@@ -17,6 +17,7 @@ from .monitor_context import MonitorContext, get_ctx, production_context
 
 ContractKind = Literal["http", "websocket"]
 MatchType = Literal["exact", "prefix"]
+RouteLocality = Literal["host_affine", "cluster_authoritative", "mixed"]
 
 
 @dataclass(frozen=True)
@@ -31,6 +32,7 @@ class RouteContract:
     overlap: str
     stale_risk: str
     recommendation: str
+    locality: RouteLocality = "host_affine"
     mutates: bool = False
     replacement: str | None = None
     response_schema_version: str | None = None
@@ -83,6 +85,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "Complements local session-supervisor hooks; it is the remote authority for v1 epic leases and a snapshot projection for registry identity.",
         "high if callers treat lease: null as never claimed, or treat registry status as live parity rather than last-restart snapshot state",
         "keep as the M2 registry-seeded remote lifecycle contract",
+        locality="cluster_authoritative",
         mutates=True,
     ),
     RouteContract(
@@ -96,6 +99,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "Complements the remote /api/epics/v1 lifecycle projection; it never exposes filesystem paths.",
         "medium if callers treat local inventory as remote lease authority",
         "keep as the path-free session-stream observability contract",
+        locality="mixed",
         response_schema_version="session-streams.v2",
     ),
     RouteContract(
@@ -281,6 +285,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "Canonical visible home for unique diagnostics formerly associated with the retired Broker Ops page; legacy /api/comms/* routes remain unchanged.",
         "medium if missing stores are mistaken for zero activity or sanitized aggregates are treated as control-plane authority",
         "keep as the read-only canonical operations projection; do not use it to mutate, clean, expire, or retire routes",
+        locality="mixed",
     ),
     RouteContract(
         "/api/fleet/agents",
@@ -293,6 +298,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "Specific member of the /api/fleet observer family; /api/fleet/endpoints serves the same handler as an alias.",
         "low — read-only inventory; agents missing from the durable plane are reported via durable_registration=false",
         "keep as the exact agent-endpoint contract beside the /api/fleet prefix family",
+        locality="cluster_authoritative",
         mutates=False,
     ),
     RouteContract(
@@ -306,6 +312,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "Consolidates observation previously spread across comms, runtime, ACP, and session-stream pages; legacy pages remain during the pre-flip soak.",
         "medium if a consumer mistakes the observer for plane authority or relies on an absent optional table as evidence of no historical work",
         "keep as the pre-flip consolidated observer; file handoffs remain authoritative and all fleet routes are read-only",
+        locality="cluster_authoritative",
         response_schema_version="comms.v2",
     ),
     RouteContract(
@@ -384,6 +391,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "Canonical channels replace legacy direct-message routes; status overlaps delegate/build events.",
         "low/medium",
         "keep",
+        locality="mixed",
         response_schema_version="comms.v2",
     ),
     RouteContract(
@@ -445,6 +453,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "Complements /api/state/routing-budget and CodexBar health/quota signals; it does not expose all-time routing weights or choose a route.",
         "medium if the bounded loaded window is treated as all-time distribution or stale activity as provider-liveness proof",
         "keep as the canonical read-only routing-decision observer",
+        locality="cluster_authoritative",
     ),
     RouteContract(
         "/api/runtime",
@@ -457,6 +466,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "Usage complements /api/state/routing-budget and cost endpoints.",
         "medium; transcript bodies are restricted to the local conversation reader",
         "keep",
+        locality="mixed",
     ),
     RouteContract(
         "/api/state/routing-budget",
@@ -675,6 +685,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "Aggregates many other API sections.",
         "low/medium when upstream collectors degrade",
         "keep cold-start source of truth",
+        locality="mixed",
         response_schema_version="orient.v2",
     ),
     RouteContract(
@@ -840,6 +851,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "Complements channel message endpoints.",
         "low",
         "keep",
+        locality="mixed",
     ),
     RouteContract(
         "/api/batch",
@@ -876,6 +888,20 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "Related to /api/admin/health and /api/orient.health.",
         "low",
         "keep",
+        locality="host_affine",
+    ),
+    RouteContract(
+        "/api/cluster/readiness",
+        "exact",
+        "http",
+        "Cluster readiness: reports storage-seam authority and ability to open authority stores for cluster-authoritative reads without claiming multi-host HA.",
+        "scripts/control_plane/storage.py authority resolution and authority store connectivity.",
+        "Evaluated per request; no cache.",
+        ("agents", "orchestrators", "monitor client", "tests"),
+        "Complements host-affine /api/health; distinct cluster-authoritative readiness contract.",
+        "low",
+        "keep as canonical cluster readiness endpoint",
+        locality="cluster_authoritative",
     ),
     RouteContract(
         "/ws/batch",
@@ -951,6 +977,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "Complements GET /api/occupancy; does not probe SSH on the request path.",
         "low",
         "keep",
+        locality="mixed",
         mutates=False,
     ),
     RouteContract(
@@ -977,6 +1004,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "Complements GET /api/occupancy burn board without merging identities across sources.",
         "low",
         "keep",
+        locality="mixed",
         mutates=False,
     ),
     RouteContract(

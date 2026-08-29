@@ -56,6 +56,7 @@ from .artifacts_router import router as artifacts_router
 from .atlas_jobs_router import router as atlas_jobs_router
 from .blue_router import router as blue_router
 from .build_events_router import router as build_events_router
+from .cluster_router import router as cluster_router
 from .codexbar_usage import scheduler_status, start_periodic_refresh, stop_periodic_refresh
 from .comms_router import ensure_broker_db_ready
 from .comms_router import router as comms_router
@@ -1958,6 +1959,7 @@ def create_app(context: MonitorContext, *, lifespan: Any = None) -> FastAPI:
     factory_app.include_router(session_streams_router, prefix="/api/session-streams", tags=["session-streams"])
     factory_app.include_router(coordination_router, prefix="/api/coordination")
     factory_app.include_router(consultation_router, prefix="/api/consultation")
+    factory_app.include_router(cluster_router, prefix="/api/cluster", tags=["cluster"])
     factory_app.include_router(cost_router, prefix="/api/cost")
     factory_app.include_router(cost_router, prefix="/api/analytics/cost")
     factory_app.include_router(contracts_router, prefix="/api/contracts", tags=["contracts"])

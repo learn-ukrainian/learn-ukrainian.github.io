@@ -26,9 +26,11 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import urllib.error
 import urllib.parse
 import urllib.request
+from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Any
 
@@ -42,6 +44,55 @@ _KNOWLEDGE_COLD_START_PATH = "/api/knowledge/cold-start"
 
 # Bound the consumer label before it ever reaches a hash or a filesystem path.
 _MAX_CONSUMER_LEN = 128
+
+
+def _normalize_base_urls(
+    base_url: str | Sequence[str] | None,
+    base_urls: Sequence[str] | str | None,
+) -> tuple[str, ...]:
+    candidates: list[str] = []
+
+    def _split(s: str) -> list[str]:
+        return [p.strip() for p in re.split(r"[\s,]+", s) if p.strip()]
+
+    if base_urls is not None:
+        if isinstance(base_urls, str):
+            candidates.extend(_split(base_urls))
+        else:
+            candidates.extend(str(u).strip() for u in base_urls if str(u).strip())
+    elif base_url is not None:
+        if isinstance(base_url, str):
+            candidates.extend(_split(base_url))
+        else:
+            candidates.extend(str(u).strip() for u in base_url if str(u).strip())
+
+    if not candidates:
+        env_multi = (
+            os.environ.get("MONITOR_API_URLS")
+            or os.environ.get("AB_MONITOR_URLS")
+            or os.environ.get("MONITOR_BASE_URLS")
+            or ""
+        ).strip()
+        if env_multi:
+            candidates.extend(_split(env_multi))
+        else:
+            single_env = (
+                os.environ.get("MONITOR_API_URL")
+                or os.environ.get("AB_MONITOR_URL")
+                or ""
+            ).strip()
+            if single_env:
+                parsed = urllib.parse.urlparse(single_env)
+                if parsed.scheme and parsed.netloc:
+                    candidates.append(f"{parsed.scheme}://{parsed.netloc}")
+                else:
+                    candidates.append(single_env)
+
+    if not candidates:
+        candidates = [DEFAULT_BASE_URL]
+
+    cleaned = tuple(c.rstrip("/") for c in candidates if c)
+    return cleaned if cleaned else (DEFAULT_BASE_URL,)
 
 
 def _canonical_context(
@@ -158,18 +209,20 @@ class ComponentResult:
 class MonitorClient:
     """Synchronous client. One instance per process is plenty.
 
-    ``base_url`` defaults to localhost but is overridable so tests can
-    spin up a fresh FastAPI TestClient and point the SDK at it.
+    ``base_url`` or ``base_urls`` can be a single URL string, a comma-separated list,
+    or a sequence of URL strings representing the ordered [A, B] base URL list.
     """
 
     def __init__(
         self,
-        base_url: str = DEFAULT_BASE_URL,
+        base_url: str | Sequence[str] | None = None,
         *,
+        base_urls: Sequence[str] | str | None = None,
         timeout_s: float = DEFAULT_TIMEOUT_S,
         session_id: str | None = None,
     ) -> None:
-        self.base_url = base_url.rstrip("/")
+        self.base_urls: tuple[str, ...] = _normalize_base_urls(base_url, base_urls)
+        self.base_url: str = self.base_urls[0]
         self.timeout_s = timeout_s
         # SessionStart persists Claude Code's documented ``session_id`` as a
         # project-private value. Non-Claude callers retain their own explicit thread
@@ -184,52 +237,127 @@ class MonitorClient:
 
     # -- low-level HTTP --------------------------------------------
 
+    def _request(
+        self,
+        method: str,
+        path: str,
+        *,
+        data: bytes | None = None,
+        headers: dict[str, str] | None = None,
+        idempotency_key: str | None = None,
+    ) -> tuple[int, str, dict[str, str]]:
+        """Low-level HTTP request across configured [A, B] base URLs.
+
+        Failover rules:
+        - GET / HEAD requests are idempotent and may fail over across the base URL list.
+        - Mutations (POST, PUT, DELETE, PATCH) retry after ambiguous transport failure
+          ONLY when a stable idempotency key is present (via ``idempotency_key`` or
+          an existing ``Idempotency-Key`` / ``X-Idempotency-Key`` header).
+        - Non-idempotent mutations without an idempotency key NEVER fail over across URLs.
+        """
+        method_upper = method.upper()
+        is_idempotent = method_upper in {"GET", "HEAD", "OPTIONS"}
+        merged_headers = dict(headers or {})
+
+        existing_idemp_key = None
+        for k, v in merged_headers.items():
+            if k.lower() in {"idempotency-key", "x-idempotency-key"}:
+                existing_idemp_key = v
+                break
+
+        effective_idemp_key = idempotency_key or existing_idemp_key
+        if effective_idemp_key and not existing_idemp_key:
+            merged_headers["Idempotency-Key"] = str(effective_idemp_key)
+
+        if self.session_id and not any(k.lower() == "x-session-id" for k in merged_headers):
+            merged_headers["X-Session-Id"] = self.session_id
+
+        can_failover = is_idempotent or bool(effective_idemp_key)
+
+        last_exc: Exception | None = None
+        for base in self.base_urls:
+            url = base + path
+            req = urllib.request.Request(
+                url,
+                data=data,
+                headers=merged_headers,
+                method=method_upper,
+            )
+            try:
+                with urllib.request.urlopen(req, timeout=self.timeout_s) as resp:
+                    body = resp.read().decode("utf-8", errors="replace")
+                    resp_headers = {k.lower(): v for k, v in resp.headers.items()}
+                    return resp.status, body, resp_headers
+            except urllib.error.HTTPError as exc:
+                resp_headers = {
+                    k.lower(): v for k, v in (exc.headers or {}).items()
+                }
+                body = ""
+                try:
+                    raw = exc.read()
+                    if raw:
+                        body = raw.decode("utf-8", errors="replace")
+                except Exception:
+                    pass
+                return exc.code, body, resp_headers
+            except (urllib.error.URLError, TimeoutError, ConnectionError, OSError) as exc:
+                last_exc = exc
+                if not can_failover:
+                    # Non-idempotent mutation without idempotency key: do not retry across URLs
+                    raise
+
+        if last_exc is not None:
+            raise last_exc
+        return 500, "", {}
+
     def _get(
         self, path: str, *, headers: dict[str, str] | None = None
     ) -> tuple[int, str, dict[str, str]]:
-        """Low-level GET. Never raises for ordinary HTTP status codes.
+        """Low-level GET. Never raises for ordinary HTTP status codes."""
+        return self._request("GET", path, headers=headers)
 
-        The SDK runs during agent cold-start — an uncaught exception
-        here prevents the agent from booting. We surface ALL HTTP
-        status codes (2xx, 3xx, 4xx, 5xx) as a status + body + headers
-        tuple so the caller can decide whether to degrade gracefully
-        (e.g. fall back to reading a local file when the API has
-        nothing useful to return). Only transport-level failures
-        (socket, DNS, refused connection) still raise — those mean
-        the API server is unreachable, which a caller wants to
-        distinguish from "server up but resource missing".
+    def _post(
+        self,
+        path: str,
+        *,
+        data: bytes | str | None = None,
+        json_body: Any = None,
+        headers: dict[str, str] | None = None,
+        idempotency_key: str | None = None,
+    ) -> tuple[int, str, dict[str, str]]:
+        """Low-level POST. Retries across [A, B] ONLY with a stable idempotency key."""
+        body_bytes: bytes | None = None
+        req_headers = dict(headers or {})
+        if json_body is not None:
+            body_bytes = json.dumps(json_body).encode("utf-8")
+            if not any(k.lower() == "content-type" for k in req_headers):
+                req_headers["Content-Type"] = "application/json"
+        elif isinstance(data, str):
+            body_bytes = data.encode("utf-8")
+        elif isinstance(data, bytes):
+            body_bytes = data
+        return self._request(
+            "POST",
+            path,
+            data=body_bytes,
+            headers=req_headers,
+            idempotency_key=idempotency_key,
+        )
 
-        Reviewer CONCERN Gemini-A / #1309: previously a 404 from
-        ``/api/session/current`` on a fresh checkout crashed
-        ``bootstrap()`` with an unhandled ``HTTPError``.
-        """
-        url = self.base_url + path
-        merged_headers = dict(headers or {})
-        # Only inject when the caller has not already supplied the header in ANY case — urllib
-        # title-cases header keys, so a caller's ``x-session-id`` would otherwise collide with and
-        # be clobbered by the injected value. An explicit caller header always wins.
-        if self.session_id and not any(k.lower() == "x-session-id" for k in merged_headers):
-            merged_headers["X-Session-Id"] = self.session_id
-        req = urllib.request.Request(url, headers=merged_headers)
-        try:
-            with urllib.request.urlopen(req, timeout=self.timeout_s) as resp:
-                body = resp.read().decode("utf-8", errors="replace")
-                resp_headers = {k.lower(): v for k, v in resp.headers.items()}
-                return resp.status, body, resp_headers
-        except urllib.error.HTTPError as exc:
-            # 304 / 404 / 500 all come through here. Surface the
-            # status + body so the caller can make a call.
-            resp_headers = {
-                k.lower(): v for k, v in (exc.headers or {}).items()
-            }
-            body = ""
+    def cluster_readiness(self) -> dict[str, Any]:
+        """Fetch the cluster readiness status."""
+        status, body, _ = self._get("/api/cluster/readiness")
+        if status == 200 and body:
             try:
-                raw = exc.read()
-                if raw:
-                    body = raw.decode("utf-8", errors="replace")
+                return json.loads(body)
             except Exception:
                 pass
-            return exc.code, body, resp_headers
+        return {
+            "status": "unavailable",
+            "ready": False,
+            "can_serve_cluster_reads": False,
+            "ha_claimed": False,
+        }
 
     # -- high-level API --------------------------------------------
 

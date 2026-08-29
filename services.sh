@@ -66,7 +66,11 @@ WORK_PRIVATE_ROOT="${LEARN_UKRAINIAN_INFRA_PRIVATE_ROOT:-$(dirname "$PUBLIC_PRIM
 mkdir -p "$LOGS_DIR" "$PIDS_DIR"
 
 # Bridge defaults for learn-ukrainian. Other projects can set AB_* explicitly.
+if [[ -n "${AB_MONITOR_URLS:-}" && -z "${AB_MONITOR_URL:-}" ]]; then
+    export AB_MONITOR_URL="$(printf '%s' "$AB_MONITOR_URLS" | tr ',' ' ' | awk '{print $1}')"
+fi
 export AB_MONITOR_URL="${AB_MONITOR_URL:-http://localhost:8765/api/state/summary}"
+export AB_MONITOR_URLS="${AB_MONITOR_URLS:-$AB_MONITOR_URL}"
 
 # Service definitions: name -> command, port, log file, health checks, process match
 declare -A SVC_CMD SVC_PORT SVC_HOST SVC_LOG SVC_DESC SVC_HEALTH SVC_HEALTH_ALT SVC_MATCH
