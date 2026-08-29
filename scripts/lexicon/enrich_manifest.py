@@ -24,7 +24,8 @@ no fabrication):
 - **heritage warning alternatives** — slovnyk.me correction dictionaries
   (Антоненко-Давидович chips when corrective, «Неправильно-правильно», Штепа
   чужослів). Full usage essays live in ``sections.usage_notes`` (#6463 davydov;
-  #6460 linguistic_norm / khreshchatyk).
+  #6460 linguistic_norm / khreshchatyk; voloschak / foreign_shtepa full notes
+  when corrective).
 - **etymology** — offline mphdict ЕСУМ roots, with the source volume/page
   citation and bibliography retained from the dictionary export.
 
@@ -229,10 +230,22 @@ _SLOVNYK_IDIOM_SLUGS = ("phraseology",)
 _SLOVNYK_PROVERB_SLUGS = ("proverbs",)
 # Full essays as sections.usage_notes. #6463 wired davydov; #6460 adds the
 # other two P0 usage-essay slugs named on the hub design (same section family,
-# same extractor). voloschak / foreign_shtepa stay on the warning-chip path.
+# same extractor).
 _SLOVNYK_USAGE_NOTE_SLUGS = ("davydov", "linguistic_norm", "khreshchatyk")
+# P1 corrective dicts (#6460, hub design §6 «voloschak/shtepa full notes when
+# corrective»): the full note joins usage_notes only when the cache row is
+# corrective — i.e. it carries a native replacement, the same signal that
+# drives the warning chips. Non-corrective rows stay chips-or-nothing; no
+# plain gloss dumps are admitted to the essay section.
+_SLOVNYK_USAGE_NOTE_CORRECTIVE_SLUGS = ("voloschak", "foreign_shtepa")
 _SLOVNYK_WARNING_SLUGS = ("davydov", "voloschak", "foreign_shtepa")
 _USAGE_NOTE_MIN_BODY_CHARS = 40
+# Corrective notes are telegraphic wrong→right pairs («Відщепенець. Відступник.»,
+# «конекція. Лучба, сполука, зв'язок.») — the essay minimum would filter out
+# nearly every attested entry, so corrective items use a small floor instead;
+# the upstream corrective gate (a native replacement must be extractable) is
+# what actually keeps junk out.
+_CORRECTIVE_NOTE_MIN_BODY_CHARS = 3
 # Compact form/pronunciation strip (#6465): the orthographic norm, the 1929
 # Holoskevych spelling for heritage comparison, and the orthoepic (pronunciation)
 # transcription. Entries are single short lines, not essays — the leading bare
@@ -2521,23 +2534,34 @@ def _split_usage_note_title(body: str) -> tuple[str | None, str]:
     return title, rest
 
 
-def _usage_note_item_from_row(row: dict[str, Any], lemma: str) -> dict[str, Any] | None:
+def _usage_note_item_from_row(
+    row: dict[str, Any], lemma: str, *, corrective: bool = False
+) -> dict[str, Any] | None:
     """Build one usage-note item from a davydov-family slovnyk cache row.
 
-    Family slugs: davydov, linguistic_norm, khreshchatyk. The row's
-    ``dictionary_label`` / slug picks the academic source; this helper does
-    not invent essay text.
+    Family slugs: davydov, linguistic_norm, khreshchatyk (P0 essays); the P1
+    corrective slugs voloschak / foreign_shtepa pass through with
+    ``corrective=True`` (gated upstream on corrective content) — telegraphic
+    wrong→right notes get the small corrective body floor and no essay title
+    split. The row's ``dictionary_label`` / slug picks the academic source;
+    this helper does not invent essay text.
     """
     raw = _SOURCE_TAIL_RE.sub("", str(row.get("text") or "")).strip()
     if not raw:
         return None
     body = _strip_leading_headword_once(raw, lemma, str(row.get("word") or ""))
-    if len(body) < _USAGE_NOTE_MIN_BODY_CHARS:
+    min_chars = _CORRECTIVE_NOTE_MIN_BODY_CHARS if corrective else _USAGE_NOTE_MIN_BODY_CHARS
+    if len(body) < min_chars:
         return None
-    title, essay = _split_usage_note_title(body)
-    if len(essay) < _USAGE_NOTE_MIN_BODY_CHARS:
-        # Title split left a stub — keep the unsplit body.
+    if corrective:
+        # Correction entries have no topic header to split off; forcing the
+        # essay title split here would invent structure they do not carry.
         title, essay = None, body
+    else:
+        title, essay = _split_usage_note_title(body)
+        if len(essay) < _USAGE_NOTE_MIN_BODY_CHARS:
+            # Title split left a stub — keep the unsplit body.
+            title, essay = None, body
     slug = str(row.get("dictionary_slug") or "davydov")
     source = str(
         row.get("dictionary_label")
@@ -2565,20 +2589,28 @@ def _usage_notes_slovnyk(lemma: str, cache: dict[str, Any] | None = None) -> dic
 
     Full Антоненко-Давидович «Як ми говоримо» text, plus «Літературне
     слововживання» and «Уроки державної мови» (Хрещатик) when a cache row
-    exists, become learner section items (not warning-only). Corrective
-    alternative chips remain on the separate ``_warning_slovnyk`` path when
-    the essay text matches corrective cues — chips only, never a second
-    full-text dump of the same essay.
+    exists, become learner section items (not warning-only). The P1 corrective
+    dicts («Неправильно-правильно», Штепа чужослів) contribute their full note
+    only when the row is corrective (hub design §6); non-corrective rows are
+    not admitted. Corrective alternative chips remain on the separate
+    ``_warning_slovnyk`` path — chips only, never a second full-text dump of
+    the same essay.
     """
     cache = cache if cache is not None else _slovnyk_cache(lemma)
     items: list[dict[str, Any]] = []
     mirror_urls_raw: list[str] = []
     sources: list[str] = []
-    for slug in _SLOVNYK_USAGE_NOTE_SLUGS:
+    for slug in (*_SLOVNYK_USAGE_NOTE_SLUGS, *_SLOVNYK_USAGE_NOTE_CORRECTIVE_SLUGS):
+        corrective = slug in _SLOVNYK_USAGE_NOTE_CORRECTIVE_SLUGS
         row = _cache_lookup(cache, slug)
         if not row:
             continue
-        item = _usage_note_item_from_row(row, lemma)
+        if corrective and not _warning_alternatives_from_row(row, lemma):
+            # voloschak / foreign_shtepa: full note only when the row is
+            # corrective (carries a native replacement). A row without one is
+            # not a style-norm essay and must not inflate the section.
+            continue
+        item = _usage_note_item_from_row(row, lemma, corrective=corrective)
         if not item:
             continue
         items.append(item)
@@ -7736,7 +7768,9 @@ def enrich_entry(
     if not proverbs and fallback_base:
         proverbs = _proverbs_slovnyk(fallback_base, slovnyk_cache)
     _apply_section("proverbs", proverbs, gate_ran=proverbs_gate_ran)
-    usage_notes_gate_ran = _slovnyk_gate_ran(slovnyk_cache, _SLOVNYK_USAGE_NOTE_SLUGS)
+    usage_notes_gate_ran = _slovnyk_gate_ran(
+        slovnyk_cache, _SLOVNYK_USAGE_NOTE_SLUGS + _SLOVNYK_USAGE_NOTE_CORRECTIVE_SLUGS
+    )
     usage_notes = _usage_notes_slovnyk(lemma, slovnyk_cache)
     if not usage_notes and fallback_base:
         usage_notes = _usage_notes_slovnyk(fallback_base, slovnyk_cache)

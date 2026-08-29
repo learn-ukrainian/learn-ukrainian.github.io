@@ -283,6 +283,19 @@ def test_usage_notes_family_slugs_are_looked_up_and_not_warning_only() -> None:
     )
     for slug in enrich_manifest._SLOVNYK_USAGE_NOTE_SLUGS:
         assert slug in enrich_manifest._SLOVNYK_LOOKUP_SLUGS
-    # P1 corrective dicts stay on the warning-chip path, not this family.
+    # P1 corrective dicts are a separate gated tuple, not the essay family.
     assert "voloschak" not in enrich_manifest._SLOVNYK_USAGE_NOTE_SLUGS
     assert "foreign_shtepa" not in enrich_manifest._SLOVNYK_USAGE_NOTE_SLUGS
+
+
+def test_usage_notes_corrective_slugs_gated_separately_and_still_warn() -> None:
+    """#6460: voloschak / foreign_shtepa full notes join usage_notes only via
+    the corrective gate; both slugs also stay on the warning-chip path."""
+    assert enrich_manifest._SLOVNYK_USAGE_NOTE_CORRECTIVE_SLUGS == (
+        "voloschak",
+        "foreign_shtepa",
+    )
+    for slug in enrich_manifest._SLOVNYK_USAGE_NOTE_CORRECTIVE_SLUGS:
+        assert slug in enrich_manifest._SLOVNYK_LOOKUP_SLUGS
+        assert slug in enrich_manifest._SLOVNYK_WARNING_SLUGS
+        assert slug not in enrich_manifest._SLOVNYK_USAGE_NOTE_SLUGS
