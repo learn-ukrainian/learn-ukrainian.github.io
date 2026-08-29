@@ -7,9 +7,13 @@ import sqlite3
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
+
+from scripts.control_plane.storage import ControlPlanePgConnectError
 from scripts.fleet_comms.cli import EXIT_OK
 from scripts.fleet_comms.cli import main as cli_main
 from scripts.fleet_comms.efficiency_metrics import (
+    _connect,
     collect_dead_letters,
     collect_delivery_backlog,
     collect_delivery_backlog_authority,
@@ -263,3 +267,26 @@ def test_authority_collectors_are_read_only(tmp_path: Path) -> None:
         assert uri.startswith("file:")
         assert "mode=ro" in uri
         assert connect.call_args.kwargs.get("uri") is True
+
+
+def test_efficiency_metrics_connect_pg_unreachable_no_sqlite(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
+    monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", "postgresql://cp_ci:cp_ci@127.0.0.1:1/postgres")
+    target = tmp_path / "comms.sqlite3"
+    with pytest.raises(ControlPlanePgConnectError, match="fleet_comms"):
+        with _connect(target):
+            pass
+    assert not target.exists()
+
+
+def test_efficiency_metrics_connect_sqlite_default(tmp_path: Path) -> None:
+    target = tmp_path / "comms.sqlite3"
+    with _connect(target) as conn:
+        assert isinstance(conn, sqlite3.Connection)
+        row = conn.execute("SELECT 1 AS val").fetchone()
+        assert row["val"] == 1
+    assert target.exists()
+

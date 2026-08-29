@@ -34,8 +34,8 @@ _RETIRED_AGENTS = frozenset({"gemini"})
 
 @contextmanager
 def _connect(db_path: Path) -> Iterator[sqlite3.Connection]:
-    """Open a read path connection and always close it (sqlite3 `with` only commits)."""
-    conn = sqlite3.connect(str(db_path))
+    """Open a write-capable connection via the storage seam and always close it."""
+    conn = cp_connect(StoreId.FLEET_COMMS, path=db_path)
     conn.row_factory = sqlite3.Row
     try:
         yield conn

@@ -20,6 +20,7 @@ from scripts.control_plane.storage import (
     sqlite_path,
 )
 from scripts.fleet_comms.artifacts import ArtifactStore
+from scripts.fleet_comms.efficiency_metrics import _connect
 from scripts.guardrails.delegate_ownership import OwnershipLedger
 from scripts.hygiene import lint_control_plane_sqlite
 
@@ -161,6 +162,22 @@ def test_session_streams_db_pg_unreachable_no_sqlite(
         db.connect()
     elapsed = time.monotonic() - started
     assert not db_target.exists()
+    assert elapsed < 8.0
+
+
+def test_efficiency_metrics_connect_pg_unreachable_no_sqlite(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
+    monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", _UNREACHABLE_DSN)
+    target = tmp_path / "comms.sqlite3"
+    started = time.monotonic()
+    with pytest.raises(ControlPlanePgConnectError, match="fleet_comms"):
+        with _connect(target):
+            pass
+    elapsed = time.monotonic() - started
+    assert not target.exists()
     assert elapsed < 8.0
 
 
