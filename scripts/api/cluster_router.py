@@ -1,8 +1,9 @@
-"""Cluster readiness check router (Phase 0 — sqlite authority, no multi-host HA).
+"""Cluster readiness check router (Phase 0 — sqlite default; pg requires SELECT 1).
 
 Clients use this endpoint to decide if this host can serve cluster-authoritative
 reads. Reports storage-seam authority and whether the process can open authority
-stores without claiming multi-host HA.
+stores without claiming multi-host HA. Postgres authority pings via the storage
+seam; DSN presence alone is never treated as ready.
 """
 
 from __future__ import annotations
@@ -55,8 +56,24 @@ def check_cluster_readiness(ctx: MonitorContext | None = None) -> dict[str, Any]
                 reason = "pg authority configured but LEARN_UKRAINIAN_CP_PG_DSN is missing"
                 can_serve_cluster_reads = False
             else:
-                # In Phase 0, postgres is configured via DSN
-                accessible = True
+                # Ping through the seam; never treat DSN presence as readiness.
+                try:
+                    conn = storage.connect(
+                        store_id, read_only=True, repo_root=repo_root
+                    )
+                    try:
+                        conn.execute("SELECT 1")
+                    finally:
+                        conn.close()
+                    accessible = True
+                except Exception:
+                    # OPSEC: store-id only — no hostnames, DSN, or userinfo.
+                    accessible = False
+                    reason = (
+                        f"control-plane store {store_id.value!r} "
+                        "postgres connect failed"
+                    )
+                    can_serve_cluster_reads = False
         elif authority in (storage.Authority.SQLITE, storage.Authority.SHADOW):
             try:
                 db_path = storage.sqlite_path(store_id, repo_root=repo_root)

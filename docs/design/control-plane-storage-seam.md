@@ -50,6 +50,7 @@ Remaining allowlisted direct opens in `scripts/hygiene/lint_control_plane_sqlite
 Legacy broker `messages.db` call sites remain direct non-authority file opens.
 
 Phase 0b residuals on private #603 (not this PR): artifact byte-plane,
-cluster-readiness `SELECT 1`, HTTP Idempotency-Key, `efficiency_metrics` move.
+HTTP Idempotency-Key, `efficiency_metrics` move. Cluster-readiness now
+pings Postgres with `SELECT 1` (DSN presence alone is not readiness).
 
 No Patroni, dual-write, public bind, live DSN flip, or DSN in git.
