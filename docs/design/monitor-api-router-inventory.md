@@ -466,9 +466,9 @@ global. `LEVELS` is track-id config, not a filesystem root.
 ### Step 12d — site / wiki / worktrees / telemetry
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
-| --- | --- | ---: | ---: | --- | --- | ---: | --- |
+| --- | --- | ---: | ---: | --- | --- | --- | ---: |
 | `site_router.py` | `/api/site` | 2 | 260 | — | — | 0 | 12d |
-| `wiki_router.py` | `/api/wiki` | 8 | 436 | `LEVELS` | — | 8 | 12d |
+| `wiki_router.py` | `/api/wiki` | 8 | 436 | `LEVELS` | — | 2 | 12d |
 | `worktrees_router.py` | `/api/worktrees` | 1 | 221 | — | — | 1 | 12d |
 | `telemetry_router.py` | (none — router defines own prefix) | 7 | 553 | — | — | 1 | 12d |
 
@@ -476,8 +476,9 @@ global. `LEVELS` is track-id config, not a filesystem root.
 `Depends(get_ctx)`. The 15 Path and router-local subprocess seams this row listed
 (`site_router` 4 Path globals + `_run` stub, `worktrees_router` 2 Path globals +
 `_run` stub, `telemetry_router` 3 Path globals, `wiki_router` 4 router-local Path
-globals) are deleted. `reap_worktrees._run` and external `wiki.*` /
-`scripts.telemetry.legacy_bridge` store-loop seams remain for unmigrated callers.
+globals) are deleted. `reap_worktrees._run`, `scripts.telemetry.legacy_bridge._DB_PATH`,
+and `wiki.{config,state}.WIKI_STATE_DIR` (2) remain for external store redirection.
+The unused `wiki.sources_db.SOURCES_DB_PATH` and dense rerank defaults (4) are deleted.
 
 ### Step 12e — work / epics
 
@@ -497,7 +498,7 @@ fixture setattr, `epics_router._store` fixture setattr, and
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
 | `main.py` (`core_router`) | (none — absolute paths) | 15 | 1,949 | `LEVELS` | — | 0 | 13 |
 
-**13 migrated (#7335):** 15 inline routes and orient collectors read roots from `Depends(get_ctx)`. Measured unique logical seams at this head: **21** (base after #7413 was **36**, delta **−15**). The seams this row previously listed (`_health_instance_identity`, `_run_command` in `main.py`, and the Path globals `BATCH_STATE_DIR`, `CURRICULUM_ROOT`, `DASHBOARDS_DIR`, `LIVE_REPO_ROOT`, `MESSAGE_DB`, `PROJECT_ROOT`, `SOURCES_DB_PATH`, `SESSION_STATE_DIR`, `_IMAGE_DIR`) are deleted.
+**13 migrated (#7335) & Residual Cleanup (#7269):** 15 inline routes and orient collectors read roots from `Depends(get_ctx)`. Measured unique logical seams at this head: **9** (base after #7413 was **21**, delta **−12**). The remaining `path_loop` rewrites (`scripts.api.config.{BATCH_STATE_DIR, CURRICULUM_ROOT, DASHBOARDS_DIR, LIVE_REPO_ROOT, MESSAGE_DB, PROJECT_ROOT}` and `scripts.api.resilience._REPO_ROOT`), `scripts.fleet_comms.legacy_broker_report.main_checkout_root`, and 4 unused `wiki.*` / RAG defaults are deleted.
 
 **Routes:** `/api` (redirect), `/api/health`, `/api/orient`, `/api/config`,
 `/api/batch/dispatcher`, `/api/batch/active`, `/api/batch/failures`,
