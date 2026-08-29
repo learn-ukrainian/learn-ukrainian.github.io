@@ -12,6 +12,7 @@ import hashlib
 import json
 import subprocess
 import sys
+from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
@@ -51,6 +52,14 @@ CYCLE001_VOID_LOGICAL_PATH = (
 )
 UNIVERSITY_SOURCE_POLICY_LOGICAL_PATH = (
     "data/projects/open_model_data/evidence/phase3_university_source_policy_v1.json"
+)
+# The compatibility matrix predates the current Phase 3 P1 freeze.  Keep the
+# boundary explicit so adding a current-phase metadata artifact cannot silently
+# change the legacy/pre-v2 denominator or weaken its exact-coverage check.
+CURRENT_PHASE_EVIDENCE_PATHS = frozenset(
+    {
+        "data/projects/open_model_data/evidence/phase3_p1_universe_freeze_v1.json",
+    }
 )
 REQUIRED_CLAIMS = {
     "public_canary_9_of_9": "public_canary_not_v2_evaluation",
@@ -158,6 +167,12 @@ def read_json(path: Path) -> dict[str, Any]:
     return value
 
 
+def _pre_v2_evidence_paths(paths: Iterable[str]) -> set[str]:
+    """Return the exact tracked evidence set covered by the v2 matrix."""
+    excluded = {MATRIX_LOGICAL_PATH, *CURRENT_PHASE_EVIDENCE_PATHS}
+    return {path for path in paths if path and path not in excluded}
+
+
 def _tracked_evidence_paths() -> set[str]:
     try:
         result = subprocess.run(
@@ -170,7 +185,7 @@ def _tracked_evidence_paths() -> set[str]:
     except (OSError, subprocess.TimeoutExpired) as exc:
         raise CompatibilityError("cannot enumerate tracked evidence") from exc
     require(result.returncode == 0, "cannot enumerate tracked evidence")
-    paths = {line for line in result.stdout.splitlines() if line and line != MATRIX_LOGICAL_PATH}
+    paths = _pre_v2_evidence_paths(result.stdout.splitlines())
     for logical_path in (
         FUNCTIONAL_ROLE_LOGICAL_PATH,
         CURRENT_HELDOUT_LABEL_LOGICAL_PATH,
