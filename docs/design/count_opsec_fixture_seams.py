@@ -31,7 +31,6 @@ from scripts.api import (
 from scripts.api import main as api_main
 from scripts.lexicon.runner import atlas_job
 from scripts.orchestration import reap_worktrees
-from scripts.wiki import sources_db
 
 GLOBAL_SEAMS = frozenset(
     {
@@ -132,17 +131,10 @@ def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> Non
     monkeypatch.setattr(reap_worktrees, "_run", lambda *_args, **_kwargs: (0, "", ""))
     monkeypatch.setattr(atlas_job, "primary_checkout_root", lambda: root)
 
-    fixture_sources_db = root / "stores" / "sources.db"
-    rag_query = importlib.import_module("rag.query")
-    for search_db_module in (sources_db, rag_query.sources_db):
-        monkeypatch.setattr(search_db_module, "SOURCES_DB_PATH", fixture_sources_db)
-        monkeypatch.setattr(search_db_module, "_conn", None)
-    monkeypatch.setattr(
-        sources_db,
-        "_get_conn",
-        lambda: (_ for _ in ()).throw(FileNotFoundError("fixture")),
-    )
-
+    # Keep ``wiki.sources_db`` loaded so the wiki-prefix external-store
+    # loop still owns that module's Path globals (step 12d). Step 10
+    # deleted the RAG-specific setattr copies, not the wiki loop.
+    importlib.import_module("rag.query")
     importlib.import_module("scripts.fleet_comms.legacy_broker_report")
     importlib.import_module("scripts.telemetry.legacy_bridge")
     importlib.import_module("wiki.state")

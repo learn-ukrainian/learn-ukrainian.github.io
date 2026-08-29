@@ -405,6 +405,67 @@ def test_step8_admin_ops_git_cluster_isolation(tmp_path: Path) -> None:
         assert "error" in second_hygiene
 
 
+def _seed_sources_db(path: Path, *, rows: int) -> None:
+    import sqlite3
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    connection = sqlite3.connect(path)
+    connection.execute("CREATE TABLE textbooks (id INTEGER PRIMARY KEY, text TEXT)")
+    connection.executemany("INSERT INTO textbooks (text) VALUES (?)", [("chunk",)] * rows)
+    connection.commit()
+    connection.close()
+
+
+def _write_textbook_png(root: Path, *, grade: str, name: str) -> None:
+    directory = root / "data" / "textbook_images" / grade
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / name).write_bytes(b"\x89PNG" + b"\x00" * 8)
+
+
+def test_step10_sources_router_cluster_isolation(tmp_path: Path) -> None:
+    @asynccontextmanager
+    async def no_lifespan(_app):
+        yield
+
+    first_root = tmp_path / "first"
+    second_root = tmp_path / "second"
+    first_ctx = fixture_context(first_root)
+    second_ctx = fixture_context(second_root)
+
+    _write_textbook_png(first_root, grade="grade-01", name="first.png")
+    _write_textbook_png(second_root, grade="grade-02", name="second.png")
+    _seed_sources_db(first_ctx.roots.sources_db_path, rows=3)
+    _seed_sources_db(second_ctx.roots.sources_db_path, rows=7)
+
+    first_app = api_main.create_app(first_ctx, lifespan=no_lifespan)
+    second_app = api_main.create_app(second_ctx, lifespan=no_lifespan)
+
+    with TestClient(first_app) as first_client, TestClient(second_app) as second_client:
+        first_browse = first_client.get("/api/sources/browse_images").json()
+        second_browse = second_client.get("/api/sources/browse_images").json()
+        assert first_browse["total"] == 1
+        assert first_browse["images"][0]["name"] == "first.png"
+        assert first_browse["images"][0]["grade"] == "grade-01"
+        assert second_browse["total"] == 1
+        assert second_browse["images"][0]["name"] == "second.png"
+        assert second_browse["images"][0]["grade"] == "grade-02"
+        assert first_browse["images"][0]["name"] not in {
+            image["name"] for image in second_browse["images"]
+        }
+
+        first_stats = first_client.get("/api/sources/stats").json()
+        second_stats = second_client.get("/api/sources/stats").json()
+        assert first_stats["sources_db"]["status"] == "ok"
+        assert second_stats["sources_db"]["status"] == "ok"
+        assert first_stats["sources_db"]["points_count"] == 3
+        assert second_stats["sources_db"]["points_count"] == 7
+        assert first_stats["sources_db"]["tables"]["textbooks"] == 3
+        assert second_stats["sources_db"]["tables"]["textbooks"] == 7
+
+        first_legacy = first_client.get("/api/rag/stats").json()
+        assert first_legacy["sources_db"]["points_count"] == 3
+
+
 def test_db_access_patterns_have_the_step_two_allowlist() -> None:
     assert len(DB_ACCESS_ALLOWLIST) == 16
     files = sorted((REPO_ROOT / "scripts/api").rglob("*.py"))

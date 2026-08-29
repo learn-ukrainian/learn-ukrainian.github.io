@@ -3,21 +3,48 @@
 from __future__ import annotations
 
 import re
+import sqlite3
 import sys
+from collections.abc import Callable
+from pathlib import Path
+from typing import TypeVar
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Depends, Query
 from fastapi.responses import JSONResponse
 
-from .config import PROJECT_ROOT
+from .monitor_context import MonitorContext, get_ctx
 
-_scripts_dir = str(PROJECT_ROOT / "scripts")
+_scripts_dir = str(Path(__file__).resolve().parents[1])
 if _scripts_dir not in sys.path:
     sys.path.insert(0, _scripts_dir)
 
 router = APIRouter(tags=["sources"])
 
-IMAGE_DIR = PROJECT_ROOT / "data" / "textbook_images"
 ALLOWED_IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
+
+_T = TypeVar("_T")
+
+
+def _image_dir(ctx: MonitorContext) -> Path:
+    if ctx.roots.images_dir is not None:
+        return ctx.roots.images_dir
+    return ctx.roots.project_root / "data" / "textbook_images"
+
+
+def _run_sources_query(ctx: MonitorContext, callback: Callable[[], _T]) -> _T:
+    """Run a RAG query against the context-owned sources handle."""
+    from rag.query import sources_db as query_sources_db  # noqa: PLC0415 — optional RAG dependency
+
+    handle = ctx.stores.sources_db
+    if handle is None or not handle.path.exists():
+        raise FileNotFoundError("data/sources.db not found")
+    connection = handle.connect()
+    connection.row_factory = sqlite3.Row
+    try:
+        with query_sources_db.using_connection(connection):
+            return callback()
+    finally:
+        connection.close()
 
 
 @router.get("/search_text")
@@ -27,10 +54,19 @@ async def search_text(
     subject: str | None = Query(None, description="Filter by subject"),
     trust_tier: int | None = Query(None, description="Trust tier"),
     limit: int = Query(5, ge=1, le=20),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     from rag.query import search_text as _search_text  # noqa: PLC0415 — optional RAG dependency
 
-    return _search_text(q, grade=grade, subject=subject, trust_tier=trust_tier, limit=limit)
+    try:
+        return _run_sources_query(
+            ctx,
+            lambda: _search_text(
+                q, grade=grade, subject=subject, trust_tier=trust_tier, limit=limit
+            ),
+        )
+    except FileNotFoundError:
+        return []
 
 
 @router.get("/search_images")
@@ -40,9 +76,11 @@ async def search_images(
     teaching_value: str | None = Query(None, description="Filter: high/medium/low/none"),
     subject: str | None = Query(None, description="Filter by subject"),
     limit: int = Query(5, ge=1, le=20),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     from rag.query import search_images as _search_images  # noqa: PLC0415 — optional RAG dependency
 
+    del ctx
     return _search_images(
         q,
         grade=grade,
@@ -59,17 +97,27 @@ async def search_literary(
     genre: str | None = Query(None, description="Filter by genre"),
     period: str | None = Query(None, description="Filter by language period"),
     limit: int = Query(5, ge=1, le=20),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     from rag.query import search_literary as _search_literary  # noqa: PLC0415 — optional RAG dependency
 
-    return _search_literary(q, work=work, genre=genre, period=period, limit=limit)
+    try:
+        return _run_sources_query(
+            ctx,
+            lambda: _search_literary(q, work=work, genre=genre, period=period, limit=limit),
+        )
+    except FileNotFoundError:
+        return []
 
 
 @router.get("/stats")
-async def collection_stats():
+async def collection_stats(ctx: MonitorContext = Depends(get_ctx)):
     from rag.query import collection_stats as _collection_stats  # noqa: PLC0415 — optional RAG dependency
 
-    return _collection_stats()
+    try:
+        return _run_sources_query(ctx, _collection_stats)
+    except FileNotFoundError:
+        return {"sources_db": {"error": "data/sources.db not found"}}
 
 
 @router.get("/browse_images")
@@ -80,24 +128,28 @@ async def browse_images(
     per_page: int = Query(100, ge=1, le=500),
     max_size: int | None = Query(None, description="Max file size in bytes"),
     min_size: int | None = Query(None, description="Min file size in bytes"),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """Browse textbook images on disk with filtering and pagination."""
+    image_dir = _image_dir(ctx)
     if grade:
         if not re.match(r"^grade-\d{2}$", grade):
             return JSONResponse(
                 status_code=400,
                 content={"error": f"Invalid grade format: {grade}"},
             )
-        search_dirs = [IMAGE_DIR / grade]
+        search_dirs = [image_dir / grade]
         if not search_dirs[0].exists():
             return JSONResponse(
                 status_code=404,
                 content={"error": f"Grade directory not found: {grade}"},
             )
     else:
-        search_dirs = sorted(
-            d for d in IMAGE_DIR.iterdir() if d.is_dir() and d.name.startswith("grade-")
-        ) if IMAGE_DIR.exists() else []
+        search_dirs = (
+            sorted(d for d in image_dir.iterdir() if d.is_dir() and d.name.startswith("grade-"))
+            if image_dir.exists()
+            else []
+        )
 
     images = []
     for directory in search_dirs:
