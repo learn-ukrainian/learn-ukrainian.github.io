@@ -88,6 +88,7 @@ from .observer_presence import router as observer_presence_router
 from .occupancy import router as occupancy_router
 from .occupancy_local import resolve_launcher_host_id
 from .ops_router import router as ops_router
+from .opsec_sanitize import opsec_path_sanitizer_middleware
 from .preload import preload_all
 from .project_state_router import router as project_state_router
 from .rag_router import router as sources_router
@@ -1937,6 +1938,7 @@ def create_app(context: MonitorContext, *, lifespan: Any = None) -> FastAPI:
         allow_headers=["*"],
     )
     factory_app.middleware("http")(resilience_middleware)
+    factory_app.middleware("http")(opsec_path_sanitizer_middleware)
     factory_app.add_exception_handler(StarletteHTTPException, http_exception_handler)
     factory_app.add_exception_handler(RequestValidationError, request_validation_exception_handler)
     factory_app.add_exception_handler(Exception, global_exception_handler)

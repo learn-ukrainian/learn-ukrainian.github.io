@@ -49,12 +49,9 @@ pytestmark = pytest.mark.repo_invariant
 KNOWN_LEAKS_PATH = Path(__file__).with_name("known_leaks.toml")
 FROZEN_IDS = frozenset(
     {
-        "admin-backup-dir",
         "fleet-workers-host-id",
         "occupancy-host-id",
         "health-instance-host",
-        "retention-plan-dir",
-        "retention-archive-root",
         "dashboard-index-localhost",
         "dashboard-work-loopback",
     }
@@ -547,7 +544,7 @@ def test_registry_reports_a_removed_operation() -> None:
 
 def test_known_leak_table_rejects_unmatched_dead_and_expired_rows() -> None:
     row = {
-        "id": "admin-backup-dir",
+        "id": "occupancy-host-id",
         "operation": "GET /synthetic",
         "field": "body.value",
         "owner": "test-owner",
@@ -568,13 +565,13 @@ def test_known_leak_table_rejects_unmatched_dead_and_expired_rows() -> None:
 
     expired = dict(row)
     expired.update(
-        operation="GET /api/admin/backup/list",
-        field="body.backup_dir",
+        operation="GET /api/occupancy",
+        field="body.hosts.opsec-host-id.host_id",
         expiry=(date.today() - timedelta(days=1)).isoformat(),
     )
     matching = opsec_scan.Finding(
-        operation="GET /api/admin/backup/list",
-        field_path="body.backup_dir",
+        operation="GET /api/occupancy",
+        field_path="body.hosts.opsec-host-id.host_id",
         kind="canary",
         token="synthetic",
         start=0,

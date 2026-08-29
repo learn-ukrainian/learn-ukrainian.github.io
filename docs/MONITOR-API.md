@@ -141,6 +141,17 @@ canaries. It exempts SHA values, RFC3339 timestamps, `epic:<N>` identifiers,
 `/api/...` route strings, and ISO durations. The committed positive/negative
 corpus protects those boundaries.
 
+[`scripts/api/opsec_sanitize.py`](../scripts/api/opsec_sanitize.py) is the
+route-wide rewriter. `create_app` wraps JSON responses so any remaining
+absolute filesystem-root token is replaced with the opaque placeholder
+`[redacted-path]` before the body leaves the process. The sanitizer reuses the
+scanner's filesystem-root detector so the two cannot drift. It does not invent
+a vendor, change deploy topology, or rewrite HTML dashboards. Path-shaped
+field names that still exist (admin backup, retention plan dir) keep their
+decision meaning via booleans and store labels in later burn-down PRs; the
+rewriter only guarantees the path token itself cannot leak through a
+pass-through or an unfinished emitter.
+
 Each exercised record derives success and redirect statuses from OpenAPI and
 permits the documented isolated-fixture 4xx contract. A 5xx is refused unless
 the registry record carries a route-specific reason and explicitly expects it;

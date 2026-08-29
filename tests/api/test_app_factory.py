@@ -20,6 +20,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 from scripts.api import main as api_main
 from scripts.api.monitor_context import fixture_context, production_context
+from scripts.api.opsec_sanitize import REDACTED_ABSOLUTE_PATH, opsec_path_sanitizer_middleware
 from scripts.api.resilience import resilience_middleware
 from tests.api.opsec_sweep import registry
 
@@ -82,10 +83,12 @@ def test_factory_snapshot_preserves_middleware_and_exception_handlers() -> None:
 
     assert [(entry.cls, entry.args) for entry in app.user_middleware] == [
         (BaseHTTPMiddleware, ()),
+        (BaseHTTPMiddleware, ()),
         (CORSMiddleware, ()),
     ]
-    assert app.user_middleware[0].kwargs["dispatch"] is resilience_middleware
-    assert app.user_middleware[1].kwargs == {
+    assert app.user_middleware[0].kwargs["dispatch"] is opsec_path_sanitizer_middleware
+    assert app.user_middleware[1].kwargs["dispatch"] is resilience_middleware
+    assert app.user_middleware[2].kwargs == {
         "allow_origins": ["*"],
         "allow_credentials": True,
         "allow_methods": ["*"],
@@ -560,8 +563,8 @@ def test_step12d_site_wiki_worktrees_telemetry_isolation(tmp_path: Path) -> None
         assert second_worktrees["count"] == 1
         assert first_worktrees["worktrees"][0]["is_primary"] is True
         assert second_worktrees["worktrees"][0]["is_primary"] is True
-        assert Path(first_worktrees["worktrees"][0]["path"]).resolve() == first_root.resolve()
-        assert Path(second_worktrees["worktrees"][0]["path"]).resolve() == second_root.resolve()
+        assert first_worktrees["worktrees"][0]["path"] == REDACTED_ABSOLUTE_PATH
+        assert second_worktrees["worktrees"][0]["path"] == REDACTED_ABSOLUTE_PATH
 
 
 def test_step12e_work_epics_cluster_isolation(tmp_path: Path) -> None:
