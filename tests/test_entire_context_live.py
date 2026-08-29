@@ -79,6 +79,21 @@ def test_projection_path_is_shared_across_linked_worktrees(tmp_path: Path) -> No
     assert projection_path(linked) == projection_path(primary)
 
 
+def test_shared_repository_root_falls_back_when_subprocess_is_denied(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """A denied git probe must not raise; Monitor degrades to the given cwd."""
+
+    def _deny(*_args, **_kwargs):
+        raise AssertionError("subprocess forbidden")
+
+    monkeypatch.setattr(subprocess, "run", _deny)
+    assert shared_repository_root(tmp_path) == tmp_path.resolve()
+    assert projection_path(tmp_path) == (
+        tmp_path.resolve() / "batch_state" / "entire-context" / "v1" / "context-links.sqlite3"
+    )
+
+
 def test_use_receipt_is_explicit_idempotent_and_separate_from_search(tmp_path: Path) -> None:
     store, link = _promoted_store(tmp_path)
     before = store.status()
