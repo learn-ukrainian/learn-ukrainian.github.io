@@ -17,7 +17,7 @@ client = TestClient(app, raise_server_exceptions=False)
 
 def _git(repo: Path, *args: str) -> str:
     env = os.environ.copy()
-    for key in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_PREFIX", "GIT_COMMON_DIR"):
+    for key in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_PREFIX", "GIT_COMMON_DIR", "AGENT_NO_MERGE"):
         env.pop(key, None)
     proc = subprocess.run(
         ["git", *args],
