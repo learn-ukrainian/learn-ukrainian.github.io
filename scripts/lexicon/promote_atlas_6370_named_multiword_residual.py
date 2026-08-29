@@ -139,7 +139,7 @@ def _build_candidate(lemma: str, inventory_path: Path, *, entry_type: str | None
         # verified present in VESUM via mcp__sources__verify_words before this
         # batch was authored (see PR description); none is heritage-flagged.
         "heritage_status": {
-            "classification": "standard_modern",
+            "classification": "standard",
             "attestations": [],
             "is_russianism": False,
             "russian_shadow": False,

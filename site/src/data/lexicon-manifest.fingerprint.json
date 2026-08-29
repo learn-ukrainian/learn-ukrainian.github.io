@@ -219,7 +219,7 @@
       },
       {
         "path": "scripts/lexicon/promote_atlas_6370_named_multiword_residual.py",
-        "sha256": "f46507ff0a6b00c3294158f5b4e9d327e5be3e51d940c4e65aba67e33dc16c2f"
+        "sha256": "19278e02a7ccff60653a371e8c2e40635505dd4fa25ce40568397777e51515d4"
       },
       {
         "path": "scripts/lexicon/promote_grow_candidates.py",

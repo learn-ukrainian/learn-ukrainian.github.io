@@ -65,6 +65,9 @@ def test_build_candidate_from_committed_inventory(lemma: str) -> None:
     assert (candidate["gloss"] or "").strip()
     assert candidate["heritage_status"]["vesum_attested"] is True
     assert candidate["heritage_status"]["is_russianism"] is False
+    # Conformance gate (validate_atlas_conformance.STANDARD_OR_UNKNOWN_CLASSIFICATIONS)
+    # only accepts "", "standard", "unknown" for evidence-free entries.
+    assert candidate["heritage_status"]["classification"] == "standard"
     assert candidate["surface_admission"] == {"practice": True}
     provenance = candidate["source_provenance"]
     assert provenance and all(item.get("inventory_path") for item in provenance)
