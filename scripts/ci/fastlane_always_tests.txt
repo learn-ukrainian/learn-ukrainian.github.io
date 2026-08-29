@@ -10,6 +10,7 @@ tests/api/test_route_locality.py
 tests/api/test_sources_router_context.py
 tests/control_plane/test_storage.py
 tests/control_plane/test_storage_contract.py
+tests/fleet_comms/test_artifacts_pg_byte_plane.py
 tests/test_ask_opencode.py
 tests/test_bio_preparation_ci_routing.py
 tests/test_ci_changed_tests.py

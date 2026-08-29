@@ -6,6 +6,14 @@ Store immutable payloads at::
 
 Creation is temp → fsync → hash → atomic rename → SQLite commit so a crash
 never leaves a DB row pointing at a missing blob.
+
+Byte-plane slice (private #603, Phase 0b): when ``fleet_comms`` authority is
+``pg`` (``LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS=pg``), payload bytes live
+in Postgres (``BYTEA``, content-addressed by sha256) in a small dedicated
+table — never in a host-local ``blobs/sha256/...`` file that a second host
+with the DSN could not read back. Default authority stays ``sqlite`` (today's
+file-backed store, unchanged). ``reference``/``is_referenced``/
+``garbage_collect_unreferenced`` remain sqlite-only in this slice.
 """
 
 from __future__ import annotations
@@ -24,7 +32,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from scripts.control_plane.storage import StoreId
+from scripts.control_plane.storage import Authority, StoreId, resolve_authority
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.contracts import new_id
 from scripts.fleet_comms.migrations import apply_migrations
@@ -35,6 +43,11 @@ _SAFE_NAME = re.compile(r"^[A-Za-z0-9._@+=,-][A-Za-z0-9._@+=, -]{0,200}$")
 _PRIVATE_DIR_MODE = 0o700
 _PRIVATE_FILE_MODE = 0o600
 _BUSY_TIMEOUT_MS = 5_000
+# Small, dedicated Postgres table for the pg byte-plane path (#603). Deliberately
+# not a mirror of the full sqlite ``artifacts`` schema — just enough columns to
+# serve ArtifactRecord plus the payload itself, so metadata and bytes share one
+# durability domain instead of a pg row pointing at a host-local file.
+_PG_BLOB_TABLE = "fleet_comms_artifact_blobs"
 
 
 def _utc_now() -> str:
@@ -82,6 +95,15 @@ class ArtifactStore:
         )
         self.blob_root = self.root / "blobs" / "sha256"
         self.db_path = self.root / "comms.sqlite3"
+        self._authority = resolve_authority(StoreId.FLEET_COMMS)
+        if self._authority is Authority.PG:
+            # Byte-plane slice (#603): connect first, touch no local disk.
+            # A DSN-unreachable failure must not leave a stray root/blob dir
+            # behind, and payload bytes never land in a host-local file.
+            self._conn = cp_connect(StoreId.FLEET_COMMS)
+            self._configure_pg_connection()
+            self._ensure_pg_blob_table()
+            return
         self._prepare_private_dir(self.root)
         self._prepare_private_dir(self.root / "blobs")
         self._prepare_private_dir(self.blob_root)
@@ -106,6 +128,27 @@ class ArtifactStore:
                 require_dir=False,
             )
 
+    def _configure_pg_connection(self) -> None:
+        from psycopg.rows import dict_row
+
+        self._conn.row_factory = dict_row
+
+    def _ensure_pg_blob_table(self) -> None:
+        self._conn.execute(
+            f"""CREATE TABLE IF NOT EXISTS {_PG_BLOB_TABLE} (
+                sha256 TEXT PRIMARY KEY,
+                artifact_id TEXT NOT NULL UNIQUE,
+                bytes BIGINT NOT NULL,
+                mime_type TEXT,
+                logical_filename TEXT,
+                producer TEXT NOT NULL,
+                retention_class TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                payload BYTEA NOT NULL
+            )"""
+        )
+        self._conn.commit()
+
     def close(self) -> None:
         self._conn.close()
 
@@ -116,7 +159,7 @@ class ArtifactStore:
         self.close()
 
     @property
-    def connection(self) -> sqlite3.Connection:
+    def connection(self) -> Any:
         return self._conn
 
     def blob_path_for(self, digest: str) -> Path:
@@ -144,6 +187,19 @@ class ArtifactStore:
         if logical_filename is not None:
             logical_filename = self._validate_filename(logical_filename)
         digest = hashlib.sha256(data).hexdigest()
+
+        if self._authority is Authority.PG:
+            return self._store_bytes_pg(
+                data,
+                digest=digest,
+                producer=producer,
+                retention_class=retention_class,
+                mime_type=mime_type,
+                logical_filename=logical_filename,
+                artifact_id=artifact_id,
+                commit=commit,
+            )
+
         dest = self.blob_path_for(digest)
         self._prepare_private_dir(dest.parent)
 
@@ -183,6 +239,57 @@ class ArtifactStore:
         if row is None:
             raise ArtifactStoreError(f"failed to persist artifact metadata for {aid}")
         return self._row_to_record(row)
+
+    def _store_bytes_pg(
+        self,
+        data: bytes,
+        *,
+        digest: str,
+        producer: str,
+        retention_class: str,
+        mime_type: str | None,
+        logical_filename: str | None,
+        artifact_id: str | None,
+        commit: bool,
+    ) -> ArtifactRecord:
+        existing = self._pg_row_by_sha256(digest)
+        if existing is not None:
+            return self._row_to_record(existing)
+
+        aid = artifact_id or new_id("artifact")
+        created = _utc_now()
+        mime = mime_type
+        if mime is None and logical_filename:
+            mime, _ = mimetypes.guess_type(logical_filename)
+        try:
+            self._conn.execute(
+                f"""INSERT INTO {_PG_BLOB_TABLE}(
+                    artifact_id, sha256, bytes, mime_type, logical_filename,
+                    producer, retention_class, created_at, payload
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                ON CONFLICT (sha256) DO NOTHING""",
+                (aid, digest, len(data), mime, logical_filename, producer, retention_class, created, data),
+            )
+            if commit:
+                self._conn.commit()
+        except Exception:
+            if commit:
+                self._conn.rollback()
+            raise
+        row = self._pg_row_by_sha256(digest)
+        if row is None:
+            raise ArtifactStoreError(f"failed to persist artifact metadata for {aid}")
+        return self._row_to_record(row)
+
+    def _pg_row_by_sha256(self, digest: str) -> Any:
+        return self._conn.execute(
+            f"SELECT * FROM {_PG_BLOB_TABLE} WHERE sha256 = %s", (digest,)
+        ).fetchone()
+
+    def _pg_row_by_artifact_id(self, artifact_id: str) -> Any:
+        return self._conn.execute(
+            f"SELECT * FROM {_PG_BLOB_TABLE} WHERE artifact_id = %s", (artifact_id,)
+        ).fetchone()
 
     def store_text(
         self,
@@ -252,12 +359,22 @@ class ArtifactStore:
         dest = dest_dir / name
         if dest.exists():
             raise ArtifactStoreError(f"materialize target already exists: {dest}")
-        shutil.copyfile(rec.blob_path, dest)
+        if self._authority is Authority.PG:
+            # Write the Postgres bytes into scratch directly — there is no
+            # host-local blob file to copy from under the pg byte-plane.
+            dest.write_bytes(self.read_bytes(artifact_id))
+        else:
+            shutil.copyfile(rec.blob_path, dest)
         if readonly:
             dest.chmod(0o444)
         return dest
 
     def get(self, artifact_id: str) -> ArtifactRecord:
+        if self._authority is Authority.PG:
+            row = self._pg_row_by_artifact_id(artifact_id)
+            if row is None:
+                raise ArtifactStoreError(f"artifact not found: {artifact_id}")
+            return self._row_to_record(row)
         row = self._conn.execute(
             "SELECT * FROM artifacts WHERE artifact_id = ?", (artifact_id,)
         ).fetchone()
@@ -266,12 +383,24 @@ class ArtifactStore:
         return self._row_to_record(row)
 
     def get_by_sha256(self, digest: str) -> ArtifactRecord | None:
+        digest = digest.lower()
+        if self._authority is Authority.PG:
+            row = self._pg_row_by_sha256(digest)
+            return self._row_to_record(row) if row else None
         row = self._conn.execute(
-            "SELECT * FROM artifacts WHERE sha256 = ?", (digest.lower(),)
+            "SELECT * FROM artifacts WHERE sha256 = ?", (digest,)
         ).fetchone()
         return self._row_to_record(row) if row else None
 
     def read_bytes(self, artifact_id: str) -> bytes:
+        if self._authority is Authority.PG:
+            row = self._pg_row_by_artifact_id(artifact_id)
+            if row is None:
+                raise ArtifactStoreError(f"artifact not found: {artifact_id}")
+            data = bytes(row["payload"])
+            if hashlib.sha256(data).hexdigest() != str(row["sha256"]):
+                raise ArtifactStoreError(f"blob digest mismatch for {artifact_id}")
+            return data
         rec = self.get(artifact_id)
         if not rec.blob_path.is_file():
             raise ArtifactStoreError(
@@ -295,6 +424,10 @@ class ArtifactStore:
         ``commit=False`` is only safe when the caller owns an active transaction
         and will commit or roll it back.
         """
+        if self._authority is Authority.PG:
+            raise ArtifactStoreError(
+                "reference() is not implemented for fleet_comms authority=pg in this slice"
+            )
         if not commit:
             self._require_active_transaction_for_deferred_commit()
         if not message_id or not artifact_id:
@@ -315,6 +448,10 @@ class ArtifactStore:
             raise
 
     def is_referenced(self, artifact_id: str) -> bool:
+        if self._authority is Authority.PG:
+            raise ArtifactStoreError(
+                "is_referenced() is not implemented for fleet_comms authority=pg in this slice"
+            )
         row = self._conn.execute(
             "SELECT 1 FROM message_artifacts WHERE artifact_id = ? LIMIT 1",
             (artifact_id,),
@@ -345,6 +482,11 @@ class ArtifactStore:
 
     def garbage_collect_unreferenced(self, *, grace_seconds: int = 3600) -> list[str]:
         """Delete unreferenced artifacts older than grace. Returns deleted artifact_ids."""
+        if self._authority is Authority.PG:
+            raise ArtifactStoreError(
+                "garbage_collect_unreferenced() is not implemented for "
+                "fleet_comms authority=pg in this slice"
+            )
         cutoff = (datetime.now(UTC) - timedelta(seconds=grace_seconds)).strftime(
             "%Y-%m-%dT%H:%M:%SZ"
         )
@@ -435,7 +577,7 @@ class ArtifactStore:
                     raise
                 time.sleep(0.05)
 
-    def _row_to_record(self, row: sqlite3.Row) -> ArtifactRecord:
+    def _row_to_record(self, row: sqlite3.Row | dict[str, Any]) -> ArtifactRecord:
         digest = str(row["sha256"])
         return ArtifactRecord(
             artifact_id=str(row["artifact_id"]),
@@ -480,6 +622,14 @@ class ArtifactStore:
         )
 
     def _require_active_transaction_for_deferred_commit(self) -> None:
+        if self._authority is Authority.PG:
+            import psycopg
+
+            if self._conn.info.transaction_status == psycopg.pq.TransactionStatus.IDLE:
+                raise ArtifactStoreError(
+                    "commit=False requires a caller-owned active transaction"
+                )
+            return
         if not self._conn.in_transaction:
             raise ArtifactStoreError(
                 "commit=False requires a caller-owned active transaction"
