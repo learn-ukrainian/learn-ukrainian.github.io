@@ -27,11 +27,12 @@ budgeting; this module only maps them to HTTP, including the shared ``_matches_e
 
 from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException, Query, Request, Response
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 
 from scripts.research import consumption, observability
 from scripts.research import registry as reg
 
+from .monitor_context import MonitorContext, get_ctx
 from .rules_router import _matches_etag
 
 router = APIRouter(tags=["knowledge"])
@@ -53,6 +54,7 @@ def knowledge_manifest(
     task_family: str | None = Query(default=None, max_length=reg.MAX_QUERY_VALUE_LEN),
     track: str | None = Query(default=None, max_length=reg.MAX_QUERY_VALUE_LEN),
     owned_path: list[str] = Query(default=[]),
+    monitor_ctx: MonitorContext = Depends(get_ctx),
 ):
     """Filtered, task-scoped research pointers for the given context.
 
@@ -62,7 +64,8 @@ def knowledge_manifest(
     response bytes. No task context yields zero records. Supports ``If-None-Match``
     for a bodyless 304.
     """
-    if not reg.is_enabled():
+    root = monitor_ctx.roots.live_repo_root
+    if not reg.is_enabled(root=root):
         return _json_response(reg.disabled_manifest_bytes())
 
     if len(owned_path) > reg.MAX_OWNED_PATHS:
@@ -70,7 +73,7 @@ def knowledge_manifest(
     if any(len(path) > reg.MAX_OWNED_PATH_LEN for path in owned_path):
         raise HTTPException(status_code=422, detail="owned_path value too long")
 
-    runtime = reg.load_runtime_safe()
+    runtime = reg.load_runtime_safe(root=root)
     if runtime is None:
         result = reg.empty_manifest_response()
     else:
@@ -86,6 +89,7 @@ def knowledge_manifest(
 def knowledge_cold_start(
     request: Request,
     role: str | None = Query(default=None, max_length=reg.MAX_QUERY_VALUE_LEN),
+    monitor_ctx: MonitorContext = Depends(get_ctx),
 ):
     """Role-only cold-start research pointers (ADR-011 P3 ``cold_start_roles``).
 
@@ -97,10 +101,11 @@ def knowledge_cold_start(
     record id, strong ETag over the exact response bytes, ``If-None-Match`` gives a
     bodyless 304.
     """
-    if not reg.is_enabled():
+    root = monitor_ctx.roots.live_repo_root
+    if not reg.is_enabled(root=root):
         return _json_response(reg.disabled_manifest_bytes())
 
-    runtime = reg.load_runtime_safe()
+    runtime = reg.load_runtime_safe(root=root)
     result = reg.empty_manifest_response() if runtime is None else reg.filtered_cold_start(runtime, role)
 
     if _matches_etag(request.headers.get("If-None-Match"), result.etag_hex):
@@ -111,6 +116,7 @@ def knowledge_cold_start(
 @router.get("/monitor")
 def knowledge_monitor(
     window_days: int = Query(default=30, ge=1, le=365),
+    monitor_ctx: MonitorContext = Depends(get_ctx),
 ):
     """ADR-011 P4 registry observability — lifecycle rot, adoption, distinct-task
     consumption, and dead consumers.
@@ -128,7 +134,10 @@ def knowledge_monitor(
     prompts, or digest bodies. Unknown research ids are aggregated without echoing
     their id strings.
     """
-    return observability.build_monitor(window_days=window_days)
+    return observability.build_monitor(
+        window_days=window_days,
+        root=monitor_ctx.roots.live_repo_root,
+    )
 
 
 @router.get("/record/{record_id}")
@@ -136,6 +145,7 @@ def knowledge_record(
     request: Request,
     record_id: str,
     task: str | None = Query(default=None),
+    monitor_ctx: MonitorContext = Depends(get_ctx),
 ):
     """One validated compact digest body as ``text/markdown`` with an honest ETag.
 
@@ -155,9 +165,10 @@ def knowledge_record(
     ``content_hash`` as ``If-None-Match`` without ever fetching the body does not
     manufacture a consumption event.
     """
-    if not reg.is_enabled():
+    root = monitor_ctx.roots.live_repo_root
+    if not reg.is_enabled(root=root):
         raise HTTPException(status_code=404, detail=_NOT_FOUND)
-    runtime = reg.load_runtime_safe()
+    runtime = reg.load_runtime_safe(root=root)
     if runtime is None:
         raise HTTPException(status_code=404, detail=_NOT_FOUND)
     result = reg.record_body(runtime, record_id)

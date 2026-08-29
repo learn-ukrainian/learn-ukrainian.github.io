@@ -1,10 +1,10 @@
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 
 from fastapi.testclient import TestClient
 
-import scripts.api.governance_router as governance_router
 import scripts.api.main as api_main
 from scripts.audit import check_adrs
 
@@ -68,9 +68,21 @@ def _write_adr_readme(path: Path) -> None:
 
 
 def _patch_governance_paths(monkeypatch, tmp_path: Path) -> tuple[Path, Path]:
+    """Pin decisions to ``tmp_path`` via MonitorContext; keep ADR scan on check_adrs.
+
+    ``collect_adr_governance`` still calls ``check_adrs`` when ``ctx.root`` is
+    None (production-shaped contexts). Tests that need ADR findings therefore
+    replace ``project_root`` on the live app context rather than using
+    ``fixture_context``, which short-circuits the ADR walk.
+    """
     decisions_file = tmp_path / "docs" / "decisions" / "decisions.yaml"
     adr_dir = tmp_path / "docs" / "architecture" / "adr"
-    monkeypatch.setattr(governance_router, "DECISIONS_FILE", decisions_file)
+    base = api_main.app.state.ctx
+    monkeypatch.setattr(
+        api_main.app.state,
+        "ctx",
+        replace(base, roots=replace(base.roots, project_root=tmp_path)),
+    )
     monkeypatch.setattr(check_adrs, "PROJECT_ROOT", tmp_path)
     monkeypatch.setattr(check_adrs, "DECISIONS_YAML", decisions_file)
     monkeypatch.setattr(check_adrs, "ADR_DIR", adr_dir)

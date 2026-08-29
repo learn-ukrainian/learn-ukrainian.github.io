@@ -5,7 +5,6 @@ directly with FastAPI's ``TestClient`` — no running API server required.
 """
 from __future__ import annotations
 
-import sys
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -14,8 +13,7 @@ import yaml
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+from scripts.api.monitor_context import fixture_context
 
 
 def _write_bundle(
@@ -68,13 +66,12 @@ def _ghost_finding(
 
 
 @pytest.fixture
-def client(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> TestClient:
+def client(tmp_path: Path) -> TestClient:
     """Mount the reviewer_ghosts_router against a tmp curriculum root."""
-    from api import reviewer_ghosts_router as rgr
-
-    monkeypatch.setattr(rgr, "CURRICULUM_ROOT", tmp_path / "curriculum" / "l2-uk-en")
+    from scripts.api import reviewer_ghosts_router as rgr
 
     app = FastAPI()
+    app.state.ctx = fixture_context(tmp_path)
     app.include_router(rgr.router, prefix="/api/state/reviewer-ghosts")
     return TestClient(app)
 
@@ -141,12 +138,8 @@ def seeded_curriculum(tmp_path: Path) -> Path:
 
 
 def test_aggregate_across_track_no_filters(
-    client: TestClient, seeded_curriculum: Path, monkeypatch: pytest.MonkeyPatch
+    client: TestClient, seeded_curriculum: Path
 ) -> None:
-    from api import reviewer_ghosts_router as rgr
-
-    monkeypatch.setattr(rgr, "CURRICULUM_ROOT", seeded_curriculum)
-
     response = client.get("/api/state/reviewer-ghosts/a1")
     assert response.status_code == 200
     body = response.json()
@@ -165,12 +158,8 @@ def test_aggregate_across_track_no_filters(
 
 
 def test_slug_filter_narrows_to_one_module(
-    client: TestClient, seeded_curriculum: Path, monkeypatch: pytest.MonkeyPatch
+    client: TestClient, seeded_curriculum: Path
 ) -> None:
-    from api import reviewer_ghosts_router as rgr
-
-    monkeypatch.setattr(rgr, "CURRICULUM_ROOT", seeded_curriculum)
-
     response = client.get("/api/state/reviewer-ghosts/a1?slug=colors")
     assert response.status_code == 200
     body = response.json()
@@ -187,12 +176,8 @@ def test_slug_filter_narrows_to_one_module(
 
 
 def test_since_filter_excludes_older_bundles(
-    client: TestClient, seeded_curriculum: Path, monkeypatch: pytest.MonkeyPatch
+    client: TestClient, seeded_curriculum: Path
 ) -> None:
-    from api import reviewer_ghosts_router as rgr
-
-    monkeypatch.setattr(rgr, "CURRICULUM_ROOT", seeded_curriculum)
-
     # Cutoff excludes the 2h-old a1/colors r1 bundle (2 findings), keeps
     # the 30-min-old a1/colors r2 (1) + base_time a1/sounds r1 (1) = 2.
     cutoff = (datetime(2026, 4, 24, 12, 0, 0, tzinfo=UTC) - timedelta(hours=1))
@@ -216,38 +201,24 @@ def test_since_filter_excludes_older_bundles(
 
 
 def test_since_rejects_invalid_iso8601(
-    client: TestClient, seeded_curriculum: Path, monkeypatch: pytest.MonkeyPatch
+    client: TestClient, seeded_curriculum: Path
 ) -> None:
-    from api import reviewer_ghosts_router as rgr
-
-    monkeypatch.setattr(rgr, "CURRICULUM_ROOT", seeded_curriculum)
-
     response = client.get("/api/state/reviewer-ghosts/a1?since=not-a-date")
     assert response.status_code == 400
     assert "ISO-8601" in response.json()["detail"]
 
 
-def test_unknown_track_returns_404(
-    client: TestClient, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    from api import reviewer_ghosts_router as rgr
-
-    monkeypatch.setattr(
-        rgr, "CURRICULUM_ROOT", tmp_path / "curriculum" / "l2-uk-en"
-    )
+def test_unknown_track_returns_404(client: TestClient) -> None:
     response = client.get("/api/state/reviewer-ghosts/not-a-real-track")
     assert response.status_code == 404
 
 
 def test_empty_track_returns_zero_aggregates(
-    client: TestClient, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    client: TestClient, tmp_path: Path
 ) -> None:
     # Valid track id but no ghost bundles on disk.
-    from api import reviewer_ghosts_router as rgr
-
     curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
     (curriculum_root / "a1" / "review").mkdir(parents=True)
-    monkeypatch.setattr(rgr, "CURRICULUM_ROOT", curriculum_root)
 
     response = client.get("/api/state/reviewer-ghosts/a1")
     assert response.status_code == 200

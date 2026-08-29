@@ -22,7 +22,6 @@ from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.api import (
     epics_router,
-    governance_router,
     issues_router,
     site_router,
     work_router,
@@ -126,7 +125,8 @@ def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> Non
             stdout="",
         ),
     )
-    monkeypatch.setattr(governance_router, "collect_adr_governance", lambda: {"total": 0})
+    # NOTE (#7269 step 12c): collect_adr_governance short-circuits on fixture
+    # context; no sweep stub.
     monkeypatch.setattr(reap_worktrees, "_run", lambda *_args, **_kwargs: (0, "", ""))
 
     # Keep ``wiki.sources_db`` loaded so the wiki-prefix external-store

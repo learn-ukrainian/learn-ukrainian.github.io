@@ -25,11 +25,11 @@ import re
 import subprocess
 from typing import Any
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Depends, Query
 
 from scripts.orchestration import issue_stream_audit as audit
 
-from .config import PROJECT_ROOT
+from .monitor_context import MonitorContext, get_ctx, production_context
 
 router = APIRouter(tags=["issues"])
 
@@ -61,12 +61,26 @@ _MERGED_IN_RE = re.compile(
 )
 
 
-def _run_gh(args: list[str], timeout_s: float = 5.0) -> tuple[int, str, str]:
+def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
+    """Fall back to the live production context for plain-Python callers.
+
+    Mirrors ``runtime_router._resolve_context`` (#7324 / #7393 / #6849).
+    """
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    return production_context()
+
+
+def _run_gh(
+    args: list[str],
+    timeout_s: float = 5.0,
+    ctx: MonitorContext | None = None,
+) -> tuple[int, str, str]:
     """Bounded ``gh`` call that never raises — see ``site_router._run``."""
     try:
         proc = subprocess.run(
             args,
-            cwd=PROJECT_ROOT,
+            cwd=_resolve_context(ctx).roots.project_root,
             capture_output=True,
             text=True,
             timeout=timeout_s,
@@ -113,7 +127,7 @@ def _extract_supersede_hint(body: str | None) -> dict[str, Any]:
     return out
 
 
-def _fetch_issues(limit: int) -> dict[str, Any]:
+def _fetch_issues(limit: int, ctx: MonitorContext | None = None) -> dict[str, Any]:
     code, stdout, stderr = _run_gh(
         [
             "gh", "issue", "list",
@@ -121,6 +135,7 @@ def _fetch_issues(limit: int) -> dict[str, Any]:
             "--limit", str(limit),
             "--json", "number,title,labels,body,createdAt,updatedAt,assignees,url",
         ],
+        ctx=ctx,
     )
     if code != 0:
         return {
@@ -171,6 +186,7 @@ def _fetch_issues(limit: int) -> dict[str, Any]:
 @router.get("/map")
 async def issues_map(
     limit: int = Query(50, ge=1, le=200, description="Upper bound on issues to scan."),
+    ctx: MonitorContext = Depends(get_ctx),
 ):
     """Open issues grouped by category with superseded-by / merged-in hints.
 
@@ -181,7 +197,7 @@ async def issues_map(
 
     Reviewer Codex-6 / #1313: makes queue management less manual.
     """
-    return await asyncio.to_thread(_fetch_issues, limit)
+    return await asyncio.to_thread(_fetch_issues, limit, ctx)
 
 
 @router.get("/streams")
