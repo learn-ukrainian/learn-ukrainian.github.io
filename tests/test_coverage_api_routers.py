@@ -160,13 +160,14 @@ def images_client(_patch_config, mock_project_root):
 @pytest.fixture()
 def rag_client(mock_project_root):
     """TestClient for sources router (with /api/sources and /api/rag)."""
+    from scripts.api.monitor_context import fixture_context
     from scripts.api.rag_router import router
 
-    with patch("scripts.api.rag_router.IMAGE_DIR", mock_project_root / "data" / "textbook_images"):
-        app = FastAPI()
-        app.include_router(router, prefix="/api/sources")
-        app.include_router(router, prefix="/api/rag")
-        yield TestClient(app)
+    app = FastAPI()
+    app.state.ctx = fixture_context(mock_project_root)
+    app.include_router(router, prefix="/api/sources")
+    app.include_router(router, prefix="/api/rag")
+    yield TestClient(app)
 
 
 # ===========================================================================
@@ -1340,6 +1341,32 @@ class TestRagBrowseImages:
         r_legacy = rag_client.get("/api/rag/browse_images", params={"grade": "../etc"})
         assert r_legacy.status_code == 400
         assert r_legacy.json()["error"] == "Invalid grade format: ../etc"
+
+    def test_browse_images_lists_context_rooted_files(self, rag_client, mock_project_root):
+        grade_dir = mock_project_root / "data" / "textbook_images" / "grade-03"
+        grade_dir.mkdir(parents=True)
+        (grade_dir / "page-01.png").write_bytes(b"\x89PNG" + b"\x00" * 12)
+
+        r = rag_client.get("/api/sources/browse_images")
+        assert r.status_code == 200
+        payload = r.json()
+        assert payload["total"] == 1
+        assert payload["images"][0]["name"] == "page-01.png"
+        assert payload["images"][0]["grade"] == "grade-03"
+        assert payload["images"][0]["path"] == "data/textbook_images/grade-03/page-01.png"
+
+        r_legacy = rag_client.get("/api/rag/browse_images")
+        assert r_legacy.status_code == 200
+        assert r_legacy.json()["total"] == 1
+
+    def test_stats_missing_corpus_keeps_documented_envelope(self, rag_client):
+        r = rag_client.get("/api/sources/stats")
+        assert r.status_code == 200
+        assert r.json() == {"sources_db": {"error": "data/sources.db not found"}}
+
+        r_legacy = rag_client.get("/api/rag/stats")
+        assert r_legacy.status_code == 200
+        assert r_legacy.json() == {"sources_db": {"error": "data/sources.db not found"}}
 
 
 class TestImagesReload:

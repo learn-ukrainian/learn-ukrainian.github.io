@@ -160,10 +160,6 @@ def _fixture_run_command(args: Any, **_kwargs: Any) -> subprocess.CompletedProce
     return _fixture_completed_process(args)
 
 
-def _fixture_missing_sources_db() -> Any:
-    raise FileNotFoundError("isolated OPSEC fixture has no source database")
-
-
 def _fixture_reap_run(
     args: list[str],
     *,
@@ -346,21 +342,12 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     monkeypatch.setattr(atlas_job, "primary_checkout_root", lambda: root)
     monkeypatch.setattr(api_main, "build_repository_authority", lambda **_kwargs: None)
 
-    # RAG imports its source DB lazily outside the scripts.api namespace. The
-    # top-level ``rag.query`` import resolves ``wiki.sources_db`` while this
-    # fixture imports ``scripts.wiki.sources_db``; both module identities must
-    # point at the same nonexistent worker-local path. The missing-corpus
-    # behavior then stays on the documented empty-response path.
-    fixture_sources_db = root / "stores" / "sources.db"
-    rag_query = importlib.import_module("rag.query")
-    search_db_modules = {
-        sources_db,
-        rag_query.sources_db,
-    }
-    for search_db_module in search_db_modules:
-        monkeypatch.setattr(search_db_module, "SOURCES_DB_PATH", fixture_sources_db)
-        monkeypatch.setattr(search_db_module, "_conn", None)
-    monkeypatch.setattr(sources_db, "_get_conn", _fixture_missing_sources_db)
+    # #7269 step 10: sources/RAG routes open the corpus through
+    # ``ctx.stores.sources_db`` (``fixture_context`` already roots that
+    # handle under this worker tree). Keep ``rag.query`` imported so the
+    # wiki-prefix external-store loop still owns ``wiki.sources_db``
+    # Path globals (step 12d). The RAG-specific setattr copies are gone.
+    importlib.import_module("rag.query")
 
     # The route sweep also traverses diagnostics that import their own local
     # stores outside ``scripts.api``. Repoint those module-level paths before
