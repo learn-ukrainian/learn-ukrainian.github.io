@@ -272,7 +272,7 @@ def record_legacy_route_usage(
 def _record_safely(route_id: str, method: str, caller_class: str, status_code: int) -> None:
     try:
         record_legacy_route_usage(route_id, method, caller_class, status_code)
-    except (OSError, RuntimeError, sqlite3.Error, ValueError):
+    except (OSError, RuntimeError, sqlite3.Error, ValueError, AssertionError):
         logger.exception(
             "legacy route telemetry failed route_id=%s method=%s status_class=%s",
             route_id,

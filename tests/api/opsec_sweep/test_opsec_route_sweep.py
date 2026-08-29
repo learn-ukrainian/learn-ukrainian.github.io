@@ -248,23 +248,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     monkeypatch.setenv("AGENT_NO_TELEMETRY_FOOTER", "1")
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(root / "batch_state" / "atlas-jobs"))
 
-    # All imported API modules use module-level Path seams. Repoint each
-    # absolute path while retaining a recognizable canary in its parent.
-    for module_name, module in tuple(sys.modules.items()):
-        if not module_name.startswith("scripts.api") or module is None:
-            continue
-        for name, value in tuple(vars(module).items()):
-            if not isinstance(value, Path) or not value.is_absolute():
-                continue
-            replacement = root / "seams" / module_name.replace(".", "_") / name.lower()
-            replacement.parent.mkdir(parents=True, exist_ok=True)
-            if value.is_dir() or value.suffix == "":
-                replacement.mkdir(parents=True, exist_ok=True)
-            monkeypatch.setattr(module, name, replacement)
-
-        if "_run_command" in vars(module):
-            monkeypatch.setattr(module, "_run_command", _fixture_run_command)
-
     monkeypatch.setattr(subprocess, "run", _deny_subprocess)
     monkeypatch.setattr(subprocess, "Popen", _deny_subprocess)
     monkeypatch.setattr(socket, "create_connection", _deny_network)
@@ -311,13 +294,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     monkeypatch.setattr(reap_worktrees, "_run", _fixture_reap_run)
     monkeypatch.setattr(api_main, "build_repository_authority", lambda **_kwargs: None)
 
-    # #7269 step 10: sources/RAG routes open the corpus through
-    # ``ctx.stores.sources_db`` (``fixture_context`` already roots that
-    # handle under this worker tree). Keep ``rag.query`` imported so the
-    # wiki-prefix external-store loop still owns ``wiki.sources_db``
-    # Path globals (step 12d). The RAG-specific setattr copies are gone.
-    importlib.import_module("rag.query")
-
     # The route sweep also traverses diagnostics that import their own local
     # stores outside ``scripts.api``. Repoint those module-level paths before
     # installing the global guard, so missing fixture state is handled by each
@@ -326,7 +302,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     # comms routes now hand the bridge the MonitorContext's broker DB
     # explicitly, so the bridge's import-time default DB_PATH globals are no
     # longer seams this sweep must repoint.
-    importlib.import_module("scripts.fleet_comms.legacy_broker_report")
     importlib.import_module("scripts.telemetry.legacy_bridge")
     importlib.import_module("wiki.state")
     for module_name, module in tuple(sys.modules.items()):
@@ -342,18 +317,6 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
             if value.is_dir() or value.suffix == "":
                 replacement.mkdir(parents=True, exist_ok=True)
             monkeypatch.setattr(module, name, replacement)
-
-    # NOTE (#7269 step 5): the step-5 inventory row originally attributed
-    # this seam to comms_router, but its only sweep consumer is the
-    # still-unmigrated fleet facade route (fleet_router.py:598 ->
-    # build_legacy_broker_report -> default_routes_db()). Deleting it here
-    # was verified to fail the sweep with "GET /api/fleet/facade/broker-report
-    # status=500" on any machine whose primary checkout has a live
-    # data/telemetry/legacy_comms_routes.db (the deny-connect backstop
-    # correctly rejects the real-DB open). It migrates with step 4
-    # (fleet_router), not step 5.
-    broker_report = importlib.import_module("scripts.fleet_comms.legacy_broker_report")
-    monkeypatch.setattr(broker_report, "main_checkout_root", lambda _repo_root: root)
 
     # This is the fixture-level backstop for any future search entry point that
     # misses a module-local path seam. Connections inside the disposable root
@@ -546,7 +509,9 @@ def test_exercised_read_registry_refuses_unexplained_5xx() -> None:
 
 def test_family_one_fixture_reaches_dual_write_and_orient_git_happy_paths(
     isolated_fixture: IsolatedFixture,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    monkeypatch.setattr(api_main, "_run_command", _fixture_run_command)
     client = TestClient(api_main.app, raise_server_exceptions=False)
 
     dual = client.get("/api/session-streams/v1/dual-write-status")

@@ -418,7 +418,7 @@ def _run_command(args: list[str], *, timeout: float = 2.0, ctx: MonitorContext |
             timeout=timeout,
             check=False,
         )
-    except FileNotFoundError as exc:
+    except (FileNotFoundError, OSError, AssertionError, subprocess.TimeoutExpired) as exc:
         return subprocess.CompletedProcess(args=args, returncode=127, stdout="", stderr=str(exc))
 
 

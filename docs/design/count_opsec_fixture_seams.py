@@ -22,7 +22,6 @@ from scripts.api import (
     issues_router,
 )
 from scripts.orchestration import reap_worktrees
-from scripts.wiki import sources_db  # noqa: F401 — same import as isolated_fixture
 
 GLOBAL_SEAMS = frozenset(
     {
@@ -68,29 +67,6 @@ def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> Non
     monkeypatch.setenv("AGENT_NO_TELEMETRY_FOOTER", "1")
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(root / "batch_state" / "atlas-jobs"))
 
-    for module_name, module in tuple(sys.modules.items()):
-        if not module_name.startswith("scripts.api") or module is None:
-            continue
-        for name, value in tuple(vars(module).items()):
-            if not isinstance(value, Path) or not value.is_absolute():
-                continue
-            replacement = root / "seams" / module_name.replace(".", "_") / name.lower()
-            replacement.parent.mkdir(parents=True, exist_ok=True)
-            if value.is_dir() or value.suffix == "":
-                replacement.mkdir(parents=True, exist_ok=True)
-            monkeypatch.setattr(module, name, replacement)
-        if "_run_command" in vars(module):
-            monkeypatch.setattr(
-                module,
-                "_run_command",
-                lambda *args, **_kwargs: subprocess.CompletedProcess(
-                    args=args[0] if args else [],
-                    returncode=0,
-                    stdout="",
-                    stderr="",
-                ),
-            )
-
     monkeypatch.setattr(subprocess, "run", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(subprocess, "Popen", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(socket, "create_connection", lambda *_args, **_kwargs: None)
@@ -103,15 +79,10 @@ def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> Non
     # context; no sweep stub.
     monkeypatch.setattr(reap_worktrees, "_run", lambda *_args, **_kwargs: (0, "", ""))
 
-    # Keep ``wiki.sources_db`` loaded so the wiki-prefix external-store
-    # loop still owns that module's Path globals (step 12d). Step 10
-    # deleted the RAG-specific setattr copies, not the wiki loop.
-    importlib.import_module("rag.query")
-    importlib.import_module("scripts.fleet_comms.legacy_broker_report")
     importlib.import_module("scripts.telemetry.legacy_bridge")
     importlib.import_module("wiki.state")
     for module_name, module in tuple(sys.modules.items()):
-        if module is None or not module_name.startswith(("scripts.ai_agent_bridge", "scripts.telemetry", "wiki")):
+        if module is None or not module_name.startswith(("scripts.telemetry", "wiki")):
             continue
         for name, value in tuple(vars(module).items()):
             if not isinstance(value, Path) or not value.is_absolute():
@@ -124,8 +95,6 @@ def replay_isolated_fixture(monkeypatch: MonkeypatchRecorder, root: Path) -> Non
                 replacement.mkdir(parents=True, exist_ok=True)
             monkeypatch.setattr(module, name, replacement)
 
-    broker_report = importlib.import_module("scripts.fleet_comms.legacy_broker_report")
-    monkeypatch.setattr(broker_report, "main_checkout_root", lambda _repo_root: root)
     monkeypatch.setattr(sqlite3, "connect", lambda *args, **kwargs: sqlite3.connect(*args, **kwargs))
 
     isolated_plane_root = root / "stores" / "fleet-comms"
