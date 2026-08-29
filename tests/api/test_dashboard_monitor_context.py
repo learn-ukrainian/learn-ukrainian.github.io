@@ -1,4 +1,7 @@
-"""#7327 step 9: dashboard family reads roots/stores via MonitorContext."""
+"""#7327 step 9: dashboard family reads roots/stores via MonitorContext.
+
+Listed in scripts/ci/fastlane_always_tests.txt (repo_invariant).
+"""
 
 from __future__ import annotations
 
