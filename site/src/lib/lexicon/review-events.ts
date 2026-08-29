@@ -184,6 +184,29 @@ export function mintUlid(nowMs: number, random?: () => number): string {
   return `${encodeCrockford(BigInt(time), 10)}${encodeCrockford(randomValue, 16)}`;
 }
 
+/**
+ * Stable ULID for pre-#7396 SRS rows. Same `(reviewedAt, fingerprint)` always
+ * mints the same id so backfill is idempotent without a server.
+ */
+export function mintDeterministicUlid(nowMs: number, fingerprint: string): string {
+  const time = Math.max(0, Math.floor(nowMs));
+  let hash = 0xcbf29ce484222325n;
+  const prime = 0x100000001b3n;
+  const input = `${time}\0${fingerprint}`;
+  for (let index = 0; index < input.length; index += 1) {
+    hash ^= BigInt(input.charCodeAt(index));
+    hash = (hash * prime) & 0xffffffffffffffffn;
+  }
+  let extra = 0xcbf29ce484222325n;
+  const salted = `\u0001${input}`;
+  for (let index = 0; index < salted.length; index += 1) {
+    extra ^= BigInt(salted.charCodeAt(index));
+    extra = (extra * prime) & 0xffffffffffffffffn;
+  }
+  const entropy = (hash << 16n) | (extra & 0xffffn);
+  return `${encodeCrockford(BigInt(time), 10)}${encodeCrockford(entropy, 16)}`;
+}
+
 export function resetReviewEventEntropy(): void {
   lastUlidTime = -1;
   lastUlidRandom = null;
