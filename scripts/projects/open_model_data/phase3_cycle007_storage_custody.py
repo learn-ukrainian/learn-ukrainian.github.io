@@ -127,8 +127,6 @@ FAILURE_CODES = frozenset(
         "fixture_flag_required",
         "work_root_failure",
         "source_mode_drift",
-        "preflight_conflict",
-        "topology_blocker",
     }
 )
 
@@ -1416,7 +1414,11 @@ def prove_content_pack_stream(
     return roundtrip, identity_proof
 
 
-def run_reversible_lane(bindings: Bindings) -> dict[str, Any]:
+def run_reversible_lane(
+    bindings: Bindings,
+    *,
+    held_out_evaluation_proof: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
     """Execute all safe reversible steps. Never deletes originals."""
     work = bindings.work_root / "cycle007-storage-lane"
     if work.exists():
@@ -1449,7 +1451,10 @@ def run_reversible_lane(bindings: Bindings) -> dict[str, Any]:
     if reconcile.get("denominator_match") is False and not bindings.fixture:
         raise StorageCustodyError("denominator_drift")
 
-    retention = decide_retention(inventory=inventory)
+    retention = decide_retention(
+        inventory=inventory,
+        held_out_evaluation_proof=held_out_evaluation_proof,
+    )
     _atomic_write_json(work / "retention-decision.json", retention)
 
     destination_avail = available_bytes(bindings.work_root)
@@ -1773,9 +1778,6 @@ def main(argv: Sequence[str] | None = None) -> int:
             "compact_stored_allocated_bytes": lane.get("compact_stored_allocated_bytes"),
             "reclaimed_byte_forecast": lane.get("reclaimed_byte_forecast"),
             "deletion_candidate_count": lane.get("deletion_candidate_count"),
-            "filesystem_avail_bytes": lane.get("filesystem_avail_bytes"),
-            "filesystem_total_bytes": lane.get("filesystem_total_bytes"),
-            "filesystem_used_bytes": lane.get("filesystem_used_bytes"),
             "peak_temporary_bytes": lane.get("peak_temporary_bytes"),
             "capacity_sufficient_for_peak": lane.get("capacity_sufficient_for_peak"),
             "identity_proof_ok": lane.get("identity_proof_ok"),

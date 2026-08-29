@@ -327,6 +327,42 @@ def test_reversible_lane_roundtrip_backup_and_auth_gate(tmp_path: Path) -> None:
             assert mode == storage.PRIVATE_FILE_MODE
 
 
+def test_reversible_lane_retain_streams_content_pack_proof(tmp_path: Path) -> None:
+    materialization, packet_count, row_count = _build_materialization(tmp_path)
+    evidence = _build_evidence(tmp_path, materialization)
+    work = tmp_path / "work"
+    work.mkdir(mode=storage.PRIVATE_DIR_MODE)
+    os.chmod(work, storage.PRIVATE_DIR_MODE)
+    proof = {
+        "held_out_evaluation_function_id": "source_qualified_cell_coverage_v1",
+        "source_qualified": True,
+        "required_fields": ["document_id", "split_id"],
+        "required_identities": ["unit_id", "unit_sha256"],
+        "named_consumer": "issue-7427-evaluation-steward",
+        "text_free_source_rights_adjudication_metadata": True,
+    }
+    bindings = storage.resolve_bindings(
+        fixture=True,
+        materialization=materialization,
+        evidence=evidence,
+        work_root=work,
+    )
+
+    lane = storage.run_reversible_lane(bindings, held_out_evaluation_proof=proof)
+
+    assert lane["lane_complete"] is True
+    assert lane["retention_outcome"] == storage.RETAIN_MINIMAL_EVALUATION_ASSET
+    assert lane["pack_kind"] == "content_compact"
+    assert lane["packet_count"] == packet_count
+    assert lane["row_count"] == row_count
+    assert lane["identity_proof_ok"] is True
+    assert lane["roundtrip_ok"] is True
+    assert lane["second_expanded_tree"] is False
+    roundtrip = json.loads((work / "cycle007-storage-lane" / "roundtrip.json").read_bytes())
+    assert roundtrip["proof_mode"] == "stream_decompress_hash"
+    assert roundtrip["roundtrip_ok"] is True
+
+
 def test_real_mode_refuses_argv_paths(tmp_path: Path) -> None:
     with pytest.raises(storage.StorageCustodyError) as exc:
         storage.resolve_bindings(
@@ -338,7 +374,7 @@ def test_real_mode_refuses_argv_paths(tmp_path: Path) -> None:
     assert exc.value.code == "path_disclosure_refused"
 
 
-def test_cli_prepare_lane_fixture(tmp_path: Path) -> None:
+def test_cli_prepare_lane_fixture(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     materialization, _packet_count, _row_count = _build_materialization(tmp_path)
     evidence = _build_evidence(tmp_path, materialization)
     work = tmp_path / "work"
@@ -359,6 +395,8 @@ def test_cli_prepare_lane_fixture(tmp_path: Path) -> None:
         ]
     )
     assert code == 0
+    stdout = json.loads(capsys.readouterr().out)
+    _assert_no_host_filesystem_leak(stdout, where="cli stdout")
     summary = json.loads(summary_out.read_bytes())
     assert summary["text_free"] is True
     assert summary["deletion_authorized"] is False
