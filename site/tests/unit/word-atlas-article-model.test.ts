@@ -3,6 +3,8 @@ import {
   atlasWikipediaOkAsIntro,
   buildWordAtlasArticleView,
   formatPos,
+  formatTranslationSource,
+  humanizeTranslationSource,
   sanitizeWikiReference,
 } from "@site/src/lib/lexicon/word-atlas-article-model";
 import { renderWordAtlasArticle } from "../helpers/render-word-atlas-article";
@@ -264,4 +266,123 @@ describe("enrichment.examples in article view and rendering (#7452)", () => {
     expect(view.sourceList).toContain("learner_english_gloss");
   });
 });
+
+describe("translation source humanization (#7459)", () => {
+  test("maps learner_english_gloss to Anna Ohoiko", () => {
+    expect(formatTranslationSource("learner_english_gloss")).toBe("Anna Ohoiko");
+    expect(humanizeTranslationSource("learner_english_gloss")).toBe("Anna Ohoiko");
+  });
+
+  test("keeps dmklinger and other sources distinct", () => {
+    expect(formatTranslationSource("dmklinger")).toBe("dmklinger");
+    expect(humanizeTranslationSource("dmklinger")).toBe("dmklinger");
+    expect(formatTranslationSource("Wikidata")).toBe("Wikidata");
+    expect(formatTranslationSource("kaikki")).toBe("kaikki");
+  });
+
+  test("handles nullish translation sources", () => {
+    expect(formatTranslationSource(undefined)).toBeNull();
+    expect(formatTranslationSource(null)).toBeNull();
+    expect(humanizeTranslationSource(undefined)).toBeNull();
+  });
+
+  test("buildWordAtlasArticleView exposes humanized translationSource", () => {
+    const ohoikoView = buildWordAtlasArticleView(
+      articleProps({
+        lemma: "автобус",
+        url_slug: "автобус",
+        gloss: "bus",
+        entry_type: "lemma",
+        pos: "noun",
+        ipa: null,
+        primary_source: "course",
+        course_usage: [],
+        enrichment: {
+          translation: { en: ["bus"], source: "learner_english_gloss" },
+        },
+      }).record,
+      "test",
+      "test",
+    );
+    expect(ohoikoView.translationSource).toBe("Anna Ohoiko");
+
+    const dmklingerView = buildWordAtlasArticleView(
+      articleProps({
+        lemma: "прапор",
+        url_slug: "прапор",
+        gloss: "flag",
+        entry_type: "lemma",
+        pos: "noun",
+        ipa: null,
+        primary_source: "course",
+        course_usage: [],
+        enrichment: {
+          translation: { en: ["flag"], source: "dmklinger" },
+        },
+      }).record,
+      "test",
+      "test",
+    );
+    expect(dmklingerView.translationSource).toBe("dmklinger");
+
+    const emptyView = buildWordAtlasArticleView(
+      articleProps({
+        lemma: "слово",
+        url_slug: "слово",
+        gloss: "word",
+        entry_type: "lemma",
+        pos: "noun",
+        ipa: null,
+        primary_source: "course",
+        course_usage: [],
+      }).record,
+      "test",
+      "test",
+    );
+    expect(emptyView.translationSource).toBeNull();
+  });
+
+  test("renders Anna Ohoiko label on Переклад block for learner_english_gloss", () => {
+    const html = renderWordAtlasArticle(
+      articleProps({
+        lemma: "автобус",
+        url_slug: "автобус",
+        gloss: "bus",
+        entry_type: "lemma",
+        pos: "noun",
+        ipa: null,
+        primary_source: "course",
+        course_usage: [],
+        enrichment: {
+          translation: { en: ["bus"], source: "learner_english_gloss" },
+        },
+      }),
+    );
+    expect(html).toContain("<h2>Переклад</h2>");
+    expect(html).toContain("Джерело: Anna Ohoiko");
+    expect(html).not.toContain("Джерело: learner_english_gloss");
+  });
+
+  test("renders dmklinger label on Переклад block for dmklinger", () => {
+    const html = renderWordAtlasArticle(
+      articleProps({
+        lemma: "прапор",
+        url_slug: "прапор",
+        gloss: "flag",
+        entry_type: "lemma",
+        pos: "noun",
+        ipa: null,
+        primary_source: "course",
+        course_usage: [],
+        enrichment: {
+          translation: { en: ["flag", "banner"], source: "dmklinger" },
+        },
+      }),
+    );
+    expect(html).toContain("<h2>Переклад</h2>");
+    expect(html).toContain("Джерело: dmklinger");
+    expect(html).not.toContain("Джерело: Anna Ohoiko");
+  });
+});
+
 
