@@ -221,6 +221,7 @@ class RequestExecutor:
         raw_bytes: bytes | None = None,
         session_id: str | None = None,
         reclaim: bool = False,
+        reclaim_stale_after_seconds: int = 600,
     ) -> RequestRecord:
         """Run adapter conformance on a capture and persist the outcome.
 
@@ -238,23 +239,41 @@ class RequestExecutor:
         if req.expires_at < now_s and req.state in {"queued", "running"}:
             self._set_state(request_id, "expired", CompletionState.UNKNOWN)
             raise RequestExecutorError(f"request {request_id} expired")
-        claim_states = ("queued", "running") if reclaim else ("queued",)
-        placeholders = ", ".join("?" for _ in claim_states)
-        cursor = self._conn.execute(
-            f"""UPDATE requests SET state = 'running', completion_state = ?,
-                updated_at = ?
-                WHERE request_id = ? AND state IN ({placeholders})
-                AND expires_at >= ?""",
-            (CompletionState.UNKNOWN.value, now_s, request_id, *claim_states, now_s),
-        )
+        if reclaim:
+            # #7485 CF r1: reclaim must never steal an ACTIVELY running
+            # request — only one whose claim has gone stale (crashed
+            # executor). Staleness = updated_at older than the floor.
+            stale_cutoff = _iso(
+                _utc_now() - timedelta(seconds=max(0, reclaim_stale_after_seconds))
+            )
+            cursor = self._conn.execute(
+                """UPDATE requests SET state = 'running', completion_state = ?,
+                   updated_at = ?
+                   WHERE request_id = ? AND expires_at >= ?
+                   AND (state = 'queued'
+                        OR (state = 'running' AND updated_at <= ?))""",
+                (CompletionState.UNKNOWN.value, now_s, request_id, now_s, stale_cutoff),
+            )
+        else:
+            cursor = self._conn.execute(
+                """UPDATE requests SET state = 'running', completion_state = ?,
+                   updated_at = ?
+                   WHERE request_id = ? AND state = 'queued'
+                   AND expires_at >= ?""",
+                (CompletionState.UNKNOWN.value, now_s, request_id, now_s),
+            )
         self._conn.commit()
         if cursor.rowcount != 1:
             current = self.get_request(request_id)
             if current.state == "running":
+                detail = (
+                    "still fresh — refusing to steal an active claim"
+                    if reclaim
+                    else "pass reclaim=True only for explicit crash recovery"
+                )
                 raise RequestExecutorError(
                     f"request {request_id} is already claimed by another "
-                    "executor (state=running); pass reclaim=True only for "
-                    "explicit crash recovery"
+                    f"executor (state=running); {detail}"
                 )
             raise RequestExecutorError(
                 f"request {request_id} is not executable (state={current.state})"
@@ -414,6 +433,35 @@ class RequestExecutor:
         }:
             return "incomplete"
         return "incomplete"
+
+    def requeue_stale_running(self, *, stale_after_seconds: int = 600) -> list[str]:
+        """Reconcile crashed executors: atomically re-queue running requests
+        whose claim has gone stale (#7485 CF r1 — production reclaim path).
+
+        Returns the re-queued request ids; unexpired requests only. Callers
+        (ops sweeps, the CLI) then re-execute them normally.
+        """
+        now = _utc_now()
+        now_s = _iso(now)
+        cutoff = _iso(now - timedelta(seconds=max(0, stale_after_seconds)))
+        rows = self._conn.execute(
+            """SELECT request_id FROM requests
+               WHERE state = 'running' AND updated_at <= ? AND expires_at >= ?
+               ORDER BY updated_at""",
+            (cutoff, now_s),
+        ).fetchall()
+        stale_ids = [str(r[0]) for r in rows]
+        requeued: list[str] = []
+        for request_id in stale_ids:
+            cursor = self._conn.execute(
+                """UPDATE requests SET state = 'queued', updated_at = ?
+                   WHERE request_id = ? AND state = 'running' AND updated_at <= ?""",
+                (now_s, request_id, cutoff),
+            )
+            if cursor.rowcount == 1:
+                requeued.append(request_id)
+        self._conn.commit()
+        return requeued
 
     def _set_state(self, request_id: str, state: str, completion: CompletionState) -> None:
         if state not in REQUEST_STATES:

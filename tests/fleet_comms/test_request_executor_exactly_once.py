@@ -45,6 +45,17 @@ def test_running_request_requires_explicit_reclaim(executor: RequestExecutor) ->
     assert cur.rowcount == 1
     with pytest.raises(RequestExecutorError, match="already claimed"):
         executor.execute_capture(req.request_id, adapter="codex", stdout="ok")
+    # #7485 CF r1: reclaim must NOT steal a FRESH running claim either.
+    with pytest.raises(RequestExecutorError, match="refusing to steal"):
+        executor.execute_capture(
+            req.request_id, adapter="codex", stdout="ok", reclaim=True
+        )
+    # A stale claim (older than the floor) is reclaimable.
+    executor.store.connection.execute(
+        "UPDATE requests SET updated_at = '2000-01-01T00:00:00Z' WHERE request_id = ?",
+        (req.request_id,),
+    )
+    executor.store.connection.commit()
     done = executor.execute_capture(
         req.request_id, adapter="codex", stdout="ok", reclaim=True
     )
@@ -77,10 +88,26 @@ def test_finalize_failure_is_atomic(
     assert refs == 0  # capture artifact exists but is unreferenced → GC-able
 
     monkeypatch.undo()
-    done = executor.execute_capture(
-        req.request_id, adapter="codex", stdout="ok", reclaim=True
+    # Production reconciliation: the sweep re-queues the stale claim, then a
+    # normal (non-reclaim) execution completes it.
+    executor.store.connection.execute(
+        "UPDATE requests SET updated_at = '2000-01-01T00:00:00Z' WHERE request_id = ?",
+        (req.request_id,),
     )
+    executor.store.connection.commit()
+    assert executor.requeue_stale_running() == [req.request_id]
+    done = executor.execute_capture(req.request_id, adapter="codex", stdout="ok")
     assert done.state in {"complete", "incomplete"}
+
+
+def test_requeue_stale_running_skips_fresh_claims(executor: RequestExecutor) -> None:
+    req = _create(executor)
+    executor.store.connection.execute(
+        "UPDATE requests SET state = 'running' WHERE request_id = ?",
+        (req.request_id,),
+    )
+    executor.store.connection.commit()
+    assert executor.requeue_stale_running() == []  # fresh claim untouched
 
 
 def test_expired_request_still_expires_on_claim(executor: RequestExecutor) -> None:
