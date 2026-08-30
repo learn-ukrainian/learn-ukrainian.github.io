@@ -185,8 +185,11 @@ Trivial one-shot (typo, single-file comment) is exempt if labeled
 ```
 
 `--enforce` exits **2** when the breadth floor fails without a recorded NOTE file
-path (optional `--note-file`). Drivers run this before handoff; CI may call it
-later in advisory mode.
+path (optional `--note-file`), or when idle-settle telemetry contains MISSING
+or DISHONEST dispositions. It never fails on raw idle opportunity-seconds.
+`--note-file` waives the breadth floor only. Drivers run this before handoff;
+CI may call it later in advisory mode. Live Monitor idle dashboard remains
+deferred (#6998).
 
 ---
 

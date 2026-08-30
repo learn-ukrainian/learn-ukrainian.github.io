@@ -1,4 +1,4 @@
-"""Tests for scripts.fleet.idle_settle (#6976 report-only reminder + telemetry)."""
+"""Tests for scripts.fleet.idle_settle (#6976 reminder + #6998 admission / enforce codes)."""
 
 from __future__ import annotations
 
@@ -38,7 +38,7 @@ def _snapshot(
     )
 
 
-def test_disposition_codes_are_exactly_the_six() -> None:
+def test_disposition_codes_include_original_six_and_new_wip() -> None:
     assert {
         "dependency_blocked",
         "review_wip_cap",
@@ -46,6 +46,9 @@ def test_disposition_codes_are_exactly_the_six() -> None:
         "disk_capacity",
         "human_decision",
         "no_ready_work",
+        "authoring_wip_cap",
+        "worktree_wip_cap",
+        "integration_wip_cap",
     } == idle.DISPOSITION_CODES
     for code in idle.DISPOSITION_CODES:
         assert idle.disposition_accepted(code) is True
@@ -295,3 +298,108 @@ def test_lanes_from_capacity_rows_mark_avoid_as_quota_fail() -> None:
     )
     assert lanes[0].is_healthy_available() is False
     assert lanes[1].is_healthy_available() is True
+
+
+@pytest.mark.parametrize(
+    ("caps", "reason"),
+    [
+        ({"authoring_in_flight": 3, "authoring_wip_limit": 3}, "authoring_wip_cap"),
+        ({"review_in_flight": 4, "review_wip_limit": 4}, "review_wip_cap"),
+        ({"ci_in_flight": 2, "ci_wip_limit": 2}, "ci_capacity"),
+        ({"ci_capacity_ok": False}, "ci_capacity"),
+        ({"worktrees_in_flight": 8, "worktrees_wip_limit": 8}, "worktree_wip_cap"),
+        ({"disk_in_flight": 1, "disk_wip_limit": 1}, "disk_capacity"),
+        ({"disk_ok": False}, "disk_capacity"),
+        ({"integration_in_flight": 1, "integration_wip_limit": 1}, "integration_wip_cap"),
+    ],
+)
+def test_admission_wip_reason_codes(caps: dict, reason: str) -> None:
+    snap = _snapshot(caps=caps)
+    state = idle.evaluate_admission(snap)
+    assert state.admitted is False
+    assert reason in state.reason_codes
+    assert state.queue_ready is True
+    dim = next(name for name, code in idle.WIP_REASON_CODES.items() if code == reason)
+    assert state.wip[dim]["ok"] is False
+    assert state.wip[dim]["reason_code"] == reason
+    decision = idle.evaluate_settle(snap, disposition=reason)
+    assert decision.disposition_honest is True
+    assert reason in decision.active_constraints
+
+
+def test_admission_admitted_when_under_limits_and_queue_ready() -> None:
+    snap = _snapshot(
+        caps={
+            "authoring_in_flight": 1,
+            "authoring_wip_limit": 3,
+            "review_in_flight": 0,
+            "review_wip_limit": 4,
+            "ci_in_flight": 0,
+            "ci_wip_limit": 5,
+            "worktrees_in_flight": 2,
+            "worktrees_wip_limit": 6,
+            "disk_in_flight": 0,
+            "disk_wip_limit": 1,
+            "integration_in_flight": 0,
+            "integration_wip_limit": 2,
+        }
+    )
+    state = idle.evaluate_admission(snap)
+    assert state.admitted is True
+    assert state.queue_ready is True
+    assert state.ready_item_count == 1
+    assert state.reason_codes == ()
+    for name in idle.WIP_DIMENSIONS:
+        assert state.wip[name]["ok"] is True
+        assert state.wip[name]["reason_code"] is None
+
+
+def test_admission_queue_not_ready() -> None:
+    snap = _snapshot(items=[{"item_id": "issue:1", "ready": False}])
+    state = idle.evaluate_admission(snap)
+    assert state.admitted is False
+    assert state.queue_ready is False
+    assert state.reason_codes == ("no_ready_work",)
+
+
+def test_enforce_fail_codes_ignore_idle_seconds() -> None:
+    missing = idle.build_report(
+        [{"outcome": "missing_action", "opportunity_seconds_since_prev": 9, "disposition_honest": None}],
+        enforce=True,
+    )
+    assert missing["enforce_fail_codes"] == [idle.ENFORCE_MISSING]
+    assert missing["idle_seconds_never_enforce"] is True
+    honest = idle.build_report(
+        [
+            {
+                "outcome": "disposed",
+                "opportunity_seconds_since_prev": 99999,
+                "disposition_honest": True,
+            }
+        ],
+        enforce=True,
+    )
+    assert honest["enforce_fail_codes"] == []
+    assert honest["eligible_idle_opportunity_seconds"] == 99999
+    assert idle.enforce_fail_codes(honest) == ()
+    dishonest = idle.build_report(
+        [{"outcome": "disposed", "disposition_honest": False, "opportunity_seconds_since_prev": 0}],
+        enforce=True,
+    )
+    assert dishonest["enforce_fail_codes"] == [idle.ENFORCE_DISHONEST]
+
+
+def test_cli_admission_json_exit_codes(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    ok = tmp_path / "ok.json"
+    ok.write_text(json.dumps(_snapshot().to_dict()), encoding="utf-8")
+    blocked = tmp_path / "blocked.json"
+    blocked.write_text(
+        json.dumps(_snapshot(caps={"worktrees_in_flight": 5, "worktrees_wip_limit": 4}).to_dict()),
+        encoding="utf-8",
+    )
+    assert idle.main(["admission", "--snapshot-json", str(ok), "--json"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["admitted"] is True
+    assert idle.main(["admission", "--snapshot-json", str(blocked), "--json"]) == 2
+    refused = json.loads(capsys.readouterr().out)
+    assert refused["reason_codes"] == ["worktree_wip_cap"]
