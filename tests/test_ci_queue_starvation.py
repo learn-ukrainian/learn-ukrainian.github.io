@@ -42,7 +42,7 @@ _MAX_ALWAYS_ON_PARALLEL_SLOTS = 6
 # 2. Critical path: on merge_group, secret-scan (<=7m) completes well before the
 #    Python test shards (30m timeout, ~10-15m runtime) and contracts/frontend (25m),
 #    so it is not on the merge-group critical path to CI Gate.
-# 3. PR tier: PRs only run 3 lightweight jobs (ruff, pytest-fastlane, secret-scan)
+# 3. PR tier: PRs run the light jobs (ruff, pytest-fastlane, secret-scan, cf-attest)
 #    with cancel-in-progress, finishing in 1-2m nominally.
 _MAX_SECRET_SCAN_TIMEOUT_MINUTES = 7
 

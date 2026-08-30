@@ -16,11 +16,12 @@ import argparse
 import sys
 from collections.abc import Mapping
 
-# Light PR tier: quick signal plus security scanning without the full suite.
+# Light PR tier: quick signal plus security scanning and the exact-head CF lock.
 LIGHT_REQUIRED: tuple[str, ...] = (
     "ruff",
     "pytest-fastlane",
     "secret-scan",
+    "cf-attest",
 )
 
 # Merge-queue / main / dispatch tier: strictly a superset of the light tier.

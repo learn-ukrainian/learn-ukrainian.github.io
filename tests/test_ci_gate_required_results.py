@@ -21,6 +21,7 @@ def _full_success() -> dict[str, str]:
 
 def test_required_jobs_pull_request_is_light_tier() -> None:
     assert required_jobs("pull_request") == LIGHT_REQUIRED
+    assert "cf-attest" in LIGHT_REQUIRED
     assert "pytest-plan" not in LIGHT_REQUIRED
     assert "python" not in LIGHT_REQUIRED
     assert "coverage-floor" not in LIGHT_REQUIRED
@@ -95,3 +96,22 @@ def test_main_exit_codes(capsys: pytest.CaptureFixture[str]) -> None:
 
 def test_main_malformed_results() -> None:
     assert main(["--event", "pull_request", "--results", "not-a-pair"]) == 2
+
+
+def test_pull_request_gate_stays_red_without_cf_attest() -> None:
+    results = {job: "success" for job in LIGHT_REQUIRED if job != "cf-attest"}
+    failures = evaluate_gate("pull_request", results)
+    assert any("cf-attest: missing" in item for item in failures)
+
+
+def test_merge_group_gate_stays_red_without_cf_attest() -> None:
+    results = {job: "success" for job in FULL_REQUIRED if job != "cf-attest"}
+    failures = evaluate_gate("merge_group", results)
+    assert any("cf-attest: missing" in item for item in failures)
+
+
+def test_docs_skills_merge_group_still_requires_cf_attest() -> None:
+    assert "cf-attest" in required_jobs("merge_group", landing_class="docs_skills")
+    results = {job: "success" for job in FULL_REQUIRED if job != "cf-attest"}
+    failures = evaluate_gate("merge_group", results, landing_class="docs_skills")
+    assert any("cf-attest: missing" in item for item in failures)
