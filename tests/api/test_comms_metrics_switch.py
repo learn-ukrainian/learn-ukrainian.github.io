@@ -30,6 +30,13 @@ def test_authority_mode_reads_plane_not_legacy_broker(
         assert payload["source"] == "authority", route
         # Fixture has no plane db — fail-open db_missing, never legacy data.
         assert payload.get("db_missing") is True, route
+        assert payload["store"]["kind"] == "comms-plane", route
+    # #7505 CF r1: legacy zero-value shape fields survive in authority mode.
+    backlog = client.get("/api/comms/v1/backlog").json()
+    assert backlog["total"] == 0 and backlog["rows"] == []
+    assert backlog["by_agent"] == {} and backlog["by_status"] == {}
+    dead = client.get("/api/comms/v1/dead-letters").json()
+    assert dead["total"] == 0 and dead["by_reason"] == {} and dead["rows"] == []
 
 
 def test_authority_mode_with_plane_db_runs_authority_collectors(

@@ -1907,17 +1907,34 @@ def comms_inbox(
 
 
 def _authority_plane_db(ctx: MonitorContext) -> Path:
-    return default_plane_root(repo_root=ctx.roots.project_root, allow_non_git=True) / "comms.sqlite3"
+    # EXACT mirror of fleet_router._plane_db_path (#7505 CF r1: the two
+    # surfaces must never resolve the plane differently).
+    return default_plane_root(repo_root=ctx.roots.project_root) / "comms.sqlite3"
 
 
-def _authority_metrics_payload(collector, ctx: MonitorContext, **kwargs) -> dict:
+def _authority_metrics_payload(
+    collector, ctx: MonitorContext, empty_fields: dict | None = None, **kwargs
+) -> dict:
     """#7486 (plan v3.1 item 5): metric routes follow the storage/plane switch.
 
     Fail-open like the fleet facade: absent plane db → db_missing; collector
     errors → typed db_error code (never exception text); the control-plane
     interlock's typed refusal under pg surfaces the same way.
     """
-    db_path = _authority_plane_db(ctx)
+    zero = dict(empty_fields or {})
+    try:
+        db_path = _authority_plane_db(ctx)
+    except Exception:
+        # Fail-open parity with the fleet facade: an unresolvable plane root
+        # (retired local plane, non-git fixture) reads as missing, never a 500.
+        return {
+            "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
+            "content_included": False,
+            "source": "authority",
+            "store": comms_plane_store(reachable=False),
+            "db_missing": True,
+            **zero,
+        }
     base = {
         "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
         "content_included": False,
@@ -1925,12 +1942,14 @@ def _authority_metrics_payload(collector, ctx: MonitorContext, **kwargs) -> dict
         "store": comms_plane_store(reachable=db_path.is_file()),
     }
     if not db_path.is_file():
-        return {**base, "db_missing": True}
+        # #7505 CF r1: keep the legacy zero-value shape fields so consumers
+        # of the configured-default authority mode see a stable schema.
+        return {**base, "db_missing": True, **zero}
     try:
         payload = collector(db_path, **kwargs)
     except (OSError, sqlite3.Error, ValueError, ControlPlaneError) as exc:
         logger.warning("comms authority collector unavailable: %s", type(exc).__name__)
-        return {**base, "db_error": type(exc).__name__}
+        return {**base, "db_error": type(exc).__name__, **zero}
     payload.update(base)
     return payload
 
@@ -1946,6 +1965,7 @@ async def comms_v1_backlog(
         return _authority_metrics_payload(
             collect_delivery_backlog_authority,
             ctx,
+            empty_fields={"total": 0, "by_agent": {}, "by_status": {}, "rows": []},
             limit=limit,
             exclude_retired=exclude_retired,
         )
@@ -1977,7 +1997,12 @@ async def comms_v1_dead_letters(
 ) -> dict:
     """Dead-letter inventory (metadata only). Sol PR-M / #7486 switch-aware."""
     if resolve_metrics_source() == "authority":
-        return _authority_metrics_payload(collect_dead_letters_authority, ctx, limit=limit)
+        return _authority_metrics_payload(
+            collect_dead_letters_authority,
+            ctx,
+            empty_fields={"total": 0, "by_reason": {}, "rows": []},
+            limit=limit,
+        )
     message_db = ctx.roots.message_db_path
     store = legacy_broker_store(reachable=message_db.is_file())
     if not message_db.exists():
