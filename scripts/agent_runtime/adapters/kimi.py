@@ -23,6 +23,7 @@ from typing import Any
 
 from scripts.review.model_catalog import kimi_model_aliases
 
+from ..failover import GH_AUTH_FAILURE_RE
 from ..result import ParseResult
 from ..tool_calls import normalize_tool_calls, parse_json_events
 from ..trail_isolation import TrailIsolationError, trail_isolation_requested
@@ -212,7 +213,15 @@ class KimiAdapter:
         response = "\n".join(response_parts).strip()
         combined = f"{stderr or ''}\n{stdout or ''}"
         call_failed = returncode != 0 or not response
-        rate_limited = call_failed and bool(_RATE_LIMIT_RE.search(combined))
+        # #7166: an unauthenticated gh prompt ("please run: gh auth login") is
+        # an auth failure, never a rate limit — do not let unrelated text in
+        # the same output trip the generic rate-limit patterns.
+        gh_auth_failure = bool(GH_AUTH_FAILURE_RE.search(combined))
+        rate_limited = (
+            call_failed
+            and not gh_auth_failure
+            and bool(_RATE_LIMIT_RE.search(combined))
+        )
         ok = returncode == 0 and bool(response) and not rate_limited
 
         stderr_excerpt: str | None = None

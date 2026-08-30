@@ -365,6 +365,25 @@ def test_parse_rate_limit_failure():
     assert parsed.response == ""
 
 
+def test_parse_gh_auth_prompt_is_not_rate_limited():
+    """#7166: an unauthenticated gh prompt in a failed worker's output is an
+    auth failure — it must not be labeled rate-limited even when unrelated
+    rate-limit text appears alongside it."""
+    parsed = KimiAdapter().parse_response(
+        stdout="",
+        stderr=(
+            "To get started with GitHub CLI, please run:  gh auth login\n"
+            "Alternatively, populate the GH_TOKEN environment variable with a "
+            "GitHub API authentication token.\n"
+            "HTTP 429: rate limit exceeded"
+        ),
+        returncode=1,
+        output_file=None,
+    )
+    assert parsed.ok is False
+    assert parsed.rate_limited is False
+
+
 def test_dispatch_parser_and_commit_trailer_accept_kimi():
     args = build_parser().parse_args(
         [
