@@ -417,3 +417,58 @@ def test_api_get_does_not_retry_4xx(monkeypatch) -> None:
     with pytest.raises(HTTPError):
         mod.github_api_get("repos/x/y/issues/1/comments")
     assert calls["n"] == 1
+
+
+def test_older_review_approve_cannot_outrank_newer_comment_block() -> None:
+    """#7502 CF r1: cross-source ordering must be chronological, not
+    comments-then-reviews concatenation order."""
+    approve = (
+        f"Cross-family CF of record (codex)\nReviewer family: openai\n"
+        f"At exact head `{PR_HEAD}`\nVERDICT: APPROVE"
+    )
+    block = (
+        f"Cross-family CF of record (codex)\nReviewer family: openai\n"
+        f"At exact head `{PR_HEAD}`\nVERDICT: REQUEST_CHANGES"
+    )
+    result = evaluate_attestation(
+        expected_head=PR_HEAD,
+        author_family="anthropic",
+        bodies=[
+            ("comment", block, "2026-08-30T12:00:00Z"),
+            ("review", approve, "2026-08-30T11:00:00Z"),  # older review
+        ],
+    )
+    assert not result.ok
+    assert "revoked CF" in result.reason
+
+
+def test_request_changes_spelling_is_a_revocation() -> None:
+    """#7502 CF r1: the posting contract's own **VERDICT: REQUEST_CHANGES**."""
+    body = (
+        f"**VERDICT: REQUEST_CHANGES**\n\nCross-family CF of record (codex)\n"
+        f"Reviewer family: openai\nAt exact head `{PR_HEAD}`"
+    )
+    parsed = parse_attestation(body)
+    assert parsed is not None and parsed.verdict == "BLOCK"
+
+
+def test_body_binds_to_primary_head_only() -> None:
+    """#7502 CF r1: one body must not attest every SHA it mentions."""
+    body = (
+        f"**VERDICT: APPROVE**\n\nCross-family CF of record (codex)\n"
+        f"Reviewer family: openai\nAt exact head `{STALE_HEAD}`\n"
+        f"History: superseded head at exact head `{PR_HEAD}` earlier."
+    )
+    result = evaluate_attestation(
+        expected_head=PR_HEAD,
+        author_family="anthropic",
+        bodies=[("comment", body)],
+    )
+    assert not result.ok
+    assert "stale CF" in result.reason
+
+
+def test_cursor_plus_dependabot_does_not_neutralize_author() -> None:
+    """#7502 CF r1: ("cursor", "dependabot") must stay cursor-auto-union."""
+    family = author_family_from_agents(("cursor", "dependabot"))
+    assert family == FAMILY_CURSOR_AUTO_UNION

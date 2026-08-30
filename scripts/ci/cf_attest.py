@@ -61,9 +61,9 @@ VERDICT_APPROVE_RE = re.compile(
     re.IGNORECASE,
 )
 VERDICT_BLOCK_RE = re.compile(
-    r"\bverdict\s*:\s*(?:"
-    r"changes?[-_ ]requested|needs?[-_ ]work|blocked|reject(?:ed)?|"
-    r"fail(?:ed|ure)?|revise"
+    r"\bverdict\s*:\s*\**\s*(?:"
+    r"changes?[-_ ]requested|request(?:ed)?[-_ ]changes?|needs?[-_ ]work|"
+    r"blocked|reject(?:ed)?|fail(?:ed|ure)?|revise"
     r")\b",
     re.IGNORECASE,
 )
@@ -131,10 +131,11 @@ class ParsedAttestation:
     reviewer_family: str
     verdict: str
     source: str
-    # Every "At exact head"-labeled SHA in the body: history-bearing comments
-    # (r1/r2/r3 recap lines) label several; a match on ANY equals a match
-    # (#7487 — first-labeled-only stale-rejected legitimate reviews).
-    labeled_shas: tuple[str, ...] = ()
+    # Attestation binds to the FIRST labeled SHA — the "At exact head" header
+    # line per the posting contract. History-recap lines later in the body
+    # neither bind nor stale-reject (CF r1 on this PR rejected match-any:
+    # it let one body attest several heads).
+    created_at: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -198,7 +199,7 @@ def author_family_from_agents(agents: Iterable[str]) -> str:
     # ``X-Agent: dependabot/x`` trailer must not neutralize a mixed PR's
     # real author family, so fixture is ignored whenever any concrete
     # family is present.
-    if FAMILY_FIXTURE in families and len(families) > 1:
+    if FAMILY_FIXTURE in families and (len(families) > 1 or saw_cursor):
         families.discard(FAMILY_FIXTURE)
     if len(families) > 1:
         return FAMILY_UNKNOWN
@@ -238,7 +239,9 @@ def _labeled_shas(text: str) -> tuple[str, ...]:
     return tuple(match.group(1).lower() for match in HEAD_LABELED_RE.finditer(text))
 
 
-def parse_attestation(body: str, *, source: str = "comment") -> ParsedAttestation | None:
+def parse_attestation(
+    body: str, *, source: str = "comment", created_at: str = ""
+) -> ParsedAttestation | None:
     """Parse one existing CF comment shape, or None if it is not CF of record.
 
     #7487: a body whose verdict is a block/changes-request is parsed as a
@@ -278,7 +281,7 @@ def parse_attestation(body: str, *, source: str = "comment") -> ParsedAttestatio
         reviewer_family=reviewer_family,
         verdict="BLOCK" if blocked else "APPROVE",
         source=source,
-        labeled_shas=labeled_heads or (sha,),
+        created_at=created_at,
     )
 
 
@@ -299,7 +302,7 @@ def evaluate_attestation(
     *,
     expected_head: str,
     author_family: str,
-    bodies: Sequence[tuple[str, str]],
+    bodies: Sequence[tuple[str, ...]],
 ) -> AttestResult:
     """Return pass/fail for the supplied comment/review bodies against one SHA."""
     head = (expected_head or "").strip().lower()
@@ -309,10 +312,20 @@ def evaluate_attestation(
         return AttestResult(False, "unparseable attestation: author family", expected_head=head)
 
     parsed: list[ParsedAttestation] = []
-    for source, body in bodies:
-        item = parse_attestation(body, source=source)
+    for entry in bodies:
+        if len(entry) == 3:
+            source, body, created_at = entry
+        else:
+            source, body = entry
+            created_at = ""
+        item = parse_attestation(body, source=source, created_at=created_at)
         if item is not None:
             parsed.append(item)
+    # Chronological latest-wins across SOURCES (#7502 CF r1): comments and
+    # reviews are fetched as separate lists, so list order alone let an older
+    # review outrank a newer comment. Sort by created_at when present; the
+    # sort is stable, so timestamp-less fixtures keep their list order.
+    parsed.sort(key=lambda item: item.created_at)
     if not parsed:
         return AttestResult(
             False,
@@ -321,11 +334,7 @@ def evaluate_attestation(
             author_family=author_family,
         )
 
-    matching = [
-        item
-        for item in parsed
-        if item.head_sha == head or head in item.labeled_shas
-    ]
+    matching = [item for item in parsed if item.head_sha == head]
     if not matching:
         attested = parsed[0].head_sha
         return AttestResult(
@@ -511,15 +520,17 @@ def collect_bodies_and_agents(
     reviews = fetch_paginated(f"repos/{repo}/pulls/{pr_number}/reviews", api_get=api_get)
     commits = fetch_paginated(f"repos/{repo}/pulls/{pr_number}/commits", api_get=api_get)
 
-    bodies: list[tuple[str, str]] = []
+    bodies: list[tuple[str, str, str]] = []
     for comment in comments:
         body = comment.get("body")
         if isinstance(body, str) and body.strip():
-            bodies.append(("comment", body))
+            stamp = comment.get("created_at")
+            bodies.append(("comment", body, stamp if isinstance(stamp, str) else ""))
     for review in reviews:
         body = review.get("body")
         if isinstance(body, str) and body.strip():
-            bodies.append(("review", body))
+            stamp = review.get("submitted_at")
+            bodies.append(("review", body, stamp if isinstance(stamp, str) else ""))
 
     messages: list[str] = []
     for commit in commits:
@@ -540,7 +551,7 @@ def run_event(
     merge_group_head_ref: str,
     repository: str,
     api_get: ApiGet | None = None,
-    bodies: Sequence[tuple[str, str]] | None = None,
+    bodies: Sequence[tuple[str, ...]] | None = None,
     author_agents: Sequence[str] | None = None,
 ) -> AttestResult:
     """Evaluate CF for one GitHub event. Non-PR events no-op succeed."""
