@@ -1245,6 +1245,37 @@ html[data-theme='dark'] .lu-content .word-atlas .word-hero .practice-cta-hero {
   font-weight: 500;
 }
 
+.examples-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.example-item {
+  padding: 12px 18px;
+  border-left: 3px solid var(--blue);
+  background: var(--blue-light);
+  border-radius: 0 6px 6px 0;
+}
+
+.example-item .example-uk {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 4px;
+}
+
+.example-item .example-en {
+  font-size: 14px;
+  color: var(--gray-600);
+  margin: 0 0 4px;
+}
+
+.example-item .atlas-muted {
+  font-size: 12px;
+  margin: 0;
+}
+
 .wiki-card {
   margin: 12px 0;
   padding: 16px 22px;

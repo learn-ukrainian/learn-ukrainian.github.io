@@ -201,3 +201,67 @@ describe("Atlas Wikipedia rusalka-kin intro gate (#7379)", () => {
     expect(view.entry.wiki_reference?.wikipedia?.summary).toBe(goddessExtract);
   });
 });
+
+describe("enrichment.examples in article view and rendering (#7452)", () => {
+  test("renders bilingual examples on article HTML", () => {
+    const html = renderWordAtlasArticle(
+      articleProps({
+        lemma: "автобус",
+        url_slug: "автобус",
+        gloss: "bus",
+        entry_type: "lemma",
+        pos: "noun",
+        ipa: null,
+        primary_source: "course",
+        course_usage: [],
+        enrichment: {
+          translation: { en: ["bus"], source: "learner_english_gloss" },
+          examples: [
+            {
+              uk: "Сашко́ ї́здить в шко́лу авто́бусом.",
+              en: "Sashko goes to school by bus.",
+              source: "Anna Ohoiko",
+              locator: "ohoiko-1000-words entry 3",
+            },
+          ],
+        },
+      }),
+    );
+    expect(html).toContain("Приклади");
+    expect(html).toContain("Сашко́ ї́здить в шко́лу авто́бусом.");
+    expect(html).toContain("Sashko goes to school by bus.");
+    expect(html).toContain("Anna Ohoiko");
+    expect(html).toContain("ohoiko-1000-words entry 3");
+  });
+
+  test("includes example source in article sources list", () => {
+    const view = buildWordAtlasArticleView(
+      articleProps({
+        lemma: "автобус",
+        url_slug: "автобус",
+        gloss: "bus",
+        entry_type: "lemma",
+        pos: "noun",
+        ipa: null,
+        primary_source: "course",
+        course_usage: [],
+        enrichment: {
+          translation: { en: ["bus"], source: "learner_english_gloss" },
+          examples: [
+            {
+              uk: "Сашко́ ї́здить в шко́лу авто́бусом.",
+              en: "Sashko goes to school by bus.",
+              source: "Anna Ohoiko",
+              locator: "ohoiko-1000-words entry 3",
+            },
+          ],
+        },
+      }).record,
+      "test",
+      "test",
+    );
+    expect(view.sources).toContain("Anna Ohoiko");
+    expect(view.sources).toContain("learner_english_gloss");
+  });
+});
+

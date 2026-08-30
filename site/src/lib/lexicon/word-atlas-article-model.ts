@@ -76,6 +76,13 @@ export interface ParticipleParadigm {
 
 export type MorphologyParadigm = NounParadigm | VerbParadigm | ParticipleParadigm | { kind: "other" };
 
+export interface EnrichmentExample {
+  uk: string;
+  en: string;
+  source: string;
+  locator?: string;
+}
+
 export interface Enrichment {
   stress?: { form: string; source: string };
   cefr?: { level: string; source: string; text?: string; pos?: string };
@@ -113,6 +120,7 @@ export interface Enrichment {
     source_url?: string;
   };
   translation?: { en: string[]; source: string; pos?: string };
+  examples?: EnrichmentExample[];
   sources?: string[];
   textbooks?: Array<{ title: string; text?: string; tag?: string; url?: string }>;
   external_materials?: Array<{
@@ -1015,6 +1023,9 @@ function buildSourceList(args: {
   if (sections?.form_notes?.source) sources.add(sections.form_notes.source);
   if (enrichment?.literary_attestation?.source) sources.add(enrichment.literary_attestation.source);
   if (enrichment?.translation?.source) sources.add(enrichment.translation.source);
+  for (const ex of enrichment?.examples ?? []) {
+    if (ex.source) sources.add(ex.source);
+  }
   if ((entry.course_usage ?? []).length > 0) sources.add("curriculum_vocabulary");
   if (entry.wiki_reference?.wikipedia) sources.add("query_wikipedia");
   if (entry.wiki_reference?.wiktionary_url) sources.add("uk.wiktionary");

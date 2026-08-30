@@ -905,6 +905,21 @@ export default function WordAtlasArticle({
             </section>
           )}
 
+          {(enrichment?.examples?.length ?? 0) > 0 && enrichment?.examples && (
+            <section className="atlas-section">
+              <h2>Приклади</h2>
+              <div className="examples-list">
+                {enrichment.examples.map((ex, idx) => (
+                  <div key={idx} className="example-item">
+                    <p className="example-uk">{ex.uk}</p>
+                    <p className="example-en" lang="en">{ex.en}</p>
+                    <p className="atlas-muted">Джерело: {ex.source}{ex.locator ? ` (${ex.locator})` : ""}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
           {entry.wiki_reference && (
             <section className="atlas-section">
               <h2>Вікіпедія</h2>
