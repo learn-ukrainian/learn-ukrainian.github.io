@@ -33,7 +33,7 @@ streams:
     epics: [4913]
   open-model-data:
     title: "Ukrainian open-model data infrastructure"
-    epics: [6321]  # prepared-data successor; completed Foundry epics #6164 and #6056 are historical
+    epics: [6321, 7423]  # #6321 program epic + #7423 Cyrillic-Slavic dataset-delivery epic; completed Foundry epics #6164 and #6056 are historical
   core-quality:
     title: "Core-track deterministic quality"
     epics: [4274]
