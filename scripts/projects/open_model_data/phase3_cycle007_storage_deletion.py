@@ -55,6 +55,12 @@ UNINSPECTABLE_QUIESCENCE_PROCESS_ALLOWLIST = frozenset(
         "sshd-session",
     }
 )
+SYSTEMD_USER_MANAGER_ARGV0_ALLOWLIST = frozenset(
+    {
+        b"/lib/systemd/systemd",
+        b"/usr/lib/systemd/systemd",
+    }
+)
 
 
 class DeletionExecutionError(ValueError):
@@ -1214,6 +1220,18 @@ def _require_no_open_target_descriptors(
             raise DeletionExecutionError("quiescence_unproved") from exc
         if process_uid != own_uid:
             continue
+        systemd_generation: bytes | None = None
+        try:
+            if (process / "comm").read_bytes() == b"systemd\n":
+                systemd_generation = _attest_systemd_user_manager(
+                    process,
+                    own_uid=own_uid,
+                )
+        except (OSError, ValueError, DeletionExecutionError):
+            # Attestation is required only if an individual descriptor cannot
+            # be inspected.  Fully inspectable processes still proceed through
+            # the ordinary target-inode scan below.
+            systemd_generation = None
         try:
             descriptors = list((process / "fd").iterdir())
         except (FileNotFoundError, ProcessLookupError):
@@ -1236,15 +1254,87 @@ def _require_no_open_target_descriptors(
                 "quiescence_unproved",
             )
             continue
+        used_systemd_descriptor_exception = False
         for descriptor in descriptors:
             try:
                 info = descriptor.stat()
             except (FileNotFoundError, ProcessLookupError):
                 continue
             except PermissionError as exc:
-                raise DeletionExecutionError("quiescence_unproved") from exc
+                if systemd_generation is None:
+                    raise DeletionExecutionError("quiescence_unproved") from exc
+                # This is trusted-infrastructure classification for the
+                # controlled source host, not authentication against hostile
+                # same-UID execution.  The exact cgroup/UID/PPID/cmdline and
+                # PID-generation binding below keep the exception confined to
+                # the kernel-managed user systemd manager observed there.
+                used_systemd_descriptor_exception = True
+                continue
             if (int(info.st_dev), int(info.st_ino)) in targets:
                 _fail("quiescence_unproved")
+        if used_systemd_descriptor_exception:
+            _require(
+                _systemd_process_generation(process) == systemd_generation,
+                "quiescence_unproved",
+            )
+
+
+def _canonical_decimal(value: bytes) -> bool:
+    return bool(value) and value.isdigit() and str(int(value)).encode("ascii") == value
+
+
+def _systemd_process_generation(process: Path) -> bytes:
+    try:
+        raw = (process / "stat").read_bytes()
+    except OSError as exc:
+        raise DeletionExecutionError("quiescence_unproved") from exc
+    marker = raw.rfind(b") ")
+    _require(
+        marker > 0 and raw.endswith(b"\n") and b"\r" not in raw,
+        "quiescence_unproved",
+    )
+    prefix = raw[:marker]
+    suffix = raw[marker + 2 : -1].split(b" ")
+    _require(prefix == process.name.encode("ascii") + b" (systemd", "quiescence_unproved")
+    _require(
+        len(suffix) >= 20 and len(suffix[0]) == 1 and suffix[0] in b"RSDZTWXIP" and b"" not in suffix,
+        "quiescence_unproved",
+    )
+    _require(suffix[1] == b"1", "quiescence_unproved")
+    start_time = suffix[19]
+    _require(_canonical_decimal(start_time), "quiescence_unproved")
+    return start_time
+
+
+def _attest_systemd_user_manager(process: Path, *, own_uid: int) -> bytes:
+    generation = _systemd_process_generation(process)
+    uid = str(own_uid).encode("ascii")
+    expected_uid_line = b"Uid:\t" + b"\t".join((uid, uid, uid, uid))
+    expected_cgroup = b"0::/user.slice/user-" + uid + b".slice/user@" + uid + b".service/init.scope\n"
+    try:
+        comm = (process / "comm").read_bytes()
+        cgroup = (process / "cgroup").read_bytes()
+        cmdline = (process / "cmdline").read_bytes()
+        status_lines = (process / "status").read_bytes().split(b"\n")
+    except OSError as exc:
+        raise DeletionExecutionError("quiescence_unproved") from exc
+    _require(comm == b"systemd\n", "quiescence_unproved")
+    _require(cgroup == expected_cgroup, "quiescence_unproved")
+    _require(cmdline.endswith(b"\0"), "quiescence_unproved")
+    arguments = cmdline.split(b"\0")
+    _require(len(arguments) == 4 and arguments[-1] == b"", "quiescence_unproved")
+    executable, user_flag, deserialize = arguments[:3]
+    _require(executable in SYSTEMD_USER_MANAGER_ARGV0_ALLOWLIST, "quiescence_unproved")
+    _require(user_flag == b"--user", "quiescence_unproved")
+    deserialize_prefix = b"--deserialize="
+    _require(deserialize.startswith(deserialize_prefix), "quiescence_unproved")
+    _require(
+        _canonical_decimal(deserialize[len(deserialize_prefix) :]),
+        "quiescence_unproved",
+    )
+    uid_lines = [line for line in status_lines if line.startswith(b"Uid:")]
+    _require(uid_lines == [expected_uid_line], "quiescence_unproved")
+    return generation
 
 
 def _verify_pending_presence(
