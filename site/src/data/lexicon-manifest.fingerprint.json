@@ -215,7 +215,7 @@
       },
       {
         "path": "scripts/lexicon/ohoiko_paired_headword_split.py",
-        "sha256": "6bb30c26bc7ccbaf75de6bc7ecabcbb226a65e5b3af44060e2298ac7a21670d0"
+        "sha256": "dd27532f07673f8193e3023f7806e3c750bc1a553d7594fc42b0be3838ac5b8a"
       },
       {
         "path": "scripts/lexicon/ohoiko_quality_enrichment.py",
