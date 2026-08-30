@@ -105,8 +105,15 @@ class ArtifactStore:
             # A DSN-unreachable failure must not leave a stray root/blob dir
             # behind, and payload bytes never land in a host-local file.
             self._conn = cp_connect(StoreId.FLEET_COMMS)
-            self._configure_pg_connection()
-            self._ensure_pg_blob_table()
+            try:
+                self._configure_pg_connection()
+                self._ensure_pg_blob_table()
+            except Exception:
+                # #7483: never leak the pg connection on partial init —
+                # repeated failures against a flaky DSN exhaust max_connections.
+                with contextlib.suppress(Exception):
+                    self._conn.close()
+                raise
             return
         self._prepare_private_dir(self.root)
         self._prepare_private_dir(self.root / "blobs")
@@ -136,6 +143,14 @@ class ArtifactStore:
         from psycopg.rows import dict_row
 
         self._conn.row_factory = dict_row
+        # #7483 (1.1/1.2): autocommit reads. Without it psycopg BEGINs on the
+        # first SELECT and the store pins an idle-in-transaction snapshot
+        # forever (blocks VACUUM, trips idle_in_transaction_session_timeout),
+        # and any prior read defeated the deferred-commit ownership guard.
+        # Writes use explicit ``conn.transaction()`` blocks below; nested
+        # blocks become SAVEPOINTs, so a helper error can never poison a
+        # caller-owned transaction (Sol 1.3).
+        self._conn.autocommit = True
 
     def _ensure_pg_blob_table(self) -> None:
         self._conn.execute(
@@ -151,7 +166,6 @@ class ArtifactStore:
                 payload BYTEA NOT NULL
             )"""
         )
-        self._conn.commit()
 
     @property
     def authority(self) -> Authority:
@@ -263,6 +277,15 @@ class ArtifactStore:
     ) -> ArtifactRecord:
         existing = self._pg_row_by_sha256(digest)
         if existing is not None:
+            if artifact_id is not None and str(existing["artifact_id"]) != artifact_id:
+                # #7483 (1.7): deterministic rejection — same content already
+                # stored under a different id; honoring the caller's id would
+                # break content addressing, silently renaming would lie.
+                raise ArtifactStoreError(
+                    f"artifact content already stored as "
+                    f"{existing['artifact_id']!r}; refusing duplicate id "
+                    f"{artifact_id!r}"
+                )
             return self._row_to_record(existing)
 
         aid = artifact_id or new_id("artifact")
@@ -270,7 +293,20 @@ class ArtifactStore:
         mime = mime_type
         if mime is None and logical_filename:
             mime, _ = mimetypes.guess_type(logical_filename)
-        try:
+        if artifact_id is not None:
+            id_row = self._pg_row_by_artifact_id(artifact_id)
+            if id_row is not None:
+                # #7483 (1.7): explicit id already bound to DIFFERENT content —
+                # fail deterministically instead of an opaque UniqueViolation
+                # that would also abort a caller-owned transaction.
+                raise ArtifactStoreError(
+                    f"artifact_id {artifact_id!r} already exists with "
+                    f"different content (sha256 {id_row['sha256']!r})"
+                )
+        # ``transaction()`` commits on exit / rolls back on error; nested in a
+        # caller-owned transaction it becomes a SAVEPOINT, so an error here
+        # rolls back only this write and never poisons the caller (#7483 1.3).
+        with self._conn.transaction():
             self._conn.execute(
                 f"""INSERT INTO {_PG_BLOB_TABLE}(
                     artifact_id, sha256, bytes, mime_type, logical_filename,
@@ -279,12 +315,6 @@ class ArtifactStore:
                 ON CONFLICT (sha256) DO NOTHING""",
                 (aid, digest, len(data), mime, logical_filename, producer, retention_class, created, data),
             )
-            if commit:
-                self._conn.commit()
-        except Exception:
-            if commit:
-                self._conn.rollback()
-            raise
         row = self._pg_row_by_sha256(digest)
         if row is None:
             raise ArtifactStoreError(f"failed to persist artifact metadata for {aid}")
