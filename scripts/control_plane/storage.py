@@ -86,6 +86,15 @@ class ControlPlanePgConnectError(ControlPlaneError):
     """Raised when a Postgres connect fails (message carries store id only)."""
 
 
+class ControlPlaneUnsupportedComponentError(ControlPlaneError):
+    """Raised when a component does not support a store's resolved authority.
+
+    Phase 0b interlock (#7482): fail closed AT THE SEAM with a stable,
+    OPSEC-safe message (store id + component only) instead of an arbitrary
+    driver error deep inside a sqlite-shaped helper.
+    """
+
+
 def _repo_root(repo_root: Path | None) -> Path:
     if repo_root is not None:
         return repo_root
@@ -111,6 +120,47 @@ def resolve_authority(store: StoreId) -> Authority:
     if global_default:
         return _parse_authority(global_default)
     return Authority.SQLITE
+
+
+# --- Phase 0b component interlock (#7482) -----------------------------------
+# Which components may open which authorities. The byte-plane ArtifactStore is
+# the ONLY pg-capable component in this slice; everything else is
+# sqlite-shaped (BEGIN IMMEDIATE, ``?`` placeholders, PRAGMA/sqlite_master,
+# triggers) and must refuse ``pg`` at construction/entry. ``shadow`` remains a
+# sqlite synonym in this slice (see M3 in the 2026-08-30 review: real dual
+# execution or refusal is a later slice).
+_SQLITE_SHAPED = frozenset({Authority.SQLITE, Authority.SHADOW})
+COMPONENT_AUTHORITIES: dict[str, frozenset[Authority]] = {
+    "artifact_store": frozenset(Authority),
+    "authority_service": _SQLITE_SHAPED,
+    "request_executor": _SQLITE_SHAPED,
+    "message_plane": _SQLITE_SHAPED,
+    "plane_status": _SQLITE_SHAPED,
+    "efficiency_metrics": _SQLITE_SHAPED,
+    "cold_start_board": _SQLITE_SHAPED,
+    "routing_reservations": _SQLITE_SHAPED,
+    "comms_cli": _SQLITE_SHAPED,
+    "migrations": _SQLITE_SHAPED,
+}
+
+
+def assert_component_supported(store: StoreId, component: str) -> Authority:
+    """Return the resolved authority; refuse unsupported combinations.
+
+    Raises ``ControlPlaneUnsupportedComponentError`` (a ``ControlPlaneError``)
+    when ``component`` is not implemented for the store's resolved authority.
+    """
+    authority = resolve_authority(store)
+    allowed = COMPONENT_AUTHORITIES.get(component)
+    if allowed is None:
+        raise ControlPlaneError(f"unknown control-plane component: {component!r}")
+    if authority not in allowed:
+        raise ControlPlaneUnsupportedComponentError(
+            f"control-plane store {store.value!r}: authority "
+            f"{authority.value!r} is not supported by component {component!r} "
+            "in this slice (#7482 interlock)"
+        )
+    return authority
 
 
 def sqlite_path(store: StoreId, *, repo_root: Path | None = None) -> Path:

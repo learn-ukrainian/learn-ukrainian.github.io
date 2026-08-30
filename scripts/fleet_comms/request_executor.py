@@ -17,6 +17,12 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from scripts.control_plane.storage import (
+    Authority,
+    ControlPlaneUnsupportedComponentError,
+    StoreId,
+    assert_component_supported,
+)
 from scripts.fleet_comms.adapter_conformance import CaptureInput, conform
 from scripts.fleet_comms.artifacts import ArtifactStore
 from scripts.fleet_comms.contracts import CompletionState, ResponseEnvelope, new_id
@@ -83,6 +89,18 @@ class RequestExecutor:
         root: Path | None = None,
         default_ttl_seconds: int | None = None,
     ) -> None:
+        # #7482 interlock: this executor is sqlite-shaped (apply_migrations,
+        # ``?`` placeholders, INSERT OR IGNORE); refuse pg at the boundary.
+        # The assert runs for INJECTED stores too — a store opened under
+        # sqlite before the authority flipped must not smuggle sqlite SQL
+        # into a pg-configured plane (CF r1 finding, PR #7498).
+        assert_component_supported(StoreId.FLEET_COMMS, "request_executor")
+        if store is not None and store.authority is Authority.PG:
+            raise ControlPlaneUnsupportedComponentError(
+                "control-plane store 'fleet_comms': authority 'pg' is not "
+                "supported by component 'request_executor' in this slice "
+                "(#7482 interlock)"
+            )
         self.store = store or ArtifactStore(root=root)
         self._owns_store = store is None
         self.registry = registry or load_endpoint_registry()

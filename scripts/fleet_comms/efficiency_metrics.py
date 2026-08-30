@@ -16,7 +16,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
 
-from scripts.control_plane.storage import StoreId
+from scripts.control_plane.storage import StoreId, assert_component_supported
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.message_plane import resolve_plane_mode
 from scripts.fleet_comms.opsec_store import batch_tasks_store, comms_plane_store
@@ -48,6 +48,7 @@ def _connect_ro(db_path: Path) -> Iterator[sqlite3.Connection]:
     """Open an existing SQLite file read-only (never creates/writes)."""
     if not db_path.is_file():
         raise FileNotFoundError(db_path)
+    assert_component_supported(StoreId.FLEET_COMMS, "efficiency_metrics")  # #7482
     conn = cp_connect(StoreId.FLEET_COMMS, path=db_path, read_only=True)
     conn.row_factory = sqlite3.Row
     try:

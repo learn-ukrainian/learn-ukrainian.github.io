@@ -19,7 +19,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any, Literal
 
-from scripts.control_plane.storage import StoreId
+from scripts.control_plane.storage import StoreId, assert_component_supported
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.artifacts import ArtifactStore
 from scripts.fleet_comms.contracts import new_id
@@ -281,6 +281,23 @@ class RoutingReservationLedger:
         store: ArtifactStore | None = None,
         root: Path | None = None,
     ) -> None:
+        # #7482 interlock: ledger SQL is sqlite-only (BEGIN IMMEDIATE,
+        # SAVEPOINT, ? placeholders); assert runs for INJECTED stores too
+        # (CF r1 finding, PR #7498).
+        from scripts.control_plane.storage import (
+            Authority as _Authority,
+        )
+        from scripts.control_plane.storage import (
+            ControlPlaneUnsupportedComponentError as _Unsupported,
+        )
+
+        assert_component_supported(StoreId.FLEET_COMMS, "routing_reservations")
+        if store is not None and store.authority is _Authority.PG:
+            raise _Unsupported(
+                "control-plane store 'fleet_comms': authority 'pg' is not "
+                "supported by component 'routing_reservations' in this "
+                "slice (#7482 interlock)"
+            )
         self.store = store or ArtifactStore(root=root)
         self._owns_store = store is None
         self._conn = self.store.connection
@@ -1225,6 +1242,7 @@ def list_routing_decisions(*, root: Path | None = None, limit: int = 100) -> lis
     db_path = plane_root / "comms.sqlite3"
     if not db_path.is_file():
         return []
+    assert_component_supported(StoreId.FLEET_COMMS, "routing_reservations")  # #7482
     try:
         connection = cp_connect(StoreId.FLEET_COMMS, path=db_path, read_only=True)
         connection.row_factory = sqlite3.Row

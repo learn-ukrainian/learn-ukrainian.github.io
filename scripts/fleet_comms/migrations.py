@@ -634,6 +634,16 @@ def _validate_applied_migrations(
 
 def apply_migrations(conn: sqlite3.Connection) -> int:
     """Apply each known migration atomically and refuse unknown future versions."""
+    if not isinstance(conn, sqlite3.Connection):
+        # #7482 interlock, defense in depth: the ledger is sqlite-only in this
+        # slice; a psycopg connection reaching this point would fail later
+        # with an opaque driver error (``BEGIN IMMEDIATE`` is not pg syntax).
+        from scripts.control_plane.storage import ControlPlaneUnsupportedComponentError
+
+        raise ControlPlaneUnsupportedComponentError(
+            "control-plane store 'fleet_comms': component 'migrations' only "
+            "supports sqlite connections in this slice (#7482 interlock)"
+        )
     _ensure_migration_table(conn)
     conn.commit()
     known = {migration.version: migration for migration in MIGRATIONS}
