@@ -127,20 +127,25 @@ def test_workdir_repointing_git_env_is_scrubbed() -> None:
         assert leaked not in env, f"{leaked} must be scrubbed from the child env"
 
 
-def test_gh_auth_chain_preserved_without_identity_token() -> None:
-    """#7166: on a job host the ops account is logged in via `gh auth login`
-    and no GH_TOKEN/App material exists. The worker must keep the host gh
-    auth chain: GH_CONFIG_DIR passes through (not redirected to an empty
-    sandbox), the credential helper is NOT blanked, and no GIT_ASKPASS is
-    injected. The extraheader stays neutralized and global-config writes stay
-    sandboxed."""
+def test_gh_auth_chain_preserved_without_identity_token(tmp_path) -> None:
+    """#7166 / #7472: on a job host the ops account is logged in via
+    `gh auth login` and no GH_TOKEN/App material exists. The worker/review
+    seat must keep the host gh auth chain: a usable GH_CONFIG_DIR (with
+    hosts.yml) passes through (not redirected to an empty sandbox), the
+    credential helper is NOT blanked, and no GIT_ASKPASS is injected. The
+    extraheader stays neutralized and global-config writes stay sandboxed.
+    """
+    gh_config = tmp_path / "gh-config"
+    gh_config.mkdir()
+    (gh_config / "hosts.yml").write_text("github.com:\n    user: ops\n", encoding="utf-8")
+
     with patch.dict(
         "os.environ",
         {
             "PATH": "/usr/bin",
             "HOME": "/Users/example",
             "USER": "example",
-            "GH_CONFIG_DIR": "/jobhost/gh-config",
+            "GH_CONFIG_DIR": str(gh_config),
         },
         clear=True,
     ):
@@ -149,7 +154,7 @@ def test_gh_auth_chain_preserved_without_identity_token() -> None:
     assert "GH_TOKEN" not in env
     assert "GITHUB_TOKEN" not in env
     assert "GIT_ASKPASS" not in env
-    assert env["GH_CONFIG_DIR"] == "/jobhost/gh-config"
+    assert env["GH_CONFIG_DIR"] == str(gh_config)
     # credential.helper must NOT be blanked in no-token mode.
     keys = [v for k, v in env.items() if k.startswith("GIT_CONFIG_KEY_")]
     assert "credential.helper" not in keys
@@ -179,10 +184,34 @@ def test_gh_config_dir_defaults_to_home_without_identity_token() -> None:
     assert env["HOME"] == "/Users/example"
 
 
+def test_empty_sandbox_gh_config_dir_rejected_without_identity_token(tmp_path) -> None:
+    """#7472: an inherited empty lu-agent-runtime-git GH_CONFIG_DIR must not
+    pass through — leave unset so gh recovers to $HOME/.config/gh."""
+    empty_sandbox = tmp_path / "lu-agent-runtime-git-deadbeef" / "gh"
+    empty_sandbox.mkdir(parents=True)
+
+    with patch.dict(
+        "os.environ",
+        {
+            "PATH": "/usr/bin",
+            "HOME": "/Users/example",
+            "USER": "example",
+            "GH_CONFIG_DIR": str(empty_sandbox),
+        },
+        clear=True,
+    ):
+        env = build_agent_env(provider="codex")
+
+    assert "GH_CONFIG_DIR" not in env
+    assert env["HOME"] == "/Users/example"
+    assert "GH_TOKEN" not in env
+
+
 def test_credential_helper_survives_sandbox_copy_without_identity_token(tmp_path) -> None:
     """#7166: the copied global config keeps `gh auth git-credential`-style
-    helpers in no-token mode (push must work) but still drops the extraheader.
-    Token mode keeps the #2842 behavior of stripping the helper."""
+    helpers in no-token mode (push/comment must work) but still drops the
+    extraheader. Token mode keeps the #2842 behavior of stripping the helper.
+    """
     gitconfig = tmp_path / ".gitconfig"
     gitconfig.write_text(
         "[user]\n"
@@ -224,3 +253,18 @@ def test_credential_helper_survives_sandbox_copy_without_identity_token(tmp_path
 
     assert "gh auth git-credential" not in sandbox_token
     assert token_env["GIT_ASKPASS"].endswith("git-askpass.sh")
+
+
+def test_usable_host_gh_config_dir_requires_hosts_yml(tmp_path) -> None:
+    from agent_runtime.env_sanitize import usable_host_gh_config_dir
+
+    empty = tmp_path / "empty"
+    empty.mkdir()
+    assert usable_host_gh_config_dir(str(empty)) is None
+
+    good = tmp_path / "good"
+    good.mkdir()
+    (good / "hosts.yml").write_text("github.com:\n    user: ops\n", encoding="utf-8")
+    assert usable_host_gh_config_dir(str(good)) == str(good)
+    assert usable_host_gh_config_dir(None) is None
+    assert usable_host_gh_config_dir("") is None

@@ -213,9 +213,10 @@ class KimiAdapter:
         response = "\n".join(response_parts).strip()
         combined = f"{stderr or ''}\n{stdout or ''}"
         call_failed = returncode != 0 or not response
-        # #7166: an unauthenticated gh prompt ("please run: gh auth login") is
-        # an auth failure, never a rate limit — do not let unrelated text in
-        # the same output trip the generic rate-limit patterns.
+        # #7166 / #7472: an unauthenticated gh prompt ("please run: gh auth
+        # login") is an auth failure, never a rate limit — do not let
+        # unrelated text in the same output trip the generic rate-limit
+        # patterns.
         gh_auth_failure = bool(GH_AUTH_FAILURE_RE.search(combined))
         rate_limited = (
             call_failed

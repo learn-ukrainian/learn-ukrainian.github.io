@@ -46,12 +46,13 @@ _AUTH_RE = re.compile(
     r"no credentials? (?:found|set|configured|available)",
     re.IGNORECASE,
 )
-# An unauthenticated gh CLI in a worker is an auth failure, never a rate
-# limit (#7166). gh prints "please run: gh auth login" / "To get started with
-# GitHub CLI" when no credential is reachable; delegate runners recorded that
-# as "rate limited" whenever unrelated text in the same output tripped the
-# generic rate-limit patterns, hiding the real blocker. This check takes
-# precedence over every other classifier below, including rate-limit.
+# An unauthenticated gh CLI in a worker/review seat is an auth failure, never
+# a rate limit (#7166 / #7472). gh prints "please run: gh auth login" / "To
+# get started with GitHub CLI" when no credential is reachable; runners
+# recorded that as "rate limited" whenever unrelated text in the same output
+# tripped the generic rate-limit patterns, hiding the real blocker. This
+# check takes precedence over every other classifier below, including
+# rate-limit.
 GH_AUTH_FAILURE_RE = re.compile(
     r"gh auth (?:login|refresh)|to get started with github cli|"
     r"populate the gh_token environment variable|"

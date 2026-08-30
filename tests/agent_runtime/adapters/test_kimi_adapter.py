@@ -366,8 +366,8 @@ def test_parse_rate_limit_failure():
 
 
 def test_parse_gh_auth_prompt_is_not_rate_limited():
-    """#7166: an unauthenticated gh prompt in a failed worker's output is an
-    auth failure — it must not be labeled rate-limited even when unrelated
+    """#7166 / #7472: an unauthenticated gh prompt in a failed seat's output is
+    an auth failure — it must not be labeled rate-limited even when unrelated
     rate-limit text appears alongside it."""
     parsed = KimiAdapter().parse_response(
         stdout="",

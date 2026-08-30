@@ -80,6 +80,21 @@ def test_parse_existing_cf_shapes() -> None:
         assert parsed.reviewer_family in {"google", "xai", "anthropic"}
 
 
+def test_parse_shared_identity_comment_contract_shape() -> None:
+    """#7472 durable path: gh pr comment body matching the module contract."""
+    body = (
+        "**VERDICT: APPROVE**\n\n"
+        "Cross-family review of record (Codex)\n"
+        "Reviewer family: OpenAI\n"
+        f"At exact head `{PR_HEAD}`\n"
+    )
+    parsed = parse_attestation(body)
+    assert parsed is not None
+    assert parsed.head_sha == PR_HEAD
+    assert parsed.verdict == "APPROVE"
+    assert parsed.reviewer_family == "openai"
+
+
 def test_parse_rejects_missing_and_blocked() -> None:
     assert parse_attestation("looks fine, no review") is None
     assert parse_attestation(f"I approve head `{PR_HEAD}`") is None

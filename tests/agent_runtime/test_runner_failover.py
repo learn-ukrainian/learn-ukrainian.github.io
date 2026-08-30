@@ -572,7 +572,7 @@ def test_classifier_routes_inband_http_401_stdout_to_auth():
 
 
 def test_classifier_routes_unauthenticated_gh_prompt_to_auth():
-    """#7166: a job-host worker whose gh lost its auth context fails with
+    """#7166 / #7472: a seat whose gh lost its auth context fails with
     "please run: gh auth login" — an auth failure, never a rate limit."""
     from agent_runtime.failover import classify_failover_trigger
 

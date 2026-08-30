@@ -8,6 +8,27 @@ head SHA matches the **PR head**, not a merge_group merge commit.
 Stdlib only so the job can sparse-checkout ``scripts/ci`` and run with system
 ``python3``. It never calls OpenRouter and does not invent a new CF protocol:
 it accepts comment shapes already used on this repo.
+
+CF of record contract (durable seat path under a shared GitHub identity,
+issue #7472 — do **not** invent a second GitHub login; native
+``gh pr review --approve`` cannot satisfy required-review forge controls when
+author == approver, and AGENT_NO_MERGE keeps merge/--approve blocked):
+
+Post with ``gh pr comment <N> --body ...`` a body that ``parse_attestation``
+accepts:
+
+* CF marker: ``cross-family`` / ``cf of record`` / ``reviewer provenance``
+* ``Verdict: APPROVE`` (or approved / pass / passed)
+* Exact head SHA (labeled ``head`` / ``exact-head``, or the sole 40-char SHA)
+* Reviewer family resolving to a concrete family in ``CONCRETE_FAMILIES``
+
+Example shape already in use on this repo::
+
+    **VERDICT: APPROVE**
+
+    Cross-family review of record (Codex)
+    Reviewer family: OpenAI
+    At exact head ``<40-char-sha>``
 """
 
 from __future__ import annotations
