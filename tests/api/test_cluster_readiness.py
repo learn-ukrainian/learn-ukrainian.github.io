@@ -1,13 +1,19 @@
-"""Tests for the separate cluster-readiness route (#7365 / Phase 0b ping).
+"""Tests for /api/cluster/readiness (#7365 Phase 0b ping · #7493 hardening).
 
-Verifies that /api/cluster/readiness reports storage-seam authority and
-store accessibility without claiming multi-host HA in Phase 0. Postgres
-authority requires a live ``SELECT 1``, not merely a configured DSN.
+Contract under test:
+- an absent sqlite database is NOT accessible, and a GET creates no
+  directories or files (readiness has zero side effects);
+- pg authority requires a live ``SELECT 1`` (DSN presence alone never reads
+  as ready) and fails closed quickly against an unreachable DSN;
+- reasons are fixed OPSEC-safe codes, never exception text or paths;
+- ``task_index`` is optional in Phase 0 and never affects readiness.
 """
 
 from __future__ import annotations
 
 import os
+import sqlite3
+import time
 from pathlib import Path
 
 import pytest
@@ -25,47 +31,91 @@ pytestmark = pytest.mark.repo_invariant
 _UNREACHABLE_DSN = "postgresql://cp_ci:cp_ci@127.0.0.1:1/postgres"
 _PG_DSN_ENV = "LEARN_UKRAINIAN_CP_PG_DSN"
 
-
-def _pg_dsn_or_skip() -> str:
-    dsn = (os.environ.get(_PG_DSN_ENV) or "").strip()
-    if not dsn:
-        pytest.skip(f"{_PG_DSN_ENV} unset/empty — Postgres readiness skipped")
-    return dsn
+_PROBED_SQLITE_STORES = (StoreId.FLEET_COMMS, StoreId.WRITE_OWNERSHIP)
 
 
-def test_cluster_readiness_endpoint_default(tmp_path: Path) -> None:
+def _ready_context(tmp_path: Path):
+    """Fixture context with every probed sqlite database actually present."""
     ctx = fixture_context(tmp_path)
-    app = api_main.create_app(ctx)
-    client = TestClient(app)
+    for store_id in _PROBED_SQLITE_STORES:
+        db_path = storage.sqlite_path(store_id, repo_root=tmp_path)
+        db_path.parent.mkdir(parents=True, exist_ok=True)
+        sqlite3.connect(db_path).close()
+    session_path = Path(ctx.stores.session_streams_database.path)
+    session_path.parent.mkdir(parents=True, exist_ok=True)
+    sqlite3.connect(session_path).close()
+    return ctx
+
+
+def test_absent_databases_are_not_ready_and_get_has_no_side_effects(
+    tmp_path: Path,
+) -> None:
+    """#7493: an empty host must answer unready, and the GET must not mkdir."""
+    client = TestClient(api_main.create_app(fixture_context(tmp_path)))
+    before = {p.relative_to(tmp_path) for p in tmp_path.rglob("*")}
 
     resp = client.get("/api/cluster/readiness")
     assert resp.status_code == 200
     data = resp.json()
 
+    assert data["status"] == "unready"
+    assert data["ready"] is False
+    assert data["can_serve_cluster_reads"] is False
+    assert data["ha_claimed"] is False
+
+    seam = data["storage_seam"]
+    for store_id in _PROBED_SQLITE_STORES:
+        entry = seam[store_id.value]
+        assert entry["accessible"] is False
+        assert entry["reason"] == "sqlite_database_missing"
+
+    # Zero side effects: the probe created no directories or files.
+    after = {p.relative_to(tmp_path) for p in tmp_path.rglob("*")}
+    assert after == before
+
+
+def test_existing_databases_answer_ready(tmp_path: Path) -> None:
+    ctx = _ready_context(tmp_path)
+    data = TestClient(api_main.create_app(ctx)).get("/api/cluster/readiness").json()
     assert data["status"] == "ready"
     assert data["ready"] is True
     assert data["can_serve_cluster_reads"] is True
     assert data["ha_claimed"] is False  # Never claims multi-host HA in Phase 0
     assert "checked_at" in data
-    assert "storage_seam" in data
 
     seam = data["storage_seam"]
-    assert StoreId.FLEET_COMMS.value in seam
-    assert StoreId.SESSION_STREAMS.value in seam
-    assert StoreId.WRITE_OWNERSHIP.value in seam
-    assert StoreId.TASK_INDEX.value in seam
+    for store_id in (*_PROBED_SQLITE_STORES, StoreId.SESSION_STREAMS):
+        entry = seam[store_id.value]
+        assert entry["authority"] == "sqlite"
+        assert entry["accessible"] is True, store_id
 
-    assert seam[StoreId.FLEET_COMMS.value]["authority"] == "sqlite"
-    assert seam[StoreId.FLEET_COMMS.value]["accessible"] is True
 
-    assert seam[StoreId.SESSION_STREAMS.value]["authority"] == "sqlite"
-    assert seam[StoreId.SESSION_STREAMS.value]["accessible"] is True
+def test_session_streams_probes_the_injected_store(tmp_path: Path) -> None:
+    """#7493: readiness must probe the context's store, not a re-derived path."""
+    ctx = _ready_context(tmp_path)
+    database = ctx.stores.session_streams_database
+    assert database is not None
+    assert Path(database.path).exists()
 
-    assert seam[StoreId.WRITE_OWNERSHIP.value]["authority"] == "sqlite"
-    assert seam[StoreId.WRITE_OWNERSHIP.value]["accessible"] is True
+    data = check_cluster_readiness(ctx)
+    assert data["storage_seam"][StoreId.SESSION_STREAMS.value]["accessible"] is True
 
-    # task_index has no sqlite backing in Phase 0
-    assert seam[StoreId.TASK_INDEX.value]["accessible"] is False
+
+def test_task_index_is_optional_and_never_blocks(tmp_path: Path) -> None:
+    data = check_cluster_readiness(_ready_context(tmp_path))
+    entry = data["storage_seam"][StoreId.TASK_INDEX.value]
+    assert entry["accessible"] is False
+    assert entry["optional"] is True
+    assert data["ready"] is True  # inaccessible-but-optional must not block
+
+
+def test_reasons_are_codes_not_paths(tmp_path: Path) -> None:
+    data = check_cluster_readiness(fixture_context(tmp_path))
+    for entry in data["storage_seam"].values():
+        reason = entry.get("reason")
+        if reason is not None:
+            assert "/" not in reason and "\\" not in reason
+            assert str(tmp_path) not in reason
 
 
 def test_cluster_readiness_plain_python_fallback() -> None:
@@ -75,111 +125,74 @@ def test_cluster_readiness_plain_python_fallback() -> None:
     assert "checked_at" in data
 
 
-def test_cluster_readiness_fails_closed_when_pg_dsn_missing(
+def test_fails_closed_when_pg_dsn_missing(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
-    monkeypatch.delenv("LEARN_UKRAINIAN_CP_PG_DSN", raising=False)
+    monkeypatch.delenv(_PG_DSN_ENV, raising=False)
+    ctx = _ready_context(tmp_path)
 
-    ctx = fixture_context(tmp_path)
-    app = api_main.create_app(ctx)
-    client = TestClient(app)
-
-    resp = client.get("/api/cluster/readiness")
-    assert resp.status_code == 200
-    data = resp.json()
-
-    assert data["status"] == "unready"
+    data = TestClient(api_main.create_app(ctx)).get("/api/cluster/readiness").json()
     assert data["ready"] is False
-    assert data["can_serve_cluster_reads"] is False
-    assert data["ha_claimed"] is False
-
-    seam = data["storage_seam"]
-    fleet_status = seam[StoreId.FLEET_COMMS.value]
-    assert fleet_status["authority"] == "pg"
-    assert fleet_status["accessible"] is False
-    assert "reason" in fleet_status
+    fleet = data["storage_seam"][StoreId.FLEET_COMMS.value]
+    assert fleet["authority"] == "pg"
+    assert fleet["accessible"] is False
+    assert fleet["reason"] == "pg_dsn_missing"
 
 
-def test_cluster_readiness_with_pg_dsn(
+def test_unreachable_pg_dsn_fails_closed_quickly(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    """Unreachable DSN must fail closed — DSN presence alone is not ready."""
+    """DSN presence alone is never ready; the probe answers within its budget."""
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
-    monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", _UNREACHABLE_DSN)
+    monkeypatch.setenv(_PG_DSN_ENV, _UNREACHABLE_DSN)
+    ctx = _ready_context(tmp_path)
 
-    ctx = fixture_context(tmp_path)
-    app = api_main.create_app(ctx)
-    client = TestClient(app)
+    started = time.monotonic()
+    data = check_cluster_readiness(ctx)
+    elapsed = time.monotonic() - started
 
-    resp = client.get("/api/cluster/readiness")
-    assert resp.status_code == 200
-    data = resp.json()
-
-    assert data["status"] == "unready"
+    fleet = data["storage_seam"][StoreId.FLEET_COMMS.value]
+    assert fleet["accessible"] is False
+    assert fleet["reason"] == "pg_probe_failed"
     assert data["ready"] is False
-    assert data["can_serve_cluster_reads"] is False
-    assert data["ha_claimed"] is False
-
-    seam = data["storage_seam"]
-    fleet_status = seam[StoreId.FLEET_COMMS.value]
-    assert fleet_status["authority"] == "pg"
-    assert fleet_status["accessible"] is False
-    assert "reason" in fleet_status
-    reason = fleet_status["reason"]
-    assert reason == "control-plane store 'fleet_comms' postgres connect failed"
-    assert "127.0.0.1" not in reason
-    assert "cp_ci" not in reason
-    assert _UNREACHABLE_DSN not in reason
+    assert elapsed < 8.0  # bounded: connect_timeout + deadline, not a hang
 
 
 @pytest.mark.postgres
-def test_cluster_readiness_pg_accessible_after_select_one(
+def test_live_pg_select_one(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    dsn = (os.environ.get(_PG_DSN_ENV) or "").strip()
+    if not dsn:
+        pytest.skip(f"{_PG_DSN_ENV} unset/empty — Postgres readiness skipped")
+    monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
+    ctx = _ready_context(tmp_path)
+
+    data = check_cluster_readiness(ctx)
+    fleet = data["storage_seam"][StoreId.FLEET_COMMS.value]
+    assert fleet["authority"] == "pg"
+    assert fleet["accessible"] is True
+
+
+def test_hung_probe_does_not_block_past_the_deadline(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    """Live DSN: pg-authority store is accessible only after a real SELECT 1."""
-    _pg_dsn_or_skip()
-    monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
-    # Leave LEARN_UKRAINIAN_CP_PG_DSN as provided by the environment.
+    """CF r1 (PR #7499): a wedged store probe must not hold the response —
+    the executor is shut down without joining workers."""
+    import scripts.api.cluster_router as cr
 
-    ctx = fixture_context(tmp_path)
-    app = api_main.create_app(ctx)
-    client = TestClient(app)
+    def _hang(store_id, ctx, repo_root):
+        time.sleep(30)
+        return {"authority": "sqlite", "accessible": True}
 
-    resp = client.get("/api/cluster/readiness")
-    assert resp.status_code == 200
-    data = resp.json()
+    monkeypatch.setattr(cr, "_probe_store", _hang)
+    monkeypatch.setattr(cr, "_PROBE_DEADLINE_S", 0.5)
+    monkeypatch.setattr(cr, "_TOTAL_DEADLINE_S", 1.5)
 
-    assert data["ha_claimed"] is False
-    seam = data["storage_seam"]
-    fleet_status = seam[StoreId.FLEET_COMMS.value]
-    assert fleet_status["authority"] == "pg"
-    assert fleet_status["accessible"] is True
-    assert "reason" not in fleet_status
-    # Other stores remain sqlite and keep the overall ready signal usable.
-    assert data["ready"] is True
-    assert data["can_serve_cluster_reads"] is True
+    started = time.monotonic()
+    data = cr.check_cluster_readiness(fixture_context(tmp_path))
+    elapsed = time.monotonic() - started
 
-
-def test_cluster_readiness_cluster_isolation(tmp_path: Path) -> None:
-    first_root = tmp_path / "first"
-    second_root = tmp_path / "second"
-    first_ctx = fixture_context(first_root)
-    second_ctx = fixture_context(second_root)
-
-    # Pre-create sqlite DB in first instance
-    first_db = storage.sqlite_path(StoreId.FLEET_COMMS, repo_root=first_root)
-    first_db.parent.mkdir(parents=True, exist_ok=True)
-    first_db.write_bytes(b"")
-
-    first_app = api_main.create_app(first_ctx)
-    second_app = api_main.create_app(second_ctx)
-
-    with TestClient(first_app) as first_client, TestClient(second_app) as second_client:
-        first_resp = first_client.get("/api/cluster/readiness").json()
-        second_resp = second_client.get("/api/cluster/readiness").json()
-
-        assert first_resp["ready"] is True
-        assert second_resp["ready"] is True
-        assert first_resp["ha_claimed"] is False
-        assert second_resp["ha_claimed"] is False
+    assert elapsed < 5.0
+    assert data["ready"] is False
+    for store_id in _PROBED_SQLITE_STORES:
+        assert data["storage_seam"][store_id.value]["reason"] == "probe_timeout"
