@@ -545,7 +545,14 @@ def _load_imported_attestation(bindings: storage.Bindings) -> dict[str, Any]:
 
 def _role_path(bindings: storage.Bindings, alias: str) -> Path:
     role, separator, relative = alias.partition("/")
-    _require(separator == "/" and relative and ".." not in Path(relative).parts, "plan_drift")
+    relative_path = Path(relative)
+    _require(
+        separator == "/"
+        and relative
+        and not relative_path.is_absolute()
+        and all(part not in {"", ".", ".."} for part in relative_path.parts),
+        "plan_drift",
+    )
     root = (
         bindings.materialization_package
         if role == "materialization"
@@ -555,7 +562,14 @@ def _role_path(bindings: storage.Bindings, alias: str) -> Path:
     )
     _require(root is not None, "plan_drift")
     assert root is not None
-    return root / relative
+    try:
+        resolved_root = root.resolve(strict=True)
+        candidate = root / relative_path
+        resolved_candidate = candidate.resolve(strict=False)
+    except OSError as exc:
+        raise DeletionExecutionError("plan_drift") from exc
+    _require(resolved_candidate.is_relative_to(resolved_root), "plan_drift")
+    return candidate
 
 
 def _role_root(bindings: storage.Bindings, role: str) -> Path:
@@ -886,8 +900,9 @@ def _journal_state(
 
 def _open_parent(bindings: storage.Bindings, alias: str) -> tuple[int, str]:
     role, separator, relative = alias.partition("/")
-    _require(separator == "/" and relative, "source_state_drift")
-    parts = Path(relative).parts
+    relative_path = Path(relative)
+    _require(separator == "/" and relative and not relative_path.is_absolute(), "source_state_drift")
+    parts = relative_path.parts
     _require(parts and all(part not in {"", ".", ".."} for part in parts), "source_state_drift")
     root = (
         bindings.materialization_package
@@ -897,6 +912,13 @@ def _open_parent(bindings: storage.Bindings, alias: str) -> tuple[int, str]:
         else None
     )
     _require(root is not None, "source_state_drift")
+    assert root is not None
+    try:
+        resolved_root = root.resolve(strict=True)
+        resolved_candidate = (root / relative_path).resolve(strict=False)
+    except OSError as exc:
+        raise DeletionExecutionError("source_state_drift") from exc
+    _require(resolved_candidate.is_relative_to(resolved_root), "source_state_drift")
     flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | getattr(os, "O_NOFOLLOW", 0)
     try:
         descriptor = os.open(root, flags)

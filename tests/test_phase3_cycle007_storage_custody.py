@@ -1643,6 +1643,52 @@ def _execute_fixture_deletion(state: Mapping[str, Any], **kwargs: Any) -> dict[s
     )
 
 
+@pytest.mark.parametrize(
+    "alias",
+    (
+        "materialization//etc/passwd",
+        "evidence//etc/passwd",
+        "materialization/../outside.bin",
+        "evidence/../outside.bin",
+    ),
+)
+def test_deletion_path_layers_reject_absolute_and_parent_escape(
+    tmp_path: Path, alias: str
+) -> None:
+    materialization = tmp_path / "materialization"
+    evidence = tmp_path / "evidence"
+    work = tmp_path / "work"
+    for directory in (materialization, evidence, work):
+        directory.mkdir()
+    bindings = storage.Bindings(materialization, evidence, work, True)
+
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._role_path(bindings, alias)
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._open_parent(bindings, alias)
+
+
+def test_deletion_path_layers_reject_symlinked_parent_escape(tmp_path: Path) -> None:
+    materialization = tmp_path / "materialization"
+    evidence = tmp_path / "evidence"
+    work = tmp_path / "work"
+    outside = tmp_path / "outside"
+    for directory in (materialization, evidence, work, outside):
+        directory.mkdir()
+    sentinel = outside / "sentinel.bin"
+    sentinel.write_bytes(b"outside-authorized-root")
+    (materialization / "escape").symlink_to(outside, target_is_directory=True)
+    bindings = storage.Bindings(materialization, evidence, work, True)
+    alias = "materialization/escape/sentinel.bin"
+
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._role_path(bindings, alias)
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._open_parent(bindings, alias)
+
+    assert sentinel.read_bytes() == b"outside-authorized-root"
+
+
 def test_authorized_deletion_is_exact_file_only_and_preserves_custody(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
