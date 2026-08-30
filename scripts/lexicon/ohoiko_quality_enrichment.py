@@ -9,6 +9,15 @@ and ``anna-ohoiko-500-verbs``), and merges them onto Atlas entries:
   represent a distinct sense.
 - Sets ``enrichment.examples`` to ``[{uk, en, source: "Anna Ohoiko", locator}]`` (<=2).
 - Re-enriches empty #7397 heads of Ohoiko provenance (e.g. ``так само``, ``забоятися``, etc.).
+- (#7471) For 500-verbs entries, additionally sets ``enrichment.verb_pedagogy``:
+  ``stems.present_future`` from ``Present / Future Stems:``, ``government`` from
+  case-government labels (``+ accusative:``, ``-ся + до + genitive:``, ...), and
+  ``aspect_partner`` cross-links between the imperfective/perfective legs of the
+  headword pair (e.g. ``аналізувати | проаналізувати``) when both legs are
+  already separate Atlas entries. All three are sourced to Anna Ohoiko and never
+  invented. See ``scripts/lexicon/verb_pedagogy_vesum_aspect.py`` for the
+  companion pass that fills ``verb_pedagogy.aspect`` (VESUM) across all Atlas
+  verbs, not just the 500 Anna covers.
 """
 
 from __future__ import annotations
@@ -82,6 +91,70 @@ FORBIDDEN_EXAMPLE_KEYWORDS = frozenset(
     }
 )
 
+# #7471 verb pedagogy: Present/Future stem pair and case-government labels,
+# both parsed straight off the 500-verbs page text (no invented data).
+STEMS_LABEL = "Present / Future Stems:"
+GOVERNMENT_LABEL_RE = re.compile(r"^[-+].{0,80}:\s*$")
+GOVERNMENT_CASE_KEYWORDS = (
+    "accusative",
+    "genitive",
+    "dative",
+    "instrumental",
+    "locative",
+    "infinitive",
+)
+
+
+def _extract_500_verbs_stems(lines: list[str]) -> list[str] | None:
+    """Extract the Present/Future stem pair from a 500-verbs page (#7471, 500/500 coverage).
+
+    The label and its stem value can appear either after the headword pair on
+    the same line (the common shape) or before it (entry 383's column order is
+    flipped) or folded onto the same OCR-merged line as a headword
+    continuation (entries 277/341/365, see ``parse_500_verbs_chunk``). Take
+    everything to the right of the label and cut at the next 2+-space column
+    gap -- that gap is the headword spillover in the entry-383 shape and is
+    absent when the stems are the last thing on the line.
+    """
+    for line in lines[:6]:
+        idx = line.find(STEMS_LABEL)
+        if idx == -1:
+            continue
+        rem = line[idx + len(STEMS_LABEL) :]
+        gap = re.search(r"\s{2,}", rem)
+        if gap:
+            rem = rem[: gap.start()]
+        rem = re.sub(r"\s+", " ", rem).strip()
+        if not rem:
+            continue
+        parts = [p.strip() for p in rem.split("|")]
+        parts = [p for p in parts if p]
+        if parts:
+            return parts
+    return None
+
+
+def _extract_500_verbs_government(lines: list[str]) -> list[str]:
+    """Extract case-government labels (``+ accusative:``, ``-ся + до + genitive:``, ...).
+
+    Covers 359/500 verb pages per the Anna Ohoiko textbook census (#7471);
+    verbs with no case-government note (e.g. intransitive two-aspect verbs)
+    legitimately return an empty list -- never invented.
+    """
+    labels: list[str] = []
+    seen: set[str] = set()
+    for line in lines:
+        stripped = line.strip()
+        if not GOVERNMENT_LABEL_RE.match(stripped):
+            continue
+        if not any(kw in stripped.lower() for kw in GOVERNMENT_CASE_KEYWORDS):
+            continue
+        label = stripped.rstrip(":").strip()
+        if label and label not in seen:
+            seen.add(label)
+            labels.append(label)
+    return labels
+
 
 @dataclass(frozen=True)
 class ParsedOhoikoEntry:
@@ -93,6 +166,9 @@ class ParsedOhoikoEntry:
     lemmas: list[str]
     gloss: str
     example: dict[str, str] | None  # {"uk": ..., "en": ..., "source": ..., "locator": ...}
+    # #7471 verb pedagogy (500-verbs only; always None for 1000-words chunks).
+    stems: list[str] | None = None
+    government: list[str] | None = None
 
 
 def is_plausible_example(uk: str, en: str) -> bool:
@@ -528,6 +604,8 @@ def parse_500_verbs_chunk(chunk_id: str, title: str, text: str) -> ParsedOhoikoE
     # IMPERFECTIVE ASPECT / PERFECTIVE ASPECT" header row is Latin-only on
     # its Cyrillic-less left side, so split_uk_en_line rejects both.
     example = extract_500_verbs_example(lines, start_i=2, locator=locator)
+    stems = _extract_500_verbs_stems(lines)
+    government = _extract_500_verbs_government(lines)
 
     return ParsedOhoikoEntry(
         source_file=SOURCE_500_VERBS,
@@ -536,6 +614,8 @@ def parse_500_verbs_chunk(chunk_id: str, title: str, text: str) -> ParsedOhoikoE
         lemmas=lemmas,
         gloss=gloss,
         example=example,
+        stems=stems,
+        government=government,
     )
 
 
@@ -650,6 +730,60 @@ def enrich_entry_with_ohoiko(
     return changed
 
 
+def enrich_entry_with_verb_pedagogy(
+    entry: dict[str, Any],
+    *,
+    stems: list[str] | None = None,
+    government: list[str] | None = None,
+    aspect_partner: dict[str, Any] | None = None,
+    locator: str = "",
+) -> bool:
+    """Merge #7471 verb-pedagogy fields (stems/government/aspect_partner) in-place.
+
+    Omits unsourced keys: only writes fields actually supplied by the caller.
+    Never overwrites an existing ``aspect_partner`` -- whichever enrichment pass
+    (this Anna 500-verbs pass, or the separate VESUM-aspect pass) sets it first
+    wins; the two are not adjudicated against each other here.
+    """
+    changed = False
+    enrichment = entry.setdefault("enrichment", {})
+    if enrichment is None:
+        enrichment = {}
+        entry["enrichment"] = enrichment
+    verb_pedagogy = enrichment.setdefault("verb_pedagogy", {})
+    if verb_pedagogy is None:
+        verb_pedagogy = {}
+        enrichment["verb_pedagogy"] = verb_pedagogy
+
+    sources = set(enrichment.get("sources") or [])
+
+    if stems:
+        verb_pedagogy["stems"] = {
+            "present_future": list(stems),
+            "source": SOURCE_LABEL_AUTHOR,
+            "locator": locator,
+        }
+        sources.add(SOURCE_LABEL_AUTHOR)
+        changed = True
+
+    if government:
+        verb_pedagogy["government"] = [
+            {"label": label, "source": SOURCE_LABEL_AUTHOR, "locator": locator} for label in government
+        ]
+        sources.add(SOURCE_LABEL_AUTHOR)
+        changed = True
+
+    if aspect_partner and "aspect_partner" not in verb_pedagogy:
+        verb_pedagogy["aspect_partner"] = aspect_partner
+        sources.add(str(aspect_partner.get("source") or SOURCE_LABEL_AUTHOR))
+        changed = True
+
+    if changed:
+        enrichment["sources"] = sorted(sources)
+
+    return changed
+
+
 def _load_500_verbs_full_text_by_number(cur: sqlite3.Cursor) -> dict[str, str]:
     """Load full verb-page text keyed by verb number, if the section exists.
 
@@ -746,6 +880,9 @@ def apply_ohoiko_quality_enrichment(
     ex_updated_500 = 0
     matched_chunks_500 = 0
     lemmas_updated_500: set[str] = set()
+    stems_updated_500 = 0
+    government_updated_500 = 0
+    aspect_partner_updated_500 = 0
 
     for item in parsed_500:
         chunk_matched = False
@@ -760,8 +897,44 @@ def apply_ohoiko_quality_enrichment(
                 if item.example:
                     enrich_entry_with_ohoiko(entry, anna_example=item.example)
                     ex_updated_500 += 1
+                if (item.stems or item.government) and enrich_entry_with_verb_pedagogy(
+                    entry, stems=item.stems, government=item.government, locator=item.locator
+                ):
+                    if item.stems:
+                        stems_updated_500 += 1
+                    if item.government:
+                        government_updated_500 += 1
         if chunk_matched:
             matched_chunks_500 += 1
+
+        # #7471 aspect_partner: the headword pair's first lemma is always the
+        # imperfective (split_headword_into_lemmas preserves source order);
+        # every lemma after it is a perfective variant. Cross-link only legs
+        # that are actually present as Atlas entries -- never invent a partner.
+        if len(item.lemmas) >= 2:
+            imperf_lemma = item.lemmas[0]
+            perf_lemmas = item.lemmas[1:]
+            imperf_entry = entries_by_lemma.get(imperf_lemma)
+            first_perf_entry = entries_by_lemma.get(perf_lemmas[0])
+            if imperf_entry is not None:
+                partner: dict[str, Any] = {"lemma": perf_lemmas[0], "source": SOURCE_LABEL_AUTHOR}
+                if first_perf_entry is not None and first_perf_entry.get("url_slug"):
+                    partner["url_slug"] = first_perf_entry["url_slug"]
+                if enrich_entry_with_verb_pedagogy(
+                    imperf_entry, aspect_partner=partner, locator=item.locator
+                ):
+                    aspect_partner_updated_500 += 1
+            for perf_lemma in perf_lemmas:
+                perf_entry = entries_by_lemma.get(perf_lemma)
+                if perf_entry is None:
+                    continue
+                partner = {"lemma": imperf_lemma, "source": SOURCE_LABEL_AUTHOR}
+                if imperf_entry is not None and imperf_entry.get("url_slug"):
+                    partner["url_slug"] = imperf_entry["url_slug"]
+                if enrich_entry_with_verb_pedagogy(
+                    perf_entry, aspect_partner=partner, locator=item.locator
+                ):
+                    aspect_partner_updated_500 += 1
 
     # Verify #7397 heads
     heads_7397_enriched = 0
@@ -781,6 +954,9 @@ def apply_ohoiko_quality_enrichment(
         "500_lemmas_updated": len(lemmas_updated_500),
         "500_gloss_applied": gloss_updated_500,
         "500_examples_applied": ex_updated_500,
+        "500_stems_applied": stems_updated_500,
+        "500_government_applied": government_updated_500,
+        "500_aspect_partner_applied": aspect_partner_updated_500,
         "heads_7397_enriched": heads_7397_enriched,
     }
 
