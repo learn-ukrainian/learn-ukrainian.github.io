@@ -1689,6 +1689,278 @@ def test_deletion_path_layers_reject_symlinked_parent_escape(tmp_path: Path) -> 
     assert sentinel.read_bytes() == b"outside-authorized-root"
 
 
+@pytest.mark.parametrize(
+    "process_class",
+    sorted(deletion.UNINSPECTABLE_QUIESCENCE_PROCESS_ALLOWLIST),
+)
+def test_quiescence_allows_only_known_uninspectable_session_infrastructure(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    process_class: str,
+) -> None:
+    proc = tmp_path / "proc"
+    descriptor_dir = proc / "101" / "fd"
+    descriptor_dir.mkdir(parents=True)
+    (proc / "101" / "comm").write_text(process_class + "\n", encoding="utf-8")
+    original_iterdir = Path.iterdir
+
+    def guarded_iterdir(path: Path):
+        if path == descriptor_dir:
+            raise PermissionError("fixture hidden descriptor table")
+        return original_iterdir(path)
+
+    monkeypatch.setattr(Path, "iterdir", guarded_iterdir)
+
+    deletion._require_no_open_target_descriptors(
+        {"entries": [{"dev": 1, "ino": 2}]},
+        fixture=False,
+        proc=proc,
+    )
+
+
+@pytest.mark.parametrize(
+    "process_class",
+    [
+        "unknown-worker",
+        "ssh-agent-helper",
+        "SSHD-session",
+        "sshd-session-extra",
+        " ssh-agent",
+        "ssh-agent ",
+        "ssh-agent\r",
+        "",
+    ],
+)
+def test_quiescence_rejects_unknown_uninspectable_same_uid_process(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    process_class: str,
+) -> None:
+    proc = tmp_path / "proc"
+    descriptor_dir = proc / "102" / "fd"
+    descriptor_dir.mkdir(parents=True)
+    (proc / "102" / "comm").write_text(process_class + "\n", encoding="utf-8")
+    original_iterdir = Path.iterdir
+
+    def guarded_iterdir(path: Path):
+        if path == descriptor_dir:
+            raise PermissionError("fixture hidden descriptor table")
+        return original_iterdir(path)
+
+    monkeypatch.setattr(Path, "iterdir", guarded_iterdir)
+
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._require_no_open_target_descriptors(
+            {"entries": [{"dev": 1, "ino": 2}]},
+            fixture=False,
+            proc=proc,
+        )
+
+
+def test_quiescence_rejects_unreadable_process_class(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    proc = tmp_path / "proc"
+    descriptor_dir = proc / "102" / "fd"
+    descriptor_dir.mkdir(parents=True)
+    comm_path = proc / "102" / "comm"
+    comm_path.write_text("ssh-agent\n", encoding="utf-8")
+    original_iterdir = Path.iterdir
+    original_read_bytes = Path.read_bytes
+
+    def guarded_iterdir(path: Path):
+        if path == descriptor_dir:
+            raise PermissionError("fixture hidden descriptor table")
+        return original_iterdir(path)
+
+    def guarded_read_bytes(path: Path) -> bytes:
+        if path == comm_path:
+            raise PermissionError("fixture hidden process class")
+        return original_read_bytes(path)
+
+    monkeypatch.setattr(Path, "iterdir", guarded_iterdir)
+    monkeypatch.setattr(Path, "read_bytes", guarded_read_bytes)
+
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._require_no_open_target_descriptors(
+            {"entries": [{"dev": 1, "ino": 2}]},
+            fixture=False,
+            proc=proc,
+        )
+
+
+def test_quiescence_still_rejects_visible_target_descriptor_with_allowed_hidden_process(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    proc = tmp_path / "proc"
+    hidden_descriptors = proc / "103" / "fd"
+    hidden_descriptors.mkdir(parents=True)
+    (proc / "103" / "comm").write_text("ssh-agent\n", encoding="utf-8")
+    visible_descriptors = proc / "104" / "fd"
+    visible_descriptors.mkdir(parents=True)
+    (proc / "104" / "comm").write_text("ordinary-worker\n", encoding="utf-8")
+    target = tmp_path / "authorized-target.bin"
+    target.write_bytes(b"target")
+    (visible_descriptors / "0").symlink_to(target)
+    target_info = target.stat()
+    original_iterdir = Path.iterdir
+
+    def guarded_iterdir(path: Path):
+        if path == hidden_descriptors:
+            raise PermissionError("fixture hidden descriptor table")
+        return original_iterdir(path)
+
+    monkeypatch.setattr(Path, "iterdir", guarded_iterdir)
+
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._require_no_open_target_descriptors(
+            {"entries": [{"dev": int(target_info.st_dev), "ino": int(target_info.st_ino)}]},
+            fixture=False,
+            proc=proc,
+        )
+
+    assert target.read_bytes() == b"target"
+
+
+def test_quiescence_still_scans_inspectable_allowlisted_process(
+    tmp_path: Path,
+) -> None:
+    proc = tmp_path / "proc"
+    descriptor_dir = proc / "105" / "fd"
+    descriptor_dir.mkdir(parents=True)
+    (proc / "105" / "comm").write_text("ssh-agent\n", encoding="utf-8")
+    target = tmp_path / "authorized-target.bin"
+    target.write_bytes(b"target")
+    (descriptor_dir / "0").symlink_to(target)
+    target_info = target.stat()
+
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._require_no_open_target_descriptors(
+            {"entries": [{"dev": int(target_info.st_dev), "ino": int(target_info.st_ino)}]},
+            fixture=False,
+            proc=proc,
+        )
+
+    assert target.read_bytes() == b"target"
+
+
+def test_quiescence_rejects_uninspectable_individual_descriptor(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    proc = tmp_path / "proc"
+    descriptor_dir = proc / "106" / "fd"
+    descriptor_dir.mkdir(parents=True)
+    (proc / "106" / "comm").write_text("ordinary-worker\n", encoding="utf-8")
+    descriptor = descriptor_dir / "0"
+    descriptor.touch()
+    original_stat = Path.stat
+
+    def guarded_stat(path: Path, *args: Any, **kwargs: Any):
+        if path == descriptor:
+            raise PermissionError("fixture hidden descriptor")
+        return original_stat(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "stat", guarded_stat)
+
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._require_no_open_target_descriptors(
+            {"entries": [{"dev": 1, "ino": 2}]},
+            fixture=False,
+            proc=proc,
+        )
+
+
+def test_quiescence_rejects_uninspectable_process_metadata(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    proc = tmp_path / "proc"
+    process = proc / "108"
+    (process / "fd").mkdir(parents=True)
+    (process / "comm").write_text("ssh-agent\n", encoding="utf-8")
+    original_stat = Path.stat
+
+    def guarded_stat(path: Path, *args: Any, **kwargs: Any):
+        if path == process:
+            raise PermissionError("fixture hidden process metadata")
+        return original_stat(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "stat", guarded_stat)
+
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._require_no_open_target_descriptors(
+            {"entries": [{"dev": 1, "ino": 2}]},
+            fixture=False,
+            proc=proc,
+        )
+
+
+@pytest.mark.parametrize("race", ["process_exit", "descriptor_close"])
+def test_quiescence_tolerates_only_genuine_process_descriptor_races(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    race: str,
+) -> None:
+    proc = tmp_path / "proc"
+    descriptor_dir = proc / "107" / "fd"
+    descriptor_dir.mkdir(parents=True)
+    (proc / "107" / "comm").write_text("ordinary-worker\n", encoding="utf-8")
+    descriptor = descriptor_dir / "0"
+    descriptor.touch()
+    original_iterdir = Path.iterdir
+    original_stat = Path.stat
+
+    def guarded_iterdir(path: Path):
+        if race == "process_exit" and path == descriptor_dir:
+            raise FileNotFoundError("fixture process exit")
+        return original_iterdir(path)
+
+    def guarded_stat(path: Path, *args: Any, **kwargs: Any):
+        if race == "descriptor_close" and path == descriptor:
+            raise ProcessLookupError("fixture descriptor close")
+        return original_stat(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "iterdir", guarded_iterdir)
+    monkeypatch.setattr(Path, "stat", guarded_stat)
+
+    deletion._require_no_open_target_descriptors(
+        {"entries": [{"dev": 1, "ino": 2}]},
+        fixture=False,
+        proc=proc,
+    )
+
+
+def test_quiescence_refusal_precedes_every_deletion_event(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    state = _prepare_deletion_fixture(tmp_path, monkeypatch)
+    target_paths = _fixture_source_paths(state)
+
+    def refuse_quiescence(*args: Any, **kwargs: Any) -> None:
+        raise deletion.DeletionExecutionError("quiescence_unproved")
+
+    monkeypatch.setattr(
+        deletion, "_require_no_open_target_descriptors", refuse_quiescence
+    )
+
+    with pytest.raises(deletion.DeletionExecutionError):
+        _execute_fixture_deletion(state)
+
+    journal_dir = (
+        state["source_work"]
+        / "cycle007-storage-primary-stage"
+        / "deletion-execution-journal"
+    )
+    events_dir = journal_dir / "events"
+    assert all(path.is_file() for path in target_paths)
+    assert state["sentinel"].is_file()
+    assert not events_dir.exists() or not tuple(events_dir.iterdir())
+
+
 def test_authorized_deletion_is_exact_file_only_and_preserves_custody(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
