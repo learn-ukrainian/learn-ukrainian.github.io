@@ -38,6 +38,7 @@ import json
 import os
 import re
 import sys
+import time
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any
@@ -60,9 +61,9 @@ VERDICT_APPROVE_RE = re.compile(
     re.IGNORECASE,
 )
 VERDICT_BLOCK_RE = re.compile(
-    r"\bverdict\s*:\s*(?:"
-    r"changes?[-_ ]requested|needs?[-_ ]work|blocked|reject(?:ed)?|"
-    r"fail(?:ed|ure)?|revise"
+    r"\bverdict\s*:\s*\**\s*(?:"
+    r"changes?[-_ ]requested|request(?:ed)?[-_ ]changes?|needs?[-_ ]work|"
+    r"blocked|reject(?:ed)?|fail(?:ed|ure)?|revise"
     r")\b",
     re.IGNORECASE,
 )
@@ -130,6 +131,11 @@ class ParsedAttestation:
     reviewer_family: str
     verdict: str
     source: str
+    # Attestation binds to the FIRST labeled SHA — the "At exact head" header
+    # line per the posting contract. History-recap lines later in the body
+    # neither bind nor stale-reject (CF r1 on this PR rejected match-any:
+    # it let one body attest several heads).
+    created_at: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -188,6 +194,13 @@ def author_family_from_agents(agents: Iterable[str]) -> str:
         if family == FAMILY_UNKNOWN:
             return FAMILY_UNKNOWN
         families.add(family)
+    # #7487: the dependabot token maps to the fixture family (universal
+    # independence — legitimate for pure dependabot PRs). One smuggled
+    # ``X-Agent: dependabot/x`` trailer must not neutralize a mixed PR's
+    # real author family, so fixture is ignored whenever any concrete
+    # family is present.
+    if FAMILY_FIXTURE in families and (len(families) > 1 or saw_cursor):
+        families.discard(FAMILY_FIXTURE)
     if len(families) > 1:
         return FAMILY_UNKNOWN
     if len(families) == 1:
@@ -222,18 +235,30 @@ def _first_labeled_sha(text: str) -> str | None:
     return match.group(1).lower()
 
 
-def parse_attestation(body: str, *, source: str = "comment") -> ParsedAttestation | None:
-    """Parse one existing CF comment shape, or None if it is not CF of record."""
+def _labeled_shas(text: str) -> tuple[str, ...]:
+    return tuple(match.group(1).lower() for match in HEAD_LABELED_RE.finditer(text))
+
+
+def parse_attestation(
+    body: str, *, source: str = "comment", created_at: str = ""
+) -> ParsedAttestation | None:
+    """Parse one existing CF comment shape, or None if it is not CF of record.
+
+    #7487: a body whose verdict is a block/changes-request is parsed as a
+    REVOCATION (verdict="BLOCK") instead of being dropped — evaluation is
+    latest-wins per reviewer family, so an earlier APPROVE cannot survive a
+    later block at the same head.
+    """
     if not isinstance(body, str) or not body.strip():
         return None
     if not CF_MARKER_RE.search(body):
         return None
-    if VERDICT_BLOCK_RE.search(body):
-        return None
-    if not VERDICT_APPROVE_RE.search(body):
+    blocked = VERDICT_BLOCK_RE.search(body) is not None
+    if not blocked and not VERDICT_APPROVE_RE.search(body):
         return None
 
-    sha = _first_labeled_sha(body)
+    labeled_heads = _labeled_shas(body)
+    sha = labeled_heads[0] if labeled_heads else None
     if sha is None:
         found = {match.group(1).lower() for match in SHA_RE.finditer(body)}
         if len(found) != 1:
@@ -254,8 +279,9 @@ def parse_attestation(body: str, *, source: str = "comment") -> ParsedAttestatio
     return ParsedAttestation(
         head_sha=sha,
         reviewer_family=reviewer_family,
-        verdict="APPROVE",
+        verdict="BLOCK" if blocked else "APPROVE",
         source=source,
+        created_at=created_at,
     )
 
 
@@ -276,7 +302,7 @@ def evaluate_attestation(
     *,
     expected_head: str,
     author_family: str,
-    bodies: Sequence[tuple[str, str]],
+    bodies: Sequence[tuple[str, ...]],
 ) -> AttestResult:
     """Return pass/fail for the supplied comment/review bodies against one SHA."""
     head = (expected_head or "").strip().lower()
@@ -286,10 +312,23 @@ def evaluate_attestation(
         return AttestResult(False, "unparseable attestation: author family", expected_head=head)
 
     parsed: list[ParsedAttestation] = []
-    for source, body in bodies:
-        item = parse_attestation(body, source=source)
+    for entry in bodies:
+        if len(entry) == 3:
+            source, body, created_at = entry
+        else:
+            source, body = entry
+            created_at = ""
+        item = parse_attestation(body, source=source, created_at=created_at)
         if item is not None:
             parsed.append(item)
+    # Chronological latest-wins across SOURCES (#7502 CF r1): comments and
+    # reviews are fetched as separate lists, so list order alone let an older
+    # review outrank a newer comment. Sort by created_at when present; the
+    # sort is stable, so timestamp-less fixtures keep their list order.
+    # Tie-break (#7502 CF r2): on EQUAL timestamps a BLOCK sorts after an
+    # APPROVE so the standing verdict fails closed — a same-second approve
+    # can never bury a same-second revocation.
+    parsed.sort(key=lambda item: (item.created_at, item.verdict == "BLOCK"))
     if not parsed:
         return AttestResult(
             False,
@@ -310,23 +349,49 @@ def evaluate_attestation(
             reviewer_family=parsed[0].reviewer_family,
         )
 
+    # Latest-wins per reviewer family (#7487): bodies arrive in API order
+    # (chronological within comments, then reviews), so the LAST parsed item
+    # for a family is its standing verdict at this head. An earlier APPROVE
+    # must not survive a later block from the same family.
+    standing: dict[str, ParsedAttestation] = {}
     for item in matching:
-        if families_independent(author_family, item.reviewer_family):
-            return AttestResult(
-                True,
-                "independent exact-head CF APPROVE",
-                expected_head=head,
-                attested_head=item.head_sha,
-                author_family=author_family,
-                reviewer_family=item.reviewer_family,
-            )
+        standing[item.reviewer_family] = item
+
+    approving = [
+        item
+        for item in standing.values()
+        if item.verdict == "APPROVE"
+        and families_independent(author_family, item.reviewer_family)
+    ]
+    if approving:
+        item = approving[0]
+        return AttestResult(
+            True,
+            "independent exact-head CF APPROVE",
+            expected_head=head,
+            attested_head=head,
+            author_family=author_family,
+            reviewer_family=item.reviewer_family,
+        )
+    revoked = [item for item in standing.values() if item.verdict == "BLOCK"]
+    if revoked:
+        return AttestResult(
+            False,
+            f"revoked CF: latest verdict from {revoked[0].reviewer_family} "
+            "is a block at this head",
+            expected_head=head,
+            attested_head=head,
+            author_family=author_family,
+            reviewer_family=revoked[0].reviewer_family,
+        )
+    first = next(iter(standing.values()))
     return AttestResult(
         False,
-        f"same-family review: author={author_family} reviewer={matching[0].reviewer_family}",
+        f"same-family review: author={author_family} reviewer={first.reviewer_family}",
         expected_head=head,
-        attested_head=matching[0].head_sha,
+        attested_head=first.head_sha,
         author_family=author_family,
-        reviewer_family=matching[0].reviewer_family,
+        reviewer_family=first.reviewer_family,
     )
 
 
@@ -345,8 +410,22 @@ def github_api_get(
     if token:
         headers["Authorization"] = f"Bearer {token}"
     request = Request(f"{base_url}/{path.lstrip('/')}", headers=headers)
-    with urlopen(request, timeout=timeout) as response:
-        return json.load(response)
+    # #7487: one transient 5xx / connection blip must not fail the Gate and
+    # force a full re-run — bounded retries with short backoff, fail closed
+    # after the budget. 4xx (auth, not-found, rate-limit-as-403) never retry.
+    attempts = 3
+    for attempt in range(1, attempts + 1):
+        try:
+            with urlopen(request, timeout=timeout) as response:
+                return json.load(response)
+        except HTTPError as exc:
+            if exc.code < 500 or attempt == attempts:
+                raise
+        except (URLError, TimeoutError):
+            if attempt == attempts:
+                raise
+        time.sleep(2 * attempt)
+    raise ValueError("unreachable: retry loop exhausted")  # pragma: no cover
 
 
 def _api_items(payload: Any, key: str) -> list[Mapping[str, Any]]:
@@ -444,15 +523,26 @@ def collect_bodies_and_agents(
     reviews = fetch_paginated(f"repos/{repo}/pulls/{pr_number}/reviews", api_get=api_get)
     commits = fetch_paginated(f"repos/{repo}/pulls/{pr_number}/commits", api_get=api_get)
 
-    bodies: list[tuple[str, str]] = []
+    bodies: list[tuple[str, str, str]] = []
     for comment in comments:
         body = comment.get("body")
         if isinstance(body, str) and body.strip():
-            bodies.append(("comment", body))
+            stamp = comment.get("created_at")
+            bodies.append(("comment", body, stamp if isinstance(stamp, str) else ""))
     for review in reviews:
+        # #7502 CF r2/r3: a PENDING review is an unsubmitted draft and a
+        # DISMISSED review is a voided one — neither may attest. Only
+        # positively-submitted states count; a missing submitted_at also
+        # fails closed (every submitted review carries one).
+        state = review.get("state")
+        stamp = review.get("submitted_at")
+        if state not in {"APPROVED", "CHANGES_REQUESTED", "COMMENTED"}:
+            continue
+        if not isinstance(stamp, str) or not stamp:
+            continue
         body = review.get("body")
         if isinstance(body, str) and body.strip():
-            bodies.append(("review", body))
+            bodies.append(("review", body, stamp))
 
     messages: list[str] = []
     for commit in commits:
@@ -473,7 +563,7 @@ def run_event(
     merge_group_head_ref: str,
     repository: str,
     api_get: ApiGet | None = None,
-    bodies: Sequence[tuple[str, str]] | None = None,
+    bodies: Sequence[tuple[str, ...]] | None = None,
     author_agents: Sequence[str] | None = None,
 ) -> AttestResult:
     """Evaluate CF for one GitHub event. Non-PR events no-op succeed."""

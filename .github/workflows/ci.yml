@@ -607,6 +607,12 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # #7487 M1: the gate must never execute candidate-controlled code.
+          # On pull_request the default checkout is the PR merge ref, letting
+          # a PR rewrite the evaluator that judges its own review; pin the
+          # trust decision to the BASE side instead. merge_group uses the
+          # queue base; push/schedule keep the event sha.
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || (github.event_name == 'merge_group' && github.event.merge_group.base_sha || github.sha) }}
           persist-credentials: false
           sparse-checkout: |
             scripts/ci
