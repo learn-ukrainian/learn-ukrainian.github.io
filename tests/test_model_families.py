@@ -25,13 +25,14 @@ _TOKEN_TO_FAMILY = {
     "deepseek": "deepseek",
     "deepseek-v4-pro": "deepseek",
     "openrouter/deepseek/deepseek-v4-flash": "deepseek",
-    # google (gemma + gemini + agy)
+    # google (gemma + gemini + agy + antigravity)
     "google": "google",
     "gemma": "google",
     "gemma-4-31b-it": "google",
     "gemini": "google",
     "gemini-3.1-pro": "google",
     "agy": "google",
+    "antigravity": "google",
     # openai (codex + gpt + openai)
     "openai": "openai",
     "gpt-5.6-terra": "openai",
@@ -72,6 +73,8 @@ _UNKNOWN_TOKENS = (
     "mystery-model",
     "composer-2.4",
     "mystery-reviewer",
+    "gravity",
+    "anti",
 )
 
 
@@ -88,9 +91,12 @@ def test_canonical_normalize_family_unknown_is_first_class() -> None:
 
 
 def test_canonical_word_boundary_prevents_false_matches() -> None:
-    # "gemmate" must NOT be read as gemma; "openrouter" has no openai marker.
+    # "gemmate" must NOT be read as gemma; "openrouter" has no openai marker;
+    # "gravity" and "anti" alone stay unknown.
     assert model_families.normalize_family("gemmate-thing") is model_families.Family.UNKNOWN
     assert model_families.normalize_family("openrouter") is model_families.Family.UNKNOWN
+    assert model_families.normalize_family("gravity") is model_families.Family.UNKNOWN
+    assert model_families.normalize_family("anti") is model_families.Family.UNKNOWN
 
 
 def test_canonical_lineage_prefers_pin_over_cursor_seat() -> None:

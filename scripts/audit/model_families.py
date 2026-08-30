@@ -23,7 +23,7 @@ Routing decisions codified here (2026-07-17, issue #5385):
   never an acceptable formal-review identity
   (``agents_extensions/shared/rules/model-assignment.md``); a cursor seat that
   records a pinned model inherits the pin's family.
-* ``agy`` / ``gemma`` / ``gemini`` → ``google`` (restored in Layer-B, which
+* ``agy`` / ``antigravity`` / ``gemma`` / ``gemini`` → ``google`` (restored in Layer-B, which
   previously orphaned ``agy``).
 * ``codex`` / ``gpt`` / ``openai`` → ``openai`` (unified; Layer-B previously
   used ``gpt``).
@@ -89,7 +89,7 @@ _LINEAGE_FIELDS: tuple[str, ...] = (
 # because cursor-Auto is UNKNOWN unless a concrete pin overrides it.
 _FAMILY_TOKEN_RULES: tuple[tuple[tuple[str, ...], Family], ...] = (
     (("deepseek",), Family.DEEPSEEK),
-    (("gemma", "gemini", "agy", "google"), Family.GOOGLE),
+    (("gemma", "gemini", "agy", "antigravity", "google"), Family.GOOGLE),
     (("codex", "openai", "gpt"), Family.OPENAI),
     (("anthropic", "claude", "fable", "opus", "sonnet"), Family.ANTHROPIC),
     (("grok", "xai"), Family.XAI),
