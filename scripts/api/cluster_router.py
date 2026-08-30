@@ -16,6 +16,7 @@ reads. Contract (private HA plan v3.1 + 2026-08-30 review):
 
 from __future__ import annotations
 
+import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
 from pathlib import Path
@@ -141,14 +142,22 @@ def check_cluster_readiness(ctx: MonitorContext | None = None) -> dict[str, Any]
     repo_root = resolved_ctx.roots.project_root if resolved_ctx.roots else None
 
     stores_status: dict[str, dict[str, Any]] = {}
-    with ThreadPoolExecutor(max_workers=len(_ACTIVE_STORES)) as pool:
+    # NOT a ``with`` block: ThreadPoolExecutor.__exit__ JOINS workers, so one
+    # hung probe (e.g. a wedged sqlite open) would hold the response past
+    # every advertised deadline (CF r1 finding, PR #7499). Shut down without
+    # waiting; a stuck worker thread is bounded by the pg connect/statement
+    # timeouts and cannot block the answer.
+    pool = ThreadPoolExecutor(max_workers=len(_ACTIVE_STORES))
+    try:
         futures = {
             store_id: pool.submit(_probe_store, store_id, resolved_ctx, repo_root)
             for store_id in _ACTIVE_STORES
         }
+        deadline = time.monotonic() + _TOTAL_DEADLINE_S
         for store_id, future in futures.items():
+            per_probe = min(_PROBE_DEADLINE_S, max(0.0, deadline - time.monotonic()))
             try:
-                entry = future.result(timeout=_PROBE_DEADLINE_S)
+                entry = future.result(timeout=per_probe)
             except TimeoutError:
                 entry = {
                     "authority": storage.resolve_authority(store_id).value,
@@ -162,6 +171,8 @@ def check_cluster_readiness(ctx: MonitorContext | None = None) -> dict[str, Any]
                     "reason": _REASON_SQLITE_PROBE_FAILED,
                 }
             stores_status[store_id.value] = entry
+    finally:
+        pool.shutdown(wait=False, cancel_futures=True)
 
     can_serve_cluster_reads = all(
         entry["accessible"] for entry in stores_status.values()

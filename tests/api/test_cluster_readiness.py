@@ -171,3 +171,28 @@ def test_live_pg_select_one(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> 
     fleet = data["storage_seam"][StoreId.FLEET_COMMS.value]
     assert fleet["authority"] == "pg"
     assert fleet["accessible"] is True
+
+
+def test_hung_probe_does_not_block_past_the_deadline(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """CF r1 (PR #7499): a wedged store probe must not hold the response —
+    the executor is shut down without joining workers."""
+    import scripts.api.cluster_router as cr
+
+    def _hang(store_id, ctx, repo_root):
+        time.sleep(30)
+        return {"authority": "sqlite", "accessible": True}
+
+    monkeypatch.setattr(cr, "_probe_store", _hang)
+    monkeypatch.setattr(cr, "_PROBE_DEADLINE_S", 0.5)
+    monkeypatch.setattr(cr, "_TOTAL_DEADLINE_S", 1.5)
+
+    started = time.monotonic()
+    data = cr.check_cluster_readiness(fixture_context(tmp_path))
+    elapsed = time.monotonic() - started
+
+    assert elapsed < 5.0
+    assert data["ready"] is False
+    for store_id in _PROBED_SQLITE_STORES:
+        assert data["storage_seam"][store_id.value]["reason"] == "probe_timeout"
