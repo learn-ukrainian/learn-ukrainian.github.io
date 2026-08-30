@@ -112,3 +112,25 @@ def test_constructor_closes_connection_on_partial_init(
         ArtifactStore(root=tmp_path)
     assert closed and closed[0].closed
     monkeypatch.setattr(ArtifactStore, "_ensure_pg_blob_table", real_ensure)
+
+
+def test_concurrent_explicit_id_race_is_deterministic(
+    pg_store: ArtifactStore, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """#7483 CF r1: a writer slipping between the pre-checks and the INSERT
+    must surface as ArtifactStoreError, never a raw UniqueViolation."""
+    first = pg_store.store_bytes(_payload(), producer="t")
+    # Simulate the race: blind the pre-checks so the INSERT hits the
+    # UNIQUE(artifact_id) constraint directly.
+    monkeypatch.setattr(pg_store, "_pg_row_by_artifact_id", lambda _aid: None)
+    real_by_sha = pg_store._pg_row_by_sha256
+    monkeypatch.setattr(pg_store, "_pg_row_by_sha256", lambda _d: None)
+    with pytest.raises(ArtifactStoreError, match="concurrent-writer race"):
+        try:
+            pg_store.store_bytes(
+                _payload(), producer="t", artifact_id=first.artifact_id
+            )
+        finally:
+            monkeypatch.setattr(pg_store, "_pg_row_by_sha256", real_by_sha)
+    # The connection must remain usable after the converted error.
+    assert pg_store.get(first.artifact_id).sha256 == first.sha256

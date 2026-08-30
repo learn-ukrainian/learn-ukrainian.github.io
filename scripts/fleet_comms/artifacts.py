@@ -306,15 +306,26 @@ class ArtifactStore:
         # ``transaction()`` commits on exit / rolls back on error; nested in a
         # caller-owned transaction it becomes a SAVEPOINT, so an error here
         # rolls back only this write and never poisons the caller (#7483 1.3).
-        with self._conn.transaction():
-            self._conn.execute(
-                f"""INSERT INTO {_PG_BLOB_TABLE}(
-                    artifact_id, sha256, bytes, mime_type, logical_filename,
-                    producer, retention_class, created_at, payload
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-                ON CONFLICT (sha256) DO NOTHING""",
-                (aid, digest, len(data), mime, logical_filename, producer, retention_class, created, data),
-            )
+        # A concurrent explicit-id writer can still slip between the
+        # pre-checks and the INSERT: convert the narrow UniqueViolation race
+        # to the same deterministic error the pre-checks raise (CF r1).
+        import psycopg.errors
+
+        try:
+            with self._conn.transaction():
+                self._conn.execute(
+                    f"""INSERT INTO {_PG_BLOB_TABLE}(
+                        artifact_id, sha256, bytes, mime_type, logical_filename,
+                        producer, retention_class, created_at, payload
+                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    ON CONFLICT (sha256) DO NOTHING""",
+                    (aid, digest, len(data), mime, logical_filename, producer, retention_class, created, data),
+                )
+        except psycopg.errors.UniqueViolation as exc:
+            raise ArtifactStoreError(
+                f"artifact_id {aid!r} already exists with different content "
+                "(lost a concurrent-writer race)"
+            ) from exc
         row = self._pg_row_by_sha256(digest)
         if row is None:
             raise ArtifactStoreError(f"failed to persist artifact metadata for {aid}")
