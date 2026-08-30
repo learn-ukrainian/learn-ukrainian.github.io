@@ -56,6 +56,12 @@ HEADS_7397 = frozenset(
     }
 )
 
+# Sentence-final punctuation (including a bare colon, which closes a
+# handful of genuinely complete 500-verbs examples that introduce a short
+# list, e.g. "Voiced and unvoiced consonants form pairs:"). Used to decide
+# whether a candidate 500-verbs example needs a wrapped-continuation merge.
+TERMINAL_PUNCT_500_VERBS = (".", "?", "!", "…", ":", "”", "»", '"')
+
 FORBIDDEN_EXAMPLE_KEYWORDS = frozenset(
     {
         "stems:",
@@ -401,6 +407,59 @@ def parse_1000_words_chunk(chunk_id: str, title: str, text: str) -> ParsedOhoiko
     )
 
 
+def extract_500_verbs_example(lines: list[str], *, start_i: int = 2, locator: str = "") -> dict[str, str] | None:
+    """Extract one bilingual UK/EN example sentence from a 500-verbs page.
+
+    Real verb pages run: headword/gloss/stems, full present/past/future/
+    conditional/imperative/participle tables, then one or more
+    case-government labels (``+ accusative:``, ``-ся + з (із, зі) +
+    instrumental:``, ...) each followed by 1-4 two-column example
+    sentences. Longer sentences wrap across 2-3 physical lines, and the
+    two columns don't always wrap in lockstep -- one side can finish
+    (reach terminal punctuation) a line before the other, so a wrapped
+    continuation may be a matching two-column row (both sides wrap) or a
+    lone Cyrillic-only / Latin-only row (only one side wraps).
+    """
+    i = start_i
+    while i < len(lines):
+        pair = split_uk_en_line(lines[i].strip())
+        if not pair:
+            i += 1
+            continue
+        uk, en = pair
+        j = i + 1
+        hops = 0
+        while hops < 5 and not (
+            uk.rstrip().endswith(TERMINAL_PUNCT_500_VERBS)
+            and en.rstrip().endswith(TERMINAL_PUNCT_500_VERBS)
+        ):
+            if j >= len(lines):
+                break
+            next_str = lines[j].strip()
+            next_pair = split_uk_en_line(next_str)
+            has_cyr = bool(CYRILLIC_CHAR_RE.search(next_str))
+            has_lat = bool(LATIN_CHAR_RE.search(next_str))
+            if next_pair:
+                nuk, nen = next_pair
+                uk = f"{uk} {nuk}".strip()
+                en = f"{en} {nen}".strip()
+            elif has_cyr and not has_lat:
+                uk = f"{uk} {next_str}".strip()
+            elif has_lat and not has_cyr:
+                en = f"{en} {next_str}".strip()
+            else:
+                break
+            j += 1
+            hops += 1
+
+        uk = re.sub(r"\s+", " ", uk).strip()
+        en = re.sub(r"\s+", " ", en).strip()
+        if is_plausible_example(uk, en):
+            return {"uk": uk, "en": en, "source": SOURCE_LABEL_AUTHOR, "locator": locator}
+        i += 1
+    return None
+
+
 def parse_500_verbs_chunk(chunk_id: str, title: str, text: str) -> ParsedOhoikoEntry:
     """Parse a single 500-verbs textbook row into structured entry data."""
     num_m = re.search(r"_e(\d+)", chunk_id)
@@ -462,21 +521,13 @@ def parse_500_verbs_chunk(chunk_id: str, title: str, text: str) -> ParsedOhoikoE
 
     lemmas = split_headword_into_lemmas(head_raw)
 
-    # 500-verbs contains conjugation tables, not example sentences; validate any candidates
-    example: dict[str, str] | None = None
-    for line in lines[2:]:
-        ls = line.strip()
-        pair = split_uk_en_line(ls)
-        if pair:
-            left, right = pair
-            if is_plausible_example(left, right):
-                example = {
-                    "uk": left,
-                    "en": right,
-                    "source": SOURCE_LABEL_AUTHOR,
-                    "locator": locator,
-                }
-                break
+    # The example sentence(s) live after the conjugation tables, past a
+    # case-government label like "+ accusative:" (see
+    # extract_500_verbs_example). Table rows themselves never match: body
+    # rows are Cyrillic-only (both aspect columns), and the "PERSON /
+    # IMPERFECTIVE ASPECT / PERFECTIVE ASPECT" header row is Latin-only on
+    # its Cyrillic-less left side, so split_uk_en_line rejects both.
+    example = extract_500_verbs_example(lines, start_i=2, locator=locator)
 
     return ParsedOhoikoEntry(
         source_file=SOURCE_500_VERBS,
@@ -599,6 +650,33 @@ def enrich_entry_with_ohoiko(
     return changed
 
 
+def _load_500_verbs_full_text_by_number(cur: sqlite3.Cursor) -> dict[str, str]:
+    """Load full verb-page text keyed by verb number, if the section exists.
+
+    ``textbooks.text`` for ``anna-ohoiko-500-verbs`` chunks is a truncated
+    stub (headword + first present-tense rows only) left over from a
+    legacy ingest path -- it never reaches the example sentences (#7457).
+    The full page (conjugation tables + case-government notes + example
+    sentences) was separately ingested into ``textbook_sections.full_text``
+    by ``scripts/ingest/ohoiko_verbs_ingest.py``, keyed by
+    ``section_number`` (the verb number as plain text, e.g. ``"1"``).
+    That ingest writes ``_v####`` chunk ids while the live ``textbooks``
+    rows use the legacy ``_e####`` ids, so ``textbooks.parent_section_id``
+    was never linked -- this looks up the richer text by number instead.
+    Returns ``{}`` when the table/rows don't exist (e.g. a DB that
+    predates the section-coverage backfill); callers fall back to the
+    stub ``textbooks.text``.
+    """
+    try:
+        rows = cur.execute(
+            "SELECT section_number, full_text FROM textbook_sections WHERE source_file = ?",
+            (SOURCE_500_VERBS,),
+        ).fetchall()
+    except sqlite3.OperationalError:
+        return {}
+    return {num: text for num, text in rows if num}
+
+
 def build_ohoiko_book_catalog(
     conn: sqlite3.Connection,
 ) -> tuple[list[ParsedOhoikoEntry], list[ParsedOhoikoEntry]]:
@@ -614,7 +692,12 @@ def build_ohoiko_book_catalog(
         "SELECT chunk_id, title, text FROM textbooks WHERE source_file = ?",
         (SOURCE_500_VERBS,),
     ).fetchall()
-    parsed_500 = [parse_500_verbs_chunk(cid, title, text) for cid, title, text in rows500]
+    full_text_by_number = _load_500_verbs_full_text_by_number(cur)
+    parsed_500 = []
+    for cid, title, text in rows500:
+        num_m = re.search(r"_e(\d+)", cid)
+        full_text = full_text_by_number.get(str(int(num_m.group(1)))) if num_m else None
+        parsed_500.append(parse_500_verbs_chunk(cid, title, full_text or text))
 
     return parsed_1000, parsed_500
 

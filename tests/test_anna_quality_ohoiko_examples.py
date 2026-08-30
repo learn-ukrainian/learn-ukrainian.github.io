@@ -12,11 +12,13 @@ required in CI):
 
 from __future__ import annotations
 
+import sqlite3
 from typing import Any
 
 from scripts.lexicon.ohoiko_quality_enrichment import (
     HEADS_7397,
     apply_ohoiko_quality_enrichment,
+    build_ohoiko_book_catalog,
     enrich_entry_with_ohoiko,
     is_duplicate_sense,
     is_plausible_example,
@@ -213,6 +215,12 @@ SAMPLE_1000_CHUNKS: dict[str, tuple[str, str, str]] = {
 }
 
 SAMPLE_500_CHUNKS: dict[str, tuple[str, str, str]] = {
+    # These bodies extend beyond the truncated `textbooks.text` stub to
+    # mirror the *shape* of a real full verb page pulled from
+    # `textbook_sections.full_text` (#7457): headword/gloss/stems, a
+    # conjugation table, a case-government label (e.g. "+ accusative:"),
+    # then example sentence(s). The example sentences are invented
+    # (not copied from the source textbook).
     "v0001": (
         "anna-ohoiko-500-verbs_e0001",
         "аналізува́ти | проаналізува́ти",
@@ -221,7 +229,9 @@ SAMPLE_500_CHUNKS: dict[str, tuple[str, str, str]] = {
         "ОСОБА                          НЕДОКОНАНИЙ ВИД                                                 ДОКОНАНИЙ ВИД\n"
         "ТЕПЕРІШНІЙ ЧАС ― PRESENT TENSE\n"
         "я                   аналізу́ю\n"
-        "ти                  аналізу́єш\n",
+        "ти                  аналізу́єш\n"
+        "+ accusative:\n"
+        "Ми ана́лізуємо результа́ти.                                      We are analyzing the results.\n",
     ),
     "v0004": (
         "anna-ohoiko-500-verbs_e0004",
@@ -231,7 +241,9 @@ SAMPLE_500_CHUNKS: dict[str, tuple[str, str, str]] = {
         "ОСОБА                                 НЕДОКОНАНИЙ ВИД                                                 ДОКОНАНИЙ ВИД\n"
         "ТЕПЕРІШНІЙ ЧАС ― PRESENT TENSE\n"
         "я                      ба́чу [ся]\n"
-        "ти                     ба́чиш [ся]\n",
+        "ти                     ба́чиш [ся]\n"
+        "+ accusative:\n"
+        "Я ба́чу вели́кий буди́нок.                                        I see a big house.\n",
     ),
     "v0018": (
         "anna-ohoiko-500-verbs_e0018",
@@ -241,7 +253,9 @@ SAMPLE_500_CHUNKS: dict[str, tuple[str, str, str]] = {
         "ОСОБА                           НЕДОКОНАНИЙ ВИД                                                 ДОКОНАНИЙ ВИД\n"
         "ТЕПЕРІШНІЙ ЧАС ― PRESENT TENSE\n"
         "я                   буду́ю\n"
-        "ти                  буду́єш\n",
+        "ти                  буду́єш\n"
+        "+ accusative:\n"
+        "Робітники́ будую́ть но́вий міст.                                  Workers are building a new bridge.\n",
     ),
     "v0277": (
         "anna-ohoiko-500-verbs_e0277",
@@ -251,7 +265,9 @@ SAMPLE_500_CHUNKS: dict[str, tuple[str, str, str]] = {
         "́ нувати [ся] | об’єдна́ти [ся]                                                Present / Future Stems: об’єдну- | об’єдна-\n"
         "ОСОБА                                    НЕДОКОНАНИЙ ВИД                                              ДОКОНАНИЙ ВИД\n"
         "ТЕПЕРІШНІЙ ЧАС ― PRESENT TENSE\n"
-        "я                       об’єд́ ную [ся]\n",
+        "я                       об’єд́ ную [ся]\n"
+        "+ accusative:\n"
+        "Ми об’єдна́ли зуси́лля.                                          We joined our efforts.\n",
     ),
     "v0341": (
         "anna-ohoiko-500-verbs_e0341",
@@ -261,7 +277,9 @@ SAMPLE_500_CHUNKS: dict[str, tuple[str, str, str]] = {
         "́ нувати [ся] | поєдна́ти [ся]                                                Present / Future Stems: поєдну- | поєдна-\n"
         "ОСОБА                              НЕДОКОНАНИЙ ВИД                                                 ДОКОНАНИЙ ВИД\n"
         "ТЕПЕРІШНІЙ ЧАС ― PRESENT TENSE\n"
-        "я                     поєд́ ную [ся]\n",
+        "я                     поєд́ ную [ся]\n"
+        "+ accusative:\n"
+        "Вона́ поє́днує ро́боту й навча́ння.                               She combines work and study.\n",
     ),
     "v0365": (
         "anna-ohoiko-500-verbs_e0365",
@@ -271,7 +289,9 @@ SAMPLE_500_CHUNKS: dict[str, tuple[str, str, str]] = {
         "́ нувати [ся] | приєдна́ти [ся]                                                  Present / Future Stems: приєдну- | приєдна-\n"
         "ОСОБА                                     НЕДОКОНАНИЙ ВИД                                                 ДОКОНАНИЙ ВИД\n"
         "ТЕПЕРІШНІЙ ЧАС ― PRESENT TENSE\n"
-        "я                         приєд́ ную [ся]\n",
+        "я                         приєд́ ную [ся]\n"
+        "-ся + до + genitive:\n"
+        "Він приєдна́вся до на́шої кома́нди.                               He joined our team.\n",
     ),
     "v0383": (
         "anna-ohoiko-500-verbs_e0383",
@@ -280,7 +300,67 @@ SAMPLE_500_CHUNKS: dict[str, tuple[str, str, str]] = {
         "Conjugation: 2nd (-ять)                                                                                   to ask (for); to request\n"
         "ОСОБА                            НЕДОКОНАНИЙ ВИД                                                 ДОКОНАНИЙ ВИД\n"
         "ТЕПЕРІШНІЙ ЧАС ― PRESENT TENSE\n"
-        "я                   прошу́\n",
+        "я                   прошу́\n"
+        "+ accusative + infinitive:\n"
+        "Він про́сить допомо́ги.                                          He asks for help.\n",
+    ),
+    # Wrapped-continuation shapes seen in real full verb pages (#7457).
+    # UK-only wrap: the EN column finishes on the first line, УК spills to
+    # a lone Cyrillic-only next line.
+    "v0431": (
+        "anna-ohoiko-500-verbs_e0431",
+        "вимага́ти | ви́могти",
+        "вимага́ти | ви́могти                                                                    Present / Future Stems: вимага- | вимож-\n"
+        "to demand\n"
+        "ОСОБА                            НЕДОКОНАНИЙ ВИД                                                 ДОКОНАНИЙ ВИД\n"
+        "ТЕПЕРІШНІЙ ЧАС ― PRESENT TENSE\n"
+        "я                   вимага́ю\n"
+        "+ genitive:\n"
+        "Ми вимага́ємо термі́нового рі́шення                              We demand an urgent decision.\n"
+        "цього́ пита́ння.\n",
+    ),
+    # EN-only wrap: УК finishes on the first line, EN column spills to a
+    # lone Latin-only next line.
+    "v0432": (
+        "anna-ohoiko-500-verbs_e0432",
+        "вага́тися | завага́тися",
+        "вага́тися | завага́тися                                                                Present / Future Stems: вага-..-ся | завага-..-ся\n"
+        "to hesitate\n"
+        "ОСОБА                            НЕДОКОНАНИЙ ВИД                                                 ДОКОНАНИЙ ВИД\n"
+        "ТЕПЕРІШНІЙ ЧАС ― PRESENT TENSE\n"
+        "я                   вага́юся\n"
+        "+ infinitive:\n"
+        "Вона́ до́вго вага́лася.                                          She hesitated for a long time before\n"
+        "                                                                 signing the contract.\n",
+    ),
+    # Both-sides wrap needing a two-hop merge (mirrors the real
+    # "Прем'єр-міністр формує..." shape where a capitalized continuation
+    # word breaks a lowercase-start-only wrap heuristic).
+    "v0433": (
+        "anna-ohoiko-500-verbs_e0433",
+        "формува́ти | сформува́ти",
+        "формува́ти | сформува́ти                                                                Present / Future Stems: форму- | сформу-\n"
+        "to form\n"
+        "ОСОБА                            НЕДОКОНАНИЙ ВИД                                                 ДОКОНАНИЙ ВИД\n"
+        "ТЕПЕРІШНІЙ ЧАС ― PRESENT TENSE\n"
+        "я                   форму́ю\n"
+        "+ accusative:\n"
+        "Комі́сія формує́ склад робо́чої гру́пи                            The commission forms the composition of the\n"
+        "Украї́ни.                                                        working group of Ukraine.\n",
+    ),
+    # Colon-terminated single-line example immediately followed by an
+    # unrelated example line -- must NOT be swallowed into one merged pair.
+    "v0434": (
+        "anna-ohoiko-500-verbs_e0434",
+        "утво́рювати | утвори́ти",
+        "утво́рювати | утвори́ти                                                                Present / Future Stems: утворю- | утвор-\n"
+        "to form, to create\n"
+        "ОСОБА                            НЕДОКОНАНИЙ ВИД                                                 ДОКОНАНИЙ ВИД\n"
+        "ТЕПЕРІШНІЙ ЧАС ― PRESENT TENSE\n"
+        "я                   утво́рюю\n"
+        "+ accusative:\n"
+        "Ці два озна́чення утво́рюють па́ру:                              These two definitions form a pair:\n"
+        "[а] ― [б], [в] ― [г].                                           [a] ― [b], [c] ― [d].\n",
     ),
 }
 
@@ -439,7 +519,12 @@ def test_parse_500_verbs_simple_pair() -> None:
     assert parsed.locator == "ohoiko-500-verbs entry 1"
     assert parsed.lemmas == ["аналізувати", "проаналізувати"]
     assert parsed.gloss == "to analyze"
-    assert parsed.example is None
+    assert parsed.example == {
+        "uk": "Ми ана́лізуємо результа́ти.",
+        "en": "We are analyzing the results.",
+        "source": "Anna Ohoiko",
+        "locator": "ohoiko-500-verbs entry 1",
+    }
 
 
 def test_parse_500_verbs_reflexive_bracket() -> None:
@@ -448,7 +533,9 @@ def test_parse_500_verbs_reflexive_bracket() -> None:
     assert parsed.entry_number == 4
     assert parsed.lemmas == ["бачити", "бачитися", "побачити", "побачитися"]
     assert parsed.gloss == "to see [to see each other, to meet]"
-    assert parsed.example is None
+    assert parsed.example is not None
+    assert parsed.example["uk"] == "Я ба́чу вели́кий буди́нок."
+    assert parsed.example["en"] == "I see a big house."
 
 
 def test_parse_500_verbs_multiple_perfectives() -> None:
@@ -457,7 +544,9 @@ def test_parse_500_verbs_multiple_perfectives() -> None:
     assert parsed.entry_number == 18
     assert parsed.lemmas == ["будувати", "збудувати", "побудувати"]
     assert parsed.gloss == "to build"
-    assert parsed.example is None
+    assert parsed.example is not None
+    assert parsed.example["uk"] == "Робітники́ будую́ть но́вий міст."
+    assert parsed.example["en"] == "Workers are building a new bridge."
 
 
 def test_parse_500_verbs_ocr_accent_wrapped_entry_277() -> None:
@@ -466,7 +555,9 @@ def test_parse_500_verbs_ocr_accent_wrapped_entry_277() -> None:
     assert parsed.entry_number == 277
     assert parsed.lemmas == ["об’єднувати", "об’єднуватися", "об’єднати", "об’єднатися"]
     assert parsed.gloss == "to unite sth/sb [to come together, to unite]"
-    assert parsed.example is None
+    assert parsed.example is not None
+    assert parsed.example["uk"] == "Ми об’єдна́ли зуси́лля."
+    assert parsed.example["en"] == "We joined our efforts."
 
 
 def test_parse_500_verbs_stems_first_entry_383() -> None:
@@ -475,7 +566,66 @@ def test_parse_500_verbs_stems_first_entry_383() -> None:
     assert parsed.entry_number == 383
     assert parsed.lemmas == ["просити", "попросити"]
     assert parsed.gloss == "to ask (for); to request"
-    assert parsed.example is None
+    assert parsed.example is not None
+    assert parsed.example["uk"] == "Він про́сить допомо́ги."
+    assert parsed.example["en"] == "He asks for help."
+
+
+def test_parse_500_verbs_case_government_label_not_mistaken_for_example() -> None:
+    # "-ся + до + genitive:" precedes the example; the parser must skip
+    # the case-government label line itself and land on the real sentence.
+    cid, title, text = SAMPLE_500_CHUNKS["v0365"]
+    parsed = parse_500_verbs_chunk(cid, title, text)
+    assert parsed.entry_number == 365
+    assert parsed.example is not None
+    assert parsed.example["uk"] == "Він приєдна́вся до на́шої кома́нди."
+    assert parsed.example["en"] == "He joined our team."
+
+
+def test_parse_500_verbs_uk_only_wrap_entry_431() -> None:
+    # EN column finishes on line 1; УК spills onto a lone Cyrillic-only
+    # continuation line that must be merged back in.
+    cid, title, text = SAMPLE_500_CHUNKS["v0431"]
+    parsed = parse_500_verbs_chunk(cid, title, text)
+    assert parsed.example is not None
+    assert parsed.example["uk"] == "Ми вимага́ємо термі́нового рі́шення цього́ пита́ння."
+    assert parsed.example["en"] == "We demand an urgent decision."
+
+
+def test_parse_500_verbs_en_only_wrap_entry_432() -> None:
+    # УК finishes on line 1; EN spills onto a lone Latin-only continuation
+    # line that must be merged back in.
+    cid, title, text = SAMPLE_500_CHUNKS["v0432"]
+    parsed = parse_500_verbs_chunk(cid, title, text)
+    assert parsed.example is not None
+    assert parsed.example["uk"] == "Вона́ до́вго вага́лася."
+    assert (
+        parsed.example["en"]
+        == "She hesitated for a long time before signing the contract."
+    )
+
+
+def test_parse_500_verbs_both_sides_wrap_entry_433() -> None:
+    # Neither column terminates on line 1; the continuation's Ukrainian
+    # word is capitalized (a proper noun), which must not block the merge.
+    cid, title, text = SAMPLE_500_CHUNKS["v0433"]
+    parsed = parse_500_verbs_chunk(cid, title, text)
+    assert parsed.example is not None
+    assert parsed.example["uk"] == "Комі́сія формує́ склад робо́чої гру́пи Украї́ни."
+    assert (
+        parsed.example["en"]
+        == "The commission forms the composition of the working group of Ukraine."
+    )
+
+
+def test_parse_500_verbs_colon_terminated_does_not_overmerge_entry_434() -> None:
+    # A colon-terminated example is already complete; the parser must not
+    # merge in the following, unrelated example line.
+    cid, title, text = SAMPLE_500_CHUNKS["v0434"]
+    parsed = parse_500_verbs_chunk(cid, title, text)
+    assert parsed.example is not None
+    assert parsed.example["uk"] == "Ці два озна́чення утво́рюють па́ру:"
+    assert parsed.example["en"] == "These two definitions form a pair:"
 
 
 # ---------------------------------------------------------------------------
@@ -701,3 +851,92 @@ def test_all_9_heads_7397_enriched_from_chunks() -> None:
         assert enr["examples"][0]["source"] == "Anna Ohoiko"
         assert "Anna Ohoiko" in enr["sources"]
         assert "learner_english_gloss" in enr["sources"]
+
+
+# ---------------------------------------------------------------------------
+# Tests: 500-verbs full-text sourcing from textbook_sections (#7457)
+# ---------------------------------------------------------------------------
+#
+# ``textbooks.text`` for anna-ohoiko-500-verbs rows is a truncated stub
+# left over from a legacy ingest path (headword + first present-tense rows
+# only) -- it never reaches the example sentences. The full page lives in
+# ``textbook_sections.full_text``, keyed by verb number via
+# ``section_number``. These tests exercise ``build_ohoiko_book_catalog``'s
+# DB-querying path directly (unlike the parser-level tests above, which
+# call ``parse_500_verbs_chunk`` with in-memory fixture text and never
+# touch sqlite) to prove the richer text is actually picked up.
+
+_STUB_500_VERBS_TEXT = (
+    "аналізува́ти | проаналізува́ти                                        Present / Future Stems: аналізу- | проаналізу-\n"
+    "to analyze\n"
+    "ОСОБА                          НЕДОКОНАНИЙ ВИД                                                 ДОКОНАНИЙ ВИД\n"
+    "ТЕПЕРІШНІЙ ЧАС ― PRESENT TENSE\n"
+    "я                   аналізу́ю\n"
+    "ти                  аналізу́єш\n"
+)
+
+_FULL_500_VERBS_TEXT = (
+    _STUB_500_VERBS_TEXT
+    + "+ accusative:\n"
+    + "Ми ана́лізуємо результа́ти.                                      We are analyzing the results.\n"
+)
+
+
+def _make_textbooks_db(*, with_sections: bool) -> sqlite3.Connection:
+    conn = sqlite3.connect(":memory:")
+    conn.execute(
+        "CREATE TABLE textbooks (chunk_id TEXT, title TEXT, text TEXT, source_file TEXT)"
+    )
+    conn.execute(
+        "INSERT INTO textbooks (chunk_id, title, text, source_file) VALUES (?, ?, ?, ?)",
+        (
+            "anna-ohoiko-500-verbs_e0001",
+            "аналізува́ти | проаналізува́ти",
+            _STUB_500_VERBS_TEXT,
+            "anna-ohoiko-500-verbs",
+        ),
+    )
+    if with_sections:
+        conn.execute(
+            "CREATE TABLE textbook_sections "
+            "(section_number TEXT, full_text TEXT, source_file TEXT)"
+        )
+        conn.execute(
+            "INSERT INTO textbook_sections (section_number, full_text, source_file) VALUES (?, ?, ?)",
+            ("1", _FULL_500_VERBS_TEXT, "anna-ohoiko-500-verbs"),
+        )
+    conn.commit()
+    return conn
+
+
+def test_build_ohoiko_book_catalog_prefers_500_verbs_section_full_text() -> None:
+    conn = _make_textbooks_db(with_sections=True)
+    try:
+        _parsed_1000, parsed_500 = build_ohoiko_book_catalog(conn)
+    finally:
+        conn.close()
+
+    assert len(parsed_500) == 1
+    entry = parsed_500[0]
+    # The truncated `textbooks.text` stub alone has no example -- proves
+    # the section full_text (with the case-government block) was used.
+    assert entry.example is not None
+    assert entry.example["uk"] == "Ми ана́лізуємо результа́ти."
+    assert entry.example["en"] == "We are analyzing the results."
+    assert entry.example["locator"] == "ohoiko-500-verbs entry 1"
+
+
+def test_build_ohoiko_book_catalog_falls_back_without_sections_table() -> None:
+    conn = _make_textbooks_db(with_sections=False)
+    try:
+        _parsed_1000, parsed_500 = build_ohoiko_book_catalog(conn)
+    finally:
+        conn.close()
+
+    assert len(parsed_500) == 1
+    entry = parsed_500[0]
+    # No textbook_sections table at all (e.g. a DB predating the
+    # section-coverage backfill) -- must not crash, and the truncated
+    # stub genuinely has no example sentence.
+    assert entry.example is None
+    assert entry.gloss == "to analyze"

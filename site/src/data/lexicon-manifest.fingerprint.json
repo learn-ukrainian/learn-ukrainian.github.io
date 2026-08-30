@@ -219,7 +219,7 @@
       },
       {
         "path": "scripts/lexicon/ohoiko_quality_enrichment.py",
-        "sha256": "bbc8b429c4d28d51ac4242a22d3204f235925a611b5fbb927ceb7df178a4983a"
+        "sha256": "1391935d7dfee260611b46afe47b852525808f050433664ff86337d0e9c44b42"
       },
       {
         "path": "scripts/lexicon/park_thin_entries.py",
