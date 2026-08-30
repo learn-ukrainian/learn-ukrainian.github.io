@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 from pathlib import Path
+from urllib.error import HTTPError
 
+import pytest
 import yaml
 
 from scripts.ci import gate_required_results as gate
@@ -98,13 +100,13 @@ def test_parse_shared_identity_comment_contract_shape() -> None:
 def test_parse_rejects_missing_and_blocked() -> None:
     assert parse_attestation("looks fine, no review") is None
     assert parse_attestation(f"I approve head `{PR_HEAD}`") is None
-    assert (
-        parse_attestation(
-            f"Cross-family review (claude-sonnet-5) at head `{PR_HEAD}` "
-            "VERDICT: CHANGES_REQUESTED"
-        )
-        is None
+    # #7487: a blocking verdict now parses as a REVOCATION instead of being
+    # dropped — latest-wins evaluation needs to see it.
+    blocked = parse_attestation(
+        f"Cross-family review (claude-sonnet-5) at head `{PR_HEAD}` "
+        "VERDICT: CHANGES_REQUESTED"
     )
+    assert blocked is not None and blocked.verdict == "BLOCK"
     assert parse_attestation("Cross-family CF of record (AGY / Gemini) VERDICT: APPROVE") is None
 
 
@@ -312,3 +314,106 @@ def test_gate_results_env_includes_cf_attest() -> None:
         if step.get("name") == "Fail unless every event-required job succeeded"
     )
     assert "cf-attest=${{ needs.cf-attest.result }}" in evaluate["env"]["RESULTS"]
+
+
+def test_later_block_revokes_earlier_approve_latest_wins() -> None:
+    """#7487: an early APPROVE must not survive a later changes-request."""
+    approve = (
+        f"Cross-family CF of record (codex)\nReviewer family: openai\n"
+        f"At exact head `{PR_HEAD}`\nVERDICT: APPROVE"
+    )
+    block = (
+        f"Cross-family CF of record (codex)\nReviewer family: openai\n"
+        f"At exact head `{PR_HEAD}`\nVERDICT: CHANGES_REQUESTED"
+    )
+    result = evaluate_attestation(
+        expected_head=PR_HEAD,
+        author_family="anthropic",
+        bodies=[("comment", approve), ("comment", block)],
+    )
+    assert not result.ok
+    assert "revoked CF" in result.reason
+
+    # And the mirror: approve AFTER a block stands.
+    result = evaluate_attestation(
+        expected_head=PR_HEAD,
+        author_family="anthropic",
+        bodies=[("comment", block), ("comment", approve)],
+    )
+    assert result.ok
+
+
+def test_history_bearing_comment_matches_any_labeled_head() -> None:
+    """#7487: an r3 comment recapping r1/r2 heads must not stale-reject."""
+    body = (
+        f"**VERDICT: APPROVE**\n\nCross-family CF of record (codex)\n"
+        f"Reviewer family: openai\nAt exact head `{PR_HEAD}`\n\n"
+        f"History: r1 APPROVE at exact head `{STALE_HEAD}` - superseded."
+    )
+    result = evaluate_attestation(
+        expected_head=PR_HEAD,
+        author_family="anthropic",
+        bodies=[("comment", body)],
+    )
+    assert result.ok, result.reason
+
+
+def test_dependabot_token_does_not_neutralize_mixed_author_family() -> None:
+    """#7487: one smuggled dependabot trailer must not grant universal
+    independence to a PR that also carries a real model family."""
+    family = author_family_from_agents(("dependabot", "codex"))
+    assert family == "openai"
+    result = evaluate_attestation(
+        expected_head=PR_HEAD,
+        author_family=family,
+        bodies=[(
+            "comment",
+            f"Cross-family CF of record (codex)\nReviewer family: openai\n"
+            f"At exact head `{PR_HEAD}`\nVERDICT: APPROVE",
+        )],
+    )
+    assert not result.ok  # openai reviewer vs openai author = same family
+
+
+def test_api_get_retries_transient_5xx(monkeypatch) -> None:
+    import scripts.ci.cf_attest as mod
+
+    calls = {"n": 0}
+
+    class _Resp:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def read(self):
+            return b"[]"
+
+    def fake_urlopen(request, timeout=0):
+        calls["n"] += 1
+        if calls["n"] < 3:
+            raise HTTPError(request.full_url, 502, "bad gateway", None, None)
+        return _Resp()
+
+    monkeypatch.setattr(mod, "urlopen", fake_urlopen)
+    monkeypatch.setattr(mod.time, "sleep", lambda s: None)
+    monkeypatch.setattr(mod.json, "load", lambda fh: [])
+    assert mod.github_api_get("repos/x/y/issues/1/comments") == []
+    assert calls["n"] == 3
+
+
+def test_api_get_does_not_retry_4xx(monkeypatch) -> None:
+    import scripts.ci.cf_attest as mod
+
+    calls = {"n": 0}
+
+    def fake_urlopen(request, timeout=0):
+        calls["n"] += 1
+        raise HTTPError(request.full_url, 404, "nope", None, None)
+
+    monkeypatch.setattr(mod, "urlopen", fake_urlopen)
+    monkeypatch.setattr(mod.time, "sleep", lambda s: None)
+    with pytest.raises(HTTPError):
+        mod.github_api_get("repos/x/y/issues/1/comments")
+    assert calls["n"] == 1

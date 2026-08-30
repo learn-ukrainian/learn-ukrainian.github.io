@@ -38,6 +38,7 @@ import json
 import os
 import re
 import sys
+import time
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any
@@ -130,6 +131,10 @@ class ParsedAttestation:
     reviewer_family: str
     verdict: str
     source: str
+    # Every "At exact head"-labeled SHA in the body: history-bearing comments
+    # (r1/r2/r3 recap lines) label several; a match on ANY equals a match
+    # (#7487 — first-labeled-only stale-rejected legitimate reviews).
+    labeled_shas: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -188,6 +193,13 @@ def author_family_from_agents(agents: Iterable[str]) -> str:
         if family == FAMILY_UNKNOWN:
             return FAMILY_UNKNOWN
         families.add(family)
+    # #7487: the dependabot token maps to the fixture family (universal
+    # independence — legitimate for pure dependabot PRs). One smuggled
+    # ``X-Agent: dependabot/x`` trailer must not neutralize a mixed PR's
+    # real author family, so fixture is ignored whenever any concrete
+    # family is present.
+    if FAMILY_FIXTURE in families and len(families) > 1:
+        families.discard(FAMILY_FIXTURE)
     if len(families) > 1:
         return FAMILY_UNKNOWN
     if len(families) == 1:
@@ -222,18 +234,28 @@ def _first_labeled_sha(text: str) -> str | None:
     return match.group(1).lower()
 
 
+def _labeled_shas(text: str) -> tuple[str, ...]:
+    return tuple(match.group(1).lower() for match in HEAD_LABELED_RE.finditer(text))
+
+
 def parse_attestation(body: str, *, source: str = "comment") -> ParsedAttestation | None:
-    """Parse one existing CF comment shape, or None if it is not CF of record."""
+    """Parse one existing CF comment shape, or None if it is not CF of record.
+
+    #7487: a body whose verdict is a block/changes-request is parsed as a
+    REVOCATION (verdict="BLOCK") instead of being dropped — evaluation is
+    latest-wins per reviewer family, so an earlier APPROVE cannot survive a
+    later block at the same head.
+    """
     if not isinstance(body, str) or not body.strip():
         return None
     if not CF_MARKER_RE.search(body):
         return None
-    if VERDICT_BLOCK_RE.search(body):
-        return None
-    if not VERDICT_APPROVE_RE.search(body):
+    blocked = VERDICT_BLOCK_RE.search(body) is not None
+    if not blocked and not VERDICT_APPROVE_RE.search(body):
         return None
 
-    sha = _first_labeled_sha(body)
+    labeled_heads = _labeled_shas(body)
+    sha = labeled_heads[0] if labeled_heads else None
     if sha is None:
         found = {match.group(1).lower() for match in SHA_RE.finditer(body)}
         if len(found) != 1:
@@ -254,8 +276,9 @@ def parse_attestation(body: str, *, source: str = "comment") -> ParsedAttestatio
     return ParsedAttestation(
         head_sha=sha,
         reviewer_family=reviewer_family,
-        verdict="APPROVE",
+        verdict="BLOCK" if blocked else "APPROVE",
         source=source,
+        labeled_shas=labeled_heads or (sha,),
     )
 
 
@@ -298,7 +321,11 @@ def evaluate_attestation(
             author_family=author_family,
         )
 
-    matching = [item for item in parsed if item.head_sha == head]
+    matching = [
+        item
+        for item in parsed
+        if item.head_sha == head or head in item.labeled_shas
+    ]
     if not matching:
         attested = parsed[0].head_sha
         return AttestResult(
@@ -310,23 +337,49 @@ def evaluate_attestation(
             reviewer_family=parsed[0].reviewer_family,
         )
 
+    # Latest-wins per reviewer family (#7487): bodies arrive in API order
+    # (chronological within comments, then reviews), so the LAST parsed item
+    # for a family is its standing verdict at this head. An earlier APPROVE
+    # must not survive a later block from the same family.
+    standing: dict[str, ParsedAttestation] = {}
     for item in matching:
-        if families_independent(author_family, item.reviewer_family):
-            return AttestResult(
-                True,
-                "independent exact-head CF APPROVE",
-                expected_head=head,
-                attested_head=item.head_sha,
-                author_family=author_family,
-                reviewer_family=item.reviewer_family,
-            )
+        standing[item.reviewer_family] = item
+
+    approving = [
+        item
+        for item in standing.values()
+        if item.verdict == "APPROVE"
+        and families_independent(author_family, item.reviewer_family)
+    ]
+    if approving:
+        item = approving[0]
+        return AttestResult(
+            True,
+            "independent exact-head CF APPROVE",
+            expected_head=head,
+            attested_head=head,
+            author_family=author_family,
+            reviewer_family=item.reviewer_family,
+        )
+    revoked = [item for item in standing.values() if item.verdict == "BLOCK"]
+    if revoked:
+        return AttestResult(
+            False,
+            f"revoked CF: latest verdict from {revoked[0].reviewer_family} "
+            "is a block at this head",
+            expected_head=head,
+            attested_head=head,
+            author_family=author_family,
+            reviewer_family=revoked[0].reviewer_family,
+        )
+    first = next(iter(standing.values()))
     return AttestResult(
         False,
-        f"same-family review: author={author_family} reviewer={matching[0].reviewer_family}",
+        f"same-family review: author={author_family} reviewer={first.reviewer_family}",
         expected_head=head,
-        attested_head=matching[0].head_sha,
+        attested_head=first.head_sha,
         author_family=author_family,
-        reviewer_family=matching[0].reviewer_family,
+        reviewer_family=first.reviewer_family,
     )
 
 
@@ -345,8 +398,22 @@ def github_api_get(
     if token:
         headers["Authorization"] = f"Bearer {token}"
     request = Request(f"{base_url}/{path.lstrip('/')}", headers=headers)
-    with urlopen(request, timeout=timeout) as response:
-        return json.load(response)
+    # #7487: one transient 5xx / connection blip must not fail the Gate and
+    # force a full re-run — bounded retries with short backoff, fail closed
+    # after the budget. 4xx (auth, not-found, rate-limit-as-403) never retry.
+    attempts = 3
+    for attempt in range(1, attempts + 1):
+        try:
+            with urlopen(request, timeout=timeout) as response:
+                return json.load(response)
+        except HTTPError as exc:
+            if exc.code < 500 or attempt == attempts:
+                raise
+        except (URLError, TimeoutError):
+            if attempt == attempts:
+                raise
+        time.sleep(2 * attempt)
+    raise ValueError("unreachable: retry loop exhausted")  # pragma: no cover
 
 
 def _api_items(payload: Any, key: str) -> list[Mapping[str, Any]]:
