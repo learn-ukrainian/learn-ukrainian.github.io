@@ -294,6 +294,22 @@ def _inject_gh_token_for_agent(worker_env: dict[str, str], agent: str) -> None:
     worker_env.pop("GH_TOKEN", None)
 
 
+def _scrub_unusable_gh_config_dir(worker_env: dict[str, str]) -> None:
+    """Drop empty/sandbox GH_CONFIG_DIR so review seats recover host gh (#7472).
+
+    A prior agent-runtime token-mode (or pre-#7166) isolate leaves
+    ``GH_CONFIG_DIR`` pointing at an empty dir. Inherited into the next
+    read-only review dispatch, that makes ``gh`` report unauthenticated even
+    when ``~/.config/gh/hosts.yml`` is valid. Only drop unusable paths; a
+    real hosts.yml dir (or unset) is left alone. Never copies token values.
+    """
+    from agent_runtime.env_sanitize import usable_host_gh_config_dir
+
+    current = worker_env.get("GH_CONFIG_DIR")
+    if current and usable_host_gh_config_dir(current) is None:
+        worker_env.pop("GH_CONFIG_DIR", None)
+
+
 DEFAULT_HARD_TIMEOUT_S = 7200
 # Silence timeout is a composite hang backstop: stdout/stderr, liveness-file
 # updates, and process-tree CPU/disk activity all keep it alive. Do not lower it
@@ -6235,6 +6251,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         worker_env["LU_RUNTIME_INITIATOR_SOURCE"] = attribution.source
         worker_env["LU_RUNTIME_RUN_NONCE"] = run_nonce
         _inject_gh_token_for_agent(worker_env, dispatch_agent)
+        _scrub_unusable_gh_config_dir(worker_env)
         worker_env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
         worker_env["TMPDIR"] = str(runtime_tmp_root)
         worker_env["LU_RUNTIME_TMP_ROOT"] = str(runtime_tmp_root)

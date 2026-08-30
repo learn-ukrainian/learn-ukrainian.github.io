@@ -4547,6 +4547,57 @@ def test_gh_shim_blocks_pr_merge_without_opt_in(tmp_path):
     assert "#1403" in proc.stderr
 
 
+def test_gh_shim_blocks_pr_review_approve_without_opt_in(tmp_path):
+    """#7472: AGENT_NO_MERGE still blocks native --approve; CF is via comment."""
+    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+    fake_gh = tmp_path / "real-gh"
+    fake_gh.write_text("#!/usr/bin/env bash\nprintf 'real-gh %s\\n' \"$*\"\n")
+    fake_gh.chmod(0o755)
+
+    proc = subprocess.run(
+        [str(shim), "pr", "review", "1234", "--approve"],
+        capture_output=True,
+        text=True,
+        env={
+            "AGENT_NO_MERGE": "1",
+            "AGENT_REAL_GH": str(fake_gh),
+            "PATH": os.environ.get("PATH", ""),
+        },
+        check=False,
+        timeout=15,
+    )
+
+    assert proc.returncode != 0
+    assert "cannot merge or approve PRs" in proc.stderr
+    assert "gh pr comment" in proc.stderr
+    assert "cf_attest" in proc.stderr
+    assert "real-gh" not in proc.stdout
+
+
+def test_gh_shim_allows_pr_comment_under_no_merge(tmp_path):
+    """#7472: CF of record posts as a comment while merge/--approve stay blocked."""
+    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+    fake_gh = tmp_path / "real-gh"
+    fake_gh.write_text("#!/usr/bin/env bash\nprintf 'real-gh %s\\n' \"$*\"\n")
+    fake_gh.chmod(0o755)
+
+    proc = subprocess.run(
+        [str(shim), "pr", "comment", "1234", "--body", "VERDICT: APPROVE"],
+        capture_output=True,
+        text=True,
+        env={
+            "AGENT_NO_MERGE": "1",
+            "AGENT_REAL_GH": str(fake_gh),
+            "PATH": os.environ.get("PATH", ""),
+        },
+        check=False,
+        timeout=15,
+    )
+
+    assert proc.returncode == 0
+    assert proc.stdout.strip() == "real-gh pr comment 1234 --body VERDICT: APPROVE"
+
+
 def test_gh_shim_allows_pr_merge_with_opt_in(tmp_path):
     shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
     fake_gh = tmp_path / "real-gh"

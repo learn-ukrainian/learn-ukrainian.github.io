@@ -223,6 +223,27 @@ def _looks_sensitive_value(value: str) -> bool:
     return bool(_SENSITIVE_VALUE_RE.search(value))
 
 
+def usable_host_gh_config_dir(path: str | None) -> str | None:
+    """Return ``path`` only when it holds real gh auth material.
+
+    Pre-#7166 / token-mode sandboxes create empty ``GH_CONFIG_DIR`` directories.
+    If a parent shell inherits one of those and a no-token child passes it
+    through, ``gh`` reports "not logged into any GitHub hosts" even when
+    ``$HOME/.config/gh/hosts.yml`` is valid (#7472 review seats, #7166 workers).
+    Reject empty or missing ``hosts.yml`` so the child falls back to the
+    HOME-default config dir. Never reads or logs token values.
+    """
+    if not path or _looks_sensitive_value(path):
+        return None
+    try:
+        hosts = Path(path) / "hosts.yml"
+        if hosts.is_file() and hosts.stat().st_size > 0:
+            return path
+    except OSError:
+        return None
+    return None
+
+
 def _isolated_git_env(
     home: str | None,
     github_token: str | None,
@@ -245,14 +266,16 @@ def _isolated_git_env(
     injected ``GH_TOKEN``.  This keeps ordinary ``git push`` working without
     exposing the operator's macOS keychain.
 
-    When NO identity token resolves (the job-host case: the ops account is
-    logged in via ``gh auth login`` and no GH_TOKEN/App material exists), the
-    child must still be able to ``gh pr create`` and push (#7166).  In that
-    case the host gh auth chain is preserved: credential helpers stay in the
-    copied config (so ``gh auth git-credential`` keeps working) and
-    ``GH_CONFIG_DIR`` is NOT redirected to an empty sandbox — the host's
-    explicit ``GH_CONFIG_DIR`` passes through, or gh falls back to its default
-    under the already-preserved ``HOME``.  No token value is ever logged or
+    When NO identity token resolves (job-host workers and read-only review
+    seats: the ops account is logged in via ``gh auth login`` and no
+    GH_TOKEN/App material exists), the child must still be able to ``gh pr
+    create`` / ``gh pr comment`` (#7166, #7472).  In that case the host gh auth
+    chain is preserved: credential helpers stay in the copied config (so
+    ``gh auth git-credential`` keeps working) and ``GH_CONFIG_DIR`` is NOT
+    redirected to an empty sandbox — a *usable* host ``GH_CONFIG_DIR`` (one
+    with ``hosts.yml``) passes through, otherwise gh falls back to its default
+    under the already-preserved ``HOME``.  Empty prior-sandbox dirs are
+    rejected so nested dispatches recover.  No token value is ever logged or
     copied; gh reads its own ``hosts.yml`` at call time.
 
     Never raises: isolation failure must not block spawning an agent.
@@ -309,9 +332,10 @@ def _isolated_git_env(
             askpass.chmod(0o700)
             env["GIT_ASKPASS"] = str(askpass)
         else:
-            # #7166 no-token fallback: keep the host gh auth chain readable.
-            # The extraheader stays blanked even in this mode — it is a secret
-            # carrier, unlike the gh hosts.yml / credential-helper chain.
+            # #7166 / #7472 no-token fallback: keep the host gh auth chain
+            # readable. The extraheader stays blanked even in this mode — it is
+            # a secret carrier, unlike the gh hosts.yml / credential-helper
+            # chain.
             env.update(
                 {
                     "GIT_CONFIG_COUNT": "1",
@@ -385,16 +409,11 @@ def build_agent_env(
         env.pop("GH_TOKEN", None)
         env.pop("GITHUB_TOKEN", None)
 
-    host_gh_config_dir = raw.get("GH_CONFIG_DIR")
     env.update(
         _isolated_git_env(
             env.get("HOME") or raw.get("HOME"),
             identity.token,
-            host_gh_config_dir=(
-                host_gh_config_dir
-                if host_gh_config_dir and not _looks_sensitive_value(host_gh_config_dir)
-                else None
-            ),
+            host_gh_config_dir=usable_host_gh_config_dir(raw.get("GH_CONFIG_DIR")),
         )
     )
 
