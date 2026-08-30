@@ -16,7 +16,7 @@
 #   ./services.sh logs work          # Show the latest service log
 #   ./services.sh supervise api install|status|uninstall
 #   ./services.sh tunnel start|status|stop  # Mac notebook SSH LocalForward
-#   ./services.sh topology           # Four-role host table (aliases only)
+#   ./services.sh topology           # Opaque four-role labels (no Host aliases)
 #   ./services.sh build astro        # Run Astro production build (no dev server)
 #   ./services.sh clean astro        # Remove Astro build/cache outputs
 #   ./services.sh rebuild astro      # Run Astro clean then build
@@ -31,7 +31,7 @@
 #   (tear down only via ``tunnel stop``). Escape hatch: LU_SERVICES_ROLE=local
 #   on Darwin restores local spawn (playground).
 #
-# SSH LocalForward (Mac notebook + Host alias hramatka):
+# SSH LocalForward (Mac notebook → writer):
 #   start/stop/restart auto-delegate to the writer host when role is
 #   notebook, when any requested service port is owned by an ssh listener,
 #   or when LU_SERVICES_SSH_HOST is set. They never spawn or signal local
@@ -45,8 +45,9 @@
 #   lookup is a no-op: tunnel auto-delegation and foreign-listener checks
 #   are skipped until a working lsof is available.
 #   fix curls each health URL; unhealthy tunneled ports get a remote
-#   restart. Overrides: LU_SERVICES_SSH_HOST (default host alias hramatka),
-#   LU_SERVICES_REMOTE_ROOT (default /home/ops/learn-ukrainian).
+#   restart. Notebook/tunnel/delegate require LU_SERVICES_SSH_HOST;
+#   delegate also requires LU_SERVICES_REMOTE_ROOT. This repo ships no
+#   Host-alias table and no remote-root default.
 #
 # Note: the `sources` service was historically called `rag`. It serves
 # SQLite FTS5 indices over textbook chunks, dictionaries, VESUM, literary
@@ -125,12 +126,12 @@ SVC_MATCH[astro]=".bin/astro dev|astro.mjs dev"
 
 ALL_SERVICES="sources api astro work"
 
-# Remote writer host for tunneled Mac notebooks. LU_SERVICES_SSH_HOST is
-# an SSH config Host alias only; leave it unset for local-process mode.
-# The default target is used only after a tunnel, notebook role, or an
-# explicit host is detected — the bare default alias does not by itself
-# force delegation on Linux/local role.
-LU_SERVICES_REMOTE_ROOT="${LU_SERVICES_REMOTE_ROOT:-/home/ops/learn-ukrainian}"
+# Remote writer target for tunneled Mac notebooks. Both LU_SERVICES_SSH_HOST
+# and LU_SERVICES_REMOTE_ROOT are operator/private env — this repo has no
+# baked Host alias or remote-root default. Leave the host unset for
+# local-process mode. A set host is a delegation trigger; notebook role
+# and an ssh-owned port also trigger, but still need the host (and root
+# for delegate) from env.
 
 # Legacy aliases: rewrite old service names when passed as CLI args.
 # Accept shell history + scripts that still say `./services.sh start rag`
@@ -317,7 +318,19 @@ _ssh_tunnel_port_pid() {
 }
 
 _ssh_delegate_host() {
-    printf '%s\n' "${LU_SERVICES_SSH_HOST:-hramatka}"
+    if [[ -z "${LU_SERVICES_SSH_HOST:-}" ]]; then
+        echo "ERROR: LU_SERVICES_SSH_HOST is unset. Set the writer SSH Host from private env; this repo ships no default." >&2
+        return 1
+    fi
+    printf '%s\n' "$LU_SERVICES_SSH_HOST"
+}
+
+_ssh_delegate_root() {
+    if [[ -z "${LU_SERVICES_REMOTE_ROOT:-}" ]]; then
+        echo "ERROR: LU_SERVICES_REMOTE_ROOT is unset. Set the remote repo root from private env; this repo ships no default." >&2
+        return 1
+    fi
+    printf '%s\n' "$LU_SERVICES_REMOTE_ROOT"
 }
 
 # Role: LU_SERVICES_ROLE override, else Darwin → notebook, else local.
@@ -373,7 +386,7 @@ _tunnel_start() {
         return 0
     fi
 
-    host="$(_ssh_delegate_host)"
+    host="$(_ssh_delegate_host)" || return 1
     echo "Starting notebook SSH LocalForward tunnel to ${host} (api/sources/work/astro on 127.0.0.1)..."
     if ! command ssh -fN -o BatchMode=yes -o ExitOnForwardFailure=yes \
         -L 127.0.0.1:8765:127.0.0.1:8765 \
@@ -469,22 +482,22 @@ _ensure_notebook_tunnel() {
 
 _print_topology() {
     cat <<'EOF'
-services.sh topology (SSH Host aliases only — no HostName/public IPs)
+services.sh topology (opaque roles — no Host aliases, no remote paths)
 
-Role       Host alias         What runs / ports
----------  -----------------  --------------------------------------------------
-writer     hramatka           loopback api 8765, sources 8766, work 8769, astro 4321
-job        atlas-runner       no writer services; tunnel-client toward writer
-witness    lu-etcd-witness    etcd/backup only; no api/sources/work/astro
-notebook   (Mac / Darwin)     never a vote; SSH LocalForward of those four
-                              127.0.0.1 ports onto the writer; never binds them
-                              as local uvicorn/launchd listeners
+Role       What runs
+---------  --------------------------------------------------
+writer     loopback api/sources/work/astro listeners
+job        no writer services; tunnel-client toward writer
+witness    backup/coordination only; no api/sources/work/astro
+notebook   never a vote; SSH LocalForward of the four
+           127.0.0.1 ports onto the writer; never binds them
+           as local uvicorn/launchd listeners
 
 Darwin defaults to notebook when LU_SERVICES_ROLE is unset.
 Escape hatch: LU_SERVICES_ROLE=local restores local spawn (playground).
 Tunnel: ./services.sh tunnel start|status|stop
-Writer SSH Host override: LU_SERVICES_SSH_HOST (default hramatka)
-Remote repo root: LU_SERVICES_REMOTE_ROOT (default /home/ops/learn-ukrainian)
+Writer SSH Host: LU_SERVICES_SSH_HOST (required for notebook/tunnel/delegate; no public default)
+Remote repo root: LU_SERVICES_REMOTE_ROOT (required for delegate; no public default)
 EOF
 }
 
@@ -500,9 +513,8 @@ _requested_has_ssh_tunnel() {
 }
 
 # Delegate when role is notebook, when the operator set LU_SERVICES_SSH_HOST,
-# or when any requested service port is an ssh LocalForward listener. The
-# default host alias is applied only at ssh time — it is not a trigger for
-# local/Linux role.
+# or when any requested service port is an ssh LocalForward listener. There
+# is no baked host alias; ssh time still requires LU_SERVICES_SSH_HOST.
 _should_delegate_remote() {
     if _is_notebook_role; then
         return 0
@@ -517,8 +529,8 @@ _delegate_remote() {
     local remote_action="$1"
     shift
     local host root remote_cmd arg
-    host="$(_ssh_delegate_host)"
-    root="${LU_SERVICES_REMOTE_ROOT:-/home/ops/learn-ukrainian}"
+    host="$(_ssh_delegate_host)" || return 1
+    root="$(_ssh_delegate_root)" || return 1
     remote_cmd="./services.sh $(printf '%q' "$remote_action")"
     for arg in "$@"; do
         remote_cmd+=" $(printf '%q' "$arg")"
@@ -1491,7 +1503,7 @@ case "$action" in
         echo "  $0 tunnel start           # Mac notebook: ssh -fN LocalForward to writer"
         echo "  $0 tunnel status          # Tunnel pid + ssh ownership of api port"
         echo "  $0 tunnel stop            # Tear down LocalForward only (not remote services)"
-        echo "  $0 topology               # Four-role Host-alias table"
+        echo "  $0 topology               # Opaque four-role labels (no Host aliases)"
         echo "  $0 supervise api install  # Write the launchd supervisor plist"
         echo "  $0 supervise api uninstall # Disable and remove the supervisor plist"
         echo "  $0 build astro            # Build Astro"
@@ -1508,8 +1520,8 @@ case "$action" in
         echo "SSH LocalForward: start/stop/restart auto-delegate when role is notebook,"
         echo "when a requested port is owned by ssh, or when LU_SERVICES_SSH_HOST is set."
         echo "They do not spawn local processes then."
-        echo "  LU_SERVICES_SSH_HOST      SSH Host alias (default: hramatka)"
-        echo "  LU_SERVICES_REMOTE_ROOT   Remote repo root (default: /home/ops/learn-ukrainian)"
+        echo "  LU_SERVICES_SSH_HOST      writer SSH Host (required for notebook/tunnel/delegate; no public default)"
+        echo "  LU_SERVICES_REMOTE_ROOT   remote repo root (required for delegate; no public default)"
         echo "  LU_SERVICES_ROLE          notebook|local|writer (optional; see topology)"
         echo ""
         echo "Note: 'rag' is accepted as a legacy alias for 'sources'; 'site' is accepted as a legacy alias for 'astro'."

@@ -25,11 +25,13 @@ mode) under a per-user macOS LaunchAgent:
 
 - On Darwin, `./services.sh` defaults to **notebook** role
   (`LU_SERVICES_ROLE=notebook`): it opens an SSH LocalForward
-  (`./services.sh tunnel start`) to the writer Host alias and delegates
-  start/stop/restart/fix remotely. It does **not** bind api/sources/work/astro
-  locally or install launchd. Use `LU_SERVICES_ROLE=local` only for a Mac
-  playground that deliberately spawns local listeners. See
-  `./services.sh topology`.
+  (`./services.sh tunnel start`) to the writer (`LU_SERVICES_SSH_HOST`) and
+  delegates start/stop/restart/fix remotely (`LU_SERVICES_REMOTE_ROOT`).
+  It does **not** bind api/sources/work/astro locally or install launchd.
+  Both env vars are required for notebook/tunnel/delegate; this repo
+  ships no Host-alias table and no remote-root default. Use
+  `LU_SERVICES_ROLE=local` only for a Mac playground that deliberately
+  spawns local listeners. See `./services.sh topology`.
 - The managed Python child runs with `-B` and
   `PYTHONDONTWRITEBYTECODE=1`. The environment setting is inherited by
   subprocesses that preserve their parent environment, so runtime imports

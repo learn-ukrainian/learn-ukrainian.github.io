@@ -21,6 +21,21 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SERVICES_SH = PROJECT_ROOT / "services.sh"
 PIDS_DIR = PROJECT_ROOT / ".pids"
 LOGS_DIR = PROJECT_ROOT / "logs"
+# Public tests never use a real writer Host alias or remote run-root.
+FAKE_SSH_HOST = "fakehost"
+FAKE_REMOTE_ROOT = "/tmp/lu-remote-root"
+_OPS_PATH_LEAK = "/home/ops"
+_NON_LOOPBACK_IPV4 = re.compile(
+    r"(?<![0-9])(?!127\.0\.0\.1)(?:\d{1,3}\.){3}\d{1,3}"
+)
+
+
+def assert_no_services_opsec_leak(text: str) -> None:
+    """topology/help stdout must not leak a home/ops path or non-loopback IPv4."""
+    assert _OPS_PATH_LEAK not in text
+    assert not _NON_LOOPBACK_IPV4.search(text)
+
+
 # Service commands use the repository virtual environment in normal CI.  The
 # explicit override lets a dispatch worktree use the shared project interpreter
 # without creating a worktree-local virtual environment. Default to the primary
@@ -146,6 +161,7 @@ def mock_lsof_env(tmp_path):
 
     env = os.environ.copy()
     env.pop("LU_SERVICES_SSH_HOST", None)
+    env.pop("LU_SERVICES_REMOTE_ROOT", None)
     env.pop("LU_SERVICES_ROLE", None)
     if os.environ.get("MOCK_LSOF_EMPTY") == "1":
         env["SVC_LSOF_BIN"] = "/nonexistent/lsof"
@@ -163,6 +179,7 @@ def cleanup_pids_and_logs():
     # Role/host overrides from the agent shell must not leak into local-mode CI.
     os.environ.pop("LU_SERVICES_ROLE", None)
     os.environ.pop("LU_SERVICES_SSH_HOST", None)
+    os.environ.pop("LU_SERVICES_REMOTE_ROOT", None)
 
     PIDS_DIR.mkdir(parents=True, exist_ok=True)
     LOGS_DIR.mkdir(parents=True, exist_ok=True)
@@ -732,6 +749,7 @@ HTTPServer(("127.0.0.1", int(os.environ["WORK_TEST_PORT"])), Handler).serve_fore
     env = os.environ.copy()
     env.pop("LU_SERVICES_ROLE", None)
     env.pop("LU_SERVICES_SSH_HOST", None)
+    env.pop("LU_SERVICES_REMOTE_ROOT", None)
     fake_pid_file = tmp_path / "work.pid"
     mock_lsof = tmp_path / "mock_lsof"
     mock_lsof.write_text(
@@ -877,7 +895,7 @@ def _ssh_notebook_recorder(
         f"case \" $* \" in\n"
         f"  *' -fN '*)\n"
         f"    if [ {exit_code} -ne 0 ]; then exit {exit_code}; fi\n"
-        f"    '{tunnel_ssh}' -N hramatka </dev/null >/dev/null 2>&1 &\n"
+        f"    '{tunnel_ssh}' -N {FAKE_SSH_HOST} </dev/null >/dev/null 2>&1 &\n"
         f"    child=$!\n"
         f"    echo \"$child\" >> '{children_file}'\n"
         f"    echo \"$child\" > '{mock_lsof_pids_file}'\n"
@@ -915,7 +933,7 @@ def _start_named_ssh_process(tmp_path: Path) -> subprocess.Popen[object]:
     tunnel_ssh = tunnel_dir / "ssh"
     tunnel_ssh.write_text("#!/bin/sh\nwhile true; do sleep 30; done\n", encoding="utf-8")
     tunnel_ssh.chmod(0o755)
-    proc = subprocess.Popen([str(tunnel_ssh), "-N", "hramatka-tunnel"])
+    proc = subprocess.Popen([str(tunnel_ssh), "-N", f"{FAKE_SSH_HOST}-tunnel"])
     reap_process_on_exit(proc)
     return proc
 
@@ -993,7 +1011,7 @@ def test_should_delegate_remote_env_or_tunnel() -> None:
             "unset LU_SERVICES_SSH_HOST",
             "unset LU_SERVICES_ROLE",
             "if _should_delegate_remote api; then echo TRIGGER; else echo LOCAL; fi",
-            "LU_SERVICES_SSH_HOST=hramatka",
+            f"LU_SERVICES_SSH_HOST={FAKE_SSH_HOST}",
             "if _should_delegate_remote api; then echo ENV; else echo NOENV; fi",
             "unset LU_SERVICES_SSH_HOST",
             "_ssh_tunnel_port_pid() { return 0; }",
@@ -1070,7 +1088,7 @@ def test_abort_if_ssh_owned_port_refuses_spawn() -> None:
 
 
 def test_usage_documents_fix_and_ssh_env() -> None:
-    """Header comments and help list fix plus the SSH Host / remote-root overrides."""
+    """Header comments and help list fix plus the SSH Host / remote-root env names."""
     source = SERVICES_SH.read_text(encoding="utf-8")
     assert "./services.sh fix" in source
     assert "./services.sh fix api" in source
@@ -1080,9 +1098,13 @@ def test_usage_documents_fix_and_ssh_env() -> None:
     assert "auto-delegate" in source
     assert "tunnel start" in source
     assert "topology" in source
+    assert _OPS_PATH_LEAK not in source
+    assert not re.search(r"\$\{LU_SERVICES_SSH_HOST:-[^}]+\}", source)
+    assert not re.search(r"\$\{LU_SERVICES_REMOTE_ROOT:-[^}]+\}", source)
 
     env = os.environ.copy()
     env.pop("LU_SERVICES_SSH_HOST", None)
+    env.pop("LU_SERVICES_REMOTE_ROOT", None)
     env.pop("LU_SERVICES_ROLE", None)
     result = subprocess.run(
         ["bash", str(SERVICES_SH), "help"],
@@ -1100,12 +1122,17 @@ def test_usage_documents_fix_and_ssh_env() -> None:
     assert "notebook" in result.stdout
     assert "tunnel" in result.stdout
     assert "auto-delegate" in result.stdout
+    assert "no public default" in result.stdout
+    assert "Host-alias table" not in result.stdout
+    assert_no_services_opsec_leak(result.stdout)
 
 
 def test_topology_documents_four_roles() -> None:
-    """topology prints the four-role table and the local escape hatch."""
+    """topology prints opaque role labels and the local escape hatch — no Host aliases."""
     env = os.environ.copy()
     env.pop("LU_SERVICES_ROLE", None)
+    env.pop("LU_SERVICES_SSH_HOST", None)
+    env.pop("LU_SERVICES_REMOTE_ROOT", None)
     result = subprocess.run(
         ["bash", str(SERVICES_SH), "topology"],
         capture_output=True,
@@ -1116,15 +1143,18 @@ def test_topology_documents_four_roles() -> None:
     )
     assert result.returncode == 0, result.stderr
     out = result.stdout
-    assert "writer" in out and "hramatka" in out
-    assert "job" in out and "atlas-runner" in out
-    assert "witness" in out and "lu-etcd-witness" in out
+    assert "writer" in out
+    assert "job" in out
+    assert "witness" in out
     assert "notebook" in out
     assert "127.0.0.1" in out
     assert "LU_SERVICES_ROLE=local" in out
     assert "tunnel" in out
-    # No dotted public IPv4 (allow 127.0.0.1 only).
-    assert not re.search(r"(?<![0-9])(?!127\.0\.0\.1)(?:\d{1,3}\.){3}\d{1,3}", out)
+    assert "LU_SERVICES_SSH_HOST" in out
+    assert "LU_SERVICES_REMOTE_ROOT" in out
+    assert "Host alias" not in out
+    assert "Host-alias" not in out
+    assert_no_services_opsec_leak(out)
 
 
 def test_start_delegates_when_ssh_host_set(temp_services_sh, mock_lsof_env, tmp_path) -> None:
@@ -1133,8 +1163,8 @@ def test_start_delegates_when_ssh_host_set(temp_services_sh, mock_lsof_env, tmp_
     _, _, env = mock_lsof_env
     shim_dir, capture = _ssh_recorder(tmp_path)
     env["PATH"] = f"{shim_dir}{os.pathsep}{env.get('PATH', os.defpath)}"
-    env["LU_SERVICES_SSH_HOST"] = "hramatka"
-    env["LU_SERVICES_REMOTE_ROOT"] = "/home/ops/learn-ukrainian"
+    env["LU_SERVICES_SSH_HOST"] = FAKE_SSH_HOST
+    env["LU_SERVICES_REMOTE_ROOT"] = FAKE_REMOTE_ROOT
 
     result = subprocess.run(
         [str(script_path), "start", "api"],
@@ -1147,8 +1177,8 @@ def test_start_delegates_when_ssh_host_set(temp_services_sh, mock_lsof_env, tmp_
     assert result.returncode == 0, f"{result.stdout}\n{result.stderr}"
     args = capture.read_text(encoding="utf-8")
     assert "BatchMode=yes" in args
-    assert "hramatka" in args
-    assert "/home/ops/learn-ukrainian" in args
+    assert FAKE_SSH_HOST in args
+    assert FAKE_REMOTE_ROOT in args
     assert "./services.sh start api" in args
     assert "Delegating start api" in result.stdout
     assert _supervisor_was_not_called(env)
@@ -1160,7 +1190,8 @@ def test_start_delegates_when_ssh_owns_port(temp_services_sh, mock_lsof_env, tmp
     set_pids, _, env = mock_lsof_env
     shim_dir, capture = _ssh_recorder(tmp_path)
     env["PATH"] = f"{shim_dir}{os.pathsep}{env.get('PATH', os.defpath)}"
-    env.pop("LU_SERVICES_SSH_HOST", None)
+    env["LU_SERVICES_SSH_HOST"] = FAKE_SSH_HOST
+    env["LU_SERVICES_REMOTE_ROOT"] = FAKE_REMOTE_ROOT
 
     tunnel = _start_named_ssh_process(tmp_path)
     set_pids([tunnel.pid])
@@ -1176,7 +1207,8 @@ def test_start_delegates_when_ssh_owns_port(temp_services_sh, mock_lsof_env, tmp
         assert result.returncode == 0, f"{result.stdout}\n{result.stderr}"
         args = capture.read_text(encoding="utf-8")
         assert "BatchMode=yes" in args
-        assert "hramatka" in args
+        assert FAKE_SSH_HOST in args
+        assert FAKE_REMOTE_ROOT in args
         assert "./services.sh start api" in args
         assert _supervisor_was_not_called(env)
     finally:
@@ -1192,7 +1224,8 @@ def test_failed_remote_delegate_does_not_spawn_local(
     _, _, env = mock_lsof_env
     shim_dir, _capture = _ssh_recorder(tmp_path, exit_code=1)
     env["PATH"] = f"{shim_dir}{os.pathsep}{env.get('PATH', os.defpath)}"
-    env["LU_SERVICES_SSH_HOST"] = "hramatka"
+    env["LU_SERVICES_SSH_HOST"] = FAKE_SSH_HOST
+    env["LU_SERVICES_REMOTE_ROOT"] = FAKE_REMOTE_ROOT
 
     result = subprocess.run(
         [str(script_path), "start", "api"],
@@ -1264,7 +1297,8 @@ def test_fix_unhealthy_ssh_tunnel_delegates_restart(
     set_pids, _, env = mock_lsof_env
     shim_dir, capture = _ssh_recorder(tmp_path)
     env["PATH"] = f"{shim_dir}{os.pathsep}{env.get('PATH', os.defpath)}"
-    env.pop("LU_SERVICES_SSH_HOST", None)
+    env["LU_SERVICES_SSH_HOST"] = FAKE_SSH_HOST
+    env["LU_SERVICES_REMOTE_ROOT"] = FAKE_REMOTE_ROOT
 
     tunnel = _start_named_ssh_process(tmp_path)
     set_pids([tunnel.pid])
@@ -1301,7 +1335,8 @@ def test_notebook_start_api_tunnels_and_delegates(
     shim_dir, capture, children = _ssh_notebook_recorder(tmp_path, mock_pids)
     env["PATH"] = f"{shim_dir}{os.pathsep}{env.get('PATH', os.defpath)}"
     env["LU_SERVICES_ROLE"] = "notebook"
-    env.pop("LU_SERVICES_SSH_HOST", None)
+    env["LU_SERVICES_SSH_HOST"] = FAKE_SSH_HOST
+    env["LU_SERVICES_REMOTE_ROOT"] = FAKE_REMOTE_ROOT
 
     try:
         result = subprocess.run(
@@ -1322,7 +1357,8 @@ def test_notebook_start_api_tunnels_and_delegates(
         assert "127.0.0.1:4321:127.0.0.1:4321" in args
         assert args.count("-L") >= 4
         assert "./services.sh start api" in args
-        assert "hramatka" in args
+        assert FAKE_SSH_HOST in args
+        assert FAKE_REMOTE_ROOT in args
         assert _supervisor_was_not_called(env)
         tunnel_pid = (pids_dir / "ssh-tunnel.pid").read_text(encoding="utf-8").strip()
         assert tunnel_pid.isdigit()
@@ -1345,7 +1381,8 @@ def test_notebook_failed_ssh_does_not_spawn_local(
     )
     env["PATH"] = f"{shim_dir}{os.pathsep}{env.get('PATH', os.defpath)}"
     env["LU_SERVICES_ROLE"] = "notebook"
-    env.pop("LU_SERVICES_SSH_HOST", None)
+    env["LU_SERVICES_SSH_HOST"] = FAKE_SSH_HOST
+    env["LU_SERVICES_REMOTE_ROOT"] = FAKE_REMOTE_ROOT
 
     try:
         result = subprocess.run(
@@ -1371,6 +1408,7 @@ def test_notebook_supervise_install_refuses(
     _, _, env = mock_lsof_env
     env["LU_SERVICES_ROLE"] = "notebook"
     env.pop("LU_SERVICES_SSH_HOST", None)
+    env.pop("LU_SERVICES_REMOTE_ROOT", None)
 
     result = subprocess.run(
         [str(script_path), "supervise", "api", "install"],
@@ -1385,3 +1423,38 @@ def test_notebook_supervise_install_refuses(
     assert "topology" in combined
     assert "tunnel start" in combined
     assert _supervisor_was_not_called(env)
+    assert_no_services_opsec_leak(combined)
+
+
+def test_notebook_unset_host_does_not_spawn_local(
+    temp_services_sh, mock_lsof_env, tmp_path
+) -> None:
+    """Notebook role with no LU_SERVICES_SSH_HOST fails closed and never calls launchd."""
+    script_path, _port = temp_services_sh
+    _, _, env = mock_lsof_env
+    env["LU_SERVICES_ROLE"] = "notebook"
+    env.pop("LU_SERVICES_SSH_HOST", None)
+    env.pop("LU_SERVICES_REMOTE_ROOT", None)
+
+    result = subprocess.run(
+        [str(script_path), "start", "api"],
+        capture_output=True,
+        text=True,
+        cwd=str(PROJECT_ROOT),
+        env=env,
+        timeout=30,
+    )
+    assert result.returncode != 0
+    combined = f"{result.stdout}\n{result.stderr}"
+    assert "LU_SERVICES_SSH_HOST" in combined
+    assert _supervisor_was_not_called(env)
+    assert_no_services_opsec_leak(combined)
+
+
+def test_public_services_surfaces_have_no_ops_path() -> None:
+    """Public services.sh and local-api-server.md must not ship a home/ops default."""
+    doc = PROJECT_ROOT / "docs" / "best-practices" / "local-api-server.md"
+    for path in (SERVICES_SH, doc):
+        text = path.read_text(encoding="utf-8")
+        assert _OPS_PATH_LEAK not in text, path
+        assert_no_services_opsec_leak(text)
