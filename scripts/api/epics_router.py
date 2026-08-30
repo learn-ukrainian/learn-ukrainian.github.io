@@ -930,7 +930,15 @@ def remote_handoff(
         body_text = body.get("body")
         if not isinstance(body_text, str):
             raise ValueError("body is invalid")
-        idempotency_key = _token(body.get("idempotency_key"), "idempotency_key")
+        # Idempotency-Key alias (#603 Phase 0b): a caller may supply the key via the
+        # HTTP header instead of (or identically alongside) body.idempotency_key. A
+        # header that disagrees with a supplied body value is refused outright rather
+        # than silently preferring one — the two must name the same retry.
+        header_key = request.headers.get("Idempotency-Key")
+        body_key = body.get("idempotency_key")
+        if header_key is not None and body_key is not None and header_key != body_key:
+            raise ValueError("Idempotency-Key header conflicts with body.idempotency_key")
+        idempotency_key = _token(header_key if header_key is not None else body_key, "idempotency_key")
         refs = []
         for ref in body.get("refs", []):
             if not isinstance(ref, dict) or ref.get("uri") is not None:
@@ -942,6 +950,11 @@ def remote_handoff(
                 }
             )
         store = _store(ctx)
+        # Snapshot the stream's high-water entry id before the append so a same-key
+        # replay (append_entry returns the pre-existing entry rather than inserting)
+        # can be told apart from a genuinely new entry for the ``Idempotent-Replayed``
+        # response header, without adding a new store method for this slice.
+        high_water_before = store.load_remote_digest(stream_id, limit=0).high_water_entry_id
         entry = store.append_entry(
             lease,
             entry_type=entry_type,
@@ -950,13 +963,16 @@ def remote_handoff(
             refs=tuple(EntryRef(**ref) for ref in refs),
         )
         limit = _digest_limit(body.get("digest_limit", 20))
+        headers = {"Cache-Control": "no-store"}
+        if entry.entry_id <= high_water_before:
+            headers["Idempotent-Replayed"] = "true"
         return JSONResponse(
             content={
                 "schema": SCHEMA,
                 "entry": _safe_entry(entry_as_dict(entry)),
                 "digest": _digest_payload(store, stream_id, limit),
             },
-            headers={"Cache-Control": "no-store"},
+            headers=headers,
         )
     except LeaseConflictError:
         return _error(409, "LEASE LOST")

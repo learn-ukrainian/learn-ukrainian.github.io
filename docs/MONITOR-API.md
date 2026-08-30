@@ -394,6 +394,18 @@ boundary for another machine.
 | GET | `/api/epics/v1/epic:<N>/bundles/latest` | Returns the newest matching manifest plus base64 blob; `agent` is required and `lineage_id` is optional |
 | POST | `/api/epics/v1/epic:<N>/release` | Exact release is idempotent; `force` requires actor host and reason |
 
+`handoff` also accepts the request idempotency key as the `Idempotency-Key`
+HTTP header, as an alias for `body.idempotency_key`; a header that disagrees
+with a supplied body value is refused with `400` rather than silently
+preferring one, and a replayed key returns the original entry with an
+`Idempotent-Replayed: true` response header. `MonitorClient` (the stdlib
+`[A, B]` failover client in `scripts/ai_agent_bridge/monitor_client.py`) may
+retry a keyed mutation on base URL B only for routes on its
+cluster-authoritative allowlist — today exactly this `/api/epics/v1` family
+(handoff/bundles/release) — and only distinguishes an ambiguous edge failure
+(`502`/`503`/`504` with no app JSON and no `server: uvicorn`) from the API's
+own well-formed `503` busy answer; `500`/`501`/`408`/`429` never trigger a hop.
+
 Driver leases are claimed on the API host through this surface. Remote mode is
 the default; `--local` is an offline-only fallback that prints a warning and
 does not create a fleet-visible lease. A driver on any machine resumes by

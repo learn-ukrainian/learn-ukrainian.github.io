@@ -15,6 +15,7 @@ import base64
 import binascii
 import gzip
 import hashlib
+import http.client
 import io
 import json
 import os
@@ -1170,19 +1171,49 @@ def _bundle_api_request(
 
 
 def _bundle_api_upload(args: argparse.Namespace, *, stream_id: str, manifest: Mapping[str, Any], blob: bytes) -> dict[str, Any]:
+    """Upload one bundle through :class:`MonitorClient` (#603 Phase 0b adoption).
+
+    Bundles already dedupe by ``bundle_sha256`` server-side (see
+    ``SessionStreamStore.upload_rollover_bundle``), so that hash doubles as this
+    call's stable idempotency key — it lets the client retry the exact same
+    upload across the [A, B] base URL list on an ambiguous transport failure
+    without risking a second distinct bundle.
+    """
     lease = _bundle_lease_payload(stream_id)
     if lease is None:
         raise RolloverBundleAPIUnavailable("SESSION_STREAM_* fenced lease envelope is unavailable")
-    return _bundle_api_request(
-        args.monitor_base_url,
-        method="POST",
-        path=f"/api/epics/v1/{stream_id}/bundles",
-        payload={
-            **lease,
-            "manifest": dict(manifest),
-            "blob": base64.b64encode(blob).decode("ascii"),
-        },
-    )
+    # Deferred: a top-level import of scripts.ai_agent_bridge.monitor_client would run
+    # the ai_agent_bridge package __init__, which (via _claude -> _review_worktree ->
+    # scripts.review.isolation) imports back from this very module — a circular import.
+    try:
+        from scripts.ai_agent_bridge.monitor_client import MonitorClient
+    except ImportError:
+        from ai_agent_bridge.monitor_client import MonitorClient
+    manifest_value = dict(manifest)
+    bundle_sha256 = manifest_value.get("bundle_sha256")
+    client = MonitorClient(base_url=_bundle_monitor_url(args.monitor_base_url), timeout_s=3.0)
+    try:
+        status, raw, _headers = client._post(
+            f"/api/epics/v1/{stream_id}/bundles",
+            json_body={
+                **lease,
+                "manifest": manifest_value,
+                "blob": base64.b64encode(blob).decode("ascii"),
+            },
+            idempotency_key=bundle_sha256 if isinstance(bundle_sha256, str) else None,
+        )
+    except (urllib.error.URLError, TimeoutError, OSError, http.client.HTTPException) as exc:
+        raise RolloverBundleAPIUnavailable(f"bundle API unavailable: {type(exc).__name__}") from exc
+    try:
+        value = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        raise RolloverBundleAPIUnavailable("bundle API returned non-JSON data") from exc
+    if status >= 400:
+        detail = value.get("detail", "request refused") if isinstance(value, dict) else "request refused"
+        raise RolloverBundleAPIUnavailable(f"bundle API unavailable: HTTP {status} ({detail})")
+    if not isinstance(value, dict):
+        raise RuntimeError("bundle API returned a non-object JSON document")
+    return value
 
 
 def _bundle_api_latest(

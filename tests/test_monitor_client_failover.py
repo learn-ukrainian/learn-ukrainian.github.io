@@ -1,7 +1,9 @@
-"""Tests for Monitor client [A, B] failover and mutation idempotency (#7365)."""
+"""Tests for Monitor client [A, B] failover and mutation idempotency (#7365, #603)."""
 
 from __future__ import annotations
 
+import http.client
+import io
 import json
 import urllib.error
 import urllib.request
@@ -10,7 +12,9 @@ from unittest.mock import Mock
 
 import pytest
 
+from scripts.ai_agent_bridge import monitor_client
 from scripts.ai_agent_bridge.monitor_client import MonitorClient, _normalize_base_urls
+from scripts.api.route_contracts import ROUTE_CONTRACTS
 
 pytestmark = pytest.mark.repo_invariant
 
@@ -113,7 +117,7 @@ def test_monitor_client_get_all_fail(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_monitor_client_get_http_error_does_not_failover(monkeypatch: pytest.MonkeyPatch) -> None:
-    """HTTP 404/500 from host A is an application response, not a transport error, so no failover."""
+    """HTTP 404 from host A is an application response, not a transport error, so no failover."""
     calls: list[str] = []
 
     def fake_urlopen(req: urllib.request.Request, timeout: float = 3.0) -> _FakeResponse:
@@ -129,6 +133,107 @@ def test_monitor_client_get_http_error_does_not_failover(monkeypatch: pytest.Mon
     assert status == 404
     assert len(calls) == 1
     assert calls[0] == "http://host-a:8765/api/missing"
+
+
+@pytest.mark.parametrize("status", [502, 503, 504])
+def test_monitor_client_get_failover_on_ambiguous_transport_statuses(
+    monkeypatch: pytest.MonkeyPatch, status: int
+) -> None:
+    """HAProxy-shaped 502/503/504 (no app JSON, no server: uvicorn) is ambiguous transport, so GET hops."""
+    calls: list[str] = []
+
+    def fake_urlopen(req: urllib.request.Request, timeout: float = 3.0) -> _FakeResponse:
+        url = req.full_url
+        calls.append(url)
+        if url.startswith("http://host-a:8765"):
+            raise urllib.error.HTTPError(url, status, "Bad Gateway", {}, None)  # type: ignore[arg-type]
+        return _FakeResponse(200, json.dumps({"host": "b"}))
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+
+    client = MonitorClient(base_urls=["http://host-a:8765", "http://host-b:8765"])
+    resp_status, body, _ = client._get("/api/state/summary")
+
+    assert resp_status == 200
+    assert json.loads(body)["host"] == "b"
+    assert len(calls) == 2
+
+
+@pytest.mark.parametrize("status", [500, 501, 408, 429])
+def test_monitor_client_get_does_not_failover_on_application_statuses(
+    monkeypatch: pytest.MonkeyPatch, status: int
+) -> None:
+    """500/501/408/429 are always application-origin answers and never trigger a hop."""
+    calls: list[str] = []
+
+    def fake_urlopen(req: urllib.request.Request, timeout: float = 3.0) -> _FakeResponse:
+        url = req.full_url
+        calls.append(url)
+        raise urllib.error.HTTPError(url, status, "error", {}, None)  # type: ignore[arg-type]
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+
+    client = MonitorClient(base_urls=["http://host-a:8765", "http://host-b:8765"])
+    resp_status, _body, _ = client._get("/api/state/summary")
+
+    assert resp_status == status
+    assert len(calls) == 1
+
+
+def test_monitor_client_get_does_not_failover_on_app_origin_503(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A well-formed API 503 (JSON body + server: uvicorn) is an answer, not a proxy failure."""
+    calls: list[str] = []
+
+    def fake_urlopen(req: urllib.request.Request, timeout: float = 3.0) -> _FakeResponse:
+        url = req.full_url
+        calls.append(url)
+        raise urllib.error.HTTPError(
+            url,
+            503,
+            "Service Unavailable",
+            {"server": "uvicorn"},  # type: ignore[arg-type]
+            io.BytesIO(json.dumps({"status": "building"}).encode("utf-8")),
+        )
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+
+    client = MonitorClient(base_urls=["http://host-a:8765", "http://host-b:8765"])
+    status, body, _ = client._get("/api/state/summary")
+
+    assert status == 503
+    assert json.loads(body)["status"] == "building"
+    assert len(calls) == 1
+
+
+def test_monitor_client_get_failover_on_incomplete_read(monkeypatch: pytest.MonkeyPatch) -> None:
+    """``http.client.IncompleteRead`` is an ambiguous transport failure like a socket reset."""
+    calls: list[str] = []
+
+    def fake_urlopen(req: urllib.request.Request, timeout: float = 3.0) -> _FakeResponse:
+        url = req.full_url
+        calls.append(url)
+        if url.startswith("http://host-a:8765"):
+            raise http.client.IncompleteRead(b"partial")
+        return _FakeResponse(200, json.dumps({"host": "b"}))
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+
+    client = MonitorClient(base_urls=["http://host-a:8765", "http://host-b:8765"])
+    status, body, _ = client._get("/api/state/summary")
+
+    assert status == 200
+    assert json.loads(body)["host"] == "b"
+    assert len(calls) == 2
+
+
+def test_monitor_client_mutation_allowlist_matches_route_contracts() -> None:
+    """The client's positive retry allowlist must exactly track the route-contract registry."""
+    expected = {
+        contract.pattern
+        for contract in ROUTE_CONTRACTS
+        if contract.mutates and contract.locality == "cluster_authoritative"
+    }
+    assert expected == monitor_client._CLUSTER_AUTHORITATIVE_MUTATION_PREFIXES
 
 
 def test_monitor_client_mutation_non_idempotent_no_retry(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -153,8 +258,9 @@ def test_monitor_client_mutation_non_idempotent_no_retry(monkeypatch: pytest.Mon
 
 
 def test_monitor_client_mutation_idempotent_retries_with_stable_key(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Idempotent mutation (with idempotency key) retries and fails over across [A, B]."""
+    """A keyed mutation on an allowlisted cluster-authoritative path retries across [A, B]."""
     calls: list[tuple[str, dict[str, str]]] = []
+    path = "/api/epics/v1/epic:test-failover/handoff"
 
     def fake_urlopen(req: urllib.request.Request, timeout: float = 3.0) -> _FakeResponse:
         url = req.full_url
@@ -171,7 +277,7 @@ def test_monitor_client_mutation_idempotent_retries_with_stable_key(monkeypatch:
     client = MonitorClient(base_urls=["http://host-a:8765", "http://host-b:8765"])
 
     status, body, _ = client._post(
-        "/api/agent-monitor/register",
+        path,
         json_body={"pid": 1234},
         idempotency_key="stable-token-abc",
     )
@@ -179,12 +285,37 @@ def test_monitor_client_mutation_idempotent_retries_with_stable_key(monkeypatch:
     assert status == 200
     assert json.loads(body)["registered"] is True
     assert len(calls) == 2
-    assert calls[0][0] == "http://host-a:8765/api/agent-monitor/register"
-    assert calls[1][0] == "http://host-b:8765/api/agent-monitor/register"
+    assert calls[0][0] == f"http://host-a:8765{path}"
+    assert calls[1][0] == f"http://host-b:8765{path}"
 
     # Both requests must carry the exact stable idempotency key
     assert calls[0][1].get("Idempotency-key") == "stable-token-abc"
     assert calls[1][1].get("Idempotency-key") == "stable-token-abc"
+
+
+def test_monitor_client_mutation_host_affine_never_retries_even_with_key(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Host-affine mutations (agent-monitor register/heartbeat, ...) never retry, key or not."""
+    calls: list[str] = []
+
+    def fake_urlopen(req: urllib.request.Request, timeout: float = 3.0) -> _FakeResponse:
+        calls.append(req.full_url)
+        raise urllib.error.URLError("Connection reset")
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+
+    client = MonitorClient(base_urls=["http://host-a:8765", "http://host-b:8765"])
+
+    with pytest.raises(urllib.error.URLError, match="Connection reset"):
+        client._post(
+            "/api/agent-monitor/register",
+            json_body={"pid": 1234},
+            idempotency_key="stable-token-abc",
+        )
+
+    assert len(calls) == 1
+    assert calls[0] == "http://host-a:8765/api/agent-monitor/register"
 
 
 def test_monitor_client_cluster_readiness_helper(monkeypatch: pytest.MonkeyPatch) -> None:
