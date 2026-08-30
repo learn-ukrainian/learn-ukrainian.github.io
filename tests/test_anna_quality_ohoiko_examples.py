@@ -19,6 +19,7 @@ from scripts.lexicon.ohoiko_quality_enrichment import (
     apply_ohoiko_quality_enrichment,
     enrich_entry_with_ohoiko,
     is_duplicate_sense,
+    is_plausible_example,
     merge_examples,
     merge_translation,
     parse_500_verbs_chunk,
@@ -150,6 +151,58 @@ SAMPLE_1000_CHUNKS: dict[str, tuple[str, str, str]] = {
         "843. таки́й са́мий  same (adjective)\n"
         "У нас такі́ са́мі пробле́ми.                    We have the same problems.\n",
     ),
+    "e0143": (
+        "anna-ohoiko-1000-words-2nd-ed_e0143",
+        "вчи́тися = учи́тися =",
+        "143. вчи́тися = учи́тися =  to study (somewhere or in\n"
+        "навча́тися, навчи́тися                         a certain way), to learn\n"
+        "(imperfective, perfective)\n"
+        "Я мо́жу вчи́тися (навча́тися),                 I can study only when it is quiet.\n"
+        "ті́льки коли́ ти́хо.\n"
+        "Наза́р уже́ навчи́вся чита́ти.                 Nazar has already learned to read.\n",
+    ),
+    "e0214": (
+        "anna-ohoiko-1000-words-2nd-ed_e0214",
+        "дзвони́ти, задзвони́ти (1), 1) to ring;",
+        "214. дзвони́ти, задзвони́ти (1), 1) to ring;\n"
+        "подзвони́ти (2)                                2) to call, to give a call\n"
+        "(imperfective, perfective)\n"
+        "У це́ркві дзво́нять дзво́ни.                   Bells are ringing in the church.\n"
+        "У це́ркві задзвони́ли дзво́ни.                 Bells started to ring in the church.\n"
+        "Я дзвоню́ йому́ за́раз.                        I am calling him now.\n"
+        "Я подзвоню́ йому́ за́втра.                     I will give him a call tomorrow.\n"
+        "диви́тися, подиви́тися\n",
+    ),
+    "e0405": (
+        "anna-ohoiko-1000-words-2nd-ed_e0405",
+        "ліво́руч = злі́ва (1) =",
+        "405. ліво́руч = злі́ва (1) =  1) on the left, to the left;\n"
+        "налі́во (2)                                    2) left (direction)\n"
+        "Ліво́руч (злі́ва) від Оле́ни — її́             To the left of Olena is her son Nazar.\n"
+        "син Наза́р.\n"
+        "Велосипеди́ст поверну́в ліво́руч               The cyclist turned left.\n"
+        "(налі́во).\n",
+    ),
+    "e0543": (
+        "anna-ohoiko-1000-words-2nd-ed_e0543",
+        "одру́жуватися,",
+        "543. одру́жуватися,  1) to get married;\n"
+        "одружи́тися                                     2) to marry a woman\n"
+        "(imperfective, perfective)\n"
+        "Бага́то пар одру́жуються влі́тку.               Many couples get married in the\n"
+        "summer.\n"
+        "Оле́г одружи́вся з Мар’я́ною.                   Oleh married Mariana.\n",
+    ),
+    "e0658": (
+        "anna-ohoiko-1000-words-2nd-ed_e0658",
+        "право́руч = спра́ва (1) =",
+        "658. право́руч = спра́ва (1) =  1) on the right, to the right;\n"
+        "напра́во (2)                                   2) right (direction)\n"
+        "Мій буди́нок право́руч (= спра́ва) My house is to the right of the shop.\n"
+        "від магази́ну.\n"
+        "Маши́на поверну́ла право́руч       The car turned right.\n"
+        "(= напра́во).\n",
+    ),
     "e0945": (
         "anna-ohoiko-1000-words-2nd-ed_e0945",
         "час від ча́су = ча́сом",
@@ -189,6 +242,45 @@ SAMPLE_500_CHUNKS: dict[str, tuple[str, str, str]] = {
         "ТЕПЕРІШНІЙ ЧАС ― PRESENT TENSE\n"
         "я                   буду́ю\n"
         "ти                  буду́єш\n",
+    ),
+    "v0277": (
+        "anna-ohoiko-500-verbs_e0277",
+        "об’єд",
+        "об’єд\n"
+        "to unite sth/sb [to come together, to unite]\n"
+        "́ нувати [ся] | об’єдна́ти [ся]                                                Present / Future Stems: об’єдну- | об’єдна-\n"
+        "ОСОБА                                    НЕДОКОНАНИЙ ВИД                                              ДОКОНАНИЙ ВИД\n"
+        "ТЕПЕРІШНІЙ ЧАС ― PRESENT TENSE\n"
+        "я                       об’єд́ ную [ся]\n",
+    ),
+    "v0341": (
+        "anna-ohoiko-500-verbs_e0341",
+        "поєд",
+        "поєд\n"
+        "to combine sth [to combine]\n"
+        "́ нувати [ся] | поєдна́ти [ся]                                                Present / Future Stems: поєдну- | поєдна-\n"
+        "ОСОБА                              НЕДОКОНАНИЙ ВИД                                                 ДОКОНАНИЙ ВИД\n"
+        "ТЕПЕРІШНІЙ ЧАС ― PRESENT TENSE\n"
+        "я                     поєд́ ную [ся]\n",
+    ),
+    "v0365": (
+        "anna-ohoiko-500-verbs_e0365",
+        "приєд",
+        "приєд\n"
+        "to add, to attach, to join sth [to join]\n"
+        "́ нувати [ся] | приєдна́ти [ся]                                                  Present / Future Stems: приєдну- | приєдна-\n"
+        "ОСОБА                                     НЕДОКОНАНИЙ ВИД                                                 ДОКОНАНИЙ ВИД\n"
+        "ТЕПЕРІШНІЙ ЧАС ― PRESENT TENSE\n"
+        "я                         приєд́ ную [ся]\n",
+    ),
+    "v0383": (
+        "anna-ohoiko-500-verbs_e0383",
+        "Present / Future Stems: прош-/прос- | попрош-/попрос-                                         проси́ти | попроси́ти",
+        "Present / Future Stems: прош-/прос- | попрош-/попрос-                                         проси́ти | попроси́ти\n"
+        "Conjugation: 2nd (-ять)                                                                                   to ask (for); to request\n"
+        "ОСОБА                            НЕДОКОНАНИЙ ВИД                                                 ДОКОНАНИЙ ВИД\n"
+        "ТЕПЕРІШНІЙ ЧАС ― PRESENT TENSE\n"
+        "я                   прошу́\n",
     ),
 }
 
@@ -273,6 +365,68 @@ def test_parse_1000_words_ocr_space_collapse_zabojatysja() -> None:
     assert parsed.example["en"] == "He is afraid of spiders."
 
 
+def test_parse_1000_words_vchytysia_entry_143() -> None:
+    cid, title, text = SAMPLE_1000_CHUNKS["e0143"]
+    parsed = parse_1000_words_chunk(cid, title, text)
+    assert parsed.entry_number == 143
+    assert parsed.lemmas == ["вчитися", "учитися", "навчатися", "навчитися"]
+    assert parsed.gloss == "to study (somewhere or in a certain way), to learn"
+    assert parsed.example is not None
+    # Must NOT be the gloss fragment "навча́тися, навчи́тися" / "a certain way), to learn (imperfective, perfective)"
+    assert parsed.example["uk"] == "Я мо́жу вчи́тися (навча́тися), ті́льки коли́ ти́хо."
+    assert parsed.example["en"] == "I can study only when it is quiet."
+    assert parsed.example["source"] == "Anna Ohoiko"
+    assert parsed.example["locator"] == "ohoiko-1000-words entry 143"
+
+
+def test_parse_1000_words_dzvonyty_entry_214() -> None:
+    cid, title, text = SAMPLE_1000_CHUNKS["e0214"]
+    parsed = parse_1000_words_chunk(cid, title, text)
+    assert parsed.entry_number == 214
+    assert parsed.lemmas == ["дзвонити", "задзвонити", "подзвонити"]
+    assert parsed.gloss == "to ring; 2) to call, to give a call"
+    assert parsed.example is not None
+    # Must NOT be the gloss fragment "подзвони́ти (2)" / "2) to call, to give a call"
+    assert parsed.example["uk"] == "У це́ркві дзво́нять дзво́ни."
+    assert parsed.example["en"] == "Bells are ringing in the church."
+
+
+def test_parse_1000_words_livoruch_entry_405() -> None:
+    cid, title, text = SAMPLE_1000_CHUNKS["e0405"]
+    parsed = parse_1000_words_chunk(cid, title, text)
+    assert parsed.entry_number == 405
+    assert parsed.lemmas == ["ліворуч", "зліва", "наліво"]
+    assert parsed.gloss == "1) on the left, to the left; 2) left (direction)"
+    assert parsed.example is not None
+    # Must NOT be the gloss fragment "налі́во (2)" / "2) left (direction)"
+    assert parsed.example["uk"] == "Ліво́руч (злі́ва) від Оле́ни — її́ син Наза́р."
+    assert parsed.example["en"] == "To the left of Olena is her son Nazar."
+
+
+def test_parse_1000_words_odruzhuvatysia_entry_543() -> None:
+    cid, title, text = SAMPLE_1000_CHUNKS["e0543"]
+    parsed = parse_1000_words_chunk(cid, title, text)
+    assert parsed.entry_number == 543
+    assert parsed.lemmas == ["одружуватися", "одружитися"]
+    assert parsed.gloss == "1) to get married; 2) to marry a woman"
+    assert parsed.example is not None
+    # Must NOT be the gloss fragment "одружи́тися" / "2) to marry a woman"
+    assert parsed.example["uk"] == "Бага́то пар одру́жуються влі́тку."
+    assert parsed.example["en"] == "Many couples get married in the summer."
+
+
+def test_parse_1000_words_pravoruch_entry_658() -> None:
+    cid, title, text = SAMPLE_1000_CHUNKS["e0658"]
+    parsed = parse_1000_words_chunk(cid, title, text)
+    assert parsed.entry_number == 658
+    assert parsed.lemmas == ["праворуч", "справа", "направо"]
+    assert parsed.gloss == "1) on the right, to the right; 2) right (direction)"
+    assert parsed.example is not None
+    # Must NOT be the gloss fragment "напра́во (2)" / "2) right (direction)"
+    assert parsed.example["uk"] == "Мій буди́нок право́руч (= спра́ва) від магази́ну."
+    assert parsed.example["en"] == "My house is to the right of the shop."
+
+
 # ---------------------------------------------------------------------------
 # Tests: 500-verbs Chunk Parser
 # ---------------------------------------------------------------------------
@@ -285,6 +439,7 @@ def test_parse_500_verbs_simple_pair() -> None:
     assert parsed.locator == "ohoiko-500-verbs entry 1"
     assert parsed.lemmas == ["аналізувати", "проаналізувати"]
     assert parsed.gloss == "to analyze"
+    assert parsed.example is None
 
 
 def test_parse_500_verbs_reflexive_bracket() -> None:
@@ -293,6 +448,7 @@ def test_parse_500_verbs_reflexive_bracket() -> None:
     assert parsed.entry_number == 4
     assert parsed.lemmas == ["бачити", "бачитися", "побачити", "побачитися"]
     assert parsed.gloss == "to see [to see each other, to meet]"
+    assert parsed.example is None
 
 
 def test_parse_500_verbs_multiple_perfectives() -> None:
@@ -301,6 +457,88 @@ def test_parse_500_verbs_multiple_perfectives() -> None:
     assert parsed.entry_number == 18
     assert parsed.lemmas == ["будувати", "збудувати", "побудувати"]
     assert parsed.gloss == "to build"
+    assert parsed.example is None
+
+
+def test_parse_500_verbs_ocr_accent_wrapped_entry_277() -> None:
+    cid, title, text = SAMPLE_500_CHUNKS["v0277"]
+    parsed = parse_500_verbs_chunk(cid, title, text)
+    assert parsed.entry_number == 277
+    assert parsed.lemmas == ["об’єднувати", "об’єднуватися", "об’єднати", "об’єднатися"]
+    assert parsed.gloss == "to unite sth/sb [to come together, to unite]"
+    assert parsed.example is None
+
+
+def test_parse_500_verbs_stems_first_entry_383() -> None:
+    cid, title, text = SAMPLE_500_CHUNKS["v0383"]
+    parsed = parse_500_verbs_chunk(cid, title, text)
+    assert parsed.entry_number == 383
+    assert parsed.lemmas == ["просити", "попросити"]
+    assert parsed.gloss == "to ask (for); to request"
+    assert parsed.example is None
+
+
+# ---------------------------------------------------------------------------
+# Tests: Plausibility Filter
+# ---------------------------------------------------------------------------
+
+
+def test_is_plausible_example_rejects_table_headers_and_fragments() -> None:
+    # Grammar tags / table labels
+    assert is_plausible_example("ОСОБА НЕДОКОНАНИЙ ВИД", "PRESENT TENSE") is False
+    assert (
+        is_plausible_example(
+            "́ нувати [ся] | об’єдна́ти [ся]",
+            "Present / Future Stems: об’єдну- | об’єдна-",
+        )
+        is False
+    )
+    assert (
+        is_plausible_example(
+            "навча́тися, навчи́тися",
+            "a certain way), to learn (imperfective, perfective)",
+        )
+        is False
+    )
+    assert (
+        is_plausible_example("подзвони́ти (2)", "2) to call, to give a call (imperfective, perfective)")
+        is False
+    )
+    assert is_plausible_example("налі́во (2)", "2) left (direction)") is False
+    assert is_plausible_example("одружи́тися", "2) to marry a woman") is False
+
+    # Unbalanced parentheses / leftover brackets
+    assert is_plausible_example("слово)", "word)") is False
+    assert is_plausible_example("слово", "word]") is False
+    assert is_plausible_example(") слово", ") word") is False
+
+    # Empty / short / single words
+    assert is_plausible_example("", "") is False
+    assert is_plausible_example("автобус", "bus") is False
+
+
+def test_is_plausible_example_accepts_valid_sentences() -> None:
+    assert (
+        is_plausible_example(
+            "Сашко́ ї́здить в шко́лу авто́бусом.",
+            "Sashko goes to school by bus.",
+        )
+        is True
+    )
+    assert (
+        is_plausible_example(
+            "У це́ркві дзво́нять дзво́ни.",
+            "Bells are ringing in the church.",
+        )
+        is True
+    )
+    assert (
+        is_plausible_example(
+            "– Хто хо́че доба́вки? – Я!",
+            "– Who wants more food? – Me!",
+        )
+        is True
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -368,6 +606,29 @@ def test_merge_examples_dedup_and_cap() -> None:
     assert len(res) == 2
     assert res[0]["uk"] == ex2["uk"]
     assert res[1]["uk"] == ex3["uk"]
+
+
+def test_merge_examples_rejects_implausible_pairs() -> None:
+    bad1 = {
+        "uk": "навча́тися, навчи́тися",
+        "en": "a certain way), to learn (imperfective, perfective)",
+        "source": "Anna Ohoiko",
+    }
+    bad2 = {
+        "uk": "́ нувати [ся] | об’єдна́ти [ся]",
+        "en": "Present / Future Stems: об’єдну- | об’єдна-",
+        "source": "Anna Ohoiko",
+    }
+    good = {
+        "uk": "Сашко́ ї́здить в шко́лу авто́бусом.",
+        "en": "Sashko goes to school by bus.",
+        "source": "Anna Ohoiko",
+    }
+    # Prior has bad1, new has bad2 and good
+    merged = merge_examples([bad1], [bad2, good])
+    assert len(merged) == 1
+    assert merged[0]["uk"] == good["uk"]
+    assert merged[0]["en"] == good["en"]
 
 
 # ---------------------------------------------------------------------------
