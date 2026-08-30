@@ -122,6 +122,13 @@ non-authorizing exact request. Any ENOSPC during a pack write fails promptly
 and cleans only that newly created partial staging pack. No stage deletes,
 unlinks, or truncates an original.
 
+Allocated block counts are filesystem-local. The admission receipt binds the
+source pack's measured allocation as its pre-copy forecast; attestation records
+the workstation's actual allocation and its delta separately. It never
+requires APFS, ext4, or a network filesystem to report identical `st_blocks`
+for identical bytes. The full stored-hash plus stream-decompression proof and
+the fresh post-copy 10 GiB floor remain the authoritative backup gates.
+
 The staged surface is intentionally a Python API rather than path-bearing real
 mode CLI arguments. The durable invocation/transport order is:
 

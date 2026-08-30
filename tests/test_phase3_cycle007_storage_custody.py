@@ -538,6 +538,71 @@ def test_staged_backup_refuses_tampered_export_or_same_failure_domain(
     assert exc.value.code == "backup_restore_failure"
 
 
+def test_staged_backup_records_cross_filesystem_allocation_without_rejecting_content(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(
+        storage,
+        "_physical_failure_domain_sha256",
+        lambda root: storage.digest(f"fixture-domain:{root.name}".encode()),
+    )
+    materialization, _packet_count, _row_count = _build_materialization(tmp_path)
+    evidence = _build_evidence(tmp_path, materialization)
+    source_work = tmp_path / "source-work"
+    source_work.mkdir(mode=storage.PRIVATE_DIR_MODE)
+    os.chmod(source_work, storage.PRIVATE_DIR_MODE)
+    bindings = storage.resolve_bindings(
+        fixture=True,
+        materialization=materialization,
+        evidence=evidence,
+        work_root=source_work,
+    )
+    primary = storage.primary_universal_pack_stage(bindings)
+    workstation_root = tmp_path / "workstation"
+    workstation_root.mkdir(mode=storage.PRIVATE_DIR_MODE)
+    imported_pack = workstation_root / "imported-pack"
+    admission = storage.workstation_backup_admission_stage(
+        primary["portable_export"],
+        workstation_root,
+        imported_pack,
+        source_failure_domain_token="fixture-primary-domain",
+        workstation_failure_domain_token="fixture-workstation-domain",
+        fixture=True,
+    )
+    shutil.copytree(primary["pack_dir"], imported_pack)
+
+    source_allocated = primary["pack_manifest"]["total_stored_allocated_bytes"]
+    allocation_delta = 22_827_008
+    monkeypatch.setattr(
+        storage,
+        "_pack_payload_allocated_bytes",
+        lambda _pack_dir, _manifest: (
+            source_allocated
+            - storage.ZSTD_METADATA_ALLOWANCE_BYTES
+            + allocation_delta
+        ),
+    )
+
+    attested = storage.workstation_backup_attestation_stage(
+        primary["portable_export"],
+        admission,
+        imported_pack,
+        workstation_root,
+        source_failure_domain_token="fixture-primary-domain",
+        workstation_failure_domain_token="fixture-workstation-domain",
+        zstd_executable=bindings.zstd_executable,
+        fixture=True,
+    )
+
+    assert attested["restore_proof"]["backup_restore_ok"] is True
+    assert attested["backup"]["source_compact_allocated_bytes"] == source_allocated
+    assert attested["backup"]["backup_allocated_bytes"] == (
+        source_allocated + allocation_delta
+    )
+    assert attested["backup"]["backup_allocation_delta_bytes"] == allocation_delta
+    assert attested["attestation"]["backup_allocation_delta_bytes"] == allocation_delta
+
+
 def test_staged_finalize_refuses_same_content_inode_drift(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
