@@ -93,11 +93,21 @@ def test_startup_seed_registers_all_canonical_release_epics(tmp_path: Path) -> N
         now=NOW,
     )
 
+    # Derive the expectation from the live registry: one record per distinct
+    # epic across streams. A literal here broke the merge queue when a new
+    # epic was registered (#7470 MQ ejection, 2026-08-30).
+    registry = yaml.safe_load(
+        (ROOT / "scripts" / "config" / "issue_streams.yaml").read_text(encoding="utf-8")
+    )
+    expected = len(
+        {epic for stream in registry["streams"].values() for epic in stream["epics"]}
+    )
+    assert expected >= 18  # canonical registry never shrinks silently
     assert health["status"] == "ok"
-    assert health["records"] == 18
-    assert health["registered"] == 18
+    assert health["records"] == expected
+    assert health["registered"] == expected
     assert health["skipped"] == 0
-    assert len(store.list_remote_projections()) == 18
+    assert len(store.list_remote_projections()) == expected
 
 
 def test_second_startup_on_same_snapshot_is_a_true_noop(tmp_path: Path) -> None:
