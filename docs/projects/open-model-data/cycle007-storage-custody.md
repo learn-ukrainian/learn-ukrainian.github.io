@@ -123,13 +123,15 @@ without weakening the reversible custody module. Before the first unlink it:
 5. acquires the deletion executor lock plus the producer quiescence locks.
 
 Execution writes a hash-chained, append-only event journal. Each entry receives
-a durable `INTENT` before a directory-relative, no-symlink `unlink`, then its
-parent directory is `fsync`ed before `UNLINKED`. A crash with a terminal
-`INTENT` resumes only that same entry: an unchanged present entry is retried;
-an absent entry is recovered and journaled; a replaced entry fails closed.
-Pending entries may never be absent. The executor calls no recursive removal,
-deletes no directory, and leaves every compact pack and receipt outside the
-deletion roots.
+a durable `INTENT`, then an atomic no-replace rename into a private
+same-filesystem quarantine. The moved inode must equal the already open,
+fully hashed inode before the source and quarantine directories are `fsync`ed
+and `MOVED` is journaled. Only that verified quarantine entry can be unlinked;
+the quarantine directory is then `fsync`ed before `UNLINKED`. A crash resumes
+from the exact source/quarantine/journal combination; a replacement or any
+ambiguous combination fails closed. Pending entries may never be absent. The
+executor calls no recursive removal, deletes no directory, and leaves every
+compact pack and receipt outside the deletion roots.
 
 After all exact entries are absent, completion remains open until a new
 post-delete nonce receives another full workstation stream proof and the

@@ -11,11 +11,13 @@ and opaque filesystem identities.
 from __future__ import annotations
 
 import contextlib
+import ctypes
 import fcntl
 import hashlib
 import os
 import secrets
 import stat
+import sys
 from collections.abc import Callable, Iterator, Mapping, Sequence
 from pathlib import Path
 from typing import Any
@@ -38,11 +40,14 @@ FAULT_POINTS = frozenset(
     {
         "before_intent",
         "after_intent",
+        "after_move",
+        "after_move_fsync",
         "after_unlink",
         "after_parent_fsync",
         "before_unlinked_event",
     }
 )
+RENAME_NOREPLACE = 1
 
 
 class DeletionExecutionError(ValueError):
@@ -88,6 +93,68 @@ def _write_new_receipt(path: Path, value: Mapping[str, Any], code: str) -> None:
         storage._atomic_write_json(path, value)
     except OSError as exc:
         raise DeletionExecutionError(code) from exc
+
+
+def _fsync_directory(path: Path, code: str = "journal_drift") -> None:
+    try:
+        descriptor = os.open(path, os.O_RDONLY | getattr(os, "O_DIRECTORY", 0))
+        try:
+            os.fsync(descriptor)
+        finally:
+            os.close(descriptor)
+    except OSError as exc:
+        raise DeletionExecutionError(code) from exc
+
+
+def _rename_noreplace(
+    source_parent: int,
+    source_name: str,
+    destination_parent: int,
+    destination_name: str,
+    *,
+    fixture: bool,
+) -> None:
+    """Atomically rename without ever replacing another directory entry."""
+    if sys.platform.startswith("linux"):
+        libc = ctypes.CDLL(None, use_errno=True)
+        renameat2 = getattr(libc, "renameat2", None)
+        _require(renameat2 is not None, "source_state_drift")
+        assert renameat2 is not None
+        renameat2.argtypes = (
+            ctypes.c_int,
+            ctypes.c_char_p,
+            ctypes.c_int,
+            ctypes.c_char_p,
+            ctypes.c_uint,
+        )
+        renameat2.restype = ctypes.c_int
+        result = renameat2(
+            source_parent,
+            os.fsencode(source_name),
+            destination_parent,
+            os.fsencode(destination_name),
+            RENAME_NOREPLACE,
+        )
+        if result != 0:
+            error = ctypes.get_errno()
+            raise DeletionExecutionError("source_state_drift") from OSError(error, os.strerror(error))
+        return
+    _require(fixture, "source_state_drift")
+    try:
+        os.stat(destination_name, dir_fd=destination_parent, follow_symlinks=False)
+    except FileNotFoundError:
+        pass
+    else:
+        _fail("source_state_drift")
+    try:
+        os.rename(
+            source_name,
+            destination_name,
+            src_dir_fd=source_parent,
+            dst_dir_fd=destination_parent,
+        )
+    except OSError as exc:
+        raise DeletionExecutionError("source_state_drift") from exc
 
 
 def _same_fields(
@@ -434,6 +501,40 @@ def _role_path(bindings: storage.Bindings, alias: str) -> Path:
     return root / relative
 
 
+def _role_root(bindings: storage.Bindings, role: str) -> Path:
+    root = (
+        bindings.materialization_package
+        if role == "materialization"
+        else bindings.evidence_package
+        if role == "evidence"
+        else None
+    )
+    _require(root is not None, "plan_drift")
+    assert root is not None
+    return root
+
+
+def _prepare_quarantine_directories(bindings: storage.Bindings, directory_name: str, roles: Sequence[str]) -> None:
+    _require(directory_name.startswith(".cycle007-delete-quarantine-"), "plan_drift")
+    for role in sorted(set(roles)):
+        root = _role_root(bindings, role)
+        quarantine = root / directory_name
+        if os.path.lexists(quarantine):
+            _require(quarantine.is_dir() and not quarantine.is_symlink(), "plan_drift")
+            _require(stat.S_IMODE(quarantine.stat().st_mode) == storage.PRIVATE_DIR_MODE, "plan_drift")
+            try:
+                _require(not any(quarantine.iterdir()), "plan_drift")
+            except OSError as exc:
+                raise DeletionExecutionError("plan_drift") from exc
+            continue
+        try:
+            quarantine.mkdir(mode=storage.PRIVATE_DIR_MODE)
+            os.chmod(quarantine, storage.PRIVATE_DIR_MODE)
+        except OSError as exc:
+            raise DeletionExecutionError("plan_drift") from exc
+        _fsync_directory(root, "plan_drift")
+
+
 def _build_plan(
     bindings: storage.Bindings,
     frozen_inventory: Mapping[str, Any],
@@ -451,6 +552,7 @@ def _build_plan(
     entries: list[dict[str, Any]] = []
     planned_inodes: set[tuple[int, int]] = set()
     expected_allocation = 0
+    quarantine_directory_name = ".cycle007-delete-quarantine-" + str(authorization["receipt_sha256"])[:16]
     for target in targets:
         _require(isinstance(target, Mapping), "plan_drift")
         _require(target.get("deletion_candidate") is True and target.get("link_set_closed") is True, "plan_drift")
@@ -500,6 +602,7 @@ def _build_plan(
         initial_links = int(source["link_count"])
         _require(initial_links == len(groups), "plan_drift")
         for index, group_aliases in enumerate(groups):
+            quarantine_role = str(group_aliases[0]).split("/", 1)[0]
             entry_body = {
                 "role_relative_path": group_aliases[0],
                 "role_relative_paths": group_aliases,
@@ -514,12 +617,19 @@ def _build_plan(
                 "sha256": source["sha256"],
                 "expected_nlink_before": initial_links - index,
                 "reclaims_inode_allocation": index == len(groups) - 1,
+                "quarantine_role": quarantine_role,
             }
             entry_body["entry_id"] = storage.digest(storage.canonical(entry_body))
+            entry_body["quarantine_name"] = f"{entry_body['entry_id']}.pending"
             entries.append(entry_body)
     entries.sort(key=lambda item: (str(item["role_relative_path"]), str(item["entry_id"])))
     _require(len(planned_inodes) == int(auth.get("deletion_candidate_count", -1)), "plan_drift")
     _require(expected_allocation == int(auth.get("reclaimed_byte_forecast", -1)), "plan_drift")
+    _prepare_quarantine_directories(
+        bindings,
+        quarantine_directory_name,
+        [str(item["quarantine_role"]) for item in entries],
+    )
     root_ids = {
         "materialization": storage._opaque_fs_id(bindings.materialization_package),
         "evidence": storage._opaque_fs_id(bindings.evidence_package),
@@ -541,6 +651,7 @@ def _build_plan(
             "inode_count": len(planned_inodes),
             "expected_reclaimed_allocated_bytes": expected_allocation,
             "entries_sha256": plan_digest,
+            "quarantine_directory_name": quarantine_directory_name,
             "entries": entries,
             "files_only": True,
             "directories_authorized": 0,
@@ -582,8 +693,13 @@ def _append_event(
     detail: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     directory = _event_dir(root)
+    created = not os.path.lexists(directory)
     directory.mkdir(mode=storage.PRIVATE_DIR_MODE, exist_ok=True)
     os.chmod(directory, storage.PRIVATE_DIR_MODE)
+    if created:
+        # The first event is not durable unless the journal root's directory
+        # entry for ``events`` is durable too.
+        _fsync_directory(root)
     event = _receipt(
         {
             "schema_version": EVENT_SCHEMA,
@@ -601,26 +717,40 @@ def _append_event(
     return event
 
 
-def _journal_state(plan: Mapping[str, Any], events: Sequence[Mapping[str, Any]]) -> tuple[set[str], str | None]:
+def _journal_state(
+    plan: Mapping[str, Any], events: Sequence[Mapping[str, Any]]
+) -> tuple[set[str], str | None, str | None]:
     valid = {str(item["entry_id"]) for item in plan["entries"]}
     completed: set[str] = set()
     inflight: str | None = None
+    inflight_phase: str | None = None
     for event in events:
         event_type = event.get("event_type")
         entry_id = event.get("entry_id")
         if event_type == "START":
-            _require(entry_id is None and not completed and inflight is None, "journal_drift")
+            _require(
+                entry_id is None and not completed and inflight is None and inflight_phase is None,
+                "journal_drift",
+            )
         elif event_type == "INTENT":
             _require(isinstance(entry_id, str) and entry_id in valid, "journal_drift")
             _require(inflight is None and entry_id not in completed, "journal_drift")
             inflight = entry_id
+            inflight_phase = "INTENT"
+        elif event_type in {"MOVED", "RECOVERED_MOVED"}:
+            _require(entry_id == inflight and inflight_phase == "INTENT", "journal_drift")
+            inflight_phase = "MOVED"
         elif event_type in {"UNLINKED", "RECOVERED_UNLINKED"}:
-            _require(entry_id == inflight and isinstance(entry_id, str), "journal_drift")
+            _require(
+                entry_id == inflight and isinstance(entry_id, str) and inflight_phase == "MOVED",
+                "journal_drift",
+            )
             completed.add(entry_id)
             inflight = None
+            inflight_phase = None
         else:
             _fail("journal_drift")
-    return completed, inflight
+    return completed, inflight, inflight_phase
 
 
 def _open_parent(bindings: storage.Bindings, alias: str) -> tuple[int, str]:
@@ -695,14 +825,52 @@ def _require_entry_aliases_absent(bindings: storage.Bindings, entry: Mapping[str
             os.close(parent)
 
 
-def _fsync_entry_parent(bindings: storage.Bindings, entry: Mapping[str, Any]) -> None:
+def _open_quarantine(bindings: storage.Bindings, plan: Mapping[str, Any], entry: Mapping[str, Any]) -> tuple[int, str]:
+    role = str(entry.get("quarantine_role"))
+    directory_name = str(plan.get("quarantine_directory_name"))
+    _require(directory_name.startswith(".cycle007-delete-quarantine-"), "plan_drift")
+    root = _role_root(bindings, role)
+    flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | getattr(os, "O_NOFOLLOW", 0)
+    root_descriptor = -1
+    try:
+        root_descriptor = os.open(root, flags)
+        descriptor = os.open(directory_name, flags, dir_fd=root_descriptor)
+    except OSError as exc:
+        raise DeletionExecutionError("source_state_drift") from exc
+    finally:
+        if root_descriptor >= 0:
+            os.close(root_descriptor)
+    return descriptor, str(entry["quarantine_name"])
+
+
+def _quarantine_present_exact(bindings: storage.Bindings, plan: Mapping[str, Any], entry: Mapping[str, Any]) -> bool:
+    quarantine, name = _open_quarantine(bindings, plan, entry)
+    try:
+        try:
+            info = os.stat(name, dir_fd=quarantine, follow_symlinks=False)
+        except FileNotFoundError:
+            return False
+        _require(stat.S_ISREG(info.st_mode) and not stat.S_ISLNK(info.st_mode), "source_state_drift")
+        _require(
+            (int(info.st_dev), int(info.st_ino)) == (entry["dev"], entry["ino"]),
+            "source_state_drift",
+        )
+        return True
+    finally:
+        os.close(quarantine)
+
+
+def _fsync_move_directories(bindings: storage.Bindings, plan: Mapping[str, Any], entry: Mapping[str, Any]) -> None:
     parent, _leaf = _open_parent(bindings, str(entry["role_relative_path"]))
+    quarantine, _name = _open_quarantine(bindings, plan, entry)
     try:
         os.fsync(parent)
+        os.fsync(quarantine)
     except OSError as exc:
         raise DeletionExecutionError("source_state_drift") from exc
     finally:
         os.close(parent)
+        os.close(quarantine)
 
 
 def _fault(
@@ -714,34 +882,99 @@ def _fault(
         fault_hook({"event": event, "entry_id": entry_id})
 
 
-def _unlink_exact(
+def _validate_open_file(descriptor: int, entry: Mapping[str, Any]) -> os.stat_result:
+    info = os.fstat(descriptor)
+    expected_identity = (int(entry["dev"]), int(entry["ino"]))
+    _require(stat.S_ISREG(info.st_mode), "source_state_drift")
+    _require((int(info.st_dev), int(info.st_ino)) == expected_identity, "source_state_drift")
+    _require(stat.S_IMODE(info.st_mode) == int(entry["mode"]), "source_state_drift")
+    _require(int(info.st_size) == int(entry["size_bytes"]), "source_state_drift")
+    _require(_allocated_from_stat(info) == int(entry["allocated_bytes"]), "source_state_drift")
+    _require(int(info.st_nlink) == int(entry["expected_nlink_before"]), "source_state_drift")
+    _require(_fd_sha256(descriptor) == entry["sha256"], "source_state_drift")
+    return info
+
+
+def _move_exact_to_quarantine(
     bindings: storage.Bindings,
+    plan: Mapping[str, Any],
     entry: Mapping[str, Any],
     fault_hook: Callable[[Mapping[str, Any]], None] | None,
 ) -> None:
     parent, leaf = _open_parent(bindings, str(entry["role_relative_path"]))
+    quarantine, quarantine_name = _open_quarantine(bindings, plan, entry)
     file_descriptor = -1
     try:
         flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
         file_descriptor = os.open(leaf, flags, dir_fd=parent)
-        info = os.fstat(file_descriptor)
+        _validate_open_file(file_descriptor, entry)
         expected_identity = (int(entry["dev"]), int(entry["ino"]))
-        _require(stat.S_ISREG(info.st_mode), "source_state_drift")
-        _require((int(info.st_dev), int(info.st_ino)) == expected_identity, "source_state_drift")
-        _require(stat.S_IMODE(info.st_mode) == int(entry["mode"]), "source_state_drift")
-        _require(int(info.st_size) == int(entry["size_bytes"]), "source_state_drift")
-        _require(_allocated_from_stat(info) == int(entry["allocated_bytes"]), "source_state_drift")
-        _require(int(info.st_nlink) == int(entry["expected_nlink_before"]), "source_state_drift")
-        _require(_fd_sha256(file_descriptor) == entry["sha256"], "source_state_drift")
         current = os.stat(leaf, dir_fd=parent, follow_symlinks=False)
         _require((int(current.st_dev), int(current.st_ino)) == expected_identity, "source_state_drift")
         _require(stat.S_ISREG(current.st_mode) and not stat.S_ISLNK(current.st_mode), "source_state_drift")
-        os.unlink(leaf, dir_fd=parent)
-        _fault(fault_hook, "after_unlink", str(entry["entry_id"]))
+        _rename_noreplace(
+            parent,
+            leaf,
+            quarantine,
+            quarantine_name,
+            fixture=bindings.fixture,
+        )
+        _fault(fault_hook, "after_move", str(entry["entry_id"]))
+        moved = os.stat(quarantine_name, dir_fd=quarantine, follow_symlinks=False)
+        if (int(moved.st_dev), int(moved.st_ino)) != expected_identity:
+            # Never unlink a swapped-in entry. Restore it without overwriting a
+            # new source entry, then fail closed.
+            _rename_noreplace(
+                quarantine,
+                quarantine_name,
+                parent,
+                leaf,
+                fixture=bindings.fixture,
+            )
+            os.fsync(parent)
+            os.fsync(quarantine)
+            _fail("source_state_drift")
         os.fsync(parent)
-        _fault(fault_hook, "after_parent_fsync", str(entry["entry_id"]))
+        os.fsync(quarantine)
+        _fault(fault_hook, "after_move_fsync", str(entry["entry_id"]))
         try:
             os.stat(leaf, dir_fd=parent, follow_symlinks=False)
+        except FileNotFoundError:
+            pass
+        else:
+            _fail("source_state_drift")
+        _require_entry_aliases_absent(bindings, entry)
+    except OSError as exc:
+        raise DeletionExecutionError("source_state_drift") from exc
+    finally:
+        if file_descriptor >= 0:
+            os.close(file_descriptor)
+        os.close(parent)
+        os.close(quarantine)
+
+
+def _unlink_quarantined_exact(
+    bindings: storage.Bindings,
+    plan: Mapping[str, Any],
+    entry: Mapping[str, Any],
+    fault_hook: Callable[[Mapping[str, Any]], None] | None,
+) -> None:
+    quarantine, name = _open_quarantine(bindings, plan, entry)
+    descriptor = -1
+    try:
+        descriptor = os.open(name, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0), dir_fd=quarantine)
+        _validate_open_file(descriptor, entry)
+        current = os.stat(name, dir_fd=quarantine, follow_symlinks=False)
+        _require(
+            (int(current.st_dev), int(current.st_ino)) == (entry["dev"], entry["ino"]),
+            "source_state_drift",
+        )
+        os.unlink(name, dir_fd=quarantine)
+        _fault(fault_hook, "after_unlink", str(entry["entry_id"]))
+        os.fsync(quarantine)
+        _fault(fault_hook, "after_parent_fsync", str(entry["entry_id"]))
+        try:
+            os.stat(name, dir_fd=quarantine, follow_symlinks=False)
         except FileNotFoundError:
             pass
         else:
@@ -749,9 +982,9 @@ def _unlink_exact(
     except OSError as exc:
         raise DeletionExecutionError("source_state_drift") from exc
     finally:
-        if file_descriptor >= 0:
-            os.close(file_descriptor)
-        os.close(parent)
+        if descriptor >= 0:
+            os.close(descriptor)
+        os.close(quarantine)
 
 
 def _validate_root_identities(bindings: storage.Bindings, plan: Mapping[str, Any]) -> None:
@@ -832,14 +1065,33 @@ def _verify_pending_presence(
     completed: set[str],
     inflight: str | None,
 ) -> None:
+    expected_quarantine_by_role: dict[str, set[str]] = {}
     for entry in plan["entries"]:
         entry_id = str(entry["entry_id"])
         present = _entry_present_exact(bindings, entry)
+        quarantined = _quarantine_present_exact(bindings, plan, entry)
+        if quarantined:
+            expected_quarantine_by_role.setdefault(str(entry["quarantine_role"]), set()).add(
+                str(entry["quarantine_name"])
+            )
         if entry_id in completed:
             _require(not present, "journal_drift")
+            _require(not quarantined, "journal_drift")
             _require_entry_aliases_absent(bindings, entry)
         elif entry_id != inflight:
             _require(present, "source_state_drift")
+            _require(not quarantined, "source_state_drift")
+    directory_name = str(plan["quarantine_directory_name"])
+    roles = {str(entry["quarantine_role"]) for entry in plan["entries"]}
+    for role in roles:
+        quarantine = _role_root(bindings, role) / directory_name
+        try:
+            actual = {path.name for path in quarantine.iterdir() if path.is_file() and not path.is_symlink()}
+            all_names = {path.name for path in quarantine.iterdir()}
+        except OSError as exc:
+            raise DeletionExecutionError("journal_drift") from exc
+        _require(actual == all_names, "journal_drift")
+        _require(actual == expected_quarantine_by_role.get(role, set()), "journal_drift")
 
 
 def execute_authorized_source_deletion(
@@ -890,9 +1142,14 @@ def execute_authorized_source_deletion(
     _require(root.is_dir() and not root.is_symlink(), "execution_state_drift")
     plan_path = root / "plan.json"
     with _execution_locks(root, quiescence_lock_paths):
-        primary_roundtrip, _identity = storage.prove_content_pack_stream(
-            frozen_inventory, primary_pack_dir, zstd_executable=bindings.zstd_executable
-        )
+        try:
+            primary_roundtrip, _identity = storage.prove_content_pack_stream(
+                frozen_inventory,
+                primary_pack_dir,
+                zstd_executable=bindings.zstd_executable,
+            )
+        except storage.StorageCustodyError as exc:
+            raise DeletionExecutionError("custody_drift") from exc
         if os.path.lexists(plan_path):
             plan = _read_receipt(plan_path, PLAN_SCHEMA, "plan_drift")
             _require(plan.get("operator_authorization_sha256") == authorization.get("receipt_sha256"), "plan_drift")
@@ -900,9 +1157,12 @@ def execute_authorized_source_deletion(
         else:
             events_path = _event_dir(root)
             _require(not os.path.lexists(events_path), "journal_drift")
-            fresh_inventory = storage.build_inventory(bindings)
-            if not bindings.fixture:
-                storage._require_production_inventory_shape(fresh_inventory)
+            try:
+                fresh_inventory = storage.build_inventory(bindings)
+                if not bindings.fixture:
+                    storage._require_production_inventory_shape(fresh_inventory)
+            except storage.StorageCustodyError as exc:
+                raise DeletionExecutionError("source_state_drift") from exc
             _critical_inventory_match(frozen_inventory, fresh_inventory, auth)
             plan = _build_plan(
                 bindings,
@@ -931,17 +1191,34 @@ def execute_authorized_source_deletion(
                 "START",
                 detail={"filesystem_avail_before_bytes": storage.available_bytes(_source_capacity_path(bindings))},
             )
-        completed, inflight = _journal_state(plan, events)
+        completed, inflight, inflight_phase = _journal_state(plan, events)
         by_id = {str(entry["entry_id"]): entry for entry in plan["entries"]}
         if inflight is not None:
             entry = by_id[inflight]
-            if _entry_present_exact(bindings, entry):
-                _unlink_exact(bindings, entry, fault_hook)
+            source_present = _entry_present_exact(bindings, entry)
+            quarantine_present = _quarantine_present_exact(bindings, plan, entry)
+            if inflight_phase == "INTENT":
+                if source_present and not quarantine_present:
+                    _move_exact_to_quarantine(bindings, plan, entry, fault_hook)
+                    _append_event(root, plan, events, "MOVED", entry_id=inflight)
+                elif not source_present and quarantine_present:
+                    _require_entry_aliases_absent(bindings, entry)
+                    _fsync_move_directories(bindings, plan, entry)
+                    _append_event(root, plan, events, "RECOVERED_MOVED", entry_id=inflight)
+                else:
+                    _fail("journal_drift")
+            elif inflight_phase != "MOVED":
+                _fail("journal_drift")
+            if _quarantine_present_exact(bindings, plan, entry):
+                _unlink_quarantined_exact(bindings, plan, entry, fault_hook)
             else:
-                # The durable INTENT makes an absent entry recoverable after a
-                # crash in the unlink-to-journal gap.  Persist the parent
-                # directory before recording recovered completion.
-                _fsync_entry_parent(bindings, entry)
+                # A durable MOVED state plus an absent quarantine entry is the
+                # crash window after exact unlink but before its event.
+                quarantine, _name = _open_quarantine(bindings, plan, entry)
+                try:
+                    os.fsync(quarantine)
+                finally:
+                    os.close(quarantine)
                 _require_entry_aliases_absent(bindings, entry)
             _append_event(root, plan, events, "RECOVERED_UNLINKED", entry_id=inflight)
             completed.add(inflight)
@@ -954,7 +1231,9 @@ def execute_authorized_source_deletion(
             _fault(fault_hook, "before_intent", entry_id)
             _append_event(root, plan, events, "INTENT", entry_id=entry_id)
             _fault(fault_hook, "after_intent", entry_id)
-            _unlink_exact(bindings, entry, fault_hook)
+            _move_exact_to_quarantine(bindings, plan, entry, fault_hook)
+            _append_event(root, plan, events, "MOVED", entry_id=entry_id)
+            _unlink_quarantined_exact(bindings, plan, entry, fault_hook)
             _fault(fault_hook, "before_unlinked_event", entry_id)
             _append_event(root, plan, events, "UNLINKED", entry_id=entry_id)
             completed.add(entry_id)
@@ -963,9 +1242,14 @@ def execute_authorized_source_deletion(
         start = events[0].get("detail", {})
         avail_before = int(start.get("filesystem_avail_before_bytes", -1))
         avail_after = storage.available_bytes(_source_capacity_path(bindings))
-        post_primary, _post_identity = storage.prove_content_pack_stream(
-            frozen_inventory, primary_pack_dir, zstd_executable=bindings.zstd_executable
-        )
+        try:
+            post_primary, _post_identity = storage.prove_content_pack_stream(
+                frozen_inventory,
+                primary_pack_dir,
+                zstd_executable=bindings.zstd_executable,
+            )
+        except storage.StorageCustodyError as exc:
+            raise DeletionExecutionError("custody_drift") from exc
         unlinked_path = root / "unlinked.json"
         if os.path.lexists(unlinked_path):
             unlinked = _read_receipt(unlinked_path, UNLINKED_SCHEMA, "execution_state_drift")
@@ -1045,13 +1329,21 @@ def finalize_deletion_execution(
     persisted_plan = _read_receipt(root / "plan.json", PLAN_SCHEMA, "execution_state_drift")
     _require(persisted_plan == plan, "execution_state_drift")
     events = _load_events(root, plan)
-    completed, inflight = _journal_state(plan, events)
-    _require(inflight is None and len(completed) == int(plan["entry_count"]), "journal_drift")
+    completed, inflight, inflight_phase = _journal_state(plan, events)
+    _require(
+        inflight is None and inflight_phase is None and len(completed) == int(plan["entry_count"]),
+        "journal_drift",
+    )
     _validate_root_identities(bindings, plan)
     _verify_pending_presence(bindings, plan, completed, None)
-    primary_roundtrip, _identity = storage.prove_content_pack_stream(
-        frozen_inventory, primary_pack_dir, zstd_executable=bindings.zstd_executable
-    )
+    try:
+        primary_roundtrip, _identity = storage.prove_content_pack_stream(
+            frozen_inventory,
+            primary_pack_dir,
+            zstd_executable=bindings.zstd_executable,
+        )
+    except storage.StorageCustodyError as exc:
+        raise DeletionExecutionError("custody_drift") from exc
     current_avail = storage.available_bytes(_source_capacity_path(bindings))
     initial_avail = int(unlinked["filesystem_avail_before_bytes"])
     completion_path = root / "completion.json"

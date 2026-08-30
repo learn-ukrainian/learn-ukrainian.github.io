@@ -1668,6 +1668,11 @@ def test_authorized_deletion_is_exact_file_only_and_preserves_custody(
     assert state["imported_pack"].is_dir()
     assert (state["primary"]["pack_dir"] / "pack-manifest.json").is_file()
     assert (state["imported_pack"] / "pack-manifest.json").is_file()
+    assert all(
+        not any(path.iterdir())
+        for root in (state["materialization"], state["evidence"])
+        for path in root.glob(".cycle007-delete-quarantine-*")
+    )
 
 
 @pytest.mark.parametrize("tamper", ["authorization", "custody"])
@@ -1741,7 +1746,15 @@ class _SyntheticDeletionCrash(RuntimeError):
 
 @pytest.mark.parametrize(
     "crash_point",
-    ["before_intent", "after_intent", "after_unlink", "after_parent_fsync", "before_unlinked_event"],
+    [
+        "before_intent",
+        "after_intent",
+        "after_move",
+        "after_move_fsync",
+        "after_unlink",
+        "after_parent_fsync",
+        "before_unlinked_event",
+    ],
 )
 def test_deletion_crash_resume_uses_durable_journal(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, crash_point: str
