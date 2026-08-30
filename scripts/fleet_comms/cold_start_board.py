@@ -19,7 +19,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from scripts.control_plane.storage import StoreId
+from scripts.control_plane.storage import StoreId, assert_component_supported
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.efficiency_metrics import (
     _AUTHORITY_BACKLOG_STATES,
@@ -463,6 +463,7 @@ def _probe_inbox_authority(
     deliveries: list[dict[str, Any]] = []
     total = 0
 
+    assert_component_supported(StoreId.FLEET_COMMS, "cold_start_board")  # #7482
     conn = cp_connect(StoreId.FLEET_COMMS, path=plane_db, read_only=True)
     conn.row_factory = sqlite3.Row
     try:

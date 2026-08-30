@@ -32,7 +32,11 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from scripts.control_plane.storage import Authority, StoreId, resolve_authority
+from scripts.control_plane.storage import (
+    Authority,
+    StoreId,
+    assert_component_supported,
+)
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.contracts import new_id
 from scripts.fleet_comms.migrations import apply_migrations
@@ -95,7 +99,7 @@ class ArtifactStore:
         )
         self.blob_root = self.root / "blobs" / "sha256"
         self.db_path = self.root / "comms.sqlite3"
-        self._authority = resolve_authority(StoreId.FLEET_COMMS)
+        self._authority = assert_component_supported(StoreId.FLEET_COMMS, "artifact_store")
         if self._authority is Authority.PG:
             # Byte-plane slice (#603): connect first, touch no local disk.
             # A DSN-unreachable failure must not leave a stray root/blob dir
@@ -148,6 +152,11 @@ class ArtifactStore:
             )"""
         )
         self._conn.commit()
+
+    @property
+    def authority(self) -> Authority:
+        """Resolved control-plane authority this store opened with (#7482)."""
+        return self._authority
 
     def close(self) -> None:
         self._conn.close()

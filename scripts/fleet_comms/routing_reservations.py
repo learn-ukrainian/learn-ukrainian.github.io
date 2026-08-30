@@ -19,7 +19,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any, Literal
 
-from scripts.control_plane.storage import StoreId
+from scripts.control_plane.storage import StoreId, assert_component_supported
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.artifacts import ArtifactStore
 from scripts.fleet_comms.contracts import new_id
@@ -1225,6 +1225,7 @@ def list_routing_decisions(*, root: Path | None = None, limit: int = 100) -> lis
     db_path = plane_root / "comms.sqlite3"
     if not db_path.is_file():
         return []
+    assert_component_supported(StoreId.FLEET_COMMS, "routing_reservations")  # #7482
     try:
         connection = cp_connect(StoreId.FLEET_COMMS, path=db_path, read_only=True)
         connection.row_factory = sqlite3.Row

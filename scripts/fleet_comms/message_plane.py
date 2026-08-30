@@ -34,7 +34,12 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
 
-from scripts.control_plane.storage import StoreId
+from scripts.control_plane.storage import (
+    ControlPlaneError,
+    StoreId,
+    assert_component_supported,
+    resolve_authority,
+)
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.contracts import CompletionState
 from scripts.fleet_comms.opsec_store import COMMS_RESPONSE_SCHEMA_VERSION, store_descriptor
@@ -514,6 +519,25 @@ def _read_applied_schema_version(db_path: Path) -> dict[str, Any]:
     from scripts.fleet_comms.migrations import MIGRATIONS
 
     known = MIGRATIONS[-1].version if MIGRATIONS else 0
+    try:
+        assert_component_supported(StoreId.FLEET_COMMS, "plane_status")
+    except ControlPlaneError:
+        # Authority-aware refusal (#7482): under pg the local sqlite file is
+        # NOT the plane; probing it (or querying pg with sqlite SQL) produced
+        # an uncaught driver error before. Report a typed, OPSEC-safe status.
+        return {
+            "known_version": known,
+            "applied_version": None,
+            "applied_name": None,
+            "db_exists": False,
+            "authority": resolve_authority(StoreId.FLEET_COMMS).value,
+            "db_error": "authority_unsupported_component",
+            "store": store_descriptor(
+                kind="comms-plane",
+                reachable=False,
+                schema_versions={"known": known, "applied": None},
+            ),
+        }
     db_exists = db_path.is_file()
     payload: dict[str, Any] = {
         "known_version": known,
@@ -540,7 +564,7 @@ def _read_applied_schema_version(db_path: Path) -> dict[str, Any]:
                 payload["store"]["schema_versions"]["applied"] = payload["applied_version"]
         finally:
             conn.close()
-    except sqlite3.Error:
+    except (sqlite3.Error, ControlPlaneError):
         # Opaque code only — exception text must not reach HTTP clients
         # (CodeQL py/stack-trace-exposure via /api/comms/v1/plane-status).
         logger.exception("plane schema read failed: %s", db_path)
