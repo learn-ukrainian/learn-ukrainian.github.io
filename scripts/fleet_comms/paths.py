@@ -14,10 +14,49 @@ ENV_ROOT = "FLEET_COMMS_ROOT"
 ENV_ALLOW_LOCAL_SHADOW = "FLEET_COMMS_ALLOW_LOCAL_SHADOW"
 DEFAULT_ROOT_REL = Path("batch_state") / "fleet-comms" / "v1"
 RETIRED_LOCAL_MARKER = "READ_ME_CANONICAL_ON_JOB_HOST.txt"
+RETIRED_LOCAL_PLANE_MESSAGE = (
+    "local fleet-comms sqlite is retired; the job-host Monitor owns "
+    "the canonical plane. Do not chmod the stub directory. Observe "
+    "via the tunneled API, or set FLEET_COMMS_ALLOW_LOCAL_SHADOW=1 "
+    "only for an isolated fixture."
+)
 
 
 class PlaneRootAnchorError(RuntimeError):
     """Raised when the plane root cannot be anchored to the primary checkout."""
+
+
+def _retired_marker_present(root: Path) -> bool:
+    """True when the notebook plane root (or its parent) carries the retire marker."""
+    return (root / RETIRED_LOCAL_MARKER).is_file() or (
+        root.parent / RETIRED_LOCAL_MARKER
+    ).is_file()
+
+
+def local_plane_is_retired(
+    *,
+    repo_root: Path | None = None,
+    root: Path | None = None,
+) -> bool:
+    """Return True when this checkout's local plane has been retired to the job host.
+
+    Does not raise. Honors ``FLEET_COMMS_ALLOW_LOCAL_SHADOW=1`` (fixtures) as
+    not-retired so isolated tests can open a local sqlite. Never creates or
+    chmods the stub directory.
+    """
+    if os.environ.get(ENV_ALLOW_LOCAL_SHADOW, "").strip() == "1":
+        return False
+    if root is not None:
+        return _retired_marker_present(Path(root).expanduser().resolve())
+    env = os.environ.get(ENV_ROOT)
+    if env:
+        return _retired_marker_present(Path(env).expanduser().resolve())
+    candidate = repo_root if repo_root is not None else Path.cwd()
+    try:
+        base = resolve_main_root(candidate)
+    except NotAGitRepositoryError:
+        return False
+    return _retired_marker_present((base / DEFAULT_ROOT_REL).resolve())
 
 
 def _refuse_retired_local_plane(root: Path) -> None:
@@ -28,15 +67,8 @@ def _refuse_retired_local_plane(root: Path) -> None:
     """
     if os.environ.get(ENV_ALLOW_LOCAL_SHADOW, "").strip() == "1":
         return
-    marker = root / RETIRED_LOCAL_MARKER
-    sibling = root.parent / RETIRED_LOCAL_MARKER
-    if marker.is_file() or sibling.is_file():
-        raise PlaneRootAnchorError(
-            "local fleet-comms sqlite is retired; the job-host Monitor owns "
-            "the canonical plane. Do not chmod the stub directory. Observe "
-            "via the tunneled API, or set FLEET_COMMS_ALLOW_LOCAL_SHADOW=1 "
-            "only for an isolated fixture."
-        )
+    if _retired_marker_present(root):
+        raise PlaneRootAnchorError(RETIRED_LOCAL_PLANE_MESSAGE)
 
 
 def default_plane_root(

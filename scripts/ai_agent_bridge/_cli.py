@@ -1526,12 +1526,15 @@ def _handle_acp_compat(args, target: str) -> None:
         )
         return
 
+    from scripts.fleet_comms.paths import PlaneRootAnchorError
+
     from ._acp_compat import (
         ASK_HARD_TIMEOUT_DEFAULT_S,
         ask_hard_timeout,
         require_compat_target,
         run_compat_ask,
     )
+    from ._job_host_forward import AskForwardError
 
     try:
         require_compat_target(target)
@@ -1565,6 +1568,9 @@ def _handle_acp_compat(args, target: str) -> None:
             f"generic default {ASK_HARD_TIMEOUT_DEFAULT_S}s). "
             "Retry with --no-timeout to lift the wall-clock cap for this ask."
         ) from exc
+    except (AskForwardError, PlaneRootAnchorError) as exc:
+        # #7172: notebook ask forward / retired-plane refusals are one-liners.
+        raise SystemExit(str(exc)) from exc
 
 
 def _dispatch_headless_review(

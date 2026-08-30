@@ -57,6 +57,7 @@ from scripts.fleet_comms.opsec_store import (
     comms_plane_store,
     legacy_broker_store,
 )
+from scripts.fleet_comms.paths import PlaneRootAnchorError
 from scripts.fleet_comms.review_publication import DEFAULT_GATE_KIND
 
 EXIT_OK = 0
@@ -1223,6 +1224,11 @@ def main(argv: list[str] | None = None) -> int:
     try:
         return int(func(args))
     except FleetCommsCliError as exc:
+        sys.stderr.write(str(exc) + "\n")
+        return EXIT_ERROR
+    except PlaneRootAnchorError as exc:
+        # #7172: notebook plane-status must fail closed with the retire message,
+        # not a raw traceback (cli-help-standard).
         sys.stderr.write(str(exc) + "\n")
         return EXIT_ERROR
 
