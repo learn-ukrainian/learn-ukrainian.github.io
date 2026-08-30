@@ -48,6 +48,13 @@ FAULT_POINTS = frozenset(
     }
 )
 RENAME_NOREPLACE = 1
+UNINSPECTABLE_QUIESCENCE_PROCESS_ALLOWLIST = frozenset(
+    {
+        "(sd-pam)",
+        "ssh-agent",
+        "sshd-session",
+    }
+)
 
 
 class DeletionExecutionError(ValueError):
@@ -1180,10 +1187,14 @@ def _execution_locks(root: Path, quiescence_lock_paths: Sequence[Path]) -> Itera
                 os.close(descriptor)
 
 
-def _require_no_open_target_descriptors(plan: Mapping[str, Any], *, fixture: bool) -> None:
+def _require_no_open_target_descriptors(
+    plan: Mapping[str, Any],
+    *,
+    fixture: bool,
+    proc: Path = Path("/proc"),
+) -> None:
     if fixture:
         return
-    proc = Path("/proc")
     _require(proc.is_dir(), "quiescence_unproved")
     targets = {(int(item["dev"]), int(item["ino"])) for item in plan["entries"]}
     own_pid = os.getpid()
@@ -1196,18 +1207,42 @@ def _require_no_open_target_descriptors(plan: Mapping[str, Any], *, fixture: boo
         if not process.name.isdigit() or int(process.name) == own_pid:
             continue
         try:
-            if process.stat().st_uid != own_uid:
-                continue
-            descriptors = list((process / "fd").iterdir())
+            process_uid = process.stat().st_uid
         except (FileNotFoundError, ProcessLookupError):
             continue
         except PermissionError as exc:
             raise DeletionExecutionError("quiescence_unproved") from exc
+        if process_uid != own_uid:
+            continue
+        try:
+            descriptors = list((process / "fd").iterdir())
+        except (FileNotFoundError, ProcessLookupError):
+            continue
+        except PermissionError as exc:
+            # Linux intentionally hides descriptor tables for a small set of
+            # same-UID session infrastructure processes.  They are not
+            # Cycle007 producers; those remain excluded by the three held
+            # guardian/controller/execution locks.  Unknown hidden processes
+            # still fail closed.
+            try:
+                process_class = (process / "comm").read_bytes()
+            except OSError:
+                raise DeletionExecutionError("quiescence_unproved") from exc
+            _require(
+                any(
+                    process_class == allowed_process_class.encode("ascii") + b"\n"
+                    for allowed_process_class in UNINSPECTABLE_QUIESCENCE_PROCESS_ALLOWLIST
+                ),
+                "quiescence_unproved",
+            )
+            continue
         for descriptor in descriptors:
             try:
                 info = descriptor.stat()
-            except (FileNotFoundError, ProcessLookupError, PermissionError):
+            except (FileNotFoundError, ProcessLookupError):
                 continue
+            except PermissionError as exc:
+                raise DeletionExecutionError("quiescence_unproved") from exc
             if (int(info.st_dev), int(info.st_ino)) in targets:
                 _fail("quiescence_unproved")
 
