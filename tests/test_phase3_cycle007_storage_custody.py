@@ -2358,3 +2358,423 @@ def test_finalize_resume_refuses_validly_rehashed_completion(
             post_response,
             state["primary"]["pack_dir"],
         )
+
+
+def _systemd_proc_stat(pid: int, *, ppid: int = 1, start_time: int = 12345) -> bytes:
+    # /proc/PID/stat fields 4..22 are ppid followed by starttime at field 22.
+    tail = [str(ppid), *(["0"] * 17), str(start_time)]
+    assert len(tail) == 19
+    return f"{pid} (systemd) S {' '.join(tail)}\n".encode("ascii")
+
+
+def _systemd_proc_fixture(
+    tmp_path: Path,
+    *,
+    pid: int = 48001,
+    uid: int | None = None,
+    comm: bytes = b"systemd\n",
+    cgroup: bytes | None = None,
+    argv0: bytes = b"/usr/lib/systemd/systemd",
+    deserialize: bytes = b"--deserialize=123",
+    extra_argv: tuple[bytes, ...] = (),
+    final_nul: bool = True,
+    status: bytes | None = None,
+    stat_bytes: bytes | None = None,
+) -> tuple[Path, Path]:
+    proc = tmp_path / "proc-systemd-fixture"
+    process = proc / str(pid)
+    fd_dir = process / "fd"
+    fd_dir.mkdir(parents=True)
+    own_uid = os.geteuid() if uid is None else uid
+    if cgroup is None:
+        cgroup = (
+            f"0::/user.slice/user-{own_uid}.slice/"
+            f"user@{own_uid}.service/init.scope\n"
+        ).encode("ascii")
+    if status is None:
+        status = f"Name:\tsystemd\nUid:\t{own_uid}\t{own_uid}\t{own_uid}\t{own_uid}\n".encode(
+            "ascii"
+        )
+    if stat_bytes is None:
+        stat_bytes = _systemd_proc_stat(pid)
+    argv = (argv0, b"--user", deserialize, *extra_argv)
+    cmdline = b"\0".join(argv) + (b"\0" if final_nul else b"")
+    (process / "comm").write_bytes(comm)
+    (process / "cgroup").write_bytes(cgroup)
+    (process / "cmdline").write_bytes(cmdline)
+    (process / "status").write_bytes(status)
+    (process / "stat").write_bytes(stat_bytes)
+    return proc, fd_dir
+
+
+def _systemd_plan() -> dict[str, Any]:
+    return {"entries": [{"dev": 1, "ino": 2}]}
+
+
+def _deny_individual_descriptor(
+    monkeypatch: pytest.MonkeyPatch, descriptor: Path
+) -> None:
+    original_stat = Path.stat
+
+    def denied_stat(path: Path, *args: Any, **kwargs: Any):
+        if path == descriptor:
+            raise PermissionError("fixture individual fd denied")
+        return original_stat(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "stat", denied_stat)
+
+
+@pytest.mark.parametrize(
+    "argv0", [b"/usr/lib/systemd/systemd", b"/lib/systemd/systemd"]
+)
+def test_quiescence_accepts_exact_attested_systemd_user_manager_argv0(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, argv0: bytes
+) -> None:
+    proc, fd_dir = _systemd_proc_fixture(tmp_path, argv0=argv0)
+    descriptor = fd_dir / "0"
+    descriptor.touch()
+    _deny_individual_descriptor(monkeypatch, descriptor)
+
+    deletion._require_no_open_target_descriptors(
+        _systemd_plan(), fixture=False, proc=proc
+    )
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("stat_bytes", b"not-a-proc-stat\n"),
+        ("status", b"Name:\tsystemd\nUid:\tbroken\n"),
+        ("cgroup", b"0::/user.slice/user-999.slice/user@999.service/init.scope\n"),
+        ("comm", b"systemd\r\n"),
+        ("cgroup", b"0::/user.slice/user-48001.slice/user@48001.service/init.scope\r\n"),
+        ("status", b"Name:\tsystemd\r\nUid:\t0 0 0 0\r\n"),
+    ],
+)
+def test_quiescence_rejects_malformed_systemd_attestation_fields(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    field: str,
+    value: bytes,
+) -> None:
+    kwargs: dict[str, Any] = {field: value}
+    proc, fd_dir = _systemd_proc_fixture(tmp_path, **kwargs)
+    descriptor = fd_dir / "0"
+    descriptor.touch()
+    _deny_individual_descriptor(monkeypatch, descriptor)
+
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._require_no_open_target_descriptors(
+            _systemd_plan(), fixture=False, proc=proc
+        )
+
+
+@pytest.mark.parametrize(
+    "cmdline_kwargs",
+    [
+        {"final_nul": False},
+        {"deserialize": b"--deserialize="},
+        {"deserialize": b"--deserialize=00123"},
+        {"deserialize": b"--deserialize=+123"},
+        {"deserialize": b"--deserialize= 123"},
+        {"extra_argv": (b"unexpected",)},
+    ],
+)
+def test_quiescence_rejects_noncanonical_systemd_cmdline(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    cmdline_kwargs: dict[str, Any],
+) -> None:
+    proc, fd_dir = _systemd_proc_fixture(tmp_path, **cmdline_kwargs)
+    descriptor = fd_dir / "0"
+    descriptor.touch()
+    _deny_individual_descriptor(monkeypatch, descriptor)
+
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._require_no_open_target_descriptors(
+            _systemd_plan(), fixture=False, proc=proc
+        )
+
+
+@pytest.mark.parametrize(
+    "status",
+    [
+        b"Name:\tsystemd\nUid:\t0 0 0 1\n",
+        b"Name:\tsystemd\nUid:\t0 0 0\n",
+        b"Name:\tsystemd\nUid:\t0 0 0 0 0\n",
+    ],
+)
+def test_quiescence_rejects_systemd_status_uid_shape_or_ownership_drift(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, status: bytes
+) -> None:
+    proc, fd_dir = _systemd_proc_fixture(tmp_path, status=status)
+    descriptor = fd_dir / "0"
+    descriptor.touch()
+    _deny_individual_descriptor(monkeypatch, descriptor)
+
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._require_no_open_target_descriptors(
+            _systemd_plan(), fixture=False, proc=proc
+        )
+
+
+def test_quiescence_rejects_systemd_ppid_mismatch(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    proc, fd_dir = _systemd_proc_fixture(
+        tmp_path, stat_bytes=_systemd_proc_stat(48001, ppid=2)
+    )
+    descriptor = fd_dir / "0"
+    descriptor.touch()
+
+    # PPID is validated on the attestation path, which is entered only when
+    # an individual descriptor cannot be inspected.
+    _deny_individual_descriptor(monkeypatch, descriptor)
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._require_no_open_target_descriptors(
+            _systemd_plan(), fixture=False, proc=proc
+        )
+
+
+def test_quiescence_rejects_systemd_differing_status_uid_ownership(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    uid = os.geteuid()
+    status = f"Name:\tsystemd\nUid:\t{uid}\t{uid}\t{uid}\t{uid + 1}\n".encode(
+        "ascii"
+    )
+    proc, fd_dir = _systemd_proc_fixture(tmp_path, status=status)
+    descriptor = fd_dir / "0"
+    descriptor.touch()
+    _deny_individual_descriptor(monkeypatch, descriptor)
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._require_no_open_target_descriptors(
+            _systemd_plan(), fixture=False, proc=proc
+        )
+
+
+@pytest.mark.parametrize(
+    "comm", [b"systemd-user\n", b"Systemd\n", b"systemd \n", b"systemd\r\n"]
+)
+def test_quiescence_rejects_near_systemd_comm(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, comm: bytes
+) -> None:
+    proc, fd_dir = _systemd_proc_fixture(tmp_path, comm=comm)
+    descriptor = fd_dir / "0"
+    descriptor.touch()
+    _deny_individual_descriptor(monkeypatch, descriptor)
+
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._require_no_open_target_descriptors(
+            _systemd_plan(), fixture=False, proc=proc
+        )
+
+
+@pytest.mark.parametrize("disappearance", [False, True])
+def test_quiescence_rejects_systemd_pid_start_time_drift_or_disappearance(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    disappearance: bool,
+) -> None:
+    proc, fd_dir = _systemd_proc_fixture(tmp_path)
+    descriptor = fd_dir / "0"
+    descriptor.touch()
+    _deny_individual_descriptor(monkeypatch, descriptor)
+    stat_path = proc / "48001" / "stat"
+    original_read_bytes = Path.read_bytes
+    reads = 0
+
+    def changing_read_bytes(path: Path) -> bytes:
+        nonlocal reads
+        if path == stat_path:
+            reads += 1
+            if reads >= 2:
+                if disappearance:
+                    raise FileNotFoundError("fixture PID exited")
+                return _systemd_proc_stat(48001, start_time=67890)
+        return original_read_bytes(path)
+
+    monkeypatch.setattr(Path, "read_bytes", changing_read_bytes)
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._require_no_open_target_descriptors(
+            _systemd_plan(), fixture=False, proc=proc
+        )
+    assert reads >= 2
+
+
+def test_quiescence_rejects_systemd_generation_change_during_fd_enumeration(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    proc, fd_dir = _systemd_proc_fixture(tmp_path)
+    descriptor = fd_dir / "0"
+    descriptor.touch()
+    _deny_individual_descriptor(monkeypatch, descriptor)
+    stat_path = proc / "48001" / "stat"
+    original_iterdir = Path.iterdir
+    original_read_bytes = Path.read_bytes
+    enumerated = False
+
+    def changing_iterdir(path: Path):
+        nonlocal enumerated
+        if path == fd_dir:
+            enumerated = True
+        return original_iterdir(path)
+
+    def changing_read_bytes(path: Path) -> bytes:
+        if path == stat_path and enumerated:
+            return _systemd_proc_stat(48001, start_time=67890)
+        return original_read_bytes(path)
+
+    monkeypatch.setattr(Path, "iterdir", changing_iterdir)
+    monkeypatch.setattr(Path, "read_bytes", changing_read_bytes)
+
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._require_no_open_target_descriptors(
+            _systemd_plan(), fixture=False, proc=proc
+        )
+
+
+def test_quiescence_rejects_any_readable_systemd_target_inode(
+    tmp_path: Path,
+) -> None:
+    proc, fd_dir = _systemd_proc_fixture(tmp_path)
+    target = tmp_path / "authorized-target.bin"
+    target.write_bytes(b"target")
+    (fd_dir / "0").symlink_to(target)
+    info = target.stat()
+
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._require_no_open_target_descriptors(
+            {
+                "entries": [
+                    {"dev": int(info.st_dev), "ino": int(info.st_ino)},
+                ]
+            },
+            fixture=False,
+            proc=proc,
+        )
+    assert target.read_bytes() == b"target"
+
+
+def test_quiescence_rejects_systemd_fd_directory_permission_error(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    proc, fd_dir = _systemd_proc_fixture(tmp_path)
+    original_iterdir = Path.iterdir
+
+    def denied_iterdir(path: Path):
+        if path == fd_dir:
+            raise PermissionError("fixture systemd fd table denied")
+        return original_iterdir(path)
+
+    monkeypatch.setattr(Path, "iterdir", denied_iterdir)
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._require_no_open_target_descriptors(
+            _systemd_plan(), fixture=False, proc=proc
+        )
+
+
+def test_quiescence_allows_only_attested_systemd_individual_descriptor_denial(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    proc, fd_dir = _systemd_proc_fixture(tmp_path)
+    descriptor = fd_dir / "0"
+    descriptor.touch()
+    original_stat = Path.stat
+
+    def denied_stat(path: Path, *args: Any, **kwargs: Any):
+        if path == descriptor:
+            raise PermissionError("fixture individual systemd fd denied")
+        return original_stat(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "stat", denied_stat)
+    deletion._require_no_open_target_descriptors(
+        _systemd_plan(), fixture=False, proc=proc
+    )
+
+
+def test_quiescence_rejects_non_attested_individual_descriptor_denial(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    proc, fd_dir = _systemd_proc_fixture(tmp_path, comm=b"ordinary-worker\n")
+    descriptor = fd_dir / "0"
+    descriptor.touch()
+    original_stat = Path.stat
+
+    def denied_stat(path: Path, *args: Any, **kwargs: Any):
+        if path == descriptor:
+            raise PermissionError("fixture individual fd denied")
+        return original_stat(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "stat", denied_stat)
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._require_no_open_target_descriptors(
+            _systemd_plan(), fixture=False, proc=proc
+        )
+
+
+def test_quiescence_rejects_mixed_denied_systemd_fd_and_visible_target(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    proc, fd_dir = _systemd_proc_fixture(tmp_path)
+    denied = fd_dir / "0"
+    denied.touch()
+    target = tmp_path / "authorized-target.bin"
+    target.write_bytes(b"target")
+    visible = fd_dir / "1"
+    visible.symlink_to(target)
+    info = target.stat()
+    original_stat = Path.stat
+
+    def mixed_stat(path: Path, *args: Any, **kwargs: Any):
+        if path == denied:
+            raise PermissionError("fixture individual systemd fd denied")
+        return original_stat(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "stat", mixed_stat)
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion._require_no_open_target_descriptors(
+            {
+                "entries": [{"dev": int(info.st_dev), "ino": int(info.st_ino)}]
+            },
+            fixture=False,
+            proc=proc,
+        )
+    assert target.read_bytes() == b"target"
+
+
+def test_systemd_quiescence_refusal_precedes_journal_and_source_mutation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    state = _prepare_deletion_fixture(tmp_path, monkeypatch)
+    proc, fd_dir = _systemd_proc_fixture(tmp_path)
+    original_require = deletion._require_no_open_target_descriptors
+    original_iterdir = Path.iterdir
+
+    def denied_iterdir(path: Path):
+        if path == fd_dir:
+            raise PermissionError("fixture systemd fd table denied")
+        return original_iterdir(path)
+
+    def force_quiescence(plan: Mapping[str, Any], *, fixture: bool) -> None:
+        original_require(plan, fixture=False, proc=proc)
+
+    monkeypatch.setattr(Path, "iterdir", denied_iterdir)
+    monkeypatch.setattr(deletion, "_require_no_open_target_descriptors", force_quiescence)
+    targets = _fixture_source_paths(state)
+
+    with pytest.raises(deletion.DeletionExecutionError):
+        _execute_fixture_deletion(state)
+
+    journal_root = (
+        state["source_work"]
+        / "cycle007-storage-primary-stage"
+        / "deletion-execution-journal"
+    )
+    events = journal_root / "events"
+    assert not events.exists() or not tuple(events.iterdir())
+    assert all(path.is_file() for path in targets)
+    assert state["sentinel"].is_file()
+    assert state["primary"]["pack_dir"].is_dir()
+    assert state["imported_pack"].is_dir()
