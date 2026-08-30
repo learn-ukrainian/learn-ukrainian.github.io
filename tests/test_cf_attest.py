@@ -472,3 +472,49 @@ def test_cursor_plus_dependabot_does_not_neutralize_author() -> None:
     """#7502 CF r1: ("cursor", "dependabot") must stay cursor-auto-union."""
     family = author_family_from_agents(("cursor", "dependabot"))
     assert family == FAMILY_CURSOR_AUTO_UNION
+
+
+def test_same_second_block_outranks_approve_both_orders() -> None:
+    """#7502 CF r2: equal timestamps must fail closed (block wins the tie)."""
+    approve = (
+        f"Cross-family CF of record (codex)\nReviewer family: openai\n"
+        f"At exact head `{PR_HEAD}`\nVERDICT: APPROVE"
+    )
+    block = (
+        f"Cross-family CF of record (codex)\nReviewer family: openai\n"
+        f"At exact head `{PR_HEAD}`\nVERDICT: REQUEST_CHANGES"
+    )
+    stamp = "2026-08-30T12:00:00Z"
+    for order in ([("comment", block, stamp), ("review", approve, stamp)],
+                  [("review", approve, stamp), ("comment", block, stamp)]):
+        result = evaluate_attestation(
+            expected_head=PR_HEAD, author_family="anthropic", bodies=order
+        )
+        assert not result.ok, order
+
+
+def test_pending_review_is_excluded_from_attestation() -> None:
+    """#7502 CF r2: an unsubmitted PENDING review must not attest."""
+    from scripts.ci.cf_attest import collect_bodies_and_agents
+
+    approve_body = (
+        f"Cross-family CF of record (codex)\nReviewer family: openai\n"
+        f"At exact head `{PR_HEAD}`\nVERDICT: APPROVE"
+    )
+
+    def fake_api(path):
+        if "/comments" in path:
+            return []
+        if "/reviews" in path:
+            return [
+                {"body": approve_body, "state": "PENDING", "submitted_at": None},
+                {"body": approve_body, "state": "APPROVED"},  # missing stamp
+            ]
+        if "/commits" in path:
+            return []
+        raise AssertionError(path)
+
+    bodies, _ = collect_bodies_and_agents(
+        repository="o/r", pr_number=1, api_get=fake_api
+    )
+    assert bodies == []

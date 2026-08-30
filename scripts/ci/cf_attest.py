@@ -325,7 +325,10 @@ def evaluate_attestation(
     # reviews are fetched as separate lists, so list order alone let an older
     # review outrank a newer comment. Sort by created_at when present; the
     # sort is stable, so timestamp-less fixtures keep their list order.
-    parsed.sort(key=lambda item: item.created_at)
+    # Tie-break (#7502 CF r2): on EQUAL timestamps a BLOCK sorts after an
+    # APPROVE so the standing verdict fails closed — a same-second approve
+    # can never bury a same-second revocation.
+    parsed.sort(key=lambda item: (item.created_at, item.verdict == "BLOCK"))
     if not parsed:
         return AttestResult(
             False,
@@ -527,10 +530,16 @@ def collect_bodies_and_agents(
             stamp = comment.get("created_at")
             bodies.append(("comment", body, stamp if isinstance(stamp, str) else ""))
     for review in reviews:
+        # #7502 CF r2: a PENDING review is an unsubmitted draft — it must not
+        # attest anything. Fail closed on a missing submitted_at too: every
+        # submitted review carries one.
+        state = review.get("state")
+        stamp = review.get("submitted_at")
+        if state == "PENDING" or not isinstance(stamp, str) or not stamp:
+            continue
         body = review.get("body")
         if isinstance(body, str) and body.strip():
-            stamp = review.get("submitted_at")
-            bodies.append(("review", body, stamp if isinstance(stamp, str) else ""))
+            bodies.append(("review", body, stamp))
 
     messages: list[str] = []
     for commit in commits:
