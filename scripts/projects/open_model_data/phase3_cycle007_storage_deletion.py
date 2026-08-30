@@ -95,6 +95,18 @@ def _write_new_receipt(path: Path, value: Mapping[str, Any], code: str) -> None:
         raise DeletionExecutionError(code) from exc
 
 
+def _persist_or_match_receipt(path: Path, value: Mapping[str, Any], schema: str, code: str) -> dict[str, Any]:
+    _require_receipt(value, code)
+    _require(value.get("schema_version") == schema, code)
+    if os.path.lexists(path):
+        existing = _read_receipt(path, schema, code)
+        _require(existing == value, code)
+        return existing
+    result = dict(value)
+    _write_new_receipt(path, result, code)
+    return result
+
+
 def _fsync_directory(path: Path, code: str = "journal_drift") -> None:
     try:
         descriptor = os.open(path, os.O_RDONLY | getattr(os, "O_DIRECTORY", 0))
@@ -269,8 +281,21 @@ def issue_deletion_execution_challenge(
     path = root / "challenge.json"
     if os.path.lexists(path):
         existing = _read_receipt(path, EXECUTION_CHALLENGE_SCHEMA, "execution_state_drift")
+        expected = {
+            "outcome_sha256": storage.OUTCOME_SHA256,
+            "deletion_auth_request_sha256": auth["receipt_sha256"],
+            "operator_authorization_sha256": authorization["receipt_sha256"],
+            "primary_stage_receipt_sha256": primary["receipt_sha256"],
+            "portable_export_receipt_sha256": portable_export["receipt_sha256"],
+            "finalize_receipt_sha256": finalize["receipt_sha256"],
+            "phase": "pre_delete",
+            "single_use": True,
+            "no_deletion_performed": True,
+        }
+        for field, value in expected.items():
+            _require(existing.get(field) == value, "execution_state_drift")
         _require(
-            existing.get("operator_authorization_sha256") == authorization.get("receipt_sha256"),
+            isinstance(existing.get("challenge_nonce"), str) and len(str(existing["challenge_nonce"])) == 64,
             "execution_state_drift",
         )
         return existing
@@ -358,18 +383,30 @@ def workstation_deletion_custody_response_stage(
 
 def _validate_custody_response(
     portable_export: Mapping[str, Any],
+    expected_attestation: Mapping[str, Any],
     challenge: Mapping[str, Any],
     response: Mapping[str, Any],
     *,
     fixture: bool,
 ) -> None:
-    for value in (portable_export, challenge, response):
+    for value in (portable_export, expected_attestation, challenge, response):
         _require_receipt(value, "custody_drift")
     _require(response.get("schema_version") == CUSTODY_RESPONSE_SCHEMA, "custody_drift")
     _require(response.get("challenge_receipt_sha256") == challenge.get("receipt_sha256"), "custody_drift")
     _require(response.get("challenge_nonce") == challenge.get("challenge_nonce"), "custody_drift")
     _require(response.get("phase") == challenge.get("phase"), "custody_drift")
     _require(response.get("portable_export_receipt_sha256") == portable_export.get("receipt_sha256"), "custody_drift")
+    _require(
+        response.get("initial_attestation_receipt_sha256") == expected_attestation.get("receipt_sha256"),
+        "custody_drift",
+    )
+    for field in (
+        "source_failure_domain_sha256",
+        "workstation_failure_domain_sha256",
+        "source_physical_domain_sha256",
+        "workstation_physical_domain_sha256",
+    ):
+        _require(response.get(field) == expected_attestation.get(field), "custody_drift")
     _require(
         response.get("source_physical_domain_sha256") == portable_export.get("source_physical_domain_sha256"),
         "custody_drift",
@@ -384,6 +421,18 @@ def _validate_custody_response(
     _require(proof.get("backup_restore_ok") is True, "custody_drift")
     _require(proof.get("proof_mode") == "portable_stream_decompress_hash", "custody_drift")
     _require(proof.get("pack_manifest_sha256") == portable_export.get("pack_manifest_sha256"), "custody_drift")
+    _require(
+        proof.get("pack_manifest_sha256") == expected_attestation.get("pack_manifest_sha256"),
+        "custody_drift",
+    )
+    _require(expected_attestation.get("backup_restore_ok") is True, "custody_drift")
+    _require(expected_attestation.get("independent_failure_domain") is True, "custody_drift")
+    _require(response.get("fresh_workstation_custody_ok") is True, "custody_drift")
+    if not fixture:
+        _require(
+            int(response.get("workstation_avail_after_bytes", -1)) >= storage.MIN_FREE_BYTES,
+            "custody_drift",
+        )
     _require(bool(response.get("fixture")) == fixture, "custody_drift")
 
 
@@ -486,6 +535,14 @@ def _validate_authorized_request_chain(
     _require(restore.get("backup_restore_ok") is True, "custody_drift")
 
 
+def _load_imported_attestation(bindings: storage.Bindings) -> dict[str, Any]:
+    return _read_receipt(
+        _deletion_root(bindings).parent / "backup-attestation.imported.json",
+        storage.BACKUP_ATTESTATION_SCHEMA_VERSION,
+        "custody_drift",
+    )
+
+
 def _role_path(bindings: storage.Bindings, alias: str) -> Path:
     role, separator, relative = alias.partition("/")
     _require(separator == "/" and relative and ".." not in Path(relative).parts, "plan_drift")
@@ -535,71 +592,64 @@ def _prepare_quarantine_directories(bindings: storage.Bindings, directory_name: 
         _fsync_directory(root, "plan_drift")
 
 
-def _build_plan(
+def _canonical_authorized_entries(
     bindings: storage.Bindings,
     frozen_inventory: Mapping[str, Any],
-    fresh_inventory: Mapping[str, Any],
     auth: Mapping[str, Any],
-    authorization: Mapping[str, Any],
-    challenge: Mapping[str, Any],
-    pre_response: Mapping[str, Any],
-    primary_proof: Mapping[str, Any],
-) -> dict[str, Any]:
+) -> tuple[list[dict[str, Any]], int, int]:
+    """Derive the only deletable entries from immutable authorization inputs."""
     targets = auth.get("targets")
     objects = frozen_inventory.get("objects")
     _require(isinstance(targets, list) and isinstance(objects, list), "plan_drift")
     by_primary = {item.get("role_relative_path"): item for item in objects if isinstance(item, Mapping)}
+    _require(len(by_primary) == len(objects), "plan_drift")
     entries: list[dict[str, Any]] = []
     planned_inodes: set[tuple[int, int]] = set()
     expected_allocation = 0
-    quarantine_directory_name = ".cycle007-delete-quarantine-" + str(authorization["receipt_sha256"])[:16]
     for target in targets:
         _require(isinstance(target, Mapping), "plan_drift")
-        _require(target.get("deletion_candidate") is True and target.get("link_set_closed") is True, "plan_drift")
         primary_alias = target.get("role_relative_path")
         source = by_primary.get(primary_alias)
         _require(isinstance(source, Mapping), "plan_drift")
-        _same_fields(
-            target,
-            source,
-            (
-                "role_relative_path",
-                "sha256",
-                "selection_class",
-                "selected_path_count",
-                "selected_link_count",
-                "link_count",
-                "external_link_count",
-                "link_set_closed",
-            ),
-            "plan_drift",
-        )
         aliases = tuple(storage._item_relative_paths(source))
-        _require(tuple(target.get("role_relative_paths", ())) == aliases, "plan_drift")
+        allocation = int(source.get("inode_allocation_bytes", source.get("allocated_bytes", -1)))
+        expected_target = {
+            "role_relative_path": source.get("role_relative_path"),
+            "role_relative_paths": list(aliases),
+            "selection_class": source.get("selection_class"),
+            "selection_classes": sorted(
+                {str(value) for value in source.get("selection_classes", [source.get("selection_class")])}
+            ),
+            "sha256": source.get("sha256"),
+            "allocated_bytes": allocation,
+            "reclaimable_allocated_bytes": allocation,
+            "selected_path_count": source.get("selected_path_count", 1),
+            "selected_link_count": source.get("selected_link_count", 1),
+            "link_count": source.get("link_count", 1),
+            "external_link_count": source.get("external_link_count", 0),
+            "link_set_closed": True,
+            "deletion_candidate": True,
+            "authorized_class": "lossless_expanded_reclaim_candidate",
+        }
+        _require(dict(target) == expected_target, "plan_drift")
+        fs = source.get("fs")
+        _require(isinstance(fs, Mapping), "plan_drift")
+        inode = (int(fs.get("dev", -1)), int(fs.get("ino", -1)))
+        _require(inode not in planned_inodes and min(inode) >= 0, "plan_drift")
+        planned_inodes.add(inode)
+        expected_allocation += allocation
+
         grouped: dict[str, list[str]] = {}
         for alias in aliases:
             path = _role_path(bindings, alias)
             try:
-                resolved = str(path.resolve(strict=True))
-                info = path.lstat()
+                canonical_path = str(path.resolve(strict=False))
             except OSError as exc:
-                raise DeletionExecutionError("source_state_drift") from exc
-            _require(stat.S_ISREG(info.st_mode) and not path.is_symlink(), "source_state_drift")
-            fs = source.get("fs")
-            _require(isinstance(fs, Mapping), "plan_drift")
-            _require(
-                (int(info.st_dev), int(info.st_ino)) == (int(fs.get("dev", -1)), int(fs.get("ino", -1))),
-                "source_state_drift",
-            )
-            grouped.setdefault(resolved, []).append(alias)
+                raise DeletionExecutionError("plan_drift") from exc
+            grouped.setdefault(canonical_path, []).append(alias)
         _require(len(grouped) == int(source.get("selected_link_count", -1)), "plan_drift")
-        fs = source["fs"]
-        inode = (int(fs["dev"]), int(fs["ino"]))
-        _require(inode not in planned_inodes, "plan_drift")
-        planned_inodes.add(inode)
-        expected_allocation += int(source["allocated_bytes"])
         groups = sorted((sorted(values) for values in grouped.values()), key=lambda values: values[0])
-        initial_links = int(source["link_count"])
+        initial_links = int(source.get("link_count", -1))
         _require(initial_links == len(groups), "plan_drift")
         for index, group_aliases in enumerate(groups):
             quarantine_role = str(group_aliases[0]).split("/", 1)[0]
@@ -625,6 +675,37 @@ def _build_plan(
     entries.sort(key=lambda item: (str(item["role_relative_path"]), str(item["entry_id"])))
     _require(len(planned_inodes) == int(auth.get("deletion_candidate_count", -1)), "plan_drift")
     _require(expected_allocation == int(auth.get("reclaimed_byte_forecast", -1)), "plan_drift")
+    return entries, len(planned_inodes), expected_allocation
+
+
+def _build_plan(
+    bindings: storage.Bindings,
+    frozen_inventory: Mapping[str, Any],
+    fresh_inventory: Mapping[str, Any],
+    auth: Mapping[str, Any],
+    authorization: Mapping[str, Any],
+    challenge: Mapping[str, Any],
+    pre_response: Mapping[str, Any],
+    primary_proof: Mapping[str, Any],
+) -> dict[str, Any]:
+    entries, inode_count, expected_allocation = _canonical_authorized_entries(
+        bindings,
+        frozen_inventory,
+        auth,
+    )
+    quarantine_directory_name = ".cycle007-delete-quarantine-" + str(authorization["receipt_sha256"])[:16]
+    for entry in entries:
+        for alias in entry["role_relative_paths"]:
+            path = _role_path(bindings, alias)
+            try:
+                info = path.lstat()
+            except OSError as exc:
+                raise DeletionExecutionError("source_state_drift") from exc
+            _require(stat.S_ISREG(info.st_mode) and not path.is_symlink(), "source_state_drift")
+            _require(
+                (int(info.st_dev), int(info.st_ino)) == (int(entry["dev"]), int(entry["ino"])),
+                "source_state_drift",
+            )
     _prepare_quarantine_directories(
         bindings,
         quarantine_directory_name,
@@ -648,7 +729,7 @@ def _build_plan(
             "fresh_primary_roundtrip_sha256": primary_proof["receipt_sha256"],
             "root_identities": root_ids,
             "entry_count": len(entries),
-            "inode_count": len(planned_inodes),
+            "inode_count": inode_count,
             "expected_reclaimed_allocated_bytes": expected_allocation,
             "entries_sha256": plan_digest,
             "quarantine_directory_name": quarantine_directory_name,
@@ -657,6 +738,56 @@ def _build_plan(
             "directories_authorized": 0,
         }
     )
+
+
+def _validate_persisted_plan(
+    bindings: storage.Bindings,
+    plan: Mapping[str, Any],
+    frozen_inventory: Mapping[str, Any],
+    auth: Mapping[str, Any],
+    authorization: Mapping[str, Any],
+    challenge: Mapping[str, Any],
+    pre_response: Mapping[str, Any],
+    primary_roundtrip: Mapping[str, Any],
+) -> None:
+    _require_receipt(plan, "plan_drift")
+    expected_entries, expected_inode_count, expected_allocation = _canonical_authorized_entries(
+        bindings,
+        frozen_inventory,
+        auth,
+    )
+    expected_quarantine_directory = ".cycle007-delete-quarantine-" + str(authorization["receipt_sha256"])[:16]
+    expected = {
+        "schema_version": PLAN_SCHEMA,
+        "outcome_sha256": storage.OUTCOME_SHA256,
+        "deletion_auth_request_sha256": auth["receipt_sha256"],
+        "operator_authorization_sha256": authorization["receipt_sha256"],
+        "execution_challenge_sha256": challenge["receipt_sha256"],
+        "pre_delete_workstation_response_sha256": pre_response["receipt_sha256"],
+        "frozen_inventory_receipt_sha256": frozen_inventory["receipt_sha256"],
+        "fresh_primary_roundtrip_sha256": primary_roundtrip["receipt_sha256"],
+        "entry_count": len(expected_entries),
+        "inode_count": expected_inode_count,
+        "expected_reclaimed_allocated_bytes": expected_allocation,
+        "entries_sha256": storage.digest(storage.canonical(expected_entries)),
+        "quarantine_directory_name": expected_quarantine_directory,
+        "entries": expected_entries,
+        "root_identities": {
+            "materialization": storage._opaque_fs_id(bindings.materialization_package),
+            "evidence": storage._opaque_fs_id(bindings.evidence_package),
+        },
+        "files_only": True,
+        "directories_authorized": 0,
+    }
+    for field, value in expected.items():
+        _require(plan.get(field) == value, "plan_drift")
+    _require(
+        isinstance(plan.get("fresh_inventory_receipt_sha256"), str)
+        and len(str(plan["fresh_inventory_receipt_sha256"])) == 64,
+        "plan_drift",
+    )
+    _require(expected_allocation == int(authorization["authorized_reclaimed_byte_forecast"]), "plan_drift")
+    _require(expected_inode_count == int(authorization["authorized_candidate_count"]), "plan_drift")
 
 
 def _event_dir(root: Path) -> Path:
@@ -1094,6 +1225,111 @@ def _verify_pending_presence(
         _require(actual == expected_quarantine_by_role.get(role, set()), "journal_drift")
 
 
+def _validate_unlinked_receipt(
+    unlinked: Mapping[str, Any],
+    plan: Mapping[str, Any],
+    authorization: Mapping[str, Any],
+    events: Sequence[Mapping[str, Any]],
+    post_primary: Mapping[str, Any],
+) -> None:
+    _require_receipt(unlinked, "execution_state_drift")
+    expected = {
+        "schema_version": UNLINKED_SCHEMA,
+        "outcome_sha256": storage.OUTCOME_SHA256,
+        "plan_receipt_sha256": plan["receipt_sha256"],
+        "operator_authorization_sha256": authorization["receipt_sha256"],
+        "journal_terminal_event_sha256": events[-1]["receipt_sha256"],
+        "unlinked_entry_count": plan["entry_count"],
+        "unlinked_path_count": plan["entry_count"],
+        "unlinked_inode_count": plan["inode_count"],
+        "unlinked_object_count": plan["inode_count"],
+        "expected_reclaimed_allocated_bytes": plan["expected_reclaimed_allocated_bytes"],
+        "reclaimed_byte_forecast": plan["expected_reclaimed_allocated_bytes"],
+        "forecast_and_observed_are_distinct": True,
+        "fresh_post_unlink_primary_roundtrip_sha256": post_primary["receipt_sha256"],
+        "all_authorized_entries_absent": True,
+        "directories_removed": 0,
+        "compact_primary_retained": True,
+        "awaiting_post_delete_workstation_proof": True,
+    }
+    for field, value in expected.items():
+        _require(unlinked.get(field) == value, "execution_state_drift")
+    before = int(unlinked.get("filesystem_avail_before_bytes", -1))
+    after = int(unlinked.get("filesystem_avail_after_unlink_bytes", -1))
+    _require(unlinked.get("source_avail_before_bytes") == before, "execution_state_drift")
+    _require(unlinked.get("source_avail_after_bytes") == after, "execution_state_drift")
+    _require(
+        unlinked.get("observed_filesystem_avail_delta_bytes") == after - before,
+        "execution_state_drift",
+    )
+
+
+def _validate_post_challenge(
+    post_challenge: Mapping[str, Any],
+    unlinked: Mapping[str, Any],
+    authorization: Mapping[str, Any],
+    portable_export: Mapping[str, Any],
+) -> None:
+    _require_receipt(post_challenge, "execution_state_drift")
+    expected = {
+        "schema_version": POST_CHALLENGE_SCHEMA,
+        "outcome_sha256": storage.OUTCOME_SHA256,
+        "phase": "post_delete",
+        "unlinked_receipt_sha256": unlinked["receipt_sha256"],
+        "operator_authorization_sha256": authorization["receipt_sha256"],
+        "portable_export_receipt_sha256": portable_export["receipt_sha256"],
+        "single_use": True,
+    }
+    for field, value in expected.items():
+        _require(post_challenge.get(field) == value, "execution_state_drift")
+    _require(
+        isinstance(post_challenge.get("challenge_nonce"), str) and len(str(post_challenge["challenge_nonce"])) == 64,
+        "execution_state_drift",
+    )
+
+
+def _validate_completion_receipt(
+    completion: Mapping[str, Any],
+    plan: Mapping[str, Any],
+    authorization: Mapping[str, Any],
+    unlinked: Mapping[str, Any],
+    post_response: Mapping[str, Any],
+    primary_roundtrip: Mapping[str, Any],
+    events: Sequence[Mapping[str, Any]],
+) -> None:
+    _require_receipt(completion, "execution_state_drift")
+    expected = {
+        "schema_version": COMPLETION_SCHEMA,
+        "outcome_sha256": storage.OUTCOME_SHA256,
+        "deletion_complete": True,
+        "operator_authorization_sha256": authorization["receipt_sha256"],
+        "plan_receipt_sha256": plan["receipt_sha256"],
+        "unlinked_receipt_sha256": unlinked["receipt_sha256"],
+        "post_delete_workstation_response_sha256": post_response["receipt_sha256"],
+        "fresh_final_primary_roundtrip_sha256": primary_roundtrip["receipt_sha256"],
+        "compact_copy_count_freshly_verified": 2,
+        "authorized_entry_count": plan["entry_count"],
+        "authorized_inode_count": plan["inode_count"],
+        "expected_reclaimed_allocated_bytes": plan["expected_reclaimed_allocated_bytes"],
+        "reclaimed_byte_forecast": plan["expected_reclaimed_allocated_bytes"],
+        "filesystem_avail_before_bytes": unlinked["filesystem_avail_before_bytes"],
+        "forecast_and_observed_are_distinct": True,
+        "forecast_is_not_actual": True,
+        "all_authorized_entries_absent": True,
+        "directories_removed": 0,
+        "compact_primary_retained": True,
+        "compact_workstation_backup_retained": True,
+        "journal_event_count": len(events),
+        "journal_terminal_event_sha256": events[-1]["receipt_sha256"],
+    }
+    for field, value in expected.items():
+        _require(completion.get(field) == value, "execution_state_drift")
+    before = int(completion["filesystem_avail_before_bytes"])
+    after = int(completion.get("filesystem_avail_at_completion_bytes", -1))
+    _require(completion.get("observed_filesystem_avail_delta_bytes") == after - before, "execution_state_drift")
+    _require(completion.get("actual_reclaimed_bytes") == after - before, "execution_state_drift")
+
+
 def execute_authorized_source_deletion(
     bindings: storage.Bindings,
     primary: Mapping[str, Any],
@@ -1130,7 +1366,14 @@ def execute_authorized_source_deletion(
         _require_receipt(value, "authorization_drift")
     _validate_authorization(auth, authorization, fixture=bindings.fixture)
     _validate_authorized_request_chain(bindings, frozen_inventory, pack_manifest, finalize, auth)
-    _validate_custody_response(portable_export, challenge, pre_response, fixture=bindings.fixture)
+    imported_attestation = _load_imported_attestation(bindings)
+    _validate_custody_response(
+        portable_export,
+        imported_attestation,
+        challenge,
+        pre_response,
+        fixture=bindings.fixture,
+    )
     _require(challenge.get("schema_version") == EXECUTION_CHALLENGE_SCHEMA, "authorization_drift")
     _require(
         challenge.get("operator_authorization_sha256") == authorization.get("receipt_sha256"), "authorization_drift"
@@ -1140,6 +1383,20 @@ def execute_authorized_source_deletion(
     _require(pack_manifest.get("receipt_sha256") == portable_export.get("pack_manifest_sha256"), "custody_drift")
     root = _deletion_root(bindings)
     _require(root.is_dir() and not root.is_symlink(), "execution_state_drift")
+    persisted_challenge = _read_receipt(root / "challenge.json", EXECUTION_CHALLENGE_SCHEMA, "execution_state_drift")
+    _require(persisted_challenge == challenge, "execution_state_drift")
+    _persist_or_match_receipt(
+        root / "operator-authorization.json",
+        authorization,
+        OPERATOR_AUTH_SCHEMA,
+        "execution_state_drift",
+    )
+    _persist_or_match_receipt(
+        root / "pre-delete-workstation-response.json",
+        pre_response,
+        CUSTODY_RESPONSE_SCHEMA,
+        "execution_state_drift",
+    )
     plan_path = root / "plan.json"
     with _execution_locks(root, quiescence_lock_paths):
         try:
@@ -1152,8 +1409,6 @@ def execute_authorized_source_deletion(
             raise DeletionExecutionError("custody_drift") from exc
         if os.path.lexists(plan_path):
             plan = _read_receipt(plan_path, PLAN_SCHEMA, "plan_drift")
-            _require(plan.get("operator_authorization_sha256") == authorization.get("receipt_sha256"), "plan_drift")
-            _require(plan.get("deletion_auth_request_sha256") == auth.get("receipt_sha256"), "plan_drift")
         else:
             events_path = _event_dir(root)
             _require(not os.path.lexists(events_path), "journal_drift")
@@ -1175,6 +1430,16 @@ def execute_authorized_source_deletion(
                 primary_roundtrip,
             )
             _write_new_receipt(plan_path, plan, "plan_drift")
+        _validate_persisted_plan(
+            bindings,
+            plan,
+            frozen_inventory,
+            auth,
+            authorization,
+            challenge,
+            pre_response,
+            primary_roundtrip,
+        )
         _validate_root_identities(bindings, plan)
         _require(
             plan.get("expected_reclaimed_allocated_bytes") == authorization.get("authorized_reclaimed_byte_forecast"),
@@ -1281,6 +1546,7 @@ def execute_authorized_source_deletion(
                 }
             )
             _write_new_receipt(unlinked_path, unlinked, "execution_state_drift")
+        _validate_unlinked_receipt(unlinked, plan, authorization, events, post_primary)
         post_path = root / "post-delete-challenge.json"
         if os.path.lexists(post_path):
             post_challenge = _read_receipt(post_path, POST_CHALLENGE_SCHEMA, "execution_state_drift")
@@ -1298,6 +1564,7 @@ def execute_authorized_source_deletion(
                 }
             )
             _write_new_receipt(post_path, post_challenge, "execution_state_drift")
+        _validate_post_challenge(post_challenge, unlinked, authorization, portable_export)
         return {
             "plan": plan,
             "unlinked_receipt": unlinked,
@@ -1323,11 +1590,39 @@ def finalize_deletion_execution(
     _require(isinstance(post_challenge, Mapping), "execution_state_drift")
     for value in (frozen_inventory, portable_export, authorization, plan, unlinked, post_challenge, post_response):
         _require_receipt(value, "execution_state_drift")
-    _validate_custody_response(portable_export, post_challenge, post_response, fixture=bindings.fixture)
-    _require(post_challenge.get("unlinked_receipt_sha256") == unlinked.get("receipt_sha256"), "execution_state_drift")
     root = _deletion_root(bindings)
+    persisted_authorization = _read_receipt(
+        root / "operator-authorization.json",
+        OPERATOR_AUTH_SCHEMA,
+        "execution_state_drift",
+    )
+    _require(persisted_authorization == authorization, "execution_state_drift")
+    auth = _read_receipt(
+        root.parent / "deletion-auth-request.json",
+        storage.AUTH_SCHEMA_VERSION,
+        "execution_state_drift",
+    )
+    _validate_authorization(auth, authorization, fixture=bindings.fixture)
+    challenge = _read_receipt(
+        root / "challenge.json",
+        EXECUTION_CHALLENGE_SCHEMA,
+        "execution_state_drift",
+    )
+    pre_response = _read_receipt(
+        root / "pre-delete-workstation-response.json",
+        CUSTODY_RESPONSE_SCHEMA,
+        "execution_state_drift",
+    )
     persisted_plan = _read_receipt(root / "plan.json", PLAN_SCHEMA, "execution_state_drift")
     _require(persisted_plan == plan, "execution_state_drift")
+    persisted_unlinked = _read_receipt(root / "unlinked.json", UNLINKED_SCHEMA, "execution_state_drift")
+    _require(persisted_unlinked == unlinked, "execution_state_drift")
+    persisted_post_challenge = _read_receipt(
+        root / "post-delete-challenge.json",
+        POST_CHALLENGE_SCHEMA,
+        "execution_state_drift",
+    )
+    _require(persisted_post_challenge == post_challenge, "execution_state_drift")
     events = _load_events(root, plan)
     completed, inflight, inflight_phase = _journal_state(plan, events)
     _require(
@@ -1344,14 +1639,45 @@ def finalize_deletion_execution(
         )
     except storage.StorageCustodyError as exc:
         raise DeletionExecutionError("custody_drift") from exc
+    _validate_persisted_plan(
+        bindings,
+        plan,
+        frozen_inventory,
+        auth,
+        authorization,
+        challenge,
+        pre_response,
+        primary_roundtrip,
+    )
+    _validate_unlinked_receipt(unlinked, plan, authorization, events, primary_roundtrip)
+    _validate_post_challenge(post_challenge, unlinked, authorization, portable_export)
+    imported_attestation = _load_imported_attestation(bindings)
+    _validate_custody_response(
+        portable_export,
+        imported_attestation,
+        post_challenge,
+        post_response,
+        fixture=bindings.fixture,
+    )
+    _persist_or_match_receipt(
+        root / "post-delete-workstation-response.json",
+        post_response,
+        CUSTODY_RESPONSE_SCHEMA,
+        "execution_state_drift",
+    )
     current_avail = storage.available_bytes(_source_capacity_path(bindings))
     initial_avail = int(unlinked["filesystem_avail_before_bytes"])
     completion_path = root / "completion.json"
     if os.path.lexists(completion_path):
         completion = _read_receipt(completion_path, COMPLETION_SCHEMA, "execution_state_drift")
-        _require(
-            completion.get("post_delete_workstation_response_sha256") == post_response.get("receipt_sha256"),
-            "execution_state_drift",
+        _validate_completion_receipt(
+            completion,
+            plan,
+            authorization,
+            unlinked,
+            post_response,
+            primary_roundtrip,
+            events,
         )
         return completion
     completion = _receipt(
@@ -1382,6 +1708,15 @@ def finalize_deletion_execution(
             "journal_event_count": len(events),
             "journal_terminal_event_sha256": events[-1]["receipt_sha256"],
         }
+    )
+    _validate_completion_receipt(
+        completion,
+        plan,
+        authorization,
+        unlinked,
+        post_response,
+        primary_roundtrip,
+        events,
     )
     _write_new_receipt(completion_path, completion, "execution_state_drift")
     return completion

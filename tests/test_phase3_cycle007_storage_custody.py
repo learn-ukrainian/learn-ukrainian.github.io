@@ -1840,3 +1840,203 @@ def test_finalize_reports_actual_free_delta_separately_from_forecast(
     assert final["reclaimed_byte_forecast"] == forecast
     assert final["actual_reclaimed_bytes"] != final["reclaimed_byte_forecast"]
     assert final["forecast_is_not_actual"] is True
+
+
+def _rehashed(value: Mapping[str, Any], **changes: Any) -> dict[str, Any]:
+    body = {key: item for key, item in value.items() if key != "receipt_sha256"}
+    body.update(changes)
+    return storage._receipt(body)
+
+
+def test_deletion_refuses_validly_rehashed_custody_misbinding(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    state = _prepare_deletion_fixture(tmp_path, monkeypatch)
+    state["pre_response"] = _rehashed(
+        state["pre_response"], initial_attestation_receipt_sha256="f" * 64
+    )
+
+    with pytest.raises(deletion.DeletionExecutionError):
+        _execute_fixture_deletion(state)
+
+    assert all(path.exists() for path in _fixture_source_paths(state))
+
+
+def test_deletion_resume_refuses_validly_rehashed_plan_misbinding(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    state = _prepare_deletion_fixture(tmp_path, monkeypatch)
+
+    def stop_before_intent(event: Mapping[str, Any]) -> None:
+        if event["event"] == "before_intent":
+            raise _SyntheticDeletionCrash("before_intent")
+
+    with pytest.raises(_SyntheticDeletionCrash):
+        _execute_fixture_deletion(state, fault_hook=stop_before_intent)
+    plan_path = (
+        state["source_work"]
+        / "cycle007-storage-primary-stage"
+        / "deletion-execution-journal"
+        / "plan.json"
+    )
+    plan = json.loads(plan_path.read_bytes())
+    storage._atomic_write_json(
+        plan_path,
+        _rehashed(plan, pre_delete_workstation_response_sha256="e" * 64),
+    )
+
+    with pytest.raises(deletion.DeletionExecutionError):
+        _execute_fixture_deletion(state)
+
+
+def test_deletion_resume_refuses_validly_rehashed_plan_target_substitution(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    state = _prepare_deletion_fixture(tmp_path, monkeypatch)
+    authorized_paths = _fixture_source_paths(state)
+
+    def stop_before_intent(event: Mapping[str, Any]) -> None:
+        if event["event"] == "before_intent":
+            raise _SyntheticDeletionCrash("before_intent")
+
+    with pytest.raises(_SyntheticDeletionCrash):
+        _execute_fixture_deletion(state, fault_hook=stop_before_intent)
+    plan_path = (
+        state["source_work"]
+        / "cycle007-storage-primary-stage"
+        / "deletion-execution-journal"
+        / "plan.json"
+    )
+    plan = json.loads(plan_path.read_bytes())
+    sentinel = state["sentinel"]
+    sentinel_info = sentinel.lstat()
+    sentinel_inode = (int(sentinel_info.st_dev), int(sentinel_info.st_ino))
+    substituted = dict(plan["entries"][0])
+    substituted.update(
+        {
+            "role_relative_path": "materialization/UNSELECTED-sentinel.bin",
+            "role_relative_paths": ["materialization/UNSELECTED-sentinel.bin"],
+            "source_path_id_sha256": storage.digest(
+                b"materialization/UNSELECTED-sentinel.bin\0"
+                + str(sentinel_inode).encode("ascii")
+            ),
+            "dev": sentinel_inode[0],
+            "ino": sentinel_inode[1],
+            "mode": stat.S_IMODE(sentinel_info.st_mode),
+            "size_bytes": int(sentinel_info.st_size),
+            "allocated_bytes": storage.allocated_bytes(sentinel),
+            "sha256": storage.digest_file(sentinel),
+            "expected_nlink_before": int(sentinel_info.st_nlink),
+            "quarantine_role": "materialization",
+        }
+    )
+    substituted_body = {
+        key: value
+        for key, value in substituted.items()
+        if key not in {"entry_id", "quarantine_name"}
+    }
+    substituted["entry_id"] = storage.digest(storage.canonical(substituted_body))
+    substituted["quarantine_name"] = f"{substituted['entry_id']}.pending"
+    entries = [substituted, *plan["entries"][1:]]
+    entries.sort(key=lambda item: (str(item["role_relative_path"]), str(item["entry_id"])))
+    forged_plan = _rehashed(
+        plan,
+        entries=entries,
+        entries_sha256=storage.digest(storage.canonical(entries)),
+    )
+    storage._atomic_write_json(plan_path, forged_plan)
+
+    with pytest.raises(deletion.DeletionExecutionError):
+        _execute_fixture_deletion(state)
+
+    assert sentinel.is_file()
+    assert sentinel.read_bytes() == b"do-not-delete-this-fixture-sentinel"
+    assert all(path.exists() for path in authorized_paths)
+
+
+def test_finalize_refuses_validly_rehashed_persisted_evidence(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    state = _prepare_deletion_fixture(tmp_path, monkeypatch)
+    result = _execute_fixture_deletion(state)
+    post_response = deletion.workstation_deletion_custody_response_stage(
+        state["primary"]["portable_export"],
+        state["attested"]["attestation"],
+        result["post_challenge"],
+        state["imported_pack"],
+        state["workstation_root"],
+        source_failure_domain_token="fixture-primary-domain",
+        workstation_failure_domain_token="fixture-workstation-domain",
+        zstd_executable=state["bindings"].zstd_executable,
+        fixture=True,
+    )
+    unlinked_path = (
+        state["source_work"]
+        / "cycle007-storage-primary-stage"
+        / "deletion-execution-journal"
+        / "unlinked.json"
+    )
+    unlinked = json.loads(unlinked_path.read_bytes())
+    storage._atomic_write_json(
+        unlinked_path,
+        _rehashed(unlinked, journal_terminal_event_sha256="d" * 64),
+    )
+
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion.finalize_deletion_execution(
+            state["bindings"],
+            state["primary"]["inventory"],
+            state["primary"]["portable_export"],
+            state["authorization"],
+            result,
+            post_response,
+            state["primary"]["pack_dir"],
+        )
+
+
+def test_finalize_resume_refuses_validly_rehashed_completion(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    state = _prepare_deletion_fixture(tmp_path, monkeypatch)
+    result = _execute_fixture_deletion(state)
+    post_response = deletion.workstation_deletion_custody_response_stage(
+        state["primary"]["portable_export"],
+        state["attested"]["attestation"],
+        result["post_challenge"],
+        state["imported_pack"],
+        state["workstation_root"],
+        source_failure_domain_token="fixture-primary-domain",
+        workstation_failure_domain_token="fixture-workstation-domain",
+        zstd_executable=state["bindings"].zstd_executable,
+        fixture=True,
+    )
+    deletion.finalize_deletion_execution(
+        state["bindings"],
+        state["primary"]["inventory"],
+        state["primary"]["portable_export"],
+        state["authorization"],
+        result,
+        post_response,
+        state["primary"]["pack_dir"],
+    )
+    completion_path = (
+        state["source_work"]
+        / "cycle007-storage-primary-stage"
+        / "deletion-execution-journal"
+        / "completion.json"
+    )
+    completion = json.loads(completion_path.read_bytes())
+    storage._atomic_write_json(
+        completion_path, _rehashed(completion, directories_removed=1)
+    )
+
+    with pytest.raises(deletion.DeletionExecutionError):
+        deletion.finalize_deletion_execution(
+            state["bindings"],
+            state["primary"]["inventory"],
+            state["primary"]["portable_export"],
+            state["authorization"],
+            result,
+            post_response,
+            state["primary"]["pack_dir"],
+        )
