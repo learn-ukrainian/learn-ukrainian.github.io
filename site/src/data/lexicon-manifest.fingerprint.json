@@ -218,6 +218,10 @@
         "sha256": "6bb30c26bc7ccbaf75de6bc7ecabcbb226a65e5b3af44060e2298ac7a21670d0"
       },
       {
+        "path": "scripts/lexicon/ohoiko_quality_enrichment.py",
+        "sha256": "bbc8b429c4d28d51ac4242a22d3204f235925a611b5fbb927ceb7df178a4983a"
+      },
+      {
         "path": "scripts/lexicon/park_thin_entries.py",
         "sha256": "634b8981c2b8233415191d6a69badf3aceaab39c47c3fbc50fb3cace5fd4511d"
       },

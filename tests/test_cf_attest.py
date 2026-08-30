@@ -149,12 +149,14 @@ def test_author_family_from_x_agent_trailers() -> None:
     assert author_family_from_agents(["claude", "claude-inline"]) == "anthropic"
     assert author_family_from_agents(["cursor", "claude"]) == "anthropic"
     assert author_family_from_agents(["claude", "codex"]) == "unknown"
+    assert author_family_from_agents(["antigravity"]) == "google"
     assert x_agent_seats_from_messages([AUTHOR_CURSOR, "unrelated"]) == ("cursor",)
 
 
 def test_normalize_family_tokens() -> None:
     assert normalize_family("claude-sonnet-5") == "anthropic"
     assert normalize_family("AGY / Gemini") == "google"
+    assert normalize_family("antigravity") == "google"
     assert normalize_family("Grok / xAI") == "xai"
     assert normalize_family("cursor") == FAMILY_CURSOR_AUTO_UNION
 
