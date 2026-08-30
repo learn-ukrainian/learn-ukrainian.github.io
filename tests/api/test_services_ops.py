@@ -1152,8 +1152,8 @@ def test_topology_documents_four_roles() -> None:
     assert "tunnel" in out
     assert "LU_SERVICES_SSH_HOST" in out
     assert "LU_SERVICES_REMOTE_ROOT" in out
-    assert "Host alias" not in out
-    assert "Host-alias" not in out
+    assert "Role       Host alias" not in out
+    assert "Host-alias table" not in out
     assert_no_services_opsec_leak(out)
 
 

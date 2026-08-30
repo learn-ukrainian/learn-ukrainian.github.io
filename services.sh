@@ -482,7 +482,7 @@ _ensure_notebook_tunnel() {
 
 _print_topology() {
     cat <<'EOF'
-services.sh topology (opaque roles — no Host aliases, no remote paths)
+services.sh topology (opaque roles only — no SSH Host names, no remote paths)
 
 Role       What runs
 ---------  --------------------------------------------------
