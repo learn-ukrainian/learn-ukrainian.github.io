@@ -1692,8 +1692,10 @@ def test_deletion_refuses_tampered_authorization_or_custody(
     assert state["imported_pack"].is_dir()
 
 
-@pytest.mark.parametrize("mutation", ["hardlink", "symlink", "inode"])
-def test_deletion_refuses_added_hardlink_symlink_or_inode_replacement(
+@pytest.mark.parametrize(
+    "mutation", ["hardlink", "symlink", "inode", "hash", "size", "mode"]
+)
+def test_deletion_refuses_source_link_identity_content_or_mode_drift(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str
 ) -> None:
     state = _prepare_deletion_fixture(tmp_path, monkeypatch)
@@ -1706,11 +1708,22 @@ def test_deletion_refuses_added_hardlink_symlink_or_inode_replacement(
         moved = target.with_name(target.name + ".original")
         os.replace(target, moved)
         os.symlink(moved.name, target)
-    else:
+    elif mutation == "inode":
         replacement = target.with_name(target.name + ".replacement")
         replacement.write_bytes(original)
         os.chmod(replacement, storage.PRIVATE_FILE_MODE)
         os.replace(replacement, target)
+    elif mutation == "hash":
+        changed = original.replace(b"synthetic", b"synthesic", 1)
+        assert changed != original
+        assert len(changed) == len(original)
+        target.write_bytes(changed)
+        os.chmod(target, storage.PRIVATE_FILE_MODE)
+    elif mutation == "size":
+        target.write_bytes(original + b" ")
+        os.chmod(target, storage.PRIVATE_FILE_MODE)
+    else:
+        target.chmod(0o640)
 
     with pytest.raises(deletion.DeletionExecutionError):
         _execute_fixture_deletion(state)
@@ -1725,7 +1738,10 @@ class _SyntheticDeletionCrash(RuntimeError):
     pass
 
 
-@pytest.mark.parametrize("crash_point", ["INTENT", "AFTER_UNLINK"])
+@pytest.mark.parametrize(
+    "crash_point",
+    ["before_intent", "after_intent", "after_unlink", "after_parent_fsync", "before_unlinked_event"],
+)
 def test_deletion_crash_resume_uses_durable_journal(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, crash_point: str
 ) -> None:
@@ -1737,26 +1753,27 @@ def test_deletion_crash_resume_uses_durable_journal(
         nonlocal crashed
         event_name = event.get("event") if isinstance(event, Mapping) else event
         normalized = str(event_name).replace("-", "_").upper()
-        if not crashed and (
-            normalized == crash_point
-            or normalized == f"AFTER_{crash_point}"
-            or (crash_point == "INTENT" and normalized == "INTENT_WRITTEN")
-        ):
+        if not crashed and normalized == crash_point:
             crashed = True
             raise _SyntheticDeletionCrash(crash_point)
 
     with pytest.raises(_SyntheticDeletionCrash):
         _execute_fixture_deletion(state, fault_hook=fault_hook)
     assert crashed is True
-    journal_candidates = tuple(
-        path
-        for path in (
-            state["source_work"]
-            / "cycle007-storage-primary-stage"
-            / "deletion-execution-journal"
-        ).glob("*")
+    journal_dir = (
+        state["source_work"]
+        / "cycle007-storage-primary-stage"
+        / "deletion-execution-journal"
     )
-    assert journal_candidates, "crash must leave a durable deletion journal"
+    journal_entries = tuple(journal_dir.glob("*")) if journal_dir.is_dir() else ()
+    intent_entries = tuple(
+        path for path in journal_entries if "intent" in path.name.lower()
+    )
+    if crash_point == "before_intent":
+        assert not intent_entries
+    else:
+        assert journal_entries, "crash must leave a durable deletion journal"
+        assert intent_entries
 
     resumed = _execute_fixture_deletion(state)
     assert resumed["unlinked_receipt"]["unlinked_path_count"] == len(target_paths)
