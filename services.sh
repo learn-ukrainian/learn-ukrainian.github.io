@@ -15,16 +15,27 @@
 #   ./services.sh status work        # Show one service
 #   ./services.sh logs work          # Show the latest service log
 #   ./services.sh supervise api install|status|uninstall
+#   ./services.sh tunnel start|status|stop  # Mac notebook SSH LocalForward
+#   ./services.sh topology           # Four-role host table (aliases only)
 #   ./services.sh build astro        # Run Astro production build (no dev server)
 #   ./services.sh clean astro        # Remove Astro build/cache outputs
 #   ./services.sh rebuild astro      # Run Astro clean then build
 #
 # Services: sources, api, astro, work
 #
-# SSH LocalForward (Mac notebook + Host alias hramatka-tunnel):
-#   start/stop/restart auto-delegate to the writer host when any requested
-#   service port is owned by an ssh listener, or when LU_SERVICES_SSH_HOST
-#   is set. They never spawn or signal local processes in that case.
+# Roles (LU_SERVICES_ROLE=notebook|local|writer; optional):
+#   Unset → Darwin defaults to notebook; other unames default to local.
+#   notebook (Mac): never spawn local api/sources/work/astro or install
+#   launchd; start/fix/restart bring up ``tunnel start`` then ssh-delegate
+#   to the writer. stop delegates remotely and leaves the tunnel up
+#   (tear down only via ``tunnel stop``). Escape hatch: LU_SERVICES_ROLE=local
+#   on Darwin restores local spawn (playground).
+#
+# SSH LocalForward (Mac notebook + Host alias hramatka):
+#   start/stop/restart auto-delegate to the writer host when role is
+#   notebook, when any requested service port is owned by an ssh listener,
+#   or when LU_SERVICES_SSH_HOST is set. They never spawn or signal local
+#   processes in that case.
 #   ``start`` with no service args requests ALL services; when any one of
 #   those ports is tunneled (or LU_SERVICES_SSH_HOST is set), the whole
 #   batch is delegated remotely — not just the tunneled service.
@@ -116,8 +127,9 @@ ALL_SERVICES="sources api astro work"
 
 # Remote writer host for tunneled Mac notebooks. LU_SERVICES_SSH_HOST is
 # an SSH config Host alias only; leave it unset for local-process mode.
-# The default target is used only after a tunnel (or an explicit host) is
-# detected — it does not by itself force delegation.
+# The default target is used only after a tunnel, notebook role, or an
+# explicit host is detected — the bare default alias does not by itself
+# force delegation on Linux/local role.
 LU_SERVICES_REMOTE_ROOT="${LU_SERVICES_REMOTE_ROOT:-/home/ops/learn-ukrainian}"
 
 # Legacy aliases: rewrite old service names when passed as CLI args.
@@ -308,6 +320,174 @@ _ssh_delegate_host() {
     printf '%s\n' "${LU_SERVICES_SSH_HOST:-hramatka}"
 }
 
+# Role: LU_SERVICES_ROLE override, else Darwin → notebook, else local.
+_services_role() {
+    if [[ -n "${LU_SERVICES_ROLE:-}" ]]; then
+        printf '%s\n' "$LU_SERVICES_ROLE"
+        return 0
+    fi
+    case "$(uname -s 2>/dev/null || true)" in
+        Darwin)
+            printf 'notebook\n'
+            ;;
+        *)
+            printf 'local\n'
+            ;;
+    esac
+}
+
+_is_notebook_role() {
+    [[ "$(_services_role)" == "notebook" ]]
+}
+
+_tunnel_pid_file() {
+    echo "$PIDS_DIR/ssh-tunnel.pid"
+}
+
+_tunnel_pid_alive() {
+    local pid_file pid
+    pid_file="$(_tunnel_pid_file)"
+    [[ -f "$pid_file" ]] || return 1
+    pid="$(tr -d '[:space:]' < "$pid_file" 2>/dev/null || true)"
+    [[ -n "$pid" ]] || return 1
+    kill -0 "$pid" 2>/dev/null || return 1
+    _is_ssh_tunnel_pid "$pid"
+}
+
+_tunnel_is_healthy() {
+    local port_pid file_pid
+    _tunnel_pid_alive || return 1
+    port_pid="$(_ssh_tunnel_port_pid api || true)"
+    [[ -n "$port_pid" ]] || return 1
+    file_pid="$(tr -d '[:space:]' < "$(_tunnel_pid_file)" 2>/dev/null || true)"
+    [[ "$port_pid" == "$file_pid" ]] || return 1
+    return 0
+}
+
+_tunnel_start() {
+    local host port_pid i pid_file
+    pid_file="$(_tunnel_pid_file)"
+
+    if _tunnel_is_healthy; then
+        echo "notebook SSH tunnel already healthy (PID $(tr -d '[:space:]' < "$pid_file"))"
+        return 0
+    fi
+
+    host="$(_ssh_delegate_host)"
+    echo "Starting notebook SSH LocalForward tunnel to ${host} (api/sources/work/astro on 127.0.0.1)..."
+    if ! command ssh -fN -o BatchMode=yes -o ExitOnForwardFailure=yes \
+        -L 127.0.0.1:8765:127.0.0.1:8765 \
+        -L 127.0.0.1:8766:127.0.0.1:8766 \
+        -L 127.0.0.1:8769:127.0.0.1:8769 \
+        -L 127.0.0.1:4321:127.0.0.1:4321 \
+        "$host"; then
+        echo "ERROR: failed to start notebook SSH tunnel to ${host}." >&2
+        return 1
+    fi
+
+    port_pid=""
+    for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20; do
+        port_pid="$(_ssh_tunnel_port_pid api || true)"
+        if [[ -n "$port_pid" ]]; then
+            break
+        fi
+        sleep 0.1
+    done
+    if [[ -z "$port_pid" ]]; then
+        echo "ERROR: ssh tunnel to ${host} started but no ssh listener on api port ${SVC_PORT[api]}." >&2
+        return 1
+    fi
+    printf '%s\n' "$port_pid" > "$pid_file"
+    echo "notebook SSH tunnel up (PID $port_pid)"
+    return 0
+}
+
+_tunnel_status() {
+    local pid_file pid port_pid
+    pid_file="$(_tunnel_pid_file)"
+    if _tunnel_is_healthy; then
+        pid="$(tr -d '[:space:]' < "$pid_file")"
+        echo "tunnel: up (PID $pid, ssh owns 127.0.0.1:${SVC_PORT[api]})"
+        return 0
+    fi
+    pid=""
+    if [[ -f "$pid_file" ]]; then
+        pid="$(tr -d '[:space:]' < "$pid_file" 2>/dev/null || true)"
+    fi
+    port_pid="$(_ssh_tunnel_port_pid api || true)"
+    if [[ -n "$pid" ]] && kill -0 "$pid" 2>/dev/null; then
+        echo "tunnel: pid $pid alive but api port not owned by that ssh (stale/partial)"
+    elif [[ -n "$port_pid" ]]; then
+        echo "tunnel: ssh owns api port (PID $port_pid) but ${pid_file} is missing/stale"
+    else
+        echo "tunnel: down"
+    fi
+    return 1
+}
+
+_tunnel_stop() {
+    local pid_file pid
+    pid_file="$(_tunnel_pid_file)"
+    if [[ ! -f "$pid_file" ]]; then
+        echo "tunnel: no pid file (${pid_file}); nothing to stop"
+        return 0
+    fi
+    pid="$(tr -d '[:space:]' < "$pid_file" 2>/dev/null || true)"
+    if [[ -z "$pid" ]]; then
+        rm -f "$pid_file"
+        echo "tunnel: empty pid file removed"
+        return 0
+    fi
+    if kill -0 "$pid" 2>/dev/null; then
+        if ! _is_ssh_tunnel_pid "$pid"; then
+            echo "ERROR: pid $pid in ${pid_file} is not an ssh tunnel; refusing to kill." >&2
+            return 1
+        fi
+        echo "Stopping notebook SSH tunnel (PID $pid)..."
+        kill "$pid" 2>/dev/null || true
+        local i
+        for i in 1 2 3 4 5 6 7 8 9 10; do
+            if ! kill -0 "$pid" 2>/dev/null; then
+                break
+            fi
+            sleep 0.1
+        done
+        if kill -0 "$pid" 2>/dev/null; then
+            kill -9 "$pid" 2>/dev/null || true
+        fi
+    else
+        echo "tunnel: pid $pid not running"
+    fi
+    rm -f "$pid_file"
+    echo "tunnel: stopped (remote writer services left running)"
+    return 0
+}
+
+_ensure_notebook_tunnel() {
+    _tunnel_start
+}
+
+_print_topology() {
+    cat <<'EOF'
+services.sh topology (SSH Host aliases only — no HostName/public IPs)
+
+Role       Host alias         What runs / ports
+---------  -----------------  --------------------------------------------------
+writer     hramatka           loopback api 8765, sources 8766, work 8769, astro 4321
+job        atlas-runner       no writer services; tunnel-client toward writer
+witness    lu-etcd-witness    etcd/backup only; no api/sources/work/astro
+notebook   (Mac / Darwin)     never a vote; SSH LocalForward of those four
+                              127.0.0.1 ports onto the writer; never binds them
+                              as local uvicorn/launchd listeners
+
+Darwin defaults to notebook when LU_SERVICES_ROLE is unset.
+Escape hatch: LU_SERVICES_ROLE=local restores local spawn (playground).
+Tunnel: ./services.sh tunnel start|status|stop
+Writer SSH Host override: LU_SERVICES_SSH_HOST (default hramatka)
+Remote repo root: LU_SERVICES_REMOTE_ROOT (default /home/ops/learn-ukrainian)
+EOF
+}
+
 _requested_has_ssh_tunnel() {
     local name
     for name in "$@"; do
@@ -319,10 +499,14 @@ _requested_has_ssh_tunnel() {
     return 1
 }
 
-# Delegate when the operator set LU_SERVICES_SSH_HOST, or when any requested
-# service port is an ssh LocalForward listener. The default host alias is
-# applied only at ssh time — it is not a trigger.
+# Delegate when role is notebook, when the operator set LU_SERVICES_SSH_HOST,
+# or when any requested service port is an ssh LocalForward listener. The
+# default host alias is applied only at ssh time — it is not a trigger for
+# local/Linux role.
 _should_delegate_remote() {
+    if _is_notebook_role; then
+        return 0
+    fi
     if [[ -n "${LU_SERVICES_SSH_HOST:-}" ]]; then
         return 0
     fi
@@ -354,6 +538,11 @@ _maybe_delegate_and_exit() {
                 exit 1
             fi
         done
+        # Notebook start/restart ensure the LocalForward first; stop leaves
+        # the tunnel up for the dashboard (tear down only via tunnel stop).
+        if _is_notebook_role && [[ "$remote_action" != "stop" ]]; then
+            _ensure_notebook_tunnel || exit $?
+        fi
         _delegate_remote "$remote_action" "$@"
         exit $?
     fi
@@ -1124,6 +1313,18 @@ case "$action" in
         fi
         ;;
     fix)
+        if _is_notebook_role; then
+            for svc in $services; do
+                if [[ -z "${SVC_CMD[$svc]+x}" ]]; then
+                    echo "  Unknown service: $svc (available: $ALL_SERVICES)"
+                    exit 1
+                fi
+            done
+            _ensure_notebook_tunnel || exit $?
+            # shellcheck disable=SC2086
+            _delegate_remote fix $services
+            exit $?
+        fi
         # Serialize local restarts with restart; remote repair skips spawn.
         if ! _acquire_restart_lock; then
             exit 1
@@ -1147,6 +1348,27 @@ case "$action" in
             exit 1
         fi
         ;;
+    tunnel)
+        tunnel_action="${remaining_args[0]:-}"
+        case "$tunnel_action" in
+            start)
+                _tunnel_start
+                ;;
+            status)
+                _tunnel_status
+                ;;
+            stop)
+                _tunnel_stop
+                ;;
+            *)
+                echo "Usage: $0 tunnel <start|status|stop>" >&2
+                exit 1
+                ;;
+        esac
+        ;;
+    topology)
+        _print_topology
+        ;;
     supervise)
         supervisor_service="${remaining_args[0]:-}"
         supervisor_action="${remaining_args[1]:-}"
@@ -1156,6 +1378,10 @@ case "$action" in
         fi
         case "$supervisor_action" in
             install)
+                if _is_notebook_role; then
+                    echo "ERROR: notebook role refuses local launchd install; see '$0 topology' and '$0 tunnel start'." >&2
+                    exit 1
+                fi
                 _api_supervisor install --repo-root "$PROJECT_ROOT"
                 ;;
             status)
@@ -1246,7 +1472,7 @@ case "$action" in
         _logs "$log_service"
         ;;
     *)
-        echo "Usage: $0 {start|stop|restart|fix|status|logs|supervise|build|clean|rebuild} [service ...]"
+        echo "Usage: $0 {start|stop|restart|fix|status|logs|tunnel|topology|supervise|build|clean|rebuild} [service ...]"
         echo ""
         echo "Services:"
         for name in $ALL_SERVICES; do
@@ -1262,6 +1488,10 @@ case "$action" in
         echo "  $0 restart                # Restart all"
         echo "  $0 fix                    # Health-check all; restart only unhealthy"
         echo "  $0 fix api                # Health-check and repair one service"
+        echo "  $0 tunnel start           # Mac notebook: ssh -fN LocalForward to writer"
+        echo "  $0 tunnel status          # Tunnel pid + ssh ownership of api port"
+        echo "  $0 tunnel stop            # Tear down LocalForward only (not remote services)"
+        echo "  $0 topology               # Four-role Host-alias table"
         echo "  $0 supervise api install  # Write the launchd supervisor plist"
         echo "  $0 supervise api uninstall # Disable and remove the supervisor plist"
         echo "  $0 build astro            # Build Astro"
@@ -1271,11 +1501,16 @@ case "$action" in
         echo "  $0 status work            # Show adapter status and typed failure reason"
         echo "  $0 logs work              # Show the latest adapter log"
         echo ""
-        echo "SSH LocalForward: start/stop/restart auto-delegate when a requested"
-        echo "port is owned by ssh (e.g. Host alias hramatka-tunnel), or when"
-        echo "LU_SERVICES_SSH_HOST is set. They do not spawn local processes then."
+        echo "Roles: Darwin defaults to notebook (tunnel + remote delegate; no local"
+        echo "uvicorn/launchd). Override with LU_SERVICES_ROLE=notebook|local|writer."
+        echo "LU_SERVICES_ROLE=local on Darwin restores local spawn (playground)."
+        echo ""
+        echo "SSH LocalForward: start/stop/restart auto-delegate when role is notebook,"
+        echo "when a requested port is owned by ssh, or when LU_SERVICES_SSH_HOST is set."
+        echo "They do not spawn local processes then."
         echo "  LU_SERVICES_SSH_HOST      SSH Host alias (default: hramatka)"
         echo "  LU_SERVICES_REMOTE_ROOT   Remote repo root (default: /home/ops/learn-ukrainian)"
+        echo "  LU_SERVICES_ROLE          notebook|local|writer (optional; see topology)"
         echo ""
         echo "Note: 'rag' is accepted as a legacy alias for 'sources'; 'site' is accepted as a legacy alias for 'astro'."
         ;;

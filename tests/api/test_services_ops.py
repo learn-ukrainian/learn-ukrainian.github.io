@@ -145,18 +145,24 @@ def mock_lsof_env(tmp_path):
 
     env = os.environ.copy()
     env.pop("LU_SERVICES_SSH_HOST", None)
+    env.pop("LU_SERVICES_ROLE", None)
     if os.environ.get("MOCK_LSOF_EMPTY") == "1":
         env["SVC_LSOF_BIN"] = "/nonexistent/lsof"
     else:
         env["SVC_LSOF_BIN"] = str(lsof_script.resolve())
     env["SVC_API_SUPERVISOR_BIN"] = str(supervisor_script.resolve())
     env["SVC_API_SUPERVISOR_CAPTURE"] = str(supervisor_capture)
+    env["SVC_LSOF_MOCK_PIDS"] = str(mock_file)
 
     return _set_pids, _clear_pids, env
 
 @pytest.fixture(autouse=True)
 def cleanup_pids_and_logs():
     """Ensure a clean state for pid files and last start timestamps."""
+    # Role/host overrides from the agent shell must not leak into local-mode CI.
+    os.environ.pop("LU_SERVICES_ROLE", None)
+    os.environ.pop("LU_SERVICES_SSH_HOST", None)
+
     PIDS_DIR.mkdir(parents=True, exist_ok=True)
     LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -723,6 +729,8 @@ HTTPServer(("127.0.0.1", int(os.environ["WORK_TEST_PORT"])), Handler).serve_fore
     )
 
     env = os.environ.copy()
+    env.pop("LU_SERVICES_ROLE", None)
+    env.pop("LU_SERVICES_SSH_HOST", None)
     fake_pid_file = tmp_path / "work.pid"
     mock_lsof = tmp_path / "mock_lsof"
     mock_lsof.write_text(
@@ -837,6 +845,72 @@ def _ssh_recorder(tmp_path: Path, exit_code: int = 0) -> tuple[Path, Path]:
     return shim_dir, capture
 
 
+def _ssh_notebook_recorder(
+    tmp_path: Path,
+    mock_lsof_pids_file: Path,
+    exit_code: int = 0,
+) -> tuple[Path, Path, Path]:
+    """PATH-first ssh shim: ``-fN`` spawns a fake tunnel and feeds mock lsof.
+
+    Returns (shim_dir, capture_file, children_file).
+    """
+    capture = tmp_path / "ssh_args.txt"
+    shim_dir = tmp_path / "ssh_bin"
+    shim_dir.mkdir(exist_ok=True)
+    tunnel_dir = tmp_path / "tunnel_proc_notebook"
+    tunnel_dir.mkdir()
+    tunnel_ssh = tunnel_dir / "ssh"
+    tunnel_ssh.write_text(
+        "#!/bin/sh\nwhile true; do sleep 30; done\n",
+        encoding="utf-8",
+    )
+    tunnel_ssh.chmod(0o755)
+    children_file = tmp_path / "tunnel_children.txt"
+    children_file.write_text("", encoding="utf-8")
+    ssh = shim_dir / "ssh"
+    # On -fN: start a long-lived argv-lookalike ssh and publish its pid to the
+    # mock lsof file so _tunnel_start can record .pids/ssh-tunnel.pid.
+    ssh.write_text(
+        f"#!/bin/sh\n"
+        f"printf '%s\\n' \"$@\" >> '{capture}'\n"
+        f"case \" $* \" in\n"
+        f"  *' -fN '*)\n"
+        f"    if [ {exit_code} -ne 0 ]; then exit {exit_code}; fi\n"
+        f"    '{tunnel_ssh}' -N hramatka </dev/null >/dev/null 2>&1 &\n"
+        f"    child=$!\n"
+        f"    echo \"$child\" >> '{children_file}'\n"
+        f"    echo \"$child\" > '{mock_lsof_pids_file}'\n"
+        f"    exit 0\n"
+        f"    ;;\n"
+        f"esac\n"
+        f"exit {exit_code}\n",
+        encoding="utf-8",
+    )
+    ssh.chmod(0o755)
+    return shim_dir, capture, children_file
+
+
+def _reap_notebook_tunnel_children(children_file: Path) -> None:
+    if not children_file.exists():
+        return
+    for line in children_file.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            pid = int(line)
+        except ValueError:
+            continue
+        try:
+            os.kill(pid, 15)
+        except OSError:
+            pass
+        try:
+            os.waitpid(pid, os.WNOHANG)
+        except ChildProcessError:
+            pass
+
+
 def _start_named_ssh_process(tmp_path: Path) -> subprocess.Popen[object]:
     """Spawn a process whose argv looks like ``…/ssh -N …`` for tunnel detection."""
     tunnel_dir = tmp_path / "tunnel_proc"
@@ -914,10 +988,13 @@ def test_should_delegate_remote_env_or_tunnel() -> None:
         [
             "declare -A SVC_CMD",
             "SVC_CMD[api]=dummy",
+            _extract_bash_function(source, "_services_role"),
+            _extract_bash_function(source, "_is_notebook_role"),
             _extract_bash_function(source, "_requested_has_ssh_tunnel"),
             _extract_bash_function(source, "_should_delegate_remote"),
             "_ssh_tunnel_port_pid() { return 1; }",
             "unset LU_SERVICES_SSH_HOST",
+            "unset LU_SERVICES_ROLE",
             "if _should_delegate_remote api; then echo TRIGGER; else echo LOCAL; fi",
             "LU_SERVICES_SSH_HOST=hramatka",
             "if _should_delegate_remote api; then echo ENV; else echo NOENV; fi",
@@ -935,6 +1012,36 @@ def test_should_delegate_remote_env_or_tunnel() -> None:
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout.split() == ["LOCAL", "ENV", "TUNNEL"]
+
+
+def test_should_delegate_remote_notebook_role_and_local_escape() -> None:
+    """LU_SERVICES_ROLE=notebook always delegates; role=local does not auto-delegate."""
+    source = SERVICES_SH.read_text(encoding="utf-8")
+    helper = "\n".join(
+        [
+            "declare -A SVC_CMD",
+            "SVC_CMD[api]=dummy",
+            _extract_bash_function(source, "_services_role"),
+            _extract_bash_function(source, "_is_notebook_role"),
+            _extract_bash_function(source, "_requested_has_ssh_tunnel"),
+            _extract_bash_function(source, "_should_delegate_remote"),
+            "_ssh_tunnel_port_pid() { return 1; }",
+            "unset LU_SERVICES_SSH_HOST",
+            "LU_SERVICES_ROLE=notebook",
+            "if _should_delegate_remote api; then echo NOTEBOOK; else echo NO_NB; fi",
+            "LU_SERVICES_ROLE=local",
+            "if _should_delegate_remote api; then echo LOCAL_DELEGATE; else echo LOCAL_OK; fi",
+        ]
+    )
+    result = subprocess.run(
+        ["bash", "-c", helper],
+        capture_output=True,
+        text=True,
+        cwd=str(PROJECT_ROOT),
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.split() == ["NOTEBOOK", "LOCAL_OK"]
 
 
 def test_abort_if_ssh_owned_port_refuses_spawn() -> None:
@@ -972,10 +1079,14 @@ def test_usage_documents_fix_and_ssh_env() -> None:
     assert "./services.sh fix api" in source
     assert "LU_SERVICES_SSH_HOST" in source
     assert "LU_SERVICES_REMOTE_ROOT" in source
+    assert "LU_SERVICES_ROLE" in source
     assert "auto-delegate" in source
+    assert "tunnel start" in source
+    assert "topology" in source
 
     env = os.environ.copy()
     env.pop("LU_SERVICES_SSH_HOST", None)
+    env.pop("LU_SERVICES_ROLE", None)
     result = subprocess.run(
         ["bash", str(SERVICES_SH), "help"],
         capture_output=True,
@@ -988,7 +1099,35 @@ def test_usage_documents_fix_and_ssh_env() -> None:
     assert "fix" in result.stdout
     assert "LU_SERVICES_SSH_HOST" in result.stdout
     assert "LU_SERVICES_REMOTE_ROOT" in result.stdout
+    assert "LU_SERVICES_ROLE" in result.stdout
+    assert "notebook" in result.stdout
+    assert "tunnel" in result.stdout
     assert "auto-delegate" in result.stdout
+
+
+def test_topology_documents_four_roles() -> None:
+    """topology prints the four-role table and the local escape hatch."""
+    env = os.environ.copy()
+    env.pop("LU_SERVICES_ROLE", None)
+    result = subprocess.run(
+        ["bash", str(SERVICES_SH), "topology"],
+        capture_output=True,
+        text=True,
+        cwd=str(PROJECT_ROOT),
+        env=env,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    out = result.stdout
+    assert "writer" in out and "hramatka" in out
+    assert "job" in out and "atlas-runner" in out
+    assert "witness" in out and "lu-etcd-witness" in out
+    assert "notebook" in out
+    assert "127.0.0.1" in out
+    assert "LU_SERVICES_ROLE=local" in out
+    assert "tunnel" in out
+    # No dotted public IPv4 (allow 127.0.0.1 only).
+    assert not re.search(r"(?<![0-9])(?!127\.0\.0\.1)(?:\d{1,3}\.){3}\d{1,3}", out)
 
 
 def test_start_delegates_when_ssh_host_set(temp_services_sh, mock_lsof_env, tmp_path) -> None:
@@ -1150,3 +1289,102 @@ def test_fix_unhealthy_ssh_tunnel_delegates_restart(
     finally:
         tunnel.terminate()
         tunnel.wait(timeout=5)
+
+
+def test_notebook_start_api_tunnels_and_delegates(
+    temp_services_sh, mock_lsof_env, tmp_path
+) -> None:
+    """Notebook start brings up ssh -fN with four -L forwards, then delegates."""
+    script_path, port = temp_services_sh
+    pids_dir = tmp_path / "pids"
+    pids_dir.mkdir()
+    _patch_script_pids_dir(script_path, pids_dir)
+    _, _, env = mock_lsof_env
+    mock_pids = Path(env["SVC_LSOF_MOCK_PIDS"])
+    shim_dir, capture, children = _ssh_notebook_recorder(tmp_path, mock_pids)
+    env["PATH"] = f"{shim_dir}{os.pathsep}{env.get('PATH', os.defpath)}"
+    env["LU_SERVICES_ROLE"] = "notebook"
+    env.pop("LU_SERVICES_SSH_HOST", None)
+
+    try:
+        result = subprocess.run(
+            [str(script_path), "start", "api"],
+            capture_output=True,
+            text=True,
+            cwd=str(PROJECT_ROOT),
+            env=env,
+            timeout=30,
+        )
+        assert result.returncode == 0, f"{result.stdout}\n{result.stderr}"
+        args = capture.read_text(encoding="utf-8")
+        assert "-fN" in args
+        assert "ExitOnForwardFailure=yes" in args
+        assert f"127.0.0.1:{port}:127.0.0.1:{port}" in args
+        assert "127.0.0.1:8766:127.0.0.1:8766" in args
+        assert "127.0.0.1:8769:127.0.0.1:8769" in args
+        assert "127.0.0.1:4321:127.0.0.1:4321" in args
+        assert args.count("-L") >= 4
+        assert "./services.sh start api" in args
+        assert "hramatka" in args
+        assert _supervisor_was_not_called(env)
+        tunnel_pid = (pids_dir / "ssh-tunnel.pid").read_text(encoding="utf-8").strip()
+        assert tunnel_pid.isdigit()
+    finally:
+        _reap_notebook_tunnel_children(children)
+
+
+def test_notebook_failed_ssh_does_not_spawn_local(
+    temp_services_sh, mock_lsof_env, tmp_path
+) -> None:
+    """Notebook role with failing ssh must exit non-zero and never call launchd."""
+    script_path, _port = temp_services_sh
+    pids_dir = tmp_path / "pids"
+    pids_dir.mkdir()
+    _patch_script_pids_dir(script_path, pids_dir)
+    _, _, env = mock_lsof_env
+    mock_pids = Path(env["SVC_LSOF_MOCK_PIDS"])
+    shim_dir, _capture, children = _ssh_notebook_recorder(
+        tmp_path, mock_pids, exit_code=1
+    )
+    env["PATH"] = f"{shim_dir}{os.pathsep}{env.get('PATH', os.defpath)}"
+    env["LU_SERVICES_ROLE"] = "notebook"
+    env.pop("LU_SERVICES_SSH_HOST", None)
+
+    try:
+        result = subprocess.run(
+            [str(script_path), "start", "api"],
+            capture_output=True,
+            text=True,
+            cwd=str(PROJECT_ROOT),
+            env=env,
+            timeout=30,
+        )
+        assert result.returncode != 0
+        assert _supervisor_was_not_called(env)
+        assert not (pids_dir / "api.pid").exists()
+    finally:
+        _reap_notebook_tunnel_children(children)
+
+
+def test_notebook_supervise_install_refuses(
+    temp_services_sh, mock_lsof_env, tmp_path
+) -> None:
+    """Notebook role refuses supervise api install and does not invoke the supervisor."""
+    script_path, _port = temp_services_sh
+    _, _, env = mock_lsof_env
+    env["LU_SERVICES_ROLE"] = "notebook"
+    env.pop("LU_SERVICES_SSH_HOST", None)
+
+    result = subprocess.run(
+        [str(script_path), "supervise", "api", "install"],
+        capture_output=True,
+        text=True,
+        cwd=str(PROJECT_ROOT),
+        env=env,
+        timeout=30,
+    )
+    assert result.returncode != 0
+    combined = f"{result.stdout}\n{result.stderr}"
+    assert "topology" in combined
+    assert "tunnel start" in combined
+    assert _supervisor_was_not_called(env)
