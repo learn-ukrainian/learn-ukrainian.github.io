@@ -183,9 +183,7 @@ class ResourceCaps:
             return False
         if name == "ci" and self.ci_capacity_ok is False:
             return False
-        if name == "disk" and self.disk_ok is False:
-            return False
-        return True
+        return not (name == "disk" and self.disk_ok is False)
 
     def dimension_status(self) -> dict[str, dict[str, Any]]:
         rows: dict[str, dict[str, Any]] = {}
