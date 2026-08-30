@@ -747,6 +747,28 @@ def cmd_acp_verify(args: argparse.Namespace) -> int:
     return EXIT_OK if payload["verified"] else EXIT_ERROR
 
 
+def cmd_requests_requeue_stale(args: argparse.Namespace) -> int:
+    """Reconcile crashed executors: requeue stale running requests (#7485)."""
+    from scripts.fleet_comms.request_executor import RequestExecutor
+
+    root = Path(args.root).expanduser() if args.root else None
+    with RequestExecutor(root=root) as executor:
+        requeued = executor.requeue_stale_running(
+            stale_after_seconds=args.stale_after_seconds
+        )
+    sys.stdout.write(
+        _json_dump(
+            {
+                "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
+                "requeued": requeued,
+                "count": len(requeued),
+                "stale_after_seconds": args.stale_after_seconds,
+            }
+        )
+    )
+    return EXIT_OK
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python -m scripts.fleet_comms",
@@ -784,6 +806,24 @@ def build_parser() -> argparse.ArgumentParser:
         help="Max recent parity events to include (default: 50)",
     )
     plane.set_defaults(func=cmd_plane_status)
+
+    requests_parser = sub.add_parser(
+        "requests",
+        help="Durable request lifecycle maintenance (#7485)",
+    )
+    requests_sub = requests_parser.add_subparsers(dest="requests_command", required=True)
+    requeue = requests_sub.add_parser(
+        "requeue-stale",
+        help="Atomically requeue running requests whose claim went stale (crashed executor)",
+    )
+    requeue.add_argument("--root", default=None, help="Plane root override")
+    requeue.add_argument(
+        "--stale-after-seconds",
+        type=int,
+        default=7200,
+        help="Staleness floor; default sits at the adapter hard-timeout ceiling",
+    )
+    requeue.set_defaults(func=cmd_requests_requeue_stale)
 
     fleet = sub.add_parser(
         "fleet",

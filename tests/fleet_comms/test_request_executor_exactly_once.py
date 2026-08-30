@@ -95,9 +95,37 @@ def test_finalize_failure_is_atomic(
         (req.request_id,),
     )
     executor.store.connection.commit()
-    assert executor.requeue_stale_running() == [req.request_id]
+    assert executor.requeue_stale_running(stale_after_seconds=60) == [req.request_id]
     done = executor.execute_capture(req.request_id, adapter="codex", stdout="ok")
     assert done.state in {"complete", "incomplete"}
+
+
+def test_touch_claim_protects_a_slow_capture_from_the_sweep(
+    executor: RequestExecutor,
+) -> None:
+    """#7504 CF r2: a heartbeating claimant can never be requeued."""
+    req = _create(executor)
+    executor.store.connection.execute(
+        "UPDATE requests SET state = 'running', updated_at = '2000-01-01T00:00:00Z' "
+        "WHERE request_id = ?",
+        (req.request_id,),
+    )
+    executor.store.connection.commit()
+    assert executor.touch_claim(req.request_id) is True  # heartbeat
+    assert executor.requeue_stale_running(stale_after_seconds=60) == []
+    assert executor.touch_claim("request-nope") is False
+
+
+def test_requeue_stale_cli_smoke(tmp_path: Path, capsys) -> None:
+    from scripts.fleet_comms.cli import build_parser
+
+    parser = build_parser()
+    args = parser.parse_args(
+        ["requests", "requeue-stale", "--root", str(tmp_path), "--stale-after-seconds", "60"]
+    )
+    assert args.func(args) == 0
+    out = capsys.readouterr().out
+    assert '"requeued": []' in out
 
 
 def test_requeue_stale_running_skips_fresh_claims(executor: RequestExecutor) -> None:
@@ -107,7 +135,7 @@ def test_requeue_stale_running_skips_fresh_claims(executor: RequestExecutor) -> 
         (req.request_id,),
     )
     executor.store.connection.commit()
-    assert executor.requeue_stale_running() == []  # fresh claim untouched
+    assert executor.requeue_stale_running(stale_after_seconds=60) == []  # fresh claim untouched
 
 
 def test_expired_request_still_expires_on_claim(executor: RequestExecutor) -> None:

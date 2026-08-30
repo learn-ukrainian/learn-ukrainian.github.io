@@ -221,7 +221,7 @@ class RequestExecutor:
         raw_bytes: bytes | None = None,
         session_id: str | None = None,
         reclaim: bool = False,
-        reclaim_stale_after_seconds: int = 600,
+        reclaim_stale_after_seconds: int = 7200,
     ) -> RequestRecord:
         """Run adapter conformance on a capture and persist the outcome.
 
@@ -434,12 +434,18 @@ class RequestExecutor:
             return "incomplete"
         return "incomplete"
 
-    def requeue_stale_running(self, *, stale_after_seconds: int = 600) -> list[str]:
+    def requeue_stale_running(self, *, stale_after_seconds: int = 7200) -> list[str]:
         """Reconcile crashed executors: atomically re-queue running requests
         whose claim has gone stale (#7485 CF r1 — production reclaim path).
 
         Returns the re-queued request ids; unexpired requests only. Callers
-        (ops sweeps, the CLI) then re-execute them normally.
+        (ops sweeps, ``python -m scripts.fleet_comms requests requeue-stale``)
+        then re-execute them normally.
+
+        The default floor (7200s) sits at the adapter HARD-timeout ceiling, so
+        a slow-but-alive capture inside the runtime's bounds can never be
+        swept (#7504 CF r2); a claimant that legitimately runs longer must
+        heartbeat via ``touch_claim()``.
         """
         now = _utc_now()
         now_s = _iso(now)
@@ -462,6 +468,20 @@ class RequestExecutor:
                 requeued.append(request_id)
         self._conn.commit()
         return requeued
+
+    def touch_claim(self, request_id: str) -> bool:
+        """Heartbeat a running claim (bumps updated_at; #7504 CF r2).
+
+        Long-running claimants call this periodically so neither
+        ``requeue_stale_running`` nor a stale-reclaim can steal them.
+        Returns False when the request is not currently running.
+        """
+        cursor = self._conn.execute(
+            "UPDATE requests SET updated_at = ? WHERE request_id = ? AND state = 'running'",
+            (_iso(_utc_now()), request_id),
+        )
+        self._conn.commit()
+        return cursor.rowcount == 1
 
     def _set_state(self, request_id: str, state: str, completion: CompletionState) -> None:
         if state not in REQUEST_STATES:
