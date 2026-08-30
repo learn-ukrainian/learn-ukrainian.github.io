@@ -4,7 +4,6 @@ import {
   buildWordAtlasArticleView,
   formatPos,
   formatTranslationSource,
-  humanizeTranslationSource,
   sanitizeWikiReference,
 } from "@site/src/lib/lexicon/word-atlas-article-model";
 import { renderWordAtlasArticle } from "../helpers/render-word-atlas-article";
@@ -270,12 +269,10 @@ describe("enrichment.examples in article view and rendering (#7452)", () => {
 describe("translation source humanization (#7459)", () => {
   test("maps learner_english_gloss to Anna Ohoiko", () => {
     expect(formatTranslationSource("learner_english_gloss")).toBe("Anna Ohoiko");
-    expect(humanizeTranslationSource("learner_english_gloss")).toBe("Anna Ohoiko");
   });
 
   test("keeps dmklinger and other sources distinct", () => {
     expect(formatTranslationSource("dmklinger")).toBe("dmklinger");
-    expect(humanizeTranslationSource("dmklinger")).toBe("dmklinger");
     expect(formatTranslationSource("Wikidata")).toBe("Wikidata");
     expect(formatTranslationSource("kaikki")).toBe("kaikki");
   });
@@ -283,7 +280,6 @@ describe("translation source humanization (#7459)", () => {
   test("handles nullish translation sources", () => {
     expect(formatTranslationSource(undefined)).toBeNull();
     expect(formatTranslationSource(null)).toBeNull();
-    expect(humanizeTranslationSource(undefined)).toBeNull();
   });
 
   test("buildWordAtlasArticleView exposes humanized translationSource", () => {

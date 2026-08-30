@@ -320,10 +320,6 @@ export function formatTranslationSource(source: string | null | undefined): stri
   return TRANSLATION_SOURCE_LABELS[source] ?? source;
 }
 
-export function humanizeTranslationSource(source: string | null | undefined): string | null {
-  return formatTranslationSource(source);
-}
-
 const MORPHOLOGY_SUPPRESSED_TYPES = new Set([
   "multiword_term",
   "expression",
