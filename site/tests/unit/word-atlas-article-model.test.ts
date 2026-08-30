@@ -5,6 +5,7 @@ import {
   formatPos,
   formatTranslationSource,
   sanitizeWikiReference,
+  type Enrichment,
 } from "@site/src/lib/lexicon/word-atlas-article-model";
 import { renderWordAtlasArticle } from "../helpers/render-word-atlas-article";
 import { articleProps } from "../helpers/word-atlas-record";
@@ -378,6 +379,69 @@ describe("translation source humanization (#7459)", () => {
     expect(html).toContain("<h2>Переклад</h2>");
     expect(html).toContain("Джерело: dmklinger");
     expect(html).not.toContain("Джерело: Anna Ohoiko");
+  });
+});
+
+describe("verb pedagogy strip (#7471)", () => {
+  function verbProps(verb_pedagogy: Enrichment["verb_pedagogy"]) {
+    return articleProps({
+      lemma: "аналізувати",
+      url_slug: "аналізувати",
+      gloss: "to analyze",
+      entry_type: "lemma",
+      pos: "verb",
+      ipa: null,
+      primary_source: "course",
+      course_usage: [],
+      enrichment: { verb_pedagogy },
+    });
+  }
+
+  test("renders aspect, partner link, stems, and government when all present", () => {
+    const html = renderWordAtlasArticle(
+      verbProps({
+        aspect: "imperfective",
+        aspect_partner: { lemma: "проаналізувати", url_slug: "проаналізувати", source: "Anna Ohoiko" },
+        stems: { present_future: ["аналізу-", "проаналізу-"], source: "Anna Ohoiko" },
+        government: [{ label: "+ accusative", source: "Anna Ohoiko" }],
+      }),
+    );
+    expect(html).toContain("<h2>Вид і керування</h2>");
+    expect(html).toContain("недоконаний");
+    expect(html).toContain('href="/lexicon/проаналізувати"');
+    expect(html).toContain("проаналізувати");
+    expect(html).toContain("аналізу- | проаналізу-");
+    expect(html).toContain("+ accusative");
+    expect(html).toContain("Джерело: VESUM, Anna Ohoiko");
+  });
+
+  test("renders a plain partner label without a link when url_slug is absent", () => {
+    const html = renderWordAtlasArticle(
+      verbProps({ aspect_partner: { lemma: "проаналізувати", source: "Anna Ohoiko" } }),
+    );
+    expect(html).toContain("проаналізувати");
+    expect(html).not.toContain('href="/lexicon/проаналізувати"');
+  });
+
+  test("omits the whole section when verb_pedagogy is absent", () => {
+    const html = renderWordAtlasArticle(
+      articleProps({
+        lemma: "автобус",
+        url_slug: "автобус",
+        gloss: "bus",
+        entry_type: "lemma",
+        pos: "noun",
+        ipa: null,
+        primary_source: "course",
+        course_usage: [],
+      }),
+    );
+    expect(html).not.toContain("Вид і керування");
+  });
+
+  test("omits the section when verb_pedagogy is present but empty", () => {
+    const html = renderWordAtlasArticle(verbProps({}));
+    expect(html).not.toContain("Вид і керування");
   });
 });
 

@@ -136,6 +136,9 @@ export default function WordAtlasArticle({
     articleOverview,
     sourceList,
     translationSource,
+    verbPedagogy,
+    hasVerbPedagogy,
+    verbPedagogySources,
     hasPractice,
     stressDisplay,
   } = view;
@@ -387,6 +390,49 @@ export default function WordAtlasArticle({
               <p className="atlas-muted">Джерело: {enrichment.etymology.source}</p>
             </section>
           ) : null}
+
+          {hasVerbPedagogy && verbPedagogy && (
+            <section className="atlas-section verb-pedagogy">
+              <h2>Вид і керування</h2>
+              <div className="verb-pedagogy-list">
+                {verbPedagogy.aspect && (
+                  <div className="verb-pedagogy-row">
+                    <span className="verb-pedagogy-label">Вид</span>
+                    <span>{verbPedagogy.aspect === "perfective" ? "доконаний" : "недоконаний"}</span>
+                  </div>
+                )}
+                {verbPedagogy.aspect_partner && (
+                  <div className="verb-pedagogy-row">
+                    <span className="verb-pedagogy-label">Видова пара</span>
+                    {verbPedagogy.aspect_partner.url_slug ? (
+                      <a href={`/lexicon/${verbPedagogy.aspect_partner.url_slug}`} className="ukr">
+                        {verbPedagogy.aspect_partner.lemma}
+                      </a>
+                    ) : (
+                      <span className="ukr">{verbPedagogy.aspect_partner.lemma}</span>
+                    )}
+                  </div>
+                )}
+                {verbPedagogy.stems && (
+                  <div className="verb-pedagogy-row">
+                    <span className="verb-pedagogy-label">Основи теп./майб. часу</span>
+                    <span className="ukr">{verbPedagogy.stems.present_future.join(" | ")}</span>
+                  </div>
+                )}
+                {(verbPedagogy.government?.length ?? 0) > 0 && (
+                  <div className="verb-pedagogy-row">
+                    <span className="verb-pedagogy-label">Керування</span>
+                    <span className="verb-government-items">
+                      {verbPedagogy.government!.map((item) => (
+                        <span key={item.label} className="verb-government-item">{item.label}</span>
+                      ))}
+                    </span>
+                  </div>
+                )}
+              </div>
+              <p className="atlas-muted">Джерело: {verbPedagogySources}</p>
+            </section>
+          )}
 
           {enrichment?.morphology && !suppressMorphology && (
             <section className="atlas-section">

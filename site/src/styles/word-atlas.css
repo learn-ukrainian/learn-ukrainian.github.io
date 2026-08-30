@@ -1276,6 +1276,43 @@ html[data-theme='dark'] .lu-content .word-atlas .word-hero .practice-cta-hero {
   margin: 0;
 }
 
+/* #7471 verb pedagogy strip: вид, aspect partner, stems, government -- a
+   short summary row, never a conjugation table (VESUM Морфологія owns that). */
+.verb-pedagogy-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.verb-pedagogy-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.verb-pedagogy-label {
+  min-width: 160px;
+  color: var(--gray-600);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.verb-government-items {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.verb-government-item {
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--blue-light);
+  color: var(--blue);
+  font-size: 13px;
+}
+
 .wiki-card {
   margin: 12px 0;
   padding: 16px 22px;

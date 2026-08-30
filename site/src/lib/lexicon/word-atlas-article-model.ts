@@ -121,6 +121,15 @@ export interface Enrichment {
   };
   translation?: { en: string[]; source: string; pos?: string };
   examples?: EnrichmentExample[];
+  /** Verb pedagogy strip (#7471): aspect, aspect partner, present/future
+   * stems, and case government -- rendered as a short summary, never a
+   * conjugation table (VESUM Морфологія owns that). */
+  verb_pedagogy?: {
+    aspect?: "imperfective" | "perfective";
+    aspect_partner?: { lemma: string; url_slug?: string; source: string };
+    stems?: { present_future: string[]; source: string; locator?: string };
+    government?: Array<{ label: string; source: string; locator?: string }>;
+  };
   sources?: string[];
   textbooks?: Array<{ title: string; text?: string; tag?: string; url?: string }>;
   external_materials?: Array<{
@@ -672,6 +681,26 @@ export function buildWordAtlasArticleView(
     sections,
   });
   const translationSource = formatTranslationSource(enrichment?.translation?.source);
+  const verbPedagogy = enrichment?.verb_pedagogy ?? null;
+  const hasVerbPedagogy = Boolean(
+    verbPedagogy &&
+      (verbPedagogy.aspect ||
+        verbPedagogy.aspect_partner ||
+        verbPedagogy.stems ||
+        (verbPedagogy.government?.length ?? 0) > 0),
+  );
+  const verbPedagogySources = verbPedagogy
+    ? Array.from(
+        new Set(
+          [
+            verbPedagogy.aspect ? "VESUM" : null,
+            verbPedagogy.aspect_partner?.source,
+            verbPedagogy.stems?.source,
+            ...(verbPedagogy.government ?? []).map((item) => item.source),
+          ].filter((value): value is string => Boolean(value)),
+        ),
+      ).join(", ")
+    : "";
   const hasPractice = (record.renderContext.practiceLevels ?? []).length > 0;
 
   function stressDisplay(form: string | undefined | null) {
@@ -715,6 +744,9 @@ export function buildWordAtlasArticleView(
     articleOverview,
     sourceList,
     translationSource,
+    verbPedagogy,
+    hasVerbPedagogy,
+    verbPedagogySources,
     hasPractice,
     generatedAt,
     manifestVersion,

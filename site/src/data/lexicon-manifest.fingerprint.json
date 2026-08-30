@@ -219,7 +219,7 @@
       },
       {
         "path": "scripts/lexicon/ohoiko_quality_enrichment.py",
-        "sha256": "1391935d7dfee260611b46afe47b852525808f050433664ff86337d0e9c44b42"
+        "sha256": "c41d97e706b6bc98f650518c1b8f29ce2398043043f8ff6a0d64928a42c0e1a6"
       },
       {
         "path": "scripts/lexicon/park_thin_entries.py",
@@ -272,6 +272,10 @@
       {
         "path": "scripts/lexicon/triage_needs_review.py",
         "sha256": "412f7456d42f6adcfbc3f44157d2bbfb9d35b22b879620e258bf76ff3c2091eb"
+      },
+      {
+        "path": "scripts/lexicon/verb_pedagogy_vesum_aspect.py",
+        "sha256": "3825d0680fc04345714c13e09c62ef2a82b7d67abd8f24b589233ffb4ed76373"
       },
       {
         "path": "scripts/lexicon/verify_manifest.py",
