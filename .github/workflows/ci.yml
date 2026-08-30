@@ -43,6 +43,13 @@ name: CI
 # push-to-main shard run or the daily backstop. Measure with
 # scripts/ci/ci_timings.py.
 #
+# Wave B item 4 next slice (#7141, after #7419): slim the three serialized
+# Gate-path jobs that still pay a fat-repo checkout. Live 2026-08-30 green
+# merge_group 33282368887: landing-class checkout 33s (still gates shards),
+# coverage-floor checkout 19s, CI Gate checkout 20s + setup-python 11s for a
+# 1s stdlib verify. Sparse/shallow those jobs only. Do not drop jobs, do not
+# class-skip merge_group, do not change Gate needs or fail-closed.
+#
 # Invariant (encodes #3873 #4888 #4936 #5351 #5354): on the full tier, pytest
 # must NEVER be selected or skipped by changed files. pytest-fastlane uses
 # changed files only as an early signal; it never replaces the shard plan.
@@ -128,10 +135,28 @@ jobs:
       class: ${{ steps.classify.outputs.class || 'full' }}
       validating_run_id: ${{ steps.classify.outputs.validating_run_id || '' }}
     steps:
+      # fetch-depth 2 is enough for a merge_group merge commit plus parents
+      # (three-dot classify). A missing BASE_SHA is fetched below. Unresolvable
+      # ranges still fail closed to full inside landing_class.py.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          fetch-depth: 0
+          fetch-depth: 2
+      - name: Fetch landing-class range endpoints
+        env:
+          BASE_SHA: ${{ github.event.merge_group.base_sha || github.event.before }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${BASE_SHA:-}" || "${BASE_SHA}" =~ ^0+$ ]]; then
+            echo "no usable BASE_SHA; classifier fail-closes to full"
+            exit 0
+          fi
+          if git cat-file -e "${BASE_SHA}^{commit}" 2>/dev/null; then
+            echo "BASE_SHA already in the shallow clone"
+            exit 0
+          fi
+          git fetch --no-tags --depth=1 origin "${BASE_SHA}" \
+            || echo "BASE_SHA fetch failed; classifier fail-closes to full"
       - name: Classify landing class
         id: classify
         env:
@@ -157,11 +182,6 @@ jobs:
             echo "class=full" >> "${GITHUB_OUTPUT}"
           fi
 
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        if: steps.classify.outputs.class != 'docs_skills'
-        with:
-          python-version-file: '.python-version'
-
       - name: Restore successful-main pytest duration dataset
         if: steps.classify.outputs.class != 'docs_skills'
         id: pytest-duration-cache
@@ -181,7 +201,7 @@ jobs:
           CACHE_HIT: ${{ steps.pytest-duration-cache.outputs.cache-hit || 'false' }}
         run: |
           set -euo pipefail
-          python scripts/ci/pytest_shards.py snapshot \
+          python3 scripts/ci/pytest_shards.py snapshot \
             --durations ci-artifacts/pytest-durations.json \
             --output ci-artifacts/pytest-duration-snapshot.json \
             --source-sha "$EVENT_SHA" \
@@ -1609,12 +1629,19 @@ jobs:
           || (github.event_name == 'push' && needs.landing-class.outputs.class == 'mq_validated')
         run: echo "landing-class=${{ needs.landing-class.outputs.class }}; coverage-floor no-op success"
 
+      # Sparse: coverage report only needs scripts/ + the config/lock that
+      # pin the combine. A fat-repo checkout was 19s on 33282368887.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: >-
           needs.landing-class.outputs.class != 'docs_skills'
           && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
         with:
           persist-credentials: false
+          sparse-checkout: |
+            scripts
+            pyproject.toml
+            requirements-lock.txt
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         if: >-
           needs.landing-class.outputs.class != 'docs_skills'
@@ -1748,12 +1775,14 @@ jobs:
       contents: read
       pull-requests: write
     steps:
+      # Stdlib verify only — skip setup-python and the fat-repo clone.
+      # 33282368887 paid 20s checkout + 11s setup-python for a 1s script.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version-file: '.python-version'
+          sparse-checkout: |
+            scripts/ci
+          sparse-checkout-cone-mode: true
       - name: Docs/skills-only — skip shard artifact verify (no-op success)
         if: >-
           github.event_name != 'pull_request'
@@ -1775,7 +1804,7 @@ jobs:
           && needs.landing-class.outputs.class != 'docs_skills'
           && (github.event_name != 'push' || needs.landing-class.outputs.class != 'mq_validated')
         run: |
-          python scripts/ci/pytest_shards.py verify-artifacts \
+          python3 scripts/ci/pytest_shards.py verify-artifacts \
             --artifact-dir ci-artifacts \
             --expected-source-sha "$GITHUB_SHA" \
             --require-plan-metadata \
@@ -1791,7 +1820,7 @@ jobs:
           RESULTS: >-
             ruff=${{ needs.ruff.result }},secret-scan=${{ needs.secret-scan.result }},pytest-plan=${{ needs.pytest-plan.result }},pytest-fastlane=${{ needs.pytest-fastlane.result }},python=${{ needs.python.result }},contracts=${{ needs.contracts.result }},frontend=${{ needs.frontend.result }},coverage-floor=${{ needs.coverage-floor.result }},pytest-duration-publish=${{ needs.pytest-duration-publish.result }}
         run: |
-          python scripts/ci/gate_required_results.py \
+          python3 scripts/ci/gate_required_results.py \
             --event "$EVENT_NAME" \
             --class "$LANDING_CLASS" \
             --python-noop "$PYTHON_NOOP" \
