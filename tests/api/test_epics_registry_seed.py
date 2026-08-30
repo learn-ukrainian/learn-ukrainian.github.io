@@ -102,7 +102,9 @@ def test_startup_seed_registers_all_canonical_release_epics(tmp_path: Path) -> N
     expected = len(
         {epic for stream in registry["streams"].values() for epic in stream["epics"]}
     )
-    assert expected >= 18  # canonical registry never shrinks silently
+    # Ratchet: growth is routine (new epic registered), shrink is exceptional
+    # and must be a deliberate test update alongside the registry change.
+    assert expected >= 19
     assert health["status"] == "ok"
     assert health["records"] == expected
     assert health["registered"] == expected
