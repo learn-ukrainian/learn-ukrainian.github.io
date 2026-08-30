@@ -83,7 +83,7 @@ CONCRETE_FAMILIES = frozenset(
 # from lint_agent_trailer.py. Kept local so this job stays stdlib-only.
 _FAMILY_TOKEN_RULES: tuple[tuple[tuple[str, ...], str], ...] = (
     (("deepseek",), "deepseek"),
-    (("gemma", "gemini", "agy", "google"), "google"),
+    (("gemma", "gemini", "agy", "antigravity", "google"), "google"),
     (("codex", "openai", "gpt"), "openai"),
     (("anthropic", "claude", "fable", "opus", "sonnet"), "anthropic"),
     (("grok", "xai"), "xai"),
