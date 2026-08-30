@@ -184,6 +184,7 @@ def test_enforce_waived_by_note_file(tmp_path: Path) -> None:
         )
     note = tmp_path / "note.md"
     note.write_text("NOTE: fleet_breadth — language-lane only this session\n", encoding="utf-8")
+    absent = tmp_path / "no-idle.jsonl"
     code = main(
         [
             "--tasks-dir",
@@ -193,19 +194,25 @@ def test_enforce_waived_by_note_file(tmp_path: Path) -> None:
             "--enforce",
             "--note-file",
             str(note),
+            "--idle-store",
+            str(absent),
             "--json",
         ]
     )
     assert code == 0
 
 
-def test_enforce_ignores_missing_idle_disposition(tmp_path: Path, capsys) -> None:
-    """#6976: --enforce stays breadth-floor-only. Missing idle action is report-only."""
-    tasks_dir = tmp_path / "tasks"
-    tasks_dir.mkdir()
+def _diverse_tasks(tasks_dir: Path) -> None:
     _task(tasks_dir / "a.json", task_id="a", agent="claude", model="claude-sonnet-5", initiator="grok-x")
     _task(tasks_dir / "b.json", task_id="b", agent="codex", model="gpt-5.6-luna", initiator="grok-x")
     _task(tasks_dir / "c.json", task_id="c", agent="codex", model="gpt-5.6-terra", initiator="grok-x")
+
+
+def test_enforce_fails_missing_idle_disposition(tmp_path: Path, capsys) -> None:
+    """#6998: --enforce fails MISSING disposition; idle seconds are not a gate."""
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    _diverse_tasks(tasks_dir)
     store = tmp_path / "idle.jsonl"
     store.write_text(
         json.dumps(
@@ -233,9 +240,173 @@ def test_enforce_ignores_missing_idle_disposition(tmp_path: Path, capsys) -> Non
             str(store),
         ]
     )
-    assert code == 0
+    assert code == 2
     payload = json.loads(capsys.readouterr().out)
     assert payload["breadth_floor_ok"] is True
-    assert payload["idle_settle"]["report_only"] is True
+    assert payload["idle_settle"]["report_only"] is False
+    assert payload["idle_settle"]["enforce_fail_codes"] == ["MISSING"]
     assert payload["idle_settle"]["settle_events_missing_action"] == 1
     assert payload["idle_settle"]["eligible_idle_opportunity_seconds"] == 12.0
+    assert payload["idle_settle"]["idle_seconds_never_enforce"] is True
+
+
+def test_enforce_fails_dishonest_idle_disposition(tmp_path: Path, capsys) -> None:
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    _diverse_tasks(tasks_dir)
+    store = tmp_path / "idle.jsonl"
+    store.write_text(
+        json.dumps(
+            {
+                "schema": "fleet-idle-settle-event.v1",
+                "outcome": "disposed",
+                "disposition": "no_ready_work",
+                "eligible": True,
+                "reminder_fired": False,
+                "opportunity_seconds_since_prev": 0.0,
+                "disposition_honest": False,
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    code = main(
+        [
+            "--tasks-dir",
+            str(tasks_dir),
+            "--initiator",
+            "grok",
+            "--enforce",
+            "--json",
+            "--idle-store",
+            str(store),
+        ]
+    )
+    assert code == 2
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["idle_settle"]["enforce_fail_codes"] == ["DISHONEST"]
+    assert payload["idle_settle"]["settle_events_dishonest"] == 1
+
+
+def test_enforce_passes_honest_disposition_despite_idle_seconds(tmp_path: Path, capsys) -> None:
+    """Authorized idle is not a failure; huge opportunity-seconds must not trip --enforce."""
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    _diverse_tasks(tasks_dir)
+    store = tmp_path / "idle.jsonl"
+    store.write_text(
+        json.dumps(
+            {
+                "schema": "fleet-idle-settle-event.v1",
+                "outcome": "disposed",
+                "disposition": "human_decision",
+                "eligible": True,
+                "reminder_fired": False,
+                "opportunity_seconds_since_prev": 86400.0,
+                "disposition_honest": True,
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    code = main(
+        [
+            "--tasks-dir",
+            str(tasks_dir),
+            "--initiator",
+            "grok",
+            "--enforce",
+            "--json",
+            "--idle-store",
+            str(store),
+        ]
+    )
+    assert code == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["idle_settle"]["enforce_fail_codes"] == []
+    assert payload["idle_settle"]["eligible_idle_opportunity_seconds"] == 86400.0
+    assert payload["idle_settle"]["idle_seconds_never_enforce"] is True
+
+
+def test_note_file_does_not_waive_missing_disposition(tmp_path: Path) -> None:
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    _diverse_tasks(tasks_dir)
+    note = tmp_path / "note.md"
+    note.write_text("NOTE: fleet_breadth — language-lane only this session\n", encoding="utf-8")
+    store = tmp_path / "idle.jsonl"
+    store.write_text(
+        json.dumps({"schema": "fleet-idle-settle-event.v1", "outcome": "missing_action"}) + "\n",
+        encoding="utf-8",
+    )
+    code = main(
+        [
+            "--tasks-dir",
+            str(tasks_dir),
+            "--initiator",
+            "grok",
+            "--enforce",
+            "--note-file",
+            str(note),
+            "--idle-store",
+            str(store),
+            "--json",
+        ]
+    )
+    assert code == 2
+
+
+def test_enforce_without_idle_store_stays_breadth_only(tmp_path: Path) -> None:
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    _diverse_tasks(tasks_dir)
+    missing = tmp_path / "absent.jsonl"
+    code = main(
+        [
+            "--tasks-dir",
+            str(tasks_dir),
+            "--initiator",
+            "grok",
+            "--enforce",
+            "--json",
+            "--idle-store",
+            str(missing),
+        ]
+    )
+    assert code == 0
+
+
+def test_breadth_report_embeds_admission_wip(tmp_path: Path, capsys) -> None:
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    _diverse_tasks(tasks_dir)
+    snap = tmp_path / "snap.json"
+    snap.write_text(
+        json.dumps(
+            {
+                "lanes": [{"lane": "cursor", "status": "cool", "in_flight": 0, "will_last": True}],
+                "items": [{"item_id": "issue:6998", "ready": True, "valuable": True, "independent": True}],
+                "caps": {"authoring_in_flight": 2, "authoring_wip_limit": 2},
+            }
+        ),
+        encoding="utf-8",
+    )
+    code = main(
+        [
+            "--tasks-dir",
+            str(tasks_dir),
+            "--initiator",
+            "grok",
+            "--json",
+            "--idle-snapshot-json",
+            str(snap),
+        ]
+    )
+    assert code == 0
+    payload = json.loads(capsys.readouterr().out)
+    admission = payload["admission"]
+    assert admission["schema"] == "fleet-admission.v1"
+    assert admission["admitted"] is False
+    assert admission["queue_ready"] is True
+    assert "authoring_wip_cap" in admission["reason_codes"]
+    assert admission["wip"]["authoring"]["reason_code"] == "authoring_wip_cap"

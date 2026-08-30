@@ -156,8 +156,9 @@ the epic's open issue set:
    - **in_flight** (named PR/task id + head),
    - **dispatch now** (ROUTING_CARD + `capacity_pick` / `/api/state/routing-budget` +
      `--check-budget`),
-   - **named hold** with one §2c code (`dependency_blocked | review_wip_cap |
-     ci_capacity | disk_capacity | human_decision | no_ready_work`).
+   - **named hold** with one §2c code (`dependency_blocked | authoring_wip_cap |
+     review_wip_cap | ci_capacity | worktree_wip_cap | disk_capacity |
+     integration_wip_cap | human_decision | no_ready_work`).
 3. **Silence is a defect** — an open epic issue with no disposition is a driver failure.
 4. **Closeout** — after merge: close the issue (or prove residual), then follow §7a order
    (P0 reaper first, then branch deletion). Merge alone is not done.
@@ -207,7 +208,8 @@ dependency/critical-path → utilization. Later items never override earlier one
    or prep the next program child whose dependency allows it). Idle free lane + ready
    item = utilization failure.
 2. **Authorized idle is not a utilization failure.** A settle-hold must name one code:
-   `dependency_blocked | review_wip_cap | ci_capacity | disk_capacity | human_decision |
+   `dependency_blocked | authoring_wip_cap | review_wip_cap | ci_capacity |
+   worktree_wip_cap | disk_capacity | integration_wip_cap | human_decision |
    no_ready_work`. Silence is not a disposition.
 3. **Pipeline with a depth limit.** While CF/CI runs on unit N, author N+1 only up to
    the WIP/resource cap. Unit N **regains priority** the moment review feedback returns.
@@ -221,12 +223,14 @@ dependency/critical-path → utilization. Later items never override earlier one
    busywork (quality > utilization). Disk wins every conflict (#M-14 — `df` + `du` of
    `.worktrees` before fan-out; reap first).
 
-Mechanical reminder + report-only telemetry (#6976). At every dispatch/review
-settle, evaluate eligible ready items and WIP/resource caps. The reminder fires
-only when something is eligible; then dispatch or pass one of the six codes.
-Unknown codes are rejected. Missing action is recorded, not gated. Do not add a
-raw idle-time threshold. `driver_breadth_report --enforce` remains the breadth
-floor only.
+Mechanical reminder + disposition telemetry (#6976/#6998). At every
+dispatch/review settle, evaluate eligible ready items and first-class admission
+WIP limits (authoring / review / CI / worktrees / disk / integration) plus
+queue readiness. The reminder fires only when something is eligible; then
+dispatch or pass a structured code. Unknown codes are rejected. Do not add a
+raw idle-time threshold. Guardrail-authorized idle is not a failure.
+`driver_breadth_report --enforce` fails the breadth floor (unless NOTE-waived)
+and MISSING/DISHONEST idle dispositions — never opportunity-seconds.
 
 ```bash
 .venv/bin/python -m scripts.orchestration.dispatch_settle task --task-id <id> \
@@ -235,6 +239,8 @@ floor only.
   --snapshot-json <snap.json> --kind dispatch --task-id <id> \
   [--dispatched | --disposition <code>]
 .venv/bin/python -m scripts.fleet.idle_settle report
+.venv/bin/python -m scripts.fleet.idle_settle admission --snapshot-json <snap.json>
+.venv/bin/python -m scripts.fleet.driver_breadth_report --initiator grok --since-hours 24 --enforce
 ```
 
 ### 3. Route by model × harness fit

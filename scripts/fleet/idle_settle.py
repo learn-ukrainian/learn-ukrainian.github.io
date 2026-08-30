@@ -1,14 +1,20 @@
 #!/usr/bin/env python3
-"""Conditional settle-event reminder + eligibility-aware idle telemetry (#6976).
+"""Conditional settle-event reminder + eligibility-aware idle telemetry (#6976/#6998).
 
-Report-only. This module never gates a settle on raw idle time and never
-changes ``driver_breadth_report --enforce``. Invalid disposition codes are
-rejected as vocabulary errors; a missing dispatch-or-disposition is recorded
-as telemetry, not a hard fail.
+This module never gates a settle on raw idle time. Invalid disposition codes
+are rejected as vocabulary errors. A missing dispatch-or-disposition is
+recorded as MISSING; a valid code that does not match eligibility is
+DISHONEST. ``driver_breadth_report --enforce`` fails those two codes only —
+never an idle-seconds threshold. Guardrail-authorized idle (honest
+disposition) is not a failure.
+
+Admission control lives here as first-class state (same plane, not a second
+controller): explicit WIP limits for authoring / review / CI / worktrees /
+disk / integration, plus queue readiness and reason codes.
 
 Eligibility (issue #6976): healthy available lane AND compatible / ready /
-valuable / independent item AND quota/capacity AND no review / CI / disk /
-dependency constraint.
+valuable / independent item AND quota/capacity AND no WIP / dependency
+constraint.
 """
 
 from __future__ import annotations
@@ -29,21 +35,39 @@ ROOT = Path(__file__).resolve().parents[2]
 EVENT_SCHEMA = "fleet-idle-settle-event.v1"
 REPORT_SCHEMA = "fleet-idle-settle.v1"
 SNAPSHOT_SCHEMA = "fleet-idle-settle-snapshot.v1"
+ADMISSION_SCHEMA = "fleet-admission.v1"
+
+WIP_DIMENSIONS: tuple[str, ...] = (
+    "authoring",
+    "review",
+    "ci",
+    "worktrees",
+    "disk",
+    "integration",
+)
+WIP_REASON_CODES: dict[str, str] = {
+    "authoring": "authoring_wip_cap",
+    "review": "review_wip_cap",
+    "ci": "ci_capacity",
+    "worktrees": "worktree_wip_cap",
+    "disk": "disk_capacity",
+    "integration": "integration_wip_cap",
+}
 
 DISPOSITION_CODES: frozenset[str] = frozenset(
     {
         "dependency_blocked",
-        "review_wip_cap",
-        "ci_capacity",
-        "disk_capacity",
         "human_decision",
         "no_ready_work",
+        *WIP_REASON_CODES.values(),
     }
 )
 
 SETTLE_KINDS: frozenset[str] = frozenset({"dispatch", "review"})
 _HEALTHY_STATUSES: frozenset[str] = frozenset({"cool", "warm", "idle"})
-_CONSTRAINT_CODES: tuple[str, ...] = ("review_wip_cap", "ci_capacity", "disk_capacity")
+_CONSTRAINT_CODES: tuple[str, ...] = tuple(WIP_REASON_CODES.values())
+ENFORCE_MISSING = "MISSING"
+ENFORCE_DISHONEST = "DISHONEST"
 
 
 def default_store_path(repo_root: Path | None = None) -> Path:
@@ -129,23 +153,56 @@ class LaneState:
         return self.will_last is not False
 
 
+def _optional_int(raw: Any) -> int | None:
+    if raw is None or raw == "":
+        return None
+    return int(raw)
+
+
 @dataclass(frozen=True)
 class ResourceCaps:
+    authoring_in_flight: int = 0
+    authoring_wip_limit: int | None = None
     review_in_flight: int = 0
     review_wip_limit: int | None = None
     ci_in_flight: int = 0
+    ci_wip_limit: int | None = None
     ci_capacity_ok: bool = True
+    worktrees_in_flight: int = 0
+    worktrees_wip_limit: int | None = None
+    disk_in_flight: int = 0
+    disk_wip_limit: int | None = None
     disk_ok: bool = True
+    integration_in_flight: int = 0
+    integration_wip_limit: int | None = None
+
+    def dimension_ok(self, name: str) -> bool:
+        in_flight = int(getattr(self, f"{name}_in_flight") or 0)
+        limit = getattr(self, f"{name}_wip_limit")
+        if limit is not None and in_flight >= int(limit):
+            return False
+        if name == "ci" and self.ci_capacity_ok is False:
+            return False
+        if name == "disk" and self.disk_ok is False:
+            return False
+        return True
+
+    def dimension_status(self) -> dict[str, dict[str, Any]]:
+        rows: dict[str, dict[str, Any]] = {}
+        for name in WIP_DIMENSIONS:
+            ok = self.dimension_ok(name)
+            rows[name] = {
+                "in_flight": int(getattr(self, f"{name}_in_flight") or 0),
+                "limit": getattr(self, f"{name}_wip_limit"),
+                "ok": ok,
+                "reason_code": None if ok else WIP_REASON_CODES[name],
+            }
+        return rows
 
     def active_constraints(self) -> tuple[str, ...]:
-        found: list[str] = []
-        if self.review_wip_limit is not None and self.review_in_flight >= self.review_wip_limit:
-            found.append("review_wip_cap")
-        if not self.ci_capacity_ok:
-            found.append("ci_capacity")
-        if not self.disk_ok:
-            found.append("disk_capacity")
-        return tuple(found)
+        return tuple(
+            WIP_REASON_CODES[name] for name in WIP_DIMENSIONS if not self.dimension_ok(name)
+        )
 
 
 @dataclass(frozen=True)
@@ -178,6 +235,29 @@ class EligiblePair:
 
 
 @dataclass(frozen=True)
+class AdmissionState:
+    """First-class WIP + queue admission (same plane as settle eligibility)."""
+
+    admitted: bool
+    queue_ready: bool
+    ready_item_count: int
+    fillable_item_ids: tuple[str, ...]
+    wip: dict[str, dict[str, Any]]
+    reason_codes: tuple[str, ...]
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "schema": ADMISSION_SCHEMA,
+            "admitted": self.admitted,
+            "queue_ready": self.queue_ready,
+            "ready_item_count": self.ready_item_count,
+            "fillable_item_ids": list(self.fillable_item_ids),
+            "wip": self.wip,
+            "reason_codes": list(self.reason_codes),
+        }
+
+
+@dataclass(frozen=True)
 class SettleDecision:
     reminder_required: bool
     reminder_fired: bool
@@ -195,6 +275,7 @@ class SettleDecision:
     caps: ResourceCaps
     settle_kind: str
     task_id: str | None
+    admission: AdmissionState
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -214,6 +295,7 @@ class SettleDecision:
             "caps": asdict(self.caps),
             "settle_kind": self.settle_kind,
             "task_id": self.task_id,
+            "admission": self.admission.to_dict(),
             "report_only": True,
         }
 
@@ -274,15 +356,21 @@ def parse_snapshot(payload: dict[str, Any] | None) -> EligibilitySnapshot:
             )
         )
 
-    limit_raw = caps_raw.get("review_wip_limit")
-    limit = None if limit_raw is None or limit_raw == "" else int(limit_raw)
-
     caps = ResourceCaps(
+        authoring_in_flight=int(caps_raw.get("authoring_in_flight") or 0),
+        authoring_wip_limit=_optional_int(caps_raw.get("authoring_wip_limit")),
         review_in_flight=int(caps_raw.get("review_in_flight") or 0),
-        review_wip_limit=limit,
+        review_wip_limit=_optional_int(caps_raw.get("review_wip_limit")),
         ci_in_flight=int(caps_raw.get("ci_in_flight") or 0),
+        ci_wip_limit=_optional_int(caps_raw.get("ci_wip_limit")),
         ci_capacity_ok=bool(caps_raw.get("ci_capacity_ok", True)),
+        worktrees_in_flight=int(caps_raw.get("worktrees_in_flight") or 0),
+        worktrees_wip_limit=_optional_int(caps_raw.get("worktrees_wip_limit")),
+        disk_in_flight=int(caps_raw.get("disk_in_flight") or 0),
+        disk_wip_limit=_optional_int(caps_raw.get("disk_wip_limit")),
         disk_ok=bool(caps_raw.get("disk_ok", True)),
+        integration_in_flight=int(caps_raw.get("integration_in_flight") or 0),
+        integration_wip_limit=_optional_int(caps_raw.get("integration_wip_limit")),
     )
     return EligibilitySnapshot(lanes=tuple(lanes), items=tuple(items), caps=caps)
 
@@ -340,23 +428,76 @@ def assemble_snapshot(
     *,
     capacity_rows: list[dict[str, Any]] | None = None,
     work_next_queue: list[dict[str, Any]] | None = None,
+    authoring_in_flight: int = 0,
+    authoring_wip_limit: int | None = None,
     review_in_flight: int = 0,
     review_wip_limit: int | None = None,
     ci_in_flight: int = 0,
+    ci_wip_limit: int | None = None,
     ci_capacity_ok: bool = True,
+    worktrees_in_flight: int = 0,
+    worktrees_wip_limit: int | None = None,
+    disk_in_flight: int = 0,
+    disk_wip_limit: int | None = None,
     disk_ok: bool = True,
+    integration_in_flight: int = 0,
+    integration_wip_limit: int | None = None,
 ) -> EligibilitySnapshot:
     return EligibilitySnapshot(
         lanes=lanes_from_capacity_rows(capacity_rows),
         items=items_from_work_next_queue(work_next_queue),
         caps=ResourceCaps(
+            authoring_in_flight=authoring_in_flight,
+            authoring_wip_limit=authoring_wip_limit,
             review_in_flight=review_in_flight,
             review_wip_limit=review_wip_limit,
             ci_in_flight=ci_in_flight,
+            ci_wip_limit=ci_wip_limit,
             ci_capacity_ok=ci_capacity_ok,
+            worktrees_in_flight=worktrees_in_flight,
+            worktrees_wip_limit=worktrees_wip_limit,
+            disk_in_flight=disk_in_flight,
+            disk_wip_limit=disk_wip_limit,
             disk_ok=disk_ok,
+            integration_in_flight=integration_in_flight,
+            integration_wip_limit=integration_wip_limit,
         ),
     )
+
+
+def evaluate_admission(snapshot: EligibilitySnapshot) -> AdmissionState:
+    fillable = tuple(item.item_id for item in snapshot.items if item.is_fillable())
+    queue_ready = bool(fillable)
+    wip = snapshot.caps.dimension_status()
+    reasons: list[str] = []
+    for name in WIP_DIMENSIONS:
+        code = wip[name]["reason_code"]
+        if code:
+            reasons.append(str(code))
+    if not queue_ready:
+        reasons.append("no_ready_work")
+    reason_codes = tuple(dict.fromkeys(reasons))
+    admitted = all(wip[name]["ok"] for name in WIP_DIMENSIONS) and queue_ready
+    return AdmissionState(
+        admitted=admitted,
+        queue_ready=queue_ready,
+        ready_item_count=len(fillable),
+        fillable_item_ids=fillable,
+        wip=wip,
+        reason_codes=reason_codes,
+    )
+
+
+def enforce_fail_codes(report: dict[str, Any] | None) -> tuple[str, ...]:
+    """MISSING/DISHONEST only. Never uses eligible idle opportunity-seconds."""
+    if not report:
+        return ()
+    codes: list[str] = []
+    if int(report.get("settle_events_missing_action") or 0) > 0:
+        codes.append(ENFORCE_MISSING)
+    if int(report.get("settle_events_dishonest") or 0) > 0:
+        codes.append(ENFORCE_DISHONEST)
+    return tuple(codes)
 
 
 def eligible_pairs(snapshot: EligibilitySnapshot) -> tuple[EligiblePair, ...]:
@@ -407,6 +548,7 @@ def evaluate_settle(
     lanes = tuple(dict.fromkeys(pair.lane for pair in pairs))
     item_ids = tuple(dict.fromkeys(pair.item_id for pair in pairs))
     constraints = snapshot.caps.active_constraints()
+    admission = evaluate_admission(snapshot)
 
     if code is not None and not disposition_accepted(code):
         return SettleDecision(
@@ -426,6 +568,7 @@ def evaluate_settle(
             caps=snapshot.caps,
             settle_kind=kind,
             task_id=task_id,
+            admission=admission,
         )
 
     honest = disposition_is_honest(snapshot, code, eligible=eligible)
@@ -447,6 +590,7 @@ def evaluate_settle(
             caps=snapshot.caps,
             settle_kind=kind,
             task_id=task_id,
+            admission=admission,
         )
 
     if dispatched:
@@ -482,6 +626,7 @@ def evaluate_settle(
         caps=snapshot.caps,
         settle_kind=kind,
         task_id=task_id,
+        admission=admission,
     )
 
 
@@ -503,11 +648,24 @@ def format_reminder(decision: SettleDecision, snapshot: EligibilitySnapshot) -> 
         lines.append(f"  - {item_id} ({kind}) lanes={','.join(lanes)}")
     caps = decision.caps
     limit = "-" if caps.review_wip_limit is None else str(caps.review_wip_limit)
+    wip = caps.dimension_status()
+    extra = []
+    for name in ("authoring", "worktrees", "integration"):
+        row = wip[name]
+        dim_limit = "-" if row["limit"] is None else str(row["limit"])
+        extra.append(f"{name}={row['in_flight']}/{dim_limit}")
     lines.append(
         "  caps: "
         f"review_wip={caps.review_in_flight}/{limit} "
         f"ci_in_flight={caps.ci_in_flight} ci_ok={caps.ci_capacity_ok} "
-        f"disk_ok={caps.disk_ok}"
+        f"disk_ok={caps.disk_ok} " + " ".join(extra)
+    )
+    admission = decision.admission
+    lines.append(
+        "  admission: "
+        f"admitted={admission.admitted} queue_ready={admission.queue_ready} "
+        f"ready={admission.ready_item_count} "
+        f"reasons={','.join(admission.reason_codes) or '-'}"
     )
     if decision.reminder_required:
         lines.append(
@@ -599,7 +757,7 @@ def record_settle(
     return event
 
 
-def build_report(events: list[dict[str, Any]]) -> dict[str, Any]:
+def build_report(events: list[dict[str, Any]], *, enforce: bool = False) -> dict[str, Any]:
     opportunity = 0.0
     missing = 0
     invalid = 0
@@ -625,9 +783,17 @@ def build_report(events: list[dict[str, Any]]) -> dict[str, Any]:
             reminders += 1
         if event.get("disposition_honest") is False:
             dishonest += 1
+    counts = {
+        "settle_events_missing_action": missing,
+        "settle_events_dishonest": dishonest,
+    }
+    fail_codes = enforce_fail_codes(counts)
     return {
         "schema": REPORT_SCHEMA,
-        "report_only": True,
+        "report_only": not enforce,
+        "enforce_disposition": enforce,
+        "enforce_fail_codes": list(fail_codes),
+        "idle_seconds_never_enforce": True,
         "event_count": len(events),
         "eligible_idle_opportunity_seconds": opportunity,
         "settle_events_missing_action": missing,
@@ -641,13 +807,30 @@ def build_report(events: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def format_report(report: dict[str, Any]) -> str:
+    fail = report.get("enforce_fail_codes") or []
     return (
         f"fleet-idle-settle report_only={report.get('report_only')} "
         f"events={report.get('event_count')} "
         f"eligible_idle_opportunity_seconds={report.get('eligible_idle_opportunity_seconds')} "
         f"missing_action={report.get('settle_events_missing_action')} "
         f"invalid_disposition={report.get('settle_events_invalid_disposition')} "
-        f"dishonest={report.get('settle_events_dishonest')}"
+        f"dishonest={report.get('settle_events_dishonest')} "
+        f"enforce_fail_codes={','.join(fail) or '-'}"
+    )
+
+
+def format_admission(state: AdmissionState) -> str:
+    wip_bits = []
+    for name in WIP_DIMENSIONS:
+        row = state.wip[name]
+        limit = "-" if row["limit"] is None else str(row["limit"])
+        flag = "ok" if row["ok"] else str(row["reason_code"])
+        wip_bits.append(f"{name}={row['in_flight']}/{limit}:{flag}")
+    return (
+        f"fleet-admission admitted={state.admitted} "
+        f"queue_ready={state.queue_ready} ready={state.ready_item_count} "
+        f"reasons={','.join(state.reason_codes) or '-'} "
+        f"wip[{' '.join(wip_bits)}]"
     )
 
 
@@ -732,6 +915,19 @@ def _cmd_report(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_admission(args: argparse.Namespace) -> int:
+    if args.snapshot_json is not None:
+        snapshot = parse_snapshot(_load_json_file(args.snapshot_json))
+    else:
+        snapshot = empty_snapshot()
+    state = evaluate_admission(snapshot)
+    if args.json:
+        print(json.dumps(state.to_dict(), ensure_ascii=False, indent=2, sort_keys=True))
+    else:
+        print(format_admission(state))
+    return 0 if state.admitted else 2
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -763,6 +959,14 @@ def _build_parser() -> argparse.ArgumentParser:
     report.add_argument("--store", type=Path, default=default_store_path())
     report.add_argument("--json", action="store_true")
     report.set_defaults(func=_cmd_report)
+
+    admission = sub.add_parser(
+        "admission",
+        help="Evaluate first-class WIP admission (authoring/review/CI/worktrees/disk/integration)",
+    )
+    admission.add_argument("--snapshot-json", type=Path, help="Eligibility snapshot JSON")
+    admission.add_argument("--json", action="store_true")
+    admission.set_defaults(func=_cmd_admission)
     return parser
 
 

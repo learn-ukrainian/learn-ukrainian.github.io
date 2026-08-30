@@ -195,19 +195,29 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--enforce",
         action="store_true",
-        help="Exit 2 when breadth floor fails and no --note-file is provided",
+        help=(
+            "Exit 2 when the breadth floor fails without --note-file, or when "
+            "idle-settle telemetry has MISSING/DISHONEST dispositions. Never "
+            "fails on raw idle opportunity-seconds."
+        ),
     )
     parser.add_argument(
         "--note-file",
         type=Path,
-        help="Path to a written NOTE: fleet_breadth justification (waives --enforce fail)",
+        help="Path to a written NOTE: fleet_breadth justification (waives breadth-floor --enforce fail only)",
     )
     parser.add_argument("--json", action="store_true", help="Machine-readable JSON only")
     parser.add_argument(
         "--idle-store",
         type=Path,
         default=None,
-        help="Optional idle-settle events JSONL to embed (report-only; ignored by --enforce)",
+        help="Optional idle-settle events JSONL to embed; --enforce fails MISSING/DISHONEST in this store",
+    )
+    parser.add_argument(
+        "--idle-snapshot-json",
+        type=Path,
+        default=None,
+        help="Optional eligibility snapshot; embeds first-class admission WIP state (not a dashboard)",
     )
     args = parser.parse_args(argv)
 
@@ -219,9 +229,25 @@ def main(argv: list[str] | None = None) -> int:
     report["generated_at"] = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     idle_path = args.idle_store if args.idle_store is not None else idle_settle.default_store_path()
     if idle_path.is_file():
-        report["idle_settle"] = idle_settle.build_report(idle_settle.load_events(idle_path))
+        report["idle_settle"] = idle_settle.build_report(
+            idle_settle.load_events(idle_path),
+            enforce=bool(args.enforce),
+        )
     else:
         report["idle_settle"] = None
+    admission_state: idle_settle.AdmissionState | None = None
+    if args.idle_snapshot_json is not None:
+        snap_payload = json.loads(args.idle_snapshot_json.read_text(encoding="utf-8"))
+        if not isinstance(snap_payload, dict):
+            print(
+                f"error: idle snapshot must be a JSON object: {args.idle_snapshot_json}",
+                file=sys.stderr,
+            )
+            return 2
+        admission_state = idle_settle.evaluate_admission(idle_settle.parse_snapshot(snap_payload))
+        report["admission"] = admission_state.to_dict()
+    else:
+        report["admission"] = None
 
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
@@ -243,7 +269,10 @@ def main(argv: list[str] | None = None) -> int:
         idle = report.get("idle_settle")
         if isinstance(idle, dict):
             print(f"  idle_settle: {idle_settle.format_report(idle)}")
+        if admission_state is not None:
+            print(f"  admission: {idle_settle.format_admission(admission_state)}")
 
+    fail = 0
     if args.enforce and report["breadth_floor_applies"] and not report["breadth_floor_ok"]:
         if args.note_file and args.note_file.is_file():
             try:
@@ -252,23 +281,38 @@ def main(argv: list[str] | None = None) -> int:
                 note_text = ""
             if "NOTE: fleet_breadth" in note_text and len(note_text.strip()) >= 24:
                 if not args.json:
-                    print(f"  enforce: waived by note-file {args.note_file}")
-                return 0
+                    print(f"  enforce: breadth floor waived by note-file {args.note_file}")
+            else:
+                if not args.json:
+                    print(
+                        "  enforce: FAIL — --note-file must contain "
+                        "'NOTE: fleet_breadth' and a short justification",
+                        file=sys.stderr,
+                    )
+                fail = 2
+        else:
             if not args.json:
                 print(
-                    "  enforce: FAIL — --note-file must contain "
-                    "'NOTE: fleet_breadth' and a short justification",
+                    "  enforce: FAIL — need >=2 agents and >=2 tiers after 3+ implement "
+                    "dispatches, or pass --note-file with a fleet_breadth NOTE",
                     file=sys.stderr,
                 )
-            return 2
+            fail = 2
+
+    idle_report = report.get("idle_settle")
+    disposition_fails = idle_settle.enforce_fail_codes(
+        idle_report if isinstance(idle_report, dict) else None
+    )
+    if args.enforce and disposition_fails:
         if not args.json:
             print(
-                "  enforce: FAIL — need >=2 agents and >=2 tiers after 3+ implement "
-                "dispatches, or pass --note-file with a fleet_breadth NOTE",
+                "  enforce: FAIL — idle disposition "
+                + ",".join(disposition_fails)
+                + " (never a raw idle-seconds threshold)",
                 file=sys.stderr,
             )
-        return 2
-    return 0
+        fail = 2
+    return fail
 
 
 if __name__ == "__main__":
