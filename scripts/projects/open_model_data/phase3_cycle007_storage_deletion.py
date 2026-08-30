@@ -33,7 +33,7 @@ UNLINKED_SCHEMA = "phase3_cycle007_storage_deletion_unlinked_v1"
 POST_CHALLENGE_SCHEMA = "phase3_cycle007_storage_post_deletion_challenge_v1"
 COMPLETION_SCHEMA = "phase3_cycle007_storage_deletion_completion_v1"
 
-DELETE_ROOT = "cycle007-storage-primary-stage/deletion-execution"
+DELETE_ROOT = "cycle007-storage-primary-stage/deletion-execution-journal"
 FAULT_POINTS = frozenset(
     {
         "before_intent",
@@ -107,6 +107,13 @@ def _deletion_root(bindings: storage.Bindings) -> Path:
     except ValueError:
         _fail("execution_state_drift")
     return root
+
+
+def _source_capacity_path(bindings: storage.Bindings) -> Path:
+    source = bindings.evidence_package or bindings.materialization_package
+    _require(source is not None, "source_state_drift")
+    assert source is not None
+    return source
 
 
 def make_operator_authorization(
@@ -332,6 +339,84 @@ def _critical_inventory_match(frozen: Mapping[str, Any], fresh: Mapping[str, Any
     _require(auth.get("inventory_receipt_sha256") == frozen.get("receipt_sha256"), "authorization_drift")
     _require(fresh.get("external_link_inode_count") == 0, "source_state_drift")
     _require(fresh.get("fully_closed_reclaimable_bytes") == fresh.get("total_allocated_bytes"), "source_state_drift")
+
+
+def _validate_authorized_request_chain(
+    bindings: storage.Bindings,
+    frozen_inventory: Mapping[str, Any],
+    pack_manifest: Mapping[str, Any],
+    finalize: Mapping[str, Any],
+    auth: Mapping[str, Any],
+) -> None:
+    """Revalidate every load-bearing receipt and exact target aggregate."""
+    for value in (frozen_inventory, pack_manifest, finalize, auth):
+        _require_receipt(value, "authorization_drift")
+    _require(auth.get("schema_version") == storage.AUTH_SCHEMA_VERSION, "authorization_drift")
+    _require(auth.get("outcome_sha256") == storage.OUTCOME_SHA256, "authorization_drift")
+    _require(auth.get("deletion_authorized") is False, "authorization_drift")
+    _require(auth.get("retention_neutral_lossless_compaction") is True, "authorization_drift")
+    _require(auth.get("compact_custody_retained_pending_issue") == 7427, "authorization_drift")
+    _require(auth.get("inventory_receipt_sha256") == frozen_inventory.get("receipt_sha256"), "authorization_drift")
+    _require(auth.get("pack_manifest_sha256") == pack_manifest.get("receipt_sha256"), "authorization_drift")
+    _require(finalize.get("deletion_auth_request_sha256") == auth.get("receipt_sha256"), "authorization_drift")
+    _require(finalize.get("fresh_link_set_closed") is True, "authorization_drift")
+    targets = auth.get("targets")
+    _require(isinstance(targets, list) and bool(targets), "authorization_drift")
+    candidates = [item for item in targets if isinstance(item, Mapping) and item.get("deletion_candidate") is True]
+    _require(len(candidates) == len(targets) == int(auth.get("deletion_candidate_count", -1)), "authorization_drift")
+    _require(int(auth.get("retained_object_count", -1)) == 0, "authorization_drift")
+    _require(
+        len({str(item.get("role_relative_path")) for item in candidates}) == len(candidates), "authorization_drift"
+    )
+    _require(
+        all(
+            item.get("link_set_closed") is True
+            and int(item.get("external_link_count", -1)) == 0
+            and item.get("authorized_class") == "lossless_expanded_reclaim_candidate"
+            and int(item.get("reclaimable_allocated_bytes", -1)) == int(item.get("allocated_bytes", -2))
+            for item in candidates
+        ),
+        "authorization_drift",
+    )
+    reclaim = sum(int(item["reclaimable_allocated_bytes"]) for item in candidates)
+    _require(reclaim == int(auth.get("reclaimed_byte_forecast", -1)), "authorization_drift")
+    _require(reclaim == int(auth.get("fully_closed_reclaimable_bytes", -2)), "authorization_drift")
+    _require(reclaim == int(frozen_inventory.get("total_allocated_bytes", -3)), "authorization_drift")
+    _same_fields(
+        frozen_inventory,
+        pack_manifest,
+        (
+            "packet_count",
+            "row_count",
+            "object_count",
+            "object_set_sha256",
+            "ordered_row_identity_commitment_sha256",
+            "deletion_state_sha256",
+        ),
+        "custody_drift",
+    )
+    stage_root = _deletion_root(bindings).parent
+    backup = _read_receipt(
+        stage_root / "backup-receipt.imported.json",
+        storage.BACKUP_SCHEMA_VERSION,
+        "custody_drift",
+    )
+    restore = _read_receipt(
+        stage_root / "backup-restore-proof.imported.json",
+        "phase3_cycle007_storage_backup_restore_proof_v1",
+        "custody_drift",
+    )
+    attestation = _read_receipt(
+        stage_root / "backup-attestation.imported.json",
+        storage.BACKUP_ATTESTATION_SCHEMA_VERSION,
+        "custody_drift",
+    )
+    _require(auth.get("backup_receipt_sha256") == backup.get("receipt_sha256"), "custody_drift")
+    _require(auth.get("backup_restore_proof_sha256") == restore.get("receipt_sha256"), "custody_drift")
+    _require(finalize.get("backup_attestation_receipt_sha256") == attestation.get("receipt_sha256"), "custody_drift")
+    _require(attestation.get("backup_receipt_sha256") == backup.get("receipt_sha256"), "custody_drift")
+    _require(attestation.get("backup_restore_proof_sha256") == restore.get("receipt_sha256"), "custody_drift")
+    _require(restore.get("backup_restore_ok") is True, "custody_drift")
 
 
 def _role_path(bindings: storage.Bindings, alias: str) -> Path:
@@ -620,10 +705,19 @@ def _fsync_entry_parent(bindings: storage.Bindings, entry: Mapping[str, Any]) ->
         os.close(parent)
 
 
+def _fault(
+    fault_hook: Callable[[Mapping[str, Any]], None] | None,
+    event: str,
+    entry_id: str,
+) -> None:
+    if fault_hook is not None:
+        fault_hook({"event": event, "entry_id": entry_id})
+
+
 def _unlink_exact(
     bindings: storage.Bindings,
     entry: Mapping[str, Any],
-    fault_hook: Callable[[str, str], None] | None,
+    fault_hook: Callable[[Mapping[str, Any]], None] | None,
 ) -> None:
     parent, leaf = _open_parent(bindings, str(entry["role_relative_path"]))
     file_descriptor = -1
@@ -643,11 +737,9 @@ def _unlink_exact(
         _require((int(current.st_dev), int(current.st_ino)) == expected_identity, "source_state_drift")
         _require(stat.S_ISREG(current.st_mode) and not stat.S_ISLNK(current.st_mode), "source_state_drift")
         os.unlink(leaf, dir_fd=parent)
-        if fault_hook is not None:
-            fault_hook("after_unlink", str(entry["entry_id"]))
+        _fault(fault_hook, "after_unlink", str(entry["entry_id"]))
         os.fsync(parent)
-        if fault_hook is not None:
-            fault_hook("after_parent_fsync", str(entry["entry_id"]))
+        _fault(fault_hook, "after_parent_fsync", str(entry["entry_id"]))
         try:
             os.stat(leaf, dir_fd=parent, follow_symlinks=False)
         except FileNotFoundError:
@@ -678,11 +770,15 @@ def _execution_locks(root: Path, quiescence_lock_paths: Sequence[Path]) -> Itera
         descriptor = os.open(lock_path, flags, storage.PRIVATE_FILE_MODE)
         os.fchmod(descriptor, storage.PRIVATE_FILE_MODE)
         descriptors.append(descriptor)
+        lock_identities: set[tuple[int, int]] = set()
         for path in quiescence_lock_paths:
             _require(path.is_absolute(), "quiescence_unproved")
             info = path.lstat()
             _require(stat.S_ISREG(info.st_mode) and not path.is_symlink(), "quiescence_unproved")
             _require(stat.S_IMODE(info.st_mode) == storage.PRIVATE_FILE_MODE, "quiescence_unproved")
+            identity = (int(info.st_dev), int(info.st_ino))
+            _require(identity not in lock_identities, "quiescence_unproved")
+            lock_identities.add(identity)
             descriptors.append(os.open(path, os.O_RDWR | getattr(os, "O_NOFOLLOW", 0)))
         for item in descriptors:
             try:
@@ -760,12 +856,14 @@ def execute_authorized_source_deletion(
     primary_pack_dir: Path,
     *,
     quiescence_lock_paths: Sequence[Path],
-    fault_hook: Callable[[str, str], None] | None = None,
+    fault_hook: Callable[[Mapping[str, Any]], None] | None = None,
 ) -> dict[str, Any]:
     """Unlink only authorized entries, durably journaling crash recovery."""
     _require(bindings.private_bound, "source_state_drift")
     if not bindings.fixture:
-        _require(bool(quiescence_lock_paths), "quiescence_unproved")
+        # Guardian, controller, and worker execution locks are the complete
+        # producer-side quiescence set for this frozen Cycle007 tree.
+        _require(len(quiescence_lock_paths) == 3, "quiescence_unproved")
     for value in (
         primary,
         portable_export,
@@ -779,6 +877,7 @@ def execute_authorized_source_deletion(
     ):
         _require_receipt(value, "authorization_drift")
     _validate_authorization(auth, authorization, fixture=bindings.fixture)
+    _validate_authorized_request_chain(bindings, frozen_inventory, pack_manifest, finalize, auth)
     _validate_custody_response(portable_export, challenge, pre_response, fixture=bindings.fixture)
     _require(challenge.get("schema_version") == EXECUTION_CHALLENGE_SCHEMA, "authorization_drift")
     _require(
@@ -830,7 +929,7 @@ def execute_authorized_source_deletion(
                 plan,
                 events,
                 "START",
-                detail={"filesystem_avail_before_bytes": storage.available_bytes(bindings.work_root)},
+                detail={"filesystem_avail_before_bytes": storage.available_bytes(_source_capacity_path(bindings))},
             )
         completed, inflight = _journal_state(plan, events)
         by_id = {str(entry["entry_id"]): entry for entry in plan["entries"]}
@@ -852,21 +951,18 @@ def execute_authorized_source_deletion(
             entry_id = str(entry["entry_id"])
             if entry_id in completed:
                 continue
-            if fault_hook is not None:
-                fault_hook("before_intent", entry_id)
+            _fault(fault_hook, "before_intent", entry_id)
             _append_event(root, plan, events, "INTENT", entry_id=entry_id)
-            if fault_hook is not None:
-                fault_hook("after_intent", entry_id)
+            _fault(fault_hook, "after_intent", entry_id)
             _unlink_exact(bindings, entry, fault_hook)
-            if fault_hook is not None:
-                fault_hook("before_unlinked_event", entry_id)
+            _fault(fault_hook, "before_unlinked_event", entry_id)
             _append_event(root, plan, events, "UNLINKED", entry_id=entry_id)
             completed.add(entry_id)
         _require(len(completed) == int(plan["entry_count"]), "journal_drift")
         _verify_pending_presence(bindings, plan, completed, None)
         start = events[0].get("detail", {})
         avail_before = int(start.get("filesystem_avail_before_bytes", -1))
-        avail_after = storage.available_bytes(bindings.work_root)
+        avail_after = storage.available_bytes(_source_capacity_path(bindings))
         post_primary, _post_identity = storage.prove_content_pack_stream(
             frozen_inventory, primary_pack_dir, zstd_executable=bindings.zstd_executable
         )
@@ -883,9 +979,14 @@ def execute_authorized_source_deletion(
                     "journal_terminal_event_sha256": events[-1]["receipt_sha256"],
                     "unlinked_entry_count": len(completed),
                     "unlinked_inode_count": plan["inode_count"],
+                    "unlinked_path_count": len(completed),
+                    "unlinked_object_count": plan["inode_count"],
                     "expected_reclaimed_allocated_bytes": plan["expected_reclaimed_allocated_bytes"],
+                    "reclaimed_byte_forecast": plan["expected_reclaimed_allocated_bytes"],
                     "filesystem_avail_before_bytes": avail_before,
                     "filesystem_avail_after_unlink_bytes": avail_after,
+                    "source_avail_before_bytes": avail_before,
+                    "source_avail_after_bytes": avail_after,
                     "observed_filesystem_avail_delta_bytes": avail_after - avail_before,
                     "forecast_and_observed_are_distinct": True,
                     "fresh_post_unlink_primary_roundtrip_sha256": post_primary["receipt_sha256"],
@@ -951,7 +1052,7 @@ def finalize_deletion_execution(
     primary_roundtrip, _identity = storage.prove_content_pack_stream(
         frozen_inventory, primary_pack_dir, zstd_executable=bindings.zstd_executable
     )
-    current_avail = storage.available_bytes(bindings.work_root)
+    current_avail = storage.available_bytes(_source_capacity_path(bindings))
     initial_avail = int(unlinked["filesystem_avail_before_bytes"])
     completion_path = root / "completion.json"
     if os.path.lexists(completion_path):
@@ -975,10 +1076,13 @@ def finalize_deletion_execution(
             "authorized_entry_count": plan["entry_count"],
             "authorized_inode_count": plan["inode_count"],
             "expected_reclaimed_allocated_bytes": plan["expected_reclaimed_allocated_bytes"],
+            "reclaimed_byte_forecast": plan["expected_reclaimed_allocated_bytes"],
             "filesystem_avail_before_bytes": initial_avail,
             "filesystem_avail_at_completion_bytes": current_avail,
             "observed_filesystem_avail_delta_bytes": current_avail - initial_avail,
+            "actual_reclaimed_bytes": current_avail - initial_avail,
             "forecast_and_observed_are_distinct": True,
+            "forecast_is_not_actual": True,
             "all_authorized_entries_absent": True,
             "directories_removed": 0,
             "compact_primary_retained": True,
