@@ -220,20 +220,45 @@ class RequestExecutor:
         events: tuple[dict[str, Any], ...] = (),
         raw_bytes: bytes | None = None,
         session_id: str | None = None,
+        reclaim: bool = False,
     ) -> RequestRecord:
         """Run adapter conformance on a capture and persist the outcome.
 
         Production adapters will stream into the artifact store then call this
         with the same bytes. Tests inject fixtures directly.
+
+        #7485 exactly-once: execution starts with an ATOMIC claim — one
+        conditional UPDATE from ``queued`` to ``running``. Two concurrent
+        executors can no longer both observe ``queued`` and both run the
+        capture. A request already ``running`` is claimable only with
+        ``reclaim=True`` (explicit crash recovery by the caller).
         """
         req = self.get_request(request_id)
-        if req.state not in {"queued", "running"}:
-            raise RequestExecutorError(f"request {request_id} is not executable (state={req.state})")
-        if req.expires_at < _iso(_utc_now()):
+        now_s = _iso(_utc_now())
+        if req.expires_at < now_s and req.state in {"queued", "running"}:
             self._set_state(request_id, "expired", CompletionState.UNKNOWN)
             raise RequestExecutorError(f"request {request_id} expired")
-
-        self._set_state(request_id, "running", CompletionState.UNKNOWN)
+        claim_states = ("queued", "running") if reclaim else ("queued",)
+        placeholders = ", ".join("?" for _ in claim_states)
+        cursor = self._conn.execute(
+            f"""UPDATE requests SET state = 'running', completion_state = ?,
+                updated_at = ?
+                WHERE request_id = ? AND state IN ({placeholders})
+                AND expires_at >= ?""",
+            (CompletionState.UNKNOWN.value, now_s, request_id, *claim_states, now_s),
+        )
+        self._conn.commit()
+        if cursor.rowcount != 1:
+            current = self.get_request(request_id)
+            if current.state == "running":
+                raise RequestExecutorError(
+                    f"request {request_id} is already claimed by another "
+                    "executor (state=running); pass reclaim=True only for "
+                    "explicit crash recovery"
+                )
+            raise RequestExecutorError(
+                f"request {request_id} is not executable (state={current.state})"
+            )
         adapter_name = (adapter or req.resolved_recipient).lower()
         capture = CaptureInput(
             adapter=adapter_name,
@@ -272,10 +297,56 @@ class RequestExecutor:
             token_metadata=envelope.token_metadata,
             tool_call_metadata=envelope.tool_call_metadata,
         )
-        self.store.reference(req.request_message_id, art.artifact_id, relation="raw_capture")
-
+        # #7485: finalize atomically. The artifact commit above is the ONLY
+        # separate commit — a crash after it leaves an unreferenced artifact,
+        # which is exactly what garbage_collect_unreferenced() reclaims. All
+        # state that must agree (references, request state, reply message)
+        # lands in ONE transaction below.
         request_state = self._map_completion_to_request_state(envelope.completion_state)
         now_s = _iso(_utc_now())
+        self._conn.execute("BEGIN IMMEDIATE")
+        try:
+            self._finalize_capture(
+                req=req,
+                request_id=request_id,
+                art=art,
+                envelope=envelope,
+                request_state=request_state,
+                now_s=now_s,
+            )
+        except Exception:
+            self._conn.rollback()
+            raise
+        self._conn.commit()
+        record = self.get_request(request_id)
+        return RequestRecord(
+            request_id=record.request_id,
+            request_message_id=record.request_message_id,
+            requested_recipient=record.requested_recipient,
+            resolved_recipient=record.resolved_recipient,
+            state=record.state,
+            expires_at=record.expires_at,
+            completion_state=record.completion_state,
+            created_at=record.created_at,
+            updated_at=record.updated_at,
+            envelope=envelope,
+            raw_capture_artifact_id=art.artifact_id,
+        )
+
+    def _finalize_capture(
+        self,
+        *,
+        req: RequestRecord,
+        request_id: str,
+        art: Any,
+        envelope: ResponseEnvelope,
+        request_state: str,
+        now_s: str,
+    ) -> None:
+        """All finalize writes; runs inside the caller's open transaction."""
+        self.store.reference(
+            req.request_message_id, art.artifact_id, relation="raw_capture", commit=False
+        )
         row = self._conn.execute(
             "SELECT invocation_spec_json FROM requests WHERE request_id = ?",
             (request_id,),
@@ -328,22 +399,7 @@ class RequestExecutor:
                     now_s,
                 ),
             )
-            self.store.reference(reply_id, art.artifact_id, relation="body")
-        self._conn.commit()
-        record = self.get_request(request_id)
-        return RequestRecord(
-            request_id=record.request_id,
-            request_message_id=record.request_message_id,
-            requested_recipient=record.requested_recipient,
-            resolved_recipient=record.resolved_recipient,
-            state=record.state,
-            expires_at=record.expires_at,
-            completion_state=record.completion_state,
-            created_at=record.created_at,
-            updated_at=record.updated_at,
-            envelope=envelope,
-            raw_capture_artifact_id=art.artifact_id,
-        )
+            self.store.reference(reply_id, art.artifact_id, relation="body", commit=False)
 
     @staticmethod
     def _map_completion_to_request_state(state: CompletionState) -> str:
