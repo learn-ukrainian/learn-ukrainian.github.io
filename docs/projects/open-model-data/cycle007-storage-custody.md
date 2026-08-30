@@ -1,6 +1,7 @@
 # Cycle007 storage custody (compact / reclaim prep)
 
-Status: reversible preparation for issue `#7434` under epic `#7423`.
+Status: exact deletion authorized for issue `#7434` under epic `#7423`;
+execution remains receipt-gated and crash-resumable.
 Cycle007 remains evaluation-only. Labeling remains OFF. This page is text-free:
 counts, hashes, booleans, filesystem totals, and safe failure codes only.
 
@@ -41,6 +42,8 @@ Own the reversible storage lane end-to-end:
 ## Implementation
 
 - Module: `scripts/projects/open_model_data/phase3_cycle007_storage_custody.py`
+- Authorized deletion executor:
+  `scripts/projects/open_model_data/phase3_cycle007_storage_deletion.py`
 - Tests: `tests/test_phase3_cycle007_storage_custody.py`
 - Public summary schema:
   `data/projects/open_model_data/contracts/phase3_cycle007_storage_public_summary_v1.schema.json`
@@ -89,7 +92,7 @@ not infer retirement from an evaluation gap.
 | STOR-ROUNDTRIP | Streaming identity proof; no second expanded tree |
 | STOR-BACKUP | Independent compact backup; every blob stream-decompressed and hashed without an expanded restore tree |
 | STOR-AUTH | Exact deletion targets + reclaim forecast after lossless pack/backup proof; unresolved retention permits only retention-neutral expanded-original targets; link sets must be closed |
-| STOR-DELETE | Not authorized; no originals deleted |
+| STOR-DELETE | Exact request `e3c464f5f97aeb0e8314e98526043ebb9ce9571ca2125d2c7fe46c6bd554cc5b` authorized for 86,922,608,640 forecast bytes; execution requires the journaled file-only gate below |
 
 ## Residual authorization request
 
@@ -100,6 +103,40 @@ not infer retirement from an evaluation gap.
    unlink, overwrite, or reclamation.
 3. Keep the compact custody pack and independent backup until `#7427`
    separately reconciles the final retention outcome.
+
+The operator supplied step 2 for the exact request and byte forecast above.
+That authorization does not permit a recursive or directory-level deletion.
+
+## Authorized exact-entry execution
+
+The companion deletion executor consumes the finalized non-authorizing request
+without weakening the reversible custody module. Before the first unlink it:
+
+1. binds a private operator-authorization receipt to the exact request hash,
+   419 closed-link candidates, and the exact byte forecast;
+2. issues a new nonce and requires the independent workstation to stream every
+   compact object through decompression and SHA-256 again;
+3. freshly proves the primary compact pack and rebuilds the complete source
+   inventory;
+4. freezes an exact role-relative directory-entry plan, with inode, mode, size,
+   allocation, link count, and content hash for every entry; and
+5. acquires the deletion executor lock plus the producer quiescence locks.
+
+Execution writes a hash-chained, append-only event journal. Each entry receives
+a durable `INTENT` before a directory-relative, no-symlink `unlink`, then its
+parent directory is `fsync`ed before `UNLINKED`. A crash with a terminal
+`INTENT` resumes only that same entry: an unchanged present entry is retried;
+an absent entry is recovered and journaled; a replaced entry fails closed.
+Pending entries may never be absent. The executor calls no recursive removal,
+deletes no directory, and leaves every compact pack and receipt outside the
+deletion roots.
+
+After all exact entries are absent, completion remains open until a new
+post-delete nonce receives another full workstation stream proof and the
+primary pack passes another full stream proof. The completion receipt records
+the forecasted allocated bytes and the observed filesystem-availability delta
+as separate quantities; it never claims they are identical merely because the
+unlink journal completed.
 
 ## Cross-host production stages
 
