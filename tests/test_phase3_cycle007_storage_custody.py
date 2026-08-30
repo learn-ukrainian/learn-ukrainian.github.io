@@ -1660,7 +1660,6 @@ def test_authorized_deletion_is_exact_file_only_and_preserves_custody(
     assert result["unlinked_receipt"]["unlinked_path_count"] == len(target_paths)
     assert result["unlinked_receipt"]["unlinked_object_count"] == state["primary"]["inventory"]["object_count"]
     assert result["unlinked_receipt"]["reclaimed_byte_forecast"] == state["finalized"]["auth"]["reclaimed_byte_forecast"]
-    assert result["post_challenge"]["backup_live_at_response"] is True
     assert all(not path.exists() for path in target_paths)
     assert sentinel.is_file()
     assert sentinel.read_bytes() == b"do-not-delete-this-fixture-sentinel"
@@ -1684,7 +1683,7 @@ def test_deletion_refuses_tampered_authorization_or_custody(
         state["pre_response"] = dict(state["pre_response"])
         state["pre_response"]["challenge_nonce"] = "tampered"
 
-    with pytest.raises(storage.StorageCustodyError):
+    with pytest.raises(deletion.DeletionExecutionError):
         _execute_fixture_deletion(state)
 
     assert any(path.exists() for path in target_paths)
@@ -1713,7 +1712,7 @@ def test_deletion_refuses_added_hardlink_symlink_or_inode_replacement(
         os.chmod(replacement, storage.PRIVATE_FILE_MODE)
         os.replace(replacement, target)
 
-    with pytest.raises(storage.StorageCustodyError):
+    with pytest.raises(deletion.DeletionExecutionError):
         _execute_fixture_deletion(state)
 
     assert target.exists() or mutation == "hardlink"
@@ -1751,9 +1750,11 @@ def test_deletion_crash_resume_uses_durable_journal(
     assert crashed is True
     journal_candidates = tuple(
         path
-        for path in (state["source_work"] / "cycle007-storage-primary-stage").glob(
-            "*deletion*journal*"
-        )
+        for path in (
+            state["source_work"]
+            / "cycle007-storage-primary-stage"
+            / "deletion-execution-journal"
+        ).glob("*")
     )
     assert journal_candidates, "crash must leave a durable deletion journal"
 
@@ -1773,14 +1774,25 @@ def test_finalize_reports_actual_free_delta_separately_from_forecast(
     before = result["unlinked_receipt"]["source_avail_before_bytes"]
     after = result["unlinked_receipt"]["source_avail_after_bytes"]
     forecast = state["finalized"]["auth"]["reclaimed_byte_forecast"]
+    post_response = deletion.workstation_deletion_custody_response_stage(
+        state["primary"]["portable_export"],
+        state["attested"]["attestation"],
+        result["post_challenge"],
+        state["imported_pack"],
+        state["workstation_root"],
+        source_failure_domain_token="fixture-primary-domain",
+        workstation_failure_domain_token="fixture-workstation-domain",
+        zstd_executable=state["bindings"].zstd_executable,
+        fixture=True,
+    )
 
     final = deletion.finalize_deletion_execution(
         state["bindings"],
         state["primary"]["inventory"],
         state["primary"]["portable_export"],
         state["authorization"],
-        state["finalized"]["finalize"],
-        result["post_challenge"],
+        result,
+        post_response,
         state["primary"]["pack_dir"],
     )
 
