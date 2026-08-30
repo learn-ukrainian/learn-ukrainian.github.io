@@ -4,7 +4,10 @@
 Reads all grade-*/**.jsonl under GDrive textbook_chunks (or --chunks-root),
 or falls back to sources.db textbooks excluding private lexicon sources.
 
-Policy: source_family=textbook → auto-approve with POS+gloss (SUM11/VESUM).
+Policy: source_family=textbook → auto-approve with POS+gloss (VESUM POS,
+СУМ-20/ВТС gloss). СУМ-11 (Soviet-era) is banned, including as gloss fill
+(#7453, operator 2026-08-30) — see
+``docs/runbooks/word-atlas-entry-model.md`` § Definitional sources.
 
 Usage::
 
@@ -36,6 +39,7 @@ from scripts.audit.source_inventory_intake import read_source_inventory, source_
 from scripts.audit.source_inventory_review_decisions import source_inventory_key
 from scripts.lexicon.build_data_manifest import _lemma_key
 from scripts.lexicon.content_lexicon_reconciler import extract_ukrainian_tokens
+from scripts.lexicon.enrich_manifest import _sum20_definition_card, _vts_definition_card
 from scripts.lexicon.grow_lexicon_from_content import build_payload, build_skeleton_entry, write_candidates
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 from scripts.verification.vesum import verify_word
@@ -114,18 +118,26 @@ def _vesum_pos(lemma: str) -> str | None:
     return _POS_MAP.get(raw, raw or None)
 
 
-def _sum11_gloss(conn: sqlite3.Connection, lemma: str) -> str | None:
-    row = conn.execute("SELECT definition FROM sum11 WHERE word = ? LIMIT 1", (lemma,)).fetchone()
-    if not row or not row[0]:
-        return None
-    definition = " ".join(str(row[0]).split())
-    if ". " in definition[:80]:
-        parts = definition.split(". ", 1)
-        if len(parts) == 2 and len(parts[0]) < 60:
-            definition = parts[1]
-    if len(definition) > 180:
-        definition = definition[:177] + "..."
-    return definition or None
+def _sum20_vts_gloss(lemma: str) -> str | None:
+    """СУМ-20/ВТС gloss fill for inventory rows.
+
+    СУМ-11 (Soviet-era) is banned on Atlas, including as inventory gloss fill
+    (#7453, operator 2026-08-30). Tries СУМ-20 first, then falls back to ВТС —
+    never to СУМ-11 — matching the public ``_definition_cards`` source order
+    in ``enrich_manifest.py``.
+    """
+    for card_fn in (_sum20_definition_card, _vts_definition_card):
+        card = card_fn(lemma)
+        definitions = card.get("definitions") if card else None
+        if not definitions:
+            continue
+        text = " ".join(str(definitions[0]).split())
+        if not text:
+            continue
+        if len(text) > 180:
+            text = text[:177] + "..."
+        return text
+    return None
 
 
 def iter_jsonl_texts(chunks_root: Path) -> Iterable[tuple[str, str, str]]:
@@ -171,7 +183,6 @@ def mine_headwords(
     texts: Iterable[tuple[str, str, str]],
     *,
     min_freq: int,
-    sum_conn: sqlite3.Connection,
     max_lemmas: int | None = None,
 ) -> list[dict[str, Any]]:
     from scripts.verification.vesum import verify_words
@@ -189,36 +200,15 @@ def mine_headwords(
     frequent = [(lemma, freq) for lemma, freq in counts.most_common() if freq >= min_freq]
     print({"unique_tokens": len(counts), "freq_ge_min": len(frequent)}, flush=True)
 
-    # Prefer forms that exist in SUM11 first (cheap SQL), then batch VESUM.
-    sum_hits: dict[str, str] = {}
+    # Batch VESUM POS first (cheap, local) to bound the set of lemmas that need a
+    # СУМ-20/ВТС gloss lookup (per-lemma, network-backed — #7453 removed the
+    # СУМ-11 bulk-SQL gloss fill, so this filter now runs before the gloss fetch
+    # rather than after it).
     batch_size = 500
     candidates = [lemma for lemma, _freq in frequent]
+    pos_by_lemma: dict[str, str] = {}
     for i in range(0, len(candidates), batch_size):
         chunk = candidates[i : i + batch_size]
-        placeholders = ",".join("?" * len(chunk))
-        for word, definition in sum_conn.execute(
-            f"SELECT word, definition FROM sum11 WHERE word IN ({placeholders})",
-            chunk,
-        ):
-            gloss = " ".join(str(definition or "").split())
-            if not gloss:
-                continue
-            if ". " in gloss[:80]:
-                parts = gloss.split(". ", 1)
-                if len(parts) == 2 and len(parts[0]) < 60:
-                    gloss = parts[1]
-            if len(gloss) > 180:
-                gloss = gloss[:177] + "..."
-            sum_hits[str(word)] = gloss
-        if (i // batch_size) % 20 == 0:
-            print(f"  sum11 scanned {min(i + batch_size, len(candidates))}/{len(candidates)}", flush=True)
-
-    sum_lemmas = [lemma for lemma in candidates if lemma in sum_hits]
-    print({"sum11_attested": len(sum_lemmas)}, flush=True)
-
-    pos_by_lemma: dict[str, str] = {}
-    for i in range(0, len(sum_lemmas), batch_size):
-        chunk = sum_lemmas[i : i + batch_size]
         verified = verify_words(chunk) or {}
         for lemma in chunk:
             hits = verified.get(lemma) or []
@@ -228,17 +218,22 @@ def mine_headwords(
             pos = _POS_MAP.get(raw, raw or None)
             if pos:
                 pos_by_lemma[lemma] = pos
-        print(f"  vesum scanned {min(i + batch_size, len(sum_lemmas))}/{len(sum_lemmas)}", flush=True)
+        print(f"  vesum scanned {min(i + batch_size, len(candidates))}/{len(candidates)}", flush=True)
+
+    print({"vesum_attested": len(pos_by_lemma)}, flush=True)
 
     rows: list[dict[str, Any]] = []
     for lemma, freq in frequent:
-        if lemma not in sum_hits or lemma not in pos_by_lemma:
+        if lemma not in pos_by_lemma:
+            continue
+        gloss = _sum20_vts_gloss(lemma)
+        if not gloss:
             continue
         rows.append(
             {
                 "lemma": lemma,
                 "pos": pos_by_lemma[lemma],
-                "gloss": sum_hits[lemma],
+                "gloss": gloss,
                 "locator": locators[lemma],
                 "source_id": SOURCE_ID,
                 "source_family": "textbook",
@@ -311,7 +306,7 @@ def write_decisions(rows: Sequence[Mapping[str, Any]], path: Path) -> Path:
                 },
                 "evidence_refs": [
                     "curated source family textbook",
-                    "VESUM POS + SUM11 gloss",
+                    "VESUM POS + СУМ-20/ВТС gloss",
                 ],
             }
         )
@@ -484,13 +479,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             source_note = f"jsonl:{root}"
 
     print({"text_units": len(texts), "source": source_note, "min_freq": args.min_freq}, flush=True)
-    with sqlite3.connect(f"file:{args.db}?mode=ro", uri=True) as conn:
-        rows = mine_headwords(
-            texts,
-            min_freq=args.min_freq,
-            sum_conn=conn,
-            max_lemmas=args.max_lemmas,
-        )
+    rows = mine_headwords(
+        texts,
+        min_freq=args.min_freq,
+        max_lemmas=args.max_lemmas,
+    )
     print({"mined_rows": len(rows)}, flush=True)
 
     if args.write_inventory or args.write_decisions or args.apply:

@@ -24,6 +24,54 @@ The model has two layers:
   variants, transliterations, and rejected/noise decisions. These can support
   search or planning, but they do not count as entries.
 
+## Definitional Sources (v1 delta — #7453)
+
+- decided_at: `2026-08-30`
+- operator: public UK definitions = **СУМ-20 + ВТС only**. **СУМ-11 is
+  forbidden.**
+
+This closes definition-source leaks that survived the 2026-06-26 decolonization
+decision (`_definition_cards` already dropped СУМ-11 from its own output;
+the leaks were elsewhere — curated inventory gloss-fill scripts still read
+`sum11` directly).
+
+- **Public UK meaning cards**: only СУМ-20 (`newsum`) and Великий тлумачний
+  словник (ВТС, `vts`). These are the only two sources that may produce a
+  public `definition_cards` entry, an inventory `gloss`, or any other
+  learner-facing Ukrainian meaning text on an Atlas page.
+- **СУМ-11 is banned on Atlas pages**, full stop — including as an inventory
+  gloss-fill fallback when curated source pipelines (Ohoiko, ULP, textbook
+  mining) build headword inventories. A `sum11` SQL query must never feed a
+  public `gloss`, `definition_cards` entry, or learner-facing text. The
+  offline `sum11` table and its sovietization-risk tooling
+  (`scripts/audit/sum11_sovietization_scan.py`, the MCP `search_definitions`
+  research tool, `_sum11_definition_card` as an internal xref helper) may
+  still exist for research/xref use — they must never be wired into a public
+  card builder or gloss-fill path again.
+- **If СУМ-20 has no row** (volumes 17–20, С–Я, are not yet published), fall
+  back to **ВТС only**. Never fall back to СУМ-11, even when it is the only
+  source with a matching headword — an unfilled gloss is preferable to a
+  Soviet-era one.
+- **Грінченко (1907)** is heritage attestation last, never a definition
+  substitute: it proves pre-Soviet attestation of a headword, never
+  reproduces its (Russian-language, Ems-era) raw gloss text. It always sorts
+  after ВТС/СУМ-20 in `_definition_cards` and is optional.
+- **Learner EN** may come from Anna Ohoiko's inventory/`textbooks`
+  (`learner_english_gloss`) — that is pedagogy-authored English, not a
+  dictionary definition. Dictionary EN (e.g. dmklinger) is extra context, not
+  a replacement for her gloss.
+- **Optional `enrichment.examples`**: at most 2 UK+EN example pairs, each with
+  stress marks and a public **locator** (e.g. `ohoiko-1000-words entry N`).
+  No paid lesson-note prose may be reproduced here.
+
+Implementation: `scripts/lexicon/enrich_manifest.py::_definition_cards` builds
+public cards from `_vts_definition_card` then `_sum20_definition_card`
+(dialect-tagged VTS entries sort behind a non-dialect СУМ-20 entry), with
+`_grinchenko_definition_card` always last. `curated_ohoiko_ulp_repromote.py`
+and `curated_textbook_jsonl_repromote.py` fill inventory glosses via the same
+`_sum20_definition_card` / `_vts_definition_card` helpers (`_sum20_vts_gloss`)
+— neither script queries the `sum11` table.
+
 ## Entry Types
 
 | `entry_type` | Counts as Atlas entry | Definition |

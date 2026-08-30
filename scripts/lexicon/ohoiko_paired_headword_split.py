@@ -20,7 +20,6 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import sqlite3
 import sys
 from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
@@ -485,57 +484,45 @@ def _vesum_pos(lemma: str) -> str | None:
     return promo._vesum_pos(lemma)
 
 
-def _sum11_gloss(conn: sqlite3.Connection, lemma: str) -> str | None:
-    return promo._sum11_gloss(conn, lemma)
+def resolve_leg_pos_gloss(leg_row: Mapping[str, Any]) -> tuple[str, str]:
+    """Resolve POS/gloss without inventing EN: VESUM POS + parent gloss or СУМ-20/ВТС.
 
-
-def resolve_leg_pos_gloss(
-    leg_row: Mapping[str, Any],
-    *,
-    sum_conn: sqlite3.Connection | None,
-) -> tuple[str, str]:
-    """Resolve POS/gloss without inventing EN: VESUM POS + parent gloss or SUM11."""
+    СУМ-11 (Soviet-era) is banned, including as gloss fill (#7453, operator
+    2026-08-30) — see ``docs/runbooks/word-atlas-entry-model.md`` §
+    Definitional sources.
+    """
     lemma = str(leg_row["lemma"])
     pos = _vesum_pos(lemma) or "unknown"
     parent_gloss = str(leg_row.get("gloss") or "").strip()
-    if parent_gloss:
-        gloss = parent_gloss
-    elif sum_conn is not None:
-        gloss = _sum11_gloss(sum_conn, lemma) or lemma
-    else:
-        gloss = lemma
+    gloss = parent_gloss or promo._sum20_vts_gloss(lemma) or lemma
     return pos, gloss
 
 
 def build_split_leg_rows(
     promote_candidates: Sequence[Mapping[str, Any]],
-    *,
-    sources_db: Path | None = None,
 ) -> list[dict[str, Any]]:
     """Materialize inventory rows for promotable split legs only."""
-    db = sources_db or (PROJECT_ROOT / "data" / "sources.db")
     rows: list[dict[str, Any]] = []
-    with sqlite3.connect(f"file:{db}?mode=ro", uri=True) as conn:
-        for cand in promote_candidates:
-            lemma = str(cand["lemma"])
-            family = str(cand.get("source_family") or "ohoiko")
-            if family == "teacher_lesson":
-                # OPSEC: prefer Ohoiko/ULP labels unless a teacher surface is required.
-                family = "ohoiko"
-            pos, gloss = resolve_leg_pos_gloss(cand, sum_conn=conn)
-            parent_locator = str(cand.get("locator") or "ohoiko-paired-split")
-            rows.append(
-                {
-                    "lemma": lemma,
-                    "pos": pos,
-                    "gloss": gloss,
-                    "locator": f"{parent_locator} :: paired-split::{lemma}",
-                    "source_id": cand.get("source_id"),
-                    "source_family": family,
-                    "extraction_mode": "paired_headword_split",
-                    "paired_source": cand.get("paired_source"),
-                }
-            )
+    for cand in promote_candidates:
+        lemma = str(cand["lemma"])
+        family = str(cand.get("source_family") or "ohoiko")
+        if family == "teacher_lesson":
+            # OPSEC: prefer Ohoiko/ULP labels unless a teacher surface is required.
+            family = "ohoiko"
+        pos, gloss = resolve_leg_pos_gloss(cand)
+        parent_locator = str(cand.get("locator") or "ohoiko-paired-split")
+        rows.append(
+            {
+                "lemma": lemma,
+                "pos": pos,
+                "gloss": gloss,
+                "locator": f"{parent_locator} :: paired-split::{lemma}",
+                "source_id": cand.get("source_id"),
+                "source_family": family,
+                "extraction_mode": "paired_headword_split",
+                "paired_source": cand.get("paired_source"),
+            }
+        )
     return dedupe_leg_rows(rows)
 
 
