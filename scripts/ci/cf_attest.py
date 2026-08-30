@@ -530,12 +530,15 @@ def collect_bodies_and_agents(
             stamp = comment.get("created_at")
             bodies.append(("comment", body, stamp if isinstance(stamp, str) else ""))
     for review in reviews:
-        # #7502 CF r2: a PENDING review is an unsubmitted draft — it must not
-        # attest anything. Fail closed on a missing submitted_at too: every
-        # submitted review carries one.
+        # #7502 CF r2/r3: a PENDING review is an unsubmitted draft and a
+        # DISMISSED review is a voided one — neither may attest. Only
+        # positively-submitted states count; a missing submitted_at also
+        # fails closed (every submitted review carries one).
         state = review.get("state")
         stamp = review.get("submitted_at")
-        if state == "PENDING" or not isinstance(stamp, str) or not stamp:
+        if state not in {"APPROVED", "CHANGES_REQUESTED", "COMMENTED"}:
+            continue
+        if not isinstance(stamp, str) or not stamp:
             continue
         body = review.get("body")
         if isinstance(body, str) and body.strip():

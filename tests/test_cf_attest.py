@@ -523,3 +523,33 @@ def test_pending_review_is_excluded_from_attestation() -> None:
         repository="o/r", pr_number=1, api_get=fake_api
     )
     assert bodies == []
+
+
+def test_dismissed_review_is_excluded_from_attestation() -> None:
+    """#7502 CF r3: a dismissed approval is void — it must not attest."""
+    from scripts.ci.cf_attest import collect_bodies_and_agents
+
+    approve_body = (
+        f"Cross-family CF of record (codex)\nReviewer family: openai\n"
+        f"At exact head `{PR_HEAD}`\nVERDICT: APPROVE"
+    )
+
+    def fake_api(path):
+        if "/comments" in path:
+            return []
+        if "/reviews" in path:
+            return [
+                {
+                    "body": approve_body,
+                    "state": "DISMISSED",
+                    "submitted_at": "2026-08-30T12:00:00Z",
+                }
+            ]
+        if "/commits" in path:
+            return []
+        raise AssertionError(path)
+
+    bodies, _ = collect_bodies_and_agents(
+        repository="o/r", pr_number=1, api_get=fake_api
+    )
+    assert bodies == []
