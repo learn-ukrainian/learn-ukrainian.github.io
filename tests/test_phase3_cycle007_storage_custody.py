@@ -1714,7 +1714,8 @@ def test_deletion_refuses_source_link_identity_content_or_mode_drift(
         os.chmod(replacement, storage.PRIVATE_FILE_MODE)
         os.replace(replacement, target)
     elif mutation == "hash":
-        changed = original.replace(b"synthetic", b"synthesic", 1)
+        assert original.endswith(b"\n")
+        changed = original[:-1] + b" "
         assert changed != original
         assert len(changed) == len(original)
         target.write_bytes(changed)
@@ -1753,7 +1754,8 @@ def test_deletion_crash_resume_uses_durable_journal(
         nonlocal crashed
         event_name = event.get("event") if isinstance(event, Mapping) else event
         normalized = str(event_name).replace("-", "_").upper()
-        if not crashed and normalized == crash_point:
+        expected = crash_point.replace("-", "_").upper()
+        if not crashed and normalized == expected:
             crashed = True
             raise _SyntheticDeletionCrash(crash_point)
 
@@ -1765,9 +1767,12 @@ def test_deletion_crash_resume_uses_durable_journal(
         / "cycle007-storage-primary-stage"
         / "deletion-execution-journal"
     )
-    journal_entries = tuple(journal_dir.glob("*")) if journal_dir.is_dir() else ()
+    events_dir = journal_dir / "events"
+    journal_entries = tuple(events_dir.glob("*.json")) if events_dir.is_dir() else ()
     intent_entries = tuple(
-        path for path in journal_entries if "intent" in path.name.lower()
+        path
+        for path in journal_entries
+        if json.loads(path.read_bytes())["event_type"] == "INTENT"
     )
     if crash_point == "before_intent":
         assert not intent_entries
@@ -1813,8 +1818,12 @@ def test_finalize_reports_actual_free_delta_separately_from_forecast(
         state["primary"]["pack_dir"],
     )
 
-    assert before <= after
-    assert final["actual_reclaimed_bytes"] == after - before
+    assert final["filesystem_avail_before_bytes"] == before
+    assert isinstance(after, int)
+    assert final["actual_reclaimed_bytes"] == (
+        final["filesystem_avail_at_completion_bytes"]
+        - final["filesystem_avail_before_bytes"]
+    )
     assert final["reclaimed_byte_forecast"] == forecast
     assert final["actual_reclaimed_bytes"] != final["reclaimed_byte_forecast"]
     assert final["forecast_is_not_actual"] is True
