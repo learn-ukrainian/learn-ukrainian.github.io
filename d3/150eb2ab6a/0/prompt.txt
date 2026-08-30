@@ -1,0 +1,5 @@
+<task-notification>
+<task-id>b9jauj4h9</task-id>
+<summary>Monitor event: "review-7470-r2 (codex CF r2) task-file settle"</summary>
+<event>review-7470-r2 settled: status=needs_finalize</event>
+</task-notification>

@@ -1,0 +1,114 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "d3150eb2ab6a",
+  "session_id": "9d3fbcaf-b21e-42f0-9261-c4d3a3957910",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-30T22:15:50.402789357Z",
+  "branch": "claude/issue-streams-7423",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/api/test_epics_registry_seed.py"
+  ],
+  "agent": "Claude Code",
+  "model": "",
+  "turn_id": "d094710c7d58",
+  "checkpoint_transcript_start": 988,
+  "transcript_lines_at_start": 988,
+  "compact_transcript_start": 121,
+  "token_usage": {
+    "input_tokens": 4,
+    "cache_creation_tokens": 1130,
+    "cache_read_tokens": 635565,
+    "output_tokens": 1297,
+    "api_call_count": 2
+  },
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "claude-skill-toolu_01KarLFp2vpmHkZRwW3zLgST",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "local-code-review"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "d094710c7d58",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 408,
+        "end": 409,
+        "entry_ids": [
+          "f73a2f8e-709e-45b5-94f6-5297c765897c"
+        ],
+        "tool_use_id": "toolu_01KarLFp2vpmHkZRwW3zLgST"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "toolu_01KarLFp2vpmHkZRwW3zLgST"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: local-code-review",
+        "default_collapsed": true
+      }
+    },
+    {
+      "id": "claude-skill-toolu_01CQVbfV2Fp2qGtbRyY9GqxX",
+      "event_type": "tool_invocation",
+      "skill": {
+        "name": "update-config"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "skill_tool_use",
+        "confidence": "explicit"
+      },
+      "turn_id": "d094710c7d58",
+      "transcript_anchor": {
+        "unit": "line",
+        "start": 641,
+        "end": 642,
+        "entry_ids": [
+          "273059b5-14c1-4794-89b1-f02df58562f4"
+        ],
+        "tool_use_id": "toolu_01CQVbfV2Fp2qGtbRyY9GqxX"
+      },
+      "native": {
+        "tool_name": "Skill",
+        "tool_use_id": "toolu_01CQVbfV2Fp2qGtbRyY9GqxX"
+      },
+      "collapse": {
+        "target": "tool_pair",
+        "label": "Skill: update-config",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 3
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-30T22:15:50.254996032Z",
+    "agent_lines": 3,
+    "agent_removed": 1,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 3,
+    "total_lines_changed": 4,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
