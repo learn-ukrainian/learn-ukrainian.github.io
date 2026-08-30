@@ -284,7 +284,6 @@ def analyze_paired_splits(
         for leg in legs:
             eff_leg = resolve_leg_lemma(leg)
             cat = classify_split_leg(eff_leg)
-            leg_cats.setdefault(cat, []).append(eff_leg)
             key = _lemma_key(eff_leg)
             in_atlas = key in atlas_keys
             row: dict[str, Any] = {
@@ -294,21 +293,30 @@ def analyze_paired_splits(
             }
             if in_atlas:
                 already_present.append(eff_leg)
-            elif cat == "single_word_vesum_ok" and key not in seen_promote:
-                seen_promote.add(key)
+            elif cat == "single_word_vesum_ok":
                 parent = (inventory_rows_by_lemma or {}).get(paired) or {}
-                promote_legs.append(
-                    {
-                        "lemma": eff_leg,
-                        "paired_source": paired,
-                        "pos": parent.get("pos"),
-                        "gloss": parent.get("gloss"),
-                        "locator": parent.get("locator"),
-                        "source_id": parent.get("source_id"),
-                        "source_family": parent.get("source_family") or "ohoiko",
-                    }
-                )
-                row["promote"] = True
+                _pos, gloss = resolve_leg_pos_gloss({"lemma": eff_leg, "gloss": parent.get("gloss")})
+                if not gloss:
+                    # VESUM-ok but no honest gloss (parent / СУМ-20 / ВТС all miss):
+                    # never promote a skeleton — hold in its own residual bucket
+                    # instead of inventing or СУМ-11 gloss-filling (#7458).
+                    cat = "single_word_vesum_ok_no_gloss"
+                    row["category"] = cat
+                elif key not in seen_promote:
+                    seen_promote.add(key)
+                    promote_legs.append(
+                        {
+                            "lemma": eff_leg,
+                            "paired_source": paired,
+                            "pos": parent.get("pos"),
+                            "gloss": parent.get("gloss"),
+                            "locator": parent.get("locator"),
+                            "source_id": parent.get("source_id"),
+                            "source_family": parent.get("source_family") or "ohoiko",
+                        }
+                    )
+                    row["promote"] = True
+            leg_cats.setdefault(cat, []).append(eff_leg)
             leg_rows.append(row)
         per_pair.append({"paired": paired, "legs": leg_rows})
 
@@ -489,19 +497,28 @@ def resolve_leg_pos_gloss(leg_row: Mapping[str, Any]) -> tuple[str, str]:
 
     СУМ-11 (Soviet-era) is banned, including as gloss fill (#7453, operator
     2026-08-30) — see ``docs/runbooks/word-atlas-entry-model.md`` §
-    Definitional sources.
+    Definitional sources. When neither the parent inventory row nor СУМ-20/ВТС
+    has a gloss, return an honest empty string — never fall back to the bare
+    Cyrillic lemma as a fake EN gloss (#7458). Callers must not promote a leg
+    with an empty gloss: that is a skeleton, not an entry.
     """
     lemma = str(leg_row["lemma"])
     pos = _vesum_pos(lemma) or "unknown"
     parent_gloss = str(leg_row.get("gloss") or "").strip()
-    gloss = parent_gloss or promo._sum20_vts_gloss(lemma) or lemma
+    gloss = parent_gloss or promo._sum20_vts_gloss(lemma) or ""
     return pos, gloss
 
 
 def build_split_leg_rows(
     promote_candidates: Sequence[Mapping[str, Any]],
 ) -> list[dict[str, Any]]:
-    """Materialize inventory rows for promotable split legs only."""
+    """Materialize inventory rows for promotable split legs only.
+
+    Skips any candidate that resolves to an empty gloss (#7458) — defense in
+    depth against skeleton entries even if a caller passes unfiltered
+    candidates; ``analyze_paired_splits`` already excludes these from
+    ``promote_candidates`` via the ``single_word_vesum_ok_no_gloss`` bucket.
+    """
     rows: list[dict[str, Any]] = []
     for cand in promote_candidates:
         lemma = str(cand["lemma"])
@@ -510,6 +527,8 @@ def build_split_leg_rows(
             # OPSEC: prefer Ohoiko/ULP labels unless a teacher surface is required.
             family = "ohoiko"
         pos, gloss = resolve_leg_pos_gloss(cand)
+        if not gloss:
+            continue
         parent_locator = str(cand.get("locator") or "ohoiko-paired-split")
         rows.append(
             {
