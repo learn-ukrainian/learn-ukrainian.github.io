@@ -571,6 +571,47 @@ def test_classifier_routes_inband_http_401_stdout_to_auth():
     assert trigger == "auth"
 
 
+def test_classifier_routes_unauthenticated_gh_prompt_to_auth():
+    """#7166: a job-host worker whose gh lost its auth context fails with
+    "please run: gh auth login" — an auth failure, never a rate limit."""
+    from agent_runtime.failover import classify_failover_trigger
+
+    stderr = (
+        "To get started with GitHub CLI, please run:  gh auth login\n"
+        "Alternatively, populate the GH_TOKEN environment variable with a "
+        "GitHub API authentication token."
+    )
+    trigger = classify_failover_trigger(
+        parse=ParseResult(ok=False, response="", stderr_excerpt=stderr[:500]),
+        returncode=1,
+        kill_reason=None,
+        stdout_text="",
+        stderr_text=stderr,
+    )
+
+    assert trigger == "auth"
+
+
+def test_classifier_gh_auth_prompt_wins_over_rate_limit_text():
+    """#7166: the mislabeled incident output also carried generic rate-limit
+    text; the gh auth prompt must still classify as auth."""
+    from agent_runtime.failover import classify_failover_trigger
+
+    stderr = (
+        "To get started with GitHub CLI, please run:  gh auth login\n"
+        "HTTP 429: rate limit exceeded"
+    )
+    trigger = classify_failover_trigger(
+        parse=ParseResult(ok=False, response="", stderr_excerpt=stderr[:500]),
+        returncode=1,
+        kill_reason=None,
+        stdout_text="",
+        stderr_text=stderr,
+    )
+
+    assert trigger == "auth"
+
+
 def test_classifier_refuses_to_rotate_on_inband_400():
     """Review D2 (PR #4580): a request-format error would fail identically on
     every route — the gate must return None so the chain is not burned."""

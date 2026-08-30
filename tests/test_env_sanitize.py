@@ -125,3 +125,102 @@ def test_workdir_repointing_git_env_is_scrubbed() -> None:
     for leaked in ("GIT_WORK_TREE", "GIT_DIR", "GIT_INDEX_FILE",
                    "GIT_COMMON_DIR", "PWD", "OLDPWD"):
         assert leaked not in env, f"{leaked} must be scrubbed from the child env"
+
+
+def test_gh_auth_chain_preserved_without_identity_token() -> None:
+    """#7166: on a job host the ops account is logged in via `gh auth login`
+    and no GH_TOKEN/App material exists. The worker must keep the host gh
+    auth chain: GH_CONFIG_DIR passes through (not redirected to an empty
+    sandbox), the credential helper is NOT blanked, and no GIT_ASKPASS is
+    injected. The extraheader stays neutralized and global-config writes stay
+    sandboxed."""
+    with patch.dict(
+        "os.environ",
+        {
+            "PATH": "/usr/bin",
+            "HOME": "/Users/example",
+            "USER": "example",
+            "GH_CONFIG_DIR": "/jobhost/gh-config",
+        },
+        clear=True,
+    ):
+        env = build_agent_env(provider="kimi")
+
+    assert "GH_TOKEN" not in env
+    assert "GITHUB_TOKEN" not in env
+    assert "GIT_ASKPASS" not in env
+    assert env["GH_CONFIG_DIR"] == "/jobhost/gh-config"
+    # credential.helper must NOT be blanked in no-token mode.
+    keys = [v for k, v in env.items() if k.startswith("GIT_CONFIG_KEY_")]
+    assert "credential.helper" not in keys
+    assert "http.https://github.com/.extraheader" in keys
+    # Write isolation (#2842) stays: global config is still the sandbox copy.
+    assert "lu-agent-runtime-git" in env["GIT_CONFIG_GLOBAL"]
+    assert env["GIT_CONFIG_NOSYSTEM"] == "1"
+    assert env["GH_PROMPT_DISABLED"] == "1"
+
+
+def test_gh_config_dir_defaults_to_home_without_identity_token() -> None:
+    """#7166: with no explicit host GH_CONFIG_DIR, leave it unset so gh falls
+    back to its default config dir under the preserved HOME — never to an
+    empty sandbox dir."""
+    with patch.dict(
+        "os.environ",
+        {
+            "PATH": "/usr/bin",
+            "HOME": "/Users/example",
+            "USER": "example",
+        },
+        clear=True,
+    ):
+        env = build_agent_env(provider="kimi")
+
+    assert "GH_CONFIG_DIR" not in env
+    assert env["HOME"] == "/Users/example"
+
+
+def test_credential_helper_survives_sandbox_copy_without_identity_token(tmp_path) -> None:
+    """#7166: the copied global config keeps `gh auth git-credential`-style
+    helpers in no-token mode (push must work) but still drops the extraheader.
+    Token mode keeps the #2842 behavior of stripping the helper."""
+    gitconfig = tmp_path / ".gitconfig"
+    gitconfig.write_text(
+        "[user]\n"
+        "\tname = Example\n"
+        "[credential]\n"
+        "\thelper = !/usr/bin/gh auth git-credential\n"
+        "[http \"https://github.com/\"]\n"
+        "\textraheader = AUTHORIZATION: basic c2VjcmV0\n",
+        encoding="utf-8",
+    )
+
+    with patch.dict(
+        "os.environ",
+        {"PATH": "/usr/bin", "HOME": str(tmp_path), "USER": "example"},
+        clear=True,
+    ):
+        no_token_env = build_agent_env(provider="kimi")
+        sandbox_no_token = Path(no_token_env["GIT_CONFIG_GLOBAL"]).read_text(
+            encoding="utf-8"
+        )
+
+    assert "gh auth git-credential" in sandbox_no_token
+    assert "extraheader" not in sandbox_no_token.lower()
+
+    with patch.dict(
+        "os.environ",
+        {
+            "PATH": "/usr/bin",
+            "HOME": str(tmp_path),
+            "USER": "example",
+            "LU_AGENT_GITHUB_TOKEN": "ghp_agenttoken",
+        },
+        clear=True,
+    ):
+        token_env = build_agent_env(provider="kimi")
+        sandbox_token = Path(token_env["GIT_CONFIG_GLOBAL"]).read_text(
+            encoding="utf-8"
+        )
+
+    assert "gh auth git-credential" not in sandbox_token
+    assert token_env["GIT_ASKPASS"].endswith("git-askpass.sh")

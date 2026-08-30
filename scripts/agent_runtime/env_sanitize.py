@@ -223,7 +223,11 @@ def _looks_sensitive_value(value: str) -> bool:
     return bool(_SENSITIVE_VALUE_RE.search(value))
 
 
-def _isolated_git_env(home: str | None, github_token: str | None) -> dict[str, str]:
+def _isolated_git_env(
+    home: str | None,
+    github_token: str | None,
+    host_gh_config_dir: str | None = None,
+) -> dict[str, str]:
     """Git ``--global`` config isolation for spawned agent CLIs (issue #2842).
 
     A stray ``git config`` write from an agent subprocess can brick git for the
@@ -233,11 +237,23 @@ def _isolated_git_env(home: str | None, github_token: str | None) -> dict[str, s
     and other global settings stay readable, but ``git config --global`` writes
     land in the copy instead of the developer's ``~/.gitconfig``.
 
-    Credential helpers and GitHub extra headers are neutralized in the child
-    process, including values inherited from system or repository config.  When
-    an identity exists, Git obtains it via a tiny ``GIT_ASKPASS`` helper that
-    reads only the injected ``GH_TOKEN``.  This keeps ordinary ``git push``
-    working without exposing the operator's macOS keychain.
+    The GitHub extra header is always neutralized in the child process,
+    including values inherited from system or repository config — it is where
+    an embedded ``AUTHORIZATION: basic ...`` header would leak.  When an
+    identity token exists, credential helpers are neutralized too and Git
+    obtains the identity via a tiny ``GIT_ASKPASS`` helper that reads only the
+    injected ``GH_TOKEN``.  This keeps ordinary ``git push`` working without
+    exposing the operator's macOS keychain.
+
+    When NO identity token resolves (the job-host case: the ops account is
+    logged in via ``gh auth login`` and no GH_TOKEN/App material exists), the
+    child must still be able to ``gh pr create`` and push (#7166).  In that
+    case the host gh auth chain is preserved: credential helpers stay in the
+    copied config (so ``gh auth git-credential`` keeps working) and
+    ``GH_CONFIG_DIR`` is NOT redirected to an empty sandbox — the host's
+    explicit ``GH_CONFIG_DIR`` passes through, or gh falls back to its default
+    under the already-preserved ``HOME``.  No token value is ever logged or
+    copied; gh reads its own ``hosts.yml`` at call time.
 
     Never raises: isolation failure must not block spawning an agent.
     """
@@ -252,7 +268,10 @@ def _isolated_git_env(home: str | None, github_token: str | None) -> dict[str, s
             shutil.copyfile(real_global, sandbox_global)
         elif not sandbox_global.exists():
             sandbox_global.write_text("", encoding="utf-8")
-        for key in ("credential.helper", "http.https://github.com/.extraheader"):
+        keys_to_unset = ["http.https://github.com/.extraheader"]
+        if github_token:
+            keys_to_unset.insert(0, "credential.helper")
+        for key in keys_to_unset:
             subprocess.run(
                 ["git", "config", "--file", str(sandbox_global), "--unset-all", key],
                 check=False,
@@ -262,17 +281,21 @@ def _isolated_git_env(home: str | None, github_token: str | None) -> dict[str, s
         env = {
             "GIT_CONFIG_GLOBAL": str(sandbox_global),
             "GIT_CONFIG_NOSYSTEM": "1",
-            "GIT_CONFIG_COUNT": "2",
-            "GIT_CONFIG_KEY_0": "credential.helper",
-            "GIT_CONFIG_VALUE_0": "",
-            "GIT_CONFIG_KEY_1": "http.https://github.com/.extraheader",
-            "GIT_CONFIG_VALUE_1": "",
             "GIT_TERMINAL_PROMPT": "0",
-            "GH_CONFIG_DIR": str(sandbox_dir / "gh"),
             "GH_PROMPT_DISABLED": "1",
         }
-        Path(env["GH_CONFIG_DIR"]).mkdir(mode=0o700)
         if github_token:
+            env.update(
+                {
+                    "GIT_CONFIG_COUNT": "2",
+                    "GIT_CONFIG_KEY_0": "credential.helper",
+                    "GIT_CONFIG_VALUE_0": "",
+                    "GIT_CONFIG_KEY_1": "http.https://github.com/.extraheader",
+                    "GIT_CONFIG_VALUE_1": "",
+                    "GH_CONFIG_DIR": str(sandbox_dir / "gh"),
+                }
+            )
+            Path(env["GH_CONFIG_DIR"]).mkdir(mode=0o700)
             askpass = sandbox_dir / "git-askpass.sh"
             askpass.write_text(
                 "#!/bin/sh\n"
@@ -285,6 +308,19 @@ def _isolated_git_env(home: str | None, github_token: str | None) -> dict[str, s
             )
             askpass.chmod(0o700)
             env["GIT_ASKPASS"] = str(askpass)
+        else:
+            # #7166 no-token fallback: keep the host gh auth chain readable.
+            # The extraheader stays blanked even in this mode — it is a secret
+            # carrier, unlike the gh hosts.yml / credential-helper chain.
+            env.update(
+                {
+                    "GIT_CONFIG_COUNT": "1",
+                    "GIT_CONFIG_KEY_0": "http.https://github.com/.extraheader",
+                    "GIT_CONFIG_VALUE_0": "",
+                }
+            )
+            if host_gh_config_dir:
+                env["GH_CONFIG_DIR"] = host_gh_config_dir
         return env
     except (OSError, subprocess.TimeoutExpired):
         # Isolation failure must not re-open the operator's global Git config.
@@ -349,6 +385,17 @@ def build_agent_env(
         env.pop("GH_TOKEN", None)
         env.pop("GITHUB_TOKEN", None)
 
-    env.update(_isolated_git_env(env.get("HOME") or raw.get("HOME"), identity.token))
+    host_gh_config_dir = raw.get("GH_CONFIG_DIR")
+    env.update(
+        _isolated_git_env(
+            env.get("HOME") or raw.get("HOME"),
+            identity.token,
+            host_gh_config_dir=(
+                host_gh_config_dir
+                if host_gh_config_dir and not _looks_sensitive_value(host_gh_config_dir)
+                else None
+            ),
+        )
+    )
 
     return env
