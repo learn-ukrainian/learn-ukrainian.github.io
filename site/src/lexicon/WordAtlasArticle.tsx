@@ -135,6 +135,7 @@ export default function WordAtlasArticle({
     statusBadges,
     articleOverview,
     sourceList,
+    translationSource,
     hasPractice,
     stressDisplay,
   } = view;
@@ -901,7 +902,7 @@ export default function WordAtlasArticle({
                   {enrichment.translation.en.map((term) => <span key={term} className="en-term">{term}</span>)}
                 </div>
               </div>
-              <p className="atlas-muted">Джерело: {enrichment.translation.source}</p>
+              <p className="atlas-muted">Джерело: {translationSource ?? enrichment.translation.source}</p>
             </section>
           )}
 

@@ -311,6 +311,15 @@ export const FORM_NOTE_LABELS: Record<string, string> = {
   orthoepy: "Орфоепія",
 };
 
+export const TRANSLATION_SOURCE_LABELS: Record<string, string> = {
+  learner_english_gloss: "Anna Ohoiko",
+};
+
+export function formatTranslationSource(source: string | null | undefined): string | null {
+  if (!source) return null;
+  return TRANSLATION_SOURCE_LABELS[source] ?? source;
+}
+
 const MORPHOLOGY_SUPPRESSED_TYPES = new Set([
   "multiword_term",
   "expression",
@@ -662,6 +671,7 @@ export function buildWordAtlasArticleView(
     definitionCards,
     sections,
   });
+  const translationSource = formatTranslationSource(enrichment?.translation?.source);
   const hasPractice = (record.renderContext.practiceLevels ?? []).length > 0;
 
   function stressDisplay(form: string | undefined | null) {
@@ -704,6 +714,7 @@ export function buildWordAtlasArticleView(
     statusBadges,
     articleOverview,
     sourceList,
+    translationSource,
     hasPractice,
     generatedAt,
     manifestVersion,
