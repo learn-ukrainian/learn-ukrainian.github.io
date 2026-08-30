@@ -9,8 +9,10 @@ no fabrication):
   human-readable Ukrainian grammatical labels, with optional stress display
   forms from ``ukrainian-word-stress``.
 - **meaning** — legacy single-source meaning kept for compatibility.
-- **definition_cards** — separate СУМ-20 and СУМ-11 definition cards with
-  source caveats.
+- **definition_cards** — public meaning cards from ВТС and СУМ-20 only
+  (СУМ-11, the Soviet-era dictionary, is excluded — decolonization decision
+  2026-06-26), with an optional Грінченко (1907) heritage-attestation card
+  always last.
 - **cefr** — PULS CEFR lookup when available, otherwise a visibly labelled
   GRAC-frequency estimate for entries outside PULS.
 - **literary_attestation** — exact-form literary corpus hit when available.

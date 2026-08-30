@@ -3,8 +3,13 @@
 
 Policy (operator 2026-07-19): Ohoiko / ULP / teacher / textbook inventories are
 curated human sources — auto-approve without AI row review. Mechanical holds
-only (missing POS/gloss, VESUM-absent singles with no SUM11/heritage, hard
+only (missing POS/gloss, VESUM-absent singles with no СУМ-20/ВТС/heritage, hard
 russianism/surzhyk).
+
+Gloss fill (#7453, operator 2026-08-30): public Atlas definitions come only
+from СУМ-20 and Великий тлумачний словник (ВТС) — СУМ-11 (Soviet-era) is
+banned, including as an inventory gloss-fill fallback. See
+``docs/runbooks/word-atlas-entry-model.md`` § Definitional sources.
 
 Builds:
   1. Source inventory YAML (lemmas + gloss + locators; no raw prose)
@@ -23,7 +28,6 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import sqlite3
 import sys
 from collections.abc import Mapping, Sequence
 from pathlib import Path
@@ -45,6 +49,7 @@ from scripts.ingest import ulp_lesson_notes_ingest as ulp_ingest
 from scripts.lexicon.atlas_intake_core import CURATED_SOURCE_FAMILIES
 from scripts.lexicon.build_data_manifest import _lemma_key
 from scripts.lexicon.content_lexicon_reconciler import extract_ukrainian_tokens
+from scripts.lexicon.enrich_manifest import _sum20_definition_card, _vts_definition_card
 from scripts.lexicon.grow_lexicon_from_content import build_payload, build_skeleton_entry, write_candidates
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 from scripts.verification.vesum import verify_word
@@ -104,20 +109,26 @@ def _vesum_pos(lemma: str) -> str | None:
     return _POS_MAP.get(raw, raw or None)
 
 
-def _sum11_gloss(conn: sqlite3.Connection, lemma: str) -> str | None:
-    row = conn.execute("SELECT definition FROM sum11 WHERE word = ? LIMIT 1", (lemma,)).fetchone()
-    if not row or not row[0]:
-        return None
-    definition = " ".join(str(row[0]).split())
-    # Drop dictionary meta prefix like АВТОМОБІ́ЛЬ, я, ч.
-    if ". " in definition[:80]:
-        # Prefer first prose sentence after headword metadata when possible.
-        parts = definition.split(". ", 1)
-        if len(parts) == 2 and len(parts[0]) < 60:
-            definition = parts[1]
-    if len(definition) > 180:
-        definition = definition[:177] + "..."
-    return definition or None
+def _sum20_vts_gloss(lemma: str) -> str | None:
+    """СУМ-20/ВТС gloss fill for inventory rows.
+
+    СУМ-11 (Soviet-era) is banned on Atlas, including as inventory gloss fill
+    (#7453, operator 2026-08-30). Tries СУМ-20 first, then falls back to ВТС —
+    never to СУМ-11 — matching the public ``_definition_cards`` source order
+    in ``enrich_manifest.py``.
+    """
+    for card_fn in (_sum20_definition_card, _vts_definition_card):
+        card = card_fn(lemma)
+        definitions = card.get("definitions") if card else None
+        if not definitions:
+            continue
+        text = " ".join(str(definitions[0]).split())
+        if not text:
+            continue
+        if len(text) > 180:
+            text = text[:177] + "..."
+        return text
+    return None
 
 
 def _infer_pos(lemma: str, gloss: str, *, preferred: str | None = None) -> str:
@@ -195,8 +206,8 @@ def collect_book_headwords() -> list[dict[str, Any]]:
     return rows
 
 
-def collect_ulp_headwords(*, min_freq: int, sum_conn: sqlite3.Connection) -> list[dict[str, Any]]:
-    """Token inventory from ULP lesson notes with SUM11 gloss fill."""
+def collect_ulp_headwords(*, min_freq: int) -> list[dict[str, Any]]:
+    """Token inventory from ULP lesson notes with СУМ-20/ВТС gloss fill."""
     counts: dict[str, int] = {}
     locators: dict[str, str] = {}
     for _slug, book in ulp_ingest.BOOKS.items():
@@ -222,7 +233,7 @@ def collect_ulp_headwords(*, min_freq: int, sum_conn: sqlite3.Connection) -> lis
         pos = _vesum_pos(lemma)
         if not pos:
             continue
-        gloss = _sum11_gloss(sum_conn, lemma)
+        gloss = _sum20_vts_gloss(lemma)
         if not gloss:
             continue
         rows.append(
@@ -488,8 +499,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     book_rows = collect_book_headwords()
     ulp_rows: list[dict[str, Any]] = []
     if not args.skip_ulp:
-        with sqlite3.connect(f"file:{PROJECT_ROOT / 'data' / 'sources.db'}?mode=ro", uri=True) as conn:
-            ulp_rows = collect_ulp_headwords(min_freq=args.ulp_min_freq, sum_conn=conn)
+        ulp_rows = collect_ulp_headwords(min_freq=args.ulp_min_freq)
     rows = dedupe_headwords([*book_rows, *ulp_rows])
     by_family: dict[str, int] = {}
     for row in rows:

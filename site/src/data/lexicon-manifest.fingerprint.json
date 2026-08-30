@@ -79,7 +79,7 @@
       },
       {
         "path": "scripts/lexicon/curated_ohoiko_ulp_repromote.py",
-        "sha256": "41d31feafa143186146c41ca195aea6ec86ec69347e4f97a6f7044f310243a6a"
+        "sha256": "fc755012f766b56e5894bd86ac9f1a7960a02a78d2b0fe9d9cf65076fc585aaf"
       },
       {
         "path": "scripts/lexicon/curated_seed_atlas_admission.py",
@@ -87,7 +87,7 @@
       },
       {
         "path": "scripts/lexicon/curated_textbook_jsonl_repromote.py",
-        "sha256": "024246cce4d9d676f139816cd2d4f62e8fc6d269f4c380cd14a5ff3afd1a1b46"
+        "sha256": "e9a0143ef1a188ef6095af727d34ee1fd51012869008e0ac1a864fe1270a63db"
       },
       {
         "path": "scripts/lexicon/curriculum_atlas_intake.py",
@@ -103,7 +103,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "dff1380c15545c06eb824705eed30860e322b2b73fb647c3398b28bf846b064b"
+        "sha256": "83efb97a2fb41279b8f9dcfa8d47dedb5b17b20a144c1c91a0f0aacfe096e46a"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -215,7 +215,7 @@
       },
       {
         "path": "scripts/lexicon/ohoiko_paired_headword_split.py",
-        "sha256": "61efdc57f37da0a91cd44b3ea20d0099f9780b0733e0db8281af1c418912c19c"
+        "sha256": "6bb30c26bc7ccbaf75de6bc7ecabcbb226a65e5b3af44060e2298ac7a21670d0"
       },
       {
         "path": "scripts/lexicon/park_thin_entries.py",
