@@ -444,12 +444,39 @@ def _run_compat_ask_impl(
 
     ``hard_timeout=None`` resolves the seat's profile default (#6877); an
     explicit value always wins.
+
+    On a notebook whose local plane is retired (#7172), ordinary asks forward
+    over SSH to the job-host plane instead of opening local sqlite.
     """
     participant = require_compat_target(command_target)
     if not task_id or not task_id.strip():
         raise ValueError("ACP ask requires a non-empty task_id")
     if hard_timeout is None:
         hard_timeout = ask_hard_timeout(command_target)
+
+    # #7172: Mac/notebook is a client. Forward before AuthorityService so a
+    # retired local marker never surfaces as PlaneRootAnchorError on ask-*.
+    from ._job_host_forward import AskForwardError, maybe_forward_compat_ask
+
+    try:
+        forwarded = maybe_forward_compat_ask(
+            command_target,
+            content,
+            task_id=task_id,
+            source=source,
+            model=model,
+            effort=effort,
+            data=data,
+            output_path=output_path,
+            stdout_only=stdout_only,
+            hard_timeout=hard_timeout,
+            participant=participant,
+            repo_root=REPO_ROOT,
+        )
+    except AskForwardError:
+        raise
+    if forwarded is not None:
+        return forwarded
 
     prompt = content
     if data:
