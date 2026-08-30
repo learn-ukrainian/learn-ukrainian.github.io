@@ -123,14 +123,12 @@ def test_concurrent_explicit_id_race_is_deterministic(
     # Simulate the race: blind the pre-checks so the INSERT hits the
     # UNIQUE(artifact_id) constraint directly.
     monkeypatch.setattr(pg_store, "_pg_row_by_artifact_id", lambda _aid: None)
-    real_by_sha = pg_store._pg_row_by_sha256
     monkeypatch.setattr(pg_store, "_pg_row_by_sha256", lambda _d: None)
     with pytest.raises(ArtifactStoreError, match="concurrent-writer race"):
-        try:
-            pg_store.store_bytes(
-                _payload(), producer="t", artifact_id=first.artifact_id
-            )
-        finally:
-            monkeypatch.setattr(pg_store, "_pg_row_by_sha256", real_by_sha)
-    # The connection must remain usable after the converted error.
+        pg_store.store_bytes(
+            _payload(), producer="t", artifact_id=first.artifact_id
+        )
+    # Restore the real row lookups BEFORE probing (the merge-group run caught
+    # a still-patched get() here), then prove the connection stayed usable.
+    monkeypatch.undo()
     assert pg_store.get(first.artifact_id).sha256 == first.sha256
