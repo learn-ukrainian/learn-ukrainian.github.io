@@ -6,9 +6,12 @@ import json
 
 import pytest
 
+from scripts.lexicon import ohoiko_paired_headword_split as paired_split
 from scripts.lexicon.ohoiko_paired_headword_split import (
+    analyze_paired_splits,
     analyze_space_collapses,
     append_space_collapse_audit,
+    build_split_leg_rows,
     classify_split_leg,
     collapse_internal_whitespace,
     collect_space_collapse_candidates,
@@ -64,6 +67,63 @@ def test_split_does_not_invent_lemmas() -> None:
     assert legs == ["науковець", "науковиця"]
     # No synthetic feminine/masculine forms beyond the split legs.
     assert "науковецька" not in legs
+
+
+def test_analyze_paired_splits_never_promotes_a_no_gloss_leg(monkeypatch) -> None:
+    """#7458: a VESUM-ok leg with no honest gloss anywhere (parent / СУМ-20 /
+    ВТС all miss) must not enter ``promote_candidates`` — it is held in its
+    own residual bucket instead, so nothing downstream ever writes a lemma+pos
+    skeleton with a fabricated or empty-but-promoted gloss."""
+    monkeypatch.setattr(paired_split, "classify_split_leg", lambda leg: "single_word_vesum_ok")
+    monkeypatch.setattr(paired_split, "resolve_leg_lemma", lambda leg: leg)
+    monkeypatch.setattr(paired_split, "_vesum_pos", lambda lemma: "noun")
+    monkeypatch.setattr(paired_split.promo, "_sum20_vts_gloss", lambda lemma: None)
+
+    result = analyze_paired_splits(
+        paired_lemmas=["безглосник, безглосниця"],
+        atlas_keys=set(),
+        inventory_rows_by_lemma={"безглосник, безглосниця": {"gloss": None}},
+    )
+
+    assert result["promote_candidate_count"] == 0
+    assert result["promote_candidates"] == []
+    assert result["leg_counts"]["single_word_vesum_ok_no_gloss"] == 2
+    assert "безглосник" in result["legs_by_category"]["single_word_vesum_ok_no_gloss"]
+
+
+def test_analyze_paired_splits_promotes_leg_with_honest_gloss(monkeypatch) -> None:
+    monkeypatch.setattr(paired_split, "classify_split_leg", lambda leg: "single_word_vesum_ok")
+    monkeypatch.setattr(paired_split, "resolve_leg_lemma", lambda leg: leg)
+    monkeypatch.setattr(paired_split, "_vesum_pos", lambda lemma: "noun")
+    monkeypatch.setattr(paired_split.promo, "_sum20_vts_gloss", lambda lemma: None)
+
+    result = analyze_paired_splits(
+        paired_lemmas=["глосник, глосниця"],
+        atlas_keys=set(),
+        inventory_rows_by_lemma={"глосник, глосниця": {"gloss": "a glossed thing"}},
+    )
+
+    assert result["promote_candidate_count"] == 2
+    assert {c["lemma"] for c in result["promote_candidates"]} == {"глосник", "глосниця"}
+    assert "single_word_vesum_ok_no_gloss" not in result["leg_counts"]
+
+
+def test_build_split_leg_rows_skips_candidates_with_no_honest_gloss(monkeypatch) -> None:
+    """Defense in depth: even if a caller hands ``build_split_leg_rows`` an
+    unfiltered candidate with no resolvable gloss, it must not write a
+    skeleton row."""
+    monkeypatch.setattr(paired_split, "_vesum_pos", lambda lemma: "noun")
+    monkeypatch.setattr(paired_split.promo, "_sum20_vts_gloss", lambda lemma: None)
+
+    rows = build_split_leg_rows(
+        [
+            {"lemma": "безглосник", "paired_source": "безглосник, безглосниця", "gloss": None},
+            {"lemma": "глосник", "paired_source": "глосник, глосниця", "gloss": "a glossed thing"},
+        ]
+    )
+
+    assert [r["lemma"] for r in rows] == ["глосник"]
+    assert rows[0]["gloss"] == "a glossed thing"
 
 
 def test_recover_latin_lookalike_twarina_and_zhinka() -> None:

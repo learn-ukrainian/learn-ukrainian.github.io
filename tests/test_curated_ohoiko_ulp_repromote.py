@@ -115,3 +115,17 @@ def test_resolve_leg_pos_gloss_prefers_parent_gloss_over_dictionary(monkeypatch)
     _pos, gloss = paired_split.resolve_leg_pos_gloss({"lemma": "прапор", "gloss": "flag"})
 
     assert gloss == "flag"
+
+
+def test_resolve_leg_pos_gloss_returns_honest_empty_string_not_lemma(monkeypatch) -> None:
+    """#7458: when no parent gloss and no СУМ-20/ВТС hit, the gloss must be an
+    honest empty string — never the bare Cyrillic lemma reused as a fake EN
+    gloss, and never СУМ-11. Callers use the empty string to hold the leg out
+    of promotion (never promote a skeleton)."""
+    monkeypatch.setattr(paired_split, "_vesum_pos", lambda lemma: "noun")
+    monkeypatch.setattr(paired_split.promo, "_sum20_vts_gloss", lambda lemma: None)
+
+    pos, gloss = paired_split.resolve_leg_pos_gloss({"lemma": "ґаджет"})
+
+    assert pos == "noun"
+    assert gloss == ""
