@@ -2364,11 +2364,27 @@ def workstation_backup_attestation_stage(
     manifest = _read_json(backup_pack_dir / "pack-manifest.json", "backup_restore_failure")
     _require(isinstance(manifest, Mapping), "backup_restore_failure")
     _require_receipt(manifest, "backup_restore_failure")
-    expected = int(portable_export.get("compact_stored_allocated_bytes", -1))
-    observed = _pack_payload_allocated_bytes(backup_pack_dir, manifest) + ZSTD_METADATA_ALLOWANCE_BYTES
-    _require(observed == int(manifest.get("total_stored_allocated_bytes", -1)), "backup_restore_failure")
-    _require(expected == observed, "backup_restore_failure")
-    _require(admission.get("required_write_bytes") == expected, "backup_restore_failure")
+    source_allocated = int(portable_export.get("compact_stored_allocated_bytes", -1))
+    backup_allocated = (
+        _pack_payload_allocated_bytes(backup_pack_dir, manifest)
+        + ZSTD_METADATA_ALLOWANCE_BYTES
+    )
+    # ``st_blocks`` is a property of the destination filesystem, not of the
+    # transported bytes.  APFS, ext4, and network-backed filesystems can
+    # legitimately allocate different block counts for the exact same pack.
+    # Bind the portable source forecast to the manifest/admission, then record
+    # the workstation's actual allocation independently.  Content equality is
+    # proved below by a full stored-hash + stream-decompression pass, while the
+    # fresh post-copy floor is the authoritative destination-capacity gate.
+    _require(
+        source_allocated == int(manifest.get("total_stored_allocated_bytes", -1)),
+        "backup_restore_failure",
+    )
+    _require(
+        admission.get("required_write_bytes") == source_allocated,
+        "backup_restore_failure",
+    )
+    _require(backup_allocated >= ZSTD_METADATA_ALLOWANCE_BYTES, "backup_restore_failure")
     restore_proof = _portable_content_stream_proof(
         backup_pack_dir, portable_export, zstd_executable=zstd_executable
     )
@@ -2383,7 +2399,9 @@ def workstation_backup_attestation_stage(
             "backup_object_count": manifest["object_count"],
             "backup_unique_inode_count": manifest.get("unique_stored_object_count"),
             "backup_duplicate_selected_link_count": 0,
-            "backup_allocated_bytes": observed,
+            "backup_allocated_bytes": backup_allocated,
+            "source_compact_allocated_bytes": source_allocated,
+            "backup_allocation_delta_bytes": backup_allocated - source_allocated,
             "backup_set_sha256": digest(canonical({"pack_manifest_sha256": manifest["receipt_sha256"]})),
             "source_failure_domain_sha256": source_domain,
             "backup_failure_domain_sha256": workstation_domain,
@@ -2420,6 +2438,9 @@ def workstation_backup_attestation_stage(
             ],
             "workstation_avail_after_bytes": avail_after,
             "min_free_bytes": MIN_FREE_BYTES,
+            "source_compact_allocated_bytes": source_allocated,
+            "backup_allocated_bytes": backup_allocated,
+            "backup_allocation_delta_bytes": backup_allocated - source_allocated,
             "backup_restore_ok": True,
             "proof_mode": "portable_stream_decompress_hash",
             "no_deletion_performed": True,
