@@ -22,6 +22,7 @@ from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_cycle007_materializer as materializer
 from scripts.projects.open_model_data import phase3_cycle007_storage_custody as storage
+from scripts.projects.open_model_data import phase3_cycle007_storage_deletion as deletion
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_SUMMARY_SCHEMA = ROOT / (
@@ -1487,3 +1488,304 @@ def test_configured_backup_root_receives_backup_artifacts(tmp_path: Path) -> Non
     assert lane["lane_complete"] is True
     assert (backup_root / "cycle007-storage-backup" / "pack-manifest.json").is_file()
     assert not (work / "cycle007-storage-lane" / "backup").exists()
+
+
+def _prepare_deletion_fixture(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> dict[str, Any]:
+    """Build a complete, synthetic, two-domain deletion-execution fixture.
+
+    This deliberately goes through the public staged custody flow before
+    creating operator authorization.  The helper owns only ``tmp_path`` and
+    never binds the real Cycle007 packages.
+    """
+    monkeypatch.setattr(
+        storage,
+        "_physical_failure_domain_sha256",
+        lambda root: storage.digest(f"fixture-domain:{root.name}".encode()),
+    )
+    materialization, _packet_count, _row_count = _build_materialization(tmp_path)
+    evidence = _build_evidence(tmp_path, materialization)
+    sentinel = materialization / "UNSELECTED-sentinel.bin"
+    sentinel.write_bytes(b"do-not-delete-this-fixture-sentinel")
+    os.chmod(sentinel, storage.PRIVATE_FILE_MODE)
+
+    source_work = tmp_path / "source-work"
+    source_work.mkdir(mode=storage.PRIVATE_DIR_MODE)
+    os.chmod(source_work, storage.PRIVATE_DIR_MODE)
+    bindings = storage.resolve_bindings(
+        fixture=True,
+        materialization=materialization,
+        evidence=evidence,
+        work_root=source_work,
+    )
+    primary = storage.primary_universal_pack_stage(bindings)
+
+    workstation_root = tmp_path / "workstation"
+    workstation_root.mkdir(mode=storage.PRIVATE_DIR_MODE)
+    os.chmod(workstation_root, storage.PRIVATE_DIR_MODE)
+    imported_pack = workstation_root / "imported-pack"
+    admission = storage.workstation_backup_admission_stage(
+        primary["portable_export"],
+        workstation_root,
+        imported_pack,
+        source_failure_domain_token="fixture-primary-domain",
+        workstation_failure_domain_token="fixture-workstation-domain",
+        fixture=True,
+    )
+    shutil.copytree(primary["pack_dir"], imported_pack)
+    attested = storage.workstation_backup_attestation_stage(
+        primary["portable_export"],
+        admission,
+        imported_pack,
+        workstation_root,
+        source_failure_domain_token="fixture-primary-domain",
+        workstation_failure_domain_token="fixture-workstation-domain",
+        zstd_executable=bindings.zstd_executable,
+        fixture=True,
+    )
+    finalization_challenge = storage.issue_finalization_challenge(
+        bindings, primary["primary_stage"], primary["portable_export"]
+    )
+    finalization_response = storage.workstation_finalization_response_stage(
+        primary["portable_export"],
+        attested["attestation"],
+        finalization_challenge,
+        imported_pack,
+        workstation_root,
+        source_failure_domain_token="fixture-primary-domain",
+        workstation_failure_domain_token="fixture-workstation-domain",
+        zstd_executable=bindings.zstd_executable,
+        fixture=True,
+    )
+    finalized = storage.finalize_source_deletion_auth_stage(
+        bindings,
+        primary["primary_stage"],
+        primary["portable_export"],
+        attested["attestation"],
+        attested["backup"],
+        attested["restore_proof"],
+        primary["pack_manifest"],
+        primary["inventory"],
+        primary["pack_dir"],
+        finalization_challenge,
+        finalization_response,
+    )
+
+    authorization = deletion.make_operator_authorization(
+        finalized["auth"],
+        "fixture-cycle007-delete-authorization-0001",
+        fixture=True,
+    )
+    challenge = deletion.issue_deletion_execution_challenge(
+        bindings,
+        primary["primary_stage"],
+        primary["portable_export"],
+        finalized["finalize"],
+        finalized["auth"],
+        authorization,
+    )
+    pre_response = deletion.workstation_deletion_custody_response_stage(
+        primary["portable_export"],
+        attested["attestation"],
+        challenge,
+        imported_pack,
+        workstation_root,
+        source_failure_domain_token="fixture-primary-domain",
+        workstation_failure_domain_token="fixture-workstation-domain",
+        zstd_executable=bindings.zstd_executable,
+        fixture=True,
+    )
+    return {
+        "bindings": bindings,
+        "materialization": materialization,
+        "evidence": evidence,
+        "sentinel": sentinel,
+        "source_work": source_work,
+        "workstation_root": workstation_root,
+        "imported_pack": imported_pack,
+        "primary": primary,
+        "attested": attested,
+        "finalized": finalized,
+        "authorization": authorization,
+        "challenge": challenge,
+        "pre_response": pre_response,
+    }
+
+
+def _fixture_source_paths(state: Mapping[str, Any]) -> set[Path]:
+    index = storage._path_index(state["bindings"])
+    paths: set[Path] = set()
+    for item in state["primary"]["inventory"]["objects"]:
+        for relative in item["role_relative_paths"]:
+            paths.add(index[relative].resolve())
+    return paths
+
+
+def _execute_fixture_deletion(state: Mapping[str, Any], **kwargs: Any) -> dict[str, Any]:
+    primary = state["primary"]
+    finalized = state["finalized"]
+    return deletion.execute_authorized_source_deletion(
+        state["bindings"],
+        primary["primary_stage"],
+        primary["portable_export"],
+        primary["inventory"],
+        primary["pack_manifest"],
+        finalized["finalize"],
+        finalized["auth"],
+        state["authorization"],
+        state["challenge"],
+        state["pre_response"],
+        primary["pack_dir"],
+        quiescence_lock_paths=kwargs.pop("quiescence_lock_paths", []),
+        fault_hook=kwargs.pop("fault_hook", None),
+        **kwargs,
+    )
+
+
+def test_authorized_deletion_is_exact_file_only_and_preserves_custody(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    state = _prepare_deletion_fixture(tmp_path, monkeypatch)
+    target_paths = _fixture_source_paths(state)
+    source_directories = {
+        path
+        for root in (state["materialization"], state["evidence"])
+        for path in root.rglob("*")
+        if path.is_dir()
+    }
+    sentinel = state["sentinel"]
+    result = _execute_fixture_deletion(state)
+
+    assert result["unlinked_receipt"]["unlinked_path_count"] == len(target_paths)
+    assert result["unlinked_receipt"]["unlinked_object_count"] == state["primary"]["inventory"]["object_count"]
+    assert result["unlinked_receipt"]["reclaimed_byte_forecast"] == state["finalized"]["auth"]["reclaimed_byte_forecast"]
+    assert result["post_challenge"]["backup_live_at_response"] is True
+    assert all(not path.exists() for path in target_paths)
+    assert sentinel.is_file()
+    assert sentinel.read_bytes() == b"do-not-delete-this-fixture-sentinel"
+    assert all(path.is_dir() for path in source_directories)
+    assert state["primary"]["pack_dir"].is_dir()
+    assert state["imported_pack"].is_dir()
+    assert (state["primary"]["pack_dir"] / "pack-manifest.json").is_file()
+    assert (state["imported_pack"] / "pack-manifest.json").is_file()
+
+
+@pytest.mark.parametrize("tamper", ["authorization", "custody"])
+def test_deletion_refuses_tampered_authorization_or_custody(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, tamper: str
+) -> None:
+    state = _prepare_deletion_fixture(tmp_path, monkeypatch)
+    target_paths = _fixture_source_paths(state)
+    if tamper == "authorization":
+        state["authorization"] = dict(state["authorization"])
+        state["authorization"]["auth_receipt_sha256"] = "f" * 64
+    else:
+        state["pre_response"] = dict(state["pre_response"])
+        state["pre_response"]["challenge_nonce"] = "tampered"
+
+    with pytest.raises(storage.StorageCustodyError):
+        _execute_fixture_deletion(state)
+
+    assert any(path.exists() for path in target_paths)
+    assert state["sentinel"].is_file()
+    assert state["primary"]["pack_dir"].is_dir()
+    assert state["imported_pack"].is_dir()
+
+
+@pytest.mark.parametrize("mutation", ["hardlink", "symlink", "inode"])
+def test_deletion_refuses_added_hardlink_symlink_or_inode_replacement(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str
+) -> None:
+    state = _prepare_deletion_fixture(tmp_path, monkeypatch)
+    target = sorted(_fixture_source_paths(state))[0]
+    original = target.read_bytes()
+    if mutation == "hardlink":
+        external = tmp_path / "external-unselected-hardlink.bin"
+        os.link(target, external)
+    elif mutation == "symlink":
+        moved = target.with_name(target.name + ".original")
+        os.replace(target, moved)
+        os.symlink(moved.name, target)
+    else:
+        replacement = target.with_name(target.name + ".replacement")
+        replacement.write_bytes(original)
+        os.chmod(replacement, storage.PRIVATE_FILE_MODE)
+        os.replace(replacement, target)
+
+    with pytest.raises(storage.StorageCustodyError):
+        _execute_fixture_deletion(state)
+
+    assert target.exists() or mutation == "hardlink"
+    assert state["sentinel"].is_file()
+    assert state["primary"]["pack_dir"].is_dir()
+    assert state["imported_pack"].is_dir()
+
+
+class _SyntheticDeletionCrash(RuntimeError):
+    pass
+
+
+@pytest.mark.parametrize("crash_point", ["INTENT", "AFTER_UNLINK"])
+def test_deletion_crash_resume_uses_durable_journal(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, crash_point: str
+) -> None:
+    state = _prepare_deletion_fixture(tmp_path, monkeypatch)
+    target_paths = _fixture_source_paths(state)
+    crashed = False
+
+    def fault_hook(event: Any) -> None:
+        nonlocal crashed
+        event_name = event.get("event") if isinstance(event, Mapping) else event
+        normalized = str(event_name).replace("-", "_").upper()
+        if not crashed and (
+            normalized == crash_point
+            or normalized == f"AFTER_{crash_point}"
+            or (crash_point == "INTENT" and normalized == "INTENT_WRITTEN")
+        ):
+            crashed = True
+            raise _SyntheticDeletionCrash(crash_point)
+
+    with pytest.raises(_SyntheticDeletionCrash):
+        _execute_fixture_deletion(state, fault_hook=fault_hook)
+    assert crashed is True
+    journal_candidates = tuple(
+        path
+        for path in (state["source_work"] / "cycle007-storage-primary-stage").glob(
+            "*deletion*journal*"
+        )
+    )
+    assert journal_candidates, "crash must leave a durable deletion journal"
+
+    resumed = _execute_fixture_deletion(state)
+    assert resumed["unlinked_receipt"]["unlinked_path_count"] == len(target_paths)
+    assert all(not path.exists() for path in target_paths)
+    assert state["sentinel"].is_file()
+    assert state["primary"]["pack_dir"].is_dir()
+    assert state["imported_pack"].is_dir()
+
+
+def test_finalize_reports_actual_free_delta_separately_from_forecast(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    state = _prepare_deletion_fixture(tmp_path, monkeypatch)
+    result = _execute_fixture_deletion(state)
+    before = result["unlinked_receipt"]["source_avail_before_bytes"]
+    after = result["unlinked_receipt"]["source_avail_after_bytes"]
+    forecast = state["finalized"]["auth"]["reclaimed_byte_forecast"]
+
+    final = deletion.finalize_deletion_execution(
+        state["bindings"],
+        state["primary"]["inventory"],
+        state["primary"]["portable_export"],
+        state["authorization"],
+        state["finalized"]["finalize"],
+        result["post_challenge"],
+        state["primary"]["pack_dir"],
+    )
+
+    assert before <= after
+    assert final["actual_reclaimed_bytes"] == after - before
+    assert final["reclaimed_byte_forecast"] == forecast
+    assert final["actual_reclaimed_bytes"] != final["reclaimed_byte_forecast"]
+    assert final["forecast_is_not_actual"] is True
