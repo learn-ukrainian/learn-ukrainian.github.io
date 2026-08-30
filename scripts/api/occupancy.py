@@ -6,7 +6,8 @@ path. Canonical SSH aliases never appear as JSON keys. Map them with
 the atlas-job registry, the cached job unit, local session-stream driver
 leases, and optional occupancy markers. Observer heartbeats from
 ``POST /api/observer/presence`` are partitioned by opaque host id; legacy rows
-remain under ``cloud-observer``.
+remain under ``cloud-observer`` and reuse the same ``burn_state`` /
+``burn_sources`` occupancy shape (no RAM lease, no host probe).
 """
 
 from __future__ import annotations
@@ -368,23 +369,39 @@ def _occupants_from_observers(host_id: str) -> list[dict[str, str | None]]:
     return occupants
 
 
-def _shape_cloud_observer(occupants: list[dict[str, str | None]]) -> dict[str, Any]:
-    ai_seats: list[str] = []
-    for o in occupants:
-        agent = o.get("agent")
-        if agent and agent not in ai_seats:
-            ai_seats.append(str(agent))
-    idle = (not occupants) or all(o.get("status") == "idle" for o in occupants)
+def _observer_clear_sources() -> dict[str, dict[str, Any]]:
+    """Atlas/driver/foundry do not apply to the presence-only observer bucket."""
     return {
-        "host_id": CLOUD_OBSERVER_HOST_ID,
+        name: {"state": "clear", "observation_age_s": 0.0} for name in _BURN_SOURCE_NAMES
+    }
+
+
+def _cloud_observer_load_entry() -> dict[str, Any]:
+    return {
         "status": "fresh",
         "observed_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
         "age_seconds": 0.0,
-        "occupants": occupants,
-        "occupant_count": len(occupants),
-        "ai_seats": ai_seats,
-        "idle_or_empty": idle,
     }
+
+
+def _shape_cloud_observer(occupants: list[dict[str, str | None]]) -> dict[str, Any]:
+    """Presence-gated observer bucket — same occupancy shape as probed hosts.
+
+    No host probe, no RAM lease, no load metrics. Burn reuses the #7216
+    helpers: clear atlas/driver/foundry sources, then ``_has_active_occupant``
+    so a working/blocked heartbeat is ``active`` and idle-only is ``idle``.
+    """
+    burn_sources = _observer_clear_sources()
+    burn_state = _burn_state(burn_sources)
+    if _has_active_occupant(occupants):
+        burn_state = "active"
+    return _shape_host(
+        CLOUD_OBSERVER_HOST_ID,
+        _cloud_observer_load_entry(),
+        occupants,
+        burn_state,
+        burn_sources,
+    )
 
 
 def _attach_cloud_observer(payload: dict[str, Any], host_id: str | None) -> dict[str, Any]:

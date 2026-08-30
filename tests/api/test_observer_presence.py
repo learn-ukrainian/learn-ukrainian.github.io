@@ -69,6 +69,12 @@ def test_presence_loopback_heartbeat_appears_under_cloud_observer() -> None:
     host = data["hosts"]["cloud-observer"]
     assert host["host_id"] == "cloud-observer"
     assert host["status"] == "fresh"
+    assert host["burn_state"] == "active"
+    assert set(host["burn_sources"]) == {"atlas_job", "driver", "foundry"}
+    assert all(source["state"] == "clear" for source in host["burn_sources"].values())
+    assert all(source["observation_age_s"] >= 0 for source in host["burn_sources"].values())
+    assert host["idle_or_empty"] is False
+    assert host["ai_seats"] == ["grok-bot"]
     assert "cpu_count" not in host
     assert "mem" not in host
     assert "error" not in host
@@ -112,6 +118,9 @@ def test_default_occupancy_keeps_quiet_mac_alongside_cloud_observer() -> None:
     assert hosts["mac-operator"]["status"] == "unavailable"
     assert hosts["mac-operator"]["idle_or_empty"] is False
     assert hosts["cloud-observer"]["occupants"][0]["agent"] == "grok-bot"
+    assert hosts["cloud-observer"]["burn_state"] == "active"
+    assert hosts["cloud-observer"]["idle_or_empty"] is False
+    assert set(hosts["cloud-observer"]["burn_sources"]) == {"atlas_job", "driver", "foundry"}
 
 
 def test_presence_rejects_ram_lease_fields() -> None:
@@ -165,6 +174,37 @@ def test_presence_upserts_per_agent_and_drops_after_ttl() -> None:
     assert live[0].status == "blocked"
     assert second.agent == "grok-bot"
     assert list_live(now_mono=126.0) == []
+
+
+def test_idle_observer_occupancy_reports_idle_burn() -> None:
+    posted = loop_client.post(
+        "/api/observer/presence",
+        json={
+            "agent": "qa-engineer",
+            "kind": "observer",
+            "task_id": "7063",
+            "status": "idle",
+            "summary": "waiting on review",
+        },
+    )
+    assert posted.status_code == 200
+    occupancy = remote_client.get("/api/occupancy?host_id=cloud-observer")
+    assert occupancy.status_code == 200
+    host = occupancy.json()["hosts"]["cloud-observer"]
+    assert host["burn_state"] == "idle"
+    assert host["idle_or_empty"] is True
+    assert host["occupants"] == [
+        {
+            "kind": "observer",
+            "agent": "qa-engineer",
+            "task_id": "7063",
+            "epic": None,
+            "status": "idle",
+        }
+    ]
+    assert "summary" not in host["occupants"][0]
+    assert "pid" not in occupancy.text
+    assert "reserved_ram_mb" not in occupancy.text
 
 
 def test_qa_engineer_and_grok_bot_can_coexist() -> None:
