@@ -334,11 +334,16 @@ def test_later_block_revokes_earlier_approve_latest_wins() -> None:
     assert not result.ok
     assert "revoked CF" in result.reason
 
-    # And the mirror: approve AFTER a block stands.
+    # And the mirror: an approve GENUINELY LATER than the block stands.
+    # It must carry a later timestamp — with equal/absent timestamps the
+    # #7502-r2 tie-break deliberately fails closed (block wins).
     result = evaluate_attestation(
         expected_head=PR_HEAD,
         author_family="anthropic",
-        bodies=[("comment", block), ("comment", approve)],
+        bodies=[
+            ("comment", block, "2026-08-30T12:00:00Z"),
+            ("comment", approve, "2026-08-30T12:05:00Z"),
+        ],
     )
     assert result.ok
 
