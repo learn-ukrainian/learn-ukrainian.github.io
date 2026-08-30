@@ -992,21 +992,68 @@ def _require_entry_aliases_absent(bindings: storage.Bindings, entry: Mapping[str
 
 
 def _open_quarantine(bindings: storage.Bindings, plan: Mapping[str, Any], entry: Mapping[str, Any]) -> tuple[int, str]:
+    """Open the deterministic same-filesystem quarantine slot for an entry.
+
+    Older persisted plans pin one role-root quarantine directory.  That works
+    when the entry and role root are on one filesystem.  A selected entry can
+    however live below a nested mount, in which case moving it to that root
+    fails with ``EXDEV``.  The plan already pins a unique, non-replacing
+    quarantine name, so for that case its exact source parent is the safe
+    quarantine directory: ``renameat2`` remains atomic and crash recovery can
+    derive the same location solely from the immutable entry device identity.
+    No source directory is ever enumerated or removed.
+    """
     role = str(entry.get("quarantine_role"))
     directory_name = str(plan.get("quarantine_directory_name"))
     _require(directory_name.startswith(".cycle007-delete-quarantine-"), "plan_drift")
     root = _role_root(bindings, role)
     flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | getattr(os, "O_NOFOLLOW", 0)
     root_descriptor = -1
+    quarantine_descriptor = -1
     try:
         root_descriptor = os.open(root, flags)
-        descriptor = os.open(directory_name, flags, dir_fd=root_descriptor)
+        quarantine_descriptor = os.open(directory_name, flags, dir_fd=root_descriptor)
+        quarantine_info = os.fstat(quarantine_descriptor)
+        if int(quarantine_info.st_dev) == int(entry["dev"]):
+            result = quarantine_descriptor
+            quarantine_descriptor = -1
+            return result, str(entry["quarantine_name"])
+        os.close(quarantine_descriptor)
+        quarantine_descriptor = -1
+        source_parent, _leaf = _open_parent(bindings, str(entry["role_relative_path"]))
+        try:
+            source_info = os.fstat(source_parent)
+            _require(int(source_info.st_dev) == int(entry["dev"]), "source_state_drift")
+            return source_parent, str(entry["quarantine_name"])
+        except Exception:
+            os.close(source_parent)
+            raise
     except OSError as exc:
         raise DeletionExecutionError("source_state_drift") from exc
     finally:
         if root_descriptor >= 0:
             os.close(root_descriptor)
-    return descriptor, str(entry["quarantine_name"])
+        # Returned descriptors are intentionally left open for the caller.
+        if quarantine_descriptor >= 0:
+            os.close(quarantine_descriptor)
+
+
+def _uses_role_root_quarantine(
+    bindings: storage.Bindings,
+    plan: Mapping[str, Any],
+    entry: Mapping[str, Any],
+) -> bool:
+    """Whether this entry's deterministic quarantine slot is role-root based."""
+    role = str(entry.get("quarantine_role"))
+    directory_name = str(plan.get("quarantine_directory_name"))
+    _require(directory_name.startswith(".cycle007-delete-quarantine-"), "plan_drift")
+    quarantine = _role_root(bindings, role) / directory_name
+    try:
+        info = quarantine.lstat()
+    except OSError as exc:
+        raise DeletionExecutionError("journal_drift") from exc
+    _require(stat.S_ISDIR(info.st_mode) and not quarantine.is_symlink(), "journal_drift")
+    return int(info.st_dev) == int(entry["dev"])
 
 
 def _quarantine_present_exact(bindings: storage.Bindings, plan: Mapping[str, Any], entry: Mapping[str, Any]) -> bool:
@@ -1348,7 +1395,7 @@ def _verify_pending_presence(
         entry_id = str(entry["entry_id"])
         present = _entry_present_exact(bindings, entry)
         quarantined = _quarantine_present_exact(bindings, plan, entry)
-        if quarantined:
+        if quarantined and _uses_role_root_quarantine(bindings, plan, entry):
             expected_quarantine_by_role.setdefault(str(entry["quarantine_role"]), set()).add(
                 str(entry["quarantine_name"])
             )
