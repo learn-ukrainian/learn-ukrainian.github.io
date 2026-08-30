@@ -278,18 +278,16 @@ class AuthorityService:
     ) -> None:
         # #7482 interlock: authority tables/queries are sqlite-only in this
         # slice (BEGIN IMMEDIATE, triggers, ``?`` placeholders) and are not in
-        # the pg migration path at all; refuse pg at the boundary.
-        if store is None:
-            assert_component_supported(StoreId.FLEET_COMMS, "authority_service")
-            self.store = ArtifactStore(root=root)
-        elif store.authority is Authority.PG:
+        # the pg migration path at all; refuse pg at the boundary. The assert
+        # runs for INJECTED stores too (CF r1 finding, PR #7498).
+        assert_component_supported(StoreId.FLEET_COMMS, "authority_service")
+        if store is not None and store.authority is Authority.PG:
             raise ControlPlaneUnsupportedComponentError(
                 "control-plane store 'fleet_comms': authority 'pg' is not "
                 "supported by component 'authority_service' in this slice "
                 "(#7482 interlock)"
             )
-        else:
-            self.store = store
+        self.store = store or ArtifactStore(root=root)
         self._owns_store = store is None
         self._conn = self.store.connection
         if self._owns_store:

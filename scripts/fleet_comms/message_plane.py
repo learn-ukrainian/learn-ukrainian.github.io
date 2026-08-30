@@ -214,6 +214,9 @@ class MessagePlane:
             self.mode = resolve_plane_mode(mode)
         else:
             self.mode = mode
+        # #7482 interlock: assert even when an executor is injected — the
+        # plane itself runs sqlite SQL (_bump_continuation, parity reads).
+        assert_component_supported(StoreId.FLEET_COMMS, "message_plane")
         self.executor = executor or RequestExecutor(root=root)
         self.legacy_db = legacy_db
         self.telemetry_path = telemetry_path

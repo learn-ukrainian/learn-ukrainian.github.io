@@ -8,6 +8,7 @@ tests/api/test_dashboard_monitor_context.py
 tests/api/test_import_pinning.py
 tests/api/test_route_locality.py
 tests/api/test_sources_router_context.py
+tests/control_plane/test_component_interlock.py
 tests/control_plane/test_storage.py
 tests/control_plane/test_storage_contract.py
 tests/fleet_comms/test_artifacts_pg_byte_plane.py
