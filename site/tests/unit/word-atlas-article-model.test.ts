@@ -260,8 +260,8 @@ describe("enrichment.examples in article view and rendering (#7452)", () => {
       "test",
       "test",
     );
-    expect(view.sources).toContain("Anna Ohoiko");
-    expect(view.sources).toContain("learner_english_gloss");
+    expect(view.sourceList).toContain("Anna Ohoiko");
+    expect(view.sourceList).toContain("learner_english_gloss");
   });
 });
 
