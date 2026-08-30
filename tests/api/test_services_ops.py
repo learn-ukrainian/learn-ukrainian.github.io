@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import os
 import re
 import shutil
@@ -901,14 +902,10 @@ def _reap_notebook_tunnel_children(children_file: Path) -> None:
             pid = int(line)
         except ValueError:
             continue
-        try:
+        with contextlib.suppress(OSError):
             os.kill(pid, 15)
-        except OSError:
-            pass
-        try:
+        with contextlib.suppress(ChildProcessError):
             os.waitpid(pid, os.WNOHANG)
-        except ChildProcessError:
-            pass
 
 
 def _start_named_ssh_process(tmp_path: Path) -> subprocess.Popen[object]:
