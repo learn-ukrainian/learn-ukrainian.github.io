@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_p1_dialect_regional_protection_amendment_v1.schema.json",
+  "title": "Additive P1 dialect and regional protection amendment v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "text_free", "status", "controlling_outcome_sha256", "base_p1_manifest", "amendment", "dialect_regional_protection", "safety", "generator"],
+  "properties": {
+    "schema_version": {"const": "phase3_p1_dialect_regional_protection_amendment_v1"},
+    "text_free": {"const": true},
+    "status": {"const": "INVENTORIED"},
+    "controlling_outcome_sha256": {"$ref": "#/$defs/sha"},
+    "base_p1_manifest": {"$ref": "#/$defs/artifact"},
+    "amendment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["amendment_version", "kind", "base_p1_rewritten", "base_required_cell_count", "additive_required_cell_count", "composite_required_cell_count", "additive_cells"],
+      "properties": {
+        "amendment_version": {"const": "v1"},
+        "kind": {"const": "additive_dialect_regional_protection"},
+        "base_p1_rewritten": {"const": false},
+        "base_required_cell_count": {"const": 15},
+        "additive_required_cell_count": {"const": 1},
+        "composite_required_cell_count": {"const": 16},
+        "additive_cells": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"$ref": "#/$defs/cell"}}
+      }
+    },
+    "dialect_regional_protection": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source_qualified_identity_required", "region_required", "register_required", "dialect_or_regional_forms_protected", "modern_correction_eligible", "automatic_normalization_to_modern_standard_ukrainian", "automatic_mapping_to_modern_national_successor", "identity_or_region_unknown_route"],
+      "properties": {
+        "source_qualified_identity_required": {"const": true}, "region_required": {"const": true}, "register_required": {"const": true}, "dialect_or_regional_forms_protected": {"const": true}, "modern_correction_eligible": {"const": false}, "automatic_normalization_to_modern_standard_ukrainian": {"const": false}, "automatic_mapping_to_modern_national_successor": {"const": false}, "identity_or_region_unknown_route": {"const": "coverage_blocked_or_abstention"}
+      }
+    },
+    "safety": {"type": "object", "additionalProperties": false, "required": ["provider_calls", "labels_created", "dataset_rows_emitted", "gold_created", "training_performed"], "properties": {"provider_calls": {"const": false}, "labels_created": {"const": false}, "dataset_rows_emitted": {"const": false}, "gold_created": {"const": false}, "training_performed": {"const": false}}},
+    "generator": {"$ref": "#/$defs/artifact"}
+  },
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "artifact": {"type": "object", "additionalProperties": false, "required": ["path", "sha256"], "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/sha"}}},
+    "cell": {"type": "object", "additionalProperties": false, "required": ["cell_id", "language_identity", "context_role", "phenomenon", "role", "status", "protection_required"], "properties": {"cell_id": {"const": "protection.source_attested_ukrainian_dialect_or_regional_form.dialect_or_regional_form.protected_dialect_or_regional"}, "language_identity": {"const": "source_attested_ukrainian_dialect_or_regional_form"}, "context_role": {"const": "dialect_or_regional_form"}, "phenomenon": {"const": "dialect_or_regional_identity"}, "role": {"const": "protected_dialect_or_regional"}, "status": {"const": "coverage_blocked"}, "protection_required": {"const": true}}}
+  }
+}
