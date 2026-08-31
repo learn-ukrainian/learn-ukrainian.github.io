@@ -1048,7 +1048,11 @@ function buildSourceList(args: {
 }) {
   const { entry, enrichment, definitionCards, sections } = args;
   const sources = new Set<string>();
-  for (const source of enrichment?.sources ?? []) sources.add(source);
+  const addMappedSource = (source: string | null | undefined) => {
+    const label = formatTranslationSource(source) ?? source;
+    if (label) sources.add(label);
+  };
+  for (const source of enrichment?.sources ?? []) addMappedSource(source);
   if (entry.pronunciation?.source) sources.add(entry.pronunciation.source);
   if (enrichment?.stress?.source) sources.add(enrichment.stress.source);
   if (enrichment?.cefr?.source) sources.add(enrichment.cefr.source);
@@ -1065,9 +1069,9 @@ function buildSourceList(args: {
   if (sections?.usage_notes?.source) sources.add(sections.usage_notes.source);
   if (sections?.form_notes?.source) sources.add(sections.form_notes.source);
   if (enrichment?.literary_attestation?.source) sources.add(enrichment.literary_attestation.source);
-  if (enrichment?.translation?.source) sources.add(enrichment.translation.source);
+  if (enrichment?.translation?.source) addMappedSource(enrichment.translation.source);
   for (const ex of enrichment?.examples ?? []) {
-    if (ex.source) sources.add(ex.source);
+    if (ex.source) addMappedSource(ex.source);
   }
   if ((entry.course_usage ?? []).length > 0) sources.add("curriculum_vocabulary");
   if (entry.wiki_reference?.wikipedia) sources.add("query_wikipedia");

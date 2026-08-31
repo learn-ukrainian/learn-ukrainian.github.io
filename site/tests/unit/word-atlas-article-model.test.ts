@@ -218,6 +218,7 @@ describe("enrichment.examples in article view and rendering (#7452)", () => {
         course_usage: [],
         enrichment: {
           translation: { en: ["bus"], source: "learner_english_gloss" },
+          sources: ["learner_english_gloss"],
           examples: [
             {
               uk: "Сашко́ ї́здить в шко́лу авто́бусом.",
@@ -263,7 +264,8 @@ describe("enrichment.examples in article view and rendering (#7452)", () => {
       "test",
     );
     expect(view.sourceList).toContain("Anna Ohoiko");
-    expect(view.sourceList).toContain("learner_english_gloss");
+    expect(view.sourceList).not.toContain("learner_english_gloss");
+    expect(view.sourceList.filter((source) => source === "Anna Ohoiko")).toHaveLength(1);
   });
 });
 
@@ -444,5 +446,4 @@ describe("verb pedagogy strip (#7471)", () => {
     expect(html).not.toContain("Вид і керування");
   });
 });
-
 
