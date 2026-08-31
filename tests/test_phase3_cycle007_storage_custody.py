@@ -1491,7 +1491,10 @@ def test_configured_backup_root_receives_backup_artifacts(tmp_path: Path) -> Non
 
 
 def _prepare_deletion_fixture(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    overlapping_evidence: bool = False,
 ) -> dict[str, Any]:
     """Build a complete, synthetic, two-domain deletion-execution fixture.
 
@@ -1505,7 +1508,10 @@ def _prepare_deletion_fixture(
         lambda root: storage.digest(f"fixture-domain:{root.name}".encode()),
     )
     materialization, _packet_count, _row_count = _build_materialization(tmp_path)
-    evidence = _build_evidence(tmp_path, materialization)
+    evidence = _build_evidence(
+        materialization if overlapping_evidence else tmp_path,
+        materialization,
+    )
     sentinel = materialization / "UNSELECTED-sentinel.bin"
     sentinel.write_bytes(b"do-not-delete-this-fixture-sentinel")
     os.chmod(sentinel, storage.PRIVATE_FILE_MODE)
@@ -2778,3 +2784,363 @@ def test_systemd_quiescence_refusal_precedes_journal_and_source_mutation(
     assert state["sentinel"].is_file()
     assert state["primary"]["pack_dir"].is_dir()
     assert state["imported_pack"].is_dir()
+
+
+def _force_role_quarantine_cross_device(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Model a nested source mount while keeping this fixture filesystem portable."""
+    prefix = ".cycle007-delete-quarantine-"
+    quarantine_fds: set[int] = set()
+    original_open = os.open
+    original_close = os.close
+    original_fstat = os.fstat
+    original_lstat = Path.lstat
+
+    def tracked_open(path: Any, *args: Any, **kwargs: Any) -> int:
+        descriptor = original_open(path, *args, **kwargs)
+        try:
+            name = Path(os.fsdecode(os.fspath(path))).name
+        except (TypeError, ValueError):
+            name = ""
+        if name.startswith(prefix):
+            quarantine_fds.add(descriptor)
+        return descriptor
+
+    def tracked_close(descriptor: int) -> None:
+        quarantine_fds.discard(descriptor)
+        original_close(descriptor)
+
+    def synthetic_fstat(descriptor: int) -> os.stat_result:
+        info = original_fstat(descriptor)
+        if descriptor not in quarantine_fds:
+            return info
+        values = list(info)
+        values[2] = int(info.st_dev) + 1
+        return os.stat_result(values)
+
+    def synthetic_lstat(path: Path, *args: Any, **kwargs: Any) -> os.stat_result:
+        info = original_lstat(path, *args, **kwargs)
+        if path.name.startswith(prefix):
+            values = list(info)
+            values[2] = int(info.st_dev) + 1
+            return os.stat_result(values)
+        return info
+
+    # ``deletion.os`` and the test module share Python's os module object; the
+    # wrappers delegate to the originals and are restored by pytest afterwards.
+    monkeypatch.setattr(os, "open", tracked_open)
+    monkeypatch.setattr(os, "close", tracked_close)
+    monkeypatch.setattr(os, "fstat", synthetic_fstat)
+    monkeypatch.setattr(Path, "lstat", synthetic_lstat)
+
+
+def _fixture_deletion_journal_root(state: Mapping[str, Any]) -> Path:
+    return (
+        state["source_work"]
+        / "cycle007-storage-primary-stage"
+        / "deletion-execution-journal"
+    )
+
+
+def test_deletion_quarantine_uses_exact_source_parent_on_cross_device(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    state = _prepare_deletion_fixture(tmp_path, monkeypatch)
+    _force_role_quarantine_cross_device(monkeypatch)
+
+    def stop_before_intent(event: Mapping[str, Any]) -> None:
+        if event["event"] == "before_intent":
+            raise _SyntheticDeletionCrash("before_intent")
+
+    with pytest.raises(_SyntheticDeletionCrash):
+        _execute_fixture_deletion(state, fault_hook=stop_before_intent)
+
+    plan_path = _fixture_deletion_journal_root(state) / "plan.json"
+    plan = json.loads(plan_path.read_bytes())
+    entry = plan["entries"][0]
+    parent, _leaf = deletion._open_parent(
+        state["bindings"], str(entry["role_relative_path"])
+    )
+    quarantine, quarantine_name = deletion._open_quarantine(
+        state["bindings"], plan, entry
+    )
+    try:
+        parent_info = os.fstat(parent)
+        quarantine_info = os.fstat(quarantine)
+        assert quarantine_name == entry["quarantine_name"]
+        assert int(quarantine_info.st_dev) == int(entry["dev"])
+        assert (int(quarantine_info.st_dev), int(quarantine_info.st_ino)) == (
+            int(parent_info.st_dev),
+            int(parent_info.st_ino),
+        )
+        role_root_quarantine = (
+            deletion._role_root(state["bindings"], str(entry["quarantine_role"]))
+            / plan["quarantine_directory_name"]
+        )
+        assert int(role_root_quarantine.lstat().st_dev) != int(entry["dev"])
+    finally:
+        os.close(parent)
+        os.close(quarantine)
+
+
+def test_deletion_cross_device_intent_recovery_keeps_every_rename_same_filesystem(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    state = _prepare_deletion_fixture(tmp_path, monkeypatch)
+    target_paths = _fixture_source_paths(state)
+    _force_role_quarantine_cross_device(monkeypatch)
+    real_fstat = os.fstat
+    real_rename = deletion._rename_noreplace
+    rename_devices: list[tuple[int, int]] = []
+
+    def recording_rename(
+        source_parent: int,
+        source_name: str,
+        destination_parent: int,
+        destination_name: str,
+        **kwargs: Any,
+    ) -> None:
+        rename_devices.append(
+            (int(real_fstat(source_parent).st_dev), int(real_fstat(destination_parent).st_dev))
+        )
+        real_rename(
+            source_parent,
+            source_name,
+            destination_parent,
+            destination_name,
+            **kwargs,
+        )
+
+    monkeypatch.setattr(deletion, "_rename_noreplace", recording_rename)
+
+    def crash_after_intent(event: Mapping[str, Any]) -> None:
+        if event["event"] == "after_intent":
+            raise _SyntheticDeletionCrash("after_intent")
+
+    with pytest.raises(_SyntheticDeletionCrash):
+        _execute_fixture_deletion(state, fault_hook=crash_after_intent)
+
+    journal_root = _fixture_deletion_journal_root(state)
+    plan_path = journal_root / "plan.json"
+    plan_bytes = plan_path.read_bytes()
+    events_before = {
+        path.name: path.read_bytes()
+        for path in (journal_root / "events").glob("*.json")
+    }
+    assert [json.loads(value)["event_type"] for value in events_before.values()] == [
+        "START",
+        "INTENT",
+    ]
+    assert all(path.is_file() for path in target_paths)
+
+    resumed = _execute_fixture_deletion(state)
+
+    assert rename_devices
+    assert all(source_dev == destination_dev for source_dev, destination_dev in rename_devices)
+    assert resumed["unlinked_receipt"]["unlinked_path_count"] == int(
+        json.loads(plan_bytes)["entry_count"]
+    )
+    assert all(not path.exists() for path in target_paths)
+    assert state["sentinel"].is_file()
+    assert plan_path.read_bytes() == plan_bytes
+    assert {
+        path.name: path.read_bytes()
+        for path in (journal_root / "events").glob("*.json")
+        if path.name in events_before
+    } == events_before
+    for role in ("materialization", "evidence"):
+        quarantine = (
+            deletion._role_root(state["bindings"], role)
+            / json.loads(plan_bytes)["quarantine_directory_name"]
+        )
+        assert quarantine.is_dir()
+        assert not any(quarantine.iterdir())
+
+
+def test_deletion_recovers_same_device_legacy_moved_state_without_rewriting_plan(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    state = _prepare_deletion_fixture(tmp_path, monkeypatch)
+    target_paths = _fixture_source_paths(state)
+
+    def crash_after_unlink(event: Mapping[str, Any]) -> None:
+        if event["event"] == "after_unlink":
+            raise _SyntheticDeletionCrash("after_unlink")
+
+    with pytest.raises(_SyntheticDeletionCrash):
+        _execute_fixture_deletion(state, fault_hook=crash_after_unlink)
+
+    journal_root = _fixture_deletion_journal_root(state)
+    plan_path = journal_root / "plan.json"
+    plan_bytes = plan_path.read_bytes()
+    plan = json.loads(plan_bytes)
+    events_dir = journal_root / "events"
+    events_before = [json.loads(path.read_bytes()) for path in sorted(events_dir.glob("*.json"))]
+    assert [event["event_type"] for event in events_before] == [
+        "START",
+        "INTENT",
+        "MOVED",
+    ]
+    first = plan["entries"][0]
+    assert deletion._uses_role_root_quarantine(state["bindings"], plan, first) is True
+    first_source = deletion._role_path(
+        state["bindings"], str(first["role_relative_path"])
+    )
+    assert not first_source.exists()
+    legacy_quarantine = (
+        deletion._role_root(state["bindings"], str(first["quarantine_role"]))
+        / plan["quarantine_directory_name"]
+        / first["quarantine_name"]
+    )
+    assert not legacy_quarantine.exists()
+
+    resumed = _execute_fixture_deletion(state)
+
+    events_after = [json.loads(path.read_bytes()) for path in sorted(events_dir.glob("*.json"))]
+    assert any(event["event_type"] == "RECOVERED_UNLINKED" for event in events_after)
+    assert resumed["unlinked_receipt"]["all_authorized_entries_absent"] is True
+    assert plan_path.read_bytes() == plan_bytes
+    assert all(not path.exists() for path in target_paths)
+    assert state["sentinel"].is_file()
+
+
+def test_rename_noreplace_never_overwrites_an_existing_quarantine_slot(
+    tmp_path: Path,
+) -> None:
+    source_parent = tmp_path / "source-parent"
+    destination_parent = tmp_path / "destination-parent"
+    source_parent.mkdir(mode=storage.PRIVATE_DIR_MODE)
+    destination_parent.mkdir(mode=storage.PRIVATE_DIR_MODE)
+    source = source_parent / "payload"
+    destination = destination_parent / "slot"
+    source.write_bytes(b"authorized-source")
+    destination.write_bytes(b"unrelated-existing-slot")
+    os.chmod(source, storage.PRIVATE_FILE_MODE)
+    os.chmod(destination, storage.PRIVATE_FILE_MODE)
+    flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0)
+    source_descriptor = os.open(source_parent, flags)
+    destination_descriptor = os.open(destination_parent, flags)
+    try:
+        with pytest.raises(deletion.DeletionExecutionError):
+            deletion._rename_noreplace(
+                source_descriptor,
+                "payload",
+                destination_descriptor,
+                "slot",
+                fixture=True,
+            )
+    finally:
+        os.close(source_descriptor)
+        os.close(destination_descriptor)
+    assert source.read_bytes() == b"authorized-source"
+    assert destination.read_bytes() == b"unrelated-existing-slot"
+
+
+def test_deletion_handles_overlapping_aliases_without_enumerating_or_removing_parents(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    state = _prepare_deletion_fixture(
+        tmp_path,
+        monkeypatch,
+        overlapping_evidence=True,
+    )
+    inventory = state["primary"]["inventory"]
+    alias_objects = [
+        item for item in inventory["objects"] if len(item["role_relative_paths"]) > 1
+    ]
+    assert alias_objects
+    target_paths = _fixture_source_paths(state)
+    target_parents = {path.parent for path in target_paths}
+    source_directories = {
+        path
+        for root in (state["materialization"], state["evidence"])
+        for path in root.rglob("*")
+        if path.is_dir()
+    }
+    directory_identity = {
+        path: (int(path.stat().st_dev), int(path.stat().st_ino))
+        for path in source_directories
+    }
+    enumerated_source_parents: list[Path] = []
+    original_iterdir = Path.iterdir
+
+    def guarded_iterdir(path: Path):
+        if path in target_parents:
+            enumerated_source_parents.append(path)
+        return original_iterdir(path)
+
+    monkeypatch.setattr(Path, "iterdir", guarded_iterdir)
+    result = _execute_fixture_deletion(state)
+    monkeypatch.setattr(Path, "iterdir", original_iterdir)
+
+    assert not enumerated_source_parents
+    assert result["unlinked_receipt"]["unlinked_inode_count"] == inventory["object_count"]
+    assert result["unlinked_receipt"]["directories_removed"] == 0
+    assert all(not path.exists() for path in target_paths)
+    for item in alias_objects:
+        for alias in item["role_relative_paths"]:
+            assert not deletion._role_path(state["bindings"], str(alias)).exists()
+    for path, identity in directory_identity.items():
+        info = path.stat()
+        assert path.is_dir()
+        assert (int(info.st_dev), int(info.st_ino)) == identity
+    assert state["primary"]["pack_dir"].is_dir()
+    assert state["imported_pack"].is_dir()
+
+
+def test_deletion_resume_accepts_persisted_plan_and_receipts_without_rewriting_history(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    state = _prepare_deletion_fixture(tmp_path, monkeypatch)
+    target_paths = _fixture_source_paths(state)
+
+    def crash_after_intent(event: Mapping[str, Any]) -> None:
+        if event["event"] == "after_intent":
+            raise _SyntheticDeletionCrash("after_intent")
+
+    with pytest.raises(_SyntheticDeletionCrash):
+        _execute_fixture_deletion(state, fault_hook=crash_after_intent)
+
+    stage_root = state["source_work"] / "cycle007-storage-primary-stage"
+    journal_root = stage_root / "deletion-execution-journal"
+    plan_path = journal_root / "plan.json"
+    plan_bytes = plan_path.read_bytes()
+    events_before = {
+        path.name: path.read_bytes()
+        for path in sorted((journal_root / "events").glob("*.json"))
+    }
+
+    # Rehydrate every input that the executor persists.  This models a fresh
+    # process resuming from the existing plan/journal rather than a live dict.
+    state["primary"]["primary_stage"] = json.loads(
+        (stage_root / "primary-stage.json").read_bytes()
+    )
+    state["primary"]["portable_export"] = json.loads(
+        (stage_root / "portable-export.json").read_bytes()
+    )
+    state["primary"]["inventory"] = json.loads((stage_root / "inventory.json").read_bytes())
+    state["primary"]["pack_manifest"] = json.loads(
+        (stage_root / "pack-manifest.receipt.json").read_bytes()
+    )
+    state["finalized"]["finalize"] = json.loads((stage_root / "finalize.json").read_bytes())
+    state["finalized"]["auth"] = json.loads(
+        (stage_root / "deletion-auth-request.json").read_bytes()
+    )
+    state["authorization"] = json.loads(
+        (journal_root / "operator-authorization.json").read_bytes()
+    )
+    state["challenge"] = json.loads((journal_root / "challenge.json").read_bytes())
+    state["pre_response"] = json.loads(
+        (journal_root / "pre-delete-workstation-response.json").read_bytes()
+    )
+
+    resumed = _execute_fixture_deletion(state)
+
+    assert resumed["unlinked_receipt"]["all_authorized_entries_absent"] is True
+    assert plan_path.read_bytes() == plan_bytes
+    assert {
+        path.name: path.read_bytes()
+        for path in sorted((journal_root / "events").glob("*.json"))
+        if path.name in events_before
+    } == events_before
+    assert all(not path.exists() for path in target_paths)
+    assert state["sentinel"].is_file()
