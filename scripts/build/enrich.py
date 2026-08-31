@@ -884,8 +884,7 @@ def enrich_file(content_path: Path, plan_path: Path) -> list[str]:
 
     # Only write if enrichment produced content (not empty/truncated)
     if actions and len(enriched) >= len(content) * 0.5:
-        # Curriculum markdown enrichment — never credentials/PII storage.
-        content_path.write_text(enriched, "utf-8")  # codeql[py/clear-text-storage-sensitive-data]
+        content_path.write_text(enriched, "utf-8")
     elif actions:
         import logging
         logging.warning(f"Enrichment for {slug} produced suspiciously short output "

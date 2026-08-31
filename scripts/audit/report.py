@@ -510,9 +510,8 @@ def print_pedagogical_violations(violations: list[dict]) -> None:
     if violations:
         print("\n📚 PEDAGOGICAL VIOLATIONS FOUND:")
         for v in violations:
-            # Pedagogical audit strings (curriculum wording), never credentials.
-            print(f"  [{v['type']}] {v['issue']}")  # codeql[py/clear-text-logging-sensitive-data]
-            print(f"     → FIX: {v['fix']}")  # codeql[py/clear-text-logging-sensitive-data]
+            print(f"  [{v['type']}] {v['issue']}")
+            print(f"     → FIX: {v['fix']}")
         print("")
 
 
