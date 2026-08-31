@@ -60,7 +60,7 @@
     "@testing-library/user-event": "^14.6.4",
     "@types/better-sqlite3": "^9.6.0",
     "@vitest/coverage-v8": "^4.1.10",
-    "happy-dom": "^20.11.2",
+    "happy-dom": "^20.11.6",
     "vitest": "^4.1.10"
   },
   "overrides": {
