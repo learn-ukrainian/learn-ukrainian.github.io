@@ -1,0 +1,45 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "b193f275b343",
+  "session_id": "3fa912f2-95d8-436f-bd78-624c8b52ec79",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-31T07:25:25.24846402Z",
+  "branch": "cursor/guard-pr-merge-rollup-fallback",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/hooks/guard-pr-merge.py",
+    "tests/test_guard_pr_merge.py"
+  ],
+  "agent": "Claude Code",
+  "model": "",
+  "turn_id": "7002d26841eb",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 26,
+    "cache_creation_tokens": 30846,
+    "cache_read_tokens": 453888,
+    "output_tokens": 2597,
+    "api_call_count": 13
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-31T07:25:25.210690413Z",
+    "agent_lines": 4,
+    "agent_removed": 2,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 4,
+    "total_lines_changed": 6,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

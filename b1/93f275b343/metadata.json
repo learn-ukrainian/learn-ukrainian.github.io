@@ -1,0 +1,27 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "b193f275b343",
+  "strategy": "manual-commit",
+  "branch": "cursor/guard-pr-merge-rollup-fallback",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "agents_extensions/shared/hooks/guard-pr-merge.py",
+    "tests/test_guard_pr_merge.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/b1/93f275b343/0/metadata.json",
+      "transcript": "/b1/93f275b343/0/full.jsonl",
+      "compact_transcript": "/b1/93f275b343/0/transcript.jsonl",
+      "content_hash": "/b1/93f275b343/0/content_hash.txt",
+      "prompt": "/b1/93f275b343/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 26,
+    "cache_creation_tokens": 30846,
+    "cache_read_tokens": 453888,
+    "output_tokens": 2597,
+    "api_call_count": 13
+  }
+}
