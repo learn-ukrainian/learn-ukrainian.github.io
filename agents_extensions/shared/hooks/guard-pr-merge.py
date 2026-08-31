@@ -891,23 +891,9 @@ def _pr_meta(pr: str, repo: str | None = None, cwd: str | None = None) -> dict |
     return data
 
 
-class _UseStatusRollupFallback:
-    """Sentinel: ``gh pr checks --json`` is unavailable on this gh build."""
-
-
-_USE_STATUS_ROLLUP = _UseStatusRollupFallback()
-
-_ROLLUP_FAIL_CONCLUSIONS = {
-    "FAILURE",
-    "CANCELLED",
-    "TIMED_OUT",
-    "ACTION_REQUIRED",
-}
-_ROLLUP_PENDING_STATUS = {"IN_PROGRESS", "QUEUED", "PENDING", "WAITING", "EXPECTED", "REQUESTED", "STALE"}
-_ROLLUP_FAIL_STATES = _ROLLUP_FAIL_CONCLUSIONS
-_ROLLUP_PENDING_STATES = {"PENDING", "EXPECTED"}
-_ROLLUP_PASS_STATES = {"SUCCESS", "SKIPPED", "NEUTRAL"}
-_ROLLUP_PASS_CONCLUSIONS = {"SUCCESS", "SKIPPED", "NEUTRAL"}
+_ROLLUP_FAIL = {"FAILURE", "CANCELLED", "TIMED_OUT", "ACTION_REQUIRED"}
+_ROLLUP_PENDING = {"IN_PROGRESS", "QUEUED", "PENDING", "WAITING", "EXPECTED", "REQUESTED", "STALE"}
+_ROLLUP_PASS = {"SUCCESS", "SKIPPED", "NEUTRAL"}
 
 
 def _checks_json_unsupported(out: subprocess.CompletedProcess[str]) -> bool:
@@ -916,7 +902,7 @@ def _checks_json_unsupported(out: subprocess.CompletedProcess[str]) -> bool:
         return False
     lines = [line.strip() for line in _decolorize(out.stderr or "").splitlines() if line.strip()]
     return (
-        len(lines) >= 3
+        len(lines) >= 4
         and lines[0] == "unknown flag: --json"
         and re.fullmatch(r"Usage:\s+gh pr checks \[<number> \| <url> \| <branch>\] \[flags\]", lines[1])
         and lines[2] == "Flags:"
@@ -925,55 +911,8 @@ def _checks_json_unsupported(out: subprocess.CompletedProcess[str]) -> bool:
     )
 
 
-def _parse_check_bucket_rows(rows: list) -> tuple[list[str], list[str]] | None:
-    failing: list[str] = []
-    pending: list[str] = []
-    for r in rows:
-        if not isinstance(r, dict):
-            return None
-        name = str(r.get("name") or "")
-        if _is_advisory(name):
-            continue
-        bucket = str(r.get("bucket") or r.get("state") or "").lower()
-        if bucket in _FAIL_BUCKETS:
-            failing.append(name)
-        elif bucket in _PENDING_BUCKETS:
-            pending.append(name)
-        elif bucket not in _PASS_BUCKETS:
-            return None
-    return failing, pending
-
-
-def _check_states_from_checks_json(
-    pr: str, repo: str | None = None, cwd: str | None = None
-) -> tuple[list[str], list[str]] | _UseStatusRollupFallback | None:
-    try:
-        out = subprocess.run(
-            ["gh", "pr", "checks", pr, *_repo_args(repo), "--json", "name,bucket,state"],
-            capture_output=True,
-            env=_gh_env(),
-            cwd=cwd,
-            text=True,
-            timeout=8,
-        )
-    except Exception:
-        return None
-    if _checks_json_unsupported(out):
-        return _USE_STATUS_ROLLUP
-    text = (out.stdout or "").strip()
-    if not text:
-        return ([], []) if out.returncode == 0 else None
-    try:
-        rows = json.loads(_decolorize(text))
-    except json.JSONDecodeError:
-        return None
-    if not isinstance(rows, list):
-        return None
-    return _parse_check_bucket_rows(rows)
-
-
 def _rollup_value(value: object) -> str:
-    return (value if isinstance(value, str) else "" if value is None else str(value)).upper()
+    return value.strip().upper() if isinstance(value, str) else ""
 
 
 def _rollup_name(row: dict) -> str | None:
@@ -997,21 +936,22 @@ def _rollup_timestamp(row: dict) -> datetime | None:
     return None
 
 
-def _rollup_key(row: dict, name: str) -> tuple[str, ...]:
-    context = row.get("context")
-    if isinstance(context, str) and context.strip():
-        return ("context", context.strip())
-    workflow = row.get("workflowName") or row.get("workflow")
-    return ("check", name, workflow.strip() if isinstance(workflow, str) else "")
-
-
 def _latest_rollup_rows(rows: list[dict]) -> list[dict] | None:
     latest: dict[tuple[str, ...], tuple[datetime | None, dict]] = {}
     for row in rows:
         name = _rollup_name(row)
         if name is None:
             return None
-        key = _rollup_key(row, name)
+        context = row.get("context")
+        workflow = row.get("workflowName") or row.get("workflow")
+        if isinstance(context, str) and context.strip():
+            key = ("context", context.strip())
+        elif isinstance(workflow, str) and workflow.strip():
+            key = ("check", name, workflow.strip())
+        else:
+            key = ("unresolved", name)
+            if key in latest:
+                return None
         timestamp = _rollup_timestamp(row)
         previous = latest.get(key)
         if previous is not None:
@@ -1026,7 +966,7 @@ def _latest_rollup_rows(rows: list[dict]) -> list[dict] | None:
 def _parse_status_rollup_rows(rows: list) -> tuple[list[str], list[str]] | None:
     if not rows:
         return None
-    non_advisory = []
+    named = []
     for row in rows:
         if not isinstance(row, dict):
             return None
@@ -1034,11 +974,10 @@ def _parse_status_rollup_rows(rows: list) -> tuple[list[str], list[str]] | None:
         if name is None:
             return None
         if not _is_advisory(name):
-            non_advisory.append(row)
-    latest = _latest_rollup_rows(non_advisory)
+            named.append(row)
+    latest = _latest_rollup_rows(named)
     if latest is None:
         return None
-
     failing: list[str] = []
     pending: list[str] = []
     for row in latest:
@@ -1048,25 +987,25 @@ def _parse_status_rollup_rows(rows: list) -> tuple[list[str], list[str]] | None:
         if state:
             if row.get("status") not in (None, "") or row.get("conclusion") not in (None, ""):
                 return None
-            if state in _ROLLUP_FAIL_STATES:
-                failing.append(name)
-            elif state in _ROLLUP_PENDING_STATES:
-                pending.append(name)
-            elif state not in _ROLLUP_PASS_STATES:
-                return None
-            continue
-
-        status = _rollup_value(row.get("status"))
-        conclusion = _rollup_value(row.get("conclusion"))
-        if conclusion in _ROLLUP_FAIL_CONCLUSIONS or status in _ROLLUP_FAIL_STATES:
-            failing.append(name)
-        elif status in _ROLLUP_PENDING_STATUS:
-            if conclusion:
-                return None
-            pending.append(name)
-        elif status == "COMPLETED" and conclusion in _ROLLUP_PASS_CONCLUSIONS:
-            continue
+            result = state
         else:
+            status = _rollup_value(row.get("status"))
+            conclusion = _rollup_value(row.get("conclusion"))
+            if conclusion in _ROLLUP_FAIL or status in _ROLLUP_FAIL:
+                result = "FAILURE"
+            elif status in _ROLLUP_PENDING:
+                if conclusion:
+                    return None
+                result = "PENDING"
+            elif status == "COMPLETED" and conclusion in _ROLLUP_PASS:
+                result = "SUCCESS"
+            else:
+                return None
+        if result in _ROLLUP_FAIL:
+            failing.append(name)
+        elif result in _ROLLUP_PENDING:
+            pending.append(name)
+        elif result not in _ROLLUP_PASS:
             return None
     return failing, pending
 
@@ -1092,22 +1031,51 @@ def _check_states_from_status_rollup(
         data = json.loads(_decolorize(out.stdout or "").strip() or "{}")
     except json.JSONDecodeError:
         return None
-    if not isinstance(data, dict):
+    if not isinstance(data, dict) or not isinstance(data.get("statusCheckRollup"), list):
         return None
-    rows = data.get("statusCheckRollup")
-    if rows is None:
-        return None
-    if not isinstance(rows, list):
-        return None
-    return _parse_status_rollup_rows(rows)
+    return _parse_status_rollup_rows(data["statusCheckRollup"])
 
 
 def _check_states(pr: str, repo: str | None = None, cwd: str | None = None) -> tuple[list[str], list[str]] | None:
     """(failing, pending) non-advisory check names, or None if undeterminable."""
-    via_checks = _check_states_from_checks_json(pr, repo, cwd)
-    if via_checks is _USE_STATUS_ROLLUP:
+    try:
+        out = subprocess.run(
+            ["gh", "pr", "checks", pr, *_repo_args(repo), "--json", "name,bucket,state"],
+            capture_output=True,
+            env=_gh_env(),
+            cwd=cwd,
+            text=True,
+            timeout=8,
+        )
+    except Exception:
+        return None
+    if _checks_json_unsupported(out):
         return _check_states_from_status_rollup(pr, repo, cwd)
-    return via_checks
+    text = (out.stdout or "").strip()
+    if not text:
+        return ([], []) if out.returncode == 0 else None
+    try:
+        rows = json.loads(_decolorize(text))
+    except json.JSONDecodeError:
+        return None
+    if not isinstance(rows, list):
+        return None
+    failing: list[str] = []
+    pending: list[str] = []
+    for r in rows:
+        if not isinstance(r, dict):
+            return None
+        name = str(r.get("name") or "")
+        if _is_advisory(name):
+            continue
+        bucket = str(r.get("bucket") or r.get("state") or "").lower()
+        if bucket in _FAIL_BUCKETS:
+            failing.append(name)
+        elif bucket in _PENDING_BUCKETS:
+            pending.append(name)
+        elif bucket not in _PASS_BUCKETS:
+            return None
+    return failing, pending
 
 
 def _base_protected(owner_repo: str, base: str) -> bool | None:

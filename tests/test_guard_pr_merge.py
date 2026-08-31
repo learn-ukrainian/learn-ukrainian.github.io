@@ -487,88 +487,50 @@ def test_known_pass_buckets_are_green(monkeypatch):
     assert guard._check_states("5") == ([], [])
 
 
-def test_check_states_falls_back_when_checks_json_unsupported(monkeypatch):
-    import types
-
-    calls: list[list[str]] = []
-
-    def fake_run(cmd, **_k):
-        calls.append(list(cmd))
-        if cmd[:4] == ["gh", "pr", "checks", "5"]:
-            return types.SimpleNamespace(
-                returncode=1,
-                stdout="",
-                stderr=_GH_246_CHECKS_JSON_GAP,
-            )
-        if cmd[:4] == ["gh", "pr", "view", "5"]:
-            payload = {
-                "statusCheckRollup": [
-                    {"name": "CI Gate", "status": "COMPLETED", "conclusion": "SUCCESS"},
-                    {"name": "Lint (ruff)", "status": "IN_PROGRESS", "conclusion": ""},
-                    {"name": "pip-audit (advisory)", "status": "COMPLETED", "conclusion": "FAILURE"},
-                ]
-            }
-            return types.SimpleNamespace(returncode=0, stdout=json.dumps(payload), stderr="")
-        raise AssertionError(f"unexpected cmd: {cmd}")
-
-    monkeypatch.setattr(guard.subprocess, "run", fake_run)
-    assert guard._check_states("5") == ([], ["Lint (ruff)"])
-    assert calls[0][:5] == ["gh", "pr", "checks", "5", "--json"]
-    assert calls[1][:5] == ["gh", "pr", "view", "5", "--json"]
-
-
 def _rollup_states(monkeypatch, rows):
     import types
 
     def fake_run(cmd, **_k):
         if cmd[:4] == ["gh", "pr", "checks", "5"]:
             return types.SimpleNamespace(returncode=1, stdout="", stderr=_GH_246_CHECKS_JSON_GAP)
-        if cmd[:4] == ["gh", "pr", "view", "5"]:
-            return types.SimpleNamespace(
-                returncode=0,
-                stdout=json.dumps({"statusCheckRollup": rows}),
-                stderr="",
-            )
-        raise AssertionError(f"unexpected cmd: {cmd}")
+        assert cmd[:4] == ["gh", "pr", "view", "5"]
+        return types.SimpleNamespace(returncode=0, stdout=json.dumps({"statusCheckRollup": rows}), stderr="")
 
     monkeypatch.setattr(guard.subprocess, "run", fake_run)
     return guard._check_states("5")
 
 
-def test_rollup_fallback_green_reaches_merge_guard(monkeypatch):
-    monkeypatch.setattr(guard, "_pr_ref", lambda args, repo=None, cwd=None: "5")
-    monkeypatch.setattr(
-        guard,
-        "_pr_meta",
-        lambda p, repo=None, cwd=None: {
-            "isDraft": False,
-            "baseRefName": "main",
-            "body": "",
-            "headRefOid": "a" * 40,
-            "number": 5,
-            "url": _URL,
-        },
-    )
-    _rollup_states(monkeypatch, [{"name": "CI Gate", "status": "COMPLETED", "conclusion": "SUCCESS"}])
-    assert guard._judge(["5", "--squash"]) is None
-
-
 @pytest.mark.parametrize(
-    "row,expected",
+    "rows,expected",
     [
-        ({"name": "CI Gate", "status": "COMPLETED", "conclusion": "FAILURE"}, (["CI Gate"], [])),
-        ({"name": "CI Gate", "status": "IN_PROGRESS", "conclusion": ""}, ([], ["CI Gate"])),
-        ({"name": "CI Gate", "status": "COMPLETED", "conclusion": "UNKNOWN"}, None),
-        ({"name": "CI Gate"}, None),
+        ([{"name": "CI Gate", "status": "COMPLETED", "conclusion": "SUCCESS"}], ([], [])),
+        ([{"name": "CI Gate", "status": "COMPLETED", "conclusion": "FAILURE"}], (["CI Gate"], [])),
+        ([{"name": "CI Gate", "status": "IN_PROGRESS", "conclusion": ""}], ([], ["CI Gate"])),
+        ([{"name": "CI Gate", "status": "COMPLETED", "conclusion": "UNKNOWN"}], None),
+        ([{"name": "CI Gate"}], None),
+        (
+            [
+                {"name": "CI Gate", "workflowName": "CI", "startedAt": "2026-08-31T06:00:00Z", "status": "COMPLETED", "conclusion": "FAILURE"},
+                {"name": "CI Gate", "workflowName": "CI", "startedAt": "2026-08-31T06:01:00Z", "status": "COMPLETED", "conclusion": "SUCCESS"},
+            ],
+            ([], []),
+        ),
+        (
+            [
+                {"name": "CI Gate", "startedAt": "2026-08-31T06:00:00Z", "status": "COMPLETED", "conclusion": "FAILURE"},
+                {"name": "CI Gate", "startedAt": "2026-08-31T06:01:00Z", "status": "COMPLETED", "conclusion": "SUCCESS"},
+            ],
+            None,
+        ),
     ],
 )
-def test_rollup_fallback_non_green_or_unknown_blocks(monkeypatch, row, expected):
-    assert _rollup_states(monkeypatch, [row]) == expected
-    monkeypatch.setattr(guard, "_pr_ref", lambda args, repo=None, cwd=None: "5")
+def test_rollup_fallback_allows_only_unambiguous_green(monkeypatch, rows, expected):
+    assert _rollup_states(monkeypatch, rows) == expected
+    monkeypatch.setattr(guard, "_pr_ref", lambda *_a, **_k: "5")
     monkeypatch.setattr(
         guard,
         "_pr_meta",
-        lambda p, repo=None, cwd=None: {
+        lambda *_a, **_k: {
             "isDraft": False,
             "baseRefName": "main",
             "body": "",
@@ -577,15 +539,7 @@ def test_rollup_fallback_non_green_or_unknown_blocks(monkeypatch, row, expected)
             "url": _URL,
         },
     )
-    assert guard._judge(["5", "--squash"]) is not None
-
-
-def test_rollup_fallback_uses_latest_duplicate_check(monkeypatch):
-    rows = [
-        {"name": "CI Gate", "startedAt": "2026-08-31T06:00:00Z", "status": "COMPLETED", "conclusion": "FAILURE"},
-        {"name": "CI Gate", "startedAt": "2026-08-31T06:01:00Z", "status": "COMPLETED", "conclusion": "SUCCESS"},
-    ]
-    assert _rollup_states(monkeypatch, rows) == ([], [])
+    assert (guard._judge(["5", "--squash"]) is None) == (expected == ([], []))
 
 
 @pytest.mark.parametrize(
@@ -608,21 +562,6 @@ def test_checks_json_fallback_requires_the_246_gap_shape(monkeypatch, returncode
     monkeypatch.setattr(guard.subprocess, "run", fake_run)
     guard._check_states("5")
     assert len(calls) == 1
-
-
-def test_status_rollup_unknown_state_fails_closed(monkeypatch):
-    payload = {"statusCheckRollup": [{"name": "CI Gate", "status": "COMPLETED", "conclusion": "WEIRD"}]}
-    _fake_gh(monkeypatch, returncode=0, stdout=json.dumps(payload))
-
-    def fake_run(cmd, **_k):
-        import types
-
-        if cmd[:4] == ["gh", "pr", "checks", "5"]:
-            return types.SimpleNamespace(returncode=1, stdout="", stderr=_GH_246_CHECKS_JSON_GAP)
-        return types.SimpleNamespace(returncode=0, stdout=json.dumps(payload), stderr="")
-
-    monkeypatch.setattr(guard.subprocess, "run", fake_run)
-    assert guard._check_states("5") is None
 
 
 @pytest.mark.parametrize("draft", ["null", '"false"', "0"])
