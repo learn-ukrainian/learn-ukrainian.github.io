@@ -60,7 +60,7 @@ def test_matrix_rejects_missing_or_unexpected_pre_v2_evidence(
 def test_tracked_matrix_is_complete_hash_bound_and_blocks_phase4() -> None:
     result = compatibility.verify()
     matrix = _matrix()
-    assert matrix["bindings"]["validator_sha256"] == compatibility.MATRIX_VALIDATOR_SHA256  # type: ignore[index]
+    assert matrix["bindings"]["validator_sha256"] == compatibility.sha256_file(compatibility.SCRIPT_PATH)  # type: ignore[index]
     assert result == {
         "ok": True,
         "schema_version": "phase3_v2_compatibility_matrix_v1",
