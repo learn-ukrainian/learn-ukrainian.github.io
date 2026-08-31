@@ -15,7 +15,7 @@
       },
       {
         "path": "scripts/lexicon/apply_anchor_worksheet.py",
-        "sha256": "836e3a9464c799e93f8c3a510bf124e45f0ec0ea254ebf0abad4437191de40f4"
+        "sha256": "be083b832c1ad4891901e9d0b92bdf07232aed32f3a27ed8ef37604808f207a0"
       },
       {
         "path": "scripts/lexicon/assess_kaikki_fillability.py",
