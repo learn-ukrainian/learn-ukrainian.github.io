@@ -220,20 +220,64 @@ class RequestExecutor:
         events: tuple[dict[str, Any], ...] = (),
         raw_bytes: bytes | None = None,
         session_id: str | None = None,
+        reclaim: bool = False,
+        reclaim_stale_after_seconds: int = 7200,
     ) -> RequestRecord:
         """Run adapter conformance on a capture and persist the outcome.
 
         Production adapters will stream into the artifact store then call this
         with the same bytes. Tests inject fixtures directly.
+
+        #7485 exactly-once: execution starts with an ATOMIC claim — one
+        conditional UPDATE from ``queued`` to ``running``. Two concurrent
+        executors can no longer both observe ``queued`` and both run the
+        capture. A request already ``running`` is claimable only with
+        ``reclaim=True`` (explicit crash recovery by the caller).
         """
         req = self.get_request(request_id)
-        if req.state not in {"queued", "running"}:
-            raise RequestExecutorError(f"request {request_id} is not executable (state={req.state})")
-        if req.expires_at < _iso(_utc_now()):
+        now_s = _iso(_utc_now())
+        if req.expires_at < now_s and req.state in {"queued", "running"}:
             self._set_state(request_id, "expired", CompletionState.UNKNOWN)
             raise RequestExecutorError(f"request {request_id} expired")
-
-        self._set_state(request_id, "running", CompletionState.UNKNOWN)
+        if reclaim:
+            # #7485 CF r1: reclaim must never steal an ACTIVELY running
+            # request — only one whose claim has gone stale (crashed
+            # executor). Staleness = updated_at older than the floor.
+            stale_cutoff = _iso(
+                _utc_now() - timedelta(seconds=max(0, reclaim_stale_after_seconds))
+            )
+            cursor = self._conn.execute(
+                """UPDATE requests SET state = 'running', completion_state = ?,
+                   updated_at = ?
+                   WHERE request_id = ? AND expires_at >= ?
+                   AND (state = 'queued'
+                        OR (state = 'running' AND updated_at <= ?))""",
+                (CompletionState.UNKNOWN.value, now_s, request_id, now_s, stale_cutoff),
+            )
+        else:
+            cursor = self._conn.execute(
+                """UPDATE requests SET state = 'running', completion_state = ?,
+                   updated_at = ?
+                   WHERE request_id = ? AND state = 'queued'
+                   AND expires_at >= ?""",
+                (CompletionState.UNKNOWN.value, now_s, request_id, now_s),
+            )
+        self._conn.commit()
+        if cursor.rowcount != 1:
+            current = self.get_request(request_id)
+            if current.state == "running":
+                detail = (
+                    "still fresh — refusing to steal an active claim"
+                    if reclaim
+                    else "pass reclaim=True only for explicit crash recovery"
+                )
+                raise RequestExecutorError(
+                    f"request {request_id} is already claimed by another "
+                    f"executor (state=running); {detail}"
+                )
+            raise RequestExecutorError(
+                f"request {request_id} is not executable (state={current.state})"
+            )
         adapter_name = (adapter or req.resolved_recipient).lower()
         capture = CaptureInput(
             adapter=adapter_name,
@@ -272,10 +316,56 @@ class RequestExecutor:
             token_metadata=envelope.token_metadata,
             tool_call_metadata=envelope.tool_call_metadata,
         )
-        self.store.reference(req.request_message_id, art.artifact_id, relation="raw_capture")
-
+        # #7485: finalize atomically. The artifact commit above is the ONLY
+        # separate commit — a crash after it leaves an unreferenced artifact,
+        # which is exactly what garbage_collect_unreferenced() reclaims. All
+        # state that must agree (references, request state, reply message)
+        # lands in ONE transaction below.
         request_state = self._map_completion_to_request_state(envelope.completion_state)
         now_s = _iso(_utc_now())
+        self._conn.execute("BEGIN IMMEDIATE")
+        try:
+            self._finalize_capture(
+                req=req,
+                request_id=request_id,
+                art=art,
+                envelope=envelope,
+                request_state=request_state,
+                now_s=now_s,
+            )
+        except Exception:
+            self._conn.rollback()
+            raise
+        self._conn.commit()
+        record = self.get_request(request_id)
+        return RequestRecord(
+            request_id=record.request_id,
+            request_message_id=record.request_message_id,
+            requested_recipient=record.requested_recipient,
+            resolved_recipient=record.resolved_recipient,
+            state=record.state,
+            expires_at=record.expires_at,
+            completion_state=record.completion_state,
+            created_at=record.created_at,
+            updated_at=record.updated_at,
+            envelope=envelope,
+            raw_capture_artifact_id=art.artifact_id,
+        )
+
+    def _finalize_capture(
+        self,
+        *,
+        req: RequestRecord,
+        request_id: str,
+        art: Any,
+        envelope: ResponseEnvelope,
+        request_state: str,
+        now_s: str,
+    ) -> None:
+        """All finalize writes; runs inside the caller's open transaction."""
+        self.store.reference(
+            req.request_message_id, art.artifact_id, relation="raw_capture", commit=False
+        )
         row = self._conn.execute(
             "SELECT invocation_spec_json FROM requests WHERE request_id = ?",
             (request_id,),
@@ -328,22 +418,7 @@ class RequestExecutor:
                     now_s,
                 ),
             )
-            self.store.reference(reply_id, art.artifact_id, relation="body")
-        self._conn.commit()
-        record = self.get_request(request_id)
-        return RequestRecord(
-            request_id=record.request_id,
-            request_message_id=record.request_message_id,
-            requested_recipient=record.requested_recipient,
-            resolved_recipient=record.resolved_recipient,
-            state=record.state,
-            expires_at=record.expires_at,
-            completion_state=record.completion_state,
-            created_at=record.created_at,
-            updated_at=record.updated_at,
-            envelope=envelope,
-            raw_capture_artifact_id=art.artifact_id,
-        )
+            self.store.reference(reply_id, art.artifact_id, relation="body", commit=False)
 
     @staticmethod
     def _map_completion_to_request_state(state: CompletionState) -> str:
@@ -358,6 +433,55 @@ class RequestExecutor:
         }:
             return "incomplete"
         return "incomplete"
+
+    def requeue_stale_running(self, *, stale_after_seconds: int = 7200) -> list[str]:
+        """Reconcile crashed executors: atomically re-queue running requests
+        whose claim has gone stale (#7485 CF r1 — production reclaim path).
+
+        Returns the re-queued request ids; unexpired requests only. Callers
+        (ops sweeps, ``python -m scripts.fleet_comms requests requeue-stale``)
+        then re-execute them normally.
+
+        The default floor (7200s) sits at the adapter HARD-timeout ceiling, so
+        a slow-but-alive capture inside the runtime's bounds can never be
+        swept (#7504 CF r2); a claimant that legitimately runs longer must
+        heartbeat via ``touch_claim()``.
+        """
+        now = _utc_now()
+        now_s = _iso(now)
+        cutoff = _iso(now - timedelta(seconds=max(0, stale_after_seconds)))
+        rows = self._conn.execute(
+            """SELECT request_id FROM requests
+               WHERE state = 'running' AND updated_at <= ? AND expires_at >= ?
+               ORDER BY updated_at""",
+            (cutoff, now_s),
+        ).fetchall()
+        stale_ids = [str(r[0]) for r in rows]
+        requeued: list[str] = []
+        for request_id in stale_ids:
+            cursor = self._conn.execute(
+                """UPDATE requests SET state = 'queued', updated_at = ?
+                   WHERE request_id = ? AND state = 'running' AND updated_at <= ?""",
+                (now_s, request_id, cutoff),
+            )
+            if cursor.rowcount == 1:
+                requeued.append(request_id)
+        self._conn.commit()
+        return requeued
+
+    def touch_claim(self, request_id: str) -> bool:
+        """Heartbeat a running claim (bumps updated_at; #7504 CF r2).
+
+        Long-running claimants call this periodically so neither
+        ``requeue_stale_running`` nor a stale-reclaim can steal them.
+        Returns False when the request is not currently running.
+        """
+        cursor = self._conn.execute(
+            "UPDATE requests SET updated_at = ? WHERE request_id = ? AND state = 'running'",
+            (_iso(_utc_now()), request_id),
+        )
+        self._conn.commit()
+        return cursor.rowcount == 1
 
     def _set_state(self, request_id: str, state: str, completion: CompletionState) -> None:
         if state not in REQUEST_STATES:
