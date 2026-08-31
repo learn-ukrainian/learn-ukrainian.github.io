@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+from copy import deepcopy
 from pathlib import Path
 
 import pytest
@@ -40,6 +41,19 @@ def test_generated_contract_is_exact_and_schema_valid() -> None:
     Draft202012Validator(schema).validate(contract)
     assert contract["denominator"]["coverage_blocked_cells"] == 14
     assert contract["cycle007"]["private_binding_state"] == "UNBOUND"
+
+
+def test_schema_rejects_nested_extra_missing_and_frozen_drift() -> None:
+    contract = firewall.build_contract()
+    schema = json.loads((firewall.DATA / "contracts/phase3_scope_circularity_firewall_v1.schema.json").read_text())
+    validator = Draft202012Validator(schema)
+    extra = deepcopy(contract)
+    extra["cycle007"]["unexpected"] = True
+    missing = deepcopy(contract)
+    del missing["private_runtime"]["rejects"]
+    drift = deepcopy(contract)
+    drift["denominator"]["source_units"] = 58
+    assert list(validator.iter_errors(extra)) and list(validator.iter_errors(missing)) and list(validator.iter_errors(drift))
 
 
 @pytest.mark.parametrize("namespace", firewall.DENY_NAMESPACES)
@@ -145,3 +159,10 @@ def test_candidate_evaluator_rejects_caller_collision_and_cycle_derivative() -> 
     corpus["corpus_sha256"] = firewall.sha256_bytes(firewall.canonical_json(corpus))
     assert firewall.evaluate_candidate_batch([{"evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-007"}], corpus)["code"] == "uncertain_lineage"
     assert firewall.evaluate_candidate_batch([{"unit_id": "x"}], corpus)["code"] == "uncertain_lineage"
+
+
+def test_concept_authority_gate_allows_independent_and_rejects_renamed_derivative() -> None:
+    allowed = {"kind": "authority_citation", "origin_kind": "independent", "concept_or_citation_id": "external_authority", "authority_sha256": "a" * 64}
+    assert firewall.admit_concept_or_authority(allowed)["ok"] is True
+    rejected = {"kind": "abstract_concept", "origin_kind": "independent", "concept_or_citation_id": "rehash", "authority_sha256": "a" * 64, "membership": "b" * 64}
+    assert firewall.admit_concept_or_authority(rejected)["code"] == "uncertain_lineage"
