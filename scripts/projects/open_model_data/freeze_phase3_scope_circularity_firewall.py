@@ -914,6 +914,31 @@ def admit_concept_or_authority(record: Mapping[str, Any], registry: Mapping[str,
     return _zero("unregistered_authority")
 
 
+def _public_binding_receipt(corpus: Mapping[str, Any]) -> dict[str, Any]:
+    value = {
+        "schema_version": "phase3_scope_circularity_public_binding_receipt_v1",
+        "text_free": True,
+        "pack_manifest_receipt_sha256": EXPECTED_PACK_MANIFEST_RECEIPT_SHA256,
+        "object_set_sha256": EXPECTED_OBJECT_SET_SHA256,
+        "ordered_row_identity_commitment_sha256": EXPECTED_ORDERED_ROW_IDENTITY_SHA256,
+        "packet_count": 204,
+        "row_count": 10159,
+        "physical_sidecar_count": 204,
+        "logical_sidecar_count": 408,
+        "object_count": 419,
+        "private_graph_commitment_sha256": corpus["corpus_sha256"],
+        "builder_clearance": {
+            "p1_sha256": PINS[P1],
+            "p1_amendment_sha256": PINS[P1_AMENDMENT],
+            "p2_sha256": PINS[P2],
+            "near_duplicate_policy_sha256": PINS[NEAR_POLICY],
+            "firewall_sha256": sha256_file(OUTPUT),
+        },
+    }
+    value["receipt_sha256"] = sha256_bytes(canonical_json(value))
+    return value
+
+
 def run_steward_production(config: str | None = None) -> dict[str, Any]:
     """Build the only valid steward receipt from the retained pack, never caller hashes.
 
@@ -962,8 +987,7 @@ def run_steward_production(config: str | None = None) -> dict[str, Any]:
         _require((pack_root_stat.st_dev, pack_root_stat.st_ino) == (os.fstat(pack_root_fd).st_dev, os.fstat(pack_root_fd).st_ino), "private_path_unsafe")
         _secure_content_pack_proof(pack_root_fd, manifest, inventory)
         _write_private_json_at(output_root_fd, "cycle007-deny-component-manifest-v1.json", corpus)
-        public_receipt = {"schema_version": "phase3_scope_circularity_public_binding_receipt_v1", "text_free": True, "pack_manifest_receipt_sha256": manifest["receipt_sha256"], "object_set_sha256": EXPECTED_OBJECT_SET_SHA256, "ordered_row_identity_commitment_sha256": EXPECTED_ORDERED_ROW_IDENTITY_SHA256, "packet_count": 204, "row_count": 10159, "physical_sidecar_count": 204, "logical_sidecar_count": 408, "object_count": 419, "private_graph_commitment_sha256": corpus["corpus_sha256"], "builder_clearance": {"p1_sha256": PINS[P1], "p1_amendment_sha256": PINS[P1_AMENDMENT], "p2_sha256": PINS[P2], "near_duplicate_policy_sha256": PINS[NEAR_POLICY], "firewall_sha256": sha256_file(OUTPUT)}}
-        public_receipt["receipt_sha256"] = sha256_bytes(canonical_json(public_receipt))
+        public_receipt = _public_binding_receipt(corpus)
         _require((output_before.st_dev, output_before.st_ino) == (os.fstat(output_root_fd).st_dev, os.fstat(output_root_fd).st_ino), "private_path_unsafe")
         _write_run_state_at(output_root_fd, "COMPLETE", corpus_sha256=corpus["corpus_sha256"], receipt_sha256=public_receipt["receipt_sha256"])
         return {"ok": True, "code": None, "emitted": 0, "promoted": 0, "activated": 0, "public_receipt": public_receipt}
@@ -996,6 +1020,7 @@ def evaluate_steward_candidates(candidates: Sequence[Mapping[str, Any]], config:
         _require(state.get("state") == "COMPLETE" and state.get("state_sha256") == sha256_bytes(canonical_json({key: value for key, value in state.items() if key != "state_sha256"})), "private_binding_unbound")
         corpus = _load_private_json(output_root / "cycle007-deny-component-manifest-v1.json", root)
         _require(state.get("corpus_sha256") == corpus.get("corpus_sha256"), "hash_drift")
+        _require(state.get("public_receipt_sha256") == _public_binding_receipt(corpus)["receipt_sha256"], "hash_drift")
         return evaluate_candidate_batch(candidates, corpus)
     except (FirewallError, OSError, UnicodeDecodeError, json.JSONDecodeError):
         return _zero("private_binding_unbound")
