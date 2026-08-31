@@ -12,6 +12,14 @@ permissions:
 on:
   schedule:
     - cron: '7,22,37,52 * * * *'
+  # Fallback trigger (#7539 follow-up): GitHub's cron has been unreliable for this
+  # workflow (zero scheduled firings in its first 4h on main), so also arm right
+  # after any CI run completes — that is exactly the moment a PR can newly become
+  # eligible (CI Gate / CF attest just turned green). The scanner never checks out
+  # or runs PR-head code, so workflow_run's default-branch privileges are safe here.
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
   workflow_dispatch:
 
 concurrency:
@@ -21,6 +29,8 @@ concurrency:
 jobs:
   arm:
     name: Arm eligible pull requests
+    # After a red CI run nothing can have newly become eligible; skip the scan.
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -36,4 +46,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-        run: python scripts/ci/auto_arm_merge.py
+        # Module invocation keeps the repo root on sys.path — #7553 added a
+        # `from scripts.ci.cf_attest import ...` import that a plain-path
+        # invocation cannot resolve (run 33445623952 crashed on it).
+        run: python -m scripts.ci.auto_arm_merge
