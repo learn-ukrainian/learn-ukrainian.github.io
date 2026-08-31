@@ -20,11 +20,11 @@
     },
     "cost": 0,
     "tokens": {
-      "input": 110984,
-      "output": 12701,
-      "reasoning": 34991,
+      "input": 117008,
+      "output": 16284,
+      "reasoning": 35331,
       "cache": {
-        "read": 3492672,
+        "read": 4280000,
         "write": 0
       }
     },
@@ -47,7 +47,7 @@
     ],
     "time": {
       "created": 1788216040316,
-      "updated": 1788216994330
+      "updated": 1788217068593
     }
   },
   "messages": [
@@ -5804,19 +5804,22 @@
         },
         "cost": 0,
         "tokens": {
-          "input": 0,
-          "output": 0,
-          "reasoning": 0,
+          "total": 111907,
+          "input": 1663,
+          "output": 545,
+          "reasoning": 259,
           "cache": {
-            "read": 0,
-            "write": 0
+            "write": 0,
+            "read": 109440
           }
         },
         "modelID": "glm-5.3",
         "providerID": "zai-coding-plan",
         "time": {
-          "created": 1788216994327
+          "created": 1788216994327,
+          "completed": 1788217018328
         },
+        "finish": "tool-calls",
         "id": "msg_05a09ea17001oHdtBmz0MmO2IT",
         "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM"
       },
@@ -5855,21 +5858,617 @@
           "tool": "bash",
           "callID": "call_703b3afcb75b4045b349e9e4",
           "state": {
-            "metadata": {
-              "output": ""
-            },
-            "status": "running",
+            "status": "completed",
             "input": {
               "command": "git add scripts/delegate.py tests/test_delegate.py tests/test_delegate_primary_integrity.py tests/test_delegate_timeouts.py && git commit -m \"$(cat <<'EOF'\nfix(delegate): #7522 pin worktree base to canonical GitHub remote\n\n_fetch_base() always fetched origin and resolved origin/<base>. On hosts\nwhere origin is a lagging mirror (atlas-runner: hramatka mirror 11 commits\nbehind GitHub), the fetch succeeded and silently pinned a stale base SHA,\nso workers built on code missing merged control-plane fixes.\n\nResolve the canonical GitHub remote (learn-ukrainian/\nlearn-ukrainian.github.io) from the checkout's git config via the new\n_git_remote_urls/_resolve_canonical_remote_name readers: prefer a remote\nnamed `github`, else origin when origin itself is that GitHub URL.\n\n- _fetch_base: single-remote hosts keep the exact origin fetch contract;\n  on two-remote hosts fetch the mirror best-effort (lag warning naming\n  both SHAs and both remotes on stderr), then fetch the canonical remote\n  into refs/remotes/origin/<branch> so every downstream resolver\n  (_origin_base_ref, ancestor checks, stale-base rebase) sees the\n  canonical SHA. Canonical fetch failure fails closed with a RuntimeError\n  naming both remotes and recovery (`git remote -v`) — never the stale\n  mirror SHA.\n- _fetch_existing_branch: --branch reuse fetches the PR branch from the\n  canonical remote (a mirror may not carry it), same fail-closed rule.\n- _base_branch_name/_origin_base_ref accept github/main as a remote-\n  qualified base; _validate_branch_reuse_name rejects github/ prefixes.\n- tests: real-git two-remote fixture proves `git log -1` of the created\n  worktree equals the canonical SHA; unit tests cover origin=GitHub\n  unchanged, canonical-SHA preference with warning, and fail-closed on\n  canonical fetch failure. Existing origin-prefix/timeout/fetch-failure\n  tests pinned to the single-remote host shape so they stay hermetic on\n  mirror-origin fleet hosts.\n\nCloses #7522\n\nX-Agent: glm/7522-canonical-base-glm\nEOF\n)\" && git log -1 --format='%H%n%s%n---%(trailers)'",
               "workdir": "/home/ops/learn-ukrainian/.worktrees/dispatch/glm/7522-canonical-base-glm"
             },
+            "output": "[glm/7522-canonical-base-glm 9b6ed2796a] fix(delegate): #7522 pin worktree base to canonical GitHub remote\n 4 files changed, 483 insertions(+), 41 deletions(-)\n9b6ed2796a5f80e13d62699cb7e00115a0d36a68\nfix(delegate): #7522 pin worktree base to canonical GitHub remote\n---X-Agent: glm/7522-canonical-base-glm\nEntire-Checkpoint: 89c2a75846c1\n\n",
+            "metadata": {
+              "output": "[glm/7522-canonical-base-glm 9b6ed2796a] fix(delegate): #7522 pin worktree base to canonical GitHub remote\n 4 files changed, 483 insertions(+), 41 deletions(-)\n9b6ed2796a5f80e13d62699cb7e00115a0d36a68\nfix(delegate): #7522 pin worktree base to canonical GitHub remote\n---X-Agent: glm/7522-canonical-base-glm\nEntire-Checkpoint: 89c2a75846c1\n\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git add scripts/delegate.py tests/test_delegate.py tests/test_delegate_primary_integrity.py tests/test_delegate_timeouts.py && git commit -m \"$(cat <<'EOF'\nfix(delegate): #7522 pin worktree base to canonical GitHub remote\n\n_fetch_base() always fetched origin and resolved origin/<base>. On hosts\nwhere origin is a lagging mirror (atlas-runner: hramatka mirror 11 commits\nbehind GitHub), the fetch succeeded and silently pinned a stale base SHA,\nso workers built on code missing merged control-plane fixes.\n\nResolve the canonical GitHub remote (learn-ukrainian/\nlearn-ukrainian.github.io) from the checkout's git config via the new\n_git_remote_urls/_resolve_canonical_remote_name readers: prefer a remote\nnamed `github`, else origin when origin itself is that GitHub URL.\n\n- _fetch_base: single-remote hosts keep the exact origin fetch contract;\n  on two-remote hosts fetch the mirror best-effort (lag warning naming\n  both SHAs and both remotes on stderr), then fetch the canonical remote\n  into refs/remotes/origin/<branch> so every downstream resolver\n  (_origin_base_ref, ancestor checks, stale-base rebase) sees the\n  canonical SHA. Canonical fetch failure fails closed with a RuntimeError\n  naming both remotes and recovery (`git remote -v`) — never the stale\n  mirror SHA.\n- _fetch_existing_branch: --branch reuse fetches the PR branch from the\n  canonical remote (a mirror may not carry it), same fail-closed rule.\n- _base_branch_name/_origin_base_ref accept github/main as a remote-\n  qualified base; _validate_branch_reuse_name rejects github/ prefixes.\n- tests: real-git two-remote fixture proves `git log -1` of the created\n  worktree equals the canonical SHA; unit tests cover origin=GitHub\n  unchanged, canonical-SHA preference with warning, and fail-closed on\n  canonical fetch failure. Existing origin-prefix/timeout/fetch-failure\n  tests pinned to the single-remote host shape so they stay hermetic on\n  mirror-origin fleet hosts.\n\nCloses #7522\n\nX-Agent: glm/7522-canonical-base-glm\nEOF\n)\" && git log -1 --format='%H%n%s%n---%(trailers)'",
             "time": {
-              "start": 1788217009174
+              "start": 1788217018085,
+              "end": 1788217018093
             }
           },
           "id": "prt_05a0a240a0012BBQk16ler66pk",
           "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM",
           "messageID": "msg_05a09ea17001oHdtBmz0MmO2IT"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "9588e9e3b56f90104f81f1ffd2158a3e9357654e",
+          "type": "step-finish",
+          "tokens": {
+            "total": 111907,
+            "input": 1663,
+            "output": 545,
+            "reasoning": 259,
+            "cache": {
+              "write": 0,
+              "read": 109440
+            }
+          },
+          "cost": 0,
+          "id": "prt_05a0a4774001A5FHGPnpyHSYFj",
+          "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM",
+          "messageID": "msg_05a09ea17001oHdtBmz0MmO2IT"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_059fb5bee001F9RUS6DPNdNAfc",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/glm/7522-canonical-base-glm",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/glm/7522-canonical-base-glm"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 112113,
+          "input": 1002,
+          "output": 71,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 111040
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1788217018343,
+          "completed": 1788217027279
+        },
+        "finish": "tool-calls",
+        "id": "msg_05a0a47e60014m5kr7XuQldmja",
+        "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM"
+      },
+      "parts": [
+        {
+          "snapshot": "9588e9e3b56f90104f81f1ffd2158a3e9357654e",
+          "type": "step-start",
+          "id": "prt_05a0a578a001af1j89pwVrK7qJ",
+          "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM",
+          "messageID": "msg_05a0a47e60014m5kr7XuQldmja"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_e7a85678fdb2402cbe7ea680",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git push -u origin glm/7522-canonical-base-glm 2>&1 | tail -5",
+              "timeout": 180000,
+              "workdir": "/home/ops/learn-ukrainian/.worktrees/dispatch/glm/7522-canonical-base-glm"
+            },
+            "output": "remote:      https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/new/glm/7522-canonical-base-glm        \nremote: \nTo https://github.com/learn-ukrainian/learn-ukrainian.github.io.git\n * [new branch]            glm/7522-canonical-base-glm -> glm/7522-canonical-base-glm\nbranch 'glm/7522-canonical-base-glm' set up to track 'origin/glm/7522-canonical-base-glm'.\n",
+            "metadata": {
+              "output": "remote:      https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/new/glm/7522-canonical-base-glm        \nremote: \nTo https://github.com/learn-ukrainian/learn-ukrainian.github.io.git\n * [new branch]            glm/7522-canonical-base-glm -> glm/7522-canonical-base-glm\nbranch 'glm/7522-canonical-base-glm' set up to track 'origin/glm/7522-canonical-base-glm'.\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git push -u origin glm/7522-canonical-base-glm 2>&1 | tail -5",
+            "time": {
+              "start": 1788217027057,
+              "end": 1788217027062
+            }
+          },
+          "id": "prt_05a0a578f001o53K2Jqynzm4gs",
+          "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM",
+          "messageID": "msg_05a0a47e60014m5kr7XuQldmja"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "9588e9e3b56f90104f81f1ffd2158a3e9357654e",
+          "type": "step-finish",
+          "tokens": {
+            "total": 112113,
+            "input": 1002,
+            "output": 71,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 111040
+            }
+          },
+          "cost": 0,
+          "id": "prt_05a0a6a76001jR6lmZnjlrOYAY",
+          "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM",
+          "messageID": "msg_05a0a47e60014m5kr7XuQldmja"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_059fb5bee001F9RUS6DPNdNAfc",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/glm/7522-canonical-base-glm",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/glm/7522-canonical-base-glm"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 113337,
+          "input": 236,
+          "output": 1101,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 112000
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1788217027294,
+          "completed": 1788217040871
+        },
+        "finish": "tool-calls",
+        "id": "msg_05a0a6ade001J1KINK1cQW0ndG",
+        "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM"
+      },
+      "parts": [
+        {
+          "snapshot": "9588e9e3b56f90104f81f1ffd2158a3e9357654e",
+          "type": "step-start",
+          "id": "prt_05a0a9c0c001pS02TS1UwYgamk",
+          "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM",
+          "messageID": "msg_05a0a6ade001J1KINK1cQW0ndG"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_96443da3c56b4f15886ff14e",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "gh pr create --title \"fix(delegate): #7522 pin worktree base to canonical GitHub remote\" --body \"$(cat <<'EOF'\nCloses #7522\n\n## Problem\n\n`_fetch_base()` in `scripts/delegate.py` always ran `git fetch origin +refs/heads/<branch>:refs/remotes/origin/<branch>` and resolved `origin/<branch>`. On hosts where `origin` is a lagging mirror (atlas-runner: the hramatka mirror was 11 commits behind GitHub, `723d2643c9` vs `f8d5759e9d`), the fetch succeeded and silently pinned a stale base SHA — workers then built on code missing merged control-plane fixes.\n\n## Change\n\n- **`_git_remote_urls` / `_resolve_canonical_remote_name`** (generalizes `_read_origin_url`, pure-filesystem config read, no subprocess): map every remote to its URL; classify the canonical GitHub remote (`learn-ukrainian/learn-ukrainian.github.io` via the existing `_parse_github_owner_repo`). Prefers a remote named `github`; else `origin` when origin itself is that GitHub URL; any other layout stays unclassified (None) — no invented remotes.\n- **`_fetch_base`**: single-remote hosts (origin is GitHub, or no GitHub remote at all) keep the byte-for-byte pre-existing origin fetch contract, including the bool failure → caller's instructive error. On two-remote hosts: fetch `origin` best-effort and snapshot its SHA only to warn, then fetch the canonical remote with the same explicit refspec, landing in `refs/remotes/origin/<branch>` so every downstream resolver (`_origin_base_ref`, `_require_local_branch_is_ancestor_of_origin`, stale-base rebase in `_validate_existing_worktree`) sees the canonical SHA. Divergence prints a stderr warning naming **both SHAs and both remotes**. Canonical fetch failure/timeout/unresolvable → fail-closed `RuntimeError` naming both remotes and recovery (`git remote -v`, fetch the GitHub remote) — never falls back to the lagging origin.\n- **`_fetch_existing_branch`** (`--branch` reuse): fetches the PR branch from the canonical remote (a mirror may lag or not carry it — the issue also saw \"remote end hung up\" on the mirror), landing in `refs/remotes/origin/<branch>`; same fail-closed rule.\n- **`_base_branch_name` / `_origin_base_ref`**: `--base github/main` is accepted as a remote-qualified convenience (`→ origin/main`); `_validate_branch_reuse_name` rejects `github/` prefixes on `--branch` like `origin/`.\n\n## Tests (tests/test_delegate_primary_integrity.py)\n\n- `test_fetch_base_origin_is_github_keeps_single_origin_fetch` — origin=GitHub hosts still do exactly one origin fetch.\n- `test_fetch_base_two_remote_host_prefers_canonical_github_sha` — mirror origin + canonical `github` remote: canonical refspec fetch order, warning names both SHAs and both remote names/URLs.\n- `test_fetch_base_canonical_fetch_failure_fails_closed_never_stale_origin` — mirror fetch succeeds, canonical fetch fails (rc≠0 and timeout): `RuntimeError` naming remotes + recovery; the stale mirror SHA is never returned.\n- `test_fetch_existing_branch_uses_canonical_github_remote` / `..._canonical_failure_never_falls_back_to_mirror`.\n- `test_worktree_base_pins_canonical_github_sha_when_origin_mirror_lags` — real-git end-to-end fixture (bare mirror lagging one commit behind the canonical bare repo, primary with mirror `origin` + `github` remote carrying the genuine github.com URL via `url.insteadOf`): **`git log -1 --format=%H` of the created worktree equals the canonical GitHub SHA**, plus the lag warning on stderr.\n- Existing `test_fetch_base_*`, `test_fetch_base_timeouts`, and the two fetch-failure tests are pinned to the single-remote host shape via `_git_remote_urls` so they remain hermetic on mirror-origin fleet hosts; all their assertions are unchanged.\n\n## Evidence\n\n- `ruff check` on touched files: `All checks passed!`\n- Acceptance: `pytest tests/test_delegate.py tests/test_delegate_primary_integrity.py tests/test_delegate_timeouts.py -q --tb=short` → **363 passed**\n- `pytest tests/test_delegate_repository_join.py -q` (covers the refactored `_read_origin_url` reader) → **31 passed**\n- Live read-only smoke on this host (origin = canonical GitHub): `_resolve_canonical_remote_name → 'origin'`, `_fetch_base('main') → True`, `origin/main` unchanged (`65bced8cca…`), `_base_branch_name('github/main') → 'main'`.\n\nX-Agent: glm/7522-canonical-base-glm\nEOF\n)\" 2>&1 | tail -3",
+              "timeout": 120000,
+              "workdir": "/home/ops/learn-ukrainian/.worktrees/dispatch/glm/7522-canonical-base-glm"
+            },
+            "output": "aborted: you must first push the current branch to a remote, or use the --head flag\n",
+            "metadata": {
+              "output": "aborted: you must first push the current branch to a remote, or use the --head flag\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "gh pr create --title \"fix(delegate): #7522 pin worktree base to canonical GitHub remote\" --body \"$(cat <<'EOF'\nCloses #7522\n\n## Problem\n\n`_fetch_base()` in `scripts/delegate.py` always ran `git fetch origin +refs/heads/<branch>:refs/remotes/origin/<branch>` and resolved `origin/<branch>`. On hosts where `origin` is a lagging mirror (atlas-runner: the hramatka mirror was 11 commits behind GitHub, `723d2643c9` vs `f8d5759e9d`), the fetch succeeded and silently pinned a stale base SHA — workers then built on code missing merged control-plane fixes.\n\n## Change\n\n- **`_git_remote_urls` / `_resolve_canonical_remote_name`** (generalizes `_read_origin_url`, pure-filesystem config read, no subprocess): map every remote to its URL; classify the canonical GitHub remote (`learn-ukrainian/learn-ukrainian.github.io` via the existing `_parse_github_owner_repo`). Prefers a remote named `github`; else `origin` when origin itself is that GitHub URL; any other layout stays unclassified (None) — no invented remotes.\n- **`_fetch_base`**: single-remote hosts (origin is GitHub, or no GitHub remote at all) keep the byte-for-byte pre-existing origin fetch contract, including the bool failure → caller's instructive error. On two-remote hosts: fetch `origin` best-effort and snapshot its SHA only to warn, then fetch the canonical remote with the same explicit refspec, landing in `refs/remotes/origin/<branch>` so every downstream resolver (`_origin_base_ref`, `_require_local_branch_is_ancestor_of_origin`, stale-base rebase in `_validate_existing_worktree`) sees the canonical SHA. Divergence prints a stderr warning naming **both SHAs and both remotes**. Canonical fetch failure/timeout/unresolvable → fail-closed `RuntimeError` naming both remotes and recovery (`git remote -v`, fetch the GitHub remote) — never falls back to the lagging origin.\n- **`_fetch_existing_branch`** (`--branch` reuse): fetches the PR branch from the canonical remote (a mirror may lag or not carry it — the issue also saw \"remote end hung up\" on the mirror), landing in `refs/remotes/origin/<branch>`; same fail-closed rule.\n- **`_base_branch_name` / `_origin_base_ref`**: `--base github/main` is accepted as a remote-qualified convenience (`→ origin/main`); `_validate_branch_reuse_name` rejects `github/` prefixes on `--branch` like `origin/`.\n\n## Tests (tests/test_delegate_primary_integrity.py)\n\n- `test_fetch_base_origin_is_github_keeps_single_origin_fetch` — origin=GitHub hosts still do exactly one origin fetch.\n- `test_fetch_base_two_remote_host_prefers_canonical_github_sha` — mirror origin + canonical `github` remote: canonical refspec fetch order, warning names both SHAs and both remote names/URLs.\n- `test_fetch_base_canonical_fetch_failure_fails_closed_never_stale_origin` — mirror fetch succeeds, canonical fetch fails (rc≠0 and timeout): `RuntimeError` naming remotes + recovery; the stale mirror SHA is never returned.\n- `test_fetch_existing_branch_uses_canonical_github_remote` / `..._canonical_failure_never_falls_back_to_mirror`.\n- `test_worktree_base_pins_canonical_github_sha_when_origin_mirror_lags` — real-git end-to-end fixture (bare mirror lagging one commit behind the canonical bare repo, primary with mirror `origin` + `github` remote carrying the genuine github.com URL via `url.insteadOf`): **`git log -1 --format=%H` of the created worktree equals the canonical GitHub SHA**, plus the lag warning on stderr.\n- Existing `test_fetch_base_*`, `test_fetch_base_timeouts`, and the two fetch-failure tests are pinned to the single-remote host shape via `_git_remote_urls` so they remain hermetic on mirror-origin fleet hosts; all their assertions are unchanged.\n\n## Evidence\n\n- `ruff check` on touched files: `All checks passed!`\n- Acceptance: `pytest tests/test_delegate.py tests/test_delegate_primary_integrity.py tests/test_delegate_timeouts.py -q --tb=short` → **363 passed**\n- `pytest tests/test_delegate_repository_join.py -q` (covers the refactored `_read_origin_url` reader) → **31 passed**\n- Live read-only smoke on this host (origin = canonical GitHub): `_resolve_canonical_remote_name → 'origin'`, `_fetch_base('main') → True`, `origin/main` unchanged (`65bced8cca…`), `_base_branch_name('github/main') → 'main'`.\n\nX-Agent: glm/7522-canonical-base-glm\nEOF\n)\" 2>&1 | tail -3",
+            "time": {
+              "start": 1788217040591,
+              "end": 1788217040606
+            }
+          },
+          "id": "prt_05a0a9c11001glwqd9o31sHvtu",
+          "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM",
+          "messageID": "msg_05a0a6ade001J1KINK1cQW0ndG"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "9588e9e3b56f90104f81f1ffd2158a3e9357654e",
+          "type": "step-finish",
+          "tokens": {
+            "total": 113337,
+            "input": 236,
+            "output": 1101,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 112000
+            }
+          },
+          "cost": 0,
+          "id": "prt_05a0a9f6f0015fXGkCHuXppg47",
+          "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM",
+          "messageID": "msg_05a0a6ade001J1KINK1cQW0ndG"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_059fb5bee001F9RUS6DPNdNAfc",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/glm/7522-canonical-base-glm",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/glm/7522-canonical-base-glm"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 114559,
+          "input": 1170,
+          "output": 1116,
+          "reasoning": 81,
+          "cache": {
+            "write": 0,
+            "read": 112192
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1788217040888,
+          "completed": 1788217055832
+        },
+        "finish": "tool-calls",
+        "id": "msg_05a0a9ff8001yWFkw7qCsXeeD6",
+        "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM"
+      },
+      "parts": [
+        {
+          "snapshot": "9588e9e3b56f90104f81f1ffd2158a3e9357654e",
+          "type": "step-start",
+          "id": "prt_05a0aab11001V3ZJOXGJLNEj0L",
+          "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM",
+          "messageID": "msg_05a0a9ff8001yWFkw7qCsXeeD6"
+        },
+        {
+          "type": "reasoning",
+          "text": "`gh pr create` aborted: \"you must first push the current branch to a remote, or use the --head flag\". The branch IS pushed (we just pushed it), but `gh` might be confused because the local checkout is a linked worktree / gh resolves the default branch from the local repo state. Use `--head glm/7522-canonical-base-glm` explicitly.",
+          "time": {
+            "start": 1788217043733,
+            "end": 1788217053306
+          },
+          "id": "prt_05a0aab15001GbUoUV1PYk5eHJ",
+          "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM",
+          "messageID": "msg_05a0a9ff8001yWFkw7qCsXeeD6"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_e4c12abd6ebc4a4aaa0a6d49",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "gh pr create --head glm/7522-canonical-base-glm --base main --title \"fix(delegate): #7522 pin worktree base to canonical GitHub remote\" --body \"$(cat <<'EOF'\nCloses #7522\n\n## Problem\n\n`_fetch_base()` in `scripts/delegate.py` always ran `git fetch origin +refs/heads/<branch>:refs/remotes/origin/<branch>` and resolved `origin/<branch>`. On hosts where `origin` is a lagging mirror (atlas-runner: the hramatka mirror was 11 commits behind GitHub, `723d2643c9` vs `f8d5759e9d`), the fetch succeeded and silently pinned a stale base SHA — workers then built on code missing merged control-plane fixes.\n\n## Change\n\n- **`_git_remote_urls` / `_resolve_canonical_remote_name`** (generalizes `_read_origin_url`, pure-filesystem config read, no subprocess): map every remote to its URL; classify the canonical GitHub remote (`learn-ukrainian/learn-ukrainian.github.io` via the existing `_parse_github_owner_repo`). Prefers a remote named `github`; else `origin` when origin itself is that GitHub URL; any other layout stays unclassified (None) — no invented remotes.\n- **`_fetch_base`**: single-remote hosts (origin is GitHub, or no GitHub remote at all) keep the byte-for-byte pre-existing origin fetch contract, including the bool failure → caller's instructive error. On two-remote hosts: fetch `origin` best-effort and snapshot its SHA only to warn, then fetch the canonical remote with the same explicit refspec, landing in `refs/remotes/origin/<branch>` so every downstream resolver (`_origin_base_ref`, `_require_local_branch_is_ancestor_of_origin`, stale-base rebase in `_validate_existing_worktree`) sees the canonical SHA. Divergence prints a stderr warning naming **both SHAs and both remotes**. Canonical fetch failure/timeout/unresolvable → fail-closed `RuntimeError` naming both remotes and recovery (`git remote -v`, fetch the GitHub remote) — never falls back to the lagging origin.\n- **`_fetch_existing_branch`** (`--branch` reuse): fetches the PR branch from the canonical remote (a mirror may lag or not carry it — the issue also saw \"remote end hung up\" on the mirror), landing in `refs/remotes/origin/<branch>`; same fail-closed rule.\n- **`_base_branch_name` / `_origin_base_ref`**: `--base github/main` is accepted as a remote-qualified convenience (`→ origin/main`); `_validate_branch_reuse_name` rejects `github/` prefixes on `--branch` like `origin/`.\n\n## Tests (tests/test_delegate_primary_integrity.py)\n\n- `test_fetch_base_origin_is_github_keeps_single_origin_fetch` — origin=GitHub hosts still do exactly one origin fetch.\n- `test_fetch_base_two_remote_host_prefers_canonical_github_sha` — mirror origin + canonical `github` remote: canonical refspec fetch order, warning names both SHAs and both remote names/URLs.\n- `test_fetch_base_canonical_fetch_failure_fails_closed_never_stale_origin` — mirror fetch succeeds, canonical fetch fails (rc≠0 and timeout): `RuntimeError` naming remotes + recovery; the stale mirror SHA is never returned.\n- `test_fetch_existing_branch_uses_canonical_github_remote` / `..._canonical_failure_never_falls_back_to_mirror`.\n- `test_worktree_base_pins_canonical_github_sha_when_origin_mirror_lags` — real-git end-to-end fixture (bare mirror lagging one commit behind the canonical bare repo, primary with mirror `origin` + `github` remote carrying the genuine github.com URL via `url.insteadOf`): **`git log -1 --format=%H` of the created worktree equals the canonical GitHub SHA**, plus the lag warning on stderr.\n- Existing `test_fetch_base_*`, `test_fetch_base_timeouts`, and the two fetch-failure tests are pinned to the single-remote host shape via `_git_remote_urls` so they remain hermetic on mirror-origin fleet hosts; all their assertions are unchanged.\n\n## Evidence\n\n- `ruff check` on touched files: `All checks passed!`\n- Acceptance: `pytest tests/test_delegate.py tests/test_delegate_primary_integrity.py tests/test_delegate_timeouts.py -q --tb=short` → **363 passed**\n- `pytest tests/test_delegate_repository_join.py -q` (covers the refactored `_read_origin_url` reader) → **31 passed**\n- Live read-only smoke on this host (origin = canonical GitHub): `_resolve_canonical_remote_name → 'origin'`, `_fetch_base('main') → True`, `origin/main` unchanged (`65bced8cca…`), `_base_branch_name('github/main') → 'main'`.\n\nX-Agent: glm/7522-canonical-base-glm\nEOF\n)\" 2>&1 | tail -3",
+              "timeout": 120000,
+              "workdir": "/home/ops/learn-ukrainian/.worktrees/dispatch/glm/7522-canonical-base-glm"
+            },
+            "output": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/7563\n",
+            "metadata": {
+              "output": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/7563\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "gh pr create --head glm/7522-canonical-base-glm --base main --title \"fix(delegate): #7522 pin worktree base to canonical GitHub remote\" --body \"$(cat <<'EOF'\nCloses #7522\n\n## Problem\n\n`_fetch_base()` in `scripts/delegate.py` always ran `git fetch origin +refs/heads/<branch>:refs/remotes/origin/<branch>` and resolved `origin/<branch>`. On hosts where `origin` is a lagging mirror (atlas-runner: the hramatka mirror was 11 commits behind GitHub, `723d2643c9` vs `f8d5759e9d`), the fetch succeeded and silently pinned a stale base SHA — workers then built on code missing merged control-plane fixes.\n\n## Change\n\n- **`_git_remote_urls` / `_resolve_canonical_remote_name`** (generalizes `_read_origin_url`, pure-filesystem config read, no subprocess): map every remote to its URL; classify the canonical GitHub remote (`learn-ukrainian/learn-ukrainian.github.io` via the existing `_parse_github_owner_repo`). Prefers a remote named `github`; else `origin` when origin itself is that GitHub URL; any other layout stays unclassified (None) — no invented remotes.\n- **`_fetch_base`**: single-remote hosts (origin is GitHub, or no GitHub remote at all) keep the byte-for-byte pre-existing origin fetch contract, including the bool failure → caller's instructive error. On two-remote hosts: fetch `origin` best-effort and snapshot its SHA only to warn, then fetch the canonical remote with the same explicit refspec, landing in `refs/remotes/origin/<branch>` so every downstream resolver (`_origin_base_ref`, `_require_local_branch_is_ancestor_of_origin`, stale-base rebase in `_validate_existing_worktree`) sees the canonical SHA. Divergence prints a stderr warning naming **both SHAs and both remotes**. Canonical fetch failure/timeout/unresolvable → fail-closed `RuntimeError` naming both remotes and recovery (`git remote -v`, fetch the GitHub remote) — never falls back to the lagging origin.\n- **`_fetch_existing_branch`** (`--branch` reuse): fetches the PR branch from the canonical remote (a mirror may lag or not carry it — the issue also saw \"remote end hung up\" on the mirror), landing in `refs/remotes/origin/<branch>`; same fail-closed rule.\n- **`_base_branch_name` / `_origin_base_ref`**: `--base github/main` is accepted as a remote-qualified convenience (`→ origin/main`); `_validate_branch_reuse_name` rejects `github/` prefixes on `--branch` like `origin/`.\n\n## Tests (tests/test_delegate_primary_integrity.py)\n\n- `test_fetch_base_origin_is_github_keeps_single_origin_fetch` — origin=GitHub hosts still do exactly one origin fetch.\n- `test_fetch_base_two_remote_host_prefers_canonical_github_sha` — mirror origin + canonical `github` remote: canonical refspec fetch order, warning names both SHAs and both remote names/URLs.\n- `test_fetch_base_canonical_fetch_failure_fails_closed_never_stale_origin` — mirror fetch succeeds, canonical fetch fails (rc≠0 and timeout): `RuntimeError` naming remotes + recovery; the stale mirror SHA is never returned.\n- `test_fetch_existing_branch_uses_canonical_github_remote` / `..._canonical_failure_never_falls_back_to_mirror`.\n- `test_worktree_base_pins_canonical_github_sha_when_origin_mirror_lags` — real-git end-to-end fixture (bare mirror lagging one commit behind the canonical bare repo, primary with mirror `origin` + `github` remote carrying the genuine github.com URL via `url.insteadOf`): **`git log -1 --format=%H` of the created worktree equals the canonical GitHub SHA**, plus the lag warning on stderr.\n- Existing `test_fetch_base_*`, `test_fetch_base_timeouts`, and the two fetch-failure tests are pinned to the single-remote host shape via `_git_remote_urls` so they remain hermetic on mirror-origin fleet hosts; all their assertions are unchanged.\n\n## Evidence\n\n- `ruff check` on touched files: `All checks passed!`\n- Acceptance: `pytest tests/test_delegate.py tests/test_delegate_primary_integrity.py tests/test_delegate_timeouts.py -q --tb=short` → **363 passed**\n- `pytest tests/test_delegate_repository_join.py -q` (covers the refactored `_read_origin_url` reader) → **31 passed**\n- Live read-only smoke on this host (origin = canonical GitHub): `_resolve_canonical_remote_name → 'origin'`, `_fetch_base('main') → True`, `origin/main` unchanged (`65bced8cca…`), `_base_branch_name('github/main') → 'main'`.\n\nX-Agent: glm/7522-canonical-base-glm\nEOF\n)\" 2>&1 | tail -3",
+            "time": {
+              "start": 1788217055600,
+              "end": 1788217055608
+            }
+          },
+          "id": "prt_05a0ad07e001YaeBCDSo85G86m",
+          "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM",
+          "messageID": "msg_05a0a9ff8001yWFkw7qCsXeeD6"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "9588e9e3b56f90104f81f1ffd2158a3e9357654e",
+          "type": "step-finish",
+          "tokens": {
+            "total": 114559,
+            "input": 1170,
+            "output": 1116,
+            "reasoning": 81,
+            "cache": {
+              "write": 0,
+              "read": 112192
+            }
+          },
+          "cost": 0,
+          "id": "prt_05a0ad9f3001eeOBvXTjrSwkNQ",
+          "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM",
+          "messageID": "msg_05a0a9ff8001yWFkw7qCsXeeD6"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_059fb5bee001F9RUS6DPNdNAfc",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/glm/7522-canonical-base-glm",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/glm/7522-canonical-base-glm"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 114691,
+          "input": 1244,
+          "output": 103,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 113344
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1788217055850,
+          "completed": 1788217061030
+        },
+        "finish": "tool-calls",
+        "id": "msg_05a0ada6a001HbQmqRXYm48ScE",
+        "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM"
+      },
+      "parts": [
+        {
+          "snapshot": "9588e9e3b56f90104f81f1ffd2158a3e9357654e",
+          "type": "step-start",
+          "id": "prt_05a0aeb09001nRHxrfmgorsum9",
+          "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM",
+          "messageID": "msg_05a0ada6a001HbQmqRXYm48ScE"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_01ae687a33c74a058ba80c05",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "gh pr view 7563 --json url,state,headRefName,baseRefName,statusCheckRollup --jq '{url, state, head: .headRefName, base: .baseRefName}' && git status --short --branch | head -3",
+              "timeout": 60000,
+              "workdir": "/home/ops/learn-ukrainian/.worktrees/dispatch/glm/7522-canonical-base-glm"
+            },
+            "output": "{\"base\":\"main\",\"head\":\"glm/7522-canonical-base-glm\",\"state\":\"OPEN\",\"url\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/7563\"}\n## glm/7522-canonical-base-glm\n",
+            "metadata": {
+              "output": "{\"base\":\"main\",\"head\":\"glm/7522-canonical-base-glm\",\"state\":\"OPEN\",\"url\":\"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/7563\"}\n## glm/7522-canonical-base-glm\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "gh pr view 7563 --json url,state,headRefName,baseRefName,statusCheckRollup --jq '{url, state, head: .headRefName, base: .baseRefName}' && git status --short --branch | head -3",
+            "time": {
+              "start": 1788217060825,
+              "end": 1788217060832
+            }
+          },
+          "id": "prt_05a0aeb0f001kAwoyvVJjRLe1g",
+          "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM",
+          "messageID": "msg_05a0ada6a001HbQmqRXYm48ScE"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "9588e9e3b56f90104f81f1ffd2158a3e9357654e",
+          "type": "step-finish",
+          "tokens": {
+            "total": 114691,
+            "input": 1244,
+            "output": 103,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 113344
+            }
+          },
+          "cost": 0,
+          "id": "prt_05a0aee46001bYmzsKwD2tv3hT",
+          "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM",
+          "messageID": "msg_05a0ada6a001HbQmqRXYm48ScE"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_059fb5bee001F9RUS6DPNdNAfc",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/glm/7522-canonical-base-glm",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/glm/7522-canonical-base-glm"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 114997,
+          "input": 196,
+          "output": 241,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 114560
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1788217061051,
+          "completed": 1788217068566
+        },
+        "finish": "tool-calls",
+        "id": "msg_05a0aeebb001x0p9p202ScMLuG",
+        "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM"
+      },
+      "parts": [
+        {
+          "snapshot": "9588e9e3b56f90104f81f1ffd2158a3e9357654e",
+          "type": "step-start",
+          "id": "prt_05a0b0b130011ibaLo385ikfev",
+          "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM",
+          "messageID": "msg_05a0aeebb001x0p9p202ScMLuG"
+        },
+        {
+          "type": "tool",
+          "tool": "todowrite",
+          "callID": "call_9f6e9d172d0b49429cf87d4f",
+          "state": {
+            "status": "completed",
+            "input": {
+              "todos": [
+                {
+                  "content": "Implement canonical GitHub remote resolution in scripts/delegate.py (_git_remote_urls, _resolve_canonical_remote_name, _fetch_base, _fetch_existing_branch, _base_branch_name/_origin_base_ref, _validate_branch_reuse_name)",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Pin _git_remote_urls fixtures in host-sensitive existing tests (test_fetch_base_strips_origin_prefix, test_fetch_base_timeouts, two primary_integrity fetch-failure tests)",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Add new focused tests in tests/test_delegate_primary_integrity.py (origin=GitHub still origin; two-remote lagging origin → canonical SHA wins; canonical fetch failure → fail closed)",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Run ruff + full acceptance pytest on touched test files",
+                  "priority": "high",
+                  "status": "completed"
+                },
+                {
+                  "content": "Commit with X-Agent trailer, push, open PR closing #7522",
+                  "priority": "high",
+                  "status": "completed"
+                }
+              ]
+            },
+            "output": "[\n  {\n    \"content\": \"Implement canonical GitHub remote resolution in scripts/delegate.py (_git_remote_urls, _resolve_canonical_remote_name, _fetch_base, _fetch_existing_branch, _base_branch_name/_origin_base_ref, _validate_branch_reuse_name)\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Pin _git_remote_urls fixtures in host-sensitive existing tests (test_fetch_base_strips_origin_prefix, test_fetch_base_timeouts, two primary_integrity fetch-failure tests)\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Add new focused tests in tests/test_delegate_primary_integrity.py (origin=GitHub still origin; two-remote lagging origin → canonical SHA wins; canonical fetch failure → fail closed)\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Run ruff + full acceptance pytest on touched test files\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Commit with X-Agent trailer, push, open PR closing #7522\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  }\n]",
+            "metadata": {
+              "todos": [
+                {
+                  "content": "Implement canonical GitHub remote resolution in scripts/delegate.py (_git_remote_urls, _resolve_canonical_remote_name, _fetch_base, _fetch_existing_branch, _base_branch_name/_origin_base_ref, _validate_branch_reuse_name)",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Pin _git_remote_urls fixtures in host-sensitive existing tests (test_fetch_base_strips_origin_prefix, test_fetch_base_timeouts, two primary_integrity fetch-failure tests)",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Add new focused tests in tests/test_delegate_primary_integrity.py (origin=GitHub still origin; two-remote lagging origin → canonical SHA wins; canonical fetch failure → fail closed)",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Run ruff + full acceptance pytest on touched test files",
+                  "status": "completed",
+                  "priority": "high"
+                },
+                {
+                  "content": "Commit with X-Agent trailer, push, open PR closing #7522",
+                  "status": "completed",
+                  "priority": "high"
+                }
+              ],
+              "truncated": false
+            },
+            "title": "0 todos",
+            "time": {
+              "start": 1788217068323,
+              "end": 1788217068327
+            }
+          },
+          "id": "prt_05a0b0b17001iMukTquePpPU38",
+          "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM",
+          "messageID": "msg_05a0aeebb001x0p9p202ScMLuG"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "9588e9e3b56f90104f81f1ffd2158a3e9357654e",
+          "type": "step-finish",
+          "tokens": {
+            "total": 114997,
+            "input": 196,
+            "output": 241,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 114560
+            }
+          },
+          "cost": 0,
+          "id": "prt_05a0b0bb10017toqRv6Gn6FgJP",
+          "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM",
+          "messageID": "msg_05a0aeebb001x0p9p202ScMLuG"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_059fb5bee001F9RUS6DPNdNAfc",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/glm/7522-canonical-base-glm",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/glm/7522-canonical-base-glm"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 115671,
+          "input": 513,
+          "output": 406,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 114752
+          }
+        },
+        "modelID": "glm-5.3",
+        "providerID": "zai-coding-plan",
+        "time": {
+          "created": 1788217068590,
+          "completed": 1788217081102
+        },
+        "finish": "stop",
+        "id": "msg_05a0b0c2e001n1Qp5j1y4BI54a",
+        "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM"
+      },
+      "parts": [
+        {
+          "snapshot": "9588e9e3b56f90104f81f1ffd2158a3e9357654e",
+          "type": "step-start",
+          "id": "prt_05a0b2117001B3Op7is9PSVTNv",
+          "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM",
+          "messageID": "msg_05a0b0c2e001n1Qp5j1y4BI54a"
+        },
+        {
+          "type": "text",
+          "text": "Done. PR opened: https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/7563 (OPEN, `glm/7522-canonical-base-glm` → `main`, commit `9b6ed2796a` with `X-Agent: glm/7522-canonical-base-glm`).\n\n**Outcome** — `scripts/delegate.py` now pins the worktree base to the canonical GitHub remote:\n- `_git_remote_urls`/`_resolve_canonical_remote_name` classify the canonical remote (`github` name preferred, else `origin`-is-GitHub) from the git config, pure-filesystem, reusing `_parse_github_owner_repo`.\n- `_fetch_base`: single-remote hosts keep the exact prior origin contract; two-remote hosts fetch origin best-effort (stderr warning naming both SHAs + both remotes on divergence), then fetch the canonical remote into `refs/remotes/origin/<branch>` so all downstream resolvers see the canonical SHA; canonical fetch failure fails closed with a `RuntimeError` naming both remotes and recovery.\n- `_fetch_existing_branch` uses the canonical remote for `--branch` reuse, same fail-closed rule; `--base github/main` accepted; `--branch github/*` rejected.\n\n**Verification** (raw results quoted above): `ruff check` → `All checks passed!`; acceptance pytest → `363 passed in 61.83s`; `test_delegate_repository_join.py` → `31 passed`; real-git fixture proves `git log -1 --format=%H` of the created worktree equals the canonical SHA on a lagging-mirror host.\n\n**Residual**: none in scope; worker prompt text (\"origin here points at the canonical GitHub remote\") is now slightly inaccurate on mirror-origin hosts — prompt/UX wording was a stated non-goal. Not merged, no auto-merge — driver owns CF + landing.",
+          "time": {
+            "start": 1788217073947,
+            "end": 1788217080875
+          },
+          "id": "prt_05a0b211a001dmGs7z14RdmFiR",
+          "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM",
+          "messageID": "msg_05a0b0c2e001n1Qp5j1y4BI54a"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "9588e9e3b56f90104f81f1ffd2158a3e9357654e",
+          "type": "step-finish",
+          "tokens": {
+            "total": 115671,
+            "input": 513,
+            "output": 406,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 114752
+            }
+          },
+          "cost": 0,
+          "id": "prt_05a0b3ca8001zKEyTCgMjwSP5f",
+          "sessionID": "ses_fa604a483ffeAEyK53RC8VanQM",
+          "messageID": "msg_05a0b0c2e001n1Qp5j1y4BI54a"
         }
       ]
     }
