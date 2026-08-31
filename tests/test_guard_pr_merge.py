@@ -32,6 +32,11 @@ import pytest
 REPO_ROOT = Path(__file__).resolve().parent.parent
 HOOK_PATH = REPO_ROOT / "agents_extensions/shared" / "hooks" / "guard-pr-merge.py"
 _URL = "https://github.com/owner/repo/pull/5"
+_GH_246_CHECKS_JSON_GAP = (
+    "unknown flag: --json\n\nUsage:  gh pr checks [<number> | <url> | <branch>] [flags]\n\n"
+    "Flags:\n"
+    "      --fail-fast         Exit watch mode on first check failure\n"
+)
 
 
 def _load_hook():
@@ -480,6 +485,93 @@ def test_known_pass_buckets_are_green(monkeypatch):
     rows = '[{"name":"CI Gate","bucket":"pass"},{"name":"Flaky","bucket":"skipping"},{"name":"N","bucket":"neutral"}]'
     _fake_gh(monkeypatch, returncode=0, stdout=rows)
     assert guard._check_states("5") == ([], [])
+
+
+def _rollup_states(monkeypatch, rows):
+    import types
+
+    def fake_run(cmd, **_k):
+        if cmd[:4] == ["gh", "pr", "checks", "5"]:
+            return types.SimpleNamespace(returncode=1, stdout="", stderr=_GH_246_CHECKS_JSON_GAP)
+        assert cmd[:4] == ["gh", "pr", "view", "5"]
+        return types.SimpleNamespace(returncode=0, stdout=json.dumps({"statusCheckRollup": rows}), stderr="")
+
+    monkeypatch.setattr(guard.subprocess, "run", fake_run)
+    return guard._check_states("5")
+
+
+@pytest.mark.parametrize(
+    "rows,expected",
+    [
+        ([], ([], [])),
+        ([{"name": "CI Gate", "status": "COMPLETED", "conclusion": "SUCCESS"}], ([], [])),
+        ([{"name": "CI Gate", "status": "COMPLETED", "conclusion": "FAILURE"}], (["CI Gate"], [])),
+        ([{"name": "CI Gate", "state": "ERROR"}], (["CI Gate"], [])),
+        ([{"name": "CI Gate", "status": "COMPLETED", "conclusion": "STARTUP_FAILURE"}], (["CI Gate"], [])),
+        ([{"name": "CI Gate", "status": "IN_PROGRESS", "conclusion": ""}], ([], ["CI Gate"])),
+        ([{"name": "CI Gate", "status": "COMPLETED", "conclusion": "UNKNOWN"}], None),
+        ([{"name": "CI Gate"}], None),
+        (
+            [
+                {"name": "CI Gate", "workflowName": "CI", "startedAt": "2026-08-31T06:00:00Z", "status": "COMPLETED", "conclusion": "FAILURE"},
+                {"name": "CI Gate", "workflowName": "CI", "startedAt": "2026-08-31T06:01:00Z", "status": "COMPLETED", "conclusion": "SUCCESS"},
+            ],
+            ([], []),
+        ),
+        (
+            [
+                {"name": "CI Gate", "workflowName": "CI", "startedAt": "2026-08-31T06:00:00Z", "status": "COMPLETED", "conclusion": "FAILURE"},
+                {"name": "CI Gate", "workflowName": "CI", "startedAt": "2026-08-31T06:00:00Z", "status": "COMPLETED", "conclusion": "SUCCESS"},
+            ],
+            None,
+        ),
+        (
+            [
+                {"name": "CI Gate", "startedAt": "2026-08-31T06:00:00Z", "status": "COMPLETED", "conclusion": "FAILURE"},
+                {"name": "CI Gate", "startedAt": "2026-08-31T06:01:00Z", "status": "COMPLETED", "conclusion": "SUCCESS"},
+            ],
+            None,
+        ),
+    ],
+)
+def test_rollup_fallback_allows_only_unambiguous_green(monkeypatch, rows, expected):
+    assert _rollup_states(monkeypatch, rows) == expected
+    monkeypatch.setattr(guard, "_pr_ref", lambda *_a, **_k: "5")
+    monkeypatch.setattr(
+        guard,
+        "_pr_meta",
+        lambda *_a, **_k: {
+            "isDraft": False,
+            "baseRefName": "main",
+            "body": "",
+            "headRefOid": "a" * 40,
+            "number": 5,
+            "url": _URL,
+        },
+    )
+    assert (guard._judge(["5", "--squash"]) is None) == (expected == ([], []))
+
+
+@pytest.mark.parametrize(
+    "returncode,stdout,stderr",
+    [
+        (1, "", "unknown flag: --json\nfatal: authentication failed\n"),
+        (0, "", _GH_246_CHECKS_JSON_GAP),
+        (1, "[]", _GH_246_CHECKS_JSON_GAP),
+    ],
+)
+def test_checks_json_fallback_requires_the_246_gap_shape(monkeypatch, returncode, stdout, stderr):
+    import types
+
+    calls = []
+
+    def fake_run(cmd, **_k):
+        calls.append(cmd)
+        return types.SimpleNamespace(returncode=returncode, stdout=stdout, stderr=stderr)
+
+    monkeypatch.setattr(guard.subprocess, "run", fake_run)
+    guard._check_states("5")
+    assert len(calls) == 1
 
 
 @pytest.mark.parametrize("draft", ["null", '"false"', "0"])
