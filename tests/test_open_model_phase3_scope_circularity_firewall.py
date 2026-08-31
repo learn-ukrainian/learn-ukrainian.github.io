@@ -53,7 +53,16 @@ def test_schema_rejects_nested_extra_missing_and_frozen_drift() -> None:
     del missing["private_runtime"]["rejects"]
     drift = deepcopy(contract)
     drift["denominator"]["source_units"] = 58
-    assert list(validator.iter_errors(extra)) and list(validator.iter_errors(missing)) and list(validator.iter_errors(drift))
+    open_binding = deepcopy(contract)
+    open_binding["phase_bindings"]["unexpected"] = {"path": "x", "sha256": "a" * 64}
+    open_split = deepcopy(contract)
+    open_split["split_firewall"]["unexpected"] = True
+    open_failure = deepcopy(contract)
+    open_failure["fail_closed"]["unexpected"] = True
+    assert all(
+        list(validator.iter_errors(candidate))
+        for candidate in (extra, missing, drift, open_binding, open_split, open_failure)
+    )
 
 
 @pytest.mark.parametrize("namespace", firewall.DENY_NAMESPACES)
