@@ -4,6 +4,7 @@ name: Auto-arm merge queue
 # normal auto-merge mechanism after the exact-head CF and CI Gate checks pass.
 # It never checks out or runs code from a subject PR head.
 permissions:
+  actions: write
   pull-requests: write
   contents: write
   checks: read

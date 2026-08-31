@@ -15,14 +15,24 @@ _REPO_ROOT = Path(__file__).resolve().parents[1]
 _WORKFLOW = _REPO_ROOT / ".github" / "workflows" / "auto-arm-merge.yml"
 
 
-def _check(name: str, conclusion: str = "SUCCESS", *, status: str = "COMPLETED", started_at: str = "2026-08-31T10:00:00Z") -> dict:
-    return {
+def _check(
+    name: str,
+    conclusion: str = "SUCCESS",
+    *,
+    status: str = "COMPLETED",
+    started_at: str = "2026-08-31T10:00:00Z",
+    details_url: str | None = None,
+) -> dict:
+    result = {
         "name": name,
         "workflowName": "CI",
         "status": status,
         "conclusion": conclusion,
         "startedAt": started_at,
     }
+    if details_url is not None:
+        result["detailsUrl"] = details_url
+    return result
 
 
 def _pr(**changes: object) -> dict:
@@ -42,6 +52,26 @@ def _pr(**changes: object) -> dict:
     }
     result.update(changes)
     return result
+
+
+def _failed_cf_pr() -> dict:
+    run_url = "https://github.com/org/repo/actions/runs/987654321/job/123456789"
+    return _pr(
+        statusCheckRollup=[
+            _check("CF attest", "FAILURE", details_url=run_url),
+            _check("CI Gate", "FAILURE", started_at="2026-08-31T10:01:00Z", details_url=run_url),
+            _check("Ruff", started_at="2026-08-31T10:02:00Z"),
+        ]
+    )
+
+
+def _attestation(head: str = HEAD, *, created_at: str = "2026-08-31T10:00:01Z") -> dict:
+    return {
+        "created_at": created_at,
+        "body": (
+            f"**VERDICT: APPROVE**\n\nCross-family review of record\nReviewer family: Anthropic\nAt exact head {head}"
+        ),
+    }
 
 
 @pytest.mark.parametrize(
@@ -104,7 +134,49 @@ def test_already_armed_pr_is_idempotent() -> None:
     assert comments == []
 
 
-def test_kill_switch_exits_before_token_or_github_calls(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+@pytest.mark.parametrize(
+    ("comments", "run_attempt", "expected_reason", "should_rerun"),
+    [
+        ([_attestation()], 1, "reran_failed_cf_attest_after_exact_head_attestation", True),
+        ([], 1, "exact_head_attestation_missing_or_stale", False),
+        ([_attestation("b" * 40)], 1, "exact_head_attestation_missing_or_stale", False),
+        ([_attestation(created_at="2026-08-31T10:00:00Z")], 1, "exact_head_attestation_missing_or_stale", False),
+        ([_attestation()], 2, "cf_attest_run_not_initial_failed_head", False),
+    ],
+    ids=[
+        "rerun-eligible",
+        "no-attestation",
+        "stale-attestation-sha",
+        "attestation-before-failed-run",
+        "already-retried",
+    ],
+)
+def test_retry_stale_cf_attests_requires_a_fresh_exact_head_approval_once(
+    comments: list[dict], run_attempt: int, expected_reason: str, should_rerun: bool
+) -> None:
+    rerun_ids: list[int] = []
+
+    decisions = auto_arm_merge.retry_stale_cf_attests(
+        [_failed_cf_pr()],
+        get_run=lambda run_id: {
+            "id": run_id,
+            "head_sha": HEAD,
+            "status": "completed",
+            "conclusion": "failure",
+            "run_attempt": run_attempt,
+        },
+        get_comments=lambda _number: comments,
+        rerun=rerun_ids.append,
+    )
+
+    assert decisions[0].reason == expected_reason
+    assert decisions[0].should_rerun is should_rerun
+    assert rerun_ids == ([987654321] if should_rerun else [])
+
+
+def test_kill_switch_exits_before_token_or_github_calls(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
     monkeypatch.setenv("AUTO_ARM_MERGE_DISABLED", "1")
     monkeypatch.delenv("GH_TOKEN", raising=False)
     monkeypatch.delenv("GITHUB_TOKEN", raising=False)
@@ -141,12 +213,32 @@ def test_gh_wrappers_only_enable_auto_merge_then_post_the_required_audit(monkeyp
     ]
 
 
+def test_rerun_wrapper_targets_only_failed_jobs(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[list[str]] = []
+
+    def fake_gh(args: object, *, token: str) -> SimpleNamespace:
+        assert token == "token"
+        calls.append(list(args))
+        return SimpleNamespace(returncode=0, stdout="", stderr="")
+
+    monkeypatch.setattr(auto_arm_merge, "_gh", fake_gh)
+
+    auto_arm_merge.rerun_failed_jobs("org/repo", 987654321, token="token")
+
+    assert calls == [["run", "rerun", "987654321", "--repo", "org/repo", "--failed"]]
+
+
 def test_workflow_is_scheduled_manual_serial_and_minimally_scoped() -> None:
     workflow = yaml.safe_load(_WORKFLOW.read_text(encoding="utf-8"))
     triggers = workflow.get("on", workflow.get(True))
 
     assert set(triggers) == {"schedule", "workflow_dispatch"}
     assert triggers["schedule"] == [{"cron": "7,22,37,52 * * * *"}]
-    assert workflow["permissions"] == {"pull-requests": "write", "contents": "write", "checks": "read"}
+    assert workflow["permissions"] == {
+        "actions": "write",
+        "pull-requests": "write",
+        "contents": "write",
+        "checks": "read",
+    }
     assert workflow["concurrency"] == {"group": "auto-arm-merge", "cancel-in-progress": False}
     assert "auto_arm_merge.py" in _WORKFLOW.read_text(encoding="utf-8")
