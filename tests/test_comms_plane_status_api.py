@@ -7,6 +7,7 @@ import sqlite3
 from dataclasses import replace
 from pathlib import Path
 
+import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
@@ -141,8 +142,9 @@ def test_api_plane_status_invalid_mode(monkeypatch, tmp_path: Path) -> None:
 
 
 def test_comms_v1_collectors_emit_store_not_db_path(
-    tmp_path: Path,
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")  # #7486: pin legacy path
     client = _client(_message_ctx(tmp_path, tmp_path / "missing.db"))
     for path in ("/api/comms/v1/backlog", "/api/comms/v1/dead-letters", "/api/comms/v1/metrics"):
         response = client.get(path)
@@ -155,8 +157,9 @@ def test_comms_v1_collectors_emit_store_not_db_path(
 
 
 def test_comms_v1_collectors_with_seeded_broker(
-    tmp_path: Path,
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")  # #7486: pin legacy path
     broker = tmp_path / "messages.db"
     conn = sqlite3.connect(broker)
     conn.executescript(

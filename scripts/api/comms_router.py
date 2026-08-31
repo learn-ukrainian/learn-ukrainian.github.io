@@ -42,16 +42,28 @@ try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
+from pathlib import Path
+
 from pydantic import BaseModel
 
+from scripts.control_plane.storage import ControlPlaneError
 from scripts.fleet_comms.efficiency_metrics import (
     collect_dead_letters,
+    collect_dead_letters_authority,
     collect_delivery_backlog,
+    collect_delivery_backlog_authority,
     collect_efficiency_metrics,
+    collect_efficiency_metrics_authority,
+    resolve_metrics_source,
 )
 from scripts.fleet_comms.message_plane import read_plane_status, resolve_plane_mode
 from scripts.fleet_comms.migrations import apply_migrations
-from scripts.fleet_comms.opsec_store import COMMS_RESPONSE_SCHEMA_VERSION, legacy_broker_store
+from scripts.fleet_comms.opsec_store import (
+    COMMS_RESPONSE_SCHEMA_VERSION,
+    comms_plane_store,
+    legacy_broker_store,
+)
+from scripts.fleet_comms.paths import default_plane_root
 
 from .monitor_context import MonitorContext, get_ctx, production_context
 from .state_helpers import cache_get, cache_set
@@ -1892,13 +1904,71 @@ def comms_inbox(
     }
 
 
+
+
+def _authority_plane_db(ctx: MonitorContext) -> Path:
+    # EXACT mirror of fleet_router._plane_db_path (#7505 CF r1: the two
+    # surfaces must never resolve the plane differently).
+    return default_plane_root(repo_root=ctx.roots.project_root) / "comms.sqlite3"
+
+
+def _authority_metrics_payload(
+    collector, ctx: MonitorContext, empty_fields: dict | None = None, **kwargs
+) -> dict:
+    """#7486 (plan v3.1 item 5): metric routes follow the storage/plane switch.
+
+    Fail-open like the fleet facade: absent plane db → db_missing; collector
+    errors → typed db_error code (never exception text); the control-plane
+    interlock's typed refusal under pg surfaces the same way.
+    """
+    zero = dict(empty_fields or {})
+    try:
+        db_path = _authority_plane_db(ctx)
+    except Exception:
+        # Fail-open parity with the fleet facade: an unresolvable plane root
+        # (retired local plane, non-git fixture) reads as missing, never a 500.
+        return {
+            "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
+            "content_included": False,
+            "source": "authority",
+            "store": comms_plane_store(reachable=False),
+            "db_missing": True,
+            **zero,
+        }
+    base = {
+        "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
+        "content_included": False,
+        "source": "authority",
+        "store": comms_plane_store(reachable=db_path.is_file()),
+    }
+    if not db_path.is_file():
+        # #7505 CF r1: keep the legacy zero-value shape fields so consumers
+        # of the configured-default authority mode see a stable schema.
+        return {**base, "db_missing": True, **zero}
+    try:
+        payload = collector(db_path, **kwargs)
+    except (OSError, sqlite3.Error, ValueError, ControlPlaneError) as exc:
+        logger.warning("comms authority collector unavailable: %s", type(exc).__name__)
+        return {**base, "db_error": type(exc).__name__, **zero}
+    payload.update(base)
+    return payload
+
+
 @router.get("/v1/backlog")
 async def comms_v1_backlog(
     limit: int = Query(100, ge=1, le=500),
     exclude_retired: bool = Query(True),
     ctx: MonitorContext = Depends(get_ctx),
 ) -> dict:
-    """Pending delivery backlog (no message content). Sol PR-M."""
+    """Pending delivery backlog (no message content). Sol PR-M / #7486 switch-aware."""
+    if resolve_metrics_source() == "authority":
+        return _authority_metrics_payload(
+            collect_delivery_backlog_authority,
+            ctx,
+            empty_fields={"total": 0, "by_agent": {}, "by_status": {}, "rows": []},
+            limit=limit,
+            exclude_retired=exclude_retired,
+        )
     message_db = ctx.roots.message_db_path
     store = legacy_broker_store(reachable=message_db.is_file())
     if not message_db.exists():
@@ -1925,7 +1995,14 @@ async def comms_v1_dead_letters(
     limit: int = Query(100, ge=1, le=500),
     ctx: MonitorContext = Depends(get_ctx),
 ) -> dict:
-    """Dead-letter inventory (metadata only). Sol PR-M."""
+    """Dead-letter inventory (metadata only). Sol PR-M / #7486 switch-aware."""
+    if resolve_metrics_source() == "authority":
+        return _authority_metrics_payload(
+            collect_dead_letters_authority,
+            ctx,
+            empty_fields={"total": 0, "by_reason": {}, "rows": []},
+            limit=limit,
+        )
     message_db = ctx.roots.message_db_path
     store = legacy_broker_store(reachable=message_db.is_file())
     if not message_db.exists():
@@ -1946,7 +2023,9 @@ async def comms_v1_dead_letters(
 
 @router.get("/v1/metrics")
 async def comms_v1_metrics(ctx: MonitorContext = Depends(get_ctx)) -> dict:
-    """Efficiency metrics from durable timestamps (no content). Sol PR-M."""
+    """Efficiency metrics from durable timestamps (no content). Sol PR-M / #7486 switch-aware."""
+    if resolve_metrics_source() == "authority":
+        return _authority_metrics_payload(collect_efficiency_metrics_authority, ctx)
     message_db = ctx.roots.message_db_path
     store = legacy_broker_store(reachable=message_db.is_file())
     if not message_db.exists():
