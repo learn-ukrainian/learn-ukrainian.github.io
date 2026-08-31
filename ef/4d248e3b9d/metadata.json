@@ -3,7 +3,7 @@
   "checkpoint_id": "ef4d248e3b9d",
   "strategy": "manual-commit",
   "branch": "cursor/guard-pr-merge-rollup-fallback",
-  "checkpoints_count": 1,
+  "checkpoints_count": 2,
   "files_touched": [
     "agents_extensions/shared/hooks/guard-pr-merge.py"
   ],
@@ -13,6 +13,13 @@
       "transcript": "/ef/4d248e3b9d/0/full.jsonl",
       "compact_transcript": "/ef/4d248e3b9d/0/transcript.jsonl",
       "content_hash": "/ef/4d248e3b9d/0/content_hash.txt",
+      "prompt": ""
+    },
+    {
+      "metadata": "/ef/4d248e3b9d/1/metadata.json",
+      "transcript": "/ef/4d248e3b9d/1/full.jsonl",
+      "compact_transcript": "/ef/4d248e3b9d/1/transcript.jsonl",
+      "content_hash": "/ef/4d248e3b9d/1/content_hash.txt",
       "prompt": ""
     }
   ],
