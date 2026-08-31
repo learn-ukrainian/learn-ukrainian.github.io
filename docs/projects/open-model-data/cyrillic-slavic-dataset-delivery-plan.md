@@ -299,9 +299,11 @@ held-out span, locator, annotation, or membership.
 
 The public receipt binds Cycle007's object-set and ordered-row commitments,
 204 packet / 10,159 row commitment, 204 physical sidecars, 408 logical
-sidecars, and 419 objects, while stating `private_binding_unbound`. It
-therefore claims no fresh private materialization. A steward-only production
-runtime self-hash verifies its private `0600` configuration and the exact
+sidecars, and 419 objects. It states `BOUND`, records the completed fresh
+private materialization, and pins its exact text-free graph commitment together
+with 38 connected components, 39 document/work/edition groups, 10,155 exact
+fingerprints, and an empty candidate-clearance allowlist. A steward-only
+production runtime self-hash verifies its private `0600` configuration and the exact
 retained lossless `content_compact` pack manifest, builds its synthetic
 inventory from that manifest, and uses the custody lane's streaming
 decompress-and-hash proof without expansion. It extracts only required packet
