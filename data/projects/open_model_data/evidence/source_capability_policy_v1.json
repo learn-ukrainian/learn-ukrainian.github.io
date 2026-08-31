@@ -60,7 +60,7 @@
       "decisions": {
         "acquisition_retention": {"state": "evidenced", "evidence_refs": ["evidence.wikipedia_primary_rights_v1"], "missing_evidence_keys": []},
         "local_preparation": {"state": "evidenced", "evidence_refs": ["evidence.wikipedia_primary_rights_v1"], "missing_evidence_keys": []},
-        "local_model_learning": {"state": "evidenced", "evidence_refs": ["evidence.wikipedia_primary_rights_v1"], "missing_evidence_keys": []},
+        "local_model_learning": {"state": "excluded", "evidence_refs": ["evidence.wikipedia_primary_rights_v1"], "missing_evidence_keys": ["actor_scope", "destination_scope", "explicit_license_or_permission"]},
         "raw_redistribution": {"state": "unresolved", "evidence_refs": ["evidence.wikipedia_primary_rights_v1"], "missing_evidence_keys": ["edition_identity", "explicit_license_or_permission"]},
         "derived_redistribution": {"state": "unresolved", "evidence_refs": ["evidence.wikipedia_primary_rights_v1"], "missing_evidence_keys": ["edition_identity", "explicit_license_or_permission"]},
         "dataset_publication": {"state": "unresolved", "evidence_refs": ["evidence.wikipedia_primary_rights_v1"], "missing_evidence_keys": ["edition_identity", "explicit_license_or_permission"]},

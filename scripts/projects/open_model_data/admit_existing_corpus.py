@@ -520,6 +520,7 @@ def _source_record(
         "record_id": _opaque_id(f"record.{family['source_family']}", raw_record_id),
         "work_id": _opaque_id(f"work.{family['source_family']}", title),
         "source_id": _opaque_id(f"source.{family['source_family']}", url),
+        "source_family": family["source_family"],
         "acquisition": {
             "receipt_id": _opaque_id(f"receipt.{family['source_family']}", receipt_material),
             "source_or_catalog_url": url,
@@ -711,12 +712,18 @@ def admit_corpus(
                             evidence_source=evidence_source,
                             contract_schema_sha256=source_record_schema_sha256,
                             text=text,
-                            usage_role="training_candidate" if disposition == "admitted" else "excluded",
+                            usage_role=(
+                                "training_candidate"
+                                if disposition == "admitted" and family["source_family"] != "wikipedia"
+                                else "excluded"
+                            ),
                         )
                         _validate(source_record, source_record_validator, f"source record {record_id}")
                         assert source_records is not None
                         source_records.write(source_record)
-                        expected_source_record_admissions += int(disposition == "admitted")
+                        expected_source_record_admissions += int(
+                            disposition == "admitted" and family["source_family"] != "wikipedia"
+                        )
                         manifest_row["source_record_id"] = source_record["record_id"]
                         retrieved_at = str(row["source_record_retrieved_at"])
                         source_record_rows += 1

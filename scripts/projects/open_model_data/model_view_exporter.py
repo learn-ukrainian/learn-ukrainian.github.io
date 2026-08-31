@@ -10,6 +10,7 @@ model, starts training, uploads data, or publishes an artifact.
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
 import math
@@ -59,6 +60,19 @@ NEW_SCHEMA_PATHS = (
     RECIPE_CONFIG_SCHEMA,
     RECIPE_MANIFEST_SCHEMA,
 )
+
+# The frozen #6958 policy is enforced from the schema-bound source record,
+# never from opaque record-ID prefixes or caller-provided eligibility claims.
+INELIGIBLE_SOURCE_FAMILIES = frozenset(("wikipedia",))
+SOURCE_FAMILY_DENIAL = "source_family_frozen_for_teaching_gold_training"
+WIKIPEDIA_FROZEN_SELECTION = {
+    "source_family": "wikipedia",
+    "state": "frozen_ineligible",
+    "eligible_for_teaching": False,
+    "eligible_for_gold": False,
+    "eligible_for_model_training": False,
+    "selection_enforced_by": "schema-bound source_family admission and exporter rejection",
+}
 DEPENDENCY_SCHEMA_PATHS = (
     CANDIDATE_SCHEMA,
     DECISION_SCHEMA,
@@ -421,6 +435,34 @@ def read_json(path: Path) -> dict[str, Any]:
     return value
 
 
+def freeze_wikipedia_historical_export_receipt(receipt: Mapping[str, Any]) -> dict[str, Any]:
+    """Return a text-free frozen metadata view of one historical Wikipedia CPT receipt.
+
+    The historical output hash and record count remain evidence of the prior
+    artifact.  The current selection decision is separately and explicitly
+    denied, so this helper never creates, reads, or rewrites a payload body.
+    """
+    frozen = copy.deepcopy(dict(receipt))
+    require(frozen.get("schema_version") == "model_view_export_receipt_v1", "unexpected export receipt schema")
+    require(frozen.get("view_kind") == "continued_pretraining", "only CPT receipts can be frozen here")
+    counts = frozen.get("counts")
+    require(isinstance(counts, dict), "export receipt counts are missing")
+    historical_records = counts.get("exported_records")
+    require(isinstance(historical_records, int) and historical_records >= 0, "historical CPT count is invalid")
+    output = frozen.get("output")
+    require(isinstance(output, Mapping) and output.get("records") == historical_records, "historical CPT output mismatch")
+    counts["historical_artifact_records"] = historical_records
+    counts["model_training_eligible_records"] = 0
+    frozen["source_family_selection"] = dict(WIKIPEDIA_FROZEN_SELECTION)
+    return frozen
+
+
+def reject_frozen_source_family_receipt(receipt: Mapping[str, Any]) -> None:
+    """Stop frozen source-family receipts before their view body is accessed."""
+    if receipt.get("source_family_selection") == WIKIPEDIA_FROZEN_SELECTION:
+        raise ExportError("Wikipedia Foundry receipt is frozen and ineligible for recipe preparation")
+
+
 def iter_jsonl(path: Path) -> Iterator[tuple[int, dict[str, Any]]]:
     try:
         handle = path.open(encoding="utf-8")
@@ -737,6 +779,16 @@ def load_source_admissions(path: Path) -> tuple[dict[str, SourceAdmission], int]
         require(isinstance(record_id, str), f"source record {index} lacks record_id")
         require(record_id not in admissions, f"duplicate source record ID: {record_id}")
         result = source_contract.validate_record(row, validator, schema_hash)
+        source_family = row.get("source_family")
+        require(isinstance(source_family, str) and source_family, f"source record {index} lacks explicit source_family")
+        if source_family in INELIGIBLE_SOURCE_FAMILIES:
+            admissions[record_id] = SourceAdmission(
+                record=row,
+                sha256=sha256_text(canonical_json(row)),
+                admitted=False,
+                reasons=tuple((*result["reasons"], SOURCE_FAMILY_DENIAL)),
+            )
+            continue
         admissions[record_id] = SourceAdmission(
             record=row,
             sha256=sha256_text(canonical_json(row)),
@@ -744,6 +796,10 @@ def load_source_admissions(path: Path) -> tuple[dict[str, SourceAdmission], int]
             reasons=tuple(result["reasons"]),
         )
     require(rows, "empty source-record input")
+    require(
+        any(admission.record["source_family"] not in INELIGIBLE_SOURCE_FAMILIES for admission in admissions.values()),
+        SOURCE_FAMILY_DENIAL,
+    )
     return admissions, len(rows)
 
 
@@ -1678,6 +1734,7 @@ def build_recipe_manifest(
     )
     view_receipt = read_json(view_receipt_path)
     validate_schema(view_receipt, receipt_validator, label="view receipt")
+    reject_frozen_source_family_receipt(view_receipt)
     require(view_receipt["view_kind"] == view_kind, "view receipt kind does not match recipe")
     view_validator = validator_for(VIEW_SCHEMAS[view_kind], schemas=schemas, registry=schema_registry)
     records, eligible_records, fixture_records = validate_view_artifact(

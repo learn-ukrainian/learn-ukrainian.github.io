@@ -77,7 +77,9 @@ def validator(path: Path) -> Draft202012Validator:
     registry = Registry()
     for schema in schemas:
         Draft202012Validator.check_schema(schema)
-        registry = registry.with_resource(str(schema["$id"]), Resource.from_contents(schema))
+        schema_id = schema.get("$id")
+        if isinstance(schema_id, str) and schema_id.strip():
+            registry = registry.with_resource(schema_id, Resource.from_contents(schema))
     active = read_json(path)
     return Draft202012Validator(active, registry=registry, format_checker=FormatChecker())
 
@@ -343,6 +345,10 @@ def prepare_payloads(
     source_records = load_source_records(source_records_path)
     expected_source = admission_receipt["outputs"]["source_records"]
     verify_artifact(source_records_path, expected_source, "source-record")
+    require(
+        all(row["source_family"] != "wikipedia" for row in source_records),
+        exporter.SOURCE_FAMILY_DENIAL,
+    )
     require(admission_receipt["dispositions"]["admitted"]["rows"] == 1029, "Wikipedia admission is incomplete")
     require(operator_packet["operator_decision_status"] == "accepted", "operator admission is not accepted")
     policy_material = {

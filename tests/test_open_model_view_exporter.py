@@ -31,12 +31,18 @@ def read_jsonl(path: Path) -> list[dict[str, Any]]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
 
 
-def source_record(text: str, *, record_id: str = "record.synthetic-001") -> dict[str, Any]:
+def source_record(
+    text: str,
+    *,
+    record_id: str = "record.synthetic-001",
+    source_family: str = "synthetic",
+) -> dict[str, Any]:
     record = json.loads(SOURCE_EXAMPLE.read_text(encoding="utf-8"))
     record["contract_schema_sha256"] = source_contract.load_schema()[1]
     record["record_id"] = record_id
     record["source_id"] = record_id.replace("record.", "source.")
     record["work_id"] = record_id.replace("record.", "work.")
+    record["source_family"] = source_family
     record["content"]["sha256"] = exporter.sha256_text(text)
     return record
 
@@ -339,6 +345,137 @@ def export_fixture_pretraining(tmp_path: Path) -> tuple[Path, Path]:
         extra_evaluation_artifacts=(),
     )
     return output, receipt
+
+
+def test_wikipedia_source_family_is_rejected_before_pretraining_output(tmp_path: Path) -> None:
+    text = "Synthetic structural fixture only."
+    source_path = tmp_path / "source.jsonl"
+    payload_path = tmp_path / "payload.jsonl"
+    output = tmp_path / "pretraining.jsonl"
+    receipt = tmp_path / "pretraining.receipt.json"
+    record_id = "record.opaque-001"
+    write_jsonl(source_path, [source_record(text, record_id=record_id, source_family="wikipedia")])
+
+    with pytest.raises(exporter.ExportError, match=exporter.SOURCE_FAMILY_DENIAL):
+        exporter.export_pretraining(
+            source_records_path=source_path,
+            payloads_path=payload_path,
+            origin="machine_generated",
+            representation_view="faithful_literary",
+            output=output,
+            receipt_output=receipt,
+            allow_test_fixtures=True,
+            v011_manifest=exporter.DEFAULT_V011_MANIFEST,
+            v02_packet=exporter.DEFAULT_V02_PACKET,
+            extra_evaluation_artifacts=(),
+        )
+
+    assert not output.exists()
+    assert not receipt.exists()
+
+
+def test_mixed_source_families_exclude_wikipedia_and_export_eligible_rows(tmp_path: Path) -> None:
+    allowed_text = "Synthetic eligible fixture."
+    blocked_text = "Synthetic blocked Wikipedia fixture."
+    source_path = tmp_path / "source.jsonl"
+    payload_path = tmp_path / "payload.jsonl"
+    output = tmp_path / "pretraining.jsonl"
+    receipt_path = tmp_path / "pretraining.receipt.json"
+    allowed_record_id = "record.synthetic-001"
+    blocked_record_id = "record.wikipedia-001"
+    write_jsonl(
+        source_path,
+        [
+            source_record(allowed_text, record_id=allowed_record_id, source_family="synthetic"),
+            source_record(blocked_text, record_id=blocked_record_id, source_family="wikipedia"),
+        ],
+    )
+    write_jsonl(
+        payload_path,
+        [
+            source_payload(allowed_text, record_id=allowed_record_id),
+            source_payload(blocked_text, payload_id="payload.wikipedia-001", record_id=blocked_record_id),
+        ],
+    )
+
+    receipt = exporter.export_pretraining(
+        source_records_path=source_path,
+        payloads_path=payload_path,
+        origin="machine_generated",
+        representation_view="faithful_literary",
+        output=output,
+        receipt_output=receipt_path,
+        allow_test_fixtures=True,
+        v011_manifest=exporter.DEFAULT_V011_MANIFEST,
+        v02_packet=exporter.DEFAULT_V02_PACKET,
+        extra_evaluation_artifacts=(),
+    )
+
+    rows = read_jsonl(output)
+    assert len(rows) == 1
+    assert rows[0]["lineage"]["source_record_id"] == allowed_record_id
+    assert receipt["admission"] == {
+        "applied": True,
+        "policy": "recompute source_record_v1 admission; unknown is denial",
+        "source_records_admitted": 1,
+        "source_records_denied": 1,
+        "source_records_total": 2,
+    }
+    assert receipt["counts"]["input_records"] == 2
+    assert receipt["counts"]["exported_records"] == 1
+    assert receipt["counts"]["excluded_source_record_not_admitted"] == 1
+
+
+@pytest.mark.parametrize("view_kind", ["correction_instruction", "preference", "quality_filter"])
+def test_wikipedia_source_family_is_rejected_before_gold_output(tmp_path: Path, view_kind: str) -> None:
+    source_path = tmp_path / "source.jsonl"
+    output = tmp_path / f"{view_kind}.jsonl"
+    receipt = tmp_path / f"{view_kind}.receipt.json"
+    write_jsonl(
+        source_path,
+        [source_record("Synthetic structural fixture only.", source_family="wikipedia")],
+    )
+
+    with pytest.raises(exporter.ExportError, match=exporter.SOURCE_FAMILY_DENIAL):
+        exporter.export_correction_family(
+            view_kind=view_kind,
+            source_records_path=source_path,
+            correction_records_path=tmp_path / "never-read.jsonl",
+            origin="machine_generated",
+            output=output,
+            receipt_output=receipt,
+            allow_test_fixtures=True,
+            v011_manifest=exporter.DEFAULT_V011_MANIFEST,
+            v02_packet=exporter.DEFAULT_V02_PACKET,
+            extra_evaluation_artifacts=(),
+        )
+
+    assert not output.exists()
+    assert not receipt.exists()
+
+
+def test_source_family_is_not_inferred_from_opaque_record_id(tmp_path: Path) -> None:
+    text = "Synthetic structural fixture only."
+    source_path = tmp_path / "source.jsonl"
+    record_id = "record.wikipedia.lookalike-001"
+    write_jsonl(source_path, [source_record(text, record_id=record_id, source_family="synthetic")])
+
+    admissions, count = exporter.load_source_admissions(source_path)
+
+    assert count == 1
+    assert list(admissions) == [record_id]
+    assert admissions[record_id].record["source_family"] == "synthetic"
+
+
+def test_historical_wikipedia_receipt_is_frozen_without_rewriting_artifact_metadata() -> None:
+    path = ROOT / "data/projects/open_model_data/model_views/wikipedia_faithful_cpt_export_receipt_v1.json"
+    receipt = exporter.read_json(path)
+    frozen = exporter.freeze_wikipedia_historical_export_receipt(receipt)
+
+    assert frozen["output"] == receipt["output"]
+    assert frozen["counts"]["historical_artifact_records"] == receipt["output"]["records"]
+    assert frozen["counts"]["model_training_eligible_records"] == 0
+    assert frozen["source_family_selection"] == exporter.WIKIPEDIA_FROZEN_SELECTION
 
 
 def test_new_schemas_are_strict_and_meta_valid() -> None:
@@ -1196,6 +1333,62 @@ def test_recipe_binds_exact_fixture_view_but_never_authorizes_training(
     }
     assert manifest["preparation"]["model_training_eligible_records"] == 0
     assert manifest["preparation"]["test_fixture_records"] == 1
+
+
+def test_recipe_rejects_frozen_wikipedia_receipt_before_reading_view_or_writing_manifest(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    view, receipt_path = export_fixture_pretraining(tmp_path)
+    receipt = exporter.read_json(receipt_path)
+    receipt["source_family_selection"] = dict(exporter.WIKIPEDIA_FROZEN_SELECTION)
+    receipt_path.write_text(exporter.canonical_json(receipt) + "\n", encoding="utf-8")
+    config_path = tmp_path / "recipe-config.json"
+    output = tmp_path / "recipe-manifest.json"
+    config_path.write_text(json.dumps(recipe_config()), encoding="utf-8")
+    monkeypatch.setattr(
+        exporter,
+        "validate_view_artifact",
+        lambda **_kwargs: pytest.fail("frozen receipt must stop before view access"),
+    )
+
+    with pytest.raises(exporter.ExportError, match="frozen and ineligible"):
+        exporter.build_recipe_manifest(
+            config_path=config_path,
+            view_path=view,
+            view_receipt_path=receipt_path,
+            output=output,
+            allow_test_fixtures=True,
+        )
+    assert not output.exists()
+
+
+def test_recipe_rejects_marker_removal_for_canonical_frozen_view_identity(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    view, receipt_path = export_fixture_pretraining(tmp_path)
+    receipt = exporter.read_json(receipt_path)
+    receipt["output"]["sha256"] = "0cf114d1b9982984f8666f5e856043a851084c6934dbb6ea7ea98486710e9ed1"
+    receipt_path.write_text(exporter.canonical_json(receipt) + "\n", encoding="utf-8")
+    config_path = tmp_path / "recipe-config.json"
+    output = tmp_path / "recipe-manifest.json"
+    config_path.write_text(json.dumps(recipe_config()), encoding="utf-8")
+    monkeypatch.setattr(
+        exporter,
+        "validate_view_artifact",
+        lambda **_kwargs: pytest.fail("missing frozen marker must stop before view access"),
+    )
+
+    with pytest.raises(exporter.ExportError, match="view receipt schema violation"):
+        exporter.build_recipe_manifest(
+            config_path=config_path,
+            view_path=view,
+            view_receipt_path=receipt_path,
+            output=output,
+            allow_test_fixtures=True,
+        )
+    assert not output.exists()
 
 
 def test_recipe_rejects_wrong_objective_and_moving_revision(tmp_path: Path) -> None:

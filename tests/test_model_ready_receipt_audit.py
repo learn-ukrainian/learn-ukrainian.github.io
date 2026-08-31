@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -27,9 +28,9 @@ def mutate(receipt: dict[str, object], name: str) -> None:
     silver = truth["silver"]  # type: ignore[index]
     lanes = silver["lanes"]  # type: ignore[index]
     if name == "faithful_count":
-        truth["continued_pretraining"]["faithful"]["records"] = 1  # type: ignore[index]
+        truth["continued_pretraining"]["faithful"]["historical_artifact_records"] = 1  # type: ignore[index]
     elif name == "modern_count":
-        truth["continued_pretraining"]["modern"]["records"] = 1  # type: ignore[index]
+        truth["continued_pretraining"]["modern"]["historical_artifact_records"] = 1  # type: ignore[index]
     elif name == "silver_count":
         silver["records"] = 1  # type: ignore[index]
     elif name == "evaluation_count":
@@ -73,6 +74,10 @@ def mutate(receipt: dict[str, object], name: str) -> None:
         silver["record_learning_or_export_eligible"] = True  # type: ignore[index]
     elif name == "heldout_eligibility":
         truth["heldout_evaluation"]["learning_eligible"] = True  # type: ignore[index]
+    elif name == "cpt_eligibility":
+        truth["continued_pretraining"]["faithful"]["record_learning_eligible"] = True  # type: ignore[index]
+    elif name == "cpt_selectable":
+        truth["continued_pretraining"]["modern"]["selectable"] = True  # type: ignore[index]
     elif name == "availability":
         receipt["payload_availability"]["faithful_continued_pretraining"]["state"] = "available"  # type: ignore[index]
     elif name == "release_status":
@@ -93,22 +98,38 @@ def mutate(receipt: dict[str, object], name: str) -> None:
         raise AssertionError(name)
 
 
-def test_current_receipt_reproduces_and_is_schema_valid(tmp_path: Path) -> None:
+def test_current_receipt_reproduces_frozen_historical_metadata(tmp_path: Path) -> None:
     inputs = audit.default_inputs()
-    receipt = audit.build_receipt(inputs)
     tracked = json.loads(CANONICAL_RECEIPT.read_text(encoding="utf-8"))
+    receipt = audit.build_receipt(inputs)
 
+    schema = json.loads(inputs.schema.read_text(encoding="utf-8"))
+    assert not list(Draft202012Validator(schema).iter_errors(tracked))
     assert receipt == tracked
     audit.validate_receipt(receipt, inputs.schema, inputs)
-    schema = json.loads(inputs.schema.read_text(encoding="utf-8"))
-    assert not list(Draft202012Validator(schema).iter_errors(receipt))
-
+    assert receipt["product_truth"]["continued_pretraining"]["faithful"] == {
+        "historical_artifact_records": 1028,
+        "record_learning_eligible": False,
+        "selectable": False,
+        "operation_training_authorized": False,
+    }
     first = tmp_path / "first.json"
     second = tmp_path / "second.json"
     audit.write_receipt(first, receipt)
     audit.write_receipt(second, audit.build_receipt(inputs))
     assert first.read_bytes() == second.read_bytes()
-    assert first.read_bytes().endswith(b"\n")
+
+
+def test_wikipedia_policy_drift_blocks_receipt_regeneration(tmp_path: Path) -> None:
+    inputs = audit.default_inputs()
+    policy = json.loads(inputs.capability_policy.read_text(encoding="utf-8"))
+    wikipedia = next(item for item in policy["family_defaults"] if item["source_family"] == "wikipedia")
+    wikipedia["decisions"]["local_model_learning"]["state"] = "evidenced"
+    changed_policy = tmp_path / "source_capability_policy_v1.json"
+    changed_policy.write_text(audit.canonical_json(policy) + "\n", encoding="utf-8")
+
+    with pytest.raises(audit.AuditError, match="model-learning policy is not excluded"):
+        audit.build_receipt(replace(inputs, capability_policy=changed_policy))
 
 
 @pytest.mark.parametrize(
@@ -117,13 +138,13 @@ def test_current_receipt_reproduces_and_is_schema_valid(tmp_path: Path) -> None:
         "faithful_count", "modern_count", "silver_count", "evaluation_count", "inventory_rows", "inventory_words", "inventory_gate_interpretation",
         "disposition", "evidence_grade", "source_family", "period", "genre", "genre_reallocation", "register",
         "lane_state", "lane_eligibility", "lane_emission", "lane_blocked", "lane_artifact", "empty_lane_explanation",
-        "evaluation_isolation", "silver_eligibility", "heldout_eligibility", "availability",
+        "evaluation_isolation", "silver_eligibility", "heldout_eligibility", "cpt_eligibility", "cpt_selectable", "availability",
         "release_status", "release_permission", "safety", "phase", "phase_deliverable", "direct_input_hash", "unknown_property",
     ],
 )
 def test_planted_mutations_are_rejected(name: str) -> None:
     inputs = audit.default_inputs()
-    receipt = audit.build_receipt(inputs)
+    receipt = json.loads(CANONICAL_RECEIPT.read_text(encoding="utf-8"))
     mutate(receipt, name)
     rebind(receipt)
 

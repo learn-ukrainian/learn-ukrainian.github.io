@@ -9,6 +9,7 @@ from typing import Any
 
 import pytest
 from jsonschema import Draft202012Validator
+from jsonschema.exceptions import SchemaError
 from tokenizers import Tokenizer, models, pre_tokenizers
 
 from scripts.projects.open_model_data import model_ready_view_production as production
@@ -100,6 +101,39 @@ def test_operational_partition_is_gap_free_and_masks_detector_cores() -> None:
         "retain",
     ]
     assert "text" not in json.dumps(spans)
+
+
+def test_validator_ignores_idless_schema_but_rejects_malformed_schema(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    contracts = tmp_path / "contracts"
+    contracts.mkdir()
+    active = contracts / "active.schema.json"
+    active.write_text(
+        json.dumps(
+            {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "$id": "https://example.invalid/active.schema.json",
+                "type": "object",
+            }
+        ),
+        encoding="utf-8",
+    )
+    (contracts / "idless.schema.json").write_text(
+        json.dumps({"$schema": "https://json-schema.org/draft/2020-12/schema", "type": "object"}),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(production, "CONTRACTS", contracts)
+
+    assert isinstance(production.validator(active), Draft202012Validator)
+
+    (contracts / "malformed.schema.json").write_text(
+        json.dumps({"$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "bad", "type": 7}),
+        encoding="utf-8",
+    )
+    with pytest.raises(SchemaError):
+        production.validator(active)
 
 
 def test_operational_partition_resolves_overlap_by_frozen_priority() -> None:
@@ -223,7 +257,7 @@ def test_word_regex_keeps_ukrainian_apostrophe_forms() -> None:
 
 
 @pytest.mark.slow
-def test_prepare_payloads_runs_complete_admitted_scope_atomically(
+def test_prepare_payloads_rejects_frozen_wikipedia_before_output(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -246,6 +280,7 @@ def test_prepare_payloads_runs_complete_admitted_scope_atomically(
         source_records.append(
             {
                 "record_id": f"record.wikipedia.{record_id:06d}",
+                "source_family": "wikipedia",
                 "content": {"sha256": production.exporter.sha256_text(text)},
             }
         )
@@ -282,23 +317,22 @@ def test_prepare_payloads_runs_complete_admitted_scope_atomically(
         lambda _path, *, expected: (masks, Counter({"wikipedia_silver_records": 1})),
     )
 
-    receipt = production.prepare_payloads(
-        source_records_path=source_records_path,
-        sources_db=sources_db,
-        detector_candidates_path=detector_candidates_path,
-        silver_records_path=silver_records_path,
-        output=output,
-        receipt_output=receipt_output,
-        detector_receipt_path=detector_receipt_path,
-        silver_receipt_path=silver_receipt_path,
-        admission_receipt_path=admission_receipt_path,
-        operator_packet_path=operator_packet_path,
-    )
+    with pytest.raises(production.ProductionError, match=production.exporter.SOURCE_FAMILY_DENIAL):
+        production.prepare_payloads(
+            source_records_path=source_records_path,
+            sources_db=sources_db,
+            detector_candidates_path=detector_candidates_path,
+            silver_records_path=silver_records_path,
+            output=output,
+            receipt_output=receipt_output,
+            detector_receipt_path=detector_receipt_path,
+            silver_receipt_path=silver_receipt_path,
+            admission_receipt_path=admission_receipt_path,
+            operator_packet_path=operator_packet_path,
+        )
 
-    assert receipt["counts"]["source_records_processed"] == 1029
-    assert receipt["counts"]["masked_records"] == 1
-    assert receipt["output_payload"] == artifact(output, 1029)
-    assert json.loads(receipt_output.read_text(encoding="utf-8")) == receipt
+    assert not output.exists()
+    assert not receipt_output.exists()
     assert not list(tmp_path.glob("*.tmp"))
     assert not list(tmp_path.glob("*.bak"))
 

@@ -280,7 +280,7 @@ def test_wikipedia_source_records_are_contract_valid_pending_and_deterministic(t
     assert first.receipt == second.receipt
 
 
-def test_accepted_wikipedia_emits_admitted_source_records_but_not_training_payload(tmp_path: Path) -> None:
+def test_accepted_wikipedia_emits_explicitly_excluded_source_records(tmp_path: Path) -> None:
     config, source_records = _wikipedia_fixture(tmp_path)
     _accept_wikipedia_fixture(tmp_path, config)
 
@@ -312,11 +312,12 @@ def test_accepted_wikipedia_emits_admitted_source_records_but_not_training_paylo
     assert {row["disposition"] for row in rows} == {"admitted"}
     assert all(row["reasons"] == ["operator_acceptance_recorded"] for row in rows)
     records = [json.loads(line) for line in source_records.read_text(encoding="utf-8").splitlines()]
-    assert {record["usage"]["role"] for record in records} == {"training_candidate"}
+    assert {record["source_family"] for record in records} == {"wikipedia"}
+    assert {record["usage"]["role"] for record in records} == {"excluded"}
     validation = validate_path(source_records)
-    assert validation["admitted_records"] == 2
-    assert validation["rejected_records"] == 0
-    assert validation["rejection_reason_counts"] == {}
+    assert validation["admitted_records"] == 0
+    assert validation["rejected_records"] == 2
+    assert validation["rejection_reason_counts"] == {"record_marked_excluded": 2}
     assert (tmp_path / "manifest-1.jsonl").read_bytes() == (tmp_path / "manifest-2.jsonl").read_bytes()
     assert source_records.read_bytes() == (tmp_path / "source-records-2.jsonl").read_bytes()
     assert (tmp_path / "receipt-1.json").read_bytes() == (tmp_path / "receipt-2.json").read_bytes()

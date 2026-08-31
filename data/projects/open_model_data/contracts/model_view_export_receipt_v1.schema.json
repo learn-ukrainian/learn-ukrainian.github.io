@@ -54,17 +54,38 @@
     },
     "counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
     "determinism": {"type": "object", "additionalProperties": false, "required": ["serialization", "ordering", "timestamps_omitted"], "properties": {"serialization": {"const": "UTF-8 canonical JSON with sorted keys and LF"}, "ordering": {"enum": ["validated ascending source payload ID", "canonical upstream packet order; unique correction record ID", "evaluation release then item ID"]}, "timestamps_omitted": {"const": true}}},
-    "safety": {"type": "object", "additionalProperties": false, "required": ["local_artifact_written", "training_performed", "upload_performed", "publication_performed", "private_data_exported", "evaluation_data_entered_non_evaluation_view", "test_fixture_mode"], "properties": {"local_artifact_written": {"const": true}, "training_performed": {"const": false}, "upload_performed": {"const": false}, "publication_performed": {"const": false}, "private_data_exported": {"const": false}, "evaluation_data_entered_non_evaluation_view": {"const": false}, "test_fixture_mode": {"type": "boolean"}}}
+    "safety": {"type": "object", "additionalProperties": false, "required": ["local_artifact_written", "training_performed", "upload_performed", "publication_performed", "private_data_exported", "evaluation_data_entered_non_evaluation_view", "test_fixture_mode"], "properties": {"local_artifact_written": {"const": true}, "training_performed": {"const": false}, "upload_performed": {"const": false}, "publication_performed": {"const": false}, "private_data_exported": {"const": false}, "evaluation_data_entered_non_evaluation_view": {"const": false}, "test_fixture_mode": {"type": "boolean"}}},
+    "source_family_selection": {"$ref": "#/$defs/sourceFamilySelection"}
   },
   "allOf": [
     {
       "if": {"properties": {"view_kind": {"const": "heldout_evaluation"}}, "required": ["view_kind"]},
       "then": {"properties": {"admission": {"properties": {"applied": {"const": false}}}, "deduplication": {"properties": {"applied": {"const": false}}}}},
       "else": {"properties": {"admission": {"properties": {"applied": {"const": true}}}, "deduplication": {"properties": {"applied": {"const": true}}}}}
+    },
+    {
+      "if": {
+        "required": ["output"],
+        "properties": {
+          "output": {
+            "required": ["sha256"],
+            "properties": {
+              "sha256": {
+                "enum": [
+                  "0cf114d1b9982984f8666f5e856043a851084c6934dbb6ea7ea98486710e9ed1",
+                  "c524a89cd2d37fd88cf3ce1e742583fe06252dd125f88b146b73c8453c7a0721"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "then": {"required": ["source_family_selection"]}
     }
   ],
   "$defs": {
     "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
-    "artifact": {"type": "object", "additionalProperties": false, "required": ["role", "records", "bytes", "sha256"], "properties": {"role": {"type": "string", "minLength": 1}, "records": {"type": "integer", "minimum": 0}, "bytes": {"type": "integer", "minimum": 0}, "sha256": {"$ref": "#/$defs/sha256"}}}
+    "artifact": {"type": "object", "additionalProperties": false, "required": ["role", "records", "bytes", "sha256"], "properties": {"role": {"type": "string", "minLength": 1}, "records": {"type": "integer", "minimum": 0}, "bytes": {"type": "integer", "minimum": 0}, "sha256": {"$ref": "#/$defs/sha256"}}},
+    "sourceFamilySelection": {"type": "object", "additionalProperties": false, "required": ["source_family", "state", "eligible_for_teaching", "eligible_for_gold", "eligible_for_model_training", "selection_enforced_by"], "properties": {"source_family": {"const": "wikipedia"}, "state": {"const": "frozen_ineligible"}, "eligible_for_teaching": {"const": false}, "eligible_for_gold": {"const": false}, "eligible_for_model_training": {"const": false}, "selection_enforced_by": {"const": "schema-bound source_family admission and exporter rejection"}}}
   }
 }

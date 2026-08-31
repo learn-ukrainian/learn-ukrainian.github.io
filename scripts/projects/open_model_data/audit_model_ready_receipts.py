@@ -43,6 +43,10 @@ class AuditInputs:
     preference_contract: Path
     quality_contract: Path
     inventory: Path
+    capability_policy: Path
+    capability_policy_schema: Path
+    source_record_contract: Path
+    exporter: Path
     schema: Path
 
 
@@ -63,6 +67,10 @@ def default_inputs(root: Path = ROOT) -> AuditInputs:
         preference_contract=contracts / "preference_view_v1.schema.json",
         quality_contract=contracts / "quality_filter_view_v1.schema.json",
         inventory=data / "inventory/aggregate_summary_v1.json",
+        capability_policy=data / "evidence/source_capability_policy_v1.json",
+        capability_policy_schema=contracts / "source_capability_policy_v1.schema.json",
+        source_record_contract=contracts / "source_record_v1.schema.json",
+        exporter=root / "scripts/projects/open_model_data/model_view_exporter.py",
         schema=contracts / "model_ready_product_audit_v1.schema.json",
     )
 
@@ -118,6 +126,10 @@ def input_artifacts(inputs: AuditInputs) -> dict[str, dict[str, Any]]:
             inputs.preference_contract,
             inputs.quality_contract,
             inputs.inventory,
+            inputs.capability_policy,
+            inputs.capability_policy_schema,
+            inputs.source_record_contract,
+            inputs.exporter,
             inputs.schema,
         )
     }
@@ -140,6 +152,17 @@ def strict_artifact(value: Mapping[str, Any]) -> dict[str, Any]:
     return {"bytes": int(value["bytes"]), "records": int(value["records"]), "sha256": str(value["sha256"])}
 
 
+def _validate_schema_instance(value: Mapping[str, Any], schema: Mapping[str, Any], label: str) -> None:
+    try:
+        Draft202012Validator.check_schema(schema)
+    except Exception as exc:  # jsonschema's schema error has no stable common base.
+        raise AuditError(f"invalid {label} schema: {exc}") from exc
+    errors = sorted(Draft202012Validator(schema).iter_errors(value), key=lambda item: list(item.path))
+    if errors:
+        location = ".".join(str(part) for part in errors[0].path) or "<root>"
+        raise AuditError(f"{label} schema violation at {location}: {errors[0].message}")
+
+
 def _validate_source_evidence(
     production: Mapping[str, Any],
     silver: Mapping[str, Any],
@@ -147,14 +170,48 @@ def _validate_source_evidence(
     modern: Mapping[str, Any],
     heldout: Mapping[str, Any],
     inventory: Mapping[str, Any],
+    capability_policy: Mapping[str, Any],
+    source_record_contract: Mapping[str, Any],
     contracts: Mapping[str, Mapping[str, Any]],
 ) -> None:
     require(production.get("schema_version") == "model_ready_view_production_v1", "unexpected production receipt")
     require(silver.get("schema_version") == "language_contact_silver_receipt_v1", "unexpected silver receipt")
     require(faithful.get("view_kind") == modern.get("view_kind") == "continued_pretraining", "CPT receipt kind mismatch")
     require(heldout.get("view_kind") == "heldout_evaluation", "heldout receipt kind mismatch")
-    require(faithful["counts"]["exported_records"] == 1028, "faithful CPT record count mismatch")
-    require(modern["counts"]["exported_records"] == 1028, "modern CPT record count mismatch")
+    wikipedia = next(
+        (scope for scope in capability_policy["family_defaults"] if scope.get("source_family") == "wikipedia"),
+        None,
+    )
+    require(isinstance(wikipedia, Mapping), "Wikipedia capability policy is missing")
+    require(
+        "source_family" in source_record_contract.get("required", [])
+        and "source_family" in source_record_contract.get("properties", {}),
+        "source record contract does not bind source_family",
+    )
+    require(
+        wikipedia["decisions"]["local_model_learning"]["state"] == "excluded",
+        "Wikipedia model-learning policy is not excluded",
+    )
+    for receipt, label in ((faithful, "faithful"), (modern, "modern")):
+        selection = receipt.get("source_family_selection")
+        require(isinstance(selection, Mapping), f"{label} CPT source-family selection is missing")
+        require(
+            selection
+            == {
+                "source_family": "wikipedia",
+                "state": "frozen_ineligible",
+                "eligible_for_teaching": False,
+                "eligible_for_gold": False,
+                "eligible_for_model_training": False,
+                "selection_enforced_by": "schema-bound source_family admission and exporter rejection",
+            },
+            f"{label} CPT source-family selection drift",
+        )
+        require(receipt["counts"]["model_training_eligible_records"] == 0, f"{label} CPT eligibility is nonzero")
+        require(
+            receipt["counts"]["historical_artifact_records"] == receipt["output"]["records"] == 1028,
+            f"{label} historical CPT count mismatch",
+        )
     require(heldout["counts"]["exported_records"] == 691, "heldout evaluation record count mismatch")
     public_inventory = inventory["distinct_content_totals"]["by_data_boundary"]["public_or_external_source"]
     require(public_inventory["content_units_by_unit_label"]["database_rows"] == 189_150, "inventory database-row count mismatch")
@@ -201,6 +258,14 @@ def build_receipt(inputs: AuditInputs) -> dict[str, Any]:
     modern = read_json(inputs.modern_cpt)
     heldout = read_json(inputs.heldout_evaluation)
     inventory = read_json(inputs.inventory)
+    capability_policy = read_json(inputs.capability_policy)
+    capability_policy_schema = read_json(inputs.capability_policy_schema)
+    source_record_contract = read_json(inputs.source_record_contract)
+    _validate_schema_instance(capability_policy, capability_policy_schema, "source capability policy")
+    try:
+        Draft202012Validator.check_schema(source_record_contract)
+    except Exception as exc:  # jsonschema's schema error has no stable common base.
+        raise AuditError(f"invalid source record schema: {exc}") from exc
     contracts = {
         "silver": read_json(inputs.silver_contract),
         "correction": read_json(inputs.correction_contract),
@@ -208,7 +273,7 @@ def build_receipt(inputs: AuditInputs) -> dict[str, Any]:
         "preference": read_json(inputs.preference_contract),
         "quality": read_json(inputs.quality_contract),
     }
-    _validate_source_evidence(production, silver, faithful, modern, heldout, inventory, contracts)
+    _validate_source_evidence(production, silver, faithful, modern, heldout, inventory, capability_policy, source_record_contract, contracts)
     direct_inputs = input_artifacts(inputs)
     source_counts = silver["counts"]
     lanes = production["silver_lanes"]
@@ -225,8 +290,8 @@ def build_receipt(inputs: AuditInputs) -> dict[str, Any]:
         "direct_inputs": direct_inputs,
         "validation": {"schema_valid": True, "source_receipts_reconciled": True, "payload_rows_read": False},
         "invariants": {
-            "faithful_cpt_records": 1028,
-            "modern_cpt_records": 1028,
+            "faithful_cpt_historical_records": 1028,
+            "modern_cpt_historical_records": 1028,
             "silver_records": 739_503,
             "heldout_evaluation_records": 691,
             "silver_distributions_sum_to_output": True,
@@ -246,12 +311,12 @@ def build_receipt(inputs: AuditInputs) -> dict[str, Any]:
                     "potential_training_admission_assets": 0,
                     "scope": "historical_existing_asset_inventory",
                 },
-                "capability_specific_wikipedia_cpt_rows": 1028,
-                "interpretation": "The historical asset-inventory gate is distinct from later capability-specific Wikipedia CPT rows.",
+                "historical_wikipedia_cpt_rows": 1028,
+                "interpretation": "The historical Wikipedia CPT artifacts are frozen and distinct from current source-family eligibility.",
             },
             "continued_pretraining": {
-                "faithful": {"records": 1028, "record_learning_eligible": True, "operation_training_authorized": False},
-                "modern": {"records": 1028, "record_learning_eligible": True, "operation_training_authorized": False},
+                "faithful": {"historical_artifact_records": 1028, "record_learning_eligible": False, "selectable": False, "operation_training_authorized": False},
+                "modern": {"historical_artifact_records": 1028, "record_learning_eligible": False, "selectable": False, "operation_training_authorized": False},
             },
             "silver": {
                 "records": 739_503,
@@ -325,6 +390,38 @@ def validate_receipt(
     require(audit_id == expected_id, "audit ID does not bind receipt content")
     if inputs is not None:
         require(value["direct_inputs"] == input_artifacts(inputs), "direct input hashes do not match current files")
+        production = read_json(inputs.production)
+        silver = read_json(inputs.silver)
+        faithful = read_json(inputs.faithful_cpt)
+        modern = read_json(inputs.modern_cpt)
+        heldout = read_json(inputs.heldout_evaluation)
+        inventory = read_json(inputs.inventory)
+        capability_policy = read_json(inputs.capability_policy)
+        capability_policy_schema = read_json(inputs.capability_policy_schema)
+        source_record_contract = read_json(inputs.source_record_contract)
+        _validate_schema_instance(capability_policy, capability_policy_schema, "source capability policy")
+        try:
+            Draft202012Validator.check_schema(source_record_contract)
+        except Exception as exc:  # jsonschema's schema error has no stable common base.
+            raise AuditError(f"invalid source record schema: {exc}") from exc
+        contracts = {
+            "silver": read_json(inputs.silver_contract),
+            "correction": read_json(inputs.correction_contract),
+            "correction_view": read_json(inputs.correction_view_contract),
+            "preference": read_json(inputs.preference_contract),
+            "quality": read_json(inputs.quality_contract),
+        }
+        _validate_source_evidence(
+            production,
+            silver,
+            faithful,
+            modern,
+            heldout,
+            inventory,
+            capability_policy,
+            source_record_contract,
+            contracts,
+        )
         source_silver = read_json(inputs.silver)
         require(
             value["product_truth"]["silver"]["distributions"]
@@ -335,14 +432,16 @@ def validate_receipt(
             "silver distributions do not match the direct receipt",
         )
         require(
-            value["product_truth"]["silver"]["lanes"] == read_json(inputs.production)["silver_lanes"],
+            value["product_truth"]["silver"]["lanes"] == production["silver_lanes"],
             "silver lanes do not match the production receipt",
         )
     invariants = value["invariants"]
     truth = value["product_truth"]
-    require(truth["continued_pretraining"]["faithful"]["records"] == invariants["faithful_cpt_records"], "faithful count invariant mismatch")
-    require(truth["corpus_inventory"]["capability_specific_wikipedia_cpt_rows"] == invariants["faithful_cpt_records"], "inventory/CPT distinction mismatch")
-    require(truth["continued_pretraining"]["modern"]["records"] == invariants["modern_cpt_records"], "modern count invariant mismatch")
+    require(truth["continued_pretraining"]["faithful"]["historical_artifact_records"] == invariants["faithful_cpt_historical_records"], "faithful count invariant mismatch")
+    require(truth["corpus_inventory"]["historical_wikipedia_cpt_rows"] == invariants["faithful_cpt_historical_records"], "inventory/CPT distinction mismatch")
+    require(truth["continued_pretraining"]["modern"]["historical_artifact_records"] == invariants["modern_cpt_historical_records"], "modern count invariant mismatch")
+    for view in truth["continued_pretraining"].values():
+        require(view["record_learning_eligible"] is False and view["selectable"] is False, "frozen CPT view became selectable")
     require(truth["silver"]["records"] == invariants["silver_records"], "silver count invariant mismatch")
     require(truth["heldout_evaluation"]["records"] == invariants["heldout_evaluation_records"], "evaluation count invariant mismatch")
     for distribution in truth["silver"]["distributions"].values():
