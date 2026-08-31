@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "pack_manifest_receipt_sha256", "object_set_sha256", "ordered_row_identity_commitment_sha256", "near_duplicate_policy_sha256", "namespace_commitments", "deny_arrays", "candidate_clearance_allowlist", "candidate_clearance_commitment_sha256", "labeling_expansion_census", "rows", "zero_namespace_proofs", "corpus_sha256"],
+  "properties": {
+    "schema_version": {"const": "phase3_cycle007_private_deny_corpus_v1"},
+    "pack_manifest_receipt_sha256": {"const": "2a883cb3e9a3b2ee673e397c8f5ba511f886f725bea980b2c982ca17f92a5e7d"},
+    "object_set_sha256": {"const": "af94e8d12c075e1e5e1816de076327dd68a3fd5d5f06ec77debcbbd590bcc9ec"},
+    "ordered_row_identity_commitment_sha256": {"const": "d873d7493c6cd276a9604954c9c7aa07e760ca4f47a276658fd28956d6fa940b"},
+    "near_duplicate_policy_sha256": {"const": "19518efb07dd8ef4173b32487da7427f3c1eb0b8f8dd5d21b046cfc4dc5d560e"},
+    "namespace_commitments": {"$ref": "#/$defs/commitments"},
+    "deny_arrays": {"$ref": "#/$defs/deny_arrays"},
+    "candidate_clearance_allowlist": {"type": "array", "maxItems": 0},
+    "candidate_clearance_commitment_sha256": {"const": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"},
+    "labeling_expansion_census": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_counts", "historical_provider_attempts", "historical_result_receipts", "historical_raw_log_receipts", "bodies_available"],
+      "properties": {
+        "schema_counts": {"const": {"phase3_cycle007_gemini_attempt_v2": 4, "phase3_cycle007_gemini_pre_call_v1": 2, "phase3_cycle007_gemini_request_plan_v1": 1, "phase3_cycle007_gemini_provider_stop_v3": 1}},
+        "historical_provider_attempts": {"const": 3}, "historical_result_receipts": {"const": 3},
+        "historical_raw_log_receipts": {"const": 3}, "bodies_available": {"const": false}
+      }
+    },
+    "rows": {"type": "array", "minItems": 10159, "maxItems": 10159, "items": {"$ref": "#/$defs/row"}},
+    "zero_namespace_proofs": {"const": {"paraphrases": 0, "synthetic_siblings": 0}},
+    "corpus_sha256": {"const": "de77b0e2444365e3c9cdec3441128f87b96ca8a15f897e4c769f9b840ccac398"}
+  },
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "commitment": {"type": "object", "additionalProperties": false, "required": ["count", "sha256"], "properties": {"count": {"type": "integer", "minimum": 0}, "sha256": {"$ref": "#/$defs/sha"}}},
+    "commitments": {"type": "object", "additionalProperties": false, "required": ["row", "source_example", "document_work_edition", "packet", "sidecar", "annotation", "exact", "near_token", "component", "labeling_receipt", "prompt_or_request", "raw_or_log", "provider_result_terminal", "derivative", "paraphrase_parent", "synthetic_parent"], "properties": {"row": {"$ref": "#/$defs/commitment"}, "source_example": {"$ref": "#/$defs/commitment"}, "document_work_edition": {"$ref": "#/$defs/commitment"}, "packet": {"$ref": "#/$defs/commitment"}, "sidecar": {"$ref": "#/$defs/commitment"}, "annotation": {"$ref": "#/$defs/commitment"}, "exact": {"$ref": "#/$defs/commitment"}, "near_token": {"$ref": "#/$defs/commitment"}, "component": {"$ref": "#/$defs/commitment"}, "labeling_receipt": {"$ref": "#/$defs/commitment"}, "prompt_or_request": {"$ref": "#/$defs/commitment"}, "raw_or_log": {"$ref": "#/$defs/commitment"}, "provider_result_terminal": {"$ref": "#/$defs/commitment"}, "derivative": {"$ref": "#/$defs/commitment"}, "paraphrase_parent": {"$ref": "#/$defs/commitment"}, "synthetic_parent": {"$ref": "#/$defs/commitment"}}},
+    "digest_array": {"type": "array", "items": {"$ref": "#/$defs/sha"}},
+    "deny_arrays": {"type": "object", "additionalProperties": false, "required": ["sidecar", "annotation", "labeling_receipt", "prompt_or_request", "raw_or_log", "provider_result_terminal", "derivative", "paraphrase_parent", "synthetic_parent"], "properties": {"sidecar": {"$ref": "#/$defs/digest_array"}, "annotation": {"$ref": "#/$defs/digest_array"}, "labeling_receipt": {"$ref": "#/$defs/digest_array"}, "prompt_or_request": {"$ref": "#/$defs/digest_array"}, "raw_or_log": {"$ref": "#/$defs/digest_array"}, "provider_result_terminal": {"$ref": "#/$defs/digest_array"}, "derivative": {"$ref": "#/$defs/digest_array"}, "paraphrase_parent": {"$ref": "#/$defs/digest_array"}, "synthetic_parent": {"$ref": "#/$defs/digest_array"}}},
+    "row": {"type": "object", "additionalProperties": false, "required": ["row", "source_example", "document_or_edition", "packet", "exact", "normalized_surface", "token_hashes", "component"], "properties": {"row": {"$ref": "#/$defs/sha"}, "source_example": {"$ref": "#/$defs/sha"}, "document_or_edition": {"$ref": "#/$defs/sha"}, "packet": {"$ref": "#/$defs/sha"}, "exact": {"$ref": "#/$defs/sha"}, "normalized_surface": {"type": "string"}, "token_hashes": {"type": "string", "pattern": "^$|^[a-f0-9]{64}(,[a-f0-9]{64})*$"}, "component": {"$ref": "#/$defs/sha"}}}
+  }
+}

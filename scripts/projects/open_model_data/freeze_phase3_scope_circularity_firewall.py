@@ -36,6 +36,9 @@ P2 = DATA / "evidence/phase3_p2_canonical_contracts_v1.json"
 NEAR_POLICY = DATA / "evidence/correction_protection_near_duplicate_policy_v1.json"
 CYCLE007 = DATA / "reference/phase3_cycle007_storage_public_summary_v1.json"
 OUTPUT = DATA / "evidence/phase3_scope_circularity_firewall_v1.json"
+PUBLIC_RECEIPT_SCHEMA = DATA / "contracts/phase3_scope_circularity_public_binding_receipt_v1.schema.json"
+PRIVATE_CORPUS_SCHEMA = DATA / "contracts/phase3_cycle007_private_deny_corpus_v1.schema.json"
+RUN_STATE_SCHEMA = DATA / "contracts/phase3_evaluation_steward_run_state_v1.schema.json"
 
 OUTCOME_SHA256 = "890498103f96a7b8f27fd52bc14418d8752e5b73a72ed8774dd0f52eb3160a47"
 PINS = {
@@ -63,19 +66,57 @@ EXPECTED_OBJECT_SET_SHA256 = storage.EXPECTED_OBJECT_SET_SHA256
 EXPECTED_ORDERED_ROW_IDENTITY_SHA256 = storage.EXPECTED_ORDERED_ROW_IDENTITY_SHA256
 EXPECTED_PACK_MANIFEST_RECEIPT_SHA256 = "2a883cb3e9a3b2ee673e397c8f5ba511f886f725bea980b2c982ca17f92a5e7d"
 EXPECTED_PRIVATE_GRAPH_COMMITMENT_SHA256 = "de77b0e2444365e3c9cdec3441128f87b96ca8a15f897e4c769f9b840ccac398"
+EXPECTED_PRIVATE_ROW_COUNT = 10159
+EXPECTED_PRIVATE_COMPONENT_COUNT = 38
+EXPECTED_PRIVATE_DOCUMENT_GROUP_COUNT = 39
+EXPECTED_PRIVATE_EXACT_COUNT = 10155
 CANDIDATE_LINEAGE_KEYS = (
     "packet", "sidecar", "annotation", "label_or_prompt", "paraphrase_parent",
     "synthetic_parent", "derivative_parent", "provenance_receipt", "raw_or_log",
     "provider_result_terminal",
 )
 ROW_DERIVED_DENY_ARRAYS = (
-    "row", "source_example", "document_work_edition", "packet", "exact", "component",
+    "row", "source_example", "document_work_edition", "packet", "exact", "near_token", "component",
 )
 PRIVATE_DENY_ARRAYS = (
     "sidecar", "annotation", "labeling_receipt", "prompt_or_request", "raw_or_log",
     "provider_result_terminal", "derivative", "paraphrase_parent", "synthetic_parent",
 )
 ALL_DENY_ARRAYS = ROW_DERIVED_DENY_ARRAYS + PRIVATE_DENY_ARRAYS
+PUBLIC_NAMESPACE_BINDINGS = {
+    "row_ids": ("row",),
+    "packets": ("packet",),
+    "examples": ("source_example",),
+    "source_units": ("source_example",),
+    "document_groups": ("document_work_edition",),
+    "work_groups": ("document_work_edition",),
+    "edition_groups": ("document_work_edition",),
+    "sidecars": ("sidecar",),
+    "annotations": ("annotation",),
+    "labels": ("labeling_receipt", "raw_or_log", "provider_result_terminal"),
+    "prompts": ("prompt_or_request",),
+    "paraphrases": ("paraphrase_parent",),
+    "synthetic_siblings": ("synthetic_parent",),
+    "duplicates": ("exact", "near_token", "component"),
+    "derivatives": ("derivative",),
+    "fingerprints": ("exact", "near_token"),
+}
+
+ATTEMPT_FAILURE_CODES = frozenset(
+    {
+        "stream_json_invalid",
+        "terminal_result_count_drift",
+        "structured_output_envelope_drift",
+        "ordinal_key_drift",
+        "label_json_invalid",
+        "label_count_or_envelope_drift",
+        "provider_status_quota_or_rate_limit",
+        "provider_status_capacity_unavailable",
+        "provider_status_timeout",
+        "provider_status_cancelled",
+        "provider_status_internal_error",
+    }
+)
 
 
 class FirewallError(ValueError):
@@ -104,8 +145,9 @@ def _require(condition: bool, code: str) -> None:
 
 
 def _read_pinned(path: Path) -> dict[str, Any]:
-    _require(sha256_file(path) == PINS[path], "hash_drift")
-    value = json.loads(path.read_text(encoding="utf-8"))
+    raw = path.read_bytes()
+    _require(sha256_bytes(raw) == PINS[path], "hash_drift")
+    value = json.loads(raw.decode("utf-8"))
     _require(isinstance(value, dict), "hash_drift")
     return value
 
@@ -138,7 +180,7 @@ def build_contract() -> dict[str, Any]:
         "split_firewall": {"atomicity": ["source", "document", "work", "edition", "exact_duplicate_component", "near_duplicate_connected_component"], "cell_requirement_records": 16, "heldout_cases_selected": 0, "zero_heldout_cases_state": "BLOCKED_NOT_ZERO", "builder_clearance": "positive_only_metadata_hashes", "builder_receives_membership": False, "derivation_callback_permitted": False, "private_steward_role": "evaluation_steward_only", "builder_steward_collision_forbidden": True},
         "cycle007": {"state": "evaluation_only", "deny_namespaces": list(DENY_NAMESPACES), "pack_manifest_receipt_sha256": EXPECTED_PACK_MANIFEST_RECEIPT_SHA256, "object_set_sha256": EXPECTED_OBJECT_SET_SHA256, "ordered_row_identity_commitment_sha256": EXPECTED_ORDERED_ROW_IDENTITY_SHA256, "public_packet_count": 204, "public_row_count": 10159, "physical_sidecar_count": 204, "logical_sidecar_count": 408, "object_count": 419, "private_binding_state": "BOUND", "fresh_private_materialization_claimed": True, "private_graph_commitment_sha256": EXPECTED_PRIVATE_GRAPH_COMMITMENT_SHA256, "component_count": 38, "document_work_edition_group_count": 39, "exact_fingerprint_count": 10155, "candidate_clearance_count": 0, "same_uid_role_isolation": "governance_limited_not_cryptographic", "concept_reuse": "independent_origin_only_without_cycle007_identity_or_membership", "authority_reuse": "citation_only_without_heldout_span_locator_annotation_or_membership"},
         "fail_closed": {"terminal_codes": list(FAIL_CODES), "batch_failure_outputs": {"emitted": 0, "promoted": 0, "activated": 0}, "partial_denominator_permitted": False, "provider_calls": 0, "labels_created": 0, "gold_created": 0, "training_performed": False},
-        "private_runtime": {"environment_binding": STEWARD_CONFIG_ENV, "file_mode": "0600", "directory_mode": "0700", "self_hash_verified_config_and_pack_manifest": True, "uses_cycle007_storage_pack_proof": True, "rejects": ["symlink", "hardlink", "traversal", "owner_mismatch", "path_overlap", "inode_device_change", "ancestor_replacement", "post_pin_toctou"], "public_output_text_free": True},
+        "private_runtime": {"environment_binding": STEWARD_CONFIG_ENV, "file_mode": "0600", "directory_mode": "0700", "self_hash_verified_config_and_pack_manifest": True, "uses_cycle007_storage_pack_proof": True, "rejects": ["symlink", "hardlink", "traversal", "owner_mismatch", "path_overlap", "inode_device_change", "ancestor_replacement", "post_pin_toctou"], "public_output_text_free": True, "schemas": {"public_receipt": artifact(PUBLIC_RECEIPT_SCHEMA), "private_corpus": artifact(PRIVATE_CORPUS_SCHEMA), "run_state": artifact(RUN_STATE_SCHEMA)}},
         "generator": artifact(Path(__file__)),
     }
 
@@ -449,6 +491,15 @@ def _validate_attempt_v2(receipt: Mapping[str, Any]) -> bool:
         and receipt["request_byte_count"] <= receipt["request_byte_budget"]
         and all(_metadata_digest(receipt.get(key)) for key in ("request_plan_sha256", "raw_sha256", "log_sha256"))
         and isinstance(receipt.get("provider_call_started"), bool)
+        and receipt.get("failure_code") in ATTEMPT_FAILURE_CODES
+        and receipt.get("failure_stage") in {"package_binding", "executable_binding", "provider_return", "stream_parse", "result_validation"}
+        and receipt.get("executable_binding_result") in {"not_checked", "verified", "synthetic", "mismatch"}
+        and receipt.get("provider_return_code") in {"not_started", "zero", "nonzero"}
+        and receipt.get("first_event_kind") in {"empty", "init", "result", "other", "unavailable"}
+        and receipt.get("last_event_kind") in {"empty", "init", "result", "other", "unavailable"}
+        and receipt.get("model_binding_result") in {"not_inspected", "verified", "mismatch", "missing"}
+        and receipt.get("result_status") in {"not_inspected", "success", "non_success", "missing"}
+        and receipt.get("structured_output_type") in {"not_inspected", "missing", "object", "string", "null", "other"}
         and all(_nonnegative_int(receipt.get(key)) for key in ("raw_byte_count", "log_byte_count", "init_count", "result_count"))
         and _nonnegative_int(receipt.get("elapsed_milliseconds"))
     )
@@ -469,6 +520,7 @@ def _validate_pre_call_v1(receipt: Mapping[str, Any]) -> bool:
         and all(_positive_int(receipt.get(key)) for key in ("packet_index", "chunk_index", "attempt", "row_count", "request_byte_budget", "request_byte_count", "estimated_input_tokens_ceiling"))
         and receipt["request_byte_count"] <= receipt["request_byte_budget"]
         and all(_metadata_digest(receipt.get(key)) for key in ("request_plan_sha256", "ordered_identity_sha256", "receipt_sha256"))
+        and receipt.get("receipt_sha256") == sha256_bytes(canonical_json({key: value for key, value in receipt.items() if key != "receipt_sha256"}))
     )
 
 
@@ -488,6 +540,7 @@ def _validate_request_plan_v1(receipt: Mapping[str, Any]) -> bool:
         and receipt.get("text_free") is True
         and all(_positive_int(receipt.get(key)) for key in ("packet_index", "request_byte_budget", "row_count"))
         and all(_metadata_digest(receipt.get(key)) for key in ("packet_identity_set_sha256", "label_prompt_sha256", "plan_sha256"))
+        and receipt.get("plan_sha256") == sha256_bytes(canonical_json({key: value for key, value in receipt.items() if key != "plan_sha256"}))
         and isinstance(chunks, list) and bool(chunks)
         and all(
             isinstance(chunk, Mapping)
@@ -515,7 +568,16 @@ def _validate_provider_stop_v3(receipt: Mapping[str, Any]) -> bool:
         _validate_metadata_common(receipt, keys)
         and receipt.get("schema_version") == "phase3_cycle007_gemini_provider_stop_v3"
         and receipt.get("new_provider_calls_allowed") is False
-        and isinstance(receipt.get("provider_call_started"), bool)
+        and receipt.get("failure_code") == "provider_status_timeout"
+        and receipt.get("failure_stage") == "provider_return"
+        and receipt.get("provider_call_started") is True
+        and receipt.get("executable_binding_result") == "verified"
+        and receipt.get("provider_return_code") == "nonzero"
+        and receipt.get("first_event_kind") == "init"
+        and receipt.get("last_event_kind") == "result"
+        and receipt.get("model_binding_result") == "verified"
+        and receipt.get("result_status") == "non_success"
+        and receipt.get("structured_output_type") == "missing"
         and all(_positive_int(receipt.get(key)) for key in ("terminal_packet_index", "chunk_index", "attempt", "request_byte_budget", "request_byte_count"))
         and receipt["request_byte_count"] <= receipt["request_byte_budget"]
         and all(_nonnegative_int(receipt.get(key)) for key in ("raw_byte_count", "log_byte_count", "init_count", "result_count", "elapsed_milliseconds"))
@@ -823,6 +885,29 @@ def _write_run_state_at(output_fd: int, state: str, *, code: str | None = None, 
     _write_private_json_at(output_fd, "cycle007-firewall-run-state-v1.json", value)
 
 
+def _valid_run_state(value: Mapping[str, Any]) -> bool:
+    common = {"schema_version", "state", "text_free", "state_sha256"}
+    state = value.get("state")
+    expected = (
+        common
+        if state == "RUNNING"
+        else common | {"corpus_sha256", "public_receipt_sha256"}
+        if state == "COMPLETE"
+        else common | {"code"}
+        if state == "TERMINAL_FAILURE"
+        else set()
+    )
+    return (
+        bool(expected)
+        and set(value) == expected
+        and value.get("schema_version") == "phase3_evaluation_steward_run_state_v1"
+        and value.get("text_free") is True
+        and value.get("state_sha256") == sha256_bytes(canonical_json({key: item for key, item in value.items() if key != "state_sha256"}))
+        and (state != "COMPLETE" or all(_metadata_digest(value.get(key)) for key in ("corpus_sha256", "public_receipt_sha256")))
+        and (state != "TERMINAL_FAILURE" or value.get("code") in FAIL_CODES)
+    )
+
+
 def _load_private_json(path: Path, root: Path) -> dict[str, Any]:
     fd, before = _safe_private_path(path, root)
     try:
@@ -844,29 +929,79 @@ def _candidate_clearance_binding(candidate: Mapping[str, Any]) -> str:
 
 
 def _validate_private_deny_corpus(corpus: Mapping[str, Any]) -> dict[str, set[str]]:
+    expected_keys = {
+        "schema_version", "pack_manifest_receipt_sha256", "object_set_sha256",
+        "ordered_row_identity_commitment_sha256", "near_duplicate_policy_sha256",
+        "namespace_commitments", "deny_arrays", "candidate_clearance_allowlist",
+        "candidate_clearance_commitment_sha256", "labeling_expansion_census", "rows",
+        "zero_namespace_proofs", "corpus_sha256",
+    }
+    _require(set(corpus) == expected_keys and corpus.get("schema_version") == "phase3_cycle007_private_deny_corpus_v1", "graph_incompleteness")
     _require(corpus.get("corpus_sha256") == sha256_bytes(canonical_json({key: value for key, value in corpus.items() if key != "corpus_sha256"})), "hash_drift")
-    _require(corpus.get("pack_manifest_receipt_sha256") == EXPECTED_PACK_MANIFEST_RECEIPT_SHA256 and corpus.get("near_duplicate_policy_sha256") == near.pinned_policy_fingerprint(), "hash_drift")
+    _require(
+        corpus.get("pack_manifest_receipt_sha256") == EXPECTED_PACK_MANIFEST_RECEIPT_SHA256
+        and corpus.get("object_set_sha256") == EXPECTED_OBJECT_SET_SHA256
+        and corpus.get("ordered_row_identity_commitment_sha256") == EXPECTED_ORDERED_ROW_IDENTITY_SHA256
+        and corpus.get("near_duplicate_policy_sha256") == near.pinned_policy_fingerprint(),
+        "hash_drift",
+    )
     _require(corpus.get("corpus_sha256") == EXPECTED_PRIVATE_GRAPH_COMMITMENT_SHA256, "hash_drift")
     arrays = corpus.get("deny_arrays")
     commitments = corpus.get("namespace_commitments")
     allowlist = corpus.get("candidate_clearance_allowlist")
     _require(isinstance(arrays, Mapping) and isinstance(commitments, Mapping) and isinstance(allowlist, list), "graph_incompleteness")
     _require(set(arrays) == set(PRIVATE_DENY_ARRAYS) and all(isinstance(arrays[name], list) and all(_metadata_digest(value) for value in arrays[name]) for name in PRIVATE_DENY_ARRAYS), "graph_incompleteness")
-    _require(corpus.get("candidate_clearance_commitment_sha256") == sha256_bytes(canonical_json(sorted(allowlist))) and all(_metadata_digest(value) for value in allowlist), "hash_drift")
+    _require(allowlist == [] and corpus.get("candidate_clearance_commitment_sha256") == sha256_bytes(canonical_json([])), "hash_drift")
     rows = corpus.get("rows")
-    _require(isinstance(rows, list) and all(isinstance(row, Mapping) and all(_metadata_digest(row.get(field)) for field in ("row", "source_example", "document_or_edition", "packet", "exact", "component")) for row in rows), "graph_incompleteness")
+    row_keys = {"row", "source_example", "document_or_edition", "packet", "exact", "normalized_surface", "token_hashes", "component"}
+    _require(
+        isinstance(rows, list)
+        and len(rows) == EXPECTED_PRIVATE_ROW_COUNT
+        and all(
+            isinstance(row, Mapping)
+            and set(row) == row_keys
+            and all(_metadata_digest(row.get(field)) for field in ("row", "source_example", "document_or_edition", "packet", "exact", "component"))
+            and isinstance(row.get("normalized_surface"), str)
+            and isinstance(row.get("token_hashes"), str)
+            and all(_metadata_digest(value) for value in row["token_hashes"].split(",") if value)
+            for row in rows
+        ),
+        "graph_incompleteness",
+    )
     derived = {
         "row": sorted(row["row"] for row in rows),
         "source_example": sorted(row["source_example"] for row in rows),
         "document_work_edition": sorted(row["document_or_edition"] for row in rows),
         "packet": sorted(row["packet"] for row in rows),
         "exact": sorted(row["exact"] for row in rows),
+        "near_token": sorted(row["token_hashes"] for row in rows),
         "component": sorted(row["component"] for row in rows),
     }
     all_arrays = derived | dict(arrays)
+    _require(set(commitments) == set(ALL_DENY_ARRAYS) and set(PUBLIC_NAMESPACE_BINDINGS) == set(DENY_NAMESPACES), "graph_incompleteness")
+    _require(set().union(*map(set, PUBLIC_NAMESPACE_BINDINGS.values())) == set(ALL_DENY_ARRAYS), "graph_incompleteness")
     for name, values in all_arrays.items():
         item = commitments.get(name)
         _require(isinstance(item, Mapping) and item == {"count": len(values), "sha256": sha256_bytes(canonical_json(values))}, "hash_drift")
+    _require(
+        len(set(derived["row"])) == EXPECTED_PRIVATE_ROW_COUNT
+        and len(set(derived["component"])) == EXPECTED_PRIVATE_COMPONENT_COUNT
+        and len(set(derived["document_work_edition"])) == EXPECTED_PRIVATE_DOCUMENT_GROUP_COUNT
+        and len(set(derived["exact"])) == EXPECTED_PRIVATE_EXACT_COUNT,
+        "graph_incompleteness",
+    )
+    _require(
+        corpus.get("labeling_expansion_census")
+        == {
+            "schema_counts": LABELING_RECEIPT_SCHEMA_COUNTS,
+            "historical_provider_attempts": 3,
+            "historical_result_receipts": 3,
+            "historical_raw_log_receipts": 3,
+            "bodies_available": False,
+        }
+        and corpus.get("zero_namespace_proofs") == {"paraphrases": 0, "synthetic_siblings": 0},
+        "graph_incompleteness",
+    )
     return {name: set(values) for name, values in all_arrays.items()}
 
 
@@ -880,6 +1015,7 @@ def evaluate_candidate_batch(candidates: Sequence[Mapping[str, Any]], corpus: Ma
             _require(isinstance(candidate, Mapping) and primary_keys <= set(candidate) <= primary_keys | {"lineage"} and candidate.get("evaluation_cycle_id") != "phase3-v2-1-evaluation-cycle-007", "uncertain_lineage")
             family, unit, digest, text, record, locator, document = (candidate.get(key) for key in ("family_id", "unit_id", "unit_sha256", "source_text", "source_record", "source_locator", "document_or_edition_identity"))
             _require(all(isinstance(value, str) and value for value in (family, unit, digest, text, document)) and isinstance(record, Mapping) and isinstance(locator, Mapping), "uncertain_lineage")
+            _require(_metadata_digest(digest), "uncertain_lineage")
             row = sha256_bytes(canonical_json({"unit_id": unit, "unit_sha256": digest}))
             source = sha256_bytes(canonical_json({"family_id": family, "source_record": record, "source_locator": locator}))
             try:
@@ -888,7 +1024,13 @@ def evaluate_candidate_batch(candidates: Sequence[Mapping[str, Any]], corpus: Ma
                 raise FirewallError("uncertain_lineage") from exc
             _require(document == expected_document, "uncertain_lineage")
             fp = near.fingerprint(text)
-            values = {"row": row, "source_example": source, "document_work_edition": sha256_bytes(document.encode()), "exact": fp.exact_fingerprint}
+            values = {
+                "row": row,
+                "source_example": source,
+                "document_work_edition": sha256_bytes(document.encode()),
+                "exact": fp.exact_fingerprint,
+                "near_token": ",".join(sorted(sha256_bytes(token.encode()) for token in set(fp.tokens))),
+            }
             if any(value in denied[key] for key, value in values.items()):
                 return _zero("leakage")
             if any(near.duplicate_or_fail_closed(text, surface, scope="span", policy=near.policy_for_governed_use("train_development_to_heldout_firewall")) for surface in surfaces):
@@ -975,9 +1117,12 @@ def run_steward_production(config: str | None = None) -> dict[str, Any]:
         root_before = os.lstat(root)
         output_checked = os.lstat(output_root)
         pack_checked = os.lstat(pack_dir)
-        output_root_fd = os.open(output_root, os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0))
-        output_before = os.fstat(output_root_fd)
-        _require((output_checked.st_dev, output_checked.st_ino) == (output_before.st_dev, output_before.st_ino), "private_path_unsafe")
+        opened_output_fd = os.open(output_root, os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0))
+        output_before = os.fstat(opened_output_fd)
+        if (output_checked.st_dev, output_checked.st_ino) != (output_before.st_dev, output_before.st_ino):
+            os.close(opened_output_fd)
+            raise FirewallError("private_path_unsafe")
+        output_root_fd = opened_output_fd
         pack_root_fd = os.open(pack_dir, os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0))
         pack_root_stat = os.fstat(pack_root_fd)
         _require(stat.S_ISDIR(pack_root_stat.st_mode) and pack_root_stat.st_uid == os.getuid() and stat.S_IMODE(pack_root_stat.st_mode) == PRIVATE_DIR_MODE, "private_path_unsafe")
@@ -986,8 +1131,11 @@ def run_steward_production(config: str | None = None) -> dict[str, Any]:
             previous = _load_private_json_at(output_root_fd, "cycle007-firewall-run-state-v1.json")
         except FileNotFoundError:
             previous = None
-        if previous is not None and previous.get("state") == "TERMINAL_FAILURE":
-            return _zero(str(previous.get("code", "private_binding_unbound")))
+        if previous is not None:
+            _require(_valid_run_state(previous), "hash_drift")
+            if previous["state"] == "TERMINAL_FAILURE":
+                return _zero(str(previous["code"]))
+            _require(previous["state"] != "RUNNING", "private_binding_unbound")
         _write_run_state_at(output_root_fd, "RUNNING")
         manifest_fd = os.open("pack-manifest.json", os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0), dir_fd=pack_root_fd)
         manifest_before = os.fstat(manifest_fd)
@@ -1041,7 +1189,7 @@ def evaluate_steward_candidates(candidates: Sequence[Mapping[str, Any]], config:
         payload, root = _read_steward_config(Path(configured))
         output_root = Path(payload["steward_output_root"])
         state = _load_private_json(output_root / "cycle007-firewall-run-state-v1.json", root)
-        _require(state.get("state") == "COMPLETE" and state.get("state_sha256") == sha256_bytes(canonical_json({key: value for key, value in state.items() if key != "state_sha256"})), "private_binding_unbound")
+        _require(_valid_run_state(state) and state.get("state") == "COMPLETE", "private_binding_unbound")
         corpus = _load_private_json(output_root / "cycle007-deny-component-manifest-v1.json", root)
         _require(state.get("corpus_sha256") == corpus.get("corpus_sha256"), "hash_drift")
         _require(state.get("public_receipt_sha256") == _public_binding_receipt(corpus)["receipt_sha256"], "hash_drift")

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "text_free", "pack_manifest_receipt_sha256", "object_set_sha256", "ordered_row_identity_commitment_sha256", "packet_count", "row_count", "physical_sidecar_count", "logical_sidecar_count", "object_count", "private_graph_commitment_sha256", "builder_clearance", "receipt_sha256"],
+  "properties": {
+    "schema_version": {"const": "phase3_scope_circularity_public_binding_receipt_v1"},
+    "text_free": {"const": true},
+    "pack_manifest_receipt_sha256": {"const": "2a883cb3e9a3b2ee673e397c8f5ba511f886f725bea980b2c982ca17f92a5e7d"},
+    "object_set_sha256": {"const": "af94e8d12c075e1e5e1816de076327dd68a3fd5d5f06ec77debcbbd590bcc9ec"},
+    "ordered_row_identity_commitment_sha256": {"const": "d873d7493c6cd276a9604954c9c7aa07e760ca4f47a276658fd28956d6fa940b"},
+    "packet_count": {"const": 204},
+    "row_count": {"const": 10159},
+    "physical_sidecar_count": {"const": 204},
+    "logical_sidecar_count": {"const": 408},
+    "object_count": {"const": 419},
+    "private_graph_commitment_sha256": {"const": "de77b0e2444365e3c9cdec3441128f87b96ca8a15f897e4c769f9b840ccac398"},
+    "builder_clearance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["p1_sha256", "p1_amendment_sha256", "p2_sha256", "near_duplicate_policy_sha256", "firewall_sha256"],
+      "properties": {
+        "p1_sha256": {"const": "0b1cd81448b96b4e818aa1dedd7df7633ff88eb500bb4d6ac3668be02962a35b"},
+        "p1_amendment_sha256": {"const": "5a4b259f764a3d41499f0a989c02fed921c18b62c9831d361d18d19dcc948afa"},
+        "p2_sha256": {"const": "dc8dfdf207728ef386cea14ddb328289b2beee5159afb98bf076e5f117602ea3"},
+        "near_duplicate_policy_sha256": {"const": "fa30e82d7a5f90b7bf4b58d3aef6106b255dda270e81459a91ba011489fdb4b4"},
+        "firewall_sha256": {"$ref": "#/$defs/sha"}
+      }
+    },
+    "receipt_sha256": {"$ref": "#/$defs/sha"}
+  },
+  "$defs": {"sha": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}
+}

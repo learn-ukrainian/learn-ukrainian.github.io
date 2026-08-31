@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "base": {
+      "type": "object",
+      "properties": {
+        "schema_version": {"const": "phase3_evaluation_steward_run_state_v1"},
+        "text_free": {"const": true},
+        "state_sha256": {"$ref": "#/$defs/sha"}
+      }
+    }
+  },
+  "oneOf": [
+    {"type": "object", "additionalProperties": false, "required": ["schema_version", "state", "text_free", "state_sha256"], "properties": {"schema_version": {"const": "phase3_evaluation_steward_run_state_v1"}, "state": {"const": "RUNNING"}, "text_free": {"const": true}, "state_sha256": {"$ref": "#/$defs/sha"}}},
+    {"type": "object", "additionalProperties": false, "required": ["schema_version", "state", "text_free", "corpus_sha256", "public_receipt_sha256", "state_sha256"], "properties": {"schema_version": {"const": "phase3_evaluation_steward_run_state_v1"}, "state": {"const": "COMPLETE"}, "text_free": {"const": true}, "corpus_sha256": {"$ref": "#/$defs/sha"}, "public_receipt_sha256": {"$ref": "#/$defs/sha"}, "state_sha256": {"$ref": "#/$defs/sha"}}},
+    {"type": "object", "additionalProperties": false, "required": ["schema_version", "state", "text_free", "code", "state_sha256"], "properties": {"schema_version": {"const": "phase3_evaluation_steward_run_state_v1"}, "state": {"const": "TERMINAL_FAILURE"}, "text_free": {"const": true}, "code": {"enum": ["leakage", "uncertain_lineage", "graph_incompleteness", "hash_drift", "denominator_drift", "rights_provenance_corruption", "protected_damage", "custody_role_collision", "private_binding_unbound", "private_path_unsafe", "document_lineage_denominator_not_frozen", "unregistered_authority"]}, "state_sha256": {"$ref": "#/$defs/sha"}}}
+  ]
+}

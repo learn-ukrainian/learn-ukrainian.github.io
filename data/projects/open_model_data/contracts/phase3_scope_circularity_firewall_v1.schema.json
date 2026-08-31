@@ -7,7 +7,7 @@
     "schema_version": {"const": "phase3_scope_circularity_firewall_v1"},
     "text_free": {"const": true},
     "status": {"const": "FROZEN_METADATA_ONLY"},
-    "controlling_outcome_sha256": {"$ref": "#/$defs/sha"},
+    "controlling_outcome_sha256": {"const": "890498103f96a7b8f27fd52bc14418d8752e5b73a72ed8774dd0f52eb3160a47"},
     "phase_bindings": {"$ref": "#/$defs/bindings"},
     "denominator": {"$ref": "#/$defs/den"},
     "split_firewall": {"$ref": "#/$defs/split"},
@@ -29,10 +29,10 @@
       "additionalProperties": false,
       "required": ["p1", "p1_dialect_amendment", "p2", "near_duplicate_policy"],
       "properties": {
-        "p1": {"$ref": "#/$defs/artifact"},
-        "p1_dialect_amendment": {"$ref": "#/$defs/artifact"},
-        "p2": {"$ref": "#/$defs/artifact"},
-        "near_duplicate_policy": {"$ref": "#/$defs/artifact"}
+        "p1": {"type": "object", "additionalProperties": false, "required": ["path", "sha256"], "properties": {"path": {"const": "data/projects/open_model_data/evidence/phase3_p1_universe_freeze_v1.json"}, "sha256": {"const": "0b1cd81448b96b4e818aa1dedd7df7633ff88eb500bb4d6ac3668be02962a35b"}}},
+        "p1_dialect_amendment": {"type": "object", "additionalProperties": false, "required": ["path", "sha256"], "properties": {"path": {"const": "data/projects/open_model_data/evidence/phase3_p1_dialect_regional_protection_amendment_v1.json"}, "sha256": {"const": "5a4b259f764a3d41499f0a989c02fed921c18b62c9831d361d18d19dcc948afa"}}},
+        "p2": {"type": "object", "additionalProperties": false, "required": ["path", "sha256"], "properties": {"path": {"const": "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json"}, "sha256": {"const": "dc8dfdf207728ef386cea14ddb328289b2beee5159afb98bf076e5f117602ea3"}}},
+        "near_duplicate_policy": {"type": "object", "additionalProperties": false, "required": ["path", "sha256"], "properties": {"path": {"const": "data/projects/open_model_data/evidence/correction_protection_near_duplicate_policy_v1.json"}, "sha256": {"const": "fa30e82d7a5f90b7bf4b58d3aef6106b255dda270e81459a91ba011489fdb4b4"}}}
       }
     },
     "den": {
@@ -65,9 +65,10 @@
       "required": ["state", "deny_namespaces", "pack_manifest_receipt_sha256", "object_set_sha256", "ordered_row_identity_commitment_sha256", "public_packet_count", "public_row_count", "physical_sidecar_count", "logical_sidecar_count", "object_count", "private_binding_state", "fresh_private_materialization_claimed", "private_graph_commitment_sha256", "component_count", "document_work_edition_group_count", "exact_fingerprint_count", "candidate_clearance_count", "same_uid_role_isolation", "concept_reuse", "authority_reuse"],
       "properties": {
         "state": {"const": "evaluation_only"},
-        "deny_namespaces": {"type": "array", "minItems": 16, "maxItems": 16, "uniqueItems": true, "items": {"type": "string"}},
-        "pack_manifest_receipt_sha256": {"$ref": "#/$defs/sha"}, "object_set_sha256": {"$ref": "#/$defs/sha"},
-        "ordered_row_identity_commitment_sha256": {"$ref": "#/$defs/sha"},
+        "deny_namespaces": {"const": ["row_ids", "packets", "examples", "source_units", "document_groups", "work_groups", "edition_groups", "sidecars", "annotations", "labels", "prompts", "paraphrases", "synthetic_siblings", "duplicates", "derivatives", "fingerprints"]},
+        "pack_manifest_receipt_sha256": {"const": "2a883cb3e9a3b2ee673e397c8f5ba511f886f725bea980b2c982ca17f92a5e7d"},
+        "object_set_sha256": {"const": "af94e8d12c075e1e5e1816de076327dd68a3fd5d5f06ec77debcbbd590bcc9ec"},
+        "ordered_row_identity_commitment_sha256": {"const": "d873d7493c6cd276a9604954c9c7aa07e760ca4f47a276658fd28956d6fa940b"},
         "public_packet_count": {"const": 204}, "public_row_count": {"const": 10159},
         "physical_sidecar_count": {"const": 204}, "logical_sidecar_count": {"const": 408}, "object_count": {"const": 419},
         "private_binding_state": {"const": "BOUND"}, "fresh_private_materialization_claimed": {"const": true},
@@ -75,14 +76,15 @@
         "component_count": {"const": 38}, "document_work_edition_group_count": {"const": 39},
         "exact_fingerprint_count": {"const": 10155}, "candidate_clearance_count": {"const": 0},
         "same_uid_role_isolation": {"const": "governance_limited_not_cryptographic"},
-        "concept_reuse": {"type": "string"}, "authority_reuse": {"type": "string"}
+        "concept_reuse": {"const": "independent_origin_only_without_cycle007_identity_or_membership"},
+        "authority_reuse": {"const": "citation_only_without_heldout_span_locator_annotation_or_membership"}
       }
     },
     "fail": {
       "type": "object", "additionalProperties": false,
       "required": ["terminal_codes", "batch_failure_outputs", "partial_denominator_permitted", "provider_calls", "labels_created", "gold_created", "training_performed"],
       "properties": {
-        "terminal_codes": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "terminal_codes": {"const": ["leakage", "uncertain_lineage", "graph_incompleteness", "hash_drift", "denominator_drift", "rights_provenance_corruption", "protected_damage", "custody_role_collision", "private_binding_unbound", "private_path_unsafe", "document_lineage_denominator_not_frozen", "unregistered_authority"]},
         "batch_failure_outputs": {"type": "object", "additionalProperties": false, "required": ["emitted", "promoted", "activated"], "properties": {"emitted": {"const": 0}, "promoted": {"const": 0}, "activated": {"const": 0}}},
         "partial_denominator_permitted": {"const": false}, "provider_calls": {"const": 0},
         "labels_created": {"const": 0}, "gold_created": {"const": 0}, "training_performed": {"const": false}
@@ -90,13 +92,22 @@
     },
     "runtime": {
       "type": "object", "additionalProperties": false,
-      "required": ["environment_binding", "file_mode", "directory_mode", "self_hash_verified_config_and_pack_manifest", "uses_cycle007_storage_pack_proof", "rejects", "public_output_text_free"],
+      "required": ["environment_binding", "file_mode", "directory_mode", "self_hash_verified_config_and_pack_manifest", "uses_cycle007_storage_pack_proof", "rejects", "public_output_text_free", "schemas"],
       "properties": {
         "environment_binding": {"const": "PHASE3_EVAL_STEWARD_CONFIG"}, "file_mode": {"const": "0600"},
         "directory_mode": {"const": "0700"}, "self_hash_verified_config_and_pack_manifest": {"const": true},
         "uses_cycle007_storage_pack_proof": {"const": true},
-        "rejects": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
-        "public_output_text_free": {"const": true}
+        "rejects": {"const": ["symlink", "hardlink", "traversal", "owner_mismatch", "path_overlap", "inode_device_change", "ancestor_replacement", "post_pin_toctou"]},
+        "public_output_text_free": {"const": true},
+        "schemas": {
+          "type": "object", "additionalProperties": false,
+          "required": ["public_receipt", "private_corpus", "run_state"],
+          "properties": {
+            "public_receipt": {"$ref": "#/$defs/artifact"},
+            "private_corpus": {"$ref": "#/$defs/artifact"},
+            "run_state": {"$ref": "#/$defs/artifact"}
+          }
+        }
       }
     }
   }

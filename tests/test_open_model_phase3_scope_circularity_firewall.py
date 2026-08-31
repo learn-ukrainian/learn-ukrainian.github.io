@@ -65,6 +65,29 @@ def test_schema_rejects_nested_extra_missing_and_frozen_drift() -> None:
     )
 
 
+def test_runtime_receipt_corpus_and_state_schemas_are_closed_and_pinned() -> None:
+    schema_paths = (firewall.PUBLIC_RECEIPT_SCHEMA, firewall.PRIVATE_CORPUS_SCHEMA, firewall.RUN_STATE_SCHEMA)
+    schemas = [json.loads(path.read_text()) for path in schema_paths]
+    for schema in schemas:
+        Draft202012Validator.check_schema(schema)
+    public_receipt = firewall._public_binding_receipt({"corpus_sha256": firewall.EXPECTED_PRIVATE_GRAPH_COMMITMENT_SHA256})
+    Draft202012Validator(schemas[0]).validate(public_receipt)
+    for state, extra in (
+        ("RUNNING", {}),
+        ("COMPLETE", {"corpus_sha256": "a" * 64, "public_receipt_sha256": "b" * 64}),
+        ("TERMINAL_FAILURE", {"code": "hash_drift"}),
+    ):
+        value = {"schema_version": "phase3_evaluation_steward_run_state_v1", "state": state, "text_free": True} | extra
+        value["state_sha256"] = firewall.sha256_bytes(firewall.canonical_json(value))
+        Draft202012Validator(schemas[2]).validate(value)
+    forged = deepcopy(public_receipt)
+    forged["private_graph_commitment_sha256"] = "0" * 64
+    assert list(Draft202012Validator(schemas[0]).iter_errors(forged))
+    private_schema = schemas[1]
+    assert private_schema["properties"]["candidate_clearance_allowlist"]["maxItems"] == 0
+    assert private_schema["properties"]["corpus_sha256"]["const"] == firewall.EXPECTED_PRIVATE_GRAPH_COMMITMENT_SHA256
+
+
 @pytest.mark.parametrize("namespace", firewall.DENY_NAMESPACES)
 def test_every_cycle007_deny_namespace_is_terminal_and_never_derives(namespace: str) -> None:
     called = 0
@@ -191,6 +214,34 @@ def test_terminal_failure_state_is_sticky(tmp_path: Path) -> None:
     assert json.loads((output / "cycle007-firewall-run-state-v1.json").read_text())["state"] == "TERMINAL_FAILURE"
 
 
+def test_initial_output_directory_replacement_fails_without_writing_replacement(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    root = tmp_path / "private"
+    output = root / "steward-output"
+    pack = root / "content-pack"
+    moved = root / "original-output"
+    for path in (root, output, pack):
+        path.mkdir(parents=True, exist_ok=True)
+        os.chmod(path, 0o700)
+    config = _private_config(root)
+    real_open = os.open
+    swapped = False
+
+    def swapping_open(path: str | bytes | os.PathLike[str] | os.PathLike[bytes], flags: int, *args: object, **kwargs: object) -> int:
+        nonlocal swapped
+        if not swapped and Path(path) == output and flags & os.O_DIRECTORY:
+            swapped = True
+            output.rename(moved)
+            output.mkdir()
+            os.chmod(output, 0o700)
+        return real_open(path, flags, *args, **kwargs)  # type: ignore[arg-type]
+
+    monkeypatch.setattr(firewall.os, "open", swapping_open)
+    result = firewall.run_steward_production(str(config))
+    assert result["code"] == "private_path_unsafe"
+    assert not (output / "cycle007-firewall-run-state-v1.json").exists()
+    assert not (moved / "cycle007-firewall-run-state-v1.json").exists()
+
+
 def test_candidate_evaluator_rejects_caller_collision_and_cycle_derivative() -> None:
     row = {"row": "a" * 64, "source_example": "b" * 64, "document_or_edition": "c" * 64, "exact": "d" * 64, "token_hashes": "e" * 64, "component": "f" * 64, "packet": "0" * 64}
     corpus = {"schema_version": "phase3_cycle007_private_deny_corpus_v1", "pack_manifest_receipt_sha256": firewall.EXPECTED_PACK_MANIFEST_RECEIPT_SHA256, "near_duplicate_policy_sha256": firewall.near.pinned_policy_fingerprint(), "rows": [row]}
@@ -200,17 +251,36 @@ def test_candidate_evaluator_rejects_caller_collision_and_cycle_derivative() -> 
 
 
 def _private_candidate_corpus(candidate: dict[str, object]) -> dict[str, object]:
+    del candidate
     arrays = {name: [] for name in firewall.PRIVATE_DENY_ARRAYS}
     commitments = {name: {"count": 0, "sha256": firewall.sha256_bytes(firewall.canonical_json([]))} for name in firewall.ALL_DENY_ARRAYS}
     corpus: dict[str, object] = {
         "schema_version": "phase3_cycle007_private_deny_corpus_v1",
         "pack_manifest_receipt_sha256": firewall.EXPECTED_PACK_MANIFEST_RECEIPT_SHA256,
+        "object_set_sha256": firewall.EXPECTED_OBJECT_SET_SHA256,
+        "ordered_row_identity_commitment_sha256": firewall.EXPECTED_ORDERED_ROW_IDENTITY_SHA256,
         "near_duplicate_policy_sha256": firewall.near.pinned_policy_fingerprint(),
         "deny_arrays": arrays, "namespace_commitments": commitments, "rows": [],
         "candidate_clearance_allowlist": [], "candidate_clearance_commitment_sha256": firewall.sha256_bytes(firewall.canonical_json([])),
+        "labeling_expansion_census": {
+            "schema_counts": firewall.LABELING_RECEIPT_SCHEMA_COUNTS,
+            "historical_provider_attempts": 3, "historical_result_receipts": 3,
+            "historical_raw_log_receipts": 3, "bodies_available": False,
+        },
+        "zero_namespace_proofs": {"paraphrases": 0, "synthetic_siblings": 0},
     }
     corpus["corpus_sha256"] = firewall.sha256_bytes(firewall.canonical_json(corpus))
     return corpus
+
+
+def _pin_synthetic_graph(monkeypatch: pytest.MonkeyPatch, corpus: dict[str, object]) -> None:
+    rows = corpus["rows"]
+    assert isinstance(rows, list)
+    monkeypatch.setattr(firewall, "EXPECTED_PRIVATE_ROW_COUNT", len(rows))
+    monkeypatch.setattr(firewall, "EXPECTED_PRIVATE_COMPONENT_COUNT", len({row["component"] for row in rows}))
+    monkeypatch.setattr(firewall, "EXPECTED_PRIVATE_DOCUMENT_GROUP_COUNT", len({row["document_or_edition"] for row in rows}))
+    monkeypatch.setattr(firewall, "EXPECTED_PRIVATE_EXACT_COUNT", len({row["exact"] for row in rows}))
+    monkeypatch.setattr(firewall, "EXPECTED_PRIVATE_GRAPH_COMMITMENT_SHA256", corpus["corpus_sha256"])
 
 
 def test_candidate_requires_private_clearance_and_every_lineage_namespace_is_denied(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -218,7 +288,7 @@ def test_candidate_requires_private_clearance_and_every_lineage_namespace_is_den
     lineage = {name: None for name in firewall.CANDIDATE_LINEAGE_KEYS}
     candidate: dict[str, object] = {"evaluation_cycle_id": "other", "family_id": "pravopys_2026_complete", "unit_id": "candidate", "unit_sha256": "a" * 64, "source_text": "novel independent text", "source_record": {}, "source_locator": {}, "document_or_edition_identity": document, "lineage": lineage}
     corpus = _private_candidate_corpus(candidate)
-    monkeypatch.setattr(firewall, "EXPECTED_PRIVATE_GRAPH_COMMITMENT_SHA256", corpus["corpus_sha256"])
+    _pin_synthetic_graph(monkeypatch, corpus)
     assert firewall.evaluate_candidate_batch([candidate], corpus)["code"] == "uncertain_lineage"
     for lineage_key, namespace in {
         "packet": "packet", "sidecar": "sidecar", "annotation": "annotation", "label_or_prompt": "prompt_or_request",
@@ -230,27 +300,27 @@ def test_candidate_requires_private_clearance_and_every_lineage_namespace_is_den
         changed["lineage"] = {**lineage, lineage_key: value}
         collision = _private_candidate_corpus(changed)
         if namespace == "packet":
-            row = {"row": "a" * 64, "source_example": "b" * 64, "document_or_edition": "c" * 64, "packet": value, "exact": "d" * 64, "component": "e" * 64, "normalized_surface": "separate"}
+            row = {"row": "a" * 64, "source_example": "b" * 64, "document_or_edition": "c" * 64, "packet": value, "exact": "d" * 64, "component": "e" * 64, "normalized_surface": "separate", "token_hashes": ""}
             collision["rows"] = [row]
-            for name, identity in {"row": row["row"], "source_example": row["source_example"], "document_work_edition": row["document_or_edition"], "packet": row["packet"], "exact": row["exact"], "component": row["component"]}.items():
+            for name, identity in {"row": row["row"], "source_example": row["source_example"], "document_work_edition": row["document_or_edition"], "packet": row["packet"], "exact": row["exact"], "near_token": row["token_hashes"], "component": row["component"]}.items():
                 collision["namespace_commitments"][name] = {"count": 1, "sha256": firewall.sha256_bytes(firewall.canonical_json([identity]))}  # type: ignore[index]
         else:
             collision["deny_arrays"][namespace] = [value]  # type: ignore[index]
             collision["namespace_commitments"][namespace] = {"count": 1, "sha256": firewall.sha256_bytes(firewall.canonical_json([value]))}  # type: ignore[index]
         collision["corpus_sha256"] = firewall.sha256_bytes(firewall.canonical_json({key: value for key, value in collision.items() if key != "corpus_sha256"}))
-        monkeypatch.setattr(firewall, "EXPECTED_PRIVATE_GRAPH_COMMITMENT_SHA256", collision["corpus_sha256"])
+        _pin_synthetic_graph(monkeypatch, collision)
         assert firewall.evaluate_candidate_batch([changed], collision)["code"] == "leakage"
 
 
 def test_row_derived_deny_sets_are_reconstructed_without_private_array_copies(monkeypatch: pytest.MonkeyPatch) -> None:
     candidate = {"evaluation_cycle_id": "other"}
     corpus = _private_candidate_corpus(candidate)
-    row = {"row": "a" * 64, "source_example": "b" * 64, "document_or_edition": "c" * 64, "packet": "d" * 64, "exact": "e" * 64, "component": "f" * 64}
+    row = {"row": "a" * 64, "source_example": "b" * 64, "document_or_edition": "c" * 64, "packet": "d" * 64, "exact": "e" * 64, "normalized_surface": "separate", "token_hashes": "", "component": "f" * 64}
     corpus["rows"] = [row]
-    for name, value in {"row": row["row"], "source_example": row["source_example"], "document_work_edition": row["document_or_edition"], "packet": row["packet"], "exact": row["exact"], "component": row["component"]}.items():
+    for name, value in {"row": row["row"], "source_example": row["source_example"], "document_work_edition": row["document_or_edition"], "packet": row["packet"], "exact": row["exact"], "near_token": row["token_hashes"], "component": row["component"]}.items():
         corpus["namespace_commitments"][name] = {"count": 1, "sha256": firewall.sha256_bytes(firewall.canonical_json([value]))}  # type: ignore[index]
     corpus["corpus_sha256"] = firewall.sha256_bytes(firewall.canonical_json({key: value for key, value in corpus.items() if key != "corpus_sha256"}))
-    monkeypatch.setattr(firewall, "EXPECTED_PRIVATE_GRAPH_COMMITMENT_SHA256", corpus["corpus_sha256"])
+    _pin_synthetic_graph(monkeypatch, corpus)
     denied = firewall._validate_private_deny_corpus(corpus)
     assert denied["row"] == {"a" * 64} and denied["packet"] == {"d" * 64}
     assert "row" not in corpus["deny_arrays"]  # type: ignore[operator]
@@ -377,20 +447,21 @@ def _labeling_receipt(schema: str, index: int) -> dict[str, object]:
             "elapsed_milliseconds": 1,
         }
     if schema == "phase3_cycle007_gemini_pre_call_v1":
-        return {
+        value = {
             "schema_version": schema, **common, "planner_version": "v1", "row_count": 1,
             "estimated_input_tokens_ceiling": 1, "ordered_identity_sha256": f"{index + 30:064x}",
-            "receipt_sha256": f"{index + 40:064x}",
         }
+        return value | {"receipt_sha256": firewall.sha256_bytes(firewall.canonical_json(value))}
     if schema == "phase3_cycle007_gemini_request_plan_v1":
-        return {
+        value = {
             "schema_version": schema, "evaluation_cycle_id": common["evaluation_cycle_id"], "lane": "clean_label",
             "packet_index": 7, "planner_version": "v1", "request_byte_budget": 524288, "row_count": 1,
             "packet_identity_set_sha256": "a" * 64, "label_prompt_sha256": "b" * 64,
             "chunks": [{"chunk_index": 1, "row_start": 1, "row_end": 1, "row_count": 1,
                         "request_byte_count": 7, "estimated_input_tokens_ceiling": 1,
-                        "ordered_identity_sha256": "c" * 64}], "text_free": True, "plan_sha256": "d" * 64,
+                        "ordered_identity_sha256": "c" * 64}], "text_free": True,
         }
+        return value | {"plan_sha256": firewall.sha256_bytes(firewall.canonical_json(value))}
     assert schema == "phase3_cycle007_gemini_provider_stop_v3"
     return {
         "schema_version": schema, "evaluation_cycle_id": common["evaluation_cycle_id"], "lane": "clean_label",
