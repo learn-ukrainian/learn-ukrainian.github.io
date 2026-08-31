@@ -1,0 +1,28 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "c4c2b40a2234",
+  "strategy": "manual-commit",
+  "branch": "glm/527-public-runroot",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ai_agent_bridge/_job_host_forward.py",
+    "scripts/practice_deck/publish.py",
+    "tests/ai_agent_bridge/test_ask_job_host_forward.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/c4/c2b40a2234/0/metadata.json",
+      "transcript": "/c4/c2b40a2234/0/full.jsonl",
+      "compact_transcript": "/c4/c2b40a2234/0/transcript.jsonl",
+      "content_hash": "/c4/c2b40a2234/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 39701,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 339776,
+    "output_tokens": 3365,
+    "api_call_count": 13
+  }
+}
