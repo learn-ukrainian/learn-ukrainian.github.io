@@ -10,6 +10,7 @@ Each team owns their router file. No conflicts.
 """
 
 import asyncio
+import functools
 import json
 import logging
 import os
@@ -240,12 +241,14 @@ _SERVER_START = datetime.now(UTC)
 
 
 def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    """Fall back to the live production context for plain-Python callers."""
+    """Fall back to the live production context for plain-Python callers.
+
+    #7494: NEVER reads the module-global ``app`` — that fallback silently
+    handed the production context to every ``create_app()`` instance,
+    defeating factory isolation. Request paths thread ``get_ctx(request)``.
+    """
     if isinstance(ctx, MonitorContext):
         return ctx
-    app_ctx = getattr(app.state, "ctx", None) if "app" in globals() else None
-    if isinstance(app_ctx, MonitorContext):
-        return app_ctx
     return production_context()
 
 # --- /api/orient caching + failure isolation (GH #1309) ----------------
@@ -733,11 +736,14 @@ def _schedule_idle_pr_refresh(collector: Callable[[], Any]) -> None:
 
 
 def _cached_idle_pr_section(
-    collector: Callable[[], Any],
+    collector: Callable[..., Any],
     fallback: dict[str, Any],
+    *,
+    ctx: MonitorContext | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     ttl = ORIENT_SECTION_TTLS["idle_prs"]
-    cached = cache_get(IDLE_PR_CACHE_KEY, ttl=ttl)
+    collector = functools.partial(collector, ctx)
+    cached = cache_get(f"{IDLE_PR_CACHE_KEY}{_ctx_cache_scope(ctx)}", ttl=ttl)
     if isinstance(cached, tuple) and len(cached) == 2:
         value, generated_at = cached
         if isinstance(value, dict) and isinstance(generated_at, str):
@@ -787,7 +793,9 @@ def reset_detached_orient_state_for_tests() -> None:
     _detached_orient_last_error.clear()
 
 
-def _schedule_detached_orient_refresh(key: str, collector: Callable[[], Any]) -> bool:
+def _schedule_detached_orient_refresh(
+    key: str, collector: Callable[[], Any], cache_key: str | None = None
+) -> bool:
     """Start a single-flight worker for ``key``. Return True if this call started it."""
     with _detached_orient_lock:
         thread = _detached_orient_threads.get(key)
@@ -795,7 +803,7 @@ def _schedule_detached_orient_refresh(key: str, collector: Callable[[], Any]) ->
             return False
         worker = threading.Thread(
             target=_run_detached_orient_refresh,
-            args=(key, collector),
+            args=(key, collector, cache_key or f"orient_{key}"),
             daemon=True,
             name=f"orient-{key}-refresh",
         )
@@ -804,13 +812,15 @@ def _schedule_detached_orient_refresh(key: str, collector: Callable[[], Any]) ->
         return True
 
 
-def _run_detached_orient_refresh(key: str, collector: Callable[[], Any]) -> None:
+def _run_detached_orient_refresh(
+    key: str, collector: Callable[[], Any], cache_key: str
+) -> None:
     ttl = ORIENT_SECTION_TTLS.get(key, 60.0)
     try:
         value = collector()
         generated_at = _isoformat_z(datetime.now(UTC))
         if ttl > 0:
-            cache_set(f"orient_{key}", (value, generated_at))
+            cache_set(cache_key, (value, generated_at))
         _detached_orient_last_good[key] = (value, generated_at)
         _detached_orient_last_error.pop(key, None)
     except Exception as exc:
@@ -819,8 +829,10 @@ def _run_detached_orient_refresh(key: str, collector: Callable[[], Any]) -> None
 
 async def _cached_detached_orient_section(
     key: str,
-    collector: Callable[[], Any],
+    collector: Callable[..., Any],
     fallback: Any,
+    *,
+    ctx: MonitorContext | None = None,
 ) -> tuple[Any, dict]:
     """Cache-first section: never let a hung collector pin the gather.
 
@@ -832,7 +844,8 @@ async def _cached_detached_orient_section(
     """
     ttl = ORIENT_SECTION_TTLS.get(key, 60.0)
     source = ORIENT_SECTION_SOURCES.get(key, "fs")
-    cache_key = f"orient_{key}"
+    collector = functools.partial(collector, ctx)
+    cache_key = f"orient_{key}{_ctx_cache_scope(ctx)}"
     if ttl > 0:
         cached = cache_get(cache_key, ttl=ttl)
         if cached is not None:
@@ -844,7 +857,7 @@ async def _cached_detached_orient_section(
                 "cache": "hit",
             }
 
-    started = _schedule_detached_orient_refresh(key, collector)
+    started = _schedule_detached_orient_refresh(key, collector, cache_key)
     thread = _detached_orient_threads.get(key)
     if started and thread is not None and thread.is_alive():
         loop = asyncio.get_running_loop()
@@ -1426,12 +1439,24 @@ async def health_check(request: Request, ctx: MonitorContext = Depends(get_ctx))
     }
 
 
+def _ctx_cache_scope(ctx: MonitorContext | None) -> str:
+    """Cache-key scope for one app context (#7494 / design goal 4.4).
+
+    Two app instances with different roots must never share orient cache
+    entries; the project root is the identity that matters.
+    """
+    if ctx is None:
+        return ""
+    return f"@{ctx.roots.project_root}"
+
+
 async def _cached_orient_section(
     key: str,
-    collector: Callable[[], Any] | Callable[[], Awaitable[Any]],
+    collector: Callable[..., Any] | Callable[..., Awaitable[Any]],
     fallback: Any,
     *,
     is_async: bool = False,
+    ctx: MonitorContext | None = None,
 ) -> tuple[Any, dict]:
     """Run one orient collector with TTL cache + hard timeout + fallback.
 
@@ -1444,13 +1469,13 @@ async def _cached_orient_section(
     a transient git/gh hiccup shouldn't poison a 2-minute TTL window.
     """
     if key == "idle_prs":
-        return _cached_idle_pr_section(collector, fallback)  # type: ignore[arg-type]
+        return _cached_idle_pr_section(collector, fallback, ctx=ctx)  # type: ignore[arg-type]
     if key in DETACHED_ORIENT_SECTION_KEYS:
-        return await _cached_detached_orient_section(key, collector, fallback)  # type: ignore[arg-type]
+        return await _cached_detached_orient_section(key, collector, fallback, ctx=ctx)  # type: ignore[arg-type]
 
     ttl = ORIENT_SECTION_TTLS.get(key, 60.0)
     source = ORIENT_SECTION_SOURCES.get(key, "fs")
-    cache_key = f"orient_{key}"
+    cache_key = f"orient_{key}{_ctx_cache_scope(ctx)}"
 
     # ttl == 0 means "don't cache at the orient layer". Skip both the
     # cache read AND the cache write paths so callers never see stale
@@ -1477,7 +1502,7 @@ async def _cached_orient_section(
     try:
         if is_async:
             value = await asyncio.wait_for(
-                collector(),  # type: ignore[misc]
+                collector(ctx),  # type: ignore[misc]
                 timeout=ORIENT_SECTION_HARD_TIMEOUT_S,
             )
         else:
@@ -1485,7 +1510,7 @@ async def _cached_orient_section(
             value = await asyncio.wait_for(
                 loop.run_in_executor(
                     _ORIENT_SYNC_EXECUTOR,
-                    collector,  # type: ignore[arg-type]
+                    functools.partial(collector, ctx),  # type: ignore[arg-type]
                 ),
                 timeout=ORIENT_SECTION_HARD_TIMEOUT_S,
             )
@@ -1610,6 +1635,10 @@ async def orient(
 
     selected = _parse_orient_sections(sections, lean=lean)
     section_specs = _orient_section_specs()
+    # #7494: thread THIS app's context into every collector — the zero-arg
+    # invocation made all 14 collectors fall back to production_context(),
+    # defeating create_app() isolation (and rebuilding contexts per call).
+    request_ctx = get_ctx(request)
     gather_results = await asyncio.gather(
         *[
             _cached_orient_section(
@@ -1617,6 +1646,7 @@ async def orient(
                 section_specs[key][0],
                 section_specs[key][1],
                 is_async=section_specs[key][2],
+                ctx=request_ctx,
             )
             for key in selected
         ]

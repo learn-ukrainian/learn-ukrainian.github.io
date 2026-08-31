@@ -51,47 +51,47 @@ def _patch_orient_sources(monkeypatch) -> None:
     for key in list(os.environ):
         if key.startswith("GIT_") or key.startswith("PRE_COMMIT"):
             monkeypatch.delenv(key, raising=False)
-    monkeypatch.setattr(api_main, "_collect_git_orient_data", lambda: {"branch": "main", "head": "abc123"})
-    monkeypatch.setattr(api_main, "_collect_issues_orient_data", lambda: {"issues": [{"number": 1186}]})
-    monkeypatch.setattr(api_main, "_collect_idle_prs_orient_data", lambda: {"idle_prs": []})
+    monkeypatch.setattr(api_main, "_collect_git_orient_data", lambda ctx=None: {"branch": "main", "head": "abc123"})
+    monkeypatch.setattr(api_main, "_collect_issues_orient_data", lambda ctx=None: {"issues": [{"number": 1186}]})
+    monkeypatch.setattr(api_main, "_collect_idle_prs_orient_data", lambda ctx=None: {"idle_prs": []})
 
-    async def fake_pipeline():
+    async def fake_pipeline(ctx=None):
         return {"summary": {"totals": {"total": 1}}}
 
     monkeypatch.setattr(api_main, "_collect_pipeline_orient_data", fake_pipeline)
     monkeypatch.setattr(
         api_main,
         "_collect_runtime_orient_data",
-        lambda: {
+        lambda ctx=None: {
             "agents": ["codex"],
             "recent_outcomes": {"ok": 1, "error": 0, "rate_limited": 0},
             "headroom": {"codex": True},
         },
     )
-    monkeypatch.setattr(api_main, "_collect_delegate_orient_data", lambda: {"active_count": 0, "recent": []})
+    monkeypatch.setattr(api_main, "_collect_delegate_orient_data", lambda ctx=None: {"active_count": 0, "recent": []})
     monkeypatch.setattr(
         api_main,
         "_collect_capacity_orient_data",
-        lambda: {"lanes": {"codex": {"in_flight": 0, "healthy": True, "burn_pct_7d": 10.0, "remaining_pct": 90.0, "status": "cool"}}, "primary_recommendation": "codex"},
+        lambda ctx=None: {"lanes": {"codex": {"in_flight": 0, "healthy": True, "burn_pct_7d": 10.0, "remaining_pct": 90.0, "status": "cool"}}, "primary_recommendation": "codex"},
     )
-    monkeypatch.setattr(api_main, "_collect_bridge_pending_orient_data", lambda: {})
+    monkeypatch.setattr(api_main, "_collect_bridge_pending_orient_data", lambda ctx=None: {})
     monkeypatch.setattr(
         api_main,
         "_collect_rollovers_orient_data",
-        lambda: {"counts": {"total": 0, "live_pending": 0}, "actionable": [], "errors": []},
+        lambda ctx=None: {"counts": {"total": 0, "live_pending": 0}, "actionable": [], "errors": []},
     )
     monkeypatch.setattr(
-        api_main, "_collect_wiki_orient_data", lambda: {"by_track": {"hist": {"compiled": 1, "total": 2, "pct": 50.0}}}
+        api_main, "_collect_wiki_orient_data", lambda ctx=None: {"by_track": {"hist": {"compiled": 1, "total": 2, "pct": 50.0}}}
     )
     monkeypatch.setattr(
         api_main,
         "_collect_health_orient_data",
-        lambda: {"api": True, "mcp_sources": False, "mcp_rag": False, "sources_db": True, "message_broker": True},
+        lambda ctx=None: {"api": True, "mcp_sources": False, "mcp_rag": False, "sources_db": True, "message_broker": True},
     )
     monkeypatch.setattr(
         api_main,
         "_collect_session_hints_orient_data",
-        lambda: [{"file": "docs/session-state/example.md", "first_line": "# Example"}],
+        lambda ctx=None: [{"file": "docs/session-state/example.md", "first_line": "# Example"}],
     )
 
 
@@ -199,7 +199,7 @@ def test_orient_git_exposes_primary_checkout_dirty_signal(monkeypatch, tmp_path)
         base_ctx,
         roots=replace(base_ctx.roots, project_root=repo, live_repo_root=repo),
     )
-    monkeypatch.setattr(api_main, "production_context", lambda: patched_ctx)
+    monkeypatch.setattr(api_main, "production_context", lambda ctx=None: patched_ctx)
     monkeypatch.setattr(api_main.app.state, "ctx", patched_ctx)
     monkeypatch.setattr(api_main, "_collect_git_orient_data", original_git_collector)
 
@@ -234,7 +234,7 @@ def test_orient_git_survives_primary_checkout_probe_failure(monkeypatch, tmp_pat
         base_ctx,
         roots=replace(base_ctx.roots, project_root=repo, live_repo_root=repo),
     )
-    monkeypatch.setattr(api_main, "production_context", lambda: patched_ctx)
+    monkeypatch.setattr(api_main, "production_context", lambda ctx=None: patched_ctx)
     monkeypatch.setattr(api_main.app.state, "ctx", patched_ctx)
     monkeypatch.setattr(api_main, "_collect_git_orient_data", original_git_collector)
 
@@ -269,7 +269,7 @@ def test_orient_git_survives_primary_checkout_probe_failure(monkeypatch, tmp_pat
 def test_health_includes_core_bare_canary(monkeypatch):
     """#2842: the health section surfaces the git core.bare detection canary."""
     # Keep this collector hermetic from the host LaunchAgent (#6937).
-    monkeypatch.setattr(api_main, "_worktree_cleanup_integrity_canary", lambda: True)
+    monkeypatch.setattr(api_main, "_worktree_cleanup_integrity_canary", lambda ctx=None: True)
     health = api_main._collect_health_orient_data()
     assert "git_core_bare_ok" in health
     # This repo has a working tree, so core.bare must be false → canary reports ok.
@@ -278,7 +278,7 @@ def test_health_includes_core_bare_canary(monkeypatch):
 
 def test_health_includes_worktree_cleanup_canary(monkeypatch):
     """#6937: a red scheduled cleanup run must surface on /api/orient health."""
-    monkeypatch.setattr(api_main, "_worktree_cleanup_integrity_canary", lambda: False)
+    monkeypatch.setattr(api_main, "_worktree_cleanup_integrity_canary", lambda ctx=None: False)
     health = api_main._collect_health_orient_data()
     assert health["worktree_cleanup_integrity_ok"] is False
 
@@ -309,7 +309,7 @@ def test_health_canaries_do_not_apply_general_repairs(monkeypatch):
 def test_orient_swallows_failing_subquery(monkeypatch):
     _patch_orient_sources(monkeypatch)
 
-    def broken_git():
+    def broken_git(ctx=None):
         raise RuntimeError("git failed")
 
     monkeypatch.setattr(api_main, "_collect_git_orient_data", broken_git)
@@ -327,7 +327,7 @@ def test_orient_includes_bridge_pending_field(monkeypatch):
     monkeypatch.setattr(
         api_main,
         "_collect_bridge_pending_orient_data",
-        lambda: {"claude": {"count": 1, "oldest_hours": 6.5}},
+        lambda ctx=None: {"claude": {"count": 1, "oldest_hours": 6.5}},
     )
 
     response = client.get("/api/orient")
@@ -345,7 +345,7 @@ def test_orient_includes_actionable_rollovers(monkeypatch):
         "actionable": [{"agent": "codex", "rollover_id": "rollover-a"}],
         "errors": [],
     }
-    monkeypatch.setattr(api_main, "_collect_rollovers_orient_data", lambda: expected)
+    monkeypatch.setattr(api_main, "_collect_rollovers_orient_data", lambda ctx=None: expected)
 
     response = client.get("/api/orient")
 
@@ -401,7 +401,7 @@ def test_orient_second_call_hits_cache(monkeypatch):
     _patch_orient_sources(monkeypatch)
     calls = {"git": 0}
 
-    def counting_git():
+    def counting_git(ctx=None):
         calls["git"] += 1
         return {"branch": "main", "head": "abc123"}
 
@@ -435,7 +435,7 @@ def test_orient_hard_timeout_isolates_async_collector(monkeypatch):
     _patch_orient_sources(monkeypatch)
     monkeypatch.setattr(api_main, "ORIENT_SECTION_HARD_TIMEOUT_S", 0.1)
 
-    async def hang_forever():
+    async def hang_forever(ctx=None):
         await asyncio.sleep(5.0)
         return {"summary": {}}
 
@@ -509,7 +509,7 @@ def test_orient_errors_are_not_cached(monkeypatch):
     _patch_orient_sources(monkeypatch)
     attempts = {"n": 0}
 
-    def flaky_git():
+    def flaky_git(ctx=None):
         attempts["n"] += 1
         if attempts["n"] == 1:
             raise RuntimeError("first-call boom")
@@ -542,7 +542,7 @@ def test_orient_issues_errors_are_not_cached(monkeypatch):
     _patch_orient_sources(monkeypatch)
     attempts = {"n": 0}
 
-    def flaky_issues():
+    def flaky_issues(ctx=None):
         attempts["n"] += 1
         if attempts["n"] == 1:
             raise RuntimeError("gh rate limited")
@@ -575,7 +575,7 @@ def test_orient_fresh_query_bypasses_cache(monkeypatch):
     _patch_orient_sources(monkeypatch)
     calls = {"git": 0}
 
-    def counting_git():
+    def counting_git(ctx=None):
         calls["git"] += 1
         return {"branch": "main", "head": f"abc{calls['git']}"}
 
@@ -601,7 +601,7 @@ def test_orient_pipeline_section_skips_orient_layer_cache(monkeypatch):
 
     calls = {"pipeline": 0}
 
-    async def counting_pipeline():
+    async def counting_pipeline(ctx=None):
         calls["pipeline"] += 1
         return {"summary": {"run": calls["pipeline"]}}
 
@@ -644,11 +644,11 @@ def test_orient_sections_subset_runs_only_selected_collectors(monkeypatch):
     _patch_orient_sources(monkeypatch)
     calls: dict[str, int] = {"git": 0, "runtime": 0, "wiki": 0}
 
-    def counting_git():
+    def counting_git(ctx=None):
         calls["git"] += 1
         return {"branch": "main", "head": "abc123"}
 
-    def counting_runtime():
+    def counting_runtime(ctx=None):
         calls["runtime"] += 1
         return {
             "agents": ["codex"],
@@ -656,7 +656,7 @@ def test_orient_sections_subset_runs_only_selected_collectors(monkeypatch):
             "headroom": {"codex": True},
         }
 
-    def counting_wiki():
+    def counting_wiki(ctx=None):
         calls["wiki"] += 1
         return {"by_track": {}}
 
@@ -747,11 +747,11 @@ def test_lean_orient_hung_capacity_and_health_do_not_stall_other_sections(monkey
     _patch_orient_sources(monkeypatch)
     release = threading.Event()
 
-    def hang_capacity():
+    def hang_capacity(ctx=None):
         release.wait(8)
         return {"lanes": {"codex": {"in_flight": 0, "healthy": True}}}
 
-    def hang_health():
+    def hang_health(ctx=None):
         release.wait(8)
         return {"api": True}
 

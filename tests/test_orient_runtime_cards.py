@@ -34,7 +34,7 @@ def _patch_usage_batch_state_dir(monkeypatch, runtime_router, batch_state_dir: P
     """
     base_ctx = runtime_router.production_context()
     patched_ctx = replace(base_ctx, roots=replace(base_ctx.roots, batch_state_dir=Path(batch_state_dir)))
-    monkeypatch.setattr(runtime_router, "production_context", lambda: patched_ctx)
+    monkeypatch.setattr(runtime_router, "production_context", lambda ctx=None: patched_ctx)
     return patched_ctx
 
 
@@ -336,9 +336,15 @@ def test_orient_endpoint_to_render_contract(tmp_path: Path, monkeypatch: pytest.
     import scripts.api.main as api_main
     import scripts.api.runtime_router as runtime_router
 
-    usage_dir = tmp_path / "api_usage"
+    del runtime_router, monkeypatch  # #7494: ctx is injected, not module-patched
+    from scripts.api.monitor_context import fixture_context
+
+    # #7494: the orient handler now threads the APP'S context into every
+    # collector, so this end-to-end test builds a fixture app whose
+    # batch_state root holds the seeded usage file — module-level patching
+    # of the production fallback no longer reaches request handling.
+    usage_dir = tmp_path / "batch_state" / "api_usage"
     today = datetime.now(UTC)
-    _patch_usage_batch_state_dir(monkeypatch, runtime_router, usage_dir.parent)
 
     _write_usage_file(
         usage_dir / f"usage_claude-dispatch_{today:%Y-%m-%d}.jsonl",
@@ -347,7 +353,7 @@ def test_orient_endpoint_to_render_contract(tmp_path: Path, monkeypatch: pytest.
         ],
     )
 
-    client = TestClient(api_main.app)
+    client = TestClient(api_main.create_app(fixture_context(tmp_path)))
     response = client.get("/api/orient?sections=runtime&fresh=true")
     assert response.status_code == 200
     data = response.json()
