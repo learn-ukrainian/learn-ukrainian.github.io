@@ -10,6 +10,7 @@ Each team owns their router file. No conflicts.
 """
 
 import asyncio
+import functools
 import json
 import logging
 import os
@@ -240,12 +241,14 @@ _SERVER_START = datetime.now(UTC)
 
 
 def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    """Fall back to the live production context for plain-Python callers."""
+    """Fall back to the live production context for plain-Python callers.
+
+    #7494: NEVER reads the module-global ``app`` — that fallback silently
+    handed the production context to every ``create_app()`` instance,
+    defeating factory isolation. Request paths thread ``get_ctx(request)``.
+    """
     if isinstance(ctx, MonitorContext):
         return ctx
-    app_ctx = getattr(app.state, "ctx", None) if "app" in globals() else None
-    if isinstance(app_ctx, MonitorContext):
-        return app_ctx
     return production_context()
 
 # --- /api/orient caching + failure isolation (GH #1309) ----------------
@@ -383,10 +386,10 @@ _detached_orient_last_error: dict[str, str] = {}
 # one detached daemon worker, never by the ASGI request path. The last successful
 # result remains available as a stale fallback when GitHub is slow or unavailable.
 _idle_pr_refresh_lock = threading.Lock()
-_idle_pr_refresh_thread: threading.Thread | None = None
-_idle_pr_last_good: tuple[dict[str, Any], str] | None = None
-_idle_pr_last_error: str | None = None
-_idle_pr_next_retry_at = 0.0
+_idle_pr_refresh_threads: dict[str, threading.Thread] = {}
+_idle_pr_last_good: dict[str, tuple[dict[str, Any], str]] = {}
+_idle_pr_last_error: dict[str, str] = {}
+_idle_pr_next_retry_at: dict[str, float] = {}
 
 
 def _parse_iso_datetime(value: str | None) -> datetime | None:
@@ -694,50 +697,54 @@ def _collect_idle_prs_orient_data(ctx: MonitorContext | None = None) -> dict[str
     return {"idle_prs": rows}
 
 
-def _run_idle_pr_refresh(collector: Callable[[], Any]) -> None:
-    global _idle_pr_last_error, _idle_pr_last_good, _idle_pr_next_retry_at
+def _run_idle_pr_refresh(collector: Callable[[], Any], scope: str) -> None:
     try:
         value = collector()
         if not isinstance(value, dict) or not isinstance(value.get("idle_prs"), list):
             raise RuntimeError("idle PR collector returned an invalid payload")
     except subprocess.TimeoutExpired:
-        _idle_pr_last_error = "gh_timeout"
-        _idle_pr_next_retry_at = time.monotonic() + 30.0
+        _idle_pr_last_error[scope] = "gh_timeout"
+        _idle_pr_next_retry_at[scope] = time.monotonic() + 30.0
         return
     except Exception:
-        _idle_pr_last_error = "gh_unavailable"
-        _idle_pr_next_retry_at = time.monotonic() + 30.0
+        _idle_pr_last_error[scope] = "gh_unavailable"
+        _idle_pr_next_retry_at[scope] = time.monotonic() + 30.0
         return
 
     generated_at = _isoformat_z(datetime.now(UTC))
-    cache_set(IDLE_PR_CACHE_KEY, (value, generated_at))
-    _idle_pr_last_good = (value, generated_at)
-    _idle_pr_last_error = None
-    _idle_pr_next_retry_at = 0.0
+    cache_set(f"{IDLE_PR_CACHE_KEY}{scope}", (value, generated_at))
+    _idle_pr_last_good[scope] = (value, generated_at)
+    _idle_pr_last_error.pop(scope, None)
+    _idle_pr_next_retry_at[scope] = 0.0
 
 
-def _schedule_idle_pr_refresh(collector: Callable[[], Any]) -> None:
-    global _idle_pr_refresh_thread
-    if time.monotonic() < _idle_pr_next_retry_at:
+def _schedule_idle_pr_refresh(collector: Callable[[], Any], scope: str) -> None:
+    if time.monotonic() < _idle_pr_next_retry_at.get(scope, 0.0):
         return
     with _idle_pr_refresh_lock:
-        if _idle_pr_refresh_thread is not None and _idle_pr_refresh_thread.is_alive():
+        thread = _idle_pr_refresh_threads.get(scope)
+        if thread is not None and thread.is_alive():
             return
-        _idle_pr_refresh_thread = threading.Thread(
+        worker = threading.Thread(
             target=_run_idle_pr_refresh,
-            args=(collector,),
+            args=(collector, scope),
             daemon=True,
             name="orient-idle-pr-refresh",
         )
-        _idle_pr_refresh_thread.start()
+        _idle_pr_refresh_threads[scope] = worker
+        worker.start()
 
 
 def _cached_idle_pr_section(
-    collector: Callable[[], Any],
+    collector: Callable[..., Any],
     fallback: dict[str, Any],
+    *,
+    ctx: MonitorContext | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     ttl = ORIENT_SECTION_TTLS["idle_prs"]
-    cached = cache_get(IDLE_PR_CACHE_KEY, ttl=ttl)
+    scope = _ctx_cache_scope(ctx)
+    collector = functools.partial(collector, ctx)
+    cached = cache_get(f"{IDLE_PR_CACHE_KEY}{scope}", ttl=ttl)
     if isinstance(cached, tuple) and len(cached) == 2:
         value, generated_at = cached
         if isinstance(value, dict) and isinstance(generated_at, str):
@@ -748,19 +755,20 @@ def _cached_idle_pr_section(
                 "cache": "hit",
             }
 
-    _schedule_idle_pr_refresh(collector)
-    if _idle_pr_last_good is not None:
-        value, generated_at = _idle_pr_last_good
+    _schedule_idle_pr_refresh(collector, scope)
+    scoped_last_good = _idle_pr_last_good.get(scope)
+    if scoped_last_good is not None:
+        value, generated_at = scoped_last_good
         meta: dict[str, Any] = {
             "generated_at": generated_at,
             "stale_after_s": ttl,
             "source": "gh",
             "cache": "miss",
             "stale": True,
-            "refreshing": _idle_pr_refresh_thread is not None and _idle_pr_refresh_thread.is_alive(),
+            "refreshing": (_t := _idle_pr_refresh_threads.get(scope)) is not None and _t.is_alive(),
         }
-        if _idle_pr_last_error is not None:
-            meta["error"] = _idle_pr_last_error
+        if (_err := _idle_pr_last_error.get(scope)) is not None:
+            meta["error"] = _err
         return value, meta
 
     meta = {
@@ -768,10 +776,10 @@ def _cached_idle_pr_section(
         "stale_after_s": ttl,
         "source": "gh",
         "cache": "miss",
-        "refreshing": _idle_pr_refresh_thread is not None and _idle_pr_refresh_thread.is_alive(),
+        "refreshing": (_t := _idle_pr_refresh_threads.get(scope)) is not None and _t.is_alive(),
     }
-    if _idle_pr_last_error is not None:
-        meta["error"] = _idle_pr_last_error
+    if (_err := _idle_pr_last_error.get(scope)) is not None:
+        meta["error"] = _err
     return fallback, meta
 
 
@@ -787,40 +795,47 @@ def reset_detached_orient_state_for_tests() -> None:
     _detached_orient_last_error.clear()
 
 
-def _schedule_detached_orient_refresh(key: str, collector: Callable[[], Any]) -> bool:
+def _schedule_detached_orient_refresh(
+    key: str, collector: Callable[[], Any], cache_key: str | None = None
+) -> bool:
     """Start a single-flight worker for ``key``. Return True if this call started it."""
     with _detached_orient_lock:
-        thread = _detached_orient_threads.get(key)
+        state_key = cache_key or f"orient_{key}"
+        thread = _detached_orient_threads.get(state_key)
         if thread is not None and thread.is_alive():
             return False
         worker = threading.Thread(
             target=_run_detached_orient_refresh,
-            args=(key, collector),
+            args=(key, collector, state_key),
             daemon=True,
             name=f"orient-{key}-refresh",
         )
-        _detached_orient_threads[key] = worker
+        _detached_orient_threads[state_key] = worker
         worker.start()
         return True
 
 
-def _run_detached_orient_refresh(key: str, collector: Callable[[], Any]) -> None:
+def _run_detached_orient_refresh(
+    key: str, collector: Callable[[], Any], cache_key: str
+) -> None:
     ttl = ORIENT_SECTION_TTLS.get(key, 60.0)
     try:
         value = collector()
         generated_at = _isoformat_z(datetime.now(UTC))
         if ttl > 0:
-            cache_set(f"orient_{key}", (value, generated_at))
-        _detached_orient_last_good[key] = (value, generated_at)
-        _detached_orient_last_error.pop(key, None)
+            cache_set(cache_key, (value, generated_at))
+        _detached_orient_last_good[cache_key] = (value, generated_at)
+        _detached_orient_last_error.pop(cache_key, None)
     except Exception as exc:
-        _detached_orient_last_error[key] = str(exc)
+        _detached_orient_last_error[cache_key] = str(exc)
 
 
 async def _cached_detached_orient_section(
     key: str,
-    collector: Callable[[], Any],
+    collector: Callable[..., Any],
     fallback: Any,
+    *,
+    ctx: MonitorContext | None = None,
 ) -> tuple[Any, dict]:
     """Cache-first section: never let a hung collector pin the gather.
 
@@ -832,7 +847,8 @@ async def _cached_detached_orient_section(
     """
     ttl = ORIENT_SECTION_TTLS.get(key, 60.0)
     source = ORIENT_SECTION_SOURCES.get(key, "fs")
-    cache_key = f"orient_{key}"
+    collector = functools.partial(collector, ctx)
+    cache_key = f"orient_{key}{_ctx_cache_scope(ctx)}"
     if ttl > 0:
         cached = cache_get(cache_key, ttl=ttl)
         if cached is not None:
@@ -844,8 +860,8 @@ async def _cached_detached_orient_section(
                 "cache": "hit",
             }
 
-    started = _schedule_detached_orient_refresh(key, collector)
-    thread = _detached_orient_threads.get(key)
+    started = _schedule_detached_orient_refresh(key, collector, cache_key)
+    thread = _detached_orient_threads.get(cache_key)
     if started and thread is not None and thread.is_alive():
         loop = asyncio.get_running_loop()
         await loop.run_in_executor(
@@ -865,7 +881,7 @@ async def _cached_detached_orient_section(
                 "cache": "miss",
             }
 
-    last_good = _detached_orient_last_good.get(key)
+    last_good = _detached_orient_last_good.get(cache_key)
     if last_good is not None:
         value, generated_at = last_good
         meta: dict[str, Any] = {
@@ -876,12 +892,12 @@ async def _cached_detached_orient_section(
             "stale": True,
             "refreshing": thread is not None and thread.is_alive(),
         }
-        last_error = _detached_orient_last_error.get(key)
+        last_error = _detached_orient_last_error.get(cache_key)
         if last_error is not None:
             meta["error"] = last_error
         return value, meta
 
-    short_err = _detached_orient_last_error.get(key) or "refreshing"
+    short_err = _detached_orient_last_error.get(cache_key) or "refreshing"
     meta = {
         "generated_at": _isoformat_z(datetime.now(UTC)),
         "stale_after_s": ttl,
@@ -1426,12 +1442,24 @@ async def health_check(request: Request, ctx: MonitorContext = Depends(get_ctx))
     }
 
 
+def _ctx_cache_scope(ctx: MonitorContext | None) -> str:
+    """Cache-key scope for one app context (#7494 / design goal 4.4).
+
+    Two app instances with different roots must never share orient cache
+    entries; the project root is the identity that matters.
+    """
+    if ctx is None:
+        return ""
+    return f"@{ctx.roots.project_root}"
+
+
 async def _cached_orient_section(
     key: str,
-    collector: Callable[[], Any] | Callable[[], Awaitable[Any]],
+    collector: Callable[..., Any] | Callable[..., Awaitable[Any]],
     fallback: Any,
     *,
     is_async: bool = False,
+    ctx: MonitorContext | None = None,
 ) -> tuple[Any, dict]:
     """Run one orient collector with TTL cache + hard timeout + fallback.
 
@@ -1444,13 +1472,13 @@ async def _cached_orient_section(
     a transient git/gh hiccup shouldn't poison a 2-minute TTL window.
     """
     if key == "idle_prs":
-        return _cached_idle_pr_section(collector, fallback)  # type: ignore[arg-type]
+        return _cached_idle_pr_section(collector, fallback, ctx=ctx)  # type: ignore[arg-type]
     if key in DETACHED_ORIENT_SECTION_KEYS:
-        return await _cached_detached_orient_section(key, collector, fallback)  # type: ignore[arg-type]
+        return await _cached_detached_orient_section(key, collector, fallback, ctx=ctx)  # type: ignore[arg-type]
 
     ttl = ORIENT_SECTION_TTLS.get(key, 60.0)
     source = ORIENT_SECTION_SOURCES.get(key, "fs")
-    cache_key = f"orient_{key}"
+    cache_key = f"orient_{key}{_ctx_cache_scope(ctx)}"
 
     # ttl == 0 means "don't cache at the orient layer". Skip both the
     # cache read AND the cache write paths so callers never see stale
@@ -1477,7 +1505,7 @@ async def _cached_orient_section(
     try:
         if is_async:
             value = await asyncio.wait_for(
-                collector(),  # type: ignore[misc]
+                collector(ctx),  # type: ignore[misc]
                 timeout=ORIENT_SECTION_HARD_TIMEOUT_S,
             )
         else:
@@ -1485,7 +1513,7 @@ async def _cached_orient_section(
             value = await asyncio.wait_for(
                 loop.run_in_executor(
                     _ORIENT_SYNC_EXECUTOR,
-                    collector,  # type: ignore[arg-type]
+                    functools.partial(collector, ctx),  # type: ignore[arg-type]
                 ),
                 timeout=ORIENT_SECTION_HARD_TIMEOUT_S,
             )
@@ -1610,6 +1638,10 @@ async def orient(
 
     selected = _parse_orient_sections(sections, lean=lean)
     section_specs = _orient_section_specs()
+    # #7494: thread THIS app's context into every collector — the zero-arg
+    # invocation made all 14 collectors fall back to production_context(),
+    # defeating create_app() isolation (and rebuilding contexts per call).
+    request_ctx = get_ctx(request)
     gather_results = await asyncio.gather(
         *[
             _cached_orient_section(
@@ -1617,6 +1649,7 @@ async def orient(
                 section_specs[key][0],
                 section_specs[key][1],
                 is_async=section_specs[key][2],
+                ctx=request_ctx,
             )
             for key in selected
         ]

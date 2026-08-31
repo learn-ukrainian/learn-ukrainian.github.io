@@ -25,7 +25,7 @@ def _pin_tasks_dir(monkeypatch, tasks_dir: Path):
         roots=replace(api_main.app.state.ctx.roots, batch_state_dir=tasks_dir.parent),
     )
     monkeypatch.setattr(api_main.app.state, "ctx", ctx)
-    monkeypatch.setattr(delegate_router, "production_context", lambda: ctx)
+    monkeypatch.setattr(delegate_router, "production_context", lambda *a, **k: ctx)
     monkeypatch.setattr(delegate_router, "_tasks_dir", lambda ctx=None: tasks_dir)
     return ctx
 
@@ -62,21 +62,21 @@ def _reset_orient_cache() -> None:
 
 
 def _patch_non_delegate_orient_sources(monkeypatch) -> None:
-    monkeypatch.setattr(api_main, "_collect_git_orient_data", lambda: {"branch": "main"})
-    monkeypatch.setattr(api_main, "_collect_issues_orient_data", lambda: {"issues": []})
-    monkeypatch.setattr(api_main, "_collect_idle_prs_orient_data", lambda: {"idle_prs": []})
+    monkeypatch.setattr(api_main, "_collect_git_orient_data", lambda *a, **k: {"branch": "main"})
+    monkeypatch.setattr(api_main, "_collect_issues_orient_data", lambda *a, **k: {"issues": []})
+    monkeypatch.setattr(api_main, "_collect_idle_prs_orient_data", lambda *a, **k: {"idle_prs": []})
 
-    async def fake_pipeline():
+    async def fake_pipeline(*a, **k):
         return {"summary": {}}
 
     monkeypatch.setattr(api_main, "_collect_pipeline_orient_data", fake_pipeline)
-    monkeypatch.setattr(api_main, "_collect_runtime_orient_data", lambda: {})
-    monkeypatch.setattr(api_main, "_collect_bridge_pending_orient_data", lambda: {})
-    monkeypatch.setattr(api_main, "_collect_wiki_orient_data", lambda: {"by_track": {}})
+    monkeypatch.setattr(api_main, "_collect_runtime_orient_data", lambda *a, **k: {})
+    monkeypatch.setattr(api_main, "_collect_bridge_pending_orient_data", lambda *a, **k: {})
+    monkeypatch.setattr(api_main, "_collect_wiki_orient_data", lambda *a, **k: {"by_track": {}})
     monkeypatch.setattr(
         api_main,
         "_collect_governance_orient_data",
-        lambda: {
+        lambda *a, **k: {
             "decisions_total": 0,
             "decisions_stale": 0,
             "decisions_approaching_expiry": 0,
@@ -85,8 +85,8 @@ def _patch_non_delegate_orient_sources(monkeypatch) -> None:
             "adrs_errors": 0,
         },
     )
-    monkeypatch.setattr(api_main, "_collect_health_orient_data", lambda: {"api": True})
-    monkeypatch.setattr(api_main, "_collect_session_hints_orient_data", lambda: [])
+    monkeypatch.setattr(api_main, "_collect_health_orient_data", lambda *a, **k: {"api": True})
+    monkeypatch.setattr(api_main, "_collect_session_hints_orient_data", lambda *a, **k: [])
 
 
 def test_delegate_active_includes_spawning_task_without_pid(tmp_path, monkeypatch):
@@ -270,7 +270,11 @@ def test_delegate_active_performance_with_many_files(tmp_path, monkeypatch):
     assert data["total"] == 2
     assert [task["task_id"] for task in data["tasks"]] == ["running-active", "spawning-active"]
     # Bound assertion: must execute in under 1 second (target < 3s SLA)
-    assert duration_s < 1.0, f"GET /api/delegate/active took {duration_s:.3f}s (> 1.0s bound)"
+    # Wall-clock bound in shared CI (#7492 class): 1.0s blew at 1.36s on a
+    # loaded merge-queue runner with the endpoint healthy (status 200). 3.0s
+    # still fails a pathological O(N) implementation on 1,500 files while
+    # tolerating runner load noise.
+    assert duration_s < 3.0, f"GET /api/delegate/active took {duration_s:.3f}s (> 3.0s bound)"
 
 
 def test_delegate_persistent_cache_survives_restart_and_avoids_reparsing(tmp_path, monkeypatch):
