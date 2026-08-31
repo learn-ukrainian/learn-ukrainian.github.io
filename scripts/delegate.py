@@ -1497,6 +1497,9 @@ _GITHUB_REMOTE_PATTERNS = (
 # Same authoritative-claim contract as scripts/api/delegate_router.py:
 # only these fields attribute a task to a repository.
 _REPOSITORY_ATTR_FIELDS = ("repository_id", "repository")
+# Canonical GitHub home of this repository (#7522): the remote dispatch must
+# pin base SHAs to when a host's ``origin`` is only a lagging mirror.
+_CANONICAL_GITHUB_REPO = "learn-ukrainian/learn-ukrainian.github.io"
 
 
 def _parse_github_owner_repo(remote_url: str | None) -> str | None:
@@ -1546,28 +1549,57 @@ def _git_common_dir(root: Path) -> Path | None:
         return None
 
 
-def _read_origin_url(root: Path) -> str | None:
-    """Read ``remote.origin.url`` from the checkout's common git config."""
+def _git_remote_urls(root: Path) -> dict[str, str]:
+    """Map remote names to URLs from the checkout's common git config.
+
+    Pure filesystem, same contract as :func:`_git_common_dir` — never a git
+    subprocess, so dispatch-path logic stays independent of the
+    ``subprocess.Popen`` stubs used by dispatch tests and hook environments.
+    The first ``url`` entry wins for remotes configured with multiple URLs.
+    """
     common = _git_common_dir(root)
     if common is None:
-        return None
+        return {}
     try:
         lines = (common / "config").read_text(encoding="utf-8", errors="replace").splitlines()
     except OSError:
-        return None
-    in_origin = False
+        return {}
+    urls: dict[str, str] = {}
+    current_remote: str | None = None
     for line in lines:
         remote_section = _GITCONFIG_REMOTE_SECTION_RE.match(line)
         if remote_section:
-            in_origin = remote_section.group(1) == "origin"
+            current_remote = remote_section.group(1)
             continue
         if _GITCONFIG_ANY_SECTION_RE.match(line):
-            in_origin = False
+            current_remote = None
             continue
-        if in_origin:
+        if current_remote is not None:
             url = _GITCONFIG_URL_RE.match(line)
-            if url:
-                return url.group(1)
+            if url and current_remote not in urls:
+                urls[current_remote] = url.group(1)
+    return urls
+
+
+def _read_origin_url(root: Path) -> str | None:
+    """Read ``remote.origin.url`` from the checkout's common git config."""
+    return _git_remote_urls(root).get("origin")
+
+
+def _resolve_canonical_remote_name(remote_urls: dict[str, str]) -> str | None:
+    """Return the name of the remote that serves the canonical GitHub repo.
+
+    Prefers a remote literally named ``github`` whose URL is the canonical
+    ``owner/repo``; otherwise ``origin`` when origin itself is that GitHub
+    URL. Any other layout stays unclassified (None) so the dispatch path
+    keeps its origin-only behavior instead of inventing a remote (#7522).
+    """
+    github_url = remote_urls.get("github")
+    if github_url and _parse_github_owner_repo(github_url) == _CANONICAL_GITHUB_REPO:
+        return "github"
+    origin_url = remote_urls.get("origin")
+    if origin_url and _parse_github_owner_repo(origin_url) == _CANONICAL_GITHUB_REPO:
+        return "origin"
     return None
 
 
@@ -2024,19 +2056,21 @@ def _warn_if_monitor_api_unreachable() -> None:
         )
 
 
-def _fetch_base(base: str) -> bool:
-    """Fetch ``origin/{base}``. Returns True iff the remote ref is resolvable.
+def _origin_tracking_refspec(branch: str) -> str:
+    """Explicit fetch mapping that lands ``branch`` under refs/remotes/origin."""
+    return f"+refs/heads/{branch}:refs/remotes/origin/{branch}"
 
-    ``base`` may be a plain branch name (``main``) or an origin-prefixed ref
-    (``origin/main`` — the form the dispatch runbooks mandate). The remote
-    refspec is an explicit mapping ``+refs/heads/<branch>:refs/remotes/origin/<branch>``
-    so the remote-tracking ref exists regardless of host git fetch refspec config (#7168).
+
+def _fetch_remote_branch(remote: str, branch: str) -> subprocess.CompletedProcess[str] | None:
+    """Fetch ``branch`` from ``remote`` into the origin tracking ref.
+
+    Returns None when the fetch could not run at all (spawn failure or
+    timeout); a completed process with a nonzero returncode is returned
+    as-is so callers can fail closed carrying git's own diagnostics.
     """
-    branch = _base_branch_name(base)
-    refspec = f"+refs/heads/{branch}:refs/remotes/origin/{branch}"
     try:
-        proc = subprocess.run(
-            ["git", "fetch", "origin", refspec],
+        return subprocess.run(
+            ["git", "fetch", remote, _origin_tracking_refspec(branch)],
             cwd=_REPO_ROOT,
             capture_output=True,
             text=True,
@@ -2045,11 +2079,13 @@ def _fetch_base(base: str) -> bool:
             timeout=DEFAULT_NETWORK_GIT_TIMEOUT_S,
         )
     except (OSError, subprocess.TimeoutExpired):
-        return False
-    if proc.returncode != 0:
-        return False
+        return None
+
+
+def _verify_origin_tracking_ref(branch: str) -> subprocess.CompletedProcess[str] | None:
+    """Verify that ``origin/<branch>`` resolves after a mapped fetch."""
     try:
-        verify = subprocess.run(
+        return subprocess.run(
             ["git", "rev-parse", "--verify", f"origin/{branch}"],
             cwd=_REPO_ROOT,
             capture_output=True,
@@ -2059,8 +2095,110 @@ def _fetch_base(base: str) -> bool:
             timeout=DEFAULT_GIT_TIMEOUT_S,
         )
     except (OSError, subprocess.TimeoutExpired):
+        return None
+
+
+def _fetch_origin_branch(branch: str) -> bool:
+    """Single-remote fetch contract: fetch origin, report success as bool."""
+    proc = _fetch_remote_branch("origin", branch)
+    if proc is None or proc.returncode != 0:
         return False
-    return verify.returncode == 0
+    verify = _verify_origin_tracking_ref(branch)
+    return verify is not None and verify.returncode == 0
+
+
+def _canonical_fetch_failure_error(
+    *,
+    branch: str,
+    canonical_remote: str,
+    canonical_url: str,
+    mirror_url: str,
+    detail: str,
+) -> RuntimeError:
+    """Build the #7522 fail-closed error for a canonical-remote fetch failure."""
+    return RuntimeError(
+        f"could not fetch base branch {branch!r} from canonical GitHub remote "
+        f"'{canonical_remote}' ({canonical_url}): {detail}. Remote 'origin' is "
+        f"{mirror_url!r} (a non-canonical mirror) and was NOT used as a fallback — "
+        "a lagging mirror must never pin the worktree base. Recovery: inspect "
+        "`git remote -v`, then run "
+        f"`git fetch {canonical_remote} {_origin_tracking_refspec(branch)}` and "
+        "retry the dispatch."
+    )
+
+
+def _fetch_base(base: str) -> bool:
+    """Fetch the dispatch base branch into ``origin/<branch>``.
+
+    ``base`` may be a plain branch name (``main``), an origin-prefixed ref
+    (``origin/main`` — the form the dispatch runbooks mandate), or a
+    github-prefixed one (``github/main``). The remote refspec is an explicit
+    mapping ``+refs/heads/<branch>:refs/remotes/origin/<branch>`` so the
+    remote-tracking ref exists regardless of host git fetch refspec config
+    (#7168).
+
+    #7522: on hosts where ``origin`` is a lagging mirror and a separate
+    remote points at the canonical GitHub repository, the base must be
+    fetched from that canonical remote — the mirror is fetched best-effort
+    only so divergence can be warned about, and a canonical fetch failure
+    fails closed instead of silently pinning the mirror's stale SHA.
+    """
+    branch = _base_branch_name(base)
+    remote_urls = _git_remote_urls(_REPO_ROOT)
+    canonical_remote = _resolve_canonical_remote_name(remote_urls)
+    if canonical_remote is None or canonical_remote == "origin":
+        # Single-remote hosts — origin is the canonical GitHub remote, or no
+        # GitHub remote is configured at all. Exactly the pre-#7522 origin
+        # fetch, including its bool failure contract: callers own the
+        # instructive fail-closed message.
+        return _fetch_origin_branch(branch)
+
+    canonical_url = remote_urls.get(canonical_remote) or "<unknown url>"
+    mirror_url = remote_urls.get("origin") or "<unknown url>"
+
+    # Fetch the mirror first, best-effort, and snapshot its SHA only to
+    # surface lag. The canonical fetch below overwrites the tracking ref,
+    # so the mirror SHA must be read before it.
+    mirror_sha: str | None = None
+    if "origin" in remote_urls:
+        _fetch_remote_branch("origin", branch)
+        mirror_sha = _resolve_sha(_REPO_ROOT, f"origin/{branch}")
+
+    canonical_proc = _fetch_remote_branch(canonical_remote, branch)
+    if canonical_proc is None:
+        raise _canonical_fetch_failure_error(
+            branch=branch,
+            canonical_remote=canonical_remote,
+            canonical_url=canonical_url,
+            mirror_url=mirror_url,
+            detail=f"fetch timed out or failed to start after {DEFAULT_NETWORK_GIT_TIMEOUT_S}s",
+        )
+    if canonical_proc.returncode != 0:
+        raise _canonical_fetch_failure_error(
+            branch=branch,
+            canonical_remote=canonical_remote,
+            canonical_url=canonical_url,
+            mirror_url=mirror_url,
+            detail=_format_process_failure(canonical_proc),
+        )
+    canonical_sha = _resolve_sha(_REPO_ROOT, f"origin/{branch}")
+    if canonical_sha is None:
+        raise _canonical_fetch_failure_error(
+            branch=branch,
+            canonical_remote=canonical_remote,
+            canonical_url=canonical_url,
+            mirror_url=mirror_url,
+            detail=f"fetched, but refs/remotes/origin/{branch} did not resolve afterwards",
+        )
+    if mirror_sha is not None and mirror_sha != canonical_sha:
+        print(
+            f"⚠️  remote 'origin' ({mirror_url}) lags the canonical GitHub remote "
+            f"'{canonical_remote}' ({canonical_url}) for branch {branch!r}: "
+            f"origin SHA {mirror_sha} != canonical SHA {canonical_sha}. "
+            "Dispatching from the canonical GitHub SHA.",
+            file=sys.stderr,
+        )
+    return True
 
 
 def _validate_branch_reuse_name(branch: str) -> str:
@@ -2068,8 +2206,10 @@ def _validate_branch_reuse_name(branch: str) -> str:
     normalized = branch.strip()
     if not normalized:
         raise ValueError("--branch must name an existing non-protected branch")
-    if normalized.startswith(("origin/", "refs/")):
-        raise ValueError(f"--branch must be a local branch name without origin/ or refs/ prefixes: got {branch!r}")
+    if normalized.startswith(("origin/", "refs/", "github/")):
+        raise ValueError(
+            f"--branch must be a local branch name without origin/, github/, or refs/ prefixes: got {branch!r}"
+        )
 
     containment = _load_worktree_containment()
     if normalized in containment.PROTECTED_BRANCHES:
@@ -2084,11 +2224,16 @@ def _fetch_existing_branch(branch: str) -> None:
 
     The remote refspec is an explicit mapping ``+refs/heads/<branch>:refs/remotes/origin/<branch>``
     so the remote-tracking ref exists regardless of host git fetch refspec config (#7168).
+    #7522: when a canonical GitHub remote is configured it is the fetch
+    source — a host mirror may lag or not carry the PR branch at all.
     """
-    refspec = f"+refs/heads/{branch}:refs/remotes/origin/{branch}"
+    remote_urls = _git_remote_urls(_REPO_ROOT)
+    canonical_remote = _resolve_canonical_remote_name(remote_urls)
+    remote_name = canonical_remote or "origin"
+    refspec = _origin_tracking_refspec(branch)
     try:
         proc = subprocess.run(
-            ["git", "fetch", "origin", refspec],
+            ["git", "fetch", remote_name, refspec],
             cwd=_REPO_ROOT,
             capture_output=True,
             text=True,
@@ -2098,9 +2243,20 @@ def _fetch_existing_branch(branch: str) -> None:
         )
     except subprocess.TimeoutExpired as exc:
         raise RuntimeError(
-            f"could not fetch existing branch {branch!r}: fetch timed out after {DEFAULT_NETWORK_GIT_TIMEOUT_S}s"
+            f"could not fetch existing branch {branch!r} from remote {remote_name!r}: "
+            f"fetch timed out after {DEFAULT_NETWORK_GIT_TIMEOUT_S}s"
         ) from exc
     if proc.returncode != 0:
+        if canonical_remote is not None and canonical_remote != "origin":
+            raise RuntimeError(
+                f"could not fetch existing branch {branch!r} from canonical GitHub "
+                f"remote '{canonical_remote}' ({remote_urls.get(canonical_remote)}): "
+                f"{_format_process_failure(proc)}. Remote 'origin' is "
+                f"{remote_urls.get('origin')!r} (a non-canonical mirror) and was NOT "
+                "used as a fallback — the mirror may lag or not carry the PR branch. "
+                "Recovery: inspect `git remote -v`, then run "
+                f"`git fetch {canonical_remote} {refspec}` and retry the dispatch."
+            )
         raise RuntimeError(f"could not fetch existing branch {branch!r}: {_format_process_failure(proc)}")
     try:
         verify = subprocess.run(
@@ -2663,12 +2819,18 @@ def _origin_base_ref(base_branch: str) -> str:
     """Return the remote ref used for ahead-count checks."""
     if base_branch.startswith("origin/"):
         return base_branch
-    return f"origin/{base_branch}"
+    return f"origin/{_base_branch_name(base_branch)}"
 
 
 def _base_branch_name(base_branch: str) -> str:
-    """Return a PR base branch name without the remote prefix."""
-    return base_branch.removeprefix("origin/")
+    """Return a PR base branch name without the remote prefix.
+
+    ``origin/main`` and ``github/main`` both name the canonical ``main`` —
+    the dispatch fetch lands every base into ``refs/remotes/origin/<name>``
+    regardless of which remote served it (#7522).
+    """
+    stripped = base_branch.removeprefix("origin/")
+    return stripped.removeprefix("github/")
 
 
 _GIT_ENV_DENYLIST = {

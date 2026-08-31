@@ -47,22 +47,36 @@ def test_fetch_base_timeouts() -> None:
         calls.append({"cmd": cmd, **kwargs})
         return _completed(cmd, returncode=0)
 
-    with patch("subprocess.run", side_effect=fake_run):
+    # Pin the single-remote host shape (#7522): origin IS the canonical
+    # GitHub remote, so _fetch_base stays a two-call origin fetch regardless
+    # of which fleet host (some carry a mirror origin + github remote) runs
+    # the suite.
+    origin_only = {"origin": "https://github.com/learn-ukrainian/learn-ukrainian.github.io.git"}
+    with (
+        patch("scripts.delegate._git_remote_urls", return_value=origin_only),
+        patch("subprocess.run", side_effect=fake_run),
+    ):
         assert _fetch_base("main") is True
 
     assert len(calls) == 2
     assert calls[0]["timeout"] == DEFAULT_NETWORK_GIT_TIMEOUT_S
     assert calls[1]["timeout"] == DEFAULT_GIT_TIMEOUT_S
 
-    with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "fetch"], DEFAULT_NETWORK_GIT_TIMEOUT_S)):
+    with (
+        patch("scripts.delegate._git_remote_urls", return_value=origin_only),
+        patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "fetch"], DEFAULT_NETWORK_GIT_TIMEOUT_S)),
+    ):
         assert _fetch_base("main") is False
 
-    with patch(
-        "subprocess.run",
-        side_effect=[
-            _completed(returncode=0),
-            subprocess.TimeoutExpired(["git", "rev-parse"], DEFAULT_GIT_TIMEOUT_S),
-        ],
+    with (
+        patch("scripts.delegate._git_remote_urls", return_value=origin_only),
+        patch(
+            "subprocess.run",
+            side_effect=[
+                _completed(returncode=0),
+                subprocess.TimeoutExpired(["git", "rev-parse"], DEFAULT_GIT_TIMEOUT_S),
+            ],
+        ),
     ):
         assert _fetch_base("main") is False
 
