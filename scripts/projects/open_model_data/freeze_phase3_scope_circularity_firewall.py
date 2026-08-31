@@ -277,10 +277,10 @@ def _canonical_packed_document_identity(entry: Mapping[str, Any]) -> str:
 
 
 LABELING_RECEIPT_SCHEMA_COUNTS = {
-    "phase3_cycle007_labeling_attempt_v2": 4,
-    "phase3_cycle007_labeling_pre_call_v1": 2,
-    "phase3_cycle007_labeling_request_plan_v1": 1,
-    "phase3_cycle007_provider_stop_v3": 1,
+    "phase3_cycle007_gemini_attempt_v2": 4,
+    "phase3_cycle007_gemini_pre_call_v1": 2,
+    "phase3_cycle007_gemini_request_plan_v1": 1,
+    "phase3_cycle007_gemini_provider_stop_v3": 1,
 }
 
 
@@ -294,18 +294,143 @@ def _receipt_commitment(receipt: Mapping[str, Any], *, object_sha256: str, field
     return sha256_bytes(canonical_json({"object": object_sha256, "commitments": selected}))
 
 
-def _receipt_is_text_free_metadata(receipt: Mapping[str, Any]) -> bool:
-    """Receipts may retain hashes/counts, never request, response, or label bodies."""
-    for key, value in receipt.items():
-        lowered = key.lower()
-        if isinstance(value, (Mapping, list)):
-            return False
-        digest = isinstance(value, str) and len(value) == 64 and all(char in "0123456789abcdef" for char in value)
-        if any(token in lowered for token in ("payload", "body", "prompt_text", "label_text")) and not (digest and lowered.endswith("_sha256")) and value not in (None, False, 0, "", sha256_bytes(b"")):
-            return False
-        if lowered.endswith("_sha256") and not digest:
-            return False
-    return True
+def _metadata_digest(value: Any) -> bool:
+    return isinstance(value, str) and len(value) == 64 and all(char in "0123456789abcdef" for char in value)
+
+
+def _positive_int(value: Any) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool) and value > 0
+
+
+def _nonnegative_int(value: Any) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool) and value >= 0
+
+
+def _validate_metadata_common(receipt: Mapping[str, Any], keys: set[str]) -> bool:
+    return (
+        set(receipt) == keys
+        and receipt.get("evaluation_cycle_id") == "phase3-v2-1-evaluation-cycle-007"
+        and receipt.get("lane") in {"clean_label", "residual_label"}
+        and receipt.get("exact_model") == "Gemini 3.6 Flash (High)"
+        and receipt.get("model_family") == "google"
+        and receipt.get("harness") == "agy"
+        and receipt.get("text_free") is True
+    )
+
+
+def _validate_attempt_v2(receipt: Mapping[str, Any]) -> bool:
+    """Closed terminal-attempt shape from the canonical Cycle007 guardian."""
+    common = {
+        "schema_version", "evaluation_cycle_id", "lane", "packet_index", "chunk_index", "attempt",
+        "exact_model", "model_family", "harness", "text_free", "request_plan_sha256",
+        "request_byte_budget", "request_byte_count", "state",
+    }
+    if receipt.get("state") == "started":
+        return (
+            _validate_metadata_common(receipt, common)
+            and receipt.get("schema_version") == "phase3_cycle007_gemini_attempt_v2"
+            and all(_positive_int(receipt.get(key)) for key in ("packet_index", "chunk_index", "attempt", "request_byte_budget", "request_byte_count"))
+            and receipt["request_byte_count"] <= receipt["request_byte_budget"]
+            and _metadata_digest(receipt.get("request_plan_sha256"))
+        )
+    terminal = common | {
+        "failure_code", "failure_stage",
+        "provider_call_started", "executable_binding_result", "provider_return_code", "raw_byte_count",
+        "raw_sha256", "log_byte_count", "log_sha256", "init_count", "result_count",
+        "first_event_kind", "last_event_kind", "model_binding_result", "result_status",
+        "structured_output_type", "elapsed_milliseconds",
+    }
+    return (
+        _validate_metadata_common(receipt, terminal)
+        and receipt.get("schema_version") == "phase3_cycle007_gemini_attempt_v2"
+        and receipt.get("state") == "terminal"
+        and all(_positive_int(receipt.get(key)) for key in ("packet_index", "chunk_index", "attempt", "request_byte_budget", "request_byte_count"))
+        and receipt["request_byte_count"] <= receipt["request_byte_budget"]
+        and all(_metadata_digest(receipt.get(key)) for key in ("request_plan_sha256", "raw_sha256", "log_sha256"))
+        and isinstance(receipt.get("provider_call_started"), bool)
+        and all(_nonnegative_int(receipt.get(key)) for key in ("raw_byte_count", "log_byte_count", "init_count", "result_count"))
+        and _nonnegative_int(receipt.get("elapsed_milliseconds"))
+    )
+
+
+def _validate_pre_call_v1(receipt: Mapping[str, Any]) -> bool:
+    keys = {
+        "schema_version", "evaluation_cycle_id", "lane", "packet_index", "chunk_index", "attempt",
+        "request_plan_sha256", "planner_version", "row_count", "request_byte_budget", "request_byte_count",
+        "estimated_input_tokens_ceiling", "ordered_identity_sha256", "text_free", "receipt_sha256",
+    }
+    return (
+        set(receipt) == keys
+        and receipt.get("schema_version") == "phase3_cycle007_gemini_pre_call_v1"
+        and receipt.get("evaluation_cycle_id") == "phase3-v2-1-evaluation-cycle-007"
+        and receipt.get("lane") in {"clean_label", "residual_label"}
+        and receipt.get("text_free") is True
+        and all(_positive_int(receipt.get(key)) for key in ("packet_index", "chunk_index", "attempt", "row_count", "request_byte_budget", "request_byte_count", "estimated_input_tokens_ceiling"))
+        and receipt["request_byte_count"] <= receipt["request_byte_budget"]
+        and all(_metadata_digest(receipt.get(key)) for key in ("request_plan_sha256", "ordered_identity_sha256", "receipt_sha256"))
+    )
+
+
+def _validate_request_plan_v1(receipt: Mapping[str, Any]) -> bool:
+    keys = {
+        "schema_version", "evaluation_cycle_id", "lane", "packet_index", "planner_version",
+        "request_byte_budget", "row_count", "packet_identity_set_sha256", "label_prompt_sha256",
+        "chunks", "text_free", "plan_sha256",
+    }
+    chunk_keys = {"chunk_index", "row_start", "row_end", "row_count", "request_byte_count", "estimated_input_tokens_ceiling", "ordered_identity_sha256"}
+    chunks = receipt.get("chunks")
+    return (
+        set(receipt) == keys
+        and receipt.get("schema_version") == "phase3_cycle007_gemini_request_plan_v1"
+        and receipt.get("evaluation_cycle_id") == "phase3-v2-1-evaluation-cycle-007"
+        and receipt.get("lane") in {"clean_label", "residual_label"}
+        and receipt.get("text_free") is True
+        and all(_positive_int(receipt.get(key)) for key in ("packet_index", "request_byte_budget", "row_count"))
+        and all(_metadata_digest(receipt.get(key)) for key in ("packet_identity_set_sha256", "label_prompt_sha256", "plan_sha256"))
+        and isinstance(chunks, list) and bool(chunks)
+        and all(
+            isinstance(chunk, Mapping)
+            and set(chunk) == chunk_keys
+            and all(_positive_int(chunk.get(key)) for key in ("chunk_index", "row_start", "row_end", "row_count", "request_byte_count", "estimated_input_tokens_ceiling"))
+            and chunk["row_start"] <= chunk["row_end"]
+            and chunk["request_byte_count"] <= receipt["request_byte_budget"]
+            and _metadata_digest(chunk.get("ordered_identity_sha256"))
+            for chunk in chunks
+        )
+    )
+
+
+def _validate_provider_stop_v3(receipt: Mapping[str, Any]) -> bool:
+    keys = {
+        "schema_version", "evaluation_cycle_id", "lane", "terminal_packet_index", "failure_code",
+        "new_provider_calls_allowed", "exact_model", "model_family", "harness", "text_free",
+        "failure_stage", "provider_call_started", "executable_binding_result", "provider_return_code",
+        "raw_byte_count", "raw_sha256", "log_byte_count", "log_sha256", "init_count", "result_count",
+        "first_event_kind", "last_event_kind", "model_binding_result", "result_status", "structured_output_type",
+        "chunk_index", "attempt", "terminal_marker_sha256", "request_plan_sha256", "request_byte_budget",
+        "request_byte_count", "elapsed_milliseconds",
+    }
+    return (
+        _validate_metadata_common(receipt, keys)
+        and receipt.get("schema_version") == "phase3_cycle007_gemini_provider_stop_v3"
+        and receipt.get("new_provider_calls_allowed") is False
+        and isinstance(receipt.get("provider_call_started"), bool)
+        and all(_positive_int(receipt.get(key)) for key in ("terminal_packet_index", "chunk_index", "attempt", "request_byte_budget", "request_byte_count"))
+        and receipt["request_byte_count"] <= receipt["request_byte_budget"]
+        and all(_nonnegative_int(receipt.get(key)) for key in ("raw_byte_count", "log_byte_count", "init_count", "result_count", "elapsed_milliseconds"))
+        and all(_metadata_digest(receipt.get(key)) for key in ("raw_sha256", "log_sha256", "terminal_marker_sha256", "request_plan_sha256"))
+    )
+
+
+def _validate_labeling_metadata_receipt(receipt: Mapping[str, Any]) -> bool:
+    schema = receipt.get("schema_version")
+    return (
+        _validate_attempt_v2(receipt) if schema == "phase3_cycle007_gemini_attempt_v2"
+        else _validate_pre_call_v1(receipt) if schema == "phase3_cycle007_gemini_pre_call_v1"
+        else _validate_request_plan_v1(receipt) if schema == "phase3_cycle007_gemini_request_plan_v1"
+        else _validate_provider_stop_v3(receipt) if schema == "phase3_cycle007_gemini_provider_stop_v3"
+        else False
+    )
 
 
 def _labeling_expansion_identities(pack_dir: Path, manifest: Mapping[str, Any]) -> tuple[dict[str, list[str]], dict[str, Any]]:
@@ -329,14 +454,22 @@ def _labeling_expansion_identities(pack_dir: Path, manifest: Mapping[str, Any]) 
         _require(
             isinstance(receipt, Mapping)
             and receipt.get("schema_version") in LABELING_RECEIPT_SCHEMA_COUNTS
-            and receipt.get("text_free") is True
-            and _receipt_is_text_free_metadata(receipt),
+            and _validate_labeling_metadata_receipt(receipt),
             "graph_incompleteness",
         )
         schema = str(receipt["schema_version"])
         by_schema[schema] += 1
+        fields_forbidden_by_shape = schema in {
+            "phase3_cycle007_gemini_pre_call_v1",
+            "phase3_cycle007_gemini_request_plan_v1",
+        } or (schema == "phase3_cycle007_gemini_attempt_v2" and receipt.get("state") == "started")
+        _require(
+            not fields_forbidden_by_shape
+            or not {"provider_call_started", "result_count", "raw_byte_count", "log_byte_count"} & set(receipt),
+            "graph_incompleteness",
+        )
         started = receipt.get("provider_call_started") is True
-        result = receipt.get("result_count")
+        result = receipt.get("result_count", 0)
         raw_bytes = receipt.get("raw_byte_count", 0)
         log_bytes = receipt.get("log_byte_count", 0)
         _require(

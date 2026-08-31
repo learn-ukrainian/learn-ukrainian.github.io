@@ -176,29 +176,78 @@ def test_compact_row_identity_uses_source_locator_for_every_family() -> None:
         firewall._canonical_packed_document_identity(unknown)
 
 
+def _labeling_receipt(schema: str, index: int) -> dict[str, object]:
+    common = {
+        "evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-007",
+        "lane": "clean_label",
+        "packet_index": index + 1,
+        "chunk_index": 1,
+        "attempt": 1,
+        "request_plan_sha256": f"{index + 1:064x}",
+        "request_byte_budget": 524288,
+        "request_byte_count": 7,
+        "text_free": True,
+    }
+    if schema == "phase3_cycle007_gemini_attempt_v2":
+        terminal = index < 2
+        if not terminal:
+            return common | {
+                "schema_version": schema, "state": "started", "exact_model": "Gemini 3.6 Flash (High)",
+                "model_family": "google", "harness": "agy",
+            }
+        return common | {
+            "schema_version": schema, "state": "terminal", "exact_model": "Gemini 3.6 Flash (High)",
+            "model_family": "google", "harness": "agy", "failure_code": "provider_status_timeout",
+            "failure_stage": "provider_return", "provider_call_started": True,
+            "executable_binding_result": "verified", "provider_return_code": "nonzero",
+            "raw_byte_count": 11, "raw_sha256": f"{index + 10:064x}",
+            "log_byte_count": 7, "log_sha256": f"{index + 20:064x}",
+            "init_count": 1, "result_count": 1,
+            "first_event_kind": "init", "last_event_kind": "result", "model_binding_result": "verified",
+            "result_status": "non_success", "structured_output_type": "missing",
+            "elapsed_milliseconds": 1,
+        }
+    if schema == "phase3_cycle007_gemini_pre_call_v1":
+        return {
+            "schema_version": schema, **common, "planner_version": "v1", "row_count": 1,
+            "estimated_input_tokens_ceiling": 1, "ordered_identity_sha256": f"{index + 30:064x}",
+            "receipt_sha256": f"{index + 40:064x}",
+        }
+    if schema == "phase3_cycle007_gemini_request_plan_v1":
+        return {
+            "schema_version": schema, "evaluation_cycle_id": common["evaluation_cycle_id"], "lane": "clean_label",
+            "packet_index": 7, "planner_version": "v1", "request_byte_budget": 524288, "row_count": 1,
+            "packet_identity_set_sha256": "a" * 64, "label_prompt_sha256": "b" * 64,
+            "chunks": [{"chunk_index": 1, "row_start": 1, "row_end": 1, "row_count": 1,
+                        "request_byte_count": 7, "estimated_input_tokens_ceiling": 1,
+                        "ordered_identity_sha256": "c" * 64}], "text_free": True, "plan_sha256": "d" * 64,
+        }
+    assert schema == "phase3_cycle007_gemini_provider_stop_v3"
+    return {
+        "schema_version": schema, "evaluation_cycle_id": common["evaluation_cycle_id"], "lane": "clean_label",
+        "terminal_packet_index": 7, "failure_code": "provider_status_timeout", "new_provider_calls_allowed": False,
+        "exact_model": "Gemini 3.6 Flash (High)", "model_family": "google", "harness": "agy", "text_free": True,
+        "failure_stage": "provider_return", "provider_call_started": True, "executable_binding_result": "verified",
+        "provider_return_code": "nonzero", "raw_byte_count": 1, "raw_sha256": "e" * 64,
+        "log_byte_count": 1, "log_sha256": "f" * 64, "init_count": 1, "result_count": 1,
+        "first_event_kind": "init", "last_event_kind": "result", "model_binding_result": "verified",
+        "result_status": "non_success", "structured_output_type": "missing", "chunk_index": 1, "attempt": 1,
+        "terminal_marker_sha256": "1" * 64, "request_plan_sha256": "2" * 64, "request_byte_budget": 524288,
+        "request_byte_count": 7, "elapsed_milliseconds": 0,
+    }
+
+
 def test_exact_labeling_receipt_census_is_populated_deny_lineage(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     schemas = (
-        ["phase3_cycle007_labeling_attempt_v2"] * 4
-        + ["phase3_cycle007_labeling_pre_call_v1"] * 2
-        + ["phase3_cycle007_labeling_request_plan_v1"]
-        + ["phase3_cycle007_provider_stop_v3"]
+        ["phase3_cycle007_gemini_attempt_v2"] * 4
+        + ["phase3_cycle007_gemini_pre_call_v1"] * 2
+        + ["phase3_cycle007_gemini_request_plan_v1"]
+        + ["phase3_cycle007_gemini_provider_stop_v3"]
     )
     receipt_bytes: dict[str, bytes] = {}
     objects: list[dict[str, object]] = []
     for index, schema in enumerate(schemas):
-        payload = {
-            "schema_version": schema,
-            "text_free": True,
-            "request_plan_sha256": f"{index:064x}",
-            "prompt_sha256": f"{index + 9:064x}",
-            "provider_call_started": index < 3,
-            "raw_byte_count": 11 if index < 3 else 0,
-            "raw_sha256": f"{index + 18:064x}",
-            "log_byte_count": 7 if index < 3 else 0,
-            "log_sha256": f"{index + 27:064x}",
-            "result_count": 1 if index < 3 else 0,
-            "terminal_marker_sha256": f"{index + 36:064x}",
-        }
+        payload = _labeling_receipt(schema, index)
         path = f"objects/{index}.json"
         receipt_bytes[path] = json.dumps(payload).encode()
         objects.append({"object_relative_path": path, "storage": "raw", "sha256": f"{index + 45:064x}", "selection_classes": ["labeling_expansion"]})
@@ -223,22 +272,14 @@ def test_exact_labeling_receipt_census_is_populated_deny_lineage(tmp_path: Path,
 
 
 def test_labeling_receipt_census_rejects_drift_or_body_payload(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    receipt = {
-        "schema_version": "phase3_cycle007_labeling_attempt_v2",
-        "text_free": True,
-        "request_plan_sha256": "a" * 64,
-        "provider_call_started": True,
-        "result_count": 1,
-        "raw_byte_count": 12,
-        "raw_sha256": "b" * 64,
-        "log_byte_count": 2,
-        "log_sha256": "c" * 64,
-    }
+    schemas = ["phase3_cycle007_gemini_attempt_v2"] * 4 + ["phase3_cycle007_gemini_pre_call_v1"] * 2 + ["phase3_cycle007_gemini_request_plan_v1", "phase3_cycle007_gemini_provider_stop_v3"]
     objects = [{"object_relative_path": f"objects/{index}.json", "storage": "raw", "sha256": f"{index:064x}", "selection_classes": ["labeling_expansion"]} for index in range(8)]
-    payloads = {f"objects/{index}.json": json.dumps(receipt | ({"raw_payload": "body"} if index == 0 else {})).encode() for index in range(8)}
+    payloads = {f"objects/{index}.json": json.dumps(_labeling_receipt(schema, index) | ({"raw_payload": "body"} if index == 0 else {})).encode() for index, schema in enumerate(schemas)}
     monkeypatch.setattr(firewall.storage, "_iter_stored_raw_chunks", lambda path, *_: iter([payloads[path.relative_to(tmp_path).as_posix()]]))
     with pytest.raises(firewall.FirewallError, match="graph_incompleteness"):
         firewall._labeling_expansion_identities(tmp_path, {"objects": objects})
-    payloads = {path: json.dumps(receipt).encode() for path in payloads}
+    drift_schemas = [*schemas]
+    drift_schemas[-1] = "phase3_cycle007_gemini_attempt_v2"
+    payloads = {f"objects/{index}.json": json.dumps(_labeling_receipt(schema, index)).encode() for index, schema in enumerate(drift_schemas)}
     with pytest.raises(firewall.FirewallError, match="graph_incompleteness"):
         firewall._labeling_expansion_identities(tmp_path, {"objects": objects})
