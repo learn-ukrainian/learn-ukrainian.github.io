@@ -844,7 +844,7 @@ def _start_named_ssh_process(tmp_path: Path) -> subprocess.Popen[object]:
     tunnel_ssh = tunnel_dir / "ssh"
     tunnel_ssh.write_text("#!/bin/sh\nwhile true; do sleep 30; done\n", encoding="utf-8")
     tunnel_ssh.chmod(0o755)
-    proc = subprocess.Popen([str(tunnel_ssh), "-N", "hramatka-tunnel"])
+    proc = subprocess.Popen([str(tunnel_ssh), "-N", "writer-tunnel"])
     reap_process_on_exit(proc)
     return proc
 
@@ -919,7 +919,7 @@ def test_should_delegate_remote_env_or_tunnel() -> None:
             "_ssh_tunnel_port_pid() { return 1; }",
             "unset LU_SERVICES_SSH_HOST",
             "if _should_delegate_remote api; then echo TRIGGER; else echo LOCAL; fi",
-            "LU_SERVICES_SSH_HOST=hramatka",
+            "LU_SERVICES_SSH_HOST=writer-host",
             "if _should_delegate_remote api; then echo ENV; else echo NOENV; fi",
             "unset LU_SERVICES_SSH_HOST",
             "_ssh_tunnel_port_pid() { return 0; }",
@@ -997,8 +997,8 @@ def test_start_delegates_when_ssh_host_set(temp_services_sh, mock_lsof_env, tmp_
     _, _, env = mock_lsof_env
     shim_dir, capture = _ssh_recorder(tmp_path)
     env["PATH"] = f"{shim_dir}{os.pathsep}{env.get('PATH', os.defpath)}"
-    env["LU_SERVICES_SSH_HOST"] = "hramatka"
-    env["LU_SERVICES_REMOTE_ROOT"] = "/home/ops/learn-ukrainian"
+    env["LU_SERVICES_SSH_HOST"] = "writer-host"
+    env["LU_SERVICES_REMOTE_ROOT"] = "/srv/writer/learn-ukrainian"
 
     result = subprocess.run(
         [str(script_path), "start", "api"],
@@ -1011,20 +1011,22 @@ def test_start_delegates_when_ssh_host_set(temp_services_sh, mock_lsof_env, tmp_
     assert result.returncode == 0, f"{result.stdout}\n{result.stderr}"
     args = capture.read_text(encoding="utf-8")
     assert "BatchMode=yes" in args
-    assert "hramatka" in args
-    assert "/home/ops/learn-ukrainian" in args
+    assert "writer-host" in args
+    assert "/srv/writer/learn-ukrainian" in args
     assert "./services.sh start api" in args
     assert "Delegating start api" in result.stdout
     assert _supervisor_was_not_called(env)
 
 
 def test_start_delegates_when_ssh_owns_port(temp_services_sh, mock_lsof_env, tmp_path) -> None:
-    """An ssh LocalForward listener on the service port delegates start without a host override."""
+    """An ssh LocalForward listener plus explicit host overrides delegates start."""
     script_path, _port = temp_services_sh
     set_pids, _, env = mock_lsof_env
     shim_dir, capture = _ssh_recorder(tmp_path)
     env["PATH"] = f"{shim_dir}{os.pathsep}{env.get('PATH', os.defpath)}"
     env.pop("LU_SERVICES_SSH_HOST", None)
+    env["LU_SERVICES_SSH_HOST"] = "writer-host"
+    env["LU_SERVICES_REMOTE_ROOT"] = "/srv/writer/learn-ukrainian"
 
     tunnel = _start_named_ssh_process(tmp_path)
     set_pids([tunnel.pid])
@@ -1040,12 +1042,52 @@ def test_start_delegates_when_ssh_owns_port(temp_services_sh, mock_lsof_env, tmp
         assert result.returncode == 0, f"{result.stdout}\n{result.stderr}"
         args = capture.read_text(encoding="utf-8")
         assert "BatchMode=yes" in args
-        assert "hramatka" in args
+        assert "writer-host" in args
         assert "./services.sh start api" in args
         assert _supervisor_was_not_called(env)
     finally:
         tunnel.terminate()
         tunnel.wait(timeout=5)
+
+
+def test_start_tunnel_without_host_fails_closed(temp_services_sh, mock_lsof_env, tmp_path) -> None:
+    """A detected tunnel without LU_SERVICES_SSH_HOST refuses instead of guessing an alias."""
+    script_path, _port = temp_services_sh
+    set_pids, _, env = mock_lsof_env
+    shim_dir, capture = _ssh_recorder(tmp_path)
+    env["PATH"] = f"{shim_dir}{os.pathsep}{env.get('PATH', os.defpath)}"
+    env.pop("LU_SERVICES_SSH_HOST", None)
+    env.pop("LU_SERVICES_REMOTE_ROOT", None)
+
+    tunnel = _start_named_ssh_process(tmp_path)
+    set_pids([tunnel.pid])
+    try:
+        result = subprocess.run(
+            [str(script_path), "start", "api"],
+            capture_output=True,
+            text=True,
+            cwd=str(PROJECT_ROOT),
+            env=env,
+            timeout=30,
+        )
+        assert result.returncode != 0, f"{result.stdout}\n{result.stderr}"
+        combined = f"{result.stdout}\n{result.stderr}"
+        assert "LU_SERVICES_SSH_HOST" in combined, combined
+        assert "no public defaults" in combined, combined
+        assert not capture.exists() or capture.read_text(encoding="utf-8") == ""
+        assert _supervisor_was_not_called(env)
+    finally:
+        tunnel.terminate()
+        tunnel.wait(timeout=5)
+
+
+def test_no_public_ssh_host_or_remote_root_defaults() -> None:
+    """The public script must not bake any SSH Host alias or remote-root path."""
+    source = SERVICES_SH.read_text(encoding="utf-8")
+    assert "LU_SERVICES_SSH_HOST" in source
+    assert "LU_SERVICES_REMOTE_ROOT" in source
+    assert "hramatka" not in source
+    assert "/home/ops" not in source
 
 
 def test_failed_remote_delegate_does_not_spawn_local(
@@ -1056,7 +1098,8 @@ def test_failed_remote_delegate_does_not_spawn_local(
     _, _, env = mock_lsof_env
     shim_dir, _capture = _ssh_recorder(tmp_path, exit_code=1)
     env["PATH"] = f"{shim_dir}{os.pathsep}{env.get('PATH', os.defpath)}"
-    env["LU_SERVICES_SSH_HOST"] = "hramatka"
+    env["LU_SERVICES_SSH_HOST"] = "writer-host"
+    env["LU_SERVICES_REMOTE_ROOT"] = "/srv/writer/learn-ukrainian"
 
     result = subprocess.run(
         [str(script_path), "start", "api"],
@@ -1129,6 +1172,8 @@ def test_fix_unhealthy_ssh_tunnel_delegates_restart(
     shim_dir, capture = _ssh_recorder(tmp_path)
     env["PATH"] = f"{shim_dir}{os.pathsep}{env.get('PATH', os.defpath)}"
     env.pop("LU_SERVICES_SSH_HOST", None)
+    env["LU_SERVICES_SSH_HOST"] = "writer-host"
+    env["LU_SERVICES_REMOTE_ROOT"] = "/srv/writer/learn-ukrainian"
 
     tunnel = _start_named_ssh_process(tmp_path)
     set_pids([tunnel.pid])
@@ -1150,3 +1195,100 @@ def test_fix_unhealthy_ssh_tunnel_delegates_restart(
     finally:
         tunnel.terminate()
         tunnel.wait(timeout=5)
+
+
+def _notebook_env(tmp_path: Path, mock_lsof_env, role: str) -> tuple[dict[str, str], Path, Path]:
+    """Env for role tests: private sibling root plus a launcher-arg capture file."""
+    _, _, env = mock_lsof_env
+    private_root = tmp_path / "private"
+    (private_root / "ops").mkdir(parents=True)
+    env["LEARN_UKRAINIAN_INFRA_PRIVATE_ROOT"] = str(private_root)
+    env["LU_SERVICES_ROLE"] = role
+    capture = tmp_path / "launcher_args.txt"
+    return env, private_root, capture
+
+
+def _write_fake_launcher(private_root: Path, capture: Path) -> Path:
+    launcher = private_root / "ops" / "writer-notebook.sh"
+    launcher.write_text(
+        f"#!/bin/sh\nprintf '%s\\n' \"$@\" >> '{capture}'\n",
+        encoding="utf-8",
+    )
+    launcher.chmod(0o755)
+    return launcher
+
+
+def test_notebook_role_execs_private_launcher(tmp_path, mock_lsof_env) -> None:
+    """Notebook role hands every action to the private launcher, no local spawn."""
+    env, private_root, capture = _notebook_env(tmp_path, mock_lsof_env, "notebook")
+    _write_fake_launcher(private_root, capture)
+
+    result = subprocess.run(
+        [str(SERVICES_SH), "start", "api"],
+        capture_output=True,
+        text=True,
+        cwd=str(PROJECT_ROOT),
+        env=env,
+        timeout=30,
+    )
+    assert result.returncode == 0, f"{result.stdout}\n{result.stderr}"
+    assert capture.read_text(encoding="utf-8").splitlines() == ["start", "api"]
+    assert _supervisor_was_not_called(env)
+
+
+def test_notebook_role_fails_closed_without_launcher(tmp_path, mock_lsof_env) -> None:
+    """A missing private launcher aborts with a hint instead of spawning locally."""
+    env, _private_root, capture = _notebook_env(tmp_path, mock_lsof_env, "notebook")
+
+    result = subprocess.run(
+        [str(SERVICES_SH), "start", "api"],
+        capture_output=True,
+        text=True,
+        cwd=str(PROJECT_ROOT),
+        env=env,
+        timeout=30,
+    )
+    assert result.returncode != 0, f"{result.stdout}\n{result.stderr}"
+    combined = f"{result.stdout}\n{result.stderr}"
+    assert "writer-notebook.sh" in combined, combined
+    assert "LU_SERVICES_ROLE=local" in combined, combined
+    assert not capture.exists()
+    assert _supervisor_was_not_called(env)
+
+
+def test_notebook_role_rejects_non_executable_launcher(tmp_path, mock_lsof_env) -> None:
+    """A present-but-not-executable launcher also fails closed."""
+    env, private_root, capture = _notebook_env(tmp_path, mock_lsof_env, "notebook")
+    launcher = private_root / "ops" / "writer-notebook.sh"
+    launcher.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+    launcher.chmod(0o644)
+
+    result = subprocess.run(
+        [str(SERVICES_SH), "status", "api"],
+        capture_output=True,
+        text=True,
+        cwd=str(PROJECT_ROOT),
+        env=env,
+        timeout=30,
+    )
+    assert result.returncode != 0, f"{result.stdout}\n{result.stderr}"
+    assert "LU_SERVICES_ROLE=local" in result.stderr, result.stderr
+    assert not capture.exists()
+
+
+def test_local_role_skips_notebook_handoff(tmp_path, mock_lsof_env) -> None:
+    """LU_SERVICES_ROLE=local runs services.sh itself even when a launcher exists."""
+    env, private_root, capture = _notebook_env(tmp_path, mock_lsof_env, "local")
+    _write_fake_launcher(private_root, capture)
+
+    result = subprocess.run(
+        [str(SERVICES_SH), "help"],
+        capture_output=True,
+        text=True,
+        cwd=str(PROJECT_ROOT),
+        env=env,
+        timeout=30,
+    )
+    assert result.returncode == 0, f"{result.stdout}\n{result.stderr}"
+    assert "Usage:" in result.stdout
+    assert not capture.exists()
