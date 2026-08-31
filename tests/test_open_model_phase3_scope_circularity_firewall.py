@@ -140,7 +140,7 @@ def test_production_fixture_uses_only_content_compact_pack_and_writes_private_gr
     config_path.write_text(json.dumps(config), encoding="utf-8")
     os.chmod(config_path, 0o600)
     monkeypatch.setattr(firewall, "validate_pack_commitments", lambda *_: True)
-    monkeypatch.setattr(firewall.storage, "prove_content_pack_stream", lambda *_: ({}, {}))
+    monkeypatch.setattr(firewall, "_secure_content_pack_proof", lambda *_: None)
     monkeypatch.setattr(firewall, "_build_private_deny_corpus", lambda *_: {"corpus_sha256": "b" * 64})
     result = firewall.run_steward_production(str(config_path))
     assert result["ok"] is True
@@ -215,6 +215,34 @@ def test_row_derived_deny_sets_are_reconstructed_without_private_array_copies() 
     denied = firewall._validate_private_deny_corpus(corpus)
     assert denied["row"] == {"a" * 64} and denied["packet"] == {"d" * 64}
     assert "row" not in corpus["deny_arrays"]  # type: ignore[operator]
+
+
+def test_secure_object_reader_rejects_hardlinks_symlinks_and_bad_compression(tmp_path: Path) -> None:
+    pack = tmp_path / "pack"
+    objects = pack / "objects"
+    objects.mkdir(parents=True)
+    os.chmod(pack, 0o700)
+    os.chmod(objects, 0o700)
+    raw = b'{"text_free":true}'
+    path = objects / "one"
+    path.write_bytes(raw)
+    os.chmod(path, 0o600)
+    item = {"object_relative_path": "objects/one", "storage": "raw", "stored_sha256": firewall.sha256_bytes(raw), "sha256": firewall.sha256_bytes(raw), "size_bytes": len(raw)}
+    assert firewall._secure_object_raw(pack, item) == raw
+    os.link(path, objects / "hard")
+    with pytest.raises(firewall.FirewallError):
+        firewall._secure_object_raw(pack, item)
+    (objects / "hard").unlink()
+    path.unlink()
+    (objects / "one").symlink_to("missing")
+    with pytest.raises((firewall.FirewallError, OSError)):
+        firewall._secure_object_raw(pack, item)
+    (objects / "one").unlink()
+    path.write_bytes(b"not-lzma")
+    os.chmod(path, 0o600)
+    bad = item | {"storage": "lzma", "stored_sha256": firewall.sha256_bytes(b"not-lzma")}
+    with pytest.raises(firewall.FirewallError):
+        firewall._secure_object_raw(pack, bad)
 
 
 def test_concept_authority_gate_requires_pinned_human_registry_and_rejects_renamed_derivative() -> None:
@@ -308,7 +336,7 @@ def test_exact_labeling_receipt_census_is_populated_deny_lineage(tmp_path: Path,
         receipt_bytes[path] = json.dumps(payload).encode()
         objects.append({"object_relative_path": path, "storage": "raw", "sha256": f"{index + 45:064x}", "selection_classes": ["labeling_expansion"]})
 
-    monkeypatch.setattr(firewall.storage, "_iter_stored_raw_chunks", lambda path, *_: iter([receipt_bytes[path.relative_to(tmp_path).as_posix()]]))
+    monkeypatch.setattr(firewall, "_secure_object_raw", lambda _pack, item: receipt_bytes[str(item["object_relative_path"])])
     identities, census = firewall._labeling_expansion_identities(tmp_path, {"objects": objects})
     assert set(identities) == {"labeling_receipt", "prompt_or_request", "raw_or_log", "provider_result_terminal", "derivative"}
     assert all(len(values) == 8 for values in identities.values())
@@ -331,7 +359,7 @@ def test_labeling_receipt_census_rejects_drift_or_body_payload(tmp_path: Path, m
     schemas = ["phase3_cycle007_gemini_attempt_v2"] * 4 + ["phase3_cycle007_gemini_pre_call_v1"] * 2 + ["phase3_cycle007_gemini_request_plan_v1", "phase3_cycle007_gemini_provider_stop_v3"]
     objects = [{"object_relative_path": f"objects/{index}.json", "storage": "raw", "sha256": f"{index:064x}", "selection_classes": ["labeling_expansion"]} for index in range(8)]
     payloads = {f"objects/{index}.json": json.dumps(_labeling_receipt(schema, index) | ({"raw_payload": "body"} if index == 0 else {})).encode() for index, schema in enumerate(schemas)}
-    monkeypatch.setattr(firewall.storage, "_iter_stored_raw_chunks", lambda path, *_: iter([payloads[path.relative_to(tmp_path).as_posix()]]))
+    monkeypatch.setattr(firewall, "_secure_object_raw", lambda _pack, item: payloads[str(item["object_relative_path"])])
     with pytest.raises(firewall.FirewallError, match="graph_incompleteness"):
         firewall._labeling_expansion_identities(tmp_path, {"objects": objects})
     drift_schemas = [*schemas]

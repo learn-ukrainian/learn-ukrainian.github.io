@@ -13,8 +13,10 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import lzma
 import os
 import stat
+import subprocess
 import tempfile
 from collections.abc import Callable, Mapping, Sequence
 from contextlib import suppress
@@ -218,6 +220,76 @@ def _safe_private_path(path: Path, root: Path) -> tuple[int, os.stat_result]:
     after = os.fstat(fd)
     _require((before.st_dev, before.st_ino) == (after.st_dev, after.st_ino), "private_path_unsafe")
     return fd, before
+
+
+def _secure_pack_object_fd(pack_dir: Path, relative: str) -> tuple[int, os.stat_result]:
+    """Open a compact-pack object exactly once through no-follow dir fds."""
+    parts = Path(relative).parts
+    _require(parts and not Path(relative).is_absolute() and ".." not in parts, "private_path_unsafe")
+    root_fd = os.open(pack_dir, os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0))
+    current = root_fd
+    try:
+        for part in parts[:-1]:
+            next_fd = os.open(part, os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0), dir_fd=current)
+            detail = os.fstat(next_fd)
+            _require(stat.S_ISDIR(detail.st_mode) and detail.st_uid == os.getuid() and stat.S_IMODE(detail.st_mode) == PRIVATE_DIR_MODE, "private_path_unsafe")
+            os.close(current)
+            current = next_fd
+        fd = os.open(parts[-1], os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0), dir_fd=current)
+        detail = os.fstat(fd)
+        _require(stat.S_ISREG(detail.st_mode) and detail.st_nlink == 1 and detail.st_uid == os.getuid() and stat.S_IMODE(detail.st_mode) == PRIVATE_MODE, "private_path_unsafe")
+        return fd, detail
+    finally:
+        os.close(current)
+
+
+def _secure_object_raw(pack_dir: Path, item: Mapping[str, Any]) -> bytes:
+    relative = item.get("object_relative_path")
+    _require(isinstance(relative, str), "pack_shape_failure")
+    fd, before = _secure_pack_object_fd(pack_dir, relative)
+    try:
+        stored = b"".join(iter(lambda: os.read(fd, 1024 * 1024), b""))
+        _require(sha256_bytes(stored) == item.get("stored_sha256"), "identity_roundtrip_failure")
+        os.lseek(fd, 0, os.SEEK_SET)
+        storage_kind = item.get("storage")
+        if storage_kind == "raw":
+            raw = b"".join(iter(lambda: os.read(fd, 1024 * 1024), b""))
+        elif storage_kind == "lzma":
+            with lzma.open(os.fdopen(os.dup(fd), "rb"), "rb") as stream:
+                raw = stream.read()
+        elif storage_kind == "zstd":
+            executable = storage._effective_zstd_executable(None)
+            with os.fdopen(os.dup(fd), "rb") as source:
+                process = subprocess.run([str(executable), *storage.ZSTD_DECOMPRESS_ARGS], stdin=source, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, check=False)
+            _require(process.returncode == 0, "identity_roundtrip_failure")
+            raw = process.stdout
+        else:
+            raise FirewallError("pack_shape_failure")
+        after = os.fstat(fd)
+        _require((before.st_dev, before.st_ino, before.st_size) == (after.st_dev, after.st_ino, after.st_size), "private_path_unsafe")
+        _require(sha256_bytes(raw) == item.get("sha256") and len(raw) == item.get("size_bytes"), "identity_roundtrip_failure")
+        return raw
+    except (OSError, lzma.LZMAError, subprocess.SubprocessError) as exc:
+        raise FirewallError("identity_roundtrip_failure") from exc
+    finally:
+        os.close(fd)
+
+
+def _secure_content_pack_proof(pack_dir: Path, manifest: Mapping[str, Any], inventory: Mapping[str, Any]) -> None:
+    """Descriptor-pinned 419-object stream proof; no pack object path is reopened."""
+    objects = manifest.get("objects")
+    _require(isinstance(objects, list) and len(objects) == 419, "pack_shape_failure")
+    restored: list[tuple[str, str]] = []
+    stored_entries: list[dict[str, Any]] = []
+    for item in objects:
+        _require(isinstance(item, Mapping), "pack_shape_failure")
+        _secure_object_raw(pack_dir, item)
+        restored.extend((path, item["sha256"]) for path in item.get("role_relative_paths", []))
+        stored_entries.append({"sha256": item["sha256"], "storage": item["storage"], "stored_sha256": item["stored_sha256"], "stored_size_bytes": int(item["stored_size_bytes"])})
+    object_set = storage._pairs_digest(restored)
+    _require(object_set == EXPECTED_OBJECT_SET_SHA256 and object_set == manifest.get("object_set_sha256"), "identity_roundtrip_failure")
+    _require(len(restored) == inventory.get("selected_path_count") and sum(entry["stored_size_bytes"] for entry in stored_entries) == manifest.get("total_stored_payload_bytes"), "identity_roundtrip_failure")
+    _require(manifest.get("stored_payload_digest") == storage.digest(storage.canonical(sorted(stored_entries, key=lambda entry: str(entry["sha256"]))),), "identity_roundtrip_failure")
 
 
 def _zero(code: str) -> dict[str, Any]:
@@ -471,7 +543,7 @@ def _labeling_expansion_identities(pack_dir: Path, manifest: Mapping[str, Any]) 
     for item in manifest["objects"]:
         if "labeling_expansion" not in item.get("selection_classes", [item.get("selection_class")]):
             continue
-        raw = b"".join(storage._iter_stored_raw_chunks(pack_dir / item["object_relative_path"], str(item["storage"]), None))
+        raw = _secure_object_raw(pack_dir, item)
         receipt = json.loads(raw.decode("utf-8"))
         _require(
             isinstance(receipt, Mapping)
@@ -553,10 +625,7 @@ def _build_private_deny_corpus(pack_dir: Path, manifest: Mapping[str, Any]) -> d
     for item in manifest["objects"]:
         if "materialization_packet" not in item.get("selection_classes", [item.get("selection_class")]):
             continue
-        object_path = pack_dir / item["object_relative_path"]
-        _require(storage.digest_file(object_path) == item["stored_sha256"], "identity_roundtrip_failure")
-        raw = b"".join(storage._iter_stored_raw_chunks(object_path, str(item["storage"]), None))
-        _require(storage.digest(raw) == item["sha256"] and len(raw) == item["size_bytes"], "identity_roundtrip_failure")
+        raw = _secure_object_raw(pack_dir, item)
         payload = json.loads(raw.decode("utf-8"))
         entries = payload.get("rows") if isinstance(payload, Mapping) else None
         _require(isinstance(entries, list), "graph_incompleteness")
@@ -810,14 +879,14 @@ def run_steward_production(config: str | None = None) -> dict[str, Any]:
         _require(manifest.get("schema_version") == storage.PACK_SCHEMA_VERSION and manifest.get("pack_kind") == "content_compact", "hash_drift")
         inventory = _content_pack_inventory(manifest)
         _require(validate_pack_commitments(manifest, inventory), "denominator_drift")
-        storage.prove_content_pack_stream(inventory, pack_dir)
+        _secure_content_pack_proof(pack_dir, manifest, inventory)
         corpus = _build_private_deny_corpus(pack_dir, manifest)
         _require(manifest.get("content_bodies_stored") is True, "graph_incompleteness")
         classes = {value for item in manifest["objects"] for value in item.get("selection_classes", [item.get("selection_class")])}
         _require("compile_expansion" not in classes and not any("label-output" in str(value) for value in classes), "graph_incompleteness")
         manifest_after = os.lstat(manifest_path)
         _require((manifest_before.st_dev, manifest_before.st_ino) == (manifest_after.st_dev, manifest_after.st_ino), "private_path_unsafe")
-        storage.prove_content_pack_stream(inventory, pack_dir)
+        _secure_content_pack_proof(pack_dir, manifest, inventory)
         _write_private_json(output_root / "cycle007-deny-component-manifest-v1.json", corpus)
         public_receipt = {"schema_version": "phase3_scope_circularity_public_binding_receipt_v1", "text_free": True, "pack_manifest_receipt_sha256": manifest["receipt_sha256"], "object_set_sha256": EXPECTED_OBJECT_SET_SHA256, "ordered_row_identity_commitment_sha256": EXPECTED_ORDERED_ROW_IDENTITY_SHA256, "packet_count": 204, "row_count": 10159, "physical_sidecar_count": 204, "logical_sidecar_count": 408, "object_count": 419, "private_graph_commitment_sha256": corpus["corpus_sha256"], "builder_clearance": {"p1_sha256": PINS[P1], "p1_amendment_sha256": PINS[P1_AMENDMENT], "p2_sha256": PINS[P2], "near_duplicate_policy_sha256": PINS[NEAR_POLICY], "firewall_sha256": sha256_file(OUTPUT)}}
         public_receipt["receipt_sha256"] = sha256_bytes(canonical_json(public_receipt))
