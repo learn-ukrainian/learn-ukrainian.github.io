@@ -95,11 +95,48 @@ fi
 mkdir -p "$LOGS_DIR" "$PIDS_DIR"
 
 # Bridge defaults for learn-ukrainian. Other projects can set AB_* explicitly.
-if [[ -n "${AB_MONITOR_URLS:-}" && -z "${AB_MONITOR_URL:-}" ]]; then
-    export AB_MONITOR_URL="$(printf '%s' "$AB_MONITOR_URLS" | tr ',' ' ' | awk '{print $1}')"
-fi
-export AB_MONITOR_URL="${AB_MONITOR_URL:-http://localhost:8765/api/state/summary}"
-export AB_MONITOR_URLS="${AB_MONITOR_URLS:-$AB_MONITOR_URL}"
+#
+# GH #7489 — two typed URL concepts, normalized once, never concatenated:
+#   AB_MONITOR_URLS — comma/space-separated Monitor BASE URLs (bare
+#                     scheme://host:port; a path here concatenates into
+#                     requests like /api/state/summary/api/state/manifest).
+#   AB_MONITOR_URL  — one ENDPOINT URL for the state-summary snapshot consumed
+#                     by the agent bridge; an explicit empty string disables
+#                     snapshot injection (documented contract).
+# An unset (never exported) variable falls back to the default; an explicitly
+# EMPTY variable means "disabled", not "use the default".
+_ab_monitor_env_defaults() {
+    if [[ -z "${AB_MONITOR_URLS+x}" ]]; then
+        if [[ -n "${AB_MONITOR_URL:-}" ]]; then
+            # Derive the base-URL list from the endpoint's ORIGIN only — never
+            # keep its path (the path-concat bug this function exists to kill).
+            local ab_rest="${AB_MONITOR_URL#*://}"
+            if [[ "$ab_rest" != "$AB_MONITOR_URL" ]]; then
+                export AB_MONITOR_URLS="${AB_MONITOR_URL%%://*}://${ab_rest%%/*}"
+            else
+                export AB_MONITOR_URLS="$AB_MONITOR_URL"
+            fi
+        elif [[ -z "${AB_MONITOR_URL+x}" ]]; then
+            export AB_MONITOR_URLS="http://localhost:8765"
+        else
+            # AB_MONITOR_URL="" (explicit disable) disables the client list too.
+            export AB_MONITOR_URLS=""
+        fi
+    fi
+    if [[ -z "${AB_MONITOR_URL+x}" ]]; then
+        # Derive the snapshot endpoint from the first base URL. Never copy a
+        # bare base URL into the endpoint var — the bridge consumer appends no
+        # path itself and would fetch the origin instead of the summary.
+        local ab_first
+        ab_first="$(printf '%s' "$AB_MONITOR_URLS" | tr ',' ' ' | awk '{print $1}')"
+        if [[ -n "$ab_first" ]]; then
+            export AB_MONITOR_URL="${ab_first%/}/api/state/summary"
+        else
+            export AB_MONITOR_URL=""
+        fi
+    fi
+}
+_ab_monitor_env_defaults
 
 # Service definitions: name -> command, port, log file, health checks, process match
 declare -A SVC_CMD SVC_PORT SVC_HOST SVC_LOG SVC_DESC SVC_HEALTH SVC_HEALTH_ALT SVC_MATCH

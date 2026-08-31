@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import inspect
+import io
 import json
 import os
 import sqlite3
 import subprocess
+import urllib.error
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from types import SimpleNamespace
@@ -4752,3 +4754,166 @@ def test_detect_corrupt_registry_record_fails_open(tmp_path: Path, capsys, monke
     assert "registry_errors" in detected
     assert len(detected["registry_errors"]) == 1
     assert "corrupt or unreadable" in detected["registry_errors"][0]
+
+
+# ── GH #7489: bundle API client contract ────────────────────────────────
+#
+# One typed base-URL contract pinned to a single loopback origin, semantic
+# 4xx classification (never retried as transient "unavailable"), and all
+# traffic through the shared MonitorClient — no second urllib client.
+
+
+class _FakeBundleResponse:
+    def __init__(self, status: int = 200, body: str = "{}", headers: dict | None = None) -> None:
+        self.status = status
+        self._body = body.encode("utf-8")
+        self.headers = headers or {}
+
+    def read(self) -> bytes:
+        return self._body
+
+    def __enter__(self) -> _FakeBundleResponse:
+        return self
+
+    def __exit__(self, *args) -> bool:
+        return False
+
+
+def _bundle_args(port: int = 8765) -> SimpleNamespace:
+    return SimpleNamespace(monitor_base_url=f"http://127.0.0.1:{port}")
+
+
+def _set_lease_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("SESSION_STREAM_SESSION_ID", "sess-1")
+    monkeypatch.setenv("SESSION_STREAM_LEASE_ID", "lease-1")
+    monkeypatch.setenv("SESSION_STREAM_GENERATION", "1")
+    monkeypatch.setenv("SESSION_STREAM_FENCING_TOKEN", "1")
+    monkeypatch.setenv("SESSION_STREAM_PROCESS_ID", "1234")
+
+
+def test_bundle_monitor_url_accepts_loopback_only() -> None:
+    """The stricter loopback constraint stays: non-loopback bases are rejected."""
+    assert th._bundle_monitor_url("http://localhost:8765") == "http://127.0.0.1:8765"
+    assert th._bundle_monitor_url("http://127.0.0.1:9999/api/state/summary") == "http://127.0.0.1:9999"
+    with pytest.raises(ValueError, match="loopback"):
+        th._bundle_monitor_url("http://10.0.0.5:8765")
+    with pytest.raises(ValueError, match="loopback"):
+        th._bundle_monitor_url("https://127.0.0.1:8765")
+
+
+@pytest.mark.parametrize("status", [400, 403, 409, 422])
+def test_bundle_api_4xx_is_semantic_refusal_not_unavailable(
+    monkeypatch: pytest.MonkeyPatch, status: int
+) -> None:
+    """GH #7489: 4xx answers are semantic refusals, never transient 'unavailable'."""
+    calls: list[str] = []
+
+    def fake_urlopen(req, timeout: float = 3.0):
+        calls.append(req.full_url)
+        raise urllib.error.HTTPError(  # type: ignore[arg-type]
+            req.full_url, status, "refused", {}, io.BytesIO(json.dumps({"detail": "nope"}).encode())
+        )
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+
+    with pytest.raises(th.RolloverBundleRefused, match=f"HTTP|{status}"):
+        th._bundle_api_request(
+            "http://127.0.0.1:8765",
+            method="GET",
+            path="/api/epics/v1/shared:rollover/bundles?limit=20",
+        )
+    # A semantic answer is returned once — never retried as transient.
+    assert len(calls) == 1
+
+
+def test_bundle_api_get_404_latest_is_not_found(monkeypatch: pytest.MonkeyPatch) -> None:
+    def fake_urlopen(req, timeout: float = 3.0):
+        raise urllib.error.HTTPError(req.full_url, 404, "not found", {}, io.BytesIO(b'{"detail":"none"}'))  # type: ignore[arg-type]
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+
+    with pytest.raises(th.RolloverBundleNotFound):
+        th._bundle_api_request(
+            "http://127.0.0.1:8765",
+            method="GET",
+            path="/api/epics/v1/shared:rollover/bundles/latest",
+        )
+
+
+def test_bundle_api_5xx_and_transport_stay_unavailable(monkeypatch: pytest.MonkeyPatch) -> None:
+    def fake_500(req, timeout: float = 3.0):
+        raise urllib.error.HTTPError(req.full_url, 500, "boom", {}, io.BytesIO(b"{}"))  # type: ignore[arg-type]
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_500)
+    with pytest.raises(th.RolloverBundleAPIUnavailable):
+        th._bundle_api_request("http://127.0.0.1:8765", method="GET", path="/api/epics/v1/s/bundles/latest")
+
+    def fake_down(req, timeout: float = 3.0):
+        raise urllib.error.URLError("connection refused")
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_down)
+    with pytest.raises(th.RolloverBundleAPIUnavailable):
+        th._bundle_api_request("http://127.0.0.1:8765", method="GET", path="/api/epics/v1/s/bundles/latest")
+
+
+def test_bundle_upload_409_is_refused_not_unavailable(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Upload path: a 409 conflict is a semantic answer, not a transient retry."""
+    _set_lease_env(monkeypatch)
+    calls: list[str] = []
+
+    def fake_urlopen(req, timeout: float = 3.0):
+        calls.append(req.full_url)
+        raise urllib.error.HTTPError(  # type: ignore[arg-type]
+            req.full_url, 409, "conflict", {}, io.BytesIO(json.dumps({"detail": "stale generation"}).encode())
+        )
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+
+    with pytest.raises(th.RolloverBundleRefused, match="409"):
+        th._bundle_api_upload(
+            _bundle_args(),
+            stream_id="shared:rollover",
+            manifest={"bundle_sha256": "abc123"},
+            blob=b"blob",
+        )
+    assert len(calls) == 1
+
+
+def test_bundle_upload_pinned_single_loopback_cannot_failover(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Acceptance: the advertised [A, B] failover cannot occur for bundle traffic —
+    the pinned single loopback base means one transport failure, one attempt."""
+    _set_lease_env(monkeypatch)
+    calls: list[str] = []
+
+    def fake_urlopen(req, timeout: float = 3.0):
+        calls.append(req.full_url)
+        raise urllib.error.URLError("connection reset")
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+
+    with pytest.raises(th.RolloverBundleAPIUnavailable):
+        th._bundle_api_upload(
+            _bundle_args(),
+            stream_id="shared:rollover",
+            manifest={"bundle_sha256": "abc123"},
+            blob=b"blob",
+        )
+    assert len(calls) == 1
+    assert calls[0].startswith("http://127.0.0.1:8765/api/epics/v1/shared:rollover/bundles")
+
+
+def test_bundle_upload_success_returns_payload(monkeypatch: pytest.MonkeyPatch) -> None:
+    _set_lease_env(monkeypatch)
+
+    def fake_urlopen(req, timeout: float = 3.0):
+        return _FakeBundleResponse(200, json.dumps({"upload_seq": 7}))
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+
+    result = th._bundle_api_upload(
+        _bundle_args(),
+        stream_id="shared:rollover",
+        manifest={"bundle_sha256": "abc123"},
+        blob=b"blob",
+    )
+    assert result["upload_seq"] == 7
