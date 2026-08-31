@@ -81,6 +81,18 @@ def test_hash_tampering_is_rejected_after_receipt_rehash(tmp_path: Path) -> None
     _reject(value, tmp_path, "artifact schema violation|P4 v1 admission binding drift")
 
 
+def test_p4_predecessor_bytes_are_actually_verified(monkeypatch: pytest.MonkeyPatch) -> None:
+    original = control_plane.sha256_file
+    p4_schema = control_plane.ROOT / control_plane.P4_SCHEMA_LOGICAL_PATH
+
+    def tampered(path: Path) -> str:
+        return "0" * 64 if path == p4_schema else original(path)
+
+    monkeypatch.setattr(control_plane, "sha256_file", tampered)
+    with pytest.raises(control_plane.ControlPlaneError, match="bound P4 v1 schema bytes drift"):
+        control_plane.verify()
+
+
 def test_forbidden_content_fields_are_rejected_even_when_schema_shape_is_bypassed(tmp_path: Path) -> None:
     value = _artifact()
     value["gates"]["provider_output"] = "opaque"
@@ -106,6 +118,18 @@ def test_only_human_steward_can_author_gold_and_quarantine_cannot_be_promoted(tm
     quarantine["legal_next_states"] = ["GOLD_ELIGIBLE"]
     _reject(value, tmp_path, "legal transition drift")
 
+    value = _artifact()
+    value["state_machine"]["transitions"].append(
+        {
+            "from_state": "MODEL_AGREEMENT_QUARANTINED_NOT_GOLD",
+            "to_state": "GOLD_ELIGIBLE",
+            "condition_code": "illegal_direct_gold_promotion",
+            "retry_or_substitute_allowed": False,
+            "human_fallback": False,
+        }
+    )
+    _reject(value, tmp_path, "transition table exact-set drift")
+
 
 def test_provider_and_critic_failures_have_human_fallbacks_and_resumable_states() -> None:
     value = _artifact()
@@ -127,9 +151,25 @@ def test_provider_and_critic_failures_have_human_fallbacks_and_resumable_states(
         "training_eligible": False,
     }
     assert states["IDENTITY_HUMAN_ABSTAINED"]["legal_next_states"] == ["CASE_CANDIDATE_PENDING"]
+    assert states["MODEL_AGREEMENT_QUARANTINED_NOT_GOLD"] == {
+        "state_id": "MODEL_AGREEMENT_QUARANTINED_NOT_GOLD",
+        "terminal": True,
+        "resumable": True,
+        "legal_next_states": [],
+        "resume_to_state": "IDENTITY_AGREEMENT_QC",
+        "counts_toward_coverage": False,
+        "gold_eligible": False,
+        "training_eligible": False,
+    }
 
 
 def test_compatibility_requires_all_sixteen_v2_semantic_cells(tmp_path: Path) -> None:
+    value = _artifact()
+    dialect = value["compatibility"]["cells"][-1]
+    assert dialect["disposition"] == "carried_forward_exact"
+    assert dialect["child_partition_ids"] == []
+    assert dialect["denominator_effect"] == "same_parent_denominator"
+
     value = _artifact()
     value["compatibility"]["cells"].pop()
     _reject(value, tmp_path, "artifact schema violation")
@@ -147,3 +187,15 @@ def test_child_dag_binds_taxonomy_before_control_plane_and_heldout(tmp_path: Pat
 
     value["child_work_slots"][1]["dependencies"] = ["phase3_v3_cooperative_control_plane_v1"]
     _reject(value, tmp_path, "V3 child dependency DAG drift")
+
+
+def test_role_access_and_coverage_flags_cannot_drift_from_visibility(tmp_path: Path) -> None:
+    value = _artifact()
+    builder = next(role for role in value["roles"] if role["role_id"] == "CANDIDATE_BUILDER")
+    builder["may_access_heldout"] = True
+    _reject(value, tmp_path, "role/visibility held-out access disagreement")
+
+    value = _artifact()
+    human = next(role for role in value["roles"] if role["role_id"] == "HUMAN_STEWARD")
+    human["may_count_toward_coverage"] = True
+    _reject(value, tmp_path, "direct role coverage credit drift")

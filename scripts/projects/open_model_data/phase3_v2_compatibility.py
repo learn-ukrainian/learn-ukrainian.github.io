@@ -53,15 +53,17 @@ CYCLE001_VOID_LOGICAL_PATH = (
 UNIVERSITY_SOURCE_POLICY_LOGICAL_PATH = (
     "data/projects/open_model_data/evidence/phase3_university_source_policy_v1.json"
 )
-# The compatibility matrix predates the current Phase 3 P1 freeze.  Keep the
-# boundary explicit so adding a current-phase metadata artifact cannot silently
-# change the legacy/pre-v2 denominator or weaken its exact-coverage check.
+# The compatibility matrix predates the current Phase 3 P1/V3 freezes.  Keep
+# the post-v2 boundary explicit so a later metadata artifact cannot silently
+# change the legacy/pre-v2 denominator or weaken its exact-coverage check.  A
+# new post-v2 evidence artifact must be reviewed and added here deliberately.
 CURRENT_PHASE_EVIDENCE_PATHS = frozenset(
     {
         "data/projects/open_model_data/evidence/phase3_p1_universe_freeze_v1.json",
         "data/projects/open_model_data/evidence/phase3_p1_dialect_regional_protection_amendment_v1.json",
         "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json",
         "data/projects/open_model_data/evidence/phase3_scope_circularity_firewall_v1.json",
+        "data/projects/open_model_data/evidence/phase3_v3_cooperative_control_plane_v1.json",
     }
 )
 REQUIRED_CLAIMS = {
