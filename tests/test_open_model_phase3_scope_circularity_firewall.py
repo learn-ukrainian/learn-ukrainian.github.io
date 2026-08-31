@@ -40,7 +40,7 @@ def test_generated_contract_is_exact_and_schema_valid() -> None:
     schema = json.loads((firewall.DATA / "contracts/phase3_scope_circularity_firewall_v1.schema.json").read_text())
     Draft202012Validator(schema).validate(contract)
     assert contract["denominator"]["coverage_blocked_cells"] == 14
-    assert contract["cycle007"]["private_binding_state"] == "UNBOUND"
+    assert contract["cycle007"]["private_binding_state"] == "BOUND"
 
 
 def test_schema_rejects_nested_extra_missing_and_frozen_drift() -> None:
@@ -177,11 +177,12 @@ def _private_candidate_corpus(candidate: dict[str, object]) -> dict[str, object]
     return corpus
 
 
-def test_candidate_requires_private_clearance_and_every_lineage_namespace_is_denied() -> None:
+def test_candidate_requires_private_clearance_and_every_lineage_namespace_is_denied(monkeypatch: pytest.MonkeyPatch) -> None:
     document = firewall.materialization._identity("pravopys_2026_complete", {}, {"locator": {}})
     lineage = {name: None for name in firewall.CANDIDATE_LINEAGE_KEYS}
     candidate: dict[str, object] = {"evaluation_cycle_id": "other", "family_id": "pravopys_2026_complete", "unit_id": "candidate", "unit_sha256": "a" * 64, "source_text": "novel independent text", "source_record": {}, "source_locator": {}, "document_or_edition_identity": document, "lineage": lineage}
     corpus = _private_candidate_corpus(candidate)
+    monkeypatch.setattr(firewall, "EXPECTED_PRIVATE_GRAPH_COMMITMENT_SHA256", corpus["corpus_sha256"])
     assert firewall.evaluate_candidate_batch([candidate], corpus)["code"] == "uncertain_lineage"
     for lineage_key, namespace in {
         "packet": "packet", "sidecar": "sidecar", "annotation": "annotation", "label_or_prompt": "prompt_or_request",
@@ -201,10 +202,11 @@ def test_candidate_requires_private_clearance_and_every_lineage_namespace_is_den
             collision["deny_arrays"][namespace] = [value]  # type: ignore[index]
             collision["namespace_commitments"][namespace] = {"count": 1, "sha256": firewall.sha256_bytes(firewall.canonical_json([value]))}  # type: ignore[index]
         collision["corpus_sha256"] = firewall.sha256_bytes(firewall.canonical_json({key: value for key, value in collision.items() if key != "corpus_sha256"}))
+        monkeypatch.setattr(firewall, "EXPECTED_PRIVATE_GRAPH_COMMITMENT_SHA256", collision["corpus_sha256"])
         assert firewall.evaluate_candidate_batch([changed], collision)["code"] == "leakage"
 
 
-def test_row_derived_deny_sets_are_reconstructed_without_private_array_copies() -> None:
+def test_row_derived_deny_sets_are_reconstructed_without_private_array_copies(monkeypatch: pytest.MonkeyPatch) -> None:
     candidate = {"evaluation_cycle_id": "other"}
     corpus = _private_candidate_corpus(candidate)
     row = {"row": "a" * 64, "source_example": "b" * 64, "document_or_edition": "c" * 64, "packet": "d" * 64, "exact": "e" * 64, "component": "f" * 64}
@@ -212,6 +214,7 @@ def test_row_derived_deny_sets_are_reconstructed_without_private_array_copies() 
     for name, value in {"row": row["row"], "source_example": row["source_example"], "document_work_edition": row["document_or_edition"], "packet": row["packet"], "exact": row["exact"], "component": row["component"]}.items():
         corpus["namespace_commitments"][name] = {"count": 1, "sha256": firewall.sha256_bytes(firewall.canonical_json([value]))}  # type: ignore[index]
     corpus["corpus_sha256"] = firewall.sha256_bytes(firewall.canonical_json({key: value for key, value in corpus.items() if key != "corpus_sha256"}))
+    monkeypatch.setattr(firewall, "EXPECTED_PRIVATE_GRAPH_COMMITMENT_SHA256", corpus["corpus_sha256"])
     denied = firewall._validate_private_deny_corpus(corpus)
     assert denied["row"] == {"a" * 64} and denied["packet"] == {"d" * 64}
     assert "row" not in corpus["deny_arrays"]  # type: ignore[operator]

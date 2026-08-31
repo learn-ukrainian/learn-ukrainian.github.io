@@ -62,6 +62,7 @@ STEWARD_CONFIG_ENV = "PHASE3_EVAL_STEWARD_CONFIG"
 EXPECTED_OBJECT_SET_SHA256 = storage.EXPECTED_OBJECT_SET_SHA256
 EXPECTED_ORDERED_ROW_IDENTITY_SHA256 = storage.EXPECTED_ORDERED_ROW_IDENTITY_SHA256
 EXPECTED_PACK_MANIFEST_RECEIPT_SHA256 = "2a883cb3e9a3b2ee673e397c8f5ba511f886f725bea980b2c982ca17f92a5e7d"
+EXPECTED_PRIVATE_GRAPH_COMMITMENT_SHA256 = "de77b0e2444365e3c9cdec3441128f87b96ca8a15f897e4c769f9b840ccac398"
 CANDIDATE_LINEAGE_KEYS = (
     "packet", "sidecar", "annotation", "label_or_prompt", "paraphrase_parent",
     "synthetic_parent", "derivative_parent", "provenance_receipt", "raw_or_log",
@@ -135,7 +136,7 @@ def build_contract() -> dict[str, Any]:
         "phase_bindings": {"p1": artifact(P1), "p1_dialect_amendment": artifact(P1_AMENDMENT), "p2": artifact(P2), "near_duplicate_policy": artifact(NEAR_POLICY)},
         "denominator": {"source_units": 57, "unknown_rights_blockers": 39, "base_required_cells": 15, "composite_required_cells": 16, "coverage_blocked_cells": 14, "not_applicable_cells": 2, "rule_slots_R": 0, "membership_hash_required": True, "canonical_order_required": True},
         "split_firewall": {"atomicity": ["source", "document", "work", "edition", "exact_duplicate_component", "near_duplicate_connected_component"], "cell_requirement_records": 16, "heldout_cases_selected": 0, "zero_heldout_cases_state": "BLOCKED_NOT_ZERO", "builder_clearance": "positive_only_metadata_hashes", "builder_receives_membership": False, "derivation_callback_permitted": False, "private_steward_role": "evaluation_steward_only", "builder_steward_collision_forbidden": True},
-        "cycle007": {"state": "evaluation_only", "deny_namespaces": list(DENY_NAMESPACES), "pack_manifest_receipt_sha256": EXPECTED_PACK_MANIFEST_RECEIPT_SHA256, "object_set_sha256": EXPECTED_OBJECT_SET_SHA256, "ordered_row_identity_commitment_sha256": EXPECTED_ORDERED_ROW_IDENTITY_SHA256, "public_packet_count": 204, "public_row_count": 10159, "physical_sidecar_count": 204, "logical_sidecar_count": 408, "object_count": 419, "private_binding_state": "UNBOUND", "fresh_private_materialization_claimed": False, "concept_reuse": "independent_origin_only_without_cycle007_identity_or_membership", "authority_reuse": "citation_only_without_heldout_span_locator_annotation_or_membership"},
+        "cycle007": {"state": "evaluation_only", "deny_namespaces": list(DENY_NAMESPACES), "pack_manifest_receipt_sha256": EXPECTED_PACK_MANIFEST_RECEIPT_SHA256, "object_set_sha256": EXPECTED_OBJECT_SET_SHA256, "ordered_row_identity_commitment_sha256": EXPECTED_ORDERED_ROW_IDENTITY_SHA256, "public_packet_count": 204, "public_row_count": 10159, "physical_sidecar_count": 204, "logical_sidecar_count": 408, "object_count": 419, "private_binding_state": "BOUND", "fresh_private_materialization_claimed": True, "private_graph_commitment_sha256": EXPECTED_PRIVATE_GRAPH_COMMITMENT_SHA256, "component_count": 38, "document_work_edition_group_count": 39, "exact_fingerprint_count": 10155, "candidate_clearance_count": 0, "same_uid_role_isolation": "governance_limited_not_cryptographic", "concept_reuse": "independent_origin_only_without_cycle007_identity_or_membership", "authority_reuse": "citation_only_without_heldout_span_locator_annotation_or_membership"},
         "fail_closed": {"terminal_codes": list(FAIL_CODES), "batch_failure_outputs": {"emitted": 0, "promoted": 0, "activated": 0}, "partial_denominator_permitted": False, "provider_calls": 0, "labels_created": 0, "gold_created": 0, "training_performed": False},
         "private_runtime": {"environment_binding": STEWARD_CONFIG_ENV, "file_mode": "0600", "directory_mode": "0700", "self_hash_verified_config_and_pack_manifest": True, "uses_cycle007_storage_pack_proof": True, "rejects": ["symlink", "hardlink", "traversal", "owner_mismatch", "path_overlap", "inode_device_change", "ancestor_replacement", "post_pin_toctou"], "public_output_text_free": True},
         "generator": artifact(Path(__file__)),
@@ -838,6 +839,7 @@ def _candidate_clearance_binding(candidate: Mapping[str, Any]) -> str:
 def _validate_private_deny_corpus(corpus: Mapping[str, Any]) -> dict[str, set[str]]:
     _require(corpus.get("corpus_sha256") == sha256_bytes(canonical_json({key: value for key, value in corpus.items() if key != "corpus_sha256"})), "hash_drift")
     _require(corpus.get("pack_manifest_receipt_sha256") == EXPECTED_PACK_MANIFEST_RECEIPT_SHA256 and corpus.get("near_duplicate_policy_sha256") == near.pinned_policy_fingerprint(), "hash_drift")
+    _require(corpus.get("corpus_sha256") == EXPECTED_PRIVATE_GRAPH_COMMITMENT_SHA256, "hash_drift")
     arrays = corpus.get("deny_arrays")
     commitments = corpus.get("namespace_commitments")
     allowlist = corpus.get("candidate_clearance_allowlist")
