@@ -35,6 +35,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 from scripts.control_plane.storage import (
+    Authority,
     ControlPlaneError,
     StoreId,
     assert_component_supported,
@@ -59,6 +60,33 @@ ENV_TELEMETRY = "FLEET_COMMS_PLANE_TELEMETRY"
 MAX_CONTINUATIONS = 2
 DEFAULT_TELEMETRY_NAME = Path("telemetry") / "plane-parity.jsonl"
 _TELEMETRY_SUMMARY_LIMIT = 50
+
+# M5: these components all participate in serving the authority plane.  The
+# byte-plane alone is insufficient: accepting an authority flip while any of
+# these seams is unavailable would only move the failure to a later request.
+_AUTHORITY_CUTOVER_CAPABILITIES = (
+    "artifact_store",
+    "authority_service",
+    "request_executor",
+    "message_plane",
+)
+
+_CUTOVER_SCHEMA_VERSION_MISMATCH = "cutover_schema_version_mismatch"
+_CUTOVER_SCHEMA_CHECKSUM_MISMATCH = "cutover_schema_checksum_mismatch"
+_CUTOVER_CAPABILITY_MISSING = "cutover_required_capability_missing"
+
+
+class AuthorityCutoverRefusedError(ControlPlaneError):
+    """Fail-closed, OPSEC-safe refusal of an authority transfer.
+
+    ``reason_code`` is the only value callers may surface.  The underlying
+    database exception and target path remain chained for local diagnostics,
+    never embedded in an operator-facing response.
+    """
+
+    def __init__(self, reason_code: str) -> None:
+        super().__init__(reason_code)
+        self.reason_code = reason_code
 
 
 def _configured_default_plane_mode() -> PlaneMode:
@@ -214,6 +242,8 @@ class MessagePlane:
             self.mode = resolve_plane_mode(mode)
         else:
             self.mode = mode
+        if self.mode == "authority":
+            verify_authority_cutover(root=root)
         # #7482 interlock: assert even when an executor is injected — the
         # plane itself runs sqlite SQL (_bump_continuation, parity reads).
         assert_component_supported(StoreId.FLEET_COMMS, "message_plane")
@@ -515,6 +545,51 @@ def open_message_plane(
         legacy_db=legacy_db,
         telemetry_path=telemetry_path,
     )
+
+
+def verify_authority_cutover(*, root: Path | None = None) -> None:
+    """Verify the target schema and required seams before an authority flip.
+
+    This is deliberately separate from liveness and cluster readiness: it is a
+    one-shot, read-only admission check on the authority-transition path.  It
+    never creates a database, applies migrations, or exposes target paths.
+    """
+    for component in _AUTHORITY_CUTOVER_CAPABILITIES:
+        try:
+            assert_component_supported(StoreId.FLEET_COMMS, component)
+        except ControlPlaneError as exc:
+            raise AuthorityCutoverRefusedError(_CUTOVER_CAPABILITY_MISSING) from exc
+
+    # The present authority plane is SQLite-only.  Guard it explicitly before
+    # constructing a URI so a per-store pg flip cannot be mistaken for a local
+    # SQLite cutover target.
+    if resolve_authority(StoreId.FLEET_COMMS) not in {Authority.SQLITE, Authority.SHADOW}:
+        raise AuthorityCutoverRefusedError(_CUTOVER_CAPABILITY_MISSING)
+
+    plane_root = Path(root) if root is not None else default_plane_root()
+    db_path = plane_root / "comms.sqlite3"
+    if not db_path.is_file():
+        raise AuthorityCutoverRefusedError(_CUTOVER_SCHEMA_VERSION_MISMATCH)
+
+    from scripts.fleet_comms.migrations import CommsMigrationError, verify_applied_migrations
+
+    try:
+        # URI mode=ro both proves the target exists and prevents this gate from
+        # becoming a schema initializer.
+        conn = cp_connect(StoreId.FLEET_COMMS, path=db_path, read_only=True)
+        try:
+            verify_applied_migrations(conn)
+        finally:
+            conn.close()
+    except CommsMigrationError as exc:
+        reason = (
+            _CUTOVER_SCHEMA_CHECKSUM_MISMATCH
+            if "checksum" in str(exc)
+            else _CUTOVER_SCHEMA_VERSION_MISMATCH
+        )
+        raise AuthorityCutoverRefusedError(reason) from exc
+    except (OSError, sqlite3.Error, ControlPlaneError) as exc:
+        raise AuthorityCutoverRefusedError(_CUTOVER_SCHEMA_VERSION_MISMATCH) from exc
 
 
 def _read_applied_schema_version(db_path: Path) -> dict[str, Any]:

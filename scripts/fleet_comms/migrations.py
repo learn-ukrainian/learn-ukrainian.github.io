@@ -632,6 +632,27 @@ def _validate_applied_migrations(
             raise CommsMigrationError(f"Communications migration {version} has an unexpected checksum")
 
 
+def verify_applied_migrations(conn: sqlite3.Connection) -> int:
+    """Verify the complete applied-migration receipt set without mutating it.
+
+    Authority cutover must not be the operation that repairs a target schema.
+    This read-only check therefore requires every currently-known migration,
+    its expected name, and its approved checksum receipt to be present before
+    a caller can transfer authority to the Fleet Comms plane.
+    """
+    if not isinstance(conn, sqlite3.Connection):
+        raise CommsMigrationError("communications migration verification requires sqlite")
+    known = {migration.version: migration for migration in MIGRATIONS}
+    try:
+        applied = _applied_migrations(conn)
+    except sqlite3.Error as exc:
+        raise CommsMigrationError("communications migration receipts unavailable") from exc
+    _validate_applied_migrations(applied, known)
+    if set(applied) != set(known):
+        raise CommsMigrationError("communications migration version set is incomplete")
+    return max(applied, default=0)
+
+
 def apply_migrations(conn: sqlite3.Connection) -> int:
     """Apply each known migration atomically and refuse unknown future versions."""
     if not isinstance(conn, sqlite3.Connection):

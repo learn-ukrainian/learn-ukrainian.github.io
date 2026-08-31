@@ -140,6 +140,24 @@ def test_fails_closed_when_pg_dsn_missing(
     assert fleet["reason"] == "pg_dsn_missing"
 
 
+def test_readiness_surfaces_component_interlock_refusal(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """#7482: operators can diagnose a rejected authority seam from readiness."""
+    monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
+    monkeypatch.setenv(_PG_DSN_ENV, _UNREACHABLE_DSN)
+
+    data = check_cluster_readiness(_ready_context(tmp_path))
+
+    refusal = data["interlocks"][StoreId.FLEET_COMMS.value]
+    assert refusal == {
+        "allowed": False,
+        "reason": "authority_unsupported_component",
+    }
+    assert data["ready"] is False
+    assert "/" not in refusal["reason"] and "\\" not in refusal["reason"]
+
+
 def test_unreachable_pg_dsn_fails_closed_quickly(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:

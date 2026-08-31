@@ -26,6 +26,7 @@ from fastapi import APIRouter, Depends
 
 from scripts.control_plane import storage
 from scripts.control_plane.storage import StoreId
+from scripts.fleet_comms.message_plane import read_plane_status
 
 from .monitor_context import MonitorContext, get_ctx, production_context
 
@@ -45,6 +46,7 @@ _REASON_DB_MISSING = "sqlite_database_missing"
 _REASON_SQLITE_PROBE_FAILED = "sqlite_probe_failed"
 _REASON_PROBE_TIMEOUT = "probe_timeout"
 _REASON_NO_BACKING = "no_sqlite_backing_in_phase_0"
+_REASON_AUTHORITY_UNSUPPORTED_COMPONENT = "authority_unsupported_component"
 
 _ACTIVE_STORES = (
     StoreId.FLEET_COMMS,
@@ -131,6 +133,37 @@ def _probe_store(
     return entry
 
 
+def _interlock_status(
+    ctx: MonitorContext, repo_root: Path | None
+) -> dict[str, dict[str, Any]]:
+    """Project a current #7482 refusal without running the authority flip gate.
+
+    Readiness remains a reachability endpoint.  It must not apply migrations or
+    decide a cutover, but an already-refused component combination makes the
+    reason observable from this endpoint alone.
+    """
+    try:
+        plane_root = _sqlite_path_for(StoreId.FLEET_COMMS, ctx, repo_root).parent
+        plane = read_plane_status(
+            repo_root=repo_root,
+            root=plane_root,
+            recent_limit=0,
+        )
+    except Exception:
+        return {}
+    schema = plane.get("schema")
+    if not isinstance(schema, dict):
+        return {}
+    if schema.get("db_error") != _REASON_AUTHORITY_UNSUPPORTED_COMPONENT:
+        return {}
+    return {
+        StoreId.FLEET_COMMS.value: {
+            "allowed": False,
+            "reason": _REASON_AUTHORITY_UNSUPPORTED_COMPONENT,
+        }
+    }
+
+
 def check_cluster_readiness(ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Evaluate cluster readiness against the app's authority stores.
 
@@ -177,6 +210,9 @@ def check_cluster_readiness(ctx: MonitorContext | None = None) -> dict[str, Any]
     can_serve_cluster_reads = all(
         entry["accessible"] for entry in stores_status.values()
     )
+    interlocks = _interlock_status(resolved_ctx, repo_root)
+    if any(entry["allowed"] is False for entry in interlocks.values()):
+        can_serve_cluster_reads = False
 
     # task_index is explicitly optional in Phase 0: reported for visibility,
     # labeled, and never part of the readiness decision.
@@ -187,7 +223,7 @@ def check_cluster_readiness(ctx: MonitorContext | None = None) -> dict[str, Any]
         "reason": _REASON_NO_BACKING,
     }
 
-    return {
+    payload = {
         "status": "ready" if can_serve_cluster_reads else "unready",
         "ready": can_serve_cluster_reads,
         "can_serve_cluster_reads": can_serve_cluster_reads,
@@ -195,6 +231,9 @@ def check_cluster_readiness(ctx: MonitorContext | None = None) -> dict[str, Any]
         "storage_seam": stores_status,
         "checked_at": now.isoformat().replace("+00:00", "Z"),
     }
+    if interlocks:
+        payload["interlocks"] = interlocks
+    return payload
 
 
 @router.get("/readiness")

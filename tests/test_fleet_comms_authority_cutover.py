@@ -17,7 +17,11 @@ from scripts.fleet_comms.authority import (
     AuthorityStaleLeaseError,
 )
 from scripts.fleet_comms.cli import main
-from scripts.fleet_comms.message_plane import MessagePlane, resolve_plane_mode
+from scripts.fleet_comms.message_plane import (
+    AuthorityCutoverRefusedError,
+    MessagePlane,
+    resolve_plane_mode,
+)
 from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
 from scripts.fleet_comms.review_publisher import record_publication_receipt
 from scripts.fleet_comms.routing_reservations import (
@@ -61,13 +65,20 @@ def _historic_routing_semantic_sha(request: RoutingReservationRequest) -> str:
     return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
 
 
-def test_authority_mode_resolves_without_changing_existing_modes() -> None:
+def test_authority_mode_resolves_without_changing_existing_modes(tmp_path: Path) -> None:
     assert resolve_plane_mode("off") == "off"
     assert resolve_plane_mode("shadow") == "shadow"
     assert resolve_plane_mode("dual-write") == "dual_write"
     assert resolve_plane_mode("authority") == "authority"
 
-    authority = MessagePlane(mode="authority", executor=_UnusedExecutor())
+    authority_root = _root(tmp_path)
+    authority_root.mkdir(parents=True)
+    conn = sqlite3.connect(authority_root / "comms.sqlite3")
+    try:
+        apply_migrations(conn)
+    finally:
+        conn.close()
+    authority = MessagePlane(mode="authority", executor=_UnusedExecutor(), root=authority_root)
     shadow = MessagePlane(mode="shadow", executor=_UnusedExecutor())
     dual = MessagePlane(mode="dual_write", executor=_UnusedExecutor())
     try:
@@ -80,6 +91,69 @@ def test_authority_mode_resolves_without_changing_existing_modes() -> None:
         authority.close()
         shadow.close()
         dual.close()
+
+
+def test_authority_flip_refuses_migration_version_or_checksum_mismatch(tmp_path: Path) -> None:
+    """M5: the authority path must not repair or accept a drifted target."""
+    root = _root(tmp_path)
+    root.mkdir(parents=True)
+    conn = sqlite3.connect(root / "comms.sqlite3")
+    try:
+        apply_migrations(conn)
+        conn.execute(
+            "UPDATE comms_schema_migrations SET checksum = ? WHERE version = ?",
+            ("0" * 64, MIGRATIONS[-1].version),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+    with pytest.raises(AuthorityCutoverRefusedError) as exc:
+        MessagePlane(mode="authority", executor=_UnusedExecutor(), root=root)
+    assert exc.value.reason_code == "cutover_schema_checksum_mismatch"
+    assert str(root) not in str(exc.value)
+
+
+def test_authority_flip_refuses_missing_migration_version(tmp_path: Path) -> None:
+    """M5: a target missing any expected migration cannot become authority."""
+    root = _root(tmp_path)
+    root.mkdir(parents=True)
+    conn = sqlite3.connect(root / "comms.sqlite3")
+    try:
+        apply_migrations(conn)
+        conn.execute(
+            "DELETE FROM comms_schema_migrations WHERE version = ?",
+            (MIGRATIONS[-1].version,),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+    with pytest.raises(AuthorityCutoverRefusedError) as exc:
+        MessagePlane(mode="authority", executor=_UnusedExecutor(), root=root)
+    assert exc.value.reason_code == "cutover_schema_version_mismatch"
+    assert str(root) not in str(exc.value)
+
+
+def test_authority_flip_refuses_missing_required_capability(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """M5: every authority-serving capability is checked before the flip."""
+    import scripts.control_plane.storage as storage
+
+    root = _root(tmp_path)
+    root.mkdir(parents=True)
+    conn = sqlite3.connect(root / "comms.sqlite3")
+    try:
+        apply_migrations(conn)
+    finally:
+        conn.close()
+    monkeypatch.setitem(storage.COMPONENT_AUTHORITIES, "message_plane", frozenset())
+
+    with pytest.raises(AuthorityCutoverRefusedError) as exc:
+        MessagePlane(mode="authority", executor=_UnusedExecutor(), root=root)
+    assert exc.value.reason_code == "cutover_required_capability_missing"
+    assert str(root) not in str(exc.value)
 
 
 def test_authority_migration_reapplies_and_old_tables_remain_readable(tmp_path: Path) -> None:
@@ -1289,6 +1363,7 @@ def test_concurrent_substitution_requests_do_not_fork_authority_or_reservation(t
         assert service.get_job(job.job_id).state == "queued"
 
 
+
 def test_authority_write_transaction_retains_atomicity_with_subservice_stores(
     tmp_path: Path,
 ) -> None:
@@ -1334,4 +1409,3 @@ def test_concurrent_substitution_requests_converge_under_high_contention(
         reservation = ledger.latest_for_authority_key(request.authority_key)
         assert reservation is not None and reservation.attempt == 2
         assert service.get_job(job.job_id).state == "queued"
-
