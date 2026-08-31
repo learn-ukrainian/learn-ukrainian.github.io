@@ -891,7 +891,7 @@ def _pr_meta(pr: str, repo: str | None = None, cwd: str | None = None) -> dict |
     return data
 
 
-_ROLLUP_FAIL = {"FAILURE", "CANCELLED", "TIMED_OUT", "ACTION_REQUIRED", "ERROR"}
+_ROLLUP_FAIL = {"FAILURE", "CANCELLED", "TIMED_OUT", "ACTION_REQUIRED", "ERROR", "STARTUP_FAILURE"}
 _ROLLUP_PENDING = {"IN_PROGRESS", "QUEUED", "PENDING", "WAITING", "EXPECTED", "REQUESTED", "STALE"}
 _ROLLUP_PASS = {"SUCCESS", "SKIPPED", "NEUTRAL"}
 
