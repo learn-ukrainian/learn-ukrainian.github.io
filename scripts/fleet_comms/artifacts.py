@@ -247,15 +247,24 @@ class ArtifactStore:
                 self._write_blob_atomic(dest, data)
             return self._row_to_record(existing)
 
-        if not dest.exists():
-            self._write_blob_atomic(dest, data)
-
         aid = artifact_id or new_id("artifact")
         created = _utc_now()
         mime = mime_type
         if mime is None and logical_filename:
             mime, _ = mimetypes.guess_type(logical_filename)
         try:
+            if commit:
+                # #7484 CF r2: the blob-existence decision, the blob write,
+                # and the row INSERT must share ONE write lock. A writer that
+                # saw the blob pre-unlink and then inserted its row after
+                # GC's locked unlink committed {row: True, blob: False}.
+                # BEGIN IMMEDIATE serializes against _unlink_if_unreferenced:
+                # whichever side wins, the losing side re-observes reality
+                # (GC sees our row and keeps the blob; we see the unlinked
+                # blob and rewrite it).
+                self._conn.execute("BEGIN IMMEDIATE")
+            if not dest.exists():
+                self._write_blob_atomic(dest, data)
             self._conn.execute(
                 """INSERT INTO artifacts(
                     artifact_id, sha256, bytes, mime_type, logical_filename,

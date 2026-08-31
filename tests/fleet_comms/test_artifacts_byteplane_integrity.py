@@ -133,3 +133,26 @@ def test_writer_dedup_self_heals_a_missing_blob(store: ArtifactStore) -> None:
     assert again.artifact_id == rec.artifact_id
     assert rec.blob_path.is_file()
     assert store.read_bytes(rec.artifact_id) == data
+
+
+def test_writer_and_gc_interleavings_never_leave_row_without_blob(
+    store: ArtifactStore,
+) -> None:
+    """#7484 CF r2: both orders of writer-vs-unlink leave {row, blob} intact."""
+    data = _payload()
+    first = store.store_bytes(data, producer="t")
+    digest = first.sha256
+    # Emulate GC phase 1 (rows committed away) with the blob still on disk.
+    store._conn.execute("DELETE FROM artifacts")
+    store._conn.commit()
+
+    # Order A: unlink phase runs first, writer after → blob rewritten under
+    # the writer's lock (dest re-checked INSIDE the transaction).
+    assert store._unlink_if_unreferenced(digest) is True
+    rec = store.store_bytes(data, producer="t")
+    assert rec.blob_path.is_file() and store.read_bytes(rec.artifact_id) == data
+
+    # Order B: writer commits first, unlink phase after → the locked row
+    # re-check sees the row and keeps the blob.
+    assert store._unlink_if_unreferenced(digest) is False
+    assert rec.blob_path.is_file() and store.read_bytes(rec.artifact_id) == data
