@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "9337a5787443",
+  "strategy": "manual-commit",
+  "branch": "codex/7493-flip-gate",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/fleet_comms/message_plane.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/93/37a5787443/0/metadata.json",
+      "transcript": "/93/37a5787443/0/full.jsonl",
+      "compact_transcript": "/93/37a5787443/0/transcript.jsonl",
+      "content_hash": "/93/37a5787443/0/content_hash.txt",
+      "prompt": "/93/37a5787443/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 252,
+    "cache_creation_tokens": 238614,
+    "cache_read_tokens": 20421050,
+    "output_tokens": 101213,
+    "api_call_count": 126
+  }
+}

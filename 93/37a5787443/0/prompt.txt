@@ -1,0 +1,5 @@
+<task-notification>
+<task-id>bgg5v89dv</task-id>
+<summary>Monitor event: "monitor-epic dispatch settle loop: 7494-residual, 7493-flip-gate, guard-rollup, review-7514"</summary>
+<event>SETTLED 7494-residual status=done</event>
+</task-notification>
