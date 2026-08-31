@@ -117,6 +117,7 @@ from .state_helpers import (
     cache_get_with_age,
     cache_invalidate,
     cache_set,
+    ctx_scoped_ttl_key,
     detect_pipeline_version,
     get_audit_status,
     get_plan_slugs,
@@ -197,9 +198,7 @@ _PREPARATION_SELECTOR_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
 
 def _ctx_cache_key(ctx: MonitorContext, *parts: object) -> str:
     """Cache key scoped to one MonitorContext root (process-global TTL cache)."""
-    root = str(ctx.roots.project_root.resolve())
-    return ":".join((root, *(str(p) for p in parts)))
-
+    return ctx_scoped_ttl_key(ctx, *parts)
 
 
 def _validate_preparation_query(request: Request, allowed: set[str]) -> None:

@@ -50,7 +50,14 @@ from .dashboard_helpers import (
 )
 from .monitor_context import MonitorContext, get_ctx, production_context
 from .state_coverage import compute_summary
-from .state_helpers import cache_get_with_age, cache_invalidate, cache_set, ctx_cache_scope, get_plan_slugs
+from .state_helpers import (
+    cache_get_with_age,
+    cache_invalidate,
+    cache_set,
+    ctx_cache_scope,
+    ctx_scoped_ttl_key,
+    get_plan_slugs,
+)
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -108,7 +115,14 @@ def _overview_cache_key(ctx: MonitorContext | None = None) -> str:
 
 
 def _summary_cache_key(ctx: MonitorContext | None = None) -> str:
-    return f"dashboard_summary{_overview_scope(ctx)}"
+    """TTL key of the state-summary payload the overview reuses.
+
+    Must be the exact key the ``/api/state/summary`` endpoint writes
+    (``state_router._ctx_cache_key(ctx, "summary")``): a warmed summary is
+    reused by the overview within the same app context, while the resolved
+    project root keeps two app instances isolated (#7494).
+    """
+    return ctx_scoped_ttl_key(_resolve_context(ctx), "summary")
 
 
 def overview_last_good_path(ctx: MonitorContext | None = None) -> Path:
@@ -134,7 +148,6 @@ def reset_overview_state_for_tests() -> None:
     _overview_last_good_by_scope.clear()
     _overview_disk_loaded_by_scope.clear()
     cache_invalidate(DASHBOARD_OVERVIEW_CACHE_KEY)
-    cache_invalidate("dashboard_summary")
 
 
 def simulate_overview_process_bounce_for_tests() -> None:
@@ -148,7 +161,6 @@ def simulate_overview_process_bounce_for_tests() -> None:
     _overview_last_good_by_scope.clear()
     _overview_disk_loaded_by_scope.clear()
     cache_invalidate(DASHBOARD_OVERVIEW_CACHE_KEY)
-    cache_invalidate("dashboard_summary")
 
 
 def _peek_state_summary(ctx: MonitorContext | None = None) -> tuple[dict, str, float | None]:

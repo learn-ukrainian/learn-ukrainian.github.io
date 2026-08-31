@@ -169,6 +169,18 @@ def ctx_cache_scope(ctx: MonitorContext | None) -> str:
     return f"@{ctx.roots.project_root}"
 
 
+def ctx_scoped_ttl_key(ctx: MonitorContext, *parts: object) -> str:
+    """Canonical ctx-scoped TTL-cache key: ``<resolved project root>:<parts...>`` (#7494).
+
+    Single source of truth for the key format so a writer in one router
+    (e.g. the state router's summary endpoint) and a reader in another
+    (e.g. the dashboard overview) always address the same entry within one
+    app context, while two app instances with different roots stay isolated.
+    """
+    root = str(ctx.roots.project_root.resolve())
+    return ":".join((root, *(str(p) for p in parts)))
+
+
 def cache_get(key: str, ttl: float) -> object | None:
     """Return cached value if still within TTL, else None."""
     entry = _ttl_cache.get(key)

@@ -324,7 +324,9 @@ class TestDashboardOverviewEndpoint:
         assert warm.status_code == 200
         summary = warm.json()
         seeded = dashboard_router._build_overview_from_state_summary(summary, "hit", 0.0, track_scan="hit")
-        state_helpers.cache_set(dashboard_router.DASHBOARD_OVERVIEW_CACHE_KEY, seeded)
+        # Seed the ctx-scoped key the endpoint reads (#7494); the unscoped
+        # constant alone no longer addresses this app context's entry.
+        state_helpers.cache_set(dashboard_router._overview_cache_key(app.state.ctx), seeded)
 
         release = threading.Event()
 
