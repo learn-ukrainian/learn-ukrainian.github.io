@@ -34,6 +34,20 @@ CASE_RECORD_KINDS = frozenset(
         "coverage_blocked",
     }
 )
+HISTORICAL_PROTECTED_CLASSES = (
+    "old_east_slavic_kyivan_rus",
+    "middle_ukrainian",
+    "church_slavonic_recension",
+    "source_attested_rusyn",
+)
+HISTORICAL_PROTECTION_INVARIANTS = {
+    "historical_forms_protected": True,
+    "modern_correction_eligible": False,
+    "old_east_slavic_is_modern_russian": False,
+    "historical_ruskyi_auto_mapped_to_modern_russian": False,
+    "automatic_mapping_to_modern_national_successor": False,
+    "recension_and_editorial_layer_required": True,
+}
 
 
 def canonical_json(value: Any) -> bytes:
@@ -191,6 +205,15 @@ def _proposal_sha256(proposal: dict[str, Any]) -> str:
     return sha256_bytes(canonical_json({key: value for key, value in proposal.items() if key != "proposal_sha256"}))
 
 
+def _historical_protection_is_exact(p1: dict[str, Any]) -> bool:
+    """Keep protected records bound to P1's non-erasure contract, not assertions."""
+    return (
+        p1.get("language_universe", {}).get("historical_protected_classes")
+        == list(HISTORICAL_PROTECTED_CLASSES)
+        and p1.get("historical_protection") == HISTORICAL_PROTECTION_INVARIANTS
+    )
+
+
 def validate_contract_integrity(contract: dict[str, Any]) -> bool:
     """Accept only the exact deterministic P2 contract for the pinned P1 input."""
     if not isinstance(contract, dict):
@@ -290,10 +313,24 @@ def validate_case_record(record: dict[str, Any], contract: dict[str, Any] | None
     if not required_roles[kind] <= roles:
         return False
     if kind == "protected_historical_context":
-        return set(record) == base | {"historical_identity", "period_id", "region_id", "recension_editorial_layer", "modern_normalization"} and all(
-            _metadata_identifier(record[key])
-            for key in ("historical_identity", "period_id", "region_id", "recension_editorial_layer")
-        ) and record["modern_normalization"] is False
+        return (
+            _historical_protection_is_exact(p1)
+            and set(record)
+            == base
+            | {
+                "historical_identity",
+                "period_id",
+                "region_id",
+                "recension_editorial_layer",
+                "modern_normalization",
+            }
+            and record["historical_identity"] in HISTORICAL_PROTECTED_CLASSES
+            and all(
+                _metadata_identifier(record[key])
+                for key in ("historical_identity", "period_id", "region_id", "recension_editorial_layer")
+            )
+            and record["modern_normalization"] is False
+        )
     if kind == "abstention":
         return set(record) == base | {"abstention_reason_code"} and _metadata_identifier(record["abstention_reason_code"])
     if kind == "not_applicable_with_evidence":
