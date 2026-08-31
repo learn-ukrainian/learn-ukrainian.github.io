@@ -32,6 +32,11 @@ import pytest
 REPO_ROOT = Path(__file__).resolve().parent.parent
 HOOK_PATH = REPO_ROOT / "agents_extensions/shared" / "hooks" / "guard-pr-merge.py"
 _URL = "https://github.com/owner/repo/pull/5"
+_GH_246_CHECKS_JSON_GAP = (
+    "unknown flag: --json\n\nUsage:  gh pr checks [<number> | <url> | <branch>] [flags]\n\n"
+    "Flags:\n"
+    "      --fail-fast         Exit watch mode on first check failure\n"
+)
 
 
 def _load_hook():
@@ -493,7 +498,7 @@ def test_check_states_falls_back_when_checks_json_unsupported(monkeypatch):
             return types.SimpleNamespace(
                 returncode=1,
                 stdout="",
-                stderr="unknown flag: --json\n",
+                stderr=_GH_246_CHECKS_JSON_GAP,
             )
         if cmd[:4] == ["gh", "pr", "view", "5"]:
             payload = {
@@ -512,6 +517,99 @@ def test_check_states_falls_back_when_checks_json_unsupported(monkeypatch):
     assert calls[1][:5] == ["gh", "pr", "view", "5", "--json"]
 
 
+def _rollup_states(monkeypatch, rows):
+    import types
+
+    def fake_run(cmd, **_k):
+        if cmd[:4] == ["gh", "pr", "checks", "5"]:
+            return types.SimpleNamespace(returncode=1, stdout="", stderr=_GH_246_CHECKS_JSON_GAP)
+        if cmd[:4] == ["gh", "pr", "view", "5"]:
+            return types.SimpleNamespace(
+                returncode=0,
+                stdout=json.dumps({"statusCheckRollup": rows}),
+                stderr="",
+            )
+        raise AssertionError(f"unexpected cmd: {cmd}")
+
+    monkeypatch.setattr(guard.subprocess, "run", fake_run)
+    return guard._check_states("5")
+
+
+def test_rollup_fallback_green_reaches_merge_guard(monkeypatch):
+    monkeypatch.setattr(guard, "_pr_ref", lambda args, repo=None, cwd=None: "5")
+    monkeypatch.setattr(
+        guard,
+        "_pr_meta",
+        lambda p, repo=None, cwd=None: {
+            "isDraft": False,
+            "baseRefName": "main",
+            "body": "",
+            "headRefOid": "a" * 40,
+            "number": 5,
+            "url": _URL,
+        },
+    )
+    _rollup_states(monkeypatch, [{"name": "CI Gate", "status": "COMPLETED", "conclusion": "SUCCESS"}])
+    assert guard._judge(["5", "--squash"]) is None
+
+
+@pytest.mark.parametrize(
+    "row,expected",
+    [
+        ({"name": "CI Gate", "status": "COMPLETED", "conclusion": "FAILURE"}, (["CI Gate"], [])),
+        ({"name": "CI Gate", "status": "IN_PROGRESS", "conclusion": ""}, ([], ["CI Gate"])),
+        ({"name": "CI Gate", "status": "COMPLETED", "conclusion": "UNKNOWN"}, None),
+        ({"name": "CI Gate"}, None),
+    ],
+)
+def test_rollup_fallback_non_green_or_unknown_blocks(monkeypatch, row, expected):
+    assert _rollup_states(monkeypatch, [row]) == expected
+    monkeypatch.setattr(guard, "_pr_ref", lambda args, repo=None, cwd=None: "5")
+    monkeypatch.setattr(
+        guard,
+        "_pr_meta",
+        lambda p, repo=None, cwd=None: {
+            "isDraft": False,
+            "baseRefName": "main",
+            "body": "",
+            "headRefOid": "a" * 40,
+            "number": 5,
+            "url": _URL,
+        },
+    )
+    assert guard._judge(["5", "--squash"]) is not None
+
+
+def test_rollup_fallback_uses_latest_duplicate_check(monkeypatch):
+    rows = [
+        {"name": "CI Gate", "startedAt": "2026-08-31T06:00:00Z", "status": "COMPLETED", "conclusion": "FAILURE"},
+        {"name": "CI Gate", "startedAt": "2026-08-31T06:01:00Z", "status": "COMPLETED", "conclusion": "SUCCESS"},
+    ]
+    assert _rollup_states(monkeypatch, rows) == ([], [])
+
+
+@pytest.mark.parametrize(
+    "returncode,stdout,stderr",
+    [
+        (1, "", "unknown flag: --json\nfatal: authentication failed\n"),
+        (0, "", _GH_246_CHECKS_JSON_GAP),
+        (1, "[]", _GH_246_CHECKS_JSON_GAP),
+    ],
+)
+def test_checks_json_fallback_requires_the_246_gap_shape(monkeypatch, returncode, stdout, stderr):
+    import types
+
+    calls = []
+
+    def fake_run(cmd, **_k):
+        calls.append(cmd)
+        return types.SimpleNamespace(returncode=returncode, stdout=stdout, stderr=stderr)
+
+    monkeypatch.setattr(guard.subprocess, "run", fake_run)
+    guard._check_states("5")
+    assert len(calls) == 1
+
+
 def test_status_rollup_unknown_state_fails_closed(monkeypatch):
     payload = {"statusCheckRollup": [{"name": "CI Gate", "status": "COMPLETED", "conclusion": "WEIRD"}]}
     _fake_gh(monkeypatch, returncode=0, stdout=json.dumps(payload))
@@ -520,7 +618,7 @@ def test_status_rollup_unknown_state_fails_closed(monkeypatch):
         import types
 
         if cmd[:4] == ["gh", "pr", "checks", "5"]:
-            return types.SimpleNamespace(returncode=1, stdout="", stderr="unknown flag: --json\n")
+            return types.SimpleNamespace(returncode=1, stdout="", stderr=_GH_246_CHECKS_JSON_GAP)
         return types.SimpleNamespace(returncode=0, stdout=json.dumps(payload), stderr="")
 
     monkeypatch.setattr(guard.subprocess, "run", fake_run)
