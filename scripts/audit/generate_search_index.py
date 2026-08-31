@@ -48,6 +48,30 @@ AUTHENTIC_RUSSIANISM_EXEMPTIONS = {
 }
 _UK_SORT_ORDER = {letter: index for index, letter in enumerate(UKRAINIAN_ALPHABET)}
 _TOKEN_RE = re.compile(r"[\w\u0400-\u04ff]+", re.UNICODE)
+_LEADING_SENSE_RE = re.compile(r"^\s*\d+[.)]\s*")
+_NEXT_SENSE_RE = re.compile(r"\s+\d+[.)]\s+")
+_TYPEAHEAD_GLOSS_SOFT_CAP = 160
+_TYPEAHEAD_GLOSS_HARD_CAP = 180
+# Protect mid-definition abbreviations so sentence splits do not fire on them.
+# Deliberately omit ``ст.`` / ``р.`` — those often end a sense before examples.
+_TYPEAHEAD_ABBREV_PROTECT = (
+    "і т. ін.",
+    "і т. д.",
+    "т. ін.",
+    "т. д.",
+    "н. е.",
+    "заст.",
+    "діал.",
+    "розм.",
+    "перен.",
+    "спец.",
+    "поет.",
+    "рідко.",
+    "одн.",
+    "мн.",
+    "див.",
+    "пор.",
+)
 
 
 def _load_helper_module(name: str, path: Path) -> Any:
@@ -228,8 +252,104 @@ def _translation_gloss(entry: Mapping[str, Any]) -> str | None:
     return "; ".join(visible[:3]) if visible else None
 
 
+def _protect_typeahead_abbreviations(text: str) -> tuple[str, dict[str, str]]:
+    placeholders: dict[str, str] = {}
+    protected = text
+    for index, abbr in enumerate(_TYPEAHEAD_ABBREV_PROTECT):
+        token = f"\0ABB{index}\0"
+        if abbr in protected:
+            protected = protected.replace(abbr, token)
+            placeholders[token] = abbr
+    return protected, placeholders
+
+
+def _restore_typeahead_abbreviations(text: str, placeholders: Mapping[str, str]) -> str:
+    restored = text
+    for token, abbr in placeholders.items():
+        restored = restored.replace(token, abbr)
+    return restored
+
+
+def _typeahead_sentences(text: str) -> list[str]:
+    protected, placeholders = _protect_typeahead_abbreviations(text)
+    parts = re.split(r"(?<=[.!?])\s+(?=[«\"„“А-ЯA-ZҐІЇЄ])", protected)
+    return [
+        _restore_typeahead_abbreviations(part.strip(), placeholders)
+        for part in parts
+        if part.strip()
+    ]
+
+
+def _cap_typeahead_gloss(text: str, limit: int) -> str:
+    """Hard-cap without appending ``...`` (hanging ellipsis hides poem mash)."""
+    if len(text) <= limit:
+        return text
+    window = text[:limit]
+    for sep in ("; ", ", ", " — ", " – ", " - ", " "):
+        pos = window.rfind(sep)
+        if pos > limit // 2:
+            return window[:pos].rstrip(" ;,")
+    return window.rstrip(" ;,")
+
+
+def _sanitize_typeahead_gloss(value: object) -> str | None:
+    """Keep typeahead ``g`` as sense-1 definition prose only.
+
+    Catalog glosses sometimes concatenate sense 1 with a later literary quote and
+    a mid-line ``...`` mash (e.g. воєвода). Typeahead should show one short
+    definition, never a chopped poem fragment.
+    """
+
+    if not isinstance(value, str):
+        return None
+    text = value.strip()
+    if not text:
+        return None
+
+    text = _LEADING_SENSE_RE.sub("", text, count=1).strip()
+    if not text:
+        return None
+
+    next_sense = _NEXT_SENSE_RE.search(text)
+    if next_sense is not None:
+        text = text[: next_sense.start()].rstrip()
+
+    had_ellipsis = False
+    for marker in ("...", "…"):
+        idx = text.find(marker)
+        if idx != -1:
+            text = text[:idx].rstrip(" ;,")
+            had_ellipsis = True
+            break
+
+    if not text:
+        return None
+
+    # Short, clean glosses (вода) stay untouched after sense-number peel.
+    if not had_ellipsis and len(text) <= _TYPEAHEAD_GLOSS_SOFT_CAP:
+        return text
+
+    sentences = _typeahead_sentences(text)
+    if not sentences:
+        capped = _cap_typeahead_gloss(text, _TYPEAHEAD_GLOSS_HARD_CAP)
+        return capped or None
+
+    max_sentences = 1 if had_ellipsis else 2
+    chosen: list[str] = []
+    for sentence in sentences[:max_sentences]:
+        trial = " ".join([*chosen, sentence]) if chosen else sentence
+        if chosen and len(trial) > _TYPEAHEAD_GLOSS_HARD_CAP:
+            break
+        chosen.append(sentence)
+        if len(" ".join(chosen)) >= _TYPEAHEAD_GLOSS_SOFT_CAP:
+            break
+
+    result = _cap_typeahead_gloss(" ".join(chosen).strip(), _TYPEAHEAD_GLOSS_HARD_CAP)
+    return result or None
+
+
 def _search_gloss(entry: Mapping[str, Any]) -> str | None:
-    return _clean_text(entry.get("gloss")) or _translation_gloss(entry)
+    return _sanitize_typeahead_gloss(entry.get("gloss")) or _translation_gloss(entry)
 
 
 def _search_row(entry: dict[str, Any]) -> dict[str, Any] | None:
@@ -510,7 +630,7 @@ def build_atlas_db_search_artifacts(
             row: dict[str, Any] = {
                 "l": display_head,
                 "s": slug,
-                "g": _clean_text(gloss),
+                "g": _sanitize_typeahead_gloss(gloss),
                 "r": transliterate(display_head),
                 "t": entry_type,
             }
