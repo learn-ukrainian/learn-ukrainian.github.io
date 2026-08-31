@@ -1238,7 +1238,7 @@ def test_notebook_role_execs_private_launcher(tmp_path, mock_lsof_env) -> None:
 
 def test_notebook_role_fails_closed_without_launcher(tmp_path, mock_lsof_env) -> None:
     """A missing private launcher aborts with a hint instead of spawning locally."""
-    env, private_root, capture = _notebook_env(tmp_path, mock_lsof_env, "notebook")
+    env, _private_root, capture = _notebook_env(tmp_path, mock_lsof_env, "notebook")
 
     result = subprocess.run(
         [str(SERVICES_SH), "start", "api"],
