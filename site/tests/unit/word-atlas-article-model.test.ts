@@ -87,7 +87,15 @@ describe("formattedOrigin in article view model", () => {
     expect(view.formattedOrigin).toBeNull();
   });
 
-  test("overview origin card reflects formatted origin", () => {
+  test("overview origin card waits for a source when origin is missing", () => {
+    const view = buildWordAtlasArticleView(makeEntry().record, "test", "test");
+    const originCard = view.articleOverview.find((card) => card.label === "Походження");
+    expect(originCard).toBeDefined();
+    expect(originCard!.ready).toBe(false);
+    expect(originCard!.detail).toBe("очікує джерело");
+  });
+
+  test("overview origin card uses a short count instead of formatted prose", () => {
     const view = buildWordAtlasArticleView(
       makeEntry({ text: "From Latin monēta.", source: "kaikki/Wiktionary (CC BY-SA 3.0)" }).record,
       "test",
@@ -96,7 +104,21 @@ describe("formattedOrigin in article view model", () => {
     const originCard = view.articleOverview.find((card) => card.label === "Походження");
     expect(originCard).toBeDefined();
     expect(originCard!.ready).toBe(true);
-    expect(originCard!.detail).toBe("From Latin monēta.");
+    expect(originCard!.detail).toBe("1 картка");
+  });
+
+  test("overview origin card does not expose an ESUM-style dump", () => {
+    const dump = "Вода, віднйк «діжечка для води»…";
+    const view = buildWordAtlasArticleView(
+      makeEntry({ text: dump, source: "ЕСУМ" }).record,
+      "test",
+      "test",
+    );
+    const originCard = view.articleOverview.find((card) => card.label === "Походження");
+    expect(originCard).toBeDefined();
+    expect(originCard!.ready).toBe(true);
+    expect(originCard!.detail).toBe("1 картка");
+    expect(originCard!.detail).not.toContain(dump);
   });
 });
 
@@ -446,4 +468,3 @@ describe("verb pedagogy strip (#7471)", () => {
     expect(html).not.toContain("Вид і керування");
   });
 });
-
