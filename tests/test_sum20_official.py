@@ -25,6 +25,7 @@ from wiki.sum20_official import (
     upsert_sum20_article,
 )
 
+from scripts.lexicon import enrich_manifest as enrich_manifest_module
 from wiki import sources_db
 
 FIXTURES = Path(__file__).parent / "fixtures" / "sum20_official"
@@ -177,6 +178,97 @@ def test_ingest_keeps_transient_failures_out_of_the_negative_cache(tmp_path: Pat
     assert counts == {"ok": 0, "unchanged": 0, "not_found": 1, "transient_error": 1, "parse_error": 0}
     assert checkpoint == 50
     assert transient == "transient_error"
+
+
+def _fixture_sources_db(tmp_path: Path, *, include_article: bool, create_schema: bool = True) -> Path:
+    db_path = tmp_path / "sources.db"
+    conn = sqlite3.connect(db_path)
+    try:
+        if create_schema:
+            ensure_sum20_official_schema(conn)
+        if create_schema and include_article:
+            article = parse_sum20_article((FIXTURES / "wordid-5.html").read_text(encoding="utf-8"), 5)
+            upsert_sum20_article(conn, article, fetched_at="2026-07-15T10:00:00+00:00")
+        conn.commit()
+    finally:
+        conn.close()
+    return db_path
+
+
+def test_definition_card_prefers_official_row_without_network(tmp_path: Path, monkeypatch) -> None:
+    db_path = _fixture_sources_db(tmp_path, include_article=True)
+    monkeypatch.setattr(enrich_manifest_module, "SOURCES_DB", db_path)
+
+    def fail_live_fetch(*_args, **_kwargs):
+        raise AssertionError("official СУМ-20 row must prevent a slovnyk.me fetch")
+
+    monkeypatch.setattr(enrich_manifest_module, "_fetch_slovnyk_entry", fail_live_fetch)
+
+    card = enrich_manifest_module._sum20_definition_card("абажу́р")
+
+    assert card == {
+        "id": "sum20",
+        "source": "Словник української мови у 20 томах (УМІФ НАН України, Ін-т мовознавства ім. О. О. Потебні)",
+        "source_pill": "СУМ-20",
+        "note": "сучасний тлумачний словник",
+        "definitions": [
+            "Частина світильника, звичайно у вигляді ковпака, признач. для зосередження і відбиття "
+            "світла та захисту очей від його впливу"
+        ],
+        "source_url": "https://sum20ua.com/?wordid=5",
+    }
+
+
+def test_definition_card_falls_back_to_existing_slovnyk_path_when_official_row_absent(
+    tmp_path: Path, monkeypatch
+) -> None:
+    db_path = _fixture_sources_db(tmp_path, include_article=False)
+    monkeypatch.setattr(enrich_manifest_module, "SOURCES_DB", db_path)
+    calls: list[tuple[str, str, str]] = []
+
+    def fake_live_fetch(lemma: str, lookup_word: str, slug: str):
+        calls.append((lemma, lookup_word, slug))
+        return {
+            "word": "АБАЖУ́Р",
+            "text": "АБАЖУ́Р, а, ч. Лампа з ковпаком.",
+            "source_url": "https://slovnyk.me/dict/newsum/абажур",
+        }
+
+    monkeypatch.setattr(enrich_manifest_module, "_fetch_slovnyk_entry", fake_live_fetch)
+
+    card = enrich_manifest_module._sum20_definition_card("абажу́р")
+
+    assert card is not None
+    assert card["definitions"] == [", а, ч. Лампа з ковпаком."]
+    assert calls == [("абажу́р", "абажур", "newsum")]
+
+
+def test_definition_card_falls_back_when_official_table_is_missing(tmp_path: Path, monkeypatch) -> None:
+    db_path = _fixture_sources_db(tmp_path, include_article=False, create_schema=False)
+    monkeypatch.setattr(enrich_manifest_module, "SOURCES_DB", db_path)
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "_fetch_slovnyk_entry",
+        lambda *_args, **_kwargs: {
+            "word": "АБАЖУ́Р",
+            "text": "АБАЖУ́Р, а, ч. Лампа з ковпаком.",
+        },
+    )
+
+    card = enrich_manifest_module._sum20_definition_card("абажу́р")
+
+    assert card is not None
+    assert card["id"] == "sum20"
+
+
+def test_definition_card_keeps_none_when_official_and_slovnyk_rows_are_absent(
+    tmp_path: Path, monkeypatch
+) -> None:
+    db_path = _fixture_sources_db(tmp_path, include_article=False)
+    monkeypatch.setattr(enrich_manifest_module, "SOURCES_DB", db_path)
+    monkeypatch.setattr(enrich_manifest_module, "_fetch_slovnyk_entry", lambda *_args, **_kwargs: None)
+
+    assert enrich_manifest_module._sum20_definition_card("абажу́р") is None
 
 
 def test_query_sum20_has_no_live_mirror_path() -> None:
