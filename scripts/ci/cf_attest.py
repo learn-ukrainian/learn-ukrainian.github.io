@@ -517,8 +517,14 @@ def collect_bodies_and_agents(
     pr_number: int,
     api_get: ApiGet,
 ) -> tuple[list[tuple[str, str]], tuple[str, ...]]:
-    """Load PR comments, review bodies, and X-Agent seats."""
+    """Load PR comments, review bodies, and X-Agent seats.
+
+    Pure Dependabot PRs have no ``X-Agent`` trailers. Resolve the PR author
+    login when it is Dependabot so ``author_family_from_agents`` can map them
+    to the fixture family (universal independence) as designed for #7487.
+    """
     repo = quote(repository, safe="/")
+    pull = api_get(f"repos/{repo}/pulls/{pr_number}")
     comments = fetch_paginated(f"repos/{repo}/issues/{pr_number}/comments", api_get=api_get)
     reviews = fetch_paginated(f"repos/{repo}/pulls/{pr_number}/reviews", api_get=api_get)
     commits = fetch_paginated(f"repos/{repo}/pulls/{pr_number}/commits", api_get=api_get)
@@ -551,7 +557,13 @@ def collect_bodies_and_agents(
             message = inner.get("message")
             if isinstance(message, str):
                 messages.append(message)
-    return bodies, x_agent_seats_from_messages(messages)
+    seats = list(x_agent_seats_from_messages(messages))
+    if isinstance(pull, Mapping):
+        user = pull.get("user")
+        login = user.get("login") if isinstance(user, Mapping) else None
+        if isinstance(login, str) and "dependabot" in login.casefold():
+            seats.append("dependabot")
+    return bodies, tuple(seats)
 
 
 def run_event(
