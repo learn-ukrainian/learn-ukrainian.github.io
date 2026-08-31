@@ -263,7 +263,7 @@
       },
       {
         "path": "scripts/lexicon/source_attribution.py",
-        "sha256": "0bd8ef8e2ef6ffa4c8a396f2a808a5ae20a390c35d5ffcfe49f8aaeb5b5ce0cc"
+        "sha256": "4465c3c5e4e76fef4d34537cddf541aa8a8c4b5a2677dc340d9f81e480d32002"
       },
       {
         "path": "scripts/lexicon/sync_teacher_table_deck.py",
