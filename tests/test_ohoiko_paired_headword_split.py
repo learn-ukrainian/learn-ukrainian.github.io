@@ -235,7 +235,7 @@ def test_split_trailing_commas_in_500_verbs_and_1000_words() -> None:
     assert split_paired_headword("замерзнути,") == ["замерзнути"]
 
 
-def test_clean_tokens_and_ocr_lookalike_dispositions() -> None:
+def test_clean_tokens_and_ocr_lookalike_dispositions(requires_vesum_db) -> None:
     # ого! and ой! strip trailing exclamation mark to canonical forms
     assert "ого!".rstrip("!") == "ого"
     assert "ой!".rstrip("!") == "ой"
@@ -244,7 +244,7 @@ def test_clean_tokens_and_ocr_lookalike_dispositions() -> None:
     assert resolve_leg_lemma("тваринa") == "тварина"
 
 
-def test_ulp_taught_leftovers_heritage_holds() -> None:
+def test_ulp_taught_leftovers_heritage_holds(requires_vesum_db, requires_sources_db) -> None:
     from scripts.lexicon.heritage_classifier import classify_lemma
 
     for lemma in ("переключити", "кримчанин", "просвітитель"):
@@ -253,7 +253,9 @@ def test_ulp_taught_leftovers_heritage_holds() -> None:
         assert paired_split.classify_split_leg(lemma) == "single_word_heritage_flag"
 
 
-def test_analyze_all_curated_leftovers_disposition(tmp_path, monkeypatch) -> None:
+def test_analyze_all_curated_leftovers_disposition(
+    tmp_path, monkeypatch, requires_vesum_db, requires_sources_db
+) -> None:
     from scripts.lexicon.ohoiko_paired_headword_split import analyze_all_curated_leftovers
 
     dummy_manifest = tmp_path / "manifest.json"
@@ -304,4 +306,3 @@ def test_analyze_all_curated_leftovers_disposition(tmp_path, monkeypatch) -> Non
     assert res["bucket_counts"]["words_1000_pair_keys"] == 1
     assert res["bucket_counts"]["ulp_leftovers"] == 1
     assert res["promote_candidate_count"] == 0
-
