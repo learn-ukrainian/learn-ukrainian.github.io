@@ -1,0 +1,421 @@
+schema_version: 1
+meta:
+  issue: '#6876'
+  stage: gemini-slice51 — proposals only
+  proposer: agy/gemini-3.7-flash-high
+  source_label_if_applied: agy_en_proposal (Gemini; not a dictionary)
+  cf:
+    verdict: APPROVE
+    resolved_model: claude-sonnet-5
+    reviewer_family: Anthropic
+    task_id: review-6876-en-slice51-claude
+records:
+- lemma: блим
+  url_slug: блим
+  proposed_anchor: blink, flash
+  confidence: medium
+  register: modern
+  abstain_reason: null
+  notes: Colloquial predicative interjection expressing a sudden blink, flash, or
+    quick glance.
+  verified_by: claude-sonnet-5
+- lemma: британці
+  url_slug: британці
+  proposed_anchor: Britons, British people
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Plural ethnonym for British people / Britons.
+  verified_by: claude-sonnet-5
+- lemma: білявка
+  url_slug: білявка
+  proposed_anchor: blonde, blonde woman
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Blonde or fair-complexioned woman or girl.
+  verified_by: claude-sonnet-5
+- lemma: вечорниці
+  url_slug: вечорниці
+  proposed_anchor: traditional evening gathering
+  confidence: high
+  register: literary
+  abstain_reason: null
+  notes: Traditional Ukrainian autumn/winter evening youth gathering with work and
+    socializing.
+  verified_by: claude-sonnet-5
+- lemma: виговоритися
+  url_slug: виговоритися
+  proposed_anchor: null
+  confidence: high
+  register: modern
+  abstain_reason: xref_stub_only
+  notes: Cross-reference stub to виговорюватися without standalone definition text.
+- lemma: волиняни
+  url_slug: волиняни
+  proposed_anchor: Volhynians
+  confidence: high
+  register: literary
+  abstain_reason: null
+  notes: Historical East Slavic tribe inhabiting Volhynia; also inhabitants of Volhynia.
+  verified_by: claude-sonnet-5
+- lemma: вібріон
+  url_slug: вібріон
+  proposed_anchor: vibrio, comma-shaped bacterium
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Comma-shaped bacterium of the genus Vibrio.
+  verified_by: claude-sonnet-5
+- lemma: депресивність
+  url_slug: депресивність
+  proposed_anchor: depressiveness, depressive state
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Abstract noun denoting the state or quality of being depressed or depressive.
+  verified_by: claude-sonnet-5
+- lemma: дизель-поїзд
+  url_slug: дизель-поїзд
+  proposed_anchor: diesel train, DMU
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Train powered by diesel engines / diesel multiple unit.
+  verified_by: claude-sonnet-5
+- lemma: дистанціювання
+  url_slug: дистанціювання
+  proposed_anchor: distancing
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Verbal noun denoting the act of distancing or keeping distance.
+  verified_by: claude-sonnet-5
+- lemma: ендорфін
+  url_slug: ендорфін
+  proposed_anchor: endorphin
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Endogenous opioid peptide hormone / endorphin.
+  verified_by: claude-sonnet-5
+- lemma: етнічність
+  url_slug: етнічність
+  proposed_anchor: ethnicity
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Abstract noun for ethnic identity or belonging to an ethnic group.
+  verified_by: claude-sonnet-5
+- lemma: йододефіцит
+  url_slug: йододефіцит
+  proposed_anchor: iodine deficiency
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Deficiency of iodine in the human body.
+  verified_by: claude-sonnet-5
+- lemma: катрен
+  url_slug: катрен
+  proposed_anchor: quatrain, four-line stanza
+  confidence: high
+  register: literary
+  abstain_reason: null
+  notes: Four-line poetic stanza (quatrain / чотиривірш).
+  verified_by: claude-sonnet-5
+- lemma: кашмір
+  url_slug: кашмір
+  proposed_anchor: null
+  confidence: high
+  register: modern
+  abstain_reason: xref_stub_only
+  notes: Cross-reference stub to кашемір without standalone definition text.
+- lemma: ке
+  url_slug: ке
+  proposed_anchor: give here, come on
+  confidence: high
+  register: literary
+  abstain_reason: null
+  notes: Colloquial/folk interjection meaning 'give here' or 'come on'.
+  verified_by: claude-sonnet-5
+- lemma: колеж
+  url_slug: колеж
+  proposed_anchor: collège, secondary school
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Secondary school or college in France and Francophone countries.
+  verified_by: claude-sonnet-5
+- lemma: конечно
+  url_slug: конечно
+  proposed_anchor: null
+  confidence: high
+  register: modern
+  abstain_reason: xref_stub_only
+  notes: Cross-reference stub to конечне without standalone definition text.
+- lemma: кривичі
+  url_slug: кривичі
+  proposed_anchor: Krivichi, Krivichs
+  confidence: high
+  register: literary
+  abstain_reason: null
+  notes: Historical East Slavic tribe (Krivichs / Krivichi).
+  verified_by: claude-sonnet-5
+- lemma: кізка
+  url_slug: кізка
+  proposed_anchor: little goat, nanny goat
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Diminutive/affectionate form of коза (goat / nanny goat).
+  verified_by: claude-sonnet-5
+- lemma: кімерійці
+  url_slug: кімерійці
+  proposed_anchor: Cimmerians
+  confidence: high
+  register: literary
+  abstain_reason: null
+  notes: Ancient nomadic people of the northern Pontic region (Cimmerians).
+  verified_by: claude-sonnet-5
+- lemma: левкас
+  url_slug: левкас
+  proposed_anchor: gesso, chalk ground
+  confidence: high
+  register: literary
+  abstain_reason: null
+  notes: Gesso or chalk-and-glue primer used in wood painting and iconography.
+  verified_by: claude-sonnet-5
+- lemma: лічилка
+  url_slug: лічилка
+  proposed_anchor: counting-out rhyme
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Children's counting-out rhyme used in games.
+  verified_by: claude-sonnet-5
+- lemma: маловідомо
+  url_slug: маловідомо
+  proposed_anchor: little is known, little-known
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Adverb formed from маловідомий ('little is known', 'scantly known').
+  verified_by: claude-sonnet-5
+- lemma: марійка
+  url_slug: марійка
+  proposed_anchor: null
+  confidence: high
+  register: modern
+  abstain_reason: xref_stub_only
+  notes: Cross-reference stub to марійці without standalone definition text.
+- lemma: марійці
+  url_slug: марійці
+  proposed_anchor: Mari people, Maris
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Finno-Ugric ethnic group indigenous to Mari El (Mari people / Cheremis).
+  verified_by: claude-sonnet-5
+- lemma: маскулінний
+  url_slug: маскулінний
+  proposed_anchor: masculine, manly
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Adjective meaning having characteristics typical of men / masculine.
+  verified_by: claude-sonnet-5
+- lemma: медінститут
+  url_slug: медінститут
+  proposed_anchor: medical institute, medical school
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Compound abbreviation for медичний інститут (medical institute).
+  verified_by: claude-sonnet-5
+- lemma: мотиватор
+  url_slug: мотиватор
+  proposed_anchor: null
+  confidence: high
+  register: modern
+  abstain_reason: no_definition_stub
+  notes: Headword-only entry with no definition text.
+- lemma: некомфортно
+  url_slug: некомфортно
+  proposed_anchor: null
+  confidence: high
+  register: modern
+  abstain_reason: no_definition_stub
+  notes: Headword-only entry with no definition text.
+- lemma: нектон
+  url_slug: нектон
+  proposed_anchor: nekton, swimming aquatic organisms
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Biological term for actively swimming aquatic organisms (nekton).
+  verified_by: claude-sonnet-5
+- lemma: неначеб
+  url_slug: неначеб
+  proposed_anchor: as if, as though
+  confidence: high
+  register: literary
+  abstain_reason: null
+  notes: Comparative conjunction and modal particle synonymous with неначе ('as if',
+    'as though').
+  verified_by: claude-sonnet-5
+- lemma: нерозлийвода
+  url_slug: нерозлийвода
+  proposed_anchor: inseparable, thick as thieves
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Colloquial predicative expression meaning 'inseparable', 'thick as thieves'.
+  verified_by: claude-sonnet-5
+- lemma: низь
+  url_slug: низь
+  proposed_anchor: reverse embroidery stitch, nyz
+  confidence: high
+  register: literary
+  abstain_reason: null
+  notes: Traditional Ukrainian counted-thread embroidery technique worked from the
+    reverse side (nyzzia/nyz).
+  verified_by: claude-sonnet-5
+- lemma: нощно
+  url_slug: нощно
+  proposed_anchor: null
+  confidence: high
+  register: archaic
+  abstain_reason: xref_stub_only
+  notes: Phraseological cross-reference entry (де́нно і но́щно див. де́нно) without
+    standalone definition.
+- lemma: ньо
+  url_slug: ньо
+  proposed_anchor: giddyup, gee
+  confidence: high
+  register: literary
+  abstain_reason: null
+  notes: Folk/rural interjection used to urge horses forward ('giddyup', 'gee').
+  verified_by: claude-sonnet-5
+- lemma: нігде
+  url_slug: нігде
+  proposed_anchor: null
+  confidence: high
+  register: dialect
+  abstain_reason: xref_stub_only
+  notes: Cross-reference stub to ніде and ніде without standalone definition.
+- lemma: обліпиховий
+  url_slug: обліпиховий
+  proposed_anchor: sea buckthorn, buckthorn
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Relational adjective pertaining to or made from sea buckthorn (обліпиха).
+  verified_by: claude-sonnet-5
+- lemma: обігрів
+  url_slug: обігрів
+  proposed_anchor: heating, warming
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Verbal noun denoting the action or system of heating / warming.
+  verified_by: claude-sonnet-5
+- lemma: панія
+  url_slug: панія
+  proposed_anchor: lady, gentlewoman
+  confidence: high
+  register: literary
+  abstain_reason: null
+  notes: Colloquial/folk variant of пані ('lady', 'gentlewoman', 'madam').
+  verified_by: claude-sonnet-5
+- lemma: по-українському
+  url_slug: по-українському
+  proposed_anchor: in Ukrainian, Ukrainian-style
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Adverb meaning according to Ukrainian custom or in the Ukrainian language.
+  verified_by: claude-sonnet-5
+- lemma: подоляночка
+  url_slug: подоляночка
+  proposed_anchor: little Podolian girl
+  confidence: high
+  register: literary
+  abstain_reason: null
+  notes: Diminutive/affectionate term for a female from Podillia; prominent in Ukrainian
+    spring folklore (vesnianky).
+  verified_by: claude-sonnet-5
+- lemma: попрактикуватися
+  url_slug: попрактикуватися
+  proposed_anchor: to practice for a while
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Perfective delimitative verb meaning to practice / gain experience for a
+    period of time.
+  verified_by: claude-sonnet-5
+- lemma: працевлаштований
+  url_slug: працевлаштований
+  proposed_anchor: employed, hired
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Adjective / passive participle meaning provided with employment / employed.
+  verified_by: claude-sonnet-5
+- lemma: призьба
+  url_slug: призьба
+  proposed_anchor: earthen bank, house-wall mound
+  confidence: high
+  register: literary
+  abstain_reason: null
+  notes: Raised earthen mound or bench constructed along the exterior base of a traditional
+    Ukrainian cottage (khata).
+  verified_by: claude-sonnet-5
+- lemma: прихищати
+  url_slug: прихищати
+  proposed_anchor: to shelter, to protect
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Imperfective transitive verb meaning to shelter, give refuge, or protect.
+  verified_by: claude-sonnet-5
+- lemma: проблемка
+  url_slug: проблемка
+  proposed_anchor: little problem, minor issue
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Diminutive of проблема ('little problem', 'minor issue').
+  verified_by: claude-sonnet-5
+- lemma: продих
+  url_slug: продих
+  proposed_anchor: stoma, stomate
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Botanical term for a microscopic pore in plant epidermis (stoma).
+  verified_by: claude-sonnet-5
+- lemma: рапана
+  url_slug: рапана
+  proposed_anchor: rapa whelk, sea snail
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Predatory marine gastropod mollusk of the genus Rapana (e.g., Rapana venosa).
+  verified_by: claude-sonnet-5
+- lemma: ратний
+  url_slug: ратний
+  proposed_anchor: martial, military, battle
+  confidence: high
+  register: literary
+  abstain_reason: null
+  notes: Archaic and solemn adjective meaning martial, military, or pertaining to
+    battle/war.
+  verified_by: claude-sonnet-5
+- lemma: ігроманія
+  url_slug: ігроманія
+  proposed_anchor: gambling addiction, gaming addiction
+  confidence: high
+  register: modern
+  abstain_reason: null
+  notes: Medical/psychological term for gambling addiction or compulsive gaming (ludomania).
+  verified_by: claude-sonnet-5

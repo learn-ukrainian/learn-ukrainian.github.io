@@ -296,6 +296,10 @@ describe("translation source humanization (#7459)", () => {
     expect(formatTranslationSource("learner_english_gloss")).toBe("Anna Ohoiko");
   });
 
+  test("maps agy_en_proposal to the model translation label", () => {
+    expect(formatTranslationSource("agy_en_proposal")).toBe("модельний переклад");
+  });
+
   test("keeps dmklinger and other sources distinct", () => {
     expect(formatTranslationSource("dmklinger")).toBe("dmklinger");
     expect(formatTranslationSource("Wikidata")).toBe("Wikidata");
