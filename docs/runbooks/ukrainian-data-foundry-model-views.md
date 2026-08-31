@@ -6,7 +6,7 @@
 > **Boundary:** local view construction and reproducible manifests, not training
 > or publication
 
-> **Phase 2–4 status:** admitted-source continued pretraining is independent of
+> **Phase 2–4 status:** source-family eligibility for continued pretraining is independent of
 > qualified correction review and may proceed as soon as its source/payload,
 > rights, privacy, origin, destination, and contamination gates pass. The
 > implemented correction-family path below accepts qualified-human records.
@@ -48,9 +48,10 @@ a model, or run training.
 
 ## Phase 3 real production result
 
-The first real production instantiation uses the operator-accepted Ukrainian
-Wikipedia continued-pretraining family. It is the frozen v1 implementation,
-not the current program limit. The later #6248 usability decision approves the
+The first real production instantiation used the operator-accepted Ukrainian
+Wikipedia continued-pretraining family. It is historical v1 evidence only:
+#6958 freezes Wikipedia Foundry views out of teaching, gold, and training.
+It is not a current program limit or an active eligible view. The later #6248 usability decision approves the
 retained literary, textbook, historical, and external-article corpus for local
 model learning after required preprocessing. #6171 must still separate that
 local capability from raw redistribution and publication, restore retained
@@ -67,7 +68,7 @@ contains no text. The measured partition contains:
 - 564,381 characters masked from modern-Ukrainian loss; and
 - zero excluded source records or human-gold claims at payload preparation.
 
-Both continued-pretraining exporters process the complete admitted scope. One
+Historically, both continued-pretraining exporters processed the complete admitted scope. One
 long near-duplicate is excluded from each arm, leaving 1,028 real,
 model-training-eligible records. The faithful artifact preserves all accepted
 source text with no character masks. The modern artifact preserves the same
@@ -126,6 +127,7 @@ exactly.
 envelope. It binds a prepared text segment to an admitted
 `source_record_v1` parent through:
 
+- an explicit schema-validated `source_family` in the hash-bound parent;
 - source record ID and parent content SHA-256;
 - explicit full-source or character-span derivation and receipt;
 - segment text and segment SHA-256;
@@ -336,9 +338,11 @@ and recipe behavior while forcing every non-evaluation row to
 share a recipe-bound view.
 
 No qualified human correction has been admitted by this implementation. The
-operator has separately admitted 1,029 Ukrainian Wikipedia source records for
-one declared continued-pretraining destination; that admission does not create
-correction labels or grant any other destination. The exporter makes missing
+historical operator admission of 1,029 Ukrainian Wikipedia source records does
+not authorize a current continued-pretraining destination, correction labels,
+or any other destination. #6958 rejects that family before any model-view
+writer is created. This component has no teaching-view schema or command; it
+makes no claim to gate unimplemented future teaching tooling. The exporter makes missing
 evidence executable and auditable rather than converting unresolved inventory
 or silver evidence into human gold.
 

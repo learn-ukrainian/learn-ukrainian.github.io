@@ -3,7 +3,7 @@
     "build_config": "70abf29e77c94f47f477c9811705724d6155eb98a3017a218aa94454b5b58eef",
     "cases": "2164d7ba31322bf3cfbed8045ad3a5b6e759395175b2c1ab11172b9c0f1237db",
     "controlled_seeds": "aee8372bdab9d8b634affbb5324ffa09ab7fd261bb53d5586cc5abb52ada0350",
-    "foundry_firewall": "a1c2f3693a8672f7ab1d8e745fafd75c5c45eab2ba2bcd5e17d9ac4739635aee",
+    "foundry_firewall": "ad782f925e7468bb9608d0d870b8cd00828f5ee570a5c5e89d68621ce19f12c1",
     "local_run_config_example": "0e3fc35c1e8631b6aba1258141ac7d3d33726493481ca783deec15f474a5fa55",
     "saved_response_schema": "652e2ce89d170d5011a4fcfdf4fdd02fe7e1728d19c6b8a7479e38fc58b4cdb2",
     "suite_cli": "3d530290c063166237d044b8b59bbf8c665d239c38755bb8433557cbc3870db9"

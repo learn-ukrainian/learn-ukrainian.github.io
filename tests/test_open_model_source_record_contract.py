@@ -41,6 +41,20 @@ def test_schema_and_synthetic_example_are_admitted() -> None:
     assert result == {"admitted": True, "record_id": "record.synthetic-001", "reasons": []}
 
 
+def test_source_family_is_required_and_not_reconstructed_from_record_id() -> None:
+    schema, schema_hash = CONTRACT.load_schema()
+    validator = Draft202012Validator(schema)
+    record = example_record()
+    record["record_id"] = "record.wikipedia.lookalike-001"
+    record.pop("source_family")
+
+    assert CONTRACT.validate_record(record, validator, schema_hash) == {
+        "admitted": False,
+        "record_id": "record.wikipedia.lookalike-001",
+        "reasons": ["schema_invalid"],
+    }
+
+
 def test_fail_closed_unknown_conflicting_rejected_and_evaluation_only() -> None:
     schema, schema_hash = CONTRACT.load_schema()
     validator = Draft202012Validator(schema)

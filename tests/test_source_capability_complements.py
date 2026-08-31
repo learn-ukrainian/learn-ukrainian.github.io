@@ -429,10 +429,11 @@ def test_verify_rejects_tampered_binding(tmp_path: Path, target: str) -> None:
         )
 
 
-def test_filter_remains_faithful_and_text_free(tmp_path: Path) -> None:
+def test_wikipedia_learning_route_is_excluded_and_text_free(tmp_path: Path) -> None:
     complement, _worklist, _receipt, _locator_path, _rows = _build(tmp_path)
-    found = list(complements.filter_rows(complement, "local_model_learning", "evidenced", "candidate", True))
+    found = list(complements.filter_rows(complement, "local_model_learning", "excluded", "excluded", False))
     assert found and all("SENTINEL SOURCE TEXT" not in value for value in found)
+    assert list(complements.filter_rows(complement, "local_model_learning", "evidenced", "candidate", True)) == []
 
 
 def test_complement_schema_requires_locator_binding(tmp_path: Path) -> None:
@@ -476,7 +477,7 @@ def test_integrated_four_family_build_has_exact_locator_grade_and_representation
     assert body["coverage"]["locator_by_family"] == {family: 2 for family in families}
     assert body["coverage"]["by_textbook_grade"] == {"7": 2}
     assert body["representation_totals"] == {
-        "faithful": {"candidate": 2, "metadata_only": 6},
+        "faithful": {"candidate": 0, "metadata_only": 8},
         "loss_masked": {"not_classified_phase2": 8},
         "protected": {"not_classified_phase2": 8},
     }
@@ -513,8 +514,30 @@ def test_faithful_requires_both_preparation_and_learning(tmp_path: Path) -> None
 
     complement, _worklist, _receipt, _locator_path, _rows = _build(tmp_path, policy_mutate=mutate)
     row = json.loads(complement.read_text().splitlines()[0])
-    assert row["routes"]["capabilities"]["local_model_learning"] == "candidate"
+    assert row["routes"]["capabilities"]["local_model_learning"] == "excluded"
     assert row["routes"]["representations"]["faithful"] == "metadata_only"
+
+
+def test_wikipedia_policy_cannot_reopen_learning_without_a_new_bound_policy() -> None:
+    policy = json.loads(
+        (ROOT / "data/projects/open_model_data/evidence/source_capability_policy_v1.json").read_text()
+    )
+    families, _overrides = complements._validate_policy(
+        policy,
+        complements._validator(complements.SCHEMAS["policy"]),
+    )
+    wikipedia = families["wikipedia"]["decisions"]
+
+    assert wikipedia["local_preparation"]["state"] == "evidenced"
+    assert wikipedia["local_model_learning"] == {
+        "state": "excluded",
+        "evidence_refs": ["evidence.wikipedia_primary_rights_v1"],
+        "missing_evidence_keys": [
+            "actor_scope",
+            "destination_scope",
+            "explicit_license_or_permission",
+        ],
+    }
 
 
 def test_source_override_beats_family_default(tmp_path: Path) -> None:

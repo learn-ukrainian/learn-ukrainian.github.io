@@ -39,8 +39,10 @@ R2U, Ukrainian corpus context, local Грінченко/ЕСУМ/СУМ-11 evide
 bounded ULIF or per-dictionary `slovnyk.me` evidence. No single source is a
 verdict.
 
-The current production receipt contains 1,028 admitted Wikipedia records in
-each continued-pretraining view. It contains zero eligible correction,
+The historical production receipt contains 1,028 Wikipedia records in each
+continued-pretraining view. #6958 freezes Wikipedia Foundry out of teaching,
+gold, and training, so those historical views are not an active eligibility
+claim. It contains zero eligible correction,
 preference, or quality-filter records; all 739,503 silver records remain
 protected or unresolved. These are product-readiness facts, not evidence that
 the corpus lacks useful material. Phase 0 #6322 audits the blocking contracts
@@ -65,8 +67,10 @@ project's synthetic and translated collections. The
 verified all 137,723 raw literary rows against retained source locators and
 core metadata, and verified the textbook family against 158 chunk files, 170
 PDFs, the selection ledger, downloader, and page-URL map. The operator has
-approved these retained human-authored families for downstream research and
-model learning toward the project goal.
+approved retained human-authored families for downstream research and model
+learning toward the project goal, subject to each family’s current capability
+policy. Wikipedia remains available only for its existing interactive reference
+use; it is excluded from teaching, gold, and training.
 
 Downstream model learning, raw-source redistribution, public dataset release,
 public weight or adapter release, and public release are independent
@@ -148,7 +152,7 @@ model-only or silver evidence; they do not certify their own Ukrainian.
 
 Export source text and labeled data through different manifests:
 
-- `continued_pretraining`: admitted human-authored text only;
+- `continued_pretraining`: admitted human-authored text from a currently eligible source family only;
 - `correction_instruction`: an observed source and supported target;
 - `preference`: explicit chosen/rejected alternatives;
 - `quality_filter`: text-free or rights-safe quality decisions;
@@ -212,9 +216,10 @@ sequence length, precision, optimizer, and adapter/full-parameter policy before
 approving its run. These calculations are a consumer planning surface, not a
 Foundry spending plan.
 
-The pinned Gemma 4 IT tokenizer produced 7,696,734 non-special tokens from
-2,778,111 lexical words in the 1,028-record, deduplicated training-eligible
-Wikipedia view: 2.7705 total text tokens per lexical word. The admitted source
+Historically, the pinned Gemma 4 IT tokenizer produced 7,696,734 non-special tokens from
+2,778,111 lexical words in the 1,028-record, deduplicated Wikipedia view:
+2.7705 total text tokens per lexical word. That measurement is not a training-eligible
+view after #6958. The historical source
 family has 1,029 records / 2,865,506 lexical words; the view exporter excludes
 one long near-duplicate, as recorded in the
 [model-view runbook](ukrainian-data-foundry-model-views.md). Applying the

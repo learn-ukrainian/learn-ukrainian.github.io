@@ -8,8 +8,8 @@
 
 ## Plain answer
 
-The corpus is usable for the project's goal. An LLM can learn from these
-textbooks, literature, articles, and Wikipedia after the text is divided into
+The corpus is usable for the project's goal. An LLM can learn from eligible
+textbooks, literature, and articles after the text is divided into
 the correct learning strata and damaged or non-target spans are kept out of
 modern-Ukrainian loss.
 
@@ -76,15 +76,18 @@ describe different retained units rather than a lost-text discrepancy.
 | Intended use | Decision | Conditions |
 | --- | --- | --- |
 | Run the clean-Ukrainian detector and evidence tool | **Use now** | Preserve uncertainty; VESUM absence alone is never an error verdict |
-| Continue training an existing open model downstream | **Use after preprocessing** | Deduplicate, stratify, filter/mask damage, preserve lineage, and isolate evaluation |
+| Continue training an existing open model downstream | **Use after preprocessing** | Deduplicate, stratify, filter/mask damage, preserve lineage, isolate evaluation, and exclude Wikipedia Foundry views under #6958 |
 | Prepare a reproducible training recipe for another Ukrainian team | **Use now** | Emit manifests and receipts without embedding private paths or republishing source files |
 | Train a general foundation model from scratch | **Do not use as the only corpus** | The roughly 139-million-token planning scale is far below foundation-model scale |
 | Create automatic correction/preference gold | **Not from raw detector output** | Use evidence-graded silver; call it gold only after adequate validation |
 | Publish raw books or textbook PDFs | **Separate decision** | Not required for downstream learning, derived receipts, tool publication, or the recipe |
 | Publish weights or an adapter | **Separate decision** | Evaluate capability, regressions, memorization, obligations, and release terms first |
 
-The operator has approved the retained human-authored source corpus for
-downstream research and model-learning work toward the project goal. This
+The operator has approved retained human-authored source families for
+downstream research and model-learning work toward the project goal, subject
+to current source-family capability policy. #6958 excludes Wikipedia Foundry
+from teaching, gold, and training while preserving its existing interactive
+reference use. This
 decision does
 not claim a blanket right to rehost the raw source books, publish a dataset, or
 release weights. Those are separate capabilities and must not be used to block

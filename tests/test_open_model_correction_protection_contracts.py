@@ -17,7 +17,7 @@ SHA = "a" * 64
 GOLD_LANE_HASHES = {
     CONTRACTS / "correction_record_v1.schema.json": "35bd6ccc85fc38f60879db4ec74fbf1979cccb1754ffb108c525d5f136ca747a",
     CONTRACTS / "correction_reviewer_decision_v1.schema.json": "c4d697b0afd6338eb7493c09b54ec265d82cc60bbc6a905f4b9707b0647177a6",
-    ROOT / "scripts/projects/open_model_data/model_view_exporter.py": "a1c2f3693a8672f7ab1d8e745fafd75c5c45eab2ba2bcd5e17d9ac4739635aee",
+    ROOT / "scripts/projects/open_model_data/model_view_exporter.py": "ad782f925e7468bb9608d0d870b8cd00828f5ee570a5c5e89d68621ce19f12c1",
 }
 SCHEMA_NAMES = (
     "correction_protection_source_v1.schema.json",
@@ -237,6 +237,6 @@ def test_fixed_dispositions_namespace_and_release_safety() -> None:
     assert safety["external_advisory_model_evidence_used"] == {"type": "boolean"}
 
 
-def test_existing_gold_lane_and_exporter_are_untouched() -> None:
+def test_existing_gold_lane_contracts_and_gated_exporter_are_hash_pinned() -> None:
     for path, expected in GOLD_LANE_HASHES.items():
         assert hashlib.sha256(path.read_bytes()).hexdigest() == expected
