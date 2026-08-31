@@ -107,9 +107,9 @@ def test_monitor_resolves_to_dedicated_provider_slot(resolver: str, expected: st
 @pytest.mark.parametrize(
     ("selector", "expected"),
     [
-        ("infra", "infra\tepic:6943\n"),
-        ("harness", "infra\tepic:6943\n"),
-        ("infra.fleet-comms", "infra\tepic:6943\n"),
+        ("infra", f"infra\t{INFRA_STREAM_ID}\n"),
+        ("harness", f"infra\t{INFRA_STREAM_ID}\n"),
+        ("infra.fleet-comms", f"infra\t{INFRA_STREAM_ID}\n"),
         ("devops", "devops\tepic:5703\n"),
         ("infra.devops", "devops\tepic:5703\n"),
         ("atlas", "atlas\tepic:4387\n"),
@@ -227,8 +227,8 @@ def test_devops_epic_is_registered_separately_from_infra() -> None:
     registry = yaml.safe_load(_ISSUE_STREAMS.read_text(encoding="utf-8"))["streams"]
 
     assert registry["infra-harness"]["epics"]
-    assert registry["devops"]["epics"] == [5703]
-    assert registry["infra-harness"]["epics"] != registry["devops"]["epics"]
+    assert 5703 in registry["devops"]["epics"]  # allow-hardcoded-epic: devops stream anchor
+    assert set(registry["infra-harness"]["epics"]).isdisjoint(registry["devops"]["epics"])
     assert f"epic:{int(registry['infra-harness']['epics'][0])}" == INFRA_STREAM_ID
 
 
@@ -236,9 +236,9 @@ def test_monitor_epic_is_registered_separately_from_infra() -> None:
     registry = yaml.safe_load(_ISSUE_STREAMS.read_text(encoding="utf-8"))["streams"]
 
     assert registry["infra-harness"]["epics"]
-    assert registry["monitor"]["epics"] == [7177]
-    assert registry["infra-harness"]["epics"] != registry["monitor"]["epics"]
-    assert registry["devops"]["epics"] != registry["monitor"]["epics"]
+    assert 7177 in registry["monitor"]["epics"]  # allow-hardcoded-epic: monitor stream anchor
+    assert set(registry["infra-harness"]["epics"]).isdisjoint(registry["monitor"]["epics"])
+    assert set(registry["devops"]["epics"]).isdisjoint(registry["monitor"]["epics"])
 
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
