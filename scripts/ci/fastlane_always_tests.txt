@@ -11,6 +11,7 @@ tests/api/test_sources_router_context.py
 tests/control_plane/test_component_interlock.py
 tests/control_plane/test_storage.py
 tests/control_plane/test_storage_contract.py
+tests/fleet_comms/test_artifacts_byteplane_integrity.py
 tests/fleet_comms/test_artifacts_pg_byte_plane.py
 tests/fleet_comms/test_artifacts_pg_transactions.py
 tests/test_ask_opencode.py

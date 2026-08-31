@@ -52,6 +52,12 @@ _BUSY_TIMEOUT_MS = 5_000
 # serve ArtifactRecord plus the payload itself, so metadata and bytes share one
 # durability domain instead of a pg row pointing at a host-local file.
 _PG_BLOB_TABLE = "fleet_comms_artifact_blobs"
+# #7484 (Sol 1.9): ONE documented byte-plane limit, enforced before hashing,
+# filesystem writes, or a BYTEA insert. Raw adapter captures are the largest
+# legitimate payload class; 64 MiB bounds them while staying far under the
+# 1 GB bytea wall and psycopg parameter limits. The rollover-bundle path keeps
+# its own tighter 4 MiB cap.
+MAX_ARTIFACT_BYTES = 64 * 1024 * 1024
 
 
 def _utc_now() -> str:
@@ -68,7 +74,9 @@ class ArtifactRecord:
     producer: str
     retention_class: str
     created_at: str
-    blob_path: Path
+    # None under pg authority (#7484): bytes live in Postgres, a host-local
+    # path would be a fabricated contract. Sqlite records always carry one.
+    blob_path: Path | None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -80,7 +88,7 @@ class ArtifactRecord:
             "producer": self.producer,
             "retention_class": self.retention_class,
             "created_at": self.created_at,
-            "blob_path": str(self.blob_path),
+            "blob_path": str(self.blob_path) if self.blob_path is not None else None,
         }
 
 
@@ -207,6 +215,11 @@ class ArtifactStore:
             self._require_active_transaction_for_deferred_commit()
         if not producer or not producer.strip():
             raise ArtifactStoreError("producer is required")
+        if len(data) > MAX_ARTIFACT_BYTES:
+            raise ArtifactStoreError(
+                f"artifact payload of {len(data)} bytes exceeds the byte-plane "
+                f"limit of {MAX_ARTIFACT_BYTES} bytes (#7484)"
+            )
         if logical_filename is not None:
             logical_filename = self._validate_filename(logical_filename)
         digest = hashlib.sha256(data).hexdigest()
@@ -331,14 +344,24 @@ class ArtifactStore:
             raise ArtifactStoreError(f"failed to persist artifact metadata for {aid}")
         return self._row_to_record(row)
 
+    # #7484 (Sol 1.15): metadata lookups must not drag the BYTEA payload over
+    # the wire — a dedup probe against a 100 MB duplicate used to download all
+    # of it. Payload transfer happens only in _pg_payload_by_artifact_id.
+    _PG_META_COLUMNS = (
+        "artifact_id, sha256, bytes, mime_type, logical_filename, "
+        "producer, retention_class, created_at"
+    )
+
     def _pg_row_by_sha256(self, digest: str) -> Any:
         return self._conn.execute(
-            f"SELECT * FROM {_PG_BLOB_TABLE} WHERE sha256 = %s", (digest,)
+            f"SELECT {self._PG_META_COLUMNS} FROM {_PG_BLOB_TABLE} WHERE sha256 = %s",
+            (digest,),
         ).fetchone()
 
     def _pg_row_by_artifact_id(self, artifact_id: str) -> Any:
         return self._conn.execute(
-            f"SELECT * FROM {_PG_BLOB_TABLE} WHERE artifact_id = %s", (artifact_id,)
+            f"SELECT {self._PG_META_COLUMNS} FROM {_PG_BLOB_TABLE} WHERE artifact_id = %s",
+            (artifact_id,)
         ).fetchone()
 
     def store_text(
@@ -442,9 +465,15 @@ class ArtifactStore:
         ).fetchone()
         return self._row_to_record(row) if row else None
 
+    def _pg_payload_by_artifact_id(self, artifact_id: str) -> Any:
+        return self._conn.execute(
+            f"SELECT sha256, payload FROM {_PG_BLOB_TABLE} WHERE artifact_id = %s",
+            (artifact_id,),
+        ).fetchone()
+
     def read_bytes(self, artifact_id: str) -> bytes:
         if self._authority is Authority.PG:
-            row = self._pg_row_by_artifact_id(artifact_id)
+            row = self._pg_payload_by_artifact_id(artifact_id)
             if row is None:
                 raise ArtifactStoreError(f"artifact not found: {artifact_id}")
             data = bytes(row["payload"])
@@ -544,6 +573,7 @@ class ArtifactStore:
             "SELECT artifact_id, sha256, created_at FROM artifacts"
         ).fetchall()
         deleted: list[str] = []
+        unlink_candidates: list[str] = []
         for row in rows:
             aid = str(row["artifact_id"])
             if self.is_referenced(aid):
@@ -551,18 +581,63 @@ class ArtifactStore:
             if str(row["created_at"]) > cutoff:
                 continue
             digest = str(row["sha256"])
-            path = self.blob_path_for(digest)
             self._conn.execute("DELETE FROM artifacts WHERE artifact_id = ?", (aid,))
-            if path.is_file():
-                # Only remove blob if no other artifact row shares the digest.
-                still = self._conn.execute(
+            unlink_candidates.append(digest)
+            deleted.append(aid)
+        # #7484 (Sol 1.6): COMMIT the row deletions BEFORE touching any file.
+        # The old unlink-then-commit order could crash into rows that pointed
+        # at deleted bytes — the exact failure the module docstring rules out.
+        # The inverse window (committed rows gone, files still present) is
+        # recoverable garbage: reclaim_orphan_blobs() sweeps it.
+        self._conn.commit()
+        for digest in unlink_candidates:
+            still = self._conn.execute(
+                "SELECT 1 FROM artifacts WHERE sha256 = ? LIMIT 1", (digest,)
+            ).fetchone()
+            if still is None:
+                path = self.blob_path_for(digest)
+                if path.is_file():
+                    path.unlink()
+        return deleted
+
+    def reclaim_orphan_blobs(self, *, grace_seconds: int = 3600) -> list[str]:
+        """Delete blob files no artifact row references (crash leftovers).
+
+        #7484 / Sol M6: a crash between blob write and row commit — or between
+        GC's row commit and its unlinks — leaves bytes that row-driven GC can
+        never discover. Grace-period protected: young files are in-flight
+        writes, never touched. Returns the reclaimed digests. Sqlite only.
+        """
+        if self._authority is Authority.PG:
+            raise ArtifactStoreError(
+                "reclaim_orphan_blobs() is not implemented for "
+                "fleet_comms authority=pg in this slice"
+            )
+        import time as _time
+
+        reclaimed: list[str] = []
+        if not self.blob_root.is_dir():
+            return reclaimed
+        cutoff_ts = _time.time() - max(0, grace_seconds)
+        for shard in sorted(self.blob_root.iterdir()):
+            if not shard.is_dir():
+                continue
+            for blob in sorted(shard.iterdir()):
+                digest = blob.name
+                if len(digest) != 64:
+                    continue
+                try:
+                    if blob.stat().st_mtime > cutoff_ts:
+                        continue
+                except OSError:
+                    continue
+                row = self._conn.execute(
                     "SELECT 1 FROM artifacts WHERE sha256 = ? LIMIT 1", (digest,)
                 ).fetchone()
-                if still is None:
-                    path.unlink()
-            deleted.append(aid)
-        self._conn.commit()
-        return deleted
+                if row is None:
+                    blob.unlink(missing_ok=True)
+                    reclaimed.append(digest)
+        return reclaimed
 
     def _write_blob_atomic(self, dest: Path, data: bytes) -> None:
         fd, tmp_name = tempfile.mkstemp(prefix=".art-", dir=str(dest.parent))
@@ -638,7 +713,9 @@ class ArtifactStore:
             producer=str(row["producer"]),
             retention_class=str(row["retention_class"]),
             created_at=str(row["created_at"]),
-            blob_path=self.blob_path_for(digest),
+            blob_path=(
+                None if self._authority is Authority.PG else self.blob_path_for(digest)
+            ),
         )
 
     def _validate_filename(self, name: str) -> str:
