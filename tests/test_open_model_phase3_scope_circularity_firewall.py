@@ -143,7 +143,7 @@ def test_private_runtime_rejects_caller_hashes_and_unsafe_config_paths(tmp_path:
     os.chmod(config, 0o600)
     assert firewall.run_steward_production(str(config))["code"] == "private_path_unsafe"
     config = _private_config(root)
-    os.chmod(config, 0o640)
+    os.chmod(config, 0o700)
     assert firewall.run_steward_production(str(config))["code"] == "private_path_unsafe"
     os.chmod(config, 0o600)
     hard = root / "hard.json"
