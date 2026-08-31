@@ -260,7 +260,14 @@ def _secure_object_raw(pack_root_fd: int, item: Mapping[str, Any]) -> bytes:
         elif storage_kind == "zstd":
             executable = storage._effective_zstd_executable(None)
             with os.fdopen(os.dup(fd), "rb") as source:
-                process = subprocess.run([str(executable), *storage.ZSTD_DECOMPRESS_ARGS], stdin=source, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, check=False)
+                process = subprocess.run(
+                    [str(executable), *storage.ZSTD_DECOMPRESS_ARGS],
+                    stdin=source,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.DEVNULL,
+                    check=False,
+                    timeout=120,
+                )
             _require(process.returncode == 0, "identity_roundtrip_failure")
             raw = process.stdout
         else:
