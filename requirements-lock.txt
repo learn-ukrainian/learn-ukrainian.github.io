@@ -204,7 +204,7 @@ transformers==5.14.1
 trec-car-tools==2.6
 typer-slim==0.24.0
 typer==0.26.7
-typing-inspection==0.4.2
+typing-inspection==0.4.4
 typing_extensions==4.16.0
 tzlocal==5.4.4
 udapi==0.5.2
