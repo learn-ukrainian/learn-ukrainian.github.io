@@ -3844,6 +3844,64 @@ def _sum20_in_coverage(lemma: str) -> bool:
     return lookup[0].casefold() in _SUM20_COVERED_INITIALS
 
 
+@lru_cache(maxsize=8192)
+def _sum20_official_rows(lookup_word: str, db_path: str) -> tuple[dict[str, Any], ...]:
+    """Read exact official СУМ-20 rows without creating a table or using the web."""
+    if not lookup_word:
+        return ()
+    try:
+        from scripts.rag.source_query import query_sum20
+
+        rows = query_sum20(lookup_word, db_path=db_path)
+    except (OSError, sqlite3.Error):
+        return ()
+    return tuple(row for row in rows if isinstance(row, dict))
+
+
+def _sum20_official_definition_card(lookup_word: str) -> dict[str, Any] | None:
+    """Build a public definition card from locally ingested official rows."""
+    definitions: list[str] = []
+    official_url = ""
+    for row in _sum20_official_rows(lookup_word, str(SOURCES_DB)):
+        senses = row.get("senses")
+        if not isinstance(senses, list):
+            continue
+        row_definitions: list[str] = []
+        for sense in senses:
+            if not isinstance(sense, Mapping):
+                continue
+            definition = _definition_body(sense.get("definition"))
+            if not definition:
+                continue
+            labels = sense.get("register_labels")
+            if isinstance(labels, list):
+                register_labels = [label.strip() for label in labels if isinstance(label, str) and label.strip()]
+                if register_labels:
+                    definition = f"{' '.join(register_labels)} {definition}"
+            row_definitions.append(definition)
+        if not row_definitions:
+            continue
+        if len(row_definitions) > 1:
+            row_definitions = [
+                " ".join(f"{index}. {definition}" for index, definition in enumerate(row_definitions, 1))
+            ]
+        definitions.extend(row_definitions)
+        official_url = official_url or str(row.get("official_url") or "")
+
+    if not definitions:
+        return None
+    card: dict[str, Any] = {
+        "id": "sum20",
+        "source": SUM20_ACADEMIC_LABEL,
+        "source_pill": SUM20_SHORT_LABEL,
+        "note": "сучасний тлумачний словник",
+        "definitions": definitions,
+    }
+    if official_url:
+        card["source_url"] = official_url
+    return card
+
+
 def _sum20_definition_card(
     lemma: str,
     cache: dict[str, Any] | None = None,
@@ -3853,6 +3911,17 @@ def _sum20_definition_card(
     if not _sum20_in_coverage(lemma):
         return None
     lookup_word = _slovnyk_lookup_word(lemma)
+    official_card = _sum20_official_definition_card(lookup_word)
+    if official_card is not None:
+        if resolve_xref:
+            resolved = _resolve_definition_xref(
+                official_card,
+                lemma,
+                lambda target: _sum20_official_definition_card(_slovnyk_lookup_word(target)),
+            )
+            if resolved is not None:
+                return resolved
+        return official_card
     row = _cache_lookup(cache, "newsum") if cache is not None else None
     if not row:
         transient = False
