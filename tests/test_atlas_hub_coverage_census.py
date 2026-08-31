@@ -210,9 +210,38 @@ def test_markdown_formatter_renders_table() -> None:
         "generated_at": "2026-08-31T00:00:00Z",
         "entries": [
             _entry(
-                lemma="слово",
+                lemma="слово1",
                 enrichment={"definition_cards": [{"id": "vts", "definitions": ["def"]}]},
-            )
+                sections={
+                    "synonyms": {
+                        "items": ["мова"],
+                        "synsets": [{"id": 1, "members": [{"lemma": "мова"}]}],
+                    },
+                    "proverbs": {"items": [{"text": "Слово не горобець"}]},
+                },
+            ),
+            _entry(
+                lemma="слово2",
+                enrichment={"definition_cards": [{"id": "sum20", "definitions": ["def2"]}]},
+                sections={
+                    "synonyms": {
+                        "items": ["вираз"],
+                        "synsets": [{"id": 2, "members": [{"lemma": "вираз"}]}],
+                    },
+                },
+            ),
+            _entry(
+                lemma="слово3",
+                enrichment={"definition_cards": [{"id": "grinchenko", "definitions": ["def3"]}]},
+                sections={
+                    "synonyms": {
+                        "items": ["фраза"],
+                    },
+                },
+            ),
+            _entry(
+                lemma="слово4",
+            ),
         ],
     }
     census = build_hub_coverage_census(manifest)
@@ -222,6 +251,20 @@ def test_markdown_formatter_renders_table() -> None:
     assert "2026-08-31T00:00:00Z" in md
     assert "| **Definitions (any card)** | `enrichment.definition_cards` |" in md
     assert "### Residual & Priority Analysis" in md
+
+    # Residual bullets must reflect fixture computed counts, not live-catalog literals
+    assert "2. **Proverbs residual**: `sections.proverbs` has **1** entries (25.00%)." in md
+    assert (
+        "3. **Synset depth**: `sections.synonyms.synsets` has **2** entries (50.00%) vs flat items (3 / 75.00%)." in md
+    )
+    assert (
+        "4. **Definitions**: `enrichment.definition_cards` covers **3** entries (75.00%), "
+        "with VTS (1 / 25.00%), СУМ-20 (1 / 25.00%), and Грінченко (1 / 25.00%)." in md
+    )
+
+    # Ensure live-catalog literals are not present
+    for literal in ("554", "2,972", "9,738", "6,703", "5,153", "2,532", "9,082"):
+        assert literal not in md
 
 
 def test_cli_emits_json_and_markdown(tmp_path: Path) -> None:

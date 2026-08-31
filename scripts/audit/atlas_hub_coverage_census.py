@@ -652,15 +652,45 @@ def format_markdown_table(census: dict[str, Any], *, p0_only: bool = False) -> s
             )
 
     residual = census.get("residual_analysis", {})
+    layers_by_key = {row["key"]: row for row in census.get("p0_layers", [])}
+
+    thinnest_label = residual.get("thinnest_layer_label") or "None"
+    thinnest_key = residual.get("thinnest_layer_key") or "None"
+    thinnest_count = residual.get("thinnest_layer_count") or 0
+    thinnest_pct = residual.get("thinnest_layer_pct") or 0.0
+
+    prov = layers_by_key.get("sections.proverbs.items", {})
+    synsets = layers_by_key.get("sections.synonyms.synsets", {})
+    syn_items = layers_by_key.get("sections.synonyms.items", {})
+    def_cards = layers_by_key.get("enrichment.definition_cards", {})
+    vts = layers_by_key.get("enrichment.definition_cards.vts", {})
+    sum20 = layers_by_key.get("enrichment.definition_cards.sum20", {})
+    grinchenko = layers_by_key.get("enrichment.definition_cards.grinchenko", {})
+
+    prov_count = prov.get("non_empty", 0)
+    prov_pct = prov.get("pct", 0.0)
+    synsets_count = synsets.get("non_empty", 0)
+    synsets_pct = synsets.get("pct", 0.0)
+    syn_items_count = syn_items.get("non_empty", 0)
+    syn_items_pct = syn_items.get("pct", 0.0)
+    def_cards_count = def_cards.get("non_empty", 0)
+    def_cards_pct = def_cards.get("pct", 0.0)
+    vts_count = vts.get("non_empty", 0)
+    vts_pct = vts.get("pct", 0.0)
+    sum20_count = sum20.get("non_empty", 0)
+    sum20_pct = sum20.get("pct", 0.0)
+    grinchenko_count = grinchenko.get("non_empty", 0)
+    grinchenko_pct = grinchenko.get("pct", 0.0)
+
     lines.extend(
         [
             "",
             "### Residual & Priority Analysis",
             "",
-            f"1. **Thinnest P0 Layer**: **{residual.get('thinnest_layer_label')}** (`{residual.get('thinnest_layer_key')}`) with **{residual.get('thinnest_layer_count'):,}** entries ({residual.get('thinnest_layer_pct'):.2f}%).",
-            "2. **Proverbs residual**: `sections.proverbs` has **554** entries (2.75%).",
-            "3. **Synset depth**: `sections.synonyms.synsets` has **2,972** entries (14.77%) vs flat items (9,082 / 45.14%).",
-            "4. **Definitions**: `enrichment.definition_cards` covers **9,738** entries (48.40%), with VTS (6,703 / 33.31%), СУМ-20 (5,153 / 25.61%), and Грінченко (2,532 / 12.58%).",
+            f"1. **Thinnest P0 Layer**: **{thinnest_label}** (`{thinnest_key}`) with **{thinnest_count:,}** entries ({thinnest_pct:.2f}%).",
+            f"2. **Proverbs residual**: `sections.proverbs` has **{prov_count:,}** entries ({prov_pct:.2f}%).",
+            f"3. **Synset depth**: `sections.synonyms.synsets` has **{synsets_count:,}** entries ({synsets_pct:.2f}%) vs flat items ({syn_items_count:,} / {syn_items_pct:.2f}%).",
+            f"4. **Definitions**: `enrichment.definition_cards` covers **{def_cards_count:,}** entries ({def_cards_pct:.2f}%), with VTS ({vts_count:,} / {vts_pct:.2f}%), СУМ-20 ({sum20_count:,} / {sum20_pct:.2f}%), and Грінченко ({grinchenko_count:,} / {grinchenko_pct:.2f}%).",
         ]
     )
 
