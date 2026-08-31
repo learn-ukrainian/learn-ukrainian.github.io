@@ -73,6 +73,133 @@ implementation continues. The receipt in
 `data/projects/open_model_data/reference/phase3_cyrillic_slavic_predecessor_handoff_v1.json`
 binds the predecessor state to this identity.
 
+## V3 additive cooperative bridge
+
+V3 is an additive execution amendment to the V2 outcome, not a replacement for
+its evidence. Its reviewed consensus packet has SHA-256
+`d3444c126deb91d05129d51c5344aa204b1db9ca0927c246698e0389466d0b1a`.
+Gemini 3.7 Flash High approved the post-amendment Ukrainian-domain audit;
+GPT-5.6 Sol approved the scope/circularity ratification; and Grok 4.6 High
+approved the adversarial ratification, all against that packet. Claude Fable 5's
+earlier amendment findings are incorporated; its repeated final ratification
+call was unavailable at the provider session cap, not rejected. The tracked
+contract is `FROZEN_REVIEWED_METADATA_ONLY`; provider execution remains closed.
+The V2 parent outcome and every predecessor artifact remain active unless the
+V3 compatibility table assigns an exact, hash-bound disposition. In particular,
+the zero-row P4 v1 receipt remains immutable at
+`BLOCKED_PENDING_SOURCE_QUALIFIED_ADJUDICATION` and
+`57/39/15/16/14/2/R=0`; a nonempty pilot requires a new P4 v2 freeze.
+
+V3 makes archaic, historical, and dialectal Ukrainian recognition explicit.
+Every span is modeled over independent identity, diachrony, variety, period,
+region, register, contact-composition, context-role, editorial/recension, and
+surface-provenance axes. Binding interpretations are:
+
+- a living source-attested Ukrainian dialect is a protected Ukrainian variety,
+  not a separate language by default;
+- archaic or bookish modern Ukrainian is distinct from historical-stage
+  Ukrainian and may still be correct modern production when attested;
+- surzhyk is contact composition, not a language identity;
+- literary eye-dialect is an editorial/context layer, not proof of a speaker's
+  identity;
+- source-attested Rusyn remains protected and is not silently mapped to a
+  Ukrainian dialect, Russian, or historical “Rus'”.
+
+Original source surfaces remain intact. Protected historical, archaic/bookish,
+dialectal, Rusyn, Church-Slavonic, mixed, quoted, transliterated, named, and
+metalinguistic spans cannot become modern-correction truth merely because they
+are nonstandard. Unresolved evidence preserves ordered identity candidates and
+routes to abstention or evidence-insufficient state.
+
+Rights are operation-specific. Retention, deterministic local analysis,
+external-provider transmission, derivation, training, publication, and
+redistribution are separate capabilities; official availability implies none
+of the others. A missing capability blocks only that operation and remains
+denominator-visible.
+
+### Cooperative roles and gold boundary
+
+Stable functional roles are source admission, content-blind split custody,
+identity lead, independent dissent, dispute critic, candidate builder, human
+steward, evaluation steward, and orchestrator. The current preferred model
+routes are runtime policy rather than role identity:
+
+- Claude Fable 5 — identity lead;
+- Gemini 3.7 Flash High plus a fresh self-audit — independent dissent;
+- Grok 4.6 High — locked-dispute critic;
+- GPT-5.6 Sol — candidate builder after the identity join.
+
+Identity reviewers receive the same label-blind packet and cannot see the
+builder's proposed identity/protection/correction, each other, prestige/order,
+or held-out material. The builder runs after the identity join and never authors
+gold. Every call records the resolved route, family, exposure/effort, prompt and
+output hashes, schema result, retry count, substitution, and failure state.
+
+Agreement must be exact across span boundaries and every classification,
+protection, correction, and confidence/abstention axis. Model agreement remains
+`MODEL_AGREEMENT_QUARANTINED_NOT_GOLD` with zero coverage, gold, training,
+evaluation, and teaching-view eligibility. All protected/high-risk rows enter
+the human queue even on agreement. Only a source-qualified atomic human decision
+can make a candidate gold-eligible, and training eligibility still requires its
+own rights, split, provenance, lineage, view, and execution-authorization gates.
+
+Provider, parser, or critic failure never shrinks the denominator or strands a
+row. Strict parsing permits one format-only retry; remaining failure routes to a
+bounded, recorded substitute or the appropriate human queue. Identity-human and
+case-human states are separate, so identity adjudication alone cannot promote a
+teaching case to gold.
+
+### Human workload and solo held-out custody
+
+Before any pilot provider call, freeze the admitted source/cell IDs, atomic
+human-decision key, exact per-stratum audit counts and seed, 100% protected-row
+review, maximum decisions and steward-hours, overflow state, error thresholds,
+and escalation rules. Sampling promotes only inspected rows. A failed cohort is
+frozen for complete human review or remains unresolved; unsampled agreements
+stay quarantined.
+
+A solo operator may hold the human and evaluation roles only under a disclosed
+temporal firewall: content-blind tooling seals source-identity groups and
+nonzero held-out counts for every V3 stratum before construction; construction
+cannot access held-out identities, content, labels, locators, fingerprints,
+derivatives, or neighbours; construction artifacts freeze before later held-out
+exposure; and any later construction change invalidates that evaluation version.
+This is not claimed as institutional independence. Evidence-ambiguous claims may
+remain abstained instead of requiring a second person.
+
+### V3 bridge DAG and orchestrator resumption
+
+Three bounded native children extend #7423:
+
+1. **#7560 — V3-A taxonomy and denominator compatibility** freezes the taxonomy,
+   dialect-parent partition, required strata, per-operation rights, and exact
+   V2-to-V3 compatibility table.
+2. **#7559 — V3-B cooperative control plane and human workflow** freezes the visibility
+   matrix, strict outputs, no-dead-end transition validator, admitting human
+   registry, workload manifest, retry/substitution policy, and transition
+   receipts.
+3. **#7561 — V3-C held-out extension and solo custody** freezes nonzero per-stratum
+   held-out requirements, content-blind custody, temporal firewall, invalidation
+   rules, and evaluation thresholds.
+
+Issue #7430 remains P4 and depends on all three V3 bridge children plus the
+merged policy gate in #6958. Issues #7431–#7433 remain validation, scaling, and
+certification. An orchestrator must
+query the V3 control-plane artifact for predecessor hashes, role visibility,
+current blockers, legal transitions, and child-slot state; it must not recreate
+the design from conversation history.
+
+Global stops are denominator drift, split leakage, Cycle007 contamination,
+protected-span damage, rights/provenance corruption, hidden substitution, role
+visibility collision, or construction mutation after held-out exposure.
+Lane-local evidence, rights, provider, format, or capacity failures remain
+visible while disjoint safe work continues.
+
+This bridge establishes contracts only. It does not authorize provider calls,
+labeling, training, source publication, or promotion of any model output to gold;
+and it does not claim a nonempty pilot, `PILOT_VALIDATED`, `DATASET_READY`, or
+`TRAINING_VALIDATED`.
+
 ## P1 source and applicability freeze
 
 The metadata-only P1 freeze is generated by

@@ -1,0 +1,1830 @@
+{
+  "schema_version": "phase3_v3_cooperative_control_plane_v1",
+  "status": "FROZEN_REVIEWED_METADATA_ONLY",
+  "text_free": true,
+  "metadata_only": true,
+  "provider_calls": false,
+  "outcome_boundary": {
+    "v2_parent_outcome_sha256": "890498103f96a7b8f27fd52bc14418d8752e5b73a72ed8774dd0f52eb3160a47",
+    "reviewed_v3_consensus_sha256": "d3444c126deb91d05129d51c5344aa204b1db9ca0927c246698e0389466d0b1a",
+    "amendment_kind": "additive_versioned_amendment",
+    "dataset_nonempty_claimed": false,
+    "dataset_ready_claimed": false,
+    "training_validated_claimed": false,
+    "labeling_enabled": false,
+    "training_enabled": false,
+    "mass_provider_work_enabled": false
+  },
+  "bindings": {
+    "schema": {
+      "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
+      "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+    },
+    "validator": {
+      "path": "scripts/projects/open_model_data/phase3_v3_cooperative_control_plane.py",
+      "sha256": "50a6ef3de21ee999325a07478e9c3570f9b7d353a622fc28ab50a3f75e9055b3"
+    },
+    "v2_compatibility_matrix": {
+      "path": "data/projects/open_model_data/evidence/phase3_v2_compatibility_matrix_v1.json",
+      "sha256": "9f3113776f899759dc9d4bdde9cde8e3fd5c85f5b3e6e748bf0ac79fac28a29c"
+    },
+    "p2_canonical_contracts": {
+      "path": "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json",
+      "sha256": "dc8dfdf207728ef386cea14ddb328289b2beee5159afb98bf076e5f117602ea3"
+    },
+    "p1_dialect_amendment": {
+      "path": "data/projects/open_model_data/evidence/phase3_p1_dialect_regional_protection_amendment_v1.json",
+      "sha256": "5a4b259f764a3d41499f0a989c02fed921c18b62c9831d361d18d19dcc948afa"
+    },
+    "p4_v1": {
+      "schema": {
+        "path": "data/projects/open_model_data/contracts/phase3_p4_pilot_construction_v1.schema.json",
+        "sha256": "0af9e421a0a734718ff884a2b08286533c8f6f6af24c1be4b9023044719f1e8f"
+      },
+      "admission_file": {
+        "path": "data/projects/open_model_data/admission/phase3_p4_pilot_construction_v1.json",
+        "sha256": "d12ed8d0827263cf5c31f049c518cf90befb4fdf4ca5cb5b413d51b17a1ec4dd"
+      },
+      "admission_receipt_sha256": "9d070d83ab9978d71c0f09249adca4738beb3395215fc603c33e8aeae61e8881",
+      "status": "BLOCKED_PENDING_SOURCE_QUALIFIED_ADJUDICATION",
+      "denominator": {
+        "source_units": 57,
+        "unknown_rights_blockers": 39,
+        "base_required_cells": 15,
+        "composite_required_cells": 16,
+        "coverage_blocked_cells": 14,
+        "not_applicable_cells": 2,
+        "rule_slots_R": 0
+      }
+    },
+    "v2_parent_outcome_sha256": "890498103f96a7b8f27fd52bc14418d8752e5b73a72ed8774dd0f52eb3160a47"
+  },
+  "taxonomy": {
+    "tuple_fields": [
+      "span_offsets",
+      "language_identity",
+      "identity_candidates",
+      "diachronic_status",
+      "variety_status",
+      "variety_id",
+      "period_id",
+      "region_id",
+      "register_id",
+      "contact_composition",
+      "context_role",
+      "recension_editorial_layer_id",
+      "original_surface",
+      "editorial_surface",
+      "normalized_surface"
+    ],
+    "axes": [
+      {
+        "axis_id": "language_identity",
+        "required": true,
+        "values": [
+          "ukrainian",
+          "russian",
+          "belarusian",
+          "bulgarian",
+          "macedonian",
+          "serbian",
+          "montenegrin_cyrillic",
+          "rusyn",
+          "church_slavonic",
+          "old_east_slavic",
+          "mixed_or_unresolved",
+          "non_slavic",
+          "unknown"
+        ],
+        "independent_from": [
+          "identity_candidates",
+          "diachronic_status",
+          "variety_status",
+          "variety_id",
+          "period_id",
+          "region_id",
+          "register_id",
+          "contact_composition",
+          "context_role",
+          "recension_editorial_layer_id"
+        ]
+      },
+      {
+        "axis_id": "identity_candidates",
+        "required": true,
+        "values": [
+          "ordered_candidates_with_abstention"
+        ],
+        "independent_from": [
+          "language_identity",
+          "diachronic_status",
+          "variety_status",
+          "variety_id",
+          "period_id",
+          "region_id",
+          "register_id",
+          "contact_composition",
+          "context_role",
+          "recension_editorial_layer_id"
+        ]
+      },
+      {
+        "axis_id": "diachronic_status",
+        "required": true,
+        "values": [
+          "modern",
+          "archaic_bookish_modern",
+          "historical_stage",
+          "undetermined"
+        ],
+        "independent_from": [
+          "language_identity",
+          "identity_candidates",
+          "variety_status",
+          "variety_id",
+          "period_id",
+          "region_id",
+          "register_id",
+          "contact_composition",
+          "context_role",
+          "recension_editorial_layer_id"
+        ]
+      },
+      {
+        "axis_id": "variety_status",
+        "required": true,
+        "values": [
+          "standard",
+          "dialectal",
+          "regional",
+          "source_attested_identity",
+          "literary_eye_dialect",
+          "unspecified"
+        ],
+        "independent_from": [
+          "language_identity",
+          "identity_candidates",
+          "diachronic_status",
+          "variety_id",
+          "period_id",
+          "region_id",
+          "register_id",
+          "contact_composition",
+          "context_role",
+          "recension_editorial_layer_id"
+        ]
+      },
+      {
+        "axis_id": "variety_id",
+        "required": true,
+        "values": [
+          "source_attested_variety_or_none"
+        ],
+        "independent_from": [
+          "language_identity",
+          "identity_candidates",
+          "diachronic_status",
+          "variety_status",
+          "period_id",
+          "region_id",
+          "register_id",
+          "contact_composition",
+          "context_role",
+          "recension_editorial_layer_id"
+        ]
+      },
+      {
+        "axis_id": "period_id",
+        "required": true,
+        "values": [
+          "source_attested_period_or_none"
+        ],
+        "independent_from": [
+          "language_identity",
+          "identity_candidates",
+          "diachronic_status",
+          "variety_status",
+          "variety_id",
+          "region_id",
+          "register_id",
+          "contact_composition",
+          "context_role",
+          "recension_editorial_layer_id"
+        ]
+      },
+      {
+        "axis_id": "region_id",
+        "required": true,
+        "values": [
+          "source_attested_region_or_none"
+        ],
+        "independent_from": [
+          "language_identity",
+          "identity_candidates",
+          "diachronic_status",
+          "variety_status",
+          "variety_id",
+          "period_id",
+          "register_id",
+          "contact_composition",
+          "context_role",
+          "recension_editorial_layer_id"
+        ]
+      },
+      {
+        "axis_id": "register_id",
+        "required": true,
+        "values": [
+          "source_attested_register_or_none"
+        ],
+        "independent_from": [
+          "language_identity",
+          "identity_candidates",
+          "diachronic_status",
+          "variety_status",
+          "variety_id",
+          "period_id",
+          "region_id",
+          "contact_composition",
+          "context_role",
+          "recension_editorial_layer_id"
+        ]
+      },
+      {
+        "axis_id": "contact_composition",
+        "required": true,
+        "values": [
+          "none",
+          "surzhyk_contact_mixing",
+          "quotation",
+          "transliteration",
+          "unresolved_contact"
+        ],
+        "independent_from": [
+          "language_identity",
+          "identity_candidates",
+          "diachronic_status",
+          "variety_status",
+          "variety_id",
+          "period_id",
+          "region_id",
+          "register_id",
+          "context_role",
+          "recension_editorial_layer_id"
+        ]
+      },
+      {
+        "axis_id": "context_role",
+        "required": true,
+        "values": [
+          "production",
+          "correction",
+          "protected_context",
+          "quotation",
+          "metalinguistic",
+          "named_entity",
+          "unresolved"
+        ],
+        "independent_from": [
+          "language_identity",
+          "identity_candidates",
+          "diachronic_status",
+          "variety_status",
+          "variety_id",
+          "period_id",
+          "region_id",
+          "register_id",
+          "contact_composition",
+          "recension_editorial_layer_id"
+        ]
+      },
+      {
+        "axis_id": "recension_editorial_layer_id",
+        "required": true,
+        "values": [
+          "source_attested_recension_or_editorial_layer_or_none"
+        ],
+        "independent_from": [
+          "language_identity",
+          "identity_candidates",
+          "diachronic_status",
+          "variety_status",
+          "variety_id",
+          "period_id",
+          "region_id",
+          "register_id",
+          "contact_composition",
+          "context_role"
+        ]
+      }
+    ],
+    "surface_layers": [
+      {
+        "layer_id": "original_surface",
+        "present_in_contract": true,
+        "provenance_required": true,
+        "source_text_embedded": false
+      },
+      {
+        "layer_id": "editorial_surface",
+        "present_in_contract": true,
+        "provenance_required": true,
+        "source_text_embedded": false
+      },
+      {
+        "layer_id": "normalized_surface",
+        "present_in_contract": true,
+        "provenance_required": true,
+        "source_text_embedded": false
+      }
+    ],
+    "protected_invariants": {
+      "original_surface_preserved": true,
+      "historical_forms_protected": true,
+      "archaic_forms_protected": true,
+      "dialect_forms_protected": true,
+      "modern_correction_eligible_when_protected": false,
+      "automatic_standard_normalization": false,
+      "automatic_national_successor_mapping": false
+    },
+    "dialect_parent_partition": {
+      "parent_cell_id": "protection.source_attested_ukrainian_dialect_or_regional_form.dialect_or_regional_form.protected_dialect_or_regional",
+      "parent_artifact": {
+        "path": "data/projects/open_model_data/evidence/phase3_p1_dialect_regional_protection_amendment_v1.json",
+        "sha256": "5a4b259f764a3d41499f0a989c02fed921c18b62c9831d361d18d19dcc948afa"
+      },
+      "partition_complete": false,
+      "membership_frozen": false,
+      "parent_denominator_visible": true,
+      "parent_direct_coverage_credit": false,
+      "partition_dimensions": [
+        "source",
+        "region",
+        "period",
+        "register"
+      ],
+      "child_strata": []
+    },
+    "identity_boundaries": {
+      "dialect_is_protected_ukrainian_variety": true,
+      "archaic_modern_is_distinct_from_historical_stage": true,
+      "surzhyk_is_contact_composition": true,
+      "literary_eye_dialect_is_context_editorial": true,
+      "rusyn_is_source_attested_identity": true,
+      "script_does_not_decide_identity": true,
+      "undecided_evidence_preserves_candidates": true
+    }
+  },
+  "rights_capabilities": {
+    "per_source_unit_required": true,
+    "capability_values": [
+      "allowed",
+      "denied",
+      "unknown"
+    ],
+    "operations": [
+      "retain",
+      "deterministic_local_analysis",
+      "external_provider_transmission",
+      "derive",
+      "model_training",
+      "publish_text_or_metadata",
+      "redistribute"
+    ],
+    "unknown_blocks_only_affected_operation": true,
+    "availability_grants_no_capability": true,
+    "denominator_visibility_preserved": true
+  },
+  "roles": [
+    {
+      "role_id": "SOURCE_ADMISSION",
+      "preferred_route": {
+        "route_id": "source_admission_deterministic",
+        "route_kind": "deterministic",
+        "provider_family": "deterministic_tooling",
+        "model": "deterministic",
+        "effort_or_exposure": "none"
+      },
+      "output_contract_id": "v3.source_admission.metadata",
+      "may_access_heldout": false,
+      "may_author_gold": false,
+      "may_count_toward_coverage": false
+    },
+    {
+      "role_id": "SPLIT_CUSTODY",
+      "preferred_route": {
+        "route_id": "split_custody_deterministic",
+        "route_kind": "deterministic",
+        "provider_family": "deterministic_tooling",
+        "model": "deterministic",
+        "effort_or_exposure": "none"
+      },
+      "output_contract_id": "v3.split_custody.metadata",
+      "may_access_heldout": false,
+      "may_author_gold": false,
+      "may_count_toward_coverage": false
+    },
+    {
+      "role_id": "IDENTITY_LEAD",
+      "preferred_route": {
+        "route_id": "identity_lead_claude_fable_5",
+        "route_kind": "model",
+        "provider_family": "anthropic",
+        "model": "claude-fable-5",
+        "effort_or_exposure": "high"
+      },
+      "output_contract_id": "v3.identity.opinion",
+      "may_access_heldout": false,
+      "may_author_gold": false,
+      "may_count_toward_coverage": false
+    },
+    {
+      "role_id": "INDEPENDENT_DISSENT",
+      "preferred_route": {
+        "route_id": "independent_dissent_gemini_3_7_flash_high",
+        "route_kind": "model",
+        "provider_family": "google",
+        "model": "gemini-3.7-flash-high",
+        "effort_or_exposure": "high"
+      },
+      "output_contract_id": "v3.identity.opinion",
+      "may_access_heldout": false,
+      "may_author_gold": false,
+      "may_count_toward_coverage": false
+    },
+    {
+      "role_id": "DISPUTE_CRITIC",
+      "preferred_route": {
+        "route_id": "dispute_critic_grok_4_6_high",
+        "route_kind": "model",
+        "provider_family": "xai",
+        "model": "grok-4.6",
+        "effort_or_exposure": "high"
+      },
+      "output_contract_id": "v3.dispute.critique",
+      "may_access_heldout": false,
+      "may_author_gold": false,
+      "may_count_toward_coverage": false
+    },
+    {
+      "role_id": "CANDIDATE_BUILDER",
+      "preferred_route": {
+        "route_id": "candidate_builder_gpt_5_6_sol_xhigh",
+        "route_kind": "model",
+        "provider_family": "openai",
+        "model": "gpt-5.6-sol",
+        "effort_or_exposure": "xhigh"
+      },
+      "output_contract_id": "v3.case.candidate",
+      "may_access_heldout": false,
+      "may_author_gold": false,
+      "may_count_toward_coverage": false
+    },
+    {
+      "role_id": "HUMAN_STEWARD",
+      "preferred_route": {
+        "route_id": "human_steward_operator",
+        "route_kind": "human",
+        "provider_family": "operator",
+        "model": "human_operator",
+        "effort_or_exposure": "manual"
+      },
+      "output_contract_id": "v3.human.adjudication",
+      "may_access_heldout": false,
+      "may_author_gold": true,
+      "may_count_toward_coverage": false
+    },
+    {
+      "role_id": "EVALUATION_STEWARD",
+      "preferred_route": {
+        "route_id": "evaluation_steward_custody",
+        "route_kind": "human",
+        "provider_family": "operator",
+        "model": "human_operator_and_deterministic_custody",
+        "effort_or_exposure": "manual"
+      },
+      "output_contract_id": "v3.evaluation.custody",
+      "may_access_heldout": true,
+      "may_author_gold": false,
+      "may_count_toward_coverage": false
+    },
+    {
+      "role_id": "ORCHESTRATOR",
+      "preferred_route": {
+        "route_id": "orchestrator_control_plane",
+        "route_kind": "deterministic",
+        "provider_family": "control_plane",
+        "model": "deterministic_control_plane",
+        "effort_or_exposure": "none"
+      },
+      "output_contract_id": "v3.transition.receipt",
+      "may_access_heldout": false,
+      "may_author_gold": false,
+      "may_count_toward_coverage": false
+    }
+  ],
+  "visibility_matrix": [
+    {
+      "role_id": "SOURCE_ADMISSION",
+      "allowed_input_classes": [
+        "source_inventory_metadata",
+        "rights_evidence_metadata",
+        "edition_metadata"
+      ],
+      "forbidden_input_classes": [
+        "source_body",
+        "source_text",
+        "heldout_membership",
+        "provider_output"
+      ],
+      "output_contract_id": "v3.source_admission.metadata",
+      "next_legal_transition_classes": [
+        "admission_or_block"
+      ],
+      "retry_budget": 0,
+      "substitute_budget": 0,
+      "heldout_access": "forbidden",
+      "coverage_credit": false,
+      "gold_credit": false,
+      "training_credit": false
+    },
+    {
+      "role_id": "SPLIT_CUSTODY",
+      "allowed_input_classes": [
+        "content_blind_group_metadata",
+        "source_identity_metadata",
+        "duplicate_component_metadata"
+      ],
+      "forbidden_input_classes": [
+        "source_body",
+        "source_text",
+        "heldout_membership",
+        "provider_output"
+      ],
+      "output_contract_id": "v3.split_custody.metadata",
+      "next_legal_transition_classes": [
+        "split_sealed"
+      ],
+      "retry_budget": 0,
+      "substitute_budget": 0,
+      "heldout_access": "forbidden",
+      "coverage_credit": false,
+      "gold_credit": false,
+      "training_credit": false
+    },
+    {
+      "role_id": "IDENTITY_LEAD",
+      "allowed_input_classes": [
+        "frozen_source_evidence_packet",
+        "taxonomy_definitions",
+        "source_capability_metadata",
+        "span_offsets_metadata"
+      ],
+      "forbidden_input_classes": [
+        "other_identity_review",
+        "candidate_builder_output",
+        "heldout_membership",
+        "heldout_content",
+        "heldout_labels",
+        "heldout_locators",
+        "heldout_fingerprints",
+        "heldout_derivatives",
+        "provider_output",
+        "model_prestige",
+        "model_order"
+      ],
+      "output_contract_id": "v3.identity.opinion",
+      "next_legal_transition_classes": [
+        "identity_join_or_dispute_or_failure"
+      ],
+      "retry_budget": 1,
+      "substitute_budget": 1,
+      "heldout_access": "forbidden",
+      "coverage_credit": false,
+      "gold_credit": false,
+      "training_credit": false
+    },
+    {
+      "role_id": "INDEPENDENT_DISSENT",
+      "allowed_input_classes": [
+        "frozen_source_evidence_packet",
+        "taxonomy_definitions",
+        "source_capability_metadata",
+        "span_offsets_metadata"
+      ],
+      "forbidden_input_classes": [
+        "other_identity_review",
+        "candidate_builder_output",
+        "heldout_membership",
+        "heldout_content",
+        "heldout_labels",
+        "heldout_locators",
+        "heldout_fingerprints",
+        "heldout_derivatives",
+        "provider_output",
+        "model_prestige",
+        "model_order"
+      ],
+      "output_contract_id": "v3.identity.opinion",
+      "next_legal_transition_classes": [
+        "identity_join_or_dispute_or_failure"
+      ],
+      "retry_budget": 1,
+      "substitute_budget": 1,
+      "heldout_access": "forbidden",
+      "coverage_credit": false,
+      "gold_credit": false,
+      "training_credit": false
+    },
+    {
+      "role_id": "DISPUTE_CRITIC",
+      "allowed_input_classes": [
+        "locked_disagreement_packet",
+        "anonymized_identity_opinions",
+        "cited_evidence_metadata",
+        "taxonomy_definitions"
+      ],
+      "forbidden_input_classes": [
+        "model_prestige",
+        "model_order",
+        "heldout_membership",
+        "heldout_content",
+        "heldout_labels",
+        "heldout_locators",
+        "heldout_fingerprints",
+        "heldout_derivatives",
+        "provider_output"
+      ],
+      "output_contract_id": "v3.dispute.critique",
+      "next_legal_transition_classes": [
+        "critique_or_human_queue"
+      ],
+      "retry_budget": 1,
+      "substitute_budget": 1,
+      "heldout_access": "forbidden",
+      "coverage_credit": false,
+      "gold_credit": false,
+      "training_credit": false
+    },
+    {
+      "role_id": "CANDIDATE_BUILDER",
+      "allowed_input_classes": [
+        "identity_join_without_opinions",
+        "source_evidence_metadata",
+        "rule_slot_metadata",
+        "taxonomy_definitions"
+      ],
+      "forbidden_input_classes": [
+        "identity_lead_output",
+        "independent_dissent_output",
+        "heldout_membership",
+        "heldout_content",
+        "heldout_labels",
+        "heldout_locators",
+        "heldout_fingerprints",
+        "heldout_derivatives",
+        "provider_output"
+      ],
+      "output_contract_id": "v3.case.candidate",
+      "next_legal_transition_classes": [
+        "candidate_or_failure"
+      ],
+      "retry_budget": 1,
+      "substitute_budget": 1,
+      "heldout_access": "forbidden",
+      "coverage_credit": false,
+      "gold_credit": false,
+      "training_credit": false
+    },
+    {
+      "role_id": "HUMAN_STEWARD",
+      "allowed_input_classes": [
+        "source_evidence_by_locator_metadata",
+        "rights_capability_metadata",
+        "candidate_metadata",
+        "taxonomy_definitions"
+      ],
+      "forbidden_input_classes": [
+        "heldout_membership",
+        "heldout_content",
+        "heldout_labels",
+        "provider_output"
+      ],
+      "output_contract_id": "v3.human.adjudication",
+      "next_legal_transition_classes": [
+        "human_adjudication_or_abstention"
+      ],
+      "retry_budget": 0,
+      "substitute_budget": 0,
+      "heldout_access": "forbidden",
+      "coverage_credit": false,
+      "gold_credit": false,
+      "training_credit": false
+    },
+    {
+      "role_id": "EVALUATION_STEWARD",
+      "allowed_input_classes": [
+        "sealed_heldout_packet_runtime",
+        "evaluation_decision_metadata",
+        "taxonomy_definitions"
+      ],
+      "forbidden_input_classes": [
+        "construction_runtime",
+        "provider_output",
+        "heldout_membership_public"
+      ],
+      "output_contract_id": "v3.evaluation.custody",
+      "next_legal_transition_classes": [
+        "evaluation_receipt"
+      ],
+      "retry_budget": 0,
+      "substitute_budget": 0,
+      "heldout_access": "evaluation_runtime_only",
+      "coverage_credit": false,
+      "gold_credit": false,
+      "training_credit": false
+    },
+    {
+      "role_id": "ORCHESTRATOR",
+      "allowed_input_classes": [
+        "contract_hash_metadata",
+        "transition_receipt_metadata",
+        "denominator_status_metadata",
+        "issue_status_metadata"
+      ],
+      "forbidden_input_classes": [
+        "source_body",
+        "source_text",
+        "heldout_membership",
+        "provider_output",
+        "gold"
+      ],
+      "output_contract_id": "v3.transition.receipt",
+      "next_legal_transition_classes": [
+        "schema_valid_transition"
+      ],
+      "retry_budget": 0,
+      "substitute_budget": 0,
+      "heldout_access": "forbidden",
+      "coverage_credit": false,
+      "gold_credit": false,
+      "training_credit": false
+    }
+  ],
+  "conflict_contract": {
+    "same_packet_for_identity_roles": true,
+    "identity_outputs_hidden_from_each_other": true,
+    "builder_receives_identity_opinions": false,
+    "builder_receives_candidate_identity_labels": false,
+    "critic_receives_model_prestige_or_order": false,
+    "model_may_vote_on_own_output": false,
+    "independent_family_required": true,
+    "operations": [
+      {
+        "producer_role": "IDENTITY_LEAD",
+        "consumer_role": "INDEPENDENT_DISSENT",
+        "shared_input_classes_forbidden": [
+          "other_identity_review",
+          "model_prestige",
+          "model_order"
+        ],
+        "output_visibility": "never_shared"
+      },
+      {
+        "producer_role": "INDEPENDENT_DISSENT",
+        "consumer_role": "IDENTITY_LEAD",
+        "shared_input_classes_forbidden": [
+          "other_identity_review",
+          "model_prestige",
+          "model_order"
+        ],
+        "output_visibility": "never_shared"
+      },
+      {
+        "producer_role": "IDENTITY_LEAD",
+        "consumer_role": "DISPUTE_CRITIC",
+        "shared_input_classes_forbidden": [
+          "model_prestige",
+          "model_order"
+        ],
+        "output_visibility": "locked_disagreement_only"
+      },
+      {
+        "producer_role": "INDEPENDENT_DISSENT",
+        "consumer_role": "DISPUTE_CRITIC",
+        "shared_input_classes_forbidden": [
+          "model_prestige",
+          "model_order"
+        ],
+        "output_visibility": "locked_disagreement_only"
+      }
+    ]
+  },
+  "state_machine": {
+    "initial_state": "SOURCE_INVENTORIED",
+    "states": [
+      {
+        "state_id": "SOURCE_INVENTORIED",
+        "terminal": false,
+        "resumable": false,
+        "legal_next_states": [
+          "SOURCE_ADMITTED",
+          "SOURCE_BLOCKED"
+        ],
+        "resume_to_state": null,
+        "counts_toward_coverage": false,
+        "gold_eligible": false,
+        "training_eligible": false
+      },
+      {
+        "state_id": "SOURCE_ADMITTED",
+        "terminal": false,
+        "resumable": false,
+        "legal_next_states": [
+          "SPLIT_SEALED"
+        ],
+        "resume_to_state": null,
+        "counts_toward_coverage": false,
+        "gold_eligible": false,
+        "training_eligible": false
+      },
+      {
+        "state_id": "SOURCE_BLOCKED",
+        "terminal": false,
+        "resumable": true,
+        "legal_next_states": [
+          "SOURCE_INVENTORIED"
+        ],
+        "resume_to_state": "SOURCE_INVENTORIED",
+        "counts_toward_coverage": false,
+        "gold_eligible": false,
+        "training_eligible": false
+      },
+      {
+        "state_id": "SPLIT_SEALED",
+        "terminal": false,
+        "resumable": false,
+        "legal_next_states": [
+          "IDENTITY_REVIEWS_PENDING"
+        ],
+        "resume_to_state": null,
+        "counts_toward_coverage": false,
+        "gold_eligible": false,
+        "training_eligible": false
+      },
+      {
+        "state_id": "IDENTITY_REVIEWS_PENDING",
+        "terminal": false,
+        "resumable": false,
+        "legal_next_states": [
+          "IDENTITY_AGREEMENT_QC",
+          "IDENTITY_DISPUTED",
+          "IDENTITY_PROVIDER_FAILURE"
+        ],
+        "resume_to_state": null,
+        "counts_toward_coverage": false,
+        "gold_eligible": false,
+        "training_eligible": false
+      },
+      {
+        "state_id": "IDENTITY_AGREEMENT_QC",
+        "terminal": false,
+        "resumable": false,
+        "legal_next_states": [
+          "IDENTITY_HUMAN_QUEUE",
+          "MODEL_AGREEMENT_QUARANTINED_NOT_GOLD"
+        ],
+        "resume_to_state": null,
+        "counts_toward_coverage": false,
+        "gold_eligible": false,
+        "training_eligible": false
+      },
+      {
+        "state_id": "IDENTITY_DISPUTED",
+        "terminal": false,
+        "resumable": false,
+        "legal_next_states": [
+          "DISPUTE_CRITIC_PENDING"
+        ],
+        "resume_to_state": null,
+        "counts_toward_coverage": false,
+        "gold_eligible": false,
+        "training_eligible": false
+      },
+      {
+        "state_id": "IDENTITY_PROVIDER_FAILURE",
+        "terminal": false,
+        "resumable": false,
+        "legal_next_states": [
+          "IDENTITY_REVIEWS_PENDING",
+          "IDENTITY_HUMAN_QUEUE"
+        ],
+        "resume_to_state": null,
+        "counts_toward_coverage": false,
+        "gold_eligible": false,
+        "training_eligible": false
+      },
+      {
+        "state_id": "IDENTITY_HUMAN_QUEUE",
+        "terminal": false,
+        "resumable": false,
+        "legal_next_states": [
+          "IDENTITY_HUMAN_ADJUDICATED",
+          "IDENTITY_HUMAN_ABSTAINED",
+          "IDENTITY_EVIDENCE_INSUFFICIENT"
+        ],
+        "resume_to_state": null,
+        "counts_toward_coverage": false,
+        "gold_eligible": false,
+        "training_eligible": false
+      },
+      {
+        "state_id": "DISPUTE_CRITIC_PENDING",
+        "terminal": false,
+        "resumable": false,
+        "legal_next_states": [
+          "DISPUTE_CRITIQUED",
+          "IDENTITY_HUMAN_QUEUE"
+        ],
+        "resume_to_state": null,
+        "counts_toward_coverage": false,
+        "gold_eligible": false,
+        "training_eligible": false
+      },
+      {
+        "state_id": "DISPUTE_CRITIQUED",
+        "terminal": false,
+        "resumable": false,
+        "legal_next_states": [
+          "IDENTITY_HUMAN_QUEUE"
+        ],
+        "resume_to_state": null,
+        "counts_toward_coverage": false,
+        "gold_eligible": false,
+        "training_eligible": false
+      },
+      {
+        "state_id": "IDENTITY_HUMAN_ADJUDICATED",
+        "terminal": false,
+        "resumable": false,
+        "legal_next_states": [
+          "CASE_CANDIDATE_PENDING"
+        ],
+        "resume_to_state": null,
+        "counts_toward_coverage": false,
+        "gold_eligible": false,
+        "training_eligible": false
+      },
+      {
+        "state_id": "IDENTITY_HUMAN_ABSTAINED",
+        "terminal": false,
+        "resumable": false,
+        "legal_next_states": [
+          "CASE_CANDIDATE_PENDING"
+        ],
+        "resume_to_state": null,
+        "counts_toward_coverage": false,
+        "gold_eligible": false,
+        "training_eligible": false
+      },
+      {
+        "state_id": "IDENTITY_EVIDENCE_INSUFFICIENT",
+        "terminal": true,
+        "resumable": true,
+        "legal_next_states": [],
+        "resume_to_state": "IDENTITY_HUMAN_QUEUE",
+        "counts_toward_coverage": false,
+        "gold_eligible": false,
+        "training_eligible": false
+      },
+      {
+        "state_id": "MODEL_AGREEMENT_QUARANTINED_NOT_GOLD",
+        "terminal": true,
+        "resumable": true,
+        "legal_next_states": [],
+        "resume_to_state": "IDENTITY_AGREEMENT_QC",
+        "counts_toward_coverage": false,
+        "gold_eligible": false,
+        "training_eligible": false
+      },
+      {
+        "state_id": "CASE_CANDIDATE_PENDING",
+        "terminal": false,
+        "resumable": false,
+        "legal_next_states": [
+          "CASE_CANDIDATE_PROPOSED",
+          "CANDIDATE_PROVIDER_FAILURE"
+        ],
+        "resume_to_state": null,
+        "counts_toward_coverage": false,
+        "gold_eligible": false,
+        "training_eligible": false
+      },
+      {
+        "state_id": "CASE_CANDIDATE_PROPOSED",
+        "terminal": false,
+        "resumable": false,
+        "legal_next_states": [
+          "CASE_HUMAN_QUEUE"
+        ],
+        "resume_to_state": null,
+        "counts_toward_coverage": false,
+        "gold_eligible": false,
+        "training_eligible": false
+      },
+      {
+        "state_id": "CANDIDATE_PROVIDER_FAILURE",
+        "terminal": false,
+        "resumable": false,
+        "legal_next_states": [
+          "CASE_CANDIDATE_PENDING",
+          "CASE_HUMAN_QUEUE"
+        ],
+        "resume_to_state": null,
+        "counts_toward_coverage": false,
+        "gold_eligible": false,
+        "training_eligible": false
+      },
+      {
+        "state_id": "CASE_HUMAN_QUEUE",
+        "terminal": false,
+        "resumable": false,
+        "legal_next_states": [
+          "CASE_HUMAN_ADJUDICATED",
+          "CASE_HUMAN_ABSTAINED",
+          "CASE_EVIDENCE_INSUFFICIENT"
+        ],
+        "resume_to_state": null,
+        "counts_toward_coverage": false,
+        "gold_eligible": false,
+        "training_eligible": false
+      },
+      {
+        "state_id": "CASE_HUMAN_ADJUDICATED",
+        "terminal": false,
+        "resumable": false,
+        "legal_next_states": [
+          "GOLD_ELIGIBLE"
+        ],
+        "resume_to_state": null,
+        "counts_toward_coverage": false,
+        "gold_eligible": false,
+        "training_eligible": false
+      },
+      {
+        "state_id": "CASE_HUMAN_ABSTAINED",
+        "terminal": false,
+        "resumable": false,
+        "legal_next_states": [
+          "CASE_EVIDENCE_INSUFFICIENT"
+        ],
+        "resume_to_state": null,
+        "counts_toward_coverage": false,
+        "gold_eligible": false,
+        "training_eligible": false
+      },
+      {
+        "state_id": "CASE_EVIDENCE_INSUFFICIENT",
+        "terminal": true,
+        "resumable": true,
+        "legal_next_states": [],
+        "resume_to_state": "CASE_HUMAN_QUEUE",
+        "counts_toward_coverage": false,
+        "gold_eligible": false,
+        "training_eligible": false
+      },
+      {
+        "state_id": "GOLD_ELIGIBLE",
+        "terminal": false,
+        "resumable": false,
+        "legal_next_states": [
+          "TRAINING_ELIGIBLE"
+        ],
+        "resume_to_state": null,
+        "counts_toward_coverage": true,
+        "gold_eligible": true,
+        "training_eligible": false
+      },
+      {
+        "state_id": "TRAINING_ELIGIBLE",
+        "terminal": true,
+        "resumable": false,
+        "legal_next_states": [],
+        "resume_to_state": null,
+        "counts_toward_coverage": true,
+        "gold_eligible": true,
+        "training_eligible": true
+      }
+    ],
+    "transitions": [
+      {
+        "from_state": "SOURCE_INVENTORIED",
+        "to_state": "SOURCE_ADMITTED",
+        "condition_code": "source_inventoried_to_source_admitted",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "SOURCE_INVENTORIED",
+        "to_state": "SOURCE_BLOCKED",
+        "condition_code": "source_inventoried_to_source_blocked",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "SOURCE_ADMITTED",
+        "to_state": "SPLIT_SEALED",
+        "condition_code": "source_admitted_to_split_sealed",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "SOURCE_BLOCKED",
+        "to_state": "SOURCE_INVENTORIED",
+        "condition_code": "source_blocked_to_source_inventoried",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "SPLIT_SEALED",
+        "to_state": "IDENTITY_REVIEWS_PENDING",
+        "condition_code": "split_sealed_to_identity_reviews_pending",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "IDENTITY_REVIEWS_PENDING",
+        "to_state": "IDENTITY_AGREEMENT_QC",
+        "condition_code": "identity_reviews_pending_to_identity_agreement_qc",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "IDENTITY_REVIEWS_PENDING",
+        "to_state": "IDENTITY_DISPUTED",
+        "condition_code": "identity_reviews_pending_to_identity_disputed",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "IDENTITY_REVIEWS_PENDING",
+        "to_state": "IDENTITY_PROVIDER_FAILURE",
+        "condition_code": "identity_reviews_pending_to_identity_provider_failure",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "IDENTITY_AGREEMENT_QC",
+        "to_state": "IDENTITY_HUMAN_QUEUE",
+        "condition_code": "identity_agreement_qc_to_identity_human_queue",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "IDENTITY_AGREEMENT_QC",
+        "to_state": "MODEL_AGREEMENT_QUARANTINED_NOT_GOLD",
+        "condition_code": "identity_agreement_qc_to_model_agreement_quarantined_not_gold",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "IDENTITY_DISPUTED",
+        "to_state": "DISPUTE_CRITIC_PENDING",
+        "condition_code": "identity_disputed_to_dispute_critic_pending",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "IDENTITY_PROVIDER_FAILURE",
+        "to_state": "IDENTITY_REVIEWS_PENDING",
+        "condition_code": "identity_provider_failure_to_identity_reviews_pending",
+        "retry_or_substitute_allowed": true,
+        "human_fallback": false
+      },
+      {
+        "from_state": "IDENTITY_PROVIDER_FAILURE",
+        "to_state": "IDENTITY_HUMAN_QUEUE",
+        "condition_code": "identity_provider_failure_to_identity_human_queue",
+        "retry_or_substitute_allowed": true,
+        "human_fallback": true
+      },
+      {
+        "from_state": "IDENTITY_HUMAN_QUEUE",
+        "to_state": "IDENTITY_HUMAN_ADJUDICATED",
+        "condition_code": "identity_human_queue_to_identity_human_adjudicated",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "IDENTITY_HUMAN_QUEUE",
+        "to_state": "IDENTITY_HUMAN_ABSTAINED",
+        "condition_code": "identity_human_queue_to_identity_human_abstained",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "IDENTITY_HUMAN_QUEUE",
+        "to_state": "IDENTITY_EVIDENCE_INSUFFICIENT",
+        "condition_code": "identity_human_queue_to_identity_evidence_insufficient",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "DISPUTE_CRITIC_PENDING",
+        "to_state": "DISPUTE_CRITIQUED",
+        "condition_code": "dispute_critic_pending_to_dispute_critiqued",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "DISPUTE_CRITIC_PENDING",
+        "to_state": "IDENTITY_HUMAN_QUEUE",
+        "condition_code": "dispute_critic_pending_to_identity_human_queue",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": true
+      },
+      {
+        "from_state": "DISPUTE_CRITIQUED",
+        "to_state": "IDENTITY_HUMAN_QUEUE",
+        "condition_code": "dispute_critiqued_to_identity_human_queue",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "IDENTITY_HUMAN_ADJUDICATED",
+        "to_state": "CASE_CANDIDATE_PENDING",
+        "condition_code": "identity_human_adjudicated_to_case_candidate_pending",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "IDENTITY_HUMAN_ABSTAINED",
+        "to_state": "CASE_CANDIDATE_PENDING",
+        "condition_code": "identity_human_abstained_to_case_candidate_pending",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "CASE_CANDIDATE_PENDING",
+        "to_state": "CASE_CANDIDATE_PROPOSED",
+        "condition_code": "case_candidate_pending_to_case_candidate_proposed",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "CASE_CANDIDATE_PENDING",
+        "to_state": "CANDIDATE_PROVIDER_FAILURE",
+        "condition_code": "case_candidate_pending_to_candidate_provider_failure",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "CASE_CANDIDATE_PROPOSED",
+        "to_state": "CASE_HUMAN_QUEUE",
+        "condition_code": "case_candidate_proposed_to_case_human_queue",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "CANDIDATE_PROVIDER_FAILURE",
+        "to_state": "CASE_CANDIDATE_PENDING",
+        "condition_code": "candidate_provider_failure_to_case_candidate_pending",
+        "retry_or_substitute_allowed": true,
+        "human_fallback": false
+      },
+      {
+        "from_state": "CANDIDATE_PROVIDER_FAILURE",
+        "to_state": "CASE_HUMAN_QUEUE",
+        "condition_code": "candidate_provider_failure_to_case_human_queue",
+        "retry_or_substitute_allowed": true,
+        "human_fallback": true
+      },
+      {
+        "from_state": "CASE_HUMAN_QUEUE",
+        "to_state": "CASE_HUMAN_ADJUDICATED",
+        "condition_code": "case_human_queue_to_case_human_adjudicated",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "CASE_HUMAN_QUEUE",
+        "to_state": "CASE_HUMAN_ABSTAINED",
+        "condition_code": "case_human_queue_to_case_human_abstained",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "CASE_HUMAN_QUEUE",
+        "to_state": "CASE_EVIDENCE_INSUFFICIENT",
+        "condition_code": "case_human_queue_to_case_evidence_insufficient",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "CASE_HUMAN_ADJUDICATED",
+        "to_state": "GOLD_ELIGIBLE",
+        "condition_code": "case_human_adjudicated_to_gold_eligible",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "CASE_HUMAN_ABSTAINED",
+        "to_state": "CASE_EVIDENCE_INSUFFICIENT",
+        "condition_code": "case_human_abstained_to_case_evidence_insufficient",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      },
+      {
+        "from_state": "GOLD_ELIGIBLE",
+        "to_state": "TRAINING_ELIGIBLE",
+        "condition_code": "gold_eligible_to_training_eligible",
+        "retry_or_substitute_allowed": false,
+        "human_fallback": false
+      }
+    ],
+    "format_retry_limit": 1,
+    "failure_denominator_policy": "preserve_denominator_route_to_retry_substitute_or_human",
+    "no_dead_end_invariant": true
+  },
+  "agreement_predicate": {
+    "predicate_id": "exact_identity_case_agreement_v1",
+    "comparison": "canonical_json_exact_equality_over_required_fields",
+    "required_fields": [
+      "span_offsets",
+      "language_identity",
+      "identity_candidates",
+      "diachronic_status",
+      "variety_status",
+      "variety_id",
+      "region_id",
+      "period_id",
+      "register_id",
+      "contact_composition",
+      "context_role",
+      "recension_editorial_layer_id",
+      "primary_case_state",
+      "modern_correction_eligible",
+      "protection_flags",
+      "confidence_or_abstention_state"
+    ],
+    "primary_language_only_insufficient": true,
+    "majority_agreement_insufficient": true,
+    "abstention_state_compared": true,
+    "provider_output_not_gold": true
+  },
+  "quarantine_policy": {
+    "state_id": "MODEL_AGREEMENT_QUARANTINED_NOT_GOLD",
+    "counts_toward_coverage": false,
+    "gold_eligible": false,
+    "training_eligible": false,
+    "evaluation_eligible": false,
+    "teaching_view_eligible": false,
+    "unsampled_promotion_allowed": false,
+    "promotion_state": "CASE_HUMAN_ADJUDICATED",
+    "protected_high_risk_always_human": true,
+    "high_risk_classes": [
+      "protected",
+      "historical",
+      "archaic",
+      "dialectal",
+      "rusyn",
+      "church_slavonic",
+      "surzhyk_or_mixed",
+      "quoted",
+      "transliterated",
+      "named",
+      "metalinguistic",
+      "low_confidence",
+      "out_of_distribution"
+    ],
+    "critic_unresolved_routes_to_human": true
+  },
+  "human_work_manifest": {
+    "required_before_provider_pilot": true,
+    "required_fields": [
+      "admitted_source_unit_ids",
+      "required_cell_ids",
+      "atomic_decision_key",
+      "per_stratum_agreement_sample_counts",
+      "sample_seed_or_hash",
+      "minimum_per_stratum",
+      "maximum_human_decisions",
+      "maximum_steward_hours",
+      "queue_overflow_state",
+      "per_stratum_audit_error_threshold",
+      "audit_escalation_rule"
+    ],
+    "atomic_decision_key": [
+      "span_hash",
+      "claim_type",
+      "proposed_value",
+      "evidence_bundle_hash",
+      "source_revision"
+    ],
+    "protected_high_risk_review_fraction": 1.0,
+    "unsampled_agreement_policy": "remain_quarantined_no_coverage_or_consumer_view_credit",
+    "audit_failure_policy": "freeze_uninspected_cohort_and_route_complete_human_review_or_unresolved",
+    "queue_overflow_policy": "preserve_full_denominator_and_record_overflow_state",
+    "provider_calls_authorized": false
+  },
+  "heldout_firewall": {
+    "content_blind_grouping_fields": [
+      "source",
+      "document",
+      "work",
+      "edition",
+      "exact_duplicate_component",
+      "near_duplicate_connected_component"
+    ],
+    "required_nonzero_count_per_v3_stratum": true,
+    "membership_sealed_before_construction": true,
+    "construction_access_to_membership": false,
+    "construction_access_to_content": false,
+    "construction_access_to_labels": false,
+    "construction_access_to_locators": false,
+    "construction_access_to_fingerprints": false,
+    "construction_access_to_derivatives": false,
+    "private_evaluation_runtime_during_construction": false,
+    "construction_freeze_before_exposure": true,
+    "post_exposure_mutation_invalidates_version": true,
+    "new_partition_required_after_invalidation": true,
+    "solo_operator_limitation_disclosed": true,
+    "ambiguous_evidence_action": "abstain"
+  },
+  "compatibility": {
+    "v2_composite_denominator": {
+      "source_units": 57,
+      "base_required_cells": 15,
+      "composite_required_cells": 16,
+      "coverage_blocked_cells": 14,
+      "not_applicable_cells": 2,
+      "rule_slots_R": 0
+    },
+    "cells": [
+      {
+        "v2_cell_id": "boundary.latin_script_slavic.ambiguous_noisy.scope_boundary.not_applicable",
+        "v2_status": "not_applicable_with_evidence",
+        "old_artifact": {
+          "path": "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json",
+          "sha256": "dc8dfdf207728ef386cea14ddb328289b2beee5159afb98bf076e5f117602ea3"
+        },
+        "disposition": "carried_forward_exact",
+        "v3_cell_id": "boundary.latin_script_slavic.ambiguous_noisy.scope_boundary.not_applicable",
+        "new_binding": {
+          "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
+          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+        },
+        "child_partition_ids": [],
+        "denominator_effect": "boundary_cell_preserved",
+        "reason_code": "v3_taxonomy_preserves_v2_cell"
+      },
+      {
+        "v2_cell_id": "boundary.mixed_identity.ambiguous_noisy.scope_boundary.abstention",
+        "v2_status": "coverage_blocked",
+        "old_artifact": {
+          "path": "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json",
+          "sha256": "dc8dfdf207728ef386cea14ddb328289b2beee5159afb98bf076e5f117602ea3"
+        },
+        "disposition": "carried_forward_exact",
+        "v3_cell_id": "boundary.mixed_identity.ambiguous_noisy.scope_boundary.abstention",
+        "new_binding": {
+          "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
+          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+        },
+        "child_partition_ids": [],
+        "denominator_effect": "same_parent_denominator",
+        "reason_code": "v3_taxonomy_preserves_v2_cell"
+      },
+      {
+        "v2_cell_id": "boundary.non_slavic_cyrillic.ambiguous_noisy.scope_boundary.not_applicable",
+        "v2_status": "not_applicable_with_evidence",
+        "old_artifact": {
+          "path": "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json",
+          "sha256": "dc8dfdf207728ef386cea14ddb328289b2beee5159afb98bf076e5f117602ea3"
+        },
+        "disposition": "carried_forward_exact",
+        "v3_cell_id": "boundary.non_slavic_cyrillic.ambiguous_noisy.scope_boundary.not_applicable",
+        "new_binding": {
+          "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
+          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+        },
+        "child_partition_ids": [],
+        "denominator_effect": "boundary_cell_preserved",
+        "reason_code": "v3_taxonomy_preserves_v2_cell"
+      },
+      {
+        "v2_cell_id": "boundary.other_or_unresolved_slavic_cyrillic.ambiguous_noisy.scope_boundary.abstention",
+        "v2_status": "coverage_blocked",
+        "old_artifact": {
+          "path": "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json",
+          "sha256": "dc8dfdf207728ef386cea14ddb328289b2beee5159afb98bf076e5f117602ea3"
+        },
+        "disposition": "carried_forward_exact",
+        "v3_cell_id": "boundary.other_or_unresolved_slavic_cyrillic.ambiguous_noisy.scope_boundary.abstention",
+        "new_binding": {
+          "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
+          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+        },
+        "child_partition_ids": [],
+        "denominator_effect": "same_parent_denominator",
+        "reason_code": "v3_taxonomy_preserves_v2_cell"
+      },
+      {
+        "v2_cell_id": "boundary.unknown.ambiguous_noisy.scope_boundary.abstention",
+        "v2_status": "coverage_blocked",
+        "old_artifact": {
+          "path": "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json",
+          "sha256": "dc8dfdf207728ef386cea14ddb328289b2beee5159afb98bf076e5f117602ea3"
+        },
+        "disposition": "carried_forward_exact",
+        "v3_cell_id": "boundary.unknown.ambiguous_noisy.scope_boundary.abstention",
+        "new_binding": {
+          "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
+          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+        },
+        "child_partition_ids": [],
+        "denominator_effect": "same_parent_denominator",
+        "reason_code": "v3_taxonomy_preserves_v2_cell"
+      },
+      {
+        "v2_cell_id": "historical.church_slavonic_recension.historical_text.historical_identity.protected_historical",
+        "v2_status": "coverage_blocked",
+        "old_artifact": {
+          "path": "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json",
+          "sha256": "dc8dfdf207728ef386cea14ddb328289b2beee5159afb98bf076e5f117602ea3"
+        },
+        "disposition": "carried_forward_exact",
+        "v3_cell_id": "historical.church_slavonic_recension.historical_text.historical_identity.protected_historical",
+        "new_binding": {
+          "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
+          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+        },
+        "child_partition_ids": [],
+        "denominator_effect": "same_parent_denominator",
+        "reason_code": "v3_taxonomy_preserves_v2_cell"
+      },
+      {
+        "v2_cell_id": "historical.middle_ukrainian.historical_text.historical_identity.protected_historical",
+        "v2_status": "coverage_blocked",
+        "old_artifact": {
+          "path": "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json",
+          "sha256": "dc8dfdf207728ef386cea14ddb328289b2beee5159afb98bf076e5f117602ea3"
+        },
+        "disposition": "carried_forward_exact",
+        "v3_cell_id": "historical.middle_ukrainian.historical_text.historical_identity.protected_historical",
+        "new_binding": {
+          "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
+          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+        },
+        "child_partition_ids": [],
+        "denominator_effect": "same_parent_denominator",
+        "reason_code": "v3_taxonomy_preserves_v2_cell"
+      },
+      {
+        "v2_cell_id": "historical.old_east_slavic_kyivan_rus.historical_text.historical_identity.protected_historical",
+        "v2_status": "coverage_blocked",
+        "old_artifact": {
+          "path": "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json",
+          "sha256": "dc8dfdf207728ef386cea14ddb328289b2beee5159afb98bf076e5f117602ea3"
+        },
+        "disposition": "carried_forward_exact",
+        "v3_cell_id": "historical.old_east_slavic_kyivan_rus.historical_text.historical_identity.protected_historical",
+        "new_binding": {
+          "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
+          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+        },
+        "child_partition_ids": [],
+        "denominator_effect": "same_parent_denominator",
+        "reason_code": "v3_taxonomy_preserves_v2_cell"
+      },
+      {
+        "v2_cell_id": "historical.source_attested_rusyn.historical_text.historical_identity.protected_historical",
+        "v2_status": "coverage_blocked",
+        "old_artifact": {
+          "path": "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json",
+          "sha256": "dc8dfdf207728ef386cea14ddb328289b2beee5159afb98bf076e5f117602ea3"
+        },
+        "disposition": "carried_forward_exact",
+        "v3_cell_id": "historical.source_attested_rusyn.historical_text.historical_identity.protected_historical",
+        "new_binding": {
+          "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
+          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+        },
+        "child_partition_ids": [],
+        "denominator_effect": "same_parent_denominator",
+        "reason_code": "v3_taxonomy_preserves_v2_cell"
+      },
+      {
+        "v2_cell_id": "modern.belarusian.unmarked.contact_interference.source_backed_correction",
+        "v2_status": "coverage_blocked",
+        "old_artifact": {
+          "path": "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json",
+          "sha256": "dc8dfdf207728ef386cea14ddb328289b2beee5159afb98bf076e5f117602ea3"
+        },
+        "disposition": "carried_forward_exact",
+        "v3_cell_id": "modern.belarusian.unmarked.contact_interference.source_backed_correction",
+        "new_binding": {
+          "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
+          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+        },
+        "child_partition_ids": [],
+        "denominator_effect": "same_parent_denominator",
+        "reason_code": "v3_taxonomy_preserves_v2_cell"
+      },
+      {
+        "v2_cell_id": "modern.bulgarian.unmarked.contact_interference.source_backed_correction",
+        "v2_status": "coverage_blocked",
+        "old_artifact": {
+          "path": "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json",
+          "sha256": "dc8dfdf207728ef386cea14ddb328289b2beee5159afb98bf076e5f117602ea3"
+        },
+        "disposition": "carried_forward_exact",
+        "v3_cell_id": "modern.bulgarian.unmarked.contact_interference.source_backed_correction",
+        "new_binding": {
+          "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
+          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+        },
+        "child_partition_ids": [],
+        "denominator_effect": "same_parent_denominator",
+        "reason_code": "v3_taxonomy_preserves_v2_cell"
+      },
+      {
+        "v2_cell_id": "modern.macedonian.unmarked.contact_interference.source_backed_correction",
+        "v2_status": "coverage_blocked",
+        "old_artifact": {
+          "path": "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json",
+          "sha256": "dc8dfdf207728ef386cea14ddb328289b2beee5159afb98bf076e5f117602ea3"
+        },
+        "disposition": "carried_forward_exact",
+        "v3_cell_id": "modern.macedonian.unmarked.contact_interference.source_backed_correction",
+        "new_binding": {
+          "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
+          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+        },
+        "child_partition_ids": [],
+        "denominator_effect": "same_parent_denominator",
+        "reason_code": "v3_taxonomy_preserves_v2_cell"
+      },
+      {
+        "v2_cell_id": "modern.montenegrin_cyrillic.unmarked.contact_interference.source_backed_correction",
+        "v2_status": "coverage_blocked",
+        "old_artifact": {
+          "path": "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json",
+          "sha256": "dc8dfdf207728ef386cea14ddb328289b2beee5159afb98bf076e5f117602ea3"
+        },
+        "disposition": "carried_forward_exact",
+        "v3_cell_id": "modern.montenegrin_cyrillic.unmarked.contact_interference.source_backed_correction",
+        "new_binding": {
+          "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
+          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+        },
+        "child_partition_ids": [],
+        "denominator_effect": "same_parent_denominator",
+        "reason_code": "v3_taxonomy_preserves_v2_cell"
+      },
+      {
+        "v2_cell_id": "modern.russian.unmarked.contact_interference.source_backed_correction",
+        "v2_status": "coverage_blocked",
+        "old_artifact": {
+          "path": "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json",
+          "sha256": "dc8dfdf207728ef386cea14ddb328289b2beee5159afb98bf076e5f117602ea3"
+        },
+        "disposition": "carried_forward_exact",
+        "v3_cell_id": "modern.russian.unmarked.contact_interference.source_backed_correction",
+        "new_binding": {
+          "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
+          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+        },
+        "child_partition_ids": [],
+        "denominator_effect": "same_parent_denominator",
+        "reason_code": "v3_taxonomy_preserves_v2_cell"
+      },
+      {
+        "v2_cell_id": "modern.serbian_cyrillic.unmarked.contact_interference.source_backed_correction",
+        "v2_status": "coverage_blocked",
+        "old_artifact": {
+          "path": "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json",
+          "sha256": "dc8dfdf207728ef386cea14ddb328289b2beee5159afb98bf076e5f117602ea3"
+        },
+        "disposition": "carried_forward_exact",
+        "v3_cell_id": "modern.serbian_cyrillic.unmarked.contact_interference.source_backed_correction",
+        "new_binding": {
+          "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
+          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+        },
+        "child_partition_ids": [],
+        "denominator_effect": "same_parent_denominator",
+        "reason_code": "v3_taxonomy_preserves_v2_cell"
+      },
+      {
+        "v2_cell_id": "protection.source_attested_ukrainian_dialect_or_regional_form.dialect_or_regional_form.protected_dialect_or_regional",
+        "v2_status": "coverage_blocked",
+        "old_artifact": {
+          "path": "data/projects/open_model_data/evidence/phase3_p1_dialect_regional_protection_amendment_v1.json",
+          "sha256": "5a4b259f764a3d41499f0a989c02fed921c18b62c9831d361d18d19dcc948afa"
+        },
+        "disposition": "carried_forward_exact",
+        "v3_cell_id": "protection.source_attested_ukrainian_dialect_or_regional_form.dialect_or_regional_form.protected_dialect_or_regional",
+        "new_binding": {
+          "path": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json",
+          "sha256": "d7897f3f4a5899e24f504916d9a63bcb82d3e20968d0be26ba8166f27ba5a852"
+        },
+        "child_partition_ids": [],
+        "denominator_effect": "same_parent_denominator",
+        "reason_code": "v2_parent_carried_until_v3_a_partition_frozen"
+      }
+    ],
+    "dispositions_complete": true,
+    "source_unit_ids_stable": true,
+    "parent_cells_no_direct_child_credit": true,
+    "v2_denominator_preserved": true
+  },
+  "child_work_slots": [
+    {
+      "slot_id": "V3-A",
+      "issue_number": 7560,
+      "title_id": "v3_a_taxonomy_and_denominator_compatibility",
+      "status": "NOT_STARTED",
+      "scope_ids": [
+        "orthogonal_taxonomy",
+        "v2_denominator",
+        "dialect_parent_partition",
+        "rights_capabilities"
+      ],
+      "dependencies": [
+        "phase3_v3_cooperative_control_plane_v1"
+      ],
+      "required_outputs": [
+        "v3_a_taxonomy_schema",
+        "v3_a_compatibility_matrix",
+        "v3_a_denominator_receipt"
+      ],
+      "provider_calls_authorized": false,
+      "completion_requires_exact_hashes": true,
+      "mass_labeling_authorized": false
+    },
+    {
+      "slot_id": "V3-B",
+      "issue_number": 7559,
+      "title_id": "v3_b_cooperative_control_plane_and_human_workflow",
+      "status": "NOT_STARTED",
+      "scope_ids": [
+        "role_visibility_conflict",
+        "state_machine",
+        "human_work_manifest",
+        "append_only_receipts"
+      ],
+      "dependencies": [
+        "phase3_v3_cooperative_control_plane_v1",
+        "issue_7560"
+      ],
+      "required_outputs": [
+        "v3_b_role_visibility_contract",
+        "v3_b_transition_validator",
+        "v3_b_human_work_manifest"
+      ],
+      "provider_calls_authorized": false,
+      "completion_requires_exact_hashes": true,
+      "mass_labeling_authorized": false
+    },
+    {
+      "slot_id": "V3-C",
+      "issue_number": 7561,
+      "title_id": "v3_c_heldout_extension_and_solo_custody",
+      "status": "NOT_STARTED",
+      "scope_ids": [
+        "heldout_strata",
+        "content_blind_split_custody",
+        "temporal_firewall",
+        "evaluation_thresholds"
+      ],
+      "dependencies": [
+        "phase3_v3_cooperative_control_plane_v1",
+        "issue_7560"
+      ],
+      "required_outputs": [
+        "v3_c_heldout_partition_contract",
+        "v3_c_solo_custody_receipt",
+        "v3_c_evaluation_thresholds"
+      ],
+      "provider_calls_authorized": false,
+      "completion_requires_exact_hashes": true,
+      "mass_labeling_authorized": false
+    }
+  ],
+  "gates": {
+    "ratification_complete": true,
+    "outcome_sha_scope_approved": true,
+    "provider_calls_authorized": false,
+    "labeling_authorized": false,
+    "training_authorized": false,
+    "p4_v2_authorized": false,
+    "required_child_slots": [
+      "V3-A",
+      "V3-B",
+      "V3-C"
+    ],
+    "p4_v1_mutation_allowed": false
+  },
+  "receipt_sha256": "0bccfee950bdd4efd144142f8ef00c0cae8a1313dd6ac705a16877973a914b97"
+}
