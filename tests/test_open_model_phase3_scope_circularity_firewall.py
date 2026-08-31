@@ -228,21 +228,23 @@ def test_secure_object_reader_rejects_hardlinks_symlinks_and_bad_compression(tmp
     path.write_bytes(raw)
     os.chmod(path, 0o600)
     item = {"object_relative_path": "objects/one", "storage": "raw", "stored_sha256": firewall.sha256_bytes(raw), "sha256": firewall.sha256_bytes(raw), "size_bytes": len(raw)}
-    assert firewall._secure_object_raw(pack, item) == raw
+    pack_fd = os.open(pack, os.O_RDONLY | os.O_DIRECTORY)
+    assert firewall._secure_object_raw(pack_fd, item) == raw
     os.link(path, objects / "hard")
     with pytest.raises(firewall.FirewallError):
-        firewall._secure_object_raw(pack, item)
+        firewall._secure_object_raw(pack_fd, item)
     (objects / "hard").unlink()
     path.unlink()
     (objects / "one").symlink_to("missing")
     with pytest.raises((firewall.FirewallError, OSError)):
-        firewall._secure_object_raw(pack, item)
+        firewall._secure_object_raw(pack_fd, item)
     (objects / "one").unlink()
     path.write_bytes(b"not-lzma")
     os.chmod(path, 0o600)
     bad = item | {"storage": "lzma", "stored_sha256": firewall.sha256_bytes(b"not-lzma")}
     with pytest.raises(firewall.FirewallError):
-        firewall._secure_object_raw(pack, bad)
+        firewall._secure_object_raw(pack_fd, bad)
+    os.close(pack_fd)
 
 
 def test_concept_authority_gate_requires_pinned_human_registry_and_rejects_renamed_derivative() -> None:

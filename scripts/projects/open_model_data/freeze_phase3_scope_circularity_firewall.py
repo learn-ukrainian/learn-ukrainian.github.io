@@ -222,12 +222,11 @@ def _safe_private_path(path: Path, root: Path) -> tuple[int, os.stat_result]:
     return fd, before
 
 
-def _secure_pack_object_fd(pack_dir: Path, relative: str) -> tuple[int, os.stat_result]:
+def _secure_pack_object_fd(pack_root_fd: int, relative: str) -> tuple[int, os.stat_result]:
     """Open a compact-pack object exactly once through no-follow dir fds."""
     parts = Path(relative).parts
     _require(parts and not Path(relative).is_absolute() and ".." not in parts, "private_path_unsafe")
-    root_fd = os.open(pack_dir, os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0))
-    current = root_fd
+    current = os.dup(pack_root_fd)
     try:
         for part in parts[:-1]:
             next_fd = os.open(part, os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0), dir_fd=current)
@@ -243,10 +242,10 @@ def _secure_pack_object_fd(pack_dir: Path, relative: str) -> tuple[int, os.stat_
         os.close(current)
 
 
-def _secure_object_raw(pack_dir: Path, item: Mapping[str, Any]) -> bytes:
+def _secure_object_raw(pack_root_fd: int, item: Mapping[str, Any]) -> bytes:
     relative = item.get("object_relative_path")
     _require(isinstance(relative, str), "pack_shape_failure")
-    fd, before = _secure_pack_object_fd(pack_dir, relative)
+    fd, before = _secure_pack_object_fd(pack_root_fd, relative)
     try:
         stored = b"".join(iter(lambda: os.read(fd, 1024 * 1024), b""))
         _require(sha256_bytes(stored) == item.get("stored_sha256"), "identity_roundtrip_failure")
@@ -275,7 +274,7 @@ def _secure_object_raw(pack_dir: Path, item: Mapping[str, Any]) -> bytes:
         os.close(fd)
 
 
-def _secure_content_pack_proof(pack_dir: Path, manifest: Mapping[str, Any], inventory: Mapping[str, Any]) -> None:
+def _secure_content_pack_proof(pack_root_fd: int, manifest: Mapping[str, Any], inventory: Mapping[str, Any]) -> None:
     """Descriptor-pinned 419-object stream proof; no pack object path is reopened."""
     objects = manifest.get("objects")
     _require(isinstance(objects, list) and len(objects) == 419, "pack_shape_failure")
@@ -283,7 +282,7 @@ def _secure_content_pack_proof(pack_dir: Path, manifest: Mapping[str, Any], inve
     stored_entries: list[dict[str, Any]] = []
     for item in objects:
         _require(isinstance(item, Mapping), "pack_shape_failure")
-        _secure_object_raw(pack_dir, item)
+        _secure_object_raw(pack_root_fd, item)
         restored.extend((path, item["sha256"]) for path in item.get("role_relative_paths", []))
         stored_entries.append({"sha256": item["sha256"], "storage": item["storage"], "stored_sha256": item["stored_sha256"], "stored_size_bytes": int(item["stored_size_bytes"])})
     object_set = storage._pairs_digest(restored)
@@ -527,7 +526,7 @@ def _validate_labeling_metadata_receipt(receipt: Mapping[str, Any]) -> bool:
     )
 
 
-def _labeling_expansion_identities(pack_dir: Path, manifest: Mapping[str, Any]) -> tuple[dict[str, list[str]], dict[str, Any]]:
+def _labeling_expansion_identities(pack_root_fd: int, manifest: Mapping[str, Any]) -> tuple[dict[str, list[str]], dict[str, Any]]:
     """Protect the exact historical metadata-receipt census as deny lineage.
 
     The receipts authenticate historical provider attempts and terminal metadata.
@@ -543,7 +542,7 @@ def _labeling_expansion_identities(pack_dir: Path, manifest: Mapping[str, Any]) 
     for item in manifest["objects"]:
         if "labeling_expansion" not in item.get("selection_classes", [item.get("selection_class")]):
             continue
-        raw = _secure_object_raw(pack_dir, item)
+        raw = _secure_object_raw(pack_root_fd, item)
         receipt = json.loads(raw.decode("utf-8"))
         _require(
             isinstance(receipt, Mapping)
@@ -618,14 +617,14 @@ def _assert_closed_zero_namespace_census(manifest: Mapping[str, Any]) -> None:
     _require(not any("paraphrase" in str(value).lower() or "synthetic" in str(value).lower() for value in classes), "graph_incompleteness")
 
 
-def _build_private_deny_corpus(pack_dir: Path, manifest: Mapping[str, Any]) -> dict[str, Any]:
+def _build_private_deny_corpus(pack_root_fd: int, manifest: Mapping[str, Any]) -> dict[str, Any]:
     """Derive the source/example/document/exact/near graph inside the steward lane."""
     policy = near.policy_for_governed_use("train_development_to_heldout_firewall")
     rows: list[dict[str, str]] = []
     for item in manifest["objects"]:
         if "materialization_packet" not in item.get("selection_classes", [item.get("selection_class")]):
             continue
-        raw = _secure_object_raw(pack_dir, item)
+        raw = _secure_object_raw(pack_root_fd, item)
         payload = json.loads(raw.decode("utf-8"))
         entries = payload.get("rows") if isinstance(payload, Mapping) else None
         _require(isinstance(entries, list), "graph_incompleteness")
@@ -681,7 +680,7 @@ def _build_private_deny_corpus(pack_dir: Path, manifest: Mapping[str, Any]) -> d
         components.setdefault(find(index), []).append(row["row"])
     component_by_row = {row_id: sha256_bytes(canonical_json(sorted(values))) for values in components.values() for row_id in values}
     sidecar_hashes = [sha256_bytes(str(item.get("sidecar_id")).encode()) for item in manifest["objects"] if "evidence_sidecar" in item.get("selection_classes", [])]
-    labeling_namespaces, labeling_census = _labeling_expansion_identities(pack_dir, manifest)
+    labeling_namespaces, labeling_census = _labeling_expansion_identities(pack_root_fd, manifest)
     _assert_closed_zero_namespace_census(manifest)
     namespaces = {
         "row": sorted(row["row"] for row in rows),
@@ -861,6 +860,7 @@ def run_steward_production(config: str | None = None) -> dict[str, Any]:
     if not configured:
         return _zero("private_binding_unbound")
     output_root: Path | None = None
+    pack_root_fd: int | None = None
     try:
         payload, root = _read_steward_config(Path(configured))
         pack_dir = Path(payload["content_pack_directory"])
@@ -868,25 +868,31 @@ def run_steward_production(config: str | None = None) -> dict[str, Any]:
         _require(pack_dir != output_root and not output_root.is_relative_to(pack_dir) and not pack_dir.is_relative_to(output_root), "private_path_unsafe")
         _validate_private_tree(pack_dir, root)
         _safe_private_directory(output_root, root)
+        pack_root_fd = os.open(pack_dir, os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0))
+        pack_root_stat = os.fstat(pack_root_fd)
+        _require(stat.S_ISDIR(pack_root_stat.st_mode) and pack_root_stat.st_uid == os.getuid() and stat.S_IMODE(pack_root_stat.st_mode) == PRIVATE_DIR_MODE, "private_path_unsafe")
         output_before = os.lstat(output_root)
         _write_run_state(output_root, "RUNNING")
-        manifest_path = pack_dir / "pack-manifest.json"
-        manifest_fd, manifest_before = _safe_private_path(manifest_path, root)
+        manifest_fd = os.open("pack-manifest.json", os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0), dir_fd=pack_root_fd)
+        manifest_before = os.fstat(manifest_fd)
+        _require(stat.S_ISREG(manifest_before.st_mode) and manifest_before.st_nlink == 1 and stat.S_IMODE(manifest_before.st_mode) == PRIVATE_MODE, "private_path_unsafe")
+        manifest_raw = b"".join(iter(lambda: os.read(manifest_fd, 65536), b""))
+        manifest_after_fd = os.fstat(manifest_fd)
         os.close(manifest_fd)
-        manifest = storage._read_json(manifest_path, "pack_shape_failure")
+        _require((manifest_before.st_dev, manifest_before.st_ino, manifest_before.st_size) == (manifest_after_fd.st_dev, manifest_after_fd.st_ino, manifest_after_fd.st_size), "private_path_unsafe")
+        manifest = json.loads(manifest_raw.decode("utf-8"))
         _require(isinstance(manifest, Mapping), "hash_drift")
         storage._require_receipt(manifest, "hash_drift")
         _require(manifest.get("schema_version") == storage.PACK_SCHEMA_VERSION and manifest.get("pack_kind") == "content_compact", "hash_drift")
         inventory = _content_pack_inventory(manifest)
         _require(validate_pack_commitments(manifest, inventory), "denominator_drift")
-        _secure_content_pack_proof(pack_dir, manifest, inventory)
-        corpus = _build_private_deny_corpus(pack_dir, manifest)
+        _secure_content_pack_proof(pack_root_fd, manifest, inventory)
+        corpus = _build_private_deny_corpus(pack_root_fd, manifest)
         _require(manifest.get("content_bodies_stored") is True, "graph_incompleteness")
         classes = {value for item in manifest["objects"] for value in item.get("selection_classes", [item.get("selection_class")])}
         _require("compile_expansion" not in classes and not any("label-output" in str(value) for value in classes), "graph_incompleteness")
-        manifest_after = os.lstat(manifest_path)
-        _require((manifest_before.st_dev, manifest_before.st_ino) == (manifest_after.st_dev, manifest_after.st_ino), "private_path_unsafe")
-        _secure_content_pack_proof(pack_dir, manifest, inventory)
+        _require((pack_root_stat.st_dev, pack_root_stat.st_ino) == (os.fstat(pack_root_fd).st_dev, os.fstat(pack_root_fd).st_ino), "private_path_unsafe")
+        _secure_content_pack_proof(pack_root_fd, manifest, inventory)
         _write_private_json(output_root / "cycle007-deny-component-manifest-v1.json", corpus)
         public_receipt = {"schema_version": "phase3_scope_circularity_public_binding_receipt_v1", "text_free": True, "pack_manifest_receipt_sha256": manifest["receipt_sha256"], "object_set_sha256": EXPECTED_OBJECT_SET_SHA256, "ordered_row_identity_commitment_sha256": EXPECTED_ORDERED_ROW_IDENTITY_SHA256, "packet_count": 204, "row_count": 10159, "physical_sidecar_count": 204, "logical_sidecar_count": 408, "object_count": 419, "private_graph_commitment_sha256": corpus["corpus_sha256"], "builder_clearance": {"p1_sha256": PINS[P1], "p1_amendment_sha256": PINS[P1_AMENDMENT], "p2_sha256": PINS[P2], "near_duplicate_policy_sha256": PINS[NEAR_POLICY], "firewall_sha256": sha256_file(OUTPUT)}}
         public_receipt["receipt_sha256"] = sha256_bytes(canonical_json(public_receipt))
@@ -903,6 +909,9 @@ def run_steward_production(config: str | None = None) -> dict[str, Any]:
             with suppress(FirewallError, OSError):
                 _write_run_state(output_root, "TERMINAL_FAILURE", code="private_path_unsafe")
         return _zero("private_path_unsafe")
+    finally:
+        if pack_root_fd is not None:
+            os.close(pack_root_fd)
 
 
 def evaluate_steward_candidates(candidates: Sequence[Mapping[str, Any]], config: str | None = None) -> dict[str, Any]:
