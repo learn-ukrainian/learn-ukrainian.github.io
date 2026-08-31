@@ -14,6 +14,7 @@ from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import LeaseHolder
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.api import atlas_jobs_router as load_mod
+from scripts.api.monitor_context import fixture_context
 from scripts.api.occupancy import router as occupancy_router
 from scripts.api.occupancy_local import write_marker
 from scripts.lexicon.runner import atlas_job
@@ -23,8 +24,9 @@ _ALIAS_LEAKS = ("atlas-runner", "hramatka", "vps")
 _PLACEHOLDER_MAP = "job-box=host-job,teach-box=host-teacher"
 
 
-def _client() -> TestClient:
+def _client(tmp_path: Path) -> TestClient:
     app = FastAPI()
+    app.state.ctx = fixture_context(tmp_path / "occupancy-ctx")
     app.include_router(occupancy_router, prefix="/api/occupancy")
     return TestClient(app, raise_server_exceptions=False)
 
@@ -80,7 +82,7 @@ def test_occupancy_session_stream_driver_keeps_low_load_host_busy(
         idle_load["job_unit"] = {"active_count": 0, "job_id": None, "state": None}
         load_mod.set_host_load_cache("teach-box", idle_load)
         load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
-        resp = _client().get("/api/occupancy?host_id=host-teacher")
+        resp = _client(tmp_path).get("/api/occupancy?host_id=host-teacher")
         assert resp.status_code == 200
         host = resp.json()["hosts"]["host-teacher"]
         assert host["idle_or_empty"] is False
@@ -116,7 +118,7 @@ def test_occupancy_driver_lease_without_host_claim_stays_idle(tmp_path: Path, mo
         idle_load["job_unit"] = {"active_count": 0, "job_id": None, "state": None}
         load_mod.set_host_load_cache("teach-box", idle_load)
         load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
-        resp = _client().get("/api/occupancy?host_id=host-teacher")
+        resp = _client(tmp_path).get("/api/occupancy?host_id=host-teacher")
         assert resp.status_code == 200
         host = resp.json()["hosts"]["host-teacher"]
         assert host["occupants"] == []
@@ -149,7 +151,7 @@ def test_occupancy_foundry_marker_keeps_low_load_host_busy(tmp_path: Path, monke
         idle_load["job_unit"] = {"active_count": 0, "job_id": None, "state": None}
         load_mod.set_host_load_cache("teach-box", idle_load)
         load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
-        resp = _client().get("/api/occupancy?host_id=host-teacher")
+        resp = _client(tmp_path).get("/api/occupancy?host_id=host-teacher")
         assert resp.status_code == 200
         host = resp.json()["hosts"]["host-teacher"]
         assert host["idle_or_empty"] is False
@@ -189,7 +191,7 @@ def test_occupancy_marker_on_unavailable_host_is_not_idle(tmp_path: Path, monkey
     fake = atlas_job.FakeHostAdapter()
     atlas_job.set_host_adapter(fake)
     try:
-        resp = _client().get("/api/occupancy?host_id=host-teacher")
+        resp = _client(tmp_path).get("/api/occupancy?host_id=host-teacher")
         assert resp.status_code == 200
         host = resp.json()["hosts"]["host-teacher"]
         assert host["status"] == "unavailable"

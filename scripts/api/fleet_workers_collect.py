@@ -347,9 +347,10 @@ def collect_observer_workers(
     *,
     now_mono: float | None = None,
     tally: SkipTally | None = None,
+    presence_store: Any = None,
 ) -> list[CollectedWorker]:
     rows: list[CollectedWorker] = []
-    for presence in list_live(now_mono=now_mono):
+    for presence in list_live(now_mono=now_mono, store=presence_store):
         agent = _agent_token(presence.agent)
         if agent is None:
             continue
@@ -573,12 +574,18 @@ def _self_host_ids() -> set[str]:
     return ids
 
 
-def _host_freshness(host_id: str, *, now_mono: float) -> str:
+def _host_freshness(
+    host_id: str,
+    *,
+    now_mono: float,
+    presence_store: Any = None,
+    report_store: Any = None,
+) -> str:
     if host_id in _self_host_ids():
         return "fresh"
     if host_id == CLOUD_OBSERVER_HOST_ID:
-        return "fresh" if list_live(now_mono=now_mono) else "unknown"
-    stored = get_live_report(host_id, now_mono=now_mono)
+        return "fresh" if list_live(now_mono=now_mono, store=presence_store) else "unknown"
+    stored = get_live_report(host_id, now_mono=now_mono, store=report_store)
     if stored is None:
         return "unknown"
     age_s = now_mono - stored.received_at_mono
@@ -590,10 +597,11 @@ def _reported_workers(
     *,
     now_mono: float,
     tally: SkipTally | None = None,
+    report_store: Any = None,
 ) -> tuple[str, list[CollectedWorker]]:
     if host_id in _self_host_ids():
         return "reported", []
-    stored = get_live_report(host_id, now_mono=now_mono)
+    stored = get_live_report(host_id, now_mono=now_mono, store=report_store)
     if stored is None:
         return "unreported", []
     status = workers_status_from_document(stored.document)
@@ -629,6 +637,8 @@ def _build_workers_payload(
     session_db: Path | None = None,
     markers_root: Path | None = None,
     now_mono: float | None = None,
+    presence_store: Any = None,
+    report_store: Any = None,
 ) -> dict[str, Any]:
     stamp = time.monotonic() if now_mono is None else now_mono
     clock = datetime.now(UTC)
@@ -653,10 +663,17 @@ def _build_workers_payload(
     for opaque in selected:
         if opaque == UNATTRIBUTED_HOST_ID:
             continue
-        freshness = _host_freshness(opaque, now_mono=stamp)
+        freshness = _host_freshness(
+            opaque,
+            now_mono=stamp,
+            presence_store=presence_store,
+            report_store=report_store,
+        )
         if freshness == "unknown":
             unknown_hosts += 1
-        workers_status, reported = _reported_workers(opaque, now_mono=stamp, tally=tally)
+        workers_status, reported = _reported_workers(
+            opaque, now_mono=stamp, tally=tally, report_store=report_store
+        )
         host_workers: list[CollectedWorker] = []
         unattributed_burn: dict[str, Any] = {}
         reason: str | None = None
@@ -688,7 +705,11 @@ def _build_workers_payload(
                 }
         elif opaque == CLOUD_OBSERVER_HOST_ID:
             workers_status = "reported"
-            host_workers.extend(collect_observer_workers(now_mono=stamp, tally=tally))
+            host_workers.extend(
+                collect_observer_workers(
+                    now_mono=stamp, tally=tally, presence_store=presence_store
+                )
+            )
         else:
             if workers_status == "unreported":
                 attention.append(f"unreported:{opaque}")
@@ -751,6 +772,8 @@ def workers_payload(
     session_db: Path | None = None,
     markers_root: Path | None = None,
     now_mono: float | None = None,
+    presence_store: Any = None,
+    report_store: Any = None,
 ) -> dict[str, Any]:
     """Join live workers. Production GETs reuse a short in-process snapshot.
 
@@ -773,6 +796,8 @@ def workers_payload(
         session_db=session_db,
         markers_root=markers_root,
         now_mono=now_mono,
+        presence_store=presence_store,
+        report_store=report_store,
     )
     if use_cache:
         with _WORKERS_PAYLOAD_LOCK:

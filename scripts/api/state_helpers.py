@@ -149,8 +149,24 @@ V6_PHASE_ORDER = _V6_PHASES
 # dict is in-memory anyway, so restart clears it naturally.
 
 import time
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .monitor_context import MonitorContext
 
 _ttl_cache: dict[str, tuple[float, object]] = {}
+
+
+def ctx_cache_scope(ctx: MonitorContext | None) -> str:
+    """Cache-key / single-slot scope for one app context (#7494).
+
+    Two app instances with different roots must never share TTL entries or
+    thrash each other's last-good slots. Empty string when ``ctx`` is absent
+    (plain-Python callers that have not resolved a context yet).
+    """
+    if ctx is None:
+        return ""
+    return f"@{ctx.roots.project_root}"
 
 
 def cache_get(key: str, ttl: float) -> object | None:

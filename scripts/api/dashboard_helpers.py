@@ -28,9 +28,9 @@ except ImportError:
 from research_quality import assess_research_compat, find_research_path, get_rubric
 
 from .review_parsing import extract_plan_verdict, extract_review_score, extract_review_verdict
-from .state_helpers import detect_pipeline_version, get_plan_slugs, read_v2_state
+from .state_helpers import ctx_cache_scope, detect_pipeline_version, get_plan_slugs, read_v2_state
 
-# Simple TTL cache for scan_track results
+# Simple TTL cache for scan_track results — keyed by context scope + track_id (#7494)
 _track_cache: dict[str, tuple[float, dict]] = {}
 _TRACK_CACHE_TTL = 30.0  # seconds
 _YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
@@ -47,6 +47,10 @@ def _curriculum_root(ctx: MonitorContext | None = None) -> Path:
     return _resolve_context(ctx).roots.curriculum_root
 
 
+def _track_cache_key(track_id: str, ctx: MonitorContext | None = None) -> str:
+    return f"{ctx_cache_scope(_resolve_context(ctx))}:{track_id}"
+
+
 def scan_track_cached(
     track_id: str,
     track_path: str,
@@ -54,11 +58,12 @@ def scan_track_cached(
     ctx: MonitorContext | None = None,
 ) -> dict:
     """Cached wrapper around scan_track."""
-    entry = _track_cache.get(track_id)
+    key = _track_cache_key(track_id, ctx)
+    entry = _track_cache.get(key)
     if entry and (time.time() - entry[0]) < _TRACK_CACHE_TTL:
         return entry[1]
     result = scan_track(track_id, track_path, manifest_modules, ctx=ctx)
-    _track_cache[track_id] = (time.time(), result)
+    _track_cache[key] = (time.time(), result)
     return result
 
 
@@ -422,7 +427,7 @@ def build_module_summary(track_dir: Path, plans_dir: Path, track_id: str, slug: 
     }
 
 
-# Simple TTL cache for track summary results
+# Simple TTL cache for track summary results — keyed by context scope + track_id
 _summary_cache: dict[str, tuple[float, dict]] = {}
 _SUMMARY_CACHE_TTL = 60.0  # seconds
 
@@ -434,11 +439,12 @@ def scan_track_summary_cached(
     ctx: MonitorContext | None = None,
 ) -> dict:
     """Cached wrapper around scan_track_summary."""
-    entry = _summary_cache.get(track_id)
+    key = _track_cache_key(track_id, ctx)
+    entry = _summary_cache.get(key)
     if entry and (time.time() - entry[0]) < _SUMMARY_CACHE_TTL:
         return entry[1]
     result = scan_track_summary(track_id, track_path, manifest_modules, ctx=ctx)
-    _summary_cache[track_id] = (time.time(), result)
+    _summary_cache[key] = (time.time(), result)
     return result
 
 

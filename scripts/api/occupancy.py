@@ -19,17 +19,19 @@ import time
 from datetime import UTC, datetime
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
 
 from scripts.api import atlas_jobs_router as load_mod
-from scripts.api.observer_presence import list_live
+from scripts.api.monitor_context import MonitorContext, get_ctx
+from scripts.api.observer_presence import PresenceStore, list_live
 from scripts.api.occupancy_local import OccupancyRead, read_markers, read_session_streams
 from scripts.api.occupancy_sanitize import CLOUD_OBSERVER_HOST_ID
 from scripts.api.occupancy_sanitize import occupant as _occupant
 from scripts.api.occupancy_sanitize import opaque_host_id as _opaque_host_id
 from scripts.api.project_state_store import (
     REPORT_TTL_SECONDS,
+    ReportStore,
     all_weekly_lanes_at_or_over_pace,
     any_lane_under_weekly_pace,
     get_freshest_lane_usage,
@@ -70,8 +72,14 @@ def _idle_duration_s(host_id: str, idle_or_empty: bool, *, now_mono: float) -> f
     return max(0.0, now_mono - _idle_since_mono[host_id])
 
 
-def _empty_host_attention_item(host_id: str, *, now_mono: float, now: datetime | None = None) -> str | None:
-    freshest = get_freshest_lane_usage(now_mono=now_mono)
+def _empty_host_attention_item(
+    host_id: str,
+    *,
+    now_mono: float,
+    now: datetime | None = None,
+    report_store: ReportStore | None = None,
+) -> str | None:
+    freshest = get_freshest_lane_usage(now_mono=now_mono, store=report_store)
     if freshest is None or freshest.age_s > REPORT_TTL_SECONDS:
         return f"empty_host_unknown_capacity:{host_id}"
     if any_lane_under_weekly_pace(freshest.lanes, now=now):
@@ -86,6 +94,7 @@ def _evaluate_attention(
     *,
     now_mono: float | None = None,
     now: datetime | None = None,
+    report_store: ReportStore | None = None,
 ) -> list[str]:
     stamp = time.monotonic() if now_mono is None else now_mono
     clock = now or datetime.now(UTC)
@@ -101,7 +110,9 @@ def _evaluate_attention(
         idle_s = _idle_duration_s(host_id, True, now_mono=stamp)
         if idle_s < EMPTY_HOST_IDLE_THRESHOLD_S:
             continue
-        item = _empty_host_attention_item(host_id, now_mono=stamp, now=clock)
+        item = _empty_host_attention_item(
+            host_id, now_mono=stamp, now=clock, report_store=report_store
+        )
         if item is not None:
             attention.append(item)
     return attention
@@ -351,9 +362,13 @@ def _shape_host(
     return shaped
 
 
-def _occupants_from_observers(host_id: str) -> list[dict[str, str | None]]:
+def _occupants_from_observers(
+    host_id: str,
+    *,
+    presence_store: PresenceStore | None = None,
+) -> list[dict[str, str | None]]:
     occupants: list[dict[str, str | None]] = []
-    for row in list_live():
+    for row in list_live(store=presence_store):
         if row.host_id != host_id:
             continue
         occupant = _occupant(
@@ -404,16 +419,28 @@ def _shape_cloud_observer(occupants: list[dict[str, str | None]]) -> dict[str, A
     )
 
 
-def _attach_cloud_observer(payload: dict[str, Any], host_id: str | None) -> dict[str, Any]:
+def _attach_cloud_observer(
+    payload: dict[str, Any],
+    host_id: str | None,
+    *,
+    presence_store: PresenceStore | None = None,
+    report_store: ReportStore | None = None,
+) -> dict[str, Any]:
     if host_id is not None and host_id != CLOUD_OBSERVER_HOST_ID:
-        payload["attention"] = _evaluate_attention(payload.get("hosts", {}))
+        payload["attention"] = _evaluate_attention(
+            payload.get("hosts", {}), report_store=report_store
+        )
         return payload
-    occupants = _occupants_from_observers(CLOUD_OBSERVER_HOST_ID)
+    occupants = _occupants_from_observers(CLOUD_OBSERVER_HOST_ID, presence_store=presence_store)
     if not occupants and host_id is None:
-        payload["attention"] = _evaluate_attention(payload.get("hosts", {}))
+        payload["attention"] = _evaluate_attention(
+            payload.get("hosts", {}), report_store=report_store
+        )
         return payload
     payload["hosts"][CLOUD_OBSERVER_HOST_ID] = _shape_cloud_observer(occupants)
-    payload["attention"] = _evaluate_attention(payload.get("hosts", {}))
+    payload["attention"] = _evaluate_attention(
+        payload.get("hosts", {}), report_store=report_store
+    )
     return payload
 
 
@@ -457,6 +484,9 @@ def _empty_payload() -> dict[str, Any]:
 def _payload_from_entries(
     selected: dict[str, str | None],
     load_entries: dict[str, dict[str, Any]],
+    *,
+    presence_store: PresenceStore | None = None,
+    report_store: ReportStore | None = None,
 ) -> dict[str, Any]:
     hosts: dict[str, Any] = {}
     mapping = parse_host_id_map()
@@ -469,7 +499,7 @@ def _payload_from_entries(
             selected=selected,
         )
         foundry_read = read_markers(host_id=opaque)
-        observer_occupants = _occupants_from_observers(opaque)
+        observer_occupants = _occupants_from_observers(opaque, presence_store=presence_store)
         groups = [atlas_occupants, driver_read.occupants, foundry_read.occupants, observer_occupants]
         occupants = _merge_occupants(*groups)
         foundry_occupants = [occupant for occupant in foundry_read.occupants if _is_foundry_occupant(occupant)]
@@ -500,15 +530,27 @@ def _payload_from_entries(
         "observed_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
         "hosts": hosts,
     }
-    payload["attention"] = _evaluate_attention(hosts)
+    payload["attention"] = _evaluate_attention(hosts, report_store=report_store)
     return payload
 
 
-def occupancy_payload(*, host_id: str | None = None, fresh: bool = False) -> dict[str, Any]:
+def occupancy_payload(
+    *,
+    host_id: str | None = None,
+    fresh: bool = False,
+    ctx: MonitorContext | None = None,
+) -> dict[str, Any]:
     """Build the synchronous cache-only payload for non-HTTP callers."""
+    presence_store = None if ctx is None else ctx.stores.presence_store
+    report_store = None if ctx is None else ctx.stores.report_store
     selected = _selected_hosts(host_id)
     if not selected:
-        return _attach_cloud_observer(_empty_payload(), host_id)
+        return _attach_cloud_observer(
+            _empty_payload(),
+            host_id,
+            presence_store=presence_store,
+            report_store=report_store,
+        )
 
     load_entries: dict[str, dict[str, Any]] = {}
     for opaque, canonical in selected.items():
@@ -516,13 +558,35 @@ def occupancy_payload(*, host_id: str | None = None, fresh: bool = False) -> dic
             load_entries[opaque] = _unavailable_load_entry()
         else:
             load_entries[opaque] = load_mod._get_host_load_entry(canonical, fresh=fresh)
-    return _attach_cloud_observer(_payload_from_entries(selected, load_entries), host_id)
+    return _attach_cloud_observer(
+        _payload_from_entries(
+            selected,
+            load_entries,
+            presence_store=presence_store,
+            report_store=report_store,
+        ),
+        host_id,
+        presence_store=presence_store,
+        report_store=report_store,
+    )
 
 
-async def _occupancy_payload_async(*, host_id: str | None = None, fresh: bool = False) -> dict[str, Any]:
+async def _occupancy_payload_async(
+    *,
+    host_id: str | None = None,
+    fresh: bool = False,
+    ctx: MonitorContext | None = None,
+) -> dict[str, Any]:
+    presence_store = None if ctx is None else ctx.stores.presence_store
+    report_store = None if ctx is None else ctx.stores.report_store
     selected = _selected_hosts(host_id)
     if not selected:
-        return _attach_cloud_observer(_empty_payload(), host_id)
+        return _attach_cloud_observer(
+            _empty_payload(),
+            host_id,
+            presence_store=presence_store,
+            report_store=report_store,
+        )
 
     tasks = []
     keys = []
@@ -535,13 +599,24 @@ async def _occupancy_payload_async(*, host_id: str | None = None, fresh: bool = 
 
     entries = await asyncio.gather(*tasks)
     load_entries = dict(zip(keys, entries, strict=True))
-    return _attach_cloud_observer(_payload_from_entries(selected, load_entries), host_id)
+    return _attach_cloud_observer(
+        _payload_from_entries(
+            selected,
+            load_entries,
+            presence_store=presence_store,
+            report_store=report_store,
+        ),
+        host_id,
+        presence_store=presence_store,
+        report_store=report_store,
+    )
 
 
 @router.get("")
 async def occupancy(
     host_id: str | None = Query(default=None),
     fresh: bool = False,
+    ctx: MonitorContext = Depends(get_ctx),
 ) -> JSONResponse:
-    payload = await _occupancy_payload_async(host_id=host_id, fresh=fresh)
+    payload = await _occupancy_payload_async(host_id=host_id, fresh=fresh, ctx=ctx)
     return JSONResponse(content=payload, headers={"Cache-Control": "no-store"})

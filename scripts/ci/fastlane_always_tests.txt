@@ -8,6 +8,7 @@ tests/api/test_comms_metrics_switch.py
 tests/api/test_dashboard_monitor_context.py
 tests/api/test_import_pinning.py
 tests/api/test_orient_ctx_isolation.py
+tests/api/test_monitor_ctx_store_isolation.py
 tests/api/test_route_locality.py
 tests/api/test_sources_router_context.py
 tests/control_plane/test_component_interlock.py

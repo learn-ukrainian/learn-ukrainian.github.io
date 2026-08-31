@@ -16,7 +16,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.responses import JSONResponse
 
-from scripts.api.state_helpers import cache_get, cache_get_with_age, cache_invalidate, cache_set
+from scripts.api.state_helpers import cache_get, cache_get_with_age, cache_invalidate, cache_set, ctx_cache_scope
 from scripts.orchestration.fleet_taxonomy import FleetTaxonomyError, resolve_area
 from scripts.orchestration.issue_stream_audit import load_registry
 from scripts.work.attention import is_actionable
@@ -113,17 +113,26 @@ def _filters_from_request(request: Request) -> dict[str, Any]:
         ) from exc
 
 
-def projection_cache_key(filters: dict[str, Any]) -> str:
+def projection_cache_key(
+    filters: dict[str, Any],
+    ctx: MonitorContext | None = None,
+) -> str:
     """Permanent warm-cache key for a validated, canonical filter dict.
 
     Self-validates via the shared projection filter admission gate so direct
     callers cannot mint keys for unknown filters or foreign ``repository_id``
     values. Reordered/duplicate multivalues within the finite raw bound collapse
     to one permanent key. The key string is built once from the canonical dict
-    (no double-encoding).
+    (no double-encoding). Scoped by app context identity (#7494) so two
+    create_app() instances never share projection entries.
     """
     canonical = admit_projection_filters(filters or {})
-    return f"{CACHE_KEY}:{sorted(canonical.items())!r}"
+    scope = ctx_cache_scope(_resolve_context(ctx))
+    return f"{CACHE_KEY}{scope}:{sorted(canonical.items())!r}"
+
+
+def _stream_registry_cache_key(ctx: MonitorContext | None = None) -> str:
+    return f"{STREAM_REGISTRY_CACHE_KEY}{ctx_cache_scope(_resolve_context(ctx))}"
 
 
 def _build_sync(filters: dict[str, Any], *, cache_age_s: float = 0.0) -> dict[str, Any]:
@@ -338,7 +347,7 @@ def warm_projection_cache(
 ) -> asyncio.Future[dict[str, Any]] | None:
     """Schedule asynchronous background warm-up of the public projection cache."""
     canonical = admit_projection_filters(filters or {})
-    key = projection_cache_key(canonical)
+    key = projection_cache_key(canonical, ctx)
     cached = cache_get_with_age(key, CACHE_TTL_S)
     if cached is not None:
         return None
@@ -357,7 +366,7 @@ async def work_projection(
 ) -> dict[str, Any]:
     """Normalized public attention list with source envelopes and degradation."""
     filters = _filters_from_request(request)
-    key = projection_cache_key(filters)
+    key = projection_cache_key(filters, ctx)
 
     if not fresh:
         cached = cache_get_with_age(key, CACHE_TTL_S)
@@ -405,16 +414,17 @@ async def work_projection(
     return out
 
 
-def _known_streams() -> list[str] | None:
+def _known_streams(ctx: MonitorContext | None = None) -> list[str] | None:
     """Registry stream keys with a small TTL cache; None when unreadable (fail closed)."""
-    cached = cache_get(STREAM_REGISTRY_CACHE_KEY, STREAM_REGISTRY_TTL_S)
+    key = _stream_registry_cache_key(ctx)
+    cached = cache_get(key, STREAM_REGISTRY_TTL_S)
     if isinstance(cached, list):
         return cached
     try:
         names = sorted(load_registry().keys())
     except Exception:
         return None
-    cache_set(STREAM_REGISTRY_CACHE_KEY, names)
+    cache_set(key, names)
     return names
 
 
@@ -470,7 +480,7 @@ async def work_next(
     unreadable stream registry fails closed with 503 ``registry_unavailable``
     rather than treating typos as an empty queue (#6890).
     """
-    known = _known_streams()
+    known = _known_streams(ctx)
     if known is None:
         return _next_error(
             503,
@@ -496,7 +506,7 @@ async def work_next(
             },
         )
 
-    key = projection_cache_key({})
+    key = projection_cache_key({}, ctx)
     cached = cache_get_with_age(key, float("inf"))
     if cached is None or not isinstance(cached[0], dict):
         return _next_error(

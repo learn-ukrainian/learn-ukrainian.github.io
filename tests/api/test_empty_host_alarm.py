@@ -77,8 +77,14 @@ def _under_pace_lane_usage(lane: str = "claude") -> dict[str, Any]:
 def _freeze_attention_now(monkeypatch: pytest.MonkeyPatch) -> None:
     original = occupancy_mod._evaluate_attention
 
-    def wrapped(hosts: dict[str, Any], *, now_mono: float | None = None, now: datetime | None = None) -> list[str]:
-        return original(hosts, now_mono=now_mono, now=FROZEN_NOW)
+    def wrapped(
+        hosts: dict[str, Any],
+        *,
+        now_mono: float | None = None,
+        now: datetime | None = None,
+        **kwargs: Any,
+    ) -> list[str]:
+        return original(hosts, now_mono=now_mono, now=FROZEN_NOW, **kwargs)
 
     monkeypatch.setattr(occupancy_mod, "_evaluate_attention", wrapped)
 

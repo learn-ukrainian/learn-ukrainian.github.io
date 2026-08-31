@@ -18,8 +18,6 @@ from agents_extensions.shared.session_streams.db import (
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 
 from . import config
-from .observer_presence import _STORE as _PRESENCE_STORE
-from .project_state_store import _STORE as _REPORT_STORE
 from .resilience import connect_sqlite
 
 # Production singleton for work-router single-flight handles. Fixture contexts
@@ -195,6 +193,11 @@ def _stores(context: MonitorContext, *, fixture: bool) -> MonitorStores:
         report_store: dict[Any, Any] = {}
         work_in_flight: dict[Any, Any] = {}
     else:
+        # Lazy imports avoid a cycle: monitor_context ↔ observer_presence /
+        # project_state_store (those modules Depends(get_ctx) on us).
+        from .observer_presence import _STORE as _PRESENCE_STORE  # noqa: PLC0415  # lazy-ok: break monitor_context ↔ observer_presence cycle
+        from .project_state_store import _STORE as _REPORT_STORE  # noqa: PLC0415  # lazy-ok: break monitor_context ↔ project_state_store cycle
+
         presence_store = _PRESENCE_STORE
         report_store = _REPORT_STORE
         work_in_flight = _WORK_IN_FLIGHT_BUILDS
