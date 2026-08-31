@@ -891,7 +891,7 @@ def _pr_meta(pr: str, repo: str | None = None, cwd: str | None = None) -> dict |
     return data
 
 
-_ROLLUP_FAIL = {"FAILURE", "CANCELLED", "TIMED_OUT", "ACTION_REQUIRED"}
+_ROLLUP_FAIL = {"FAILURE", "CANCELLED", "TIMED_OUT", "ACTION_REQUIRED", "ERROR"}
 _ROLLUP_PENDING = {"IN_PROGRESS", "QUEUED", "PENDING", "WAITING", "EXPECTED", "REQUESTED", "STALE"}
 _ROLLUP_PASS = {"SUCCESS", "SKIPPED", "NEUTRAL"}
 
@@ -967,7 +967,7 @@ def _latest_rollup_rows(rows: list[dict]) -> list[dict] | None:
 
 def _parse_status_rollup_rows(rows: list) -> tuple[list[str], list[str]] | None:
     if not rows:
-        return None
+        return [], []
     named = []
     for row in rows:
         if not isinstance(row, dict):

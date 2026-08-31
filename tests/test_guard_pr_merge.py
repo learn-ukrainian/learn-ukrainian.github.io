@@ -503,8 +503,10 @@ def _rollup_states(monkeypatch, rows):
 @pytest.mark.parametrize(
     "rows,expected",
     [
+        ([], ([], [])),
         ([{"name": "CI Gate", "status": "COMPLETED", "conclusion": "SUCCESS"}], ([], [])),
         ([{"name": "CI Gate", "status": "COMPLETED", "conclusion": "FAILURE"}], (["CI Gate"], [])),
+        ([{"name": "CI Gate", "state": "ERROR"}], (["CI Gate"], [])),
         ([{"name": "CI Gate", "status": "IN_PROGRESS", "conclusion": ""}], ([], ["CI Gate"])),
         ([{"name": "CI Gate", "status": "COMPLETED", "conclusion": "UNKNOWN"}], None),
         ([{"name": "CI Gate"}], None),
