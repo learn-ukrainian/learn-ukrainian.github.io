@@ -1,0 +1,889 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "phase3_historical_protection_channels_v1.schema.json",
+  "title": "Phase 3 historical protection channels v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "text_free",
+    "status",
+    "controlling_outcome_sha256",
+    "bindings",
+    "input_state",
+    "historical_protection",
+    "source_contract",
+    "source_inventory",
+    "channels",
+    "disposition_contract",
+    "review_contract",
+    "heldout_contract",
+    "denominator",
+    "zero_counters",
+    "safety",
+    "generator",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_historical_protection_channels_v1"},
+    "text_free": {"const": true},
+    "status": {"const": "FROZEN_METADATA_ONLY"},
+    "controlling_outcome_sha256": {"$ref": "#/$defs/sha256"},
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "historical_protection_channels_schema",
+        "p1",
+        "p1_schema",
+        "p1_dialect_amendment",
+        "p1_dialect_amendment_schema",
+        "p2",
+        "p2_schema",
+        "scope_circularity_firewall",
+        "scope_circularity_firewall_schema",
+        "historical_spine_v2",
+        "historical_spine_v2_schema",
+        "periodization_freeze_v1",
+        "periodization_freeze_v1_schema"
+      ],
+      "properties": {
+        "historical_protection_channels_schema": {"$ref": "#/$defs/artifact"},
+        "p1": {"$ref": "#/$defs/artifact"},
+        "p1_schema": {"$ref": "#/$defs/artifact"},
+        "p1_dialect_amendment": {"$ref": "#/$defs/artifact"},
+        "p1_dialect_amendment_schema": {"$ref": "#/$defs/artifact"},
+        "p2": {"$ref": "#/$defs/artifact"},
+        "p2_schema": {"$ref": "#/$defs/artifact"},
+        "scope_circularity_firewall": {"$ref": "#/$defs/artifact"},
+        "scope_circularity_firewall_schema": {"$ref": "#/$defs/artifact"},
+        "historical_spine_v2": {"$ref": "#/$defs/artifact"},
+        "historical_spine_v2_schema": {"$ref": "#/$defs/artifact"},
+        "periodization_freeze_v1": {"$ref": "#/$defs/artifact"},
+        "periodization_freeze_v1_schema": {"$ref": "#/$defs/artifact"}
+      }
+    },
+    "input_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "historical_spine_status",
+        "historical_spine_gates",
+        "periodization_status",
+        "periodization_layer_ready",
+        "overall_phase3_source_freeze_ready",
+        "p2_composite_input_sha256",
+        "p2_empty_rule_manifest_sha256",
+        "scope_firewall_status"
+      ],
+      "properties": {
+        "historical_spine_status": {"type": "string"},
+        "historical_spine_gates": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "qualified_historical_semantic_review_complete",
+            "historical_source_coverage_ready",
+            "historical_source_freeze_ready",
+            "phase3_complete",
+            "phase4_authorized",
+            "phase4_blocked"
+          ],
+          "properties": {
+            "qualified_historical_semantic_review_complete": {"const": false},
+            "historical_source_coverage_ready": {"const": false},
+            "historical_source_freeze_ready": {"const": false},
+            "phase3_complete": {"const": false},
+            "phase4_authorized": {"const": false},
+            "phase4_blocked": {"const": true}
+          }
+        },
+        "periodization_status": {"type": "string"},
+        "periodization_layer_ready": {"const": true},
+        "overall_phase3_source_freeze_ready": {"const": false},
+        "p2_composite_input_sha256": {"$ref": "#/$defs/sha256"},
+        "p2_empty_rule_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "scope_firewall_status": {"type": "string"}
+      }
+    },
+    "historical_protection": {"$ref": "#/$defs/historical_protection"},
+    "source_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_unit_fields_required",
+        "source_qualified_identity_required",
+        "period_region_register_recension_required",
+        "recension_editorial_layer_is_distinct",
+        "mixed_layers_require_separate_identity_fields",
+        "source_attested_rusyn_requires_source_attested_identity",
+        "source_attested_rusyn_policy",
+        "unknown_rights_route",
+        "private_only_route",
+        "unresolved_identity_route",
+        "source_bodies_in_contract",
+        "public_locator_policy"
+      ],
+      "properties": {
+        "source_unit_fields_required": {
+          "type": "array",
+          "const": [
+            "source_unit_id",
+            "source_identity_sha256",
+            "source_artifact_sha256",
+            "provenance_sha256",
+            "source_kind",
+            "rights_status"
+          ]
+        },
+        "source_qualified_identity_required": {"const": true},
+        "period_region_register_recension_required": {"const": true},
+        "recension_editorial_layer_is_distinct": {"const": true},
+        "mixed_layers_require_separate_identity_fields": {"const": true},
+        "source_attested_rusyn_requires_source_attested_identity": {"const": true},
+        "source_attested_rusyn_policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "requires_source_qualified_identity",
+            "ruthenian_is_not_rusyn_alias",
+            "unresolved_without_source_attestation"
+          ],
+          "properties": {
+            "requires_source_qualified_identity": {"const": true},
+            "ruthenian_is_not_rusyn_alias": {"const": true},
+            "unresolved_without_source_attestation": {"const": true}
+          }
+        },
+        "unknown_rights_route": {"const": "coverage_blocked"},
+        "private_only_route": {"const": "coverage_blocked"},
+        "unresolved_identity_route": {"const": "abstention_or_coverage_blocked"},
+        "source_bodies_in_contract": {"const": false},
+        "public_locator_policy": {"const": "text_free_hash_bound_receipt_only"}
+      }
+    },
+    "source_inventory": {
+      "type": "array",
+      "minItems": 5,
+      "items": {"$ref": "#/$defs/source_unit"}
+    },
+    "channels": {
+      "type": "array",
+      "minItems": 5,
+      "items": {"$ref": "#/$defs/channel"}
+    },
+    "disposition_contract": {"$ref": "#/$defs/disposition_contract"},
+    "review_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_qualified_human_required",
+        "adjudication_registry_status",
+        "semantic_admission_permitted",
+        "model_output_is_not_authority",
+        "claim_typed_evidence_required",
+        "immutable_adjudication_record_required",
+        "required_evidence_claim_roles",
+        "protected_identity_requires_role",
+        "rights_requires_role",
+        "unresolved_route"
+      ],
+      "properties": {
+        "source_qualified_human_required": {"const": true},
+        "adjudication_registry_status": {"const": "FROZEN_NONADMITTING"},
+        "semantic_admission_permitted": {"const": false},
+        "model_output_is_not_authority": {"const": true},
+        "claim_typed_evidence_required": {"const": true},
+        "immutable_adjudication_record_required": {"const": true},
+        "required_evidence_claim_roles": {
+          "type": "array",
+          "const": [
+            "protected_historical_identity",
+            "rights_provenance",
+            "source_qualified_human_adjudication",
+            "abstention_or_not_applicable_authority"
+          ]
+        },
+        "protected_identity_requires_role": {"const": "protected_historical_identity"},
+        "rights_requires_role": {"const": "rights_provenance"},
+        "unresolved_route": {"const": "abstention_or_coverage_blocked"}
+      }
+    },
+    "heldout_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "firewall_artifact_sha256",
+        "state",
+        "builder_receives_membership",
+        "heldout_cases_selected",
+        "zero_heldout_cases_state",
+        "split_atomicity",
+        "deny_namespaces",
+        "requirements"
+      ],
+      "properties": {
+        "firewall_artifact_sha256": {"$ref": "#/$defs/sha256"},
+        "state": {"const": "evaluation_only"},
+        "builder_receives_membership": {"const": false},
+        "heldout_cases_selected": {"const": 0},
+        "zero_heldout_cases_state": {"const": "BLOCKED_NOT_ZERO"},
+        "split_atomicity": {
+          "const": [
+            "source",
+            "document",
+            "work",
+            "edition",
+            "exact_duplicate_component",
+            "near_duplicate_connected_component"
+          ]
+        },
+        "deny_namespaces": {
+          "const": [
+            "row_ids",
+            "packets",
+            "examples",
+            "source_units",
+            "document_groups",
+            "work_groups",
+            "edition_groups",
+            "sidecars",
+            "annotations",
+            "labels",
+            "prompts",
+            "paraphrases",
+            "synthetic_siblings",
+            "duplicates",
+            "derivatives",
+            "fingerprints"
+          ]
+        },
+        "requirements": {
+          "type": "array",
+          "const": [
+            "source_document_work_edition_split_is_disjoint",
+            "cycle007_rows_sidecars_prompts_labels_and_derivatives_are_denied",
+            "uncertain_lineage_fails_closed",
+            "heldout_spans_and_annotations_are_not_exposed_to_builders"
+          ]
+        }
+      }
+    },
+    "denominator": {"$ref": "#/$defs/denominator"},
+    "zero_counters": {"$ref": "#/$defs/zero_counters"},
+    "safety": {"$ref": "#/$defs/safety"},
+    "generator": {"$ref": "#/$defs/artifact"},
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/-]{0,255}$"
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_./-]+$"
+        },
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "historical_protection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "historical_forms_protected",
+        "modern_correction_eligible",
+        "old_east_slavic_is_modern_russian",
+        "historical_ruskyi_auto_mapped_to_modern_russian",
+        "automatic_mapping_to_modern_national_successor",
+        "recension_and_editorial_layer_required",
+        "protected_identity_classes",
+        "unresolved_historical_cyrillic_identity",
+        "no_automatic_successor_mapping",
+        "script_is_not_language_identity",
+        "mixed_layers_allowed",
+        "forced_single_label_forbidden",
+        "identity_dimensions"
+      ],
+      "properties": {
+        "historical_forms_protected": {"const": true},
+        "modern_correction_eligible": {"const": false},
+        "old_east_slavic_is_modern_russian": {"const": false},
+        "historical_ruskyi_auto_mapped_to_modern_russian": {"const": false},
+        "automatic_mapping_to_modern_national_successor": {"const": false},
+        "recension_and_editorial_layer_required": {"const": true},
+        "protected_identity_classes": {
+          "const": [
+            "old_east_slavic_kyivan_rus",
+            "middle_ukrainian",
+            "church_slavonic_recension",
+            "source_attested_rusyn"
+          ]
+        },
+        "unresolved_historical_cyrillic_identity": {"const": "unresolved_historical_cyrillic"},
+        "no_automatic_successor_mapping": {"const": true},
+        "script_is_not_language_identity": {"const": true},
+        "mixed_layers_allowed": {"const": true},
+        "forced_single_label_forbidden": {"const": true},
+        "identity_dimensions": {
+          "const": [
+            "language_identity",
+            "script_profile",
+            "context_role",
+            "scope_status",
+            "period_id",
+            "region_id",
+            "register_id",
+            "recension_editorial_layer_id",
+            "identity_candidates"
+          ]
+        }
+      }
+    },
+    "source_unit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_unit_id",
+        "collection_id",
+        "source_kind",
+        "custody_state",
+        "date_evidence_state",
+        "source_attribution_state",
+        "rights_status",
+        "semantic_gold",
+        "phase3_historical_training_eligible",
+        "record_counts",
+        "source_artifact_sha256",
+        "source_identity_sha256",
+        "provenance_sha256",
+        "metadata_only"
+      ],
+      "properties": {
+        "source_unit_id": {"$ref": "#/$defs/identifier"},
+        "collection_id": {"$ref": "#/$defs/identifier"},
+        "source_kind": {"type": "string", "minLength": 1},
+        "custody_state": {"type": "string", "minLength": 1},
+        "date_evidence_state": {"type": "string", "minLength": 1},
+        "source_attribution_state": {"type": "string", "minLength": 1},
+        "rights_status": {"type": "string", "minLength": 1},
+        "semantic_gold": {"const": false},
+        "phase3_historical_training_eligible": {"const": false},
+        "record_counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "public_api_records": {"type": "integer", "minimum": 0},
+            "text_bearing_records": {"type": "integer", "minimum": 0},
+            "source_labelled_ukrainian_records": {"type": "integer", "minimum": 0}
+          }
+        },
+        "source_artifact_sha256": {"$ref": "#/$defs/sha256"},
+        "source_identity_sha256": {"$ref": "#/$defs/sha256"},
+        "provenance_sha256": {"$ref": "#/$defs/sha256"},
+        "metadata_only": {"const": true}
+      }
+    },
+    "channel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "channel_id",
+        "protected_identity",
+        "source_unit_ids",
+        "status",
+        "blocker_codes",
+        "identity_policy",
+        "historical_forms_protected",
+        "modern_correction_eligible"
+      ],
+      "properties": {
+        "channel_id": {"$ref": "#/$defs/identifier"},
+        "protected_identity": {"$ref": "#/$defs/identifier"},
+        "source_unit_ids": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/identifier"},
+          "uniqueItems": true
+        },
+        "status": {"enum": ["coverage_blocked", "unresolved"]},
+        "blocker_codes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/identifier"},
+          "uniqueItems": true
+        },
+        "identity_policy": {"type": "string", "minLength": 1},
+        "historical_forms_protected": {"const": true},
+        "modern_correction_eligible": {"const": false}
+      }
+    },
+    "disposition_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_schema_version",
+        "states",
+        "protected_record_kinds",
+        "semantic_admission_permitted",
+        "exactly_one_primary_state",
+        "coverage_blocked_emits_record",
+        "coverage_blocked_emission_scope",
+        "modern_correction_record_kind_forbidden",
+        "required_identity_fields",
+        "required_unknown_dimensions",
+        "protected_requires_source_qualified_review",
+        "unresolved_requires_explicit_unknown_dimensions",
+        "forbidden_record_keys"
+      ],
+      "properties": {
+        "record_schema_version": {"const": "phase3_historical_protection_disposition_v1"},
+        "states": {"const": ["protected_historical", "abstention", "unresolved", "coverage_blocked"]},
+        "protected_record_kinds": {
+          "const": [
+            "protected_old_east_slavic",
+            "protected_middle_ukrainian",
+            "protected_church_slavonic_recension",
+            "protected_rusyn"
+          ]
+        },
+        "semantic_admission_permitted": {"const": false},
+        "exactly_one_primary_state": {"const": true},
+        "coverage_blocked_emits_record": {"const": false},
+        "coverage_blocked_emission_scope": {"const": "dataset_rows_only"},
+        "modern_correction_record_kind_forbidden": {"const": true},
+        "required_identity_fields": {
+          "const": ["period_id", "region_id", "register_id", "recension_editorial_layer_id", "identity_candidates"]
+        },
+        "required_unknown_dimensions": {
+          "const": ["period_id", "region_id", "register_id", "recension_editorial_layer_id"]
+        },
+        "protected_requires_source_qualified_review": {"const": true},
+        "unresolved_requires_explicit_unknown_dimensions": {"const": true},
+        "forbidden_record_keys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "denominator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_units",
+        "unknown_rights_blockers",
+        "p1_base_required_cells",
+        "p1_composite_required_cells",
+        "p2_rule_slots_R",
+        "historical_source_collections",
+        "modern_correction_denominator_unchanged",
+        "historical_channels_additive_protection_only",
+        "blocked_and_unresolved_remain_denominator_visible",
+        "partial_denominator_permitted",
+        "cell_status_counts"
+      ],
+      "properties": {
+        "source_units": {"const": 57},
+        "unknown_rights_blockers": {"const": 39},
+        "p1_base_required_cells": {"const": 15},
+        "p1_composite_required_cells": {"const": 16},
+        "p2_rule_slots_R": {"const": 0},
+        "historical_source_collections": {"const": 5},
+        "modern_correction_denominator_unchanged": {"const": true},
+        "historical_channels_additive_protection_only": {"const": true},
+        "blocked_and_unresolved_remain_denominator_visible": {"const": true},
+        "partial_denominator_permitted": {"const": false},
+        "cell_status_counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["coverage_blocked", "not_applicable_with_evidence"],
+          "properties": {
+            "coverage_blocked": {"const": 14},
+            "not_applicable_with_evidence": {"const": 2}
+          }
+        }
+      }
+    },
+    "zero_counters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_rows_emitted",
+        "historical_protected_rows_admitted",
+        "rusyn_rows_admitted",
+        "church_slavonic_rows_admitted",
+        "middle_ukrainian_rows_admitted",
+        "modern_correction_rows_created",
+        "heldout_cases_selected",
+        "provider_calls",
+        "labels_created",
+        "gold_created",
+        "training_rows"
+      ],
+      "properties": {
+        "source_rows_emitted": {"const": 0},
+        "historical_protected_rows_admitted": {"const": 0},
+        "rusyn_rows_admitted": {"const": 0},
+        "church_slavonic_rows_admitted": {"const": 0},
+        "middle_ukrainian_rows_admitted": {"const": 0},
+        "modern_correction_rows_created": {"const": 0},
+        "heldout_cases_selected": {"const": 0},
+        "provider_calls": {"const": 0},
+        "labels_created": {"const": 0},
+        "gold_created": {"const": 0},
+        "training_rows": {"const": 0}
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_text_emitted",
+        "modernized_text_emitted",
+        "private_locator_emitted",
+        "dataset_rows_emitted",
+        "labels_created",
+        "gold_created",
+        "provider_calls",
+        "training_performed"
+      ],
+      "properties": {
+        "source_text_emitted": {"const": false},
+        "modernized_text_emitted": {"const": false},
+        "private_locator_emitted": {"const": false},
+        "dataset_rows_emitted": {"const": false},
+        "labels_created": {"const": false},
+        "gold_created": {"const": false},
+        "provider_calls": {"const": false},
+        "training_performed": {"const": false}
+      }
+    },
+    "protection_invariants": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "historical_forms_protected",
+        "modern_correction_eligible",
+        "old_east_slavic_is_modern_russian",
+        "historical_ruskyi_auto_mapped_to_modern_russian",
+        "automatic_mapping_to_modern_national_successor",
+        "recension_and_editorial_layer_required"
+      ],
+      "properties": {
+        "historical_forms_protected": {"const": true},
+        "modern_correction_eligible": {"const": false},
+        "old_east_slavic_is_modern_russian": {"const": false},
+        "historical_ruskyi_auto_mapped_to_modern_russian": {"const": false},
+        "automatic_mapping_to_modern_national_successor": {"const": false},
+        "recension_and_editorial_layer_required": {"const": true}
+      }
+    },
+    "language_layers": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/identifier"}
+    },
+    "unknown_dimensions": {
+      "const": ["period_id", "region_id", "register_id", "recension_editorial_layer_id"]
+    },
+    "identity_candidates": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/identifier"}
+    },
+    "nullable_identifier": {
+      "anyOf": [{"$ref": "#/$defs/identifier"}, {"type": "null"}]
+    },
+    "evidence_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_ref_id",
+        "claim_role",
+        "source_unit_id",
+        "source_unit_identity_sha256",
+        "source_artifact_sha256",
+        "provenance_sha256"
+      ],
+      "properties": {
+        "evidence_ref_id": {"$ref": "#/$defs/identifier"},
+        "claim_role": {
+          "enum": [
+            "protected_historical_identity",
+            "rights_provenance",
+            "source_qualified_human_adjudication",
+            "abstention_or_not_applicable_authority"
+          ]
+        },
+        "source_unit_id": {"$ref": "#/$defs/identifier"},
+        "source_unit_identity_sha256": {"$ref": "#/$defs/sha256"},
+        "source_artifact_sha256": {"$ref": "#/$defs/sha256"},
+        "provenance_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reviewer_kind",
+        "qualification_status",
+        "adjudication_record_sha256",
+        "evidence_ref_ids"
+      ],
+      "properties": {
+        "reviewer_kind": {"const": "human"},
+        "qualification_status": {"const": "registered_source_qualified_human"},
+        "adjudication_record_sha256": {"$ref": "#/$defs/sha256"},
+        "evidence_ref_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/identifier"}
+        }
+      }
+    },
+    "record_common": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "record_kind",
+        "record_id",
+        "channel_id",
+        "language_layer_ids",
+        "mixed_layers_allowed",
+        "single_label_forced",
+        "protection_invariants",
+        "body_free"
+      ],
+      "properties": {
+        "schema_version": {"const": "phase3_historical_protection_disposition_v1"},
+        "record_kind": {"type": "string"},
+        "record_id": {"$ref": "#/$defs/identifier"},
+        "channel_id": {"$ref": "#/$defs/identifier"},
+        "language_layer_ids": {"$ref": "#/$defs/language_layers"},
+        "mixed_layers_allowed": {"const": true},
+        "single_label_forced": {"const": false},
+        "protection_invariants": {"$ref": "#/$defs/protection_invariants"},
+        "body_free": {"const": true}
+      }
+    },
+    "coverage_blocked_record": {
+      "allOf": [
+        {"$ref": "#/$defs/record_common"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version",
+            "record_kind",
+            "record_id",
+            "channel_id",
+            "blocker_code",
+            "unknown_dimensions",
+            "language_layer_ids",
+            "mixed_layers_allowed",
+            "single_label_forced",
+            "protection_invariants",
+            "body_free"
+          ],
+          "properties": {
+            "schema_version": {"const": "phase3_historical_protection_disposition_v1"},
+            "record_kind": {"const": "coverage_blocked"},
+            "record_id": {"$ref": "#/$defs/identifier"},
+            "channel_id": {"$ref": "#/$defs/identifier"},
+            "blocker_code": {"$ref": "#/$defs/identifier"},
+            "unknown_dimensions": {"$ref": "#/$defs/unknown_dimensions"},
+            "language_layer_ids": {"$ref": "#/$defs/language_layers"},
+            "mixed_layers_allowed": {"const": true},
+            "single_label_forced": {"const": false},
+            "protection_invariants": {"$ref": "#/$defs/protection_invariants"},
+            "body_free": {"const": true}
+          }
+        }
+      ]
+    },
+    "unresolved_record": {
+      "allOf": [
+        {"$ref": "#/$defs/record_common"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version",
+            "record_kind",
+            "record_id",
+            "channel_id",
+            "unresolved_code",
+            "unknown_dimensions",
+            "identity_candidates",
+            "period_id",
+            "region_id",
+            "register_id",
+            "recension_editorial_layer_id",
+            "language_layer_ids",
+            "mixed_layers_allowed",
+            "single_label_forced",
+            "protection_invariants",
+            "body_free"
+          ],
+          "properties": {
+            "schema_version": {"const": "phase3_historical_protection_disposition_v1"},
+            "record_kind": {"const": "unresolved"},
+            "record_id": {"$ref": "#/$defs/identifier"},
+            "channel_id": {"$ref": "#/$defs/identifier"},
+            "unresolved_code": {"$ref": "#/$defs/identifier"},
+            "unknown_dimensions": {"$ref": "#/$defs/unknown_dimensions"},
+            "identity_candidates": {"$ref": "#/$defs/identity_candidates"},
+            "period_id": {"$ref": "#/$defs/nullable_identifier"},
+            "region_id": {"$ref": "#/$defs/nullable_identifier"},
+            "register_id": {"$ref": "#/$defs/nullable_identifier"},
+            "recension_editorial_layer_id": {"$ref": "#/$defs/nullable_identifier"},
+            "language_layer_ids": {"$ref": "#/$defs/language_layers"},
+            "mixed_layers_allowed": {"const": true},
+            "single_label_forced": {"const": false},
+            "protection_invariants": {"$ref": "#/$defs/protection_invariants"},
+            "body_free": {"const": true}
+          }
+        }
+      ]
+    },
+    "abstention_record": {
+      "allOf": [
+        {"$ref": "#/$defs/record_common"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version",
+            "record_kind",
+            "record_id",
+            "channel_id",
+            "abstention_code",
+            "unknown_dimensions",
+            "identity_candidates",
+            "period_id",
+            "region_id",
+            "register_id",
+            "recension_editorial_layer_id",
+            "language_layer_ids",
+            "mixed_layers_allowed",
+            "single_label_forced",
+            "protection_invariants",
+            "body_free"
+          ],
+          "properties": {
+            "schema_version": {"const": "phase3_historical_protection_disposition_v1"},
+            "record_kind": {"const": "abstention"},
+            "record_id": {"$ref": "#/$defs/identifier"},
+            "channel_id": {"$ref": "#/$defs/identifier"},
+            "abstention_code": {"$ref": "#/$defs/identifier"},
+            "unknown_dimensions": {"$ref": "#/$defs/unknown_dimensions"},
+            "identity_candidates": {"$ref": "#/$defs/identity_candidates"},
+            "period_id": {"$ref": "#/$defs/nullable_identifier"},
+            "region_id": {"$ref": "#/$defs/nullable_identifier"},
+            "register_id": {"$ref": "#/$defs/nullable_identifier"},
+            "recension_editorial_layer_id": {"$ref": "#/$defs/nullable_identifier"},
+            "language_layer_ids": {"$ref": "#/$defs/language_layers"},
+            "mixed_layers_allowed": {"const": true},
+            "single_label_forced": {"const": false},
+            "protection_invariants": {"$ref": "#/$defs/protection_invariants"},
+            "body_free": {"const": true}
+          }
+        }
+      ]
+    },
+    "protected_record": {
+      "allOf": [
+        {"$ref": "#/$defs/record_common"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version",
+            "record_kind",
+            "record_id",
+            "channel_id",
+            "language_identity",
+            "source_qualified_identity",
+            "source_unit_ids",
+            "evidence_refs",
+            "review",
+            "period_id",
+            "region_id",
+            "register_id",
+            "recension_editorial_layer_id",
+            "identity_candidates",
+            "language_layer_ids",
+            "mixed_layers_allowed",
+            "single_label_forced",
+            "protection_invariants",
+            "body_free"
+          ],
+          "properties": {
+            "schema_version": {"const": "phase3_historical_protection_disposition_v1"},
+            "record_kind": {
+              "enum": [
+                "protected_old_east_slavic",
+                "protected_middle_ukrainian",
+                "protected_church_slavonic_recension",
+                "protected_rusyn"
+              ]
+            },
+            "record_id": {"$ref": "#/$defs/identifier"},
+            "channel_id": {"$ref": "#/$defs/identifier"},
+            "language_identity": {
+              "enum": [
+                "old_east_slavic_kyivan_rus",
+                "middle_ukrainian",
+                "church_slavonic_recension",
+                "source_attested_rusyn"
+              ]
+            },
+            "source_qualified_identity": {"const": true},
+            "source_unit_ids": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {"$ref": "#/$defs/identifier"}
+            },
+            "evidence_refs": {
+              "type": "array",
+              "minItems": 1,
+              "items": {"$ref": "#/$defs/evidence_ref"}
+            },
+            "review": {"$ref": "#/$defs/review"},
+            "period_id": {"$ref": "#/$defs/identifier"},
+            "region_id": {"$ref": "#/$defs/identifier"},
+            "register_id": {"$ref": "#/$defs/identifier"},
+            "recension_editorial_layer_id": {"$ref": "#/$defs/identifier"},
+            "identity_candidates": {"$ref": "#/$defs/identity_candidates"},
+            "language_layer_ids": {"$ref": "#/$defs/language_layers"},
+            "mixed_layers_allowed": {"const": true},
+            "single_label_forced": {"const": false},
+            "protection_invariants": {"$ref": "#/$defs/protection_invariants"},
+            "body_free": {"const": true}
+          }
+        }
+      ]
+    },
+    "disposition_record": {
+      "oneOf": [
+        {"$ref": "#/$defs/coverage_blocked_record"},
+        {"$ref": "#/$defs/unresolved_record"},
+        {"$ref": "#/$defs/abstention_record"},
+        {"$ref": "#/$defs/protected_record"}
+      ]
+    }
+  }
+}
