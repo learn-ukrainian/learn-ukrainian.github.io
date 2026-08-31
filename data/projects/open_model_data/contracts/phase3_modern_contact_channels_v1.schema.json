@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_modern_contact_channels_v1.schema.json",
+  "title": "Phase 3 modern Cyrillic contact channels v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "status", "text_free", "controlling_outcome_sha256", "bindings", "channels", "protected_context_roles", "safety_counters", "claims", "generator", "receipt_sha256"],
+  "properties": {
+    "schema_version": {"const": "phase3_modern_contact_channels_v1"},
+    "status": {"const": "BLOCKED_PENDING_SOURCE_QUALIFIED_ADJUDICATION"},
+    "text_free": {"const": true},
+    "controlling_outcome_sha256": {"const": "890498103f96a7b8f27fd52bc14418d8752e5b73a72ed8774dd0f52eb3160a47"},
+    "bindings": {"$ref": "#/$defs/bindings"},
+    "channels": {"type": "array", "minItems": 6, "maxItems": 6, "uniqueItems": true, "items": {"$ref": "#/$defs/channel"}},
+    "protected_context_roles": {"const": ["quotation", "code_switch", "transliteration", "metalinguistic_example", "name_title", "dialect_or_regional_form", "historical_text", "ambiguous_noisy"]},
+    "safety_counters": {"$ref": "#/$defs/counters"},
+    "claims": {"$ref": "#/$defs/claims"},
+    "generator": {"$ref": "#/$defs/generator"},
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "artifact": {
+      "type": "object", "additionalProperties": false,
+      "required": ["logical_path", "sha256"],
+      "properties": {"logical_path": {"type": "string", "pattern": "^[^/].*"}, "sha256": {"$ref": "#/$defs/sha256"}}
+    },
+    "denominator": {
+      "type": "object", "additionalProperties": false,
+      "required": ["base_required_cell_count", "additive_required_cell_count", "composite_required_cell_count", "composite_input_sha256", "modern_channel_cell_count", "unknown_rights_blocker_count", "rule_slots_R"],
+      "properties": {
+        "base_required_cell_count": {"const": 15},
+        "additive_required_cell_count": {"const": 1},
+        "composite_required_cell_count": {"const": 16},
+        "composite_input_sha256": {"const": "83b59c6b62fff0beaf68dec7c3ca40b70033693dc19c50f26d27c553265352b0"},
+        "modern_channel_cell_count": {"const": 6},
+        "unknown_rights_blocker_count": {"const": 39},
+        "rule_slots_R": {"const": 0}
+      }
+    },
+    "bindings": {
+      "type": "object", "additionalProperties": false,
+      "required": ["p1", "p1_dialect_regional_amendment", "p2", "phase3_scope_circularity_firewall", "composite_denominator"],
+      "properties": {
+        "p1": {"allOf": [{"$ref": "#/$defs/artifact"}, {"properties": {"logical_path": {"const": "data/projects/open_model_data/evidence/phase3_p1_universe_freeze_v1.json"}, "sha256": {"const": "0b1cd81448b96b4e818aa1dedd7df7633ff88eb500bb4d6ac3668be02962a35b"}}}]},
+        "p1_dialect_regional_amendment": {"allOf": [{"$ref": "#/$defs/artifact"}, {"properties": {"logical_path": {"const": "data/projects/open_model_data/evidence/phase3_p1_dialect_regional_protection_amendment_v1.json"}, "sha256": {"const": "5a4b259f764a3d41499f0a989c02fed921c18b62c9831d361d18d19dcc948afa"}}}]},
+        "p2": {"allOf": [{"$ref": "#/$defs/artifact"}, {"properties": {"logical_path": {"const": "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json"}, "sha256": {"const": "dc8dfdf207728ef386cea14ddb328289b2beee5159afb98bf076e5f117602ea3"}}}]},
+        "phase3_scope_circularity_firewall": {"allOf": [{"$ref": "#/$defs/artifact"}, {"properties": {"logical_path": {"const": "data/projects/open_model_data/evidence/phase3_scope_circularity_firewall_v1.json"}, "sha256": {"const": "4470448c6d0f665196375cf28255d7c092148700a99934b2d0dd1f43a8a3e24c"}}}]},
+        "composite_denominator": {"$ref": "#/$defs/denominator"}
+      }
+    },
+    "source_blocker": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source_unit_identity_sha256", "source_artifact_sha256", "provenance_status", "rights_status", "source_disposition"],
+      "properties": {
+        "source_unit_identity_sha256": {"type": "null"},
+        "source_artifact_sha256": {"type": "null"},
+        "provenance_status": {"const": "source_qualified_evidence_not_bound"},
+        "rights_status": {"const": "unknown_rights_blocker"},
+        "source_disposition": {"const": "coverage_blocked"}
+      }
+    },
+    "adjudication_blocker": {
+      "type": "object", "additionalProperties": false,
+      "required": ["registry_status", "semantic_case_admission_permitted", "adjudication_registry_sha256", "source_qualified_human_record_sha256", "model_proposal_may_promote"],
+      "properties": {
+        "registry_status": {"const": "FROZEN_NONADMITTING"},
+        "semantic_case_admission_permitted": {"const": false},
+        "adjudication_registry_sha256": {"type": "null"},
+        "source_qualified_human_record_sha256": {"type": "null"},
+        "model_proposal_may_promote": {"const": false}
+      }
+    },
+    "channel": {
+      "type": "object", "additionalProperties": false,
+      "required": ["cell_id", "language_identity", "language_identity_basis", "script_identity_rule", "context_role", "phenomenon", "role", "status", "source_blocker", "adjudication_blocker", "protected_context_roles"],
+      "properties": {
+        "cell_id": {"enum": ["modern.russian.unmarked.contact_interference.source_backed_correction", "modern.belarusian.unmarked.contact_interference.source_backed_correction", "modern.bulgarian.unmarked.contact_interference.source_backed_correction", "modern.macedonian.unmarked.contact_interference.source_backed_correction", "modern.serbian_cyrillic.unmarked.contact_interference.source_backed_correction", "modern.montenegrin_cyrillic.unmarked.contact_interference.source_backed_correction"]},
+        "language_identity": {"enum": ["russian", "belarusian", "bulgarian", "macedonian", "serbian_cyrillic", "montenegrin_cyrillic"]},
+        "language_identity_basis": {"const": "source_qualified_not_script_inferred"},
+        "script_identity_rule": {"const": "cyrillic_script_is_not_language_identity"},
+        "context_role": {"const": "unmarked_modern_ukrainian"},
+        "phenomenon": {"const": "contact_interference"},
+        "role": {"const": "source_backed_correction"},
+        "status": {"const": "coverage_blocked"},
+        "source_blocker": {"$ref": "#/$defs/source_blocker"},
+        "adjudication_blocker": {"$ref": "#/$defs/adjudication_blocker"},
+        "protected_context_roles": {"const": ["quotation", "code_switch", "transliteration", "metalinguistic_example", "name_title", "dialect_or_regional_form", "historical_text", "ambiguous_noisy"]}
+      }
+    },
+    "counters": {
+      "type": "object", "additionalProperties": false,
+      "required": ["correction_targets_emitted", "dataset_rows_emitted", "labels_created", "gold_created", "provider_requests", "training_rows_emitted"],
+      "properties": {
+        "correction_targets_emitted": {"const": 0},
+        "dataset_rows_emitted": {"const": 0},
+        "labels_created": {"const": 0},
+        "gold_created": {"const": 0},
+        "provider_requests": {"const": 0},
+        "training_rows_emitted": {"const": 0}
+      }
+    },
+    "claims": {
+      "type": "object", "additionalProperties": false,
+      "required": ["all_six_channels_coverage_blocked", "script_is_not_language_identity", "model_proposals_are_nonadmitting", "source_qualified_human_authority_registered", "source_qualified_human_adjudication_present"],
+      "properties": {
+        "all_six_channels_coverage_blocked": {"const": true},
+        "script_is_not_language_identity": {"const": true},
+        "model_proposals_are_nonadmitting": {"const": true},
+        "source_qualified_human_authority_registered": {"const": false},
+        "source_qualified_human_adjudication_present": {"const": false}
+      }
+    },
+    "generator": {
+      "type": "object", "additionalProperties": false,
+      "required": ["logical_path", "implementation_sha256", "schema_sha256"],
+      "properties": {
+        "logical_path": {"const": "scripts/projects/open_model_data/phase3_modern_contact_channels.py"},
+        "implementation_sha256": {"$ref": "#/$defs/sha256"},
+        "schema_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}
