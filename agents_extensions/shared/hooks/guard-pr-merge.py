@@ -47,7 +47,7 @@ import re
 import shlex
 import subprocess
 import sys
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from typing import NamedTuple
 
 # Agent harnesses export CLICOLOR_FORCE/FORCE_COLOR, which beat NO_COLOR and make
@@ -932,7 +932,10 @@ def _rollup_timestamp(row: dict) -> datetime | None:
             parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
         except ValueError:
             continue
-        return parsed if parsed.tzinfo is not None else parsed.replace(tzinfo=UTC)
+        if parsed.tzinfo is None:
+            # ``datetime.UTC`` is Python 3.11+; this standalone hook supports 3.10.
+            parsed = parsed.replace(tzinfo=timezone.utc)  # noqa: UP017
+        return parsed
     return None
 
 
