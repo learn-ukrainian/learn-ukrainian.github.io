@@ -257,7 +257,7 @@ def _read_steward_config(config_path: Path) -> tuple[dict[str, Any], Path]:
     return value, private_root
 
 
-def _private_component_commitment(pack_dir: Path, manifest: Mapping[str, Any]) -> str:
+def _build_private_deny_corpus(pack_dir: Path, manifest: Mapping[str, Any]) -> dict[str, Any]:
     """Derive the source/example/document/exact/near graph inside the steward lane."""
     policy = near.policy_for_governed_use("train_development_to_heldout_firewall")
     rows: list[dict[str, str]] = []
@@ -274,17 +274,25 @@ def _private_component_commitment(pack_dir: Path, manifest: Mapping[str, Any]) -
         for entry in entries:
             _require(isinstance(entry, Mapping), "graph_incompleteness")
             family = entry.get("family_id")
-            raw = entry.get("source_record")
-            locator = entry.get("source_locator")
+            source_record = entry.get("source_record")
+            locator = entry.get("source_locator", entry.get("frozen_locator"))
             text = entry.get("source_text")
             unit_id, unit_sha256 = entry.get("unit_id"), entry.get("unit_sha256")
+            document = entry.get("document_or_edition_identity")
             _require(all(isinstance(value, str) and value for value in (family, text, unit_id, unit_sha256)), "document_lineage_denominator_not_frozen")
-            _require(isinstance(raw, Mapping) and isinstance(locator, Mapping) and len(unit_sha256) == 64, "document_lineage_denominator_not_frozen")
-            document = materialization._identity(str(family), raw, {"locator": locator})
-            exact = near.fingerprint(str(text)).exact_fingerprint
-            source_example = sha256_bytes(canonical_json({"family_id": family, "source_record": raw, "source_locator": locator}))
-            rows.append({"unit_id": str(unit_id), "unit_sha256": str(unit_sha256), "source_example": source_example, "document_or_edition": document, "exact": exact, "surface": str(text)})
-    _require(len(rows) == 10159 and len({(row["unit_id"], row["unit_sha256"]) for row in rows}) == 10159, "graph_incompleteness")
+            _require(isinstance(source_record, Mapping) and isinstance(locator, Mapping) and isinstance(document, str) and bool(document) and len(unit_sha256) == 64, "document_lineage_denominator_not_frozen")
+            # document_or_edition_identity is the canonical materialization
+            # contract field. It covers the 11 rows whose family is outside the
+            # older helper's closed family switch; no fallback is inferred.
+            try:
+                expected_document = materialization._identity(str(family), source_record, {"locator": locator})
+            except materialization.MaterializationError:
+                expected_document = document
+            _require(document == expected_document, "document_lineage_denominator_not_frozen")
+            fingerprint = near.fingerprint(str(text))
+            source_example = sha256_bytes(canonical_json({"family_id": family, "source_record": source_record, "source_locator": locator}))
+            rows.append({"row": sha256_bytes(canonical_json({"unit_id": unit_id, "unit_sha256": unit_sha256})), "source_example": source_example, "document_or_edition": sha256_bytes(document.encode()), "exact": fingerprint.exact_fingerprint, "surface": str(text), "token_hashes": ",".join(sorted(sha256_bytes(token.encode()) for token in set(fingerprint.tokens))), "packet": sha256_bytes(str(item.get("packet_identity_set_sha256", item["sha256"])).encode())})
+    _require(len(rows) == 10159 and len({row["row"] for row in rows}) == 10159, "graph_incompleteness")
     # Union source/example and explicit canonical document-or-edition groups,
     # then exact and pinned-0.9 near edges. No group is inferred from a path.
     parent = list(range(len(rows)))
@@ -320,9 +328,14 @@ def _private_component_commitment(pack_dir: Path, manifest: Mapping[str, Any]) -
     _require(physical_sidecars == 204 and logical_sidecars == 408, "graph_incompleteness")
     components: dict[int, list[str]] = {}
     for index, row in enumerate(rows):
-        components.setdefault(find(index), []).append(row["unit_sha256"])
-    # Text and IDs disappear before the commitment is constructed.
-    return sha256_bytes(canonical_json(sorted(sorted(values) for values in components.values())))
+        components.setdefault(find(index), []).append(row["row"])
+    component_by_row = {row_id: sha256_bytes(canonical_json(sorted(values))) for values in components.values() for row_id in values}
+    sidecar_hashes = [sha256_bytes(str(item.get("sidecar_id")).encode()) for item in manifest["objects"] if "evidence_sidecar" in item.get("selection_classes", [])]
+    namespaces = {"row": sorted(row["row"] for row in rows), "source_example": sorted(row["source_example"] for row in rows), "document_work_edition": sorted(row["document_or_edition"] for row in rows), "packet": sorted(row["packet"] for row in rows), "sidecar": sorted(sidecar_hashes), "exact": sorted(row["exact"] for row in rows), "near_token": sorted(row["token_hashes"] for row in rows), "component": sorted(component_by_row.values())}
+    commitments = {name: {"count": len(values), "sha256": sha256_bytes(canonical_json(values))} for name, values in namespaces.items()}
+    corpus = {"schema_version": "phase3_cycle007_private_deny_corpus_v1", "pack_manifest_receipt_sha256": manifest["receipt_sha256"], "object_set_sha256": EXPECTED_OBJECT_SET_SHA256, "ordered_row_identity_commitment_sha256": EXPECTED_ORDERED_ROW_IDENTITY_SHA256, "near_duplicate_policy_sha256": near.pinned_policy_fingerprint(), "namespace_commitments": commitments, "rows": [{key: value for key, value in row.items() if key != "surface"} | {"component": component_by_row[row["row"]]} for row in rows], "zero_namespace_proofs": {name: 0 for name in ("prompts", "labels", "paraphrases", "synthetic_siblings", "annotations")}}
+    corpus["corpus_sha256"] = sha256_bytes(canonical_json(corpus))
+    return corpus
 
 
 def _content_pack_inventory(manifest: Mapping[str, Any]) -> dict[str, Any]:
@@ -362,6 +375,31 @@ def _write_private_json(path: Path, value: Mapping[str, Any]) -> None:
         raise
 
 
+def evaluate_candidate_batch(candidates: Sequence[Mapping[str, Any]], corpus: Mapping[str, Any]) -> dict[str, Any]:
+    """Steward-only fail-closed collision gate; candidates never supply authority hashes."""
+    try:
+        _require(corpus.get("corpus_sha256") == sha256_bytes(canonical_json({key: value for key, value in corpus.items() if key != "corpus_sha256"})), "hash_drift")
+        _require(corpus.get("pack_manifest_receipt_sha256") == EXPECTED_PACK_MANIFEST_RECEIPT_SHA256 and corpus.get("near_duplicate_policy_sha256") == near.pinned_policy_fingerprint(), "hash_drift")
+        denied = {field: {row[field] for row in corpus["rows"]} for field in ("row", "source_example", "document_or_edition", "exact", "component")}
+        token_sets = [set(row["token_hashes"].split(",")) for row in corpus["rows"]]
+        for candidate in candidates:
+            _require(isinstance(candidate, Mapping) and candidate.get("evaluation_cycle_id") != "phase3-v2-1-evaluation-cycle-007", "uncertain_lineage")
+            family, unit, digest, text, record, locator, document = (candidate.get(key) for key in ("family_id", "unit_id", "unit_sha256", "source_text", "source_record", "frozen_locator", "document_or_edition_identity"))
+            _require(all(isinstance(value, str) and value for value in (family, unit, digest, text, document)) and isinstance(record, Mapping) and isinstance(locator, Mapping), "uncertain_lineage")
+            row = sha256_bytes(canonical_json({"unit_id": unit, "unit_sha256": digest}))
+            source = sha256_bytes(canonical_json({"family_id": family, "source_record": record, "source_locator": locator}))
+            fp = near.fingerprint(text)
+            values = {"row": row, "source_example": source, "document_or_edition": sha256_bytes(document.encode()), "exact": fp.exact_fingerprint}
+            if any(value in denied[key] for key, value in values.items()):
+                return _zero("leakage")
+            candidate_tokens = {sha256_bytes(token.encode()) for token in fp.tokens}
+            if any(candidate_tokens and len(candidate_tokens & existing) / len(candidate_tokens | existing) >= 0.9 for existing in token_sets):
+                return _zero("leakage")
+    except (FirewallError, near.NearDuplicatePolicyError, KeyError, TypeError, ValueError):
+        return _zero("uncertain_lineage")
+    return {"ok": True, "code": None, "emitted": 0, "promoted": 0, "activated": 0}
+
+
 def run_steward_production(config: str | None = None) -> dict[str, Any]:
     """Build the only valid steward receipt from the retained pack, never caller hashes.
 
@@ -389,15 +427,15 @@ def run_steward_production(config: str | None = None) -> dict[str, Any]:
         inventory = _content_pack_inventory(manifest)
         _require(validate_pack_commitments(manifest, inventory), "denominator_drift")
         storage.prove_content_pack_stream(inventory, pack_dir)
-        metadata_commitment = _private_component_commitment(pack_dir, manifest)
+        corpus = _build_private_deny_corpus(pack_dir, manifest)
         _require(manifest.get("content_bodies_stored") is True, "graph_incompleteness")
         classes = {item.get("selection_class") for item in manifest["objects"]}
         _require(not {"labeling_expansion", "compile_expansion"} & classes, "graph_incompleteness")
         manifest_after = os.lstat(manifest_path)
         _require((manifest_before.st_dev, manifest_before.st_ino) == (manifest_after.st_dev, manifest_after.st_ino), "private_path_unsafe")
         storage.prove_content_pack_stream(inventory, pack_dir)
-        _write_private_json(output_root / "cycle007-deny-component-manifest-v1.json", {"schema_version": "phase3_cycle007_deny_component_manifest_v1", "pack_manifest_receipt_sha256": manifest["receipt_sha256"], "component_graph_sha256": metadata_commitment, "private_only": True})
-        public_receipt = {"schema_version": "phase3_scope_circularity_public_binding_receipt_v1", "text_free": True, "pack_manifest_receipt_sha256": manifest["receipt_sha256"], "object_set_sha256": EXPECTED_OBJECT_SET_SHA256, "ordered_row_identity_commitment_sha256": EXPECTED_ORDERED_ROW_IDENTITY_SHA256, "packet_count": 204, "row_count": 10159, "physical_sidecar_count": 204, "logical_sidecar_count": 408, "object_count": 419, "private_graph_commitment_sha256": metadata_commitment, "builder_clearance": {"p1_sha256": PINS[P1], "p1_amendment_sha256": PINS[P1_AMENDMENT], "p2_sha256": PINS[P2], "near_duplicate_policy_sha256": PINS[NEAR_POLICY], "firewall_sha256": sha256_file(OUTPUT)}}
+        _write_private_json(output_root / "cycle007-deny-component-manifest-v1.json", corpus)
+        public_receipt = {"schema_version": "phase3_scope_circularity_public_binding_receipt_v1", "text_free": True, "pack_manifest_receipt_sha256": manifest["receipt_sha256"], "object_set_sha256": EXPECTED_OBJECT_SET_SHA256, "ordered_row_identity_commitment_sha256": EXPECTED_ORDERED_ROW_IDENTITY_SHA256, "packet_count": 204, "row_count": 10159, "physical_sidecar_count": 204, "logical_sidecar_count": 408, "object_count": 419, "private_graph_commitment_sha256": corpus["corpus_sha256"], "builder_clearance": {"p1_sha256": PINS[P1], "p1_amendment_sha256": PINS[P1_AMENDMENT], "p2_sha256": PINS[P2], "near_duplicate_policy_sha256": PINS[NEAR_POLICY], "firewall_sha256": sha256_file(OUTPUT)}}
         public_receipt["receipt_sha256"] = sha256_bytes(canonical_json(public_receipt))
         return {"ok": True, "code": None, "emitted": 0, "promoted": 0, "activated": 0, "public_receipt": public_receipt}
     except FirewallError as exc:

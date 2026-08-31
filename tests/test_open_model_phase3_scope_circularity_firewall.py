@@ -127,7 +127,7 @@ def test_production_fixture_uses_only_content_compact_pack_and_writes_private_gr
     os.chmod(config_path, 0o600)
     monkeypatch.setattr(firewall, "validate_pack_commitments", lambda *_: True)
     monkeypatch.setattr(firewall.storage, "prove_content_pack_stream", lambda *_: ({}, {}))
-    monkeypatch.setattr(firewall, "_private_component_commitment", lambda *_: "b" * 64)
+    monkeypatch.setattr(firewall, "_build_private_deny_corpus", lambda *_: {"corpus_sha256": "b" * 64})
     result = firewall.run_steward_production(str(config_path))
     assert result["ok"] is True
     assert (output / "cycle007-deny-component-manifest-v1.json").stat().st_mode & 0o777 == 0o600
@@ -137,3 +137,11 @@ def test_unbound_and_graph_incomplete_batches_fail_with_zero_outputs() -> None:
     assert firewall.validate_private_runtime_binding(None)["code"] == "private_binding_unbound"
     result = firewall.validate_lineage_batch([{"candidate_id": "missing"}])
     assert result == {"ok": False, "code": "graph_incompleteness", "emitted": 0, "promoted": 0, "activated": 0}
+
+
+def test_candidate_evaluator_rejects_caller_collision_and_cycle_derivative() -> None:
+    row = {"row": "a" * 64, "source_example": "b" * 64, "document_or_edition": "c" * 64, "exact": "d" * 64, "token_hashes": "e" * 64, "component": "f" * 64, "packet": "0" * 64}
+    corpus = {"schema_version": "phase3_cycle007_private_deny_corpus_v1", "pack_manifest_receipt_sha256": firewall.EXPECTED_PACK_MANIFEST_RECEIPT_SHA256, "near_duplicate_policy_sha256": firewall.near.pinned_policy_fingerprint(), "rows": [row]}
+    corpus["corpus_sha256"] = firewall.sha256_bytes(firewall.canonical_json(corpus))
+    assert firewall.evaluate_candidate_batch([{"evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-007"}], corpus)["code"] == "uncertain_lineage"
+    assert firewall.evaluate_candidate_batch([{"unit_id": "x"}], corpus)["code"] == "uncertain_lineage"

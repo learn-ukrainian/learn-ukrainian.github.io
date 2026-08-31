@@ -296,10 +296,15 @@ runtime self-hash verifies its private `0600` configuration and the exact
 retained lossless `content_compact` pack manifest, builds its synthetic
 inventory from that manifest, and uses the custody lane's streaming
 decompress-and-hash proof without expansion. It extracts only required packet
-metadata in memory, derives canonical document-or-edition identity with the
-source-identity helper, and writes its deny/component graph only to a distinct
-private `0700` steward output root. It cannot accept caller-authored membership
-or component hashes. Missing explicit document/work/edition identity fails
+metadata in memory, including the canonical materialization
+`document_or_edition_identity` for families outside the older helper's closed
+switch, and writes a self-hashed private deny corpus: hashed row,
+source-example, document/work/edition, packet, sidecar, exact-fingerprint,
+near-token, and connected-component commitments plus zero-namespace proofs.
+A steward-only candidate evaluator derives these values itself and produces
+zero outputs for any collision, derivative, drift, or uncertain lineage.
+Builders receive only positive clearance/public receipts; caller hashes cannot
+mint authority. Missing explicit document/work/edition identity fails
 `document_lineage_denominator_not_frozen`; missing proof that
 prompt/label/paraphrase/synthetic/annotation namespaces are zero fails closed.
 It rejects symlinks, unsafe hardlinks, traversal, role collision, unsafe
