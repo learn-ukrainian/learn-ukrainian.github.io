@@ -151,6 +151,7 @@ def test_production_fixture_uses_only_content_compact_pack_and_writes_private_gr
     monkeypatch.setattr(firewall, "validate_pack_commitments", lambda *_: True)
     monkeypatch.setattr(firewall, "_secure_content_pack_proof", lambda *_: None)
     monkeypatch.setattr(firewall, "_build_private_deny_corpus", lambda *_: {"corpus_sha256": "b" * 64})
+    monkeypatch.setattr(firewall, "_validate_private_deny_corpus", lambda *_: {})
     result = firewall.run_steward_production(str(config_path))
     assert result["ok"] is True
     assert (output / "cycle007-deny-component-manifest-v1.json").stat().st_mode & 0o777 == 0o600
@@ -170,6 +171,24 @@ def test_unbound_and_graph_incomplete_batches_fail_with_zero_outputs() -> None:
     assert firewall.validate_private_runtime_binding(None)["code"] == "private_binding_unbound"
     result = firewall.validate_lineage_batch([{"candidate_id": "missing"}])
     assert result == {"ok": False, "code": "graph_incompleteness", "emitted": 0, "promoted": 0, "activated": 0}
+
+
+def test_terminal_failure_state_is_sticky(tmp_path: Path) -> None:
+    root = tmp_path / "private"
+    output = root / "steward-output"
+    pack = root / "content-pack"
+    for path in (root, output, pack):
+        path.mkdir(parents=True, exist_ok=True)
+        os.chmod(path, 0o700)
+    config = _private_config(root)
+    output_fd = os.open(output, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        firewall._write_run_state_at(output_fd, "TERMINAL_FAILURE", code="hash_drift")
+    finally:
+        os.close(output_fd)
+    result = firewall.run_steward_production(str(config))
+    assert result == {"ok": False, "code": "hash_drift", "emitted": 0, "promoted": 0, "activated": 0}
+    assert json.loads((output / "cycle007-firewall-run-state-v1.json").read_text())["state"] == "TERMINAL_FAILURE"
 
 
 def test_candidate_evaluator_rejects_caller_collision_and_cycle_derivative() -> None:

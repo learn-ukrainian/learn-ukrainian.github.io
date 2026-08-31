@@ -922,6 +922,11 @@ def admit_concept_or_authority(record: Mapping[str, Any], registry: Mapping[str,
 
 
 def _public_binding_receipt(corpus: Mapping[str, Any]) -> dict[str, Any]:
+    try:
+        current_output = json.loads(OUTPUT.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        raise FirewallError("hash_drift") from exc
+    _require(validate_contract_integrity(current_output), "hash_drift")
     value = {
         "schema_version": "phase3_scope_circularity_public_binding_receipt_v1",
         "text_free": True,
@@ -967,11 +972,22 @@ def run_steward_production(config: str | None = None) -> dict[str, Any]:
         _require(pack_dir != output_root and not output_root.is_relative_to(pack_dir) and not pack_dir.is_relative_to(output_root), "private_path_unsafe")
         _validate_private_tree(pack_dir, root)
         _safe_private_directory(output_root, root)
+        root_before = os.lstat(root)
+        output_checked = os.lstat(output_root)
+        pack_checked = os.lstat(pack_dir)
         output_root_fd = os.open(output_root, os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0))
         output_before = os.fstat(output_root_fd)
+        _require((output_checked.st_dev, output_checked.st_ino) == (output_before.st_dev, output_before.st_ino), "private_path_unsafe")
         pack_root_fd = os.open(pack_dir, os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0))
         pack_root_stat = os.fstat(pack_root_fd)
         _require(stat.S_ISDIR(pack_root_stat.st_mode) and pack_root_stat.st_uid == os.getuid() and stat.S_IMODE(pack_root_stat.st_mode) == PRIVATE_DIR_MODE, "private_path_unsafe")
+        _require((pack_checked.st_dev, pack_checked.st_ino) == (pack_root_stat.st_dev, pack_root_stat.st_ino) and (root_before.st_dev, root_before.st_ino) == (os.lstat(root).st_dev, os.lstat(root).st_ino), "private_path_unsafe")
+        try:
+            previous = _load_private_json_at(output_root_fd, "cycle007-firewall-run-state-v1.json")
+        except FileNotFoundError:
+            previous = None
+        if previous is not None and previous.get("state") == "TERMINAL_FAILURE":
+            return _zero(str(previous.get("code", "private_binding_unbound")))
         _write_run_state_at(output_root_fd, "RUNNING")
         manifest_fd = os.open("pack-manifest.json", os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0), dir_fd=pack_root_fd)
         manifest_before = os.fstat(manifest_fd)
@@ -993,6 +1009,7 @@ def run_steward_production(config: str | None = None) -> dict[str, Any]:
         _require("compile_expansion" not in classes and not any("label-output" in str(value) for value in classes), "graph_incompleteness")
         _require((pack_root_stat.st_dev, pack_root_stat.st_ino) == (os.fstat(pack_root_fd).st_dev, os.fstat(pack_root_fd).st_ino), "private_path_unsafe")
         _secure_content_pack_proof(pack_root_fd, manifest, inventory)
+        _validate_private_deny_corpus(corpus)
         _write_private_json_at(output_root_fd, "cycle007-deny-component-manifest-v1.json", corpus)
         public_receipt = _public_binding_receipt(corpus)
         _require((output_before.st_dev, output_before.st_ino) == (os.fstat(output_root_fd).st_dev, os.fstat(output_root_fd).st_ino), "private_path_unsafe")
