@@ -904,6 +904,7 @@ function buildArticleOverview(args: {
   const externalCount = externalGroups.reduce((total, group) => total + (group.materials?.length ?? 0), 0);
   const definitionCount =
     definitionCards.length + (enrichment?.meaning ? 1 : 0) + (phraseHasGloss ? 1 : 0);
+  const originCount = formattedOrigin || enrichment?.etymology ? 1 : 0;
   const cards = [
     {
       label: "Значення",
@@ -915,8 +916,11 @@ function buildArticleOverview(args: {
     },
     {
       label: "Походження",
-      ready: Boolean(formattedOrigin || enrichment?.etymology),
-      detail: formattedOrigin?.text ?? enrichment?.etymology?.source ?? "очікує джерело",
+      ready: originCount > 0,
+      detail:
+        originCount > 0
+          ? `${originCount} ${pluralizeUk(originCount, ["картка", "картки", "карток"])}`
+          : "очікує джерело",
     },
     {
       label: "Морфологія",
