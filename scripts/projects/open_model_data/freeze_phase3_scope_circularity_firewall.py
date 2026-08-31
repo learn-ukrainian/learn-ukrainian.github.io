@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Freeze #7427's metadata-only held-out and Cycle007 lineage firewall.
 
-This module deliberately has no extractor, labeler, or derivation callback.
-It permits builders to receive only the public freeze hashes.  The optional
-steward runtime reads an opaque private binding solely to prove safe custody;
-it never opens source/evidence bodies or emits membership, labels, prompts, or
-private locators.
+This module deliberately has no labeler or derivation callback.  It permits
+builders to receive only the public freeze hashes.  The optional steward
+runtime privately streams authenticated source/evidence bodies to construct a
+mode-0600 collision corpus; it never exposes membership, labels, prompts,
+source text, or private locators to builders or public output.
 """
 
 from __future__ import annotations
@@ -51,7 +51,7 @@ FAIL_CODES = (
     "leakage", "uncertain_lineage", "graph_incompleteness", "hash_drift",
     "denominator_drift", "rights_provenance_corruption", "protected_damage",
     "custody_role_collision", "private_binding_unbound", "private_path_unsafe",
-    "document_lineage_denominator_not_frozen",
+    "document_lineage_denominator_not_frozen", "unregistered_authority",
 )
 PRIVATE_MODE = 0o600
 PRIVATE_DIR_MODE = 0o700
@@ -59,6 +59,16 @@ STEWARD_CONFIG_ENV = "PHASE3_EVAL_STEWARD_CONFIG"
 EXPECTED_OBJECT_SET_SHA256 = storage.EXPECTED_OBJECT_SET_SHA256
 EXPECTED_ORDERED_ROW_IDENTITY_SHA256 = storage.EXPECTED_ORDERED_ROW_IDENTITY_SHA256
 EXPECTED_PACK_MANIFEST_RECEIPT_SHA256 = "2a883cb3e9a3b2ee673e397c8f5ba511f886f725bea980b2c982ca17f92a5e7d"
+CANDIDATE_LINEAGE_KEYS = (
+    "packet", "sidecar", "annotation", "label_or_prompt", "paraphrase_parent",
+    "synthetic_parent", "derivative_parent", "provenance_receipt", "raw_or_log",
+    "provider_result_terminal",
+)
+PRIVATE_DENY_ARRAYS = (
+    "row", "source_example", "document_work_edition", "packet", "sidecar", "annotation",
+    "exact", "component", "labeling_receipt", "prompt_or_request", "raw_or_log",
+    "provider_result_terminal", "derivative", "paraphrase_parent", "synthetic_parent",
+)
 
 
 class FirewallError(ValueError):
@@ -592,9 +602,21 @@ def _build_private_deny_corpus(pack_dir: Path, manifest: Mapping[str, Any]) -> d
     sidecar_hashes = [sha256_bytes(str(item.get("sidecar_id")).encode()) for item in manifest["objects"] if "evidence_sidecar" in item.get("selection_classes", [])]
     labeling_namespaces, labeling_census = _labeling_expansion_identities(pack_dir, manifest)
     _assert_closed_zero_namespace_census(manifest)
-    namespaces = {"row": sorted(row["row"] for row in rows), "source_example": sorted(row["source_example"] for row in rows), "document_work_edition": sorted(row["document_or_edition"] for row in rows), "packet": sorted(row["packet"] for row in rows), "sidecar": sorted(sidecar_hashes), "exact": sorted(row["exact"] for row in rows), "near_token": sorted(row["token_hashes"] for row in rows), "component": sorted(component_by_row.values())} | labeling_namespaces
+    namespaces = {
+        "row": sorted(row["row"] for row in rows),
+        "source_example": sorted(row["source_example"] for row in rows),
+        "document_work_edition": sorted(row["document_or_edition"] for row in rows),
+        "packet": sorted(row["packet"] for row in rows),
+        "sidecar": sorted(sidecar_hashes),
+        "annotation": sorted(sidecar_hashes),
+        "exact": sorted(row["exact"] for row in rows),
+        "near_token": sorted(row["token_hashes"] for row in rows),
+        "component": sorted(component_by_row.values()),
+        "paraphrase_parent": [], "synthetic_parent": [],
+    } | labeling_namespaces
     commitments = {name: {"count": len(values), "sha256": sha256_bytes(canonical_json(values))} for name, values in namespaces.items()}
-    corpus = {"schema_version": "phase3_cycle007_private_deny_corpus_v1", "pack_manifest_receipt_sha256": manifest["receipt_sha256"], "object_set_sha256": EXPECTED_OBJECT_SET_SHA256, "ordered_row_identity_commitment_sha256": EXPECTED_ORDERED_ROW_IDENTITY_SHA256, "near_duplicate_policy_sha256": near.pinned_policy_fingerprint(), "namespace_commitments": commitments, "labeling_expansion_census": labeling_census, "rows": [{key: value for key, value in row.items() if key != "surface"} | {"component": component_by_row[row["row"]]} for row in rows], "zero_namespace_proofs": {name: 0 for name in ("paraphrases", "synthetic_siblings")}}
+    _require(set(PRIVATE_DENY_ARRAYS) <= set(namespaces), "graph_incompleteness")
+    corpus = {"schema_version": "phase3_cycle007_private_deny_corpus_v1", "pack_manifest_receipt_sha256": manifest["receipt_sha256"], "object_set_sha256": EXPECTED_OBJECT_SET_SHA256, "ordered_row_identity_commitment_sha256": EXPECTED_ORDERED_ROW_IDENTITY_SHA256, "near_duplicate_policy_sha256": near.pinned_policy_fingerprint(), "namespace_commitments": commitments, "deny_arrays": namespaces, "candidate_clearance_allowlist": [], "candidate_clearance_commitment_sha256": sha256_bytes(canonical_json([])), "labeling_expansion_census": labeling_census, "rows": [{key: value for key, value in row.items() if key != "surface"} | {"component": component_by_row[row["row"]]} for row in rows], "zero_namespace_proofs": {name: 0 for name in ("paraphrases", "synthetic_siblings")}}
     corpus["corpus_sha256"] = sha256_bytes(canonical_json(corpus))
     return corpus
 
@@ -636,16 +658,34 @@ def _write_private_json(path: Path, value: Mapping[str, Any]) -> None:
         raise
 
 
+def _candidate_clearance_binding(candidate: Mapping[str, Any]) -> str:
+    """The evaluator, not a caller field, derives the full candidate lineage key."""
+    return sha256_bytes(canonical_json({"schema_version": "phase3_evaluation_candidate_lineage_v1", "candidate": candidate}))
+
+
+def _validate_private_deny_corpus(corpus: Mapping[str, Any]) -> dict[str, set[str]]:
+    _require(corpus.get("corpus_sha256") == sha256_bytes(canonical_json({key: value for key, value in corpus.items() if key != "corpus_sha256"})), "hash_drift")
+    _require(corpus.get("pack_manifest_receipt_sha256") == EXPECTED_PACK_MANIFEST_RECEIPT_SHA256 and corpus.get("near_duplicate_policy_sha256") == near.pinned_policy_fingerprint(), "hash_drift")
+    arrays = corpus.get("deny_arrays")
+    commitments = corpus.get("namespace_commitments")
+    allowlist = corpus.get("candidate_clearance_allowlist")
+    _require(isinstance(arrays, Mapping) and isinstance(commitments, Mapping) and isinstance(allowlist, list), "graph_incompleteness")
+    _require(set(PRIVATE_DENY_ARRAYS) <= set(arrays) and all(isinstance(arrays[name], list) and all(_metadata_digest(value) for value in arrays[name]) for name in PRIVATE_DENY_ARRAYS), "graph_incompleteness")
+    _require(corpus.get("candidate_clearance_commitment_sha256") == sha256_bytes(canonical_json(sorted(allowlist))) and all(_metadata_digest(value) for value in allowlist), "hash_drift")
+    for name, values in arrays.items():
+        item = commitments.get(name)
+        _require(isinstance(item, Mapping) and item == {"count": len(values), "sha256": sha256_bytes(canonical_json(values))}, "hash_drift")
+    return {name: set(values) for name, values in arrays.items()}
+
+
 def evaluate_candidate_batch(candidates: Sequence[Mapping[str, Any]], corpus: Mapping[str, Any]) -> dict[str, Any]:
-    """Steward-only fail-closed collision gate; candidates never supply authority hashes."""
+    """Steward-only collision gate; novelty requires a private exact clearance."""
     try:
-        _require(corpus.get("corpus_sha256") == sha256_bytes(canonical_json({key: value for key, value in corpus.items() if key != "corpus_sha256"})), "hash_drift")
-        _require(corpus.get("pack_manifest_receipt_sha256") == EXPECTED_PACK_MANIFEST_RECEIPT_SHA256 and corpus.get("near_duplicate_policy_sha256") == near.pinned_policy_fingerprint(), "hash_drift")
-        denied = {field: {row[field] for row in corpus["rows"]} for field in ("row", "source_example", "document_or_edition", "exact", "component")}
+        denied = _validate_private_deny_corpus(corpus)
         surfaces = [row["normalized_surface"] for row in corpus["rows"]]
+        primary_keys = {"evaluation_cycle_id", "family_id", "unit_id", "unit_sha256", "source_text", "source_record", "source_locator", "document_or_edition_identity"}
         for candidate in candidates:
-            _require(isinstance(candidate, Mapping) and candidate.get("evaluation_cycle_id") != "phase3-v2-1-evaluation-cycle-007" and candidate.get("origin_kind") == "independent", "uncertain_lineage")
-            _require(not any(key in candidate for key in ("cycle007_parent", "derivative_of", "prompt_parent", "paraphrase_parent", "synthetic_sibling_parent")), "uncertain_lineage")
+            _require(isinstance(candidate, Mapping) and primary_keys <= set(candidate) <= primary_keys | {"lineage"} and candidate.get("evaluation_cycle_id") != "phase3-v2-1-evaluation-cycle-007", "uncertain_lineage")
             family, unit, digest, text, record, locator, document = (candidate.get(key) for key in ("family_id", "unit_id", "unit_sha256", "source_text", "source_record", "source_locator", "document_or_edition_identity"))
             _require(all(isinstance(value, str) and value for value in (family, unit, digest, text, document)) and isinstance(record, Mapping) and isinstance(locator, Mapping), "uncertain_lineage")
             row = sha256_bytes(canonical_json({"unit_id": unit, "unit_sha256": digest}))
@@ -656,35 +696,46 @@ def evaluate_candidate_batch(candidates: Sequence[Mapping[str, Any]], corpus: Ma
                 raise FirewallError("uncertain_lineage") from exc
             _require(document == expected_document, "uncertain_lineage")
             fp = near.fingerprint(text)
-            values = {"row": row, "source_example": source, "document_or_edition": sha256_bytes(document.encode()), "exact": fp.exact_fingerprint}
+            values = {"row": row, "source_example": source, "document_work_edition": sha256_bytes(document.encode()), "exact": fp.exact_fingerprint}
             if any(value in denied[key] for key, value in values.items()):
                 return _zero("leakage")
             if any(near.duplicate_or_fail_closed(text, surface, scope="span", policy=near.policy_for_governed_use("train_development_to_heldout_firewall")) for surface in surfaces):
                 return _zero("leakage")
+            lineage = candidate.get("lineage")
+            _require(isinstance(lineage, Mapping) and set(lineage) == set(CANDIDATE_LINEAGE_KEYS) and all(value is None or _metadata_digest(value) for value in lineage.values()), "uncertain_lineage")
+            namespace_by_lineage = {"packet": "packet", "sidecar": "sidecar", "annotation": "annotation", "label_or_prompt": "prompt_or_request", "paraphrase_parent": "paraphrase_parent", "synthetic_parent": "synthetic_parent", "derivative_parent": "derivative", "provenance_receipt": "labeling_receipt", "raw_or_log": "raw_or_log", "provider_result_terminal": "provider_result_terminal"}
+            if any(value is not None and value in denied[namespace_by_lineage[name]] for name, value in lineage.items()):
+                return _zero("leakage")
+            _require(_candidate_clearance_binding(candidate) in corpus["candidate_clearance_allowlist"], "uncertain_lineage")
     except (FirewallError, near.NearDuplicatePolicyError, KeyError, TypeError, ValueError):
         return _zero("uncertain_lineage")
     return {"ok": True, "code": None, "emitted": 0, "promoted": 0, "activated": 0}
 
 
-def admit_concept_or_authority(record: Mapping[str, Any]) -> dict[str, Any]:
-    """Admit only independent abstract concepts/citations; never eval derivation."""
+def admit_concept_or_authority(record: Mapping[str, Any], registry: Mapping[str, Any] | None = None) -> dict[str, Any]:
+    """Classify only; P2's frozen nonadmitting registry cannot grant admission."""
     forbidden = {"row_id", "example_id", "document_id", "span", "locator", "annotation", "membership", "cycle007", "derivative", "prompt", "paraphrase", "synthetic"}
     try:
+        _require(isinstance(record, Mapping), "uncertain_lineage")
+        if any(token in key.lower() or token in str(value).lower() for key, value in record.items() for token in forbidden):
+            return _zero("leakage")
         _require(isinstance(record, Mapping) and set(record) == {"kind", "origin_kind", "concept_or_citation_id", "authority_sha256"}, "uncertain_lineage")
         _require(record.get("kind") in {"abstract_concept", "authority_citation"} and record.get("origin_kind") == "independent", "uncertain_lineage")
         _require(all(isinstance(record[key], str) and record[key] for key in ("concept_or_citation_id", "authority_sha256")), "uncertain_lineage")
-        _require(len(str(record["authority_sha256"])) == 64 and not any(token in key.lower() or token in str(value).lower() for key, value in record.items() for token in forbidden), "leakage")
+        _require(_metadata_digest(record["authority_sha256"]), "uncertain_lineage")
     except FirewallError as exc:
         return _zero(str(exc))
-    return {"ok": True, "code": None, "emitted": 0, "promoted": 0, "activated": 0}
+    del registry
+    return _zero("unregistered_authority")
 
 
 def run_steward_production(config: str | None = None) -> dict[str, Any]:
     """Build the only valid steward receipt from the retained pack, never caller hashes.
 
     It reuses the storage lane's strict inventory and stream-roundtrip proof.
-    No expanded copy, text body, prompt, label, locator, or membership is
-    emitted; returned values are public-safe commitments and builder hashes.
+    The private mode-0600 corpus retains normalized surfaces needed by the
+    pinned near-duplicate policy.  No expanded source tree or private content
+    is exposed; returned values are public-safe commitments and builder hashes.
     """
     configured = config if config is not None else os.environ.get(STEWARD_CONFIG_ENV)
     if not configured:

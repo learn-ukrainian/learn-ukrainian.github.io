@@ -161,11 +161,46 @@ def test_candidate_evaluator_rejects_caller_collision_and_cycle_derivative() -> 
     assert firewall.evaluate_candidate_batch([{"unit_id": "x"}], corpus)["code"] == "uncertain_lineage"
 
 
-def test_concept_authority_gate_allows_independent_and_rejects_renamed_derivative() -> None:
+def _private_candidate_corpus(candidate: dict[str, object]) -> dict[str, object]:
+    arrays = {name: [] for name in firewall.PRIVATE_DENY_ARRAYS}
+    commitments = {name: {"count": 0, "sha256": firewall.sha256_bytes(firewall.canonical_json([]))} for name in arrays}
+    corpus: dict[str, object] = {
+        "schema_version": "phase3_cycle007_private_deny_corpus_v1",
+        "pack_manifest_receipt_sha256": firewall.EXPECTED_PACK_MANIFEST_RECEIPT_SHA256,
+        "near_duplicate_policy_sha256": firewall.near.pinned_policy_fingerprint(),
+        "deny_arrays": arrays, "namespace_commitments": commitments, "rows": [],
+        "candidate_clearance_allowlist": [], "candidate_clearance_commitment_sha256": firewall.sha256_bytes(firewall.canonical_json([])),
+    }
+    corpus["corpus_sha256"] = firewall.sha256_bytes(firewall.canonical_json(corpus))
+    return corpus
+
+
+def test_candidate_requires_private_clearance_and_every_lineage_namespace_is_denied() -> None:
+    document = firewall.materialization._identity("pravopys_2026_complete", {}, {"locator": {}})
+    lineage = {name: None for name in firewall.CANDIDATE_LINEAGE_KEYS}
+    candidate: dict[str, object] = {"evaluation_cycle_id": "other", "family_id": "pravopys_2026_complete", "unit_id": "candidate", "unit_sha256": "a" * 64, "source_text": "novel independent text", "source_record": {}, "source_locator": {}, "document_or_edition_identity": document, "lineage": lineage}
+    corpus = _private_candidate_corpus(candidate)
+    assert firewall.evaluate_candidate_batch([candidate], corpus)["code"] == "uncertain_lineage"
+    for lineage_key, namespace in {
+        "packet": "packet", "sidecar": "sidecar", "annotation": "annotation", "label_or_prompt": "prompt_or_request",
+        "paraphrase_parent": "paraphrase_parent", "synthetic_parent": "synthetic_parent", "derivative_parent": "derivative",
+        "provenance_receipt": "labeling_receipt", "raw_or_log": "raw_or_log", "provider_result_terminal": "provider_result_terminal",
+    }.items():
+        value = "b" * 64
+        changed = deepcopy(candidate)
+        changed["lineage"] = {**lineage, lineage_key: value}
+        collision = _private_candidate_corpus(changed)
+        collision["deny_arrays"][namespace] = [value]  # type: ignore[index]
+        collision["namespace_commitments"][namespace] = {"count": 1, "sha256": firewall.sha256_bytes(firewall.canonical_json([value]))}  # type: ignore[index]
+        collision["corpus_sha256"] = firewall.sha256_bytes(firewall.canonical_json({key: value for key, value in collision.items() if key != "corpus_sha256"}))
+        assert firewall.evaluate_candidate_batch([changed], collision)["code"] == "leakage"
+
+
+def test_concept_authority_gate_requires_pinned_human_registry_and_rejects_renamed_derivative() -> None:
     allowed = {"kind": "authority_citation", "origin_kind": "independent", "concept_or_citation_id": "external_authority", "authority_sha256": "a" * 64}
-    assert firewall.admit_concept_or_authority(allowed)["ok"] is True
+    assert firewall.admit_concept_or_authority(allowed) == {"ok": False, "code": "unregistered_authority", "emitted": 0, "promoted": 0, "activated": 0}
     rejected = {"kind": "abstract_concept", "origin_kind": "independent", "concept_or_citation_id": "rehash", "authority_sha256": "a" * 64, "membership": "b" * 64}
-    assert firewall.admit_concept_or_authority(rejected)["code"] == "uncertain_lineage"
+    assert firewall.admit_concept_or_authority(rejected)["code"] == "leakage"
 
 
 def test_compact_row_identity_uses_source_locator_for_every_family() -> None:
