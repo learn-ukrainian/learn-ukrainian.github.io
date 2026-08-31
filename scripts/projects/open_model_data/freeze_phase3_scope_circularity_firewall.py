@@ -739,6 +739,58 @@ def _write_private_json(path: Path, value: Mapping[str, Any]) -> None:
         raise
 
 
+def _write_private_json_at(directory_fd: int, name: str, value: Mapping[str, Any]) -> None:
+    """Atomic private write anchored to an already-verified directory fd."""
+    _require("/" not in name and name not in {"", ".", ".."}, "private_path_unsafe")
+    before = os.fstat(directory_fd)
+    _require(stat.S_ISDIR(before.st_mode) and before.st_uid == os.getuid() and stat.S_IMODE(before.st_mode) == PRIVATE_DIR_MODE, "private_path_unsafe")
+    temporary = f".{name}.{os.urandom(12).hex()}"
+    fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0), PRIVATE_MODE, dir_fd=directory_fd)
+    try:
+        payload = canonical_json(dict(value))
+        os.write(fd, payload)
+        os.fsync(fd)
+        os.fchmod(fd, PRIVATE_MODE)
+        detail = os.fstat(fd)
+        _require(stat.S_ISREG(detail.st_mode) and detail.st_nlink == 1 and stat.S_IMODE(detail.st_mode) == PRIVATE_MODE, "private_path_unsafe")
+    finally:
+        os.close(fd)
+    try:
+        os.rename(temporary, name, src_dir_fd=directory_fd, dst_dir_fd=directory_fd)
+        os.fsync(directory_fd)
+        target_fd = os.open(name, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0), dir_fd=directory_fd)
+        try:
+            detail = os.fstat(target_fd)
+            _require(stat.S_ISREG(detail.st_mode) and detail.st_nlink == 1 and stat.S_IMODE(detail.st_mode) == PRIVATE_MODE, "private_path_unsafe")
+        finally:
+            os.close(target_fd)
+        after = os.fstat(directory_fd)
+        _require((before.st_dev, before.st_ino) == (after.st_dev, after.st_ino), "private_path_unsafe")
+    except BaseException:
+        with suppress(OSError):
+            os.unlink(temporary, dir_fd=directory_fd)
+        raise
+
+
+def _load_private_json_at(directory_fd: int, name: str) -> dict[str, Any]:
+    _require("/" not in name and name not in {"", ".", ".."}, "private_path_unsafe")
+    before = os.fstat(directory_fd)
+    fd = os.open(name, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0), dir_fd=directory_fd)
+    try:
+        detail = os.fstat(fd)
+        _require(stat.S_ISREG(detail.st_mode) and detail.st_nlink == 1 and stat.S_IMODE(detail.st_mode) == PRIVATE_MODE, "private_path_unsafe")
+        raw = b"".join(iter(lambda: os.read(fd, 65536), b""))
+        after_file = os.fstat(fd)
+        _require((detail.st_dev, detail.st_ino, detail.st_size) == (after_file.st_dev, after_file.st_ino, after_file.st_size), "private_path_unsafe")
+    finally:
+        os.close(fd)
+    after = os.fstat(directory_fd)
+    _require((before.st_dev, before.st_ino) == (after.st_dev, after.st_ino), "private_path_unsafe")
+    value = json.loads(raw.decode("utf-8"))
+    _require(isinstance(value, dict), "private_path_unsafe")
+    return value
+
+
 def _write_run_state(output_root: Path, state: str, *, code: str | None = None, corpus_sha256: str | None = None, receipt_sha256: str | None = None) -> None:
     value: dict[str, Any] = {"schema_version": "phase3_evaluation_steward_run_state_v1", "state": state, "text_free": True}
     if code is not None:
@@ -749,6 +801,18 @@ def _write_run_state(output_root: Path, state: str, *, code: str | None = None, 
         value["public_receipt_sha256"] = receipt_sha256
     value["state_sha256"] = sha256_bytes(canonical_json(value))
     _write_private_json(output_root / "cycle007-firewall-run-state-v1.json", value)
+
+
+def _write_run_state_at(output_fd: int, state: str, *, code: str | None = None, corpus_sha256: str | None = None, receipt_sha256: str | None = None) -> None:
+    value: dict[str, Any] = {"schema_version": "phase3_evaluation_steward_run_state_v1", "state": state, "text_free": True}
+    if code is not None:
+        value["code"] = code
+    if corpus_sha256 is not None:
+        value["corpus_sha256"] = corpus_sha256
+    if receipt_sha256 is not None:
+        value["public_receipt_sha256"] = receipt_sha256
+    value["state_sha256"] = sha256_bytes(canonical_json(value))
+    _write_private_json_at(output_fd, "cycle007-firewall-run-state-v1.json", value)
 
 
 def _load_private_json(path: Path, root: Path) -> dict[str, Any]:
@@ -861,6 +925,7 @@ def run_steward_production(config: str | None = None) -> dict[str, Any]:
         return _zero("private_binding_unbound")
     output_root: Path | None = None
     pack_root_fd: int | None = None
+    output_root_fd: int | None = None
     try:
         payload, root = _read_steward_config(Path(configured))
         pack_dir = Path(payload["content_pack_directory"])
@@ -868,11 +933,12 @@ def run_steward_production(config: str | None = None) -> dict[str, Any]:
         _require(pack_dir != output_root and not output_root.is_relative_to(pack_dir) and not pack_dir.is_relative_to(output_root), "private_path_unsafe")
         _validate_private_tree(pack_dir, root)
         _safe_private_directory(output_root, root)
+        output_root_fd = os.open(output_root, os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0))
+        output_before = os.fstat(output_root_fd)
         pack_root_fd = os.open(pack_dir, os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0))
         pack_root_stat = os.fstat(pack_root_fd)
         _require(stat.S_ISDIR(pack_root_stat.st_mode) and pack_root_stat.st_uid == os.getuid() and stat.S_IMODE(pack_root_stat.st_mode) == PRIVATE_DIR_MODE, "private_path_unsafe")
-        output_before = os.lstat(output_root)
-        _write_run_state(output_root, "RUNNING")
+        _write_run_state_at(output_root_fd, "RUNNING")
         manifest_fd = os.open("pack-manifest.json", os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0), dir_fd=pack_root_fd)
         manifest_before = os.fstat(manifest_fd)
         _require(stat.S_ISREG(manifest_before.st_mode) and manifest_before.st_nlink == 1 and stat.S_IMODE(manifest_before.st_mode) == PRIVATE_MODE, "private_path_unsafe")
@@ -893,25 +959,27 @@ def run_steward_production(config: str | None = None) -> dict[str, Any]:
         _require("compile_expansion" not in classes and not any("label-output" in str(value) for value in classes), "graph_incompleteness")
         _require((pack_root_stat.st_dev, pack_root_stat.st_ino) == (os.fstat(pack_root_fd).st_dev, os.fstat(pack_root_fd).st_ino), "private_path_unsafe")
         _secure_content_pack_proof(pack_root_fd, manifest, inventory)
-        _write_private_json(output_root / "cycle007-deny-component-manifest-v1.json", corpus)
+        _write_private_json_at(output_root_fd, "cycle007-deny-component-manifest-v1.json", corpus)
         public_receipt = {"schema_version": "phase3_scope_circularity_public_binding_receipt_v1", "text_free": True, "pack_manifest_receipt_sha256": manifest["receipt_sha256"], "object_set_sha256": EXPECTED_OBJECT_SET_SHA256, "ordered_row_identity_commitment_sha256": EXPECTED_ORDERED_ROW_IDENTITY_SHA256, "packet_count": 204, "row_count": 10159, "physical_sidecar_count": 204, "logical_sidecar_count": 408, "object_count": 419, "private_graph_commitment_sha256": corpus["corpus_sha256"], "builder_clearance": {"p1_sha256": PINS[P1], "p1_amendment_sha256": PINS[P1_AMENDMENT], "p2_sha256": PINS[P2], "near_duplicate_policy_sha256": PINS[NEAR_POLICY], "firewall_sha256": sha256_file(OUTPUT)}}
         public_receipt["receipt_sha256"] = sha256_bytes(canonical_json(public_receipt))
-        _require((output_before.st_dev, output_before.st_ino) == (os.lstat(output_root).st_dev, os.lstat(output_root).st_ino), "private_path_unsafe")
-        _write_run_state(output_root, "COMPLETE", corpus_sha256=corpus["corpus_sha256"], receipt_sha256=public_receipt["receipt_sha256"])
+        _require((output_before.st_dev, output_before.st_ino) == (os.fstat(output_root_fd).st_dev, os.fstat(output_root_fd).st_ino), "private_path_unsafe")
+        _write_run_state_at(output_root_fd, "COMPLETE", corpus_sha256=corpus["corpus_sha256"], receipt_sha256=public_receipt["receipt_sha256"])
         return {"ok": True, "code": None, "emitted": 0, "promoted": 0, "activated": 0, "public_receipt": public_receipt}
     except FirewallError as exc:
-        if output_root is not None:
+        if output_root_fd is not None:
             with suppress(FirewallError, OSError):
-                _write_run_state(output_root, "TERMINAL_FAILURE", code=str(exc))
+                _write_run_state_at(output_root_fd, "TERMINAL_FAILURE", code=str(exc))
         return _zero(str(exc))
     except (OSError, UnicodeDecodeError, json.JSONDecodeError, storage.StorageCustodyError):
-        if output_root is not None:
+        if output_root_fd is not None:
             with suppress(FirewallError, OSError):
-                _write_run_state(output_root, "TERMINAL_FAILURE", code="private_path_unsafe")
+                _write_run_state_at(output_root_fd, "TERMINAL_FAILURE", code="private_path_unsafe")
         return _zero("private_path_unsafe")
     finally:
         if pack_root_fd is not None:
             os.close(pack_root_fd)
+        if output_root_fd is not None:
+            os.close(output_root_fd)
 
 
 def evaluate_steward_candidates(candidates: Sequence[Mapping[str, Any]], config: str | None = None) -> dict[str, Any]:
