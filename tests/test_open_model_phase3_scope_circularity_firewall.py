@@ -166,3 +166,11 @@ def test_concept_authority_gate_allows_independent_and_rejects_renamed_derivativ
     assert firewall.admit_concept_or_authority(allowed)["ok"] is True
     rejected = {"kind": "abstract_concept", "origin_kind": "independent", "concept_or_citation_id": "rehash", "authority_sha256": "a" * 64, "membership": "b" * 64}
     assert firewall.admit_concept_or_authority(rejected)["code"] == "uncertain_lineage"
+
+
+def test_compact_row_identity_uses_source_locator_for_every_family() -> None:
+    row = {"family_id": "pravopys_2026_complete", "unit_id": "unit", "unit_sha256": "a" * 64, "source_locator": {}, "source_text": "x", "source_text_sha256": firewall.sha256_bytes(b"x"), "source_record": {}, "materialization_projection": "clean_label"}
+    assert firewall._canonical_packed_document_identity(row).startswith("document_or_edition.pravopys_2026_complete")
+    unknown = {**row, "family_id": "unmapped_family"}
+    with pytest.raises(firewall.FirewallError):
+        firewall._canonical_packed_document_identity(unknown)

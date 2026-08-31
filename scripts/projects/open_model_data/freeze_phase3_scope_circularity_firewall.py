@@ -264,18 +264,16 @@ def _canonical_packed_document_identity(entry: Mapping[str, Any]) -> str:
     that predates the old helper switch; unsupported caller candidates never
     receive this exception.
     """
-    required = {"family_id", "unit_id", "unit_sha256", "frozen_locator", "frozen_locator_sha256", "document_or_edition_identity", "source_text", "source_text_sha256", "source_record"}
+    required = {"family_id", "unit_id", "unit_sha256", "source_locator", "source_text", "source_text_sha256", "source_record", "materialization_projection"}
     _require(required <= set(entry), "document_lineage_denominator_not_frozen")
-    document = entry.get("document_or_edition_identity")
     text = entry.get("source_text")
-    _require(isinstance(document, str) and bool(document) and isinstance(text, str), "document_lineage_denominator_not_frozen")
-    _require(entry.get("source_text_sha256") == sha256_bytes(text.encode()) and entry.get("frozen_locator_sha256") == sha256_bytes(canonical_json(entry.get("frozen_locator"))), "document_lineage_denominator_not_frozen")
+    locator = entry.get("source_locator")
+    _require(isinstance(text, str) and isinstance(locator, Mapping) and isinstance(entry.get("source_record"), Mapping), "document_lineage_denominator_not_frozen")
+    _require(entry.get("source_text_sha256") == sha256_bytes(text.encode()) and isinstance(entry.get("unit_sha256"), str) and len(entry["unit_sha256"]) == 64, "document_lineage_denominator_not_frozen")
     try:
-        expected = materialization._identity(str(entry["family_id"]), entry["source_record"], {"locator": entry["frozen_locator"]})
-    except materialization.MaterializationError:
-        return document
-    _require(document == expected, "document_lineage_denominator_not_frozen")
-    return document
+        return materialization._identity(str(entry["family_id"]), entry["source_record"], {"locator": locator})
+    except materialization.MaterializationError as exc:
+        raise FirewallError("document_lineage_denominator_not_frozen") from exc
 
 
 def _build_private_deny_corpus(pack_dir: Path, manifest: Mapping[str, Any]) -> dict[str, Any]:
@@ -398,7 +396,7 @@ def evaluate_candidate_batch(candidates: Sequence[Mapping[str, Any]], corpus: Ma
         for candidate in candidates:
             _require(isinstance(candidate, Mapping) and candidate.get("evaluation_cycle_id") != "phase3-v2-1-evaluation-cycle-007" and candidate.get("origin_kind") == "independent", "uncertain_lineage")
             _require(not any(key in candidate for key in ("cycle007_parent", "derivative_of", "prompt_parent", "paraphrase_parent", "synthetic_sibling_parent")), "uncertain_lineage")
-            family, unit, digest, text, record, locator, document = (candidate.get(key) for key in ("family_id", "unit_id", "unit_sha256", "source_text", "source_record", "frozen_locator", "document_or_edition_identity"))
+            family, unit, digest, text, record, locator, document = (candidate.get(key) for key in ("family_id", "unit_id", "unit_sha256", "source_text", "source_record", "source_locator", "document_or_edition_identity"))
             _require(all(isinstance(value, str) and value for value in (family, unit, digest, text, document)) and isinstance(record, Mapping) and isinstance(locator, Mapping), "uncertain_lineage")
             row = sha256_bytes(canonical_json({"unit_id": unit, "unit_sha256": digest}))
             source = sha256_bytes(canonical_json({"family_id": family, "source_record": record, "source_locator": locator}))
