@@ -325,4 +325,6 @@ def test_normalize_academic_label_maps_wikidata() -> None:
     assert normalize_academic_label("wikidata") == WIKIDATA_LABEL
     assert normalize_academic_label("Wikidata") == WIKIDATA_LABEL
     assert normalize_academic_label("wikidata.org") == WIKIDATA_LABEL
+    assert normalize_academic_label("wikidata.org/wiki/Q1") == WIKIDATA_LABEL
+    assert normalize_academic_label("evilwikidata.org") == "evilwikidata.org"
     assert normalize_academic_label(WIKIDATA_LABEL) == WIKIDATA_LABEL

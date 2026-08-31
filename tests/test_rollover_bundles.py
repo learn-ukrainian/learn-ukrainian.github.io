@@ -546,7 +546,8 @@ def test_api_down_import_is_fail_open_and_secret_prose_is_not_a_hit(
     assert not called
     assert bundle.is_file()
     warning = capsys.readouterr().err
-    assert "rule=credential-assignment" in warning
+    assert "secret scan hit count=1" in warning
+    assert "credential-assignment" not in warning
     assert "supersecret-value" not in warning
 
     auto_result = th._maybe_auto_upload_bundle(
@@ -558,7 +559,8 @@ def test_api_down_import_is_fail_open_and_secret_prose_is_not_a_hit(
     )
     assert auto_result["status"] == "skipped-secret-scan"
     auto_warning = capsys.readouterr().err
-    assert "rule=credential-assignment" in auto_warning
+    assert "secret scan hit count=1" in auto_warning
+    assert "credential-assignment" not in auto_warning
     assert "supersecret-value" not in auto_warning
 
 

@@ -240,7 +240,9 @@ jobs:
         if: >-
           needs.landing-class.outputs.class == 'docs_skills'
           || (github.event_name == 'push' && needs.landing-class.outputs.class == 'mq_validated')
-        run: echo "landing-class=${{ needs.landing-class.outputs.class }}; pytest-plan no-op success"
+        env:
+          LANDING_CLASS: ${{ needs.landing-class.outputs.class }}
+        run: echo "landing-class=${LANDING_CLASS}; pytest-plan no-op success"
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: >-
@@ -674,9 +676,12 @@ jobs:
         if: >-
           needs.landing-class.outputs.class == 'docs_skills'
           || (github.event_name == 'push' && needs.landing-class.outputs.class == 'mq_validated')
+        env:
+          LANDING_CLASS: ${{ needs.landing-class.outputs.class }}
+          SHARD: ${{ matrix.shard }}
         run: |
           echo "no_op=true" >> "$GITHUB_OUTPUT"
-          echo "landing-class=${{ needs.landing-class.outputs.class }}; python shard ${{ matrix.shard }} no-op success"
+          echo "landing-class=${LANDING_CLASS}; python shard ${SHARD} no-op success"
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: >-
@@ -1671,7 +1676,9 @@ jobs:
         if: >-
           needs.landing-class.outputs.class == 'docs_skills'
           || (github.event_name == 'push' && needs.landing-class.outputs.class == 'mq_validated')
-        run: echo "landing-class=${{ needs.landing-class.outputs.class }}; coverage-floor no-op success"
+        env:
+          LANDING_CLASS: ${{ needs.landing-class.outputs.class }}
+        run: echo "landing-class=${LANDING_CLASS}; coverage-floor no-op success"
 
       # Sparse: coverage report only needs scripts/ + the config/lock that
       # pin the combine. A fat-repo checkout was 19s on 33282368887.
@@ -1833,7 +1840,9 @@ jobs:
           github.event_name != 'pull_request'
           && (needs.landing-class.outputs.class == 'docs_skills'
               || (github.event_name == 'push' && needs.landing-class.outputs.class == 'mq_validated'))
-        run: echo "landing-class=${{ needs.landing-class.outputs.class }}; CI Gate verify-artifacts no-op success"
+        env:
+          LANDING_CLASS: ${{ needs.landing-class.outputs.class }}
+        run: echo "landing-class=${LANDING_CLASS}; CI Gate verify-artifacts no-op success"
       - name: Download pytest shard plans and JUnit results
         if: >-
           github.event_name != 'pull_request'

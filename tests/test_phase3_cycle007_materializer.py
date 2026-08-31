@@ -394,7 +394,7 @@ def test_materializer_real_mode_rejects_a_world_readable_source_package(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ):
     source, output, _rows = _fixture(tmp_path)
-    os.chmod(source / "custody-receipt.json", 0o644)  # no longer mode-0600
+    os.chmod(source / "custody-receipt.json", 0o644)  # intentional world-readable fixture; production path must refuse
     # Bind the frozen hashes to this fixture so we get past source_binding_drift
     # and reach the mode-verification step this test is actually about.
     custody_raw = (source / "custody-receipt.json").read_bytes()
@@ -645,7 +645,7 @@ def test_main_real_mode_config_file_must_be_mode_0600(tmp_path: Path, monkeypatc
     source, output, _rows = _fixture(tmp_path)
     config_path = tmp_path / "materializer-config.json"
     config_path.write_text(materializer.json.dumps({"source": str(source), "output": str(output)}))
-    os.chmod(config_path, 0o644)  # world-readable — must be refused
+    os.chmod(config_path, 0o644)  # intentional world-readable fixture; production path must refuse
     monkeypatch.setenv(materializer.REAL_CONFIG_ENV, str(config_path))
     monkeypatch.delenv(materializer.REAL_SOURCE_ENV, raising=False)
     monkeypatch.delenv(materializer.REAL_OUTPUT_ENV, raising=False)

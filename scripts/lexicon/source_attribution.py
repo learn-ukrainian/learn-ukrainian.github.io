@@ -266,7 +266,12 @@ def normalize_academic_label(label: str) -> str:
         return GOROH_LABEL
     if cleaned.casefold().startswith("e2u.org.ua") or cleaned.casefold() == "e2u":
         return E2U_LABEL
-    if cleaned.casefold() == "wikidata" or cleaned.casefold().startswith("wikidata.org"):
+    # Label tokens only (not URL host checks). Exact tokens, or the path form
+    # "wikidata.org/…" via partition so CodeQL does not see a bare substring
+    # sanitizer (py/incomplete-url-substring-sanitization).
+    folded = cleaned.casefold()
+    head, _, _tail = folded.partition("/")
+    if folded == "wikidata" or head == "wikidata.org":
         return WIKIDATA_LABEL
     if cleaned.casefold().startswith(RELATION_PAIRS_PREFIX):
         return _remap_relation_pairs_label(cleaned)

@@ -5408,9 +5408,10 @@ def cmd_export_bundle(args: argparse.Namespace) -> int:
         "source_state": rel(state_path, state_root),
         "upload": "not-requested",
     }
-    for _member, rule in secret_hits:
+    if secret_hits:
+        # Count only — never echo matched rule names or member paths (secrets).
         print(
-            f"WARNING: rollover bundle secret scan hit rule={rule}; "
+            f"WARNING: rollover bundle secret scan hit count={len(secret_hits)}; "
             "local bundle was written but upload was skipped.",
             file=sys.stderr,
         )
@@ -5457,9 +5458,10 @@ def _maybe_auto_upload_bundle(
             supplied=None,
         )
         write_bytes_atomic(output_path, blob)
-        for _member, rule in secret_hits:
+        if secret_hits:
+            # Count only — never echo matched rule names or member paths (secrets).
             print(
-                f"WARNING: rollover bundle secret scan hit rule={rule}; "
+                f"WARNING: rollover bundle secret scan hit count={len(secret_hits)}; "
                 "local bundle was written but upload was skipped.",
                 file=sys.stderr,
             )

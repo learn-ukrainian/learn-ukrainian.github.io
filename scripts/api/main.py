@@ -1741,9 +1741,10 @@ def _attach_cold_start_research(response: dict[str, Any], role: str | None) -> N
         pointers, _dropped = reg.select_cold_start_pointers(runtime, role)
         response["research"] = {"enabled": True, "records": pointers}
     except Exception:
+        # Do not interpolate the role string — it is request-derived and would
+        # reintroduce py/log-injection even after control-char scrubbing.
         logger.warning(
-            "orient: cold-start research selector failed unexpectedly for role %r; omitting research section",
-            role,
+            "orient: cold-start research selector failed unexpectedly; omitting research section",
             exc_info=True,
         )
         response.pop("research", None)
