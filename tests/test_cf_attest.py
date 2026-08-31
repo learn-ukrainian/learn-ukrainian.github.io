@@ -508,6 +508,8 @@ def test_pending_review_is_excluded_from_attestation() -> None:
     )
 
     def fake_api(path):
+        if path == "repos/o/r/pulls/1" or path.startswith("repos/o/r/pulls/1?"):
+            return {"user": {"login": "human"}}
         if "/comments" in path:
             return []
         if "/reviews" in path:
@@ -535,6 +537,8 @@ def test_dismissed_review_is_excluded_from_attestation() -> None:
     )
 
     def fake_api(path):
+        if path == "repos/o/r/pulls/1" or path.startswith("repos/o/r/pulls/1?"):
+            return {"user": {"login": "human"}}
         if "/comments" in path:
             return []
         if "/reviews" in path:
@@ -553,3 +557,37 @@ def test_dismissed_review_is_excluded_from_attestation() -> None:
         repository="o/r", pr_number=1, api_get=fake_api
     )
     assert bodies == []
+
+
+def test_dependabot_pr_author_maps_to_fixture_family_seat() -> None:
+    """Pure Dependabot PRs have no X-Agent trailers; author login must supply the seat."""
+    from scripts.ci.cf_attest import (
+        author_family_from_agents,
+        collect_bodies_and_agents,
+        evaluate_attestation,
+    )
+
+    def fake_api(path):
+        if path == "repos/o/r/pulls/1" or path.startswith("repos/o/r/pulls/1?"):
+            return {"user": {"login": "dependabot[bot]"}}
+        if "/comments" in path or "/reviews" in path or "/commits" in path:
+            return []
+        raise AssertionError(path)
+
+    bodies, agents = collect_bodies_and_agents(
+        repository="o/r", pr_number=1, api_get=fake_api
+    )
+    assert bodies == []
+    assert agents == ("dependabot",)
+    family = author_family_from_agents(agents)
+    assert family == "fixture"
+    result = evaluate_attestation(
+        expected_head=PR_HEAD,
+        author_family=family,
+        bodies=[(
+            "comment",
+            f"Cross-family CF of record (codex)\nReviewer family: openai\n"
+            f"At exact head `{PR_HEAD}`\nVERDICT: APPROVE",
+        )],
+    )
+    assert result.ok, result.reason
