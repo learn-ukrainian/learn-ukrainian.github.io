@@ -268,6 +268,37 @@ Scale is governed by a deterministic coverage-yield curve: newly satisfied
 source-backed atomic coverage compared with duplicate/derivative volume. It is
 not governed by a model learning curve or a fixed row quota.
 
+### P2 evaluation firewall (`#7427`)
+
+`freeze_phase3_scope_circularity_firewall.py` freezes a text-free, executable
+custody contract before any rule or case derivation. It binds the exact P1,
+P1 dialect amendment, P2, and near-duplicate-policy hashes; it retains the
+57/39/15/16 denominator, fourteen blocked cells, two N/A cells, and empty
+`R=0`. The sixteen held-out requirement records are frozen as metadata
+requirements, without inventing a numeric floor or a semantic case.
+
+Builder clearance is positive-only: it contains only the frozen public hashes,
+never a held-out complement, path, descriptor, locator, fingerprint, label,
+prompt, annotation, or membership identity. Source/document/work/edition and
+exact/near-duplicate connected components are atomic. The Cycle007 firewall
+denies rows, packets, examples, source units, document/work/edition groups,
+sidecars, annotations, labels, prompts, paraphrases, synthetic siblings,
+duplicates, derivatives, and fingerprints. Shared concepts require an
+independent origin; authority reuse is citation-only and cannot carry a
+held-out span, locator, annotation, or membership.
+
+The public receipt binds Cycle007's 204 packet / 10,159 row commitment, 204
+physical sidecars, 408 logical sidecars, and 419 objects, while stating
+`private_binding_unbound`. It therefore claims no fresh private
+materialization. The steward runtime accepts an opaque environment-bound
+private binding only under a `0700` private directory and `0600` regular file;
+it rejects symlinks, hardlinks, traversal, role collision, unsafe owner/mode,
+path overlap, inode/device changes, ancestor replacement, and post-pin TOCTOU.
+It emits no private locator, content body, label, prompt, or membership. Any
+leakage, uncertain lineage, incomplete graph, hash/denominator drift,
+rights/provenance corruption, protected damage, or custody collision is a
+terminal batch failure with zero emitted, promoted, or activated outputs.
+
 ## Roles and evidence
 
 The role map is:
