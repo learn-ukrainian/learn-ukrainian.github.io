@@ -95,7 +95,7 @@ def test_clearance_is_positive_only_and_rehashed_outer_receipt_cannot_bypass() -
 def test_same_count_pack_or_row_commitment_mutation_fails() -> None:
     manifest = {"schema_version": firewall.storage.PACK_SCHEMA_VERSION, "pack_kind": "content_compact", "receipt_sha256": firewall.EXPECTED_PACK_MANIFEST_RECEIPT_SHA256, "object_set_sha256": firewall.EXPECTED_OBJECT_SET_SHA256, "ordered_row_identity_commitment_sha256": firewall.EXPECTED_ORDERED_ROW_IDENTITY_SHA256, "packet_count": 204, "row_count": 10159, "object_count": 419}
     inventory = {"packet_count": 204, "row_count": 10159, "object_count": 419, "sidecar_count": 408, "object_set_sha256": firewall.EXPECTED_OBJECT_SET_SHA256, "ordered_row_identity_commitment_sha256": firewall.EXPECTED_ORDERED_ROW_IDENTITY_SHA256}
-    assert firewall.validate_pack_commitments(manifest, inventory)
+    assert not firewall.validate_pack_commitments(manifest, inventory)
     assert not firewall.validate_pack_commitments({**manifest, "object_set_sha256": "0" * 64}, inventory)
     assert not firewall.validate_pack_commitments(manifest, {**inventory, "ordered_row_identity_commitment_sha256": "0" * 64})
 
@@ -163,7 +163,7 @@ def test_candidate_evaluator_rejects_caller_collision_and_cycle_derivative() -> 
 
 def _private_candidate_corpus(candidate: dict[str, object]) -> dict[str, object]:
     arrays = {name: [] for name in firewall.PRIVATE_DENY_ARRAYS}
-    commitments = {name: {"count": 0, "sha256": firewall.sha256_bytes(firewall.canonical_json([]))} for name in arrays}
+    commitments = {name: {"count": 0, "sha256": firewall.sha256_bytes(firewall.canonical_json([]))} for name in firewall.ALL_DENY_ARRAYS}
     corpus: dict[str, object] = {
         "schema_version": "phase3_cycle007_private_deny_corpus_v1",
         "pack_manifest_receipt_sha256": firewall.EXPECTED_PACK_MANIFEST_RECEIPT_SHA256,
@@ -190,10 +190,29 @@ def test_candidate_requires_private_clearance_and_every_lineage_namespace_is_den
         changed = deepcopy(candidate)
         changed["lineage"] = {**lineage, lineage_key: value}
         collision = _private_candidate_corpus(changed)
-        collision["deny_arrays"][namespace] = [value]  # type: ignore[index]
-        collision["namespace_commitments"][namespace] = {"count": 1, "sha256": firewall.sha256_bytes(firewall.canonical_json([value]))}  # type: ignore[index]
+        if namespace == "packet":
+            row = {"row": "a" * 64, "source_example": "b" * 64, "document_or_edition": "c" * 64, "packet": value, "exact": "d" * 64, "component": "e" * 64, "normalized_surface": "separate"}
+            collision["rows"] = [row]
+            for name, identity in {"row": row["row"], "source_example": row["source_example"], "document_work_edition": row["document_or_edition"], "packet": row["packet"], "exact": row["exact"], "component": row["component"]}.items():
+                collision["namespace_commitments"][name] = {"count": 1, "sha256": firewall.sha256_bytes(firewall.canonical_json([identity]))}  # type: ignore[index]
+        else:
+            collision["deny_arrays"][namespace] = [value]  # type: ignore[index]
+            collision["namespace_commitments"][namespace] = {"count": 1, "sha256": firewall.sha256_bytes(firewall.canonical_json([value]))}  # type: ignore[index]
         collision["corpus_sha256"] = firewall.sha256_bytes(firewall.canonical_json({key: value for key, value in collision.items() if key != "corpus_sha256"}))
         assert firewall.evaluate_candidate_batch([changed], collision)["code"] == "leakage"
+
+
+def test_row_derived_deny_sets_are_reconstructed_without_private_array_copies() -> None:
+    candidate = {"evaluation_cycle_id": "other"}
+    corpus = _private_candidate_corpus(candidate)
+    row = {"row": "a" * 64, "source_example": "b" * 64, "document_or_edition": "c" * 64, "packet": "d" * 64, "exact": "e" * 64, "component": "f" * 64}
+    corpus["rows"] = [row]
+    for name, value in {"row": row["row"], "source_example": row["source_example"], "document_work_edition": row["document_or_edition"], "packet": row["packet"], "exact": row["exact"], "component": row["component"]}.items():
+        corpus["namespace_commitments"][name] = {"count": 1, "sha256": firewall.sha256_bytes(firewall.canonical_json([value]))}  # type: ignore[index]
+    corpus["corpus_sha256"] = firewall.sha256_bytes(firewall.canonical_json({key: value for key, value in corpus.items() if key != "corpus_sha256"}))
+    denied = firewall._validate_private_deny_corpus(corpus)
+    assert denied["row"] == {"a" * 64} and denied["packet"] == {"d" * 64}
+    assert "row" not in corpus["deny_arrays"]  # type: ignore[operator]
 
 
 def test_concept_authority_gate_requires_pinned_human_registry_and_rejects_renamed_derivative() -> None:

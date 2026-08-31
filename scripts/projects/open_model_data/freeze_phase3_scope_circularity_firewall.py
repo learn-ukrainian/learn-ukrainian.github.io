@@ -64,11 +64,14 @@ CANDIDATE_LINEAGE_KEYS = (
     "synthetic_parent", "derivative_parent", "provenance_receipt", "raw_or_log",
     "provider_result_terminal",
 )
+ROW_DERIVED_DENY_ARRAYS = (
+    "row", "source_example", "document_work_edition", "packet", "exact", "component",
+)
 PRIVATE_DENY_ARRAYS = (
-    "row", "source_example", "document_work_edition", "packet", "sidecar", "annotation",
-    "exact", "component", "labeling_receipt", "prompt_or_request", "raw_or_log",
+    "sidecar", "annotation", "labeling_receipt", "prompt_or_request", "raw_or_log",
     "provider_result_terminal", "derivative", "paraphrase_parent", "synthetic_parent",
 )
+ALL_DENY_ARRAYS = ROW_DERIVED_DENY_ARRAYS + PRIVATE_DENY_ARRAYS
 
 
 class FirewallError(ValueError):
@@ -145,7 +148,11 @@ def validate_contract_integrity(contract: Mapping[str, Any]) -> bool:
 
 def validate_builder_clearance(clearance: Mapping[str, Any], contract: Mapping[str, Any] | None = None) -> bool:
     """Positive-only builder clearance. No membership or derived data is accepted."""
-    if contract is not None and not validate_contract_integrity(contract):
+    try:
+        generated = json.loads(OUTPUT.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return False
+    if not validate_contract_integrity(generated) or (contract is not None and canonical_json(dict(contract)) != canonical_json(generated)):
         return False
     allowed = {"p1_sha256", "p1_amendment_sha256", "p2_sha256", "near_duplicate_policy_sha256", "firewall_sha256"}
     if set(clearance) != allowed or not all(isinstance(value, str) and len(value) == 64 for value in clearance.values()):
@@ -157,6 +164,8 @@ def validate_builder_clearance(clearance: Mapping[str, Any], contract: Mapping[s
 def validate_pack_commitments(manifest: Mapping[str, Any], inventory: Mapping[str, Any]) -> bool:
     """Reject same-count pack, row-order, or object-membership substitutions."""
     try:
+        storage._require_receipt(manifest, "hash_drift")
+        objects = manifest.get("objects")
         return (
             manifest.get("schema_version") == storage.PACK_SCHEMA_VERSION
             and manifest.get("pack_kind") == "content_compact"
@@ -164,11 +173,13 @@ def validate_pack_commitments(manifest: Mapping[str, Any], inventory: Mapping[st
             and manifest.get("object_set_sha256") == EXPECTED_OBJECT_SET_SHA256
             and manifest.get("ordered_row_identity_commitment_sha256") == EXPECTED_ORDERED_ROW_IDENTITY_SHA256
             and (manifest.get("packet_count"), manifest.get("row_count"), manifest.get("object_count")) == (204, 10159, 419)
+            and isinstance(objects, list) and len(objects) == 419
+            and all(isinstance(item, Mapping) and {"object_relative_path", "sha256", "stored_sha256", "storage", "selection_class", "selection_classes", "size_bytes", "role_relative_paths"} <= set(item) for item in objects)
             and (inventory.get("packet_count"), inventory.get("row_count"), inventory.get("object_count"), inventory.get("sidecar_count")) == (204, 10159, 419, 408)
             and inventory.get("object_set_sha256") == EXPECTED_OBJECT_SET_SHA256
             and inventory.get("ordered_row_identity_commitment_sha256") == EXPECTED_ORDERED_ROW_IDENTITY_SHA256
         )
-    except AttributeError:
+    except (AttributeError, FirewallError, storage.StorageCustodyError):
         return False
 
 
@@ -184,7 +195,7 @@ def validate_lineage_batch(records: Sequence[Mapping[str, Any]], *, derive: Call
         seen.add(record["candidate_id"])
     # Derivation is intentionally absent from the implementation contract.
     del derive
-    return {"ok": True, "code": None, "emitted": 0, "promoted": 0, "activated": 0}
+    return _zero("uncertain_lineage")
 
 
 def _safe_private_path(path: Path, root: Path) -> tuple[int, os.stat_result]:
@@ -615,8 +626,9 @@ def _build_private_deny_corpus(pack_dir: Path, manifest: Mapping[str, Any]) -> d
         "paraphrase_parent": [], "synthetic_parent": [],
     } | labeling_namespaces
     commitments = {name: {"count": len(values), "sha256": sha256_bytes(canonical_json(values))} for name, values in namespaces.items()}
-    _require(set(PRIVATE_DENY_ARRAYS) <= set(namespaces), "graph_incompleteness")
-    corpus = {"schema_version": "phase3_cycle007_private_deny_corpus_v1", "pack_manifest_receipt_sha256": manifest["receipt_sha256"], "object_set_sha256": EXPECTED_OBJECT_SET_SHA256, "ordered_row_identity_commitment_sha256": EXPECTED_ORDERED_ROW_IDENTITY_SHA256, "near_duplicate_policy_sha256": near.pinned_policy_fingerprint(), "namespace_commitments": commitments, "deny_arrays": namespaces, "candidate_clearance_allowlist": [], "candidate_clearance_commitment_sha256": sha256_bytes(canonical_json([])), "labeling_expansion_census": labeling_census, "rows": [{key: value for key, value in row.items() if key != "surface"} | {"component": component_by_row[row["row"]]} for row in rows], "zero_namespace_proofs": {name: 0 for name in ("paraphrases", "synthetic_siblings")}}
+    _require(set(ALL_DENY_ARRAYS) <= set(namespaces), "graph_incompleteness")
+    private_arrays = {name: namespaces[name] for name in PRIVATE_DENY_ARRAYS}
+    corpus = {"schema_version": "phase3_cycle007_private_deny_corpus_v1", "pack_manifest_receipt_sha256": manifest["receipt_sha256"], "object_set_sha256": EXPECTED_OBJECT_SET_SHA256, "ordered_row_identity_commitment_sha256": EXPECTED_ORDERED_ROW_IDENTITY_SHA256, "near_duplicate_policy_sha256": near.pinned_policy_fingerprint(), "namespace_commitments": commitments, "deny_arrays": private_arrays, "candidate_clearance_allowlist": [], "candidate_clearance_commitment_sha256": sha256_bytes(canonical_json([])), "labeling_expansion_census": labeling_census, "rows": [{key: value for key, value in row.items() if key != "surface"} | {"component": component_by_row[row["row"]]} for row in rows], "zero_namespace_proofs": {name: 0 for name in ("paraphrases", "synthetic_siblings")}}
     corpus["corpus_sha256"] = sha256_bytes(canonical_json(corpus))
     return corpus
 
@@ -670,12 +682,23 @@ def _validate_private_deny_corpus(corpus: Mapping[str, Any]) -> dict[str, set[st
     commitments = corpus.get("namespace_commitments")
     allowlist = corpus.get("candidate_clearance_allowlist")
     _require(isinstance(arrays, Mapping) and isinstance(commitments, Mapping) and isinstance(allowlist, list), "graph_incompleteness")
-    _require(set(PRIVATE_DENY_ARRAYS) <= set(arrays) and all(isinstance(arrays[name], list) and all(_metadata_digest(value) for value in arrays[name]) for name in PRIVATE_DENY_ARRAYS), "graph_incompleteness")
+    _require(set(arrays) == set(PRIVATE_DENY_ARRAYS) and all(isinstance(arrays[name], list) and all(_metadata_digest(value) for value in arrays[name]) for name in PRIVATE_DENY_ARRAYS), "graph_incompleteness")
     _require(corpus.get("candidate_clearance_commitment_sha256") == sha256_bytes(canonical_json(sorted(allowlist))) and all(_metadata_digest(value) for value in allowlist), "hash_drift")
-    for name, values in arrays.items():
+    rows = corpus.get("rows")
+    _require(isinstance(rows, list) and all(isinstance(row, Mapping) and all(_metadata_digest(row.get(field)) for field in ("row", "source_example", "document_or_edition", "packet", "exact", "component")) for row in rows), "graph_incompleteness")
+    derived = {
+        "row": sorted(row["row"] for row in rows),
+        "source_example": sorted(row["source_example"] for row in rows),
+        "document_work_edition": sorted(row["document_or_edition"] for row in rows),
+        "packet": sorted(row["packet"] for row in rows),
+        "exact": sorted(row["exact"] for row in rows),
+        "component": sorted(row["component"] for row in rows),
+    }
+    all_arrays = derived | dict(arrays)
+    for name, values in all_arrays.items():
         item = commitments.get(name)
         _require(isinstance(item, Mapping) and item == {"count": len(values), "sha256": sha256_bytes(canonical_json(values))}, "hash_drift")
-    return {name: set(values) for name, values in arrays.items()}
+    return {name: set(values) for name, values in all_arrays.items()}
 
 
 def evaluate_candidate_batch(candidates: Sequence[Mapping[str, Any]], corpus: Mapping[str, Any]) -> dict[str, Any]:
