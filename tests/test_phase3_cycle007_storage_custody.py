@@ -2930,6 +2930,116 @@ def test_deletion_recovers_same_device_legacy_moved_state_without_rewriting_plan
     assert state["sentinel"].is_file()
 
 
+def test_legacy_moved_unlink_crash_resume_fsyncs_both_dirs_before_event(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    state = _prepare_deletion_fixture(tmp_path, monkeypatch)
+    target_paths = _fixture_source_paths(state)
+
+    def crash_after_intent(event: Mapping[str, Any]) -> None:
+        if event["event"] == "after_intent":
+            raise _SyntheticDeletionCrash("after_intent")
+
+    with pytest.raises(_SyntheticDeletionCrash):
+        _execute_fixture_deletion(state, fault_hook=crash_after_intent)
+
+    journal_root = _fixture_deletion_journal_root(state)
+    plan_path = journal_root / "plan.json"
+    plan = json.loads(plan_path.read_bytes())
+    events = deletion._load_events(journal_root, plan)
+    first = plan["entries"][0]
+    source = deletion._role_path(
+        state["bindings"], str(first["role_relative_path"])
+    )
+    source_parent = source.parent
+    legacy_directory = (
+        deletion._role_root(state["bindings"], str(first["quarantine_role"]))
+        / plan["quarantine_directory_name"]
+    )
+    legacy_slot = legacy_directory / str(first["quarantine_name"])
+    source_parent_identity = (
+        int(source_parent.stat().st_dev),
+        int(source_parent.stat().st_ino),
+    )
+    legacy_directory_identity = (
+        int(legacy_directory.stat().st_dev),
+        int(legacy_directory.stat().st_ino),
+    )
+
+    # Persist a genuine old-format MOVED state: the exact object is in the
+    # role-root slot, not the new source-parent slot, before the unlink starts.
+    os.rename(source, legacy_slot)
+    deletion._append_event(
+        journal_root,
+        plan,
+        events,
+        "MOVED",
+        entry_id=str(first["entry_id"]),
+    )
+    assert not source.exists()
+    assert legacy_slot.is_file()
+
+    def crash_after_legacy_unlink(event: Mapping[str, Any]) -> None:
+        if event["event"] == "after_unlink":
+            raise _SyntheticDeletionCrash("after_legacy_unlink")
+
+    with pytest.raises(_SyntheticDeletionCrash):
+        _execute_fixture_deletion(state, fault_hook=crash_after_legacy_unlink)
+
+    assert not source.exists()
+    assert not legacy_slot.exists()
+    events_after_crash = [
+        json.loads(path.read_bytes())
+        for path in sorted((journal_root / "events").glob("*.json"))
+    ]
+    assert [event["event_type"] for event in events_after_crash] == [
+        "START",
+        "INTENT",
+        "MOVED",
+    ]
+
+    real_fstat = os.fstat
+    real_fsync = os.fsync
+    fsync_identities: list[tuple[int, int]] = []
+    recovered_event_fsyncs: list[tuple[tuple[int, int], ...]] = []
+
+    def traced_fsync(descriptor: int) -> None:
+        info = real_fstat(descriptor)
+        fsync_identities.append((int(info.st_dev), int(info.st_ino)))
+        real_fsync(descriptor)
+
+    real_append_event = deletion._append_event
+
+    def traced_append_event(
+        root: Path,
+        persisted_plan: Mapping[str, Any],
+        persisted_events: list[dict[str, Any]],
+        event_type: str,
+        **kwargs: Any,
+    ) -> dict[str, Any]:
+        if event_type == "RECOVERED_UNLINKED":
+            recovered_event_fsyncs.append(tuple(fsync_identities))
+        return real_append_event(
+            root,
+            persisted_plan,
+            persisted_events,
+            event_type,
+            **kwargs,
+        )
+
+    monkeypatch.setattr(os, "fsync", traced_fsync)
+    monkeypatch.setattr(deletion, "_append_event", traced_append_event)
+    resumed = _execute_fixture_deletion(state)
+
+    assert resumed["unlinked_receipt"]["all_authorized_entries_absent"] is True
+    assert recovered_event_fsyncs
+    fsyncs_before_recovered_event = recovered_event_fsyncs[0]
+    assert source_parent_identity in fsyncs_before_recovered_event
+    assert legacy_directory_identity in fsyncs_before_recovered_event
+    assert all(not path.exists() for path in target_paths)
+    assert state["sentinel"].is_file()
+
+
 @pytest.mark.parametrize(
     "recovery_drift",
     ["both_exact_slots", "wrong_source_slot", "wrong_legacy_slot", "source_topology"],
