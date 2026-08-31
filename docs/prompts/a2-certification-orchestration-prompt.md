@@ -286,7 +286,8 @@ Run explicit A2 calque/russianism checks. At minimum, reject:
 
    All edits, commits, and PR pushes happen in this worktree only.
 
-2. (Worktree already created in step 1.)
+2. Confirm isolation: `pwd` is under `.worktrees/dispatch/...` and the primary
+   checkout was not switched or pulled.
 
 3. Read the target source set and find actual defects.
 
