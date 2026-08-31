@@ -294,6 +294,11 @@ def _is_sha256(value: Any) -> bool:
     return isinstance(value, str) and len(value) == 64 and all(character in "0123456789abcdef" for character in value)
 
 
+def _is_rule_slot_id(value: Any) -> bool:
+    prefix = "p2_rule_slot:"
+    return isinstance(value, str) and value.startswith(prefix) and _is_sha256(value.removeprefix(prefix))
+
+
 def _proposal_sha256(proposal: dict[str, Any]) -> str:
     return sha256_bytes(canonical_json({key: value for key, value in proposal.items() if key != "proposal_sha256"}))
 
@@ -454,7 +459,8 @@ def validate_case_record(record: dict[str, Any], contract: dict[str, Any] | None
             and set(record)
             == base
             | {"dialect_or_regional_identity", "region_id", "register_id", "source_qualified_identity", "modern_normalization"}
-            and all(_metadata_identifier(record[key]) for key in ("dialect_or_regional_identity", "region_id", "register_id"))
+            and record["dialect_or_regional_identity"] == "source_attested_ukrainian_dialect_or_regional_form"
+            and all(_metadata_identifier(record[key]) for key in ("region_id", "register_id"))
             and record["source_qualified_identity"] is True
             and record["modern_normalization"] is False
         )
@@ -487,7 +493,12 @@ def validate_rule_slot_identity(slot: dict[str, Any], contract: dict[str, Any] |
     identity = slot.get("atomic_identity")
     if not isinstance(identity, dict) or set(identity) != set(RULE_SLOT_IDENTITY_FIELDS):
         return False
-    if not _metadata_identifier(identity["coverage_stratum_id"]) or not _metadata_identifier(identity["claim_type"]):
+    composite_cell_ids = {
+        cell["cell_id"]
+        for cell in _composite_cells(read_p1(), read_dialect_regional_amendment())
+        if isinstance(cell, dict)
+    }
+    if identity["coverage_stratum_id"] not in composite_cell_ids or not _metadata_identifier(identity["claim_type"]):
         return False
     if not _metadata_identifier(identity["source_class"]) or not _metadata_identifier(identity["identity_candidate"]):
         return False
@@ -500,7 +511,7 @@ def validate_rule_slot_identity(slot: dict[str, Any], contract: dict[str, Any] |
         return False
     parents = slot["parent_slot_ids"]
     if not isinstance(parents, list) or len(parents) != len(set(parents)) or not all(
-        isinstance(parent, str) and parent.startswith("p2_rule_slot:") and len(parent) == 77 for parent in parents
+        _is_rule_slot_id(parent) for parent in parents
     ):
         return False
     if (slot["lineage_kind"] == "root") != (parents == []):
@@ -527,25 +538,32 @@ def validate_rule_manifest_evolution(
     value = contract if contract is not None else build_contract()
     if not validate_contract_integrity(value) or not isinstance(previous_manifest, dict) or not isinstance(next_manifest, dict):
         return False
-    if set(previous_manifest) != {"manifest_version", "slots", "rule_manifest_sha256"}:
+    previous_version = _manifest_version_number(previous_manifest.get("manifest_version"))
+    if previous_version is None:
         return False
-    if set(next_manifest) != {"manifest_version", "parent_rule_manifest_sha256", "slots", "rule_manifest_sha256"}:
+    previous_keys = {"manifest_version", "composite_input_sha256", "slots", "rule_manifest_sha256"}
+    if previous_version > 1:
+        previous_keys.add("parent_rule_manifest_sha256")
+    if set(previous_manifest) != previous_keys:
+        return False
+    if previous_version > 1 and not _is_sha256(previous_manifest.get("parent_rule_manifest_sha256")):
+        return False
+    if set(next_manifest) != {"manifest_version", "composite_input_sha256", "parent_rule_manifest_sha256", "slots", "rule_manifest_sha256"}:
         return False
     previous_slots = previous_manifest.get("slots")
     next_slots = next_manifest.get("slots")
     if not isinstance(previous_slots, list) or not isinstance(next_slots, list):
         return False
-    if previous_manifest != {
-        "manifest_version": value["rule_slot_universe"]["rule_manifest_version"],
-        "slots": value["rule_slot_universe"]["slots"],
-        "rule_manifest_sha256": value["rule_slot_universe"]["rule_manifest_sha256"],
-    }:
+    composite_input_sha256 = value["p1_binding"]["composite_input_sha256"]
+    if (
+        previous_manifest.get("composite_input_sha256") != composite_input_sha256
+        or next_manifest.get("composite_input_sha256") != composite_input_sha256
+    ):
         return False
-    if previous_manifest["rule_manifest_sha256"] != sha256_bytes(canonical_json(previous_slots)):
+    if not _is_sha256(previous_manifest["rule_manifest_sha256"]) or previous_manifest["rule_manifest_sha256"] != sha256_bytes(canonical_json(previous_slots)):
         return False
-    if next_manifest["parent_rule_manifest_sha256"] != previous_manifest["rule_manifest_sha256"]:
+    if not _is_sha256(next_manifest.get("parent_rule_manifest_sha256")) or next_manifest["parent_rule_manifest_sha256"] != previous_manifest["rule_manifest_sha256"]:
         return False
-    previous_version = _manifest_version_number(previous_manifest["manifest_version"])
     next_version = _manifest_version_number(next_manifest["manifest_version"])
     if previous_version is None or next_version != previous_version + 1:
         return False
@@ -556,10 +574,27 @@ def validate_rule_manifest_evolution(
         return False
     if any(not validate_rule_slot_identity(slot, value) for slot in next_slots):
         return False
-    previous_ids = {slot["rule_slot_id"] for slot in previous_slots}
+    if any(not validate_rule_slot_identity(slot, value) for slot in previous_slots):
+        return False
+    if [slot["rule_slot_id"] for slot in previous_slots] != sorted(slot["rule_slot_id"] for slot in previous_slots):
+        return False
+    if [slot["rule_slot_id"] for slot in next_slots] != sorted(slot["rule_slot_id"] for slot in next_slots):
+        return False
+    previous_by_id = {slot["rule_slot_id"]: slot for slot in previous_slots}
+    next_by_id = {slot["rule_slot_id"]: slot for slot in next_slots}
+    if not set(previous_by_id) <= set(next_by_id):
+        return False
+    if any(next_by_id[slot_id] != slot for slot_id, slot in previous_by_id.items()):
+        return False
     for slot in next_slots:
         parent_ids = set(slot["parent_slot_ids"])
-        if parent_ids and not parent_ids <= previous_ids:
+        if parent_ids and not parent_ids <= set(previous_by_id):
+            return False
+        if parent_ids and any(
+            previous_by_id[parent_id]["atomic_identity"]["coverage_stratum_id"]
+            != slot["atomic_identity"]["coverage_stratum_id"]
+            for parent_id in parent_ids
+        ):
             return False
     return True
 

@@ -131,6 +131,13 @@ claim-typed evidence, unresolved identity, historical normalization, and
 unregistered authority all fail closed. P2 is metadata-only: no source/evidence
 bodies, provider calls, labels, gold, or training are created.
 
+Future rule-manifest wrappers bind the composite denominator hash, canonical
+sorted slot order, their own recomputed manifest hash, and the exact parent
+manifest hash. They preserve every prior slot append-only; any split or merge
+child must retain its parents' coverage stratum. Thus multi-version rule
+evolution cannot move a rule across coverage strata or hide a denominator
+change, while the frozen empty `R` remains nonadmitting.
+
 ## Product boundary
 
 The target is modern Standard Ukrainian. The modern Cyrillic-written contact
