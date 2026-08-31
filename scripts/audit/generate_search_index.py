@@ -314,13 +314,15 @@ def _sanitize_typeahead_gloss(value: object) -> str | None:
     if next_sense is not None:
         text = text[: next_sense.start()].rstrip()
 
+    # Prefer the earliest marker in the string — not the first marker type in
+    # the tuple. Mixed glosses (e.g. ба) put Unicode ``…`` before a later ASCII
+    # ``...``; scanning ``("...", "…")`` and breaking on the first hit otherwise
+    # keeps the literary dialogue between them.
     had_ellipsis = False
-    for marker in ("...", "…"):
-        idx = text.find(marker)
-        if idx != -1:
-            text = text[:idx].rstrip(" ;,")
-            had_ellipsis = True
-            break
+    ellipsis_hits = [idx for marker in ("...", "…") if (idx := text.find(marker)) != -1]
+    if ellipsis_hits:
+        text = text[: min(ellipsis_hits)].rstrip(" ;,")
+        had_ellipsis = True
 
     if not text:
         return None

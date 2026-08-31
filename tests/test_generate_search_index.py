@@ -173,6 +173,13 @@ _VOYEVODA_MASHED_GLOSS = (
     "Велике свято! Тиск народу, Зо всього царств..."
 )
 
+# Cloned from lemma ба: Unicode ellipsis precedes a later ASCII ``...``.
+_BA_MIXED_ELLIPSIS_GLOSS = (
+    "Уживається для вираження здивування, здогаду і т. ін.; значенням близький "
+    "до дивись. — Ти, як те сонечко, закрасиш мою смутну хату, розвеселиш "
+    "матір… — Ба! У тебе й мати є? А я ..."
+)
+
 
 def test_sanitize_typeahead_gloss_keeps_sense_one_only_for_voyevoda_mash() -> None:
     gloss = _sanitize_typeahead_gloss(_VOYEVODA_MASHED_GLOSS)
@@ -183,6 +190,19 @@ def test_sanitize_typeahead_gloss_keeps_sense_one_only_for_voyevoda_mash() -> No
     assert "царств" not in gloss
     assert not gloss.endswith("...")
     assert not gloss.endswith("…")
+    assert len(gloss) <= 180
+
+
+def test_sanitize_typeahead_gloss_cuts_at_earliest_ellipsis_for_ba_mixed_markers() -> None:
+    """Unicode ``…`` before ASCII ``...`` must win by index, not tuple order."""
+    assert _BA_MIXED_ELLIPSIS_GLOSS.find("…") < _BA_MIXED_ELLIPSIS_GLOSS.find("...")
+    gloss = _sanitize_typeahead_gloss(_BA_MIXED_ELLIPSIS_GLOSS)
+    assert gloss is not None
+    assert "…" not in gloss
+    assert "..." not in gloss
+    assert "— Ба!" not in gloss
+    assert "мати є" not in gloss
+    assert "дивись" in gloss
     assert len(gloss) <= 180
 
 
