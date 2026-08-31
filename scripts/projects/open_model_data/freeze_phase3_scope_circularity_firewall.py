@@ -148,7 +148,8 @@ def validate_pack_commitments(manifest: Mapping[str, Any], inventory: Mapping[st
     """Reject same-count pack, row-order, or object-membership substitutions."""
     try:
         return (
-            manifest.get("schema_version") == storage.LINEAGE_PACK_SCHEMA_VERSION
+            manifest.get("schema_version") == storage.PACK_SCHEMA_VERSION
+            and manifest.get("pack_kind") == "content_compact"
             and manifest.get("receipt_sha256") == EXPECTED_PACK_MANIFEST_RECEIPT_SHA256
             and manifest.get("object_set_sha256") == EXPECTED_OBJECT_SET_SHA256
             and manifest.get("ordered_row_identity_commitment_sha256") == EXPECTED_ORDERED_ROW_IDENTITY_SHA256
@@ -242,7 +243,7 @@ def _read_steward_config(config_path: Path) -> tuple[dict[str, Any], Path]:
     after = os.lstat(config_path)
     _require((before.st_dev, before.st_ino) == (after.st_dev, after.st_ino), "private_path_unsafe")
     value = json.loads(payload.decode("utf-8"))
-    keys = {"schema_version", "private_root", "pack_manifest", "materialization_package", "evidence_package", "steward_role", "config_sha256"}
+    keys = {"schema_version", "private_root", "content_pack_directory", "steward_output_root", "steward_role", "config_sha256"}
     _require(isinstance(value, dict) and set(value) == keys, "private_path_unsafe")
     _require(value.get("schema_version") == "phase3_evaluation_steward_config_v1", "private_path_unsafe")
     _require(value.get("steward_role") == "evaluation_steward", "custody_role_collision")
@@ -250,20 +251,24 @@ def _read_steward_config(config_path: Path) -> tuple[dict[str, Any], Path]:
     private_root = Path(value["private_root"])
     _require(private_root.is_absolute() and private_root == root, "private_path_unsafe")
     _safe_private_directory(private_root, private_root)
-    for key in ("pack_manifest", "materialization_package", "evidence_package"):
+    for key in ("content_pack_directory", "steward_output_root"):
         _require(isinstance(value[key], str) and Path(value[key]).is_absolute(), "private_path_unsafe")
         _require(Path(value[key]).is_relative_to(private_root), "private_path_unsafe")
     return value, private_root
 
 
-def _private_component_commitment(package: Path, evidence: Path) -> str:
+def _private_component_commitment(pack_dir: Path, manifest: Mapping[str, Any]) -> str:
     """Derive the source/example/document/exact/near graph inside the steward lane."""
     policy = near.policy_for_governed_use("train_development_to_heldout_firewall")
     rows: list[dict[str, str]] = []
-    for _, packet, selection in storage.iter_selected_files(package, role="materialization"):
-        if selection != "materialization_packet":
+    for item in manifest["objects"]:
+        if "materialization_packet" not in item.get("selection_classes", [item.get("selection_class")]):
             continue
-        payload = storage._read_json(packet, "inventory_shape_failure")
+        object_path = pack_dir / item["object_relative_path"]
+        _require(storage.digest_file(object_path) == item["stored_sha256"], "identity_roundtrip_failure")
+        raw = b"".join(storage._iter_stored_raw_chunks(object_path, str(item["storage"]), None))
+        _require(storage.digest(raw) == item["sha256"] and len(raw) == item["size_bytes"], "identity_roundtrip_failure")
+        payload = json.loads(raw.decode("utf-8"))
         entries = payload.get("rows") if isinstance(payload, Mapping) else None
         _require(isinstance(entries, list), "graph_incompleteness")
         for entry in entries:
@@ -310,12 +315,9 @@ def _private_component_commitment(package: Path, evidence: Path) -> str:
         fingerprints.append(fingerprint)
         for token in set(fingerprint.tokens):
             token_index.setdefault(token, []).append(index)
-    sidecars = 0
-    for _, sidecar, selection in storage.iter_selected_files(evidence, role="evidence"):
-        if selection == "evidence_sidecar":
-            storage._sidecar_identity(sidecar)
-            sidecars += 1
-    _require(sidecars == 408, "graph_incompleteness")
+    physical_sidecars = sum("evidence_sidecar" in item.get("selection_classes", []) for item in manifest["objects"])
+    logical_sidecars = sum(item.get("selection_classes", []).count("evidence_sidecar") * len(item.get("role_relative_paths", [])) for item in manifest["objects"])
+    _require(physical_sidecars == 204 and logical_sidecars == 408, "graph_incompleteness")
     components: dict[int, list[str]] = {}
     for index, row in enumerate(rows):
         components.setdefault(find(index), []).append(row["unit_sha256"])
@@ -323,22 +325,41 @@ def _private_component_commitment(package: Path, evidence: Path) -> str:
     return sha256_bytes(canonical_json(sorted(sorted(values) for values in components.values())))
 
 
-def _stream_packet_identities(package: Path) -> set[tuple[str, str]]:
-    """Use the custody lane's metadata-only packet reader; retain no row body."""
-    identities: set[tuple[str, str]] = set()
-    ordered: list[tuple[str, str]] = []
-    for _, packet, selection in storage.iter_selected_files(package, role="materialization"):
-        if selection != "materialization_packet":
-            continue
-        _, packet_identities = storage._identity_fields_from_packet(packet)
-        for identity in packet_identities:
-            _require(identity not in identities, "graph_incompleteness")
-            identities.add(identity)
-            ordered.append(identity)
-    _require(len(identities) == 10159, "graph_incompleteness")
-    ordered_digest = storage.digest("\n".join(f"{unit}\t{digest}" for unit, digest in ordered).encode("utf-8"))
-    _require(ordered_digest == EXPECTED_ORDERED_ROW_IDENTITY_SHA256, "denominator_drift")
-    return identities
+def _content_pack_inventory(manifest: Mapping[str, Any]) -> dict[str, Any]:
+    """Reconstruct only the custody inventory view committed by the content pack."""
+    objects = manifest.get("objects")
+    _require(isinstance(objects, list) and len(objects) == 419, "denominator_drift")
+    selected = sum(len(item.get("role_relative_paths", [])) for item in objects if isinstance(item, Mapping))
+    inventory = {
+        "packet_count": manifest.get("packet_count"), "row_count": manifest.get("row_count"),
+        "object_count": len(objects), "sidecar_count": 408, "selected_path_count": selected,
+        "object_set_sha256": manifest.get("object_set_sha256"),
+        "ordered_row_identity_commitment_sha256": manifest.get("ordered_row_identity_commitment_sha256"),
+        "receipt_sha256": manifest.get("inventory_receipt_sha256"), "objects": objects,
+    }
+    _require(selected == 624 and isinstance(inventory["receipt_sha256"], str), "denominator_drift")
+    return inventory
+
+
+def _write_private_json(path: Path, value: Mapping[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    os.chmod(path.parent, PRIVATE_DIR_MODE)
+    payload = canonical_json(dict(value))
+    fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
+    try:
+        with os.fdopen(fd, "wb") as handle:
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.chmod(temporary, PRIVATE_MODE)
+        os.replace(temporary, path)
+        os.chmod(path, PRIVATE_MODE)
+        current = os.lstat(path)
+        _require(current.st_nlink == 1 and stat.S_IMODE(current.st_mode) == PRIVATE_MODE, "private_path_unsafe")
+    except BaseException:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
+        raise
 
 
 def run_steward_production(config: str | None = None) -> dict[str, Any]:
@@ -353,31 +374,29 @@ def run_steward_production(config: str | None = None) -> dict[str, Any]:
         return _zero("private_binding_unbound")
     try:
         payload, root = _read_steward_config(Path(configured))
-        manifest_path = Path(payload["pack_manifest"])
-        # Pack/metadata must be exclusive regular files. Their directory roots
-        # and both source packages are owned, non-symlinked private trees.
+        pack_dir = Path(payload["content_pack_directory"])
+        output_root = Path(payload["steward_output_root"])
+        _require(pack_dir != output_root and not output_root.is_relative_to(pack_dir) and not pack_dir.is_relative_to(output_root), "private_path_unsafe")
+        _validate_private_tree(pack_dir, root)
+        _safe_private_directory(output_root, root)
+        manifest_path = pack_dir / "pack-manifest.json"
         manifest_fd, manifest_before = _safe_private_path(manifest_path, root)
         os.close(manifest_fd)
-        materialization_package = Path(payload["materialization_package"])
-        evidence_package = Path(payload["evidence_package"])
-        _validate_private_tree(materialization_package, root)
-        _validate_private_tree(evidence_package, root)
         manifest = storage._read_json(manifest_path, "pack_shape_failure")
         _require(isinstance(manifest, Mapping), "hash_drift")
         storage._require_receipt(manifest, "hash_drift")
-        bindings = storage.Bindings(materialization_package, evidence_package, root, False)
-        inventory = storage.build_inventory(bindings)
+        _require(manifest.get("schema_version") == storage.PACK_SCHEMA_VERSION and manifest.get("pack_kind") == "content_compact", "hash_drift")
+        inventory = _content_pack_inventory(manifest)
         _require(validate_pack_commitments(manifest, inventory), "denominator_drift")
-        storage.prove_lineage_against_sources(inventory, bindings, manifest)
-        _stream_packet_identities(materialization_package)
-        metadata_commitment = _private_component_commitment(materialization_package, evidence_package)
-        _require(manifest.get("pack_kind") == "non_content_lineage_hashes" and manifest.get("content_bodies_stored") is False, "graph_incompleteness")
-        _require(not {"labeling_expansion", "compile_expansion"} & set(inventory.get("selection_counts", {})), "graph_incompleteness")
+        storage.prove_content_pack_stream(inventory, pack_dir)
+        metadata_commitment = _private_component_commitment(pack_dir, manifest)
+        _require(manifest.get("content_bodies_stored") is True, "graph_incompleteness")
+        classes = {item.get("selection_class") for item in manifest["objects"]}
+        _require(not {"labeling_expansion", "compile_expansion"} & classes, "graph_incompleteness")
         manifest_after = os.lstat(manifest_path)
         _require((manifest_before.st_dev, manifest_before.st_ino) == (manifest_after.st_dev, manifest_after.st_ino), "private_path_unsafe")
-        inventory_after = storage.build_inventory(bindings)
-        _require(inventory_after.get("object_set_sha256") == inventory.get("object_set_sha256"), "private_path_unsafe")
-        _require(inventory_after.get("ordered_row_identity_commitment_sha256") == inventory.get("ordered_row_identity_commitment_sha256"), "private_path_unsafe")
+        storage.prove_content_pack_stream(inventory, pack_dir)
+        _write_private_json(output_root / "cycle007-deny-component-manifest-v1.json", {"schema_version": "phase3_cycle007_deny_component_manifest_v1", "pack_manifest_receipt_sha256": manifest["receipt_sha256"], "component_graph_sha256": metadata_commitment, "private_only": True})
         public_receipt = {"schema_version": "phase3_scope_circularity_public_binding_receipt_v1", "text_free": True, "pack_manifest_receipt_sha256": manifest["receipt_sha256"], "object_set_sha256": EXPECTED_OBJECT_SET_SHA256, "ordered_row_identity_commitment_sha256": EXPECTED_ORDERED_ROW_IDENTITY_SHA256, "packet_count": 204, "row_count": 10159, "physical_sidecar_count": 204, "logical_sidecar_count": 408, "object_count": 419, "private_graph_commitment_sha256": metadata_commitment, "builder_clearance": {"p1_sha256": PINS[P1], "p1_amendment_sha256": PINS[P1_AMENDMENT], "p2_sha256": PINS[P2], "near_duplicate_policy_sha256": PINS[NEAR_POLICY], "firewall_sha256": sha256_file(OUTPUT)}}
         public_receipt["receipt_sha256"] = sha256_bytes(canonical_json(public_receipt))
         return {"ok": True, "code": None, "emitted": 0, "promoted": 0, "activated": 0, "public_receipt": public_receipt}

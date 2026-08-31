@@ -293,11 +293,14 @@ The public receipt binds Cycle007's object-set and ordered-row commitments,
 sidecars, and 419 objects, while stating `private_binding_unbound`. It
 therefore claims no fresh private materialization. A steward-only production
 runtime self-hash verifies its private `0600` configuration and the exact
-content-pack manifest, reuses the custody lane's streaming inventory and
-round-trip proof without expansion, and reads only unit identity fields plus a
-manifest-bound lineage-metadata sidecar. It cannot accept caller-authored
-membership or component hashes. Missing explicit document/work/edition
-identity fails `document_lineage_denominator_not_frozen`; missing proof that
+retained lossless `content_compact` pack manifest, builds its synthetic
+inventory from that manifest, and uses the custody lane's streaming
+decompress-and-hash proof without expansion. It extracts only required packet
+metadata in memory, derives canonical document-or-edition identity with the
+source-identity helper, and writes its deny/component graph only to a distinct
+private `0700` steward output root. It cannot accept caller-authored membership
+or component hashes. Missing explicit document/work/edition identity fails
+`document_lineage_denominator_not_frozen`; missing proof that
 prompt/label/paraphrase/synthetic/annotation namespaces are zero fails closed.
 It rejects symlinks, unsafe hardlinks, traversal, role collision, unsafe
 owner/mode, path overlap, inode/device changes, ancestor replacement, and
