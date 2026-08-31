@@ -991,84 +991,93 @@ def _require_entry_aliases_absent(bindings: storage.Bindings, entry: Mapping[str
             os.close(parent)
 
 
-def _open_quarantine(bindings: storage.Bindings, plan: Mapping[str, Any], entry: Mapping[str, Any]) -> tuple[int, str]:
-    """Open the deterministic same-filesystem quarantine slot for an entry.
-
-    Older persisted plans pin one role-root quarantine directory.  That works
-    when the entry and role root are on one filesystem.  A selected entry can
-    however live below a nested mount, in which case moving it to that root
-    fails with ``EXDEV``.  The plan already pins a unique, non-replacing
-    quarantine name, so for that case its exact source parent is the safe
-    quarantine directory: ``renameat2`` remains atomic and crash recovery can
-    derive the same location solely from the immutable entry device identity.
-    No source directory is ever enumerated or removed.
-    """
+def _open_legacy_quarantine(
+    bindings: storage.Bindings, plan: Mapping[str, Any], entry: Mapping[str, Any]
+) -> tuple[int, str]:
+    """Open the role-root slot used by already-journaled legacy moves."""
     role = str(entry.get("quarantine_role"))
     directory_name = str(plan.get("quarantine_directory_name"))
     _require(directory_name.startswith(".cycle007-delete-quarantine-"), "plan_drift")
     root = _role_root(bindings, role)
     flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | getattr(os, "O_NOFOLLOW", 0)
     root_descriptor = -1
-    quarantine_descriptor = -1
     try:
         root_descriptor = os.open(root, flags)
-        quarantine_descriptor = os.open(directory_name, flags, dir_fd=root_descriptor)
-        quarantine_info = os.fstat(quarantine_descriptor)
-        if int(quarantine_info.st_dev) == int(entry["dev"]):
-            result = quarantine_descriptor
-            quarantine_descriptor = -1
-            return result, str(entry["quarantine_name"])
-        os.close(quarantine_descriptor)
-        quarantine_descriptor = -1
-        source_parent, _leaf = _open_parent(bindings, str(entry["role_relative_path"]))
-        try:
-            source_info = os.fstat(source_parent)
-            _require(int(source_info.st_dev) == int(entry["dev"]), "source_state_drift")
-            return source_parent, str(entry["quarantine_name"])
-        except Exception:
-            os.close(source_parent)
-            raise
+        descriptor = os.open(directory_name, flags, dir_fd=root_descriptor)
     except OSError as exc:
         raise DeletionExecutionError("source_state_drift") from exc
     finally:
         if root_descriptor >= 0:
             os.close(root_descriptor)
-        # Returned descriptors are intentionally left open for the caller.
-        if quarantine_descriptor >= 0:
-            os.close(quarantine_descriptor)
+    return descriptor, str(entry["quarantine_name"])
 
 
-def _uses_role_root_quarantine(
-    bindings: storage.Bindings,
-    plan: Mapping[str, Any],
-    entry: Mapping[str, Any],
-) -> bool:
-    """Whether this entry's deterministic quarantine slot is role-root based."""
-    role = str(entry.get("quarantine_role"))
-    directory_name = str(plan.get("quarantine_directory_name"))
-    _require(directory_name.startswith(".cycle007-delete-quarantine-"), "plan_drift")
-    quarantine = _role_root(bindings, role) / directory_name
+def _slot_present_exact(descriptor: int, name: str, entry: Mapping[str, Any]) -> bool:
+    """Read one exact quarantine name without enumerating its directory."""
     try:
-        info = quarantine.lstat()
-    except OSError as exc:
-        raise DeletionExecutionError("journal_drift") from exc
-    _require(stat.S_ISDIR(info.st_mode) and not quarantine.is_symlink(), "journal_drift")
-    return int(info.st_dev) == int(entry["dev"])
+        info = os.stat(name, dir_fd=descriptor, follow_symlinks=False)
+    except FileNotFoundError:
+        return False
+    _require(stat.S_ISREG(info.st_mode) and not stat.S_ISLNK(info.st_mode), "source_state_drift")
+    _require(
+        (int(info.st_dev), int(info.st_ino)) == (int(entry["dev"]), int(entry["ino"])),
+        "source_state_drift",
+    )
+    return True
+
+
+def _open_quarantine(bindings: storage.Bindings, plan: Mapping[str, Any], entry: Mapping[str, Any]) -> tuple[int, str]:
+    """Resolve the exact quarantine slot across new and legacy journal states.
+
+    New moves always rename into the source parent under the plan-pinned unique
+    name, avoiding EXDEV even through bind mounts where matching ``st_dev`` is
+    not a rename-viability proof.  Recovery probes that slot and the legacy
+    role-root slot by exact name only.  A collision, duplicate exact inode, or
+    mixed state fails closed; source parents are never enumerated or removed.
+    """
+    source_parent, _leaf = _open_parent(bindings, str(entry["role_relative_path"]))
+    legacy = -1
+    try:
+        legacy, name = _open_legacy_quarantine(bindings, plan, entry)
+        source_present = _slot_present_exact(source_parent, name, entry)
+        legacy_present = _slot_present_exact(legacy, name, entry)
+        _require(not (source_present and legacy_present), "source_state_drift")
+        if legacy_present:
+            os.close(source_parent)
+            source_parent = -1
+            result = legacy
+            legacy = -1
+            return result, name
+        # No prior quarantine slot means a new move.  Always use this exact
+        # source directory rather than inferring rename compatibility from
+        # mount/device metadata.
+        os.close(legacy)
+        legacy = -1
+        result = source_parent
+        source_parent = -1
+        return result, name
+    finally:
+        if source_parent >= 0:
+            os.close(source_parent)
+        if legacy >= 0:
+            os.close(legacy)
 
 
 def _quarantine_present_exact(bindings: storage.Bindings, plan: Mapping[str, Any], entry: Mapping[str, Any]) -> bool:
     quarantine, name = _open_quarantine(bindings, plan, entry)
     try:
-        try:
-            info = os.stat(name, dir_fd=quarantine, follow_symlinks=False)
-        except FileNotFoundError:
-            return False
-        _require(stat.S_ISREG(info.st_mode) and not stat.S_ISLNK(info.st_mode), "source_state_drift")
-        _require(
-            (int(info.st_dev), int(info.st_ino)) == (entry["dev"], entry["ino"]),
-            "source_state_drift",
-        )
-        return True
+        return _slot_present_exact(quarantine, name, entry)
+    finally:
+        os.close(quarantine)
+
+
+def _legacy_quarantine_present_exact(
+    bindings: storage.Bindings, plan: Mapping[str, Any], entry: Mapping[str, Any]
+) -> bool:
+    """Return legacy-slot state while retaining strict legacy-dir validation."""
+    quarantine, name = _open_legacy_quarantine(bindings, plan, entry)
+    try:
+        return _slot_present_exact(quarantine, name, entry)
     finally:
         os.close(quarantine)
 
@@ -1395,7 +1404,7 @@ def _verify_pending_presence(
         entry_id = str(entry["entry_id"])
         present = _entry_present_exact(bindings, entry)
         quarantined = _quarantine_present_exact(bindings, plan, entry)
-        if quarantined and _uses_role_root_quarantine(bindings, plan, entry):
+        if quarantined and _legacy_quarantine_present_exact(bindings, plan, entry):
             expected_quarantine_by_role.setdefault(str(entry["quarantine_role"]), set()).add(
                 str(entry["quarantine_name"])
             )
