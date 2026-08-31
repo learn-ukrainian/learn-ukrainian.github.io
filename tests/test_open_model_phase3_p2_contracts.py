@@ -229,7 +229,7 @@ def _case(record_kind: str) -> dict[str, Any]:
     elif record_kind == "protected_dialect_or_regional_context":
         value.update(
             {
-                "dialect_or_regional_identity": "fixture_dialect_or_regional_form",
+                "dialect_or_regional_identity": "source_attested_ukrainian_dialect_or_regional_form",
                 "region_id": "region:fixture",
                 "register_id": "register:fixture",
                 "source_qualified_identity": True,
@@ -280,12 +280,14 @@ def _rule_slot(
     coverage_stratum_id: str | None = None,
     lineage_kind: str = "root",
     parent_slot_ids: list[str] | None = None,
+    claim_type: str = "fixture_claim_type",
+    identity_candidate: str = "fixture_identity_candidate",
 ) -> dict[str, Any]:
     identity = {
         "coverage_stratum_id": coverage_stratum_id or _cell_id("coverage_blocked"),
-        "claim_type": "fixture_claim_type",
+        "claim_type": claim_type,
         "source_class": "fixture_source_class",
-        "identity_candidate": "fixture_identity_candidate",
+        "identity_candidate": identity_candidate,
         "applicability_predicate_id": "predicate:fixture",
         "evidence_set_sha256": SHA256,
         "adjudication_record_sha256": SHA256,
@@ -303,9 +305,11 @@ def _rule_manifest(
     *,
     version: str = "phase3_p2_rule_manifest_v1",
     parent_rule_manifest_sha256: str | None = None,
+    composite_input_sha256: str | None = None,
 ) -> dict[str, Any]:
     value: dict[str, Any] = {
         "manifest_version": version,
+        "composite_input_sha256": composite_input_sha256 or _composite_input_sha256(),
         "slots": slots,
         "rule_manifest_sha256": p2.sha256_bytes(p2.canonical_json(slots)),
     }
@@ -428,7 +432,15 @@ def test_json_schema_accepts_each_state_specific_case_branch(record_kind: str) -
     [
         ("coverage_blocked", "authority", copy.deepcopy(AUTHORITY)),
         ("protected_historical_context", "dialect_or_regional_identity", "cross-state"),
+        ("protected_historical_context", "historical_identity", "modern_standard_ukrainian"),
+        ("protected_historical_context", "period_id", ""),
+        ("protected_historical_context", "region_id", ""),
+        ("protected_historical_context", "recension_editorial_layer", ""),
         ("protected_dialect_or_regional_context", "historical_identity", "cross-state"),
+        ("protected_dialect_or_regional_context", "dialect_or_regional_identity", ""),
+        ("protected_dialect_or_regional_context", "dialect_or_regional_identity", "modern_standard_ukrainian"),
+        ("protected_dialect_or_regional_context", "region_id", ""),
+        ("protected_dialect_or_regional_context", "register_id", ""),
         ("protected_dialect_or_regional_context", "source_qualified_identity", False),
         ("protected_dialect_or_regional_context", "modern_normalization", True),
         ("abstention", "not_applicable_evidence_id", "cross-state"),
@@ -441,6 +453,25 @@ def test_json_schema_rejects_cross_state_case_fields(
 ) -> None:
     record = _case(record_kind)
     record[field] = value
+    with pytest.raises(ValidationError):
+        _validate_case_schema(record)
+
+
+@pytest.mark.parametrize(
+    ("record_kind", "field"),
+    [
+        ("protected_historical_context", "historical_identity"),
+        ("protected_historical_context", "period_id"),
+        ("protected_historical_context", "region_id"),
+        ("protected_historical_context", "recension_editorial_layer"),
+        ("protected_dialect_or_regional_context", "dialect_or_regional_identity"),
+        ("protected_dialect_or_regional_context", "region_id"),
+        ("protected_dialect_or_regional_context", "register_id"),
+    ],
+)
+def test_json_schema_rejects_missing_protection_identity_fields(record_kind: str, field: str) -> None:
+    record = _case(record_kind)
+    del record[field]
     with pytest.raises(ValidationError):
         _validate_case_schema(record)
 
@@ -647,6 +678,19 @@ def test_atomic_rule_slot_identity_accepts_structurally_valid_lineage(
     ) is True
 
 
+def test_rule_slot_identity_must_bind_to_one_of_the_frozen_composite_strata() -> None:
+    outside = _rule_slot(coverage_stratum_id="coverage.stratum:not-frozen")
+    assert p2.validate_rule_slot_identity(outside, _contract()) is False
+
+
+def test_rule_slot_identity_rejects_non_hex_parent_slot_ids() -> None:
+    slot = _rule_slot(
+        lineage_kind="split_child",
+        parent_slot_ids=["p2_rule_slot:" + ("g" * 64)],
+    )
+    assert p2.validate_rule_slot_identity(slot, _contract()) is False
+
+
 @pytest.mark.parametrize(
     "mutation",
     [
@@ -659,6 +703,12 @@ def test_atomic_rule_slot_identity_accepts_structurally_valid_lineage(
         lambda slot: slot.update({"lineage_kind": "root", "parent_slot_ids": ["p2_rule_slot:" + SHA256]}),
         lambda slot: slot.update({"lineage_kind": "split_child", "parent_slot_ids": []}),
         lambda slot: slot.update({"lineage_kind": "merge", "parent_slot_ids": ["p2_rule_slot:" + SHA256]}),
+        lambda slot: slot.update(
+            {
+                "lineage_kind": "merge",
+                "parent_slot_ids": ["p2_rule_slot:" + ("b" * 64), "p2_rule_slot:" + SHA256],
+            }
+        ),
     ],
 )
 def test_atomic_rule_slot_identity_mutations_fail_closed(mutation: Any) -> None:
@@ -719,6 +769,136 @@ def test_empty_rule_manifest_can_resume_only_as_the_exact_empty_manifest() -> No
     assert p2.validate_rule_manifest_evolution(previous, empty_next, contract) is True
     assert p2.validate_rule_manifest_evolution([], [], contract) is False
     assert p2.validate_rule_manifest_evolution(previous, {"slots": []}, contract) is False
+
+
+def test_rule_manifest_evolution_accepts_hash_verified_split_then_merge_chain() -> None:
+    contract = _contract()
+    stratum = _cell_id("coverage_blocked")
+    root_a = _rule_slot(coverage_stratum_id=stratum, claim_type="fixture_claim_a")
+    root_b = _rule_slot(coverage_stratum_id=stratum, claim_type="fixture_claim_b")
+    roots = sorted([root_a, root_b], key=lambda slot: slot["rule_slot_id"])
+    manifest_v1 = _rule_manifest(roots)
+
+    split_child = _rule_slot(
+        coverage_stratum_id=stratum,
+        lineage_kind="split_child",
+        parent_slot_ids=[root_a["rule_slot_id"]],
+        claim_type="fixture_claim_split_child",
+    )
+    slots_v2 = sorted([*roots, split_child], key=lambda slot: slot["rule_slot_id"])
+    manifest_v2 = _rule_manifest(
+        slots_v2,
+        version="phase3_p2_rule_manifest_v2",
+        parent_rule_manifest_sha256=manifest_v1["rule_manifest_sha256"],
+    )
+
+    merge_slot = _rule_slot(
+        coverage_stratum_id=stratum,
+        lineage_kind="merge",
+        parent_slot_ids=sorted([root_a["rule_slot_id"], root_b["rule_slot_id"]]),
+        claim_type="fixture_claim_merge",
+    )
+    slots_v3 = sorted([*slots_v2, merge_slot], key=lambda slot: slot["rule_slot_id"])
+    manifest_v3 = _rule_manifest(
+        slots_v3,
+        version="phase3_p2_rule_manifest_v3",
+        parent_rule_manifest_sha256=manifest_v2["rule_manifest_sha256"],
+    )
+
+    assert p2.validate_rule_manifest_evolution(manifest_v1, manifest_v2, contract) is True
+    assert p2.validate_rule_manifest_evolution(manifest_v2, manifest_v3, contract) is True
+    assert all(
+        slot["atomic_identity"]["coverage_stratum_id"] == stratum
+        for manifest in (manifest_v1, manifest_v2, manifest_v3)
+        for slot in manifest["slots"]
+    )
+    assert contract["p1_binding"]["composite_required_cell_count"] == 16
+
+
+@pytest.mark.parametrize("mutation", ["composite_input_sha256", "parent_rule_manifest_sha256", "rule_manifest_sha256"])
+def test_rule_manifest_evolution_rejects_hash_binding_drift(mutation: str) -> None:
+    contract = _contract()
+    root = _rule_slot(coverage_stratum_id=_cell_id("coverage_blocked"))
+    previous = _rule_manifest([root])
+    child = _rule_slot(
+        coverage_stratum_id=root["atomic_identity"]["coverage_stratum_id"],
+        lineage_kind="split_child",
+        parent_slot_ids=[root["rule_slot_id"]],
+        claim_type="fixture_split",
+    )
+    next_manifest = _rule_manifest(
+        sorted([root, child], key=lambda slot: slot["rule_slot_id"]),
+        version="phase3_p2_rule_manifest_v2",
+        parent_rule_manifest_sha256=previous["rule_manifest_sha256"],
+    )
+    mutated = copy.deepcopy(next_manifest)
+    mutated[mutation] = SHA256
+    assert p2.validate_rule_manifest_evolution(previous, mutated, contract) is False
+
+
+def test_rule_manifest_evolution_rejects_reordering_or_noncanonical_hash_encoding() -> None:
+    contract = _contract()
+    first = _rule_slot(coverage_stratum_id=_cell_id("coverage_blocked"), claim_type="fixture_claim_a")
+    second = _rule_slot(coverage_stratum_id=_cell_id("coverage_blocked"), claim_type="fixture_claim_b")
+    roots = sorted([first, second], key=lambda slot: slot["rule_slot_id"])
+    previous = _rule_manifest(roots)
+    child = _rule_slot(
+        coverage_stratum_id=first["atomic_identity"]["coverage_stratum_id"],
+        lineage_kind="split_child",
+        parent_slot_ids=[first["rule_slot_id"]],
+        claim_type="fixture_claim_child",
+    )
+    slots = sorted([*roots, child], key=lambda slot: slot["rule_slot_id"])
+    canonical_next = _rule_manifest(
+        slots,
+        version="phase3_p2_rule_manifest_v2",
+        parent_rule_manifest_sha256=previous["rule_manifest_sha256"],
+    )
+    reversed_order = copy.deepcopy(canonical_next)
+    reversed_order["slots"] = list(reversed(slots))
+    reversed_order["rule_manifest_sha256"] = p2.sha256_bytes(p2.canonical_json(reversed_order["slots"]))
+    assert p2.validate_rule_manifest_evolution(previous, reversed_order, contract) is False
+
+    noncanonical_hash = copy.deepcopy(canonical_next)
+    noncanonical_hash["rule_manifest_sha256"] = p2.sha256_bytes(
+        json.dumps(slots, ensure_ascii=False, sort_keys=True).encode("utf-8")
+    )
+    assert p2.validate_rule_manifest_evolution(previous, noncanonical_hash, contract) is False
+
+
+def test_rule_manifest_evolution_rejects_missing_slot_cross_stratum_parent_and_version_drift() -> None:
+    contract = _contract()
+    stratum = _cell_id("coverage_blocked")
+    root_a = _rule_slot(coverage_stratum_id=stratum, claim_type="fixture_claim_a")
+    root_b = _rule_slot(coverage_stratum_id=stratum, claim_type="fixture_claim_b")
+    previous = _rule_manifest(sorted([root_a, root_b], key=lambda slot: slot["rule_slot_id"]))
+
+    child = _rule_slot(
+        coverage_stratum_id=_cell_id("not_applicable_with_evidence"),
+        lineage_kind="split_child",
+        parent_slot_ids=[root_a["rule_slot_id"]],
+        claim_type="fixture_cross_stratum_child",
+    )
+    cross_stratum = _rule_manifest(
+        sorted([root_a, root_b, child], key=lambda slot: slot["rule_slot_id"]),
+        version="phase3_p2_rule_manifest_v2",
+        parent_rule_manifest_sha256=previous["rule_manifest_sha256"],
+    )
+    assert p2.validate_rule_manifest_evolution(previous, cross_stratum, contract) is False
+
+    missing = _rule_manifest(
+        [root_a],
+        version="phase3_p2_rule_manifest_v2",
+        parent_rule_manifest_sha256=previous["rule_manifest_sha256"],
+    )
+    assert p2.validate_rule_manifest_evolution(previous, missing, contract) is False
+
+    bad_version = _rule_manifest(
+        sorted([root_a, root_b], key=lambda slot: slot["rule_slot_id"]),
+        version="phase3_p2_rule_manifest_v4",
+        parent_rule_manifest_sha256=previous["rule_manifest_sha256"],
+    )
+    assert p2.validate_rule_manifest_evolution(previous, bad_version, contract) is False
 
 
 @pytest.mark.parametrize(
