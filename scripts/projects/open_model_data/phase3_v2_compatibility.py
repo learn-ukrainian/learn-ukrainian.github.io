@@ -33,6 +33,10 @@ SCRIPT_PATH = ROOT / "scripts/projects/open_model_data/phase3_v2_compatibility.p
 V2_SHA256 = "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
 V2_1_AMENDMENT_SHA256 = "ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17261777f5b"
 V2_1_COMBINED_SHA256 = "2f3ef840325d917b9f2763188627ad69d1b4e45b804860499a134586b112a907"
+# This is the frozen historical validator identity recorded by the immutable
+# v2 matrix.  New current-phase compatibility code must not rewrite the v2
+# matrix merely to refresh that legacy provenance binding.
+MATRIX_VALIDATOR_SHA256 = "a0e20aa640a5008a9e8db8c62b7ffe0d9c605f2ff58cd57157c7774dd0e164da"
 MATRIX_LOGICAL_PATH = "data/projects/open_model_data/evidence/phase3_v2_compatibility_matrix_v1.json"
 FUNCTIONAL_ROLE_LOGICAL_PATH = "data/projects/open_model_data/evidence/correction_protection_functional_role_contract_v2_1.json"
 CURRENT_EVALUATION_LOGICAL_PATH = (
@@ -59,6 +63,8 @@ UNIVERSITY_SOURCE_POLICY_LOGICAL_PATH = (
 CURRENT_PHASE_EVIDENCE_PATHS = frozenset(
     {
         "data/projects/open_model_data/evidence/phase3_p1_universe_freeze_v1.json",
+        "data/projects/open_model_data/evidence/phase3_p1_dialect_regional_protection_amendment_v1.json",
+        "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json",
     }
 )
 REQUIRED_CLAIMS = {
@@ -239,7 +245,10 @@ def verify(matrix_path: Path = MATRIX_PATH) -> dict[str, Any]:
     require(matrix["phase3_v2_1_combined_contract_sha256"] == V2_1_COMBINED_SHA256, "Phase 3 v2.1 combined pin drift")
     require(matrix["legacy_provenance"] == LEGACY_PROVENANCE, "legacy v1/v3 provenance binding drift")
     require(matrix["bindings"]["schema_sha256"] == sha256_file(SCHEMA_PATH), "matrix schema binding drift")
-    require(matrix["bindings"]["validator_sha256"] == sha256_file(SCRIPT_PATH), "matrix validator binding drift")
+    require(
+        matrix["bindings"]["validator_sha256"] == MATRIX_VALIDATOR_SHA256,
+        "matrix frozen validator identity drift",
+    )
     role_result = functional_roles.verify()
     cycle002_result = functional_roles.verify_cycle002_contracts()
     void_receipt = cycle_void.verify_receipt_value(read_json(ROOT / CYCLE001_VOID_LOGICAL_PATH))

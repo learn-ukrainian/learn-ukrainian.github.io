@@ -22,6 +22,11 @@ def _matrix() -> dict[str, object]:
 
 def test_current_phase_artifacts_are_excluded_without_widening_legacy_denominator() -> None:
     legacy_path = "data/projects/open_model_data/evidence/correction_protection_adapter_receipt_v1.json"
+    assert {
+        "data/projects/open_model_data/evidence/phase3_p1_universe_freeze_v1.json",
+        "data/projects/open_model_data/evidence/phase3_p1_dialect_regional_protection_amendment_v1.json",
+        "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json",
+    } == compatibility.CURRENT_PHASE_EVIDENCE_PATHS
     assert compatibility._pre_v2_evidence_paths(
         {
             compatibility.MATRIX_LOGICAL_PATH,
@@ -54,6 +59,8 @@ def test_matrix_rejects_missing_or_unexpected_pre_v2_evidence(
 
 def test_tracked_matrix_is_complete_hash_bound_and_blocks_phase4() -> None:
     result = compatibility.verify()
+    matrix = _matrix()
+    assert matrix["bindings"]["validator_sha256"] == compatibility.MATRIX_VALIDATOR_SHA256  # type: ignore[index]
     assert result == {
         "ok": True,
         "schema_version": "phase3_v2_compatibility_matrix_v1",
