@@ -591,6 +591,23 @@ class ArtifactStore:
         # recoverable garbage: reclaim_orphan_blobs() sweeps it.
         self._conn.commit()
         for digest in unlink_candidates:
+            self._unlink_if_unreferenced(digest)
+        return deleted
+
+    def _unlink_if_unreferenced(self, digest: str) -> bool:
+        """Atomically re-check and unlink one blob (#7484 CF r1).
+
+        The row re-check and the unlink run inside one BEGIN IMMEDIATE
+        transaction: a concurrent writer's row INSERT either lands before the
+        lock (the check sees it and the blob survives) or blocks until the
+        commit — after which the writer's dedup path finds ``dest.exists()``
+        False and rewrites the blob atomically. Either way no committed row
+        can end up pointing at deleted bytes. A crash between unlink and
+        commit leaves no row for the digest (checked under the lock), so
+        nothing dangles.
+        """
+        self._conn.execute("BEGIN IMMEDIATE")
+        try:
             still = self._conn.execute(
                 "SELECT 1 FROM artifacts WHERE sha256 = ? LIMIT 1", (digest,)
             ).fetchone()
@@ -598,7 +615,14 @@ class ArtifactStore:
                 path = self.blob_path_for(digest)
                 if path.is_file():
                     path.unlink()
-        return deleted
+                removed = True
+            else:
+                removed = False
+        except Exception:
+            self._conn.rollback()
+            raise
+        self._conn.commit()
+        return removed
 
     def reclaim_orphan_blobs(self, *, grace_seconds: int = 3600) -> list[str]:
         """Delete blob files no artifact row references (crash leftovers).
@@ -631,11 +655,7 @@ class ArtifactStore:
                         continue
                 except OSError:
                     continue
-                row = self._conn.execute(
-                    "SELECT 1 FROM artifacts WHERE sha256 = ? LIMIT 1", (digest,)
-                ).fetchone()
-                if row is None:
-                    blob.unlink(missing_ok=True)
+                if self._unlink_if_unreferenced(digest):
                     reclaimed.append(digest)
         return reclaimed
 

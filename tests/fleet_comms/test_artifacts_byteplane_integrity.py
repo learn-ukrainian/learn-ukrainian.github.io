@@ -108,3 +108,28 @@ def test_pg_records_carry_no_fabricated_blob_path(
         # Metadata lookups return no payload column.
         row = store._pg_row_by_artifact_id(rec.artifact_id)
         assert "payload" not in dict(row)
+
+
+def test_unlink_skips_when_a_writer_reinserted_the_digest(
+    store: ArtifactStore, tmp_path: Path
+) -> None:
+    """#7484 CF r1: a row committed by a concurrent writer between GC's row
+    commit and the unlink phase must keep its blob."""
+    rec = store.store_bytes(_payload(), producer="t")
+    # Simulate the concurrent writer: the row exists when the unlink phase
+    # re-checks under its write lock.
+    assert store._unlink_if_unreferenced(rec.sha256) is False
+    assert rec.blob_path.is_file()
+    assert store.read_bytes(rec.artifact_id)
+
+
+def test_writer_dedup_self_heals_a_missing_blob(store: ArtifactStore) -> None:
+    """#7484 CF r1 companion: a writer that lost the unlink race rewrites the
+    blob on its next same-content store (dest.exists() is re-checked)."""
+    data = _payload()
+    rec = store.store_bytes(data, producer="t")
+    rec.blob_path.unlink()
+    again = store.store_bytes(data, producer="t")
+    assert again.artifact_id == rec.artifact_id
+    assert rec.blob_path.is_file()
+    assert store.read_bytes(rec.artifact_id) == data
