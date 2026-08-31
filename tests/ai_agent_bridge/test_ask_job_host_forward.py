@@ -1,4 +1,9 @@
-"""#7172 — notebook ask-* forwards to the job-host plane; plane-status fails clean."""
+"""#7172 — notebook ask-* forwards to the job-host plane; plane-status fails clean.
+
+Follow-up to #7515: no baked-in run-root. Forward targets come only from
+absolute ``LU_JOB_REPO`` / ``LU_SERVICES_REMOTE_ROOT`` env vars; host set
+without a repo fails closed (``None``).
+"""
 
 from __future__ import annotations
 
@@ -15,6 +20,10 @@ from scripts.fleet_comms.paths import (
     RETIRED_LOCAL_PLANE_MESSAGE,
     local_plane_is_retired,
 )
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+# Synthetic checkout path: never a real deployment run-root.
+_SYNTHETIC_REPO = "/srv/writer/learn-ukrainian"
 
 
 def _plant_retire_marker(plane_root: Path) -> Path:
@@ -62,12 +71,12 @@ def test_resolve_ask_forward_target_prefers_job_dispatch_host(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setenv("LU_JOB_DISPATCH_HOST", "job-alias")
-    monkeypatch.setenv("LU_JOB_REPO", "/home/ops/learn-ukrainian")
+    monkeypatch.setenv("LU_JOB_REPO", _SYNTHETIC_REPO)
     monkeypatch.delenv("LU_SERVICES_SSH_HOST", raising=False)
     target = _job_host_forward.resolve_ask_forward_target()
     assert target is not None
     assert target.host == "job-alias"
-    assert target.remote_repo == "/home/ops/learn-ukrainian"
+    assert target.remote_repo == _SYNTHETIC_REPO
 
 
 def test_resolve_ask_forward_target_falls_back_to_services_host(
@@ -77,10 +86,40 @@ def test_resolve_ask_forward_target_falls_back_to_services_host(
     monkeypatch.delenv("ATLAS_RUNNER_HOST", raising=False)
     monkeypatch.delenv("LU_JOB_REPO", raising=False)
     monkeypatch.setenv("LU_SERVICES_SSH_HOST", "services-alias")
-    monkeypatch.setenv("LU_SERVICES_REMOTE_ROOT", "/home/ops/learn-ukrainian")
+    monkeypatch.setenv("LU_SERVICES_REMOTE_ROOT", _SYNTHETIC_REPO)
     target = _job_host_forward.resolve_ask_forward_target()
     assert target is not None
     assert target.host == "services-alias"
+    assert target.remote_repo == _SYNTHETIC_REPO
+
+
+def test_resolve_ask_forward_target_host_without_repo_fails_closed(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#7515 follow-up: no default run-root — host alone must not resolve."""
+    for host_var in (
+        "LU_JOB_DISPATCH_HOST",
+        "ATLAS_RUNNER_HOST",
+        "LU_SERVICES_SSH_HOST",
+    ):
+        monkeypatch.setenv(host_var, "configured-alias")
+    monkeypatch.delenv("LU_JOB_REPO", raising=False)
+    monkeypatch.delenv("LU_SERVICES_REMOTE_ROOT", raising=False)
+    assert _job_host_forward.resolve_ask_forward_target() is None
+
+
+def test_forward_module_and_publish_help_have_no_baked_run_root() -> None:
+    """OPSEC: production sources must not embed a concrete run-root."""
+    forward_source = (
+        _REPO_ROOT / "scripts" / "ai_agent_bridge" / "_job_host_forward.py"
+    ).read_text(encoding="utf-8")
+    assert "/home/ops" not in forward_source
+    assert not hasattr(_job_host_forward, "DEFAULT_SERVICES_REPO")
+
+    publish_source = (
+        _REPO_ROOT / "scripts" / "practice_deck" / "publish.py"
+    ).read_text(encoding="utf-8")
+    assert "/home/ops" not in publish_source
 
 
 def test_maybe_forward_refuses_cleanly_when_retired_without_config(
@@ -118,7 +157,7 @@ def test_run_compat_ask_forwards_instead_of_plane_root_error(
     monkeypatch.setenv("FLEET_COMMS_ROOT", str(plane))
     monkeypatch.delenv("FLEET_COMMS_ALLOW_LOCAL_SHADOW", raising=False)
     monkeypatch.setenv("LU_JOB_DISPATCH_HOST", "opaque-job")
-    monkeypatch.setenv("LU_JOB_REPO", "/home/ops/learn-ukrainian")
+    monkeypatch.setenv("LU_JOB_REPO", _SYNTHETIC_REPO)
     monkeypatch.delenv(_job_host_forward.ENV_FORWARD_DONE, raising=False)
 
     sentinel = SimpleNamespace(
@@ -153,7 +192,7 @@ def test_forward_compat_ask_invokes_ssh_without_leaking_host(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     monkeypatch.setenv("LU_JOB_DISPATCH_HOST", "secret-alias-must-not-leak")
-    monkeypatch.setenv("LU_JOB_REPO", "/home/ops/secret-repo-must-not-leak")
+    monkeypatch.setenv("LU_JOB_REPO", "/srv/writer/secret-repo-must-not-leak")
     monkeypatch.delenv(_job_host_forward.ENV_FORWARD_DONE, raising=False)
 
     completed = SimpleNamespace(
@@ -186,13 +225,13 @@ def test_forward_compat_ask_invokes_ssh_without_leaking_host(
     captured = capsys.readouterr()
     assert "secret-alias-must-not-leak" not in captured.out
     assert "secret-alias-must-not-leak" not in captured.err
-    assert "/home/ops/secret-repo-must-not-leak" not in captured.err
+    assert "/srv/writer/secret-repo-must-not-leak" not in captured.err
 
 
 def test_forward_script_sets_loop_guard_and_stdout_only() -> None:
     script = _job_host_forward._build_remote_ask_script(
         command_target="kimi",
-        remote_repo="/home/ops/learn-ukrainian",
+        remote_repo=_SYNTHETIC_REPO,
         task_id="loop-guard",
         source="claude",
         model=None,

@@ -41,7 +41,6 @@ ENV_JOB_HOST_FALLBACK = "ATLAS_RUNNER_HOST"
 ENV_SERVICES_HOST = "LU_SERVICES_SSH_HOST"
 ENV_JOB_REPO = "LU_JOB_REPO"
 ENV_SERVICES_REPO = "LU_SERVICES_REMOTE_ROOT"
-DEFAULT_SERVICES_REPO = "/home/ops/learn-ukrainian"
 
 REMOTE_PATH_EXPORT = 'export PATH="$HOME/.local/bin:$HOME/.opencode/bin:$PATH"'
 # Generous wall clock: seat profiles go up to 1800s (kimi); transport grace on top.
@@ -74,12 +73,14 @@ def resolve_ask_forward_target() -> AskForwardTarget | None:
 
     Configured means an SSH Host alias plus an absolute remote checkout —
     the same contract ``services.sh`` / ``job_host_exec`` use. Returns None
-    when the operator has not wired the notebook client yet.
+    when the operator has not wired the notebook client yet, and None when
+    a host is set but no absolute repo env var is: there is no baked-in
+    default run-root (#7515 follow-up); fail closed instead.
     """
     host = _env(ENV_JOB_HOST) or _env(ENV_JOB_HOST_FALLBACK) or _env(ENV_SERVICES_HOST)
     if not host:
         return None
-    repo = _env(ENV_JOB_REPO) or _env(ENV_SERVICES_REPO) or DEFAULT_SERVICES_REPO
+    repo = _env(ENV_JOB_REPO) or _env(ENV_SERVICES_REPO)
     if not repo.startswith("/"):
         return None
     return AskForwardTarget(host=host, remote_repo=repo)

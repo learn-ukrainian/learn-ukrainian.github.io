@@ -459,8 +459,8 @@ def main() -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python scripts/practice_deck/publish.py --dry-run\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python scripts/practice_deck/publish.py "
+            "  .venv/bin/python scripts/practice_deck/publish.py --dry-run\n"
+            "  .venv/bin/python scripts/practice_deck/publish.py "
             "--release-tag atlas-practice-deck --repo learn-ukrainian/learn-ukrainian.github.io\n\n"
             "Outputs: writes the gzip asset and pointer locally; without --dry-run, uploads GitHub Release assets.\n"
             "Exit codes: 0 on success; non-zero when validation, GitHub, or filesystem work fails.\n"
