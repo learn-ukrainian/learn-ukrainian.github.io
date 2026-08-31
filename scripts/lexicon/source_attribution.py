@@ -266,7 +266,10 @@ def normalize_academic_label(label: str) -> str:
         return GOROH_LABEL
     if cleaned.casefold().startswith("e2u.org.ua") or cleaned.casefold() == "e2u":
         return E2U_LABEL
-    if cleaned.casefold() == "wikidata" or cleaned.casefold().startswith("wikidata.org"):
+    # Label tokens only (not URL host checks): exact "wikidata" / "wikidata.org"
+    # or a dotted path under that host token (wikidata.org/...).
+    folded = cleaned.casefold()
+    if folded == "wikidata" or folded == "wikidata.org" or folded.startswith("wikidata.org/"):
         return WIKIDATA_LABEL
     if cleaned.casefold().startswith(RELATION_PAIRS_PREFIX):
         return _remap_relation_pairs_label(cleaned)
