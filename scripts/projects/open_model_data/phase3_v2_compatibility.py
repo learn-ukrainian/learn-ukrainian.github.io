@@ -59,6 +59,8 @@ UNIVERSITY_SOURCE_POLICY_LOGICAL_PATH = (
 CURRENT_PHASE_EVIDENCE_PATHS = frozenset(
     {
         "data/projects/open_model_data/evidence/phase3_p1_universe_freeze_v1.json",
+        "data/projects/open_model_data/evidence/phase3_p1_dialect_regional_protection_amendment_v1.json",
+        "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json",
     }
 )
 REQUIRED_CLAIMS = {
