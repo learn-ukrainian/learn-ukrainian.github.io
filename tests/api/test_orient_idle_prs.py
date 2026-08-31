@@ -48,23 +48,15 @@ def _pr(number: int, *, updated_at: datetime, **changes: object) -> dict:
 
 @pytest.fixture(autouse=True)
 def _reset_idle_pr_state():
-    state_helpers.cache_invalidate(api_main.IDLE_PR_CACHE_KEY)
-    api_main._idle_pr_last_good = None
-    api_main._idle_pr_last_error = None
-    api_main._idle_pr_next_retry_at = 0.0
-    thread = api_main._idle_pr_refresh_thread
-    if thread is not None and thread.is_alive():
-        thread.join(timeout=2.0)
-    api_main._idle_pr_refresh_thread = None
-    yield
-    thread = api_main._idle_pr_refresh_thread
-    if thread is not None and thread.is_alive():
-        thread.join(timeout=2.0)
-    state_helpers.cache_invalidate(api_main.IDLE_PR_CACHE_KEY)
-    api_main._idle_pr_last_good = None
-    api_main._idle_pr_last_error = None
-    api_main._idle_pr_next_retry_at = 0.0
-    api_main._idle_pr_refresh_thread = None
+    """#7494: idle-PR state is per-scope dicts now — clear them whole."""
+    for thread in list(api_main._idle_pr_refresh_threads.values()):
+        if thread is not None and thread.is_alive():
+            thread.join(timeout=5)
+    api_main._idle_pr_refresh_threads.clear()
+    api_main._idle_pr_last_good.clear()
+    api_main._idle_pr_last_error.clear()
+    api_main._idle_pr_next_retry_at.clear()
+
 
 
 def test_idle_pr_collector_excludes_fresh_red_and_unreviewed_prs(monkeypatch):
@@ -171,13 +163,13 @@ def test_dirty_merge_state_remains_ineligible():
 
 
 def test_timeout_refresh_degrades_to_absent_cache():
-    def timed_out():
+    def timed_out(ctx=None):
         raise subprocess.TimeoutExpired(cmd=["gh", "pr", "list"], timeout=api_main.IDLE_PR_FETCH_TIMEOUT_S)
 
-    api_main._run_idle_pr_refresh(timed_out)
+    api_main._run_idle_pr_refresh(timed_out, "")
 
     assert state_helpers.cache_get(api_main.IDLE_PR_CACHE_KEY, ttl=api_main.ORIENT_SECTION_TTLS["idle_prs"]) is None
-    assert api_main._idle_pr_last_error == "gh_timeout"
+    assert api_main._idle_pr_last_error.get("") == "gh_timeout"
 
     result, meta = api_main._cached_idle_pr_section(timed_out, {"idle_prs": []})
 
@@ -189,7 +181,7 @@ def test_idle_pr_request_path_only_schedules_slow_gh_refresh(monkeypatch):
     started = threading.Event()
     release = threading.Event()
 
-    def slow_collector():
+    def slow_collector(ctx=None):
         started.set()
         release.wait(timeout=2.0)
         return {"idle_prs": []}
@@ -204,5 +196,6 @@ def test_idle_pr_request_path_only_schedules_slow_gh_refresh(monkeypatch):
     assert started.wait(timeout=1.0)
 
     release.set()
-    assert api_main._idle_pr_refresh_thread is not None
-    api_main._idle_pr_refresh_thread.join(timeout=2.0)
+    worker = api_main._idle_pr_refresh_threads.get("")
+    assert worker is not None
+    worker.join(timeout=2.0)
