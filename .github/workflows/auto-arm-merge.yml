@@ -1,0 +1,38 @@
+name: Auto-arm merge queue
+
+# #7539: scheduled, default-branch automation that only enables GitHub's
+# normal auto-merge mechanism after the exact-head CF and CI Gate checks pass.
+# It never checks out or runs code from a subject PR head.
+permissions:
+  pull-requests: write
+  contents: write
+  checks: read
+
+on:
+  schedule:
+    - cron: '7,22,37,52 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: auto-arm-merge
+  cancel-in-progress: false
+
+jobs:
+  arm:
+    name: Arm eligible pull requests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+
+      - name: Arm opted-in green pull requests
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: python scripts/ci/auto_arm_merge.py
