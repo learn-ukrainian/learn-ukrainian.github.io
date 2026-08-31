@@ -283,20 +283,21 @@ def test_fetch_base_origin_is_github_keeps_single_origin_fetch(tmp_tasks_dir, mo
 def test_fetch_base_two_remote_host_prefers_canonical_github_sha(tmp_tasks_dir, monkeypatch, capsys):
     """origin = non-GitHub mirror AND `github` = canonical remote: the base
     must be fetched from `github` (landing in refs/remotes/origin/<branch>),
-    the mirror is fetched best-effort only to warn, and the warning must name
-    both SHAs and both remotes (#7522)."""
+    the mirror is probed read-only via ls-remote only to warn, and the warning
+    must name both SHAs and both remotes (#7522)."""
     _pin_two_remote_host(monkeypatch)
     fetches: list[list[str]] = []
-    tracking = {"sha": _STALE_MIRROR_SHA}
+    probes: list[list[str]] = []
 
     def fake_run(cmd, **kwargs):
         if cmd[:2] == ["git", "fetch"]:
             fetches.append(list(cmd))
-            if cmd[2] == "github":
-                tracking["sha"] = _CANONICAL_SHA
             return subprocess.CompletedProcess(cmd, 0, "", "")
+        if cmd[:2] == ["git", "ls-remote"]:
+            probes.append(list(cmd))
+            return subprocess.CompletedProcess(cmd, 0, _STALE_MIRROR_SHA + "\trefs/heads/main\n", "")
         if cmd[:2] == ["git", "rev-parse"]:
-            return subprocess.CompletedProcess(cmd, 0, tracking["sha"] + "\n", "")
+            return subprocess.CompletedProcess(cmd, 0, _CANONICAL_SHA + "\n", "")
         return subprocess.CompletedProcess(cmd, 0, "", "")
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
@@ -304,7 +305,9 @@ def test_fetch_base_two_remote_host_prefers_canonical_github_sha(tmp_tasks_dir, 
     assert delegate._fetch_base("main") is True
 
     refspec = "+refs/heads/main:refs/remotes/origin/main"
-    assert fetches == [["git", "fetch", "origin", refspec], ["git", "fetch", "github", refspec]]
+    # The canonical fetch is the ONLY fetch — origin is probed read-only.
+    assert fetches == [["git", "fetch", "github", refspec]]
+    assert probes == [["git", "ls-remote", "origin", "refs/heads/main"]]
     err = capsys.readouterr().err
     assert _STALE_MIRROR_SHA in err
     assert _CANONICAL_SHA in err
@@ -314,14 +317,16 @@ def test_fetch_base_two_remote_host_prefers_canonical_github_sha(tmp_tasks_dir, 
 
 def test_fetch_base_canonical_fetch_failure_fails_closed_never_stale_origin(tmp_tasks_dir, monkeypatch):
     """Canonical fetch failure must raise, never silently return the stale
-    mirror SHA — even when the mirror fetch itself succeeds (#7522)."""
+    mirror SHA — even when the mirror probe itself succeeds (#7522)."""
     _pin_two_remote_host(monkeypatch)
+    fetches: list[list[str]] = []
 
     def fake_run(cmd, **kwargs):
         if cmd[:2] == ["git", "fetch"]:
-            if cmd[2] == "github":
-                return subprocess.CompletedProcess(cmd, 128, "", "fatal: remote end hung up unexpectedly")
-            return subprocess.CompletedProcess(cmd, 0, "", "")
+            fetches.append(list(cmd))
+            return subprocess.CompletedProcess(cmd, 128, "", "fatal: remote end hung up unexpectedly")
+        if cmd[:2] == ["git", "ls-remote"]:
+            return subprocess.CompletedProcess(cmd, 0, _STALE_MIRROR_SHA + "\trefs/heads/main\n", "")
         return subprocess.CompletedProcess(cmd, 0, _STALE_MIRROR_SHA + "\n", "")
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
@@ -334,18 +339,89 @@ def test_fetch_base_canonical_fetch_failure_fails_closed_never_stale_origin(tmp_
     assert "origin" in message and _MIRROR_URL in message
     assert "remote end hung up" in message
     assert "git remote -v" in message
+    # Only the canonical remote was ever fetched — the reachable mirror
+    # never touched refs/remotes/origin/main.
+    refspec = "+refs/heads/main:refs/remotes/origin/main"
+    assert fetches == [["git", "fetch", "github", refspec]]
+
+    fetches.clear()
 
     def fake_run_timeout(cmd, **kwargs):
         if cmd[:2] == ["git", "fetch"]:
-            if cmd[2] == "github":
-                raise subprocess.TimeoutExpired(cmd, 180.0)
-            return subprocess.CompletedProcess(cmd, 0, "", "")
+            fetches.append(list(cmd))
+            raise subprocess.TimeoutExpired(cmd, 180.0)
+        if cmd[:2] == ["git", "ls-remote"]:
+            return subprocess.CompletedProcess(cmd, 0, _STALE_MIRROR_SHA + "\trefs/heads/main\n", "")
         return subprocess.CompletedProcess(cmd, 0, _STALE_MIRROR_SHA + "\n", "")
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run_timeout)
 
     with pytest.raises(RuntimeError, match="timed out"):
         delegate._fetch_base("main")
+    assert fetches == [["git", "fetch", "github", refspec]]
+
+
+def test_fetch_base_canonical_failure_never_poisons_origin_tracking_ref(tmp_path, monkeypatch):
+    """#7522 review follow-up, real git end to end: with a previously-good
+    refs/remotes/origin/main pinned to the canonical SHA, a canonical fetch
+    failure must fail closed AND leave the tracking ref at its pre-fetch
+    value — the reachable lagging mirror is probed with ls-remote, never
+    fetched over the tracking ref."""
+    seed = _init_repo(tmp_path / "seed")
+    mirror = tmp_path / "mirror.git"
+    canonical = tmp_path / "canonical.git"
+    env = _clean_env()
+
+    subprocess.run(
+        ["git", "clone", "-q", "--bare", str(seed), str(mirror)],
+        check=True,
+        env=env,
+        capture_output=True,
+        timeout=30,
+    )
+    subprocess.run(
+        ["git", "clone", "-q", "--bare", str(seed), str(canonical)],
+        check=True,
+        env=env,
+        capture_output=True,
+        timeout=30,
+    )
+    # The mirror stays behind; only the canonical remote advances.
+    (seed / "README.md").write_text("canonical advance\n")
+    _git(seed, "commit", "-qam", "advance canonical main")
+    _git(seed, "push", "-q", str(canonical), "main")
+    canonical_sha = _git(canonical, "rev-parse", "main").stdout.strip()
+    mirror_sha = _git(mirror, "rev-parse", "main").stdout.strip()
+    assert canonical_sha != mirror_sha
+
+    primary = tmp_path / "primary"
+    subprocess.run(
+        ["git", "clone", "-q", str(mirror), str(primary)],
+        check=True,
+        env=env,
+        capture_output=True,
+        timeout=30,
+    )
+    # `github` carries the canonical GitHub URL in config; an insteadOf
+    # rewrite routes the actual fetch to the local bare fixture, so the
+    # remote-classification code under test sees the genuine host shape.
+    _git(primary, "remote", "add", "github", _CANONICAL_URL)
+    _git(primary, "config", f"url.{canonical}.insteadOf", _CANONICAL_URL)
+    # A previous good dispatch pinned the tracking ref to the canonical SHA.
+    _git(primary, "fetch", "-q", "github", "+refs/heads/main:refs/remotes/origin/main")
+    assert _git(primary, "rev-parse", "refs/remotes/origin/main").stdout.strip() == canonical_sha
+    # Now the canonical remote dies; the lagging mirror still answers.
+    _git(primary, "config", "--unset", f"url.{canonical}.insteadOf")
+    _git(primary, "config", f"url.{tmp_path / 'dead-remote.git'}.insteadOf", _CANONICAL_URL)
+
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary.resolve())
+
+    with pytest.raises(RuntimeError, match="canonical GitHub remote"):
+        delegate._fetch_base("main")
+
+    after = _git(primary, "rev-parse", "refs/remotes/origin/main").stdout.strip()
+    assert after == canonical_sha
+    assert after != mirror_sha
 
 
 def test_fetch_existing_branch_uses_canonical_github_remote(tmp_tasks_dir, monkeypatch):

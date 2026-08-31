@@ -2082,6 +2082,35 @@ def _fetch_remote_branch(remote: str, branch: str) -> subprocess.CompletedProces
         return None
 
 
+def _ls_remote_branch_sha(remote: str, branch: str) -> str | None:
+    """Probe the SHA ``remote`` serves for ``branch`` without touching refs.
+
+    ``git ls-remote`` answers from the remote directly, so a lagging mirror
+    can be detected (#7522) while ``refs/remotes/origin/<branch>`` is written
+    only by the canonical fetch. Best-effort: a spawn failure, timeout, or
+    unresolved ref yields None.
+    """
+    try:
+        proc = subprocess.run(
+            ["git", "ls-remote", remote, f"refs/heads/{branch}"],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_NETWORK_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if proc.returncode != 0:
+        return None
+    for line in (proc.stdout or "").splitlines():
+        sha, sep, ref = line.partition("\t")
+        if sep and ref.strip() == f"refs/heads/{branch}":
+            return sha.strip() or None
+    return None
+
+
 def _verify_origin_tracking_ref(branch: str) -> subprocess.CompletedProcess[str] | None:
     """Verify that ``origin/<branch>`` resolves after a mapped fetch."""
     try:
@@ -2139,9 +2168,12 @@ def _fetch_base(base: str) -> bool:
 
     #7522: on hosts where ``origin`` is a lagging mirror and a separate
     remote points at the canonical GitHub repository, the base must be
-    fetched from that canonical remote — the mirror is fetched best-effort
-    only so divergence can be warned about, and a canonical fetch failure
-    fails closed instead of silently pinning the mirror's stale SHA.
+    fetched from that canonical remote — the mirror is probed read-only
+    (``git ls-remote``) only so divergence can be warned about, and a
+    canonical fetch failure fails closed instead of silently pinning the
+    mirror's stale SHA. The canonical fetch is the only writer of
+    ``refs/remotes/origin/<branch>``: a fail-closed dispatch leaves the
+    prior tracking ref untouched, never pinned to the lagging mirror.
     """
     branch = _base_branch_name(base)
     remote_urls = _git_remote_urls(_REPO_ROOT)
@@ -2156,13 +2188,14 @@ def _fetch_base(base: str) -> bool:
     canonical_url = remote_urls.get(canonical_remote) or "<unknown url>"
     mirror_url = remote_urls.get("origin") or "<unknown url>"
 
-    # Fetch the mirror first, best-effort, and snapshot its SHA only to
-    # surface lag. The canonical fetch below overwrites the tracking ref,
-    # so the mirror SHA must be read before it.
+    # Probe the mirror read-only — never a fetch. A mirror fetch lands its
+    # lagging SHA in refs/remotes/origin/<branch>; if the canonical fetch
+    # below then fails closed, the tracking ref would stay poisoned at that
+    # stale SHA. ls-remote writes no local ref, so the canonical fetch is
+    # the only writer of the tracking ref.
     mirror_sha: str | None = None
     if "origin" in remote_urls:
-        _fetch_remote_branch("origin", branch)
-        mirror_sha = _resolve_sha(_REPO_ROOT, f"origin/{branch}")
+        mirror_sha = _ls_remote_branch_sha("origin", branch)
 
     canonical_proc = _fetch_remote_branch(canonical_remote, branch)
     if canonical_proc is None:
@@ -3640,11 +3673,14 @@ def _validate_existing_worktree(
             f"Commit, stash, or remove the worktree before reuse."
         )
 
-    # 3. Stale-base check. Refresh origin/{base} first; ignore fetch failure
-    # (we'll use whatever ref is locally available and warn instead of hard-
-    # failing offline). Normalize so an origin-prefixed ``base`` (the form
-    # the dispatch runbooks mandate) never yields ``origin/origin/main`` —
-    # that unresolvable ref made this whole check a silent no-op.
+    # 3. Stale-base check. Refresh origin/{base} first. Single-remote hosts
+    # keep the lenient bool contract — an offline fetch falls back to
+    # whatever ref is locally available below. Two-remote hosts fail
+    # closed inside _fetch_base when the canonical GitHub remote is
+    # unreachable: a lagging mirror must never pin the base (#7522).
+    # Normalize so an origin-prefixed ``base`` (the form the dispatch
+    # runbooks mandate) never yields ``origin/origin/main`` — that
+    # unresolvable ref made this whole check a silent no-op.
     origin_ref = _origin_base_ref(base)
     _fetch_base(base)
     try:
