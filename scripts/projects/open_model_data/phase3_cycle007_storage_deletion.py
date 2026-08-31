@@ -1095,6 +1095,33 @@ def _fsync_move_directories(bindings: storage.Bindings, plan: Mapping[str, Any],
         os.close(quarantine)
 
 
+def _fsync_absent_quarantine_candidates(
+    bindings: storage.Bindings, plan: Mapping[str, Any], entry: Mapping[str, Any]
+) -> None:
+    """Durably observe the post-unlink crash window across both exact slots.
+
+    A legacy MOVED event may refer to the role-root slot, while a repaired
+    executor writes new moves into the source-parent slot.  When recovery sees
+    neither exact name, fsync both candidate directories before accepting the
+    inferred post-unlink state.  This performs no enumeration and does not
+    create, rename, or remove any directory entry.
+    """
+    source_parent, _leaf = _open_parent(bindings, str(entry["role_relative_path"]))
+    legacy = -1
+    try:
+        legacy, name = _open_legacy_quarantine(bindings, plan, entry)
+        _require(not _slot_present_exact(source_parent, name, entry), "source_state_drift")
+        _require(not _slot_present_exact(legacy, name, entry), "source_state_drift")
+        os.fsync(source_parent)
+        os.fsync(legacy)
+    except OSError as exc:
+        raise DeletionExecutionError("source_state_drift") from exc
+    finally:
+        os.close(source_parent)
+        if legacy >= 0:
+            os.close(legacy)
+
+
 def _fault(
     fault_hook: Callable[[Mapping[str, Any]], None] | None,
     event: str,
@@ -1682,11 +1709,7 @@ def execute_authorized_source_deletion(
             else:
                 # A durable MOVED state plus an absent quarantine entry is the
                 # crash window after exact unlink but before its event.
-                quarantine, _name = _open_quarantine(bindings, plan, entry)
-                try:
-                    os.fsync(quarantine)
-                finally:
-                    os.close(quarantine)
+                _fsync_absent_quarantine_candidates(bindings, plan, entry)
                 _require_entry_aliases_absent(bindings, entry)
             _append_event(root, plan, events, "RECOVERED_UNLINKED", entry_id=inflight)
             completed.add(inflight)
