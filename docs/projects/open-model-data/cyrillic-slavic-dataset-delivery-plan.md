@@ -203,6 +203,15 @@ training truth. Shared abstract rule concepts or authority-only citations may be
 reused only when no exact Cycle007 span or derivative is used; uncertain lineage
 is excluded.
 
+The retained compact pack also contains eight text-free historical
+labeling-expansion receipts (four attempt-v2, two pre-call-v1, one
+request-plan-v1, and one provider-stop-v3). They authenticate protected
+request/prompt/raw/log/result/terminal lineage, including historical attempted
+calls where bodies are unavailable; the firewall records them as populated deny
+commitments rather than claiming labels or prompt lineage are zero. This does
+not authorize or record any new provider call, label, gold, or training action
+for #7427.
+
 ## Frozen product and denominators
 
 The product is a source capability ledger, immutable claim-typed evidence,
@@ -267,6 +276,55 @@ cell by changing its applicability or denominator.
 Scale is governed by a deterministic coverage-yield curve: newly satisfied
 source-backed atomic coverage compared with duplicate/derivative volume. It is
 not governed by a model learning curve or a fixed row quota.
+
+### P2 evaluation firewall (`#7427`)
+
+`freeze_phase3_scope_circularity_firewall.py` freezes a text-free, executable
+custody contract before any rule or case derivation. It binds the exact P1,
+P1 dialect amendment, P2, and near-duplicate-policy hashes; it retains the
+57/39/15/16 denominator, fourteen blocked cells, two N/A cells, and empty
+`R=0`. The sixteen cell-requirement records are frozen as metadata
+requirements; no held-out cases are selected, and zero remains
+`BLOCKED_NOT_ZERO` rather than a fabricated numeric floor or semantic case.
+
+Builder clearance is positive-only: it contains only the frozen public hashes,
+never a held-out complement, path, descriptor, locator, fingerprint, label,
+prompt, annotation, or membership identity. Source/document/work/edition and
+exact/near-duplicate connected components are atomic. The Cycle007 firewall
+denies rows, packets, examples, source units, document/work/edition groups,
+sidecars, annotations, labels, prompts, paraphrases, synthetic siblings,
+duplicates, derivatives, and fingerprints. Shared concepts require an
+independent origin; authority reuse is citation-only and cannot carry a
+held-out span, locator, annotation, or membership.
+
+The public receipt binds Cycle007's object-set and ordered-row commitments,
+204 packet / 10,159 row commitment, 204 physical sidecars, 408 logical
+sidecars, and 419 objects. It states `BOUND`, records the completed fresh
+private materialization, and pins its exact text-free graph commitment together
+with 38 connected components, 39 document/work/edition groups, 10,155 exact
+fingerprints, and an empty candidate-clearance allowlist. A steward-only
+production runtime self-hash verifies its private `0600` configuration and the exact
+retained lossless `content_compact` pack manifest, builds its synthetic
+inventory from that manifest, and uses the custody lane's streaming
+decompress-and-hash proof without expansion. It extracts only required packet
+metadata in memory, including the canonical materialization
+`document_or_edition_identity` for families outside the older helper's closed
+switch, and writes a self-hashed private deny corpus: hashed row,
+source-example, document/work/edition, packet, sidecar, exact-fingerprint,
+near-token, and connected-component commitments plus zero-namespace proofs.
+A steward-only candidate evaluator derives these values itself and produces
+zero outputs for any collision, derivative, drift, or uncertain lineage.
+Builders receive only positive clearance/public receipts; caller hashes cannot
+mint authority. Missing explicit document/work/edition identity fails
+`document_lineage_denominator_not_frozen`; missing proof that
+prompt/label/paraphrase/synthetic/annotation namespaces are zero fails closed.
+It rejects symlinks, unsafe hardlinks, traversal, role collision, unsafe
+owner/mode, path overlap, inode/device changes, ancestor replacement, and
+post-pin TOCTOU. It emits no private locator, content body, label, prompt, or
+membership. Any leakage, uncertain lineage, incomplete graph,
+hash/denominator drift, rights/provenance corruption, protected damage, or
+custody collision is a terminal batch failure with zero emitted, promoted, or
+activated outputs.
 
 ## Roles and evidence
 

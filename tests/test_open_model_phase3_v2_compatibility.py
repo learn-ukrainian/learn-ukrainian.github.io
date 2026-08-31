@@ -26,14 +26,17 @@ def test_current_phase_artifacts_are_excluded_without_widening_legacy_denominato
         "data/projects/open_model_data/evidence/phase3_p1_universe_freeze_v1.json",
         "data/projects/open_model_data/evidence/phase3_p1_dialect_regional_protection_amendment_v1.json",
         "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json",
+        "data/projects/open_model_data/evidence/phase3_scope_circularity_firewall_v1.json",
     } == compatibility.CURRENT_PHASE_EVIDENCE_PATHS
+    near_match = "data/projects/open_model_data/evidence/phase3_scope_circularity_firewall_v1_shadow.json"
     assert compatibility._pre_v2_evidence_paths(
         {
             compatibility.MATRIX_LOGICAL_PATH,
             *compatibility.CURRENT_PHASE_EVIDENCE_PATHS,
             legacy_path,
+            near_match,
         }
-    ) == {legacy_path}
+    ) == {legacy_path, near_match}
 
 
 @pytest.mark.parametrize("delta", ["missing", "unexpected"])
