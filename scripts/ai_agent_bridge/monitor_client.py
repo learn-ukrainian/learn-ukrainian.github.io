@@ -70,53 +70,85 @@ _CLUSTER_AUTHORITATIVE_MUTATION_PREFIXES: frozenset[str] = frozenset({
 })
 
 
+# ── Base-URL contract (GH #7489) ────────────────────────────────────────
+#
+# One typed concept: the Monitor **base URL** — ``scheme://host[:port]`` with
+# NO path. The client derives every endpoint URL by appending a path to a base
+# URL, so a base URL that smuggles in an endpoint path (the historical
+# ``AB_MONITOR_URL=http://localhost:8765/api/state/summary`` default leaking
+# into the multi-URL branch) concatenates into requests like
+# ``/api/state/summary/api/state/manifest``. Every accepted value is therefore
+# normalized to its bare origin exactly once, here.
+#
+# ``MONITOR_API_URLS`` is the canonical env var; the rest are deprecated
+# aliases kept only so existing operator environments keep resolving. New code
+# and docs should reference the canonical name only.
+CANONICAL_BASE_URLS_ENV = "MONITOR_API_URLS"
+DEPRECATED_BASE_URLS_ENV = (
+    "AB_MONITOR_URLS",
+    "MONITOR_BASE_URLS",
+    "MONITOR_API_URL",
+    "AB_MONITOR_URL",
+)
+
+
+def _base_origin(url: str) -> str:
+    """Normalize one base URL to ``scheme://host[:port]`` — never a path.
+
+    Values without a parseable scheme/netloc pass through with only trailing
+    slashes stripped so exotic-but-deliberate values still reach the transport.
+    """
+    value = url.strip().rstrip("/")
+    parsed = urllib.parse.urlparse(value)
+    if parsed.scheme and parsed.netloc:
+        return f"{parsed.scheme}://{parsed.netloc}"
+    return value
+
+
+def _split_url_list(s: str) -> list[str]:
+    return [p.strip() for p in re.split(r"[\s,]+", s) if p.strip()]
+
+
 def _normalize_base_urls(
     base_url: str | Sequence[str] | None,
     base_urls: Sequence[str] | str | None,
 ) -> tuple[str, ...]:
-    candidates: list[str] = []
+    """Resolve the ordered [A, B] base-URL list (GH #7489 typed contract).
 
-    def _split(s: str) -> list[str]:
-        return [p.strip() for p in re.split(r"[\s,]+", s) if p.strip()]
+    Precedence — the first source that is *set* wins:
 
-    if base_urls is not None:
-        if isinstance(base_urls, str):
-            candidates.extend(_split(base_urls))
-        else:
-            candidates.extend(str(u).strip() for u in base_urls if str(u).strip())
-    elif base_url is not None:
-        if isinstance(base_url, str):
-            candidates.extend(_split(base_url))
-        else:
-            candidates.extend(str(u).strip() for u in base_url if str(u).strip())
+    1. Constructor ``base_urls`` / ``base_url`` (string or sequence).
+    2. Env ``MONITOR_API_URLS`` (canonical), then the deprecated aliases in
+       ``DEPRECATED_BASE_URLS_ENV`` order.
+    3. ``DEFAULT_BASE_URL``.
 
-    if not candidates:
-        env_multi = (
-            os.environ.get("MONITOR_API_URLS")
-            or os.environ.get("AB_MONITOR_URLS")
-            or os.environ.get("MONITOR_BASE_URLS")
-            or ""
-        ).strip()
-        if env_multi:
-            candidates.extend(_split(env_multi))
-        else:
-            single_env = (
-                os.environ.get("MONITOR_API_URL")
-                or os.environ.get("AB_MONITOR_URL")
-                or ""
-            ).strip()
-            if single_env:
-                parsed = urllib.parse.urlparse(single_env)
-                if parsed.scheme and parsed.netloc:
-                    candidates.append(f"{parsed.scheme}://{parsed.netloc}")
-                else:
-                    candidates.append(single_env)
+    An explicit empty value — a constructor arg that is blank, or an env var
+    that is present but blank — DISABLES the client (returns ``()``); it does
+    NOT fall through to a lower-precedence source or the default. ``None``
+    (unset) is what falls through. This honors the documented
+    ``AB_MONITOR_URL=""`` disable contract that the old ``or``-chain silently
+    ignored.
+    """
 
-    if not candidates:
+    def _from_value(value: str | Sequence[str] | None) -> list[str] | None:
+        if value is None:
+            return None
+        if isinstance(value, str):
+            return _split_url_list(value)
+        return [str(u).strip() for u in value if str(u).strip()]
+
+    candidates = _from_value(base_urls) if base_urls is not None else _from_value(base_url)
+
+    if candidates is None:
+        for var in (CANONICAL_BASE_URLS_ENV, *DEPRECATED_BASE_URLS_ENV):
+            if var in os.environ:
+                candidates = _split_url_list(os.environ[var])
+                break
+
+    if candidates is None:
         candidates = [DEFAULT_BASE_URL]
 
-    cleaned = tuple(c.rstrip("/") for c in candidates if c)
-    return cleaned if cleaned else (DEFAULT_BASE_URL,)
+    return tuple(_base_origin(c) for c in candidates)
 
 
 def _canonical_context(
@@ -269,6 +301,10 @@ class MonitorClient:
 
     ``base_url`` or ``base_urls`` can be a single URL string, a comma-separated list,
     or a sequence of URL strings representing the ordered [A, B] base URL list.
+    Values are normalized once to bare ``scheme://host[:port]`` origins (see
+    ``_normalize_base_urls``); an explicit blank value disables the client
+    entirely (``base_urls == ()`` and requests fail soft without any network
+    attempt).
     """
 
     def __init__(
@@ -280,7 +316,7 @@ class MonitorClient:
         session_id: str | None = None,
     ) -> None:
         self.base_urls: tuple[str, ...] = _normalize_base_urls(base_url, base_urls)
-        self.base_url: str = self.base_urls[0]
+        self.base_url: str = self.base_urls[0] if self.base_urls else ""
         self.timeout_s = timeout_s
         # SessionStart persists Claude Code's documented ``session_id`` as a
         # project-private value. Non-Claude callers retain their own explicit thread
@@ -322,6 +358,11 @@ class MonitorClient:
         - ``http.client.HTTPException`` (``IncompleteRead``, ``BadStatusLine``, ...) is
           an ambiguous transport failure alongside ``URLError``/``ConnectionError``.
         """
+        if not self.base_urls:
+            # Explicitly disabled (blank base URL source): fail soft without any
+            # network attempt. 500 is a plain application-error answer here —
+            # never an ambiguous-transport status — and there is no B to hop to.
+            return 500, "", {}
         method_upper = method.upper()
         is_idempotent = method_upper in {"GET", "HEAD", "OPTIONS"}
         merged_headers = dict(headers or {})
@@ -395,6 +436,36 @@ class MonitorClient:
         if last_response is not None:
             return last_response
         return 500, "", {}
+
+    # -- public low-level verbs --------------------------------------
+
+    def get(
+        self, path: str, *, headers: dict[str, str] | None = None
+    ) -> tuple[int, str, dict[str, str]]:
+        """GET ``path`` across the configured base URLs. Never raises for
+        ordinary HTTP status codes; transport failures raise after the last
+        base URL. Cross-module callers must use this, not the private alias."""
+        return self._get(path, headers=headers)
+
+    def post(
+        self,
+        path: str,
+        *,
+        data: bytes | str | None = None,
+        json_body: Any = None,
+        headers: dict[str, str] | None = None,
+        idempotency_key: str | None = None,
+    ) -> tuple[int, str, dict[str, str]]:
+        """POST ``path``. Retries across [A, B] ONLY with a stable idempotency
+        key on an allowlisted cluster-authoritative route. Cross-module callers
+        must use this, not the private alias (GH #7489)."""
+        return self._post(
+            path,
+            data=data,
+            json_body=json_body,
+            headers=headers,
+            idempotency_key=idempotency_key,
+        )
 
     def _get(
         self, path: str, *, headers: dict[str, str] | None = None

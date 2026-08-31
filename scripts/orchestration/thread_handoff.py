@@ -1075,11 +1075,25 @@ def _bundle_status_manifest(state_root: Path, *, agent: str, lineage_id: str) ->
 
 
 class RolloverBundleAPIUnavailable(RuntimeError):
-    """The optional remote bundle authority cannot be reached."""
+    """The optional remote bundle authority cannot be reached (transient).
+
+    Reserved for transport failures and 5xx answers. A semantic 4xx answer is
+    NEVER transient — see :class:`RolloverBundleRefused` (GH #7489).
+    """
 
 
 class RolloverBundleNotFound(RuntimeError):
     """The remote bundle authority has no matching bundle."""
+
+
+class RolloverBundleRefused(RuntimeError):
+    """The remote bundle authority gave a semantic 4xx answer.
+
+    403 (fenced lease), 409 (stale generation), 422 (bad payload), ... are
+    application answers about THIS request — retrying them as transient
+    "unavailable" just re-refuses. Only :class:`RolloverBundleAPIUnavailable`
+    may be treated as transient (GH #7489).
+    """
 
 
 def _bundle_monitor_url(base_url: str) -> str:
@@ -1128,6 +1142,55 @@ def _bundle_lease_payload(stream_id: str) -> dict[str, Any] | None:
     }
 
 
+def _bundle_client(base_url: str, *, timeout_s: float = 3.0) -> Any:
+    """One shared MonitorClient pinned to a single loopback base URL.
+
+    ``_bundle_monitor_url`` collapses whatever was configured to ONE
+    ``http://127.0.0.1:<port>`` base, so the client's advertised [A, B]
+    failover provably cannot hop hosts for bundle traffic (GH #7489 keeps this
+    stricter constraint as an acceptance test).
+
+    Deferred import: a top-level import of scripts.ai_agent_bridge.monitor_client
+    would run the ai_agent_bridge package __init__, which (via _claude ->
+    _review_worktree -> scripts.review.isolation) imports back from this very
+    module — a circular import.
+    """
+    try:
+        from scripts.ai_agent_bridge.monitor_client import MonitorClient
+    except ImportError:
+        from ai_agent_bridge.monitor_client import MonitorClient
+    return MonitorClient(base_url=_bundle_monitor_url(base_url), timeout_s=timeout_s)
+
+
+def _bundle_raise_for_status(status: int, value: Any, *, method: str, path: str) -> None:
+    """Classify a bundle-API error status semantically (GH #7489).
+
+    A 404 on a bundle read means "no matching bundle". Any OTHER 4xx is a
+    semantic refusal (403 fenced lease, 409 stale generation, ...) — never a
+    transient "unavailable", so callers must not retry it as one. Only 5xx
+    stays transient.
+    """
+    detail = value.get("detail", "request refused") if isinstance(value, dict) else "request refused"
+    clean = path.split("?", 1)[0]
+    if method == "GET" and status == 404 and (
+        clean.endswith("/bundles/latest") or "/bundles/" in clean
+    ):
+        raise RolloverBundleNotFound(f"bundle API has no matching bundle: {detail}")
+    if 400 <= status < 500:
+        raise RolloverBundleRefused(f"bundle API refused request ({status}): {detail}")
+    raise RolloverBundleAPIUnavailable(f"bundle API unavailable: HTTP {status} ({detail})")
+
+
+def _bundle_parse_body(raw: str) -> Any:
+    """Best-effort JSON parse; ``None`` when the body is absent or not JSON."""
+    if not raw:
+        return None
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        return None
+
+
 def _bundle_api_request(
     base_url: str,
     *,
@@ -1136,35 +1199,29 @@ def _bundle_api_request(
     payload: Mapping[str, Any] | None = None,
     timeout_s: float = 3.0,
 ) -> dict[str, Any]:
-    body = None if payload is None else _bundle_json(payload)
-    request = urllib.request.Request(
-        f"{_bundle_monitor_url(base_url)}{path}",
-        data=body,
-        headers={"Accept": "application/json", "Content-Type": "application/json"},
-        method=method,
-    )
+    """Bundle API call through the shared :class:`MonitorClient` (GH #7489).
+
+    The second hand-rolled urllib client is retired: all bundle traffic goes
+    through ``MonitorClient`` so base-URL normalization and failover policy
+    live in exactly one place.
+    """
+    client = _bundle_client(base_url, timeout_s=timeout_s)
     try:
-        with urllib.request.urlopen(request, timeout=timeout_s) as response:
-            raw = response.read().decode("utf-8")
-            status = int(getattr(response, "status", 200))
-    except urllib.error.HTTPError as exc:
-        if method == "GET" and exc.code == 404 and (
-            path.split("?", 1)[0].endswith("/bundles/latest")
-            or "/bundles/" in path.split("?", 1)[0]
-        ):
-            raise RolloverBundleNotFound("bundle API has no matching bundle") from exc
-        raise RolloverBundleAPIUnavailable(f"bundle API unavailable: HTTP {exc.code}") from exc
-    except (urllib.error.URLError, TimeoutError, OSError) as exc:
+        if method.upper() == "GET":
+            status, raw, _headers = client.get(path, headers={"Accept": "application/json"})
+        else:
+            status, raw, _headers = client.post(
+                path,
+                json_body=payload,
+                headers={"Accept": "application/json"},
+            )
+    except (urllib.error.URLError, TimeoutError, OSError, http.client.HTTPException) as exc:
         raise RolloverBundleAPIUnavailable(f"bundle API unavailable: {type(exc).__name__}") from exc
-    try:
-        value = json.loads(raw)
-    except json.JSONDecodeError as exc:
-        raise RolloverBundleAPIUnavailable("bundle API returned non-JSON data") from exc
+    value = _bundle_parse_body(raw)
     if status >= 400:
-        detail = value.get("detail", "request refused") if isinstance(value, dict) else "request refused"
-        if status == 404:
-            raise RolloverBundleNotFound(f"bundle API has no matching bundle: {detail}")
-        raise RuntimeError(f"bundle API refused request ({status}): {detail}")
+        _bundle_raise_for_status(status, value, method=method.upper(), path=path)
+    if value is None:
+        raise RolloverBundleAPIUnavailable("bundle API returned non-JSON data")
     if not isinstance(value, dict):
         raise RuntimeError("bundle API returned a non-object JSON document")
     return value
@@ -1177,24 +1234,20 @@ def _bundle_api_upload(args: argparse.Namespace, *, stream_id: str, manifest: Ma
     ``SessionStreamStore.upload_rollover_bundle``), so that hash doubles as this
     call's stable idempotency key — it lets the client retry the exact same
     upload across the [A, B] base URL list on an ambiguous transport failure
-    without risking a second distinct bundle.
+    without risking a second distinct bundle. (Bundle traffic is pinned to a
+    single loopback base URL by ``_bundle_monitor_url``, so no cross-host hop
+    can actually occur.)
     """
     lease = _bundle_lease_payload(stream_id)
     if lease is None:
         raise RolloverBundleAPIUnavailable("SESSION_STREAM_* fenced lease envelope is unavailable")
-    # Deferred: a top-level import of scripts.ai_agent_bridge.monitor_client would run
-    # the ai_agent_bridge package __init__, which (via _claude -> _review_worktree ->
-    # scripts.review.isolation) imports back from this very module — a circular import.
-    try:
-        from scripts.ai_agent_bridge.monitor_client import MonitorClient
-    except ImportError:
-        from ai_agent_bridge.monitor_client import MonitorClient
     manifest_value = dict(manifest)
     bundle_sha256 = manifest_value.get("bundle_sha256")
-    client = MonitorClient(base_url=_bundle_monitor_url(args.monitor_base_url), timeout_s=3.0)
+    client = _bundle_client(args.monitor_base_url, timeout_s=3.0)
+    path = f"/api/epics/v1/{stream_id}/bundles"
     try:
-        status, raw, _headers = client._post(
-            f"/api/epics/v1/{stream_id}/bundles",
+        status, raw, _headers = client.post(
+            path,
             json_body={
                 **lease,
                 "manifest": manifest_value,
@@ -1204,13 +1257,11 @@ def _bundle_api_upload(args: argparse.Namespace, *, stream_id: str, manifest: Ma
         )
     except (urllib.error.URLError, TimeoutError, OSError, http.client.HTTPException) as exc:
         raise RolloverBundleAPIUnavailable(f"bundle API unavailable: {type(exc).__name__}") from exc
-    try:
-        value = json.loads(raw)
-    except json.JSONDecodeError as exc:
-        raise RolloverBundleAPIUnavailable("bundle API returned non-JSON data") from exc
+    value = _bundle_parse_body(raw)
     if status >= 400:
-        detail = value.get("detail", "request refused") if isinstance(value, dict) else "request refused"
-        raise RolloverBundleAPIUnavailable(f"bundle API unavailable: HTTP {status} ({detail})")
+        _bundle_raise_for_status(status, value, method="POST", path=path)
+    if value is None:
+        raise RolloverBundleAPIUnavailable("bundle API returned non-JSON data")
     if not isinstance(value, dict):
         raise RuntimeError("bundle API returned a non-object JSON document")
     return value
@@ -5710,6 +5761,9 @@ def cmd_import_bundle(args: argparse.Namespace) -> int:
         print(json.dumps({"status": "warning", "action": "import-bundle", "reason": str(exc)}, separators=(",", ":")))
         return 0
     except RolloverBundleNotFound as exc:
+        return _bundle_import_error(str(exc))
+    except RolloverBundleRefused as exc:
+        # Semantic 4xx — not transient, must NOT fail open like unavailability.
         return _bundle_import_error(str(exc))
     except (OSError, ValueError, KeyError, TypeError) as exc:
         return _bundle_import_error(str(exc))
