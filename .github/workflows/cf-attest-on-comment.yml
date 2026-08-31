@@ -1,0 +1,80 @@
+name: CF attest on comment
+
+# #7544: CF attest on pull_request runs at push time — before the cross-family
+# comment can exist. When a CF-of-record comment lands, re-evaluate attest for
+# the PR's current head immediately (dedicated job; not a full CI re-run).
+# Auto-arm's stale-failed rerun (#7548) remains the merge-queue companion.
+
+permissions:
+  contents: read
+  pull-requests: read
+
+on:
+  issue_comment:
+    types: [created]
+
+concurrency:
+  group: cf-attest-on-comment-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
+jobs:
+  cf-attest:
+    name: CF attest
+    # PR comments only. Match the CF attest shape (VERDICT + Reviewer family);
+    # ignore Codex usage-limit noise and ordinary driver chatter.
+    # Matching comments never skip-to-green: resolve + attest fail closed.
+    if: >-
+      github.event.issue.pull_request &&
+      contains(github.event.comment.body, 'VERDICT:') &&
+      contains(github.event.comment.body, 'Reviewer family:') &&
+      !contains(github.event.comment.body, 'usage limit')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Resolve PR head SHA
+        id: pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+          # Fail-closed: missing/malformed head or API errors must red the job.
+          # PR_NUMBER is a GitHub-issued integer; never interpolate comment text
+          # into the shell (untrusted-workflow-interpolation gate).
+          if [[ ! "${PR_NUMBER}" =~ ^[1-9][0-9]*$ ]]; then
+            echo "::error::CF attest fail-closed: missing PR number"
+            exit 1
+          fi
+          sha="$(gh api "repos/${REPO}/pulls/${PR_NUMBER}" --jq .head.sha)"
+          if [[ ! "${sha}" =~ ^[0-9a-fA-F]{40}$ ]]; then
+            echo "::error::CF attest fail-closed: missing or malformed PR head SHA"
+            exit 1
+          fi
+          echo "head_sha=${sha}" >> "${GITHUB_OUTPUT}"
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # #7487: execute the trusted default-branch evaluator that hosts this
+          # workflow (issue_comment always loads from default). The PR head is
+          # the attestation *target* via PR_HEAD_SHA below — never run the
+          # candidate's copy of cf_attest.py.
+          persist-credentials: false
+          sparse-checkout: |
+            scripts/ci
+          sparse-checkout-cone-mode: true
+
+      - name: Require exact-head cross-family review
+        env:
+          EVENT_NAME: pull_request
+          EVENT_SHA: ${{ github.sha }}
+          PR_HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
+          PR_NUMBER: ${{ github.event.issue.number }}
+          MERGE_GROUP_HEAD_REF: ""
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_API_URL: ${{ github.api_url }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: python3 scripts/ci/cf_attest.py

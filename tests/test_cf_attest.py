@@ -24,6 +24,7 @@ from scripts.ci.cf_attest import (
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _CI = _REPO_ROOT / ".github" / "workflows" / "ci.yml"
+_COMMENT_WORKFLOW = _REPO_ROOT / ".github" / "workflows" / "cf-attest-on-comment.yml"
 
 PR_HEAD = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 MERGE_SHA = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
@@ -314,6 +315,68 @@ def test_gate_results_env_includes_cf_attest() -> None:
         if step.get("name") == "Fail unless every event-required job succeeded"
     )
     assert "cf-attest=${{ needs.cf-attest.result }}" in evaluate["env"]["RESULTS"]
+
+
+def _load_comment_workflow() -> dict:
+    data = yaml.safe_load(_COMMENT_WORKFLOW.read_text(encoding="utf-8"))
+    assert isinstance(data, dict)
+    return data
+
+
+def _comment_triggers(workflow: dict) -> dict:
+    # PyYAML (YAML 1.1) parses the bare ``on:`` key as the boolean True.
+    raw = workflow.get("on", workflow.get(True))
+    assert isinstance(raw, dict), "comment workflow has no `on:` triggers"
+    return raw
+
+
+def test_comment_workflow_triggers_on_issue_comment_created() -> None:
+    """#7544: dedicated workflow re-evaluates attest when the CF comment lands."""
+    assert _COMMENT_WORKFLOW.is_file(), f"missing workflow: {_COMMENT_WORKFLOW}"
+    triggers = _comment_triggers(_load_comment_workflow())
+    assert set(triggers) == {"issue_comment"}
+    assert triggers["issue_comment"] == {"types": ["created"]}
+
+
+def test_comment_workflow_is_pr_only_and_cf_shaped() -> None:
+    job = _load_comment_workflow()["jobs"]["cf-attest"]
+    condition = " ".join(str(job.get("if") or "").split())
+    assert "github.event.issue.pull_request" in condition
+    assert "VERDICT:" in condition
+    assert "Reviewer family:" in condition
+    assert "usage limit" in condition
+    assert job.get("continue-on-error") is not True
+
+
+def test_comment_workflow_pins_exact_head_env_and_run() -> None:
+    workflow = _load_comment_workflow()
+    assert workflow["permissions"] == {"contents": "read", "pull-requests": "read"}
+    job = workflow["jobs"]["cf-attest"]
+    assert job["name"] == "CF attest"
+    assert job["permissions"] == {"contents": "read", "pull-requests": "read"}
+    resolve = next(step for step in job["steps"] if step.get("id") == "pr")
+    assert "fail-closed" in resolve["run"]
+    assert "github.event.comment.body" not in resolve["run"]
+    step = next(
+        item
+        for item in job["steps"]
+        if item.get("name") == "Require exact-head cross-family review"
+    )
+    env = step["env"]
+    assert env["EVENT_NAME"] == "pull_request"
+    assert env["PR_HEAD_SHA"] == "${{ steps.pr.outputs.head_sha }}"
+    assert env["PR_NUMBER"] == "${{ github.event.issue.number }}"
+    assert env["EVENT_SHA"] == "${{ github.sha }}"
+    assert step["run"] == "python3 scripts/ci/cf_attest.py"
+    assert "${{" not in step["run"]
+    assert step.get("continue-on-error") is not True
+    checkout = next(
+        item for item in job["steps"] if str(item.get("uses", "")).startswith("actions/checkout@")
+    )
+    assert checkout["with"]["persist-credentials"] is False
+    # #7487: trusted default-branch evaluator; PR head is PR_HEAD_SHA only.
+    assert "ref" not in checkout["with"]
+    assert "scripts/ci" in str(checkout["with"].get("sparse-checkout", ""))
 
 
 def test_later_block_revokes_earlier_approve_latest_wins() -> None:
