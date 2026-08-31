@@ -247,6 +247,50 @@ def test_secure_object_reader_rejects_hardlinks_symlinks_and_bad_compression(tmp
     os.close(pack_fd)
 
 
+def test_held_pack_and_manifest_descriptors_survive_visible_path_swap(tmp_path: Path) -> None:
+    pack = tmp_path / "pack"
+    objects = pack / "objects"
+    objects.mkdir(parents=True)
+    os.chmod(pack, 0o700)
+    os.chmod(objects, 0o700)
+    raw = b"original"
+    object_path = objects / "one"
+    object_path.write_bytes(raw)
+    os.chmod(object_path, 0o600)
+    manifest_path = pack / "pack-manifest.json"
+    manifest_path.write_bytes(b'{"original":true}')
+    os.chmod(manifest_path, 0o600)
+    item = {"object_relative_path": "objects/one", "storage": "raw", "stored_sha256": firewall.sha256_bytes(raw), "sha256": firewall.sha256_bytes(raw), "size_bytes": len(raw)}
+    pack_fd = os.open(pack, os.O_RDONLY | os.O_DIRECTORY)
+    manifest_fd = os.open("pack-manifest.json", os.O_RDONLY, dir_fd=pack_fd)
+    moved = tmp_path / "moved-pack"
+    pack.rename(moved)
+    pack.mkdir()
+    os.chmod(pack, 0o700)
+    (pack / "pack-manifest.json").write_bytes(b'{"attacker":true}')
+    os.chmod(pack / "pack-manifest.json", 0o600)
+    assert b"".join(iter(lambda: os.read(manifest_fd, 65536), b"")) == b'{"original":true}'
+    assert firewall._secure_object_raw(pack_fd, item) == raw
+    os.close(manifest_fd)
+    os.close(pack_fd)
+
+
+def test_held_output_descriptor_writes_and_loads_original_directory_after_swap(tmp_path: Path) -> None:
+    output = tmp_path / "output"
+    output.mkdir()
+    os.chmod(output, 0o700)
+    output_fd = os.open(output, os.O_RDONLY | os.O_DIRECTORY)
+    moved = tmp_path / "moved-output"
+    output.rename(moved)
+    output.mkdir()
+    os.chmod(output, 0o700)
+    firewall._write_private_json_at(output_fd, "state.json", {"text_free": True})
+    assert not (output / "state.json").exists()
+    assert firewall._load_private_json_at(output_fd, "state.json") == {"text_free": True}
+    assert json.loads((moved / "state.json").read_text()) == {"text_free": True}
+    os.close(output_fd)
+
+
 def test_concept_authority_gate_requires_pinned_human_registry_and_rejects_renamed_derivative() -> None:
     allowed = {"kind": "authority_citation", "origin_kind": "independent", "concept_or_citation_id": "external_authority", "authority_sha256": "a" * 64}
     assert firewall.admit_concept_or_authority(allowed) == {"ok": False, "code": "unregistered_authority", "emitted": 0, "promoted": 0, "activated": 0}
