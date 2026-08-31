@@ -108,13 +108,19 @@ def _seed_authority_plane(root: Path) -> Path:
     return plane_db
 
 
-def test_all_probes_board_structure():
+def test_all_probes_board_structure(tmp_path):
     """Board emitted contains expected top-level keys and all 10 diagnostic probes."""
+    # #7500: isolate on a tmp repo root — against the LIVE repo the board rides
+    # the 16KiB cap (real plane traffic) and the oversized fallback strips
+    # probe fields, failing these assertions order-dependently.
     board = build_cold_start_board(
         stream_id="epic:9999",
         agent="agy/cold-start-pr2-board",
         needle="board",
+        root=tmp_path / "plane",
+        repo_root=tmp_path,
     )
+    assert "_board_oversized_fallback" not in board
 
     assert "timestamp" in board
     assert "board_status" in board
@@ -211,7 +217,7 @@ def test_no_claim_or_write_calls(monkeypatch):
     assert board["board_status"] in {"ok", "degraded"}
 
 
-def test_capsule_reports_live_plane_mode(monkeypatch):
+def test_capsule_reports_live_plane_mode(monkeypatch, tmp_path):
     """capsule_session_env uses resolve_plane_mode(None), not a hardcoded off default."""
     monkeypatch.delenv("FLEET_COMMS_PLANE_MODE", raising=False)
     monkeypatch.delenv("FLEET_COMMS_MESSAGE_PLANE", raising=False)
@@ -220,7 +226,7 @@ def test_capsule_reports_live_plane_mode(monkeypatch):
         "scripts.fleet_comms.cold_start_board.resolve_plane_mode",
         return_value="authority",
     ) as resolve:
-        board = build_cold_start_board(agent="grok-infra")
+        board = build_cold_start_board(agent="grok-infra", root=tmp_path / "plane", repo_root=tmp_path)
         resolve.assert_called()
         assert board["probes"]["capsule_session_env"]["data"]["plane_mode"] == "authority"
 
