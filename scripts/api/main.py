@@ -386,10 +386,10 @@ _detached_orient_last_error: dict[str, str] = {}
 # one detached daemon worker, never by the ASGI request path. The last successful
 # result remains available as a stale fallback when GitHub is slow or unavailable.
 _idle_pr_refresh_lock = threading.Lock()
-_idle_pr_refresh_thread: threading.Thread | None = None
-_idle_pr_last_good: tuple[dict[str, Any], str] | None = None
-_idle_pr_last_error: str | None = None
-_idle_pr_next_retry_at = 0.0
+_idle_pr_refresh_threads: dict[str, threading.Thread] = {}
+_idle_pr_last_good: dict[str, tuple[dict[str, Any], str]] = {}
+_idle_pr_last_error: dict[str, str] = {}
+_idle_pr_next_retry_at: dict[str, float] = {}
 
 
 def _parse_iso_datetime(value: str | None) -> datetime | None:
@@ -697,42 +697,42 @@ def _collect_idle_prs_orient_data(ctx: MonitorContext | None = None) -> dict[str
     return {"idle_prs": rows}
 
 
-def _run_idle_pr_refresh(collector: Callable[[], Any]) -> None:
-    global _idle_pr_last_error, _idle_pr_last_good, _idle_pr_next_retry_at
+def _run_idle_pr_refresh(collector: Callable[[], Any], scope: str) -> None:
     try:
         value = collector()
         if not isinstance(value, dict) or not isinstance(value.get("idle_prs"), list):
             raise RuntimeError("idle PR collector returned an invalid payload")
     except subprocess.TimeoutExpired:
-        _idle_pr_last_error = "gh_timeout"
-        _idle_pr_next_retry_at = time.monotonic() + 30.0
+        _idle_pr_last_error[scope] = "gh_timeout"
+        _idle_pr_next_retry_at[scope] = time.monotonic() + 30.0
         return
     except Exception:
-        _idle_pr_last_error = "gh_unavailable"
-        _idle_pr_next_retry_at = time.monotonic() + 30.0
+        _idle_pr_last_error[scope] = "gh_unavailable"
+        _idle_pr_next_retry_at[scope] = time.monotonic() + 30.0
         return
 
     generated_at = _isoformat_z(datetime.now(UTC))
-    cache_set(IDLE_PR_CACHE_KEY, (value, generated_at))
-    _idle_pr_last_good = (value, generated_at)
-    _idle_pr_last_error = None
-    _idle_pr_next_retry_at = 0.0
+    cache_set(f"{IDLE_PR_CACHE_KEY}{scope}", (value, generated_at))
+    _idle_pr_last_good[scope] = (value, generated_at)
+    _idle_pr_last_error.pop(scope, None)
+    _idle_pr_next_retry_at[scope] = 0.0
 
 
-def _schedule_idle_pr_refresh(collector: Callable[[], Any]) -> None:
-    global _idle_pr_refresh_thread
-    if time.monotonic() < _idle_pr_next_retry_at:
+def _schedule_idle_pr_refresh(collector: Callable[[], Any], scope: str) -> None:
+    if time.monotonic() < _idle_pr_next_retry_at.get(scope, 0.0):
         return
     with _idle_pr_refresh_lock:
-        if _idle_pr_refresh_thread is not None and _idle_pr_refresh_thread.is_alive():
+        thread = _idle_pr_refresh_threads.get(scope)
+        if thread is not None and thread.is_alive():
             return
-        _idle_pr_refresh_thread = threading.Thread(
+        worker = threading.Thread(
             target=_run_idle_pr_refresh,
-            args=(collector,),
+            args=(collector, scope),
             daemon=True,
             name="orient-idle-pr-refresh",
         )
-        _idle_pr_refresh_thread.start()
+        _idle_pr_refresh_threads[scope] = worker
+        worker.start()
 
 
 def _cached_idle_pr_section(
@@ -742,8 +742,9 @@ def _cached_idle_pr_section(
     ctx: MonitorContext | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     ttl = ORIENT_SECTION_TTLS["idle_prs"]
+    scope = _ctx_cache_scope(ctx)
     collector = functools.partial(collector, ctx)
-    cached = cache_get(f"{IDLE_PR_CACHE_KEY}{_ctx_cache_scope(ctx)}", ttl=ttl)
+    cached = cache_get(f"{IDLE_PR_CACHE_KEY}{scope}", ttl=ttl)
     if isinstance(cached, tuple) and len(cached) == 2:
         value, generated_at = cached
         if isinstance(value, dict) and isinstance(generated_at, str):
@@ -754,19 +755,20 @@ def _cached_idle_pr_section(
                 "cache": "hit",
             }
 
-    _schedule_idle_pr_refresh(collector)
-    if _idle_pr_last_good is not None:
-        value, generated_at = _idle_pr_last_good
+    _schedule_idle_pr_refresh(collector, scope)
+    scoped_last_good = _idle_pr_last_good.get(scope)
+    if scoped_last_good is not None:
+        value, generated_at = scoped_last_good
         meta: dict[str, Any] = {
             "generated_at": generated_at,
             "stale_after_s": ttl,
             "source": "gh",
             "cache": "miss",
             "stale": True,
-            "refreshing": _idle_pr_refresh_thread is not None and _idle_pr_refresh_thread.is_alive(),
+            "refreshing": (_t := _idle_pr_refresh_threads.get(scope)) is not None and _t.is_alive(),
         }
-        if _idle_pr_last_error is not None:
-            meta["error"] = _idle_pr_last_error
+        if (_err := _idle_pr_last_error.get(scope)) is not None:
+            meta["error"] = _err
         return value, meta
 
     meta = {
@@ -774,10 +776,10 @@ def _cached_idle_pr_section(
         "stale_after_s": ttl,
         "source": "gh",
         "cache": "miss",
-        "refreshing": _idle_pr_refresh_thread is not None and _idle_pr_refresh_thread.is_alive(),
+        "refreshing": (_t := _idle_pr_refresh_threads.get(scope)) is not None and _t.is_alive(),
     }
-    if _idle_pr_last_error is not None:
-        meta["error"] = _idle_pr_last_error
+    if (_err := _idle_pr_last_error.get(scope)) is not None:
+        meta["error"] = _err
     return fallback, meta
 
 
@@ -798,16 +800,17 @@ def _schedule_detached_orient_refresh(
 ) -> bool:
     """Start a single-flight worker for ``key``. Return True if this call started it."""
     with _detached_orient_lock:
-        thread = _detached_orient_threads.get(key)
+        state_key = cache_key or f"orient_{key}"
+        thread = _detached_orient_threads.get(state_key)
         if thread is not None and thread.is_alive():
             return False
         worker = threading.Thread(
             target=_run_detached_orient_refresh,
-            args=(key, collector, cache_key or f"orient_{key}"),
+            args=(key, collector, state_key),
             daemon=True,
             name=f"orient-{key}-refresh",
         )
-        _detached_orient_threads[key] = worker
+        _detached_orient_threads[state_key] = worker
         worker.start()
         return True
 
@@ -821,10 +824,10 @@ def _run_detached_orient_refresh(
         generated_at = _isoformat_z(datetime.now(UTC))
         if ttl > 0:
             cache_set(cache_key, (value, generated_at))
-        _detached_orient_last_good[key] = (value, generated_at)
-        _detached_orient_last_error.pop(key, None)
+        _detached_orient_last_good[cache_key] = (value, generated_at)
+        _detached_orient_last_error.pop(cache_key, None)
     except Exception as exc:
-        _detached_orient_last_error[key] = str(exc)
+        _detached_orient_last_error[cache_key] = str(exc)
 
 
 async def _cached_detached_orient_section(
@@ -858,7 +861,7 @@ async def _cached_detached_orient_section(
             }
 
     started = _schedule_detached_orient_refresh(key, collector, cache_key)
-    thread = _detached_orient_threads.get(key)
+    thread = _detached_orient_threads.get(cache_key)
     if started and thread is not None and thread.is_alive():
         loop = asyncio.get_running_loop()
         await loop.run_in_executor(
@@ -878,7 +881,7 @@ async def _cached_detached_orient_section(
                 "cache": "miss",
             }
 
-    last_good = _detached_orient_last_good.get(key)
+    last_good = _detached_orient_last_good.get(cache_key)
     if last_good is not None:
         value, generated_at = last_good
         meta: dict[str, Any] = {
@@ -889,12 +892,12 @@ async def _cached_detached_orient_section(
             "stale": True,
             "refreshing": thread is not None and thread.is_alive(),
         }
-        last_error = _detached_orient_last_error.get(key)
+        last_error = _detached_orient_last_error.get(cache_key)
         if last_error is not None:
             meta["error"] = last_error
         return value, meta
 
-    short_err = _detached_orient_last_error.get(key) or "refreshing"
+    short_err = _detached_orient_last_error.get(cache_key) or "refreshing"
     meta = {
         "generated_at": _isoformat_z(datetime.now(UTC)),
         "stale_after_s": ttl,

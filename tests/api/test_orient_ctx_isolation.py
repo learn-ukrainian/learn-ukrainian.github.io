@@ -55,3 +55,30 @@ def test_resolve_context_never_reads_the_module_global_app(tmp_path: Path) -> No
     assert resolved is not ctx
     # and an explicitly passed ctx always wins
     assert api_main._resolve_context(ctx) is ctx
+
+
+def test_idle_pr_last_good_is_not_shared_across_contexts(tmp_path: Path) -> None:
+    """#7494 CF r1: one app's last-good idle-PR payload must never surface
+    in another app's response on a cache miss."""
+    import scripts.api.main as m
+
+    scope_a, scope_b = "@/roots/a", "@/roots/b"
+    m._idle_pr_last_good[scope_a] = ({"idle_prs": [{"number": 1}]}, "2026-08-31T00:00:00Z")
+    try:
+        assert m._idle_pr_last_good.get(scope_b) is None
+        # The reader consults only its own scope: emulate scope-b miss path.
+        assert scope_b not in m._idle_pr_last_error
+    finally:
+        m._idle_pr_last_good.pop(scope_a, None)
+
+
+def test_detached_last_good_keyed_by_scoped_cache_key(tmp_path: Path) -> None:
+    import scripts.api.main as m
+
+    key_a = "orient_pipeline@/roots/a"
+    m._detached_orient_last_good[key_a] = ({"summary": {}}, "2026-08-31T00:00:00Z")
+    try:
+        assert m._detached_orient_last_good.get("orient_pipeline@/roots/b") is None
+        assert m._detached_orient_last_good.get("orient_pipeline") is None
+    finally:
+        m._detached_orient_last_good.pop(key_a, None)
