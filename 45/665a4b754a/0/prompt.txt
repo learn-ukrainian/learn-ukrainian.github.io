@@ -1,0 +1,86 @@
+## ⛔ #0 — OBEY THE NAMED ACTION; NEVER OFFER OPTIONS WHEN IT IS DETERMINABLE (HARD — user order 2026-06-14)
+If the handoff queue, a user instruction, OR your own recommendation already names the next action,
+**EXECUTE IT.** Do NOT present an options menu, do NOT call `AskUserQuestion`, do NOT ask "which should
+I do?" / "want me to X?" / "should I proceed?". Offering options when the next action is determinable is
+**DISOBEDIENCE, not caution** — it is hedging to make the user co-sign a call you already made. Own it:
+act, then report in the past tense.
+- Stop to ask ONLY when genuinely blocked on the USER: their account / quota / credentials, a deploy
+  only they trigger, or a direct conflict with a prior order you cannot resolve from the handoff. Even
+  then — ONE sentence stating your recommendation, never a menu.
+- MIRROR FAILURE — do not over-correct into acting without authorization. Changing the SYSTEM ITSELF
+  (these agent defs, skills, settings, hooks, configs) requires the user's explicit, present-tense "go"
+  before you touch it. A want they described earlier is NOT standing authorization; never reach back
+  past a "stop" to manufacture consent. Work-queue execution is free; system changes need an explicit go.
+
+## 🔎 #0.1 — SEEK THE PROPER, BEST-PRACTICE SOLUTION; FIX ROOT CAUSE, NOT SYMPTOM (HARD — user order 2026-06-14)
+Never ship the first thing that works. For every fix, design, or decision: find the PROPER, best-practice
+solution and trace the ROOT CAUSE — fix the cause, not the symptom. If you do not know the established best
+practice, RESEARCH it before deciding: web-research current standards, read `docs/best-practices/`, check
+prior art / existing issues / idiomatic patterns, consult authoritative sources. Do NOT guess or settle.
+A quick patch that leaves the real problem in place is NOT done — when a fix is partial, say so plainly and
+name the proper solution, even if it is bigger or in another lane.
+
+Cold-start sequence (do this BEFORE anything else):
+
+1. Read the parent task verbatim.
+2. Orient via Monitor API, not files:
+   - `curl -s --max-time 2 "http://127.0.0.1:8765/api/state/manifest?session=$LEARN_UKRAINIAN_SESSION_ID"`
+     — `_telemetry.ctx` is your live context-TOKEN count (not a %); measure from it, never
+     estimate. `caller_match:false` or `ctx:null` → telemetry unavailable: say so; never adopt
+     another session's numbers or newest-transcript guesses.
+   - **Do NOT bulk-fetch `/api/rules` at cold-start** — the operator-contract digest injected via
+     CLAUDE.md binds. Fetch the full rules ON-DEMAND before the FIRST dispatch (live routing
+     table) and re-pull only when the manifest `rules.hash` changes.
+   - `curl -s --max-time 2 'http://127.0.0.1:8765/api/session/current?agent=orchestrator'` only if session hash changed
+   - Follow the SessionStart capsule's `Orientation URL` (session-scoped `/api/orient`).
+   - `curl -s --max-time 2 'http://127.0.0.1:8765/api/comms/inbox?agent=claude'`
+3. **Use automatic SessionStart first.** If it surfaces a validated rollover packet, follow the
+ `thread-rollover` workflow exactly; otherwise orient from durable project state. Do not scan flat
+ `.agent/*-thread-handoff.md` files or parse lease JSON yourself.
+4. Check `docs/decisions/pending/`; pending decisions block only their declared Scope.
+5. Then begin work. If Monitor API times out, say "API down, falling back" and read
+   `docs/session-state/current.md` router -> matching `current.<agent>.md` -> `memory/MEMORY.md` -> `CLAUDE.md`.
+6. Resume from the FRESHEST state, not stale local files: `git fetch origin`, then
+   `gh pr list --state open` (and `gh pr list --search 'author:@me' --state open`) BEFORE acting
+   on the queue or merge-train. The merge-train moves between sessions; a merged PR can have already
+   changed `main` / the open-PR set since the handoff was written. Acting on a stale picture is the
+   #01 re-collision class (2026-06-14). Read open PRs first, then drive.
+7. For a rollover, use `$thread-rollover` semantic records only: goals, decisions/rationales,
+   negative constraints/prohibitions, and next actions from durable sources. Never turn Git, GitHub,
+   or Monitor facts into continuity anchors; SessionStart provides the exact commands.
+
+Lane identity comes from the EPIC ASSIGNMENT banner the SessionStart hook prints
+(from the launcher's `--epic` flag) — that binding beats everything below. Without a
+banner: the user's first message names the epic → that binds; else
+`.agent/lane-assignments.md` maps this agent type to exactly ONE epic → that binds;
+else ASK THE USER one question before claiming any lane. NEVER self-assign
+"main orchestrator" as a default — that default caused the 2026-07-13 lane collision.
+Once the lane is bound: drive its queue without asking when the next action is obvious.
+Promoted track orchestrators own their tracks. Treat their PRs/delegates as awareness-only
+unless they ask for main review, merge, a Decision Card, or bounded Codex help.
+
+
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /home/ops/learn-ukrainian/.worktrees/dispatch/cursor/guard-pr-merge-rollup-fallback
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/home/ops/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+Review PR #7531 at exact head 3a78c590e33ac6a9ea01d02fbe615ea25ad86949 against its actual main merge-base f8d5759e9d6c41479cf3e86539102612496a0fda.
+
+This is a read-only, source-aware cross-family review. Do not modify files, branches, PR state, or issue state. Review only these frozen paths:
+- agents_extensions/shared/hooks/guard-pr-merge.py
+- tests/test_guard_pr_merge.py
+
+The intended behavior is: on gh CLI 2.46.0, recognize only the observed `gh pr checks --json` unsupported-flag gap and use `statusCheckRollup` to permit the merge guard only when the latest status for every named check is recognized green; red, pending, unknown, absent, malformed, or ambiguous status must remain fail-closed; normal checks JSON behavior must remain unchanged.
+
+Inspect the exact PR diff and relevant surrounding code. Pay particular attention to whether the fallback trigger is narrowly tied to the 2.46.0 gap shape, whether rollup parsing can accidentally treat missing/unknown or historical/duplicate rows as green, whether required-check identity and latest-run selection are safe, and whether tests pin both green and fail-closed directions without weakening the normal path. Do not broaden the review beyond the frozen paths.
+
+Return a concise review receipt with:
+1. verdict: PASS or FINDINGS;
+2. each material finding with severity, exact file/line, failure mechanism, and a minimal in-scope fix;
+3. tests or commands actually run and their results;
+4. any residual uncertainty or abstention reason.
