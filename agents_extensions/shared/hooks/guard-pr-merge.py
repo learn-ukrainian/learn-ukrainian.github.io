@@ -890,31 +890,28 @@ def _pr_meta(pr: str, repo: str | None = None, cwd: str | None = None) -> dict |
     return data
 
 
-def _check_states(pr: str, repo: str | None = None, cwd: str | None = None) -> tuple[list[str], list[str]] | None:
-    """(failing, pending) non-advisory check names, or None if undeterminable."""
-    try:
-        out = subprocess.run(
-            ["gh", "pr", "checks", pr, *_repo_args(repo), "--json", "name,bucket,state"],
-            capture_output=True,
-            env=_gh_env(),
-            cwd=cwd,
-            text=True,
-            timeout=8,
-        )
-    except Exception:
-        return None
-    text = (out.stdout or "").strip()
-    if not text:
-        # Empty output is ambiguous: a PR with zero checks (rc 0 → nothing to wait for)
-        # vs a gh error / non-existent PR (rc != 0 → fail-CLOSED block). Reading an
-        # *error* as "no failing checks" is the fail-open bug guard-admin-merge closed.
-        return ([], []) if out.returncode == 0 else None
-    try:
-        rows = json.loads(_decolorize(text))
-    except json.JSONDecodeError:
-        return None
-    if not isinstance(rows, list):
-        return None
+class _UseStatusRollupFallback:
+    """Sentinel: ``gh pr checks --json`` is unavailable on this gh build."""
+
+
+_USE_STATUS_ROLLUP = _UseStatusRollupFallback()
+
+_ROLLUP_FAIL_CONCLUSIONS = {
+    "FAILURE",
+    "CANCELLED",
+    "TIMED_OUT",
+    "ACTION_REQUIRED",
+}
+_ROLLUP_PENDING_STATUS = {"IN_PROGRESS", "QUEUED", "PENDING", "WAITING", "EXPECTED"}
+_ROLLUP_PASS_CONCLUSIONS = {"SUCCESS", "SKIPPED", "NEUTRAL", ""}
+
+
+def _checks_json_unsupported(stderr: str) -> bool:
+    low = stderr.lower()
+    return "unknown flag" in low and "--json" in low
+
+
+def _parse_check_bucket_rows(rows: list) -> tuple[list[str], list[str]] | None:
     failing: list[str] = []
     pending: list[str] = []
     for r in rows:
@@ -929,11 +926,94 @@ def _check_states(pr: str, repo: str | None = None, cwd: str | None = None) -> t
         elif bucket in _PENDING_BUCKETS:
             pending.append(name)
         elif bucket not in _PASS_BUCKETS:
-            # Schema drift or a partial row on a non-advisory check. "I don't recognize
-            # this state" must never fall through to green — that is the fail-open bug
-            # this hook exists to prevent, arriving by a different door.
             return None
     return failing, pending
+
+
+def _check_states_from_checks_json(
+    pr: str, repo: str | None = None, cwd: str | None = None
+) -> tuple[list[str], list[str]] | None | _UseStatusRollupFallback:
+    try:
+        out = subprocess.run(
+            ["gh", "pr", "checks", pr, *_repo_args(repo), "--json", "name,bucket,state"],
+            capture_output=True,
+            env=_gh_env(),
+            cwd=cwd,
+            text=True,
+            timeout=8,
+        )
+    except Exception:
+        return None
+    stderr = _decolorize(out.stderr or "")
+    if _checks_json_unsupported(stderr):
+        return _USE_STATUS_ROLLUP
+    text = (out.stdout or "").strip()
+    if not text:
+        return ([], []) if out.returncode == 0 else None
+    try:
+        rows = json.loads(_decolorize(text))
+    except json.JSONDecodeError:
+        return None
+    if not isinstance(rows, list):
+        return None
+    return _parse_check_bucket_rows(rows)
+
+
+def _check_states_from_status_rollup(
+    pr: str, repo: str | None = None, cwd: str | None = None
+) -> tuple[list[str], list[str]] | None:
+    """Fallback for gh builds without ``pr checks --json`` (e.g. 2.46.x)."""
+    try:
+        out = subprocess.run(
+            ["gh", "pr", "view", pr, *_repo_args(repo), "--json", "statusCheckRollup"],
+            capture_output=True,
+            env=_gh_env(),
+            cwd=cwd,
+            text=True,
+            timeout=8,
+        )
+    except Exception:
+        return None
+    if out.returncode != 0:
+        return None
+    try:
+        data = json.loads(_decolorize(out.stdout or "").strip() or "{}")
+    except json.JSONDecodeError:
+        return None
+    if not isinstance(data, dict):
+        return None
+    rows = data.get("statusCheckRollup")
+    if rows is None:
+        return None
+    if not isinstance(rows, list):
+        return None
+    failing: list[str] = []
+    pending: list[str] = []
+    for r in rows:
+        if not isinstance(r, dict):
+            return None
+        name = str(r.get("name") or "")
+        if _is_advisory(name):
+            continue
+        status = str(r.get("status") or "").upper()
+        conclusion = str(r.get("conclusion") or "").upper()
+        if conclusion in _ROLLUP_FAIL_CONCLUSIONS:
+            failing.append(name)
+        elif status in _ROLLUP_PENDING_STATUS:
+            pending.append(name)
+        elif status == "COMPLETED" and conclusion in _ROLLUP_PASS_CONCLUSIONS:
+            continue
+        else:
+            return None
+    return failing, pending
+
+
+def _check_states(pr: str, repo: str | None = None, cwd: str | None = None) -> tuple[list[str], list[str]] | None:
+    """(failing, pending) non-advisory check names, or None if undeterminable."""
+    via_checks = _check_states_from_checks_json(pr, repo, cwd)
+    if via_checks is _USE_STATUS_ROLLUP:
+        return _check_states_from_status_rollup(pr, repo, cwd)
+    return via_checks
 
 
 def _base_protected(owner_repo: str, base: str) -> bool | None:

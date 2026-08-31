@@ -482,6 +482,51 @@ def test_known_pass_buckets_are_green(monkeypatch):
     assert guard._check_states("5") == ([], [])
 
 
+def test_check_states_falls_back_when_checks_json_unsupported(monkeypatch):
+    import types
+
+    calls: list[list[str]] = []
+
+    def fake_run(cmd, **_k):
+        calls.append(list(cmd))
+        if cmd[:4] == ["gh", "pr", "checks", "5"]:
+            return types.SimpleNamespace(
+                returncode=1,
+                stdout="",
+                stderr="unknown flag: --json\n",
+            )
+        if cmd[:4] == ["gh", "pr", "view", "5"]:
+            payload = {
+                "statusCheckRollup": [
+                    {"name": "CI Gate", "status": "COMPLETED", "conclusion": "SUCCESS"},
+                    {"name": "Lint (ruff)", "status": "IN_PROGRESS", "conclusion": ""},
+                    {"name": "pip-audit (advisory)", "status": "COMPLETED", "conclusion": "FAILURE"},
+                ]
+            }
+            return types.SimpleNamespace(returncode=0, stdout=json.dumps(payload), stderr="")
+        raise AssertionError(f"unexpected cmd: {cmd}")
+
+    monkeypatch.setattr(guard.subprocess, "run", fake_run)
+    assert guard._check_states("5") == ([], ["Lint (ruff)"])
+    assert calls[0][:5] == ["gh", "pr", "checks", "5", "--json"]
+    assert calls[1][:5] == ["gh", "pr", "view", "5", "--json"]
+
+
+def test_status_rollup_unknown_state_fails_closed(monkeypatch):
+    payload = {"statusCheckRollup": [{"name": "CI Gate", "status": "COMPLETED", "conclusion": "WEIRD"}]}
+    _fake_gh(monkeypatch, returncode=0, stdout=json.dumps(payload))
+
+    def fake_run(cmd, **_k):
+        import types
+
+        if cmd[:4] == ["gh", "pr", "checks", "5"]:
+            return types.SimpleNamespace(returncode=1, stdout="", stderr="unknown flag: --json\n")
+        return types.SimpleNamespace(returncode=0, stdout=json.dumps(payload), stderr="")
+
+    monkeypatch.setattr(guard.subprocess, "run", fake_run)
+    assert guard._check_states("5") is None
+
+
 @pytest.mark.parametrize("draft", ["null", '"false"', "0"])
 def test_non_bool_isdraft_fails_closed(monkeypatch, draft):
     # F004: `isDraft: null` is falsey → was read as a confirmed non-draft and allowed.
