@@ -270,7 +270,11 @@ def test_delegate_active_performance_with_many_files(tmp_path, monkeypatch):
     assert data["total"] == 2
     assert [task["task_id"] for task in data["tasks"]] == ["running-active", "spawning-active"]
     # Bound assertion: must execute in under 1 second (target < 3s SLA)
-    assert duration_s < 1.0, f"GET /api/delegate/active took {duration_s:.3f}s (> 1.0s bound)"
+    # Wall-clock bound in shared CI (#7492 class): 1.0s blew at 1.36s on a
+    # loaded merge-queue runner with the endpoint healthy (status 200). 3.0s
+    # still fails a pathological O(N) implementation on 1,500 files while
+    # tolerating runner load noise.
+    assert duration_s < 3.0, f"GET /api/delegate/active took {duration_s:.3f}s (> 3.0s bound)"
 
 
 def test_delegate_persistent_cache_survives_restart_and_avoids_reparsing(tmp_path, monkeypatch):
