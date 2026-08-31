@@ -174,3 +174,71 @@ def test_compact_row_identity_uses_source_locator_for_every_family() -> None:
     unknown = {**row, "family_id": "unmapped_family"}
     with pytest.raises(firewall.FirewallError):
         firewall._canonical_packed_document_identity(unknown)
+
+
+def test_exact_labeling_receipt_census_is_populated_deny_lineage(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    schemas = (
+        ["phase3_cycle007_labeling_attempt_v2"] * 4
+        + ["phase3_cycle007_labeling_pre_call_v1"] * 2
+        + ["phase3_cycle007_labeling_request_plan_v1"]
+        + ["phase3_cycle007_provider_stop_v3"]
+    )
+    receipt_bytes: dict[str, bytes] = {}
+    objects: list[dict[str, object]] = []
+    for index, schema in enumerate(schemas):
+        payload = {
+            "schema_version": schema,
+            "text_free": True,
+            "request_plan_sha256": f"{index:064x}",
+            "prompt_sha256": f"{index + 9:064x}",
+            "provider_call_started": index < 3,
+            "raw_byte_count": 11 if index < 3 else 0,
+            "raw_sha256": f"{index + 18:064x}",
+            "log_byte_count": 7 if index < 3 else 0,
+            "log_sha256": f"{index + 27:064x}",
+            "result_count": 1 if index < 3 else 0,
+            "terminal_marker_sha256": f"{index + 36:064x}",
+        }
+        path = f"objects/{index}.json"
+        receipt_bytes[path] = json.dumps(payload).encode()
+        objects.append({"object_relative_path": path, "storage": "raw", "sha256": f"{index + 45:064x}", "selection_classes": ["labeling_expansion"]})
+
+    monkeypatch.setattr(firewall.storage, "_iter_stored_raw_chunks", lambda path, *_: iter([receipt_bytes[path.relative_to(tmp_path).as_posix()]]))
+    identities, census = firewall._labeling_expansion_identities(tmp_path, {"objects": objects})
+    assert set(identities) == {"labeling_receipt", "prompt_or_request", "raw_or_log", "provider_result_terminal", "derivative"}
+    assert all(len(values) == 8 for values in identities.values())
+    assert identities["labeling_receipt"] == sorted(f"{index + 45:064x}" for index in range(8))
+    assert census == {
+        "schema_counts": firewall.LABELING_RECEIPT_SCHEMA_COUNTS,
+        "historical_provider_attempts": 3,
+        "historical_result_receipts": 3,
+        "historical_raw_log_receipts": 3,
+        "bodies_available": False,
+    }
+    drift = json.loads(receipt_bytes["objects/0.json"])
+    drift["result_count"] = 0
+    receipt_bytes["objects/0.json"] = json.dumps(drift).encode()
+    with pytest.raises(firewall.FirewallError, match="graph_incompleteness"):
+        firewall._labeling_expansion_identities(tmp_path, {"objects": objects})
+
+
+def test_labeling_receipt_census_rejects_drift_or_body_payload(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    receipt = {
+        "schema_version": "phase3_cycle007_labeling_attempt_v2",
+        "text_free": True,
+        "request_plan_sha256": "a" * 64,
+        "provider_call_started": True,
+        "result_count": 1,
+        "raw_byte_count": 12,
+        "raw_sha256": "b" * 64,
+        "log_byte_count": 2,
+        "log_sha256": "c" * 64,
+    }
+    objects = [{"object_relative_path": f"objects/{index}.json", "storage": "raw", "sha256": f"{index:064x}", "selection_classes": ["labeling_expansion"]} for index in range(8)]
+    payloads = {f"objects/{index}.json": json.dumps(receipt | ({"raw_payload": "body"} if index == 0 else {})).encode() for index in range(8)}
+    monkeypatch.setattr(firewall.storage, "_iter_stored_raw_chunks", lambda path, *_: iter([payloads[path.relative_to(tmp_path).as_posix()]]))
+    with pytest.raises(firewall.FirewallError, match="graph_incompleteness"):
+        firewall._labeling_expansion_identities(tmp_path, {"objects": objects})
+    payloads = {path: json.dumps(receipt).encode() for path in payloads}
+    with pytest.raises(firewall.FirewallError, match="graph_incompleteness"):
+        firewall._labeling_expansion_identities(tmp_path, {"objects": objects})

@@ -276,6 +276,121 @@ def _canonical_packed_document_identity(entry: Mapping[str, Any]) -> str:
         raise FirewallError("document_lineage_denominator_not_frozen") from exc
 
 
+LABELING_RECEIPT_SCHEMA_COUNTS = {
+    "phase3_cycle007_labeling_attempt_v2": 4,
+    "phase3_cycle007_labeling_pre_call_v1": 2,
+    "phase3_cycle007_labeling_request_plan_v1": 1,
+    "phase3_cycle007_provider_stop_v3": 1,
+}
+
+
+def _receipt_commitment(receipt: Mapping[str, Any], *, object_sha256: str, fields: tuple[str, ...]) -> str:
+    """Hash only authenticated metadata commitments, never emitted receipt data."""
+    selected = {
+        key: value
+        for key, value in receipt.items()
+        if any(token in key.lower() for token in fields)
+    }
+    return sha256_bytes(canonical_json({"object": object_sha256, "commitments": selected}))
+
+
+def _receipt_is_text_free_metadata(receipt: Mapping[str, Any]) -> bool:
+    """Receipts may retain hashes/counts, never request, response, or label bodies."""
+    for key, value in receipt.items():
+        lowered = key.lower()
+        if isinstance(value, (Mapping, list)):
+            return False
+        digest = isinstance(value, str) and len(value) == 64 and all(char in "0123456789abcdef" for char in value)
+        if any(token in lowered for token in ("payload", "body", "prompt_text", "label_text")) and not (digest and lowered.endswith("_sha256")) and value not in (None, False, 0, "", sha256_bytes(b"")):
+            return False
+        if lowered.endswith("_sha256") and not digest:
+            return False
+    return True
+
+
+def _labeling_expansion_identities(pack_dir: Path, manifest: Mapping[str, Any]) -> tuple[dict[str, list[str]], dict[str, Any]]:
+    """Protect the exact historical metadata-receipt census as deny lineage.
+
+    The receipts authenticate historical provider attempts and terminal metadata.
+    They are not new #7427 calls and no request/result body is retained here, but
+    their object/request/prompt/raw/log/result/terminal identities must remain
+    unavailable to any candidate builder.
+    """
+    by_schema = {schema: 0 for schema in LABELING_RECEIPT_SCHEMA_COUNTS}
+    namespaces = {name: [] for name in ("labeling_receipt", "prompt_or_request", "raw_or_log", "provider_result_terminal", "derivative")}
+    historical_provider_attempts = 0
+    historical_result_receipts = 0
+    historical_raw_log_receipts = 0
+    for item in manifest["objects"]:
+        if "labeling_expansion" not in item.get("selection_classes", [item.get("selection_class")]):
+            continue
+        raw = b"".join(storage._iter_stored_raw_chunks(pack_dir / item["object_relative_path"], str(item["storage"]), None))
+        receipt = json.loads(raw.decode("utf-8"))
+        _require(
+            isinstance(receipt, Mapping)
+            and receipt.get("schema_version") in LABELING_RECEIPT_SCHEMA_COUNTS
+            and receipt.get("text_free") is True
+            and _receipt_is_text_free_metadata(receipt),
+            "graph_incompleteness",
+        )
+        schema = str(receipt["schema_version"])
+        by_schema[schema] += 1
+        started = receipt.get("provider_call_started") is True
+        result = receipt.get("result_count")
+        raw_bytes = receipt.get("raw_byte_count", 0)
+        log_bytes = receipt.get("log_byte_count", 0)
+        _require(
+            isinstance(result, int) and not isinstance(result, bool) and result >= 0
+            and isinstance(raw_bytes, int) and not isinstance(raw_bytes, bool) and raw_bytes >= 0
+            and isinstance(log_bytes, int) and not isinstance(log_bytes, bool) and log_bytes >= 0,
+            "graph_incompleteness",
+        )
+        _require(
+            result in {0, 1}
+            and started == (result == 1) == (raw_bytes > 0 and log_bytes > 0),
+            "graph_incompleteness",
+        )
+        historical_provider_attempts += int(started)
+        historical_result_receipts += int(result > 0)
+        historical_raw_log_receipts += int(raw_bytes > 0 and log_bytes > 0)
+        object_sha256 = item.get("sha256")
+        _require(isinstance(object_sha256, str) and len(object_sha256) == 64, "graph_incompleteness")
+        namespaces["labeling_receipt"].append(object_sha256)
+        namespaces["prompt_or_request"].append(_receipt_commitment(receipt, object_sha256=object_sha256, fields=("request", "prompt")))
+        namespaces["raw_or_log"].append(_receipt_commitment(receipt, object_sha256=object_sha256, fields=("raw", "log")))
+        namespaces["provider_result_terminal"].append(_receipt_commitment(receipt, object_sha256=object_sha256, fields=("result", "terminal", "provider_call")))
+        namespaces["derivative"].append(_receipt_commitment(receipt, object_sha256=object_sha256, fields=("request", "prompt", "raw", "log", "result", "terminal", "provider_call")))
+    _require(
+        by_schema == LABELING_RECEIPT_SCHEMA_COUNTS
+        and sum(by_schema.values()) == 8
+        and (historical_provider_attempts, historical_result_receipts, historical_raw_log_receipts) == (3, 3, 3),
+        "graph_incompleteness",
+    )
+    census = {
+        "schema_counts": by_schema,
+        "historical_provider_attempts": historical_provider_attempts,
+        "historical_result_receipts": historical_result_receipts,
+        "historical_raw_log_receipts": historical_raw_log_receipts,
+        "bodies_available": False,
+    }
+    return {name: sorted(values) for name, values in namespaces.items()}, census
+
+
+def _assert_closed_zero_namespace_census(manifest: Mapping[str, Any]) -> None:
+    """Only the documented compact-pack selection classes can justify zeros."""
+    known = {
+        "materialization_packet", "materialization_custody", "materialization_manifest",
+        "evidence_sidecar", "evidence_manifest", "labeling_expansion", "compile_expansion",
+    }
+    classes = {
+        value
+        for item in manifest["objects"]
+        for value in item.get("selection_classes", [item.get("selection_class")])
+    }
+    _require(classes <= known, "graph_incompleteness")
+    _require(not any("paraphrase" in str(value).lower() or "synthetic" in str(value).lower() for value in classes), "graph_incompleteness")
+
+
 def _build_private_deny_corpus(pack_dir: Path, manifest: Mapping[str, Any]) -> dict[str, Any]:
     """Derive the source/example/document/exact/near graph inside the steward lane."""
     policy = near.policy_for_governed_use("train_development_to_heldout_firewall")
@@ -342,9 +457,11 @@ def _build_private_deny_corpus(pack_dir: Path, manifest: Mapping[str, Any]) -> d
         components.setdefault(find(index), []).append(row["row"])
     component_by_row = {row_id: sha256_bytes(canonical_json(sorted(values))) for values in components.values() for row_id in values}
     sidecar_hashes = [sha256_bytes(str(item.get("sidecar_id")).encode()) for item in manifest["objects"] if "evidence_sidecar" in item.get("selection_classes", [])]
-    namespaces = {"row": sorted(row["row"] for row in rows), "source_example": sorted(row["source_example"] for row in rows), "document_work_edition": sorted(row["document_or_edition"] for row in rows), "packet": sorted(row["packet"] for row in rows), "sidecar": sorted(sidecar_hashes), "exact": sorted(row["exact"] for row in rows), "near_token": sorted(row["token_hashes"] for row in rows), "component": sorted(component_by_row.values())}
+    labeling_namespaces, labeling_census = _labeling_expansion_identities(pack_dir, manifest)
+    _assert_closed_zero_namespace_census(manifest)
+    namespaces = {"row": sorted(row["row"] for row in rows), "source_example": sorted(row["source_example"] for row in rows), "document_work_edition": sorted(row["document_or_edition"] for row in rows), "packet": sorted(row["packet"] for row in rows), "sidecar": sorted(sidecar_hashes), "exact": sorted(row["exact"] for row in rows), "near_token": sorted(row["token_hashes"] for row in rows), "component": sorted(component_by_row.values())} | labeling_namespaces
     commitments = {name: {"count": len(values), "sha256": sha256_bytes(canonical_json(values))} for name, values in namespaces.items()}
-    corpus = {"schema_version": "phase3_cycle007_private_deny_corpus_v1", "pack_manifest_receipt_sha256": manifest["receipt_sha256"], "object_set_sha256": EXPECTED_OBJECT_SET_SHA256, "ordered_row_identity_commitment_sha256": EXPECTED_ORDERED_ROW_IDENTITY_SHA256, "near_duplicate_policy_sha256": near.pinned_policy_fingerprint(), "namespace_commitments": commitments, "rows": [{key: value for key, value in row.items() if key != "surface"} | {"component": component_by_row[row["row"]]} for row in rows], "zero_namespace_proofs": {name: 0 for name in ("prompts", "labels", "paraphrases", "synthetic_siblings")}}
+    corpus = {"schema_version": "phase3_cycle007_private_deny_corpus_v1", "pack_manifest_receipt_sha256": manifest["receipt_sha256"], "object_set_sha256": EXPECTED_OBJECT_SET_SHA256, "ordered_row_identity_commitment_sha256": EXPECTED_ORDERED_ROW_IDENTITY_SHA256, "near_duplicate_policy_sha256": near.pinned_policy_fingerprint(), "namespace_commitments": commitments, "labeling_expansion_census": labeling_census, "rows": [{key: value for key, value in row.items() if key != "surface"} | {"component": component_by_row[row["row"]]} for row in rows], "zero_namespace_proofs": {name: 0 for name in ("paraphrases", "synthetic_siblings")}}
     corpus["corpus_sha256"] = sha256_bytes(canonical_json(corpus))
     return corpus
 
@@ -459,7 +576,7 @@ def run_steward_production(config: str | None = None) -> dict[str, Any]:
         corpus = _build_private_deny_corpus(pack_dir, manifest)
         _require(manifest.get("content_bodies_stored") is True, "graph_incompleteness")
         classes = {value for item in manifest["objects"] for value in item.get("selection_classes", [item.get("selection_class")])}
-        _require(not {"labeling_expansion", "compile_expansion"} & classes, "graph_incompleteness")
+        _require("compile_expansion" not in classes and not any("label-output" in str(value) for value in classes), "graph_incompleteness")
         manifest_after = os.lstat(manifest_path)
         _require((manifest_before.st_dev, manifest_before.st_ino) == (manifest_after.st_dev, manifest_after.st_ino), "private_path_unsafe")
         storage.prove_content_pack_stream(inventory, pack_dir)

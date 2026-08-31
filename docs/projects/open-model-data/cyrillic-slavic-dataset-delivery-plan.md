@@ -203,6 +203,15 @@ training truth. Shared abstract rule concepts or authority-only citations may be
 reused only when no exact Cycle007 span or derivative is used; uncertain lineage
 is excluded.
 
+The retained compact pack also contains eight text-free historical
+labeling-expansion receipts (four attempt-v2, two pre-call-v1, one
+request-plan-v1, and one provider-stop-v3). They authenticate protected
+request/prompt/raw/log/result/terminal lineage, including historical attempted
+calls where bodies are unavailable; the firewall records them as populated deny
+commitments rather than claiming labels or prompt lineage are zero. This does
+not authorize or record any new provider call, label, gold, or training action
+for #7427.
+
 ## Frozen product and denominators
 
 The product is a source capability ledger, immutable claim-typed evidence,
