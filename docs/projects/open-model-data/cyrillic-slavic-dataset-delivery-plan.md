@@ -101,14 +101,17 @@ and validated by the adjacent schema. It consumes only the P1 metadata
 manifest: 57 source units, 39 unknown-rights blockers, all 15 required cells,
 and their explicit statuses remain denominator-visible.
 
-The contract derives one deterministic atomic slot in `R` per P1 required cell.
-It freezes the derivation algorithm and slot identity, not a substantive
-linguistic rule. Slots cannot merge or split without a new versioned P1 cell
-and dataset version. It also freezes immutable claim-typed evidence roles,
+P1 cells remain coverage strata, not atomic linguistic rules. The current
+canonical `R` is intentionally empty; it freezes the deterministic future-rule
+admission, identity, split/merge lineage, and denominator-version algorithm
+without fabricating a substantive claim. The canonical empty-rule-manifest hash
+and exact P1 artifact hash make same-count input drift fail closed. It also
+freezes immutable claim-typed evidence roles,
 source-qualified human-adjudication requirements, structurally distinct case
 states (correct, correction, minimal contrast, protected historical context,
 abstention, not-applicable, and coverage-blocked), proposal provenance, and
-non-promotion of model proposals. Unknown rights/provenance, missing
+non-promotion of model proposals. Executable validators reject proposal
+mutation and model-authority laundering. Unknown rights/provenance, missing
 claim-typed evidence, unresolved identity, and historical normalization all
 fail closed. P2 is metadata-only: no source/evidence bodies, provider calls,
 labels, gold, or training are created.
