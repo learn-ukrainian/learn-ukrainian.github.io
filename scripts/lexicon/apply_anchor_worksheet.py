@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Apply approved #5133 learner-English anchors from a curation worksheet.
+"""Apply approved learner-English anchors from a curation worksheet.
 
-The worksheet is deliberately the review artifact.  This applier only adds a
-translation where a learner-facing English anchor is still absent; it never
-replaces a published gloss or translation.
+The worksheet is deliberately the review artifact.  Its metadata selects an
+allowlisted translation source, and this applier only adds a translation where
+one is still absent; it never replaces a published gloss or translation.
 """
 
 from __future__ import annotations
@@ -33,7 +33,14 @@ from scripts.lexicon.manifest_io import DEFAULT_MANIFEST, write_manifest
 
 DEFAULT_WORKSHEET = PROJECT_ROOT / "data" / "lexicon" / "anchor_curation_worksheet.yaml"
 ANCHOR_SOURCE = "anchor_curation_worksheet (#5133)"
+AGY_EN_SOURCE = "agy_en_proposal"
+AGY_EN_WORKSHEET_LABEL = "agy_en_proposal (Gemini; not a dictionary)"
 APPROVED_CONFIDENCES = frozenset({"high", "medium"})
+WORKSHEET_SOURCE_KEYS: dict[str, str] = {
+    ANCHOR_SOURCE: ANCHOR_SOURCE,
+    AGY_EN_SOURCE: AGY_EN_SOURCE,
+    AGY_EN_WORKSHEET_LABEL: AGY_EN_SOURCE,
+}
 
 
 @dataclass(frozen=True)
@@ -57,6 +64,7 @@ def apply_anchor_worksheet(
         raise ValueError("manifest entries must be a list")
 
     index = _manifest_index(entries)
+    source = _worksheet_source(worksheet)
     approved = 0
     applied: list[str] = []
     skipped_existing: list[str] = []
@@ -81,10 +89,10 @@ def apply_anchor_worksheet(
         if entry is None:
             raise ValueError(f"worksheet entry is absent from manifest: {lemma} ({url_slug})")
         approved += 1
-        if _entry_has_learner_english_anchor(entry):
+        if _entry_has_learner_english_anchor(entry) or _entry_has_existing_translation(entry):
             skipped_existing.append(lemma)
             continue
-        _set_anchor(entry, anchor.strip())
+        _set_anchor(entry, anchor.strip(), source)
         applied.append(lemma)
 
     return ApplyResult(
@@ -113,7 +121,7 @@ def apply_from_paths(
     manifest = _load_json_object(manifest_path)
     worksheet = _load_yaml_object(worksheet_path)
     result = apply_anchor_worksheet(manifest, worksheet)
-    cached_fills = _apply_cached_slovnyk_anchors(manifest)
+    cached_fills = () if _worksheet_source(worksheet) == AGY_EN_SOURCE else _apply_cached_slovnyk_anchors(manifest)
 
     result = ApplyResult(**{**result.__dict__, "cached_fills": cached_fills})
     if not write or not (result.applied or result.cached_fills):
@@ -149,11 +157,46 @@ def format_result(result: ApplyResult) -> str:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
-    parser.add_argument("--worksheet", type=Path, default=DEFAULT_WORKSHEET)
-    parser.add_argument("--fingerprint", type=Path, default=DEFAULT_FINGERPRINT)
-    parser.add_argument("--write", action="store_true", help="Write the manifest and fingerprint sidecar.")
+    parser = argparse.ArgumentParser(
+        description=(
+            "Apply approved learner-English anchors from a YAML worksheet.\n"
+            "Use for a bounded dry-run or explicit write; do not use it to hydrate the live manifest implicitly."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python scripts/lexicon/apply_anchor_worksheet.py --worksheet data/lexicon/agy_en_slice51_worksheet.yaml
+  .venv/bin/python scripts/lexicon/apply_anchor_worksheet.py --worksheet data/lexicon/agy_en_slice51_worksheet.yaml --manifest /tmp/manifest.json
+
+Outputs:
+  Dry-run prints an auditable summary and keeps all changes in memory. --write updates the manifest and fingerprint sidecar.
+Exit codes:
+  0 means the worksheet was validated and processed; 1 or higher means loading or application failed.
+Related: data/lexicon/anchor_curation_worksheet.yaml and issue #6876.
+""",
+    )
+    parser.add_argument(
+        "--manifest",
+        type=Path,
+        default=DEFAULT_MANIFEST,
+        help="Manifest JSON to inspect or write (default: %(default)s).",
+    )
+    parser.add_argument(
+        "--worksheet",
+        type=Path,
+        default=DEFAULT_WORKSHEET,
+        help="Approved worksheet YAML to apply (default: %(default)s).",
+    )
+    parser.add_argument(
+        "--fingerprint",
+        type=Path,
+        default=DEFAULT_FINGERPRINT,
+        help="Fingerprint sidecar written with --write (default: %(default)s).",
+    )
+    parser.add_argument(
+        "--write",
+        action="store_true",
+        help="Persist applied anchors and the fingerprint sidecar; omit for an in-memory dry-run (default).",
+    )
     return parser
 
 
@@ -174,6 +217,24 @@ def _records(worksheet: Mapping[str, Any]) -> list[Mapping[str, Any]]:
     if not isinstance(records, list):
         raise ValueError("worksheet records must be a list")
     return [record for record in records if isinstance(record, Mapping)]
+
+
+def _worksheet_source(worksheet: Mapping[str, Any]) -> str:
+    """Resolve a worksheet's source key through the explicit source allowlist."""
+    meta = worksheet.get("meta")
+    if meta is None:
+        return ANCHOR_SOURCE
+    if not isinstance(meta, Mapping):
+        raise ValueError("worksheet meta must be an object")
+    label = meta.get("source_label_if_applied")
+    if label is None:
+        return ANCHOR_SOURCE
+    if not isinstance(label, str) or not label.strip():
+        raise ValueError("worksheet meta.source_label_if_applied must be a non-empty string")
+    try:
+        return WORKSHEET_SOURCE_KEYS[label.strip()]
+    except KeyError as exc:
+        raise ValueError(f"unsupported worksheet source label: {label}") from exc
 
 
 def _record_is_approved(record: Mapping[str, Any]) -> bool:
@@ -204,14 +265,26 @@ def _manifest_index(entries: Sequence[Any]) -> dict[tuple[str, str], dict[str, A
     return index
 
 
-def _set_anchor(entry: dict[str, Any], anchor: str) -> None:
+def _entry_has_existing_translation(entry: Mapping[str, Any]) -> bool:
+    """Return whether an entry already carries a non-empty translation list."""
+    enrichment = entry.get("enrichment")
+    if not isinstance(enrichment, Mapping):
+        return False
+    translation = enrichment.get("translation")
+    if not isinstance(translation, Mapping):
+        return False
+    terms = translation.get("en")
+    return isinstance(terms, list) and any(isinstance(term, str) and term.strip() for term in terms)
+
+
+def _set_anchor(entry: dict[str, Any], anchor: str, source: str = ANCHOR_SOURCE) -> None:
     enrichment = entry.setdefault("enrichment", {})
     if not isinstance(enrichment, dict):
         raise ValueError(f"entry enrichment must be an object: {entry.get('lemma')}")
-    enrichment["translation"] = {"en": [anchor], "source": ANCHOR_SOURCE}
+    enrichment["translation"] = {"en": [anchor], "source": source}
     sources = enrichment.get("sources")
     source_set = {source for source in sources if isinstance(source, str)} if isinstance(sources, list) else set()
-    source_set.add(ANCHOR_SOURCE)
+    source_set.add(source)
     enrichment["sources"] = sorted(source_set)
 
 

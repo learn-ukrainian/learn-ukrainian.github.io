@@ -322,6 +322,7 @@ export const FORM_NOTE_LABELS: Record<string, string> = {
 
 export const TRANSLATION_SOURCE_LABELS: Record<string, string> = {
   learner_english_gloss: "Anna Ohoiko",
+  agy_en_proposal: "модельний переклад",
 };
 
 export function formatTranslationSource(source: string | null | undefined): string | null {
