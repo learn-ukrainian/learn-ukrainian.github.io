@@ -1,0 +1,45 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "bb699ecc2d3e",
+  "session_id": "ses_fa5eef3cfffeCu0wCU8WNanBMj",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-31T23:09:52.22654068Z",
+  "branch": "glm/7522-canonical-base-glm",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/delegate.py",
+    "tests/test_delegate_primary_integrity.py"
+  ],
+  "agent": "OpenCode",
+  "model": "",
+  "turn_id": "c8390402c814",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 59955,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 672000,
+    "output_tokens": 5180,
+    "api_call_count": 20
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-31T23:09:52.170331743Z",
+    "agent_lines": 139,
+    "agent_removed": 27,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 139,
+    "total_lines_changed": 166,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
