@@ -13,6 +13,14 @@ SHA_A = "a" * 64
 SHA_B = "b" * 64
 
 
+def test_prefreeze_uses_the_exact_current_phase_firewall_exclusion() -> None:
+    """A current #7427 receipt cannot expand the historical v2 denominator."""
+    assert (
+        "data/projects/open_model_data/evidence/phase3_scope_circularity_firewall_v1.json"
+        in readiness.compatibility.CURRENT_PHASE_EVIDENCE_PATHS
+    )
+
+
 def _stub_external_receipts(monkeypatch: pytest.MonkeyPatch) -> None:
     ua_receipt = {
         "receipt_sha256": SHA_A,
