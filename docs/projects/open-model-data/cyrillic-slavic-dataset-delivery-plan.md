@@ -363,6 +363,24 @@ human-readable projection.
 | P7 | #7433 | #7432 | reproduce consumer views and certify state | `DATASET_READY`, `DATASET_PARTIAL`, or `BLOCKED` receipt |
 | parallel | #7434 | #7424 and Cycle007 custody identities | compact Cycle007 storage safely | exact round-trip and recoverable backup; deletion separately authorized |
 
+### P4 source-qualified pilot construction (`#7430`)
+
+P4 consumes the exact P2 contract, Cycle007 firewall, P3 modern and historical
+channel receipts, and the merged #6958 source-family admission boundary. Its
+deterministic metadata-only construction receipt keeps the frozen denominator
+at 57/39/15/16/14/2/R=0 and currently emits zero case or dataset rows with
+`BLOCKED_PENDING_SOURCE_QUALIFIED_ADJUDICATION`. It cannot claim
+`PILOT_VALIDATED` vacuously. A future nonempty case requires a canonical rule
+slot, claim-appropriate evidence, registered source-qualified human
+adjudication, complete rights/provenance and source identity, and a clear
+firewall result; it must not expose held-out membership, use Wikipedia,
+Cycle007-derived, provider-authored, or uncertain lineage. Historical and
+dialect roles remain protection roles and cannot be converted into modern
+corrections. The P4 candidate preflight is structural metadata validation only:
+it cannot prove registry membership or evidence binding and cannot admit a
+future row. A nonempty successor must be newly frozen and bind and verify the
+actual adjudication-registry membership and evidence binding.
+
 Critical path:
 
 `#7424 → #7425 → #7426 → #7427 → (#7428 || #7429) → #7430 → #7431 → #7432 → #7433`

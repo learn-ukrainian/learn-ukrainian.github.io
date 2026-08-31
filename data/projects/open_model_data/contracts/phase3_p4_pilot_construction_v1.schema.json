@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_p4_pilot_construction_v1.schema.json",
+  "title": "Phase 3 P4 source-qualified pilot construction v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "status", "text_free", "controlling_outcome_sha256", "bindings", "denominator", "case_role_requirements", "candidate_metadata_contract", "firewall_constraints", "current_construction", "residuals", "safety_counters", "claims", "generator", "receipt_sha256"],
+  "properties": {
+    "schema_version": {"const": "phase3_p4_pilot_construction_v1"},
+    "status": {"const": "BLOCKED_PENDING_SOURCE_QUALIFIED_ADJUDICATION"},
+    "text_free": {"const": true},
+    "controlling_outcome_sha256": {"const": "890498103f96a7b8f27fd52bc14418d8752e5b73a72ed8774dd0f52eb3160a47"},
+    "bindings": {"$ref": "#/$defs/bindings"},
+    "denominator": {"$ref": "#/$defs/denominator"},
+    "case_role_requirements": {"type": "array", "minItems": 8, "maxItems": 8, "uniqueItems": true, "items": {"$ref": "#/$defs/case_role"}},
+    "candidate_metadata_contract": {"$ref": "#/$defs/candidate_metadata_contract"},
+    "firewall_constraints": {"$ref": "#/$defs/firewall"},
+    "current_construction": {"$ref": "#/$defs/construction"},
+    "residuals": {"type": "array", "minItems": 6, "maxItems": 6, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "safety_counters": {"$ref": "#/$defs/counters"},
+    "claims": {"$ref": "#/$defs/claims"},
+    "generator": {"$ref": "#/$defs/generator"},
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "artifact": {"type": "object", "additionalProperties": false, "required": ["path", "sha256"], "properties": {"path": {"type": "string", "pattern": "^[^/].*"}, "sha256": {"$ref": "#/$defs/sha256"}}},
+    "bindings": {"type": "object", "additionalProperties": false, "required": ["p2_canonical_contracts", "scope_circularity_firewall", "modern_contact_channels", "historical_protection_channels", "source_capability_policy", "source_record_contract", "corpus_admission_validator", "model_view_export_admission_gate"], "properties": {"p2_canonical_contracts": {"$ref": "#/$defs/artifact"}, "scope_circularity_firewall": {"$ref": "#/$defs/artifact"}, "modern_contact_channels": {"$ref": "#/$defs/artifact"}, "historical_protection_channels": {"$ref": "#/$defs/artifact"}, "source_capability_policy": {"$ref": "#/$defs/artifact"}, "source_record_contract": {"$ref": "#/$defs/artifact"}, "corpus_admission_validator": {"$ref": "#/$defs/artifact"}, "model_view_export_admission_gate": {"$ref": "#/$defs/artifact"}}},
+    "denominator": {"type": "object", "additionalProperties": false, "required": ["source_units", "unknown_rights_blockers", "base_required_cells", "composite_required_cells", "coverage_blocked_cells", "not_applicable_cells", "rule_slots_R"], "properties": {"source_units": {"const": 57}, "unknown_rights_blockers": {"const": 39}, "base_required_cells": {"const": 15}, "composite_required_cells": {"const": 16}, "coverage_blocked_cells": {"const": 14}, "not_applicable_cells": {"const": 2}, "rule_slots_R": {"const": 0}}},
+    "case_role": {"type": "object", "additionalProperties": false, "required": ["case_role", "claim_appropriate_evidence_roles", "emits_dataset_case", "may_be_modern_correction"], "properties": {"case_role": {"enum": ["correct_modern_production", "source_backed_correction", "minimal_contrast", "protected_historical_context", "protected_dialect_or_regional_context", "abstention", "not_applicable_with_evidence", "coverage_blocked"]}, "claim_appropriate_evidence_roles": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}, "emits_dataset_case": {"type": "boolean"}, "may_be_modern_correction": {"type": "boolean"}}},
+    "candidate_metadata_contract": {"type": "object", "additionalProperties": false, "required": ["canonical_rule_slot_required", "claim_appropriate_evidence_required", "registered_source_qualified_human_adjudication_required", "rights_provenance_required", "source_identity_required", "firewall_clearance_required", "candidate_preflight_only", "future_nonempty_version_must_verify_adjudication_registry_membership", "future_nonempty_version_must_verify_adjudication_evidence_binding", "forbidden_body_fields"], "properties": {"canonical_rule_slot_required": {"const": true}, "claim_appropriate_evidence_required": {"const": true}, "registered_source_qualified_human_adjudication_required": {"const": true}, "rights_provenance_required": {"const": true}, "source_identity_required": {"const": true}, "firewall_clearance_required": {"const": true}, "candidate_preflight_only": {"const": true}, "future_nonempty_version_must_verify_adjudication_registry_membership": {"const": true}, "future_nonempty_version_must_verify_adjudication_evidence_binding": {"const": true}, "forbidden_body_fields": {"const": ["content", "gold", "heldout_membership", "label", "prompt", "provider_output", "source_body", "source_text", "text"]}}},
+    "firewall": {"type": "object", "additionalProperties": false, "required": ["builder_receives_heldout_membership", "cycle007_lineage_denied", "cycle007_derivatives_denied", "cycle007_fingerprints_denied", "heldout_lineage_denied", "provider_authored_gold_denied", "wikipedia_denied", "uncertain_lineage_denied", "atomic_split_requirements"], "properties": {"builder_receives_heldout_membership": {"const": false}, "cycle007_lineage_denied": {"const": true}, "cycle007_derivatives_denied": {"const": true}, "cycle007_fingerprints_denied": {"const": true}, "heldout_lineage_denied": {"const": true}, "provider_authored_gold_denied": {"const": true}, "wikipedia_denied": {"const": true}, "uncertain_lineage_denied": {"const": true}, "atomic_split_requirements": {"const": ["source", "document", "work", "edition", "exact_duplicate_component", "near_duplicate_connected_component"]}}},
+    "construction": {"type": "object", "additionalProperties": false, "required": ["dataset_case_rows", "dataset_case_row_count", "construction_state", "candidate_admission_implemented"], "properties": {"dataset_case_rows": {"const": []}, "dataset_case_row_count": {"const": 0}, "construction_state": {"const": "no_admitted_cases"}, "candidate_admission_implemented": {"const": true}}},
+    "counters": {"type": "object", "additionalProperties": false, "required": ["dataset_rows_emitted", "case_rows_emitted", "correction_targets_emitted", "gold_created", "labels_created", "provider_requests", "training_rows_emitted"], "properties": {"dataset_rows_emitted": {"const": 0}, "case_rows_emitted": {"const": 0}, "correction_targets_emitted": {"const": 0}, "gold_created": {"const": 0}, "labels_created": {"const": 0}, "provider_requests": {"const": 0}, "training_rows_emitted": {"const": 0}}},
+    "claims": {"type": "object", "additionalProperties": false, "required": ["pilot_validated_claimed", "dataset_ready_claimed", "training_validated_claimed", "nonempty_pilot_constructed", "historical_or_dialect_modernized"], "properties": {"pilot_validated_claimed": {"const": false}, "dataset_ready_claimed": {"const": false}, "training_validated_claimed": {"const": false}, "nonempty_pilot_constructed": {"const": false}, "historical_or_dialect_modernized": {"const": false}}},
+    "generator": {"type": "object", "additionalProperties": false, "required": ["path", "implementation_sha256", "schema_sha256"], "properties": {"path": {"const": "scripts/projects/open_model_data/build_phase3_p4_pilot.py"}, "implementation_sha256": {"$ref": "#/$defs/sha256"}, "schema_sha256": {"$ref": "#/$defs/sha256"}}}
+  }
+}
