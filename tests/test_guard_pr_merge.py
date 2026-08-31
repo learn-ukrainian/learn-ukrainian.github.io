@@ -517,6 +517,13 @@ def _rollup_states(monkeypatch, rows):
         ),
         (
             [
+                {"name": "CI Gate", "workflowName": "CI", "startedAt": "2026-08-31T06:00:00Z", "status": "COMPLETED", "conclusion": "FAILURE"},
+                {"name": "CI Gate", "workflowName": "CI", "startedAt": "2026-08-31T06:00:00Z", "status": "COMPLETED", "conclusion": "SUCCESS"},
+            ],
+            None,
+        ),
+        (
+            [
                 {"name": "CI Gate", "startedAt": "2026-08-31T06:00:00Z", "status": "COMPLETED", "conclusion": "FAILURE"},
                 {"name": "CI Gate", "startedAt": "2026-08-31T06:01:00Z", "status": "COMPLETED", "conclusion": "SUCCESS"},
             ],

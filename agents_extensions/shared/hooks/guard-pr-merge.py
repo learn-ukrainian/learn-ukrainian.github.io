@@ -959,6 +959,8 @@ def _latest_rollup_rows(rows: list[dict]) -> list[dict] | None:
                 return None
             if timestamp < previous[0]:
                 continue
+            if timestamp == previous[0]:
+                return None
         latest[key] = (timestamp, row)
     return [row for _timestamp, row in latest.values()]
 
@@ -1053,6 +1055,9 @@ def _check_states(pr: str, repo: str | None = None, cwd: str | None = None) -> t
         return _check_states_from_status_rollup(pr, repo, cwd)
     text = (out.stdout or "").strip()
     if not text:
+        # Empty output is ambiguous: a PR with zero checks (rc 0 → nothing to wait for)
+        # vs a gh error / non-existent PR (rc != 0 → fail-CLOSED block). Reading an
+        # *error* as "no failing checks" is the fail-open bug guard-admin-merge closed.
         return ([], []) if out.returncode == 0 else None
     try:
         rows = json.loads(_decolorize(text))
@@ -1074,6 +1079,9 @@ def _check_states(pr: str, repo: str | None = None, cwd: str | None = None) -> t
         elif bucket in _PENDING_BUCKETS:
             pending.append(name)
         elif bucket not in _PASS_BUCKETS:
+            # Schema drift or a partial row on a non-advisory check. "I don't recognize
+            # this state" must never fall through to green — that is the fail-open bug
+            # this hook exists to prevent, arriving by a different door.
             return None
     return failing, pending
 
