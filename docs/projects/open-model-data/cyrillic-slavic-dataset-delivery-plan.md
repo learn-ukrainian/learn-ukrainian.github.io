@@ -274,8 +274,9 @@ not governed by a model learning curve or a fixed row quota.
 custody contract before any rule or case derivation. It binds the exact P1,
 P1 dialect amendment, P2, and near-duplicate-policy hashes; it retains the
 57/39/15/16 denominator, fourteen blocked cells, two N/A cells, and empty
-`R=0`. The sixteen held-out requirement records are frozen as metadata
-requirements, without inventing a numeric floor or a semantic case.
+`R=0`. The sixteen cell-requirement records are frozen as metadata
+requirements; no held-out cases are selected, and zero remains
+`BLOCKED_NOT_ZERO` rather than a fabricated numeric floor or semantic case.
 
 Builder clearance is positive-only: it contains only the frozen public hashes,
 never a held-out complement, path, descriptor, locator, fingerprint, label,
@@ -287,17 +288,24 @@ duplicates, derivatives, and fingerprints. Shared concepts require an
 independent origin; authority reuse is citation-only and cannot carry a
 held-out span, locator, annotation, or membership.
 
-The public receipt binds Cycle007's 204 packet / 10,159 row commitment, 204
-physical sidecars, 408 logical sidecars, and 419 objects, while stating
-`private_binding_unbound`. It therefore claims no fresh private
-materialization. The steward runtime accepts an opaque environment-bound
-private binding only under a `0700` private directory and `0600` regular file;
-it rejects symlinks, hardlinks, traversal, role collision, unsafe owner/mode,
-path overlap, inode/device changes, ancestor replacement, and post-pin TOCTOU.
-It emits no private locator, content body, label, prompt, or membership. Any
-leakage, uncertain lineage, incomplete graph, hash/denominator drift,
-rights/provenance corruption, protected damage, or custody collision is a
-terminal batch failure with zero emitted, promoted, or activated outputs.
+The public receipt binds Cycle007's object-set and ordered-row commitments,
+204 packet / 10,159 row commitment, 204 physical sidecars, 408 logical
+sidecars, and 419 objects, while stating `private_binding_unbound`. It
+therefore claims no fresh private materialization. A steward-only production
+runtime self-hash verifies its private `0600` configuration and the exact
+content-pack manifest, reuses the custody lane's streaming inventory and
+round-trip proof without expansion, and reads only unit identity fields plus a
+manifest-bound lineage-metadata sidecar. It cannot accept caller-authored
+membership or component hashes. Missing explicit document/work/edition
+identity fails `document_lineage_denominator_not_frozen`; missing proof that
+prompt/label/paraphrase/synthetic/annotation namespaces are zero fails closed.
+It rejects symlinks, unsafe hardlinks, traversal, role collision, unsafe
+owner/mode, path overlap, inode/device changes, ancestor replacement, and
+post-pin TOCTOU. It emits no private locator, content body, label, prompt, or
+membership. Any leakage, uncertain lineage, incomplete graph,
+hash/denominator drift, rights/provenance corruption, protected damage, or
+custody collision is a terminal batch failure with zero emitted, promoted, or
+activated outputs.
 
 ## Roles and evidence
 

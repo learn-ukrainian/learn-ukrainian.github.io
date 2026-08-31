@@ -16,11 +16,20 @@ def _record(*, namespace: str = "independent", origin: str = "independent", cand
     return {"candidate_id": candidate, "origin": origin, "namespace": namespace, "membership_sha256": "a" * 64, "component_sha256": "b" * 64, "independent_origin": "true"}
 
 
-def _private_binding(root: Path, name: str = "binding.json") -> Path:
+def _private_config(root: Path, name: str = "config.json") -> Path:
     root.mkdir(parents=True, exist_ok=True)
     os.chmod(root, 0o700)
     path = root / name
-    path.write_text(json.dumps({"binding_version": "phase3_evaluation_private_binding_v1", "membership_sha256": "a" * 64, "component_graph_sha256": "b" * 64, "steward_role": "evaluation_steward"}), encoding="utf-8")
+    value = {
+        "schema_version": "phase3_evaluation_steward_config_v1",
+        "private_root": str(root),
+        "pack_manifest": str(root / "pack-manifest.json"),
+        "materialization_package": str(root / "materialization"),
+        "evidence_package": str(root / "evidence"),
+        "steward_role": "evaluation_steward",
+    }
+    value["config_sha256"] = firewall._config_hash(value)
+    path.write_text(json.dumps(value), encoding="utf-8")
     os.chmod(path, 0o600)
     return path
 
@@ -70,20 +79,35 @@ def test_clearance_is_positive_only_and_rehashed_outer_receipt_cannot_bypass() -
     assert firewall.validate_lineage_batch([_record(namespace="prompts")])["emitted"] == 0
 
 
-def test_private_binding_rejects_unsafe_paths_and_accepts_opaque_safe_binding(tmp_path: Path) -> None:
+def test_same_count_pack_or_row_commitment_mutation_fails() -> None:
+    manifest = {"schema_version": firewall.storage.LINEAGE_PACK_SCHEMA_VERSION, "receipt_sha256": firewall.EXPECTED_PACK_MANIFEST_RECEIPT_SHA256, "object_set_sha256": firewall.EXPECTED_OBJECT_SET_SHA256, "ordered_row_identity_commitment_sha256": firewall.EXPECTED_ORDERED_ROW_IDENTITY_SHA256, "packet_count": 204, "row_count": 10159, "object_count": 419}
+    inventory = {"packet_count": 204, "row_count": 10159, "object_count": 419, "sidecar_count": 408, "object_set_sha256": firewall.EXPECTED_OBJECT_SET_SHA256, "ordered_row_identity_commitment_sha256": firewall.EXPECTED_ORDERED_ROW_IDENTITY_SHA256}
+    assert firewall.validate_pack_commitments(manifest, inventory)
+    assert not firewall.validate_pack_commitments({**manifest, "object_set_sha256": "0" * 64}, inventory)
+    assert not firewall.validate_pack_commitments(manifest, {**inventory, "ordered_row_identity_commitment_sha256": "0" * 64})
+
+
+def test_private_runtime_rejects_caller_hashes_and_unsafe_config_paths(tmp_path: Path) -> None:
     root = tmp_path / "private"
-    binding = _private_binding(root)
-    assert firewall.validate_private_runtime_binding(str(binding), private_root=root)["ok"]
-    os.chmod(binding, 0o644)
-    assert firewall.validate_private_runtime_binding(str(binding), private_root=root)["code"] == "private_path_unsafe"
-    os.chmod(binding, 0o600)
+    config = _private_config(root)
+    assert firewall.run_steward_production(str(config))["ok"] is False
+    forged = json.loads(config.read_text())
+    forged["membership_sha256"] = "a" * 64
+    forged["component_graph_sha256"] = "b" * 64
+    config.write_text(json.dumps(forged), encoding="utf-8")
+    os.chmod(config, 0o600)
+    assert firewall.run_steward_production(str(config))["code"] == "private_path_unsafe"
+    config = _private_config(root)
+    os.chmod(config, 0o644)
+    assert firewall.run_steward_production(str(config))["code"] == "private_path_unsafe"
+    os.chmod(config, 0o600)
     hard = root / "hard.json"
-    os.link(binding, hard)
-    assert firewall.validate_private_runtime_binding(str(hard), private_root=root)["code"] == "private_path_unsafe"
+    os.link(config, hard)
+    assert firewall.run_steward_production(str(hard))["code"] == "private_path_unsafe"
     hard.unlink()
     link = root / "link.json"
-    link.symlink_to(binding)
-    assert firewall.validate_private_runtime_binding(str(link), private_root=root)["code"] == "private_path_unsafe"
+    link.symlink_to(config)
+    assert firewall.run_steward_production(str(link))["code"] == "private_path_unsafe"
 
 
 def test_unbound_and_graph_incomplete_batches_fail_with_zero_outputs() -> None:
