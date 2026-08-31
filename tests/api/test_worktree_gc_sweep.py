@@ -17,20 +17,20 @@ client = TestClient(api_main.app, raise_server_exceptions=False)
 
 def _patch_orient_sources(monkeypatch: pytest.MonkeyPatch) -> None:
     # Patch non-runtime sources to keep orient fast and hermetic
-    monkeypatch.setattr(api_main, "_collect_git_orient_data", lambda: {"branch": "main"})
-    monkeypatch.setattr(api_main, "_collect_issues_orient_data", lambda: {"issues": []})
-    monkeypatch.setattr(api_main, "_collect_idle_prs_orient_data", lambda: {"idle_prs": []})
+    monkeypatch.setattr(api_main, "_collect_git_orient_data", lambda *a, **k: {"branch": "main"})
+    monkeypatch.setattr(api_main, "_collect_issues_orient_data", lambda *a, **k: {"issues": []})
+    monkeypatch.setattr(api_main, "_collect_idle_prs_orient_data", lambda *a, **k: {"idle_prs": []})
 
-    async def fake_pipeline():
+    async def fake_pipeline(*a, **k):
         return {"summary": {}}
 
     monkeypatch.setattr(api_main, "_collect_pipeline_orient_data", fake_pipeline)
-    monkeypatch.setattr(api_main, "_collect_delegate_orient_data", lambda: {})
-    monkeypatch.setattr(api_main, "_collect_wiki_orient_data", lambda: {"by_track": {}})
+    monkeypatch.setattr(api_main, "_collect_delegate_orient_data", lambda *a, **k: {})
+    monkeypatch.setattr(api_main, "_collect_wiki_orient_data", lambda *a, **k: {"by_track": {}})
     monkeypatch.setattr(
         api_main,
         "_collect_governance_orient_data",
-        lambda: {
+        lambda *a, **k: {
             "decisions_total": 0,
             "decisions_stale": 0,
             "decisions_approaching_expiry": 0,
@@ -39,12 +39,12 @@ def _patch_orient_sources(monkeypatch: pytest.MonkeyPatch) -> None:
             "adrs_errors": 0,
         },
     )
-    monkeypatch.setattr(api_main, "_collect_health_orient_data", lambda: {"api": True})
-    monkeypatch.setattr(api_main, "_collect_session_hints_orient_data", lambda: [])
+    monkeypatch.setattr(api_main, "_collect_health_orient_data", lambda *a, **k: {"api": True})
+    monkeypatch.setattr(api_main, "_collect_session_hints_orient_data", lambda *a, **k: [])
 
     # Patch runtime API dependencies
-    monkeypatch.setattr(api_main.runtime_api, "list_runtime_agents", lambda: [])
-    monkeypatch.setattr(api_main.runtime_api, "runtime_recent_outcomes_today", lambda: [])
+    monkeypatch.setattr(api_main.runtime_api, "list_runtime_agents", lambda *a, **k: [])
+    monkeypatch.setattr(api_main.runtime_api, "runtime_recent_outcomes_today", lambda *a, **k: [])
 
 
 @pytest.fixture(autouse=True)

@@ -25,7 +25,7 @@ def _pin_tasks_dir(monkeypatch, tasks_dir: Path):
         roots=replace(api_main.app.state.ctx.roots, batch_state_dir=tasks_dir.parent),
     )
     monkeypatch.setattr(api_main.app.state, "ctx", ctx)
-    monkeypatch.setattr(delegate_router, "production_context", lambda: ctx)
+    monkeypatch.setattr(delegate_router, "production_context", lambda *a, **k: ctx)
     monkeypatch.setattr(delegate_router, "_tasks_dir", lambda ctx=None: tasks_dir)
     return ctx
 
@@ -62,21 +62,21 @@ def _reset_orient_cache() -> None:
 
 
 def _patch_non_delegate_orient_sources(monkeypatch) -> None:
-    monkeypatch.setattr(api_main, "_collect_git_orient_data", lambda: {"branch": "main"})
-    monkeypatch.setattr(api_main, "_collect_issues_orient_data", lambda: {"issues": []})
-    monkeypatch.setattr(api_main, "_collect_idle_prs_orient_data", lambda: {"idle_prs": []})
+    monkeypatch.setattr(api_main, "_collect_git_orient_data", lambda *a, **k: {"branch": "main"})
+    monkeypatch.setattr(api_main, "_collect_issues_orient_data", lambda *a, **k: {"issues": []})
+    monkeypatch.setattr(api_main, "_collect_idle_prs_orient_data", lambda *a, **k: {"idle_prs": []})
 
-    async def fake_pipeline():
+    async def fake_pipeline(*a, **k):
         return {"summary": {}}
 
     monkeypatch.setattr(api_main, "_collect_pipeline_orient_data", fake_pipeline)
-    monkeypatch.setattr(api_main, "_collect_runtime_orient_data", lambda: {})
-    monkeypatch.setattr(api_main, "_collect_bridge_pending_orient_data", lambda: {})
-    monkeypatch.setattr(api_main, "_collect_wiki_orient_data", lambda: {"by_track": {}})
+    monkeypatch.setattr(api_main, "_collect_runtime_orient_data", lambda *a, **k: {})
+    monkeypatch.setattr(api_main, "_collect_bridge_pending_orient_data", lambda *a, **k: {})
+    monkeypatch.setattr(api_main, "_collect_wiki_orient_data", lambda *a, **k: {"by_track": {}})
     monkeypatch.setattr(
         api_main,
         "_collect_governance_orient_data",
-        lambda: {
+        lambda *a, **k: {
             "decisions_total": 0,
             "decisions_stale": 0,
             "decisions_approaching_expiry": 0,
@@ -85,8 +85,8 @@ def _patch_non_delegate_orient_sources(monkeypatch) -> None:
             "adrs_errors": 0,
         },
     )
-    monkeypatch.setattr(api_main, "_collect_health_orient_data", lambda: {"api": True})
-    monkeypatch.setattr(api_main, "_collect_session_hints_orient_data", lambda: [])
+    monkeypatch.setattr(api_main, "_collect_health_orient_data", lambda *a, **k: {"api": True})
+    monkeypatch.setattr(api_main, "_collect_session_hints_orient_data", lambda *a, **k: [])
 
 
 def test_delegate_active_includes_spawning_task_without_pid(tmp_path, monkeypatch):
