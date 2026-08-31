@@ -514,6 +514,8 @@ def validate_rule_slot_identity(slot: dict[str, Any], contract: dict[str, Any] |
         _is_rule_slot_id(parent) for parent in parents
     ):
         return False
+    if parents != sorted(parents):
+        return False
     if (slot["lineage_kind"] == "root") != (parents == []):
         return False
     if slot["lineage_kind"] == "split_child" and len(parents) != 1:
