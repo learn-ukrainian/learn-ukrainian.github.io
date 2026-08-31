@@ -17,6 +17,7 @@ import os
 import stat
 import tempfile
 from collections.abc import Callable, Mapping, Sequence
+from contextlib import suppress
 from pathlib import Path
 from typing import Any
 
@@ -670,6 +671,33 @@ def _write_private_json(path: Path, value: Mapping[str, Any]) -> None:
         raise
 
 
+def _write_run_state(output_root: Path, state: str, *, code: str | None = None, corpus_sha256: str | None = None, receipt_sha256: str | None = None) -> None:
+    value: dict[str, Any] = {"schema_version": "phase3_evaluation_steward_run_state_v1", "state": state, "text_free": True}
+    if code is not None:
+        value["code"] = code
+    if corpus_sha256 is not None:
+        value["corpus_sha256"] = corpus_sha256
+    if receipt_sha256 is not None:
+        value["public_receipt_sha256"] = receipt_sha256
+    value["state_sha256"] = sha256_bytes(canonical_json(value))
+    _write_private_json(output_root / "cycle007-firewall-run-state-v1.json", value)
+
+
+def _load_private_json(path: Path, root: Path) -> dict[str, Any]:
+    fd, before = _safe_private_path(path, root)
+    try:
+        chunks: list[bytes] = []
+        while chunk := os.read(fd, 65536):
+            chunks.append(chunk)
+    finally:
+        os.close(fd)
+    after = os.lstat(path)
+    _require((before.st_dev, before.st_ino) == (after.st_dev, after.st_ino), "private_path_unsafe")
+    value = json.loads(b"".join(chunks).decode("utf-8"))
+    _require(isinstance(value, dict), "private_path_unsafe")
+    return value
+
+
 def _candidate_clearance_binding(candidate: Mapping[str, Any]) -> str:
     """The evaluator, not a caller field, derives the full candidate lineage key."""
     return sha256_bytes(canonical_json({"schema_version": "phase3_evaluation_candidate_lineage_v1", "candidate": candidate}))
@@ -763,6 +791,7 @@ def run_steward_production(config: str | None = None) -> dict[str, Any]:
     configured = config if config is not None else os.environ.get(STEWARD_CONFIG_ENV)
     if not configured:
         return _zero("private_binding_unbound")
+    output_root: Path | None = None
     try:
         payload, root = _read_steward_config(Path(configured))
         pack_dir = Path(payload["content_pack_directory"])
@@ -770,6 +799,8 @@ def run_steward_production(config: str | None = None) -> dict[str, Any]:
         _require(pack_dir != output_root and not output_root.is_relative_to(pack_dir) and not pack_dir.is_relative_to(output_root), "private_path_unsafe")
         _validate_private_tree(pack_dir, root)
         _safe_private_directory(output_root, root)
+        output_before = os.lstat(output_root)
+        _write_run_state(output_root, "RUNNING")
         manifest_path = pack_dir / "pack-manifest.json"
         manifest_fd, manifest_before = _safe_private_path(manifest_path, root)
         os.close(manifest_fd)
@@ -790,11 +821,36 @@ def run_steward_production(config: str | None = None) -> dict[str, Any]:
         _write_private_json(output_root / "cycle007-deny-component-manifest-v1.json", corpus)
         public_receipt = {"schema_version": "phase3_scope_circularity_public_binding_receipt_v1", "text_free": True, "pack_manifest_receipt_sha256": manifest["receipt_sha256"], "object_set_sha256": EXPECTED_OBJECT_SET_SHA256, "ordered_row_identity_commitment_sha256": EXPECTED_ORDERED_ROW_IDENTITY_SHA256, "packet_count": 204, "row_count": 10159, "physical_sidecar_count": 204, "logical_sidecar_count": 408, "object_count": 419, "private_graph_commitment_sha256": corpus["corpus_sha256"], "builder_clearance": {"p1_sha256": PINS[P1], "p1_amendment_sha256": PINS[P1_AMENDMENT], "p2_sha256": PINS[P2], "near_duplicate_policy_sha256": PINS[NEAR_POLICY], "firewall_sha256": sha256_file(OUTPUT)}}
         public_receipt["receipt_sha256"] = sha256_bytes(canonical_json(public_receipt))
+        _require((output_before.st_dev, output_before.st_ino) == (os.lstat(output_root).st_dev, os.lstat(output_root).st_ino), "private_path_unsafe")
+        _write_run_state(output_root, "COMPLETE", corpus_sha256=corpus["corpus_sha256"], receipt_sha256=public_receipt["receipt_sha256"])
         return {"ok": True, "code": None, "emitted": 0, "promoted": 0, "activated": 0, "public_receipt": public_receipt}
     except FirewallError as exc:
+        if output_root is not None:
+            with suppress(FirewallError, OSError):
+                _write_run_state(output_root, "TERMINAL_FAILURE", code=str(exc))
         return _zero(str(exc))
     except (OSError, UnicodeDecodeError, json.JSONDecodeError, storage.StorageCustodyError):
+        if output_root is not None:
+            with suppress(FirewallError, OSError):
+                _write_run_state(output_root, "TERMINAL_FAILURE", code="private_path_unsafe")
         return _zero("private_path_unsafe")
+
+
+def evaluate_steward_candidates(candidates: Sequence[Mapping[str, Any]], config: str | None = None) -> dict[str, Any]:
+    """Load only a completed, self-bound steward corpus; callers cannot supply one."""
+    configured = config if config is not None else os.environ.get(STEWARD_CONFIG_ENV)
+    if not configured:
+        return _zero("private_binding_unbound")
+    try:
+        payload, root = _read_steward_config(Path(configured))
+        output_root = Path(payload["steward_output_root"])
+        state = _load_private_json(output_root / "cycle007-firewall-run-state-v1.json", root)
+        _require(state.get("state") == "COMPLETE" and state.get("state_sha256") == sha256_bytes(canonical_json({key: value for key, value in state.items() if key != "state_sha256"})), "private_binding_unbound")
+        corpus = _load_private_json(output_root / "cycle007-deny-component-manifest-v1.json", root)
+        _require(state.get("corpus_sha256") == corpus.get("corpus_sha256"), "hash_drift")
+        return evaluate_candidate_batch(candidates, corpus)
+    except (FirewallError, OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return _zero("private_binding_unbound")
 
 
 def validate_private_runtime_binding(binding: str | None = None, *, private_root: Path | None = None) -> dict[str, Any]:

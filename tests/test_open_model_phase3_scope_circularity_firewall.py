@@ -145,6 +145,8 @@ def test_production_fixture_uses_only_content_compact_pack_and_writes_private_gr
     result = firewall.run_steward_production(str(config_path))
     assert result["ok"] is True
     assert (output / "cycle007-deny-component-manifest-v1.json").stat().st_mode & 0o777 == 0o600
+    assert json.loads((output / "cycle007-firewall-run-state-v1.json").read_text())["state"] == "COMPLETE"
+    assert firewall.evaluate_steward_candidates([], str(config_path))["code"] == "uncertain_lineage"
 
 
 def test_unbound_and_graph_incomplete_batches_fail_with_zero_outputs() -> None:
