@@ -1741,14 +1741,10 @@ def _attach_cold_start_research(response: dict[str, Any], role: str | None) -> N
         pointers, _dropped = reg.select_cold_start_pointers(runtime, role)
         response["research"] = {"enabled": True, "records": pointers}
     except Exception:
-        # Collapse control chars so a query-string role cannot inject log lines.
-        safe_role = "".join(
-            ch if ch.isprintable() and ch not in "\r\n\t" else "?"
-            for ch in (role or "")
-        )[:128]
+        # Do not interpolate the role string — it is request-derived and would
+        # reintroduce py/log-injection even after control-char scrubbing.
         logger.warning(
-            "orient: cold-start research selector failed unexpectedly for role %r; omitting research section",
-            safe_role,
+            "orient: cold-start research selector failed unexpectedly; omitting research section",
             exc_info=True,
         )
         response.pop("research", None)
