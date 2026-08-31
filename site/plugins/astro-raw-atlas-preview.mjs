@@ -12,7 +12,7 @@ import { vitePluginAstroPreview } from '../node_modules/astro/dist/core/preview/
 import { rawAtlasShardTransport } from './raw-atlas-shard-transport.mjs';
 
 const require = createRequire(import.meta.url);
-const supportedAstroVersion = '7.2.2';
+const supportedAstroVersion = '7.2.4';
 const { version: installedAstroVersion } = require('../node_modules/astro/package.json');
 
 if (installedAstroVersion !== supportedAstroVersion) {
