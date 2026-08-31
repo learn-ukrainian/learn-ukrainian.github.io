@@ -576,7 +576,7 @@ def verify_authority_cutover(*, root: Path | None = None) -> None:
     try:
         # URI mode=ro both proves the target exists and prevents this gate from
         # becoming a schema initializer.
-        conn = sqlite3.connect(f"file:{db_path.resolve().as_posix()}?mode=ro", uri=True)
+        conn = cp_connect(StoreId.FLEET_COMMS, path=db_path, read_only=True)
         try:
             verify_applied_migrations(conn)
         finally:
@@ -588,7 +588,7 @@ def verify_authority_cutover(*, root: Path | None = None) -> None:
             else _CUTOVER_SCHEMA_VERSION_MISMATCH
         )
         raise AuthorityCutoverRefusedError(reason) from exc
-    except (OSError, sqlite3.Error) as exc:
+    except (OSError, sqlite3.Error, ControlPlaneError) as exc:
         raise AuthorityCutoverRefusedError(_CUTOVER_SCHEMA_VERSION_MISMATCH) from exc
 
 
