@@ -4,6 +4,16 @@ The playground API is a local development service, not a production web
 service. It still needs guardrails because the dashboards poll multiple heavy
 filesystem and SQLite endpoints from one browser session.
 
+## Mac Notebook Path
+
+On macOS, `./services.sh` runs in the `notebook` role and never spawns a
+local uvicorn or launchd agent. Every action execs the private writer
+launcher (`ops/writer-notebook.sh` in the sibling private checkout), which
+owns the SSH tunnel to the writer host. If that launcher is missing, the
+script fails closed with a hint; set `LU_SERVICES_ROLE=local` to run services
+on the Mac itself. Remote delegation has no public defaults — set both
+`LU_SERVICES_SSH_HOST` and `LU_SERVICES_REMOTE_ROOT` explicitly.
+
 ## Process Model
 
 Normal API commands launch uvicorn in dev-reload mode:
