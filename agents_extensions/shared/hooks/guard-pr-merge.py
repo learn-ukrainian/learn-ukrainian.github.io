@@ -946,7 +946,7 @@ def _parse_check_bucket_rows(rows: list) -> tuple[list[str], list[str]] | None:
 
 def _check_states_from_checks_json(
     pr: str, repo: str | None = None, cwd: str | None = None
-) -> tuple[list[str], list[str]] | None | _UseStatusRollupFallback:
+) -> tuple[list[str], list[str]] | _UseStatusRollupFallback | None:
     try:
         out = subprocess.run(
             ["gh", "pr", "checks", pr, *_repo_args(repo), "--json", "name,bucket,state"],
