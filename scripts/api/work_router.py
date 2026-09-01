@@ -218,12 +218,12 @@ def shutdown_worker_loop(*, join_timeout_s: float = 1.0) -> bool:
             await loop.shutdown_default_executor()
             loop.stop()
 
-        try:
-            stopper = asyncio.run_coroutine_threadsafe(stop_loop(), loop)
-            stopper.result(timeout=join_timeout_s)
-        except (concurrent.futures.TimeoutError, RuntimeError):
-            with contextlib.suppress(RuntimeError):
-                loop.call_soon_threadsafe(loop.stop)
+        # CF finding (PR #7571): never wait on the stop future — loop.stop()
+        # halts the loop before the future's done-callback dispatches, so a
+        # result(timeout=...) ALWAYS burned the full timeout (~21s app
+        # shutdown stall). Dispatch the stop and join the thread instead.
+        with contextlib.suppress(RuntimeError):
+            asyncio.run_coroutine_threadsafe(stop_loop(), loop)
     if thread is not threading.current_thread() and thread.is_alive():
         thread.join(timeout=join_timeout_s)
     if thread.is_alive():
