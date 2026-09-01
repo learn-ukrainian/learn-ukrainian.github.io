@@ -13,6 +13,7 @@ from scripts.ci.cf_attest import (
     FAMILY_CURSOR_AUTO_UNION,
     author_family_from_agents,
     evaluate_attestation,
+    families_independent,
     main,
     normalize_family,
     parse_attestation,
@@ -166,7 +167,13 @@ def test_author_family_from_x_agent_trailers() -> None:
     assert author_family_from_agents(["cursor"]) == FAMILY_CURSOR_AUTO_UNION
     assert author_family_from_agents(["claude", "claude-inline"]) == "anthropic"
     assert author_family_from_agents(["cursor", "claude"]) == "anthropic"
-    assert author_family_from_agents(["claude", "codex"]) == "unknown"
+    # Multi-family authorship resolves to a canonical union token (stricter
+    # independence: reviewer must be outside every member), not UNKNOWN —
+    # a driver landing a reviewer-prescribed fix on a worker's PR is the
+    # normal flow and must stay attestable (#7571, 2026-09-01).
+    assert author_family_from_agents(["claude", "codex"]) == "anthropic+openai"
+    assert author_family_from_agents(["codex", "claude"]) == "anthropic+openai"
+    assert author_family_from_agents(["claude", "codex", "bogus-seat"]) == "unknown"
     assert author_family_from_agents(["antigravity"]) == "google"
     assert x_agent_seats_from_messages([AUTHOR_CURSOR, "unrelated"]) == ("cursor",)
 
@@ -654,3 +661,40 @@ def test_dependabot_pr_author_maps_to_fixture_family_seat() -> None:
         )],
     )
     assert result.ok, result.reason
+
+
+def test_union_author_family_requires_reviewer_outside_every_member() -> None:
+    assert families_independent("anthropic+openai", "google") is True
+    assert families_independent("anthropic+openai", "deepseek") is True
+    assert families_independent("anthropic+openai", "openai") is False
+    assert families_independent("anthropic+openai", "anthropic") is False
+    # Any non-concrete member fails closed.
+    assert families_independent("anthropic+unknown", "google") is False
+    assert families_independent("anthropic+cursor-auto-union", "google") is False
+
+
+def test_pass_union_author_with_outside_reviewer() -> None:
+    result = evaluate_attestation(
+        expected_head=PR_HEAD,
+        author_family="anthropic+openai",
+        bodies=[(
+            "comment",
+            f"Cross-family review of record (agy)\nReviewer family: Google\n"
+            f"At exact head `{PR_HEAD}`\n**VERDICT: APPROVE**",
+        )],
+    )
+    assert result.ok, result.reason
+    assert result.reviewer_family == "google"
+
+
+def test_fail_union_author_with_member_reviewer() -> None:
+    result = evaluate_attestation(
+        expected_head=PR_HEAD,
+        author_family="anthropic+openai",
+        bodies=[(
+            "comment",
+            f"Cross-family CF of record (codex)\nReviewer family: openai\n"
+            f"At exact head `{PR_HEAD}`\nVERDICT: APPROVE",
+        )],
+    )
+    assert not result.ok

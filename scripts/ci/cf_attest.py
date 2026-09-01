@@ -183,7 +183,12 @@ def normalize_family(value: str) -> str:
 
 
 def author_family_from_agents(agents: Iterable[str]) -> str:
-    """Resolve X-Agent seat names to one author family (fail closed on conflict)."""
+    """Resolve X-Agent seats to the author family, or a '+'-joined union.
+
+    Unparseable seats still fail closed to UNKNOWN; multiple concrete
+    families resolve to a canonical sorted union token whose independence
+    check is stricter (reviewer outside every member).
+    """
     families: set[str] = set()
     saw_cursor = False
     for raw in agents:
@@ -202,7 +207,13 @@ def author_family_from_agents(agents: Iterable[str]) -> str:
     if FAMILY_FIXTURE in families and (len(families) > 1 or saw_cursor):
         families.discard(FAMILY_FIXTURE)
     if len(families) > 1:
-        return FAMILY_UNKNOWN
+        # Multi-family authorship (e.g. a driver landing a reviewer-prescribed
+        # fix on a worker's PR) is legitimate and STRICTER, not looser: the
+        # reviewer must be independent of EVERY author family. Encode the set
+        # as a canonical '+'-joined token; families_independent() enforces
+        # union independence. (Previously fail-closed to UNKNOWN, which made
+        # every co-authored PR permanently unattestable — 2026-09-01, #7571.)
+        return "+".join(sorted(families))
     if len(families) == 1:
         return next(iter(families))
     if saw_cursor:
@@ -293,6 +304,13 @@ def families_independent(author_family: str, reviewer_family: str) -> bool:
         return reviewer_family not in CURSOR_AUTO_UNION_FAMILIES
     if author_family == FAMILY_FIXTURE:
         return True
+    if "+" in author_family:
+        parts = set(author_family.split("+"))
+        # Union independence: reviewer outside EVERY author family; any
+        # non-concrete part fails closed.
+        if not parts <= CONCRETE_FAMILIES:
+            return False
+        return reviewer_family not in parts
     if author_family not in CONCRETE_FAMILIES:
         return False
     return reviewer_family != author_family
