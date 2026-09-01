@@ -21,6 +21,10 @@ and local-branch updates in `.agent/primary-ref-audit.jsonl`. This is an audit
 tripwire only, not protection: it is bypassable (for example,
 `core.hooksPath=/dev/null`) and never blocks a Git ref update.
 
+## Untracked Git hook delegators (`.githooks/` vs `$GIT_COMMON_DIR/hooks`)
+
+To prevent lifecycle tooling (specifically Entire CLI) from dirtying the working tree, `core.hooksPath` must remain unset rather than pointing at the tracked `.githooks` directory. `scripts/install_git_hooks.sh` installs untracked delegators into `$GIT_COMMON_DIR/hooks/` that dispatch to the current worktree's tracked `.githooks/` files. When Entire CLI writes its hook wrappers to the common hooks directory, it chains existing hooks via `<name>.pre-entire`, keeping tracked repository files pristine across all linked worktrees.
+
 ## Why this is a rule, not a suggestion
 
 Real incident 2026-04-24: a pilot build of `a1/sounds-letters-and-hello`

@@ -3,9 +3,10 @@
 # Install the repository's complete tracked hook chain:
 #   scripts/install_git_hooks.sh
 #
-# Do not run `pre-commit install`: pre-commit refuses that command while the
-# repository intentionally uses `core.hooksPath=.githooks`. The tracked
-# wrappers invoke these stages through the project virtual environment.
+# Do not run `pre-commit install`: hooks live in `$GIT_COMMON_DIR/hooks`,
+# delegating to the tracked `.githooks/` of the current worktree (`core.hooksPath`
+# stays unset so Entire CLI can chain per-clone without dirtying tracked files).
+# The tracked chain calls pre-commit itself through the project virtual environment.
 #
 # Or run manually on all files:
 #   pre-commit run --all-files

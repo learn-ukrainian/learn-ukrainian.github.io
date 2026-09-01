@@ -14,14 +14,15 @@ meet it so agents can use them without source-diving.
 
 ## Git hooks
 
-Run `scripts/install_git_hooks.sh` once after cloning to configure the
-repository-level `core.hooksPath` as `.githooks`. The relative path applies to
-each linked worktree, so the complete tracked hook chain is shared without a
-per-worktree install. It runs the configured pre-commit, commit-message, and
-pre-push gates; preserves the pytest-stamp and Git LFS hooks; and restores the
-primary-checkout guards after checkout or merge. The installer also
-materializes `.githooks` in existing sparse worktrees without broadening their
-checkout.
+Run `scripts/install_git_hooks.sh` once after cloning to install delegators in
+`$GIT_COMMON_DIR/hooks` that delegate to the tracked `.githooks/` of the current
+worktree. `core.hooksPath` stays unset so Entire CLI can chain per-clone without
+dirtying tracked files. The delegators ensure the complete tracked hook chain is
+shared across all linked worktrees without a per-worktree install. It runs the
+configured pre-commit, commit-message, and pre-push gates; preserves the
+pytest-stamp and Git LFS hooks; and restores the primary-checkout guards after
+checkout or merge. The installer also materializes `.githooks` in existing sparse
+worktrees without broadening their checkout.
 
 ---
 
