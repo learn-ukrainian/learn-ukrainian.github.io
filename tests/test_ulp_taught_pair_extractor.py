@@ -58,6 +58,33 @@ def test_extract_inline_dash_pairs() -> None:
     assert pairs[2].english_gloss == "Fine."
 
 
+def test_uncurated_note_token_soup_yields_zero_taught_pairs() -> None:
+    """Fail-closed: prose / bare tokens / adjacent mixed-language are not taught pairs."""
+    soup = (
+        # Running UA prose without an Anna EN gloss column
+        "Привіт! Мене звати Анна. Сьогодні ми говоримо про погоду.\n"
+        # Bare note-token candidates (content_token intake soup)
+        "уявляти\n"
+        "умови\n"
+        "морозиво\n"
+        "записувала\n"
+        # Adjacent mixed-language material without taught-pair layout (<4 spaces)
+        "The transcript mentions привіт near Hi but not as a gloss row.\n"
+        "привіт Hi\n"
+        "чудово wonderful\n"
+        # Reversed EN—UK order (not UK headword + Anna EN gloss)
+        "Hello — Привіт\n"
+        "Fine. — До́бре.\n"
+        # Embedded tokens beside English commentary, not separator glosses
+        "She said чудово, and later the commentary used wonderful casually.\n"
+        "умови: mentioned in the episode notes without an Anna gloss column\n"
+        # Latin inside the UK side fails curated line-shape checks
+        "привіт (hello) — not a curated taught pair\n"
+    )
+    pairs = extract_taught_pairs_from_text(soup, source_file="ulp-1-00-lesson-notes", season=1)
+    assert pairs == []
+
+
 def test_measure_curated_ulp_lists_with_dummy_files(tmp_path: Path) -> None:
     dummy_manifest = tmp_path / "manifest.json"
     dummy_manifest.write_text(
