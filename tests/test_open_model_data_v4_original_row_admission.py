@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 from scripts.projects.open_model_data import v4_original_row_admission as admission
@@ -82,8 +83,8 @@ def test_cli_retains_rejected_rows_instead_of_dropping_them(tmp_path: Path) -> N
     rejected["rights"]["derived_dataset_redistribution"] = False  # type: ignore[index]
     input_path, output_path = tmp_path / "rows.json", tmp_path / "receipt.json"
     input_path.write_text(json.dumps([_row(), rejected]), encoding="utf-8")
-    command = ["/home/ops/learn-ukrainian/.venv/bin/python", "scripts/projects/open_model_data/v4_original_row_admission.py", "--input", str(input_path), "--output", str(output_path)]
-    result = subprocess.run(command, check=False, capture_output=True, text=True)
+    command = [sys.executable, "scripts/projects/open_model_data/v4_original_row_admission.py", "--input", str(input_path), "--output", str(output_path)]
+    result = subprocess.run(command, check=False, capture_output=True, text=True, timeout=60)
     assert result.returncode == 0, result.stderr
     receipt = json.loads(output_path.read_text())
     assert receipt["counts"] == {"input_rows": 2, "admitted_rows": 1, "rejected_rows": 1}

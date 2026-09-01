@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 from scripts.projects.open_model_data import v4_arena_receipt as arena
@@ -127,8 +128,8 @@ def test_hash_replay_and_cli_are_deterministic(tmp_path: Path) -> None:
     assert arena.build_receipts(**fixture) == arena.build_receipts(**copy.deepcopy(fixture))  # type: ignore[arg-type]
     input_path, private_path, public_path = tmp_path / "input.json", tmp_path / "private.json", tmp_path / "public.json"
     input_path.write_text(json.dumps(fixture), encoding="utf-8")
-    command = ["/home/ops/learn-ukrainian/.venv/bin/python", "scripts/projects/open_model_data/v4_arena_receipt.py", "--input", str(input_path), "--private-output", str(private_path), "--public-output", str(public_path)]
-    result = subprocess.run(command, check=False, capture_output=True, text=True)
+    command = [sys.executable, "scripts/projects/open_model_data/v4_arena_receipt.py", "--input", str(input_path), "--private-output", str(private_path), "--public-output", str(public_path)]
+    result = subprocess.run(command, check=False, capture_output=True, text=True, timeout=60)
     assert result.returncode == 0, result.stderr
     assert arena.verify_receipt(json.loads(public_path.read_text()))["receipt_sha256"]
 
