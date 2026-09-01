@@ -68,14 +68,16 @@ already enforces today:
 - **Stream lease (drivers only):** `SessionStreamStore.open_session` refuses a second
   live driver on the same epic stream with
   `stream {id} already has live session …` (`agents_extensions/shared/session_streams/store.py`).
-- **Worker dispatch:** `scripts/delegate.py` `_check_capacity_hint` is explicitly
-  **non-blocking** — it prints a note when the lane is busy; it does **not** refuse
-  `dispatch --agent cursor` because a Cursor driver holds a stream lease.
+- **Worker dispatch:** `scripts/delegate.py` `_check_capacity_hint` keeps the
+  ordinary busy-lane note, but reads the session-stream store before a Cursor
+  dispatch. A live Cursor process-driver lease refuses `dispatch --agent cursor`
+  before spawn; `--force-agent` overrides that refusal with an explicit NOTE.
 - **Fleet endpoint metadata:** `concurrency_limit: 1` on the `cursor` endpoint is
-  declarative / API-surfaced; it is not a dispatch mutex against the TUI driver.
+  declarative / API-surfaced and is not used as a general worker cap. The
+  session-stream lease is the dispatch admission signal for the Cursor driver.
 
-Policy fail-closed therefore remains operator/driver discipline until a future unit
-wires lease↔dispatch coupling. Full charter: `docs/runbooks/cursor-driver.md`.
+This lease↔dispatch coupling is fail-closed by default. Full charter:
+`docs/runbooks/cursor-driver.md`.
 
 **Opus 5 @ xhigh is the DEFAULT Anthropic driver seat** (operator decision 2026-08-03).
 `./start-claude-driver.sh --epic <epic>` pins Opus 5 with `--effort xhigh` by default;

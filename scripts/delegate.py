@@ -5603,60 +5603,6 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         except OSError:
             early_prompt = None
 
-    if not bool(getattr(args, "dry_run", False)):
-        placement, reason, host_id = decide_dispatch_placement(repo_root=_REPO_ROOT)
-        if placement == "vps" and host_id:
-            print(f"→ forwarding dispatch to {host_id} (run_nonce={run_nonce})", file=sys.stderr)
-            forward_error: BaseException | None = None
-            forward_rc: int | None = None
-            try:
-                forward_rc = forward_dispatch(
-                    host_id=host_id,
-                    argv=sys.argv,
-                    initiator=attribution.initiator,
-                    initiator_source=attribution.source,
-                    run_nonce=run_nonce,
-                )
-            except SshTransportError as exc:
-                forward_error = exc
-            except (ValueError, FileNotFoundError, OSError) as exc:
-                forward_error = exc
-            if not notebook_fallback_after_forward(forward_rc, error=forward_error):
-                if forward_error is not None:
-                    _record_forward_failure(
-                        task_id=task_id,
-                        run_nonce=run_nonce,
-                        attribution=attribution,
-                        agent=getattr(args, "agent", "unknown"),
-                        mode=getattr(args, "mode", "read-only"),
-                        prompt=early_prompt or "",
-                        error=forward_error,
-                        requested_model=getattr(args, "model", None),
-                        requested_effort=getattr(args, "effort", None),
-                        requested_harness=getattr(args, "harness", None),
-                        worktree_path=getattr(args, "worktree", None),
-                        worktree_branch=getattr(args, "branch", None),
-                        worktree_base=getattr(args, "base", None) or "main",
-                        keep_worktree=bool(getattr(args, "keep_worktree", False)),
-                        hard_timeout=getattr(args, "hard_timeout", DEFAULT_HARD_TIMEOUT_S),
-                        silence_timeout=getattr(args, "silence_timeout", DEFAULT_SILENCE_TIMEOUT_S),
-                        initial_response_timeout=getattr(
-                            args, "initial_response_timeout", DEFAULT_INITIAL_RESPONSE_TIMEOUT_S
-                        ),
-                        max_budget_usd=getattr(args, "max_budget_usd", None),
-                        output_schema_path=getattr(args, "output_schema", None),
-                    )
-                    refusal_msg = format_forward_config_refusal(forward_error, host_id=host_id)
-                    print(refusal_msg, file=sys.stderr)
-                    return 2
-                return int(forward_rc or 0)
-            why = str(forward_error) if forward_error is not None else f"ssh rc {forward_rc}"
-            print(
-                f"⚠️  VPS forward failed ({why}); spawning on notebook",
-                file=sys.stderr,
-            )
-        elif reason in {"unavailable", "full"}:
-            print(f"⚠️  every VPS worker host is {reason}; spawning on notebook", file=sys.stderr)
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
     from agent_runtime.agent_identity import resolve_retired_agent_alias
     from agent_runtime.telemetry import resolve_dispatch_start_telemetry
@@ -5912,7 +5858,68 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
 
     _warn_kimicc_oauth_token_life(requested_harness, args.hard_timeout)
 
-    _check_capacity_hint(dispatch_agent, args=args)
+    try:
+        _check_capacity_hint(dispatch_agent, args=args)
+    except CapacityGuardRefuseError as exc:
+        print(f"❌ {exc}", file=sys.stderr)
+        return 2
+
+    # Admission must precede placement forwarding: a VPS forward is itself a
+    # spawn path, so a refused Cursor dispatch must never leave this process.
+    if not bool(getattr(args, "dry_run", False)):
+        placement, reason, host_id = decide_dispatch_placement(repo_root=_REPO_ROOT)
+        if placement == "vps" and host_id:
+            print(f"→ forwarding dispatch to {host_id} (run_nonce={run_nonce})", file=sys.stderr)
+            forward_error: BaseException | None = None
+            forward_rc: int | None = None
+            try:
+                forward_rc = forward_dispatch(
+                    host_id=host_id,
+                    argv=sys.argv,
+                    initiator=attribution.initiator,
+                    initiator_source=attribution.source,
+                    run_nonce=run_nonce,
+                )
+            except SshTransportError as exc:
+                forward_error = exc
+            except (ValueError, FileNotFoundError, OSError) as exc:
+                forward_error = exc
+            if not notebook_fallback_after_forward(forward_rc, error=forward_error):
+                if forward_error is not None:
+                    _record_forward_failure(
+                        task_id=task_id,
+                        run_nonce=run_nonce,
+                        attribution=attribution,
+                        agent=getattr(args, "agent", "unknown"),
+                        mode=getattr(args, "mode", "read-only"),
+                        prompt=early_prompt or "",
+                        error=forward_error,
+                        requested_model=getattr(args, "model", None),
+                        requested_effort=getattr(args, "effort", None),
+                        requested_harness=getattr(args, "harness", None),
+                        worktree_path=getattr(args, "worktree", None),
+                        worktree_branch=getattr(args, "branch", None),
+                        worktree_base=getattr(args, "base", None) or "main",
+                        keep_worktree=bool(getattr(args, "keep_worktree", False)),
+                        hard_timeout=getattr(args, "hard_timeout", DEFAULT_HARD_TIMEOUT_S),
+                        silence_timeout=getattr(args, "silence_timeout", DEFAULT_SILENCE_TIMEOUT_S),
+                        initial_response_timeout=getattr(
+                            args, "initial_response_timeout", DEFAULT_INITIAL_RESPONSE_TIMEOUT_S
+                        ),
+                        max_budget_usd=getattr(args, "max_budget_usd", None),
+                        output_schema_path=getattr(args, "output_schema", None),
+                    )
+                    refusal_msg = format_forward_config_refusal(forward_error, host_id=host_id)
+                    print(refusal_msg, file=sys.stderr)
+                    return 2
+                return int(forward_rc or 0)
+            why = str(forward_error) if forward_error is not None else f"ssh rc {forward_rc}"
+            print(
+                f"⚠️  VPS forward failed ({why}); spawning on notebook",
+                file=sys.stderr,
+            )
+        elif reason in {"unavailable", "full"}:
+            print(f"⚠️  every VPS worker host is {reason}; spawning on notebook", file=sys.stderr)
 
     try:
         output_schema_path, output_schema_sha256 = _resolve_output_schema(
@@ -6639,6 +6646,10 @@ class BudgetGuardRefuseError(RuntimeError):
     """Raised when --check-budget must refuse dispatch (hot/deficit/near_cap, no fallback)."""
 
 
+class CapacityGuardRefuseError(RuntimeError):
+    """Raised when Cursor driver lease admission must refuse a worker spawn."""
+
+
 def _monitor_api_base_url() -> str:
     return os.environ.get("DELEGATE_MONITOR_API", _MONITOR_API_BASE_URL).rstrip("/")
 
@@ -6870,8 +6881,96 @@ def _resolve_agent_with_budget_guard(agent: str) -> str:
     )
 
 
+def _session_stream_store() -> Any:
+    """Build the canonical read-only session-stream store used by fleet code."""
+    from agents_extensions.shared.session_streams.db import DEFAULT_RELATIVE_DATABASE, SessionStreamDatabase
+    from agents_extensions.shared.session_streams.store import SessionStreamStore
+
+    return SessionStreamStore(SessionStreamDatabase(_REPO_ROOT / DEFAULT_RELATIVE_DATABASE))
+
+
+def _find_live_cursor_driver_lease() -> dict[str, Any] | None:
+    """Return one live Cursor process-driver lease, or ``None`` when absent.
+
+    The session-stream database is the sole source of truth here. A missing,
+    unreadable, or malformed store refuses admission rather than allowing an
+    unverifiable Cursor spawn.
+    """
+    try:
+        from agents_extensions.shared.session_streams.model import parse_timestamp
+
+        store = _session_stream_store()
+        database = getattr(store, "database", None)
+        database_path = getattr(database, "path", None)
+        if database_path is not None and not Path(database_path).is_file():
+            raise ValueError("session-stream database is missing")
+
+        projections = store.list_remote_projections()
+        now = datetime.now(UTC)
+        for projection in projections:
+            if not isinstance(projection, dict):
+                raise ValueError("session-stream projection is not an object")
+
+            nested_lease = projection.get("lease")
+            lease = nested_lease if isinstance(nested_lease, dict) else projection
+            holder_agent = str(lease.get("holder_agent") or "").strip().lower()
+            if holder_agent != "cursor":
+                continue
+            if str(lease.get("holder_harness") or "").strip().lower() != "cursor-agent":
+                continue
+            if str(lease.get("holder_kind") or "process").strip().lower() != "process":
+                continue
+            if str(lease.get("state") or "").strip().lower() != "active":
+                continue
+            session_state = str(lease.get("session_state") or projection.get("session_state") or "").strip().lower()
+            if session_state not in {"open", "rolling"}:
+                continue
+            if lease.get("session_expired_at") or projection.get("session_expired_at"):
+                continue
+
+            expires_at = lease.get("expires_at")
+            if not isinstance(expires_at, str) or not expires_at.strip():
+                raise ValueError("Cursor lease has no expiry")
+            if parse_timestamp(expires_at) > now:
+                return lease
+        return None
+    except CapacityGuardRefuseError:
+        raise
+    except Exception as exc:
+        raise CapacityGuardRefuseError(
+            "CAPACITY REFUSED: unable to verify the session-stream store for a live Cursor driver lease; "
+            "use --force-agent to override."
+        ) from exc
+
+
 def _check_capacity_hint(dispatch_agent: str, args: argparse.Namespace | None = None) -> None:
-    """Non-blocking hint when dispatching to a busy lane while other eligible lanes are idle."""
+    """Refuse Cursor driver-lease collisions; otherwise retain the busy-lane hint."""
+    target_norm = str(dispatch_agent or "").strip().lower()
+    force_agent = bool(getattr(args, "force_agent", False)) if args is not None else False
+
+    if target_norm == "cursor":
+        try:
+            cursor_driver_lease = _find_live_cursor_driver_lease()
+        except CapacityGuardRefuseError:
+            if not force_agent:
+                raise
+            print(
+                "NOTE: --force-agent overrides Cursor driver-lease admission after the live lease check failed; "
+                "spawning --agent cursor.",
+                file=sys.stderr,
+            )
+        else:
+            if cursor_driver_lease is not None:
+                if not force_agent:
+                    raise CapacityGuardRefuseError(
+                        "CAPACITY REFUSED: --agent cursor has a live Cursor driver stream lease; "
+                        "refusing worker spawn. Use another agent or pass --force-agent to override."
+                    )
+                print(
+                    "NOTE: --force-agent overrides the live Cursor driver stream lease; spawning --agent cursor.",
+                    file=sys.stderr,
+                )
+
     if args is not None and (getattr(args, "json", False) or getattr(args, "quiet", False)):
         return
 
@@ -6891,7 +6990,7 @@ def _check_capacity_hint(dispatch_agent: str, args: argparse.Namespace | None = 
             for lane in ("claude", "codex", "gemini", "grok", "cursor", "kimi")
             if lane not in RETIRED_AGENT_ALIASES
         )
-        target_norm = normalize_agent_name(dispatch_agent) or dispatch_agent.lower().strip()
+        target_norm = normalize_agent_name(dispatch_agent) or target_norm
 
         in_flight: dict[str, int] = {lane: 0 for lane in subscription_lanes}
         if _TASKS_DIR.is_dir():
@@ -7536,7 +7635,8 @@ def build_parser() -> argparse.ArgumentParser:
         "--force-agent",
         action="store_true",
         help=(
-            "Suppress --check-budget / LU_DISPATCH_CHECK_BUDGET routing guard and dispatch with the requested agent."
+            "Suppress --check-budget / LU_DISPATCH_CHECK_BUDGET routing guard and dispatch with the requested agent; "
+            "also overrides a live Cursor driver-lease refusal with a NOTE."
         ),
     )
     d.add_argument(

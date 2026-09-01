@@ -6,7 +6,12 @@ import json
 import sys
 import types
 import urllib.error
+from datetime import UTC, datetime
 from pathlib import Path
+
+from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+from agents_extensions.shared.session_streams.model import LeaseHolder
+from agents_extensions.shared.session_streams.store import SessionStreamStore
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
@@ -146,6 +151,7 @@ def _dispatch_args(*extra: str):
 def _patch_spawn(monkeypatch, tmp_path):
     monkeypatch.setattr(delegate, "_TASKS_DIR", tmp_path / "tasks")
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_args, **_kwargs: _FakeProc())
+    monkeypatch.setattr(delegate, "_session_stream_store", lambda: _session_stream_store(tmp_path))
     telemetry = type(
         "_Telemetry",
         (),
@@ -155,6 +161,44 @@ def _patch_spawn(monkeypatch, tmp_path):
         "agent_runtime.telemetry.resolve_dispatch_start_telemetry",
         lambda **_kwargs: telemetry,
     )
+
+
+def _track_worker_spawns(monkeypatch):
+    spawned = []
+
+    def fake_popen(*args, **kwargs):
+        command = args[0] if args else ()
+        if isinstance(command, (list, tuple)) and "_worker" in command:
+            spawned.append((args, kwargs))
+        return _FakeProc()
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+    return spawned
+
+
+def _session_stream_store(tmp_path: Path) -> SessionStreamStore:
+    database = SessionStreamDatabase(tmp_path / "session-streams.sqlite3")
+    connection = database.connect()
+    connection.close()
+    return SessionStreamStore(database)
+
+
+def _cursor_driver_store(tmp_path: Path) -> SessionStreamStore:
+    store = _session_stream_store(tmp_path)
+    store.open_session(
+        stream_id="epic:4707",
+        holder=LeaseHolder(
+            agent="cursor",
+            harness="cursor-agent",
+            instance_id="cursor-driver-fixture",
+            task_id="cursor-driver-fixture",
+            process_id=99999,
+        ),
+        lineage_id="cursor-driver-lineage",
+        ttl_seconds=600,
+        now=datetime.now(UTC),
+    )
+    return store
 
 
 def test_check_budget_warns_when_agent_mismatch(monkeypatch, tmp_path, capsys):
@@ -587,3 +631,95 @@ def test_dispatch_capacity_hint_printed_when_target_lane_busy(monkeypatch, tmp_p
     captured = capsys.readouterr()
     assert captured.out == ""
     assert captured.err == ""
+
+
+def test_dispatch_cursor_refuses_when_driver_lease_is_live(monkeypatch, tmp_path, capsys):
+    """A live Cursor driver lease is a hard admission refusal before Popen."""
+    from scripts.orchestration import job_host_exec
+
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: None)
+    monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
+    monkeypatch.setattr(delegate, "_session_stream_store", lambda: _cursor_driver_store(tmp_path))
+    monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kwargs: ("vps", "available", "host-job"))
+    monkeypatch.setattr(
+        job_host_exec,
+        "forward_dispatch",
+        lambda **_kwargs: pytest.fail("a refused Cursor dispatch must not forward to a worker host"),
+    )
+    spawned = _track_worker_spawns(monkeypatch)
+
+    rc = delegate.cmd_dispatch(_dispatch_args("--agent", "cursor"))
+
+    assert rc == 2
+    assert spawned == []
+    err = capsys.readouterr().err
+    assert "CAPACITY REFUSED" in err
+    assert "live Cursor driver stream lease" in err
+
+
+@pytest.mark.parametrize("suppression", ("json", "quiet"))
+def test_dispatch_cursor_lease_refusal_is_not_suppressed_by_json_or_quiet(monkeypatch, tmp_path, capsys, suppression):
+    """Machine-output modes hide hints, not the hard Cursor admission refusal."""
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: None)
+    monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
+    monkeypatch.setattr(delegate, "_session_stream_store", lambda: _cursor_driver_store(tmp_path))
+    spawned = _track_worker_spawns(monkeypatch)
+    args = _dispatch_args("--agent", "cursor")
+    setattr(args, suppression, True)
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 2
+    assert spawned == []
+    err = capsys.readouterr().err
+    assert "CAPACITY REFUSED" in err
+    assert "💡" not in err
+
+
+def test_dispatch_cursor_force_agent_overrides_live_driver_lease(monkeypatch, tmp_path, capsys):
+    """--force-agent permits the explicit collision and records a NOTE."""
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: None)
+    monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
+    monkeypatch.setattr(delegate, "_session_stream_store", lambda: _cursor_driver_store(tmp_path))
+    spawned = _track_worker_spawns(monkeypatch)
+
+    rc = delegate.cmd_dispatch(_dispatch_args("--agent", "cursor", "--force-agent"))
+
+    assert rc == 0
+    assert len(spawned) == 1
+    err = capsys.readouterr().err
+    assert "NOTE: --force-agent overrides the live Cursor driver stream lease" in err
+
+
+def test_dispatch_cursor_worker_only_in_flight_keeps_hint_and_spawns(monkeypatch, tmp_path, capsys):
+    """A Cursor worker task is not the Cursor driver's session-stream lease."""
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: None)
+    monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
+    monkeypatch.setattr(delegate, "_session_stream_store", lambda: _session_stream_store(tmp_path))
+    monkeypatch.setattr(delegate, "_pid_alive", lambda _pid: True)
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    (tasks_dir / "cursor-worker.json").write_text(
+        json.dumps(
+            {
+                "task_id": "cursor-worker",
+                "agent": "cursor",
+                "status": "running",
+                "pid": 99999,
+            }
+        ),
+        encoding="utf-8",
+    )
+    spawned = _track_worker_spawns(monkeypatch)
+
+    rc = delegate.cmd_dispatch(_dispatch_args("--agent", "cursor"))
+
+    assert rc == 0
+    assert len(spawned) == 1
+    err = capsys.readouterr().err
+    assert "💡 Note: lane 'cursor' has 1 task(s) in flight" in err
+    assert "CAPACITY REFUSED" not in err

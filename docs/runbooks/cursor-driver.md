@@ -49,12 +49,14 @@ Cross-family independence checks evaluate either the **attested concrete model f
   - Epic **stream leases** fail closed on a second live driver:
     `stream {id} already has live session …` in
     `agents_extensions/shared/session_streams/store.py` (`LifecycleError`).
-  - `scripts/delegate.py` `_check_capacity_hint` is **non-blocking** (docstring:
-    "Non-blocking hint when dispatching to a busy lane…"); busy Cursor workers
-    only emit a stderr note — they do not refuse because a Cursor driver holds
-    a stream lease.
+  - `scripts/delegate.py` `_check_capacity_hint` keeps a non-blocking stderr
+    note for ordinary busy lanes, but reads the session-stream store for Cursor
+    admission. A live Cursor process-driver lease refuses `--agent cursor`
+    before spawn; `--force-agent` overrides with an explicit NOTE. Cursor
+    worker-only in-flight state does not satisfy this lease check.
   - `scripts/config/fleet_communications.yaml` `cursor.concurrency_limit: 1` is
-    endpoint metadata (surfaced by the fleet API), not a dispatch mutex.
+    endpoint metadata (surfaced by the fleet API), not a general dispatch worker
+    cap; the session-stream lease is the Cursor driver admission signal.
 - **Layout A Worktrees:** Implementation runs only from isolated dispatch worktrees under `.worktrees/dispatch/{agent}/{task}/`.
 - **Driver Never Merges:** Drivers neither merge PRs nor arm auto-merge. The human operator retains sole merge authority.
 - **Single Playbook:** No second router or alternate state machine; drivers run the standard `drive-epic` skill.
