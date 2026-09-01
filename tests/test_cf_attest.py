@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
-from urllib.error import HTTPError
+from urllib.error import HTTPError, URLError
 
 import pytest
 import yaml
@@ -11,6 +12,8 @@ import yaml
 from scripts.ci import gate_required_results as gate
 from scripts.ci.cf_attest import (
     FAMILY_CURSOR_AUTO_UNION,
+    VERDICT_PRESENT_RE,
+    AttestResult,
     author_family_from_agents,
     build_attest_feedback,
     diagnose_attest_comment,
@@ -354,6 +357,11 @@ def test_comment_workflow_is_pr_only_and_verdict_shaped() -> None:
     assert "github.event.issue.pull_request" in condition
     assert "VERDICT:" in condition
     assert "usage limit" in condition
+    # #7593-r2: the evaluator's own gap comment is bot-authored and
+    # verdict-free by construction; the gate must also exclude bots so an
+    # unattestable verdict can never start a comment loop.
+    assert "github.event.comment.user.type != 'Bot'" in condition
+    assert "github-actions[bot]" in condition
     # #M-4 (2026-09-01): the family may arrive via a resolved_model: line, so
     # requiring a literal "Reviewer family:" silently skipped valid verdicts
     # (runs 33552592932 / 33552245509). The evaluator fail-closes instead.
@@ -389,6 +397,10 @@ def test_comment_workflow_pins_exact_head_env_and_run() -> None:
     # The untrusted comment body reaches the evaluator via env only, so a
     # verdict that cannot be attested earns ONE gap comment — never a skip.
     assert env["COMMENT_BODY"] == "${{ github.event.comment.body }}"
+    # #7593-r2: bot guard + dedupe inputs via env as well (never the shell).
+    assert env["COMMENT_AUTHOR_LOGIN"] == "${{ github.event.comment.user.login }}"
+    assert env["COMMENT_AUTHOR_TYPE"] == "${{ github.event.comment.user.type }}"
+    assert env["COMMENT_ID"] == "${{ github.event.comment.id }}"
     assert step["run"] == "python3 scripts/ci/cf_attest.py --feedback-comment"
     assert "${{" not in step["run"]
     assert step.get("continue-on-error") is not True
@@ -809,9 +821,146 @@ def test_diagnose_attest_comment_reports_each_gap() -> None:
 
 def test_build_attest_feedback_is_one_short_comment() -> None:
     body = build_attest_feedback("missing a resolvable reviewer family")
-    assert "VERDICT:" in body
+    assert "cf-attest:gap" in body
     assert "missing a resolvable reviewer family" in body
     assert "resolved_model" in body
+
+
+def test_build_attest_feedback_never_retriggers_the_gate() -> None:
+    """#7593-r2: the gap comment must not carry the workflow trigger tokens.
+
+    The on-comment job gate is ``contains(body, 'VERDICT:')``; the evaluator
+    re-diagnoses anything matching VERDICT_PRESENT_RE. The gap comment must
+    fail both, carry the hidden dedupe marker, and avoid the literal family /
+    cross-family-paren tokens.
+    """
+    body = build_attest_feedback(
+        "missing a recognized verdict (e.g. VERDICT&#58; APPROVE)",
+        head=PR_HEAD,
+        trigger_id="4242",
+    )
+    assert not VERDICT_PRESENT_RE.search(body)
+    assert "VERDICT:" not in body
+    assert "verdict:" not in body.casefold()
+    assert "Reviewer family:" not in body
+    assert "reviewer family:" not in body.casefold()
+    assert "Cross-family review of record (" not in body
+    assert "<!-- cf-attest:gap" in body
+    assert f"head={PR_HEAD}" in body
+    assert "trigger=4242" in body
+    # The REAL diagnose notes are embedded verbatim — verify end-to-end.
+    note = diagnose_attest_comment("**VERDICT: APPROVE** and nothing else")
+    assert note is not None
+    real = build_attest_feedback(note, head=PR_HEAD, trigger_id="1")
+    assert not VERDICT_PRESENT_RE.search(real)
+    assert "VERDICT:" not in real
+    assert "Reviewer family:" not in real
+
+
+def test_diagnose_attest_comment_never_answers_own_gap_comment() -> None:
+    """#7593-r2: the marker alone suppresses a reply, verdict tokens or not."""
+    body = build_attest_feedback("missing a head SHA", head=PR_HEAD, trigger_id="7")
+    assert diagnose_attest_comment(body, expected_head=PR_HEAD) is None
+    tagged_verdict = "<!-- cf-attest:gap -->\n**VERDICT: APPROVE** but no head"
+    assert diagnose_attest_comment(tagged_verdict, expected_head=PR_HEAD) is None
+
+
+def _feedback_args() -> argparse.Namespace:
+    return argparse.Namespace(repository="o/r", pr_number="5")
+
+
+def _failing_result() -> AttestResult:
+    return AttestResult(False, "missing CF: no independent exact-head APPROVE",
+                        expected_head=PR_HEAD)
+
+
+def _unattestable_trigger_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("COMMENT_BODY", "**VERDICT: APPROVE** with nothing else")
+    monkeypatch.setenv("COMMENT_AUTHOR_TYPE", "User")
+    monkeypatch.setenv("COMMENT_AUTHOR_LOGIN", "fleet-reviewer")
+    monkeypatch.setenv("COMMENT_ID", "9001")
+
+
+def test_maybe_post_feedback_posts_once_with_marker_and_no_triggers(monkeypatch) -> None:
+    import scripts.ci.cf_attest as mod
+
+    posts: list[dict] = []
+    _unattestable_trigger_env(monkeypatch)
+    monkeypatch.setattr(mod, "github_api_get", lambda *a, **k: [])
+    monkeypatch.setattr(mod, "github_api_post", lambda path, payload, **k: posts.append(payload))
+    mod._maybe_post_feedback(_feedback_args(), _failing_result())
+    assert len(posts) == 1
+    body = posts[0]["body"]
+    assert "<!-- cf-attest:gap" in body
+    assert f"head={PR_HEAD}" in body
+    assert "trigger=9001" in body
+    assert "VERDICT:" not in body
+    assert "Reviewer family:" not in body
+    assert not VERDICT_PRESENT_RE.search(body)
+
+
+def test_maybe_post_feedback_skips_bot_authored_trigger(monkeypatch) -> None:
+    import scripts.ci.cf_attest as mod
+
+    _unattestable_trigger_env(monkeypatch)
+    monkeypatch.setenv("COMMENT_AUTHOR_TYPE", "Bot")
+    monkeypatch.setenv("COMMENT_AUTHOR_LOGIN", "github-actions[bot]")
+    monkeypatch.setattr(mod, "github_api_get", lambda *a, **k: pytest.fail("must not fetch"))
+    monkeypatch.setattr(mod, "github_api_post", lambda *a, **k: pytest.fail("must not POST"))
+    mod._maybe_post_feedback(_feedback_args(), _failing_result())
+
+
+def test_maybe_post_feedback_skips_own_gap_comment_body(monkeypatch) -> None:
+    import scripts.ci.cf_attest as mod
+
+    _unattestable_trigger_env(monkeypatch)
+    monkeypatch.setenv(
+        "COMMENT_BODY", build_attest_feedback("missing x", head=PR_HEAD, trigger_id="1")
+    )
+    monkeypatch.setattr(mod, "github_api_get", lambda *a, **k: pytest.fail("must not fetch"))
+    monkeypatch.setattr(mod, "github_api_post", lambda *a, **k: pytest.fail("must not POST"))
+    mod._maybe_post_feedback(_feedback_args(), _failing_result())
+
+
+def test_maybe_post_feedback_dedupes_per_pr_and_head(monkeypatch) -> None:
+    """#7593-r2: an existing marker+head gap comment suppresses a repost."""
+    import scripts.ci.cf_attest as mod
+
+    _unattestable_trigger_env(monkeypatch)
+    existing = [
+        {"body": "unrelated chatter"},
+        {"body": build_attest_feedback("missing x", head=PR_HEAD, trigger_id="1")},
+    ]
+    monkeypatch.setattr(mod, "github_api_get", lambda *a, **k: existing)
+    monkeypatch.setattr(mod, "github_api_post", lambda *a, **k: pytest.fail("must not POST"))
+    mod._maybe_post_feedback(_feedback_args(), _failing_result())
+
+
+def test_maybe_post_feedback_reposts_for_a_new_head(monkeypatch) -> None:
+    """A gap comment at a STALE head must not suppress one at the new head."""
+    import scripts.ci.cf_attest as mod
+
+    posts: list[dict] = []
+    _unattestable_trigger_env(monkeypatch)
+    existing = [{"body": build_attest_feedback("missing x", head=STALE_HEAD, trigger_id="1")}]
+    monkeypatch.setattr(mod, "github_api_get", lambda *a, **k: existing)
+    monkeypatch.setattr(mod, "github_api_post", lambda path, payload, **k: posts.append(payload))
+    mod._maybe_post_feedback(_feedback_args(), _failing_result())
+    assert len(posts) == 1
+
+
+def test_maybe_post_feedback_skips_when_dedupe_check_fails(monkeypatch) -> None:
+    """Fail closed against a loop: no dedupe check, no comment."""
+    import scripts.ci.cf_attest as mod
+
+    _unattestable_trigger_env(monkeypatch)
+
+    def broken_get(*a, **k):
+        raise URLError("api down")
+
+    monkeypatch.setattr(mod, "github_api_get", broken_get)
+    monkeypatch.setattr(mod, "github_api_post", lambda *a, **k: pytest.fail("must not POST"))
+    mod._maybe_post_feedback(_feedback_args(), _failing_result())
 
 
 def _failed_cf_check_run(run_id: int = 424242) -> dict:

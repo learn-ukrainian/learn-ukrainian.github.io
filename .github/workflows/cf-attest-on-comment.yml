@@ -12,6 +12,13 @@ name: CF attest on comment
 # gap comment when the verdict cannot be attested, and reruns the stale
 # failed CF attest run at this head after a fresh accept (no more manual
 # `gh run rerun --failed`).
+#
+# #7593-r2 (2026-09-01): the gap comment itself carries verdict-shaped text,
+# so an unguarded gate made the bot's own feedback retrigger this workflow in
+# a loop. The gate now ignores bot-authored comments, and the evaluator
+# answers neither its own marker-tagged gap comment nor any bot author, never
+# emits the literal trigger tokens, and posts at most one gap comment per
+# (PR, head SHA).
 
 permissions:
   contents: read
@@ -33,8 +40,12 @@ jobs:
     # markdown emphasis on the verdict is fine. Matching comments never
     # skip-to-green: resolve + attest fail closed, and an unattestable
     # verdict earns exactly one gap comment (never a silent skip).
+    # Bot-authored comments are excluded (#7593-r2): the evaluator's own gap
+    # comment must never retrigger this workflow.
     if: >-
       github.event.issue.pull_request &&
+      github.event.comment.user.type != 'Bot' &&
+      github.event.comment.user.login != 'github-actions[bot]' &&
       contains(github.event.comment.body, 'VERDICT:') &&
       !contains(github.event.comment.body, 'usage limit')
     runs-on: ubuntu-latest
@@ -92,6 +103,11 @@ jobs:
           # Untrusted comment text travels via env only — never spliced into
           # the run script (untrusted-workflow-interpolation gate).
           COMMENT_BODY: ${{ github.event.comment.body }}
+          # #7593-r2: author identity (bot guard) and comment id (dedupe) via
+          # env as well; never interpolated into the shell.
+          COMMENT_AUTHOR_LOGIN: ${{ github.event.comment.user.login }}
+          COMMENT_AUTHOR_TYPE: ${{ github.event.comment.user.type }}
+          COMMENT_ID: ${{ github.event.comment.id }}
         run: python3 scripts/ci/cf_attest.py --feedback-comment
 
       - name: Rerun stale failed CF attest at this head

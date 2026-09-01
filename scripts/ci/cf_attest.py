@@ -92,6 +92,10 @@ RESOLVED_MODEL_RE = re.compile(
     re.IGNORECASE,
 )
 VERDICT_PRESENT_RE = re.compile(r"\bverdict\s*:", re.IGNORECASE)
+# #7593-r2: hidden marker on the evaluator's own gap comment. The evaluator
+# never answers a body carrying it, and at most one gap comment is posted per
+# (PR, head SHA) — the on-comment workflow must never loop on its own output.
+GAP_COMMENT_TAG = "cf-attest:gap"
 CF_PAREN_RE = re.compile(
     r"\b(?:cross[- ]family(?:\s+(?:review|cf))?|cf of record)\b[^\n(]{0,40}\(([^)]+)\)",
     re.IGNORECASE,
@@ -325,8 +329,15 @@ def diagnose_attest_comment(body: str, *, expected_head: str = "") -> str | None
     that misses the contract is never skipped silently (#M-4, 2026-09-01: a
     ``**VERDICT: APPROVE**`` + ``resolved_model:`` comment with no
     ``Reviewer family:`` line was dropped without any feedback).
+
+    #7593-r2: a body carrying our own gap-comment marker is never diagnosed —
+    answering it would retrigger the workflow in a loop.
     """
-    if not isinstance(body, str) or not VERDICT_PRESENT_RE.search(body):
+    if not isinstance(body, str) or not body.strip():
+        return None
+    if GAP_COMMENT_TAG in body:
+        return None
+    if not VERDICT_PRESENT_RE.search(body):
         return None
     parsed = parse_attestation(body)
     if parsed is not None:
@@ -338,36 +349,84 @@ def diagnose_attest_comment(body: str, *, expected_head: str = "") -> str | None
             )
         return None
     gaps: list[str] = []
+    # #7593-r2: these notes are embedded verbatim in the gap comment, so they
+    # must not carry the literal gate trigger tokens. The expected-shape
+    # tokens use HTML entities (VERDICT&#58;) which render as colons on
+    # GitHub but fail ``contains(body, 'VERDICT:')`` and VERDICT_PRESENT_RE.
     if not CF_MARKER_RE.search(body):
-        gaps.append("a cross-family marker (e.g. `Cross-family review of record (<seat>)`)")
+        gaps.append(
+            "a cross-family marker (e.g. a `Cross-family review of record` "
+            "line naming the reviewer seat)"
+        )
     if not VERDICT_APPROVE_RE.search(body) and not VERDICT_BLOCK_RE.search(body):
-        gaps.append("a recognized verdict (`VERDICT: APPROVE` or `VERDICT: CHANGES_REQUESTED`)")
+        gaps.append(
+            "a recognized verdict (e.g. VERDICT&#58; APPROVE or VERDICT&#58; CHANGES_REQUESTED)"
+        )
     if _first_labeled_sha(body) is None:
         found = {match.group(1).lower() for match in SHA_RE.finditer(body)}
         if len(found) != 1:
             gaps.append("the exact head SHA (e.g. `At exact head `<40-char-sha>``)")
     if normalize_family(_family_text(body)) not in CONCRETE_FAMILIES:
         gaps.append(
-            "a resolvable reviewer family — add `Reviewer family: <family>` "
-            "or `resolved_model: <model-id>` (e.g. `resolved_model: claude-sonnet-5`)"
+            "a resolvable reviewer family — add a Reviewer family&#58; <family> line "
+            "or a resolved_model&#58; <model-id> line (e.g. resolved_model&#58; claude-sonnet-5)"
         )
     if not gaps:
         return None
     return "missing " + "; ".join(gaps)
 
 
-def build_attest_feedback(note: str) -> str:
-    """The one short bot comment for an unattestable VERDICT comment."""
+def build_attest_feedback(note: str, *, head: str = "", trigger_id: str = "") -> str:
+    """The one short bot comment for an unattestable verdict comment.
+
+    #7593-r2: this comment must never retrigger the on-comment workflow. It
+    carries a hidden dedupe marker (``cf-attest:gap`` plus the head SHA and
+    triggering comment id), and the expected-shape tokens are written with
+    HTML entities (``VERDICT&#58;``) so neither ``contains(body, 'VERDICT:')``
+    nor VERDICT_PRESENT_RE matches it. Entities sit OUTSIDE code spans so
+    GitHub renders them as the literal tokens for the reader.
+    """
+    marker = f"<!-- {GAP_COMMENT_TAG}"
+    normalized_head = (head or "").strip().lower()
+    if SHA_RE.fullmatch(normalized_head):
+        marker += f" head={normalized_head}"
+    normalized_trigger = (trigger_id or "").strip()
+    if normalized_trigger.isdigit():
+        marker += f" trigger={normalized_trigger}"
+    marker += " -->"
     return (
-        "CF attest: your `VERDICT:` comment could not be recorded — " + note + ".\n\n"
+        marker + "\n"
+        "CF attest: your verdict comment could not be recorded — " + note + ".\n\n"
         "Expected shape (markdown emphasis around the verdict is fine):\n"
-        "```\n"
-        "**VERDICT: APPROVE**\n"
-        "Cross-family review of record (<seat>)\n"
-        "Reviewer family: <family>   # or a line like: resolved_model: <model-id>\n"
-        "At exact head `<40-char-sha>`\n"
-        "```"
+        "- **VERDICT&#58; APPROVE**\n"
+        "- Cross-family review of record — <seat>\n"
+        "- Reviewer family&#58; <family>   (or a line like: resolved_model&#58; <model-id>)\n"
+        "- At exact head `<40-char-sha>`"
     )
+
+
+def _is_gap_comment(body: str, *, head: str = "") -> bool:
+    """True for our own gap comments; with ``head`` set, only at that head."""
+    if GAP_COMMENT_TAG not in body:
+        return False
+    normalized = (head or "").strip().lower()
+    if normalized and SHA_RE.fullmatch(normalized):
+        return f"head={normalized}" in body
+    return True
+
+
+def _comment_author_is_bot() -> bool:
+    """True when the triggering comment author is automation.
+
+    ``COMMENT_AUTHOR_TYPE``/``COMMENT_AUTHOR_LOGIN`` arrive via env from the
+    issue_comment event (never shell-interpolated). Absent values mean the
+    caller did not supply identity — the marker and trigger-token guards
+    still apply — but alone they do not block feedback.
+    """
+    if os.environ.get("COMMENT_AUTHOR_TYPE", "").strip() == "Bot":
+        return True
+    login = os.environ.get("COMMENT_AUTHOR_LOGIN", "").strip().casefold()
+    return login.endswith("[bot]")
 
 
 def families_independent(author_family: str, reviewer_family: str) -> bool:
@@ -900,8 +959,20 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 
 def _maybe_post_feedback(args: argparse.Namespace, result: AttestResult) -> None:
-    """Best-effort gap comment; never changes the fail-closed exit code."""
+    """Best-effort gap comment; never changes the fail-closed exit code.
+
+    #7593-r2 loop guards: never answer a bot-authored trigger or our own
+    marker-tagged gap comment, and post at most one gap comment per
+    (PR, head SHA) — an existing marker+head comment suppresses a repost. If
+    the dedupe check itself fails, skip posting rather than risk a loop.
+    """
+    if _comment_author_is_bot():
+        print("CF attest feedback skipped: triggering comment author is a bot")
+        return
     body = os.environ.get("COMMENT_BODY", "")
+    if GAP_COMMENT_TAG in body:
+        print("CF attest feedback skipped: trigger carries the gap-comment marker")
+        return
     note = diagnose_attest_comment(body, expected_head=result.expected_head)
     if note is None:
         return
@@ -911,10 +982,31 @@ def _maybe_post_feedback(args: argparse.Namespace, result: AttestResult) -> None
         print("::warning::CF attest feedback skipped: missing repo or PR number", file=sys.stderr)
         return
     token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+    quoted = quote(repo, safe="/")
+    head = (result.expected_head or "").strip().lower()
+    try:
+        existing = fetch_paginated(
+            f"repos/{quoted}/issues/{number}/comments",
+            api_get=lambda path: github_api_get(path, token=token),
+        )
+    except Exception as exc:
+        print(
+            f"::warning::CF attest feedback skipped: dedupe check failed: {exc}",
+            file=sys.stderr,
+        )
+        return
+    if any(
+        isinstance(comment.get("body"), str)
+        and _is_gap_comment(comment["body"], head=head)
+        for comment in existing
+    ):
+        print("CF attest feedback skipped: gap comment already posted at this head")
+        return
+    trigger_id = os.environ.get("COMMENT_ID", "").strip()
     try:
         github_api_post(
-            f"repos/{quote(repo, safe='/')}/issues/{number}/comments",
-            {"body": build_attest_feedback(note)},
+            f"repos/{quoted}/issues/{number}/comments",
+            {"body": build_attest_feedback(note, head=head, trigger_id=trigger_id)},
             token=token,
         )
     except Exception as exc:  # best-effort: feedback must not mask the verdict
