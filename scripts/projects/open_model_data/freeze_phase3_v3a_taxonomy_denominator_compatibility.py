@@ -197,14 +197,17 @@ def _walk_forbidden(value: Any, path: str = "artifact") -> None:
 
 def verify_source_db(path: Path) -> None:
     require(path.is_file(), f"source DB missing: {path}")
-    connection = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
     try:
-        rows = connection.execute(
-            "SELECT chunk_id,title,text,parent_section_id FROM textbooks WHERE source_file=? ORDER BY chunk_id",
-            (SOURCE_ID,),
-        ).fetchall()
-    finally:
-        connection.close()
+        connection = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+        try:
+            rows = connection.execute(
+                "SELECT chunk_id,title,text,parent_section_id FROM textbooks WHERE source_file=? ORDER BY chunk_id",
+                (SOURCE_ID,),
+            ).fetchall()
+        finally:
+            connection.close()
+    except sqlite3.Error as exc:
+        raise V3AError("cannot query dialectology source DB") from exc
     digest = hashlib.sha256()
     chunk_hashes: dict[str, str] = {}
     for chunk_id, title, body, parent_section_id in rows:

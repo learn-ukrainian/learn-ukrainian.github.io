@@ -26,15 +26,20 @@ def _rehash(value: dict[str, Any]) -> None:
     value["receipt_sha256"] = v3a.receipt_sha(value)
 
 
-def _source_db_has_textbooks(path: Path) -> bool:
+SOURCE_DB_REQUIRED_COLUMNS = {
+    "chunk_id",
+    "parent_section_id",
+    "source_file",
+    "text",
+    "title",
+}
+
+
+def _source_db_has_textbooks_schema(path: Path) -> bool:
     connection = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
     try:
-        return (
-            connection.execute(
-                "SELECT 1 FROM sqlite_master WHERE type='table' AND name='textbooks'"
-            ).fetchone()
-            is not None
-        )
+        columns = {str(row[1]) for row in connection.execute("PRAGMA table_info(textbooks)")}
+        return columns >= SOURCE_DB_REQUIRED_COLUMNS
     finally:
         connection.close()
 
@@ -248,7 +253,7 @@ def test_local_source_db_reproduces_content_blind_evidence_when_available() -> N
     source_db = v3a.ROOT / "data/sources.db"
     if not source_db.is_file():
         pytest.skip("local source DB is not installed")
-    if not _source_db_has_textbooks(source_db):
+    if not _source_db_has_textbooks_schema(source_db):
         pytest.skip("local source DB does not contain the textbook corpus")
     v3a.verify_source_db(source_db)
 
@@ -257,11 +262,23 @@ def test_source_db_availability_requires_textbooks_schema(tmp_path: Path) -> Non
     placeholder = tmp_path / "sources.db"
     connection = sqlite3.connect(placeholder)
     connection.close()
-    assert _source_db_has_textbooks(placeholder) is False
+    assert _source_db_has_textbooks_schema(placeholder) is False
 
     connection = sqlite3.connect(placeholder)
     try:
         connection.execute("CREATE TABLE textbooks (chunk_id TEXT)")
     finally:
         connection.close()
-    assert _source_db_has_textbooks(placeholder) is True
+    assert _source_db_has_textbooks_schema(placeholder) is False
+    with pytest.raises(v3a.V3AError, match="cannot query dialectology source DB"):
+        v3a.verify_source_db(placeholder)
+
+    connection = sqlite3.connect(placeholder)
+    try:
+        for column in ("source_file", "title", "text", "parent_section_id"):
+            connection.execute(f"ALTER TABLE textbooks ADD COLUMN {column} TEXT")
+    finally:
+        connection.close()
+    assert _source_db_has_textbooks_schema(placeholder) is True
+    with pytest.raises(v3a.V3AError, match="dialectology source row count drift"):
+        v3a.verify_source_db(placeholder)
