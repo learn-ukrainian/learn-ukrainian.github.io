@@ -251,3 +251,155 @@ def test_cmd_task_silent_without_snapshot(
     out = capsys.readouterr().out
     assert "SETTLE REMINDER" not in out
     assert not store.exists()
+
+
+def _seed_claim(ledger_path: Path, task_id: str) -> None:
+    import sqlite3
+    import time
+
+    conn = sqlite3.connect(ledger_path)
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS write_claims (task_id TEXT, claim_json TEXT, pid INTEGER, created_at REAL, PRIMARY KEY (task_id, claim_json))"
+    )
+    conn.execute(
+        "INSERT INTO write_claims VALUES (?,?,?,?)",
+        (task_id, '{"kind":"file","norm":"scripts/x.py"}', 999_999_999, time.time() - 10_000),
+    )
+    conn.commit()
+    conn.close()
+
+
+def _claim_count(ledger_path: Path, task_id: str) -> int:
+    import sqlite3
+
+    conn = sqlite3.connect(ledger_path)
+    try:
+        row = conn.execute("SELECT COUNT(*) FROM write_claims WHERE task_id = ?", (task_id,)).fetchone()
+    finally:
+        conn.close()
+    return int(row[0])
+
+
+def test_settle_task_settles_missing_worktree(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    task_dir = tmp_path / "tasks"
+    task_dir.mkdir()
+    task_id = "dead-wt"
+    (task_dir / f"{task_id}.json").write_text(
+        json.dumps(
+            {
+                "task_id": task_id,
+                "status": "needs_finalize",
+                "pid": 999_999_999,
+                "worktree_path": str(tmp_path / "reaped-wt"),
+                "worktree_branch": "atlas/dead-wt",
+            }
+        ),
+        encoding="utf-8",
+    )
+    ledger_path = tmp_path / "own.sqlite3"
+    _seed_claim(ledger_path, task_id)
+    monkeypatch.setattr(ds, "default_ledger_path", lambda: ledger_path)
+
+    report = ds.settle_task(
+        task_id,
+        repo_root=tmp_path,
+        task_dir=task_dir,
+        release_stale=False,
+    )
+
+    assert "marked_failed_missing_worktree" in report.actions
+    assert "released_ownership_claims" in report.actions
+    healed = json.loads((task_dir / f"{task_id}.json").read_text(encoding="utf-8"))
+    assert healed["status"] == "failed"
+    assert "worktree is missing" in healed["last_error"]
+    assert _claim_count(ledger_path, task_id) == 0
+    assert report.commits_ahead is None
+    assert report.pr_url is None
+    assert report.closeout["blocker"] == "none"
+
+
+def test_settle_task_missing_worktree_live_pid_not_settled(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    task_dir = tmp_path / "tasks"
+    task_dir.mkdir()
+    task_id = "live-wt"
+    (task_dir / f"{task_id}.json").write_text(
+        json.dumps(
+            {
+                "task_id": task_id,
+                "status": "running",
+                "pid": os.getpid(),
+                "worktree_path": str(tmp_path / "reaped-wt"),
+                "worktree_branch": "codex/live-wt",
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(ds, "default_ledger_path", lambda: tmp_path / "own.sqlite3")
+
+    seen_cwds: list[Path] = []
+
+    def fake_find_pr(_branch: str | None, cwd: Path) -> tuple[str | None, int | None]:
+        seen_cwds.append(cwd)
+        return None, None
+
+    monkeypatch.setattr(ds, "_find_pr", fake_find_pr)
+
+    report = ds.settle_task(
+        task_id,
+        repo_root=tmp_path,
+        task_dir=task_dir,
+        release_stale=False,
+    )
+
+    assert "marked_failed_missing_worktree" not in report.actions
+    assert report.status == "running"
+    assert report.pid_alive is True
+    # PR probing must not use the reaped worktree as cwd (crashes with Errno 2).
+    assert seen_cwds and all(cwd == tmp_path for cwd in seen_cwds)
+    state = json.loads((task_dir / f"{task_id}.json").read_text(encoding="utf-8"))
+    assert state["status"] == "running"
+
+
+def test_settle_task_worktree_present_path_unchanged(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    task_dir = tmp_path / "tasks"
+    task_dir.mkdir()
+    task_id = "present-wt"
+    wt = tmp_path / "wt"
+    wt.mkdir()
+    (task_dir / f"{task_id}.json").write_text(
+        json.dumps(
+            {
+                "task_id": task_id,
+                "status": "done",
+                "pid": 999_999_999,
+                "worktree_path": str(wt),
+                "worktree_branch": "codex/present-wt",
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(ds, "default_ledger_path", lambda: tmp_path / "own.sqlite3")
+
+    probed: list[Path] = []
+
+    def fake_git_info(worktree: Path) -> tuple[str | None, int | None, bool | None]:
+        probed.append(worktree)
+        return "codex/present-wt", 0, False
+
+    monkeypatch.setattr(ds, "_git_info", fake_git_info)
+    monkeypatch.setattr(ds, "_find_pr", lambda _b, _c: (None, None))
+
+    report = ds.settle_task(
+        task_id,
+        repo_root=tmp_path,
+        task_dir=task_dir,
+        release_stale=False,
+    )
+
+    assert probed == [wt]
+    assert "marked_failed_missing_worktree" not in report.actions
+    assert report.status == "done"
+    assert report.commits_ahead == 0
+    assert report.closeout["blocker"] == "none"
+    state = json.loads((task_dir / f"{task_id}.json").read_text(encoding="utf-8"))
+    assert state["status"] == "done"
