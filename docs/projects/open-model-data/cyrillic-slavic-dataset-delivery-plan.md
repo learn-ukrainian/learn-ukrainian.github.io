@@ -171,9 +171,16 @@ preserves its slots; it never disappears by denominator reduction.
 
 ## Completion terms
 
-The epic is ready to drive when the V4 binding, live VPS custody/capacity receipt,
-this pilot contract, and sealed A3 commitment are present. The pilot succeeds
-only when all required slots satisfy the frozen denominator and gates, the held-out
+`READY_TO_DRIVE` is an orchestration state, not a construction state. It requires
+the V4 binding, the validator on `main`, live VPS reachability and capacity for
+the pilot, this frozen slot contract, and the A0–A13 role map. It does not require
+source inventory, source admission, or sealed held-out membership.
+
+`PRE_BUILDER` begins after `READY_TO_DRIVE`: A1/A2 produce the custody and
+source-admission receipts, then A3 seals the source-family and held-out commitment
+before any A4–A7 builder work begins.
+
+The pilot succeeds only when all required slots satisfy the frozen denominator and gates, the held-out
 evaluation is frozen as `EVAL_ARTIFACT_READY`, and the permitted consumer view is
 `TRAINING_READY_SILVER`. Any unresolved required slot leaves the pilot in
 `BLOCKED_WITH_RESIDUALS`, with its exact residual and next owner reported.
