@@ -231,7 +231,7 @@ def test_receipts_detect_mutation_without_rehash() -> None:
 
 
 def test_local_source_db_reproduces_content_blind_evidence_when_available() -> None:
-    source_db = Path("/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db")
+    source_db = v3a.ROOT / "data/sources.db"
     if not source_db.is_file():
         pytest.skip("local source DB is not installed")
     v3a.verify_source_db(source_db)
