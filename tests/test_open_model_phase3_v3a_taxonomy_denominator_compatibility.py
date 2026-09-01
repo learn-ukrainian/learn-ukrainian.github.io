@@ -67,6 +67,31 @@ def test_exact_denominator_distinguishes_lineage_from_coverage_credit() -> None:
     }
 
 
+def test_denominator_is_derived_from_bound_predecessors_and_partition() -> None:
+    p1 = v3a.read_json(v3a.P1_PATH)
+    v3 = v3a.read_json(v3a.V3_ARTIFACT_PATH)
+    children = v3a._children()
+    assert v3a._derive_denominator(p1, v3, children) == _main()["denominator"]
+
+    expanded_p1 = copy.deepcopy(p1)
+    extra_unit = copy.deepcopy(expanded_p1["source_manifest"]["source_units"][0])
+    extra_unit["source_unit_id"] = "derivation-test-only"
+    extra_unit["rights"]["required_state"] = "unknown"
+    expanded_p1["source_manifest"]["source_units"].append(extra_unit)
+    expanded_children = copy.deepcopy(children)
+    expanded_children.append(copy.deepcopy(children[0]))
+
+    derived = v3a._derive_denominator(expanded_p1, v3, expanded_children)
+    assert derived["source_units"] == 58
+    assert derived["legacy_unknown_rights_units"] == 40
+    assert derived["v3_child_cells"] == 4
+    assert derived["visible_cells"] == 20
+    assert derived["active_coverage_target_cells"] == 17
+    assert derived["active_coverage_blocked_cells"] == 17
+    assert derived["legacy_blocked_snapshot_records"] == 18
+    assert derived["no_double_count_proof"] == "13_v2_targets_excluding_parent_plus_4_children_equals_17"
+
+
 def test_partition_is_three_source_attested_macro_regions_without_credit() -> None:
     partition = _main()["dialect_partition"]
     assert partition["partition_complete"] is True

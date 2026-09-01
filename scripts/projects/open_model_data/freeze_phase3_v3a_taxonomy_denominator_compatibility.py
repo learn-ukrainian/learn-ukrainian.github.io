@@ -91,20 +91,36 @@ CHILDREN = (
     {
         "region_id": "northern_polissian",
         "chunk_evidence": (
-            ("uni-ukrmova-dialectology-torchynska-2017_s0019", 12, "f7e068c2a28a4feb9bbf2013d3fd482e56b184817428d902f4ba09b1e61021e8"),
-            ("uni-ukrmova-dialectology-torchynska-2017_s0020", 13, "956423d25eb12a89a01d11f94bf6529533f583b825c0b286c747564c39040844"),
+            (
+                "uni-ukrmova-dialectology-torchynska-2017_s0019",
+                12,
+                "f7e068c2a28a4feb9bbf2013d3fd482e56b184817428d902f4ba09b1e61021e8",
+            ),
+            (
+                "uni-ukrmova-dialectology-torchynska-2017_s0020",
+                13,
+                "956423d25eb12a89a01d11f94bf6529533f583b825c0b286c747564c39040844",
+            ),
         ),
     },
     {
         "region_id": "southeastern",
         "chunk_evidence": (
-            ("uni-ukrmova-dialectology-torchynska-2017_s0020", 13, "956423d25eb12a89a01d11f94bf6529533f583b825c0b286c747564c39040844"),
+            (
+                "uni-ukrmova-dialectology-torchynska-2017_s0020",
+                13,
+                "956423d25eb12a89a01d11f94bf6529533f583b825c0b286c747564c39040844",
+            ),
         ),
     },
     {
         "region_id": "southwestern",
         "chunk_evidence": (
-            ("uni-ukrmova-dialectology-torchynska-2017_s0020", 13, "956423d25eb12a89a01d11f94bf6529533f583b825c0b286c747564c39040844"),
+            (
+                "uni-ukrmova-dialectology-torchynska-2017_s0020",
+                13,
+                "956423d25eb12a89a01d11f94bf6529533f583b825c0b286c747564c39040844",
+            ),
         ),
     },
 )
@@ -184,8 +200,7 @@ def verify_source_db(path: Path) -> None:
     connection = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
     try:
         rows = connection.execute(
-            "SELECT chunk_id,title,text,parent_section_id FROM textbooks "
-            "WHERE source_file=? ORDER BY chunk_id",
+            "SELECT chunk_id,title,text,parent_section_id FROM textbooks WHERE source_file=? ORDER BY chunk_id",
             (SOURCE_ID,),
         ).fetchall()
     finally:
@@ -267,12 +282,51 @@ def _rights_rows(p1: Mapping[str, Any]) -> list[dict[str, Any]]:
     return rows
 
 
+def _derive_denominator(
+    p1: Mapping[str, Any],
+    v3: Mapping[str, Any],
+    children: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Reconcile the V3-A denominator from hash-bound predecessor metadata."""
+    source_units = p1["source_manifest"]["source_units"]
+    v2_cells = v3["compatibility"]["cells"]
+    predecessor_denominator = v3["compatibility"]["v2_composite_denominator"]
+
+    source_unit_count = len(source_units)
+    unknown_rights_count = sum(unit["rights"]["required_state"] == "unknown" for unit in source_units)
+    not_applicable_count = sum(cell["v2_status"] == "not_applicable_with_evidence" for cell in v2_cells)
+    lineage_parent_count = sum(cell["v2_cell_id"] == PARENT_CELL_ID for cell in v2_cells)
+    legacy_active_targets = len(v2_cells) - not_applicable_count - lineage_parent_count
+    child_count = len(children)
+    active_targets = legacy_active_targets + child_count
+    blocked_children = sum(child["coverage_status"] == "coverage_blocked" for child in children)
+    active_blocked = int(predecessor_denominator["coverage_blocked_cells"]) - lineage_parent_count + blocked_children
+    return {
+        "source_units": source_unit_count,
+        "legacy_unknown_rights_units": unknown_rights_count,
+        "rule_slots_R": int(predecessor_denominator["rule_slots_R"]),
+        "v2_visible_cells": len(v2_cells),
+        "v3_child_cells": child_count,
+        "visible_cells": len(v2_cells) + child_count,
+        "active_coverage_target_cells": active_targets,
+        "active_coverage_blocked_cells": active_blocked,
+        "not_applicable_cells": not_applicable_count,
+        "lineage_only_parent_cells": lineage_parent_count,
+        "legacy_blocked_snapshot_records": (int(predecessor_denominator["coverage_blocked_cells"]) + blocked_children),
+        "satisfied_cells": active_targets - active_blocked,
+        "no_double_count_proof": (
+            f"{legacy_active_targets}_v2_targets_excluding_parent_plus_{child_count}_children_equals_{active_targets}"
+        ),
+    }
+
+
 def build_main() -> dict[str, Any]:
     verify_predecessors()
     p1 = read_json(P1_PATH)
     v3 = read_json(V3_ARTIFACT_PATH)
     children = _children()
     rights_rows = _rights_rows(p1)
+    denominator = _derive_denominator(p1, v3, children)
     taxonomy = copy.deepcopy(v3["taxonomy"])
     taxonomy.pop("dialect_parent_partition")
     return with_receipt(
@@ -321,21 +375,7 @@ def build_main() -> dict[str, Any]:
                 "finer_dialect_depth_complete": False,
                 "example_coverage_complete": False,
             },
-            "denominator": {
-                "source_units": 57,
-                "legacy_unknown_rights_units": 39,
-                "rule_slots_R": 0,
-                "v2_visible_cells": 16,
-                "v3_child_cells": 3,
-                "visible_cells": 19,
-                "active_coverage_target_cells": 16,
-                "active_coverage_blocked_cells": 16,
-                "not_applicable_cells": 2,
-                "lineage_only_parent_cells": 1,
-                "legacy_blocked_snapshot_records": 17,
-                "satisfied_cells": 0,
-                "no_double_count_proof": "13_v2_targets_excluding_parent_plus_3_children_equals_16",
-            },
+            "denominator": denominator,
             "rights_capabilities": {
                 "operations": list(OPERATIONS),
                 "source_unit_rows": rights_rows,
@@ -470,21 +510,9 @@ def validate(main: Mapping[str, Any], matrix: Mapping[str, Any]) -> None:
         require(child["evidence_locators"], "dialect child lacks source evidence")
 
     denominator = main["denominator"]
-    expected_denominator = {
-        "source_units": 57,
-        "legacy_unknown_rights_units": 39,
-        "rule_slots_R": 0,
-        "v2_visible_cells": 16,
-        "v3_child_cells": 3,
-        "visible_cells": 19,
-        "active_coverage_target_cells": 16,
-        "active_coverage_blocked_cells": 16,
-        "not_applicable_cells": 2,
-        "lineage_only_parent_cells": 1,
-        "legacy_blocked_snapshot_records": 17,
-        "satisfied_cells": 0,
-        "no_double_count_proof": "13_v2_targets_excluding_parent_plus_3_children_equals_16",
-    }
+    p1 = read_json(P1_PATH)
+    v3 = read_json(V3_ARTIFACT_PATH)
+    expected_denominator = _derive_denominator(p1, v3, _children())
     require(denominator == expected_denominator, "V3-A denominator drift")
     require(denominator["visible_cells"] == 19, "visible denominator drift")
     require(denominator["active_coverage_target_cells"] == 16, "active coverage denominator drift")
@@ -495,15 +523,19 @@ def validate(main: Mapping[str, Any], matrix: Mapping[str, Any]) -> None:
 
     rights = main["rights_capabilities"]
     require(tuple(rights["operations"]) == OPERATIONS, "rights operation order drift")
-    require(rights["source_unit_count"] == 57, "rights source-unit denominator drift")
-    require(rights["operation_cell_count"] == 399, "rights operation-cell denominator drift")
+    source_unit_count = len(p1["source_manifest"]["source_units"])
+    require(rights["source_unit_count"] == source_unit_count, "rights source-unit denominator drift")
     require(
-        rights["unknown_source_units_by_operation"] == {operation: 57 for operation in OPERATIONS},
+        rights["operation_cell_count"] == source_unit_count * len(OPERATIONS),
+        "rights operation-cell denominator drift",
+    )
+    require(
+        rights["unknown_source_units_by_operation"] == {operation: source_unit_count for operation in OPERATIONS},
         "rights unresolved-operation counts drift",
     )
-    p1_ids = sorted(row["source_unit_id"] for row in read_json(P1_PATH)["source_manifest"]["source_units"])
+    p1_ids = sorted(row["source_unit_id"] for row in p1["source_manifest"]["source_units"])
     require([row["source_unit_id"] for row in rights["source_unit_rows"]] == p1_ids, "rights source IDs drift")
-    require(rights["source_unit_rows"] == _rights_rows(read_json(P1_PATH)), "rights evidence matrix drift")
+    require(rights["source_unit_rows"] == _rights_rows(p1), "rights evidence matrix drift")
     for row in rights["source_unit_rows"]:
         require([item["operation"] for item in row["operations"]] == list(OPERATIONS), "rights operation set drift")
         for item in row["operations"]:
@@ -517,13 +549,13 @@ def validate(main: Mapping[str, Any], matrix: Mapping[str, Any]) -> None:
     require(len({row["v2_cell_id"] for row in rows}) == 16, "compatibility IDs are not unique")
     parent = next(row for row in rows if row["v2_cell_id"] == PARENT_CELL_ID)
     require(parent["disposition"] == "superseded_by_partition", "dialect parent disposition drift")
-    require(parent["denominator_effect"] == "parent_visible_children_no_double_count", "parent denominator effect drift")
+    require(
+        parent["denominator_effect"] == "parent_visible_children_no_double_count", "parent denominator effect drift"
+    )
     require(parent["child_partition_ids"] == [row["stratum_id"] for row in children], "child compatibility drift")
     require(matrix["v3a_artifact_binding"] == binding(ARTIFACT_PATH), "matrix V3-A binding drift")
     require(sum(row["disposition"] == "carried_forward_exact" for row in rows) == 15, "carried row count drift")
-    predecessor_rows = {
-        row["v2_cell_id"]: row for row in read_json(V3_ARTIFACT_PATH)["compatibility"]["cells"]
-    }
+    predecessor_rows = {row["v2_cell_id"]: row for row in read_json(V3_ARTIFACT_PATH)["compatibility"]["cells"]}
     for row in rows:
         if row["v2_cell_id"] != PARENT_CELL_ID:
             require(row == predecessor_rows[row["v2_cell_id"]], f"carried compatibility row drift: {row['v2_cell_id']}")
