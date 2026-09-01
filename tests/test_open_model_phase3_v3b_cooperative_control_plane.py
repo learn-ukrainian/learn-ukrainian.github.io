@@ -519,13 +519,62 @@ def test_receipt_chains_are_row_scoped_and_gold_requires_same_row_human_predeces
     row_a_human["resolved_route"]["provider_family"] = "operator"
     row_a_human["resolved_route"]["model"] = "human_operator"
     row_a_human["receipt_sha256"] = v3b.receipt_sha(row_a_human)
+    with pytest.raises(v3b.V3BError, match="row genesis mismatch"):
+        v3b.validate_transition_receipts([row_a_human], artifact)
+
+    chain = [
+        _transition_receipt(
+            artifact,
+            0,
+            "SOURCE_RIGHTS_BLOCKED",
+            "SOURCE_RIGHTS_REVIEW_PENDING",
+            "rights_evidence_supplied",
+            None,
+        )
+    ]
+    for source, target, condition in (
+        ("SOURCE_RIGHTS_REVIEW_PENDING", "SOURCE_ADMITTED", "operation_rights_verified"),
+        ("SOURCE_ADMITTED", "IDENTITY_PENDING", "identity_packet_frozen"),
+        ("IDENTITY_PENDING", "MODEL_AGREEMENT_QUARANTINED_NOT_GOLD", "exact_model_agreement"),
+        (
+            "MODEL_AGREEMENT_QUARANTINED_NOT_GOLD",
+            "CASE_HUMAN_QUEUE",
+            "complete_human_review_selected",
+        ),
+        ("CASE_HUMAN_QUEUE", "CASE_HUMAN_ADJUDICATED", "qualified_human_adjudicated"),
+    ):
+        chain.append(
+            _transition_receipt(
+                artifact,
+                len(chain),
+                source,
+                target,
+                condition,
+                chain[-1]["receipt_sha256"],
+            )
+        )
+    identity = chain[3]
+    identity_role = next(role for role in artifact["role_contracts"] if role["role_id"] == "IDENTITY_LEAD")
+    identity["role_id"] = "IDENTITY_LEAD"
+    identity["attempt_count"] = 1
+    identity["resolved_route"]["provider_family"] = identity_role["provider_family"]
+    identity["resolved_route"]["model"] = identity_role["model"]
+    identity["receipt_sha256"] = v3b.receipt_sha(identity)
+    for index in range(4, len(chain)):
+        chain[index]["previous_receipt_sha256"] = chain[index - 1]["receipt_sha256"]
+        if index == len(chain) - 1:
+            chain[index]["role_id"] = "HUMAN_STEWARD"
+            chain[index]["resolved_route"]["provider_family"] = "operator"
+            chain[index]["resolved_route"]["model"] = "human_operator"
+        chain[index]["receipt_sha256"] = v3b.receipt_sha(chain[index])
+
     row_a_gold = _transition_receipt(
         artifact,
-        1,
+        len(chain),
         "CASE_HUMAN_ADJUDICATED",
         "GOLD_ELIGIBLE_METADATA_ONLY",
         "all_gold_guards_satisfied",
-        row_a_human["receipt_sha256"],
+        chain[-1]["receipt_sha256"],
     )
     row_a_gold["role_id"] = "HUMAN_STEWARD"
     row_a_gold["resolved_route"]["provider_family"] = "operator"
@@ -533,12 +582,12 @@ def test_receipt_chains_are_row_scoped_and_gold_requires_same_row_human_predeces
     row_a_gold["guard_result"] = "pass"
     row_a_gold["gold_guard_results"] = {field: True for field in v3b.GOLD_GUARD_FIELDS}
     row_a_gold["receipt_sha256"] = v3b.receipt_sha(row_a_gold)
-    v3b.validate_transition_receipts([row_a_human, row_a_gold], artifact)
+    v3b.validate_transition_receipts([*chain, row_a_gold], artifact)
 
     row_b_gold = copy.deepcopy(row_a_gold)
     _retarget_receipt(row_b_gold, "6" * 64)
     with pytest.raises(v3b.V3BError, match="sequence gap"):
-        v3b.validate_transition_receipts([row_a_human, row_b_gold], artifact)
+        v3b.validate_transition_receipts([*chain, row_b_gold], artifact)
 
     row_b_gold["sequence"] = 0
     row_b_gold["previous_receipt_sha256"] = None

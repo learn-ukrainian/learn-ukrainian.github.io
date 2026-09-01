@@ -109,6 +109,8 @@ STATES = (
     "GOLD_ELIGIBLE_METADATA_ONLY",
 )
 
+ROW_GENESIS_STATE = "SOURCE_RIGHTS_BLOCKED"
+
 TRANSITIONS = (
     ("SOURCE_RIGHTS_BLOCKED", "SOURCE_RIGHTS_REVIEW_PENDING", "rights_evidence_supplied"),
     ("SOURCE_RIGHTS_REVIEW_PENDING", "SOURCE_RIGHTS_BLOCKED", "rights_still_unresolved"),
@@ -708,6 +710,7 @@ def build_artifact() -> dict[str, Any]:
         },
         "state_machine": {
             "states": list(STATES),
+            "row_genesis_state": ROW_GENESIS_STATE,
             "transitions": [
                 {
                     "from_state": source,
@@ -743,6 +746,7 @@ def build_artifact() -> dict[str, Any]:
             "contiguous_sequence_required": True,
             "previous_hash_chain_required": True,
             "sequence_and_hash_chain_scoped_per_row": True,
+            "first_receipt_from_state_must_equal_row_genesis_state": True,
             "from_state_must_match_predecessor_to_state": True,
             "transition_actor_must_match_authorized_role_ids": True,
             "all_receipt_roles_have_frozen_routes": True,
@@ -911,6 +915,7 @@ def validate_transition_receipts(
     previous_hash_by_row: dict[str, str] = {}
     previous_to_by_row: dict[str, str] = {}
     expected_sequence_by_row: dict[str, int] = {}
+    genesis_valid_by_row: dict[str, bool] = {}
     budgets: dict[tuple[str, str], dict[str, Any]] = {}
     model_role_ids = {role for role, _family, _model, _contract in MODEL_ROLES}
     retry_dispatch_conditions = {
@@ -939,6 +944,10 @@ def validate_transition_receipts(
         expected_sequence = expected_sequence_by_row.get(row_id, 0)
         previous_hash = previous_hash_by_row.get(row_id)
         previous_to = previous_to_by_row.get(row_id)
+        if row_id not in genesis_valid_by_row:
+            genesis_valid_by_row[row_id] = (
+                item["from_state"] == artifact["state_machine"]["row_genesis_state"]
+            )
         require(item["sequence"] == expected_sequence, "transition receipt sequence gap")
         require(item["previous_receipt_sha256"] == previous_hash, "transition receipt previous hash mismatch")
         if previous_to is not None:
@@ -1030,6 +1039,7 @@ def validate_transition_receipts(
         expected_sequence_by_row[row_id] = expected_sequence + 1
         previous_hash_by_row[row_id] = str(item["receipt_sha256"])
         previous_to_by_row[row_id] = str(item["to_state"])
+    require(all(genesis_valid_by_row.values()), "transition receipt row genesis mismatch")
 
 
 def validate(artifact: Mapping[str, Any], schema: Mapping[str, Any]) -> None:
@@ -1081,6 +1091,7 @@ def validate(artifact: Mapping[str, Any], schema: Mapping[str, Any]) -> None:
     require(work["unsampled_promotion_allowed"] is False, "unsampled promotion enabled")
     machine = artifact["state_machine"]
     require(set(machine["states"]) == set(STATES), "state set drift")
+    require(machine["row_genesis_state"] == ROW_GENESIS_STATE, "row genesis state drift")
     edges = {(row["from_state"], row["to_state"], row["condition_code"]) for row in machine["transitions"]}
     require(edges == set(TRANSITIONS), "transition set drift")
     for row in machine["transitions"]:
@@ -1099,6 +1110,13 @@ def validate(artifact: Mapping[str, Any], schema: Mapping[str, Any]) -> None:
     require(not any(source == "MODEL_AGREEMENT_QUARANTINED_NOT_GOLD" and target.startswith("GOLD") for source, target, _ in edges), "quarantine direct gold path")
     require(not any(source == "IDENTITY_ABSTAINED_NON_GOLD" and target == "CASE_CANDIDATE_PENDING" for source, target, _ in edges), "identity abstention reaches candidate")
     require(all("TRAINING" not in state for state in machine["states"]), "training state present")
+    require(
+        artifact["transition_receipt_contract"][
+            "first_receipt_from_state_must_equal_row_genesis_state"
+        ]
+        is True,
+        "row genesis receipt invariant disabled",
+    )
     gates = artifact["execution_gates"]
     require(not any(gates.values()), "execution gate enabled")
     retry = artifact["retry_and_substitution"]
