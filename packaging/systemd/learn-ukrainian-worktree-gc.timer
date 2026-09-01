@@ -1,0 +1,11 @@
+[Unit]
+Description=Learn Ukrainian daily worktree garbage collection timer
+
+[Timer]
+OnCalendar=daily
+RandomizedDelaySec=1800
+Persistent=true
+Unit=learn-ukrainian-worktree-gc.service
+
+[Install]
+WantedBy=timers.target
