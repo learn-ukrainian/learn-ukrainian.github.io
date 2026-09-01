@@ -679,3 +679,29 @@ def test_http_fresh_codexbar_kicks_background_and_does_not_block(monkeypatch, tm
     assert kicked == ["kick"]
     assert data["diagnostics"]["fresh_codexbar_requested"] is True
     assert data["diagnostics"]["fresh_codexbar_blocking"] is False
+
+
+def test_compute_routing_budget_computes_in_flight_once(monkeypatch, tmp_path):
+    """compute_routing_budget must scan in-flight tasks once, not per subscription lane (#7596)."""
+    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
+    _configure(monkeypatch, tmp_path, [_record("codex (gpt-5.5)", 100.0, now)])
+
+    calls = 0
+    orig_in_flight = state_router._in_flight_by_agent
+
+    def _counted_in_flight(*args, **kwargs):
+        nonlocal calls
+        calls += 1
+        return orig_in_flight(*args, **kwargs)
+
+    monkeypatch.setattr(state_router, "_in_flight_by_agent", _counted_in_flight)
+
+    data = state_router.compute_routing_budget(now)
+
+    assert calls == 1
+    assert "in_flight" in data
+    ranked = data.get("ranked_by_headroom", [])
+    sub_lanes = [r for r in ranked if r.get("type") == "subscription"]
+    assert len(sub_lanes) == len(state_router.SUBSCRIPTION_LANES)
+    for row in sub_lanes:
+        assert "in_flight" in row
