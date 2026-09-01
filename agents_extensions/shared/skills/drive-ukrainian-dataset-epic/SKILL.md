@@ -67,11 +67,29 @@ and promotion of model agreement to truth.
 
 ## Slot, row, and case identity
 
-Public pilot slot IDs are a source-free stable series: assign one ID to each
-frozen slot position, `V4-PILOT-SLOT-001` through `V4-PILOT-SLOT-100`. A public
-slot ID contains only the V4 series and its zero-padded position. It must not
-encode a source, text, model, provider, arrival order, or derived label, and it
-stays stable while a slot is unresolved or carries a residual.
+Public pilot slot IDs are a source-free stable series, with one source-free
+series per frozen stratum. The canonical frozen public-slot manifest is
+`data/projects/open_model_data/admission/dataset_v4_pilot_slot_manifest_v1.json`
+(`schema_version: dataset_v4_pilot_slot_manifest_v1`). Generate public pilot
+slot IDs from its eight `slot_series` entries only: each ID is the manifest's
+source-free `id_prefix` followed by its three-digit, zero-padded ordinal,
+starting at `start=1`. The frozen series are:
+
+| Manifest stratum | `id_prefix` | Start | Count | Generated range |
+| --- | --- | ---: | ---: | --- |
+| `standard_correct` | `v4p-standard-correct` | 1 | 15 | `v4p-standard-correct-001` … `v4p-standard-correct-015` |
+| `correction` | `v4p-correction` | 1 | 15 | `v4p-correction-001` … `v4p-correction-015` |
+| `literary` | `v4p-literary` | 1 | 15 | `v4p-literary-001` … `v4p-literary-015` |
+| `dialect_regional` | `v4p-dialect-regional` | 1 | 15 | `v4p-dialect-regional-001` … `v4p-dialect-regional-015` |
+| `archaic_historical` | `v4p-archaic-historical` | 1 | 15 | `v4p-archaic-historical-001` … `v4p-archaic-historical-015` |
+| `mixing` | `v4p-mixing` | 1 | 10 | `v4p-mixing-001` … `v4p-mixing-010` |
+| `quotation_interference` | `v4p-quotation-interference` | 1 | 10 | `v4p-quotation-interference-001` … `v4p-quotation-interference-010` |
+| `abstention` | `v4p-abstention` | 1 | 5 | `v4p-abstention-001` … `v4p-abstention-005` |
+
+These are source-free stable per-stratum series: the prefix is the frozen
+manifest stratum label, not a source, text, model, provider, arrival order, or
+derived label. Do not invent a global series or substitute a different prefix;
+slot IDs stay stable while a slot is unresolved or carries a residual.
 
 After a slot is admitted, derived row and case IDs may bind sources later.
 Derive each opaque ID from the V4 version, its public slot ID, source-unit
@@ -304,25 +322,40 @@ a global block.
 
 ## Driver preflight
 
-The driver may start the next phase only after attaching evidence for each item:
+Preflight is gate-specific, not an all-at-once checklist. Evidence for a later
+gate must not be required to enter an earlier gate, and each dispatch reevaluates
+only the gate that it is about to cross.
 
-1. Both control issues resolve to the exact V4 outcome SHA.
-2. The 100 row slots, strata, stable-ID rule, and source/case packet are frozen.
-3. The source manifest is unit-complete and every unit has a disposition.
-4. The operation-specific rights ledger is present for the operation being run.
-5. The split/held-out firewall, leave-one-out matrix, and Cycle007 deny-list are
-   sealed before case derivation.
-6. Functional role owners, visibility boundaries, and substitution records are
-   named; no-self-vote is mechanically checkable.
-7. The VPS capacity receipt satisfies the launch inequality and preserves reserve.
-8. The live routing/health/capacity signals and exact code/skill gate are fresh.
+`READY_TO_DRIVE` has exactly these five checks:
 
-Missing evidence is `unknown`, not permission to guess. A lane-local source,
-rights, evidence, format, capacity, or route problem keeps its affected rows or
-cells visible while disjoint safe work proceeds. A global denominator drift,
-split leak, Cycle007 contamination, protected-span mutation, or
-rights/provenance corruption stops the affected phase and requires a named
-disposition.
+1. the V4 contract and validator pass on **main and VPS**;
+2. VPS reachability is verified;
+3. measured capacity satisfies the 100-row pilot high-water requirement;
+4. the frozen public slot contract is bound to the canonical slot manifest;
+5. the complete functional role map is present.
+
+The `A1/A2` prerequisite is evaluated before `PRE_BUILDER`: A1 supplies the
+VPS custody/capacity receipt, and A2 supplies the source inventory, admission,
+and rights-by-operation receipt. Do not require A2 evidence to enter
+`READY_TO_DRIVE`.
+
+`PRE_BUILDER` is evaluated only immediately before builder dispatch. It requires
+the admitted slice plus the sealed A3 heldout/source-family split and access
+firewall. Do not require heldout evidence to enter `READY_TO_DRIVE`; heldout
+evidence is a builder prerequisite, not a global preflight item.
+
+`PRE_SCALE` is evaluated only before scale dispatch. It requires pilot
+high-water measurements, full-scale capacity evidence, and source-inventory
+reconciliation against the admitted slice. Do not pull these scale-only checks
+back into `READY_TO_DRIVE` or `PRE_BUILDER`.
+
+At every dispatch, independently recheck and receipt the live routing,
+health/capacity signals, and exact code/skill head; a stale route or head never
+silently satisfies a gate. Missing evidence is `unknown`, not permission to
+guess. A missing gate dispatches its named prerequisite and keeps affected
+rows/cells visible; it is not a global block. A global denominator drift, split
+leak, Cycle007 contamination, protected-span mutation, or rights/provenance
+corruption still stops the affected phase and requires a named disposition.
 
 ## Issue-stage ownership and execution
 
@@ -331,10 +364,16 @@ handoff for the open child stages is:
 
 | Stage | Issue | Primary outcome | Functional lead |
 | --- | --- | --- | --- |
-| Pilot construction | #7430 | The smallest reproducible 100-slot source-derived pilot and residual map. | Candidate builder, with identity/dissent, custody, rights, and capacity stewards. |
-| Pilot validation | #7431 | Independent split, integrity, identity, and held-out validation with exact disposition. | Held-out evaluator and consumer reproducer. |
-| Coverage-yield scale | #7432 | Add source-backed coverage without changing the frozen denominator or IDs. | Driver plus source/capacity stewards and bounded builder lanes. |
-| Consumer certification | #7433 | Reproduction of eligible views and typed release receipt. | Consumer reproducer, rights steward, and driver. |
+| Pilot construction | #7430 | The smallest reproducible 100-slot source-derived pilot and residual map. | A10 pilot-review lead (accountable); A4-A8 producers separated. |
+| Pilot validation | #7431 | Independent split, integrity, identity, and held-out validation with exact disposition. | A9 heldout/evaluation lead (accountable); independent A10 review. |
+| Coverage-yield scale | #7432 | Add source-backed coverage without changing the frozen denominator or IDs. | A8 scale/admission-assembly lead (accountable); A1/A2/A4/A5/A7 producers. |
+| Consumer certification | #7433 | Reproduction of eligible views and typed release receipt. | A11 silver-release lead (accountable); separate A9 reproducer and A10 reviewer. |
+
+Each issue has exactly one accountable lead: #7430 is accountable to the A10
+pilot-review lead, #7431 to the A9 heldout/evaluation lead, #7432 to the A8
+scale/admission-assembly lead, and #7433 to the A11 silver-release lead.
+Producers and reviewers named after the semicolon remain separate from that
+accountability.
 
 Before dispatch, freeze the issue packet's denominator slice, owned outputs,
 input hashes, hidden boundary, operation rights, acceptance evidence, and

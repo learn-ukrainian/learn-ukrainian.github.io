@@ -41,8 +41,10 @@ def test_v4_scope_and_safety_contract_is_machine_visible() -> None:
         "Dedicated non-Ukrainian Slavic programs are out of scope.",
         "Modern Rusyn is not a",
         "Public pilot slot IDs are a source-free stable series",
-        "V4-PILOT-SLOT-001",
-        "V4-PILOT-SLOT-100",
+        "data/projects/open_model_data/admission/dataset_v4_pilot_slot_manifest_v1.json",
+        "schema_version: dataset_v4_pilot_slot_manifest_v1",
+        "Generate public pilot slot IDs from its eight `slot_series` entries only",
+        "source-free stable per-stratum series",
         "derived row and case IDs may bind sources later",
         "Silver does not require universal human and model agreement.",
         "hypothesis, proposal, vote, confidence, or agreement cannot independently",
@@ -51,6 +53,69 @@ def test_v4_scope_and_safety_contract_is_machine_visible() -> None:
         "Model hypotheses cannot independently admit silver or make gold.",
     ):
         assert marker in normalized_text
+
+    slot_section = text.split("## Slot, row, and case identity", 1)[1].split(
+        "After a slot is admitted", 1
+    )[0]
+    slot_rows = re.findall(
+        r"^\| `([^`]+)` \| `([^`]+)` \| (\d+) \| (\d+) \| `([^`]+)` … `([^`]+)` \|$",
+        slot_section,
+        re.MULTILINE,
+    )
+    assert slot_rows == [
+        (
+            "standard_correct",
+            "v4p-standard-correct",
+            "1",
+            "15",
+            "v4p-standard-correct-001",
+            "v4p-standard-correct-015",
+        ),
+        (
+            "correction",
+            "v4p-correction",
+            "1",
+            "15",
+            "v4p-correction-001",
+            "v4p-correction-015",
+        ),
+        (
+            "literary",
+            "v4p-literary",
+            "1",
+            "15",
+            "v4p-literary-001",
+            "v4p-literary-015",
+        ),
+        (
+            "dialect_regional",
+            "v4p-dialect-regional",
+            "1",
+            "15",
+            "v4p-dialect-regional-001",
+            "v4p-dialect-regional-015",
+        ),
+        (
+            "archaic_historical",
+            "v4p-archaic-historical",
+            "1",
+            "15",
+            "v4p-archaic-historical-001",
+            "v4p-archaic-historical-015",
+        ),
+        ("mixing", "v4p-mixing", "1", "10", "v4p-mixing-001", "v4p-mixing-010"),
+        (
+            "quotation_interference",
+            "v4p-quotation-interference",
+            "1",
+            "10",
+            "v4p-quotation-interference-001",
+            "v4p-quotation-interference-010",
+        ),
+        ("abstention", "v4p-abstention", "1", "5", "v4p-abstention-001", "v4p-abstention-005"),
+    ]
+    assert sum(int(row[3]) for row in slot_rows) == 100
+    assert "V4-PILOT-SLOT-" not in normalized_text
 
     for role in (
         "Accountable epic driver",
@@ -142,3 +207,48 @@ def test_v4_scope_and_safety_contract_is_machine_visible() -> None:
         for marker in ("READY_TO_DRIVE", "A1/A2 custody/inventory", "PRE_BUILDER", "PRE_SCALE")
     ]
     assert gate_positions == sorted(gate_positions)
+
+    preflight = text.split("## Driver preflight", 1)[1].split(
+        "## Issue-stage ownership and execution", 1
+    )[0]
+    normalized_preflight = " ".join(preflight.split())
+    assert "not an all-at-once checklist" in normalized_preflight
+    ready_block = preflight.split("The `A1/A2` prerequisite", 1)[0]
+    normalized_ready_block = " ".join(ready_block.split())
+    assert "`READY_TO_DRIVE` has exactly these five checks" in normalized_ready_block
+    assert len(re.findall(r"^\d\. ", ready_block, re.MULTILINE)) == 5
+    for marker in (
+        "VPS custody/capacity receipt",
+        "source inventory, admission, and rights-by-operation receipt",
+        "admitted slice plus the sealed A3 heldout/source-family split",
+        "pilot high-water measurements, full-scale capacity evidence, and source-inventory reconciliation",
+        "At every dispatch, independently recheck and receipt the live routing",
+        "exact code/skill head",
+    ):
+        assert marker in normalized_preflight
+    for marker in (
+        "The source manifest is unit-complete",
+        "The operation-specific rights ledger is present for the operation being run",
+        "The split/held-out firewall, leave-one-out matrix, and Cycle007 deny-list are sealed",
+    ):
+        assert marker not in normalized_ready_block
+
+    issue_table = text.split(
+        "| Stage | Issue | Primary outcome | Functional lead |", 1
+    )[1].split("\n\nEach issue has exactly one accountable lead", 1)[0]
+    issue_leads = dict(
+        re.findall(r"^\| [^|]+ \| (#743[0-3]) \| [^|]+ \| ([^|]+) \|$", issue_table, re.MULTILINE)
+    )
+    assert issue_leads == {
+        "#7430": "A10 pilot-review lead (accountable); A4-A8 producers separated.",
+        "#7431": "A9 heldout/evaluation lead (accountable); independent A10 review.",
+        "#7432": "A8 scale/admission-assembly lead (accountable); A1/A2/A4/A5/A7 producers.",
+        "#7433": "A11 silver-release lead (accountable); separate A9 reproducer and A10 reviewer.",
+    }
+    for marker in (
+        "Candidate builder, with identity/dissent, custody, rights, and capacity stewards.",
+        "Held-out evaluator and consumer reproducer.",
+        "Driver plus source/capacity stewards and bounded builder lanes.",
+        "Consumer reproducer, rights steward, and driver.",
+    ):
+        assert marker not in issue_table
