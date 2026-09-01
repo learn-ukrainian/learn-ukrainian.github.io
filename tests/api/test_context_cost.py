@@ -33,9 +33,8 @@ def test_production_context_is_constructed_once_until_cache_clear(monkeypatch) -
         assert first is second
         assert build_calls == 1
 
-    # Restore the normal process singleton for tests that use main.app.
+    # Leave the cache clear so later tests cannot inherit this test's context.
     production_context.cache_clear()
-    production_context()
 
 
 def test_epics_and_session_streams_share_one_database_store(monkeypatch, tmp_path: Path) -> None:

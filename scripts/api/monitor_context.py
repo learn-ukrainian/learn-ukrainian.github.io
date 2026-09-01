@@ -319,6 +319,7 @@ def _stores(context: MonitorContext, *, fixture: bool) -> MonitorStores:
         report_store=report_store,
         session_streams_database=session_database,
         session_streams_store=session_store,
+        # Migration note: migrate legacy standalone epics.db data into this DB before startup.
         # Epics and session streams intentionally share one database handle and
         # store: both are projections over the same context-owned file.
         epics_database=session_database,
@@ -356,23 +357,48 @@ def _build_context(
 
 
 @lru_cache(maxsize=1)
-def production_context() -> MonitorContext:
-    """Build a context from the current production configuration resolution."""
-    project_root = Path(config.PROJECT_ROOT)
-    live_repo_root = Path(config.LIVE_REPO_ROOT)
+def _cached_production_context(
+    project_root: Path,
+    live_repo_root: Path,
+    dashboards_dir: Path,
+    batch_state_dir: Path,
+    curriculum_root: Path,
+    message_db_path: Path,
+    session_streams_db_path: Path,
+    backup_dir: Path,
+) -> MonitorContext:
     return _build_context(
         project_root=project_root,
         live_repo_root=live_repo_root,
-        dashboards_dir=Path(config.DASHBOARDS_DIR),
-        batch_state_dir=Path(config.BATCH_STATE_DIR),
-        curriculum_root=Path(config.CURRICULUM_ROOT),
-        message_db_path=Path(config.MESSAGE_DB),
-        session_streams_db_path=default_database_path(live_repo_root),
-        backup_dir=Path(
-            os.environ.get("BACKUP_DIR", str(project_root / "data" / "backups"))
-        ),
+        dashboards_dir=dashboards_dir,
+        batch_state_dir=batch_state_dir,
+        curriculum_root=curriculum_root,
+        message_db_path=message_db_path,
+        session_streams_db_path=session_streams_db_path,
+        backup_dir=backup_dir,
         fixture=False,
     )
+
+
+def production_context() -> MonitorContext:
+    """Build a cached context keyed by the current production configuration."""
+    project_root = Path(config.PROJECT_ROOT)
+    live_repo_root = Path(config.LIVE_REPO_ROOT)
+    return _cached_production_context(
+        project_root,
+        live_repo_root,
+        Path(config.DASHBOARDS_DIR),
+        Path(config.BATCH_STATE_DIR),
+        Path(config.CURRICULUM_ROOT),
+        Path(config.MESSAGE_DB),
+        default_database_path(live_repo_root),
+        Path(os.environ.get("BACKUP_DIR", str(project_root / "data" / "backups"))),
+    )
+
+
+# Preserve the cache lifecycle hook used by tests and operational callers while
+# keeping configuration resolution outside the cached zero-argument wrapper.
+production_context.cache_clear = _cached_production_context.cache_clear  # type: ignore[attr-defined]
 
 
 def fixture_context(root: os.PathLike[str] | str) -> MonitorContext:
