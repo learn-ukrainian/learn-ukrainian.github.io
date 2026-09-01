@@ -109,8 +109,8 @@ from .state_router import router as state_router
 from .telemetry.response import add_json_telemetry, session_id_from_request
 from .telemetry_router import router as telemetry_router
 from .wiki_router import router as wiki_router
+from .work_router import drain_context_background_work, warm_projection_cache
 from .work_router import router as work_router
-from .work_router import warm_projection_cache
 from .worktrees_router import router as worktrees_router
 
 core_router = APIRouter()
@@ -123,29 +123,35 @@ async def _lifespan(_app: FastAPI):
     Without this, "Shutting down" lines in logs/api.log have no provenance.
     See scripts/api/_signal_log.py for the wrapper rationale.
     """
-    preload_all()
-    install_signal_logging()
-    ensure_broker_db_ready()
     ctx = _app.state.ctx
-    seed_manifest_inventory(
-        ctx.roots.project_root,
-        store=ctx.stores.epics_store,
-        handoff_root=ctx.roots.live_repo_root,
-        ctx=ctx,
-    )
     try:
-        isa.schedule_refresh(force=False)
-    except Exception as exc:
-        logger.warning("Issue stream audit refresh schedule on startup failed: %s", exc)
-    try:
-        warm_projection_cache(ctx=ctx)
-    except Exception as exc:
-        logger.warning("Work projection warmup schedule on startup failed: %s", exc)
-    start_periodic_refresh()
-    try:
+        preload_all()
+        install_signal_logging()
+        ensure_broker_db_ready()
+        seed_manifest_inventory(
+            ctx.roots.project_root,
+            store=ctx.stores.epics_store,
+            handoff_root=ctx.roots.live_repo_root,
+            ctx=ctx,
+        )
+        try:
+            isa.schedule_refresh(force=False)
+        except Exception as exc:
+            logger.warning("Issue stream audit refresh schedule on startup failed: %s", exc)
+        try:
+            warm_projection_cache(ctx=ctx)
+        except Exception as exc:
+            logger.warning("Work projection warmup schedule on startup failed: %s", exc)
+        start_periodic_refresh()
         yield
     finally:
-        stop_periodic_refresh()
+        try:
+            stop_periodic_refresh()
+        finally:
+            try:
+                await drain_context_background_work(ctx)
+            finally:
+                await ctx.runtime.close_resources(ctx.stores.image_store)
 
 
 def _error_envelope(
@@ -1084,8 +1090,8 @@ def _collect_wiki_orient_data(ctx: MonitorContext | None = None) -> dict:
     resolved_ctx = _resolve_context(ctx)
     wiki_api.wiki_state.get_status_summary()
 
-    candidates = wiki_api._list_article_candidates()  # one full-tree scan
-    wiki_dir = resolved_ctx.roots.project_root / "wiki"
+    candidates = wiki_api._list_article_candidates(resolved_ctx)  # one context-scoped full-tree scan
+    wiki_dir = wiki_api._wiki_dir(resolved_ctx)
 
     by_track: dict[str, dict[str, Any]] = {}
     known_tracks = wiki_api._known_tracks(ctx=ctx) if ctx is not None else wiki_api._known_tracks()

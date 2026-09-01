@@ -274,6 +274,10 @@ class ImageStore:
         self.page_cache: OrderedDict[str, bytes] = OrderedDict()
         self.write_lock = asyncio.Lock()
 
+    async def close(self) -> None:
+        """Release context-owned PDF documents during app shutdown."""
+        await self.pdf_pool.clear()
+
 
 def _resolve_image_store(ctx: MonitorContext | None = None) -> ImageStore:
     resolved_ctx = _resolve_context(ctx)
@@ -283,11 +287,14 @@ def _resolve_image_store(ctx: MonitorContext | None = None) -> ImageStore:
     images_dir = roots.images_dir or (roots.project_root / "data" / "textbook_images")
     textbooks_dir = roots.textbooks_dir or (roots.project_root / "data" / "textbooks")
     annotations_file = images_dir / "image_text_pairs.jsonl"
-    return ImageStore(
-        images_dir=images_dir,
-        textbooks_dir=textbooks_dir,
-        annotations_file=annotations_file,
-        project_root=roots.project_root,
+    return resolved_ctx.runtime.get_or_create_resource(
+        "image_store:fallback",
+        lambda: ImageStore(
+            images_dir=images_dir,
+            textbooks_dir=textbooks_dir,
+            annotations_file=annotations_file,
+            project_root=roots.project_root,
+        ),
     )
 
 
@@ -753,4 +760,3 @@ async def reload_index(ctx: MonitorContext = Depends(get_ctx)):
         "total_records": len(store.index.records),
         "pdfs_on_disk": len(store.index.pdf_catalog),
     }
-
