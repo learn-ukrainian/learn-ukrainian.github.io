@@ -1,4 +1,5 @@
 import { describe, expect, test } from "vitest";
+import { formatOrigin } from "@site/src/lib/lexicon/format-origin";
 import {
   atlasWikipediaOkAsIntro,
   buildWordAtlasArticleView,
@@ -119,6 +120,37 @@ describe("formattedOrigin in article view model", () => {
     expect(originCard!.ready).toBe(true);
     expect(originCard!.detail).toBe("1 картка");
     expect(originCard!.detail).not.toContain(dump);
+  });
+
+  test("article etymology renders full stored ESUM text, not a 160-char clip", () => {
+    // Long enough that formatOrigin would truncate with "…" — article must keep the store.
+    const fullEsum =
+      "псл. *voda; споріднене з лит. vanduõ, vandеñs «вода», прус. wundan, гот. watō, двн. waʒӡаr «тс.», " +
+      "інд. udakám «вода», тох. А/В wär «тс.»; іє. *u̯ed- / *u̯od- «мокрий, вода»; " +
+      "пор. також дінд. unátti «змочує», лат. unda «хвиля».";
+    expect(fullEsum.length).toBeGreaterThan(160);
+    const clipped = formatOrigin({ text: fullEsum, source: "ЕСУМ, т. 1, с. 413" });
+    expect(clipped?.text.endsWith("…")).toBe(true);
+    expect(clipped!.text).not.toBe(fullEsum);
+
+    const html = renderWordAtlasArticle(
+      articleProps({
+        lemma: "вода",
+        url_slug: "вода",
+        gloss: "water",
+        entry_type: "lemma",
+        pos: "noun",
+        ipa: null,
+        primary_source: "course",
+        course_usage: [],
+        enrichment: {
+          etymology: { text: fullEsum, source: "ЕСУМ, т. 1, с. 413" },
+        },
+      }),
+    );
+    expect(html).toContain(fullEsum);
+    expect(html).toContain("Джерело: ЕСУМ, т. 1, с. 413");
+    expect(html).not.toContain(clipped!.text);
   });
 });
 

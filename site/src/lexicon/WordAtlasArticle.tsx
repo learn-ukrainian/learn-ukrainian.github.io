@@ -123,7 +123,6 @@ export default function WordAtlasArticle({
     headwordIpa,
     heritageBoxes,
     etymologyStages,
-    formattedOrigin,
     courseUsage,
     textbookItems,
     externalGroups,
@@ -366,13 +365,7 @@ export default function WordAtlasArticle({
             </section>
           )}
 
-          {formattedOrigin ? (
-            <section className="atlas-section" id="etymology">
-              <h2>Етимологія</h2>
-              <div className="ety-note" data-ety-note-output aria-live="polite">{formattedOrigin.text}</div>
-              <p className="atlas-muted">Джерело: {formattedOrigin.source}</p>
-            </section>
-          ) : enrichment?.etymology ? (
+          {enrichment?.etymology ? (
             <section className="atlas-section" id="etymology">
               <h2>Етимологія</h2>
               <div className="ety-timeline">
