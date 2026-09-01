@@ -249,4 +249,5 @@ def test_workflow_is_scheduled_manual_serial_and_minimally_scoped() -> None:
         "checks": "read",
     }
     assert workflow["concurrency"] == {"group": "auto-arm-merge", "cancel-in-progress": False}
-    assert "auto_arm_merge.py" in _WORKFLOW.read_text(encoding="utf-8")
+    # Module invocation keeps the repo root importable (scripts.ci.cf_attest).
+    assert "python -m scripts.ci.auto_arm_merge" in _WORKFLOW.read_text(encoding="utf-8")
