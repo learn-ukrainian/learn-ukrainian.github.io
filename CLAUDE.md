@@ -151,5 +151,5 @@ the task needs. Do not pad reports or handoffs with filler sections, redundant s
 boilerplate.
 
 **Length is a prompting concern, not an effort concern.** Lowering `/effort` does not reliably
-shorten user-facing output on Opus 5 — it changes how much the model thinks, not how much it
+shorten user-facing output on Fable 5.1 — it changes how much the model thinks, not how much it
 writes. Reach for this section, not the effort dial.
