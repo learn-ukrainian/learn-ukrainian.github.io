@@ -915,6 +915,7 @@ def compute_routing_budget(
     except Exception as exc:
         logging.getLogger("state_router").debug("Failed to compute lane health: %s", exc)
 
+    in_flight_by_agent = _in_flight_by_agent(resolved_tasks_dir)
     api_accounts = _build_api_accounts_payload(fresh=fresh_codexbar)
 
     # Empty config case: unknown statuses, suppressed rec (no confident pick from absent data)
@@ -1016,7 +1017,7 @@ def compute_routing_budget(
             "generated_at": _isoformat_z(current_time),
             "agents": agents,
             "api_accounts": api_accounts,
-            "in_flight": _in_flight_by_agent(resolved_tasks_dir),
+            "in_flight": in_flight_by_agent,
             "recommendation": rec,
             "diagnostics": {
                 "records_loaded": 0,
@@ -1528,7 +1529,7 @@ def compute_routing_budget(
                 "burn_pct_7d": a.get("burn_pct_7d"),
                 "remaining_pct": a.get("remaining_pct"),
                 "resets_at": a.get("resets_at"),
-                "in_flight": _in_flight_by_agent(resolved_tasks_dir).get(lane, 0),
+                "in_flight": in_flight_by_agent.get(lane, 0),
                 "health": a.get("health", {"healthy": True, "consecutive_failures": 0, "span_minutes": 0}),
             }
         )
@@ -1565,7 +1566,7 @@ def compute_routing_budget(
         "generated_at": _isoformat_z(current_time),
         "agents": agents,
         "api_accounts": api_accounts,
-        "in_flight": _in_flight_by_agent(resolved_tasks_dir),
+        "in_flight": in_flight_by_agent,
         "recommendation": rec,
         "diagnostics": {
             "records_loaded": len(records),
