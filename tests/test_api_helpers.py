@@ -1093,11 +1093,11 @@ class TestScanTrackCached:
     """scan_track_cached returns cached results within TTL."""
 
     def test_cache_returns_same_result(self):
-        from scripts.api.dashboard_helpers import _track_cache, scan_track_cached
+        from scripts.api.dashboard_helpers import _track_cache, _track_cache_key, scan_track_cached
 
-        # Pre-populate cache
+        # Pre-populate cache under the ctx-scoped key the lookup uses (#7494)
         cached_data = {"track_id": "test", "modules": []}
-        _track_cache["test_track"] = (time.time(), cached_data)
+        _track_cache[_track_cache_key("test_track", None)] = (time.time(), cached_data)
         result = scan_track_cached("test_track", "test_path", [])
         assert result == cached_data
 
@@ -1116,10 +1116,15 @@ class TestScanTrackSummaryCached:
     """scan_track_summary_cached returns cached results within TTL."""
 
     def test_cache_returns_same_result(self):
-        from scripts.api.dashboard_helpers import _summary_cache, scan_track_summary_cached
+        from scripts.api.dashboard_helpers import (
+            _summary_cache,
+            _track_cache_key,
+            scan_track_summary_cached,
+        )
 
+        # Pre-populate cache under the ctx-scoped key the lookup uses (#7494)
         cached_data = {"track_id": "test", "modules": []}
-        _summary_cache["test_summary"] = (time.time(), cached_data)
+        _summary_cache[_track_cache_key("test_summary", None)] = (time.time(), cached_data)
         result = scan_track_summary_cached("test_summary", "test_path", [])
         assert result == cached_data
 

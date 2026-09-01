@@ -352,7 +352,8 @@ def test_overview_cold_last_good_does_not_report_all_missing(monkeypatch, tmp_pa
     monkeypatch.setattr(
         dashboard_router,
         "_peek_state_summary",
-        lambda: (summary, "hit", 0.0),
+        # ctx-threaded since #7494
+        lambda *_a, **_k: (summary, "hit", 0.0),
     )
     monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda *_a, **_k: None)
 
