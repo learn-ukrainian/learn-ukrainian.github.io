@@ -32,10 +32,8 @@ The seven product scopes are:
 
 The first scope has two separate pilot strata because correct production and
 correction have different behavior. The remaining six scopes have one stratum
-each, so the 100-slot pilot has eight strata.
-
-Dedicated Belarusian, Bulgarian, Macedonian, Serbian, and Montenegrin lanes are
-removed. They are not substitutes for Ukrainian evidence. Modern Rusyn is
+each, so the 100-slot pilot has eight strata. Dedicated Belarusian, Bulgarian,
+Macedonian, Serbian, and Montenegrin lanes are removed. Modern Rusyn is
 protected and out of scope: do not silently map it to Ukrainian, Russian, or a
 historical Ukrainian stage.
 
@@ -43,17 +41,16 @@ historical Ukrainian stage.
 
 The first deliverable is **silver**: stable row IDs, provenance/rights metadata,
 labels or abstentions, validations, and evaluation eligibility as separately
-gated properties. Model agreement can support a silver observation; it never
-creates gold. A later, versioned overlay may upgrade individual stable IDs to
-gold after its own review and rights gates. No re-numbering or rebuilding of the
-silver corpus is implied by that upgrade.
+gated properties. Models provide hypotheses only. Model agreement does not admit
+silver and never creates gold. A later, versioned overlay may upgrade individual
+stable IDs to gold after its own review and rights gates. No re-numbering or
+rebuilding of the silver corpus is implied by that upgrade.
 
 The private, lawfully obtained corpus is used on the VPS for custody, bounded
 analysis, and source-family assignment. Public/exportable rows must be
 independently authored and non-reconstructive unless the exact source operation
-is cleared. Source availability is not a project-wide rights assertion:
-retention, local analysis, provider transmission, derivation, training,
-publication, and redistribution are independent operations.
+is cleared. Retention, local analysis, provider transmission, derivation,
+training, publication, and redistribution are independent operations.
 
 An unresolved operation blocks only that source-operation lane. It remains
 visible in its lane receipt and cannot silently shrink the denominator. It is a
@@ -100,24 +97,28 @@ invalidates the affected evaluation version.
 ## Functional roles and handoffs
 
 The driver assigns an accountable lead to every role; model/provider choice is a
-runtime routing decision and is never embedded in this plan.
+runtime routing decision and is never embedded in this plan. The role map is
+fixed for this epic:
 
 | ID | Owner role | Produces | May not do |
 | --- | --- | --- | --- |
-| A0 | dataset-epic driver | topology, ledger, dispatch, integration receipt | self-review or bypass gates |
-| A1 | VPS custody/capacity steward | inventory, forecast, cleanup/floor receipt | expose corpus or change scope |
-| A2 | source-admission steward | operation-specific source-family decisions | assign held-out membership alone |
-| A3 | split/evaluation firewall steward | sealed source-family and held-out commitment | reveal held-out identities to builders |
-| A4 | Ukrainian taxonomy lead | scope/protection taxonomy and abstention rules | modernize protected material |
-| A5 | candidate builder | source-free candidate rows and provenance links | create gold or see held-out membership |
-| A6 | arena coordinator | blind packets, strict parsing, non-self voting receipt | vote for its own output |
-| A7 | dissent/dispute critic | bounded dispute disposition or abstention | erase disagreements |
-| A8 | contract validator | schema, quota, lineage, and privacy validation | relabel a failed row |
-| A9 | silver release steward | versioned silver manifest and release receipt | claim gold from model agreement |
-| A10 | held-out evaluation steward | frozen evaluation report | alter construction after exposure |
-| A11 | consumer-certification steward | training/consumer compatibility receipt | waive rights or evaluation gates |
-| A12 | independent cross-family reviewer | exact-head review verdict | approve its own implementation |
-| A13 | closeout/recovery steward | residual, rollback, and next-lane receipt | hide a stopped denominator |
+| A0 | scope and accountable lead | scope/denominator ledger and route | bypass gates or self-review |
+| A1 | custody steward | VPS inventory, capacity, cleanup/floor receipt | expose corpus or change scope |
+| A2 | source inventory and admission steward | source-family and operation decision | assign held-out membership alone |
+| A3 | held-out steward | sealed source-family and held-out commitment | reveal held-out identities to builders |
+| A4 | deterministic extraction steward | reproducible source-free extraction packet | improvise source assignment |
+| A5 | evidence-enrichment steward | provenance/evidence joins and uncertainty flags | modernize protected material |
+| A6 | safe-arena steward | blind packet, strict parser, non-self vote receipt | vote for its own output |
+| A7 | original-row factory steward | independently authored candidate rows | see held-out membership or create gold |
+| A8 | admission and assembly steward | validated silver assembly receipt | waive contract/privacy gates |
+| A9 | evaluation-package steward | frozen held-out evaluation package | alter construction after exposure |
+| A10 | pilot-review steward | pilot review disposition and residuals | hide unresolved required slots |
+| A11 | training-ready release steward | permitted silver consumer release | waive rights/evaluation gates |
+| A12 | later-gold-overlay steward | separately versioned gold-upgrade overlay | infer gold from model agreement |
+| A13 | cleanup and recovery steward | cleanup, rollback, and next-lane receipt | hide a stopped denominator |
+
+Independent cross-family review is a gate on the exact implementation head; it
+is not A12 and cannot be replaced by the authoring family.
 
 ## Arena and evidence rules
 
@@ -126,37 +127,53 @@ schema-validated response. A participant cannot vote for its own output.
 Invalid output receives one format-only retry; a persistent failure is recorded,
 then a bounded substitute or abstention is used without changing the denominator.
 The coordinator records routes, families, attempts, exposure, and hashes in
-private receipts. No model consensus, however strong, is gold.
+private receipts. Models provide hypotheses only: agreement does not admit
+silver and does not create gold. Humans are optional for silver and may later
+support source-qualified gold overlays or hard disputes.
 
-Humans are optional for silver. They are useful later for source-qualified gold
-overlays or hard disputes, but their absence cannot stop ordinary silver work.
+## Completion vocabulary and stop policy
 
-## Driver gates and stop policy
+The only V4 completion vocabulary is:
 
-The driver must obtain these in order:
+- `ARENA_SLICE_READY`
+- `EVAL_ARTIFACT_READY`
+- `TRAINING_READY_SILVER`
+- `TRAINING_READY_GOLD_SUBSET`
+- `GOLD_UPGRADE_READY`
+- `BLOCKED_WITH_RESIDUALS`
+
+`BLOCKED_WITH_RESIDUALS` settles a bounded packet and records its unresolved
+slots, denominator, cause, owner, and next route. It is not successful pilot
+completion. An unresolved required slot cannot satisfy `EVAL_ARTIFACT_READY` or
+`TRAINING_READY_SILVER`; those successful states require every required slot in
+the frozen denominator to have passed its applicable admission, privacy, rights,
+and evaluation gates. `TRAINING_READY_GOLD_SUBSET` is limited to rows actually
+promoted by a later gold overlay. `GOLD_UPGRADE_READY` means an overlay may be
+reviewed, not that gold already exists.
+
+The driver obtains gates in order:
 
 1. A0 binds this V4 hash, #622, #7423, denominator, non-goals, roles, and held-out policy.
 2. A1 proves VPS custody/capacity above the hard floor for the next bounded lane.
 3. A2 admits a feasible source family for that lane and requested operation.
-4. A3 seals the source-family/held-out commitment before builders start.
-5. A4–A8 construct and validate silver candidates without source or held-out leakage.
-6. A6/A7 settle arena disagreements through non-self voting, substitution, or abstention.
-7. A9 freezes the silver release; A10 evaluates it; A11 certifies the allowed consumer view.
-8. A12 reviews the exact implementation head independently; A13 publishes residuals and routes the next lane.
+4. A3 seals the source-family/held-out commitment before A4–A7 begin.
+5. A4/A5 create deterministic, evidence-enriched packets; A6/A7 construct safely.
+6. A8 admits and assembles only rows that pass all silver gates.
+7. A9 packages evaluation; A10 reviews the pilot; A11 releases only a training-ready silver view.
+8. A12 handles later gold overlays; independent cross-family review gates every exact implementation head; A13 closes or recovers the lane.
 
 Global stop: no feasible path remains for a frozen required stratum, VPS custody
 cannot remain above its floor, a privacy firewall is breached, or a required
 contract/evaluation gate is invalid. Lane-local stop: one source operation,
 provider route, parser attempt, candidate, or source family fails while another
-frozen path remains. A stopped lane produces an explicit receipt and preserves
-its slots; it never disappears by denominator reduction.
+frozen path remains. A stopped lane produces `BLOCKED_WITH_RESIDUALS` and
+preserves its slots; it never disappears by denominator reduction.
 
 ## Completion terms
 
 The epic is ready to drive when the V4 binding, live VPS custody/capacity receipt,
-this pilot contract, and sealed A3 commitment are present. The pilot completes
-only when all 100 stable slots have a permitted terminal state (silver candidate,
-validated abstention, or explicit lane-local residual), exact quotas remain
-visible, the held-out evaluation is frozen, and the consumer view has passed its
-own rights and certification gates. Final closure reports the achieved count,
-denominator, residuals, and next owner.
+this pilot contract, and sealed A3 commitment are present. The pilot succeeds
+only when all required slots satisfy the frozen denominator and gates, the held-out
+evaluation is frozen as `EVAL_ARTIFACT_READY`, and the permitted consumer view is
+`TRAINING_READY_SILVER`. Any unresolved required slot leaves the pilot in
+`BLOCKED_WITH_RESIDUALS`, with its exact residual and next owner reported.
