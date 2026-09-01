@@ -750,6 +750,8 @@ def validate_output(contract_id: str, payload: Mapping[str, Any], schema: Mappin
     errors = sorted(Draft202012Validator(_schema_for_ref(schema, ref)).iter_errors(payload), key=lambda item: list(item.path))
     require(not errors, f"output schema violation: {errors[0].message}" if errors else "output schema violation")
     _walk_forbidden(payload, "output")
+    if contract_id == "v3b.transition.receipt":
+        return
     require((payload["parser_state"] == "abstained") is bool(payload["abstain"]), "output abstention mismatch")
     if contract_id == "v3b.identity.opinion":
         confidence = payload["decision"]["confidence_or_abstention_state"]
@@ -857,7 +859,19 @@ def validate_transition_receipts(
     previous_hash: str | None = None
     previous_to: str | None = None
     expected_sequence = 0
-    last_family_by_role: dict[str, str] = {}
+    budgets: dict[tuple[str, str], dict[str, Any]] = {}
+    model_role_ids = {role for role, _family, _model, _contract in MODEL_ROLES}
+    retry_dispatch_conditions = {
+        "format_retry_dispatched",
+        "critic_format_retry_dispatched",
+        "candidate_format_retry_dispatched",
+    }
+    substitute_dispatch_conditions = {
+        "family_safe_substitute_dispatched",
+        "critic_substitute_dispatched",
+        "candidate_substitute_dispatched",
+    }
+    retry_limits = artifact["retry_and_substitution"]
     for item in receipts:
         errors = sorted(validator.iter_errors(item), key=lambda error: list(error.path))
         require(not errors, f"transition receipt schema violation: {errors[0].message}" if errors else "receipt invalid")
@@ -886,10 +900,40 @@ def validate_transition_receipts(
         require(item["contract_sha256"] == artifact["receipt_sha256"], "receipt contract drift")
         role_id = str(item["role_id"])
         family = str(item["resolved_route"]["provider_family"])
-        if item["substitute_used"]:
-            require(role_id in last_family_by_role, "substitute lacks predecessor family")
-            require(last_family_by_role[role_id] != family, "same-family substitution")
-        last_family_by_role[role_id] = family
+        if role_id in model_role_ids:
+            key = (str(item["row_id"]), role_id)
+            existed = key in budgets
+            budget = budgets.setdefault(
+                key,
+                {
+                    "format_retries": 0,
+                    "substitutes": 0,
+                    "original_family": family,
+                },
+            )
+            condition = str(item["condition_code"])
+            if condition in retry_dispatch_conditions:
+                require(existed, "format retry lacks original attempt")
+                budget["format_retries"] += 1
+            if condition in substitute_dispatch_conditions:
+                require(existed, "substitute lacks original attempt")
+                budget["substitutes"] += 1
+                require(item["substitute_used"] is True, "substitute transition missing flag")
+                require(budget["original_family"] != family, "same-family substitution")
+            require(
+                budget["format_retries"] <= retry_limits["format_retry_limit"],
+                "format retry budget exhausted",
+            )
+            require(
+                budget["substitutes"] <= retry_limits["independent_family_substitute_limit"],
+                "substitution budget exhausted",
+            )
+            expected_attempts = 1 + budget["format_retries"] + budget["substitutes"]
+            require(item["attempt_count"] == expected_attempts, "cumulative attempt count mismatch")
+            require(
+                expected_attempts <= retry_limits["maximum_attempts_per_role_per_row"],
+                "maximum attempt budget exhausted",
+            )
         if item["to_state"] == "GOLD_ELIGIBLE_METADATA_ONLY":
             require(item["guard_result"] == "pass", "gold transition guard not satisfied")
             require(all(item["gold_guard_results"].values()), "gold transition guard bundle incomplete")

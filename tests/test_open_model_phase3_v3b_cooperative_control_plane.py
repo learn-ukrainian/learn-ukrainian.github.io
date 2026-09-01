@@ -339,6 +339,7 @@ def test_transition_receipts_are_hash_chained_and_append_only() -> None:
     )
     v3b.validate_transition_receipts([first, second], artifact)
     v3b.validate_transition_receipts([first, second, copy.deepcopy(first)], artifact)
+    v3b.validate_output("v3b.transition.receipt", first)
 
     gap = copy.deepcopy(second)
     gap["sequence"] = 3
@@ -394,6 +395,7 @@ def test_same_family_substitution_and_unguarded_gold_are_rejected() -> None:
     )
     first["role_id"] = "IDENTITY_LEAD"
     first["resolved_route"]["provider_family"] = "anthropic"
+    first["attempt_count"] = 1
     first["receipt_sha256"] = v3b.receipt_sha(first)
     second = _transition_receipt(
         artifact,
@@ -406,7 +408,7 @@ def test_same_family_substitution_and_unguarded_gold_are_rejected() -> None:
     second["role_id"] = "IDENTITY_LEAD"
     second["resolved_route"]["provider_family"] = "anthropic"
     second["substitute_used"] = True
-    second["attempt_count"] = 1
+    second["attempt_count"] = 2
     second["receipt_sha256"] = v3b.receipt_sha(second)
     with pytest.raises(v3b.V3BError, match="same-family substitution"):
         v3b.validate_transition_receipts([first, second], artifact)
@@ -428,6 +430,77 @@ def test_same_family_substitution_and_unguarded_gold_are_rejected() -> None:
     gold["receipt_sha256"] = v3b.receipt_sha(gold)
     with pytest.raises(v3b.V3BError, match="guard bundle incomplete"):
         v3b.validate_transition_receipts([gold], artifact)
+
+
+def test_cumulative_retry_and_substitution_budgets_cannot_loop() -> None:
+    artifact = _artifact()
+    receipts: list[dict[str, Any]] = []
+    previous = None
+    specs = [
+        ("IDENTITY_PENDING", "IDENTITY_RETRY_PENDING", "format_failure_retry_available", 1),
+        ("IDENTITY_RETRY_PENDING", "IDENTITY_PENDING", "format_retry_dispatched", 2),
+        ("IDENTITY_PENDING", "IDENTITY_RETRY_PENDING", "format_failure_retry_available", 2),
+        ("IDENTITY_RETRY_PENDING", "IDENTITY_PENDING", "format_retry_dispatched", 3),
+    ]
+    for sequence, (source, target, condition, attempts) in enumerate(specs):
+        item = _transition_receipt(artifact, sequence, source, target, condition, previous)
+        item["role_id"] = "IDENTITY_LEAD"
+        item["resolved_route"]["provider_family"] = "anthropic"
+        item["attempt_count"] = attempts
+        item["format_retry_used"] = condition == "format_retry_dispatched"
+        item["receipt_sha256"] = v3b.receipt_sha(item)
+        receipts.append(item)
+        previous = item["receipt_sha256"]
+    with pytest.raises(v3b.V3BError, match="format retry budget exhausted"):
+        v3b.validate_transition_receipts(receipts, artifact)
+
+    receipts = []
+    previous = None
+    specs = [
+        (
+            "IDENTITY_PENDING",
+            "IDENTITY_SUBSTITUTE_PENDING",
+            "provider_failure_substitute_available",
+            "anthropic",
+            1,
+            False,
+        ),
+        (
+            "IDENTITY_SUBSTITUTE_PENDING",
+            "IDENTITY_PENDING",
+            "family_safe_substitute_dispatched",
+            "google",
+            2,
+            True,
+        ),
+        (
+            "IDENTITY_PENDING",
+            "IDENTITY_SUBSTITUTE_PENDING",
+            "provider_failure_substitute_available",
+            "google",
+            2,
+            False,
+        ),
+        (
+            "IDENTITY_SUBSTITUTE_PENDING",
+            "IDENTITY_PENDING",
+            "family_safe_substitute_dispatched",
+            "xai",
+            3,
+            True,
+        ),
+    ]
+    for sequence, (source, target, condition, family, attempts, substituted) in enumerate(specs):
+        item = _transition_receipt(artifact, sequence, source, target, condition, previous)
+        item["role_id"] = "IDENTITY_LEAD"
+        item["resolved_route"]["provider_family"] = family
+        item["attempt_count"] = attempts
+        item["substitute_used"] = substituted
+        item["receipt_sha256"] = v3b.receipt_sha(item)
+        receipts.append(item)
+        previous = item["receipt_sha256"]
+    with pytest.raises(v3b.V3BError, match="substitution budget exhausted"):
+        v3b.validate_transition_receipts(receipts, artifact)
 
 
 def test_forbidden_body_and_heldout_fields_are_rejected() -> None:
