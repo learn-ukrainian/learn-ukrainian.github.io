@@ -433,6 +433,25 @@ def test_custody_receipt_hash_chain_and_replay_are_fail_closed() -> None:
     with pytest.raises(v3c.V3CError, match=r"identity drift|self-hash mismatch|divergent"):
         v3c.validate_custody_receipts([seal, divergent], artifact)
 
+    with pytest.raises(v3c.V3CError, match="duplicate custody receipt in canonical stream"):
+        v3c.validate_custody_receipts([seal, copy.deepcopy(seal)], artifact)
+
+
+def test_top_level_validation_wires_the_custody_receipt_validator(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    artifact = _artifact()
+    calls: list[tuple[list[dict[str, Any]], dict[str, Any]]] = []
+    original = v3c.validate_custody_receipts
+
+    def spy(receipts: list[dict[str, Any]], candidate: dict[str, Any] | None = None) -> None:
+        calls.append((receipts, candidate or artifact))
+        original(receipts, candidate)
+
+    monkeypatch.setattr(v3c, "validate_custody_receipts", spy)
+    v3c.validate(artifact, _schema())
+    assert calls == [([], artifact)]
+
 
 def test_forbidden_heldout_fields_and_post_exposure_state_are_rejected() -> None:
     artifact = _artifact()

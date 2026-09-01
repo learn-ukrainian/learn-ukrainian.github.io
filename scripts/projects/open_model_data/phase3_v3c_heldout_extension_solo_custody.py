@@ -423,6 +423,7 @@ def _custody_receipt_contract(ledger: Mapping[str, Any]) -> dict[str, Any]:
         "previous_hash_chain_required": True,
         "byte_identical_replay_only": True,
         "divergent_replay_rejected": True,
+        "duplicates_in_canonical_stream_forbidden": True,
         "exposure_requires_pre_exposure_seal": True,
         "invalidation_requires_prior_exposure": True,
         "invalidation_requires_new_cycle": True,
@@ -852,6 +853,7 @@ def build_schema() -> dict[str, Any]:
                 "previous_hash_chain_required": {"const": True},
                 "byte_identical_replay_only": {"const": True},
                 "divergent_replay_rejected": {"const": True},
+                "duplicates_in_canonical_stream_forbidden": {"const": True},
                 "exposure_requires_pre_exposure_seal": {"const": True},
                 "invalidation_requires_prior_exposure": {"const": True},
                 "invalidation_requires_new_cycle": {"const": True},
@@ -870,6 +872,7 @@ def build_schema() -> dict[str, Any]:
                 "previous_hash_chain_required",
                 "byte_identical_replay_only",
                 "divergent_replay_rejected",
+                "duplicates_in_canonical_stream_forbidden",
                 "exposure_requires_pre_exposure_seal",
                 "invalidation_requires_prior_exposure",
                 "invalidation_requires_new_cycle",
@@ -1257,7 +1260,6 @@ def validate_custody_receipts(
     ledger_sha = artifact["requirement_ledger"]["ledger_sha256"]
     seen_ids: dict[str, bytes] = {}
     previous_hash: str | None = None
-    expected_sequence = 0
     current_cycle: str | None = None
     current_state: str | None = None
     cycle_ids: set[str] = set()
@@ -1265,7 +1267,7 @@ def validate_custody_receipts(
     sealed_freeze_commitment: str | None = None
     sealed_evaluation_version: str | None = None
     exposed_version: str | None = None
-    for receipt in receipts:
+    for expected_sequence, receipt in enumerate(receipts):
         errors = sorted(Draft202012Validator(receipt_schema).iter_errors(receipt), key=lambda error: list(error.path))
         require(not errors, f"custody receipt schema violation: {errors[0].message}" if errors else "receipt invalid")
         _walk_forbidden(receipt, "custody_receipt")
@@ -1273,10 +1275,9 @@ def validate_custody_receipts(
         receipt_id = str(receipt["receipt_id"])
         if receipt_id in seen_ids:
             require(seen_ids[receipt_id] == encoded, "divergent custody receipt replay")
-            continue
+            raise V3CError("duplicate custody receipt in canonical stream")
         seen_ids[receipt_id] = encoded
         require(receipt["sequence"] == expected_sequence, "custody receipt sequence gap")
-        expected_sequence += 1
         require(receipt["previous_receipt_sha256"] == previous_hash, "custody receipt previous hash mismatch")
         require(receipt["receipt_id"] == sha256_value(_receipt_identity(receipt)), "custody receipt identity drift")
         require(receipt["receipt_sha256"] == receipt_sha(receipt), "custody receipt self-hash mismatch")
@@ -1373,6 +1374,7 @@ def validate(artifact: Mapping[str, Any], schema: Mapping[str, Any] | None = Non
     require(bindings["validator"] == binding(SCRIPT_PATH), "validator binding drift")
     require(bindings["v3a_artifact"] == binding(V3A_ARTIFACT_PATH), "V3-A artifact binding drift")
     require(bindings["v3a_compatibility_matrix"] == binding(V3A_MATRIX_PATH), "V3-A matrix binding drift")
+    validate_custody_receipts(artifact["custody_receipts"]["rows"], artifact)
     require(artifact["custody_receipts"]["rows"] == [], "tracked artifact contains custody receipts")
     require(artifact["custody_receipts"]["row_count"] == 0, "tracked artifact receipt count drift")
     require(not any(artifact["execution_gates"].values()), "execution gate enabled")
