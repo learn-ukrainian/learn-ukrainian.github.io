@@ -9,6 +9,19 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 INSTALLER_SCRIPT = REPO_ROOT / "scripts/install_git_hooks.sh"
+REQUIRED_HOOKS = (
+    "pre-commit",
+    "commit-msg",
+    "pre-push",
+    "post-merge",
+    "post-checkout",
+    "post-commit",
+)
+SUPPORT_FILES = (
+    "_lib.sh",
+    "check-pytest-stamp.py",
+    "pytest_stamp.py",
+)
 
 
 def _clean_env(extra: dict[str, str] | None = None) -> dict[str, str]:
@@ -67,23 +80,20 @@ def _fixture_repository(tmp_path: Path) -> tuple[Path, dict[str, str]]:
         "HOOK_LOG": str(hook_log),
     }
 
-    # Tracked minimal commit-msg hook
-    _write_executable(
-        repo / ".githooks/commit-msg",
-        "#!/usr/bin/env bash\n"
-        "set -euo pipefail\n"
-        'printf "commit-msg:%s\\n" "$1" >> "$HOOK_LOG"\n',
-    )
-    # Tracked minimal pre-commit hook
-    _write_executable(
-        repo / ".githooks/pre-commit",
-        "#!/usr/bin/env bash\n"
-        "set -euo pipefail\n"
-        'printf "pre-commit\\n" >> "$HOOK_LOG"\n',
-    )
-    # Support files to ensure installer ignores them
-    (repo / ".githooks/_lib.sh").write_text("# support library\n", encoding="utf-8")
-    (repo / ".githooks/pytest_stamp.py").write_text("# python helper\n", encoding="utf-8")
+    for hook_name in REQUIRED_HOOKS:
+        if hook_name == "commit-msg":
+            _write_executable(
+                repo / f".githooks/{hook_name}",
+                '#!/usr/bin/env bash\nset -euo pipefail\nprintf "commit-msg:%s\\n" "$1" >> "$HOOK_LOG"\n',
+            )
+        else:
+            _write_executable(
+                repo / f".githooks/{hook_name}",
+                f'#!/usr/bin/env bash\nset -euo pipefail\nprintf "{hook_name}\\n" >> "$HOOK_LOG"\n',
+            )
+
+    for support_file in SUPPORT_FILES:
+        (repo / f".githooks/{support_file}").write_text(f"# {support_file}\n", encoding="utf-8")
 
     (repo / "README.md").write_text("initial\n", encoding="utf-8")
     _git(repo, "add", ".")
@@ -100,8 +110,8 @@ def test_installer_unsets_core_hooks_path_and_creates_delegators(tmp_path: Path)
 
     result = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
     assert result.returncode == 0
-    assert "commit-msg: installed" in result.stdout
-    assert "pre-commit: installed" in result.stdout
+    for hook_name in REQUIRED_HOOKS:
+        assert f"{hook_name}: installed" in result.stdout
 
     # (a) core.hooksPath is unset
     check_config = _git(repo, "config", "--get", "core.hooksPath", env=env, check=False)
@@ -109,7 +119,7 @@ def test_installer_unsets_core_hooks_path_and_creates_delegators(tmp_path: Path)
 
     # (b) delegators present + executable
     hooks_dir = repo / ".git/hooks"
-    for hook_name in ("commit-msg", "pre-commit"):
+    for hook_name in REQUIRED_HOOKS:
         delegator = hooks_dir / hook_name
         assert delegator.is_file(), f"Expected delegator at {delegator}"
         assert os.access(delegator, os.X_OK), f"Delegator at {delegator} must be executable"
@@ -118,8 +128,8 @@ def test_installer_unsets_core_hooks_path_and_creates_delegators(tmp_path: Path)
         assert f'hook="$root/.githooks/{hook_name}"' in content
 
     # Non-hook files must not have delegators
-    assert not (hooks_dir / "_lib.sh").exists()
-    assert not (hooks_dir / "pytest_stamp.py").exists()
+    for support_file in SUPPORT_FILES:
+        assert not (hooks_dir / support_file).exists()
 
 
 def test_commit_in_linked_worktree_triggers_tracked_hook(tmp_path: Path) -> None:
@@ -134,9 +144,10 @@ def test_commit_in_linked_worktree_triggers_tracked_hook(tmp_path: Path) -> None
     _git(worktree, "commit", "-m", "feature commit", env=env)
 
     hook_log = Path(env["HOOK_LOG"]).read_text(encoding="utf-8").splitlines()
-    # (c) commit-msg and pre-commit in linked worktree triggered the tracked hook
+    # commit-msg, pre-commit, and post-commit in linked worktree triggered the tracked hook
     assert "pre-commit" in hook_log
     assert any(line.startswith("commit-msg:") for line in hook_log)
+    assert "post-commit" in hook_log
 
 
 def test_installer_is_idempotent(tmp_path: Path) -> None:
@@ -145,17 +156,29 @@ def test_installer_is_idempotent(tmp_path: Path) -> None:
     # First run: installed
     run1 = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
     assert run1.returncode == 0
-    assert "commit-msg: installed" in run1.stdout
-    assert "pre-commit: installed" in run1.stdout
+    for hook_name in REQUIRED_HOOKS:
+        assert f"{hook_name}: installed" in run1.stdout
 
     # Second run: kept
     run2 = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
     assert run2.returncode == 0
-    assert "commit-msg: kept" in run2.stdout
-    assert "pre-commit: kept" in run2.stdout
+    for hook_name in REQUIRED_HOOKS:
+        assert f"{hook_name}: kept" in run2.stdout
 
     check_config = _git(repo, "config", "--get", "core.hooksPath", env=env, check=False)
     assert check_config.returncode != 0
+
+    # Commit inside a LINKED worktree and verify tracked hooks fire
+    worktree = tmp_path / "worktree"
+    _git(repo, "worktree", "add", "-b", "feature-idempotent", str(worktree), env=env)
+    (worktree / "change.txt").write_text("idempotent change\n", encoding="utf-8")
+    _git(worktree, "add", "change.txt", env=env)
+    _git(worktree, "commit", "-m", "idempotent commit", env=env)
+
+    hook_log = Path(env["HOOK_LOG"]).read_text(encoding="utf-8").splitlines()
+    assert "pre-commit" in hook_log
+    assert any(line.startswith("commit-msg:") for line in hook_log)
+    assert "post-commit" in hook_log
 
 
 def test_pre_existing_entire_wrapper_is_preserved_and_chained(tmp_path: Path) -> None:
@@ -179,7 +202,7 @@ def test_pre_existing_entire_wrapper_is_preserved_and_chained(tmp_path: Path) ->
     assert "commit-msg: chained-under-entire" in result.stdout
     assert "pre-commit: installed" in result.stdout
 
-    # (e) Entire wrapper preserved at commit-msg
+    # Entire wrapper preserved at commit-msg
     commit_msg_hook = hooks_dir / "commit-msg"
     assert commit_msg_hook.read_text(encoding="utf-8") == entire_wrapper_content
 
@@ -189,14 +212,18 @@ def test_pre_existing_entire_wrapper_is_preserved_and_chained(tmp_path: Path) ->
     assert os.access(pre_entire, os.X_OK)
     assert "# generated by scripts/install_git_hooks.sh" in pre_entire.read_text(encoding="utf-8")
 
-    # When committing, both Entire wrapper and tracked hook run via chain
-    (repo / "newfile.txt").write_text("payload\n", encoding="utf-8")
-    _git(repo, "add", "newfile.txt", env=env)
-    _git(repo, "commit", "-m", "test chained commit", env=env)
+    # When committing inside a LINKED worktree, both Entire wrapper and tracked hook run via chain
+    worktree = tmp_path / "worktree"
+    _git(repo, "worktree", "add", "-b", "feature-entire", str(worktree), env=env)
+    (worktree / "wt-file.txt").write_text("entire payload\n", encoding="utf-8")
+    _git(worktree, "add", "wt-file.txt", env=env)
+    _git(worktree, "commit", "-m", "test chained commit in worktree", env=env)
 
     hook_log = Path(env["HOOK_LOG"]).read_text(encoding="utf-8").splitlines()
     assert "entire-commit-msg-wrapper" in hook_log
+    assert "pre-commit" in hook_log
     assert any(line.startswith("commit-msg:") for line in hook_log)
+    assert "post-commit" in hook_log
 
     # Re-running installer preserves Entire wrapper and chaining (idempotent)
     run_again = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
@@ -211,7 +238,7 @@ def test_foreign_hook_is_preserved_and_skipped(tmp_path: Path) -> None:
     hooks_dir.mkdir(parents=True, exist_ok=True)
 
     # Custom hook created manually by a user (no Entire marker, no generated marker)
-    foreign_content = "#!/bin/sh\n# Custom personal hook\nexit 0\n"
+    foreign_content = '#!/usr/bin/env bash\nset -euo pipefail\nprintf "foreign-commit-msg\\n" >> "$HOOK_LOG"\nexit 0\n'
     _write_executable(hooks_dir / "commit-msg", foreign_content)
 
     result = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
@@ -221,6 +248,19 @@ def test_foreign_hook_is_preserved_and_skipped(tmp_path: Path) -> None:
     assert "pre-commit: installed" in result.stdout
 
     # Foreign hook was NOT overwritten
+    assert (hooks_dir / "commit-msg").read_text(encoding="utf-8") == foreign_content
+
+    # When committing inside a LINKED worktree, foreign hook runs and tracked commit-msg does not run
+    worktree = tmp_path / "worktree"
+    _git(repo, "worktree", "add", "-b", "feature-foreign", str(worktree), env=env)
+    (worktree / "wt-foreign.txt").write_text("foreign hook test\n", encoding="utf-8")
+    _git(worktree, "add", "wt-foreign.txt", env=env)
+    _git(worktree, "commit", "-m", "foreign hook commit", env=env)
+
+    hook_log = Path(env["HOOK_LOG"]).read_text(encoding="utf-8").splitlines()
+    assert "foreign-commit-msg" in hook_log
+    assert "pre-commit" in hook_log
+    assert not any(line.startswith("commit-msg:") for line in hook_log)
     assert (hooks_dir / "commit-msg").read_text(encoding="utf-8") == foreign_content
 
 
@@ -233,3 +273,76 @@ def test_preserves_custom_core_hooks_path(tmp_path: Path) -> None:
     assert result.returncode == 0
     assert f"Found explicit core.hooksPath={custom_path}" in result.stdout
     assert _git(repo, "config", "--get", "core.hooksPath", env=env).stdout.strip() == str(custom_path)
+
+
+def test_extra_executable_hook_gets_delegator(tmp_path: Path) -> None:
+    repo, env = _fixture_repository(tmp_path)
+    _write_executable(
+        repo / ".githooks/reference-transaction",
+        '#!/usr/bin/env bash\nset -euo pipefail\nprintf "ref-tx:%s\\n" "$1" >> "$HOOK_LOG"\n',
+    )
+
+    result = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
+    assert result.returncode == 0
+    assert "reference-transaction: installed" in result.stdout
+
+    delegator = repo / ".git/hooks/reference-transaction"
+    assert delegator.is_file()
+    assert os.access(delegator, os.X_OK)
+
+
+def test_installer_refuses_incomplete_hook_directory_and_leaves_hooks_untouched(tmp_path: Path) -> None:
+    repo, env = _fixture_repository(tmp_path)
+    (repo / ".githooks/commit-msg").unlink()
+
+    # Ensure common hooks dir doesn't exist yet
+    hooks_dir = repo / ".git/hooks"
+    if hooks_dir.exists():
+        shutil.rmtree(hooks_dir)
+
+    result = _run(
+        ["bash", "scripts/install_git_hooks.sh"],
+        cwd=repo,
+        env=env,
+        check=False,
+    )
+    assert result.returncode == 1
+    assert "Expected executable hook at" in result.stderr
+    assert "commit-msg" in result.stderr
+    # Validation ran before touching common hooks dir
+    assert not hooks_dir.exists()
+
+
+def test_installer_refuses_missing_support_file_and_leaves_hooks_untouched(tmp_path: Path) -> None:
+    repo, env = _fixture_repository(tmp_path)
+    (repo / ".githooks/check-pytest-stamp.py").unlink()
+
+    hooks_dir = repo / ".git/hooks"
+    if hooks_dir.exists():
+        shutil.rmtree(hooks_dir)
+
+    result = _run(
+        ["bash", "scripts/install_git_hooks.sh"],
+        cwd=repo,
+        env=env,
+        check=False,
+    )
+    assert result.returncode == 1
+    assert "Expected readable hook support file at" in result.stderr
+    assert "check-pytest-stamp.py" in result.stderr
+    assert not hooks_dir.exists()
+
+
+def test_installer_refuses_non_executable_hook(tmp_path: Path) -> None:
+    repo, env = _fixture_repository(tmp_path)
+    (repo / ".githooks/pre-push").chmod(0o644)
+
+    result = _run(
+        ["bash", "scripts/install_git_hooks.sh"],
+        cwd=repo,
+        env=env,
+        check=False,
+    )
+    assert result.returncode == 1
+    assert "Expected executable hook at" in result.stderr
+    assert "pre-push" in result.stderr

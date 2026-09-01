@@ -5,18 +5,40 @@
 set -euo pipefail
 
 repo_root="$(git rev-parse --show-toplevel)"
+tracked_hooks_dir="$repo_root/.githooks"
+if [[ ! -d "$tracked_hooks_dir" ]]; then
+    echo "Tracked hooks directory not found at $tracked_hooks_dir" >&2
+    exit 1
+fi
+
+required_hooks=(
+    pre-commit
+    commit-msg
+    pre-push
+    post-merge
+    post-checkout
+    post-commit
+)
+for hook_name in "${required_hooks[@]}"; do
+    if [[ ! -x "$tracked_hooks_dir/$hook_name" ]]; then
+        echo "Expected executable hook at $tracked_hooks_dir/$hook_name" >&2
+        exit 1
+    fi
+done
+
+for support_file in _lib.sh check-pytest-stamp.py pytest_stamp.py; do
+    if [[ ! -r "$tracked_hooks_dir/$support_file" ]]; then
+        echo "Expected readable hook support file at $tracked_hooks_dir/$support_file" >&2
+        exit 1
+    fi
+done
+
 git_common_dir="$(git rev-parse --git-common-dir)"
 if [[ "$git_common_dir" != /* ]]; then
     git_common_dir="$repo_root/$git_common_dir"
 fi
 hooks_dir="$git_common_dir/hooks"
 mkdir -p "$hooks_dir"
-
-tracked_hooks_dir="$repo_root/.githooks"
-if [[ ! -d "$tracked_hooks_dir" ]]; then
-    echo "Tracked hooks directory not found at $tracked_hooks_dir" >&2
-    exit 1
-fi
 
 # 1. Unset core.hooksPath if set to .githooks (leave any other explicit value alone)
 current_hooks_path="$(git config --get core.hooksPath 2>/dev/null || true)"

@@ -66,9 +66,7 @@ def _write_executable(path: Path, text: str) -> None:
 
 
 def _project_python() -> Path:
-    common_dir = Path(
-        _git(REPO_ROOT, "rev-parse", "--git-common-dir").stdout.strip()
-    )
+    common_dir = Path(_git(REPO_ROOT, "rev-parse", "--git-common-dir").stdout.strip())
     if not common_dir.is_absolute():
         common_dir = REPO_ROOT / common_dir
     return common_dir.resolve().parent / ".venv" / "bin" / "python"
@@ -87,14 +85,11 @@ def _fixture_repository(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:
     shutil.copy2(REPO_ROOT / "scripts/install_git_hooks.sh", repo / "scripts/install_git_hooks.sh")
     _write_executable(
         repo / "scripts/pre_commit/project_python.sh",
-        "#!/usr/bin/env bash\n"
-        "set -euo pipefail\n"
-        f'exec "{_project_python()}" "$@"\n',
+        f'#!/usr/bin/env bash\nset -euo pipefail\nexec "{_project_python()}" "$@"\n',
     )
     _write_executable(
         repo / "scripts/guardrails/primary_post_checkout_heal.sh",
-        "#!/usr/bin/env bash\n"
-        'printf "primary-heal\\n" >> "$HOOK_LOG"\n',
+        '#!/usr/bin/env bash\nprintf "primary-heal\\n" >> "$HOOK_LOG"\n',
     )
     (repo / "scripts/guardrails/primary_write_guard.py").write_text(
         "import os\n"
@@ -109,19 +104,19 @@ def _fixture_repository(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:
         "    hooks:\n"
         "      - id: fixture-pre-commit\n"
         "        name: fixture pre-commit\n"
-        "        entry: bash -c 'printf \"pre-commit\\\\n\" >> \"$HOOK_LOG\"'\n"
+        '        entry: bash -c \'printf "pre-commit\\\\n" >> "$HOOK_LOG"\'\n'
         "        language: system\n"
         "        pass_filenames: false\n"
         "        stages: [pre-commit]\n"
         "      - id: fixture-commit-msg\n"
         "        name: fixture commit-msg\n"
-        "        entry: bash -c 'printf \"commit-msg\\\\n\" >> \"$HOOK_LOG\"'\n"
+        '        entry: bash -c \'printf "commit-msg\\\\n" >> "$HOOK_LOG"\'\n'
         "        language: system\n"
         "        pass_filenames: false\n"
         "        stages: [commit-msg]\n"
         "      - id: fixture-pre-push\n"
         "        name: fixture pre-push\n"
-        "        entry: bash -c 'printf \"pre-push:%s\\\\n\" \"$*\" >> \"$HOOK_LOG\"' --\n"
+        '        entry: bash -c \'printf "pre-push:%s\\\\n" "$*" >> "$HOOK_LOG"\' --\n'
         "        language: system\n"
         "        files: ^docs\\.md$\n"
         "        stages: [pre-push]\n",
@@ -223,6 +218,21 @@ def test_installer_refuses_missing_hook_directory(tmp_path):
 
     assert result.returncode == 1
     assert "Tracked hooks directory not found" in result.stderr
+
+
+def test_installer_refuses_an_incomplete_hook_directory(tmp_path):
+    repo, _, env = _fixture_repository(tmp_path)
+    (repo / ".githooks/commit-msg").unlink()
+
+    result = _run(
+        ["bash", "scripts/install_git_hooks.sh"],
+        cwd=repo,
+        env=env,
+        check=False,
+    )
+
+    assert result.returncode == 1
+    assert "Expected executable hook" in result.stderr
 
 
 def test_post_checkout_heals_even_when_lfs_fails(tmp_path):
