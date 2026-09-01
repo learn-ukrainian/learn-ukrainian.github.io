@@ -65,21 +65,31 @@ optimization, a general knowledge corpus, claims about model performance,
 automatic modernization, source-text publication beyond the admitted rights,
 and promotion of model agreement to truth.
 
-## Row identity and release layers
+## Slot, row, and case identity
 
-Assign every pilot slot and every admitted row a deterministic, opaque stable ID
-derived from the V4 version, source-unit identity, evidence/span locator, rule or
-case key, and role. Never derive an ID from provider order, model output, arrival
-time, file position, or a mutable sentence number. A source or case may have
-multiple role-specific records, but their lineage must remain explicit.
+Public pilot slot IDs are a source-free stable series: assign one ID to each
+frozen slot position, `V4-PILOT-SLOT-001` through `V4-PILOT-SLOT-100`. A public
+slot ID contains only the V4 series and its zero-padded position. It must not
+encode a source, text, model, provider, arrival order, or derived label, and it
+stays stable while a slot is unresolved or carries a residual.
+
+After a slot is admitted, derived row and case IDs may bind sources later.
+Derive each opaque ID from the V4 version, its public slot ID, source-unit
+identity/hash, evidence/span locator, rule or case key, and role. Keep the
+lineage from every derived row/case back to its source-free slot. Never derive
+an ID from provider order, model output, arrival time, file position, or a
+mutable sentence number. A source or case may have multiple role-specific
+records, but their lineage must remain explicit.
 
 Use append-only overlays:
 
 - **Silver** is a reproducible, schema-valid, source-traceable row whose
   uncertainty and review state are explicit. It may be produced without a human
   decision when the deterministic source, operation rights, provenance, split,
-  and structural checks pass. Human review is optional for silver and improves
-  evidence; it is never implied by a model proposal.
+  and structural checks pass. Silver does not require universal human and model
+  agreement. Human review is optional for silver and improves evidence; a model
+  hypothesis, proposal, vote, confidence, or agreement cannot independently
+  admit a row to silver.
 - **Gold** is an overlay on the same stable row ID, not a rewrite of silver. It
   requires a source-qualified human adjudication tied to claim-appropriate cited
   evidence, an adjudication receipt, and independent rights, split, provenance,
@@ -88,9 +98,10 @@ Use append-only overlays:
 
 Model proposals, votes, rationales, and unresolved decisions are separate from
 both target layers. Exact agreement is recorded as
-`MODEL_AGREEMENT_QUARANTINED_NOT_GOLD`; agreement, majority, confidence, or
-attestation can never promote a row to gold. A silver row must not be called a
-gold target or used to claim `DATASET_READY`.
+`MODEL_AGREEMENT_QUARANTINED_NOT_GOLD`; hypotheses, agreement, majority,
+confidence, or attestation can never independently make a row gold. A silver
+row must not be called a gold target or used to claim a stronger release state.
+Model hypotheses cannot independently admit silver or make gold.
 
 ## Functional ownership
 
@@ -123,6 +134,39 @@ required by `$drive-epic`; record the selected route, alternatives, and reason.
 If live routing is unavailable, treat it as unknown and continue only with safe
 deterministic work whose route is not material. Never invent an available seat,
 quota, health state, or reviewer identity.
+
+## A0–A13 stage ownership
+
+Use this exact ownership map in every issue packet and handoff:
+
+| Stage | Accountable ownership | Boundary |
+| --- | --- | --- |
+| `A0` | Accountable driver | Epic scope, order, integration, gates, residuals, and disposition. |
+| `A1` | VPS custody/capacity | Remote residency, custody controls, byte/inode measurements, and high-water reserve. |
+| `A2` | Source inventory/admission/rights by operation | Unit-complete inventory, admission decisions, and the per-operation rights ledger. |
+| `A3` | Heldout/source-family split | Source-family grouping, held-out seal, leakage firewall, and access boundary. |
+| `A4` | Deterministic extraction | Reproducible source-unit/span extraction with immutable input and output hashes. |
+| `A5` | Expression-free evidence enrichment | Evidence metadata and annotations without emitting protected source expressions. |
+| `A6` | Blind arena | Label-blind, author-blind proposals and leave-one-out scoring packets. |
+| `A7` | Independent original-row factory | Source-derived original rows/cases with independent construction and lineage. |
+| `A8` | Admission/assembly | Admitted slice assembly, schema checks, residual attachment, and append-only views. |
+| `A9` | Evaluation/scorer/manifest/consumer reproduction | Held-out scoring, manifest/hash checks, and consumer view rebuild. |
+| `A10` | Pilot review with independent Ukrainian + exact-head CF gates | Ukrainian-language pilot review plus exact-head cross-family review gates. |
+| `A11` | Silver release | Typed silver receipt and release of rows that pass deterministic admission checks. |
+| `A12` | Later gold overlays | Source-qualified human adjudication overlays on stable silver row IDs. |
+| `A13` | Cleanup | Approved temporary-output cleanup and receipt-backed closeout after disposition. |
+
+There is one accountable lead per stage, and producers and reviewers are
+separated. A substituted lane inherits the stage boundary but cannot collapse
+the producer/reviewer separation or claim another stage's outcome.
+
+The exact ownership sequence is: A0 accountable driver; A1 VPS custody/capacity;
+A2 source inventory/admission/rights by operation; A3 heldout/source-family
+split; A4 deterministic extraction; A5 expression-free evidence enrichment; A6
+blind arena; A7 independent original-row factory; A8 admission/assembly; A9
+evaluation/scorer/manifest/consumer reproduction; A10 pilot review with
+independent Ukrainian + exact-head CF gates; A11 silver release; A12 later gold
+overlays; A13 cleanup.
 
 ## Independence and no-self-vote contract
 
@@ -171,33 +215,59 @@ measured fields:
 
 ```text
 measured_at
+total_bytes, used_bytes
 free_bytes, free_inodes
 source_input_bytes
 persistent_index_and_cache_bytes
 retained_output_bytes
 active_worktree_bytes
+active_worktree_growth_bytes
 peak_staging_bytes
 pending_output_bytes
 recovery_copy_bytes
+incremental_peak_bytes, incremental_peak_inodes
 policy_reserve_bytes
+policy_reserve_inodes
 required_bytes, required_inodes
 parallelism_cap
 measurement_method
 ```
 
-Compute the forecast as:
+Treat `total_bytes`, `used_bytes`, and `free_bytes` as one measured filesystem
+snapshot (`total_bytes = used_bytes + free_bytes`, within the measurement
+method's rounding). Existing source inputs, indexes/caches, retained outputs,
+and active worktrees are already resident in `used_bytes` and are reflected in
+`free_bytes`; retain their individual fields for reconciliation, but do not add
+them again to the launch requirement. In particular, do not double-count
+retained bytes already included in used/free.
+
+Compute only the new work's high-water forecast as:
 
 ```text
-persistent = source_input + indexes/caches + retained_outputs + worktrees
-peak       = persistent + peak_staging + pending_output + recovery_copy
-required   = peak + policy_reserve
+incremental_peak_bytes = active_worktree_growth_bytes + peak_staging_bytes
+                        + pending_output_bytes + recovery_copy_bytes
+required_bytes         = incremental_peak_bytes + policy_reserve_bytes
 ```
 
-The launch inequality is `free_bytes >= required_bytes` and
-`free_inodes >= required_inodes`, with the active operational reserve preserved.
-The reserve and parallelism cap come from live capacity policy and measurement,
-not a hard-coded quota. If any term is unknown, the forecast is not proven and
-scale work does not launch.
+The launch inequalities are, equivalently:
+
+```text
+free_bytes  >= incremental_peak_bytes + policy_reserve_bytes
+total_bytes >= used_bytes + incremental_peak_bytes + policy_reserve_bytes
+```
+
+In short: `free >= incremental peak + reserve`, or `total >= used +
+incremental peak + reserve`.
+
+and `free_inodes >= incremental_peak_inodes + policy_reserve_inodes`, with the
+active operational reserve preserved. The reserve and parallelism cap come from
+live capacity policy and measurement, not a hard-coded quota. If any term is
+unknown, the forecast is not proven and scale work does not launch.
+
+Do not add `retained_output_bytes`, `source_input_bytes`, or
+`persistent_index_and_cache_bytes` to `incremental_peak_bytes` when those bytes
+are already included in the measured `used_bytes`/`free_bytes` snapshot. If a
+planned artifact is not yet resident, count it once as an incremental term.
 
 Measure high-water usage during the 100-row pilot by stratum and operation.
 For scale, extrapolate by homogeneous source/cell class and retain the largest
@@ -206,6 +276,31 @@ do not multiply one convenient average across unlike sources. Re-measure after
 each new persistent artifact or concurrency change. If capacity is insufficient,
 reduce concurrency, finish/reclaim approved temporary outputs, or route to an
 already-approved remote lane. Do not delete source evidence or weaken the floor.
+
+## Split readiness gates
+
+These are gate labels, not release states. Evaluate them in order and attach a
+typed receipt for each one:
+
+- `READY_TO_DRIVE` requires the V4 contract and validator to pass on **main and
+  VPS**, verified VPS reachability, measured capacity for the 100-row pilot,
+  the frozen public slot contract, and the complete functional role map.
+- After `READY_TO_DRIVE`, the `A1/A2` custody-and-inventory prerequisite must
+  pass: A1 proves VPS custody/capacity and A2 proves source inventory, admission,
+  and rights by operation.
+- `PRE_BUILDER` requires the admitted slice plus a sealed A3 held-out/source-
+  family split and its access firewall.
+- `PRE_SCALE` requires pilot high-water measurements, full-scale capacity
+  evidence, and source-inventory reconciliation against the admitted slice.
+
+If a gate is missing, dispatch its named prerequisite and keep the affected
+rows/cells visible; a missing prerequisite is not a global block. Use
+`BLOCKED_WITH_RESIDUALS` only when a named global stop condition remains after
+the safe prerequisite work is dispatched.
+
+The gate sequence is `READY_TO_DRIVE` → A1/A2 custody/inventory →
+`PRE_BUILDER` → `PRE_SCALE`; do not skip a missing prerequisite or turn it into
+a global block.
 
 ## Driver preflight
 
@@ -249,21 +344,28 @@ Never let a waiting review or capacity check erase the next issue disposition.
 
 ## Completion and residual behavior
 
-`SILVER` and `GOLD` describe row overlays, not epic release states. Use only this
-release vocabulary:
+`SILVER` and `GOLD` describe row overlays, not epic release states. Use only
+this V4 release vocabulary:
 
-- `INVENTORIED`: source universe is disposition-complete; blocked and unresolved
-  counts remain explicit.
-- `PILOT_VALIDATED`: the source-qualified pilot, split firewall, and held-out
-  protection/integrity gates pass. This does not mean the full dataset is ready.
-- `DATASET_PARTIAL`: reproducible rows exist, but a required source/cell, right,
-  adjudication, or integrity condition remains unresolved or blocked.
-- `DATASET_READY`: the frozen required denominator is covered with no unresolved
-  or blocked required cells, no unknown required rights, no exclusion gaming,
-  every target is human-adjudicated and source-traceable, every view is
-  split-safe/reproducible, and consumer reproduction passes.
-- `BLOCKED`: a named global stop condition prevents safe progress.
-- `TRAINING_VALIDATED`: outside this epic and never a completion claim here.
+- `ARENA_SLICE_READY`: the frozen source-free slot slice, role map, and
+  label-blind arena packet are ready; this is not a truth or training claim.
+- `EVAL_ARTIFACT_READY`: the independent held-out partition, scorer, manifest,
+  and integrity/reproduction artifact are sealed and ready for evaluation.
+- `TRAINING_READY_SILVER`: deterministic source, rights-by-operation,
+  provenance, split, schema, and structural checks admit a reproducible silver
+  view. It does not require universal human and model agreement; hypotheses,
+  proposals, votes, confidence, and agreement cannot independently admit silver.
+- `TRAINING_READY_GOLD_SUBSET`: only the explicitly identified subset with
+  source-qualified human adjudication, cited evidence, independent rights,
+  split, lineage, view, and execution-authorization gates is eligible for a
+  gold training view; all other rows remain silver or residual.
+- `GOLD_UPGRADE_READY`: stable silver rows have a bounded, source-qualified
+  later-adjudication path and append-only overlay plan; this state does not
+  assert that a gold overlay has been granted.
+- `BLOCKED_WITH_RESIDUALS`: a named global stop condition remains after safe
+  prerequisite dispatch; typed residuals stay denominator-visible with an owner
+  and next action. A missing lane-local gate uses its prerequisite dispatch,
+  not this state.
 
 Every residual record contains a stable row/cell or source-unit ID, stage,
 reason code, owner role, next action, retryability, and latest evidence digest;
