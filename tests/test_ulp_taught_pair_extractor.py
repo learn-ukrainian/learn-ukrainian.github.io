@@ -10,7 +10,6 @@ import yaml
 
 from scripts.lexicon import ulp_taught_pair_extractor as extractor
 from scripts.lexicon.ulp_taught_pair_extractor import (
-    TaughtPair,
     extract_taught_pairs_from_text,
     format_markdown_tables,
     measure_corpus_intake_ulp,
@@ -50,11 +49,7 @@ def test_extract_key_vocabulary_table_pairs() -> None:
 
 
 def test_extract_inline_dash_pairs() -> None:
-    sample_text = (
-        "Чудо́во! — Great! Wonderful!\n"
-        "Ду́же до́бре! — Very good!\n"
-        "До́бре. — Fine.\n"
-    )
+    sample_text = "Чудо́во! — Great! Wonderful!\nДу́же до́бре! — Very good!\nДо́бре. — Fine.\n"
     pairs = extract_taught_pairs_from_text(sample_text, source_file="ulp-1-00-lesson-notes", season=1)
     assert len(pairs) == 3
     assert pairs[0].ukrainian_headword == "Чудо́во!"

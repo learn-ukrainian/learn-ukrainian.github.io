@@ -19,7 +19,7 @@ import argparse
 import json
 import re
 import sys
-from collections.abc import Iterable, Mapping, Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -51,8 +51,6 @@ from scripts.lexicon.build_data_manifest import _lemma_key
 from scripts.lexicon.heritage_classifier import classify_lemma
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 from scripts.lexicon.ohoiko_paired_headword_split import (
-    classify_split_leg,
-    is_single_orthographic_word,
     resolve_leg_lemma,
     split_paired_headword,
     strip_trailing_parentheticals,
@@ -61,12 +59,9 @@ from scripts.verification.vesum import verify_word
 
 DEFAULT_MANIFEST = _resolve_repo_path(PROJECT_ROOT / "site/src/data/lexicon-manifest.json")
 DEFAULT_CURATED_INVENTORY = _resolve_repo_path(
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml"
+    PROJECT_ROOT / "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml"
 )
-DEFAULT_INTAKE_DECISIONS_DIR = _resolve_repo_path(
-    PROJECT_ROOT / "data/lexicon/source-inventory-review-decisions"
-)
+DEFAULT_INTAKE_DECISIONS_DIR = _resolve_repo_path(PROJECT_ROOT / "data/lexicon/source-inventory-review-decisions")
 DEFAULT_SOURCES_DB = _resolve_repo_path(PROJECT_ROOT / "data" / "sources.db")
 
 SEPARATORS = ("—", "–", "―", " - ", " = ", ": ")
@@ -182,11 +177,7 @@ def extract_taught_pairs_from_text(
 def load_atlas_lemma_keys(manifest_path: Path = DEFAULT_MANIFEST) -> set[str]:
     manifest_file = _resolve_repo_path(manifest_path)
     data = json.loads(manifest_file.read_text(encoding="utf-8"))
-    return {
-        _lemma_key(str(entry.get("lemma") or ""))
-        for entry in data.get("entries", [])
-        if isinstance(entry, dict)
-    }
+    return {_lemma_key(str(entry.get("lemma") or "")) for entry in data.get("entries", []) if isinstance(entry, dict)}
 
 
 def measure_curated_ulp_lists(
@@ -257,11 +248,7 @@ def measure_corpus_intake_ulp(
         doc = yaml.safe_load(f.read_text(encoding="utf-8"))
         all_decisions.extend(doc.get("decisions", []))
 
-    ulp_decisions = [
-        d
-        for d in all_decisions
-        if "ulp-" in str(d.get("source_inventory", {}).get("source_id", ""))
-    ]
+    ulp_decisions = [d for d in all_decisions if "ulp-" in str(d.get("source_inventory", {}).get("source_id", ""))]
 
     per_season = {}
     for s in range(1, 7):
@@ -286,7 +273,11 @@ def measure_corpus_intake_ulp(
                 else:
                     hs = classify_lemma(eff)
                     cl = str(hs.get("classification") or "")
-                    if hs.get("is_russianism") or hs.get("russian_shadow") or cl in ("russianism", "calque", "surzhyk", "sovietism"):
+                    if (
+                        hs.get("is_russianism")
+                        or hs.get("russian_shadow")
+                        or cl in ("russianism", "calque", "surzhyk", "sovietism")
+                    ):
                         heritage_hold += 1
                     else:
                         vesum_ok_missing += 1
@@ -369,7 +360,11 @@ def measure_taught_pairs_from_sources(
                 else:
                     hs = classify_lemma(eff)
                     cl = str(hs.get("classification") or "")
-                    if hs.get("is_russianism") or hs.get("russian_shadow") or cl in ("russianism", "calque", "surzhyk", "sovietism"):
+                    if (
+                        hs.get("is_russianism")
+                        or hs.get("russian_shadow")
+                        or cl in ("russianism", "calque", "surzhyk", "sovietism")
+                    ):
                         heritage_hold.append(eff)
                     else:
                         vesum_ok_missing.append(eff)
