@@ -105,6 +105,7 @@ def test_v4_pilot_slot_manifest_binds_the_frozen_non_goals() -> None:
         "no_dataset_or_model_performance_claims_without_release_gates",
     }
 
+
 def test_v4_pilot_slot_manifest_has_required_roles_gates_and_no_private_payload() -> None:
     manifest = _load(MANIFEST)
     keys = _all_keys(manifest)
