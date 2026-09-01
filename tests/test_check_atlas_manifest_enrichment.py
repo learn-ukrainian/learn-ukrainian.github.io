@@ -84,8 +84,10 @@ def test_gate_runs_in_minimal_env_without_third_party_deps(tmp_path: Path) -> No
     """
     import subprocess
 
+    from tests.project_python import project_python
+
     root = Path(__file__).resolve().parents[1]
-    venv_python = root / ".venv" / "bin" / "python"
+    venv_python = project_python()
     manifest = _write(tmp_path / "m.json", enrichment_generated=True, n_total=4, n_enriched=4)
     code = (
         "import builtins, sys\n"

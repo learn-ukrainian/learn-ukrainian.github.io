@@ -8,8 +8,10 @@ from pathlib import Path
 
 import pytest
 
+from tests.project_python import project_python
+
 ROOT = Path(__file__).resolve().parents[1]
-PYTHON = str(ROOT / ".venv" / "bin" / "python")
+PYTHON = str(project_python())
 DRIVER = ROOT / "scripts" / "lexicon" / "runner" / "enrich_offline_20k.py"
 FIXTURE = ROOT / "tests" / "fixtures" / "lexicon" / "runner_pr1"
 MAX_FIXTURE_LEMMAS = 50
