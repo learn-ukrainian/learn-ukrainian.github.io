@@ -410,22 +410,22 @@ launcher_prepare_driver_identity() {
 }
 
 launcher_import_rollover_bundle() {
-  local stream helper_root python script output rc
+  local stream helper_root py script output rc
   stream="$(launcher_selector_stream "$LC_EPIC" 2>/dev/null || true)"
   case "$stream" in
     epic:*) ;;
     *) return 0 ;;
   esac
   helper_root="${LC_DURABLE_HELPER_ROOT:-$LC_ROOT}"
-  python="$helper_root/.venv/bin/python"
+  py="$helper_root/.venv/bin/python"
   script="$helper_root/scripts/orchestration/thread_handoff.py"
-  if [ ! -x "$python" ] || [ ! -f "$script" ]; then
+  if [ ! -x "$py" ] || [ ! -f "$script" ]; then
     printf 'WARNING: rollover bundle pre-lease import unavailable; continuing fail-open (helper=%s).\n' "$helper_root" >&2
     return 0
   fi
   output=""
   rc=0
-  output="$("$python" "$script" \
+  output="$("$py" "$script" \
     --repo-root "$helper_root" \
     --monitor-base-url "${LU_MONITOR_LOOPBACK:-http://127.0.0.1:8765}" \
     import-bundle --from-api "$stream" --stream "$stream" 2>&1)" || rc=$?
@@ -643,6 +643,45 @@ launcher_exec_command() {
   return "$provider_rc"
 }
 
+launcher_forward_args_have_agent() {
+  local arg
+  for arg in "${LC_FORWARD_ARGS[@]}"; do
+    case "$arg" in
+      --agent|--agent=*) return 0 ;;
+    esac
+  done
+  return 1
+}
+
+launcher_inject_driver_agent() {
+  # Claude Code selects its system prompt from --agent. The project default
+  # (.claude/settings.json "agent") is the main orchestrator, which is the wrong
+  # prompt for every non-curriculum driver lane, so resolve the lane's
+  # driver_agent_type from scripts/config/area_assignments.yaml and inject it
+  # unless the caller chose an agent explicitly.
+  [ "$LC_PROVIDER" = "claude" ] || return 0
+  [ -n "${LC_EPIC:-}" ] || return 0
+  if launcher_forward_args_have_agent; then
+    return 0
+  fi
+  local py="$LC_SESSION_ROOT/.venv/bin/python"
+  local agent_type=""
+  if [ ! -x "$py" ]; then
+    # Linked worktrees usually carry no venv; the durable helper root does.
+    py="${LC_DURABLE_HELPER_ROOT:-$LC_SESSION_ROOT}/.venv/bin/python"
+  fi
+  [ -x "$py" ] || return 0
+  agent_type="$(cd "$LC_SESSION_ROOT" && "$py" -m scripts.orchestration.driver_agent_type --lane "$LC_EPIC" 2>/dev/null || true)"
+  if [ -z "$agent_type" ]; then
+    printf 'launcher: no driver_agent_type for lane %s in area_assignments.yaml; keeping the settings default agent\n' "$LC_EPIC" >&2
+    return 0
+  fi
+  LC_FORWARD_ARGS=(--agent "$agent_type" "${LC_FORWARD_ARGS[@]}")
+  if [ "$LC_DRY_RUN" = "1" ]; then
+    printf 'launcher: would select agent %s for lane %s\n' "$agent_type" "$LC_EPIC"
+  fi
+}
+
 launcher_bind_drive_epic() {
   local fleet_clause
   if [ -r "$LC_ROOT/scripts/lib/fleet_comms_cold_start.sh" ]; then
@@ -659,6 +698,7 @@ launcher_bind_drive_epic() {
     fleet_clause='Fleet-comms: run plane-status; cross-family review is direct ask-<lane> per the skill (§6) — verdict posted on the PR, merge when CI green, sealed formal CF is retired; authority mode is durable state and ACP is provider transport.'
   fi
   LC_DRIVER_PROMPT="Load agents_extensions/shared/skills/drive-epic/SKILL.md before acting. The launcher already claimed the ${LC_EPIC} lease and ran its provider canary; do not claim, renew, or reopen the lease. ${fleet_clause} Consult the Work API projection (http://127.0.0.1:8765/api/work/v1/projection) for orientation and treat grok-bot QA-observer issues as a queue input — the skill covers both. Obtain independent cross-family review."
+  launcher_inject_driver_agent
   LC_FORWARD_ARGS+=("$LC_DRIVER_PROMPT")
   if [ "$LC_DRY_RUN" = "1" ]; then
     printf 'launcher: would bind drive-epic after lease and provider canary\n'

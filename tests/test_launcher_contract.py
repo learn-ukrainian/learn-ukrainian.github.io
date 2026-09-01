@@ -610,3 +610,16 @@ def test_retired_names_are_absent_from_tracked_content() -> None:
             path = REPO / relative
             if path.is_file() and path.suffix not in {".png", ".jpg", ".jpeg", ".gif", ".pdf"}:
                 assert retired not in path.read_text(encoding="utf-8", errors="ignore"), relative
+
+
+def test_claude_driver_injects_lane_agent_type() -> None:
+    """--epic <lane> selects the lane's driver_agent_type from area_assignments.yaml (#F1, prompt audit)."""
+    result = run_launcher("start-claude-driver.sh", "--epic", "infra")
+    assert result.returncode == 0, result.stderr
+    assert "launcher: would select agent infra-orchestrator for lane infra" in result.stdout
+    assert "would exec claude --agent infra-orchestrator " in result.stdout
+
+    explicit = run_launcher("start-claude-driver.sh", "--epic", "infra", "--agent", "curriculum-orchestrator")
+    assert explicit.returncode == 0, explicit.stderr
+    assert "would select agent" not in explicit.stdout
+    assert "would exec claude --agent curriculum-orchestrator " in explicit.stdout
