@@ -232,8 +232,16 @@ def test_workflow_is_scheduled_manual_serial_and_minimally_scoped() -> None:
     workflow = yaml.safe_load(_WORKFLOW.read_text(encoding="utf-8"))
     triggers = workflow.get("on", workflow.get(True))
 
-    assert set(triggers) == {"schedule", "workflow_dispatch"}
+    # workflow_run added as the event-driven fallback for the unreliable cron:
+    # arm right after a CI run completes (success-only, gated at the job level).
+    assert set(triggers) == {"schedule", "workflow_dispatch", "workflow_run"}
     assert triggers["schedule"] == [{"cron": "7,22,37,52 * * * *"}]
+    assert triggers["workflow_run"] == {"workflows": ["CI"], "types": ["completed"]}
+    arm_job = workflow["jobs"]["arm"]
+    assert (
+        arm_job["if"]
+        == "github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'"
+    )
     assert workflow["permissions"] == {
         "actions": "write",
         "pull-requests": "write",
