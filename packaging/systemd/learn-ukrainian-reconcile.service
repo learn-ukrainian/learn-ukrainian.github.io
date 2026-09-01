@@ -1,0 +1,12 @@
+[Unit]
+Description=Learn Ukrainian scheduled reconciliation sweep (report-only default)
+After=network.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=@REPO_ROOT@
+Environment=PYTHONUNBUFFERED=1
+ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.reconcile_sweep
+
+[Install]
+WantedBy=default.target

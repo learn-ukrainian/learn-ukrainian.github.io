@@ -155,7 +155,7 @@ def test_fetch_failure_degrades_gracefully(tmp_path: Path, monkeypatch: pytest.M
         lambda apply=False: {"roots_reaped": 0, "bytes_freed": 0, "errors": 0, "candidates": 0, "skipped_live": 0},
     )
 
-    res = scheduled_worktree_cleanup._repo_result_unlocked(repo, apply=False)
+    res = scheduled_worktree_cleanup._repo_result_unlocked(repo, apply=True)
     assert any("fetch failed" in err for err in res["errors"])
     assert res["adopted"] == []
     assert "adoption skipped: adoption probe failed" in res["errors"]
@@ -385,9 +385,7 @@ def test_terminal_task_reaped_with_none_active_ids(tmp_path: Path) -> None:
     assert "settled dispatch task-id=task-789" in reason
 
 
-def test_create_review_temp_root_defaults_to_scratch_root(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_create_review_temp_root_defaults_to_scratch_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """#7164: create_review_temp_root without explicit dir defaults to ensure_scratch_root()."""
     scratch_root = tmp_path / "fleet-scratch"
     scratch_root.mkdir()
@@ -401,4 +399,3 @@ def test_create_review_temp_root_defaults_to_scratch_root(
         assert (root / REVIEW_TEMP_ROOT_MANIFEST_NAME).is_file()
     finally:
         isolation.remove_review_temp_tree(root)
-

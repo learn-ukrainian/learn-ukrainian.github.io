@@ -157,13 +157,7 @@ def normalize_claim(raw: str) -> PathClaim:
     # Reject absolute / parent escapes / drive-qualified paths as unknown
     # (not comparable safely as repo-relative claims).
     drive_qualified = len(norm) >= 2 and norm[0].isalpha() and norm[1] == ":"
-    if (
-        norm.startswith("/")
-        or norm.startswith("../")
-        or norm == ".."
-        or "/../" in f"/{norm}/"
-        or drive_qualified
-    ):
+    if norm.startswith("/") or norm.startswith("../") or norm == ".." or "/../" in f"/{norm}/" or drive_qualified:
         return PathClaim(raw=raw, kind=ClaimKind.UNKNOWN, norm=text)
 
     if is_double_star or is_subtree_slash:
@@ -276,11 +270,7 @@ def refusal_message(
         shown = ", ".join(
             f"{labels[key]} on "
             + ", ".join(sanitize_for_display(p) for p in by_peer[key][:2])
-            + (
-                f" (+{len(by_peer[key]) - 2} more paths)"
-                if len(by_peer[key]) > 2
-                else ""
-            )
+            + (f" (+{len(by_peer[key]) - 2} more paths)" if len(by_peer[key]) > 2 else "")
             for key in shown_keys
         )
         more = f" (+{len(by_peer) - 3} more)" if len(by_peer) > 3 else ""
@@ -288,14 +278,8 @@ def refusal_message(
 
     parts: list[str] = []
     if self_unprovable:
-        declared = (
-            ", ".join(repr(sanitize_for_display(c.raw)) for c in unknown[:3])
-            if unknown
-            else "none declared"
-        )
-        parts.append(
-            f"this task declared no comparable --research-owned-path ({declared})"
-        )
+        declared = ", ".join(repr(sanitize_for_display(c.raw)) for c in unknown[:3]) if unknown else "none declared"
+        parts.append(f"this task declared no comparable --research-owned-path ({declared})")
     distinct_peers = _dedupe_peers(unprovable_peers)
     if distinct_peers:
         peers = ", ".join(_peer_label(p) for p in distinct_peers[:3])
@@ -321,11 +305,7 @@ def claims_conflict(a: PathClaim, b: PathClaim) -> bool:
     if a.kind == ClaimKind.SUBTREE and b.kind == ClaimKind.FILE:
         return b.norm == a.norm or b.norm.startswith(a.norm + "/")
     # subtree/subtree
-    return (
-        a.norm == b.norm
-        or a.norm.startswith(b.norm + "/")
-        or b.norm.startswith(a.norm + "/")
-    )
+    return a.norm == b.norm or a.norm.startswith(b.norm + "/") or b.norm.startswith(a.norm + "/")
 
 
 def _pid_alive(pid: int) -> bool:
@@ -379,9 +359,7 @@ def _task_still_active(
                 state_pid = int(raw_pid)
 
     clock = time.time() if now is None else now
-    in_grace = (
-        created_at is not None and (clock - float(created_at)) <= ADMISSION_PID_GRACE_S
-    )
+    in_grace = created_at is not None and (clock - float(created_at)) <= ADMISSION_PID_GRACE_S
 
     # Within grace only: live ledger PID holds claim (admission→state-write race).
     if in_grace and pid is not None and pid > 0 and _pid_alive(pid):
@@ -416,62 +394,58 @@ class OwnershipLedger:
         mode: GuardMode | None = None,
     ) -> None:
         self.path = Path(path) if path is not None else default_ledger_path()
-        self.task_state_dir = (
-            Path(task_state_dir) if task_state_dir is not None else default_task_state_dir()
-        )
+        self.task_state_dir = Path(task_state_dir) if task_state_dir is not None else default_task_state_dir()
         # Default follows env (REFUSE after #5645 soak). Explicit mode still wins.
         self.mode = mode if mode is not None else env_guard_mode()
         self.path.parent.mkdir(parents=True, exist_ok=True)
 
-    def _connect(self) -> sqlite3.Connection:
+    def _connect(self, *, read_only: bool = False) -> sqlite3.Connection:
         conn = cp_connect(
             StoreId.WRITE_OWNERSHIP,
             path=self.path,
-            read_only=False,
+            read_only=read_only,
             timeout=30.0,
             isolation_level=None,
         )
         conn.row_factory = sqlite3.Row
-        conn.execute("PRAGMA journal_mode=WAL")
-        conn.execute("PRAGMA busy_timeout=30000")
-        conn.execute(
-            """
-            CREATE TABLE IF NOT EXISTS write_claims (
-                task_id TEXT NOT NULL,
-                claim_json TEXT NOT NULL,
-                pid INTEGER,
-                created_at REAL NOT NULL,
-                PRIMARY KEY (task_id, claim_json)
+        if not read_only:
+            conn.execute("PRAGMA journal_mode=WAL")
+            conn.execute("PRAGMA busy_timeout=30000")
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS write_claims (
+                    task_id TEXT NOT NULL,
+                    claim_json TEXT NOT NULL,
+                    pid INTEGER,
+                    created_at REAL NOT NULL,
+                    PRIMARY KEY (task_id, claim_json)
+                )
+                """
             )
-            """
-        )
-        conn.execute(
-            """
-            CREATE TABLE IF NOT EXISTS admission_events (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                ts REAL NOT NULL,
-                task_id TEXT NOT NULL,
-                event TEXT NOT NULL,
-                payload TEXT NOT NULL
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS admission_events (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    ts REAL NOT NULL,
+                    task_id TEXT NOT NULL,
+                    event TEXT NOT NULL,
+                    payload TEXT NOT NULL
+                )
+                """
             )
-            """
-        )
         return conn
 
     def _reconcile_stale(self, conn: sqlite3.Connection) -> list[str]:
         released: list[str] = []
         rows = conn.execute(
-            "SELECT task_id, pid, MIN(created_at) AS created_at "
-            "FROM write_claims GROUP BY task_id, pid"
+            "SELECT task_id, pid, MIN(created_at) AS created_at FROM write_claims GROUP BY task_id, pid"
         ).fetchall()
         for row in rows:
             task_id = str(row["task_id"])
             pid = row["pid"]
             pid_i = int(pid) if pid is not None else None
             created = float(row["created_at"]) if row["created_at"] is not None else None
-            if not _task_still_active(
-                task_id, pid_i, self.task_state_dir, created_at=created
-            ):
+            if not _task_still_active(task_id, pid_i, self.task_state_dir, created_at=created):
                 conn.execute("DELETE FROM write_claims WHERE task_id = ?", (task_id,))
                 released.append(task_id)
         return released
@@ -528,9 +502,7 @@ class OwnershipLedger:
         concrete = [c for c in claims if c.kind != ClaimKind.UNKNOWN]
         # No declared paths still participate in the ledger when peers are active
         # (cannot prove disjointness — Fable solo-admit only when truly alone).
-        no_claim_sentinel = PathClaim(
-            raw="*", kind=ClaimKind.UNKNOWN, norm="*"
-        )
+        no_claim_sentinel = PathClaim(raw="*", kind=ClaimKind.UNKNOWN, norm="*")
 
         with self._connect() as conn:
             conn.execute("BEGIN IMMEDIATE")
@@ -557,8 +529,7 @@ class OwnershipLedger:
                     }
                     if self.mode == GuardMode.REFUSE:
                         conn.execute(
-                            "INSERT INTO admission_events (ts, task_id, event, payload) "
-                            "VALUES (?,?,?,?)",
+                            "INSERT INTO admission_events (ts, task_id, event, payload) VALUES (?,?,?,?)",
                             (
                                 time.time(),
                                 task_id,
@@ -571,9 +542,7 @@ class OwnershipLedger:
                             admitted=False,
                             mode=self.mode,
                             would_refuse=True,
-                            reason=(
-                                f"task_id already admitted by live pid={other_pid} (REFUSE)"
-                            ),
+                            reason=(f"task_id already admitted by live pid={other_pid} (REFUSE)"),
                             conflicts=[
                                 {
                                     "other_task_id": task_id,
@@ -584,8 +553,7 @@ class OwnershipLedger:
                         )
                     # WARN: keep existing claim; do not replace; admit with would_refuse
                     conn.execute(
-                        "INSERT INTO admission_events (ts, task_id, event, payload) "
-                        "VALUES (?,?,?,?)",
+                        "INSERT INTO admission_events (ts, task_id, event, payload) VALUES (?,?,?,?)",
                         (
                             time.time(),
                             task_id,
@@ -733,9 +701,7 @@ class OwnershipLedger:
             conn.execute("COMMIT")
 
             if conflicts or unprovable:
-                reason = (
-                    f"would-refuse recorded ({event_name}); admitted under {self.mode.value}"
-                )
+                reason = f"would-refuse recorded ({event_name}); admitted under {self.mode.value}"
             elif not claims:
                 reason = "no owned-path claims; solo admit with sentinel reservation"
             else:
@@ -807,6 +773,4 @@ def update_write_claim_pid(
     task_state_dir: Path | None = None,
 ) -> None:
     """Public helper: bind claim rows to the detached worker PID after Popen."""
-    OwnershipLedger(ledger_path, task_state_dir=task_state_dir).update_claim_pid(
-        task_id, new_pid
-    )
+    OwnershipLedger(ledger_path, task_state_dir=task_state_dir).update_claim_pid(task_id, new_pid)

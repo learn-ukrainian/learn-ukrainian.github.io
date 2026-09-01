@@ -22,9 +22,7 @@ def _git_env() -> dict[str, str]:
     return {
         key: value
         for key, value in os.environ.items()
-        if not key.startswith("GIT_")
-        and not key.startswith("PRE_COMMIT")
-        and key != "AGENT_NO_MERGE"
+        if not key.startswith("GIT_") and not key.startswith("PRE_COMMIT") and key != "AGENT_NO_MERGE"
     }
 
 
@@ -195,9 +193,7 @@ def test_drop_never_removes_canonical_main(tmp_path: Path) -> None:
     assert fetch_refspecs.canonical_main_refspec() in _fetch_refspecs(repo)
 
 
-def test_origin_head_delete_also_drops_matching_refspec(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_origin_head_delete_also_drops_matching_refspec(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = _narrow_clone(tmp_path)
     branch = "codex/merged-origin"
     _git(repo, "branch", branch, "main")
@@ -246,28 +242,18 @@ def test_dry_run_reconcile_does_not_write(tmp_path: Path) -> None:
     assert _fetch_refspecs(repo) == before
 
 
-def test_scheduled_hygiene_heals_stale_refspec_before_fetch(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_scheduled_hygiene_heals_stale_refspec_before_fetch(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = _narrow_clone(tmp_path)
     spec = _add_stale_refspec(repo, "kimi/infra-7080-audit-dashboard-r2")
-    monkeypatch.setattr(
-        cleanup, "_worktree_prune", lambda _repo, *, apply: {"ok": True}
-    )
+    monkeypatch.setattr(cleanup, "_worktree_prune", lambda _repo, *, apply: {"ok": True})
     monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
     monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: [])
-    monkeypatch.setattr(
-        cleanup.reap_worktrees, "adopt_dispatch_worktrees", lambda _repo: []
-    )
+    monkeypatch.setattr(cleanup.reap_worktrees, "adopt_dispatch_worktrees", lambda _repo: [])
     monkeypatch.setattr(cleanup, "cleanup_gone_local_branches", lambda *_a, **_k: [])
     monkeypatch.setattr(cleanup, "cleanup_stale_origin_branches", lambda *_a, **_k: [])
-    monkeypatch.setattr(
-        cleanup, "cleanup_untracked_local_branches", lambda *_a, **_k: []
-    )
+    monkeypatch.setattr(cleanup, "cleanup_untracked_local_branches", lambda *_a, **_k: [])
     monkeypatch.setattr(cleanup, "find_orphaned_worktree_directories", lambda _repo: [])
-    monkeypatch.setattr(
-        cleanup, "_git_maintenance", lambda _repo, *, apply: {"ok": True}
-    )
+    monkeypatch.setattr(cleanup, "_git_maintenance", lambda _repo, *, apply: {"ok": True})
     monkeypatch.setattr(cleanup, "sweep_review_temp_orphans", lambda: {"errors": 0})
     monkeypatch.setattr(
         cleanup,
@@ -281,7 +267,7 @@ def test_scheduled_hygiene_heals_stale_refspec_before_fetch(
         },
     )
 
-    result = cleanup._repo_result(repo, apply=False)
+    result = cleanup._repo_result(repo, apply=True)
 
     assert result["fetch"]["ok"] is True
     assert spec in (result["fetch_refspecs"] or {}).get("pruned", [])

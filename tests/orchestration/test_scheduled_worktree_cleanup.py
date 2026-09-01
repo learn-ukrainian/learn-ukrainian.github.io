@@ -14,9 +14,7 @@ def _git(cwd: Path, *args: str) -> str:
     env = {
         key: value
         for key, value in os.environ.items()
-        if not key.startswith("GIT_")
-        and not key.startswith("PRE_COMMIT")
-        and key != "AGENT_NO_MERGE"
+        if not key.startswith("GIT_") and not key.startswith("PRE_COMMIT") and key != "AGENT_NO_MERGE"
     }
     proc = subprocess.run(
         ["git", *args],
@@ -24,7 +22,8 @@ def _git(cwd: Path, *args: str) -> str:
         capture_output=True,
         text=True,
         check=True,
-        env=env, timeout=30,
+        env=env,
+        timeout=30,
     )
     return proc.stdout.strip()
 
@@ -75,7 +74,11 @@ def test_scheduled_cleanup_enables_terminal_dispatch_class_by_default(
     monkeypatch.setattr(cleanup, "find_orphaned_worktree_directories", lambda _repo: [])
     monkeypatch.setattr(cleanup, "_git_maintenance", lambda _repo, *, apply: {"ok": True})
     monkeypatch.setattr(cleanup, "sweep_review_temp_orphans", lambda: {"errors": 0})
-    monkeypatch.setattr(cleanup, "sweep_tmp_leaks", lambda apply=False: {"errors": 0, "roots_reaped": 0, "bytes_freed": 0, "candidates": 0, "skipped_live": 0})
+    monkeypatch.setattr(
+        cleanup,
+        "sweep_tmp_leaks",
+        lambda apply=False: {"errors": 0, "roots_reaped": 0, "bytes_freed": 0, "candidates": 0, "skipped_live": 0},
+    )
 
     cleanup._repo_result(repo, apply=False)
 
@@ -100,7 +103,11 @@ def test_scheduled_terminal_dispatch_class_can_be_disabled(tmp_path: Path, monke
     monkeypatch.setattr(cleanup, "find_orphaned_worktree_directories", lambda _repo: [])
     monkeypatch.setattr(cleanup, "_git_maintenance", lambda _repo, *, apply: {"ok": True})
     monkeypatch.setattr(cleanup, "sweep_review_temp_orphans", lambda: {"errors": 0})
-    monkeypatch.setattr(cleanup, "sweep_tmp_leaks", lambda apply=False: {"errors": 0, "roots_reaped": 0, "bytes_freed": 0, "candidates": 0, "skipped_live": 0})
+    monkeypatch.setattr(
+        cleanup,
+        "sweep_tmp_leaks",
+        lambda apply=False: {"errors": 0, "roots_reaped": 0, "bytes_freed": 0, "candidates": 0, "skipped_live": 0},
+    )
 
     cleanup._repo_result(repo, apply=False)
 
@@ -403,8 +410,7 @@ def test_repository_run_fails_closed_when_hygiene_lock_is_held(
 
     assert result["fetch"] is None
     assert result["errors"] == [
-        f"another scheduled Git hygiene run holds "
-        f"{repo / '.git' / 'scheduled-git-hygiene.lock'}"
+        f"another scheduled Git hygiene run holds {repo / '.git' / 'scheduled-git-hygiene.lock'}"
     ]
 
 
@@ -445,9 +451,7 @@ def test_lock_contention_is_aggregated_in_receipt(
 
     assert receipt["schema_version"] == "scheduled-git-hygiene.v2"
     assert receipt["summary"]["errors"] == 1
-    assert "another scheduled Git hygiene run holds" in (
-        receipt["repositories"][0]["errors"][0]
-    )
+    assert "another scheduled Git hygiene run holds" in (receipt["repositories"][0]["errors"][0])
 
 
 def test_receipt_aggregates_both_repositories(tmp_path: Path, monkeypatch) -> None:
@@ -465,9 +469,7 @@ def test_receipt_aggregates_both_repositories(tmp_path: Path, monkeypatch) -> No
                     "branch_pruned": repo_root == public,
                 }
             ],
-            "branches": [
-                {"action": "deleted"} if repo_root == public else {"action": "skipped"}
-            ],
+            "branches": [{"action": "deleted"} if repo_root == public else {"action": "skipped"}],
             "orphans": [{"path": "orphan"}] if repo_root == private else [],
             "errors": [],
             "apply": apply,
@@ -645,9 +647,7 @@ def test_untracked_ancestor_local_branch_is_deleted(tmp_path: Path, monkeypatch)
     assert _git(repo, "branch", "--list", branch) == ""
 
 
-def test_review_checkout_unrelated_commit_is_preserved(
-    tmp_path: Path, monkeypatch
-) -> None:
+def test_review_checkout_unrelated_commit_is_preserved(tmp_path: Path, monkeypatch) -> None:
     repo = _repo(tmp_path)
     _git(repo, "checkout", "-b", "pr-7020")
     (repo / "review.txt").write_text("review\n", encoding="utf-8")
@@ -681,9 +681,7 @@ def test_review_checkout_unrelated_commit_is_preserved(
     assert _git(repo, "branch", "--list", "pr-7020") != ""
 
 
-def test_review_checkout_exact_merged_head_is_deleted(
-    tmp_path: Path, monkeypatch
-) -> None:
+def test_review_checkout_exact_merged_head_is_deleted(tmp_path: Path, monkeypatch) -> None:
     repo = _repo(tmp_path)
     branch = "pr-7020"
     _git(repo, "branch", branch, "main")
@@ -747,3 +745,89 @@ def test_entire_checkpoint_branch_is_not_deleted(tmp_path: Path, monkeypatch) ->
     assert result == []
     assert _git(repo, "branch", "--list", "entire/checkpoints/v1") != ""
 
+
+def test_dry_run_zero_repo_mutation(tmp_path: Path, monkeypatch) -> None:
+    repo = _repo(tmp_path)
+    remote = tmp_path / "origin.git"
+
+    # Add a stale refspec that reconcile_fetch_refspecs would prune if apply=True
+    _git(
+        repo,
+        "config",
+        "--add",
+        "remote.origin.fetch",
+        "+refs/heads/gone-head:refs/remotes/origin/gone-head",
+    )
+    config_before = (repo / ".git" / "config").read_text(encoding="utf-8")
+    refs_before = _git(repo, "for-each-ref")
+
+    # Push a new commit to remote directly, so if fetch was called, refs would change
+    work_clone = tmp_path / "clone"
+    _git(tmp_path, "clone", str(remote), str(work_clone))
+    _git(work_clone, "config", "user.email", "remote@example.invalid")
+    _git(work_clone, "config", "user.name", "Remote User")
+    _git(work_clone, "checkout", "-b", "remote-feature")
+    (work_clone / "feature.txt").write_text("feature\n", encoding="utf-8")
+    _git(work_clone, "add", "feature.txt")
+    _git(work_clone, "commit", "-m", "remote feature")
+    _git(work_clone, "push", "origin", "remote-feature")
+
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_query_pr_states",
+        lambda _repo, _branch: ([], None),
+    )
+
+    result = cleanup._repo_result(repo, apply=False)
+
+    # 1. Fetch was not run in dry-run
+    assert result["fetch"] is None
+    # 2. Refspec reconcile was dry-run (not applied)
+    assert result["fetch_refspecs"] is not None
+    assert result["fetch_refspecs"]["applied"] is False
+    assert "+refs/heads/gone-head:refs/remotes/origin/gone-head" in result["fetch_refspecs"]["pruned"]
+
+    # 3. .git/config is completely unmodified
+    config_after = (repo / ".git" / "config").read_text(encoding="utf-8")
+    assert config_after == config_before
+
+    # 4. Git refs in local repo are completely unmodified (new remote-feature ref was NOT fetched)
+    refs_after = _git(repo, "for-each-ref")
+    assert refs_after == refs_before
+    assert "remote-feature" not in refs_after
+
+
+def test_report_mode_preserves_review_temp_orphans(tmp_path: Path, monkeypatch) -> None:
+    """Report/dry-run mode must never mutate filesystem or delete review temp orphans."""
+    repo = _repo(tmp_path)
+    tmp_base = tmp_path / "scratch"
+    tmp_base.mkdir()
+    monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_base))
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_base))
+
+    from scripts.review.isolation import REVIEW_TEMP_ROOT_MANIFEST_NAME, create_review_temp_root
+
+    root = create_review_temp_root(prefix="lu-review-snap-", dir=tmp_base)
+    manifest_path = root / REVIEW_TEMP_ROOT_MANIFEST_NAME
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["owner_pid"] = 999999
+    manifest["created_at_epoch"] = 1000.0
+    manifest_path.chmod(0o600)
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_query_pr_states",
+        lambda _repo, _branch: ([], None),
+    )
+
+    # In report/dry-run mode (apply=False), root MUST NOT be reaped
+    result_dry = cleanup._repo_result(repo, apply=False)
+    assert result_dry.get("review_temp_sweep") is None
+    assert root.exists(), "review temp orphan was deleted during report-only dry-run!"
+
+    # In apply mode (apply=True), root IS reaped
+    result_apply = cleanup._repo_result(repo, apply=True)
+    assert result_apply.get("review_temp_sweep") is not None
+    assert result_apply["review_temp_sweep"]["roots_reaped"] == 1
+    assert not root.exists(), "review temp orphan should be reaped during apply mode"

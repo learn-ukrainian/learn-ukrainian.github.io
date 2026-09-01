@@ -1,0 +1,11 @@
+[Unit]
+Description=Learn Ukrainian hourly reconciliation sweep timer
+
+[Timer]
+OnCalendar=hourly
+RandomizedDelaySec=300
+Persistent=true
+Unit=learn-ukrainian-reconcile.service
+
+[Install]
+WantedBy=timers.target

@@ -93,9 +93,7 @@ class _GitHygieneLock:
             fcntl.flock(self.handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError as exc:
             self.handle.close()
-            raise RuntimeError(
-                f"another scheduled Git hygiene run holds {self.path}"
-            ) from exc
+            raise RuntimeError(f"another scheduled Git hygiene run holds {self.path}") from exc
 
     def __exit__(self, _exc_type: Any, _exc: Any, _tb: Any) -> None:
         if self.handle is not None:
@@ -122,11 +120,7 @@ _REVIEW_CHECKOUT_RE = re.compile(r"^(?:pr|review)-(\d+)(?:-review|-tmp)?$")
 
 
 def _checked_out_branches(repo_root: Path) -> set[str]:
-    return {
-        item.branch
-        for item in reap_worktrees.list_git_worktrees(repo_root)
-        if item.branch is not None
-    }
+    return {item.branch for item in reap_worktrees.list_git_worktrees(repo_root) if item.branch is not None}
 
 
 def _is_protected_local_branch(branch: str) -> bool:
@@ -157,17 +151,13 @@ def _gone_local_branches(repo_root: Path) -> list[tuple[str, str]]:
         if len(parts) != 3:
             continue
         branch, head_sha, upstream = parts
-        if branch in {"main", "master"} or not upstream.startswith(
-            "refs/remotes/origin/"
-        ):
+        if branch in {"main", "master"} or not upstream.startswith("refs/remotes/origin/"):
             continue
         exists = _run_git(repo_root, "show-ref", "--verify", "--quiet", upstream)
         if exists.returncode == 1:
             gone.append((branch, head_sha))
         elif exists.returncode != 0:
-            raise RuntimeError(
-                f"cannot verify upstream for {branch}: {_failure(exists)}"
-            )
+            raise RuntimeError(f"cannot verify upstream for {branch}: {_failure(exists)}")
     return gone
 
 
@@ -207,9 +197,7 @@ def _stale_ref_delete_reason(
         return f"{kind}; exact head of CLOSED PR #{exact_closed.number}", None
     if _branch_is_origin_main_ancestor(repo_root, head_sha):
         return f"{kind}; branch HEAD is an ancestor of origin/main", None
-    return None, (
-        f"{kind} but no exact merged/closed PR or origin/main ancestry evidence"
-    )
+    return None, (f"{kind} but no exact merged/closed PR or origin/main ancestry evidence")
 
 
 def _origin_heads(repo_root: Path) -> list[tuple[str, str]]:
@@ -228,11 +216,7 @@ def _origin_heads(repo_root: Path) -> list[tuple[str, str]]:
         if len(parts) != 2 or not parts[0].startswith(prefix):
             continue
         branch = parts[0][len(prefix) :]
-        if (
-            branch in _PROTECTED_BRANCHES
-            or branch == "HEAD"
-            or _is_protected_local_branch(branch)
-        ):
+        if branch in _PROTECTED_BRANCHES or branch == "HEAD" or _is_protected_local_branch(branch):
             continue
         heads.append((branch, parts[1]))
     return heads
@@ -547,9 +531,7 @@ def _query_pr_by_number(
         reap_worktrees.PullRequestState(
             number=number_value if isinstance(number_value, int) else number,
             state=state,
-            head_sha=(
-                str(item.get("headRefOid")) if item.get("headRefOid") else None
-            ),
+            head_sha=(str(item.get("headRefOid")) if item.get("headRefOid") else None),
         )
     ], None
 
@@ -736,25 +718,22 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
     # A configured refspec whose remote head is gone is a hard error, so
     # this must run before the first `git fetch --prune`.
     try:
-        refspec_report = fetch_refspecs.reconcile_fetch_refspecs(
-            repo_root, apply=True
-        )
+        refspec_report = fetch_refspecs.reconcile_fetch_refspecs(repo_root, apply=apply)
         result["fetch_refspecs"] = refspec_report
         if not refspec_report.get("ok"):
-            result["errors"].append(
-                f"fetch refspec reconcile failed ({refspec_report.get('error')})"
-            )
+            result["errors"].append(f"fetch refspec reconcile failed ({refspec_report.get('error')})")
     except Exception as exc:
         result["fetch_refspecs"] = {"ok": False, "error": str(exc)}
         result["errors"].append(f"fetch refspec reconcile failed: {exc}")
 
-    fetch = _run_git(repo_root, "fetch", "--prune", "origin")
-    result["fetch"] = {
-        "ok": fetch.returncode == 0,
-        "detail": None if fetch.returncode == 0 else _failure(fetch),
-    }
-    if fetch.returncode != 0:
-        result["errors"].append(f"fetch failed ({_failure(fetch)}); degraded to local cleanup")
+    if apply:
+        fetch = _run_git(repo_root, "fetch", "--prune", "origin")
+        result["fetch"] = {
+            "ok": fetch.returncode == 0,
+            "detail": None if fetch.returncode == 0 else _failure(fetch),
+        }
+        if fetch.returncode != 0:
+            result["errors"].append(f"fetch failed ({_failure(fetch)}); degraded to local cleanup")
 
     worktree_prune = _worktree_prune(repo_root, apply=apply)
     result["worktree_prune"] = worktree_prune
@@ -794,11 +773,7 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
             # local hygiene steps from running.
             result["adopted"] = []
             result["errors"].append(f"adoption skipped: {exc}")
-        result["errors"].extend(
-            f"{row.path}: {row.error or row.reason}"
-            for row in rows
-            if row.action == "error"
-        )
+        result["errors"].extend(f"{row.path}: {row.error or row.reason}" for row in rows if row.action == "error")
         if apply and os.environ.get("LU_REAPER_DISABLED") == "1":
             origin_branches: list[dict[str, Any]] = []
             branches: list[dict[str, Any]] = []
@@ -808,21 +783,15 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
             if apply:
                 if any(row.get("action") == "deleted" for row in origin_branches):
                     try:
-                        fetch_refspecs.reconcile_fetch_refspecs(
-                            repo_root, apply=True
-                        )
+                        fetch_refspecs.reconcile_fetch_refspecs(repo_root, apply=True)
                     except Exception as exc:
-                        result["errors"].append(
-                            f"post-origin fetch refspec reconcile failed: {exc}"
-                        )
+                        result["errors"].append(f"post-origin fetch refspec reconcile failed: {exc}")
                 prune_after = _run_git(repo_root, "fetch", "--prune", "origin")
                 if prune_after.returncode != 0:
-                    result["errors"].append(
-                        f"post-origin prune failed ({_failure(prune_after)})"
-                    )
-            branches = cleanup_gone_local_branches(
+                    result["errors"].append(f"post-origin prune failed ({_failure(prune_after)})")
+            branches = cleanup_gone_local_branches(repo_root, apply=apply) + cleanup_untracked_local_branches(
                 repo_root, apply=apply
-            ) + cleanup_untracked_local_branches(repo_root, apply=apply)
+            )
         result["origin_branches"] = origin_branches
         result["branches"] = branches
         result["errors"].extend(
@@ -831,26 +800,21 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
             if row["action"] == "error"
         )
         result["errors"].extend(
-            f"{row['branch']}: {row.get('error') or row['reason']}"
-            for row in branches
-            if row["action"] == "error"
+            f"{row['branch']}: {row.get('error') or row['reason']}" for row in branches if row["action"] == "error"
         )
         result["orphans"] = find_orphaned_worktree_directories(repo_root)
         maintenance = _git_maintenance(repo_root, apply=apply)
         result["maintenance"] = maintenance
         if not maintenance["ok"]:
-            result["errors"].append(
-                f"git maintenance failed: {maintenance['detail']}"
-            )
-        try:
-            sweep_res = sweep_review_temp_orphans()
-            result["review_temp_sweep"] = sweep_res
-            if sweep_res.get("errors"):
-                result["errors"].append(
-                    f"review temp sweep encountered {sweep_res['errors']} error(s)"
-                )
-        except Exception as exc:
-            result["errors"].append(f"review temp sweep failed: {exc}")
+            result["errors"].append(f"git maintenance failed: {maintenance['detail']}")
+        if apply:
+            try:
+                sweep_res = sweep_review_temp_orphans()
+                result["review_temp_sweep"] = sweep_res
+                if sweep_res.get("errors"):
+                    result["errors"].append(f"review temp sweep encountered {sweep_res['errors']} error(s)")
+            except Exception as exc:
+                result["errors"].append(f"review temp sweep failed: {exc}")
         try:
             leak_res = sweep_tmp_leaks(apply=apply)
             result["tmp_leak_sweep"] = {
@@ -862,15 +826,11 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
                 "disk_pressure": leak_res.get("disk_pressure"),
             }
             if leak_res.get("errors"):
-                result["errors"].append(
-                    f"tmp leak sweep encountered {leak_res['errors']} error(s)"
-                )
+                result["errors"].append(f"tmp leak sweep encountered {leak_res['errors']} error(s)")
         except Exception as exc:
             result["errors"].append(f"tmp leak sweep failed: {exc}")
 
-        result["needs_finalize_worktrees"] = (
-            reap_worktrees.find_needs_finalize_worktrees(repo_root)
-        )
+        result["needs_finalize_worktrees"] = reap_worktrees.find_needs_finalize_worktrees(repo_root)
     except RuntimeError as exc:
         result["errors"].append(str(exc))
     return result
@@ -905,22 +865,13 @@ def build_receipt(
     errors = sum(len(repository["errors"]) for repository in repositories)
     orphans = sum(len(repository["orphans"]) for repository in repositories)
     origin_branches_deleted = sum(
-        1
-        for repository in repositories
-        for row in repository.get("origin_branches", [])
-        if row["action"] == "deleted"
+        1 for repository in repositories for row in repository.get("origin_branches", []) if row["action"] == "deleted"
     )
-    branches_deleted = sum(
-        1
-        for repository in repositories
-        for row in repository["branches"]
-        if row["action"] == "deleted"
-    ) + sum(
-        1
-        for repository in repositories
-        for row in repository["results"]
-        if row.get("branch_pruned") is True
-    ) + origin_branches_deleted
+    branches_deleted = (
+        sum(1 for repository in repositories for row in repository["branches"] if row["action"] == "deleted")
+        + sum(1 for repository in repositories for row in repository["results"] if row.get("branch_pruned") is True)
+        + origin_branches_deleted
+    )
     review_temp_reaped = sum(
         repository.get("review_temp_sweep", {}).get("roots_reaped", 0)
         for repository in repositories
@@ -932,15 +883,11 @@ def build_receipt(
         if repository.get("review_temp_sweep")
     )
     needs_finalize_worktrees = [
-        item
-        for repository in repositories
-        for item in repository.get("needs_finalize_worktrees", [])
+        item for repository in repositories for item in repository.get("needs_finalize_worktrees", [])
     ]
     if needs_finalize_worktrees:
         for item in needs_finalize_worktrees:
-            sys.stderr.write(
-                f"WARNING: Worktree '{item.get('path')}' skipped with status 'needs_finalize'\n"
-            )
+            sys.stderr.write(f"WARNING: Worktree '{item.get('path')}' skipped with status 'needs_finalize'\n")
     return {
         "schema_version": SCHEMA_VERSION,
         "observed_at": timestamp,
@@ -1017,9 +964,7 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=default_state_dir() / "receipts" / "v2",
     )
-    parser.set_defaults(
-        default_repo_roots=[public_repo, default_private_repo(public_repo)]
-    )
+    parser.set_defaults(default_repo_roots=[public_repo, default_private_repo(public_repo)])
     return parser
 
 
