@@ -54,6 +54,7 @@ def test_delegate_dispatch_accepts_grok_agent_and_alias():
                 "--prompt",
                 "noop",
                 "--dry-run",
+                "--force-new",
             ],
             capture_output=True,
             text=True,
@@ -61,8 +62,7 @@ def test_delegate_dispatch_accepts_grok_agent_and_alias():
             cwd=str(_REPO_ROOT),
         )
         assert result.returncode == 0, (
-            f"delegate dispatch --agent {agent} failed:\n"
-            f"stdout={result.stdout!r}\nstderr={result.stderr!r}"
+            f"delegate dispatch --agent {agent} failed:\nstdout={result.stdout!r}\nstderr={result.stderr!r}"
         )
         assert task in result.stdout
 

@@ -297,6 +297,18 @@ level. Runner rejects invocations requesting an unsupported mode with
 `ValueError` if missing. This prevents "write to wherever Python happens
 to be running" bugs.
 
+### Native Grok headless permission mapping (#7583)
+
+On native Grok 1.0.x CLI, `acceptEdits --always-approve` still prompts for shell
+execution and fails unattended turns (`stopReason=cancelled`), while `plan`
+blocks all tool calls outright. The adapter maps `workspace-write` to
+`auto --always-approve`, `danger` to `bypassPermissions --always-approve`, and
+`read-only` to `auto` with explicit `--deny` rules for file edits/writes
+(`Write`, `Edit`, `MultiEdit`, `search_replace`) and mutating shell (`git push`,
+`gh pr create/merge`, `rm`). This preserves tool execution for read-only
+reviews (`gh pr diff`, `pytest`, `ruff`, `git fetch`) while preventing
+mutations.
+
 ## Weak-driver trail isolation (P5)
 
 Trail drivers are never given a shell, workspace writes, GitHub mutation, or

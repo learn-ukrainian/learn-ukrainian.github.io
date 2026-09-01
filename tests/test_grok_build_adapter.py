@@ -4,6 +4,7 @@ Kept deliberately separate from the Hermes-backed `grok` agent
 (HermesGrokAdapter, grok-4.5). These tests don't require the grok binary
 to be installed — `shutil.which` is mocked.
 """
+
 from __future__ import annotations
 
 import json
@@ -21,6 +22,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 from agent_runtime import registry
 from agent_runtime.adapters.base import AgentAdapter, InvocationPlan
 from agent_runtime.adapters.grok_build import (
+    _READ_ONLY_DENY_RULES,
     GROK_BUILD_DEFAULT_EFFORT,
     GROK_BUILD_DEFAULT_MODEL,
     GROK_SUPPORTED_EFFORTS,
@@ -36,9 +38,7 @@ FAKE_GROK = "/usr/local/bin/grok"
 
 
 def _build(prompt: str, tmp_path: Path, **kw):
-    with patch(
-        "agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK
-    ):
+    with patch("agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
         return GrokBuildAdapter().build_invocation(
             prompt=prompt,
             mode=kw.pop("mode", "danger"),
@@ -68,8 +68,8 @@ def test_basic_headless_invocation(tmp_path):
 
 def test_mode_permission_mapping(tmp_path):
     for mode, perm in [
-        ("read-only", "plan"),
-        ("workspace-write", "acceptEdits"),
+        ("read-only", "auto"),
+        ("workspace-write", "auto"),
         ("danger", "bypassPermissions"),
     ]:
         plan = _build("do x", tmp_path, mode=mode)
@@ -86,8 +86,104 @@ def test_write_capable_modes_auto_approve_headless_tool_execution(tmp_path, mode
 def test_read_only_mode_does_not_auto_approve_tool_execution(tmp_path):
     plan = _build("inspect only", tmp_path, mode="read-only")
 
-    assert _val(plan.cmd, "--permission-mode") == "plan"
+    assert _val(plan.cmd, "--permission-mode") == "auto"
     assert "--always-approve" not in plan.cmd
+
+
+def test_read_only_mode_applies_mutation_deny_rules(tmp_path):
+    plan = _build("inspect only", tmp_path, mode="read-only")
+
+    assert _val(plan.cmd, "--permission-mode") == "auto"
+    assert "--always-approve" not in plan.cmd
+    denied = [plan.cmd[i + 1] for i, item in enumerate(plan.cmd) if item == "--deny"]
+    assert denied == list(_READ_ONLY_DENY_RULES)
+    assert set(_READ_ONLY_DENY_RULES) == {
+        "Write",
+        "Edit",
+        "MultiEdit",
+        "search_replace",
+        "Bash(git push*)",
+        "Bash(gh pr create*)",
+        "Bash(gh pr merge*)",
+        "Bash(rm*)",
+    }
+
+
+def test_exact_argv_per_mode(tmp_path):
+    # read-only: auto, no always-approve, read-only deny rules for writes and mutating shell
+    ro_plan = _build("inspect", tmp_path, mode="read-only", model="grok-4.6", effort="high")
+    assert ro_plan.cmd == [
+        FAKE_GROK,
+        "-p",
+        "inspect",
+        "--output-format",
+        "json",
+        "--no-alt-screen",
+        "--permission-mode",
+        "auto",
+        "--cwd",
+        str(tmp_path),
+        "--deny",
+        "Write",
+        "--deny",
+        "Edit",
+        "--deny",
+        "MultiEdit",
+        "--deny",
+        "search_replace",
+        "--deny",
+        "Bash(git push*)",
+        "--deny",
+        "Bash(gh pr create*)",
+        "--deny",
+        "Bash(gh pr merge*)",
+        "--deny",
+        "Bash(rm*)",
+        "-m",
+        "grok-4.6",
+        "--effort",
+        "high",
+    ]
+
+    # workspace-write: auto, always-approve, no default deny rules
+    ww_plan = _build("edit code", tmp_path, mode="workspace-write", model="grok-4.6", effort="high")
+    assert ww_plan.cmd == [
+        FAKE_GROK,
+        "-p",
+        "edit code",
+        "--output-format",
+        "json",
+        "--no-alt-screen",
+        "--permission-mode",
+        "auto",
+        "--cwd",
+        str(tmp_path),
+        "--always-approve",
+        "-m",
+        "grok-4.6",
+        "--effort",
+        "high",
+    ]
+
+    # danger: bypassPermissions, always-approve, no default deny rules
+    danger_plan = _build("danger task", tmp_path, mode="danger", model="grok-4.6", effort="high")
+    assert danger_plan.cmd == [
+        FAKE_GROK,
+        "-p",
+        "danger task",
+        "--output-format",
+        "json",
+        "--no-alt-screen",
+        "--permission-mode",
+        "bypassPermissions",
+        "--cwd",
+        str(tmp_path),
+        "--always-approve",
+        "-m",
+        "grok-4.6",
+        "--effort",
+        "high",
+    ]
 
 
 def test_trail_isolation_does_not_inherit_write_approval(tmp_path):
@@ -167,9 +263,7 @@ def test_hyphen_leading_prompt_uses_prompt_file(tmp_path):
 
 
 def test_tool_config_allow_deny(tmp_path):
-    plan = _build(
-        "x", tmp_path, tool_config={"allowed_tools": "Read,Grep", "disallowed_tools": "Bash"}
-    )
+    plan = _build("x", tmp_path, tool_config={"allowed_tools": "Read,Grep", "disallowed_tools": "Bash"})
     assert _val(plan.cmd, "--tools") == "Read,Grep"
     assert _val(plan.cmd, "--disallowed-tools") == "Bash"
 
@@ -193,9 +287,7 @@ def test_mcp_sources_prompt_prefix_translates_to_native_grok_tool_names(tmp_path
 def test_translate_mcp_prefix_for_grok_build_is_scoped():
     prompt = "mcp__sources__search_text mcp__rag__legacy"
 
-    assert _translate_mcp_prefix_for_grok_build(prompt) == (
-        "sources__search_text mcp__rag__legacy"
-    )
+    assert _translate_mcp_prefix_for_grok_build(prompt) == ("sources__search_text mcp__rag__legacy")
 
 
 def test_adapt_prompt_for_grok_build_mcp_adds_headless_suffix():
@@ -253,9 +345,7 @@ def test_parse_json_with_log_noise():
 
 
 def test_parse_plain_fallback():
-    r = GrokBuildAdapter().parse_response(
-        stdout="just plain text", stderr="", returncode=0, output_file=None
-    )
+    r = GrokBuildAdapter().parse_response(stdout="just plain text", stderr="", returncode=0, output_file=None)
     assert r.ok
     assert r.response == "just plain text"
 
@@ -351,9 +441,7 @@ def test_liveness_signal_paths_ignore_peer_session_and_shared_home(tmp_path, mon
     (grok_home / "active_sessions.json").write_text("[]\n", encoding="utf-8")
 
     adapter = GrokBuildAdapter()
-    with patch(
-        "agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK
-    ):
+    with patch("agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
         plan = adapter.build_invocation(
             prompt="do the work",
             mode="danger",
@@ -435,9 +523,7 @@ def test_liveness_newest_post_snapshot_cannot_steal_bound_session(tmp_path, monk
     grok_home = resolve_grok_home()
 
     adapter = GrokBuildAdapter()
-    with patch(
-        "agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK
-    ):
+    with patch("agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
         plan = adapter.build_invocation(
             prompt="supervised",
             mode="danger",
@@ -490,9 +576,7 @@ def test_liveness_split_instance_non_resume_uses_plan_snapshot(tmp_path, monkeyp
     (peer / "events.jsonl").write_text("{}\n", encoding="utf-8")
 
     builder = GrokBuildAdapter()
-    with patch(
-        "agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK
-    ):
+    with patch("agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
         plan = builder.build_invocation(
             prompt="supervised",
             mode="danger",
@@ -546,9 +630,7 @@ def test_liveness_respects_grok_home_override(tmp_path, monkeypatch):
 
     monkeypatch.setenv("GROK_HOME", str(custom))
     adapter = GrokBuildAdapter()
-    with patch(
-        "agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK
-    ):
+    with patch("agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
         plan = adapter.build_invocation(
             prompt="env home",
             mode="danger",
@@ -599,9 +681,7 @@ def test_liveness_shared_adapter_two_plans_no_cross_pin(tmp_path, monkeypatch):
     sessions_root = grok_home / "sessions" / quote(str(project.resolve()), safe="")
 
     adapter = GrokBuildAdapter()
-    with patch(
-        "agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK
-    ):
+    with patch("agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
         plan_a = adapter.build_invocation(
             prompt="plan A",
             mode="danger",
@@ -671,9 +751,7 @@ def test_liveness_pinned_dir_deleted_mid_run_stays_bound(tmp_path, monkeypatch):
     grok_home = resolve_grok_home()
 
     adapter = GrokBuildAdapter()
-    with patch(
-        "agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK
-    ):
+    with patch("agent_runtime.adapters.grok_build.shutil.which", return_value=FAKE_GROK):
         plan = adapter.build_invocation(
             prompt="supervised",
             mode="danger",
