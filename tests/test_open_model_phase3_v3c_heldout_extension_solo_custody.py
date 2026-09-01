@@ -309,6 +309,52 @@ def test_custody_receipt_rejects_exposure_without_seal_and_uninvalidated_mutatio
         v3c.validate_custody_receipts([seal, bad_invalidation], artifact)
 
 
+def test_invalidation_requires_a_fresh_cycle_id() -> None:
+    artifact = _artifact()
+    freeze = "1" * 64
+    version = "2" * 64
+    seal = _receipt(
+        sequence=0,
+        cycle_id="cycle-test-001",
+        event_type="cycle_sealed",
+        cycle_status="SEALED_PRE_EXPOSURE",
+        previous_receipt_sha256=None,
+        freeze_commitment_sha256=freeze,
+        evaluation_version_sha256=version,
+    )
+    exposure = _receipt(
+        sequence=1,
+        cycle_id="cycle-test-001",
+        event_type="exposure",
+        cycle_status="EXPOSED",
+        previous_receipt_sha256=seal["receipt_sha256"],
+        freeze_commitment_sha256=freeze,
+        evaluation_version_sha256=version,
+    )
+    invalidation = _receipt(
+        sequence=2,
+        cycle_id="cycle-test-001",
+        event_type="invalidation",
+        cycle_status="INVALIDATED_RESEAL_REQUIRED",
+        previous_receipt_sha256=exposure["receipt_sha256"],
+        freeze_commitment_sha256=freeze,
+        evaluation_version_sha256=version,
+        mutation=True,
+        new_cycle_required=True,
+    )
+    reused = _receipt(
+        sequence=3,
+        cycle_id="cycle-test-001",
+        event_type="cycle_sealed",
+        cycle_status="SEALED_PRE_EXPOSURE",
+        previous_receipt_sha256=invalidation["receipt_sha256"],
+        freeze_commitment_sha256="3" * 64,
+        evaluation_version_sha256="4" * 64,
+    )
+    with pytest.raises(v3c.V3CError, match="new cycle id required"):
+        v3c.validate_custody_receipts([seal, exposure, invalidation, reused], artifact)
+
+
 def test_custody_receipt_hash_chain_and_replay_are_fail_closed() -> None:
     artifact = _artifact()
     seal = _receipt(

@@ -1257,6 +1257,7 @@ def validate_custody_receipts(
     expected_sequence = 0
     current_cycle: str | None = None
     current_state: str | None = None
+    cycle_ids: set[str] = set()
     sealed_freeze_commitment: str | None = None
     sealed_evaluation_version: str | None = None
     exposed_version: str | None = None
@@ -1289,29 +1290,29 @@ def validate_custody_receipts(
             require(receipt["evaluation_version_sha256"] != "0" * 64, "initial evaluation version missing")
             current_cycle = cycle
             current_state = status
+            cycle_ids.add(cycle)
             sealed_freeze_commitment = receipt["freeze_commitment_sha256"]
             sealed_evaluation_version = receipt["evaluation_version_sha256"]
         elif cycle != current_cycle:
             require(current_state == "INVALIDATED_RESEAL_REQUIRED", "new cycle before invalidation")
             require(event == "cycle_sealed" and status == "SEALED_PRE_EXPOSURE", "new cycle must begin sealed")
+            require(cycle not in cycle_ids, "invalidated cycle cannot be reused")
             require(mutated is False and receipt["new_cycle_required"] is False, "new cycle seal flags invalid")
             require(receipt["freeze_commitment_sha256"] != "0" * 64, "new cycle freeze commitment missing")
             require(receipt["evaluation_version_sha256"] != "0" * 64, "new cycle evaluation version missing")
+            require(
+                receipt["freeze_commitment_sha256"] != sealed_freeze_commitment
+                or receipt["evaluation_version_sha256"] != sealed_evaluation_version,
+                "new cycle commitments must change",
+            )
             current_cycle = cycle
             current_state = status
+            cycle_ids.add(cycle)
             sealed_freeze_commitment = receipt["freeze_commitment_sha256"]
             sealed_evaluation_version = receipt["evaluation_version_sha256"]
             exposed_version = None
         elif event == "cycle_sealed":
-            require(current_state == "INVALIDATED_RESEAL_REQUIRED", "cycle resealed without invalidation")
-            require(status == "SEALED_PRE_EXPOSURE", "resealed cycle has invalid state")
-            require(mutated is False and receipt["new_cycle_required"] is False, "reseal flags invalid")
-            require(receipt["freeze_commitment_sha256"] != "0" * 64, "reseal freeze commitment missing")
-            require(receipt["evaluation_version_sha256"] != "0" * 64, "reseal evaluation version missing")
-            current_state = status
-            sealed_freeze_commitment = receipt["freeze_commitment_sha256"]
-            sealed_evaluation_version = receipt["evaluation_version_sha256"]
-            exposed_version = None
+            raise V3CError("new cycle id required after invalidation")
         elif event == "exposure":
             require(current_state == "SEALED_PRE_EXPOSURE", "exposure before pre-exposure seal")
             require(status == "EXPOSED", "exposure receipt state invalid")
