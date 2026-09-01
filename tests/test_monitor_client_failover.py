@@ -79,6 +79,97 @@ def test_normalize_base_urls_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
     assert _normalize_base_urls(None, None) == ("http://127.0.0.1:8765",)
 
 
+def _clear_monitor_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    for var in ("MONITOR_API_URLS", "AB_MONITOR_URLS", "MONITOR_BASE_URLS", "MONITOR_API_URL", "AB_MONITOR_URL"):
+        monkeypatch.delenv(var, raising=False)
+
+
+def test_normalize_base_urls_strips_endpoint_paths(monkeypatch: pytest.MonkeyPatch) -> None:
+    """GH #7489 regression: a base URL must never keep an endpoint path.
+
+    The historical services.sh default exported
+    ``AB_MONITOR_URLS=http://localhost:8765/api/state/summary``; the old
+    multi-URL branch kept the path, so requests became
+    ``/api/state/summary/api/state/manifest``. Every source — constructor arg,
+    multi env, single env — now normalizes to the bare origin, once.
+    """
+    _clear_monitor_env(monkeypatch)
+
+    # Constructor args (string and sequence) lose their paths.
+    assert _normalize_base_urls("http://host-a:8765/api/state/summary", None) == ("http://host-a:8765",)
+    assert _normalize_base_urls(
+        ["http://host-a:8765/api/state/summary", "http://host-b:8765/api/state/summary"], None
+    ) == ("http://host-a:8765", "http://host-b:8765")
+
+    # Multi-URL env with paths (the original bug shape).
+    monkeypatch.setenv(
+        "AB_MONITOR_URLS",
+        "http://host-a:8765/api/state/summary, http://host-b:8765/api/state/summary",
+    )
+    assert _normalize_base_urls(None, None) == ("http://host-a:8765", "http://host-b:8765")
+
+
+def test_request_never_concatenates_endpoint_path(monkeypatch: pytest.MonkeyPatch) -> None:
+    """GH #7489 regression: requests hit <origin>/api/state/manifest, never
+    <origin>/api/state/summary/api/state/manifest."""
+    _clear_monitor_env(monkeypatch)
+    monkeypatch.setenv("AB_MONITOR_URLS", "http://host-a:8765/api/state/summary")
+    calls: list[str] = []
+
+    def fake_urlopen(req: urllib.request.Request, timeout: float = 3.0) -> _FakeResponse:
+        calls.append(req.full_url)
+        return _FakeResponse(200, "{}")
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+
+    client = MonitorClient()
+    status, _body, _ = client.get("/api/state/manifest")
+
+    assert status == 200
+    assert calls == ["http://host-a:8765/api/state/manifest"]
+
+
+def test_explicit_empty_string_disables_client(monkeypatch: pytest.MonkeyPatch) -> None:
+    """GH #7489: the documented ``AB_MONITOR_URL=""`` disable must be honored.
+
+    An explicitly blank source disables the client — it must NOT fall through
+    to a lower-precedence alias or the localhost default, and requests must
+    fail soft without touching the network.
+    """
+    _clear_monitor_env(monkeypatch)
+    monkeypatch.setenv("AB_MONITOR_URL", "")
+
+    def forbidden_urlopen(req: urllib.request.Request, timeout: float = 3.0) -> _FakeResponse:
+        raise AssertionError(f"disabled client attempted network I/O: {req.full_url}")
+
+    monkeypatch.setattr(urllib.request, "urlopen", forbidden_urlopen)
+
+    client = MonitorClient()
+    assert client.base_urls == ()
+    assert client.base_url == ""
+    status, body, _ = client.get("/api/state/manifest")
+    assert status == 500
+    assert body == ""
+
+    # An explicit blank constructor arg is the same explicit disable.
+    assert MonitorClient(base_url="").base_urls == ()
+    assert MonitorClient(base_urls="   ").base_urls == ()
+
+
+def test_canonical_env_var_wins_and_aliases_still_resolve(monkeypatch: pytest.MonkeyPatch) -> None:
+    """MONITOR_API_URLS is canonical; deprecated aliases resolve when it is unset."""
+    _clear_monitor_env(monkeypatch)
+    monkeypatch.setenv("AB_MONITOR_URLS", "http://alias-a:8765")
+    monkeypatch.setenv("MONITOR_API_URLS", "http://canonical:8765")
+    assert _normalize_base_urls(None, None) == ("http://canonical:8765",)
+
+    monkeypatch.delenv("MONITOR_API_URLS")
+    assert _normalize_base_urls(None, None) == ("http://alias-a:8765",)
+
+    # Constructor args always beat every env var.
+    assert _normalize_base_urls("http://arg:8765", None) == ("http://arg:8765",)
+
+
 def test_monitor_client_get_failover_success(monkeypatch: pytest.MonkeyPatch) -> None:
     """GET fails over from host A to host B upon transport failure."""
     calls: list[str] = []

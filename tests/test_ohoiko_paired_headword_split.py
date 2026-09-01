@@ -225,3 +225,84 @@ def test_space_collapse_audit_appends_idempotently(tmp_path) -> None:
     lines = path.read_text(encoding="utf-8").splitlines()
     assert len(lines) == 1
     assert json.loads(lines[0])["original_form"] == "забоя тися"
+
+
+def test_split_trailing_commas_in_500_verbs_and_1000_words() -> None:
+    assert split_paired_headword("випити,") == ["випити"]
+    assert split_paired_headword("вкрасти,") == ["вкрасти"]
+    assert split_paired_headword("купляти,") == ["купляти"]
+    assert split_paired_headword("поліцейський,") == ["поліцейський"]
+    assert split_paired_headword("замерзнути,") == ["замерзнути"]
+
+
+def test_clean_tokens_and_ocr_lookalike_dispositions(requires_vesum_db) -> None:
+    # ого! and ой! strip trailing exclamation mark to canonical forms
+    assert "ого!".rstrip("!") == "ого"
+    assert "ой!".rstrip("!") == "ой"
+    # тваринa recovers lookalike latin 'a' to Cyrillic 'а'
+    assert recover_latin_lookalike("тваринa") == "тварина"
+    assert resolve_leg_lemma("тваринa") == "тварина"
+
+
+def test_ulp_taught_leftovers_heritage_holds(requires_vesum_db, requires_sources_db) -> None:
+    from scripts.lexicon.heritage_classifier import classify_lemma
+
+    for lemma in ("переключити", "кримчанин", "просвітитель"):
+        hs = classify_lemma(lemma)
+        assert hs.get("is_russianism") is True or hs.get("classification") == "russianism"
+        assert paired_split.classify_split_leg(lemma) == "single_word_heritage_flag"
+
+
+def test_analyze_all_curated_leftovers_disposition(
+    tmp_path, monkeypatch, requires_vesum_db, requires_sources_db
+) -> None:
+    from scripts.lexicon.ohoiko_paired_headword_split import analyze_all_curated_leftovers
+
+    dummy_manifest = tmp_path / "manifest.json"
+    dummy_manifest.write_text(
+        json.dumps(
+            {
+                "entries": [
+                    {"lemma": "ого"},
+                    {"lemma": "ой"},
+                    {"lemma": "тварина"},
+                    {"lemma": "випити"},
+                    {"lemma": "актор"},
+                    {"lemma": "акторка"},
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    dummy_inv = tmp_path / "inventory.yaml"
+    import yaml
+
+    dummy_inv.write_text(
+        yaml.safe_dump(
+            {
+                "sources": [
+                    {
+                        "id": "ohoiko-bulk",
+                        "headwords": [
+                            {"lemma": "ого!", "locator": "ohoiko-1000-words entry 1"},
+                            {"lemma": "ой!", "locator": "ohoiko-1000-words entry 2"},
+                            {"lemma": "тваринa", "locator": "ohoiko-1000-words entry 3"},
+                            {"lemma": "випити,", "locator": "ohoiko-500-verbs entry 1"},
+                            {"lemma": "актор, акторка", "locator": "ohoiko-1000-words entry 4"},
+                            {"lemma": "переключити", "locator": "ulp-4-00-lesson-notes lesson 1"},
+                        ],
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    res = analyze_all_curated_leftovers(inventory_path=dummy_inv, manifest_path=dummy_manifest)
+    assert res["total_keys"] == 6
+    assert res["bucket_counts"]["clean_tokens"] == 3
+    assert res["bucket_counts"]["verbs_500_trailing_comma"] == 1
+    assert res["bucket_counts"]["words_1000_pair_keys"] == 1
+    assert res["bucket_counts"]["ulp_leftovers"] == 1
+    assert res["promote_candidate_count"] == 0

@@ -23,9 +23,19 @@ def test_inventory_covers_repo_issue_streams():
     assert ok is True
     assert missing == []
     records = load_stream_epic_inventory(repo)
-    # issue_streams.yaml has more than the old hard-coded four epics
-    assert len(records) >= 10
+    # Derive the expectation from the live registry: one record per distinct
+    # epic across streams (#7492).
+    registry = yaml.safe_load(
+        (repo / "scripts" / "config" / "issue_streams.yaml").read_text(encoding="utf-8")
+    )
+    expected_epics = {
+        epic for stream in registry["streams"].values() for epic in stream["epics"]
+    }
+    # Ratchet: growth is routine, shrink is exceptional and deliberate.
+    assert len(expected_epics) >= 19
+    assert len(records) == len(expected_epics)
     ids = {r.stream_id for r in records}
+    assert ids == {f"epic:{epic}" for epic in expected_epics}
     assert "epic:4387" in ids  # allow-hardcoded-epic: historical inventory stream coverage
     assert "epic:6943" in ids  # allow-hardcoded-epic: historical inventory stream coverage
     assert "epic:4542" in ids  # allow-hardcoded-epic: historical inventory stream coverage

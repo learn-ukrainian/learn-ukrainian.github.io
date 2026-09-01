@@ -4575,6 +4575,14 @@ def test_fetch_base_strips_origin_prefix(monkeypatch):
     ``origin/main`` — nonexistent — so the fetch failed and every conforming
     dispatch silently fell back to the local (possibly stale) tracking ref.
     """
+    # Pin the single-remote host shape (#7522): origin IS the canonical
+    # GitHub remote, so the fetch flow stays the plain origin fetch
+    # regardless of which fleet host runs the suite.
+    monkeypatch.setattr(
+        delegate,
+        "_git_remote_urls",
+        lambda _root: {"origin": "https://github.com/learn-ukrainian/learn-ukrainian.github.io.git"},
+    )
     calls, fake_run = _make_run_stub()
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
 
@@ -4587,6 +4595,13 @@ def test_fetch_base_strips_origin_prefix(monkeypatch):
 
 
 def test_fetch_base_plain_branch_unchanged(monkeypatch):
+    # Pin the single-remote host shape (#7522) — see
+    # test_fetch_base_strips_origin_prefix.
+    monkeypatch.setattr(
+        delegate,
+        "_git_remote_urls",
+        lambda _root: {"origin": "https://github.com/learn-ukrainian/learn-ukrainian.github.io.git"},
+    )
     calls, fake_run = _make_run_stub()
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
 

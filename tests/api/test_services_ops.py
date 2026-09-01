@@ -1292,3 +1292,83 @@ def test_local_role_skips_notebook_handoff(tmp_path, mock_lsof_env) -> None:
     assert result.returncode == 0, f"{result.stdout}\n{result.stderr}"
     assert "Usage:" in result.stdout
     assert not capture.exists()
+
+
+
+# ── GH #7489: typed AB_MONITOR_URLS (base URLs) vs AB_MONITOR_URL (endpoint) ──
+
+
+def _run_ab_monitor_env_defaults(env_overrides: dict) -> tuple:
+    """Run services.sh's ``_ab_monitor_env_defaults`` in isolation.
+
+    ``env_overrides`` maps AB_MONITOR_URL/AB_MONITOR_URLS to a value, or None
+    to leave the variable unset. Returns ``(AB_MONITOR_URLS, AB_MONITOR_URL)``.
+    """
+    source = SERVICES_SH.read_text(encoding="utf-8")
+    helper = _extract_bash_function(source, "_ab_monitor_env_defaults")
+    env = {
+        key: value
+        for key, value in os.environ.items()
+        if key not in ("AB_MONITOR_URL", "AB_MONITOR_URLS")
+    }
+    for key, value in env_overrides.items():
+        if value is None:
+            env.pop(key, None)
+        else:
+            env[key] = value
+    result = subprocess.run(
+        [
+            "bash",
+            "-c",
+            f"{helper}\n_ab_monitor_env_defaults\n"
+            'printf "%s\\n%s\\n" "$AB_MONITOR_URLS" "$AB_MONITOR_URL"\n',
+        ],
+        capture_output=True,
+        text=True,
+        env=env,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    urls, url = result.stdout.splitlines()
+    return urls, url
+
+
+def test_ab_monitor_defaults_neither_set() -> None:
+    """Default: base list is a bare origin; endpoint carries the summary path."""
+    urls, url = _run_ab_monitor_env_defaults({"AB_MONITOR_URL": None, "AB_MONITOR_URLS": None})
+    assert urls == "http://localhost:8765"
+    assert url == "http://localhost:8765/api/state/summary"
+
+
+def test_ab_monitor_urls_never_keeps_endpoint_path() -> None:
+    """GH #7489 regression: deriving the base list from an endpoint URL must
+    drop the path — otherwise requests become /api/state/summary/api/state/manifest."""
+    urls, url = _run_ab_monitor_env_defaults(
+        {"AB_MONITOR_URL": "http://examplehost:9999/api/state/summary", "AB_MONITOR_URLS": None}
+    )
+    assert urls == "http://examplehost:9999"
+    assert url == "http://examplehost:9999/api/state/summary"
+
+
+def test_ab_monitor_url_derived_from_first_base_url() -> None:
+    """Multi-URL branch: the endpoint derives from the first BASE URL with the
+    summary path appended — never a bare base URL (which the bridge consumer
+    would fetch path-less)."""
+    urls, url = _run_ab_monitor_env_defaults(
+        {"AB_MONITOR_URL": None, "AB_MONITOR_URLS": "http://host-a:8765,http://host-b:8765"}
+    )
+    assert urls == "http://host-a:8765,http://host-b:8765"
+    assert url == "http://host-a:8765/api/state/summary"
+
+
+def test_ab_monitor_explicit_empty_disables() -> None:
+    """GH #7489: the documented explicit empty-string disable is honored —
+    an empty AB_MONITOR_URL disables the snapshot endpoint AND the base list
+    instead of silently falling back to the localhost default."""
+    urls, url = _run_ab_monitor_env_defaults({"AB_MONITOR_URL": "", "AB_MONITOR_URLS": None})
+    assert urls == ""
+    assert url == ""
+
+    urls, url = _run_ab_monitor_env_defaults({"AB_MONITOR_URL": None, "AB_MONITOR_URLS": ""})
+    assert urls == ""
+    assert url == ""

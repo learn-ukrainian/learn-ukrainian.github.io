@@ -882,6 +882,192 @@ def write_space_collapse_artifacts(
     }
 
 
+def analyze_all_curated_leftovers(
+    *,
+    inventory_path: Path,
+    manifest_path: Path,
+) -> dict[str, Any]:
+    """Audit and classify all 250 curated Ohoiko/ULP leftover keys against live Atlas (#7550).
+
+    Covers:
+      - 213 Ohoiko 1000-words pair / comma keys
+      - 31 Ohoiko 500-verbs trailing-comma keys
+      - 3 clean tokens (ого!, ой!, тваринa [latin-a OCR])
+      - 3 ULP taught leftovers (переключити, кримчанин, просвітитель)
+    """
+    _entry_count, atlas_keys = atlas_lemma_keys(manifest_path)
+    records = load_inventory_records(inventory_path)
+    unique_raw_records: dict[str, dict[str, Any]] = {str(r["lemma"]): r for r in records}
+
+    clean_token_keys = ("ого!", "ой!", "тваринa")
+    ulp_leftover_keys = ("переключити", "кримчанин", "просвітитель")
+
+    words_213 = [
+        r
+        for l, r in unique_raw_records.items()
+        if "1000-words" in str(r.get("locator") or "")
+        and l not in clean_token_keys
+        and (_lemma_key(l) not in atlas_keys or l.endswith(","))
+    ]
+    verbs_31 = [
+        r
+        for l, r in unique_raw_records.items()
+        if "500-verbs" in str(r.get("locator") or "") and str(r["lemma"]).endswith(",")
+    ]
+    tokens_3 = [unique_raw_records[k] for k in clean_token_keys if k in unique_raw_records]
+    ulp_3 = [unique_raw_records[k] for k in ulp_leftover_keys if k in unique_raw_records]
+
+    table_rows: list[dict[str, Any]] = []
+    bucket_counts: dict[str, int] = {
+        "words_1000_pair_keys": len(words_213),
+        "verbs_500_trailing_comma": len(verbs_31),
+        "clean_tokens": len(tokens_3),
+        "ulp_leftovers": len(ulp_3),
+    }
+
+    leg_disposition_counts: dict[str, int] = {}
+    promote_candidates: list[dict[str, Any]] = []
+
+    # 1. Clean tokens
+    for r in tokens_3:
+        k = str(r["lemma"])
+        if k in ("ого!", "ой!"):
+            canonical = k.rstrip("!")
+            in_atlas = _lemma_key(canonical) in atlas_keys
+            disp = "hold(interjection_punctuation_canonical_in_atlas)"
+            leg_disposition_counts[disp] = leg_disposition_counts.get(disp, 0) + 1
+            table_rows.append(
+                {
+                    "bucket": "clean_tokens",
+                    "key": k,
+                    "legs": [canonical],
+                    "vesum_heritage": "interjection token",
+                    "in_atlas": in_atlas,
+                    "disposition": disp,
+                    "source_id": r.get("source_id"),
+                    "locator": r.get("locator"),
+                }
+            )
+        elif k == "тваринa":
+            canonical = recover_latin_lookalike(k)
+            in_atlas = _lemma_key(canonical) in atlas_keys
+            disp = "hold(ocr_latin_lookalike_canonical_in_atlas)"
+            leg_disposition_counts[disp] = leg_disposition_counts.get(disp, 0) + 1
+            table_rows.append(
+                {
+                    "bucket": "clean_tokens",
+                    "key": k,
+                    "legs": [canonical],
+                    "vesum_heritage": "VESUM ok, standard",
+                    "in_atlas": in_atlas,
+                    "disposition": disp,
+                    "source_id": r.get("source_id"),
+                    "locator": r.get("locator"),
+                }
+            )
+
+    # 2. ULP leftovers
+    for r in ulp_3:
+        k = str(r["lemma"])
+        eff = resolve_leg_lemma(k)
+        hs = classify_lemma(eff)
+        cl = str(hs.get("classification") or "")
+        is_ru = bool(hs.get("is_russianism"))
+        in_atlas = _lemma_key(eff) in atlas_keys
+        hits = bool(verify_word(eff) or [])
+        disp = f"hold(heritage_{cl})" if (is_ru or cl in HERITAGE_HOLD) else ("admit" if (hits and not in_atlas) else "hold")
+        leg_disposition_counts[disp] = leg_disposition_counts.get(disp, 0) + 1
+        table_rows.append(
+            {
+                "bucket": "ulp_leftovers",
+                "key": k,
+                "legs": [eff],
+                "vesum_heritage": f"VESUM ok, {cl}" if hits else "vesum_absent",
+                "in_atlas": in_atlas,
+                "disposition": disp,
+                "source_id": r.get("source_id"),
+                "locator": r.get("locator"),
+            }
+        )
+
+    # 3. 500-verbs trailing comma
+    for r in verbs_31:
+        k = str(r["lemma"])
+        canonical = k.rstrip(",")
+        in_atlas = _lemma_key(canonical) in atlas_keys
+        disp = "hold(trailing_comma_canonical_in_atlas)"
+        leg_disposition_counts[disp] = leg_disposition_counts.get(disp, 0) + 1
+        table_rows.append(
+            {
+                "bucket": "verbs_500_trailing_comma",
+                "key": k,
+                "legs": [canonical],
+                "vesum_heritage": "VESUM ok, standard",
+                "in_atlas": in_atlas,
+                "disposition": disp,
+                "source_id": r.get("source_id"),
+                "locator": r.get("locator"),
+            }
+        )
+
+    # 4. 1000-words pair / comma keys
+    for r in words_213:
+        k = str(r["lemma"])
+        raw_legs = split_paired_headword(k)
+        eff_legs = [resolve_leg_lemma(l) for l in raw_legs]
+        leg_disps: list[str] = []
+        for leg in eff_legs:
+            in_a = _lemma_key(leg) in atlas_keys
+            if in_a:
+                leg_disps.append("already_in_atlas")
+                leg_disposition_counts["already_in_atlas"] = leg_disposition_counts.get("already_in_atlas", 0) + 1
+            elif not is_single_orthographic_word(leg):
+                leg_disps.append("multiword_after_split")
+                leg_disposition_counts["multiword_after_split"] = leg_disposition_counts.get("multiword_after_split", 0) + 1
+            else:
+                cat = classify_split_leg(leg)
+                if cat == "single_word_vesum_ok":
+                    leg_disps.append("admit")
+                    leg_disposition_counts["admit"] = leg_disposition_counts.get("admit", 0) + 1
+                    promote_candidates.append(
+                        {
+                            "lemma": leg,
+                            "paired_source": k,
+                            "source_id": r.get("source_id"),
+                            "locator": r.get("locator"),
+                        }
+                    )
+                else:
+                    leg_disps.append(cat)
+                    leg_disposition_counts[cat] = leg_disposition_counts.get(cat, 0) + 1
+
+        all_in_a = all(_lemma_key(l) in atlas_keys for l in eff_legs)
+        key_disp = "hold(already_in_atlas)" if all_in_a else f"hold({', '.join(leg_disps)})"
+
+        table_rows.append(
+            {
+                "bucket": "words_1000_pair_keys",
+                "key": k,
+                "legs": eff_legs,
+                "vesum_heritage": "VESUM / split classified",
+                "in_atlas": all_in_a,
+                "disposition": key_disp,
+                "source_id": r.get("source_id"),
+                "locator": r.get("locator"),
+            }
+        )
+
+    return {
+        "schema": "atlas-7550-anna-unit-a-leftovers-census.v1",
+        "total_keys": len(table_rows),
+        "bucket_counts": bucket_counts,
+        "leg_disposition_counts": leg_disposition_counts,
+        "promote_candidate_count": len(promote_candidates),
+        "promote_candidates": promote_candidates,
+        "table_rows": table_rows,
+    }
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--inventory", type=Path, default=DEFAULT_INVENTORY)
@@ -889,6 +1075,16 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--out", type=Path, help="Write residual / split analysis JSON")
     p.add_argument("--rederive", action="store_true", help="Re-derive inventory residual")
     p.add_argument("--analyze-paired", action="store_true", help="Analyze paired splits")
+    p.add_argument(
+        "--census-250",
+        action="store_true",
+        help="Run complete 250 curated leftover keys census (#7550)",
+    )
+    p.add_argument(
+        "--format-markdown",
+        action="store_true",
+        help="Print markdown table for census-250",
+    )
     p.add_argument(
         "--analyze-space-collapse",
         action="store_true",
@@ -1055,6 +1251,32 @@ def main(argv: Sequence[str] | None = None) -> int:
                 batch_id=args.space_collapse_batch_id,
             )
             print(json.dumps(payload["space_collapse_artifacts"], ensure_ascii=False), flush=True)
+
+    if args.census_250:
+        census = analyze_all_curated_leftovers(
+            inventory_path=args.inventory,
+            manifest_path=args.manifest,
+        )
+        payload["census_250"] = census
+        print(
+            json.dumps(
+                {
+                    "total_keys": census["total_keys"],
+                    "bucket_counts": census["bucket_counts"],
+                    "leg_disposition_counts": census["leg_disposition_counts"],
+                    "promote_candidate_count": census["promote_candidate_count"],
+                },
+                ensure_ascii=False,
+            ),
+            flush=True,
+        )
+        if args.format_markdown:
+            print("\n| Key | Legs | VESUM / Heritage | In Atlas? | Disposition |")
+            print("| --- | --- | --- | :---: | --- |")
+            for row in census["table_rows"]:
+                legs_str = ", ".join(row["legs"])
+                in_a = "Yes" if row["in_atlas"] else "No"
+                print(f"| `{row['key']}` | `{legs_str}` | {row['vesum_heritage']} | {in_a} | `{row['disposition']}` |")
 
     if args.out:
         args.out.parent.mkdir(parents=True, exist_ok=True)

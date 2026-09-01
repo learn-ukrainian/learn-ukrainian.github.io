@@ -1,0 +1,575 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_v3_cooperative_control_plane_v1.schema.json",
+  "title": "Phase 3 V3 cooperative control-plane contract v1",
+  "description": "Reviewed, text-free contract for the additive V3 bridge. It records roles, visibility, transitions, rights, taxonomy, compatibility, custody, and gates; it contains no source or model output.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "status",
+    "text_free",
+    "metadata_only",
+    "provider_calls",
+    "outcome_boundary",
+    "bindings",
+    "taxonomy",
+    "rights_capabilities",
+    "roles",
+    "visibility_matrix",
+    "conflict_contract",
+    "state_machine",
+    "agreement_predicate",
+    "quarantine_policy",
+    "human_work_manifest",
+    "heldout_firewall",
+    "compatibility",
+    "child_work_slots",
+    "gates",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "phase3_v3_cooperative_control_plane_v1"},
+    "status": {"const": "FROZEN_REVIEWED_METADATA_ONLY"},
+    "text_free": {"const": true},
+    "metadata_only": {"const": true},
+    "provider_calls": {"const": false},
+    "outcome_boundary": {"$ref": "#/$defs/outcomeBoundary"},
+    "bindings": {"$ref": "#/$defs/bindings"},
+    "taxonomy": {"$ref": "#/$defs/taxonomy"},
+    "rights_capabilities": {"$ref": "#/$defs/rightsCapabilities"},
+    "roles": {"type": "array", "minItems": 9, "maxItems": 9, "uniqueItems": true, "items": {"$ref": "#/$defs/role"}},
+    "visibility_matrix": {"type": "array", "minItems": 9, "maxItems": 9, "uniqueItems": true, "items": {"$ref": "#/$defs/visibilityEntry"}},
+    "conflict_contract": {"$ref": "#/$defs/conflictContract"},
+    "state_machine": {"$ref": "#/$defs/stateMachine"},
+    "agreement_predicate": {"$ref": "#/$defs/agreementPredicate"},
+    "quarantine_policy": {"$ref": "#/$defs/quarantinePolicy"},
+    "human_work_manifest": {"$ref": "#/$defs/humanWorkManifest"},
+    "heldout_firewall": {"$ref": "#/$defs/heldoutFirewall"},
+    "compatibility": {"$ref": "#/$defs/compatibility"},
+    "child_work_slots": {"type": "array", "minItems": 3, "maxItems": 3, "uniqueItems": true, "items": {"$ref": "#/$defs/childWorkSlot"}},
+    "gates": {"$ref": "#/$defs/gates"},
+    "receipt_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9_.:/-]+$"},
+    "path": {"type": "string", "minLength": 1, "pattern": "^[^/].*"},
+    "artifactBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {"path": {"$ref": "#/$defs/path"}, "sha256": {"$ref": "#/$defs/sha256"}}
+    },
+    "outcomeBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "v2_parent_outcome_sha256",
+        "reviewed_v3_consensus_sha256",
+        "amendment_kind",
+        "dataset_nonempty_claimed",
+        "dataset_ready_claimed",
+        "training_validated_claimed",
+        "labeling_enabled",
+        "training_enabled",
+        "mass_provider_work_enabled"
+      ],
+      "properties": {
+        "v2_parent_outcome_sha256": {"const": "890498103f96a7b8f27fd52bc14418d8752e5b73a72ed8774dd0f52eb3160a47"},
+        "reviewed_v3_consensus_sha256": {"const": "d3444c126deb91d05129d51c5344aa204b1db9ca0927c246698e0389466d0b1a"},
+        "amendment_kind": {"const": "additive_versioned_amendment"},
+        "dataset_nonempty_claimed": {"const": false},
+        "dataset_ready_claimed": {"const": false},
+        "training_validated_claimed": {"const": false},
+        "labeling_enabled": {"const": false},
+        "training_enabled": {"const": false},
+        "mass_provider_work_enabled": {"const": false}
+      }
+    },
+    "p4Binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "admission_file", "admission_receipt_sha256", "status", "denominator"],
+      "properties": {
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "sha256"],
+          "properties": {
+            "path": {"const": "data/projects/open_model_data/contracts/phase3_p4_pilot_construction_v1.schema.json"},
+            "sha256": {"const": "0af9e421a0a734718ff884a2b08286533c8f6f6af24c1be4b9023044719f1e8f"}
+          }
+        },
+        "admission_file": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "sha256"],
+          "properties": {
+            "path": {"const": "data/projects/open_model_data/admission/phase3_p4_pilot_construction_v1.json"},
+            "sha256": {"const": "d12ed8d0827263cf5c31f049c518cf90befb4fdf4ca5cb5b413d51b17a1ec4dd"}
+          }
+        },
+        "admission_receipt_sha256": {"const": "9d070d83ab9978d71c0f09249adca4738beb3395215fc603c33e8aeae61e8881"},
+        "status": {"const": "BLOCKED_PENDING_SOURCE_QUALIFIED_ADJUDICATION"},
+        "denominator": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source_units", "unknown_rights_blockers", "base_required_cells", "composite_required_cells", "coverage_blocked_cells", "not_applicable_cells", "rule_slots_R"],
+          "properties": {
+            "source_units": {"const": 57},
+            "unknown_rights_blockers": {"const": 39},
+            "base_required_cells": {"const": 15},
+            "composite_required_cells": {"const": 16},
+            "coverage_blocked_cells": {"const": 14},
+            "not_applicable_cells": {"const": 2},
+            "rule_slots_R": {"const": 0}
+          }
+        }
+      }
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "validator", "v2_compatibility_matrix", "p2_canonical_contracts", "p1_dialect_amendment", "p4_v1", "v2_parent_outcome_sha256"],
+      "properties": {
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "sha256"],
+          "properties": {
+            "path": {"const": "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json"},
+            "sha256": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        "validator": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "sha256"],
+          "properties": {
+            "path": {"const": "scripts/projects/open_model_data/phase3_v3_cooperative_control_plane.py"},
+            "sha256": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        "v2_compatibility_matrix": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "sha256"],
+          "properties": {
+            "path": {"const": "data/projects/open_model_data/evidence/phase3_v2_compatibility_matrix_v1.json"},
+            "sha256": {"const": "9f3113776f899759dc9d4bdde9cde8e3fd5c85f5b3e6e748bf0ac79fac28a29c"}
+          }
+        },
+        "p2_canonical_contracts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "sha256"],
+          "properties": {
+            "path": {"const": "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json"},
+            "sha256": {"const": "dc8dfdf207728ef386cea14ddb328289b2beee5159afb98bf076e5f117602ea3"}
+          }
+        },
+        "p1_dialect_amendment": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "sha256"],
+          "properties": {
+            "path": {"const": "data/projects/open_model_data/evidence/phase3_p1_dialect_regional_protection_amendment_v1.json"},
+            "sha256": {"const": "5a4b259f764a3d41499f0a989c02fed921c18b62c9831d361d18d19dcc948afa"}
+          }
+        },
+        "p4_v1": {"$ref": "#/$defs/p4Binding"},
+        "v2_parent_outcome_sha256": {"const": "890498103f96a7b8f27fd52bc14418d8752e5b73a72ed8774dd0f52eb3160a47"}
+      }
+    },
+    "taxonomyAxis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["axis_id", "required", "values", "independent_from"],
+      "properties": {
+        "axis_id": {"enum": ["language_identity", "identity_candidates", "diachronic_status", "variety_status", "variety_id", "period_id", "region_id", "register_id", "contact_composition", "context_role", "recension_editorial_layer_id"]},
+        "required": {"const": true},
+        "values": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "independent_from": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}}
+      }
+    },
+    "surfaceLayer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["layer_id", "present_in_contract", "provenance_required", "source_text_embedded"],
+      "properties": {
+        "layer_id": {"enum": ["original_surface", "editorial_surface", "normalized_surface"]},
+        "present_in_contract": {"const": true},
+        "provenance_required": {"const": true},
+        "source_text_embedded": {"const": false}
+      }
+    },
+    "taxonomy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tuple_fields", "axes", "surface_layers", "protected_invariants", "dialect_parent_partition", "identity_boundaries"],
+      "properties": {
+        "tuple_fields": {"const": ["span_offsets", "language_identity", "identity_candidates", "diachronic_status", "variety_status", "variety_id", "period_id", "region_id", "register_id", "contact_composition", "context_role", "recension_editorial_layer_id", "original_surface", "editorial_surface", "normalized_surface"]},
+        "axes": {"type": "array", "minItems": 11, "maxItems": 11, "uniqueItems": true, "items": {"$ref": "#/$defs/taxonomyAxis"}},
+        "surface_layers": {"type": "array", "minItems": 3, "maxItems": 3, "uniqueItems": true, "items": {"$ref": "#/$defs/surfaceLayer"}},
+        "protected_invariants": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["original_surface_preserved", "historical_forms_protected", "archaic_forms_protected", "dialect_forms_protected", "modern_correction_eligible_when_protected", "automatic_standard_normalization", "automatic_national_successor_mapping"],
+          "properties": {
+            "original_surface_preserved": {"const": true},
+            "historical_forms_protected": {"const": true},
+            "archaic_forms_protected": {"const": true},
+            "dialect_forms_protected": {"const": true},
+            "modern_correction_eligible_when_protected": {"const": false},
+            "automatic_standard_normalization": {"const": false},
+            "automatic_national_successor_mapping": {"const": false}
+          }
+        },
+        "dialect_parent_partition": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["parent_cell_id", "parent_artifact", "partition_complete", "membership_frozen", "parent_denominator_visible", "parent_direct_coverage_credit", "partition_dimensions", "child_strata"],
+          "properties": {
+            "parent_cell_id": {"const": "protection.source_attested_ukrainian_dialect_or_regional_form.dialect_or_regional_form.protected_dialect_or_regional"},
+            "parent_artifact": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["path", "sha256"],
+              "properties": {
+                "path": {"const": "data/projects/open_model_data/evidence/phase3_p1_dialect_regional_protection_amendment_v1.json"},
+                "sha256": {"const": "5a4b259f764a3d41499f0a989c02fed921c18b62c9831d361d18d19dcc948afa"}
+              }
+            },
+            "partition_complete": {"const": false},
+            "membership_frozen": {"const": false},
+            "parent_denominator_visible": {"const": true},
+            "parent_direct_coverage_credit": {"const": false},
+            "partition_dimensions": {"const": ["source", "region", "period", "register"]},
+            "child_strata": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["stratum_id", "parent_cell_id", "dimensions", "source_membership_frozen"],
+                "properties": {
+                  "stratum_id": {"$ref": "#/$defs/id"},
+                  "parent_cell_id": {"const": "protection.source_attested_ukrainian_dialect_or_regional_form.dialect_or_regional_form.protected_dialect_or_regional"},
+                  "dimensions": {"const": ["source", "region", "period", "register"]},
+                  "source_membership_frozen": {"const": false}
+                }
+              }
+            }
+          }
+        },
+        "identity_boundaries": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["dialect_is_protected_ukrainian_variety", "archaic_modern_is_distinct_from_historical_stage", "surzhyk_is_contact_composition", "literary_eye_dialect_is_context_editorial", "rusyn_is_source_attested_identity", "script_does_not_decide_identity", "undecided_evidence_preserves_candidates"],
+          "properties": {
+            "dialect_is_protected_ukrainian_variety": {"const": true},
+            "archaic_modern_is_distinct_from_historical_stage": {"const": true},
+            "surzhyk_is_contact_composition": {"const": true},
+            "literary_eye_dialect_is_context_editorial": {"const": true},
+            "rusyn_is_source_attested_identity": {"const": true},
+            "script_does_not_decide_identity": {"const": true},
+            "undecided_evidence_preserves_candidates": {"const": true}
+          }
+        }
+      }
+    },
+    "rightsCapabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["per_source_unit_required", "capability_values", "operations", "unknown_blocks_only_affected_operation", "availability_grants_no_capability", "denominator_visibility_preserved"],
+      "properties": {
+        "per_source_unit_required": {"const": true},
+        "capability_values": {"const": ["allowed", "denied", "unknown"]},
+        "operations": {"const": ["retain", "deterministic_local_analysis", "external_provider_transmission", "derive", "model_training", "publish_text_or_metadata", "redistribute"]},
+        "unknown_blocks_only_affected_operation": {"const": true},
+        "availability_grants_no_capability": {"const": true},
+        "denominator_visibility_preserved": {"const": true}
+      }
+    },
+    "route": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["route_id", "route_kind", "provider_family", "model", "effort_or_exposure"],
+      "properties": {
+        "route_id": {"$ref": "#/$defs/id"},
+        "route_kind": {"enum": ["deterministic", "model", "human"]},
+        "provider_family": {"$ref": "#/$defs/id"},
+        "model": {"$ref": "#/$defs/id"},
+        "effort_or_exposure": {"$ref": "#/$defs/id"}
+      }
+    },
+    "role": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role_id", "preferred_route", "output_contract_id", "may_access_heldout", "may_author_gold", "may_count_toward_coverage"],
+      "properties": {
+        "role_id": {"enum": ["SOURCE_ADMISSION", "SPLIT_CUSTODY", "IDENTITY_LEAD", "INDEPENDENT_DISSENT", "DISPUTE_CRITIC", "CANDIDATE_BUILDER", "HUMAN_STEWARD", "EVALUATION_STEWARD", "ORCHESTRATOR"]},
+        "preferred_route": {"$ref": "#/$defs/route"},
+        "output_contract_id": {"$ref": "#/$defs/id"},
+        "may_access_heldout": {"type": "boolean"},
+        "may_author_gold": {"type": "boolean"},
+        "may_count_toward_coverage": {"type": "boolean"}
+      }
+    },
+    "visibilityEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role_id", "allowed_input_classes", "forbidden_input_classes", "output_contract_id", "next_legal_transition_classes", "retry_budget", "substitute_budget", "heldout_access", "coverage_credit", "gold_credit", "training_credit"],
+      "properties": {
+        "role_id": {"enum": ["SOURCE_ADMISSION", "SPLIT_CUSTODY", "IDENTITY_LEAD", "INDEPENDENT_DISSENT", "DISPUTE_CRITIC", "CANDIDATE_BUILDER", "HUMAN_STEWARD", "EVALUATION_STEWARD", "ORCHESTRATOR"]},
+        "allowed_input_classes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "forbidden_input_classes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "output_contract_id": {"$ref": "#/$defs/id"},
+        "next_legal_transition_classes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "retry_budget": {"type": "integer", "minimum": 0, "maximum": 1},
+        "substitute_budget": {"type": "integer", "minimum": 0, "maximum": 1},
+        "heldout_access": {"enum": ["forbidden", "evaluation_runtime_only"]},
+        "coverage_credit": {"const": false},
+        "gold_credit": {"const": false},
+        "training_credit": {"const": false}
+      }
+    },
+    "conflictContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["same_packet_for_identity_roles", "identity_outputs_hidden_from_each_other", "builder_receives_identity_opinions", "builder_receives_candidate_identity_labels", "critic_receives_model_prestige_or_order", "model_may_vote_on_own_output", "independent_family_required", "operations"],
+      "properties": {
+        "same_packet_for_identity_roles": {"const": true},
+        "identity_outputs_hidden_from_each_other": {"const": true},
+        "builder_receives_identity_opinions": {"const": false},
+        "builder_receives_candidate_identity_labels": {"const": false},
+        "critic_receives_model_prestige_or_order": {"const": false},
+        "model_may_vote_on_own_output": {"const": false},
+        "independent_family_required": {"const": true},
+        "operations": {"type": "array", "minItems": 3, "uniqueItems": true, "items": {"$ref": "#/$defs/conflictOperation"}}
+      }
+    },
+    "conflictOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["producer_role", "consumer_role", "shared_input_classes_forbidden", "output_visibility"],
+      "properties": {
+        "producer_role": {"enum": ["IDENTITY_LEAD", "INDEPENDENT_DISSENT", "DISPUTE_CRITIC", "CANDIDATE_BUILDER"]},
+        "consumer_role": {"enum": ["IDENTITY_LEAD", "INDEPENDENT_DISSENT", "DISPUTE_CRITIC", "CANDIDATE_BUILDER"]},
+        "shared_input_classes_forbidden": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "output_visibility": {"enum": ["locked_disagreement_only", "identity_join_without_opinions", "never_shared"]}
+      }
+    },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state_id", "terminal", "resumable", "legal_next_states", "resume_to_state", "counts_toward_coverage", "gold_eligible", "training_eligible"],
+      "properties": {
+        "state_id": {"$ref": "#/$defs/stateId"},
+        "terminal": {"type": "boolean"},
+        "resumable": {"type": "boolean"},
+        "legal_next_states": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/stateId"}},
+        "resume_to_state": {"anyOf": [{"$ref": "#/$defs/stateId"}, {"type": "null"}]},
+        "counts_toward_coverage": {"type": "boolean"},
+        "gold_eligible": {"type": "boolean"},
+        "training_eligible": {"type": "boolean"}
+      }
+    },
+    "stateId": {
+      "enum": [
+        "SOURCE_INVENTORIED",
+        "SOURCE_ADMITTED",
+        "SOURCE_BLOCKED",
+        "SPLIT_SEALED",
+        "IDENTITY_REVIEWS_PENDING",
+        "IDENTITY_AGREEMENT_QC",
+        "IDENTITY_DISPUTED",
+        "IDENTITY_PROVIDER_FAILURE",
+        "IDENTITY_HUMAN_QUEUE",
+        "DISPUTE_CRITIC_PENDING",
+        "DISPUTE_CRITIQUED",
+        "IDENTITY_HUMAN_ADJUDICATED",
+        "IDENTITY_HUMAN_ABSTAINED",
+        "IDENTITY_EVIDENCE_INSUFFICIENT",
+        "MODEL_AGREEMENT_QUARANTINED_NOT_GOLD",
+        "CASE_CANDIDATE_PENDING",
+        "CASE_CANDIDATE_PROPOSED",
+        "CANDIDATE_PROVIDER_FAILURE",
+        "CASE_HUMAN_QUEUE",
+        "CASE_HUMAN_ADJUDICATED",
+        "CASE_HUMAN_ABSTAINED",
+        "CASE_EVIDENCE_INSUFFICIENT",
+        "GOLD_ELIGIBLE",
+        "TRAINING_ELIGIBLE"
+      ]
+    },
+    "transition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from_state", "to_state", "condition_code", "retry_or_substitute_allowed", "human_fallback"],
+      "properties": {
+        "from_state": {"$ref": "#/$defs/stateId"},
+        "to_state": {"$ref": "#/$defs/stateId"},
+        "condition_code": {"$ref": "#/$defs/id"},
+        "retry_or_substitute_allowed": {"type": "boolean"},
+        "human_fallback": {"type": "boolean"}
+      }
+    },
+    "stateMachine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["initial_state", "states", "transitions", "format_retry_limit", "failure_denominator_policy", "no_dead_end_invariant"],
+      "properties": {
+        "initial_state": {"const": "SOURCE_INVENTORIED"},
+        "states": {"type": "array", "minItems": 24, "maxItems": 24, "uniqueItems": true, "items": {"$ref": "#/$defs/state"}},
+        "transitions": {"type": "array", "minItems": 30, "uniqueItems": true, "items": {"$ref": "#/$defs/transition"}},
+        "format_retry_limit": {"const": 1},
+        "failure_denominator_policy": {"const": "preserve_denominator_route_to_retry_substitute_or_human"},
+        "no_dead_end_invariant": {"const": true}
+      }
+    },
+    "agreementPredicate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["predicate_id", "comparison", "required_fields", "primary_language_only_insufficient", "majority_agreement_insufficient", "abstention_state_compared", "provider_output_not_gold"],
+      "properties": {
+        "predicate_id": {"const": "exact_identity_case_agreement_v1"},
+        "comparison": {"const": "canonical_json_exact_equality_over_required_fields"},
+        "required_fields": {"const": ["span_offsets", "language_identity", "identity_candidates", "diachronic_status", "variety_status", "variety_id", "region_id", "period_id", "register_id", "contact_composition", "context_role", "recension_editorial_layer_id", "primary_case_state", "modern_correction_eligible", "protection_flags", "confidence_or_abstention_state"]},
+        "primary_language_only_insufficient": {"const": true},
+        "majority_agreement_insufficient": {"const": true},
+        "abstention_state_compared": {"const": true},
+        "provider_output_not_gold": {"const": true}
+      }
+    },
+    "quarantinePolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state_id", "counts_toward_coverage", "gold_eligible", "training_eligible", "evaluation_eligible", "teaching_view_eligible", "unsampled_promotion_allowed", "promotion_state", "protected_high_risk_always_human", "high_risk_classes", "critic_unresolved_routes_to_human"],
+      "properties": {
+        "state_id": {"const": "MODEL_AGREEMENT_QUARANTINED_NOT_GOLD"},
+        "counts_toward_coverage": {"const": false},
+        "gold_eligible": {"const": false},
+        "training_eligible": {"const": false},
+        "evaluation_eligible": {"const": false},
+        "teaching_view_eligible": {"const": false},
+        "unsampled_promotion_allowed": {"const": false},
+        "promotion_state": {"const": "CASE_HUMAN_ADJUDICATED"},
+        "protected_high_risk_always_human": {"const": true},
+        "high_risk_classes": {"const": ["protected", "historical", "archaic", "dialectal", "rusyn", "church_slavonic", "surzhyk_or_mixed", "quoted", "transliterated", "named", "metalinguistic", "low_confidence", "out_of_distribution"]},
+        "critic_unresolved_routes_to_human": {"const": true}
+      }
+    },
+    "humanWorkManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required_before_provider_pilot", "required_fields", "atomic_decision_key", "protected_high_risk_review_fraction", "unsampled_agreement_policy", "audit_failure_policy", "queue_overflow_policy", "provider_calls_authorized"],
+      "properties": {
+        "required_before_provider_pilot": {"const": true},
+        "required_fields": {"const": ["admitted_source_unit_ids", "required_cell_ids", "atomic_decision_key", "per_stratum_agreement_sample_counts", "sample_seed_or_hash", "minimum_per_stratum", "maximum_human_decisions", "maximum_steward_hours", "queue_overflow_state", "per_stratum_audit_error_threshold", "audit_escalation_rule"]},
+        "atomic_decision_key": {"const": ["span_hash", "claim_type", "proposed_value", "evidence_bundle_hash", "source_revision"]},
+        "protected_high_risk_review_fraction": {"const": 1.0},
+        "unsampled_agreement_policy": {"const": "remain_quarantined_no_coverage_or_consumer_view_credit"},
+        "audit_failure_policy": {"const": "freeze_uninspected_cohort_and_route_complete_human_review_or_unresolved"},
+        "queue_overflow_policy": {"const": "preserve_full_denominator_and_record_overflow_state"},
+        "provider_calls_authorized": {"const": false}
+      }
+    },
+    "heldoutFirewall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["content_blind_grouping_fields", "required_nonzero_count_per_v3_stratum", "membership_sealed_before_construction", "construction_access_to_membership", "construction_access_to_content", "construction_access_to_labels", "construction_access_to_locators", "construction_access_to_fingerprints", "construction_access_to_derivatives", "private_evaluation_runtime_during_construction", "construction_freeze_before_exposure", "post_exposure_mutation_invalidates_version", "new_partition_required_after_invalidation", "solo_operator_limitation_disclosed", "ambiguous_evidence_action"],
+      "properties": {
+        "content_blind_grouping_fields": {"const": ["source", "document", "work", "edition", "exact_duplicate_component", "near_duplicate_connected_component"]},
+        "required_nonzero_count_per_v3_stratum": {"const": true},
+        "membership_sealed_before_construction": {"const": true},
+        "construction_access_to_membership": {"const": false},
+        "construction_access_to_content": {"const": false},
+        "construction_access_to_labels": {"const": false},
+        "construction_access_to_locators": {"const": false},
+        "construction_access_to_fingerprints": {"const": false},
+        "construction_access_to_derivatives": {"const": false},
+        "private_evaluation_runtime_during_construction": {"const": false},
+        "construction_freeze_before_exposure": {"const": true},
+        "post_exposure_mutation_invalidates_version": {"const": true},
+        "new_partition_required_after_invalidation": {"const": true},
+        "solo_operator_limitation_disclosed": {"const": true},
+        "ambiguous_evidence_action": {"const": "abstain"}
+      }
+    },
+    "cell": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["v2_cell_id", "v2_status", "old_artifact", "disposition", "v3_cell_id", "new_binding", "child_partition_ids", "denominator_effect", "reason_code"],
+      "properties": {
+        "v2_cell_id": {"$ref": "#/$defs/id"},
+        "v2_status": {"enum": ["satisfied", "not_applicable_with_evidence", "coverage_blocked", "unresolved"]},
+        "old_artifact": {"$ref": "#/$defs/artifactBinding"},
+        "disposition": {"enum": ["carried_forward_exact", "superseded_by_version", "superseded_by_partition", "invalidated_with_reason"]},
+        "v3_cell_id": {"$ref": "#/$defs/id"},
+        "new_binding": {"$ref": "#/$defs/artifactBinding"},
+        "child_partition_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "denominator_effect": {"enum": ["same_parent_denominator", "parent_visible_children_no_double_count", "boundary_cell_preserved"]},
+        "reason_code": {"$ref": "#/$defs/id"}
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["v2_composite_denominator", "cells", "dispositions_complete", "source_unit_ids_stable", "parent_cells_no_direct_child_credit", "v2_denominator_preserved"],
+      "properties": {
+        "v2_composite_denominator": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source_units", "base_required_cells", "composite_required_cells", "coverage_blocked_cells", "not_applicable_cells", "rule_slots_R"],
+          "properties": {
+            "source_units": {"const": 57},
+            "base_required_cells": {"const": 15},
+            "composite_required_cells": {"const": 16},
+            "coverage_blocked_cells": {"const": 14},
+            "not_applicable_cells": {"const": 2},
+            "rule_slots_R": {"const": 0}
+          }
+        },
+        "cells": {"type": "array", "minItems": 16, "maxItems": 16, "uniqueItems": true, "items": {"$ref": "#/$defs/cell"}},
+        "dispositions_complete": {"const": true},
+        "source_unit_ids_stable": {"const": true},
+        "parent_cells_no_direct_child_credit": {"const": true},
+        "v2_denominator_preserved": {"const": true}
+      }
+    },
+    "childWorkSlot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slot_id", "issue_number", "title_id", "status", "scope_ids", "dependencies", "required_outputs", "provider_calls_authorized", "completion_requires_exact_hashes", "mass_labeling_authorized"],
+      "properties": {
+        "slot_id": {"enum": ["V3-A", "V3-B", "V3-C"]},
+        "issue_number": {"type": "integer", "minimum": 1},
+        "title_id": {"$ref": "#/$defs/id"},
+        "status": {"const": "NOT_STARTED"},
+        "scope_ids": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "dependencies": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "required_outputs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "provider_calls_authorized": {"const": false},
+        "completion_requires_exact_hashes": {"const": true},
+        "mass_labeling_authorized": {"const": false}
+      }
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ratification_complete", "outcome_sha_scope_approved", "provider_calls_authorized", "labeling_authorized", "training_authorized", "p4_v2_authorized", "required_child_slots", "p4_v1_mutation_allowed"],
+      "properties": {
+        "ratification_complete": {"const": true},
+        "outcome_sha_scope_approved": {"const": true},
+        "provider_calls_authorized": {"const": false},
+        "labeling_authorized": {"const": false},
+        "training_authorized": {"const": false},
+        "p4_v2_authorized": {"const": false},
+        "required_child_slots": {"const": ["V3-A", "V3-B", "V3-C"]},
+        "p4_v1_mutation_allowed": {"const": false}
+      }
+    }
+  }
+}
