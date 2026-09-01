@@ -97,6 +97,9 @@ jobs:
       pull-requests: write
       contents: write
       checks: read
+      # read: issue timeline scan for removed_from_merge_queue events
+      # (merge-queue ejection visibility; no workflow trigger exists for it).
+      issues: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

@@ -5,6 +5,12 @@ Issue #7539 deliberately delegates merging to GitHub's existing branch
 protection and merge queue.  This scanner never merges directly and never uses
 an administrative bypass: it only requests ``gh pr merge --auto`` after the
 exact-head CF and CI gates have both passed.
+
+It also owns two merge-queue visibility duties: the "queued" audit comment
+fires only on the state change into the queue (a live ``mergeQueueEntry``
+suppresses re-comments), and each ``removed_from_merge_queue`` timeline event
+earns exactly one comment with the run URL and failed job names — GitHub emits
+no workflow trigger for queue removals, so ejection is detected by polling.
 """
 
 from __future__ import annotations
@@ -456,12 +462,16 @@ def enable_auto_merge(repo: str, number: int, head_sha: str, *, token: str) -> N
         raise RuntimeError(detail or f"failed to enable auto-merge for PR #{number}")
 
 
-def post_audit_comment(repo: str, number: int, head_sha: str, *, token: str) -> None:
-    body = f"auto-arm: queued at head {head_sha} (cf-attest+gate green)"
+def post_pr_comment(repo: str, number: int, body: str, *, token: str) -> None:
     completed = _gh(["pr", "comment", str(number), "--repo", repo, "--body", body], token=token)
     if completed.returncode != 0:
         detail = (completed.stderr or completed.stdout or "").strip()
-        raise RuntimeError(detail or f"failed to post audit comment for PR #{number}")
+        raise RuntimeError(detail or f"failed to post comment for PR #{number}")
+
+
+def post_audit_comment(repo: str, number: int, head_sha: str, *, token: str) -> None:
+    body = f"auto-arm: queued at head {head_sha} (cf-attest+gate green)"
+    post_pr_comment(repo, number, body, token=token)
 
 
 def get_workflow_run(repo: str, run_id: int, *, token: str) -> Mapping[str, Any]:
@@ -496,17 +506,81 @@ def rerun_failed_jobs(repo: str, run_id: int, *, token: str) -> None:
         raise RuntimeError(detail or f"failed to rerun failed jobs for Actions run {run_id}")
 
 
+MERGE_QUEUE_ENTRY_QUERY = (
+    "query($owner: String!, $name: String!, $number: Int!) {"
+    " repository(owner: $owner, name: $name) {"
+    " pullRequest(number: $number) {"
+    " mergeQueueEntry { position }"
+    " } } }"
+)
+
+
+def get_merge_queue_entry(repo: str, number: int, *, token: str) -> Mapping[str, Any] | None:
+    """Return the PR's live mergeQueueEntry via GraphQL, or None when not queued.
+
+    A queued PR can report ``autoMergeRequest: null`` (GitHub consumes the
+    request at enqueue), so the REST shape alone cannot tell "queued" from
+    "never armed" — #7573 was re-armed and re-commented 4x in 13 min while
+    sitting in the queue. Entry presence is head-bound by construction: a
+    head push removes the PR from the queue.
+    """
+
+    owner, sep, name = repo.partition("/")
+    if not sep or not owner or not name:
+        raise RuntimeError(f"invalid repo {repo!r}")
+    payload = _gh_json(
+        [
+            "api",
+            "graphql",
+            "-f",
+            f"query={MERGE_QUEUE_ENTRY_QUERY}",
+            "-F",
+            f"owner={owner}",
+            "-F",
+            f"name={name}",
+            "-F",
+            f"number={number}",
+        ],
+        token=token,
+    )
+    node: Any = payload
+    for key in ("data", "repository", "pullRequest"):
+        if not isinstance(node, Mapping):
+            raise RuntimeError("mergeQueueEntry response is malformed")
+        node = node.get(key)
+    if not isinstance(node, Mapping):
+        return None
+    entry = node.get("mergeQueueEntry")
+    return entry if isinstance(entry, Mapping) else None
+
+
 def arm_eligible_prs(
     prs: Sequence[Mapping[str, Any]],
     *,
     enable: Callable[[int, str], None],
     comment: Callable[[int, str], None],
+    is_queued: Callable[[int, str], bool] | None = None,
 ) -> list[ArmDecision]:
-    """Evaluate PRs and perform the two thin mutating operations for green ones."""
+    """Evaluate PRs and perform the two thin mutating operations for green ones.
+
+    ``is_queued`` suppresses the re-arm + re-comment noise for a PR already in
+    the merge queue at the same head: the "queued" audit comment is posted only
+    on the state change into the queue, not on every scan.
+    """
 
     decisions: list[ArmDecision] = []
     for pr in prs:
         decision = decide_auto_arm(pr)
+        if decision.should_arm and is_queued is not None:
+            assert decision.number is not None
+            try:
+                if is_queued(decision.number, decision.head_sha):
+                    decision = ArmDecision(
+                        False, "already_armed_or_queued", decision.number, decision.head_sha
+                    )
+            except (RuntimeError, ValueError, KeyError):
+                # Advisory: GraphQL failure must not abort the scan or block arming.
+                pass
         decisions.append(decision)
         if not decision.should_arm:
             continue
@@ -514,6 +588,207 @@ def arm_eligible_prs(
         enable(decision.number, decision.head_sha)
         comment(decision.number, decision.head_sha)
     return decisions
+
+
+EJECTION_EVENT = "removed_from_merge_queue"
+EJECTION_MARKER_PREFIX = "<!-- auto-arm:queue-ejection:"
+FAILED_JOB_CONCLUSIONS = frozenset({"failure", "timed_out", "cancelled"})
+
+
+@dataclass(frozen=True)
+class EjectionDecision:
+    """A deterministic disposition for one PR's merge-queue ejection notice."""
+
+    should_comment: bool
+    reason: str
+    number: int | None = None
+    event_id: str = ""
+    head_sha: str = ""
+    created_at: str = ""
+
+
+def decide_queue_ejection(
+    events: Sequence[Mapping[str, Any]],
+    comments: Sequence[Mapping[str, Any]],
+    *,
+    number: int,
+) -> EjectionDecision:
+    """Return the latest unreported merge-queue ejection for one PR.
+
+    GitHub emits NO workflow trigger for a queue removal (the ``merge_group``
+    event only supports ``checks_requested``), so ejections are detected by
+    polling the issue timeline's ``removed_from_merge_queue`` events. The
+    #7042 kick comment still covers merge_group CI Gate *failures*; this
+    covers the rest (timeouts, queue rebuilds, manual removals) exactly once
+    per ejection event, deduped by a hidden marker comment.
+    """
+
+    removals = [
+        event
+        for event in events
+        if isinstance(event, Mapping) and event.get("event") == EJECTION_EVENT
+    ]
+    if not removals:
+        return EjectionDecision(False, "no_queue_ejection", number)
+    latest = removals[-1]
+    raw_id = latest.get("id")
+    if not isinstance(raw_id, int) or isinstance(raw_id, bool) or raw_id <= 0:
+        return EjectionDecision(False, "ejection_event_unidentifiable", number)
+    event_id = str(raw_id)
+    marker = f"{EJECTION_MARKER_PREFIX}{event_id} -->"
+    for comment in comments:
+        body = comment.get("body") if isinstance(comment, Mapping) else None
+        if isinstance(body, str) and marker in body:
+            return EjectionDecision(False, "ejection_already_noted", number, event_id)
+    head = latest.get("commit_id")
+    stamp = latest.get("created_at")
+    return EjectionDecision(
+        True,
+        "queue_ejection_unreported",
+        number,
+        event_id,
+        head_sha=head if isinstance(head, str) else "",
+        created_at=stamp if isinstance(stamp, str) else "",
+    )
+
+
+def build_ejection_comment(
+    decision: EjectionDecision,
+    *,
+    run_url: str | None,
+    failed_jobs: Sequence[str],
+) -> str:
+    """One comment per ejection: run URL + failed job names + re-arm note."""
+
+    head = decision.head_sha[:8] if decision.head_sha else "unknown head"
+    stamp = decision.created_at or "unknown time"
+    lines = [f"auto-arm: this PR was removed from the merge queue (`{head}`, {stamp})."]
+    if run_url is not None:
+        lines.append(f"Latest merge-group CI run: {run_url}")
+        lines.append(
+            "Failed jobs: " + (", ".join(failed_jobs) if failed_jobs else "none recorded")
+        )
+    else:
+        lines.append(
+            "No merge-group CI run found for this ejection (queue rebuild or manual removal)."
+        )
+    lines.append(
+        "The auto-arm scanner re-queues automatically once CF attest and CI Gate "
+        "are green at the current head."
+    )
+    lines.append(f"{EJECTION_MARKER_PREFIX}{decision.event_id} -->")
+    return "\n".join(lines)
+
+
+def notify_queue_ejections(
+    prs: Sequence[Mapping[str, Any]],
+    *,
+    get_events: Callable[[int], Sequence[Mapping[str, Any]]],
+    get_comments: Callable[[int], Sequence[Mapping[str, Any]]],
+    get_run_details: Callable[[int], tuple[str | None, Sequence[str]]],
+    comment: Callable[[int, str], None],
+) -> list[EjectionDecision]:
+    """Comment once per merge-queue ejection on opted-in open PRs.
+
+    Advisory: a scan/post failure for one PR is recorded as a decision and
+    must never wedge the arming path above.
+    """
+
+    decisions: list[EjectionDecision] = []
+    for pr in prs:
+        number = _usable_pr_number(pr.get("number"))
+        if number is None or str(pr.get("state") or "").upper() != "OPEN":
+            continue
+        labels = _label_names(pr)
+        if labels is None or AUTO_ARM_OPT_IN_LABEL not in labels:
+            continue
+        try:
+            decision = decide_queue_ejection(
+                get_events(number), get_comments(number), number=number
+            )
+        except (RuntimeError, ValueError, KeyError) as exc:
+            decisions.append(EjectionDecision(False, f"ejection_scan_unavailable:{exc}", number))
+            continue
+        decisions.append(decision)
+        if not decision.should_comment:
+            continue
+        run_url, failed_jobs = get_run_details(number)
+        comment(number, build_ejection_comment(decision, run_url=run_url, failed_jobs=failed_jobs))
+    return decisions
+
+
+def list_issue_timeline(repo: str, number: int, *, token: str) -> list[Mapping[str, Any]]:
+    """Fetch the PR's issue timeline (carries removed_from_merge_queue events)."""
+
+    payload = _gh_json(
+        [
+            "api",
+            "--paginate",
+            "--slurp",
+            f"repos/{repo}/issues/{number}/timeline?per_page=100",
+        ],
+        token=token,
+    )
+    if not isinstance(payload, list) or not all(isinstance(page, list) for page in payload):
+        raise RuntimeError("PR timeline response is not a list of pages")
+    events = [item for page in payload for item in page]
+    if not all(isinstance(item, Mapping) for item in events):
+        raise RuntimeError("PR timeline response contains a non-object")
+    return events
+
+
+def latest_merge_group_run(repo: str, number: int, *, token: str) -> Mapping[str, Any] | None:
+    """Latest merge_group CI run for the PR's queue branch, if any."""
+
+    payload = _gh_json(
+        ["api", f"repos/{repo}/actions/runs?event=merge_group&per_page=100"],
+        token=token,
+    )
+    runs = payload.get("workflow_runs") if isinstance(payload, Mapping) else None
+    if not isinstance(runs, list):
+        raise RuntimeError("workflow runs response is malformed")
+    needle = f"pr-{number}-"
+    matching = [
+        run
+        for run in runs
+        if isinstance(run, Mapping) and needle in str(run.get("head_branch") or "")
+    ]
+    if not matching:
+        return None
+    matching.sort(key=lambda run: str(run.get("created_at") or ""))
+    return matching[-1]
+
+
+def failed_job_names(repo: str, run_id: int, *, token: str) -> list[str]:
+    """Failed/cancelled/timed-out job names of one workflow run (latest attempt)."""
+
+    payload = _gh_json(
+        ["api", f"repos/{repo}/actions/runs/{run_id}/jobs?per_page=100&filter=latest"],
+        token=token,
+    )
+    jobs = payload.get("jobs") if isinstance(payload, Mapping) else None
+    if not isinstance(jobs, list):
+        raise RuntimeError("workflow run jobs response is malformed")
+    names = []
+    for job in jobs:
+        if not isinstance(job, Mapping):
+            continue
+        name = job.get("name")
+        if isinstance(name, str) and str(job.get("conclusion") or "").lower() in FAILED_JOB_CONCLUSIONS:
+            names.append(name)
+    return sorted(names)
+
+
+def merge_group_run_details(repo: str, number: int, *, token: str) -> tuple[str | None, list[str]]:
+    """(run URL, failed job names) for the PR's latest merge-group run."""
+
+    run = latest_merge_group_run(repo, number, token=token)
+    if run is None:
+        return None, []
+    run_id = run.get("id")
+    url = run.get("html_url")
+    jobs = failed_job_names(repo, run_id, token=token) if isinstance(run_id, int) else []
+    return (url if isinstance(url, str) else None), jobs
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -541,6 +816,16 @@ def main(argv: Sequence[str] | None = None) -> int:
         prs,
         enable=lambda number, head_sha: enable_auto_merge(args.repo, number, head_sha, token=token),
         comment=lambda number, head_sha: post_audit_comment(args.repo, number, head_sha, token=token),
+        is_queued=lambda number, _head_sha: (
+            get_merge_queue_entry(args.repo, number, token=token) is not None
+        ),
+    )
+    ejection_decisions = notify_queue_ejections(
+        prs,
+        get_events=lambda number: list_issue_timeline(args.repo, number, token=token),
+        get_comments=lambda number: list_pr_comments(args.repo, number, token=token),
+        get_run_details=lambda number: merge_group_run_details(args.repo, number, token=token),
+        comment=lambda number, body: post_pr_comment(args.repo, number, body, token=token),
     )
     for decision in retry_decisions:
         if decision.should_rerun:
@@ -549,6 +834,17 @@ def main(argv: Sequence[str] | None = None) -> int:
         if decision.reason == "already_armed_or_queued":
             continue
         print(json.dumps({"number": decision.number, "reason": decision.reason, "armed": decision.should_arm}))
+    for decision in ejection_decisions:
+        if decision.should_comment or decision.reason.startswith("ejection_scan_unavailable"):
+            print(
+                json.dumps(
+                    {
+                        "number": decision.number,
+                        "reason": decision.reason,
+                        "ejection_noted": decision.event_id or None,
+                    }
+                )
+            )
     return 0
 
 

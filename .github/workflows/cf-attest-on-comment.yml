@@ -4,6 +4,21 @@ name: CF attest on comment
 # comment can exist. When a CF-of-record comment lands, re-evaluate attest for
 # the PR's current head immediately (dedicated job; not a full CI re-run).
 # Auto-arm's stale-failed rerun (#7548) remains the merge-queue companion.
+#
+# #M-4 (2026-09-01): the job gate used to require a literal "Reviewer family:"
+# line, so a "**VERDICT: APPROVE**" comment carrying only "resolved_model:"
+# was skipped SILENTLY (runs 33552592932 / 33552245509). The gate now fires on
+# any verdict-shaped PR comment; the evaluator fail-closes, posts ONE short
+# gap comment when the verdict cannot be attested, and reruns the stale
+# failed CF attest run at this head after a fresh accept (no more manual
+# `gh run rerun --failed`).
+#
+# #7593-r2 (2026-09-01): the gap comment itself carries verdict-shaped text,
+# so an unguarded gate made the bot's own feedback retrigger this workflow in
+# a loop. The gate now ignores bot-authored comments, and the evaluator
+# answers neither its own marker-tagged gap comment nor any bot author, never
+# emits the literal trigger tokens, and posts at most one gap comment per
+# (PR, head SHA).
 
 permissions:
   contents: read
@@ -20,19 +35,27 @@ concurrency:
 jobs:
   cf-attest:
     name: CF attest
-    # PR comments only. Match the CF attest shape (VERDICT + Reviewer family);
-    # ignore Codex usage-limit noise and ordinary driver chatter.
-    # Matching comments never skip-to-green: resolve + attest fail closed.
+    # PR comments only. Any verdict-shaped comment runs the evaluator —
+    # the family may arrive via "Reviewer family:" OR "resolved_model:", and
+    # markdown emphasis on the verdict is fine. Matching comments never
+    # skip-to-green: resolve + attest fail closed, and an unattestable
+    # verdict earns exactly one gap comment (never a silent skip).
+    # Bot-authored comments are excluded (#7593-r2): the evaluator's own gap
+    # comment must never retrigger this workflow.
     if: >-
       github.event.issue.pull_request &&
+      github.event.comment.user.type != 'Bot' &&
+      github.event.comment.user.login != 'github-actions[bot]' &&
       contains(github.event.comment.body, 'VERDICT:') &&
-      contains(github.event.comment.body, 'Reviewer family:') &&
       !contains(github.event.comment.body, 'usage limit')
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
       contents: read
-      pull-requests: read
+      # write: post the one gap comment when a verdict cannot be attested.
+      pull-requests: write
+      # write: rerun the stale failed CF attest run after a fresh accept.
+      actions: write
     steps:
       - name: Resolve PR head SHA
         id: pr
@@ -77,4 +100,25 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           GITHUB_API_URL: ${{ github.api_url }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-        run: python3 scripts/ci/cf_attest.py
+          # Untrusted comment text travels via env only — never spliced into
+          # the run script (untrusted-workflow-interpolation gate).
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          # #7593-r2: author identity (bot guard) and comment id (dedupe) via
+          # env as well; never interpolated into the shell.
+          COMMENT_AUTHOR_LOGIN: ${{ github.event.comment.user.login }}
+          COMMENT_AUTHOR_TYPE: ${{ github.event.comment.user.type }}
+          COMMENT_ID: ${{ github.event.comment.id }}
+        run: python3 scripts/ci/cf_attest.py --feedback-comment
+
+      - name: Rerun stale failed CF attest at this head
+        # The verdict was just accepted for the current head; the push-time
+        # CI run's CF attest job may still be red from before the comment
+        # existed. Re-run it once instead of leaving the PR red until a
+        # human reruns by hand (#M-4).
+        if: success()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_API_URL: ${{ github.api_url }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
+        run: python3 scripts/ci/cf_attest.py --rerun-stale-failed

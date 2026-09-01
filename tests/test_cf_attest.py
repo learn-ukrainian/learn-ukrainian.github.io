@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
-from urllib.error import HTTPError
+from urllib.error import HTTPError, URLError
 
 import pytest
 import yaml
@@ -11,13 +12,18 @@ import yaml
 from scripts.ci import gate_required_results as gate
 from scripts.ci.cf_attest import (
     FAMILY_CURSOR_AUTO_UNION,
+    VERDICT_PRESENT_RE,
+    AttestResult,
     author_family_from_agents,
+    build_attest_feedback,
+    diagnose_attest_comment,
     evaluate_attestation,
     families_independent,
     main,
     normalize_family,
     parse_attestation,
     parse_pr_number,
+    rerun_stale_failed_cf_attest,
     resolve_pr_head_sha,
     run_event,
     x_agent_seats_from_messages,
@@ -345,13 +351,21 @@ def test_comment_workflow_triggers_on_issue_comment_created() -> None:
     assert triggers["issue_comment"] == {"types": ["created"]}
 
 
-def test_comment_workflow_is_pr_only_and_cf_shaped() -> None:
+def test_comment_workflow_is_pr_only_and_verdict_shaped() -> None:
     job = _load_comment_workflow()["jobs"]["cf-attest"]
     condition = " ".join(str(job.get("if") or "").split())
     assert "github.event.issue.pull_request" in condition
     assert "VERDICT:" in condition
-    assert "Reviewer family:" in condition
     assert "usage limit" in condition
+    # #7593-r2: the evaluator's own gap comment is bot-authored and
+    # verdict-free by construction; the gate must also exclude bots so an
+    # unattestable verdict can never start a comment loop.
+    assert "github.event.comment.user.type != 'Bot'" in condition
+    assert "github-actions[bot]" in condition
+    # #M-4 (2026-09-01): the family may arrive via a resolved_model: line, so
+    # requiring a literal "Reviewer family:" silently skipped valid verdicts
+    # (runs 33552592932 / 33552245509). The evaluator fail-closes instead.
+    assert "Reviewer family:" not in condition
     assert job.get("continue-on-error") is not True
 
 
@@ -360,7 +374,13 @@ def test_comment_workflow_pins_exact_head_env_and_run() -> None:
     assert workflow["permissions"] == {"contents": "read", "pull-requests": "read"}
     job = workflow["jobs"]["cf-attest"]
     assert job["name"] == "CF attest"
-    assert job["permissions"] == {"contents": "read", "pull-requests": "read"}
+    # Job-level writes are scoped to exactly the two side effects: the gap
+    # comment (pull-requests) and the stale-run rerun (actions).
+    assert job["permissions"] == {
+        "contents": "read",
+        "pull-requests": "write",
+        "actions": "write",
+    }
     resolve = next(step for step in job["steps"] if step.get("id") == "pr")
     assert "fail-closed" in resolve["run"]
     assert "github.event.comment.body" not in resolve["run"]
@@ -374,9 +394,26 @@ def test_comment_workflow_pins_exact_head_env_and_run() -> None:
     assert env["PR_HEAD_SHA"] == "${{ steps.pr.outputs.head_sha }}"
     assert env["PR_NUMBER"] == "${{ github.event.issue.number }}"
     assert env["EVENT_SHA"] == "${{ github.sha }}"
-    assert step["run"] == "python3 scripts/ci/cf_attest.py"
+    # The untrusted comment body reaches the evaluator via env only, so a
+    # verdict that cannot be attested earns ONE gap comment — never a skip.
+    assert env["COMMENT_BODY"] == "${{ github.event.comment.body }}"
+    # #7593-r2: bot guard + dedupe inputs via env as well (never the shell).
+    assert env["COMMENT_AUTHOR_LOGIN"] == "${{ github.event.comment.user.login }}"
+    assert env["COMMENT_AUTHOR_TYPE"] == "${{ github.event.comment.user.type }}"
+    assert env["COMMENT_ID"] == "${{ github.event.comment.id }}"
+    assert step["run"] == "python3 scripts/ci/cf_attest.py --feedback-comment"
     assert "${{" not in step["run"]
     assert step.get("continue-on-error") is not True
+    rerun = next(
+        item
+        for item in job["steps"]
+        if item.get("name") == "Rerun stale failed CF attest at this head"
+    )
+    assert rerun["if"] == "success()"
+    assert rerun["run"] == "python3 scripts/ci/cf_attest.py --rerun-stale-failed"
+    assert "${{" not in rerun["run"]
+    assert rerun["env"]["PR_HEAD_SHA"] == "${{ steps.pr.outputs.head_sha }}"
+    assert rerun["env"]["GITHUB_REPOSITORY"] == "${{ github.repository }}"
     checkout = next(
         item for item in job["steps"] if str(item.get("uses", "")).startswith("actions/checkout@")
     )
@@ -698,3 +735,374 @@ def test_fail_union_author_with_member_reviewer() -> None:
         )],
     )
     assert not result.ok
+
+
+def test_parse_verdict_emphasis_and_resolved_model_shapes() -> None:
+    """#M-4: verdict case/emphasis variants and family via resolved_model."""
+    variants = [
+        (
+            f"Cross-family review of record (codex)\nReviewer family: openai\n"
+            f"At exact head `{PR_HEAD}`\nVERDICT: APPROVE",
+            "openai",
+        ),
+        (
+            f"**VERDICT: APPROVE**\n\nCross-family review of record (codex)\n"
+            f"Reviewer family: openai\nAt exact head `{PR_HEAD}`",
+            "openai",
+        ),
+        (
+            f"Cross-family review of record (codex)\nReviewer family: openai\n"
+            f"At exact head `{PR_HEAD}`\nVERDICT: **APPROVE**",
+            "openai",
+        ),
+        # The exact #M-4 shape: bold verdict + resolved_model, no family line.
+        (
+            f"**VERDICT: APPROVE**\nCross-family review of record (codex)\n"
+            f"resolved_model: gpt-5-codex\nAt exact head `{PR_HEAD}`",
+            "openai",
+        ),
+        (
+            f"verdict: approve\nCross-family review (claude-sonnet-5)\n"
+            f"resolved_model: claude-sonnet-5\nAt exact head `{PR_HEAD}`",
+            "anthropic",
+        ),
+    ]
+    for body, family in variants:
+        parsed = parse_attestation(body)
+        assert parsed is not None, body
+        assert parsed.head_sha == PR_HEAD
+        assert parsed.verdict == "APPROVE"
+        assert parsed.reviewer_family == family
+
+
+def test_parse_resolved_model_unresolvable_fails_closed() -> None:
+    """An unresolvable resolved_model is a failed attest, not a silent skip."""
+    body = (
+        "**VERDICT: APPROVE**\nCross-family review of record (mystery-seat)\n"
+        f"resolved_model: some-unlisted-model\nAt exact head `{PR_HEAD}`"
+    )
+    assert parse_attestation(body) is None
+
+
+def test_diagnose_attest_comment_reports_each_gap() -> None:
+    assert diagnose_attest_comment("ordinary chatter, no verdict") is None
+
+    good = (
+        "**VERDICT: APPROVE**\nCross-family review of record (codex)\n"
+        f"Reviewer family: openai\nAt exact head `{PR_HEAD}`"
+    )
+    assert diagnose_attest_comment(good, expected_head=PR_HEAD) is None
+
+    stale = diagnose_attest_comment(good, expected_head=STALE_HEAD)
+    assert stale is not None
+    assert PR_HEAD in stale and STALE_HEAD in stale
+
+    no_family = (
+        "**VERDICT: APPROVE**\nCross-family review of record\n"
+        f"At exact head `{PR_HEAD}`"
+    )
+    note = diagnose_attest_comment(no_family, expected_head=PR_HEAD)
+    assert note is not None and "reviewer family" in note
+
+    no_head = (
+        "**VERDICT: APPROVE**\nCross-family review of record (codex)\n"
+        "Reviewer family: openai"
+    )
+    note = diagnose_attest_comment(no_head, expected_head=PR_HEAD)
+    assert note is not None and "head SHA" in note
+
+    bad_model = (
+        "**VERDICT: APPROVE**\nCross-family review of record\n"
+        f"resolved_model: unlisted-thing\nAt exact head `{PR_HEAD}`"
+    )
+    note = diagnose_attest_comment(bad_model)
+    assert note is not None and "resolved_model" in note
+
+
+def test_build_attest_feedback_is_one_short_comment() -> None:
+    body = build_attest_feedback("missing a resolvable reviewer family")
+    assert "cf-attest:gap" in body
+    assert "missing a resolvable reviewer family" in body
+    assert "resolved_model" in body
+
+
+def test_build_attest_feedback_never_retriggers_the_gate() -> None:
+    """#7593-r2: the gap comment must not carry the workflow trigger tokens.
+
+    The on-comment job gate is ``contains(body, 'VERDICT:')``; the evaluator
+    re-diagnoses anything matching VERDICT_PRESENT_RE. The gap comment must
+    fail both, carry the hidden dedupe marker, and avoid the literal family /
+    cross-family-paren tokens.
+    """
+    body = build_attest_feedback(
+        "missing a recognized verdict (e.g. VERDICT&#58; APPROVE)",
+        head=PR_HEAD,
+        trigger_id="4242",
+    )
+    assert not VERDICT_PRESENT_RE.search(body)
+    assert "VERDICT:" not in body
+    assert "verdict:" not in body.casefold()
+    assert "Reviewer family:" not in body
+    assert "reviewer family:" not in body.casefold()
+    assert "Cross-family review of record (" not in body
+    assert "<!-- cf-attest:gap" in body
+    assert f"head={PR_HEAD}" in body
+    assert "trigger=4242" in body
+    # The REAL diagnose notes are embedded verbatim — verify end-to-end.
+    note = diagnose_attest_comment("**VERDICT: APPROVE** and nothing else")
+    assert note is not None
+    real = build_attest_feedback(note, head=PR_HEAD, trigger_id="1")
+    assert not VERDICT_PRESENT_RE.search(real)
+    assert "VERDICT:" not in real
+    assert "Reviewer family:" not in real
+
+
+def test_diagnose_attest_comment_never_answers_own_gap_comment() -> None:
+    """#7593-r2: the marker alone suppresses a reply, verdict tokens or not."""
+    body = build_attest_feedback("missing a head SHA", head=PR_HEAD, trigger_id="7")
+    assert diagnose_attest_comment(body, expected_head=PR_HEAD) is None
+    tagged_verdict = "<!-- cf-attest:gap -->\n**VERDICT: APPROVE** but no head"
+    assert diagnose_attest_comment(tagged_verdict, expected_head=PR_HEAD) is None
+
+
+def _feedback_args() -> argparse.Namespace:
+    return argparse.Namespace(repository="o/r", pr_number="5")
+
+
+def _failing_result() -> AttestResult:
+    return AttestResult(False, "missing CF: no independent exact-head APPROVE",
+                        expected_head=PR_HEAD)
+
+
+def _unattestable_trigger_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("COMMENT_BODY", "**VERDICT: APPROVE** with nothing else")
+    monkeypatch.setenv("COMMENT_AUTHOR_TYPE", "User")
+    monkeypatch.setenv("COMMENT_AUTHOR_LOGIN", "fleet-reviewer")
+    monkeypatch.setenv("COMMENT_ID", "9001")
+
+
+def test_maybe_post_feedback_posts_once_with_marker_and_no_triggers(monkeypatch) -> None:
+    import scripts.ci.cf_attest as mod
+
+    posts: list[dict] = []
+    _unattestable_trigger_env(monkeypatch)
+    monkeypatch.setattr(mod, "github_api_get", lambda *a, **k: [])
+    monkeypatch.setattr(mod, "github_api_post", lambda path, payload, **k: posts.append(payload))
+    mod._maybe_post_feedback(_feedback_args(), _failing_result())
+    assert len(posts) == 1
+    body = posts[0]["body"]
+    assert "<!-- cf-attest:gap" in body
+    assert f"head={PR_HEAD}" in body
+    assert "trigger=9001" in body
+    assert "VERDICT:" not in body
+    assert "Reviewer family:" not in body
+    assert not VERDICT_PRESENT_RE.search(body)
+
+
+def test_maybe_post_feedback_skips_bot_authored_trigger(monkeypatch) -> None:
+    import scripts.ci.cf_attest as mod
+
+    _unattestable_trigger_env(monkeypatch)
+    monkeypatch.setenv("COMMENT_AUTHOR_TYPE", "Bot")
+    monkeypatch.setenv("COMMENT_AUTHOR_LOGIN", "github-actions[bot]")
+    monkeypatch.setattr(mod, "github_api_get", lambda *a, **k: pytest.fail("must not fetch"))
+    monkeypatch.setattr(mod, "github_api_post", lambda *a, **k: pytest.fail("must not POST"))
+    mod._maybe_post_feedback(_feedback_args(), _failing_result())
+
+
+def test_maybe_post_feedback_skips_own_gap_comment_body(monkeypatch) -> None:
+    import scripts.ci.cf_attest as mod
+
+    _unattestable_trigger_env(monkeypatch)
+    monkeypatch.setenv(
+        "COMMENT_BODY", build_attest_feedback("missing x", head=PR_HEAD, trigger_id="1")
+    )
+    monkeypatch.setattr(mod, "github_api_get", lambda *a, **k: pytest.fail("must not fetch"))
+    monkeypatch.setattr(mod, "github_api_post", lambda *a, **k: pytest.fail("must not POST"))
+    mod._maybe_post_feedback(_feedback_args(), _failing_result())
+
+
+def test_maybe_post_feedback_dedupes_per_pr_and_head(monkeypatch) -> None:
+    """#7593-r2: an existing marker+head gap comment suppresses a repost."""
+    import scripts.ci.cf_attest as mod
+
+    _unattestable_trigger_env(monkeypatch)
+    existing = [
+        {"body": "unrelated chatter"},
+        {"body": build_attest_feedback("missing x", head=PR_HEAD, trigger_id="1")},
+    ]
+    monkeypatch.setattr(mod, "github_api_get", lambda *a, **k: existing)
+    monkeypatch.setattr(mod, "github_api_post", lambda *a, **k: pytest.fail("must not POST"))
+    mod._maybe_post_feedback(_feedback_args(), _failing_result())
+
+
+def test_maybe_post_feedback_reposts_for_a_new_head(monkeypatch) -> None:
+    """A gap comment at a STALE head must not suppress one at the new head."""
+    import scripts.ci.cf_attest as mod
+
+    posts: list[dict] = []
+    _unattestable_trigger_env(monkeypatch)
+    existing = [{"body": build_attest_feedback("missing x", head=STALE_HEAD, trigger_id="1")}]
+    monkeypatch.setattr(mod, "github_api_get", lambda *a, **k: existing)
+    monkeypatch.setattr(mod, "github_api_post", lambda path, payload, **k: posts.append(payload))
+    mod._maybe_post_feedback(_feedback_args(), _failing_result())
+    assert len(posts) == 1
+
+
+def test_maybe_post_feedback_skips_when_dedupe_check_fails(monkeypatch) -> None:
+    """Fail closed against a loop: no dedupe check, no comment."""
+    import scripts.ci.cf_attest as mod
+
+    _unattestable_trigger_env(monkeypatch)
+
+    def broken_get(*a, **k):
+        raise URLError("api down")
+
+    monkeypatch.setattr(mod, "github_api_get", broken_get)
+    monkeypatch.setattr(mod, "github_api_post", lambda *a, **k: pytest.fail("must not POST"))
+    mod._maybe_post_feedback(_feedback_args(), _failing_result())
+
+
+def _failed_cf_check_run(run_id: int = 424242, job_id: int = 9) -> dict:
+    return {
+        "name": "CF attest",
+        "status": "completed",
+        "conclusion": "failure",
+        "details_url": f"https://github.com/o/r/actions/runs/{run_id}/job/{job_id}",
+    }
+
+
+def _run_payload(run_id: int, **overrides: object) -> dict:
+    payload = {
+        "id": run_id,
+        "head_sha": PR_HEAD,
+        "status": "completed",
+        "conclusion": "failure",
+        "run_attempt": 1,
+    }
+    payload.update(overrides)
+    return payload
+
+
+def test_rerun_stale_failed_cf_attest_reruns_initial_failed_job() -> None:
+    posts: list[tuple[str, dict]] = []
+
+    def api_get(path: str) -> object:
+        if "check-runs" in path:
+            return {"check_runs": [_failed_cf_check_run()]}
+        if path.endswith("/actions/runs/424242"):
+            return _run_payload(424242)
+        raise AssertionError(path)
+
+    summary = rerun_stale_failed_cf_attest(
+        repository="o/r",
+        head_sha=PR_HEAD,
+        api_get=api_get,
+        api_post=lambda path, payload: posts.append((path, payload)),
+    )
+    assert "424242" in summary
+    assert "9" in summary
+    assert posts == [("repos/o/r/actions/jobs/9/rerun", {})]
+    assert not any("rerun-failed-jobs" in path for path, _ in posts)
+
+
+def test_rerun_stale_failed_cf_attest_scopes_to_job_never_whole_run() -> None:
+    """#7593 r3: mutation is scoped strictly to the CF attest job."""
+    posts: list[tuple[str, dict]] = []
+
+    def api_get(path: str) -> object:
+        if "check-runs" in path:
+            return {"check_runs": [_failed_cf_check_run(run_id=555555, job_id=123)]}
+        if path.endswith("/actions/runs/555555"):
+            return _run_payload(555555)
+        raise AssertionError(path)
+
+    summary = rerun_stale_failed_cf_attest(
+        repository="o/r",
+        head_sha=PR_HEAD,
+        api_get=api_get,
+        api_post=lambda path, payload: posts.append((path, payload)),
+    )
+    assert "job 123 for run 555555" in summary
+    assert posts == [("repos/o/r/actions/jobs/123/rerun", {})]
+    assert "rerun-failed-jobs" not in posts[0][0]
+
+
+def test_rerun_stale_failed_cf_attest_noops_when_check_green() -> None:
+    def api_get(path: str) -> object:
+        assert "check-runs" in path
+        return {"check_runs": [_failed_cf_check_run() | {"conclusion": "success"}]}
+
+    summary = rerun_stale_failed_cf_attest(
+        repository="o/r",
+        head_sha=PR_HEAD,
+        api_get=api_get,
+        api_post=lambda path, payload: pytest.fail("must not POST"),
+    )
+    assert "nothing to rerun" in summary
+
+
+def test_rerun_stale_failed_cf_attest_never_reruns_a_second_attempt() -> None:
+    """#7593 r3: rate-limit per head SHA — second comment on the same head is a no-op."""
+    def api_get(path: str) -> object:
+        if "check-runs" in path:
+            return {"check_runs": [_failed_cf_check_run()]}
+        if path.endswith("/actions/runs/424242"):
+            return _run_payload(424242, run_attempt=2)
+        raise AssertionError(path)
+
+    summary = rerun_stale_failed_cf_attest(
+        repository="o/r",
+        head_sha=PR_HEAD,
+        api_get=api_get,
+        api_post=lambda path, payload: pytest.fail("must not POST"),
+    )
+    assert "not rerunning again" in summary
+
+
+def test_rerun_stale_failed_cf_attest_rejects_head_mismatch() -> None:
+    def api_get(path: str) -> object:
+        if "check-runs" in path:
+            return {"check_runs": [_failed_cf_check_run()]}
+        if path.endswith("/actions/runs/424242"):
+            return _run_payload(424242, head_sha=STALE_HEAD)
+        raise AssertionError(path)
+
+    summary = rerun_stale_failed_cf_attest(
+        repository="o/r",
+        head_sha=PR_HEAD,
+        api_get=api_get,
+        api_post=lambda path, payload: pytest.fail("must not POST"),
+    )
+    assert "head SHA mismatch" in summary
+
+
+def test_rerun_stale_failed_cf_attest_fails_closed_on_bad_head() -> None:
+    with pytest.raises(ValueError, match="malformed PR head SHA"):
+        rerun_stale_failed_cf_attest(
+            repository="o/r",
+            head_sha="not-a-sha",
+            api_get=lambda path: pytest.fail("must not fetch"),
+            api_post=lambda path, payload: pytest.fail("must not POST"),
+        )
+
+
+def test_mismatched_family_or_head_never_attests_or_reruns() -> None:
+    """Same-family and mismatched-head comments fail closed and never attest."""
+    # Same family: google reviewing google
+    same_family_result = evaluate_attestation(
+        expected_head=PR_HEAD,
+        author_family="google",
+        bodies=[("comment", _formal_agy(PR_HEAD))],
+    )
+    assert not same_family_result.ok
+    assert "same-family review" in same_family_result.reason
+
+    # Mismatched head
+    mismatched_head_result = evaluate_attestation(
+        expected_head=PR_HEAD,
+        author_family="openai",
+        bodies=[("comment", _formal_agy(STALE_HEAD))],
+    )
+    assert not mismatched_head_result.ok
+    assert "stale CF" in mismatched_head_result.reason or "head mismatch" in mismatched_head_result.reason
