@@ -86,6 +86,9 @@ _PROVIDER_SECRET_ALLOWLIST = {
         "KIMI_API_KEY",
         "ANTHROPIC_AUTH_TOKEN",
     },
+    "cursor": {
+        "CURSOR_API_KEY",
+    },
 }
 
 _PROVIDER_SAFE_NAME_ALLOWLIST = {
@@ -284,8 +287,7 @@ def _isolated_git_env(
         sandbox_dir = Path(tempfile.mkdtemp(prefix="lu-agent-runtime-git-"))
         sandbox_global = sandbox_dir / "agent.gitconfig"
         real_global = Path(
-            os.environ.get("GIT_CONFIG_GLOBAL")
-            or ((Path(home) if home else Path.home()) / ".gitconfig")
+            os.environ.get("GIT_CONFIG_GLOBAL") or ((Path(home) if home else Path.home()) / ".gitconfig")
         )
         if real_global.is_file():
             shutil.copyfile(real_global, sandbox_global)
@@ -322,7 +324,7 @@ def _isolated_git_env(
             askpass = sandbox_dir / "git-askpass.sh"
             askpass.write_text(
                 "#!/bin/sh\n"
-                "case \"$1\" in\n"
+                'case "$1" in\n'
                 "  *Username*) printf '%s\\n' x-access-token ;;\n"
                 "  *Password*) printf '%s\\n' \"$GH_TOKEN\" ;;\n"
                 "  *) printf '\\n' ;;\n"

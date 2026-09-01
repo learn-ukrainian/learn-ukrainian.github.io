@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import re
 import shutil
 import subprocess
@@ -64,9 +65,7 @@ _GITHUB_SECONDARY_RATE_LIMIT_MARKER = "agent-gh-shim: github_secondary_rate_limi
 # this boundary structural: assistant prose, tool input, and arbitrary log
 # text must never become model evidence merely because they contain the word
 # "model".
-_NON_CONCRETE_MODEL_VALUES = frozenset(
-    {"", "auto", "default", "unknown", "none", "null", "n/a", "unattested-harness"}
-)
+_NON_CONCRETE_MODEL_VALUES = frozenset({"", "auto", "default", "unknown", "none", "null", "n/a", "unattested-harness"})
 _MODEL_KEYS = frozenset(
     {
         "model",
@@ -177,8 +176,10 @@ class CursorAdapter:
         cmd: list[str] = [
             cursor_bin,
             "-p",  # Non-interactive print mode; prompt arrives via stdin.
-            "--model", model or self.default_model,
-            "--output-format", config.get("output_format", "stream-json"),
+            "--model",
+            model or self.default_model,
+            "--output-format",
+            config.get("output_format", "stream-json"),
             "--trust",  # Headless workspace-trust bypass
         ]
 
@@ -232,12 +233,18 @@ class CursorAdapter:
                 cmd.append("--approve-mcps")
             cmd.extend(["--force", "--sandbox", "disabled"])
 
+        env_overrides: dict[str, str] = {"LU_ENTIRE_CAPTURE_OWNER": "fleet"}
+        if "CURSOR_API_KEY" not in os.environ:
+            file_key = _load_cursor_api_key_from_env_file()
+            if file_key:
+                env_overrides["CURSOR_API_KEY"] = file_key
+
         return InvocationPlan(
             cmd=cmd,
             cwd=cwd,
             stdin_payload=prompt,
             output_file=None,  # Cursor writes to stdout
-            env_overrides={"LU_ENTIRE_CAPTURE_OWNER": "fleet"},
+            env_overrides=env_overrides,
             liveness_paths=(),  # rely on stdout streaming
             metadata={
                 "entire_fleet": {
@@ -277,10 +284,7 @@ class CursorAdapter:
                 selected[name] = sanitized
 
         if missing:
-            raise RuntimeError(
-                "CursorAdapter could not resolve MCP server config for: "
-                + ", ".join(sorted(missing))
-            )
+            raise RuntimeError("CursorAdapter could not resolve MCP server config for: " + ", ".join(sorted(missing)))
 
         target = Path(workspace) / ".cursor" / "mcp.json"
         existing = self._read_mcp_file(target)
@@ -452,14 +456,8 @@ class CursorAdapter:
         # stderr diagnostic is rate-limited.
         usable_response = bool(response)
         failed_call = returncode != 0 or not usable_response
-        github_secondary_rate_limited = (
-            failed_call and _GITHUB_SECONDARY_RATE_LIMIT_MARKER in (stderr or "")
-        )
-        rate_limited = (
-            failed_call
-            and not github_secondary_rate_limited
-            and bool(_RATE_LIMIT_RE.search(stderr or ""))
-        )
+        github_secondary_rate_limited = failed_call and _GITHUB_SECONDARY_RATE_LIMIT_MARKER in (stderr or "")
+        rate_limited = failed_call and not github_secondary_rate_limited and bool(_RATE_LIMIT_RE.search(stderr or ""))
 
         ok = returncode == 0 and bool(response) and not rate_limited
 
@@ -490,9 +488,7 @@ class CursorAdapter:
             session_id=session_id,
             tool_calls=tool_calls,
             substitution=model_attribution,
-            failure_code=(
-                "github_secondary_rate_limited" if github_secondary_rate_limited else None
-            ),
+            failure_code=("github_secondary_rate_limited" if github_secondary_rate_limited else None),
         )
 
     def _read_session_transcript_events(
@@ -502,13 +498,7 @@ class CursorAdapter:
     ) -> list[dict]:
         encoded = self._encode_workspace_path(workspace_path)
         transcript = (
-            Path.home()
-            / ".cursor"
-            / "projects"
-            / encoded
-            / "agent-transcripts"
-            / session_id
-            / f"{session_id}.jsonl"
+            Path.home() / ".cursor" / "projects" / encoded / "agent-transcripts" / session_id / f"{session_id}.jsonl"
         )
         try:
             text = transcript.read_text(encoding="utf-8")
@@ -648,9 +638,7 @@ def _extract_concrete_model_from_events(events: list[dict]) -> str | None:
 
 
 _CURSOR_AUTH_PATH = Path.home() / ".config" / "cursor" / "auth.json"
-_CURSOR_USAGE_URL = (
-    "https://api2.cursor.sh/aiserver.v1.DashboardService/GetCurrentPeriodUsage"
-)
+_CURSOR_USAGE_URL = "https://api2.cursor.sh/aiserver.v1.DashboardService/GetCurrentPeriodUsage"
 
 
 def _cursor_cli_binary() -> str:
@@ -711,6 +699,42 @@ def _load_cursor_access_token() -> str | None:
         return None
     token = data.get("accessToken")
     return str(token).strip() if isinstance(token, str) and token.strip() else None
+
+
+def _cursor_api_key_env_path() -> Path:
+    return Path.home() / ".config" / "cursor-agent" / "api.key.env"
+
+
+def _load_cursor_api_key_from_env_file(path: Path | None = None) -> str | None:
+    """Read CURSOR_API_KEY from ~/.config/cursor-agent/api.key.env if present.
+
+    Never logs or prints the key value.
+    """
+    key_file = path if path is not None else _cursor_api_key_env_path()
+    if not key_file.is_file():
+        return None
+    try:
+        content = key_file.read_text(encoding="utf-8")
+    except OSError:
+        return None
+
+    for raw_line in content.splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if line.startswith("export "):
+            line = line[len("export ") :].strip()
+        if "=" in line:
+            name, _, val = line.partition("=")
+            if name.strip() == "CURSOR_API_KEY":
+                cleaned = val.strip()
+                if (cleaned.startswith('"') and cleaned.endswith('"')) or (
+                    cleaned.startswith("'") and cleaned.endswith("'")
+                ):
+                    cleaned = cleaned[1:-1]
+                if cleaned:
+                    return cleaned
+    return None
 
 
 def _ms_to_iso_z(raw_ms: object) -> str | None:

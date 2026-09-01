@@ -35,10 +35,14 @@ def test_delegate_dispatch_accepts_cursor_agent():
             sys.executable,
             str(_REPO_ROOT / "scripts" / "delegate.py"),
             "dispatch",
-            "--agent", "cursor",
-            "--task-id", "test-cursor-argparse-probe",
-            "--prompt", "noop",
+            "--agent",
+            "cursor",
+            "--task-id",
+            "test-cursor-argparse-probe",
+            "--prompt",
+            "noop",
             "--dry-run",
+            "--force-new",
         ],
         capture_output=True,
         text=True,
@@ -46,8 +50,7 @@ def test_delegate_dispatch_accepts_cursor_agent():
         cwd=str(_REPO_ROOT),
     )
     assert result.returncode == 0, (
-        f"delegate dispatch --agent cursor failed:\n"
-        f"stdout={result.stdout!r}\nstderr={result.stderr!r}"
+        f"delegate dispatch --agent cursor failed:\nstdout={result.stdout!r}\nstderr={result.stderr!r}"
     )
     assert "test-cursor-argparse-probe" in result.stdout
 
