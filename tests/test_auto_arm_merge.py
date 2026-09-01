@@ -238,10 +238,9 @@ def test_workflow_is_scheduled_manual_serial_and_minimally_scoped() -> None:
     assert triggers["schedule"] == [{"cron": "7,22,37,52 * * * *"}]
     assert triggers["workflow_run"] == {"workflows": ["CI"], "types": ["completed"]}
     arm_job = workflow["jobs"]["arm"]
-    assert (
-        arm_job["if"]
-        == "github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'"
-    )
+    # No success-only gate: red CI completions MUST fire the scan — the #7548
+    # stale-attest rerun lives there, and a CF-attest-raced run is red.
+    assert "if" not in arm_job
     assert workflow["permissions"] == {
         "actions": "write",
         "pull-requests": "write",

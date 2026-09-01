@@ -29,8 +29,11 @@ concurrency:
 jobs:
   arm:
     name: Arm eligible pull requests
-    # After a red CI run nothing can have newly become eligible; skip the scan.
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    # No success-only gate on workflow_run (removed after live evidence
+    # 2026-09-01 08:32/08:34Z): a CF-attest-raced run concludes FAILURE, and
+    # the #7548 stale-attest rerun lives in this very scan — skipping red
+    # runs blocked the self-heal exactly when it was needed, leaving raced
+    # PRs to the unreliable cron. The scanner is cheap and no-ops safely.
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
