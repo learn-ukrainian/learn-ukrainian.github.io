@@ -12,12 +12,15 @@ from scripts.ci import gate_required_results as gate
 from scripts.ci.cf_attest import (
     FAMILY_CURSOR_AUTO_UNION,
     author_family_from_agents,
+    build_attest_feedback,
+    diagnose_attest_comment,
     evaluate_attestation,
     families_independent,
     main,
     normalize_family,
     parse_attestation,
     parse_pr_number,
+    rerun_stale_failed_cf_attest,
     resolve_pr_head_sha,
     run_event,
     x_agent_seats_from_messages,
@@ -345,13 +348,16 @@ def test_comment_workflow_triggers_on_issue_comment_created() -> None:
     assert triggers["issue_comment"] == {"types": ["created"]}
 
 
-def test_comment_workflow_is_pr_only_and_cf_shaped() -> None:
+def test_comment_workflow_is_pr_only_and_verdict_shaped() -> None:
     job = _load_comment_workflow()["jobs"]["cf-attest"]
     condition = " ".join(str(job.get("if") or "").split())
     assert "github.event.issue.pull_request" in condition
     assert "VERDICT:" in condition
-    assert "Reviewer family:" in condition
     assert "usage limit" in condition
+    # #M-4 (2026-09-01): the family may arrive via a resolved_model: line, so
+    # requiring a literal "Reviewer family:" silently skipped valid verdicts
+    # (runs 33552592932 / 33552245509). The evaluator fail-closes instead.
+    assert "Reviewer family:" not in condition
     assert job.get("continue-on-error") is not True
 
 
@@ -360,7 +366,13 @@ def test_comment_workflow_pins_exact_head_env_and_run() -> None:
     assert workflow["permissions"] == {"contents": "read", "pull-requests": "read"}
     job = workflow["jobs"]["cf-attest"]
     assert job["name"] == "CF attest"
-    assert job["permissions"] == {"contents": "read", "pull-requests": "read"}
+    # Job-level writes are scoped to exactly the two side effects: the gap
+    # comment (pull-requests) and the stale-run rerun (actions).
+    assert job["permissions"] == {
+        "contents": "read",
+        "pull-requests": "write",
+        "actions": "write",
+    }
     resolve = next(step for step in job["steps"] if step.get("id") == "pr")
     assert "fail-closed" in resolve["run"]
     assert "github.event.comment.body" not in resolve["run"]
@@ -374,9 +386,22 @@ def test_comment_workflow_pins_exact_head_env_and_run() -> None:
     assert env["PR_HEAD_SHA"] == "${{ steps.pr.outputs.head_sha }}"
     assert env["PR_NUMBER"] == "${{ github.event.issue.number }}"
     assert env["EVENT_SHA"] == "${{ github.sha }}"
-    assert step["run"] == "python3 scripts/ci/cf_attest.py"
+    # The untrusted comment body reaches the evaluator via env only, so a
+    # verdict that cannot be attested earns ONE gap comment — never a skip.
+    assert env["COMMENT_BODY"] == "${{ github.event.comment.body }}"
+    assert step["run"] == "python3 scripts/ci/cf_attest.py --feedback-comment"
     assert "${{" not in step["run"]
     assert step.get("continue-on-error") is not True
+    rerun = next(
+        item
+        for item in job["steps"]
+        if item.get("name") == "Rerun stale failed CF attest at this head"
+    )
+    assert rerun["if"] == "success()"
+    assert rerun["run"] == "python3 scripts/ci/cf_attest.py --rerun-stale-failed"
+    assert "${{" not in rerun["run"]
+    assert rerun["env"]["PR_HEAD_SHA"] == "${{ steps.pr.outputs.head_sha }}"
+    assert rerun["env"]["GITHUB_REPOSITORY"] == "${{ github.repository }}"
     checkout = next(
         item for item in job["steps"] if str(item.get("uses", "")).startswith("actions/checkout@")
     )
@@ -698,3 +723,191 @@ def test_fail_union_author_with_member_reviewer() -> None:
         )],
     )
     assert not result.ok
+
+
+def test_parse_verdict_emphasis_and_resolved_model_shapes() -> None:
+    """#M-4: verdict case/emphasis variants and family via resolved_model."""
+    variants = [
+        (
+            f"Cross-family review of record (codex)\nReviewer family: openai\n"
+            f"At exact head `{PR_HEAD}`\nVERDICT: APPROVE",
+            "openai",
+        ),
+        (
+            f"**VERDICT: APPROVE**\n\nCross-family review of record (codex)\n"
+            f"Reviewer family: openai\nAt exact head `{PR_HEAD}`",
+            "openai",
+        ),
+        (
+            f"Cross-family review of record (codex)\nReviewer family: openai\n"
+            f"At exact head `{PR_HEAD}`\nVERDICT: **APPROVE**",
+            "openai",
+        ),
+        # The exact #M-4 shape: bold verdict + resolved_model, no family line.
+        (
+            f"**VERDICT: APPROVE**\nCross-family review of record (codex)\n"
+            f"resolved_model: gpt-5-codex\nAt exact head `{PR_HEAD}`",
+            "openai",
+        ),
+        (
+            f"verdict: approve\nCross-family review (claude-sonnet-5)\n"
+            f"resolved_model: claude-sonnet-5\nAt exact head `{PR_HEAD}`",
+            "anthropic",
+        ),
+    ]
+    for body, family in variants:
+        parsed = parse_attestation(body)
+        assert parsed is not None, body
+        assert parsed.head_sha == PR_HEAD
+        assert parsed.verdict == "APPROVE"
+        assert parsed.reviewer_family == family
+
+
+def test_parse_resolved_model_unresolvable_fails_closed() -> None:
+    """An unresolvable resolved_model is a failed attest, not a silent skip."""
+    body = (
+        "**VERDICT: APPROVE**\nCross-family review of record (mystery-seat)\n"
+        f"resolved_model: some-unlisted-model\nAt exact head `{PR_HEAD}`"
+    )
+    assert parse_attestation(body) is None
+
+
+def test_diagnose_attest_comment_reports_each_gap() -> None:
+    assert diagnose_attest_comment("ordinary chatter, no verdict") is None
+
+    good = (
+        "**VERDICT: APPROVE**\nCross-family review of record (codex)\n"
+        f"Reviewer family: openai\nAt exact head `{PR_HEAD}`"
+    )
+    assert diagnose_attest_comment(good, expected_head=PR_HEAD) is None
+
+    stale = diagnose_attest_comment(good, expected_head=STALE_HEAD)
+    assert stale is not None
+    assert PR_HEAD in stale and STALE_HEAD in stale
+
+    no_family = (
+        "**VERDICT: APPROVE**\nCross-family review of record\n"
+        f"At exact head `{PR_HEAD}`"
+    )
+    note = diagnose_attest_comment(no_family, expected_head=PR_HEAD)
+    assert note is not None and "reviewer family" in note
+
+    no_head = (
+        "**VERDICT: APPROVE**\nCross-family review of record (codex)\n"
+        "Reviewer family: openai"
+    )
+    note = diagnose_attest_comment(no_head, expected_head=PR_HEAD)
+    assert note is not None and "head SHA" in note
+
+    bad_model = (
+        "**VERDICT: APPROVE**\nCross-family review of record\n"
+        f"resolved_model: unlisted-thing\nAt exact head `{PR_HEAD}`"
+    )
+    note = diagnose_attest_comment(bad_model)
+    assert note is not None and "resolved_model" in note
+
+
+def test_build_attest_feedback_is_one_short_comment() -> None:
+    body = build_attest_feedback("missing a resolvable reviewer family")
+    assert "VERDICT:" in body
+    assert "missing a resolvable reviewer family" in body
+    assert "resolved_model" in body
+
+
+def _failed_cf_check_run(run_id: int = 424242) -> dict:
+    return {
+        "name": "CF attest",
+        "status": "completed",
+        "conclusion": "failure",
+        "details_url": f"https://github.com/o/r/actions/runs/{run_id}/job/9",
+    }
+
+
+def _run_payload(run_id: int, **overrides: object) -> dict:
+    payload = {
+        "id": run_id,
+        "head_sha": PR_HEAD,
+        "status": "completed",
+        "conclusion": "failure",
+        "run_attempt": 1,
+    }
+    payload.update(overrides)
+    return payload
+
+
+def test_rerun_stale_failed_cf_attest_reruns_initial_failed_run() -> None:
+    posts: list[tuple[str, dict]] = []
+
+    def api_get(path: str) -> object:
+        if "check-runs" in path:
+            return {"check_runs": [_failed_cf_check_run()]}
+        if path.endswith("/actions/runs/424242"):
+            return _run_payload(424242)
+        raise AssertionError(path)
+
+    summary = rerun_stale_failed_cf_attest(
+        repository="o/r",
+        head_sha=PR_HEAD,
+        api_get=api_get,
+        api_post=lambda path, payload: posts.append((path, payload)),
+    )
+    assert "424242" in summary
+    assert posts == [("repos/o/r/actions/runs/424242/rerun-failed-jobs", {})]
+
+
+def test_rerun_stale_failed_cf_attest_noops_when_check_green() -> None:
+    def api_get(path: str) -> object:
+        assert "check-runs" in path
+        return {"check_runs": [_failed_cf_check_run() | {"conclusion": "success"}]}
+
+    summary = rerun_stale_failed_cf_attest(
+        repository="o/r",
+        head_sha=PR_HEAD,
+        api_get=api_get,
+        api_post=lambda path, payload: pytest.fail("must not POST"),
+    )
+    assert "nothing to rerun" in summary
+
+
+def test_rerun_stale_failed_cf_attest_never_reruns_a_second_attempt() -> None:
+    def api_get(path: str) -> object:
+        if "check-runs" in path:
+            return {"check_runs": [_failed_cf_check_run()]}
+        if path.endswith("/actions/runs/424242"):
+            return _run_payload(424242, run_attempt=2)
+        raise AssertionError(path)
+
+    summary = rerun_stale_failed_cf_attest(
+        repository="o/r",
+        head_sha=PR_HEAD,
+        api_get=api_get,
+        api_post=lambda path, payload: pytest.fail("must not POST"),
+    )
+    assert "not rerunning again" in summary
+
+
+def test_rerun_stale_failed_cf_attest_rejects_head_mismatch() -> None:
+    def api_get(path: str) -> object:
+        if "check-runs" in path:
+            return {"check_runs": [_failed_cf_check_run()]}
+        if path.endswith("/actions/runs/424242"):
+            return _run_payload(424242, head_sha=STALE_HEAD)
+        raise AssertionError(path)
+
+    summary = rerun_stale_failed_cf_attest(
+        repository="o/r",
+        head_sha=PR_HEAD,
+        api_get=api_get,
+        api_post=lambda path, payload: pytest.fail("must not POST"),
+    )
+    assert "head SHA mismatch" in summary
+
+
+def test_rerun_stale_failed_cf_attest_fails_closed_on_bad_head() -> None:
+    with pytest.raises(ValueError, match="malformed PR head SHA"):
+        rerun_stale_failed_cf_attest(
+            repository="o/r",
+            head_sha="not-a-sha",
+            api_get=lambda path: pytest.fail("must not fetch"),
+            api_post=lambda path, payload: pytest.fail("must not POST"),
+        )

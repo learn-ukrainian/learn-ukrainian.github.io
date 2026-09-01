@@ -18,9 +18,12 @@ Post with ``gh pr comment <N> --body ...`` a body that ``parse_attestation``
 accepts:
 
 * CF marker: ``cross-family`` / ``cf of record`` / ``reviewer provenance``
-* ``Verdict: APPROVE`` (or approved / pass / passed)
+* ``Verdict: APPROVE`` (or approved / pass / passed; markdown emphasis like
+  ``**VERDICT: APPROVE**`` or ``VERDICT: **APPROVE**`` is fine)
 * Exact head SHA (labeled ``head`` / ``exact-head``, or the sole 40-char SHA)
-* Reviewer family resolving to a concrete family in ``CONCRETE_FAMILIES``
+* Reviewer family resolving to a concrete family in ``CONCRETE_FAMILIES``,
+  from a ``Reviewer family:`` line OR a ``resolved_model:`` model id mapped
+  through the same ``normalize_family`` resolver the Gate uses
 
 Example shape already in use on this repo::
 
@@ -57,7 +60,9 @@ CF_MARKER_RE = re.compile(
     re.IGNORECASE,
 )
 VERDICT_APPROVE_RE = re.compile(
-    r"\bverdict\s*:\s*(?:approve[d]?|pass(?:ed)?)\b",
+    # Markdown emphasis around the token or the value is fine:
+    # ``**VERDICT: APPROVE**`` and ``VERDICT: **APPROVE**`` both attest.
+    r"\bverdict\s*:\s*\**\s*(?:approve[d]?|pass(?:ed)?)\b",
     re.IGNORECASE,
 )
 VERDICT_BLOCK_RE = re.compile(
@@ -78,6 +83,15 @@ FAMILY_LABELED_RE = re.compile(
     r"(?:reviewer\s+family|family)\s*[:=]\s*([^\n;]+)",
     re.IGNORECASE,
 )
+# #M-4 (2026-09-01): reviewers increasingly record their model instead of a
+# family line (``resolved_model: claude-sonnet-5``). It resolves through the
+# same normalize_family resolver the Gate uses; unresolvable still fails
+# closed.
+RESOLVED_MODEL_RE = re.compile(
+    r"\bresolved_model\s*[:=]\s*([^\n;]+)",
+    re.IGNORECASE,
+)
+VERDICT_PRESENT_RE = re.compile(r"\bverdict\s*:", re.IGNORECASE)
 CF_PAREN_RE = re.compile(
     r"\b(?:cross[- ]family(?:\s+(?:review|cf))?|cf of record)\b[^\n(]{0,40}\(([^)]+)\)",
     re.IGNORECASE,
@@ -250,6 +264,21 @@ def _labeled_shas(text: str) -> tuple[str, ...]:
     return tuple(match.group(1).lower() for match in HEAD_LABELED_RE.finditer(text))
 
 
+def _family_text(body: str) -> str:
+    """Family evidence: ``Reviewer family:`` line, ``resolved_model:`` line,
+    or the CF parenthetical — in that order of precedence."""
+    labeled = FAMILY_LABELED_RE.search(body)
+    if labeled is not None:
+        return labeled.group(1)
+    model = RESOLVED_MODEL_RE.search(body)
+    if model is not None:
+        return model.group(1)
+    paren = CF_PAREN_RE.search(body)
+    if paren is not None:
+        return paren.group(1)
+    return ""
+
+
 def parse_attestation(
     body: str, *, source: str = "comment", created_at: str = ""
 ) -> ParsedAttestation | None:
@@ -276,14 +305,7 @@ def parse_attestation(
             return None
         sha = next(iter(found))
 
-    family_text = ""
-    labeled = FAMILY_LABELED_RE.search(body)
-    if labeled is not None:
-        family_text = labeled.group(1)
-    else:
-        paren = CF_PAREN_RE.search(body)
-        if paren is not None:
-            family_text = paren.group(1)
+    family_text = _family_text(body)
     reviewer_family = normalize_family(family_text)
     if reviewer_family not in CONCRETE_FAMILIES:
         return None
@@ -293,6 +315,58 @@ def parse_attestation(
         verdict="BLOCK" if blocked else "APPROVE",
         source=source,
         created_at=created_at,
+    )
+
+
+def diagnose_attest_comment(body: str, *, expected_head: str = "") -> str | None:
+    """Explain why a VERDICT-bearing comment cannot attest, else ``None``.
+
+    The on-comment workflow posts this as ONE short gap comment so a verdict
+    that misses the contract is never skipped silently (#M-4, 2026-09-01: a
+    ``**VERDICT: APPROVE**`` + ``resolved_model:`` comment with no
+    ``Reviewer family:`` line was dropped without any feedback).
+    """
+    if not isinstance(body, str) or not VERDICT_PRESENT_RE.search(body):
+        return None
+    parsed = parse_attestation(body)
+    if parsed is not None:
+        head = (expected_head or "").strip().lower()
+        if head and SHA_RE.fullmatch(head) and parsed.head_sha != head:
+            return (
+                f"it attests `{parsed.head_sha}` but the current PR head is "
+                f"`{head}` — repost the verdict against the current head"
+            )
+        return None
+    gaps: list[str] = []
+    if not CF_MARKER_RE.search(body):
+        gaps.append("a cross-family marker (e.g. `Cross-family review of record (<seat>)`)")
+    if not VERDICT_APPROVE_RE.search(body) and not VERDICT_BLOCK_RE.search(body):
+        gaps.append("a recognized verdict (`VERDICT: APPROVE` or `VERDICT: CHANGES_REQUESTED`)")
+    if _first_labeled_sha(body) is None:
+        found = {match.group(1).lower() for match in SHA_RE.finditer(body)}
+        if len(found) != 1:
+            gaps.append("the exact head SHA (e.g. `At exact head `<40-char-sha>``)")
+    if normalize_family(_family_text(body)) not in CONCRETE_FAMILIES:
+        gaps.append(
+            "a resolvable reviewer family — add `Reviewer family: <family>` "
+            "or `resolved_model: <model-id>` (e.g. `resolved_model: claude-sonnet-5`)"
+        )
+    if not gaps:
+        return None
+    return "missing " + "; ".join(gaps)
+
+
+def build_attest_feedback(note: str) -> str:
+    """The one short bot comment for an unattestable VERDICT comment."""
+    return (
+        "CF attest: your `VERDICT:` comment could not be recorded — " + note + ".\n\n"
+        "Expected shape (markdown emphasis around the verdict is fine):\n"
+        "```\n"
+        "**VERDICT: APPROVE**\n"
+        "Cross-family review of record (<seat>)\n"
+        "Reviewer family: <family>   # or a line like: resolved_model: <model-id>\n"
+        "At exact head `<40-char-sha>`\n"
+        "```"
     )
 
 
@@ -444,6 +518,99 @@ def github_api_get(
                 raise
         time.sleep(2 * attempt)
     raise ValueError("unreachable: retry loop exhausted")  # pragma: no cover
+
+
+def github_api_post(
+    path: str,
+    payload: Mapping[str, Any] | None = None,
+    *,
+    token: str | None = None,
+    api_url: str | None = None,
+    timeout: int = GITHUB_API_TIMEOUT_SECONDS,
+) -> Any:
+    """POST one GitHub REST resource (gap comment, failed-jobs rerun).
+
+    Single attempt: both callers are best-effort side effects layered on a
+    fail-closed verdict, so a transient failure must surface as a warning,
+    not hide behind retries.
+    """
+    base_url = (api_url or os.environ.get("GITHUB_API_URL") or "https://api.github.com").rstrip(
+        "/"
+    )
+    headers = {"Accept": "application/vnd.github+json", "Content-Type": "application/json"}
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    data = json.dumps(payload or {}).encode("utf-8")
+    request = Request(f"{base_url}/{path.lstrip('/')}", data=data, headers=headers, method="POST")
+    with urlopen(request, timeout=timeout) as response:
+        body = response.read()
+    if not body.strip():
+        return {}
+    return json.loads(body)
+
+
+RUN_ID_RE = re.compile(r"/actions/runs/([1-9][0-9]*)")
+STALE_CHECK_CONCLUSIONS = frozenset({"FAILURE", "STALE", "TIMED_OUT"})
+STALE_RUN_CONCLUSIONS = frozenset({"failure", "timed_out"})
+
+
+def rerun_stale_failed_cf_attest(
+    *,
+    repository: str,
+    head_sha: str,
+    api_get: ApiGet,
+    api_post: Callable[[str, Mapping[str, Any]], Any],
+) -> str:
+    """Re-run failed jobs of the initial failed CF attest run at ``head_sha``.
+
+    #7548 built this path for the scheduled auto-arm scanner; the on-comment
+    workflow could not reach it, so a freshly accepted verdict left the PR's
+    ``CF attest`` check red until a human ran ``gh run rerun --failed``
+    (#M-4, 2026-09-01). Idempotent: only a first-attempt completed failure
+    at this exact head is rerun.
+    """
+    repo = (repository or "").strip()
+    if "/" not in repo:
+        raise ValueError("rerun-stale-failed: GITHUB_REPOSITORY missing")
+    head = (head_sha or "").strip().lower()
+    if not SHA_RE.fullmatch(head):
+        raise ValueError("rerun-stale-failed: missing or malformed PR head SHA")
+    quoted = quote(repo, safe="/")
+    query = urlencode({"check_name": "CF attest", "filter": "latest"})
+    payload = api_get(f"repos/{quoted}/commits/{head}/check-runs?{query}")
+    check_runs = payload.get("check_runs") if isinstance(payload, Mapping) else None
+    if not isinstance(check_runs, list):
+        raise ValueError("rerun-stale-failed: check-runs payload malformed")
+    candidates: list[int] = []
+    for check in check_runs:
+        if not isinstance(check, Mapping):
+            continue
+        if str(check.get("name") or "") != "CF attest":
+            continue
+        if str(check.get("status") or "").upper() != "COMPLETED":
+            continue
+        if str(check.get("conclusion") or "").upper() not in STALE_CHECK_CONCLUSIONS:
+            continue
+        match = RUN_ID_RE.search(str(check.get("details_url") or ""))
+        if match is not None:
+            candidates.append(int(match.group(1)))
+    if not candidates:
+        return "no failed/stale CF attest check run at this head; nothing to rerun"
+    run_id = candidates[-1]
+    run = api_get(f"repos/{quoted}/actions/runs/{run_id}")
+    if not isinstance(run, Mapping):
+        raise ValueError("rerun-stale-failed: workflow run payload malformed")
+    if str(run.get("head_sha") or "").strip().lower() != head:
+        return f"run {run_id} head SHA mismatch; not rerunning"
+    if run.get("run_attempt") != 1:
+        return f"run {run_id} already on attempt {run.get('run_attempt')}; not rerunning again"
+    if (
+        str(run.get("status") or "").upper() != "COMPLETED"
+        or str(run.get("conclusion") or "").strip().lower() not in STALE_RUN_CONCLUSIONS
+    ):
+        return f"run {run_id} is not a completed failure; not rerunning"
+    api_post(f"repos/{quoted}/actions/runs/{run_id}/rerun-failed-jobs", {})
+    return f"requested rerun of failed jobs for run {run_id}"
 
 
 def _api_items(payload: Any, key: str) -> list[Mapping[str, Any]]:
@@ -664,7 +831,45 @@ def main(argv: Sequence[str] | None = None) -> int:
         "--repository",
         default=os.environ.get("GITHUB_REPOSITORY", ""),
     )
+    parser.add_argument(
+        "--feedback-comment",
+        action="store_true",
+        help=(
+            "when evaluation fails and the triggering comment (env COMMENT_BODY) "
+            "carries a VERDICT that cannot be attested, post ONE short gap comment"
+        ),
+    )
+    parser.add_argument(
+        "--rerun-stale-failed",
+        action="store_true",
+        help=(
+            "re-run failed jobs of the initial failed CF attest run at "
+            "--pr-head-sha, then exit (post-accept companion)"
+        ),
+    )
     args = parser.parse_args(list(argv) if argv is not None else None)
+
+    if args.rerun_stale_failed:
+        token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+
+        def _get(path: str) -> Any:
+            return github_api_get(path, token=token)
+
+        def _post(path: str, payload: Mapping[str, Any]) -> Any:
+            return github_api_post(path, payload, token=token)
+
+        try:
+            summary = rerun_stale_failed_cf_attest(
+                repository=args.repository,
+                head_sha=args.pr_head_sha,
+                api_get=_get,
+                api_post=_post,
+            )
+        except Exception as exc:
+            print(f"::error::CF attest rerun-stale-failed: {exc}", file=sys.stderr)
+            return 1
+        print(f"rerun-stale-failed: {summary}")
+        return 0
 
     try:
         result = run_event(
@@ -686,10 +891,36 @@ def main(argv: Sequence[str] | None = None) -> int:
     print(f"reviewer_family={result.reviewer_family}")
     print(f"reason={result.reason}")
     if not result.ok:
+        if args.feedback_comment:
+            _maybe_post_feedback(args, result)
         print(f"::error::CF attest fail-closed: {result.reason}", file=sys.stderr)
         return 1
     print("CF attest: independent exact-head cross-family APPROVE")
     return 0
+
+
+def _maybe_post_feedback(args: argparse.Namespace, result: AttestResult) -> None:
+    """Best-effort gap comment; never changes the fail-closed exit code."""
+    body = os.environ.get("COMMENT_BODY", "")
+    note = diagnose_attest_comment(body, expected_head=result.expected_head)
+    if note is None:
+        return
+    repo = (args.repository or "").strip()
+    number = (args.pr_number or "").strip()
+    if "/" not in repo or not number.isdigit():
+        print("::warning::CF attest feedback skipped: missing repo or PR number", file=sys.stderr)
+        return
+    token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+    try:
+        github_api_post(
+            f"repos/{quote(repo, safe='/')}/issues/{number}/comments",
+            {"body": build_attest_feedback(note)},
+            token=token,
+        )
+    except Exception as exc:  # best-effort: feedback must not mask the verdict
+        print(f"::warning::CF attest feedback comment failed: {exc}", file=sys.stderr)
+        return
+    print("posted attest-format feedback comment")
 
 
 if __name__ == "__main__":
