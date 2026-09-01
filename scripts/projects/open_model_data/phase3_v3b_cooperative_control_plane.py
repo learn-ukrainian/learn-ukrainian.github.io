@@ -70,6 +70,7 @@ MODEL_ROLES = (
     ("DISPUTE_CRITIC", "xai", "grok-4.6", "v3b.dispute.critique"),
     ("CANDIDATE_BUILDER", "openai", "gpt-5.6-sol", "v3b.case.candidate"),
 )
+MODEL_ROLES_BY_ID = frozenset(role for role, _family, _model, _contract in MODEL_ROLES)
 
 GOLD_GUARD_FIELDS = (
     "identity_resolved_or_explicit_protected_abstention",
@@ -153,6 +154,36 @@ TRANSITIONS = (
     ("CASE_EVIDENCE_INSUFFICIENT", "CASE_HUMAN_QUEUE", "new_evidence_resume"),
     ("CASE_HUMAN_ABSTAINED", "CASE_HUMAN_QUEUE", "reopened_with_new_evidence"),
 )
+
+
+def authorized_roles_for_transition(source: str, target: str, condition: str) -> list[str]:
+    edge = (source, target, condition)
+    require(edge in TRANSITIONS, "cannot authorize unknown transition")
+    if source in {
+        "SOURCE_RIGHTS_BLOCKED",
+        "SOURCE_RIGHTS_REVIEW_PENDING",
+        "SOURCE_ADMITTED",
+        "MODEL_AGREEMENT_QUARANTINED_NOT_GOLD",
+        "IDENTITY_RESOLVED",
+    }:
+        return ["SOURCE_ADMISSION"]
+    if source in {"IDENTITY_PENDING", "IDENTITY_RETRY_PENDING", "IDENTITY_SUBSTITUTE_PENDING"}:
+        return ["IDENTITY_LEAD", "INDEPENDENT_DISSENT"]
+    if source in {"DISPUTE_CRITIC_PENDING", "CRITIC_RETRY_PENDING", "CRITIC_SUBSTITUTE_PENDING"}:
+        return ["DISPUTE_CRITIC"]
+    if source in {"CASE_CANDIDATE_PENDING", "CANDIDATE_RETRY_PENDING", "CANDIDATE_SUBSTITUTE_PENDING"}:
+        return ["CANDIDATE_BUILDER"]
+    if source in {
+        "IDENTITY_HUMAN_QUEUE",
+        "IDENTITY_ABSTAINED_NON_GOLD",
+        "CASE_HUMAN_QUEUE",
+        "HUMAN_QUEUE_OVERFLOW",
+        "CASE_EVIDENCE_INSUFFICIENT",
+        "CASE_HUMAN_ABSTAINED",
+        "CASE_HUMAN_ADJUDICATED",
+    }:
+        return ["HUMAN_STEWARD"]
+    raise V3BError(f"transition lacks authorized role: {edge}")
 
 
 class V3BError(ValueError):
@@ -474,7 +505,7 @@ def build_schema() -> dict[str, Any]:
             "outcome_boundary": {"type": "object"},
             "denominator": {"type": "object"},
             "incidence_manifest": {"type": "object"},
-            "role_contracts": {"type": "array", "minItems": 5, "uniqueItems": True},
+            "role_contracts": {"type": "array", "minItems": 6, "uniqueItems": True},
             "blindness_and_conflicts": {"type": "object"},
             "output_contracts": {"type": "object"},
             "retry_and_substitution": {"type": "object"},
@@ -573,6 +604,16 @@ def build_artifact() -> dict[str, Any]:
     incidence = _incidence_manifest()
     roles = [
         {
+            "role_id": "SOURCE_ADMISSION",
+            "provider_family": "deterministic_tooling",
+            "model": "deterministic",
+            "output_contract_id": "v3b.transition.receipt",
+            "heldout_access": "forbidden",
+            "may_author_gold": False,
+        }
+    ]
+    roles.extend(
+        {
             "role_id": role,
             "provider_family": family,
             "model": model,
@@ -581,7 +622,7 @@ def build_artifact() -> dict[str, Any]:
             "may_author_gold": False,
         }
         for role, family, model, contract in MODEL_ROLES
-    ]
+    )
     roles.append(
         {
             "role_id": "HUMAN_STEWARD",
@@ -668,7 +709,12 @@ def build_artifact() -> dict[str, Any]:
         "state_machine": {
             "states": list(STATES),
             "transitions": [
-                {"from_state": source, "to_state": target, "condition_code": condition}
+                {
+                    "from_state": source,
+                    "to_state": target,
+                    "condition_code": condition,
+                    "authorized_role_ids": authorized_roles_for_transition(source, target, condition),
+                }
                 for source, target, condition in TRANSITIONS
             ],
             "terminal_states": ["GOLD_ELIGIBLE_METADATA_ONLY"],
@@ -696,7 +742,11 @@ def build_artifact() -> dict[str, Any]:
             "append_only": True,
             "contiguous_sequence_required": True,
             "previous_hash_chain_required": True,
+            "sequence_and_hash_chain_scoped_per_row": True,
             "from_state_must_match_predecessor_to_state": True,
+            "transition_actor_must_match_authorized_role_ids": True,
+            "all_receipt_roles_have_frozen_routes": True,
+            "gold_transition_requires_same_row_human_adjudication_predecessor": True,
             "gold_transition_requires_guard_bundle_pass": True,
             "substitution_family_change_verified": True,
             "byte_identical_replay_only": True,
@@ -851,14 +901,16 @@ def validate_transition_receipts(
     artifact = artifact or build_artifact()
     schema = read_json(SCHEMA_PATH)
     validator = Draft202012Validator(schema["$defs"]["transition_receipt"])
-    transitions = {
-        (item["from_state"], item["to_state"], item["condition_code"])
+    transition_roles = {
+        (item["from_state"], item["to_state"], item["condition_code"]): set(
+            item["authorized_role_ids"]
+        )
         for item in artifact["state_machine"]["transitions"]
     }
-    seen_ids: dict[str, bytes] = {}
-    previous_hash: str | None = None
-    previous_to: str | None = None
-    expected_sequence = 0
+    seen_ids: dict[tuple[str, str], bytes] = {}
+    previous_hash_by_row: dict[str, str] = {}
+    previous_to_by_row: dict[str, str] = {}
+    expected_sequence_by_row: dict[str, int] = {}
     budgets: dict[tuple[str, str], dict[str, Any]] = {}
     model_role_ids = {role for role, _family, _model, _contract in MODEL_ROLES}
     retry_dispatch_conditions = {
@@ -877,18 +929,22 @@ def validate_transition_receipts(
         errors = sorted(validator.iter_errors(item), key=lambda error: list(error.path))
         require(not errors, f"transition receipt schema violation: {errors[0].message}" if errors else "receipt invalid")
         encoded = canonical_bytes(item)
+        row_id = str(item["row_id"])
         receipt_id = str(item["receipt_id"])
-        if receipt_id in seen_ids:
-            require(seen_ids[receipt_id] == encoded, "divergent transition receipt replay")
+        receipt_key = (row_id, receipt_id)
+        if receipt_key in seen_ids:
+            require(seen_ids[receipt_key] == encoded, "divergent transition receipt replay")
             continue
-        seen_ids[receipt_id] = encoded
+        seen_ids[receipt_key] = encoded
+        expected_sequence = expected_sequence_by_row.get(row_id, 0)
+        previous_hash = previous_hash_by_row.get(row_id)
+        previous_to = previous_to_by_row.get(row_id)
         require(item["sequence"] == expected_sequence, "transition receipt sequence gap")
-        expected_sequence += 1
         require(item["previous_receipt_sha256"] == previous_hash, "transition receipt previous hash mismatch")
         if previous_to is not None:
             require(item["from_state"] == previous_to, "transition receipt from-state mismatch")
         edge = (item["from_state"], item["to_state"], item["condition_code"])
-        require(edge in transitions, "transition receipt edge not allowed")
+        require(edge in transition_roles, "transition receipt edge not allowed")
         identity = {
             "row_id": item["row_id"],
             "sequence": item["sequence"],
@@ -900,13 +956,15 @@ def validate_transition_receipts(
         require(item["denominator_sha256"] == artifact["incidence_manifest"]["denominator_sha256"], "receipt denominator drift")
         require(item["contract_sha256"] == artifact["receipt_sha256"], "receipt contract drift")
         role_id = str(item["role_id"])
+        require(role_id in transition_roles[edge], "transition receipt role not authorized")
         family = str(item["resolved_route"]["provider_family"])
         model = str(item["resolved_route"]["model"])
         condition = str(item["condition_code"])
-        if role_id == "HUMAN_STEWARD":
+        if role_id in {"SOURCE_ADMISSION", "HUMAN_STEWARD"}:
             frozen_role = role_contracts[role_id]
-            require(family == frozen_role["provider_family"], "human steward provider family drift")
-            require(model == frozen_role["model"], "human steward model drift")
+            role_label = role_id.casefold().replace("_", " ")
+            require(family == frozen_role["provider_family"], f"{role_label} provider family drift")
+            require(model == frozen_role["model"], f"{role_label} model drift")
         if role_id in model_role_ids:
             key = (str(item["row_id"]), role_id)
             existed = key in budgets
@@ -964,9 +1022,14 @@ def validate_transition_receipts(
             require(role_id == "HUMAN_STEWARD", "gold transition requires human steward")
             require(item["guard_result"] == "pass", "gold transition guard not satisfied")
             require(all(item["gold_guard_results"].values()), "gold transition guard bundle incomplete")
+            require(
+                previous_to == "CASE_HUMAN_ADJUDICATED",
+                "gold transition lacks same-row human adjudication predecessor",
+            )
         require(item["receipt_sha256"] == receipt_sha(item), "transition receipt self-hash mismatch")
-        previous_hash = item["receipt_sha256"]
-        previous_to = str(item["to_state"])
+        expected_sequence_by_row[row_id] = expected_sequence + 1
+        previous_hash_by_row[row_id] = str(item["receipt_sha256"])
+        previous_to_by_row[row_id] = str(item["to_state"])
 
 
 def validate(artifact: Mapping[str, Any], schema: Mapping[str, Any]) -> None:
@@ -993,7 +1056,11 @@ def validate(artifact: Mapping[str, Any], schema: Mapping[str, Any]) -> None:
     denominator_sha = incidence_body.pop("denominator_sha256")
     require(denominator_sha == sha256_bytes(canonical_bytes(incidence_body)), "incidence denominator hash mismatch")
     roles = artifact["role_contracts"]
-    families = [role["provider_family"] for role in roles if role["role_id"] != "HUMAN_STEWARD"]
+    require(
+        {role["role_id"] for role in roles} == {"SOURCE_ADMISSION", "HUMAN_STEWARD", *MODEL_ROLES_BY_ID},
+        "receipt role contract set drift",
+    )
+    families = [role["provider_family"] for role in roles if role["role_id"] in MODEL_ROLES_BY_ID]
     require(len(families) == len(set(families)) == 4, "model family conflict")
     registry = artifact["single_human_registry"]
     registry_body = dict(registry)
@@ -1016,6 +1083,12 @@ def validate(artifact: Mapping[str, Any], schema: Mapping[str, Any]) -> None:
     require(set(machine["states"]) == set(STATES), "state set drift")
     edges = {(row["from_state"], row["to_state"], row["condition_code"]) for row in machine["transitions"]}
     require(edges == set(TRANSITIONS), "transition set drift")
+    for row in machine["transitions"]:
+        edge = (row["from_state"], row["to_state"], row["condition_code"])
+        require(
+            row["authorized_role_ids"] == authorized_roles_for_transition(*edge),
+            "transition authorized role drift",
+        )
     outgoing = Counter(row["from_state"] for row in machine["transitions"])
     for state in machine["states"]:
         require(state in machine["terminal_states"] or outgoing[state] > 0, f"dead-end state: {state}")

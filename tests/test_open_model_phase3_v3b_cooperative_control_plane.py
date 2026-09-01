@@ -139,6 +139,19 @@ def _transition_receipt(
     return value
 
 
+def _retarget_receipt(value: dict[str, Any], row_id: str) -> None:
+    value["row_id"] = row_id
+    identity = {
+        "row_id": value["row_id"],
+        "sequence": value["sequence"],
+        "from_state": value["from_state"],
+        "to_state": value["to_state"],
+        "condition_code": value["condition_code"],
+    }
+    value["receipt_id"] = v3b.sha256_bytes(v3b.canonical_bytes(identity))
+    value["receipt_sha256"] = v3b.receipt_sha(value)
+
+
 def test_frozen_artifact_and_schema_are_strict_and_deterministic() -> None:
     schema = _schema()
     artifact = _artifact()
@@ -241,6 +254,7 @@ def test_identity_abstention_cannot_reach_candidate_or_gold() -> None:
             "from_state": "IDENTITY_ABSTAINED_NON_GOLD",
             "to_state": "CASE_HUMAN_ABSTAINED",
             "condition_code": "abstention_case_preserved",
+            "authorized_role_ids": ["HUMAN_STEWARD"],
         }
     ]
     assert "TRAINING_ELIGIBLE" not in machine["states"]
@@ -475,8 +489,103 @@ def test_transition_receipts_bind_frozen_role_routes_and_human_gold_authority() 
     model_authored_gold["role_id"] = "CANDIDATE_BUILDER"
     model_authored_gold["attempt_count"] = 1
     model_authored_gold["receipt_sha256"] = v3b.receipt_sha(model_authored_gold)
-    with pytest.raises(v3b.V3BError, match="gold transition requires human steward"):
+    with pytest.raises(v3b.V3BError, match="transition receipt role not authorized"):
         v3b.validate_transition_receipts([model_authored_gold], artifact)
+
+
+def test_receipt_chains_are_row_scoped_and_gold_requires_same_row_human_predecessor() -> None:
+    artifact = _artifact()
+    row_a = _transition_receipt(
+        artifact,
+        0,
+        "SOURCE_RIGHTS_BLOCKED",
+        "SOURCE_RIGHTS_REVIEW_PENDING",
+        "rights_evidence_supplied",
+        None,
+    )
+    row_b = copy.deepcopy(row_a)
+    _retarget_receipt(row_b, "5" * 64)
+    v3b.validate_transition_receipts([row_a, row_b], artifact)
+
+    row_a_human = _transition_receipt(
+        artifact,
+        0,
+        "CASE_HUMAN_QUEUE",
+        "CASE_HUMAN_ADJUDICATED",
+        "qualified_human_adjudicated",
+        None,
+    )
+    row_a_human["role_id"] = "HUMAN_STEWARD"
+    row_a_human["resolved_route"]["provider_family"] = "operator"
+    row_a_human["resolved_route"]["model"] = "human_operator"
+    row_a_human["receipt_sha256"] = v3b.receipt_sha(row_a_human)
+    row_a_gold = _transition_receipt(
+        artifact,
+        1,
+        "CASE_HUMAN_ADJUDICATED",
+        "GOLD_ELIGIBLE_METADATA_ONLY",
+        "all_gold_guards_satisfied",
+        row_a_human["receipt_sha256"],
+    )
+    row_a_gold["role_id"] = "HUMAN_STEWARD"
+    row_a_gold["resolved_route"]["provider_family"] = "operator"
+    row_a_gold["resolved_route"]["model"] = "human_operator"
+    row_a_gold["guard_result"] = "pass"
+    row_a_gold["gold_guard_results"] = {field: True for field in v3b.GOLD_GUARD_FIELDS}
+    row_a_gold["receipt_sha256"] = v3b.receipt_sha(row_a_gold)
+    v3b.validate_transition_receipts([row_a_human, row_a_gold], artifact)
+
+    row_b_gold = copy.deepcopy(row_a_gold)
+    _retarget_receipt(row_b_gold, "6" * 64)
+    with pytest.raises(v3b.V3BError, match="sequence gap"):
+        v3b.validate_transition_receipts([row_a_human, row_b_gold], artifact)
+
+    row_b_gold["sequence"] = 0
+    row_b_gold["previous_receipt_sha256"] = None
+    _retarget_receipt(row_b_gold, "6" * 64)
+    with pytest.raises(v3b.V3BError, match="same-row human adjudication predecessor"):
+        v3b.validate_transition_receipts([row_b_gold], artifact)
+
+
+def test_every_receipt_role_has_a_frozen_route_and_authorized_transition_lane() -> None:
+    artifact = _artifact()
+    assert {role["role_id"] for role in artifact["role_contracts"]} == {
+        "SOURCE_ADMISSION",
+        "IDENTITY_LEAD",
+        "INDEPENDENT_DISSENT",
+        "DISPUTE_CRITIC",
+        "CANDIDATE_BUILDER",
+        "HUMAN_STEWARD",
+    }
+    wrong_source_route = _transition_receipt(
+        artifact,
+        0,
+        "SOURCE_RIGHTS_BLOCKED",
+        "SOURCE_RIGHTS_REVIEW_PENDING",
+        "rights_evidence_supplied",
+        None,
+    )
+    wrong_source_route["resolved_route"]["provider_family"] = "anthropic"
+    wrong_source_route["resolved_route"]["model"] = "claude-fable-5"
+    wrong_source_route["receipt_sha256"] = v3b.receipt_sha(wrong_source_route)
+    with pytest.raises(v3b.V3BError, match="source admission provider family drift"):
+        v3b.validate_transition_receipts([wrong_source_route], artifact)
+
+    wrong_lane = _transition_receipt(
+        artifact,
+        0,
+        "IDENTITY_PENDING",
+        "MODEL_AGREEMENT_QUARANTINED_NOT_GOLD",
+        "exact_model_agreement",
+        None,
+    )
+    wrong_lane["role_id"] = "CANDIDATE_BUILDER"
+    wrong_lane["attempt_count"] = 1
+    wrong_lane["resolved_route"]["provider_family"] = "openai"
+    wrong_lane["resolved_route"]["model"] = "gpt-5.6-sol"
+    wrong_lane["receipt_sha256"] = v3b.receipt_sha(wrong_lane)
+    with pytest.raises(v3b.V3BError, match="transition receipt role not authorized"):
+        v3b.validate_transition_receipts([wrong_lane], artifact)
 
 
 def test_cumulative_retry_and_substitution_budgets_cannot_loop() -> None:
