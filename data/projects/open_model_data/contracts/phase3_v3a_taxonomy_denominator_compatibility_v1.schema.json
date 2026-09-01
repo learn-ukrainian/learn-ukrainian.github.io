@@ -1,0 +1,261 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/phase3_v3a_taxonomy_denominator_compatibility_v1.schema.json",
+  "title": "Phase 3 V3-A taxonomy and denominator compatibility",
+  "oneOf": [
+    {"$ref": "#/$defs/mainArtifact"},
+    {"$ref": "#/$defs/compatibilityArtifact"}
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "id": {"type": "string", "minLength": 1, "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "taxonomy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tuple_fields", "axes", "surface_layers", "protected_invariants", "identity_boundaries"],
+      "properties": {
+        "tuple_fields": {"type": "array", "minItems": 15, "maxItems": 15, "uniqueItems": true, "items": {"type": "string"}},
+        "axes": {
+          "type": "array", "minItems": 11, "maxItems": 11,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["axis_id", "required", "values", "independent_from"],
+            "properties": {
+              "axis_id": {"$ref": "#/$defs/id"}, "required": {"const": true},
+              "values": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+              "independent_from": {"type": "array", "minItems": 10, "maxItems": 10, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}}
+            }
+          }
+        },
+        "surface_layers": {
+          "type": "array", "minItems": 3, "maxItems": 3,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["layer_id", "present_in_contract", "provenance_required", "source_text_embedded"],
+            "properties": {"layer_id": {"$ref": "#/$defs/id"}, "present_in_contract": {"const": true}, "provenance_required": {"const": true}, "source_text_embedded": {"const": false}}
+          }
+        },
+        "protected_invariants": {
+          "type": "object", "additionalProperties": false,
+          "required": ["original_surface_preserved", "historical_forms_protected", "archaic_forms_protected", "dialect_forms_protected", "modern_correction_eligible_when_protected", "automatic_standard_normalization", "automatic_national_successor_mapping"],
+          "properties": {
+            "original_surface_preserved": {"const": true}, "historical_forms_protected": {"const": true},
+            "archaic_forms_protected": {"const": true}, "dialect_forms_protected": {"const": true},
+            "modern_correction_eligible_when_protected": {"const": false}, "automatic_standard_normalization": {"const": false},
+            "automatic_national_successor_mapping": {"const": false}
+          }
+        },
+        "identity_boundaries": {
+          "type": "object", "additionalProperties": false,
+          "required": ["dialect_is_protected_ukrainian_variety", "archaic_modern_is_distinct_from_historical_stage", "surzhyk_is_contact_composition", "literary_eye_dialect_is_context_editorial", "rusyn_is_source_attested_identity", "script_does_not_decide_identity", "undecided_evidence_preserves_candidates"],
+          "properties": {
+            "dialect_is_protected_ukrainian_variety": {"const": true}, "archaic_modern_is_distinct_from_historical_stage": {"const": true},
+            "surzhyk_is_contact_composition": {"const": true}, "literary_eye_dialect_is_context_editorial": {"const": true},
+            "rusyn_is_source_attested_identity": {"const": true}, "script_does_not_decide_identity": {"const": true},
+            "undecided_evidence_preserves_candidates": {"const": true}
+          }
+        }
+      }
+    },
+    "locator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["chunk_id", "source_page", "chunk_text_sha256"],
+      "properties": {
+        "chunk_id": {"$ref": "#/$defs/id"},
+        "source_page": {"type": "integer", "minimum": 1},
+        "chunk_text_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "childStratum": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stratum_id", "parent_cell_id", "source_id", "region_id", "period_id", "register_id",
+        "lineage_status", "coverage_status", "coverage_target", "coverage_credit",
+        "source_membership_frozen", "evidence_role", "evidence_locators"
+      ],
+      "properties": {
+        "stratum_id": {"$ref": "#/$defs/id"},
+        "parent_cell_id": {"$ref": "#/$defs/id"},
+        "source_id": {"const": "uni-ukrmova-dialectology-torchynska-2017"},
+        "region_id": {"enum": ["northern_polissian", "southeastern", "southwestern"]},
+        "period_id": {"const": "contemporary_ukrainian"},
+        "register_id": {"const": "territorial_spoken_dialect"},
+        "lineage_status": {"const": "child_of_parent"},
+        "coverage_status": {"const": "coverage_blocked"},
+        "coverage_target": {"const": true},
+        "coverage_credit": {"const": false},
+        "source_membership_frozen": {"const": true},
+        "evidence_role": {"const": "taxonomy_partition_only_not_example_coverage"},
+        "evidence_locators": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/locator"}}
+      }
+    },
+    "rightsOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operation", "state", "reason_code", "evidence_binding"],
+      "properties": {
+        "operation": {"enum": ["retain", "deterministic_local_analysis", "external_provider_transmission", "derive", "model_training", "publish_text_or_metadata", "redistribute"]},
+        "state": {"enum": ["allowed", "denied", "unknown"]},
+        "reason_code": {"type": "string", "minLength": 1},
+        "evidence_binding": {"$ref": "#/$defs/binding"},
+        "scope_qualifier": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["body_scope", "metadata_scope", "combined_grant_forbidden"],
+          "properties": {
+            "body_scope": {"enum": ["allowed", "denied", "unknown"]},
+            "metadata_scope": {"enum": ["allowed", "denied", "unknown"]},
+            "combined_grant_forbidden": {"const": true}
+          }
+        }
+      }
+    },
+    "rightsRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_unit_id", "legacy_capability_state", "legacy_required_state", "legacy_blocked_lanes", "operations"],
+      "properties": {
+        "source_unit_id": {"$ref": "#/$defs/id"},
+        "legacy_capability_state": {"type": "string", "minLength": 1},
+        "legacy_required_state": {"type": "string", "minLength": 1},
+        "legacy_blocked_lanes": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "operations": {"type": "array", "minItems": 7, "maxItems": 7, "items": {"$ref": "#/$defs/rightsOperation"}}
+      }
+    },
+    "mainArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version", "artifact_type", "status", "text_free", "controlling_outcome_sha256",
+        "reviewed_v3_consensus_sha256", "bindings", "taxonomy", "dialect_partition", "denominator",
+        "rights_capabilities", "execution_gates", "heldout_contract", "residuals", "receipt_sha256"
+      ],
+      "properties": {
+        "schema_version": {"const": "phase3-v3a-taxonomy-denominator-compatibility-v1"},
+        "artifact_type": {"const": "v3a_taxonomy_denominator_receipt"},
+        "status": {"const": "FROZEN_METADATA_ONLY"},
+        "text_free": {"const": true},
+        "controlling_outcome_sha256": {"const": "890498103f96a7b8f27fd52bc14418d8752e5b73a72ed8774dd0f52eb3160a47"},
+        "reviewed_v3_consensus_sha256": {"const": "d3444c126deb91d05129d51c5344aa204b1db9ca0927c246698e0389466d0b1a"},
+        "bindings": {
+          "type": "object", "additionalProperties": false,
+          "required": ["schema", "validator", "p1_universe", "p1_dialect_amendment", "p2_contracts", "v3_control_plane_schema", "v3_control_plane_artifact", "v2_compatibility_matrix", "source_policy_v4"],
+          "properties": {
+            "schema": {"$ref": "#/$defs/binding"}, "validator": {"$ref": "#/$defs/binding"},
+            "p1_universe": {"$ref": "#/$defs/binding"}, "p1_dialect_amendment": {"$ref": "#/$defs/binding"},
+            "p2_contracts": {"$ref": "#/$defs/binding"}, "v3_control_plane_schema": {"$ref": "#/$defs/binding"},
+            "v3_control_plane_artifact": {"$ref": "#/$defs/binding"}, "v2_compatibility_matrix": {"$ref": "#/$defs/binding"},
+            "source_policy_v4": {"$ref": "#/$defs/binding"}
+          }
+        },
+        "taxonomy": {"$ref": "#/$defs/taxonomy"},
+        "dialect_partition": {
+          "type": "object", "additionalProperties": false,
+          "required": ["parent_cell_id", "partition_dimensions", "partition_level", "partition_complete", "membership_frozen", "parent_denominator_visible", "parent_legacy_coverage_status", "parent_coverage_role", "parent_direct_coverage_credit", "source_attestation", "child_strata", "finer_dialect_depth_complete", "example_coverage_complete"],
+          "properties": {
+            "parent_cell_id": {"$ref": "#/$defs/id"},
+            "partition_dimensions": {"const": ["source", "region", "period", "register"]},
+            "partition_level": {"const": "complete_top_level_macro_region_taxonomy"},
+            "partition_complete": {"const": true}, "membership_frozen": {"const": true},
+            "parent_denominator_visible": {"const": true}, "parent_legacy_coverage_status": {"const": "coverage_blocked"},
+            "parent_coverage_role": {"const": "lineage_only"}, "parent_direct_coverage_credit": {"const": false},
+            "source_attestation": {
+              "type": "object", "additionalProperties": false,
+              "required": ["source_id", "jsonl_sha256", "front_matter_rows_sha256", "local_materialization", "source_body_embedded", "coverage_depth"],
+              "properties": {
+                "source_id": {"const": "uni-ukrmova-dialectology-torchynska-2017"},
+                "jsonl_sha256": {"$ref": "#/$defs/sha256"}, "front_matter_rows_sha256": {"$ref": "#/$defs/sha256"},
+                "local_materialization": {
+                  "type": "object", "additionalProperties": false,
+                  "required": ["canonicalization", "row_count", "rows_sha256"],
+                  "properties": {"canonicalization": {"const": "sorted_chunk_id_jsonl_v1"}, "row_count": {"const": 281}, "rows_sha256": {"$ref": "#/$defs/sha256"}}
+                },
+                "source_body_embedded": {"const": false}, "coverage_depth": {"const": "partial"}
+              }
+            },
+            "child_strata": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"$ref": "#/$defs/childStratum"}},
+            "finer_dialect_depth_complete": {"const": false}, "example_coverage_complete": {"const": false}
+          }
+        },
+        "denominator": {
+          "type": "object", "additionalProperties": false,
+          "required": ["source_units", "legacy_unknown_rights_units", "rule_slots_R", "v2_visible_cells", "v3_child_cells", "visible_cells", "active_coverage_target_cells", "active_coverage_blocked_cells", "not_applicable_cells", "lineage_only_parent_cells", "legacy_blocked_snapshot_records", "satisfied_cells", "no_double_count_proof"],
+          "properties": {
+            "source_units": {"const": 57}, "legacy_unknown_rights_units": {"const": 39}, "rule_slots_R": {"const": 0},
+            "v2_visible_cells": {"const": 16}, "v3_child_cells": {"const": 3}, "visible_cells": {"const": 19},
+            "active_coverage_target_cells": {"const": 16}, "active_coverage_blocked_cells": {"const": 16},
+            "not_applicable_cells": {"const": 2}, "lineage_only_parent_cells": {"const": 1},
+            "legacy_blocked_snapshot_records": {"const": 17}, "satisfied_cells": {"const": 0},
+            "no_double_count_proof": {"const": "13_v2_targets_excluding_parent_plus_3_children_equals_16"}
+          }
+        },
+        "rights_capabilities": {
+          "type": "object", "additionalProperties": false,
+          "required": ["operations", "source_unit_rows", "source_unit_count", "operation_cell_count", "unknown_source_units_by_operation", "availability_grants_no_capability", "unknown_blocks_only_affected_operation", "execution_authorization_is_separate"],
+          "properties": {
+            "operations": {"const": ["retain", "deterministic_local_analysis", "external_provider_transmission", "derive", "model_training", "publish_text_or_metadata", "redistribute"]},
+            "source_unit_rows": {"type": "array", "minItems": 57, "maxItems": 57, "items": {"$ref": "#/$defs/rightsRow"}},
+            "source_unit_count": {"const": 57}, "operation_cell_count": {"const": 399},
+            "unknown_source_units_by_operation": {
+              "type": "object", "additionalProperties": false,
+              "required": ["retain", "deterministic_local_analysis", "external_provider_transmission", "derive", "model_training", "publish_text_or_metadata", "redistribute"],
+              "properties": {
+                "retain": {"const": 57}, "deterministic_local_analysis": {"const": 57}, "external_provider_transmission": {"const": 57},
+                "derive": {"const": 57}, "model_training": {"const": 57}, "publish_text_or_metadata": {"const": 57}, "redistribute": {"const": 57}
+              }
+            },
+            "availability_grants_no_capability": {"const": true}, "unknown_blocks_only_affected_operation": {"const": true},
+            "execution_authorization_is_separate": {"const": true}
+          }
+        },
+        "execution_gates": {
+          "type": "object", "additionalProperties": false,
+          "required": ["provider_calls_authorized", "labeling_authorized", "training_authorized", "p4_v1_mutation_allowed"],
+          "properties": {"provider_calls_authorized": {"const": false}, "labeling_authorized": {"const": false}, "training_authorized": {"const": false}, "p4_v1_mutation_allowed": {"const": false}}
+        },
+        "heldout_contract": {
+          "type": "object", "additionalProperties": false,
+          "required": ["owner_issue", "abstract_stratum_ids_visible", "membership_present", "locators_present", "fingerprints_present"],
+          "properties": {"owner_issue": {"const": 7561}, "abstract_stratum_ids_visible": {"const": true}, "membership_present": {"const": false}, "locators_present": {"const": false}, "fingerprints_present": {"const": false}}
+        },
+        "residuals": {"type": "array", "minItems": 4, "uniqueItems": true, "items": {"type": "string"}},
+        "receipt_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "compatibilityRow": {
+      "type": "object", "additionalProperties": false,
+      "required": ["v2_cell_id", "v2_status", "old_artifact", "disposition", "v3_cell_id", "new_binding", "child_partition_ids", "denominator_effect", "reason_code"],
+      "properties": {
+        "v2_cell_id": {"$ref": "#/$defs/id"}, "v2_status": {"type": "string"}, "old_artifact": {"$ref": "#/$defs/binding"},
+        "disposition": {"enum": ["carried_forward_exact", "superseded_by_partition"]}, "v3_cell_id": {"$ref": "#/$defs/id"},
+        "new_binding": {"$ref": "#/$defs/binding"}, "child_partition_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "denominator_effect": {"type": "string", "minLength": 1}, "reason_code": {"type": "string", "minLength": 1}
+      }
+    },
+    "compatibilityArtifact": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "artifact_type", "status", "text_free", "v2_parent_outcome_sha256", "v3a_artifact_binding", "v3_predecessor_binding", "rows", "row_count", "carried_forward_exact_count", "superseded_by_partition_count", "source_unit_ids_stable", "parent_denominator_visible", "parent_direct_coverage_credit", "receipt_sha256"],
+      "properties": {
+        "schema_version": {"const": "phase3-v3a-taxonomy-denominator-compatibility-v1"}, "artifact_type": {"const": "v3a_compatibility_matrix"},
+        "status": {"const": "FROZEN_METADATA_ONLY"}, "text_free": {"const": true},
+        "v2_parent_outcome_sha256": {"const": "890498103f96a7b8f27fd52bc14418d8752e5b73a72ed8774dd0f52eb3160a47"},
+        "v3a_artifact_binding": {"$ref": "#/$defs/binding"}, "v3_predecessor_binding": {"$ref": "#/$defs/binding"},
+        "rows": {"type": "array", "minItems": 16, "maxItems": 16, "items": {"$ref": "#/$defs/compatibilityRow"}},
+        "row_count": {"const": 16}, "carried_forward_exact_count": {"const": 15}, "superseded_by_partition_count": {"const": 1},
+        "source_unit_ids_stable": {"const": true}, "parent_denominator_visible": {"const": true}, "parent_direct_coverage_credit": {"const": false},
+        "receipt_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}
