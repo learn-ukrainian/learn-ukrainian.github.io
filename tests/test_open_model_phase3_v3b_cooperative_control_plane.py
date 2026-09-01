@@ -395,6 +395,7 @@ def test_same_family_substitution_and_unguarded_gold_are_rejected() -> None:
     )
     first["role_id"] = "IDENTITY_LEAD"
     first["resolved_route"]["provider_family"] = "anthropic"
+    first["resolved_route"]["model"] = "claude-fable-5"
     first["attempt_count"] = 1
     first["receipt_sha256"] = v3b.receipt_sha(first)
     second = _transition_receipt(
@@ -407,6 +408,7 @@ def test_same_family_substitution_and_unguarded_gold_are_rejected() -> None:
     )
     second["role_id"] = "IDENTITY_LEAD"
     second["resolved_route"]["provider_family"] = "anthropic"
+    second["resolved_route"]["model"] = "claude-fable-5"
     second["substitute_used"] = True
     second["attempt_count"] = 2
     second["receipt_sha256"] = v3b.receipt_sha(second)
@@ -422,6 +424,8 @@ def test_same_family_substitution_and_unguarded_gold_are_rejected() -> None:
         None,
     )
     gold["role_id"] = "HUMAN_STEWARD"
+    gold["resolved_route"]["provider_family"] = "operator"
+    gold["resolved_route"]["model"] = "human_operator"
     gold["receipt_sha256"] = v3b.receipt_sha(gold)
     with pytest.raises(v3b.V3BError, match="gold transition guard"):
         v3b.validate_transition_receipts([gold], artifact)
@@ -430,6 +434,49 @@ def test_same_family_substitution_and_unguarded_gold_are_rejected() -> None:
     gold["receipt_sha256"] = v3b.receipt_sha(gold)
     with pytest.raises(v3b.V3BError, match="guard bundle incomplete"):
         v3b.validate_transition_receipts([gold], artifact)
+
+
+def test_transition_receipts_bind_frozen_role_routes_and_human_gold_authority() -> None:
+    artifact = _artifact()
+    wrong_model_route = _transition_receipt(
+        artifact,
+        0,
+        "IDENTITY_PENDING",
+        "MODEL_AGREEMENT_QUARANTINED_NOT_GOLD",
+        "exact_model_agreement",
+        None,
+    )
+    wrong_model_route["role_id"] = "IDENTITY_LEAD"
+    wrong_model_route["attempt_count"] = 1
+    wrong_model_route["resolved_route"]["provider_family"] = "google"
+    wrong_model_route["resolved_route"]["model"] = "gemini-3.7-flash-high"
+    wrong_model_route["receipt_sha256"] = v3b.receipt_sha(wrong_model_route)
+    with pytest.raises(v3b.V3BError, match="original provider family drift"):
+        v3b.validate_transition_receipts([wrong_model_route], artifact)
+
+    wrong_human_route = _transition_receipt(
+        artifact,
+        0,
+        "CASE_HUMAN_ADJUDICATED",
+        "GOLD_ELIGIBLE_METADATA_ONLY",
+        "all_gold_guards_satisfied",
+        None,
+    )
+    wrong_human_route["role_id"] = "HUMAN_STEWARD"
+    wrong_human_route["resolved_route"]["provider_family"] = "openai"
+    wrong_human_route["resolved_route"]["model"] = "gpt-5.6-sol"
+    wrong_human_route["guard_result"] = "pass"
+    wrong_human_route["gold_guard_results"] = {field: True for field in v3b.GOLD_GUARD_FIELDS}
+    wrong_human_route["receipt_sha256"] = v3b.receipt_sha(wrong_human_route)
+    with pytest.raises(v3b.V3BError, match="human steward provider family drift"):
+        v3b.validate_transition_receipts([wrong_human_route], artifact)
+
+    model_authored_gold = copy.deepcopy(wrong_human_route)
+    model_authored_gold["role_id"] = "CANDIDATE_BUILDER"
+    model_authored_gold["attempt_count"] = 1
+    model_authored_gold["receipt_sha256"] = v3b.receipt_sha(model_authored_gold)
+    with pytest.raises(v3b.V3BError, match="gold transition requires human steward"):
+        v3b.validate_transition_receipts([model_authored_gold], artifact)
 
 
 def test_cumulative_retry_and_substitution_budgets_cannot_loop() -> None:
@@ -446,6 +493,7 @@ def test_cumulative_retry_and_substitution_budgets_cannot_loop() -> None:
         item = _transition_receipt(artifact, sequence, source, target, condition, previous)
         item["role_id"] = "IDENTITY_LEAD"
         item["resolved_route"]["provider_family"] = "anthropic"
+        item["resolved_route"]["model"] = "claude-fable-5"
         item["attempt_count"] = attempts
         item["format_retry_used"] = condition == "format_retry_dispatched"
         item["receipt_sha256"] = v3b.receipt_sha(item)
@@ -490,10 +538,16 @@ def test_cumulative_retry_and_substitution_budgets_cannot_loop() -> None:
             True,
         ),
     ]
+    models_by_family = {
+        "anthropic": "claude-fable-5",
+        "google": "gemini-3.7-flash-high",
+        "xai": "grok-4.6",
+    }
     for sequence, (source, target, condition, family, attempts, substituted) in enumerate(specs):
         item = _transition_receipt(artifact, sequence, source, target, condition, previous)
         item["role_id"] = "IDENTITY_LEAD"
         item["resolved_route"]["provider_family"] = family
+        item["resolved_route"]["model"] = models_by_family[family]
         item["attempt_count"] = attempts
         item["substitute_used"] = substituted
         item["receipt_sha256"] = v3b.receipt_sha(item)

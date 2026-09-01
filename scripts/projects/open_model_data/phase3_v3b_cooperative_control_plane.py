@@ -872,6 +872,7 @@ def validate_transition_receipts(
         "candidate_substitute_dispatched",
     }
     retry_limits = artifact["retry_and_substitution"]
+    role_contracts = {str(role["role_id"]): role for role in artifact["role_contracts"]}
     for item in receipts:
         errors = sorted(validator.iter_errors(item), key=lambda error: list(error.path))
         require(not errors, f"transition receipt schema violation: {errors[0].message}" if errors else "receipt invalid")
@@ -900,18 +901,29 @@ def validate_transition_receipts(
         require(item["contract_sha256"] == artifact["receipt_sha256"], "receipt contract drift")
         role_id = str(item["role_id"])
         family = str(item["resolved_route"]["provider_family"])
+        model = str(item["resolved_route"]["model"])
+        condition = str(item["condition_code"])
+        if role_id == "HUMAN_STEWARD":
+            frozen_role = role_contracts[role_id]
+            require(family == frozen_role["provider_family"], "human steward provider family drift")
+            require(model == frozen_role["model"], "human steward model drift")
         if role_id in model_role_ids:
             key = (str(item["row_id"]), role_id)
             existed = key in budgets
-            budget = budgets.setdefault(
-                key,
-                {
+            frozen_role = role_contracts[role_id]
+            if not existed:
+                require(condition not in retry_dispatch_conditions, "format retry lacks original attempt")
+                require(condition not in substitute_dispatch_conditions, "substitute lacks original attempt")
+                require(family == frozen_role["provider_family"], "original provider family drift")
+                require(model == frozen_role["model"], "original model drift")
+                budgets[key] = {
                     "format_retries": 0,
                     "substitutes": 0,
                     "original_family": family,
-                },
-            )
-            condition = str(item["condition_code"])
+                    "active_family": family,
+                    "active_model": model,
+                }
+            budget = budgets[key]
             if condition in retry_dispatch_conditions:
                 require(existed, "format retry lacks original attempt")
                 budget["format_retries"] += 1
@@ -920,6 +932,20 @@ def validate_transition_receipts(
                 budget["substitutes"] += 1
                 require(item["substitute_used"] is True, "substitute transition missing flag")
                 require(budget["original_family"] != family, "same-family substitution")
+                require(budget["active_family"] != family, "substitute did not change active family")
+                budget["active_family"] = family
+                budget["active_model"] = model
+            else:
+                require(family == budget["active_family"], "active provider family drift")
+                require(model == budget["active_model"], "active model drift")
+            require(
+                item["format_retry_used"] is (condition in retry_dispatch_conditions),
+                "format retry flag mismatch",
+            )
+            require(
+                item["substitute_used"] is (condition in substitute_dispatch_conditions),
+                "substitute flag mismatch",
+            )
             require(
                 budget["format_retries"] <= retry_limits["format_retry_limit"],
                 "format retry budget exhausted",
@@ -935,6 +961,7 @@ def validate_transition_receipts(
                 "maximum attempt budget exhausted",
             )
         if item["to_state"] == "GOLD_ELIGIBLE_METADATA_ONLY":
+            require(role_id == "HUMAN_STEWARD", "gold transition requires human steward")
             require(item["guard_result"] == "pass", "gold transition guard not satisfied")
             require(all(item["gold_guard_results"].values()), "gold transition guard bundle incomplete")
         require(item["receipt_sha256"] == receipt_sha(item), "transition receipt self-hash mismatch")
