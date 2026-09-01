@@ -355,6 +355,63 @@ def test_invalidation_requires_a_fresh_cycle_id() -> None:
         v3c.validate_custody_receipts([seal, exposure, invalidation, reused], artifact)
 
 
+def test_reseal_cannot_reuse_any_historical_commitment_pair() -> None:
+    artifact = _artifact()
+    receipts: list[dict[str, Any]] = []
+
+    def append(
+        cycle_id: str,
+        event_type: str,
+        cycle_status: str,
+        freeze: str,
+        version: str,
+        *,
+        mutation: bool = False,
+        new_cycle_required: bool = False,
+    ) -> None:
+        previous = receipts[-1]["receipt_sha256"] if receipts else None
+        receipts.append(
+            _receipt(
+                sequence=len(receipts),
+                cycle_id=cycle_id,
+                event_type=event_type,
+                cycle_status=cycle_status,
+                previous_receipt_sha256=previous,
+                freeze_commitment_sha256=freeze,
+                evaluation_version_sha256=version,
+                mutation=mutation,
+                new_cycle_required=new_cycle_required,
+            )
+        )
+
+    append("cycle-test-001", "cycle_sealed", "SEALED_PRE_EXPOSURE", "1" * 64, "2" * 64)
+    append("cycle-test-001", "exposure", "EXPOSED", "1" * 64, "2" * 64)
+    append(
+        "cycle-test-001",
+        "invalidation",
+        "INVALIDATED_RESEAL_REQUIRED",
+        "1" * 64,
+        "2" * 64,
+        mutation=True,
+        new_cycle_required=True,
+    )
+    append("cycle-test-002", "cycle_sealed", "SEALED_PRE_EXPOSURE", "3" * 64, "4" * 64)
+    append("cycle-test-002", "exposure", "EXPOSED", "3" * 64, "4" * 64)
+    append(
+        "cycle-test-002",
+        "invalidation",
+        "INVALIDATED_RESEAL_REQUIRED",
+        "3" * 64,
+        "4" * 64,
+        mutation=True,
+        new_cycle_required=True,
+    )
+    append("cycle-test-003", "cycle_sealed", "SEALED_PRE_EXPOSURE", "1" * 64, "2" * 64)
+
+    with pytest.raises(v3c.V3CError, match="commitment pair cannot be reused"):
+        v3c.validate_custody_receipts(receipts, artifact)
+
+
 def test_custody_receipt_hash_chain_and_replay_are_fail_closed() -> None:
     artifact = _artifact()
     seal = _receipt(

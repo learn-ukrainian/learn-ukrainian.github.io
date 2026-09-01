@@ -426,6 +426,7 @@ def _custody_receipt_contract(ledger: Mapping[str, Any]) -> dict[str, Any]:
         "exposure_requires_pre_exposure_seal": True,
         "invalidation_requires_prior_exposure": True,
         "invalidation_requires_new_cycle": True,
+        "sealed_commitment_pair_reuse_forbidden": True,
         "construction_mutation_after_exposure_is_global_stop": True,
         "ledger_sha256": ledger["ledger_sha256"],
         "rows": [],
@@ -854,6 +855,7 @@ def build_schema() -> dict[str, Any]:
                 "exposure_requires_pre_exposure_seal": {"const": True},
                 "invalidation_requires_prior_exposure": {"const": True},
                 "invalidation_requires_new_cycle": {"const": True},
+                "sealed_commitment_pair_reuse_forbidden": {"const": True},
                 "construction_mutation_after_exposure_is_global_stop": {"const": True},
                 "ledger_sha256": hash_schema,
                 "rows": {"type": "array", "maxItems": 0, "items": {"$ref": "#/$defs/custodyReceipt"}},
@@ -871,6 +873,7 @@ def build_schema() -> dict[str, Any]:
                 "exposure_requires_pre_exposure_seal",
                 "invalidation_requires_prior_exposure",
                 "invalidation_requires_new_cycle",
+                "sealed_commitment_pair_reuse_forbidden",
                 "construction_mutation_after_exposure_is_global_stop",
                 "ledger_sha256",
                 "rows",
@@ -1258,6 +1261,7 @@ def validate_custody_receipts(
     current_cycle: str | None = None
     current_state: str | None = None
     cycle_ids: set[str] = set()
+    sealed_commitment_pairs: set[tuple[str, str]] = set()
     sealed_freeze_commitment: str | None = None
     sealed_evaluation_version: str | None = None
     exposed_version: str | None = None
@@ -1293,6 +1297,7 @@ def validate_custody_receipts(
             cycle_ids.add(cycle)
             sealed_freeze_commitment = receipt["freeze_commitment_sha256"]
             sealed_evaluation_version = receipt["evaluation_version_sha256"]
+            sealed_commitment_pairs.add((sealed_freeze_commitment, sealed_evaluation_version))
         elif cycle != current_cycle:
             require(current_state == "INVALIDATED_RESEAL_REQUIRED", "new cycle before invalidation")
             require(event == "cycle_sealed" and status == "SEALED_PRE_EXPOSURE", "new cycle must begin sealed")
@@ -1300,16 +1305,17 @@ def validate_custody_receipts(
             require(mutated is False and receipt["new_cycle_required"] is False, "new cycle seal flags invalid")
             require(receipt["freeze_commitment_sha256"] != "0" * 64, "new cycle freeze commitment missing")
             require(receipt["evaluation_version_sha256"] != "0" * 64, "new cycle evaluation version missing")
-            require(
-                receipt["freeze_commitment_sha256"] != sealed_freeze_commitment
-                or receipt["evaluation_version_sha256"] != sealed_evaluation_version,
-                "new cycle commitments must change",
+            commitment_pair = (
+                receipt["freeze_commitment_sha256"],
+                receipt["evaluation_version_sha256"],
             )
+            require(commitment_pair not in sealed_commitment_pairs, "sealed commitment pair cannot be reused")
             current_cycle = cycle
             current_state = status
             cycle_ids.add(cycle)
             sealed_freeze_commitment = receipt["freeze_commitment_sha256"]
             sealed_evaluation_version = receipt["evaluation_version_sha256"]
+            sealed_commitment_pairs.add(commitment_pair)
             exposed_version = None
         elif event == "cycle_sealed":
             raise V3CError("new cycle id required after invalidation")
