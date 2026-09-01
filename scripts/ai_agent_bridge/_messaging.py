@@ -16,8 +16,13 @@ def check_inbox(for_llm: str = "gemini"):
     """Check inbox for messages addressed to an agent.
 
     Dual-READ permanent aliases (e.g. ``grok-build`` ↔ ``grok``) so historical
-    rows are not orphaned after the seat rename.
+    rows are not orphaned after the seat rename. Phantom launcher-minted
+    ``{provider}-{empty-slots-area}`` names (e.g. ``grok-open-model-data``)
+    resolve to the provider inbox (#7597).
     """
+    from ._channels import resolve_recipient_alias
+
+    for_llm = resolve_recipient_alias(for_llm)
     try:
         from agent_runtime.agent_identity import seat_read_aliases
 
@@ -282,7 +287,14 @@ def acknowledge(
 
 
 def acknowledge_all(for_llm: str, *, consumed_by_live_driver: bool = False):
-    """Acknowledge ALL unread messages for a given agent (dual-READ aliases)."""
+    """Acknowledge ALL unread messages for a given agent (dual-READ aliases).
+
+    Phantom launcher-minted ``{provider}-{empty-slots-area}`` names resolve to
+    the provider inbox (#7597).
+    """
+    from ._channels import resolve_recipient_alias
+
+    for_llm = resolve_recipient_alias(for_llm)
     try:
         from agent_runtime.agent_identity import seat_read_aliases
 

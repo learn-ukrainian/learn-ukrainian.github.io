@@ -85,15 +85,47 @@ def test_devops_resolves_to_dedicated_provider_slot(resolver: str, expected: str
 @pytest.mark.parametrize(
     ("resolver", "expected"),
     [
-        ("handoff_identity_for_epic", "claude-monitor"),
-        ("handoff_identity_for_gemini_epic", "gemini-monitor"),
-        ("handoff_identity_for_codex_epic", "codex-monitor"),
-        ("handoff_identity_for_cursor_epic", "cursor-monitor"),
+        ("handoff_identity_for_epic", "claude"),
+        ("handoff_identity_for_gemini_epic", "gemini"),
+        ("handoff_identity_for_codex_epic", "codex"),
+        ("handoff_identity_for_cursor_epic", "cursor"),
+        ("handoff_identity_for_grok_epic", "grok"),
+        ("handoff_identity_for_kimi_epic", "kimi"),
     ],
 )
-def test_monitor_resolves_to_dedicated_provider_slot(resolver: str, expected: str) -> None:
+def test_monitor_empty_roster_resolves_to_provider_identity(resolver: str, expected: str) -> None:
+    """monitor.slots is [] in area_assignments.yaml: no per-lane roster slot is
+    minted, so the launcher must export the bare provider identity — a valid
+    inbox --for choice — instead of a phantom `{provider}-monitor` (#7597)."""
     result = subprocess.run(
         ["bash", "-c", 'source "$1"; "$2" monitor', "bash", str(_HANDOFF_IDENTITY), resolver],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == expected
+
+
+@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
+@pytest.mark.parametrize(
+    ("resolver", "expected"),
+    [
+        ("handoff_identity_for_epic", "claude"),
+        ("handoff_identity_for_gemini_epic", "gemini"),
+        ("handoff_identity_for_codex_epic", "codex"),
+        ("handoff_identity_for_cursor_epic", "cursor"),
+        ("handoff_identity_for_grok_epic", "grok"),
+        ("handoff_identity_for_kimi_epic", "kimi"),
+    ],
+)
+def test_open_model_data_empty_roster_resolves_to_provider_identity(resolver: str, expected: str) -> None:
+    """open-model-data.slots is [] in area_assignments.yaml: the launcher must
+    not mint the phantom `grok-open-model-data` slot that inbox --for rejects
+    (#7597)."""
+    result = subprocess.run(
+        ["bash", "-c", 'source "$1"; "$2" open-model-data', "bash", str(_HANDOFF_IDENTITY), resolver],
         cwd=_REPO_ROOT,
         capture_output=True,
         text=True,
@@ -149,18 +181,19 @@ def test_legacy_selector_outputs_remain_byte_identical(selector: str, expected: 
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
 @pytest.mark.parametrize(
-    ("selector", "lane", "stream", "claude_slot", "gemini_slot", "grok_slot"),
+    ("selector", "lane", "stream", "claude_slot", "gemini_slot", "grok_slot", "codex_slot"),
     [
-        ("infra.fleet-comms", "infra", INFRA_STREAM_ID, "claude-infra", "gemini-infra", "grok-infra"),
-        ("infra.devops", "devops", "epic:5703", "claude-devops", "gemini-devops", "grok-devops"),
-        ("devops", "devops", "epic:5703", "claude-devops", "gemini-devops", "grok-devops"),
-        ("infra.monitor", "monitor", "epic:7177", "claude-monitor", "gemini-monitor", "grok-monitor"),
-        ("monitor", "monitor", "epic:7177", "claude-monitor", "gemini-monitor", "grok-monitor"),
-        ("atlas.practice", "atlas", "epic:4387", "claude-atlas", "gemini-atlas", "grok-atlas"),
-        ("practice-hub", "atlas", "epic:4387", "claude-atlas", "gemini-atlas", "grok-atlas"),
-        ("hramatka.lessons", "hramatka", "epic:4542", "claude-hramatka", "gemini-hramatka", "grok-hramatka"),
-        ("corpus", "corpus", "epic:4706", "claude-corpus", "gemini-corpus", "grok-corpus"),
-        ("corpus-channels", "corpus", "epic:4706", "claude-corpus", "gemini-corpus", "grok-corpus"),
+        ("infra.fleet-comms", "infra", INFRA_STREAM_ID, "claude-infra", "gemini-infra", "grok-infra", "codex-infra"),
+        ("infra.devops", "devops", "epic:5703", "claude-devops", "gemini-devops", "grok-devops", "codex-devops"),
+        ("devops", "devops", "epic:5703", "claude-devops", "gemini-devops", "grok-devops", "codex-devops"),
+        # Empty-roster areas (slots: []) mint the bare provider identity (#7597).
+        ("infra.monitor", "monitor", "epic:7177", "claude", "gemini", "grok", "codex"),
+        ("monitor", "monitor", "epic:7177", "claude", "gemini", "grok", "codex"),
+        ("atlas.practice", "atlas", "epic:4387", "claude-atlas", "gemini-atlas", "grok-atlas", "codex-atlas"),
+        ("practice-hub", "atlas", "epic:4387", "claude-atlas", "gemini-atlas", "grok-atlas", "codex-atlas"),
+        ("hramatka.lessons", "hramatka", "epic:4542", "claude-hramatka", "gemini-hramatka", "grok-hramatka", "codex-hramatka"),
+        ("corpus", "corpus", "epic:4706", "claude-corpus", "gemini-corpus", "grok-corpus", "codex-corpus"),
+        ("corpus-channels", "corpus", "epic:4706", "claude-corpus", "gemini-corpus", "grok-corpus", "codex-corpus"),
     ],
 )
 def test_dot_notation_selector_resolves_stream_and_provider_handoff(
@@ -170,6 +203,7 @@ def test_dot_notation_selector_resolves_stream_and_provider_handoff(
     claude_slot: str,
     gemini_slot: str,
     grok_slot: str,
+    codex_slot: str,
 ) -> None:
     result = subprocess.run(
         [
@@ -186,7 +220,7 @@ def test_dot_notation_selector_resolves_stream_and_provider_handoff(
         timeout=60,
     )
     assert result.returncode == 0, result.stderr
-    assert result.stdout == f"{lane}|{stream}|{claude_slot}|{gemini_slot}|{grok_slot}|codex-{lane}"
+    assert result.stdout == f"{lane}|{stream}|{claude_slot}|{gemini_slot}|{grok_slot}|{codex_slot}"
 
 
 @pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")

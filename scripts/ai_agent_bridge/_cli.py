@@ -73,7 +73,11 @@ def _detect_caller_identity_from_env() -> str | None:
 
     handoff_agent = os.environ.get("SESSION_HANDOFF_AGENT")
     if handoff_agent:
-        normalized = handoff_agent.strip().lower()
+        # Phantom `{provider}-{empty-slots-area}` handoff identities (minted by
+        # pre-#7597 launchers, e.g. grok-open-model-data) resolve to the
+        # provider so the explicit handoff marker still beats the GROK_AGENT /
+        # CLAUDE_PROJECT_DIR heuristics below.
+        normalized = _channels.resolve_recipient_alias(handoff_agent.strip().lower())
         if normalized in _channels.get_valid_agents():
             return normalized
     claude_name = os.environ.get("CLAUDE_AGENT_NAME")
@@ -456,6 +460,10 @@ def _build_parser() -> argparse.ArgumentParser:
         "--for",
         dest="for_llm",
         default="gemini",
+        # type= runs before choices: an already-minted phantom
+        # `{provider}-{empty-slots-area}` (e.g. grok-open-model-data, #7597)
+        # normalizes to its provider so live sessions can drain.
+        type=_channels.resolve_recipient_alias,
         choices=recipient_choices,
         help="Check inbox for which agent (default: gemini)",
     )
@@ -471,6 +479,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--to",
         dest="to_llm",
         default="claude",
+        type=_channels.resolve_recipient_alias,
         choices=recipient_choices,
         help="Target agent (default: claude)",
     )
@@ -492,7 +501,12 @@ def _build_parser() -> argparse.ArgumentParser:
 
     # ack-all
     ack_all_parser = subparsers.add_parser("ack-all", help="Acknowledge ALL unread messages for an agent")
-    ack_all_parser.add_argument("agent", choices=recipient_choices, help="Agent whose inbox to clear")
+    ack_all_parser.add_argument(
+        "agent",
+        type=_channels.resolve_recipient_alias,
+        choices=recipient_choices,
+        help="Agent whose inbox to clear",
+    )
     ack_all_parser.add_argument(
         "--consumed-by-live-driver",
         action="store_true",
