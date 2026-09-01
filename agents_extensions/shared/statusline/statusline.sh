@@ -2,16 +2,15 @@
 # Claude Code statusline — learn-ukrainian project.
 #
 # Reads Claude Code status JSON from stdin and renders:
-#   [MODEL] cwd-basename [wt:worktree-name] (branch*) [ctx: N%]
-#   [effort: level] [think] [5h: N%] [7d: N%]
+#   [MODEL] [ctx: UK/BK (N%)] cwd-basename [wt:worktree-name] (branch*)
+#   [effort: level] [think] [5h: N%] [7d: N%] [$cost]
 #
 # Segments:
 #   [MODEL]        .model.display_name, omitted if missing
-#   cwd-basename   basename(.workspace.current_dir), pwd fallback
-#   [wt:...]       basename(.workspace.git_worktree), omitted if not in a worktree
-#   (branch*)      git branch + `*` if dirty
-#   [ctx: UK/BK (N%)] context window — color-coded green<50, yellow 50-79,
-#                    red 80+. U=used Ktokens, B=budget Ktokens, N=percent.
+#   [ctx: UK/BK (N%)] context window — placed immediately after MODEL so
+#                    usage is the first thing visible on the line. Bold +
+#                    color-coded: green<50, yellow 50-79, red 80+.
+#                    U=used Ktokens, B=budget Ktokens, N=percent used.
 #                    Used tokens prefer official Claude Code fields:
 #                      1) .context_window.total_input_tokens;
 #                      2) input/cache fields inside .context_window.current_usage;
@@ -21,6 +20,9 @@
 #                    Capacity prefers .context_window.context_window_size, then
 #                    the canonical per-session record. There is no universal 1M
 #                    or auto-compaction fallback; unknown capacity stays hidden.
+#   cwd-basename   basename(.workspace.current_dir), pwd fallback
+#   [wt:...]       basename(.workspace.git_worktree), omitted if not in a worktree
+#   (branch*)      git branch (--no-optional-locks, subsecond) + `*` if dirty
 #   [effort: ...]  .effort.level — low/medium default, high/xhigh bold,
 #                    max red. Omitted for pre-2.1.119 clients.
 #   [think]        .thinking.enabled — emitted only when true. Omitted for
@@ -30,11 +32,12 @@
 #                    Stays silent while healthy — no noise in normal use.
 #   [7d: N%]       .rate_limits.seven_day.used_percentage — weekly budget.
 #                    Same threshold scheme as 5h.
-#
-# NOTE: .cost.total_cost_usd is deliberately NOT rendered. The field is a
-# client-side API-equivalent estimate that is meaningless for Claude Max
-# subscription users (which is the primary intended user of this project).
-# The actionable subscription metrics are the 5h and 7d rate-limit windows.
+#   [$cost]        .cost.total_cost_usd, formatted to 2 decimals, shown only
+#                    when the input JSON provides the field. Kept last/low-
+#                    emphasis: for Claude Max subscribers the 5h/7d rate-limit
+#                    windows above remain the actionable subscription signal;
+#                    this is supplementary session telemetry, shown whenever
+#                    the schema includes it and dropped silently otherwise.
 #
 # Schema reference: https://code.claude.com/docs/en/statusline.md
 #
@@ -79,14 +82,17 @@ worktree=$(json_get '.workspace.git_worktree')
 wt_seg=""
 [ -n "$worktree" ] && wt_seg="[wt:$(basename "$worktree")]"
 
-# Branch + dirty marker
+# Branch + dirty marker.
+# --no-optional-locks: never blocks on / contends for the repo lock, since
+# the statusline fires on every event and must stay subsecond regardless of
+# what other git operations (hooks, other agents) are doing concurrently.
 branch_seg=""
-if git -C "$cwd" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  branch=$(git -C "$cwd" symbolic-ref --quiet --short HEAD 2>/dev/null \
-           || git -C "$cwd" rev-parse --short HEAD 2>/dev/null \
+if git --no-optional-locks -C "$cwd" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  branch=$(git --no-optional-locks -C "$cwd" symbolic-ref --quiet --short HEAD 2>/dev/null \
+           || git --no-optional-locks -C "$cwd" rev-parse --short HEAD 2>/dev/null \
            || true)
   dirty=""
-  [ -n "$(git -C "$cwd" status --porcelain 2>/dev/null)" ] && dirty="*"
+  [ -n "$(git --no-optional-locks -C "$cwd" status --porcelain 2>/dev/null)" ] && dirty="*"
   [ -n "$branch" ] && branch_seg="($branch$dirty)"
 fi
 
@@ -118,7 +124,7 @@ is_positive_integer() {
 # itself resolves linked worktrees back to the primary checkout's private state.
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$cwd}"
 if [ ! -f "$PROJECT_DIR/scripts/lib/session_record.py" ]; then
-  PROJECT_DIR=$(git -C "$cwd" rev-parse --show-toplevel 2>/dev/null || printf '%s' "$cwd")
+  PROJECT_DIR=$(git --no-optional-locks -C "$cwd" rev-parse --show-toplevel 2>/dev/null || printf '%s' "$cwd")
 fi
 PYTHON_BIN="$PROJECT_DIR/.venv/bin/python"
 SESSION_RECORD="$PROJECT_DIR/scripts/lib/session_record.py"
@@ -198,9 +204,9 @@ fi
 if [ -n "$ctx_pct" ]; then
   ctx_int=$(printf '%.0f' "$ctx_pct" 2>/dev/null) || ctx_int=""
   if [ -n "$ctx_int" ]; then
-    if   [ "$ctx_int" -ge 80 ]; then ctx_color="\033[31m"   # red
-    elif [ "$ctx_int" -ge 50 ]; then ctx_color="\033[33m"   # yellow
-    else                             ctx_color="\033[32m"   # green
+    if   [ "$ctx_int" -ge 80 ]; then ctx_color="\033[1;31m"   # red, bold
+    elif [ "$ctx_int" -ge 50 ]; then ctx_color="\033[1;33m"   # yellow, bold
+    else                             ctx_color="\033[1;32m"   # green, bold
     fi
     if is_positive_integer "$ctx_used" && is_positive_integer "$ctx_budget"; then
       ctx_used_k=$(( (ctx_used + 500) / 1000 ))
@@ -319,15 +325,24 @@ rate_limit_seg() {
 rl5h_seg=$(rate_limit_seg "5h" ".rate_limits.five_hour.used_percentage")
 rl7d_seg=$(rate_limit_seg "7d" ".rate_limits.seven_day.used_percentage")
 
+# Session cost — some Claude Code schema versions include .cost.total_cost_usd,
+# others omit it entirely. Degrade to empty silently either way; never error.
+cost_seg=""
+cost_usd=$(json_get '.cost.total_cost_usd')
+if [ -n "$cost_usd" ]; then
+  cost_fmt=$(printf '%.2f' "$cost_usd" 2>/dev/null) || cost_fmt=""
+  [ -n "$cost_fmt" ] && cost_seg="[\$${cost_fmt}]"
+fi
+
 # ── Assemble ────────────────────────────────────────────────────
 
 parts=()
 [ -n "$model" ]        && parts+=("[$model]")
+[ -n "$ctx_seg" ]      && parts+=("$ctx_seg")
 parts+=("$cwd_name")
 [ -n "$wt_seg" ]       && parts+=("$wt_seg")
 [ -n "$branch_seg" ]   && parts+=("$branch_seg")
 [ -n "$mode_seg" ]     && parts+=("$mode_seg")
-[ -n "$ctx_seg" ]      && parts+=("$ctx_seg")
 [ -n "$steps_seg" ]    && parts+=("$steps_seg")
 [ -n "$compacts_seg" ] && parts+=("$compacts_seg")
 [ -n "$handoff_seg" ]  && parts+=("$handoff_seg")
@@ -336,6 +351,7 @@ parts+=("$cwd_name")
 [ -n "$thinking_seg" ] && parts+=("$thinking_seg")
 [ -n "$rl5h_seg" ]     && parts+=("$rl5h_seg")
 [ -n "$rl7d_seg" ]     && parts+=("$rl7d_seg")
+[ -n "$cost_seg" ]     && parts+=("$cost_seg")
 
 # %b interprets the ANSI escape codes embedded in coloured segments.
 printf '%b\n' "${parts[*]}"
