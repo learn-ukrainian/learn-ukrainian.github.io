@@ -274,6 +274,10 @@
         "sha256": "412f7456d42f6adcfbc3f44157d2bbfb9d35b22b879620e258bf76ff3c2091eb"
       },
       {
+        "path": "scripts/lexicon/ulp_taught_pair_extractor.py",
+        "sha256": "707f527d3db608d1d4332234e9dc7b5113e8e2cacaea1055f5cfbad180b68a70"
+      },
+      {
         "path": "scripts/lexicon/verb_pedagogy_vesum_aspect.py",
         "sha256": "3825d0680fc04345714c13e09c62ef2a82b7d67abd8f24b589233ffb4ed76373"
       },

@@ -1,551 +1,200 @@
-# Cyrillic-Slavic Ukrainian dataset delivery plan
-
-Status: canonical execution plan for epic [#7423](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/7423).
-This document is the durable handoff for the dataset-delivery arc; it does not
-authorize provider execution, model training, storage deletion, or publication
-beyond the rights of the admitted sources.
-
-<!-- BEGIN OUTCOME_FREEZE_V2 -->
-OUTCOME_FREEZE_V2
-
-User-visible outcome:
-Deliver a versioned, reproducible, source-derived dataset that teaches models to produce and preserve proper modern Standard Ukrainian while resisting interference only from the exhaustive V1 allowlist of Slavic language classes written in Cyrillic. The dataset must also identify and protect legitimate historical material, especially the Old East Slavic / Kyivan Rus written-language continuum and Middle Ukrainian, instead of correcting it into modern Ukrainian.
-
-Operational language and context boundary:
-- Target: modern Standard Ukrainian.
-- Exhaustive V1 modern contact/adversarial allowlist: Russian, Belarusian, Bulgarian, Macedonian, Serbian in Cyrillic, and Montenegrin in Cyrillic. No named class may be added without source-qualified domain review and a new outcome freeze.
-- Historical/protected identity classes: Old East Slavic / Kyivan Rus written-language continuum, Middle Ukrainian, Old Church Slavonic or a source-qualified Church Slavonic recension, and source-attested Rusyn.
-- Every span has separate language_identity, script_profile, context_role, period/region/register where applicable, identity_candidates, and scope_status fields. Script never proves language identity.
-- Context roles: unmarked modern Ukrainian, quotation, code-switch, transliteration, metalinguistic example, name/title, dialect or regional form, historical text, and ambiguous/noisy text.
-- Correction truth is eligible only when the exact span is independently adjudicated as unmarked modern Ukrainian and the contrasted contact class is in the exhaustive V1 allowlist. Unknown, mixed-identity, non-Slavic Cyrillic, Latin-script Slavic, transliterated, and other_or_unresolved_slavic_cyrillic spans route to out_of_scope_protected or abstain, never correction truth.
-
-Historical non-erasure invariants:
-For every historical/protected source span: historical_forms_protected=true; modern_correction_eligible=false; old_east_slavic_is_modern_russian=false; historical_ruskyi_auto_mapped_to_modern_russian=false; and no automatic mapping to any modern national successor language. A modern-context rule may apply only to a distinct span independently adjudicated as unmarked modern Ukrainian; it may never relabel a historical source span. Historical records retain period, region, register, recension/editorial layer, identity candidates, and an unresolved historical-Cyrillic route. Old Church Slavonic and later source recensions must be distinguished or explicitly mapped, not flattened.
-
-Frozen source denominator:
-Freeze a versioned source manifest with exact admitted units, hashes, admission cutoff, source/rights capability state, and later-addition policy; later sources require a new dataset version. Derive and freeze an atomic rule denominator R, its algorithm, merge/split rules, and rule-manifest hash before scale. Keep source_unit_disposition separate from coverage_cell_status. Freeze an applicability predicate and explicit required-cell manifest over language x context x phenomenon x role rather than an implicit full Cartesian product. Every frozen source unit is dispositioned exactly once as converted, supporting_only, protected, evaluation_only, rights_limited_locator_only, duplicate, non_rule_bearing, unresolved, or blocked_with_reason. Every required coverage cell is separately marked satisfied, not_applicable_with_evidence, coverage_blocked, or unresolved. An actual protected_case is distinct from not_applicable_with_evidence; N/A never satisfies protected-case coverage. Row count, storage size, schema validity, or model agreement cannot substitute for denominator closure.
-
-Canonical product:
-A source capability ledger; immutable claim-typed evidence records; frozen atomic rule cards; teaching cases containing correct production, correction, minimal contrast, protected, and adjudicated abstention roles; deterministic derived training/evaluation views; versioned source-identity splits; provenance and rights metadata; and a consumer reproduction receipt. Gold targets require source-qualified human adjudication against cited claim-appropriate evidence. Attestation alone cannot establish contextual correctness. Model proposals retain provenance and cannot become targets without human adjudication. A coverage_blocked cell is not an abstention teaching case.
-
-Cycle007 isolation:
-Cycle007 remains evaluation-only and deny-listed from training truth. Freeze the deny-list over row IDs, exact example/source units, document/work/edition groups, labels, case-specific sidecars, prompts, paraphrases, and synthetic siblings. Prohibit evaluation-example and annotation derivation while allowing only shared abstract rule concepts or authority-only citations whose exact held-out spans and annotations are not exposed. Any uncertain lineage is excluded from training views.
-
-Non-goals:
-No general C2 knowledge corpus; no Latin-script Slavic interference program; no non-Slavic Cyrillic program; no model training in this epic; no preference optimization; no mass Gemini/Grok labeling; no provider output promoted to gold; no model-performance learning curve; no prompt-baseline or dataset-backed model-behavior claim as an epic completion gate; no publication of source text beyond rights; no automatic modernization of historical, dialectal, quoted, named, transliterated, or metalinguistic spans.
-
-Role map:
-One accountable orchestrator owns sequencing and disposition. Source/rights owners establish capabilities. Source-qualified human adjudicators establish gold against claim-appropriate evidence. Ukrainian language lanes may propose and independently review mappings but are not truth by themselves. Independent builders implement deterministic artifacts. An evaluation steward freezes held-out partitions before any rule/case derivation and withholds held-out labels from builders. A cross-family reviewer gates every consequential PR. Models may propose candidates but cannot author gold labels.
-
-Independent held-out evaluation:
-Freeze document/source-identity splits, exact and near-duplicate policy, required-cell construction rules, and per-required-cell held-out requirements before rule or case derivation. Keep held-out text, labels, annotations, and case-specific derivatives unavailable to builders. Report dataset integrity and coverage per language, context, phenomenon, and role. Hard global failures are any split leakage, unsupported gold label, destructive edit of a protected case, provenance/rights loss, denominator drift, integrity corruption, or Cycle007 derivative entering training truth. Model training and behavior comparison remain separately authorized after DATASET_READY and cannot close this epic.
-
-Stop, residual, and scale policy:
-Global stop conditions are denominator drift, leakage, protected-span damage, rights/provenance integrity corruption, or Cycle007 contamination. Lane-local stop conditions are unresolved rights, incomplete sources, or insufficient evidence; disjoint safe lanes may continue, while affected required cells remain coverage_blocked or unresolved. Never lower a gate, synthesize authority, or silently expand scope. Scale only after a source-qualified pilot passes; measure a deterministic coverage-yield curve of newly satisfied source-backed atomic coverage versus duplicate/derivative volume, never a model-performance learning curve.
-
-Completion vocabulary:
-INVENTORIED means the frozen source universe is disposition-complete, with blocked and unresolved counts still explicit. PILOT_VALIDATED means the source-qualified pilot, split firewall, and held-out protection/integrity gates pass. DATASET_PARTIAL means reproducible admitted rows exist but at least one frozen required source unit/cell, right, or integrity requirement remains blocked or unresolved. DATASET_READY means the frozen required denominator is covered with zero unresolved or blocked required cells, zero unknown required rights, zero exclusion gaming, all admitted targets human-adjudicated and source-traceable, all views split-safe and reproducible, and the consumer receipt independently reproduces the dataset. Protected, evaluation-only, rights-limited, duplicate, and non-rule-bearing units remain denominator-visible. BLOCKED means a named global stop condition prevents safe progress. TRAINING_VALIDATED is outside this epic and cannot be claimed here.
-
-Legacy and policy disposition:
-The new epic remains a child of open-model-data stream epic #6321. Issue #6375 is superseded for dataset delivery only after a machine-readable handoff receipt validates the controlling outcome SHA, old/new issue IDs, public artifact SHAs, exact text-free Cycle007 state including labeling still OFF and zero provider-derived training labels, residual counts, blockers, owners, and receiving-epic acceptance. Completed historical issues remain closed. Issue #6958 remains open until its machine-readable Wikipedia teaching/gold/training ineligibility field and fail-closed selection gate land; the successor epic pins that policy to the exact merged artifact/check SHA rather than relying on a mutable issue number. The approximately 81 GiB Cycle007 expansion may be reclaimed only through a separate compact-migration child with exact round-trip proof, a recoverable backup, and explicit operator authorization before deletion.
-<!-- END OUTCOME_FREEZE_V2 -->
-
-## Frozen contract
-
-| Field | Value |
-| --- | --- |
-| Parent epic | #7423 |
-| Controlling outcome SHA-256 | `890498103f96a7b8f27fd52bc14418d8752e5b73a72ed8774dd0f52eb3160a47` |
-| Contract state | `V2_REVIEWED_ACTIVE` |
-| Ukrainian-domain review | `APPROVE` — Gemini 3.7 Flash High |
-| Scope/circularity review | `APPROVE` — GPT-5.6 Sol red-team |
-| Previous contract | `V1_SUPERSEDED_NOT_ACTIVE` |
-
-The frozen outcome is:
-
-> Deliver a versioned, reproducible, source-derived dataset that teaches models to produce and preserve proper modern Standard Ukrainian while resisting interference only from an exhaustive V1 allowlist of Cyrillic-written Slavic contact classes. It must identify and protect historical language—especially the Old East Slavic / Kyivan Rus written-language continuum and Middle Ukrainian—instead of modernizing or relabeling it.
-
-The SHA above is the controlling identity from the reviewed epic contract. Any
-material change to the outcome, language boundary, denominator, role map,
-evaluation design, stop policy, or completion terms invalidates this plan and
-requires a new domain review and an independent scope/circularity review before
-implementation continues. The receipt in
-`data/projects/open_model_data/reference/phase3_cyrillic_slavic_predecessor_handoff_v1.json`
-binds the predecessor state to this identity.
-
-## V3 additive cooperative bridge
-
-V3 is an additive execution amendment to the V2 outcome, not a replacement for
-its evidence. Its reviewed consensus packet has SHA-256
-`d3444c126deb91d05129d51c5344aa204b1db9ca0927c246698e0389466d0b1a`.
-Gemini 3.7 Flash High approved the post-amendment Ukrainian-domain audit;
-GPT-5.6 Sol approved the scope/circularity ratification; and Grok 4.6 High
-approved the adversarial ratification, all against that packet. Claude Fable 5's
-earlier amendment findings are incorporated; its repeated final ratification
-call was unavailable at the provider session cap, not rejected. The tracked
-contract is `FROZEN_REVIEWED_METADATA_ONLY`; provider execution remains closed.
-The V2 parent outcome and every predecessor artifact remain active unless the
-V3 compatibility table assigns an exact, hash-bound disposition. In particular,
-the zero-row P4 v1 receipt remains immutable at
-`BLOCKED_PENDING_SOURCE_QUALIFIED_ADJUDICATION` and
-`57/39/15/16/14/2/R=0`; a nonempty pilot requires a new P4 v2 freeze.
-
-V3 makes archaic, historical, and dialectal Ukrainian recognition explicit.
-Every span is modeled over independent identity, diachrony, variety, period,
-region, register, contact-composition, context-role, editorial/recension, and
-surface-provenance axes. Binding interpretations are:
-
-- a living source-attested Ukrainian dialect is a protected Ukrainian variety,
-  not a separate language by default;
-- archaic or bookish modern Ukrainian is distinct from historical-stage
-  Ukrainian and may still be correct modern production when attested;
-- surzhyk is contact composition, not a language identity;
-- literary eye-dialect is an editorial/context layer, not proof of a speaker's
-  identity;
-- source-attested Rusyn remains protected and is not silently mapped to a
-  Ukrainian dialect, Russian, or historical “Rus'”.
-
-Original source surfaces remain intact. Protected historical, archaic/bookish,
-dialectal, Rusyn, Church-Slavonic, mixed, quoted, transliterated, named, and
-metalinguistic spans cannot become modern-correction truth merely because they
-are nonstandard. Unresolved evidence preserves ordered identity candidates and
-routes to abstention or evidence-insufficient state.
-
-Rights are operation-specific. Retention, deterministic local analysis,
-external-provider transmission, derivation, training, publication, and
-redistribution are separate capabilities; official availability implies none
-of the others. A missing capability blocks only that operation and remains
-denominator-visible.
-
-### Cooperative roles and gold boundary
-
-Stable functional roles are source admission, content-blind split custody,
-identity lead, independent dissent, dispute critic, candidate builder, human
-steward, evaluation steward, and orchestrator. The current preferred model
-routes are runtime policy rather than role identity:
-
-- Claude Fable 5 — identity lead;
-- Gemini 3.7 Flash High plus a fresh self-audit — independent dissent;
-- Grok 4.6 High — locked-dispute critic;
-- GPT-5.6 Sol — candidate builder after the identity join.
-
-Identity reviewers receive the same label-blind packet and cannot see the
-builder's proposed identity/protection/correction, each other, prestige/order,
-or held-out material. The builder runs after the identity join and never authors
-gold. Every call records the resolved route, family, exposure/effort, prompt and
-output hashes, schema result, retry count, substitution, and failure state.
-
-Agreement must be exact across span boundaries and every classification,
-protection, correction, and confidence/abstention axis. Model agreement remains
-`MODEL_AGREEMENT_QUARANTINED_NOT_GOLD` with zero coverage, gold, training,
-evaluation, and teaching-view eligibility. All protected/high-risk rows enter
-the human queue even on agreement. Only a source-qualified atomic human decision
-can make a candidate gold-eligible, and training eligibility still requires its
-own rights, split, provenance, lineage, view, and execution-authorization gates.
-
-Provider, parser, or critic failure never shrinks the denominator or strands a
-row. Strict parsing permits one format-only retry; remaining failure routes to a
-bounded, recorded substitute or the appropriate human queue. Identity-human and
-case-human states are separate, so identity adjudication alone cannot promote a
-teaching case to gold.
-
-### Human workload and solo held-out custody
-
-Before any pilot provider call, freeze the admitted source/cell IDs, atomic
-human-decision key, exact per-stratum audit counts and seed, 100% protected-row
-review, maximum decisions and steward-hours, overflow state, error thresholds,
-and escalation rules. Sampling promotes only inspected rows. A failed cohort is
-frozen for complete human review or remains unresolved; unsampled agreements
-stay quarantined.
-
-A solo operator may hold the human and evaluation roles only under a disclosed
-temporal firewall: content-blind tooling seals source-identity groups and
-nonzero held-out counts for every V3 stratum before construction; construction
-cannot access held-out identities, content, labels, locators, fingerprints,
-derivatives, or neighbours; construction artifacts freeze before later held-out
-exposure; and any later construction change invalidates that evaluation version.
-This is not claimed as institutional independence. Evidence-ambiguous claims may
-remain abstained instead of requiring a second person.
-
-### V3 bridge DAG and orchestrator resumption
-
-Three bounded native children extend #7423:
-
-1. **#7560 — V3-A taxonomy and denominator compatibility** freezes the taxonomy,
-   dialect-parent partition, required strata, per-operation rights, and exact
-   V2-to-V3 compatibility table.
-2. **#7559 — V3-B cooperative control plane and human workflow** freezes the visibility
-   matrix, strict outputs, no-dead-end transition validator, admitting human
-   registry, workload manifest, retry/substitution policy, and transition
-   receipts.
-3. **#7561 — V3-C held-out extension and solo custody** freezes nonzero per-stratum
-   held-out requirements, content-blind custody, temporal firewall, invalidation
-   rules, and evaluation thresholds.
-
-Issue #7430 remains P4 and depends on all three V3 bridge children plus the
-merged policy gate in #6958. Issues #7431–#7433 remain validation, scaling, and
-certification. An orchestrator must
-query the V3 control-plane artifact for predecessor hashes, role visibility,
-current blockers, legal transitions, and child-slot state; it must not recreate
-the design from conversation history.
-
-Global stops are denominator drift, split leakage, Cycle007 contamination,
-protected-span damage, rights/provenance corruption, hidden substitution, role
-visibility collision, or construction mutation after held-out exposure.
-Lane-local evidence, rights, provider, format, or capacity failures remain
-visible while disjoint safe work continues.
-
-This bridge establishes contracts only. It does not authorize provider calls,
-labeling, training, source publication, or promotion of any model output to gold;
-and it does not claim a nonempty pilot, `PILOT_VALIDATED`, `DATASET_READY`, or
-`TRAINING_VALIDATED`.
-
-## P1 source and applicability freeze
-
-The metadata-only P1 freeze is generated by
-`scripts/projects/open_model_data/freeze_phase3_p1_universe.py` and recorded in
-`data/projects/open_model_data/evidence/phase3_p1_universe_freeze_v1.json`,
-validated by its adjacent schema. It binds the admission cutoff and source
-artifact hashes to the controlling outcome SHA. Each frozen source artifact or
-historical collection has one explicit source-unit disposition; its unit count
-remains denominator-visible, while no source rows are emitted.
-
-The freeze preserves unknown rights as visible blockers, keeps the six modern
-Cyrillic contact classes exhaustive, and records the historical non-erasure
-invariants. Applicability is a named conjunction over span-level identity,
-script, context, contrasted class, scope, and source-qualified adjudication.
-The required-cell list is explicit rather than a Cartesian-product assumption.
-`not_applicable_with_evidence` cannot satisfy a protected-historical cell. P1
-is `INVENTORIED`; blocked and unresolved cells are intentionally residual work
-for the dependency-ordered child issues.
-
-### P1 additive dialect/regional protection amendment
-
-P1 v1 is not rewritten. The separate metadata-only
-`phase3_p1_dialect_regional_protection_amendment_v1` binds the exact P1 v1
-artifact hash, adds one denominator-visible `coverage_blocked` stratum for a
-source-attested Ukrainian dialect or regional form, and takes the composite
-required-cell denominator from 15 to 16. It requires source-qualified identity,
-region, and register before future admission; it forbids normalization to modern
-Standard Ukrainian or any automatic successor mapping. An unknown identity or
-region remains coverage-blocked or abstained, never silently corrected.
-
-## P2 canonical metadata contracts
-
-P2 (`#7426`) is generated by
-`scripts/projects/open_model_data/freeze_phase3_p2_contracts.py` into
-`data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json`
-and validated by the adjacent schema. It consumes only the P1 metadata
-manifest plus that additive amendment: 57 source units, 39 unknown-rights
-blockers, the immutable 15-cell base, and the 16-cell composite denominator
-with explicit statuses remain denominator-visible.
-
-P1 cells remain coverage strata, not atomic linguistic rules. The current
-canonical `R` is intentionally empty; it freezes the deterministic future-rule
-admission, canonical atomic identity, collision detection, split/merge
-parent-child lineage, and manifest-version algorithm without fabricating a
-substantive claim. Structural future-rule validation is separate from admission:
-the current manifest remains empty. Its adjudication registry is explicitly
-non-admitting, so only coverage-blocked records can be admitted in P2; a
-caller-supplied authority object cannot become semantic evidence. Future
-semantic admission requires a frozen qualified-human registry and immutable
-adjudication-record hash. The canonical empty-rule-manifest hash and composite
-P1 input hash make same-count input drift fail closed. It also freezes immutable
-claim-typed evidence roles, structurally distinct protected historical and
-dialect/regional states, composite-bound proposal provenance, and
-non-promotion of model proposals. Unknown rights/provenance, missing
-claim-typed evidence, unresolved identity, historical normalization, and
-unregistered authority all fail closed. P2 is metadata-only: no source/evidence
-bodies, provider calls, labels, gold, or training are created.
-
-Future rule-manifest wrappers bind the composite denominator hash, canonical
-sorted slot order, their own recomputed manifest hash, and the exact parent
-manifest hash. They preserve every prior slot append-only; any split or merge
-child must retain its parents' coverage stratum. Thus multi-version rule
-evolution cannot move a rule across coverage strata or hide a denominator
-change, while the frozen empty `R` remains nonadmitting.
-
-## Product boundary
-
-The target is modern Standard Ukrainian. The modern Cyrillic-written contact
-allowlist is exhaustive for this dataset version:
-
-1. Russian.
-2. Belarusian.
-3. Bulgarian.
-4. Macedonian.
-5. Serbian written in Cyrillic.
-6. Montenegrin written in Cyrillic.
-
-The following are protected historical or regional identities and are not
-modern correction targets by identity alone:
-
-- Old East Slavic / the Kyivan Rus written-language continuum;
-- Middle Ukrainian;
-- Old Church Slavonic, or a source-qualified Church Slavonic recension;
-- source-attested Rusyn.
-
-The dataset must represent these dimensions independently for every span:
-
-- `language_identity`;
-- `script_profile`;
-- `context_role`;
-- `scope_status`;
-- period, region, register, and recension/editorial layer where applicable.
-
-Script is not language identity. Unknown, mixed-identity, non-Slavic Cyrillic,
-Latin-script Slavic, transliterated, and unresolved spans are protected,
-out-of-scope, or abstained; they are never silently converted into correction
-truth. A span is correction-eligible only when it is independently adjudicated
-as unmarked modern Ukrainian and the source-backed rule applies to that span.
-
-### Historical non-erasure invariants
-
-Every historical/protected span must enforce all of these invariants:
-
-- `historical_forms_protected=true`;
-- `modern_correction_eligible=false`;
-- `old_east_slavic_is_modern_russian=false`;
-- `historical_ruskyi_auto_mapped_to_modern_russian=false`;
-- no automatic mapping to any modern national successor language.
-
-Modern correction may apply only to a distinct span independently adjudicated as
-unmarked modern Ukrainian. It may never relabel, normalize, or erase a
-historical source span. Mixed Middle Ukrainian/Church Slavonic material and
-recension/editorial layers remain representable without a forced single label.
-
-### Explicit non-goals
-
-- general C2 knowledge or a general historical-language corpus;
-- Latin-script Slavic or non-Slavic Cyrillic interference programs;
-- model training, preference optimization, model downloads, or model-performance learning curves;
-- mass Gemini/Grok labeling or provider output promoted to gold;
-- automatic modernization of historical, dialectal, quoted, named, transliterated, metalinguistic, or exercise/distractor spans;
-- publication beyond source rights;
-- changing the frozen taxonomy, denominator, packet size, validators, endpoints, or custody controls inside this dataset version.
-
-Cycle007 remains evaluation-only. Its rows, sidecars, prompts, labels,
-paraphrases, synthetic siblings, and source/example identities are denied from
-training truth. Shared abstract rule concepts or authority-only citations may be
-reused only when no exact Cycle007 span or derivative is used; uncertain lineage
-is excluded.
-
-The retained compact pack also contains eight text-free historical
-labeling-expansion receipts (four attempt-v2, two pre-call-v1, one
-request-plan-v1, and one provider-stop-v3). They authenticate protected
-request/prompt/raw/log/result/terminal lineage, including historical attempted
-calls where bodies are unavailable; the firewall records them as populated deny
-commitments rather than claiming labels or prompt lineage are zero. This does
-not authorize or record any new provider call, label, gold, or training action
-for #7427.
-
-## Frozen product and denominators
-
-The product is a source capability ledger, immutable claim-typed evidence,
-frozen atomic rule cards, source-qualified teaching cases, deterministic
-derived training/evaluation views, source-identity splits, provenance/rights
-metadata, and an independently reproduced consumer receipt. It is not complete
-because a row count, schema, transport, model agreement, or CI run looks good.
-
-Before scale, freeze all of the following:
-
-- the versioned source-unit manifest, hashes, admission cutoff, and rights capabilities;
-- the atomic rule denominator `R`, derivation algorithm, merge/split rules, and manifest hash;
-- the applicability predicate and required coverage-cell manifest;
-- separate source-unit dispositions and coverage-cell statuses;
-- per-required-cell construction and held-out requirements;
-- source/document identity partitions and exact/near-duplicate policy;
-- the Cycle007 deny-list and evaluator custody boundary.
-
-For every mandatory source family, each frozen source unit appears exactly once:
-
-`input_total == converted + supporting_only + protected + evaluation_only + rights_limited_locator_only + duplicate + non_rule_bearing + unresolved + blocked_with_reason`
-
-Source-unit dispositions remain separate from coverage-cell statuses. Every
-required coverage cell is separately marked `satisfied`,
-`not_applicable_with_evidence`, `coverage_blocked`, or `unresolved`.
-Independently confirmed non-evaluation rule-bearing units link bidirectionally
-to immutable evidence/rule artifacts and to reviewed deterministic
-training/evaluation views, with protection and abstention behavior explicit.
-Later consumer shapes are governed by child contracts.
-
-An actual protected case is distinct from
-`not_applicable_with_evidence`; N/A cannot satisfy protection coverage.
-Attestation alone cannot establish contextual correctness. Gold targets require
-source-qualified human adjudication against claim-appropriate cited evidence.
-Models may propose candidates, but cannot author gold.
-
-## Case and evaluation contract
-
-The canonical case roles are:
-
-- correct modern production;
-- source-backed correction;
-- minimal contrast;
-- actual protected historical/context span;
-- adjudicated abstention;
-- `not_applicable_with_evidence`;
-- coverage-blocked/unresolved.
-
-Before derivation, the evaluation steward freezes source partitions, required
-coverage strata, clean-modern controls, thresholds, rights/role contracts, and
-the near-duplicate policy. Rule authors see only steward-cleared development
-material; they never see held-out text, labels, locators, fingerprints,
-derivatives, public-canary patterns, or near-neighbours. Any leakage, uncertain
-lineage, protected-span damage, denominator drift, or rights/provenance
-corruption is a terminal global stop.
-
-Global stops apply to the whole epic. Lane-local stops (for example, unresolved
-rights or insufficient source evidence in one contact class) keep the affected
-cells blocked while disjoint safe lanes may continue. No lane may hide a blocked
-cell by changing its applicability or denominator.
-
-Scale is governed by a deterministic coverage-yield curve: newly satisfied
-source-backed atomic coverage compared with duplicate/derivative volume. It is
-not governed by a model learning curve or a fixed row quota.
-
-### P2 evaluation firewall (`#7427`)
-
-`freeze_phase3_scope_circularity_firewall.py` freezes a text-free, executable
-custody contract before any rule or case derivation. It binds the exact P1,
-P1 dialect amendment, P2, and near-duplicate-policy hashes; it retains the
-57/39/15/16 denominator, fourteen blocked cells, two N/A cells, and empty
-`R=0`. The sixteen cell-requirement records are frozen as metadata
-requirements; no held-out cases are selected, and zero remains
-`BLOCKED_NOT_ZERO` rather than a fabricated numeric floor or semantic case.
-
-Builder clearance is positive-only: it contains only the frozen public hashes,
-never a held-out complement, path, descriptor, locator, fingerprint, label,
-prompt, annotation, or membership identity. Source/document/work/edition and
-exact/near-duplicate connected components are atomic. The Cycle007 firewall
-denies rows, packets, examples, source units, document/work/edition groups,
-sidecars, annotations, labels, prompts, paraphrases, synthetic siblings,
-duplicates, derivatives, and fingerprints. Shared concepts require an
-independent origin; authority reuse is citation-only and cannot carry a
-held-out span, locator, annotation, or membership.
-
-The public receipt binds Cycle007's object-set and ordered-row commitments,
-204 packet / 10,159 row commitment, 204 physical sidecars, 408 logical
-sidecars, and 419 objects. It states `BOUND`, records the completed fresh
-private materialization, and pins its exact text-free graph commitment together
-with 38 connected components, 39 document/work/edition groups, 10,155 exact
-fingerprints, and an empty candidate-clearance allowlist. A steward-only
-production runtime self-hash verifies its private `0600` configuration and the exact
-retained lossless `content_compact` pack manifest, builds its synthetic
-inventory from that manifest, and uses the custody lane's streaming
-decompress-and-hash proof without expansion. It extracts only required packet
-metadata in memory, including the canonical materialization
-`document_or_edition_identity` for families outside the older helper's closed
-switch, and writes a self-hashed private deny corpus: hashed row,
-source-example, document/work/edition, packet, sidecar, exact-fingerprint,
-near-token, and connected-component commitments plus zero-namespace proofs.
-A steward-only candidate evaluator derives these values itself and produces
-zero outputs for any collision, derivative, drift, or uncertain lineage.
-Builders receive only positive clearance/public receipts; caller hashes cannot
-mint authority. Missing explicit document/work/edition identity fails
-`document_lineage_denominator_not_frozen`; missing proof that
-prompt/label/paraphrase/synthetic/annotation namespaces are zero fails closed.
-It rejects symlinks, unsafe hardlinks, traversal, role collision, unsafe
-owner/mode, path overlap, inode/device changes, ancestor replacement, and
-post-pin TOCTOU. It emits no private locator, content body, label, prompt, or
-membership. Any leakage, uncertain lineage, incomplete graph,
-hash/denominator drift, rights/provenance corruption, protected damage, or
-custody collision is a terminal batch failure with zero emitted, promoted, or
-activated outputs.
-
-## Roles and evidence
-
-The role map is:
-
-- one accountable orchestrator owns scope, sequencing, integration, verification, issue truth, and final disposition;
-- source/rights owners establish source capabilities and rights boundaries;
-- source-qualified human adjudicators establish gold against claim-appropriate cited evidence;
-- Ukrainian language lanes may propose and independently review mappings but are not truth by themselves;
-- independent builders implement deterministic artifacts;
-- an evaluation steward freezes held-out partitions before any rule/case derivation and withholds held-out labels from builders;
-- a cross-family PR reviewer gates every consequential PR.
-
-Independence-sensitive review and steward roles must not self-review their own
-artifacts. Ukrainian claims require a language-qualified review lane and
-source-backed verification; model agreement is never evidence of authority.
-
-## Ordered issue DAG
-
-Every child issue carries the controlling SHA, its role, denominator, explicit
-dependencies, non-goals, acceptance evidence, and global/lane-local stop policy.
-Native child links on GitHub are authoritative; the table below is the durable
-human-readable projection.
-
-| Stage | Issue | Depends on | Owned outcome | Terminal evidence |
-| --- | --- | --- | --- | --- |
-| P0 | #7424 | — | publish this contract, stream pointer, and predecessor handoff | merged plan, validated receipt, predecessor disposition |
-| P1 | #7425 | #7424 | freeze source, rights, language, and applicability universe | frozen unit and required-cell manifests |
-| P2 | #7426 | #7425 | freeze atomic rule, evidence, adjudication, and case contracts | frozen `R`, authority rules, fail-closed validators |
-| P2 | #7427 | #7425, #7426 | freeze held-out splits and Cycle007 lineage firewall | split and deny-list custody proof |
-| P3 | #7428 | #7425–#7427 | build six modern Cyrillic contact channels | source-qualified modern cell dispositions |
-| P3 | #7429 | #7425–#7427 | build historical protection channels | non-erasure, period, region, and recension proof |
-| P4 | #7430 | #7426–#7429 and merged #6958 | construct the smallest source-qualified pilot | reproducible pilot with all applicable case roles |
-| P5 | #7431 | #7430 | independently validate pilot and issue scale GO/NO-GO | exact GO/NO-GO and residual map |
-| P6 | #7432 | #7431 GO | scale by coverage yield without denominator revision | yield curve and closure/residual receipt |
-| P7 | #7433 | #7432 | reproduce consumer views and certify state | `DATASET_READY`, `DATASET_PARTIAL`, or `BLOCKED` receipt |
-| parallel | #7434 | #7424 and Cycle007 custody identities | compact Cycle007 storage safely | exact round-trip and recoverable backup; deletion separately authorized |
-
-### P4 source-qualified pilot construction (`#7430`)
-
-P4 consumes the exact P2 contract, Cycle007 firewall, P3 modern and historical
-channel receipts, and the merged #6958 source-family admission boundary. Its
-deterministic metadata-only construction receipt keeps the frozen denominator
-at 57/39/15/16/14/2/R=0 and currently emits zero case or dataset rows with
-`BLOCKED_PENDING_SOURCE_QUALIFIED_ADJUDICATION`. It cannot claim
-`PILOT_VALIDATED` vacuously. A future nonempty case requires a canonical rule
-slot, claim-appropriate evidence, registered source-qualified human
-adjudication, complete rights/provenance and source identity, and a clear
-firewall result; it must not expose held-out membership, use Wikipedia,
-Cycle007-derived, provider-authored, or uncertain lineage. Historical and
-dialect roles remain protection roles and cannot be converted into modern
-corrections. The P4 candidate preflight is structural metadata validation only:
-it cannot prove registry membership or evidence binding and cannot admit a
-future row. A nonempty successor must be newly frozen and bind and verify the
-actual adjudication-registry membership and evidence binding.
-
-Critical path:
-
-`#7424 → #7425 → #7426 → #7427 → (#7428 || #7429) → #7430 → #7431 → #7432 → #7433`
-
-`#6958` is a binding admission dependency, not a duplicate child. It must mark
-Wikipedia Foundry views ineligible for teaching, gold, and training and enforce
-that policy fail-closed before #7430. #7434 is parallel custody work and is not
-a semantic dataset gate.
-
-## Completion vocabulary
-
-Use these exact statuses; do not collapse them:
-
-- `INVENTORIED`: source universe disposition-complete, with blocked/unresolved counts visible.
-- `PILOT_VALIDATED`: source-qualified pilot, split firewall, and held-out protection/integrity gates pass.
-- `DATASET_PARTIAL`: reproducible rows exist but required denominator, rights, or integrity gaps remain.
-- `DATASET_READY`: frozen required denominator covered; zero blocked/unresolved required cells; zero unknown required rights; no exclusion gaming; every admitted target human-adjudicated/source-traceable; every view split-safe/reproducible; consumer reproduction passes.
-- `BLOCKED`: a named global stop prevents safe progress.
-- `TRAINING_VALIDATED`: outside this epic and forbidden as a completion claim.
-
-No intermediate child may claim `DATASET_READY` or `TRAINING_VALIDATED`.
-
-## Transfer and anti-misdirection instructions
-
-An agent taking over this epic starts from the epic and this document, then:
-
-1. verify the controlling outcome SHA and current `origin/main` identities;
-2. read the exact child issue and native dependency links before dispatch;
-3. freeze the task's denominator, non-goals, role, held-out boundary, and stop/residual policy in its issue/brief;
-4. use only its owned paths and a dispatch worktree;
-5. record model/provider proposals separately from human-adjudicated gold;
-6. run deterministic validators before any provider or training authorization;
-7. report counts, booleans, hashes, statuses, and named residual owners—not source text;
-8. stop on any global tripwire, and keep lane-local blockers visible without shrinking the denominator;
-9. close an issue only after every acceptance criterion has typed evidence and all remaining scope is transferred;
-10. never treat `TRAINING_VALIDATED`, model agreement, storage size, row totals, or schema validity as a substitute for the stated completion gates.
-
-The public predecessor receipt binds #6375 to #7423 and records the exact
-text-free Cycle007 state. #6375/Cycle007 is historical evidence, not the active
-milestone. The predecessor closes only after that receipt is merged and validated;
-any genuine residual is owned by #6958 or #7434 as mapped in the receipt.
+# Cyrillic-Slavic Ukrainian dataset delivery plan — V4
+
+## Controlling contract and history
+
+This is the operational control packet for the Ukrainian dataset-delivery epic.
+Its controlling outcome is SHA-256
+`78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20`.
+The private coordination board is [#622](https://github.com/learn-ukrainian/learn-ukrainian-infra-private/issues/622);
+the public delivery epic is [#7423](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/7423).
+
+V2 and V3 are retained as historical predecessor evidence only. They do not set
+the current scope, release policy, rights disposition, pilot denominator, or
+driver route. A conflicting predecessor instruction is superseded by this V4
+packet and the hash-bound private board decision.
+
+## Product outcome
+
+Build a Ukrainian language-quality dataset and held-out evaluation harness that
+helps language models recognize, preserve, and produce Ukrainian accurately.
+It does not attempt to teach a complete vernacular, reconstruct a book, or turn
+protected varieties into modern-standard errors.
+
+The seven product scopes are:
+
+1. modern Standard Ukrainian control: correct production and source-backed correction;
+2. literary Ukrainian;
+3. living Ukrainian dialect and regional varieties;
+4. archaic, historical, and bookish Ukrainian;
+5. Surzhyk and Ukrainian–Russian mixing;
+6. Russian quotation and interference in Ukrainian context; and
+7. evidence-insufficient or unsafe cases, represented by abstention.
+
+The first scope has two separate pilot strata because correct production and
+correction have different behavior. The remaining six scopes have one stratum
+each, so the 100-slot pilot has eight strata. Dedicated Belarusian, Bulgarian,
+Macedonian, Serbian, and Montenegrin lanes are removed. Modern Rusyn is
+protected and out of scope: do not silently map it to Ukrainian, Russian, or a
+historical Ukrainian stage.
+
+## Frozen non-goals
+
+A0 binds these non-goals before dispatch. This epic does not include:
+
+1. model training or preference optimization;
+2. a general Ukrainian vernacular or knowledge corpus;
+3. dedicated non-Ukrainian Slavic lanes;
+4. remapping modern Rusyn to Ukrainian, Russian, or a historical stage;
+5. automatic modernization or correction of protected literary, dialectal, historical, or quoted material;
+6. provider/model output or agreement as silver admission or gold;
+7. source-text publication or redistribution beyond the exact cleared operation rights;
+8. Mac corpus handling or data-producing work; or
+9. a dataset/model-performance claim in place of dataset, evaluation, rights, or release gates.
+
+## Release train and data boundary
+
+The first deliverable is **silver**: stable row IDs, provenance/rights metadata,
+labels or abstentions, validations, and evaluation eligibility as separately
+gated properties. Models provide hypotheses only. Model agreement does not admit
+silver and never creates gold. A later, versioned overlay may upgrade individual
+stable IDs to gold after its own review and rights gates. No re-numbering or
+rebuilding of the silver corpus is implied by that upgrade.
+
+The private, lawfully obtained corpus is used on the VPS for custody, bounded
+analysis, and source-family assignment. Public/exportable rows must be
+independently authored and non-reconstructive unless the exact source operation
+is cleared. Retention, local analysis, provider transmission, derivation,
+training, publication, and redistribution are independent operations.
+
+An unresolved operation blocks only that source-operation lane. It remains
+visible in its lane receipt and cannot silently shrink the denominator. It is a
+global stop only if it prevents every feasible source family for a frozen required
+stratum.
+
+## Custody, capacity, and privacy gates
+
+All corpus handling, candidate construction, validation runs, and driver
+worktrees are VPS-first. The Mac is coordination-only and must not receive a
+corpus copy or long-lived dispatch worktree. Before each lane starts, A1 records
+the current free space, its forecast, a cleanup budget, the hard floor, and the
+data/derivative locations. A lane may start only when its forecast plus cleanup
+reserve stays above that floor; failure is lane-local unless it makes every
+remaining required lane infeasible.
+
+The public pilot-slot manifest is deliberately expression-free. It has no source
+text, source locator, source identity, document identity, provider prompt/output,
+label, correction, or held-out membership. Those sealed details are created only
+by A2/A3 in private custody after the gates below are satisfied.
+
+## Frozen pilot entry contract
+
+`data/projects/open_model_data/admission/dataset_v4_pilot_slot_manifest_v1.json`
+defines 100 stable slot IDs by deterministic series:
+
+| Stratum | Slots |
+| --- | ---: |
+| standard-correct | 15 |
+| correction | 15 |
+| literary | 15 |
+| dialect-regional | 15 |
+| archaic-historical | 15 |
+| mixing | 10 |
+| quotation-interference | 10 |
+| abstention | 5 |
+
+Before any builder receives an item, A3 must create a separate sealed commitment
+that assigns source families and nonzero held-out groups without exposing held-out
+membership to builders. Slot-to-source assignment is an A2/A3 private artifact,
+not a guess in the public manifest. A construction change after held-out exposure
+invalidates the affected evaluation version.
+
+## Functional roles and handoffs
+
+The driver assigns an accountable lead to every role; model/provider choice is a
+runtime routing decision and is never embedded in this plan. The role map is
+fixed for this epic:
+
+| ID | Owner role | Produces | May not do |
+| --- | --- | --- | --- |
+| A0 | scope and accountable lead | scope/denominator ledger and route | bypass gates or self-review |
+| A1 | custody steward | VPS inventory, capacity, cleanup/floor receipt | expose corpus or change scope |
+| A2 | source inventory and admission steward | source-family and operation decision | assign held-out membership alone |
+| A3 | held-out steward | sealed source-family and held-out commitment | reveal held-out identities to builders |
+| A4 | deterministic extraction steward | reproducible source-free extraction packet | improvise source assignment |
+| A5 | evidence-enrichment steward | provenance/evidence joins and uncertainty flags | modernize protected material |
+| A6 | safe-arena steward | blind packet, strict parser, non-self vote receipt | vote for its own output |
+| A7 | original-row factory steward | independently authored candidate rows | see held-out membership or create gold |
+| A8 | admission and assembly steward | validated silver assembly receipt | waive contract/privacy gates |
+| A9 | evaluation-package steward | frozen held-out evaluation package | alter construction after exposure |
+| A10 | pilot-review steward | pilot review disposition and residuals | hide unresolved required slots |
+| A11 | training-ready release steward | permitted silver consumer release | waive rights/evaluation gates |
+| A12 | later-gold-overlay steward | separately versioned gold-upgrade overlay | infer gold from model agreement |
+| A13 | cleanup and recovery steward | cleanup, rollback, and next-lane receipt | hide a stopped denominator |
+
+Independent cross-family review is a gate on the exact implementation head; it
+is not A12 and cannot be replaced by the authoring family.
+
+## Arena and evidence rules
+
+Every arena participant receives the same blind packet and emits one strict,
+schema-validated response. A participant cannot vote for its own output.
+Invalid output receives one format-only retry; a persistent failure is recorded,
+then a bounded substitute or abstention is used without changing the denominator.
+The coordinator records routes, families, attempts, exposure, and hashes in
+private receipts. Models provide hypotheses only: agreement does not admit
+silver and does not create gold. Humans are optional for silver and may later
+support source-qualified gold overlays or hard disputes.
+
+## Completion vocabulary and stop policy
+
+The only V4 completion vocabulary is:
+
+- `ARENA_SLICE_READY`
+- `EVAL_ARTIFACT_READY`
+- `TRAINING_READY_SILVER`
+- `TRAINING_READY_GOLD_SUBSET`
+- `GOLD_UPGRADE_READY`
+- `BLOCKED_WITH_RESIDUALS`
+
+`BLOCKED_WITH_RESIDUALS` settles a bounded packet and records its unresolved
+slots, denominator, cause, owner, and next route. It is not successful pilot
+completion. An unresolved required slot cannot satisfy `EVAL_ARTIFACT_READY` or
+`TRAINING_READY_SILVER`; those successful states require every required slot in
+the frozen denominator to have passed its applicable admission, privacy, rights,
+and evaluation gates. `TRAINING_READY_GOLD_SUBSET` is limited to rows actually
+promoted by a later gold overlay. `GOLD_UPGRADE_READY` means an overlay may be
+reviewed, not that gold already exists.
+
+The driver obtains gates in order:
+
+1. A0 binds this V4 hash, #622, #7423, denominator, non-goals, roles, and held-out policy.
+2. A1 proves VPS custody/capacity above the hard floor for the next bounded lane.
+3. A2 admits a feasible source family for that lane and requested operation.
+4. A3 seals the source-family/held-out commitment before A4–A7 begin.
+5. A4/A5 create deterministic, evidence-enriched packets; A6/A7 construct safely.
+6. A8 admits and assembles only rows that pass all silver gates.
+7. A9 packages evaluation; A10 reviews the pilot; A11 releases only a training-ready silver view.
+8. A12 handles later gold overlays; independent cross-family review gates every exact implementation head; A13 closes or recovers the lane.
+
+Global stop: no feasible path remains for a frozen required stratum, VPS custody
+cannot remain above its floor, a privacy firewall is breached, or a required
+contract/evaluation gate is invalid. Lane-local stop: one source operation,
+provider route, parser attempt, candidate, or source family fails while another
+frozen path remains. A stopped lane produces `BLOCKED_WITH_RESIDUALS` and
+preserves its slots; it never disappears by denominator reduction.
+
+## Completion terms
+
+`READY_TO_DRIVE` is an orchestration state, not a construction state. It requires
+the V4 binding, the validator on `main`, live VPS reachability and capacity for
+the pilot, this frozen slot contract, and the A0–A13 role map. It does not require
+source inventory, source admission, or sealed held-out membership.
+
+`PRE_BUILDER` begins after `READY_TO_DRIVE`: A1/A2 produce the custody and
+source-admission receipts, then A3 seals the source-family and held-out commitment
+before any A4–A7 builder work begins.
+
+The pilot succeeds only when all required slots satisfy the frozen denominator and gates, the held-out
+evaluation is frozen as `EVAL_ARTIFACT_READY`, and the permitted consumer view is
+`TRAINING_READY_SILVER`. Any unresolved required slot leaves the pilot in
+`BLOCKED_WITH_RESIDUALS`, with its exact residual and next owner reported.
