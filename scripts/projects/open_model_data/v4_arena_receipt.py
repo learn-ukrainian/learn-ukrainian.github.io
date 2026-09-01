@@ -90,6 +90,10 @@ def _candidate_bindings(
         require(isinstance(provider_id, str) and provider_id, f"candidate {candidate_id} provider ID missing")
         require(isinstance(route_id, str) and route_id in routes, f"candidate {candidate_id} route ID invalid")
         bindings[candidate_id] = {"provider_id": provider_id, "route_id": route_id}
+    require(
+        len({item["provider_id"] for item in bindings.values()}) == len(bindings),
+        "candidate map has duplicate provider binding",
+    )
     require(len({item["route_id"] for item in bindings.values()}) == len(bindings), "candidate map has duplicate route binding")
     require(set(item["route_id"] for item in bindings.values()) == set(routes), "candidate map / route denominator drift")
     return routes, bindings

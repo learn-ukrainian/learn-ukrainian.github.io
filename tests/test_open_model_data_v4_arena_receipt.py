@@ -11,6 +11,7 @@ from pathlib import Path
 from scripts.projects.open_model_data import v4_arena_receipt as arena
 
 H = "a" * 64
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
 def _proposal(candidate_id: str, provider_id: str, labels: list[str]) -> str:
@@ -90,6 +91,17 @@ def test_denominator_shrink_and_candidate_map_drift_fail_closed() -> None:
         raise AssertionError("denominator shrink was accepted")
 
 
+def test_duplicate_provider_bindings_fail_closed() -> None:
+    fixture = _fixture()
+    fixture["candidate_map"]["candidate-2"]["provider_id"] = "provider-1"  # type: ignore[index]
+    try:
+        arena.build_receipts(**fixture)  # type: ignore[arg-type]
+    except arena.ArenaReceiptError as exc:
+        assert str(exc) == "candidate map has duplicate provider binding"
+    else:
+        raise AssertionError("duplicate provider binding was accepted")
+
+
 def test_bad_ballots_are_explicit_residuals() -> None:
     fixture = _fixture()
     ballots = fixture["ballots"]
@@ -128,7 +140,7 @@ def test_hash_replay_and_cli_are_deterministic(tmp_path: Path) -> None:
     assert arena.build_receipts(**fixture) == arena.build_receipts(**copy.deepcopy(fixture))  # type: ignore[arg-type]
     input_path, private_path, public_path = tmp_path / "input.json", tmp_path / "private.json", tmp_path / "public.json"
     input_path.write_text(json.dumps(fixture), encoding="utf-8")
-    command = [sys.executable, "scripts/projects/open_model_data/v4_arena_receipt.py", "--input", str(input_path), "--private-output", str(private_path), "--public-output", str(public_path)]
+    command = [sys.executable, str(REPO_ROOT / "scripts/projects/open_model_data/v4_arena_receipt.py"), "--input", str(input_path), "--private-output", str(private_path), "--public-output", str(public_path)]
     result = subprocess.run(command, check=False, capture_output=True, text=True, timeout=60)
     assert result.returncode == 0, result.stderr
     assert arena.verify_receipt(json.loads(public_path.read_text()))["receipt_sha256"]

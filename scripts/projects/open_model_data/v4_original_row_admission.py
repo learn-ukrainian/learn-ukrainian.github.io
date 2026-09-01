@@ -6,14 +6,18 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sys
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
 SCHEMA_VERSION = "v4-original-row-admission-v1"
+INPUT_SCHEMA_VERSION = "v4-original-row-admission-input-v1"
 RECONSTRUCTION_GATES = ("exact", "fuzzy", "structural", "cumulative", "reconstruction")
 MODEL_ONLY_BASES = frozenset({"model_agreement", "arena_vote", "model_vote"})
+SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+RIGHTS_OPERATION_CELLS = frozenset({"training", "derived_dataset_redistribution"})
 
 
 class OriginalRowAdmissionError(ValueError):
@@ -26,6 +30,17 @@ def canonical_json(value: Any) -> str:
 
 def sha256_value(value: Any) -> str:
     return hashlib.sha256((canonical_json(value) + "\n").encode("utf-8")).hexdigest()
+
+
+def _sha256(value: Any, field: str, residuals: list[str]) -> str | None:
+    if not isinstance(value, str) or SHA256_RE.fullmatch(value) is None:
+        residuals.append(f"{field.upper()}_INVALID")
+        return None
+    return value
+
+
+def _nonempty_string(value: Any) -> bool:
+    return isinstance(value, str) and bool(value)
 
 
 def _identifier_list(value: Any, field: str, residuals: list[str]) -> list[str]:
@@ -50,6 +65,7 @@ def evaluate_row(row: Mapping[str, Any]) -> dict[str, Any]:
     if not isinstance(row_id, str) or not row_id:
         residuals.append("ROW_ID_INVALID")
         row_id = None
+    row_content_sha256 = _sha256(row.get("row_content_sha256"), "row_content_sha256", residuals)
     lineage = row.get("lineage")
     if not isinstance(lineage, Mapping) or lineage.get("immutable") is not True:
         residuals.append("LINEAGE_NOT_IMMUTABLE")
@@ -65,17 +81,28 @@ def evaluate_row(row: Mapping[str, Any]) -> dict[str, Any]:
     authorship = row.get("authorship")
     if _basis_is_model_only(authorship):
         residuals.append("MODEL_AGREEMENT_CANNOT_SATISFY_AUTHORSHIP")
-    elif not isinstance(authorship, Mapping) or not (
-        authorship.get("independently_authored") is True
-        or (isinstance(authorship.get("direct_text_clearance"), Mapping) and authorship["direct_text_clearance"].get("cleared") is True and isinstance(authorship["direct_text_clearance"].get("operation_id"), str) and bool(authorship["direct_text_clearance"]["operation_id"]))
-    ):
+    elif not isinstance(authorship, Mapping):
         residuals.append("AUTHORSHIP_OR_DIRECT_TEXT_CLEARANCE_REQUIRED")
+    elif authorship.get("independently_authored") is True:
+        if not _nonempty_string(authorship.get("receipt_id")):
+            residuals.append("AUTHORSHIP_RECEIPT_ID_REQUIRED")
+    else:
+        clearance = authorship.get("direct_text_clearance")
+        if not isinstance(clearance, Mapping) or clearance.get("cleared") is not True:
+            residuals.append("AUTHORSHIP_OR_DIRECT_TEXT_CLEARANCE_REQUIRED")
+        else:
+            if not _nonempty_string(clearance.get("operation_id")):
+                residuals.append("DIRECT_TEXT_CLEARANCE_OPERATION_ID_REQUIRED")
+            if not _nonempty_string(clearance.get("receipt_id")):
+                residuals.append("DIRECT_TEXT_CLEARANCE_RECEIPT_ID_REQUIRED")
 
     evidence = row.get("evidence")
     if _basis_is_model_only(evidence):
         residuals.append("MODEL_AGREEMENT_CANNOT_SATISFY_EVIDENCE")
     elif not isinstance(evidence, Mapping) or evidence.get("grade") != "verified" or evidence.get("uncertainty") not in {"resolved", "bounded"} or evidence.get("disposition") not in {"supported", "admitted"}:
         residuals.append("EVIDENCE_NOT_VERIFIED")
+    elif not _nonempty_string(evidence.get("receipt_id")):
+        residuals.append("VERIFIED_EVIDENCE_RECEIPT_ID_REQUIRED")
 
     rights = row.get("rights")
     if _basis_is_model_only(rights):
@@ -84,6 +111,17 @@ def evaluate_row(row: Mapping[str, Any]) -> dict[str, Any]:
         residuals.append("TRAINING_RIGHTS_NOT_GRANTED")
     if not isinstance(rights, Mapping) or rights.get("derived_dataset_redistribution") is not True:
         residuals.append("DERIVED_DATASET_REDISTRIBUTION_RIGHTS_NOT_GRANTED")
+    if isinstance(rights, Mapping) and (
+        rights.get("training") is True or rights.get("derived_dataset_redistribution") is True
+    ):
+        if not _nonempty_string(rights.get("receipt_id")):
+            residuals.append("RIGHTS_RECEIPT_ID_REQUIRED")
+        operation_cells = rights.get("operation_cells")
+        if not isinstance(operation_cells, list) or not all(isinstance(cell, str) for cell in operation_cells):
+            operation_cells = []
+        for operation in RIGHTS_OPERATION_CELLS:
+            if rights.get(operation) is True and operation not in operation_cells:
+                residuals.append(f"{operation.upper()}_RIGHTS_OPERATION_CELL_UNCOVERED")
 
     split = row.get("split_duplicate_safety")
     if not isinstance(split, Mapping) or split.get("passed") is not True or not isinstance(split.get("receipt_id"), str) or not split.get("receipt_id"):
@@ -96,7 +134,7 @@ def evaluate_row(row: Mapping[str, Any]) -> dict[str, Any]:
         if not isinstance(value, Mapping) or value.get("passed") is not True or not isinstance(value.get("receipt_id"), str) or not value.get("receipt_id"):
             residuals.append(f"{gate.upper()}_RECONSTRUCTION_GATE_FAILED")
 
-    if row.get("model_agreement") is True or row.get("arena_vote") is True:
+    if any(row.get(alias) is True for alias in MODEL_ONLY_BASES):
         residuals.append("MODEL_AGREEMENT_CANNOT_SATISFY_ADMISSION")
     if tier == "gold":
         gold_basis = row.get("gold_basis")
@@ -108,6 +146,7 @@ def evaluate_row(row: Mapping[str, Any]) -> dict[str, Any]:
     residuals = sorted(set(residuals))
     result = {
         "row_id": row_id,
+        "row_content_sha256": row_content_sha256,
         "label_tier": tier if tier in {"silver", "gold"} else None,
         "source_lineage_ids": source_ids,
         "evidence_lineage_ids": evidence_ids,
@@ -120,9 +159,12 @@ def evaluate_row(row: Mapping[str, Any]) -> dict[str, Any]:
     return result
 
 
-def admit_rows(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+def admit_rows(*, outcome_sha256: str, rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     if not isinstance(rows, Sequence) or isinstance(rows, (str, bytes)):
         raise OriginalRowAdmissionError("rows must be a list")
+    outcome_sha256 = _sha256(outcome_sha256, "outcome_sha256", [])
+    if outcome_sha256 is None:
+        raise OriginalRowAdmissionError("OUTCOME_SHA256_INVALID")
     receipts = [evaluate_row(row) for row in rows]
     ids = [item["row_id"] for item in receipts]
     if any(item is None for item in ids) or len(ids) != len(set(ids)):
@@ -130,6 +172,7 @@ def admit_rows(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     result = {
         "schema_version": SCHEMA_VERSION,
         "visibility": "machine_receipt_text_free",
+        "outcome_sha256": outcome_sha256,
         "rows": receipts,
         "counts": {"input_rows": len(receipts), "admitted_rows": sum(item["disposition"] == "admitted" for item in receipts), "rejected_rows": sum(item["disposition"] == "rejected" for item in receipts)},
     }
@@ -146,14 +189,16 @@ def verify_receipt(receipt: Mapping[str, Any]) -> dict[str, Any]:
         raise OriginalRowAdmissionError("receipt hash drift")
     if body.get("schema_version") != SCHEMA_VERSION:
         raise OriginalRowAdmissionError("receipt schema drift")
-    if set(body) != {"schema_version", "visibility", "rows", "counts"} or body.get("visibility") != "machine_receipt_text_free":
+    if set(body) != {"schema_version", "visibility", "outcome_sha256", "rows", "counts"} or body.get("visibility") != "machine_receipt_text_free":
         raise OriginalRowAdmissionError("receipt schema drift")
+    if not isinstance(body.get("outcome_sha256"), str) or SHA256_RE.fullmatch(body["outcome_sha256"]) is None:
+        raise OriginalRowAdmissionError("receipt outcome SHA-256 drift")
     rows, counts = body.get("rows"), body.get("counts")
     if not isinstance(rows, list) or not isinstance(counts, Mapping):
         raise OriginalRowAdmissionError("receipt schema drift")
     if counts != {"input_rows": len(rows), "admitted_rows": sum(item.get("disposition") == "admitted" for item in rows if isinstance(item, Mapping)), "rejected_rows": sum(item.get("disposition") == "rejected" for item in rows if isinstance(item, Mapping))}:
         raise OriginalRowAdmissionError("receipt count drift")
-    required_row_keys = {"row_id", "label_tier", "source_lineage_ids", "evidence_lineage_ids", "disposition", "training_eligible", "residual_codes", "eligibility", "receipt_sha256"}
+    required_row_keys = {"row_id", "row_content_sha256", "label_tier", "source_lineage_ids", "evidence_lineage_ids", "disposition", "training_eligible", "residual_codes", "eligibility", "receipt_sha256"}
     for row in rows:
         if not isinstance(row, Mapping) or set(row) != required_row_keys:
             raise OriginalRowAdmissionError("row receipt schema drift")
@@ -161,6 +206,11 @@ def verify_receipt(receipt: Mapping[str, Any]) -> dict[str, Any]:
         row_hash = row_body.pop("receipt_sha256")
         if not isinstance(row_hash, str) or row_hash != sha256_value(row_body):
             raise OriginalRowAdmissionError("row receipt hash drift")
+        row_content_sha256 = row.get("row_content_sha256")
+        if row_content_sha256 is not None and (not isinstance(row_content_sha256, str) or SHA256_RE.fullmatch(row_content_sha256) is None):
+            raise OriginalRowAdmissionError("row receipt content SHA-256 drift")
+        if row.get("disposition") == "admitted" and row_content_sha256 is None:
+            raise OriginalRowAdmissionError("row receipt content SHA-256 drift")
         if row.get("disposition") not in {"admitted", "rejected"} or row.get("training_eligible") != (row.get("disposition") == "admitted"):
             raise OriginalRowAdmissionError("row receipt eligibility drift")
     return dict(receipt)
@@ -168,12 +218,14 @@ def verify_receipt(receipt: Mapping[str, Any]) -> dict[str, Any]:
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--input", required=True, type=Path, help="JSON list of original row fixtures")
+    parser.add_argument("--input", required=True, type=Path, help="versioned JSON object containing outcome_sha256 and rows")
     parser.add_argument("--output", required=True, type=Path)
     args = parser.parse_args(argv)
     try:
-        rows = json.loads(args.input.read_text(encoding="utf-8"))
-        receipt = admit_rows(rows)
+        payload = json.loads(args.input.read_text(encoding="utf-8"))
+        if not isinstance(payload, Mapping) or set(payload) != {"schema_version", "outcome_sha256", "rows"} or payload.get("schema_version") != INPUT_SCHEMA_VERSION:
+            raise OriginalRowAdmissionError("input schema drift")
+        receipt = admit_rows(outcome_sha256=payload["outcome_sha256"], rows=payload["rows"])
         args.output.write_text(canonical_json(receipt) + "\n", encoding="utf-8")
     except (OriginalRowAdmissionError, OSError, json.JSONDecodeError) as exc:
         print(f"V4 original-row admission: FAIL: {exc}", file=sys.stderr)
