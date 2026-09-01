@@ -233,16 +233,17 @@ def test_workflow_is_scheduled_manual_serial_and_minimally_scoped() -> None:
     triggers = workflow.get("on", workflow.get(True))
 
     # workflow_run added as the event-driven fallback for the unreliable cron:
-    # arm right after a CI run completes (success-only, gated at the job level).
+    # arm right after a CI run completes, with red runs admitted by the
+    # read-only label gate below.
     assert set(triggers) == {"schedule", "workflow_dispatch", "workflow_run"}
     assert triggers["schedule"] == [{"cron": "7,22,37,52 * * * *"}]
     assert triggers["workflow_run"] == {"workflows": ["CI"], "types": ["completed"]}
     arm_job = workflow["jobs"]["arm"]
-    assert (
-        arm_job["if"]
-        == "github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'"
-    )
+    assert arm_job["needs"] == "red_completion_gate"
     assert workflow["permissions"] == {
+        "contents": "read",
+    }
+    assert arm_job["permissions"] == {
         "actions": "write",
         "pull-requests": "write",
         "contents": "write",
@@ -251,3 +252,41 @@ def test_workflow_is_scheduled_manual_serial_and_minimally_scoped() -> None:
     assert workflow["concurrency"] == {"group": "auto-arm-merge", "cancel-in-progress": False}
     # Module invocation keeps the repo root importable (scripts.ci.cf_attest).
     assert "python -m scripts.ci.auto_arm_merge" in _WORKFLOW.read_text(encoding="utf-8")
+
+
+@pytest.mark.parametrize(
+    ("head_repository", "conclusion", "has_label", "expected"),
+    [
+        ("fork-owner/repo", "failure", True, False),
+        ("org/repo", "failure", False, False),
+        ("org/repo", "failure", True, True),
+    ],
+    ids=["fork-red-run", "same-repo-red-run-without-label", "same-repo-red-labeled"],
+)
+def test_workflow_run_privilege_boundary_cases(
+    head_repository: str, conclusion: str, has_label: bool, expected: bool
+) -> None:
+    workflow = yaml.safe_load(_WORKFLOW.read_text(encoding="utf-8"))
+    gate = workflow["jobs"]["red_completion_gate"]
+    arm_if = workflow["jobs"]["arm"]["if"]
+
+    assert gate["if"] == (
+        "github.event_name == 'workflow_run' && "
+        "github.event.workflow_run.conclusion != 'success' && "
+        "github.event.workflow_run.head_repository.full_name == github.repository"
+    )
+    assert gate["permissions"] == {"contents": "read", "pull-requests": "read"}
+    label_step = gate["steps"][0]
+    assert label_step["env"]["WORKFLOW_PULL_REQUESTS"] == "${{ toJSON(github.event.workflow_run.pull_requests) }}"
+    assert "repos/${REPOSITORY}/pulls/${number}" in label_step["run"]
+    assert '"automerge-ok"' in label_step["run"]
+    assert ".[0:100]" in label_step["run"]
+    assert "github.event.workflow_run.head_repository.full_name == github.repository" in arm_if
+    assert "github.event.workflow_run.conclusion == 'success'" in arm_if
+    assert "needs.red_completion_gate.outputs.has_automerge_label == 'true'" in arm_if
+
+    # This is the job-level condition's red-run truth table: fork runs fail the
+    # repository boundary, while a same-repository red run needs the label gate.
+    repository = "org/repo"
+    allowed = head_repository == repository and (conclusion == "success" or has_label)
+    assert allowed is expected

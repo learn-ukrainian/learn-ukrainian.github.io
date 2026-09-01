@@ -4,12 +4,11 @@ name: Auto-arm merge queue
 # normal auto-merge mechanism after the exact-head CF and CI Gate checks pass.
 # It never checks out or runs code from a subject PR head.
 permissions:
-  actions: write
-  pull-requests: write
-  contents: write
-  checks: read
+  contents: read
 
-on:
+# zizmor cannot model the read-only gate below; retain workflow_run for the
+# red-run self-heal, with the fork/label boundary enforced before arm starts.
+on: # zizmor: ignore[dangerous-triggers]
   schedule:
     - cron: '7,22,37,52 * * * *'
   # Fallback trigger (#7539 follow-up): GitHub's cron has been unreliable for this
@@ -27,12 +26,77 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  red_completion_gate:
+    name: Authorize red-completion scan
+    # workflow_run can be emitted for a fork PR. Keep this gate read-only and
+    # require a same-repository run plus a live automerge-ok label before the
+    # write-permission scan below is even scheduled.
+    if: >-
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.conclusion != 'success' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      has_automerge_label: ${{ steps.label_gate.outputs.has_automerge_label }}
+    steps:
+      - name: Check triggering pull request labels
+        id: label_gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          WORKFLOW_PULL_REQUESTS: ${{ toJSON(github.event.workflow_run.pull_requests) }}
+        run: |
+          set -euo pipefail
+          has_automerge_label=false
+          while IFS= read -r number; do
+            if [[ ! "${number}" =~ ^[1-9][0-9]*$ ]]; then
+              continue
+            fi
+            if gh api --repo "${REPOSITORY}" \
+              "repos/${REPOSITORY}/pulls/${number}" \
+              --jq 'any(.labels[]; (.name | ascii_downcase) == "automerge-ok")' | grep -qx true; then
+              has_automerge_label=true
+              break
+            fi
+          done < <(
+            jq -r 'if type == "array" then .[0:100][] | (.number // empty) else empty end' \
+              <<<"${WORKFLOW_PULL_REQUESTS}"
+          )
+          echo "has_automerge_label=${has_automerge_label}" >> "${GITHUB_OUTPUT}"
+
   arm:
     name: Arm eligible pull requests
-    # After a red CI run nothing can have newly become eligible; skip the scan.
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    needs: red_completion_gate
+    # Privileged boundary: fork workflow_run events and unlabeled red runs are
+    # rejected before this write-permission job starts. Red same-repository
+    # runs with automerge-ok still trigger the bounded --limit 1000 scan so
+    # the #7548 stale-attest self-heal remains event-driven.
+    if: >-
+      always() &&
+      (
+        github.event_name != 'workflow_run' ||
+        (
+          github.event.workflow_run.head_repository.full_name == github.repository &&
+          (
+            github.event.workflow_run.conclusion == 'success' ||
+            (
+              needs.red_completion_gate.result == 'success' &&
+              needs.red_completion_gate.outputs.has_automerge_label == 'true'
+            )
+          )
+        )
+      )
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      actions: write
+      pull-requests: write
+      contents: write
+      checks: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
