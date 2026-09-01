@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+import sqlite3
 from pathlib import Path
 from typing import Any
 
@@ -23,6 +24,19 @@ def _matrix() -> dict[str, Any]:
 
 def _rehash(value: dict[str, Any]) -> None:
     value["receipt_sha256"] = v3a.receipt_sha(value)
+
+
+def _source_db_has_textbooks(path: Path) -> bool:
+    connection = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+    try:
+        return (
+            connection.execute(
+                "SELECT 1 FROM sqlite_master WHERE type='table' AND name='textbooks'"
+            ).fetchone()
+            is not None
+        )
+    finally:
+        connection.close()
 
 
 def _reject_main(value: dict[str, Any], pattern: str) -> None:
@@ -234,4 +248,20 @@ def test_local_source_db_reproduces_content_blind_evidence_when_available() -> N
     source_db = v3a.ROOT / "data/sources.db"
     if not source_db.is_file():
         pytest.skip("local source DB is not installed")
+    if not _source_db_has_textbooks(source_db):
+        pytest.skip("local source DB does not contain the textbook corpus")
     v3a.verify_source_db(source_db)
+
+
+def test_source_db_availability_requires_textbooks_schema(tmp_path: Path) -> None:
+    placeholder = tmp_path / "sources.db"
+    connection = sqlite3.connect(placeholder)
+    connection.close()
+    assert _source_db_has_textbooks(placeholder) is False
+
+    connection = sqlite3.connect(placeholder)
+    try:
+        connection.execute("CREATE TABLE textbooks (chunk_id TEXT)")
+    finally:
+        connection.close()
+    assert _source_db_has_textbooks(placeholder) is True
