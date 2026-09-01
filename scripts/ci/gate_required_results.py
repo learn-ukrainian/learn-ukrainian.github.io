@@ -172,6 +172,13 @@ def main(argv: list[str] | None = None) -> int:
     if failures:
         for reason in failures:
             print(f"::error::CI Gate fail-closed: {reason}", file=sys.stderr)
+        if all(item.startswith("cf-attest:") for item in failures):
+            print(
+                "::notice::Product jobs succeeded. Gate is red solely because "
+                "independent exact-head CF is missing, stale, or same-family — "
+                "not because ruff/tests/secret-scan failed.",
+                file=sys.stderr,
+            )
         return 1
     print("CI Gate: every required dependency succeeded")
     return 0

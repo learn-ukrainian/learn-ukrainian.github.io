@@ -593,8 +593,11 @@ jobs:
   #     Always runs. PASSES only when a PR comment or review body is CF of
   #     record for the current PR head SHA (not the merge_group merge
   #     commit). Missing / same-family / stale SHA / unparseable → failure
-  #     so CI Gate cannot go green. Push/schedule/dispatch no-op succeed
-  #     (no PR). docs_skills still requires CF (no written exception).
+  #     so CI Gate cannot go green (#7141; auto-arm keys off this check).
+  #     Push/schedule/dispatch no-op succeed (no PR). docs_skills still
+  #     requires CF (no written exception). When Gate's only failure is
+  #     this job, the aggregator prints a notice so ruff/fastlane/secret-scan
+  #     green is not mistaken for a product-test failure.
   # ---------------------------------------------------------------------
   cf-attest:
     name: CF attest
