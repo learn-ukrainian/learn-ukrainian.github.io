@@ -15,10 +15,11 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any, Literal
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, StrictInt, field_validator
 
+from scripts.api.monitor_context import MonitorContext, get_ctx
 from scripts.api.occupancy_sanitize import (
     CLOUD_OBSERVER_HOST_ID,
 )
@@ -44,6 +45,17 @@ NOTEBOOK_SESSION_AGENTS = frozenset({"claude", "codex", "cursor"})
 
 _STORE_LOCK = threading.Lock()
 _STORE: dict[tuple[str, str, str], ObserverPresence] = {}
+
+PresenceStore = dict[tuple[str, str, str], "ObserverPresence"]
+
+
+def _resolve_store(store: PresenceStore | None) -> PresenceStore:
+    """Use the injected store when provided; otherwise the production singleton.
+
+    ``production_context().stores.presence_store`` is this same object; fixture
+    contexts own a fresh dict. Callers must never look up a module-global app.
+    """
+    return store if store is not None else _STORE
 
 
 @dataclass(frozen=True)
@@ -100,19 +112,25 @@ class PresenceRequestForbidden(ValueError):
     """Loopback or field validation failed after pydantic parsing."""
 
 
-def reset_observer_presence() -> None:
-    """Test helper: drop every heartbeat."""
+def reset_observer_presence(store: PresenceStore | None = None) -> None:
+    """Test helper: drop every heartbeat in the given (or production) store."""
+    target = _resolve_store(store)
     with _STORE_LOCK:
-        _STORE.clear()
+        target.clear()
 
 
-def list_live(*, now_mono: float | None = None) -> list[ObserverPresence]:
+def list_live(
+    *,
+    now_mono: float | None = None,
+    store: PresenceStore | None = None,
+) -> list[ObserverPresence]:
     deadline = time.monotonic() if now_mono is None else now_mono
+    target = _resolve_store(store)
     with _STORE_LOCK:
-        stale = [key for key, row in _STORE.items() if row.expires_at_mono <= deadline]
+        stale = [key for key, row in target.items() if row.expires_at_mono <= deadline]
         for key in stale:
-            del _STORE[key]
-        return list(_STORE.values())
+            del target[key]
+        return list(target.values())
 
 
 def _allowed_host_ids() -> set[str]:
@@ -151,6 +169,7 @@ def upsert_presence(
     *,
     now_mono: float | None = None,
     ttl_seconds: int = PRESENCE_TTL_SECONDS,
+    store: PresenceStore | None = None,
 ) -> ObserverPresence:
     agent = _safe_field(payload.agent, role="agent")
     if agent not in ALLOWED_AGENTS:
@@ -190,8 +209,9 @@ def upsert_presence(
         expires_at_mono=stamp + ttl_seconds,
     )
     key = (host_id, agent, instance_id or "default")
+    target = _resolve_store(store)
     with _STORE_LOCK:
-        _STORE[key] = row
+        target[key] = row
     return row
 
 
@@ -200,10 +220,11 @@ def fresh_presence_for_session(
     *,
     now_mono: float | None = None,
     max_age_seconds: float = PRESENCE_FRESHNESS_SECONDS,
+    store: PresenceStore | None = None,
 ) -> tuple[ObserverPresence, float] | None:
     """Return only a fresh row whose instance id exactly matches the caller."""
     deadline = time.monotonic() if now_mono is None else now_mono
-    for row in list_live(now_mono=deadline):
+    for row in list_live(now_mono=deadline, store=store):
         if row.instance_id != session_id:
             continue
         age = max(0.0, deadline - row.updated_at_mono)
@@ -217,10 +238,11 @@ def fresh_notebook_presence_for_session(
     *,
     now_mono: float | None = None,
     max_age_seconds: float = PRESENCE_FRESHNESS_SECONDS,
+    store: PresenceStore | None = None,
 ) -> tuple[ObserverPresence, float] | None:
     """Return a fresh eligible notebook session without cross-host shadowing."""
     deadline = time.monotonic() if now_mono is None else now_mono
-    for row in list_live(now_mono=deadline):
+    for row in list_live(now_mono=deadline, store=store):
         if (
             row.instance_id != session_id
             or row.host_id != MAC_OPERATOR_HOST_ID
@@ -287,12 +309,23 @@ def _row_payload(row: ObserverPresence) -> dict[str, Any]:
 
 
 @router.post("/presence")
-async def post_presence(request: Request, body: PresenceRequest) -> JSONResponse:
+async def post_presence(
+    request: Request,
+    body: PresenceRequest,
+    ctx: MonitorContext = Depends(get_ctx),
+) -> JSONResponse:
     no_store = {"Cache-Control": "no-store"}
     if not _direct_loopback_peer(request):
         return JSONResponse(status_code=403, content={"detail": "Forbidden"}, headers=no_store)
+    store = ctx.stores.presence_store
+    if store is None:
+        return JSONResponse(
+            status_code=503,
+            content={"detail": "presence store unavailable"},
+            headers=no_store,
+        )
     try:
-        row = upsert_presence(body)
+        row = upsert_presence(body, store=store)
     except PresenceRequestForbidden:
         return JSONResponse(status_code=400, content={"detail": "invalid observer presence"}, headers=no_store)
     return JSONResponse(content=_row_payload(row), headers=no_store)

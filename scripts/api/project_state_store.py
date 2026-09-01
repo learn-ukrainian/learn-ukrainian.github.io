@@ -21,6 +21,13 @@ _FUTURE_SKEW_SECONDS = 60
 _STORE_LOCK = threading.Lock()
 _STORE: dict[str, StoredReport] = {}
 
+ReportStore = dict[str, "StoredReport"]
+
+
+def _resolve_store(store: ReportStore | None) -> ReportStore:
+    """Use the injected store when provided; otherwise the production singleton."""
+    return store if store is not None else _STORE
+
 
 class CollectedAtError(ValueError):
     """collected_at failed parse or bounds validation."""
@@ -38,9 +45,10 @@ class FreshestLaneUsage:
     host_id: str
 
 
-def reset_project_state_store() -> None:
+def reset_project_state_store(store: ReportStore | None = None) -> None:
+    target = _resolve_store(store)
     with _STORE_LOCK:
-        _STORE.clear()
+        target.clear()
 
 
 @dataclass(frozen=True)
@@ -59,15 +67,20 @@ def lane_usage_status_from_document(document: dict[str, Any]) -> str:
     return "reported"
 
 
-def get_freshest_lane_usage(*, now_mono: float | None = None) -> FreshestLaneUsage | None:
+def get_freshest_lane_usage(
+    *,
+    now_mono: float | None = None,
+    store: ReportStore | None = None,
+) -> FreshestLaneUsage | None:
     deadline = time.monotonic() if now_mono is None else now_mono
+    target = _resolve_store(store)
     with _STORE_LOCK:
-        stale = [host_id for host_id, row in _STORE.items() if row.expires_at_mono <= deadline]
+        stale = [host_id for host_id, row in target.items() if row.expires_at_mono <= deadline]
         for host_id in stale:
-            del _STORE[host_id]
+            del target[host_id]
         candidates = [
             row
-            for row in _STORE.values()
+            for row in target.values()
             if isinstance(row.document.get("lane_usage"), list) and row.document["lane_usage"]
         ]
     if not candidates:
@@ -154,6 +167,7 @@ def upsert_report(
     now_mono: float | None = None,
     now: datetime | None = None,
     ttl_seconds: int = REPORT_TTL_SECONDS,
+    store: ReportStore | None = None,
 ) -> StoredReport:
     stamp = time.monotonic() if now_mono is None else now_mono
     host_id = str(document["host_id"])
@@ -167,38 +181,51 @@ def upsert_report(
         collected_at=collected_at,
         workers_status=workers_status,
     )
+    target = _resolve_store(store)
     with _STORE_LOCK:
-        existing = _STORE.get(host_id)
+        existing = target.get(host_id)
         if existing is not None and collected_at <= existing.collected_at:
             raise StaleReportError("stale_report")
-        _STORE[host_id] = row
+        target[host_id] = row
     return row
 
 
-def get_stored_report(host_id: str) -> StoredReport | None:
+def get_stored_report(host_id: str, *, store: ReportStore | None = None) -> StoredReport | None:
+    target = _resolve_store(store)
     with _STORE_LOCK:
-        return _STORE.get(host_id)
+        return target.get(host_id)
 
 
-def get_live_report(host_id: str, *, now_mono: float | None = None) -> StoredReport | None:
+def get_live_report(
+    host_id: str,
+    *,
+    now_mono: float | None = None,
+    store: ReportStore | None = None,
+) -> StoredReport | None:
     deadline = time.monotonic() if now_mono is None else now_mono
+    target = _resolve_store(store)
     with _STORE_LOCK:
-        row = _STORE.get(host_id)
+        row = target.get(host_id)
         if row is None:
             return None
         if row.expires_at_mono <= deadline:
-            del _STORE[host_id]
+            del target[host_id]
             return None
         return row
 
 
-def list_live_reports(*, now_mono: float | None = None) -> list[StoredReport]:
+def list_live_reports(
+    *,
+    now_mono: float | None = None,
+    store: ReportStore | None = None,
+) -> list[StoredReport]:
     deadline = time.monotonic() if now_mono is None else now_mono
+    target = _resolve_store(store)
     with _STORE_LOCK:
-        stale = [host_id for host_id, row in _STORE.items() if row.expires_at_mono <= deadline]
+        stale = [host_id for host_id, row in target.items() if row.expires_at_mono <= deadline]
         for host_id in stale:
-            del _STORE[host_id]
-        return list(_STORE.values())
+            del target[host_id]
+        return list(target.values())
 
 
 def compute_service_drift(

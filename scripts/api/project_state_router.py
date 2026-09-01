@@ -246,7 +246,12 @@ def _local_document_metadata(host_id: str, document: dict[str, Any]) -> tuple[fl
     return 0.0, "fresh"
 
 
-def _payload_for_host(host_id: str, *, now_mono: float) -> dict[str, Any]:
+def _payload_for_host(
+    host_id: str,
+    *,
+    now_mono: float,
+    store: Any = None,
+) -> dict[str, Any]:
     if host_id in _self_host_ids():
         document = _live_local_document(host_id)
         if document is None:
@@ -259,7 +264,7 @@ def _payload_for_host(host_id: str, *, now_mono: float) -> dict[str, Any]:
             collected_at=document["collected_at"],
         )
 
-    stored = get_live_report(host_id, now_mono=now_mono)
+    stored = get_live_report(host_id, now_mono=now_mono, store=store)
     if stored is None:
         return unknown_host_payload(host_id)
     age_s = now_mono - stored.received_at_mono
@@ -274,9 +279,10 @@ def _payload_for_host(host_id: str, *, now_mono: float) -> dict[str, Any]:
 
 def projects_payload(*, host_id: str | None = None, ctx: MonitorContext | None = None) -> dict[str, Any]:
     now_mono = time.monotonic()
+    report_store = None if ctx is None else ctx.stores.report_store
     hosts: dict[str, Any] = {}
     for opaque in _selected_host_ids(host_id, ctx):
-        hosts[opaque] = _payload_for_host(opaque, now_mono=now_mono)
+        hosts[opaque] = _payload_for_host(opaque, now_mono=now_mono, store=report_store)
     return {
         "schema": PROJECT_STATE_SCHEMA,
         "observed_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
@@ -326,7 +332,7 @@ async def post_project_report(
         return JSONResponse(status_code=400, content={"detail": "invalid project state report"}, headers=no_store)
 
     try:
-        row = upsert_report(document)
+        row = upsert_report(document, store=ctx.stores.report_store)
     except CollectedAtError:
         return JSONResponse(status_code=400, content={"detail": "invalid collected_at"}, headers=no_store)
     except StaleReportError:

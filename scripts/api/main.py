@@ -104,7 +104,7 @@ from .runtime_router import router as runtime_router
 from .session_router import router as session_router
 from .session_streams_router import router as session_streams_router
 from .site_router import router as site_router
-from .state_helpers import cache_get, cache_invalidate, cache_set
+from .state_helpers import cache_get, cache_invalidate, cache_set, ctx_cache_scope
 from .state_router import router as state_router
 from .telemetry.response import add_json_telemetry, session_id_from_request
 from .telemetry_router import router as telemetry_router
@@ -1448,9 +1448,7 @@ def _ctx_cache_scope(ctx: MonitorContext | None) -> str:
     Two app instances with different roots must never share orient cache
     entries; the project root is the identity that matters.
     """
-    if ctx is None:
-        return ""
-    return f"@{ctx.roots.project_root}"
+    return ctx_cache_scope(ctx)
 
 
 async def _cached_orient_section(

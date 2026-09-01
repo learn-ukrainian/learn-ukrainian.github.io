@@ -475,7 +475,8 @@ def test_projection_cache_key_direct_call_rejects_and_canonicalizes():
     key_raw_b = projection_cache_key(raw_b)
     key_parsed = projection_cache_key(parsed)
     assert key_raw_a == key_raw_b == key_parsed
-    assert key_raw_a.startswith(f"{CACHE_KEY}:")
+    assert key_raw_a.startswith(CACHE_KEY)
+    assert "@" in key_raw_a  # #7494 context scope
     # Single encoding only — no nested repr of an already-encoded key string.
     assert key_raw_a.count(CACHE_KEY) == 1
 

@@ -284,7 +284,7 @@ class TestOverviewLastGoodHonesty:
         monkeypatch.setattr(
             dashboard_router,
             "_peek_state_summary",
-            lambda: (_published_summary(), "hit", 0.0),
+            lambda *_a, **_k: (_published_summary(), "hit", 0.0),
         )
         monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda *_a, **_k: None)
 
@@ -357,7 +357,7 @@ class TestOverviewLastGoodHonesty:
         monkeypatch.setattr(
             dashboard_router,
             "_peek_state_summary",
-            lambda: (_published_summary(), "hit", 0.0),
+            lambda *_a, **_k: (_published_summary(), "hit", 0.0),
         )
 
         resp = self._client().get("/api/dashboard/overview")
@@ -383,12 +383,13 @@ class TestOverviewLastGoodHonesty:
             summary, "hit", 0.0, track_scan="hit"
         )
         seeded["meta"]["track_scan"] = "hit"
-        state_helpers.cache_set(dashboard_router.DASHBOARD_OVERVIEW_CACHE_KEY, seeded)
-        dashboard_router._overview_last_good = seeded
+        state_helpers.cache_set(dashboard_router._overview_cache_key(), seeded)
+        scope = dashboard_router._overview_scope()
+        dashboard_router._overview_last_good_by_scope[scope] = seeded
         monkeypatch.setattr(
             dashboard_router,
             "_peek_state_summary",
-            lambda: (summary, "hit", 0.0),
+            lambda *_a, **_k: (summary, "hit", 0.0),
         )
         monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda *_a, **_k: None)
 
@@ -412,12 +413,12 @@ class TestOverviewLastGoodHonesty:
         seeded = dashboard_router._build_overview_from_state_summary(
             summary, "hit", 0.0, track_scan="hit"
         )
-        dashboard_router._overview_last_good = seeded
-        dashboard_router._overview_disk_loaded = True
+        dashboard_router._overview_last_good_by_scope[dashboard_router._overview_scope()] = seeded
+        dashboard_router._overview_disk_loaded_by_scope[dashboard_router._overview_scope()] = True
         monkeypatch.setattr(
             dashboard_router,
             "_peek_state_summary",
-            lambda: (summary, "hit", 0.0),
+            lambda *_a, **_k: (summary, "hit", 0.0),
         )
         monkeypatch.setattr(dashboard_router, "_schedule_overview_refresh", lambda *_a, **_k: None)
 

@@ -50,7 +50,14 @@ from .dashboard_helpers import (
 )
 from .monitor_context import MonitorContext, get_ctx, production_context
 from .state_coverage import compute_summary
-from .state_helpers import cache_get_with_age, cache_invalidate, cache_set, get_plan_slugs
+from .state_helpers import (
+    cache_get_with_age,
+    cache_invalidate,
+    cache_set,
+    ctx_cache_scope,
+    ctx_scoped_ttl_key,
+    get_plan_slugs,
+)
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -94,9 +101,28 @@ _OVERVIEW_TOTAL_KEYS = (
 )
 
 _overview_refresh_lock = threading.Lock()
-_overview_refresh_thread: threading.Thread | None = None
-_overview_last_good: dict | None = None
-_overview_disk_loaded = False
+_overview_refresh_threads: dict[str, threading.Thread] = {}
+_overview_last_good_by_scope: dict[str, dict] = {}
+_overview_disk_loaded_by_scope: dict[str, bool] = {}
+
+
+def _overview_scope(ctx: MonitorContext | None = None) -> str:
+    return ctx_cache_scope(_resolve_context(ctx))
+
+
+def _overview_cache_key(ctx: MonitorContext | None = None) -> str:
+    return f"{DASHBOARD_OVERVIEW_CACHE_KEY}{_overview_scope(ctx)}"
+
+
+def _summary_cache_key(ctx: MonitorContext | None = None) -> str:
+    """TTL key of the state-summary payload the overview reuses.
+
+    Must be the exact key the ``/api/state/summary`` endpoint writes
+    (``state_router._ctx_cache_key(ctx, "summary")``): a warmed summary is
+    reused by the overview within the same app context, while the resolved
+    project root keeps two app instances isolated (#7494).
+    """
+    return ctx_scoped_ttl_key(_resolve_context(ctx), "summary")
 
 
 def overview_last_good_path(ctx: MonitorContext | None = None) -> Path:
@@ -113,37 +139,33 @@ def reset_overview_state_for_tests() -> None:
     Skips reloading the host disk snapshot so pytest cannot pick up a
     previous Monitor process's last-good file.
     """
-    global _overview_refresh_thread, _overview_last_good, _overview_disk_loaded
-    thread: threading.Thread | None
+    threads: list[threading.Thread]
     with _overview_refresh_lock:
-        thread = _overview_refresh_thread
-    if thread is not None:
+        threads = list(_overview_refresh_threads.values())
+        _overview_refresh_threads.clear()
+    for thread in threads:
         thread.join(timeout=2.0)
-    _overview_last_good = None
-    _overview_disk_loaded = True
+    _overview_last_good_by_scope.clear()
+    _overview_disk_loaded_by_scope.clear()
     cache_invalidate(DASHBOARD_OVERVIEW_CACHE_KEY)
-    with _overview_refresh_lock:
-        _overview_refresh_thread = None
 
 
 def simulate_overview_process_bounce_for_tests() -> None:
     """Clear process memory only; the durable last-good file remains."""
-    global _overview_refresh_thread, _overview_last_good, _overview_disk_loaded
-    thread: threading.Thread | None
+    threads: list[threading.Thread]
     with _overview_refresh_lock:
-        thread = _overview_refresh_thread
-    if thread is not None:
+        threads = list(_overview_refresh_threads.values())
+        _overview_refresh_threads.clear()
+    for thread in threads:
         thread.join(timeout=2.0)
-    _overview_last_good = None
-    _overview_disk_loaded = False
+    _overview_last_good_by_scope.clear()
+    _overview_disk_loaded_by_scope.clear()
     cache_invalidate(DASHBOARD_OVERVIEW_CACHE_KEY)
-    with _overview_refresh_lock:
-        _overview_refresh_thread = None
 
 
-def _peek_state_summary() -> tuple[dict, str, float | None]:
+def _peek_state_summary(ctx: MonitorContext | None = None) -> tuple[dict, str, float | None]:
     """Read the state-summary TTL cache without computing on the request path."""
-    cached = cache_get_with_age("summary", ttl=DASHBOARD_STATE_SUMMARY_TTL_S)
+    cached = cache_get_with_age(_summary_cache_key(ctx), ttl=DASHBOARD_STATE_SUMMARY_TTL_S)
     if cached is not None:
         value, age_s = cached
         return value, "hit", age_s
@@ -265,17 +287,17 @@ def read_persisted_overview_last_good(ctx: MonitorContext | None = None) -> dict
 
 def hydrate_overview_last_good_from_disk(ctx: MonitorContext | None = None) -> dict | None:
     """Load durable last-good into process memory once per lifetime (or bounce)."""
-    global _overview_last_good, _overview_disk_loaded
-    if _overview_last_good is not None:
-        _overview_disk_loaded = True
-        return _overview_last_good
-    if _overview_disk_loaded:
+    scope = _overview_scope(ctx)
+    if scope in _overview_last_good_by_scope and _overview_last_good_by_scope[scope] is not None:
+        _overview_disk_loaded_by_scope[scope] = True
+        return _overview_last_good_by_scope[scope]
+    if _overview_disk_loaded_by_scope.get(scope):
         return None
-    _overview_disk_loaded = True
+    _overview_disk_loaded_by_scope[scope] = True
     payload = read_persisted_overview_last_good(ctx)
     if payload is None:
         return None
-    _overview_last_good = payload
+    _overview_last_good_by_scope[scope] = payload
     return payload
 
 
@@ -362,13 +384,13 @@ def _build_overview_payload_from_scans(ctx: MonitorContext | None = None) -> dic
     resolved = _resolve_context(ctx)
     manifest = load_manifest(resolved)
     levels = manifest.get("levels", {})
-    cached = cache_get_with_age("summary", ttl=DASHBOARD_STATE_SUMMARY_TTL_S)
+    cached = cache_get_with_age(_summary_cache_key(resolved), ttl=DASHBOARD_STATE_SUMMARY_TTL_S)
     if cached is not None:
         state_summary, age_s = cached
         cache_state = "hit"
     else:
         state_summary = compute_summary()
-        cache_set("summary", state_summary)
+        cache_set(_summary_cache_key(resolved), state_summary)
         cache_state = "miss"
         age_s = 0.0
     state_tracks = state_summary.get("tracks", {})
@@ -444,36 +466,39 @@ def _build_overview_payload_from_scans(ctx: MonitorContext | None = None) -> dic
 
 
 def _schedule_overview_refresh(ctx: MonitorContext | None = None) -> None:
-    global _overview_refresh_thread
     resolved = _resolve_context(ctx)
+    scope = _overview_scope(resolved)
     with _overview_refresh_lock:
-        if _overview_refresh_thread is not None and _overview_refresh_thread.is_alive():
+        existing = _overview_refresh_threads.get(scope)
+        if existing is not None and existing.is_alive():
             return
-        _overview_refresh_thread = threading.Thread(
+        thread = threading.Thread(
             target=_run_overview_refresh,
             args=(resolved,),
             daemon=True,
-            name="dashboard-overview-refresh",
+            name=f"dashboard-overview-refresh{scope}",
         )
-        _overview_refresh_thread.start()
+        _overview_refresh_threads[scope] = thread
+        thread.start()
 
 
-def _overview_refresh_running() -> bool:
+def _overview_refresh_running(ctx: MonitorContext | None = None) -> bool:
+    scope = _overview_scope(ctx)
     with _overview_refresh_lock:
-        thread = _overview_refresh_thread
+        thread = _overview_refresh_threads.get(scope)
     return thread is not None and thread.is_alive()
 
 
 def _run_overview_refresh(ctx: MonitorContext | None = None) -> None:
-    global _overview_last_good, _overview_disk_loaded
     try:
         payload = _build_overview_payload_from_scans(ctx)
         if _usable_overview_last_good(payload) is None:
             logger.warning("dashboard overview refresh produced no tracks; keeping last-good")
             return
-        cache_set(DASHBOARD_OVERVIEW_CACHE_KEY, payload)
-        _overview_last_good = payload
-        _overview_disk_loaded = True
+        scope = _overview_scope(ctx)
+        cache_set(_overview_cache_key(ctx), payload)
+        _overview_last_good_by_scope[scope] = payload
+        _overview_disk_loaded_by_scope[scope] = True
         persist_overview_last_good(payload, ctx)
     except Exception:
         logger.exception("dashboard overview background refresh failed")
@@ -495,10 +520,10 @@ async def overview(ctx: MonitorContext = Depends(get_ctx)):
     / ``meta.error`` stay honest about whether the per-module scan has
     run. ``meta.refreshing`` is only set while warming (no last-good yet).
     """
-    state_summary, cache_state, age_s = _peek_state_summary()
+    state_summary, cache_state, age_s = _peek_state_summary(ctx)
     state_tracks = state_summary.get("tracks", {}) if isinstance(state_summary, dict) else {}
 
-    cached = cache_get_with_age(DASHBOARD_OVERVIEW_CACHE_KEY, ttl=DASHBOARD_OVERVIEW_TTL_S)
+    cached = cache_get_with_age(_overview_cache_key(ctx), ttl=DASHBOARD_OVERVIEW_TTL_S)
     if cached is not None:
         value, overview_age_s = cached
         payload = copy.deepcopy(value)
@@ -520,7 +545,7 @@ async def overview(ctx: MonitorContext = Depends(get_ctx)):
 
     last_good = hydrate_overview_last_good_from_disk(ctx)
     if last_good is not None:
-        if not _overview_refresh_running():
+        if not _overview_refresh_running(ctx):
             _schedule_overview_refresh(ctx)
         payload = copy.deepcopy(last_good)
         payload["timestamp"] = datetime.now(UTC).isoformat()

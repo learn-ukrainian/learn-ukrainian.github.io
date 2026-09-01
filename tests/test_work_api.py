@@ -401,7 +401,7 @@ def _warm_next_cache() -> dict:
 
 
 def _patch_known_streams(monkeypatch):
-    monkeypatch.setattr(work_router, "_known_streams", lambda: list(NEXT_STREAMS))
+    monkeypatch.setattr(work_router, "_known_streams", lambda *_a, **_k: list(NEXT_STREAMS))
 
 
 def test_next_stream_scoped_queue_and_digest(monkeypatch):
@@ -553,10 +553,12 @@ def test_next_max_stale_503_when_refresh_never_finishes(monkeypatch):
     from scripts.api.work_router import projection_cache_key
 
     _patch_known_streams(monkeypatch)
+    # Drain any leftover single-flight builds from prior cases so a late
+    # cache_set cannot rejuvenate the deliberately aged entry below.
+    work_router._IN_FLIGHT_BUILDS.clear()
     payload = _warm_next_cache()
     key = projection_cache_key({})
     age = work_router.NEXT_MAX_STALE_S + 15.0
-    _ttl_cache[key] = (time.monotonic() - age, payload)
 
     scheduled: list[str] = []
     monkeypatch.setattr(
@@ -564,6 +566,7 @@ def test_next_max_stale_503_when_refresh_never_finishes(monkeypatch):
         "_get_or_create_build_task",
         lambda k, filters, ctx=None: scheduled.append(k),
     )
+    _ttl_cache[key] = (time.monotonic() - age, payload)
     response = client.get("/api/work/v1/next?stream=infra-harness")
     assert response.status_code == 503, response.text
     body = response.json()
@@ -593,7 +596,7 @@ def test_next_rejects_unknown_and_missing_stream(monkeypatch):
 def test_next_registry_unavailable_503(monkeypatch):
     """Unreadable registry → 503 registry_unavailable, never 200 empty (#6890 #5)."""
     _warm_next_cache()
-    monkeypatch.setattr(work_router, "_known_streams", lambda: None)
+    monkeypatch.setattr(work_router, "_known_streams", lambda *_a, **_k: None)
     response = client.get("/api/work/v1/next?stream=infra-harness")
     assert response.status_code == 503, response.text
     body = response.json()

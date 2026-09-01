@@ -5,7 +5,7 @@ from __future__ import annotations
 import socket
 import time
 from collections.abc import Iterator
-from contextlib import contextmanager
+from contextlib import asynccontextmanager, contextmanager
 from dataclasses import replace
 from pathlib import Path
 from threading import Thread
@@ -15,8 +15,14 @@ import uvicorn
 from fastapi import FastAPI
 
 from agents_extensions.shared.session_streams.store import SessionStreamStore
-from scripts.api import epics_router
+from scripts.api.main import create_app
 from scripts.api.monitor_context import fixture_context
+
+
+@asynccontextmanager
+async def _stub_lifespan(_app: FastAPI):
+    """No schedulers / inventory seed — acceptance stubs only need the router."""
+    yield
 
 
 def epics_app_for_store(
@@ -25,15 +31,17 @@ def epics_app_for_store(
     *,
     live_repo_root: Path | None = None,
 ) -> FastAPI:
-    """Build a FastAPI app whose epics routes read ``store`` via MonitorContext."""
+    """Build a create_app() Monitor instance whose epics routes read ``store``.
+
+    Goes through ``create_app`` so OPSEC path-sanitizer middleware (and the
+    rest of the production stack) actually runs — the prior bare-FastAPI
+    bypass was #7494 item 4.8a.
+    """
     ctx = fixture_context(root)
     if live_repo_root is not None:
         ctx = replace(ctx, roots=replace(ctx.roots, live_repo_root=Path(live_repo_root)))
     ctx = replace(ctx, stores=replace(ctx.stores, epics_store=store))
-    app = FastAPI()
-    app.state.ctx = ctx
-    app.include_router(epics_router.router, prefix="/api/epics")
-    return app
+    return create_app(ctx, lifespan=_stub_lifespan)
 
 
 @contextmanager

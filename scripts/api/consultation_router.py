@@ -29,7 +29,7 @@ from fastapi.responses import JSONResponse
 
 from .config import LEVELS
 from .monitor_context import MonitorContext, get_ctx, production_context
-from .state_helpers import cache_get, cache_set, read_v2_state
+from .state_helpers import cache_get, cache_set, ctx_cache_scope, read_v2_state
 
 # Import TemplateChange and apply_template_patch at module level.
 # state_helpers already inserts scripts/ into sys.path, so this import works.
@@ -154,7 +154,7 @@ def _collect_all_consultations(
     ctx: MonitorContext | None = None,
 ) -> list[dict]:
     """Scan all state.json files and collect consultation entries."""
-    cache_key = "consultation_history_all"
+    cache_key = f"consultation_history_all{ctx_cache_scope(_resolve_context(ctx))}"
     cached = cache_get(cache_key, ttl=30)
     if cached is not None:
         results = cached
@@ -522,7 +522,7 @@ async def get_module_history(track: str, slug: str, ctx: MonitorContext = Depend
 @router.get("/metrics")
 async def get_metrics(ctx: MonitorContext = Depends(get_ctx)):
     """Aggregate consultation stats."""
-    cache_key = "consultation_metrics"
+    cache_key = f"consultation_metrics{ctx_cache_scope(ctx)}"
     cached = cache_get(cache_key, ttl=30)
     if cached is not None:
         return cached
