@@ -1,0 +1,23 @@
+{
+  "schema_version": "dataset_v4_pilot_slot_manifest_v1",
+  "status": "FROZEN_PREBUILD_SLOT_CONTRACT",
+  "text_free": true,
+  "controlling_outcome_sha256": "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20",
+  "product_scope": ["standard_control", "literary", "dialect_regional", "archaic_historical", "mixing", "quotation_interference", "abstention"],
+  "release_train": {"initial": "silver", "later_overlay": "gold", "model_agreement_creates_gold": false},
+  "custody_policy": {"execution": "VPS_FIRST", "mac_corpus_copy_allowed": false, "capacity_gate_required": true},
+  "rights_policy": {"operation_specific": true, "unresolved_operation_is_global_blocker": false},
+  "required_role_ids": ["A0", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "A11", "A12", "A13"],
+  "required_gate_ids": ["VPS_CUSTODY_CAPACITY", "SOURCE_OPERATION_ADMISSION", "SEALED_HELDOUT_SOURCE_FAMILY_SPLIT", "NON_SELF_ARENA_VOTING", "MODEL_AGREEMENT_NOT_GOLD", "SILVER_FIRST_STABLE_IDS"],
+  "sealed_heldout_commitment": {"required_before_builders_start": true, "source_family_split_required": true, "heldout_membership_included": false, "assignment_owner": "A2_A3_PRIVATE_ARTIFACT"},
+  "slot_series": [
+    {"stratum": "standard_correct", "id_prefix": "v4p-standard-correct", "start": 1, "count": 15, "assignment_state": "UNASSIGNED_PENDING_A2_A3"},
+    {"stratum": "correction", "id_prefix": "v4p-correction", "start": 1, "count": 15, "assignment_state": "UNASSIGNED_PENDING_A2_A3"},
+    {"stratum": "literary", "id_prefix": "v4p-literary", "start": 1, "count": 15, "assignment_state": "UNASSIGNED_PENDING_A2_A3"},
+    {"stratum": "dialect_regional", "id_prefix": "v4p-dialect-regional", "start": 1, "count": 15, "assignment_state": "UNASSIGNED_PENDING_A2_A3"},
+    {"stratum": "archaic_historical", "id_prefix": "v4p-archaic-historical", "start": 1, "count": 15, "assignment_state": "UNASSIGNED_PENDING_A2_A3"},
+    {"stratum": "mixing", "id_prefix": "v4p-mixing", "start": 1, "count": 10, "assignment_state": "UNASSIGNED_PENDING_A2_A3"},
+    {"stratum": "quotation_interference", "id_prefix": "v4p-quotation-interference", "start": 1, "count": 10, "assignment_state": "UNASSIGNED_PENDING_A2_A3"},
+    {"stratum": "abstention", "id_prefix": "v4p-abstention", "start": 1, "count": 5, "assignment_state": "UNASSIGNED_PENDING_A2_A3"}
+  ]
+}
