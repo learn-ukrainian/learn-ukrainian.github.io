@@ -90,6 +90,21 @@ def test_v4_slot_schema_rejects_duplicate_missing_and_wrong_quota_series() -> No
     assert _errors(wrong_quota)
 
 
+def test_v4_pilot_slot_manifest_binds_the_frozen_non_goals() -> None:
+    manifest = _load(MANIFEST)
+
+    assert set(manifest["non_goals"]) == {
+        "no_model_training_or_preference_optimization",
+        "no_general_vernacular_or_knowledge_corpus",
+        "no_dedicated_non_ukrainian_slavic_lanes",
+        "no_modern_rusyn_remapping",
+        "no_automatic_modernization_of_protected_material",
+        "no_model_output_or_agreement_as_silver_or_gold",
+        "no_source_text_publication_or_redistribution_without_operation_rights",
+        "no_mac_corpus_or_data_producing_work",
+        "no_dataset_or_model_performance_claims_without_release_gates",
+    }
+
 def test_v4_pilot_slot_manifest_has_required_roles_gates_and_no_private_payload() -> None:
     manifest = _load(MANIFEST)
     keys = _all_keys(manifest)

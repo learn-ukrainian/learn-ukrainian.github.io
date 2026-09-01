@@ -37,6 +37,20 @@ Macedonian, Serbian, and Montenegrin lanes are removed. Modern Rusyn is
 protected and out of scope: do not silently map it to Ukrainian, Russian, or a
 historical Ukrainian stage.
 
+## Frozen non-goals
+
+A0 binds these non-goals before dispatch. This epic does not include:
+
+1. model training or preference optimization;
+2. a general Ukrainian vernacular or knowledge corpus;
+3. dedicated non-Ukrainian Slavic lanes;
+4. remapping modern Rusyn to Ukrainian, Russian, or a historical stage;
+5. automatic modernization or correction of protected literary, dialectal, historical, or quoted material;
+6. provider/model output or agreement as silver admission or gold;
+7. source-text publication or redistribution beyond the exact cleared operation rights;
+8. Mac corpus handling or data-producing work; or
+9. a dataset/model-performance claim in place of dataset, evaluation, rights, or release gates.
+
 ## Release train and data boundary
 
 The first deliverable is **silver**: stable row IDs, provenance/rights metadata,

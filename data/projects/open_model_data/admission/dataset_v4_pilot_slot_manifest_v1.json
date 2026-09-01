@@ -4,6 +4,7 @@
   "text_free": true,
   "controlling_outcome_sha256": "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20",
   "product_scope": ["standard_control", "literary", "dialect_regional", "archaic_historical", "mixing", "quotation_interference", "abstention"],
+  "non_goals": ["no_model_training_or_preference_optimization", "no_general_vernacular_or_knowledge_corpus", "no_dedicated_non_ukrainian_slavic_lanes", "no_modern_rusyn_remapping", "no_automatic_modernization_of_protected_material", "no_model_output_or_agreement_as_silver_or_gold", "no_source_text_publication_or_redistribution_without_operation_rights", "no_mac_corpus_or_data_producing_work", "no_dataset_or_model_performance_claims_without_release_gates"],
   "release_train": {"initial": "silver", "later_overlay": "gold", "model_agreement_admits_silver": false, "model_agreement_creates_gold": false},
   "custody_policy": {"execution": "VPS_FIRST", "mac_corpus_copy_allowed": false, "capacity_gate_required": true},
   "rights_policy": {"operation_specific": true, "unresolved_operation_is_global_blocker": false},
