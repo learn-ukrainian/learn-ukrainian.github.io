@@ -6,7 +6,9 @@ name: Auto-arm merge queue
 permissions:
   contents: read
 
-on:
+# zizmor cannot model the read-only gate below; retain workflow_run for the
+# red-run self-heal, with the fork/label boundary enforced before arm starts.
+on: # zizmor: ignore[dangerous-triggers]
   schedule:
     - cron: '7,22,37,52 * * * *'
   # Fallback trigger (#7539 follow-up): GitHub's cron has been unreliable for this
