@@ -96,7 +96,7 @@ review_scheduler:
     claude:
       formal_review_eligible: true
       # Operator 2026-08-06: Opus 5 + Opus 4.8 are formal CF pins (not advisory-only).
-      models: [claude-fable-5, claude-sonnet-5, claude-opus-5, claude-opus-4-8]
+      models: [claude-fable-5-1, claude-fable-5, claude-sonnet-5, claude-opus-5, claude-opus-4-8]
       participant: claude
       adapter_transport: acp
       catalog_transport: native_claude
@@ -319,6 +319,22 @@ models:
       no Wave 1 public CF cell required to hold the lock.
     sources:
       - https://www.anthropic.com/news/claude-fable-5-mythos-5
+  claude-fable-5-1:
+    family: anthropic
+    tier: frontier_authority
+    lifecycle: active
+    roles: [architecture, critical_review, long_horizon_coding, orchestration]
+    transports: [native_claude, cursor]
+    strengths: [highest_anthropic_capability, long_horizon_work, always_on_thinking]
+    weaknesses: [stricter_refusal_surface, cursor_fallback_no_zdr]
+    notes: >-
+      Fable 5.1 succeeds claude-fable-5 as the Anthropic orchestration and
+      designated-authority seat. Thinking is always on (never send
+      thinking: disabled); start at high effort. Keep verification scaffolding —
+      the Opus 5 guidance to delete it does not apply. claude-fable-5 remains as
+      the legacy alias id pinned by existing callers and tests.
+    sources:
+      - https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1
   claude-opus-5:
     family: anthropic
     tier: frontier_authority
@@ -762,6 +778,13 @@ review_candidates:
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-5.6-terra
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
+  claude-fable-5-1:
+    model_id: claude-fable-5-1
+    route: claude
+    transport: native_claude
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-fable-5-1
+    review_profiles: [code, infra]
+    capabilities: [code_review, isolation, sealed_evidence]
   claude-fable-5:
     model_id: claude-fable-5
     route: claude
@@ -910,13 +933,14 @@ review_candidates:
 # Same shape for every orchestrator seat — like AGY Flash → Pro.
 orchestrator_seats:
   claude:
-    model_id: claude-fable-5
+    model_id: claude-fable-5-1
     effort: high
     escalate_model_id: gpt-5.6-sol
     escalate_effort: xhigh
     escalate_when: deep_single_shot_or_architecture
     note: >-
-      Fable 5 remains the Anthropic orchestration and designated-authority seat.
+      Fable 5.1 is the Anthropic orchestration and designated-authority seat
+      (claude-fable-5 remains as the legacy alias id pinned by existing callers).
       Non-binding Anthropic advisory consultations route separately to Opus 5 under
       the operator's 2026-07-31 directive. Fable runs in the SUMMONED cadence, not
       as a resident daily driver: grok-4.6 owns the daily epic loops; Fable takes
