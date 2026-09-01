@@ -573,10 +573,14 @@ def arm_eligible_prs(
         decision = decide_auto_arm(pr)
         if decision.should_arm and is_queued is not None:
             assert decision.number is not None
-            if is_queued(decision.number, decision.head_sha):
-                decision = ArmDecision(
-                    False, "already_armed_or_queued", decision.number, decision.head_sha
-                )
+            try:
+                if is_queued(decision.number, decision.head_sha):
+                    decision = ArmDecision(
+                        False, "already_armed_or_queued", decision.number, decision.head_sha
+                    )
+            except (RuntimeError, ValueError, KeyError):
+                # Advisory: GraphQL failure must not abort the scan or block arming.
+                pass
         decisions.append(decision)
         if not decision.should_arm:
             continue

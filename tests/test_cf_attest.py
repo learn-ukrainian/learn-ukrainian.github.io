@@ -963,12 +963,12 @@ def test_maybe_post_feedback_skips_when_dedupe_check_fails(monkeypatch) -> None:
     mod._maybe_post_feedback(_feedback_args(), _failing_result())
 
 
-def _failed_cf_check_run(run_id: int = 424242) -> dict:
+def _failed_cf_check_run(run_id: int = 424242, job_id: int = 9) -> dict:
     return {
         "name": "CF attest",
         "status": "completed",
         "conclusion": "failure",
-        "details_url": f"https://github.com/o/r/actions/runs/{run_id}/job/9",
+        "details_url": f"https://github.com/o/r/actions/runs/{run_id}/job/{job_id}",
     }
 
 
@@ -984,7 +984,7 @@ def _run_payload(run_id: int, **overrides: object) -> dict:
     return payload
 
 
-def test_rerun_stale_failed_cf_attest_reruns_initial_failed_run() -> None:
+def test_rerun_stale_failed_cf_attest_reruns_initial_failed_job() -> None:
     posts: list[tuple[str, dict]] = []
 
     def api_get(path: str) -> object:
@@ -1001,7 +1001,31 @@ def test_rerun_stale_failed_cf_attest_reruns_initial_failed_run() -> None:
         api_post=lambda path, payload: posts.append((path, payload)),
     )
     assert "424242" in summary
-    assert posts == [("repos/o/r/actions/runs/424242/rerun-failed-jobs", {})]
+    assert "9" in summary
+    assert posts == [("repos/o/r/actions/jobs/9/rerun", {})]
+    assert not any("rerun-failed-jobs" in path for path, _ in posts)
+
+
+def test_rerun_stale_failed_cf_attest_scopes_to_job_never_whole_run() -> None:
+    """#7593 r3: mutation is scoped strictly to the CF attest job."""
+    posts: list[tuple[str, dict]] = []
+
+    def api_get(path: str) -> object:
+        if "check-runs" in path:
+            return {"check_runs": [_failed_cf_check_run(run_id=555555, job_id=123)]}
+        if path.endswith("/actions/runs/555555"):
+            return _run_payload(555555)
+        raise AssertionError(path)
+
+    summary = rerun_stale_failed_cf_attest(
+        repository="o/r",
+        head_sha=PR_HEAD,
+        api_get=api_get,
+        api_post=lambda path, payload: posts.append((path, payload)),
+    )
+    assert "job 123 for run 555555" in summary
+    assert posts == [("repos/o/r/actions/jobs/123/rerun", {})]
+    assert "rerun-failed-jobs" not in posts[0][0]
 
 
 def test_rerun_stale_failed_cf_attest_noops_when_check_green() -> None:
@@ -1019,6 +1043,7 @@ def test_rerun_stale_failed_cf_attest_noops_when_check_green() -> None:
 
 
 def test_rerun_stale_failed_cf_attest_never_reruns_a_second_attempt() -> None:
+    """#7593 r3: rate-limit per head SHA — second comment on the same head is a no-op."""
     def api_get(path: str) -> object:
         if "check-runs" in path:
             return {"check_runs": [_failed_cf_check_run()]}
@@ -1060,3 +1085,24 @@ def test_rerun_stale_failed_cf_attest_fails_closed_on_bad_head() -> None:
             api_get=lambda path: pytest.fail("must not fetch"),
             api_post=lambda path, payload: pytest.fail("must not POST"),
         )
+
+
+def test_mismatched_family_or_head_never_attests_or_reruns() -> None:
+    """Same-family and mismatched-head comments fail closed and never attest."""
+    # Same family: google reviewing google
+    same_family_result = evaluate_attestation(
+        expected_head=PR_HEAD,
+        author_family="google",
+        bodies=[("comment", _formal_agy(PR_HEAD))],
+    )
+    assert not same_family_result.ok
+    assert "same-family review" in same_family_result.reason
+
+    # Mismatched head
+    mismatched_head_result = evaluate_attestation(
+        expected_head=PR_HEAD,
+        author_family="openai",
+        bodies=[("comment", _formal_agy(STALE_HEAD))],
+    )
+    assert not mismatched_head_result.ok
+    assert "stale CF" in mismatched_head_result.reason or "head mismatch" in mismatched_head_result.reason

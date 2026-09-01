@@ -609,6 +609,7 @@ def github_api_post(
 
 
 RUN_ID_RE = re.compile(r"/actions/runs/([1-9][0-9]*)")
+JOB_ID_RE = re.compile(r"/actions/runs/[1-9][0-9]*/jobs?/([1-9][0-9]*)")
 STALE_CHECK_CONCLUSIONS = frozenset({"FAILURE", "STALE", "TIMED_OUT"})
 STALE_RUN_CONCLUSIONS = frozenset({"failure", "timed_out"})
 
@@ -620,13 +621,12 @@ def rerun_stale_failed_cf_attest(
     api_get: ApiGet,
     api_post: Callable[[str, Mapping[str, Any]], Any],
 ) -> str:
-    """Re-run failed jobs of the initial failed CF attest run at ``head_sha``.
+    """Re-run the CF attest job of the initial failed CI run at ``head_sha``.
 
-    #7548 built this path for the scheduled auto-arm scanner; the on-comment
-    workflow could not reach it, so a freshly accepted verdict left the PR's
-    ``CF attest`` check red until a human ran ``gh run rerun --failed``
-    (#M-4, 2026-09-01). Idempotent: only a first-attempt completed failure
-    at this exact head is rerun.
+    #7548 built whole-run rerun for the scheduled auto-arm scanner; #7593
+    scopes this on-comment companion strictly to the single ``CF attest`` job
+    (never whole-run) and enforces rate-limiting (at most one rerun attempt
+    per head SHA).
     """
     repo = (repository or "").strip()
     if "/" not in repo:
@@ -640,7 +640,7 @@ def rerun_stale_failed_cf_attest(
     check_runs = payload.get("check_runs") if isinstance(payload, Mapping) else None
     if not isinstance(check_runs, list):
         raise ValueError("rerun-stale-failed: check-runs payload malformed")
-    candidates: list[int] = []
+    candidates: list[tuple[int, int]] = []
     for check in check_runs:
         if not isinstance(check, Mapping):
             continue
@@ -650,12 +650,22 @@ def rerun_stale_failed_cf_attest(
             continue
         if str(check.get("conclusion") or "").upper() not in STALE_CHECK_CONCLUSIONS:
             continue
-        match = RUN_ID_RE.search(str(check.get("details_url") or ""))
-        if match is not None:
-            candidates.append(int(match.group(1)))
+        details = str(check.get("details_url") or "")
+        run_match = RUN_ID_RE.search(details)
+        job_match = JOB_ID_RE.search(details)
+        check_id = check.get("id")
+        job_id: int | None = None
+        if job_match is not None:
+            job_id = int(job_match.group(1))
+        elif isinstance(check_id, int):
+            job_id = check_id
+        elif isinstance(check_id, str) and check_id.isdigit():
+            job_id = int(check_id)
+        if run_match is not None and job_id is not None:
+            candidates.append((int(run_match.group(1)), job_id))
     if not candidates:
         return "no failed/stale CF attest check run at this head; nothing to rerun"
-    run_id = candidates[-1]
+    run_id, job_id = candidates[-1]
     run = api_get(f"repos/{quoted}/actions/runs/{run_id}")
     if not isinstance(run, Mapping):
         raise ValueError("rerun-stale-failed: workflow run payload malformed")
@@ -668,8 +678,8 @@ def rerun_stale_failed_cf_attest(
         or str(run.get("conclusion") or "").strip().lower() not in STALE_RUN_CONCLUSIONS
     ):
         return f"run {run_id} is not a completed failure; not rerunning"
-    api_post(f"repos/{quoted}/actions/runs/{run_id}/rerun-failed-jobs", {})
-    return f"requested rerun of failed jobs for run {run_id}"
+    api_post(f"repos/{quoted}/actions/jobs/{job_id}/rerun", {})
+    return f"requested rerun of CF attest job {job_id} for run {run_id}"
 
 
 def _api_items(payload: Any, key: str) -> list[Mapping[str, Any]]:

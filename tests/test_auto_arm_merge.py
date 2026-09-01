@@ -327,6 +327,66 @@ def test_not_queued_green_pr_still_arms_and_comments_once() -> None:
     assert comments == [(7539, HEAD)]
 
 
+def test_arm_eligible_prs_is_queued_graphql_failure_does_not_abort_scan_or_later_prs() -> None:
+    """#7593 r3: GraphQL failure on one PR degrades to advisory and does not block later PRs."""
+    pr1 = _pr(number=101, headRefOid="1" * 40)
+    pr2 = _pr(number=102, headRefOid="2" * 40)
+
+    enabled: list[int] = []
+    comments: list[tuple[int, str]] = []
+
+    def flaky_is_queued(number: int, _head_sha: str) -> bool:
+        if number == 101:
+            raise RuntimeError("GraphQL 502 Bad Gateway")
+        return False
+
+    decisions = auto_arm_merge.arm_eligible_prs(
+        [pr1, pr2],
+        enable=lambda number, _head_sha: enabled.append(number),
+        comment=lambda number, head_sha: comments.append((number, head_sha)),
+        is_queued=flaky_is_queued,
+    )
+
+    assert len(decisions) == 2
+    assert decisions[0].should_arm is True
+    assert decisions[0].number == 101
+    assert decisions[1].should_arm is True
+    assert decisions[1].number == 102
+    assert enabled == [101, 102]
+    assert comments == [(101, "1" * 40), (102, "2" * 40)]
+
+
+@pytest.mark.parametrize(
+    "exc",
+    [
+        RuntimeError("HTTP 500 internal server error"),
+        ValueError("malformed GraphQL payload"),
+        KeyError("mergeQueueEntry"),
+    ],
+)
+def test_arm_eligible_prs_is_queued_exceptions_degrade_to_advisory(exc: Exception) -> None:
+    pr1 = _pr(number=101, headRefOid="1" * 40)
+    pr2 = _pr(number=102, headRefOid="2" * 40)
+
+    enabled: list[int] = []
+    comments: list[tuple[int, str]] = []
+
+    def failing_is_queued(number: int, _head_sha: str) -> bool:
+        if number == 101:
+            raise exc
+        return False
+
+    decisions = auto_arm_merge.arm_eligible_prs(
+        [pr1, pr2],
+        enable=lambda number, _head_sha: enabled.append(number),
+        comment=lambda number, head_sha: comments.append((number, head_sha)),
+        is_queued=failing_is_queued,
+    )
+
+    assert [d.number for d in decisions if d.should_arm] == [101, 102]
+    assert enabled == [101, 102]
+
+
 def test_get_merge_queue_entry_parses_graphql_envelope(monkeypatch: pytest.MonkeyPatch) -> None:
     import json as _json
 
