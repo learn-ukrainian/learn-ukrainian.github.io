@@ -23,7 +23,11 @@ from pathlib import Path
 from typing import Any
 
 from scripts.fleet import idle_settle as idle_settle
-from scripts.guardrails.delegate_ownership import OwnershipLedger, default_ledger_path
+from scripts.guardrails.delegate_ownership import (
+    TERMINAL_TASK_STATUSES,
+    OwnershipLedger,
+    default_ledger_path,
+)
 
 
 def repo_root_from_file() -> Path:
@@ -77,7 +81,6 @@ def _run(
             if isinstance(exc.stderr, str)
             else f"command timed out after {timeout}s",
         )
-
 
 
 def _load_task(task_dir: Path, task_id: str) -> dict[str, Any]:
@@ -138,15 +141,57 @@ def heal_zombie_task(
         data["status"] = "failed"
         data["exit_code"] = data.get("exit_code") if data.get("exit_code") is not None else -9
         data["returncode"] = data.get("returncode") if data.get("returncode") is not None else -9
-        data["last_error"] = (
-            data.get("last_error")
-            or "dispatch_settle: recorded PID is dead while status=running"
-        )
+        data["last_error"] = data.get("last_error") or "dispatch_settle: recorded PID is dead while status=running"
         _save_task(task_dir, task_id, data)
         actions.append("marked_failed_zombie_running")
         if ledger is not None:
             ledger.release(task_id)
             actions.append("released_ownership_claims")
+    return actions
+
+
+def settle_missing_worktree(
+    task_dir: Path,
+    task_id: str,
+    *,
+    ledger: OwnershipLedger | None = None,
+) -> list[str]:
+    """Settle a record whose worktree was already reaped and whose PID is dead.
+
+    Such a record is pure history: there is no tree to probe, push, or review.
+    Mark it terminal with the existing vocabulary and release write-ownership
+    claims. Records with a live PID are never settled here.
+    """
+    actions: list[str] = []
+    data = _load_task(task_dir, task_id)
+    status = data.get("status")
+    raw_pid = data.get("pid")
+    pid: int | None
+    if isinstance(raw_pid, int):
+        pid = raw_pid
+    elif isinstance(raw_pid, str) and raw_pid.isdigit():
+        pid = int(raw_pid)
+    else:
+        pid = None
+    worktree_raw = data.get("worktree_path") or data.get("cwd")
+    worktree = Path(str(worktree_raw)) if worktree_raw else None
+
+    if worktree is None or worktree.is_dir() or _pid_alive(pid):
+        return actions
+
+    if status not in TERMINAL_TASK_STATUSES:
+        data["status"] = "failed"
+        data["exit_code"] = data.get("exit_code") if data.get("exit_code") is not None else -9
+        data["returncode"] = data.get("returncode") if data.get("returncode") is not None else -9
+        data["last_error"] = (
+            data.get("last_error")
+            or "dispatch_settle: recorded worktree is missing and PID is dead; settling as pure history"
+        )
+        _save_task(task_dir, task_id, data)
+        actions.append("marked_failed_missing_worktree")
+    if ledger is not None:
+        ledger.release(task_id)
+        actions.append("released_ownership_claims")
     return actions
 
 
@@ -245,8 +290,7 @@ def push_and_maybe_open_pr(
         return actions
     pr_title = title or f"chore(dispatch): settle {branch}"
     pr_body = body or (
-        "Auto-opened by `python -m scripts.orchestration.dispatch_settle` "
-        "after a worker left commits without a PR.\n"
+        "Auto-opened by `python -m scripts.orchestration.dispatch_settle` after a worker left commits without a PR.\n"
     )
     create = _run(
         [
@@ -288,6 +332,7 @@ def settle_task(
             actions.append(f"released_inactive:{','.join(sorted(set(released)))}")
 
     actions.extend(heal_zombie_task(tdir, task_id, ledger=ledger))
+    actions.extend(settle_missing_worktree(tdir, task_id, ledger=ledger))
 
     data = _load_task(tdir, task_id)
     status = data.get("status") if isinstance(data.get("status"), str) else None
@@ -298,26 +343,29 @@ def settle_task(
         pid = int(raw_pid)
     else:
         pid = None
+    pid_alive = _pid_alive(pid)
     worktree_raw = data.get("worktree_path") or data.get("cwd")
     worktree = Path(str(worktree_raw)) if worktree_raw else None
+    worktree_missing = worktree is not None and not worktree.is_dir()
     branch_task = data.get("worktree_branch")
     branch: str | None = branch_task if isinstance(branch_task, str) else None
     commits_ahead: int | None = None
     dirty: bool | None = None
-    if worktree is not None:
+    settled_missing_worktree = worktree_missing and not pid_alive
+    if worktree is not None and not settled_missing_worktree:
         b, ahead, d = _git_info(worktree)
         branch = branch or b
         commits_ahead = ahead
         dirty = d
 
-    pr_url, pr_number = _find_pr(branch, worktree or root)
+    if settled_missing_worktree:
+        # Pure history: skip branch/PR probing that requires the reaped worktree.
+        pr_url, pr_number = None, None
+    else:
+        pr_cwd = worktree if worktree is not None and worktree.is_dir() else root
+        pr_url, pr_number = _find_pr(branch, pr_cwd)
 
-    if (
-        push
-        and worktree is not None
-        and branch
-        and (commits_ahead or 0) > 0
-    ):
+    if push and worktree is not None and branch and (commits_ahead or 0) > 0:
         actions.extend(
             push_and_maybe_open_pr(
                 worktree,
@@ -348,7 +396,7 @@ def settle_task(
         task_id=task_id,
         status=status,
         pid=pid,
-        pid_alive=_pid_alive(pid),
+        pid_alive=pid_alive,
         worktree_path=str(worktree) if worktree else None,
         branch=branch,
         commits_ahead=commits_ahead,
@@ -481,8 +529,7 @@ def _build_parser() -> argparse.ArgumentParser:
     task.add_argument(
         "--disposition",
         default=None,
-        help="Idle-settle disposition when no follow-up dispatch: "
-        + " | ".join(sorted(idle_settle.DISPOSITION_CODES)),
+        help="Idle-settle disposition when no follow-up dispatch: " + " | ".join(sorted(idle_settle.DISPOSITION_CODES)),
     )
     task.add_argument(
         "--dispatched",
