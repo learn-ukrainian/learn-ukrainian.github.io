@@ -5871,13 +5871,12 @@ def render_session_start_context(
 ) -> str:
     """Render the only SessionStart handoff text; shell hooks never parse leases."""
     if candidate is None or candidate.get("status") == "none":
-        facts_path = ".agent/orientation-health-facts.json"
+        # Cold-start canary minting retired (operator 2026-08-31): a no-packet
+        # cold start orients from durable state; probes exist only for rollovers.
         lines = [
             "COLD START: NO LIVE THREAD ROLLOVER",
             "No pending or resumed packet exists for this agent.",
             "Orient from durable project state with tool-backed reads before ordinary work.",
-            "Create exactly ten truthful legacy orientation facts, then run:",
-            f".venv/bin/python scripts/context_canary.py mint --facts {facts_path} --out .agent/orientation-health-probe.json",
             "Do not invent a lineage_id or rollover_id; prepare creates both only when this thread later rolls over.",
             "Keep the primary checkout read-only and use a dispatch worktree for implementation.",
         ]

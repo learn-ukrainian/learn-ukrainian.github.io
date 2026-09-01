@@ -171,7 +171,8 @@ is for CROSS-session continuity, not an in-session rot guard. But:
   `/api/rules` + `docs/best-practices/agent-activity-matrix.md`); confirm current capability via
   `.venv/bin/python scripts/ai_agent_bridge/__main__.py check-model` before relying on it.
 - Brief with EXPLICIT numbered steps (worktree → work → tests → ruff → conventional commit → push →
-  PR; the WORKER never merges — the orchestrator arms auto-merge after the review gate) + the #M-4
+  PR; the WORKER never merges — the orchestrator labels `automerge-ok` only after the exact-head
+  CF verdict, per the #7450 landing order) + the #M-4
   preamble (each verifiable claim + its deterministic tool). Before any issue-fix dispatch:
   `gh pr list --state all --search "<issue-nr>"` — an open issue ≠ unfixed.
 - **Watch: `Monitor` a settle-loop on the task's `batch_state/tasks/<id>.json` `status`** → read the
@@ -211,11 +212,13 @@ is for CROSS-session continuity, not an in-session rot guard. But:
   user" (#M-12). Merge once an independent CROSS-FAMILY review passes AND blocking CI is green
   (pytest / ruff / frontend / schema-drift / gitleaks / radon — never `--admin`-bypass, #M-0.5).
   Never self-review your own PR.
-- **A ready PR must not sit:** arm `gh pr merge --auto --squash` the MOMENT the
-  review gate passes (#0H). **Never merge — or arm auto-merge on — a DRAFT, and never merge ahead of
-  the review verdict:** a draft squash-merged 14 minutes after opening, before its cross-family
-  review finished, landed buggy code on a live pilot's main (incident 2026-07-16). One PR = one
-  owning lane; deconflict explicitly before touching a PR another lane opened.
+- **A ready PR must not sit (#0H), but the landing order binds (#7450):** (1) independent
+  cross-family exact-head CF APPROVE, (2) CI Gate green on that same head, (3) only then label
+  `automerge-ok` — the auto-arm pipeline (#7539/#7540) arms GitHub auto-merge; never arm ahead of
+  the CF verdict, and a moved head makes the prior APPROVE stale. **Never arm or merge a DRAFT, and
+  never merge ahead of the review verdict:** a draft squash-merged 14 minutes after opening, before
+  its cross-family review finished, landed buggy code on a live pilot's main (incident 2026-07-16).
+  One PR = one owning lane; deconflict explicitly before touching a PR another lane opened.
 - **Deploy discipline (user-flagged 2026-07-16): run the WHOLE loop — code → build → test → soak —
   LOCALLY; deploy to a live host ONLY reviewed+merged code, then one parity smoke there.**
   In-progress code never touches a live pilot/host.

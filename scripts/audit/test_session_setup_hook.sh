@@ -420,7 +420,8 @@ assert_not_contains "$output" "COLD START: NO LIVE THREAD ROLLOVER" "pending pac
 setup_fixture "$fixture_root"
 output="$(run_hook "$fixture_root")"
 assert_contains "$output" "COLD START: NO LIVE THREAD ROLLOVER" "engine cold start"
-assert_contains "$output" "Create exactly ten truthful legacy orientation facts" "engine cold start"
+assert_contains "$output" "Orient from durable project state with tool-backed reads" "engine cold start"
+assert_not_contains "$output" "context_canary.py mint" "engine cold start"
 
 # 13. Engine lane isolation across local .agent paths.
 setup_fixture "$fixture_root"
