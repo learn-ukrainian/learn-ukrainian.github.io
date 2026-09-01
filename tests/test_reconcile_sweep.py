@@ -448,6 +448,7 @@ def test_reconcile_sweep_systemd_exec_start_smoke(tmp_path: Path) -> None:
         capture_output=True,
         text=True,
         check=False,
+        timeout=60,
     )
     assert res_help.returncode == 0
     assert "Reconcile stale write-ownership claims" in res_help.stdout
@@ -468,6 +469,7 @@ def test_reconcile_sweep_systemd_exec_start_smoke(tmp_path: Path) -> None:
         capture_output=True,
         text=True,
         check=False,
+        timeout=60,
     )
     assert res_report.returncode == 0
     assert "reconcile-sweep: mode=dry_run scanned_tasks=0 zombie_tasks=0 stale_claims=0" in res_report.stdout
@@ -480,6 +482,7 @@ def test_reconcile_sweep_systemd_exec_start_smoke(tmp_path: Path) -> None:
         capture_output=True,
         text=True,
         check=False,
+        timeout=60,
     )
     assert res_script_help.returncode == 0
     assert "Reconcile stale write-ownership claims" in res_script_help.stdout
@@ -497,6 +500,7 @@ def test_reconcile_sweep_systemd_exec_start_smoke(tmp_path: Path) -> None:
         capture_output=True,
         text=True,
         check=False,
+        timeout=60,
     )
     assert res_script_report.returncode == 0
     assert "reconcile-sweep: mode=dry_run scanned_tasks=0 zombie_tasks=0 stale_claims=0" in res_script_report.stdout
