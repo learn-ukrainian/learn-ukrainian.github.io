@@ -11,7 +11,7 @@ from unittest.mock import AsyncMock, Mock
 
 from fastapi.testclient import TestClient
 
-from scripts.api import git_hygiene_router, images_router, monitor_context, wiki_router, work_router
+from scripts.api import config, git_hygiene_router, images_router, monitor_context, wiki_router, work_router
 from scripts.api import main as api_main
 from scripts.api.monitor_context import fixture_context, production_context
 
@@ -35,6 +35,27 @@ def test_production_context_is_constructed_once_until_cache_clear(monkeypatch) -
 
     # Leave the cache clear so later tests cannot inherit this test's context.
     production_context.cache_clear()
+
+
+def test_production_context_cache_key_tracks_config_changes(monkeypatch, tmp_path: Path) -> None:
+    built_configs: list[dict[str, object]] = []
+
+    def counted_build_context(**kwargs):
+        built_configs.append(kwargs)
+        return object()
+
+    monkeypatch.setattr(monitor_context, "_build_context", counted_build_context)
+    production_context.cache_clear()
+    try:
+        first = production_context()
+        monkeypatch.setattr(config, "PROJECT_ROOT", tmp_path / "project")
+        second = production_context()
+    finally:
+        production_context.cache_clear()
+
+    assert first is not second
+    assert len(built_configs) == 2
+    assert built_configs[0]["project_root"] != built_configs[1]["project_root"]
 
 
 def test_epics_and_session_streams_share_one_database_store(monkeypatch, tmp_path: Path) -> None:
