@@ -144,17 +144,20 @@ everything" cannot survive this repo's merge rate and is corporate dual-control 
 
 **8.5 — Auto-merge protocol.**
 - **Workers never merge and never arm auto-merge.** Only the driver owning that PR's lane arms it.
-- Arm **only** when all three hold: the review gate is satisfied — **no BLOCKING finding outstanding**
-  per §8.4, so a non-blocking nit does **not** hold arming · PR is **not a draft** · **no failing
-  checks**. Standard form:
-  `gh pr merge <N> --auto --squash -R <owner/repo>`.
+- Arm **only** when all three hold (landing order #7450): the review gate is satisfied — exact-head
+  cross-family CF APPROVE with **no BLOCKING finding outstanding** per §8.4 (a non-blocking nit does
+  **not** hold arming) · PR is **not a draft** · **CI Gate green on that same head** (pending is not
+  green — never arm and wait for Gate; early-armed auto-merge is how #7447–#7449 landed with empty
+  reviews). Standard form: label `automerge-ok` — the auto-arm pipeline (#7539/#7540) arms GitHub
+  auto-merge; manual `gh pr merge <N> --auto --squash -R <owner/repo>` at that fully-green point is
+  equivalent.
   Do **not** pass `--delete-branch` while this repo uses a merge queue — deleting the head
   mid-queue can close the PR without landing. Delete the remote branch only after
   `MERGED`, as part of post-merge cleanup (§7a / worktree-cleanup).
-- **Arm as early as those conditions allow, then leave it alone.** The binding policy in
-  [`workflow.md`](workflow.md) (§ auto-merge) is explicit: arm `--auto` and *"GitHub merges it when CI
-  settles, nobody babysits."* `--auto` waits for green and never bypasses blocking checks, so early
-  arming is safe and is the intended path.
+- **Arm the moment all three gates hold, then leave it alone.** The binding policy in
+  [`workflow.md`](workflow.md) (§ merge policy) matches: once armed, *"GitHub merges it,
+  nobody babysits."* A moved head makes the prior APPROVE stale — re-run exact-head CF before
+  re-arming.
 - **Our review gate is agent-enforced, not GitHub-enforced.** Branch protection may require only a
   single status check and **zero approving reviews**, so nothing external will stop a premature merge.
   That is precisely why the review gate must gate *arming*.

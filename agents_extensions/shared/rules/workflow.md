@@ -153,15 +153,20 @@ or pad. The replacement must run the exact reserved-path commands emitted by
 `context_canary.py mint --snapshot`, `questions`, and strict `score --verdict` before
 the separate challenge proof and `confirm-started` can unlock cleanup.
 
-## Merge policy — ready PRs must not sit (user directive 2026-07-07, #4703)
+## Merge policy — ready PRs must not sit (#4703; landing order #7450; auto-arm #7539)
 
-The repo setting `allow_auto_merge` is ENABLED (was the root cause of ready PRs sitting for
-hours). Every lane: the moment a PR's review gate passes (cross-family review evidence, no
-requested changes), run `gh pr merge <N> --auto --squash` — GitHub merges it when CI
-settles, nobody babysits. Do **not** pass `--delete-branch` while this repo uses a merge
-queue (head deletion mid-queue can close without landing); delete the remote branch only
-after `MERGED`. Dispatched agents still do NOT self-enable auto-merge (review gate first —
-unchanged). `--auto` waits for green and never bypasses blocking checks (#M-0.5 semantics
+The repo setting `allow_auto_merge` is ENABLED (was the root cause of ready PRs sitting
+for hours). The binding landing order (operator 2026-08-30, #7450): (1) independent
+cross-family exact-head CF APPROVE, (2) CI Gate green on that **same** head, (3) only then
+arm/queue. Never arm auto-merge ahead of either gate — early-armed auto-merge is how
+#7447–#7449 landed with empty reviews, and a moved head makes a prior APPROVE stale. Once
+both gates are green at the exact head, label the PR `automerge-ok`: the label-gated
+auto-arm pipeline (#7539/#7540) arms GitHub auto-merge on its next firing
+(`do-not-merge`/`hold` block it; manual `gh pr merge <N> --auto --squash` at that
+fully-green point is equivalent). Do **not** pass `--delete-branch` while this repo uses a
+merge queue (head deletion mid-queue can close without landing); delete the remote branch
+only after `MERGED`. Dispatched agents still do NOT self-enable auto-merge or self-label
+(review gate first — unchanged). `--auto` never bypasses blocking checks (#M-0.5 semantics
 unchanged).
 
 **Stream-scoped sweeps (user directive 2026-07-13 — parallel-stream chaos fix; supersedes the
@@ -208,13 +213,9 @@ handoff file just to survive compaction.
 SessionStart automatically runs the read-only engine detector. If it reports a
 packet, follow its exact ordered commands; it never chooses a lease by filesystem
 order and never auto-runs resume, proof, confirmation, or cleanup. A no-packet
-cold start uses a complete legacy orientation-health probe only after tool-backed
-orientation:
-
-```bash
-printf '%s\n' '[{"id":"goal","q":"What is the active durable goal?","a":"<truthful durable answer>"},{"id":"decision","q":"What durable decision constrains this task?","a":"<truthful durable answer>"},{"id":"constraint","q":"What prohibition still applies?","a":"<truthful durable answer>"},{"id":"next-action","q":"What is the next durable action?","a":"<truthful durable answer>"},{"id":"owner","q":"Who owns the active task?","a":"<truthful durable answer>"},{"id":"scope","q":"What is explicitly out of scope?","a":"<truthful durable answer>"},{"id":"evidence","q":"Which durable artifact was read?","a":"<truthful durable answer>"},{"id":"risk","q":"What unresolved risk remains?","a":"<truthful durable answer>"},{"id":"validation","q":"What validation is required?","a":"<truthful durable answer>"},{"id":"next-boundary","q":"What condition ends this session?","a":"<truthful durable answer>"}]' > .agent/orientation-health-facts.json
-.venv/bin/python scripts/context_canary.py mint --facts .agent/orientation-health-facts.json --out .agent/orientation-health-probe.json
-```
+cold start orients from durable project state with tool-backed reads — the legacy
+cold-start orientation-health canary mint is retired (operator 2026-08-31); canary
+probes exist only inside the `thread-rollover` flow.
 
 Every new durable session handoff ships as **MD brief only** (user decision 2026-07-07 —
 the HTML halves were not being read):

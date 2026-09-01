@@ -126,7 +126,8 @@ Roster facts (lanes, models, costs, when-to-use) live ONLY in the canonical serv
 `model-assignment.md` (`/api/rules`) + `docs/best-practices/agent-activity-matrix.md` — inline
 mirrors go stale (they churned on every lane rotation); consult the live sources per dispatch.
 Stable role notes only:
-- Epic/track drivers own their lanes end-to-end and SELF-MERGE their own PRs (lane model, #5269);
+- Epic/track drivers own their lanes end-to-end and land their own PRs via the #7450 landing
+  order + `automerge-ok` auto-arm pipeline (lane model, #5269; pipeline #7539);
   treat their PRs/delegates as awareness-only unless flagged `needs=main-review|merge`.
 - Review seats: prefer in-session inline for the Claude seat (a review subagent reloads full
   project context); dispatching Claude is permitted when needed (user 2026-06-22). Route the bulk
@@ -165,13 +166,18 @@ dispatch briefs.
   linter/Python-version changes, merge conflicts, failing required CI,
   cross-track architecture conflicts, or user direction changes.
 
-## Merge discipline (lane model, #5269/#0H)
-- PRs only; never commit or merge to `main` directly. Drivers SELF-MERGE their own lane's PRs after
-  an independent CROSS-FAMILY review + green blocking CI — there is no promoting orchestrator. Main
-  merges its OWN arc's PRs plus those flagged `needs=merge`.
-- A ready PR must not sit: arm `gh pr merge --auto --squash` the MOMENT the review
-  gate passes. **Never merge — or arm auto-merge on — a DRAFT, and never merge ahead of the review
-  verdict** (a pre-review draft-merge landed buggy code on a live pilot, incident 2026-07-16). One
+## Merge discipline (lane model #5269; landing order #7450; auto-arm pipeline #7539)
+- PRs only; never commit or merge to `main` directly. Drivers own their lane's landings end-to-end
+  — there is no promoting orchestrator. Main lands its OWN arc's PRs plus those flagged
+  `needs=merge`.
+- **Landing order (binding, #7450):** (1) independent CROSS-FAMILY exact-head CF APPROVE, (2) CI
+  Gate green on that same head, (3) only then queue/arm. Auto-merge armed early is NOT CF — that is
+  how #7447–#7449 landed with empty reviews. A moved head makes the prior APPROVE stale.
+- A ready PR must not sit: once CF + CI are green at the exact head, label it `automerge-ok` and the
+  label-gated auto-arm pipeline (#7539/#7540) arms GitHub auto-merge (`do-not-merge`/`hold` block;
+  the label may sit on an unreviewed PR — the pipeline arms nothing until CF attest + CI Gate are
+  green at the head). **Never arm or merge a DRAFT, and never merge ahead of the review verdict**
+  (a pre-review draft-merge landed buggy code on a live pilot, incident 2026-07-16). One
   PR = one owning lane; a fresh out-of-lane PR is hands-off unless it has sat GREEN >1 hour.
 - Blocking CI red → never `--admin`-bypass (#M-0.5). After any merge: delete branch remote+local,
   remove its worktree (worktree first), sweep stale refs at session start/close (#M-10a).
