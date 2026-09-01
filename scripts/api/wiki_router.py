@@ -64,13 +64,32 @@ def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
     return production_context()
 
 
+def _wiki_dir(ctx: MonitorContext | None = None) -> Path:
+    """Return the wiki tree for the serving context.
+
+    Fixture contexts own a project-local wiki tree.  Plain production callers
+    retain the compiler's configured path, which is also the seam used by the
+    existing wiki tests and deployment redirections.
+    """
+    resolved_ctx = _resolve_context(ctx)
+    if resolved_ctx.root is not None:
+        return resolved_ctx.roots.project_root / "wiki"
+    return Path(wiki_config.WIKI_DIR)
+
+
 def _known_tracks(ctx: MonitorContext | None = None) -> list[str]:
-    plan_root = _resolve_context(ctx).roots.curriculum_root / "plans"
-    configured = [level["id"] for level in LEVELS]
-    existing = {path.name for path in plan_root.iterdir() if path.is_dir()} if plan_root.exists() else set()
-    ordered = [track for track in configured if track in existing]
-    extras = sorted(existing - set(configured))
-    return ordered + extras
+    resolved_ctx = _resolve_context(ctx)
+    plan_root = resolved_ctx.roots.curriculum_root / "plans"
+    configured = tuple(level["id"] for level in LEVELS)
+    cache_key = f"wiki:known_tracks:{plan_root.resolve()}:{configured!r}"
+
+    def build() -> list[str]:
+        existing = {path.name for path in plan_root.iterdir() if path.is_dir()} if plan_root.exists() else set()
+        ordered = [track for track in configured if track in existing]
+        extras = sorted(existing - set(configured))
+        return ordered + extras
+
+    return resolved_ctx.runtime.get_or_create_derived(cache_key, build)
 
 
 def _track_exists(track: str, ctx: MonitorContext | None = None) -> bool:
@@ -96,7 +115,7 @@ def _track_slugs(track: str) -> list[str]:
         return []
 
 
-def _list_article_candidates() -> dict[str, list[dict[str, Any]]]:
+def _build_article_candidates(wiki_dir: Path) -> dict[str, list[dict[str, Any]]]:
     progress = wiki_state.load_progress().get("articles", {})
     candidates: dict[str, list[dict[str, Any]]] = {}
 
@@ -113,8 +132,8 @@ def _list_article_candidates() -> dict[str, list[dict[str, Any]]]:
         })
 
     known_paths = {candidate["path"] for rows in candidates.values() for candidate in rows}
-    for md_file in sorted(wiki_config.WIKI_DIR.rglob("*.md")):
-        rel = md_file.relative_to(wiki_config.WIKI_DIR)
+    for md_file in sorted(wiki_dir.rglob("*.md")):
+        rel = md_file.relative_to(wiki_dir)
         if any(part.startswith(".") for part in rel.parts):
             continue
         if rel.name == "index.md" or rel.name.startswith("."):
@@ -136,6 +155,20 @@ def _list_article_candidates() -> dict[str, list[dict[str, Any]]]:
     return candidates
 
 
+def _list_article_candidates(
+    ctx: MonitorContext | None = None,
+) -> dict[str, list[dict[str, Any]]]:
+    """Return one context-scoped snapshot of the wiki article index."""
+    resolved_ctx = _resolve_context(ctx)
+    wiki_dir = _wiki_dir(resolved_ctx)
+    state_dir = Path(wiki_state.WIKI_STATE_DIR)
+    cache_key = f"wiki:article_candidates:{wiki_dir.resolve()}:{state_dir.resolve()}"
+    return resolved_ctx.runtime.get_or_create_derived(
+        cache_key,
+        lambda: _build_article_candidates(wiki_dir),
+    )
+
+
 def _matches_track_domain(track: str, rel_path: str) -> bool:
     domains = wiki_config.TRACK_DOMAINS.get(track, [])
     if not domains:
@@ -147,9 +180,10 @@ def _resolve_article(
     track: str,
     slug: str,
     candidates_by_slug: dict[str, list[dict[str, Any]]] | None = None,
+    ctx: MonitorContext | None = None,
 ) -> dict[str, Any] | None:
     article_candidates = (
-        _list_article_candidates() if candidates_by_slug is None else candidates_by_slug
+        _list_article_candidates(ctx) if candidates_by_slug is None else candidates_by_slug
     )
     candidates = article_candidates.get(slug, [])
     if not candidates:
@@ -195,14 +229,17 @@ def _read_article_word_count(path: Path, cache: dict[Path, int]) -> int:
 def _preload_article_word_counts(
     candidates_by_slug: dict[str, list[dict[str, Any]]],
     cache: dict[Path, int],
+    wiki_dir: Path | None = None,
 ) -> None:
+    if wiki_dir is None:
+        wiki_dir = Path(wiki_config.WIKI_DIR)
     paths: list[Path] = []
     seen: set[Path] = set()
     for candidates in candidates_by_slug.values():
         for article in candidates:
             if article.get("word_count") is not None or not article.get("from_progress"):
                 continue
-            article_path = _safe_join(wiki_config.WIKI_DIR, article["path"])
+            article_path = _safe_join(wiki_dir, article["path"])
             if not article_path or not article_path.exists() or article_path in seen:
                 continue
             seen.add(article_path)
@@ -243,13 +280,13 @@ def _track_status_rows(
     _ensure_track_exists(track, ctx)
     slugs = _track_slugs(track)
     article_candidates = (
-        _list_article_candidates() if candidates_by_slug is None else candidates_by_slug
+        _list_article_candidates(ctx) if candidates_by_slug is None else candidates_by_slug
     )
     rows = []
 
     for slug in slugs:
-        article = _resolve_article(track, slug, article_candidates)
-        article_path = _safe_join(wiki_config.WIKI_DIR, article["path"]) if article else None
+        article = _resolve_article(track, slug, article_candidates, ctx=ctx)
+        article_path = _safe_join(_wiki_dir(ctx), article["path"]) if article else None
         compiled = bool(article_path and article_path.exists())
         word_count = 0
 
@@ -276,14 +313,14 @@ def _track_status_rows(
 async def wiki_status(ctx: MonitorContext = Depends(get_ctx)):
     """Per-track wiki compilation status."""
     known_tracks = _known_tracks(ctx)
-    cache_key = f"wiki_status_{wiki_config.WIKI_DIR}_" + ",".join(known_tracks)
+    cache_key = f"wiki_status_{_wiki_dir(ctx)}_" + ",".join(known_tracks)
     cached = cache_get(cache_key, ttl=60.0)
     if cached is not None:
         return cached
 
-    article_candidates = _list_article_candidates()
+    article_candidates = _list_article_candidates(ctx)
     word_count_cache: dict[Path, int] = {}
-    _preload_article_word_counts(article_candidates, word_count_cache)
+    _preload_article_word_counts(article_candidates, word_count_cache, _wiki_dir(ctx))
     tracks = []
 
     for track in known_tracks:
@@ -310,7 +347,7 @@ async def wiki_status(ctx: MonitorContext = Depends(get_ctx)):
 @router.get("/status/{track}")
 async def wiki_status_track(track: str, ctx: MonitorContext = Depends(get_ctx)):
     """Per-module wiki compilation status for one track."""
-    cache_key = f"wiki_status_track_{track}_{wiki_config.WIKI_DIR}"
+    cache_key = f"wiki_status_track_{track}_{_wiki_dir(ctx)}"
     cached = cache_get(cache_key, ttl=60.0)
     if cached is not None:
         return cached
@@ -326,7 +363,7 @@ async def wiki_article(track: str, slug: str, ctx: MonitorContext = Depends(get_
     if slug not in _track_slugs(track):
         raise HTTPException(status_code=404, detail=f"Article not found: {track}/{slug}")
 
-    article = _resolve_article(track, slug)
+    article = _resolve_article(track, slug, ctx=ctx)
     source_count = article.get("source_count") if article else _source_count(track, slug)
 
     if not article:
@@ -341,7 +378,7 @@ async def wiki_article(track: str, slug: str, ctx: MonitorContext = Depends(get_
             "compiled_at": None,
         }
 
-    article_path = _safe_join(wiki_config.WIKI_DIR, article["path"])
+    article_path = _safe_join(_wiki_dir(ctx), article["path"])
     if article_path is None:
         return {
             "track": track,

@@ -463,6 +463,17 @@ def _extract_policy_exemptions(policy_doc: Path) -> list[str]:
     return sorted(set(patterns or FALLBACK_EXEMPTION_PATTERNS))
 
 
+def _policy_exemption_patterns(ctx: MonitorContext) -> list[str]:
+    """Return the policy snapshot retained by the serving context."""
+    policy_doc = _policy_doc(ctx.roots.project_root)
+    cache_key = f"git_hygiene:policy_exemptions:{policy_doc.resolve()}"
+    snapshot = ctx.runtime.get_or_create_derived(
+        cache_key,
+        lambda: tuple(_extract_policy_exemptions(policy_doc)),
+    )
+    return list(snapshot)
+
+
 def _matches_pattern(path: str, pattern: str) -> bool:
     normalized = path.strip("/")
     normalized_pattern = pattern.strip()
@@ -665,14 +676,22 @@ def _suggestions(buckets: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
     return suggestions
 
 
-def compute_git_hygiene(project_root: Path | None = None) -> dict[str, Any]:
+def compute_git_hygiene(
+    project_root: Path | None = None,
+    *,
+    ctx: MonitorContext | None = None,
+) -> dict[str, Any]:
+    resolved_ctx = _resolve_context(ctx) if ctx is not None or project_root is None else None
     if project_root is None:
-        project_root = _resolve_context().roots.live_repo_root
+        assert resolved_ctx is not None
+        project_root = resolved_ctx.roots.live_repo_root
 
     started = time.perf_counter()
     generated_at = _isoformat_z(datetime.now(UTC))
-    policy_doc = _policy_doc(project_root)
-    exemption_patterns = _extract_policy_exemptions(policy_doc)
+    if resolved_ctx is not None:
+        exemption_patterns = _policy_exemption_patterns(resolved_ctx)
+    else:
+        exemption_patterns = _extract_policy_exemptions(_policy_doc(project_root))
 
     code, stdout, stderr = _run_git(
         ["status", "--short", "--porcelain=v1", "--untracked-files=all"],
@@ -752,7 +771,7 @@ def compute_git_hygiene(project_root: Path | None = None) -> dict[str, Any]:
 @router.get("/hygiene")
 async def git_hygiene(ctx: MonitorContext = Depends(get_ctx)):
     """Classify current working-tree drift into actionable buckets."""
-    return await asyncio.to_thread(compute_git_hygiene, ctx.roots.live_repo_root)
+    return await asyncio.to_thread(compute_git_hygiene, ctx.roots.live_repo_root, ctx=ctx)
 
 
 @router.get("/cleanup", response_model=CleanupReport, response_model_exclude_none=True)

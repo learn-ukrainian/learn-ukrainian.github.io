@@ -153,6 +153,7 @@ _IN_FLIGHT_LOCK = threading.Lock()
 _WORKER_LOOP: asyncio.AbstractEventLoop | None = None
 _WORKER_THREAD: threading.Thread | None = None
 _WORKER_LOOP_LOCK = threading.Lock()
+_WORKER_FUTURES: set[concurrent.futures.Future[Any]] = set()
 
 
 def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
@@ -197,6 +198,44 @@ def _ensure_worker_loop() -> asyncio.AbstractEventLoop:
         _WORKER_LOOP = loop
         _WORKER_THREAD = thread
         return loop
+
+
+def shutdown_worker_loop(*, join_timeout_s: float = 1.0) -> bool:
+    """Stop the shared projection loop once all context work has settled."""
+    global _WORKER_LOOP, _WORKER_THREAD
+    with _WORKER_LOOP_LOCK:
+        loop = _WORKER_LOOP
+        thread = _WORKER_THREAD
+        active = {future for future in _WORKER_FUTURES if not future.done()}
+        _WORKER_FUTURES.intersection_update(active)
+    if loop is None or thread is None:
+        return True
+    if active:
+        return False
+
+    if loop.is_running():
+        async def stop_loop() -> None:
+            await loop.shutdown_default_executor()
+            loop.stop()
+
+        # CF finding (PR #7571): never wait on the stop future — loop.stop()
+        # halts the loop before the future's done-callback dispatches, so a
+        # result(timeout=...) ALWAYS burned the full timeout (~21s app
+        # shutdown stall). Dispatch the stop and join the thread instead.
+        with contextlib.suppress(RuntimeError):
+            asyncio.run_coroutine_threadsafe(stop_loop(), loop)
+    if thread is not threading.current_thread() and thread.is_alive():
+        thread.join(timeout=join_timeout_s)
+    if thread.is_alive():
+        return False
+
+    with _WORKER_LOOP_LOCK:
+        if _WORKER_LOOP is loop:
+            _WORKER_LOOP = None
+            _WORKER_THREAD = None
+    with contextlib.suppress(RuntimeError):
+        loop.close()
+    return True
 
 
 async def _run_build_job(
@@ -265,7 +304,8 @@ def _ensure_in_flight(
     ctx: MonitorContext | None = None,
 ) -> concurrent.futures.Future[dict[str, Any]]:
     """Start or join the single-flight build; never tied to the request loop."""
-    slots = _in_flight_builds(ctx)
+    resolved_ctx = _resolve_context(ctx)
+    slots = _in_flight_builds(resolved_ctx)
     with _IN_FLIGHT_LOCK:
         existing = slots.get(key)
         if existing is not None and not existing.done():
@@ -301,10 +341,51 @@ def _ensure_in_flight(
         _clear(handle)
         raise
 
+    with _WORKER_LOOP_LOCK:
+        _WORKER_FUTURES.add(cfut)
+
+    def _forget_worker_future(future: concurrent.futures.Future[Any]) -> None:
+        with _WORKER_LOOP_LOCK:
+            _WORKER_FUTURES.discard(future)
+
+    cfut.add_done_callback(_forget_worker_future)
+    resolved_ctx.runtime.register_background_work(cfut)
     cfut.add_done_callback(_clear)
     cfut.add_done_callback(_consume_build_failure)
     cfut.add_done_callback(_finish_handle)
     return handle
+
+
+async def drain_context_background_work(
+    ctx: MonitorContext,
+    *,
+    timeout_s: float = NEXT_BUILD_TIMEOUT_S + 1.0,
+) -> None:
+    """Await this context's projection work and retire its worker loop."""
+    futures: list[concurrent.futures.Future[Any]] = []
+    seen: set[int] = set()
+    for future in (*ctx.runtime.background_work(), *(ctx.stores.work_in_flight or {}).values()):
+        if not isinstance(future, concurrent.futures.Future) or id(future) in seen:
+            continue
+        seen.add(id(future))
+        futures.append(future)
+
+    loop = asyncio.get_running_loop()
+    deadline = loop.time() + timeout_s
+    for future in futures:
+        remaining = deadline - loop.time()
+        if remaining <= 0:
+            log.warning("context background work did not drain before shutdown deadline")
+            break
+        try:
+            await asyncio.wait_for(asyncio.wrap_future(future), timeout=remaining)
+        except TimeoutError:
+            log.warning("context background work timed out during shutdown")
+            break
+        except Exception as exc:
+            log.warning("context background work failed during shutdown: %s", type(exc).__name__)
+
+    shutdown_worker_loop(join_timeout_s=max(0.0, deadline - loop.time()))
 
 
 def _get_or_create_build_task(

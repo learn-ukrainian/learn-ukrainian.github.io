@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+import inspect
 import os
+import threading
 from collections.abc import Callable, Iterator, Mapping
 from dataclasses import dataclass, field, replace
+from functools import lru_cache
 from pathlib import Path
 from types import MappingProxyType
 from typing import Any
@@ -104,6 +107,93 @@ class MonitorStores:
             yield name, getattr(self, name)
 
 
+@dataclass
+class MonitorRuntime:
+    """Mutable lifetime state owned by one :class:`MonitorContext`.
+
+    ``MonitorContext`` itself remains frozen so roots and store wiring cannot
+    drift after app construction.  This small runtime holder is the safe home
+    for lazy, immutable snapshots and for work/resources that must be drained
+    when the app exits.
+    """
+
+    _derived: dict[str, Any] = field(default_factory=dict, repr=False)
+    _resources: list[Any] = field(default_factory=list, repr=False)
+    _background_work: set[Any] = field(default_factory=set, repr=False)
+    _lock: threading.RLock = field(default_factory=threading.RLock, repr=False)
+
+    def get_or_create_derived(self, key: str, factory: Callable[[], Any]) -> Any:
+        """Return one context-scoped derived snapshot for ``key``."""
+        with self._lock:
+            if key not in self._derived:
+                self._derived[key] = factory()
+            return self._derived[key]
+
+    def get_or_create_resource(
+        self,
+        key: str,
+        factory: Callable[[], Any],
+    ) -> Any:
+        """Return one lazily-created context resource and retain its owner."""
+        with self._lock:
+            if key in self._derived:
+                return self._derived[key]
+            resource = factory()
+            self._derived[key] = resource
+            if resource not in self._resources:
+                self._resources.append(resource)
+            return resource
+
+    def register_resource(self, resource: Any) -> Any:
+        """Register an eagerly-created resource exactly once."""
+        with self._lock:
+            if resource not in self._resources:
+                self._resources.append(resource)
+        return resource
+
+    def register_background_work(self, work: Any) -> Any:
+        """Track a future-like context task until it settles."""
+        with self._lock:
+            self._background_work.add(work)
+
+        add_done_callback = getattr(work, "add_done_callback", None)
+        if callable(add_done_callback):
+            add_done_callback(self._forget_background_work)
+        return work
+
+    def _forget_background_work(self, work: Any) -> None:
+        with self._lock:
+            self._background_work.discard(work)
+
+    def background_work(self) -> tuple[Any, ...]:
+        """Return a stable snapshot of not-yet-drained context work."""
+        with self._lock:
+            return tuple(self._background_work)
+
+    def resources(self) -> tuple[Any, ...]:
+        """Return resources retained by this context."""
+        with self._lock:
+            return tuple(self._resources)
+
+    async def close_resources(self, *extra: Any) -> None:
+        """Close retained resources and any explicitly supplied replacements."""
+        resources: list[Any] = []
+        seen: set[int] = set()
+        for resource in (*self.resources(), *extra):
+            if resource is None or id(resource) in seen:
+                continue
+            seen.add(id(resource))
+            resources.append(resource)
+
+        for resource in resources:
+            close = getattr(resource, "close", None)
+            if not callable(close):
+                continue
+            result = close()
+            if inspect.isawaitable(result):
+                await result
+
+
 @dataclass(frozen=True)
 class MonitorContext:
     """Immutable roots plus the store handles for one Monitor app instance."""
@@ -111,6 +201,7 @@ class MonitorContext:
     roots: MonitorRoots
     stores: MonitorStores
     root: Path | None = field(default=None, repr=False, compare=False)
+    runtime: MonitorRuntime = field(default_factory=MonitorRuntime, repr=False, compare=False)
 
     def _resolve_db_path(self, database: os.PathLike[str] | str) -> Path:
         """Resolve a database target and enforce a fixture root, if present."""
@@ -186,7 +277,6 @@ def _roots(
 def _stores(context: MonitorContext, *, fixture: bool) -> MonitorStores:
     roots = context.roots
     session_database = context._open_db(roots.session_streams_db_path, session_streams=True)
-    epics_database = context._open_db(roots.epics_db_path, session_streams=True)
 
     if fixture:
         presence_store: dict[Any, Any] = {}
@@ -213,12 +303,14 @@ def _stores(context: MonitorContext, *, fixture: bool) -> MonitorStores:
     images_dir = roots.images_dir or (roots.project_root / "data" / "textbook_images")
     textbooks_dir = roots.textbooks_dir or (roots.project_root / "data" / "textbooks")
     annotations_file = images_dir / "image_text_pairs.jsonl"
+    session_store = SessionStreamStore(session_database)
     image_store = ImageStore(
         images_dir=images_dir,
         textbooks_dir=textbooks_dir,
         annotations_file=annotations_file,
         project_root=roots.project_root,
     )
+    context.runtime.register_resource(image_store)
 
     return MonitorStores(
         sources_db=DatabaseHandle(roots.sources_db_path, context._open_db),
@@ -226,9 +318,12 @@ def _stores(context: MonitorContext, *, fixture: bool) -> MonitorStores:
         presence_store=presence_store,
         report_store=report_store,
         session_streams_database=session_database,
-        session_streams_store=SessionStreamStore(session_database),
-        epics_database=epics_database,
-        epics_store=SessionStreamStore(epics_database),
+        session_streams_store=session_store,
+        # Migration note: migrate legacy standalone epics.db data into this DB before startup.
+        # Epics and session streams intentionally share one database handle and
+        # store: both are projections over the same context-owned file.
+        epics_database=session_database,
+        epics_store=session_store,
         image_store=image_store,
         work_in_flight=work_in_flight,
     )
@@ -261,23 +356,49 @@ def _build_context(
     return replace(context, stores=_stores(context, fixture=fixture))
 
 
-def production_context() -> MonitorContext:
-    """Build a context from the current production configuration resolution."""
-    project_root = Path(config.PROJECT_ROOT)
-    live_repo_root = Path(config.LIVE_REPO_ROOT)
+@lru_cache(maxsize=1)
+def _cached_production_context(
+    project_root: Path,
+    live_repo_root: Path,
+    dashboards_dir: Path,
+    batch_state_dir: Path,
+    curriculum_root: Path,
+    message_db_path: Path,
+    session_streams_db_path: Path,
+    backup_dir: Path,
+) -> MonitorContext:
     return _build_context(
         project_root=project_root,
         live_repo_root=live_repo_root,
-        dashboards_dir=Path(config.DASHBOARDS_DIR),
-        batch_state_dir=Path(config.BATCH_STATE_DIR),
-        curriculum_root=Path(config.CURRICULUM_ROOT),
-        message_db_path=Path(config.MESSAGE_DB),
-        session_streams_db_path=default_database_path(live_repo_root),
-        backup_dir=Path(
-            os.environ.get("BACKUP_DIR", str(project_root / "data" / "backups"))
-        ),
+        dashboards_dir=dashboards_dir,
+        batch_state_dir=batch_state_dir,
+        curriculum_root=curriculum_root,
+        message_db_path=message_db_path,
+        session_streams_db_path=session_streams_db_path,
+        backup_dir=backup_dir,
         fixture=False,
     )
+
+
+def production_context() -> MonitorContext:
+    """Build a cached context keyed by the current production configuration."""
+    project_root = Path(config.PROJECT_ROOT)
+    live_repo_root = Path(config.LIVE_REPO_ROOT)
+    return _cached_production_context(
+        project_root,
+        live_repo_root,
+        Path(config.DASHBOARDS_DIR),
+        Path(config.BATCH_STATE_DIR),
+        Path(config.CURRICULUM_ROOT),
+        Path(config.MESSAGE_DB),
+        default_database_path(live_repo_root),
+        Path(os.environ.get("BACKUP_DIR", str(project_root / "data" / "backups"))),
+    )
+
+
+# Preserve the cache lifecycle hook used by tests and operational callers while
+# keeping configuration resolution outside the cached zero-argument wrapper.
+production_context.cache_clear = _cached_production_context.cache_clear  # type: ignore[attr-defined]
 
 
 def fixture_context(root: os.PathLike[str] | str) -> MonitorContext:
@@ -300,6 +421,7 @@ __all__ = [
     "DatabaseHandle",
     "MonitorContext",
     "MonitorRoots",
+    "MonitorRuntime",
     "MonitorStores",
     "fixture_context",
     "get_ctx",
