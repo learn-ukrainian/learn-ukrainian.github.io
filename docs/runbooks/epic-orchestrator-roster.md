@@ -113,7 +113,7 @@ Exact tables below must match `scripts/config/model_catalog.yaml` → `orchestra
 | seat | model_id | effort | escalate_model_id | escalate_effort |
 | --- | --- | --- | --- | --- |
 | agy | gemini-3.7-flash-high | high | gemini-3.1-pro-high | high |
-| claude | claude-fable-5 | high | gpt-5.6-sol | xhigh |
+| claude | claude-fable-5-1 | high | gpt-5.6-sol | xhigh |
 | codex | gpt-5.6-terra | high | gpt-5.6-sol | xhigh |
 | cursor | auto | high | gpt-5.6-sol | xhigh |
 | grok | grok-4.6 | high | grok-4.6 | high |

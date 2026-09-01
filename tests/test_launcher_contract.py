@@ -554,6 +554,41 @@ def test_session_and_durable_helper_roots_are_deliberately_distinct() -> None:
     assert "durable_helper_dir" in route
 
 
+def test_linked_worktree_helper_calls_use_durable_helper_python(tmp_path: Path) -> None:
+    """A linked worktree has no own .venv; observer heartbeat and lease close must
+    run the durable helper root's interpreter (#F2, prompt audit r3)."""
+    session_root = tmp_path / "worktree"
+    session_root.mkdir()  # deliberately no session_root/.venv
+    helper_root = tmp_path / "primary"
+    log = tmp_path / "invocations.log"
+    stub = helper_root / ".venv" / "bin" / "python"
+    stub.parent.mkdir(parents=True)
+    stub.write_text(
+        "#!/usr/bin/env bash\n"
+        f"printf '%s\\n' \"$@\" >> {log}\n",
+        encoding="utf-8",
+    )
+    stub.chmod(0o755)
+    script = f"""
+set -euo pipefail
+LC_PROVIDER=cursor
+LC_MODE=driver
+LC_DRY_RUN=0
+LC_EPIC=devops
+LC_ROOT={session_root}
+LC_SESSION_ROOT={session_root}
+LC_DURABLE_HELPER_ROOT={helper_root}
+source {REPO / 'scripts' / 'lib' / 'launcher_core.sh'}
+launcher_cursor_observer_presence
+launcher_close_driver_lease
+"""
+    result = subprocess.run(["bash", "-c", script], text=True, capture_output=True, check=False, timeout=30)
+    assert result.returncode == 0, result.stderr
+    body = log.read_text(encoding="utf-8")
+    assert "-m\nscripts.orchestration.observer_heartbeat\n" in body
+    assert "-m\nscripts.session_supervisor\nclose\n--role\ndriver\n" in body
+
+
 def test_compat_wrappers_forward_to_shared_adapters() -> None:
     kimicc = (REPO / "start-kimicc.sh").read_text(encoding="utf-8")
     glmcc = (REPO / "start-glmcc.sh").read_text(encoding="utf-8")
@@ -623,3 +658,9 @@ def test_claude_driver_injects_lane_agent_type() -> None:
     assert explicit.returncode == 0, explicit.stderr
     assert "would select agent" not in explicit.stdout
     assert "would exec claude --agent curriculum-orchestrator " in explicit.stdout
+
+    # Stream aliases (fleet_taxonomy.yaml) must not fall back to the curriculum
+    # settings default: atlas-practice canonicalizes to the atlas area (#F1, r3).
+    alias = run_launcher("start-claude-driver.sh", "--epic", "atlas-practice")
+    assert alias.returncode == 0, alias.stderr
+    assert "launcher: would select agent infra-orchestrator for lane atlas-practice" in alias.stdout

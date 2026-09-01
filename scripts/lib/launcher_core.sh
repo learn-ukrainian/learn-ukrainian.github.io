@@ -283,7 +283,8 @@ launcher_normalize_model() {
   # Claude omits --model unless asked (interactive and driver). Short aliases
   # normalize to roster identifiers when a model is provided.
   case "$LC_PROVIDER:$LC_MODEL" in
-    claude:fable) LC_MODEL='claude-fable-5' ;;
+    claude:fable) LC_MODEL='claude-fable-5-1' ;;
+    claude:fable-5|claude:claude-fable-5) LC_MODEL='claude-fable-5' ;;  # legacy alias
     claude:sonnet) LC_MODEL='claude-sonnet-5' ;;
     claude:opus|claude:opus-5) LC_MODEL='claude-opus-5' ;;
   esac
@@ -384,7 +385,7 @@ launcher_validate_driver_certification() {
     return 0
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
-    claude:claude-opus-5|claude:claude-fable-5|claude:claude-sonnet-5|codex:gpt-5.6-terra|codex:gpt-5.6-luna|codex:gpt-5.6-sol|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.6|cursor:auto|cursor:grok-4.6|cursor:composer-2.5)
+    claude:claude-opus-5|claude:claude-fable-5|claude:claude-fable-5-1|claude:claude-sonnet-5|codex:gpt-5.6-terra|codex:gpt-5.6-luna|codex:gpt-5.6-sol|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.6|cursor:auto|cursor:grok-4.6|cursor:composer-2.5)
       return 0
       ;;
     *)
@@ -464,7 +465,8 @@ launcher_cursor_observer_presence() {
   fi
   local task_id
   task_id="${SESSION_TASK_ID:-${LC_EPIC:-cursor-driver}}"
-  "$LC_SESSION_ROOT/.venv/bin/python" -m scripts.orchestration.observer_heartbeat \
+  # Linked worktrees carry no venv; the durable helper root does.
+  "${LC_DURABLE_HELPER_ROOT:-$LC_SESSION_ROOT}/.venv/bin/python" -m scripts.orchestration.observer_heartbeat \
     --agent cursor \
     --task-id "$task_id" \
     --epic "$LC_EPIC" \
@@ -520,7 +522,7 @@ launcher_driver_renew_loop() {
       if ! kill -0 "$child_pid" 2>/dev/null; then
         break
       fi
-      if heartbeat_error="$($LC_ROOT/.venv/bin/python -m scripts.session_supervisor heartbeat --role driver 2>&1 >/dev/null)"; then
+      if heartbeat_error="$("${LC_DURABLE_HELPER_ROOT:-$LC_ROOT}/.venv/bin/python" -m scripts.session_supervisor heartbeat --role driver 2>&1 >/dev/null)"; then
         renew_started=$SECONDS
         continue
       fi
@@ -557,7 +559,8 @@ launcher_close_driver_lease() {
 
   local attempt
   for attempt in 1 2; do
-    if "$LC_SESSION_ROOT/.venv/bin/python" \
+    # Linked worktrees carry no venv; the durable helper root does.
+    if "${LC_DURABLE_HELPER_ROOT:-$LC_SESSION_ROOT}/.venv/bin/python" \
         -m scripts.session_supervisor close --role driver >/dev/null 2>&1; then
       LC_DRIVER_LEASE_CLOSED=1
       return 0

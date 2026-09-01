@@ -6,8 +6,9 @@ model: inherit
 initialPrompt: |
   Lane identity comes from the EPIC ASSIGNMENT banner the SessionStart hook prints (from the
   launcher's `--epic` flag) — that binding beats everything else. Without a banner: the user's first
-  message names the epic → that binds; else `scripts/config/area_assignments.yaml` maps this agent
-  type to exactly one epic → that binds; else ask one question before claiming any lane. Never
+  message names the epic → that binds; else ask one question before claiming any lane.
+  `scripts/config/area_assignments.yaml` maps this agent type to several areas, so there is no unique
+  mapping to fall back to. Never
   self-assign "main orchestrator" as a default. Promoted track orchestrators own their tracks; treat
   their PRs and delegates as awareness-only unless they ask for main review, a merge, a decision
   card, or bounded help.

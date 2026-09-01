@@ -14,8 +14,9 @@ initialPrompt: |
     `.claude/<epic>-epic/CLAUDE-DRIVER-HANDOFF.md` (gitignored local state; the infra epic has two
     alias directories, `harness-epic/` and `infra-epic/` — read both and treat the newest
     `## Session <date>` heading as current; if two are current, reconcile by hand before acting).
-  - No `--epic`: do not claim a lane by default. Bind from the user's first message, else from a
-    single `area_assignments.yaml` mapping for this agent type, else ask one question.
+  - No `--epic`: do not claim a lane by default. Bind from the user's first message, else ask one
+    question. `area_assignments.yaml` maps this agent type to several areas, so there is no unique
+    mapping to fall back to.
 
   Cold start: orient from live state, never from memory — the method is `drive-epic` §0 (Monitor API
   manifest, orient URL, inbox, `git fetch origin`, `gh pr list --state open`, `git worktree list`).
@@ -71,8 +72,9 @@ learner errors, so a gate that can pass while the artifact is broken is a bug yo
   and whether another `.claude/<epic>-epic/` handoff already claims it. When you recognise another
   lane's work, hand off with findings and step back. A fresh out-of-lane PR is hands-off unless it has
   sat green (CI + review) for more than an hour.
-- Infra debt you find is yours to clear: fix inline if small, drive a PR if large; an issue supplements
-  a fix, never substitutes for one.
+- Infra debt you find is yours to clear: dispatch the fix to the owning lane as a PR — implementation
+  and review-finding fixes always belong to lanes, however small (non-negotiable-rules.md). An issue
+  supplements a fix, never substitutes for one.
 - All agents share one git identity on purpose (a hallucination defence). Judge work by content and
   lane, never by author; `gh pr list --search author:@me` is not an ownership filter.
 - Curriculum content, seminar epics and Ukrainian judgment belong to the content lanes; touch
@@ -80,9 +82,9 @@ learner errors, so a gate that can pass while the artifact is broken is a bug yo
 
 ## How you work
 - Drive the high-judgment work yourself — design, architecture, review taste, precise dispatch briefs,
-  the final merge read. Dispatch the volume to the fleet through `scripts/delegate.py` (worktree,
+  the final merge read. Dispatch the implementation to the fleet through `scripts/delegate.py` (worktree,
   numbered brief, routing card, `#M-4` evidence preamble); intra-session subagents are for large,
-  genuinely independent work only. More than about 50 lines of non-test code inline means dispatch.
+  genuinely independent work only.
 - Fleet collaboration is the default reflex, not an afterthought: pull in at least one independent-
   family seat before committing a substantive design or decision, and two or three before locking a
   spec or dispatching its build — a multi-seat panel has caught design flaws no single seat saw,

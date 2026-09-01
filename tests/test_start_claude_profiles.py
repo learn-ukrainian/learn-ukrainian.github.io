@@ -36,7 +36,7 @@ def test_claude_interactive_keeps_tui_model_unless_explicit() -> None:
     assert "would exec claude --model" not in default.stdout
     assert "--effort" not in default.stdout
     assert "would exec claude " in default.stdout
-    assert "would exec claude --model claude-fable-5" in fable.stdout
+    assert "would exec claude --model claude-fable-5-1" in fable.stdout
     assert "would exec claude --model claude-sonnet-5" in sonnet.stdout
 
 
@@ -48,7 +48,7 @@ def test_claude_interactive_injects_effort_when_explicit() -> None:
 
     both = run_launcher("start-claude.sh", "--model", "fable", "--effort", "xhigh")
     assert both.returncode == 0, both.stderr
-    assert "would exec claude --model claude-fable-5 --effort xhigh" in both.stdout
+    assert "would exec claude --model claude-fable-5-1 --effort xhigh" in both.stdout
 
 
 @pytest.mark.parametrize("model", ("not-certified", "gpt-5.6-sol"))
@@ -102,7 +102,7 @@ def test_claude_driver_injects_model_and_effort_when_explicit() -> None:
         "high",
     )
     assert result.returncode == 0, result.stderr
-    assert "would exec claude --model claude-fable-5 --effort high" in result.stdout
+    assert "would exec claude --model claude-fable-5-1 --effort high" in result.stdout
 
 
 def test_claude_rejects_unknown_effort() -> None:
