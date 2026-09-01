@@ -1,4 +1,4 @@
-"""Integration coverage for the tracked ``core.hooksPath`` chain."""
+"""Integration coverage for the tracked Git hook delegator chain."""
 
 from __future__ import annotations
 
@@ -50,8 +50,13 @@ def _run(
     )
 
 
-def _git(repo: Path, *args: str, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
-    return _run(["git", *args], cwd=repo, env=env)
+def _git(
+    repo: Path,
+    *args: str,
+    env: dict[str, str] | None = None,
+    check: bool = True,
+) -> subprocess.CompletedProcess[str]:
+    return _run(["git", *args], cwd=repo, env=env, check=check)
 
 
 def _write_executable(path: Path, text: str) -> None:
@@ -175,8 +180,9 @@ def test_installer_and_all_hook_functions_run(tmp_path):
     hook_log = Path(env["HOOK_LOG"])
 
     install = _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
-    assert "complete tracked Git hook chain" in install.stdout
-    assert _git(repo, "config", "--get", "core.hooksPath", env=env).stdout.strip() == ".githooks"
+    assert install.returncode == 0
+    assert "pre-commit: installed" in install.stdout
+    assert _git(repo, "config", "--get", "core.hooksPath", env=env, check=False).returncode != 0
 
     _git(repo, "checkout", "-b", "feature", env=env)
     (repo / "docs.md").write_text("docs-only change\n", encoding="utf-8")
@@ -204,9 +210,9 @@ def test_installer_and_all_hook_functions_run(tmp_path):
     assert updates[0].split()[2] == "refs/heads/main"
 
 
-def test_installer_refuses_an_incomplete_hook_directory(tmp_path):
+def test_installer_refuses_missing_hook_directory(tmp_path):
     repo, _, env = _fixture_repository(tmp_path)
-    (repo / ".githooks/commit-msg").unlink()
+    shutil.rmtree(repo / ".githooks")
 
     result = _run(
         ["bash", "scripts/install_git_hooks.sh"],
@@ -216,7 +222,7 @@ def test_installer_refuses_an_incomplete_hook_directory(tmp_path):
     )
 
     assert result.returncode == 1
-    assert "Expected executable hook" in result.stderr
+    assert "Tracked hooks directory not found" in result.stderr
 
 
 def test_post_checkout_heals_even_when_lfs_fails(tmp_path):

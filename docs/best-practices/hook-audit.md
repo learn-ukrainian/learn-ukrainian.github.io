@@ -1,8 +1,8 @@
 # Harness hook audit (2026-08-06)
 
-**Owner:** fleet / harness  
-**Operator GO:** side project while atlas continues  
-**Status:** tooling + Grok/Claude split + measured optimizations landed this PR  
+**Owner:** fleet / harness
+**Operator GO:** side project while atlas continues
+**Status:** tooling + Grok/Claude split + measured optimizations landed this PR
 
 ## Failure mode
 
@@ -20,6 +20,17 @@ compat scanning of `.claude/settings.json`.
 | `agents_extensions/codex/hooks.json` | Codex lifecycle | SessionStart + serialized pre-tool policy |
 | Grok native `~/.grok/hooks` | Optional thin Grok hooks | Empty by default |
 | Grok Claude-compat | Merges project Claude hooks when trusted | **On by default** — main footgun |
+| `.githooks/*` (via `$GIT_COMMON_DIR/hooks`) | Git lifecycle delegators | Low overhead per git action |
+
+## Git hooks and Entire CLI delegator architecture
+
+Tracked hook source files live in `.githooks/` as the single source of truth across all linked worktrees. Historically, `scripts/install_git_hooks.sh` set `core.hooksPath=.githooks`. However, when Entire CLI is enabled (via `.entire/settings.json`), its session lifecycle auto-installs git hook wrappers into whichever directory `core.hooksPath` points at. If `core.hooksPath` points at `.githooks`, Entire overwrites the tracked files and creates untracked artifacts (`*.pre-entire`, `prepare-commit-msg`, `post-rewrite`), leaving the primary checkout dirty and breaking automated dispatch and handoff gates.
+
+To prevent dirty checkout drift while preserving Entire CLI functionality:
+- `core.hooksPath` is kept **unset** (or cleared if set to `.githooks`).
+- `scripts/install_git_hooks.sh` writes untracked delegator scripts into the Git common hooks directory (`$GIT_COMMON_DIR/hooks/`).
+- Each delegator dynamically resolves the current worktree root (`git rev-parse --show-toplevel`) and delegates to `$root/.githooks/<name>` if executable.
+- When Entire CLI is present, Entire installs its wrapper at `$GIT_COMMON_DIR/hooks/<name>` and chains to `<name>.pre-entire`. The installer detects the `# Entire CLI hooks` marker and places the delegator at `$GIT_COMMON_DIR/hooks/<name>.pre-entire`, preserving Entire's wrapper chain in the untracked common hooks dir without touching tracked files.
 
 ## Keep / drop matrix
 
