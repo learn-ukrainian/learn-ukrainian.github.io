@@ -13,23 +13,13 @@
 import WordAtlasArticle from "./WordAtlasArticle";
 import AtlasTypeahead from "./AtlasTypeahead.astro";
 import type { WordAtlasPageState } from "../lib/lexicon/word-atlas-page-state";
-import searchAliases from "../data/lexicon-search-aliases.json";
-import searchArticles from "../data/lexicon-search-index.json";
-import {
-  buildAtlasLinkCatalogFromSearchRows,
-  type AtlasSearchAliasRow,
-  type AtlasSearchArticleRow,
-} from "../lib/lexicon/word-atlas-article-model";
+import { atlasLinkCatalog } from "../lib/lexicon/atlas-link-catalog";
 
 interface Props {
   state: WordAtlasPageState;
 }
 
 const { state } = Astro.props as Props;
-const atlasLinkCatalog = buildAtlasLinkCatalogFromSearchRows(
-  searchArticles as AtlasSearchArticleRow[],
-  searchAliases as AtlasSearchAliasRow[],
-);
 ---
 
 {state.status === "ready" ? (
