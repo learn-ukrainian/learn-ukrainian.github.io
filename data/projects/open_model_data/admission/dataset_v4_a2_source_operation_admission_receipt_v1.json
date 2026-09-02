@@ -1,0 +1,555 @@
+{
+  "schema_version": "dataset_v4_a2_source_operation_admission_receipt_v1",
+  "receipt_id": "dataset-v4-a2-source-operation-admission-v1",
+  "status": "A2_SOURCE_OPERATION_RECEIPT_COMPLETE",
+  "text_free": true,
+  "controlling_outcome_sha256": "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20",
+  "control_surfaces": {
+    "public_control_issue": 7423,
+    "pilot_child_issue": 7430,
+    "private_operational_board": 622
+  },
+  "bindings": {
+    "slot_manifest": {
+      "path": "data/projects/open_model_data/admission/dataset_v4_pilot_slot_manifest_v1.json",
+      "sha256": "51002db3decf8055478f3662f3f3f3c8afa9936fa2a2200724bd01b025627a13",
+      "schema_version": "dataset_v4_pilot_slot_manifest_v1"
+    },
+    "public_external_admission": {
+      "path": "data/projects/open_model_data/admission/public_external_accepted_admission_receipt_v1.json",
+      "sha256": "1359e2d2067795c4246be93cb4187d708b22a9d7af406e089d5ac087095c09d4",
+      "schema_version": "corpus_admission_receipt_v1"
+    },
+    "capability_policy": {
+      "path": "data/projects/open_model_data/evidence/source_capability_policy_v1.json",
+      "sha256": "3a4a3af2edb1f7d68ebec8717e617ba8465ec26e74c29b408812ef1503aa6c60",
+      "schema_version": "source_capability_policy_v1"
+    },
+    "wikipedia_rights_evidence": {
+      "path": "data/projects/open_model_data/admission/wikipedia_primary_rights_evidence_v1.json",
+      "sha256": "be71135b39a7972d6dfe75a2a0f0dec7726b02ff728641f6b2c8cef3ea8b5ec1",
+      "schema_version": "corpus_admission_evidence_v1"
+    },
+    "historical_protection_channels": {
+      "path": "data/projects/open_model_data/admission/phase3_historical_protection_channels_v1.json",
+      "sha256": "837e826ca2a4eb005def3ef438ef7e4e29c58e87414ee80ab482ee3fe8591654",
+      "schema_version": "phase3_historical_protection_channels_v1",
+      "historical_only": true
+    },
+    "modern_contact_channels": {
+      "path": "data/projects/open_model_data/admission/phase3_modern_contact_channels_v1.json",
+      "sha256": "573e7d9b7c25f1d09a874e70a6f1ac573d14c228c86f9a67d619e70b07a8160a",
+      "schema_version": "phase3_modern_contact_channels_v1",
+      "historical_only": true
+    },
+    "aggregate_inventory_summary": {
+      "path": "data/projects/open_model_data/inventory/aggregate_summary_v1.json",
+      "sha256": "8906e28a0073c9ab1da622558cd189a6131c18c1d7bf96b9daa6308c59f606b5",
+      "schema_version": "existing_asset_inventory_summary_v1"
+    },
+    "historical_p4_receipt": {
+      "path": "data/projects/open_model_data/admission/phase3_p4_pilot_construction_v1.json",
+      "sha256": "d12ed8d0827263cf5c31f049c518cf90befb4fdf4ca5cb5b413d51b17a1ec4dd",
+      "schema_version": "phase3_p4_pilot_construction_v1",
+      "historical_only": true
+    },
+    "inventory_ledger": {
+      "path": "data/projects/open_model_data/inventory/recovery_ledger_v1.jsonl",
+      "sha256": "ac6a1da8db2dbfbf831e74d58d987674c06ebaeca7b8067aad1ee6c353d196bf",
+      "schema_version": "existing_asset_inventory_v1"
+    }
+  },
+  "frozen_denominator": {
+    "total_slots": 100,
+    "strata": [
+      {
+        "stratum": "standard_correct",
+        "frozen_slots": 15,
+        "first_slot_id": "v4p-standard-correct-001",
+        "last_slot_id": "v4p-standard-correct-015"
+      },
+      {
+        "stratum": "correction",
+        "frozen_slots": 15,
+        "first_slot_id": "v4p-correction-001",
+        "last_slot_id": "v4p-correction-015"
+      },
+      {
+        "stratum": "literary",
+        "frozen_slots": 15,
+        "first_slot_id": "v4p-literary-001",
+        "last_slot_id": "v4p-literary-015"
+      },
+      {
+        "stratum": "dialect_regional",
+        "frozen_slots": 15,
+        "first_slot_id": "v4p-dialect-regional-001",
+        "last_slot_id": "v4p-dialect-regional-015"
+      },
+      {
+        "stratum": "archaic_historical",
+        "frozen_slots": 15,
+        "first_slot_id": "v4p-archaic-historical-001",
+        "last_slot_id": "v4p-archaic-historical-015"
+      },
+      {
+        "stratum": "mixing",
+        "frozen_slots": 10,
+        "first_slot_id": "v4p-mixing-001",
+        "last_slot_id": "v4p-mixing-010"
+      },
+      {
+        "stratum": "quotation_interference",
+        "frozen_slots": 10,
+        "first_slot_id": "v4p-quotation-interference-001",
+        "last_slot_id": "v4p-quotation-interference-010"
+      },
+      {
+        "stratum": "abstention",
+        "frozen_slots": 5,
+        "first_slot_id": "v4p-abstention-001",
+        "last_slot_id": "v4p-abstention-005"
+      }
+    ]
+  },
+  "inventory_reconciliation": {
+    "aggregate_inventory_ledger_records": 41,
+    "public_or_external_asset_records": 20,
+    "primary_corpus_collections": 4,
+    "overlap_views": 3,
+    "lexical_resources": 12,
+    "raw_reconciliation_collections": 1,
+    "frozen_historical_source_units": 5,
+    "a2_candidate_source_units": 9,
+    "new_source_fetches": 0,
+    "non_candidate_inventory_categories": [
+      {
+        "category": "period_overlap_views",
+        "units": 3,
+        "reason_code": "overlap_not_independent_source_unit"
+      },
+      {
+        "category": "lexical_resources",
+        "units": 12,
+        "reason_code": "not_a_corpus_source_unit_for_a2"
+      },
+      {
+        "category": "raw_literary_reconciliation",
+        "units": 1,
+        "reason_code": "duplicate_raw_reconciliation_only"
+      }
+    ]
+  },
+  "operations": [
+    "retention",
+    "deterministic_local_analysis",
+    "transmission_to_external_model_or_service",
+    "derivation_of_annotations_or_examples",
+    "training_use",
+    "publication",
+    "redistribution"
+  ],
+  "source_operation_ledger": [
+    {
+      "source_unit_id": "db.external_articles",
+      "source_class": "existing_corpus_collection",
+      "inventory_record_count": 1205,
+      "metadata_only": false,
+      "candidate_strata": [
+        {
+          "stratum": "quotation_interference",
+          "support_role": "scope_bound_candidate",
+          "required_operation": "derivation_of_annotations_or_examples"
+        }
+      ],
+      "operation_rights": {
+        "retention": {"value": "scope_bound", "evidence_refs": ["issue.7430.operator_routing_decision", "inventory.recovery_ledger_v1"], "scope": "existing local retention only"},
+        "deterministic_local_analysis": {"value": "scope_bound", "evidence_refs": ["issue.7430.operator_routing_decision"], "scope": "deterministic local admission analysis only"},
+        "transmission_to_external_model_or_service": {"value": "unknown", "evidence_refs": ["evidence.source_capability_policy_v1"], "scope": "no unit-specific external-service permission evidence", "owner_role": "rights_capability_steward", "next_action": "obtain unit-specific transmission evidence", "retryability": "retryable"},
+        "derivation_of_annotations_or_examples": {"value": "scope_bound", "evidence_refs": ["issue.7430.operator_routing_decision"], "scope": "independently authored nonreconstructive future material only"},
+        "training_use": {"value": "unknown", "evidence_refs": ["evidence.source_capability_policy_v1"], "scope": "no direct source-unit training permission evidence", "owner_role": "rights_capability_steward", "next_action": "obtain unit-specific training evidence", "retryability": "retryable"},
+        "publication": {"value": "unknown", "evidence_refs": ["evidence.source_capability_policy_v1"], "scope": "requires source-specific release evidence", "owner_role": "rights_capability_steward", "next_action": "obtain source-specific publication evidence", "retryability": "retryable"},
+        "redistribution": {"value": "unknown", "evidence_refs": ["evidence.source_capability_policy_v1"], "scope": "requires source-specific redistribution evidence", "owner_role": "rights_capability_steward", "next_action": "obtain source-specific redistribution evidence", "retryability": "retryable"}
+      }
+    },
+    {
+      "source_unit_id": "db.literary_texts",
+      "source_class": "existing_corpus_collection",
+      "inventory_record_count": 137723,
+      "metadata_only": false,
+      "candidate_strata": [
+        {
+          "stratum": "literary",
+          "support_role": "scope_bound_candidate",
+          "required_operation": "derivation_of_annotations_or_examples"
+        }
+      ],
+      "operation_rights": {
+        "retention": {"value": "scope_bound", "evidence_refs": ["issue.7430.operator_routing_decision", "inventory.recovery_ledger_v1"], "scope": "existing local retention only"},
+        "deterministic_local_analysis": {"value": "scope_bound", "evidence_refs": ["issue.7430.operator_routing_decision"], "scope": "deterministic local admission analysis only"},
+        "transmission_to_external_model_or_service": {"value": "unknown", "evidence_refs": ["evidence.source_capability_policy_v1"], "scope": "no unit-specific external-service permission evidence", "owner_role": "rights_capability_steward", "next_action": "obtain unit-specific transmission evidence", "retryability": "retryable"},
+        "derivation_of_annotations_or_examples": {"value": "scope_bound", "evidence_refs": ["issue.7430.operator_routing_decision"], "scope": "independently authored nonreconstructive future material only"},
+        "training_use": {"value": "unknown", "evidence_refs": ["evidence.source_capability_policy_v1"], "scope": "no direct source-unit training permission evidence", "owner_role": "rights_capability_steward", "next_action": "obtain unit-specific training evidence", "retryability": "retryable"},
+        "publication": {"value": "unknown", "evidence_refs": ["evidence.source_capability_policy_v1"], "scope": "requires source-specific release evidence", "owner_role": "rights_capability_steward", "next_action": "obtain source-specific publication evidence", "retryability": "retryable"},
+        "redistribution": {"value": "unknown", "evidence_refs": ["evidence.source_capability_policy_v1"], "scope": "requires source-specific redistribution evidence", "owner_role": "rights_capability_steward", "next_action": "obtain source-specific redistribution evidence", "retryability": "retryable"}
+      }
+    },
+    {
+      "source_unit_id": "db.textbooks.public",
+      "source_class": "existing_corpus_collection",
+      "inventory_record_count": 49193,
+      "metadata_only": false,
+      "candidate_strata": [
+        {
+          "stratum": "standard_correct",
+          "support_role": "scope_bound_candidate",
+          "required_operation": "derivation_of_annotations_or_examples"
+        },
+        {
+          "stratum": "correction",
+          "support_role": "scope_bound_candidate",
+          "required_operation": "derivation_of_annotations_or_examples"
+        }
+      ],
+      "operation_rights": {
+        "retention": {"value": "scope_bound", "evidence_refs": ["issue.7430.operator_routing_decision", "inventory.recovery_ledger_v1"], "scope": "existing local retention only"},
+        "deterministic_local_analysis": {"value": "scope_bound", "evidence_refs": ["issue.7430.operator_routing_decision"], "scope": "deterministic local admission analysis only"},
+        "transmission_to_external_model_or_service": {"value": "unknown", "evidence_refs": ["evidence.source_capability_policy_v1"], "scope": "no unit-specific external-service permission evidence", "owner_role": "rights_capability_steward", "next_action": "obtain unit-specific transmission evidence", "retryability": "retryable"},
+        "derivation_of_annotations_or_examples": {"value": "scope_bound", "evidence_refs": ["issue.7430.operator_routing_decision"], "scope": "independently authored nonreconstructive future material only"},
+        "training_use": {"value": "unknown", "evidence_refs": ["evidence.source_capability_policy_v1"], "scope": "no direct source-unit training permission evidence", "owner_role": "rights_capability_steward", "next_action": "obtain unit-specific training evidence", "retryability": "retryable"},
+        "publication": {"value": "unknown", "evidence_refs": ["evidence.source_capability_policy_v1"], "scope": "requires source-specific release evidence", "owner_role": "rights_capability_steward", "next_action": "obtain source-specific publication evidence", "retryability": "retryable"},
+        "redistribution": {"value": "unknown", "evidence_refs": ["evidence.source_capability_policy_v1"], "scope": "requires source-specific redistribution evidence", "owner_role": "rights_capability_steward", "next_action": "obtain source-specific redistribution evidence", "retryability": "retryable"}
+      }
+    },
+    {
+      "source_unit_id": "db.wikipedia",
+      "source_class": "existing_corpus_collection",
+      "inventory_record_count": 1029,
+      "metadata_only": false,
+      "candidate_strata": [
+        {
+          "stratum": "standard_correct",
+          "support_role": "evidence_candidate_only",
+          "required_operation": "deterministic_local_analysis"
+        }
+      ],
+      "operation_rights": {
+        "retention": {"value": "allowed", "evidence_refs": ["evidence.wikipedia_primary_rights_v1"], "scope": "existing captured cohort only"},
+        "deterministic_local_analysis": {"value": "allowed", "evidence_refs": ["evidence.wikipedia_primary_rights_v1"], "scope": "local candidate and evidence analysis only"},
+        "transmission_to_external_model_or_service": {"value": "unknown", "evidence_refs": ["evidence.wikipedia_primary_rights_v1"], "scope": "no article-level external-service decision", "owner_role": "rights_capability_steward", "next_action": "obtain article-level transmission evidence", "retryability": "retryable"},
+        "derivation_of_annotations_or_examples": {"value": "scope_bound", "evidence_refs": ["issue.7430.operator_routing_decision", "evidence.wikipedia_primary_rights_v1"], "scope": "evidence candidate only; any future material remains independently authored and nonreconstructive"},
+        "training_use": {"value": "denied", "evidence_refs": ["evidence.source_capability_policy_v1", "issue.7430.operator_routing_decision"], "scope": "not a V4 default training source", "owner_role": "rights_capability_steward", "next_action": "keep direct source training disabled", "retryability": "not_retryable"},
+        "publication": {"value": "unknown", "evidence_refs": ["evidence.wikipedia_primary_rights_v1"], "scope": "article-level attribution and release requirements remain unresolved", "owner_role": "rights_capability_steward", "next_action": "obtain article-level publication evidence", "retryability": "retryable"},
+        "redistribution": {"value": "unknown", "evidence_refs": ["evidence.wikipedia_primary_rights_v1"], "scope": "article-level attribution and redistribution requirements remain unresolved", "owner_role": "rights_capability_steward", "next_action": "obtain article-level redistribution evidence", "retryability": "retryable"}
+      }
+    },
+    {
+      "source_unit_id": "historical.bobrovskyy-near-caves-dipinto-2010",
+      "source_class": "frozen_historical_source_unit",
+      "inventory_record_count": null,
+      "metadata_only": true,
+      "candidate_strata": [
+        {
+          "stratum": "archaic_historical",
+          "support_role": "protected_candidate",
+          "required_operation": "derivation_of_annotations_or_examples"
+        }
+      ],
+      "protection_constraints": [
+        "historical_forms_protected_no_automatic_modernization"
+      ],
+      "operation_rights": {
+        "retention": {"value": "scope_bound", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "private research and source-evidence boundary"},
+        "deterministic_local_analysis": {"value": "scope_bound", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "metadata and protected-identity analysis only"},
+        "transmission_to_external_model_or_service": {"value": "denied", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "private research boundary", "owner_role": "rights_capability_steward", "next_action": "keep external transmission disabled", "retryability": "not_retryable"},
+        "derivation_of_annotations_or_examples": {"value": "scope_bound", "evidence_refs": ["issue.7430.operator_routing_decision", "admission.phase3_historical_protection_channels_v1"], "scope": "metadata and protected-status derivation only"},
+        "training_use": {"value": "denied", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "direct source training remains disabled", "owner_role": "rights_capability_steward", "next_action": "keep direct source training disabled", "retryability": "not_retryable"},
+        "publication": {"value": "denied", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "no source release authority", "owner_role": "rights_capability_steward", "next_action": "keep publication disabled", "retryability": "not_retryable"},
+        "redistribution": {"value": "denied", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "no source redistribution authority", "owner_role": "rights_capability_steward", "next_action": "keep redistribution disabled", "retryability": "not_retryable"}
+      }
+    },
+    {
+      "source_unit_id": "historical.korniienko-spas-na-berestovi-2013",
+      "source_class": "frozen_historical_source_unit",
+      "inventory_record_count": null,
+      "metadata_only": true,
+      "candidate_strata": [
+        {
+          "stratum": "archaic_historical",
+          "support_role": "protected_candidate",
+          "required_operation": "derivation_of_annotations_or_examples"
+        }
+      ],
+      "protection_constraints": [
+        "historical_forms_protected_no_automatic_modernization"
+      ],
+      "operation_rights": {
+        "retention": {"value": "scope_bound", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "private research artifact boundary"},
+        "deterministic_local_analysis": {"value": "scope_bound", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "metadata and protected-identity analysis only"},
+        "transmission_to_external_model_or_service": {"value": "denied", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "private research boundary", "owner_role": "rights_capability_steward", "next_action": "keep external transmission disabled", "retryability": "not_retryable"},
+        "derivation_of_annotations_or_examples": {"value": "scope_bound", "evidence_refs": ["issue.7430.operator_routing_decision", "admission.phase3_historical_protection_channels_v1"], "scope": "metadata and protected-status derivation only"},
+        "training_use": {"value": "denied", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "direct source training remains disabled", "owner_role": "rights_capability_steward", "next_action": "keep direct source training disabled", "retryability": "not_retryable"},
+        "publication": {"value": "denied", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "no source release authority", "owner_role": "rights_capability_steward", "next_action": "keep publication disabled", "retryability": "not_retryable"},
+        "redistribution": {"value": "denied", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "no source redistribution authority", "owner_role": "rights_capability_steward", "next_action": "keep redistribution disabled", "retryability": "not_retryable"}
+      }
+    },
+    {
+      "source_unit_id": "historical.plug2-zenodo-19482961",
+      "source_class": "frozen_historical_source_unit",
+      "inventory_record_count": null,
+      "metadata_only": true,
+      "candidate_strata": [
+        {
+          "stratum": "archaic_historical",
+          "support_role": "protected_candidate",
+          "required_operation": "derivation_of_annotations_or_examples"
+        }
+      ],
+      "protection_constraints": [
+        "historical_forms_protected_no_automatic_modernization"
+      ],
+      "operation_rights": {
+        "retention": {"value": "allowed", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "existing admitted local unit only"},
+        "deterministic_local_analysis": {"value": "allowed", "evidence_refs": ["issue.7430.operator_routing_decision", "admission.phase3_historical_protection_channels_v1"], "scope": "local protected-identity analysis only"},
+        "transmission_to_external_model_or_service": {"value": "unknown", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "no external-service permission evidence", "owner_role": "rights_capability_steward", "next_action": "obtain transmission evidence", "retryability": "retryable"},
+        "derivation_of_annotations_or_examples": {"value": "scope_bound", "evidence_refs": ["issue.7430.operator_routing_decision"], "scope": "independently authored nonreconstructive future material only"},
+        "training_use": {"value": "scope_bound", "evidence_refs": ["issue.7430.operator_routing_decision", "admission.phase3_historical_protection_channels_v1"], "scope": "only a later independently authored nonreconstructive view"},
+        "publication": {"value": "unknown", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "requires source-specific release evidence", "owner_role": "rights_capability_steward", "next_action": "obtain publication evidence", "retryability": "retryable"},
+        "redistribution": {"value": "unknown", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "requires source-specific redistribution evidence", "owner_role": "rights_capability_steward", "next_action": "obtain redistribution evidence", "retryability": "retryable"}
+      }
+    },
+    {
+      "source_unit_id": "historical.saint-sophia-inscriptions",
+      "source_class": "frozen_historical_source_unit",
+      "inventory_record_count": 4157,
+      "metadata_only": true,
+      "candidate_strata": [
+        {
+          "stratum": "archaic_historical",
+          "support_role": "protected_candidate",
+          "required_operation": "derivation_of_annotations_or_examples"
+        }
+      ],
+      "protection_constraints": [
+        "historical_forms_protected_no_automatic_modernization"
+      ],
+      "operation_rights": {
+        "retention": {"value": "scope_bound", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "public availability does not establish broader permission"},
+        "deterministic_local_analysis": {"value": "scope_bound", "evidence_refs": ["issue.7430.operator_routing_decision", "admission.phase3_historical_protection_channels_v1"], "scope": "local protected-identity analysis only"},
+        "transmission_to_external_model_or_service": {"value": "unknown", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "license not declared for external transmission", "owner_role": "rights_capability_steward", "next_action": "obtain transmission evidence", "retryability": "retryable"},
+        "derivation_of_annotations_or_examples": {"value": "scope_bound", "evidence_refs": ["issue.7430.operator_routing_decision"], "scope": "independently authored nonreconstructive future material only"},
+        "training_use": {"value": "unknown", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "no source-unit direct training permission evidence", "owner_role": "rights_capability_steward", "next_action": "obtain training evidence", "retryability": "retryable"},
+        "publication": {"value": "unknown", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "license not declared for publication", "owner_role": "rights_capability_steward", "next_action": "obtain publication evidence", "retryability": "retryable"},
+        "redistribution": {"value": "unknown", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "license not declared for redistribution", "owner_role": "rights_capability_steward", "next_action": "obtain redistribution evidence", "retryability": "retryable"}
+      }
+    },
+    {
+      "source_unit_id": "historical.ud-old-east-slavic-ruthenian-05a029e00ccf",
+      "source_class": "frozen_historical_source_unit",
+      "inventory_record_count": null,
+      "metadata_only": true,
+      "candidate_strata": [
+        {
+          "stratum": "archaic_historical",
+          "support_role": "protected_candidate",
+          "required_operation": "derivation_of_annotations_or_examples"
+        }
+      ],
+      "protection_constraints": [
+        "historical_forms_protected_no_automatic_modernization",
+        "source_attested_rusyn_not_mapped_to_dialect_regional"
+      ],
+      "operation_rights": {
+        "retention": {"value": "allowed", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "existing admitted local unit only"},
+        "deterministic_local_analysis": {"value": "allowed", "evidence_refs": ["issue.7430.operator_routing_decision", "admission.phase3_historical_protection_channels_v1"], "scope": "local protected-identity analysis only"},
+        "transmission_to_external_model_or_service": {"value": "unknown", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "no external-service permission evidence", "owner_role": "rights_capability_steward", "next_action": "obtain transmission evidence", "retryability": "retryable"},
+        "derivation_of_annotations_or_examples": {"value": "scope_bound", "evidence_refs": ["issue.7430.operator_routing_decision"], "scope": "independently authored nonreconstructive future material only"},
+        "training_use": {"value": "scope_bound", "evidence_refs": ["issue.7430.operator_routing_decision", "admission.phase3_historical_protection_channels_v1"], "scope": "only a later independently authored nonreconstructive view"},
+        "publication": {"value": "unknown", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "requires source-specific release evidence", "owner_role": "rights_capability_steward", "next_action": "obtain publication evidence", "retryability": "retryable"},
+        "redistribution": {"value": "unknown", "evidence_refs": ["admission.phase3_historical_protection_channels_v1"], "scope": "requires source-specific redistribution evidence", "owner_role": "rights_capability_steward", "next_action": "obtain redistribution evidence", "retryability": "retryable"}
+      }
+    }
+  ],
+  "stratum_coverage_map": [
+    {
+      "stratum": "standard_correct",
+      "frozen_slots": 15,
+      "supporting_existing_source_unit_ids": ["db.textbooks.public"],
+      "evidence_only_source_unit_ids": ["db.wikipedia"],
+      "residual_ids": ["a2-residual-standard-correct-rights-unknown"],
+      "coverage_state": "support_identified_with_residual"
+    },
+    {
+      "stratum": "correction",
+      "frozen_slots": 15,
+      "supporting_existing_source_unit_ids": ["db.textbooks.public"],
+      "evidence_only_source_unit_ids": [],
+      "residual_ids": ["a2-residual-correction-coverage-blocked"],
+      "coverage_state": "support_identified_with_residual"
+    },
+    {
+      "stratum": "literary",
+      "frozen_slots": 15,
+      "supporting_existing_source_unit_ids": ["db.literary_texts"],
+      "evidence_only_source_unit_ids": [],
+      "residual_ids": ["a2-residual-literary-rights-unknown"],
+      "coverage_state": "support_identified_with_residual"
+    },
+    {
+      "stratum": "dialect_regional",
+      "frozen_slots": 15,
+      "supporting_existing_source_unit_ids": [],
+      "evidence_only_source_unit_ids": [],
+      "residual_ids": ["a2-residual-dialect-regional-source-incomplete"],
+      "coverage_state": "source_incomplete"
+    },
+    {
+      "stratum": "archaic_historical",
+      "frozen_slots": 15,
+      "supporting_existing_source_unit_ids": [
+        "historical.bobrovskyy-near-caves-dipinto-2010",
+        "historical.korniienko-spas-na-berestovi-2013",
+        "historical.plug2-zenodo-19482961",
+        "historical.saint-sophia-inscriptions",
+        "historical.ud-old-east-slavic-ruthenian-05a029e00ccf"
+      ],
+      "evidence_only_source_unit_ids": [],
+      "residual_ids": ["a2-residual-archaic-historical-coverage-blocked"],
+      "coverage_state": "support_identified_with_residual"
+    },
+    {
+      "stratum": "mixing",
+      "frozen_slots": 10,
+      "supporting_existing_source_unit_ids": [],
+      "evidence_only_source_unit_ids": [],
+      "residual_ids": ["a2-residual-mixing-source-incomplete"],
+      "coverage_state": "source_incomplete"
+    },
+    {
+      "stratum": "quotation_interference",
+      "frozen_slots": 10,
+      "supporting_existing_source_unit_ids": ["db.external_articles"],
+      "evidence_only_source_unit_ids": [],
+      "residual_ids": ["a2-residual-quotation-interference-rights-unknown"],
+      "coverage_state": "support_identified_with_residual"
+    },
+    {
+      "stratum": "abstention",
+      "frozen_slots": 5,
+      "supporting_existing_source_unit_ids": [],
+      "evidence_only_source_unit_ids": [],
+      "residual_ids": ["a2-residual-abstention-source-incomplete"],
+      "coverage_state": "source_incomplete"
+    }
+  ],
+  "residuals": [
+    {
+      "residual_id": "a2-residual-standard-correct-rights-unknown",
+      "subject_kind": "stratum",
+      "subject_id": "standard_correct",
+      "stage": "A2",
+      "reason_code": "rights_unknown",
+      "owner_role": "rights_capability_steward",
+      "next_action": "bind unit-specific training and release evidence before later row admission",
+      "retryability": "retryable",
+      "evidence_refs": ["evidence.source_capability_policy_v1", "inventory.recovery_ledger_v1"]
+    },
+    {
+      "residual_id": "a2-residual-correction-coverage-blocked",
+      "subject_kind": "stratum",
+      "subject_id": "correction",
+      "stage": "A2",
+      "reason_code": "coverage_blocked",
+      "owner_role": "source_admission_steward",
+      "next_action": "bind source-qualified correction authority to a later candidate without extracting it now",
+      "retryability": "retryable",
+      "evidence_refs": ["admission.phase3_modern_contact_channels_v1", "inventory.recovery_ledger_v1"]
+    },
+    {
+      "residual_id": "a2-residual-literary-rights-unknown",
+      "subject_kind": "stratum",
+      "subject_id": "literary",
+      "stage": "A2",
+      "reason_code": "rights_unknown",
+      "owner_role": "rights_capability_steward",
+      "next_action": "normalize source-unit rights and provenance before later row admission",
+      "retryability": "retryable",
+      "evidence_refs": ["evidence.source_capability_policy_v1", "inventory.recovery_ledger_v1"]
+    },
+    {
+      "residual_id": "a2-residual-dialect-regional-source-incomplete",
+      "subject_kind": "stratum",
+      "subject_id": "dialect_regional",
+      "stage": "A2",
+      "reason_code": "source_incomplete",
+      "owner_role": "source_admission_steward",
+      "next_action": "identify an existing or later separately acquired Ukrainian dialect source without remapping Rusyn",
+      "retryability": "retryable",
+      "evidence_refs": ["admission.phase3_historical_protection_channels_v1", "inventory.recovery_ledger_v1"]
+    },
+    {
+      "residual_id": "a2-residual-archaic-historical-coverage-blocked",
+      "subject_kind": "stratum",
+      "subject_id": "archaic_historical",
+      "stage": "A2",
+      "reason_code": "coverage_blocked",
+      "owner_role": "source_admission_steward",
+      "next_action": "complete historical identity and source-layer review before later row admission",
+      "retryability": "retryable",
+      "evidence_refs": ["admission.phase3_historical_protection_channels_v1"]
+    },
+    {
+      "residual_id": "a2-residual-mixing-source-incomplete",
+      "subject_kind": "stratum",
+      "subject_id": "mixing",
+      "stage": "A2",
+      "reason_code": "source_incomplete",
+      "owner_role": "source_admission_steward",
+      "next_action": "identify a lawful existing or later separately acquired Ukrainian Russian contact source",
+      "retryability": "retryable",
+      "evidence_refs": ["admission.phase3_modern_contact_channels_v1", "inventory.recovery_ledger_v1"]
+    },
+    {
+      "residual_id": "a2-residual-quotation-interference-rights-unknown",
+      "subject_kind": "stratum",
+      "subject_id": "quotation_interference",
+      "stage": "A2",
+      "reason_code": "rights_unknown",
+      "owner_role": "rights_capability_steward",
+      "next_action": "normalize unit-specific transmission and release evidence before later row admission",
+      "retryability": "retryable",
+      "evidence_refs": ["evidence.source_capability_policy_v1", "inventory.recovery_ledger_v1"]
+    },
+    {
+      "residual_id": "a2-residual-abstention-source-incomplete",
+      "subject_kind": "stratum",
+      "subject_id": "abstention",
+      "stage": "A2",
+      "reason_code": "source_incomplete",
+      "owner_role": "source_admission_steward",
+      "next_action": "bind later abstention evidence without inventing a source-derived row now",
+      "retryability": "retryable",
+      "evidence_refs": ["inventory.recovery_ledger_v1"]
+    }
+  ],
+  "execution_counters": {
+    "dataset_rows_emitted": 0,
+    "new_source_fetches": 0,
+    "external_service_transmissions": 0,
+    "annotation_or_example_derivations": 0,
+    "publication_events": 0,
+    "redistribution_events": 0,
+    "training_events": 0
+  },
+  "safety_assertions": {
+    "rows_not_admitted": true,
+    "independently_authored_rows_not_created": true,
+    "mac_corpus_copy_created": false,
+    "historical_v3_control_not_used": true,
+    "wikipedia_not_default_training_source": true,
+    "modern_rusyn_not_mapped_to_dialect": true,
+    "unknown_operations_global_block": false,
+    "prebuilder_state_claimed": false,
+    "later_release_state_claimed": false
+  }
+}
