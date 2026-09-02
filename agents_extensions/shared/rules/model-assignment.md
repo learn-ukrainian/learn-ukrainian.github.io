@@ -650,7 +650,7 @@ Consequences:
 `scripts/config/model_catalog.yaml`; its 30-day lint prevents this prose from being treated as a
 permanent capability claim. Confirm exact live strings in native CLI catalogs and bridge probes.
 
-## Gemini 3.7 Flash vs 3.1 Pro (default updated 2026-08-13)
+## Gemini 3.8 Flash vs 3.1 Pro (default updated 2026-09-02)
 
 Operator directive: **Gemini 3.8 Flash is the AGY top default** (agentic workhorse).
 Gemini 3.7 Flash remains an active previous pin.
