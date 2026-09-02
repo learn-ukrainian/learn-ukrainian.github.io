@@ -890,7 +890,7 @@ Use this before content generation to verify plan files still match `scripts/aud
 | `scripts/audit/lint_session_state.py` | Check handoff docs for missing env-file references | `.venv/bin/python scripts/audit/lint_session_state.py --all` |
 | `scripts/audit/lint_anti_menu.py` | Detect anti-menu sign-off prompts in markdown | `.venv/bin/python scripts/audit/lint_anti_menu.py --text docs/session-state/current.md` |
 | `scripts/audit/decision_lineage.py` | Scan decision git backlinks | `.venv/bin/python scripts/audit/decision_lineage.py --decision-id ADR-008` |
-| `scripts/ci/ci_timings.py` | Measure per-event and per-job CI durations and merge-queue timings (#7174) | `.venv/bin/python scripts/ci/ci_timings.py --event merge_group --since 2026-08-22` |
+| `scripts/ci/ci_timings.py` | Measure per-event and per-job CI durations and merge-queue timings (#7174). BEFORE snapshot for the 2026-09-02 sweet-spot drive: [`docs/plans/2026-09-02-ci-sweet-spot.md`](plans/2026-09-02-ci-sweet-spot.md) | `.venv/bin/python scripts/ci/ci_timings.py --event merge_group --since 2026-08-22` |
 
 ---
 
