@@ -2099,9 +2099,12 @@ function paradigmCaseForms(
   const out: Array<{ caseName: string; number: string; form: string }> = [];
   for (const [caseName, numbers] of Object.entries(lemma.paradigm.cases ?? {})) {
     if (!numbers) continue;
+    // #7613: practice shards key cases in Ukrainian (e.g. `називний`); normalize
+    // to the English keys the cloze/morphology logic compares against.
+    const normalizedCase = UK_CASE_TO_KEY[caseName.trim().toLowerCase()] ?? caseName;
     for (const [number, form] of Object.entries(numbers)) {
       const trimmed = form?.trim();
-      if (trimmed) out.push({ caseName, number, form: trimmed });
+      if (trimmed) out.push({ caseName: normalizedCase, number, form: trimmed });
     }
   }
   return out;
@@ -2172,10 +2175,11 @@ export function collectLemmaMorphologyForms(
       UK_CASE_TO_KEY[rawCase] ??
       'oblique';
     const number = item.slot?.number === 'plural' ? 'plural' : 'singular';
+    // #7613: only the drill answer (`item.form`) is an attested form of this
+    // slot. Distractor `options[].label` entries are other slots' forms —
+    // ingesting them under the answer's case fabricated nominative singulars
+    // like plural «прикраси» on a називний/однина slot.
     if (item.form) push(caseName, number, item.form);
-    for (const opt of item.options ?? []) {
-      if (opt.label) push(caseName, number, opt.label);
-    }
   }
 
   return out;
@@ -2185,9 +2189,16 @@ function pickParadigmForm(
   lemma: PracticeLexeme,
   caseName: string,
 ): string | null {
-  const numbers = lemma.paradigm.cases?.[caseName];
-  if (!numbers) return null;
-  return numbers.singular?.trim() || numbers.plural?.trim() || null;
+  // #7613: paradigm case keys may be Ukrainian (`називний`) or English
+  // (`nominative`) depending on the shard — compare normalized keys.
+  const wanted = UK_CASE_TO_KEY[caseName.trim().toLowerCase()] ?? caseName.trim();
+  for (const [key, numbers] of Object.entries(lemma.paradigm.cases ?? {})) {
+    if (!numbers) continue;
+    const normalized = UK_CASE_TO_KEY[key.trim().toLowerCase()] ?? key.trim();
+    if (normalized !== wanted) continue;
+    return numbers.singular?.trim() || numbers.plural?.trim() || null;
+  }
+  return null;
 }
 
 function stablePickIndex(seed: string, modulo: number): number {
@@ -2267,7 +2278,10 @@ export function upgradeIdentityClozeToMorphology(
   if (NON_CASE_CLOZE_POS.has((lemma.pos ?? '').trim().toLocaleLowerCase())) return null;
 
   const formBank = collectLemmaMorphologyForms(lemma, deck);
-  const blankCase = (cloze.blankCase || 'nominative').trim() || 'nominative';
+  // #7613: blankCase arrives in English from the cloze shard but may be
+  // Ukrainian in other surfaces — normalize before comparing to bank rows.
+  const rawBlankCase = (cloze.blankCase || 'nominative').trim() || 'nominative';
+  const blankCase = UK_CASE_TO_KEY[rawBlankCase.toLowerCase()] ?? rawBlankCase;
   const fromBlank =
     pickParadigmForm(lemma, blankCase) ||
     formBank.find((row) => row.caseName === blankCase && czNorm(row.form) !== czNorm(lemma.lemma))
@@ -2275,7 +2289,14 @@ export function upgradeIdentityClozeToMorphology(
     null;
   let caseName = blankCase;
   let form = fromBlank;
-  let keepSentence = Boolean(fromBlank && czNorm(fromBlank) !== czNorm(lemma.lemma));
+  // #7613: never keep the original textbook sentence under a different form
+  // (stress-insensitive). Only the original blank word itself may keep its
+  // frame; anything else falls through to the synthetic '___' frame below.
+  let keepSentence = Boolean(
+    fromBlank &&
+      czNorm(fromBlank) === czNorm(cloze.form) &&
+      czNorm(fromBlank) !== czNorm(lemma.lemma),
+  );
 
   if (!keepSentence) {
     // Never use unresolved 'oblique' tags or invent a case (no genitive guess).
