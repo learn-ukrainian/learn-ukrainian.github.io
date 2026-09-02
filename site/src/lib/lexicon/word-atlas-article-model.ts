@@ -286,6 +286,19 @@ export const PERSON_ROWS = [
   { key: "3", label: "3 особа" },
 ] as const;
 
+export const IMPERATIVE_ROWS = [
+  { key: "2-singular", label: "2 особа", number: "однина", person: "2" },
+  { key: "1-plural", label: "1 особа (мн.)", number: "множина", person: "1" },
+  { key: "2-plural", label: "2 особа (мн.)", number: "множина", person: "2" },
+] as const;
+
+export const PAST_ROWS = [
+  { key: "чол.", label: "чол." },
+  { key: "жін.", label: "жін." },
+  { key: "сер.", label: "сер." },
+  { key: "множина", label: "множина" },
+] as const;
+
 /** Ukrainian track labels for «У курсі» (CEFR codes stay Latin; seminar tracks are localized). */
 export const TRACK_LABELS_UK: Record<string, string> = {
   a1: "A1",
