@@ -227,11 +227,56 @@ def test_aggregate_ledger_rows_refuses_unknown_commitment() -> None:
         enrichment.aggregate_ledger_rows([extraction.canonical_json(row)], ["b" * 64])
 
 
-def test_aggregate_ledger_rows_fails_closed_against_a_near_zero_memory_cap() -> None:
+def test_aggregate_ledger_rows_fails_closed_against_a_near_zero_memory_cap(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A near-zero cap must fail closed deterministically, regardless of
+    whether this particular synthetic stream happens to nudge real
+    ``ru_maxrss`` -- so the RSS delta itself is monkeypatched rather than
+    left to chance."""
     commitment = "a" * 64
     rows = [extraction.canonical_json(_row(commitment, i, 10)) for i in range(5_000)]
-    with pytest.raises(enrichment.MemoryBudgetExceeded):
-        enrichment.aggregate_ledger_rows(rows, [commitment], memory_cap_bytes=1, memory_check_interval=1)
+    rss_values = iter([1_000, 1_001])  # baseline snapshot, then one incremental-growth check
+    monkeypatch.setattr(enrichment, "_current_rss_bytes", lambda: next(rss_values))
+    with pytest.raises(enrichment.MemoryBudgetExceeded, match="incremental resident memory"):
+        enrichment.aggregate_ledger_rows(rows, [commitment], memory_cap_bytes=0, memory_check_interval=1)
+
+
+def test_aggregate_ledger_rows_bounds_growth_not_the_hosts_inherited_high_water(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Regression for the merge-queue RSS bug: a host process whose inherited
+    ``ru_maxrss`` already sits well past the 512 MiB production cap (e.g.
+    thousands of prior pytest cases in the same shard) must not trip the
+    guard on its own -- only growth incurred *by this pass* counts."""
+    commitment = "a" * 64
+    rows = [extraction.canonical_json(_row(commitment, i, 10)) for i in range(50)]
+    inherited_high_water = 1_702_019_072  # > the 512 MiB production cap, as seen in CI
+    monkeypatch.setattr(enrichment, "_current_rss_bytes", lambda: inherited_high_water)
+
+    accumulators, total_rows = enrichment.aggregate_ledger_rows(
+        rows, [commitment], memory_cap_bytes=enrichment.DEFAULT_A5_MEMORY_CAP_BYTES, memory_check_interval=1
+    )
+
+    assert total_rows == 50
+    assert accumulators[commitment]["span_count"] == 50
+
+
+def test_aggregate_ledger_rows_still_fails_closed_on_real_growth_above_a_high_baseline(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The cap must still bite once *this pass* actually grows past it, even
+    starting from a high inherited baseline -- proving the fix bounds
+    incremental growth rather than disabling the guard outright."""
+    commitment = "a" * 64
+    rows = [extraction.canonical_json(_row(commitment, i, 10)) for i in range(10)]
+    baseline = 1_702_019_072
+    grown = baseline + enrichment.DEFAULT_A5_MEMORY_CAP_BYTES + 1
+    rss_values = iter([baseline] + [grown] * 20)
+    monkeypatch.setattr(enrichment, "_current_rss_bytes", lambda: next(rss_values))
+
+    with pytest.raises(enrichment.MemoryBudgetExceeded, match="incremental resident memory"):
+        enrichment.aggregate_ledger_rows(
+            rows, [commitment], memory_cap_bytes=enrichment.DEFAULT_A5_MEMORY_CAP_BYTES, memory_check_interval=1
+        )
 
 
 def test_build_per_unit_evidence_is_sorted_by_commitment() -> None:
@@ -318,6 +363,28 @@ def test_compute_evidence_enrichment_streams_real_rows_and_aggregates_id_free(tm
 
     # Rerunning against the same private artifacts is a pure re-read, reproducible.
     assert enrichment.compute_evidence_enrichment(a4_receipt, tmp_path) == result
+
+
+def test_compute_evidence_enrichment_succeeds_under_a_high_inherited_rss_baseline(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Regression for the merge-queue-only failure (green on the PR fastlane,
+    red in the full 4-shard merge-group run): after ~5k prior tests in a
+    pytest shard, the host process's inherited ``ru_maxrss`` can already sit
+    above the 512 MiB production cap even though this synthetic stream never
+    opens the real 1.5 GiB private ledger. The cap must bound only this
+    pass's own growth, not that inherited high-water mark."""
+    commitment_a = "a" * 64
+    commitment_b = "b" * 64
+    rows = [_row(commitment_a, 0, 10), _row(commitment_a, 1, 20), _row(commitment_b, 0, 5)]
+    root_sha256, row_count = _write_private_ledger(tmp_path, rows)
+    a4_receipt = _synthetic_a4_receipt([commitment_a, commitment_b], row_count=row_count, root_sha256=root_sha256)
+    monkeypatch.setattr(enrichment, "_current_rss_bytes", lambda: 1_702_019_072)  # the exact CI figure
+
+    result = enrichment.compute_evidence_enrichment(a4_receipt, tmp_path)
+
+    assert result["ledger_consumed"] is True
+    assert result["spans_covered"] == 3
 
 
 def test_compute_evidence_enrichment_handles_a_zero_row_ledger(tmp_path: Path) -> None:

@@ -110,10 +110,13 @@ A4_RECEIPT_PATH = ADMISSION / "dataset_v4_a4_deterministic_extraction_receipt_v1
 # copied). Same directory A4 itself uses.
 DEFAULT_A4_PRIVATE_DIR = extraction.DEFAULT_A4_PRIVATE_DIR
 
-# Hard cap on resident memory during a real streaming pass -- generous, since
-# the accumulator itself never grows past one small dict keyed by A4's
-# (currently 8) known commitments regardless of ledger size; this exists only
-# as defense-in-depth against a future change accidentally buffering rows.
+# Hard cap on a streaming pass's own incremental resident-memory growth --
+# generous, since the accumulator itself never grows past one small dict
+# keyed by A4's (currently 8) known commitments regardless of ledger size;
+# this exists only as defense-in-depth against a future change accidentally
+# buffering rows. Bounds growth relative to a baseline snapshot taken at the
+# start of the pass (see ``_require_within_memory_budget``), never the host
+# process's absolute, process-lifetime ``ru_maxrss`` high-water mark.
 DEFAULT_A5_MEMORY_CAP_BYTES = 512 * 1024 * 1024
 _MEMORY_CHECK_INTERVAL_ROWS = 2_000
 
@@ -249,12 +252,23 @@ def _current_rss_bytes() -> int:
     return ru_maxrss if sys.platform == "darwin" else ru_maxrss * 1024
 
 
-def _require_within_memory_budget(memory_cap_bytes: int) -> None:
+def _require_within_memory_budget(baseline_rss_bytes: int, memory_cap_bytes: int) -> None:
+    """Fail closed once *this pass's own* resident-memory growth -- current
+    ``ru_maxrss`` minus the ``baseline_rss_bytes`` snapshot taken before the
+    pass started -- exceeds ``memory_cap_bytes``. Deliberately never compares
+    the raw absolute ``ru_maxrss`` to the cap: ``ru_maxrss`` is a process-
+    lifetime high-water mark, so in a long-lived host process (thousands of
+    prior pytest cases, a long-running worker) it can already sit well above
+    a 512 MiB cap before this pass ever streams a single row -- that
+    inherited high-water is not this pass's memory use and must not trip the
+    guard on its own."""
     rss_bytes = _current_rss_bytes()
-    if rss_bytes > memory_cap_bytes:
+    incremental_bytes = rss_bytes - baseline_rss_bytes
+    if incremental_bytes > memory_cap_bytes:
         raise MemoryBudgetExceeded(
-            f"streaming enrichment aborted: resident memory {rss_bytes} bytes exceeded the configured "
-            f"cap of {memory_cap_bytes} bytes -- failing closed"
+            f"streaming enrichment aborted: this pass's incremental resident memory {incremental_bytes} "
+            f"bytes (baseline {baseline_rss_bytes}, current {rss_bytes}) exceeded the configured cap of "
+            f"{memory_cap_bytes} bytes -- failing closed"
         )
 
 
@@ -264,6 +278,7 @@ def aggregate_ledger_rows(
     *,
     memory_cap_bytes: int = DEFAULT_A5_MEMORY_CAP_BYTES,
     memory_check_interval: int = _MEMORY_CHECK_INTERVAL_ROWS,
+    baseline_rss_bytes: int | None = None,
 ) -> tuple[dict[str, dict[str, Any]], int]:
     """Stream ``ledger_lines`` (one JSON line per span row, as produced by
     ``v4_a4_deterministic_extraction.iter_private_artifact_lines``) exactly
@@ -272,8 +287,16 @@ def aggregate_ledger_rows(
     accumulator dict, one entry per ``known_commitments`` (currently 8),
     never one per row. Fails closed (``EnrichmentError``) if a row names a
     commitment outside ``known_commitments`` (private-artifact drift or
-    corruption), and (``MemoryBudgetExceeded``) if resident memory would
-    exceed ``memory_cap_bytes``."""
+    corruption), and (``MemoryBudgetExceeded``) if this pass's own resident
+    memory growth would exceed ``memory_cap_bytes``.
+
+    ``baseline_rss_bytes`` is snapshotted once, at the start of this call, so
+    the cap bounds only the growth this pass itself causes -- never the host
+    process's inherited high-water mark. Pass it explicitly only to amortize
+    one baseline across multiple passes sharing a budget; the default (taking
+    a fresh snapshot here) is correct for a standalone call."""
+    if baseline_rss_bytes is None:
+        baseline_rss_bytes = _current_rss_bytes()
     accumulators = {commitment: new_unit_accumulator() for commitment in known_commitments}
     total_rows = 0
     for line in ledger_lines:
@@ -287,8 +310,8 @@ def aggregate_ledger_rows(
         accumulate_row(accumulators[commitment], row["span_byte_length"])
         total_rows += 1
         if total_rows % memory_check_interval == 0:
-            _require_within_memory_budget(memory_cap_bytes)
-    _require_within_memory_budget(memory_cap_bytes)
+            _require_within_memory_budget(baseline_rss_bytes, memory_cap_bytes)
+    _require_within_memory_budget(baseline_rss_bytes, memory_cap_bytes)
     return accumulators, total_rows
 
 
