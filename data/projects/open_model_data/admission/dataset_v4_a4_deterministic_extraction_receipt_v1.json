@@ -1,0 +1,95 @@
+{
+  "schema_version": "dataset_v4_a4_deterministic_extraction_receipt_v1",
+  "receipt_id": "dataset-v4-a4-deterministic-extraction-v1",
+  "status": "A4_DETERMINISTIC_EXTRACTION_BLOCKED_NO_BUILDER_PACKET",
+  "text_free": true,
+  "controlling_outcome_sha256": "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20",
+  "control_surfaces": {
+    "public_control_issue": 7423,
+    "pilot_child_issue": 7430,
+    "private_operational_board": 622
+  },
+  "bindings": {
+    "a2_source_operation_admission": {
+      "path": "data/projects/open_model_data/admission/dataset_v4_a2_source_operation_admission_receipt_v1.json",
+      "sha256": "da005a28fffe7f12f263d1494a8cabd151bf8d98ff4f6ce9d51fe9d809199fcd",
+      "schema_version": "dataset_v4_a2_source_operation_admission_receipt_v1"
+    },
+    "a3_heldout_source_family_seal": {
+      "path": "data/projects/open_model_data/admission/dataset_v4_a3_heldout_source_family_seal_receipt_v1.json",
+      "sha256": "0b3635211c95afd1e830a664401f41153d072d783d53b4537fc46dd2204bcf46",
+      "schema_version": "dataset_v4_a3_heldout_source_family_seal_receipt_v1"
+    },
+    "extraction_algorithm_implementation": {
+      "path": "scripts/projects/open_model_data/v4_a4_deterministic_extraction.py",
+      "sha256": "c05458231b55dab5566d71bd3248224d9e8d57c5b3dac2956babecd2dfab7774",
+      "schema_version": "v4_a4_deterministic_extraction_script_v1"
+    }
+  },
+  "extraction_algorithm": {
+    "algorithm_id": "v4-a4-deterministic-span-extraction-v1",
+    "algorithm_version": "v1",
+    "unit_of_extraction": "sentence_span",
+    "content_blind": false,
+    "ordering": "source_unit_id_ascending_then_byte_offset_ascending",
+    "input_hash_formula": "sha256(raw_span_bytes_utf8)",
+    "output_hash_formula": "sha256(canonical_json({source_unit_id, span_index, span_byte_length, input_sha256, extraction_algorithm_id, extraction_algorithm_version}))",
+    "text_emitted": false,
+    "reproducibility": "byte_stable_given_identical_source_unit_bytes_and_frozen_segmentation_rule",
+    "algorithm_descriptor_sha256": "c3ce60b8b6cd2b4ae2255fb30b8ffb84dac061b502ea62a0525af17a0eb46d27"
+  },
+  "builder_packet_gate": {
+    "gate_id": "v4-a4-builder-packet-gate-v1",
+    "status": "AWAITING_A3_HELDOUT_BUILDER_PACKET_ISSUANCE",
+    "requires": ["A3_seal_complete", "builder_packet_issued_by_a3_heldout"],
+    "a3_seal_complete": true,
+    "builder_packet_issued": false,
+    "builder_eligible_source_unit_ids_known_to_a4": false,
+    "owner_role": "A3_heldout",
+    "blocked_reason_code": "builder_packet_not_issued"
+  },
+  "extraction_ledger": [],
+  "a2_residuals_carried_forward": [
+    {"residual_id": "a2-residual-standard-correct-rights-unknown", "origin_stage": "A2", "status": "unresolved_carried_to_a4"},
+    {"residual_id": "a2-residual-correction-coverage-blocked", "origin_stage": "A2", "status": "unresolved_carried_to_a4"},
+    {"residual_id": "a2-residual-literary-rights-unknown", "origin_stage": "A2", "status": "unresolved_carried_to_a4"},
+    {"residual_id": "a2-residual-dialect-regional-source-incomplete", "origin_stage": "A2", "status": "unresolved_carried_to_a4"},
+    {"residual_id": "a2-residual-archaic-historical-coverage-blocked", "origin_stage": "A2", "status": "unresolved_carried_to_a4"},
+    {"residual_id": "a2-residual-mixing-source-incomplete", "origin_stage": "A2", "status": "unresolved_carried_to_a4"},
+    {"residual_id": "a2-residual-quotation-interference-rights-unknown", "origin_stage": "A2", "status": "unresolved_carried_to_a4"},
+    {"residual_id": "a2-residual-abstention-source-incomplete", "origin_stage": "A2", "status": "unresolved_carried_to_a4"}
+  ],
+  "a4_residuals": [
+    {
+      "residual_id": "a4-residual-builder-packet-not-issued",
+      "subject_kind": "process",
+      "subject_id": "builder_packet_issuance",
+      "stage": "A4",
+      "reason_code": "builder_packet_not_issued",
+      "owner_role": "A3_heldout",
+      "next_action": "issue the builder-eligible source_unit_id packet (complement only, never the held-out family_id) so A4 extraction can run",
+      "retryability": "retryable",
+      "evidence_refs": ["admission.dataset_v4_a3_heldout_source_family_seal_receipt_v1"]
+    }
+  ],
+  "execution_counters": {
+    "dataset_rows_emitted": 0,
+    "new_source_fetches": 0,
+    "source_units_extracted": 0,
+    "spans_extracted": 0,
+    "builder_packets_consumed": 0
+  },
+  "safety_assertions": {
+    "rows_not_admitted": true,
+    "text_emitted": false,
+    "held_out_membership_referenced": false,
+    "extraction_executed_without_builder_packet": false,
+    "mac_corpus_copy_created": false,
+    "historical_v3_control_not_used": true,
+    "modern_rusyn_not_mapped_to_dialect": true,
+    "prebuilder_state_claimed": false,
+    "training_ready_silver_claimed": false,
+    "later_release_state_claimed": false,
+    "epic_done_claimed": false
+  }
+}
