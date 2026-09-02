@@ -109,9 +109,31 @@ jobs:
         with:
           python-version-file: '.python-version'
 
+      # #7586: GITHUB_TOKEN-created merge-queue entries never receive
+      # merge_group workflow runs, so the queue ejects after the check
+      # timeout and the next scan re-arms — a 60-min loop. Mint an App
+      # installation token or skip arming. Never fall back to github.token.
+      - name: Mint auto-arm GitHub App token
+        id: app
+        if: ${{ vars.AUTO_ARM_APP_CLIENT_ID != '' }}
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ vars.AUTO_ARM_APP_CLIENT_ID }}
+          private-key: ${{ secrets.AUTO_ARM_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+          permission-checks: read
+          permission-merge-queues: write
+
+      - name: Skip arming when the App is not configured
+        if: ${{ steps.app.outputs.token == '' }}
+        run: |
+          echo "::error::AUTO_ARM_APP_CLIENT_ID / AUTO_ARM_APP_PRIVATE_KEY missing; skip arm (#7586). Never fall back to github.token."
+
       - name: Arm opted-in green pull requests
+        if: ${{ steps.app.outputs.token != '' }}
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ steps.app.outputs.token }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         # Module invocation keeps the repo root on sys.path — #7553 added a
         # `from scripts.ci.cf_attest import ...` import that a plain-path
