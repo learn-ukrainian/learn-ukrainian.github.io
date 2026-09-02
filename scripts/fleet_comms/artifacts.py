@@ -42,17 +42,17 @@ from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.contracts import new_id
 from scripts.fleet_comms.migrations import apply_migrations
 from scripts.fleet_comms.paths import DEFAULT_ROOT_REL, default_plane_root
+from scripts.fleet_comms.pg_schema import PG_BLOB_TABLE, apply_pg_schema, verify_pg_schema
 
 DEFAULT_ROOT = DEFAULT_ROOT_REL
 _SAFE_NAME = re.compile(r"^[A-Za-z0-9._@+=,-][A-Za-z0-9._@+=, -]{0,200}$")
 _PRIVATE_DIR_MODE = 0o700
 _PRIVATE_FILE_MODE = 0o600
 _BUSY_TIMEOUT_MS = 5_000
-# Small, dedicated Postgres table for the pg byte-plane path (#603). Deliberately
-# not a mirror of the full sqlite ``artifacts`` schema — just enough columns to
-# serve ArtifactRecord plus the payload itself, so metadata and bytes share one
-# durability domain instead of a pg row pointing at a host-local file.
-_PG_BLOB_TABLE = "fleet_comms_artifact_blobs"
+# Small, dedicated Postgres table for the pg byte-plane path (#603 / #7483 1.14).
+# DDL lives in the numbered pg migration ledger (``pg_schema``); this alias
+# keeps SQL in this module pointing at the same table name.
+_PG_BLOB_TABLE = PG_BLOB_TABLE
 # #7484 (Sol 1.9): ONE documented byte-plane limit, enforced before hashing,
 # filesystem writes, or a BYTEA insert. Raw adapter captures are the largest
 # legitimate payload class; 64 MiB bounds them while staying far under the
@@ -100,7 +100,13 @@ class ArtifactStoreError(RuntimeError):
 class ArtifactStore:
     """SQLite metadata + content-addressed blob store."""
 
-    def __init__(self, root: Path | None = None, *, repo_root: Path | None = None) -> None:
+    def __init__(
+        self,
+        root: Path | None = None,
+        *,
+        repo_root: Path | None = None,
+        readonly: bool = False,
+    ) -> None:
         self.root = (
             Path(root).resolve()
             if root is not None
@@ -108,21 +114,33 @@ class ArtifactStore:
         )
         self.blob_root = self.root / "blobs" / "sha256"
         self.db_path = self.root / "comms.sqlite3"
+        self._readonly = bool(readonly)
         self._authority = assert_component_supported(StoreId.FLEET_COMMS, "artifact_store")
         if self._authority is Authority.PG:
             # Byte-plane slice (#603): connect first, touch no local disk.
             # A DSN-unreachable failure must not leave a stray root/blob dir
             # behind, and payload bytes never land in a host-local file.
-            self._conn = cp_connect(StoreId.FLEET_COMMS)
+            self._conn = cp_connect(StoreId.FLEET_COMMS, read_only=self._readonly)
             try:
                 self._configure_pg_connection()
-                self._ensure_pg_blob_table()
+                if not self._readonly:
+                    # #7483 (1.14): blob + request-plane DDL via checksummed ledger.
+                    apply_pg_schema(self._conn)
+                    verify_pg_schema(self._conn)
             except Exception:
                 # #7483: never leak the pg connection on partial init —
                 # repeated failures against a flaky DSN exhaust max_connections.
                 with contextlib.suppress(Exception):
                     self._conn.close()
                 raise
+            return
+        if self._readonly:
+            self._conn = cp_connect(
+                StoreId.FLEET_COMMS,
+                path=self.db_path,
+                read_only=True,
+            )
+            self._conn.row_factory = sqlite3.Row
             return
         self._prepare_private_dir(self.root)
         self._prepare_private_dir(self.root / "blobs")
@@ -148,6 +166,21 @@ class ArtifactStore:
                 require_dir=False,
             )
 
+    @classmethod
+    def open_readonly(
+        cls,
+        root: Path | None = None,
+        *,
+        repo_root: Path | None = None,
+    ) -> ArtifactStore:
+        """Open an existing plane for reads only (#7483 1.12).
+
+        Skips migrations/DDL and opens the backend read-only so sealed-verdict
+        resolvers (and other body-free readers) never mutate the store and
+        never bypass it via a host-local CAS path.
+        """
+        return cls(root=root, repo_root=repo_root, readonly=True)
+
     def _configure_pg_connection(self) -> None:
         from psycopg.rows import dict_row
 
@@ -156,25 +189,40 @@ class ArtifactStore:
         # first SELECT and the store pins an idle-in-transaction snapshot
         # forever (blocks VACUUM, trips idle_in_transaction_session_timeout),
         # and any prior read defeated the deferred-commit ownership guard.
-        # Writes use explicit ``conn.transaction()`` blocks below; nested
-        # blocks become SAVEPOINTs, so a helper error can never poison a
-        # caller-owned transaction (Sol 1.3).
+        # Writes use the single ``_transaction`` context manager below;
+        # nested blocks become SAVEPOINTs, so a helper error can never poison
+        # a caller-owned transaction (Sol 1.3).
         self._conn.autocommit = True
 
-    def _ensure_pg_blob_table(self) -> None:
-        self._conn.execute(
-            f"""CREATE TABLE IF NOT EXISTS {_PG_BLOB_TABLE} (
-                sha256 TEXT PRIMARY KEY,
-                artifact_id TEXT NOT NULL UNIQUE,
-                bytes BIGINT NOT NULL,
-                mime_type TEXT,
-                logical_filename TEXT,
-                producer TEXT NOT NULL,
-                retention_class TEXT NOT NULL,
-                created_at TEXT NOT NULL,
-                payload BYTEA NOT NULL
-            )"""
-        )
+    @contextlib.contextmanager
+    def _transaction(self):
+        """Single write-transaction owner for sqlite and pg (#7483 acceptance).
+
+        Under pg, delegates to ``conn.transaction()`` (nested = SAVEPOINT).
+        Under sqlite, opens ``BEGIN IMMEDIATE`` when the caller does not
+        already own a transaction; nested use reuses the outer tx.
+        """
+        self._refuse_readonly_write("_transaction")
+        if self._authority is Authority.PG:
+            with self._conn.transaction():
+                yield self._conn
+            return
+        nested = self._conn.in_transaction
+        if nested:
+            yield self._conn
+            return
+        self._conn.execute("BEGIN IMMEDIATE")
+        try:
+            yield self._conn
+        except Exception:
+            self._conn.rollback()
+            raise
+        else:
+            self._conn.commit()
+
+    def _refuse_readonly_write(self, op: str) -> None:
+        if self._readonly:
+            raise ArtifactStoreError(f"read-only ArtifactStore refuses {op}")
 
     @property
     def authority(self) -> Authority:
@@ -212,6 +260,7 @@ class ArtifactStore:
         commit: bool = True,
     ) -> ArtifactRecord:
         """Store bytes; ``commit=False`` requires a caller-owned active transaction."""
+        self._refuse_readonly_write("store_bytes")
         if not commit:
             self._require_active_transaction_for_deferred_commit()
         if not producer or not producer.strip():
@@ -326,7 +375,7 @@ class ArtifactStore:
                     f"artifact_id {artifact_id!r} already exists with "
                     f"different content (sha256 {id_row['sha256']!r})"
                 )
-        # ``transaction()`` commits on exit / rolls back on error; nested in a
+        # ``_transaction`` commits on exit / rolls back on error; nested in a
         # caller-owned transaction it becomes a SAVEPOINT, so an error here
         # rolls back only this write and never poisons the caller (#7483 1.3).
         # A concurrent explicit-id writer can still slip between the
@@ -335,7 +384,7 @@ class ArtifactStore:
         import psycopg.errors
 
         try:
-            with self._conn.transaction():
+            with self._transaction():
                 self._conn.execute(
                     f"""INSERT INTO {_PG_BLOB_TABLE}(
                         artifact_id, sha256, bytes, mime_type, logical_filename,
@@ -513,6 +562,7 @@ class ArtifactStore:
         ``commit=False`` is only safe when the caller owns an active transaction
         and will commit or roll it back.
         """
+        self._refuse_readonly_write("reference")
         if not commit:
             self._require_active_transaction_for_deferred_commit()
         if not message_id or not artifact_id:
@@ -523,7 +573,7 @@ class ArtifactStore:
             # transaction; nested in a caller-owned transaction (commit=False,
             # e.g. the request executor's finalize) it becomes a SAVEPOINT,
             # matching the _store_bytes_pg pattern (#7483 Sol 1.3).
-            with self._conn.transaction():
+            with self._transaction():
                 self._ensure_message_stub(message_id)
                 self._conn.execute(
                     """INSERT INTO message_artifacts(message_id, artifact_id, relation)
@@ -581,6 +631,7 @@ class ArtifactStore:
 
     def garbage_collect_unreferenced(self, *, grace_seconds: int = 3600) -> list[str]:
         """Delete unreferenced artifacts older than grace. Returns deleted artifact_ids."""
+        self._refuse_readonly_write("garbage_collect_unreferenced")
         if self._authority is Authority.PG:
             raise ArtifactStoreError(
                 "garbage_collect_unreferenced() is not implemented for "
@@ -652,6 +703,7 @@ class ArtifactStore:
         never discover. Grace-period protected: young files are in-flight
         writes, never touched. Returns the reclaimed digests. Sqlite only.
         """
+        self._refuse_readonly_write("reclaim_orphan_blobs")
         if self._authority is Authority.PG:
             raise ArtifactStoreError(
                 "reclaim_orphan_blobs() is not implemented for "

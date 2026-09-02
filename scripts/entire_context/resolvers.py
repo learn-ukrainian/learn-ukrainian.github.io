@@ -36,11 +36,11 @@ Real resolvers in this slice:
   gate/state, and publication timestamp/context only.
 - ``formal_review`` — an exact review ID resolves against a completed
   formal-review job in the Fleet Comms SQLite store, loads and hash-checks the
-  sealed-verdict blob read-only, parses it with the existing strict parser, and
-  re-checks job binding. Projects review ID, repository, PR, head SHA, gate,
-  state, verdict token, model/family/harness, attempt count/completion states,
-  and publication state only. Never exposes artifact IDs or payload
-  text/findings.
+  sealed-verdict blob through the read-only ArtifactStore API, parses it with
+  the existing strict parser, and re-checks job binding. Projects review ID,
+  repository, PR, head SHA, gate, state, verdict token, model/family/harness,
+  attempt count/completion states, and publication state only. Never exposes
+  artifact IDs or payload text/findings.
 - ``fleet_receipt`` — an exact request ID resolves against one canonical
   ``requests`` row in the Fleet Comms SQLite store. Projects request ID,
   requested/resolved recipient, terminal state, completion state, and
@@ -58,7 +58,6 @@ service calls are performed.
 
 from __future__ import annotations
 
-import hashlib
 import json
 import math
 import re
@@ -74,6 +73,8 @@ from scripts.agent_runtime.acpx_discuss import (
     AcpxDiscussionNotFoundError,
     verify_discussion_receipt,
 )
+from scripts.control_plane.storage import ControlPlaneError
+from scripts.fleet_comms.artifacts import ArtifactStore, ArtifactStoreError
 from scripts.fleet_comms.review_publication import parse_sealed_verdict_payload
 from scripts.orchestration.task_family.rollover_registry import (
     load_record as load_rollover_record,
@@ -104,7 +105,6 @@ GIT_TIMEOUT_SECONDS = 30
 
 ACP_CONVERSATION_ID_RE = re.compile(r"^conversation_[0-9a-f]{32}$")
 GITHUB_REPOSITORY_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*/[A-Za-z0-9][A-Za-z0-9._-]*$")
-SHA256_HEX_RE = re.compile(r"^[0-9a-f]{64}$")
 GITHUB_ORIGIN_RE = re.compile(
     r"^(?:git@github\.com:|ssh://git@github\.com/|https://github\.com/)"
     r"(?P<repository>[A-Za-z0-9][A-Za-z0-9._-]*/[A-Za-z0-9][A-Za-z0-9._-]*?)(?:\.git)?/?$"
@@ -637,12 +637,6 @@ def _fleet_db_path(fleet_root: Path | str) -> Path:
     return Path(fleet_root).expanduser().resolve() / "comms.sqlite3"
 
 
-def _blob_path_for(fleet_root: Path, digest: str) -> Path:
-    """Compute the content-addressed sealed-verdict blob path (matches ArtifactStore)."""
-    lowered = digest.lower()
-    return Path(fleet_root).expanduser().resolve() / "blobs" / "sha256" / lowered[:2] / lowered
-
-
 def _github_namespace(repo: Path) -> str:
     """Derive ``github:<owner/repo>`` from a public local origin, or fail closed."""
     origin = _origin_url(Path(repo))
@@ -1104,9 +1098,10 @@ def resolve_formal_review(
     """Resolve a completed formal-review job, hash-check its sealed verdict, and project.
 
     Reads the Fleet Comms SQLite store read-only, loads the sealed-verdict blob
-    from the content-addressed store, hash-checks it, parses it with the
-    existing strict parser, and re-checks job binding. Never exposes sealed /
-    snapshot / raw artifact IDs or payload text / findings.
+    through the read-only ArtifactStore API (#7483 1.12), hash-checks it,
+    parses it with the existing strict parser, and re-checks job binding.
+    Never exposes sealed / snapshot / raw artifact IDs or payload text /
+    findings.
     """
     if not review_id or not review_id.strip():
         raise ResolutionError(REASON_RESOLUTION_ERROR, "review_id is required")
@@ -1135,15 +1130,6 @@ def resolve_formal_review(
         if sealed_artifact_id is None:
             raise ResolutionError(REASON_SOURCE_MISSING, "job has no sealed verdict")
         try:
-            art_row = connection.execute(
-                "SELECT sha256 FROM artifacts WHERE artifact_id = ?",
-                (str(sealed_artifact_id),),
-            ).fetchone()
-        except sqlite3.Error as exc:
-            raise ResolutionError(REASON_RESOLUTION_ERROR, "artifacts unreadable") from exc
-        if art_row is None:
-            raise ResolutionError(REASON_SOURCE_MISSING)
-        try:
             pub_row = connection.execute(
                 "SELECT head_sha, status_context, published_at FROM github_publications WHERE review_id = ?",
                 (rid,),
@@ -1161,19 +1147,20 @@ def resolve_formal_review(
     finally:
         connection.close()
 
-    # Hash-check the sealed-verdict blob read-only (never via ArtifactStore).
-    digest_hex = str(art_row["sha256"]).lower()
-    if not SHA256_HEX_RE.fullmatch(digest_hex):
-        raise ResolutionError(REASON_RESOLUTION_ERROR, "sealed-verdict digest is malformed")
-    blob_path = _blob_path_for(root, digest_hex)
-    if not blob_path.is_file():
-        raise ResolutionError(REASON_SOURCE_MISSING, "sealed-verdict blob missing")
+    # #7483 (1.12): load + hash-check via the read-only ArtifactStore API —
+    # never a host-local CAS path that bypasses the store.
     try:
-        blob_bytes = blob_path.read_bytes()
-    except OSError as exc:
+        with ArtifactStore.open_readonly(root=root) as store:
+            blob_bytes = store.read_bytes(str(sealed_artifact_id))
+    except ArtifactStoreError as exc:
+        message = str(exc).lower()
+        if "digest mismatch" in message:
+            raise ResolutionError(REASON_DIGEST_MISMATCH, "sealed-verdict blob digest drift") from exc
+        if "not found" in message or "missing blob" in message:
+            raise ResolutionError(REASON_SOURCE_MISSING, "sealed-verdict blob missing") from exc
         raise ResolutionError(REASON_RESOLUTION_ERROR, "sealed-verdict blob unreadable") from exc
-    if hashlib.sha256(blob_bytes).hexdigest() != digest_hex:
-        raise ResolutionError(REASON_DIGEST_MISMATCH, "sealed-verdict blob digest drift")
+    except (OSError, ControlPlaneError) as exc:
+        raise ResolutionError(REASON_RESOLUTION_ERROR, "sealed-verdict store unreadable") from exc
 
     # Parse with the existing strict parser and re-check job binding.
     try:

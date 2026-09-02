@@ -101,17 +101,50 @@ def test_constructor_closes_connection_on_partial_init(
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
     closed: list[object] = []
 
-    real_ensure = ArtifactStore._ensure_pg_blob_table
+    import scripts.fleet_comms.artifacts as artifacts_mod
 
-    def boom(self):
-        closed.append(self._conn)
+    real_apply = artifacts_mod.apply_pg_schema
+
+    def boom(conn):
+        closed.append(conn)
         raise RuntimeError("induced init failure")
 
-    monkeypatch.setattr(ArtifactStore, "_ensure_pg_blob_table", boom)
+    monkeypatch.setattr(artifacts_mod, "apply_pg_schema", boom)
     with pytest.raises(RuntimeError, match="induced init failure"):
         ArtifactStore(root=tmp_path)
     assert closed and closed[0].closed
-    monkeypatch.setattr(ArtifactStore, "_ensure_pg_blob_table", real_ensure)
+    monkeypatch.setattr(artifacts_mod, "apply_pg_schema", real_apply)
+
+
+def test_writes_use_single_transaction_context_manager(
+    pg_store: ArtifactStore,
+) -> None:
+    """#7483 acceptance: store writes go through ``_transaction``."""
+    seen: list[str] = []
+    real = pg_store._transaction
+
+    from contextlib import contextmanager
+
+    @contextmanager
+    def wrapped():
+        seen.append("enter")
+        with real() as conn:
+            yield conn
+        seen.append("exit")
+
+    pg_store._transaction = wrapped  # type: ignore[method-assign]
+    pg_store.store_bytes(_payload(), producer="t")
+    assert seen == ["enter", "exit"]
+
+
+def test_open_readonly_refuses_writes(pg_store: ArtifactStore, tmp_path: Path) -> None:
+    """#7483 (1.12): readonly open can read but never write."""
+    rec = pg_store.store_bytes(_payload(), producer="t")
+    with ArtifactStore.open_readonly(root=tmp_path) as reader:
+        assert reader.read_bytes(rec.artifact_id) == pg_store.read_bytes(rec.artifact_id)
+        with pytest.raises(ArtifactStoreError, match="read-only"):
+            reader.store_bytes(_payload(), producer="t")
+
 
 
 def test_concurrent_explicit_id_race_is_deterministic(

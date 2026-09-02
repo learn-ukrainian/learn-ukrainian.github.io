@@ -1971,7 +1971,16 @@ def _write_typed_source_fixtures(tmp_path: Path, head_sha: str) -> tuple[Path, P
                 publication_id TEXT PRIMARY KEY, review_id TEXT NOT NULL, head_sha TEXT NOT NULL,
                 status_context TEXT NOT NULL, published_at TEXT NOT NULL
             );
-            CREATE TABLE artifacts (artifact_id TEXT PRIMARY KEY, sha256 TEXT NOT NULL);
+            CREATE TABLE artifacts (
+                artifact_id TEXT PRIMARY KEY,
+                sha256 TEXT NOT NULL,
+                bytes INTEGER NOT NULL,
+                mime_type TEXT,
+                logical_filename TEXT,
+                producer TEXT NOT NULL,
+                retention_class TEXT NOT NULL,
+                created_at TEXT NOT NULL
+            );
             CREATE TABLE requests (
                 request_id TEXT PRIMARY KEY, requested_recipient TEXT NOT NULL,
                 resolved_recipient TEXT NOT NULL, state TEXT NOT NULL, completion_state TEXT NOT NULL,
@@ -2007,7 +2016,19 @@ def _write_typed_source_fixtures(tmp_path: Path, head_sha: str) -> tuple[Path, P
                 "2026-08-02T10:00:00Z",
             ),
         )
-        connection.execute("INSERT INTO artifacts VALUES (?, ?)", ("artifact_sealed_canary", sealed_digest))
+        connection.execute(
+            "INSERT INTO artifacts VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (
+                "artifact_sealed_canary",
+                sealed_digest,
+                len(sealed_bytes),
+                "application/json",
+                "sealed-verdict.json",
+                "test-fixture",
+                "default",
+                "2026-08-02T10:00:00Z",
+            ),
+        )
         connection.execute(
             "INSERT INTO formal_review_attempts VALUES (?, ?, ?, ?, ?, ?)",
             ("attempt_1", review_id, 1, "complete", "artifact_raw_canary", "2026-08-02T10:01:00Z"),
