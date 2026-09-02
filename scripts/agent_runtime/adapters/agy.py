@@ -2,7 +2,7 @@
 
 Ported from `kubedojo/scripts/agent_runtime/adapters/agy.py` for the
 2026-05-20 seminar-writer evaluation. `agy` ships Gemini Flash
-("gemini-3.7-flash-high" default; was 3.6 Flash) on a separate meter from gemini-cli; the
+("gemini-3.8-flash-high" default; was 3.7 Flash) on a separate meter from gemini-cli; the
 seminar-track writer ADR at
 `docs/decisions/pending/2026-05-20-seminar-track-writer-assignment.md`
 adds it as candidate D pending empirical testing.
@@ -93,14 +93,18 @@ _MAX_INLINE_TOOL_RESULT_BYTES = 1_000_000
 _AGY_PRINT_TIMEOUT = "120m"
 
 # Canonical ``agy --model`` values (verbatim from ``agy models`` as of
-# 2026-08-13). Callers may pass a slug (``gemini-3.7-flash-high``) or a legacy
-# display string (``Gemini 3.7 Flash (High)``); ``_normalize_model`` collapses
+# 2026-09-02). Callers may pass a slug (``gemini-3.8-flash-high``) or a legacy
+# display string (``Gemini 3.8 Flash (High)``); ``_normalize_model`` collapses
 # both to the same key. We always emit the slug form because ``agy models``
 # now lists slugs and headless ``--model <slug>`` is the proven path.
 #
 # Historical note: earlier AGY builds wanted display labels (#2731 slug bug).
-# Live probe 2026-08-13: ``agy models`` lists gemini-3.7-flash-high/medium/low.
+# Live probe 2026-09-02: ``agy models`` lists gemini-3.8-flash-high/medium/low
+# above the 3.7/3.6 back-compat entries.
 _AGY_MODEL_SLUGS: tuple[str, ...] = (
+    "gemini-3.8-flash-high",
+    "gemini-3.8-flash-medium",
+    "gemini-3.8-flash-low",
     "gemini-3.7-flash-high",
     "gemini-3.7-flash-medium",
     "gemini-3.7-flash-low",
@@ -119,6 +123,9 @@ _AGY_MODEL_SLUGS: tuple[str, ...] = (
 
 # Legacy display labels still accepted as input (normalize → same key as slug).
 _AGY_MODEL_LEGACY_LABELS: tuple[str, ...] = (
+    "Gemini 3.8 Flash (High)",
+    "Gemini 3.8 Flash (Medium)",
+    "Gemini 3.8 Flash (Low)",
     "Gemini 3.7 Flash (High)",
     "Gemini 3.7 Flash (Medium)",
     "Gemini 3.7 Flash (Low)",
@@ -138,7 +145,7 @@ _AGY_MODEL_LEGACY_LABELS: tuple[str, ...] = (
 
 def _normalize_model(value: str) -> str:
     """Collapse a model identifier to its alphanumeric-lowercase form so a slug
-    (``gemini-3.7-flash-high``) and the CLI display string (``Gemini 3.7 Flash
+    (``gemini-3.8-flash-high``) and the CLI display string (``Gemini 3.8 Flash
     (High)``) map to the same key."""
     return re.sub(r"[^a-z0-9]", "", value.lower())
 
@@ -170,7 +177,7 @@ class AgyAdapter:
     """Adapter for the ``agy`` Antigravity CLI."""
 
     name: str = "agy"
-    default_model: str = os.environ.get("LEARN_UK_AGY_MODEL", "gemini-3.7-flash-high")
+    default_model: str = os.environ.get("LEARN_UK_AGY_MODEL", "gemini-3.8-flash-high")
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
 
     def build_invocation(

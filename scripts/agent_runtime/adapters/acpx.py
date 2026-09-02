@@ -165,7 +165,7 @@ _HERMES_REQUIRED_FLAGS: tuple[str, ...] = (
     "--model",
     "--provider",
 )
-AGY_ACP_MODEL = "gemini-3.7-flash-high"
+AGY_ACP_MODEL = "gemini-3.8-flash-high"
 CLAUDE_ACP_MODEL = "claude-sonnet-5"
 CLAUDE_ACP_MODELS = frozenset({CLAUDE_ACP_MODEL, "claude-fable-5"})
 GLM_ACP_MODEL = "glm-5.3"

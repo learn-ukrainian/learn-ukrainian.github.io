@@ -133,7 +133,7 @@ review_scheduler:
     agy:
       formal_review_eligible: false
       formal_review_exclusion_reason: source-blind AGY ACP wrapper does not expose parent-owned MCP servers
-      models: [gemini-3.7-flash-high]
+      models: [gemini-3.8-flash-high]
       participant: agy
       adapter_transport: acp
       catalog_transport: agy
@@ -378,6 +378,31 @@ models:
     weaknesses: [less_final_authority_than_opus, tokenizer_uses_more_tokens]
     sources:
       - https://platform.claude.com/docs/en/about-claude/models/whats-new-sonnet-5
+  gemini-3.8-flash-high:
+    family: google
+    tier: frontier_practical
+    lifecycle: active
+    aliases: [gemini-3.8-flash, gemini-3.8-flash-medium, gemini-3.8-flash-low]
+    roles: [implementation, agentic_coding, subagent_work, strong_review, multimodal_analysis]
+    transports: [agy]
+    strengths: [token_efficient_agentic_loops, fast_tool_use, coding_benchmark_gains, low_cost, fast_scoped_cf]
+    weaknesses: [not_default_critical_authority, deep_architecture_still_prefers_pro_or_sol]
+    notes: >-
+      Default AGY Flash pin (operator GO 2026-09-02). Live `agy models` probe
+      2026-09-02 lists gemini-3.8-flash-high/medium/low; 3.7/3.6 stay in the
+      back-compat allowlist. Native AGY subscribed seat — never OpenRouter.
+      Ukrainian-lane default is the Text Arena language-category jump vs 3.7
+      Flash High (lmarena 2026-09-02, Gemini 3.8 Flash High): Writing,
+      Literature & Language #7→#3; Multi-Turn #9→#4; Longer Query #13→#5;
+      Hard Prompts (English) #23→#6; Hard Prompts #13→#7; Instruction
+      Following #11→#9; Coding #22→#7. Text Arena overall #7 (1494) vs
+      Claude Opus 5 High #8 (1492) and Gemini 3.7 Flash High #10 (1491).
+      Agent Arena #14 (+5.94%) vs 3.7 Flash High #32 (+0.84%) is supporting
+      agentic evidence, not the language-lane reason. WebDev Code Arena #18
+      (1567) is not a Ukrainian-lane claim. Not Sol/Fable/Opus authority.
+    sources:
+      - https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash
+      - https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/
   gemini-3.7-flash-high:
     family: google
     tier: frontier_practical
@@ -386,7 +411,7 @@ models:
     roles: [implementation, agentic_coding, subagent_work, strong_review, multimodal_analysis]
     transports: [agy]
     strengths: [token_efficient_agentic_loops, fast_tool_use, coding_benchmark_gains, low_cost, fast_scoped_cf]
-    weaknesses: [not_default_critical_authority, deep_architecture_still_prefers_pro_or_sol]
+    weaknesses: [superseded_as_default_by_3_8_flash, not_default_critical_authority, deep_architecture_still_prefers_pro_or_sol]
     notes: >-
       Wave 1 SCORECARD 2026-08-23: CF #7137 pass, wall ~47s, low noise, concrete
       finding. Fast scoped CF. Native AGY subscribed seat — never OpenRouter.
@@ -799,6 +824,14 @@ review_candidates:
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model claude-fable-5
     review_profiles: [code, infra]
     capabilities: [code_review]
+  gemini-3.8-flash:
+    model_id: gemini-3.8-flash-high
+    route: agy
+    transport: agy
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.8-flash-high
+    health_keys: [gemini]
+    review_profiles: [code, infra]
+    capabilities: [code_review]
   gemini-3.7-flash:
     model_id: gemini-3.7-flash-high
     route: agy
@@ -979,7 +1012,7 @@ orchestrator_seats:
     fallback_model_id: grok-4.6
     note: native grok-4.6; Cursor explicit grok-4.6 if native dark (not a quality escalate)
   agy:
-    model_id: gemini-3.7-flash-high
+    model_id: gemini-3.8-flash-high
     effort: high
     escalate_model_id: gemini-3.1-pro-high
     escalate_effort: high
@@ -1066,8 +1099,8 @@ formal_cf_defaults:
   agy:
     # Orchestrator pin + ladder seat; not a review-pr --reviewer transport until
     # sealed isolation (#5555). When AGY is the formal candidate, resolve-reviewer
-    # selects gemini-3.7-flash-high via the practical ladder.
-    model_id: gemini-3.7-flash-high
+    # selects gemini-3.8-flash-high via the practical ladder.
+    model_id: gemini-3.8-flash-high
     effort: high
     formal_review_eligible: false
     isolation_issue: 5555
@@ -1086,7 +1119,7 @@ review_ladders:
     - [claude-fable-5-cursor-fallback]
     - [gpt-5.6-terra]
     - [claude-sonnet-5]
-    - [gemini-3.7-flash]
+    - [gemini-3.8-flash]
     - [grok-4.6]
     - [grok-4.6-cursor-fallback]
     - [kimi-k3]
@@ -1104,7 +1137,7 @@ review_ladders:
     - [gpt-5.6-terra]
     - [claude-sonnet-5]
     - [glm-5.3]
-    - [gemini-3.7-flash]
+    - [gemini-3.8-flash]
     - [grok-4.6]
     - [grok-4.6-cursor-fallback]
     - [kimi-k3]

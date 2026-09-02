@@ -47,7 +47,7 @@ def _config(family: str = "codex") -> layerb_judge_bridge.BridgeConfig:
     model = {
         "codex": PINNED_CODEX_MODEL,
         "grok": PINNED_GROK_MODEL,
-        "gemini": "gemini-3.7-flash-high",
+        "gemini": "gemini-3.8-flash-high",
     }[family]
     return layerb_judge_bridge.BridgeConfig(
         family=family,
@@ -1502,4 +1502,3 @@ def test_codex_trace_keys_normalization(monkeypatch: pytest.MonkeyPatch) -> None
         response = layerb_judge_bridge.run_bridge(_request(), _config())
         assert _relation(response)["relation"] == "ABSTAIN", f"Failed to reject wrong model with key: {key}"
         assert response.get("_bridge_conservative_reason") == "model_pin", f"Failed to reject wrong model with key: {key}"
-
