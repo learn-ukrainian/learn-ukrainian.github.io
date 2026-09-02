@@ -531,7 +531,7 @@ def test_iter_private_artifact_lines_streams_content(tmp_path: Path) -> None:
 def test_iter_private_artifact_lines_refuses_wrong_mode(tmp_path: Path) -> None:
     path = tmp_path / "artifact.jsonl"
     path.write_text("{}\n")
-    os.chmod(path, 0o644)
+    os.chmod(path, 0o400)
     with pytest.raises(extraction.ExtractionError, match="unexpected mode"):
         list(extraction.iter_private_artifact_lines(path))
 
