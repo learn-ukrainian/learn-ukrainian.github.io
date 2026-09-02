@@ -1,7 +1,7 @@
 {
   "schema_version": "dataset_v4_a3_heldout_source_family_seal_receipt_v1",
   "receipt_id": "dataset-v4-a3-heldout-source-family-seal-v1",
-  "status": "A3_HELDOUT_SOURCE_FAMILY_SEAL_FIREWALL_SEALED_MEMBERSHIP_PENDING",
+  "status": "A3_HELDOUT_SOURCE_FAMILY_SEAL_FIREWALL_SEALED_MEMBERSHIP_ASSIGNED_PRIVATE",
   "text_free": true,
   "controlling_outcome_sha256": "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20",
   "control_surfaces": {
@@ -31,6 +31,11 @@
       "schema_version": "phase3_scope_circularity_firewall_v1",
       "v3_only": true,
       "used_for_denial_only": true
+    },
+    "assignment_algorithm_implementation": {
+      "path": "scripts/projects/open_model_data/v4_a3_heldout_family_assignment.py",
+      "sha256": "392b3fa923cc09ba9a59a77ecd3758e6ba884c4011916d8b7ec3c180cc481d03",
+      "schema_version": "v4_a3_heldout_family_assignment_script_v1"
     }
   },
   "source_family_registry": {
@@ -59,23 +64,32 @@
   },
   "heldout_partition_seal": {
     "seal_id": "v4-a3-heldout-partition-seal-v1",
-    "status": "FROZEN_ALGORITHM_AND_FIREWALL_SEALED_MEMBERSHIP_NOT_YET_ASSIGNED",
+    "status": "FROZEN_ALGORITHM_AND_MEMBERSHIP_ASSIGNED_PRIVATE_NOT_DISCLOSED",
     "sealed_before_any_builder_packet": true,
     "partition_unit": "source_family",
     "family_count": 9,
-    "assignment_algorithm_id": "v4-a3-sha256-family-bucket-split-v1",
+    "assignment_algorithm": {
+      "algorithm_id": "v4-a3-hmac-sha256-family-rank-split-v1",
+      "algorithm_version": "v1",
+      "identity_dimensions": ["family_id"],
+      "content_blind": true,
+      "formula": "rank_key(family_id) = int(hmac.new(key=private_salt, msg=family_id.encode('utf-8'), digestmod=hashlib.sha256).hexdigest(), 16); order family_ids ascending by (rank_key(family_id), family_id); heldout_target_count = max(1, round(family_count * heldout_fraction)); the first heldout_target_count family_ids in that order are assigned to the heldout pool; every remaining family_id is assigned to the builder_eligible pool",
+      "heldout_fraction": 0.1,
+      "rounding_rule": "python_round_half_to_even",
+      "minimum_heldout_count": 1,
+      "algorithm_descriptor_sha256": "b2abbb8e45f60abb098b8976dec7e7f2b4668137f55bfab8eee3999bd65a1928",
+      "salt_commitment_sha256": "ba6b4e7c726fec4f6fd9615895912ea8b199ca282e510b6a7503b7c86634e786",
+      "assignment_commitment_sha256": "e3d7cd2d377378eb35baaed32ca1a6f6e658a9101bf182bf8cc466987a2aa9e0"
+    },
     "assignment_is_deterministic": true,
     "assignment_is_content_blind": true,
     "assignment_requires_private_salt": true,
-    "bucket_count": 10000,
-    "heldout_bucket_range": [0, 999],
-    "builder_eligible_bucket_range": [1000, 9999],
-    "families_assigned_heldout": 0,
-    "families_assigned_builder_eligible": 0,
-    "families_assignment_pending": 9,
+    "heldout_count": 1,
+    "builder_eligible_count": 8,
+    "heldout_membership_assigned_privately": true,
     "heldout_membership_included": false,
     "membership_owner_role": "A3_heldout",
-    "membership_materialization_location": "private_operational_board_622",
+    "membership_materialization_location": "private_batch_state_and_private_operational_board_622",
     "disjointness_assertion": "each_family_will_be_assigned_to_exactly_one_pool_no_family_split_across_pools",
     "reseal_required_on": [
       "source_family_registry_change",
@@ -117,12 +131,12 @@
     "adoption_forbidden": true,
     "reason_code": "cross_version_evidence_not_reusable_for_v4_family_split",
     "denied_fingerprints": [
-      {"fingerprint_kind": "corpus_sha256", "value": "de77b0e2444365e3c9cdec3441128f87b96ca8a15f897e4c769f9b840ccac398", "denied": true},
       {"fingerprint_kind": "object_set_sha256", "value": "af94e8d12c075e1e5e1816de076327dd68a3fd5d5f06ec77debcbbd590bcc9ec", "denied": true},
       {"fingerprint_kind": "pack_manifest_receipt_sha256", "value": "2a883cb3e9a3b2ee673e397c8f5ba511f886f725bea980b2c982ca17f92a5e7d", "denied": true},
       {"fingerprint_kind": "ordered_row_identity_commitment_sha256", "value": "d873d7493c6cd276a9604954c9c7aa07e760ca4f47a276658fd28956d6fa940b", "denied": true},
       {"fingerprint_kind": "candidate_clearance_commitment_sha256", "value": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570", "denied": true},
-      {"fingerprint_kind": "private_graph_commitment_sha256", "value": "de77b0e2444365e3c9cdec3441128f87b96ca8a15f897e4c769f9b840ccac398", "denied": true}
+      {"fingerprint_kind": "private_graph_commitment_sha256", "value": "de77b0e2444365e3c9cdec3441128f87b96ca8a15f897e4c769f9b840ccac398", "denied": true},
+      {"fingerprint_kind": "near_duplicate_policy_fingerprint_sha256", "value": "19518efb07dd8ef4173b32487da7427f3c1eb0b8f8dd5d21b046cfc4dc5d560e", "denied": true}
     ]
   },
   "a2_residuals_carried_forward": [
@@ -135,19 +149,7 @@
     {"residual_id": "a2-residual-quotation-interference-rights-unknown", "origin_stage": "A2", "status": "unresolved_carried_to_a3"},
     {"residual_id": "a2-residual-abstention-source-incomplete", "origin_stage": "A2", "status": "unresolved_carried_to_a3"}
   ],
-  "a3_residuals": [
-    {
-      "residual_id": "a3-residual-heldout-membership-assignment-pending",
-      "subject_kind": "heldout_partition_seal",
-      "subject_id": "source_family",
-      "stage": "A3",
-      "reason_code": "membership_not_yet_assigned",
-      "owner_role": "A3_heldout",
-      "next_action": "execute the sealed deterministic bucket algorithm under a privileged private salt and materialize per-family pool assignment on the private operational board without exposing it to any builder role",
-      "retryability": "retryable",
-      "evidence_refs": ["admission.dataset_v4_pilot_slot_manifest_v1.sealed_heldout_commitment", "admission.dataset_v4_a3_heldout_source_family_seal_receipt_v1.heldout_partition_seal"]
-    }
-  ],
+  "a3_residuals": [],
   "execution_counters": {
     "dataset_rows_emitted": 0,
     "new_source_fetches": 0,

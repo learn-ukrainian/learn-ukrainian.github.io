@@ -26,7 +26,7 @@
   "properties": {
     "schema_version": {"const": "dataset_v4_a3_heldout_source_family_seal_receipt_v1"},
     "receipt_id": {"const": "dataset-v4-a3-heldout-source-family-seal-v1"},
-    "status": {"const": "A3_HELDOUT_SOURCE_FAMILY_SEAL_FIREWALL_SEALED_MEMBERSHIP_PENDING"},
+    "status": {"const": "A3_HELDOUT_SOURCE_FAMILY_SEAL_FIREWALL_SEALED_MEMBERSHIP_ASSIGNED_PRIVATE"},
     "text_free": {"const": true},
     "controlling_outcome_sha256": {"const": "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"},
     "control_surfaces": {
@@ -42,7 +42,10 @@
     "bindings": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["a2_source_operation_admission", "slot_manifest", "near_duplicate_policy", "cycle007_scope_circularity_evidence"],
+      "required": [
+        "a2_source_operation_admission", "slot_manifest", "near_duplicate_policy",
+        "cycle007_scope_circularity_evidence", "assignment_algorithm_implementation"
+      ],
       "properties": {
         "a2_source_operation_admission": {"$ref": "#/$defs/artifact_binding"},
         "slot_manifest": {"$ref": "#/$defs/artifact_binding"},
@@ -54,6 +57,14 @@
           "properties": {
             "v3_only": {"const": true},
             "used_for_denial_only": {"const": true}
+          }
+        },
+        "assignment_algorithm_implementation": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "type": "object",
+          "properties": {
+            "path": {"const": "scripts/projects/open_model_data/v4_a3_heldout_family_assignment.py"},
+            "schema_version": {"const": "v4_a3_heldout_family_assignment_script_v1"}
           }
         }
       }
@@ -116,31 +127,50 @@
       "additionalProperties": false,
       "required": [
         "seal_id", "status", "sealed_before_any_builder_packet", "partition_unit", "family_count",
-        "assignment_algorithm_id", "assignment_is_deterministic", "assignment_is_content_blind",
-        "assignment_requires_private_salt", "bucket_count", "heldout_bucket_range",
-        "builder_eligible_bucket_range", "families_assigned_heldout", "families_assigned_builder_eligible",
-        "families_assignment_pending", "heldout_membership_included", "membership_owner_role",
+        "assignment_algorithm", "assignment_is_deterministic", "assignment_is_content_blind",
+        "assignment_requires_private_salt", "heldout_count", "builder_eligible_count",
+        "heldout_membership_assigned_privately", "heldout_membership_included", "membership_owner_role",
         "membership_materialization_location", "disjointness_assertion", "reseal_required_on"
       ],
       "properties": {
         "seal_id": {"const": "v4-a3-heldout-partition-seal-v1"},
-        "status": {"const": "FROZEN_ALGORITHM_AND_FIREWALL_SEALED_MEMBERSHIP_NOT_YET_ASSIGNED"},
+        "status": {"const": "FROZEN_ALGORITHM_AND_MEMBERSHIP_ASSIGNED_PRIVATE_NOT_DISCLOSED"},
         "sealed_before_any_builder_packet": {"const": true},
         "partition_unit": {"const": "source_family"},
         "family_count": {"const": 9},
-        "assignment_algorithm_id": {"const": "v4-a3-sha256-family-bucket-split-v1"},
+        "assignment_algorithm": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "algorithm_id", "algorithm_version", "identity_dimensions", "content_blind", "formula",
+            "heldout_fraction", "rounding_rule", "minimum_heldout_count", "algorithm_descriptor_sha256",
+            "salt_commitment_sha256", "assignment_commitment_sha256"
+          ],
+          "properties": {
+            "algorithm_id": {"const": "v4-a3-hmac-sha256-family-rank-split-v1"},
+            "algorithm_version": {"const": "v1"},
+            "identity_dimensions": {"const": ["family_id"]},
+            "content_blind": {"const": true},
+            "formula": {
+              "const": "rank_key(family_id) = int(hmac.new(key=private_salt, msg=family_id.encode('utf-8'), digestmod=hashlib.sha256).hexdigest(), 16); order family_ids ascending by (rank_key(family_id), family_id); heldout_target_count = max(1, round(family_count * heldout_fraction)); the first heldout_target_count family_ids in that order are assigned to the heldout pool; every remaining family_id is assigned to the builder_eligible pool"
+            },
+            "heldout_fraction": {"const": 0.1},
+            "rounding_rule": {"const": "python_round_half_to_even"},
+            "minimum_heldout_count": {"const": 1},
+            "algorithm_descriptor_sha256": {"const": "b2abbb8e45f60abb098b8976dec7e7f2b4668137f55bfab8eee3999bd65a1928"},
+            "salt_commitment_sha256": {"$ref": "#/$defs/sha256"},
+            "assignment_commitment_sha256": {"$ref": "#/$defs/sha256"}
+          }
+        },
         "assignment_is_deterministic": {"const": true},
         "assignment_is_content_blind": {"const": true},
         "assignment_requires_private_salt": {"const": true},
-        "bucket_count": {"const": 10000},
-        "heldout_bucket_range": {"const": [0, 999]},
-        "builder_eligible_bucket_range": {"const": [1000, 9999]},
-        "families_assigned_heldout": {"const": 0},
-        "families_assigned_builder_eligible": {"const": 0},
-        "families_assignment_pending": {"const": 9},
+        "heldout_count": {"const": 1},
+        "builder_eligible_count": {"const": 8},
+        "heldout_membership_assigned_privately": {"const": true},
         "heldout_membership_included": {"const": false},
         "membership_owner_role": {"const": "A3_heldout"},
-        "membership_materialization_location": {"const": "private_operational_board_622"},
+        "membership_materialization_location": {"const": "private_batch_state_and_private_operational_board_622"},
         "disjointness_assertion": {"const": "each_family_will_be_assigned_to_exactly_one_pool_no_family_split_across_pools"},
         "reseal_required_on": {
           "type": "array",
@@ -237,7 +267,6 @@
     },
     "a3_residuals": {
       "type": "array",
-      "minItems": 1,
       "items": {
         "type": "object",
         "additionalProperties": false,
