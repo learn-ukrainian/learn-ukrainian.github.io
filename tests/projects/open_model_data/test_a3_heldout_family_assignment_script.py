@@ -930,12 +930,12 @@ def test_a3_heldout_assignment_migrate_refuses_commitment_drift(tmp_path: Path) 
 
 def _init_primary_repo(path: Path) -> None:
     path.mkdir(parents=True, exist_ok=True)
-    subprocess.run(["git", "init", "-q"], cwd=path, check=True)
-    subprocess.run(["git", "config", "user.email", "test@example.invalid"], cwd=path, check=True)
-    subprocess.run(["git", "config", "user.name", "Test"], cwd=path, check=True)
+    subprocess.run(["git", "init", "-q"], cwd=path, check=True, timeout=30)
+    subprocess.run(["git", "config", "user.email", "test@example.invalid"], cwd=path, check=True, timeout=30)
+    subprocess.run(["git", "config", "user.name", "Test"], cwd=path, check=True, timeout=30)
     (path / "seed.txt").write_text("seed\n")
-    subprocess.run(["git", "add", "."], cwd=path, check=True)
-    subprocess.run(["git", "commit", "-q", "-m", "seed"], cwd=path, check=True)
+    subprocess.run(["git", "add", "."], cwd=path, check=True, timeout=30)
+    subprocess.run(["git", "commit", "-q", "-m", "seed"], cwd=path, check=True, timeout=30)
 
 
 def test_discover_primary_root_resolves_worktree_to_primary_not_itself(tmp_path: Path) -> None:
@@ -946,6 +946,7 @@ def test_discover_primary_root_resolves_worktree_to_primary_not_itself(tmp_path:
         ["git", "worktree", "add", "-q", "-b", "dispatch-branch", str(worktree)],
         cwd=primary,
         check=True,
+        timeout=30,
     )
 
     assert assignment._discover_primary_root(worktree) == primary.resolve()
@@ -967,6 +968,7 @@ def test_discover_primary_root_worktree_private_artifact_lands_on_primary(tmp_pa
         ["git", "worktree", "add", "-q", "-b", "dispatch-branch-2", str(worktree)],
         cwd=primary,
         check=True,
+        timeout=30,
     )
 
     primary_batch_state = assignment._discover_primary_root(worktree) / "batch_state"
