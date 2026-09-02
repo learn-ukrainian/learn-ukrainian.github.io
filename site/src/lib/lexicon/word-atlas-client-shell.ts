@@ -10,6 +10,12 @@ import {
   type EntryRecord,
 } from "./atlas-data-source.ts";
 import { absoluteSitePath } from "./site-base.ts";
+import {
+  buildAtlasLinkCatalogFromSearchRows,
+  type AtlasLinkCatalog,
+  type AtlasSearchAliasRow,
+  type AtlasSearchArticleRow,
+} from "./word-atlas-article-model.ts";
 
 export type AtlasClientShellState =
   | { status: "loading"; slug: string }
@@ -77,6 +83,7 @@ export async function preflightAtlasSlugInSearchIndex(
   slug: string,
   fetchImpl: typeof fetch,
   baseUrl = "/",
+  onIndexLoaded?: (rows: AtlasSearchArticleRow[]) => void,
 ): Promise<"found" | "missing" | "unknown"> {
   const url = absoluteSitePath("/lexicon/search-index.json", baseUrl);
   try {
@@ -84,6 +91,7 @@ export async function preflightAtlasSlugInSearchIndex(
     if (!response.ok) return "unknown";
     const data: unknown = await response.json();
     if (!Array.isArray(data)) return "unknown";
+    onIndexLoaded?.(data as AtlasSearchArticleRow[]);
     const hit = data.some(
       (row) =>
         row &&
@@ -95,6 +103,43 @@ export async function preflightAtlasSlugInSearchIndex(
     return hit ? "found" : "missing";
   } catch {
     return "unknown";
+  }
+}
+
+/** Load the public lexical catalog used for learner-facing Atlas backlinks. */
+export async function loadAtlasLinkCatalog(
+  fetchImpl: typeof fetch,
+  baseUrl = "/",
+  articleRows?: readonly AtlasSearchArticleRow[],
+): Promise<AtlasLinkCatalog | null> {
+  try {
+    let articles = articleRows;
+    if (!articles) {
+      const response = await fetchImpl(
+        absoluteSitePath("/lexicon/search-index.json", baseUrl),
+      );
+      if (!response.ok) return null;
+      const data: unknown = await response.json();
+      if (!Array.isArray(data)) return null;
+      articles = data as AtlasSearchArticleRow[];
+    }
+
+    let aliases: AtlasSearchAliasRow[] = [];
+    try {
+      const response = await fetchImpl(
+        absoluteSitePath("/lexicon/search-aliases.json", baseUrl),
+      );
+      if (response.ok) {
+        const data: unknown = await response.json();
+        if (Array.isArray(data)) aliases = data as AtlasSearchAliasRow[];
+      }
+    } catch {
+      // Direct article heads still provide useful links when aliases are offline.
+    }
+
+    return buildAtlasLinkCatalogFromSearchRows(articles, aliases);
+  } catch {
+    return null;
   }
 }
 

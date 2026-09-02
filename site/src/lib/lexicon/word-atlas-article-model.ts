@@ -270,6 +270,32 @@ export interface LexiconEntryView {
   } | null;
 }
 
+/** Minimal canonical article shape needed for learner-facing Atlas backlinks. */
+export interface AtlasLinkCatalogEntry {
+  slug: string;
+  lemma: string;
+  entry_type?: string | null;
+  pos?: string | null;
+  gloss?: string | null;
+  enrichment?: Pick<Enrichment, "morphology"> | null;
+}
+
+export interface AtlasLinkCatalogAlias {
+  alias: string;
+  target_slug: string;
+}
+
+/** Injectable catalog keeps link resolution unit-testable without opening atlas.db. */
+export interface AtlasLinkCatalog {
+  entries: readonly AtlasLinkCatalogEntry[];
+  aliases?: readonly AtlasLinkCatalogAlias[];
+}
+
+export interface ParticipleLink {
+  lemma: string;
+  slug: string;
+}
+
 export const CASE_ROWS = [
   { key: "називний", label: "Називний" },
   { key: "родовий", label: "Родовий" },
@@ -515,6 +541,236 @@ export function normalizeAtlasLemma(lemma: string): string {
   return stripWikiStress(lemma).trim().toLocaleLowerCase("uk");
 }
 
+/** Normalize a relation label without changing the text shown to the learner. */
+export function normalizeAtlasLookupText(value: string): string {
+  return normalizeAtlasLemma(value.replace(/\([^)]*\)/gu, "").replace(/\s+/gu, " "));
+}
+
+export interface AtlasLinkResolver {
+  resolve(text: string, excludeSlug?: string | null): string | null;
+  resolveSlug(slug: string, excludeSlug?: string | null): string | null;
+  isAmbiguous(text: string): boolean;
+}
+
+export interface AtlasSearchArticleRow {
+  l: string;
+  s: string;
+  g: string | null;
+  t?: string;
+}
+
+export interface AtlasSearchAliasRow {
+  a: string;
+  s: string;
+}
+
+export function buildAtlasLinkCatalogFromSearchRows(
+  articles: readonly AtlasSearchArticleRow[],
+  aliases: readonly AtlasSearchAliasRow[] = [],
+): AtlasLinkCatalog {
+  return {
+    entries: articles.map((row) => ({
+      lemma: row.l,
+      slug: row.s,
+      entry_type: row.t ?? "lemma",
+      gloss: row.g,
+    })),
+    aliases: aliases.map((row) => ({ alias: row.a, target_slug: row.s })),
+  };
+}
+
+const EMPTY_ATLAS_LINK_CATALOG: AtlasLinkCatalog = { entries: [], aliases: [] };
+
+interface AtlasLinkIndexes {
+  entriesBySlug: Map<string, AtlasLinkCatalogEntry[]>;
+  canonicalSlugs: Set<string>;
+  directTargets: Map<string, Set<string>>;
+  aliasTargets: Map<string, Set<string>>;
+}
+
+const ATLAS_LINK_INDEX_CACHE = new WeakMap<AtlasLinkCatalog, AtlasLinkIndexes>();
+
+function isCanonicalAtlasEntry(entry: AtlasLinkCatalogEntry): boolean {
+  return (
+    Boolean(entry.slug.trim() && entry.lemma.trim()) &&
+    entry.entry_type !== null &&
+    entry.entry_type !== "form_route"
+  );
+}
+
+function posVariants(entries: AtlasLinkCatalogEntry[]): Set<string> {
+  const variants = new Set<string>();
+  for (const entry of entries) {
+    const pos = entry.pos?.trim();
+    if (!pos) continue;
+    for (const value of pos.split(/\s*(?:[,;/|+])\s*|\s+(?:or|або)\s+/iu)) {
+      const normalized = normalizeAtlasLemma(value);
+      if (normalized) variants.add(normalized);
+    }
+  }
+  return variants;
+}
+
+function uniqueTarget(
+  slugs: Set<string>,
+  entriesBySlug: Map<string, AtlasLinkCatalogEntry[]>,
+): string | null {
+  if (slugs.size !== 1) return null;
+  const slug = [...slugs][0]!;
+  const entries = entriesBySlug.get(slug) ?? [];
+  if (entries.length === 0 || posVariants(entries).size > 1) return null;
+  return slug;
+}
+
+function addLookupTarget(index: Map<string, Set<string>>, text: string, slug: string): void {
+  const key = normalizeAtlasLookupText(text);
+  if (!key || !slug.trim()) return;
+  const targets = index.get(key) ?? new Set<string>();
+  targets.add(slug);
+  index.set(key, targets);
+}
+
+function atlasLinkIndexes(catalog: AtlasLinkCatalog): AtlasLinkIndexes {
+  const cached = ATLAS_LINK_INDEX_CACHE.get(catalog);
+  if (cached) return cached;
+
+  const entriesBySlug = new Map<string, AtlasLinkCatalogEntry[]>();
+  const canonicalSlugs = new Set<string>();
+  const directTargets = new Map<string, Set<string>>();
+  const aliasTargets = new Map<string, Set<string>>();
+
+  for (const entry of catalog.entries) {
+    if (!isCanonicalAtlasEntry(entry)) continue;
+    const entries = entriesBySlug.get(entry.slug) ?? [];
+    entries.push(entry);
+    entriesBySlug.set(entry.slug, entries);
+    canonicalSlugs.add(entry.slug);
+    addLookupTarget(directTargets, entry.lemma, entry.slug);
+  }
+  for (const alias of catalog.aliases ?? []) {
+    if (!canonicalSlugs.has(alias.target_slug)) continue;
+    addLookupTarget(aliasTargets, alias.alias, alias.target_slug);
+  }
+
+  const indexes = { entriesBySlug, canonicalSlugs, directTargets, aliasTargets };
+  ATLAS_LINK_INDEX_CACHE.set(catalog, indexes);
+  return indexes;
+}
+
+/**
+ * Build the article/alias resolver used by all learner-facing lexical links.
+ * Direct article heads win over aliases; every non-unique target is rejected.
+ */
+export function buildAtlasLinkResolver(
+  catalog: AtlasLinkCatalog = EMPTY_ATLAS_LINK_CATALOG,
+  relatedSlugs: readonly string[] = [],
+): AtlasLinkResolver {
+  const { entriesBySlug, canonicalSlugs, directTargets, aliasTargets } = atlasLinkIndexes(catalog);
+  const relationTargets = new Map<string, Set<string>>();
+
+  for (const slug of relatedSlugs) {
+    addLookupTarget(relationTargets, slug, slug);
+  }
+
+  const resolveIndexed = (
+    index: Map<string, Set<string>>,
+    key: string,
+    excludeSlug?: string | null,
+  ): string | null => {
+    const targets = index.get(key);
+    if (!targets) return null;
+    const target = uniqueTarget(targets, entriesBySlug);
+    if (!target || target === excludeSlug) return null;
+    return target;
+  };
+
+  const hasAmbiguousIndexed = (index: Map<string, Set<string>>, key: string): boolean => {
+    const targets = index.get(key);
+    if (!targets) return false;
+    return uniqueTarget(targets, entriesBySlug) === null;
+  };
+
+  return {
+    resolve(text, excludeSlug) {
+      const key = normalizeAtlasLookupText(text);
+      if (!key) return null;
+      // A direct head is authoritative, including when it is ambiguous or the
+      // only result is the current page; do not fall through to an alias.
+      if (directTargets.has(key)) return resolveIndexed(directTargets, key, excludeSlug);
+      if (aliasTargets.has(key)) return resolveIndexed(aliasTargets, key, excludeSlug);
+
+      const related = relationTargets.get(key);
+      if (!related || related.size !== 1) return null;
+      const target = [...related][0]!;
+      return target === excludeSlug ? null : target;
+    },
+    resolveSlug(slug, excludeSlug) {
+      if (!canonicalSlugs.has(slug) || slug === excludeSlug) return null;
+      return uniqueTarget(new Set([slug]), entriesBySlug);
+    },
+    isAmbiguous(text) {
+      const key = normalizeAtlasLookupText(text);
+      if (!key) return false;
+      if (directTargets.has(key)) return hasAmbiguousIndexed(directTargets, key);
+      if (aliasTargets.has(key)) return hasAmbiguousIndexed(aliasTargets, key);
+      return (relationTargets.get(key)?.size ?? 0) > 1;
+    },
+  };
+}
+
+const PASSIVE_PARTICIPLE_PARENT_RE =
+  /^\s*Дієпр\.\s*пас\.?[\s\S]*?(?<![\p{L}\p{M}])до\s+([\p{L}\p{M}]+(?:['’ʼ-][\p{L}\p{M}]+)*)/iu;
+
+function participleParent(entry: AtlasLinkCatalogEntry): string | null {
+  const paradigm = entry.enrichment?.morphology?.paradigm;
+  if (paradigm?.kind === "participle") {
+    if (paradigm.voice !== "passive") return null;
+    return paradigm.verb?.trim() || null;
+  }
+  const match = entry.gloss?.match(PASSIVE_PARTICIPLE_PARENT_RE);
+  return match?.[1]?.trim() || null;
+}
+
+interface ParticipleCandidate extends ParticipleLink {
+  parent: string;
+}
+
+const PARTICIPLE_CANDIDATE_CACHE = new WeakMap<AtlasLinkCatalog, ParticipleCandidate[]>();
+
+function participleCandidates(catalog: AtlasLinkCatalog): ParticipleCandidate[] {
+  const cached = PARTICIPLE_CANDIDATE_CACHE.get(catalog);
+  if (cached) return cached;
+
+  const candidates: ParticipleCandidate[] = [];
+  for (const entry of catalog.entries) {
+    if (!isCanonicalAtlasEntry(entry)) continue;
+    const parent = participleParent(entry);
+    if (parent) candidates.push({ lemma: entry.lemma, slug: entry.slug, parent });
+  }
+  PARTICIPLE_CANDIDATE_CACHE.set(catalog, candidates);
+  return candidates;
+}
+
+/** Return published passive participle routes whose verified parent is `parentSlug`. */
+export function buildParticipleLinks(
+  catalog: AtlasLinkCatalog,
+  resolver: AtlasLinkResolver,
+  parentSlug: string,
+): ParticipleLink[] {
+  const links = new Map<string, ParticipleLink>();
+  for (const candidate of participleCandidates(catalog)) {
+    if (candidate.slug === parentSlug || resolver.resolve(candidate.parent) !== parentSlug) continue;
+    links.set(candidate.slug, { lemma: candidate.lemma, slug: candidate.slug });
+  }
+  return [...links.values()].sort((left, right) => {
+    const lemmaOrder = normalizeAtlasLookupText(left.lemma).localeCompare(
+      normalizeAtlasLookupText(right.lemma),
+      "uk",
+    );
+    return lemmaOrder || left.slug.localeCompare(right.slug);
+  });
+}
+
 export function isRusalkaClassLemma(lemma: string): boolean {
   return RUSALKA_CLASS_LEMMAS.has(normalizeAtlasLemma(lemma));
 }
@@ -600,6 +856,7 @@ export function buildWordAtlasArticleView(
   record: EntryRecord,
   generatedAt: string,
   manifestVersion: string,
+  atlasLinkCatalog?: AtlasLinkCatalog,
 ) {
   const rawEntry = record.entry as unknown as LexiconEntryView;
   const wikiReference = sanitizeWikiReference(rawEntry.lemma, rawEntry.wiki_reference);
@@ -627,7 +884,25 @@ export function buildWordAtlasArticleView(
   const paradigm = enrichment?.morphology?.paradigm ?? null;
   const nounParadigm = paradigm?.kind === "noun" ? paradigm : null;
   const verbParadigm = paradigm?.kind === "verb" ? paradigm : null;
-  const participleParadigm = paradigm?.kind === "participle" ? paradigm : null;
+  const rawParticipleParadigm = paradigm?.kind === "participle" ? paradigm : null;
+  const linkCatalog = atlasLinkCatalog ?? EMPTY_ATLAS_LINK_CATALOG;
+  const linkResolver = buildAtlasLinkResolver(
+    linkCatalog,
+    record.relations.map((relation) => relation.related_slug),
+  );
+  const participleParentSlug =
+    rawParticipleParadigm?.voice === "passive" && rawParticipleParadigm.verb
+      ? linkResolver.resolve(rawParticipleParadigm.verb, entry.url_slug) ??
+        (!linkResolver.isAmbiguous(rawParticipleParadigm.verb)
+          ? atlasLinkCatalog === undefined
+            ? rawParticipleParadigm.verb_url_slug?.trim() || null
+            : linkResolver.resolveSlug(rawParticipleParadigm.verb_url_slug ?? "", entry.url_slug)
+          : null)
+      : null;
+  const participleParadigm = rawParticipleParadigm
+    ? { ...rawParticipleParadigm, verb_url_slug: participleParentSlug ?? undefined }
+    : null;
+  const participleLinks = buildParticipleLinks(linkCatalog, linkResolver, entry.url_slug);
   const markedForms = enrichment?.morphology?.marked_forms ?? [];
   const markedFormGroups: Array<{ marker_label: string; forms: typeof markedForms }> = [];
   for (const form of markedForms) {
@@ -660,6 +935,7 @@ export function buildWordAtlasArticleView(
   const textbookItems = enrichment?.textbooks ?? [];
   const externalGroups = groupExternalMaterials(enrichment?.external_materials ?? []);
   const componentLinks = record.renderContext.componentLinks;
+  const atlasLinkTargetForText = (text: string) => linkResolver.resolve(text, entry.url_slug);
   const phraseHasGloss = Boolean(
     entry.gloss && definitionCards.length === 0 && !enrichment?.meaning,
   );
@@ -736,6 +1012,8 @@ export function buildWordAtlasArticleView(
     nounParadigm,
     verbParadigm,
     participleParadigm,
+    participleLinks,
+    atlasLinkTargetForText,
     markedFormGroups,
     isFullyMarked,
     isExpressionLikeEntry,

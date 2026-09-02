@@ -16,6 +16,7 @@ import {
   sourceClass,
   sourceHost,
   TRACK_LABELS_UK,
+  type AtlasLinkCatalog,
   type VerbParadigm,
 } from "../lib/lexicon/word-atlas-article-model";
 import { morphologyFormCountLabel } from "../lib/lexicon/register-markers";
@@ -27,6 +28,8 @@ export interface WordAtlasArticleProps {
   record: EntryRecord;
   generatedAt: string;
   manifestVersion: string;
+  /** Optional in-memory catalog for canonical lexical backlinks and tests. */
+  atlasLinkCatalog?: AtlasLinkCatalog;
   /** Optional typeahead slot (Astro AtlasTypeahead on prerendered pages). */
   children?: ReactNode;
 }
@@ -121,9 +124,10 @@ export default function WordAtlasArticle({
   record,
   generatedAt,
   manifestVersion,
+  atlasLinkCatalog,
   children,
 }: WordAtlasArticleProps) {
-  const view = buildWordAtlasArticleView(record, generatedAt, manifestVersion);
+  const view = buildWordAtlasArticleView(record, generatedAt, manifestVersion, atlasLinkCatalog);
   const {
     entry,
     enrichment,
@@ -137,6 +141,8 @@ export default function WordAtlasArticle({
     nounParadigm,
     verbParadigm,
     participleParadigm,
+    participleLinks,
+    atlasLinkTargetForText,
     markedFormGroups,
     isFullyMarked,
     isExpressionLikeEntry,
@@ -670,6 +676,20 @@ export default function WordAtlasArticle({
             </section>
           )}
 
+          {participleLinks.length > 0 && (
+            <section className="atlas-section">
+              <h2>Дієприкметники</h2>
+              <div className="chip-row">
+                {participleLinks.map((participle) => (
+                  <span key={participle.slug} className="chip">
+                    <a href={`/lexicon/${participle.slug}`} className="ukr">{participle.lemma}</a>
+                    <span className="chip-gloss">дієприкметник</span>
+                  </span>
+                ))}
+              </div>
+            </section>
+          )}
+
           {(sections?.form_notes?.items?.length ?? 0) > 0 && (
             <section className="atlas-section">
               <h2>Написання і вимова</h2>
@@ -724,21 +744,37 @@ export default function WordAtlasArticle({
                           <div className="chip-row">
                             {synset.members
                               .filter((member) => member.lemma !== entry.lemma)
-                              .map((member) => (
-                                <span key={member.lemma} className="chip">
-                                  {member.stressed}
-                                  {member.gloss?.text ? (
-                                    <span className="chip-gloss">{member.gloss.text}</span>
-                                  ) : null}
-                                </span>
-                              ))}
+                              .map((member) => {
+                                const targetSlug = atlasLinkTargetForText(member.lemma);
+                                return (
+                                  <span key={member.lemma} className="chip">
+                                    {targetSlug ? (
+                                      <a href={`/lexicon/${targetSlug}`} className="ukr">
+                                        {member.stressed}
+                                      </a>
+                                    ) : (
+                                      member.stressed
+                                    )}
+                                    {member.gloss?.text ? (
+                                      <span className="chip-gloss">{member.gloss.text}</span>
+                                    ) : null}
+                                  </span>
+                                );
+                              })}
                           </div>
                         </div>
                       ))}
                     </div>
                   ) : (
                     <div className="chip-row">
-                      {sections!.synonyms!.items.map((item) => <span key={item} className="chip">{item}</span>)}
+                      {sections!.synonyms!.items.map((item) => {
+                        const targetSlug = atlasLinkTargetForText(item);
+                        return (
+                          <span key={item} className="chip">
+                            {targetSlug ? <a href={`/lexicon/${targetSlug}`} className="ukr">{item}</a> : item}
+                          </span>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -747,7 +783,14 @@ export default function WordAtlasArticle({
                 <div style={{marginTop: "14px"}}>
                   <div className="chip-label">Антоніми:</div>
                   <div className="chip-row">
-                    {sections!.antonyms!.items.map((item) => <span key={item} className="chip antonym">{item}</span>)}
+                    {sections!.antonyms!.items.map((item) => {
+                      const targetSlug = atlasLinkTargetForText(item);
+                      return (
+                        <span key={item} className="chip antonym">
+                          {targetSlug ? <a href={`/lexicon/${targetSlug}`} className="ukr">{item}</a> : item}
+                        </span>
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -823,13 +866,23 @@ export default function WordAtlasArticle({
             <section className="atlas-section">
               <h2>Пароніми</h2>
               <div className="chip-row">
-                {sections!.paronyms!.items.map((item) => (
-                  <span key={item.word} className="chip">
-                    <strong>Не плутати з {item.word}</strong>
-                    {item.distinction ? ` — ${item.distinction}` : ""}
-                    {item.exam_provenance?.length ? ` (${item.exam_provenance.join("; ")})` : ""}
-                  </span>
-                ))}
+                {sections!.paronyms!.items.map((item) => {
+                  const targetSlug = atlasLinkTargetForText(item.word);
+                  return (
+                    <span key={item.word} className="chip">
+                      <strong>
+                        Не плутати з{" "}
+                        {targetSlug ? (
+                          <a href={`/lexicon/${targetSlug}`} className="ukr">{item.word}</a>
+                        ) : (
+                          item.word
+                        )}
+                      </strong>
+                      {item.distinction ? ` — ${item.distinction}` : ""}
+                      {item.exam_provenance?.length ? ` (${item.exam_provenance.join("; ")})` : ""}
+                    </span>
+                  );
+                })}
               </div>
               <div className="data-caveat">
                 Пароніми — близькі за формою слова з різними значеннями; розрізняйте їх за контекстом.

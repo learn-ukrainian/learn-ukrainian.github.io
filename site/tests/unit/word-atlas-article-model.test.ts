@@ -2,10 +2,12 @@ import { describe, expect, test } from "vitest";
 import { formatOrigin } from "@site/src/lib/lexicon/format-origin";
 import {
   atlasWikipediaOkAsIntro,
+  buildAtlasLinkCatalogFromSearchRows,
   buildWordAtlasArticleView,
   formatPos,
   formatTranslationSource,
   sanitizeWikiReference,
+  type AtlasLinkCatalog,
   type Enrichment,
   type VerbParadigm,
 } from "@site/src/lib/lexicon/word-atlas-article-model";
@@ -610,5 +612,159 @@ describe("verb imperative and past morphology blocks (#7609)", () => {
     expect(html).toContain("читати");
     expect(html).not.toContain("Наказовий");
     expect(html).not.toContain("Минулий");
+  });
+});
+
+describe("Atlas lexical backlinks (#7610)", () => {
+  type FixtureEntry = Parameters<typeof articleProps>[0];
+  type CatalogEntry = AtlasLinkCatalog["entries"][number];
+
+  function fixtureEntry(lemma: string, overrides: Record<string, unknown> = {}): FixtureEntry {
+    return {
+      lemma,
+      url_slug: lemma,
+      gloss: null,
+      entry_type: "lemma",
+      pos: "noun",
+      ipa: null,
+      primary_source: "fixture",
+      course_usage: [],
+      ...overrides,
+    } as FixtureEntry;
+  }
+
+  function catalogEntry(
+    lemma: string,
+    overrides: Partial<CatalogEntry> = {},
+  ): CatalogEntry {
+    return { lemma, slug: lemma, entry_type: "lemma", ...overrides };
+  }
+
+  test("links canonical synonym, antonym, alias, and paronym targets while failing closed", () => {
+    const catalog: AtlasLinkCatalog = {
+      entries: [
+        catalogEntry("читати", { pos: "infinitive" }),
+        catalogEntry("ректи", { pos: "infinitive" }),
+        catalogEntry("протилежний"),
+        catalogEntry("двозначний", { slug: "двозначний-1", pos: "noun" }),
+        catalogEntry("двозначний", { slug: "двозначний-2", pos: "verb" }),
+        catalogEntry("змішаний", { pos: "іменник або дієслово" }),
+      ],
+      aliases: [{ alias: "говорити", target_slug: "ректи" }],
+    };
+    const entry = fixtureEntry("читати", {
+      pos: "verb",
+      sections: {
+        synonyms: { items: ["ректи (заст.)", "говорити", "відсутній", "двозначний", "змішаний"], source: "fixture" },
+        antonyms: { items: ["протилежний"], source: "fixture" },
+        paronyms: { items: [{ word: "ректи (заст.)", distinction: "інше значення" }], source: "fixture" },
+      },
+    });
+    const html = renderWordAtlasArticle({
+      ...articleProps(entry),
+      atlasLinkCatalog: catalog,
+    });
+
+    expect(html).toContain('href="/lexicon/ректи"');
+    expect(html).toContain('>ректи (заст.)</a>');
+    expect(html).toContain('>говорити</a>');
+    expect(html).toContain('href="/lexicon/протилежний"');
+    expect(html).toContain("Не плутати з");
+    expect(html).not.toContain('href="/lexicon/відсутній"');
+    expect(html).not.toContain('href="/lexicon/двозначний-1"');
+    expect(html).not.toContain('href="/lexicon/змішаний"');
+    expect(html).not.toContain('href="/lexicon/читати"');
+  });
+
+  test("uses a verified relation target even when the in-memory catalog omits its article", () => {
+    const entry = fixtureEntry("джерело", {
+      sections: { synonyms: { items: ["ректи (заст.)"], source: "fixture" } },
+    });
+    const props = articleProps(entry);
+    const record = {
+      ...props.record,
+      relations: [
+        {
+          related_slug: "ректи",
+          entry_type: null,
+          relation: "synonym",
+          component_role: null,
+          provenance: "verified",
+        },
+      ],
+    };
+    const html = renderWordAtlasArticle({
+      ...props,
+      record,
+      atlasLinkCatalog: { entries: [catalogEntry("джерело")] },
+    });
+
+    expect(html).toContain('href="/lexicon/ректи"');
+    expect(html).toContain('>ректи (заст.)</a>');
+  });
+
+  test("links passive participle parents and lists only passive participles on the verb", () => {
+    const passiveParadigm = {
+      kind: "participle" as const,
+      voice: "passive" as const,
+      aspect: "imperfective" as const,
+      verb: "читати",
+    };
+    const activeParadigm = {
+      kind: "participle" as const,
+      voice: "active" as const,
+      aspect: "imperfective" as const,
+      verb: "читати",
+    };
+    const morphology = (paradigm: typeof passiveParadigm | typeof activeParadigm) => ({
+      pos: "прикметник",
+      form_count: 1,
+      forms: [{ form: "форма", label: "називний" }],
+      source: "VESUM",
+      paradigm,
+    });
+    const catalog: AtlasLinkCatalog = {
+      entries: [
+        catalogEntry("читати", { pos: "infinitive" }),
+        catalogEntry("читаний", { pos: "adjective", enrichment: { morphology: morphology(passiveParadigm) } }),
+        catalogEntry("активний", { pos: "adjective", enrichment: { morphology: morphology(activeParadigm) } }),
+        catalogEntry("читаючи", { pos: "adverb", gloss: "Дієприсл. доконаного виду до читати." }),
+      ],
+    };
+
+    const participleHtml = renderWordAtlasArticle({
+      ...articleProps(fixtureEntry("читаний", {
+        pos: "adjective",
+        enrichment: { morphology: morphology(passiveParadigm) },
+      })),
+      atlasLinkCatalog: catalog,
+    });
+    const verbHtml = renderWordAtlasArticle({
+      ...articleProps(fixtureEntry("читати", { pos: "verb" })),
+      atlasLinkCatalog: catalog,
+    });
+
+    expect(participleHtml).toContain('href="/lexicon/читати"');
+    expect(verbHtml).toContain("<h2>Дієприкметники</h2>");
+    expect(verbHtml).toContain('href="/lexicon/читаний"');
+    expect(verbHtml).toContain("дієприкметник");
+    expect(verbHtml).not.toContain('href="/lexicon/активний"');
+    expect(verbHtml).not.toContain('href="/lexicon/читаючи"');
+  });
+
+  test("derives the published passive relationship from search-index glosses", () => {
+    const catalog = buildAtlasLinkCatalogFromSearchRows([
+      { l: "читати", s: "читати", g: "to read", t: "lemma" },
+      { l: "читаний", s: "читаний", g: "Дієпр. пас. мин. і теп. ч. до чита́ти.", t: "lemma" },
+      { l: "читаючи", s: "читаючи", g: "Дієприсл. недоконаного виду до читати.", t: "lemma" },
+    ]);
+    const view = buildWordAtlasArticleView(
+      articleProps(fixtureEntry("читати", { pos: "verb" })).record,
+      "test",
+      "test",
+      catalog,
+    );
+
+    expect(view.participleLinks).toEqual([{ lemma: "читаний", slug: "читаний" }]);
   });
 });

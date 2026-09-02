@@ -262,7 +262,9 @@ describe('entry_type-branched article rendering (#4385)', () => {
 
     expect(html).toContain('Паронім');
     expect(html).toContain('<h2>Пароніми</h2>');
-    expect(html).toContain('Не плутати з ефектний');
+    expect(html).toContain('Не плутати з');
+    expect(html).toContain('ефектний');
+    expect(html).toMatch(/<a href="\/lexicon\/[^"]+" class="ukr">ефектний<\/a>/);
     expect(html).toContain('який справляє сильне враження, яскравий');
     expect(html).toContain('ЗНО 2021, завдання №35');
     expect(html).toContain('Джерела паронімів:');

@@ -13,6 +13,7 @@
 import WordAtlasArticle from "./WordAtlasArticle";
 import AtlasTypeahead from "./AtlasTypeahead.astro";
 import type { WordAtlasPageState } from "../lib/lexicon/word-atlas-page-state";
+import { atlasLinkCatalog } from "../lib/lexicon/atlas-link-catalog";
 
 interface Props {
   state: WordAtlasPageState;
@@ -27,6 +28,7 @@ const { state } = Astro.props as Props;
       record={state.record}
       generatedAt={state.generatedAt}
       manifestVersion={state.manifestVersion}
+      atlasLinkCatalog={atlasLinkCatalog}
     >
       <AtlasTypeahead id="atlas-article-search" label="Шукати слово в Лексиконі" />
     </WordAtlasArticle>
