@@ -6,7 +6,7 @@ version = 1
 [[known_leaks]]
 id = "fleet-workers-host-id"
 operation = "GET /api/fleet/workers/v1"
-field = "body.hosts[2].host_id"
+field = "body.hosts[1].host_id"
 owner = "monitor-fleet"
 expiry = "2026-09-23"
 

@@ -914,6 +914,30 @@ def test_occupancy_unmapped_default_host_query(tmp_path, monkeypatch) -> None:
         load_mod.clear_host_load_cache()
 
 
+def test_cloud_observer_explicit_query_with_zero_heartbeats_is_unavailable(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Explicit cloud-observer query must not fake fresh/0.0 with no presence."""
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
+    fake = atlas_job.FakeHostAdapter()
+    atlas_job.set_host_adapter(fake)
+    try:
+        resp = client.get("/api/occupancy?host_id=cloud-observer")
+        assert resp.status_code == 200
+        host = resp.json()["hosts"]["cloud-observer"]
+        assert host["host_id"] == "cloud-observer"
+        assert host["status"] == "unavailable"
+        assert host["error"] == "unreachable"
+        assert host["age_seconds"] == 0.0
+        assert host["occupants"] == []
+        assert host["occupant_count"] == 0
+        assert host["status"] != "fresh"
+    finally:
+        atlas_job.set_host_adapter(None)
+        load_mod.clear_host_load_cache()
+
+
 def test_cloud_observer_presence_age_uses_freshness_window(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

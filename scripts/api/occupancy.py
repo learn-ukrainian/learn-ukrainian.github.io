@@ -445,11 +445,7 @@ def _presence_load_entry(
 ) -> dict[str, Any]:
     rows = [row for row in snapshot.live_presence if row.host_id == host_id]
     if not rows:
-        return {
-            "status": "fresh",
-            "observed_at": snapshot.now.isoformat().replace("+00:00", "Z"),
-            "age_seconds": 0.0,
-        }
+        return _unavailable_load_entry(now=snapshot.now)
     newest = max(rows, key=lambda row: row.updated_at_mono)
     age = _safe_age(snapshot.now_mono - newest.updated_at_mono)
     status = "fresh" if age <= PRESENCE_FRESHNESS_SECONDS else "stale"
