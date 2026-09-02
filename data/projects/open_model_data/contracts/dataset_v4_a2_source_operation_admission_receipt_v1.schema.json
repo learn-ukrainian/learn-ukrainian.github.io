@@ -1,0 +1,672 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/dataset_v4_a2_source_operation_admission_receipt_v1.schema.json",
+  "title": "Dataset V4 A2 source-operation admission receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "status",
+    "text_free",
+    "controlling_outcome_sha256",
+    "control_surfaces",
+    "bindings",
+    "frozen_denominator",
+    "inventory_reconciliation",
+    "operations",
+    "source_operation_ledger",
+    "stratum_coverage_map",
+    "residuals",
+    "execution_counters",
+    "safety_assertions"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "dataset_v4_a2_source_operation_admission_receipt_v1"
+    },
+    "receipt_id": {
+      "const": "dataset-v4-a2-source-operation-admission-v1"
+    },
+    "status": {
+      "const": "A2_SOURCE_OPERATION_RECEIPT_COMPLETE"
+    },
+    "text_free": {
+      "const": true
+    },
+    "controlling_outcome_sha256": {
+      "const": "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"
+    },
+    "control_surfaces": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_control_issue",
+        "pilot_child_issue",
+        "private_operational_board"
+      ],
+      "properties": {
+        "public_control_issue": {
+          "const": 7423
+        },
+        "pilot_child_issue": {
+          "const": 7430
+        },
+        "private_operational_board": {
+          "const": 622
+        }
+      }
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slot_manifest",
+        "public_external_admission",
+        "capability_policy",
+        "wikipedia_rights_evidence",
+        "historical_protection_channels",
+        "modern_contact_channels",
+        "aggregate_inventory_summary",
+        "historical_p4_receipt",
+        "inventory_ledger"
+      ],
+      "properties": {
+        "slot_manifest": {
+          "$ref": "#/$defs/artifact_binding"
+        },
+        "public_external_admission": {
+          "$ref": "#/$defs/artifact_binding"
+        },
+        "capability_policy": {
+          "$ref": "#/$defs/artifact_binding"
+        },
+        "wikipedia_rights_evidence": {
+          "$ref": "#/$defs/artifact_binding"
+        },
+        "historical_protection_channels": {
+          "$ref": "#/$defs/artifact_binding"
+        },
+        "modern_contact_channels": {
+          "$ref": "#/$defs/artifact_binding"
+        },
+        "aggregate_inventory_summary": {
+          "$ref": "#/$defs/artifact_binding"
+        },
+        "historical_p4_receipt": {
+          "$ref": "#/$defs/artifact_binding"
+        },
+        "inventory_ledger": {
+          "$ref": "#/$defs/artifact_binding"
+        }
+      }
+    },
+    "frozen_denominator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_slots",
+        "strata"
+      ],
+      "properties": {
+        "total_slots": {
+          "const": 100
+        },
+        "strata": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "items": {
+            "$ref": "#/$defs/denominator_stratum"
+          }
+        }
+      }
+    },
+    "inventory_reconciliation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aggregate_inventory_ledger_records",
+        "public_or_external_asset_records",
+        "primary_corpus_collections",
+        "overlap_views",
+        "lexical_resources",
+        "raw_reconciliation_collections",
+        "frozen_historical_source_units",
+        "a2_candidate_source_units",
+        "new_source_fetches",
+        "non_candidate_inventory_categories"
+      ],
+      "properties": {
+        "aggregate_inventory_ledger_records": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "public_or_external_asset_records": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "primary_corpus_collections": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "overlap_views": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "lexical_resources": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "raw_reconciliation_collections": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "frozen_historical_source_units": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "a2_candidate_source_units": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "new_source_fetches": {
+          "const": 0
+        },
+        "non_candidate_inventory_categories": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/non_candidate_category"
+          }
+        }
+      }
+    },
+    "operations": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/operation_name"
+      }
+    },
+    "source_operation_ledger": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/source_unit"
+      }
+    },
+    "stratum_coverage_map": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {
+        "$ref": "#/$defs/coverage_entry"
+      }
+    },
+    "residuals": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/residual"
+      }
+    },
+    "execution_counters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dataset_rows_emitted",
+        "new_source_fetches",
+        "external_service_transmissions",
+        "annotation_or_example_derivations",
+        "publication_events",
+        "redistribution_events",
+        "training_events"
+      ],
+      "properties": {
+        "dataset_rows_emitted": {
+          "const": 0
+        },
+        "new_source_fetches": {
+          "const": 0
+        },
+        "external_service_transmissions": {
+          "const": 0
+        },
+        "annotation_or_example_derivations": {
+          "const": 0
+        },
+        "publication_events": {
+          "const": 0
+        },
+        "redistribution_events": {
+          "const": 0
+        },
+        "training_events": {
+          "const": 0
+        }
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rows_not_admitted",
+        "independently_authored_rows_not_created",
+        "mac_corpus_copy_created",
+        "historical_v3_control_not_used",
+        "wikipedia_not_default_training_source",
+        "modern_rusyn_not_mapped_to_dialect",
+        "unknown_operations_global_block",
+        "prebuilder_state_claimed",
+        "later_release_state_claimed"
+      ],
+      "properties": {
+        "rows_not_admitted": {
+          "const": true
+        },
+        "independently_authored_rows_not_created": {
+          "const": true
+        },
+        "mac_corpus_copy_created": {
+          "const": false
+        },
+        "historical_v3_control_not_used": {
+          "const": true
+        },
+        "wikipedia_not_default_training_source": {
+          "const": true
+        },
+        "modern_rusyn_not_mapped_to_dialect": {
+          "const": true
+        },
+        "unknown_operations_global_block": {
+          "const": false
+        },
+        "prebuilder_state_claimed": {
+          "const": false
+        },
+        "later_release_state_claimed": {
+          "const": false
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "stratum": {
+      "enum": [
+        "standard_correct",
+        "correction",
+        "literary",
+        "dialect_regional",
+        "archaic_historical",
+        "mixing",
+        "quotation_interference",
+        "abstention"
+      ]
+    },
+    "operation_name": {
+      "enum": [
+        "retention",
+        "deterministic_local_analysis",
+        "transmission_to_external_model_or_service",
+        "derivation_of_annotations_or_examples",
+        "training_use",
+        "publication",
+        "redistribution"
+      ]
+    },
+    "artifact_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "schema_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "historical_only": {
+          "type": "boolean"
+        }
+      }
+    },
+    "denominator_stratum": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stratum",
+        "frozen_slots",
+        "first_slot_id",
+        "last_slot_id"
+      ],
+      "properties": {
+        "stratum": {
+          "$ref": "#/$defs/stratum"
+        },
+        "frozen_slots": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "first_slot_id": {
+          "type": "string",
+          "pattern": "^v4p-[a-z-]+-001$"
+        },
+        "last_slot_id": {
+          "type": "string",
+          "pattern": "^v4p-[a-z-]+-[0-9]{3}$"
+        }
+      }
+    },
+    "non_candidate_category": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "category",
+        "units",
+        "reason_code"
+      ],
+      "properties": {
+        "category": {
+          "type": "string",
+          "minLength": 1
+        },
+        "units": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reason_code": {
+          "enum": [
+            "overlap_not_independent_source_unit",
+            "not_a_corpus_source_unit_for_a2",
+            "duplicate_raw_reconciliation_only"
+          ]
+        }
+      }
+    },
+    "candidate_stratum": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stratum",
+        "support_role",
+        "required_operation"
+      ],
+      "properties": {
+        "stratum": {
+          "$ref": "#/$defs/stratum"
+        },
+        "support_role": {
+          "enum": [
+            "scope_bound_candidate",
+            "protected_candidate",
+            "evidence_candidate_only"
+          ]
+        },
+        "required_operation": {
+          "$ref": "#/$defs/operation_name"
+        }
+      }
+    },
+    "operation_right": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "evidence_refs",
+        "scope"
+      ],
+      "properties": {
+        "value": {
+          "enum": [
+            "allowed",
+            "denied",
+            "unknown",
+            "scope_bound"
+          ]
+        },
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 3
+        },
+        "owner_role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "next_action": {
+          "type": "string",
+          "minLength": 1
+        },
+        "retryability": {
+          "enum": [
+            "retryable",
+            "not_retryable"
+          ]
+        }
+      }
+    },
+    "operation_rights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "retention",
+        "deterministic_local_analysis",
+        "transmission_to_external_model_or_service",
+        "derivation_of_annotations_or_examples",
+        "training_use",
+        "publication",
+        "redistribution"
+      ],
+      "properties": {
+        "retention": {
+          "$ref": "#/$defs/operation_right"
+        },
+        "deterministic_local_analysis": {
+          "$ref": "#/$defs/operation_right"
+        },
+        "transmission_to_external_model_or_service": {
+          "$ref": "#/$defs/operation_right"
+        },
+        "derivation_of_annotations_or_examples": {
+          "$ref": "#/$defs/operation_right"
+        },
+        "training_use": {
+          "$ref": "#/$defs/operation_right"
+        },
+        "publication": {
+          "$ref": "#/$defs/operation_right"
+        },
+        "redistribution": {
+          "$ref": "#/$defs/operation_right"
+        }
+      }
+    },
+    "source_unit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_unit_id",
+        "source_class",
+        "inventory_record_count",
+        "metadata_only",
+        "candidate_strata",
+        "operation_rights"
+      ],
+      "properties": {
+        "source_unit_id": {
+          "type": "string",
+          "minLength": 3
+        },
+        "source_class": {
+          "enum": [
+            "existing_corpus_collection",
+            "frozen_historical_source_unit"
+          ]
+        },
+        "inventory_record_count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "metadata_only": {
+          "type": "boolean"
+        },
+        "candidate_strata": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/candidate_stratum"
+          }
+        },
+        "protection_constraints": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "operation_rights": {
+          "$ref": "#/$defs/operation_rights"
+        }
+      }
+    },
+    "coverage_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stratum",
+        "frozen_slots",
+        "supporting_existing_source_unit_ids",
+        "evidence_only_source_unit_ids",
+        "residual_ids",
+        "coverage_state"
+      ],
+      "properties": {
+        "stratum": {
+          "$ref": "#/$defs/stratum"
+        },
+        "frozen_slots": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "supporting_existing_source_unit_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 3
+          }
+        },
+        "evidence_only_source_unit_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 3
+          }
+        },
+        "residual_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 3
+          }
+        },
+        "coverage_state": {
+          "enum": [
+            "candidate_support_identified",
+            "support_identified_with_residual",
+            "source_incomplete"
+          ]
+        }
+      }
+    },
+    "residual": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "residual_id",
+        "subject_kind",
+        "subject_id",
+        "stage",
+        "reason_code",
+        "owner_role",
+        "next_action",
+        "retryability",
+        "evidence_refs"
+      ],
+      "properties": {
+        "residual_id": {
+          "type": "string",
+          "minLength": 3
+        },
+        "subject_kind": {
+          "const": "stratum"
+        },
+        "subject_id": {
+          "$ref": "#/$defs/stratum"
+        },
+        "stage": {
+          "const": "A2"
+        },
+        "reason_code": {
+          "enum": [
+            "source_incomplete",
+            "rights_unknown",
+            "coverage_blocked"
+          ]
+        },
+        "owner_role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "next_action": {
+          "type": "string",
+          "minLength": 1
+        },
+        "retryability": {
+          "enum": [
+            "retryable",
+            "not_retryable"
+          ]
+        },
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}
