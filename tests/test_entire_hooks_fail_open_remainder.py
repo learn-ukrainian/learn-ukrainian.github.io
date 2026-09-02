@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 import os
 import re
-import sqlite3
 import subprocess
 import sys
 from pathlib import Path
@@ -43,39 +42,36 @@ def _make_fake_entire_cli(directory: Path, *, exit_code: int = 1) -> Path:
     return fake_cli
 
 
-def _make_inbox_db(tmp_path: Path) -> Path:
-    db_path = tmp_path / ".mcp" / "servers" / "message-broker" / "messages.db"
-    db_path.parent.mkdir(parents=True, exist_ok=True)
-    with sqlite3.connect(db_path) as conn:
-        conn.execute(
-            """
-            CREATE TABLE messages (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                from_llm TEXT,
-                to_llm TEXT,
-                message_type TEXT,
-                task_id TEXT,
-                content TEXT,
-                timestamp TEXT,
-                acknowledged INTEGER,
-                claimed_by TEXT
-            )
-            """
-        )
-        conn.executemany(
-            """
-            INSERT INTO messages
-                (from_llm, to_llm, message_type, task_id, content, timestamp,
-                 acknowledged, claimed_by)
-            VALUES (?, ?, 'status', 'hooks', ?, '2026-07-26T00:00:00Z', 0, NULL)
-            """,
-            [
-                ("claude", "codex", "codex-targeted unread payload"),
-                ("codex", "claude", "claude-targeted unread payload"),
-                ("claude", "gemini", "gemini-targeted unread payload"),
-            ],
-        )
-    return db_path
+def _make_fake_inbox_python(tmp_path: Path) -> tuple[Path, Path]:
+    """Create a project interpreter that exposes only the live inbox CLI shape."""
+    python = tmp_path / ".venv" / "bin" / "python"
+    python.parent.mkdir(parents=True, exist_ok=True)
+    fixtures = tmp_path / "inbox-fixtures"
+    fixtures.mkdir()
+    args_log = tmp_path / "inbox-cli-args.log"
+    python.write_text(
+        "#!/bin/sh\n"
+        "if [ \"$#\" -ne 5 ] || [ \"$1\" != \"-m\" ] || [ \"$2\" != \"scripts.ai_agent_bridge\" ] || [ \"$3\" != \"inbox\" ] || [ \"$4\" != \"--for\" ]; then\n"
+        "  exit 64\n"
+        "fi\n"
+        "if [ \"${FAKE_INBOX_FAIL:-0}\" = \"1\" ]; then\n"
+        "  exit 1\n"
+        "fi\n"
+        "printf '%s\\n' \"$*\" >> \"$FAKE_INBOX_ARGS\"\n"
+        "cat \"$FAKE_INBOX_FIXTURES/$5.txt\"\n",
+        encoding="utf-8",
+    )
+    python.chmod(0o755)
+    return fixtures, args_log
+
+
+def _write_inbox_fixture(fixtures: Path, recipient: str, preview: str, *, message_id: int = 101) -> None:
+    (fixtures / f"{recipient}.txt").write_text(
+        f"📬 Inbox for {recipient}: 1 unread | 0 read-but-not-live-consumed | 0 live-consumed\n\n"
+        f"  [{message_id}] [unread] From: sender | Type: status | 2026-09-02T00:00:00Z\n"
+        f"      {preview}\n",
+        encoding="utf-8",
+    )
 
 
 def test_claude_entire_hooks_manifest_structure() -> None:
@@ -199,7 +195,12 @@ def test_cursor_shim_commands_fail_open_when_cli_errors(tmp_path: Path) -> None:
 
 def test_inbox_hook_emits_provider_scoped_previews_and_live_inbox_instruction(tmp_path: Path) -> None:
     """Inbox hook must emit provider previews and live inbox command, never mcp__message-broker."""
-    _make_inbox_db(tmp_path)
+    source = INBOX_HOOK.read_text(encoding="utf-8")
+    assert "sqlite3" not in source.lower()
+    assert "messages.db" not in source
+    assert ".mcp/servers/message-broker" not in source
+    assert '"$PROJECT_DIR/.venv/bin/python" -m scripts.ai_agent_bridge inbox --for "$RECIPIENT"' in source
+    fixtures, args_log = _make_fake_inbox_python(tmp_path)
 
     test_cases = [
         ("claude", "CLAUDE INBOX: 1 unread message", "claude-targeted unread payload", ".venv/bin/python -m scripts.ai_agent_bridge inbox --for claude"),
@@ -208,9 +209,16 @@ def test_inbox_hook_emits_provider_scoped_previews_and_live_inbox_instruction(tm
     ]
 
     for recipient, expected_header, expected_preview, expected_instruction in test_cases:
+        _write_inbox_fixture(fixtures, recipient, expected_preview)
         env = os.environ.copy()
-        env["CLAUDE_PROJECT_DIR"] = str(tmp_path)
-        env["LEARN_UK_HOOK_RECIPIENT"] = recipient
+        env.update(
+            {
+                "CLAUDE_PROJECT_DIR": str(tmp_path),
+                "LEARN_UK_HOOK_RECIPIENT": recipient,
+                "FAKE_INBOX_FIXTURES": str(fixtures),
+                "FAKE_INBOX_ARGS": str(args_log),
+            }
+        )
         env.pop("LEARN_UK_HOOK_SESSION_ID", None)
         env.pop("LEARN_UKRAINIAN_SESSION_ID", None)
         env.pop("CODEX_THREAD_ID", None)
@@ -235,13 +243,26 @@ def test_inbox_hook_emits_provider_scoped_previews_and_live_inbox_instruction(tm
         assert expected_instruction in context, f"Expected instruction '{expected_instruction}' missing in:\n{context}"
         assert "mcp__message-broker" not in context, f"Retired MCP tool found in:\n{context}"
 
+    assert args_log.read_text(encoding="utf-8").splitlines()[-3:] == [
+        "-m scripts.ai_agent_bridge inbox --for claude",
+        "-m scripts.ai_agent_bridge inbox --for codex",
+        "-m scripts.ai_agent_bridge inbox --for gemini",
+    ]
+
 
 def test_inbox_hook_defaults_to_claude_recipient(tmp_path: Path) -> None:
     """When LEARN_UK_HOOK_RECIPIENT is unset, inbox hook defaults to claude."""
-    _make_inbox_db(tmp_path)
+    fixtures, args_log = _make_fake_inbox_python(tmp_path)
+    _write_inbox_fixture(fixtures, "claude", "claude-default payload")
 
     env = os.environ.copy()
-    env["CLAUDE_PROJECT_DIR"] = str(tmp_path)
+    env.update(
+        {
+            "CLAUDE_PROJECT_DIR": str(tmp_path),
+            "FAKE_INBOX_FIXTURES": str(fixtures),
+            "FAKE_INBOX_ARGS": str(args_log),
+        }
+    )
     env.pop("LEARN_UK_HOOK_RECIPIENT", None)
     env.pop("LEARN_UK_HOOK_SESSION_ID", None)
     env.pop("LEARN_UKRAINIAN_SESSION_ID", None)
@@ -265,3 +286,100 @@ def test_inbox_hook_defaults_to_claude_recipient(tmp_path: Path) -> None:
     assert "CLAUDE INBOX: 1 unread message" in context
     assert ".venv/bin/python -m scripts.ai_agent_bridge inbox --for claude" in context
     assert "mcp__message-broker" not in context
+    assert args_log.read_text(encoding="utf-8").strip() == "-m scripts.ai_agent_bridge inbox --for claude"
+
+
+def test_inbox_hook_fails_open_when_project_interpreter_is_missing(tmp_path: Path) -> None:
+    env = os.environ.copy()
+    env.update({"CLAUDE_PROJECT_DIR": str(tmp_path), "LEARN_UK_HOOK_RECIPIENT": "codex"})
+
+    completed = subprocess.run(
+        ["bash", str(INBOX_HOOK)],
+        input="{}",
+        text=True,
+        capture_output=True,
+        check=False,
+        env=env,
+        timeout=10,
+    )
+
+    assert completed.returncode == 0
+    assert completed.stdout == ""
+    assert completed.stderr == ""
+
+
+def test_inbox_hook_fails_open_when_live_cli_errors(tmp_path: Path) -> None:
+    fixtures, args_log = _make_fake_inbox_python(tmp_path)
+    _write_inbox_fixture(fixtures, "codex", "unreachable payload")
+    env = os.environ.copy()
+    env.update(
+        {
+            "CLAUDE_PROJECT_DIR": str(tmp_path),
+            "LEARN_UK_HOOK_RECIPIENT": "codex",
+            "FAKE_INBOX_FIXTURES": str(fixtures),
+            "FAKE_INBOX_ARGS": str(args_log),
+            "FAKE_INBOX_FAIL": "1",
+        }
+    )
+
+    completed = subprocess.run(
+        ["bash", str(INBOX_HOOK)],
+        input="{}",
+        text=True,
+        capture_output=True,
+        check=False,
+        env=env,
+        timeout=10,
+    )
+
+    assert completed.returncode == 0
+    assert completed.stdout == ""
+    assert completed.stderr == ""
+    assert not args_log.exists()
+    assert not (tmp_path / ".agent" / "runtime").exists()
+
+
+def test_inbox_hook_surfaces_at_most_five_cli_previews(tmp_path: Path) -> None:
+    fixtures, args_log = _make_fake_inbox_python(tmp_path)
+    rows = "\n".join(
+        f"  [{message_id}] [unread] From: sender | Type: status | 2026-09-02T00:00:00Z\n"
+        f"      preview-{message_id}"
+        for message_id in range(101, 107)
+    )
+    (fixtures / "codex.txt").write_text(
+        "📬 Inbox for codex: 6 unread | 0 read-but-not-live-consumed | 0 live-consumed\n\n"
+        f"{rows}\n"
+        "  [201] [read-but-not-live-consumed] From: sender | Type: status | 2026-09-02T00:00:00Z\n"
+        "      read-only-body\n"
+        "  [202] [live-consumed] From: sender | Type: status | 2026-09-02T00:00:00Z\n"
+        "      live-consumed-body\n",
+        encoding="utf-8",
+    )
+    env = os.environ.copy()
+    env.update(
+        {
+            "CLAUDE_PROJECT_DIR": str(tmp_path),
+            "LEARN_UK_HOOK_RECIPIENT": "codex",
+            "FAKE_INBOX_FIXTURES": str(fixtures),
+            "FAKE_INBOX_ARGS": str(args_log),
+        }
+    )
+
+    completed = subprocess.run(
+        ["bash", str(INBOX_HOOK)],
+        input="{}",
+        text=True,
+        capture_output=True,
+        check=False,
+        env=env,
+        timeout=10,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    context = json.loads(completed.stdout)["hookSpecificOutput"]["additionalContext"]
+    assert "CODEX INBOX: 6 unread message(s) waiting." in context
+    assert all(f"preview-{message_id}" in context for message_id in range(101, 106))
+    assert "preview-106" not in context
+    assert "read-only-body" not in context
+    assert "live-consumed-body" not in context
+    assert context.count("[unread]") == 5

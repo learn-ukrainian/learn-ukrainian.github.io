@@ -15,7 +15,7 @@ export const EntireExitTrap: Plugin = async () => {
         [
           "sh",
           "-c",
-          "if ! command -v entire >/dev/null 2>&1; then exit 0; fi; exec entire hooks opencode session-end",
+          "if ! command -v entire >/dev/null 2>&1; then exit 0; fi; entire hooks opencode session-end || true",
         ],
         {
           stdin: new TextEncoder().encode(JSON.stringify({ session_id: sessionID }) + "\n"),
