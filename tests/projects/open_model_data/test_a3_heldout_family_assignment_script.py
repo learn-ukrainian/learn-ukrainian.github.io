@@ -20,7 +20,14 @@ import pytest
 
 from scripts.projects.open_model_data import v4_a3_heldout_family_assignment as assignment
 
+ROOT = Path(__file__).resolve().parents[3]
+REAL_RECEIPT_PATH = (
+    ROOT / "data/projects/open_model_data/admission/dataset_v4_a3_heldout_source_family_seal_receipt_v1.json"
+)
+REAL_RECEIPT = json.loads(REAL_RECEIPT_PATH.read_text(encoding="utf-8"))
+
 FAMILY_IDS = [f"fam-synthetic-{index:02d}" for index in range(9)]
+assert len(FAMILY_IDS) == len(REAL_RECEIPT["source_family_registry"]["families"])
 
 
 @pytest.fixture(autouse=True)
@@ -33,28 +40,38 @@ def _private_root_under_tmp(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> 
 
 
 def _receipt_shape(family_ids: list[str]) -> dict:
-    """A full, production-shaped stand-in receipt (minus the fields that
-    only ``_fresh_receipt``/``_sealed_receipt`` fill in), so binding tests
-    exercise the same fields the real receipt carries: controlling SHA,
-    bindings, the full family registry, and reseal triggers."""
-    return {
-        "controlling_outcome_sha256": "1" * 64,
-        "bindings": {
-            "assignment_algorithm_implementation": {
-                "path": "scripts/projects/open_model_data/v4_a3_heldout_family_assignment.py",
-                "sha256": "2" * 64,
-                "schema_version": "v4_a3_heldout_family_assignment_script_v1",
-            }
-        },
-        "source_family_registry": {
-            "grouping_basis": "source_identity_not_prestige_or_provider_arrival_order",
-            "family_count": len(family_ids),
-            "families": [{"family_id": fid} for fid in family_ids],
-        },
-        "heldout_partition_seal": {
-            "reseal_required_on": ["source_family_registry_change"],
-        },
-    }
+    """A full, schema-conformant stand-in receipt: a deep copy of the real
+    sealed production receipt -- same bindings (real paths, real on-disk
+    sha256), same access_firewall, same everything else -- with only
+    ``source_family_registry.families`` swapped for synthetic ``family_ids``
+    (same count as the real registry, so every schema const tied to
+    family_count, including ``heldout_count``/``builder_eligible_count``,
+    still holds) and the two salt-derived commitment hashes cleared to
+    represent a not-yet-sealed state (``_receipt_is_sealed`` treats an empty
+    string as absent).
+
+    Building this from the real receipt -- rather than hand-rolling an
+    approximation -- means every test that runs through ``main()`` exercises
+    the exact schema/algorithm-metadata/binding-hash independent-validation
+    path production runs, not a stand-in of it.
+    """
+    assert len(family_ids) == len(REAL_RECEIPT["source_family_registry"]["families"])
+    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt["source_family_registry"]["families"] = [
+        {
+            "family_id": fid,
+            "member_source_unit_ids": [f"synthetic.{fid}"],
+            "source_class": "existing_corpus_collection",
+            "grouping_rationale": (
+                "distinct_existing_local_corpus_collection_identity_no_cross_collection_merge_evidence"
+            ),
+        }
+        for fid in family_ids
+    ]
+    algorithm = receipt["heldout_partition_seal"]["assignment_algorithm"]
+    algorithm["salt_commitment_sha256"] = ""
+    algorithm["assignment_commitment_sha256"] = ""
+    return receipt
 
 
 def _fresh_receipt(salt: bytes, family_ids: list[str]) -> dict:
@@ -63,10 +80,9 @@ def _fresh_receipt(salt: bytes, family_ids: list[str]) -> dict:
     result = assignment.assign(salt, family_ids)
     summary = assignment.public_commitment_summary(salt, result)
     receipt = _receipt_shape(family_ids)
-    receipt["heldout_partition_seal"]["assignment_algorithm"] = {
-        "salt_commitment_sha256": summary["salt_commitment_sha256"],
-        "assignment_commitment_sha256": summary["assignment_commitment_sha256"],
-    }
+    algorithm = receipt["heldout_partition_seal"]["assignment_algorithm"]
+    algorithm["salt_commitment_sha256"] = summary["salt_commitment_sha256"]
+    algorithm["assignment_commitment_sha256"] = summary["assignment_commitment_sha256"]
     return receipt
 
 
@@ -539,3 +555,251 @@ def test_a3_heldout_assignment_test_salt_override_requires_32_bytes(
             ["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--generate"],
             salt_hex="00" * 16,
         )
+
+
+# --- independent receipt validation ----------------------------------------
+#
+# Reproduces the reviewer's probe directly: a receipt whose declared
+# algorithm_descriptor_sha256 / heldout_count / binding sha256 was altered
+# must be refused by main() itself -- not merely by a separate pytest run
+# against the schema -- before any private-artifact filesystem operation.
+# Uses the real, on-disk production receipt (mutated in a temp copy) so
+# these are genuine end-to-end regressions, not stand-ins of the real shape.
+
+
+def test_a3_heldout_main_refuses_receipt_with_altered_algorithm_descriptor_sha256(tmp_path: Path) -> None:
+    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt["heldout_partition_seal"]["assignment_algorithm"]["algorithm_descriptor_sha256"] = "0" * 64
+    receipt_path = _write_receipt(tmp_path, receipt)
+    private_dir = tmp_path / "private"
+
+    with pytest.raises(assignment.AssignmentError, match="algorithm_descriptor_sha256"):
+        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--generate"])
+    assert not (private_dir / assignment.MEMBERSHIP_FILENAME).exists()
+
+
+def test_a3_heldout_main_refuses_receipt_with_altered_algorithm_metadata_field(tmp_path: Path) -> None:
+    """A mismatched individual metadata field (heldout_fraction) must be
+    caught independently of the descriptor hash comparison -- not just
+    trusted because some other field still matches."""
+    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt["heldout_partition_seal"]["assignment_algorithm"]["heldout_fraction"] = 0.5
+    receipt_path = _write_receipt(tmp_path, receipt)
+    private_dir = tmp_path / "private"
+
+    with pytest.raises(assignment.AssignmentError, match="assignment_algorithm metadata"):
+        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--generate"])
+    assert not (private_dir / assignment.MEMBERSHIP_FILENAME).exists()
+
+
+def test_a3_heldout_main_refuses_receipt_with_altered_heldout_count(tmp_path: Path) -> None:
+    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt["heldout_partition_seal"]["heldout_count"] = 2
+    receipt["heldout_partition_seal"]["builder_eligible_count"] = 7
+    receipt_path = _write_receipt(tmp_path, receipt)
+    private_dir = tmp_path / "private"
+
+    with pytest.raises(assignment.AssignmentError, match="heldout_count"):
+        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--generate"])
+    assert not (private_dir / assignment.MEMBERSHIP_FILENAME).exists()
+
+
+def test_a3_heldout_main_refuses_receipt_with_altered_binding_hash(tmp_path: Path) -> None:
+    """A binding's declared sha256 is never trusted -- the actual file named
+    by ``path`` is hashed and must match."""
+    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt["bindings"]["slot_manifest"]["sha256"] = "0" * 64
+    receipt_path = _write_receipt(tmp_path, receipt)
+    private_dir = tmp_path / "private"
+
+    with pytest.raises(assignment.AssignmentError, match="on-disk sha256"):
+        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--generate"])
+    assert not (private_dir / assignment.MEMBERSHIP_FILENAME).exists()
+
+
+def test_a3_heldout_main_refuses_sealed_receipt_that_fails_schema(tmp_path: Path) -> None:
+    """A sealed receipt (real commitments present) must also be fully
+    schema-conformant -- a schema-forbidden field (e.g. a smuggled salt_hex
+    on a binding) is refused even though every other independent check
+    (algorithm metadata, counts, on-disk binding hash) still passes."""
+    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt["bindings"]["slot_manifest"]["salt_hex"] = "00" * 32
+    receipt_path = _write_receipt(tmp_path, receipt)
+    private_dir = tmp_path / "private"
+
+    with pytest.raises(assignment.AssignmentError, match="schema"):
+        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--generate"])
+    assert not (private_dir / assignment.MEMBERSHIP_FILENAME).exists()
+
+
+def test_a3_heldout_main_accepts_the_real_sealed_receipt_unmutated() -> None:
+    """Sanity check: the actual checked-in production receipt passes every
+    independent check unmutated (schema, algorithm metadata, pool counts,
+    on-disk binding hashes) -- proving the checks above fail *because* of
+    the specific mutation, not because the real receipt itself is somehow
+    unable to pass its own validation. Does not exercise --generate here:
+    a fresh random salt can never reproduce the real receipt's already-
+    sealed commitments, which is a separate (and already-tested) refusal."""
+    assignment.validate_receipt_independently(copy.deepcopy(REAL_RECEIPT))
+
+
+# --- legacy artifact migration (pre receipt_binding_sha256) ----------------
+
+
+def _write_legacy_artifact(private_dir: Path, salt: bytes, result: dict) -> Path:
+    """Write a private artifact in the exact shape parent 0587a233 wrote:
+    every current field except receipt_binding_sha256, which did not exist
+    yet. Bypasses write_private_artifact deliberately -- that function
+    always writes the current (post-migration) shape."""
+    private_dir.mkdir(mode=assignment.PRIVATE_DIR_MODE, parents=True, exist_ok=True)
+    os.chmod(private_dir, assignment.PRIVATE_DIR_MODE)
+    payload = {
+        "algorithm_id": assignment.ALGORITHM_ID,
+        "algorithm_descriptor_sha256": assignment.ALGORITHM_DESCRIPTOR_SHA256,
+        "salt_hex": salt.hex(),
+        "membership": result["membership"],
+        "heldout_family_ids": result["heldout_family_ids"],
+        "builder_eligible_family_ids": result["builder_eligible_family_ids"],
+    }
+    membership_path = private_dir / assignment.MEMBERSHIP_FILENAME
+    membership_path.write_text(assignment.canonical_json(payload) + "\n")
+    os.chmod(membership_path, assignment.PRIVATE_FILE_MODE)
+    return membership_path
+
+
+def test_a3_heldout_assignment_is_legacy_artifact_detects_pre_binding_shape(tmp_path: Path) -> None:
+    private_dir = tmp_path / "private"
+    salt = secrets.token_bytes(32)
+    result = assignment.assign(salt, FAMILY_IDS)
+    membership_path = _write_legacy_artifact(private_dir, salt, result)
+
+    assert assignment.is_legacy_artifact(membership_path)
+
+
+def test_a3_heldout_assignment_plain_verify_against_legacy_artifact_points_at_migrate(tmp_path: Path) -> None:
+    """A plain rerun (no --generate, no --migrate) against a legacy artifact
+    must not be stuck on a generic 'missing required fields' error -- it
+    must fail closed with clear guidance to pass --migrate."""
+    private_dir = tmp_path / "private"
+    salt = secrets.token_bytes(32)
+    result = assignment.assign(salt, FAMILY_IDS)
+    receipt = _fresh_receipt(salt, FAMILY_IDS)
+    receipt_path = _write_receipt(tmp_path, receipt)
+    _write_legacy_artifact(private_dir, salt, result)
+
+    with pytest.raises(assignment.AssignmentError, match="--migrate"):
+        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir)])
+
+
+def test_a3_heldout_assignment_generate_against_legacy_artifact_still_refuses(tmp_path: Path) -> None:
+    """--generate against an existing (even legacy) artifact is still
+    refused -- --migrate, not --generate, is the only sanctioned upgrade."""
+    private_dir = tmp_path / "private"
+    salt = secrets.token_bytes(32)
+    result = assignment.assign(salt, FAMILY_IDS)
+    receipt = _fresh_receipt(salt, FAMILY_IDS)
+    receipt_path = _write_receipt(tmp_path, receipt)
+    membership_path = _write_legacy_artifact(private_dir, salt, result)
+
+    with pytest.raises(assignment.AssignmentError, match="already exists"):
+        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--generate"])
+    # Untouched: still legacy-shaped, no receipt_binding_sha256 was added.
+    assert assignment.is_legacy_artifact(membership_path)
+
+
+def test_a3_heldout_assignment_migrate_upgrades_legacy_artifact_in_place(
+    tmp_path: Path, capsys: pytest.CaptureFixture
+) -> None:
+    private_dir = tmp_path / "private"
+    salt = secrets.token_bytes(32)
+    result = assignment.assign(salt, FAMILY_IDS)
+    receipt = _fresh_receipt(salt, FAMILY_IDS)
+    receipt_path = _write_receipt(tmp_path, receipt)
+    membership_path = _write_legacy_artifact(private_dir, salt, result)
+
+    assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--migrate"])
+    printed = json.loads(capsys.readouterr().out)
+    assert printed["salt_commitment_sha256"] == receipt["heldout_partition_seal"]["assignment_algorithm"][
+        "salt_commitment_sha256"
+    ]
+
+    assert not assignment.is_legacy_artifact(membership_path)
+    upgraded = assignment.load_private_artifact(membership_path)
+    assert upgraded["membership"] == result["membership"]
+    assert upgraded["heldout_family_ids"] == result["heldout_family_ids"]
+    assert upgraded["builder_eligible_family_ids"] == result["builder_eligible_family_ids"]
+    assert upgraded["salt_hex"] == salt.hex()
+    assert upgraded["receipt_binding_sha256"] == assignment.receipt_binding_sha256(receipt)
+
+    # A plain verify now succeeds -- the artifact is no longer stuck.
+    assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir)])
+
+
+def test_a3_heldout_assignment_migrate_is_idempotent_refuses_already_migrated_artifact(tmp_path: Path) -> None:
+    private_dir = tmp_path / "private"
+    salt = secrets.token_bytes(32)
+    result = assignment.assign(salt, FAMILY_IDS)
+    receipt = _fresh_receipt(salt, FAMILY_IDS)
+    receipt_path = _write_receipt(tmp_path, receipt)
+    membership_path = private_dir / assignment.MEMBERSHIP_FILENAME
+    assignment.write_private_artifact(membership_path, salt, result, assignment.receipt_binding_sha256(receipt))
+
+    with pytest.raises(assignment.AssignmentError, match="nothing to migrate"):
+        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--migrate"])
+
+
+def test_a3_heldout_assignment_migrate_refuses_when_no_artifact_exists(tmp_path: Path) -> None:
+    private_dir = tmp_path / "private"
+    receipt_path = _write_receipt(tmp_path, _fresh_receipt(secrets.token_bytes(32), FAMILY_IDS))
+
+    with pytest.raises(assignment.AssignmentError, match="no private artifact found to migrate"):
+        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--migrate"])
+
+
+def test_a3_heldout_assignment_migrate_refuses_generate_combined(tmp_path: Path) -> None:
+    private_dir = tmp_path / "private"
+    receipt_path = _write_receipt(tmp_path, _fresh_receipt(secrets.token_bytes(32), FAMILY_IDS))
+
+    with pytest.raises(assignment.AssignmentError, match="mutually exclusive"):
+        assignment.main(
+            ["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--migrate", "--generate"]
+        )
+
+
+def test_a3_heldout_assignment_migrate_refuses_tampered_legacy_membership(tmp_path: Path) -> None:
+    private_dir = tmp_path / "private"
+    salt = secrets.token_bytes(32)
+    result = assignment.assign(salt, FAMILY_IDS)
+    receipt = _fresh_receipt(salt, FAMILY_IDS)
+    receipt_path = _write_receipt(tmp_path, receipt)
+    membership_path = _write_legacy_artifact(private_dir, salt, result)
+
+    payload = json.loads(membership_path.read_text(encoding="utf-8"))
+    first_family = FAMILY_IDS[0]
+    payload["membership"][first_family] = (
+        "builder_eligible" if payload["membership"][first_family] == "heldout" else "heldout"
+    )
+    os.chmod(membership_path, 0o600)
+    membership_path.write_text(json.dumps(payload))
+    os.chmod(membership_path, assignment.PRIVATE_FILE_MODE)
+
+    with pytest.raises(assignment.AssignmentError, match="does not reproduce"):
+        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--migrate"])
+    assert assignment.is_legacy_artifact(membership_path)
+
+
+def test_a3_heldout_assignment_migrate_refuses_commitment_drift(tmp_path: Path) -> None:
+    """A legacy artifact whose recomputed commitments don't match the sealed
+    receipt (e.g. the receipt was resealed against a different salt since
+    the legacy artifact was written) must be refused, not silently adopted."""
+    private_dir = tmp_path / "private"
+    salt = secrets.token_bytes(32)
+    result = assignment.assign(salt, FAMILY_IDS)
+    membership_path = _write_legacy_artifact(private_dir, salt, result)
+
+    other_receipt = _fresh_receipt(secrets.token_bytes(32), FAMILY_IDS)
+    receipt_path = _write_receipt(tmp_path, other_receipt)
+
+    with pytest.raises(assignment.AssignmentError, match="drift"):
+        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--migrate"])
+    assert assignment.is_legacy_artifact(membership_path)

@@ -72,11 +72,16 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
+from jsonschema import Draft202012Validator
+
 ROOT = Path(__file__).resolve().parents[3]
 PRIVATE_ROOT = ROOT / "batch_state"
 DEFAULT_PRIVATE_DIR = PRIVATE_ROOT / "open-model-data/v4-a3-heldout"
 DEFAULT_RECEIPT = (
     ROOT / "data/projects/open_model_data/admission/dataset_v4_a3_heldout_source_family_seal_receipt_v1.json"
+)
+RECEIPT_SCHEMA = (
+    ROOT / "data/projects/open_model_data/contracts/dataset_v4_a3_heldout_source_family_seal_receipt_v1.schema.json"
 )
 
 # Test-only salt override, read from the environment rather than a CLI flag
@@ -143,17 +148,28 @@ def rank_key(salt: bytes, family_id: str) -> int:
     return int(digest, 16)
 
 
+def heldout_target_count(family_count: int) -> int:
+    """The `heldout_fraction`/`minimum_heldout_count` half of the frozen formula.
+
+    Deliberately salt-independent: which family lands in the held-out pool is
+    salt-dependent, but how many do is fixed by the formula alone. Exposed
+    separately so the public ``heldout_count``/``builder_eligible_count`` a
+    receipt declares can be independently recomputed from the public
+    ``family_count`` -- no salt, and therefore no private artifact, required.
+    """
+    require(family_count >= 2, "need at least 2 families to hold one out and keep one builder-eligible")
+    target = max(1, round(family_count * ALGORITHM_DESCRIPTOR["heldout_fraction"]))
+    return min(target, family_count - 1)
+
+
 def assign(salt: bytes, family_ids: list[str]) -> dict[str, Any]:
     """Apply the frozen ALGORITHM_DESCRIPTOR formula. Pure function of (salt, family_ids)."""
     require(len(salt) == 32, "salt must be exactly 32 bytes")
     require(len(family_ids) == len(set(family_ids)), "family_ids must be unique")
     family_count = len(family_ids)
-    require(family_count >= 2, "need at least 2 families to hold one out and keep one builder-eligible")
 
     ordered = sorted(family_ids, key=lambda fid: (rank_key(salt, fid), fid))
-    heldout_target_count = max(1, round(family_count * ALGORITHM_DESCRIPTOR["heldout_fraction"]))
-    heldout_target_count = min(heldout_target_count, family_count - 1)
-    heldout = set(ordered[:heldout_target_count])
+    heldout = set(ordered[: heldout_target_count(family_count)])
     membership = {fid: ("heldout" if fid in heldout else "builder_eligible") for fid in family_ids}
     heldout_ids = sorted(fid for fid, pool in membership.items() if pool == "heldout")
     builder_ids = sorted(fid for fid, pool in membership.items() if pool == "builder_eligible")
@@ -219,6 +235,129 @@ def receipt_binding_context(receipt: dict[str, Any]) -> dict[str, Any]:
 
 def receipt_binding_sha256(receipt: dict[str, Any]) -> str:
     return sha256_text(canonical_json(receipt_binding_context(receipt)))
+
+
+# --- independent receipt validation ---------------------------------------
+#
+# Everything below trusts nothing the receipt merely *declares*: it re-derives
+# each fact from a source this script controls (the frozen ALGORITHM_DESCRIPTOR,
+# the public family_count, the actual bytes on disk of every bound artifact) and
+# compares. A receipt that is schema-conformant and carries commitment hashes
+# that happen to match is not enough on its own -- see
+# ``verify_against_receipt`` for the salt-bound commitment checks; this is the
+# salt-independent half, run unconditionally (both --generate and verify) so a
+# corrupted or hand-edited receipt is caught before any private-artifact
+# filesystem operation is even attempted.
+
+
+def _load_receipt_schema() -> dict[str, Any]:
+    schema = json.loads(RECEIPT_SCHEMA.read_text(encoding="utf-8"))
+    Draft202012Validator.check_schema(schema)
+    return schema
+
+
+def validate_receipt_schema(receipt: dict[str, Any]) -> None:
+    errors = sorted(Draft202012Validator(_load_receipt_schema()).iter_errors(receipt), key=lambda e: list(e.path))
+    require(not errors, f"receipt fails schema validation: {errors[0].message}" if errors else "")
+
+
+def validate_algorithm_metadata(receipt: dict[str, Any]) -> None:
+    """Recompute the algorithm descriptor hash from the frozen constants in
+    this file and require the receipt's declared metadata -- both the
+    individual fields and the ``algorithm_descriptor_sha256`` derived from
+    them -- to match exactly. A receipt that declares a different
+    ``algorithm_descriptor_sha256`` (or individual fields inconsistent with
+    it) must fail here, independent of anything else in the receipt."""
+    algorithm = receipt["heldout_partition_seal"]["assignment_algorithm"]
+    declared_metadata = {
+        "algorithm_id": algorithm.get("algorithm_id"),
+        "algorithm_version": algorithm.get("algorithm_version"),
+        "identity_dimensions": algorithm.get("identity_dimensions"),
+        "content_blind": algorithm.get("content_blind"),
+        "formula": algorithm.get("formula"),
+        "heldout_fraction": algorithm.get("heldout_fraction"),
+        "rounding_rule": algorithm.get("rounding_rule"),
+        "minimum_heldout_count": algorithm.get("minimum_heldout_count"),
+    }
+    require(
+        declared_metadata == ALGORITHM_DESCRIPTOR,
+        "receipt assignment_algorithm metadata does not match the frozen ALGORITHM_DESCRIPTOR -- refusing",
+    )
+    require(
+        algorithm.get("algorithm_descriptor_sha256") == ALGORITHM_DESCRIPTOR_SHA256,
+        "receipt algorithm_descriptor_sha256 does not match the locally recomputed frozen descriptor hash -- refusing",
+    )
+
+
+def validate_pool_counts(receipt: dict[str, Any]) -> None:
+    """Recompute the expected heldout/builder-eligible split size from the
+    public ``family_count`` alone (no salt needed -- see
+    ``heldout_target_count``) and require the receipt's declared
+    ``heldout_count``/``builder_eligible_count`` to match. Catches a receipt
+    whose counts were hand-edited (e.g. to hide or inflate the held-out pool)
+    even though the commitment hashes still verify."""
+    seal = receipt["heldout_partition_seal"]
+    family_count = receipt["source_family_registry"]["family_count"]
+    require(
+        seal["family_count"] == family_count,
+        "receipt heldout_partition_seal.family_count does not match source_family_registry.family_count -- refusing",
+    )
+    expected_heldout = heldout_target_count(family_count)
+    expected_builder_eligible = family_count - expected_heldout
+    require(
+        seal["heldout_count"] == expected_heldout,
+        f"receipt heldout_count ({seal['heldout_count']}) does not match the count recomputed from the frozen "
+        f"formula and family_count={family_count} ({expected_heldout}) -- refusing",
+    )
+    require(
+        seal["builder_eligible_count"] == expected_builder_eligible,
+        f"receipt builder_eligible_count ({seal['builder_eligible_count']}) does not match the count recomputed "
+        f"from the frozen formula and family_count={family_count} ({expected_builder_eligible}) -- refusing",
+    )
+
+
+def validate_bindings_hash_to_disk(receipt: dict[str, Any], root: Path) -> None:
+    """Independently hash every file named in ``bindings`` and require it to
+    match the receipt's declared ``sha256`` -- the declared hash is never
+    trusted on its own. Also refuses a bound path that escapes ``root``
+    (e.g. an absolute path or a ``..`` traversal) before ever reading it."""
+    for name, binding in receipt["bindings"].items():
+        bound_path = (root / binding["path"]).resolve()
+        require(
+            root.resolve() in bound_path.parents or bound_path == root.resolve(),
+            f"binding {name!r} path escapes the repository root -- refusing: {binding['path']}",
+        )
+        require(bound_path.is_file(), f"binding {name!r} does not point at a file: {bound_path}")
+        actual_sha256 = hashlib.sha256(bound_path.read_bytes()).hexdigest()
+        require(
+            actual_sha256 == binding["sha256"],
+            f"binding {name!r} on-disk sha256 ({actual_sha256}) does not match the receipt's declared "
+            f"sha256 ({binding['sha256']}) for {binding['path']} -- refusing",
+        )
+
+
+def validate_receipt_independently(receipt: dict[str, Any], root: Path = ROOT) -> None:
+    """Run every salt-independent check that does not trust a declared field
+    at face value: algorithm metadata/hash, pool counts, and on-disk binding
+    hashes always; full schema conformance whenever the receipt claims to be
+    sealed (``_receipt_is_sealed``).
+
+    Schema conformance is gated on sealing, not unconditional, because the
+    pinned production schema (``RECEIPT_SCHEMA``) models only the final,
+    committed artifact -- it requires sha256-pattern commitment fields a
+    not-yet-sealed draft receipt does not have yet by design (see
+    ``_receipt_is_sealed`` and the ``--generate``-against-unsealed-receipt
+    path in ``main``). Once a receipt claims real commitments it must also be
+    fully schema-conformant; nothing about that claim is trusted otherwise.
+
+    Called unconditionally in ``main`` -- before --generate, --migrate, or a
+    plain verify -- so nothing downstream ever operates against a receipt
+    whose declared fields were trusted rather than re-derived."""
+    validate_algorithm_metadata(receipt)
+    validate_pool_counts(receipt)
+    validate_bindings_hash_to_disk(receipt, root)
+    if _receipt_is_sealed(receipt):
+        validate_receipt_schema(receipt)
 
 
 # --- filesystem hardening -----------------------------------------------
@@ -341,9 +480,30 @@ def write_private_artifact(
             temporary.unlink()
 
 
-def load_private_artifact(path: Path) -> dict[str, Any]:
+REQUIRED_ARTIFACT_FIELDS = frozenset(
+    {
+        "salt_hex",
+        "membership",
+        "heldout_family_ids",
+        "builder_eligible_family_ids",
+        "receipt_binding_sha256",
+    }
+)
+
+# Fields a private artifact written before receipt_binding_sha256 existed
+# (parent 0587a233) still has -- everything except that one field. Used only
+# by the explicit --migrate path; a plain (non-migrate) load always requires
+# the full REQUIRED_ARTIFACT_FIELDS set above.
+LEGACY_REQUIRED_ARTIFACT_FIELDS = REQUIRED_ARTIFACT_FIELDS - {"receipt_binding_sha256"}
+
+
+def load_private_artifact(path: Path, required_fields: frozenset[str] = REQUIRED_ARTIFACT_FIELDS) -> dict[str, Any]:
     """Read the private membership artifact, refusing anything but a plain,
-    owner-only-mode regular file reached with no symlink in its path."""
+    owner-only-mode regular file reached with no symlink in its path.
+
+    ``required_fields`` defaults to the full current field set; pass
+    ``LEGACY_REQUIRED_ARTIFACT_FIELDS`` to read a pre-receipt_binding_sha256
+    artifact (only ever done from the explicit ``--migrate`` path)."""
     _assert_no_symlink_components(path)
     try:
         info = path.lstat()
@@ -366,15 +526,44 @@ def load_private_artifact(path: Path) -> dict[str, Any]:
         raise AssignmentError(f"cannot read private artifact: {path}") from exc
     value = json.loads(raw.decode("utf-8"))
     require(isinstance(value, dict), f"private artifact is not a JSON object: {path}")
-    required_fields = {
-        "salt_hex",
-        "membership",
-        "heldout_family_ids",
-        "builder_eligible_family_ids",
-        "receipt_binding_sha256",
-    }
     require(required_fields <= value.keys(), f"private artifact missing required fields: {path}")
     return value
+
+
+def _rewrite_private_artifact(path: Path, payload: dict[str, Any]) -> None:
+    """Atomically *replace* an existing private artifact's content in place.
+
+    Unlike ``write_private_artifact`` (create-only, no-clobber), this is the
+    one sanctioned path allowed to overwrite a private artifact -- used only
+    by ``migrate_private_artifact``, and only after every recomputation and
+    commitment check there has already passed. Same write-temp -> fsync ->
+    atomic-swap -> fsync-directory discipline as ``write_private_artifact``,
+    but swaps via ``os.replace`` (atomic on POSIX) instead of a no-clobber
+    ``os.link``, since replacing is exactly what a migration must do.
+    """
+    private_dir = path.parent
+    _assert_no_symlink_components(private_dir)
+    _assert_no_symlink_components(path)
+    _assert_contained(path, private_dir)
+    require(
+        path.exists() and not path.is_symlink() and stat.S_ISREG(path.lstat().st_mode),
+        f"private artifact missing or not a regular file, nothing to migrate: {path}",
+    )
+
+    encoded = (canonical_json(payload) + "\n").encode("utf-8")
+    descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=private_dir)
+    temporary = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, "wb") as handle:
+            os.fchmod(handle.fileno(), PRIVATE_FILE_MODE)
+            handle.write(encoded)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+        _fsync_directory(private_dir)
+    finally:
+        with contextlib.suppress(OSError):
+            temporary.unlink()
 
 
 # --- fail-closed rerun ----------------------------------------------------
@@ -457,6 +646,85 @@ def verify_against_receipt(
     return summary
 
 
+def is_legacy_artifact(membership_path: Path) -> bool:
+    """True if the artifact at ``membership_path`` predates
+    ``receipt_binding_sha256`` (written by parent 0587a233 or earlier).
+
+    Reads with the same relaxed (legacy) required-field set a plain load
+    would refuse outright, purely to distinguish "legacy, needs --migrate"
+    from "corrupt, missing other fields too" -- it never trusts the content
+    beyond that one presence check.
+    """
+    stored = load_private_artifact(membership_path, required_fields=LEGACY_REQUIRED_ARTIFACT_FIELDS)
+    return "receipt_binding_sha256" not in stored
+
+
+def migrate_private_artifact(
+    membership_path: Path, receipt: dict[str, Any], family_ids: list[str]
+) -> dict[str, Any]:
+    """Explicit, fail-closed upgrade path for a private artifact written
+    before ``receipt_binding_sha256`` existed (parent ``0587a233``).
+
+    Never invoked by a plain verify run -- only via ``--migrate``. Runs the
+    identical recomputation and commitment checks ``verify_against_receipt``
+    runs (membership reproduces from the artifact's own stored salt, the
+    persisted derived lists match, and the resulting commitments match the
+    sealed public receipt's) before ever touching the file. The one check it
+    does *not* run is the ``receipt_binding_sha256`` comparison -- the legacy
+    artifact does not have one yet; computing and writing it is exactly what
+    this migration does. Only if every recomputation/commitment check passes
+    does it rewrite the artifact in place (atomic replace, same private
+    mode/dir) to add ``receipt_binding_sha256`` computed from the *current*
+    receipt. Membership, salt, and every other field are carried over
+    byte-for-byte -- a migration never changes the held-out assignment
+    itself, only adds the binding fingerprint that was missing.
+    """
+    stored = load_private_artifact(membership_path, required_fields=LEGACY_REQUIRED_ARTIFACT_FIELDS)
+    require(
+        "receipt_binding_sha256" not in stored,
+        f"private artifact already carries receipt_binding_sha256 -- nothing to migrate, "
+        f"omit --migrate to verify instead: {membership_path}",
+    )
+    require(
+        stored.get("algorithm_descriptor_sha256") == ALGORITHM_DESCRIPTOR_SHA256,
+        "private artifact algorithm_descriptor_sha256 does not match the frozen descriptor -- refusing to migrate",
+    )
+    salt = bytes.fromhex(stored["salt_hex"])
+    recomputed = assign(salt, family_ids)
+    require(
+        recomputed["membership"] == stored["membership"],
+        "private artifact membership does not reproduce from its own stored salt -- refusing to migrate "
+        "(tampered artifact or a family_ids change without a reseal)",
+    )
+    require(
+        recomputed["heldout_family_ids"] == stored["heldout_family_ids"],
+        "private artifact heldout_family_ids does not match recomputed membership -- refusing to migrate "
+        "(tampered artifact)",
+    )
+    require(
+        recomputed["builder_eligible_family_ids"] == stored["builder_eligible_family_ids"],
+        "private artifact builder_eligible_family_ids does not match recomputed membership -- refusing to migrate "
+        "(tampered artifact)",
+    )
+
+    summary = public_commitment_summary(salt, recomputed)
+    receipt_commitments = _receipt_commitments(receipt)
+    require(
+        summary["salt_commitment_sha256"] == receipt_commitments["salt_commitment_sha256"],
+        "salt_commitment_sha256 drift between the private artifact and the sealed public receipt -- "
+        "refusing to migrate",
+    )
+    require(
+        summary["assignment_commitment_sha256"] == receipt_commitments["assignment_commitment_sha256"],
+        "assignment_commitment_sha256 drift between the private artifact and the sealed public receipt -- "
+        "refusing to migrate",
+    )
+
+    payload = {**stored, "receipt_binding_sha256": receipt_binding_sha256(receipt)}
+    _rewrite_private_artifact(membership_path, payload)
+    return summary
+
+
 def _resolve_generation_salt() -> bytes:
     """Fresh 32-byte random salt, unless overridden for a deterministic test.
 
@@ -508,21 +776,55 @@ def main(argv: list[str] | None = None) -> None:
             "does not reproduce."
         ),
     )
+    parser.add_argument(
+        "--migrate",
+        action="store_true",
+        help=(
+            "Explicit, fail-closed upgrade for a private artifact written before "
+            "receipt_binding_sha256 existed (parent 0587a233): verify-and-rewrite in place, "
+            "adding the missing field -- never changes the held-out membership itself. "
+            "Refused if no artifact exists at --private-dir, if --generate is also passed, "
+            "or if the existing artifact already carries receipt_binding_sha256 (nothing to migrate)."
+        ),
+    )
     args = parser.parse_args(argv)
+    require(not (args.generate and args.migrate), "--generate and --migrate are mutually exclusive")
 
     receipt = json.loads(args.receipt.read_text(encoding="utf-8"))
     family_ids = sorted(family["family_id"] for family in receipt["source_family_registry"]["families"])
+    # Independent validation: re-derive every algorithm-metadata/count/binding
+    # fact from a source this script controls rather than trusting the
+    # receipt's declared fields -- see validate_receipt_independently. Runs
+    # before any private-artifact filesystem operation, for --generate,
+    # --migrate, and plain verify alike.
+    validate_receipt_independently(receipt)
 
     private_dir = _absolute_unresolved(args.private_dir)
     _assert_no_symlink_components(private_dir)
     _assert_within_private_root(private_dir, PRIVATE_ROOT)
     membership_path = private_dir / MEMBERSHIP_FILENAME
 
+    if args.migrate:
+        require(
+            membership_path.exists() or membership_path.is_symlink(),
+            f"no private artifact found to migrate: {membership_path}",
+        )
+        summary = migrate_private_artifact(membership_path, receipt, family_ids)
+        print(canonical_json(summary))
+        return
+
     if membership_path.exists() or membership_path.is_symlink():
         require(
             not args.generate,
             f"private artifact already exists, refusing to overwrite: {membership_path} "
             "-- fail closed on rerun; omit --generate to verify it instead",
+        )
+        require(
+            not is_legacy_artifact(membership_path),
+            f"private artifact predates receipt_binding_sha256 (written before the reseal-drift fix in "
+            f"parent 0587a233) -- pass --migrate to verify and upgrade it in place (fail-closed, the "
+            f"held-out membership itself is never changed); a plain verify cannot proceed until it is "
+            f"migrated: {membership_path}",
         )
         summary = verify_against_receipt(membership_path, receipt, family_ids)
         print(canonical_json(summary))
