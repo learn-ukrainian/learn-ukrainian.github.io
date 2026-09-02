@@ -25,6 +25,13 @@ END_MARKER = "<<<V4_ARENA_PROPOSAL_JSON_END>>>"
 HASH_RE = re.compile(r"^[0-9a-f]{64}$")
 QUARANTINE = "MODEL_AGREEMENT_QUARANTINED_NOT_GOLD"
 
+# A retry is only ever granted for a *format* failure -- the wire shape was
+# wrong, not the content.  A schema/content failure (wrong candidate, case
+# drift, invalid label/tag, ...) is never retried: giving a provider a second
+# attempt there would let it fabricate a differently-wrong-but-well-formed
+# answer instead of recording the real disagreement.
+FORMAT_ONLY_CODES = frozenset({"MALFORMED_PROVIDER_OUTPUT", "NONCANONICAL_PROVIDER_JSON"})
+
 
 class ArenaReceiptError(ValueError):
     """The arena binding or its deterministic receipt is unsafe."""
@@ -75,6 +82,46 @@ def parse_proposal(raw: Any) -> dict[str, Any]:
     require(isinstance(proposal, dict), "MALFORMED_PROVIDER_OUTPUT")
     require(canonical_json(proposal) == payload, "NONCANONICAL_PROVIDER_JSON")
     return proposal
+
+
+def _split_provider_entry(entry: Any) -> tuple[Any, Any]:
+    """A provider output entry is either the raw single-shot payload (any
+    type; ``parse_proposal`` fails it closed if it is not a wire-shaped
+    string), or an object ``{"primary": ..., "retry": ...}`` opting into one
+    format-only retry. Never raises -- an entry that looks like neither shape
+    is passed through as a primary-only payload, so it still fails closed
+    inside ``parse_proposal`` with the ordinary ``MALFORMED_PROVIDER_OUTPUT``
+    residual rather than a different, surprising error here."""
+    if isinstance(entry, Mapping) and set(entry) <= {"primary", "retry"} and "primary" in entry:
+        return entry.get("primary"), entry.get("retry")
+    return entry, None
+
+
+def parse_proposal_with_one_format_retry(
+    primary_raw: Any, retry_raw: Any = None
+) -> tuple[dict[str, Any] | None, str | None, bool]:
+    """Parse ``primary_raw``. If -- and only if -- that attempt fails with a
+    *format-only* error code (``FORMAT_ONLY_CODES``) and ``retry_raw`` is
+    supplied, make exactly one more attempt against ``retry_raw``. A
+    non-format failure, or a format failure with no ``retry_raw``, is never
+    retried, and a retry is never itself retried.
+
+    Returns ``(proposal, error_code, retried)``: on success ``proposal`` is
+    the parsed dict and ``error_code`` is ``None``; on failure ``proposal``
+    is ``None`` and ``error_code`` is the final (post-retry, if attempted)
+    failure code. ``retried`` reports whether a retry attempt was made,
+    regardless of whether it succeeded.
+    """
+    try:
+        return parse_proposal(primary_raw), None, False
+    except ArenaReceiptError as exc:
+        primary_code = str(exc)
+        if primary_code not in FORMAT_ONLY_CODES or retry_raw is None:
+            return None, primary_code, False
+        try:
+            return parse_proposal(retry_raw), None, True
+        except ArenaReceiptError as retry_exc:
+            return None, str(retry_exc), True
 
 
 def _candidate_bindings(
@@ -152,16 +199,38 @@ def build_receipts(
     route_statuses: list[dict[str, Any]] = []
     residuals: list[dict[str, Any]] = []
     for candidate_id, binding in sorted(candidates.items(), key=lambda item: item[1]["route_id"]):
-        raw = provider_outputs.get(candidate_id)
-        raw_hash = sha256_value(raw) if raw is not None else None
+        primary_raw, retry_raw = _split_provider_entry(provider_outputs.get(candidate_id))
+        primary_hash = sha256_value(primary_raw) if primary_raw is not None else None
+        retry_hash = sha256_value(retry_raw) if retry_raw is not None else None
+        proposal, parse_error, retried = parse_proposal_with_one_format_retry(primary_raw, retry_raw)
         try:
-            proposal = parse_proposal(raw)
+            require(parse_error is None, parse_error or "MALFORMED_PROVIDER_OUTPUT")
+            assert proposal is not None
             require(proposal.get("provider_id") == binding["provider_id"], "PROVIDER_ID_DRIFT")
             proposals[candidate_id] = _proposal_cases(proposal, candidate_id, frozen_cases, labels, tags)
-            route_statuses.append({"route_id": binding["route_id"], "candidate_id": candidate_id, "status": "valid", "output_sha256": raw_hash})
+            route_statuses.append(
+                {
+                    "route_id": binding["route_id"],
+                    "candidate_id": candidate_id,
+                    "status": "valid",
+                    "output_sha256": primary_hash,
+                    "retry_output_sha256": retry_hash,
+                    "retried": retried,
+                }
+            )
         except ArenaReceiptError as exc:
             code = str(exc)
-            route_statuses.append({"route_id": binding["route_id"], "candidate_id": candidate_id, "status": "invalid", "output_sha256": raw_hash, "residual_code": code})
+            route_statuses.append(
+                {
+                    "route_id": binding["route_id"],
+                    "candidate_id": candidate_id,
+                    "status": "invalid",
+                    "output_sha256": primary_hash,
+                    "retry_output_sha256": retry_hash,
+                    "retried": retried,
+                    "residual_code": code,
+                }
+            )
             residuals.append(_residual(code, candidate_id=candidate_id, route_id=binding["route_id"]))
 
     valid_ballots: list[dict[str, str]] = []
@@ -187,6 +256,16 @@ def build_receipts(
         ballot_keys.add(key)
         valid_ballots.append({"voter_candidate_id": str(voter), "candidate_id": str(target), "case_id": str(case_id), "label": str(label)})
 
+    # Leave-one-out index: every valid ballot is, by construction (self-vote is
+    # rejected above), cast by a candidate *other than* the one it is about --
+    # so grouping by (target, case) already gives the leave-one-out peer set
+    # for that target on that case.  This is the only consensus this receipt
+    # ever aggregates from ballots; a candidate's own self-reported proposal
+    # label (see ``candidate_outputs`` below) never enters it.
+    ballots_by_target_case: dict[tuple[str, str], list[dict[str, str]]] = {}
+    for entry in valid_ballots:
+        ballots_by_target_case.setdefault((entry["candidate_id"], entry["case_id"]), []).append(entry)
+
     # A valid provider must cover every non-self candidate and frozen case.  Invalid
     # provider routes remain residuals, rather than silently changing this expectation.
     for voter in sorted(proposals):
@@ -202,6 +281,19 @@ def build_receipts(
         outputs = [{"candidate_id": candidate_id, **proposals[candidate_id][index]} for candidate_id in sorted(proposals)]
         counts = Counter(item["label"] for item in outputs)
         status = "exact_agreement" if len(outputs) >= 2 and len(counts) == 1 else "disagreement"
+        leave_one_out_ballots = []
+        for target_candidate_id in sorted(candidates):
+            peer_ballots = ballots_by_target_case.get((target_candidate_id, case_id), [])
+            peer_counts = Counter(entry["label"] for entry in peer_ballots)
+            ranked = peer_counts.most_common()
+            consensus_label = ranked[0][0] if len(ranked) == 1 or (len(ranked) > 1 and ranked[0][1] > ranked[1][1]) else None
+            leave_one_out_ballots.append({
+                "candidate_id": target_candidate_id,
+                "voter_count": len(peer_ballots),
+                "label_counts": dict(sorted(peer_counts.items())),
+                "consensus_label": consensus_label,
+                "unanimous": len(peer_counts) == 1 and len(peer_ballots) > 0,
+            })
         per_case.append({
             "case_id": case_id,
             "disposition": QUARANTINE,
@@ -209,6 +301,7 @@ def build_receipts(
             "valid_candidate_count": len(outputs),
             "label_counts": dict(sorted(counts.items())),
             "candidate_outputs": outputs,
+            "leave_one_out_ballots": leave_one_out_ballots,
         })
 
     binding = {
