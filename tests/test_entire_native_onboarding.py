@@ -235,6 +235,8 @@ def test_opencode_plugin_tracks_real_host_model_and_fails_open() -> None:
     exit_trap = OPENCODE_EXIT_TRAP.read_text(encoding="utf-8")
 
     assert "entire hooks opencode" in plugin
+    assert "exec entire" not in plugin
+    assert "|| true" in plugin
     assert "currentModel = msg.modelID" in plugin
     assert 'case "session.created"' in plugin
     assert 'case "message.updated"' in plugin
@@ -242,12 +244,72 @@ def test_opencode_plugin_tracks_real_host_model_and_fails_open() -> None:
     assert "plugin failures must not crash OpenCode" in plugin
     assert "refs/entire" not in plugin
     assert hashlib.sha256(plugin_bytes).hexdigest() == (
-        "516fc7c811560f61cf860f8ea0f76f67d57f30279d018c9dabb8e37fc1142d88"
+        "7e562fdc276798ce4771c95d703dc07ccbbdc22bece2286f7c5a2f0d17e2884f"
     )
     assert 'process.once("beforeExit", endCurrentSession)' in exit_trap
     assert 'process.once("exit", endCurrentSession)' in exit_trap
+    assert "exec entire" not in exit_trap
+    assert "|| true" in exit_trap
     assert "entire hooks opencode session-end" in exit_trap
     assert "termination capture can never crash OpenCode" in exit_trap
+
+
+def test_opencode_plugin_wrappers_fail_open_when_cli_errors(tmp_path: Path) -> None:
+    """The shell wrappers used by OpenCode swallow an installed CLI failure."""
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    fake_entire = fake_bin / "entire"
+    args_log = tmp_path / "entire-args.log"
+    fake_entire.write_text(
+        "#!/bin/sh\n"
+        "printf '%s\\n' \"$*\" >> \"$ENTIRE_ARGS\"\n"
+        "echo 'failed to parse hook event: empty hook input' >&2\n"
+        "exit 1\n",
+        encoding="utf-8",
+    )
+    fake_entire.chmod(0o755)
+    env = {"PATH": f"{fake_bin}:/usr/bin:/bin", "ENTIRE_ARGS": str(args_log)}
+
+    plugin = OPENCODE_PLUGIN.read_text(encoding="utf-8")
+    command_match = re.search(
+        r'return \["sh", "-c", `([^`]*command -v entire[^`]*)`\]',
+        plugin,
+    )
+    assert command_match is not None
+    command_template = command_match.group(1)
+    for hook_name in ("session-start", "turn-start", "turn-end", "session-end"):
+        result = subprocess.run(
+            ["/bin/sh", "-c", command_template.replace("${hookName}", hook_name)],
+            input="{}\n",
+            capture_output=True,
+            text=True,
+            check=False,
+            env=env,
+            timeout=5,
+        )
+        assert result.returncode == 0, (hook_name, result.stderr)
+
+    assert args_log.read_text(encoding="utf-8").splitlines() == [
+        "hooks opencode session-start",
+        "hooks opencode turn-start",
+        "hooks opencode turn-end",
+        "hooks opencode session-end",
+    ]
+
+    exit_trap = OPENCODE_EXIT_TRAP.read_text(encoding="utf-8")
+    exit_match = re.search(r'"(if ! command -v entire[^"\n]+session-end \|\| true)"', exit_trap)
+    assert exit_match is not None
+    result = subprocess.run(
+        ["/bin/sh", "-c", exit_match.group(1)],
+        input="{}\n",
+        capture_output=True,
+        text=True,
+        check=False,
+        env=env,
+        timeout=5,
+    )
+    assert result.returncode == 0, result.stderr
+    assert args_log.read_text(encoding="utf-8").splitlines()[-1] == "hooks opencode session-end"
 
 
 def test_no_public_entire_refs_in_native_onboarding_files() -> None:

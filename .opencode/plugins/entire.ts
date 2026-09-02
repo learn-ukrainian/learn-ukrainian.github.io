@@ -25,9 +25,9 @@ export const EntirePlugin: Plugin = async ({ directory }) => {
    */
   function hookCmd(hookName: string): string[] {
     if (ENTIRE_CMD !== "entire") {
-      return ["sh", "-c", `${ENTIRE_CMD} hooks opencode ${hookName}`]
+      return ["sh", "-c", `${ENTIRE_CMD} hooks opencode ${hookName} || true`]
     }
-    return ["sh", "-c", `if ! command -v entire >/dev/null 2>&1; then exit 0; fi; exec entire hooks opencode ${hookName}`]
+    return ["sh", "-c", `if ! command -v entire >/dev/null 2>&1; then exit 0; fi; entire hooks opencode ${hookName} || true`]
   }
 
   /**
