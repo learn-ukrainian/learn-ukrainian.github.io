@@ -146,6 +146,90 @@ def test_hash_replay_and_cli_are_deterministic(tmp_path: Path) -> None:
     assert arena.verify_receipt(json.loads(public_path.read_text()))["receipt_sha256"]
 
 
+def test_one_format_only_retry_recovers_a_malformed_primary_output() -> None:
+    fixture = _fixture()
+    recovered = arena.format_proposal(
+        {
+            "schema_version": arena.PROPOSAL_SCHEMA_VERSION,
+            "candidate_id": "candidate-4",
+            "provider_id": "provider-4",
+            "cases": [{"case_id": cid, "label": "accept", "tags": ["synthetic"]} for cid in [f"synthetic-{i:02d}" for i in range(1, 21)]],
+        }
+    )
+    fixture["provider_outputs"]["candidate-4"] = {"primary": "not a marker payload", "retry": recovered}
+    receipts = arena.build_receipts(**fixture)  # type: ignore[arg-type]
+    statuses = {item["candidate_id"]: item for item in receipts["public"]["route_statuses"]}
+    assert statuses["candidate-4"]["status"] == "valid"
+    assert statuses["candidate-4"]["retried"] is True
+    assert receipts["public"]["counts"]["valid_routes"] == 4
+
+
+def test_one_format_only_retry_still_records_failure_when_retry_also_malformed() -> None:
+    fixture = _fixture()
+    fixture["provider_outputs"]["candidate-4"] = {"primary": "still not a marker payload", "retry": "also not a marker payload"}
+    receipts = arena.build_receipts(**fixture)  # type: ignore[arg-type]
+    statuses = {item["candidate_id"]: item for item in receipts["public"]["route_statuses"]}
+    assert statuses["candidate-4"]["status"] == "invalid"
+    assert statuses["candidate-4"]["retried"] is True
+    assert statuses["candidate-4"]["residual_code"] == "MALFORMED_PROVIDER_OUTPUT"
+
+
+def test_non_format_failure_is_never_retried() -> None:
+    fixture = _fixture()
+    # PROVIDER_ID_DRIFT is a content/schema failure, not a format failure -- a
+    # retry payload must never be consulted for it.
+    wrong_provider = arena.format_proposal(
+        {
+            "schema_version": arena.PROPOSAL_SCHEMA_VERSION,
+            "candidate_id": "candidate-4",
+            "provider_id": "not-the-bound-provider",
+            "cases": [{"case_id": cid, "label": "accept", "tags": ["synthetic"]} for cid in [f"synthetic-{i:02d}" for i in range(1, 21)]],
+        }
+    )
+    fixture["provider_outputs"]["candidate-4"] = {"primary": wrong_provider, "retry": _proposal("candidate-4", "provider-4", ["accept"] * 20)}
+    receipts = arena.build_receipts(**fixture)  # type: ignore[arg-type]
+    statuses = {item["candidate_id"]: item for item in receipts["public"]["route_statuses"]}
+    assert statuses["candidate-4"]["status"] == "invalid"
+    assert statuses["candidate-4"]["retried"] is False
+    assert statuses["candidate-4"]["residual_code"] == "PROVIDER_ID_DRIFT"
+
+
+def test_leave_one_out_ballots_never_mix_in_a_candidates_own_self_report() -> None:
+    fixture = _fixture()
+    # Every candidate's own ballots vote "accept" for every peer/case in the base
+    # fixture; make candidate-2 vote "reject" for candidate-1's first case only, and
+    # confirm the leave-one-out summary reflects only *peer* ballots (never
+    # candidate-1's own proposal label, which is "accept" for that case).
+    ballots = fixture["ballots"]
+    assert isinstance(ballots, list)
+    for ballot in ballots:
+        if ballot["voter_candidate_id"] == "candidate-2" and ballot["candidate_id"] == "candidate-1" and ballot["case_id"] == "synthetic-01":
+            ballot["label"] = "reject"
+    receipts = arena.build_receipts(**fixture)  # type: ignore[arg-type]
+    first_case = receipts["public"]["cases"][0]
+    assert first_case["case_id"] == "synthetic-01"
+    loo = {item["candidate_id"]: item for item in first_case["leave_one_out_ballots"]}
+    assert loo["candidate-1"]["label_counts"] == {"accept": 2, "reject": 1}
+    assert loo["candidate-1"]["unanimous"] is False
+    assert loo["candidate-1"]["voter_count"] == 3
+    assert loo["candidate-1"]["consensus_label"] == "accept"
+
+
+def test_leave_one_out_ballots_report_no_consensus_on_an_exact_split() -> None:
+    fixture = _fixture()
+    ballots = fixture["ballots"]
+    assert isinstance(ballots, list)
+    for ballot in ballots:
+        if ballot["candidate_id"] == "candidate-1" and ballot["case_id"] == "synthetic-01" and ballot["voter_candidate_id"] in {"candidate-2", "candidate-3"}:
+            ballot["label"] = "reject" if ballot["voter_candidate_id"] == "candidate-2" else "accept"
+        elif ballot["candidate_id"] == "candidate-1" and ballot["case_id"] == "synthetic-01":
+            ballot["label"] = "reject"
+    receipts = arena.build_receipts(**fixture)  # type: ignore[arg-type]
+    loo = {item["candidate_id"]: item for item in receipts["public"]["cases"][0]["leave_one_out_ballots"]}
+    assert loo["candidate-1"]["label_counts"] == {"accept": 1, "reject": 2}
+    assert loo["candidate-1"]["consensus_label"] == "reject"
+
+
 def test_receipt_schema_drift_fails_closed_even_when_rehashed() -> None:
     receipt = arena.build_receipts(**_fixture())["public"]  # type: ignore[arg-type]
     receipt["unexpected"] = True
