@@ -41,7 +41,7 @@ def test_gemini_interactive_defaults_to_agy_and_rejects_epic() -> None:
     epic = run_launcher("start-gemini.sh", "--epic", "atlas")
     assert interactive.returncode == 0, interactive.stderr
     exec_line = _would_exec_line(interactive.stdout)
-    assert "would exec agy --model gemini-3.7-flash-high" in exec_line
+    assert "would exec agy --model gemini-3.8-flash-high" in exec_line
     assert not _AGY_PROMPT_FLAG.search(exec_line), exec_line
     assert _DRIVE_EPIC_NEEDLE not in exec_line
     assert _AGY_SKIP_PERMISSIONS not in exec_line, exec_line

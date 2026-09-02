@@ -77,6 +77,8 @@ def test_note_file_requires_fleet_breadth_marker(tmp_path: Path) -> None:
 
 def test_tier_for_gemini_flash_high_is_practical() -> None:
     """CF F1: bare 'flash' must not map gemini-*-flash-high to heap."""
+    assert _tier_for("agy", "gemini-3.8-flash-high") == "practical"
+    assert _tier_for("gemini", "gemini-3.8-flash-high") == "practical"
     assert _tier_for("agy", "gemini-3.7-flash-high") == "practical"
     assert _tier_for("gemini", "gemini-3.7-flash-high") == "practical"
     assert _tier_for("agy", "gemini-3.6-flash-high") == "practical"

@@ -75,13 +75,13 @@ lint: #5642 / `scripts/lint/lint_fleet_roster.py`.
 | **claude** | `claude-fable-5` @ high | **`gpt-5.6-sol` @ xhigh** (cross-family) | yes (`review-pr --reviewer claude`; Sonnet default, Fable explicit) |
 | **codex** | `gpt-5.6-terra` @ high | **`gpt-5.6-sol` @ xhigh** | yes (`review-pr --reviewer codex`) |
 | **grok** | `grok-4.6` @ high | same SKU (Cursor = avail. fallback) | yes (`review-pr --reviewer grok`) |
-| **agy** | `gemini-3.7-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | no until #5555 — still *requests* CF |
+| **agy** | `gemini-3.8-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | no until #5555 — still *requests* CF |
 | **cursor** | `auto` @ high (allowlist: `grok-4.6`, `composer-2.5`) | **`gpt-5.6-sol` @ xhigh** | no — formal CF requires attested `resolved_model` |
 
 <!-- fleet-roster-projection:begin orchestrator_seats -->
 | seat | model_id | effort | escalate_model_id | escalate_effort |
 | --- | --- | --- | --- | --- |
-| agy | gemini-3.7-flash-high | high | gemini-3.1-pro-high | high |
+| agy | gemini-3.8-flash-high | high | gemini-3.1-pro-high | high |
 | claude | claude-fable-5-1 | high | gpt-5.6-sol | xhigh |
 | codex | gpt-5.6-terra | high | gpt-5.6-sol | xhigh |
 | cursor | auto | high | gpt-5.6-sol | xhigh |
@@ -92,7 +92,7 @@ Escalate when: architecture, hard multi-file judgment, high-stakes synthesis —
 
 ```bash
 # AGY default / escalate
-.venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.7-flash-high ...
+.venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.8-flash-high ...
 .venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.1-pro-high ...
 # Claude escalate
 .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-fable-5 ...

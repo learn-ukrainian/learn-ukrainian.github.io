@@ -17,7 +17,7 @@ try:
 except ImportError:
     from enum import Enum
 
-    class StrEnum(str, Enum):  # noqa: UP042
+    class StrEnum(str, Enum):
         """Fallback StrEnum implementation for Python 3.10 support."""
 
         def __str__(self) -> str:
@@ -25,7 +25,7 @@ except ImportError:
 
 from scripts.audit.hramatka_qg_rules import DIMENSION_ORDER, scan_hramatka_lesson
 
-PRIMARY_MODEL = "gemini-3.7-flash-high"
+PRIMARY_MODEL = "gemini-3.8-flash-high"
 SECONDARY_MODEL = "gemini-3.1-pro-high"
 MAX_PROVIDER_ATTEMPTS = 4
 _PERFECT_QG_SCORE = 10.0

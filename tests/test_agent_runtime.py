@@ -338,7 +338,7 @@ def test_acpx_grok_shadow_entry_is_direct_only():
         (
             "acpx-agy-shadow",
             "scripts.agent_runtime.adapters.acpx:AcpxAgyShadowAdapter",
-            "gemini-3.7-flash-high",
+            "gemini-3.8-flash-high",
         ),
         (
             "acpx-glm-shadow",
@@ -383,7 +383,7 @@ def test_cursor_entry_is_well_formed():
 def test_agy_entry_is_well_formed():
     entry = get_agent_entry("agy")
     assert entry["adapter"] == "scripts.agent_runtime.adapters.agy:AgyAdapter"
-    assert entry["default_model"] == "gemini-3.7-flash-high"
+    assert entry["default_model"] == "gemini-3.8-flash-high"
     assert entry["cli_available"] is True
     assert entry["resume_policy"] == "bridge_only"
     assert {"content_writing", "content_review"} <= entry["capabilities"]

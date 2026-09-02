@@ -931,7 +931,7 @@ def test_practical_ladder_starts_with_terra_then_sonnet():
             "gpt-5.6-terra",
             "claude-sonnet-5",
             "glm-5.3",
-            "gemini-3.7-flash",
+            "gemini-3.8-flash",
         ]
         assert ladder[4][0].name == "grok-4.6"
 
@@ -981,4 +981,3 @@ def test_glm_egress_exclusion_reason_names_unlock_flag():
     )
     assert result.status == "excluded"
     assert "requires --data-egress-policy local_interactive" in result.reason
-
