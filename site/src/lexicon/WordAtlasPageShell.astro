@@ -13,12 +13,23 @@
 import WordAtlasArticle from "./WordAtlasArticle";
 import AtlasTypeahead from "./AtlasTypeahead.astro";
 import type { WordAtlasPageState } from "../lib/lexicon/word-atlas-page-state";
+import searchAliases from "../data/lexicon-search-aliases.json";
+import searchArticles from "../data/lexicon-search-index.json";
+import {
+  buildAtlasLinkCatalogFromSearchRows,
+  type AtlasSearchAliasRow,
+  type AtlasSearchArticleRow,
+} from "../lib/lexicon/word-atlas-article-model";
 
 interface Props {
   state: WordAtlasPageState;
 }
 
 const { state } = Astro.props as Props;
+const atlasLinkCatalog = buildAtlasLinkCatalogFromSearchRows(
+  searchArticles as AtlasSearchArticleRow[],
+  searchAliases as AtlasSearchAliasRow[],
+);
 ---
 
 {state.status === "ready" ? (
@@ -27,6 +38,7 @@ const { state } = Astro.props as Props;
       record={state.record}
       generatedAt={state.generatedAt}
       manifestVersion={state.manifestVersion}
+      atlasLinkCatalog={atlasLinkCatalog}
     >
       <AtlasTypeahead id="atlas-article-search" label="Шукати слово в Лексиконі" />
     </WordAtlasArticle>

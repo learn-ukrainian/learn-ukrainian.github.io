@@ -24,11 +24,16 @@ import {
 import { HttpAtlasDataSource } from "../lib/lexicon/http-atlas-data-source";
 import { absoluteSitePath } from "../lib/lexicon/site-base";
 import {
+  loadAtlasLinkCatalog,
   analyticsClassForState,
   loadAtlasClientShellEntry,
   preflightAtlasSlugInSearchIndex,
   type AtlasClientShellState,
 } from "../lib/lexicon/word-atlas-client-shell";
+import type {
+  AtlasLinkCatalog,
+  AtlasSearchArticleRow,
+} from "../lib/lexicon/word-atlas-article-model";
 
 export interface WordAtlasClientShellProps {
   /** Same-origin atlas root; default `/atlas` (base-aware absolute). */
@@ -106,6 +111,7 @@ export default function WordAtlasClientShell({
   const [state, setState] = useState<AtlasClientShellState | null>(() =>
     slug ? { status: "loading", slug } : null,
   );
+  const [atlasLinkCatalog, setAtlasLinkCatalog] = useState<AtlasLinkCatalog | null>(null);
   const [retryToken, setRetryToken] = useState(0);
   const articleHostRef = useRef<HTMLDivElement | null>(null);
   const reportedRef = useRef<string | null>(null);
@@ -126,10 +132,19 @@ export default function WordAtlasClientShell({
     if (!slug) return;
     let cancelled = false;
     setState({ status: "loading", slug });
+    setAtlasLinkCatalog(null);
 
     const run = async () => {
       const fetchFn = fetchImpl ?? fetch.bind(globalThis);
-      const preflight = await preflightAtlasSlugInSearchIndex(slug, fetchFn, resolvedBase);
+      let articleRows: AtlasSearchArticleRow[] | undefined;
+      const preflight = await preflightAtlasSlugInSearchIndex(
+        slug,
+        fetchFn,
+        resolvedBase,
+        (rows) => {
+          articleRows = rows;
+        },
+      );
       if (cancelled) return;
       if (preflight === "missing") {
         setState({ status: "not_found", slug });
@@ -140,8 +155,14 @@ export default function WordAtlasClientShell({
         assetBaseUrl: atlasBase,
         pointerTtlMs: 0,
       });
-      const next = await loadAtlasClientShellEntry(slug, source);
-      if (!cancelled) setState(next);
+      const [next, linkCatalog] = await Promise.all([
+        loadAtlasClientShellEntry(slug, source),
+        loadAtlasLinkCatalog(fetchFn, resolvedBase, articleRows),
+      ]);
+      if (!cancelled) {
+        setAtlasLinkCatalog(linkCatalog);
+        setState(next);
+      }
     };
 
     void run();
@@ -263,6 +284,7 @@ export default function WordAtlasClientShell({
         record={state.record}
         generatedAt={state.generatedAt}
         manifestVersion={state.manifestVersion}
+        atlasLinkCatalog={atlasLinkCatalog ?? undefined}
       />
     </div>
   );
