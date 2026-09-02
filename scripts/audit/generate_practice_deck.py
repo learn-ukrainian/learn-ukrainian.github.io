@@ -48,6 +48,40 @@ from scripts.practice_deck.end_dictionaries import (
 )
 from scripts.practice_deck.io import compute_deck_inputs_fingerprint, compute_deck_version
 
+
+def _load_morphological_validator() -> Any:
+    """Load ``checks/morphological_validator.py`` by FILE PATH, bypassing the
+    ``scripts.audit`` package ``__init__.py``.
+
+    Importing via the package path (``from scripts.audit.checks...``) forces
+    Python to initialize the ``scripts.audit`` package first — a large,
+    unrelated curriculum-audit import chain whose ``scripts/audit/config.py``
+    does a bare ``from config import ...`` resolved against ``sys.path[0]``.
+    When this file is imported as a top-level module by a sibling audit CLI
+    (``python scripts/audit/check_static_practice_assets.py`` puts
+    ``scripts/audit`` on ``sys.path``), that bare import self-shadows against
+    ``scripts/audit/config.py`` and crashes on a circular partial import.
+    Loading the sibling by path sidesteps the package ``__init__`` and is
+    safe under both bare-script and package import, matching the pattern in
+    ``check_node_modules_integrity._load_sibling``.
+    """
+    import importlib.util
+
+    name = "generate_practice_deck._morphological_validator"
+    if name in sys.modules:
+        return sys.modules[name]
+    path = Path(__file__).resolve().parent / "checks" / "morphological_validator.py"
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)  # type: ignore[union-attr]
+    return module
+
+
+_MORPHOLOGICAL_VALIDATOR = _load_morphological_validator()
+_AGREEMENT_SKIP = _MORPHOLOGICAL_VALIDATOR._AGREEMENT_SKIP
+check_agreement = _MORPHOLOGICAL_VALIDATOR.check_agreement
+
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
 DEFAULT_ATLAS_DB = Path("data/atlas.db")
 # Deck shards are served as literal static files from public/ (not via dynamic .json.ts
@@ -1917,6 +1951,41 @@ def _accepted_alts(candidate: dict[str, Any]) -> list[str]:
     return [value for value in (part.strip() for part in text.split("|")) if value]
 
 
+def _cloze_blank_context_agrees(
+    sentence: str,
+    form: str,
+    verifier: VesumVerifier,
+) -> bool:
+    """Return whether the filled cloze keeps adj-noun agreement at the blank.
+
+    The form checks above prove the gold form exists in VESUM; they say
+    nothing about the sentence around the slot.  When the token immediately
+    before ``___`` is a VESUM adjective and the gold form is a VESUM noun,
+    the filled sentence must share at least one gender/case analysis:
+    ``Різдвяна ___`` keeps ``прикраса`` but rejects ``прикраси``.  The check
+    reuses the shared morphological validator, so pronoun-like adjectives
+    (``_AGREEMENT_SKIP``) and adverb homographs follow the same rules as
+    module content.  Anything else — no pre-blank token, no adjective, no
+    noun — is out of scope and passes.
+    """
+    before_blank = sentence.split("___", 1)[0]
+    previous_tokens = _INVENTORY_WORD_RE.findall(before_blank)
+    if not previous_tokens:
+        return True
+    previous = previous_tokens[-1]
+    previous_key = _strip_stress(previous).lower()
+    form_key = _strip_stress(form).lower()
+    if previous_key in _AGREEMENT_SKIP or form_key in _AGREEMENT_SKIP:
+        return True
+    vesum_results = {
+        previous_key: _verified_surface_matches(previous, verifier),
+        form_key: _verified_surface_matches(form, verifier),
+    }
+    pair_line = f"{previous} {form}"
+    word_lines = [(previous, 1, pair_line), (form, 1, pair_line)]
+    return not check_agreement(word_lines, vesum_results, max_issues=1)
+
+
 def _build_cloze_items(
     lexeme: dict[str, Any],
     cloze_rows: list[dict[str, Any]],
@@ -1995,6 +2064,8 @@ def _build_cloze_items(
         sentence = _clean_text(candidate.get("sentence"))
         cloze_en = _clean_text(candidate.get("clozeEn")) or _clean_text(candidate.get("translation"))
         if not sentence or "___" not in sentence or (not inventory_candidate and not cloze_en):
+            continue
+        if not _cloze_blank_context_agrees(sentence, form, verifier):
             continue
         frame_key = "\x1f".join((deck_version, lexeme["lemmaId"], sentence, rule_id))
         sentence_frame_id = "sf_" + hashlib.sha1(frame_key.encode("utf-8")).hexdigest()[:12]
