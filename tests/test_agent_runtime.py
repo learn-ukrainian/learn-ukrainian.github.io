@@ -1155,6 +1155,46 @@ def test_codex_parse_response_rate_limit_url_no_false_positive(tmp_path):
     assert result.ok is True
 
 
+def test_codex_parse_response_version_banner_is_not_rate_limited(tmp_path):
+    """Regression: a Codex exec header + version banner is never a rate limit.
+
+    Evidence 2026-09-02: a failed exec whose stderr carries only the banner
+    (``OpenAI Codex v0.152.0`` plus the workdir/model header) must classify
+    as a plain failure.  The bare-429 pattern must also stay clear of dotted
+    version components such as ``v0.152.429`` — with no divider lines the
+    sanitiser falls back to the whole stderr, so the banner itself is
+    pattern-matched.
+    """
+    adapter = CodexAdapter()
+    output_file = tmp_path / "output.txt"
+    output_file.write_text("")
+
+    header_only = (
+        "OpenAI Codex v0.152.0\n"
+        "--------\n"
+        "workdir: /tmp/work\n"
+        "model: gpt-5.6-luna\n"
+        "--------\n"
+    )
+    result = adapter.parse_response(
+        stdout="",
+        stderr=header_only,
+        returncode=1,
+        output_file=output_file,
+    )
+    assert result.ok is False
+    assert result.rate_limited is False
+
+    dotted_429 = adapter.parse_response(
+        stdout="",
+        stderr="OpenAI Codex v0.152.429\n",
+        returncode=1,
+        output_file=output_file,
+    )
+    assert dotted_429.ok is False
+    assert dotted_429.rate_limited is False
+
+
 def test_codex_liveness_paths_exclude_rollout_files(tmp_path, monkeypatch):
     """Regression: the adapter must NOT return any rollout-*.jsonl
     file in liveness paths.

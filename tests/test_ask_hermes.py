@@ -567,6 +567,41 @@ def test_missing_entire_cli_has_no_spool_side_effects(tmp_path: Path, monkeypatc
     assert not capture._capture_root(tmp_path).exists()
 
 
+def test_missing_fleet_hook_agent_never_invokes_entire(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Entire 0.8.42 has no built-in ``fleet`` hook agent; without the
+    external ``entire-agent-fleet`` plugin binary the capture must fail open:
+    the local spool is still written, but ``entire hooks fleet`` is never
+    invoked (evidence 2026-09-02: ``unknown agent "fleet"`` rc=1)."""
+
+    def which(name: str) -> str | None:
+        return "/fake/entire" if name == "entire" else None
+
+    invoked: list[list[str]] = []
+
+    def run(command, **kwargs):
+        invoked.append(command)
+        assert command[0] == "git", f"unexpected subprocess: {command}"
+        return SimpleNamespace(returncode=0, stdout=b"")
+
+    monkeypatch.setattr(capture.shutil, "which", which)
+    monkeypatch.setattr(capture.subprocess, "run", run)
+
+    fleet = capture.FleetCapture.start(
+        host_harness="hermes",
+        runner_agent="deepseek",
+        entrypoint="bridge",
+        requested_model="deepseek-v4-flash",
+        prompt="fixture",
+        repo_path=tmp_path,
+        runtime_repo_root=tmp_path,
+    )
+    assert fleet is not None
+    assert fleet.transcript_path.exists()
+    fleet.finish(response="provider result", outcome="ok", returncode=0)
+    assert not fleet.session_dir.exists()
+    assert all(command[0] == "git" for command in invoked)
+
+
 def test_cursor_headless_is_owned_without_claiming_native_cursor(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
