@@ -1,0 +1,305 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/dataset_v4_a5_evidence_enrichment_receipt_v1.schema.json",
+  "title": "Dataset V4 A5 expression-free evidence enrichment receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "status",
+    "text_free",
+    "expression_free",
+    "controlling_outcome_sha256",
+    "control_surfaces",
+    "bindings",
+    "enrichment_algorithm",
+    "enrichment_gate",
+    "evidence_enrichment",
+    "a2_residuals_carried_forward",
+    "a4_residuals_carried_forward",
+    "a5_residuals",
+    "execution_counters",
+    "safety_assertions"
+  ],
+  "properties": {
+    "schema_version": {"const": "dataset_v4_a5_evidence_enrichment_receipt_v1"},
+    "receipt_id": {"const": "dataset-v4-a5-evidence-enrichment-v1"},
+    "status": {"const": "A5_EVIDENCE_ENRICHMENT_COMPUTED_TEXT_FREE_EXPRESSION_FREE_NO_COMPLEMENT_ENUMERATION"},
+    "text_free": {"const": true},
+    "expression_free": {"const": true},
+    "controlling_outcome_sha256": {"const": "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"},
+    "control_surfaces": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["public_control_issue", "pilot_child_issue", "private_operational_board"],
+      "properties": {
+        "public_control_issue": {"const": 7423},
+        "pilot_child_issue": {"const": 7430},
+        "private_operational_board": {"const": 622}
+      }
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "a2_source_operation_admission",
+        "a4_deterministic_extraction",
+        "enrichment_algorithm_implementation"
+      ],
+      "properties": {
+        "a2_source_operation_admission": {"$ref": "#/$defs/artifact_binding"},
+        "a4_deterministic_extraction": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "type": "object",
+          "properties": {
+            "path": {"const": "data/projects/open_model_data/admission/dataset_v4_a4_deterministic_extraction_receipt_v1.json"},
+            "schema_version": {"const": "dataset_v4_a4_deterministic_extraction_receipt_v1"}
+          }
+        },
+        "enrichment_algorithm_implementation": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "type": "object",
+          "properties": {
+            "path": {"const": "scripts/projects/open_model_data/v4_a5_evidence_enrichment.py"},
+            "schema_version": {"const": "v4_a5_evidence_enrichment_script_v1"}
+          }
+        }
+      }
+    },
+    "enrichment_algorithm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm_id", "algorithm_version", "unit_of_enrichment", "content_blind", "expression_blind",
+        "ordering", "aggregated_fields", "aggregation_formula", "evidence_commitment_formula",
+        "text_emitted", "expression_emitted", "reproducibility", "algorithm_descriptor_sha256"
+      ],
+      "properties": {
+        "algorithm_id": {"const": "v4-a5-structural-evidence-enrichment-v1"},
+        "algorithm_version": {"const": "v1"},
+        "unit_of_enrichment": {"const": "source_unit_commitment"},
+        "content_blind": {"const": true},
+        "expression_blind": {"const": true},
+        "ordering": {"const": "source_unit_commitment_sha256_ascending"},
+        "aggregated_fields": {
+          "const": ["span_count", "total_span_bytes", "min_span_byte_length", "max_span_byte_length"]
+        },
+        "aggregation_formula": {
+          "const": "for each row in A4's private extraction ledger (only source_unit_commitment_sha256 and span_byte_length are read -- input_sha256/output_sha256/span text are never inspected): span_count[commitment] += 1; total_span_bytes[commitment] += span_byte_length; min_span_byte_length[commitment] = min(existing, span_byte_length); max_span_byte_length[commitment] = max(existing, span_byte_length); a commitment with no rows keeps span_count 0, total_span_bytes 0, min/max null"
+        },
+        "evidence_commitment_formula": {
+          "const": "sha256(canonical_json(per_unit_evidence sorted by source_unit_commitment_sha256))"
+        },
+        "text_emitted": {"const": false},
+        "expression_emitted": {"const": false},
+        "reproducibility": {
+          "const": "byte_stable_given_the_identical_private_a4_extraction_ledger_and_the_frozen_aggregation_formula"
+        },
+        "algorithm_descriptor_sha256": {"const": "2b65f7b1149bfd528efe7dbdb70a485a53d1fedd0916876f54fe77bdbb3aefc4"}
+      }
+    },
+    "enrichment_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gate_id", "status", "requires", "a4_receipt_present", "a4_receipt_valid",
+        "a4_extraction_available", "owner_role", "blocked_reason_code"
+      ],
+      "properties": {
+        "gate_id": {"const": "v4-a5-enrichment-gate-v1"},
+        "status": {"const": "A4_EXTRACTION_AVAILABLE_GATE_OPEN"},
+        "requires": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "a4_receipt_present": {"const": true},
+        "a4_receipt_valid": {"const": true},
+        "a4_extraction_available": {"const": true},
+        "owner_role": {"const": "A4_deterministic_extraction"},
+        "blocked_reason_code": {"const": null}
+      }
+    },
+    "evidence_enrichment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enrichment_id", "ledger_opened_by", "ledger_consumed", "a4_ledger_binding",
+        "per_unit_evidence", "evidence_commitment_sha256", "spans_covered", "units_with_evidence"
+      ],
+      "properties": {
+        "enrichment_id": {"const": "v4-a5-structural-evidence-enrichment-v1"},
+        "ledger_opened_by": {"const": "A5_evidence_enrichment"},
+        "ledger_consumed": {"const": true},
+        "a4_ledger_binding": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["row_count", "root_sha256"],
+          "properties": {
+            "row_count": {"type": "integer", "minimum": 0},
+            "root_sha256": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        "per_unit_evidence": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "source_unit_commitment_sha256", "span_count", "total_span_bytes",
+              "min_span_byte_length", "max_span_byte_length"
+            ],
+            "properties": {
+              "source_unit_commitment_sha256": {"$ref": "#/$defs/sha256"},
+              "span_count": {"type": "integer", "minimum": 0},
+              "total_span_bytes": {"type": "integer", "minimum": 0},
+              "min_span_byte_length": {"type": ["integer", "null"], "minimum": 1},
+              "max_span_byte_length": {"type": ["integer", "null"], "minimum": 1}
+            }
+          }
+        },
+        "evidence_commitment_sha256": {"$ref": "#/$defs/sha256"},
+        "spans_covered": {"type": "integer", "minimum": 0},
+        "units_with_evidence": {"type": "integer", "minimum": 0, "maximum": 8}
+      }
+    },
+    "a2_residuals_carried_forward": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["residual_id", "origin_stage", "status"],
+        "properties": {
+          "residual_id": {
+            "enum": [
+              "a2-residual-standard-correct-rights-unknown",
+              "a2-residual-correction-coverage-blocked",
+              "a2-residual-literary-rights-unknown",
+              "a2-residual-dialect-regional-source-incomplete",
+              "a2-residual-archaic-historical-coverage-blocked",
+              "a2-residual-mixing-source-incomplete",
+              "a2-residual-quotation-interference-rights-unknown",
+              "a2-residual-abstention-source-incomplete"
+            ]
+          },
+          "origin_stage": {"const": "A2"},
+          "status": {"const": "unresolved_carried_to_a5"}
+        }
+      }
+    },
+    "a4_residuals_carried_forward": {
+      "type": "array",
+      "minItems": 9,
+      "maxItems": 9,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["residual_id", "origin_stage", "status"],
+        "properties": {
+          "residual_id": {"type": "string", "pattern": "^a4-residual-[a-z0-9_-]+$"},
+          "origin_stage": {"const": "A4"},
+          "status": {"const": "unresolved_carried_to_a5"}
+        }
+      }
+    },
+    "a5_residuals": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "residual_id", "subject_kind", "subject_id", "stage", "reason_code",
+          "owner_role", "next_action", "retryability", "evidence_refs"
+        ],
+        "properties": {
+          "residual_id": {"type": "string", "pattern": "^a5-residual-[a-z0-9_-]+$"},
+          "subject_kind": {"const": "source_unit_commitment"},
+          "subject_id": {"$ref": "#/$defs/sha256"},
+          "stage": {"const": "A5"},
+          "reason_code": {
+            "enum": ["structural_evidence_computed", "structural_evidence_pending_source_ingestion"]
+          },
+          "owner_role": {"enum": ["A5_evidence_enrichment", "V4_source_byte_ingestion"]},
+          "next_action": {"type": "string", "minLength": 1},
+          "retryability": {"enum": ["retryable", "not_retryable"]},
+          "evidence_refs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "execution_counters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dataset_rows_emitted", "new_source_fetches", "source_units_enriched",
+        "spans_covered", "ledgers_consumed"
+      ],
+      "properties": {
+        "dataset_rows_emitted": {"const": 0},
+        "new_source_fetches": {"const": 0},
+        "source_units_enriched": {"type": "integer", "minimum": 0, "maximum": 8},
+        "spans_covered": {"type": "integer", "minimum": 0},
+        "ledgers_consumed": {"const": 1}
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rows_not_admitted", "text_emitted", "expression_emitted", "held_out_membership_referenced",
+        "enrichment_executed_without_a4_extraction", "mac_corpus_copy_created",
+        "historical_v3_control_not_used", "modern_rusyn_not_mapped_to_dialect",
+        "prebuilder_state_claimed", "training_ready_silver_claimed",
+        "later_release_state_claimed", "epic_done_claimed", "builder_eligible_ids_present_in_public_diff"
+      ],
+      "properties": {
+        "rows_not_admitted": {"const": true},
+        "text_emitted": {"const": false},
+        "expression_emitted": {"const": false},
+        "held_out_membership_referenced": {"const": false},
+        "enrichment_executed_without_a4_extraction": {"const": false},
+        "mac_corpus_copy_created": {"const": false},
+        "historical_v3_control_not_used": {"const": true},
+        "modern_rusyn_not_mapped_to_dialect": {"const": true},
+        "prebuilder_state_claimed": {"const": false},
+        "training_ready_silver_claimed": {"const": false},
+        "later_release_state_claimed": {"const": false},
+        "epic_done_claimed": {"const": false},
+        "builder_eligible_ids_present_in_public_diff": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "artifact_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "schema_version"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+"
+        },
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "schema_version": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}
