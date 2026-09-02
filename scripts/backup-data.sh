@@ -379,10 +379,13 @@ validate_source_symlinks() {
   while IFS= read -r -d '' link; do
     relative=${link#"$SOURCE"/}
     target="$(readlink "$link")"
-    resolved="$(realpath "$link" 2>/dev/null)" ||
-      die "Broken symlink in backup source: $relative -> $target"
 
     if [[ "$relative" == "textbooks" || "$relative" == "vesum" ]]; then
+      if ! resolved="$(realpath "$link" 2>/dev/null)"; then
+        LEGACY_EXCLUDES+=("$relative")
+        echo "EXCLUDED legacy Drive symlink: $relative"
+        continue
+      fi
       [[ -n "$LEGACY_DIR" ]] ||
         die "Legacy symlink found but the legacy Drive directory is unavailable: $relative"
       path_is_within "$resolved" "$LEGACY_DIR" ||
@@ -392,6 +395,8 @@ validate_source_symlinks() {
       continue
     fi
 
+    resolved="$(realpath "$link" 2>/dev/null)" ||
+      die "Broken symlink in backup source: $relative -> $target"
     [[ "$target" != /* ]] ||
       die "Absolute symlink is not backup-safe: $relative -> $target"
     path_is_within "$resolved" "$source_real" ||
