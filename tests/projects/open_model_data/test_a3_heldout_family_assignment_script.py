@@ -480,9 +480,9 @@ def test_a3_heldout_assignment_load_refuses_wrong_mode(tmp_path: Path) -> None:
         json.dumps({"salt_hex": "00" * 32, "membership": {}, "algorithm_descriptor_sha256": "x"})
     )
     # Any mode other than PRIVATE_FILE_MODE (0o600) should trip the check;
-    # use a group-readable-but-not-world-readable/writable mode so the
-    # artifact stays non-permissive even while deliberately "wrong".
-    os.chmod(membership_path, 0o640)
+    # use an owner-only mode (no group/world read or write) so the artifact
+    # stays non-permissive even while deliberately "wrong".
+    os.chmod(membership_path, 0o400)
 
     with pytest.raises(assignment.AssignmentError, match="mode"):
         assignment.load_private_artifact(membership_path)
