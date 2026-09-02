@@ -72,7 +72,7 @@
       "additionalProperties": false,
       "required": [
         "algorithm_id", "algorithm_version", "unit_of_extraction", "content_blind", "ordering",
-        "input_hash_formula", "output_hash_formula", "text_emitted", "reproducibility",
+        "segmentation_rule", "input_hash_formula", "output_hash_formula", "text_emitted", "reproducibility",
         "algorithm_descriptor_sha256"
       ],
       "properties": {
@@ -80,14 +80,17 @@
         "algorithm_version": {"const": "v1"},
         "unit_of_extraction": {"const": "sentence_span"},
         "content_blind": {"const": false},
-        "ordering": {"const": "source_unit_id_ascending_then_byte_offset_ascending"},
+        "ordering": {"const": "source_unit_commitment_sha256_ascending_then_span_index_ascending"},
+        "segmentation_rule": {
+          "const": "text = raw_unit_bytes.decode('utf-8'); spans = re.split(r'(?<=[.!?…])\\s+', text); spans = [span.strip() for span in spans if span.strip()]; span_index assigned in list order starting at 0"
+        },
         "input_hash_formula": {"const": "sha256(raw_span_bytes_utf8)"},
         "output_hash_formula": {
-          "const": "sha256(canonical_json({source_unit_id, span_index, span_byte_length, input_sha256, extraction_algorithm_id, extraction_algorithm_version}))"
+          "const": "sha256(canonical_json({source_unit_commitment_sha256, span_index, span_byte_length, input_sha256, extraction_algorithm_id, extraction_algorithm_version}))"
         },
         "text_emitted": {"const": false},
         "reproducibility": {"const": "byte_stable_given_identical_source_unit_bytes_and_frozen_segmentation_rule"},
-        "algorithm_descriptor_sha256": {"const": "c3ce60b8b6cd2b4ae2255fb30b8ffb84dac061b502ea62a0525af17a0eb46d27"}
+        "algorithm_descriptor_sha256": {"const": "e0b7535b457c7357e948bce67ffdc49c26d8bd5defc86b74c109423398db8480"}
       }
     },
     "builder_packet_gate": {
@@ -162,15 +165,16 @@
     },
     "extraction_ledger": {
       "type": "array",
-      "maxItems": 0,
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["source_unit_id", "span_index", "span_byte_length", "input_sha256", "output_sha256"],
+        "required": [
+          "source_unit_commitment_sha256", "span_index", "span_byte_length", "input_sha256", "output_sha256"
+        ],
         "properties": {
-          "source_unit_id": {"type": "string", "minLength": 3},
+          "source_unit_commitment_sha256": {"$ref": "#/$defs/sha256"},
           "span_index": {"type": "integer", "minimum": 0},
-          "span_byte_length": {"type": "integer", "minimum": 0},
+          "span_byte_length": {"type": "integer", "minimum": 1},
           "input_sha256": {"$ref": "#/$defs/sha256"},
           "output_sha256": {"$ref": "#/$defs/sha256"}
         }
@@ -250,8 +254,8 @@
       "properties": {
         "dataset_rows_emitted": {"const": 0},
         "new_source_fetches": {"const": 0},
-        "source_units_extracted": {"const": 0},
-        "spans_extracted": {"const": 0},
+        "source_units_extracted": {"type": "integer", "minimum": 0},
+        "spans_extracted": {"type": "integer", "minimum": 0},
         "builder_packets_consumed": {"const": 1},
         "builder_eligible_units_committed": {"const": 8}
       }
