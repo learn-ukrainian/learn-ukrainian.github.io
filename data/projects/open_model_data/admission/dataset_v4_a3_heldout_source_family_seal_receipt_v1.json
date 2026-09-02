@@ -1,0 +1,176 @@
+{
+  "schema_version": "dataset_v4_a3_heldout_source_family_seal_receipt_v1",
+  "receipt_id": "dataset-v4-a3-heldout-source-family-seal-v1",
+  "status": "A3_HELDOUT_SOURCE_FAMILY_SEAL_FIREWALL_SEALED_MEMBERSHIP_ASSIGNED_PRIVATE",
+  "text_free": true,
+  "controlling_outcome_sha256": "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20",
+  "control_surfaces": {
+    "public_control_issue": 7423,
+    "pilot_child_issue": 7430,
+    "private_operational_board": 622
+  },
+  "bindings": {
+    "a2_source_operation_admission": {
+      "path": "data/projects/open_model_data/admission/dataset_v4_a2_source_operation_admission_receipt_v1.json",
+      "sha256": "da005a28fffe7f12f263d1494a8cabd151bf8d98ff4f6ce9d51fe9d809199fcd",
+      "schema_version": "dataset_v4_a2_source_operation_admission_receipt_v1"
+    },
+    "slot_manifest": {
+      "path": "data/projects/open_model_data/admission/dataset_v4_pilot_slot_manifest_v1.json",
+      "sha256": "51002db3decf8055478f3662f3f3f3c8afa9936fa2a2200724bd01b025627a13",
+      "schema_version": "dataset_v4_pilot_slot_manifest_v1"
+    },
+    "near_duplicate_policy": {
+      "path": "data/projects/open_model_data/evidence/correction_protection_near_duplicate_policy_v1.json",
+      "sha256": "fa30e82d7a5f90b7bf4b58d3aef6106b255dda270e81459a91ba011489fdb4b4",
+      "schema_version": "near_duplicate_policy_v1"
+    },
+    "cycle007_scope_circularity_evidence": {
+      "path": "data/projects/open_model_data/evidence/phase3_scope_circularity_firewall_v1.json",
+      "sha256": "4470448c6d0f665196375cf28255d7c092148700a99934b2d0dd1f43a8a3e24c",
+      "schema_version": "phase3_scope_circularity_firewall_v1",
+      "v3_only": true,
+      "used_for_denial_only": true
+    },
+    "assignment_algorithm_implementation": {
+      "path": "scripts/projects/open_model_data/v4_a3_heldout_family_assignment.py",
+      "sha256": "f2846e18ee2db81db4db188d16ca742750dfc8f42ba3b24dff531f2413745cc8",
+      "schema_version": "v4_a3_heldout_family_assignment_script_v1"
+    }
+  },
+  "source_family_registry": {
+    "grouping_basis": "source_identity_not_prestige_or_provider_arrival_order",
+    "family_count": 9,
+    "families": [
+      {"family_id": "fam-db-external-articles", "member_source_unit_ids": ["db.external_articles"], "source_class": "existing_corpus_collection", "grouping_rationale": "distinct_existing_local_corpus_collection_identity_no_cross_collection_merge_evidence"},
+      {"family_id": "fam-db-literary-texts", "member_source_unit_ids": ["db.literary_texts"], "source_class": "existing_corpus_collection", "grouping_rationale": "distinct_existing_local_corpus_collection_identity_no_cross_collection_merge_evidence"},
+      {"family_id": "fam-db-textbooks-public", "member_source_unit_ids": ["db.textbooks.public"], "source_class": "existing_corpus_collection", "grouping_rationale": "distinct_existing_local_corpus_collection_identity_no_cross_collection_merge_evidence"},
+      {"family_id": "fam-db-wikipedia", "member_source_unit_ids": ["db.wikipedia"], "source_class": "existing_corpus_collection", "grouping_rationale": "distinct_existing_local_corpus_collection_identity_no_cross_collection_merge_evidence"},
+      {"family_id": "fam-hist-bobrovskyy-near-caves-dipinto-2010", "member_source_unit_ids": ["historical.bobrovskyy-near-caves-dipinto-2010"], "source_class": "frozen_historical_source_unit", "grouping_rationale": "distinct_historical_author_or_repository_provenance_no_cross_unit_merge_evidence"},
+      {"family_id": "fam-hist-korniienko-spas-na-berestovi-2013", "member_source_unit_ids": ["historical.korniienko-spas-na-berestovi-2013"], "source_class": "frozen_historical_source_unit", "grouping_rationale": "distinct_historical_author_or_repository_provenance_no_cross_unit_merge_evidence"},
+      {"family_id": "fam-hist-plug2-zenodo-19482961", "member_source_unit_ids": ["historical.plug2-zenodo-19482961"], "source_class": "frozen_historical_source_unit", "grouping_rationale": "distinct_historical_author_or_repository_provenance_no_cross_unit_merge_evidence"},
+      {"family_id": "fam-hist-saint-sophia-inscriptions", "member_source_unit_ids": ["historical.saint-sophia-inscriptions"], "source_class": "frozen_historical_source_unit", "grouping_rationale": "distinct_historical_author_or_repository_provenance_no_cross_unit_merge_evidence"},
+      {"family_id": "fam-hist-ud-old-east-slavic-ruthenian-05a029e00ccf", "member_source_unit_ids": ["historical.ud-old-east-slavic-ruthenian-05a029e00ccf"], "source_class": "frozen_historical_source_unit", "grouping_rationale": "distinct_historical_author_or_repository_provenance_no_cross_unit_merge_evidence"}
+    ]
+  },
+  "identity_group_freeze": {
+    "freeze_id": "v4-a3-identity-group-freeze-v1",
+    "status": "FROZEN_FAMILY_GROUPING_NO_HELDOUT_MEMBERSHIP",
+    "family_count": 9,
+    "same_family_never_split": true,
+    "dimension_order_is_frozen": true,
+    "source_admission_assigns_hidden_membership": false,
+    "construction_receives_hidden_membership": false
+  },
+  "heldout_partition_seal": {
+    "seal_id": "v4-a3-heldout-partition-seal-v1",
+    "status": "FROZEN_ALGORITHM_AND_MEMBERSHIP_ASSIGNED_PRIVATE_NOT_DISCLOSED",
+    "sealed_before_any_builder_packet": true,
+    "partition_unit": "source_family",
+    "family_count": 9,
+    "assignment_algorithm": {
+      "algorithm_id": "v4-a3-hmac-sha256-family-rank-split-v1",
+      "algorithm_version": "v1",
+      "identity_dimensions": ["family_id"],
+      "content_blind": true,
+      "formula": "rank_key(family_id) = int(hmac.new(key=private_salt, msg=family_id.encode('utf-8'), digestmod=hashlib.sha256).hexdigest(), 16); order family_ids ascending by (rank_key(family_id), family_id); heldout_target_count = max(1, round(family_count * heldout_fraction)); the first heldout_target_count family_ids in that order are assigned to the heldout pool; every remaining family_id is assigned to the builder_eligible pool",
+      "heldout_fraction": 0.1,
+      "rounding_rule": "python_round_half_to_even",
+      "minimum_heldout_count": 1,
+      "algorithm_descriptor_sha256": "b2abbb8e45f60abb098b8976dec7e7f2b4668137f55bfab8eee3999bd65a1928",
+      "salt_commitment_sha256": "ba6b4e7c726fec4f6fd9615895912ea8b199ca282e510b6a7503b7c86634e786",
+      "assignment_commitment_sha256": "e3d7cd2d377378eb35baaed32ca1a6f6e658a9101bf182bf8cc466987a2aa9e0"
+    },
+    "assignment_is_deterministic": true,
+    "assignment_is_content_blind": true,
+    "assignment_requires_private_salt": true,
+    "heldout_count": 1,
+    "builder_eligible_count": 8,
+    "heldout_membership_assigned_privately": true,
+    "heldout_membership_included": false,
+    "membership_owner_role": "A3_heldout",
+    "membership_materialization_location": "private_batch_state_and_private_operational_board_622",
+    "disjointness_assertion": "each_family_will_be_assigned_to_exactly_one_pool_no_family_split_across_pools",
+    "reseal_required_on": [
+      "source_family_registry_change",
+      "near_duplicate_policy_change",
+      "source_operation_ledger_change"
+    ]
+  },
+  "access_firewall": [
+    {"role_id": "A0_scope_lead", "heldout_family_pool_visible": false, "heldout_membership_locator_visible": false, "heldout_fingerprint_visible": false, "heldout_near_neighbour_visible": false, "forbidden_fields": ["heldout_family_pool", "heldout_membership_locator", "heldout_fingerprint", "heldout_near_neighbour"]},
+    {"role_id": "A1_custody", "heldout_family_pool_visible": false, "heldout_membership_locator_visible": false, "heldout_fingerprint_visible": false, "heldout_near_neighbour_visible": false, "forbidden_fields": ["heldout_family_pool", "heldout_membership_locator", "heldout_fingerprint", "heldout_near_neighbour"]},
+    {"role_id": "A2_source_inventory_admission", "heldout_family_pool_visible": false, "heldout_membership_locator_visible": false, "heldout_fingerprint_visible": false, "heldout_near_neighbour_visible": false, "forbidden_fields": ["heldout_family_pool", "heldout_membership_locator", "heldout_fingerprint", "heldout_near_neighbour"]},
+    {"role_id": "A3_heldout", "heldout_family_pool_visible": true, "heldout_membership_locator_visible": true, "heldout_fingerprint_visible": true, "heldout_near_neighbour_visible": true, "forbidden_fields": []},
+    {"role_id": "A4_deterministic_extraction", "heldout_family_pool_visible": false, "heldout_membership_locator_visible": false, "heldout_fingerprint_visible": false, "heldout_near_neighbour_visible": false, "forbidden_fields": ["heldout_family_pool", "heldout_membership_locator", "heldout_fingerprint", "heldout_near_neighbour"]},
+    {"role_id": "A5_evidence_enrichment", "heldout_family_pool_visible": false, "heldout_membership_locator_visible": false, "heldout_fingerprint_visible": false, "heldout_near_neighbour_visible": false, "forbidden_fields": ["heldout_family_pool", "heldout_membership_locator", "heldout_fingerprint", "heldout_near_neighbour"]},
+    {"role_id": "A6_safe_arena", "heldout_family_pool_visible": false, "heldout_membership_locator_visible": false, "heldout_fingerprint_visible": false, "heldout_near_neighbour_visible": false, "forbidden_fields": ["heldout_family_pool", "heldout_membership_locator", "heldout_fingerprint", "heldout_near_neighbour"]},
+    {"role_id": "A7_original_row_factory", "heldout_family_pool_visible": false, "heldout_membership_locator_visible": false, "heldout_fingerprint_visible": false, "heldout_near_neighbour_visible": false, "forbidden_fields": ["heldout_family_pool", "heldout_membership_locator", "heldout_fingerprint", "heldout_near_neighbour"]},
+    {"role_id": "A8_admission_assembly", "heldout_family_pool_visible": false, "heldout_membership_locator_visible": false, "heldout_fingerprint_visible": false, "heldout_near_neighbour_visible": false, "forbidden_fields": ["heldout_family_pool", "heldout_membership_locator", "heldout_fingerprint", "heldout_near_neighbour"]},
+    {"role_id": "A9_evaluation_package", "heldout_family_pool_visible": false, "heldout_membership_locator_visible": false, "heldout_fingerprint_visible": false, "heldout_near_neighbour_visible": false, "forbidden_fields": ["heldout_family_pool", "heldout_membership_locator", "heldout_fingerprint", "heldout_near_neighbour"]},
+    {"role_id": "A10_pilot_review", "heldout_family_pool_visible": false, "heldout_membership_locator_visible": false, "heldout_fingerprint_visible": false, "heldout_near_neighbour_visible": false, "forbidden_fields": ["heldout_family_pool", "heldout_membership_locator", "heldout_fingerprint", "heldout_near_neighbour"]},
+    {"role_id": "A11_training_ready_release", "heldout_family_pool_visible": false, "heldout_membership_locator_visible": false, "heldout_fingerprint_visible": false, "heldout_near_neighbour_visible": false, "forbidden_fields": ["heldout_family_pool", "heldout_membership_locator", "heldout_fingerprint", "heldout_near_neighbour"]},
+    {"role_id": "A12_later_gold_overlay", "heldout_family_pool_visible": false, "heldout_membership_locator_visible": false, "heldout_fingerprint_visible": false, "heldout_near_neighbour_visible": false, "forbidden_fields": ["heldout_family_pool", "heldout_membership_locator", "heldout_fingerprint", "heldout_near_neighbour"]},
+    {"role_id": "A13_cleanup_recovery", "heldout_family_pool_visible": false, "heldout_membership_locator_visible": false, "heldout_fingerprint_visible": false, "heldout_near_neighbour_visible": false, "forbidden_fields": ["heldout_family_pool", "heldout_membership_locator", "heldout_fingerprint", "heldout_near_neighbour"]}
+  ],
+  "temporal_firewall": {
+    "firewall_id": "v4-a3-temporal-firewall-v1",
+    "exposure_allowed": false,
+    "exposure_before_seal_forbidden": true,
+    "builder_packet_issued": false,
+    "builder_packet_issuance_requires": ["A3_seal_complete", "A2_receipt_bound", "near_duplicate_policy_bound", "heldout_membership_assigned_privately"],
+    "mutation_after_seal": "forbidden_without_reseal",
+    "current_state": "SEALED_NO_BUILDER_EXPOSURE"
+  },
+  "cycle007_denial": {
+    "denial_id": "v4-a3-cycle007-denial-v1",
+    "source_cycle_label": "phase3_scope_circularity_firewall_v1.cycle007",
+    "source_cycle_controlling_outcome_sha256": "890498103f96a7b8f27fd52bc14418d8752e5b73a72ed8774dd0f52eb3160a47",
+    "denied": true,
+    "reused_in_v4": false,
+    "adoption_forbidden": true,
+    "reason_code": "cross_version_evidence_not_reusable_for_v4_family_split",
+    "denied_fingerprints": [
+      {"fingerprint_kind": "object_set_sha256", "value": "af94e8d12c075e1e5e1816de076327dd68a3fd5d5f06ec77debcbbd590bcc9ec", "denied": true},
+      {"fingerprint_kind": "pack_manifest_receipt_sha256", "value": "2a883cb3e9a3b2ee673e397c8f5ba511f886f725bea980b2c982ca17f92a5e7d", "denied": true},
+      {"fingerprint_kind": "ordered_row_identity_commitment_sha256", "value": "d873d7493c6cd276a9604954c9c7aa07e760ca4f47a276658fd28956d6fa940b", "denied": true},
+      {"fingerprint_kind": "candidate_clearance_commitment_sha256", "value": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570", "denied": true},
+      {"fingerprint_kind": "private_graph_commitment_sha256", "value": "de77b0e2444365e3c9cdec3441128f87b96ca8a15f897e4c769f9b840ccac398", "denied": true},
+      {"fingerprint_kind": "near_duplicate_policy_fingerprint_sha256", "value": "19518efb07dd8ef4173b32487da7427f3c1eb0b8f8dd5d21b046cfc4dc5d560e", "denied": true}
+    ]
+  },
+  "a2_residuals_carried_forward": [
+    {"residual_id": "a2-residual-standard-correct-rights-unknown", "origin_stage": "A2", "status": "unresolved_carried_to_a3"},
+    {"residual_id": "a2-residual-correction-coverage-blocked", "origin_stage": "A2", "status": "unresolved_carried_to_a3"},
+    {"residual_id": "a2-residual-literary-rights-unknown", "origin_stage": "A2", "status": "unresolved_carried_to_a3"},
+    {"residual_id": "a2-residual-dialect-regional-source-incomplete", "origin_stage": "A2", "status": "unresolved_carried_to_a3"},
+    {"residual_id": "a2-residual-archaic-historical-coverage-blocked", "origin_stage": "A2", "status": "unresolved_carried_to_a3"},
+    {"residual_id": "a2-residual-mixing-source-incomplete", "origin_stage": "A2", "status": "unresolved_carried_to_a3"},
+    {"residual_id": "a2-residual-quotation-interference-rights-unknown", "origin_stage": "A2", "status": "unresolved_carried_to_a3"},
+    {"residual_id": "a2-residual-abstention-source-incomplete", "origin_stage": "A2", "status": "unresolved_carried_to_a3"}
+  ],
+  "a3_residuals": [],
+  "execution_counters": {
+    "dataset_rows_emitted": 0,
+    "new_source_fetches": 0,
+    "builder_packets_issued": 0,
+    "heldout_exposures_to_builder": 0,
+    "cycle007_material_reused": 0,
+    "family_merges_performed": 0
+  },
+  "safety_assertions": {
+    "rows_not_admitted": true,
+    "heldout_membership_exposed_to_builder": false,
+    "builder_packet_issued_before_seal": false,
+    "cycle007_material_reused": false,
+    "historical_v3_control_not_used": true,
+    "mac_corpus_copy_created": false,
+    "modern_rusyn_not_mapped_to_dialect": true,
+    "prebuilder_state_claimed": false,
+    "pre_scale_state_claimed": false,
+    "training_ready_silver_claimed": false,
+    "eval_artifact_ready_claimed": false,
+    "later_release_state_claimed": false,
+    "epic_done_claimed": false
+  }
+}
