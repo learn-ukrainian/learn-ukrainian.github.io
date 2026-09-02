@@ -52,6 +52,18 @@ Legacy broker `messages.db` call sites remain direct non-authority file opens.
 Cluster-readiness pings Postgres with `SELECT 1` (DSN presence alone is not
 readiness).
 
+## Live authority (current production, 2026-09-02, after public #7606/#7607 and the host freeze/import)
+
+| Store | Live authority | Notes |
+| --- | --- | --- |
+| `fleet_comms` | `pg` | create/get + execute/claim paths on Postgres |
+| `session_streams` | `sqlite` | sqlite-only by design in this slice (#7482 interlock). Do not port now. |
+| `write_ownership` | `sqlite` | same class as session_streams |
+| `task_index` | (none yet) | planned pg-only store; not live |
+| `teacher` | `sqlite` | out of scope; must remain hosted |
+
+A Postgres copy of `session_streams`/`write_ownership` was imported then unfenced back to sqlite, and those pg tables were renamed to `*_import_stale_20260902` so they cannot be mistaken for authority. Receipt: `batch_state/cp-pg-stale-import-neutralise-20260902.json`.
+
 ## Artifact byte-plane (this slice)
 
 `ArtifactStore.store_bytes` / `read_bytes` / `get` / `materialize`: when
