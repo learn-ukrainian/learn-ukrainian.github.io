@@ -75,6 +75,7 @@ from scripts.agent_runtime.acpx_discuss import (
 )
 from scripts.control_plane.storage import ControlPlaneError
 from scripts.fleet_comms.artifacts import ArtifactStore, ArtifactStoreError
+from scripts.fleet_comms.pg_schema import PgSchemaError
 from scripts.fleet_comms.review_publication import parse_sealed_verdict_payload
 from scripts.orchestration.task_family.rollover_registry import (
     load_record as load_rollover_record,
@@ -1159,8 +1160,14 @@ def resolve_formal_review(
         if "not found" in message or "missing blob" in message:
             raise ResolutionError(REASON_SOURCE_MISSING, "sealed-verdict blob missing") from exc
         raise ResolutionError(REASON_RESOLUTION_ERROR, "sealed-verdict blob unreadable") from exc
-    except (OSError, ControlPlaneError) as exc:
+    except (OSError, ControlPlaneError, PgSchemaError) as exc:
         raise ResolutionError(REASON_RESOLUTION_ERROR, "sealed-verdict store unreadable") from exc
+    except Exception as exc:
+        # Readonly pg open verifies schema first; if a missing table still
+        # surfaces (or verify is bypassed), map it — never a raw UndefinedTable.
+        if type(exc).__name__ == "UndefinedTable":
+            raise ResolutionError(REASON_RESOLUTION_ERROR, "sealed-verdict store unreadable") from exc
+        raise
 
     # Parse with the existing strict parser and re-check job binding.
     try:

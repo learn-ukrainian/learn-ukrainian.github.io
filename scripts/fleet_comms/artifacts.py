@@ -42,7 +42,12 @@ from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.contracts import new_id
 from scripts.fleet_comms.migrations import apply_migrations
 from scripts.fleet_comms.paths import DEFAULT_ROOT_REL, default_plane_root
-from scripts.fleet_comms.pg_schema import PG_BLOB_TABLE, apply_pg_schema, verify_pg_schema
+from scripts.fleet_comms.pg_schema import (
+    PG_BLOB_TABLE,
+    PgSchemaError,
+    apply_pg_schema,
+    verify_pg_schema,
+)
 
 DEFAULT_ROOT = DEFAULT_ROOT_REL
 _SAFE_NAME = re.compile(r"^[A-Za-z0-9._@+=,-][A-Za-z0-9._@+=, -]{0,200}$")
@@ -126,12 +131,18 @@ class ArtifactStore:
                 if not self._readonly:
                     # #7483 (1.14): blob + request-plane DDL via checksummed ledger.
                     apply_pg_schema(self._conn)
-                    verify_pg_schema(self._conn)
-            except Exception:
+                # Readonly must still fail closed on missing/drifted schema
+                # rather than hitting UndefinedTable on the first blob SELECT.
+                verify_pg_schema(self._conn)
+            except Exception as exc:
                 # #7483: never leak the pg connection on partial init —
                 # repeated failures against a flaky DSN exhaust max_connections.
                 with contextlib.suppress(Exception):
                     self._conn.close()
+                if isinstance(exc, PgSchemaError):
+                    raise ArtifactStoreError(
+                        "fleet_comms pg schema missing or drifted"
+                    ) from exc
                 raise
             return
         if self._readonly:
@@ -175,9 +186,10 @@ class ArtifactStore:
     ) -> ArtifactStore:
         """Open an existing plane for reads only (#7483 1.12).
 
-        Skips migrations/DDL and opens the backend read-only so sealed-verdict
+        Skips apply/DDL and opens the backend read-only so sealed-verdict
         resolvers (and other body-free readers) never mutate the store and
-        never bypass it via a host-local CAS path.
+        never bypass it via a host-local CAS path. On pg this still runs
+        ``verify_pg_schema`` (read-only drift gate).
         """
         return cls(root=root, repo_root=repo_root, readonly=True)
 
