@@ -1,0 +1,294 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/dataset_v4_a4_deterministic_extraction_receipt_v1.schema.json",
+  "title": "Dataset V4 A4 deterministic extraction receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "status",
+    "text_free",
+    "controlling_outcome_sha256",
+    "control_surfaces",
+    "bindings",
+    "extraction_algorithm",
+    "builder_packet_gate",
+    "builder_packet_consumption",
+    "extraction_ledger",
+    "a2_residuals_carried_forward",
+    "a4_residuals",
+    "execution_counters",
+    "safety_assertions"
+  ],
+  "properties": {
+    "schema_version": {"const": "dataset_v4_a4_deterministic_extraction_receipt_v1"},
+    "receipt_id": {"const": "dataset-v4-a4-deterministic-extraction-v1"},
+    "status": {"const": "A4_BUILDER_PACKET_CONSUMED_GATE_OPEN_TEXT_FREE_NO_COMPLEMENT_ENUMERATION"},
+    "text_free": {"const": true},
+    "controlling_outcome_sha256": {"const": "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"},
+    "control_surfaces": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["public_control_issue", "pilot_child_issue", "private_operational_board"],
+      "properties": {
+        "public_control_issue": {"const": 7423},
+        "pilot_child_issue": {"const": 7430},
+        "private_operational_board": {"const": 622}
+      }
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "a2_source_operation_admission",
+        "a3_heldout_source_family_seal",
+        "a3_builder_packet_receipt",
+        "extraction_algorithm_implementation"
+      ],
+      "properties": {
+        "a2_source_operation_admission": {"$ref": "#/$defs/artifact_binding"},
+        "a3_heldout_source_family_seal": {"$ref": "#/$defs/artifact_binding"},
+        "a3_builder_packet_receipt": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "type": "object",
+          "properties": {
+            "path": {"const": "data/projects/open_model_data/admission/dataset_v4_a3_builder_packet_receipt_v1.json"},
+            "schema_version": {"const": "dataset_v4_a3_builder_packet_receipt_v1"}
+          }
+        },
+        "extraction_algorithm_implementation": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "type": "object",
+          "properties": {
+            "path": {"const": "scripts/projects/open_model_data/v4_a4_deterministic_extraction.py"},
+            "schema_version": {"const": "v4_a4_deterministic_extraction_script_v1"}
+          }
+        }
+      }
+    },
+    "extraction_algorithm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm_id", "algorithm_version", "unit_of_extraction", "content_blind", "ordering",
+        "input_hash_formula", "output_hash_formula", "text_emitted", "reproducibility",
+        "algorithm_descriptor_sha256"
+      ],
+      "properties": {
+        "algorithm_id": {"const": "v4-a4-deterministic-span-extraction-v1"},
+        "algorithm_version": {"const": "v1"},
+        "unit_of_extraction": {"const": "sentence_span"},
+        "content_blind": {"const": false},
+        "ordering": {"const": "source_unit_id_ascending_then_byte_offset_ascending"},
+        "input_hash_formula": {"const": "sha256(raw_span_bytes_utf8)"},
+        "output_hash_formula": {
+          "const": "sha256(canonical_json({source_unit_id, span_index, span_byte_length, input_sha256, extraction_algorithm_id, extraction_algorithm_version}))"
+        },
+        "text_emitted": {"const": false},
+        "reproducibility": {"const": "byte_stable_given_identical_source_unit_bytes_and_frozen_segmentation_rule"},
+        "algorithm_descriptor_sha256": {"const": "c3ce60b8b6cd2b4ae2255fb30b8ffb84dac061b502ea62a0525af17a0eb46d27"}
+      }
+    },
+    "builder_packet_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gate_id", "status", "requires", "a3_seal_complete", "builder_packet_issued",
+        "builder_eligible_source_unit_ids_known_to_a4", "packet_receipt_binding_verified",
+        "owner_role", "blocked_reason_code"
+      ],
+      "properties": {
+        "gate_id": {"const": "v4-a4-builder-packet-gate-v1"},
+        "status": {"const": "BUILDER_PACKET_ISSUED_GATE_OPEN"},
+        "requires": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "a3_seal_complete": {"const": true},
+        "builder_packet_issued": {"const": true},
+        "builder_eligible_source_unit_ids_known_to_a4": {"const": true},
+        "packet_receipt_binding_verified": {"const": true},
+        "owner_role": {"const": "A3_heldout"},
+        "blocked_reason_code": {"const": null}
+      }
+    },
+    "builder_packet_consumption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "consumption_id", "packet_opened_by", "packet_consumed", "unit_commitment_algorithm",
+        "consumed_source_unit_count", "unit_commitments", "consumed_units_commitment_sha256",
+        "membership_disclosed", "heldout_family_id_disclosed"
+      ],
+      "properties": {
+        "consumption_id": {"const": "v4-a4-builder-packet-consumption-v1"},
+        "packet_opened_by": {"const": "A4_deterministic_extraction"},
+        "packet_consumed": {"const": true},
+        "unit_commitment_algorithm": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "algorithm_id", "algorithm_version", "identity_dimensions", "content_blind", "formula",
+            "text_emitted", "reproducibility", "algorithm_descriptor_sha256"
+          ],
+          "properties": {
+            "algorithm_id": {"const": "v4-a4-unit-commitment-hmac-sha256-v1"},
+            "algorithm_version": {"const": "v1"},
+            "identity_dimensions": {"const": ["source_unit_id"]},
+            "content_blind": {"const": true},
+            "formula": {
+              "const": "unit_commitment_sha256(id) = hmac_sha256(key=private_a4_salt, msg=UNIT_COMMITMENT_DOMAIN + 0x00 + canonical_json({source_unit_id: id})); consumed_units_commitment_sha256(ids) = hmac_sha256(key=private_a4_salt, msg=UNIT_COMMITMENT_ROOT_DOMAIN + 0x00 + canonical_json({source_unit_ids: sorted(ids), count: len(ids)}))"
+            },
+            "text_emitted": {"const": false},
+            "reproducibility": {"const": "byte_stable_given_the_same_private_a4_salt_and_the_same_builder_eligible_source_unit_id_set"},
+            "algorithm_descriptor_sha256": {"const": "5ad217282ae326241093670ba56d2e98902f375d70bca7f0a8970560c0a9b5c7"}
+          }
+        },
+        "consumed_source_unit_count": {"const": 8},
+        "unit_commitments": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/sha256"}
+        },
+        "consumed_units_commitment_sha256": {"$ref": "#/$defs/sha256"},
+        "membership_disclosed": {"const": false},
+        "heldout_family_id_disclosed": {"const": false}
+      }
+    },
+    "extraction_ledger": {
+      "type": "array",
+      "maxItems": 0,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_unit_id", "span_index", "span_byte_length", "input_sha256", "output_sha256"],
+        "properties": {
+          "source_unit_id": {"type": "string", "minLength": 3},
+          "span_index": {"type": "integer", "minimum": 0},
+          "span_byte_length": {"type": "integer", "minimum": 0},
+          "input_sha256": {"$ref": "#/$defs/sha256"},
+          "output_sha256": {"$ref": "#/$defs/sha256"}
+        }
+      }
+    },
+    "a2_residuals_carried_forward": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["residual_id", "origin_stage", "status"],
+        "properties": {
+          "residual_id": {
+            "enum": [
+              "a2-residual-standard-correct-rights-unknown",
+              "a2-residual-correction-coverage-blocked",
+              "a2-residual-literary-rights-unknown",
+              "a2-residual-dialect-regional-source-incomplete",
+              "a2-residual-archaic-historical-coverage-blocked",
+              "a2-residual-mixing-source-incomplete",
+              "a2-residual-quotation-interference-rights-unknown",
+              "a2-residual-abstention-source-incomplete"
+            ]
+          },
+          "origin_stage": {"const": "A2"},
+          "status": {"const": "unresolved_carried_to_a4"}
+        }
+      }
+    },
+    "a4_residuals": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "residual_id", "subject_kind", "subject_id", "stage", "reason_code",
+          "owner_role", "next_action", "retryability", "evidence_refs"
+        ],
+        "properties": {
+          "residual_id": {"const": "a4-residual-byte-level-extraction-pending-source-ingestion"},
+          "subject_kind": {"const": "process"},
+          "subject_id": {"const": "byte_level_span_extraction"},
+          "stage": {"const": "A4"},
+          "reason_code": {"const": "source_byte_content_not_yet_ingested_for_v4"},
+          "owner_role": {"const": "V4_source_byte_ingestion"},
+          "next_action": {"type": "string", "minLength": 1},
+          "retryability": {"enum": ["retryable", "not_retryable"]},
+          "evidence_refs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "execution_counters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dataset_rows_emitted", "new_source_fetches", "source_units_extracted",
+        "spans_extracted", "builder_packets_consumed", "builder_eligible_units_committed"
+      ],
+      "properties": {
+        "dataset_rows_emitted": {"const": 0},
+        "new_source_fetches": {"const": 0},
+        "source_units_extracted": {"const": 0},
+        "spans_extracted": {"const": 0},
+        "builder_packets_consumed": {"const": 1},
+        "builder_eligible_units_committed": {"const": 8}
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rows_not_admitted", "text_emitted", "held_out_membership_referenced",
+        "extraction_executed_without_builder_packet", "mac_corpus_copy_created",
+        "historical_v3_control_not_used", "modern_rusyn_not_mapped_to_dialect",
+        "prebuilder_state_claimed", "training_ready_silver_claimed",
+        "later_release_state_claimed", "epic_done_claimed", "builder_eligible_ids_present_in_public_diff"
+      ],
+      "properties": {
+        "rows_not_admitted": {"const": true},
+        "text_emitted": {"const": false},
+        "held_out_membership_referenced": {"const": false},
+        "extraction_executed_without_builder_packet": {"const": false},
+        "mac_corpus_copy_created": {"const": false},
+        "historical_v3_control_not_used": {"const": true},
+        "modern_rusyn_not_mapped_to_dialect": {"const": true},
+        "prebuilder_state_claimed": {"const": false},
+        "training_ready_silver_claimed": {"const": false},
+        "later_release_state_claimed": {"const": false},
+        "epic_done_claimed": {"const": false},
+        "builder_eligible_ids_present_in_public_diff": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "artifact_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "schema_version"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+"
+        },
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "schema_version": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}
