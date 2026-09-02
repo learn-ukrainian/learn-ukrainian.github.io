@@ -82,6 +82,21 @@ EXTRACTION_ALGORITHM_DESCRIPTOR = {
     "reproducibility": "byte_stable_given_identical_source_unit_bytes_and_frozen_segmentation_rule",
 }
 
+LEDGER_COMMITMENT_ALGORITHM_DESCRIPTOR = {
+    "algorithm_id": "v4-a4-extraction-ledger-rolling-commitment-sha256-v1",
+    "algorithm_version": "v1",
+    "content_blind": True,
+    "formula": (
+        "state_0 = sha256(LEDGER_COMMITMENT_DOMAIN + 0x00).digest(); "
+        "for each row in extraction_ledger order (source_unit_commitment_sha256 ascending, then "
+        "span_index ascending): state_i = sha256(state_(i-1) + 0x00 + row.output_sha256.encode('ascii'))"
+        ".digest(); root_sha256 = state_n.hexdigest() after all rows (root of an empty ledger is "
+        "sha256(LEDGER_COMMITMENT_DOMAIN + 0x00).hexdigest())"
+    ),
+    "text_emitted": False,
+    "reproducibility": "byte_stable_given_the_identical_ordered_sequence_of_row_output_hashes",
+}
+
 UNIT_COMMITMENT_ALGORITHM_DESCRIPTOR = {
     "algorithm_id": "v4-a4-unit-commitment-hmac-sha256-v1",
     "algorithm_version": "v1",
@@ -209,6 +224,14 @@ def test_unit_commitment_algorithm_descriptor_is_frozen_and_hashed() -> None:
     )
 
 
+def test_ledger_commitment_algorithm_descriptor_is_frozen_and_hashed() -> None:
+    assert extraction.LEDGER_COMMITMENT_ALGORITHM_DESCRIPTOR == LEDGER_COMMITMENT_ALGORITHM_DESCRIPTOR
+    assert (
+        hashlib.sha256(_canonical_json(LEDGER_COMMITMENT_ALGORITHM_DESCRIPTOR).encode("utf-8")).hexdigest()
+        == extraction.LEDGER_COMMITMENT_ALGORITHM_DESCRIPTOR_SHA256
+    )
+
+
 def test_extraction_record_output_hash_is_pure_function_of_identity_fields() -> None:
     """No source text feeds the output hash -- only already-hashed
     ``input_sha256`` and the record's own identity fields, keyed by the
@@ -313,6 +336,204 @@ def test_run_deterministic_extraction_emits_sorted_hash_only_rows_for_units_with
         extraction.unit_commitment_sha256(salt, unit_id) for unit_id in bytes_by_unit
     }
     assert {row["source_unit_commitment_sha256"] for row in ledger} == expected_commitments
+
+
+# --- streaming extraction: memory-bounded, byte-identical to the reference --
+
+
+def _rows_by_row_texts(rows_by_unit: dict[str, list[str]]):
+    def _provider(unit_id: str):
+        yield from rows_by_unit.get(unit_id, [])
+
+    return _provider
+
+
+def test_stream_sentence_spans_matches_segment_sentence_spans_for_joined_rows() -> None:
+    """The streaming, row-by-row segmenter must reproduce the frozen
+    whole-bytes reference implementation exactly, for every row-list shape
+    that matters: multiple sentences per row, a sentence split across a row
+    boundary, a row with no terminal punctuation, whitespace-only rows,
+    a single row, and an empty row list."""
+    cases: list[list[str]] = [
+        [],
+        ["Only one sentence."],
+        ["Alpha one. Alpha two!", "Beta one?", "Gamma, no terminator"],
+        ["No terminator here", "continues into this row."],
+        ["Ends right at a boundary. ", "Starts fresh."],
+        ["   ", "Real sentence follows."],
+        ["Ends without space.", "  ", "Trailing sentence."],
+    ]
+    for rows in cases:
+        streamed = list(extraction.stream_sentence_spans(rows))
+        reference = extraction.segment_sentence_spans("\n\n".join(rows).encode("utf-8"))
+        assert streamed == reference, rows
+
+
+def test_stream_ledger_rows_for_units_matches_run_deterministic_extraction() -> None:
+    """The real streaming pass and the small-scale reference pass must agree
+    row-for-row given equivalent inputs (whole bytes vs. the same bytes
+    split into rows)."""
+    salt = secrets.token_bytes(32)
+    ids = ["synthetic.unit-a", "synthetic.unit-b", "synthetic.unit-c"]
+    whole_bytes_by_unit = {
+        "synthetic.unit-a": b"Alpha span one. Alpha span two!",
+        "synthetic.unit-c": b"Gamma span one only.",
+    }
+    rows_by_unit = {
+        "synthetic.unit-a": ["Alpha span one. Alpha span two!"],
+        "synthetic.unit-c": ["Gamma span one only."],
+    }
+
+    reference = extraction.run_deterministic_extraction(ids, salt, whole_bytes_by_unit.get)
+    ordered = sorted((extraction.unit_commitment_sha256(salt, unit_id), unit_id) for unit_id in ids)
+    streamed = list(extraction.stream_ledger_rows_for_units(ordered, _rows_by_row_texts(rows_by_unit)))
+
+    assert streamed == reference
+
+
+def test_stream_ledger_rows_for_units_skips_units_the_provider_yields_nothing_for() -> None:
+    salt = secrets.token_bytes(32)
+    ordered = [(extraction.unit_commitment_sha256(salt, "synthetic.empty"), "synthetic.empty")]
+    streamed = list(extraction.stream_ledger_rows_for_units(ordered, _rows_by_row_texts({})))
+    assert streamed == []
+
+
+def test_current_rss_bytes_is_positive_on_this_platform() -> None:
+    assert extraction._current_rss_bytes() > 0
+
+
+def test_require_within_memory_budget_passes_under_a_generous_cap() -> None:
+    extraction._require_within_memory_budget(extraction.DEFAULT_A4_MEMORY_CAP_BYTES)  # must not raise
+
+
+def test_require_within_memory_budget_fails_closed_against_a_near_zero_cap() -> None:
+    """A cap far below the interpreter's own baseline RSS trips immediately
+    -- proves the mechanism fires without needing to actually allocate
+    gigabytes of memory inside a test."""
+    with pytest.raises(extraction.MemoryBudgetExceeded, match="exceeded the configured cap"):
+        extraction._require_within_memory_budget(1)
+
+
+def test_stream_ledger_rows_for_units_fails_closed_against_a_near_zero_memory_cap() -> None:
+    salt = secrets.token_bytes(32)
+    ordered = [(extraction.unit_commitment_sha256(salt, "synthetic.unit-a"), "synthetic.unit-a")]
+    provider = _rows_by_row_texts({"synthetic.unit-a": ["One. Two. Three. Four."]})
+    with pytest.raises(extraction.MemoryBudgetExceeded):
+        list(
+            extraction.stream_ledger_rows_for_units(
+                ordered, provider, memory_cap_bytes=1, memory_check_interval=1
+            )
+        )
+
+
+# --- ledger rolling commitment: content-blind, streaming-computable --------
+
+
+def test_empty_ledger_root_sha256_matches_the_domain_only_state() -> None:
+    assert extraction.new_ledger_rolling_state().hex() == extraction.EMPTY_LEDGER_ROOT_SHA256
+
+
+def test_ledger_rolling_commitment_matches_incremental_update() -> None:
+    rows = [{"output_sha256": "a" * 64}, {"output_sha256": "b" * 64}, {"output_sha256": "c" * 64}]
+    incremental = extraction.new_ledger_rolling_state()
+    for row in rows:
+        incremental = extraction.ledger_rolling_update(incremental, row["output_sha256"])
+    assert extraction.ledger_rolling_commitment_sha256(rows) == incremental.hex()
+
+
+def test_ledger_rolling_commitment_is_order_sensitive() -> None:
+    rows = [{"output_sha256": "a" * 64}, {"output_sha256": "b" * 64}]
+    assert extraction.ledger_rolling_commitment_sha256(rows) != extraction.ledger_rolling_commitment_sha256(
+        list(reversed(rows))
+    )
+
+
+def test_ledger_rolling_commitment_of_empty_sequence_is_the_empty_root() -> None:
+    assert extraction.ledger_rolling_commitment_sha256([]) == extraction.EMPTY_LEDGER_ROOT_SHA256
+
+
+# --- private streaming ledger writer: create-only, symlink-safe, mode 0600 -
+
+
+def test_materialize_streaming_ledger_writes_a_private_0600_jsonl_file(tmp_path: Path) -> None:
+    rows = [
+        {
+            "source_unit_commitment_sha256": "a" * 64,
+            "span_index": 0,
+            "span_byte_length": 5,
+            "input_sha256": "b" * 64,
+            "output_sha256": "c" * 64,
+        },
+        {
+            "source_unit_commitment_sha256": "a" * 64,
+            "span_index": 1,
+            "span_byte_length": 5,
+            "input_sha256": "d" * 64,
+            "output_sha256": "e" * 64,
+        },
+    ]
+    ledger_path = tmp_path / "private" / extraction.A4_LEDGER_FILENAME
+
+    summary = extraction.materialize_streaming_ledger(iter(rows), ledger_path)
+
+    assert summary["row_count"] == 2
+    assert summary["source_units_extracted"] == 1
+    assert summary["root_sha256"] == extraction.ledger_rolling_commitment_sha256(rows)
+    assert ledger_path.is_file()
+    assert stat.S_IMODE(ledger_path.stat().st_mode) == heldout.PRIVATE_FILE_MODE
+    lines = ledger_path.read_text(encoding="utf-8").splitlines()
+    assert [json.loads(line) for line in lines] == rows
+
+
+def test_materialize_streaming_ledger_of_an_empty_stream(tmp_path: Path) -> None:
+    ledger_path = tmp_path / "private" / extraction.A4_LEDGER_FILENAME
+    summary = extraction.materialize_streaming_ledger(iter(()), ledger_path)
+    assert summary == {"row_count": 0, "root_sha256": extraction.EMPTY_LEDGER_ROOT_SHA256, "source_units_extracted": 0}
+    assert ledger_path.is_file()  # still written -- an empty ledger is still a real (empty) private artifact
+
+
+def test_materialize_streaming_ledger_never_links_a_partial_file_on_failure(tmp_path: Path) -> None:
+    """If the row stream raises partway through (e.g. MemoryBudgetExceeded),
+    no file at all appears at ledger_path -- the temp file is unlinked, never
+    linked into place."""
+
+    def _rows():
+        yield {
+            "source_unit_commitment_sha256": "a" * 64,
+            "span_index": 0,
+            "span_byte_length": 5,
+            "input_sha256": "b" * 64,
+            "output_sha256": "c" * 64,
+        }
+        raise extraction.MemoryBudgetExceeded("synthetic failure mid-stream")
+
+    ledger_path = tmp_path / "private" / extraction.A4_LEDGER_FILENAME
+    with pytest.raises(extraction.MemoryBudgetExceeded):
+        extraction.materialize_streaming_ledger(_rows(), ledger_path)
+    assert not ledger_path.exists()
+    assert list(ledger_path.parent.iterdir()) == []  # temp file cleaned up too
+
+
+def test_write_new_private_streamed_artifact_refuses_to_clobber_existing(tmp_path: Path) -> None:
+    path = tmp_path / "private" / "artifact.jsonl"
+    extraction.write_new_private_streamed_artifact(path, [b"a\n"])
+    with pytest.raises(extraction.ExtractionError, match="already exists"):
+        extraction.write_new_private_streamed_artifact(path, [b"b\n"])
+
+
+def test_iter_private_artifact_lines_streams_content(tmp_path: Path) -> None:
+    path = tmp_path / "private" / "artifact.jsonl"
+    extraction.write_new_private_streamed_artifact(path, [b'{"a":1}\n', b'{"b":2}\n'])
+    lines = list(extraction.iter_private_artifact_lines(path))
+    assert [json.loads(line) for line in lines] == [{"a": 1}, {"b": 2}]
+
+
+def test_iter_private_artifact_lines_refuses_wrong_mode(tmp_path: Path) -> None:
+    path = tmp_path / "artifact.jsonl"
+    path.write_text("{}\n")
+    os.chmod(path, 0o400)
+    with pytest.raises(extraction.ExtractionError, match="unexpected mode"):
+        list(extraction.iter_private_artifact_lines(path))
 
 
 # --- unit commitment: keyed, reproducible, unenumerable, domain-separated --
@@ -437,9 +658,64 @@ def test_consume_builder_packet_computes_real_reproducible_id_free_commitments(t
     assert salt_path.is_file()
     assert stat.S_IMODE(salt_path.stat().st_mode) == heldout.PRIVATE_FILE_MODE
 
+    assert summary["extraction_ledger_commitment"] == {"row_count": 0, "root_sha256": extraction.EMPTY_LEDGER_ROOT_SHA256}
+    manifest_path = a4_private_dir / extraction.A4_LEDGER_MANIFEST_FILENAME
+    ledger_path = a4_private_dir / extraction.A4_LEDGER_FILENAME
+    assert manifest_path.is_file()
+    assert stat.S_IMODE(manifest_path.stat().st_mode) == heldout.PRIVATE_FILE_MODE
+    assert ledger_path.is_file()
+    assert stat.S_IMODE(ledger_path.stat().st_mode) == heldout.PRIVATE_FILE_MODE
+    assert ledger_path.read_text(encoding="utf-8") == ""
+
     # Rerunning against the same private artifacts (verify-only path) reproduces exactly.
     again = extraction.consume_builder_packet(seal_receipt_path, packet_dir, a4_private_dir)
     assert again == summary
+
+
+def test_consume_builder_packet_streams_real_rows_to_a_private_ledger_and_reruns_without_the_provider(
+    tmp_path: Path,
+) -> None:
+    """Every one of the 9 synthetic units gets exactly one real sentence, so
+    regardless of which single family the (random-salt) A3 assignment holds
+    out, the consumed 8 always contribute exactly 8 spans -- deterministic
+    without needing to know or depend on which one was excluded."""
+    seal_receipt_path, packet_dir, _ = _issue_synthetic_packet(tmp_path)
+    a4_private_dir = tmp_path / "a4-private"
+    rows_by_unit = {f"synthetic.{fid}": [f"Sentence for {index}."] for index, fid in enumerate(FAMILY_IDS)}
+    calls: list[str] = []
+
+    def _counting_provider(unit_id: str):
+        calls.append(unit_id)
+        yield from rows_by_unit.get(unit_id, [])
+
+    summary = extraction.consume_builder_packet(seal_receipt_path, packet_dir, a4_private_dir, _counting_provider)
+
+    assert summary["spans_extracted"] == 8
+    assert summary["source_units_extracted"] == 8
+    assert summary["extraction_ledger_commitment"]["row_count"] == 8
+    assert summary["extraction_ledger_commitment"]["root_sha256"] != extraction.EMPTY_LEDGER_ROOT_SHA256
+    serialized = json.dumps(summary)
+    assert not any(fid in serialized for fid in FAMILY_IDS)
+
+    ledger_path = a4_private_dir / extraction.A4_LEDGER_FILENAME
+    lines = ledger_path.read_text(encoding="utf-8").splitlines()
+    assert len(lines) == 8
+    for line in lines:
+        row = json.loads(line)
+        assert set(row) == {
+            "source_unit_commitment_sha256", "span_index", "span_byte_length", "input_sha256", "output_sha256",
+        }
+    assert not any(f"Sentence for {i}" in ledger_path.read_text(encoding="utf-8") for i in range(9))
+
+    extraction.verify_builder_packet_consumption_privately(
+        {"builder_packet_consumption": summary}, seal_receipt_path, packet_dir, a4_private_dir
+    )
+
+    # Rerun: the manifest already exists, so the row_provider is never called again.
+    calls.clear()
+    again = extraction.consume_builder_packet(seal_receipt_path, packet_dir, a4_private_dir, _counting_provider)
+    assert again == summary
+    assert calls == []
 
 
 def test_consume_builder_packet_refuses_when_private_packet_missing(tmp_path: Path) -> None:
@@ -549,7 +825,7 @@ def test_a4_extraction_bindings_match_exact_inputs() -> None:
     )
 
 
-def test_a4_extraction_algorithm_still_frozen_and_unexecuted() -> None:
+def test_a4_extraction_algorithm_still_frozen_with_a_real_id_free_ledger_commitment() -> None:
     receipt = _receipt()
     algorithm = receipt["extraction_algorithm"]
     declared = {k: algorithm[k] for k in EXTRACTION_ALGORITHM_DESCRIPTOR}
@@ -560,10 +836,21 @@ def test_a4_extraction_algorithm_still_frozen_and_unexecuted() -> None:
         == hashlib.sha256(_canonical_json(EXTRACTION_ALGORITHM_DESCRIPTOR).encode("utf-8")).hexdigest()
     )
     assert algorithm["text_emitted"] is False
-    assert receipt["extraction_ledger"] == []
-    assert receipt["execution_counters"]["source_units_extracted"] == 0
-    assert receipt["execution_counters"]["spans_extracted"] == 0
+
+    ledger_commitment = receipt["builder_packet_consumption"]["extraction_ledger_commitment"]
+    assert ledger_commitment["commitment_algorithm"] == {
+        **LEDGER_COMMITMENT_ALGORITHM_DESCRIPTOR,
+        "algorithm_descriptor_sha256": extraction.LEDGER_COMMITMENT_ALGORITHM_DESCRIPTOR_SHA256,
+    }
+    if ledger_commitment["row_count"] == 0:
+        assert ledger_commitment["root_sha256"] == extraction.EMPTY_LEDGER_ROOT_SHA256
+    assert receipt["execution_counters"]["spans_extracted"] == ledger_commitment["row_count"]
+    assert receipt["execution_counters"]["source_units_extracted"] <= receipt["builder_packet_consumption"][
+        "consumed_source_unit_count"
+    ]
     assert receipt["execution_counters"]["dataset_rows_emitted"] == 0
+    # The private ledger itself is never in this (public) receipt at any size.
+    assert "extraction_ledger" not in receipt
 
 
 def test_a4_builder_packet_gate_is_open_and_matches_live_public_state() -> None:
@@ -780,68 +1067,52 @@ def test_a4_script_refuses_a_forged_closed_gate_that_contradicts_live_public_sta
         extraction.validate_receipt_independently(forged)
 
 
-def _forged_ledger_row(commitment: str, *, span_index: int = 0, span_byte_length: int = 10, wrong_output: bool = False) -> dict:
-    input_sha256 = "a" * 64
-    output_sha256 = (
-        "b" * 64
-        if wrong_output
-        else extraction.extraction_record_output_hash(commitment, span_index, span_byte_length, input_sha256)
-    )
+def _ledger_commitment(*, row_count: int = 1, root_sha256: str | None = None) -> dict:
     return {
-        "source_unit_commitment_sha256": commitment,
-        "span_index": span_index,
-        "span_byte_length": span_byte_length,
-        "input_sha256": input_sha256,
-        "output_sha256": output_sha256,
+        "commitment_algorithm": {
+            **LEDGER_COMMITMENT_ALGORITHM_DESCRIPTOR,
+            "algorithm_descriptor_sha256": extraction.LEDGER_COMMITMENT_ALGORITHM_DESCRIPTOR_SHA256,
+        },
+        "row_count": row_count,
+        "root_sha256": root_sha256 or ("a" * 64),
     }
 
 
-def test_a4_script_refuses_a_ledger_entry_whose_commitment_is_not_a_consumed_unit() -> None:
-    """Even a well-formed, correctly-hashed row is refused if its commitment
-    is not one of the units A4 actually consumed -- the ledger can never
-    name a unit outside builder_packet_consumption.unit_commitments."""
+def test_validate_extraction_ledger_commitment_shape_accepts_the_empty_commitment() -> None:
+    extraction.validate_extraction_ledger_commitment_shape(
+        _ledger_commitment(row_count=0, root_sha256=extraction.EMPTY_LEDGER_ROOT_SHA256)
+    )
+
+
+def test_validate_extraction_ledger_commitment_shape_refuses_a_tampered_algorithm() -> None:
+    tampered = _ledger_commitment()
+    tampered["commitment_algorithm"]["formula"] = "tampered"
+    with pytest.raises(extraction.ExtractionError, match="LEDGER_COMMITMENT_ALGORITHM_DESCRIPTOR"):
+        extraction.validate_extraction_ledger_commitment_shape(tampered)
+
+
+def test_validate_extraction_ledger_commitment_shape_refuses_a_tampered_descriptor_hash() -> None:
+    tampered = _ledger_commitment()
+    tampered["commitment_algorithm"]["algorithm_descriptor_sha256"] = "0" * 64
+    with pytest.raises(extraction.ExtractionError, match="algorithm_descriptor_sha256"):
+        extraction.validate_extraction_ledger_commitment_shape(tampered)
+
+
+def test_validate_extraction_ledger_commitment_shape_refuses_zero_rows_with_a_non_empty_root() -> None:
+    tampered = _ledger_commitment(row_count=0, root_sha256="a" * 64)
+    with pytest.raises(extraction.ExtractionError, match="empty-ledger"):
+        extraction.validate_extraction_ledger_commitment_shape(tampered)
+
+
+def test_a4_script_refuses_a_ledger_commitment_naming_a_row_count_below_zero_via_schema() -> None:
+    """The schema itself (not this module's own validators) refuses a
+    negative row_count -- structural bounds live there, not duplicated here."""
     receipt = _receipt()
     forged = copy.deepcopy(receipt)
-    unknown_commitment = "0" * 64
-    assert unknown_commitment not in receipt["builder_packet_consumption"]["unit_commitments"]
-    forged["extraction_ledger"] = [_forged_ledger_row(unknown_commitment)]
-    forged["execution_counters"]["spans_extracted"] = 1
-    forged["execution_counters"]["source_units_extracted"] = 1
-
-    with pytest.raises(extraction.ExtractionError, match="outside"):
-        extraction.validate_receipt_independently(forged)
-
-
-def test_a4_script_refuses_a_ledger_entry_with_a_wrong_output_hash() -> None:
-    """Isolates ``validate_extraction_ledger_hashes`` directly."""
-    receipt = _receipt()
-    forged = copy.deepcopy(receipt)
-    forged["extraction_ledger"] = [_forged_ledger_row("a" * 64, wrong_output=True)]
+    forged["builder_packet_consumption"]["extraction_ledger_commitment"]["row_count"] = -1
 
     with pytest.raises(extraction.ExtractionError):
-        extraction.validate_extraction_ledger_hashes(forged)
-
-
-def test_a4_script_refuses_a_duplicate_ledger_entry() -> None:
-    receipt = _receipt()
-    forged = copy.deepcopy(receipt)
-    commitment = "a" * 64
-    forged["extraction_ledger"] = [_forged_ledger_row(commitment), _forged_ledger_row(commitment)]
-
-    with pytest.raises(extraction.ExtractionError, match="duplicate"):
-        extraction.validate_extraction_ledger_hashes(forged)
-
-
-def test_a4_script_refuses_an_out_of_order_ledger() -> None:
-    receipt = _receipt()
-    forged = copy.deepcopy(receipt)
-    forged["extraction_ledger"] = [
-        _forged_ledger_row("b" * 64, span_index=0),
-        _forged_ledger_row("a" * 64, span_index=0),
-    ]
-
-    with pytest.raises(extraction.ExtractionError, match="ordered"):
-        extraction.validate_extraction_ledger_hashes(forged)
+        extraction.validate_receipt_independently(forged)
 
 
 def test_validate_ledger_consistency_with_gate_refuses_a_non_empty_ledger_when_gate_closed() -> None:
@@ -850,7 +1121,7 @@ def test_validate_ledger_consistency_with_gate_refuses_a_non_empty_ledger_when_g
     this cannot otherwise be reached via ``validate_receipt_independently``."""
     receipt = _receipt()
     forged = copy.deepcopy(receipt)
-    forged["extraction_ledger"] = [_forged_ledger_row(receipt["builder_packet_consumption"]["unit_commitments"][0])]
+    forged["builder_packet_consumption"]["extraction_ledger_commitment"] = _ledger_commitment(row_count=1)
     forged["execution_counters"]["spans_extracted"] = 1
     forged["execution_counters"]["source_units_extracted"] = 1
     closed_gate = {"gate_open": False}
@@ -866,6 +1137,18 @@ def test_validate_ledger_consistency_with_gate_refuses_counter_drift() -> None:
     open_gate = {"gate_open": True}
 
     with pytest.raises(extraction.ExtractionError, match="spans_extracted"):
+        extraction.validate_ledger_consistency_with_gate(forged, open_gate)
+
+
+def test_validate_ledger_consistency_with_gate_refuses_source_units_extracted_exceeding_consumed_count() -> None:
+    receipt = _receipt()
+    forged = copy.deepcopy(receipt)
+    forged["execution_counters"]["source_units_extracted"] = forged["builder_packet_consumption"][
+        "consumed_source_unit_count"
+    ] + 1
+    open_gate = {"gate_open": True}
+
+    with pytest.raises(extraction.ExtractionError, match="source_units_extracted"):
         extraction.validate_ledger_consistency_with_gate(forged, open_gate)
 
 
@@ -925,7 +1208,7 @@ def test_cli_consume_wired_to_path_overrides(tmp_path: Path, capsys: pytest.Capt
     assert not any(fid in json.dumps(printed) for fid in FAMILY_IDS)
 
 
-def test_cli_consume_defaults_to_the_real_byte_provider(
+def test_cli_consume_defaults_to_the_real_row_provider(
     tmp_path: Path, capsys: pytest.CaptureFixture, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     seal_receipt_path, packet_dir, _ = _issue_synthetic_packet(tmp_path)
@@ -933,16 +1216,16 @@ def test_cli_consume_defaults_to_the_real_byte_provider(
     seen: list[object] = []
     real_consume = extraction.consume_builder_packet
 
-    def spy(seal_path, pkt_dir, priv_dir, byte_provider=extraction.admitted_local_byte_provider):
-        seen.append(byte_provider)
-        return real_consume(seal_path, pkt_dir, priv_dir, byte_provider)
+    def spy(seal_path, pkt_dir, priv_dir, row_provider=extraction.admitted_local_row_provider, memory_cap_bytes=extraction.DEFAULT_A4_MEMORY_CAP_BYTES):
+        seen.append(row_provider)
+        return real_consume(seal_path, pkt_dir, priv_dir, row_provider, memory_cap_bytes)
 
     monkeypatch.setattr(extraction, "consume_builder_packet", spy)
     extraction.main(
         ["--consume", "--seal-receipt", str(seal_receipt_path), "--packet-dir", str(packet_dir), "--a4-private-dir", str(a4_private_dir)]
     )
     capsys.readouterr()
-    assert seen == [extraction.admitted_local_byte_provider]
+    assert seen == [extraction.admitted_local_row_provider]
 
 
 def test_cli_consume_no_real_bytes_forces_the_no_op_provider(
@@ -953,9 +1236,9 @@ def test_cli_consume_no_real_bytes_forces_the_no_op_provider(
     seen: list[object] = []
     real_consume = extraction.consume_builder_packet
 
-    def spy(seal_path, pkt_dir, priv_dir, byte_provider=extraction.admitted_local_byte_provider):
-        seen.append(byte_provider)
-        return real_consume(seal_path, pkt_dir, priv_dir, byte_provider)
+    def spy(seal_path, pkt_dir, priv_dir, row_provider=extraction.admitted_local_row_provider, memory_cap_bytes=extraction.DEFAULT_A4_MEMORY_CAP_BYTES):
+        seen.append(row_provider)
+        return real_consume(seal_path, pkt_dir, priv_dir, row_provider, memory_cap_bytes)
 
     monkeypatch.setattr(extraction, "consume_builder_packet", spy)
     extraction.main(
@@ -968,4 +1251,31 @@ def test_cli_consume_no_real_bytes_forces_the_no_op_provider(
         ]
     )
     capsys.readouterr()
-    assert seen == [extraction.no_v4_byte_ingestion_admission]
+    assert seen == [extraction.no_v4_row_provider]
+
+
+def test_cli_consume_memory_cap_bytes_is_wired_through(
+    tmp_path: Path, capsys: pytest.CaptureFixture, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    seal_receipt_path, packet_dir, _ = _issue_synthetic_packet(tmp_path)
+    a4_private_dir = tmp_path / "a4-private"
+    seen: list[int] = []
+    real_consume = extraction.consume_builder_packet
+
+    def spy(seal_path, pkt_dir, priv_dir, row_provider=extraction.admitted_local_row_provider, memory_cap_bytes=extraction.DEFAULT_A4_MEMORY_CAP_BYTES):
+        seen.append(memory_cap_bytes)
+        return real_consume(seal_path, pkt_dir, priv_dir, row_provider, memory_cap_bytes)
+
+    monkeypatch.setattr(extraction, "consume_builder_packet", spy)
+    extraction.main(
+        [
+            "--consume",
+            "--no-real-bytes",
+            "--seal-receipt", str(seal_receipt_path),
+            "--packet-dir", str(packet_dir),
+            "--a4-private-dir", str(a4_private_dir),
+            "--memory-cap-bytes", "2000000000",
+        ]
+    )
+    capsys.readouterr()
+    assert seen == [2000000000]

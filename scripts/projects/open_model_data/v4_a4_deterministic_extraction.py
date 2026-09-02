@@ -29,33 +29,46 @@ never reads that field to decide whether *a* packet has since been issued
 (see ``check_builder_packet_gate``, which reads only the packet's own public
 receipt).
 
-This module has three independent parts:
+This module has four independent parts:
 
 1. ``EXTRACTION_ALGORITHM_DESCRIPTOR`` -- the frozen, hashed, real-corpus
-   span-extraction formula, plus its implementation (``segment_sentence_
-   spans`` / ``extract_ledger_rows_for_unit`` / ``run_deterministic_
-   extraction``), which is real, runnable code. ``run_deterministic_
-   extraction`` takes a ``byte_provider`` callable; the production default,
-   ``admitted_local_byte_provider``, delegates to
-   ``v4_source_byte_ingestion_admission.provide_bytes_for_admitted_unit``,
-   which opens ``data/sources.db`` -- read-only, never writes, never
+   span-extraction formula. Two implementations of it exist side by side:
+   ``segment_sentence_spans`` / ``extract_ledger_rows_for_unit`` /
+   ``run_deterministic_extraction`` is the small-scale, whole-bytes-in-memory
+   reference implementation (used by tests and cheap dry runs); ``stream_
+   sentence_spans`` / ``stream_ledger_rows_for_units`` is the real,
+   memory-bounded *production* implementation, proven equivalent to the
+   reference one (see the equivalence tests). A prior full in-memory consume
+   of the largest admitted table exceeded 5 GiB RSS and had to be killed --
+   the production path streams row-by-row (never ``.fetchall()``, never a
+   joined blob, never a fully-materialized ledger list) and fails closed via
+   ``MemoryBudgetExceeded`` the instant a configured RSS cap (default
+   ``DEFAULT_A4_MEMORY_CAP_BYTES``, well under the ~512 MiB this module is
+   scoped to prove) would be exceeded. The production default row provider,
+   ``admitted_local_row_provider``, delegates to
+   ``v4_source_byte_ingestion_admission.iter_admitted_unit_row_texts``,
+   which streams ``data/sources.db`` -- read-only, never writes, never
    transmits -- only for the four ``db.*`` units that module's own
    ``dataset_v4_source_byte_ingestion_admission_receipt_v1.json`` admits for
    ``deterministic_local_analysis``. The five ``metadata_only``
-   ``historical.*`` units still fall straight through to ``None`` (no real
-   byte content was ever admitted for them at all), and so does any unit for
+   ``historical.*`` units still yield nothing at all (no real byte content
+   was ever admitted for them in the first place), and so does any unit for
    which the local store or table is unreachable right now -- in either case
    ``consume_builder_packet`` skips it silently, and
    ``derive_source_unit_extraction_residuals`` (below) independently
-   explains why. ``extraction_ledger``'s shape carries hash-only rows keyed
-   by the same per-unit HMAC commitment used in
-   ``builder_packet_consumption``, never a plaintext ``source_unit_id``. A
-   generic local corpus database containing rows for a source unit is not by
-   itself this V4-scoped ingestion admission -- only
-   ``v4_source_byte_ingestion_admission``'s own frozen, receipt-bound
-   ``ADMITTED_SOURCE_UNIT_IDS`` is; ``admitted_local_byte_provider`` never
-   reads ``data/sources.db`` directly, only through that module. Frozen the
-   same way A3 froze its assignment formula: any edit changes
+   explains why. The real hash-only ledger rows -- keyed by the same
+   per-unit HMAC commitment used in ``builder_packet_consumption``, never a
+   plaintext ``source_unit_id`` -- are written to a **private**, gitignored,
+   mode-0600 JSONL file under ``batch_state/`` (see
+   ``materialize_streaming_ledger``); the public receipt's
+   ``extraction_ledger_commitment`` carries only a row count and a
+   root/rolling commitment over that private ledger, never the rows
+   themselves -- a real admitted table can hold millions of spans, and
+   nothing at that scale is ever committed to git. A generic local corpus
+   database containing rows for a source unit is not by itself this
+   V4-scoped ingestion admission -- only ``v4_source_byte_ingestion_
+   admission``'s own frozen, receipt-bound ``ADMITTED_SOURCE_UNIT_IDS`` is.
+   Frozen the same way A3 froze its assignment formula: any edit changes
    ``EXTRACTION_ALGORITHM_DESCRIPTOR_SHA256``, pinned as a schema ``const``.
 2. ``UNIT_COMMITMENT_ALGORITHM_DESCRIPTOR`` -- a second, distinct, also
    frozen and hashed algorithm that *does* run today: a content-blind,
@@ -68,37 +81,54 @@ This module has three independent parts:
    algorithms distinct (separate ids, separate frozen hashes, separate
    receipt sections) means neither can be silently substituted for the
    other while still validating.
-3. ``check_builder_packet_gate`` -- independently re-derives the current
+3. ``LEDGER_COMMITMENT_ALGORITHM_DESCRIPTOR`` -- a third, distinct, frozen
+   and hashed algorithm: the content-blind rolling hash chain that folds the
+   real (private) extraction ledger's per-row ``output_sha256`` values into
+   the single public ``root_sha256`` the receipt carries. See
+   ``new_ledger_rolling_state`` / ``ledger_rolling_update`` /
+   ``materialize_streaming_ledger``.
+4. ``check_builder_packet_gate`` -- independently re-derives the current
    gate state from the bound A3 seal receipt *and* the bound A3 builder
    packet receipt on disk (both public, never trusting the A4 receipt's own
    declared fields, never opening any private artifact).
 
 Run with no arguments to verify the checked-in A4 receipt reproduces all
-three parts and is consistent with the bound A2/A3 receipts on disk -- using
+four parts and is consistent with the bound A2/A3 receipts on disk -- using
 only public artifacts, so this passes in a fresh checkout with no
 ``batch_state/``. Pass ``--consume`` (only meaningful where the private
 builder packet actually exists) to open it for real, independently verify
-it against the public seal receipt's family registry, and (re)compute the
-real unit commitments; add ``--write-receipt`` to persist a freshly
-assembled receipt. Pass ``--verify-private`` to additionally re-derive the
-checked-in receipt's ``builder_packet_consumption`` commitments
-cryptographically from the private packet and the private A4 salt artifact.
+it against the public seal receipt's family registry, (re)compute the real
+unit commitments, and stream the real extraction ledger to a private file
+under a hard memory cap (``--memory-cap-bytes``); add ``--write-receipt`` to
+persist a freshly assembled public receipt. Pass ``--verify-private`` to
+additionally re-derive the checked-in receipt's ``builder_packet_
+consumption`` commitments cryptographically from the private packet, the
+private A4 salt artifact, and a full streaming replay of the private
+extraction ledger.
 """
 
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import hmac
 import json
+import os
 import re
 import secrets
+import stat
 import sys
-from collections.abc import Callable
+from collections.abc import Callable, Iterable, Iterator
 from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator
+
+try:
+    import resource
+except ImportError:  # pragma: no cover - resource is POSIX-only; this project targets Linux
+    resource = None  # type: ignore[assignment]
 
 _SELF_ROOT = Path(__file__).resolve().parents[3]
 if str(_SELF_ROOT) not in sys.path:
@@ -133,6 +163,30 @@ DEFAULT_PRIVATE_PACKET_DIR = heldout.DEFAULT_PRIVATE_DIR
 DEFAULT_A4_PRIVATE_DIR = PRIVATE_ROOT / "open-model-data/v4-a4-extraction"
 A4_SALT_FILENAME = "v4_a4_unit_commitment_salt_v1.json"
 A4_SALT_REQUIRED_FIELDS = frozenset({"algorithm_id", "algorithm_version", "salt_hex", "receipt_binding_sha256"})
+
+# The private, gitignored, hash-only extraction ledger and its small public-
+# shaped manifest -- both live under the same per-run A4 private directory as
+# the salt above, both mode 0600 (see heldout.PRIVATE_FILE_MODE). The ledger
+# itself (one JSON line per span, never the span text) can hold millions of
+# rows for a real admitted table; the manifest is the one small (counts +
+# root commitment) file a rerun reads to verify-and-skip instead of
+# re-streaming the whole table again. Neither is ever committed to git --
+# see docs/best-practices/git-hygiene.md and this project's own
+# .gitignore for batch_state/.
+A4_LEDGER_FILENAME = "v4_a4_extraction_ledger_v1.jsonl"
+A4_LEDGER_MANIFEST_FILENAME = "v4_a4_extraction_ledger_manifest_v1.json"
+A4_LEDGER_MANIFEST_REQUIRED_FIELDS = frozenset(
+    {"algorithm_id", "algorithm_version", "row_count", "root_sha256", "source_units_extracted", "receipt_binding_sha256"}
+)
+
+# Hard cap on resident memory during a real streaming consume, well under the
+# ~512 MiB target this module is scoped to prove -- see MemoryBudgetExceeded
+# and _require_within_memory_budget below. A prior full in-memory consume of
+# the largest admitted table exceeded 5 GiB RSS and had to be killed; this
+# cap exists so the same mistake fails closed instead of paging the host to
+# death.
+DEFAULT_A4_MEMORY_CAP_BYTES = 512 * 1024 * 1024
+_MEMORY_CHECK_INTERVAL_SPANS = 2_000
 
 V4_SHA256 = "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"
 
@@ -255,6 +309,42 @@ def segment_sentence_spans(raw_unit_bytes: bytes) -> list[str]:
     return [span.strip() for span in _SENTENCE_SPAN_BOUNDARY.split(text) if span.strip()]
 
 
+def stream_sentence_spans(row_texts: Iterable[str]) -> Iterator[str]:
+    """Streaming-equivalent of ``segment_sentence_spans("\\n\\n".join(row_texts)
+    .encode("utf-8"))`` -- byte-identical output, without ever holding the
+    full joined text (or the full row list) in memory: only a single,
+    still-growing trailing fragment is carried from one row to the next.
+
+    This is the standard incremental-regex-split technique and is exact
+    (not an approximation) for this pattern: ``re.split`` scans left to
+    right, and any match already *closed* by a following non-whitespace
+    character already present in the buffer can never be reopened by
+    appending more text -- only the single trailing (possibly still
+    mid-match, possibly just unterminated) fragment can change as more text
+    arrives. So after each row is appended, every split piece except the
+    last is guaranteed final and is yielded immediately (stripped, empties
+    dropped, matching ``segment_sentence_spans``'s own filtering); the last
+    piece becomes the new pending fragment. See
+    ``test_stream_sentence_spans_matches_segment_sentence_spans_for_joined_rows``
+    for the equivalence proof against the frozen reference implementation.
+    """
+    pending = ""
+    started = False
+    for row_text in row_texts:
+        pending = f"{pending}\n\n{row_text}" if started else row_text
+        started = True
+        parts = _SENTENCE_SPAN_BOUNDARY.split(pending)
+        for part in parts[:-1]:
+            stripped = part.strip()
+            if stripped:
+                yield stripped
+        pending = parts[-1]
+    if started:
+        stripped = pending.strip()
+        if stripped:
+            yield stripped
+
+
 def extract_ledger_rows_for_unit(raw_unit_bytes: bytes, source_unit_commitment_sha256: str) -> list[dict[str, Any]]:
     """Run the frozen extraction formula against one unit's real bytes, keyed
     by that unit's already-computed (HMAC, private-salted) commitment --
@@ -291,15 +381,72 @@ def no_v4_byte_ingestion_admission(source_unit_id: str) -> bytes | None:
 
 
 def admitted_local_byte_provider(source_unit_id: str) -> bytes | None:
-    """Production default ``byte_provider``: delegates to
-    ``v4_source_byte_ingestion_admission.provide_bytes_for_admitted_unit``,
-    which only ever opens ``data/sources.db`` for a unit inside that
-    module's own frozen ``ADMITTED_SOURCE_UNIT_IDS`` -- every other real
-    unit (the five ``metadata_only`` ``historical.*`` ones) falls straight
-    through to ``None``, exactly as ``no_v4_byte_ingestion_admission``
-    always did for them. This function itself never reads a row of text; it
-    only ever forwards to the one module admitted to do that."""
+    """Small-scale/synthetic ``byte_provider`` for ``run_deterministic_
+    extraction`` below: delegates to ``v4_source_byte_ingestion_admission.
+    provide_bytes_for_admitted_unit``, which ``.fetchall()``'s the admitted
+    rows into one in-memory blob. Fine for tests and dry runs against a
+    handful of rows; never the production default for a real admitted
+    table -- see ``admitted_local_row_provider`` below, which streams
+    instead."""
     return byte_ingestion.provide_bytes_for_admitted_unit(source_unit_id)
+
+
+class MemoryBudgetExceeded(ExtractionError):
+    """A streaming extraction pass would exceed its configured resident-
+    memory cap. Raised, never silently ignored -- the caller must treat this
+    as a hard stop: whatever the private ledger writer has already flushed
+    to its temp file is discarded (never linked into place; see
+    ``heldout.write_new_private_streamed_artifact``), so a run that fails
+    this way leaves no partial private ledger and no receipt claiming a
+    consumption that never finished."""
+
+
+def _current_rss_bytes() -> int:
+    """Current process resident set size, in bytes, via ``getrusage``'s
+    high-water mark (``ru_maxrss``) -- a value that only ever grows within a
+    process, which is exactly what a hard memory *cap* wants to catch: once
+    it has crossed the cap, no later measurement can un-cross it. Returns
+    ``0`` (never raises) on a platform where the ``resource`` module is
+    unavailable (Windows) -- this project targets Linux, where ``ru_maxrss``
+    is kibibytes; macOS/BSD report bytes instead, handled by ``sys.
+    platform`` below."""
+    if resource is None:  # pragma: no cover - POSIX-only module, see import above
+        return 0
+    ru_maxrss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    return ru_maxrss if sys.platform == "darwin" else ru_maxrss * 1024
+
+
+def _require_within_memory_budget(memory_cap_bytes: int) -> None:
+    rss_bytes = _current_rss_bytes()
+    if rss_bytes > memory_cap_bytes:
+        raise MemoryBudgetExceeded(
+            f"streaming extraction aborted: resident memory {rss_bytes} bytes exceeded the configured "
+            f"cap of {memory_cap_bytes} bytes -- failing closed rather than risk exhausting host memory "
+            "(see the 5 GiB RSS full in-memory consume this module exists to never repeat)"
+        )
+
+
+def no_v4_row_provider(source_unit_id: str) -> Iterator[str]:
+    """Streaming counterpart to ``no_v4_byte_ingestion_admission``: an
+    immediately-exhausted generator (yields nothing) for any source unit.
+    Kept for callers/tests that want the pre-admission behaviour explicitly,
+    and wired by ``--no-real-bytes`` for a cheap dry-run consumption that
+    never opens ``data/sources.db`` at all."""
+    return iter(())
+
+
+def admitted_local_row_provider(source_unit_id: str) -> Iterator[str]:
+    """Production default ``row_provider`` for the real streaming consume:
+    delegates to ``v4_source_byte_ingestion_admission.
+    iter_admitted_unit_row_texts``, which streams one admitted row's text at
+    a time via lazy SQLite cursor iteration -- never ``.fetchall()``, never
+    a joined blob, never more than one row's text resident at once. Yields
+    nothing at all for any unit outside that module's own frozen
+    ``ADMITTED_SOURCE_UNIT_IDS``, exactly mirroring ``admitted_local_byte_
+    provider``'s ``None`` for the same units. This function itself never
+    reads a row of text; it only ever forwards to the one module admitted
+    to do that."""
+    yield from byte_ingestion.iter_admitted_unit_row_texts(source_unit_id)
 
 
 def run_deterministic_extraction(
@@ -325,6 +472,54 @@ def run_deterministic_extraction(
         rows.extend(extract_ledger_rows_for_unit(raw_bytes, commitment))
     rows.sort(key=lambda row: (row["source_unit_commitment_sha256"], row["span_index"]))
     return rows
+
+
+def stream_ledger_rows_for_units(
+    commitment_and_unit_ids: list[tuple[str, str]],
+    row_provider: Callable[[str], Iterator[str]],
+    *,
+    memory_cap_bytes: int = DEFAULT_A4_MEMORY_CAP_BYTES,
+    memory_check_interval: int = _MEMORY_CHECK_INTERVAL_SPANS,
+) -> Iterator[dict[str, Any]]:
+    """The real, memory-bounded production extraction pass: streams
+    hash-only ledger rows for the given units, one span at a time, in the
+    frozen ordering (``EXTRACTION_ALGORITHM_DESCRIPTOR["ordering"]``:
+    commitment ascending, span_index ascending within a unit) -- without a
+    final sort step, because callers already pass ``commitment_and_unit_ids``
+    pre-sorted by commitment (commitments are cheap HMACs over ids, computed
+    up front, independent of any unit's byte content) and each unit's own
+    spans stream out in increasing span_index by construction (see
+    ``stream_sentence_spans``).
+
+    Never materializes the ledger itself: this is a generator, and each row
+    is discarded by this function the instant it is yielded. Checks resident
+    memory every ``memory_check_interval`` spans and fails closed
+    (``MemoryBudgetExceeded``) the moment the configured cap is exceeded --
+    callers must have already persisted whatever was yielded before that
+    point (e.g. to a private ledger file), since nothing here buffers it for
+    them. A unit for which ``row_provider`` yields no rows at all
+    contributes zero spans and is silently skipped, exactly as
+    ``run_deterministic_extraction`` skips a unit whose ``byte_provider``
+    returns ``None``."""
+    spans_seen = 0
+    for commitment, unit_id in commitment_and_unit_ids:
+        for span_index, span in enumerate(stream_sentence_spans(row_provider(unit_id))):
+            span_bytes = span.encode("utf-8")
+            input_sha256 = hashlib.sha256(span_bytes).hexdigest()
+            span_byte_length = len(span_bytes)
+            yield {
+                "source_unit_commitment_sha256": commitment,
+                "span_index": span_index,
+                "span_byte_length": span_byte_length,
+                "input_sha256": input_sha256,
+                "output_sha256": extraction_record_output_hash(
+                    commitment, span_index, span_byte_length, input_sha256
+                ),
+            }
+            spans_seen += 1
+            if spans_seen % memory_check_interval == 0:
+                _require_within_memory_budget(memory_cap_bytes)
+    _require_within_memory_budget(memory_cap_bytes)
 
 
 # --- frozen unit-commitment algorithm (real, content-blind, runs today) ----
@@ -379,6 +574,232 @@ def builder_eligible_unit_commitments(salt: bytes, source_unit_ids: list[str]) -
     """Sorted by *commitment value*, not by source_unit_id -- so publishing
     this array never leaks the original ids' sort order either."""
     return sorted(unit_commitment_sha256(salt, unit_id) for unit_id in source_unit_ids)
+
+
+# --- extraction-ledger rolling commitment (real, content-blind, runs today) -
+#
+# The one piece a real streaming consume against a large admitted table
+# still needs a public-safe answer for: extraction_ledger can no longer be a
+# literal public array (a real table can yield millions of rows -- see the
+# module docstring's ~3.8M-span figure and the 5 GiB RSS a full in-memory
+# consume once cost). This is a plain hash *chain* (not a Merkle tree): a
+# running SHA-256 state, folded one row at a time over each row's own
+# already-computed output_sha256, in the exact ledger order
+# EXTRACTION_ALGORITHM_DESCRIPTOR["ordering"] already fixes. That makes it
+# computable incrementally while streaming (see stream_ledger_rows_for_units
+# / materialize_streaming_ledger below) and independently reproducible later
+# by anyone holding the private ledger, without ever needing the ledger
+# itself to be public. Unkeyed (plain SHA-256, not HMAC) -- unlike the unit
+# commitment above, there is no small public candidate set to enumerate
+# against a bare row-hash chain, so a private salt buys no real
+# confidentiality here.
+
+LEDGER_COMMITMENT_DOMAIN = b"v4-a4-extraction-ledger-rolling-commitment-v1"
+
+LEDGER_COMMITMENT_ALGORITHM_DESCRIPTOR: dict[str, Any] = {
+    "algorithm_id": "v4-a4-extraction-ledger-rolling-commitment-sha256-v1",
+    "algorithm_version": "v1",
+    "content_blind": True,
+    "formula": (
+        "state_0 = sha256(LEDGER_COMMITMENT_DOMAIN + 0x00).digest(); "
+        "for each row in extraction_ledger order (source_unit_commitment_sha256 ascending, then "
+        "span_index ascending): state_i = sha256(state_(i-1) + 0x00 + row.output_sha256.encode('ascii'))"
+        ".digest(); root_sha256 = state_n.hexdigest() after all rows (root of an empty ledger is "
+        "sha256(LEDGER_COMMITMENT_DOMAIN + 0x00).hexdigest())"
+    ),
+    "text_emitted": False,
+    "reproducibility": "byte_stable_given_the_identical_ordered_sequence_of_row_output_hashes",
+}
+
+LEDGER_COMMITMENT_ALGORITHM_DESCRIPTOR_SHA256 = sha256_text(canonical_json(LEDGER_COMMITMENT_ALGORITHM_DESCRIPTOR))
+
+
+def new_ledger_rolling_state() -> bytes:
+    return hashlib.sha256(LEDGER_COMMITMENT_DOMAIN + b"\x00").digest()
+
+
+def ledger_rolling_update(state: bytes, output_sha256_hex: str) -> bytes:
+    return hashlib.sha256(state + b"\x00" + output_sha256_hex.encode("ascii")).digest()
+
+
+EMPTY_LEDGER_ROOT_SHA256 = new_ledger_rolling_state().hex()
+
+
+def ledger_rolling_commitment_sha256(rows: Iterable[dict[str, Any]]) -> str:
+    """Pure, replay-based reference implementation: folds an already-materialized
+    (or freshly streamed) sequence of rows into the same rolling state
+    ``materialize_streaming_ledger`` computes incrementally while writing.
+    Used by ``--verify-private`` to recompute the commitment by replaying the
+    real private ledger file -- never by ordinary (public-only) receipt
+    verification, which has no ledger to replay."""
+    state = new_ledger_rolling_state()
+    for row in rows:
+        state = ledger_rolling_update(state, row["output_sha256"])
+    return state.hex()
+
+
+# --- private-artifact filesystem hardening, self-contained -----------------
+#
+# A4 could reuse ``heldout.write_new_private_json_artifact``'s directory-fd/
+# symlink-safety discipline by adding a streamed sibling to it in
+# ``v4_a3_heldout_family_assignment.py`` -- but that module's own file bytes
+# are load-bearing: its SHA-256 is a ``bindings.assignment_algorithm_
+# implementation`` entry inside the *already-sealed* A3 receipt, and that
+# receipt's ``bindings`` block is itself covered by ``receipt_binding_
+# sha256`` (see that module's ``receipt_binding_context``), which the real
+# private builder packet and every downstream A4 private artifact are bound
+# to. Editing that file at all -- even to add an unrelated, algorithm-
+# independent generic helper -- would force re-sealing/re-issuing the whole
+# already-completed A3 chain. So A4 keeps its own private-artifact
+# filesystem hardening fully self-contained instead: the same create-only,
+# symlink-safe, single-directory-fd, fsync'd-to-disk discipline as
+# ``heldout.write_new_private_json_artifact``/``load_private_artifact``,
+# reimplemented here rather than shared, specifically so this module's own
+# (already-necessarily-changing) file hash never has to drag A3's sealed
+# receipt chain along with it.
+
+
+def _assert_no_symlink_components(path: Path) -> None:
+    """Refuse if any component of an absolute path (leaf included) is a
+    symlink."""
+    require(path.is_absolute(), f"path must be absolute: {path}")
+    current = Path(path.anchor)
+    for part in path.parts[1:]:
+        current /= part
+        try:
+            info = current.lstat()
+        except FileNotFoundError:
+            continue
+        require(not stat.S_ISLNK(info.st_mode), f"refusing symlink path component: {current}")
+
+
+def _assert_contained(candidate: Path, base: Path) -> None:
+    """Refuse a resolved path that escapes the intended base directory (traversal)."""
+    resolved_candidate = candidate.resolve()
+    resolved_base = base.resolve()
+    require(
+        resolved_candidate == resolved_base or resolved_base in resolved_candidate.parents,
+        f"refusing path escaping private directory {resolved_base}: {candidate}",
+    )
+
+
+def _open_directory_no_symlink(path: Path) -> int:
+    """Open ``path`` as a directory file descriptor, refusing a symlinked
+    leaf. Every subsequent operation is anchored to this fd, closing the
+    check-then-act race a pathname-based re-open would leave open. Caller
+    closes the returned fd."""
+    flags = os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0)
+    return os.open(path, flags)
+
+
+def write_new_private_streamed_artifact(path: Path, chunks: Iterable[bytes]) -> None:
+    """Atomically *create* a private artifact at ``path`` from an iterable of
+    raw byte chunks, writing each one to the temp file as it is produced --
+    never buffering the whole payload as a single in-memory blob first. Same
+    create-only, symlink-safe, single-directory-fd, fsync'd-to-disk
+    discipline as ``heldout.write_new_private_json_artifact``, for a
+    streamed payload (e.g. one JSON line per ledger row) instead of one
+    ``canonical_json(payload)`` blob. An exception raised while iterating
+    ``chunks`` (e.g. ``MemoryBudgetExceeded``) propagates out of this
+    function with the destination path left untouched -- the temp file is
+    unlinked, never linked into place."""
+    private_dir = path.parent
+    _assert_no_symlink_components(private_dir)
+    private_dir.mkdir(parents=True, exist_ok=True, mode=heldout.PRIVATE_DIR_MODE)
+    os.chmod(private_dir, heldout.PRIVATE_DIR_MODE)
+    _assert_no_symlink_components(path)
+    _assert_contained(path, private_dir)
+
+    dir_fd = _open_directory_no_symlink(private_dir)
+    try:
+        try:
+            os.stat(path.name, dir_fd=dir_fd, follow_symlinks=False)
+            already_exists = True
+        except FileNotFoundError:
+            already_exists = False
+        require(not already_exists, f"private artifact already exists, refusing to overwrite: {path}")
+
+        temporary_name = f".{path.name}.{secrets.token_hex(8)}.tmp"
+        descriptor = os.open(
+            temporary_name, os.O_WRONLY | os.O_CREAT | os.O_EXCL, heldout.PRIVATE_FILE_MODE, dir_fd=dir_fd
+        )
+        try:
+            with os.fdopen(descriptor, "wb") as handle:
+                os.fchmod(handle.fileno(), heldout.PRIVATE_FILE_MODE)
+                for chunk in chunks:
+                    handle.write(chunk)
+                handle.flush()
+                os.fsync(handle.fileno())
+            try:
+                os.link(temporary_name, path.name, src_dir_fd=dir_fd, dst_dir_fd=dir_fd)
+            except FileExistsError:
+                raise ExtractionError(f"private artifact already exists, refusing to overwrite: {path}") from None
+            os.fsync(dir_fd)
+        finally:
+            with contextlib.suppress(OSError):
+                os.unlink(temporary_name, dir_fd=dir_fd)
+    finally:
+        os.close(dir_fd)
+
+
+def iter_private_artifact_lines(path: Path) -> Iterator[str]:
+    """Stream a private artifact's lines one at a time, with the same
+    symlink-safe, regular-file, owner-only-mode checks ``heldout.
+    load_private_artifact`` runs -- but never ``.read()``'s the whole file
+    into memory first. Verify-only; used only by the explicit, operator-
+    invoked ``--verify-private`` replay check, never by ordinary
+    (public-only) receipt validation."""
+    _assert_no_symlink_components(path)
+    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
+    try:
+        descriptor = os.open(path, flags)
+    except FileNotFoundError:
+        raise ExtractionError(f"private artifact missing: {path}") from None
+    except OSError as exc:
+        raise ExtractionError(f"private artifact is not a regular file: {path}") from exc
+
+    with os.fdopen(descriptor, "rb") as handle:
+        info = os.fstat(handle.fileno())
+        require(stat.S_ISREG(info.st_mode), f"private artifact is not a regular file: {path}")
+        require(
+            stat.S_IMODE(info.st_mode) == heldout.PRIVATE_FILE_MODE,
+            f"private artifact has unexpected mode (want {oct(heldout.PRIVATE_FILE_MODE)}): {path}",
+        )
+        for raw_line in handle:
+            yield raw_line.decode("utf-8")
+
+
+def materialize_streaming_ledger(rows: Iterator[dict[str, Any]], ledger_path: Path) -> dict[str, Any]:
+    """Consume a ledger-row stream exactly once: write each row as one JSON
+    line to a private, create-only, symlink-safe file (``write_new_private_
+    streamed_artifact`` above) while incrementally folding it into the
+    rolling commitment -- never holding more than one row in memory at a
+    time, and never reading the file back to compute the commitment.
+
+    If ``rows`` raises partway through (e.g. ``MemoryBudgetExceeded``), the
+    exception propagates out of the inner generator and out of
+    ``write_new_private_streamed_artifact`` in turn; that function's own
+    create-then-link discipline means the destination ``ledger_path`` is
+    never created in that case -- only a temp file, which it unlinks -- so a
+    failed streaming pass never leaves a partial private ledger behind."""
+    state = new_ledger_rolling_state()
+    row_count = 0
+    distinct_units: set[str] = set()
+
+    def _line_chunks() -> Iterator[bytes]:
+        nonlocal state, row_count
+        for row in rows:
+            distinct_units.add(row["source_unit_commitment_sha256"])
+            state = ledger_rolling_update(state, row["output_sha256"])
+            row_count += 1
+            yield (canonical_json(row) + "\n").encode("utf-8")
+
+    write_new_private_streamed_artifact(ledger_path, _line_chunks())
+    return {
+        "row_count": row_count,
+        "root_sha256": state.hex(),
+        "source_units_extracted": len(distinct_units),
+    }
 
 
 # --- builder-packet gate (public-only) --------------------------------------
@@ -477,26 +898,40 @@ def consume_builder_packet(
     seal_receipt_path: Path = A3_SEAL_RECEIPT_PATH,
     packet_dir: Path = DEFAULT_PRIVATE_PACKET_DIR,
     a4_private_dir: Path = DEFAULT_A4_PRIVATE_DIR,
-    byte_provider: Callable[[str], bytes | None] = admitted_local_byte_provider,
+    row_provider: Callable[[str], Iterator[str]] = admitted_local_row_provider,
+    memory_cap_bytes: int = DEFAULT_A4_MEMORY_CAP_BYTES,
 ) -> dict[str, Any]:
     """Open the real private builder packet (never the membership file),
     independently verify its ``builder_eligible_source_unit_ids`` reproduce
     from its own ``builder_eligible_family_ids`` against the *public* seal
     receipt's family registry, resolve A4's own private unit-commitment salt
     (verify-only if one already exists; generate-once, create-only
-    otherwise), compute the real, keyed, id-free commitments, and run the
-    frozen extraction formula (``run_deterministic_extraction``) against
-    whatever bytes ``byte_provider`` returns -- the production default
-    (``admitted_local_byte_provider``) returns real bytes for whichever of
-    the four ``db.*`` units are both builder-eligible (per the private
-    packet) and actually reachable in ``data/sources.db`` right now, and
-    ``None`` for every other unit (the five ``historical.*`` units, or any
-    ``db.*`` unit whose local store happens to be unreachable), so the
-    ledger holds hash-only rows exactly for that subset.
+    otherwise), compute the real, keyed, id-free commitments, and stream the
+    frozen extraction formula (``stream_ledger_rows_for_units``, memory-
+    capped at ``memory_cap_bytes``) against whatever rows ``row_provider``
+    yields -- the production default (``admitted_local_row_provider``)
+    streams real row text for whichever of the four ``db.*`` units are both
+    builder-eligible (per the private packet) and actually reachable in
+    ``data/sources.db`` right now, and nothing at all for every other unit
+    (the five ``historical.*`` units, or any ``db.*`` unit whose local store
+    happens to be unreachable), so the ledger holds hash-only rows exactly
+    for that subset.
 
-    Fails closed (raises ``ExtractionError``/``heldout.AssignmentError``) if
-    the private packet is missing, unreadable, or does not reproduce --
-    never guesses at the builder-eligible set."""
+    The resulting hash-only rows are written to a private, gitignored,
+    create-only, mode-0600 JSONL ledger under ``a4_private_dir`` -- never
+    returned, never held in memory as a list, and never embedded in the
+    return value or any public receipt; only counts and a rolling
+    commitment are. A rerun against the *same* seal/packet binding is a
+    cheap verify-only path (reads the small private manifest, never
+    re-streams the whole table); a rerun against a *different* binding with
+    the same ``a4_private_dir`` fails closed on manifest drift, mirroring
+    the salt artifact's own fail-closed rerun discipline just above.
+
+    Fails closed (raises ``ExtractionError``/``heldout.AssignmentError``/
+    ``MemoryBudgetExceeded``) if the private packet is missing, unreadable,
+    does not reproduce, or the streaming pass would exceed its memory cap --
+    never guesses at the builder-eligible set and never leaves a partial
+    private ledger behind (see ``materialize_streaming_ledger``)."""
     seal_receipt = _load(seal_receipt_path)
     heldout.validate_receipt_independently(seal_receipt)
 
@@ -549,16 +984,60 @@ def consume_builder_packet(
 
     unit_commitments = builder_eligible_unit_commitments(salt, source_unit_ids)
     root_commitment = root_commitment_sha256(salt, source_unit_ids)
-    extraction_ledger = run_deterministic_extraction(source_unit_ids, salt, byte_provider)
+
+    ledger_path = a4_private_dir / A4_LEDGER_FILENAME
+    manifest_path = a4_private_dir / A4_LEDGER_MANIFEST_FILENAME
+    if manifest_path.exists() or manifest_path.is_symlink():
+        stored_manifest = heldout.load_private_artifact(
+            manifest_path, required_fields=A4_LEDGER_MANIFEST_REQUIRED_FIELDS
+        )
+        require(
+            stored_manifest["algorithm_id"] == LEDGER_COMMITMENT_ALGORITHM_DESCRIPTOR["algorithm_id"],
+            "private A4 extraction-ledger manifest algorithm_id does not match the frozen ledger-commitment "
+            "algorithm -- refusing",
+        )
+        require(
+            stored_manifest["receipt_binding_sha256"] == binding,
+            "private A4 extraction-ledger manifest receipt_binding_sha256 drift against the live A3 "
+            "seal/packet -- refusing (reseal/regenerate required)",
+        )
+        ledger_summary = {
+            "row_count": stored_manifest["row_count"],
+            "root_sha256": stored_manifest["root_sha256"],
+            "source_units_extracted": stored_manifest["source_units_extracted"],
+        }
+    else:
+        require(
+            not (ledger_path.exists() or ledger_path.is_symlink()),
+            f"private extraction ledger exists without its manifest -- refusing (corrupt or partially "
+            f"written private state, needs manual recovery): {ledger_path}",
+        )
+        ordered_units = sorted((unit_commitment_sha256(salt, unit_id), unit_id) for unit_id in source_unit_ids)
+        row_stream = stream_ledger_rows_for_units(ordered_units, row_provider, memory_cap_bytes=memory_cap_bytes)
+        ledger_summary = materialize_streaming_ledger(row_stream, ledger_path)
+        heldout.write_new_private_json_artifact(
+            manifest_path,
+            {
+                "algorithm_id": LEDGER_COMMITMENT_ALGORITHM_DESCRIPTOR["algorithm_id"],
+                "algorithm_version": LEDGER_COMMITMENT_ALGORITHM_DESCRIPTOR["algorithm_version"],
+                "row_count": ledger_summary["row_count"],
+                "root_sha256": ledger_summary["root_sha256"],
+                "source_units_extracted": ledger_summary["source_units_extracted"],
+                "receipt_binding_sha256": binding,
+            },
+        )
 
     return {
         "packet_consumed": True,
         "consumed_source_unit_count": len(source_unit_ids),
         "unit_commitments": unit_commitments,
         "consumed_units_commitment_sha256": root_commitment,
-        "extraction_ledger": extraction_ledger,
-        "source_units_extracted": len({row["source_unit_commitment_sha256"] for row in extraction_ledger}),
-        "spans_extracted": len(extraction_ledger),
+        "extraction_ledger_commitment": {
+            "row_count": ledger_summary["row_count"],
+            "root_sha256": ledger_summary["root_sha256"],
+        },
+        "source_units_extracted": ledger_summary["source_units_extracted"],
+        "spans_extracted": ledger_summary["row_count"],
     }
 
 
@@ -616,6 +1095,52 @@ def verify_builder_packet_consumption_privately(
         consumption["consumed_source_unit_count"] == len(recomputed_ids),
         "receipt builder_packet_consumption.consumed_source_unit_count does not match the recomputed real "
         "count -- refusing",
+    )
+
+    manifest_path = a4_private_dir / A4_LEDGER_MANIFEST_FILENAME
+    stored_manifest = heldout.load_private_artifact(manifest_path, required_fields=A4_LEDGER_MANIFEST_REQUIRED_FIELDS)
+    require(
+        stored_manifest["algorithm_id"] == LEDGER_COMMITMENT_ALGORITHM_DESCRIPTOR["algorithm_id"],
+        "private A4 extraction-ledger manifest algorithm_id does not match the frozen ledger-commitment "
+        "algorithm -- refusing",
+    )
+    ledger_commitment = consumption["extraction_ledger_commitment"]
+    require(
+        stored_manifest["row_count"] == ledger_commitment["row_count"]
+        and stored_manifest["root_sha256"] == ledger_commitment["root_sha256"],
+        "receipt builder_packet_consumption.extraction_ledger_commitment does not reproduce from the "
+        "private extraction-ledger manifest -- refusing",
+    )
+    require(
+        stored_manifest["source_units_extracted"] == consumption["source_units_extracted"],
+        "receipt builder_packet_consumption.source_units_extracted does not match the private "
+        "extraction-ledger manifest -- refusing",
+    )
+
+    ledger_path = a4_private_dir / A4_LEDGER_FILENAME
+    replayed_state = new_ledger_rolling_state()
+    replayed_row_count = 0
+    replayed_units: set[str] = set()
+    if stored_manifest["row_count"] > 0:
+        for line in iter_private_artifact_lines(ledger_path):
+            row = json.loads(line)
+            replayed_state = ledger_rolling_update(replayed_state, row["output_sha256"])
+            replayed_row_count += 1
+            replayed_units.add(row["source_unit_commitment_sha256"])
+    require(
+        replayed_row_count == stored_manifest["row_count"],
+        "private extraction ledger row count does not match its own manifest -- refusing (truncated or "
+        "appended-to ledger file)",
+    )
+    require(
+        replayed_state.hex() == stored_manifest["root_sha256"],
+        "private extraction ledger does not replay to its own manifest's root_sha256 -- refusing (tampered "
+        "or corrupted ledger file)",
+    )
+    require(
+        len(replayed_units) == stored_manifest["source_units_extracted"],
+        "private extraction ledger's distinct commitments do not match its own manifest's "
+        "source_units_extracted -- refusing",
     )
 
 
@@ -826,8 +1351,16 @@ def build_receipt(consumption: dict[str, Any], gate: dict[str, Any], root: Path 
             "consumed_units_commitment_sha256": consumption["consumed_units_commitment_sha256"],
             "membership_disclosed": False,
             "heldout_family_id_disclosed": False,
+            "source_units_extracted": consumption["source_units_extracted"],
+            "extraction_ledger_commitment": {
+                "commitment_algorithm": {
+                    **LEDGER_COMMITMENT_ALGORITHM_DESCRIPTOR,
+                    "algorithm_descriptor_sha256": LEDGER_COMMITMENT_ALGORITHM_DESCRIPTOR_SHA256,
+                },
+                "row_count": consumption["extraction_ledger_commitment"]["row_count"],
+                "root_sha256": consumption["extraction_ledger_commitment"]["root_sha256"],
+            },
         },
-        "extraction_ledger": consumption.get("extraction_ledger", []),
         "a2_residuals_carried_forward": a2_residuals_carried,
         "a4_residuals": derive_source_unit_extraction_residuals(a2_receipt),
         "execution_counters": {
@@ -929,39 +1462,53 @@ def validate_gate_matches_receipt(receipt: dict[str, Any], root: Path) -> None:
 def validate_ledger_consistency_with_gate(receipt: dict[str, Any], gate: dict[str, Any]) -> None:
     """Pure, gate-dict-parameterized so it can be exercised directly against
     a synthetic gate in tests, independent of ``check_builder_packet_gate``'s
-    live filesystem read. The extraction ledger may only be non-empty once
-    the packet gate is genuinely open *and* the packet was actually
-    consumed -- extraction never runs ahead of, or without, a real
+    live filesystem read. The extraction ledger commitment may only be
+    non-empty once the packet gate is genuinely open *and* the packet was
+    actually consumed -- extraction never runs ahead of, or without, a real
     consumption. ``dataset_rows_emitted`` is separately pinned to ``const 0``
     by the schema regardless: ledger rows are pre-admission span/unit
-    hashes, never admitted dataset rows."""
-    ledger = receipt["extraction_ledger"]
+    hashes, never admitted dataset rows.
+
+    This is necessarily a much weaker check than the old literal-array
+    version it replaces: with the ledger itself private (see the module
+    docstring), a public-only verifier can check the *commitment*'s shape
+    and its cross-references to other public counters, but can never
+    recompute ``root_sha256`` from row content it was never given --
+    ``verify_builder_packet_consumption_privately`` does that, by replaying
+    the real private ledger file."""
     consumption = receipt["builder_packet_consumption"]
+    ledger_commitment = consumption["extraction_ledger_commitment"]
+    row_count = ledger_commitment["row_count"]
+    root_sha256 = ledger_commitment["root_sha256"]
+
     if not gate["gate_open"] or not consumption["packet_consumed"]:
         require(
-            ledger == [],
-            "extraction_ledger is non-empty but the builder_packet_gate is not open and/or the packet was "
-            "not consumed -- refusing (extraction must never run ahead of a real consumption)",
+            row_count == 0 and root_sha256 == EMPTY_LEDGER_ROOT_SHA256,
+            "extraction_ledger_commitment is non-empty but the builder_packet_gate is not open and/or the "
+            "packet was not consumed -- refusing (extraction must never run ahead of a real consumption)",
+        )
+    if row_count == 0:
+        require(
+            root_sha256 == EMPTY_LEDGER_ROOT_SHA256,
+            "extraction_ledger_commitment.row_count is 0 but root_sha256 is not the frozen empty-ledger "
+            "commitment -- refusing",
         )
 
     require(
-        receipt["execution_counters"]["spans_extracted"] == len(ledger),
-        "execution_counters.spans_extracted does not match len(extraction_ledger) -- refusing",
+        receipt["execution_counters"]["spans_extracted"] == row_count,
+        "execution_counters.spans_extracted does not match builder_packet_consumption."
+        "extraction_ledger_commitment.row_count -- refusing",
     )
-    distinct_units = {row["source_unit_commitment_sha256"] for row in ledger}
     require(
-        receipt["execution_counters"]["source_units_extracted"] == len(distinct_units),
-        "execution_counters.source_units_extracted does not match the distinct commitments present in "
-        "extraction_ledger -- refusing",
+        receipt["execution_counters"]["source_units_extracted"] == consumption["source_units_extracted"],
+        "execution_counters.source_units_extracted does not match builder_packet_consumption."
+        "source_units_extracted -- refusing",
     )
-    if ledger:
-        known_commitments = set(consumption["unit_commitments"])
-        require(
-            distinct_units <= known_commitments,
-            "extraction_ledger references a source_unit_commitment_sha256 outside "
-            "builder_packet_consumption.unit_commitments -- refusing (ledger cannot name a unit A4 never "
-            "consumed)",
-        )
+    require(
+        consumption["source_units_extracted"] <= consumption["consumed_source_unit_count"],
+        "builder_packet_consumption.source_units_extracted exceeds consumed_source_unit_count -- refusing "
+        "(cannot have extracted spans for more units than were actually consumed)",
+    )
 
 
 def validate_builder_packet_consumption(receipt: dict[str, Any]) -> None:
@@ -1014,6 +1561,35 @@ def validate_builder_packet_consumption(receipt: dict[str, Any]) -> None:
             "packet receipt's builder_eligible_source_unit_count -- refusing",
         )
 
+    validate_extraction_ledger_commitment_shape(consumption["extraction_ledger_commitment"])
+
+
+def validate_extraction_ledger_commitment_shape(ledger_commitment: dict[str, Any]) -> None:
+    """Public-only structural verification of ``extraction_ledger_commitment``:
+    the frozen commitment-algorithm metadata/hash, and that ``row_count``/
+    ``root_sha256`` agree with each other for the empty case. Never
+    recomputes ``root_sha256`` from real rows -- the ledger itself is
+    private; see ``verify_builder_packet_consumption_privately`` for the
+    replay-based check that can."""
+    algorithm = ledger_commitment["commitment_algorithm"]
+    declared = {k: algorithm.get(k) for k in LEDGER_COMMITMENT_ALGORITHM_DESCRIPTOR}
+    require(
+        declared == LEDGER_COMMITMENT_ALGORITHM_DESCRIPTOR,
+        "extraction_ledger_commitment.commitment_algorithm does not match the frozen "
+        "LEDGER_COMMITMENT_ALGORITHM_DESCRIPTOR -- refusing",
+    )
+    require(
+        algorithm.get("algorithm_descriptor_sha256") == LEDGER_COMMITMENT_ALGORITHM_DESCRIPTOR_SHA256,
+        "extraction_ledger_commitment.commitment_algorithm.algorithm_descriptor_sha256 does not match the "
+        "locally recomputed frozen descriptor hash -- refusing",
+    )
+    if ledger_commitment["row_count"] == 0:
+        require(
+            ledger_commitment["root_sha256"] == EMPTY_LEDGER_ROOT_SHA256,
+            "extraction_ledger_commitment.row_count is 0 but root_sha256 is not the frozen empty-ledger "
+            "commitment -- refusing",
+        )
+
 
 def validate_no_forbidden_keys(receipt: dict[str, Any]) -> None:
     def _all_keys(value: Any) -> set[str]:
@@ -1041,38 +1617,6 @@ def validate_a4_residuals_derivable_from_a2(receipt: dict[str, Any]) -> None:
     )
 
 
-def validate_extraction_ledger_hashes(receipt: dict[str, Any]) -> None:
-    """Recompute every ledger record's ``output_sha256`` from its own
-    identity fields, and require the ledger is ordered and duplicate-free --
-    catches a hand-edited, stale, reordered, or duplicated ledger entry
-    regardless of whether the checked-in production receipt's ledger is
-    empty (no admitted unit's local store was reachable) or holds real
-    hash-only rows (see ``admitted_local_byte_provider``)."""
-    ledger = receipt["extraction_ledger"]
-    seen: set[tuple[str, int]] = set()
-    previous_key: tuple[str, int] | None = None
-    for record in ledger:
-        expected = extraction_record_output_hash(
-            record["source_unit_commitment_sha256"],
-            record["span_index"],
-            record["span_byte_length"],
-            record["input_sha256"],
-        )
-        require(
-            record["output_sha256"] == expected,
-            f"extraction_ledger record for commitment {record['source_unit_commitment_sha256']!r} span "
-            f"{record['span_index']} does not reproduce output_sha256 from its own identity fields -- refusing",
-        )
-        key = (record["source_unit_commitment_sha256"], record["span_index"])
-        require(key not in seen, f"extraction_ledger has a duplicate (commitment, span_index) entry: {key} -- refusing")
-        seen.add(key)
-        require(
-            previous_key is None or previous_key < key,
-            "extraction_ledger is not ordered by (source_unit_commitment_sha256, span_index) ascending -- refusing",
-        )
-        previous_key = key
-
-
 def validate_receipt_independently(receipt: dict[str, Any], root: Path = ROOT) -> None:
     validate_algorithm_metadata(receipt)
     validate_bindings_hash_to_disk(receipt, root)
@@ -1080,7 +1624,6 @@ def validate_receipt_independently(receipt: dict[str, Any], root: Path = ROOT) -
     validate_builder_packet_consumption(receipt)
     validate_no_forbidden_keys(receipt)
     validate_a4_residuals_derivable_from_a2(receipt)
-    validate_extraction_ledger_hashes(receipt)
     validate_receipt_schema(receipt)
 
 
@@ -1130,13 +1673,21 @@ def main(argv: list[str] | None = None) -> None:
         "--no-real-bytes",
         action="store_true",
         help=(
-            "With --consume, force the no-op byte_provider (no data/sources.db read at all) regardless of "
+            "With --consume, force the no-op row_provider (no data/sources.db read at all) regardless of "
             "the real production default. Every other field (bindings, gate, unit commitments, a4_residuals) "
-            "is still real; extraction_ledger stays empty. Use this for a cheap dry-run consumption -- the "
-            "real production default (admitted_local_byte_provider) can, for the larger admitted tables, "
-            "materialize millions of hash-only rows and multiple GB of peak memory in one process; that is "
-            "a distinct, separately-resourced batch operation, not something to run unbounded inside an "
-            "interactive dispatch on shared infrastructure."
+            "is still real; extraction_ledger_commitment stays at row_count 0. Use this for a cheap dry-run "
+            "consumption that never opens data/sources.db at all -- the real production default "
+            "(admitted_local_row_provider) streams row-by-row with a hard memory cap (see --memory-cap-bytes) "
+            "specifically so it is safe to run against the real, larger admitted tables without this flag."
+        ),
+    )
+    parser.add_argument(
+        "--memory-cap-bytes",
+        type=int,
+        default=DEFAULT_A4_MEMORY_CAP_BYTES,
+        help=(
+            "With --consume (and not --no-real-bytes), the hard resident-memory cap the real streaming "
+            f"extraction pass fails closed against (default: {DEFAULT_A4_MEMORY_CAP_BYTES} bytes)."
         ),
     )
     args = parser.parse_args(argv)
@@ -1148,8 +1699,10 @@ def main(argv: list[str] | None = None) -> None:
             f"builder_packet_gate is not open (blocked_reason_code={gate['blocked_reason_code']!r}) -- "
             "refusing to consume",
         )
-        byte_provider = no_v4_byte_ingestion_admission if args.no_real_bytes else admitted_local_byte_provider
-        consumption = consume_builder_packet(args.seal_receipt, args.packet_dir, args.a4_private_dir, byte_provider)
+        row_provider = no_v4_row_provider if args.no_real_bytes else admitted_local_row_provider
+        consumption = consume_builder_packet(
+            args.seal_receipt, args.packet_dir, args.a4_private_dir, row_provider, args.memory_cap_bytes
+        )
         if args.write_receipt:
             receipt = build_receipt(consumption, gate)
             validate_receipt_independently(receipt)

@@ -63,11 +63,25 @@ Two, deliberately different, questions this module answers:
   never about which family A3 privately held out, so disclosing it (see
   ``v4_a4_deterministic_extraction.derive_source_unit_extraction_residuals``)
   never leaks complement membership.
-- ``provide_bytes_for_admitted_unit(unit_id)`` -- the real byte provider
-  wired as A4's production default. Only ever called by
-  ``run_deterministic_extraction`` for units the private builder packet
-  actually names (never for the held-out one), and only this function -- not
-  the residual probe above -- ever reads real row *text*.
+- ``provide_bytes_for_admitted_unit(unit_id)`` -- the whole-unit byte
+  provider used by A4's small-scale/synthetic ``run_deterministic_
+  extraction`` path (tests, dry runs). ``.fetchall()``'s the admitted rows
+  and joins them into a single in-memory ``bytes`` blob -- fine for a
+  handful of synthetic rows, but never safe to point at a real admitted
+  table: the largest one materializes millions of sentence spans, and a
+  full in-memory consume of it once exceeded 5 GiB RSS and had to be
+  killed. Never wired as A4's *production* default any more -- see
+  ``iter_admitted_unit_row_texts`` below.
+- ``iter_admitted_unit_row_texts(unit_id)`` -- the real, memory-bounded
+  production provider: a generator that yields one admitted row's text at a
+  time, straight from lazy SQLite cursor iteration (never ``.fetchall()``,
+  never ``.fetchmany()`` into a buffered list, never a joined blob). Wired
+  as A4's actual production default (``v4_a4_deterministic_extraction.
+  admitted_local_row_provider``) so a real consume against the full table
+  never holds more than one row's text in memory at a time. Yields zero
+  values (an immediately-exhausted generator, never ``None``, never a
+  raised error) under exactly the same fail-closed conditions
+  ``provide_bytes_for_admitted_unit`` returns ``None`` for.
 """
 
 from __future__ import annotations
@@ -77,6 +91,7 @@ import hashlib
 import json
 import sqlite3
 import sys
+from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
@@ -315,6 +330,50 @@ def provide_bytes_for_admitted_unit(source_unit_id: str, primary_root: Path = PR
         return None
     text = "\n\n".join(str(value or "") for (value,) in rows)
     return text.encode("utf-8")
+
+
+def iter_admitted_unit_row_texts(source_unit_id: str, primary_root: Path = PRIMARY_ROOT) -> Iterator[str]:
+    """The real, memory-bounded production byte provider: streams one
+    admitted row's text at a time via lazy cursor iteration (``for row in
+    cursor:``, which pulls a single row from SQLite's own statement cursor
+    per ``__next__`` call) -- never ``.fetchall()``, never a manual
+    ``.fetchmany()`` buffer, never a joined blob. Callers see the exact
+    same row order (``ORDER BY id ASC``) ``provide_bytes_for_admitted_unit``
+    already used, so re-joining every yielded value with ``"\\n\\n"`` in
+    order reproduces that function's whole-blob output exactly.
+
+    Yields nothing at all (an immediately-exhausted generator) -- never
+    raises, never yields ``None`` -- for any unit outside
+    ``ADMITTED_SOURCE_UNIT_IDS``, or when the local store file/table is
+    missing, or on any SQLite error mid-stream; callers must treat "zero
+    values yielded" exactly like ``provide_bytes_for_admitted_unit``'s
+    ``None``, never as an error. Never itself logs, prints, or persists a
+    row's text -- the only intended caller
+    (``v4_a4_deterministic_extraction.stream_ledger_rows_for_units``) hashes
+    each row's contribution into per-span hashes as it streams past and
+    discards it immediately."""
+    if source_unit_id not in LOCAL_STORE_BINDINGS:
+        return
+    db_path = local_sources_db_path(primary_root)
+    if not db_path.is_file():
+        return
+    binding = LOCAL_STORE_BINDINGS[source_unit_id]
+    try:
+        connection = _connect_read_only(db_path)
+    except sqlite3.Error:
+        return
+    try:
+        try:
+            if not _table_exists(connection, binding["sqlite_table"]):
+                return
+            sql, parameters = _select_sql(binding)
+            cursor = connection.execute(sql, parameters)
+            for (value,) in cursor:
+                yield str(value or "")
+        except sqlite3.Error:
+            return
+    finally:
+        connection.close()
 
 
 # --- admission scope re-derivation from A2's own public ledger -------------
