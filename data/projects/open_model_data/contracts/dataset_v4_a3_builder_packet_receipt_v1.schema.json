@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/dataset_v4_a3_builder_packet_receipt_v1.schema.json",
+  "title": "Dataset V4 A3 builder packet receipt v1",
+  "description": "Text-free, membership-free public receipt for the A3-issued builder packet: proves a packet was issued and binds it to the sealed A3 held-out receipt via commitment hashes only. Never carries a held-out family_id, a builder-eligible family_id/source_unit_id list, the private salt, or the membership map -- those live only in the private packet artifact under batch_state/ and on the private operational board.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "status",
+    "text_free",
+    "controlling_outcome_sha256",
+    "control_surfaces",
+    "seal_receipt_binding",
+    "packet",
+    "temporal_firewall_packet",
+    "execution_counters",
+    "safety_assertions"
+  ],
+  "properties": {
+    "schema_version": {"const": "dataset_v4_a3_builder_packet_receipt_v1"},
+    "receipt_id": {"const": "dataset-v4-a3-builder-packet-v1"},
+    "status": {"const": "A3_BUILDER_PACKET_ISSUED_TEXT_FREE_NO_COMPLEMENT_ENUMERATION"},
+    "text_free": {"const": true},
+    "controlling_outcome_sha256": {"const": "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"},
+    "control_surfaces": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["public_control_issue", "pilot_child_issue", "private_operational_board"],
+      "properties": {
+        "public_control_issue": {"const": 7423},
+        "pilot_child_issue": {"const": 7430},
+        "private_operational_board": {"const": 622}
+      }
+    },
+    "seal_receipt_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "schema_version", "receipt_binding_sha256"],
+      "properties": {
+        "path": {"const": "data/projects/open_model_data/admission/dataset_v4_a3_heldout_source_family_seal_receipt_v1.json"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "schema_version": {"const": "dataset_v4_a3_heldout_source_family_seal_receipt_v1"},
+        "receipt_binding_sha256": {
+          "$ref": "#/$defs/sha256",
+          "description": "The sealed A3 receipt's own receipt_binding_sha256 fingerprint (see v4_a3_heldout_family_assignment.receipt_binding_sha256) -- proves this packet was issued against the exact sealed seal context, not a drifted one."
+        }
+      }
+    },
+    "packet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packet_id",
+        "algorithm_id",
+        "family_count",
+        "heldout_count",
+        "builder_eligible_count",
+        "builder_eligible_source_unit_count",
+        "packet_commitment_sha256",
+        "issued_to_role",
+        "materialization_location",
+        "membership_disclosed",
+        "heldout_family_id_disclosed"
+      ],
+      "properties": {
+        "packet_id": {"const": "v4-a3-builder-packet-v1"},
+        "algorithm_id": {"const": "v4-a3-builder-packet-hmac-sha256-v1"},
+        "family_count": {"const": 9},
+        "heldout_count": {"const": 1},
+        "builder_eligible_count": {"const": 8},
+        "builder_eligible_source_unit_count": {"type": "integer", "minimum": 1},
+        "packet_commitment_sha256": {
+          "$ref": "#/$defs/sha256",
+          "description": "HMAC-SHA256 over the private packet payload, keyed by the same private salt as the A3 assignment_commitment_sha256 (domain-separated). Never a plain hash -- a plain sha256(packet) would be enumerable against the public family_id registry the same way an unsalted assignment commitment would be."
+        },
+        "issued_to_role": {"const": "A4_deterministic_extraction"},
+        "materialization_location": {"const": "private_batch_state_and_private_operational_board_622"},
+        "membership_disclosed": {"const": false},
+        "heldout_family_id_disclosed": {"const": false}
+      }
+    },
+    "temporal_firewall_packet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "firewall_id",
+        "builder_packet_issued",
+        "builder_packet_issued_after_seal",
+        "seal_receipt_status_at_issuance",
+        "seal_was_sealed_before_any_builder_packet"
+      ],
+      "properties": {
+        "firewall_id": {"const": "v4-a3-builder-packet-temporal-firewall-v1"},
+        "builder_packet_issued": {"const": true},
+        "builder_packet_issued_after_seal": {"const": true},
+        "seal_receipt_status_at_issuance": {"const": "A3_HELDOUT_SOURCE_FAMILY_SEAL_FIREWALL_SEALED_MEMBERSHIP_ASSIGNED_PRIVATE"},
+        "seal_was_sealed_before_any_builder_packet": {
+          "const": true,
+          "description": "Restates the sealed A3 receipt's own historical, past-tense heldout_partition_seal.sealed_before_any_builder_packet fact. That field on the seal receipt is never edited by packet issuance -- it stays true because the seal really was completed before this (or any) packet existed."
+        }
+      }
+    },
+    "execution_counters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dataset_rows_emitted", "builder_packets_issued"],
+      "properties": {
+        "dataset_rows_emitted": {"const": 0},
+        "builder_packets_issued": {"const": 1}
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "heldout_membership_exposed_to_builder",
+        "heldout_family_id_present_in_public_diff",
+        "builder_eligible_ids_present_in_public_diff",
+        "prebuilder_state_claimed",
+        "epic_done_claimed"
+      ],
+      "properties": {
+        "heldout_membership_exposed_to_builder": {"const": false},
+        "heldout_family_id_present_in_public_diff": {"const": false},
+        "builder_eligible_ids_present_in_public_diff": {"const": false},
+        "prebuilder_state_claimed": {"const": false},
+        "epic_done_claimed": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  }
+}
