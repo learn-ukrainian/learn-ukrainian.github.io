@@ -7,6 +7,7 @@ import {
   formatTranslationSource,
   sanitizeWikiReference,
   type Enrichment,
+  type VerbParadigm,
 } from "@site/src/lib/lexicon/word-atlas-article-model";
 import { renderWordAtlasArticle } from "../helpers/render-word-atlas-article";
 import { articleProps } from "../helpers/word-atlas-record";
@@ -502,5 +503,112 @@ describe("verb pedagogy strip (#7471)", () => {
   test("omits the section when verb_pedagogy is present but empty", () => {
     const html = renderWordAtlasArticle(verbProps({}));
     expect(html).not.toContain("Вид і керування");
+  });
+});
+
+describe("verb imperative and past morphology blocks (#7609)", () => {
+  function verbProps(
+    paradigm?: VerbParadigm,
+    forms: Array<{ form: string; label: string }> = [],
+    lemma = "бути",
+  ) {
+    return articleProps({
+      lemma,
+      url_slug: lemma,
+      gloss: lemma === "читати" ? "to read" : "to be",
+      entry_type: "lemma",
+      pos: "verb",
+      ipa: null,
+      primary_source: "course",
+      course_usage: [],
+      enrichment: {
+        morphology: {
+          pos: "verb",
+          form_count: forms.length,
+          forms,
+          source: "VESUM",
+          paradigm,
+        },
+      },
+    });
+  }
+
+  test("renders imperative and past forms in their own tables", () => {
+    const html = renderWordAtlasArticle(
+      verbProps({
+        kind: "verb",
+        infinitive: "бути",
+        tenses: {
+          теперішній: { однина: { "1": "є" }, множина: { "1": "є" } },
+        },
+        imperative: { однина: { "2": "будь" }, множина: { "1": "будьмо", "2": "будьте" } },
+        past: { "чол.": "був", "жін.": "була", "сер.": "було", множина: "були" },
+      }),
+    );
+
+    const document = new DOMParser().parseFromString(html, "text/html");
+    const tableWithCaption = (caption: string) =>
+      Array.from(document.querySelectorAll("table")).find(
+        (table) => table.querySelector("caption")?.textContent === caption,
+      );
+    const tableRows = (caption: string) => {
+      const table = tableWithCaption(caption);
+      expect(table).toBeDefined();
+      return Array.from(table!.querySelectorAll("tbody tr")).map((row) =>
+        Array.from(row.querySelectorAll("td")).map((cell) => cell.textContent),
+      );
+    };
+
+    expect(tableRows("Наказовий")).toEqual([
+      ["2 особа", "будь", ""],
+      ["1 особа (мн.)", "", "будьмо"],
+      ["2 особа (мн.)", "", "будьте"],
+    ]);
+    expect(tableRows("Минулий")).toEqual([
+      ["чол.", "був"],
+      ["жін.", "була"],
+      ["сер.", "було"],
+      ["множина", "були"],
+    ]);
+  });
+
+  test("does not render imperative or past captions for a tense-only paradigm", () => {
+    const html = renderWordAtlasArticle(
+      verbProps({
+        kind: "verb",
+        tenses: {
+          теперішній: { однина: { "1": "є" } },
+          майбутній: {},
+        },
+      }),
+    );
+
+    expect(html).toContain("<caption>теперішній</caption>");
+    expect(html).not.toContain("майбутній");
+    expect(html).not.toContain("Наказовий");
+    expect(html).not.toContain("Минулий");
+  });
+
+  test("does not render empty imperative or past sub-blocks", () => {
+    const html = renderWordAtlasArticle(
+      verbProps({
+        kind: "verb",
+        imperative: { однина: { "2": "" }, множина: {} },
+        past: { "чол.": "", "жін.": "", "сер.": "", множина: "" },
+      }),
+    );
+
+    expect(html).not.toContain("Наказовий");
+    expect(html).not.toContain("Минулий");
+  });
+
+  test("keeps an unstructured empty-label verb on the fallback path", () => {
+    const html = renderWordAtlasArticle(
+      verbProps(undefined, [{ form: "читати", label: "" }], "читати"),
+    );
+
+    expect(html).toContain("читати");
+    expect(html).not.toContain("Наказовий");
+    expect(html).not.toContain("Минулий");
   });
 });

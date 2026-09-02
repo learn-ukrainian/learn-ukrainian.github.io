@@ -7,13 +7,16 @@ import {
   CASE_ROWS,
   CONTEXT_LABELS_UK,
   FORM_NOTE_LABELS,
+  IMPERATIVE_ROWS,
   isMirrorUrl,
   learnerFacingUrls,
   MARKED_LEARNER_NOTE,
+  PAST_ROWS,
   PERSON_ROWS,
   sourceClass,
   sourceHost,
   TRACK_LABELS_UK,
+  type VerbParadigm,
 } from "../lib/lexicon/word-atlas-article-model";
 import { morphologyFormCountLabel } from "../lib/lexicon/register-markers";
 import ChromeText from "../lib/i18n/ChromeText";
@@ -92,6 +95,26 @@ function DefaultAtlasTypeahead() {
       />
     </div>
   );
+}
+
+function hasForm(form: string | undefined) {
+  return Boolean(form?.trim());
+}
+
+function hasAnyForm(forms: Record<string, string | undefined> | undefined) {
+  return Object.values(forms ?? {}).some((form) => hasForm(form));
+}
+
+function hasTenseForms(numbers: Record<string, Record<string, string>>) {
+  return Object.values(numbers).some((forms) => hasAnyForm(forms));
+}
+
+function hasImperativeForms(imperative: VerbParadigm["imperative"]) {
+  return IMPERATIVE_ROWS.some((row) => hasForm(imperative?.[row.number]?.[row.person]));
+}
+
+function hasPastForms(past: VerbParadigm["past"]) {
+  return PAST_ROWS.some((row) => hasForm(past?.[row.key]));
 }
 
 export default function WordAtlasArticle({
@@ -458,9 +481,32 @@ export default function WordAtlasArticle({
                   {verbParadigm.infinitive && (
                     <p><strong>Інфінітив:</strong> <span className="ukr">{stressDisplay(verbParadigm.infinitive)}</span></p>
                   )}
-                  {Object.entries(verbParadigm.tenses ?? {}).map(([tense, numbers]) => (
-                    <table key={tense} className="paradigm-table">
-                      <caption>{tense}</caption>
+                  {Object.entries(verbParadigm.tenses ?? {})
+                    .filter(([, numbers]) => hasTenseForms(numbers))
+                    .map(([tense, numbers]) => (
+                      <table key={tense} className="paradigm-table">
+                        <caption>{tense}</caption>
+                        <thead>
+                          <tr>
+                            <th scope="col" className="col-case">Особа</th>
+                            <th scope="col">Однина</th>
+                            <th scope="col">Множина</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {PERSON_ROWS.map((person) => (
+                            <tr key={person.key}>
+                              <td className="case-name">{person.label}</td>
+                              <td className="form">{stressDisplay(numbers["однина"]?.[person.key])}</td>
+                              <td className="form">{stressDisplay(numbers["множина"]?.[person.key])}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    ))}
+                  {hasImperativeForms(verbParadigm.imperative) && (
+                    <table className="paradigm-table">
+                      <caption>Наказовий</caption>
                       <thead>
                         <tr>
                           <th scope="col" className="col-case">Особа</th>
@@ -469,16 +515,41 @@ export default function WordAtlasArticle({
                         </tr>
                       </thead>
                       <tbody>
-                        {PERSON_ROWS.map((person) => (
-                          <tr key={person.key}>
-                            <td className="case-name">{person.label}</td>
-                            <td className="form">{stressDisplay(numbers["однина"]?.[person.key])}</td>
-                            <td className="form">{stressDisplay(numbers["множина"]?.[person.key])}</td>
-                          </tr>
-                        ))}
+                        {IMPERATIVE_ROWS.map((row) => {
+                          const form = verbParadigm.imperative?.[row.number]?.[row.person];
+                          return (
+                            <tr key={row.key}>
+                              <td className="case-name">{row.label}</td>
+                              <td className="form">{row.number === "однина" ? stressDisplay(form) : ""}</td>
+                              <td className="form">{row.number === "множина" ? stressDisplay(form) : ""}</td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
-                  ))}
+                  )}
+                  {hasPastForms(verbParadigm.past) && (
+                    <table className="paradigm-table">
+                      <caption>Минулий</caption>
+                      <thead>
+                        <tr>
+                          <th scope="col" className="col-case">Рід / число</th>
+                          <th scope="col">Форма</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {PAST_ROWS.map((row) => {
+                          const form = verbParadigm.past?.[row.key];
+                          return form?.trim() ? (
+                            <tr key={row.key}>
+                              <td className="case-name">{row.label}</td>
+                              <td className="form">{stressDisplay(form)}</td>
+                            </tr>
+                          ) : null;
+                        })}
+                      </tbody>
+                    </table>
+                  )}
                 </>
               ) : participleParadigm ? (
                 <>
