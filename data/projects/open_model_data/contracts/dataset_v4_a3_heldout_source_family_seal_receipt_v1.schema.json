@@ -344,6 +344,7 @@
     },
     "artifact_binding": {
       "type": "object",
+      "additionalProperties": false,
       "required": ["path", "sha256", "schema_version"],
       "properties": {
         "path": {

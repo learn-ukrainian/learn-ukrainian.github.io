@@ -142,6 +142,23 @@ def test_a3_heldout_seal_bindings_match_exact_inputs() -> None:
     assert receipt["bindings"]["cycle007_scope_circularity_evidence"]["used_for_denial_only"] is True
 
 
+def test_a3_heldout_seal_schema_forbids_sensitive_unknown_fields_on_bindings() -> None:
+    """A binding object must not be able to smuggle in the private salt or a
+    membership locator -- neither field is ever legitimate on a public
+    artifact_binding entry, and the schema must reject them outright rather
+    than silently accepting and ignoring them."""
+    receipt = _receipt()
+
+    for key in receipt["bindings"]:
+        with_salt = copy.deepcopy(receipt)
+        with_salt["bindings"][key]["salt_hex"] = "00" * 32
+        assert _errors(with_salt), f"schema accepted salt_hex on bindings.{key}"
+
+        with_locator = copy.deepcopy(receipt)
+        with_locator["bindings"][key]["heldout_membership_locator"] = "batch_state/whatever"
+        assert _errors(with_locator), f"schema accepted heldout_membership_locator on bindings.{key}"
+
+
 def test_a3_heldout_seal_receipt_is_payload_and_membership_free() -> None:
     receipt = _receipt()
 
