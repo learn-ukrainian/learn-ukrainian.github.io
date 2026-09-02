@@ -115,3 +115,30 @@ def test_docs_skills_merge_group_still_requires_cf_attest() -> None:
     results = {job: "success" for job in FULL_REQUIRED if job != "cf-attest"}
     failures = evaluate_gate("merge_group", results, landing_class="docs_skills")
     assert any("cf-attest: missing" in item for item in failures)
+
+
+def test_main_cf_only_failure_still_red_and_explains_product_jobs_are_green(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Gate stays fail-closed (#7141) but must not look like a pytest failure."""
+    pairs = ",".join(
+        f"{job}={'failure' if job == 'cf-attest' else 'success'}" for job in LIGHT_REQUIRED
+    )
+    assert main(["--event", "pull_request", "--results", pairs]) == 1
+    err = capsys.readouterr().err
+    assert "CI Gate fail-closed: cf-attest: failure" in err
+    assert "Product jobs succeeded" in err
+    assert "not because ruff/tests/secret-scan failed" in err
+
+
+def test_main_product_failure_does_not_claim_cf_only(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    pairs = ",".join(
+        f"{job}={'failure' if job in {'cf-attest', 'ruff'} else 'success'}"
+        for job in LIGHT_REQUIRED
+    )
+    assert main(["--event", "pull_request", "--results", pairs]) == 1
+    err = capsys.readouterr().err
+    assert "ruff: failure" in err
+    assert "Product jobs succeeded" not in err
