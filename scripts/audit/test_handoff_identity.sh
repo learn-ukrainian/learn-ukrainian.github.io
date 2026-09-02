@@ -73,11 +73,9 @@ eq "$(handoff_identity_for_epic hramatka)" "claude-hramatka" "epic hramatka → 
 eq "$(handoff_identity_for_epic harness)" "claude-infra" "epic harness → claude-infra (#5201)"
 eq "$(handoff_identity_for_epic infra)" "claude-infra" "epic infra → claude-infra alias"
 eq "$(handoff_identity_for_epic infra.devops)" "claude-devops" "dot devops → claude-devops"
-# monitor has an EMPTY slots roster in area_assignments.yaml: no per-lane slot
-# is minted, so the provider identity itself is the slot (#7597).
-eq "$(handoff_identity_for_epic monitor)" "claude" "epic monitor → claude (empty roster)"
-eq "$(handoff_identity_for_epic infra.monitor)" "claude" "dot monitor → claude (empty roster)"
-eq "$(handoff_identity_for_epic open-model-data)" "claude" "epic open-model-data → claude (empty roster)"
+eq "$(handoff_identity_for_epic monitor)" "claude-monitor" "epic monitor → claude-monitor"
+eq "$(handoff_identity_for_epic infra.monitor)" "claude-monitor" "dot monitor → claude-monitor"
+eq "$(handoff_identity_for_epic open-model-data)" "claude-open-model-data" "epic open-model-data → claude-open-model-data"
 eq "$(handoff_identity_for_epic)" "" "no epic → empty slot"
 
 # Codex uses provider-specific per-epic slots; DevOps is independent from Infra.
@@ -86,9 +84,9 @@ eq "$(handoff_identity_for_codex_epic hramatka)" "codex-hramatka" "Codex hramatk
 eq "$(handoff_identity_for_codex_epic harness)" "codex-infra" "Codex harness → codex-infra"
 eq "$(handoff_identity_for_codex_epic infra)" "codex-infra" "Codex infra → codex-infra alias"
 eq "$(handoff_identity_for_codex_epic infra.devops)" "codex-devops" "Codex dot devops → codex-devops"
-eq "$(handoff_identity_for_codex_epic monitor)" "codex" "Codex epic monitor → codex (empty roster)"
-eq "$(handoff_identity_for_codex_epic infra.monitor)" "codex" "Codex dot monitor → codex (empty roster)"
-eq "$(handoff_identity_for_codex_epic open-model-data)" "codex" "Codex open-model-data → codex (empty roster)"
+eq "$(handoff_identity_for_codex_epic monitor)" "codex-monitor" "Codex epic monitor → codex-monitor"
+eq "$(handoff_identity_for_codex_epic infra.monitor)" "codex-monitor" "Codex dot monitor → codex-monitor"
+eq "$(handoff_identity_for_codex_epic open-model-data)" "codex-open-model-data" "Codex open-model-data → codex-open-model-data"
 eq "$(handoff_identity_for_codex_epic)" "" "Codex no epic → empty slot"
 
 # Gemini uses provider-specific per-epic slots; DevOps is independent from Infra.
@@ -97,36 +95,19 @@ eq "$(handoff_identity_for_gemini_epic hramatka)" "gemini-hramatka" "Gemini hram
 eq "$(handoff_identity_for_gemini_epic harness)" "gemini-infra" "Gemini harness → gemini-infra"
 eq "$(handoff_identity_for_gemini_epic infra)" "gemini-infra" "Gemini infra → gemini-infra alias"
 eq "$(handoff_identity_for_gemini_epic infra.devops)" "gemini-devops" "Gemini dot devops → gemini-devops"
-eq "$(handoff_identity_for_gemini_epic monitor)" "gemini" "Gemini epic monitor → gemini (empty roster)"
-eq "$(handoff_identity_for_gemini_epic infra.monitor)" "gemini" "Gemini dot monitor → gemini (empty roster)"
+eq "$(handoff_identity_for_gemini_epic monitor)" "gemini-monitor" "Gemini epic monitor → gemini-monitor"
+eq "$(handoff_identity_for_gemini_epic infra.monitor)" "gemini-monitor" "Gemini dot monitor → gemini-monitor"
+eq "$(handoff_identity_for_gemini_epic open-model-data)" "gemini-open-model-data" "Gemini open-model-data → gemini-open-model-data"
 eq "$(handoff_identity_for_gemini_epic)" "" "Gemini no epic → empty slot"
 
-# Grok/Kimi/Cursor: empty-roster areas mint the bare provider identity so the
-# exported SESSION_HANDOFF_AGENT is always a valid inbox --for choice (#7597).
-eq "$(handoff_identity_for_grok_epic open-model-data)" "grok" "Grok open-model-data → grok (empty roster)"
-eq "$(handoff_identity_for_grok_epic monitor)" "grok" "Grok monitor → grok (empty roster)"
+# Grok/Kimi/Cursor: empty-roster areas keep minting {provider}-{area} to prevent
+# handoff/session collisions across concurrent lanes (#7597, #7600).
+eq "$(handoff_identity_for_grok_epic open-model-data)" "grok-open-model-data" "Grok open-model-data → grok-open-model-data"
+eq "$(handoff_identity_for_grok_epic monitor)" "grok-monitor" "Grok monitor → grok-monitor"
 eq "$(handoff_identity_for_grok_epic atlas)" "grok-atlas" "Grok atlas → grok-atlas"
-eq "$(handoff_identity_for_kimi_epic open-model-data)" "kimi" "Kimi open-model-data → kimi (empty roster)"
-eq "$(handoff_identity_for_cursor_epic open-model-data)" "cursor" "Cursor open-model-data → cursor (empty roster)"
+eq "$(handoff_identity_for_kimi_epic open-model-data)" "kimi-open-model-data" "Kimi open-model-data → kimi-open-model-data"
+eq "$(handoff_identity_for_cursor_epic open-model-data)" "cursor-open-model-data" "Cursor open-model-data → cursor-open-model-data"
 eq "$(handoff_identity_for_cursor_epic devops)" "cursor-devops" "Cursor devops keeps per-lane form"
-# Phantom {provider}-{area} must NEVER be the resolved slot for an empty-roster area.
-if [[ "$(handoff_identity_for_grok_epic open-model-data)" == "grok-open-model-data" ]]; then
-  fail "open-model-data must not invent phantom grok-open-model-data slot (#7597)"
-fi
-
-# --- empty-roster rule follows the assignments registry (fixture override) ---
-fixture_root="$(mktemp -d)"
-cat > "$fixture_root/area_assignments.yaml" <<'YAML'
-schema_version: 1
-assignments:
-  atlas:
-    driver_agent_type: infra-orchestrator
-    slots: []
-YAML
-eq "$(HANDOFF_AREA_ASSIGNMENTS_YAML="$fixture_root/area_assignments.yaml" handoff_identity_for_grok_epic atlas)" "grok" "fixture: emptied atlas roster → grok"
-eq "$(HANDOFF_AREA_ASSIGNMENTS_YAML="$fixture_root/area_assignments.yaml" handoff_identity_for_grok_epic monitor)" "grok-monitor" "fixture: unregistered area keeps per-lane form"
-eq "$(HANDOFF_AREA_ASSIGNMENTS_YAML="$fixture_root/missing.yaml" handoff_identity_for_grok_epic monitor)" "grok-monitor" "missing registry keeps per-lane form"
-rm -rf "$fixture_root"
 
 
 # --- e2e: --epic harness resolves the infra lane slot (not phantom claude-harness) ---

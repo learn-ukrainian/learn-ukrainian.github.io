@@ -221,54 +221,6 @@ EOF
 EOF
 }
 
-# _launcher_area_slots_empty "<lane>"
-# Succeed only when area_assignments.yaml registers an area named exactly like
-# the lane AND that area's slots roster is empty (monitor, open-model-data,
-# core). Any other case — registry missing, area missing, roster non-empty —
-# returns 1 so callers keep the legacy per-lane slot form. Tests may point
-# HANDOFF_AREA_ASSIGNMENTS_YAML at a fixture registry.
-_launcher_area_slots_empty() {
-  local area="${1:-}"
-  local registry="${HANDOFF_AREA_ASSIGNMENTS_YAML:-$_HANDOFF_IDENTITY_DIR/../config/area_assignments.yaml}"
-  case "$area" in
-    ''|*[!A-Za-z0-9._-]*) return 1 ;;
-  esac
-  [ -f "$registry" ] || return 1
-  awk -v area="$area" '
-    $0 ~ /^assignments:[[:space:]]*(#.*)?$/ { in_assignments = 1; next }
-    !in_assignments { next }
-    # Area keys are exactly two-space indented (`  open-model-data:`); slot
-    # list items are deeper and start with a dash, so they never match here.
-    $0 ~ /^  [^[:space:]]/ && $1 ~ /^[A-Za-z0-9][A-Za-z0-9._-]*:$/ {
-      if (found) finished = 1
-      if (!finished && $1 == area ":") { found = 1; empty = 1 }
-      next
-    }
-    found && !finished {
-      if ($0 ~ /^[[:space:]]+-[[:space:]]+[^[:space:]]/) empty = 0
-      next
-    }
-    END {
-      if (!in_assignments || !found || !empty) exit 1
-    }
-  ' "$registry"
-}
-
-# _launcher_handoff_slot_for_lane <provider> <lane>
-# Print the SESSION_HANDOFF_AGENT slot for a provider+lane pair. An area whose
-# area_assignments.yaml slots roster is EMPTY mints no per-lane roster slot:
-# emit the bare provider identity (inbox --for accepts it) instead of a
-# phantom `{provider}-{lane}` that argparse rejects (#7597). Registry miss or
-# non-empty roster keeps the legacy per-lane form.
-_launcher_handoff_slot_for_lane() {
-  local provider="${1:-}" lane="${2:-}"
-  if _launcher_area_slots_empty "$lane"; then
-    printf '%s' "$provider"
-  else
-    printf '%s-%s' "$provider" "$lane"
-  fi
-}
-
 # handoff_agent_from_argv "$@"
 # Echo the value of `--agent <v>` / `--agent=<v>` from an argv list, or nothing.
 # Does NOT consume the argument — the caller still forwards "$@" to claude
@@ -384,7 +336,7 @@ handoff_identity_for_epic() {
   local lane=''
   [ -n "${1:-}" ] || return 0
   lane="$(launcher_selector_lane "$1")" || return 1
-  _launcher_handoff_slot_for_lane claude "$lane"
+  printf 'claude-%s' "$lane"
 }
 
 # handoff_identity_for_codex_epic "<epic-name>"
@@ -396,7 +348,7 @@ handoff_identity_for_codex_epic() {
   local lane=''
   [ -n "${1:-}" ] || return 0
   lane="$(launcher_selector_lane "$1")" || return 1
-  _launcher_handoff_slot_for_lane codex "$lane"
+  printf 'codex-%s' "$lane"
 }
 
 # handoff_identity_for_kimi_epic "<epic-name>"
@@ -406,7 +358,7 @@ handoff_identity_for_kimi_epic() {
   local lane=''
   [ -n "${1:-}" ] || return 0
   lane="$(launcher_selector_lane "$1")" || return 1
-  _launcher_handoff_slot_for_lane kimi "$lane"
+  printf 'kimi-%s' "$lane"
 }
 
 # handoff_identity_for_gemini_epic "<epic-name>"
@@ -416,7 +368,7 @@ handoff_identity_for_gemini_epic() {
   local lane=''
   [ -n "${1:-}" ] || return 0
   lane="$(launcher_selector_lane "$1")" || return 1
-  _launcher_handoff_slot_for_lane gemini "$lane"
+  printf 'gemini-%s' "$lane"
 }
 
 # handoff_identity_for_grok_epic "<selector>"
@@ -425,7 +377,7 @@ handoff_identity_for_grok_epic() {
   local lane=''
   [ -n "${1:-}" ] || return 0
   lane="$(launcher_selector_lane "$1")" || return 1
-  _launcher_handoff_slot_for_lane grok "$lane"
+  printf 'grok-%s' "$lane"
 }
 
 # handoff_identity_for_cursor_epic "<selector>"
@@ -435,5 +387,5 @@ handoff_identity_for_cursor_epic() {
   local lane=''
   [ -n "${1:-}" ] || return 0
   lane="$(launcher_selector_lane "$1")" || return 1
-  _launcher_handoff_slot_for_lane cursor "$lane"
+  printf 'cursor-%s' "$lane"
 }
