@@ -91,7 +91,7 @@ done <<< "$PREVIEWS"
 
 CONTEXT="${CONTEXT}
 ---
-Use mcp__message-broker__receive_messages to read full messages. Acknowledge after processing."
+.venv/bin/python -m scripts.ai_agent_bridge inbox --for ${RECIPIENT}"
 
 jq -n --arg msg "$CONTEXT" \
   '{"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","additionalContext":$msg}}'

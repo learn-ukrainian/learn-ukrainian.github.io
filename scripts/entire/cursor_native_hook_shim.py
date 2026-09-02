@@ -38,7 +38,7 @@ _STOCK_HOOKS = {
 _STOCK_COMMANDS = {
     key: (
         "sh -c 'if ! command -v entire >/dev/null 2>&1; then exit 0; fi; "
-        f"exec entire hooks cursor {verb}'"
+        f"entire hooks cursor {verb} || true'"
     )
     for key, verb in _STOCK_HOOKS.items()
 }
