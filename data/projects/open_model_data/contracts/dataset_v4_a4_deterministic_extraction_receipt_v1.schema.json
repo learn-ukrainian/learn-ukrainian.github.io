@@ -44,6 +44,7 @@
         "a2_source_operation_admission",
         "a3_heldout_source_family_seal",
         "a3_builder_packet_receipt",
+        "v4_source_byte_ingestion_admission",
         "extraction_algorithm_implementation"
       ],
       "properties": {
@@ -55,6 +56,14 @@
           "properties": {
             "path": {"const": "data/projects/open_model_data/admission/dataset_v4_a3_builder_packet_receipt_v1.json"},
             "schema_version": {"const": "dataset_v4_a3_builder_packet_receipt_v1"}
+          }
+        },
+        "v4_source_byte_ingestion_admission": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "type": "object",
+          "properties": {
+            "path": {"const": "data/projects/open_model_data/admission/dataset_v4_source_byte_ingestion_admission_receipt_v1.json"},
+            "schema_version": {"const": "dataset_v4_source_byte_ingestion_admission_receipt_v1"}
           }
         },
         "extraction_algorithm_implementation": {
@@ -227,7 +236,8 @@
             "enum": [
               "metadata_only",
               "source_byte_content_not_yet_ingested_for_v4",
-              "deterministic_local_analysis_denied"
+              "deterministic_local_analysis_denied",
+              "source_byte_content_ingestion_admitted_for_v4"
             ]
           },
           "owner_role": {

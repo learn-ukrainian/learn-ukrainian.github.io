@@ -34,28 +34,28 @@ This module has three independent parts:
 1. ``EXTRACTION_ALGORITHM_DESCRIPTOR`` -- the frozen, hashed, real-corpus
    span-extraction formula, plus its implementation (``segment_sentence_
    spans`` / ``extract_ledger_rows_for_unit`` / ``run_deterministic_
-   extraction``), which is real, runnable code today -- not yet exercised
-   against real production content, though, because no real, rights-chain-
-   verified V4 byte ingestion admission exists yet for the builder-eligible
-   complement. ``run_deterministic_extraction`` takes a ``byte_provider``
-   callable; the production default, ``no_v4_byte_ingestion_admission``,
-   always returns ``None`` for every unit, so ``consume_builder_packet``'s
-   ``extraction_ledger`` stays empty and ``source_units_extracted``/
-   ``spans_extracted`` stay ``0`` today -- not because the schema forbids
-   otherwise (``extraction_ledger``'s ``maxItems: 0`` cap is lifted; the
-   ledger's shape now carries hash-only rows keyed by the same per-unit
-   HMAC commitment used in ``builder_packet_consumption``, never a plaintext
-   ``source_unit_id``), but because that default provider has nothing to
-   return. See ``derive_source_unit_extraction_residuals``, which
-   independently re-derives one typed residual per real source_unit_id from
-   A2's own public ``source_operation_ledger`` (never scoped to the secret
-   builder-eligible subset, so it can never disclose complement membership
-   -- see that function's docstring). A generic local corpus database
-   containing rows for a source unit is not the same thing as this
-   V4-scoped ingestion admission; A4 never treats the former as satisfying
-   the latter, and ``no_v4_byte_ingestion_admission`` deliberately never
-   reads ``data/sources.db`` for that reason. Frozen the same way A3 froze
-   its assignment formula: any edit changes
+   extraction``), which is real, runnable code. ``run_deterministic_
+   extraction`` takes a ``byte_provider`` callable; the production default,
+   ``admitted_local_byte_provider``, delegates to
+   ``v4_source_byte_ingestion_admission.provide_bytes_for_admitted_unit``,
+   which opens ``data/sources.db`` -- read-only, never writes, never
+   transmits -- only for the four ``db.*`` units that module's own
+   ``dataset_v4_source_byte_ingestion_admission_receipt_v1.json`` admits for
+   ``deterministic_local_analysis``. The five ``metadata_only``
+   ``historical.*`` units still fall straight through to ``None`` (no real
+   byte content was ever admitted for them at all), and so does any unit for
+   which the local store or table is unreachable right now -- in either case
+   ``consume_builder_packet`` skips it silently, and
+   ``derive_source_unit_extraction_residuals`` (below) independently
+   explains why. ``extraction_ledger``'s shape carries hash-only rows keyed
+   by the same per-unit HMAC commitment used in
+   ``builder_packet_consumption``, never a plaintext ``source_unit_id``. A
+   generic local corpus database containing rows for a source unit is not by
+   itself this V4-scoped ingestion admission -- only
+   ``v4_source_byte_ingestion_admission``'s own frozen, receipt-bound
+   ``ADMITTED_SOURCE_UNIT_IDS`` is; ``admitted_local_byte_provider`` never
+   reads ``data/sources.db`` directly, only through that module. Frozen the
+   same way A3 froze its assignment formula: any edit changes
    ``EXTRACTION_ALGORITHM_DESCRIPTOR_SHA256``, pinned as a schema ``const``.
 2. ``UNIT_COMMITMENT_ALGORITHM_DESCRIPTOR`` -- a second, distinct, also
    frozen and hashed algorithm that *does* run today: a content-blind,
@@ -106,6 +106,7 @@ if str(_SELF_ROOT) not in sys.path:
 
 from scripts.projects.open_model_data import v4_a3_builder_packet as packet
 from scripts.projects.open_model_data import v4_a3_heldout_family_assignment as heldout
+from scripts.projects.open_model_data import v4_source_byte_ingestion_admission as byte_ingestion
 
 ROOT = heldout.ROOT
 PRIMARY_ROOT = heldout.PRIMARY_ROOT
@@ -119,6 +120,7 @@ A4_SCHEMA_PATH = CONTRACTS / "dataset_v4_a4_deterministic_extraction_receipt_v1.
 A3_SEAL_RECEIPT_PATH = ADMISSION / "dataset_v4_a3_heldout_source_family_seal_receipt_v1.json"
 A3_PACKET_RECEIPT_PATH = ADMISSION / "dataset_v4_a3_builder_packet_receipt_v1.json"
 A2_RECEIPT_PATH = ADMISSION / "dataset_v4_a2_source_operation_admission_receipt_v1.json"
+BYTE_INGESTION_RECEIPT_PATH = ADMISSION / "dataset_v4_source_byte_ingestion_admission_receipt_v1.json"
 
 # The packet A3 issued *to A4* -- distinct from, and stored alongside, the
 # private membership file A4 must never open. Same directory (both owned by
@@ -279,21 +281,31 @@ def extract_ledger_rows_for_unit(raw_unit_bytes: bytes, source_unit_commitment_s
 
 
 def no_v4_byte_ingestion_admission(source_unit_id: str) -> bytes | None:
-    """Production default ``byte_provider``: no real, rights-chain-verified
-    V4-scoped byte ingestion admission exists yet for *any* source unit (see
-    the module docstring and ``SOURCE_UNIT_RESIDUAL_REASON_PENDING_V4_
-    INGESTION``). Always returns ``None`` -- deliberately never reads
-    ``data/sources.db`` or any other generic local corpus store, which is
-    not the same thing as this admission. Swapping in a real provider, once
-    a real admission exists for the builder-eligible complement, is a
-    distinct, explicitly-scoped future change."""
+    """Legacy no-op ``byte_provider``: always returns ``None``, for any
+    source unit. Kept for callers/tests that want the pre-admission
+    behaviour explicitly; no longer the production default -- see
+    ``admitted_local_byte_provider``, wired below now that a real,
+    rights-chain-verified V4-scoped byte ingestion admission exists for the
+    four ``db.*`` units (``v4_source_byte_ingestion_admission``)."""
     return None
+
+
+def admitted_local_byte_provider(source_unit_id: str) -> bytes | None:
+    """Production default ``byte_provider``: delegates to
+    ``v4_source_byte_ingestion_admission.provide_bytes_for_admitted_unit``,
+    which only ever opens ``data/sources.db`` for a unit inside that
+    module's own frozen ``ADMITTED_SOURCE_UNIT_IDS`` -- every other real
+    unit (the five ``metadata_only`` ``historical.*`` ones) falls straight
+    through to ``None``, exactly as ``no_v4_byte_ingestion_admission``
+    always did for them. This function itself never reads a row of text; it
+    only ever forwards to the one module admitted to do that."""
+    return byte_ingestion.provide_bytes_for_admitted_unit(source_unit_id)
 
 
 def run_deterministic_extraction(
     source_unit_ids: list[str],
     salt: bytes,
-    byte_provider: Callable[[str], bytes | None] = no_v4_byte_ingestion_admission,
+    byte_provider: Callable[[str], bytes | None] = admitted_local_byte_provider,
 ) -> list[dict[str, Any]]:
     """For each builder-eligible unit, ask ``byte_provider`` for its real
     bytes; skip (silently -- the typed residual already explains why,
@@ -465,7 +477,7 @@ def consume_builder_packet(
     seal_receipt_path: Path = A3_SEAL_RECEIPT_PATH,
     packet_dir: Path = DEFAULT_PRIVATE_PACKET_DIR,
     a4_private_dir: Path = DEFAULT_A4_PRIVATE_DIR,
-    byte_provider: Callable[[str], bytes | None] = no_v4_byte_ingestion_admission,
+    byte_provider: Callable[[str], bytes | None] = admitted_local_byte_provider,
 ) -> dict[str, Any]:
     """Open the real private builder packet (never the membership file),
     independently verify its ``builder_eligible_source_unit_ids`` reproduce
@@ -475,9 +487,12 @@ def consume_builder_packet(
     otherwise), compute the real, keyed, id-free commitments, and run the
     frozen extraction formula (``run_deterministic_extraction``) against
     whatever bytes ``byte_provider`` returns -- the production default
-    (``no_v4_byte_ingestion_admission``) returns none, so the ledger is
-    empty today; a real provider is a distinct, explicitly-scoped future
-    change.
+    (``admitted_local_byte_provider``) returns real bytes for whichever of
+    the four ``db.*`` units are both builder-eligible (per the private
+    packet) and actually reachable in ``data/sources.db`` right now, and
+    ``None`` for every other unit (the five ``historical.*`` units, or any
+    ``db.*`` unit whose local store happens to be unreachable), so the
+    ledger holds hash-only rows exactly for that subset.
 
     Fails closed (raises ``ExtractionError``/``heldout.AssignmentError``) if
     the private packet is missing, unreadable, or does not reproduce --
@@ -615,8 +630,27 @@ def verify_builder_packet_consumption_privately(
 # complement membership: A4 is not selectively silent about the held-out
 # one -- it reports on every real unit identically regardless of its
 # (secret, never-consulted-here) eligibility. This never opens
-# ``batch_state/`` and never queries any local corpus database; it is a pure
-# function of A2's own already-committed, already-public fields.
+# ``batch_state/`` and never queries any private artifact, and -- unlike
+# ``consume_builder_packet``'s real ``byte_provider`` -- it never touches
+# ``data/sources.db`` or any other local filesystem state either. It is a
+# pure function of A2's own already-committed, already-public fields plus
+# one more public, static fact: whether
+# ``v4_source_byte_ingestion_admission.ADMITTED_SOURCE_UNIT_IDS`` (a
+# hardcoded, git-committed constant -- never a live filesystem probe) admits
+# this unit at all. Deliberately excludes any live "is the local store
+# actually reachable right now" check: that fact is real (see
+# ``v4_source_byte_ingestion_admission.local_bytes_reachable``) but is
+# environment-dependent (``data/sources.db`` is a ~1.9 GiB gitignored file
+# present on some machines and not others -- see that module's own
+# docstring), and this receipt's independent verification must reproduce
+# identically in a fresh checkout with no ``batch_state/`` *and* no local
+# ``data/sources.db``, matching every other test in this suite that needs
+# that file (``@pytest.mark.skipif(not SOURCES_DB.exists(), ...)`` elsewhere
+# in this repo's test suite). The per-unit *observed* reachability at
+# admission-authoring time lives only in the separate, informational
+# ``admitted_source_units[].local_store_reachable_at_admission`` field of
+# ``dataset_v4_source_byte_ingestion_admission_receipt_v1.json`` itself,
+# which is likewise never re-asserted live during ordinary validation.
 #
 # ``subject_id`` is ``sha256(source_unit_id)`` -- unsalted, and therefore
 # trivially re-enumerable by anyone who hashes A2's own 9 public ids and
@@ -624,32 +658,45 @@ def verify_builder_packet_consumption_privately(
 # that exact limitation for the *true* secret, held-out identity, which is
 # why that commitment is HMAC-keyed instead). This receipt has no comparable
 # secret to protect here -- reason_code is itself a pure function of A2's own
-# already-public ``metadata_only``/rights fields, so a reader can already
-# derive which real id maps to which residual from A2 alone, hash or no
-# hash. The hash exists only so this receipt stays self-contained and never
-# repeats a plaintext source_unit_id verbatim, not to add real confidentiality.
+# already-public ``metadata_only``/rights fields plus the one public,
+# hardcoded admission fact above, so a reader can already derive which real
+# id maps to which residual from A2 and the byte-ingestion admission's
+# module constant alone, hash or no hash. The hash exists only so this
+# receipt stays self-contained and never repeats a plaintext source_unit_id
+# verbatim, not to add real confidentiality.
 
 SOURCE_UNIT_RESIDUAL_REASON_METADATA_ONLY = "metadata_only"
 SOURCE_UNIT_RESIDUAL_REASON_PENDING_V4_INGESTION = "source_byte_content_not_yet_ingested_for_v4"
 SOURCE_UNIT_RESIDUAL_REASON_ANALYSIS_DENIED = "deterministic_local_analysis_denied"
+SOURCE_UNIT_RESIDUAL_REASON_INGESTION_ADMITTED = "source_byte_content_ingestion_admitted_for_v4"
 
 
-def derive_source_unit_extraction_residuals(a2_receipt: dict[str, Any]) -> list[dict[str, Any]]:
-    """One typed, per-real-source-unit residual explaining why byte-level
-    extraction cannot run against it yet -- ``metadata_only`` (A2 admitted
-    metadata only, no byte content), ``deterministic_local_analysis_denied``
-    (A2 rights block even local analysis -- not currently true for any V4
-    candidate unit, handled for correctness), or
-    ``source_byte_content_not_yet_ingested_for_v4`` (A2 admitted real content
-    rows, but no rights-chain-verified V4-scoped byte ingestion admission
-    exists yet -- a generic local corpus database is not that admission).
-    Ordered by the *commitment*, not the source_unit_id (which never appears
-    in this receipt -- see the section comment above), matching how
+def derive_source_unit_extraction_residuals(
+    a2_receipt: dict[str, Any],
+    admitted_source_unit_ids: frozenset[str] = byte_ingestion.ADMITTED_SOURCE_UNIT_IDS,
+) -> list[dict[str, Any]]:
+    """One typed, per-real-source-unit status entry -- a residual explaining
+    why byte-level extraction cannot run against it yet, or a confirmation
+    that a V4-scoped ingestion admission now exists for it (whether this
+    unit's spans actually end up in ``extraction_ledger`` for a given run
+    stays undisclosed here; see the section comment above): ``metadata_only``
+    (A2 admitted metadata only, no byte content),
+    ``deterministic_local_analysis_denied`` (A2 rights block even local
+    analysis -- not currently true for any V4 candidate unit, handled for
+    correctness), ``source_byte_content_not_yet_ingested_for_v4`` (no
+    V4-scoped byte ingestion admission exists yet for this unit), or
+    ``source_byte_content_ingestion_admitted_for_v4`` (one now does).
+    Ordered by the *commitment*, not the source_unit_id (which never
+    appears in this receipt -- see the section comment above), matching how
     ``builder_eligible_unit_commitments`` orders by commitment value too."""
     residuals = []
     for entry in a2_receipt["source_operation_ledger"]:
         unit_id = entry["source_unit_id"]
         rights = entry["operation_rights"]["deterministic_local_analysis"]["value"]
+        evidence_refs = [
+            "admission.dataset_v4_a2_source_operation_admission_receipt_v1.source_operation_ledger",
+            "admission.dataset_v4_a4_deterministic_extraction_receipt_v1.extraction_algorithm",
+        ]
         if entry["metadata_only"]:
             reason_code = SOURCE_UNIT_RESIDUAL_REASON_METADATA_ONLY
             owner_role = "source_admission_steward"
@@ -657,6 +704,7 @@ def derive_source_unit_extraction_residuals(a2_receipt: dict[str, Any]) -> list[
                 "obtain a real byte-content admission (beyond metadata_only) for this source unit from "
                 "source_admission_steward before byte-level extraction can run against it"
             )
+            retryability = "retryable"
         elif rights not in ("allowed", "scope_bound"):
             reason_code = SOURCE_UNIT_RESIDUAL_REASON_ANALYSIS_DENIED
             owner_role = "rights_capability_steward"
@@ -664,7 +712,8 @@ def derive_source_unit_extraction_residuals(a2_receipt: dict[str, Any]) -> list[
                 f"obtain deterministic_local_analysis rights (currently {rights!r}) for this source unit "
                 "before byte-level extraction can run against it"
             )
-        else:
+            retryability = "retryable"
+        elif unit_id not in admitted_source_unit_ids:
             reason_code = SOURCE_UNIT_RESIDUAL_REASON_PENDING_V4_INGESTION
             owner_role = "V4_source_byte_ingestion"
             next_action = (
@@ -672,6 +721,21 @@ def derive_source_unit_extraction_residuals(a2_receipt: dict[str, Any]) -> list[
                 "admission for this source unit -- distinct from its general local retention -- before the "
                 "frozen sha256(raw_span_bytes_utf8) formula in extraction_algorithm can execute against it"
             )
+            retryability = "retryable"
+        else:
+            reason_code = SOURCE_UNIT_RESIDUAL_REASON_INGESTION_ADMITTED
+            owner_role = "V4_source_byte_ingestion"
+            next_action = (
+                "no further admission action required from V4_source_byte_ingestion for this source unit; "
+                "whether its spans actually appear in extraction_ledger for a given V4 run depends on the "
+                "private builder-eligible complement and on live local-store reachability, neither of which "
+                "this residual discloses"
+            )
+            retryability = "not_retryable"
+            evidence_refs = [
+                *evidence_refs,
+                "admission.dataset_v4_source_byte_ingestion_admission_receipt_v1.admitted_source_units",
+            ]
         commitment = sha256_text(unit_id)
         residuals.append(
             {
@@ -682,11 +746,8 @@ def derive_source_unit_extraction_residuals(a2_receipt: dict[str, Any]) -> list[
                 "reason_code": reason_code,
                 "owner_role": owner_role,
                 "next_action": next_action,
-                "retryability": "retryable",
-                "evidence_refs": [
-                    "admission.dataset_v4_a2_source_operation_admission_receipt_v1.source_operation_ledger",
-                    "admission.dataset_v4_a4_deterministic_extraction_receipt_v1.extraction_algorithm",
-                ],
+                "retryability": retryability,
+                "evidence_refs": evidence_refs,
             }
         )
     residuals.sort(key=lambda residual: residual["subject_id"])
@@ -725,6 +786,11 @@ def build_receipt(consumption: dict[str, Any], gate: dict[str, Any], root: Path 
                 "path": str(A3_PACKET_RECEIPT_PATH.relative_to(root)),
                 "sha256": sha256_file(A3_PACKET_RECEIPT_PATH),
                 "schema_version": "dataset_v4_a3_builder_packet_receipt_v1",
+            },
+            "v4_source_byte_ingestion_admission": {
+                "path": str(BYTE_INGESTION_RECEIPT_PATH.relative_to(root)),
+                "sha256": sha256_file(BYTE_INGESTION_RECEIPT_PATH),
+                "schema_version": "dataset_v4_source_byte_ingestion_admission_receipt_v1",
             },
             "extraction_algorithm_implementation": {
                 "path": "scripts/projects/open_model_data/v4_a4_deterministic_extraction.py",
@@ -978,9 +1044,10 @@ def validate_a4_residuals_derivable_from_a2(receipt: dict[str, Any]) -> None:
 def validate_extraction_ledger_hashes(receipt: dict[str, Any]) -> None:
     """Recompute every ledger record's ``output_sha256`` from its own
     identity fields, and require the ledger is ordered and duplicate-free --
-    catches a hand-edited, stale, reordered, or duplicated ledger entry even
-    though the ledger is currently always empty in the checked-in production
-    receipt (see ``no_v4_byte_ingestion_admission``)."""
+    catches a hand-edited, stale, reordered, or duplicated ledger entry
+    regardless of whether the checked-in production receipt's ledger is
+    empty (no admitted unit's local store was reachable) or holds real
+    hash-only rows (see ``admitted_local_byte_provider``)."""
     ledger = receipt["extraction_ledger"]
     seen: set[tuple[str, int]] = set()
     previous_key: tuple[str, int] | None = None
@@ -1059,6 +1126,19 @@ def main(argv: list[str] | None = None) -> None:
         action="store_true",
         help="Additionally re-derive builder_packet_consumption cryptographically from the private artifacts.",
     )
+    parser.add_argument(
+        "--no-real-bytes",
+        action="store_true",
+        help=(
+            "With --consume, force the no-op byte_provider (no data/sources.db read at all) regardless of "
+            "the real production default. Every other field (bindings, gate, unit commitments, a4_residuals) "
+            "is still real; extraction_ledger stays empty. Use this for a cheap dry-run consumption -- the "
+            "real production default (admitted_local_byte_provider) can, for the larger admitted tables, "
+            "materialize millions of hash-only rows and multiple GB of peak memory in one process; that is "
+            "a distinct, separately-resourced batch operation, not something to run unbounded inside an "
+            "interactive dispatch on shared infrastructure."
+        ),
+    )
     args = parser.parse_args(argv)
 
     if args.consume:
@@ -1068,7 +1148,8 @@ def main(argv: list[str] | None = None) -> None:
             f"builder_packet_gate is not open (blocked_reason_code={gate['blocked_reason_code']!r}) -- "
             "refusing to consume",
         )
-        consumption = consume_builder_packet(args.seal_receipt, args.packet_dir, args.a4_private_dir)
+        byte_provider = no_v4_byte_ingestion_admission if args.no_real_bytes else admitted_local_byte_provider
+        consumption = consume_builder_packet(args.seal_receipt, args.packet_dir, args.a4_private_dir, byte_provider)
         if args.write_receipt:
             receipt = build_receipt(consumption, gate)
             validate_receipt_independently(receipt)
