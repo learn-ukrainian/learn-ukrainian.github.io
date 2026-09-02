@@ -267,6 +267,23 @@ def test_no_v4_byte_ingestion_admission_always_returns_none() -> None:
     assert extraction.no_v4_byte_ingestion_admission("db.wikipedia") is None
 
 
+def test_admitted_local_byte_provider_delegates_to_byte_ingestion_module(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The production default provider is a thin, transparent delegate --
+    never its own second implementation of DB access."""
+    calls: list[str] = []
+
+    def fake_provide(source_unit_id: str) -> bytes | None:
+        calls.append(source_unit_id)
+        return b"fake bytes." if source_unit_id == "db.wikipedia" else None
+
+    import scripts.projects.open_model_data.v4_source_byte_ingestion_admission as byte_ingestion_module
+
+    monkeypatch.setattr(byte_ingestion_module, "provide_bytes_for_admitted_unit", fake_provide)
+    assert extraction.admitted_local_byte_provider("db.wikipedia") == b"fake bytes."
+    assert extraction.admitted_local_byte_provider("historical.some-unit") is None
+    assert calls == ["db.wikipedia", "historical.some-unit"]
+
+
 def test_run_deterministic_extraction_is_empty_with_the_production_default_provider() -> None:
     salt = secrets.token_bytes(32)
     ledger = extraction.run_deterministic_extraction(["synthetic.unit-a", "synthetic.unit-b"], salt)
@@ -527,6 +544,9 @@ def test_a4_extraction_bindings_match_exact_inputs() -> None:
 
     assert receipt["bindings"]["a3_heldout_source_family_seal"]["path"] == str(REAL_SEAL_RECEIPT_PATH.relative_to(ROOT))
     assert receipt["bindings"]["a3_builder_packet_receipt"]["path"] == str(REAL_PACKET_RECEIPT_PATH.relative_to(ROOT))
+    assert receipt["bindings"]["v4_source_byte_ingestion_admission"]["path"] == (
+        "data/projects/open_model_data/admission/dataset_v4_source_byte_ingestion_admission_receipt_v1.json"
+    )
 
 
 def test_a4_extraction_algorithm_still_frozen_and_unexecuted() -> None:
@@ -622,14 +642,20 @@ def test_a4_residual_names_the_byte_level_extraction_gap_not_any_source() -> Non
         "metadata_only",
         "source_byte_content_not_yet_ingested_for_v4",
         "deterministic_local_analysis_denied",
+        "source_byte_content_ingestion_admitted_for_v4",
     }
     metadata_only_count = sum(1 for entry in a2_receipt["source_operation_ledger"] if entry["metadata_only"])
     assert sum(1 for r in residuals if r["reason_code"] == "metadata_only") == metadata_only_count
+    # The four non-metadata_only db.* units are now admitted (see
+    # v4_source_byte_ingestion_admission) -- their residuals confirm that
+    # admission rather than still claiming "not yet ingested".
+    assert sum(1 for r in residuals if r["reason_code"] == "source_byte_content_ingestion_admitted_for_v4") == 4
+    assert sum(1 for r in residuals if r["reason_code"] == "source_byte_content_not_yet_ingested_for_v4") == 0
 
     for residual in residuals:
         assert residual["stage"] == "A4"
         assert residual["subject_kind"] == "source_unit_commitment"
-        assert residual["retryability"] == "retryable"
+        assert residual["retryability"] in ("retryable", "not_retryable")
         assert residual["evidence_refs"]
         assert "fam-" not in residual["next_action"]
 
@@ -664,6 +690,50 @@ def test_derive_source_unit_extraction_residuals_reclassifies_denied_analysis_ri
     assert residuals[0]["reason_code"] == "deterministic_local_analysis_denied"
     assert residuals[0]["owner_role"] == "rights_capability_steward"
     assert "synthetic.denied-unit" not in json.dumps(residuals)
+
+
+def test_derive_source_unit_extraction_residuals_pending_when_not_admitted() -> None:
+    """A real-content, rights-clear unit outside ``admitted_source_unit_ids``
+    still reads as pending V4 ingestion -- the admission set, not just
+    metadata_only/rights, gates the new reason code."""
+    synthetic = {
+        "source_operation_ledger": [
+            {
+                "source_unit_id": "synthetic.unadmitted-unit",
+                "metadata_only": False,
+                "operation_rights": {"deterministic_local_analysis": {"value": "allowed"}},
+            }
+        ]
+    }
+    residuals = extraction.derive_source_unit_extraction_residuals(synthetic, admitted_source_unit_ids=frozenset())
+    assert len(residuals) == 1
+    assert residuals[0]["reason_code"] == "source_byte_content_not_yet_ingested_for_v4"
+    assert residuals[0]["owner_role"] == "V4_source_byte_ingestion"
+    assert residuals[0]["retryability"] == "retryable"
+
+
+def test_derive_source_unit_extraction_residuals_admitted_when_in_admission_set() -> None:
+    """The same unit, once admitted, flips to the new confirmation reason --
+    a pure function of the (hardcoded, git-committed) admission set, never a
+    live filesystem probe (so this is exercised with no data/sources.db
+    involved at all)."""
+    synthetic = {
+        "source_operation_ledger": [
+            {
+                "source_unit_id": "synthetic.admitted-unit",
+                "metadata_only": False,
+                "operation_rights": {"deterministic_local_analysis": {"value": "scope_bound"}},
+            }
+        ]
+    }
+    residuals = extraction.derive_source_unit_extraction_residuals(
+        synthetic, admitted_source_unit_ids=frozenset({"synthetic.admitted-unit"})
+    )
+    assert len(residuals) == 1
+    assert residuals[0]["reason_code"] == "source_byte_content_ingestion_admitted_for_v4"
+    assert residuals[0]["owner_role"] == "V4_source_byte_ingestion"
+    assert residuals[0]["retryability"] == "not_retryable"
+    assert "synthetic.admitted-unit" not in json.dumps(residuals)
 
 
 def test_a4_script_refuses_a4_residuals_that_drift_from_a2() -> None:
@@ -853,3 +923,49 @@ def test_cli_consume_wired_to_path_overrides(tmp_path: Path, capsys: pytest.Capt
     printed = json.loads(capsys.readouterr().out)
     assert printed["packet_consumed"] is True
     assert not any(fid in json.dumps(printed) for fid in FAMILY_IDS)
+
+
+def test_cli_consume_defaults_to_the_real_byte_provider(
+    tmp_path: Path, capsys: pytest.CaptureFixture, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    seal_receipt_path, packet_dir, _ = _issue_synthetic_packet(tmp_path)
+    a4_private_dir = tmp_path / "a4-private"
+    seen: list[object] = []
+    real_consume = extraction.consume_builder_packet
+
+    def spy(seal_path, pkt_dir, priv_dir, byte_provider=extraction.admitted_local_byte_provider):
+        seen.append(byte_provider)
+        return real_consume(seal_path, pkt_dir, priv_dir, byte_provider)
+
+    monkeypatch.setattr(extraction, "consume_builder_packet", spy)
+    extraction.main(
+        ["--consume", "--seal-receipt", str(seal_receipt_path), "--packet-dir", str(packet_dir), "--a4-private-dir", str(a4_private_dir)]
+    )
+    capsys.readouterr()
+    assert seen == [extraction.admitted_local_byte_provider]
+
+
+def test_cli_consume_no_real_bytes_forces_the_no_op_provider(
+    tmp_path: Path, capsys: pytest.CaptureFixture, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    seal_receipt_path, packet_dir, _ = _issue_synthetic_packet(tmp_path)
+    a4_private_dir = tmp_path / "a4-private"
+    seen: list[object] = []
+    real_consume = extraction.consume_builder_packet
+
+    def spy(seal_path, pkt_dir, priv_dir, byte_provider=extraction.admitted_local_byte_provider):
+        seen.append(byte_provider)
+        return real_consume(seal_path, pkt_dir, priv_dir, byte_provider)
+
+    monkeypatch.setattr(extraction, "consume_builder_packet", spy)
+    extraction.main(
+        [
+            "--consume",
+            "--no-real-bytes",
+            "--seal-receipt", str(seal_receipt_path),
+            "--packet-dir", str(packet_dir),
+            "--a4-private-dir", str(a4_private_dir),
+        ]
+    )
+    capsys.readouterr()
+    assert seen == [extraction.no_v4_byte_ingestion_admission]

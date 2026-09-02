@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/dataset_v4_source_byte_ingestion_admission_receipt_v1.schema.json",
+  "title": "Dataset V4 source byte ingestion admission receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "status",
+    "text_free",
+    "controlling_outcome_sha256",
+    "control_surfaces",
+    "bindings",
+    "admitted_operation",
+    "local_store_binding_descriptor",
+    "admitted_source_units",
+    "execution_counters",
+    "safety_assertions"
+  ],
+  "properties": {
+    "schema_version": {"const": "dataset_v4_source_byte_ingestion_admission_receipt_v1"},
+    "receipt_id": {"const": "dataset-v4-source-byte-ingestion-admission-v1"},
+    "status": {"const": "V4_SOURCE_BYTE_INGESTION_ADMITTED_HASHING_ONLY_TEXT_FREE"},
+    "text_free": {"const": true},
+    "controlling_outcome_sha256": {"const": "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"},
+    "control_surfaces": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["public_control_issue", "pilot_child_issue", "private_operational_board"],
+      "properties": {
+        "public_control_issue": {"const": 7423},
+        "pilot_child_issue": {"const": 7430},
+        "private_operational_board": {"const": 622}
+      }
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["a2_source_operation_admission", "local_store_binding_implementation"],
+      "properties": {
+        "a2_source_operation_admission": {"$ref": "#/$defs/artifact_binding"},
+        "local_store_binding_implementation": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "type": "object",
+          "properties": {
+            "path": {"const": "scripts/projects/open_model_data/v4_source_byte_ingestion_admission.py"},
+            "schema_version": {"const": "v4_source_byte_ingestion_admission_script_v1"}
+          }
+        }
+      }
+    },
+    "admitted_operation": {"const": "deterministic_local_analysis"},
+    "local_store_binding_descriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "descriptor_id", "descriptor_version", "admitted_operation", "content_blind",
+        "text_emitted", "row_filter_definitions", "descriptor_sha256"
+      ],
+      "properties": {
+        "descriptor_id": {"const": "v4-source-byte-ingestion-local-store-binding-v1"},
+        "descriptor_version": {"const": "v1"},
+        "admitted_operation": {"const": "deterministic_local_analysis"},
+        "content_blind": {"const": false},
+        "text_emitted": {"const": false},
+        "row_filter_definitions": {
+          "type": "object",
+          "additionalProperties": {"type": "string", "minLength": 1},
+          "required": ["none", "source_file_not_in_private_textbook_sources"]
+        },
+        "descriptor_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "admitted_source_units": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_unit_id", "sqlite_table", "text_column", "row_filter", "order_by",
+          "admitted_operation", "local_store_reachable_at_admission", "row_count_observed_at_admission"
+        ],
+        "properties": {
+          "source_unit_id": {
+            "enum": ["db.external_articles", "db.literary_texts", "db.textbooks.public", "db.wikipedia"]
+          },
+          "sqlite_table": {"type": "string", "minLength": 1},
+          "text_column": {"type": "string", "minLength": 1},
+          "row_filter": {"enum": ["none", "source_file_not_in_private_textbook_sources"]},
+          "order_by": {"const": "id_ascending"},
+          "admitted_operation": {"const": "deterministic_local_analysis"},
+          "local_store_reachable_at_admission": {"type": "boolean"},
+          "row_count_observed_at_admission": {"type": ["integer", "null"], "minimum": 0}
+        }
+      }
+    },
+    "execution_counters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dataset_rows_emitted"],
+      "properties": {
+        "dataset_rows_emitted": {"const": 0}
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rows_not_admitted", "text_emitted", "operations_admitted", "training_use_expanded",
+        "publication_expanded", "redistribution_expanded", "transmission_to_external_service_expanded",
+        "mac_corpus_copy_created", "prebuilder_state_claimed", "epic_done_claimed"
+      ],
+      "properties": {
+        "rows_not_admitted": {"const": true},
+        "text_emitted": {"const": false},
+        "operations_admitted": {"const": ["deterministic_local_analysis"]},
+        "training_use_expanded": {"const": false},
+        "publication_expanded": {"const": false},
+        "redistribution_expanded": {"const": false},
+        "transmission_to_external_service_expanded": {"const": false},
+        "mac_corpus_copy_created": {"const": false},
+        "prebuilder_state_claimed": {"const": false},
+        "epic_done_claimed": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "artifact_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "schema_version"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+"
+        },
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "schema_version": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}
