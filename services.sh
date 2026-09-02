@@ -1298,10 +1298,18 @@ case "$action" in
         fi
         ;;
     status)
+        # Reconcile before the table so PIDs are accurate, but hold the
+        # warning until after the rows. Over ssh (Mac notebook) stdout is
+        # fully buffered and stderr is not, so printing the warning first
+        # dropped it into the middle of the table.
+        status_reconcile_msg=""
         if [[ " $services " == *" api "* ]]; then
-            _reconcile_api_pid
+            status_reconcile_msg="$(_reconcile_api_pid 2>&1)" || true
         fi
         _status "$services"
+        if [[ -n "$status_reconcile_msg" ]]; then
+            printf '%s\n' "$status_reconcile_msg" >&2
+        fi
         ;;
     logs)
         if [[ "${#remaining_args[@]}" -ne 1 ]]; then

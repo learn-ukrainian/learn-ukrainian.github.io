@@ -202,6 +202,7 @@ def test_pid_reconciliation(temp_services_sh, mock_lsof_env, tmp_path):
     pids_dir.mkdir()
     _patch_script_pids_dir(script_path, pids_dir)
     set_pids, clear_pids, env = mock_lsof_env
+    env["LU_SERVICES_ROLE"] = "local"
     api_pid_file = pids_dir / "api.pid"
 
     # Start a dummy sleep process to act as the listener process.
@@ -227,7 +228,12 @@ def test_pid_reconciliation(temp_services_sh, mock_lsof_env, tmp_path):
             env=env, timeout=30
         )
 
-        assert "WARNING: pid file mismatch" in res.stderr or "WARNING: pid file mismatch" in res.stdout, f"mismatch check failed. returncode={res.returncode}\nstdout:\n{res.stdout}\nstderr:\n{res.stderr}"
+        assert "WARNING: pid file mismatch" in res.stderr, (
+            f"mismatch check failed. returncode={res.returncode}\n"
+            f"stdout:\n{res.stdout}\nstderr:\n{res.stderr}"
+        )
+        assert "WARNING" not in res.stdout
+        assert res.stdout.find("SERVICE") != -1
         assert api_pid_file.exists()
         reconciled_pid = api_pid_file.read_text(encoding="utf-8").strip()
         assert reconciled_pid == str(proc.pid)
@@ -350,6 +356,7 @@ def test_pid_reconciliation_integration(temp_services_sh_real, mock_lsof_env, tm
     _patch_script_pids_dir(script_path, pids_dir)
     api_pid_file = pids_dir / "api.pid"
     set_pids, _, env = mock_lsof_env
+    env["LU_SERVICES_ROLE"] = "local"
 
     # Start a dummy listener process with the API signature configured for our dynamic port
     dummy_code = (
@@ -388,7 +395,11 @@ def test_pid_reconciliation_integration(temp_services_sh_real, mock_lsof_env, tm
             env=env, timeout=30,
         )
 
-        assert "WARNING: pid file mismatch" in res.stderr or "WARNING: pid file mismatch" in res.stdout
+        assert "WARNING: pid file mismatch" in res.stderr, (
+            f"mismatch check failed. returncode={res.returncode}\n"
+            f"stdout:\n{res.stdout}\nstderr:\n{res.stderr}"
+        )
+        assert "WARNING" not in res.stdout
         assert api_pid_file.exists()
         reconciled_pid = api_pid_file.read_text(encoding="utf-8").strip()
         assert reconciled_pid == str(proc.pid)
