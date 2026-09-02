@@ -322,6 +322,29 @@ def test_candidate_sentences_matches_apostrophe_variants() -> None:
     assert list(_candidate_sentences(sentence, "сім'я")) == [sentence]
 
 
+def test_candidate_sentences_strips_leading_quiz_marker() -> None:
+    stripped = "Різдвяна прикраса на палиці."
+
+    assert list(
+        _candidate_sentences("Д Різдвяна прикраса на палиці.", "прикраса")
+    ) == [stripped]
+
+
+def test_candidate_sentences_never_strips_real_one_letter_starters() -> None:
+    for sentence, lemma in (
+        ("У Києві постала резиденція.", "постала"),
+        ("Вона читає, а він пише.", "а"),
+        ("Я читаю, а він пише.", "Я"),
+    ):
+        assert list(_candidate_sentences(sentence, lemma)) == [sentence]
+
+
+def test_candidate_sentences_rejects_quiz_marker_with_lowercase_leftover() -> None:
+    assert list(
+        _candidate_sentences("Г воно доходить до моєї кімнати.", "воно")
+    ) == []
+
+
 def test_daily_lemmas_and_written_schema(tmp_path) -> None:
     pool = tmp_path / "daily.json"
     pool.write_text(

@@ -157,6 +157,13 @@ BROKEN_APOSTROPHE_RE = re.compile(
 # in the textbook corpus; ordinary one-letter sentence starters such as ``Я``
 # and ``В`` must remain valid.
 LEADING_OPTION_RE = re.compile(r"^\s*Г\s+[а-щьюяєіїґ]")
+# Textbook multiple-choice answer keys leak a leading option letter into the
+# sentence text (``Д Різдвяна прикраса…``).  ``Б``/``Г``/``Д``/``Е``/``Ґ``
+# are never real one-letter sentence starters in Ukrainian — unlike ``У``,
+# ``В``, ``І``, ``Я``, ``А``, which must never be stripped — so the marker is
+# removed and the remainder is screened again by the noise checks below
+# (a lowercase leftover such as ``воно доходить…`` is still rejected).
+LEADING_QUIZ_MARKER_RE = re.compile(r"^\s*[БГДЕҐ]\s+")
 LEADING_STRUCTURED_LABEL_RE = re.compile(
     r"^\s*(?:вид|елементи сюжету|репліка|часи дієслів|"
     r"доконаний вид|недоконаний вид|теперішній час|минулий час|"
@@ -449,6 +456,9 @@ def _candidate_sentences(text: str, lemma: str, *, vesum: VesumSentenceVerifier 
     """
     for raw_sentence in SENTENCE_SPLIT_RE.split(_normalise(text)):
         sentence = raw_sentence.strip(" \t\n—–")
+        quiz_marker = LEADING_QUIZ_MARKER_RE.match(sentence)
+        if quiz_marker:
+            sentence = sentence[quiz_marker.end():].lstrip(" \t\n—–")
         tokens = _tokens(sentence)
         if not (3 <= len(tokens) <= 18 and 15 <= len(sentence) <= 180):
             continue

@@ -23,6 +23,7 @@ from scripts.audit.generate_practice_deck import (
     _build_lexeme,
     _build_paradigm_items,
     _build_paronym_items,
+    _cloze_blank_context_agrees,
     _declension_category,
     _eligible_decoys,
     _heritage_availability_level,
@@ -2353,6 +2354,54 @@ def test_sentence_inventory_verifies_source_capitalization_against_normalized_ve
     assert generate_practice_deck._inventory_form_details(
         "книга", "noun", "Книга", verifier
     ) == ("nominative", "singular")
+
+
+def _agreement_verifier() -> JsonVesumVerifier:
+    return JsonVesumVerifier(
+        {
+            "різдвяна": [
+                {"lemma": "різдвяний", "pos": "adj", "tags": "adj:f:v_naz"},
+                {"lemma": "різдвяний", "pos": "adj", "tags": "adj:f:v_zna"},
+            ],
+            "прикраса": [
+                {"lemma": "прикраса", "pos": "noun", "tags": "noun:inanim:f:v_naz"},
+                {"lemma": "прикраса", "pos": "noun", "tags": "noun:inanim:f:v_zna"},
+            ],
+            "прикраси": [
+                {"lemma": "прикраса", "pos": "noun", "tags": "noun:inanim:f:v_rod"},
+                {"lemma": "прикраса", "pos": "noun", "tags": "noun:inanim:p:v_naz"},
+                {"lemma": "прикраса", "pos": "noun", "tags": "noun:inanim:p:v_zna"},
+            ],
+            "висить": [{"lemma": "висіти", "pos": "verb", "tags": "verb:imperf:pres:s:3"}],
+        }
+    )
+
+
+def test_cloze_blank_agreement_keeps_agreeing_filled_form() -> None:
+    verifier = _agreement_verifier()
+
+    assert _cloze_blank_context_agrees("Різдвяна ___ на палиці.", "прикраса", verifier)
+
+
+def test_cloze_blank_agreement_rejects_disagreeing_filled_form() -> None:
+    verifier = _agreement_verifier()
+
+    assert not _cloze_blank_context_agrees("Різдвяна ___ на палиці.", "прикраси", verifier)
+
+
+def test_cloze_blank_agreement_ignores_non_adjective_context() -> None:
+    verifier = _agreement_verifier()
+
+    # No token before the blank, and a non-adjective before the blank, are
+    # both outside the agreement gate's scope.
+    assert _cloze_blank_context_agrees("___ на палиці.", "прикраси", verifier)
+    assert _cloze_blank_context_agrees("Прикраса висить ___.", "прикраси", verifier)
+
+
+def test_cloze_blank_agreement_skips_pronoun_like_adjectives() -> None:
+    verifier = _agreement_verifier()
+
+    assert _cloze_blank_context_agrees("Ця ___ на палиці.", "прикраси", verifier)
 
 
 def test_sentence_inventory_drops_function_identity_unless_curated(tmp_path: Path) -> None:
