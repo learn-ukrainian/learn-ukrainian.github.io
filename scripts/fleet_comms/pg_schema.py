@@ -1,12 +1,14 @@
 """Narrow Postgres DDL for the request-plane slice (private #605).
 
-Covers ONLY the three tables the pg-capable request path touches:
-``conversations`` / ``comms_messages`` / ``requests``. Column types keep
-TEXT-parity with the sqlite schema in ``scripts.fleet_comms.migrations``
-(ISO-8601 timestamps and JSON payloads stay TEXT) so rows are comparable
-across engines during the pre-cutover period. This is deliberately NOT a
-mirror of the full sqlite migration chain — authority-queue, routing, and
-review tables arrive with their own slices.
+Covers ONLY the tables the pg-capable request path touches:
+``conversations`` / ``comms_messages`` / ``requests`` / ``message_artifacts``
+(the last is the ``ArtifactStore.reference()`` link table the execute path
+needs). Column types keep TEXT-parity with the sqlite schema in
+``scripts.fleet_comms.migrations`` (ISO-8601 timestamps and JSON payloads
+stay TEXT) so rows are comparable across engines during the pre-cutover
+period. This is deliberately NOT a mirror of the full sqlite migration
+chain — authority-queue, routing, and review tables arrive with their own
+slices.
 
 The connection is expected to be autocommit (the ArtifactStore pg pattern);
 DDL runs inside one explicit ``conn.transaction()`` so a failure cannot
@@ -51,6 +53,18 @@ PG_SCHEMA_STATEMENTS: tuple[str, ...] = (
         created_at TEXT NOT NULL,
         updated_at TEXT NOT NULL,
         FOREIGN KEY (request_message_id) REFERENCES comms_messages(message_id)
+    )""",
+    # Links comms messages to content-addressed artifact rows. The artifact
+    # side points at the pg byte-plane table owned by ArtifactStore (its
+    # ``artifact_id`` column is UNIQUE), which must exist before this DDL
+    # runs — the executor always applies the schema after store init.
+    """CREATE TABLE IF NOT EXISTS message_artifacts (
+        message_id TEXT NOT NULL,
+        artifact_id TEXT NOT NULL,
+        relation TEXT NOT NULL,
+        PRIMARY KEY (message_id, artifact_id, relation),
+        FOREIGN KEY (message_id) REFERENCES comms_messages(message_id),
+        FOREIGN KEY (artifact_id) REFERENCES fleet_comms_artifact_blobs(artifact_id)
     )""",
 )
 

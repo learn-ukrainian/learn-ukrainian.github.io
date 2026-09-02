@@ -12,8 +12,9 @@ Byte-plane slice (private #603, Phase 0b): when ``fleet_comms`` authority is
 in Postgres (``BYTEA``, content-addressed by sha256) in a small dedicated
 table — never in a host-local ``blobs/sha256/...`` file that a second host
 with the DSN could not read back. Default authority stays ``sqlite`` (today's
-file-backed store, unchanged). ``reference``/``is_referenced``/
-``garbage_collect_unreferenced`` remain sqlite-only in this slice.
+file-backed store, unchanged). ``is_referenced``/
+``garbage_collect_unreferenced`` remain sqlite-only in this slice;
+``reference`` is dialect-aware (request-execute slice, #605 follow-on).
 """
 
 from __future__ import annotations
@@ -512,15 +513,25 @@ class ArtifactStore:
         ``commit=False`` is only safe when the caller owns an active transaction
         and will commit or roll it back.
         """
-        if self._authority is Authority.PG:
-            raise ArtifactStoreError(
-                "reference() is not implemented for fleet_comms authority=pg in this slice"
-            )
         if not commit:
             self._require_active_transaction_for_deferred_commit()
         if not message_id or not artifact_id:
             raise ArtifactStoreError("message_id and artifact_id required")
         self.get(artifact_id)  # ensure exists
+        if self._authority is Authority.PG:
+            # Autocommit connection: the stub + link share ONE explicit
+            # transaction; nested in a caller-owned transaction (commit=False,
+            # e.g. the request executor's finalize) it becomes a SAVEPOINT,
+            # matching the _store_bytes_pg pattern (#7483 Sol 1.3).
+            with self._conn.transaction():
+                self._ensure_message_stub(message_id)
+                self._conn.execute(
+                    """INSERT INTO message_artifacts(message_id, artifact_id, relation)
+                       VALUES (%s, %s, %s)
+                       ON CONFLICT (message_id, artifact_id, relation) DO NOTHING""",
+                    (message_id, artifact_id, relation),
+                )
+            return
         try:
             self._ensure_message_stub(message_id)
             self._conn.execute(
@@ -759,6 +770,27 @@ class ArtifactStore:
         return base
 
     def _ensure_message_stub(self, message_id: str) -> None:
+        if self._authority is Authority.PG:
+            row = self._conn.execute(
+                "SELECT 1 FROM comms_messages WHERE message_id = %s", (message_id,)
+            ).fetchone()
+            if row:
+                return
+            conv = new_id("conversation")
+            now = _utc_now()
+            self._conn.execute(
+                "INSERT INTO conversations(conversation_id, created_at, source)"
+                " VALUES (%s, %s, %s) ON CONFLICT (conversation_id) DO NOTHING",
+                (conv, now, "artifact-store"),
+            )
+            self._conn.execute(
+                """INSERT INTO comms_messages(
+                    message_id, conversation_id, kind, sender, body_inline, created_at
+                ) VALUES (%s, %s, 'note', 'artifact-store', '', %s)
+                ON CONFLICT (message_id) DO NOTHING""",
+                (message_id, conv, now),
+            )
+            return
         row = self._conn.execute(
             "SELECT 1 FROM comms_messages WHERE message_id = ?", (message_id,)
         ).fetchone()

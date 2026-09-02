@@ -124,6 +124,13 @@ class RequestExecutor:
     def _is_pg(self) -> bool:
         return self._authority is Authority.PG
 
+    def _commit(self) -> None:
+        # psycopg pg connections are autocommit (ArtifactStore pg pattern):
+        # bare statements commit on their own and explicit transactions
+        # commit at block exit. Only sqlite needs an explicit commit here.
+        if not self._is_pg:
+            self._conn.commit()
+
     def close(self) -> None:
         if self._owns_store:
             self.store.close()
@@ -301,11 +308,7 @@ class RequestExecutor:
         capture. A request already ``running`` is claimable only with
         ``reclaim=True`` (explicit crash recovery by the caller).
         """
-        if self._is_pg:
-            raise RequestExecutorError(
-                "execute_capture is not implemented for fleet_comms "
-                "authority=pg in this slice"
-            )
+        ph = "%s" if self._is_pg else "?"
         req = self.get_request(request_id)
         now_s = _iso(_utc_now())
         if req.expires_at < now_s and req.state in {"queued", "running"}:
@@ -319,22 +322,24 @@ class RequestExecutor:
                 _utc_now() - timedelta(seconds=max(0, reclaim_stale_after_seconds))
             )
             cursor = self._conn.execute(
-                """UPDATE requests SET state = 'running', completion_state = ?,
-                   updated_at = ?
-                   WHERE request_id = ? AND expires_at >= ?
+                f"""UPDATE requests SET state = 'running', completion_state = {ph},
+                   updated_at = {ph}
+                   WHERE request_id = {ph} AND expires_at >= {ph}
                    AND (state = 'queued'
-                        OR (state = 'running' AND updated_at <= ?))""",
+                        OR (state = 'running' AND updated_at <= {ph}))""",
                 (CompletionState.UNKNOWN.value, now_s, request_id, now_s, stale_cutoff),
             )
         else:
             cursor = self._conn.execute(
-                """UPDATE requests SET state = 'running', completion_state = ?,
-                   updated_at = ?
-                   WHERE request_id = ? AND state = 'queued'
-                   AND expires_at >= ?""",
+                f"""UPDATE requests SET state = 'running', completion_state = {ph},
+                   updated_at = {ph}
+                   WHERE request_id = {ph} AND state = 'queued'
+                   AND expires_at >= {ph}""",
                 (CompletionState.UNKNOWN.value, now_s, request_id, now_s),
             )
-        self._conn.commit()
+        # Under pg the claim UPDATE is a single autocommit statement — the
+        # same one-atomic-statement claim the sqlite commit provides.
+        self._commit()
         if cursor.rowcount != 1:
             current = self.get_request(request_id)
             if current.state == "running":
@@ -395,20 +400,33 @@ class RequestExecutor:
         # lands in ONE transaction below.
         request_state = self._map_completion_to_request_state(envelope.completion_state)
         now_s = _iso(_utc_now())
-        self._conn.execute("BEGIN IMMEDIATE")
-        try:
-            self._finalize_capture(
-                req=req,
-                request_id=request_id,
-                art=art,
-                envelope=envelope,
-                request_state=request_state,
-                now_s=now_s,
-            )
-        except Exception:
-            self._conn.rollback()
-            raise
-        self._conn.commit()
+        if self._is_pg:
+            # psycopg autocommit connection: all finalize writes share ONE
+            # explicit transaction (create_request pg pattern).
+            with self._conn.transaction():
+                self._finalize_capture(
+                    req=req,
+                    request_id=request_id,
+                    art=art,
+                    envelope=envelope,
+                    request_state=request_state,
+                    now_s=now_s,
+                )
+        else:
+            self._conn.execute("BEGIN IMMEDIATE")
+            try:
+                self._finalize_capture(
+                    req=req,
+                    request_id=request_id,
+                    art=art,
+                    envelope=envelope,
+                    request_state=request_state,
+                    now_s=now_s,
+                )
+            except Exception:
+                self._conn.rollback()
+                raise
+            self._conn.commit()
         record = self.get_request(request_id)
         return RequestRecord(
             request_id=record.request_id,
@@ -435,17 +453,18 @@ class RequestExecutor:
         now_s: str,
     ) -> None:
         """All finalize writes; runs inside the caller's open transaction."""
+        ph = "%s" if self._is_pg else "?"
         self.store.reference(
             req.request_message_id, art.artifact_id, relation="raw_capture", commit=False
         )
         row = self._conn.execute(
-            "SELECT invocation_spec_json FROM requests WHERE request_id = ?",
+            f"SELECT invocation_spec_json FROM requests WHERE request_id = {ph}",
             (request_id,),
         ).fetchone()
         spec: dict[str, Any] = {}
-        if row and row[0]:
+        if row and row["invocation_spec_json"]:
             try:
-                loaded = json.loads(str(row[0]))
+                loaded = json.loads(str(row["invocation_spec_json"]))
                 if isinstance(loaded, dict):
                     spec = loaded
             except json.JSONDecodeError:
@@ -453,9 +472,9 @@ class RequestExecutor:
         spec["raw_capture_artifact_id"] = art.artifact_id
         spec["completion_state"] = envelope.completion_state.value
         self._conn.execute(
-            """UPDATE requests SET state = ?, completion_state = ?, updated_at = ?,
-               invocation_spec_json = ?
-               WHERE request_id = ?""",
+            f"""UPDATE requests SET state = {ph}, completion_state = {ph}, updated_at = {ph},
+               invocation_spec_json = {ph}
+               WHERE request_id = {ph}""",
             (
                 request_state,
                 envelope.completion_state.value,
@@ -469,13 +488,13 @@ class RequestExecutor:
             reply_id = new_id("message")
             preview = envelope.response_text[:500]
             self._conn.execute(
-                """INSERT INTO comms_messages(
+                f"""INSERT INTO comms_messages(
                     message_id, conversation_id, in_reply_to, kind, sender, recipient,
                     body_inline, body_artifact_id, content_sha256, metadata_json, created_at
                 ) VALUES (
-                    ?,
-                    (SELECT conversation_id FROM comms_messages WHERE message_id = ?),
-                    ?, 'reply', ?, ?, ?, ?, ?, ?, ?
+                    {ph},
+                    (SELECT conversation_id FROM comms_messages WHERE message_id = {ph}),
+                    {ph}, 'reply', {ph}, {ph}, {ph}, {ph}, {ph}, {ph}, {ph}
                 )""",
                 (
                     reply_id,
@@ -519,31 +538,29 @@ class RequestExecutor:
         swept (#7504 CF r2); a claimant that legitimately runs longer must
         heartbeat via ``touch_claim()``.
         """
-        if self._is_pg:
-            raise RequestExecutorError(
-                "requeue_stale_running is not implemented for fleet_comms "
-                "authority=pg in this slice"
-            )
         now = _utc_now()
         now_s = _iso(now)
         cutoff = _iso(now - timedelta(seconds=max(0, stale_after_seconds)))
+        ph = "%s" if self._is_pg else "?"
         rows = self._conn.execute(
-            """SELECT request_id FROM requests
-               WHERE state = 'running' AND updated_at <= ? AND expires_at >= ?
+            f"""SELECT request_id FROM requests
+               WHERE state = 'running' AND updated_at <= {ph} AND expires_at >= {ph}
                ORDER BY updated_at""",
             (cutoff, now_s),
         ).fetchall()
-        stale_ids = [str(r[0]) for r in rows]
+        stale_ids = [str(r["request_id"]) for r in rows]
         requeued: list[str] = []
         for request_id in stale_ids:
             cursor = self._conn.execute(
-                """UPDATE requests SET state = 'queued', updated_at = ?
-                   WHERE request_id = ? AND state = 'running' AND updated_at <= ?""",
+                f"""UPDATE requests SET state = 'queued', updated_at = {ph}
+                   WHERE request_id = {ph} AND state = 'running' AND updated_at <= {ph}""",
                 (now_s, request_id, cutoff),
             )
+            # Each UPDATE is conditional and self-atomic; the rowcount check
+            # absorbs the read-then-update race on either engine.
             if cursor.rowcount == 1:
                 requeued.append(request_id)
-        self._conn.commit()
+        self._commit()
         return requeued
 
     def touch_claim(self, request_id: str) -> bool:
@@ -553,26 +570,25 @@ class RequestExecutor:
         ``requeue_stale_running`` nor a stale-reclaim can steal them.
         Returns False when the request is not currently running.
         """
-        if self._is_pg:
-            raise RequestExecutorError(
-                "touch_claim is not implemented for fleet_comms "
-                "authority=pg in this slice"
-            )
+        ph = "%s" if self._is_pg else "?"
         cursor = self._conn.execute(
-            "UPDATE requests SET updated_at = ? WHERE request_id = ? AND state = 'running'",
+            f"UPDATE requests SET updated_at = {ph}"
+            f" WHERE request_id = {ph} AND state = 'running'",
             (_iso(_utc_now()), request_id),
         )
-        self._conn.commit()
+        self._commit()
         return cursor.rowcount == 1
 
     def _set_state(self, request_id: str, state: str, completion: CompletionState) -> None:
         if state not in REQUEST_STATES:
             raise RequestExecutorError(f"invalid request state: {state}")
+        ph = "%s" if self._is_pg else "?"
         self._conn.execute(
-            "UPDATE requests SET state = ?, completion_state = ?, updated_at = ? WHERE request_id = ?",
+            f"UPDATE requests SET state = {ph}, completion_state = {ph},"
+            f" updated_at = {ph} WHERE request_id = {ph}",
             (state, completion.value, _iso(_utc_now()), request_id),
         )
-        self._conn.commit()
+        self._commit()
 
 
 def open_executor(root: Path | None = None) -> RequestExecutor:
