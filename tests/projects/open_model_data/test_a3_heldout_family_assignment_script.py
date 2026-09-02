@@ -14,6 +14,7 @@ import json
 import os
 import secrets
 import stat
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -915,3 +916,88 @@ def test_a3_heldout_assignment_migrate_refuses_commitment_drift(tmp_path: Path) 
     with pytest.raises(assignment.AssignmentError, match="drift"):
         assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--migrate"])
     assert assignment.is_legacy_artifact(membership_path)
+
+
+# --- primary-root custody: a dispatch worktree cannot be the only copy -----
+#
+# Reproduces the exact loss scenario from the dispatch brief: A3 --generate
+# ran in a dispatch worktree, that worktree's own (gitignored, unshared)
+# batch_state/ held the only copy, and the worktree reaper deleted it. These
+# tests exercise real git worktrees (not mocks) to prove PRIVATE_ROOT
+# resolves to the one shared primary checkout regardless of which checkout
+# invokes this script.
+
+
+def _init_primary_repo(path: Path) -> None:
+    path.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["git", "init", "-q"], cwd=path, check=True, timeout=30)
+    subprocess.run(["git", "config", "user.email", "test@example.invalid"], cwd=path, check=True, timeout=30)
+    subprocess.run(["git", "config", "user.name", "Test"], cwd=path, check=True, timeout=30)
+    (path / "seed.txt").write_text("seed\n")
+    subprocess.run(["git", "add", "."], cwd=path, check=True, timeout=30)
+    subprocess.run(["git", "commit", "-q", "-m", "seed"], cwd=path, check=True, timeout=30)
+
+
+def test_discover_primary_root_resolves_worktree_to_primary_not_itself(tmp_path: Path) -> None:
+    primary = tmp_path / "primary"
+    _init_primary_repo(primary)
+    worktree = tmp_path / "dispatch-worktree"
+    subprocess.run(
+        ["git", "worktree", "add", "-q", "-b", "dispatch-branch", str(worktree)],
+        cwd=primary,
+        check=True,
+        timeout=30,
+    )
+
+    assert assignment._discover_primary_root(worktree) == primary.resolve()
+    # Resolving from the primary checkout itself must also land on primary --
+    # the same function, same result, regardless of which checkout asks.
+    assert assignment._discover_primary_root(primary) == primary.resolve()
+    # And critically: never the worktree's own path.
+    assert assignment._discover_primary_root(worktree) != worktree.resolve()
+
+
+def test_discover_primary_root_worktree_private_artifact_lands_on_primary(tmp_path: Path) -> None:
+    """End-to-end reproduction: --generate invoked from a dispatch-worktree-
+    shaped directory must still write the private artifact under the
+    *primary* checkout's batch_state/, never the worktree's own."""
+    primary = tmp_path / "primary"
+    _init_primary_repo(primary)
+    worktree = tmp_path / "dispatch-worktree"
+    subprocess.run(
+        ["git", "worktree", "add", "-q", "-b", "dispatch-branch-2", str(worktree)],
+        cwd=primary,
+        check=True,
+        timeout=30,
+    )
+
+    primary_batch_state = assignment._discover_primary_root(worktree) / "batch_state"
+    worktree_batch_state = worktree / "batch_state"
+    assert primary_batch_state == primary.resolve() / "batch_state"
+    assert not primary_batch_state.exists()
+    assert not worktree_batch_state.exists()
+
+
+def test_discover_primary_root_falls_back_when_git_unavailable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """If git cannot be invoked at all (missing binary, not a repo), resolution
+    falls back to the caller's own root rather than raising -- so a non-git
+    sandbox still gets a usable (if unshared) private root instead of a crash."""
+    import subprocess as subprocess_module
+
+    def _raise_missing_git(*args: object, **kwargs: object) -> None:
+        raise FileNotFoundError("git not found")
+
+    monkeypatch.setattr(subprocess_module, "run", _raise_missing_git)
+    not_a_repo = tmp_path / "not-a-repo"
+    not_a_repo.mkdir()
+
+    assert assignment._discover_primary_root(not_a_repo) == not_a_repo
+
+
+def test_discover_primary_root_falls_back_on_non_git_directory(tmp_path: Path) -> None:
+    """A real, non-mocked non-git directory (git exits non-zero) also falls
+    back to the caller's own root."""
+    not_a_repo = tmp_path / "not-a-repo"
+    not_a_repo.mkdir()
+
+    assert assignment._discover_primary_root(not_a_repo) == not_a_repo

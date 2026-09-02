@@ -60,6 +60,15 @@ artifact or binding hash -- see ``validate_access_firewall_invariants`` and
 Outputs never leave ``batch_state/`` (git-ignored, mode 0700/0600) or the
 private operational board (learn-ukrainian-infra-private#622); only counts
 and commitments are safe to publish in the tracked public receipt.
+
+``batch_state/`` is resolved against the one shared **primary** checkout
+(see ``_discover_primary_root``), never against ``__file__`` of whichever
+checkout happens to run this script. A dispatch worktree has its own
+gitignored ``batch_state/`` that is not shared with (not a symlink to) the
+primary checkout -- a private artifact written relative to the running
+worktree's own path is lost the moment that worktree is reaped. This is
+exactly how the first V4 A3 membership artifact was lost: ``--generate`` ran
+in a dispatch worktree, and the worktree reaper deleted the only copy.
 """
 
 from __future__ import annotations
@@ -72,6 +81,7 @@ import json
 import os
 import secrets
 import stat
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -79,7 +89,51 @@ from typing import Any
 from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[3]
-PRIVATE_ROOT = ROOT / "batch_state"
+
+
+def _discover_primary_root(fallback: Path) -> Path:
+    """Resolve the one shared **primary** checkout root, independent of
+    which worktree copy of this script is currently executing.
+
+    ``git rev-parse --git-common-dir`` returns the single ``.git`` directory
+    shared by a repository's primary checkout and every one of its
+    worktrees -- the same physical path no matter which checkout invokes
+    it -- so its parent is the one primary checkout root, always. This is
+    the mechanism the operator contract calls for (``git worktree list`` /
+    ``git rev-parse --git-common-dir``), not ``Path(__file__)``, which only
+    ever describes the checkout that happens to contain this file.
+
+    Falls back to ``fallback`` (the running checkout's own root) if ``git``
+    is unavailable, this is not a git checkout at all, or the reported
+    common dir is not shaped like a real ``.git`` directory -- e.g. a bare
+    clone or a sandbox with no git binary. In every normal dispatch/primary
+    checkout of this repository, git resolution succeeds and this fallback
+    never triggers.
+    """
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
+            cwd=fallback,
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return fallback
+    if result.returncode != 0:
+        return fallback
+    common_dir_text = result.stdout.strip()
+    if not common_dir_text:
+        return fallback
+    common_dir = Path(common_dir_text)
+    if common_dir.name != ".git" or not common_dir.is_dir():
+        return fallback
+    return common_dir.parent
+
+
+PRIMARY_ROOT = _discover_primary_root(ROOT)
+PRIVATE_ROOT = PRIMARY_ROOT / "batch_state"
 DEFAULT_PRIVATE_DIR = PRIVATE_ROOT / "open-model-data/v4-a3-heldout"
 DEFAULT_RECEIPT = (
     ROOT / "data/projects/open_model_data/admission/dataset_v4_a3_heldout_source_family_seal_receipt_v1.json"
@@ -557,17 +611,23 @@ def _assert_contained(candidate: Path, base: Path) -> None:
     )
 
 
-def write_private_artifact(
-    path: Path, salt: bytes, result: dict[str, Any], receipt_binding: str
-) -> None:
-    """Atomically *create* the private membership artifact. Never overwrites.
+def write_new_private_json_artifact(path: Path, payload: dict[str, Any]) -> None:
+    """Atomically *create* a private JSON artifact at ``path``. Never overwrites.
+
+    The generic, payload-agnostic half of what was originally
+    ``write_private_artifact``: every private artifact this project writes
+    under ``batch_state/`` (the held-out membership here, the builder packet
+    in ``v4_a3_builder_packet.py``) needs the identical symlink-safe,
+    no-clobber, fsync'd-to-disk write discipline -- only the JSON payload
+    differs. Callers assemble their own ``payload`` dict and pass it here
+    rather than re-implementing this filesystem hardening.
 
     Uses write-temp -> fsync -> hardlink-into-place -> unlink-temp: the
     final path either does not exist or holds fully-written content (atomic),
     and ``os.link`` raises ``FileExistsError`` if the destination is already
     occupied by any filesystem object -- a regular file, a stale hardlink, or
-    a symlink -- so reruns can never clobber a prior salt (no-clobber).
-    Callers must route reruns through ``verify_against_receipt`` instead of
+    a symlink -- so reruns can never clobber a prior artifact (no-clobber).
+    Callers must route reruns through their own verify path instead of
     calling this again.
 
     All of the temp-write/link/unlink/fsync steps are performed relative to
@@ -593,15 +653,6 @@ def write_private_artifact(
             already_exists = False
         require(not already_exists, f"private artifact already exists, refusing to overwrite: {path}")
 
-        payload = {
-            "algorithm_id": ALGORITHM_ID,
-            "algorithm_descriptor_sha256": ALGORITHM_DESCRIPTOR_SHA256,
-            "salt_hex": salt.hex(),
-            "membership": result["membership"],
-            "heldout_family_ids": result["heldout_family_ids"],
-            "builder_eligible_family_ids": result["builder_eligible_family_ids"],
-            "receipt_binding_sha256": receipt_binding,
-        }
         encoded = (canonical_json(payload) + "\n").encode("utf-8")
 
         temporary_name = f".{path.name}.{secrets.token_hex(8)}.tmp"
@@ -624,6 +675,25 @@ def write_private_artifact(
                 os.unlink(temporary_name, dir_fd=dir_fd)
     finally:
         os.close(dir_fd)
+
+
+def write_private_artifact(
+    path: Path, salt: bytes, result: dict[str, Any], receipt_binding: str
+) -> None:
+    """Assemble the held-out membership payload and create it via
+    ``write_new_private_json_artifact`` (create-only, no-clobber). See that
+    function's docstring for the filesystem-hardening discipline this uses.
+    """
+    payload = {
+        "algorithm_id": ALGORITHM_ID,
+        "algorithm_descriptor_sha256": ALGORITHM_DESCRIPTOR_SHA256,
+        "salt_hex": salt.hex(),
+        "membership": result["membership"],
+        "heldout_family_ids": result["heldout_family_ids"],
+        "builder_eligible_family_ids": result["builder_eligible_family_ids"],
+        "receipt_binding_sha256": receipt_binding,
+    }
+    write_new_private_json_artifact(path, payload)
 
 
 REQUIRED_ARTIFACT_FIELDS = frozenset(
@@ -772,6 +842,14 @@ def _receipt_is_sealed(receipt: dict[str, Any]) -> bool:
         "a partially sealed receipt is invalid, refusing (fail closed)",
     )
     return has_salt_commitment and has_assignment_commitment
+
+
+def receipt_is_sealed(receipt: dict[str, Any]) -> bool:
+    """Public wrapper around ``_receipt_is_sealed`` for other A3-owned
+    modules (e.g. ``v4_a3_builder_packet.py``) that need to refuse issuing a
+    builder packet against a receipt that has not actually been sealed yet,
+    without reaching into this module's private name."""
+    return _receipt_is_sealed(receipt)
 
 
 def verify_against_receipt(

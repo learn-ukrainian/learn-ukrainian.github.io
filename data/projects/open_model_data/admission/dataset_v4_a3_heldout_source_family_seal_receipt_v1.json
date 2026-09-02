@@ -34,7 +34,7 @@
     },
     "assignment_algorithm_implementation": {
       "path": "scripts/projects/open_model_data/v4_a3_heldout_family_assignment.py",
-      "sha256": "f2846e18ee2db81db4db188d16ca742750dfc8f42ba3b24dff531f2413745cc8",
+      "sha256": "0691c83969b2312f01f111d2eac98fa6aadb5daa9ce059b7750ca28faf52359d",
       "schema_version": "v4_a3_heldout_family_assignment_script_v1"
     }
   },
@@ -78,8 +78,8 @@
       "rounding_rule": "python_round_half_to_even",
       "minimum_heldout_count": 1,
       "algorithm_descriptor_sha256": "b2abbb8e45f60abb098b8976dec7e7f2b4668137f55bfab8eee3999bd65a1928",
-      "salt_commitment_sha256": "ba6b4e7c726fec4f6fd9615895912ea8b199ca282e510b6a7503b7c86634e786",
-      "assignment_commitment_sha256": "e3d7cd2d377378eb35baaed32ca1a6f6e658a9101bf182bf8cc466987a2aa9e0"
+      "salt_commitment_sha256": "885639c508afd561a4b409e8cf9f256d645822e559729b7289796c4f3a3530bf",
+      "assignment_commitment_sha256": "2cc6a110a9a6836540b7ae14cdedd1f2149770b0d6e1a0c1b7d258d8985943db"
     },
     "assignment_is_deterministic": true,
     "assignment_is_content_blind": true,
