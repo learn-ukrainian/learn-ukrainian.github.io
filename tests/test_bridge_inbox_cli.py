@@ -13,7 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.result import Result
 
-from scripts.ai_agent_bridge import _acp_compat, _channels, _channels_cli, _cli, _db
+from scripts.ai_agent_bridge import _acp_compat, _channels, _channels_cli, _cli, _db, _messaging
 
 
 def test_post_preflight_warns_for_large_body():
@@ -759,6 +759,17 @@ def test_detect_caller_identity_honors_session_handoff_agent(monkeypatch):
     assert _cli._detect_caller_identity_from_env() == "claude-infra"
 
 
+def test_detect_caller_identity_phantom_handoff_agent_aliased_to_provider(monkeypatch):
+    # #7597: a pre-fix launcher exported SESSION_HANDOFF_AGENT=grok-open-model-data.
+    # The explicit marker must still win (aliased to the provider), not fall
+    # through to the soft CLAUDE_PROJECT_DIR heuristic.
+    _clear_identity_env(monkeypatch)
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "grok-open-model-data")
+    monkeypatch.setenv("CLAUDE_PROJECT_DIR", "/tmp/claude-project")
+
+    assert _cli._detect_caller_identity_from_env() == "grok"
+
+
 def test_explicit_from_mismatch_with_handoff_agent_is_warning_tagged(monkeypatch, capsys):
     _clear_identity_env(monkeypatch)
     monkeypatch.setenv("SESSION_HANDOFF_AGENT", "claude-folk")
@@ -887,3 +898,72 @@ def test_recipient_choices_cover_every_valid_agent():
         assert parser.parse_args(["inbox", "--for", agent]).for_llm == agent
         assert parser.parse_args(["ack-all", agent]).agent == agent
         assert parser.parse_args(["send", "hi", "--to", agent]).to_llm == agent
+
+
+# ── #7597: phantom {provider}-{empty-slots-area} aliases ──────────────
+
+
+def test_resolve_recipient_alias_maps_empty_roster_phantoms_to_provider():
+    # open-model-data and monitor both carry `slots: []` in
+    # area_assignments.yaml, so launchers never mint a per-lane slot for them;
+    # already-minted SESSION_HANDOFF_AGENT names must drain via the provider.
+    assert _channels.resolve_recipient_alias("grok-open-model-data") == "grok"
+    assert _channels.resolve_recipient_alias("claude-monitor") == "claude"
+    assert _channels.resolve_recipient_alias("kimi-open-model-data") == "kimi"
+
+
+def test_resolve_recipient_alias_keeps_registered_and_static_identities():
+    for agent in ("grok", "grok-build", "grok-hermes", "grok-infra", "claude-atlas", "claude-desktop"):
+        assert _channels.resolve_recipient_alias(agent) == agent
+
+
+def test_resolve_recipient_alias_rejects_typos_and_unknown_providers():
+    # A typo of a registered lane (claude-infa) or an unknown provider prefix
+    # must NOT silently read the provider inbox — pass through unchanged so
+    # argparse choices / validators still reject them.
+    assert _channels.resolve_recipient_alias("claude-infa") == "claude-infa"
+    assert _channels.resolve_recipient_alias("nosuch-open-model-data") == "nosuch-open-model-data"
+    assert _channels.resolve_recipient_alias("nosuch") == "nosuch"
+    assert _channels.resolve_recipient_alias("") == ""
+
+
+def test_inbox_for_accepts_phantom_empty_roster_identity():
+    parser = _cli._build_parser()
+    assert parser.parse_args(["inbox", "--for", "grok-open-model-data"]).for_llm == "grok"
+    assert parser.parse_args(["ack-all", "grok-open-model-data"]).agent == "grok"
+    assert parser.parse_args(["send", "hi", "--to", "grok-open-model-data"]).to_llm == "grok"
+    assert parser.parse_args(["inbox", "show", "grok-open-model-data"]).agent == "grok"
+    assert parser.parse_args(["inbox", "run", "grok-open-model-data", "--once"]).agent == "grok"
+
+
+def test_inbox_for_still_rejects_unknown_identities():
+    parser = _cli._build_parser()
+    with pytest.raises(SystemExit):
+        parser.parse_args(["inbox", "--for", "claude-infa"])
+    with pytest.raises(SystemExit):
+        parser.parse_args(["inbox", "--for", "grok-nosucharea"])
+
+
+def test_check_inbox_phantom_identity_drains_provider_inbox(capsys):
+    # A live session launched before #7597 carries
+    # SESSION_HANDOFF_AGENT=grok-open-model-data; its inbox drain must read the
+    # grok inbox without a relaunch.
+    _messaging.send_message("hello grok", from_llm="claude", to_llm="grok", quiet=True)
+    capsys.readouterr()
+
+    _messaging.check_inbox("grok-open-model-data")
+
+    captured = capsys.readouterr()
+    assert "Inbox for grok" in captured.out
+    assert "From: claude" in captured.out
+
+
+def test_acknowledge_all_phantom_identity_acks_provider_inbox(capsys):
+    _messaging.send_message("ack me", from_llm="claude", to_llm="grok", quiet=True)
+    capsys.readouterr()
+
+    _messaging.acknowledge_all("grok-open-model-data")
+
+    captured = capsys.readouterr()
+    assert "Acknowledged 1 messages" in captured.out
+    assert "for grok" in captured.out

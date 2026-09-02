@@ -169,6 +169,67 @@ def get_valid_post_agents(*, assignments_path: Path | None = None) -> tuple[str,
 def get_valid_recipient_agents(*, assignments_path: Path | None = None) -> tuple[str, ...]:
     return get_valid_agents(assignments_path=assignments_path)
 
+
+def _load_empty_slot_areas(assignments_path: Path | None = None) -> tuple[str, ...]:
+    """Area names whose area_assignments.yaml slots roster is empty.
+
+    Same lazy fail-open contract as ``_load_registry_slots``: empty tuple on
+    missing file, parse error, or missing PyYAML.
+    """
+    path = (assignments_path or ASSIGNMENTS_PATH).resolve()
+    try:
+        if not path.is_file():
+            return ()
+        text = path.read_text(encoding="utf-8")
+        try:
+            import yaml
+
+            raw_data = yaml.safe_load(text)
+        except ImportError:
+            return ()
+        if not isinstance(raw_data, dict):
+            return ()
+        assignments = raw_data.get("assignments")
+        if not isinstance(assignments, dict):
+            return ()
+        areas: list[str] = []
+        for name, area_data in assignments.items():
+            if not isinstance(name, str) or not isinstance(area_data, dict):
+                continue
+            area_slots = area_data.get("slots", [])
+            if isinstance(area_slots, (list, tuple)) and not area_slots:
+                areas.append(name.strip())
+        return tuple(areas)
+    except Exception:
+        return ()
+
+
+def resolve_recipient_alias(agent: str, *, assignments_path: Path | None = None) -> str:
+    """Resolve a phantom ``{provider}-{empty-slots-area}`` identity to its provider.
+
+    Launchers used to mint SESSION_HANDOFF_AGENT names like
+    ``grok-open-model-data`` for areas whose area_assignments.yaml slots
+    roster is empty; those names were never valid inbox recipients, so
+    argparse rejected them and stranded the live session (#7597). Treat such
+    an already-minted name as an alias of the bare provider so the session
+    can drain. Registered slots and static identities pass through unchanged,
+    and unknown names pass through unchanged too so validators still reject
+    them (a typo of a registered lane must not silently read the provider
+    inbox).
+    """
+    if not agent:
+        return agent
+    if agent in get_valid_agents(assignments_path=assignments_path):
+        return agent
+    provider, sep, area = agent.partition("-")
+    if not sep or not provider or not area:
+        return agent
+    if provider not in STATIC_VALID_AGENTS:
+        return agent
+    if area in _load_empty_slot_areas(assignments_path):
+        return provider
+    return agent
+
 VALID_KINDS = ("post", "reply", "system", "fanout_start", "fanout_end")
 VALID_DELIVERY_STATUSES = (
     "pending",

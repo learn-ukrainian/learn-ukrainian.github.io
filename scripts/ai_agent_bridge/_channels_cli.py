@@ -492,6 +492,8 @@ def register_channel_commands(subparsers: Any) -> None:
         )
         inbox_run.add_argument(
             "agent",
+            # Phantom `{provider}-{empty-slots-area}` aliases to the provider (#7597).
+            type=_channels.resolve_recipient_alias,
             choices=list(_channels.get_valid_agents()),
             help="Agent inbox to drain",
         )
@@ -537,6 +539,7 @@ def register_channel_commands(subparsers: Any) -> None:
         )
         inbox_show.add_argument(
             "agent",
+            type=_channels.resolve_recipient_alias,
             choices=list(_channels.get_valid_agents()),
             help="Agent inbox to inspect",
         )
@@ -569,6 +572,7 @@ def register_channel_commands(subparsers: Any) -> None:
     sync_parser.add_argument(
         "agent",
         nargs="?",
+        type=_channels.resolve_recipient_alias,
         choices=list(_channels.get_valid_agents()),
         help="Single agent inbox to drain",
     )

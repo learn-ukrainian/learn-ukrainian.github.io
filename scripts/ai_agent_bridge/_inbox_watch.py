@@ -21,6 +21,7 @@ from typing import TextIO
 from agent_runtime.agent_identity import seat_read_aliases
 from secret_redactor import redact_text
 
+from ._channels import resolve_recipient_alias
 from ._config import DB_PATH, PRIMARY_REPO_ROOT
 
 DEFAULT_POLL_INTERVAL_SECONDS = 15.0
@@ -68,7 +69,7 @@ class WatcherLock:
 
 def recipients_for_agent(agent: str) -> tuple[str, ...]:
     """Resolve the bridge's permanent dual-read aliases for an agent seat."""
-    recipients = seat_read_aliases(agent)
+    recipients = seat_read_aliases(resolve_recipient_alias(agent))
     if not recipients:
         raise ValueError("agent slot must not be empty")
     return recipients

@@ -75,6 +75,7 @@ eq "$(handoff_identity_for_epic infra)" "claude-infra" "epic infra → claude-in
 eq "$(handoff_identity_for_epic infra.devops)" "claude-devops" "dot devops → claude-devops"
 eq "$(handoff_identity_for_epic monitor)" "claude-monitor" "epic monitor → claude-monitor"
 eq "$(handoff_identity_for_epic infra.monitor)" "claude-monitor" "dot monitor → claude-monitor"
+eq "$(handoff_identity_for_epic open-model-data)" "claude-open-model-data" "epic open-model-data → claude-open-model-data"
 eq "$(handoff_identity_for_epic)" "" "no epic → empty slot"
 
 # Codex uses provider-specific per-epic slots; DevOps is independent from Infra.
@@ -85,6 +86,7 @@ eq "$(handoff_identity_for_codex_epic infra)" "codex-infra" "Codex infra → cod
 eq "$(handoff_identity_for_codex_epic infra.devops)" "codex-devops" "Codex dot devops → codex-devops"
 eq "$(handoff_identity_for_codex_epic monitor)" "codex-monitor" "Codex epic monitor → codex-monitor"
 eq "$(handoff_identity_for_codex_epic infra.monitor)" "codex-monitor" "Codex dot monitor → codex-monitor"
+eq "$(handoff_identity_for_codex_epic open-model-data)" "codex-open-model-data" "Codex open-model-data → codex-open-model-data"
 eq "$(handoff_identity_for_codex_epic)" "" "Codex no epic → empty slot"
 
 # Gemini uses provider-specific per-epic slots; DevOps is independent from Infra.
@@ -95,7 +97,17 @@ eq "$(handoff_identity_for_gemini_epic infra)" "gemini-infra" "Gemini infra → 
 eq "$(handoff_identity_for_gemini_epic infra.devops)" "gemini-devops" "Gemini dot devops → gemini-devops"
 eq "$(handoff_identity_for_gemini_epic monitor)" "gemini-monitor" "Gemini epic monitor → gemini-monitor"
 eq "$(handoff_identity_for_gemini_epic infra.monitor)" "gemini-monitor" "Gemini dot monitor → gemini-monitor"
+eq "$(handoff_identity_for_gemini_epic open-model-data)" "gemini-open-model-data" "Gemini open-model-data → gemini-open-model-data"
 eq "$(handoff_identity_for_gemini_epic)" "" "Gemini no epic → empty slot"
+
+# Grok/Kimi/Cursor: empty-roster areas keep minting {provider}-{area} to prevent
+# handoff/session collisions across concurrent lanes (#7597, #7600).
+eq "$(handoff_identity_for_grok_epic open-model-data)" "grok-open-model-data" "Grok open-model-data → grok-open-model-data"
+eq "$(handoff_identity_for_grok_epic monitor)" "grok-monitor" "Grok monitor → grok-monitor"
+eq "$(handoff_identity_for_grok_epic atlas)" "grok-atlas" "Grok atlas → grok-atlas"
+eq "$(handoff_identity_for_kimi_epic open-model-data)" "kimi-open-model-data" "Kimi open-model-data → kimi-open-model-data"
+eq "$(handoff_identity_for_cursor_epic open-model-data)" "cursor-open-model-data" "Cursor open-model-data → cursor-open-model-data"
+eq "$(handoff_identity_for_cursor_epic devops)" "cursor-devops" "Cursor devops keeps per-lane form"
 
 
 # --- e2e: --epic harness resolves the infra lane slot (not phantom claude-harness) ---
