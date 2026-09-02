@@ -6892,8 +6892,9 @@ def _session_stream_store() -> Any:
 def _find_live_cursor_driver_lease() -> dict[str, Any] | None:
     """Return one live Cursor process-driver lease, or ``None`` when absent.
 
-    The session-stream database is the sole source of truth here. A missing,
-    unreadable, or malformed store refuses admission rather than allowing an
+    The session-stream database is the sole source of truth here. A missing
+    store file means absence (no live lease), not refusal. An unreadable or
+    malformed existing store still refuses admission rather than allowing an
     unverifiable Cursor spawn.
     """
     try:
@@ -6903,7 +6904,7 @@ def _find_live_cursor_driver_lease() -> dict[str, Any] | None:
         database = getattr(store, "database", None)
         database_path = getattr(database, "path", None)
         if database_path is not None and not Path(database_path).is_file():
-            raise ValueError("session-stream database is missing")
+            return None
 
         projections = store.list_remote_projections()
         now = datetime.now(UTC)

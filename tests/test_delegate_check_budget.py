@@ -722,4 +722,22 @@ def test_dispatch_cursor_worker_only_in_flight_keeps_hint_and_spawns(monkeypatch
     assert len(spawned) == 1
     err = capsys.readouterr().err
     assert "💡 Note: lane 'cursor' has 1 task(s) in flight" in err
-    assert "CAPACITY REFUSED" not in err
+
+
+def test_dispatch_cursor_missing_session_stream_db_is_absence_not_refusal(monkeypatch, tmp_path, capsys):
+    """A missing session-stream database file means no live lease, not refusal."""
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: None)
+    monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
+    monkeypatch.setattr(
+        delegate,
+        "_session_stream_store",
+        lambda: SessionStreamStore(SessionStreamDatabase(tmp_path / "missing.sqlite3")),
+    )
+    spawned = _track_worker_spawns(monkeypatch)
+
+    rc = delegate.cmd_dispatch(_dispatch_args("--agent", "cursor"))
+
+    assert rc == 0
+    assert len(spawned) == 1
+    assert "CAPACITY REFUSED" not in capsys.readouterr().err
