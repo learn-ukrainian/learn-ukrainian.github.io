@@ -4,6 +4,14 @@ Capture ownership is selected by the physical subprocess host, never by the
 model label.  Native Entire hosts therefore never enter this module.  The
 private transcript spool exists only while synchronous ``entire hooks`` calls
 need it and is deleted after the terminal hook attempt.
+
+The pinned Entire CLI (0.8.42) ships no built-in ``fleet`` hook agent; the
+optional external plugin is present only when
+``scripts/entire/install_fleet_external_agent.sh`` has placed the
+``entire-agent-fleet`` binary on PATH.  Hook delivery therefore fails open:
+when the plugin is absent the local spool is still written, but no
+``entire hooks fleet`` call is ever attempted, so a missing agent can never
+surface as a provider-side error.
 """
 
 from __future__ import annotations
@@ -259,6 +267,12 @@ class FleetCapture:
     ) -> bool:
         entire = shutil.which("entire")
         if not entire:
+            return False
+        if shutil.which("entire-agent-fleet") is None:
+            # Entire 0.8.42 has no built-in "fleet" hook agent; without the
+            # external plugin binary the call can only fail with
+            # ``unknown agent "fleet"``.  Fail open and keep the local spool.
+            _LOGGER.debug("Entire fleet hook %s skipped: entire-agent-fleet not installed", hook)
             return False
         payload: dict[str, object] = {
             "hook_type": hook,

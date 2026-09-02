@@ -63,7 +63,11 @@ _RATE_LIMIT_PATTERNS = (
     r"too many requests",
     r"\bHTTP 429\b",
     r"\bstatus 429\b",
-    r"\b429\b",
+    # Bare 429, but never inside a dotted version/number: the Codex exec
+    # banner (e.g. "OpenAI Codex v0.152.429") must not read as a rate
+    # limit.  Plain \b429\b still matches ".429" because "." is a
+    # non-word character, so exclude a leading digit-or-dot explicitly.
+    r"(?<![\w.])429\b",
 )
 _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 

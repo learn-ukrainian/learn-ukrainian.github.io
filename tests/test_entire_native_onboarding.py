@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import re
 import subprocess
 import tomllib
 from pathlib import Path
@@ -120,7 +121,10 @@ def test_codex_cli_and_desktop_share_four_composed_entire_hooks() -> None:
 
     assert config["features"]["hooks"] is True
     assert len(entire_hooks) == 4
-    assert {command["command"].rsplit(" ", 1)[-1].rstrip("'") for command in entire_hooks} == {
+    assert {
+        re.search(r"entire hooks codex (\S+)", command["command"]).group(1)
+        for command in entire_hooks
+    } == {
         "session-start",
         "post-tool-use",
         "user-prompt-submit",
@@ -128,6 +132,9 @@ def test_codex_cli_and_desktop_share_four_composed_entire_hooks() -> None:
     }
     assert all(command["timeout"] == 30 for command in entire_hooks)
     assert all("if ! command -v entire" in command["command"] for command in entire_hooks)
+    # Entire capture is optional: an installed CLI that fails (hook parse or
+    # agent errors) must exit 0 so Codex exec is never poisoned by it.
+    assert all(command["command"].endswith("|| true'") for command in entire_hooks)
 
     # Existing project hook semantics must survive onboarding unchanged. The
     # stock 0.8.42 installer rewrites these objects and drops this metadata.
@@ -186,6 +193,40 @@ def test_entire_hooks_fail_open_when_cli_is_unavailable() -> None:
         )
         assert result.returncode == 0
         assert result.stderr == ""
+
+
+def test_entire_codex_hooks_fail_open_when_installed_cli_errors(tmp_path: Path) -> None:
+    """An installed Entire CLI that errors must never poison Codex exec.
+
+    Evidence 2026-09-02: Entire 0.8.42 exits rc=1 with
+    ``failed to parse hook event: empty hook input`` on empty stdin, and
+    ``unknown agent`` when the agent is missing.  Both are optional-capture
+    failures, so every Codex Entire hook must still exit 0.
+    """
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    fake_entire = fake_bin / "entire"
+    fake_entire.write_text(
+        "#!/bin/sh\n"
+        "echo 'failed to parse hook event: empty hook input' >&2\n"
+        "exit 1\n",
+        encoding="utf-8",
+    )
+    fake_entire.chmod(0o755)
+    codex = json.loads(CODEX_HOOKS.read_text(encoding="utf-8"))
+
+    for hook in _entire_hooks(codex, "codex"):
+        for stdin in ("", "{}\n"):
+            result = subprocess.run(
+                ["/bin/sh", "-c", hook["command"]],
+                input=stdin,
+                capture_output=True,
+                text=True,
+                check=False,
+                env={"PATH": f"{fake_bin}:/usr/bin:/bin"},
+                timeout=5,
+            )
+            assert result.returncode == 0, (hook["command"], result.returncode)
 
 
 def test_opencode_plugin_tracks_real_host_model_and_fails_open() -> None:
