@@ -15,7 +15,9 @@ from __future__ import annotations
 import asyncio
 import math
 import os
+import threading
 import time
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any
 
@@ -24,7 +26,12 @@ from fastapi.responses import JSONResponse
 
 from scripts.api import atlas_jobs_router as load_mod
 from scripts.api.monitor_context import MonitorContext, get_ctx
-from scripts.api.observer_presence import PresenceStore, list_live
+from scripts.api.observer_presence import (
+    PRESENCE_FRESHNESS_SECONDS,
+    ObserverPresence,
+    PresenceStore,
+    list_live,
+)
 from scripts.api.occupancy_local import OccupancyRead, read_markers, read_session_streams
 from scripts.api.occupancy_sanitize import CLOUD_OBSERVER_HOST_ID
 from scripts.api.occupancy_sanitize import occupant as _occupant
@@ -46,30 +53,48 @@ _FOUNDRY_AGENTS = frozenset({"foundry", "evidence-compiler"})
 _FOUNDRY_TASK_IDS = frozenset({"ukrainian-data-foundry", "phase3-cycle007-evidence-compiler"})
 
 
-DEFAULT_HOST_IDS = ("host-teacher", "host-job")
+# Default glance: one production Linux host + Mac observer. ``host-job`` remains
+# queryable when mapped or requested explicitly, but is not a ghost glance row.
+DEFAULT_GLANCE_HOST_IDS = ("host-teacher",)
+# Back-compat alias: callers that enumerate the default glance use this name.
+DEFAULT_HOST_IDS = DEFAULT_GLANCE_HOST_IDS
+QUERYABLE_DEFAULT_HOST_IDS = frozenset({"host-teacher", "host-job"})
 MAC_OPERATOR_HOST_ID = "mac-operator"
-_BURN_SOURCE_NAMES = ("atlas_job", "driver", "foundry")
+_BURN_SOURCE_NAMES = ("atlas_job", "driver", "foundry", "service", "observer")
 _BURN_SOURCE_STATES = frozenset({"active", "clear", "unknown"})
 EMPTY_HOST_IDLE_THRESHOLD_S = 15 * 60
 _BOOT_MONO = time.monotonic()
+_IDLE_LOCK = threading.Lock()
 _idle_since_mono: dict[str, float] = {}
 _ever_had_activity: dict[str, bool] = {}
 
 
+@dataclass(frozen=True)
+class OccupancySnapshot:
+    """Immutable per-request inputs shared across every host shape."""
+
+    host_id_map: dict[str, str]
+    live_presence: tuple[ObserverPresence, ...]
+    now_mono: float
+    now: datetime
+
+
 def reset_empty_host_tracking() -> None:
     """Test helper: clear idle-since memo state."""
-    _idle_since_mono.clear()
-    _ever_had_activity.clear()
+    with _IDLE_LOCK:
+        _idle_since_mono.clear()
+        _ever_had_activity.clear()
 
 
 def _idle_duration_s(host_id: str, idle_or_empty: bool, *, now_mono: float) -> float:
-    if not idle_or_empty:
-        _idle_since_mono.pop(host_id, None)
-        _ever_had_activity[host_id] = True
-        return 0.0
-    if host_id not in _idle_since_mono:
-        _idle_since_mono[host_id] = now_mono if _ever_had_activity.get(host_id) else _BOOT_MONO
-    return max(0.0, now_mono - _idle_since_mono[host_id])
+    with _IDLE_LOCK:
+        if not idle_or_empty:
+            _idle_since_mono.pop(host_id, None)
+            _ever_had_activity[host_id] = True
+            return 0.0
+        if host_id not in _idle_since_mono:
+            _idle_since_mono[host_id] = now_mono if _ever_had_activity.get(host_id) else _BOOT_MONO
+        return max(0.0, now_mono - _idle_since_mono[host_id])
 
 
 def _empty_host_attention_item(
@@ -118,11 +143,12 @@ def _evaluate_attention(
     return attention
 
 
-def _unavailable_load_entry() -> dict[str, Any]:
+def _unavailable_load_entry(*, now: datetime | None = None) -> dict[str, Any]:
+    clock = now or datetime.now(UTC)
     return {
         "status": "unavailable",
         "error": "unreachable",
-        "observed_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+        "observed_at": clock.isoformat().replace("+00:00", "Z"),
         "age_seconds": 0.0,
     }
 
@@ -144,6 +170,22 @@ def parse_host_id_map(raw: str | None = None) -> dict[str, str]:
             continue
         mapping[canonical] = opaque
     return mapping
+
+
+def _build_snapshot(
+    *,
+    presence_store: PresenceStore | None = None,
+    host_id_map: dict[str, str] | None = None,
+    now_mono: float | None = None,
+    now: datetime | None = None,
+) -> OccupancySnapshot:
+    stamp = time.monotonic() if now_mono is None else now_mono
+    return OccupancySnapshot(
+        host_id_map=dict(host_id_map if host_id_map is not None else parse_host_id_map()),
+        live_presence=tuple(list_live(now_mono=stamp, store=presence_store)),
+        now_mono=stamp,
+        now=now or datetime.now(UTC),
+    )
 
 
 def _read_occupants_from_registry(
@@ -210,31 +252,6 @@ def _merge_occupants(*groups: list[dict[str, str | None]]) -> list[dict[str, str
             seen.add(key)
             merged.append(occupant)
     return merged
-
-
-def _is_idle_or_empty(
-    status: str,
-    occupants: list[dict[str, str | None]],
-    load_entry: dict[str, Any] | None = None,
-) -> bool:
-    if occupants and not all(o.get("kind") == "observer" and o.get("status") == "idle" for o in occupants):
-        return False
-    if status == "unavailable":
-        # Unreachable burn is unknown, not proven idle.
-        return False
-    if load_entry:
-        job_unit = load_entry.get("job_unit")
-        if isinstance(job_unit, dict) and int(job_unit.get("active_count") or 0) > 0:
-            return False
-        loadavg = load_entry.get("loadavg")
-        if isinstance(loadavg, list) and loadavg:
-            try:
-                load1 = float(loadavg[0])
-                if load1 >= 1.0:
-                    return False
-            except (TypeError, ValueError, IndexError):
-                pass
-    return True
 
 
 def _safe_age(value: Any) -> float:
@@ -311,11 +328,14 @@ def _is_foundry_occupant(occupant: dict[str, str | None]) -> bool:
     return occupant.get("agent") in _FOUNDRY_AGENTS or occupant.get("task_id") in _FOUNDRY_TASK_IDS
 
 
-def _has_active_occupant(occupants: list[dict[str, str | None]]) -> bool:
-    return any(
-        occupant.get("kind") != "observer" or occupant.get("status") != "idle"
+def _active_observer_occupants(
+    occupants: list[dict[str, str | None]],
+) -> list[dict[str, str | None]]:
+    return [
+        occupant
         for occupant in occupants
-    )
+        if occupant.get("kind") == "observer" and occupant.get("status") != "idle"
+    ]
 
 
 def _burn_state(burn_sources: dict[str, dict[str, Any]]) -> str:
@@ -365,10 +385,10 @@ def _shape_host(
 def _occupants_from_observers(
     host_id: str,
     *,
-    presence_store: PresenceStore | None = None,
+    snapshot: OccupancySnapshot,
 ) -> list[dict[str, str | None]]:
     occupants: list[dict[str, str | None]] = []
-    for row in list_live(store=presence_store):
+    for row in snapshot.live_presence:
         if row.host_id != host_id:
             continue
         occupant = _occupant(
@@ -384,37 +404,78 @@ def _occupants_from_observers(
     return occupants
 
 
-def _observer_clear_sources() -> dict[str, dict[str, Any]]:
-    """Atlas/driver/foundry do not apply to the presence-only observer bucket."""
+def _presence_age_s(host_id: str, *, snapshot: OccupancySnapshot) -> float:
+    ages = [
+        max(0.0, snapshot.now_mono - row.updated_at_mono)
+        for row in snapshot.live_presence
+        if row.host_id == host_id
+    ]
+    if not ages:
+        return 0.0
+    return _safe_age(min(ages))
+
+
+def _observer_source_payload(
+    observer_occupants: list[dict[str, str | None]],
+    *,
+    observation_age_s: float,
+) -> dict[str, Any]:
     return {
-        name: {"state": "clear", "observation_age_s": 0.0} for name in _BURN_SOURCE_NAMES
+        "state": _source_state(
+            readable=True,
+            occupants=_active_observer_occupants(observer_occupants),
+        ),
+        "observation_age_s": _safe_age(observation_age_s),
     }
 
 
-def _cloud_observer_load_entry() -> dict[str, Any]:
+def _clear_probe_sources(*, observation_age_s: float = 0.0) -> dict[str, dict[str, Any]]:
+    """Atlas/driver/foundry/service do not apply to the presence-only observer bucket."""
+    age = _safe_age(observation_age_s)
     return {
-        "status": "fresh",
-        "observed_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
-        "age_seconds": 0.0,
+        name: {"state": "clear", "observation_age_s": age}
+        for name in ("atlas_job", "driver", "foundry", "service")
     }
 
 
-def _shape_cloud_observer(occupants: list[dict[str, str | None]]) -> dict[str, Any]:
+def _presence_load_entry(
+    host_id: str,
+    *,
+    snapshot: OccupancySnapshot,
+) -> dict[str, Any]:
+    rows = [row for row in snapshot.live_presence if row.host_id == host_id]
+    if not rows:
+        return _unavailable_load_entry(now=snapshot.now)
+    newest = max(rows, key=lambda row: row.updated_at_mono)
+    age = _safe_age(snapshot.now_mono - newest.updated_at_mono)
+    status = "fresh" if age <= PRESENCE_FRESHNESS_SECONDS else "stale"
+    return {
+        "status": status,
+        "observed_at": newest.updated_at,
+        "age_seconds": age,
+    }
+
+
+def _shape_cloud_observer(
+    occupants: list[dict[str, str | None]],
+    *,
+    snapshot: OccupancySnapshot,
+) -> dict[str, Any]:
     """Presence-gated observer bucket — same occupancy shape as probed hosts.
 
-    No host probe, no RAM lease, no load metrics. Burn reuses the #7216
-    helpers: clear atlas/driver/foundry sources, then ``_has_active_occupant``
-    so a working/blocked heartbeat is ``active`` and idle-only is ``idle``.
+    No host probe, no RAM lease, no load metrics. Burn derives only from
+    ``burn_sources``: probe sources stay clear, and the ``observer`` source
+    explains working/blocked heartbeats.
     """
-    burn_sources = _observer_clear_sources()
-    burn_state = _burn_state(burn_sources)
-    if _has_active_occupant(occupants):
-        burn_state = "active"
+    load_entry = _presence_load_entry(CLOUD_OBSERVER_HOST_ID, snapshot=snapshot)
+    age = _safe_age(load_entry.get("age_seconds"))
+    burn_sources = _clear_probe_sources(observation_age_s=age)
+    burn_sources["observer"] = _observer_source_payload(occupants, observation_age_s=age)
     return _shape_host(
         CLOUD_OBSERVER_HOST_ID,
-        _cloud_observer_load_entry(),
+        load_entry,
         occupants,
-        burn_state,
+        _burn_state(burn_sources),
         burn_sources,
     )
 
@@ -423,44 +484,40 @@ def _attach_cloud_observer(
     payload: dict[str, Any],
     host_id: str | None,
     *,
-    presence_store: PresenceStore | None = None,
-    report_store: ReportStore | None = None,
+    snapshot: OccupancySnapshot,
 ) -> dict[str, Any]:
     if host_id is not None and host_id != CLOUD_OBSERVER_HOST_ID:
-        payload["attention"] = _evaluate_attention(
-            payload.get("hosts", {}), report_store=report_store
-        )
         return payload
-    occupants = _occupants_from_observers(CLOUD_OBSERVER_HOST_ID, presence_store=presence_store)
+    occupants = _occupants_from_observers(CLOUD_OBSERVER_HOST_ID, snapshot=snapshot)
     if not occupants and host_id is None:
-        payload["attention"] = _evaluate_attention(
-            payload.get("hosts", {}), report_store=report_store
-        )
         return payload
-    payload["hosts"][CLOUD_OBSERVER_HOST_ID] = _shape_cloud_observer(occupants)
-    payload["attention"] = _evaluate_attention(
-        payload.get("hosts", {}), report_store=report_store
+    payload["hosts"][CLOUD_OBSERVER_HOST_ID] = _shape_cloud_observer(
+        occupants, snapshot=snapshot
     )
     return payload
 
 
-def _selected_hosts(host_id: str | None) -> dict[str, str | None]:
+def _selected_hosts(
+    host_id: str | None,
+    *,
+    snapshot: OccupancySnapshot,
+) -> dict[str, str | None]:
     if host_id == CLOUD_OBSERVER_HOST_ID:
         return {}
 
-    mapping = parse_host_id_map()
+    mapping = snapshot.host_id_map
     reverse = {opaque: canonical for canonical, opaque in mapping.items()}
     if host_id is not None:
         if host_id == MAC_OPERATOR_HOST_ID:
             return {host_id: None}
         if host_id in reverse:
             return {host_id: reverse[host_id]}
-        if host_id in DEFAULT_HOST_IDS:
-            return {host_id: None}
+        if host_id in QUERYABLE_DEFAULT_HOST_IDS:
+            return {host_id: reverse.get(host_id)}
         raise HTTPException(status_code=400, detail="unknown host_id")
 
     selected: dict[str, str | None] = {}
-    for default_id in DEFAULT_HOST_IDS:
+    for default_id in DEFAULT_GLANCE_HOST_IDS:
         selected[default_id] = reverse.get(default_id)
     for opaque, canonical in reverse.items():
         if opaque not in selected:
@@ -472,65 +529,105 @@ def _selected_hosts(host_id: str | None) -> dict[str, str | None]:
     return selected
 
 
-def _empty_payload() -> dict[str, Any]:
+def _empty_payload(*, now: datetime) -> dict[str, Any]:
     return {
         "schema": OCCUPANCY_SCHEMA,
-        "observed_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+        "observed_at": now.isoformat().replace("+00:00", "Z"),
         "hosts": {},
         "attention": [],
     }
+
+
+def _burn_sources_for_host(
+    *,
+    atlas_source: dict[str, Any],
+    driver_read: OccupancyRead,
+    marker_read: OccupancyRead,
+    foundry_occupants: list[dict[str, str | None]],
+    service_occupants: list[dict[str, str | None]],
+    observer_occupants: list[dict[str, str | None]],
+    observer_age_s: float,
+) -> dict[str, dict[str, Any]]:
+    return dict(
+        zip(
+            _BURN_SOURCE_NAMES,
+            (
+                atlas_source,
+                _local_source_payload(driver_read),
+                _local_source_payload(marker_read, occupants=foundry_occupants),
+                _local_source_payload(marker_read, occupants=service_occupants),
+                _observer_source_payload(observer_occupants, observation_age_s=observer_age_s),
+            ),
+            strict=True,
+        )
+    )
 
 
 def _payload_from_entries(
     selected: dict[str, str | None],
     load_entries: dict[str, dict[str, Any]],
     *,
-    presence_store: PresenceStore | None = None,
-    report_store: ReportStore | None = None,
+    snapshot: OccupancySnapshot,
 ) -> dict[str, Any]:
     hosts: dict[str, Any] = {}
-    mapping = parse_host_id_map()
+    mapping = snapshot.host_id_map
     for opaque, canonical in selected.items():
-        load_entry = load_entries.get(opaque) or _unavailable_load_entry()
+        load_entry = load_entries.get(opaque) or _unavailable_load_entry(now=snapshot.now)
         atlas_occupants, atlas_source = _atlas_job_read(canonical, load_entry)
         driver_read = read_session_streams(
             host_id=opaque,
             mapping=mapping,
             selected=selected,
+            now=snapshot.now,
         )
-        foundry_read = read_markers(host_id=opaque)
-        observer_occupants = _occupants_from_observers(opaque, presence_store=presence_store)
-        groups = [atlas_occupants, driver_read.occupants, foundry_read.occupants, observer_occupants]
+        marker_read = read_markers(host_id=opaque, now=snapshot.now)
+        observer_occupants = _occupants_from_observers(opaque, snapshot=snapshot)
+        groups = [atlas_occupants, driver_read.occupants, marker_read.occupants, observer_occupants]
         occupants = _merge_occupants(*groups)
-        foundry_occupants = [occupant for occupant in foundry_read.occupants if _is_foundry_occupant(occupant)]
-        burn_sources = dict(
-            zip(
-                _BURN_SOURCE_NAMES,
-                (
-                    atlas_source,
-                    _local_source_payload(driver_read),
-                    _local_source_payload(foundry_read, occupants=foundry_occupants),
-                ),
-                strict=True,
-            )
+        foundry_occupants = [
+            occupant for occupant in marker_read.occupants if _is_foundry_occupant(occupant)
+        ]
+        service_occupants = [
+            occupant for occupant in marker_read.occupants if not _is_foundry_occupant(occupant)
+        ]
+        burn_sources = _burn_sources_for_host(
+            atlas_source=atlas_source,
+            driver_read=driver_read,
+            marker_read=marker_read,
+            foundry_occupants=foundry_occupants,
+            service_occupants=service_occupants,
+            observer_occupants=observer_occupants,
+            observer_age_s=_presence_age_s(opaque, snapshot=snapshot),
         )
-        burn_state = _burn_state(burn_sources)
-        if _has_active_occupant(occupants):
-            burn_state = "active"
         hosts[opaque] = _shape_host(
             opaque,
             load_entry,
             occupants,
-            burn_state,
+            _burn_state(burn_sources),
             burn_sources,
         )
 
-    payload = {
+    return {
         "schema": OCCUPANCY_SCHEMA,
-        "observed_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+        "observed_at": snapshot.now.isoformat().replace("+00:00", "Z"),
         "hosts": hosts,
     }
-    payload["attention"] = _evaluate_attention(hosts, report_store=report_store)
+
+
+def _finalize_payload(
+    payload: dict[str, Any],
+    host_id: str | None,
+    *,
+    snapshot: OccupancySnapshot,
+    report_store: ReportStore | None = None,
+) -> dict[str, Any]:
+    payload = _attach_cloud_observer(payload, host_id, snapshot=snapshot)
+    payload["attention"] = _evaluate_attention(
+        payload.get("hosts", {}),
+        now_mono=snapshot.now_mono,
+        now=snapshot.now,
+        report_store=report_store,
+    )
     return payload
 
 
@@ -543,30 +640,26 @@ def occupancy_payload(
     """Build the synchronous cache-only payload for non-HTTP callers."""
     presence_store = None if ctx is None else ctx.stores.presence_store
     report_store = None if ctx is None else ctx.stores.report_store
-    selected = _selected_hosts(host_id)
+    snapshot = _build_snapshot(presence_store=presence_store)
+    selected = _selected_hosts(host_id, snapshot=snapshot)
     if not selected:
-        return _attach_cloud_observer(
-            _empty_payload(),
+        return _finalize_payload(
+            _empty_payload(now=snapshot.now),
             host_id,
-            presence_store=presence_store,
+            snapshot=snapshot,
             report_store=report_store,
         )
 
     load_entries: dict[str, dict[str, Any]] = {}
     for opaque, canonical in selected.items():
         if canonical is None:
-            load_entries[opaque] = _unavailable_load_entry()
+            load_entries[opaque] = _unavailable_load_entry(now=snapshot.now)
         else:
             load_entries[opaque] = load_mod._get_host_load_entry(canonical, fresh=fresh)
-    return _attach_cloud_observer(
-        _payload_from_entries(
-            selected,
-            load_entries,
-            presence_store=presence_store,
-            report_store=report_store,
-        ),
+    return _finalize_payload(
+        _payload_from_entries(selected, load_entries, snapshot=snapshot),
         host_id,
-        presence_store=presence_store,
+        snapshot=snapshot,
         report_store=report_store,
     )
 
@@ -579,12 +672,13 @@ async def _occupancy_payload_async(
 ) -> dict[str, Any]:
     presence_store = None if ctx is None else ctx.stores.presence_store
     report_store = None if ctx is None else ctx.stores.report_store
-    selected = _selected_hosts(host_id)
+    snapshot = _build_snapshot(presence_store=presence_store)
+    selected = _selected_hosts(host_id, snapshot=snapshot)
     if not selected:
-        return _attach_cloud_observer(
-            _empty_payload(),
+        return _finalize_payload(
+            _empty_payload(now=snapshot.now),
             host_id,
-            presence_store=presence_store,
+            snapshot=snapshot,
             report_store=report_store,
         )
 
@@ -593,21 +687,16 @@ async def _occupancy_payload_async(
     for opaque, canonical in selected.items():
         keys.append(opaque)
         if canonical is None:
-            tasks.append(asyncio.sleep(0, result=_unavailable_load_entry()))
+            tasks.append(asyncio.sleep(0, result=_unavailable_load_entry(now=snapshot.now)))
         else:
             tasks.append(load_mod._get_host_load_entry_async(canonical, fresh=fresh))
 
     entries = await asyncio.gather(*tasks)
     load_entries = dict(zip(keys, entries, strict=True))
-    return _attach_cloud_observer(
-        _payload_from_entries(
-            selected,
-            load_entries,
-            presence_store=presence_store,
-            report_store=report_store,
-        ),
+    return _finalize_payload(
+        _payload_from_entries(selected, load_entries, snapshot=snapshot),
         host_id,
-        presence_store=presence_store,
+        snapshot=snapshot,
         report_store=report_store,
     )
 

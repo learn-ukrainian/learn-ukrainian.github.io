@@ -25,7 +25,7 @@ from scripts.api.fleet_workers_models import (
 )
 from scripts.api.fleet_workers_sanitize import validate_worker_row_dict
 from scripts.api.observer_presence import list_live
-from scripts.api.occupancy import DEFAULT_HOST_IDS, parse_host_id_map
+from scripts.api.occupancy import DEFAULT_HOST_IDS, QUERYABLE_DEFAULT_HOST_IDS, parse_host_id_map
 from scripts.api.occupancy_local import (
     DEFAULT_MARKER_TTL_S,
     OccupancyRead,
@@ -550,7 +550,11 @@ def _selected_host_ids(host_id: str | None) -> list[str]:
     mapping = parse_host_id_map()
     reverse = {opaque: canonical for canonical, opaque in mapping.items()}
     if host_id is not None:
-        if host_id in reverse or host_id in DEFAULT_HOST_IDS or host_id == CLOUD_OBSERVER_HOST_ID:
+        if (
+            host_id in reverse
+            or host_id in QUERYABLE_DEFAULT_HOST_IDS
+            or host_id == CLOUD_OBSERVER_HOST_ID
+        ):
             return [host_id]
         return []
     selected: list[str] = []
