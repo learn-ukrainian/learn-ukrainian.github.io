@@ -12,6 +12,7 @@ the exact real filter values.
 from __future__ import annotations
 
 import copy
+import inspect
 import json
 import sqlite3
 from pathlib import Path
@@ -111,6 +112,81 @@ def test_provide_bytes_never_raises_on_a_corrupt_file(tmp_path: Path) -> None:
     db_path.write_bytes(b"not a real sqlite file")
     assert admission.provide_bytes_for_admitted_unit("db.wikipedia", tmp_path) is None
     assert admission.local_bytes_reachable("db.wikipedia", tmp_path) is False
+
+
+# --- streaming row provider: memory-bounded, real production default --------
+
+
+def test_iter_admitted_unit_row_texts_matches_provide_bytes_for_admitted_unit(tmp_path: Path) -> None:
+    """The streaming and whole-blob providers must agree: joining every
+    streamed row with the same separator reproduces the whole-blob output
+    exactly, for every admitted unit."""
+    _make_sources_db(tmp_path)
+    for unit_id in admission.ADMITTED_SOURCE_UNIT_IDS:
+        streamed = list(admission.iter_admitted_unit_row_texts(unit_id, tmp_path))
+        whole = admission.provide_bytes_for_admitted_unit(unit_id, tmp_path)
+        if not streamed:
+            assert whole is None
+        else:
+            assert "\n\n".join(streamed).encode("utf-8") == whole
+
+
+def test_iter_admitted_unit_row_texts_yields_nothing_for_a_non_admitted_unit(tmp_path: Path) -> None:
+    _make_sources_db(tmp_path)
+    assert list(admission.iter_admitted_unit_row_texts("historical.some-unit", tmp_path)) == []
+
+
+def test_iter_admitted_unit_row_texts_yields_nothing_when_local_store_file_missing(tmp_path: Path) -> None:
+    assert list(admission.iter_admitted_unit_row_texts("db.wikipedia", tmp_path)) == []
+
+
+def test_iter_admitted_unit_row_texts_yields_nothing_when_table_missing(tmp_path: Path) -> None:
+    _make_sources_db(tmp_path, with_literary=False)
+    assert list(admission.iter_admitted_unit_row_texts("db.literary_texts", tmp_path)) == []
+
+
+def test_iter_admitted_unit_row_texts_excludes_private_textbook_sources(tmp_path: Path) -> None:
+    _make_sources_db(tmp_path)
+    rows = list(admission.iter_admitted_unit_row_texts("db.textbooks.public", tmp_path))
+    assert rows == ["Public chunk."]
+
+
+def test_iter_admitted_unit_row_texts_never_raises_on_a_corrupt_file(tmp_path: Path) -> None:
+    db_path = tmp_path / "data" / "sources.db"
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    db_path.write_bytes(b"not a real sqlite file")
+    assert list(admission.iter_admitted_unit_row_texts("db.wikipedia", tmp_path)) == []
+
+
+def test_iter_admitted_unit_row_texts_is_a_generator_function() -> None:
+    """A generator function cannot itself hold a fully-materialized
+    ``.fetchall()``/``.fetchmany()`` result list across the whole call --
+    each ``yield`` suspends with only the current row's text live. (Its
+    body is additionally verified never to call ``sqlite3.Cursor.fetchall``/
+    ``fetchmany`` at all -- see the module source; those C-level cursor
+    methods are immutable and cannot be monkeypatched to assert this
+    behaviourally.)"""
+    assert inspect.isgeneratorfunction(admission.iter_admitted_unit_row_texts)
+
+
+def test_iter_admitted_unit_row_texts_streams_a_large_table_row_by_row(tmp_path: Path) -> None:
+    """Behavioral proxy for "streams, never buffers the whole result set":
+    a few thousand rows, consumed lazily one at a time, in the same
+    ascending-id order the whole-blob provider uses."""
+    db_path = tmp_path / "data" / "sources.db"
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    connection = sqlite3.connect(db_path)
+    connection.execute("CREATE TABLE wikipedia (id INTEGER PRIMARY KEY, text TEXT)")
+    connection.executemany("INSERT INTO wikipedia (text) VALUES (?)", [(f"Row {i}.",) for i in range(5000)])
+    connection.commit()
+    connection.close()
+
+    generator = admission.iter_admitted_unit_row_texts("db.wikipedia", tmp_path)
+    first = next(generator)
+    assert first == "Row 0."  # proves at least one row is available before the rest are consumed
+    remaining = list(generator)
+    assert len(remaining) == 4999
+    assert remaining[-1] == "Row 4999."
 
 
 # --- reachability probe: cheap, content-blind --------------------------------

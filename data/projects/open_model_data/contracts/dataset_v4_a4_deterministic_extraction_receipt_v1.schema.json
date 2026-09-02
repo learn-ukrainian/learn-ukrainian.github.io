@@ -15,7 +15,6 @@
     "extraction_algorithm",
     "builder_packet_gate",
     "builder_packet_consumption",
-    "extraction_ledger",
     "a2_residuals_carried_forward",
     "a4_residuals",
     "execution_counters",
@@ -133,7 +132,8 @@
       "required": [
         "consumption_id", "packet_opened_by", "packet_consumed", "unit_commitment_algorithm",
         "consumed_source_unit_count", "unit_commitments", "consumed_units_commitment_sha256",
-        "membership_disclosed", "heldout_family_id_disclosed"
+        "membership_disclosed", "heldout_family_id_disclosed", "source_units_extracted",
+        "extraction_ledger_commitment"
       ],
       "properties": {
         "consumption_id": {"const": "v4-a4-builder-packet-consumption-v1"},
@@ -169,23 +169,35 @@
         },
         "consumed_units_commitment_sha256": {"$ref": "#/$defs/sha256"},
         "membership_disclosed": {"const": false},
-        "heldout_family_id_disclosed": {"const": false}
-      }
-    },
-    "extraction_ledger": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "source_unit_commitment_sha256", "span_index", "span_byte_length", "input_sha256", "output_sha256"
-        ],
-        "properties": {
-          "source_unit_commitment_sha256": {"$ref": "#/$defs/sha256"},
-          "span_index": {"type": "integer", "minimum": 0},
-          "span_byte_length": {"type": "integer", "minimum": 1},
-          "input_sha256": {"$ref": "#/$defs/sha256"},
-          "output_sha256": {"$ref": "#/$defs/sha256"}
+        "heldout_family_id_disclosed": {"const": false},
+        "source_units_extracted": {"type": "integer", "minimum": 0},
+        "extraction_ledger_commitment": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["commitment_algorithm", "row_count", "root_sha256"],
+          "properties": {
+            "commitment_algorithm": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "algorithm_id", "algorithm_version", "content_blind", "formula", "text_emitted",
+                "reproducibility", "algorithm_descriptor_sha256"
+              ],
+              "properties": {
+                "algorithm_id": {"const": "v4-a4-extraction-ledger-rolling-commitment-sha256-v1"},
+                "algorithm_version": {"const": "v1"},
+                "content_blind": {"const": true},
+                "formula": {
+                  "const": "state_0 = sha256(LEDGER_COMMITMENT_DOMAIN + 0x00).digest(); for each row in extraction_ledger order (source_unit_commitment_sha256 ascending, then span_index ascending): state_i = sha256(state_(i-1) + 0x00 + row.output_sha256.encode('ascii')).digest(); root_sha256 = state_n.hexdigest() after all rows (root of an empty ledger is sha256(LEDGER_COMMITMENT_DOMAIN + 0x00).hexdigest())"
+                },
+                "text_emitted": {"const": false},
+                "reproducibility": {"const": "byte_stable_given_the_identical_ordered_sequence_of_row_output_hashes"},
+                "algorithm_descriptor_sha256": {"const": "d607833963bcd215bd9b0b952aecd0dbf36cb889fa9857cd7d933e5f686ef883"}
+              }
+            },
+            "row_count": {"type": "integer", "minimum": 0},
+            "root_sha256": {"$ref": "#/$defs/sha256"}
+          }
         }
       }
     },
