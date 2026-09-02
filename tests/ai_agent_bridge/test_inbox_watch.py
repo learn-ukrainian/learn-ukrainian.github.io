@@ -18,7 +18,10 @@ from scripts.ai_agent_bridge import _db, _inbox_watch, _messaging
 def isolate_db(tmp_path: Path):
     """Create an isolated broker database with the current messages schema."""
     db_path = tmp_path / "messages.db"
-    with patch("scripts.ai_agent_bridge._config.DB_PATH", db_path), patch("scripts.ai_agent_bridge._db.DB_PATH", db_path):
+    with (
+        patch("scripts.ai_agent_bridge._config.DB_PATH", db_path),
+        patch("scripts.ai_agent_bridge._db.DB_PATH", db_path),
+    ):
         _db.init_db().close()
         yield db_path
 
@@ -127,12 +130,15 @@ def test_duplicate_watcher_lock_blocks_second_start(isolate_db: Path, tmp_path: 
     finally:
         first.release()
 
-    assert _inbox_watch.run_watcher(
-        "grok-build",
-        db_path=isolate_db,
-        lock_dir=lock_dir,
-        once=True,
-    ) == 0
+    assert (
+        _inbox_watch.run_watcher(
+            "grok-build",
+            db_path=isolate_db,
+            lock_dir=lock_dir,
+            once=True,
+        )
+        == 0
+    )
 
 
 def test_cursor_does_not_advance_when_stdout_flush_fails(isolate_db: Path):
@@ -173,9 +179,13 @@ def test_inbox_watcher_tick_invokes_ask_watchdog(isolate_db: Path, tmp_path: Pat
         patch.stopall()
 
 
-def test_inbox_watcher_watchdog_failure_warns_and_continues(isolate_db: Path, tmp_path: Path, capsys: pytest.CaptureFixture):
+def test_inbox_watcher_watchdog_failure_warns_and_continues(
+    isolate_db: Path, tmp_path: Path, capsys: pytest.CaptureFixture
+):
     """A raising ask watchdog emits a stderr warning and does not crash the watcher loop (#5893)."""
-    watchdog_mock = patch("scripts.ai_agent_bridge._ask_lifecycle.run_ask_watchdog", side_effect=RuntimeError("watchdog exploded")).start()
+    watchdog_mock = patch(
+        "scripts.ai_agent_bridge._ask_lifecycle.run_ask_watchdog", side_effect=RuntimeError("watchdog exploded")
+    ).start()
     try:
         cursor = _inbox_watch.run_watcher(
             "grok",
@@ -190,3 +200,25 @@ def test_inbox_watcher_watchdog_failure_warns_and_continues(isolate_db: Path, tm
         assert "⚠️  inbox watcher: ask watchdog failed: RuntimeError: watchdog exploded" in stderr
     finally:
         patch.stopall()
+
+
+def test_recipients_for_agent_resolves_phantom_empty_roster_identity():
+    """A phantom {provider}-{empty-slots-area} identity resolves to provider aliases (#7597)."""
+    recipients = _inbox_watch.recipients_for_agent("grok-open-model-data")
+    assert recipients == ("grok", "grok-build")
+    assert "grok-open-model-data" not in recipients
+    assert _inbox_watch.canonical_slot("grok-open-model-data") == "grok"
+
+
+def test_poll_once_surfaces_messages_for_phantom_empty_roster_identity(isolate_db: Path):
+    """Watcher polling for a phantom identity queries messages for the resolved provider aliases."""
+    canonical_id = _send("canonical message", to_llm="grok")
+    alias_id = _send("historical message", to_llm="grok-build")
+
+    conn = _inbox_watch.open_readonly_db(isolate_db)
+    try:
+        events = _inbox_watch.poll_once(conn, "grok-open-model-data", last_seen=0)
+    finally:
+        conn.close()
+
+    assert [event.message_id for event in events] == [canonical_id, alias_id]
