@@ -34,7 +34,7 @@
     },
     "assignment_algorithm_implementation": {
       "path": "scripts/projects/open_model_data/v4_a3_heldout_family_assignment.py",
-      "sha256": "d5baa857c02fa796ac10dde0b79798e363b602c954013cf5396fd36517c39c5f",
+      "sha256": "f2846e18ee2db81db4db188d16ca742750dfc8f42ba3b24dff531f2413745cc8",
       "schema_version": "v4_a3_heldout_family_assignment_script_v1"
     }
   },

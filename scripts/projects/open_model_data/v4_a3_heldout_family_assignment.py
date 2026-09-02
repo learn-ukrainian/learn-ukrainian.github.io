@@ -47,10 +47,15 @@ sealed; afterward this script is verify-only for that receipt.
 Verification does not stop at the two commitment hashes: it binds the
 private artifact to the full receipt context it was sealed against --
 ``controlling_outcome_sha256``, every artifact ``bindings`` entry, the
-complete ``source_family_registry``, and ``reseal_required_on`` -- via a
-``receipt_binding_sha256`` fingerprint stored in the private artifact at
-generation time and recomputed from the live receipt on every verify. Any
-drift in any of those fields (not just the commitments) is refused.
+complete ``source_family_registry``, ``reseal_required_on``,
+``access_firewall``, ``temporal_firewall``, ``cycle007_denial``, and
+``safety_assertions`` -- via a ``receipt_binding_sha256`` fingerprint stored
+in the private artifact at generation time and recomputed from the live
+receipt on every verify. Any drift in any of those fields (not just the
+commitments) is refused. The access-firewall and Cycle007-denial invariants
+are additionally enforced unconditionally, independent of any private
+artifact or binding hash -- see ``validate_access_firewall_invariants`` and
+``validate_cycle007_denial_invariants``.
 
 Outputs never leave ``batch_state/`` (git-ignored, mode 0700/0600) or the
 private operational board (learn-ukrainian-infra-private#622); only counts
@@ -68,7 +73,6 @@ import os
 import secrets
 import stat
 import sys
-import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -219,10 +223,19 @@ def receipt_binding_context(receipt: dict[str, Any]) -> dict[str, Any]:
     """The full set of receipt facts a sealed private assignment is bound to.
 
     Not just the two commitment hashes: the controlling outcome SHA, every
-    artifact binding, the complete family registry, and the reseal triggers.
-    A receipt that still carries the same two commitment hashes but has
-    drifted in any of these -- a family added/removed, a bound artifact
-    swapped, the controlling epic changed -- must fail verification.
+    artifact binding, the complete family registry, the reseal triggers, and
+    -- critically -- the access firewall, temporal firewall, Cycle007
+    denial, and safety assertions. A receipt that still carries the same two
+    commitment hashes but has drifted in any of these -- a family
+    added/removed, a bound artifact swapped, the controlling epic changed,
+    a builder role's held-out visibility flipped to true, or a denied
+    Cycle007 fingerprint dropped from the list -- must fail verification.
+    (A CF probe found exactly this gap: flipping A4's held-out visibility or
+    dropping a denied fingerprint still verified, because those sections
+    were not part of this context. See also
+    ``validate_access_firewall_invariants``/``validate_cycle007_denial_invariants``,
+    which enforce the same two invariants unconditionally -- independent of
+    whether a private artifact even exists yet to bind against.)
     """
     seal = receipt["heldout_partition_seal"]
     return {
@@ -230,6 +243,10 @@ def receipt_binding_context(receipt: dict[str, Any]) -> dict[str, Any]:
         "bindings": receipt["bindings"],
         "source_family_registry": receipt["source_family_registry"],
         "reseal_required_on": seal["reseal_required_on"],
+        "access_firewall": receipt["access_firewall"],
+        "temporal_firewall": receipt["temporal_firewall"],
+        "cycle007_denial": receipt["cycle007_denial"],
+        "safety_assertions": receipt["safety_assertions"],
     }
 
 
@@ -289,18 +306,51 @@ def validate_algorithm_metadata(receipt: dict[str, Any]) -> None:
     )
 
 
+def actual_family_count(receipt: dict[str, Any]) -> int:
+    """The one source of truth for family_count: the number of *unique*
+    ``family_id`` values actually present in
+    ``source_family_registry.families``.
+
+    Never trust the declared ``source_family_registry.family_count`` /
+    ``heldout_partition_seal.family_count`` integers on their own -- a
+    not-yet-sealed draft receipt skips schema validation (see
+    ``validate_receipt_independently``), so a hand-edited draft can declare
+    ``family_count: 9`` while the ``families`` array actually holds 8 (or
+    contains a duplicate ``family_id``), and every downstream pool-count
+    check would silently use the wrong denominator. This is derived from the
+    array itself, not from any declared integer.
+    """
+    family_ids = [family["family_id"] for family in receipt["source_family_registry"]["families"]]
+    require(
+        len(family_ids) == len(set(family_ids)),
+        "receipt source_family_registry.families contains duplicate family_id values -- refusing",
+    )
+    return len(family_ids)
+
+
 def validate_pool_counts(receipt: dict[str, Any]) -> None:
     """Recompute the expected heldout/builder-eligible split size from the
-    public ``family_count`` alone (no salt needed -- see
-    ``heldout_target_count``) and require the receipt's declared
-    ``heldout_count``/``builder_eligible_count`` to match. Catches a receipt
-    whose counts were hand-edited (e.g. to hide or inflate the held-out pool)
-    even though the commitment hashes still verify."""
+    actual unique ``family_id`` count in ``source_family_registry.families``
+    (via ``actual_family_count`` -- never the declared integer fields, which
+    can disagree with the array itself) and require every declared count --
+    ``source_family_registry.family_count``,
+    ``heldout_partition_seal.family_count``, ``heldout_count``, and
+    ``builder_eligible_count`` -- to match what that recomputation implies.
+    Catches a receipt whose counts were hand-edited (e.g. to hide or inflate
+    the held-out pool, or to declare a family_count the families array does
+    not actually support) even though the commitment hashes still verify."""
     seal = receipt["heldout_partition_seal"]
-    family_count = receipt["source_family_registry"]["family_count"]
+    family_count = actual_family_count(receipt)
+    require(
+        receipt["source_family_registry"]["family_count"] == family_count,
+        f"receipt source_family_registry.family_count "
+        f"({receipt['source_family_registry']['family_count']}) does not match the actual number of unique "
+        f"family_id values in source_family_registry.families ({family_count}) -- refusing",
+    )
     require(
         seal["family_count"] == family_count,
-        "receipt heldout_partition_seal.family_count does not match source_family_registry.family_count -- refusing",
+        f"receipt heldout_partition_seal.family_count ({seal['family_count']}) does not match the actual "
+        f"number of unique family_id values in source_family_registry.families ({family_count}) -- refusing",
     )
     expected_heldout = heldout_target_count(family_count)
     expected_builder_eligible = family_count - expected_heldout
@@ -314,6 +364,68 @@ def validate_pool_counts(receipt: dict[str, Any]) -> None:
         f"receipt builder_eligible_count ({seal['builder_eligible_count']}) does not match the count recomputed "
         f"from the frozen formula and family_count={family_count} ({expected_builder_eligible}) -- refusing",
     )
+
+
+# Held-out fields a builder-facing role must never have visibility into --
+# mirrors heldout_partition_seal's own membership_owner_role concept and the
+# access_firewall.forbidden_fields entries in the sealed receipt.
+BUILDER_FORBIDDEN_HELDOUT_FIELDS = frozenset(
+    {"heldout_family_pool", "heldout_membership_locator", "heldout_fingerprint", "heldout_near_neighbour"}
+)
+
+
+def validate_access_firewall_invariants(receipt: dict[str, Any]) -> None:
+    """Independently enforce that no role other than the declared held-out
+    owner role (``heldout_partition_seal.membership_owner_role``) can see
+    any held-out signal, and that every other role's ``forbidden_fields``
+    still lists every held-out field.
+
+    This is unconditional -- it does not rely on ``receipt_binding_sha256``
+    drift detection, which only fires on a *rerun* against an existing
+    private artifact. A CF probe found that setting a builder role's (e.g.
+    A4) held-out visibility to true still verified because access_firewall
+    was not part of the binding context; this check refuses that receipt
+    outright, regardless of whether any private artifact exists yet.
+    """
+    owner_role = receipt["heldout_partition_seal"]["membership_owner_role"]
+    for entry in receipt["access_firewall"]:
+        if entry["role_id"] == owner_role:
+            continue
+        require(
+            not entry["heldout_family_pool_visible"]
+            and not entry["heldout_membership_locator_visible"]
+            and not entry["heldout_fingerprint_visible"]
+            and not entry["heldout_near_neighbour_visible"],
+            f"access_firewall role {entry['role_id']!r} is not the held-out owner role ({owner_role!r}) but "
+            f"declares held-out visibility -- refusing",
+        )
+        require(
+            set(entry.get("forbidden_fields", [])) >= BUILDER_FORBIDDEN_HELDOUT_FIELDS,
+            f"access_firewall role {entry['role_id']!r} does not forbid every held-out field -- refusing",
+        )
+
+
+def validate_cycle007_denial_invariants(receipt: dict[str, Any]) -> None:
+    """Independently enforce that the Cycle007 denial is intact: the denial
+    itself has not been flipped to permit reuse, and every fingerprint it
+    lists is still marked denied.
+
+    Unconditional for the same reason as ``validate_access_firewall_invariants``
+    -- a CF probe found that dropping a denied fingerprint (or flipping one
+    entry's ``denied`` to false) still verified, because ``cycle007_denial``
+    was not part of the binding context.
+    """
+    denial = receipt["cycle007_denial"]
+    require(denial["denied"] is True, "cycle007_denial.denied is not true -- refusing")
+    require(denial["adoption_forbidden"] is True, "cycle007_denial.adoption_forbidden is not true -- refusing")
+    require(denial["reused_in_v4"] is False, "cycle007_denial.reused_in_v4 is not false -- refusing")
+    fingerprints = denial["denied_fingerprints"]
+    require(len(fingerprints) > 0, "cycle007_denial.denied_fingerprints is empty -- refusing")
+    for entry in fingerprints:
+        require(
+            entry["denied"] is True,
+            f"cycle007_denial fingerprint {entry.get('fingerprint_kind')!r} is not denied -- refusing",
+        )
 
 
 def validate_bindings_hash_to_disk(receipt: dict[str, Any], root: Path) -> None:
@@ -338,9 +450,11 @@ def validate_bindings_hash_to_disk(receipt: dict[str, Any], root: Path) -> None:
 
 def validate_receipt_independently(receipt: dict[str, Any], root: Path = ROOT) -> None:
     """Run every salt-independent check that does not trust a declared field
-    at face value: algorithm metadata/hash, pool counts, and on-disk binding
-    hashes always; full schema conformance whenever the receipt claims to be
-    sealed (``_receipt_is_sealed``).
+    at face value: algorithm metadata/hash, pool counts, the access-firewall
+    and Cycle007-denial invariants, and on-disk binding hashes always; full
+    schema conformance whenever the receipt claims to be sealed
+    (``_receipt_is_sealed``, which itself fails closed on a partially-sealed
+    receipt -- see its docstring).
 
     Schema conformance is gated on sealing, not unconditional, because the
     pinned production schema (``RECEIPT_SCHEMA``) models only the final,
@@ -355,6 +469,8 @@ def validate_receipt_independently(receipt: dict[str, Any], root: Path = ROOT) -
     whose declared fields were trusted rather than re-derived."""
     validate_algorithm_metadata(receipt)
     validate_pool_counts(receipt)
+    validate_access_firewall_invariants(receipt)
+    validate_cycle007_denial_invariants(receipt)
     validate_bindings_hash_to_disk(receipt, root)
     if _receipt_is_sealed(receipt):
         validate_receipt_schema(receipt)
@@ -369,12 +485,23 @@ def validate_receipt_independently(receipt: dict[str, Any], root: Path = ROOT) -
 # through a symlink, or written outside its intended directory.
 
 
-def _fsync_directory(path: Path) -> None:
-    descriptor = os.open(path, os.O_RDONLY | getattr(os, "O_DIRECTORY", 0))
-    try:
-        os.fsync(descriptor)
-    finally:
-        os.close(descriptor)
+def _open_directory_no_symlink(path: Path) -> int:
+    """Open ``path`` as a directory file descriptor, refusing if the leaf
+    component is (or resolves via a trailing symlink to) anything but a
+    real directory.
+
+    Every subsequent operation against this directory's contents is then
+    anchored to this fd (``dir_fd=``) rather than to the pathname again --
+    closing the classic check-then-act window where the pathname could be
+    replaced (e.g. the directory itself swapped for a symlink to somewhere
+    else) between an earlier ``lstat``-based check and a later
+    open/link/replace against the same path string. ``_assert_no_symlink_components``
+    is still run by callers first, as defense in depth against a symlinked
+    *ancestor* component; this closes the remaining race on the leaf
+    directory itself. Caller is responsible for closing the returned fd.
+    """
+    flags = os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_NOFOLLOW", 0)
+    return os.open(path, flags)
 
 
 def _assert_no_symlink_components(path: Path) -> None:
@@ -442,6 +569,13 @@ def write_private_artifact(
     a symlink -- so reruns can never clobber a prior salt (no-clobber).
     Callers must route reruns through ``verify_against_receipt`` instead of
     calling this again.
+
+    All of the temp-write/link/unlink/fsync steps are performed relative to
+    a single directory file descriptor (see ``_open_directory_no_symlink``)
+    opened once at the top, rather than by re-resolving ``private_dir`` as a
+    pathname for each step -- closing the window where the directory could
+    be replaced (e.g. by a symlink) between an earlier check and a later
+    step that still trusted the pathname.
     """
     private_dir = path.parent
     _assert_no_symlink_components(private_dir)
@@ -449,35 +583,47 @@ def write_private_artifact(
     os.chmod(private_dir, PRIVATE_DIR_MODE)
     _assert_no_symlink_components(path)
     _assert_contained(path, private_dir)
-    require(not path.exists() and not path.is_symlink(), f"private artifact already exists, refusing to overwrite: {path}")
 
-    payload = {
-        "algorithm_id": ALGORITHM_ID,
-        "algorithm_descriptor_sha256": ALGORITHM_DESCRIPTOR_SHA256,
-        "salt_hex": salt.hex(),
-        "membership": result["membership"],
-        "heldout_family_ids": result["heldout_family_ids"],
-        "builder_eligible_family_ids": result["builder_eligible_family_ids"],
-        "receipt_binding_sha256": receipt_binding,
-    }
-    encoded = (canonical_json(payload) + "\n").encode("utf-8")
-
-    descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=private_dir)
-    temporary = Path(temporary_name)
+    dir_fd = _open_directory_no_symlink(private_dir)
     try:
-        with os.fdopen(descriptor, "wb") as handle:
-            os.fchmod(handle.fileno(), PRIVATE_FILE_MODE)
-            handle.write(encoded)
-            handle.flush()
-            os.fsync(handle.fileno())
         try:
-            os.link(temporary, path)
-        except FileExistsError:
-            raise AssignmentError(f"private artifact already exists, refusing to overwrite: {path}") from None
-        _fsync_directory(private_dir)
+            os.stat(path.name, dir_fd=dir_fd, follow_symlinks=False)
+            already_exists = True
+        except FileNotFoundError:
+            already_exists = False
+        require(not already_exists, f"private artifact already exists, refusing to overwrite: {path}")
+
+        payload = {
+            "algorithm_id": ALGORITHM_ID,
+            "algorithm_descriptor_sha256": ALGORITHM_DESCRIPTOR_SHA256,
+            "salt_hex": salt.hex(),
+            "membership": result["membership"],
+            "heldout_family_ids": result["heldout_family_ids"],
+            "builder_eligible_family_ids": result["builder_eligible_family_ids"],
+            "receipt_binding_sha256": receipt_binding,
+        }
+        encoded = (canonical_json(payload) + "\n").encode("utf-8")
+
+        temporary_name = f".{path.name}.{secrets.token_hex(8)}.tmp"
+        descriptor = os.open(
+            temporary_name, os.O_WRONLY | os.O_CREAT | os.O_EXCL, PRIVATE_FILE_MODE, dir_fd=dir_fd
+        )
+        try:
+            with os.fdopen(descriptor, "wb") as handle:
+                os.fchmod(handle.fileno(), PRIVATE_FILE_MODE)
+                handle.write(encoded)
+                handle.flush()
+                os.fsync(handle.fileno())
+            try:
+                os.link(temporary_name, path.name, src_dir_fd=dir_fd, dst_dir_fd=dir_fd)
+            except FileExistsError:
+                raise AssignmentError(f"private artifact already exists, refusing to overwrite: {path}") from None
+            os.fsync(dir_fd)
+        finally:
+            with contextlib.suppress(OSError):
+                os.unlink(temporary_name, dir_fd=dir_fd)
     finally:
-        with contextlib.suppress(OSError):
-            temporary.unlink()
+        os.close(dir_fd)
 
 
 REQUIRED_ARTIFACT_FIELDS = frozenset(
@@ -501,29 +647,39 @@ def load_private_artifact(path: Path, required_fields: frozenset[str] = REQUIRED
     """Read the private membership artifact, refusing anything but a plain,
     owner-only-mode regular file reached with no symlink in its path.
 
+    The regular-file and mode checks are run via ``os.fstat`` on the file
+    descriptor already opened (with ``O_NOFOLLOW``) for reading -- not via a
+    separate ``lstat`` on the pathname beforehand -- so the checks always
+    describe exactly the bytes about to be read, with no window between a
+    pathname-based check and a later pathname-based open where the file
+    could be swapped.
+
     ``required_fields`` defaults to the full current field set; pass
     ``LEGACY_REQUIRED_ARTIFACT_FIELDS`` to read a pre-receipt_binding_sha256
     artifact (only ever done from the explicit ``--migrate`` path)."""
     _assert_no_symlink_components(path)
+    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
     try:
-        info = path.lstat()
+        descriptor = os.open(path, flags)
     except FileNotFoundError:
         raise AssignmentError(f"private artifact missing: {path}") from None
-    require(
-        stat.S_ISREG(info.st_mode) and not stat.S_ISLNK(info.st_mode),
-        f"private artifact is not a regular file: {path}",
-    )
-    require(
-        stat.S_IMODE(info.st_mode) == PRIVATE_FILE_MODE,
-        f"private artifact has unexpected mode (want {oct(PRIVATE_FILE_MODE)}): {path}",
-    )
-    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
-    descriptor = os.open(path, flags)
-    try:
-        with os.fdopen(descriptor, "rb") as handle:
-            raw = handle.read()
     except OSError as exc:
-        raise AssignmentError(f"cannot read private artifact: {path}") from exc
+        raise AssignmentError(f"private artifact is not a regular file: {path}") from exc
+
+    with os.fdopen(descriptor, "rb") as handle:
+        info = os.fstat(handle.fileno())
+        require(
+            stat.S_ISREG(info.st_mode),
+            f"private artifact is not a regular file: {path}",
+        )
+        require(
+            stat.S_IMODE(info.st_mode) == PRIVATE_FILE_MODE,
+            f"private artifact has unexpected mode (want {oct(PRIVATE_FILE_MODE)}): {path}",
+        )
+        try:
+            raw = handle.read()
+        except OSError as exc:
+            raise AssignmentError(f"cannot read private artifact: {path}") from exc
     value = json.loads(raw.decode("utf-8"))
     require(isinstance(value, dict), f"private artifact is not a JSON object: {path}")
     require(required_fields <= value.keys(), f"private artifact missing required fields: {path}")
@@ -539,31 +695,44 @@ def _rewrite_private_artifact(path: Path, payload: dict[str, Any]) -> None:
     commitment check there has already passed. Same write-temp -> fsync ->
     atomic-swap -> fsync-directory discipline as ``write_private_artifact``,
     but swaps via ``os.replace`` (atomic on POSIX) instead of a no-clobber
-    ``os.link``, since replacing is exactly what a migration must do.
+    ``os.link``, since replacing is exactly what a migration must do. Also
+    anchored to a single directory file descriptor throughout, for the same
+    TOCTOU reason documented on ``_open_directory_no_symlink``.
     """
     private_dir = path.parent
     _assert_no_symlink_components(private_dir)
     _assert_no_symlink_components(path)
     _assert_contained(path, private_dir)
-    require(
-        path.exists() and not path.is_symlink() and stat.S_ISREG(path.lstat().st_mode),
-        f"private artifact missing or not a regular file, nothing to migrate: {path}",
-    )
 
-    encoded = (canonical_json(payload) + "\n").encode("utf-8")
-    descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=private_dir)
-    temporary = Path(temporary_name)
+    dir_fd = _open_directory_no_symlink(private_dir)
     try:
-        with os.fdopen(descriptor, "wb") as handle:
-            os.fchmod(handle.fileno(), PRIVATE_FILE_MODE)
-            handle.write(encoded)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary, path)
-        _fsync_directory(private_dir)
+        try:
+            info = os.stat(path.name, dir_fd=dir_fd, follow_symlinks=False)
+        except FileNotFoundError:
+            raise AssignmentError(f"private artifact missing or not a regular file, nothing to migrate: {path}") from None
+        require(
+            stat.S_ISREG(info.st_mode) and not stat.S_ISLNK(info.st_mode),
+            f"private artifact missing or not a regular file, nothing to migrate: {path}",
+        )
+
+        encoded = (canonical_json(payload) + "\n").encode("utf-8")
+        temporary_name = f".{path.name}.{secrets.token_hex(8)}.tmp"
+        descriptor = os.open(
+            temporary_name, os.O_WRONLY | os.O_CREAT | os.O_EXCL, PRIVATE_FILE_MODE, dir_fd=dir_fd
+        )
+        try:
+            with os.fdopen(descriptor, "wb") as handle:
+                os.fchmod(handle.fileno(), PRIVATE_FILE_MODE)
+                handle.write(encoded)
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(temporary_name, path.name, src_dir_fd=dir_fd, dst_dir_fd=dir_fd)
+            os.fsync(dir_fd)
+        finally:
+            with contextlib.suppress(OSError):
+                os.unlink(temporary_name, dir_fd=dir_fd)
     finally:
-        with contextlib.suppress(OSError):
-            temporary.unlink()
+        os.close(dir_fd)
 
 
 # --- fail-closed rerun ----------------------------------------------------
@@ -586,9 +755,23 @@ def _receipt_is_sealed(receipt: dict[str, Any]) -> bool:
     definition. Generation against an already-sealed receipt must reproduce
     its exact commitments or refuse -- see the ``--generate`` branch in
     ``main``.
+
+    Fails closed if exactly one of the two commitment fields is present: a
+    receipt cannot legitimately have a ``salt_commitment_sha256`` without an
+    ``assignment_commitment_sha256`` (or vice versa) -- both are written
+    together by ``public_commitment_summary`` at generation time. A receipt
+    in that state is corrupt or hand-edited, not merely "not yet sealed",
+    and must never be silently treated as the latter.
     """
     algorithm = receipt.get("heldout_partition_seal", {}).get("assignment_algorithm", {})
-    return bool(algorithm.get("salt_commitment_sha256")) and bool(algorithm.get("assignment_commitment_sha256"))
+    has_salt_commitment = bool(algorithm.get("salt_commitment_sha256"))
+    has_assignment_commitment = bool(algorithm.get("assignment_commitment_sha256"))
+    require(
+        has_salt_commitment == has_assignment_commitment,
+        "receipt carries exactly one of salt_commitment_sha256/assignment_commitment_sha256 -- "
+        "a partially sealed receipt is invalid, refusing (fail closed)",
+    )
+    return has_salt_commitment and has_assignment_commitment
 
 
 def verify_against_receipt(

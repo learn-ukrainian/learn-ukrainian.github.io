@@ -302,13 +302,34 @@ def test_a3_heldout_assignment_rerun_detects_commitment_drift_against_receipt(tm
         lambda receipt: receipt["heldout_partition_seal"].__setitem__(
             "reseal_required_on", ["some_other_trigger"]
         ),
+        # A builder role's held-out visibility flipped to true -- the exact
+        # CF probe that motivated binding access_firewall into the receipt
+        # binding context. heldout_count is deliberately left unmutated so
+        # this exercises the binding-hash drift path in isolation.
+        lambda receipt: next(
+            role for role in receipt["access_firewall"] if role["role_id"] == "A4_deterministic_extraction"
+        ).__setitem__("heldout_family_pool_visible", True),
+        lambda receipt: receipt["temporal_firewall"].__setitem__("exposure_allowed", True),
+        # A denied Cycle007 fingerprint silently dropped from the list.
+        lambda receipt: receipt["cycle007_denial"]["denied_fingerprints"].pop(),
+        lambda receipt: receipt["safety_assertions"].__setitem__("heldout_membership_exposed_to_builder", True),
     ],
-    ids=["controlling_sha", "bindings", "family_registry", "reseal_triggers"],
+    ids=[
+        "controlling_sha",
+        "bindings",
+        "family_registry",
+        "reseal_triggers",
+        "access_firewall_visibility_flip",
+        "temporal_firewall_exposure_flip",
+        "cycle007_fingerprint_dropped",
+        "safety_assertions_flip",
+    ],
 )
 def test_a3_heldout_assignment_rerun_detects_binding_context_drift(tmp_path: Path, mutate) -> None:
     """Verification is bound to more than the two commitment hashes: a
-    change to the controlling SHA, bindings, family registry, or reseal
-    triggers -- even with the commitment hashes unchanged -- must refuse."""
+    change to the controlling SHA, bindings, family registry, reseal
+    triggers, access firewall, temporal firewall, Cycle007 denial, or safety
+    assertions -- even with the commitment hashes unchanged -- must refuse."""
     private_dir = tmp_path / "private"
     salt = secrets.token_bytes(32)
     result = assignment.assign(salt, FAMILY_IDS)
@@ -613,6 +634,94 @@ def test_a3_heldout_main_refuses_receipt_with_altered_binding_hash(tmp_path: Pat
     private_dir = tmp_path / "private"
 
     with pytest.raises(assignment.AssignmentError, match="on-disk sha256"):
+        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--generate"])
+    assert not (private_dir / assignment.MEMBERSHIP_FILENAME).exists()
+
+
+def test_a3_heldout_main_refuses_receipt_with_builder_role_heldout_visibility_flipped(tmp_path: Path) -> None:
+    """Reproduces the CF probe directly: a builder-facing role (A4) with its
+    held-out visibility flipped to true must be refused unconditionally --
+    not merely by binding-hash drift on a rerun, but by
+    ``validate_access_firewall_invariants`` on the very first run, before
+    any private artifact exists."""
+    receipt = copy.deepcopy(REAL_RECEIPT)
+    a4 = next(role for role in receipt["access_firewall"] if role["role_id"] == "A4_deterministic_extraction")
+    a4["heldout_family_pool_visible"] = True
+    receipt_path = _write_receipt(tmp_path, receipt)
+    private_dir = tmp_path / "private"
+
+    with pytest.raises(assignment.AssignmentError, match="held-out visibility"):
+        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--generate"])
+    assert not (private_dir / assignment.MEMBERSHIP_FILENAME).exists()
+
+
+def test_a3_heldout_main_refuses_receipt_with_dropped_cycle007_denial(tmp_path: Path) -> None:
+    """A denied Cycle007 fingerprint flipped to not-denied must be refused
+    unconditionally by ``validate_cycle007_denial_invariants``, independent
+    of any private artifact."""
+    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt["cycle007_denial"]["denied_fingerprints"][0]["denied"] = False
+    receipt_path = _write_receipt(tmp_path, receipt)
+    private_dir = tmp_path / "private"
+
+    with pytest.raises(assignment.AssignmentError, match="not denied"):
+        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--generate"])
+    assert not (private_dir / assignment.MEMBERSHIP_FILENAME).exists()
+
+
+def test_a3_heldout_main_refuses_receipt_with_cycle007_denial_flipped(tmp_path: Path) -> None:
+    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt["cycle007_denial"]["reused_in_v4"] = True
+    receipt_path = _write_receipt(tmp_path, receipt)
+    private_dir = tmp_path / "private"
+
+    with pytest.raises(assignment.AssignmentError, match="reused_in_v4"):
+        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--generate"])
+    assert not (private_dir / assignment.MEMBERSHIP_FILENAME).exists()
+
+
+def test_a3_heldout_main_refuses_draft_receipt_where_declared_family_count_disagrees_with_array(
+    tmp_path: Path,
+) -> None:
+    """An unsealed draft receipt (which skips schema validation -- see
+    ``validate_receipt_independently``) that declares
+    ``source_family_registry.family_count: 9`` while the ``families`` array
+    actually holds 8 must be refused. Counts are derived from the actual
+    unique ``family_id`` set, never the declared integer."""
+    receipt = _receipt_shape(FAMILY_IDS)
+    removed = receipt["source_family_registry"]["families"].pop()
+    receipt_path = _write_receipt(tmp_path, receipt)
+    private_dir = tmp_path / "private"
+
+    with pytest.raises(assignment.AssignmentError, match="family_count"):
+        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--generate"])
+    assert not (private_dir / assignment.MEMBERSHIP_FILENAME).exists()
+    assert removed  # keep the popped entry referenced so intent is unambiguous
+
+
+def test_a3_heldout_main_refuses_receipt_with_duplicate_family_ids(tmp_path: Path) -> None:
+    receipt = _receipt_shape(FAMILY_IDS)
+    receipt["source_family_registry"]["families"][1]["family_id"] = receipt["source_family_registry"]["families"][
+        0
+    ]["family_id"]
+    receipt_path = _write_receipt(tmp_path, receipt)
+    private_dir = tmp_path / "private"
+
+    with pytest.raises(assignment.AssignmentError, match="duplicate family_id"):
+        assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--generate"])
+    assert not (private_dir / assignment.MEMBERSHIP_FILENAME).exists()
+
+
+def test_a3_heldout_main_refuses_receipt_with_exactly_one_commitment_present(tmp_path: Path) -> None:
+    """A receipt carrying only one of the two commitment fields is corrupt
+    or hand-edited, not merely "not yet sealed" -- ``_receipt_is_sealed``
+    must fail closed rather than silently treating it as an unsealed draft."""
+    receipt = _receipt_shape(FAMILY_IDS)
+    receipt["heldout_partition_seal"]["assignment_algorithm"]["salt_commitment_sha256"] = "a" * 64
+    receipt_path = _write_receipt(tmp_path, receipt)
+    private_dir = tmp_path / "private"
+
+    with pytest.raises(assignment.AssignmentError, match="exactly one"):
         assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--generate"])
     assert not (private_dir / assignment.MEMBERSHIP_FILENAME).exists()
 
