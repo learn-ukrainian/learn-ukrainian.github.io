@@ -28,6 +28,7 @@ from scripts.fleet_comms.artifacts import ArtifactStore
 from scripts.fleet_comms.contracts import CompletionState, ResponseEnvelope, new_id
 from scripts.fleet_comms.endpoints import EndpointRegistry, load_endpoint_registry
 from scripts.fleet_comms.migrations import apply_migrations
+from scripts.fleet_comms.pg_schema import apply_pg_schema
 
 REQUEST_STATES = frozenset(
     {"queued", "running", "complete", "incomplete", "failed", "expired", "dead_lettered"}
@@ -89,17 +90,19 @@ class RequestExecutor:
         root: Path | None = None,
         default_ttl_seconds: int | None = None,
     ) -> None:
-        # #7482 interlock: this executor is sqlite-shaped (apply_migrations,
-        # ``?`` placeholders, INSERT OR IGNORE); refuse pg at the boundary.
-        # The assert runs for INJECTED stores too — a store opened under
-        # sqlite before the authority flipped must not smuggle sqlite SQL
-        # into a pg-configured plane (CF r1 finding, PR #7498).
-        assert_component_supported(StoreId.FLEET_COMMS, "request_executor")
-        if store is not None and store.authority is Authority.PG:
+        # #7482 interlock, extended by the public #605 slice: pg construction
+        # is now allowed (create_request/get_request are dialect-aware), but
+        # an injected store must match the CURRENTLY resolved authority in
+        # either direction — a store opened under sqlite must not smuggle
+        # sqlite SQL into a pg-configured plane (CF r1 finding, PR #7498),
+        # and a pg store must not be driven under a sqlite-resolved plane.
+        self._authority = assert_component_supported(StoreId.FLEET_COMMS, "request_executor")
+        if store is not None and store.authority is not self._authority:
             raise ControlPlaneUnsupportedComponentError(
-                "control-plane store 'fleet_comms': authority 'pg' is not "
-                "supported by component 'request_executor' in this slice "
-                "(#7482 interlock)"
+                "control-plane store 'fleet_comms': injected artifact store "
+                f"authority {store.authority.value!r} does not match resolved "
+                f"authority {self._authority.value!r} for component "
+                "'request_executor' (#7482/#605 mismatch guard)"
             )
         self.store = store or ArtifactStore(root=root)
         self._owns_store = store is None
@@ -107,7 +110,19 @@ class RequestExecutor:
         self.default_ttl_seconds = default_ttl_seconds
         self._conn = self.store.connection
         if self._owns_store:
-            apply_migrations(self._conn)
+            if self._authority is Authority.PG:
+                apply_pg_schema(self._conn)
+            else:
+                apply_migrations(self._conn)
+
+    @property
+    def authority(self) -> Authority:
+        """Resolved control-plane authority this executor opened with (#605)."""
+        return self._authority
+
+    @property
+    def _is_pg(self) -> bool:
+        return self._authority is Authority.PG
 
     def close(self) -> None:
         if self._owns_store:
@@ -143,6 +158,57 @@ class RequestExecutor:
         req_id = new_id("request")
         now_s = _iso(now)
         expires_s = _iso(expires)
+
+        if self._is_pg:
+            # psycopg connection is autocommit (ArtifactStore pg pattern);
+            # the three inserts share ONE explicit transaction.
+            with self._conn.transaction():
+                self._conn.execute(
+                    "INSERT INTO conversations(conversation_id, created_at, source, title)"
+                    " VALUES (%s, %s, %s, %s) ON CONFLICT (conversation_id) DO NOTHING",
+                    (conv, now_s, "request-executor", None),
+                )
+                self._conn.execute(
+                    """INSERT INTO comms_messages(
+                        message_id, conversation_id, kind, sender, recipient, body_inline,
+                        content_sha256, metadata_json, created_at
+                    ) VALUES (%s, %s, 'request', %s, %s, %s, %s, %s, %s)""",
+                    (
+                        msg_id,
+                        conv,
+                        sender,
+                        resolved,
+                        body,
+                        None,
+                        json.dumps(metadata or {}, sort_keys=True),
+                        now_s,
+                    ),
+                )
+                self._conn.execute(
+                    """INSERT INTO requests(
+                        request_id, request_message_id, requested_recipient, resolved_recipient,
+                        state, expires_at, completion_state, invocation_spec_json, created_at, updated_at
+                    ) VALUES (%s, %s, %s, %s, 'queued', %s, 'unknown', %s, %s, %s)""",
+                    (
+                        req_id,
+                        msg_id,
+                        requested,
+                        resolved,
+                        expires_s,
+                        json.dumps(
+                            {
+                                "recipient": recipient,
+                                "requested_recipient": requested,
+                                "resolved_recipient": resolved,
+                                "ttl_seconds": ttl,
+                            },
+                            sort_keys=True,
+                        ),
+                        now_s,
+                        now_s,
+                    ),
+                )
+            return self.get_request(req_id)
 
         self._conn.execute(
             "INSERT OR IGNORE INTO conversations(conversation_id, created_at, source, title) VALUES (?, ?, ?, ?)",
@@ -192,8 +258,9 @@ class RequestExecutor:
         return self.get_request(req_id)
 
     def get_request(self, request_id: str) -> RequestRecord:
+        placeholder = "%s" if self._is_pg else "?"
         row = self._conn.execute(
-            "SELECT * FROM requests WHERE request_id = ?", (request_id,)
+            f"SELECT * FROM requests WHERE request_id = {placeholder}", (request_id,)
         ).fetchone()
         if row is None:
             raise RequestExecutorError(f"request not found: {request_id}")
@@ -234,6 +301,11 @@ class RequestExecutor:
         capture. A request already ``running`` is claimable only with
         ``reclaim=True`` (explicit crash recovery by the caller).
         """
+        if self._is_pg:
+            raise RequestExecutorError(
+                "execute_capture is not implemented for fleet_comms "
+                "authority=pg in this slice"
+            )
         req = self.get_request(request_id)
         now_s = _iso(_utc_now())
         if req.expires_at < now_s and req.state in {"queued", "running"}:
@@ -447,6 +519,11 @@ class RequestExecutor:
         swept (#7504 CF r2); a claimant that legitimately runs longer must
         heartbeat via ``touch_claim()``.
         """
+        if self._is_pg:
+            raise RequestExecutorError(
+                "requeue_stale_running is not implemented for fleet_comms "
+                "authority=pg in this slice"
+            )
         now = _utc_now()
         now_s = _iso(now)
         cutoff = _iso(now - timedelta(seconds=max(0, stale_after_seconds)))
@@ -476,6 +553,11 @@ class RequestExecutor:
         ``requeue_stale_running`` nor a stale-reclaim can steal them.
         Returns False when the request is not currently running.
         """
+        if self._is_pg:
+            raise RequestExecutorError(
+                "touch_claim is not implemented for fleet_comms "
+                "authority=pg in this slice"
+            )
         cursor = self._conn.execute(
             "UPDATE requests SET updated_at = ? WHERE request_id = ? AND state = 'running'",
             (_iso(_utc_now()), request_id),

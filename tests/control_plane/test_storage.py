@@ -148,20 +148,27 @@ def test_artifact_store_pg_unreachable_no_sqlite(
     assert elapsed < 8.0
 
 
-def test_session_streams_db_pg_unreachable_no_sqlite(
+def test_session_streams_db_pg_refused_by_interlock_no_sqlite(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    """#605: session_streams is sqlite-only; the #7482 interlock refuses pg
+    at the seam (before any Postgres connect is even attempted)."""
+    from scripts.control_plane.storage import ControlPlaneUnsupportedComponentError
+
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_SESSION_STREAMS", "pg")
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", _UNREACHABLE_DSN)
     db_target = tmp_path / "session-streams.sqlite3"
     db = SessionStreamDatabase(path=db_target)
     started = time.monotonic()
-    with pytest.raises(ControlPlanePgConnectError, match="session_streams"):
+    with pytest.raises(ControlPlaneUnsupportedComponentError, match="session_streams") as raised:
         db.connect()
     elapsed = time.monotonic() - started
     assert not db_target.exists()
     assert elapsed < 8.0
+    message = str(raised.value)
+    assert "127.0.0.1" not in message
+    assert "postgresql://" not in message
 
 
 def test_control_plane_sqlite_refused_error_still_exported() -> None:

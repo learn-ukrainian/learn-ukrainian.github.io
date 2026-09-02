@@ -37,6 +37,7 @@ from typing import Any, Literal
 from scripts.control_plane.storage import (
     Authority,
     ControlPlaneError,
+    ControlPlaneUnsupportedComponentError,
     StoreId,
     assert_component_supported,
     resolve_authority,
@@ -244,9 +245,22 @@ class MessagePlane:
             self.mode = mode
         if self.mode == "authority":
             verify_authority_cutover(root=root)
-        # #7482 interlock: assert even when an executor is injected — the
-        # plane itself runs sqlite SQL (_bump_continuation, parity reads).
-        assert_component_supported(StoreId.FLEET_COMMS, "message_plane")
+        # #7482 interlock, extended by the public #605 slice: pg construction
+        # is allowed (open_ask/load_request/compute_parity only exercise the
+        # pg-capable executor create/get path), but an injected executor must
+        # match the CURRENTLY resolved authority in either direction. The
+        # plane's own sqlite SQL (_bump_continuation) stays unreachable under
+        # pg because execute_capture refuses pg first.
+        # mode="authority" still refuses pg above via verify_authority_cutover
+        # — live traffic is not flipped in this slice.
+        authority = assert_component_supported(StoreId.FLEET_COMMS, "message_plane")
+        if executor is not None and executor.authority is not authority:
+            raise ControlPlaneUnsupportedComponentError(
+                "control-plane store 'fleet_comms': injected executor "
+                f"authority {executor.authority.value!r} does not match "
+                f"resolved authority {authority.value!r} for component "
+                "'message_plane' (#7482/#605 mismatch guard)"
+            )
         self.executor = executor or RequestExecutor(root=root)
         self.legacy_db = legacy_db
         self.telemetry_path = telemetry_path

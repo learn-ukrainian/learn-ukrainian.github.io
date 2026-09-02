@@ -37,11 +37,17 @@ def _pg_authority(monkeypatch: pytest.MonkeyPatch) -> None:
     )
 
 
-def test_matrix_covers_every_component_and_only_artifact_store_is_pg_capable() -> None:
+_PG_CAPABLE_COMPONENTS = frozenset(
+    {"artifact_store", "request_executor", "message_plane"}
+)
+
+
+def test_matrix_covers_every_component_and_expected_pg_capability() -> None:
+    assert "session_streams" in COMPONENT_AUTHORITIES
     for component, allowed in COMPONENT_AUTHORITIES.items():
         assert allowed, component
-        if component == "artifact_store":
-            assert Authority.PG in allowed
+        if component in _PG_CAPABLE_COMPONENTS:
+            assert Authority.PG in allowed, component
         else:
             assert Authority.PG not in allowed, component
         # shadow stays a sqlite synonym in this slice — every component that
@@ -51,9 +57,9 @@ def test_matrix_covers_every_component_and_only_artifact_store_is_pg_capable() -
 
 def test_assert_component_supported_refuses_pg_for_sqlite_shaped() -> None:
     with pytest.raises(ControlPlaneUnsupportedComponentError) as exc:
-        assert_component_supported(StoreId.FLEET_COMMS, "request_executor")
+        assert_component_supported(StoreId.FLEET_COMMS, "authority_service")
     msg = str(exc.value)
-    assert "request_executor" in msg and "'pg'" in msg
+    assert "authority_service" in msg and "'pg'" in msg
     # OPSEC: store id only — never a DSN fragment or hostname.
     assert "127.0.0.1" not in msg and "postgresql" not in msg
 
@@ -63,11 +69,17 @@ def test_assert_component_supported_unknown_component_fails_closed() -> None:
         assert_component_supported(StoreId.FLEET_COMMS, "no_such_component")
 
 
-def test_request_executor_refuses_pg_at_construction(tmp_path: Path) -> None:
+def test_request_executor_pg_unreachable_fails_closed(tmp_path: Path) -> None:
+    """#605: pg construction is allowed; an unreachable DSN fails closed with
+    a typed, OPSEC-safe error instead of an interlock refusal."""
+    from scripts.control_plane.storage import ControlPlanePgConnectError
     from scripts.fleet_comms.request_executor import RequestExecutor
 
-    with pytest.raises(ControlPlaneUnsupportedComponentError):
+    with pytest.raises(ControlPlanePgConnectError) as exc:
         RequestExecutor(root=tmp_path)
+    msg = str(exc.value)
+    assert "fleet_comms" in msg
+    assert "127.0.0.1" not in msg and "postgresql" not in msg
 
 
 def test_authority_service_refuses_pg_at_construction(tmp_path: Path) -> None:
@@ -77,11 +89,43 @@ def test_authority_service_refuses_pg_at_construction(tmp_path: Path) -> None:
         AuthorityService(root=tmp_path)
 
 
-def test_message_plane_refuses_pg_at_construction(tmp_path: Path) -> None:
+def test_message_plane_pg_unreachable_fails_closed(tmp_path: Path) -> None:
+    """#605: pg construction is allowed; an unreachable DSN fails closed."""
+    from scripts.control_plane.storage import ControlPlanePgConnectError
     from scripts.fleet_comms.message_plane import MessagePlane
 
-    with pytest.raises(ControlPlaneUnsupportedComponentError):
+    with pytest.raises(ControlPlanePgConnectError):
         MessagePlane(mode="shadow", root=tmp_path)
+
+
+def test_message_plane_authority_mode_still_refuses_pg(tmp_path: Path) -> None:
+    """#605: live traffic is NOT flipped — authority mode keeps refusing pg
+    at the verify_authority_cutover gate."""
+    from scripts.fleet_comms.message_plane import (
+        AuthorityCutoverRefusedError,
+        MessagePlane,
+    )
+
+    with pytest.raises(AuthorityCutoverRefusedError) as exc:
+        MessagePlane(mode="authority", root=tmp_path)
+    assert exc.value.reason_code == "cutover_required_capability_missing"
+
+
+def test_session_streams_refuses_pg_cleanly(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """#605: session_streams is sqlite-only; the interlock refuses pg at the
+    seam before any connection attempt (no DSN required)."""
+    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+
+    monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_SESSION_STREAMS", "pg")
+    monkeypatch.delenv("LEARN_UKRAINIAN_CP_PG_DSN", raising=False)
+    db_target = tmp_path / "session-streams.sqlite3"
+    with pytest.raises(ControlPlaneUnsupportedComponentError) as exc:
+        SessionStreamDatabase(path=db_target).connect()
+    msg = str(exc.value)
+    assert "session_streams" in msg and "'pg'" in msg
+    assert not db_target.exists()
 
 
 def test_plane_status_reports_typed_refusal_not_500(tmp_path: Path) -> None:
