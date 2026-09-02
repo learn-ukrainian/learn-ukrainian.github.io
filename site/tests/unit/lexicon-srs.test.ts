@@ -26,6 +26,7 @@ import {
   saveState,
   selectDailyPracticeDeckItems,
   czNorm,
+  collectLemmaMorphologyForms,
   isCaseClozeDrill,
   isIdentityClozeInsert,
   selectNextPracticeItem,
@@ -43,6 +44,7 @@ import {
   type PracticeIndexItem,
   type PracticeLexeme,
   type PracticeMode,
+  type PracticeParadigmItem,
   type PracticeSelection,
   type ReviewLogEntry,
   type SelectionHistoryItem,
@@ -1351,6 +1353,109 @@ describe('lexicon SRS facade', () => {
     expect(stripped.index[0]?.clozeIds).toEqual([]);
     expect(stripped.index[0]?.hasCloze).toBe(false);
     expect(stripped.index[0]?.modes).toEqual(['flashcards']);
+  });
+
+  test('lemma-focus never teaches plural «прикраси» inside the singular «Різдвяна ___» frame (#7613)', () => {
+    // Production B1 regression: a paradigm drill's distractor labels
+    // (прикраси/прикрас/прикрасі on a називний/однина slot) were ingested as
+    // attested nominative singulars, and the Ukrainian paradigm key «називний»
+    // never matched the English `nominative` lookup — so the identity cloze was
+    // "upgraded" to plural «прикраси» while keeping the singular textbook frame.
+    const prykrasa = lexeme('прикраса', 'прикраса', 'прикраса gloss', 'B1');
+    prykrasa.paradigm = {
+      cases: {
+        // Ukrainian case keys, as in practice-lexemes.B1.json.
+        називний: { singular: 'прикраса', plural: 'прикраси' },
+      },
+    };
+    const identity = cloze('прикраса', 'prykrasa-identity', 'nominative', 'прикраса');
+    identity.sentence = 'Різдвяна ___ на палиці.';
+    identity.attribution = { source: 'textbook', label: 'Підручник', locator: 'с. 12' };
+    const caseDrill = cloze('прикраса', 'prykrasa-case', 'орудний', 'прикрасою');
+    caseDrill.sentence = 'Ялинка сяє ___.';
+
+    const drill: PracticeParadigmItem = {
+      paradigmId: 'prykrasa-paradigm-nom-sg',
+      lemmaId: 'прикраса',
+      lemma: 'прикраса',
+      slot: { case: 'називний', number: 'singular', labelUk: 'Називний, однина' },
+      form: 'прикраса',
+      options: [
+        { label: 'прикраса', kind: 'answer' },
+        { label: 'прикраси', kind: 'same-paradigm' },
+        { label: 'прикрас', kind: 'same-paradigm' },
+        { label: 'прикрасі', kind: 'same-paradigm' },
+      ],
+    };
+
+    const prykrasaDeck: PracticeDeckData = {
+      deckVersion: 'test-v1',
+      level: 'B1',
+      index: [
+        {
+          lemmaId: 'прикраса',
+          lemma: 'прикраса',
+          cefr: 'B1',
+          modes: ['flashcards', 'cloze', 'paradigm'],
+          hasCloze: true,
+          clozeIds: ['prykrasa-identity', 'prykrasa-case'],
+          newOrder: 0,
+        },
+      ],
+      lexemes: [prykrasa],
+      cloze: [identity, caseDrill],
+      paradigm: [drill],
+    };
+
+    // Distractor labels are not attested nominative singulars: only the drill
+    // answer «прикраса» enters the bank; «прикрас»/«прикрасі» never do.
+    const bank = collectLemmaMorphologyForms(prykrasa, prykrasaDeck);
+    expect(
+      bank.filter((row) => row.caseName === 'nominative').map((row) => row.form),
+    ).toEqual(['прикраса', 'прикраси']);
+    expect(bank.some((row) => row.form === 'прикрас' || row.form === 'прикрасі')).toBe(false);
+
+    // Thin real morphology (only називний attested) yields fewer than four real
+    // option forms, so the identity insert is dropped instead of being
+    // "upgraded" to «прикраси» under the singular «Різдвяна ___» frame.
+    const upgraded = upgradeIdentityClozeToMorphology(identity, prykrasa, prykrasaDeck);
+    expect(upgraded).toBeNull();
+
+    const focused = stripIdentityClozeForLemmaFocus(prykrasaDeck, 'прикраса');
+    expect(focused.index[0]?.clozeIds).toEqual(['prykrasa-case']);
+    expect(focused.index[0]?.hasCloze).toBe(true);
+    expect(focused.index[0]?.modes).toContain('cloze');
+
+    const taughtIds = new Set(focused.index.flatMap((row) => row.clozeIds));
+    const taught = focused.cloze.filter((item) => taughtIds.has(item.clozeId));
+    expect(taught.length).toBeGreaterThan(0);
+    for (const item of taught) {
+      expect(validateClozeOptions(item)).toEqual([]);
+      // «Різдвяна» (singular adjective) + plural «прикраси» is never taught.
+      expect(item.sentence.includes('Різдвяна') && czNorm(item.form) === czNorm('прикраси')).toBe(
+        false,
+      );
+    }
+
+    // When richer morphology does allow an upgrade, the original textbook frame
+    // and its attribution are never kept under a different form.
+    const rich = lexeme('прикраса', 'прикраса', 'прикраса gloss', 'B1');
+    rich.paradigm = {
+      cases: {
+        називний: { singular: 'прикраса', plural: 'прикраси' },
+        родовий: { singular: 'прикраси', plural: 'прикрас' },
+        давальний: { singular: 'прикрасі' },
+        орудний: { singular: 'прикрасою' },
+      },
+    };
+    const richDeck: PracticeDeckData = { ...prykrasaDeck, lexemes: [rich] };
+    const upgradedRich = upgradeIdentityClozeToMorphology(identity, rich, richDeck);
+    expect(upgradedRich).not.toBeNull();
+    expect(czNorm(upgradedRich!.form)).not.toBe(czNorm('прикраса'));
+    expect(upgradedRich!.sentence).toBe('___');
+    expect(upgradedRich!.clozeEn).toBeUndefined();
+    expect(upgradedRich!.attribution).toBeUndefined();
+    expect(upgradedRich!.sentence.includes('Різдвяна')).toBe(false);
   });
 
   test('lemma-focus content key changes when identity cloze is upgraded in place', () => {
