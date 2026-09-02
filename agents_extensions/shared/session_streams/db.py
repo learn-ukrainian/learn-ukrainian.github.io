@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
-from scripts.control_plane.storage import StoreId
+from scripts.control_plane.storage import StoreId, assert_component_supported
 from scripts.control_plane.storage import connect as cp_connect
 
 from .model import isoformat_z, utc_now
@@ -133,6 +133,11 @@ class SessionStreamDatabase:
         ) from last_error
 
     def _connect_once(self, *, read_only: bool, now: datetime | None) -> sqlite3.Connection:
+        # #605: session_streams is sqlite-only in this slice. Refuse pg at
+        # the seam — otherwise cp_connect hands back a psycopg connection and
+        # the PRAGMA configuration below crashes deep inside a sqlite-shaped
+        # helper.
+        assert_component_supported(StoreId.SESSION_STREAMS, "session_streams")
         connection = cp_connect(
             StoreId.SESSION_STREAMS,
             path=self.path,

@@ -123,18 +123,23 @@ def resolve_authority(store: StoreId) -> Authority:
 
 
 # --- Phase 0b component interlock (#7482) -----------------------------------
-# Which components may open which authorities. The byte-plane ArtifactStore is
-# the ONLY pg-capable component in this slice; everything else is
-# sqlite-shaped (BEGIN IMMEDIATE, ``?`` placeholders, PRAGMA/sqlite_master,
-# triggers) and must refuse ``pg`` at construction/entry. ``shadow`` remains a
-# sqlite synonym in this slice (see M3 in the 2026-08-30 review: real dual
-# execution or refusal is a later slice).
+# Which components may open which authorities. pg-capable components in this
+# slice: the byte-plane ArtifactStore (#603) and, since the public #605 slice,
+# the request plane (RequestExecutor/MessagePlane) for create/get only.
+# Everything else is sqlite-shaped (BEGIN IMMEDIATE, ``?`` placeholders,
+# PRAGMA/sqlite_master, triggers) and must refuse ``pg`` at
+# construction/entry. ``session_streams`` is explicitly sqlite-only: it has
+# no pg adapter and would crash on PRAGMA under a psycopg connection.
+# ``shadow`` remains a sqlite synonym in this slice (see M3 in the 2026-08-30
+# review: real dual execution or refusal is a later slice).
 _SQLITE_SHAPED = frozenset({Authority.SQLITE, Authority.SHADOW})
+_PG_CAPABLE = frozenset(Authority)
 COMPONENT_AUTHORITIES: dict[str, frozenset[Authority]] = {
-    "artifact_store": frozenset(Authority),
+    "artifact_store": _PG_CAPABLE,
     "authority_service": _SQLITE_SHAPED,
-    "request_executor": _SQLITE_SHAPED,
-    "message_plane": _SQLITE_SHAPED,
+    "request_executor": _PG_CAPABLE,
+    "message_plane": _PG_CAPABLE,
+    "session_streams": _SQLITE_SHAPED,
     "plane_status": _SQLITE_SHAPED,
     "efficiency_metrics": _SQLITE_SHAPED,
     "cold_start_board": _SQLITE_SHAPED,

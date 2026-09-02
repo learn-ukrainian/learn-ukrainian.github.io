@@ -11,6 +11,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.control_plane.storage import Authority
 from scripts.fleet_comms.authority import (
     AuthorityService,
     AuthorityServiceError,
@@ -35,6 +36,8 @@ from scripts.fleet_comms.routing_reservations import (
 
 class _UnusedExecutor:
     """Enough of the executor contract for mode-only tests."""
+
+    authority = Authority.SQLITE
 
     def close(self) -> None:
         return None
