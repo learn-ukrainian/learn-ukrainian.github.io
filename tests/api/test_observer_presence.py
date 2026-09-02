@@ -70,8 +70,18 @@ def test_presence_loopback_heartbeat_appears_under_cloud_observer() -> None:
     assert host["host_id"] == "cloud-observer"
     assert host["status"] == "fresh"
     assert host["burn_state"] == "active"
-    assert set(host["burn_sources"]) == {"atlas_job", "driver", "foundry"}
-    assert all(source["state"] == "clear" for source in host["burn_sources"].values())
+    assert set(host["burn_sources"]) == {
+        "atlas_job",
+        "driver",
+        "foundry",
+        "service",
+        "observer",
+    }
+    assert host["burn_sources"]["observer"]["state"] == "active"
+    assert all(
+        host["burn_sources"][name]["state"] == "clear"
+        for name in ("atlas_job", "driver", "foundry", "service")
+    )
     assert all(source["observation_age_s"] >= 0 for source in host["burn_sources"].values())
     assert host["idle_or_empty"] is False
     assert host["ai_seats"] == ["grok-bot"]
@@ -120,7 +130,14 @@ def test_default_occupancy_keeps_quiet_mac_alongside_cloud_observer() -> None:
     assert hosts["cloud-observer"]["occupants"][0]["agent"] == "grok-bot"
     assert hosts["cloud-observer"]["burn_state"] == "active"
     assert hosts["cloud-observer"]["idle_or_empty"] is False
-    assert set(hosts["cloud-observer"]["burn_sources"]) == {"atlas_job", "driver", "foundry"}
+    assert set(hosts["cloud-observer"]["burn_sources"]) == {
+        "atlas_job",
+        "driver",
+        "foundry",
+        "service",
+        "observer",
+    }
+    assert hosts["cloud-observer"]["burn_sources"]["observer"]["state"] == "active"
 
 
 def test_presence_rejects_ram_lease_fields() -> None:
@@ -193,6 +210,7 @@ def test_idle_observer_occupancy_reports_idle_burn() -> None:
     host = occupancy.json()["hosts"]["cloud-observer"]
     assert host["burn_state"] == "idle"
     assert host["idle_or_empty"] is True
+    assert host["burn_sources"]["observer"]["state"] == "clear"
     assert host["occupants"] == [
         {
             "kind": "observer",

@@ -14,7 +14,7 @@ from pydantic import BaseModel, ConfigDict
 
 from scripts.api.monitor_context import MonitorContext, get_ctx
 from scripts.api.observer_presence import _direct_loopback_peer
-from scripts.api.occupancy import DEFAULT_HOST_IDS, parse_host_id_map
+from scripts.api.occupancy import DEFAULT_HOST_IDS, QUERYABLE_DEFAULT_HOST_IDS, parse_host_id_map
 from scripts.api.occupancy_local import resolve_launcher_host_id, self_host_opaque_ids
 from scripts.api.occupancy_sanitize import opaque_host_id as _opaque_host_id
 from scripts.api.project_state_collect import collect_local_document
@@ -211,7 +211,7 @@ def allowed_reporter_host_ids(ctx: MonitorContext | None = None) -> frozenset[st
 def _selected_host_ids(host_id: str | None, ctx: MonitorContext | None = None) -> list[str]:
     allowed = allowed_reporter_host_ids(ctx)
     if host_id is not None:
-        if host_id not in allowed and host_id not in DEFAULT_HOST_IDS:
+        if host_id not in allowed and host_id not in QUERYABLE_DEFAULT_HOST_IDS:
             raise HTTPException(status_code=400, detail="unknown host_id")
         return [host_id]
     selected: list[str] = []

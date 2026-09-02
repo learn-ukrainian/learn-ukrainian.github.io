@@ -18,6 +18,7 @@ from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.api import atlas_jobs_router as load_mod
 from scripts.api.main import app
 from scripts.api.observer_presence import (
+    PRESENCE_FRESHNESS_SECONDS,
     PresenceRequest,
     list_live,
     reset_observer_presence,
@@ -131,8 +132,8 @@ def test_occupancy_enumerates_both_default_hosts_without_opaque_map(tmp_path, mo
         assert resp.status_code == 200
         data = resp.json()
         assert data["schema"] == "monitor-occupancy.v1"
-        assert sorted(data["hosts"].keys()) == ["host-job", "host-teacher", "mac-operator"]
-        for host_id in ("host-job", "host-teacher"):
+        assert sorted(data["hosts"].keys()) == ["host-teacher", "mac-operator"]
+        for host_id in ("host-teacher",):
             entry = data["hosts"][host_id]
             assert entry["host_id"] == host_id
             assert entry["status"] == "unavailable"
@@ -143,10 +144,18 @@ def test_occupancy_enumerates_both_default_hosts_without_opaque_map(tmp_path, mo
             assert entry["ai_seats"] == []
             assert "cpu_count" not in entry
             assert "mem" not in entry
+            assert set(entry["burn_sources"]) == {
+                "atlas_job",
+                "driver",
+                "foundry",
+                "service",
+                "observer",
+            }
         _assert_quiet_mac_row(data["hosts"]["mac-operator"])
         text = resp.text
         for alias in _ALIAS_LEAKS:
             assert alias not in text
+        assert "host-job" not in data["hosts"]
     finally:
         atlas_job.set_host_adapter(None)
         load_mod.clear_host_load_cache()
@@ -193,7 +202,7 @@ def test_occupancy_default_glance_merges_live_mac_observer(tmp_path, monkeypatch
         resp = client.get("/api/occupancy")
         assert resp.status_code == 200
         data = resp.json()
-        assert sorted(data["hosts"].keys()) == ["host-job", "host-teacher", "mac-operator"]
+        assert sorted(data["hosts"].keys()) == ["host-teacher", "mac-operator"]
         host = data["hosts"]["mac-operator"]
         assert host["status"] == "unavailable"
         assert host["error"] == "unreachable"
@@ -210,6 +219,9 @@ def test_occupancy_default_glance_merges_live_mac_observer(tmp_path, monkeypatch
         assert host["occupant_count"] == 1
         assert host["ai_seats"] == ["cursor"]
         assert host["idle_or_empty"] is False
+        assert host["burn_state"] == "active"
+        assert host["burn_sources"]["observer"]["state"] == "active"
+        assert host["burn_sources"]["foundry"]["state"] == "clear"
         assert "cpu_count" not in host
         assert "mem" not in host
     finally:
@@ -242,7 +254,13 @@ def test_occupancy_shape_uses_placeholders(tmp_path, monkeypatch) -> None:
             assert isinstance(host["occupant_count"], int)
             assert isinstance(host["ai_seats"], list)
             assert host["burn_state"] == "idle"
-            assert set(host["burn_sources"]) == {"atlas_job", "driver", "foundry"}
+            assert set(host["burn_sources"]) == {
+                "atlas_job",
+                "driver",
+                "foundry",
+                "service",
+                "observer",
+            }
             assert all(source["state"] == "clear" for source in host["burn_sources"].values())
             assert all(source["observation_age_s"] >= 0 for source in host["burn_sources"].values())
             assert isinstance(host["idle_or_empty"], bool)
@@ -490,7 +508,7 @@ def test_parse_host_id_map_drops_non_opaque_values() -> None:
     assert not _opaque_host_id("atlas-runner")
     assert not _opaque_host_id("hramatka")
     assert not _opaque_host_id("vps")
-    assert not _opaque_host_id("10.0.0.1")
+    assert not _opaque_host_id("192.0.2.1")
     assert not _opaque_host_id("host.example")
     assert not _opaque_host_id("cloud-observer")
     assert _opaque_host_id("host-job")
@@ -508,7 +526,7 @@ def test_safe_field_drops_aliases_addresses_and_fqdn() -> None:
         "atlas-runner-reenrich-3",
         "hramatka-drive",
         "vps-2",
-        "10.0.0.1",
+        "192.0.2.1",
         "2001:db8::1",
         "box.example.com",
         "/tmp/hidden/job",
@@ -537,7 +555,7 @@ def test_safe_summary_drops_paths_secrets_and_aliases() -> None:
     assert _safe_summary("  spaced   words  ") == "spaced words"
     for leaked in (
         "talk to atlas-runner",
-        "10.0.0.1 sweep",
+        "192.0.2.1 sweep",
         "/etc/passwd",
         "notes/etc/passwd",
         "box.example.com",
@@ -721,7 +739,7 @@ def test_occupancy_fresh_compiler_marker_wins_at_low_hardware_load(tmp_path, mon
         load_mod.clear_host_load_cache()
 
 
-def test_occupancy_generic_service_marker_preserves_occupant_with_clear_foundry_burn(
+def test_occupancy_generic_service_marker_explains_burn_via_service_source(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path / "registry"))
@@ -749,6 +767,7 @@ def test_occupancy_generic_service_marker_preserves_occupant_with_clear_foundry_
             {"kind": "service", "agent": "codex", "task_id": "lu-codex-6375", "epic": "6375"}
         ]
         assert host["burn_sources"]["foundry"]["state"] == "clear"
+        assert host["burn_sources"]["service"]["state"] == "active"
         assert host["burn_state"] == "active"
         assert host["idle_or_empty"] is False
     finally:
@@ -790,6 +809,7 @@ def test_occupancy_foundry_and_generic_markers_keep_foundry_burn_honest(
         assert host["occupant_count"] == 2
         assert {row["agent"] for row in host["occupants"]} == {"cursor", "evidence-compiler"}
         assert host["burn_sources"]["foundry"]["state"] == "active"
+        assert host["burn_sources"]["service"]["state"] == "active"
         assert host["burn_state"] == "active"
         assert host["idle_or_empty"] is False
     finally:
@@ -814,7 +834,7 @@ def test_occupancy_unreadable_marker_store_is_unknown_and_opsec_safe(tmp_path, m
         assert host["burn_sources"]["foundry"]["state"] == "unknown"
         assert host["idle_or_empty"] is False
         text = json.dumps(host).lower()
-        for forbidden in ("/users/", "10.0.0.1", "atlas-runner", "tunnel", "ssh", "not-json"):
+        for forbidden in ("/users/", "192.0.2.1", "atlas-runner", "tunnel", "ssh", "not-json"):
             assert forbidden not in text
     finally:
         atlas_job.set_host_adapter(None)
@@ -889,6 +909,39 @@ def test_occupancy_unmapped_default_host_query(tmp_path, monkeypatch) -> None:
         assert teacher["idle_or_empty"] is False
         assert teacher["occupant_count"] == 0
         assert teacher["ai_seats"] == []
+    finally:
+        atlas_job.set_host_adapter(None)
+        load_mod.clear_host_load_cache()
+
+
+def test_cloud_observer_presence_age_uses_freshness_window(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
+    fake = atlas_job.FakeHostAdapter()
+    atlas_job.set_host_adapter(fake)
+    try:
+        stamp = time.monotonic()
+        upsert_presence(
+            PresenceRequest.model_validate(
+                {
+                    "agent": "grok-bot",
+                    "kind": "observer",
+                    "task_id": "7491",
+                    "status": "working",
+                }
+            ),
+            now_mono=stamp - PRESENCE_FRESHNESS_SECONDS - 5,
+        )
+        # Freeze presence list_live clock via occupancy snapshot now_mono by
+        # advancing wall monotonic only through the stored updated_at_mono.
+        host = client.get("/api/occupancy?host_id=cloud-observer").json()["hosts"]["cloud-observer"]
+        assert host["status"] == "stale"
+        assert host["age_seconds"] >= PRESENCE_FRESHNESS_SECONDS
+        assert host["burn_state"] == "active"
+        assert host["burn_sources"]["observer"]["state"] == "active"
+        assert host["burn_sources"]["observer"]["observation_age_s"] >= PRESENCE_FRESHNESS_SECONDS
     finally:
         atlas_job.set_host_adapter(None)
         load_mod.clear_host_load_cache()
