@@ -17,6 +17,7 @@ tests/control_plane/test_storage_contract.py
 tests/fleet_comms/test_artifacts_byteplane_integrity.py
 tests/fleet_comms/test_artifacts_pg_byte_plane.py
 tests/fleet_comms/test_artifacts_pg_transactions.py
+tests/fleet_comms/test_pg_schema_ledger.py
 tests/fleet_comms/test_request_executor_exactly_once.py
 tests/fleet_comms/test_request_executor_pg.py
 tests/test_ask_opencode.py
