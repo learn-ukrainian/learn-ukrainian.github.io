@@ -251,8 +251,21 @@ def test_workflow_is_scheduled_manual_serial_and_minimally_scoped() -> None:
         "issues": "read",
     }
     assert workflow["concurrency"] == {"group": "auto-arm-merge", "cancel-in-progress": False}
+    source = _WORKFLOW.read_text(encoding="utf-8")
     # Module invocation keeps the repo root importable (scripts.ci.cf_attest).
-    assert "python -m scripts.ci.auto_arm_merge" in _WORKFLOW.read_text(encoding="utf-8")
+    assert "python -m scripts.ci.auto_arm_merge" in source
+    # #7586: arming must not use GITHUB_TOKEN (merge_group would never run).
+    arm_steps = arm_job["steps"]
+    mint = next(step for step in arm_steps if step.get("id") == "app")
+    assert mint["uses"].startswith("actions/create-github-app-token@")
+    assert "bcd2ba49218906704ab6c1aa796996da409d3eb1" in mint["uses"]
+    arm = next(step for step in arm_steps if step.get("name") == "Arm opted-in green pull requests")
+    assert arm["env"]["GH_TOKEN"] == "${{ steps.app.outputs.token }}"
+    assert "${{ github.token }}" not in str(arm.get("env"))
+    assert "Never fall back to github.token" in source
+    skip = next(step for step in arm_steps if step.get("name") == "Skip arming when the App is not configured")
+    assert skip["if"] == "${{ steps.app.outputs.token == '' }}"
+    assert arm["if"] == "${{ steps.app.outputs.token != '' }}"
 
 
 @pytest.mark.parametrize(
