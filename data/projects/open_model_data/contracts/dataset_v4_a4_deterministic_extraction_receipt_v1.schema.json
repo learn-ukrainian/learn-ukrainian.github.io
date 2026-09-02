@@ -14,6 +14,7 @@
     "bindings",
     "extraction_algorithm",
     "builder_packet_gate",
+    "builder_packet_consumption",
     "extraction_ledger",
     "a2_residuals_carried_forward",
     "a4_residuals",
@@ -23,7 +24,7 @@
   "properties": {
     "schema_version": {"const": "dataset_v4_a4_deterministic_extraction_receipt_v1"},
     "receipt_id": {"const": "dataset-v4-a4-deterministic-extraction-v1"},
-    "status": {"const": "A4_DETERMINISTIC_EXTRACTION_BLOCKED_NO_BUILDER_PACKET"},
+    "status": {"const": "A4_BUILDER_PACKET_CONSUMED_GATE_OPEN_TEXT_FREE_NO_COMPLEMENT_ENUMERATION"},
     "text_free": {"const": true},
     "controlling_outcome_sha256": {"const": "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"},
     "control_surfaces": {
@@ -39,10 +40,23 @@
     "bindings": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["a2_source_operation_admission", "a3_heldout_source_family_seal", "extraction_algorithm_implementation"],
+      "required": [
+        "a2_source_operation_admission",
+        "a3_heldout_source_family_seal",
+        "a3_builder_packet_receipt",
+        "extraction_algorithm_implementation"
+      ],
       "properties": {
         "a2_source_operation_admission": {"$ref": "#/$defs/artifact_binding"},
         "a3_heldout_source_family_seal": {"$ref": "#/$defs/artifact_binding"},
+        "a3_builder_packet_receipt": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "type": "object",
+          "properties": {
+            "path": {"const": "data/projects/open_model_data/admission/dataset_v4_a3_builder_packet_receipt_v1.json"},
+            "schema_version": {"const": "dataset_v4_a3_builder_packet_receipt_v1"}
+          }
+        },
         "extraction_algorithm_implementation": {
           "allOf": [{"$ref": "#/$defs/artifact_binding"}],
           "type": "object",
@@ -81,11 +95,12 @@
       "additionalProperties": false,
       "required": [
         "gate_id", "status", "requires", "a3_seal_complete", "builder_packet_issued",
-        "builder_eligible_source_unit_ids_known_to_a4", "owner_role", "blocked_reason_code"
+        "builder_eligible_source_unit_ids_known_to_a4", "packet_receipt_binding_verified",
+        "owner_role", "blocked_reason_code"
       ],
       "properties": {
         "gate_id": {"const": "v4-a4-builder-packet-gate-v1"},
-        "status": {"const": "AWAITING_A3_HELDOUT_BUILDER_PACKET_ISSUANCE"},
+        "status": {"const": "BUILDER_PACKET_ISSUED_GATE_OPEN"},
         "requires": {
           "type": "array",
           "minItems": 1,
@@ -93,10 +108,56 @@
           "items": {"type": "string", "minLength": 1}
         },
         "a3_seal_complete": {"const": true},
-        "builder_packet_issued": {"const": false},
-        "builder_eligible_source_unit_ids_known_to_a4": {"const": false},
+        "builder_packet_issued": {"const": true},
+        "builder_eligible_source_unit_ids_known_to_a4": {"const": true},
+        "packet_receipt_binding_verified": {"const": true},
         "owner_role": {"const": "A3_heldout"},
-        "blocked_reason_code": {"const": "builder_packet_not_issued"}
+        "blocked_reason_code": {"const": null}
+      }
+    },
+    "builder_packet_consumption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "consumption_id", "packet_opened_by", "packet_consumed", "unit_commitment_algorithm",
+        "consumed_source_unit_count", "unit_commitments", "consumed_units_commitment_sha256",
+        "membership_disclosed", "heldout_family_id_disclosed"
+      ],
+      "properties": {
+        "consumption_id": {"const": "v4-a4-builder-packet-consumption-v1"},
+        "packet_opened_by": {"const": "A4_deterministic_extraction"},
+        "packet_consumed": {"const": true},
+        "unit_commitment_algorithm": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "algorithm_id", "algorithm_version", "identity_dimensions", "content_blind", "formula",
+            "text_emitted", "reproducibility", "algorithm_descriptor_sha256"
+          ],
+          "properties": {
+            "algorithm_id": {"const": "v4-a4-unit-commitment-hmac-sha256-v1"},
+            "algorithm_version": {"const": "v1"},
+            "identity_dimensions": {"const": ["source_unit_id"]},
+            "content_blind": {"const": true},
+            "formula": {
+              "const": "unit_commitment_sha256(id) = hmac_sha256(key=private_a4_salt, msg=UNIT_COMMITMENT_DOMAIN + 0x00 + canonical_json({source_unit_id: id})); consumed_units_commitment_sha256(ids) = hmac_sha256(key=private_a4_salt, msg=UNIT_COMMITMENT_ROOT_DOMAIN + 0x00 + canonical_json({source_unit_ids: sorted(ids), count: len(ids)}))"
+            },
+            "text_emitted": {"const": false},
+            "reproducibility": {"const": "byte_stable_given_the_same_private_a4_salt_and_the_same_builder_eligible_source_unit_id_set"},
+            "algorithm_descriptor_sha256": {"const": "5ad217282ae326241093670ba56d2e98902f375d70bca7f0a8970560c0a9b5c7"}
+          }
+        },
+        "consumed_source_unit_count": {"const": 8},
+        "unit_commitments": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/sha256"}
+        },
+        "consumed_units_commitment_sha256": {"$ref": "#/$defs/sha256"},
+        "membership_disclosed": {"const": false},
+        "heldout_family_id_disclosed": {"const": false}
       }
     },
     "extraction_ledger": {
@@ -152,12 +213,12 @@
           "owner_role", "next_action", "retryability", "evidence_refs"
         ],
         "properties": {
-          "residual_id": {"const": "a4-residual-builder-packet-not-issued"},
+          "residual_id": {"const": "a4-residual-byte-level-extraction-pending-source-ingestion"},
           "subject_kind": {"const": "process"},
-          "subject_id": {"const": "builder_packet_issuance"},
+          "subject_id": {"const": "byte_level_span_extraction"},
           "stage": {"const": "A4"},
-          "reason_code": {"const": "builder_packet_not_issued"},
-          "owner_role": {"const": "A3_heldout"},
+          "reason_code": {"const": "source_byte_content_not_yet_ingested_for_v4"},
+          "owner_role": {"const": "V4_source_byte_ingestion"},
           "next_action": {"type": "string", "minLength": 1},
           "retryability": {"enum": ["retryable", "not_retryable"]},
           "evidence_refs": {
@@ -174,14 +235,15 @@
       "additionalProperties": false,
       "required": [
         "dataset_rows_emitted", "new_source_fetches", "source_units_extracted",
-        "spans_extracted", "builder_packets_consumed"
+        "spans_extracted", "builder_packets_consumed", "builder_eligible_units_committed"
       ],
       "properties": {
         "dataset_rows_emitted": {"const": 0},
         "new_source_fetches": {"const": 0},
         "source_units_extracted": {"const": 0},
         "spans_extracted": {"const": 0},
-        "builder_packets_consumed": {"const": 0}
+        "builder_packets_consumed": {"const": 1},
+        "builder_eligible_units_committed": {"const": 8}
       }
     },
     "safety_assertions": {
@@ -192,7 +254,7 @@
         "extraction_executed_without_builder_packet", "mac_corpus_copy_created",
         "historical_v3_control_not_used", "modern_rusyn_not_mapped_to_dialect",
         "prebuilder_state_claimed", "training_ready_silver_claimed",
-        "later_release_state_claimed", "epic_done_claimed"
+        "later_release_state_claimed", "epic_done_claimed", "builder_eligible_ids_present_in_public_diff"
       ],
       "properties": {
         "rows_not_admitted": {"const": true},
@@ -205,7 +267,8 @@
         "prebuilder_state_claimed": {"const": false},
         "training_ready_silver_claimed": {"const": false},
         "later_release_state_claimed": {"const": false},
-        "epic_done_claimed": {"const": false}
+        "epic_done_claimed": {"const": false},
+        "builder_eligible_ids_present_in_public_diff": {"const": false}
       }
     }
   },
