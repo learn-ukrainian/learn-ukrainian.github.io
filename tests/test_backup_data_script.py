@@ -809,6 +809,55 @@ def test_symlink_policy_excludes_known_legacy_links_and_rejects_escapes(
     assert "Absolute symlink is not backup-safe" in rejected.stderr
 
 
+def test_doctor_and_backup_exclude_dangling_legacy_drive_symlinks(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    environment.pop("LU_BACKUP_LEGACY_DIR", None)
+    dangling_target = tmp_path / "nonexistent-drive-path" / "textbooks"
+    (source / "textbooks").symlink_to(dangling_target)
+    (source / "vesum").symlink_to(tmp_path / "nonexistent-drive-path" / "vesum")
+
+    doctor_result = _run(environment, "doctor")
+    assert doctor_result.returncode == 0, doctor_result.stderr
+    assert "EXCLUDED legacy Drive symlink: textbooks\n" in doctor_result.stdout
+    assert "EXCLUDED legacy Drive symlink: vesum\n" in doctor_result.stdout
+    assert str(dangling_target) not in doctor_result.stdout
+    assert "Doctor checks passed." in doctor_result.stdout
+
+    backup_result = _run(environment, "backup")
+    assert backup_result.returncode == 0, backup_result.stderr
+    assert "EXCLUDED legacy Drive symlink: textbooks\n" in backup_result.stdout
+    assert "EXCLUDED legacy Drive symlink: vesum\n" in backup_result.stdout
+    assert str(dangling_target) not in backup_result.stdout
+
+
+def test_backup_fails_closed_for_dangling_non_legacy_symlink_in_source(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    (source / "broken-link.txt").symlink_to("missing-dir/missing.txt")
+
+    result = _run(environment, "backup")
+    assert result.returncode != 0
+    assert "Broken symlink in backup source: broken-link.txt -> missing-dir/missing.txt" in result.stderr
+
+
+def test_symlink_policy_rejects_resolving_legacy_symlink_outside_legacy_dir(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    outside_dir = tmp_path / "outside-legacy"
+    outside_dir.mkdir()
+    (source / "textbooks").symlink_to(outside_dir)
+
+    result = _run(environment, "backup")
+    assert result.returncode != 0
+    assert "Known legacy symlink points outside the legacy backup: textbooks ->" in result.stderr
+
+
 def test_real_textbooks_directory_is_included(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
