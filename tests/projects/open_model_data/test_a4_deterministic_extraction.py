@@ -520,18 +520,87 @@ def test_a4_extraction_carries_forward_every_a2_residual_unchanged() -> None:
 
 
 def test_a4_residual_names_the_byte_level_extraction_gap_not_any_source() -> None:
+    """One residual per real A2 source unit (9), id-free -- ``subject_id`` is
+    a bare ``sha256(source_unit_id)`` commitment, never the plaintext id."""
     receipt = _receipt()
     residuals = receipt["a4_residuals"]
+    a2_receipt = _load(A2_RECEIPT)
 
+    assert len(residuals) == 9
+    assert residuals == extraction.derive_source_unit_extraction_residuals(a2_receipt)
+
+    expected_commitments = {
+        hashlib.sha256(entry["source_unit_id"].encode("utf-8")).hexdigest()
+        for entry in a2_receipt["source_operation_ledger"]
+    }
+    assert {residual["subject_id"] for residual in residuals} == expected_commitments
+
+    reason_codes = {residual["reason_code"] for residual in residuals}
+    assert reason_codes <= {
+        "metadata_only",
+        "source_byte_content_not_yet_ingested_for_v4",
+        "deterministic_local_analysis_denied",
+    }
+    metadata_only_count = sum(1 for entry in a2_receipt["source_operation_ledger"] if entry["metadata_only"])
+    assert sum(1 for r in residuals if r["reason_code"] == "metadata_only") == metadata_only_count
+
+    for residual in residuals:
+        assert residual["stage"] == "A4"
+        assert residual["subject_kind"] == "source_unit_commitment"
+        assert residual["retryability"] == "retryable"
+        assert residual["evidence_refs"]
+        assert "fam-" not in residual["next_action"]
+
+
+def test_derive_source_unit_extraction_residuals_is_pure_and_reproducible() -> None:
+    a2_receipt = _load(A2_RECEIPT)
+    first = extraction.derive_source_unit_extraction_residuals(a2_receipt)
+    second = extraction.derive_source_unit_extraction_residuals(a2_receipt)
+    assert first == second
+    assert len(first) == len(a2_receipt["source_operation_ledger"])
+    serialized = json.dumps(first)
+    for entry in a2_receipt["source_operation_ledger"]:
+        assert entry["source_unit_id"] not in serialized
+
+
+def test_derive_source_unit_extraction_residuals_reclassifies_denied_analysis_rights() -> None:
+    """A synthetic unit with denied deterministic_local_analysis rights takes
+    the dedicated ``deterministic_local_analysis_denied`` branch -- currently
+    unreachable against the real A2 receipt (no V4 candidate unit is denied
+    that operation), so this exercises it directly."""
+    synthetic = {
+        "source_operation_ledger": [
+            {
+                "source_unit_id": "synthetic.denied-unit",
+                "metadata_only": False,
+                "operation_rights": {"deterministic_local_analysis": {"value": "denied"}},
+            }
+        ]
+    }
+    residuals = extraction.derive_source_unit_extraction_residuals(synthetic)
     assert len(residuals) == 1
-    residual = residuals[0]
-    assert residual["residual_id"] == "a4-residual-byte-level-extraction-pending-source-ingestion"
-    assert residual["stage"] == "A4"
-    assert residual["reason_code"] == "source_byte_content_not_yet_ingested_for_v4"
-    assert residual["owner_role"] == "V4_source_byte_ingestion"
-    assert residual["retryability"] == "retryable"
-    assert residual["evidence_refs"]
-    assert "fam-" not in residual["next_action"]
+    assert residuals[0]["reason_code"] == "deterministic_local_analysis_denied"
+    assert residuals[0]["owner_role"] == "rights_capability_steward"
+    assert "synthetic.denied-unit" not in json.dumps(residuals)
+
+
+def test_a4_script_refuses_a4_residuals_that_drift_from_a2() -> None:
+    receipt = _receipt()
+    forged = copy.deepcopy(receipt)
+    forged["a4_residuals"][0]["reason_code"] = "metadata_only"
+
+    with pytest.raises(extraction.ExtractionError, match="does not reproduce from A2"):
+        extraction.validate_receipt_independently(forged)
+
+
+def test_a4_script_refuses_an_a4_residual_naming_a_plaintext_source_unit_id() -> None:
+    receipt = _receipt()
+    forged = copy.deepcopy(receipt)
+    forged["a4_residuals"][0]["subject_id"] = "0" * 64
+    forged["a4_residuals"][0]["subject_kind"] = "source_unit"
+
+    with pytest.raises(extraction.ExtractionError, match="does not reproduce from A2"):
+        extraction.validate_receipt_independently(forged)
 
 
 def test_a4_script_verifies_the_checked_in_receipt() -> None:

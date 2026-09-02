@@ -204,7 +204,9 @@
     },
     "a4_residuals": {
       "type": "array",
-      "minItems": 1,
+      "minItems": 9,
+      "maxItems": 9,
+      "uniqueItems": true,
       "items": {
         "type": "object",
         "additionalProperties": false,
@@ -213,12 +215,20 @@
           "owner_role", "next_action", "retryability", "evidence_refs"
         ],
         "properties": {
-          "residual_id": {"const": "a4-residual-byte-level-extraction-pending-source-ingestion"},
-          "subject_kind": {"const": "process"},
-          "subject_id": {"const": "byte_level_span_extraction"},
+          "residual_id": {"type": "string", "pattern": "^a4-residual-[a-z0-9_-]+$"},
+          "subject_kind": {"const": "source_unit_commitment"},
+          "subject_id": {"$ref": "#/$defs/sha256"},
           "stage": {"const": "A4"},
-          "reason_code": {"const": "source_byte_content_not_yet_ingested_for_v4"},
-          "owner_role": {"const": "V4_source_byte_ingestion"},
+          "reason_code": {
+            "enum": [
+              "metadata_only",
+              "source_byte_content_not_yet_ingested_for_v4",
+              "deterministic_local_analysis_denied"
+            ]
+          },
+          "owner_role": {
+            "enum": ["V4_source_byte_ingestion", "source_admission_steward", "rights_capability_steward"]
+          },
           "next_action": {"type": "string", "minLength": 1},
           "retryability": {"enum": ["retryable", "not_retryable"]},
           "evidence_refs": {

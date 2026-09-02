@@ -32,14 +32,21 @@ receipt).
 This module has three independent parts:
 
 1. ``EXTRACTION_ALGORITHM_DESCRIPTOR`` -- the frozen, hashed, real-corpus
-   span-extraction formula A4 will eventually run once byte-addressable
-   source content is available for the builder-eligible complement. Not yet
-   executed: this receipt's ``extraction_ledger`` stays empty and
+   span-extraction formula A4 will eventually run once a real, rights-chain-
+   verified V4 byte ingestion admission exists for the builder-eligible
+   complement. Not yet executed: this receipt's ``extraction_ledger`` stays
+   empty (the schema pins it to ``maxItems: 0``) and
    ``source_units_extracted``/``spans_extracted`` stay ``0`` regardless of
-   the builder-packet gate's state -- see the ``a4-residual-byte-level-
-   extraction-pending-source-ingestion`` residual. Frozen the same way A3
-   froze its assignment formula: any edit changes
-   ``EXTRACTION_ALGORITHM_DESCRIPTOR_SHA256``, pinned as a schema ``const``.
+   the builder-packet gate's state -- see ``derive_source_unit_extraction_
+   residuals``, which independently re-derives one typed residual per real
+   source_unit_id from A2's own public ``source_operation_ledger`` (never
+   scoped to the secret builder-eligible subset, so it can never disclose
+   complement membership -- see that function's docstring). A generic local
+   corpus database containing rows for a source unit is not the same thing
+   as this V4-scoped ingestion admission; A4 never treats the former as
+   satisfying the latter. Frozen the same way A3 froze its assignment
+   formula: any edit changes ``EXTRACTION_ALGORITHM_DESCRIPTOR_SHA256``,
+   pinned as a schema ``const``.
 2. ``UNIT_COMMITMENT_ALGORITHM_DESCRIPTOR`` -- a second, distinct, also
    frozen and hashed algorithm that *does* run today: a content-blind,
    HMAC-keyed commitment over the real (private) builder-eligible
@@ -484,6 +491,95 @@ def verify_builder_packet_consumption_privately(
     )
 
 
+# --- per-source-unit byte-level extraction residuals (public, content-blind) -
+#
+# A2's source_operation_ledger already publicly names all 9 real
+# source_unit_ids (4 db.* existing-corpus collections, 5 historical.* frozen
+# units) together with each one's own ``metadata_only`` flag and
+# ``deterministic_local_analysis`` right -- none of that is secret, unlike
+# *which 8 of the 9* are builder-eligible. Deriving one residual per real
+# unit, uniformly across the full public registry, therefore never discloses
+# complement membership: A4 is not selectively silent about the held-out
+# one -- it reports on every real unit identically regardless of its
+# (secret, never-consulted-here) eligibility. This never opens
+# ``batch_state/`` and never queries any local corpus database; it is a pure
+# function of A2's own already-committed, already-public fields.
+#
+# ``subject_id`` is ``sha256(source_unit_id)`` -- unsalted, and therefore
+# trivially re-enumerable by anyone who hashes A2's own 9 public ids and
+# matches (this codebase's own comment on ``unit_commitment_sha256`` names
+# that exact limitation for the *true* secret, held-out identity, which is
+# why that commitment is HMAC-keyed instead). This receipt has no comparable
+# secret to protect here -- reason_code is itself a pure function of A2's own
+# already-public ``metadata_only``/rights fields, so a reader can already
+# derive which real id maps to which residual from A2 alone, hash or no
+# hash. The hash exists only so this receipt stays self-contained and never
+# repeats a plaintext source_unit_id verbatim, not to add real confidentiality.
+
+SOURCE_UNIT_RESIDUAL_REASON_METADATA_ONLY = "metadata_only"
+SOURCE_UNIT_RESIDUAL_REASON_PENDING_V4_INGESTION = "source_byte_content_not_yet_ingested_for_v4"
+SOURCE_UNIT_RESIDUAL_REASON_ANALYSIS_DENIED = "deterministic_local_analysis_denied"
+
+
+def derive_source_unit_extraction_residuals(a2_receipt: dict[str, Any]) -> list[dict[str, Any]]:
+    """One typed, per-real-source-unit residual explaining why byte-level
+    extraction cannot run against it yet -- ``metadata_only`` (A2 admitted
+    metadata only, no byte content), ``deterministic_local_analysis_denied``
+    (A2 rights block even local analysis -- not currently true for any V4
+    candidate unit, handled for correctness), or
+    ``source_byte_content_not_yet_ingested_for_v4`` (A2 admitted real content
+    rows, but no rights-chain-verified V4-scoped byte ingestion admission
+    exists yet -- a generic local corpus database is not that admission).
+    Ordered by the *commitment*, not the source_unit_id (which never appears
+    in this receipt -- see the section comment above), matching how
+    ``builder_eligible_unit_commitments`` orders by commitment value too."""
+    residuals = []
+    for entry in a2_receipt["source_operation_ledger"]:
+        unit_id = entry["source_unit_id"]
+        rights = entry["operation_rights"]["deterministic_local_analysis"]["value"]
+        if entry["metadata_only"]:
+            reason_code = SOURCE_UNIT_RESIDUAL_REASON_METADATA_ONLY
+            owner_role = "source_admission_steward"
+            next_action = (
+                "obtain a real byte-content admission (beyond metadata_only) for this source unit from "
+                "source_admission_steward before byte-level extraction can run against it"
+            )
+        elif rights not in ("allowed", "scope_bound"):
+            reason_code = SOURCE_UNIT_RESIDUAL_REASON_ANALYSIS_DENIED
+            owner_role = "rights_capability_steward"
+            next_action = (
+                f"obtain deterministic_local_analysis rights (currently {rights!r}) for this source unit "
+                "before byte-level extraction can run against it"
+            )
+        else:
+            reason_code = SOURCE_UNIT_RESIDUAL_REASON_PENDING_V4_INGESTION
+            owner_role = "V4_source_byte_ingestion"
+            next_action = (
+                "V4_source_byte_ingestion must issue a rights-chain-verified V4-scoped byte ingestion "
+                "admission for this source unit -- distinct from its general local retention -- before the "
+                "frozen sha256(raw_span_bytes_utf8) formula in extraction_algorithm can execute against it"
+            )
+        commitment = sha256_text(unit_id)
+        residuals.append(
+            {
+                "residual_id": f"a4-residual-{reason_code.replace('_', '-')}-{commitment[:16]}",
+                "subject_kind": "source_unit_commitment",
+                "subject_id": commitment,
+                "stage": "A4",
+                "reason_code": reason_code,
+                "owner_role": owner_role,
+                "next_action": next_action,
+                "retryability": "retryable",
+                "evidence_refs": [
+                    "admission.dataset_v4_a2_source_operation_admission_receipt_v1.source_operation_ledger",
+                    "admission.dataset_v4_a4_deterministic_extraction_receipt_v1.extraction_algorithm",
+                ],
+            }
+        )
+    residuals.sort(key=lambda residual: residual["subject_id"])
+    return residuals
+
+
 # --- receipt assembly --------------------------------------------------------
 
 
@@ -554,27 +650,7 @@ def build_receipt(consumption: dict[str, Any], gate: dict[str, Any], root: Path 
         },
         "extraction_ledger": [],
         "a2_residuals_carried_forward": a2_residuals_carried,
-        "a4_residuals": [
-            {
-                "residual_id": "a4-residual-byte-level-extraction-pending-source-ingestion",
-                "subject_kind": "process",
-                "subject_id": "byte_level_span_extraction",
-                "stage": "A4",
-                "reason_code": "source_byte_content_not_yet_ingested_for_v4",
-                "owner_role": "V4_source_byte_ingestion",
-                "next_action": (
-                    "ingest byte-addressable, rights-clear source content for the builder-eligible complement "
-                    "(never resolving which family is held out) so the frozen sha256(raw_span_bytes_utf8) "
-                    "formula in extraction_algorithm can execute for real against real spans; until then "
-                    "extraction_ledger stays empty by design"
-                ),
-                "retryability": "retryable",
-                "evidence_refs": [
-                    "admission.dataset_v4_a4_deterministic_extraction_receipt_v1.extraction_algorithm",
-                    "admission.dataset_v4_a4_deterministic_extraction_receipt_v1.builder_packet_consumption",
-                ],
-            }
-        ],
+        "a4_residuals": derive_source_unit_extraction_residuals(a2_receipt),
         "execution_counters": {
             "dataset_rows_emitted": 0,
             "new_source_fetches": 0,
@@ -747,6 +823,20 @@ def validate_no_forbidden_keys(receipt: dict[str, Any]) -> None:
     require(not leaked, f"receipt carries forbidden key(s): {sorted(leaked)} -- refusing")
 
 
+def validate_a4_residuals_derivable_from_a2(receipt: dict[str, Any]) -> None:
+    """Independently re-derives ``a4_residuals`` from the live, public A2
+    receipt on disk and requires an exact match -- catches a stale, hand-
+    edited, or incomplete residual list (e.g. one still scoped to only the
+    secret builder-eligible subset, which would itself be a complement-
+    membership leak) even though the derivation is otherwise pure."""
+    a2_receipt = _load(A2_RECEIPT_PATH)
+    expected = derive_source_unit_extraction_residuals(a2_receipt)
+    require(
+        receipt["a4_residuals"] == expected,
+        "a4_residuals does not reproduce from A2's public source_operation_ledger -- refusing",
+    )
+
+
 def validate_extraction_ledger_hashes(receipt: dict[str, Any]) -> None:
     """Recompute every ledger record's ``output_sha256`` from its own
     identity fields; catches a hand-edited or stale ledger entry even though
@@ -768,6 +858,7 @@ def validate_receipt_independently(receipt: dict[str, Any], root: Path = ROOT) -
     validate_gate_matches_receipt(receipt, root)
     validate_builder_packet_consumption(receipt)
     validate_no_forbidden_keys(receipt)
+    validate_a4_residuals_derivable_from_a2(receipt)
     validate_extraction_ledger_hashes(receipt)
     validate_receipt_schema(receipt)
 
