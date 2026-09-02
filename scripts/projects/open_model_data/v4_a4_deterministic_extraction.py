@@ -32,21 +32,31 @@ receipt).
 This module has three independent parts:
 
 1. ``EXTRACTION_ALGORITHM_DESCRIPTOR`` -- the frozen, hashed, real-corpus
-   span-extraction formula A4 will eventually run once a real, rights-chain-
-   verified V4 byte ingestion admission exists for the builder-eligible
-   complement. Not yet executed: this receipt's ``extraction_ledger`` stays
-   empty (the schema pins it to ``maxItems: 0``) and
-   ``source_units_extracted``/``spans_extracted`` stay ``0`` regardless of
-   the builder-packet gate's state -- see ``derive_source_unit_extraction_
-   residuals``, which independently re-derives one typed residual per real
-   source_unit_id from A2's own public ``source_operation_ledger`` (never
-   scoped to the secret builder-eligible subset, so it can never disclose
-   complement membership -- see that function's docstring). A generic local
-   corpus database containing rows for a source unit is not the same thing
-   as this V4-scoped ingestion admission; A4 never treats the former as
-   satisfying the latter. Frozen the same way A3 froze its assignment
-   formula: any edit changes ``EXTRACTION_ALGORITHM_DESCRIPTOR_SHA256``,
-   pinned as a schema ``const``.
+   span-extraction formula, plus its implementation (``segment_sentence_
+   spans`` / ``extract_ledger_rows_for_unit`` / ``run_deterministic_
+   extraction``), which is real, runnable code today -- not yet exercised
+   against real production content, though, because no real, rights-chain-
+   verified V4 byte ingestion admission exists yet for the builder-eligible
+   complement. ``run_deterministic_extraction`` takes a ``byte_provider``
+   callable; the production default, ``no_v4_byte_ingestion_admission``,
+   always returns ``None`` for every unit, so ``consume_builder_packet``'s
+   ``extraction_ledger`` stays empty and ``source_units_extracted``/
+   ``spans_extracted`` stay ``0`` today -- not because the schema forbids
+   otherwise (``extraction_ledger``'s ``maxItems: 0`` cap is lifted; the
+   ledger's shape now carries hash-only rows keyed by the same per-unit
+   HMAC commitment used in ``builder_packet_consumption``, never a plaintext
+   ``source_unit_id``), but because that default provider has nothing to
+   return. See ``derive_source_unit_extraction_residuals``, which
+   independently re-derives one typed residual per real source_unit_id from
+   A2's own public ``source_operation_ledger`` (never scoped to the secret
+   builder-eligible subset, so it can never disclose complement membership
+   -- see that function's docstring). A generic local corpus database
+   containing rows for a source unit is not the same thing as this
+   V4-scoped ingestion admission; A4 never treats the former as satisfying
+   the latter, and ``no_v4_byte_ingestion_admission`` deliberately never
+   reads ``data/sources.db`` for that reason. Frozen the same way A3 froze
+   its assignment formula: any edit changes
+   ``EXTRACTION_ALGORITHM_DESCRIPTOR_SHA256``, pinned as a schema ``const``.
 2. ``UNIT_COMMITMENT_ALGORITHM_DESCRIPTOR`` -- a second, distinct, also
    frozen and hashed algorithm that *does* run today: a content-blind,
    HMAC-keyed commitment over the real (private) builder-eligible
@@ -81,8 +91,10 @@ import argparse
 import hashlib
 import hmac
 import json
+import re
 import secrets
 import sys
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -131,6 +143,7 @@ FORBIDDEN_KEYS = frozenset(
         "text",
         "source_body",
         "source_text",
+        "source_unit_id",
         "prompt",
         "label",
         "gold",
@@ -169,23 +182,38 @@ def sha256_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-# --- frozen byte-level extraction algorithm (real corpus, not yet run) -----
+# --- frozen byte-level extraction algorithm (real code, real corpus not yet
+# --- reachable) --------------------------------------------------------------
 #
-# Not yet executed against any source unit -- see the module docstring and
-# the a4-residual carried in a4_residuals. Frozen and hashed now so that the
+# Runnable today (see ``segment_sentence_spans`` / ``extract_ledger_rows_
+# for_unit`` / ``run_deterministic_extraction`` below) but not yet exercised
+# against any real source unit -- see the module docstring and the
+# a4-residual carried in a4_residuals. Frozen and hashed now so that the
 # moment byte-addressable, rights-clear source content exists for the
 # builder-eligible complement, extraction runs against a formula that was
 # fixed before any builder-eligible unit was known -- not tuned post hoc.
+#
+# Every identity field is keyed by ``source_unit_commitment_sha256`` -- the
+# same per-unit HMAC commitment ``builder_packet_consumption.unit_
+# commitments`` already publishes -- never the plaintext ``source_unit_id``.
+# ``source_unit_id`` is only ever an *input* to that commitment's HMAC (see
+# ``unit_commitment_sha256`` below); it is never itself a field of any
+# public ledger row.
 
 EXTRACTION_ALGORITHM_DESCRIPTOR: dict[str, Any] = {
     "algorithm_id": "v4-a4-deterministic-span-extraction-v1",
     "algorithm_version": "v1",
     "unit_of_extraction": "sentence_span",
     "content_blind": False,
-    "ordering": "source_unit_id_ascending_then_byte_offset_ascending",
+    "ordering": "source_unit_commitment_sha256_ascending_then_span_index_ascending",
+    "segmentation_rule": (
+        "text = raw_unit_bytes.decode('utf-8'); spans = re.split(r'(?<=[.!?…])\\s+', text); "
+        "spans = [span.strip() for span in spans if span.strip()]; span_index assigned in list "
+        "order starting at 0"
+    ),
     "input_hash_formula": "sha256(raw_span_bytes_utf8)",
     "output_hash_formula": (
-        "sha256(canonical_json({source_unit_id, span_index, span_byte_length, "
+        "sha256(canonical_json({source_unit_commitment_sha256, span_index, span_byte_length, "
         "input_sha256, extraction_algorithm_id, extraction_algorithm_version}))"
     ),
     "text_emitted": False,
@@ -194,15 +222,18 @@ EXTRACTION_ALGORITHM_DESCRIPTOR: dict[str, Any] = {
 
 EXTRACTION_ALGORITHM_DESCRIPTOR_SHA256 = sha256_text(canonical_json(EXTRACTION_ALGORITHM_DESCRIPTOR))
 
+_SENTENCE_SPAN_BOUNDARY = re.compile(r"(?<=[.!?…])\s+")
+
 
 def extraction_record_output_hash(
-    source_unit_id: str, span_index: int, span_byte_length: int, input_sha256: str
+    source_unit_commitment_sha256: str, span_index: int, span_byte_length: int, input_sha256: str
 ) -> str:
     """Pure function implementing ``output_hash_formula`` above. Never touches
-    span text -- only the record's own identity fields and the already-hashed
+    span text -- only the record's own identity fields (keyed by the unit's
+    HMAC commitment, never its plaintext id) and the already-hashed
     ``input_sha256`` are covered."""
     record = {
-        "source_unit_id": source_unit_id,
+        "source_unit_commitment_sha256": source_unit_commitment_sha256,
         "span_index": span_index,
         "span_byte_length": span_byte_length,
         "input_sha256": input_sha256,
@@ -210,6 +241,78 @@ def extraction_record_output_hash(
         "extraction_algorithm_version": EXTRACTION_ALGORITHM_DESCRIPTOR["algorithm_version"],
     }
     return sha256_text(canonical_json(record))
+
+
+def segment_sentence_spans(raw_unit_bytes: bytes) -> list[str]:
+    """Pure, frozen segmentation matching ``segmentation_rule`` above: UTF-8
+    decode, split on the sentence-boundary regex, strip, drop empties.
+    Returns span *text* -- callers must hash it immediately and never persist
+    or print the return value; see ``extract_ledger_rows_for_unit``, the only
+    caller in this module."""
+    text = raw_unit_bytes.decode("utf-8")
+    return [span.strip() for span in _SENTENCE_SPAN_BOUNDARY.split(text) if span.strip()]
+
+
+def extract_ledger_rows_for_unit(raw_unit_bytes: bytes, source_unit_commitment_sha256: str) -> list[dict[str, Any]]:
+    """Run the frozen extraction formula against one unit's real bytes, keyed
+    by that unit's already-computed (HMAC, private-salted) commitment --
+    never its plaintext ``source_unit_id``. Returns hash-only rows; each
+    span's text is discarded the instant its hash is taken and never appears
+    in the return value."""
+    rows: list[dict[str, Any]] = []
+    for span_index, span in enumerate(segment_sentence_spans(raw_unit_bytes)):
+        span_bytes = span.encode("utf-8")
+        input_sha256 = hashlib.sha256(span_bytes).hexdigest()
+        span_byte_length = len(span_bytes)
+        rows.append(
+            {
+                "source_unit_commitment_sha256": source_unit_commitment_sha256,
+                "span_index": span_index,
+                "span_byte_length": span_byte_length,
+                "input_sha256": input_sha256,
+                "output_sha256": extraction_record_output_hash(
+                    source_unit_commitment_sha256, span_index, span_byte_length, input_sha256
+                ),
+            }
+        )
+    return rows
+
+
+def no_v4_byte_ingestion_admission(source_unit_id: str) -> bytes | None:
+    """Production default ``byte_provider``: no real, rights-chain-verified
+    V4-scoped byte ingestion admission exists yet for *any* source unit (see
+    the module docstring and ``SOURCE_UNIT_RESIDUAL_REASON_PENDING_V4_
+    INGESTION``). Always returns ``None`` -- deliberately never reads
+    ``data/sources.db`` or any other generic local corpus store, which is
+    not the same thing as this admission. Swapping in a real provider, once
+    a real admission exists for the builder-eligible complement, is a
+    distinct, explicitly-scoped future change."""
+    return None
+
+
+def run_deterministic_extraction(
+    source_unit_ids: list[str],
+    salt: bytes,
+    byte_provider: Callable[[str], bytes | None] = no_v4_byte_ingestion_admission,
+) -> list[dict[str, Any]]:
+    """For each builder-eligible unit, ask ``byte_provider`` for its real
+    bytes; skip (silently -- the typed residual already explains why,
+    independently) any unit for which it returns ``None``. Never receives or
+    handles anything but already-open, already-rights-checked bytes -- rights
+    gating happens upstream, in whatever real ``byte_provider`` a future
+    change wires in. Rows are ordered by (commitment, span_index) ascending,
+    matching ``EXTRACTION_ALGORITHM_DESCRIPTOR["ordering"]`` -- never by
+    ``source_unit_id``, so publishing this list never leaks the units'
+    original order either."""
+    rows: list[dict[str, Any]] = []
+    for unit_id in source_unit_ids:
+        raw_bytes = byte_provider(unit_id)
+        if raw_bytes is None:
+            continue
+        commitment = unit_commitment_sha256(salt, unit_id)
+        rows.extend(extract_ledger_rows_for_unit(raw_bytes, commitment))
+    rows.sort(key=lambda row: (row["source_unit_commitment_sha256"], row["span_index"]))
+    return rows
 
 
 # --- frozen unit-commitment algorithm (real, content-blind, runs today) ----
@@ -362,13 +465,19 @@ def consume_builder_packet(
     seal_receipt_path: Path = A3_SEAL_RECEIPT_PATH,
     packet_dir: Path = DEFAULT_PRIVATE_PACKET_DIR,
     a4_private_dir: Path = DEFAULT_A4_PRIVATE_DIR,
+    byte_provider: Callable[[str], bytes | None] = no_v4_byte_ingestion_admission,
 ) -> dict[str, Any]:
     """Open the real private builder packet (never the membership file),
     independently verify its ``builder_eligible_source_unit_ids`` reproduce
     from its own ``builder_eligible_family_ids`` against the *public* seal
     receipt's family registry, resolve A4's own private unit-commitment salt
     (verify-only if one already exists; generate-once, create-only
-    otherwise), and compute the real, keyed, id-free commitments.
+    otherwise), compute the real, keyed, id-free commitments, and run the
+    frozen extraction formula (``run_deterministic_extraction``) against
+    whatever bytes ``byte_provider`` returns -- the production default
+    (``no_v4_byte_ingestion_admission``) returns none, so the ledger is
+    empty today; a real provider is a distinct, explicitly-scoped future
+    change.
 
     Fails closed (raises ``ExtractionError``/``heldout.AssignmentError``) if
     the private packet is missing, unreadable, or does not reproduce --
@@ -425,12 +534,16 @@ def consume_builder_packet(
 
     unit_commitments = builder_eligible_unit_commitments(salt, source_unit_ids)
     root_commitment = root_commitment_sha256(salt, source_unit_ids)
+    extraction_ledger = run_deterministic_extraction(source_unit_ids, salt, byte_provider)
 
     return {
         "packet_consumed": True,
         "consumed_source_unit_count": len(source_unit_ids),
         "unit_commitments": unit_commitments,
         "consumed_units_commitment_sha256": root_commitment,
+        "extraction_ledger": extraction_ledger,
+        "source_units_extracted": len({row["source_unit_commitment_sha256"] for row in extraction_ledger}),
+        "spans_extracted": len(extraction_ledger),
     }
 
 
@@ -648,14 +761,14 @@ def build_receipt(consumption: dict[str, Any], gate: dict[str, Any], root: Path 
             "membership_disclosed": False,
             "heldout_family_id_disclosed": False,
         },
-        "extraction_ledger": [],
+        "extraction_ledger": consumption.get("extraction_ledger", []),
         "a2_residuals_carried_forward": a2_residuals_carried,
         "a4_residuals": derive_source_unit_extraction_residuals(a2_receipt),
         "execution_counters": {
             "dataset_rows_emitted": 0,
             "new_source_fetches": 0,
-            "source_units_extracted": 0,
-            "spans_extracted": 0,
+            "source_units_extracted": consumption.get("source_units_extracted", 0),
+            "spans_extracted": consumption.get("spans_extracted", 0),
             "builder_packets_consumed": 1 if consumption["packet_consumed"] else 0,
             "builder_eligible_units_committed": consumption["consumed_source_unit_count"],
         },
@@ -732,20 +845,7 @@ def validate_gate_matches_receipt(receipt: dict[str, Any], root: Path) -> None:
         "seal and A3 builder packet receipts -- refusing (reseal/re-issue or regenerate required)",
     )
 
-    # The byte-level extraction ledger stays empty regardless of gate state:
-    # this receipt never executes the frozen EXTRACTION_ALGORITHM_DESCRIPTOR
-    # formula against real bytes (see a4_residuals) -- only the id-free
-    # builder_packet_consumption commitment below reflects real work done.
-    require(
-        receipt["extraction_ledger"] == [],
-        "extraction_ledger is non-empty -- the frozen byte-level formula has not been executed in this "
-        "receipt; refusing (real span-byte extraction is a separate, explicitly-scoped future change)",
-    )
-    require(
-        receipt["execution_counters"]["source_units_extracted"] == 0
-        and receipt["execution_counters"]["spans_extracted"] == 0,
-        "execution_counters claim byte-level extraction occurred while extraction_ledger is empty -- refusing",
-    )
+    validate_ledger_consistency_with_gate(receipt, gate)
 
     consumption = receipt["builder_packet_consumption"]
     if gate["gate_open"]:
@@ -757,6 +857,44 @@ def validate_gate_matches_receipt(receipt: dict[str, Any], root: Path) -> None:
         require(
             consumption["packet_consumed"] is False and consumption["unit_commitments"] == [],
             "builder_packet_gate is closed but builder_packet_consumption claims a packet was consumed -- refusing",
+        )
+
+
+def validate_ledger_consistency_with_gate(receipt: dict[str, Any], gate: dict[str, Any]) -> None:
+    """Pure, gate-dict-parameterized so it can be exercised directly against
+    a synthetic gate in tests, independent of ``check_builder_packet_gate``'s
+    live filesystem read. The extraction ledger may only be non-empty once
+    the packet gate is genuinely open *and* the packet was actually
+    consumed -- extraction never runs ahead of, or without, a real
+    consumption. ``dataset_rows_emitted`` is separately pinned to ``const 0``
+    by the schema regardless: ledger rows are pre-admission span/unit
+    hashes, never admitted dataset rows."""
+    ledger = receipt["extraction_ledger"]
+    consumption = receipt["builder_packet_consumption"]
+    if not gate["gate_open"] or not consumption["packet_consumed"]:
+        require(
+            ledger == [],
+            "extraction_ledger is non-empty but the builder_packet_gate is not open and/or the packet was "
+            "not consumed -- refusing (extraction must never run ahead of a real consumption)",
+        )
+
+    require(
+        receipt["execution_counters"]["spans_extracted"] == len(ledger),
+        "execution_counters.spans_extracted does not match len(extraction_ledger) -- refusing",
+    )
+    distinct_units = {row["source_unit_commitment_sha256"] for row in ledger}
+    require(
+        receipt["execution_counters"]["source_units_extracted"] == len(distinct_units),
+        "execution_counters.source_units_extracted does not match the distinct commitments present in "
+        "extraction_ledger -- refusing",
+    )
+    if ledger:
+        known_commitments = set(consumption["unit_commitments"])
+        require(
+            distinct_units <= known_commitments,
+            "extraction_ledger references a source_unit_commitment_sha256 outside "
+            "builder_packet_consumption.unit_commitments -- refusing (ledger cannot name a unit A4 never "
+            "consumed)",
         )
 
 
@@ -839,17 +977,33 @@ def validate_a4_residuals_derivable_from_a2(receipt: dict[str, Any]) -> None:
 
 def validate_extraction_ledger_hashes(receipt: dict[str, Any]) -> None:
     """Recompute every ledger record's ``output_sha256`` from its own
-    identity fields; catches a hand-edited or stale ledger entry even though
-    the ledger is currently always empty (byte-level extraction has not run)."""
-    for record in receipt["extraction_ledger"]:
+    identity fields, and require the ledger is ordered and duplicate-free --
+    catches a hand-edited, stale, reordered, or duplicated ledger entry even
+    though the ledger is currently always empty in the checked-in production
+    receipt (see ``no_v4_byte_ingestion_admission``)."""
+    ledger = receipt["extraction_ledger"]
+    seen: set[tuple[str, int]] = set()
+    previous_key: tuple[str, int] | None = None
+    for record in ledger:
         expected = extraction_record_output_hash(
-            record["source_unit_id"], record["span_index"], record["span_byte_length"], record["input_sha256"]
+            record["source_unit_commitment_sha256"],
+            record["span_index"],
+            record["span_byte_length"],
+            record["input_sha256"],
         )
         require(
             record["output_sha256"] == expected,
-            f"extraction_ledger record for {record['source_unit_id']!r} span {record['span_index']} "
-            f"does not reproduce output_sha256 from its own identity fields -- refusing",
+            f"extraction_ledger record for commitment {record['source_unit_commitment_sha256']!r} span "
+            f"{record['span_index']} does not reproduce output_sha256 from its own identity fields -- refusing",
         )
+        key = (record["source_unit_commitment_sha256"], record["span_index"])
+        require(key not in seen, f"extraction_ledger has a duplicate (commitment, span_index) entry: {key} -- refusing")
+        seen.add(key)
+        require(
+            previous_key is None or previous_key < key,
+            "extraction_ledger is not ordered by (source_unit_commitment_sha256, span_index) ascending -- refusing",
+        )
+        previous_key = key
 
 
 def validate_receipt_independently(receipt: dict[str, Any], root: Path = ROOT) -> None:

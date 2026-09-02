@@ -45,6 +45,7 @@ FORBIDDEN_KEYS = {
     "text",
     "source_body",
     "source_text",
+    "source_unit_id",
     "prompt",
     "label",
     "gold",
@@ -66,10 +67,15 @@ EXTRACTION_ALGORITHM_DESCRIPTOR = {
     "algorithm_version": "v1",
     "unit_of_extraction": "sentence_span",
     "content_blind": False,
-    "ordering": "source_unit_id_ascending_then_byte_offset_ascending",
+    "ordering": "source_unit_commitment_sha256_ascending_then_span_index_ascending",
+    "segmentation_rule": (
+        "text = raw_unit_bytes.decode('utf-8'); spans = re.split(r'(?<=[.!?…])\\s+', text); "
+        "spans = [span.strip() for span in spans if span.strip()]; span_index assigned in list "
+        "order starting at 0"
+    ),
     "input_hash_formula": "sha256(raw_span_bytes_utf8)",
     "output_hash_formula": (
-        "sha256(canonical_json({source_unit_id, span_index, span_byte_length, "
+        "sha256(canonical_json({source_unit_commitment_sha256, span_index, span_byte_length, "
         "input_sha256, extraction_algorithm_id, extraction_algorithm_version}))"
     ),
     "text_emitted": False,
@@ -205,15 +211,91 @@ def test_unit_commitment_algorithm_descriptor_is_frozen_and_hashed() -> None:
 
 def test_extraction_record_output_hash_is_pure_function_of_identity_fields() -> None:
     """No source text feeds the output hash -- only already-hashed
-    ``input_sha256`` and the record's own identity fields."""
-    first = extraction.extraction_record_output_hash("db.wikipedia", 0, 42, "a" * 64)
-    second = extraction.extraction_record_output_hash("db.wikipedia", 0, 42, "a" * 64)
-    different_index = extraction.extraction_record_output_hash("db.wikipedia", 1, 42, "a" * 64)
-    different_input = extraction.extraction_record_output_hash("db.wikipedia", 0, 42, "b" * 64)
+    ``input_sha256`` and the record's own identity fields, keyed by the
+    unit's commitment, never a plaintext id."""
+    commitment = "a" * 64
+    other_commitment = "b" * 64
+    first = extraction.extraction_record_output_hash(commitment, 0, 42, "a" * 64)
+    second = extraction.extraction_record_output_hash(commitment, 0, 42, "a" * 64)
+    different_index = extraction.extraction_record_output_hash(commitment, 1, 42, "a" * 64)
+    different_input = extraction.extraction_record_output_hash(commitment, 0, 42, "b" * 64)
+    different_commitment = extraction.extraction_record_output_hash(other_commitment, 0, 42, "a" * 64)
 
     assert first == second  # reproducible
     assert first != different_index
     assert first != different_input
+    assert first != different_commitment
+
+
+# --- sentence-span segmentation and hash-only per-unit extraction ----------
+
+
+def test_segment_sentence_spans_is_deterministic_and_drops_empties() -> None:
+    raw = "Перше речення. Друге речення!  Третє?".encode()
+    spans = extraction.segment_sentence_spans(raw)
+    assert spans == extraction.segment_sentence_spans(raw)
+    assert spans == ["Перше речення.", "Друге речення!", "Третє?"]
+
+
+def test_extract_ledger_rows_for_unit_is_hash_only_and_never_contains_span_text() -> None:
+    raw = b"Hello world. This is span two! And a third one?"
+    commitment = hashlib.sha256(b"synthetic-commitment").hexdigest()
+
+    rows = extraction.extract_ledger_rows_for_unit(raw, commitment)
+
+    assert len(rows) == 3
+    serialized = json.dumps(rows)
+    for span in extraction.segment_sentence_spans(raw):
+        assert span not in serialized
+    for index, row in enumerate(rows):
+        assert set(row) == {
+            "source_unit_commitment_sha256",
+            "span_index",
+            "span_byte_length",
+            "input_sha256",
+            "output_sha256",
+        }
+        assert row["source_unit_commitment_sha256"] == commitment
+        assert row["span_index"] == index
+        assert row["output_sha256"] == extraction.extraction_record_output_hash(
+            commitment, row["span_index"], row["span_byte_length"], row["input_sha256"]
+        )
+
+
+def test_no_v4_byte_ingestion_admission_always_returns_none() -> None:
+    assert extraction.no_v4_byte_ingestion_admission("anything") is None
+    assert extraction.no_v4_byte_ingestion_admission("db.wikipedia") is None
+
+
+def test_run_deterministic_extraction_is_empty_with_the_production_default_provider() -> None:
+    salt = secrets.token_bytes(32)
+    ledger = extraction.run_deterministic_extraction(["synthetic.unit-a", "synthetic.unit-b"], salt)
+    assert ledger == []
+
+
+def test_run_deterministic_extraction_emits_sorted_hash_only_rows_for_units_with_bytes() -> None:
+    salt = secrets.token_bytes(32)
+    ids = ["synthetic.unit-a", "synthetic.unit-b", "synthetic.unit-c"]
+    bytes_by_unit = {
+        "synthetic.unit-a": b"Alpha span one. Alpha span two!",
+        "synthetic.unit-c": b"Gamma span one only.",
+    }
+
+    ledger = extraction.run_deterministic_extraction(ids, salt, bytes_by_unit.get)
+
+    assert len(ledger) == 3  # 2 spans from unit-a, 1 from unit-c, 0 from unit-b (no bytes)
+    assert ledger == sorted(ledger, key=lambda row: (row["source_unit_commitment_sha256"], row["span_index"]))
+    serialized = json.dumps(ledger)
+    for unit_id in ids:
+        assert unit_id not in serialized
+    for raw in bytes_by_unit.values():
+        for span in extraction.segment_sentence_spans(raw):
+            assert span not in serialized
+
+    expected_commitments = {
+        extraction.unit_commitment_sha256(salt, unit_id) for unit_id in bytes_by_unit
+    }
+    assert {row["source_unit_commitment_sha256"] for row in ledger} == expected_commitments
 
 
 # --- unit commitment: keyed, reproducible, unenumerable, domain-separated --
@@ -628,41 +710,93 @@ def test_a4_script_refuses_a_forged_closed_gate_that_contradicts_live_public_sta
         extraction.validate_receipt_independently(forged)
 
 
-def test_a4_script_refuses_extraction_ledger_entries_even_though_gate_is_open() -> None:
+def _forged_ledger_row(commitment: str, *, span_index: int = 0, span_byte_length: int = 10, wrong_output: bool = False) -> dict:
+    input_sha256 = "a" * 64
+    output_sha256 = (
+        "b" * 64
+        if wrong_output
+        else extraction.extraction_record_output_hash(commitment, span_index, span_byte_length, input_sha256)
+    )
+    return {
+        "source_unit_commitment_sha256": commitment,
+        "span_index": span_index,
+        "span_byte_length": span_byte_length,
+        "input_sha256": input_sha256,
+        "output_sha256": output_sha256,
+    }
+
+
+def test_a4_script_refuses_a_ledger_entry_whose_commitment_is_not_a_consumed_unit() -> None:
+    """Even a well-formed, correctly-hashed row is refused if its commitment
+    is not one of the units A4 actually consumed -- the ledger can never
+    name a unit outside builder_packet_consumption.unit_commitments."""
     receipt = _receipt()
     forged = copy.deepcopy(receipt)
-    forged["extraction_ledger"] = [
-        {
-            "source_unit_id": "db.wikipedia",
-            "span_index": 0,
-            "span_byte_length": 10,
-            "input_sha256": "a" * 64,
-            "output_sha256": extraction.extraction_record_output_hash("db.wikipedia", 0, 10, "a" * 64),
-        }
-    ]
+    unknown_commitment = "0" * 64
+    assert unknown_commitment not in receipt["builder_packet_consumption"]["unit_commitments"]
+    forged["extraction_ledger"] = [_forged_ledger_row(unknown_commitment)]
+    forged["execution_counters"]["spans_extracted"] = 1
+    forged["execution_counters"]["source_units_extracted"] = 1
 
-    with pytest.raises(extraction.ExtractionError):
+    with pytest.raises(extraction.ExtractionError, match="outside"):
         extraction.validate_receipt_independently(forged)
 
 
 def test_a4_script_refuses_a_ledger_entry_with_a_wrong_output_hash() -> None:
-    """Isolates ``validate_extraction_ledger_hashes`` directly (not via
-    ``validate_receipt_independently``, which would already refuse a
-    non-empty ledger regardless of hash correctness)."""
+    """Isolates ``validate_extraction_ledger_hashes`` directly."""
     receipt = _receipt()
     forged = copy.deepcopy(receipt)
-    forged["extraction_ledger"] = [
-        {
-            "source_unit_id": "db.wikipedia",
-            "span_index": 0,
-            "span_byte_length": 10,
-            "input_sha256": "a" * 64,
-            "output_sha256": "b" * 64,
-        }
-    ]
+    forged["extraction_ledger"] = [_forged_ledger_row("a" * 64, wrong_output=True)]
 
     with pytest.raises(extraction.ExtractionError):
         extraction.validate_extraction_ledger_hashes(forged)
+
+
+def test_a4_script_refuses_a_duplicate_ledger_entry() -> None:
+    receipt = _receipt()
+    forged = copy.deepcopy(receipt)
+    commitment = "a" * 64
+    forged["extraction_ledger"] = [_forged_ledger_row(commitment), _forged_ledger_row(commitment)]
+
+    with pytest.raises(extraction.ExtractionError, match="duplicate"):
+        extraction.validate_extraction_ledger_hashes(forged)
+
+
+def test_a4_script_refuses_an_out_of_order_ledger() -> None:
+    receipt = _receipt()
+    forged = copy.deepcopy(receipt)
+    forged["extraction_ledger"] = [
+        _forged_ledger_row("b" * 64, span_index=0),
+        _forged_ledger_row("a" * 64, span_index=0),
+    ]
+
+    with pytest.raises(extraction.ExtractionError, match="ordered"):
+        extraction.validate_extraction_ledger_hashes(forged)
+
+
+def test_validate_ledger_consistency_with_gate_refuses_a_non_empty_ledger_when_gate_closed() -> None:
+    """Exercises the gate-parameterized invariant directly against a
+    synthetic closed gate -- the live production gate is always open, so
+    this cannot otherwise be reached via ``validate_receipt_independently``."""
+    receipt = _receipt()
+    forged = copy.deepcopy(receipt)
+    forged["extraction_ledger"] = [_forged_ledger_row(receipt["builder_packet_consumption"]["unit_commitments"][0])]
+    forged["execution_counters"]["spans_extracted"] = 1
+    forged["execution_counters"]["source_units_extracted"] = 1
+    closed_gate = {"gate_open": False}
+
+    with pytest.raises(extraction.ExtractionError, match="not open"):
+        extraction.validate_ledger_consistency_with_gate(forged, closed_gate)
+
+
+def test_validate_ledger_consistency_with_gate_refuses_counter_drift() -> None:
+    receipt = _receipt()
+    forged = copy.deepcopy(receipt)
+    forged["execution_counters"]["spans_extracted"] = 999
+    open_gate = {"gate_open": True}
+
+    with pytest.raises(extraction.ExtractionError, match="spans_extracted"):
+        extraction.validate_ledger_consistency_with_gate(forged, open_gate)
 
 
 def test_a4_script_refuses_consumption_count_drift_against_public_packet_receipt() -> None:
