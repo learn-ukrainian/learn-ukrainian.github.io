@@ -187,6 +187,8 @@ def check_assembly_gate(root: Path = ROOT) -> dict[str, Any]:
             "a7_receipt_valid": False,
             "a2_rights_resolved": False,
             "all_slots_assigned": False,
+            "slots_ready": 0,
+            "slots_residual": 100,
             "assembly_slice_ready": False,
             "owner_role": "A2_A3_PRIVATE_ARTIFACT",
             "blocked_reason_code": f"required_public_artifact_missing:{missing[0]}",
@@ -197,9 +199,12 @@ def check_assembly_gate(root: Path = ROOT) -> dict[str, Any]:
 
     a2_receipt = _load(a2_path)
     require(a2_receipt.get("controlling_outcome_sha256") == V4_SHA256, "A2 receipt is not bound to the expected V4 controlling outcome -- refusing")
-    rights_resolved = len(a2_receipt.get("residuals", [])) == 0
 
-    all_assigned = all(series["assignment_state"] == "ASSIGNED" for series in manifest["slot_series"])
+    # Per-slot, never a single global AND across all 100 slots: resolving one
+    # stratum's residual never depends on, or unblocks, any other stratum.
+    readiness = a7.per_slot_readiness(manifest, a2_receipt)
+    rights_resolved = all(record["rights_resolved"] for record in readiness)
+    all_assigned = all(record["assigned"] for record in readiness)
 
     a7_receipt = _load(a7_path)
     try:
@@ -208,23 +213,33 @@ def check_assembly_gate(root: Path = ROOT) -> dict[str, Any]:
     except a7.OriginalRowFactoryError:
         a7_valid = False
 
-    assembly_slice_ready = rights_resolved and all_assigned and a7_valid
+    slots_ready = sum(1 for record in readiness if record["slot_ready"]) if a7_valid else 0
+    slots_residual = len(readiness) - slots_ready
+    assembly_slice_ready = slots_ready == len(readiness)
+
     blocked_reason_code = None
     if not assembly_slice_ready:
         if not a7_valid:
             blocked_reason_code = "a7_receipt_invalid"
-        elif not rights_resolved and not all_assigned:
-            blocked_reason_code = "rights_unresolved_and_slots_unassigned"
-        elif not rights_resolved:
-            blocked_reason_code = "rights_unresolved"
+        elif slots_ready == 0:
+            if not rights_resolved and not all_assigned:
+                blocked_reason_code = "rights_unresolved_and_slots_unassigned"
+            elif not rights_resolved:
+                blocked_reason_code = "rights_unresolved"
+            else:
+                blocked_reason_code = "slot_assignment_pending_a2_a3"
         else:
-            blocked_reason_code = "slot_assignment_pending_a2_a3"
+            # Some, but not all, frozen slots are ready -- the case the old
+            # global-AND gate could never represent.
+            blocked_reason_code = "partial_slots_pending_a2_a3"
 
     return {
         "gate_id": "v4-a8-assembly-gate-v1",
         "a7_receipt_valid": a7_valid,
         "a2_rights_resolved": rights_resolved,
         "all_slots_assigned": all_assigned,
+        "slots_ready": slots_ready,
+        "slots_residual": slots_residual,
         "assembly_slice_ready": assembly_slice_ready,
         "owner_role": manifest["sealed_heldout_commitment"]["assignment_owner"],
         "blocked_reason_code": blocked_reason_code,
@@ -401,10 +416,12 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
         "frozen_slot_denominator": {"total_slots": len(frozen_slot_ids), "strata": strata},
         "assembly_gate": {
             "gate_id": gate["gate_id"],
-            "requires": ["a7_receipt_independently_valid", "a2_rights_fully_resolved", "all_frozen_slots_assigned"],
+            "requires": ["a7_receipt_independently_valid", "per_slot_a2_rights_resolved", "per_slot_manifest_assignment"],
             "a7_receipt_valid": gate["a7_receipt_valid"],
             "a2_rights_resolved": gate["a2_rights_resolved"],
             "all_slots_assigned": gate["all_slots_assigned"],
+            "slots_ready": gate["slots_ready"],
+            "slots_residual": gate["slots_residual"],
             "assembly_slice_ready": gate["assembly_slice_ready"],
             "owner_role": gate["owner_role"],
             "blocked_reason_code": gate["blocked_reason_code"],
@@ -426,8 +443,8 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
             "dataset_rows_emitted": engine_admission_receipt["counts"]["admitted_rows"],
             "candidate_rows_assembled": engine_admission_receipt["counts"]["input_rows"],
             "frozen_slot_count": len(frozen_slot_ids),
-            "slots_admitted_ready": len(frozen_slot_ids) if gate["assembly_slice_ready"] else 0,
-            "slots_blocked": 0 if gate["assembly_slice_ready"] else len(frozen_slot_ids),
+            "slots_admitted_ready": gate["slots_ready"],
+            "slots_blocked": gate["slots_residual"],
         },
         "eligibility": dict(ASSEMBLY_ELIGIBILITY),
         "safety_assertions": {
@@ -485,6 +502,8 @@ def validate_gate_matches_receipt(receipt: dict[str, Any], root: Path) -> None:
         declared["a7_receipt_valid"] == gate["a7_receipt_valid"]
         and declared["a2_rights_resolved"] == gate["a2_rights_resolved"]
         and declared["all_slots_assigned"] == gate["all_slots_assigned"]
+        and declared["slots_ready"] == gate["slots_ready"]
+        and declared["slots_residual"] == gate["slots_residual"]
         and declared["assembly_slice_ready"] == gate["assembly_slice_ready"]
         and declared["blocked_reason_code"] == gate["blocked_reason_code"],
         "receipt assembly_gate does not match the state independently re-derived from the live public artifacts "

@@ -1,0 +1,256 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/dataset_v4_per_slot_private_factory_receipt_v1.schema.json",
+  "title": "Dataset V4 per-slot private factory receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "status",
+    "text_free",
+    "controlling_outcome_sha256",
+    "control_surfaces",
+    "bindings",
+    "role_map",
+    "frozen_slot_denominator",
+    "per_slot_gate",
+    "reason_code_totals",
+    "a2_residuals_carried_forward",
+    "a7_residuals_carried_forward",
+    "execution_counters",
+    "eligibility",
+    "safety_assertions"
+  ],
+  "properties": {
+    "schema_version": {"const": "dataset_v4_per_slot_private_factory_receipt_v1"},
+    "receipt_id": {"const": "dataset-v4-per-slot-private-factory-v1"},
+    "status": {"const": "V4_PER_SLOT_PRIVATE_FACTORY_WIRED_TEXT_FREE_ZERO_PRIVATE_ROWS_NO_SLOT_HMAC_TABLE"},
+    "text_free": {"const": true},
+    "controlling_outcome_sha256": {"const": "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"},
+    "control_surfaces": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["public_control_issue", "pilot_child_issue", "private_operational_board"],
+      "properties": {
+        "public_control_issue": {"const": 7423},
+        "pilot_child_issue": {"const": 7430},
+        "private_operational_board": {"const": 622}
+      }
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "a2_source_operation_admission",
+        "a7_original_row_factory",
+        "pilot_slot_manifest",
+        "wiring_implementation"
+      ],
+      "properties": {
+        "a2_source_operation_admission": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "properties": {
+            "path": {"const": "data/projects/open_model_data/admission/dataset_v4_a2_source_operation_admission_receipt_v1.json"},
+            "schema_version": {"const": "dataset_v4_a2_source_operation_admission_receipt_v1"}
+          }
+        },
+        "a7_original_row_factory": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "properties": {
+            "path": {"const": "data/projects/open_model_data/admission/dataset_v4_a7_original_row_factory_receipt_v1.json"},
+            "schema_version": {"const": "dataset_v4_a7_original_row_factory_receipt_v1"}
+          }
+        },
+        "pilot_slot_manifest": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "properties": {
+            "path": {"const": "data/projects/open_model_data/admission/dataset_v4_pilot_slot_manifest_v1.json"},
+            "schema_version": {"const": "dataset_v4_pilot_slot_manifest_v1"}
+          }
+        },
+        "wiring_implementation": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "properties": {
+            "path": {"const": "scripts/projects/open_model_data/v4_per_slot_private_factory.py"},
+            "schema_version": {"const": "v4_per_slot_private_factory_script_v1"}
+          }
+        }
+      }
+    },
+    "role_map": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["A0", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "A11", "A12", "A13"],
+      "properties": {
+        "A0": {"const": "scope_lead"},
+        "A1": {"const": "custody"},
+        "A2": {"const": "source_inventory_admission"},
+        "A3": {"const": "heldout"},
+        "A4": {"const": "deterministic_extraction"},
+        "A5": {"const": "evidence_enrichment"},
+        "A6": {"const": "safe_arena"},
+        "A7": {"const": "original_row_factory"},
+        "A8": {"const": "admission_assembly"},
+        "A9": {"const": "evaluation_package"},
+        "A10": {"const": "pilot_review"},
+        "A11": {"const": "training_ready_release"},
+        "A12": {"const": "later_gold_overlay"},
+        "A13": {"const": "cleanup_recovery"}
+      }
+    },
+    "frozen_slot_denominator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["total_slots", "strata"],
+      "properties": {
+        "total_slots": {"const": 100},
+        "strata": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["stratum", "id_prefix", "count", "assignment_state", "slot_ids"],
+            "properties": {
+              "stratum": {"type": "string", "minLength": 1},
+              "id_prefix": {"type": "string", "pattern": "^v4p-[a-z-]+$"},
+              "count": {"type": "integer", "minimum": 1},
+              "assignment_state": {"type": "string", "minLength": 1},
+              "slot_ids": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {"type": "string", "pattern": "^v4p-[a-z-]+-[0-9]{3}$"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "per_slot_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gate_id", "a7_receipt_valid", "slots_ready", "slots_residual", "owner_role", "blocked_reason_code"],
+      "properties": {
+        "gate_id": {"const": "v4-per-slot-private-factory-gate-v1"},
+        "a7_receipt_valid": {"type": "boolean"},
+        "slots_ready": {"type": "integer", "minimum": 0, "maximum": 100},
+        "slots_residual": {"type": "integer", "minimum": 0, "maximum": 100},
+        "owner_role": {"type": "string", "minLength": 1},
+        "blocked_reason_code": {"type": ["string", "null"]}
+      }
+    },
+    "reason_code_totals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rights_unknown", "source_incomplete", "independence_unavailable"],
+      "properties": {
+        "rights_unknown": {"type": "integer", "minimum": 0, "maximum": 100},
+        "source_incomplete": {"type": "integer", "minimum": 0, "maximum": 100},
+        "independence_unavailable": {"type": "integer", "minimum": 0, "maximum": 100}
+      }
+    },
+    "a2_residuals_carried_forward": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["residual_id", "origin_stage", "status"],
+        "properties": {
+          "residual_id": {"type": "string", "pattern": "^a2-residual-[a-z0-9-]+$"},
+          "origin_stage": {"const": "A2"},
+          "status": {"const": "unresolved_carried_to_private_factory"}
+        }
+      }
+    },
+    "a7_residuals_carried_forward": {
+      "type": "array",
+      "minItems": 100,
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["residual_id", "origin_stage", "status"],
+        "properties": {
+          "residual_id": {"type": "string", "pattern": "^a7-residual-(rights-unknown|source-incomplete|independence-unavailable)-v4p-[a-z-]+-[0-9]{3}$"},
+          "origin_stage": {"const": "A7"},
+          "status": {"const": "unresolved_carried_to_private_factory"}
+        }
+      }
+    },
+    "execution_counters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dataset_rows_emitted", "private_rows_constructed", "slots_ready", "slots_residual", "frozen_slot_count"],
+      "properties": {
+        "dataset_rows_emitted": {"const": 0},
+        "private_rows_constructed": {"const": 0},
+        "slots_ready": {"type": "integer", "minimum": 0, "maximum": 100},
+        "slots_residual": {"type": "integer", "minimum": 0, "maximum": 100},
+        "frozen_slot_count": {"const": 100}
+      }
+    },
+    "eligibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gold", "training", "evaluation", "teaching", "coverage"],
+      "properties": {
+        "gold": {"const": false},
+        "training": {"const": false},
+        "evaluation": {"const": false},
+        "teaching": {"const": false},
+        "coverage": {"const": false}
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rows_not_admitted", "text_emitted", "source_text_loaded_into_model",
+        "corpus_refetched", "held_out_membership_referenced", "a4_private_ledger_opened",
+        "slot_to_source_unit_table_published", "slot_to_commitment_table_published",
+        "gold_created", "training_ready_silver_claimed", "arena_slice_ready_claimed",
+        "mac_corpus_copy_created", "epic_done_claimed", "heldout_family_identity_leaked"
+      ],
+      "properties": {
+        "rows_not_admitted": {"const": true},
+        "text_emitted": {"const": false},
+        "source_text_loaded_into_model": {"const": false},
+        "corpus_refetched": {"const": false},
+        "held_out_membership_referenced": {"const": false},
+        "a4_private_ledger_opened": {"const": false},
+        "slot_to_source_unit_table_published": {"const": false},
+        "slot_to_commitment_table_published": {"const": false},
+        "gold_created": {"const": false},
+        "training_ready_silver_claimed": {"const": false},
+        "arena_slice_ready_claimed": {"const": false},
+        "mac_corpus_copy_created": {"const": false},
+        "epic_done_claimed": {"const": false},
+        "heldout_family_identity_leaked": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "artifact_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "schema_version"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+"
+        },
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "schema_version": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

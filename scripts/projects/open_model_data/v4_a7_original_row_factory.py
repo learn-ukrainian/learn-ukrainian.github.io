@@ -174,6 +174,53 @@ def stratum_reason_codes(a2_receipt: dict[str, Any]) -> dict[str, str]:
     return resolved
 
 
+# --- per-slot readiness (public-only, no global AND) -------------------------
+#
+# Root-cause fix: the finest granularity this pipeline ever publishes is
+# per-stratum (A2's own ``stratum_coverage_map`` residual and the frozen
+# manifest's own per-stratum ``assignment_state``) -- there is no per-
+# individual-slot signal beyond that. The bug this module used to carry was
+# never about that granularity; it was collapsing eight independent per-
+# stratum signals into two single, repo-wide booleans (`all(... for every
+# stratum)`) before a single slot's readiness was ever decided. That turns
+# one still-open stratum into a global veto over the other seven, even
+# when they have nothing to do with each other. ``per_slot_readiness``
+# never does that: every frozen slot's ``slot_ready`` is a pure function of
+# *its own* stratum's own state, so resolving stratum A can never depend on,
+# or be blocked by, stratum B's residual.
+
+
+def per_slot_readiness(manifest: dict[str, Any], a2_receipt: dict[str, Any]) -> list[dict[str, Any]]:
+    """One record per frozen public slot ID -- never a single repo-wide
+    boolean. A pure function of the manifest's own per-stratum
+    ``assignment_state`` and A2's own per-stratum ``stratum_coverage_map``/
+    ``residuals``; never opens any private state. A slot is ``slot_ready``
+    only when its *own* stratum's rights/coverage residual is resolved *and*
+    its *own* stratum is assigned -- another stratum's unresolved residual
+    or pending assignment never affects it."""
+    unresolved_residual_ids = {entry["residual_id"] for entry in a2_receipt.get("residuals", [])}
+    coverage_by_stratum = {coverage["stratum"]: coverage for coverage in a2_receipt["stratum_coverage_map"]}
+    records = []
+    for stratum_entry in a6.frozen_slot_strata(manifest):
+        stratum = stratum_entry["stratum"]
+        coverage = coverage_by_stratum[stratum]
+        rights_resolved = not (set(coverage["residual_ids"]) & unresolved_residual_ids)
+        assigned = stratum_entry["assignment_state"] == "ASSIGNED"
+        slot_ready = rights_resolved and assigned
+        for slot_id in stratum_entry["slot_ids"]:
+            records.append(
+                {
+                    "slot_id": slot_id,
+                    "stratum": stratum,
+                    "rights_resolved": rights_resolved,
+                    "assigned": assigned,
+                    "slot_ready": slot_ready,
+                }
+            )
+    records.sort(key=lambda record: record["slot_id"])
+    return records
+
+
 # --- factory gate (public-only) ----------------------------------------------
 
 
@@ -205,6 +252,8 @@ def check_factory_gate(root: Path = ROOT) -> dict[str, Any]:
             "a6_receipt_valid": False,
             "a2_rights_resolved": False,
             "all_slots_assigned": False,
+            "slots_ready": 0,
+            "slots_residual": 100,
             "factory_slice_ready": False,
             "owner_role": "A2_A3_PRIVATE_ARTIFACT",
             "blocked_reason_code": f"required_public_artifact_missing:{missing[0]}",
@@ -215,9 +264,12 @@ def check_factory_gate(root: Path = ROOT) -> dict[str, Any]:
 
     a2_receipt = _load(a2_path)
     require(a2_receipt.get("controlling_outcome_sha256") == V4_SHA256, "A2 receipt is not bound to the expected V4 controlling outcome -- refusing")
-    rights_resolved = len(a2_receipt.get("residuals", [])) == 0
 
-    all_assigned = all(series["assignment_state"] == "ASSIGNED" for series in manifest["slot_series"])
+    # Per-slot, never a single global AND across all 100 slots: resolving one
+    # stratum's residual never depends on, or unblocks, any other stratum.
+    readiness = per_slot_readiness(manifest, a2_receipt)
+    rights_resolved = all(record["rights_resolved"] for record in readiness)
+    all_assigned = all(record["assigned"] for record in readiness)
 
     a6_receipt = _load(a6_path)
     try:
@@ -226,23 +278,35 @@ def check_factory_gate(root: Path = ROOT) -> dict[str, Any]:
     except a6.ArenaWiringError:
         a6_valid = False
 
-    factory_slice_ready = rights_resolved and all_assigned and a6_valid
+    slots_ready = sum(1 for record in readiness if record["slot_ready"]) if a6_valid else 0
+    slots_residual = len(readiness) - slots_ready
+    factory_slice_ready = slots_ready == len(readiness)
+
     blocked_reason_code = None
     if not factory_slice_ready:
         if not a6_valid:
             blocked_reason_code = "a6_receipt_invalid"
-        elif not rights_resolved and not all_assigned:
-            blocked_reason_code = "rights_unresolved_and_slots_unassigned"
-        elif not rights_resolved:
-            blocked_reason_code = "rights_unresolved"
+        elif slots_ready == 0:
+            if not rights_resolved and not all_assigned:
+                blocked_reason_code = "rights_unresolved_and_slots_unassigned"
+            elif not rights_resolved:
+                blocked_reason_code = "rights_unresolved"
+            else:
+                blocked_reason_code = "slot_assignment_pending_a2_a3"
         else:
-            blocked_reason_code = "slot_assignment_pending_a2_a3"
+            # Some, but not all, frozen slots are ready -- the case the old
+            # global-AND gate could never represent (it could only ever
+            # report 0 or every slot ready). Never collapsed into the
+            # all-blocked reason codes above.
+            blocked_reason_code = "partial_slots_pending_a2_a3"
 
     return {
         "gate_id": "v4-a7-factory-gate-v1",
         "a6_receipt_valid": a6_valid,
         "a2_rights_resolved": rights_resolved,
         "all_slots_assigned": all_assigned,
+        "slots_ready": slots_ready,
+        "slots_residual": slots_residual,
         "factory_slice_ready": factory_slice_ready,
         "owner_role": manifest["sealed_heldout_commitment"]["assignment_owner"],
         "blocked_reason_code": blocked_reason_code,
@@ -385,10 +449,12 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
         "frozen_slot_denominator": {"total_slots": len(frozen_slot_ids), "strata": strata},
         "factory_gate": {
             "gate_id": gate["gate_id"],
-            "requires": ["a6_receipt_independently_valid", "a2_rights_fully_resolved", "all_frozen_slots_assigned"],
+            "requires": ["a6_receipt_independently_valid", "per_slot_a2_rights_resolved", "per_slot_manifest_assignment"],
             "a6_receipt_valid": gate["a6_receipt_valid"],
             "a2_rights_resolved": gate["a2_rights_resolved"],
             "all_slots_assigned": gate["all_slots_assigned"],
+            "slots_ready": gate["slots_ready"],
+            "slots_residual": gate["slots_residual"],
             "factory_slice_ready": gate["factory_slice_ready"],
             "owner_role": gate["owner_role"],
             "blocked_reason_code": gate["blocked_reason_code"],
@@ -408,8 +474,8 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
             "dataset_rows_emitted": engine_admission_receipt["counts"]["admitted_rows"],
             "candidate_rows_constructed": engine_admission_receipt["counts"]["input_rows"],
             "frozen_slot_count": len(frozen_slot_ids),
-            "slots_factory_ready": len(frozen_slot_ids) if gate["factory_slice_ready"] else 0,
-            "slots_blocked": 0 if gate["factory_slice_ready"] else len(frozen_slot_ids),
+            "slots_factory_ready": gate["slots_ready"],
+            "slots_blocked": gate["slots_residual"],
         },
         "eligibility": dict(FACTORY_ELIGIBILITY),
         "safety_assertions": {
@@ -463,6 +529,8 @@ def validate_gate_matches_receipt(receipt: dict[str, Any], root: Path) -> None:
         declared["a6_receipt_valid"] == gate["a6_receipt_valid"]
         and declared["a2_rights_resolved"] == gate["a2_rights_resolved"]
         and declared["all_slots_assigned"] == gate["all_slots_assigned"]
+        and declared["slots_ready"] == gate["slots_ready"]
+        and declared["slots_residual"] == gate["slots_residual"]
         and declared["factory_slice_ready"] == gate["factory_slice_ready"]
         and declared["blocked_reason_code"] == gate["blocked_reason_code"],
         "receipt factory_gate does not match the state independently re-derived from the live public artifacts "

@@ -248,8 +248,9 @@ def test_a10_receipt_binds_v4_sha_and_control_surfaces() -> None:
 
 
 def test_a10_receipt_binds_the_merged_a9_receipt_by_its_known_public_sha() -> None:
-    # The merged A9 receipt's public sha256, frozen at dispatch time (PR #7640).
-    assert a10.sha256_file(A9_RECEIPT_PATH) == "e8a68e70364497d2fded8e45277e66f1ded4edc2939c57bd810924f90eb88db7"
+    # The merged A9 receipt's public sha256, frozen at dispatch time (v4-per-slot-private-factory:
+    # A9's gate went per-slot instead of a single global AND, changing its content).
+    assert a10.sha256_file(A9_RECEIPT_PATH) == "42c2799f68b675150ca54b1c802ec5d6be8ee838a59d37e469fc5f14baf16127"
 
 
 def test_a10_receipt_carries_forward_every_a2_a4_a5_a6_a7_a8_a9_residual_unresolved() -> None:
