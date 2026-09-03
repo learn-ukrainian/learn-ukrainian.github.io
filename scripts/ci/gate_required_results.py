@@ -16,12 +16,11 @@ import argparse
 import sys
 from collections.abc import Mapping
 
-# Light PR tier: quick signal plus security scanning and the exact-head CF lock.
+# Light PR tier: quick signal plus security scanning.
 LIGHT_REQUIRED: tuple[str, ...] = (
     "ruff",
     "pytest-fastlane",
     "secret-scan",
-    "cf-attest",
 )
 
 # Merge-queue / main / dispatch tier: strictly a superset of the light tier.
@@ -172,13 +171,6 @@ def main(argv: list[str] | None = None) -> int:
     if failures:
         for reason in failures:
             print(f"::error::CI Gate fail-closed: {reason}", file=sys.stderr)
-        if all(item.startswith("cf-attest:") for item in failures):
-            print(
-                "::notice::Product jobs succeeded. Gate is red solely because "
-                "independent exact-head CF is missing, stale, or same-family — "
-                "not because ruff/tests/secret-scan failed.",
-                file=sys.stderr,
-            )
         return 1
     print("CI Gate: every required dependency succeeded")
     return 0

@@ -175,7 +175,6 @@ def test_gate_and_merge_group_invariants_hold() -> None:
     assert gate["needs"] == [
         "ruff",
         "secret-scan",
-        "cf-attest",
         "landing-class",
         "pytest-plan",
         "pytest-fastlane",

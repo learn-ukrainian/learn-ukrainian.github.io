@@ -1,24 +1,19 @@
 name: Auto-arm merge queue
 
-# #7539: scheduled, default-branch automation that only enables GitHub's
-# normal auto-merge mechanism after the exact-head CF and CI Gate checks pass.
-# It never checks out or runs code from a subject PR head.
+# #7539: default-branch automation that only enables GitHub's normal
+# auto-merge mechanism once CI Gate passes at the current head. It never
+# checks out or runs code from a subject PR head.
+#
+# Retire-CF-attest (2026-09-03 GO): schedule and workflow_run triggers are
+# removed so this workflow is never a live, automatic merge path during the
+# red-team review window — humans merge; this pipeline only runs on explicit
+# workflow_dispatch. The workflow_run-triggered red-completion self-heal scan
+# (#7548), which existed to retry a stale failed CF-attest check, is retired
+# with it: CF attest no longer exists as a check to retry.
 permissions:
   contents: read
 
-# zizmor cannot model the read-only gate below; retain workflow_run for the
-# red-run self-heal, with the fork/label boundary enforced before arm starts.
-on: # zizmor: ignore[dangerous-triggers]
-  schedule:
-    - cron: '7,22,37,52 * * * *'
-  # Fallback trigger (#7539 follow-up): GitHub's cron has been unreliable for this
-  # workflow (zero scheduled firings in its first 4h on main), so also arm right
-  # after any CI run completes — that is exactly the moment a PR can newly become
-  # eligible (CI Gate / CF attest just turned green). The scanner never checks out
-  # or runs PR-head code, so workflow_run's default-branch privileges are safe here.
-  workflow_run:
-    workflows: ["CI"]
-    types: [completed]
+on:
   workflow_dispatch:
 
 concurrency:
@@ -26,70 +21,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  red_completion_gate:
-    name: Authorize red-completion scan
-    # workflow_run can be emitted for a fork PR. Keep this gate read-only and
-    # require a same-repository run plus a live automerge-ok label before the
-    # write-permission scan below is even scheduled.
-    if: >-
-      github.event_name == 'workflow_run' &&
-      github.event.workflow_run.conclusion != 'success' &&
-      github.event.workflow_run.head_repository.full_name == github.repository
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      contents: read
-      pull-requests: read
-    outputs:
-      has_automerge_label: ${{ steps.label_gate.outputs.has_automerge_label }}
-    steps:
-      - name: Check triggering pull request labels
-        id: label_gate
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPOSITORY: ${{ github.repository }}
-          WORKFLOW_PULL_REQUESTS: ${{ toJSON(github.event.workflow_run.pull_requests) }}
-        run: |
-          set -euo pipefail
-          has_automerge_label=false
-          while IFS= read -r number; do
-            if [[ ! "${number}" =~ ^[1-9][0-9]*$ ]]; then
-              continue
-            fi
-            if gh api --repo "${REPOSITORY}" \
-              "repos/${REPOSITORY}/pulls/${number}" \
-              --jq 'any(.labels[]; (.name | ascii_downcase) == "automerge-ok")' | grep -qx true; then
-              has_automerge_label=true
-              break
-            fi
-          done < <(
-            jq -r 'if type == "array" then .[0:100][] | (.number // empty) else empty end' \
-              <<<"${WORKFLOW_PULL_REQUESTS}"
-          )
-          echo "has_automerge_label=${has_automerge_label}" >> "${GITHUB_OUTPUT}"
-
   arm:
     name: Arm eligible pull requests
-    needs: red_completion_gate
-    # Privileged boundary: fork workflow_run events and unlabeled red runs are
-    # rejected before this write-permission job starts. Red same-repository
-    # runs with automerge-ok still trigger the bounded --limit 1000 scan so
-    # the #7548 stale-attest self-heal remains event-driven.
-    if: >-
-      always() &&
-      (
-        github.event_name != 'workflow_run' ||
-        (
-          github.event.workflow_run.head_repository.full_name == github.repository &&
-          (
-            github.event.workflow_run.conclusion == 'success' ||
-            (
-              needs.red_completion_gate.result == 'success' &&
-              needs.red_completion_gate.outputs.has_automerge_label == 'true'
-            )
-          )
-        )
-      )
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -135,7 +68,5 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-        # Module invocation keeps the repo root on sys.path — #7553 added a
-        # `from scripts.ci.cf_attest import ...` import that a plain-path
-        # invocation cannot resolve (run 33445623952 crashed on it).
+        # Module invocation keeps the repo root on sys.path.
         run: python -m scripts.ci.auto_arm_merge

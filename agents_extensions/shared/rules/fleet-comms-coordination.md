@@ -90,7 +90,10 @@ cold-prompts; silent plane flips; “for now” cutovers.
 
 # Cross-family PR review — DIRECT only (operator 2026-08-06; sealed formal RETIRED 2026-08-07):
 # ONE round. Ask a cross-family lane for verdict + findings at the current head,
-# then post on the PR (gh pr comment / gh pr review). Merge when CI is green.
+# then post on the PR (gh pr comment / gh pr review) as a discussion input.
+# CF attest / CF-as-merge-gate is RETIRED (operator GO 2026-09-03): the sole
+# required GitHub check is CI Gate, and merge happens once Gate is green — do
+# not treat the posted verdict as a lock CI or the merge queue enforces.
 # Then reap worktrees + temps (drive-epic §7a / reap_worktrees.py --apply).
 # `--type review` routes to a headless native CLI WITH tools (delegate.py
 # dispatch --agent <lane> --worktree; gh/pytest available), never tool-less
@@ -136,8 +139,10 @@ Every epic driver session (any harness) MUST:
 4. Review of record = ONE cross-family round posted on the PR at the current head
    (direct ask + posted verdict). **Shielded formal CF (`review-pr`, sealed MCP,
    multi-GB `lu-review-*` / `shielded-reviews` clones) is RETIRED** (operator
-   2026-08-07) — disk and process harm outweighed isolation benefit. Discussion
-   and same-family chat are still not the gate.
+   2026-08-07) — disk and process harm outweighed isolation benefit. **CF
+   attest / CF-as-merge-gate is RETIRED** (operator GO 2026-09-03): posting a
+   verdict is discussion input, not a CI check — CI Gate alone gates merge.
+   Discussion and same-family chat are never a substitute for independent review.
 5. Treat launcher-claimed stream leases as held — do not open/resume the lease yourself.
 6. **Session health by seat:**
    - **grok / gemini / kimi:** canary mint/score

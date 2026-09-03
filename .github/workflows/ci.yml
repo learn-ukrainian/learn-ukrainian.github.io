@@ -6,13 +6,15 @@ name: CI
 # duration-balanced file shards, and JUnit reconstruction inside CI Gate.
 #
 # Two-tier merge-queue cutover (#6943 stage 2): one workflow, two events.
-# pull_request tier (light): ruff + fastlane + secret scan + exact-head CF.
+# pull_request tier (light): ruff + fastlane + secret scan.
 # merge_group / push / schedule / workflow_dispatch tier (full): light PLUS
 # planner contract, four shards, and coverage floor. CI Gate remains the sole
 # required context, reports on all full-tier events, and fail-closes on
-# missing/skipped required deps. cf-attest is a needs-job (like ruff): Gate
-# stays red without independent exact-head CF. merge_group checks the PR head
-# SHA, not the merge commit, so enqueue does not demand a second CF.
+# missing/skipped required deps.
+#
+# Retire-CF-attest (2026-09-03 GO): the cf-attest needs-job and its
+# cross-family review lock are retired. Merge is gated on CI Gate alone; red
+# team review happens out of band, not as a CI check.
 #
 # Third class (#7018): docs_skills — decided by scripts/ci/landing_class.py on
 # merge_group / push / workflow_dispatch (NOT GitHub paths:/paths-ignore).
@@ -587,51 +589,6 @@ jobs:
         run: |
           echo "::error::TruffleHog secret scan failed after 3 attempts" >&2
           exit 1
-
-  # ---------------------------------------------------------------------
-  # 3b. cf-attest — exact-head independent cross-family review lock.
-  #     Always runs. PASSES only when a PR comment or review body is CF of
-  #     record for the current PR head SHA (not the merge_group merge
-  #     commit). Missing / same-family / stale SHA / unparseable → failure
-  #     so CI Gate cannot go green (#7141; auto-arm keys off this check).
-  #     Push/schedule/dispatch no-op succeed (no PR). docs_skills still
-  #     requires CF (no written exception). When Gate's only failure is
-  #     this job, the aggregator prints a notice so ruff/fastlane/secret-scan
-  #     green is not mistaken for a product-test failure.
-  # ---------------------------------------------------------------------
-  cf-attest:
-    name: CF attest
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    # needs ruff only to stay outside the t=0 always-on slot budget (#4811).
-    # ruff always runs, so this job is never skipped.
-    needs: [ruff]
-    permissions:
-      contents: read
-      pull-requests: read
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          # #7487 M1: the gate must never execute candidate-controlled code.
-          # On pull_request the default checkout is the PR merge ref, letting
-          # a PR rewrite the evaluator that judges its own review; pin the
-          # trust decision to the BASE side instead. merge_group uses the
-          # queue base; push/schedule keep the event sha.
-          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || (github.event_name == 'merge_group' && github.event.merge_group.base_sha || github.sha) }}
-          persist-credentials: false
-          sparse-checkout: |
-            scripts/ci
-          sparse-checkout-cone-mode: true
-      - name: Require exact-head cross-family review
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          EVENT_SHA: ${{ github.sha }}
-          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha || '' }}
-          PR_NUMBER: ${{ github.event.pull_request.number || '' }}
-          MERGE_GROUP_HEAD_REF: ${{ github.event.merge_group.head_ref || '' }}
-          GITHUB_TOKEN: ${{ github.token }}
-          GITHUB_API_URL: ${{ github.api_url }}
-        run: python3 scripts/ci/cf_attest.py
 
   # ---------------------------------------------------------------------
   # 4. python — collect and execute four unconditional test partitions.
@@ -1817,7 +1774,6 @@ jobs:
     needs:
       - ruff
       - secret-scan
-      - cf-attest
       - landing-class
       - pytest-plan
       - pytest-fastlane
@@ -1875,7 +1831,7 @@ jobs:
           # Explicit pairs — join(needs.*.result) loses job ids and cannot
           # distinguish expected PR-tier skips from unexpected ones.
           RESULTS: >-
-            ruff=${{ needs.ruff.result }},secret-scan=${{ needs.secret-scan.result }},cf-attest=${{ needs.cf-attest.result }},pytest-plan=${{ needs.pytest-plan.result }},pytest-fastlane=${{ needs.pytest-fastlane.result }},python=${{ needs.python.result }},contracts=${{ needs.contracts.result }},frontend=${{ needs.frontend.result }},coverage-floor=${{ needs.coverage-floor.result }},pytest-duration-publish=${{ needs.pytest-duration-publish.result }}
+            ruff=${{ needs.ruff.result }},secret-scan=${{ needs.secret-scan.result }},pytest-plan=${{ needs.pytest-plan.result }},pytest-fastlane=${{ needs.pytest-fastlane.result }},python=${{ needs.python.result }},contracts=${{ needs.contracts.result }},frontend=${{ needs.frontend.result }},coverage-floor=${{ needs.coverage-floor.result }},pytest-duration-publish=${{ needs.pytest-duration-publish.result }}
         run: |
           python3 scripts/ci/gate_required_results.py \
             --event "$EVENT_NAME" \
@@ -1895,7 +1851,7 @@ jobs:
           HEAD_REF: ${{ github.event.merge_group.head_ref }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           RESULTS: >-
-            ruff=${{ needs.ruff.result }},secret-scan=${{ needs.secret-scan.result }},cf-attest=${{ needs.cf-attest.result }},pytest-plan=${{ needs.pytest-plan.result }},pytest-fastlane=${{ needs.pytest-fastlane.result }},python=${{ needs.python.result }},contracts=${{ needs.contracts.result }},frontend=${{ needs.frontend.result }},coverage-floor=${{ needs.coverage-floor.result }}
+            ruff=${{ needs.ruff.result }},secret-scan=${{ needs.secret-scan.result }},pytest-plan=${{ needs.pytest-plan.result }},pytest-fastlane=${{ needs.pytest-fastlane.result }},python=${{ needs.python.result }},contracts=${{ needs.contracts.result }},frontend=${{ needs.frontend.result }},coverage-floor=${{ needs.coverage-floor.result }}
         run: |
           set +e
           pr_number=$(printf '%s' "$HEAD_REF" | grep -oE 'pr-[0-9]+' | grep -oE '[0-9]+' | head -n1)

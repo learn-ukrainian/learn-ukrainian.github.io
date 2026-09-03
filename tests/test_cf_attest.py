@@ -3,13 +3,10 @@
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
 from urllib.error import HTTPError, URLError
 
 import pytest
-import yaml
 
-from scripts.ci import gate_required_results as gate
 from scripts.ci.cf_attest import (
     FAMILY_CURSOR_AUTO_UNION,
     VERDICT_PRESENT_RE,
@@ -28,10 +25,6 @@ from scripts.ci.cf_attest import (
     run_event,
     x_agent_seats_from_messages,
 )
-
-_REPO_ROOT = Path(__file__).resolve().parents[1]
-_CI = _REPO_ROOT / ".github" / "workflows" / "ci.yml"
-_COMMENT_WORKFLOW = _REPO_ROOT / ".github" / "workflows" / "cf-attest-on-comment.yml"
 
 PR_HEAD = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 MERGE_SHA = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
@@ -287,140 +280,6 @@ def test_main_fails_closed_without_pr_context(capsys) -> None:
     assert main(["--event", "pull_request"]) == 1
     err = capsys.readouterr().err
     assert "fail-closed" in err
-
-
-def _load_ci() -> dict:
-    data = yaml.safe_load(_CI.read_text(encoding="utf-8"))
-    assert isinstance(data, dict)
-    return data
-
-
-def test_workflow_pins_cf_attest_into_gate_needs() -> None:
-    jobs = _load_ci()["jobs"]
-    assert "cf-attest" in jobs
-    assert jobs["cf-attest"].get("if") is None
-    assert jobs["cf-attest"]["needs"] == ["ruff"]
-    assert "cf-attest" in jobs["ci-gate"]["needs"]
-    assert set(jobs["ci-gate"]["needs"]) == set(gate.GATE_NEEDS_JOBS)
-    assert "cf-attest" in gate.LIGHT_REQUIRED
-    assert "cf-attest" in gate.FULL_REQUIRED
-
-
-def test_workflow_merge_group_checks_pr_head_not_merge_sha() -> None:
-    job = _load_ci()["jobs"]["cf-attest"]
-    step = next(
-        item for item in job["steps"] if item.get("name") == "Require exact-head cross-family review"
-    )
-    env = step["env"]
-    assert env["PR_HEAD_SHA"] == "${{ github.event.pull_request.head.sha || '' }}"
-    assert env["MERGE_GROUP_HEAD_REF"] == "${{ github.event.merge_group.head_ref || '' }}"
-    assert env["EVENT_SHA"] == "${{ github.sha }}"
-    assert "merge_group.head_sha" not in step["run"]
-    assert "github.event.merge_group.head_sha" not in yaml.dump(step)
-    assert step["run"] == "python3 scripts/ci/cf_attest.py"
-    assert "${{" not in step["run"]
-
-
-def test_gate_results_env_includes_cf_attest() -> None:
-    evaluate = next(
-        step
-        for step in _load_ci()["jobs"]["ci-gate"]["steps"]
-        if step.get("name") == "Fail unless every event-required job succeeded"
-    )
-    assert "cf-attest=${{ needs.cf-attest.result }}" in evaluate["env"]["RESULTS"]
-
-
-def _load_comment_workflow() -> dict:
-    data = yaml.safe_load(_COMMENT_WORKFLOW.read_text(encoding="utf-8"))
-    assert isinstance(data, dict)
-    return data
-
-
-def _comment_triggers(workflow: dict) -> dict:
-    # PyYAML (YAML 1.1) parses the bare ``on:`` key as the boolean True.
-    raw = workflow.get("on", workflow.get(True))
-    assert isinstance(raw, dict), "comment workflow has no `on:` triggers"
-    return raw
-
-
-def test_comment_workflow_triggers_on_issue_comment_created() -> None:
-    """#7544: dedicated workflow re-evaluates attest when the CF comment lands."""
-    assert _COMMENT_WORKFLOW.is_file(), f"missing workflow: {_COMMENT_WORKFLOW}"
-    triggers = _comment_triggers(_load_comment_workflow())
-    assert set(triggers) == {"issue_comment"}
-    assert triggers["issue_comment"] == {"types": ["created"]}
-
-
-def test_comment_workflow_is_pr_only_and_verdict_shaped() -> None:
-    job = _load_comment_workflow()["jobs"]["cf-attest"]
-    condition = " ".join(str(job.get("if") or "").split())
-    assert "github.event.issue.pull_request" in condition
-    assert "VERDICT:" in condition
-    assert "usage limit" in condition
-    # #7593-r2: the evaluator's own gap comment is bot-authored and
-    # verdict-free by construction; the gate must also exclude bots so an
-    # unattestable verdict can never start a comment loop.
-    assert "github.event.comment.user.type != 'Bot'" in condition
-    assert "github-actions[bot]" in condition
-    # #M-4 (2026-09-01): the family may arrive via a resolved_model: line, so
-    # requiring a literal "Reviewer family:" silently skipped valid verdicts
-    # (runs 33552592932 / 33552245509). The evaluator fail-closes instead.
-    assert "Reviewer family:" not in condition
-    assert job.get("continue-on-error") is not True
-
-
-def test_comment_workflow_pins_exact_head_env_and_run() -> None:
-    workflow = _load_comment_workflow()
-    assert workflow["permissions"] == {"contents": "read", "pull-requests": "read"}
-    job = workflow["jobs"]["cf-attest"]
-    assert job["name"] == "CF attest"
-    # Job-level writes are scoped to exactly the two side effects: the gap
-    # comment (pull-requests) and the stale-run rerun (actions).
-    assert job["permissions"] == {
-        "contents": "read",
-        "pull-requests": "write",
-        "actions": "write",
-    }
-    resolve = next(step for step in job["steps"] if step.get("id") == "pr")
-    assert "fail-closed" in resolve["run"]
-    assert "github.event.comment.body" not in resolve["run"]
-    step = next(
-        item
-        for item in job["steps"]
-        if item.get("name") == "Require exact-head cross-family review"
-    )
-    env = step["env"]
-    assert env["EVENT_NAME"] == "pull_request"
-    assert env["PR_HEAD_SHA"] == "${{ steps.pr.outputs.head_sha }}"
-    assert env["PR_NUMBER"] == "${{ github.event.issue.number }}"
-    assert env["EVENT_SHA"] == "${{ github.sha }}"
-    # The untrusted comment body reaches the evaluator via env only, so a
-    # verdict that cannot be attested earns ONE gap comment — never a skip.
-    assert env["COMMENT_BODY"] == "${{ github.event.comment.body }}"
-    # #7593-r2: bot guard + dedupe inputs via env as well (never the shell).
-    assert env["COMMENT_AUTHOR_LOGIN"] == "${{ github.event.comment.user.login }}"
-    assert env["COMMENT_AUTHOR_TYPE"] == "${{ github.event.comment.user.type }}"
-    assert env["COMMENT_ID"] == "${{ github.event.comment.id }}"
-    assert step["run"] == "python3 scripts/ci/cf_attest.py --feedback-comment"
-    assert "${{" not in step["run"]
-    assert step.get("continue-on-error") is not True
-    rerun = next(
-        item
-        for item in job["steps"]
-        if item.get("name") == "Rerun stale failed CF attest at this head"
-    )
-    assert rerun["if"] == "success()"
-    assert rerun["run"] == "python3 scripts/ci/cf_attest.py --rerun-stale-failed"
-    assert "${{" not in rerun["run"]
-    assert rerun["env"]["PR_HEAD_SHA"] == "${{ steps.pr.outputs.head_sha }}"
-    assert rerun["env"]["GITHUB_REPOSITORY"] == "${{ github.repository }}"
-    checkout = next(
-        item for item in job["steps"] if str(item.get("uses", "")).startswith("actions/checkout@")
-    )
-    assert checkout["with"]["persist-credentials"] is False
-    # #7487: trusted default-branch evaluator; PR head is PR_HEAD_SHA only.
-    assert "ref" not in checkout["with"]
-    assert "scripts/ci" in str(checkout["with"].get("sparse-checkout", ""))
 
 
 def test_later_block_revokes_earlier_approve_latest_wins() -> None:

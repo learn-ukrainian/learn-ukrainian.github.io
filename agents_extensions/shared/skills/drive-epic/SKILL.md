@@ -370,92 +370,54 @@ action. Read and apply every `unread` or `read-but-not-live-consumed` entry, the
 .venv/bin/python -m scripts.ai_agent_bridge ack --consumed-by-live-driver <message-id> [<message-id> ...]
 ```
 
-### 6. Cross-family review gate (load-bearing — discussion ≠ review)
+### 6. Cross-family review — retired as a merge gate (red team reviews out of band)
 
-A review of record is **independent and cross-family** (outside the author's model
-family; never self-review, never same-family). The CF of record must be
-**exact-head**: attested `resolved_model`, `VERDICT: APPROVE` (or equivalent),
-and the attested SHA equals the current PR head. Discussion on the thread is not CF.
+**CF attest and CF-as-merge-gate are retired (operator GO 2026-09-03).** CI
+Gate no longer runs a `cf-attest` job, and no review-of-record check blocks
+merge. Red team review happens out of band — it is not a CI check and it does
+not gate landing.
 
-- **Execution and comms layers:** CF, design, and plan use toolful seats (`delegate.py` or native harnesses); ACP is toolless intercomm only, and caveman lite is style (never persisted review text).
-
-**Reviewer family is live data.** Pick the reviewer from the live Cursor Cloud
-catalog and the served `/api/rules` reviewer-seat rule. Do **not** hardcode Claude
-Sonnet (or any one model). The writer's family is never eligible.
-
-**Cursor Cloud-authored PRs:** CF is another Cloud seat on a **different family**
-(Gemini Flash, GLM from the Cloud catalog, Grok, GPT, Kimi K3, … — whatever the
-live catalog lists that is outside the author's family). **VPS drivers** may still
-use the existing `ask-<lane>` / `delegate.py` review path below; the landing order
-in §7 is the same.
-
-**Shielded formal CF is RETIRED (operator 2026-08-07).** Do **not** run
-`review-pr` / sealed `lu-review-*` / `shielded-reviews` clones — the CLI fails
-closed. Use lightweight direct review:
-
-```bash
-printf '%s\n' "Cross-family review of PR #<N> at head <SHA>: VERDICT + findings." | \
-  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - \
-    --task-id review-<N> --type review
-# Post the exact-head verdict on the PR (attest resolved_model + SHA).
-# Do not enqueue or auto-merge here — landing order is §7.
-```
-
-This command line is unchanged, but the transport underneath it is not ACP
-(operator 2026-08-23, #7155): `--type review` / `--review` / `--pr` / `--branch`
-route to a headless native CLI with tools (`delegate.py dispatch --agent <lane>
---worktree`, `gh`/pytest available), never the tool-less `--deny-all --no-fs
---no-terminal` chat transport. ACP stays for ordinary, non-review `ask-*`.
-
-Read the review CONTENT (not just pass/fail), apply deltas,
-re-probe gate-driving data yourself. If the head moves after APPROVE, the CF is
-stale — re-run exact-head CF before any enqueue.
+`ask-<lane> --type review` is still a legitimate way to get a second opinion
+on a risky design or diff, but that exchange is discussion, not a merge gate:
+do not wait on it, do not attest a `resolved_model` verdict, and do not treat
+its outcome as a landing precondition. Merge readiness is CI Gate alone (§7).
 
 ### 7. Merge discipline
 
 PRs only — never commit or merge to `main` directly.
 
-**Binding public landing order (operator 2026-08-30 / #7450):** GitHub
-`required_approving_review_count` is 0 and the sole required check is CI Gate.
-Auto-merge / enqueue is **not** CF. That is how PRs #7447–#7449 hit `main` with
-empty reviews. Drivers follow this order, even when Gate already includes
-`cf-attest`:
+**Binding public landing order (operator GO 2026-09-03 — retire CF attest):**
+the sole required GitHub check is **CI Gate**, and `required_approving_review_count`
+is 0. There is no CF-attest requirement and no review-of-record gate.
 
-1. **Independent cross-family exact-head CF** — attested `resolved_model`,
-   different family from the author, APPROVE on the current PR head.
-2. **CI Gate green** on that **same** head.
-3. **Merge queue only after both.** Enqueue then; never before.
+1. **CI Gate green** on the current head.
+2. **Merge queue / squash merge.** Enqueue or merge then; never before Gate is green.
 
-**Never auto-merge or enqueue first.** Never treat `gh pr merge --auto` as a
-substitute for CF. Do **not** arm `--auto` and wait for Gate. Enqueue / MQ only
-after CF APPROVE on the exact head **and** Gate is green:
+**Never auto-merge or enqueue ahead of a red Gate.** Do **not** arm `--auto`
+as a substitute for watching Gate turn green:
 
 ```bash
-# Only after §7 steps 1 and 2 on this exact head. Never --auto.
+# Only after §7 step 1 on this exact head. Never --auto.
 gh pr merge --squash
 ```
 
 Do **not** pass `--delete-branch` here while this repo uses a merge queue — deleting the
 head mid-queue can close the PR without landing. Delete the remote branch only after
 `gh pr view` shows `MERGED`, as part of §7a cleanup. Never enqueue a **draft** and never
-merge ahead of the review verdict. Blocking CI red → never `--admin`-bypass. A
-track/infra driver **self-enqueues its own lane's PR** after exact-head CF + Gate
-green (lane model — there is no promoting orchestrator). Flag another lane's PR with
+merge ahead of Gate going green. Blocking CI red → never `--admin`-bypass. A
+track/infra driver **self-enqueues its own lane's PR** once Gate is green
+(lane model — there is no promoting orchestrator). Flag another lane's PR with
 `needs=merge` rather than merging it.
 Skill- or docs-only landings classify as merge_group `docs_skills` (#7018):
 the four pytest shards and coverage combine are no-op **success**, not skipped.
-
-**If the head moves, re-run exact-head CF before re-queue.** A new SHA makes the
-prior APPROVE stale (Gate `cf-attest` fail-closes on SHA mismatch).
 
 **Merge-queue kick is same-hour work (#7042).** A **kick** is `merge_group` CI Gate
 going red and GitHub dequeuing the PR — it lands back on the branch looking CLEAN,
 with no visible failure unless you go look. CI Gate now comments the source PR with
 the run URL and per-job `RESULTS` on a kick; that comment is the trigger, not a
-courtesy. On seeing it: read the failed jobs from the run, fix or rebase, re-run
-exact-head CF review if the head moved, then re-queue — same hour, never left
-overnight. Do not stand up a bot or recovery workflow for this; it is driver work
-like any other red CI.
+courtesy. On seeing it: read the failed jobs from the run, fix or rebase, then
+re-queue — same hour, never left overnight. Do not stand up a bot or recovery
+workflow for this; it is driver work like any other red CI.
 
 ### 7-rollout. Local / production proof (when the epic requires it)
 

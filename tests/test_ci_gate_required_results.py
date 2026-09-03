@@ -21,7 +21,7 @@ def _full_success() -> dict[str, str]:
 
 def test_required_jobs_pull_request_is_light_tier() -> None:
     assert required_jobs("pull_request") == LIGHT_REQUIRED
-    assert "cf-attest" in LIGHT_REQUIRED
+    assert "cf-attest" not in LIGHT_REQUIRED
     assert "pytest-plan" not in LIGHT_REQUIRED
     assert "python" not in LIGHT_REQUIRED
     assert "coverage-floor" not in LIGHT_REQUIRED
@@ -98,47 +98,12 @@ def test_main_malformed_results() -> None:
     assert main(["--event", "pull_request", "--results", "not-a-pair"]) == 2
 
 
-def test_pull_request_gate_stays_red_without_cf_attest() -> None:
-    results = {job: "success" for job in LIGHT_REQUIRED if job != "cf-attest"}
-    failures = evaluate_gate("pull_request", results)
-    assert any("cf-attest: missing" in item for item in failures)
-
-
-def test_merge_group_gate_stays_red_without_cf_attest() -> None:
-    results = {job: "success" for job in FULL_REQUIRED if job != "cf-attest"}
-    failures = evaluate_gate("merge_group", results)
-    assert any("cf-attest: missing" in item for item in failures)
-
-
-def test_docs_skills_merge_group_still_requires_cf_attest() -> None:
-    assert "cf-attest" in required_jobs("merge_group", landing_class="docs_skills")
-    results = {job: "success" for job in FULL_REQUIRED if job != "cf-attest"}
-    failures = evaluate_gate("merge_group", results, landing_class="docs_skills")
-    assert any("cf-attest: missing" in item for item in failures)
-
-
-def test_main_cf_only_failure_still_red_and_explains_product_jobs_are_green(
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    """Gate stays fail-closed (#7141) but must not look like a pytest failure."""
-    pairs = ",".join(
-        f"{job}={'failure' if job == 'cf-attest' else 'success'}" for job in LIGHT_REQUIRED
-    )
-    assert main(["--event", "pull_request", "--results", pairs]) == 1
-    err = capsys.readouterr().err
-    assert "CI Gate fail-closed: cf-attest: failure" in err
-    assert "Product jobs succeeded" in err
-    assert "not because ruff/tests/secret-scan failed" in err
-
-
-def test_main_product_failure_does_not_claim_cf_only(
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    pairs = ",".join(
-        f"{job}={'failure' if job in {'cf-attest', 'ruff'} else 'success'}"
-        for job in LIGHT_REQUIRED
-    )
-    assert main(["--event", "pull_request", "--results", pairs]) == 1
-    err = capsys.readouterr().err
-    assert "ruff: failure" in err
-    assert "Product jobs succeeded" not in err
+def test_cf_attest_is_retired_from_every_tier() -> None:
+    """Retire-CF-attest (2026-09-03 GO): no tier requires cf-attest any more."""
+    for event, landing_class in (
+        ("pull_request", "full"),
+        ("merge_group", "full"),
+        ("merge_group", "docs_skills"),
+        ("push", "full"),
+    ):
+        assert "cf-attest" not in required_jobs(event, landing_class=landing_class)

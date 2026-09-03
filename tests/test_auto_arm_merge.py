@@ -45,33 +45,12 @@ def _pr(**changes: object) -> dict:
         "headRefOid": HEAD,
         "autoMergeRequest": None,
         "statusCheckRollup": [
-            _check("CF attest"),
             _check("CI Gate", started_at="2026-08-31T10:01:00Z"),
             _check("Ruff", started_at="2026-08-31T10:02:00Z"),
         ],
     }
     result.update(changes)
     return result
-
-
-def _failed_cf_pr() -> dict:
-    run_url = "https://github.com/org/repo/actions/runs/987654321/job/123456789"
-    return _pr(
-        statusCheckRollup=[
-            _check("CF attest", "FAILURE", details_url=run_url),
-            _check("CI Gate", "FAILURE", started_at="2026-08-31T10:01:00Z", details_url=run_url),
-            _check("Ruff", started_at="2026-08-31T10:02:00Z"),
-        ]
-    )
-
-
-def _attestation(head: str = HEAD, *, created_at: str = "2026-08-31T10:00:01Z") -> dict:
-    return {
-        "created_at": created_at,
-        "body": (
-            f"**VERDICT: APPROVE**\n\nCross-family review of record\nReviewer family: Anthropic\nAt exact head {head}"
-        ),
-    }
 
 
 @pytest.mark.parametrize(
@@ -81,17 +60,12 @@ def _attestation(head: str = HEAD, *, created_at: str = "2026-08-31T10:00:01Z") 
         (_pr(labels=[{"name": "automerge-ok"}, {"name": "hold"}]), "blocking_label"),
         (_pr(labels=[{"name": "automerge-ok"}, {"name": "do-not-merge"}]), "blocking_label"),
         (_pr(isDraft=True), "draft_or_unknown"),
-        (_pr(statusCheckRollup=[_check("CI Gate"), _check("Ruff")]), "cf_attest_not_green_at_head"),
         (
-            _pr(statusCheckRollup=[_check("CF attest", "FAILURE"), _check("CI Gate"), _check("Ruff")]),
-            "cf_attest_not_green_at_head",
-        ),
-        (
-            _pr(statusCheckRollup=[_check("CF attest"), _check("CI Gate", "FAILURE"), _check("Ruff")]),
+            _pr(statusCheckRollup=[_check("CI Gate", "FAILURE"), _check("Ruff")]),
             "ci_gate_not_green",
         ),
         (
-            _pr(statusCheckRollup=[_check("CF attest"), _check("CI Gate"), _check("Ruff", "", status="IN_PROGRESS")]),
+            _pr(statusCheckRollup=[_check("CI Gate"), _check("Ruff", "", status="IN_PROGRESS")]),
             "blocking_check_pending:Ruff",
         ),
         (_pr(autoMergeRequest={"enabledAt": "2026-08-31T10:03:00Z"}), "already_armed_or_queued"),
@@ -114,7 +88,7 @@ def test_arm_eligible_prs_arms_and_audits_exactly_one_green_pr() -> None:
         comment=lambda number, head_sha: comments.append((number, head_sha)),
     )
 
-    assert decisions == [auto_arm_merge.ArmDecision(True, "cf_attest_and_ci_gate_green", 7539, HEAD)]
+    assert decisions == [auto_arm_merge.ArmDecision(True, "ci_gate_green", 7539, HEAD)]
     assert enabled == [7539]
     assert comments == [(7539, HEAD)]
 
@@ -132,46 +106,6 @@ def test_already_armed_pr_is_idempotent() -> None:
     assert decisions[0].reason == "already_armed_or_queued"
     assert enabled == []
     assert comments == []
-
-
-@pytest.mark.parametrize(
-    ("comments", "run_attempt", "expected_reason", "should_rerun"),
-    [
-        ([_attestation()], 1, "reran_failed_cf_attest_after_exact_head_attestation", True),
-        ([], 1, "exact_head_attestation_missing_or_stale", False),
-        ([_attestation("b" * 40)], 1, "exact_head_attestation_missing_or_stale", False),
-        ([_attestation(created_at="2026-08-31T10:00:00Z")], 1, "exact_head_attestation_missing_or_stale", False),
-        ([_attestation()], 2, "cf_attest_run_not_initial_failed_head", False),
-    ],
-    ids=[
-        "rerun-eligible",
-        "no-attestation",
-        "stale-attestation-sha",
-        "attestation-before-failed-run",
-        "already-retried",
-    ],
-)
-def test_retry_stale_cf_attests_requires_a_fresh_exact_head_approval_once(
-    comments: list[dict], run_attempt: int, expected_reason: str, should_rerun: bool
-) -> None:
-    rerun_ids: list[int] = []
-
-    decisions = auto_arm_merge.retry_stale_cf_attests(
-        [_failed_cf_pr()],
-        get_run=lambda run_id: {
-            "id": run_id,
-            "head_sha": HEAD,
-            "status": "completed",
-            "conclusion": "failure",
-            "run_attempt": run_attempt,
-        },
-        get_comments=lambda _number: comments,
-        rerun=rerun_ids.append,
-    )
-
-    assert decisions[0].reason == expected_reason
-    assert decisions[0].should_rerun is should_rerun
-    assert rerun_ids == ([987654321] if should_rerun else [])
 
 
 def test_kill_switch_exits_before_token_or_github_calls(
@@ -208,38 +142,21 @@ def test_gh_wrappers_only_enable_auto_merge_then_post_the_required_audit(monkeyp
             "--repo",
             "org/repo",
             "--body",
-            f"auto-arm: queued at head {HEAD} (cf-attest+gate green)",
+            f"auto-arm: queued at head {HEAD} (gate green)",
         ],
     ]
 
 
-def test_rerun_wrapper_targets_only_failed_jobs(monkeypatch: pytest.MonkeyPatch) -> None:
-    calls: list[list[str]] = []
-
-    def fake_gh(args: object, *, token: str) -> SimpleNamespace:
-        assert token == "token"
-        calls.append(list(args))
-        return SimpleNamespace(returncode=0, stdout="", stderr="")
-
-    monkeypatch.setattr(auto_arm_merge, "_gh", fake_gh)
-
-    auto_arm_merge.rerun_failed_jobs("org/repo", 987654321, token="token")
-
-    assert calls == [["run", "rerun", "987654321", "--repo", "org/repo", "--failed"]]
-
-
-def test_workflow_is_scheduled_manual_serial_and_minimally_scoped() -> None:
+def test_workflow_is_dispatch_only_and_minimally_scoped() -> None:
+    """Retire-CF-attest (2026-09-03 GO): schedule/workflow_run are retired so
+    this workflow is never a live, automatic merge path — dispatch only."""
     workflow = yaml.safe_load(_WORKFLOW.read_text(encoding="utf-8"))
     triggers = workflow.get("on", workflow.get(True))
 
-    # workflow_run added as the event-driven fallback for the unreliable cron:
-    # arm right after a CI run completes, with red runs admitted by the
-    # read-only label gate below.
-    assert set(triggers) == {"schedule", "workflow_dispatch", "workflow_run"}
-    assert triggers["schedule"] == [{"cron": "7,22,37,52 * * * *"}]
-    assert triggers["workflow_run"] == {"workflows": ["CI"], "types": ["completed"]}
+    assert set(triggers) == {"workflow_dispatch"}
     arm_job = workflow["jobs"]["arm"]
-    assert arm_job["needs"] == "red_completion_gate"
+    assert "needs" not in arm_job
+    assert "red_completion_gate" not in workflow["jobs"]
     assert workflow["permissions"] == {
         "contents": "read",
     }
@@ -252,7 +169,6 @@ def test_workflow_is_scheduled_manual_serial_and_minimally_scoped() -> None:
     }
     assert workflow["concurrency"] == {"group": "auto-arm-merge", "cancel-in-progress": False}
     source = _WORKFLOW.read_text(encoding="utf-8")
-    # Module invocation keeps the repo root importable (scripts.ci.cf_attest).
     assert "python -m scripts.ci.auto_arm_merge" in source
     # #7586: arming must not use GITHUB_TOKEN (merge_group would never run).
     arm_steps = arm_job["steps"]
@@ -266,44 +182,6 @@ def test_workflow_is_scheduled_manual_serial_and_minimally_scoped() -> None:
     skip = next(step for step in arm_steps if step.get("name") == "Skip arming when the App is not configured")
     assert skip["if"] == "${{ steps.app.outputs.token == '' }}"
     assert arm["if"] == "${{ steps.app.outputs.token != '' }}"
-
-
-@pytest.mark.parametrize(
-    ("head_repository", "conclusion", "has_label", "expected"),
-    [
-        ("fork-owner/repo", "failure", True, False),
-        ("org/repo", "failure", False, False),
-        ("org/repo", "failure", True, True),
-    ],
-    ids=["fork-red-run", "same-repo-red-run-without-label", "same-repo-red-labeled"],
-)
-def test_workflow_run_privilege_boundary_cases(
-    head_repository: str, conclusion: str, has_label: bool, expected: bool
-) -> None:
-    workflow = yaml.safe_load(_WORKFLOW.read_text(encoding="utf-8"))
-    gate = workflow["jobs"]["red_completion_gate"]
-    arm_if = workflow["jobs"]["arm"]["if"]
-
-    assert gate["if"] == (
-        "github.event_name == 'workflow_run' && "
-        "github.event.workflow_run.conclusion != 'success' && "
-        "github.event.workflow_run.head_repository.full_name == github.repository"
-    )
-    assert gate["permissions"] == {"contents": "read", "pull-requests": "read"}
-    label_step = gate["steps"][0]
-    assert label_step["env"]["WORKFLOW_PULL_REQUESTS"] == "${{ toJSON(github.event.workflow_run.pull_requests) }}"
-    assert "repos/${REPOSITORY}/pulls/${number}" in label_step["run"]
-    assert '"automerge-ok"' in label_step["run"]
-    assert ".[0:100]" in label_step["run"]
-    assert "github.event.workflow_run.head_repository.full_name == github.repository" in arm_if
-    assert "github.event.workflow_run.conclusion == 'success'" in arm_if
-    assert "needs.red_completion_gate.outputs.has_automerge_label == 'true'" in arm_if
-
-    # This is the job-level condition's red-run truth table: fork runs fail the
-    # repository boundary, while a same-repository red run needs the label gate.
-    repository = "org/repo"
-    allowed = head_repository == repository and (conclusion == "success" or has_label)
-    assert allowed is expected
 
 
 def test_already_queued_pr_is_not_rearmed_or_recommented() -> None:
@@ -335,7 +213,7 @@ def test_not_queued_green_pr_still_arms_and_comments_once() -> None:
         is_queued=lambda _number, _head_sha: False,
     )
 
-    assert decisions == [auto_arm_merge.ArmDecision(True, "cf_attest_and_ci_gate_green", 7539, HEAD)]
+    assert decisions == [auto_arm_merge.ArmDecision(True, "ci_gate_green", 7539, HEAD)]
     assert enabled == [7539]
     assert comments == [(7539, HEAD)]
 

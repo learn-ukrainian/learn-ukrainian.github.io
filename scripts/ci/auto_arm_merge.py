@@ -3,14 +3,18 @@
 
 Issue #7539 deliberately delegates merging to GitHub's existing branch
 protection and merge queue.  This scanner never merges directly and never uses
-an administrative bypass: it only requests ``gh pr merge --auto`` after the
-exact-head CF and CI gates have both passed.
+an administrative bypass: it only requests ``gh pr merge --auto`` after CI
+Gate has passed at the current head.
 
 It also owns two merge-queue visibility duties: the "queued" audit comment
 fires only on the state change into the queue (a live ``mergeQueueEntry``
 suppresses re-comments), and each ``removed_from_merge_queue`` timeline event
 earns exactly one comment with the run URL and failed job names — GitHub emits
 no workflow trigger for queue removals, so ejection is detected by polling.
+
+Retire-CF-attest (2026-09-03 GO): CI Gate is the sole required check. The
+one-time stale-CF-attest retry (#7548) that this module used to own is
+retired with it — there is no CF attest check left to retry.
 """
 
 from __future__ import annotations
@@ -26,18 +30,14 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any
 
-from scripts.ci.cf_attest import parse_attestation
-
 AUTO_ARM_OPT_IN_LABEL = "automerge-ok"
 BLOCKING_LABELS = frozenset({"do-not-merge", "hold"})
-CF_ATTEST_CHECK = "CF attest"
 CI_GATE_CHECK = "CI Gate"
 ADVISORY_MARKER = "advisory"
 GREEN_CONCLUSIONS = frozenset({"SUCCESS", "NEUTRAL", "SKIPPED"})
 PENDING_STATES = frozenset({"", "EXPECTED", "IN_PROGRESS", "PENDING", "QUEUED", "REQUESTED", "STALE", "WAITING"})
 SHA_RE = re.compile(r"[0-9a-f]{40}", re.IGNORECASE)
 DEFAULT_GH_TIMEOUT = 60
-ACTION_RUN_ID_RE = re.compile(r"/actions/runs/(?P<run_id>[1-9][0-9]*)(?:/job/[1-9][0-9]*)?/?$")
 
 
 @dataclass(frozen=True)
@@ -47,17 +47,6 @@ class ArmDecision:
     should_arm: bool
     reason: str
     number: int | None = None
-    head_sha: str = ""
-
-
-@dataclass(frozen=True)
-class RetryDecision:
-    """A deterministic disposition for a one-time stale CF-attest retry."""
-
-    should_rerun: bool
-    reason: str
-    number: int | None = None
-    run_id: int | None = None
     head_sha: str = ""
 
 
@@ -185,9 +174,9 @@ def decide_auto_arm(pr: Mapping[str, Any]) -> ArmDecision:
     """Decide whether fetched current-head PR data can receive auto-merge.
 
     ``gh pr list --json statusCheckRollup,headRefOid`` supplies the rollup for
-    the PR's current head.  The required ``CF attest`` job itself validates the
-    exact-head cross-family evidence, so this function intentionally trusts
-    only that job's successful conclusion rather than reimplementing it.
+    the PR's current head. ``CI Gate`` is the sole required check (retire-CF-
+    attest, 2026-09-03); this function requires it green plus every other
+    non-advisory check reported at the current head.
     """
 
     number = _usable_pr_number(pr.get("number"))
@@ -218,8 +207,6 @@ def decide_auto_arm(pr: Mapping[str, Any]) -> ArmDecision:
     if latest is None:
         return ArmDecision(False, error or "checks_unavailable", number)
     current_checks = list(latest.values())
-    if not _required_check_is_green(current_checks, CF_ATTEST_CHECK):
-        return ArmDecision(False, "cf_attest_not_green_at_head", number)
     if not _required_check_is_green(current_checks, CI_GATE_CHECK):
         return ArmDecision(False, "ci_gate_not_green", number)
 
@@ -234,157 +221,7 @@ def decide_auto_arm(pr: Mapping[str, Any]) -> ArmDecision:
         if outcome != "green":
             return ArmDecision(False, f"blocking_check_failing:{name}", number)
 
-    return ArmDecision(True, "cf_attest_and_ci_gate_green", number, head_sha)
-
-
-def _action_run_id(check: Mapping[str, Any]) -> int | None:
-    """Extract an Actions run id from GitHub's check details URL."""
-
-    details_url = check.get("detailsUrl")
-    if not isinstance(details_url, str):
-        return None
-    match = ACTION_RUN_ID_RE.search(details_url)
-    return int(match.group("run_id")) if match is not None else None
-
-
-def _retry_candidate(pr: Mapping[str, Any]) -> RetryDecision:
-    """Identify the one safe failed-CF shape that may be retried.
-
-    ``CI Gate`` is permitted to be failed only when it belongs to the exact
-    same Actions run: it necessarily aggregates a failed ``CF attest`` job.
-    All independent checks remain strict green requirements.
-    """
-
-    arm_decision = decide_auto_arm(pr)
-    if arm_decision.should_arm:
-        return RetryDecision(False, "already_green", arm_decision.number, head_sha=arm_decision.head_sha)
-    if arm_decision.reason != "cf_attest_not_green_at_head":
-        return RetryDecision(False, arm_decision.reason, arm_decision.number)
-
-    number = arm_decision.number
-    assert number is not None
-    head_sha = pr.get("headRefOid")
-    assert isinstance(head_sha, str)
-    head_sha = head_sha.casefold()
-    latest, error = decide_latest_checks(pr.get("statusCheckRollup"))
-    if latest is None:
-        return RetryDecision(False, error or "checks_unavailable", number)
-    current_checks = list(latest.values())
-    cf_checks = [check for check in current_checks if _check_name(check) == CF_ATTEST_CHECK]
-    if len(cf_checks) != 1:
-        return RetryDecision(False, "cf_attest_ambiguous", number)
-    cf_check = cf_checks[0]
-    if (
-        str(cf_check.get("status") or "").strip().upper() != "COMPLETED"
-        or str(cf_check.get("conclusion") or "").strip().upper() != "FAILURE"
-    ):
-        return RetryDecision(False, "cf_attest_not_completed_failure", number)
-    if _parse_timestamp(cf_check.get("startedAt")) is None:
-        return RetryDecision(False, "cf_attest_started_at_unavailable", number)
-    run_id = _action_run_id(cf_check)
-    if run_id is None:
-        return RetryDecision(False, "cf_attest_run_unavailable", number)
-
-    for check in current_checks:
-        name = _check_name(check)
-        assert name is not None
-        if name == CF_ATTEST_CHECK or ADVISORY_MARKER in name.casefold():
-            continue
-        outcome = _check_outcome(check)
-        if name == CI_GATE_CHECK and outcome == "failing" and _action_run_id(check) == run_id:
-            continue
-        if outcome != "green":
-            return RetryDecision(False, f"blocking_check_not_green:{name}", number)
-
-    return RetryDecision(True, "failed_cf_attest_needs_exact_head_attestation", number, run_id, head_sha)
-
-
-def _has_fresh_exact_head_attestation(
-    comments: Sequence[Mapping[str, Any]], *, head_sha: str, failed_run_started_at: datetime
-) -> bool:
-    """Accept only a CF parser-valid APPROVE created after the failed run."""
-
-    for comment in comments:
-        body = comment.get("body")
-        created_at = _parse_timestamp(comment.get("created_at"))
-        if not isinstance(body, str) or created_at is None or created_at <= failed_run_started_at:
-            continue
-        parsed = parse_attestation(body)
-        if parsed is not None and parsed.verdict == "APPROVE" and parsed.head_sha == head_sha.casefold():
-            return True
-    return False
-
-
-def retry_stale_cf_attests(
-    prs: Sequence[Mapping[str, Any]],
-    *,
-    get_run: Callable[[int], Mapping[str, Any]],
-    get_comments: Callable[[int], Sequence[Mapping[str, Any]]],
-    rerun: Callable[[int], None],
-) -> list[RetryDecision]:
-    """Rerun failed CF-attest workflow jobs exactly once after a fresh CF comment.
-
-    GitHub exposes ``run_attempt`` on the workflow run, which provides durable
-    idempotency per run/head without adding a mutable PR comment protocol.
-    """
-
-    decisions: list[RetryDecision] = []
-    for pr in prs:
-        candidate = _retry_candidate(pr)
-        if not candidate.should_rerun:
-            decisions.append(candidate)
-            continue
-        assert candidate.number is not None
-        assert candidate.run_id is not None
-        assert candidate.head_sha
-        run = get_run(candidate.run_id)
-        if (
-            run.get("run_attempt") != 1
-            or str(run.get("head_sha") or "").casefold() != candidate.head_sha
-            or str(run.get("status") or "").upper() != "COMPLETED"
-            or str(run.get("conclusion") or "").upper() != "FAILURE"
-        ):
-            decisions.append(
-                RetryDecision(
-                    False,
-                    "cf_attest_run_not_initial_failed_head",
-                    candidate.number,
-                    candidate.run_id,
-                    candidate.head_sha,
-                )
-            )
-            continue
-        latest, _error = decide_latest_checks(pr.get("statusCheckRollup"))
-        assert latest is not None
-        cf_check = next(check for check in latest.values() if _check_name(check) == CF_ATTEST_CHECK)
-        failed_run_started_at = _parse_timestamp(cf_check.get("startedAt"))
-        assert failed_run_started_at is not None
-        if not _has_fresh_exact_head_attestation(
-            get_comments(candidate.number),
-            head_sha=candidate.head_sha,
-            failed_run_started_at=failed_run_started_at,
-        ):
-            decisions.append(
-                RetryDecision(
-                    False,
-                    "exact_head_attestation_missing_or_stale",
-                    candidate.number,
-                    candidate.run_id,
-                    candidate.head_sha,
-                )
-            )
-            continue
-        rerun(candidate.run_id)
-        decisions.append(
-            RetryDecision(
-                True,
-                "reran_failed_cf_attest_after_exact_head_attestation",
-                candidate.number,
-                candidate.run_id,
-                candidate.head_sha,
-            )
-        )
-    return decisions
+    return ArmDecision(True, "ci_gate_green", number, head_sha)
 
 
 def _gh_env(token: str) -> dict[str, str]:
@@ -470,15 +307,8 @@ def post_pr_comment(repo: str, number: int, body: str, *, token: str) -> None:
 
 
 def post_audit_comment(repo: str, number: int, head_sha: str, *, token: str) -> None:
-    body = f"auto-arm: queued at head {head_sha} (cf-attest+gate green)"
+    body = f"auto-arm: queued at head {head_sha} (gate green)"
     post_pr_comment(repo, number, body, token=token)
-
-
-def get_workflow_run(repo: str, run_id: int, *, token: str) -> Mapping[str, Any]:
-    payload = _gh_json(["api", f"repos/{repo}/actions/runs/{run_id}"], token=token)
-    if not isinstance(payload, Mapping):
-        raise RuntimeError("workflow run response is not an object")
-    return payload
 
 
 def list_pr_comments(repo: str, number: int, *, token: str) -> list[Mapping[str, Any]]:
@@ -497,13 +327,6 @@ def list_pr_comments(repo: str, number: int, *, token: str) -> list[Mapping[str,
     if not all(isinstance(item, Mapping) for item in comments):
         raise RuntimeError("PR comments response contains a non-object")
     return comments
-
-
-def rerun_failed_jobs(repo: str, run_id: int, *, token: str) -> None:
-    completed = _gh(["run", "rerun", str(run_id), "--repo", repo, "--failed"], token=token)
-    if completed.returncode != 0:
-        detail = (completed.stderr or completed.stdout or "").strip()
-        raise RuntimeError(detail or f"failed to rerun failed jobs for Actions run {run_id}")
 
 
 MERGE_QUEUE_ENTRY_QUERY = (
@@ -673,8 +496,8 @@ def build_ejection_comment(
             "No merge-group CI run found for this ejection (queue rebuild or manual removal)."
         )
     lines.append(
-        "The auto-arm scanner re-queues automatically once CF attest and CI Gate "
-        "are green at the current head."
+        "The auto-arm scanner re-queues automatically once CI Gate is green "
+        "at the current head."
     )
     lines.append(f"{EJECTION_MARKER_PREFIX}{decision.event_id} -->")
     return "\n".join(lines)
@@ -806,12 +629,6 @@ def main(argv: Sequence[str] | None = None) -> int:
         raise SystemExit("GH_TOKEN or GITHUB_TOKEN is required")
 
     prs = list_open_prs(args.repo, token=token)
-    retry_decisions = retry_stale_cf_attests(
-        prs,
-        get_run=lambda run_id: get_workflow_run(args.repo, run_id, token=token),
-        get_comments=lambda number: list_pr_comments(args.repo, number, token=token),
-        rerun=lambda run_id: rerun_failed_jobs(args.repo, run_id, token=token),
-    )
     decisions = arm_eligible_prs(
         prs,
         enable=lambda number, head_sha: enable_auto_merge(args.repo, number, head_sha, token=token),
@@ -827,9 +644,6 @@ def main(argv: Sequence[str] | None = None) -> int:
         get_run_details=lambda number: merge_group_run_details(args.repo, number, token=token),
         comment=lambda number, body: post_pr_comment(args.repo, number, body, token=token),
     )
-    for decision in retry_decisions:
-        if decision.should_rerun:
-            print(json.dumps({"number": decision.number, "reason": decision.reason, "rerun": True}))
     for decision in decisions:
         if decision.reason == "already_armed_or_queued":
             continue
