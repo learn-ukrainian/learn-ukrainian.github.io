@@ -318,6 +318,7 @@ def test_workflow_scheduled_runs_never_auto_arm(
             "REPOSITORY": "org/repo",
         },
         check=True,
+        timeout=30,
     )
 
     recorded = out_file.read_text()
