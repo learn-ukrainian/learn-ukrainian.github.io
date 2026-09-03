@@ -646,14 +646,15 @@ def _cursor_cli_binary() -> str:
 
     Prefer the unambiguous ``cursor-agent`` name. A generic ``agent`` on PATH
     can be Grok Build TUI (``~/.local/bin/agent``), so only fall back to
-    ``agent`` after PATH and ``~/.local/bin/cursor-agent`` miss.
+    ``agent`` after PATH and ``~/.local/bin/cursor-agent`` miss. The home-bin
+    path is used only when the file exists **and** is executable.
     """
     found = shutil.which("cursor-agent")
     if found:
         return found
     home_bin = Path.home() / ".local" / "bin" / "cursor-agent"
     try:
-        if home_bin.is_file():
+        if home_bin.is_file() and os.access(home_bin, os.X_OK):
             return str(home_bin)
     except OSError:
         pass
@@ -693,8 +694,15 @@ def probe_cursor_login(*, timeout_s: float = 5.0) -> dict[str, Any]:
             timeout=timeout_s,
             check=False,
         )
-    except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
-        kind = "missing_binary" if isinstance(exc, FileNotFoundError) else "timeout"
+    except (FileNotFoundError, subprocess.TimeoutExpired, OSError) as exc:
+        if isinstance(exc, FileNotFoundError):
+            kind = "missing_binary"
+        elif isinstance(exc, subprocess.TimeoutExpired):
+            kind = "timeout"
+        elif isinstance(exc, PermissionError):
+            kind = "permission"
+        else:
+            kind = "os_error"
         is_auth = _cursor_env_or_file_authenticated()
         return {
             "lane": "cursor",

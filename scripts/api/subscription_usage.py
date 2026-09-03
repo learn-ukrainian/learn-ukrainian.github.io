@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import contextlib
 import json
+import math
 import os
 import platform
 import subprocess
@@ -554,20 +555,25 @@ def _load_deepseek_api_key() -> str | None:
 
 
 def _coerce_float(value: Any) -> float | None:
-    """Accept int/float and numeric strings; reject bool/empty/non-numeric."""
+    """Accept int/float and numeric strings; reject bool/empty/non-numeric/non-finite."""
     if value is None or isinstance(value, bool):
         return None
+    result: float
     if isinstance(value, (int, float)):
-        return float(value)
-    if isinstance(value, str):
+        result = float(value)
+    elif isinstance(value, str):
         stripped = value.strip()
         if not stripped:
             return None
         try:
-            return float(stripped)
+            result = float(stripped)
         except ValueError:
             return None
-    return None
+    else:
+        return None
+    if math.isnan(result) or math.isinf(result):
+        return None
+    return result
 
 
 _as_optional_float = _coerce_float

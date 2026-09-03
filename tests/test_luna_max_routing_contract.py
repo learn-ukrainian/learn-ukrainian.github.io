@@ -56,13 +56,21 @@ def test_luna_is_absent_from_formal_review_candidates_and_ladders() -> None:
         assert "gpt-5.6-luna" not in rung_candidates
 
 
-def test_kimi_k3_and_glm_5_2_remain_on_every_code_review_ladder() -> None:
+def test_kimi_k3_remains_on_every_code_review_ladder() -> None:
     ladders = load_model_catalog()["review_ladders"]
     assert set(ladders) == {"critical", "high", "medium", "low"}
 
     for ladder in ladders.values():
         rung_candidates = {candidate for rung in ladder for candidate in rung}
-        assert {"kimi-k3", "glm-5.3"} <= rung_candidates
+        assert "kimi-k3" in rung_candidates
+        assert "glm-5.3" not in rung_candidates
+
+
+def test_glm_is_absent_from_automatic_review_ladders() -> None:
+    catalog = load_model_catalog()
+    assert "glm-5.3" in catalog["review_candidates"]
+    for ladder in catalog["review_ladders"].values():
+        assert "glm-5.3" not in {candidate for rung in ladder for candidate in rung}
 
 
 def test_review_boundary_rejects_same_family_advisory_output() -> None:

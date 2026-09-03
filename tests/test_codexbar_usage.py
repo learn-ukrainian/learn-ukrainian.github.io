@@ -1470,6 +1470,51 @@ def test_coerce_float_accepts_numeric_strings_rejects_bool_empty():
     assert subscription_usage_mod._coerce_float(None) is None
 
 
+def test_coerce_float_rejects_non_finite_string_and_float():
+    assert subscription_usage_mod._coerce_float("NaN") is None
+    assert subscription_usage_mod._coerce_float("nan") is None
+    assert subscription_usage_mod._coerce_float("Infinity") is None
+    assert subscription_usage_mod._coerce_float("-Infinity") is None
+    assert subscription_usage_mod._coerce_float(float("nan")) is None
+    assert subscription_usage_mod._coerce_float(float("inf")) is None
+    assert subscription_usage_mod._coerce_float(float("-inf")) is None
+
+
+def test_kimi_http_200_nan_used_is_unparseable_not_healthy(monkeypatch):
+    """HTTP 200 with used=NaN must not become healthy with nan percents."""
+    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda: "fixture-kimi-token")
+    monkeypatch.setattr(
+        subscription_usage_mod,
+        "_http_json_request",
+        lambda *args, **kwargs: (
+            200,
+            {
+                "usage": {
+                    "used": "NaN",
+                    "limit": "100",
+                },
+                "limits": [
+                    {
+                        "detail": {
+                            "used": "NaN",
+                            "limit": "100",
+                        },
+                        "window": {"duration": 300, "timeUnit": "TIME_UNIT_MINUTE"},
+                    }
+                ],
+            },
+            None,
+        ),
+    )
+    codexbar_usage_mod._last_good_data.pop("kimi", None)
+
+    res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
+    assert res["error_kind"] == "unparseable_schema"
+    assert res["status"] != "healthy"
+    assert res["primary_used_pct"] is None
+    assert res["weekly_used_pct"] is None
+
+
 def test_cursor_need_login_is_not_served_fresh_past_short_ttl(monkeypatch):
     """NEED_LOGIN must re-probe quickly, not squat as "fresh" for the full
     10-minute CURSOR_CACHE_TTL_S — and a later successful probe replaces it."""

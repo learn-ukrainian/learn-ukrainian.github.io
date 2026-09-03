@@ -18,7 +18,8 @@ versioned ``scripts/config/model_catalog.yaml`` catalog at import time
 YAML edits** — this module must not hard-code a second ladder. As of the
 fleet-comms practical-CF pin (#5512): ``critical`` keeps authority-first
 (Sol/Fable/Opus); ``high|medium|low`` walk practical seats (Terra, Sonnet 5,
-Gemini 3.6 Flash, Grok native + Cursor-explicit ``grok-4.6`` fallback, …).
+Gemini Flash, Grok native + Cursor-explicit ``grok-4.6`` fallback, …).
+``glm-5.3`` remains catalogued for an explicit ``--reviewer`` pin only.
 Its separate freshness lint forces a provider/CLI/source review every 30 days
 without making a stale catalog an operational outage at runtime.
 """
@@ -30,7 +31,7 @@ from dataclasses import dataclass, field, replace
 from typing import Literal
 
 from scripts.agent_runtime.adapters.acpx import ACPX_PARTICIPANT_CATALOG_TRANSPORTS, ACPX_SUPPORTED_PARTICIPANTS
-from scripts.agent_runtime.agent_identity import normalize_seat, tools_writer_runtime_agent
+from scripts.agent_runtime.agent_identity import normalize_seat, resolve_retired_agent_alias, tools_writer_runtime_agent
 from scripts.audit import model_families
 from scripts.review.model_catalog import VALID_REVIEW_PROFILES, VALID_RISKS, load_model_catalog
 from scripts.review.reviewer_scheduler import circuit_exclusion_reason, selection_key
@@ -626,6 +627,21 @@ def _suitability_rank(candidate: ReviewerCandidate, inputs: ResolverInputs) -> i
     return None
 
 
+def _retired_alias_target(candidate: ReviewerCandidate) -> str | None:
+    """Return the permanent substitute for a retired CLI seat, or None.
+
+    Checks the candidate's route (dispatch agent), quota_bucket, participant,
+    and name against ``RETIRED_AGENT_ALIASES`` (currently ``glm``→``cursor``,
+    ``gemini``→``agy``). Catalogued candidates remain pin-eligible; automatic
+    selection must not pick a retired seat.
+    """
+    for token in (candidate.route, candidate.quota_bucket, candidate.participant, candidate.name):
+        target = resolve_retired_agent_alias(token)
+        if target is not None:
+            return target
+    return None
+
+
 def evaluate_candidate(
     candidate: ReviewerCandidate,
     inputs: ResolverInputs,
@@ -643,6 +659,22 @@ def evaluate_candidate(
     )
     normalized_snapshot = normalize_routing_snapshot(inputs.routing_snapshot)
     health = _health_of(candidate, normalized_snapshot)
+
+    retired_target = _retired_alias_target(candidate)
+    if retired_target is not None and inputs.pinned_candidate != candidate.name:
+        return CandidateResult(
+            name=candidate.name,
+            concrete_model=candidate.concrete_model,
+            family=candidate.family,
+            route=candidate.route,
+            transport=candidate.transport,
+            invocation=candidate.invocation,
+            quality_tier=candidate.quality_tier,
+            requires_silence_timeout=candidate.requires_silence_timeout,
+            status="excluded",
+            reason=f"retired→{retired_target}",
+            health=health,
+        )
 
     if family == CURSOR_AUTO_UNION_FAMILY:
         if candidate.family in CURSOR_AUTO_UNION_FAMILIES:
