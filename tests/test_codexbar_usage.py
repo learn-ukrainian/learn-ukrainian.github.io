@@ -1402,6 +1402,74 @@ def test_kimi_credentials_present_but_http_failure_is_fetch_error_not_need_login
     assert res["error_kind"] != "need_login"
 
 
+def test_kimi_string_usage_and_derived_used_parses_healthy(monkeypatch):
+    """Live Kimi shape (2026-09-03): string used/limit/remaining; detail lacks used;
+    window is {duration, timeUnit: TIME_UNIT_MINUTE}. Must parse, not NEED_LOGIN.
+    """
+    live_shape = {
+        "usage": {
+            "used": "40",
+            "limit": "100",
+            "remaining": "60",
+            "resetTime": "2026-09-10T00:00:00Z",
+        },
+        "limits": [
+            {
+                "detail": {
+                    "limit": "100",
+                    "remaining": "55",
+                    "resetTime": "2026-09-03T10:00:00Z",
+                },
+                "window": {"duration": 300, "timeUnit": "TIME_UNIT_MINUTE"},
+            }
+        ],
+    }
+    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda: "fixture-kimi-token")
+    monkeypatch.setattr(
+        subscription_usage_mod,
+        "_http_json_request",
+        lambda *args, **kwargs: (200, live_shape, None),
+    )
+    codexbar_usage_mod._last_good_data.pop("kimi", None)
+
+    res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
+    assert res["status"] == "healthy"
+    assert res["error_kind"] != "need_login"
+    assert res["error_kind"] is None
+    # detail used derived: 100 - 55 = 45 → 45%
+    assert res["primary_used_pct"] == 45.0
+    # usage.used/limit strings → 40%
+    assert res["weekly_used_pct"] == 40.0
+    assert res["windows"]["primary"]["window_minutes"] == 300
+
+
+def test_kimi_http_200_unparseable_payload_is_not_need_login(monkeypatch):
+    """Bearer present + HTTP 200 but no usable windows → unparseable, not need_login."""
+    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda: "fixture-kimi-token")
+    monkeypatch.setattr(
+        subscription_usage_mod,
+        "_http_json_request",
+        lambda *args, **kwargs: (200, {"usage": {}, "limits": []}, None),
+    )
+    codexbar_usage_mod._last_good_data.pop("kimi", None)
+
+    res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
+    assert res["error_kind"] != "need_login"
+    assert res["error_kind"] == "unparseable_schema"
+    assert res["status"] != "healthy"
+    assert res["primary_used_pct"] is None
+    assert res["weekly_used_pct"] is None
+
+
+def test_coerce_float_accepts_numeric_strings_rejects_bool_empty():
+    assert subscription_usage_mod._coerce_float(" 42.5 ") == 42.5
+    assert subscription_usage_mod._coerce_float(7) == 7.0
+    assert subscription_usage_mod._coerce_float(True) is None
+    assert subscription_usage_mod._coerce_float("") is None
+    assert subscription_usage_mod._coerce_float("nope") is None
+    assert subscription_usage_mod._coerce_float(None) is None
+
+
 def test_cursor_need_login_is_not_served_fresh_past_short_ttl(monkeypatch):
     """NEED_LOGIN must re-probe quickly, not squat as "fresh" for the full
     10-minute CURSOR_CACHE_TTL_S — and a later successful probe replaces it."""

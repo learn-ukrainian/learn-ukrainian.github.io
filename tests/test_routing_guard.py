@@ -80,6 +80,27 @@ def test_forbidden_models_refused(model: str) -> None:
         assert_model_routing_allowed(model, context="test")
 
 
+def test_ox_alpha_message_points_to_cursor_not_glm() -> None:
+    with pytest.raises(RoutingGuardError, match="--agent cursor") as excinfo:
+        assert_model_routing_allowed("ox-alpha", context="test")
+    msg = str(excinfo.value)
+    assert "--agent glm" not in msg
+    assert "z.ai" in msg.lower() or "retired" in msg.lower()
+    assert "LU_ROUTING_GUARD_OVERRIDE=1" in msg
+
+
+def test_openrouter_glm_message_points_to_cursor_not_glm() -> None:
+    with pytest.raises(RoutingGuardError, match="--agent cursor") as excinfo:
+        assert_model_routing_allowed("openrouter/z-ai/glm-5.3-flash", context="test")
+    msg = str(excinfo.value)
+    assert "`delegate.py dispatch --agent glm`" not in msg
+    assert "do not dispatch `--agent glm`" in msg
+    assert "OpenRouter glm only" in msg
+    assert "LU_ROUTING_GUARD_OVERRIDE=1" in msg
+    assert "zai/glm-5.3-flash via" not in msg
+    assert "FIRST-PARTY z.ai" not in msg
+
+
 @pytest.mark.parametrize(
     "model",
     [

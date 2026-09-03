@@ -553,7 +553,8 @@ def _load_deepseek_api_key() -> str | None:
     return None
 
 
-def _as_optional_float(value: Any) -> float | None:
+def _coerce_float(value: Any) -> float | None:
+    """Accept int/float and numeric strings; reject bool/empty/non-numeric."""
     if value is None or isinstance(value, bool):
         return None
     if isinstance(value, (int, float)):
@@ -567,6 +568,9 @@ def _as_optional_float(value: Any) -> float | None:
         except ValueError:
             return None
     return None
+
+
+_as_optional_float = _coerce_float
 
 
 def _empty_openrouter_account(probe_state: str = "NEED_PROBE") -> dict[str, Any]:
@@ -997,6 +1001,32 @@ def _probe_codex_native(*, timeout_s: float) -> dict[str, Any]:
     )
 
 
+def _kimi_used_and_limit(block: dict[str, Any]) -> tuple[float | None, float | None]:
+    """Coerce Kimi used/limit; derive used from limit - remaining when used absent."""
+    used = _coerce_float(block.get("used"))
+    limit = _coerce_float(block.get("limit"))
+    remaining = _coerce_float(block.get("remaining"))
+    if used is None and limit is not None and remaining is not None:
+        used = limit - remaining
+    return used, limit
+
+
+def _kimi_window_minutes(item: dict[str, Any]) -> int:
+    """Parse limits[].window {duration, timeUnit}; default 300 minutes."""
+    window = item.get("window")
+    if isinstance(window, dict):
+        duration = _coerce_float(window.get("duration") or window.get("number"))
+        unit = str(window.get("timeUnit") or window.get("unit") or "").lower()
+        if duration is not None:
+            if "minute" in unit:
+                return int(duration)
+            if "hour" in unit:
+                return int(duration) * 60
+            if "day" in unit:
+                return int(duration) * 1440
+    return 300
+
+
 def _probe_kimi_native(*, timeout_s: float) -> dict[str, Any]:
     token = _load_kimi_bearer()
     if not token:
@@ -1025,9 +1055,8 @@ def _probe_kimi_native(*, timeout_s: float) -> dict[str, Any]:
     weekly_used = None
     weekly_reset = None
     if usage_block:
-        used = usage_block.get("used")
-        limit = usage_block.get("limit")
-        if isinstance(used, (int, float)) and isinstance(limit, (int, float)) and limit:
+        used, limit = _kimi_used_and_limit(usage_block)
+        if used is not None and limit is not None and limit:
             weekly_used = float(used) / float(limit) * 100.0
         weekly_reset = usage_block.get("resetTime") or usage_block.get("reset_time")
     primary = None
@@ -1035,13 +1064,12 @@ def _probe_kimi_native(*, timeout_s: float) -> dict[str, Any]:
         if not isinstance(item, dict):
             continue
         detail = item.get("detail") if isinstance(item.get("detail"), dict) else {}
-        used = detail.get("used")
-        limit = detail.get("limit")
-        if not isinstance(used, (int, float)) or not isinstance(limit, (int, float)) or not limit:
+        used, limit = _kimi_used_and_limit(detail)
+        if used is None or limit is None or not limit:
             continue
         primary = _window_from_used_pct(
             float(used) / float(limit) * 100.0,
-            window_minutes=300,
+            window_minutes=_kimi_window_minutes(item),
             resets_at=detail.get("resetTime") or detail.get("reset_time"),
         )
         break
@@ -1050,6 +1078,15 @@ def _probe_kimi_native(*, timeout_s: float) -> dict[str, Any]:
         if weekly_used is not None
         else None
     )
+    if primary is None and secondary is None:
+        return _normalize_provider_error(
+            "kimi",
+            {
+                "message": "Kimi usage payload missing rate windows",
+                "kind": "unparseable_schema",
+                "code": "UNPARSEABLE_SCHEMA",
+            },
+        )
     return _normalize_provider_data(
         "kimi",
         {"provider": "kimi", "source": "kimi_code_api", "usage": {"primary": primary, "secondary": secondary}},

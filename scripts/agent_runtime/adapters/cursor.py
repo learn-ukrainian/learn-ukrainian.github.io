@@ -642,7 +642,22 @@ _CURSOR_USAGE_URL = "https://api2.cursor.sh/aiserver.v1.DashboardService/GetCurr
 
 
 def _cursor_cli_binary() -> str:
-    return shutil.which("cursor-agent") or shutil.which("agent") or "cursor-agent"
+    """Resolve the Cursor CLI even when systemd PATH omits ``~/.local/bin``.
+
+    Prefer the unambiguous ``cursor-agent`` name. A generic ``agent`` on PATH
+    can be Grok Build TUI (``~/.local/bin/agent``), so only fall back to
+    ``agent`` after PATH and ``~/.local/bin/cursor-agent`` miss.
+    """
+    found = shutil.which("cursor-agent")
+    if found:
+        return found
+    home_bin = Path.home() / ".local" / "bin" / "cursor-agent"
+    try:
+        if home_bin.is_file():
+            return str(home_bin)
+    except OSError:
+        pass
+    return shutil.which("agent") or "cursor-agent"
 
 
 def _cursor_env_or_file_authenticated() -> bool:

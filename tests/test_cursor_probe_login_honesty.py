@@ -94,3 +94,31 @@ def test_missing_binary_no_key_is_need_login(monkeypatch):
     assert result["is_authenticated"] is False
     assert result["login_state"] == "NEED_LOGIN"
     assert result["error_kind"] == "missing_binary"
+
+
+def test_cursor_cli_binary_resolves_home_local_when_path_empty(tmp_path, monkeypatch):
+    """systemd PATH often omits ~/.local/bin; still find cursor-agent there."""
+    fake_home = tmp_path / "home"
+    fake_bin = fake_home / ".local" / "bin" / "cursor-agent"
+    fake_bin.parent.mkdir(parents=True)
+    fake_bin.write_text("#!/bin/sh\n", encoding="utf-8")
+    fake_bin.chmod(0o755)
+    monkeypatch.setenv("HOME", str(fake_home))
+    monkeypatch.setenv("PATH", "")
+
+    assert cursor_mod._cursor_cli_binary() == str(fake_bin)
+
+
+def test_path_missing_binary_and_no_key_is_need_login_missing_binary(tmp_path, monkeypatch):
+    """Empty PATH, no ~/.local/bin/cursor-agent, no API key → NEED_LOGIN/missing_binary."""
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_home))
+    monkeypatch.setenv("PATH", "")
+    monkeypatch.delenv("CURSOR_API_KEY", raising=False)
+    monkeypatch.setattr(cursor_mod, "_load_cursor_api_key_from_env_file", lambda: None)
+
+    result = cursor_mod.probe_cursor_login()
+    assert result["is_authenticated"] is False
+    assert result["login_state"] == "NEED_LOGIN"
+    assert result["error_kind"] == "missing_binary"
