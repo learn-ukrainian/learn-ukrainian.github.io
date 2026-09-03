@@ -127,7 +127,7 @@ async def _lifespan(_app: FastAPI):
     try:
         preload_all()
         install_signal_logging()
-        ensure_broker_db_ready()
+        ensure_broker_db_ready(ctx=ctx)
         seed_manifest_inventory(
             ctx.roots.project_root,
             store=ctx.stores.epics_store,
@@ -1005,12 +1005,9 @@ def _collect_runtime_orient_data(ctx: MonitorContext | None = None) -> dict:
 
 
 def _collect_delegate_orient_data(ctx: MonitorContext | None = None) -> dict:
-    if ctx is not None:
-        recent = delegate_api.list_delegate_tasks(status="all", limit=5, ctx=ctx)
-        active = delegate_api.active_delegate_count(ctx=ctx)
-    else:
-        recent = delegate_api.list_delegate_tasks(status="all", limit=5)
-        active = delegate_api.active_delegate_count()
+    resolved_ctx = resolve_context(ctx)
+    recent = delegate_api.list_delegate_tasks(status="all", limit=5, ctx=resolved_ctx)
+    active = delegate_api.active_delegate_count(ctx=resolved_ctx)
     return {
         "active_count": active,
         "recent": recent["tasks"],
@@ -1327,20 +1324,12 @@ def _collect_health_orient_data(ctx: MonitorContext | None = None) -> dict:
     resolved_ctx = resolve_context(ctx)
     mcp_sources_ok = _port_open("127.0.0.1", 8766, 0.2)
     tmp_usability = _tmp_usability_canary()
-    if ctx is not None:
-        core_bare_ok = _core_bare_canary(ctx=ctx)
-        self_symlink_ok = _self_symlink_canary(ctx=ctx)
-        primary_integrity_ok = _primary_integrity_canary(ctx=ctx)
-        node_modules_integrity_ok = _node_modules_integrity_canary(ctx=ctx)
-        venv_integrity_ok = _venv_integrity_canary(ctx=ctx)
-        worktree_cleanup_integrity_ok = _worktree_cleanup_integrity_canary(ctx=ctx)
-    else:
-        core_bare_ok = _core_bare_canary()
-        self_symlink_ok = _self_symlink_canary()
-        primary_integrity_ok = _primary_integrity_canary()
-        node_modules_integrity_ok = _node_modules_integrity_canary()
-        venv_integrity_ok = _venv_integrity_canary()
-        worktree_cleanup_integrity_ok = _worktree_cleanup_integrity_canary()
+    core_bare_ok = _core_bare_canary(ctx=resolved_ctx)
+    self_symlink_ok = _self_symlink_canary(ctx=resolved_ctx)
+    primary_integrity_ok = _primary_integrity_canary(ctx=resolved_ctx)
+    node_modules_integrity_ok = _node_modules_integrity_canary(ctx=resolved_ctx)
+    venv_integrity_ok = _venv_integrity_canary(ctx=resolved_ctx)
+    worktree_cleanup_integrity_ok = _worktree_cleanup_integrity_canary(ctx=resolved_ctx)
     return {
         "api": True,
         "mcp_sources": mcp_sources_ok,

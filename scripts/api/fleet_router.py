@@ -2563,7 +2563,6 @@ def fleet_acp_conversations(
     ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
     """Reuse the ACP read model for body-free conversation and round observability."""
-    del ctx
     since_value = _normalize_time(since, "since")
     until_value = _normalize_time(until, "until")
     filters = {
@@ -2574,7 +2573,7 @@ def fleet_acp_conversations(
         "since": since_value,
         "until": until_value,
     }
-    payload = list_acp_conversations(limit=MAX_ACP_SCAN)
+    payload = list_acp_conversations(limit=MAX_ACP_SCAN, ctx=ctx)
     availability = _safe_text(payload.get("availability"), fallback="unavailable")
     records = payload.get("conversations") if isinstance(payload.get("conversations"), list) else []
     filtered: list[dict[str, Any]] = []
@@ -2613,8 +2612,7 @@ def fleet_acp_conversation_detail(
     ctx: MonitorContext = Depends(get_ctx),
 ) -> JSONResponse:
     """Reuse the existing body-free ACP event timeline for one conversation."""
-    del ctx
-    record = get_acp_conversation(conversation_id)
+    record = get_acp_conversation(conversation_id, ctx=ctx)
     if record is None:
         raise HTTPException(status_code=404, detail="Conversation not found")
     return JSONResponse(

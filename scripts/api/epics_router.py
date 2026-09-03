@@ -41,7 +41,7 @@ from agents_extensions.shared.session_streams.store import (
     SessionStreamStore,
     validate_entry_body,
 )
-from scripts.api.monitor_context import MonitorContext, get_ctx, production_context, resolve_context
+from scripts.api.monitor_context import MonitorContext, get_ctx, resolve_context
 from scripts.api.observer_presence import _direct_loopback_peer
 from scripts.api.occupancy_sanitize import opaque_host_id, safe_field
 from scripts.orchestration import issue_stream_audit as audit
@@ -165,9 +165,8 @@ def seed_manifest_inventory(
     ctx: MonitorContext | None = None,
 ) -> dict[str, Any]:
     """Fail-open startup seed from the release registry into the live store."""
-    resolved = ctx if isinstance(ctx, MonitorContext) else None
     if store is None or handoff_root is None:
-        resolved = resolved or production_context()
+        resolved = resolve_context(ctx)
         store = store or _store(resolved)
         handoff_root = handoff_root or resolved.roots.live_repo_root
     registry_path: Path | None = None
