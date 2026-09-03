@@ -24,6 +24,7 @@ accepts:
 * Reviewer family resolving to a concrete family in ``CONCRETE_FAMILIES``,
   from a ``Reviewer family:`` line OR a ``resolved_model:`` model id mapped
   through the same ``normalize_family`` resolver the Gate uses
+* The GitHub user who authored the comment/review is not the PR author
 
 Example shape already in use on this repo::
 
@@ -44,6 +45,7 @@ import sys
 import time
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.parse import quote, urlencode
@@ -154,6 +156,13 @@ class ParsedAttestation:
     # neither bind nor stale-reject (CF r1 on this PR rejected match-any:
     # it let one body attest several heads).
     created_at: str = ""
+    # Filled from GitHub metadata, never from the attestation body. A missing
+    # author is not evidence of independence and is rejected when the
+    # evaluator has PR-author identity available.
+    author_login: str = ""
+    # GitHub's stable numeric user id, when supplied by the API. Login is
+    # retained as a compatibility fallback for old fixtures/API payloads.
+    author_id: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -283,15 +292,91 @@ def _family_text(body: str) -> str:
     return ""
 
 
+def _normalize_login(value: Any) -> str:
+    """Normalize a GitHub login for case-insensitive identity comparison."""
+    if not isinstance(value, str):
+        return ""
+    return value.strip().casefold()
+
+
+def _normalize_user_id(value: Any) -> str:
+    """Normalize GitHub's numeric user id without treating booleans as ids."""
+    if isinstance(value, bool):
+        return ""
+    if isinstance(value, int):
+        return str(value) if value > 0 else ""
+    if isinstance(value, str):
+        normalized = value.strip()
+        return normalized if normalized.isdigit() and int(normalized) > 0 else ""
+    return ""
+
+
+def _user_identity(item: Mapping[str, Any]) -> tuple[str, str]:
+    """Return ``(login, id)`` from one GitHub API item's user object."""
+    user = item.get("user")
+    if not isinstance(user, Mapping):
+        return "", ""
+    return _normalize_login(user.get("login")), _normalize_user_id(user.get("id"))
+
+
+def _identity_matches(
+    *,
+    author_login: str,
+    author_id: str,
+    candidate_login: str,
+    candidate_id: str,
+) -> bool:
+    """Compare GitHub identities, preferring the stable user id."""
+    if author_id and candidate_id:
+        return author_id == candidate_id
+    if author_login and candidate_login:
+        return author_login == candidate_login
+    return False
+
+
+def _identity_is_comparable(
+    *,
+    author_login: str,
+    author_id: str,
+    candidate_login: str,
+    candidate_id: str,
+) -> bool:
+    """Return whether the two API identities share a comparable signal."""
+    return bool((author_id and candidate_id) or (author_login and candidate_login))
+
+
+def _timestamp_sort_key(value: str) -> tuple[int, datetime]:
+    """Sort RFC3339 timestamps chronologically, retaining fixture stability."""
+    raw = value.strip() if isinstance(value, str) else ""
+    if raw:
+        try:
+            parsed = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+            if parsed.tzinfo is not None:
+                return 1, parsed.astimezone(UTC)
+        except ValueError:
+            pass
+    return 0, datetime.min.replace(tzinfo=UTC)
+
+
+def _timestamp_is_valid(value: str) -> bool:
+    """Return whether a collected API timestamp is usable for ordering."""
+    return _timestamp_sort_key(value)[0] == 1
+
+
 def parse_attestation(
-    body: str, *, source: str = "comment", created_at: str = ""
+    body: str,
+    *,
+    source: str = "comment",
+    created_at: str = "",
+    author_login: str = "",
+    author_id: str | int | None = "",
 ) -> ParsedAttestation | None:
     """Parse one existing CF comment shape, or None if it is not CF of record.
 
     #7487: a body whose verdict is a block/changes-request is parsed as a
     REVOCATION (verdict="BLOCK") instead of being dropped — evaluation is
-    latest-wins per reviewer family, so an earlier APPROVE cannot survive a
-    later block at the same head.
+    latest-wins across current-head records, so an earlier APPROVE cannot
+    survive a later block at the same head.
     """
     if not isinstance(body, str) or not body.strip():
         return None
@@ -319,6 +404,8 @@ def parse_attestation(
         verdict="BLOCK" if blocked else "APPROVE",
         source=source,
         created_at=created_at,
+        author_login=_normalize_login(author_login),
+        author_id=_normalize_user_id(author_id),
     )
 
 
@@ -454,95 +541,184 @@ def evaluate_attestation(
     expected_head: str,
     author_family: str,
     bodies: Sequence[tuple[str, ...]],
+    pr_author_login: str | None = None,
+    pr_author_id: str | int | None = None,
 ) -> AttestResult:
-    """Return pass/fail for the supplied comment/review bodies against one SHA."""
+    """Return pass/fail for supplied comment/review bodies against one SHA.
+
+    ``pr_author_login``/``pr_author_id`` are sourced from the PR object, while
+    each body entry's fourth/fifth fields are sourced from that
+    comment/review's ``user.login``/``user.id``. When PR identity is available,
+    both are required for an attestation to be eligible: a self-authored or
+    identity-less body fails closed. The shorter two/three-field form remains
+    accepted for pure parser fixtures that do not model GitHub metadata.
+    """
     head = (expected_head or "").strip().lower()
     if not SHA_RE.fullmatch(head):
         return AttestResult(False, "unparseable attestation: invalid expected PR head SHA")
     if author_family in {FAMILY_UNKNOWN, ""}:
         return AttestResult(False, "unparseable attestation: author family", expected_head=head)
 
+    normalized_pr_author_login = _normalize_login(pr_author_login)
+    normalized_pr_author_id = _normalize_user_id(pr_author_id)
+    identity_context = pr_author_login is not None or pr_author_id is not None
+    if identity_context and not (normalized_pr_author_login or normalized_pr_author_id):
+        return AttestResult(
+            False,
+            "unparseable attestation: missing PR author identity",
+            expected_head=head,
+            author_family=author_family,
+        )
+
     parsed: list[ParsedAttestation] = []
+    self_authored = False
     for entry in bodies:
-        if len(entry) == 3:
+        if len(entry) == 5:
+            source, body, created_at, author_login, author_id = entry
+        elif len(entry) == 4:
+            source, body, created_at, author = entry
+            if _normalize_user_id(author):
+                author_login = ""
+                author_id = author
+            else:
+                author_login = author
+                author_id = ""
+        elif len(entry) == 3:
             source, body, created_at = entry
-        else:
+            author_login = ""
+            author_id = ""
+        elif len(entry) == 2:
             source, body = entry
             created_at = ""
-        item = parse_attestation(body, source=source, created_at=created_at)
+            author_login = ""
+            author_id = ""
+        else:
+            continue
+        item = parse_attestation(
+            body,
+            source=source,
+            created_at=created_at,
+            author_login=author_login,
+            author_id=author_id,
+        )
         if item is not None:
+            comparable = _identity_is_comparable(
+                author_login=normalized_pr_author_login,
+                author_id=normalized_pr_author_id,
+                candidate_login=item.author_login,
+                candidate_id=item.author_id,
+            )
+            if identity_context and comparable and _identity_matches(
+                author_login=normalized_pr_author_login,
+                author_id=normalized_pr_author_id,
+                candidate_login=item.author_login,
+                candidate_id=item.author_id,
+            ):
+                self_authored = True
+                continue
             parsed.append(item)
     # Chronological latest-wins across SOURCES (#7502 CF r1): comments and
     # reviews are fetched as separate lists, so list order alone let an older
     # review outrank a newer comment. Sort by created_at when present; the
     # sort is stable, so timestamp-less fixtures keep their list order.
     # Tie-break (#7502 CF r2): on EQUAL timestamps a BLOCK sorts after an
-    # APPROVE so the standing verdict fails closed — a same-second approve
+    # APPROVE so the latest verdict fails closed — a same-second approve
     # can never bury a same-second revocation.
-    parsed.sort(key=lambda item: (item.created_at, item.verdict == "BLOCK"))
+    parsed.sort(
+        key=lambda item: (*_timestamp_sort_key(item.created_at), item.verdict == "BLOCK")
+    )
     if not parsed:
+        if self_authored:
+            reason = "self-authored CF rejected: attestation author matches PR author"
+        else:
+            reason = "missing CF: no independent exact-head APPROVE"
         return AttestResult(
             False,
-            "missing CF: no independent exact-head APPROVE",
+            reason,
             expected_head=head,
             author_family=author_family,
         )
 
     matching = [item for item in parsed if item.head_sha == head]
     if not matching:
-        attested = parsed[0].head_sha
+        attested = parsed[-1].head_sha
         return AttestResult(
             False,
             f"stale CF: attested {attested} != PR head {head}",
             expected_head=head,
             attested_head=attested,
             author_family=author_family,
-            reviewer_family=parsed[0].reviewer_family,
+            reviewer_family=parsed[-1].reviewer_family,
         )
 
-    # Latest-wins per reviewer family (#7487): bodies arrive in API order
-    # (chronological within comments, then reviews), so the LAST parsed item
-    # for a family is its standing verdict at this head. An earlier APPROVE
-    # must not survive a later block from the same family.
-    standing: dict[str, ParsedAttestation] = {}
-    for item in matching:
-        standing[item.reviewer_family] = item
+    if identity_context:
+        invalid_metadata = next(
+            (
+                item
+                for item in matching
+                if not _identity_is_comparable(
+                    author_login=normalized_pr_author_login,
+                    author_id=normalized_pr_author_id,
+                    candidate_login=item.author_login,
+                    candidate_id=item.author_id,
+                )
+                or not _timestamp_is_valid(item.created_at)
+            ),
+            None,
+        )
+        if invalid_metadata is not None:
+            reason = (
+                "unparseable attestation: missing attestation author identity"
+                if not _identity_is_comparable(
+                    author_login=normalized_pr_author_login,
+                    author_id=normalized_pr_author_id,
+                    candidate_login=invalid_metadata.author_login,
+                    candidate_id=invalid_metadata.author_id,
+                )
+                else "unparseable attestation: invalid attestation timestamp"
+            )
+            return AttestResult(
+                False,
+                reason,
+                expected_head=head,
+                attested_head=head,
+                author_family=author_family,
+                reviewer_family=invalid_metadata.reviewer_family,
+            )
 
-    approving = [
-        item
-        for item in standing.values()
-        if item.verdict == "APPROVE"
-        and families_independent(author_family, item.reviewer_family)
-    ]
-    if approving:
-        item = approving[0]
+    # Latest-wins across all parseable current-head comments/reviews (#7487):
+    # a later block cannot leave an earlier approval standing merely because
+    # the body claims a different reviewer family. Equal timestamps already
+    # sort BLOCK after APPROVE so conflicts fail closed.
+    latest = matching[-1]
+    if latest.verdict == "APPROVE" and families_independent(
+        author_family, latest.reviewer_family
+    ):
         return AttestResult(
             True,
             "independent exact-head CF APPROVE",
             expected_head=head,
             attested_head=head,
             author_family=author_family,
-            reviewer_family=item.reviewer_family,
+            reviewer_family=latest.reviewer_family,
         )
-    revoked = [item for item in standing.values() if item.verdict == "BLOCK"]
-    if revoked:
+    if latest.verdict == "BLOCK":
         return AttestResult(
             False,
-            f"revoked CF: latest verdict from {revoked[0].reviewer_family} "
+            f"revoked CF: latest verdict from {latest.reviewer_family} "
             "is a block at this head",
             expected_head=head,
             attested_head=head,
             author_family=author_family,
-            reviewer_family=revoked[0].reviewer_family,
+            reviewer_family=latest.reviewer_family,
         )
-    first = next(iter(standing.values()))
     return AttestResult(
         False,
-        f"same-family review: author={author_family} reviewer={first.reviewer_family}",
+        f"same-family review: author={author_family} reviewer={latest.reviewer_family}",
         expected_head=head,
-        attested_head=first.head_sha,
+        attested_head=latest.head_sha,
         author_family=author_family,
-        reviewer_family=first.reviewer_family,
+        reviewer_family=latest.reviewer_family,
     )
 
 
@@ -770,25 +946,41 @@ def collect_bodies_and_agents(
     repository: str,
     pr_number: int,
     api_get: ApiGet,
-) -> tuple[list[tuple[str, str]], tuple[str, ...]]:
+) -> tuple[list[tuple[str, str, str, str, str]], tuple[str, ...], str, str]:
     """Load PR comments, review bodies, and X-Agent seats.
 
     Pure Dependabot PRs have no ``X-Agent`` trailers. Resolve the PR author
     login when it is Dependabot so ``author_family_from_agents`` can map them
     to the fixture family (universal independence) as designed for #7487.
+    Comment/review author identities travel with their bodies so self-authored
+    attestations can be rejected without trusting body prose.
     """
     repo = quote(repository, safe="/")
     pull = api_get(f"repos/{repo}/pulls/{pr_number}")
+    pr_author_login, pr_author_id = (
+        _user_identity(pull) if isinstance(pull, Mapping) else ("", "")
+    )
+    if not (pr_author_login or pr_author_id):
+        raise ValueError("unparseable attestation: missing PR author identity")
     comments = fetch_paginated(f"repos/{repo}/issues/{pr_number}/comments", api_get=api_get)
     reviews = fetch_paginated(f"repos/{repo}/pulls/{pr_number}/reviews", api_get=api_get)
     commits = fetch_paginated(f"repos/{repo}/pulls/{pr_number}/commits", api_get=api_get)
 
-    bodies: list[tuple[str, str, str]] = []
+    bodies: list[tuple[str, str, str, str, str]] = []
     for comment in comments:
         body = comment.get("body")
+        stamp = comment.get("created_at")
+        author_login, author_id = _user_identity(comment)
         if isinstance(body, str) and body.strip():
-            stamp = comment.get("created_at")
-            bodies.append(("comment", body, stamp if isinstance(stamp, str) else ""))
+            bodies.append(
+                (
+                    "comment",
+                    body,
+                    stamp if isinstance(stamp, str) else "",
+                    author_login,
+                    author_id,
+                )
+            )
     for review in reviews:
         # #7502 CF r2/r3: a PENDING review is an unsubmitted draft and a
         # DISMISSED review is a voided one — neither may attest. Only
@@ -801,8 +993,9 @@ def collect_bodies_and_agents(
         if not isinstance(stamp, str) or not stamp:
             continue
         body = review.get("body")
+        author_login, author_id = _user_identity(review)
         if isinstance(body, str) and body.strip():
-            bodies.append(("review", body, stamp))
+            bodies.append(("review", body, stamp, author_login, author_id))
 
     messages: list[str] = []
     for commit in commits:
@@ -817,7 +1010,7 @@ def collect_bodies_and_agents(
         login = user.get("login") if isinstance(user, Mapping) else None
         if isinstance(login, str) and "dependabot" in login.casefold():
             seats.append("dependabot")
-    return bodies, tuple(seats)
+    return bodies, tuple(seats), pr_author_login, pr_author_id
 
 
 def run_event(
@@ -831,6 +1024,8 @@ def run_event(
     api_get: ApiGet | None = None,
     bodies: Sequence[tuple[str, ...]] | None = None,
     author_agents: Sequence[str] | None = None,
+    pr_author_login: str | None = None,
+    pr_author_id: str | int | None = None,
 ) -> AttestResult:
     """Evaluate CF for one GitHub event. Non-PR events no-op succeed."""
     name = (event_name or "").strip()
@@ -858,6 +1053,8 @@ def run_event(
 
     resolved_bodies = list(bodies) if bodies is not None else None
     resolved_agents = tuple(author_agents) if author_agents is not None else None
+    resolved_pr_author_login = pr_author_login
+    resolved_pr_author_id = pr_author_id
     if resolved_bodies is None or resolved_agents is None:
         if number is None:
             return AttestResult(False, "unparseable attestation: missing PR number")
@@ -868,7 +1065,12 @@ def run_event(
             lambda path: github_api_get(path, token=os.environ.get("GITHUB_TOKEN"))
         )
         try:
-            fetched_bodies, fetched_agents = collect_bodies_and_agents(
+            (
+                fetched_bodies,
+                fetched_agents,
+                fetched_pr_author_login,
+                fetched_pr_author_id,
+            ) = collect_bodies_and_agents(
                 repository=repo, pr_number=number, api_get=get
             )
         except (ValueError, HTTPError, URLError, TimeoutError, json.JSONDecodeError) as exc:
@@ -877,12 +1079,16 @@ def run_event(
             resolved_bodies = fetched_bodies
         if resolved_agents is None:
             resolved_agents = fetched_agents
+        resolved_pr_author_login = fetched_pr_author_login
+        resolved_pr_author_id = fetched_pr_author_id
 
     author_family = author_family_from_agents(resolved_agents or ())
     return evaluate_attestation(
         expected_head=expected_head,
         author_family=author_family,
         bodies=resolved_bodies,
+        pr_author_login=resolved_pr_author_login,
+        pr_author_id=resolved_pr_author_id,
     )
 
 

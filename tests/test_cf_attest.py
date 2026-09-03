@@ -436,7 +436,11 @@ def test_later_block_revokes_earlier_approve_latest_wins() -> None:
     result = evaluate_attestation(
         expected_head=PR_HEAD,
         author_family="anthropic",
-        bodies=[("comment", approve), ("comment", block)],
+        pr_author_login="pr-author",
+        bodies=[
+            ("comment", approve, "2026-08-30T12:00:00Z", "external-reviewer"),
+            ("comment", block, "2026-08-30T12:01:00Z", "external-reviewer"),
+        ],
     )
     assert not result.ok
     assert "revoked CF" in result.reason
@@ -447,12 +451,137 @@ def test_later_block_revokes_earlier_approve_latest_wins() -> None:
     result = evaluate_attestation(
         expected_head=PR_HEAD,
         author_family="anthropic",
+        pr_author_login="pr-author",
         bodies=[
-            ("comment", block, "2026-08-30T12:00:00Z"),
-            ("comment", approve, "2026-08-30T12:05:00Z"),
+            ("comment", block, "2026-08-30T12:00:00Z", "external-reviewer"),
+            ("comment", approve, "2026-08-30T12:05:00Z", "external-reviewer"),
         ],
     )
     assert result.ok
+
+
+def test_pr_author_cannot_self_attest_comment_or_review() -> None:
+    """#7487: GitHub item identity, not body prose, rejects self-approval."""
+    approve = (
+        f"Cross-family CF of record (codex)\nReviewer family: openai\n"
+        f"At exact head `{PR_HEAD}`\nVERDICT: APPROVE"
+    )
+
+    def fake_api(path):
+        if path == "repos/o/r/pulls/1" or path.startswith("repos/o/r/pulls/1?"):
+            return {"user": {"login": "Pr-Author", "id": 100}}
+        if "/comments" in path:
+            return [
+                {
+                    "body": approve,
+                    "created_at": "2026-09-01T12:00:00Z",
+                    # Login changed after the PR was opened; stable user.id
+                    # must still identify this as the PR author.
+                    "user": {"login": "renamed-pr-author", "id": 100},
+                }
+            ]
+        if "/reviews" in path:
+            return [
+                {
+                    "body": approve,
+                    "state": "APPROVED",
+                    "submitted_at": "2026-09-01T12:01:00Z",
+                    "user": {"login": "another-renamed-pr-author", "id": 100},
+                }
+            ]
+        if "/commits" in path:
+            return [{"commit": {"message": AUTHOR_CURSOR}}]
+        raise AssertionError(path)
+
+    result = run_event(
+        event_name="pull_request",
+        event_sha=MERGE_SHA,
+        pr_head_sha=PR_HEAD,
+        pr_number="1",
+        merge_group_head_ref="",
+        repository="o/r",
+        api_get=fake_api,
+    )
+    assert not result.ok
+    assert "self-authored" in result.reason
+
+
+def test_later_block_from_any_family_revokes_earlier_approve() -> None:
+    """The newest current-head verdict wins even when its claimed family changes."""
+    approve = (
+        f"Cross-family CF of record (codex)\nReviewer family: openai\n"
+        f"At exact head `{PR_HEAD}`\nVERDICT: APPROVE"
+    )
+    block = (
+        f"Cross-family CF of record (agy)\nReviewer family: google\n"
+        f"At exact head `{PR_HEAD}`\nVERDICT: CHANGES_REQUESTED"
+    )
+    result = evaluate_attestation(
+        expected_head=PR_HEAD,
+        author_family="anthropic",
+        pr_author_id=100,
+        bodies=[
+            ("review", block, "2026-08-30T12:05:00Z", "other-reviewer", 202),
+            ("comment", approve, "2026-08-30T12:00:00Z", "first-reviewer", 201),
+        ],
+    )
+    assert not result.ok
+    assert "revoked CF" in result.reason
+
+
+def test_identityless_attestation_fails_closed_when_pr_author_is_known() -> None:
+    """A missing GitHub author cannot establish reviewer independence."""
+    body = (
+        f"Cross-family CF of record (codex)\nReviewer family: openai\n"
+        f"At exact head `{PR_HEAD}`\nVERDICT: APPROVE"
+    )
+    result = evaluate_attestation(
+        expected_head=PR_HEAD,
+        author_family="anthropic",
+        pr_author_login="pr-author",
+        bodies=[("comment", body, "2026-09-01T12:00:00Z")],
+    )
+    assert not result.ok
+    assert "missing attestation author identity" in result.reason
+
+
+def test_current_head_attestation_without_timestamp_fails_closed() -> None:
+    """A current-head verdict without an ordering timestamp cannot attest."""
+    body = (
+        f"Cross-family CF of record (codex)\nReviewer family: openai\n"
+        f"At exact head `{PR_HEAD}`\nVERDICT: APPROVE"
+    )
+    result = evaluate_attestation(
+        expected_head=PR_HEAD,
+        author_family="anthropic",
+        pr_author_id=100,
+        bodies=[("comment", body, "", "reviewer", 200)],
+    )
+    assert not result.ok
+    assert "invalid attestation timestamp" in result.reason
+
+
+def test_identityless_later_revocation_cannot_leave_approval_green() -> None:
+    """An unknown author on a later block must not be silently discarded."""
+    approve = (
+        f"Cross-family CF of record (codex)\nReviewer family: openai\n"
+        f"At exact head `{PR_HEAD}`\nVERDICT: APPROVE"
+    )
+    block = (
+        f"Cross-family CF of record (codex)\nReviewer family: openai\n"
+        f"At exact head `{PR_HEAD}`\nVERDICT: CHANGES_REQUESTED"
+    )
+    result = evaluate_attestation(
+        expected_head=PR_HEAD,
+        author_family="anthropic",
+        pr_author_id=100,
+        bodies=[
+            ("comment", approve, "2026-08-30T12:00:00Z", "reviewer", 200),
+            ("comment", block, "2026-08-30T12:01:00Z", "", ""),
+        ],
+    )
+    assert not result.ok
+    assert "missing attestation author identity" in result.reason
 
 
 def test_history_bearing_comment_matches_any_labeled_head() -> None:
@@ -545,9 +674,10 @@ def test_older_review_approve_cannot_outrank_newer_comment_block() -> None:
     result = evaluate_attestation(
         expected_head=PR_HEAD,
         author_family="anthropic",
+        pr_author_login="pr-author",
         bodies=[
-            ("comment", block, "2026-08-30T12:00:00Z"),
-            ("review", approve, "2026-08-30T11:00:00Z"),  # older review
+            ("comment", block, "2026-08-30T12:00:00Z", "external-reviewer"),
+            ("review", approve, "2026-08-30T11:00:00Z", "external-reviewer"),  # older review
         ],
     )
     assert not result.ok
@@ -616,7 +746,7 @@ def test_pending_review_is_excluded_from_attestation() -> None:
 
     def fake_api(path):
         if path == "repos/o/r/pulls/1" or path.startswith("repos/o/r/pulls/1?"):
-            return {"user": {"login": "human"}}
+            return {"user": {"login": "human", "id": 101}}
         if "/comments" in path:
             return []
         if "/reviews" in path:
@@ -628,7 +758,7 @@ def test_pending_review_is_excluded_from_attestation() -> None:
             return []
         raise AssertionError(path)
 
-    bodies, _ = collect_bodies_and_agents(
+    bodies, _, _, _ = collect_bodies_and_agents(
         repository="o/r", pr_number=1, api_get=fake_api
     )
     assert bodies == []
@@ -645,7 +775,7 @@ def test_dismissed_review_is_excluded_from_attestation() -> None:
 
     def fake_api(path):
         if path == "repos/o/r/pulls/1" or path.startswith("repos/o/r/pulls/1?"):
-            return {"user": {"login": "human"}}
+            return {"user": {"login": "human", "id": 101}}
         if "/comments" in path:
             return []
         if "/reviews" in path:
@@ -660,7 +790,7 @@ def test_dismissed_review_is_excluded_from_attestation() -> None:
             return []
         raise AssertionError(path)
 
-    bodies, _ = collect_bodies_and_agents(
+    bodies, _, _, _ = collect_bodies_and_agents(
         repository="o/r", pr_number=1, api_get=fake_api
     )
     assert bodies == []
@@ -676,16 +806,18 @@ def test_dependabot_pr_author_maps_to_fixture_family_seat() -> None:
 
     def fake_api(path):
         if path == "repos/o/r/pulls/1" or path.startswith("repos/o/r/pulls/1?"):
-            return {"user": {"login": "dependabot[bot]"}}
+            return {"user": {"login": "dependabot[bot]", "id": 102}}
         if "/comments" in path or "/reviews" in path or "/commits" in path:
             return []
         raise AssertionError(path)
 
-    bodies, agents = collect_bodies_and_agents(
+    bodies, agents, pr_author_login, pr_author_id = collect_bodies_and_agents(
         repository="o/r", pr_number=1, api_get=fake_api
     )
     assert bodies == []
     assert agents == ("dependabot",)
+    assert pr_author_login == "dependabot[bot]"
+    assert pr_author_id == "102"
     family = author_family_from_agents(agents)
     assert family == "fixture"
     result = evaluate_attestation(
