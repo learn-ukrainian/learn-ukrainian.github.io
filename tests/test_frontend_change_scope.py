@@ -403,36 +403,35 @@ def test_removing_denominator_entry_fails_hydrate_guard(tmp_path: Path) -> None:
         scope.assert_hydrate_entrypoints_in_denominator(denominator=loaded)
 
 
-def test_ci_yml_uses_shared_scope_helper_with_full_tier_frontend_job() -> None:
+def test_ci_yml_uses_shared_scope_helper_with_unconditional_frontend_job() -> None:
     workflow = yaml.safe_load(_CI.read_text(encoding="utf-8"))
     jobs = workflow["jobs"]
 
-    assert jobs["frontend"]["if"] == "github.event_name != 'pull_request'"
+    # 2026-09-03 simple-CI cutover: frontend runs on every event, including
+    # pull_request; its scope step cheap-exits internally instead.
+    assert "if" not in jobs["frontend"]
     # Rule of thumb: assert an invariant, not a snapshot; if changing X
     # legitimately requires editing >1 test, the test is a snapshot.
     # ci-gate.needs is pinned exactly once — by the canonical set the gate
-    # evaluator itself exports (gate_required_results.GATE_NEEDS_JOBS: the
-    # push tier, which is the superset of the light/full tiers, plus
-    # landing-class whose outputs the gate step consumes).
+    # evaluator itself exports (gate_required_results.GATE_NEEDS_JOBS).
     assert set(jobs["ci-gate"]["needs"]) == set(gate.GATE_NEEDS_JOBS)
 
-    for job_name in ("frontend", "frontend-e2e"):
-        steps = jobs[job_name]["steps"]
-        scope_step = next(s for s in steps if s.get("id") == "scope")
-        assert "frontend_change_scope.py" in scope_step["run"]
-        assert "pull_request.base.sha" in scope_step["env"]["BASE_SHA"]
-        assert "merge_group.base_sha" in scope_step["env"]["BASE_SHA"]
-        assert "github.event.before" in scope_step["env"]["BASE_SHA"]
-        assert "pull_request.head.sha" in scope_step["env"]["HEAD_SHA"]
-        assert "merge_group.head_sha" in scope_step["env"]["HEAD_SHA"]
-        assert "github.sha" in scope_step["env"]["HEAD_SHA"]
-        assert scope_step["env"]["EVENT_NAME"] == "${{ github.event_name }}"
-        assert "--event" in scope_step["run"]
-        assert "--head" in scope_step["run"]
+    steps = jobs["frontend"]["steps"]
+    scope_step = next(s for s in steps if s.get("id") == "scope")
+    assert "frontend_change_scope.py" in scope_step["run"]
+    assert "pull_request.base.sha" in scope_step["env"]["BASE_SHA"]
+    assert "merge_group.base_sha" in scope_step["env"]["BASE_SHA"]
+    assert "github.event.before" in scope_step["env"]["BASE_SHA"]
+    assert "pull_request.head.sha" in scope_step["env"]["HEAD_SHA"]
+    assert "merge_group.head_sha" in scope_step["env"]["HEAD_SHA"]
+    assert "github.sha" in scope_step["env"]["HEAD_SHA"]
+    assert scope_step["env"]["EVENT_NAME"] == "${{ github.event_name }}"
+    assert "--event" in scope_step["run"]
+    assert "--head" in scope_step["run"]
 
-        checkout = steps[0]
-        assert checkout["with"]["fetch-depth"] == 0
+    checkout = steps[0]
+    assert checkout["with"]["fetch-depth"] == 0
 
-        gated = [s for s in steps[2:] if s.get("if")]
-        assert gated, f"{job_name} must gate post-scope steps"
-        assert all("steps.scope.outputs.run == 'true'" in str(s["if"]) for s in gated)
+    gated = [s for s in steps[2:] if s.get("if")]
+    assert gated, "frontend must gate post-scope steps"
+    assert all("steps.scope.outputs.run == 'true'" in str(s["if"]) for s in gated)

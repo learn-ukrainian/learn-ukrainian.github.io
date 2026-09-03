@@ -7,30 +7,33 @@ an operational guard, not a change to `ci.yml`'s job graph or `CI Gate` needs.
 ## CI Gate
 
 `CI Gate` is the repository's single required check. It is the final job in
-`.github/workflows/ci.yml` and succeeds only when every dependency required
-*for that event* succeeds:
+`.github/workflows/ci.yml` and succeeds only when every job in
+`scripts/ci/gate_required_results.REQUIRED_JOBS` reports success:
+`ruff`, `secret-scan`, `pytest-fastlane`, `pytest`, `contracts`, `frontend`.
 
-- **pull_request (light tier):** `ruff`, `pytest-fastlane`, `contracts`,
-  `frontend`. Planner / four shards / coverage floor are intentionally skipped.
-- **merge_group / push / workflow_dispatch (full tier):** the light set plus
-  the `pytest-plan` contract, all four `python` shards, and `coverage-floor`.
-  Skipped ≠ success on this tier. `landing-class` freezes one immutable
-  duration snapshot; each Python shard collects the required selection and
-  computes its own file-grouped LPT plan in parallel. CI Gate verifies the
-  source/selection/snapshot metadata, exact node-ID receipts, JUnit counts,
-  and complete four-shard partition. `Publish pytest durations` now runs on
-  successful merge_group as well as push-to-main (step summary + artifact).
-  Cache save stays push-to-main only. The merge_group Gate does not require
-  that job; the push Gate still does.
+2026-09-03 simple-CI cutover (Fable VERDICT: FIX on #7657): there is no
+light/full tier split any more. Every required job is unconditional and runs
+on every event this workflow triggers on — pull_request, merge_group, push to
+main, workflow_dispatch, and the daily schedule. `frontend` still cheap-exits
+internally (a step inside the job, via
+`scripts/ci/frontend_change_scope.py`) when nothing in its denominator
+changed; that is not a workflow-level skip. `pytest` is one plain job: it
+collects and runs the whole required suite (`not atlas_release and not
+slow`) with `-n auto --dist=loadfile` — no shard matrix, no landing-class
+classification, no duration-snapshot artifacts, no coverage collection.
+Retired with that cutover: the `landing-class` classifier
+(`scripts/ci/landing_class.py`), the `pytest-plan` contract job, the
+four-way `python` shard matrix, `coverage-floor`, `pytest-duration-publish`,
+the advisory `frontend-e2e` job, and the `ci-gate-queue-recovery.yml`
+workflow (it keyed tail-job detection on the deleted `Coverage floor` job
+name).
 
 Aggregation is `scripts/ci/gate_required_results.py` (fail-closed on missing,
-failed, cancelled, or unexpectedly skipped required jobs). The fastlane's
-changed-file selection is only an early signal: it never selects, skips, or
-replaces the full-suite shard plan on the full tier. The planner contract does
-not collect tests and is not a shard dependency; its result validates the
-immutable snapshot and planner schema while Gate remains authoritative for
-actual planning and execution. The workflow remains the authoritative job
-composition; this runbook deliberately does not duplicate its YAML.
+failed, cancelled, or skipped required jobs — skipped ≠ success). The
+fastlane's changed-file selection is only an early signal: it never selects,
+skips, or narrows the `pytest` job's collection. The workflow remains the
+authoritative job composition; this runbook deliberately does not duplicate
+its YAML.
 
 The contracts job's BIO preparation validation is load-bearing. In particular,
 an active BIO hold must continue to fail closed (`PREPARATION_HOLD_ACTIVE`),
@@ -49,17 +52,17 @@ Run the inventory locally from the repository root:
 The script parses every `.github/workflows/*.yml` that runs on `pull_request`
 or `merge_group`. It counts each top-level job and expands static matrix
 dimensions, exclusions, and additions. It fails closed on an unsupported
-dynamic matrix. The documented pytest-shard runtime matrix is the exception:
-`PYTEST_SHARD_CEILING` is pinned to four and asserts that the static `ci.yml`
-matrix does not exceed that topology.
+dynamic matrix. `PYTEST_SHARD_CEILING` and its `ci.yml:python` matrix
+special-case predate the 2026-09-03 simple-CI cutover (#7657), which retired
+the four-way `python` shard matrix in favor of one plain `pytest` job; that
+special-case is dormant (no job named `python` remains in `ci.yml`) and is
+harmless to leave in place — it never fires without a matching job/matrix.
 
 `CI_SLOT_CEILING = 31` in `scripts/ci/slot_inventory.py` is the only policy
-source. Its baseline is the measured 29 PR runner slots, including the
-parallel pytest fastlane and four pytest shards; two slots are deliberate
-headroom.
-The same command runs inside the existing always-on `actionlint` PR workflow,
-so a workflow edit cannot silently bypass the budget and the guard adds no
-runner job of its own.
+source. Its baseline predates the cutover; re-measure with the command above
+before relying on the exact number. The same command runs inside the
+existing always-on `actionlint` PR workflow, so a workflow edit cannot
+silently bypass the budget and the guard adds no runner job of its own.
 
 To raise the ceiling, submit a focused one-line PR changing
 `CI_SLOT_CEILING`, with the inventory's measured before/after output and the
@@ -94,8 +97,8 @@ full-suite path.
 newline-delimited file plan from changed conventional test modules under
 `tests/`. An empty plan is successful and intentional for docs-only or
 implementation-only changes. It currently does not infer tests from changed
-implementation files; the unconditional shards remain responsible for that
-coverage.
+implementation files; the unconditional `pytest` job remains responsible for
+that coverage.
 
 `CI Gate` remains the only required check. CodeQL stays on GitHub default
 setup and, after a repository administrator sets

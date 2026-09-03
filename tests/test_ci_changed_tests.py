@@ -124,7 +124,7 @@ def test_workflow_changes_trigger_repo_invariant_manifest_and_select_queue_starv
     for path in (
         ".github/workflows/ci.yml",
         ".github/workflows/hygiene.yml",
-        ".github/workflows/ci-gate-queue-recovery.yml",
+        ".github/workflows/integration-sweep.yml",
         ".github/workflows/security-audit.yml",
         ".github/workflows/ui-policy-gate.yml",
     ):

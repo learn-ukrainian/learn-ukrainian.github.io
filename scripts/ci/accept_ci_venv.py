@@ -7,8 +7,8 @@ helper is fail-open toward a fresh install (never fail-closed on a bad cache)
 and fail-closed for the later pytest/coverage steps that consume the venv.
 
 Required imports match the lock-minus-live-ML profile used by fastlane and
-the four shards: ``pytest`` is the runner; ``coverage`` is already in
-``requirements-lock.txt`` and lets coverage-floor reuse the same tree.
+the full-suite ``pytest`` job: ``pytest`` is the runner; ``coverage`` is
+already in ``requirements-lock.txt``.
 """
 
 from __future__ import annotations

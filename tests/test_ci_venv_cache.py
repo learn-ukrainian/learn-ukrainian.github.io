@@ -12,8 +12,12 @@ Live evidence (2026-08-28, public Actions jobs on this repo):
 The wheel cache is necessary but not sufficient. Caching the populated
 ``.venv`` (exact lockfile key, no restore-keys) is the remaining unpack skip.
 A hit is accepted only after ``scripts/ci/accept_ci_venv.py`` imports pytest
-and coverage; otherwise the existing pip install runs. CI Gate needs, fail-closed
-semantics, and merge_group cancel-in-progress are unchanged.
+and coverage; otherwise the existing pip install runs.
+
+2026-09-03 simple-CI cutover: the four-shard ``python`` matrix and
+``coverage-floor`` are retired in favor of one plain ``pytest`` job that runs
+on every event. This file's fastlane/pytest venv-cache assertions carry over
+unchanged; the retired jobs' assertions are dropped with them.
 """
 
 from __future__ import annotations
@@ -25,6 +29,7 @@ from pathlib import Path
 import yaml
 
 from scripts.ci.accept_ci_venv import REQUIRED_IMPORTS, accept_ci_venv, main
+from scripts.ci.gate_required_results import REQUIRED_JOBS
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _CI = _REPO_ROOT / ".github" / "workflows" / "ci.yml"
@@ -116,10 +121,10 @@ def test_main_writes_github_output_and_never_fails_closed_on_cache(tmp_path: Pat
     assert output.read_text(encoding="utf-8") == "cache-hit=false\n"
 
 
-def test_fastlane_and_shards_share_exact_venv_key_without_restore_keys() -> None:
+def test_fastlane_and_pytest_share_exact_venv_key_without_restore_keys() -> None:
     for job_id, restore_name, save_name in (
         ("pytest-fastlane", "Restore CI venv", "Save CI venv"),
-        ("python", "Restore CI venv", "Save CI venv"),
+        ("pytest", "Restore CI venv", "Save CI venv"),
     ):
         restore = _named(job_id, restore_name)
         save = _named(job_id, save_name)
@@ -132,15 +137,6 @@ def test_fastlane_and_shards_share_exact_venv_key_without_restore_keys() -> None
         assert "restore-keys" not in restore["with"]
 
 
-def test_coverage_floor_restores_same_venv_key_and_does_not_save() -> None:
-    restore = _named("coverage-floor", "Restore CI venv")
-    assert restore["with"]["key"] == CI_VENV_KEY
-    assert restore["with"]["path"] == ".venv"
-    assert "restore-keys" not in restore["with"]
-    names = [step.get("name") for step in _steps("coverage-floor")]
-    assert "Save CI venv" not in names
-
-
 def test_install_and_wheel_restore_are_skipped_on_accepted_venv() -> None:
     fastlane_install = _named(
         "pytest-fastlane", "Install fastlane test dependencies (lock minus live ML)"
@@ -150,16 +146,14 @@ def test_install_and_wheel_restore_are_skipped_on_accepted_venv() -> None:
     assert "steps.plan.outputs.has_tests == 'true'" in str(fastlane_install["if"])
     assert "steps.ci-venv.outputs.cache-hit != 'true'" in str(fastlane_wheels["if"])
 
-    shard_install = _named("python", "Install dependencies")
-    shard_wheels = _named("python", "Restore pip wheel cache")
-    for step in (shard_install, shard_wheels):
-        condition = str(step["if"])
-        assert "steps.ci-venv.outputs.cache-hit != 'true'" in condition
-        assert "docs_skills" in condition
+    pytest_install = _named("pytest", "Install dependencies")
+    pytest_wheels = _named("pytest", "Restore pip wheel cache")
+    for step in (pytest_install, pytest_wheels):
+        assert step["if"] == "steps.ci-venv.outputs.cache-hit != 'true'"
 
 
 def test_accept_step_uses_stdlib_helper_not_inline_probe() -> None:
-    for job_id in ("pytest-fastlane", "python", "coverage-floor"):
+    for job_id in ("pytest-fastlane", "pytest"):
         step = _named(job_id, "Accept restored CI venv")
         assert "scripts/ci/accept_ci_venv.py" in step["run"]
         assert step["env"]["RESTORE_HIT"] == "${{ steps.ci-venv-cache.outputs.cache-hit }}"
@@ -172,34 +166,12 @@ def test_gate_and_merge_group_invariants_hold() -> None:
     assert concurrency["cancel-in-progress"] == "${{ github.event_name == 'pull_request' }}"
     gate = workflow["jobs"]["ci-gate"]
     assert gate["if"] == "always() && !cancelled()"
-    assert gate["needs"] == [
-        "ruff",
-        "secret-scan",
-        "landing-class",
-        "pytest-plan",
-        "pytest-fastlane",
-        "python",
-        "contracts",
-        "frontend",
-        "coverage-floor",
-        "pytest-duration-publish",
-    ]
-
-
-def test_coverage_floor_still_enforces_fail_under_and_skips_render() -> None:
-    combine = _named("coverage-floor", "Combine and enforce")
-    run = combine["run"]
-    assert "coverage combine" in run
-    assert "coverage report --fail-under=35" in run
-    assert "refusing to pass vacuously" in run
-    assert "coverage xml" not in run
-    assert "coverage html" not in run
-    assert "CI_VENV_HIT" in combine.get("env", {})
+    assert gate["needs"] == list(REQUIRED_JOBS)
 
 
 def test_venv_key_embeds_workflow_extra_pins() -> None:
     """Extras are installed after the lockfile; they must bust the venv key."""
-    install = _named("python", "Install dependencies")["run"]
+    install = _named("pytest", "Install dependencies")["run"]
     assert "multiprocess==0.70.18" in install
     assert "huggingface-hub==1.24.0" in install
     assert "mp0.70.18" in CI_VENV_KEY

@@ -85,10 +85,8 @@ def test_no_new_job_was_added_to_ci_workflow() -> None:
     # Rule of thumb: assert an invariant, not a snapshot; if changing X
     # legitimately requires editing >1 test, the test is a snapshot. The job
     # inventory derives from the one canonical ci-gate.needs set exported by
-    # the gate evaluator, plus the two frozen-by-decision jobs that hang off
-    # the gate rather than feed it (frontend-e2e waits on ci-gate; ci-gate is
-    # the gate itself).
-    expected_jobs = set(gate.GATE_NEEDS_JOBS) | {"frontend-e2e", "ci-gate"}
+    # the gate evaluator, plus ci-gate itself (which is not in its own needs).
+    expected_jobs = set(gate.GATE_NEEDS_JOBS) | {"ci-gate"}
     assert set(workflow["jobs"]) == expected_jobs, (
         "the merge-group kick comment must be a step on ci-gate, not an unrelated job"
     )

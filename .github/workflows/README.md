@@ -6,8 +6,7 @@ CI, security, and deploy automation for the learn-ukrainian curriculum.
 
 | Workflow | Purpose | Trigger | Notes |
 |----------|---------|---------|-------|
-| `ci.yml` | Required path: pytest shards, contracts (schema/MDX/atlas/BIO + secret scan + PR-body guard), frontend, coverage floor, **CI Gate**; advisory E2E after gate | PR / push to main / merge_group | `CI Gate` is the only **required** status check (CF attest retired 2026-09-03; red team reviews out of band). Always-on parallel fan-out is capped (#4811). |
-| `ci-gate-queue-recovery.yml` | Re-run cancelled CI Gate once when upstream jobs succeeded (runner-queue starvation) | Every 15 min / manual | Stopgap for #4811; scans recent CI runs via `gh api` (no `workflow_run` — zizmor); never re-runs genuine failures; default-branch logic only. |
+| `ci.yml` | Required path: ruff, secret-scan, pytest-fastlane, pytest (full suite), contracts (schema/MDX/atlas/BIO + PR-body guard), frontend, **CI Gate** | PR / push to main / merge_group | `CI Gate` is the only **required** status check (CF attest retired 2026-09-03; red team reviews out of band). Every required job is unconditional on every event — no light/full tier split (simple-CI cutover 2026-09-03, #7657). Always-on parallel fan-out is capped (#4811). |
 | `content-ci.yml` | Advisory content gates (bio dossier Section-7 xref, dossier word-count) | PR | Non-blocking; unfiltered `pull_request` so it never wedges as "expected". |
 | `hygiene.yml` | Advisory radon / prompt lint / postmortem / agent-config / scripts-root checks | PR | Composite `hygiene-checks` job (#4811 slot cut); not in CI Gate. |
 | `integration-sweep.yml` | Arms auto-merge for abandoned reviewed PRs | Every 15 min / manual | Fail-closed membership, current-head approval, required-CI (`CI Gate`, the documented sole required check; not admin protection API), and idle-owner checks; manual runs default to dry-run; schedule soft-skips HTTP 403. |

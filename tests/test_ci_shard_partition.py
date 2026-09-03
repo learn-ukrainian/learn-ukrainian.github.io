@@ -345,22 +345,19 @@ def test_run_nodeids_records_reported_execution_ids(tmp_path: Path, monkeypatch:
     assert data["pytest_exit_code"] == 0
 
 
-def test_ci_workflow_uses_shard_local_planner_and_ci_gate_verifier() -> None:
+def test_ci_workflow_pytest_job_runs_full_suite_unconditionally() -> None:
+    """2026-09-03 simple-CI cutover: no planner/shard/landing-class wiring."""
     workflow = (Path(__file__).resolve().parents[1] / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     nightly = (
         Path(__file__).resolve().parents[1] / ".github" / "workflows" / "pytest-slow-nightly.yml"
     ).read_text(encoding="utf-8")
 
-    assert "pytest-plan:" in workflow
     assert "pytest-fastlane:" in workflow
     assert "changed_tests.py" in workflow
-    assert "timeout-minutes: 10" in workflow
-    assert "pytest_shards.py plan-shard" in workflow
-    assert "pytest_shards.py plan \\" not in workflow
-    assert "pytest-duration-snapshot" in workflow
-    assert "pytest-plans" not in workflow
-    assert "pytest_shards.py verify-artifacts" in workflow
-    assert "gate_required_results.py" in workflow
+    assert "  pytest:" in workflow
+    assert "pytest-plan:" not in workflow
+    assert "landing-class:" not in workflow
+    assert "pytest_shards.py" not in workflow
     assert "--dist=loadfile" in workflow
     assert "-m 'not atlas_release and not slow'" in workflow
     assert workflow.count("-m 'not atlas_release and not slow'") >= 2
@@ -373,29 +370,14 @@ def test_ci_workflow_uses_shard_local_planner_and_ci_gate_verifier() -> None:
     assert nightly.splitlines()[0] == "name: Pytest slow nightly"
 
 
-def test_ci_shard_planner_declares_matrix_shard_env() -> None:
-    workflow = yaml.safe_load(
-        (Path(__file__).resolve().parents[1] / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
-    )
-    planner_step = next(
-        step
-        for step in workflow["jobs"]["python"]["steps"]
-        if step.get("name") == "Collect and plan this pytest shard locally"
-    )
-
-    assert planner_step["env"]["SHARD"] == "${{ matrix.shard }}"
-
-
-def test_required_lanes_exclude_live_model_setup_and_fastlane_matches_shard_install() -> None:
+def test_required_lanes_exclude_live_model_setup_and_fastlane_matches_pytest_install() -> None:
     repo_root = Path(__file__).resolve().parents[1]
     workflow = yaml.safe_load((repo_root / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8"))
     jobs = workflow["jobs"]
 
-    planner_steps = jobs["pytest-plan"]["steps"]
-    planner_validate = next(step for step in planner_steps if step.get("name") == "Validate planner contract without collection")
-    shard_steps = jobs["python"]["steps"]
-    shard_install = next(step for step in shard_steps if step.get("name") == "Install dependencies")
-    shard_cache = next(step for step in shard_steps if step.get("name") == "Restore pip wheel cache")
+    pytest_steps = jobs["pytest"]["steps"]
+    pytest_install = next(step for step in pytest_steps if step.get("name") == "Install dependencies")
+    pytest_cache = next(step for step in pytest_steps if step.get("name") == "Restore pip wheel cache")
     fastlane_steps = jobs["pytest-fastlane"]["steps"]
     fastlane_install = next(
         step
@@ -405,24 +387,22 @@ def test_required_lanes_exclude_live_model_setup_and_fastlane_matches_shard_inst
     fastlane_run = next(step for step in fastlane_steps if step.get("name") == "Run directly changed test modules")
     fastlane_cache_steps = [step for step in fastlane_steps if "pip wheel cache" in step.get("name", "").lower()]
 
-    assert jobs["python"]["needs"] == ["landing-class"]
-    assert "validate-snapshot" in planner_validate["run"]
-    assert all("Install planner dependencies" not in str(step.get("name")) for step in planner_steps)
-    for step in (shard_install,):
+    assert "needs" not in jobs["pytest"]
+    for step in (pytest_install,):
         run = step["run"]
         assert "torch==2.13.0" not in run
         assert "download.pytorch.org" not in run
         assert "|stanza)" in run
-    assert "stanza_resources" not in "\n".join(str(step) for step in shard_steps)
+    assert "stanza_resources" not in "\n".join(str(step) for step in pytest_steps)
 
     live_ml_filter = "grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt"
-    assert live_ml_filter in shard_install["run"]
+    assert live_ml_filter in pytest_install["run"]
     assert live_ml_filter in fastlane_install["run"]
     assert "pip install --no-deps -r" in fastlane_install["run"]
     assert "fastlane_requirements.py" not in fastlane_install["run"]
     assert "requirements-fastlane.txt" not in fastlane_install["run"]
     assert fastlane_cache_steps
-    assert all(step["with"]["key"] == shard_cache["with"]["key"] for step in fastlane_cache_steps)
+    assert all(step["with"]["key"] == pytest_cache["with"]["key"] for step in fastlane_cache_steps)
     assert all("-no-live-ml" in str(step) for step in fastlane_cache_steps)
     assert "No module named" in fastlane_run["run"]
     assert "CPU torch" in fastlane_run["run"]
