@@ -1,0 +1,492 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/dataset_v4_a10_pilot_review_gate_receipt_v1.schema.json",
+  "title": "Dataset V4 A10 pilot review gate receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "status",
+    "text_free",
+    "controlling_outcome_sha256",
+    "control_surfaces",
+    "bindings",
+    "role_map",
+    "frozen_slot_denominator",
+    "review_gate",
+    "review_packet",
+    "a2_residuals_carried_forward",
+    "a4_residuals_carried_forward",
+    "a5_residuals_carried_forward",
+    "a6_residuals_carried_forward",
+    "a7_residuals_carried_forward",
+    "a8_residuals_carried_forward",
+    "a9_residuals_carried_forward",
+    "a10_residuals",
+    "review_readiness_view",
+    "execution_counters",
+    "eligibility",
+    "safety_assertions"
+  ],
+  "properties": {
+    "schema_version": {"const": "dataset_v4_a10_pilot_review_gate_receipt_v1"},
+    "receipt_id": {"const": "dataset-v4-a10-pilot-review-gate-v1"},
+    "status": {
+      "enum": [
+        "A10_PILOT_REVIEW_GATE_WIRED_REVIEW_NOT_EXECUTED_TEXT_FREE_NO_PASSED_PILOT_CLAIM",
+        "PILOT_REVIEW_PASSED"
+      ]
+    },
+    "text_free": {"const": true},
+    "controlling_outcome_sha256": {"const": "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"},
+    "control_surfaces": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["public_control_issue", "pilot_child_issue", "private_operational_board"],
+      "properties": {
+        "public_control_issue": {"const": 7423},
+        "pilot_child_issue": {"const": 7430},
+        "private_operational_board": {"const": 622}
+      }
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "a2_source_operation_admission",
+        "a4_deterministic_extraction",
+        "a5_evidence_enrichment",
+        "a6_blind_arena",
+        "a7_original_row_factory",
+        "a8_admission_assembly",
+        "a9_evaluation_package",
+        "pilot_slot_manifest",
+        "wiring_implementation"
+      ],
+      "properties": {
+        "a2_source_operation_admission": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "properties": {
+            "path": {"const": "data/projects/open_model_data/admission/dataset_v4_a2_source_operation_admission_receipt_v1.json"},
+            "schema_version": {"const": "dataset_v4_a2_source_operation_admission_receipt_v1"}
+          }
+        },
+        "a4_deterministic_extraction": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "properties": {
+            "path": {"const": "data/projects/open_model_data/admission/dataset_v4_a4_deterministic_extraction_receipt_v1.json"},
+            "schema_version": {"const": "dataset_v4_a4_deterministic_extraction_receipt_v1"}
+          }
+        },
+        "a5_evidence_enrichment": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "properties": {
+            "path": {"const": "data/projects/open_model_data/admission/dataset_v4_a5_evidence_enrichment_receipt_v1.json"},
+            "schema_version": {"const": "dataset_v4_a5_evidence_enrichment_receipt_v1"}
+          }
+        },
+        "a6_blind_arena": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "properties": {
+            "path": {"const": "data/projects/open_model_data/admission/dataset_v4_a6_blind_arena_receipt_v1.json"},
+            "schema_version": {"const": "dataset_v4_a6_blind_arena_receipt_v1"}
+          }
+        },
+        "a7_original_row_factory": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "properties": {
+            "path": {"const": "data/projects/open_model_data/admission/dataset_v4_a7_original_row_factory_receipt_v1.json"},
+            "schema_version": {"const": "dataset_v4_a7_original_row_factory_receipt_v1"}
+          }
+        },
+        "a8_admission_assembly": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "properties": {
+            "path": {"const": "data/projects/open_model_data/admission/dataset_v4_a8_admission_assembly_receipt_v1.json"},
+            "schema_version": {"const": "dataset_v4_a8_admission_assembly_receipt_v1"}
+          }
+        },
+        "a9_evaluation_package": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "properties": {
+            "path": {"const": "data/projects/open_model_data/admission/dataset_v4_a9_evaluation_package_receipt_v1.json"},
+            "schema_version": {"const": "dataset_v4_a9_evaluation_package_receipt_v1"}
+          }
+        },
+        "pilot_slot_manifest": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "properties": {
+            "path": {"const": "data/projects/open_model_data/admission/dataset_v4_pilot_slot_manifest_v1.json"},
+            "schema_version": {"const": "dataset_v4_pilot_slot_manifest_v1"}
+          }
+        },
+        "wiring_implementation": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "properties": {
+            "path": {"const": "scripts/projects/open_model_data/v4_a10_pilot_review_gate.py"},
+            "schema_version": {"const": "v4_a10_pilot_review_gate_script_v1"}
+          }
+        }
+      }
+    },
+    "role_map": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["A0", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "A11", "A12", "A13"],
+      "properties": {
+        "A0": {"const": "scope_lead"},
+        "A1": {"const": "custody"},
+        "A2": {"const": "source_inventory_admission"},
+        "A3": {"const": "heldout"},
+        "A4": {"const": "deterministic_extraction"},
+        "A5": {"const": "evidence_enrichment"},
+        "A6": {"const": "safe_arena"},
+        "A7": {"const": "original_row_factory"},
+        "A8": {"const": "admission_assembly"},
+        "A9": {"const": "evaluation_package"},
+        "A10": {"const": "pilot_review"},
+        "A11": {"const": "training_ready_release"},
+        "A12": {"const": "later_gold_overlay"},
+        "A13": {"const": "cleanup_recovery"}
+      }
+    },
+    "frozen_slot_denominator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["total_slots", "strata"],
+      "properties": {
+        "total_slots": {"const": 100},
+        "strata": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["stratum", "id_prefix", "count", "assignment_state", "slot_ids"],
+            "properties": {
+              "stratum": {"type": "string", "minLength": 1},
+              "id_prefix": {"type": "string", "pattern": "^v4p-[a-z-]+$"},
+              "count": {"type": "integer", "minimum": 1},
+              "assignment_state": {"type": "string", "minLength": 1},
+              "slot_ids": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {"type": "string", "pattern": "^v4p-[a-z-]+-[0-9]{3}$"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "review_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gate_id", "requires", "a9_receipt_valid", "a2_rights_resolved",
+        "all_slots_assigned", "upstream_evaluation_slice_ready", "independent_review_recorded",
+        "pilot_review_slice_ready", "owner_role", "blocked_reason_code"
+      ],
+      "properties": {
+        "gate_id": {"const": "v4-a10-pilot-review-gate-v1"},
+        "requires": {
+          "const": [
+            "a9_receipt_independently_valid",
+            "a2_rights_fully_resolved",
+            "all_frozen_slots_assigned",
+            "upstream_a9_evaluation_slice_ready",
+            "independent_review_recorded"
+          ]
+        },
+        "a9_receipt_valid": {"type": "boolean"},
+        "a2_rights_resolved": {"type": "boolean"},
+        "all_slots_assigned": {"type": "boolean"},
+        "upstream_evaluation_slice_ready": {"type": "boolean"},
+        "independent_review_recorded": {"const": false},
+        "pilot_review_slice_ready": {"type": "boolean"},
+        "owner_role": {"type": "string", "minLength": 1},
+        "blocked_reason_code": {"type": ["string", "null"]}
+      }
+    },
+    "review_packet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gate_id",
+        "requires_independent_ukrainian_language_reviewer",
+        "reviewer_family_must_differ_from_author_family",
+        "requires_exact_head_cross_family_review_of_record",
+        "self_review_satisfies_gate",
+        "discussion_only_satisfies_gate",
+        "internal_helper_swarm_satisfies_gate",
+        "review_may_execute_against_missing_or_empty_rows",
+        "review_execution_state"
+      ],
+      "properties": {
+        "gate_id": {"const": "INDEPENDENT_CROSS_FAMILY_EXACT_HEAD_REVIEW"},
+        "requires_independent_ukrainian_language_reviewer": {"const": true},
+        "reviewer_family_must_differ_from_author_family": {"const": true},
+        "requires_exact_head_cross_family_review_of_record": {"const": true},
+        "self_review_satisfies_gate": {"const": false},
+        "discussion_only_satisfies_gate": {"const": false},
+        "internal_helper_swarm_satisfies_gate": {"const": false},
+        "review_may_execute_against_missing_or_empty_rows": {"const": false},
+        "review_execution_state": {"const": "NOT_EXECUTED_NO_ADMITTED_ROWS"}
+      }
+    },
+    "a2_residuals_carried_forward": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["residual_id", "origin_stage", "status"],
+        "properties": {
+          "residual_id": {
+            "enum": [
+              "a2-residual-standard-correct-rights-unknown",
+              "a2-residual-correction-coverage-blocked",
+              "a2-residual-literary-rights-unknown",
+              "a2-residual-dialect-regional-source-incomplete",
+              "a2-residual-archaic-historical-coverage-blocked",
+              "a2-residual-mixing-source-incomplete",
+              "a2-residual-quotation-interference-rights-unknown",
+              "a2-residual-abstention-source-incomplete"
+            ]
+          },
+          "origin_stage": {"const": "A2"},
+          "status": {"const": "unresolved_carried_to_a10"}
+        }
+      }
+    },
+    "a4_residuals_carried_forward": {
+      "type": "array",
+      "minItems": 9,
+      "maxItems": 9,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["residual_id", "origin_stage", "status"],
+        "properties": {
+          "residual_id": {"type": "string", "pattern": "^a4-residual-[a-z0-9_-]+$"},
+          "origin_stage": {"const": "A4"},
+          "status": {"const": "unresolved_carried_to_a10"}
+        }
+      }
+    },
+    "a5_residuals_carried_forward": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["residual_id", "origin_stage", "status"],
+        "properties": {
+          "residual_id": {"type": "string", "pattern": "^a5-residual-[a-z0-9_-]+$"},
+          "origin_stage": {"const": "A5"},
+          "status": {"const": "unresolved_carried_to_a10"}
+        }
+      }
+    },
+    "a6_residuals_carried_forward": {
+      "type": "array",
+      "minItems": 100,
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["residual_id", "origin_stage", "status"],
+        "properties": {
+          "residual_id": {"type": "string", "pattern": "^a6-residual-independence-unavailable-v4p-[a-z-]+-[0-9]{3}$"},
+          "origin_stage": {"const": "A6"},
+          "status": {"const": "unresolved_carried_to_a10"}
+        }
+      }
+    },
+    "a7_residuals_carried_forward": {
+      "type": "array",
+      "minItems": 100,
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["residual_id", "origin_stage", "status"],
+        "properties": {
+          "residual_id": {"type": "string", "pattern": "^a7-residual-(rights-unknown|source-incomplete|independence-unavailable)-v4p-[a-z-]+-[0-9]{3}$"},
+          "origin_stage": {"const": "A7"},
+          "status": {"const": "unresolved_carried_to_a10"}
+        }
+      }
+    },
+    "a8_residuals_carried_forward": {
+      "type": "array",
+      "minItems": 100,
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["residual_id", "origin_stage", "status"],
+        "properties": {
+          "residual_id": {"type": "string", "pattern": "^a8-residual-(rights-unknown|source-incomplete|independence-unavailable)-v4p-[a-z-]+-[0-9]{3}$"},
+          "origin_stage": {"const": "A8"},
+          "status": {"const": "unresolved_carried_to_a10"}
+        }
+      }
+    },
+    "a9_residuals_carried_forward": {
+      "type": "array",
+      "minItems": 100,
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["residual_id", "origin_stage", "status"],
+        "properties": {
+          "residual_id": {"type": "string", "pattern": "^a9-residual-(rights-unknown|source-incomplete|independence-unavailable)-v4p-[a-z-]+-[0-9]{3}$"},
+          "origin_stage": {"const": "A9"},
+          "status": {"const": "unresolved_carried_to_a10"}
+        }
+      }
+    },
+    "a10_residuals": {
+      "type": "array",
+      "minItems": 100,
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "residual_id", "subject_kind", "subject_id", "stage", "reason_code",
+          "owner_role", "next_action", "retryability", "evidence_refs"
+        ],
+        "properties": {
+          "residual_id": {"type": "string", "pattern": "^a10-residual-(rights-unknown|source-incomplete|independence-unavailable)-v4p-[a-z-]+-[0-9]{3}$"},
+          "subject_kind": {"const": "pilot_slot"},
+          "subject_id": {"type": "string", "pattern": "^v4p-[a-z-]+-[0-9]{3}$"},
+          "stage": {"const": "A10"},
+          "reason_code": {"enum": ["rights_unknown", "source_incomplete", "independence_unavailable"]},
+          "owner_role": {"type": "string", "minLength": 1},
+          "next_action": {"type": "string", "minLength": 1},
+          "retryability": {"const": "retryable"},
+          "evidence_refs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "review_readiness_view": {
+      "type": "array",
+      "minItems": 100,
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["slot_id", "row_admitted", "row_scored", "review_required", "review_executed", "reviewer_family", "cf_review_of_record_passed", "residual_id"],
+        "properties": {
+          "slot_id": {"type": "string", "pattern": "^v4p-[a-z-]+-[0-9]{3}$"},
+          "row_admitted": {"const": false},
+          "row_scored": {"const": false},
+          "review_required": {"const": true},
+          "review_executed": {"const": false},
+          "reviewer_family": {"const": null},
+          "cf_review_of_record_passed": {"const": false},
+          "residual_id": {"type": "string", "pattern": "^a10-residual-(rights-unknown|source-incomplete|independence-unavailable)-v4p-[a-z-]+-[0-9]{3}$"}
+        }
+      }
+    },
+    "execution_counters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dataset_rows_emitted", "rows_reviewed", "rows_admitted_and_eligible_for_review",
+        "frozen_slot_count", "slots_review_ready", "slots_blocked"
+      ],
+      "properties": {
+        "dataset_rows_emitted": {"const": 0},
+        "rows_reviewed": {"const": 0},
+        "rows_admitted_and_eligible_for_review": {"const": 0},
+        "frozen_slot_count": {"const": 100},
+        "slots_review_ready": {"type": "integer", "minimum": 0, "maximum": 100},
+        "slots_blocked": {"type": "integer", "minimum": 0, "maximum": 100}
+      }
+    },
+    "eligibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gold", "training", "evaluation", "teaching", "coverage"],
+      "properties": {
+        "gold": {"const": false},
+        "training": {"const": false},
+        "evaluation": {"const": false},
+        "teaching": {"const": false},
+        "coverage": {"const": false}
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rows_not_admitted", "text_emitted", "source_text_loaded_into_model",
+        "corpus_refetched", "held_out_membership_referenced", "held_out_membership_opened",
+        "gold_created", "live_model_inference_over_corpus", "construction_altered_after_exposure",
+        "training_ready_silver_claimed", "arena_slice_ready_claimed", "admitted_slice_ready_claimed",
+        "eval_artifact_ready_claimed", "pilot_review_passed_claimed", "self_review_occurred",
+        "review_executed_against_missing_or_empty_row", "contract_gate_waived", "privacy_gate_waived",
+        "a4_private_ledger_loaded", "mac_corpus_copy_created", "epic_done_claimed",
+        "heldout_family_identity_leaked"
+      ],
+      "properties": {
+        "rows_not_admitted": {"const": true},
+        "text_emitted": {"const": false},
+        "source_text_loaded_into_model": {"const": false},
+        "corpus_refetched": {"const": false},
+        "held_out_membership_referenced": {"const": false},
+        "held_out_membership_opened": {"const": false},
+        "gold_created": {"const": false},
+        "live_model_inference_over_corpus": {"const": false},
+        "construction_altered_after_exposure": {"const": false},
+        "training_ready_silver_claimed": {"const": false},
+        "arena_slice_ready_claimed": {"const": false},
+        "admitted_slice_ready_claimed": {"const": false},
+        "eval_artifact_ready_claimed": {"const": false},
+        "pilot_review_passed_claimed": {"const": false},
+        "self_review_occurred": {"const": false},
+        "review_executed_against_missing_or_empty_row": {"const": false},
+        "contract_gate_waived": {"const": false},
+        "privacy_gate_waived": {"const": false},
+        "a4_private_ledger_loaded": {"const": false},
+        "mac_corpus_copy_created": {"const": false},
+        "epic_done_claimed": {"const": false},
+        "heldout_family_identity_leaked": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "artifact_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "schema_version"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+"
+        },
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "schema_version": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}
