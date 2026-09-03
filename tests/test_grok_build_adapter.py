@@ -97,20 +97,21 @@ def test_read_only_mode_applies_mutation_deny_rules(tmp_path):
     assert "--always-approve" not in plan.cmd
     denied = [plan.cmd[i + 1] for i, item in enumerate(plan.cmd) if item == "--deny"]
     assert denied == list(_READ_ONLY_DENY_RULES)
+    assert "Bash" in denied
     assert set(_READ_ONLY_DENY_RULES) == {
         "Write",
         "Edit",
         "MultiEdit",
+        "NotebookEdit",
         "search_replace",
-        "Bash(git push*)",
-        "Bash(gh pr create*)",
-        "Bash(gh pr merge*)",
-        "Bash(rm*)",
+        "Bash",
     }
+    # Fail-closed: no prefix-only Bash rules that leave gh api / tee / sed -i open.
+    assert not any(rule.startswith("Bash(") for rule in _READ_ONLY_DENY_RULES)
 
 
 def test_exact_argv_per_mode(tmp_path):
-    # read-only: auto, no always-approve, read-only deny rules for writes and mutating shell
+    # read-only: auto, no always-approve, fail-closed deny on write tools + Bash
     ro_plan = _build("inspect", tmp_path, mode="read-only", model="grok-4.6", effort="high")
     assert ro_plan.cmd == [
         FAKE_GROK,
@@ -130,15 +131,11 @@ def test_exact_argv_per_mode(tmp_path):
         "--deny",
         "MultiEdit",
         "--deny",
+        "NotebookEdit",
+        "--deny",
         "search_replace",
         "--deny",
-        "Bash(git push*)",
-        "--deny",
-        "Bash(gh pr create*)",
-        "--deny",
-        "Bash(gh pr merge*)",
-        "--deny",
-        "Bash(rm*)",
+        "Bash",
         "-m",
         "grok-4.6",
         "--effort",

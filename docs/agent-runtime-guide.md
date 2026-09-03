@@ -303,11 +303,13 @@ On native Grok 1.0.x CLI, `acceptEdits --always-approve` still prompts for shell
 execution and fails unattended turns (`stopReason=cancelled`), while `plan`
 blocks all tool calls outright. The adapter maps `workspace-write` to
 `auto --always-approve`, `danger` to `bypassPermissions --always-approve`, and
-`read-only` to `auto` with explicit `--deny` rules for file edits/writes
-(`Write`, `Edit`, `MultiEdit`, `search_replace`) and mutating shell (`git push`,
-`gh pr create/merge`, `rm`). This preserves tool execution for read-only
-reviews (`gh pr diff`, `pytest`, `ruff`, `git fetch`) while preventing
-mutations.
+ordinary `read-only` to `auto` with fail-closed `--deny` on write tools
+(`Write`, `Edit`, `MultiEdit`, `NotebookEdit`, `search_replace`) and `Bash`.
+Prefix Bash denies are not fail-closed under `auto` (unnamed commands may still
+be approved). Ordinary read-only therefore does **not** claim live shell success
+for `gh` / `pytest` / `ruff` / `git`; those need `workspace-write`/`danger` or a
+sealed `review_isolation` / MCP path. Argv coverage is asserted in unit tests;
+do not treat argv assertions as live CLI proof.
 
 ## Weak-driver trail isolation (P5)
 

@@ -15,8 +15,8 @@ The CLI uses its own stored auth under ``~/.grok`` (OAuth), so no API key is
 injected — HOME (already allow-listed by env_sanitize) is sufficient.
 
 Mode → ``--permission-mode``:
-- ``read-only``       → ``auto`` + explicit ``--deny`` rules for writes and mutating shell
-  (execution-capable for reviews/queries to run ``gh pr diff``, ``pytest``, ``ruff``, ``git fetch`` without mutating)
+- ``read-only``       → ``auto`` + fail-closed ``--deny`` on write tools and ``Bash``
+  (Read/Grep/Glob still run; no shell — prefix deny lists are not a closed allowlist under ``auto``)
 - ``workspace-write`` → ``auto`` + ``--always-approve``
   (unattended tool execution and file edits within the dispatch worktree)
 - ``danger``          → ``bypassPermissions`` + ``--always-approve``
@@ -24,9 +24,10 @@ Mode → ``--permission-mode``:
 
 Issue #7583: On native Grok 1.0.x CLI, ``acceptEdits --always-approve`` still prompts
 for approval on shell commands and terminates headless turns (``stopReason=cancelled``),
-while ``plan`` blocks all tool calls outright. Both write and read-only dispatches
-map to execution-capable modes (``auto``), with ``read-only`` receiving explicit
-``--deny`` rules for write tools and mutating shell commands.
+while ``plan`` blocks all tool calls outright. Write dispatches map to execution-capable
+``auto``/``bypassPermissions`` with ``--always-approve``. Ordinary ``read-only`` also
+maps to ``auto`` so non-shell read tools can run, but must deny ``Bash`` and write tools
+fail-closed (same posture as sealed ``review_isolation`` Bash denial).
 
 Trail and review isolation use their own explicit tool/deny policies; they do
 not inherit the ordinary write-dispatch approval grant.
@@ -67,7 +68,7 @@ _RATE_LIMIT_RE = re.compile(
 # Runtime mode → grok CLI --permission-mode value.
 # Issue #7583: on grok 1.0.x, acceptEdits does not cover shell headlessly (turn
 # cancels), while plan blocks all tool calls. We map workspace-write to auto
-# (with --always-approve) and read-only to auto (with write/mutation deny rules).
+# (with --always-approve) and read-only to auto with fail-closed Bash/write denies.
 _MODE_PERMISSION: dict[str, str] = {
     "read-only": "auto",
     "workspace-write": "auto",
@@ -78,19 +79,17 @@ _MODE_PERMISSION: dict[str, str] = {
 # run without a human approval prompt.
 _UNATTENDED_WRITE_MODES: frozenset[str] = frozenset({"workspace-write", "danger"})
 
-# Deny rules for read-only mode (issue #7583): grok --permission-mode auto is
-# execution-capable so reviews can run read-only tools and safe shell commands
-# (gh pr diff, pytest, ruff, git fetch/status), while explicit --deny rules block
-# file modifications and mutating shell commands (git push, gh pr create/merge, rm).
+# Deny rules for ordinary read-only (issue #7583 / PR #7594 CF): grok
+# --permission-mode auto may approve unnamed commands, and prefix Bash denies
+# are not fail-closed (gh api, git -C … push, tee, sed -i, …). Deny Bash and
+# write tools wholesale — same fail-closed shell posture as review_isolation.
 _READ_ONLY_DENY_RULES: tuple[str, ...] = (
     "Write",
     "Edit",
     "MultiEdit",
+    "NotebookEdit",
     "search_replace",
-    "Bash(git push*)",
-    "Bash(gh pr create*)",
-    "Bash(gh pr merge*)",
-    "Bash(rm*)",
+    "Bash",
 )
 
 # MCP servers that are safe to run under an execution-capable permission mode
@@ -276,9 +275,9 @@ class GrokBuildAdapter:
             cmd.extend(["-p", prompt])
 
         cmd.extend(["--output-format", "json", "--no-alt-screen"])
-        # Issue #7583: read-only maps to grok `auto` mode with explicit `--deny`
-        # rules to block file edits and mutating shell (git push, gh pr create/merge, rm)
-        # while permitting read tools and safe inspection (gh pr diff, pytest, ruff).
+        # Issue #7583 / #7594: ordinary read-only maps to grok `auto` so non-shell
+        # read tools can run, with fail-closed `--deny` on Bash + write tools.
+        # Prefix-only Bash denies are not a closed allowlist under `auto`.
         # MCP-grounded reviews execute tool calls (e.g. sources__verify_words)
         # under bypassPermissions with MCP deny rules.
         mcp_servers_requested = set(tc.get("mcp_server_names") or [])
