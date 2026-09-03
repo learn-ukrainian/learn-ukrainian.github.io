@@ -125,7 +125,7 @@ jobs:
         with:
           python-version-file: '.python-version'
           cache: pip
-      - run: python -m pip install ruff
+      - run: python -m pip install "$(grep -E '^ruff==' requirements-lock.txt)"
       - run: |
           python -m ruff check scripts/ tests/ agents_extensions/ dashboards/
 
@@ -202,7 +202,18 @@ jobs:
           python-version-file: '.python-version'
           cache: pip
           cache-dependency-path: requirements-lock.txt
-      - run: python -m pip install -r requirements-lock.txt
+      - name: Install Python deps
+        run: |
+          set -euo pipefail
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          # Lockfile is internally inconsistent (marker-pdf vs pillow; see
+          # requirements.txt). Documented CI install is `--no-deps`. Drop
+          # live-ML wheels — the unit suite does not import them and they
+          # blow the 15m budget.
+          grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt \
+            > "${RUNNER_TEMP}/requirements-ci.txt"
+          .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
       - name: Run pytest
         env:
           DOCS_ONLY: ${{ needs.changes.outputs.docs_only }}
@@ -210,12 +221,12 @@ jobs:
         run: |
           set -euo pipefail
           if [ "$DOCS_ONLY" = "true" ]; then
-            python -m pytest tests -m docs_skills --strict-markers --timeout=120 \
+            .venv/bin/python -m pytest tests -m docs_skills --strict-markers --timeout=120 \
               --override-ini addopts=-v
             exit 0
           fi
           mapfile -t files < <(git ls-files 'tests/**/test_*.py' | sort | sed -n "${SHARD}~4p")
-          python -m pytest "${files[@]}" -n auto --dist=loadfile --timeout=120 \
+          .venv/bin/python -m pytest "${files[@]}" -n auto --dist=loadfile --timeout=120 \
             -m 'not atlas_release and not slow' --strict-markers \
             --override-ini addopts=-v
 
@@ -288,8 +299,12 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
-      - run: python -m pip install jsonschema PyYAML
-      - run: python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest()"
+      - name: Create Python venv
+        run: |
+          set -euo pipefail
+          python -m venv .venv
+          .venv/bin/python -m pip install jsonschema PyYAML
+      - run: .venv/bin/python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest()"
       - working-directory: site
         run: npm ci
       - working-directory: site
