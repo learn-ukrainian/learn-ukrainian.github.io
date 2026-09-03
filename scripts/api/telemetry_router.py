@@ -21,7 +21,7 @@ from pydantic import BaseModel, Field
 
 from scripts.telemetry.legacy_bridge import bridge_usage_summary
 
-from .monitor_context import MonitorContext, get_ctx, production_context
+from .monitor_context import MonitorContext, get_ctx, resolve_context
 from .telemetry.legacy_comms import legacy_comms_summary
 
 router = APIRouter(prefix="/api/telemetry", tags=["telemetry"])
@@ -79,23 +79,18 @@ class ModuleBuildTelemetryIngest(BaseModel):
     participants: list[ModuleBuildParticipantIngest] = Field(default_factory=list)
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    """Fall back to the live production context for plain-Python callers."""
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
 def _tool_timings_path(ctx: MonitorContext | None = None) -> Path:
-    return _resolve_context(ctx).roots.project_root / "data" / "telemetry" / "tool_timings.db"
+    return resolve_context(ctx).roots.project_root / "data" / "telemetry" / "tool_timings.db"
 
 
 def _module_build_db_path(ctx: MonitorContext | None = None) -> Path:
-    return _resolve_context(ctx).roots.project_root / "data" / "telemetry" / "module_builds.db"
+    return resolve_context(ctx).roots.project_root / "data" / "telemetry" / "module_builds.db"
 
 
 def _legacy_comms_db_path(ctx: MonitorContext | None = None) -> Path:
-    return _resolve_context(ctx).roots.project_root / "data" / "telemetry" / "legacy_comms_routes.db"
+    return resolve_context(ctx).roots.project_root / "data" / "telemetry" / "legacy_comms_routes.db"
 
 
 def _open_telemetry_db(ctx: MonitorContext, path: Path) -> sqlite3.Connection:
@@ -138,7 +133,7 @@ def _computed_total_tokens(participant: ModuleBuildParticipantIngest) -> int | N
 
 
 def _init_db(ctx: MonitorContext | None = None, db_path: Path | None = None) -> None:
-    resolved = _resolve_context(ctx)
+    resolved = resolve_context(ctx)
     path = db_path or _tool_timings_path(resolved)
     with closing(_open_telemetry_db(resolved, path)) as conn:
         conn.executescript("""
@@ -158,7 +153,7 @@ def _init_db(ctx: MonitorContext | None = None, db_path: Path | None = None) -> 
 
 
 def _init_module_build_db(ctx: MonitorContext | None = None, db_path: Path | None = None) -> None:
-    resolved = _resolve_context(ctx)
+    resolved = resolve_context(ctx)
     path = db_path or _module_build_db_path(resolved)
     with closing(_open_telemetry_db(resolved, path)) as conn:
         conn.execute("PRAGMA foreign_keys = ON")

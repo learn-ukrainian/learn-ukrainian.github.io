@@ -15,7 +15,6 @@ try:
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
-from . import config
 from .config import LEVELS
 from .state_compute import _compute_shippable, _get_review_score
 from .state_helpers import (
@@ -57,12 +56,10 @@ def compute_build_status_track(
     track_id: str,
     level_cfg: dict,
     *,
-    curriculum_root: Path | None = None,
+    curriculum_root: Path,
     plans_root: Path | None = None,
 ) -> dict:
     """Compute build progress for a single track."""
-    if curriculum_root is None:
-        curriculum_root = config.CURRICULUM_ROOT
     plan_slugs = get_plan_slugs(track_id, curriculum_root=curriculum_root, plans_root=plans_root)
     track_dir = curriculum_root / level_cfg["path"]
     total = len(plan_slugs)
@@ -157,12 +154,10 @@ def scan_module_phases(orch_dir, version):
 
 def compute_build_status_all(
     *,
-    curriculum_root: Path | None = None,
+    curriculum_root: Path,
     plans_root: Path | None = None,
 ) -> dict:
     """Compute build progress across all tracks."""
-    if curriculum_root is None:
-        curriculum_root = config.CURRICULUM_ROOT
     tracks = {}
     for level_cfg in LEVELS:
         track_id = level_cfg["id"]
@@ -198,10 +193,8 @@ def compute_build_status_all(
     return {"generated_at": datetime.now(UTC).isoformat(), "tracks": tracks}
 
 
-def _score_docs_text(track_id: str, *, project_root: Path | None = None) -> str:
+def _score_docs_text(track_id: str, *, project_root: Path) -> str:
     """Return concatenated durable score docs text for a track."""
-    if project_root is None:
-        project_root = config.PROJECT_ROOT
     docs_dir = safe_join(project_root, "docs", "audits")
     if not docs_dir.exists():
         return ""
@@ -267,8 +260,8 @@ def compute_module_range_status(
     *,
     start: int,
     end: int,
-    curriculum_root: Path | None = None,
-    project_root: Path | None = None,
+    curriculum_root: Path,
+    project_root: Path,
     plans_root: Path | None = None,
 ) -> dict:
     """Compute deterministic committed-file status for a module number range.
@@ -283,10 +276,6 @@ def compute_module_range_status(
     if end < start:
         raise ValueError("end must be greater than or equal to start")
 
-    if curriculum_root is None:
-        curriculum_root = config.CURRICULUM_ROOT
-    if project_root is None:
-        project_root = config.PROJECT_ROOT
 
     plan_slugs = get_plan_slugs(track_id, curriculum_root=curriculum_root, plans_root=plans_root)
     selected = [(num, slug) for num, slug in plan_slugs if start <= num <= end]
@@ -323,12 +312,10 @@ def compute_track_health(
     track_id: str,
     level_cfg: dict,
     *,
-    curriculum_root: Path | None = None,
+    curriculum_root: Path,
     plans_root: Path | None = None,
 ) -> dict:
     """Compute track health summary."""
-    if curriculum_root is None:
-        curriculum_root = config.CURRICULUM_ROOT
     if plans_root is None:
         plans_root = curriculum_root / "plans"
     plan_slugs = get_plan_slugs(track_id, curriculum_root=curriculum_root, plans_root=plans_root)
@@ -473,12 +460,10 @@ def compute_eta(completion_times: list, remaining: int) -> int | None:
 def compute_enrichment_status(
     track: str | None = None,
     *,
-    curriculum_root: Path | None = None,
+    curriculum_root: Path,
     plans_root: Path | None = None,
 ) -> dict:
     """Compute enrichment status across tracks."""
-    if curriculum_root is None:
-        curriculum_root = config.CURRICULUM_ROOT
     if plans_root is None:
         plans_root = curriculum_root / "plans"
     tracks = {}
@@ -505,10 +490,8 @@ def compute_enrichment_status(
     return {"generated_at": datetime.now(UTC).isoformat(), "tracks": tracks}
 
 
-def compute_build_stats(track: str, *, curriculum_root: Path | None = None) -> dict:
+def compute_build_stats(track: str, *, curriculum_root: Path) -> dict:
     """Parse V6 build-stats.jsonl for a track."""
-    if curriculum_root is None:
-        curriculum_root = config.CURRICULUM_ROOT
     stats_path = curriculum_root / track / "build-stats.jsonl"
     if not stats_path.exists():
         return {"track": track, "entries": [], "summary": {}}
@@ -536,10 +519,8 @@ def compute_build_stats(track: str, *, curriculum_root: Path | None = None) -> d
     }
 
 
-def compute_build_stats_all(*, curriculum_root: Path | None = None) -> dict:
+def compute_build_stats_all(*, curriculum_root: Path) -> dict:
     """Aggregate V6 build stats across all tracks."""
-    if curriculum_root is None:
-        curriculum_root = config.CURRICULUM_ROOT
     all_stats = {}
     total_attempts = 0
     total_successes = 0

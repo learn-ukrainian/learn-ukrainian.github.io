@@ -29,7 +29,6 @@ from typing import Literal
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from fastapi.responses import JSONResponse, PlainTextResponse
 
-from . import config
 from .monitor_context import MonitorContext, get_ctx
 from .telemetry.response import (
     add_json_telemetry,
@@ -93,9 +92,9 @@ RULE_SOURCES: tuple[str, ...] = (
 _FILE_SEP = "\n\n---\n\n"
 
 
-def _read_rule_files(project_root: Path | None = None) -> tuple[list[str], list[str]]:
+def _read_rule_files(project_root: Path) -> tuple[list[str], list[str]]:
     """Return (present_paths, file_contents) for every file that exists."""
-    root = project_root if project_root is not None else Path(config.PROJECT_ROOT)
+    root = project_root
     present_paths: list[str] = []
     contents: list[str] = []
     for rel in RULE_SOURCES:
@@ -114,7 +113,7 @@ def _read_rule_files(project_root: Path | None = None) -> tuple[list[str], list[
     return present_paths, contents
 
 
-def _assemble_rules(project_root: Path | None = None) -> tuple[str, list[str], str]:
+def _assemble_rules(project_root: Path) -> tuple[str, list[str], str]:
     """Return (markdown, sources, sha256_hex) for the concatenated rules.
 
     Raises ``HTTPException(500)`` if not a single source file could be
@@ -204,7 +203,7 @@ def _cache_headers(etag: str, digest: str, hash_header: str) -> dict[str, str]:
     return headers
 
 
-def rules_hash(project_root: Path | None = None) -> str:
+def rules_hash(*, project_root: Path) -> str:
     """Hash-only helper used by ``/api/state/manifest``.
 
     Cheap enough to call on every manifest request (three small file
@@ -218,11 +217,11 @@ def rules_hash(project_root: Path | None = None) -> str:
     return digest
 
 
-def rules_source_paths(project_root: Path | None = None) -> list[str]:
+def rules_source_paths(*, project_root: Path) -> list[str]:
     """Resolve the set of rule sources that actually exist right now.
 
     Mirrors ``_read_rule_files()`` but without reading the bodies, for
     the manifest to advertise what the current concat covers.
     """
-    root = project_root if project_root is not None else Path(config.PROJECT_ROOT)
+    root = project_root
     return [rel for rel in RULE_SOURCES if (root / rel).is_file()]

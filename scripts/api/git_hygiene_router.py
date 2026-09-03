@@ -32,7 +32,7 @@ from pydantic import BaseModel
 
 from scripts.common.git_context import sanitized_git_env
 
-from .monitor_context import MonitorContext, get_ctx, production_context
+from .monitor_context import MonitorContext, get_ctx, resolve_context
 
 router = APIRouter(tags=["git"])
 FALLBACK_EXEMPTION_PATTERNS = (
@@ -50,11 +50,6 @@ BUCKET_NAMES = (
 _GIT_TIMEOUT_S = 2.0
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    """Fall back to the live production context for plain-Python callers."""
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
 def _policy_doc(project_root: Path) -> Path:
@@ -341,7 +336,7 @@ def _worktree_reason(upstream_gone: bool, fully_merged_to_main: bool, clean: boo
 
 def compute_git_cleanup(project_root: Path | None = None) -> CleanupReport:
     if project_root is None:
-        project_root = _resolve_context().roots.live_repo_root
+        project_root = resolve_context().roots.live_repo_root
 
     started = time.perf_counter()
     computed_at = _isoformat_z(datetime.now(UTC))
@@ -681,7 +676,7 @@ def compute_git_hygiene(
     *,
     ctx: MonitorContext | None = None,
 ) -> dict[str, Any]:
-    resolved_ctx = _resolve_context(ctx) if ctx is not None or project_root is None else None
+    resolved_ctx = resolve_context(ctx) if ctx is not None or project_root is None else None
     if project_root is None:
         assert resolved_ctx is not None
         project_root = resolved_ctx.roots.live_repo_root

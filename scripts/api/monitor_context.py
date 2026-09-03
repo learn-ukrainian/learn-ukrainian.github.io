@@ -233,6 +233,20 @@ def get_ctx(request: Request) -> MonitorContext:
     return request.app.state.ctx
 
 
+def resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
+    """Return ``ctx`` when provided; otherwise the live production context.
+
+    #7496 / #7494: NEVER reads the module-global ``app``. Request paths use
+    ``Depends(get_ctx)``. Plain-Python callers that omit ``ctx`` get
+    ``production_context()``. Internal helpers that own roots or stores must
+    take an explicit ``MonitorContext`` — do not add helpers that consult a
+    global app, and do not reintroduce per-module copies of this function.
+    """
+    if isinstance(ctx, MonitorContext):
+        return ctx
+    return production_context()
+
+
 def _effective_roots(project_root: Path) -> Mapping[str, Path]:
     from .docs_router import (  # noqa: PLC0415  # lazy-ok: avoid circular import between monitor_context and docs_router
         build_effective_roots,
@@ -426,4 +440,5 @@ __all__ = [
     "fixture_context",
     "get_ctx",
     "production_context",
+    "resolve_context",
 ]

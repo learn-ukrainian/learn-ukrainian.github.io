@@ -21,7 +21,7 @@ from pydantic import BaseModel
 
 from scripts.lexicon.runner import atlas_job
 
-from .monitor_context import MonitorContext, get_ctx, production_context
+from .monitor_context import MonitorContext, get_ctx, resolve_context
 
 router = APIRouter(tags=["atlas-jobs"])
 
@@ -101,14 +101,6 @@ class CloseBody(BaseModel):
     skip_restic: bool = False
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    """Fall back to the live production context for plain-Python callers.
-
-    Mirrors ``runtime_router._resolve_context`` (#7324 / #7393 / #6849).
-    """
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
 def _registry_dir(ctx: MonitorContext | None = None) -> Path:
@@ -121,7 +113,7 @@ def _registry_dir(ctx: MonitorContext | None = None) -> Path:
     override = os.environ.get("ATLAS_JOB_REGISTRY")
     if override:
         return Path(override)
-    return _resolve_context(ctx).roots.batch_state_dir / "atlas-jobs"
+    return resolve_context(ctx).roots.batch_state_dir / "atlas-jobs"
 
 
 def _registry_display(ctx: MonitorContext | None = None) -> str:
@@ -131,7 +123,7 @@ def _registry_display(ctx: MonitorContext | None = None) -> str:
     ``atlas_job.registry_dir`` sweep seam returned this canary-free relative
     path). Production still reports the live registry location.
     """
-    resolved = _resolve_context(ctx)
+    resolved = resolve_context(ctx)
     if resolved.root is not None:
         return "atlas-jobs-fixture"
     return str(_registry_dir(resolved))

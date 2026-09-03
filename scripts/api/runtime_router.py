@@ -21,7 +21,8 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.responses import JSONResponse
 
-from .monitor_context import MonitorContext, get_ctx, production_context
+from .monitor_context import MonitorContext, get_ctx, resolve_context
+from .monitor_context import production_context as production_context  # re-export: test monkeypatches
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -51,17 +52,6 @@ from scripts.orchestration import codex_transport_health
 router = APIRouter(tags=["runtime"])
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    """Fall back to the live production context for plain-Python callers.
-
-    Mirrors ``fleet_router._resolve_context`` (#7393 / #6849): every route
-    handler gets ``ctx`` injected via ``Depends(get_ctx)``, but this router's
-    helpers are also called directly — by other routers, dashboard
-    collectors, and unit tests — outside FastAPI request handling.
-    """
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
 _KNOWN_OUTCOMES = ("ok", "error", "timeout", "rate_limited")
@@ -292,7 +282,7 @@ def _usage_day_from_name(path: Path) -> date | None:
 
 
 def _usage_dir(ctx: MonitorContext | None = None) -> Path:
-    return _resolve_context(ctx).roots.batch_state_dir / "api_usage"
+    return resolve_context(ctx).roots.batch_state_dir / "api_usage"
 
 
 def _usage_files(
@@ -399,27 +389,22 @@ def _last_used_agent_models(*, days: int = 7, ctx: MonitorContext | None = None)
     return {agent: model for agent, (_, model) in latest_by_agent.items()}
 
 
-def _adapters_dir(ctx: MonitorContext | None = None) -> Path:
-    """Resolve the installed adapters package, fresh each call.
+def _adapters_dir(ctx: MonitorContext) -> Path:
+    """Resolve the installed adapters package from the explicit context root.
 
-    Not a module-level constant: the adapters package lives beside this
-    router's own code, not under a fixture-swappable data root, so there is
-    no OPSEC-swept ``Path`` global to keep here. A fixture context (``ctx.root
-    is not None``) still must never enumerate — and so never echo — the real
-    installed adapter modules into a scanned response; it gets a definitely
-    empty directory under its own disposable root instead.
+    A fixture context (``ctx.root is not None``) must never enumerate — and so
+    never echo — the real installed adapter modules into a scanned response; it
+    gets a definitely empty directory under its own disposable root instead.
     """
-    resolved_ctx = _resolve_context(ctx)
-    if resolved_ctx.root is not None:
-        return resolved_ctx.root / "runtime_adapters_fixture_stub"
-    return Path(__file__).resolve().parent.parent / "agent_runtime" / "adapters"
+    if ctx.root is not None:
+        return ctx.root / "runtime_adapters_fixture_stub"
+    return ctx.roots.project_root / "scripts" / "agent_runtime" / "adapters"
 
 
-def list_runtime_agents(ctx: MonitorContext | None = None) -> list[dict[str, Any]]:
+def list_runtime_agents(ctx: MonitorContext) -> list[dict[str, Any]]:
     _refresh_agent_registry_if_changed()
-    resolved_ctx = _resolve_context(ctx)
-    last_used = _last_used_agent_models(ctx=resolved_ctx)
-    adapters_dir = _adapters_dir(resolved_ctx)
+    last_used = _last_used_agent_models(ctx=ctx)
+    adapters_dir = _adapters_dir(ctx)
     agents: list[dict[str, Any]] = []
     for path in sorted(adapters_dir.glob("*.py")):
         # Skip non-agent helper modules and alternate-harness adapters that
@@ -683,7 +668,7 @@ def recent_runtime_records(*, limit: int = 50, ctx: MonitorContext | None = None
 
 def _routing_plane_status(ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Expose the actual plane posture without inferring authority from rows."""
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     try:
         raw = read_plane_status(repo_root=resolved_ctx.roots.project_root, recent_limit=0)
     except Exception:
@@ -1025,7 +1010,7 @@ def list_routing_assignments(*, limit: int = 100, ctx: MonitorContext | None = N
     empty history.
     """
     record_limit = min(max(1, int(limit)), 100)
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     plane = _routing_plane_status(resolved_ctx)
     try:
         ledger = importlib.import_module("scripts.fleet_comms.routing_reservations")
@@ -1117,15 +1102,14 @@ def _rounded(value: Any, digits: int = 2) -> float | None:
 # ---------------------------------------------------------------------
 
 
-def _acp_db_path() -> Path:
+def _acp_db_path(ctx: MonitorContext) -> Path:
     """Return the configured fleet-comms database without creating it."""
-    repo_root = Path(__file__).resolve().parents[2]
-    return message_plane.default_plane_root(repo_root=repo_root) / "comms.sqlite3"
+    return message_plane.default_plane_root(repo_root=ctx.roots.project_root) / "comms.sqlite3"
 
 
-def _open_acp_db_readonly() -> sqlite3.Connection | None:
+def _open_acp_db_readonly(ctx: MonitorContext) -> sqlite3.Connection | None:
     """Open fleet-comms storage read-only, returning ``None`` when unavailable."""
-    db_path = _acp_db_path()
+    db_path = _acp_db_path(ctx)
     if not db_path.is_file():
         return None
     try:
@@ -1411,8 +1395,8 @@ def _acp_summary(
     }
 
 
-def _acp_available_connection() -> sqlite3.Connection | None:
-    connection = _open_acp_db_readonly()
+def _acp_available_connection(ctx: MonitorContext) -> sqlite3.Connection | None:
+    connection = _open_acp_db_readonly(ctx)
     if connection is None:
         return None
     try:
@@ -1425,9 +1409,9 @@ def _acp_available_connection() -> sqlite3.Connection | None:
     return connection
 
 
-def list_acp_conversations(*, limit: int = 50) -> dict[str, Any]:
+def list_acp_conversations(*, limit: int = 50, ctx: MonitorContext) -> dict[str, Any]:
     """Return sanitized active-conversation summaries without touching storage."""
-    connection = _acp_available_connection()
+    connection = _acp_available_connection(ctx)
     if connection is None:
         return {"availability": "unavailable", "conversations": []}
     try:
@@ -1454,12 +1438,12 @@ def list_acp_conversations(*, limit: int = 50) -> dict[str, Any]:
     return {"availability": "available" if conversations else "empty", "conversations": conversations}
 
 
-def get_acp_conversation(conversation_id: str) -> dict[str, Any] | None:
+def get_acp_conversation(conversation_id: str, *, ctx: MonitorContext) -> dict[str, Any] | None:
     """Return one sanitized conversation timeline, or ``None`` without details."""
     safe_id = _acp_identifier(conversation_id)
     if safe_id is None:
         return None
-    connection = _acp_available_connection()
+    connection = _acp_available_connection(ctx)
     if connection is None:
         return None
     try:
@@ -1587,12 +1571,12 @@ def _acp_transcript_entries(
     return entries
 
 
-def get_acp_conversation_transcript(conversation_id: str) -> dict[str, Any] | None:
+def get_acp_conversation_transcript(conversation_id: str, *, ctx: MonitorContext) -> dict[str, Any] | None:
     """Return a single bounded ACP transcript, or ``None`` without diagnostics."""
     safe_id = _acp_identifier(conversation_id)
     if safe_id is None:
         return None
-    connection = _open_acp_db_readonly()
+    connection = _open_acp_db_readonly(ctx)
     if connection is None:
         return None
     try:
@@ -1640,27 +1624,37 @@ async def runtime_acpx(days: int = Query(7, ge=1, le=30), ctx: MonitorContext = 
 
 
 @router.get("/acp/conversations")
-async def runtime_acp_conversations(limit: int = Query(50, ge=1, le=100)):
+async def runtime_acp_conversations(
+    limit: int = Query(50, ge=1, le=100),
+    ctx: MonitorContext = Depends(get_ctx),
+):
     """Read only, allowlisted summaries of persisted ACP conversations."""
-    return await asyncio.to_thread(list_acp_conversations, limit=limit)
+    return await asyncio.to_thread(list_acp_conversations, limit=limit, ctx=ctx)
 
 
 @router.get("/acp/conversations/{conversation_id}")
-async def runtime_acp_conversation(conversation_id: str):
+async def runtime_acp_conversation(
+    conversation_id: str,
+    ctx: MonitorContext = Depends(get_ctx),
+):
     """Read one allowlisted ACP conversation timeline without message content."""
-    conversation = await asyncio.to_thread(get_acp_conversation, conversation_id)
+    conversation = await asyncio.to_thread(get_acp_conversation, conversation_id, ctx=ctx)
     if conversation is None:
         raise HTTPException(status_code=404, detail="Conversation not found")
     return conversation
 
 
 @router.get("/acp/conversations/{conversation_id}/transcript")
-async def runtime_acp_conversation_transcript(conversation_id: str, request: Request):
+async def runtime_acp_conversation_transcript(
+    conversation_id: str,
+    request: Request,
+    ctx: MonitorContext = Depends(get_ctx),
+):
     """Read body-inline ACP content for the local UI only; never mutate storage."""
     no_store = {"Cache-Control": "no-store"}
     if not _acp_transcript_client_is_loopback(request):
         return JSONResponse(status_code=403, content={"detail": "Forbidden"}, headers=no_store)
-    transcript = await asyncio.to_thread(get_acp_conversation_transcript, conversation_id)
+    transcript = await asyncio.to_thread(get_acp_conversation_transcript, conversation_id, ctx=ctx)
     if transcript is None:
         return JSONResponse(
             status_code=404,

@@ -2764,7 +2764,7 @@ async def manifest(request: Request, ctx: MonitorContext = Depends(get_ctx)):
     body = {
         "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
         "rules": {
-            "hash": rules_hash(ctx.roots.project_root),
+            "hash": rules_hash(project_root=ctx.roots.project_root),
             "url": "/api/rules?format=markdown",
             "format": "markdown",
             "note": "Condensed critical + non-negotiable + workflow rules. Drop straight into a system prompt.",

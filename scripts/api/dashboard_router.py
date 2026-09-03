@@ -48,7 +48,7 @@ from .dashboard_helpers import (
     scan_track_summary_cached,
     stats_from_state_summary,
 )
-from .monitor_context import MonitorContext, get_ctx, production_context
+from .monitor_context import MonitorContext, get_ctx, resolve_context
 from .state_coverage import compute_summary
 from .state_helpers import (
     cache_get_with_age,
@@ -73,16 +73,6 @@ router = APIRouter(tags=["dashboard"])
 logger = logging.getLogger(__name__)
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    """Fall back to the live production context for plain-Python callers.
-
-    Mirrors ``runtime_router._resolve_context`` (#7398 / #6849): every route
-    handler gets ``ctx`` injected via ``Depends(get_ctx)``, but helpers are
-    also called directly by unit tests outside FastAPI request handling.
-    """
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
 DASHBOARD_STATE_SUMMARY_TTL_S = 60.0
@@ -107,7 +97,7 @@ _overview_disk_loaded_by_scope: dict[str, bool] = {}
 
 
 def _overview_scope(ctx: MonitorContext | None = None) -> str:
-    return ctx_cache_scope(_resolve_context(ctx))
+    return ctx_cache_scope(resolve_context(ctx))
 
 
 def _overview_cache_key(ctx: MonitorContext | None = None) -> str:
@@ -122,7 +112,7 @@ def _summary_cache_key(ctx: MonitorContext | None = None) -> str:
     reused by the overview within the same app context, while the resolved
     project root keeps two app instances isolated (#7494).
     """
-    return ctx_scoped_ttl_key(_resolve_context(ctx), "summary")
+    return ctx_scoped_ttl_key(resolve_context(ctx), "summary")
 
 
 def overview_last_good_path(ctx: MonitorContext | None = None) -> Path:
@@ -130,7 +120,7 @@ def overview_last_good_path(ctx: MonitorContext | None = None) -> Path:
     override = os.environ.get(DASHBOARD_OVERVIEW_LAST_GOOD_ENV)
     if override:
         return Path(override)
-    return _resolve_context(ctx).roots.project_root / ".cache" / "dashboard_overview_last_good.json"
+    return resolve_context(ctx).roots.project_root / ".cache" / "dashboard_overview_last_good.json"
 
 
 def reset_overview_state_for_tests() -> None:
@@ -310,7 +300,7 @@ def _build_overview_from_state_summary(
     ctx: MonitorContext | None = None,
 ) -> dict:
     """Assemble overview from cached summary + manifest. No per-module FS scan."""
-    resolved = _resolve_context(ctx)
+    resolved = resolve_context(ctx)
     manifest = load_manifest(resolved)
     levels = manifest.get("levels", {})
     state_tracks = state_summary.get("tracks", {}) if isinstance(state_summary, dict) else {}
@@ -381,7 +371,7 @@ def _build_overview_from_state_summary(
 
 def _build_overview_payload_from_scans(ctx: MonitorContext | None = None) -> dict:
     """Full overview including per-module status badges. Background refresh only."""
-    resolved = _resolve_context(ctx)
+    resolved = resolve_context(ctx)
     manifest = load_manifest(resolved)
     levels = manifest.get("levels", {})
     cached = cache_get_with_age(_summary_cache_key(resolved), ttl=DASHBOARD_STATE_SUMMARY_TTL_S)
@@ -466,7 +456,7 @@ def _build_overview_payload_from_scans(ctx: MonitorContext | None = None) -> dic
 
 
 def _schedule_overview_refresh(ctx: MonitorContext | None = None) -> None:
-    resolved = _resolve_context(ctx)
+    resolved = resolve_context(ctx)
     scope = _overview_scope(resolved)
     with _overview_refresh_lock:
         existing = _overview_refresh_threads.get(scope)

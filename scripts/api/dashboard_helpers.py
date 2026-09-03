@@ -14,7 +14,7 @@ from pathlib import Path
 import yaml
 
 from .config import LEVELS, SEMINAR_TRACK_IDS
-from .monitor_context import MonitorContext, production_context
+from .monitor_context import MonitorContext
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -36,26 +36,18 @@ _TRACK_CACHE_TTL = 30.0  # seconds
 _YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    """Fall back to the live production context for plain-Python callers."""
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
-def _curriculum_root(ctx: MonitorContext | None = None) -> Path:
-    return _resolve_context(ctx).roots.curriculum_root
 
-
-def _track_cache_key(track_id: str, ctx: MonitorContext | None = None) -> str:
-    return f"{ctx_cache_scope(_resolve_context(ctx))}:{track_id}"
+def _track_cache_key(track_id: str, ctx: MonitorContext) -> str:
+    return f"{ctx_cache_scope(ctx)}:{track_id}"
 
 
 def scan_track_cached(
     track_id: str,
     track_path: str,
     manifest_modules: list,
-    ctx: MonitorContext | None = None,
+    ctx: MonitorContext,
 ) -> dict:
     """Cached wrapper around scan_track."""
     key = _track_cache_key(track_id, ctx)
@@ -67,9 +59,9 @@ def scan_track_cached(
     return result
 
 
-def load_manifest(ctx: MonitorContext | None = None) -> dict:
+def load_manifest(ctx: MonitorContext) -> dict:
     """Load the curriculum manifest YAML file."""
-    manifest_path = _curriculum_root(ctx) / "curriculum.yaml"
+    manifest_path = ctx.roots.curriculum_root / "curriculum.yaml"
     if not manifest_path.exists():
         return {}
     with open(manifest_path) as f:
@@ -436,7 +428,7 @@ def scan_track_summary_cached(
     track_id: str,
     track_path: str,
     manifest_modules: list,
-    ctx: MonitorContext | None = None,
+    ctx: MonitorContext,
 ) -> dict:
     """Cached wrapper around scan_track_summary."""
     key = _track_cache_key(track_id, ctx)
@@ -452,10 +444,10 @@ def scan_track_summary(
     track_id: str,
     track_path: str,
     manifest_modules: list,
-    ctx: MonitorContext | None = None,
+    ctx: MonitorContext,
 ) -> dict:
     """Lightweight track scan — only status/badges per module, no research or full detail."""
-    curriculum_root = _curriculum_root(ctx)
+    curriculum_root = ctx.roots.curriculum_root
     track_dir = _safe_join(curriculum_root, track_path)
     plans_dir = _safe_join(curriculum_root, "plans", track_id)
     if not track_dir or not plans_dir:
@@ -491,10 +483,10 @@ def scan_track(
     track_id: str,
     track_path: str,
     manifest_modules: list,
-    ctx: MonitorContext | None = None,
+    ctx: MonitorContext,
 ) -> dict:
     """Scan a single track and return module-level detail."""
-    curriculum_root = _curriculum_root(ctx)
+    curriculum_root = ctx.roots.curriculum_root
     track_dir = _safe_join(curriculum_root, track_path)
     plans_dir = _safe_join(curriculum_root, "plans", track_id)
     if not track_dir or not plans_dir:
@@ -528,10 +520,10 @@ def scan_track(
     }
 
 
-def find_active_builds(ctx: MonitorContext | None = None) -> list[dict]:
+def find_active_builds(ctx: MonitorContext) -> list[dict]:
     """Find orchestration dirs modified in last 15 minutes."""
     active_builds = []
-    curriculum_root = _curriculum_root(ctx)
+    curriculum_root = ctx.roots.curriculum_root
     if not curriculum_root.exists():
         return active_builds
     for track_dir in curriculum_root.iterdir():
@@ -599,9 +591,9 @@ def classify_module_queue(track_id, track_dir, slug, idx, status_file) -> str | 
     return None
 
 
-def scan_pipeline_queues(ctx: MonitorContext | None = None) -> tuple[list, list, list]:
+def scan_pipeline_queues(ctx: MonitorContext) -> tuple[list, list, list]:
     """Scan all tracks to build otaman, hetman, and final_review queues."""
-    curriculum_root = _curriculum_root(ctx)
+    curriculum_root = ctx.roots.curriculum_root
     manifest = load_manifest(ctx)
     otaman_queue: list[dict] = []
     hetman_queue: list[dict] = []

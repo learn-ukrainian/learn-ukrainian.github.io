@@ -41,7 +41,7 @@ from scripts.fleet_comms.opsec_store import COMMS_RESPONSE_SCHEMA_VERSION, store
 from scripts.orchestration import reap_worktrees
 
 from . import comms_router as legacy_comms
-from .monitor_context import MonitorContext, get_ctx, production_context
+from .monitor_context import MonitorContext, get_ctx, resolve_context
 from .runtime_router import get_acp_conversation, list_acp_conversations, recent_runtime_records
 
 router = APIRouter(tags=["fleet"])
@@ -110,15 +110,11 @@ _BEARER_TOKEN = re.compile(r"(?i)\bbearer\s+[A-Za-z0-9._~+/=-]{8,}")
 _TOKEN_LITERAL = re.compile(r"\b(?:gh[pousr]_[A-Za-z0-9_]{16,}|sk-[A-Za-z0-9_-]{16,})\b")
 
 
-def _resolve_context(ctx: Any = None) -> MonitorContext:
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
 def _plane_root(ctx: MonitorContext | None = None) -> Path:
     """Resolve the existing durable plane root without creating it."""
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     return message_plane.default_plane_root(repo_root=resolved_ctx.roots.project_root)
 
 
@@ -131,7 +127,7 @@ def _read_connection(
     ctx: MonitorContext | None = None,
 ) -> Iterator[tuple[sqlite3.Connection | None, str]]:
     """Yield a query-only connection, never creating a database or schema."""
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     db_path = _plane_db_path(resolved_ctx)
     if not db_path.is_file():
         yield None, "db_missing"
@@ -359,7 +355,7 @@ def _paged_query(
 
 def _safe_plane_status(ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Project the existing plane read model without paths or raw telemetry rows."""
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     status = read_plane_status(repo_root=resolved_ctx.roots.project_root, recent_limit=0)
     mode = _safe_text(status.get("mode"), fallback="invalid")
     authority_active = mode == "authority"
@@ -406,7 +402,7 @@ def _facade_authority_payload(
     ctx: MonitorContext | None = None,
 ) -> dict[str, Any]:
     """Run an authority collector fail-open without creating a plane database."""
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     db_path = _plane_db_path(resolved_ctx)
     if not db_path.is_file():
         return {
@@ -438,7 +434,7 @@ def _facade_authority_payload(
 
 def _facade_backlog_payload(limit: int, ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Return the existing authority backlog projection for the thin facade."""
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     db_path = _plane_db_path(resolved_ctx)
     if not db_path.is_file():
         return {
@@ -481,7 +477,7 @@ def _facade_backlog_payload(limit: int, ctx: MonitorContext | None = None) -> di
 
 def _facade_dead_letters_payload(limit: int, ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Return the existing authority dead-letter projection for the thin facade."""
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     db_path = _plane_db_path(resolved_ctx)
     if not db_path.is_file():
         return {
@@ -520,7 +516,7 @@ def _facade_dead_letters_payload(limit: int, ctx: MonitorContext | None = None) 
 
 def _facade_reap_report(ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Return the established merged-head reaper report in dry-run mode only."""
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     try:
         results = reap_worktrees.reap_worktrees(
             repo_root=reap_worktrees.primary_checkout_root(resolved_ctx.roots.live_repo_root),
@@ -806,7 +802,7 @@ def _legacy_broker_snapshot(ctx: MonitorContext | None = None) -> dict[str, Any]
     writability. This consolidated observer deliberately does not reuse that
     behavior: a GET must never create, migrate, or journal the broker database.
     """
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     db_path = resolved_ctx.roots.message_db_path
     result: dict[str, Any] = {
         "availability": "db_missing",
@@ -954,7 +950,7 @@ def _safe_batch_projection(raw: Any) -> dict[str, Any]:
 
 def _legacy_batch_snapshot(ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Collect the existing batch read models without populating their cache."""
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     logs = legacy_comms._scan_preseed_logs(resolved_ctx)
     processes = legacy_comms._check_build_processes()
     all_tracks = {
@@ -2153,7 +2149,7 @@ def fleet_reviews(
     and participates in COUNT / LIMIT / OFFSET so foreign rows cannot consume the
     page budget of a repository-scoped consumer (e.g. public Work projection).
     """
-    ctx = _resolve_context(ctx)
+    ctx = resolve_context(ctx)
     since_value = _normalize_time(since, "since")
     until_value = _normalize_time(until, "until")
     filters = {
@@ -2567,7 +2563,6 @@ def fleet_acp_conversations(
     ctx: MonitorContext = Depends(get_ctx),
 ) -> dict[str, Any]:
     """Reuse the ACP read model for body-free conversation and round observability."""
-    del ctx
     since_value = _normalize_time(since, "since")
     until_value = _normalize_time(until, "until")
     filters = {
@@ -2578,7 +2573,7 @@ def fleet_acp_conversations(
         "since": since_value,
         "until": until_value,
     }
-    payload = list_acp_conversations(limit=MAX_ACP_SCAN)
+    payload = list_acp_conversations(limit=MAX_ACP_SCAN, ctx=ctx)
     availability = _safe_text(payload.get("availability"), fallback="unavailable")
     records = payload.get("conversations") if isinstance(payload.get("conversations"), list) else []
     filtered: list[dict[str, Any]] = []
@@ -2617,8 +2612,7 @@ def fleet_acp_conversation_detail(
     ctx: MonitorContext = Depends(get_ctx),
 ) -> JSONResponse:
     """Reuse the existing body-free ACP event timeline for one conversation."""
-    del ctx
-    record = get_acp_conversation(conversation_id)
+    record = get_acp_conversation(conversation_id, ctx=ctx)
     if record is None:
         raise HTTPException(status_code=404, detail="Conversation not found")
     return JSONResponse(

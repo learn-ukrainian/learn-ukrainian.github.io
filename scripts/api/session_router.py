@@ -31,7 +31,6 @@ from typing import Literal
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from fastapi.responses import JSONResponse, PlainTextResponse
 
-from . import config
 from .monitor_context import MonitorContext, get_ctx
 from .rules_router import _matches_etag  # shared ETag parser
 from .telemetry.response import (
@@ -55,7 +54,7 @@ AGENT_NAME_RE = re.compile(r"^[a-z][a-z0-9-]*$")
 _RECENT_HANDOFFS_N = 3
 
 
-def _safe_project_path(rel_path: str, project_root: Path | str | None = None) -> Path:
+def _safe_project_path(rel_path: str, project_root: Path | str) -> Path:
     """Resolve ``rel_path`` under ``PROJECT_ROOT`` and reject any escape.
 
     The ``agent`` query param is already regex-validated and Agent-Handoff
@@ -74,7 +73,7 @@ def _safe_project_path(rel_path: str, project_root: Path | str | None = None) ->
     function). The trailing ``os.sep`` prevents a sibling-prefix bypass
     (``/rootX`` is not inside ``/root``); ``candidate == root`` is allowed.
     """
-    root_val = project_root if project_root is not None else config.PROJECT_ROOT
+    root_val = project_root
     root = os.path.realpath(root_val)
     candidate = os.path.realpath(os.path.join(root, rel_path))
     if candidate != root and not candidate.startswith(root + os.sep):
@@ -85,7 +84,7 @@ def _safe_project_path(rel_path: str, project_root: Path | str | None = None) ->
     return Path(candidate)
 
 
-def _read_session_file(session_path: str, project_root: Path | str | None = None) -> str:
+def _read_session_file(session_path: str, project_root: Path | str) -> str:
     path = _safe_project_path(session_path, project_root)
     if not path.is_file():
         raise HTTPException(
@@ -139,11 +138,11 @@ def _parse_agent_handoffs(router_markdown: str) -> dict[str, str]:
     return mapping
 
 
-def _resolve_session_path(agent: str, project_root: Path | None = None) -> str:
+def _resolve_session_path(agent: str, project_root: Path) -> str:
     if agent == "router":
         return SESSION_ROUTER_PATH
 
-    root = project_root if project_root is not None else Path(config.PROJECT_ROOT)
+    root = project_root
     router_path = root / SESSION_ROUTER_PATH
     agent_default = (
         # If the small compatibility router is absent, the API should still
@@ -174,7 +173,7 @@ def _resolve_session_path(agent: str, project_root: Path | None = None) -> str:
     return agent_default
 
 
-def _recent_handoff_paths(project_root: Path | None = None) -> list[str]:
+def _recent_handoff_paths(project_root: Path) -> list[str]:
     """Return the N most-recent ``docs/session-state/*.{md,html}`` by filename.
 
     The convention is ``YYYY-MM-DD-<topic>.{md,html}``, which lexicographically
@@ -183,7 +182,7 @@ def _recent_handoff_paths(project_root: Path | None = None) -> list[str]:
     (2026-05-09) shifted handoff bodies to HTML for ai → human consumption,
     while keeping the same filename convention for machine discovery.
     """
-    root = project_root if project_root is not None else Path(config.PROJECT_ROOT)
+    root = project_root
     session_dir = root / "docs" / "session-state"
     if not session_dir.is_dir():
         return []
@@ -206,7 +205,7 @@ def _assemble_session(
     project_root: Path | None = None,
 ) -> tuple[str, dict, str]:
     """Return (markdown, sections_dict, sha256_hex) for the session view."""
-    root = project_root if project_root is not None else Path(config.PROJECT_ROOT)
+    root = project_root
     normalized_agent = _normalize_agent(agent)
     current_path = _resolve_session_path(normalized_agent, root)
     current_md = _read_session_file(current_path, root).rstrip() + "\n"
@@ -287,7 +286,7 @@ def _cache_headers(etag: str, digest: str) -> dict[str, str]:
     return headers
 
 
-def session_hash(agent: str = DEFAULT_SESSION_AGENT, project_root: Path | None = None) -> str:
+def session_hash(agent: str = DEFAULT_SESSION_AGENT, *, project_root: Path) -> str:
     """Hash-only helper for ``/api/state/manifest``. Returns empty on error."""
     try:
         _, _, digest = _assemble_session(agent, project_root)

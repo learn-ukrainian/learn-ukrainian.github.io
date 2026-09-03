@@ -17,13 +17,13 @@ from scripts.api.session_router import _read_session_file, _safe_project_path
 
 
 def test_safe_path_accepts_in_root():
-    resolved = _safe_project_path("docs/session-state/current.md")
+    resolved = _safe_project_path("docs/session-state/current.md", PROJECT_ROOT)
     assert str(resolved).startswith(str(PROJECT_ROOT.resolve()))
 
 
 def test_safe_path_accepts_root_itself():
     # An empty/dot rel-path resolves to the root and must be allowed.
-    assert _safe_project_path(".") == PROJECT_ROOT.resolve()
+    assert _safe_project_path(".", PROJECT_ROOT) == PROJECT_ROOT.resolve()
 
 
 @pytest.mark.parametrize(
@@ -38,14 +38,14 @@ def test_safe_path_accepts_root_itself():
 )
 def test_safe_path_rejects_escape(evil):
     with pytest.raises(HTTPException) as exc:
-        _safe_project_path(evil)
+        _safe_project_path(evil, PROJECT_ROOT)
     assert exc.value.status_code == 400
 
 
 def test_read_session_file_rejects_escape():
     # The escape must be caught by the containment barrier (400), never read.
     with pytest.raises(HTTPException) as exc:
-        _read_session_file("../../../../etc/passwd")
+        _read_session_file("../../../../etc/passwd", PROJECT_ROOT)
     assert exc.value.status_code == 400
 
 
@@ -57,5 +57,5 @@ def test_safe_path_rejects_sibling_prefix():
     root = PROJECT_ROOT.resolve()
     sibling = f"../{root.name}-evil/secret"
     with pytest.raises(HTTPException) as exc:
-        _safe_project_path(sibling)
+        _safe_project_path(sibling, PROJECT_ROOT)
     assert exc.value.status_code == 400

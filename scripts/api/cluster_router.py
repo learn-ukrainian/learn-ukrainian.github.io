@@ -28,7 +28,7 @@ from scripts.control_plane import storage
 from scripts.control_plane.storage import StoreId
 from scripts.fleet_comms.message_plane import read_plane_status
 
-from .monitor_context import MonitorContext, get_ctx, production_context
+from .monitor_context import MonitorContext, get_ctx, resolve_context
 
 router = APIRouter(tags=["cluster"])
 
@@ -55,10 +55,6 @@ _ACTIVE_STORES = (
 )
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
 def _sqlite_path_for(
@@ -170,7 +166,7 @@ def check_cluster_readiness(ctx: MonitorContext | None = None) -> dict[str, Any]
     Blocking by design — callers on an event loop go through the sync route
     handler (FastAPI threadpool) or their own executor.
     """
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     now = datetime.now(UTC)
     repo_root = resolved_ctx.roots.project_root if resolved_ctx.roots else None
 

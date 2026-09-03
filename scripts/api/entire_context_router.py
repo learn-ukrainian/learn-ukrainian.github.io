@@ -21,7 +21,7 @@ from scripts.entire_context.resolvers import (
 from scripts.entire_context.store import ContextLinkStore
 from scripts.fleet_comms import message_plane
 
-from .monitor_context import MonitorContext, get_ctx, production_context
+from .monitor_context import MonitorContext, get_ctx, resolve_context
 from .repository_authority import preparation_data_root
 
 router = APIRouter(tags=["entire-context"])
@@ -39,15 +39,10 @@ _ACP_HEALTH_TEXT_FIELDS = (
 )
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    """Fall back to the live production context for plain-Python callers."""
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
 def _repo_root(ctx: MonitorContext | None = None) -> Path:
-    resolved = _resolve_context(ctx)
+    resolved = resolve_context(ctx)
     return preparation_data_root(
         project_root=Path(resolved.roots.project_root),
         live_repo_root=Path(resolved.roots.live_repo_root),

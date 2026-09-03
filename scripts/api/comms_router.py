@@ -65,7 +65,7 @@ from scripts.fleet_comms.opsec_store import (
 )
 from scripts.fleet_comms.paths import default_plane_root
 
-from .monitor_context import MonitorContext, get_ctx, production_context
+from .monitor_context import MonitorContext, get_ctx, resolve_context
 from .state_helpers import cache_get, cache_set
 from .telemetry.legacy_comms import LegacyCommsTelemetryRoute
 
@@ -109,8 +109,7 @@ def _tune_db_connection(conn: sqlite3.Connection, *, writable: bool) -> None:
 
 def ensure_broker_db_ready(ctx: MonitorContext | None = None) -> None:
     """Run idempotent broker startup tuning and migrations."""
-    if ctx is None:
-        ctx = production_context()
+    ctx = resolve_context(ctx)
     message_db = ctx.roots.message_db_path
     if not message_db.exists():
         return

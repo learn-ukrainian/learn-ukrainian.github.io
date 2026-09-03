@@ -199,6 +199,9 @@ def test_orient_git_exposes_primary_checkout_dirty_signal(monkeypatch, tmp_path)
         base_ctx,
         roots=replace(base_ctx.roots, project_root=repo, live_repo_root=repo),
     )
+    import scripts.api.monitor_context as monitor_context
+
+    monkeypatch.setattr(monitor_context, "production_context", lambda ctx=None: patched_ctx)
     monkeypatch.setattr(api_main, "production_context", lambda ctx=None: patched_ctx)
     monkeypatch.setattr(api_main.app.state, "ctx", patched_ctx)
     monkeypatch.setattr(api_main, "_collect_git_orient_data", original_git_collector)
@@ -234,6 +237,9 @@ def test_orient_git_survives_primary_checkout_probe_failure(monkeypatch, tmp_pat
         base_ctx,
         roots=replace(base_ctx.roots, project_root=repo, live_repo_root=repo),
     )
+    import scripts.api.monitor_context as monitor_context
+
+    monkeypatch.setattr(monitor_context, "production_context", lambda ctx=None: patched_ctx)
     monkeypatch.setattr(api_main, "production_context", lambda ctx=None: patched_ctx)
     monkeypatch.setattr(api_main.app.state, "ctx", patched_ctx)
     monkeypatch.setattr(api_main, "_collect_git_orient_data", original_git_collector)
@@ -723,7 +729,7 @@ def test_orient_includes_capacity_section(monkeypatch):
 def test_orient_issues_collector_uses_five_second_subprocess_timeout(monkeypatch):
     captured: dict[str, float] = {}
 
-    def fake_run_command(args, *, timeout: float = 2.0):
+    def fake_run_command(args, *, timeout: float = 2.0, ctx=None):
         captured["timeout"] = timeout
         raise RuntimeError("gh unavailable for timeout assertion")
 

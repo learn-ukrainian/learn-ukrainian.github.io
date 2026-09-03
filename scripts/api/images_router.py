@@ -27,7 +27,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import Response
 from pydantic import BaseModel
 
-from .monitor_context import MonitorContext, get_ctx, production_context
+from .monitor_context import MonitorContext, get_ctx, resolve_context
 
 # Ensure scripts/ is importable for rag.poc_pair_page
 _scripts_dir = str(Path(__file__).resolve().parents[1])
@@ -37,10 +37,6 @@ if _scripts_dir not in sys.path:
 router = APIRouter(tags=["images"])
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
 _PAGE_CACHE_MAX = 100
@@ -280,7 +276,7 @@ class ImageStore:
 
 
 def _resolve_image_store(ctx: MonitorContext | None = None) -> ImageStore:
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     if resolved_ctx.stores.image_store is not None:
         return resolved_ctx.stores.image_store
     roots = resolved_ctx.roots

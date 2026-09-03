@@ -27,7 +27,7 @@ from fastapi import APIRouter, Depends
 
 from scripts.common.git_context import sanitized_git_env
 
-from .monitor_context import MonitorContext, get_ctx, production_context
+from .monitor_context import MonitorContext, get_ctx, resolve_context
 
 router = APIRouter(tags=["worktrees"])
 
@@ -36,11 +36,6 @@ router = APIRouter(tags=["worktrees"])
 # bounded; the aggregate endpoint budget is ~4 × timeout_s per
 # worktree.
 _GIT_TIMEOUT_S = 2.0
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    """Fall back to the live production context for plain-Python callers."""
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
 def _worktree_git_env() -> dict[str, str]:
@@ -186,7 +181,7 @@ async def list_worktrees(ctx: MonitorContext = Depends(get_ctx)):
     Reviewer Codex-5 / #1313: "would have prevented the branch /
     worktree confusion we hit". Read-only; never mutates git state.
     """
-    resolved = _resolve_context(ctx)
+    resolved = resolve_context(ctx)
     live_repo_root = resolved.roots.live_repo_root
 
     def _compute() -> dict:

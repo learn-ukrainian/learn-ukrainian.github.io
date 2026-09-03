@@ -32,7 +32,7 @@ try:
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
-from .monitor_context import MonitorContext, get_ctx, production_context
+from .monitor_context import MonitorContext, get_ctx, resolve_context
 
 router = APIRouter(tags=["admin"])
 START_TIME = time.time()
@@ -43,11 +43,6 @@ START_TIME = time.time()
 ALLOWED_IMG_EXT = {".png", ".jpg", ".jpeg", ".webp"}
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    """Fall back to the live production context for plain-Python callers."""
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
 def _data_dir(ctx: MonitorContext) -> Path:
@@ -87,7 +82,7 @@ def _format_bytes(n: int) -> str:
 
 def _broker_health(ctx: MonitorContext | None = None) -> dict:
     """Read broker DB health synchronously."""
-    resolved = _resolve_context(ctx)
+    resolved = resolve_context(ctx)
     message_db = resolved.roots.message_db_path
     result = {"status": "missing", "size_bytes": 0, "queue_depth": 0}
     if message_db is None or not message_db.exists():
