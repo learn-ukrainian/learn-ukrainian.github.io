@@ -222,12 +222,12 @@ jobs:
           set -euo pipefail
           if [ "$DOCS_ONLY" = "true" ]; then
             .venv/bin/python -m pytest tests -m docs_skills --strict-markers --timeout=120 \
-              --override-ini addopts=-v
+              --timeout-method=thread --override-ini addopts=-v
             exit 0
           fi
-          mapfile -t files < <(git ls-files 'tests/**/test_*.py' | sort | sed -n "${SHARD}~4p")
+          mapfile -t files < <(git ls-files -- tests | grep -E '/test_[^/]+\.py$' | sort | sed -n "${SHARD}~4p")
           .venv/bin/python -m pytest "${files[@]}" -n auto --dist=loadfile --timeout=120 \
-            -m 'not atlas_release and not slow' --strict-markers \
+            --timeout-method=thread -m 'not atlas_release and not slow' --strict-markers \
             --override-ini addopts=-v
 
   contracts:
@@ -250,11 +250,12 @@ jobs:
           node-version: '22'
           cache: npm
           cache-dependency-path: package-lock.json
-      - run: |
+      - name: Install contract-check dependencies
+        run: |
           python -m pip install PyYAML jsonschema requests==2.34.2
           npm ci
       - run: python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest()"
-      - name: Word Atlas sense-lint ratchet
+      - name: Run Word Atlas sense-lint ratchet (#6437)
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
         run: |
@@ -278,8 +279,163 @@ jobs:
       - run: python scripts/audit/check_mdx_generation_drift.py --changed-vs-base origin/main
       - run: python scripts/lexicon/check_manifest_freshness.py
       - run: python scripts/audit/check_atlas_manifest_enrichment.py
+      - name: Gate Atlas POC richness and learner anchors (#3930, advisory since #4515)
+        continue-on-error: true
+        run: |
+          python scripts/audit/audit_atlas_poc_richness.py \
+            --max-search-no-visible-gloss 0 \
+            --max-old-gate-no-english-anchor 0 \
+            --max-poc-thin-pages 900
       - run: python scripts/audit/check_static_practice_assets.py
+      - name: Check Atlas vocabulary manifest coverage (advisory, diff-scoped)
+        continue-on-error: true
+        run: |
+          git fetch --no-tags --quiet origin main || true
+          python scripts/lexicon/check_manifest_vocabulary_coverage.py --changed-only --base origin/main
       - run: python scripts/audit/check_dossier_wordcount.py --changed
+      - name: Validate BIO preparation capsules and active holds
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import os
+          import subprocess
+
+          from scripts.orchestration import curriculum_readiness as readiness
+          from scripts.orchestration.preparation_evidence import load_manual_evidence
+
+          root = Path.cwd()
+          base_sha = os.environ.get("BASE_SHA", "")
+          head_sha = os.environ.get("HEAD_SHA", "HEAD") or "HEAD"
+          if not base_sha or set(base_sha) == {"0"}:
+              base_sha = subprocess.check_output(
+                  ["git", "merge-base", "origin/main", head_sha],
+                  text=True,
+              ).strip()
+          changed = set(
+              subprocess.check_output(
+                  [
+                      "git",
+                      "diff",
+                      "--no-renames",
+                      "--name-only",
+                      "--diff-filter=AM",
+                      base_sha,
+                      head_sha,
+                  ],
+                  text=True,
+              ).splitlines()
+          )
+          deleted = set(
+              subprocess.check_output(
+                  [
+                      "git",
+                      "diff",
+                      "--no-renames",
+                      "--name-only",
+                      "--diff-filter=D",
+                      base_sha,
+                      head_sha,
+                  ],
+                  text=True,
+              ).splitlines()
+          )
+
+          _, manifest_slugs = readiness.load_manifest_track(root, "bio")
+          manifest_set = set(manifest_slugs)
+
+          def is_bio_preparation_path(raw_path: str) -> bool:
+              path = Path(raw_path)
+              parts = path.parts
+              wiki_slug = (
+                  path.name.removesuffix(".sources.yaml")
+                  if raw_path.endswith(".sources.yaml")
+                  else path.stem
+              )
+              return (
+                  parts[:4] == ("curriculum", "l2-uk-en", "plans", "bio")
+                  or parts[:4] == ("curriculum", "l2-uk-en", "bio", "discovery")
+                  or raw_path == "curriculum/l2-uk-en/bio/promotion-evidence.yaml"
+                  or parts[:3] == ("docs", "research", "bio")
+                  or (parts[:2] == ("wiki", "figures") and wiki_slug in manifest_set)
+              )
+
+          deleted_preparation = sorted(path for path in deleted if is_bio_preparation_path(path))
+          if deleted_preparation:
+              raise SystemExit(f"BIO preparation files may not be deleted: {deleted_preparation}")
+
+          registry_path = root / "curriculum/l2-uk-en/bio/promotion-evidence.yaml"
+          evidence = load_manual_evidence(registry_path, manifest_set)
+          active_holds = {
+              slug
+              for slug, gates in evidence.items()
+              if gates.get("hold", {}).get("active") is True
+          }
+
+          changed_slugs = set()
+          for raw_path in changed:
+              path = Path(raw_path)
+              parts = path.parts
+              slug = None
+              if parts[:4] == ("curriculum", "l2-uk-en", "plans", "bio"):
+                  slug = path.stem
+              elif parts[:4] == ("curriculum", "l2-uk-en", "bio", "discovery"):
+                  slug = path.stem
+              elif parts[:3] == ("docs", "research", "bio"):
+                  slug = path.stem
+              elif parts[:2] == ("wiki", "figures"):
+                  slug = path.name.removesuffix(".sources.yaml") if raw_path.endswith(".sources.yaml") else path.stem
+              if slug in manifest_set:
+                  changed_slugs.add(slug)
+
+          if "curriculum/l2-uk-en/bio/promotion-evidence.yaml" in changed:
+              from scripts.orchestration.preparation_evidence import UniqueKeyLoader
+              import yaml
+
+              registry_rel = "curriculum/l2-uk-en/bio/promotion-evidence.yaml"
+              try:
+                  base_registry_text = subprocess.check_output(
+                      ["git", "show", f"{base_sha}:{registry_rel}"],
+                      text=True,
+                      stderr=subprocess.DEVNULL,
+                  )
+              except subprocess.CalledProcessError:
+                  base_registry_text = "version: 1\nentries: {}\n"
+              base_registry = yaml.load(base_registry_text, Loader=UniqueKeyLoader)
+              head_registry = yaml.load(registry_path.read_text(encoding="utf-8"), Loader=UniqueKeyLoader)
+              base_entries = base_registry.get("entries", {})
+              head_entries = head_registry.get("entries", {})
+              registry_changed_slugs = {
+                  slug
+                  for slug in set(base_entries) | set(head_entries)
+                  if base_entries.get(slug) != head_entries.get(slug)
+              }
+              off_manifest_changes = registry_changed_slugs - manifest_set
+              if off_manifest_changes:
+                  raise SystemExit(
+                      f"promotion evidence changed off-manifest slugs: {sorted(off_manifest_changes)}"
+                  )
+              changed_slugs.update(registry_changed_slugs)
+
+          targets = active_holds | changed_slugs
+          for slug in sorted(targets, key=manifest_slugs.index):
+              result = readiness.evaluate_preparation("bio", slug, repo_root=root)
+              finding_ids = {finding["id"] for finding in result["findings"]}
+              if slug in active_holds:
+                  if result["next_action"] != "stop" or "PREPARATION_HOLD_ACTIVE" not in finding_ids:
+                      raise SystemExit(f"active hold does not fail closed for {slug}")
+                  continue
+              failed = [item["id"] for item in result["requirements"] if not item["passed"]]
+              if failed:
+                  raise SystemExit(f"changed BIO capsule is not preparation-ready: {slug}: {failed}")
+
+          print(
+              f"BIO preparation PASS: entries={len(evidence)} "
+              f"changed_slugs={len(changed_slugs)} active_holds={len(active_holds)}"
+          )
+          PY
 
   frontend:
     name: Frontend
