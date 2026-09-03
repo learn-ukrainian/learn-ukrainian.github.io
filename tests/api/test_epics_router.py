@@ -128,6 +128,32 @@ def test_router_handoff_replay_sets_idempotent_replayed_header(tmp_path: Path, m
     assert replay.json()["entry"]["type"] == "state"
 
 
+def test_router_handoff_missing_stream_is_lease_lost_not_store_error(tmp_path: Path, monkeypatch) -> None:
+    """A handoff against a missing stream is 409 LEASE LOST, not a digest-probe 5xx (#7488)."""
+    client = _client(tmp_path, monkeypatch)
+    response = client.post(
+        "/api/epics/v1/epic:999999999/handoff",
+        json={
+            "stream_id": "epic:999999999",
+            "session_id": "missing-session",
+            "lease_id": "missing-lease",
+            "generation": 1,
+            "fencing_token": 1,
+            "agent": "codex",
+            "harness": "codex-cli",
+            "instance_id": "missing-instance",
+            "process_id": 1234,
+            "host_id": "api-host",
+            "ttl_seconds": 900,
+            "type": "state",
+            "body": "working",
+            "idempotency_key": "missing-stream-1",
+        },
+    )
+    assert response.status_code == 409, response.text
+    assert response.json()["detail"] == "LEASE LOST"
+
+
 def test_router_rejects_live_holder_force_without_actor_and_opsec_body(tmp_path: Path, monkeypatch) -> None:
     client = _client(tmp_path, monkeypatch)
     _claim(client)
@@ -151,7 +177,7 @@ def test_router_rejects_live_holder_force_without_actor_and_opsec_body(tmp_path:
 
     bad = client.post(
         "/api/epics/v1/epic:7178/handoff",
-        json={**_claim(client)["lease"], "type": "note", "body": "10.0.0.1", "idempotency_key": "bad"},
+        json={**_claim(client)["lease"], "type": "note", "body": "203.0.113.1", "idempotency_key": "bad"},
     )
     # The claim above replays the first lease, so the body is rejected by the API hygiene gate.
     assert bad.status_code == 400
@@ -474,4 +500,3 @@ def test_epics_graph_store_lease_and_decision_passthrough(tmp_path: Path, monkey
     assert epic_7177["lease"] is not None
     assert epic_7177["last_state"]["body"] == "working on graph"
     assert epic_7177["last_decision"]["body"] == "design approved"
-

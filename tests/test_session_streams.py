@@ -198,7 +198,7 @@ def test_app_thread_requires_verified_fresh_exact_proofs_and_can_renew_after_exp
         idempotency_key="app-3",
         now=expired + timedelta(seconds=1),
         app_proof=_app_proof("append", holder, lease=renewed, now=expired + timedelta(seconds=1)),
-    )
+    ).entry
     assert entry.body == "Renewed GUI holder can append."
 
 
@@ -524,13 +524,15 @@ def test_pinned_entries_precede_bounded_recent_tail(tmp_path: Path) -> None:
         refs=(EntryRef(kind="github", uri="https://github.com/example/issues/1"),),
         now=NOW + timedelta(seconds=1),
     )
+    assert order.is_replay is False
+    order_entry = order.entry
     constraint = store.append_entry(
         lease,
         entry_type=EntryType.NEGATIVE_CONSTRAINT,
         body="Never mutate a closed session.",
         idempotency_key="constraint-1",
         now=NOW + timedelta(seconds=2),
-    )
+    ).entry
     notes = [
         store.append_entry(
             lease,
@@ -538,13 +540,13 @@ def test_pinned_entries_precede_bounded_recent_tail(tmp_path: Path) -> None:
             body=f"Recent note {index}",
             idempotency_key=f"note-{index}",
             now=NOW + timedelta(seconds=3 + index),
-        )
+        ).entry
         for index in range(5)
     ]
 
     digest = store.load_digest("epic:4707", limit=2)
 
-    assert [entry.entry_id for entry in digest.pinned] == [order.entry_id, constraint.entry_id]
+    assert [entry.entry_id for entry in digest.pinned] == [order_entry.entry_id, constraint.entry_id]
     assert [entry.entry_id for entry in digest.recent] == [notes[-2].entry_id, notes[-1].entry_id]
     assert digest.entries == digest.pinned + digest.recent
     assert len(digest.digest_sha256) == 64
@@ -557,7 +559,8 @@ def test_pinned_entries_precede_bounded_recent_tail(tmp_path: Path) -> None:
         refs=(EntryRef(kind="github", uri="https://github.com/example/issues/1"),),
         now=NOW + timedelta(seconds=20),
     )
-    assert repeated.entry_id == order.entry_id
+    assert repeated.is_replay is True
+    assert repeated.entry.entry_id == order_entry.entry_id
     with pytest.raises(LeaseConflictError, match="different immutable content"):
         store.append_entry(
             lease,
@@ -578,7 +581,7 @@ def test_digest_uses_one_wal_snapshot_during_concurrent_pinned_append(tmp_path: 
         body="Existing snapshot note.",
         idempotency_key="snapshot-note",
         now=NOW + timedelta(seconds=1),
-    )
+    ).entry
     pinned_query_started = Event()
     writer_finished = Event()
 
@@ -680,7 +683,7 @@ def test_ttl_heartbeat_and_expired_write_fencing(tmp_path: Path) -> None:
         body="Holder process revived its own exact lease.",
         idempotency_key="revived",
         now=NOW + timedelta(seconds=32),
-    )
+    ).entry
     assert entry.entry_id > 0
 
 
@@ -783,7 +786,7 @@ def test_open_rolling_closed_state_machine_and_sql_immutability(tmp_path: Path) 
         body="Close cleanly.",
         idempotency_key="before-close",
         now=NOW + timedelta(seconds=3),
-    )
+    ).entry
     assert store.close_session(lease, now=NOW + timedelta(seconds=4)) is SessionState.CLOSED
     assert store.close_session(lease, now=NOW + timedelta(seconds=5)) is SessionState.CLOSED
     successor = store.open_session(

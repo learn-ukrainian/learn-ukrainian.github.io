@@ -47,20 +47,23 @@ _KNOWLEDGE_COLD_START_PATH = "/api/knowledge/cold-start"
 _MAX_CONSUMER_LEN = 128
 
 # HAProxy/edge transport failures that look like an HTTP response but carry no
-# application answer: 502/503/504 with neither app JSON nor ``server: uvicorn``.
-# 500/501/408/429 are deliberately excluded — those are application-origin
-# outcomes (or a client-rate-limit answer), never a transport ambiguity, and
-# must not trigger a retry against the other base URL (#603 Phase 0b).
+# application answer: 502/503/504 whose JSON body is not the app's documented
+# 503 shape. 500/501/408/429 are deliberately excluded — those are
+# application-origin outcomes (or a client-rate-limit answer), never a
+# transport ambiguity, and must not trigger a retry against the other base
+# URL (#603 Phase 0b).
 _AMBIGUOUS_TRANSPORT_HTTP_STATUSES = frozenset({502, 503, 504})
 
 # The API's own well-formed 503 answers (busy-building, stale-cache-only,
 # registry-unavailable) — these are real application responses, not proxy
-# failures, and must never trigger a base-URL hop.
+# failures, and must never trigger a base-URL hop. JSON body shape is the
+# contract; a ``Server`` header is not.
 _APP_ORIGIN_503_STATUS_VALUES = frozenset({"building", "stale", "registry_unavailable"})
 
-# Positive allowlist of path prefixes that MAY retry a keyed mutation (POST/
-# PUT/PATCH/DELETE carrying a stable Idempotency-Key) across the [A, B] base
-# URL list. This must equal
+# Positive allowlist of path prefixes that WOULD be eligible to retry a keyed
+# mutation (POST/PUT/PATCH/DELETE carrying a stable Idempotency-Key) across
+# the [A, B] base URL list, IF keyed-mutation failover were enabled. This must
+# equal
 # ``{c.pattern for c in ROUTE_CONTRACTS if c.mutates and c.locality == "cluster_authoritative"}``
 # in ``scripts/api/route_contracts.py`` — kept as a literal here (rather than
 # imported) so this stdlib-only client module never pulls in FastAPI.
@@ -68,6 +71,13 @@ _APP_ORIGIN_503_STATUS_VALUES = frozenset({"building", "stale", "registry_unavai
 _CLUSTER_AUTHORITATIVE_MUTATION_PREFIXES: frozenset[str] = frozenset({
     "/api/epics/v1",
 })
+
+# Keyed-mutation failover across [A, B] stays disabled until a second host
+# would share an atomic idempotency record (key, request digest, state,
+# result). Today there is one production host; the allowlisted epics family
+# is loopback-fenced, so a hop would 403 at the fence — and if the fence
+# relaxed, per-host sqlite would duplicate the write. GH #7488.
+_KEYED_MUTATION_FAILOVER_ENABLED = False
 
 
 # ── Base-URL contract (GH #7489) ────────────────────────────────────────
@@ -252,18 +262,17 @@ def _empty_changed_projection(cached_body: str) -> str:
     return _serialize_projection(proj["enabled"], [])
 
 
-def _is_app_origin_503(status: int, body: str, headers: dict[str, str]) -> bool:
+def _is_app_origin_503(status: int, body: str, _headers: dict[str, str]) -> bool:
     """True only for the API's own well-formed ``503`` answer.
 
-    Requires both a ``server: uvicorn`` response header AND a JSON body whose
-    ``status`` field is one of the app's documented busy states. Anything
-    short of that (an edge/proxy 503 with no body, an unrelated JSON shape, a
-    missing/different ``server`` header) is treated as an ambiguous transport
-    failure eligible for failover, never as an answer.
+    The contract is the JSON body shape: an object whose ``status`` field is
+    one of the app's documented busy states. A ``Server`` header is ignored
+    (a reverse proxy may rewrite or drop it; treating a missing
+    ``server: uvicorn`` as "hop" was fail-open to failover). Anything short
+    of the body shape (empty, HTML, unrelated JSON) is an ambiguous transport
+    failure eligible for failover, never an answer.
     """
     if status != 503:
-        return False
-    if "uvicorn" not in (headers.get("server") or "").lower():
         return False
     try:
         data = json.loads(body) if body else None
@@ -273,8 +282,9 @@ def _is_app_origin_503(status: int, body: str, headers: dict[str, str]) -> bool:
 
 
 def _mutation_path_may_failover(path: str) -> bool:
-    """True when ``path`` (query stripped) is a cluster-authoritative mutation
-    route allowed to retry a keyed mutation on base URL B.
+    """True when ``path`` (query stripped) is on the cluster-authoritative
+    mutation allowlist. The hop still requires
+    ``_KEYED_MUTATION_FAILOVER_ENABLED`` (off until a shared key record exists).
 
     See ``_CLUSTER_AUTHORITATIVE_MUTATION_PREFIXES`` above.
     """
@@ -345,18 +355,21 @@ class MonitorClient:
         Failover rules:
         - GET / HEAD / OPTIONS requests are idempotent and may fail over across the
           base URL list.
-        - Mutations (POST, PUT, DELETE, PATCH) retry after ambiguous transport failure
-          ONLY when a stable idempotency key is present (via ``idempotency_key`` or
-          an existing ``Idempotency-Key`` / ``X-Idempotency-Key`` header) AND ``path``
-          is on the ``_CLUSTER_AUTHORITATIVE_MUTATION_PREFIXES`` allowlist. Host-affine
-          mutations (agent-monitor register/heartbeat, etc.) never retry, key or not.
+        - Keyed-mutation failover is disabled (``_KEYED_MUTATION_FAILOVER_ENABLED``)
+          until a second host would share an atomic idempotency record. The
+          ``_CLUSTER_AUTHORITATIVE_MUTATION_PREFIXES`` allowlist names the routes
+          that would become eligible then; today they are loopback-fenced and a
+          hop would 403. Host-affine mutations never retry, key or not.
         - Non-idempotent mutations without an idempotency key NEVER fail over across URLs.
         - An ambiguous transport HTTP status (502/503/504 that is not the app's own
-          well-formed 503 answer — see ``_is_app_origin_503``) is treated exactly like
+          well-formed 503 JSON body — see ``_is_app_origin_503``) is treated exactly like
           a network-level transport failure for failover purposes. 500/501/408/429
           are always application answers and never trigger a hop.
         - ``http.client.HTTPException`` (``IncompleteRead``, ``BadStatusLine``, ...) is
           an ambiguous transport failure alongside ``URLError``/``ConnectionError``.
+        - After the last base URL, a more recent HTTP response is returned even if an
+          earlier attempt raised a transport exception (``last_exc`` must not shadow
+          ``last_response``).
         """
         if not self.base_urls:
             # Explicitly disabled (blank base URL source): fail soft without any
@@ -381,7 +394,9 @@ class MonitorClient:
             merged_headers["X-Session-Id"] = self.session_id
 
         can_failover = is_idempotent or (
-            bool(effective_idemp_key) and _mutation_path_may_failover(path)
+            _KEYED_MUTATION_FAILOVER_ENABLED
+            and bool(effective_idemp_key)
+            and _mutation_path_may_failover(path)
         )
 
         last_exc: Exception | None = None
@@ -411,6 +426,7 @@ class MonitorClient:
                 except Exception:
                     pass
                 last_response = (exc.code, body, resp_headers)
+                last_exc = None  # a later HTTP answer must not be shadowed by an older transport error
                 if (
                     can_failover
                     and exc.code in _AMBIGUOUS_TRANSPORT_HTTP_STATUSES
@@ -426,15 +442,16 @@ class MonitorClient:
                 OSError,
             ) as exc:
                 last_exc = exc
+                last_response = None  # a later transport error is the current outcome
                 if not can_failover:
                     # Non-idempotent mutation without idempotency key: do not retry across URLs
                     raise
                 continue
 
-        if last_exc is not None:
-            raise last_exc
         if last_response is not None:
             return last_response
+        if last_exc is not None:
+            raise last_exc
         return 500, "", {}
 
     # -- public low-level verbs --------------------------------------
@@ -456,9 +473,9 @@ class MonitorClient:
         headers: dict[str, str] | None = None,
         idempotency_key: str | None = None,
     ) -> tuple[int, str, dict[str, str]]:
-        """POST ``path``. Retries across [A, B] ONLY with a stable idempotency
-        key on an allowlisted cluster-authoritative route. Cross-module callers
-        must use this, not the private alias (GH #7489)."""
+        """POST ``path``. Keyed-mutation failover is disabled until a shared
+        atomic key record exists (GH #7488). Cross-module callers must use
+        this, not the private alias (GH #7489)."""
         return self._post(
             path,
             data=data,
@@ -482,7 +499,7 @@ class MonitorClient:
         headers: dict[str, str] | None = None,
         idempotency_key: str | None = None,
     ) -> tuple[int, str, dict[str, str]]:
-        """Low-level POST. Retries across [A, B] ONLY with a stable idempotency key."""
+        """Low-level POST. Keyed-mutation failover is disabled (GH #7488)."""
         body_bytes: bytes | None = None
         req_headers = dict(headers or {})
         if json_body is not None:

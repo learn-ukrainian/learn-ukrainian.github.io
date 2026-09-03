@@ -1,4 +1,4 @@
-"""Tests for Monitor client [A, B] failover and mutation idempotency (#7365, #603)."""
+"""Tests for Monitor client [A, B] failover and mutation idempotency (#7365, #603, #7488)."""
 
 from __future__ import annotations
 
@@ -7,14 +7,20 @@ import io
 import json
 import urllib.error
 import urllib.request
+from pathlib import Path
 from typing import Any
 from unittest.mock import Mock
 
 import pytest
+from fastapi.testclient import TestClient
 
 from scripts.ai_agent_bridge import monitor_client
 from scripts.ai_agent_bridge.monitor_client import MonitorClient, _normalize_base_urls
+from scripts.api import epics_router
+from scripts.api.config import LIVE_REPO_ROOT
+from scripts.api.monitor_context import fixture_context
 from scripts.api.route_contracts import ROUTE_CONTRACTS
+from tests.epics_monitor_stub import epics_app_for_store
 
 pytestmark = pytest.mark.repo_invariant
 
@@ -230,7 +236,7 @@ def test_monitor_client_get_http_error_does_not_failover(monkeypatch: pytest.Mon
 def test_monitor_client_get_failover_on_ambiguous_transport_statuses(
     monkeypatch: pytest.MonkeyPatch, status: int
 ) -> None:
-    """HAProxy-shaped 502/503/504 (no app JSON, no server: uvicorn) is ambiguous transport, so GET hops."""
+    """HAProxy-shaped 502/503/504 (no app JSON body) is ambiguous transport, so GET hops."""
     calls: list[str] = []
 
     def fake_urlopen(req: urllib.request.Request, timeout: float = 3.0) -> _FakeResponse:
@@ -272,7 +278,7 @@ def test_monitor_client_get_does_not_failover_on_application_statuses(
 
 
 def test_monitor_client_get_does_not_failover_on_app_origin_503(monkeypatch: pytest.MonkeyPatch) -> None:
-    """A well-formed API 503 (JSON body + server: uvicorn) is an answer, not a proxy failure."""
+    """A well-formed API 503 is the JSON body shape; a Server header is not required."""
     calls: list[str] = []
 
     def fake_urlopen(req: urllib.request.Request, timeout: float = 3.0) -> _FakeResponse:
@@ -282,7 +288,7 @@ def test_monitor_client_get_does_not_failover_on_app_origin_503(monkeypatch: pyt
             url,
             503,
             "Service Unavailable",
-            {"server": "uvicorn"},  # type: ignore[arg-type]
+            {},  # type: ignore[arg-type]
             io.BytesIO(json.dumps({"status": "building"}).encode("utf-8")),
         )
 
@@ -294,6 +300,78 @@ def test_monitor_client_get_does_not_failover_on_app_origin_503(monkeypatch: pyt
     assert status == 503
     assert json.loads(body)["status"] == "building"
     assert len(calls) == 1
+
+
+def test_monitor_client_get_failover_when_uvicorn_header_lacks_app_json(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A ``server: uvicorn`` header without the app JSON body is not an answer; GET hops."""
+    calls: list[str] = []
+
+    def fake_urlopen(req: urllib.request.Request, timeout: float = 3.0) -> _FakeResponse:
+        url = req.full_url
+        calls.append(url)
+        if url.startswith("http://host-a:8765"):
+            raise urllib.error.HTTPError(
+                url,
+                503,
+                "Service Unavailable",
+                {"server": "uvicorn"},  # type: ignore[arg-type]
+                io.BytesIO(b"<html>bad gateway</html>"),
+            )
+        return _FakeResponse(200, json.dumps({"host": "b"}))
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+
+    client = MonitorClient(base_urls=["http://host-a:8765", "http://host-b:8765"])
+    status, body, _ = client._get("/api/state/summary")
+
+    assert status == 200
+    assert json.loads(body)["host"] == "b"
+    assert len(calls) == 2
+
+
+def test_monitor_client_last_exc_does_not_shadow_later_http_response(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A later HTTP answer (B's 502) must be returned; A's earlier URLError must not win."""
+    calls: list[str] = []
+
+    def fake_urlopen(req: urllib.request.Request, timeout: float = 3.0) -> _FakeResponse:
+        url = req.full_url
+        calls.append(url)
+        if url.startswith("http://host-a:8765"):
+            raise urllib.error.URLError("Connection refused")
+        raise urllib.error.HTTPError(url, 502, "Bad Gateway", {}, None)  # type: ignore[arg-type]
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+
+    client = MonitorClient(base_urls=["http://host-a:8765", "http://host-b:8765"])
+    status, _body, _ = client._get("/api/state/summary")
+
+    assert status == 502
+    assert len(calls) == 2
+
+
+def test_monitor_client_later_transport_error_is_raised_not_older_http(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A later transport error is the current outcome; an older 502 must not be returned."""
+    calls: list[str] = []
+
+    def fake_urlopen(req: urllib.request.Request, timeout: float = 3.0) -> _FakeResponse:
+        url = req.full_url
+        calls.append(url)
+        if url.startswith("http://host-a:8765"):
+            raise urllib.error.HTTPError(url, 502, "Bad Gateway", {}, None)  # type: ignore[arg-type]
+        raise urllib.error.URLError("Connection refused")
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+
+    client = MonitorClient(base_urls=["http://host-a:8765", "http://host-b:8765"])
+    with pytest.raises(urllib.error.URLError, match="Connection refused"):
+        client._get("/api/state/summary")
+    assert len(calls) == 2
 
 
 def test_monitor_client_get_failover_on_incomplete_read(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -348,8 +426,11 @@ def test_monitor_client_mutation_non_idempotent_no_retry(monkeypatch: pytest.Mon
     assert calls[0] == "http://host-a:8765/api/agent-monitor/register"
 
 
-def test_monitor_client_mutation_idempotent_retries_with_stable_key(monkeypatch: pytest.MonkeyPatch) -> None:
-    """A keyed mutation on an allowlisted cluster-authoritative path retries across [A, B]."""
+def test_monitor_client_keyed_mutation_does_not_retry_while_failover_disabled(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A keyed mutation on an allowlisted path must not hop while failover is disabled (#7488)."""
+    assert monitor_client._KEYED_MUTATION_FAILOVER_ENABLED is False
     calls: list[tuple[str, dict[str, str]]] = []
     path = "/api/epics/v1/epic:test-failover/handoff"
 
@@ -357,31 +438,78 @@ def test_monitor_client_mutation_idempotent_retries_with_stable_key(monkeypatch:
         url = req.full_url
         headers = {k: v for k, v in req.headers.items()}
         calls.append((url, headers))
-        if url.startswith("http://host-a:8765"):
-            raise urllib.error.URLError("Connection reset")
-        if url.startswith("http://host-b:8765"):
-            return _FakeResponse(200, json.dumps({"registered": True}))
-        raise urllib.error.URLError(f"Unknown host {url}")
+        raise urllib.error.URLError("Connection reset")
 
     monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
 
     client = MonitorClient(base_urls=["http://host-a:8765", "http://host-b:8765"])
 
-    status, body, _ = client._post(
-        path,
-        json_body={"pid": 1234},
-        idempotency_key="stable-token-abc",
-    )
+    with pytest.raises(urllib.error.URLError, match="Connection reset"):
+        client._post(
+            path,
+            json_body={"pid": 1234},
+            idempotency_key="stable-token-abc",
+        )
 
-    assert status == 200
-    assert json.loads(body)["registered"] is True
-    assert len(calls) == 2
+    assert len(calls) == 1
     assert calls[0][0] == f"http://host-a:8765{path}"
-    assert calls[1][0] == f"http://host-b:8765{path}"
-
-    # Both requests must carry the exact stable idempotency key
     assert calls[0][1].get("Idempotency-key") == "stable-token-abc"
-    assert calls[1][1].get("Idempotency-key") == "stable-token-abc"
+
+
+def test_keyed_mutation_failover_cannot_fire_while_loopback_fence_holds(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """#7488: the mutation-failover allowlist is the loopback-fenced epics family.
+
+    Failover cannot hop a keyed mutation while that fence holds: a second
+    base would 403 at the fence, and per-host sqlite would duplicate if the
+    fence relaxed. Shared atomic key records are not this PR.
+    """
+    assert monitor_client._KEYED_MUTATION_FAILOVER_ENABLED is False
+    expected = {
+        contract.pattern
+        for contract in ROUTE_CONTRACTS
+        if contract.mutates and contract.locality == "cluster_authoritative"
+    }
+    assert expected == monitor_client._CLUSTER_AUTHORITATIVE_MUTATION_PREFIXES
+    assert expected == frozenset({"/api/epics/v1"})
+
+    live = Path(LIVE_REPO_ROOT)
+    ctx_root = tmp_path / "ctx"
+    ctx_root.mkdir()
+    ctx = fixture_context(ctx_root)
+    store = ctx.stores.epics_store
+    assert store is not None
+    epics_router.seed_manifest_inventory(live, store=store, handoff_root=live)
+    app = epics_app_for_store(store, ctx_root, live_repo_root=live)
+    # Default TestClient peer is not loopback; the fence must refuse before store access.
+    remote = TestClient(app)
+    for path in (
+        "/api/epics/v1/epic:7178/claim",  # allow-hardcoded-epic: loopback fence on allowlisted prefix
+        "/api/epics/v1/epic:7178/heartbeat",  # allow-hardcoded-epic: loopback fence on allowlisted prefix
+        "/api/epics/v1/epic:7178/handoff",  # allow-hardcoded-epic: loopback fence on allowlisted prefix
+        "/api/epics/v1/epic:7178/release",  # allow-hardcoded-epic: loopback fence on allowlisted prefix
+        "/api/epics/v1/epic:7178/bundles",  # allow-hardcoded-epic: loopback fence on allowlisted prefix
+    ):
+        refused = remote.post(path, json={})
+        assert refused.status_code == 403, path
+        assert refused.json()["detail"] == "loopback mutation required"
+
+    calls: list[str] = []
+
+    def fake_urlopen(req: urllib.request.Request, timeout: float = 3.0) -> _FakeResponse:
+        calls.append(req.full_url)
+        raise urllib.error.URLError("Connection reset")
+
+    monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
+    client = MonitorClient(base_urls=["http://host-a:8765", "http://host-b:8765"])
+    with pytest.raises(urllib.error.URLError, match="Connection reset"):
+        client._post(
+            "/api/epics/v1/epic:test-failover/handoff",
+            json_body={"type": "state", "body": "working"},
+            idempotency_key="stable-token-abc",
+        )
+    assert calls == ["http://host-a:8765/api/epics/v1/epic:test-failover/handoff"]
 
 
 def test_monitor_client_mutation_host_affine_never_retries_even_with_key(

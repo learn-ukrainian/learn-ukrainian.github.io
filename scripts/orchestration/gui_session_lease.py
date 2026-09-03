@@ -574,7 +574,7 @@ def _run(args: argparse.Namespace) -> dict[str, object]:
             body=args.body,
             idempotency_key=args.idempotency_key,
             app_proof=proof,
-        )
+        ).entry
         return {
             "ok": True,
             "action": "append",

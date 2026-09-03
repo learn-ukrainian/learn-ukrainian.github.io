@@ -944,12 +944,7 @@ def remote_handoff(
                 }
             )
         store = _store(ctx)
-        # Snapshot the stream's high-water entry id before the append so a same-key
-        # replay (append_entry returns the pre-existing entry rather than inserting)
-        # can be told apart from a genuinely new entry for the ``Idempotent-Replayed``
-        # response header, without adding a new store method for this slice.
-        high_water_before = store.load_remote_digest(stream_id, limit=0).high_water_entry_id
-        entry = store.append_entry(
+        appended = store.append_entry(
             lease,
             entry_type=entry_type,
             body=body_text,
@@ -958,17 +953,17 @@ def remote_handoff(
         )
         limit = _digest_limit(body.get("digest_limit", 20))
         headers = {"Cache-Control": "no-store"}
-        if entry.entry_id <= high_water_before:
+        if appended.is_replay:
             headers["Idempotent-Replayed"] = "true"
         return JSONResponse(
             content={
                 "schema": SCHEMA,
-                "entry": _safe_entry(entry_as_dict(entry)),
+                "entry": _safe_entry(entry_as_dict(appended.entry)),
                 "digest": _digest_payload(store, stream_id, limit),
             },
             headers=headers,
         )
-    except LeaseConflictError:
+    except (NotFoundError, LeaseConflictError):
         return _error(409, "LEASE LOST")
     except (ValueError, ContentRejectedError):
         return _error(400, "invalid epic handoff request")

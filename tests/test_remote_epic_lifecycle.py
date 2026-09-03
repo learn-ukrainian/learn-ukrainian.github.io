@@ -77,7 +77,7 @@ def test_claim_heartbeat_handoff_release_replay_conflict_and_fencing(tmp_path: P
         body="working",
         idempotency_key="state-1",
         now=now + timedelta(seconds=4),
-    )
+    ).entry
     assert entry.type is EntryType.STATE
     assert store.release_remote_session(renewed, now=now + timedelta(seconds=5)).value == "closed"
     assert store.release_remote_session(renewed, now=now + timedelta(seconds=6)).value == "closed"
@@ -173,7 +173,7 @@ def test_late_heartbeat_before_successor_revives_exact_lease(tmp_path: Path) -> 
 
 @pytest.mark.parametrize(
     "body",
-    ["contact 10.0.0.7", "write /Users/alice/private.txt", "ssh atlas-runner", "connect example.com"],
+    ["contact 203.0.113.7", "write /Users/alice/private.txt", "ssh atlas-runner", "connect example.com"],
 )
 def test_remote_entry_body_rejects_opsec_tokens(tmp_path: Path, body: str) -> None:
     store = _store(tmp_path)
