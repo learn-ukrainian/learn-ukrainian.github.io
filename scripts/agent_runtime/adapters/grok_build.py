@@ -15,11 +15,19 @@ The CLI uses its own stored auth under ``~/.grok`` (OAuth), so no API key is
 injected — HOME (already allow-listed by env_sanitize) is sufficient.
 
 Mode → ``--permission-mode``:
-- ``read-only``       → ``plan``               (analysis only, no mutations)
-- ``workspace-write`` → ``acceptEdits`` + ``--always-approve``
-  (unattended edits and Bash within the dispatch worktree)
+- ``read-only``       → ``auto`` + fail-closed ``--deny`` on write tools and ``Bash``
+  (Read/Grep/Glob still run; no shell — prefix deny lists are not a closed allowlist under ``auto``)
+- ``workspace-write`` → ``auto`` + ``--always-approve``
+  (unattended tool execution and file edits within the dispatch worktree)
 - ``danger``          → ``bypassPermissions`` + ``--always-approve``
   (unattended full autonomy within the dispatch worktree)
+
+Issue #7583: On native Grok 1.0.x CLI, ``acceptEdits --always-approve`` still prompts
+for approval on shell commands and terminates headless turns (``stopReason=cancelled``),
+while ``plan`` blocks all tool calls outright. Write dispatches map to execution-capable
+``auto``/``bypassPermissions`` with ``--always-approve``. Ordinary ``read-only`` also
+maps to ``auto`` so non-shell read tools can run, but must deny ``Bash`` and write tools
+fail-closed (same posture as sealed ``review_isolation`` Bash denial).
 
 Trail and review isolation use their own explicit tool/deny policies; they do
 not inherit the ordinary write-dispatch approval grant.
@@ -58,17 +66,31 @@ _RATE_LIMIT_RE = re.compile(
 )
 
 # Runtime mode → grok CLI --permission-mode value.
+# Issue #7583: on grok 1.0.x, acceptEdits does not cover shell headlessly (turn
+# cancels), while plan blocks all tool calls. We map workspace-write to auto
+# (with --always-approve) and read-only to auto with fail-closed Bash/write denies.
 _MODE_PERMISSION: dict[str, str] = {
-    "read-only": "plan",
-    "workspace-write": "acceptEdits",
+    "read-only": "auto",
+    "workspace-write": "auto",
     "danger": "bypassPermissions",
 }
 
-# Native Grok separates file-edit acceptance from approval for shell/tool
-# executions. Dispatch worktrees are the write boundary, so non-isolated
-# write-capable dispatches must grant both for ``git push`` / ``gh pr create``
-# to complete without a human approval prompt.
+# Non-isolated write-capable dispatches grant --always-approve so tool executions
+# run without a human approval prompt.
 _UNATTENDED_WRITE_MODES: frozenset[str] = frozenset({"workspace-write", "danger"})
+
+# Deny rules for ordinary read-only (issue #7583 / PR #7594 CF): grok
+# --permission-mode auto may approve unnamed commands, and prefix Bash denies
+# are not fail-closed (gh api, git -C … push, tee, sed -i, …). Deny Bash and
+# write tools wholesale — same fail-closed shell posture as review_isolation.
+_READ_ONLY_DENY_RULES: tuple[str, ...] = (
+    "Write",
+    "Edit",
+    "MultiEdit",
+    "NotebookEdit",
+    "search_replace",
+    "Bash",
+)
 
 # MCP servers that are safe to run under an execution-capable permission mode
 # (read-only data lookups, no mutations). ONLY these may trigger the plan→exec
@@ -126,10 +148,7 @@ def validate_grok_effort(effort: str | None) -> str | None:
     if effort is None:
         return None
     if effort not in GROK_SUPPORTED_EFFORTS:
-        raise ValueError(
-            "native Grok CLI supports --effort values "
-            f"{sorted(GROK_SUPPORTED_EFFORTS)}; got {effort!r}"
-        )
+        raise ValueError(f"native Grok CLI supports --effort values {sorted(GROK_SUPPORTED_EFFORTS)}; got {effort!r}")
     return effort
 
 
@@ -195,9 +214,7 @@ class GrokBuildAdapter:
                 raise TrailIsolationError("Grok trail isolation requires mode='read-only'")
             unsupported = sorted(set(tc) - _TRAIL_ISOLATION_TOOL_CONFIG_KEYS)
             if unsupported:
-                raise TrailIsolationError(
-                    f"Grok trail isolation refuses incompatible tool_config keys: {unsupported}"
-                )
+                raise TrailIsolationError(f"Grok trail isolation refuses incompatible tool_config keys: {unsupported}")
             trail_cwd = assert_trail_isolation_config(tc, profile="grok")
         review_isolation = bool(tc.get("review_isolation"))
         review_write_root: Path | None = None
@@ -258,14 +275,11 @@ class GrokBuildAdapter:
             cmd.extend(["-p", prompt])
 
         cmd.extend(["--output-format", "json", "--no-alt-screen"])
-        # read-only maps to grok `plan` mode, which is analysis-only and BLOCKS
-        # tool execution. MCP-grounded reviews MUST execute tool calls (e.g.
-        # sources__verify_word), so when ONLY known read-only MCP servers are
-        # requested we override to an execution-capable mode. Defense-in-depth:
-        # the `--deny` rules below block file writes + shell even under bypass
-        # (deny wins over bypassPermissions), so a prompt-injected review article
-        # cannot make grok mutate the filesystem or run shell. Any non-read-only
-        # or non-MCP call keeps its normal (safer) mode mapping.
+        # Issue #7583 / #7594: ordinary read-only maps to grok `auto` so non-shell
+        # read tools can run, with fail-closed `--deny` on Bash + write tools.
+        # Prefix-only Bash denies are not a closed allowlist under `auto`.
+        # MCP-grounded reviews execute tool calls (e.g. sources__verify_words)
+        # under bypassPermissions with MCP deny rules.
         mcp_servers_requested = set(tc.get("mcp_server_names") or [])
         mcp_read_only = bool(mcp_servers_requested) and mcp_servers_requested <= _READ_ONLY_MCP_SERVERS
         # Review isolation (#5285): expose only built-in read tools. The
@@ -286,6 +300,9 @@ class GrokBuildAdapter:
             cmd.append("--no-plan")
             cmd.append("--disable-web-search")
             for rule in _MCP_REVIEW_DENY_RULES:
+                cmd.extend(["--deny", rule])
+        elif mode == "read-only" and not trail_isolation and not review_isolation:
+            for rule in _READ_ONLY_DENY_RULES:
                 cmd.extend(["--deny", rule])
         if trail_isolation:
             cmd.extend(
@@ -498,9 +515,7 @@ class GrokBuildAdapter:
         env_overrides: dict[str, str],
     ) -> set[Path]:
         """Snapshot pre-existing cwd-scoped session dirs before launch."""
-        self._session_dir_snapshot = self._snapshot_preexisting_session_dirs(
-            cwd, env_overrides=env_overrides
-        )
+        self._session_dir_snapshot = self._snapshot_preexisting_session_dirs(cwd, env_overrides=env_overrides)
         return self._session_dir_snapshot
 
     def _snapshot_preexisting_session_dirs(
@@ -509,9 +524,7 @@ class GrokBuildAdapter:
         *,
         env_overrides: dict[str, str],
     ) -> set[Path]:
-        sessions_root = grok_cwd_sessions_dir(
-            resolve_grok_home(env=env_overrides), cwd
-        )
+        sessions_root = grok_cwd_sessions_dir(resolve_grok_home(env=env_overrides), cwd)
         try:
             if not sessions_root.is_dir():
                 return set()
@@ -550,21 +563,18 @@ class GrokBuildAdapter:
         # stale-only signal against the stall timer (#6935 startup window).
         paths: list[Path] = [sessions_root]
 
-        known: set[Path] = set(snapshot) if snapshot is not None else (
-            set(getattr(self, "_session_dir_snapshot", set()) or set())
+        known: set[Path] = (
+            set(snapshot) if snapshot is not None else (set(getattr(self, "_session_dir_snapshot", set()) or set()))
         )
         try:
-            children = (
-                [path for path in sessions_root.iterdir() if path.is_dir()]
-                if sessions_root.is_dir()
-                else []
-            )
+            children = [path for path in sessions_root.iterdir() if path.is_dir()] if sessions_root.is_dir() else []
         except OSError:
             children = []
 
         new_sessions = [path for path in children if path not in known]
         discovered_id: str | None = None
         if new_sessions:
+
             def _mtime(path: Path) -> float:
                 try:
                     return path.stat().st_mtime
