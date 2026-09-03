@@ -556,8 +556,8 @@ stores are read-only migration/projection inputs, not a live write target.
   *DRIVER-HANDOFF.md` — gitignored local state — or `docs/session-state/` for infra); see
   the file-handoff steps in §8. Successor-claim diagnostics: `session_streams
   handoff-status` / `handoff-claim` (#5530).
-- **Sealed formal CF is retired** — CF is the direct `ask-<lane>` + PR-post flow in §6,
-  not `review-pr` / sealed `lu-review-*`.
+- **Sealed formal CF (`review-pr`) is RETIRED** — CF is the direct `ask-<lane>` + PR-post
+  flow in §6, not `review-pr` / sealed `lu-review-*`.
 - **ACP provider transport:** ACP is toolless intercomm only (state transfer / ordinary asks/discuss); CF, design, and plan use toolful seats (`delegate.py` or native harnesses), and caveman lite is style.
 - **Never** flip the plane, enable retention apply, or invent a competing comms design
   from this skill — those remain the infra lane's gated actions, even post-cutover.

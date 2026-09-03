@@ -28,8 +28,9 @@ non-skippable:
 2. Use established best practice and fix root causes.
 3. Preserve Git/GitHub hygiene: layout A, dispatch worktrees, PRs, and
    `X-Agent` attribution.
-4. Use the fleet; the review gate is an independent **cross-family** review,
-   not discussion.
+4. Use the fleet; independent cross-family review is a standing quality
+   practice (not discussion), but it does not gate merge — see item 11 and
+   the CI Gate note below.
 5. Route by model × harness fit.
 6. Substitute a constrained lane and record that substitution.
 7. Make tool-backed claims only; outcome validity precedes paid execution:
