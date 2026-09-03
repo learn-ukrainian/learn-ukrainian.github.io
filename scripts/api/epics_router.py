@@ -41,7 +41,7 @@ from agents_extensions.shared.session_streams.store import (
     SessionStreamStore,
     validate_entry_body,
 )
-from scripts.api.monitor_context import MonitorContext, get_ctx, production_context
+from scripts.api.monitor_context import MonitorContext, get_ctx, production_context, resolve_context
 from scripts.api.observer_presence import _direct_loopback_peer
 from scripts.api.occupancy_sanitize import opaque_host_id, safe_field
 from scripts.orchestration import issue_stream_audit as audit
@@ -85,16 +85,11 @@ _REGISTRY_HEALTH: dict[str, Any] = {
 }
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    """Fall back to the live production context for plain-Python callers."""
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
 def _store(ctx: MonitorContext | None = None) -> SessionStreamStore:
     """Return the API-host epic store; the path never crosses the HTTP boundary."""
-    store = _resolve_context(ctx).stores.epics_store
+    store = resolve_context(ctx).stores.epics_store
     if store is None:
         raise FileNotFoundError("epic store is unavailable")
     return store
@@ -587,7 +582,7 @@ def remote_epic_list(ctx: MonitorContext = Depends(get_ctx)) -> JSONResponse:
 
 def _load_issue_streams(ctx: MonitorContext | None = None) -> dict[str, Any]:
     try:
-        path = resolve_streams_yaml(_resolve_context(ctx).roots.live_repo_root)
+        path = resolve_streams_yaml(resolve_context(ctx).roots.live_repo_root)
         data = yaml.safe_load(path.read_text(encoding="utf-8"))
         if isinstance(data, dict) and isinstance(data.get("streams"), dict):
             return data["streams"]

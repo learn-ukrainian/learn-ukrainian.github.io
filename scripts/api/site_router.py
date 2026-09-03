@@ -33,7 +33,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, Query
 
 from . import config as api_config
-from .monitor_context import MonitorContext, get_ctx, production_context
+from .monitor_context import MonitorContext, get_ctx, resolve_context
 
 router = APIRouter(tags=["site"])
 
@@ -52,15 +52,10 @@ CANARY_PATHS: tuple[str, ...] = (
 )
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    """Fall back to the live production context for plain-Python callers."""
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
 def _site_dir(ctx: MonitorContext | None = None) -> Path:
-    return _resolve_context(ctx).roots.project_root / "site"
+    return resolve_context(ctx).roots.project_root / "site"
 
 
 def _astro_output_dir(ctx: MonitorContext | None = None) -> Path:
@@ -224,7 +219,7 @@ def _last_deploy_commit(ctx: MonitorContext | None = None) -> dict[str, Any]:
 
 def _sitemap_freshness(ctx: MonitorContext | None = None) -> dict[str, Any]:
     astro_output_dir = _astro_output_dir(ctx)
-    project_root = _resolve_context(ctx).roots.project_root
+    project_root = resolve_context(ctx).roots.project_root
     sitemap = astro_output_dir / "sitemap-index.xml"
     if not sitemap.is_file():
         sitemap = astro_output_dir / "sitemap-0.xml"

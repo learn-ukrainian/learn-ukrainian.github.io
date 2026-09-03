@@ -30,19 +30,11 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
 
 from .config import LEVELS
-from .monitor_context import MonitorContext, get_ctx, production_context
+from .monitor_context import MonitorContext, get_ctx, resolve_context
 
 router = APIRouter(tags=["reviewer-ghosts"])
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    """Fall back to the live production context for plain-Python callers.
-
-    Mirrors ``runtime_router._resolve_context`` (#7324 / #7393 / #6849).
-    """
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
 def _iter_ghost_bundles(track: str, ctx: MonitorContext | None = None) -> list[Path]:
@@ -50,7 +42,7 @@ def _iter_ghost_bundles(track: str, ctx: MonitorContext | None = None) -> list[P
     level_cfg = next((lvl for lvl in LEVELS if lvl["id"] == track), None)
     if not level_cfg:
         return []
-    review_dir = _resolve_context(ctx).roots.curriculum_root / level_cfg["path"] / "review"
+    review_dir = resolve_context(ctx).roots.curriculum_root / level_cfg["path"] / "review"
     if not review_dir.is_dir():
         return []
     return sorted(review_dir.glob("*-ghost-review-r*.yaml"))

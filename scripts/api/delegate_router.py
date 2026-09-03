@@ -14,7 +14,7 @@ from typing import Any, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
-from .monitor_context import MonitorContext, get_ctx, production_context
+from .monitor_context import MonitorContext, get_ctx, resolve_context
 
 router = APIRouter(tags=["delegate"])
 
@@ -27,11 +27,6 @@ ACTIVE_TASK_STATUSES = {"running", "spawning"}
 DELEGATE_REPOSITORY_ATTR_FIELDS = ("repository_id", "repository")
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    """Fall back to the live production context for plain-Python callers."""
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
 def _tasks_dir(ctx: MonitorContext | None = None) -> Path:
@@ -185,7 +180,7 @@ def _task_cache_db_path(tasks_dir_str: str) -> Path:
 
 def _init_task_cache_db(db_path: Path, ctx: MonitorContext | None = None) -> sqlite3.Connection | None:
     try:
-        conn = _resolve_context(ctx)._open_db(db_path)
+        conn = resolve_context(ctx)._open_db(db_path)
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS task_cache (
@@ -333,7 +328,7 @@ def _delegate_task_rows(
     """
     global _TASK_STATE_CACHE, _LAST_TASKS_DIR_STR
 
-    resolved = _resolve_context(ctx)
+    resolved = resolve_context(ctx)
     tasks_dir = _tasks_dir(resolved)
     tasks_dir_str = str(tasks_dir)
     if tasks_dir_str != _LAST_TASKS_DIR_STR:

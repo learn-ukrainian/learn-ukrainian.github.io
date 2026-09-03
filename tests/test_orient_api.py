@@ -723,7 +723,7 @@ def test_orient_includes_capacity_section(monkeypatch):
 def test_orient_issues_collector_uses_five_second_subprocess_timeout(monkeypatch):
     captured: dict[str, float] = {}
 
-    def fake_run_command(args, *, timeout: float = 2.0):
+    def fake_run_command(args, *, timeout: float = 2.0, ctx=None):
         captured["timeout"] = timeout
         raise RuntimeError("gh unavailable for timeout assertion")
 

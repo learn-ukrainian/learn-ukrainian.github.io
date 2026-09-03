@@ -34,7 +34,7 @@ from .monitor_context import (
     _WORK_IN_FLIGHT_BUILDS,
     MonitorContext,
     get_ctx,
-    production_context,
+    resolve_context,
 )
 
 log = logging.getLogger(__name__)
@@ -127,12 +127,12 @@ def projection_cache_key(
     create_app() instances never share projection entries.
     """
     canonical = admit_projection_filters(filters or {})
-    scope = ctx_cache_scope(_resolve_context(ctx))
+    scope = ctx_cache_scope(resolve_context(ctx))
     return f"{CACHE_KEY}{scope}:{sorted(canonical.items())!r}"
 
 
 def _stream_registry_cache_key(ctx: MonitorContext | None = None) -> str:
-    return f"{STREAM_REGISTRY_CACHE_KEY}{ctx_cache_scope(_resolve_context(ctx))}"
+    return f"{STREAM_REGISTRY_CACHE_KEY}{ctx_cache_scope(resolve_context(ctx))}"
 
 
 def _build_sync(filters: dict[str, Any], *, cache_age_s: float = 0.0) -> dict[str, Any]:
@@ -156,17 +156,12 @@ _WORKER_LOOP_LOCK = threading.Lock()
 _WORKER_FUTURES: set[concurrent.futures.Future[Any]] = set()
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    """Fall back to the live production context for plain-Python callers."""
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
 def _in_flight_builds(
     ctx: MonitorContext | None = None,
 ) -> dict[str, concurrent.futures.Future[dict[str, Any]]]:
-    store = _resolve_context(ctx).stores.work_in_flight
+    store = resolve_context(ctx).stores.work_in_flight
     if store is None:
         raise RuntimeError("work in-flight map is unavailable")
     return store
@@ -304,7 +299,7 @@ def _ensure_in_flight(
     ctx: MonitorContext | None = None,
 ) -> concurrent.futures.Future[dict[str, Any]]:
     """Start or join the single-flight build; never tied to the request loop."""
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     slots = _in_flight_builds(resolved_ctx)
     with _IN_FLIGHT_LOCK:
         existing = slots.get(key)

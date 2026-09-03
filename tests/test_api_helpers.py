@@ -1092,13 +1092,15 @@ class TestParseSlug:
 class TestScanTrackCached:
     """scan_track_cached returns cached results within TTL."""
 
-    def test_cache_returns_same_result(self):
+    def test_cache_returns_same_result(self, tmp_path):
         from scripts.api.dashboard_helpers import _track_cache, _track_cache_key, scan_track_cached
+        from scripts.api.monitor_context import fixture_context
 
+        ctx = fixture_context(tmp_path)
         # Pre-populate cache under the ctx-scoped key the lookup uses (#7494)
         cached_data = {"track_id": "test", "modules": []}
-        _track_cache[_track_cache_key("test_track", None)] = (time.time(), cached_data)
-        result = scan_track_cached("test_track", "test_path", [])
+        _track_cache[_track_cache_key("test_track", ctx)] = (time.time(), cached_data)
+        result = scan_track_cached("test_track", "test_path", [], ctx=ctx)
         assert result == cached_data
 
     def test_expired_cache_calls_scan(self):
@@ -1115,17 +1117,19 @@ class TestScanTrackCached:
 class TestScanTrackSummaryCached:
     """scan_track_summary_cached returns cached results within TTL."""
 
-    def test_cache_returns_same_result(self):
+    def test_cache_returns_same_result(self, tmp_path):
         from scripts.api.dashboard_helpers import (
             _summary_cache,
             _track_cache_key,
             scan_track_summary_cached,
         )
+        from scripts.api.monitor_context import fixture_context
 
+        ctx = fixture_context(tmp_path)
         # Pre-populate cache under the ctx-scoped key the lookup uses (#7494)
         cached_data = {"track_id": "test", "modules": []}
-        _summary_cache[_track_cache_key("test_summary", None)] = (time.time(), cached_data)
-        result = scan_track_summary_cached("test_summary", "test_path", [])
+        _summary_cache[_track_cache_key("test_summary", ctx)] = (time.time(), cached_data)
+        result = scan_track_summary_cached("test_summary", "test_path", [], ctx=ctx)
         assert result == cached_data
 
     def test_expired_cache_is_stale(self):
@@ -1631,4 +1635,3 @@ class TestGetBrokerMessagesForSlug:
         from scripts.api.state_helpers import get_broker_messages_for_slug
 
         assert get_broker_messages_for_slug("test-slug", message_db=None) == []
-

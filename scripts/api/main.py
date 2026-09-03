@@ -84,7 +84,7 @@ from .hermes_cron_router import router as hermes_cron_router
 from .images_router import router as images_router
 from .issues_router import router as issues_router
 from .knowledge_router import router as knowledge_router
-from .monitor_context import MonitorContext, get_ctx, production_context
+from .monitor_context import MonitorContext, get_ctx, production_context, resolve_context
 from .observer_presence import router as observer_presence_router
 from .occupancy import router as occupancy_router
 from .occupancy_local import resolve_launcher_host_id
@@ -246,16 +246,6 @@ async def global_exception_handler(request: Request, exc: Exception):
 _SERVER_START = datetime.now(UTC)
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    """Fall back to the live production context for plain-Python callers.
-
-    #7494: NEVER reads the module-global ``app`` — that fallback silently
-    handed the production context to every ``create_app()`` instance,
-    defeating factory isolation. Request paths thread ``get_ctx(request)``.
-    """
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 # --- /api/orient caching + failure isolation (GH #1309) ----------------
 #
@@ -415,7 +405,7 @@ def _isoformat_z(value: datetime) -> str:
 
 
 def _run_command(args: list[str], *, timeout: float = 2.0, ctx: MonitorContext | None = None) -> subprocess.CompletedProcess[str]:
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     cwd = resolved_ctx.roots.live_repo_root if args and args[0] == "git" else resolved_ctx.roots.project_root
     if not Path(cwd).exists():
         return subprocess.CompletedProcess(args=args, returncode=127, stdout="", stderr="cwd does not exist")
@@ -433,12 +423,12 @@ def _run_command(args: list[str], *, timeout: float = 2.0, ctx: MonitorContext |
 
 
 def _collect_git_orient_data(ctx: MonitorContext | None = None) -> dict:
-    resolved_ctx = _resolve_context(ctx)
-    branch_proc = _run_command(["git", "branch", "--show-current"], ctx=ctx) if ctx is not None else _run_command(["git", "branch", "--show-current"])
-    head_proc = _run_command(["git", "rev-parse", "--short=9", "HEAD"], ctx=ctx) if ctx is not None else _run_command(["git", "rev-parse", "--short=9", "HEAD"])
-    full_head_proc = _run_command(["git", "rev-parse", "HEAD"], ctx=ctx) if ctx is not None else _run_command(["git", "rev-parse", "HEAD"])
-    ahead_proc = _run_command(["git", "rev-list", "--count", "origin/main..HEAD"], ctx=ctx) if ctx is not None else _run_command(["git", "rev-list", "--count", "origin/main..HEAD"])
-    log_proc = _run_command(["git", "log", "--oneline", "-5"], ctx=ctx) if ctx is not None else _run_command(["git", "log", "--oneline", "-5"])
+    resolved_ctx = resolve_context(ctx)
+    branch_proc = _run_command(["git", "branch", "--show-current"], ctx=ctx)
+    head_proc = _run_command(["git", "rev-parse", "--short=9", "HEAD"], ctx=ctx)
+    full_head_proc = _run_command(["git", "rev-parse", "HEAD"], ctx=ctx)
+    ahead_proc = _run_command(["git", "rev-list", "--count", "origin/main..HEAD"], ctx=ctx)
+    log_proc = _run_command(["git", "log", "--oneline", "-5"], ctx=ctx)
 
     if branch_proc.returncode != 0:
         raise RuntimeError(branch_proc.stderr.strip() or "git branch failed")
@@ -517,7 +507,7 @@ def _collect_issues_orient_data(ctx: MonitorContext | None = None) -> dict:
         "--json",
         "number,title,labels,createdAt",
     ]
-    proc = _run_command(cmd, timeout=5.0, ctx=ctx) if ctx is not None else _run_command(cmd, timeout=5.0)
+    proc = _run_command(cmd, timeout=5.0, ctx=ctx)
 
     if proc.returncode != 0:
         error = proc.stderr.strip() or proc.stdout.strip() or "gh issue list failed"
@@ -686,7 +676,7 @@ def _collect_idle_prs_orient_data(ctx: MonitorContext | None = None) -> dict[str
         "--json",
         "number,state,isDraft,headRefName,headRefOid,updatedAt,reviewDecision,reviews,comments,statusCheckRollup,mergeStateStatus",
     ]
-    proc = _run_command(cmd, timeout=IDLE_PR_FETCH_TIMEOUT_S, ctx=ctx) if ctx is not None else _run_command(cmd, timeout=IDLE_PR_FETCH_TIMEOUT_S)
+    proc = _run_command(cmd, timeout=IDLE_PR_FETCH_TIMEOUT_S, ctx=ctx)
     if proc.returncode != 0:
         error = proc.stderr.strip() or proc.stdout.strip() or "gh pr list failed"
         raise RuntimeError(error)
@@ -918,7 +908,7 @@ async def _cached_detached_orient_section(
 
 
 async def _collect_pipeline_orient_data(ctx: MonitorContext | None = None) -> dict:
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     return {"summary": await state_api.state_summary(fresh=False, ctx=resolved_ctx)}
 
 
@@ -946,7 +936,7 @@ def _maybe_run_worktree_gc_sweep(ctx: MonitorContext | None = None) -> None:
     # Set cache to prevent concurrent triggering
     cache_set("worktree_gc_sweep", True)
 
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     global _gc_sweep_thread
     with _gc_sweep_lock:
         if _gc_sweep_thread is not None and _gc_sweep_thread.is_alive():
@@ -958,7 +948,7 @@ def _maybe_run_worktree_gc_sweep(ctx: MonitorContext | None = None) -> None:
 def _run_worktree_gc_sweep(ctx: MonitorContext | None = None) -> None:
     global _last_gc_sweep_summary
     try:
-        resolved_ctx = _resolve_context(ctx)
+        resolved_ctx = resolve_context(ctx)
         repo_root = primary_checkout_root(resolved_ctx.roots.project_root)
 
         results = reap_worktrees(
@@ -984,16 +974,11 @@ def _run_worktree_gc_sweep(ctx: MonitorContext | None = None) -> None:
 
 
 def _collect_runtime_orient_data(ctx: MonitorContext | None = None) -> dict:
-    if ctx is not None:
-        _maybe_run_worktree_gc_sweep(ctx=ctx)
-        agents = runtime_api.list_runtime_agents(ctx=ctx)
-        usage = runtime_api.summarize_runtime_usage(days=1, ctx=ctx)
-        recent = runtime_api.runtime_recent_outcomes_today(ctx=ctx)
-    else:
-        _maybe_run_worktree_gc_sweep()
-        agents = runtime_api.list_runtime_agents()
-        usage = runtime_api.summarize_runtime_usage(days=1)
-        recent = runtime_api.runtime_recent_outcomes_today()
+    resolved = resolve_context(ctx)
+    _maybe_run_worktree_gc_sweep(ctx=resolved)
+    agents = runtime_api.list_runtime_agents(ctx=resolved)
+    usage = runtime_api.summarize_runtime_usage(days=1, ctx=resolved)
+    recent = runtime_api.runtime_recent_outcomes_today(ctx=resolved)
     headroom = {}
     for agent_info in agents:
         name = agent_info.get("name")
@@ -1033,7 +1018,7 @@ def _collect_delegate_orient_data(ctx: MonitorContext | None = None) -> dict:
 
 
 def _collect_capacity_orient_data(ctx: MonitorContext | None = None) -> dict:
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     budget = state_api.compute_routing_budget(
         budget_config_path=resolved_ctx.roots.project_root / "scripts" / "config" / "agent_budgets.yaml",
         tasks_dir=resolved_ctx.roots.batch_state_dir / "tasks",
@@ -1063,14 +1048,14 @@ def _collect_capacity_orient_data(ctx: MonitorContext | None = None) -> dict:
 
 
 def _collect_bridge_pending_orient_data(ctx: MonitorContext | None = None) -> dict:
-    _resolve_context(ctx)
+    resolve_context(ctx)
     from scripts.ai_agent_bridge import _channels  # noqa: PLC0415 — optional broker bridge
 
     return _channels.bridge_pending_summary()
 
 
 def _collect_rollovers_orient_data(ctx: MonitorContext | None = None) -> dict:
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     return collect_rollover_orient_data(live_repo_root=resolved_ctx.roots.live_repo_root)
 
 
@@ -1087,14 +1072,14 @@ def _collect_wiki_orient_data(ctx: MonitorContext | None = None) -> dict:
     Fix: build the candidates index once (~6 ms) and resolve in pure dict
     lookups + Path.exists() checks. Same answer, ~50× faster.
     """
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     wiki_api.wiki_state.get_status_summary()
 
     candidates = wiki_api._list_article_candidates(resolved_ctx)  # one context-scoped full-tree scan
     wiki_dir = wiki_api._wiki_dir(resolved_ctx)
 
     by_track: dict[str, dict[str, Any]] = {}
-    known_tracks = wiki_api._known_tracks(ctx=ctx) if ctx is not None else wiki_api._known_tracks()
+    known_tracks = wiki_api._known_tracks(ctx=ctx)
     for track in known_tracks:
         slugs = wiki_api._track_slugs(track)
         if not slugs:
@@ -1124,7 +1109,7 @@ def _collect_wiki_orient_data(ctx: MonitorContext | None = None) -> dict:
 
 
 def _collect_governance_orient_data(ctx: MonitorContext | None = None) -> dict[str, int]:
-    return collect_governance_summary(ctx=ctx) if ctx is not None else collect_governance_summary()
+    return collect_governance_summary(ctx=ctx)
 
 
 logger = logging.getLogger(__name__)
@@ -1152,7 +1137,7 @@ def _core_bare_canary(ctx: MonitorContext | None = None) -> bool:
     it's needed. On drift it auto-resets to false and logs an alert. Never raises:
     the canary must not break health collection.
     """
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     try:
         from scripts.audit.check_core_bare import check_core_bare  # noqa: PLC0415 — script-path fallback
     except ImportError:  # path-flavoured import for test/script contexts
@@ -1181,7 +1166,7 @@ def _self_symlink_canary(ctx: MonitorContext | None = None) -> bool:
     collection. See the autopsy
     ``docs/bug-autopsies/node-modules-eloop-symlink.md``.
     """
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     try:
         from scripts.audit.check_self_symlinks import check_self_symlinks  # noqa: PLC0415 — script-path fallback
     except ImportError:  # path-flavoured import for test/script contexts
@@ -1206,7 +1191,7 @@ def _primary_integrity_canary(ctx: MonitorContext | None = None) -> bool:
     fetching, or pulling the human's checkout.
     Never raises: the canary must not break health collection.
     """
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     try:
         from scripts.audit.check_primary_integrity import (  # noqa: PLC0415 — script-path fallback
             check_primary_integrity,
@@ -1237,7 +1222,7 @@ def _node_modules_integrity_canary(ctx: MonitorContext | None = None) -> bool:
     `_primary_integrity_canary` — detects and records, never repairs. Never
     raises: the canary must not break health collection.
     """
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     try:
         from scripts.audit.check_node_modules_integrity import (  # noqa: PLC0415 — script-path fallback
             check_node_modules_integrity,
@@ -1269,7 +1254,7 @@ def _venv_integrity_canary(ctx: MonitorContext | None = None) -> bool:
     detects and records, never repairs. Never raises: the canary must not
     break health collection.
     """
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     try:
         from scripts.audit.check_venv_integrity import check_venv_integrity  # noqa: PLC0415 — script-path fallback
     except ImportError:  # path-flavoured import for test/script contexts
@@ -1296,7 +1281,7 @@ def _worktree_cleanup_integrity_canary(ctx: MonitorContext | None = None) -> boo
     records, never reloads launchd. Never raises: the canary must not break
     health collection.
     """
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     try:
         from scripts.audit.check_worktree_cleanup_integrity import (  # noqa: PLC0415 — script-path fallback
             check_worktree_cleanup_integrity,
@@ -1339,7 +1324,7 @@ def _tmp_usability_canary() -> dict:
 
 
 def _collect_health_orient_data(ctx: MonitorContext | None = None) -> dict:
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     mcp_sources_ok = _port_open("127.0.0.1", 8766, 0.2)
     tmp_usability = _tmp_usability_canary()
     if ctx is not None:
@@ -1385,7 +1370,7 @@ def _first_non_empty_line(path: Path) -> str:
 
 
 def _collect_session_hints_orient_data(ctx: MonitorContext | None = None) -> list[dict]:
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     session_state_dir = resolved_ctx.roots.project_root / "docs" / "session-state"
     if not session_state_dir.exists():
         return []
@@ -1405,9 +1390,9 @@ def _collect_session_hints_orient_data(ctx: MonitorContext | None = None) -> lis
 
 def _health_instance_identity(ctx: MonitorContext | None = None) -> dict[str, str | None]:
     """Return loopback-safe opaque host id and serving vs checkout SHAs for /api/health."""
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     host_label = resolve_launcher_host_id()
-    head_proc = _run_command(["git", "rev-parse", "HEAD"], ctx=ctx) if ctx is not None else _run_command(["git", "rev-parse", "HEAD"])
+    head_proc = _run_command(["git", "rev-parse", "HEAD"], ctx=ctx)
     checkout_sha = head_proc.stdout.strip() if head_proc.returncode == 0 else None
     project_root = resolved_ctx.roots.project_root.resolve()
     if is_release_root(project_root):

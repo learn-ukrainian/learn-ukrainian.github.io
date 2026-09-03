@@ -36,7 +36,7 @@ except ImportError:
 
 from .config import LEVELS
 from .docs_router import collect_html_artifacts
-from .monitor_context import MonitorContext, get_ctx, production_context
+from .monitor_context import MonitorContext, get_ctx, resolve_context
 from .review_parsing import count_review_issues, extract_review_score, extract_review_verdict
 from .state_compute import _compute_shippable, _get_review_score
 from .state_helpers import (
@@ -50,10 +50,6 @@ from .state_helpers import (
 router = APIRouter(tags=["artifacts"])
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
 # ---------------------------------------------------------------------
@@ -153,7 +149,7 @@ async def html_artifacts(
         status=status,
         author=author,
         types=types,
-        ctx=_resolve_context(ctx),
+        ctx=resolve_context(ctx),
     )
 
 
@@ -188,7 +184,7 @@ def _compute_artifact_snapshot(track: str, slug: str, ctx: MonitorContext | None
     if not cfg:
         return {"error": f"unknown track: {track}"}
 
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     curriculum_root = resolved_ctx.roots.curriculum_root
     project_root = resolved_ctx.roots.project_root
     plans_root = project_root / "plans"
@@ -253,7 +249,7 @@ def _compute_artifact_snapshot(track: str, slug: str, ctx: MonitorContext | None
 @router.get("/{track}/{slug}")
 async def module_artifact(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     """Single-module artifact snapshot."""
-    result = await asyncio.to_thread(_compute_artifact_snapshot, track, slug, ctx=_resolve_context(ctx))
+    result = await asyncio.to_thread(_compute_artifact_snapshot, track, slug, ctx=resolve_context(ctx))
     if "error" in result:
         return JSONResponse(status_code=404, content=result)
     return result
@@ -325,7 +321,7 @@ def _enumerate_force_deletions(track: str, slug: str, ctx: MonitorContext | None
     if not cfg:
         return []
 
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     curriculum_root = resolved_ctx.roots.curriculum_root
     project_root = resolved_ctx.roots.project_root
 
@@ -428,7 +424,7 @@ async def force_preview(track: str, slug: str, ctx: MonitorContext = Depends(get
             content={"error": f"unknown track: {track}"},
         )
 
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     targets = await asyncio.to_thread(_enumerate_force_deletions, track, slug, ctx=resolved_ctx)
 
     try:
@@ -488,7 +484,7 @@ async def ship_ready(
             status_code=404,
             content={"error": f"unknown track: {track}"},
         )
-    return await asyncio.to_thread(_list_ship_ready, track, ctx=_resolve_context(ctx))
+    return await asyncio.to_thread(_list_ship_ready, track, ctx=resolve_context(ctx))
 
 
 # ---------------------------------------------------------------------
@@ -522,7 +518,7 @@ def _classify_module_files(track: str, slug: str, ctx: MonitorContext | None = N
     if not cfg:
         return {"error": f"unknown track: {track}"}
 
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     curriculum_root = resolved_ctx.roots.curriculum_root
     project_root = resolved_ctx.roots.project_root
     plans_root = project_root / "plans"
@@ -628,7 +624,7 @@ def _classify_module_files(track: str, slug: str, ctx: MonitorContext | None = N
 @router.get("/{track}/{slug}/files")
 async def module_files(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     """Classified file manifest for one module (#1313 / Codex-2)."""
-    result = await asyncio.to_thread(_classify_module_files, track, slug, ctx=_resolve_context(ctx))
+    result = await asyncio.to_thread(_classify_module_files, track, slug, ctx=resolve_context(ctx))
     if "error" in result:
         return JSONResponse(status_code=404, content=result)
     return result
@@ -670,7 +666,7 @@ def _review_snapshot(track: str, slug: str, ctx: MonitorContext | None = None) -
     if not cfg:
         return {"error": f"unknown track: {track}"}
 
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     try:
         base = safe_join(resolved_ctx.roots.curriculum_root, cfg["path"])
         review_dir = safe_join(base, "review")
@@ -735,7 +731,7 @@ async def review_snapshot(track: str, slug: str, ctx: MonitorContext = Depends(g
     with zero actionable findings (#1313 / Codex-3). Deterministic
     detection so bad-review cases don't slip through.
     """
-    result = await asyncio.to_thread(_review_snapshot, track, slug, ctx=_resolve_context(ctx))
+    result = await asyncio.to_thread(_review_snapshot, track, slug, ctx=resolve_context(ctx))
     if "error" in result:
         return JSONResponse(status_code=404, content=result)
     return result
@@ -758,7 +754,7 @@ def _state_drift_check(track: str, slug: str, ctx: MonitorContext | None = None)
     if not cfg:
         return {"error": f"unknown track: {track}"}
 
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     curriculum_root = resolved_ctx.roots.curriculum_root
     project_root = resolved_ctx.roots.project_root
 
@@ -877,8 +873,7 @@ def _state_drift_check(track: str, slug: str, ctx: MonitorContext | None = None)
 @router.get("/{track}/{slug}/drift")
 async def drift_check(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     """Cross-check module state across state.json, audit, review, disk."""
-    result = await asyncio.to_thread(_state_drift_check, track, slug, ctx=_resolve_context(ctx))
+    result = await asyncio.to_thread(_state_drift_check, track, slug, ctx=resolve_context(ctx))
     if "error" in result:
         return JSONResponse(status_code=404, content=result)
     return result
-

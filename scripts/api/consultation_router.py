@@ -28,7 +28,7 @@ from fastapi import APIRouter, Depends, Query
 from fastapi.responses import JSONResponse
 
 from .config import LEVELS
-from .monitor_context import MonitorContext, get_ctx, production_context
+from .monitor_context import MonitorContext, get_ctx
 from .state_helpers import cache_get, cache_set, ctx_cache_scope, read_v2_state
 
 # Import TemplateChange and apply_template_patch at module level.
@@ -46,31 +46,22 @@ router = APIRouter(tags=["consultation"])
 _TRACK_IDS = [level["id"] for level in LEVELS]
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    """Fall back to the live production context for plain-Python callers."""
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
-def _queue_dir(ctx: MonitorContext | None = None) -> Path:
-    return _resolve_context(ctx).roots.queue_dir
+def _queue_dir(ctx: MonitorContext) -> Path:
+    return ctx.roots.queue_dir
 
 
-def _applied_dir(ctx: MonitorContext | None = None) -> Path:
+def _applied_dir(ctx: MonitorContext) -> Path:
     return _queue_dir(ctx) / "applied"
 
 
-def _rejected_dir(ctx: MonitorContext | None = None) -> Path:
+def _rejected_dir(ctx: MonitorContext) -> Path:
     return _queue_dir(ctx) / "rejected"
 
 
-def _template_dir(ctx: MonitorContext | None = None) -> Path:
-    return _resolve_context(ctx).roots.project_root / "agents_extensions" / "shared" / "phases" / "gemini"
-
-
-def _curriculum_root(ctx: MonitorContext | None = None) -> Path:
-    return _resolve_context(ctx).roots.curriculum_root
+def _template_dir(ctx: MonitorContext) -> Path:
+    return ctx.roots.project_root / "agents_extensions" / "shared" / "phases" / "gemini"
 
 
 # ==================== HELPERS ====================
@@ -84,7 +75,7 @@ def _parse_queue_file(path: Path) -> dict | None:
         return None
 
 
-def _list_queue_files(ctx: MonitorContext | None = None) -> list[Path]:
+def _list_queue_files(ctx: MonitorContext) -> list[Path]:
     """List pending .yaml files in queue dir (not README, not subdirs)."""
     queue_dir = _queue_dir(ctx)
     if not queue_dir.exists():
@@ -119,7 +110,7 @@ def _queue_summary(path: Path, data: dict) -> dict:
     }
 
 
-def _list_queue_with_summaries(ctx: MonitorContext | None = None) -> dict:
+def _list_queue_with_summaries(ctx: MonitorContext) -> dict:
     """List pending proposals with summaries (runs in thread)."""
     files = _list_queue_files(ctx)
     items = []
@@ -130,7 +121,7 @@ def _list_queue_with_summaries(ctx: MonitorContext | None = None) -> dict:
     return {"pending": items, "count": len(items)}
 
 
-def _get_queue_detail(filename: str, ctx: MonitorContext | None = None) -> tuple[int, dict]:
+def _get_queue_detail(filename: str, ctx: MonitorContext) -> tuple[int, dict]:
     """Get detail for a queue file. Returns (status_code, response_dict)."""
     for subdir, status in [
         (_queue_dir(ctx), "pending"),
@@ -151,16 +142,17 @@ def _get_queue_detail(filename: str, ctx: MonitorContext | None = None) -> tuple
 def _collect_all_consultations(
     track_filter: str | None = None,
     outcome_filter: str | None = None,
-    ctx: MonitorContext | None = None,
+    *,
+    ctx: MonitorContext,
 ) -> list[dict]:
     """Scan all state.json files and collect consultation entries."""
-    cache_key = f"consultation_history_all{ctx_cache_scope(_resolve_context(ctx))}"
+    cache_key = f"consultation_history_all{ctx_cache_scope(ctx)}"
     cached = cache_get(cache_key, ttl=30)
     if cached is not None:
         results = cached
     else:
         results = []
-        curriculum_root = _curriculum_root(ctx)
+        curriculum_root = ctx.roots.curriculum_root
         for track_id in _TRACK_IDS:
             track_dir = curriculum_root / track_id
             orch_dir = track_dir / "orchestration"
@@ -188,7 +180,7 @@ def _collect_all_consultations(
     return results
 
 
-def _resolve_template_path(file_field: str, ctx: MonitorContext | None = None) -> Path | None:
+def _resolve_template_path(file_field: str, ctx: MonitorContext) -> Path | None:
     """Resolve a change's file field to a safe template path.
 
     Validates the resolved path is strictly within the template dir.
@@ -220,7 +212,7 @@ def _find_matches(find_text: str, content: str) -> bool:
     return _normalize_ws(find_text) in _normalize_ws(content)
 
 
-def _validate_find_strings(proposal: dict, ctx: MonitorContext | None = None) -> list[dict]:
+def _validate_find_strings(proposal: dict, ctx: MonitorContext) -> list[dict]:
     """Check that each FIND string exists in its target template.
 
     Uses exact match first, then whitespace-normalized fallback (same as
@@ -252,7 +244,7 @@ def _validate_find_strings(proposal: dict, ctx: MonitorContext | None = None) ->
     return mismatches
 
 
-def _apply_proposal(proposal: dict, ctx: MonitorContext | None = None) -> tuple[bool, int, list[str]]:
+def _apply_proposal(proposal: dict, ctx: MonitorContext) -> tuple[bool, int, list[str]]:
     """Apply all changes in a proposal to their templates.
 
     Returns (success, num_applied, errors).
@@ -299,7 +291,7 @@ def _apply_proposal(proposal: dict, ctx: MonitorContext | None = None) -> tuple[
     return len(errors) == 0, total_applied, errors
 
 
-def _do_approve(filename: str, ctx: MonitorContext | None = None) -> tuple[int, dict]:
+def _do_approve(filename: str, ctx: MonitorContext) -> tuple[int, dict]:
     """Execute approval: validate, patch, move. Returns (status_code, response)."""
     queue_dir = _queue_dir(ctx)
     applied_dir = _applied_dir(ctx)
@@ -343,7 +335,7 @@ def _do_approve(filename: str, ctx: MonitorContext | None = None) -> tuple[int, 
     }
 
 
-def _do_reject(filename: str, reason: str, ctx: MonitorContext | None = None) -> tuple[int, dict]:
+def _do_reject(filename: str, reason: str, ctx: MonitorContext) -> tuple[int, dict]:
     """Execute rejection: optionally annotate, move. Returns (status_code, response)."""
     queue_dir = _queue_dir(ctx)
     rejected_dir = _rejected_dir(ctx)
@@ -380,7 +372,7 @@ def _do_reject(filename: str, reason: str, ctx: MonitorContext | None = None) ->
     return 200, {"status": "rejected", "filename": filename, "reason": reason or None}
 
 
-def _compute_metrics(ctx: MonitorContext | None = None) -> dict:
+def _compute_metrics(ctx: MonitorContext) -> dict:
     """Compute all metrics (runs in thread). Includes keyword extraction."""
     all_entries = _collect_all_consultations(ctx=ctx)
 
@@ -485,7 +477,7 @@ async def get_history(
     ctx: MonitorContext = Depends(get_ctx),
 ):
     """All consultations across all modules, with optional filters."""
-    results = await asyncio.to_thread(_collect_all_consultations, track, outcome, ctx)
+    results = await asyncio.to_thread(_collect_all_consultations, track, outcome, ctx=ctx)
     total = len(results)
     page = results[offset : offset + limit]
     return {"consultations": page, "total": total, "limit": limit, "offset": offset}
@@ -495,7 +487,7 @@ async def get_history(
 async def get_module_history(track: str, slug: str, ctx: MonitorContext = Depends(get_ctx)):
     """Consultation timeline for one module."""
     try:
-        orch_dir = safe_join(_curriculum_root(ctx), track, "orchestration", slug)
+        orch_dir = safe_join(ctx.roots.curriculum_root, track, "orchestration", slug)
     except ValueError:
         return JSONResponse(
             status_code=400,

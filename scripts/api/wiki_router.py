@@ -20,7 +20,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from .config import LEVELS
-from .monitor_context import MonitorContext, get_ctx, production_context
+from .monitor_context import MonitorContext, get_ctx, resolve_context
 from .state_helpers import cache_get, cache_set
 
 # scripts/wiki is not a package, so we add the scripts/ root to sys.path
@@ -57,11 +57,6 @@ _TABLE_NAMES = [
 _WORD_COUNT_WORKERS = 4
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    """Fall back to the live production context for plain-Python callers."""
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
 def _wiki_dir(ctx: MonitorContext | None = None) -> Path:
@@ -71,15 +66,14 @@ def _wiki_dir(ctx: MonitorContext | None = None) -> Path:
     retain the compiler's configured path, which is also the seam used by the
     existing wiki tests and deployment redirections.
     """
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     if resolved_ctx.root is not None:
         return resolved_ctx.roots.project_root / "wiki"
     return Path(wiki_config.WIKI_DIR)
 
 
-def _known_tracks(ctx: MonitorContext | None = None) -> list[str]:
-    resolved_ctx = _resolve_context(ctx)
-    plan_root = resolved_ctx.roots.curriculum_root / "plans"
+def _known_tracks(ctx: MonitorContext) -> list[str]:
+    plan_root = ctx.roots.curriculum_root / "plans"
     configured = tuple(level["id"] for level in LEVELS)
     cache_key = f"wiki:known_tracks:{plan_root.resolve()}:{configured!r}"
 
@@ -89,10 +83,10 @@ def _known_tracks(ctx: MonitorContext | None = None) -> list[str]:
         extras = sorted(existing - set(configured))
         return ordered + extras
 
-    return resolved_ctx.runtime.get_or_create_derived(cache_key, build)
+    return ctx.runtime.get_or_create_derived(cache_key, build)
 
 
-def _track_exists(track: str, ctx: MonitorContext | None = None) -> bool:
+def _track_exists(track: str, ctx: MonitorContext) -> bool:
     return track in _known_tracks(ctx)
 
 
@@ -103,7 +97,7 @@ def _safe_join(base: Path, *parts: str | Path) -> Path | None:
         return None
 
 
-def _ensure_track_exists(track: str, ctx: MonitorContext | None = None) -> None:
+def _ensure_track_exists(track: str, ctx: MonitorContext) -> None:
     if not _track_exists(track, ctx):
         raise HTTPException(status_code=404, detail=f"Track not found: {track}")
 
@@ -159,7 +153,7 @@ def _list_article_candidates(
     ctx: MonitorContext | None = None,
 ) -> dict[str, list[dict[str, Any]]]:
     """Return one context-scoped snapshot of the wiki article index."""
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     wiki_dir = _wiki_dir(resolved_ctx)
     state_dir = Path(wiki_state.WIKI_STATE_DIR)
     cache_key = f"wiki:article_candidates:{wiki_dir.resolve()}:{state_dir.resolve()}"
