@@ -682,6 +682,13 @@ _TAG_LABELS: dict[str, str] = {
     "1": "1 ос.",
     "2": "2 ос.",
     "3": "3 ос.",
+    # Безособова форма на -но/-то (читано, написано …) — dict_uk tagset doc
+    # (``doc/tags.txt`` @ github.com/brown-uk/dict_uk): "impers    безособова
+    # форма". Without this entry ``_decode_tag`` drops the token silently and
+    # ``verb:imperf:impers`` (1619 × -но, 183 × -то in VESUM) decodes to ``""``,
+    # which used to wipe the whole verb paradigm in ``_build_verb_paradigm``
+    # (#7611).
+    "impers": "безособова форма",
 }
 
 _POS_LABELS: dict[str, str] = {
@@ -841,13 +848,23 @@ def _parse_person_slot(parts: list[str]) -> tuple[str, str] | None:
     return parts[1], person
 
 
+_IMPERSONAL_LABEL = _TAG_LABELS["impers"]
+
+
 def _build_verb_paradigm(forms: list[dict[str, str]]) -> dict | None:
+    """Build a structured verb paradigm, quarantining bad rows instead of the
+    whole paradigm (#7611). A form whose label is empty, unmapped, or an
+    unrecognized cell under a known tense/mood head is dropped on its own —
+    it is never silently folded into another field, and it never wipes the
+    forms that *did* decode cleanly.
+    """
     infinitive: list[str] = []
     tenses: dict[str, dict[str, dict[str, list[str]]]] = {
         tense: {number: {person: [] for person in _PERSONS} for number in _NUMBERS} for tense in _VERB_TENSES
     }
     imperative: dict[str, dict[str, list[str]]] = {number: {person: [] for person in _PERSONS} for number in _NUMBERS}
     past: dict[str, list[str]] = {key: [] for key in _PAST_KEYS}
+    impersonal: list[str] = []
 
     for row in forms:
         form = row.get("form", "")
@@ -859,24 +876,33 @@ def _build_verb_paradigm(forms: list[dict[str, str]]) -> dict | None:
             if _is_infinitive_form(form):
                 infinitive.append(form)
             continue
+        if _IMPERSONAL_LABEL in parts:
+            # Безособова форма на -но/-то (читано, написано …) has no person,
+            # number, or tense cells of its own — first-class field, not a
+            # tense/imperative/past slot.
+            impersonal.append(form)
+            continue
         if len(parts) == 2 and parts[0] == "минулий" and parts[1] in past:
             past[parts[1]].append(form)
             continue
         if parts and parts[0] == "наказовий":
             parsed = _parse_person_slot(parts)
-            if not parsed:
-                return None
-            number, person = parsed
-            imperative[number][person].append(form)
+            if parsed:
+                number, person = parsed
+                imperative[number][person].append(form)
+            # else: unrecognized cell under a known mood head — quarantine
+            # this row only, keep building the rest of the paradigm.
             continue
         if parts and parts[0] in tenses:
             parsed = _parse_person_slot(parts)
-            if not parsed:
-                return None
-            number, person = parsed
-            tenses[parts[0]][number][person].append(form)
+            if parsed:
+                number, person = parsed
+                tenses[parts[0]][number][person].append(form)
             continue
-        return None
+        # Empty label (unmapped VESUM tag token) or an unrecognized non-empty
+        # label: quarantine this one form. A non-empty unknown label stays
+        # diagnostic — it is dropped, never guessed into a structured field.
+        continue
 
     infinitive_value = _join_variants(infinitive)
     if not infinitive_value:
@@ -887,13 +913,13 @@ def _build_verb_paradigm(forms: list[dict[str, str]]) -> dict | None:
         has_tense = any(tenses[tense][number][person] for number in _NUMBERS for person in _PERSONS)
         if not has_tense:
             continue
-        collapsed_tenses[tense] = {"однина": {}, "множина": {}}
+        tense_cells: dict[str, dict[str, str]] = {number: {} for number in _NUMBERS}
         for number in _NUMBERS:
             for person in _PERSONS:
                 value = _join_variants(tenses[tense][number][person])
-                if not value:
-                    return None
-                collapsed_tenses[tense][number][person] = value
+                if value:
+                    tense_cells[number][person] = value
+        collapsed_tenses[tense] = tense_cells
 
     collapsed_imperative: dict[str, dict[str, str]] = {}
     for number in _NUMBERS:
@@ -904,15 +930,15 @@ def _build_verb_paradigm(forms: list[dict[str, str]]) -> dict | None:
             collapsed_imperative.setdefault(number, {})[person] = value
 
     collapsed_past: dict[str, str] = {}
-    has_past = any(past.values())
-    if has_past:
+    if any(past.values()):
         for key in _PAST_KEYS:
             value = _join_variants(past[key])
-            if not value:
-                return None
-            collapsed_past[key] = value
+            if value:
+                collapsed_past[key] = value
 
-    if not collapsed_tenses and not collapsed_imperative and not collapsed_past:
+    impersonal_value = _join_variants(impersonal)
+
+    if not collapsed_tenses and not collapsed_imperative and not collapsed_past and not impersonal_value:
         return None
 
     paradigm: dict[str, object] = {"kind": "verb", "infinitive": infinitive_value}
@@ -922,6 +948,8 @@ def _build_verb_paradigm(forms: list[dict[str, str]]) -> dict | None:
         paradigm["imperative"] = collapsed_imperative
     if collapsed_past:
         paradigm["past"] = collapsed_past
+    if impersonal_value:
+        paradigm["impersonal"] = impersonal_value
     return paradigm
 
 
