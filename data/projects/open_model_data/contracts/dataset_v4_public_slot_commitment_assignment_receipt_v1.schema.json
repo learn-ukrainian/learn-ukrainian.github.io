@@ -1,0 +1,356 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/dataset_v4_public_slot_commitment_assignment_receipt_v1.schema.json",
+  "title": "Dataset V4 public-slot commitment assignment receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "status",
+    "text_free",
+    "controlling_outcome_sha256",
+    "control_surfaces",
+    "bindings",
+    "role_map",
+    "frozen_slot_denominator",
+    "assignment_gate",
+    "commitment_binding_policy",
+    "commitment_pool",
+    "assignment_records",
+    "a2_residuals_carried_forward",
+    "a4_residuals_carried_forward",
+    "engine_wiring",
+    "execution_counters",
+    "eligibility",
+    "safety_assertions"
+  ],
+  "properties": {
+    "schema_version": {"const": "dataset_v4_public_slot_commitment_assignment_receipt_v1"},
+    "receipt_id": {"const": "dataset-v4-public-slot-commitment-assignment-v1"},
+    "status": {"const": "V4_PUBLIC_SLOT_COMMITMENT_ASSIGNMENT_ALL_SLOTS_RESIDUAL_TEXT_FREE_NO_STRATUM_COMMITMENT_LINK"},
+    "text_free": {"const": true},
+    "controlling_outcome_sha256": {"const": "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"},
+    "control_surfaces": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["public_control_issue", "pilot_child_issue", "private_operational_board"],
+      "properties": {
+        "public_control_issue": {"const": 7423},
+        "pilot_child_issue": {"const": 7430},
+        "private_operational_board": {"const": 622}
+      }
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "a2_source_operation_admission",
+        "a4_deterministic_extraction",
+        "pilot_slot_manifest",
+        "admission_engine_implementation",
+        "wiring_implementation"
+      ],
+      "properties": {
+        "a2_source_operation_admission": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "properties": {
+            "path": {"const": "data/projects/open_model_data/admission/dataset_v4_a2_source_operation_admission_receipt_v1.json"},
+            "schema_version": {"const": "dataset_v4_a2_source_operation_admission_receipt_v1"}
+          }
+        },
+        "a4_deterministic_extraction": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "properties": {
+            "path": {"const": "data/projects/open_model_data/admission/dataset_v4_a4_deterministic_extraction_receipt_v1.json"},
+            "schema_version": {"const": "dataset_v4_a4_deterministic_extraction_receipt_v1"}
+          }
+        },
+        "pilot_slot_manifest": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "properties": {
+            "path": {"const": "data/projects/open_model_data/admission/dataset_v4_pilot_slot_manifest_v1.json"},
+            "schema_version": {"const": "dataset_v4_pilot_slot_manifest_v1"}
+          }
+        },
+        "admission_engine_implementation": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "properties": {
+            "path": {"const": "scripts/projects/open_model_data/v4_original_row_admission.py"},
+            "schema_version": {"const": "v4_original_row_admission_script_v1"}
+          }
+        },
+        "wiring_implementation": {
+          "allOf": [{"$ref": "#/$defs/artifact_binding"}],
+          "properties": {
+            "path": {"const": "scripts/projects/open_model_data/v4_public_slot_commitment_assignment.py"},
+            "schema_version": {"const": "v4_public_slot_commitment_assignment_script_v1"}
+          }
+        }
+      }
+    },
+    "role_map": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["A0", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "A11", "A12", "A13"],
+      "properties": {
+        "A0": {"const": "scope_lead"},
+        "A1": {"const": "custody"},
+        "A2": {"const": "source_inventory_admission"},
+        "A3": {"const": "heldout"},
+        "A4": {"const": "deterministic_extraction"},
+        "A5": {"const": "evidence_enrichment"},
+        "A6": {"const": "safe_arena"},
+        "A7": {"const": "original_row_factory"},
+        "A8": {"const": "admission_assembly"},
+        "A9": {"const": "evaluation_package"},
+        "A10": {"const": "pilot_review"},
+        "A11": {"const": "training_ready_release"},
+        "A12": {"const": "later_gold_overlay"},
+        "A13": {"const": "cleanup_recovery"}
+      }
+    },
+    "frozen_slot_denominator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["total_slots", "strata"],
+      "properties": {
+        "total_slots": {"const": 100},
+        "strata": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["stratum", "id_prefix", "count", "assignment_state", "slot_ids"],
+            "properties": {
+              "stratum": {"type": "string", "minLength": 1},
+              "id_prefix": {"type": "string", "pattern": "^v4p-[a-z-]+$"},
+              "count": {"type": "integer", "minimum": 1},
+              "assignment_state": {"type": "string", "minLength": 1},
+              "slot_ids": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {"type": "string", "pattern": "^v4p-[a-z-]+-[0-9]{3}$"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "assignment_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gate_id", "a4_receipt_valid", "a2_rights_resolved", "builder_eligible_commitments_available",
+        "stratum_commitment_binding_available", "assignment_ready", "owner_role", "blocked_reason_code"
+      ],
+      "properties": {
+        "gate_id": {"const": "v4-public-slot-commitment-assignment-gate-v1"},
+        "a4_receipt_valid": {"type": "boolean"},
+        "a2_rights_resolved": {"type": "boolean"},
+        "builder_eligible_commitments_available": {"type": "integer", "minimum": 0},
+        "stratum_commitment_binding_available": {"const": false},
+        "assignment_ready": {"const": false},
+        "owner_role": {"type": "string", "minLength": 1},
+        "blocked_reason_code": {"type": ["string", "null"]}
+      }
+    },
+    "commitment_binding_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy_id", "stratum_commitment_binding_ever_public", "reason", "owner_role"],
+      "properties": {
+        "policy_id": {"const": "v4-public-slot-commitment-binding-policy-v1"},
+        "stratum_commitment_binding_ever_public": {"const": false},
+        "reason": {"type": "string", "minLength": 1},
+        "owner_role": {"const": "A2_A3_PRIVATE_ARTIFACT"}
+      }
+    },
+    "commitment_pool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pool_id", "commitment_algorithm_id", "commitment_algorithm_descriptor_sha256",
+        "content_blind", "total_builder_eligible_commitments", "commitments"
+      ],
+      "properties": {
+        "pool_id": {"const": "v4-public-slot-commitment-pool-v1"},
+        "commitment_algorithm_id": {"const": "v4-a4-unit-commitment-hmac-sha256-v1"},
+        "commitment_algorithm_descriptor_sha256": {"$ref": "#/$defs/sha256"},
+        "content_blind": {"const": true},
+        "total_builder_eligible_commitments": {"type": "integer", "minimum": 0},
+        "commitments": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/sha256"}
+        }
+      }
+    },
+    "assignment_records": {
+      "type": "array",
+      "minItems": 100,
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["slot_id", "stratum", "assignment_status", "commitment_sha256", "reason_code", "owner_role", "next_action"],
+        "properties": {
+          "slot_id": {"type": "string", "pattern": "^v4p-[a-z-]+-[0-9]{3}$"},
+          "stratum": {"type": "string", "minLength": 1},
+          "assignment_status": {"const": "residual"},
+          "commitment_sha256": {"const": null},
+          "reason_code": {"enum": ["rights_unknown", "source_incomplete", "independence_unavailable"]},
+          "owner_role": {"type": "string", "minLength": 1},
+          "next_action": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "a2_residuals_carried_forward": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["residual_id", "origin_stage", "status"],
+        "properties": {
+          "residual_id": {
+            "enum": [
+              "a2-residual-standard-correct-rights-unknown",
+              "a2-residual-correction-coverage-blocked",
+              "a2-residual-literary-rights-unknown",
+              "a2-residual-dialect-regional-source-incomplete",
+              "a2-residual-archaic-historical-coverage-blocked",
+              "a2-residual-mixing-source-incomplete",
+              "a2-residual-quotation-interference-rights-unknown",
+              "a2-residual-abstention-source-incomplete"
+            ]
+          },
+          "origin_stage": {"const": "A2"},
+          "status": {"const": "unresolved_carried_to_public_slot_commitment_assignment"}
+        }
+      }
+    },
+    "a4_residuals_carried_forward": {
+      "type": "array",
+      "minItems": 9,
+      "maxItems": 9,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["residual_id", "origin_stage", "status"],
+        "properties": {
+          "residual_id": {"type": "string", "pattern": "^a4-residual-[a-z0-9_-]+$"},
+          "origin_stage": {"const": "A4"},
+          "status": {"const": "unresolved_carried_to_public_slot_commitment_assignment"}
+        }
+      }
+    },
+    "engine_wiring": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["engine_schema_version", "engine_input_schema_version", "model_only_bases_blocked", "admission_receipt"],
+      "properties": {
+        "engine_schema_version": {"const": "v4-original-row-admission-v1"},
+        "engine_input_schema_version": {"const": "v4-original-row-admission-input-v1"},
+        "model_only_bases_blocked": {"const": ["arena_vote", "model_agreement", "model_vote"]},
+        "admission_receipt": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["schema_version", "visibility", "outcome_sha256", "rows", "counts", "receipt_sha256"],
+          "properties": {
+            "schema_version": {"const": "v4-original-row-admission-v1"},
+            "visibility": {"const": "machine_receipt_text_free"},
+            "outcome_sha256": {"const": "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"},
+            "rows": {"const": []},
+            "counts": {"const": {"input_rows": 0, "admitted_rows": 0, "rejected_rows": 0}},
+            "receipt_sha256": {"$ref": "#/$defs/sha256"}
+          }
+        }
+      }
+    },
+    "execution_counters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dataset_rows_emitted", "frozen_slot_count", "assigned_slot_count",
+        "residual_slot_count", "builder_eligible_commitments_available"
+      ],
+      "properties": {
+        "dataset_rows_emitted": {"const": 0},
+        "frozen_slot_count": {"const": 100},
+        "assigned_slot_count": {"const": 0},
+        "residual_slot_count": {"const": 100},
+        "builder_eligible_commitments_available": {"type": "integer", "minimum": 0}
+      }
+    },
+    "eligibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gold", "training", "evaluation", "teaching", "coverage"],
+      "properties": {
+        "gold": {"const": false},
+        "training": {"const": false},
+        "evaluation": {"const": false},
+        "teaching": {"const": false},
+        "coverage": {"const": false}
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rows_not_admitted", "text_emitted", "source_text_loaded_into_model", "corpus_refetched",
+        "held_out_membership_referenced", "held_out_membership_opened", "private_builder_packet_opened",
+        "a4_private_ledger_opened", "stratum_to_commitment_binding_published", "commitment_bound_to_a_slot",
+        "gold_created", "training_ready_silver_claimed", "arena_slice_ready_claimed", "eval_artifact_ready_claimed",
+        "mac_corpus_copy_created", "epic_done_claimed", "heldout_family_identity_leaked",
+        "denominator_reduced_below_100", "residual_silently_dropped"
+      ],
+      "properties": {
+        "rows_not_admitted": {"const": true},
+        "text_emitted": {"const": false},
+        "source_text_loaded_into_model": {"const": false},
+        "corpus_refetched": {"const": false},
+        "held_out_membership_referenced": {"const": false},
+        "held_out_membership_opened": {"const": false},
+        "private_builder_packet_opened": {"const": false},
+        "a4_private_ledger_opened": {"const": false},
+        "stratum_to_commitment_binding_published": {"const": false},
+        "commitment_bound_to_a_slot": {"const": false},
+        "gold_created": {"const": false},
+        "training_ready_silver_claimed": {"const": false},
+        "arena_slice_ready_claimed": {"const": false},
+        "eval_artifact_ready_claimed": {"const": false},
+        "mac_corpus_copy_created": {"const": false},
+        "epic_done_claimed": {"const": false},
+        "heldout_family_identity_leaked": {"const": false},
+        "denominator_reduced_below_100": {"const": false},
+        "residual_silently_dropped": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "artifact_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "schema_version"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+"
+        },
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "schema_version": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}
