@@ -375,15 +375,15 @@ def test_api_lifespan_invokes_registry_seed_with_two_roots(monkeypatch: pytest.M
     calls: dict[str, object] = {}
     monkeypatch.setattr(api_main, "preload_all", lambda: None)
     monkeypatch.setattr(api_main, "install_signal_logging", lambda: None)
-    monkeypatch.setattr(api_main, "ensure_broker_db_ready", lambda: None)
+    monkeypatch.setattr(api_main, "ensure_broker_db_ready", lambda **_kwargs: None)
     monkeypatch.setattr(api_main.isa, "schedule_refresh", lambda force=False: None)
     monkeypatch.setattr(api_main, "warm_projection_cache", lambda **_kwargs: None)
     monkeypatch.setattr(api_main, "start_periodic_refresh", lambda: None)
     monkeypatch.setattr(api_main, "stop_periodic_refresh", lambda: None)
 
-    def fake_seed(root: Path, **kwargs: object) -> dict[str, object]:
+    def fake_seed(root: Path, *, ctx: object, **kwargs: object) -> dict[str, object]:
         calls["root"] = root
-        calls["kwargs"] = kwargs
+        calls["kwargs"] = {"ctx": ctx, **kwargs}
         return {}
 
     monkeypatch.setattr(api_main, "seed_manifest_inventory", fake_seed)
