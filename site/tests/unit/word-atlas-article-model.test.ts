@@ -752,7 +752,7 @@ describe("Atlas lexical backlinks (#7610)", () => {
     expect(verbHtml).not.toContain('href="/lexicon/читаючи"');
   });
 
-  test("derives the published passive relationship from search-index glosses", () => {
+  test("derives passive relationships from search-index glosses without treating gerund glosses as parent evidence", () => {
     const catalog = buildAtlasLinkCatalogFromSearchRows([
       { l: "читати", s: "читати", g: "to read", t: "lemma" },
       { l: "читаний", s: "читаний", g: "Дієпр. пас. мин. і теп. ч. до чита́ти.", t: "lemma" },
@@ -766,5 +766,64 @@ describe("Atlas lexical backlinks (#7610)", () => {
     );
 
     expect(view.participleLinks).toEqual([{ lemma: "читаний", slug: "читаний" }]);
+    expect(view.gerundLinks).toEqual([]);
+  });
+
+  test("lists producer-verified gerunds on their verb page", () => {
+    const catalog = buildAtlasLinkCatalogFromSearchRows([
+      { l: "читати", s: "читати", g: "to read", t: "lemma" },
+      {
+        l: "читаючи",
+        s: "читаючи",
+        g: "while reading",
+        t: "lemma",
+        p: "чита́ти",
+      },
+    ]);
+    const props = articleProps(fixtureEntry("читати", { pos: "verb" }));
+    const view = buildWordAtlasArticleView(props.record, "test", "test", catalog);
+    const html = renderWordAtlasArticle({ ...props, atlasLinkCatalog: catalog });
+
+    expect(view.gerundLinks).toEqual([{ lemma: "читаючи", slug: "читаючи" }]);
+    expect(html).toContain("<h2>Дієприслівники</h2>");
+    expect(html).toContain('href="/lexicon/читаючи"');
+    expect(html).toContain("дієприслівник");
+  });
+
+  test("fails closed for parentless, unresolved, and ambiguous gerund parents", () => {
+    const catalog = buildAtlasLinkCatalogFromSearchRows([
+      { l: "читати", s: "читати", g: "to read", t: "lemma" },
+      { l: "читаючи", s: "читаючи", g: "while reading", t: "lemma", p: "читати" },
+      { l: "зробивши", s: "зробивши", g: "having done", t: "lemma", p: "відсутній" },
+      {
+        l: "сидячи",
+        s: "сидячи",
+        g: "Дієприсл. недоконаного виду до сидіти.",
+        t: "lemma",
+      },
+    ]);
+    const props = articleProps(fixtureEntry("читати", { pos: "verb" }));
+    const html = renderWordAtlasArticle({ ...props, atlasLinkCatalog: catalog });
+
+    expect(html).toContain('href="/lexicon/читаючи"');
+    expect(html).not.toContain('href="/lexicon/зробивши"');
+    expect(html).not.toContain('href="/lexicon/сидячи"');
+
+    const ambiguousCatalog = buildAtlasLinkCatalogFromSearchRows([
+      { l: "читати", s: "читати-1", g: "to read", t: "lemma" },
+      { l: "читати", s: "читати-2", g: "to read", t: "lemma" },
+      { l: "читаючи", s: "читаючи", g: "while reading", t: "lemma", p: "читати" },
+    ]);
+    const ambiguousProps = articleProps(
+      fixtureEntry("читати", { url_slug: "читати-1", pos: "verb" }),
+    );
+    const ambiguousView = buildWordAtlasArticleView(
+      ambiguousProps.record,
+      "test",
+      "test",
+      ambiguousCatalog,
+    );
+
+    expect(ambiguousView.gerundLinks).toEqual([]);
   });
 });

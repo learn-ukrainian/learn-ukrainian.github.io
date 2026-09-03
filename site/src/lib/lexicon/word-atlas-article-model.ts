@@ -277,6 +277,8 @@ export interface AtlasLinkCatalogEntry {
   entry_type?: string | null;
   pos?: string | null;
   gloss?: string | null;
+  /** Producer-verified gerund parent; never derived from the entry spelling. */
+  gerund_parent?: string | null;
   enrichment?: Pick<Enrichment, "morphology"> | null;
 }
 
@@ -292,6 +294,11 @@ export interface AtlasLinkCatalog {
 }
 
 export interface ParticipleLink {
+  lemma: string;
+  slug: string;
+}
+
+export interface GerundLink {
   lemma: string;
   slug: string;
 }
@@ -557,6 +564,8 @@ export interface AtlasSearchArticleRow {
   s: string;
   g: string | null;
   t?: string;
+  /** Compact source-backed gerund → infinitive parent emitted by the producer. */
+  p?: string;
 }
 
 export interface AtlasSearchAliasRow {
@@ -574,6 +583,7 @@ export function buildAtlasLinkCatalogFromSearchRows(
       slug: row.s,
       entry_type: row.t ?? "lemma",
       gloss: row.g,
+      gerund_parent: row.p,
     })),
     aliases: aliases.map((row) => ({ alias: row.a, target_slug: row.s })),
   };
@@ -771,6 +781,48 @@ export function buildParticipleLinks(
   });
 }
 
+interface GerundCandidate extends GerundLink {
+  parent: string;
+}
+
+const GERUND_CANDIDATE_CACHE = new WeakMap<AtlasLinkCatalog, GerundCandidate[]>();
+
+function gerundCandidates(catalog: AtlasLinkCatalog): GerundCandidate[] {
+  const cached = GERUND_CANDIDATE_CACHE.get(catalog);
+  if (cached) return cached;
+
+  const candidates: GerundCandidate[] = [];
+  for (const entry of catalog.entries) {
+    if (!isCanonicalAtlasEntry(entry)) continue;
+    const parent = entry.gerund_parent?.trim();
+    if (parent) candidates.push({ lemma: entry.lemma, slug: entry.slug, parent });
+  }
+  GERUND_CANDIDATE_CACHE.set(catalog, candidates);
+  return candidates;
+}
+
+/** Return published gerund routes whose producer-verified parent is `parentSlug`. */
+export function buildGerundLinks(
+  catalog: AtlasLinkCatalog,
+  resolver: AtlasLinkResolver,
+  parentSlug: string,
+): GerundLink[] {
+  const links = new Map<string, GerundLink>();
+  for (const candidate of gerundCandidates(catalog)) {
+    // `resolve()` rejects missing and ambiguous parent heads, so a stale or
+    // malformed compact hint cannot turn into a learner-facing backlink.
+    if (candidate.slug === parentSlug || resolver.resolve(candidate.parent) !== parentSlug) continue;
+    links.set(candidate.slug, { lemma: candidate.lemma, slug: candidate.slug });
+  }
+  return [...links.values()].sort((left, right) => {
+    const lemmaOrder = normalizeAtlasLookupText(left.lemma).localeCompare(
+      normalizeAtlasLookupText(right.lemma),
+      "uk",
+    );
+    return lemmaOrder || left.slug.localeCompare(right.slug);
+  });
+}
+
 export function isRusalkaClassLemma(lemma: string): boolean {
   return RUSALKA_CLASS_LEMMAS.has(normalizeAtlasLemma(lemma));
 }
@@ -903,6 +955,7 @@ export function buildWordAtlasArticleView(
     ? { ...rawParticipleParadigm, verb_url_slug: participleParentSlug ?? undefined }
     : null;
   const participleLinks = buildParticipleLinks(linkCatalog, linkResolver, entry.url_slug);
+  const gerundLinks = buildGerundLinks(linkCatalog, linkResolver, entry.url_slug);
   const markedForms = enrichment?.morphology?.marked_forms ?? [];
   const markedFormGroups: Array<{ marker_label: string; forms: typeof markedForms }> = [];
   for (const form of markedForms) {
@@ -1013,6 +1066,7 @@ export function buildWordAtlasArticleView(
     verbParadigm,
     participleParadigm,
     participleLinks,
+    gerundLinks,
     atlasLinkTargetForText,
     markedFormGroups,
     isFullyMarked,

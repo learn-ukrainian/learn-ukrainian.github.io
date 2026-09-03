@@ -69,12 +69,18 @@ def fixture_entries() -> list[dict[str, object]]:
     ]
 
 
-def atlas_db_fixture(tmp_path: Path) -> Path:
+def atlas_db_fixture(
+    tmp_path: Path,
+    *,
+    entries: list[dict[str, object]] | None = None,
+) -> Path:
     manifest = tmp_path / "manifest.json"
     manifest.write_text(
         json.dumps(
             {
-                "entries": [
+                "entries": entries
+                if entries is not None
+                else [
                     entry("Іван", slug="іван", gloss="Ivan"),
                     entry("автобус", gloss="bus"),
                     {"lemma": "Іване", "url_slug": "іване", "form_of": {"url_slug": "іван"}},
@@ -125,6 +131,200 @@ def test_db_artifact_build_fails_on_the_site_build_entry_model_gates(tmp_path: P
 
     with pytest.raises(ValueError, match="alias_target_integrity failure"):
         build_atlas_db_search_artifacts(db)
+
+
+def test_db_artifacts_emit_only_provenance_safe_gerund_parents(tmp_path: Path) -> None:
+    dictionary_gerund = entry("читаючи", gloss="while reading")
+    dictionary_gerund["enrichment"] = {
+        "definition_cards": [
+            {
+                "id": "sum20",
+                "source": "СУМ-20",
+                "definitions": ["чита́ючи Дієприсл. недоконаного виду до чита́ти."],
+            }
+        ]
+    }
+    meaning_gerund = entry("прочитавши", gloss="having read")
+    meaning_gerund["enrichment"] = {
+        "meaning": {
+            "source": "словник",
+            "definitions": ["Дієприсл. доконаного виду до прочита́ти."],
+        }
+    }
+    vesum_hint = entry("йдучи", gloss="while going")
+    vesum_hint["enrichment"] = {
+        "morphology": {
+            "source": "VESUM",
+            "pos": "advp",
+            "paradigm": {"kind": "other", "verb": "іти"},
+        }
+    }
+    pos_only = entry("сидячи", gloss="while sitting")
+    pos_only["enrichment"] = {
+        "morphology": {"source": "VESUM", "pos": "advp", "paradigm": {"kind": "other"}}
+    }
+    non_vesum = entry("лежачи", gloss="while lying")
+    non_vesum["enrichment"] = {
+        "morphology": {
+            "source": "manual",
+            "pos": "advp",
+            "paradigm": {"kind": "other", "verb": "лежати"},
+        }
+    }
+    wrong_vesum_pos = entry("стоячи", gloss="while standing")
+    wrong_vesum_pos["enrichment"] = {
+        "morphology": {
+            "source": "VESUM",
+            "pos": "adverbial participle",
+            "paradigm": {"kind": "other", "verb": "стояти"},
+        }
+    }
+    missing_parent = entry("кажучи", gloss="while saying")
+    missing_parent["enrichment"] = {
+        "definition_cards": [
+            {"id": "sum20", "source": "СУМ-20", "definitions": ["Ка́жучи, дієприсл."]}
+        ]
+    }
+    conflicting_parents = entry("роблячи", gloss="while doing")
+    conflicting_parents["enrichment"] = {
+        "meaning": {
+            "source": "словник",
+            "definitions": ["Дієприсл. недоконаного виду до роби́ти."],
+        },
+        "definition_cards": [
+            {
+                "id": "sum20",
+                "source": "СУМ-20",
+                "definitions": ["Роблячи Дієприсл. до вико́нувати."],
+            }
+        ],
+    }
+    unsourced_definition = entry("співаючи", gloss="while singing")
+    unsourced_definition["enrichment"] = {
+        "definition_cards": [
+            {"id": "unattributed", "definitions": ["Дієприсл. до співа́ти."]}
+        ]
+    }
+    learner_gloss = entry("танцюючи", gloss="Дієприсл. до танцюва́ти.")
+    passive_participle = entry("читаний", gloss="read")
+    passive_participle["enrichment"] = {
+        "definition_cards": [
+            {
+                "id": "sum20",
+                "source": "СУМ-20",
+                "definitions": ["Дієпр. пас. мин. часу до чита́ти."],
+            }
+        ]
+    }
+    anna_copy = entry("працюючи", gloss="while working")
+    anna_copy["enrichment"] = {
+        "meaning": {
+            "source": "Anna Ohoiko",
+            "definitions": ["Дієприсл. до працюва́ти."],
+        }
+    }
+
+    db = atlas_db_fixture(
+        tmp_path,
+        entries=[
+            entry("читати"),
+            entry("прочитати"),
+            entry("іти"),
+            dictionary_gerund,
+            meaning_gerund,
+            vesum_hint,
+            pos_only,
+            non_vesum,
+            wrong_vesum_pos,
+            missing_parent,
+            conflicting_parents,
+            unsourced_definition,
+            learner_gloss,
+            passive_participle,
+            anna_copy,
+        ],
+    )
+
+    articles, _, _ = build_atlas_db_search_artifacts(db)
+    by_slug = {row["s"]: row for row in articles}
+
+    assert by_slug["читаючи"]["p"] == "чита́ти"
+    assert by_slug["прочитавши"]["p"] == "прочита́ти"
+    assert by_slug["йдучи"]["p"] == "іти"
+    for slug in (
+        "сидячи",
+        "лежачи",
+        "стоячи",
+        "кажучи",
+        "роблячи",
+        "співаючи",
+        "танцюючи",
+        "читаний",
+        "працюючи",
+    ):
+        assert "p" not in by_slug[slug]
+
+
+def test_db_mode_preserves_gerund_parent_in_search_rows_and_shards(tmp_path: Path) -> None:
+    gerund = entry("говорячи", gloss="while speaking")
+    gerund["enrichment"] = {
+        "definition_cards": [
+            {
+                "id": "sum20",
+                "source": "СУМ-20",
+                "definitions": ["гово́рячи Дієприсл. до говори́ти."],
+            }
+        ]
+    }
+    db = atlas_db_fixture(tmp_path, entries=[entry("говорити"), gerund])
+    search_out = tmp_path / "search.json"
+    aliases_out = tmp_path / "aliases.json"
+    search_shards_out = tmp_path / "search-shards.json"
+    search_shard_dir = tmp_path / "search-shards"
+    browse_meta_out = tmp_path / "browse-meta.json"
+    browse_flagged_out = tmp_path / "browse-flagged.json"
+    browse_dir = tmp_path / "browse"
+
+    assert (
+        main(
+            [
+                "--db",
+                str(db),
+                "--out",
+                str(search_out),
+                "--aliases-out",
+                str(aliases_out),
+                "--search-shards-out",
+                str(search_shards_out),
+                "--search-shard-dir",
+                str(search_shard_dir),
+                "--browse-meta-out",
+                str(browse_meta_out),
+                "--browse-flagged-out",
+                str(browse_flagged_out),
+                "--browse-dir",
+                str(browse_dir),
+            ]
+        )
+        == 0
+    )
+
+    search_rows = json.loads(search_out.read_text(encoding="utf-8"))
+    gerund_row = next(row for row in search_rows if row["s"] == "говорячи")
+    assert gerund_row["p"] == "говори́ти"
+
+    search_shards = json.loads(search_shards_out.read_text(encoding="utf-8"))
+    shard_key = next(
+        key
+        for key in search_shards["shards"]
+        if any(
+            row["s"] == "говорячи"
+            for row in json.loads((search_shard_dir / f"{key}.json").read_text(encoding="utf-8"))
+        )
+    )
+    shard_rows = json.loads((search_shard_dir / f"{shard_key}.json").read_text(encoding="utf-8"))
+    assert next(row for row in shard_rows if row["s"] == "говорячи")["p"] == "говори́ти"
+    assert all("p" not in row for row in json.loads((browse_dir / "Г.json").read_text(encoding="utf-8")))
 
 
 def test_build_index_schema_sorting_filters_and_kind_buckets() -> None:

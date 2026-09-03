@@ -73,6 +73,21 @@ _TYPEAHEAD_ABBREV_PROTECT = (
     "пор.",
 )
 
+# A gerund's spelling does not identify its infinitive (for example, ``йдучи``
+# does not derive from ``*йдти``).  Only preserve an explicit parent attested
+# in a sourced Ukrainian definition or an existing VESUM-backed morphology
+# hint.  ``Дієпр.`` is deliberately excluded: it abbreviates
+# ``дієприкметник``, not ``дієприслівник``.
+_UKRAINIAN_WORD_CHARS = "А-Яа-яЄєІіЇїҐґ\u0300\u0301"
+_UKRAINIAN_WORD_RE = rf"[{_UKRAINIAN_WORD_CHARS}]+(?:['’ʼ-][{_UKRAINIAN_WORD_CHARS}]+)*"
+_GERUND_PARENT_RE = re.compile(
+    rf"(?<![{_UKRAINIAN_WORD_CHARS}])дієприсл\.(?![{_UKRAINIAN_WORD_CHARS}])"
+    rf"[\s\S]*?(?<![{_UKRAINIAN_WORD_CHARS}])до\s+({_UKRAINIAN_WORD_RE})",
+    re.IGNORECASE,
+)
+_GERUND_PARENT_WORD_RE = re.compile(rf"^{_UKRAINIAN_WORD_RE}$")
+_PARENT_APOSTROPHE_TRANSLATION = str.maketrans({"’": "'", "ʼ": "'"})
+
 
 def _load_helper_module(name: str, path: Path) -> Any:
     spec = importlib.util.spec_from_file_location(name, path)
@@ -114,6 +129,115 @@ def _clean_text(value: object) -> str | None:
         return None
     normalized = value.strip()
     return normalized or None
+
+
+def _definition_strings(value: object) -> list[str]:
+    """Return source-definition prose without treating arbitrary metadata as text."""
+    if not isinstance(value, list):
+        return []
+    strings: list[str] = []
+    for item in value:
+        if isinstance(item, str):
+            strings.append(item)
+        elif isinstance(item, Mapping):
+            for key in ("text", "definition", "value"):
+                text = item.get(key)
+                if isinstance(text, str):
+                    strings.append(text)
+    return strings
+
+
+def _is_anna_copy_source(value: object) -> bool:
+    source = _clean_text(value)
+    if not source:
+        return False
+    normalized = source.casefold()
+    return any(marker in normalized for marker in ("anna", "ohoiko", "learner_english_gloss"))
+
+
+def _sourced_gerund_definition_hints(entry: Mapping[str, Any]) -> list[str]:
+    """Collect only dictionary/enrichment definitions with declared sources.
+
+    ``articles.gloss`` is the learner-facing typeahead gloss and is not a
+    dictionary provenance field.  Do not turn its wording into a grammatical
+    relationship.  The same is true of form notes: an entry may be labelled a
+    gerund there without naming the generating infinitive.  Anna/Ohoiko
+    learner copy is likewise outside this dictionary-evidence boundary.
+    """
+    enrichment = entry.get("enrichment")
+    if not isinstance(enrichment, Mapping):
+        return []
+
+    hints: list[str] = []
+    meaning = enrichment.get("meaning")
+    if (
+        isinstance(meaning, Mapping)
+        and _clean_text(meaning.get("source"))
+        and not _is_anna_copy_source(meaning.get("source"))
+    ):
+        hints.extend(_definition_strings(meaning.get("definitions")))
+
+    cards = enrichment.get("definition_cards")
+    if not isinstance(cards, list):
+        return hints
+    for card in cards:
+        if (
+            not isinstance(card, Mapping)
+            or not _clean_text(card.get("source"))
+            or _is_anna_copy_source(card.get("source"))
+        ):
+            continue
+        hints.extend(_definition_strings(card.get("definitions")))
+    return hints
+
+
+def _clean_gerund_parent(value: object) -> str | None:
+    parent = _clean_text(value)
+    if not parent or not _GERUND_PARENT_WORD_RE.fullmatch(parent):
+        return None
+    return parent
+
+
+def _normalized_parent_hint(value: str) -> str:
+    """Compare explicit parent hints without deriving or changing a lemma."""
+    return (
+        unicodedata.normalize("NFC", value)
+        .replace("\u0301", "")
+        .replace("\u0300", "")
+        .translate(_PARENT_APOSTROPHE_TRANSLATION)
+        .casefold()
+    )
+
+
+def _gerund_parent(entry: Mapping[str, Any]) -> str | None:
+    """Return one provenance-safe gerund parent, otherwise fail closed.
+
+    A dictionary definition may explicitly state ``Дієприсл. … до <verb>``.
+    Separately, VESUM ``pos=advp`` establishes that a stored morphology parent
+    belongs to a gerund; VESUM alone never supplies or implies that parent.
+    Conflicting source hints are intentionally omitted from the public catalog.
+    """
+    candidates: dict[str, str] = {}
+    for hint in _sourced_gerund_definition_hints(entry):
+        for match in _GERUND_PARENT_RE.finditer(hint):
+            parent = _clean_gerund_parent(match.group(1))
+            if parent:
+                candidates.setdefault(_normalized_parent_hint(parent), parent)
+
+    enrichment = entry.get("enrichment")
+    morphology = enrichment.get("morphology") if isinstance(enrichment, Mapping) else None
+    if isinstance(morphology, Mapping):
+        paradigm = morphology.get("paradigm")
+        if (
+            morphology.get("source") == "VESUM"
+            and morphology.get("pos") == "advp"
+            and isinstance(paradigm, Mapping)
+        ):
+            parent = _clean_gerund_parent(paradigm.get("verb"))
+            if parent:
+                candidates.setdefault(_normalized_parent_hint(parent), parent)
+
+    return next(iter(candidates.values())) if len(candidates) == 1 else None
 
 
 def _json_bytes(payload: object) -> bytes:
@@ -374,6 +498,11 @@ def _search_row(entry: dict[str, Any]) -> dict[str, Any] | None:
     cls = classification_code(entry)
     if cls:
         row["cls"] = cls
+    gerund_parent = _gerund_parent(entry)
+    if gerund_parent:
+        # ``p`` is a compact, source-backed gerund → infinitive hint for the
+        # Atlas link catalog.  It is never inferred from the gerund spelling.
+        row["p"] = gerund_parent
     return row
 
 
@@ -627,6 +756,23 @@ def build_atlas_db_search_artifacts(
                WHERE review_state = 'approved' AND visibility = 'public'
                ORDER BY display_head COLLATE NOCASE, slug"""
         ).fetchall()
+        enrichment_by_slug: dict[str, dict[str, Any]] = defaultdict(dict)
+        for slug, section, payload_json in conn.execute(
+            """SELECT slug, section, payload_json
+               FROM enrichment
+               WHERE section IN ('meaning', 'definition_cards', 'morphology')"""
+        ):
+            try:
+                payload = json.loads(payload_json)
+            except (TypeError, json.JSONDecodeError):
+                # A malformed enrichment payload cannot establish a public
+                # grammatical relationship; skip it rather than guessing.
+                continue
+            # ``definition_cards`` is a JSON list; the other inspected
+            # sections are mappings.  Keep only those container shapes and
+            # let the provenance extractor validate their nested fields.
+            if isinstance(payload, (Mapping, list)):
+                enrichment_by_slug[str(slug)][str(section)] = payload
         articles: list[dict[str, Any]] = []
         for slug, display_head, gloss, entry_type, cefr in article_rows:
             row: dict[str, Any] = {
@@ -639,6 +785,11 @@ def build_atlas_db_search_artifacts(
             level = _clean_text(cefr)
             if level:
                 row["c"] = level
+            gerund_parent = _gerund_parent({"enrichment": enrichment_by_slug.get(str(slug), {})})
+            if gerund_parent:
+                # Preserve the producer-verified parent in the exact search
+                # rows consumed by both the prerendered and client Atlas.
+                row["p"] = gerund_parent
             articles.append(row)
         articles.sort(key=lambda row: _uk_sort_key(row["l"]))
 

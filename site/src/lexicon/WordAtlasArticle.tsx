@@ -142,6 +142,7 @@ export default function WordAtlasArticle({
     verbParadigm,
     participleParadigm,
     participleLinks,
+    gerundLinks,
     atlasLinkTargetForText,
     markedFormGroups,
     isFullyMarked,
@@ -684,6 +685,20 @@ export default function WordAtlasArticle({
                   <span key={participle.slug} className="chip">
                     <a href={`/lexicon/${participle.slug}`} className="ukr">{participle.lemma}</a>
                     <span className="chip-gloss">дієприкметник</span>
+                  </span>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {gerundLinks.length > 0 && (
+            <section className="atlas-section">
+              <h2>Дієприслівники</h2>
+              <div className="chip-row">
+                {gerundLinks.map((gerund) => (
+                  <span key={gerund.slug} className="chip">
+                    <a href={`/lexicon/${gerund.slug}`} className="ukr">{gerund.lemma}</a>
+                    <span className="chip-gloss">дієприслівник</span>
                   </span>
                 ))}
               </div>
