@@ -29,6 +29,7 @@ import {
   collectLemmaMorphologyForms,
   isCaseClozeDrill,
   isIdentityClozeInsert,
+  isWrongCaseAnswer,
   selectNextPracticeItem,
   seededAnswerIndex,
   lemmaFocusClozeContentKey,
@@ -1309,6 +1310,13 @@ describe('lexicon SRS facade', () => {
 
     expect(isIdentityClozeInsert(identity, novyi)).toBe(true);
     expect(isCaseClozeDrill(caseDrill, novyi)).toBe(true);
+
+    // Apostrophe / casefold identity must use czNorm, not raw NFC equality.
+    const appeared = lexeme("з'явитися", "З’явитися");
+    const identityApostrophe = cloze("з'явитися", "appear-id", 'nominative', "З’явитися");
+    expect(isCaseClozeDrill(identityApostrophe, appeared)).toBe(false);
+    expect(isWrongCaseAnswer("з'явитися", appeared, identityApostrophe)).toBe(false);
+    expect(isWrongCaseAnswer('зʼявився', appeared, identityApostrophe)).toBe(false);
 
     const upgraded = upgradeIdentityClozeToMorphology(identity, novyi);
     expect(upgraded).not.toBeNull();

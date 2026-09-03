@@ -36,6 +36,11 @@ from lexeme_filter import (
     is_surface_admitted,
     practice_ineligibility_reason,
 )
+from practice_linguistic import (
+    check_cloze_item,
+    check_stress_item,
+    index_from_generator_candidates,
+)
 
 from scripts.lexicon.curated_membership import (
     apply_membership,
@@ -198,7 +203,7 @@ CASE_RULES = {
         "trigger": "dictionary form",
         "triggerLabel": "словникова форма",
         "feedbackTemplate": "словникова форма ({lemma} -> {form})",
-        "sameFormFeedbackTemplate": "словникова (називний) форма: {form}",
+        "sameFormFeedbackTemplate": "словникова форма: {form}",
     },
     "accusative_direct_object": {
         "case": "accusative",
@@ -1992,6 +1997,8 @@ def _build_cloze_items(
     allowlist: ReviewedSourceAllowlist,
     verifier: VesumVerifier,
     deck_version: str,
+    *,
+    source_index: Any | None = None,
 ) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
     for index, candidate in enumerate(cloze_rows):
@@ -2103,6 +2110,21 @@ def _build_cloze_items(
             item["attribution"] = attribution
         if lexeme.get("senseId"):
             item["senseId"] = lexeme["senseId"]
+        # Curated rows may omit form and derive it from the paradigm; there is then
+        # no independent attested surface to join. Inventory always carries form.
+        source_for_item = source_index
+        if not inventory_candidate and not _clean_text(candidate.get("form")):
+            source_for_item = None
+        linguistic_findings = check_cloze_item(
+            item,
+            verifier,
+            source_index=source_for_item,
+            lemma_plain=lexeme.get("lemmaPlain") or lexeme.get("lemma"),
+            # Agreement already enforced above via _cloze_blank_context_agrees.
+            check_agreement=False,
+        )
+        if linguistic_findings:
+            continue
         items.append(item)
     return items
 
@@ -4119,6 +4141,14 @@ def validate_mode_items(mode: str, items: list[dict[str, Any]]) -> list[str]:
     elif mode == "homonym":
         for index, item in enumerate(items):
             errors.extend(f"homonym[{index}]: {error}" for error in validate_homonym_item(item))
+    elif mode == "stress":
+        for index, item in enumerate(items):
+            if not isinstance(item, dict):
+                errors.append(f"stress[{index}]: item must be an object")
+                continue
+            errors.extend(
+                f"stress[{index}]: {finding.message}" for finding in check_stress_item(item)
+            )
     return errors
 
 
@@ -4496,6 +4526,7 @@ def build_practice_shards(
         key_type, key_value = key
         target = cloze_by_lemma_id if key_type == "lemmaId" else cloze_by_lemma
         target.setdefault(key_value, []).append(row)
+    cloze_source_index = index_from_generator_candidates(cloze_sources)
     cloze_by_level: dict[str, list[dict[str, Any]]] = {level: [] for level in CEFR_ORDER}
     cloze_ids_by_lemma: dict[str, list[str]] = {}
     mode_by_level: dict[str, dict[str, list[dict[str, Any]]]] = {
@@ -4514,7 +4545,14 @@ def build_practice_shards(
             ]
         else:
             source_rows = []
-        items = _build_cloze_items(lexeme, source_rows, allowlist, verifier, deck_version)
+        items = _build_cloze_items(
+            lexeme,
+            source_rows,
+            allowlist,
+            verifier,
+            deck_version,
+            source_index=cloze_source_index,
+        )
         for item in items:
             item["options"] = _make_options(item, lexeme, all_lexemes, rng)
             option_errors = validate_option_set(item)

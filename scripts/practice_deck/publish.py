@@ -26,6 +26,7 @@ DEFAULT_PRACTICE_DIR = ROOT / "site" / "public" / "lexicon"
 DEFAULT_POINTER = ROOT / "site" / "src" / "data" / "lexicon-practice-deck.pointer.json"
 DEFAULT_GZIP = ROOT / "site" / "src" / "data" / "lexicon-practice-deck.json.gz"
 DEFAULT_ATLAS_DB = ROOT / "data" / "atlas.db"
+DEFAULT_VESUM_DB = ROOT / "data" / "vesum.db"
 DEFAULT_CLOZE_SOURCES = ROOT / "site" / "src" / "data" / "lexicon-practice-cloze-sources.json"
 DEFAULT_SENTENCE_INVENTORY = ROOT / "site" / "src" / "data" / "lexicon-sentence-inventory.json"
 DEFAULT_HERITAGE_PAIRS = ROOT / "data" / "lexicon" / "heritage_pairs.yaml"
@@ -395,12 +396,106 @@ def upload_practice_deck_assets(
     upload_release_asset(gzip_path, asset_name=ASSET_NAME, release_tag=release_tag, repo=repo, clobber=True)
 
 
+def run_linguistic_gate(
+    practice_dir: Path = DEFAULT_PRACTICE_DIR,
+    *,
+    vesum_db_path: Path = DEFAULT_VESUM_DB,
+    cloze_sources_path: Path | None = DEFAULT_CLOZE_SOURCES,
+    sentence_inventory_path: Path | None = DEFAULT_SENTENCE_INVENTORY,
+) -> None:
+    """Refuse publish when the mechanical linguistic pack finds errors.
+
+    Runs before package construction / gzip / upload / pointer writes.
+    """
+    if not vesum_db_path.exists():
+        raise PracticeDeckPublishError(
+            f"VESUM database {vesum_db_path} is missing. "
+            "Practice publish requires VESUM for the linguistic quality gate."
+        )
+    audit_dir = ROOT / "scripts" / "audit"
+    if str(audit_dir) not in sys.path:
+        sys.path.insert(0, str(audit_dir))
+    from generate_practice_deck import (
+        RealVesumVerifier,
+        read_cloze_sources,
+        read_sentence_inventory,
+    )
+    from practice_linguistic import (
+        LINGUISTIC_GATE_VERSION,
+        audit_practice_payloads,
+        format_findings,
+        index_from_generator_candidates,
+    )
+
+    verifier = RealVesumVerifier(vesum_db_path)
+    source_rows: list[dict[str, Any]] = []
+    if sentence_inventory_path and sentence_inventory_path.exists():
+        source_rows.extend(read_sentence_inventory(sentence_inventory_path))
+    if cloze_sources_path and cloze_sources_path.exists():
+        source_rows.extend(read_cloze_sources(cloze_sources_path))
+    source_index = index_from_generator_candidates(source_rows)
+
+    cloze_items: list[dict[str, Any]] = []
+    stress_items: list[dict[str, Any]] = []
+    paradigm_items: list[dict[str, Any]] = []
+    heritage_items: list[dict[str, Any]] = []
+    paronym_items: list[dict[str, Any]] = []
+    antonym_items: list[dict[str, Any]] = []
+    homonym_items: list[dict[str, Any]] = []
+    lexeme_plain_by_id: dict[str, str] = {}
+    body_keys = {
+        "cloze": ("cloze", cloze_items),
+        "stress": ("stress", stress_items),
+        "paradigm": ("paradigm", paradigm_items),
+        "heritage": ("heritage", heritage_items),
+        "paronym": ("paronym", paronym_items),
+        "antonym": ("antonym", antonym_items),
+        "homonym": ("homonym", homonym_items),
+    }
+    for level in LEVELS:
+        lexeme_path = practice_dir / f"practice-lexemes.{level}.json"
+        if lexeme_path.exists():
+            payload = json.loads(lexeme_path.read_text(encoding="utf-8"))
+            for lexeme in payload.get("lexemes") or []:
+                if isinstance(lexeme, dict) and isinstance(lexeme.get("lemmaId"), str):
+                    lemma_id = lexeme["lemmaId"]
+                    lemma = lexeme.get("lemma") or lexeme.get("lemmaPlain") or lemma_id
+                    lexeme_plain_by_id[lemma_id] = str(lemma)
+        for kind, (body_key, bucket) in body_keys.items():
+            path = practice_dir / f"practice-{kind}.{level}.json"
+            if not path.exists():
+                continue
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            rows = payload.get(body_key)
+            if isinstance(rows, list):
+                bucket.extend(item for item in rows if isinstance(item, dict))
+
+    findings = audit_practice_payloads(
+        cloze_items=cloze_items,
+        stress_items=stress_items,
+        paradigm_items=paradigm_items,
+        heritage_items=heritage_items,
+        paronym_items=paronym_items,
+        antonym_items=antonym_items,
+        homonym_items=homonym_items,
+        verifier=verifier,
+        source_index=source_index,
+        lexeme_plain_by_id=lexeme_plain_by_id,
+    )
+    if findings:
+        raise PracticeDeckPublishError(
+            f"Practice linguistic gate v{LINGUISTIC_GATE_VERSION} failed "
+            f"({len(findings)}): {format_findings(findings)}"
+        )
+
+
 def publish_practice_deck(
     *,
     practice_dir: Path = DEFAULT_PRACTICE_DIR,
     gzip_path: Path = DEFAULT_GZIP,
     pointer_path: Path = DEFAULT_POINTER,
     atlas_db_path: Path = DEFAULT_ATLAS_DB,
+    vesum_db_path: Path = DEFAULT_VESUM_DB,
     heritage_pairs_path: Path | None = DEFAULT_HERITAGE_PAIRS,
     paronym_pairs_path: Path | None = DEFAULT_PARONYM_PAIRS,
     antonym_pairs_path: Path | None = DEFAULT_ANTONYM_PAIRS,
@@ -413,6 +508,13 @@ def publish_practice_deck(
     repo: str = DEFAULT_REPO,
     dry_run: bool = False,
 ) -> dict[str, Any]:
+    # Linguistic pack must run before gzip/upload/pointer side effects.
+    run_linguistic_gate(
+        practice_dir,
+        vesum_db_path=vesum_db_path,
+        cloze_sources_path=cloze_sources_path,
+        sentence_inventory_path=sentence_inventory_path,
+    )
     deck_version, pointer_files, package_files = collect_shards(practice_dir)
     expected_version = expected_deck_version(
         atlas_db_path,
@@ -471,6 +573,7 @@ def main() -> int:
     parser.add_argument("--gzip", type=Path, default=DEFAULT_GZIP, help="Output gzip package path (default: %(default)s).")
     parser.add_argument("--pointer", type=Path, default=DEFAULT_POINTER, help="Output pointer JSON path (default: %(default)s).")
     parser.add_argument("--atlas-db", type=Path, default=DEFAULT_ATLAS_DB, help="Public Atlas DB input (default: %(default)s).")
+    parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB, help="VESUM DB for linguistic gate (default: %(default)s).")
     parser.add_argument("--cloze-sources", type=Path, default=DEFAULT_CLOZE_SOURCES, help="Cloze-source JSON input (default: %(default)s).")
     parser.add_argument("--sentence-inventory", type=Path, default=DEFAULT_SENTENCE_INVENTORY, help="Sentence-inventory JSON input (default: %(default)s).")
     parser.add_argument("--heritage-pairs", type=Path, default=DEFAULT_HERITAGE_PAIRS, help="Heritage-pair YAML input (default: %(default)s).")
@@ -488,6 +591,7 @@ def main() -> int:
         gzip_path=args.gzip,
         pointer_path=args.pointer,
         atlas_db_path=args.atlas_db,
+        vesum_db_path=args.vesum_db,
         heritage_pairs_path=args.heritage_pairs,
         paronym_pairs_path=args.paronym_pairs,
         antonym_pairs_path=args.antonym_pairs,

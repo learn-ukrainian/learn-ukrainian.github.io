@@ -13,7 +13,7 @@ CURATED_MEMBERSHIP ?= site/src/data/lexicon-teacher-curated-membership.json
 CURATED_MEMBERSHIP_HOMEWORK ?= .claude/atlas-epic/plans/curated-seed/curated-seed.jsonl
 CURATED_MEMBERSHIP_TEACHER ?= site/src/data/lexicon-teacher-cloze.json
 
-.PHONY: atlas-practice-api-hydrate atlas-export-runtime atlas-local-practice-refresh curated-membership practice-admit-curated-seed practice-gold-curated-seed atlas atlas-publish practice-deck practice-deck-publish open-dataset open-dataset-publish help test-linux-fs
+.PHONY: atlas-practice-api-hydrate atlas-export-runtime atlas-local-practice-refresh curated-membership practice-admit-curated-seed practice-gold-curated-seed atlas atlas-publish practice-deck practice-deck-publish practice-deck-linguistic-gate open-dataset open-dataset-publish help test-linux-fs
 
 help:
 	@printf '%s\n' 'test-linux-fs  Run Linux filesystem-parity guardrail tests (see docs/runbooks/ci-gate.md)'
@@ -73,7 +73,10 @@ practice-deck:
 	$(PYTHON) scripts/audit/generate_practice_deck.py --curated-membership "$(CURATED_MEMBERSHIP)"
 
 practice-deck-publish: practice-deck
-	$(PYTHON) scripts/practice_deck/publish.py --curated-membership "$(CURATED_MEMBERSHIP)"
+	$(PYTHON) scripts/practice_deck/publish.py --curated-membership "$(CURATED_MEMBERSHIP)" --vesum-db data/vesum.db
+
+practice-deck-linguistic-gate:
+	$(PYTHON) scripts/audit/check_static_practice_assets.py --vesum-db data/vesum.db
 
 open-dataset:
 	$(PYTHON) scripts/lexicon/export_open_dataset.py

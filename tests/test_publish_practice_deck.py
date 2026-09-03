@@ -4,6 +4,7 @@ import gzip
 import json
 import sqlite3
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -27,6 +28,7 @@ from scripts.practice_deck.publish import (
     LEVELS,
     PracticeDeckPublishError,
     publish_practice_deck,
+    run_linguistic_gate,
 )
 
 FIXTURES = Path("tests/fixtures")
@@ -37,6 +39,12 @@ CLOZE_SOURCES = FIXTURES / "lexicon-practice-cloze-sources.json"
 HERITAGE_PAIRS = FIXTURES / "lexicon-practice-heritage-pairs.yaml"
 PARONYM_PAIRS = FIXTURES / "lexicon-practice-paronym-pairs.yaml"
 ANTONYM_PAIRS = FIXTURES / "lexicon-practice-antonym-pairs.yaml"
+
+
+@pytest.fixture(autouse=True)
+def _bypass_linguistic_gate(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Schema/version publish tests stay hermetic; gate covered separately."""
+    monkeypatch.setattr(publish_module, "run_linguistic_gate", lambda *args, **kwargs: None)
 
 
 def _write_json(path: Path, payload: object) -> None:
@@ -448,7 +456,6 @@ def test_publish_script_style_invocation_reaches_projection_read(tmp_path: Path)
     (#4660 review fix — sys.path bootstrap; the #4529 lazy-absolute-import class).
     Hermetic: fixture shards in a tmp practice dir get PAST collect_shards, and an
     empty sqlite file gets PAST the exists() guard and INTO the lazy-import path."""
-    import sys
 
     repo_root = Path(publish_module.__file__).resolve().parents[2]
     practice_dir = tmp_path / "lexicon"
@@ -477,4 +484,31 @@ def test_publish_script_style_invocation_reaches_projection_read(tmp_path: Path)
     combined = result.stdout + result.stderr
     assert result.returncode != 0
     assert "No module named 'scripts'" not in combined
-    assert "Failed to calculate expected deck version" in combined
+    # Linguistic gate runs before package construction; missing VESUM or a bad
+    # atlas DB both refuse publish. Prefer the gate message when VESUM is absent
+    # in the worktree, otherwise the atlas version failure.
+    assert (
+        "VESUM database" in combined
+        or "Failed to calculate expected deck version" in combined
+        or "linguistic gate" in combined
+    )
+
+
+def test_publish_refuses_missing_vesum_before_gzip(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(publish_module, "run_linguistic_gate", run_linguistic_gate)
+    practice_dir = tmp_path / "lexicon"
+    input_paths = _write_publish_inputs(tmp_path / "inputs")
+    from scripts.practice_deck.publish import expected_deck_version
+
+    expected_version = expected_deck_version(**input_paths)
+    _write_practice_deck(practice_dir, deck_version=expected_version)
+    gzip_path = tmp_path / "deck.json.gz"
+    with pytest.raises(PracticeDeckPublishError, match="VESUM database"):
+        publish_practice_deck(
+            practice_dir=practice_dir,
+            gzip_path=gzip_path,
+            dry_run=True,
+            vesum_db_path=tmp_path / "missing-vesum.db",
+            **input_paths,
+        )
+    assert not gzip_path.exists()

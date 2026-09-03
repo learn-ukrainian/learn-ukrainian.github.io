@@ -2321,7 +2321,7 @@ def test_sentence_inventory_emits_attested_nominative_cloze_with_provenance(
     assert cloze["blankCase"] == "nominative"
     assert cloze["number"] == "singular"
     assert "clozeEn" not in cloze
-    assert cloze["caseRule"]["feedback"] == "словникова (називний) форма: книга"
+    assert cloze["caseRule"]["feedback"] == "словникова форма: книга"
     labels = [option["label"] for option in cloze["options"]]
     assert len(labels) == len(set(labels)) == 4
     assert {option["strategy"] for option in cloze["options"]} == {"no-pair"}

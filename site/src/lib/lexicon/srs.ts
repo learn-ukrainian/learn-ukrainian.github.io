@@ -2044,6 +2044,9 @@ export function czNorm(value: string): string {
 }
 
 export function isWrongCaseAnswer(value: string, lemma: PracticeLexeme, cloze: PracticeClozeItem): boolean {
+  // Identity inserts are dictionary-form recall, never case drills — do not
+  // route wrong answers through the «put it in the nominative» path.
+  if (!isCaseClozeDrill(cloze, lemma)) return false;
   const normalized = czNorm(value);
   if (!normalized || normalized === czNorm(cloze.form)) return false;
   if (normalized === czNorm(lemma.lemma)) return true;
@@ -2065,12 +2068,12 @@ export function isCaseClozeDrill(
   cloze: PracticeClozeItem,
   lemma: Pick<PracticeLexeme, 'lemma' | 'pos'>,
 ): boolean {
-  // Deterministic prompt heuristic: an NFC/casefold-equal answer is an insertion,
+  // Deterministic prompt heuristic: czNorm-equal answer is an insertion,
   // never a case drill. Likewise, VESUM indeclinable POS tags must not receive
   // case wording. Otherwise a changed form remains a case drill: authored clozes
   // carry case-rule feedback and their chips may distinguish case variants.
-  const normalizedForm = cloze.form.trim().normalize('NFC').toLocaleLowerCase('uk-UA');
-  const normalizedLemma = lemma.lemma.trim().normalize('NFC').toLocaleLowerCase('uk-UA');
+  const normalizedForm = czNorm(cloze.form);
+  const normalizedLemma = czNorm(lemma.lemma);
   if (!normalizedForm || normalizedForm === normalizedLemma) return false;
   return !NON_CASE_CLOZE_POS.has((lemma.pos ?? '').trim().toLocaleLowerCase());
 }
