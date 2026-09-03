@@ -460,8 +460,12 @@ def test_later_block_revokes_earlier_approve_latest_wins() -> None:
     assert result.ok
 
 
-def test_pr_author_cannot_self_attest_comment_or_review() -> None:
-    """#7487: GitHub item identity, not body prose, rejects self-approval."""
+def test_same_github_account_fleet_driver_can_attest() -> None:
+    """fix-cf-attest-fleet-identity, 2026-09-03: this fleet posts every PR
+    and every CF comment/review from one shared GitHub account, so a
+    matching login/id must NOT by itself reject an attestation — only
+    model-family independence decides. Independent reviewer family (openai)
+    vs. author family (cursor-auto-union, via X-Agent) still attests."""
     approve = (
         f"Cross-family CF of record (codex)\nReviewer family: openai\n"
         f"At exact head `{PR_HEAD}`\nVERDICT: APPROVE"
@@ -475,8 +479,8 @@ def test_pr_author_cannot_self_attest_comment_or_review() -> None:
                 {
                     "body": approve,
                     "created_at": "2026-09-01T12:00:00Z",
-                    # Login changed after the PR was opened; stable user.id
-                    # must still identify this as the PR author.
+                    # Same account as the PR author, exactly as this fleet's
+                    # driver posts every attestation.
                     "user": {"login": "renamed-pr-author", "id": 100},
                 }
             ]
@@ -502,8 +506,76 @@ def test_pr_author_cannot_self_attest_comment_or_review() -> None:
         repository="o/r",
         api_get=fake_api,
     )
+    assert result.ok, result.reason
+
+
+def test_same_github_account_same_family_review_is_rejected() -> None:
+    """A GitHub identity match no longer disqualifies an attestation, but an
+    actual same-family review (author and reviewer resolve to the same
+    model family) still fails closed as self-review."""
+    approve = (
+        f"Cross-family CF of record (claude)\nReviewer family: anthropic\n"
+        f"At exact head `{PR_HEAD}`\nVERDICT: APPROVE"
+    )
+
+    def fake_api(path):
+        if path == "repos/o/r/pulls/1" or path.startswith("repos/o/r/pulls/1?"):
+            return {"user": {"login": "Pr-Author", "id": 100}}
+        if "/comments" in path:
+            return [
+                {
+                    "body": approve,
+                    "created_at": "2026-09-01T12:00:00Z",
+                    "user": {"login": "renamed-pr-author", "id": 100},
+                }
+            ]
+        if "/reviews" in path:
+            return []
+        if "/commits" in path:
+            return [{"commit": {"message": AUTHOR_CLAUDE}}]
+        raise AssertionError(path)
+
+    result = run_event(
+        event_name="pull_request",
+        event_sha=MERGE_SHA,
+        pr_head_sha=PR_HEAD,
+        pr_number="1",
+        merge_group_head_ref="",
+        repository="o/r",
+        api_get=fake_api,
+    )
     assert not result.ok
-    assert "self-authored" in result.reason
+    assert "same-family review" in result.reason
+
+
+def test_merge_group_shared_account_resolved_model_attests_across_family() -> None:
+    """merge_group-shaped fixture: PR author and commenter share one GitHub
+    account/id, the comment records ``resolved_model:`` instead of a
+    ``Reviewer family:`` line, and the X-Agent author family (xai, via
+    ``grok``) is independent of the resolved reviewer family (anthropic)."""
+    approve = (
+        f"Cross-family CF of record (claude)\nresolved_model: claude-sonnet-5\n"
+        f"At exact head `{PR_HEAD}`\nVERDICT: APPROVE"
+    )
+
+    def api_get(path: str) -> dict:
+        assert "/pulls/88" in path
+        return {"head": {"sha": PR_HEAD}}
+
+    result = run_event(
+        event_name="merge_group",
+        event_sha=MERGE_SHA,
+        pr_head_sha="",
+        pr_number="",
+        merge_group_head_ref="refs/heads/gh-readonly-queue/main/pr-88-" + MERGE_SHA,
+        repository="learn-ukrainian/learn-ukrainian.github.io",
+        api_get=api_get,
+        bodies=[("comment", approve, "2026-09-01T12:00:00Z", "krisztiankoos", 100)],
+        author_agents=("grok",),
+        pr_author_login="krisztiankoos",
+        pr_author_id=100,
+    )
+    assert result.ok, result.reason
 
 
 def test_later_block_from_any_family_revokes_earlier_approve() -> None:

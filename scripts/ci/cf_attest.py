@@ -24,7 +24,15 @@ accepts:
 * Reviewer family resolving to a concrete family in ``CONCRETE_FAMILIES``,
   from a ``Reviewer family:`` line OR a ``resolved_model:`` model id mapped
   through the same ``normalize_family`` resolver the Gate uses
-* The GitHub user who authored the comment/review is not the PR author
+* The reviewer's model family (``resolved_model:`` / ``Reviewer family:``) is
+  independent of the PR author's model family (``X-Agent:`` trailers on the
+  head commit) — checked by ``families_independent``. This fleet's driver
+  posts every PR and every CF comment under one shared GitHub account
+  (fix-cf-attest-fleet-identity, 2026-09-03), so a matching GitHub
+  login/id is NOT itself a rejection; family independence is the only
+  gate. A comment/review whose author identity cannot be compared at all
+  (missing login/id) still fails closed when the PR author's identity is
+  known.
 
 Example shape already in use on this repo::
 
@@ -319,21 +327,6 @@ def _user_identity(item: Mapping[str, Any]) -> tuple[str, str]:
     return _normalize_login(user.get("login")), _normalize_user_id(user.get("id"))
 
 
-def _identity_matches(
-    *,
-    author_login: str,
-    author_id: str,
-    candidate_login: str,
-    candidate_id: str,
-) -> bool:
-    """Compare GitHub identities, preferring the stable user id."""
-    if author_id and candidate_id:
-        return author_id == candidate_id
-    if author_login and candidate_login:
-        return author_login == candidate_login
-    return False
-
-
 def _identity_is_comparable(
     *,
     author_login: str,
@@ -548,10 +541,18 @@ def evaluate_attestation(
 
     ``pr_author_login``/``pr_author_id`` are sourced from the PR object, while
     each body entry's fourth/fifth fields are sourced from that
-    comment/review's ``user.login``/``user.id``. When PR identity is available,
-    both are required for an attestation to be eligible: a self-authored or
-    identity-less body fails closed. The shorter two/three-field form remains
-    accepted for pure parser fixtures that do not model GitHub metadata.
+    comment/review's ``user.login``/``user.id``. A GitHub identity match
+    between the attestation author and the PR author is NOT itself a
+    rejection reason (issue #7472/fleet-identity, 2026-09-03): this fleet
+    posts every PR and every CF comment under one shared GitHub account, so
+    the driver posting a worker's independent verdict is the normal path.
+    Independence is decided by model family (``author_family`` from
+    X-Agent trailers vs. ``reviewer_family`` from the attestation body) in
+    ``families_independent`` below, not by GitHub login/id. When PR identity
+    is available, an attestation whose author identity cannot be compared at
+    all (missing login/id) still fails closed. The shorter two/three-field
+    form remains accepted for pure parser fixtures that do not model GitHub
+    metadata.
     """
     head = (expected_head or "").strip().lower()
     if not SHA_RE.fullmatch(head):
@@ -571,7 +572,6 @@ def evaluate_attestation(
         )
 
     parsed: list[ParsedAttestation] = []
-    self_authored = False
     for entry in bodies:
         if len(entry) == 5:
             source, body, created_at, author_login, author_id = entry
@@ -602,20 +602,12 @@ def evaluate_attestation(
             author_id=author_id,
         )
         if item is not None:
-            comparable = _identity_is_comparable(
-                author_login=normalized_pr_author_login,
-                author_id=normalized_pr_author_id,
-                candidate_login=item.author_login,
-                candidate_id=item.author_id,
-            )
-            if identity_context and comparable and _identity_matches(
-                author_login=normalized_pr_author_login,
-                author_id=normalized_pr_author_id,
-                candidate_login=item.author_login,
-                candidate_id=item.author_id,
-            ):
-                self_authored = True
-                continue
+            # #fix-cf-attest-fleet-identity: a matching GitHub login/id no
+            # longer drops the attestation — this fleet's driver posts every
+            # comment under the PR author's own GitHub account. Identity-less
+            # bodies still fail closed below (matching + invalid_metadata),
+            # and same-family reviews still fail closed via
+            # ``families_independent``.
             parsed.append(item)
     # Chronological latest-wins across SOURCES (#7502 CF r1): comments and
     # reviews are fetched as separate lists, so list order alone let an older
@@ -628,13 +620,9 @@ def evaluate_attestation(
         key=lambda item: (*_timestamp_sort_key(item.created_at), item.verdict == "BLOCK")
     )
     if not parsed:
-        if self_authored:
-            reason = "self-authored CF rejected: attestation author matches PR author"
-        else:
-            reason = "missing CF: no independent exact-head APPROVE"
         return AttestResult(
             False,
-            reason,
+            "missing CF: no independent exact-head APPROVE",
             expected_head=head,
             author_family=author_family,
         )
@@ -952,8 +940,10 @@ def collect_bodies_and_agents(
     Pure Dependabot PRs have no ``X-Agent`` trailers. Resolve the PR author
     login when it is Dependabot so ``author_family_from_agents`` can map them
     to the fixture family (universal independence) as designed for #7487.
-    Comment/review author identities travel with their bodies so self-authored
-    attestations can be rejected without trusting body prose.
+    Comment/review author identities travel with their bodies so
+    identity-less attestations can be rejected without trusting body prose,
+    even though a GitHub identity match against the PR author is no longer
+    itself a rejection reason (fix-cf-attest-fleet-identity, 2026-09-03).
     """
     repo = quote(repository, safe="/")
     pull = api_get(f"repos/{repo}/pulls/{pr_number}")
