@@ -2613,21 +2613,18 @@ def review_isolation_tool_config(engine: str) -> dict[str, object]:
             }
         )
     elif engine_key in {"grok", "grok-build"}:
-        # Keys match GrokBuildAdapter: disallowed_tools → --disallowed-tools,
-        # permission mode comes from mode="read-only" → plan, plus --deny rules.
+        # Keys match GrokBuildAdapter. Native Grok's --disallowed-tools takes
+        # built-in tool IDs; review_deny_tools takes documented permission
+        # prefixes. Do not pass Claude-shaped names such as NotebookEdit.
         base.update(
             {
-                "disallowed_tools": "Shell,Write,Edit,Bash,MultiEdit,NotebookEdit,search_replace",
+                "disallowed_tools": "run_terminal_cmd,search_replace",
                 "allowed_tools": "Read,Grep,Glob",
                 "permission_mode": "bypassPermissions",
                 "review_deny_tools": [
                     "Write",
                     "Edit",
-                    "MultiEdit",
-                    "NotebookEdit",
-                    "search_replace",
                     "Bash",
-                    "Shell",
                 ],
             }
         )

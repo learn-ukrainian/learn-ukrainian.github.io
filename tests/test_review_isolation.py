@@ -781,6 +781,8 @@ def test_tool_config_denies_nested_reviewers_and_writes() -> None:
     assert "disallowed_tools" in grok
     assert "review_deny_tools" in grok
     assert grok["allowed_tools"] == "Read,Grep,Glob"
+    assert grok["disallowed_tools"] == "run_terminal_cmd,search_replace"
+    assert grok["review_deny_tools"] == ["Write", "Edit", "Bash"]
     assert grok["permission_mode"] == "bypassPermissions"
     assert grok.get("deny_tools") is None  # old wrong key removed
 
