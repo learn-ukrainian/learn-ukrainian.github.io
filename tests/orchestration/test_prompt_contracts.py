@@ -7,6 +7,8 @@ from pathlib import Path
 import pytest
 import yaml
 
+pytestmark = pytest.mark.docs_skills
+
 from scripts.lint import lint_prompts
 from scripts.orchestration import prompt_contracts as contracts
 

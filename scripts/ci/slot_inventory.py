@@ -85,12 +85,12 @@ def _matrix_slots(matrix: Any, *, workflow_name: str, job_name: str) -> int:
     exclude = matrix_map.get("exclude", [])
     dimensions = {key: value for key, value in matrix_map.items() if key not in {"include", "exclude"}}
 
-    if workflow_name == "ci.yml" and job_name == "python" and isinstance(dimensions.get("shard"), str):
+    if workflow_name == "ci.yml" and job_name == "pytest" and isinstance(dimensions.get("shard"), str):
         shard_expression = dimensions["shard"]
         if "${{" not in shard_expression:
-            raise ValueError("ci.yml:python shard matrix must be a static list or GitHub expression")
+            raise ValueError("ci.yml:pytest shard matrix must be a static list or GitHub expression")
         if set(dimensions) != {"shard"}:
-            raise ValueError("ci.yml:python dynamic shard matrix may not have other dimensions")
+            raise ValueError("ci.yml:pytest dynamic shard matrix may not have other dimensions")
         return PYTEST_SHARD_CEILING
 
     values = {
@@ -120,13 +120,13 @@ def _matrix_slots(matrix: Any, *, workflow_name: str, job_name: str) -> int:
         ):
             combinations.append(dict(entry_map))
 
-    if workflow_name == "ci.yml" and job_name == "python":
+    if workflow_name == "ci.yml" and job_name == "pytest":
         shards = values.get("shard")
-        if shards is None:
-            raise ValueError("ci.yml:python must retain its documented shard matrix")
-        if len(shards) > PYTEST_SHARD_CEILING:
+        if shards is None and "${{" not in str(dimensions.get("shard", "")):
+            raise ValueError("ci.yml:pytest must retain its documented shard matrix")
+        if shards is not None and len(shards) > PYTEST_SHARD_CEILING:
             raise ValueError(
-                f"ci.yml:python has {len(shards)} shards, above PYTEST_SHARD_CEILING={PYTEST_SHARD_CEILING}"
+                f"ci.yml:pytest has {len(shards)} shards, above PYTEST_SHARD_CEILING={PYTEST_SHARD_CEILING}"
             )
     return len(combinations)
 

@@ -14,6 +14,10 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+import pytest
+
+pytestmark = pytest.mark.docs_skills
+
 REPO = Path(__file__).resolve().parents[1]
 CONTRACT = REPO / "agents_extensions/shared/rules/operator-expectations.md"
 CONTRACT_REL = "agents_extensions/shared/rules/operator-expectations.md"

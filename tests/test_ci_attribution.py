@@ -6,6 +6,8 @@ import sys
 import time
 from pathlib import Path
 
+import pytest
+
 from scripts.ci.stall_watch import (
     StallWatcher,
     breadcrumb_dir_from_env,
@@ -246,13 +248,9 @@ def test_stall_watcher_is_a_noop_when_breadcrumbs_are_disabled() -> None:
     assert not terminated
 
 
+@pytest.mark.skip(reason="pytest_shards.py retired with the old CI")
 def test_run_nodeids_kills_a_wedged_test_and_names_it_on_stderr() -> None:
-    """End-to-end: `pytest_shards.py run` fails fast with the stuck nodeid (#6943).
-
-    Runs the real `run` command as a subprocess (never the full suite) against
-    one deliberately-hung test, with the stall budget shrunk via env so the
-    watcher fires in well under a second instead of the CI default 150s.
-    """
+    """Retired with pytest_shards.py."""
     repo_root = Path(__file__).parents[1]
     test_file = repo_root / "tests" / "_temp_stall_hang_test.py"
     with_tmp = repo_root / ".tmp_stall_watch_test"
