@@ -7974,6 +7974,9 @@ def enrich(
     for #5331) with optional side DBs under ``data/lexicon/side/``.
     """
     target_manifest = Path(manifest_path) if manifest_path is not None else MANIFEST
+    target_fingerprint = (
+        Path(fingerprint_path) if fingerprint_path is not None else DEFAULT_FINGERPRINT
+    )
     if os.environ.get("LEXICON_USE_RUNNER", "").strip() in {"1", "true", "yes", "on"}:
         from scripts.lexicon.runner.memory import MemoryPolicy
         from scripts.lexicon.runner.offline_engine import enrich_offline_slice
@@ -8021,7 +8024,7 @@ def enrich(
     work_dir = ROOT / "data" / "lexicon" / "runner_work"
     work_dir.mkdir(parents=True, exist_ok=True)
 
-    staged = stage_manifest_to_sqlite(MANIFEST, work_dir / "staged_manifest.sqlite")
+    staged = stage_manifest_to_sqlite(target_manifest, work_dir / "staged_manifest.sqlite")
     # Reviewed synonym verdicts are first-class corpus facts for the manifest.
     load_approved_synonym_verdicts(SOURCES_DB)
     conn = sqlite3.connect(f"file:{SOURCES_DB}?mode=ro", uri=True)
@@ -8132,9 +8135,9 @@ def enrich(
         _install_dmklinger_side_db(None)
         _BALLA_REVERSE_INDEX.clear()
 
-    fingerprint_payload = write_fingerprint(DEFAULT_FINGERPRINT, root=ROOT)
+    fingerprint_payload = write_fingerprint(target_fingerprint, root=ROOT)
     with StreamingCandidateWriter(
-        MANIFEST,
+        target_manifest,
         meta={
             "enrichment_generated": True,
             "manifest_fingerprint": {

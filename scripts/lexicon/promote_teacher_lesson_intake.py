@@ -22,10 +22,12 @@ Run from the repository root after building an explicit VESUM shadow database::
 from __future__ import annotations
 
 import argparse
+import datetime as dt
 import fcntl
 import hashlib
 import json
 import os
+import re
 import sqlite3
 import sys
 import tempfile
@@ -131,6 +133,8 @@ def _assert_no_new_conformance_violations(*, staged: Path, baseline: Path) -> di
 from scripts.audit.source_inventory_intake import read_source_inventory, source_inventory_candidates
 from scripts.audit.source_inventory_review_decisions import source_inventory_key
 from scripts.lexicon.build_data_manifest import _lemma_key
+from scripts.lexicon.curated_membership import DEFAULT_MEMBERSHIP_PATH
+from scripts.lexicon.curated_membership import SCHEMA as MEMBERSHIP_SCHEMA
 from scripts.lexicon.enrich_manifest import (
     _dmklinger_key,
     _kaikki_translation,
@@ -142,6 +146,7 @@ from scripts.lexicon.enrich_manifest import (
 )
 from scripts.lexicon.grow_lexicon_from_content import build_payload, build_skeleton_entry, write_candidates
 from scripts.lexicon.lemma_normalization import strip_acute_stress
+from scripts.lexicon.manifest_fingerprint import write_fingerprint
 from scripts.verification.vesum import verify_words
 
 # Keep this committed ledger path until #5995 ships its coordinated ledger scrub and rename.
@@ -161,6 +166,7 @@ DEFAULT_FINGERPRINT = PROJECT_ROOT / "site/src/data/lexicon-manifest.fingerprint
 DEFAULT_CANDIDATES = Path("/tmp/atlas-private-teacher-lesson-candidates.json")
 DEFAULT_DECISIONS = Path("/tmp/atlas-private-teacher-lesson-decisions.yaml")
 DEFAULT_PLAN = Path("/tmp/atlas-private-teacher-lesson-plan.json")
+MEMBERSHIP_SOURCE_TAG = "teacher_inventory"
 
 # The ledger's original inventory path contains the private contributor's name.
 # Public entries retain the source family and a generic, reproducible intake id,
@@ -189,6 +195,7 @@ _POS_MAP = {
     "abbr": "abbreviation",
 }
 _UKRAINIAN_LETTERS = frozenset("абвгґдеєжзиіїйклмнопрстуфхцчшщьюя")
+SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
 
 @dataclass(frozen=True)
@@ -544,6 +551,61 @@ def _write_decisions(rows: Sequence[Mapping[str, Any]], path: Path) -> None:
     path.write_text(yaml.safe_dump(payload, allow_unicode=True, sort_keys=False, width=100), encoding="utf-8")
 
 
+def _enrich_promoted_entries(
+    entries: list[dict[str, Any]],
+    promoted_lemma_keys: set[str],
+    *,
+    sources_db: Path | None,
+) -> int:
+    """Run ``enrich_entry`` only on newly promoted lemmas.
+
+    A teacher-lesson promotion adds a handful to a few thousand heads into an
+    Atlas manifest that otherwise has tens of thousands of entries.  Calling
+    ``enrich_manifest.enrich()`` re-enriches *every* entry in the manifest
+    (streaming staging, CEFR, relation closure, ...) regardless of how many
+    are new, which took 9h and was killed on a 9-head promote (#7623). This
+    promoter never needs that full sweep: dictionary-grounded enrichment is
+    per-lemma and side-effect-free, so it is safe (and vastly cheaper) to run
+    it only on the entries this promotion actually added.
+    """
+    if not promoted_lemma_keys:
+        return 0
+    db_path = sources_db if sources_db is not None else enrich_module.SOURCES_DB
+    enriched = 0
+    kaikki_lookup = enrich_module._load_kaikki_lookup()
+    with sqlite3.connect(f"file:{db_path}?mode=ro", uri=True) as conn:
+        has_sum11_flags = enrich_module._sum11_has_flag_columns(conn)
+        for entry in entries:
+            if _lemma_key(str(entry.get("lemma") or "")) not in promoted_lemma_keys:
+                continue
+            if enrich_module.enrich_entry(entry, conn, kaikki_lookup, has_sum11_flags=has_sum11_flags):
+                enriched += 1
+    return enriched
+
+
+def _resumable_journal(journal_path: Path, manifest: Path) -> dict[str, Any] | None:
+    """Return the journal record iff it is safe to resume a staged promotion.
+
+    Safe means: the journal reached at least ``MANIFEST_STAGED``, its staged
+    file is still on disk, and the live manifest has not moved since the
+    ``base_sha256`` it was staged against (otherwise the staged additions may
+    no longer apply cleanly and a fresh plan/apply pass is required).
+    """
+    if not journal_path.is_file() or not STAGED_MANIFEST.is_file():
+        return None
+    try:
+        record = json.loads(journal_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    if not isinstance(record, dict):
+        return None
+    if record.get("phase") not in {"MANIFEST_STAGED", "ENRICHED", "VERIFIED"}:
+        return None
+    if record.get("base_sha256") != _sha256_file(manifest):
+        return None
+    return record
+
+
 def promote(
     *,
     full_decisions: Path,
@@ -556,6 +618,7 @@ def promote(
     decisions_out: Path,
     write: bool,
     allow_held: bool = False,
+    resume_staged: bool = False,
 ) -> dict[str, Any]:
     candidates, decisions, report = _build_rows(
         full_decisions, curated_inventory, manifest, vesum_db, sources_db
@@ -592,36 +655,70 @@ def promote(
     with open(DEFAULT_LOCK, "w") as lock_fd:
         fcntl.flock(lock_fd, fcntl.LOCK_EX)
         try:
-            base_sha256 = _sha256_file(manifest)
-            tx_id = str(uuid.uuid4())
-            journal_record: dict[str, Any] = {
-                "schema_version": "promotion-journal.v1",
-                "tx_id": tx_id,
-                "base_sha256": base_sha256,
-                "phase": "PREPARED",
-                "promoted_count": len(candidates),
-            }
-            _atomic_write_json(DEFAULT_JOURNAL, journal_record)
+            resumed_journal = _resumable_journal(DEFAULT_JOURNAL, manifest) if resume_staged else None
 
-            # PHASE 1: STAGE MANIFEST
-            manifest_payload = json.loads(manifest.read_text(encoding="utf-8"))
-            applied = apply.apply_promotion_plan(manifest_payload, plan, source_family="teacher_lesson")
-            _atomic_write_json(STAGED_MANIFEST, manifest_payload)
-            staged_sha256 = _sha256_file(STAGED_MANIFEST)
-            journal_record.update({
-                "phase": "MANIFEST_STAGED",
-                "staged_sha256": staged_sha256,
-                "promoted": applied["counts"]["promoted"],
-            })
-            _atomic_write_json(DEFAULT_JOURNAL, journal_record)
+            if resumed_journal is not None:
+                # Resume a promotion whose manifest was already staged (and
+                # possibly enriched) by a prior, interrupted run: reuse the
+                # staged file instead of re-applying the plan, which would
+                # otherwise be a silent no-op (the plan's additions are
+                # already present) but wastes the plan/apply work again.
+                journal_record = resumed_journal
+                base_sha256 = journal_record["base_sha256"]
+                manifest_payload = json.loads(STAGED_MANIFEST.read_text(encoding="utf-8"))
+                base_entries = json.loads(manifest.read_text(encoding="utf-8")).get("entries", [])
+                base_keys = {_lemma_key(str(e.get("lemma") or "")) for e in base_entries}
+                promoted_keys = {
+                    _lemma_key(str(e.get("lemma") or ""))
+                    for e in manifest_payload.get("entries", [])
+                    if _lemma_key(str(e.get("lemma") or "")) not in base_keys
+                }
+                promoted_count = len(promoted_keys)
+                already_enriched = journal_record.get("phase") in {"ENRICHED", "VERIFIED"}
+            else:
+                base_sha256 = _sha256_file(manifest)
+                tx_id = str(uuid.uuid4())
+                journal_record = {
+                    "schema_version": "promotion-journal.v1",
+                    "tx_id": tx_id,
+                    "base_sha256": base_sha256,
+                    "phase": "PREPARED",
+                    "promoted_count": len(candidates),
+                }
+                _atomic_write_json(DEFAULT_JOURNAL, journal_record)
 
-            # PHASE 2: ENRICH STAGED MANIFEST
-            if applied["counts"]["promoted"]:
-                enrich_module.enrich(manifest_path=STAGED_MANIFEST, fingerprint_path=STAGED_FINGERPRINT)
+                # PHASE 1: STAGE MANIFEST
+                manifest_payload = json.loads(manifest.read_text(encoding="utf-8"))
+                applied = apply.apply_promotion_plan(manifest_payload, plan, source_family="teacher_lesson")
+                _atomic_write_json(STAGED_MANIFEST, manifest_payload)
+                staged_sha256 = _sha256_file(STAGED_MANIFEST)
+                journal_record.update({
+                    "phase": "MANIFEST_STAGED",
+                    "staged_sha256": staged_sha256,
+                    "promoted": applied["counts"]["promoted"],
+                })
+                _atomic_write_json(DEFAULT_JOURNAL, journal_record)
+                promoted_keys = {_lemma_key(row["lemma"]) for row in applied["promoted_entries"]}
+                promoted_count = applied["counts"]["promoted"]
+                already_enriched = False
+
+            # PHASE 2: ENRICH ONLY THE PROMOTED ENTRIES.
+            # A teacher-lesson promotion never runs a full-manifest
+            # enrich_module.enrich() sweep: that walks every entry already in
+            # the Atlas (tens of thousands) regardless of how many are new,
+            # which is what took 9h and was killed on a 9-head promote
+            # (#7623). enrich_entry() is the same dictionary-grounded,
+            # per-lemma enrichment, scoped to just this promotion's additions.
+            if promoted_keys and not already_enriched:
+                _enrich_promoted_entries(manifest_payload["entries"], promoted_keys, sources_db=sources_db)
+                _atomic_write_json(STAGED_MANIFEST, manifest_payload)
+            if promoted_keys:
+                write_fingerprint(STAGED_FINGERPRINT, root=PROJECT_ROOT)
             enriched_sha256 = _sha256_file(STAGED_MANIFEST)
             journal_record.update({
                 "phase": "ENRICHED",
                 "enriched_sha256": enriched_sha256,
+                "promoted": promoted_count,
             })
             _atomic_write_json(DEFAULT_JOURNAL, journal_record)
 
@@ -667,10 +764,142 @@ def promote(
             })
             _atomic_write_json(DEFAULT_JOURNAL, journal_record)
 
-            result.update({"applied": applied["counts"], "wrote": bool(applied["counts"]["promoted"]), "journal": journal_record})
+            result.update({
+                "applied": {"promoted": promoted_count},
+                "resumed": resumed_journal is not None,
+                "wrote": bool(promoted_count),
+                "journal": journal_record,
+            })
             return result
         finally:
             fcntl.flock(lock_fd, fcntl.LOCK_UN)
+
+
+def _read_approved_decision_lemmas(path: Path) -> list[str]:
+    """Read every ``approve_for_publish`` lemma from a decisions ledger.
+
+    Unlike ``_build_rows``, this never re-derives POS/gloss/VESUM canonical
+    forms: an approved teacher-lesson lemma that already has an Atlas route
+    needs no gloss of its own (the existing entry already carries one), so
+    gating membership on gloss-fallback availability would silently drop
+    already-routable lemmas whenever a dictionary cache happens to differ
+    between runs.
+    """
+    payload = yaml.safe_load(path.read_text(encoding="utf-8"))
+    rows = payload.get("decisions") if isinstance(payload, Mapping) else None
+    if not isinstance(rows, list):
+        raise ValueError(f"{path}: expected a decision ledger with decisions")
+    lemmas: list[str] = []
+    for row in rows:
+        if isinstance(row, Mapping) and row.get("decision") == "approve_for_publish":
+            lemma = _normalise(row.get("lemma"))
+            if lemma:
+                lemmas.append(lemma)
+    return lemmas
+
+
+def _manifest_routes_by_lemma_key(manifest_entries: Sequence[Mapping[str, Any]]) -> dict[str, dict[str, str]]:
+    routes: dict[str, dict[str, str]] = {}
+    for entry in manifest_entries:
+        lemma = str(entry.get("lemma") or "")
+        slug = str(entry.get("url_slug") or "")
+        if lemma and slug:
+            routes.setdefault(_lemma_key(lemma), {"lemma": lemma, "slug": slug})
+    return routes
+
+
+def build_teacher_lesson_membership(
+    *,
+    decisions_path: Path,
+    manifest_path: Path,
+    membership_in: Path,
+    source_tag: str = MEMBERSHIP_SOURCE_TAG,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Union approved teacher-lesson lemmas with an existing Atlas route into curated membership.
+
+    Recognition-only: this only ever unions lemma/slug identifiers into the
+    membership table (which downstream ``apply_membership`` uses to flip
+    ``surface_admission.practice``). It never writes a cloze card, so cloze
+    admission stays false for every lemma this adds.
+    """
+    lemmas = sorted(set(_read_approved_decision_lemmas(decisions_path)))
+    manifest_entries = json.loads(manifest_path.read_text(encoding="utf-8")).get("entries", [])
+    routes = _manifest_routes_by_lemma_key(manifest_entries)
+
+    if membership_in.is_file():
+        existing = json.loads(membership_in.read_text(encoding="utf-8"))
+    else:
+        existing = {"schema": MEMBERSHIP_SCHEMA, "schemaVersion": 1, "members": []}
+    members: dict[str, dict[str, Any]] = {}
+    for row in existing.get("members", []):
+        slug = str(row.get("slug") or "")
+        if slug:
+            members[slug] = {"lemma": row["lemma"], "slug": slug, "sources": set(row.get("sources", []))}
+
+    resolved = 0
+    unresolved = 0
+    newly_tagged = 0
+    for lemma in lemmas:
+        route = routes.get(_lemma_key(lemma))
+        if route is None:
+            unresolved += 1
+            continue
+        resolved += 1
+        record = members.setdefault(route["slug"], {"lemma": route["lemma"], "slug": route["slug"], "sources": set()})
+        if source_tag not in record["sources"]:
+            newly_tagged += 1
+        record["sources"].add(source_tag)
+
+    serialized_members = [
+        {"lemma": record["lemma"], "slug": record["slug"], "sources": sorted(record["sources"])}
+        for _slug, record in sorted(members.items(), key=lambda item: (_lemma_key(item[1]["lemma"]), item[0]))
+    ]
+    payload = {"schema": MEMBERSHIP_SCHEMA, "schemaVersion": 1, "members": serialized_members}
+    report = {
+        "decision_lemmas": len(lemmas),
+        "resolved_atlas_routes": resolved,
+        "unresolved_atlas_routes": unresolved,
+        "newly_tagged_members": newly_tagged,
+        "total_members": len(serialized_members),
+    }
+    return payload, report
+
+
+def record_source_shape_checksum(
+    *,
+    sha256: str,
+    batch_id: str,
+    recorded_at: str,
+    journal_path: Path = DEFAULT_JOURNAL,
+) -> dict[str, Any]:
+    """Append a weekly private-source-shape checksum to the promotion journal.
+
+    Non-destructive: this never touches ``phase``/``tx_id``/other promotion
+    fields, so it is safe to call between (or instead of) a real ``--write``
+    promotion, purely as an audit trail of which source shape each reviewed
+    delta batch was checked against (see ``--print-source-shape`` in
+    ``scripts/audit/private_teacher_lesson_intake.py``).
+    """
+    if not SHA256_RE.fullmatch(sha256.strip().lower()):
+        raise ValueError("--record-source-shape must be a lowercase SHA-256 hex digest")
+    record: dict[str, Any] = {}
+    if journal_path.is_file():
+        try:
+            loaded = json.loads(journal_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            loaded = None
+        if isinstance(loaded, dict):
+            record = loaded
+    history = record.get("source_shape_history")
+    history = list(history) if isinstance(history, list) else []
+    entry = {"batch_id": batch_id, "source_shape_sha256": sha256.strip().lower(), "recorded_at": recorded_at}
+    history.append(entry)
+    record["source_shape_history"] = history
+    record["latest_source_shape_sha256"] = entry["source_shape_sha256"]
+    record["latest_source_shape_batch_id"] = batch_id
+    DEFAULT_INTAKE_DIR.mkdir(parents=True, exist_ok=True)
+    _atomic_write_json(journal_path, record)
+    return record
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -679,7 +908,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--curated-inventory", type=Path, default=DEFAULT_CURATED_INVENTORY)
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--fingerprint", type=Path, default=DEFAULT_FINGERPRINT)
-    parser.add_argument("--vesum-db", type=Path, required=True, help="Explicit verified VESUM shadow database")
+    parser.add_argument(
+        "--vesum-db",
+        type=Path,
+        help="Explicit verified VESUM shadow database (required unless --emit-membership)",
+    )
     parser.add_argument(
         "--sources-db",
         type=Path,
@@ -690,13 +923,82 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--apply", action="store_true", help="Build the promotion plan")
     parser.add_argument("--write", action="store_true", help="Apply the plan to the manifest")
     parser.add_argument("--allow-held", action="store_true", help="Allow promoting ready candidates while holding anchorless rows")
+    parser.add_argument(
+        "--resume-staged",
+        action="store_true",
+        help=(
+            "Resume a promotion whose manifest is already staged (journal phase "
+            "MANIFEST_STAGED or later) against an unchanged base manifest, instead "
+            "of re-applying the plan from scratch."
+        ),
+    )
     parser.add_argument("--report", action="store_true")
+    parser.add_argument(
+        "--emit-membership",
+        type=Path,
+        help=(
+            "Standalone mode: union every approved teacher-lesson lemma in "
+            "--decisions-in that already has an Atlas route in --manifest into "
+            "the curated-practice membership table at this path, tagged "
+            f"{MEMBERSHIP_SOURCE_TAG!r}. Recognition-only (never admits cloze). "
+            "Skips --vesum-db/--apply entirely; run this after a promotion "
+            "(or a --apply --report dry run) has written --decisions-in."
+        ),
+    )
+    parser.add_argument(
+        "--decisions-in",
+        type=Path,
+        default=DEFAULT_DECISIONS,
+        help="Decisions ledger to read for --emit-membership (defaults to --decisions-out's default path)",
+    )
+    parser.add_argument(
+        "--membership-in",
+        type=Path,
+        default=DEFAULT_MEMBERSHIP_PATH,
+        help="Existing curated-membership JSON to union with for --emit-membership",
+    )
+    parser.add_argument(
+        "--record-source-shape",
+        metavar="SHA256",
+        help=(
+            "Standalone mode: append a weekly private-source-shape checksum "
+            "(from `private_teacher_lesson_intake.py --print-source-shape`) to the "
+            "intake journal's audit trail. Requires --source-shape-batch-id."
+        ),
+    )
+    parser.add_argument("--source-shape-batch-id", help="Batch id this --record-source-shape checksum belongs to")
+    parser.add_argument(
+        "--source-shape-recorded-at",
+        help="ISO date the checksum was recorded (defaults to today, UTC)",
+    )
     args = parser.parse_args(argv)
+    if args.record_source_shape:
+        if not args.source_shape_batch_id:
+            parser.error("--record-source-shape requires --source-shape-batch-id")
+        recorded_at = args.source_shape_recorded_at or dt.date.today().isoformat()
+        record = record_source_shape_checksum(
+            sha256=args.record_source_shape,
+            batch_id=args.source_shape_batch_id,
+            recorded_at=recorded_at,
+        )
+        if args.report:
+            print(json.dumps(record, ensure_ascii=False, indent=2, sort_keys=True))
+        return 0
+    if args.emit_membership:
+        membership_payload, membership_report = build_teacher_lesson_membership(
+            decisions_path=args.decisions_in,
+            manifest_path=args.manifest,
+            membership_in=args.membership_in,
+        )
+        _atomic_write_json(args.emit_membership, membership_payload)
+        if args.report:
+            print(json.dumps(membership_report, ensure_ascii=False, indent=2, sort_keys=True))
+        return 0
     if args.write and not args.apply:
         parser.error("--write requires --apply")
     if not args.apply:
         parser.error("--apply is required to build a promotion plan")
-    if not args.vesum_db.is_file():
+    if not args.vesum_db or not args.vesum_db.is_file():
         parser.error(f"--vesum-db is not a file: {args.vesum_db}")
     summary = promote(
         full_decisions=args.full_decisions,
@@ -709,6 +1011,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         decisions_out=args.decisions_out,
         write=args.write,
         allow_held=args.allow_held,
+        resume_staged=args.resume_staged,
     )
     if args.report:
         print(json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True))

@@ -103,7 +103,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "e5e14bc0b8941c6fce62f3eb095c0a904893cc0c1d1884ac1fa1c9e5a38dfe14"
+        "sha256": "b4d9fb8cb927c1f29deb60bc215f0aa3dca09f1f5e6da93dc6117210342bd10a"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -235,7 +235,7 @@
       },
       {
         "path": "scripts/lexicon/promote_teacher_lesson_intake.py",
-        "sha256": "6b68b0170972136ed25c5d8215361c0d6a3f060cefdc00b09a3788bb5b159d8b"
+        "sha256": "bbe8a3d21940946f8fb8bcf00f90c0fa6222fddad7495d5218162b0454293d25"
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
