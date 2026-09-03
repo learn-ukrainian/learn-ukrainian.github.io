@@ -66,6 +66,14 @@ DEFAULT_CODEXBAR_REFRESH_INTERVAL_S = 720.0
 # Native Cursor login + dashboard probe can exceed routing.html's 5s timeout.
 # Cache HTTP reads for 10 minutes; background refresh keeps snapshots warm.
 DEFAULT_CURSOR_CACHE_TTL_S = 600.0
+# A NEED_LOGIN probe result gets a much shorter fresh-window than a healthy
+# one. NEED_LOGIN routinely reflects a transient state — a CLI status race,
+# an operator finishing `cursor-agent login` mid-session, or a key file
+# written after the driver started — and serving it as "fresh" for the full
+# 10-minute CURSOR_CACHE_TTL_S froze the lane in NEED_LOGIN long after
+# login/API-key access was actually restored. Keep this well under
+# CURSOR_CACHE_TTL_S so a resolved login state recovers fast.
+DEFAULT_CURSOR_NEED_LOGIN_CACHE_TTL_S = 30.0
 DEFAULT_API_ACCOUNT_CACHE_TTL_S = 600.0
 CURSOR_CACHE_KEY = "cursor_lane_usage"
 API_ACCOUNT_PROVIDERS: tuple[str, ...] = ("openrouter", "deepseek")
@@ -223,6 +231,11 @@ def _codexbar_refresh_interval_s() -> float:
 def _cursor_cache_ttl_s() -> float:
     """How long a successful Cursor native snapshot is labelled fresh."""
     return _env_positive_float("CURSOR_CACHE_TTL_S", DEFAULT_CURSOR_CACHE_TTL_S)
+
+
+def _cursor_need_login_cache_ttl_s() -> float:
+    """How long a cached NEED_LOGIN probe is labelled fresh before re-probing."""
+    return _env_positive_float("CURSOR_NEED_LOGIN_CACHE_TTL_S", DEFAULT_CURSOR_NEED_LOGIN_CACHE_TTL_S)
 
 
 def _api_account_cache_ttl_s() -> float:
@@ -395,6 +408,17 @@ def _load_codex_oauth_token() -> str | None:
             val = data.get(key)
             if isinstance(val, str) and val.strip():
                 return val.strip()
+        # Codex CLI's current auth.json shape nests the OAuth token set under
+        # "tokens" (e.g. {"tokens": {"access_token": ..., "refresh_token":
+        # ...}, "last_refresh": ...}). Only the top-level keys above were
+        # read, so a nested-shape auth.json probed as NEED_LOGIN even with a
+        # valid, unexpired access_token on disk.
+        nested = data.get("tokens")
+        if isinstance(nested, dict):
+            for key in ("access_token", "accessToken", "token"):
+                val = nested.get(key)
+                if isinstance(val, str) and val.strip():
+                    return val.strip()
     return None
 
 
@@ -1920,7 +1944,12 @@ def get_cursor_lane_usage(*, prefer_native: bool = True) -> dict[str, Any]:
     cached = cache_get_with_age(CURSOR_CACHE_KEY, ttl=_cursor_cache_ttl_s())
     if cached is not None:
         val, age = cached
-        if _cursor_probe_is_cacheable(val):
+        stale_need_login = (
+            isinstance(val, dict)
+            and val.get("probe_state") == "NEED_LOGIN"
+            and age >= _cursor_need_login_cache_ttl_s()
+        )
+        if _cursor_probe_is_cacheable(val) and not stale_need_login:
             return _with_cursor_observation_metadata(
                 val,
                 freshness="fresh",

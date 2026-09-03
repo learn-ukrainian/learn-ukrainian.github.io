@@ -15,19 +15,19 @@ Dual-READ / prefer-WRITE:
   or decision docs describing past runs.
 
 This module also carries ``RETIRED_AGENT_ALIASES`` — permanent dispatch-agent
-substitutions for a provider whose CLI is gone outright (currently
-``gemini`` → ``agy``). Those are a distinct concept from the seat aliases
-above: a retired-agent alias forwards to a genuinely different adapter, so
-it is resolve-only, never dual-read.
+substitutions for a provider whose CLI/subscription is gone outright
+(currently ``gemini`` → ``agy``, ``glm`` → ``cursor``). Those are a distinct
+concept from the seat aliases above: a retired-agent alias forwards to a
+genuinely different adapter, so it is resolve-only, never dual-read.
 """
 
 from __future__ import annotations
 
-# Permanent CLI retirements: a dispatch agent whose native binary is gone for
-# good, mapped to the live adapter that now carries that provider family's
-# work. UNLIKE ``SEAT_ALIASES`` (a cosmetic rename of the SAME adapter), a
-# retired-agent alias swaps to a DIFFERENT adapter/CLI entirely — the old
-# entry is never dual-readable, it always resolves forward.
+# Permanent CLI retirements: a dispatch agent whose native binary/subscription
+# is gone for good, mapped to the live adapter that now carries that provider
+# family's work. UNLIKE ``SEAT_ALIASES`` (a cosmetic rename of the SAME
+# adapter), a retired-agent alias swaps to a DIFFERENT adapter/CLI entirely —
+# the old entry is never dual-readable, it always resolves forward.
 #
 # gemini → agy (operator fact, 2026-08-18): the ``gemini`` CLI is not
 # supported and will not be installed. Live Gemini-family implementer is the
@@ -35,8 +35,16 @@ from __future__ import annotations
 # `gemini` binary exists — dispatching it fails with
 # ``FileNotFoundError: 'gemini'``. Resolve the alias BEFORE Popen,
 # unconditionally (not only when the lane is hot/near_cap/deficit).
+#
+# glm → cursor (operator fact, 2026-09-03): the z.ai GLM subscription backing
+# the `glm` lane is retired (key gone; NEED_LOGIN is expected, not a probe
+# bug). glm-5.3 work routes to cursor or OpenRouter instead. This is a
+# permanent routing default, not a hot/near_cap/deficit-only shed — do not
+# invent a standing OpenRouter glm worker here. An operator can still ask for
+# glm explicitly; this alias only governs unattended/default routing.
 RETIRED_AGENT_ALIASES: dict[str, str] = {
     "gemini": "agy",
+    "glm": "cursor",
 }
 
 

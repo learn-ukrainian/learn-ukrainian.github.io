@@ -645,10 +645,29 @@ def _cursor_cli_binary() -> str:
     return shutil.which("cursor-agent") or shutil.which("agent") or "cursor-agent"
 
 
+def _cursor_env_or_file_authenticated() -> bool:
+    """True when a usable Cursor API key is available outside the CLI's own state.
+
+    The CLI's ``status --format json`` reflects its own login/session state
+    (``~/.config/cursor/auth.json``), which is a DIFFERENT credential path
+    than ``CURSOR_API_KEY``. A driver env with ``CURSOR_API_KEY`` set (or a
+    persisted ``~/.config/cursor-agent/api.key.env``) is a fully usable
+    Cursor identity for dispatch even when the CLI itself reports
+    unauthenticated — dispatch already resolves this key independently (see
+    ``build_invocation``). Never log or return the key value.
+    """
+    if os.environ.get("CURSOR_API_KEY", "").strip():
+        return True
+    return _load_cursor_api_key_from_env_file() is not None
+
+
 def probe_cursor_login(*, timeout_s: float = 5.0) -> dict[str, Any]:
     """Preflight Cursor CLI auth without printing secrets.
 
-    Returns ``login_state`` of ``authenticated`` or ``NEED_LOGIN``.
+    Returns ``login_state`` of ``authenticated`` or ``NEED_LOGIN``. A usable
+    ``CURSOR_API_KEY`` (env or on-disk key file) counts as authenticated even
+    when the CLI's own session state says otherwise — see
+    ``_cursor_env_or_file_authenticated``.
     """
     fetched_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     try:
@@ -661,13 +680,14 @@ def probe_cursor_login(*, timeout_s: float = 5.0) -> dict[str, Any]:
         )
     except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
         kind = "missing_binary" if isinstance(exc, FileNotFoundError) else "timeout"
+        is_auth = _cursor_env_or_file_authenticated()
         return {
             "lane": "cursor",
             "source": "cursor_cli",
-            "login_state": "NEED_LOGIN",
-            "is_authenticated": False,
-            "status": "need_login",
-            "error_kind": kind,
+            "login_state": "authenticated" if is_auth else "NEED_LOGIN",
+            "is_authenticated": is_auth,
+            "status": "authenticated" if is_auth else "need_login",
+            "error_kind": None if is_auth else kind,
             "fetched_at": fetched_at,
         }
 
@@ -680,6 +700,8 @@ def probe_cursor_login(*, timeout_s: float = 5.0) -> dict[str, Any]:
     is_auth = bool(payload.get("isAuthenticated"))
     if not is_auth and str(payload.get("status") or "").lower() == "authenticated":
         is_auth = True
+    if not is_auth:
+        is_auth = _cursor_env_or_file_authenticated()
 
     return {
         "lane": "cursor",
