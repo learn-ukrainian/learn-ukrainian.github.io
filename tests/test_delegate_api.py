@@ -21,6 +21,11 @@ def _pin_tasks_dir(monkeypatch, tasks_dir: Path):
     tasks_dir.mkdir(parents=True, exist_ok=True)
     ctx = replace(app.state.ctx, roots=replace(app.state.ctx.roots, batch_state_dir=tasks_dir.parent))
     monkeypatch.setattr(app.state, "ctx", ctx)
+    # Patch the canonical factory (used by shared resolve_context) and the
+    # router re-export kept for monkeypatch compatibility after #7496.
+    import scripts.api.monitor_context as monitor_context
+
+    monkeypatch.setattr(monitor_context, "production_context", lambda: ctx)
     monkeypatch.setattr(delegate_router, "production_context", lambda: ctx)
     monkeypatch.setattr(delegate_router, "_tasks_dir", lambda ctx=None: tasks_dir)
     return ctx
@@ -470,4 +475,3 @@ def test_task_detail_detects_stale_run_nonce_split_brain(tmp_path, monkeypatch):
     resp_mismatch = client.get("/api/delegate/tasks/split-task?run_nonce=round-2-live-nonce")
     assert resp_mismatch.status_code == 409
     assert "Task run_nonce mismatch" in resp_mismatch.json()["detail"]
-

@@ -28,12 +28,15 @@ def _patch_usage_batch_state_dir(monkeypatch, runtime_router, batch_state_dir: P
     ``_collect_runtime_orient_data`` (main.py) calls ``summarize_runtime_usage``,
     ``runtime_recent_outcomes_today``, and ``list_runtime_agents`` with no
     ``ctx`` — direct-Python callers outside FastAPI request handling resolve
-    through ``production_context()`` (#7324 step 6). Patching that factory
-    (rather than a since-removed ``USAGE_DIR`` module global) redirects every
-    one of those calls, including ones reached through ``/api/orient`` itself.
+    through ``monitor_context.production_context()`` via shared
+    ``resolve_context`` (#7324 step 6 / #7496). Patch that factory (and the
+    router re-export) rather than a since-removed ``USAGE_DIR`` module global.
     """
-    base_ctx = runtime_router.production_context()
+    import scripts.api.monitor_context as monitor_context
+
+    base_ctx = monitor_context.production_context()
     patched_ctx = replace(base_ctx, roots=replace(base_ctx.roots, batch_state_dir=Path(batch_state_dir)))
+    monkeypatch.setattr(monitor_context, "production_context", lambda ctx=None: patched_ctx)
     monkeypatch.setattr(runtime_router, "production_context", lambda ctx=None: patched_ctx)
     return patched_ctx
 

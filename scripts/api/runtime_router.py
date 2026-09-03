@@ -22,6 +22,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.responses import JSONResponse
 
 from .monitor_context import MonitorContext, get_ctx, resolve_context
+from .monitor_context import production_context as production_context  # re-export: test monkeypatches
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 

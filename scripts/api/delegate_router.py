@@ -15,6 +15,7 @@ from typing import Any, Literal
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from .monitor_context import MonitorContext, get_ctx, resolve_context
+from .monitor_context import production_context as production_context  # re-export: test monkeypatches
 
 router = APIRouter(tags=["delegate"])
 
