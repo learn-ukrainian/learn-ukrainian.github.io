@@ -2,8 +2,9 @@ name: Integration sweep
 
 # The integration-owner role's abandoned-PR liveness net (#5029). This is
 # deliberately scheduled rather than session-bound: scheduled runs execute
-# from main, while manual runs are dry-run unless an operator explicitly opts
-# into applying the already fail-closed decision checks.
+# from main, but retire-CF-attest (2026-09-03 GO) means NO run auto-arms —
+# scheduled runs are always dry-run (report-only); an operator must run
+# workflow_dispatch with apply=true to act on the fail-closed decision checks.
 on:
   schedule:
     - cron: '7,22,37,52 * * * *'
@@ -55,7 +56,9 @@ jobs:
           REPOSITORY: ${{ github.repository }}
         run: |
           args=()
-          if [[ "$EVENT_NAME" == "schedule" || "$APPLY" == "true" ]]; then
+          # Scheduled runs are always dry-run (no auto-arm); only an explicit
+          # workflow_dispatch apply=true opts into arming eligible PRs.
+          if [[ "$EVENT_NAME" != "schedule" && "$APPLY" == "true" ]]; then
             args+=(--apply)
           fi
           python -m scripts.orchestration.integration_sweep --repo "$REPOSITORY" "${args[@]}"

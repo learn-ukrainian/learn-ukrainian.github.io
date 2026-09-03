@@ -159,7 +159,10 @@ tie-breakers.
     re-review after a material change to the outcome, scope, denominator, role map, acceptance
     criteria, or independent evaluation. A non-goal that shrinks the actual mission needs
     operator/advisor approval. Prompt review improves dispatch quality only: it never replaces
-    exact-head implementation review or the independent cross-family PR gate.
+    exact-head implementation review or independent cross-family PR review. (CF attest and
+    CF-as-merge-gate are retired — operator GO 2026-09-03, `drive-epic` skill §6–7: that review
+    happens out of band and does not gate landing; CI Gate green is the sole landing
+    precondition.)
 
 ## Precedence
 

@@ -79,8 +79,10 @@ non-skippable:
   operator tasking.
 - Every commit has an `X-Agent: <agent>/<task-id>` trailer. Change tasks end in
   a pushed PR with CI; never push directly to `main`. Workers neither merge nor
-  arm auto-merge. Before merge, required CI and an independent cross-family
-  exact-head review must both pass; resolve material findings and re-review.
+  arm auto-merge. CF attest and CF-as-merge-gate are retired (operator GO
+  2026-09-03; `drive-epic` skill §6–7): landing order is **CI Gate green →
+  human/red-team merge** — no cross-family-APPROVE precondition, no auto-arm.
+  Red team review happens out of band and does not gate landing.
 - Treat unavailable telemetry as unknown, not policy proof. Do not close
   partial work: state verified outcome, denominator, residual gap, and owner.
 

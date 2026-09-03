@@ -153,21 +153,19 @@ or pad. The replacement must run the exact reserved-path commands emitted by
 `context_canary.py mint --snapshot`, `questions`, and strict `score --verdict` before
 the separate challenge proof and `confirm-started` can unlock cleanup.
 
-## Merge policy — ready PRs must not sit (#4703; landing order #7450; auto-arm #7539)
+## Merge policy — ready PRs must not sit (#4703; retire-CF-attest, operator GO 2026-09-03)
 
 The repo setting `allow_auto_merge` is ENABLED (was the root cause of ready PRs sitting
-for hours). The binding landing order (operator 2026-08-30, #7450): (1) independent
-cross-family exact-head CF APPROVE, (2) CI Gate green on that **same** head, (3) only then
-arm/queue. Never arm auto-merge ahead of either gate — early-armed auto-merge is how
-#7447–#7449 landed with empty reviews, and a moved head makes a prior APPROVE stale. Once
-both gates are green at the exact head, label the PR `automerge-ok`: the label-gated
-auto-arm pipeline (#7539/#7540) arms GitHub auto-merge on its next firing
-(`do-not-merge`/`hold` block it; manual `gh pr merge <N> --auto --squash` at that
-fully-green point is equivalent). Do **not** pass `--delete-branch` while this repo uses a
-merge queue (head deletion mid-queue can close without landing); delete the remote branch
-only after `MERGED`. Dispatched agents still do NOT self-enable auto-merge or self-label
-(review gate first — unchanged). `--auto` never bypasses blocking checks (#M-0.5 semantics
-unchanged).
+for hours). **CF attest and CF-as-merge-gate are retired** (skill `drive-epic` §6–7): there
+is no cross-family-APPROVE precondition on landing, and **no auto-arm**. The binding
+landing order is: (1) **CI Gate green** on the current head, (2) merge/enqueue then — never
+before. Red team review happens out of band; it is not a CI check and does not gate
+landing. Once Gate is green at the exact head, `gh pr merge <N> --squash` (never `--auto`
+as a substitute for watching Gate turn green). Do **not** pass `--delete-branch` while this
+repo uses a merge queue (head deletion mid-queue can close without landing); delete the
+remote branch only after `MERGED`. Dispatched agents still do NOT self-enable auto-merge or
+self-merge out of turn — the driver owning that PR's lane merges it. `--auto` never bypasses
+blocking checks (#M-0.5 semantics unchanged).
 
 **Stream-scoped sweeps (user directive 2026-07-13 — parallel-stream chaos fix; supersedes the
 2026-07-07 one-hour out-of-lane backstop for TRACK sessions).** Multiple streams run in parallel, so a

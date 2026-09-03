@@ -1,10 +1,18 @@
 from __future__ import annotations
 
+import subprocess
+import sys
 import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+import pytest
+import yaml
+
 from scripts.orchestration import integration_sweep
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+_WORKFLOW = _REPO_ROOT / ".github" / "workflows" / "integration-sweep.yml"
 
 NOW = datetime(2026, 8, 9, 12, tzinfo=UTC)
 HEAD = "a" * 40
@@ -269,3 +277,48 @@ def test_main_non_schedule_still_refuses_http_403(monkeypatch, capsys) -> None:
     out = capsys.readouterr().out
     assert out.startswith("integration sweep refused:")
     assert "HTTP 403" in out
+
+
+def _sweep_step_script() -> str:
+    workflow = yaml.safe_load(_WORKFLOW.read_text(encoding="utf-8"))
+    steps = workflow["jobs"]["sweep"]["steps"]
+    step = next(s for s in steps if s.get("name") == "Sweep abandoned PRs")
+    return step["run"]
+
+
+@pytest.mark.parametrize(
+    ("event_name", "apply_input", "expect_apply_flag"),
+    [
+        ("schedule", "", False),
+        ("schedule", "true", False),
+        ("workflow_dispatch", "", False),
+        ("workflow_dispatch", "false", False),
+        ("workflow_dispatch", "true", True),
+    ],
+)
+def test_workflow_scheduled_runs_never_auto_arm(
+    tmp_path: Path, event_name: str, apply_input: str, expect_apply_flag: bool
+) -> None:
+    """Retire-CF-attest (2026-09-03 GO): scheduled sweeps are always dry-run;
+    only an explicit workflow_dispatch apply=true opts into --apply."""
+    fake_python = tmp_path / "record_args.py"
+    out_file = tmp_path / "args.txt"
+    fake_python.write_text(
+        "import sys\n"
+        f"open({str(out_file)!r}, 'w').write(' '.join(sys.argv[1:]))\n"
+    )
+    script = _sweep_step_script().replace("python -m", f"{sys.executable} {fake_python} -m")
+
+    subprocess.run(
+        ["bash", "-c", script],
+        env={
+            "PATH": "/usr/bin:/bin",
+            "EVENT_NAME": event_name,
+            "APPLY": apply_input,
+            "REPOSITORY": "org/repo",
+        },
+        check=True,
+    )
+
+    recorded = out_file.read_text()
+    assert ("--apply" in recorded.split()) is expect_apply_flag

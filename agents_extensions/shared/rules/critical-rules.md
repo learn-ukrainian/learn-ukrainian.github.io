@@ -142,28 +142,27 @@ everything" cannot survive this repo's merge rate and is corporate dual-control 
 - The tier is the **reviewer's** call, recorded explicitly in the verdict, not the author's. An author
   who disagrees escalates to a second reviewer rather than re-tiering their own finding.
 
-**8.5 — Auto-merge protocol.**
-- **Workers never merge and never arm auto-merge.** Only the driver owning that PR's lane arms it.
-- Arm **only** when all three hold (landing order #7450): the review gate is satisfied — exact-head
-  cross-family CF APPROVE with **no BLOCKING finding outstanding** per §8.4 (a non-blocking nit does
-  **not** hold arming) · PR is **not a draft** · **CI Gate green on that same head** (pending is not
-  green — never arm and wait for Gate; early-armed auto-merge is how #7447–#7449 landed with empty
-  reviews). Standard form: label `automerge-ok` — the auto-arm pipeline (#7539/#7540) arms GitHub
-  auto-merge; manual `gh pr merge <N> --auto --squash -R <owner/repo>` at that fully-green point is
-  equivalent.
+**8.5 — Merge protocol (retire-CF-attest, operator GO 2026-09-03).**
+- **Workers never merge and never arm auto-merge.** Only the driver owning that PR's lane merges it.
+- **CF attest and CF-as-merge-gate are retired** (skill `drive-epic` §6–7). There is no
+  cross-family-APPROVE precondition on landing. **No auto-arm.** Landing order is: **CI Gate green
+  on the current head → human/red-team merge.** Red team review happens out of band — it is not a
+  CI check and does not gate landing.
+- Merge **only** when both hold: PR is **not a draft** · **CI Gate green on that same head** (pending
+  is not green — never merge or enqueue and wait for Gate). `gh pr merge <N> --squash -R <owner/repo>`
+  at that fully-green point; do not arm `--auto` as a substitute for watching Gate turn green.
   Do **not** pass `--delete-branch` while this repo uses a merge queue — deleting the head
   mid-queue can close the PR without landing. Delete the remote branch only after
   `MERGED`, as part of post-merge cleanup (§7a / worktree-cleanup).
-- **Arm the moment all three gates hold, then leave it alone.** The binding policy in
-  [`workflow.md`](workflow.md) (§ merge policy) matches: once armed, *"GitHub merges it,
-  nobody babysits."* A moved head makes the prior APPROVE stale — re-run exact-head CF before
-  re-arming.
-- **Our review gate is agent-enforced, not GitHub-enforced.** Branch protection may require only a
+- **Our merge gate is agent-enforced, not GitHub-enforced.** Branch protection may require only a
   single status check and **zero approving reviews**, so nothing external will stop a premature merge.
-  That is precisely why the review gate must gate *arming*.
-- **Never merge ahead of the verdict, even under pressure.** On 2026-07-25 PR #5741 was armed while
-  green and merged before its review returned; that review then found a factual omission and an
-  overstatement in the merged document, needing a follow-up PR to correct.
+  That is precisely why the driver must gate merging on Gate green itself, not delegate that
+  judgment away.
+- **Never merge ahead of a red or pending Gate, even under pressure.** On 2026-07-25 PR #5741 was
+  armed while green and merged before its review returned; that review then found a factual omission
+  and an overstatement in the merged document, needing a follow-up PR to correct. The lesson under the
+  current (post-CF-attest) doctrine is the same discipline applied to Gate: never merge ahead of the
+  signal you're relying on.
 - **ARMED ≠ MERGED.** A PR leaves the books only at state `MERGED`. Once armed, GitHub is responsible for
   merging it — **do not babysit for arming.** A watcher's only legitimate jobs are to notice
   *exceptions*: an outage-failed check that needs re-running, a base-branch fix that needs
