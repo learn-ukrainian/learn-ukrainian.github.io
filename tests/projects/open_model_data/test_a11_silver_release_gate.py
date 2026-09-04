@@ -292,9 +292,9 @@ def test_a11_receipt_binds_v4_sha_and_control_surfaces() -> None:
 
 
 def test_a11_receipt_binds_the_merged_a10_receipt_by_its_known_public_sha() -> None:
-    # The merged A10 receipt's public sha256, frozen at dispatch time (v4-per-slot-private-factory:
-    # A9's gate went per-slot instead of a single global AND, rippling A10's own binding hash forward).
-    assert a11.sha256_file(A10_RECEIPT_PATH) == "3aaa3a78fe261cad92274632b0f63d72fa8b1057fa65cbce46cc4e382f64faf1"
+    # The merged A10 receipt's public sha256, frozen at dispatch time (PR #7654 repair cycle 3:
+    # A7's own upstream hash changed (dropped the undecided A7-vs-A6 subset), rippling into A8-A10).
+    assert a11.sha256_file(A10_RECEIPT_PATH) == "db9b28e570639675ea4fd546fc610727b94886125879a7478286651d95a59ab8"
 
 
 def test_a11_receipt_carries_forward_every_a2_a4_a5_a6_a7_a8_a9_a10_residual_unresolved() -> None:

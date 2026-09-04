@@ -173,9 +173,9 @@ def test_a8_receipt_binds_v4_sha_and_control_surfaces() -> None:
 
 
 def test_a8_receipt_binds_the_merged_a7_receipt_by_its_known_public_sha() -> None:
-    # The merged A7 receipt's public sha256, frozen at dispatch time (PR #7654 repair cycle 2:
-    # A7's gate now reports positive-completion evidence, not per-slot readiness, changing its content).
-    assert a8.sha256_file(A7_RECEIPT_PATH) == "50f555ea69fbc30a5f0a99035af700f6f6672ad45740d799c851f3d6725be5e2"
+    # The merged A7 receipt's public sha256, frozen at dispatch time (PR #7654 repair cycle 3:
+    # A7's gate dropped the undecided A7-vs-A6 upstream-completion subset/requires entry, changing its content).
+    assert a8.sha256_file(A7_RECEIPT_PATH) == "941753820df881c959fde30b682429155f984ddabe3ff07a2e59315f16b6604c"
 
 
 def test_a8_receipt_carries_forward_every_a2_a4_a5_a6_a7_residual_unresolved() -> None:

@@ -144,7 +144,6 @@
             "a6_receipt_independently_valid",
             "per_stratum_a2_rights_resolved",
             "per_stratum_manifest_assignment",
-            "per_slot_a6_completion_evidence",
             "per_slot_a7_completion_evidence"
           ]
         },

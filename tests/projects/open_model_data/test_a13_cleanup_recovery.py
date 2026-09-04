@@ -261,10 +261,10 @@ def test_a13_receipt_binds_v4_sha_and_control_surfaces() -> None:
 
 
 def test_a13_receipt_binds_the_merged_a12_receipt_by_its_known_public_sha() -> None:
-    # The merged A12 receipt's public sha256, frozen at dispatch time (PR #7654 repair cycle 2:
-    # A6-A9 gained positive-completion evidence, rippling A12's own binding hash forward).
-    assert a13.sha256_file(A12_RECEIPT_PATH) == "2cf58f64339209a640014f62378f30a0b45c0d95b921b8aa3cd78e760c20f94f"
-    assert a13.A12_RECEIPT_SHA256_AT_MERGE == "2cf58f64339209a640014f62378f30a0b45c0d95b921b8aa3cd78e760c20f94f"
+    # The merged A12 receipt's public sha256, frozen at dispatch time (PR #7654 repair cycle 3:
+    # A7's own upstream hash changed (dropped the undecided A7-vs-A6 subset), rippling into A8-A12).
+    assert a13.sha256_file(A12_RECEIPT_PATH) == "281db8794b83d4dd208470cfc23366012a8309577069d54e6ea28592695bb939"
+    assert a13.A12_RECEIPT_SHA256_AT_MERGE == "281db8794b83d4dd208470cfc23366012a8309577069d54e6ea28592695bb939"
 
 
 def test_a13_receipt_carries_forward_every_a2_a4_a5_a6_a7_a8_a9_a10_a11_a12_residual_unresolved() -> None:

@@ -22,8 +22,8 @@ public artifacts --
 * A4's deterministic extraction receipt (only its own already-carried
   residuals, never A4's private ledger),
 * A5's evidence enrichment receipt (already-carried residuals only),
-* A6's blind arena receipt (already-carried residuals *and* its own typed,
-  positive ``a6_completions``),
+* A6's blind arena receipt (already-carried residuals only -- A9 never
+  reads or depends on ``a6_completions``),
 * A7's original-row factory receipt (its own typed, positive
   ``a7_completions``),
 * A8's admission/assembly receipt (its own typed, positive
@@ -37,8 +37,11 @@ public artifacts --
 2, Option A). A slot is only ever A9-complete once a real ``a9_completions``
 record exists for it *and* that slot is also present in A8's own
 ``a8_completions`` (the upstream-subset invariant; A8's own validation
-already transitively covers the A8-vs-A7-vs-A6 chain). Three independent
-parts:
+already transitively covers the A8-vs-A7 subset). This chain never reaches
+A6: whether A7 completion should require A6 completion per slot is an
+explicitly deferred policy decision (design packet F2), not one this repair
+makes, so A6 completion is never part of the A9-vs-A8-vs-A7 chain either.
+Three independent parts:
 
 1. ``check_evaluation_gate`` -- independently re-derives, from those seven
    public artifacts alone, whether a real evaluation artifact may be
@@ -286,7 +289,7 @@ def derive_a9_slot_residuals(manifest: dict[str, Any], a2_receipt: dict[str, Any
                     "owner_role": owner_role,
                     "next_action": (
                         "no admitted row exists to evaluate for this frozen slot until its stratum is "
-                        "prerequisite-eligible and A6, A7, A8, and A9 each produce real positive completion "
+                        "prerequisite-eligible and A7, A8, and A9 each produce real positive completion "
                         "evidence for it -- never score a placeholder row"
                     ),
                     "retryability": "retryable",

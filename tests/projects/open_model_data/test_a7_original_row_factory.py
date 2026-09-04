@@ -108,15 +108,18 @@ def test_a7_gate_closed_when_a6_receipt_is_invalid(tmp_path: Path) -> None:
     assert gate["blocked_reason_code"] == "upstream_receipt_invalid"
 
 
-def test_a7_gate_reports_eligible_but_stays_closed_pending_upstream_a6_completion(tmp_path: Path) -> None:
+def test_a7_gate_reports_eligible_and_awaits_only_its_own_execution_never_a6_completion(tmp_path: Path) -> None:
     """The regression test for the P1 this dispatch fixes: A2 rights +
     manifest assignment resolving a stratum must never, by itself, produce
     a positive A7 completion count. Every validator here runs live (A6's
     own real ``check_arena_gate``/``validate_receipt_independently``,
     never stubbed) against a synthetic root where one stratum is genuinely
-    prerequisite-eligible; A6's own ``a6_completions`` stays empty (no
-    execution mechanism exists), so A7 -- which requires A6's positive
-    completion evidence, not just eligibility -- stays at 0 complete."""
+    prerequisite-eligible. A6's own ``a6_completions`` stays empty (no
+    execution mechanism exists) but this never blocks A7: whether A7
+    completion should require A6 completion per slot is an explicitly
+    deferred policy decision (design packet F2), not one this repair makes,
+    so A7's gate reports the eligible slots as awaiting *A7's own*
+    execution, never A6's completion."""
     fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
     a6_receipt = a7.a6.build_receipt(tmp_path)
     a7.a6.validate_receipt_independently(a6_receipt, tmp_path)
@@ -129,7 +132,7 @@ def test_a7_gate_reports_eligible_but_stays_closed_pending_upstream_a6_completio
     assert gate["slots_stage_complete"] == 0
     assert gate["slots_residual"] == 100
     assert gate["factory_slice_ready"] is False
-    assert gate["blocked_reason_code"] == "eligible_slots_awaiting_upstream_stage_completion"
+    assert gate["blocked_reason_code"] == "eligible_slots_awaiting_this_stage_execution"
 
 
 # --- A7 residuals ----------------------------------------------------------------

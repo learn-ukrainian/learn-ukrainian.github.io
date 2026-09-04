@@ -23,9 +23,9 @@ inputs are five already-public artifacts --
 * A4's deterministic extraction receipt (only its own already-carried
   residuals, never A4's private ledger),
 * A5's evidence enrichment receipt (already-carried residuals only),
-* A6's blind arena receipt (already-carried residuals, and its own typed,
-  positive ``a6_completions`` -- the direct upstream signal this module's
-  gate builds on), and
+* A6's blind arena receipt (already-carried residuals, and its own
+  independent structural validity -- an artifact/binding requirement this
+  module still enforces, never a completion dependency; see below), and
 * the frozen 100-slot V4 pilot slot manifest (``slot_series`` -- public slot
   IDs only, never a real ``source_unit_id``).
 
@@ -33,21 +33,31 @@ inputs are five already-public artifacts --
 2, Option A -- ``batch_state/tasks/design-7654-partial-stage-evidence.
 result``). Cycle 1 derived a slot's readiness from A2 rights + manifest
 assignment metadata plus a slot's *absence* from A6's own residual list --
-absence is never completion evidence (cross-family P1, 2026-09-04). This
-module now reads A6's own typed, positive ``a6_completions`` records
-directly; a slot is only ever counted A7-complete once a real ``a7_completions``
-record exists for it *and* that record's slot is also present in A6's own
-``a6_completions`` (the upstream-subset invariant). Two independent parts:
+absence is never completion evidence (cross-family P1, 2026-09-04). A slot
+is only ever counted A7-complete once a real ``a7_completions`` record
+exists for it *and* that record's slot is prerequisite-eligible.
+
+**A7 completion does not require A6 completion.** The design packet's own
+Risks section flags, and explicitly does not resolve, whether A7 completion
+should require A6 completion per slot: A6 is a blind-arena/evaluation-
+adjacent surface and A7 is independent row construction, and the delivery
+plan lists them as siblings, not a chain (design packet follow-up F2). This
+module therefore never reads A6's ``a6_completions`` and never subset-checks
+A7's completions against them. A7 does still require A6's receipt to
+independently validate as a bound artifact -- ``a6_receipt_valid`` gates
+``blocked_reason_code`` exactly the way a corrupted/tampered upstream
+artifact would for any stage -- but a *valid, empty* A6 receipt (today's
+real state) never blocks A7 completion by itself.
 
 1. ``check_factory_gate`` -- independently re-derives, from those five public
    artifacts alone, whether a real independently-constructed row may be
    produced at all. Right now it cannot: every frozen slot is still
-   ``UNASSIGNED_PENDING_A2_A3``, A2 still carries eight unresolved
-   rights/coverage residuals, and A6's own ``a6_completions`` is empty --
-   so ``slots_prerequisite_eligible`` is 0 and ``factory_slice_ready`` is
-   false. Per the binding contract this module must *never* claim the
-   row-ready status while that is true; it reports ``factory_slice_ready:
-   false`` and a typed ``blocked_reason_code`` instead.
+   ``UNASSIGNED_PENDING_A2_A3`` and A2 still carries eight unresolved
+   rights/coverage residuals -- so ``slots_prerequisite_eligible`` is 0 and
+   ``factory_slice_ready`` is false. Per the binding contract this module
+   must *never* claim the row-ready status while that is true; it reports
+   ``factory_slice_ready: false`` and a typed ``blocked_reason_code``
+   instead.
 2. ``build_receipt`` -- assembles the public receipt: the frozen 100-slot
    denominator (reusing, never duplicating, ``v4_stage_evidence
    .frozen_slot_strata``/``all_frozen_slot_ids``), the per-stratum
@@ -170,12 +180,14 @@ def check_factory_gate(root: Path = ROOT) -> dict[str, Any]:
     """Independently re-derive whether a real, source-derived, independently
     constructed row may be produced at all, from the frozen slot manifest's
     own per-stratum ``assignment_state``, A2's own residuals, and A6's
-    independent validity -- never trusting the A7 receipt's own declared
-    fields, never opening ``batch_state/``. ``factory_slice_ready`` is only
-    ever true once this stage's own positive ``a7_completions`` cover all
-    100 frozen slots, each one also present in A6's own ``a6_completions``
-    (the upstream-subset invariant) -- prerequisite eligibility is necessary
-    but never sufficient on its own.
+    independent structural validity -- never trusting the A7 receipt's own
+    declared fields, never opening ``batch_state/``. ``factory_slice_ready``
+    is only ever true once this stage's own positive ``a7_completions``
+    cover all 100 frozen slots, each one prerequisite-eligible -- prerequisite
+    eligibility is necessary but never sufficient on its own. A7 completion
+    is never gated on A6 completion membership or count (design packet F2 --
+    an A7-requires-A6 policy is flagged, not decided, by this repair); A6's
+    receipt is required only to independently validate as a bound artifact.
 
     Fails closed -- a *closed gate*, not an exception -- if any of the three
     required public artifacts (slot manifest, A2 receipt, A6 receipt) is
@@ -219,19 +231,18 @@ def check_factory_gate(root: Path = ROOT) -> dict[str, Any]:
     eligible_ids = ev.eligible_slot_ids(eligibility)
     total_ids = set(all_frozen_slot_ids(manifest))
 
-    a6_completion_ids = (
-        ev.completion_slot_ids(a6_receipt.get("a6_completions", []), stage="A6", total_slot_ids=total_ids, error_cls=OriginalRowFactoryError) if a6_valid else set()
-    )
-
     a7_completions: list[dict[str, Any]] = []  # A7 has no execution mechanism yet -- always empty (design F2).
     a7_completion_ids = ev.completion_slot_ids(a7_completions, stage="A7", total_slot_ids=total_ids, error_cls=OriginalRowFactoryError)
     residual_ids = ev.derive_residual_slot_ids(total_ids, a7_completion_ids)
     ev.validate_partition(total_ids, a7_completion_ids, residual_ids, label="A7", error_cls=OriginalRowFactoryError)
     ev.validate_subset(a7_completion_ids, eligible_ids, label="A7 completions vs prerequisite-eligible slots", error_cls=OriginalRowFactoryError)
-    ev.validate_subset(a7_completion_ids, a6_completion_ids, label="A7 completions vs A6 completions (upstream subset)", error_cls=OriginalRowFactoryError)
+    # Deliberately no A7-vs-A6 upstream-completion subset check: whether A7
+    # completion requires A6 completion is an explicitly deferred policy
+    # decision (design packet F2), never made by this repair. A6's receipt
+    # is required to independently validate above (an artifact/binding
+    # requirement); its own completion count never gates A7.
 
     slots_prerequisite_eligible = len(eligible_ids)
-    slots_upstream_complete = len(a6_completion_ids)
     slots_stage_complete = len(a7_completion_ids)
     slots_residual = len(residual_ids)
     factory_slice_ready = slots_stage_complete == 100
@@ -239,8 +250,8 @@ def check_factory_gate(root: Path = ROOT) -> dict[str, Any]:
     blocked_reason_code = ev.gate_blocked_reason_code(
         upstream_valid=a6_valid,
         slots_prerequisite_eligible=slots_prerequisite_eligible,
-        has_upstream_stage=True,
-        slots_upstream_complete=slots_upstream_complete,
+        has_upstream_stage=False,  # A7 completion is never gated on A6 completion membership or count (design F2).
+        slots_upstream_complete=0,
         slots_stage_complete=slots_stage_complete,
         total=100,
     )
@@ -249,7 +260,7 @@ def check_factory_gate(root: Path = ROOT) -> dict[str, Any]:
         "gate_id": "v4-a7-factory-gate-v1",
         "a6_receipt_valid": a6_valid,
         "slots_prerequisite_eligible": slots_prerequisite_eligible,
-        "slots_upstream_complete": slots_upstream_complete,
+        "slots_upstream_complete": 0,  # No A7-vs-A6 completion dependency -- see module docstring (design F2).
         "slots_stage_complete": slots_stage_complete,
         "slots_residual": slots_residual,
         "factory_slice_ready": factory_slice_ready,
@@ -289,14 +300,13 @@ def derive_a7_slot_residuals(manifest: dict[str, Any], a2_receipt: dict[str, Any
                     "owner_role": owner_role,
                     "next_action": (
                         "no independently authored or independently constructed row may be produced for this "
-                        "frozen slot until its stratum is prerequisite-eligible and A6 and A7 each produce real "
-                        "positive completion evidence for it -- never derive a row from metadata alone"
+                        "frozen slot until its stratum is prerequisite-eligible and A7 produces real positive "
+                        "completion evidence for it -- never derive a row from metadata alone"
                     ),
                     "retryability": "retryable",
                     "evidence_refs": [
                         "admission.dataset_v4_pilot_slot_manifest_v1.slot_series",
                         "admission.dataset_v4_a2_source_operation_admission_receipt_v1.stratum_coverage_map",
-                        "admission.dataset_v4_a6_blind_arena_receipt_v1.a6_completions",
                     ],
                 }
             )
@@ -410,7 +420,6 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
                 "a6_receipt_independently_valid",
                 "per_stratum_a2_rights_resolved",
                 "per_stratum_manifest_assignment",
-                "per_slot_a6_completion_evidence",
                 "per_slot_a7_completion_evidence",
             ],
             "a6_receipt_valid": gate["a6_receipt_valid"],
@@ -546,7 +555,6 @@ def validate_engine_wiring(receipt: dict[str, Any]) -> None:
 def validate_eligibility_and_completion(receipt: dict[str, Any], root: Path) -> None:
     manifest = _load(root / SLOT_MANIFEST_RELATIVE)
     a2_receipt = _load(root / A2_RECEIPT_RELATIVE)
-    a6_receipt = _load(root / A6_RECEIPT_RELATIVE)
     gate = check_factory_gate(root)
 
     expected_eligibility = ev.public_eligibility(ev.stratum_eligibility(manifest, a2_receipt, error_cls=OriginalRowFactoryError))
@@ -554,10 +562,10 @@ def validate_eligibility_and_completion(receipt: dict[str, Any], root: Path) -> 
 
     total_ids = set(all_frozen_slot_ids(manifest))
     eligible_ids = ev.eligible_slot_ids(ev.stratum_eligibility(manifest, a2_receipt, error_cls=OriginalRowFactoryError))
-    a6_completion_ids = ev.completion_slot_ids(a6_receipt.get("a6_completions", []), stage="A6", total_slot_ids=total_ids, error_cls=OriginalRowFactoryError)
     completion_ids = ev.completion_slot_ids(receipt["a7_completions"], stage="A7", total_slot_ids=total_ids, error_cls=OriginalRowFactoryError)
     ev.validate_subset(completion_ids, eligible_ids, label="A7 completions vs prerequisite-eligible slots", error_cls=OriginalRowFactoryError)
-    ev.validate_subset(completion_ids, a6_completion_ids, label="A7 completions vs A6 completions (upstream subset)", error_cls=OriginalRowFactoryError)
+    # Deliberately no A7-vs-A6 upstream-completion subset check here either --
+    # see check_factory_gate and the module docstring (design packet F2).
     require(len(completion_ids) == gate["slots_stage_complete"], "a7_completions count does not match the gate's slots_stage_complete -- refusing")
 
     residual_subject_ids = {entry["subject_id"] for entry in receipt["a7_residuals"]}

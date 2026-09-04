@@ -23,8 +23,8 @@ ledger: its only inputs are six already-public artifacts --
 * A4's deterministic extraction receipt (only its own already-carried
   residuals, never A4's private ledger),
 * A5's evidence enrichment receipt (already-carried residuals only),
-* A6's blind arena receipt (already-carried residuals *and* its own typed,
-  positive ``a6_completions``),
+* A6's blind arena receipt (already-carried residuals only -- A8 never
+  reads or depends on ``a6_completions``),
 * A7's original-row factory receipt (already-carried residuals, its own
   typed, positive ``a7_completions``, its own zero-row engine admission
   receipt, and its own gate state as the direct upstream signal this
@@ -35,8 +35,12 @@ ledger: its only inputs are six already-public artifacts --
 **Prerequisite eligibility is not stage completion** (PR #7654 repair cycle
 2, Option A). A slot is only ever A8-complete once a real ``a8_completions``
 record exists for it *and* that slot is also present in A7's own
-``a7_completions`` (the upstream-subset invariant; A7's own validation
-already transitively covers the A7-vs-A6 subset). Two independent parts:
+``a7_completions`` (the upstream-subset invariant). A7 completion does not
+itself require A6 completion -- whether A7 should require A6 completion per
+slot is an explicitly deferred policy decision (design packet F2), not one
+this repair makes -- so this A8-vs-A7 subset check is the full extent of
+A8's own upstream-completion dependency; it never transitively implies an
+A7-vs-A6 relationship. Two independent parts:
 
 1. ``check_assembly_gate`` -- independently re-derives, from those six public
    artifacts alone, whether a real admitted slice may be assembled at all.
@@ -277,7 +281,7 @@ def derive_a8_slot_residuals(manifest: dict[str, Any], a2_receipt: dict[str, Any
                     "owner_role": owner_role,
                     "next_action": (
                         "no rights-cleared row exists to assemble for this frozen slot until its stratum is "
-                        "prerequisite-eligible and A6, A7, and A8 each produce real positive completion evidence "
+                        "prerequisite-eligible and A7 and A8 each produce real positive completion evidence "
                         "for it -- never assemble a row from metadata alone"
                     ),
                     "retryability": "retryable",

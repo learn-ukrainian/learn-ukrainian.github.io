@@ -179,12 +179,17 @@ def test_subset_refuses_a_completion_for_a_prerequisite_ineligible_slot() -> Non
 
 
 def test_subset_refuses_a_completion_with_no_matching_upstream_completion() -> None:
-    """Upstream-missing: a downstream stage cannot claim a slot complete
+    """Upstream-missing: a downstream stage that does declare an upstream-
+    completion dependency (A8 on A7, A9 on A8) cannot claim a slot complete
     unless the immediately upstream stage's own positive completion
     evidence also names it -- eligibility, and even a real downstream-level
-    construction, can never stand in for the missing upstream proof."""
-    upstream_completion: set[str] = set()  # A6's own a6_completions, empty today.
-    completion = {"v4p-standard-correct-001"}  # A7 claims this slot complete anyway.
+    construction, can never stand in for the missing upstream proof. (A7
+    itself declares no such dependency on A6 -- an explicitly deferred
+    policy decision, design packet F2 -- so this exercises the shared
+    ``ev.validate_subset`` primitive directly, the same one A8/A9's gates
+    call against their own immediate upstream.)"""
+    upstream_completion: set[str] = set()  # A7's own a7_completions, empty today.
+    completion = {"v4p-standard-correct-001"}  # A8 claims this slot complete anyway.
     with pytest.raises(ValueError, match="subset"):
         ev.validate_subset(completion, upstream_completion, label="test")
 
