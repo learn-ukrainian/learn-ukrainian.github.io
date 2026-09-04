@@ -31,6 +31,26 @@ ATTESTATION_DOMAIN = b"v4-sources-verifier-attestation-v1"
 VERIFIER_TOOL_PREFIX = "mcp__sources__"
 SHA256_HEX_RE = re.compile(r"^[a-f0-9]{64}$")
 
+# Exact allowed key set for a signed attestation body (PR #7662 repair 5) --
+# a signature can never smuggle an extra field into an artifact documented
+# as text-free.
+ATTESTATION_KEYS = frozenset(
+    {
+        "schema_version",
+        "outcome_sha256",
+        "row_content_sha256",
+        "identifier",
+        "tool_id",
+        "tool_version",
+        "request_id",
+        "tool_result_sha256",
+        "lookup_ids",
+        "success",
+        "invocation_id",
+        "signer_key_id",
+    }
+)
+
 
 class SourcesAuthorityError(ValueError):
     """A verifier attestation cannot be issued or verified safely."""
@@ -67,6 +87,7 @@ def issue_verifier_attestation(
     require(isinstance(row_content_sha256, str) and bool(SHA256_HEX_RE.match(row_content_sha256)), "row_content_sha256 is not a well-formed sha256 -- refusing")
     require(isinstance(tool_result_sha256, str) and bool(SHA256_HEX_RE.match(tool_result_sha256)), "tool_result_sha256 is not a well-formed sha256 -- refusing")
     require(isinstance(lookup_ids, list) and bool(lookup_ids) and all(isinstance(x, str) and x for x in lookup_ids), "lookup_ids must be a nonempty list of immutable identifiers -- refusing")
+    require(len(lookup_ids) == len(set(lookup_ids)), "lookup_ids must not contain duplicates -- refusing")
     require(isinstance(request_id, str) and request_id, "request_id must be a nonempty string -- refusing")
     require(isinstance(invocation_id, str) and invocation_id, "invocation_id must be a nonempty string -- refusing")
     require(isinstance(signer_key_id, str) and signer_key_id, "signer_key_id must be a nonempty string -- refusing")
@@ -98,6 +119,7 @@ def verify_verifier_attestation(attestation: dict[str, Any], *, trust_policy: di
     (registered, non-revoked) key."""
     require(isinstance(attestation, dict), "verifier attestation must be an object -- refusing")
     body = {k: v for k, v in attestation.items() if k != "signature_hex"}
+    require(set(body) == ATTESTATION_KEYS, f"verifier attestation must declare exactly {sorted(ATTESTATION_KEYS)} -- refusing (unexpected or missing key)")
     require(body.get("schema_version") == SCHEMA_VERSION, "verifier attestation schema_version mismatch -- refusing")
     require(body.get("outcome_sha256") == outcome_sha256, "verifier attestation is bound to a different outcome_sha256 -- refusing")
     require(body.get("row_content_sha256") == row_content_sha256, "verifier attestation is not bound to this row's content hash -- refusing")

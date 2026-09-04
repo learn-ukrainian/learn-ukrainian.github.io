@@ -20,12 +20,15 @@ every load-bearing path (repair C), the exact project-row rights binding
 from __future__ import annotations
 
 import copy
+import dataclasses
+import inspect
 import json
 from pathlib import Path
 
 import _v4_a7_real_slot_fixture as fx
 import pytest
 
+from scripts.fleet_comms.contracts import CompletionState, ResponseEnvelope
 from scripts.projects.open_model_data import v4_a3_builder_packet as packet
 from scripts.projects.open_model_data import v4_a3_candidate_family_floor as floor
 from scripts.projects.open_model_data import v4_a3_d1_transition_validator as d1_validator
@@ -238,29 +241,12 @@ def test_review_receipt_refuses_same_model_family_as_author() -> None:
     author_execution_receipt = fx.build_author_execution_receipt(row_content_sha256)
     authorship = ledger.build_authorship_receipt(author_execution_receipt=author_execution_receipt, trust_policy=fx.TRUST_POLICY, row_content_sha256=row_content_sha256)
     authorship_receipt_sha256 = ledger.sha256_text(ledger.canonical_json(authorship))
-    # A distinct task/run/session, properly (re-)signed under the fixture's
-    # own fleet key, but the *same* model_family as the author.
-    reviewer_execution_receipt = fleet_execution.issue_reviewer_execution_receipt(
-        signing_key_hex=fx.FLEET_SIGNING_KEY_HEX,
-        signer_key_id=fx.FLEET_KEY_ID,
-        outcome_sha256=ledger.V4_SHA256,
-        task_id=fx.REVIEWER_TASK_ID,
-        run_nonce=fx.REVIEWER_RUN_NONCE,
-        fleet_receipt_sha256=ledger.sha256_text("fixture-reviewer-fleet-receipt"),
-        provider_session_id="fixture-reviewer-session-001",
-        model_family=author_execution_receipt["model_family"],
-        exact_model="fixture-reviewer-model-v1",
-        harness="fixture-harness",
-        prompt_sha256="3" * 64,
-        packet_sha256="4" * 64,
-        row_content_sha256=row_content_sha256,
-        execution_result_sha256=ledger.sha256_text("fixture-reviewer-execution-result"),
-        authorship_receipt_sha256=authorship_receipt_sha256,
-        rubric_sha256="5" * 64,
-        verdict="PASS",
-        verification_tool_ids=["fixture-tool-2"],
-        issuance_nonce="fixture-reviewer-issuance-nonce-001",
-    )
+    # A distinct task/run/session, properly signed under the fixture's own
+    # fleet key, but the reviewer's task-state seat_or_model resolves (via
+    # the canonical resolver) to the *same* model family as the author's --
+    # never a caller-asserted family string.
+    same_family_task_state = fx.build_reviewer_task_state(seat_or_model=fx.AUTHOR_SEAT_OR_MODEL)
+    reviewer_execution_receipt = fx.build_reviewer_execution_receipt(row_content_sha256, authorship_receipt_sha256, task_state=same_family_task_state)
     with pytest.raises(ledger.PrivateLedgerError, match="model family"):
         ledger.build_review_receipt(authorship_receipt=authorship, reviewer_execution_receipt=reviewer_execution_receipt, trust_policy=fx.TRUST_POLICY, row_content_sha256=row_content_sha256)
 
@@ -270,29 +256,16 @@ def test_review_receipt_refuses_same_session_as_author() -> None:
     author_execution_receipt = fx.build_author_execution_receipt(row_content_sha256)
     authorship = ledger.build_authorship_receipt(author_execution_receipt=author_execution_receipt, trust_policy=fx.TRUST_POLICY, row_content_sha256=row_content_sha256)
     authorship_receipt_sha256 = ledger.sha256_text(ledger.canonical_json(authorship))
-    # A distinct model_family/task/run, but the same provider_session_id, is
-    # re-signed under the fixture's own fleet key so the signature stays
-    # valid while the session collides.
-    reviewer_execution_receipt = fleet_execution.issue_reviewer_execution_receipt(
-        signing_key_hex=fx.FLEET_SIGNING_KEY_HEX,
-        signer_key_id=fx.FLEET_KEY_ID,
-        outcome_sha256=ledger.V4_SHA256,
-        task_id=fx.REVIEWER_TASK_ID,
-        run_nonce=fx.REVIEWER_RUN_NONCE,
-        fleet_receipt_sha256=ledger.sha256_text("fixture-reviewer-fleet-receipt"),
-        provider_session_id=author_execution_receipt["provider_session_id"],
-        model_family="fixture-reviewer-family",
-        exact_model="fixture-reviewer-model-v1",
-        harness="fixture-harness",
-        prompt_sha256="3" * 64,
-        packet_sha256="4" * 64,
-        row_content_sha256=row_content_sha256,
-        execution_result_sha256=ledger.sha256_text("fixture-reviewer-execution-result"),
-        authorship_receipt_sha256=authorship_receipt_sha256,
-        rubric_sha256="5" * 64,
-        verdict="PASS",
-        verification_tool_ids=["fixture-tool-2"],
-        issuance_nonce="fixture-reviewer-issuance-nonce-001",
+    # A distinct model_family/task/run, but the same provider session
+    # identity (the envelope's own session_id, cross-checked against the
+    # task state) as the author -- signed under the fixture's own fleet key
+    # so the signature stays valid while the session collides.
+    same_session_task_state = fx.build_reviewer_task_state(session_id=fx.AUTHOR_SESSION_ID)
+    same_session_envelope = fx.build_terminal_envelope(
+        raw_capture_sha256=ledger.sha256_text("fixture-reviewer-execution-result"), session_id=fx.AUTHOR_SESSION_ID, raw_capture_artifact_id="fixture-reviewer-raw-capture-001"
+    )
+    reviewer_execution_receipt = fx.build_reviewer_execution_receipt(
+        row_content_sha256, authorship_receipt_sha256, task_state=same_session_task_state, envelope=same_session_envelope
     )
     with pytest.raises(ledger.PrivateLedgerError, match="session"):
         ledger.build_review_receipt(authorship_receipt=authorship, reviewer_execution_receipt=reviewer_execution_receipt, trust_policy=fx.TRUST_POLICY, row_content_sha256=row_content_sha256)
@@ -304,50 +277,13 @@ def test_review_receipt_refuses_same_session_as_author() -> None:
 @pytest.mark.parametrize("saw_flag", ["saw_source_text", "saw_heldout", "saw_eligible_unit_ids"])
 def test_author_execution_receipt_refuses_any_saw_flag_true(saw_flag: str) -> None:
     with pytest.raises(fleet_execution.FleetExecutionError, match=saw_flag):
-        fleet_execution.issue_author_execution_receipt(
-            signing_key_hex=fx.FLEET_SIGNING_KEY_HEX,
-            signer_key_id=fx.FLEET_KEY_ID,
-            outcome_sha256=ledger.V4_SHA256,
-            task_id=fx.AUTHOR_TASK_ID,
-            run_nonce=fx.AUTHOR_RUN_NONCE,
-            fleet_receipt_sha256=ledger.sha256_text("x"),
-            provider_session_id="s",
-            model_family="fixture-author-family",
-            exact_model="fixture-author-model-v1",
-            harness="fixture-harness",
-            prompt_sha256="1" * 64,
-            packet_sha256="2" * 64,
-            row_content_sha256="a" * 64,
-            execution_result_sha256=ledger.sha256_text("y"),
-            issuance_nonce="n",
-            **{saw_flag: True},
-        )
+        fx.build_author_execution_receipt("a" * 64, **{saw_flag: True})
 
 
 @pytest.mark.parametrize("saw_flag", ["saw_source_text", "saw_heldout", "saw_eligible_unit_ids"])
 def test_reviewer_execution_receipt_refuses_any_saw_flag_true(saw_flag: str) -> None:
     with pytest.raises(fleet_execution.FleetExecutionError, match=saw_flag):
-        fleet_execution.issue_reviewer_execution_receipt(
-            signing_key_hex=fx.FLEET_SIGNING_KEY_HEX,
-            signer_key_id=fx.FLEET_KEY_ID,
-            outcome_sha256=ledger.V4_SHA256,
-            task_id=fx.REVIEWER_TASK_ID,
-            run_nonce=fx.REVIEWER_RUN_NONCE,
-            fleet_receipt_sha256=ledger.sha256_text("x"),
-            provider_session_id="s",
-            model_family="fixture-reviewer-family",
-            exact_model="fixture-reviewer-model-v1",
-            harness="fixture-harness",
-            prompt_sha256="3" * 64,
-            packet_sha256="4" * 64,
-            row_content_sha256="a" * 64,
-            execution_result_sha256=ledger.sha256_text("y"),
-            authorship_receipt_sha256="b" * 64,
-            rubric_sha256="c" * 64,
-            verdict="PASS",
-            issuance_nonce="n",
-            **{saw_flag: True},
-        )
+        fx.build_reviewer_execution_receipt("a" * 64, "b" * 64, **{saw_flag: True})
 
 
 # --- tamper: public lineage equal to an A4 commitment -----------------------
@@ -919,23 +855,7 @@ def test_build_authorship_receipt_refuses_missing_signature() -> None:
 
 def test_build_authorship_receipt_refuses_an_unknown_signer_key() -> None:
     row_content_sha256 = "a" * 64
-    forged = fleet_execution.issue_author_execution_receipt(
-        signing_key_hex=fx.FLEET_SIGNING_KEY_HEX,
-        signer_key_id="unregistered-fleet-key",
-        outcome_sha256=ledger.V4_SHA256,
-        task_id="t",
-        run_nonce="n",
-        fleet_receipt_sha256=ledger.sha256_text("x"),
-        provider_session_id="s",
-        model_family="fixture-author-family",
-        exact_model="fixture-author-model-v1",
-        harness="fixture-harness",
-        prompt_sha256="1" * 64,
-        packet_sha256="2" * 64,
-        row_content_sha256=row_content_sha256,
-        execution_result_sha256=ledger.sha256_text("y"),
-        issuance_nonce="in",
-    )
+    forged = fx.build_author_execution_receipt(row_content_sha256, signer_key_id="unregistered-fleet-key")
     with pytest.raises(ledger.PrivateLedgerError, match="authenticity"):
         ledger.build_authorship_receipt(author_execution_receipt=forged, trust_policy=fx.TRUST_POLICY, row_content_sha256=row_content_sha256)
 
@@ -977,6 +897,211 @@ def test_build_review_receipt_refuses_a_rubric_hash_mismatch() -> None:
         fleet_execution.verify_reviewer_execution_receipt(
             signed_for_one_rubric, trust_policy=fx.TRUST_POLICY, outcome_sha256=ledger.V4_SHA256, row_content_sha256=row_content_sha256, authorship_receipt_sha256=authorship_receipt_sha256, rubric_sha256="b" * 64
         )
+
+
+# --- repair 5: the signer is an execution attester, not a passthrough -----
+
+
+def test_issue_execution_receipt_apis_accept_no_caller_supplied_family_or_harness() -> None:
+    """Static guard: neither issuance function, nor either observation
+    dataclass, exposes a keyword a caller could use to assert its own model
+    family/harness -- identity is derived only from
+    ``TaskExecutionState.seat_or_model``/``harness`` (PR #7662 repair 5)."""
+    issue_author_params = set(inspect.signature(fleet_execution.issue_author_execution_receipt).parameters)
+    issue_reviewer_params = set(inspect.signature(fleet_execution.issue_reviewer_execution_receipt).parameters)
+    observation_fields = {f.name for f in dataclasses.fields(fleet_execution.AuthorExecutionObservation)} | {f.name for f in dataclasses.fields(fleet_execution.ReviewerExecutionObservation)}
+    for forbidden in ("model_family", "exact_model", "harness", "author_family"):
+        assert forbidden not in issue_author_params
+        assert forbidden not in issue_reviewer_params
+        assert forbidden not in observation_fields
+
+
+def test_response_envelope_cannot_construct_complete_without_a_terminal_event() -> None:
+    """The ``ResponseEnvelope`` contract itself refuses to construct a
+    ``COMPLETE`` envelope with no observed terminal event -- the strongest
+    possible enforcement of the advisor's terminal-event requirement."""
+    with pytest.raises(ValueError, match="terminal event"):
+        ResponseEnvelope(
+            segments=(), completion_state=CompletionState.COMPLETE, terminal_event_observed=False, process_returncode=0, raw_capture_artifact_id="x", raw_capture_sha256="a" * 64, session_id="s"
+        )
+
+
+def test_issue_author_execution_receipt_refuses_a_nonterminal_task_status() -> None:
+    task_state = fx.build_author_task_state(status="running")
+    with pytest.raises(fleet_execution.FleetExecutionError, match="terminal successful"):
+        fx.build_author_execution_receipt("a" * 64, task_state=task_state)
+
+
+def test_issue_author_execution_receipt_refuses_a_nonzero_task_return_code() -> None:
+    task_state = fx.build_author_task_state(return_code=1)
+    with pytest.raises(fleet_execution.FleetExecutionError, match="return code"):
+        fx.build_author_execution_receipt("a" * 64, task_state=task_state)
+
+
+@pytest.mark.parametrize("completion_state", [CompletionState.FAILED, CompletionState.UNKNOWN, CompletionState.LENGTH_LIMITED, CompletionState.TRANSPORT_INCOMPLETE])
+def test_issue_author_execution_receipt_refuses_a_non_complete_envelope(completion_state: CompletionState) -> None:
+    envelope = ResponseEnvelope(
+        segments=(),
+        completion_state=completion_state,
+        terminal_event_observed=False,
+        process_returncode=0,
+        raw_capture_artifact_id="fixture-author-raw-capture-002",
+        raw_capture_sha256=ledger.sha256_text("fixture-author-execution-result"),
+        session_id=fx.AUTHOR_SESSION_ID,
+    )
+    with pytest.raises(fleet_execution.FleetExecutionError, match="envelope is not complete"):
+        fx.build_author_execution_receipt("a" * 64, envelope=envelope)
+
+
+def test_issue_author_execution_receipt_refuses_an_unsuccessful_process_returncode() -> None:
+    envelope = ResponseEnvelope(
+        segments=(),
+        completion_state=CompletionState.COMPLETE,
+        terminal_event_observed=True,
+        process_returncode=1,
+        raw_capture_artifact_id="fixture-author-raw-capture-003",
+        raw_capture_sha256=ledger.sha256_text("fixture-author-execution-result"),
+        session_id=fx.AUTHOR_SESSION_ID,
+    )
+    with pytest.raises(fleet_execution.FleetExecutionError, match="process return code"):
+        fx.build_author_execution_receipt("a" * 64, envelope=envelope)
+
+
+def test_issue_author_execution_receipt_refuses_a_task_id_mismatch_against_the_task_state() -> None:
+    with pytest.raises(fleet_execution.FleetExecutionError, match="task_id"):
+        fx.build_author_execution_receipt("a" * 64, task_id="mismatched-task-id")
+
+
+def test_issue_author_execution_receipt_refuses_a_run_nonce_mismatch_against_the_task_state() -> None:
+    with pytest.raises(fleet_execution.FleetExecutionError, match="run_nonce"):
+        fx.build_author_execution_receipt("a" * 64, run_nonce="mismatched-run-nonce")
+
+
+def test_issue_author_execution_receipt_refuses_an_observed_model_mismatch_against_the_task_state() -> None:
+    with pytest.raises(fleet_execution.FleetExecutionError, match="observed_model"):
+        fx.build_author_execution_receipt("a" * 64, observed_model="a-different-model-entirely")
+
+
+def test_issue_author_execution_receipt_refuses_an_execution_result_hash_mismatch_against_the_envelope() -> None:
+    with pytest.raises(fleet_execution.FleetExecutionError, match="raw-capture digest"):
+        fx.build_author_execution_receipt("a" * 64, execution_result_sha256="9" * 64)
+
+
+def test_issue_author_execution_receipt_refuses_a_provider_session_id_mismatch_against_the_envelope() -> None:
+    with pytest.raises(fleet_execution.FleetExecutionError, match="session_id"):
+        fx.build_author_execution_receipt("a" * 64, provider_session_id="a-different-session-entirely")
+
+
+def test_issue_author_execution_receipt_refuses_an_unresolvable_model_family() -> None:
+    task_state = fx.build_author_task_state(seat_or_model="totally-unrecognized-seat-xyz")
+    with pytest.raises(fleet_execution.FleetExecutionError, match="could not be resolved"):
+        fx.build_author_execution_receipt("a" * 64, task_state=task_state)
+
+
+def test_issue_author_execution_receipt_refuses_an_ambiguous_harness_seat() -> None:
+    task_state = fx.build_author_task_state(seat_or_model="cursor")
+    with pytest.raises(fleet_execution.FleetExecutionError, match="could not be resolved"):
+        fx.build_author_execution_receipt("a" * 64, task_state=task_state)
+
+
+def test_issue_author_execution_receipt_refuses_a_cursor_auto_union_family() -> None:
+    task_state = fx.build_author_task_state(seat_or_model="cursor:auto")
+    with pytest.raises(fleet_execution.FleetExecutionError, match="union family"):
+        fx.build_author_execution_receipt("a" * 64, task_state=task_state)
+
+
+def test_issue_author_execution_receipt_refuses_a_non_canonical_harness() -> None:
+    task_state = fx.build_author_task_state(harness="some-made-up-harness")
+    with pytest.raises(fleet_execution.FleetExecutionError, match="canonical known harness"):
+        fx.build_author_execution_receipt("a" * 64, task_state=task_state)
+
+
+def test_issue_author_execution_receipt_refuses_duplicate_verification_tool_ids() -> None:
+    with pytest.raises(fleet_execution.FleetExecutionError, match="duplicate"):
+        fx.build_author_execution_receipt("a" * 64, verification_tool_ids=("dup-tool", "dup-tool"))
+
+
+def test_verify_author_execution_receipt_refuses_an_extra_signed_field_even_when_resigned() -> None:
+    """The strongest form of the exact-key-set guard: even a fresh,
+    correctly recomputed signature over a body carrying an extra (here,
+    text-bearing) field must still refuse."""
+    row_content_sha256 = "a" * 64
+    real = fx.build_author_execution_receipt(row_content_sha256)
+    body = {k: v for k, v in real.items() if k != "signature_hex"}
+    tampered_body = {**body, "row_text": "this is real corpus text that must never be signable"}
+    signature_hex = trust.sign(fx.FLEET_SIGNING_KEY_HEX, fleet_execution.AUTHOR_DOMAIN, tampered_body)
+    tampered = {**tampered_body, "signature_hex": signature_hex}
+    with pytest.raises(fleet_execution.FleetExecutionError, match="exactly"):
+        fleet_execution.verify_author_execution_receipt(tampered, trust_policy=fx.TRUST_POLICY, outcome_sha256=ledger.V4_SHA256, row_content_sha256=row_content_sha256)
+
+
+def test_verify_author_execution_receipt_refuses_an_uppercase_hex_hash_even_when_resigned() -> None:
+    row_content_sha256 = "a" * 64
+    real = fx.build_author_execution_receipt(row_content_sha256)
+    body = {k: v for k, v in real.items() if k != "signature_hex"}
+    tampered_body = {**body, "prompt_sha256": "A" * 64}
+    signature_hex = trust.sign(fx.FLEET_SIGNING_KEY_HEX, fleet_execution.AUTHOR_DOMAIN, tampered_body)
+    tampered = {**tampered_body, "signature_hex": signature_hex}
+    with pytest.raises(fleet_execution.FleetExecutionError, match="lowercase-hex"):
+        fleet_execution.verify_author_execution_receipt(tampered, trust_policy=fx.TRUST_POLICY, outcome_sha256=ledger.V4_SHA256, row_content_sha256=row_content_sha256)
+
+
+def test_issue_verifier_attestation_refuses_duplicate_lookup_ids() -> None:
+    with pytest.raises(sources_authority.SourcesAuthorityError, match="duplicate"):
+        sources_authority.issue_verifier_attestation(
+            signing_key_hex=fx.SOURCES_SIGNING_KEY_HEX,
+            signer_key_id=fx.SOURCES_KEY_ID,
+            outcome_sha256=ledger.V4_SHA256,
+            row_content_sha256="a" * 64,
+            identifier="vesum:lemma-example-001",
+            tool_id="mcp__sources__verify_word",
+            tool_version="v1",
+            request_id="req-1",
+            tool_result_sha256="b" * 64,
+            lookup_ids=["dup-lookup", "dup-lookup"],
+            invocation_id="inv-1",
+        )
+
+
+def test_verify_verifier_attestation_refuses_an_extra_field_even_when_resigned() -> None:
+    attestation = sources_authority.issue_verifier_attestation(
+        signing_key_hex=fx.SOURCES_SIGNING_KEY_HEX,
+        signer_key_id=fx.SOURCES_KEY_ID,
+        outcome_sha256=ledger.V4_SHA256,
+        row_content_sha256="a" * 64,
+        identifier="vesum:lemma-example-001",
+        tool_id="mcp__sources__verify_word",
+        tool_version="v1",
+        request_id="req-1",
+        tool_result_sha256="b" * 64,
+        lookup_ids=["l-1"],
+        invocation_id="inv-1",
+    )
+    body = {k: v for k, v in attestation.items() if k != "signature_hex"}
+    tampered_body = {**body, "extra_note": "should never be signable"}
+    signature_hex = trust.sign(fx.SOURCES_SIGNING_KEY_HEX, sources_authority.ATTESTATION_DOMAIN, tampered_body)
+    tampered = {**tampered_body, "signature_hex": signature_hex}
+    with pytest.raises(sources_authority.SourcesAuthorityError, match="exactly"):
+        sources_authority.verify_verifier_attestation(tampered, trust_policy=fx.TRUST_POLICY, outcome_sha256=ledger.V4_SHA256, row_content_sha256="a" * 64)
+
+
+def test_trust_policy_refuses_a_keyring_entry_with_an_extra_field() -> None:
+    policy = trust.empty_trust_policy()
+    policy["keyrings"]["fleet_execution"]["extra-key"] = {"public_key_hex": fx.FLEET_PUBLIC_KEY_HEX, "revoked": False, "note": "smuggled"}
+    with pytest.raises(trust.TrustAuthorityError, match="exactly"):
+        trust.validate_trust_policy(policy)
+
+
+def test_trust_policy_refuses_a_non_lowercase_hex_public_key() -> None:
+    policy = trust.empty_trust_policy()
+    policy["keyrings"]["fleet_execution"]["bad-key"] = {"public_key_hex": "A" * 64, "revoked": False}
+    with pytest.raises(trust.TrustAuthorityError, match="lowercase-hex"):
+        trust.validate_trust_policy(policy)
+
+
+def test_verify_refuses_an_uppercase_hex_signature() -> None:
+    with pytest.raises(trust.TrustAuthorityError, match="lowercase-hex"):
+        trust.verify(fx.FLEET_PUBLIC_KEY_HEX, fleet_execution.AUTHOR_DOMAIN, {"x": 1}, "A" * 128)
 
 
 def test_verify_private_replay_refuses_a_same_task_run_author_and_reviewer(tmp_path: Path) -> None:

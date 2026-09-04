@@ -39,6 +39,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -47,6 +48,15 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey,
 
 SCHEMA_VERSION = "v4-trust-policy-v1"
 KEYRING_ROLES = ("sources", "a3", "fleet_execution")
+
+# Real lowercase-hex syntax, not merely "the right length" -- a 64-character
+# string containing an uppercase letter or a non-hex character must never
+# pass a "well-formed sha256/key/signature" check silently truncated to a
+# length comparison (PR #7662 repair 5). Shared by every module that signs
+# or verifies a payload under this trust authority.
+HEX64_RE = re.compile(r"^[a-f0-9]{64}$")
+SIGNATURE_HEX_RE = re.compile(r"^[a-f0-9]{128}$")
+KEYRING_ENTRY_KEYS = frozenset({"public_key_hex", "revoked"})
 
 _SELF_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_TRUST_POLICY_RELATIVE = "data/projects/open_model_data/trust/v4_trust_policy_v1.json"
@@ -68,6 +78,28 @@ def canonical_json(value: Any) -> str:
 
 def sha256_text(value: str) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def require_exact_keys(body: dict[str, Any], expected_keys: frozenset[str], label: str, *, error_cls: type[Exception] = TrustAuthorityError) -> None:
+    """Fail closed unless ``body`` declares exactly ``expected_keys`` -- a
+    signature (even a freshly, correctly recomputed one) can never smuggle
+    an unexpected extra field past a verifier that only checks the fields it
+    happens to look at (PR #7662 repair 5). Shared by every signed-payload
+    verifier in this project's three keyrings (``sources``/``a3``/
+    ``fleet_execution``) so a row/source/membership/corpus-text field can
+    never ride along in an artifact documented as text-free. ``error_cls``
+    lets a cross-module caller (e.g. ``FleetExecutionError``) preserve its
+    own error taxonomy rather than leaking this module's own exception type
+    across the module boundary."""
+    if not isinstance(body, dict):
+        raise error_cls(f"{label} must be an object -- refusing")
+    if set(body) != expected_keys:
+        raise error_cls(f"{label} must declare exactly {sorted(expected_keys)} -- refusing (unexpected or missing key)")
+
+
+def require_sha256_hex(value: Any, label: str, *, error_cls: type[Exception] = TrustAuthorityError) -> None:
+    if not (isinstance(value, str) and bool(HEX64_RE.match(value))):
+        raise error_cls(f"{label} must be a lowercase-hex sha256 digest -- refusing")
 
 
 def _domain_separated_message(domain: bytes, payload: dict[str, Any]) -> bytes:
@@ -104,8 +136,8 @@ def verify(public_key_hex: str, domain: bytes, payload: dict[str, Any], signatur
     a signature is valid -- always recomputes the domain-separated message
     from ``payload`` and checks it against ``signature_hex`` under
     ``public_key_hex``."""
-    require(isinstance(public_key_hex, str) and len(public_key_hex) == 64, "public_key_hex must be 32 raw bytes, hex-encoded -- refusing")
-    require(isinstance(signature_hex, str) and len(signature_hex) == 128, "signature_hex must be 64 raw bytes, hex-encoded -- refusing")
+    require(isinstance(public_key_hex, str) and bool(HEX64_RE.match(public_key_hex)), "public_key_hex must be 32 raw bytes, lowercase-hex-encoded -- refusing")
+    require(isinstance(signature_hex, str) and bool(SIGNATURE_HEX_RE.match(signature_hex)), "signature_hex must be 64 raw bytes, lowercase-hex-encoded -- refusing")
     try:
         public_key = Ed25519PublicKey.from_public_bytes(bytes.fromhex(public_key_hex))
         public_key.verify(bytes.fromhex(signature_hex), _domain_separated_message(domain, payload))
@@ -132,8 +164,16 @@ def validate_trust_policy(policy: dict[str, Any]) -> None:
         for key_id, entry in keyring.items():
             require(isinstance(key_id, str) and key_id, f"trust policy keyring {role!r} has a malformed key_id -- refusing")
             require(isinstance(entry, dict), f"trust policy keyring {role!r} entry {key_id!r} must be an object -- refusing")
+            # Exact allowed key set: a keyring entry can never smuggle an
+            # extra field (e.g. a label, a note) that downstream code might
+            # later start trusting -- refusing here keeps every entry
+            # provably text-free (PR #7662 repair 5).
+            require(
+                set(entry) == KEYRING_ENTRY_KEYS,
+                f"trust policy keyring {role!r} entry {key_id!r} must declare exactly {sorted(KEYRING_ENTRY_KEYS)} -- refusing",
+            )
             public_key_hex = entry.get("public_key_hex")
-            require(isinstance(public_key_hex, str) and len(public_key_hex) == 64, f"trust policy keyring {role!r} entry {key_id!r} public_key_hex must be 32 raw bytes, hex-encoded -- refusing")
+            require(isinstance(public_key_hex, str) and bool(HEX64_RE.match(public_key_hex)), f"trust policy keyring {role!r} entry {key_id!r} public_key_hex must be 32 raw bytes, lowercase-hex-encoded -- refusing")
             require(isinstance(entry.get("revoked"), bool), f"trust policy keyring {role!r} entry {key_id!r} must declare revoked true/false -- refusing")
 
 

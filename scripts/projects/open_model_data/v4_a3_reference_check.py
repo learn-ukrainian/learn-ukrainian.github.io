@@ -82,6 +82,14 @@ RECEIPT_SIGNATURE_DOMAIN = b"v4-a3-reference-check-signature-v1"
 REPLAY_ATTESTATION_SCHEMA_VERSION = "v4-a3-replay-attestation-v1"
 REPLAY_ATTESTATION_DOMAIN = b"v4-a3-replay-attestation-v1"
 
+# Exact allowed key sets for these two signed A3 artifacts (PR #7662 repair
+# 5) -- a signature can never smuggle an extra field into an artifact
+# documented as text-free.
+RECEIPT_SIGNATURE_KEYS = frozenset({"schema_version", "outcome_sha256", "reference_check_receipt_sha256", "signer_key_id"})
+REPLAY_ATTESTATION_KEYS = frozenset(
+    {"schema_version", "outcome_sha256", "row_content_sha256", "reference_check_receipt_sha256", "policy_sha256", "replay_invocation_id", "signer_key_id"}
+)
+
 # A stricter band than the near-duplicate policy's own 0.9 near-duplicate
 # minimum -- deliberately lower, so "structural" catches shorter shared
 # skeletons the near-duplicate check alone would pass.
@@ -261,6 +269,7 @@ def verify_reference_check_receipt_signature(signature: dict[str, Any], *, recei
     receipt content)."""
     require(isinstance(signature, dict), "reference-check receipt signature must be an object -- refusing")
     body = {k: v for k, v in signature.items() if k != "signature_hex"}
+    require(set(body) == RECEIPT_SIGNATURE_KEYS, f"reference-check receipt signature must declare exactly {sorted(RECEIPT_SIGNATURE_KEYS)} -- refusing (unexpected or missing key)")
     require(body.get("schema_version") == RECEIPT_SIGNATURE_SCHEMA_VERSION, "reference-check receipt signature schema_version mismatch -- refusing")
     require(body.get("outcome_sha256") == outcome_sha256, "reference-check receipt signature is bound to a different outcome -- refusing")
     require(body.get("reference_check_receipt_sha256") == _sha256_text(_canonical_json(receipt)), "reference-check receipt signature does not bind this exact receipt -- refusing (stale or altered receipt)")
@@ -315,6 +324,7 @@ def verify_replay_attestation(attestation: dict[str, Any], *, receipt: dict[str,
     receipt's own declared policy hash."""
     require(isinstance(attestation, dict), "replay attestation must be an object -- refusing")
     body = {k: v for k, v in attestation.items() if k != "signature_hex"}
+    require(set(body) == REPLAY_ATTESTATION_KEYS, f"replay attestation must declare exactly {sorted(REPLAY_ATTESTATION_KEYS)} -- refusing (unexpected or missing key)")
     require(body.get("schema_version") == REPLAY_ATTESTATION_SCHEMA_VERSION, "replay attestation schema_version mismatch -- refusing")
     require(body.get("outcome_sha256") == outcome_sha256, "replay attestation is bound to a different outcome -- refusing")
     require(body.get("row_content_sha256") == row_content_sha256, "replay attestation is not bound to this row's content hash -- refusing")

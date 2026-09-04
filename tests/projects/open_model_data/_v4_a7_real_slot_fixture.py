@@ -44,6 +44,22 @@ derived from repository-root ``LICENSE-CONTENT.md`` (see
 ``v4_a7_private_ledger.derive_project_rights_receipt_id``), not a
 placeholder -- ``ZERO_RIGHTS_RECEIPT_ID`` is kept as the explicit negative
 tamper case.
+
+Repair (PR #7662, repair 5 -- accountable-review blocker): the fleet
+execution attester now consumes a trusted execution *observation* rather
+than caller-asserted identity keywords. ``build_author_task_state``/
+``build_reviewer_task_state`` build a synthetic, terminal
+``fleet_execution.TaskExecutionState`` (task/run/session id, ``status:
+"done"``, a zero return code, and an exact seat/model string that resolves
+-- via the canonical cross-family resolver -- to a distinct concrete family
+per role); ``build_terminal_envelope`` builds the matching typed
+``ResponseEnvelope`` (``CompletionState.COMPLETE``, an observed terminal
+event, a zero process return code, and the raw-capture digest the
+observation's ``execution_result_sha256`` must equal).
+``build_author_execution_receipt``/``build_reviewer_execution_receipt``
+assemble the role-specific structured observation from those two plus this
+fixture's own hashes and call ``issue_*_execution_receipt`` -- never the
+retired keyword-only signature.
 """
 
 from __future__ import annotations
@@ -56,6 +72,7 @@ from typing import Any
 
 import _v4_synthetic_chain_fixture as base_fixture
 
+from scripts.fleet_comms.contracts import CompletionState, ResponseEnvelope
 from scripts.projects.open_model_data import v4_a3_builder_packet as packet
 from scripts.projects.open_model_data import v4_a3_heldout_family_assignment as heldout
 from scripts.projects.open_model_data import v4_a3_reference_check as reference_check
@@ -118,6 +135,22 @@ AUTHOR_TASK_ID = "fixture-author-task-001"
 AUTHOR_RUN_NONCE = "fixture-author-run-nonce-001"
 REVIEWER_TASK_ID = "fixture-reviewer-task-001"
 REVIEWER_RUN_NONCE = "fixture-reviewer-run-nonce-001"
+
+# PR #7662 repair 5: the attester derives model_family/exact_model/harness
+# from authoritative task/runtime evidence alone -- these are the exact
+# runtime-resolved seat/model strings and canonical harness executables the
+# fixture's own synthetic terminal task-state attests to. "claude"/"codex"
+# are both members of the project's canonical known-harness allowlist
+# (``scripts.orchestration.thread_handoff.KNOWN_HARNESS_EXECUTABLES``); the
+# seat strings resolve, via the canonical cross-family resolver, to two
+# distinct concrete families (anthropic vs. openai) -- never the same table
+# twice, never a caller-asserted family string.
+AUTHOR_SEAT_OR_MODEL = "claude-sonnet-5-fixture-author"
+AUTHOR_HARNESS = "claude"
+AUTHOR_SESSION_ID = "fixture-author-session-001"
+REVIEWER_SEAT_OR_MODEL = "gpt-5.6-fixture-reviewer"
+REVIEWER_HARNESS = "codex"
+REVIEWER_SESSION_ID = "fixture-reviewer-session-001"
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -219,23 +252,83 @@ def build_verifier_backed_evidence_receipt(row_content_sha256: str, *, vesum_ids
     return evidence_binder.build_evidence_receipt(row_content_sha256, verifier_receipts, trust_policy=TRUST_POLICY)
 
 
-def build_author_execution_receipt(row_content_sha256: str, *, prompt_sha256: str = "1" * 64, packet_sha256: str = "2" * 64) -> dict[str, Any]:
+def build_author_task_state(
+    *,
+    task_id: str = AUTHOR_TASK_ID,
+    run_nonce: str = AUTHOR_RUN_NONCE,
+    session_id: str | None = AUTHOR_SESSION_ID,
+    seat_or_model: str = AUTHOR_SEAT_OR_MODEL,
+    harness: str = AUTHOR_HARNESS,
+    status: str = "done",
+    return_code: int = 0,
+) -> fleet_execution.TaskExecutionState:
+    return fleet_execution.TaskExecutionState(task_id=task_id, run_nonce=run_nonce, status=status, return_code=return_code, seat_or_model=seat_or_model, harness=harness, session_id=session_id)
+
+
+def build_reviewer_task_state(
+    *,
+    task_id: str = REVIEWER_TASK_ID,
+    run_nonce: str = REVIEWER_RUN_NONCE,
+    session_id: str | None = REVIEWER_SESSION_ID,
+    seat_or_model: str = REVIEWER_SEAT_OR_MODEL,
+    harness: str = REVIEWER_HARNESS,
+    status: str = "done",
+    return_code: int = 0,
+) -> fleet_execution.TaskExecutionState:
+    return fleet_execution.TaskExecutionState(task_id=task_id, run_nonce=run_nonce, status=status, return_code=return_code, seat_or_model=seat_or_model, harness=harness, session_id=session_id)
+
+
+def build_terminal_envelope(*, raw_capture_sha256: str, session_id: str, raw_capture_artifact_id: str) -> ResponseEnvelope:
+    """A synthetic, terminally-complete ``ResponseEnvelope`` -- the shared
+    transport-neutral completion contract (``scripts.fleet_comms.contracts``)
+    the attester requires alongside authoritative task-state evidence before
+    it will ever sign (PR #7662 repair 5)."""
+    return ResponseEnvelope(
+        segments=(),
+        completion_state=CompletionState.COMPLETE,
+        terminal_event_observed=True,
+        process_returncode=0,
+        raw_capture_artifact_id=raw_capture_artifact_id,
+        raw_capture_sha256=raw_capture_sha256,
+        session_id=session_id,
+    )
+
+
+def build_author_execution_receipt(
+    row_content_sha256: str,
+    *,
+    prompt_sha256: str = "1" * 64,
+    packet_sha256: str = "2" * 64,
+    task_state: fleet_execution.TaskExecutionState | None = None,
+    envelope: ResponseEnvelope | None = None,
+    signing_key_hex: str = FLEET_SIGNING_KEY_HEX,
+    signer_key_id: str = FLEET_KEY_ID,
+    **observation_overrides: Any,
+) -> dict[str, Any]:
+    execution_result_sha256 = ledger.sha256_text("fixture-author-execution-result")
+    resolved_task_state = task_state if task_state is not None else build_author_task_state()
+    resolved_envelope = envelope if envelope is not None else build_terminal_envelope(raw_capture_sha256=execution_result_sha256, session_id=AUTHOR_SESSION_ID, raw_capture_artifact_id="fixture-author-raw-capture-001")
+    observation_kwargs: dict[str, Any] = {
+        "task_id": resolved_task_state.task_id,
+        "run_nonce": resolved_task_state.run_nonce,
+        "observed_model": resolved_task_state.seat_or_model,
+        "row_content_sha256": row_content_sha256,
+        "prompt_sha256": prompt_sha256,
+        "packet_sha256": packet_sha256,
+        "execution_result_sha256": execution_result_sha256,
+        "fleet_receipt_sha256": ledger.sha256_text("fixture-author-fleet-receipt"),
+        "provider_session_id": resolved_envelope.session_id,
+        "verification_tool_ids": ("fixture-tool-1",),
+    }
+    observation_kwargs.update(observation_overrides)
+    observation = fleet_execution.AuthorExecutionObservation(**observation_kwargs)
     return fleet_execution.issue_author_execution_receipt(
-        signing_key_hex=FLEET_SIGNING_KEY_HEX,
-        signer_key_id=FLEET_KEY_ID,
+        signing_key_hex=signing_key_hex,
+        signer_key_id=signer_key_id,
         outcome_sha256=ledger.V4_SHA256,
-        task_id=AUTHOR_TASK_ID,
-        run_nonce=AUTHOR_RUN_NONCE,
-        fleet_receipt_sha256=ledger.sha256_text("fixture-author-fleet-receipt"),
-        provider_session_id="fixture-author-session-001",
-        model_family="fixture-author-family",
-        exact_model="fixture-author-model-v1",
-        harness="fixture-harness",
-        prompt_sha256=prompt_sha256,
-        packet_sha256=packet_sha256,
-        row_content_sha256=row_content_sha256,
-        execution_result_sha256=ledger.sha256_text("fixture-author-execution-result"),
-        verification_tool_ids=["fixture-tool-1"],
+        task_state=resolved_task_state,
+        envelope=resolved_envelope,
+        observation=observation,
         issuance_nonce="fixture-author-issuance-nonce-001",
     )
 
@@ -248,26 +341,39 @@ def build_reviewer_execution_receipt(
     verdict: str = "PASS",
     prompt_sha256: str = "3" * 64,
     packet_sha256: str = "4" * 64,
+    task_state: fleet_execution.TaskExecutionState | None = None,
+    envelope: ResponseEnvelope | None = None,
+    signing_key_hex: str = FLEET_SIGNING_KEY_HEX,
+    signer_key_id: str = FLEET_KEY_ID,
+    **observation_overrides: Any,
 ) -> dict[str, Any]:
+    execution_result_sha256 = ledger.sha256_text("fixture-reviewer-execution-result")
+    resolved_task_state = task_state if task_state is not None else build_reviewer_task_state()
+    resolved_envelope = envelope if envelope is not None else build_terminal_envelope(raw_capture_sha256=execution_result_sha256, session_id=REVIEWER_SESSION_ID, raw_capture_artifact_id="fixture-reviewer-raw-capture-001")
+    observation_kwargs: dict[str, Any] = {
+        "task_id": resolved_task_state.task_id,
+        "run_nonce": resolved_task_state.run_nonce,
+        "observed_model": resolved_task_state.seat_or_model,
+        "row_content_sha256": row_content_sha256,
+        "prompt_sha256": prompt_sha256,
+        "packet_sha256": packet_sha256,
+        "execution_result_sha256": execution_result_sha256,
+        "fleet_receipt_sha256": ledger.sha256_text("fixture-reviewer-fleet-receipt"),
+        "authorship_receipt_sha256": authorship_receipt_sha256,
+        "rubric_sha256": rubric_sha256,
+        "verdict": verdict,
+        "provider_session_id": resolved_envelope.session_id,
+        "verification_tool_ids": ("fixture-tool-2",),
+    }
+    observation_kwargs.update(observation_overrides)
+    observation = fleet_execution.ReviewerExecutionObservation(**observation_kwargs)
     return fleet_execution.issue_reviewer_execution_receipt(
-        signing_key_hex=FLEET_SIGNING_KEY_HEX,
-        signer_key_id=FLEET_KEY_ID,
+        signing_key_hex=signing_key_hex,
+        signer_key_id=signer_key_id,
         outcome_sha256=ledger.V4_SHA256,
-        task_id=REVIEWER_TASK_ID,
-        run_nonce=REVIEWER_RUN_NONCE,
-        fleet_receipt_sha256=ledger.sha256_text("fixture-reviewer-fleet-receipt"),
-        provider_session_id="fixture-reviewer-session-001",
-        model_family="fixture-reviewer-family",
-        exact_model="fixture-reviewer-model-v1",
-        harness="fixture-harness",
-        prompt_sha256=prompt_sha256,
-        packet_sha256=packet_sha256,
-        row_content_sha256=row_content_sha256,
-        execution_result_sha256=ledger.sha256_text("fixture-reviewer-execution-result"),
-        authorship_receipt_sha256=authorship_receipt_sha256,
-        rubric_sha256=rubric_sha256,
-        verdict=verdict,
-        verification_tool_ids=["fixture-tool-2"],
+        task_state=resolved_task_state,
+        envelope=resolved_envelope,
+        observation=observation,
         issuance_nonce="fixture-reviewer-issuance-nonce-001",
     )
 
