@@ -735,7 +735,7 @@ def test_acp_conversation_api_is_ordered_allowlisted_and_read_only(tmp_path, mon
             "classification": "complete",
             "participants": ["codex", "grok"],
             "rounds_requested": 2,
-            "rounds_completed": 1,
+            "rounds_completed": 0,
             "created_at": _iso(now - timedelta(minutes=5)),
             "deadline_at": _iso(now + timedelta(minutes=5)),
             "expired": False,

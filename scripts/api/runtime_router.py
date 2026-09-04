@@ -1320,7 +1320,10 @@ def _acp_rounds_completed(
 ) -> int:
     lanes_by_round: dict[int, set[str]] = defaultdict(set)
     for event in events:
-        if event.get("event_type") not in _ACP_MESSAGE_EVENTS:
+        if (
+            event.get("event_type") not in _ACP_MESSAGE_EVENTS
+            or event.get("outcome") != "succeeded"
+        ):
             continue
         round_number = event.get("round")
         if not isinstance(round_number, int):

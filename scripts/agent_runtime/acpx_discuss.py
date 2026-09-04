@@ -1,7 +1,7 @@
 """Bounded, durable ACPX multi-seat discussion controller (#6078, #6130).
 
 This is intentionally a small finite DAG, not a new message-plane router. It
-requires ``LU_ACPX_TRANSPORT=active``; two to six participants resolve through
+requires ``LU_ACPX_TRANSPORT=active``; exactly two participants resolve through
 the runner-owned normal ACP boundary into enabled direct-only ACPX seats, while
 the final synthesis is a fresh native Codex call.
 """
@@ -56,7 +56,7 @@ logger = logging.getLogger(__name__)
 PARTICIPANTS = ("codex", "grok")
 SUPPORTED_PARTICIPANTS = frozenset(ACPX_SUPPORTED_PARTICIPANTS)
 MIN_PARTICIPANTS = 2
-MAX_PARTICIPANTS = 6
+MAX_PARTICIPANTS = 2
 MAX_ROUNDS = 3
 DEFAULT_ROUNDS = 2
 CALL_TIMEOUT_SECONDS = 300
@@ -899,7 +899,7 @@ class AcpxDiscussionController:
             or any(item not in SUPPORTED_PARTICIPANTS for item in normalized_participants)
         ):
             raise AcpxDiscussionError(
-                f"participants must name {MIN_PARTICIPANTS} to {MAX_PARTICIPANTS} distinct "
+                f"participants must name exactly {MIN_PARTICIPANTS} distinct "
                 "enabled ACP seats: "
                 + ", ".join(sorted(SUPPORTED_PARTICIPANTS))
             )
@@ -1040,7 +1040,7 @@ class AcpxDiscussionController:
             )
         initial_state = "INITIAL_COMPLETE" if all(item.outcome == "ok" for item in outcomes) else "PARTIAL"
         self._append(conversation_id, event_type="STATE", state=initial_state, transition=True)
-        rounds_completed = 1
+        rounds_completed = 1 if initial_state == "INITIAL_COMPLETE" else 0
         if self.cancelled():
             return self._cancelled_payload(
                 conversation_id,
@@ -1100,8 +1100,9 @@ class AcpxDiscussionController:
                     outcome="content" if content_used > CONTENT_BUDGET_BYTES else "tokens",
                     metadata={"content_used": content_used, "token_used": token_used},
                 )
-            rounds_completed = round_no
             next_state = "CROSS_EXCHANGE_COMPLETE" if all(item.outcome == "ok" for item in outcomes) else "PARTIAL"
+            if next_state == "CROSS_EXCHANGE_COMPLETE" and rounds_completed == round_no - 1:
+                rounds_completed = round_no
             self._append(conversation_id, event_type="STATE", state=next_state, transition=True)
             if self.cancelled():
                 return self._cancelled_payload(
@@ -1238,6 +1239,21 @@ def run_discussion(**kwargs: Any) -> dict[str, Any]:
         result = controller.run(**kwargs)
     finally:
         controller.close()
+    # The terminal payload is a convenience surface. Its completed-round
+    # figure is read back from the durable authority conversation whenever the
+    # record is available, so callers never report scheduled rounds as
+    # completed after a partial run. Injected controller seams can return
+    # synthetic payloads without storage; preserve that test-only seam rather
+    # than changing an already-completed result.
+    try:
+        receipt = verify_discussion_receipt(
+            root=root,
+            conversation_id=str(result["conversation_id"]),
+        )
+    except AcpxDiscussionError:
+        logger.warning("ACP terminal receipt unavailable for completed-round status")
+    else:
+        result["rounds_completed"] = receipt["successful_rounds"]
     if result.get("state") == "COMPLETE":
         try:
             # Local import avoids making ACP depend on the optional projection
@@ -1353,10 +1369,11 @@ def verify_discussion_receipt(
             rounds_observed = max(rounds_observed, round_no)
             if outcome == "ok":
                 successful_legs.add((round_no, participant))
-    successful_rounds = sum(
-        all((round_no, participant) in successful_legs for participant in participant_names)
-        for round_no in range(1, rounds_requested + 1)
-    )
+    successful_rounds = 0
+    for round_no in range(1, rounds_requested + 1):
+        if not all((round_no, participant) in successful_legs for participant in participant_names):
+            break
+        successful_rounds = round_no
     synthesis_events = [
         event for event in events if event["event_type"] == "SYNTHESIS_TERMINAL"
     ]

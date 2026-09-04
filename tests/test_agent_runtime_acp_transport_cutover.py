@@ -4,8 +4,6 @@ from __future__ import annotations
 
 import importlib
 import os
-import threading
-import time
 from pathlib import Path
 
 import pytest
@@ -322,62 +320,109 @@ def test_adapter_extra_metadata_cannot_override_runner_sealed_provenance(tmp_pat
     }
 
 
-def test_discussion_uses_normal_transport_for_three_participants_with_pins(
+def test_discussion_rejects_three_participants_before_reserving_a_conversation(
     tmp_path,
     monkeypatch,
 ) -> None:
     _active_acp(monkeypatch)
     monkeypatch.setattr(acpx_discuss, "classify_repo_path", lambda *_a, **_k: "dispatch_worktree")
-    calls: list[tuple[str, dict[str, object]]] = []
-    active = 0
-    active_max = 0
-    lock = threading.Lock()
-
-    def participant(agent: str, _prompt: str, **kwargs) -> Result:
-        nonlocal active, active_max
-        with lock:
-            active += 1
-            active_max = max(active_max, active)
-        try:
-            time.sleep(0.02)
-            calls.append((agent, kwargs))
-            return _result(agent, f"{agent} response")
-        finally:
-            with lock:
-                active -= 1
+    calls: list[str] = []
 
     controller = acpx_discuss.AcpxDiscussionController(
         root=tmp_path / "plane",
-        participant_call=None,
+        participant_call=lambda agent, *_args, **_kwargs: calls.append(agent),
         synthesis_call=lambda agent, _prompt, **_kwargs: _result(agent, "synthesis"),
     )
-    monkeypatch.setattr(acpx_discuss, "invoke_inter_agent", participant)
+    try:
+        with pytest.raises(acpx_discuss.AcpxDiscussionError, match="exactly 2"):
+            controller.run(
+                prompt="Compare the bounded options.",
+                cwd=tmp_path,
+                task_id="task-6159",
+                correlation_id="corr-6159",
+                idempotency_key="idem-three-seat",
+                rounds=2,
+                participants=("codex", "kimi", "glm"),
+                source="codex",
+            )
+        conversations = controller.conn.execute(
+            "SELECT COUNT(*) FROM acp_conversations"
+        ).fetchone()[0]
+    finally:
+        controller.close()
+
+    assert calls == []
+    assert conversations == 0
+
+
+def test_failed_initial_wave_persists_zero_completed_rounds(tmp_path, monkeypatch) -> None:
+    _active_acp(monkeypatch)
+    monkeypatch.setattr(acpx_discuss, "classify_repo_path", lambda *_a, **_k: "dispatch_worktree")
+
+    def participant(agent: str, *_args, **_kwargs) -> Result:
+        if agent == "acpx-claude-shadow":
+            raise RuntimeError("fixture transport failure")
+        return _result(agent)
+
+    controller = acpx_discuss.AcpxDiscussionController(
+        root=tmp_path / "plane",
+        participant_call=participant,
+        synthesis_call=lambda agent, _prompt, **_kwargs: _result(agent, "partial synthesis"),
+    )
     try:
         payload = controller.run(
             prompt="Compare the bounded options.",
             cwd=tmp_path,
-            task_id="task-6159",
-            correlation_id="corr-6159",
-            idempotency_key="idem-three-seat",
+            task_id="task-7159",
+            correlation_id="corr-7159",
+            idempotency_key="idem-7159",
             rounds=2,
-            participants=("claude", "kimicc", "glm"),
-            models={"kimicc": "kimi-code/k3", "glm": "glm-5.3"},
-            efforts={"glm": "high"},
+            participants=("codex", "claude"),
             source="codex",
+        )
+        receipt = acpx_discuss.verify_discussion_receipt(
+            root=tmp_path / "plane", conversation_id=payload["conversation_id"]
         )
     finally:
         controller.close()
 
-    assert payload["state"] == "COMPLETE"
-    assert len(payload["participant_outcomes"]) == 6
-    assert {agent for agent, _kwargs in calls} == {"claude", "kimicc", "glm"}
-    assert len(calls) == 6
-    assert active_max <= acpx_discuss.PARTICIPANT_CONCURRENCY
-    kimicc_calls = [kwargs for agent, kwargs in calls if agent == "kimicc"]
-    glm_calls = [kwargs for agent, kwargs in calls if agent == "glm"]
-    assert all(kwargs["model"] == "kimi-code/k3" for kwargs in kimicc_calls)
-    assert all(kwargs["model"] == "glm-5.3" for kwargs in glm_calls)
-    assert all(kwargs["effort"] == "high" for kwargs in glm_calls)
+    assert payload["state"] == "PARTIAL_COMPLETE"
+    assert payload["rounds_completed"] == 0
+    assert receipt["successful_rounds"] == 0
+
+
+def test_discussion_status_uses_durable_receipt_rounds(tmp_path, monkeypatch) -> None:
+    class StubController:
+        def __init__(self, *, root: Path) -> None:
+            self.root = root
+
+        def run(self, **_kwargs) -> dict[str, object]:
+            return {
+                "conversation_id": "conversation_" + "e" * 32,
+                "state": "PARTIAL_COMPLETE",
+                "rounds_completed": 2,
+            }
+
+        def close(self) -> None:
+            pass
+
+    monkeypatch.setattr(acpx_discuss, "AcpxDiscussionController", StubController)
+    monkeypatch.setattr(
+        acpx_discuss,
+        "verify_discussion_receipt",
+        lambda **_kwargs: {"successful_rounds": 0},
+    )
+
+    payload = acpx_discuss.run_discussion(
+        prompt="Compare the bounded options.",
+        cwd=tmp_path,
+        task_id="task-7159",
+        correlation_id="corr-7159",
+        idempotency_key="idem-7159",
+        root=tmp_path / "plane",
+    )
+
+    assert payload["rounds_completed"] == 0
 
 
 @pytest.mark.parametrize("model", ["k3-256k", "kimi-k3-256k", "kimi-code/k3-256k"])
