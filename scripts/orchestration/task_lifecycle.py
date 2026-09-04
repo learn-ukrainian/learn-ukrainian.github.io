@@ -115,10 +115,6 @@ def _clean_text(value: Any, label: str, *, maximum: int = 4000) -> str:
     return cleaned
 
 
-def _issue_url(repository: str, number: int) -> str:
-    return f"https://github.com/{repository}/issues/{number}"
-
-
 def _pr_url(repository: str, number: int) -> str:
     return f"https://github.com/{repository}/pull/{number}"
 
