@@ -11,10 +11,12 @@ import pytest
 from scripts.work.attention import apply_health_and_actions, derive_health, derive_safe_next_action
 from scripts.work.normalize import _match_dispatch, build_projection
 from scripts.work.relations import (
+    collect_missing_blocked_by_issue_numbers,
     detect_dependency_cycles,
     extract_body_relations,
     issue_work_id,
     make_work_id,
+    parse_issue_work_id,
     resolve_live_blockers,
 )
 from scripts.work.schema import (
@@ -1814,7 +1816,8 @@ def test_resolve_live_blockers_keeps_open_target_blocking():
 
 def test_resolve_live_blockers_conservative_when_target_unknown():
     """A blocker target not present in this projection can't be confirmed
-    closed, so it must conservatively remain a live blocker."""
+    closed (lookup is unknown or omitted), so it must conservatively remain
+    a live blocker."""
     items = [
         {
             "work_id": issue_work_id(REPO, 1),
@@ -1826,8 +1829,133 @@ def test_resolve_live_blockers_conservative_when_target_unknown():
             ],
         },
     ]
+    # No lookup provided -> conservative live blocker
     resolve_live_blockers(items)
     assert items[0]["flags"]["has_blocker"] is True
+
+    # Empty lookup map (failed/timed out lookup) -> stays conservative
+    resolve_live_blockers(items, target_lifecycle_by_id={})
+    assert items[0]["flags"]["has_blocker"] is True
+
+    # Lookup resolved a different issue -> 999 stays unknown and conservative
+    resolve_live_blockers(items, target_lifecycle_by_id={issue_work_id(REPO, 888): "closed"})
+    assert items[0]["flags"]["has_blocker"] is True
+
+    # Lookup says open -> still a live blocker
+    resolve_live_blockers(items, target_lifecycle_by_id={issue_work_id(REPO, 999): "open"})
+    assert items[0]["flags"]["has_blocker"] is True
+
+
+def test_resolve_live_blockers_absent_target_cleared_by_lifecycle_map():
+    """Absent blocker target is cleared when a provided/fixture lifecycle map confirms it closed."""
+    items = [
+        {
+            "work_id": issue_work_id(REPO, 1),
+            "resource_kind": "issue",
+            "lifecycle": "open",
+            "flags": {},
+            "relationships": [
+                {"type": "blocked_by", "target_id": issue_work_id(REPO, 999), "evidence": "issue_body"},
+            ],
+        },
+    ]
+    # Target absent from items, but lifecycle map says closed -> has_blocker False
+    resolve_live_blockers(items, target_lifecycle_by_id={issue_work_id(REPO, 999): "closed"})
+    assert items[0]["flags"]["has_blocker"] is False
+
+    # Also cleared when keyed by issue number (int or str)
+    resolve_live_blockers(items, target_lifecycle_by_id={999: "closed"})
+    assert items[0]["flags"]["has_blocker"] is False
+
+    resolve_live_blockers(items, target_lifecycle_by_id={"999": "closed"})
+    assert items[0]["flags"]["has_blocker"] is False
+
+
+def test_collect_missing_blocked_by_issue_numbers():
+    """collect_missing_blocked_by_issue_numbers identifies absent blocked_by targets."""
+    items = [
+        {
+            "work_id": issue_work_id(REPO, 1),
+            "resource_kind": "issue",
+            "relationships": [
+                {"type": "blocked_by", "target_id": issue_work_id(REPO, 2)},
+                {"type": "blocked_by", "target_id": issue_work_id(REPO, 3)},
+                {"type": "related", "target_id": issue_work_id(REPO, 4)},
+                {"type": "blocked_by", "target_id": issue_work_id("foreign/repo", 5)},
+            ],
+        },
+        {
+            "work_id": issue_work_id(REPO, 2),
+            "resource_kind": "issue",
+            "relationships": [],
+        },
+    ]
+    # Issue 2 is present in items, issue 4 is not blocked_by, issue 5 is foreign repo.
+    # Only issue 3 is missing and within REPO.
+    assert collect_missing_blocked_by_issue_numbers(items, repository_id=REPO) == [3]
+
+
+def test_parse_issue_work_id():
+    """parse_issue_work_id parses valid issue work IDs and rejects invalid forms."""
+    assert parse_issue_work_id(issue_work_id(REPO, 123)) == (REPO, 123)
+    assert parse_issue_work_id("wp1:public-monitor:owner/repo:issue:456") == ("owner/repo", 456)
+    assert parse_issue_work_id(None) is None
+    assert parse_issue_work_id("wp1:public-monitor:owner/repo:pr:123") is None
+    assert parse_issue_work_id("invalid") is None
+
+
+def test_fetch_issue_states_batched_runner_handling():
+    """fetch_issue_states_batched handles empty, foreign, success, not-found, and timeout."""
+    from scripts.work.sources_public import fetch_issue_states_batched
+
+    # 1. Empty numbers -> zero calls
+    assert fetch_issue_states_batched([], repository_id=REPO) == {}
+
+    # 2. Foreign repo -> raises ValueError before runner
+    with pytest.raises(ValueError, match="public repository_id must be exactly"):
+        fetch_issue_states_batched([7178], repository_id="other/repo")
+
+    # 3. Successful runner
+    def mock_runner(args, timeout_s):
+        stdout = json.dumps({
+            "data": {
+                "repository": {
+                    "i7178": {"number": 7178, "state": "CLOSED"},
+                    "i7184": {"number": 7184, "state": "OPEN"},
+                }
+            }
+        })
+        return 0, stdout, ""
+
+    res = fetch_issue_states_batched([7178, 7184], repository_id=REPO, runner=mock_runner)
+    assert res[issue_work_id(REPO, 7178)] == "closed"
+    assert res[issue_work_id(REPO, 7184)] == "open"
+    assert res["7178"] == "closed"
+    assert res["7184"] == "open"
+
+    # 4. Timeout runner -> returns {}
+    def timeout_runner(args, timeout_s):
+        return 124, "", "timeout"
+
+    assert fetch_issue_states_batched([7178], repository_id=REPO, runner=timeout_runner) == {}
+
+    # 5. Missing / NOT_FOUND issue in data -> omitted from result
+    def not_found_runner(args, timeout_s):
+        stdout = json.dumps({
+            "data": {
+                "repository": {
+                    "i7178": {"number": 7178, "state": "CLOSED"},
+                    "i999": None,
+                }
+            },
+            "errors": [{"type": "NOT_FOUND"}],
+        })
+        return 1, stdout, "not found"
+
+    res_nf = fetch_issue_states_batched([7178, 999], repository_id=REPO, runner=not_found_runner)
+    assert res_nf[issue_work_id(REPO, 7178)] == "closed"
+    assert issue_work_id(REPO, 999) not in res_nf
+    assert "999" not in res_nf
 
 
 def test_match_dispatch_requires_boundary_safe_issue_and_pr_ids():
@@ -2230,6 +2358,100 @@ def test_build_projection_open_depends_on_still_blocks():
     blocked — closed-target handling must not clear real blockers."""
     sections = _closed_depends_on_sections(blocker_state="OPEN")
     projection = build_projection(sections, repository_id=REPO)
+    validate_projection(projection)
+
+    item = next(i for i in projection["items"] if i["work_id"] == issue_work_id(REPO, 7185))
+    assert item["flags"]["has_blocker"] is True
+    assert item["health"] == "AT_RISK"
+    assert item["safe_next_action"]["code"] == "RESOLVE_BLOCKER"
+    assert "blocked_by" in item["safe_next_action"]["reason_codes"]
+
+
+def _missing_target_depends_on_sections(
+    *,
+    body: str = "Parent: #7177 (M2). Depends on #7178 M1 and held-out resume (#7184).",
+) -> dict[str, SectionResult]:
+    """Mirror #7185: issue 7185 in items, but target #7178 absent from items."""
+    return {
+        "issues": SectionResult(
+            "issues",
+            "ok",
+            payload=[
+                {
+                    "number": 7185,
+                    "title": "Downstream issue",
+                    "labels": [],
+                    "assignees": [],
+                    "body": body,
+                    "createdAt": "2026-08-01T00:00:00Z",
+                    "updatedAt": "2026-08-02T00:00:00Z",
+                    "url": "https://example.test/issues/7185",
+                    "state": "OPEN",
+                },
+            ],
+            count=1,
+        ),
+        "prs": SectionResult("prs", "ok", payload=[], count=0),
+        "streams": SectionResult(
+            "streams",
+            "ok",
+            payload={
+                "generated_at": 1,
+                "orphans": [],
+                "multi_homed": [],
+                "pending_native_link": [],
+                "ok": True,
+            },
+            count=0,
+        ),
+        "delegate_active": SectionResult("delegate_active", "ok", payload={"total": 0, "tasks": []}, count=0),
+        "delegate_tasks": SectionResult("delegate_tasks", "ok", payload={"total": 0, "tasks": []}, count=0),
+        "fleet_reviews": SectionResult("fleet_reviews", "ok", payload={"total": 0, "reviews": []}, count=0),
+    }
+
+
+def test_build_projection_closed_missing_target_clears_blocker_via_injected_lookup():
+    """#7185-style body + closed #7178 not in items -> not RESOLVE_BLOCKER."""
+    sections = _missing_target_depends_on_sections()
+    projection = build_projection(
+        sections,
+        repository_id=REPO,
+        target_lifecycle_lookup={issue_work_id(REPO, 7178): "closed"},
+    )
+    validate_projection(projection)
+
+    item = next(i for i in projection["items"] if i["work_id"] == issue_work_id(REPO, 7185))
+    assert item["flags"]["has_blocker"] is False
+    assert item["health"] != "AT_RISK"
+    assert item["safe_next_action"]["code"] != "RESOLVE_BLOCKER"
+    assert "blocked_by" not in item["safe_next_action"]["reason_codes"]
+
+
+def test_build_projection_open_missing_target_still_blocks_via_injected_lookup():
+    """Open missing target still blocks when injected lookup returns open."""
+    sections = _missing_target_depends_on_sections()
+    projection = build_projection(
+        sections,
+        repository_id=REPO,
+        target_lifecycle_lookup={issue_work_id(REPO, 7178): "open"},
+    )
+    validate_projection(projection)
+
+    item = next(i for i in projection["items"] if i["work_id"] == issue_work_id(REPO, 7185))
+    assert item["flags"]["has_blocker"] is True
+    assert item["health"] == "AT_RISK"
+    assert item["safe_next_action"]["code"] == "RESOLVE_BLOCKER"
+    assert "blocked_by" in item["safe_next_action"]["reason_codes"]
+
+
+def test_build_projection_missing_target_lookup_failure_still_conservative():
+    """Lookup failure/timeout for missing target still keeps conservative live blocker."""
+    sections = _missing_target_depends_on_sections()
+    projection = build_projection(
+        sections,
+        repository_id=REPO,
+        target_lifecycle_lookup={},
+    )
     validate_projection(projection)
 
     item = next(i for i in projection["items"] if i["work_id"] == issue_work_id(REPO, 7185))
