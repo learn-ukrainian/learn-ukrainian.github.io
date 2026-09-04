@@ -202,6 +202,15 @@ function codexbarHostToolingMissing(routing) {
     && snapshots.every(codexbarSnapshotIsMissingBinary);
 }
 
+// Retired CLI seats → live display names (do not revive gemini/glm as live seats).
+const RETIRED_RECOMMENDATION_ALIASES = { gemini: 'agy', glm: 'cursor' };
+
+function displayRecommendationAgent(name) {
+  if (name == null || name === '') return name;
+  const key = String(name).trim().toLowerCase();
+  return RETIRED_RECOMMENDATION_ALIASES[key] || name;
+}
+
 function routingRecommendationDisplay(routing) {
   const rec = routing.recommendation || {};
   const hostToolingSkip = !rec.primary_agent_for_code && codexbarHostToolingMissing(routing);
@@ -220,7 +229,7 @@ function routingRecommendationDisplay(routing) {
   }
   return {
     title: 'Primary Agent',
-    value: rec.primary_agent_for_code || 'unknown',
+    value: displayRecommendationAgent(rec.primary_agent_for_code) || 'unknown',
     detail: rec.rationale || '',
     panelClass: 'ok',
     warnings: sourceWarnings

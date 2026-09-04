@@ -118,4 +118,4 @@ def test_runtime_dashboard_queries_headroom_with_headroom_or_last_used_model() -
     html = (DASHBOARDS_DIR / "runtime.html").read_text(encoding="utf-8")
     assert "agent.headroom_model || agent.last_used_model || agent.default_model" in html
     assert "<th>Headroom Model</th>" in html
-    assert "Model used for the 15-min rate-limit probe for this adapter" in html
+    assert "Model used for the 5-min rate-limit probe for this adapter" in html

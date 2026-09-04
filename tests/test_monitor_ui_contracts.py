@@ -343,7 +343,21 @@ def test_routing_page_labels_host_tooling_skip_when_native_probes_unavailable():
         codex: {{codexbar: {{error_kind: 'timeout', auth_error: 'CodexBar CLI timed out'}}}}
       }}
     }});
-    console.log(JSON.stringify({{missingBinary, cliNotFound, nonBinaryFailure}}));
+    const geminiAlias = routingRecommendationDisplay({{
+      recommendation: {{primary_agent_for_code: 'gemini', rationale: 'coolest', warnings: []}},
+      agents: {{}}
+    }});
+    const glmAlias = routingRecommendationDisplay({{
+      recommendation: {{primary_agent_for_code: 'glm', rationale: 'coolest', warnings: []}},
+      agents: {{}}
+    }});
+    const liveAgy = routingRecommendationDisplay({{
+      recommendation: {{primary_agent_for_code: 'agy', rationale: 'coolest', warnings: []}},
+      agents: {{}}
+    }});
+    console.log(JSON.stringify({{
+      missingBinary, cliNotFound, nonBinaryFailure, geminiAlias, glmAlias, liveAgy
+    }}));
     """
     result = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True, timeout=30)
     output = json.loads(result.stdout)
@@ -358,6 +372,9 @@ def test_routing_page_labels_host_tooling_skip_when_native_probes_unavailable():
     assert output["cliNotFound"]["value"] == "Skipped"
     assert output["nonBinaryFailure"]["value"] == "unknown"
     assert output["nonBinaryFailure"]["warnings"] == ["empty snapshot — no recommendation emitted"]
+    assert output["geminiAlias"]["value"] == "agy"
+    assert output["glmAlias"]["value"] == "cursor"
+    assert output["liveAgy"]["value"] == "agy"
 
 
 def test_shared_monitor_css_targets_unified_nav_classes():
