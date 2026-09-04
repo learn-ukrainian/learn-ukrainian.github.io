@@ -213,13 +213,14 @@ Never auto-reset branches for review thrash. Do not reintroduce sealed formal CF
 ## ACP provider transport
 
 For normal **read-only inter-agent communication**, ACP is the only provider
-transport. Fleet launchers make ordinary (non-review) `ask-*` and 2–6
-participant `discuss` calls use the durable ACP controller for enabled
-routes: Codex, Grok, Claude, Kimi, KimiCC K3, Cursor, Pool, AGY, GLM, and
-DeepSeek. The direct `.venv/bin/python -m scripts.fleet_comms acp-discuss`
-surface remains available to operators. Selection starts no process at cold
-start and does not change `delegate.py`. The default is two rounds and the
-hard maximum is three.
+transport. Fleet launchers make ordinary (non-review) `ask-*` and `discuss`
+calls that name **exactly two enabled seats** use the durable ACP controller:
+Codex, Grok, Claude, Kimi, KimiCC K3, Cursor, Pool, AGY, GLM, and DeepSeek.
+Any other participant count (including the former 3–6-seat range) is rejected
+loudly before a conversation begins. The direct `.venv/bin/python -m
+scripts.fleet_comms acp-discuss` surface remains available to operators.
+Selection starts no process at cold start and does not change `delegate.py`.
+The default is two rounds and the hard maximum is three.
 
 **ACP is intercommunication only — never review** (operator 2026-08-23,
 #7155). Its `--deny-all --no-fs --no-terminal` chat transport cannot run

@@ -595,7 +595,7 @@ stores are read-only migration/projection inputs, not a live write target.
   handoff-status` / `handoff-claim` (#5530).
 - **Sealed formal CF is retired** — CF is the direct `ask-<lane>` + PR-post flow in §6,
   not `review-pr` / sealed `lu-review-*`.
-- **ACP provider transport:** ACP is toolless intercomm only (state transfer / ordinary asks/discuss); CF, design, and plan use toolful seats (`delegate.py` or native harnesses), and caveman lite is style.
+- **ACP provider transport:** ACP is toolless intercomm only (state transfer / ordinary asks and `discuss` with exactly two enabled seats; every other participant count rejects); CF, design, and plan use toolful seats (`delegate.py` or native harnesses), and caveman lite is style.
 - **Never** flip the plane, enable retention apply, or invent a competing comms design
   from this skill — those remain the infra lane's gated actions, even post-cutover.
 
