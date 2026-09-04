@@ -270,12 +270,31 @@ def _task_id(task_id: int) -> str:
     return f"zno:{task_id}"
 
 
+def _topic_norm_unmapped_tags(conn: sqlite3.Connection) -> list[dict[str, object]]:
+    """Expose tagged rows which remain outside the deterministic normalizer."""
+    rows = conn.execute(
+        """
+        SELECT topic_tag, count(*)
+        FROM zno_tasks
+        WHERE trim(topic_tag) <> '' AND trim(topic_norm) = ''
+        GROUP BY topic_tag
+        ORDER BY topic_tag
+        """
+    ).fetchall()
+    return [{"topicTag": str(topic_tag), "taskCount": int(task_count)} for topic_tag, task_count in rows]
+
+
 def _residual_counts(conn: sqlite3.Connection, emitted: int) -> dict[str, int]:
     corpus = int(conn.execute("SELECT count(*) FROM zno_tasks").fetchone()[0])
     return {
         "corpusTasks": corpus,
         "emptyTopicTag": int(conn.execute("SELECT count(*) FROM zno_tasks WHERE trim(topic_tag) = ''").fetchone()[0]),
         "emptyTopicNorm": int(conn.execute("SELECT count(*) FROM zno_tasks WHERE trim(topic_norm) = ''").fetchone()[0]),
+        "unmappedTopicNorm": int(
+            conn.execute(
+                "SELECT count(*) FROM zno_tasks WHERE trim(topic_tag) <> '' AND trim(topic_norm) = ''"
+            ).fetchone()[0]
+        ),
         "emptyKeyOwnStatement": int(conn.execute("SELECT count(*) FROM zno_tasks WHERE task_format = 'own-statement' AND trim(correct_json) = ''").fetchone()[0]),
         "documentsFetchNotOk": int(conn.execute("SELECT count(*) FROM zno_documents WHERE fetch_status <> 'ok'").fetchone()[0]),
         "emittedItems": emitted,
@@ -344,6 +363,7 @@ def build_zno_shards(
             "schemaVersion": 1,
             "decks": deck_receipts,
             "namedResidual": _residual_counts(conn, emitted_total),
+            "topicNormUnmappedTags": _topic_norm_unmapped_tags(conn),
             "markupIntegrity": {
                 "quarantinedMissingMarkup": quarantined_markup,
                 "overlayPath": str(markup_overlay_path.relative_to(ROOT))

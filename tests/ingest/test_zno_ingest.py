@@ -12,13 +12,18 @@ import pytest
 from scripts.ingest import zno_ingest
 from scripts.ingest.zno_ingest import (
     FETCH_TIMEOUT_SECONDS,
+    MINIMUM_COMPLETE_TASK_COUNT,
     ONLINE_TEST_MAPPING,
+    SESSION_COMPLETENESS,
+    assert_session_completeness,
+    backfill_topic_norm,
     derive_task_metadata,
     fetch_page_with_rate_limit,
     ingest,
     ingest_documents,
     init_db,
     parse_and_insert_tasks,
+    topic_norm_from_tag,
 )
 
 
@@ -51,7 +56,7 @@ def test_documents_count_and_status(db_path: Path) -> None:
         init_db(conn)
         ingest_documents(conn)
 
-        # Assert count is exactly 33
+        # This is the booklet catalogue size, not an extraction-completeness claim.
         count = conn.execute("SELECT count(*) FROM zno_documents").fetchone()[0]
         assert count == 33
 
@@ -181,6 +186,76 @@ def test_online_mapping_covers_every_booklet_with_a_clean_interactive_source() -
     }
 
 
+def test_session_completeness_ledger_covers_each_online_mapping_entry() -> None:
+    mapped_sessions = {(year, "nmt" if year >= 2022 else "zno", session) for year, session, _scope in ONLINE_TEST_MAPPING}
+    assert set(SESSION_COMPLETENESS) == mapped_sessions
+    assert len(SESSION_COMPLETENESS) == 31
+    assert SESSION_COMPLETENESS[(2022, "nmt", "osnovna")] == {
+        "expected_tasks": 20,
+        "expected_single_choice_with_letter_key": 15,
+        "own_statement_count": 0,
+    }
+    assert SESSION_COMPLETENESS[(2021, "zno", "osnovna")]["own_statement_count"] == 4
+
+
+def test_session_completeness_fails_closed_for_missing_or_unkeyed_rows(db_path: Path) -> None:
+    conn = sqlite3.connect(db_path)
+    try:
+        init_db(conn)
+        conn.execute(
+            """
+            INSERT INTO zno_tasks(document_id, year, exam, session, task_no, task_format, stem, correct_json)
+            VALUES (1, 2010, 'zno', 'sesiya-1', 1, 'single-choice', 'x', '')
+            """
+        )
+        with pytest.raises(ValueError, match="single-choice rows lack an А–Д key"):
+            assert_session_completeness(conn)
+    finally:
+        conn.close()
+
+
+@pytest.mark.parametrize(
+    ("topic_tag", "expected"),
+    [
+        ("ТЕМА: Орфоепія. Наголос", "orthoepic_norm"),
+        ("ТЕМА: ЛЕКСИКОЛОГІЯ. Синоніми", "lexical_norm"),
+        ("ТЕМА: Синтаксис. Речення", "syntactic_norm"),
+        ("ТЕМА: Морфологія. Іменник", "morphological_norm"),
+        ("ТЕМА: Будова слова. Словотвір", "word_formation"),
+        ("ТЕМА: Фразеологія", "phraseology"),
+        ("ТЕМА: Розвиток мовлення. Зміст і будова тексту", "text"),
+        ("ТЕМА: Література ХХ ст.", "literature"),
+    ],
+)
+def test_topic_norm_from_tag_uses_ukrainian_casefold(topic_tag: str, expected: str) -> None:
+    assert topic_norm_from_tag(topic_tag) == expected
+
+
+def test_topic_norm_backfill_preserves_reviewed_values_and_reports_unmapped(db_path: Path) -> None:
+    conn = sqlite3.connect(db_path)
+    try:
+        init_db(conn)
+        conn.executemany(
+            """
+            INSERT INTO zno_tasks(document_id, year, exam, session, task_no, task_format, stem, topic_tag, topic_norm)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                (1, 2024, "nmt", "sesiya-1", 1, "single-choice", "x", "ТЕМА: ЛЕКСИКА", ""),
+                (1, 2024, "nmt", "sesiya-1", 2, "single-choice", "x", "ТЕМА: Синтаксис", "literature"),
+                (1, 2024, "nmt", "sesiya-1", 3, "single-choice", "x", "ТЕМА: Невідома рубрика", ""),
+            ],
+        )
+        before = conn.execute("SELECT count(*) FROM zno_tasks").fetchone()[0]
+        result = backfill_topic_norm(conn)
+        assert conn.execute("SELECT count(*) FROM zno_tasks").fetchone()[0] == before
+        assert conn.execute("SELECT topic_norm FROM zno_tasks WHERE task_no = 1").fetchone() == ("lexical_norm",)
+        assert conn.execute("SELECT topic_norm FROM zno_tasks WHERE task_no = 2").fetchone() == ("literature",)
+        assert result == {"updated": 1, "unmapped": {"ТЕМА: Невідома рубрика": 1}}
+    finally:
+        conn.close()
+
+
 def test_task_refresh_preserves_reviewed_annotations(db_path: Path) -> None:
     conn = sqlite3.connect(db_path)
     try:
@@ -285,12 +360,13 @@ def test_fetch_page_uses_bounded_request_timeout(tmp_path: Path, monkeypatch: py
 @pytest.mark.skipif(os.getenv("ZNO_LIVE") != "1", reason="Requires ZNO_LIVE=1 env var")
 def test_task_extraction_live(db_path: Path, cache_dir: Path) -> None:
     total_tasks = ingest(db_path, cache_dir)
-    assert total_tasks == 1646
+    assert total_tasks >= MINIMUM_COMPLETE_TASK_COUNT
 
     conn = sqlite3.connect(db_path)
     try:
         tasks_count = conn.execute("SELECT count(*) FROM zno_tasks").fetchone()[0]
-        assert tasks_count == 1646
+        assert tasks_count >= MINIMUM_COMPLETE_TASK_COUNT
+        assert_session_completeness(conn)
 
         year_counts = dict(conn.execute("SELECT year, count(*) FROM zno_tasks GROUP BY year"))
         assert year_counts == {
