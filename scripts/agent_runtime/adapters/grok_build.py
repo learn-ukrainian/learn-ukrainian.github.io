@@ -83,12 +83,15 @@ _UNATTENDED_WRITE_MODES: frozenset[str] = frozenset({"workspace-write", "danger"
 # --permission-mode auto may approve unnamed commands, and prefix Bash denies
 # are not fail-closed (gh api, git -C … push, tee, sed -i, …). Deny Bash and
 # write tools wholesale — same fail-closed shell posture as review_isolation.
+# Native Grok's documented permission-rule prefixes are Bash, Edit, Write, Read,
+# Grep, WebFetch, and MCPTool. These are permission prefixes, not built-in tool
+# IDs: ``search_replace`` belongs to ``--disallowed-tools``, not ``--deny``.
+_GROK_PERMISSION_RULE_PREFIXES: frozenset[str] = frozenset(
+    {"Bash", "Edit", "Grep", "MCPTool", "Read", "WebFetch", "Write"}
+)
 _READ_ONLY_DENY_RULES: tuple[str, ...] = (
     "Write",
     "Edit",
-    "MultiEdit",
-    "NotebookEdit",
-    "search_replace",
     "Bash",
 )
 
@@ -106,9 +109,6 @@ _READ_ONLY_MCP_SERVERS: frozenset[str] = frozenset({"sources"})
 _MCP_REVIEW_DENY_RULES: tuple[str, ...] = (
     "Write",
     "Edit",
-    "MultiEdit",
-    "NotebookEdit",
-    "search_replace",
     "Bash",
 )
 # Operator order 2026-08-16 (issue #6865): grok is at 4.6; retire the 4.5 pin.
@@ -329,11 +329,30 @@ class GrokBuildAdapter:
                     "--verbatim",
                 ]
             )
-            deny_rules = tc.get("review_deny_tools") or list(_MCP_REVIEW_DENY_RULES)
-            if isinstance(deny_rules, (list, tuple)):
-                for rule in deny_rules:
-                    if rule:
-                        cmd.extend(["--deny", str(rule)])
+            configured_deny_rules = tc.get("review_deny_tools")
+            if configured_deny_rules is None:
+                deny_rules = _MCP_REVIEW_DENY_RULES
+            elif not isinstance(configured_deny_rules, (list, tuple)):
+                raise ValueError("GrokBuildAdapter: review_deny_tools must be a list or tuple")
+            else:
+                deny_rules = tuple(configured_deny_rules)
+                invalid_rules = [
+                    rule
+                    for rule in deny_rules
+                    if not isinstance(rule, str) or rule not in _GROK_PERMISSION_RULE_PREFIXES
+                ]
+                if invalid_rules:
+                    raise ValueError(
+                        "GrokBuildAdapter: review_deny_tools contains unsupported Grok permission prefixes: "
+                        f"{invalid_rules!r}"
+                    )
+                missing_rules = set(_MCP_REVIEW_DENY_RULES) - set(deny_rules)
+                if missing_rules:
+                    raise ValueError(
+                        f"GrokBuildAdapter: review_deny_tools must retain fail-closed rules: {sorted(missing_rules)!r}"
+                    )
+            for rule in deny_rules:
+                cmd.extend(["--deny", rule])
 
         effective_effort = validate_grok_effort(effort or self.default_effort)
         cmd.extend(["-m", requested_model])
@@ -342,6 +361,16 @@ class GrokBuildAdapter:
             cmd.extend(["--effort", effective_effort])
 
         disallowed = tc.get("disallowed_tools")
+        if mode == "read-only" and not trail_isolation:
+            # search_replace is Grok's native editor tool ID, not a valid
+            # --deny prefix. Remove it explicitly in every read-only path.
+            if disallowed:
+                disallowed_values = [value.strip() for value in str(disallowed).split(",") if value.strip()]
+                if "search_replace" not in disallowed_values:
+                    disallowed_values.append("search_replace")
+                disallowed = ",".join(disallowed_values)
+            else:
+                disallowed = "search_replace"
         if disallowed:
             cmd.extend(["--disallowed-tools", str(disallowed)])
         allowed = tc.get("allowed_tools")

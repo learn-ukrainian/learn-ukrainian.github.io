@@ -29,14 +29,9 @@ GROK_TRAIL_DENY_TOOLS: tuple[str, ...] = (
     "Bash",
     "Write",
     "Edit",
-    "MultiEdit",
-    "NotebookEdit",
     "Read",
-    "Glob",
     "Grep",
-    "LS",
     "WebFetch",
-    "WebSearch",
 )
 
 

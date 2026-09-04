@@ -22,6 +22,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 from agent_runtime import registry
 from agent_runtime.adapters.base import AgentAdapter, InvocationPlan
 from agent_runtime.adapters.grok_build import (
+    _MCP_REVIEW_DENY_RULES,
     _READ_ONLY_DENY_RULES,
     GROK_BUILD_DEFAULT_EFFORT,
     GROK_BUILD_DEFAULT_MODEL,
@@ -95,19 +96,32 @@ def test_read_only_mode_applies_mutation_deny_rules(tmp_path):
 
     assert _val(plan.cmd, "--permission-mode") == "auto"
     assert "--always-approve" not in plan.cmd
+    assert _val(plan.cmd, "--disallowed-tools") == "search_replace"
     denied = [plan.cmd[i + 1] for i, item in enumerate(plan.cmd) if item == "--deny"]
     assert denied == list(_READ_ONLY_DENY_RULES)
     assert "Bash" in denied
-    assert set(_READ_ONLY_DENY_RULES) == {
-        "Write",
-        "Edit",
-        "MultiEdit",
-        "NotebookEdit",
-        "search_replace",
-        "Bash",
-    }
+    assert set(_READ_ONLY_DENY_RULES) == {"Write", "Edit", "Bash"}
     # Fail-closed: no prefix-only Bash rules that leave gh api / tee / sed -i open.
     assert not any(rule.startswith("Bash(") for rule in _READ_ONLY_DENY_RULES)
+
+
+def test_grok_deny_rules_use_documented_native_permission_prefixes():
+    # Pinned to the native Grok CLI headless documentation. These are
+    # permission-rule prefixes, not Claude-shaped built-in tool IDs.
+    documented_prefixes = {
+        "Bash",
+        "Edit",
+        "Grep",
+        "MCPTool",
+        "Read",
+        "WebFetch",
+        "Write",
+    }
+    assert set(_READ_ONLY_DENY_RULES) <= documented_prefixes
+    assert set(_MCP_REVIEW_DENY_RULES) <= documented_prefixes
+    assert "Bash" in _READ_ONLY_DENY_RULES
+    assert "NotebookEdit" not in _READ_ONLY_DENY_RULES
+    assert "NotebookEdit" not in _MCP_REVIEW_DENY_RULES
 
 
 def test_exact_argv_per_mode(tmp_path):
@@ -129,17 +143,13 @@ def test_exact_argv_per_mode(tmp_path):
         "--deny",
         "Edit",
         "--deny",
-        "MultiEdit",
-        "--deny",
-        "NotebookEdit",
-        "--deny",
-        "search_replace",
-        "--deny",
         "Bash",
         "-m",
         "grok-4.6",
         "--effort",
         "high",
+        "--disallowed-tools",
+        "search_replace",
     ]
 
     # workspace-write: auto, always-approve, no default deny rules
@@ -222,7 +232,26 @@ def test_review_isolation_keeps_its_existing_approval_and_denies(tmp_path):
     assert "--always-approve" in plan.cmd
     denied = [plan.cmd[index + 1] for index, item in enumerate(plan.cmd) if item == "--deny"]
     assert "Bash" in denied
-    assert {"Write", "Edit", "MultiEdit", "NotebookEdit"} <= set(denied)
+    assert denied == list(_MCP_REVIEW_DENY_RULES)
+    assert _val(plan.cmd, "--disallowed-tools") == "search_replace"
+
+
+@pytest.mark.parametrize(
+    "review_deny_tools",
+    ["Bash", ["NotebookEdit"], ["Write", "Bash"], ["Write", "Edit", "Bash", "Glob"]],
+)
+def test_review_isolation_rejects_unsupported_or_weak_deny_overrides(tmp_path, review_deny_tools):
+    review_root = tmp_path / "review"
+    for child in ("tmp", "home", "exec"):
+        (review_root / child).mkdir(parents=True, exist_ok=True)
+    tool_config = {
+        "review_isolation": True,
+        "review_engine_binary": "/usr/bin/true",
+        "review_deny_tools": review_deny_tools,
+    }
+    with patch("scripts.review.isolation.validated_review_write_root", return_value=review_root):
+        with pytest.raises(ValueError, match="review_deny_tools"):
+            _build("review evidence", tmp_path, mode="read-only", tool_config=tool_config)
 
 
 def test_unsupported_mode_raises(tmp_path):

@@ -100,8 +100,10 @@ def test_grok_profile_has_one_private_server_and_exact_allowlist() -> None:
         assert _values_after(plan.cmd, "--tools") == [launch.tool_config["allowed_tools"]]
         assert _values_after(plan.cmd, "--allow") == list(trail_isolation.GROK_TRAIL_TOOLS)
         denied = _values_after(plan.cmd, "--deny")
+        assert denied == list(trail_isolation.GROK_TRAIL_DENY_TOOLS)
+        assert set(denied) <= {"Bash", "Edit", "Grep", "Read", "WebFetch", "Write"}
         assert "Bash" in denied
-        assert {"Write", "Edit", "MultiEdit", "NotebookEdit"} <= set(denied)
+        assert "NotebookEdit" not in denied
         assert "mcp__unknown__mutation" not in launch.tool_config["allowed_tools"]
         assert plan.cmd[plan.cmd.index("--permission-mode") + 1] == "default"
     finally:
