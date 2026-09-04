@@ -16,6 +16,7 @@ from scripts.work.relations import (
     issue_work_id,
     make_work_id,
     pr_work_id,
+    resolve_live_blockers,
     review_work_id,
     task_work_id,
 )
@@ -311,6 +312,9 @@ def _build_issue_item(
         ],
         "omissions": [],
         "flags": {
+            # Provisional — `resolve_live_blockers` (post-inversion, in
+            # `build_projection`) overwrites this once closed targets are
+            # known and inferred inbound `blocks` edges have landed.
             "has_blocker": any(r["type"] == "blocked_by" for r in relations),
             "is_duplicate": any(r["type"] == "duplicate_of" for r in relations),
             "is_superseded": any(r["type"] == "superseded_by" for r in relations),
@@ -664,6 +668,9 @@ def build_projection(
     invert_relationships(items)
     cycles = detect_dependency_cycles(items)
     annotate_cycles(items, cycles)
+    # A closed target is not a live blocker (#7177/#7185) — must run after
+    # inversion (covers inferred edges) and before health/action derivation.
+    resolve_live_blockers(items)
 
     # Source is "ok enough" for health when GH issue/PR sections did not hard-fail.
     source_ok = issues_section.status not in {"unavailable", "timeout"} or prs_section.status not in {
