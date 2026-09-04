@@ -426,7 +426,9 @@ def test_agents_endpoint_returns_known_adapters():
     assert response.status_code == 200
     agents = response.json()["agents"]
     names = {agent["name"] for agent in agents}
-    assert {"claude", "gemini", "codex"} <= names
+    assert {"claude", "codex"} <= names
+    assert "gemini" not in names
+    assert "glm" not in names
     assert not any(name.startswith("acpx-") for name in names)
     codex = next(agent for agent in agents if agent["name"] == "codex")
     assert codex["binary"] == "codex"

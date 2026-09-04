@@ -78,6 +78,11 @@ def test_resolve_launcher_host_id_uses_occupancy_mapping_and_fallbacks(
     monkeypatch.setenv("ATLAS_JOB_SELF_HOST", "unknown-box")
     assert resolve_launcher_host_id() == "local"
 
+    monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
+    monkeypatch.delenv("ATLAS_JOB_SELF_HOST", raising=False)
+    monkeypatch.setattr("scripts.api.occupancy_local.sys.platform", "linux")
+    assert resolve_launcher_host_id() == "host-teacher"
+
     monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-explicit")
     assert resolve_launcher_host_id() == "host-explicit"
 

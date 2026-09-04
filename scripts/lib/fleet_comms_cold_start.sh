@@ -107,8 +107,9 @@ fleet_comms_print_banner_line() {
   esac
 }
 
-# Prefer the tunneled job-host Monitor. If it is down, warn and continue on the
-# notebook — never start a second Mac Monitor, never lift the retired sqlite.
+# Prefer the production Monitor on loopback (Mac tunnel client). If it is down,
+# warn and continue on the Mac — never start a second Monitor, never lift the
+# retired sqlite.
 fleet_comms_warn_if_plane_unreachable() {
   local root="${PROJECT_DIR:-${LC_ROOT:-.}}"
   local py=""
@@ -116,7 +117,7 @@ fleet_comms_warn_if_plane_unreachable() {
     return 0
   fi
   if ! py="$(fleet_comms_resolve_python "$root")"; then
-    echo "⚠️  plane fallback: no project interpreter; starting on notebook." >&2
+    echo "⚠️  plane fallback: no project interpreter; starting on Mac." >&2
     return 0
   fi
   (

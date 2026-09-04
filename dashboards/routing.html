@@ -451,7 +451,8 @@ function renderApiAccounts(routing) {
 
 function renderSubscriptions(routing) {
   const agents = routing.agents || {};
-  const subscriptionLanes = ['cursor', 'claude', 'codex', 'gemini', 'grok', 'kimi', 'glm'];
+  // Live subscription lanes only — retired gemini CLI / glm stay off the roster.
+  const subscriptionLanes = ['cursor', 'claude', 'codex', 'grok', 'kimi', 'agy'];
   const rows = subscriptionLanes
     .filter(name => agents[name])
     .map(name => {

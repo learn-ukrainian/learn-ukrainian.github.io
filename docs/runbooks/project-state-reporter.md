@@ -1,17 +1,25 @@
-# Project-state reporter timers (#7188)
+# Project-state reporter timers (#7188 / #7177)
 
 Per-host checkout and serving-SHA drift reaches the Monitor API through a
 loopback-only push reporter on each machine. The API host evaluates itself
-in-process on every `GET /api/fleet/projects/v1` read; remote hosts POST
-sanitized documents to `POST /api/fleet/projects/v1/report` through the
-existing loopback tunnel.
+in-process on every `GET /api/fleet/projects/v1` read (empty-map Linux fills
+the production glance row `host-teacher`); remote hosts POST sanitized
+documents to `POST /api/fleet/projects/v1/report` through the existing
+loopback tunnel. Do **not** report as `host-job` — that opaque id is not a
+default glance row and returns `400 unknown host_id` unless mapped.
 
 ## Reporter CLI
 
+On the production Linux API host, in-process collect is enough; an optional
+loopback POST may use the production opaque id:
+
 ```bash
-LU_MONITOR_HOST_ID=host-job \
+LU_MONITOR_HOST_ID=host-teacher \
   .venv/bin/python scripts/api/project_state_local.py report
 ```
+
+Or omit `LU_MONITOR_HOST_ID` when `MONITOR_OCCUPANCY_HOST_IDS` is unset — the
+launcher resolves to `host-teacher` on Linux / `mac-operator` on Darwin.
 
 Dry-run collection only:
 
@@ -21,8 +29,9 @@ Dry-run collection only:
 
 The reporter identity is the opaque host id from `LU_MONITOR_HOST_ID`,
 `MONITOR_OCCUPANCY_DRIVER_HOST_ID`, or the single self-mapped entry in
-`MONITOR_OCCUPANCY_HOST_IDS`. `mac-operator` is also allowlisted without a
-mapping entry.
+`MONITOR_OCCUPANCY_HOST_IDS`. With an empty map, Linux resolves to
+`host-teacher` and Darwin to `mac-operator`. `mac-operator` is also
+allowlisted without a mapping entry.
 
 ## Linux (systemd timer)
 
@@ -31,10 +40,20 @@ Templates live in `packaging/systemd/`:
 - `learn-ukrainian-project-state-reporter.service` (oneshot)
 - `learn-ukrainian-project-state-reporter.timer` (5-minute cadence)
 
-Install is operator-owned: copy units into the user or system unit path, set
-`WorkingDirectory` and `ExecStart` to the primary checkout, enable the timer,
-and verify loopback POST succeeds. The wrapper script is
-`scripts/orchestration/run_project_state_reporter.sh`.
+### One-line operator install
+
+```bash
+install -Dm644 packaging/systemd/learn-ukrainian-project-state-reporter.{service,timer} \
+  ~/.config/systemd/user/ && systemctl --user daemon-reload && \
+  systemctl --user enable --now learn-ukrainian-project-state-reporter.timer
+```
+
+Set `WorkingDirectory` / the wrapper path to the primary checkout if the
+template `%h/projects/learn-ukrainian` placeholder differs. Prefer leaving
+`LU_MONITOR_HOST_ID` unset on the API host (in-process fill), or set
+`LU_MONITOR_HOST_ID=host-teacher` — never `host-job`.
+
+The wrapper script is `scripts/orchestration/run_project_state_reporter.sh`.
 
 ## macOS (LaunchAgent)
 

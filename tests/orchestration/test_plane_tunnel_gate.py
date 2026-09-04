@@ -1,4 +1,4 @@
-"""Notebook driver plane probe: ok when tunneled, degraded fallback when not."""
+"""Production Monitor plane probe: ok when tunneled, degraded fallback when not."""
 
 from __future__ import annotations
 
@@ -35,7 +35,9 @@ def test_unreachable_is_degraded_not_refused(monkeypatch) -> None:
     monkeypatch.setattr(gate.urllib.request, "urlopen", boom)
     status, reason = gate.check_driver_plane(timeout=0.1)
     assert status == "degraded"
-    assert "notebook" in reason
+    assert "Mac" in reason
+    assert "job-host" not in reason
+    assert "notebook" not in reason
     assert "retired" in reason
     line = gate.format_launcher_line(status, reason)
     assert line.startswith("⚠️")
@@ -63,6 +65,8 @@ def test_healthy_observer_is_ok(monkeypatch) -> None:
     status, reason = gate.check_driver_plane()
     assert status == "ok"
     assert "loopback" in reason
+    assert "production" in reason
+    assert "job-host" not in reason
 
 
 def test_missing_fleet_db_is_degraded(monkeypatch) -> None:
@@ -79,10 +83,12 @@ def test_missing_fleet_db_is_degraded(monkeypatch) -> None:
 
 def test_help_contract() -> None:
     help_text = gate.build_parser().format_help()
-    assert "Probe the tunneled job-host Monitor before notebook driver launch." in help_text
+    assert "Probe the production Monitor on loopback before Mac driver launch." in help_text
+    assert "job-host" not in help_text
+    assert "notebook" not in help_text
     assert "do not use it to start a second Monitor" in help_text
     assert "Examples:" in help_text
     assert "Outputs:" in help_text
     assert "Exit codes:" in help_text
     assert "Related:" in help_text
-    assert "Issue: #7062" in help_text
+    assert "Issue: #7177" in help_text
