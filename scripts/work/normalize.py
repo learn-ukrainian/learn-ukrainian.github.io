@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Callable
 from datetime import UTC, datetime
 from typing import Any
 
@@ -10,6 +11,7 @@ from scripts.work import SOURCE_PUBLIC
 from scripts.work.attention import _pr_check_state, apply_health_and_actions
 from scripts.work.relations import (
     annotate_cycles,
+    collect_missing_blocked_by_issue_numbers,
     detect_dependency_cycles,
     extract_body_relations,
     invert_relationships,
@@ -27,6 +29,7 @@ from scripts.work.sources_public import (
     admit_public_repository_id,
     allowlist_stream_names,
     collect_public_sections,
+    fetch_issue_states_batched,
     filter_public_delegate_tasks,
     private_capability_seam,
     private_source_envelope,
@@ -581,6 +584,8 @@ def build_projection(
     repository_id: str | None = None,
     filters: dict[str, Any] | None = None,
     cache_age_s: float = 0.0,
+    target_lifecycle_lookup: Callable[..., dict[str | int, str]] | dict[str | int, str] | None = None,
+    gh_runner: Callable[[list[str], float], tuple[int, str, str]] | None = None,
 ) -> dict[str, Any]:
     repo = admit_public_repository_id(repository_id)
     # Projection boundary: every filter path (HTTP, direct call, cache key) must
@@ -670,7 +675,23 @@ def build_projection(
     annotate_cycles(items, cycles)
     # A closed target is not a live blocker (#7177/#7185) — must run after
     # inversion (covers inferred edges) and before health/action derivation.
-    resolve_live_blockers(items)
+    missing_numbers = collect_missing_blocked_by_issue_numbers(items, repository_id=repo)
+    resolved_lifecycles: dict[str | int, str] = {}
+    if target_lifecycle_lookup is not None:
+        if isinstance(target_lifecycle_lookup, dict):
+            resolved_lifecycles = target_lifecycle_lookup
+        elif callable(target_lifecycle_lookup):
+            try:
+                resolved_lifecycles = target_lifecycle_lookup(missing_numbers, repo)
+            except TypeError:
+                resolved_lifecycles = target_lifecycle_lookup(missing_numbers)
+    elif missing_numbers:
+        resolved_lifecycles = fetch_issue_states_batched(
+            missing_numbers,
+            repository_id=repo,
+            runner=gh_runner,
+        )
+    resolve_live_blockers(items, target_lifecycle_by_id=resolved_lifecycles)
 
     # Source is "ok enough" for health when GH issue/PR sections did not hard-fail.
     source_ok = issues_section.status not in {"unavailable", "timeout"} or prs_section.status not in {
@@ -780,18 +801,22 @@ def build_public_projection(
     repository_id: str | None = None,
     filters: dict[str, Any] | None = None,
     cache_age_s: float = 0.0,
+    target_lifecycle_lookup: Callable[..., dict[str | int, str]] | dict[str | int, str] | None = None,
     **collect_kwargs: Any,
 ) -> dict[str, Any]:
     # Admit filters at this entry point too so collect-only callers cannot
     # skip the shared saved-view gate when they only reach build_projection
     # after an expensive collect (fail closed early on foreign keys).
     canonical_filters = admit_projection_filters(filters)
+    gh_runner = collect_kwargs.get("gh_runner")
     sections = collect_public_sections(repository_id=repository_id, **collect_kwargs)
     return build_projection(
         sections,
         repository_id=repository_id,
         filters=canonical_filters or None,
         cache_age_s=cache_age_s,
+        target_lifecycle_lookup=target_lifecycle_lookup,
+        gh_runner=gh_runner,
     )
 
 

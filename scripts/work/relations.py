@@ -44,6 +44,19 @@ def issue_work_id(repository_id: str, number: int | str) -> str:
     return make_work_id(SOURCE_PUBLIC, repository_id, "issue", str(number))
 
 
+def parse_issue_work_id(work_id: str | None) -> tuple[str, int] | None:
+    """Parse an issue work_id into (repository_id, issue_number)."""
+    if not work_id or not isinstance(work_id, str):
+        return None
+    parts = work_id.split(":")
+    if len(parts) == 5 and parts[0] == WORK_ID_PREFIX and parts[1] == SOURCE_PUBLIC and parts[3] == "issue":
+        try:
+            return parts[2], int(parts[4])
+        except ValueError:
+            return None
+    return None
+
+
 def pr_work_id(repository_id: str, number: int | str) -> str:
     return make_work_id(SOURCE_PUBLIC, repository_id, "pr", str(number))
 
@@ -183,7 +196,42 @@ def detect_dependency_cycles(items: list[dict[str, Any]]) -> list[list[str]]:
     return unique
 
 
-def resolve_live_blockers(items: list[dict[str, Any]]) -> None:
+def collect_missing_blocked_by_issue_numbers(
+    items: list[dict[str, Any]],
+    *,
+    repository_id: str | None = None,
+) -> list[int]:
+    """Collect issue numbers targeted by 'blocked_by' edges that are absent from items.
+
+    Only targets matching the given repository (if provided) are returned.
+    Cross-repo or unparseable target IDs cannot be resolved by the repository
+    lookup and will stay conservative in `resolve_live_blockers`.
+    """
+    known_work_ids = {item["work_id"] for item in items if isinstance(item, dict) and "work_id" in item}
+    missing: set[int] = set()
+    for item in items:
+        if not isinstance(item, dict) or item.get("resource_kind") != "issue":
+            continue
+        for rel in item.get("relationships") or []:
+            if not isinstance(rel, dict) or rel.get("type") != "blocked_by":
+                continue
+            target_id = rel.get("target_id")
+            if not target_id or target_id in known_work_ids:
+                continue
+            parsed = parse_issue_work_id(target_id)
+            if parsed is None:
+                continue
+            target_repo, number = parsed
+            if repository_id is not None and target_repo != repository_id:
+                continue
+            missing.add(number)
+    return sorted(missing)
+
+
+def resolve_live_blockers(
+    items: list[dict[str, Any]],
+    target_lifecycle_by_id: dict[str | int, str] | None = None,
+) -> None:
     """Demote ``blocked_by`` flags whose target issue is closed (#7177/#7185).
 
     A ``Depends on #N`` / ``blocked by #N`` reference — body-derived, or
@@ -193,16 +241,25 @@ def resolve_live_blockers(items: list[dict[str, Any]]) -> None:
     health/safe-next-action derivation, which reads `flags["has_blocker"]`.
 
     Targets not present in this projection (paginated out, cross-repo,
-    private-only, etc.) cannot be confirmed closed, so they conservatively
-    still count as blockers — this function only ever narrows
-    `has_blocker`, never widens it, and never touches the `relationships`
-    list itself (the closed edge stays visible as evidence).
+    private-only, etc.) cannot be confirmed closed unless resolved via
+    `target_lifecycle_by_id`. Any target whose state cannot be confirmed
+    closed conservatively still counts as a blocker — this function only
+    ever narrows `has_blocker`, never widens it, and never touches the
+    `relationships` list itself (the closed edge stays visible as evidence).
     """
-    lifecycle_by_id = {
+    lifecycle_by_id: dict[str | int, str] = {
         item["work_id"]: str(item.get("lifecycle") or "").lower()
         for item in items
         if item.get("resource_kind") == "issue"
     }
+    if target_lifecycle_by_id:
+        for k, v in target_lifecycle_by_id.items():
+            state = str(v or "").lower()
+            lifecycle_by_id[k] = state
+            if isinstance(k, int) or (isinstance(k, str) and k.isdigit()):
+                lifecycle_by_id[str(k)] = state
+                lifecycle_by_id[int(k)] = state
+
     for item in items:
         if item.get("resource_kind") != "issue":
             continue
@@ -210,7 +267,14 @@ def resolve_live_blockers(items: list[dict[str, Any]]) -> None:
         for rel in item.get("relationships") or []:
             if rel.get("type") != "blocked_by":
                 continue
-            if lifecycle_by_id.get(rel.get("target_id")) == "closed":
+            target_id = rel.get("target_id")
+            if target_id and lifecycle_by_id.get(target_id) == "closed":
+                continue
+            parsed = parse_issue_work_id(target_id) if target_id else None
+            if parsed and (
+                lifecycle_by_id.get(parsed[1]) == "closed"
+                or lifecycle_by_id.get(str(parsed[1])) == "closed"
+            ):
                 continue
             live = True
         item.setdefault("flags", {})["has_blocker"] = live
