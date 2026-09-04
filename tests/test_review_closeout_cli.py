@@ -97,8 +97,9 @@ def test_full_flow_target_freeze_expansion_cycle_reviewer_findings(tmp_path):
     reviewer_proc = _run_cli(state_file, "resolve-reviewer", "--author-model", "claude")
     assert reviewer_proc.returncode == 0, reviewer_proc.stderr
     resolution = json.loads(reviewer_proc.stdout)
-    # Practical formal CF default: Terra @ medium risk (Sol only on critical).
-    assert resolution["selected"]["name"] == "gpt-5.6-terra"
+    # The default OpenAI formal CF catalog seat resolves to Astra.
+    assert resolution["selected"]["name"] == "openai_frontier"
+    assert resolution["selected"]["concrete_model"] == "gpt-6-astra"
     assert resolution["selected"]["route"] == "codex"
     assert resolution["policy_version"] == "deterministic-formal-routing.v2"
     assert resolution["resolved_risk"] == "medium"

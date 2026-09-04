@@ -142,9 +142,24 @@ def test_codex_driver_preserves_transport_probe_and_lease_guard() -> None:
 
     governor = run_launcher("start-codex-driver.sh", "--governor", "AUTO", env={"SESSION_EPIC": "foreign"})
     assert governor.returncode == 0, governor.stderr
-    assert "--model gpt-5.6-sol" in governor.stdout
+    assert "--model gpt-6-astra" in governor.stdout
     assert "governor SESSION_EPIC=<unset>" in governor.stdout
     assert "would claim lease" not in governor.stdout
+
+
+@pytest.mark.parametrize(
+    ("launcher", "args", "model", "effort"),
+    [
+        ("start-codex.sh", [], "gpt-6-astra", "low"),
+        ("start-codex-driver.sh", ["--epic", "devops"], "gpt-6-astra", "high"),
+        ("start-codex.sh", ["--model", "gpt-5.6-luna", "--effort", "max"], "gpt-5.6-luna", "max"),
+    ],
+)
+def test_codex_launchers_pin_roles_and_preserve_explicit_scout(launcher, args, model, effort):
+    result = run_launcher(launcher, *args)
+    assert result.returncode == 0, result.stderr
+    assert f"--model {model}" in result.stdout
+    assert f"model_reasoning_effort={effort}" in result.stdout
 
 
 def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:

@@ -49,9 +49,9 @@ def test_agents_endpoint_reports_last_used_and_headroom_model(tmp_path: Path, mo
     # 1. Without usage records, last_used_model is None and headroom_model falls back to default_model.
     agents = list_runtime_agents(ctx)
     codex = next(a for a in agents if a["name"] == "codex")
-    assert codex["default_model"] == "gpt-5.6-luna"
+    assert codex["default_model"] == "gpt-6-astra"
     assert codex["last_used_model"] is None
-    assert codex["headroom_model"] == "gpt-5.6-luna"
+    assert codex["headroom_model"] == "gpt-6-astra"
 
     # 2. Write live usage record for Codex with gpt-5.6-terra.
     today_file = usage_dir / f"usage_codex-delegate_{now:%Y-%m-%d}.jsonl"
@@ -73,7 +73,7 @@ def test_agents_endpoint_reports_last_used_and_headroom_model(tmp_path: Path, mo
     assert response.status_code == 200
     agents_json = response.json()["agents"]
     codex_json = next(a for a in agents_json if a["name"] == "codex")
-    assert codex_json["default_model"] == "gpt-5.6-luna"
+    assert codex_json["default_model"] == "gpt-6-astra"
     assert codex_json["last_used_model"] == "gpt-5.6-terra"
     assert codex_json["headroom_model"] == "gpt-5.6-terra"
 

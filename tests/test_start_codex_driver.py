@@ -112,7 +112,7 @@ def test_sustained_driver_probes_then_claims_lease_then_binds_drive_epic() -> No
     assert result.stdout.index("would mint and bootstrap") < result.stdout.index("would bind drive-epic")
 
 
-def test_governor_pins_sol_and_is_mutation_guarded_against_lease_claim() -> None:
+def test_governor_pins_astra_and_is_mutation_guarded_against_lease_claim() -> None:
     result = run_launcher(
         "start-codex-driver.sh",
         "--governor",
@@ -122,10 +122,11 @@ def test_governor_pins_sol_and_is_mutation_guarded_against_lease_claim() -> None
     assert result.returncode == 0, result.stderr
     argv = _would_exec_argv(result)
     model_index = argv.index("--model")
-    assert argv[model_index + 1] == "gpt-5.6-sol"
-    # Mutation guard: removing this seed leaves the bounded Sol invocation
+    assert argv[model_index + 1] == "gpt-6-astra"
+    assert argv[model_index + 2 : model_index + 4] == ["-c", "model_reasoning_effort=high"]
+    # Mutation guard: removing this seed leaves the bounded Astra invocation
     # without the operator-ordered supervision instruction.
-    assert argv[model_index + 2] == (
+    assert argv[model_index + 4] == (
         "Follow agents_extensions/shared/prompts/dynamic-area-epic-fleet-governor.md "
         "for one bounded supervision cycle. TARGET=AUTO GOAL=AUTO"
     )
@@ -189,14 +190,15 @@ def test_governor_refuses_degraded_transport_before_exec(tmp_path: Path) -> None
     assert "CODEX_EXEC" not in result.stdout
 
 
-def test_governor_execs_sol_after_healthy_transport_probe(tmp_path: Path) -> None:
+def test_governor_execs_astra_after_healthy_transport_probe(tmp_path: Path) -> None:
     launcher, executable_dir = _runtime_launcher(tmp_path)
     result = _run_runtime_governor(launcher, executable_dir, probe_exit=0)
 
     assert result.returncode == 0, result.stderr
     assert '{"status":"healthy","fresh":true}' in result.stdout
     assert "CODEX_EXEC" in result.stdout
-    assert "--model gpt-5.6-sol" in result.stdout
+    assert "--model gpt-6-astra" in result.stdout
+    assert "model_reasoning_effort=high" in result.stdout
     assert "dynamic-area-epic-fleet-governor.md" in result.stdout
 
 
