@@ -315,12 +315,13 @@ def _occupants_from_job_unit(canonical: str, load_entry: dict[str, Any]) -> list
 
 def _merge_occupants(*groups: list[dict[str, str | None]]) -> list[dict[str, str | None]]:
     merged: list[dict[str, str | None]] = []
-    seen: set[tuple[str, str, str]] = set()
+    seen: set[tuple[str, ...]] = set()
     for group in groups:
         for occupant in group:
             key = (
                 occupant["kind"],
                 occupant["task_id"] or "",
+                "" if occupant["kind"] == "job" else (occupant.get("epic") or ""),
                 occupant.get("instance_id") or "",
             )
             if key in seen:

@@ -165,7 +165,7 @@ def read_session_streams(
         return OccupancyRead([], False, 0.0)
 
     occupants: list[dict[str, str | None]] = []
-    seen: set[tuple[str, str]] = set()
+    seen: set[tuple[str, str, str]] = set()
     observed_at: list[datetime] = []
     for row in rows:
         try:
@@ -189,7 +189,7 @@ def read_session_streams(
         )
         if occupant is None:
             continue
-        key = (occupant["kind"], occupant["task_id"] or "")
+        key = (occupant["kind"], occupant["task_id"] or "", occupant.get("epic") or "")
         if key in seen:
             continue
         seen.add(key)

@@ -24,7 +24,12 @@ from scripts.api.observer_presence import (
     reset_observer_presence,
     upsert_presence,
 )
-from scripts.api.occupancy import MAC_OPERATOR_HOST_ID, _in_process_api_host_load, parse_host_id_map
+from scripts.api.occupancy import (
+    MAC_OPERATOR_HOST_ID,
+    _in_process_api_host_load,
+    _merge_occupants,
+    parse_host_id_map,
+)
 from scripts.api.occupancy_local import write_marker
 from scripts.api.occupancy_sanitize import occupant as _occupant
 from scripts.api.occupancy_sanitize import opaque_host_id as _opaque_host_id
@@ -90,21 +95,32 @@ def _warm_load(fake: atlas_job.FakeHostAdapter) -> None:
     load_mod.set_host_load_cache("teach-box", fake.host_load("teach-box"))
 
 
-def _open_lease(db_path: Path, *, ttl_seconds: int = 600) -> None:
+def _open_lease(
+    db_path: Path,
+    *,
+    stream_id: str = "epic:7139",
+    agent: str = "claude",
+    task_id: str = "occupancy-driver",
+    ttl_seconds: int = 600,
+    session_id: str | None = None,
+    lease_id: str | None = None,
+    instance_id: str = "runtime-occupancy",
+    process_id: int = 41001,
+) -> None:
     store = SessionStreamStore(SessionStreamDatabase(db_path))
     store.open_session(
-        stream_id="epic:7139",
+        stream_id=stream_id,
         holder=LeaseHolder(
-            agent="claude",
+            agent=agent,
             harness="claude-code",
-            instance_id="runtime-occupancy",
-            process_id=41001,
-            task_id="occupancy-driver",
+            instance_id=instance_id,
+            process_id=process_id,
+            task_id=task_id,
         ),
-        lineage_id="lineage-occupancy",
+        lineage_id=f"lineage-{stream_id}",
         ttl_seconds=ttl_seconds,
-        session_id="session-occupancy",
-        lease_id="lease-occupancy",
+        session_id=session_id or f"session-{stream_id}",
+        lease_id=lease_id or f"lease-{stream_id}",
     )
 
 
@@ -707,6 +723,73 @@ def test_occupancy_active_driver_lease_wins_at_low_hardware_load(tmp_path, monke
         assert host["burn_sources"]["driver"]["observation_age_s"] >= 0
         assert any(row["kind"] == "driver" for row in host["occupants"])
         assert host["idle_or_empty"] is False
+    finally:
+        atlas_job.set_host_adapter(None)
+        load_mod.clear_host_load_cache()
+
+
+def test_merge_occupants_preserves_distinct_epics_and_dedupes_identical() -> None:
+    grok_epics = [
+        {"kind": "driver", "agent": "grok", "task_id": "launcher-grok-driver", "epic": "4387"},
+        {"kind": "driver", "agent": "grok", "task_id": "launcher-grok-driver", "epic": "6943"},
+        {"kind": "driver", "agent": "grok", "task_id": "launcher-grok-driver", "epic": "7177"},
+    ]
+    duplicates = [
+        {"kind": "driver", "agent": "grok", "task_id": "launcher-grok-driver", "epic": "7177"},
+    ]
+    merged = _merge_occupants(grok_epics, duplicates)
+    assert len(merged) == 3
+    assert [o["epic"] for o in merged] == ["4387", "6943", "7177"]
+
+    # Regression: job deduplication without epic still merges correctly
+    registry_job = [{"kind": "job", "agent": None, "task_id": "job-1", "epic": "atlas"}]
+    load_job = [{"kind": "job", "agent": None, "task_id": "job-1", "epic": None}]
+    merged_jobs = _merge_occupants(registry_job, load_job)
+    assert len(merged_jobs) == 1
+    assert merged_jobs[0]["epic"] == "atlas"
+
+
+def test_occupancy_glance_shows_every_epic_driver(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path / "registry"))
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
+    monkeypatch.setenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", "host-teacher")
+    db_path = tmp_path / "session-streams.sqlite3"
+    _open_lease(
+        db_path,
+        stream_id="epic:4387",
+        agent="grok",
+        task_id="launcher-grok-driver",
+        process_id=3176144,
+    )
+    _open_lease(
+        db_path,
+        stream_id="epic:6943",
+        agent="grok",
+        task_id="launcher-grok-driver",
+        process_id=3128086,
+    )
+    _open_lease(
+        db_path,
+        stream_id="epic:7177",
+        agent="grok",
+        task_id="launcher-grok-driver",
+        process_id=3172701,
+    )
+    monkeypatch.setattr("scripts.api.occupancy_local.session_streams_db_path", lambda: db_path)
+    fake = atlas_job.FakeHostAdapter()
+    atlas_job.set_host_adapter(fake)
+    try:
+        load_mod.clear_host_load_cache()
+        load_mod.set_host_load_cache("teach-box", fake.host_load("teach-box"))
+        load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
+        resp = client.get("/api/occupancy?host_id=host-teacher")
+        assert resp.status_code == 200
+        host = resp.json()["hosts"]["host-teacher"]
+        driver_occupants = [o for o in host["occupants"] if o["kind"] == "driver"]
+        assert len(driver_occupants) == 3
+        epics = [o["epic"] for o in driver_occupants]
+        assert epics == ["4387", "6943", "7177"]
+        assert all(o["task_id"] == "launcher-grok-driver" for o in driver_occupants)
     finally:
         atlas_job.set_host_adapter(None)
         load_mod.clear_host_load_cache()
