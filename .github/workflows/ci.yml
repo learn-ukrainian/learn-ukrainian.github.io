@@ -225,6 +225,10 @@ jobs:
           grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt \
             > "${RUNNER_TEMP}/requirements-ci.txt"
           .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
+      - run: npm ci --ignore-scripts
+      - name: Hydrate Atlas lexicon manifest
+        run: |
+          .venv/bin/python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
       - name: Run pytest
         env:
           DOCS_ONLY: ${{ needs.changes.outputs.docs_only }}
