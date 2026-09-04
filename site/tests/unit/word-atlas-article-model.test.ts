@@ -3,7 +3,10 @@ import { formatOrigin } from "@site/src/lib/lexicon/format-origin";
 import {
   atlasWikipediaOkAsIntro,
   buildAtlasLinkCatalogFromSearchRows,
+  buildFutureTenseNumbers,
   buildWordAtlasArticleView,
+  formatConditionalForm,
+  formatKhayImperative,
   formatPos,
   formatTranslationSource,
   sanitizeWikiReference,
@@ -825,5 +828,367 @@ describe("Atlas lexical backlinks (#7610)", () => {
     );
 
     expect(ambiguousView.gerundLinks).toEqual([]);
+  });
+});
+
+describe("verb future, conditional, хай, impersonal, and aspect columns (#7608)", () => {
+  function testVerbProps(args: {
+    lemma?: string;
+    url_slug?: string;
+    paradigm?: VerbParadigm;
+    verb_pedagogy?: Enrichment["verb_pedagogy"];
+  }) {
+    const { lemma = "читати", url_slug = lemma, paradigm, verb_pedagogy } = args;
+    return articleProps({
+      lemma,
+      url_slug,
+      gloss: "to read",
+      entry_type: "lemma",
+      pos: "verb",
+      ipa: null,
+      primary_source: "course",
+      course_usage: [],
+      enrichment: {
+        verb_pedagogy,
+        morphology: {
+          pos: "verb",
+          form_count: 1,
+          forms: [{ form: lemma, label: "інфінітив" }],
+          source: "VESUM",
+          paradigm,
+        },
+      },
+    });
+  }
+
+  function tableRows(html: string, caption: string): string[][] {
+    const document = new DOMParser().parseFromString(html, "text/html");
+    const table = Array.from(document.querySelectorAll("table")).find(
+      (t) => t.querySelector("caption")?.textContent === caption,
+    );
+    if (!table) return [];
+    return Array.from(table.querySelectorAll("tbody tr")).map((row) =>
+      Array.from(row.querySelectorAll("td")).map((cell) => cell.textContent ?? ""),
+    );
+  }
+
+  function tableHeaders(html: string, caption: string): string[] {
+    const document = new DOMParser().parseFromString(html, "text/html");
+    const table = Array.from(document.querySelectorAll("table")).find(
+      (t) => t.querySelector("caption")?.textContent === caption,
+    );
+    if (!table) return [];
+    return Array.from(table.querySelectorAll("thead th")).map((cell) => cell.textContent ?? "");
+  }
+
+  describe("formatConditionalForm", () => {
+    test("appends би after consonants and б after vowels", () => {
+      expect(formatConditionalForm("читав")).toBe("читав би");
+      expect(formatConditionalForm("був")).toBe("був би");
+      expect(formatConditionalForm("ніс")).toBe("ніс би");
+
+      expect(formatConditionalForm("читала")).toBe("читала б");
+      expect(formatConditionalForm("було")).toBe("було б");
+      expect(formatConditionalForm("були")).toBe("були б");
+    });
+
+    test("handles combining stress marks properly", () => {
+      expect(formatConditionalForm("чита́в")).toBe("чита́в би");
+      expect(formatConditionalForm("чита́ла")).toBe("чита́ла б");
+    });
+
+    test("handles multiple variants separated by slash", () => {
+      expect(formatConditionalForm("читав / ніс")).toBe("читав би / ніс би");
+    });
+
+    test("handles empty/nullish input", () => {
+      expect(formatConditionalForm("")).toBe("");
+      expect(formatConditionalForm(undefined)).toBe("");
+      expect(formatConditionalForm(null)).toBe("");
+    });
+  });
+
+  describe("formatKhayImperative", () => {
+    test("prefixes (не)хай to 3rd person forms", () => {
+      expect(formatKhayImperative("читає")).toBe("(не)хай читає");
+      expect(formatKhayImperative("читають")).toBe("(не)хай читають");
+    });
+
+    test("handles multiple variants separated by slash", () => {
+      expect(formatKhayImperative("читає / чита")).toBe("(не)хай читає / (не)хай чита");
+    });
+
+    test("handles empty/nullish input", () => {
+      expect(formatKhayImperative("")).toBe("");
+      expect(formatKhayImperative(undefined)).toBe("");
+      expect(formatKhayImperative(null)).toBe("");
+    });
+  });
+
+  describe("buildFutureTenseNumbers", () => {
+    test("combines analytic and synthetic future for imperfective verbs", () => {
+      const result = buildFutureTenseNumbers({
+        infinitive: "читати",
+        futureNumbers: {
+          однина: { "1": "читатиму", "2": "читатимеш", "3": "читатиме" },
+          множина: { "1": "читатимемо", "2": "читатимете", "3": "читатимуть" },
+        },
+        aspect: "imperfective",
+      });
+
+      expect(result).toEqual({
+        однина: {
+          "1": "буду читати / читатиму",
+          "2": "будеш читати / читатимеш",
+          "3": "буде читати / читатиме",
+        },
+        множина: {
+          "1": "будемо читати / читатимемо",
+          "2": "будете читати / читатимете",
+          "3": "будуть читати / читатимуть",
+        },
+      });
+    });
+
+    test("does not generate analytic future for perfective verbs", () => {
+      const result = buildFutureTenseNumbers({
+        infinitive: "прочитати",
+        futureNumbers: {
+          однина: { "1": "прочитаю", "2": "прочитаєш", "3": "прочитає" },
+          множина: { "1": "прочитаємо", "2": "прочитаєте", "3": "прочитають" },
+        },
+        aspect: "perfective",
+      });
+
+      expect(result).toEqual({
+        однина: {
+          "1": "прочитаю",
+          "2": "прочитаєш",
+          "3": "прочитає",
+        },
+        множина: {
+          "1": "прочитаємо",
+          "2": "прочитаєте",
+          "3": "прочитають",
+        },
+      });
+    });
+
+    test("does not generate буду бути for бути", () => {
+      const result = buildFutureTenseNumbers({
+        infinitive: "бути",
+        futureNumbers: {
+          однина: { "1": "буду", "2": "будеш", "3": "буде" },
+          множина: { "1": "будемо", "2": "будете", "3": "будуть" },
+        },
+        aspect: "imperfective",
+      });
+
+      expect(result?.однина["1"]).toBe("буду");
+      expect(result?.однина["1"]).not.toContain("буду бути");
+    });
+
+    test("returns null when empty", () => {
+      const result = buildFutureTenseNumbers({
+        infinitive: undefined,
+        futureNumbers: null,
+      });
+      expect(result).toBeNull();
+    });
+  });
+
+  describe("HTML layout integration", () => {
+    test("impersonal present: renders Безособова форма when present", () => {
+      const html = renderWordAtlasArticle(
+        testVerbProps({
+          paradigm: {
+            kind: "verb",
+            infinitive: "читати",
+            impersonal: "читано",
+          },
+        }),
+      );
+
+      expect(html).toContain("Безособова форма:");
+      expect(html).toContain("читано");
+    });
+
+    test("empty omitted: omits blocks when forms are absent", () => {
+      const html = renderWordAtlasArticle(
+        testVerbProps({
+          paradigm: {
+            kind: "verb",
+            infinitive: "читати",
+            // impersonal absent
+            // past absent
+            // imperative absent
+            // future absent
+          },
+        }),
+      );
+
+      expect(html).not.toContain("Безособова форма");
+      expect(html).not.toContain("майбутній");
+      expect(html).not.toContain("Наказовий");
+      expect(html).not.toContain("Минулий");
+      expect(html).not.toContain("Умовний");
+    });
+
+    test("conditional concatenation: renders Умовний table with past + би/б", () => {
+      const html = renderWordAtlasArticle(
+        testVerbProps({
+          paradigm: {
+            kind: "verb",
+            infinitive: "читати",
+            past: { "чол.": "читав", "жін.": "читала", "сер.": "читало", множина: "читали" },
+          },
+        }),
+      );
+
+      expect(html).toContain("<caption>Умовний</caption>");
+      expect(tableRows(html, "Умовний")).toEqual([
+        ["чол.", "читав би"],
+        ["жін.", "читала б"],
+        ["сер.", "читало б"],
+        ["множина", "читали б"],
+      ]);
+    });
+
+    test("хай omitted without 3sg: renders (не)хай with 3sg and omits without 3sg", () => {
+      // With 3sg:
+      const with3sg = renderWordAtlasArticle(
+        testVerbProps({
+          paradigm: {
+            kind: "verb",
+            infinitive: "читати",
+            tenses: {
+              теперішній: {
+                однина: { "1": "читаю", "2": "читаєш", "3": "читає" },
+                множина: { "1": "читаємо", "2": "читаєте", "3": "читають" },
+              },
+            },
+            imperative: { однина: { "2": "читай" }, множина: { "1": "читаймо", "2": "читайте" } },
+          },
+        }),
+      );
+
+      expect(tableRows(with3sg, "Наказовий")).toEqual([
+        ["2 особа", "читай", ""],
+        ["1 особа (мн.)", "", "читаймо"],
+        ["2 особа (мн.)", "", "читайте"],
+        ["3 особа", "(не)хай читає", "(не)хай читають"],
+      ]);
+
+      // Without 3sg (only 1st person present):
+      const without3sg = renderWordAtlasArticle(
+        testVerbProps({
+          paradigm: {
+            kind: "verb",
+            infinitive: "читати",
+            tenses: {
+              теперішній: {
+                однина: { "1": "читаю" },
+                множина: { "1": "читаємо" },
+              },
+            },
+            imperative: { однина: { "2": "читай" }, множина: { "1": "читаймо", "2": "читайте" } },
+          },
+        }),
+      );
+
+      expect(tableRows(without3sg, "Наказовий")).toEqual([
+        ["2 особа", "читай", ""],
+        ["1 особа (мн.)", "", "читаймо"],
+        ["2 особа (мн.)", "", "читайте"],
+      ]);
+      expect(without3sg).not.toContain("(не)хай");
+    });
+
+    test("no partner → one column: renders single Форма column when partner is missing or unresolved", () => {
+      const html = renderWordAtlasArticle(
+        testVerbProps({
+          paradigm: {
+            kind: "verb",
+            infinitive: "читати",
+            past: { "чол.": "читав", "жін.": "читала", "сер.": "читало", множина: "читали" },
+          },
+        }),
+      );
+
+      expect(tableHeaders(html, "Минулий")).toEqual(["Рід / число", "Форма"]);
+      expect(tableHeaders(html, "Умовний")).toEqual(["Рід / число", "Форма"]);
+      expect(tableRows(html, "Минулий")).toEqual([
+        ["чол.", "читав"],
+        ["жін.", "читала"],
+        ["сер.", "читало"],
+        ["множина", "читали"],
+      ]);
+    });
+
+    test("resolved partner → two aspect columns: renders Недоконаний вид and Доконаний вид columns", () => {
+      const catalog = buildAtlasLinkCatalogFromSearchRows([
+        { l: "читати", s: "читати", g: "to read", t: "lemma" },
+        { l: "прочитати", s: "прочитати", g: "to have read", t: "lemma" },
+      ]);
+      (catalog.entries[1] as any).enrichment = {
+        morphology: {
+          paradigm: {
+            kind: "verb",
+            infinitive: "прочитати",
+            past: {
+              "чол.": "прочитав",
+              "жін.": "прочитала",
+              "сер.": "прочитало",
+              множина: "прочитали",
+            },
+          },
+        },
+      };
+
+      const html = renderWordAtlasArticle({
+        ...testVerbProps({
+          lemma: "читати",
+          url_slug: "читати",
+          paradigm: {
+            kind: "verb",
+            infinitive: "читати",
+            past: { "чол.": "читав", "жін.": "читала", "сер.": "читало", множина: "читали" },
+          },
+          verb_pedagogy: {
+            aspect: "imperfective",
+            aspect_partner: {
+              lemma: "прочитати",
+              url_slug: "прочитати",
+              source: "VESUM",
+            },
+          },
+        }),
+        atlasLinkCatalog: catalog,
+      });
+
+      expect(tableHeaders(html, "Минулий")).toEqual([
+        "Рід / число",
+        "Недоконаний вид",
+        "Доконаний вид",
+      ]);
+      expect(tableRows(html, "Минулий")).toEqual([
+        ["чол.", "читав", "прочитав"],
+        ["жін.", "читала", "прочитала"],
+        ["сер.", "читало", "прочитало"],
+        ["множина", "читали", "прочитали"],
+      ]);
+
+      expect(tableHeaders(html, "Умовний")).toEqual([
+        "Рід / число",
+        "Недоконаний вид",
+        "Доконаний вид",
+      ]);
+      expect(tableRows(html, "Умовний")).toEqual([
+        ["чол.", "читав би", "прочитав би"],
+        ["жін.", "читала б", "прочитала б"],
+        ["сер.", "читало б", "прочитало б"],
+        ["множина", "читали б", "прочитали б"],
+      ]);
+    });
   });
 });
