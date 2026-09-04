@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""Probe the production Monitor plane on loopback for Mac tunnel clients.
+"""Probe the production Monitor plane on loopback for driver launchers.
 
-Drivers prefer the one production Linux Monitor at loopback (the persistent
-tunnel from the Mac observer). If that Monitor is down, launchers must still
-start on the Mac — they must not enable the retired local sqlite. This module
-never prints host aliases or occupancy env.
+Drivers prefer the one production Linux Monitor at loopback. If that Monitor
+is down, launchers must still start on the Mac — they must not enable the
+retired local sqlite. This module never prints host aliases or occupancy env.
 """
 
 from __future__ import annotations
@@ -24,7 +23,10 @@ PlaneStatus = Literal["ok", "degraded", "skipped"]
 
 
 def _monitor_base() -> str:
-    return os.environ.get("DELEGATE_MONITOR_API", _MONITOR_DEFAULT).rstrip("/")
+    return os.environ.get(
+        "LU_MONITOR_LOOPBACK",
+        os.environ.get("DELEGATE_MONITOR_API", _MONITOR_DEFAULT),
+    ).rstrip("/")
 
 
 def _get_json(path: str, *, timeout: float) -> dict[str, Any]:
@@ -47,7 +49,6 @@ def check_driver_plane(*, timeout: float = 2.0) -> tuple[PlaneStatus, str]:
         return "skipped", "plane probe skipped"
     try:
         health = _get_json("/api/health", timeout=timeout)
-        fleet = _get_json("/api/fleet/health", timeout=timeout)
     except (
         OSError,
         TimeoutError,
@@ -67,13 +68,9 @@ def check_driver_plane(*, timeout: float = 2.0) -> tuple[PlaneStatus, str]:
             "production Monitor health is not ok; starting on Mac. "
             "Fleet sqlite stays retired until the tunnel is back.",
         )
-    schema = fleet.get("schema") if isinstance(fleet.get("schema"), dict) else {}
-    if schema.get("db_exists") is not True:
-        return (
-            "degraded",
-            "production fleet db is not visible; starting on Mac. "
-            "Fleet sqlite stays retired until the tunnel is back.",
-        )
+    # The fleet-health schema is not a reachability signal. In authority mode,
+    # a typed ``authority_unsupported_component`` refusal reports db_exists as
+    # false by design because the production plane is backed by Postgres.
     return "ok", "production plane reachable on loopback"
 
 

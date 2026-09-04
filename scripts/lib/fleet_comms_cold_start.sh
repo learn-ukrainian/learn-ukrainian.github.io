@@ -117,7 +117,7 @@ fleet_comms_warn_if_plane_unreachable() {
     return 0
   fi
   if ! py="$(fleet_comms_resolve_python "$root")"; then
-    echo "⚠️  plane fallback: no project interpreter; starting on Mac." >&2
+    echo "⚠️  plane probe skipped: no project interpreter; continuing without plane status." >&2
     return 0
   fi
   (
