@@ -39,25 +39,38 @@ def sanitize_text(text: str) -> str:
 
 
 def sanitize_document(value: Any) -> Any:
-    """Recursively redact absolute filesystem-root paths in JSON-like values."""
+    """Redact paths, scanning each distinct string once per response.
+
+    Projection items and attention rows repeat the same metadata thousands of
+    times. Keep this memo local: no public/private data or scanner result can
+    survive into another request.
+    """
+    return _sanitize_document(value, {})
+
+
+def _sanitize_document(value: Any, scanned: dict[str, str]) -> Any:
     if isinstance(value, str):
-        return sanitize_text(value)
+        if value not in scanned:
+            scanned[value] = sanitize_text(value)
+        sanitized = scanned[value]
+        # Preserve unchanged object identity, including equal distinct strings.
+        return value if sanitized == value else sanitized
     if isinstance(value, Mapping):
         changed = False
         rewritten: dict[Any, Any] = {}
         for key, child in value.items():
-            sanitized = sanitize_document(child)
+            sanitized = _sanitize_document(child, scanned)
             rewritten[key] = sanitized
             if sanitized is not child:
                 changed = True
         return rewritten if changed else value
     if isinstance(value, list):
-        rewritten_list = [sanitize_document(child) for child in value]
+        rewritten_list = [_sanitize_document(child, scanned) for child in value]
         if any(left is not right for left, right in zip(rewritten_list, value, strict=True)):
             return rewritten_list
         return value
     if isinstance(value, tuple):
-        rewritten_tuple = tuple(sanitize_document(child) for child in value)
+        rewritten_tuple = tuple(_sanitize_document(child, scanned) for child in value)
         if any(left is not right for left, right in zip(rewritten_tuple, value, strict=True)):
             return rewritten_tuple
         return value

@@ -434,12 +434,12 @@ def warm_projection_cache(
     return _follow_cfuture(_get_or_create_build_task(key, canonical, ctx))
 
 
-@router.get("/v1/projection")
+@router.get("/v1/projection", response_class=JSONResponse)
 async def work_projection(
     request: Request,
     fresh: bool = Query(False, description="Bypass warm projection cache."),
     ctx: MonitorContext = Depends(get_ctx),
-) -> dict[str, Any]:
+) -> JSONResponse:
     """Normalized public attention list with source envelopes and degradation."""
     filters = _filters_from_request(request)
     key = projection_cache_key(filters, ctx)
@@ -452,7 +452,7 @@ async def work_projection(
                 # Return a shallow copy with updated cache_age_s.
                 out = dict(payload)
                 out["cache_age_s"] = float(age)
-                return out
+                return JSONResponse(content=out)
 
     if fresh:
         cache_invalidate(CACHE_KEY)
@@ -465,7 +465,7 @@ async def work_projection(
         if stale is not None and isinstance(stale[0], dict):
             out = dict(stale[0])
             out["cache_age_s"] = float(stale[1])
-            return out
+            return JSONResponse(content=out)
         # Typed degradation envelope — never a bare 500 hide of healthy sources.
         raise HTTPException(
             status_code=504,
@@ -486,8 +486,10 @@ async def work_projection(
             detail={"error": "work_projection_invalid", "message": str(exc)},
         ) from exc
 
+    # The builder already validates JSON-native data. Avoid FastAPI walking
+    # every nested value again through jsonable_encoder on this large response.
     out = dict(payload)
-    return out
+    return JSONResponse(content=out)
 
 
 def _known_streams(ctx: MonitorContext | None = None) -> list[str] | None:
@@ -686,6 +688,11 @@ async def work_next(
         "cache_age_s": float(age),
         "limit": limit,
         "queue": queue,
+        "sources": [
+            source for source in payload.get("sources", [])
+            if source.get("source_id") == "public-monitor"
+        ],
+        "denominator": payload.get("denominator", {}),
         "digest": {
             "other_streams": {
                 "actionable_counts_by_stream": {k: counts[k] for k in sorted(counts)},
