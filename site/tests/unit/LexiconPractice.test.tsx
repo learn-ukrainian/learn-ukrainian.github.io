@@ -5603,7 +5603,9 @@ describe('LexiconPractice', () => {
       );
 
       await user.click(container.querySelector<HTMLButtonElement>('[data-mode="zno-stress"]')!);
-      expect(screen.getByTestId('practice-zno-session')).toBeInTheDocument();
+      // #7671: the deck's task content is a dynamic-import chunk, not bundled — the
+      // session frame appears once that chunk resolves.
+      await waitFor(() => expect(screen.getByTestId('practice-zno-session')).toBeInTheDocument());
       expect(screen.getByTestId('zno-practice-item')).toBeInTheDocument();
       expect(screen.getByText(/Джерело: УЦОЯО/)).toBeInTheDocument();
       expect(screen.queryByTestId('practice-dashboard-hero')).not.toBeInTheDocument();

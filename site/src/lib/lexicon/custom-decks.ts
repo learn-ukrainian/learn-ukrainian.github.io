@@ -6,6 +6,16 @@
 
 import type { PracticeClozeItem } from './srs';
 import teacherTableData from '../../data/lexicon-teacher-table-deck.json';
+// #7671: pre-derived at build time (scripts/generate-teacher-lesson-keys.ts) from the
+// same filterTeacherClozeItems rule applied to the ~6.8MB lexicon-teacher-cloze.json
+// source. Importing that raw source here used to bundle the entire file into this
+// client-only island just to compute a lemma-key list — this small (~60KB) derived
+// file is the deduplicated result, and the actual teacher-cloze content is served
+// separately, on demand, as the practice-cloze.teacher.json runtime shard.
+import defaultTeacherLemmasData from '../../data/lexicon-teacher-lesson-keys.json';
+import { filterTeacherClozeItems } from './teacher-cloze-filter';
+
+export { filterTeacherClozeItems };
 
 export interface CustomSet {
   id: string;
@@ -54,52 +64,7 @@ export function getDeviceId(): string {
   }
 }
 
-import teacherClozeData from '../../data/lexicon-teacher-cloze.json';
-
-const excludedTeacherClozeIds = new Set([
-  'teacher_cloze_57',
-  'teacher_cloze_581',
-  'teacher_cloze_1521',
-]);
-// Keep scrubbed teacher-name markers out of public source text while preserving the
-// privacy filter for the Latin, Ukrainian, and Russian spellings found in old data.
-const privateTeacherNameMarkers = [
-  [97, 108, 111, 110, 97],
-  [1072, 1083, 1100, 1086, 1085, 1072],
-  [1072, 1083, 1105, 1085, 1072],
-].map((codePoints) => String.fromCodePoint(...codePoints));
-
-function containsPrivateTeacherName(value: unknown): boolean {
-  if (typeof value === 'string') {
-    const normalized = value.toLowerCase();
-    return privateTeacherNameMarkers.some((marker) => normalized.includes(marker));
-  }
-  if (Array.isArray(value)) {
-    return value.some(containsPrivateTeacherName);
-  }
-  if (value && typeof value === 'object') {
-    return Object.values(value).some(containsPrivateTeacherName);
-  }
-  return false;
-}
-
-/** Removes teacher-cloze cards whose public content must not be served. */
-export function filterTeacherClozeItems<T extends { clozeId: string }>(items: readonly T[]): T[] {
-  return items.filter(
-    (item) => !excludedTeacherClozeIds.has(item.clozeId) && !containsPrivateTeacherName(item),
-  );
-}
-
-const defaultTeacherLemmas: string[] = Array.from(
-  new Set(
-    filterTeacherClozeItems(
-      (teacherClozeData as { cloze?: Array<{ clozeId: string; lemmaId?: string; lemma?: string }> })
-        .cloze ?? [],
-    )
-      .map((c) => c.lemmaId || c.lemma)
-      .filter((k): k is string => Boolean(k)),
-  ),
-);
+const defaultTeacherLemmas: string[] = defaultTeacherLemmasData;
 
 const lowercaseLemmaKeySetCache = new WeakMap<readonly string[], ReadonlySet<string>>();
 
