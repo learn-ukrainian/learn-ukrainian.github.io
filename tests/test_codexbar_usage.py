@@ -916,6 +916,86 @@ def test_dashboard_routing_html_need_login_does_not_render_zero_auto_used():
     assert 'style="width:0%"' not in out
 
 
+def test_dashboard_routing_html_agy_row_binds_gemini_family_budget():
+    """Live Gemini-family seat is agy; budget API may still key agents.gemini."""
+    import subprocess
+
+    html_text = Path("dashboards/routing.html").read_text(encoding="utf-8")
+    assert "agents.agy || agents.gemini" in html_text
+    assert "['cursor', 'claude', 'codex', 'grok', 'kimi', 'agy']" in html_text
+    assert "'glm'" not in html_text[html_text.index("subscriptionLanes") : html_text.index("subscriptionLanes") + 120]
+
+    script = """
+    const fs = require('fs');
+    const html = fs.readFileSync('dashboards/routing.html', 'utf8');
+    const start = html.indexOf('function escapeHtml');
+    const end = html.indexOf('function renderAgents');
+    if (start < 0 || end < 0) throw new Error('subscription render helpers not found');
+    const helpers = html.slice(start, end);
+
+    let innerHTML = '';
+    const document = {
+      getElementById: (id) => ({ set innerHTML(val) { innerHTML = val; } })
+    };
+    eval(helpers);
+
+    renderSubscriptions({
+      agents: {
+        gemini: {
+          status: 'cool',
+          burn_pct_7d: 12,
+          remaining_pct: 88,
+          codexbar: { weekly_used_pct: 12, fetched_at: '2026-09-04T00:00:00Z' },
+        },
+        glm: {
+          status: 'cool',
+          burn_pct_7d: 1,
+          remaining_pct: 99,
+        },
+      },
+      in_flight: { gemini: 2 },
+    });
+    const fromGeminiOnly = innerHTML;
+
+    innerHTML = '';
+    renderSubscriptions({
+      agents: {
+        agy: {
+          status: 'warm',
+          burn_pct_7d: 40,
+          remaining_pct: 60,
+          codexbar: { weekly_used_pct: 40, fetched_at: '2026-09-04T00:00:00Z' },
+        },
+        gemini: {
+          status: 'cool',
+          burn_pct_7d: 12,
+          remaining_pct: 88,
+        },
+      },
+      in_flight: { agy: 1, gemini: 9 },
+    });
+    const prefersAgy = innerHTML;
+
+    console.log(JSON.stringify({ fromGeminiOnly, prefersAgy }));
+    """
+    res = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True, timeout=30)
+    payload = json.loads(res.stdout)
+    from_gemini = payload["fromGeminiOnly"]
+    prefers_agy = payload["prefersAgy"]
+
+    assert ">agy<" in from_gemini
+    assert "cool" in from_gemini
+    assert ">2<" in from_gemini
+    assert ">gemini<" not in from_gemini
+    assert ">glm<" not in from_gemini
+
+    assert ">agy<" in prefers_agy
+    assert "warm" in prefers_agy
+    assert ">1<" in prefers_agy
+    assert ">gemini<" not in prefers_agy
+    assert ">glm<" not in prefers_agy
+
+
 def test_get_cursor_lane_usage_is_cache_only_on_http_path(monkeypatch):
     """HTTP reads must not block on live Cursor probes."""
     cache_invalidate(codexbar_usage_mod.CURSOR_CACHE_KEY)

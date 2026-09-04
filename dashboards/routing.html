@@ -449,14 +449,26 @@ function renderApiAccounts(routing) {
   </table>`;
 }
 
+function resolveSubscriptionAgent(agents, name) {
+  // Budget API keys Gemini-family allotment as `gemini`; live seat is `agy`.
+  if (name === 'agy') return agents.agy || agents.gemini || null;
+  return agents[name] || null;
+}
+
+function resolveSubscriptionInFlight(inFlight, name) {
+  if (name === 'agy') return inFlight.agy ?? inFlight.gemini ?? 0;
+  return inFlight[name] ?? 0;
+}
+
 function renderSubscriptions(routing) {
   const agents = routing.agents || {};
+  const inFlight = routing.in_flight || {};
   // Live subscription lanes only — retired gemini CLI / glm stay off the roster.
   const subscriptionLanes = ['cursor', 'claude', 'codex', 'grok', 'kimi', 'agy'];
   const rows = subscriptionLanes
-    .filter(name => agents[name])
     .map(name => {
-      const agent = agents[name];
+      const agent = resolveSubscriptionAgent(agents, name);
+      if (!agent) return '';
       const isCursor = name === 'cursor';
       const needLogin = agent.login_state === 'NEED_LOGIN' || agent.probe_state === 'NEED_LOGIN';
       const needProbe = !needLogin && agent.probe_state === 'NEED_PROBE';
@@ -490,7 +502,7 @@ function renderSubscriptions(routing) {
         <td>${statusPill(agent.status)}</td>
         <td>${windowsHtml}${renderLaneFreshness(agent)}</td>
         <td>${renderFleetBurnCell(agent)}</td>
-        <td>${escapeHtml((routing.in_flight || {})[name] ?? 0)}</td>
+        <td>${escapeHtml(resolveSubscriptionInFlight(inFlight, name))}</td>
       </tr>`;
     }).join('');
 
