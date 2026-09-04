@@ -24,6 +24,7 @@ from scripts.review.reviewer_resolver import (
     QWEN,
     REVIEW_CANDIDATES,
     REVIEW_LADDERS,
+    SONNET_5,
     TERRA,
     UNKNOWN_AUTHOR_FAMILY,
     ResolverInputs,
@@ -502,21 +503,45 @@ def test_folk_content_excludes_both_deepseek_models():
 
 
 def test_glm_data_egress_gate_is_fail_closed():
+    # Explicit pin bypasses retirement so the egress gate is still testable.
     for policy in (None, "ci_automated"):
         result = evaluate_candidate(
             GLM,
-            ResolverInputs(author_model="claude", data_egress_policy=policy),
+            ResolverInputs(
+                author_model="claude",
+                data_egress_policy=policy,
+                pinned_candidate=GLM.name,
+                pressure_override_reason="fixture pin for egress gate",
+            ),
             author_family="anthropic",
         )
         assert result.status == "excluded"
     eligible = evaluate_candidate(
         GLM,
         ResolverInputs(
-            author_model="claude", data_egress_policy="local_interactive", requested_role="security_review"
+            author_model="claude",
+            data_egress_policy="local_interactive",
+            requested_role="security_review",
+            pinned_candidate=GLM.name,
+            pressure_override_reason="fixture pin for egress gate",
         ),
         author_family="anthropic",
     )
     assert eligible.status == "eligible"
+
+
+def test_glm_automatic_selection_is_retired_without_explicit_pin():
+    result = evaluate_candidate(
+        GLM,
+        ResolverInputs(
+            author_model="claude",
+            data_egress_policy="local_interactive",
+            requested_role="security_review",
+        ),
+        author_family="anthropic",
+    )
+    assert result.status == "excluded"
+    assert result.reason == "retired→cursor"
 
 
 def test_qwen_is_excluded_from_automatic_routing():
@@ -858,7 +883,8 @@ def test_formal_k3_participant_identity_is_explicit():
     assert "authenticated K3 sealed MCP canary" in result.reason
 
 
-def test_glm_is_a_profile_suitable_fallback_when_preferred_cross_family_route_is_unavailable():
+def test_glm_on_ladder_is_skipped_unless_explicitly_pinned():
+    """Even if a caller still lists glm on a ladder, automatic resolve skips it."""
     resolution = resolve_reviewer(
         ResolverInputs(
             author_model="gpt-5.6-sol",
@@ -868,20 +894,32 @@ def test_glm_is_a_profile_suitable_fallback_when_preferred_cross_family_route_is
             data_egress_policy="local_interactive",
             exact_head="f" * 40,
         ),
-        runtime_state={
-            "agents": {
-                "codex": {"status": "unhealthy"},
-                "claude": {"status": "unhealthy"},
-                "grok": {"status": "unhealthy"},
-                "kimi": {"status": "unhealthy"},
-            }
-        },
+        ladder=((GLM,), (SONNET_5,)),
     )
 
     assert resolution.selected is not None
+    assert resolution.selected.name == "claude-sonnet-5"
+    glm_entry = next(entry for entry in resolution.trace if entry.name == "glm-5.3")
+    assert glm_entry.status == "excluded"
+    assert glm_entry.reason == "retired→cursor"
+
+
+def test_explicit_glm_pin_remains_eligible_with_egress_policy():
+    resolution = resolve_reviewer(
+        ResolverInputs(
+            author_model="gpt-5.6-sol",
+            author_family="openai",
+            review_profile="infra",
+            risk="high",
+            data_egress_policy="local_interactive",
+            exact_head="f" * 40,
+            pinned_candidate="glm-5.3",
+            pressure_override_reason="operator-requested glm-5.3 pin",
+        ),
+    )
+    assert resolution.selected is not None
     assert resolution.selected.name == "glm-5.3"
     assert resolution.selected.family == "zhipu"
-    assert resolution.selected.suitability_rank == 1
 
 
 def test_sealed_acpx_receipt_exposes_participant_and_credential_bucket_sharing():
@@ -930,10 +968,11 @@ def test_practical_ladder_starts_with_terra_then_sonnet():
         assert [rung[0].name for rung in ladder[:4]] == [
             "gpt-5.6-terra",
             "claude-sonnet-5",
-            "glm-5.3",
             "gemini-3.8-flash",
+            "grok-4.6",
         ]
-        assert ladder[4][0].name == "grok-4.6"
+        assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
+        assert ladder[4][0].name == "grok-4.6-cursor-fallback"
 
 
 def test_candidate_constants_preserve_expected_identity():
@@ -976,7 +1015,12 @@ def test_glm_egress_exclusion_reason_names_unlock_flag():
     """GLM fail-closed egress policy exclusion names the unlocking flag."""
     result = evaluate_candidate(
         GLM,
-        ResolverInputs(author_model="claude", data_egress_policy=None),
+        ResolverInputs(
+            author_model="claude",
+            data_egress_policy=None,
+            pinned_candidate=GLM.name,
+            pressure_override_reason="fixture pin for egress gate",
+        ),
         author_family="anthropic",
     )
     assert result.status == "excluded"

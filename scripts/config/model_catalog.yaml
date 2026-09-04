@@ -745,9 +745,10 @@ models:
     weaknesses: [china_data_egress, local_interactive_only, never_openrouter, not_language_lane]
     notes: >-
       Revealed 2026-08-26 as GLM-5.3-Flash (formerly OpenRouter stealth ox-alpha). OpenCode
-      invocation `zai/glm-5.3-flash` via `--agent glm` (default Flash workhorse). LOCAL-ONLY
-      China egress; Z.AI API prepaid (provider `zai`), not Coding Plan. Stealth slug retired.
-      NOT a review_candidate. NOT on review ladders. NOT formal_review_eligible (same-family zhipu).
+      invocation `zai/glm-5.3-flash` via explicit `--agent glm` only (z.ai retired 2026-09-03;
+      default routing is `--agent cursor`). LOCAL-ONLY China egress; Z.AI API prepaid
+      (provider `zai`), not Coding Plan. Stealth slug retired. NOT a review_candidate.
+      NOT on review ladders. NOT formal_review_eligible (same-family zhipu).
       Coding Plan `glm-5.3` remains explicit `--model glm-5.3` for security/coherence.
     sources:
       - https://openrouter.ai/z-ai/glm-5.3-flash
@@ -1108,8 +1109,9 @@ formal_cf_defaults:
 review_ladders:
   # #5293 quality-first: never let a later rung improve quality tier.
   # critical keeps frontier_authority first (false APPROVED is expensive).
-  # high/medium/low: Terra → Sonnet → GLM first (Sol GO 2026-08-03), then Flash /
-  # Grok / K3 / DS / pool — not Sol/Fable/advisor seats on routine PRs.
+  # high/medium/low: Terra → Sonnet → Flash / Grok / K3 / DS / pool — not
+  # Sol/Fable/advisor seats on routine PRs. glm-5.3 is catalogued for explicit
+  # `--reviewer glm-5.3` only (z.ai retired 2026-09-03); never an automatic rung.
   critical:
     - [openai_frontier]
     # Fable 5 is the Anthropic authority rung (operator 2026-07-26 — Opus 5
@@ -1123,7 +1125,6 @@ review_ladders:
     - [grok-4.6]
     - [grok-4.6-cursor-fallback]
     - [kimi-k3]
-    - [glm-5.3]
     # Operator 2026-08-13: DeepSeek Flash remains the only DeepSeek review-ladder rung
     # (volume). Pro hold lifted for hard implement only — never a routine review rung.
     - [deepseek-v4-flash]
@@ -1132,11 +1133,10 @@ review_ladders:
     - [pool]
     - [pool-xs, gemini-3.5-flash]
   high: &practical_first_code_review
-    # Routine CF order (Sol GO 2026-08-03): Terra → Sonnet → GLM, then other workhorses.
-    # Advisors (Sol/Fable) stay off this ladder (critical only).
+    # Routine CF order: Terra → Sonnet → Flash / Grok / K3… (glm off automatic
+    # ladders; advisors Sol/Fable stay critical-only).
     - [gpt-5.6-terra]
     - [claude-sonnet-5]
-    - [glm-5.3]
     - [gemini-3.8-flash]
     - [grok-4.6]
     - [grok-4.6-cursor-fallback]

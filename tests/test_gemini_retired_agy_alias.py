@@ -36,7 +36,7 @@ def test_resolve_retired_agent_alias_maps_gemini_to_agy():
         resolve_retired_agent_alias,
     )
 
-    assert RETIRED_AGENT_ALIASES == {"gemini": "agy"}
+    assert RETIRED_AGENT_ALIASES["gemini"] == "agy"
     assert resolve_retired_agent_alias("gemini") == "agy"
     assert resolve_retired_agent_alias("GEMINI") == "agy"
     assert resolve_retired_agent_alias("  gemini  ") == "agy"

@@ -60,6 +60,10 @@ def test_lane_rows_mark_avoid():
     assert rows["cursor"]["avoid"] is False
     assert rows["cursor"]["status"] == "cool"
     assert rows["cursor"]["will_last"] is True
+    # glm's z.ai subscription is retired (operator 2026-09-03): AVOID even
+    # when the budget snapshot itself still reports the lane as cool/wrong.
+    assert rows["glm"]["avoid"] is True
+    assert "retired→cursor" in rows["glm"]["notes"]
 
 
 def test_pick_order_cool_first():
@@ -69,8 +73,12 @@ def test_pick_order_cool_first():
     ranked = [p for p in picks if p["pick"] != "AVOID"]
     assert "codex" in avoid_lanes
     assert "claude" in avoid_lanes
+    assert "gemini" in avoid_lanes
+    assert "glm" in avoid_lanes
     assert ranked[0]["lane"] == "cursor"
-    assert ranked[1]["lane"] == "glm"
+    # glm must never rank as a pick, even though _CODE_LANE_PRIORITY used to
+    # place it #2 — it is force-AVOID via RETIRED_AGENT_ALIASES.
+    assert "glm" not in [p["lane"] for p in ranked]
 
 
 def test_format_includes_rec():

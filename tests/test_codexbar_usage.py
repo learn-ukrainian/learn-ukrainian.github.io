@@ -1331,3 +1331,252 @@ def test_compute_routing_budget_includes_api_accounts(monkeypatch, tmp_path):
 def test_routing_html_contains_api_accounts_panel():
     text = Path("dashboards/routing.html").read_text(encoding="utf-8")
     assert "API accounts" in text
+
+
+# --- routing-budget stale/wrong lane state regressions (#7646) --------------
+
+
+def test_load_codex_oauth_token_reads_nested_tokens_shape(tmp_path, monkeypatch):
+    """Codex CLI's current auth.json nests the OAuth set under "tokens"."""
+    codex_home = tmp_path / ".codex"
+    codex_home.mkdir()
+    (codex_home / "auth.json").write_text(
+        json.dumps({"tokens": {"access_token": "fixture-nested-token", "refresh_token": "fixture-refresh"}}),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("CODEX_HOME", str(codex_home))
+
+    assert subscription_usage_mod._load_codex_oauth_token() == "fixture-nested-token"
+
+
+def test_load_codex_oauth_token_still_reads_top_level_shape(tmp_path, monkeypatch):
+    """Backward compat: a flat top-level access_token must still resolve."""
+    codex_home = tmp_path / ".codex"
+    codex_home.mkdir()
+    (codex_home / "auth.json").write_text(
+        json.dumps({"access_token": "fixture-flat-token"}),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("CODEX_HOME", str(codex_home))
+
+    assert subscription_usage_mod._load_codex_oauth_token() == "fixture-flat-token"
+
+
+def test_load_kimi_bearer_reads_credentials_file(tmp_path, monkeypatch):
+    """Kimi credential loader must succeed from kimi-code.json's access_token."""
+    monkeypatch.delenv("KIMI_CODE_API_KEY", raising=False)
+    cred_path = tmp_path / "kimi-code.json"
+    cred_path.write_text(json.dumps({"access_token": "fixture-kimi-token"}), encoding="utf-8")
+    monkeypatch.setenv("KIMI_CODE_CREDENTIALS_PATH", str(cred_path))
+
+    assert subscription_usage_mod._load_kimi_bearer() == "fixture-kimi-token"
+
+
+def test_kimi_missing_credentials_file_is_need_login(tmp_path, monkeypatch):
+    """No credential file anywhere → honest NEED_LOGIN, not a fetch_error."""
+    monkeypatch.delenv("KIMI_CODE_API_KEY", raising=False)
+    monkeypatch.setenv("KIMI_CODE_CREDENTIALS_PATH", str(tmp_path / "missing-kimi-code.json"))
+    codexbar_usage_mod._last_good_data.pop("kimi", None)
+
+    res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
+    assert res["status"] == "unavailable"
+    assert res["error_kind"] == "need_login"
+    assert res["probe_state"] == "NEED_LOGIN"
+
+
+def test_kimi_credentials_present_but_http_failure_is_fetch_error_not_need_login(monkeypatch):
+    """A present, loadable credential file that fails at the network layer must
+    surface fetch_error/unavailable — never re-claim NEED_LOGIN, which would
+    wrongly tell the operator to log in again."""
+    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda: "fixture-kimi-token")
+    monkeypatch.setattr(
+        subscription_usage_mod,
+        "_http_json_request",
+        lambda *args, **kwargs: (0, None, "connection reset"),
+    )
+    codexbar_usage_mod._last_good_data.pop("kimi", None)
+
+    res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
+    assert res["status"] == "unavailable"
+    assert res["error_kind"] == "fetch_error"
+    assert res["error_kind"] != "need_login"
+
+
+def test_kimi_string_usage_and_derived_used_parses_healthy(monkeypatch):
+    """Live Kimi shape (2026-09-03): string used/limit/remaining; detail lacks used;
+    window is {duration, timeUnit: TIME_UNIT_MINUTE}. Must parse, not NEED_LOGIN.
+    """
+    live_shape = {
+        "usage": {
+            "used": "40",
+            "limit": "100",
+            "remaining": "60",
+            "resetTime": "2026-09-10T00:00:00Z",
+        },
+        "limits": [
+            {
+                "detail": {
+                    "limit": "100",
+                    "remaining": "55",
+                    "resetTime": "2026-09-03T10:00:00Z",
+                },
+                "window": {"duration": 300, "timeUnit": "TIME_UNIT_MINUTE"},
+            }
+        ],
+    }
+    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda: "fixture-kimi-token")
+    monkeypatch.setattr(
+        subscription_usage_mod,
+        "_http_json_request",
+        lambda *args, **kwargs: (200, live_shape, None),
+    )
+    codexbar_usage_mod._last_good_data.pop("kimi", None)
+
+    res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
+    assert res["status"] == "healthy"
+    assert res["error_kind"] != "need_login"
+    assert res["error_kind"] is None
+    # detail used derived: 100 - 55 = 45 → 45%
+    assert res["primary_used_pct"] == 45.0
+    # usage.used/limit strings → 40%
+    assert res["weekly_used_pct"] == 40.0
+    assert res["windows"]["primary"]["window_minutes"] == 300
+
+
+def test_kimi_http_200_unparseable_payload_is_not_need_login(monkeypatch):
+    """Bearer present + HTTP 200 but no usable windows → unparseable, not need_login."""
+    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda: "fixture-kimi-token")
+    monkeypatch.setattr(
+        subscription_usage_mod,
+        "_http_json_request",
+        lambda *args, **kwargs: (200, {"usage": {}, "limits": []}, None),
+    )
+    codexbar_usage_mod._last_good_data.pop("kimi", None)
+
+    res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
+    assert res["error_kind"] != "need_login"
+    assert res["error_kind"] == "unparseable_schema"
+    assert res["status"] != "healthy"
+    assert res["primary_used_pct"] is None
+    assert res["weekly_used_pct"] is None
+
+
+def test_coerce_float_accepts_numeric_strings_rejects_bool_empty():
+    assert subscription_usage_mod._coerce_float(" 42.5 ") == 42.5
+    assert subscription_usage_mod._coerce_float(7) == 7.0
+    assert subscription_usage_mod._coerce_float(True) is None
+    assert subscription_usage_mod._coerce_float("") is None
+    assert subscription_usage_mod._coerce_float("nope") is None
+    assert subscription_usage_mod._coerce_float(None) is None
+
+
+def test_coerce_float_rejects_non_finite_string_and_float():
+    assert subscription_usage_mod._coerce_float("NaN") is None
+    assert subscription_usage_mod._coerce_float("nan") is None
+    assert subscription_usage_mod._coerce_float("Infinity") is None
+    assert subscription_usage_mod._coerce_float("-Infinity") is None
+    assert subscription_usage_mod._coerce_float(float("nan")) is None
+    assert subscription_usage_mod._coerce_float(float("inf")) is None
+    assert subscription_usage_mod._coerce_float(float("-inf")) is None
+
+
+def test_kimi_http_200_nan_used_is_unparseable_not_healthy(monkeypatch):
+    """HTTP 200 with used=NaN must not become healthy with nan percents."""
+    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda: "fixture-kimi-token")
+    monkeypatch.setattr(
+        subscription_usage_mod,
+        "_http_json_request",
+        lambda *args, **kwargs: (
+            200,
+            {
+                "usage": {
+                    "used": "NaN",
+                    "limit": "100",
+                },
+                "limits": [
+                    {
+                        "detail": {
+                            "used": "NaN",
+                            "limit": "100",
+                        },
+                        "window": {"duration": 300, "timeUnit": "TIME_UNIT_MINUTE"},
+                    }
+                ],
+            },
+            None,
+        ),
+    )
+    codexbar_usage_mod._last_good_data.pop("kimi", None)
+
+    res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
+    assert res["error_kind"] == "unparseable_schema"
+    assert res["status"] != "healthy"
+    assert res["primary_used_pct"] is None
+    assert res["weekly_used_pct"] is None
+
+
+def test_cursor_need_login_is_not_served_fresh_past_short_ttl(monkeypatch):
+    """NEED_LOGIN must re-probe quickly, not squat as "fresh" for the full
+    10-minute CURSOR_CACHE_TTL_S — and a later successful probe replaces it."""
+    from scripts.api import state_helpers as state_helpers_mod
+
+    cache_invalidate(codexbar_usage_mod.CURSOR_CACHE_KEY)
+    codexbar_usage_mod._cursor_last_good = None
+    monkeypatch.setenv("CODEXBAR_ON_DEMAND_REFRESH", "0")
+
+    need_login = {
+        "lane": "cursor",
+        "probe_state": "NEED_LOGIN",
+        "login_state": "NEED_LOGIN",
+        "is_authenticated": False,
+        "status": "need_login",
+        "fetched_at": "2026-09-03T12:00:00Z",
+    }
+    assert codexbar_usage_mod._record_cursor_probe_result(need_login) is True
+
+    # Backdate the cached entry past the short NEED_LOGIN TTL (default 30s)
+    # but well within the full healthy-probe TTL (default 600s), so only the
+    # NEED_LOGIN-specific short window governs this read.
+    entry_ts, entry_val = state_helpers_mod._ttl_cache[codexbar_usage_mod.CURSOR_CACHE_KEY]
+    state_helpers_mod._ttl_cache[codexbar_usage_mod.CURSOR_CACHE_KEY] = (entry_ts - 60.0, entry_val)
+
+    stale = codexbar_usage_mod.get_cursor_lane_usage()
+    assert stale["freshness"] != "fresh"
+
+    healthy = {
+        "lane": "cursor",
+        "probe_state": "healthy",
+        "login_state": "authenticated",
+        "provider_windows": {
+            "auto": {"window": "monthly", "label": "Auto", "used_pct": 10.0, "remaining_pct": 90.0, "resets_at": None},
+            "api": {"window": "monthly", "label": "API", "used_pct": 2.0, "remaining_pct": 98.0, "resets_at": None},
+        },
+        "fetched_at": "2026-09-03T12:05:00Z",
+    }
+    assert codexbar_usage_mod._record_cursor_probe_result(healthy) is True
+
+    replaced = codexbar_usage_mod.get_cursor_lane_usage()
+    assert replaced["freshness"] == "fresh"
+    assert replaced["probe_state"] == "healthy"
+
+
+def test_cursor_need_login_within_short_ttl_still_served_fresh(monkeypatch):
+    """A brand-new NEED_LOGIN probe is still usable as "fresh" within its
+    short cache window (avoids a re-probe storm on every single request)."""
+    cache_invalidate(codexbar_usage_mod.CURSOR_CACHE_KEY)
+    codexbar_usage_mod._cursor_last_good = None
+    monkeypatch.setenv("CODEXBAR_ON_DEMAND_REFRESH", "0")
+
+    need_login = {
+        "lane": "cursor",
+        "probe_state": "NEED_LOGIN",
+        "login_state": "NEED_LOGIN",
+        "is_authenticated": False,
+        "status": "need_login",
+        "fetched_at": "2026-09-03T12:00:00Z",
+    }
+    assert codexbar_usage_mod._record_cursor_probe_result(need_login) is True
+
+    result = codexbar_usage_mod.get_cursor_lane_usage()
+    assert result["freshness"] == "fresh"
+    assert result["probe_state"] == "NEED_LOGIN"

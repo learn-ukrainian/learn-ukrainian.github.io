@@ -21,10 +21,11 @@ try:
 except ImportError:  # pragma: no cover - script path fallback
     from agent_runtime.agent_identity import RETIRED_AGENT_ALIASES  # type: ignore
 
-# Subscription + free seats drivers may pick for code implement. "gemini" is
-# kept here for budget-row VISIBILITY (its Gemini-family quota still shows in
-# the table) but is force-AVOID via RETIRED_AGENT_ALIASES below — the gemini
-# CLI is retired (operator 2026-08-18) and must never be a `pick`.
+# Subscription + free seats drivers may pick for code implement. "gemini" and
+# "glm" are kept here for budget-row VISIBILITY (their quota/status still
+# shows in the table) but are force-AVOID via RETIRED_AGENT_ALIASES below —
+# the gemini CLI is retired (operator 2026-08-18) and the z.ai GLM
+# subscription is retired (operator 2026-09-03); neither may ever be a `pick`.
 CODE_LANES: tuple[str, ...] = (
     "claude",
     "codex",
@@ -39,14 +40,17 @@ CODE_LANES: tuple[str, ...] = (
 
 _AVOID_STATUSES = frozenset({"hot", "near_cap", "need_login"})
 _COOL_STATUSES = frozenset({"cool", "warm", "idle"})
+# Retired lanes (gemini, glm) rank alongside each other near the bottom —
+# is_avoid_lane() already force-excludes them from `pick`, this ordering only
+# affects stable table/tie-break display among AVOID rows.
 _CODE_LANE_PRIORITY = {
     "cursor": 0,
-    "glm": 1,
-    "codex": 2,
-    "claude": 3,
-    "grok": 4,
-    "kimi": 5,
-    "gemini": 6,
+    "codex": 1,
+    "claude": 2,
+    "grok": 3,
+    "kimi": 4,
+    "gemini": 5,
+    "glm": 6,
     "agy": 7,
     "deepseek": 8,
 }

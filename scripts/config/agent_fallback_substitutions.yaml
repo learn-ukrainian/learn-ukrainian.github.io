@@ -16,7 +16,13 @@ dispatch_fallbacks:
   # Canonical mapping lives in agent_runtime.agent_identity.RETIRED_AGENT_ALIASES;
   # this row keeps it visible to yaml-only consumers of dispatch_fallbacks.
   gemini: agy
-  # grok/cursor/kimi/agy/glm: no automatic mapping without an explicit
+  # PERMANENT retirement, not a hot/deficit-only shed: the z.ai GLM
+  # subscription backing the glm lane is retired (key gone; operator
+  # 2026-09-03). glm-5.3 work routes to cursor or OpenRouter instead.
+  # Canonical mapping lives in agent_runtime.agent_identity.RETIRED_AGENT_ALIASES;
+  # this row keeps it visible to yaml-only consumers of dispatch_fallbacks.
+  glm: cursor
+  # grok/cursor/kimi/agy: no automatic mapping without an explicit
   # operator comment (refuse dispatch when hot/deficit and no row here).
 #
 # Trigger condition: when a budget bucket is at status `near_cap` or `hot`,
@@ -69,6 +75,16 @@ substitutions:
       Do not tell agents to install `gemini` — the live Gemini-family
       implementer is agy.
     budget_bucket: "Gemini-family quota, tracked under agy"
+
+  - currently_uses: "delegate.py --agent glm"
+    fallback: |
+      PERMANENT, always-on (not a budget-status shed): the z.ai GLM
+      subscription is retired (key gone; operator 2026-09-03). Resolves to
+      `delegate.py --agent cursor` before Popen, via dispatch_fallbacks.glm
+      and agent_identity.RETIRED_AGENT_ALIASES. glm-5.3 work routes to
+      cursor or OpenRouter; do not dispatch --agent glm unless the operator
+      explicitly asks.
+    budget_bucket: "glm quota (retired) → Cursor"
 
   - currently_uses: "linear_pipeline.invoke_writer(writer='claude-tools')"
     fallback: |

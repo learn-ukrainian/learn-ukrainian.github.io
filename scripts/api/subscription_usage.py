@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import contextlib
 import json
+import math
 import os
 import platform
 import subprocess
@@ -66,6 +67,14 @@ DEFAULT_CODEXBAR_REFRESH_INTERVAL_S = 720.0
 # Native Cursor login + dashboard probe can exceed routing.html's 5s timeout.
 # Cache HTTP reads for 10 minutes; background refresh keeps snapshots warm.
 DEFAULT_CURSOR_CACHE_TTL_S = 600.0
+# A NEED_LOGIN probe result gets a much shorter fresh-window than a healthy
+# one. NEED_LOGIN routinely reflects a transient state — a CLI status race,
+# an operator finishing `cursor-agent login` mid-session, or a key file
+# written after the driver started — and serving it as "fresh" for the full
+# 10-minute CURSOR_CACHE_TTL_S froze the lane in NEED_LOGIN long after
+# login/API-key access was actually restored. Keep this well under
+# CURSOR_CACHE_TTL_S so a resolved login state recovers fast.
+DEFAULT_CURSOR_NEED_LOGIN_CACHE_TTL_S = 30.0
 DEFAULT_API_ACCOUNT_CACHE_TTL_S = 600.0
 CURSOR_CACHE_KEY = "cursor_lane_usage"
 API_ACCOUNT_PROVIDERS: tuple[str, ...] = ("openrouter", "deepseek")
@@ -223,6 +232,11 @@ def _codexbar_refresh_interval_s() -> float:
 def _cursor_cache_ttl_s() -> float:
     """How long a successful Cursor native snapshot is labelled fresh."""
     return _env_positive_float("CURSOR_CACHE_TTL_S", DEFAULT_CURSOR_CACHE_TTL_S)
+
+
+def _cursor_need_login_cache_ttl_s() -> float:
+    """How long a cached NEED_LOGIN probe is labelled fresh before re-probing."""
+    return _env_positive_float("CURSOR_NEED_LOGIN_CACHE_TTL_S", DEFAULT_CURSOR_NEED_LOGIN_CACHE_TTL_S)
 
 
 def _api_account_cache_ttl_s() -> float:
@@ -395,6 +409,17 @@ def _load_codex_oauth_token() -> str | None:
             val = data.get(key)
             if isinstance(val, str) and val.strip():
                 return val.strip()
+        # Codex CLI's current auth.json shape nests the OAuth token set under
+        # "tokens" (e.g. {"tokens": {"access_token": ..., "refresh_token":
+        # ...}, "last_refresh": ...}). Only the top-level keys above were
+        # read, so a nested-shape auth.json probed as NEED_LOGIN even with a
+        # valid, unexpired access_token on disk.
+        nested = data.get("tokens")
+        if isinstance(nested, dict):
+            for key in ("access_token", "accessToken", "token"):
+                val = nested.get(key)
+                if isinstance(val, str) and val.strip():
+                    return val.strip()
     return None
 
 
@@ -529,20 +554,29 @@ def _load_deepseek_api_key() -> str | None:
     return None
 
 
-def _as_optional_float(value: Any) -> float | None:
+def _coerce_float(value: Any) -> float | None:
+    """Accept int/float and numeric strings; reject bool/empty/non-numeric/non-finite."""
     if value is None or isinstance(value, bool):
         return None
+    result: float
     if isinstance(value, (int, float)):
-        return float(value)
-    if isinstance(value, str):
+        result = float(value)
+    elif isinstance(value, str):
         stripped = value.strip()
         if not stripped:
             return None
         try:
-            return float(stripped)
+            result = float(stripped)
         except ValueError:
             return None
-    return None
+    else:
+        return None
+    if math.isnan(result) or math.isinf(result):
+        return None
+    return result
+
+
+_as_optional_float = _coerce_float
 
 
 def _empty_openrouter_account(probe_state: str = "NEED_PROBE") -> dict[str, Any]:
@@ -973,6 +1007,32 @@ def _probe_codex_native(*, timeout_s: float) -> dict[str, Any]:
     )
 
 
+def _kimi_used_and_limit(block: dict[str, Any]) -> tuple[float | None, float | None]:
+    """Coerce Kimi used/limit; derive used from limit - remaining when used absent."""
+    used = _coerce_float(block.get("used"))
+    limit = _coerce_float(block.get("limit"))
+    remaining = _coerce_float(block.get("remaining"))
+    if used is None and limit is not None and remaining is not None:
+        used = limit - remaining
+    return used, limit
+
+
+def _kimi_window_minutes(item: dict[str, Any]) -> int:
+    """Parse limits[].window {duration, timeUnit}; default 300 minutes."""
+    window = item.get("window")
+    if isinstance(window, dict):
+        duration = _coerce_float(window.get("duration") or window.get("number"))
+        unit = str(window.get("timeUnit") or window.get("unit") or "").lower()
+        if duration is not None:
+            if "minute" in unit:
+                return int(duration)
+            if "hour" in unit:
+                return int(duration) * 60
+            if "day" in unit:
+                return int(duration) * 1440
+    return 300
+
+
 def _probe_kimi_native(*, timeout_s: float) -> dict[str, Any]:
     token = _load_kimi_bearer()
     if not token:
@@ -1001,9 +1061,8 @@ def _probe_kimi_native(*, timeout_s: float) -> dict[str, Any]:
     weekly_used = None
     weekly_reset = None
     if usage_block:
-        used = usage_block.get("used")
-        limit = usage_block.get("limit")
-        if isinstance(used, (int, float)) and isinstance(limit, (int, float)) and limit:
+        used, limit = _kimi_used_and_limit(usage_block)
+        if used is not None and limit is not None and limit:
             weekly_used = float(used) / float(limit) * 100.0
         weekly_reset = usage_block.get("resetTime") or usage_block.get("reset_time")
     primary = None
@@ -1011,13 +1070,12 @@ def _probe_kimi_native(*, timeout_s: float) -> dict[str, Any]:
         if not isinstance(item, dict):
             continue
         detail = item.get("detail") if isinstance(item.get("detail"), dict) else {}
-        used = detail.get("used")
-        limit = detail.get("limit")
-        if not isinstance(used, (int, float)) or not isinstance(limit, (int, float)) or not limit:
+        used, limit = _kimi_used_and_limit(detail)
+        if used is None or limit is None or not limit:
             continue
         primary = _window_from_used_pct(
             float(used) / float(limit) * 100.0,
-            window_minutes=300,
+            window_minutes=_kimi_window_minutes(item),
             resets_at=detail.get("resetTime") or detail.get("reset_time"),
         )
         break
@@ -1026,6 +1084,15 @@ def _probe_kimi_native(*, timeout_s: float) -> dict[str, Any]:
         if weekly_used is not None
         else None
     )
+    if primary is None and secondary is None:
+        return _normalize_provider_error(
+            "kimi",
+            {
+                "message": "Kimi usage payload missing rate windows",
+                "kind": "unparseable_schema",
+                "code": "UNPARSEABLE_SCHEMA",
+            },
+        )
     return _normalize_provider_data(
         "kimi",
         {"provider": "kimi", "source": "kimi_code_api", "usage": {"primary": primary, "secondary": secondary}},
@@ -1920,7 +1987,12 @@ def get_cursor_lane_usage(*, prefer_native: bool = True) -> dict[str, Any]:
     cached = cache_get_with_age(CURSOR_CACHE_KEY, ttl=_cursor_cache_ttl_s())
     if cached is not None:
         val, age = cached
-        if _cursor_probe_is_cacheable(val):
+        stale_need_login = (
+            isinstance(val, dict)
+            and val.get("probe_state") == "NEED_LOGIN"
+            and age >= _cursor_need_login_cache_ttl_s()
+        )
+        if _cursor_probe_is_cacheable(val) and not stale_need_login:
             return _with_cursor_observation_metadata(
                 val,
                 freshness="fresh",

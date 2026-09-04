@@ -111,11 +111,20 @@ def test_luna_economics_use_model_specific_openai_sources() -> None:
     } <= sources
 
 
-def test_kimi_k3_and_glm_5_2_remain_on_every_code_review_ladder() -> None:
-    """The two operator-requested cross-family seats must not silently disappear."""
+def test_kimi_k3_remains_on_every_code_review_ladder() -> None:
+    """Kimi K3 must stay on every automatic ladder; glm is pin-only (retired)."""
     for ladder in load_model_catalog()["review_ladders"].values():
         candidates = {candidate for rung in ladder for candidate in rung}
-        assert {"kimi-k3", "glm-5.3"} <= candidates
+        assert "kimi-k3" in candidates
+        assert "glm-5.3" not in candidates
+
+
+def test_glm_is_absent_from_automatic_review_ladders() -> None:
+    """z.ai retired: glm-5.3 stays catalogued for explicit pins, never auto-rung."""
+    catalog = load_model_catalog()
+    assert "glm-5.3" in catalog["review_candidates"]
+    for ladder in catalog["review_ladders"].values():
+        assert "glm-5.3" not in {candidate for rung in ladder for candidate in rung}
 
 
 def test_deepseek_v4_flash_high_is_a_practical_code_seat_without_critical_priority() -> None:
@@ -133,7 +142,8 @@ def test_deepseek_v4_flash_high_is_a_practical_code_seat_without_critical_priori
     )
 
     practical = [rung[0] for rung in catalog["review_ladders"]["high"] if len(rung) == 1]
-    assert practical.index("glm-5.3") < practical.index("deepseek-v4-flash")
+    assert "glm-5.3" not in practical
+    assert practical.index("claude-sonnet-5") < practical.index("deepseek-v4-flash")
     # Operator 2026-08-13: Pro hold lifted for hard implement only; Flash stays
     # the only DeepSeek review-ladder rung (volume) — Pro never joins ladders.
     assert "deepseek-v4-flash" in practical

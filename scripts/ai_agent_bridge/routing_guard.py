@@ -37,9 +37,10 @@ _SUBSCRIPTION_VIA_OPENROUTER_RE = re.compile(
 # deepseek-direct/<model> is canonical; transport-comparison experiments
 # (#4321/#4358) go through the override env.
 _DEEPSEEK_VIA_OPENROUTER_RE = re.compile(r"openrouter/deepseek", re.IGNORECASE)
-# GLM defaults to FIRST-PARTY z.ai, never OpenRouter (user order 2026-08-27:
-# subscribed / prepaid GLM seats must not hop through OpenRouter — same class
-# as DeepSeek first-party 2026-07-07).
+# OpenRouter GLM remains refused for unattended routing (user order 2026-08-27,
+# reinforced 2026-09-03: z.ai subscription retired — default Flash/code
+# workhorse is --agent cursor; OpenRouter glm only with explicit operator ask
+# + LU_ROUTING_GUARD_OVERRIDE=1).
 _GLM_VIA_OPENROUTER_RE = re.compile(
     r"openrouter/(?:z-ai|zhipu|zai)(?:/|$)",
     re.IGNORECASE,
@@ -59,7 +60,7 @@ _DEEPSEEK_FAMILY_MODEL_RE = re.compile(r"^deepseek", re.IGNORECASE)
 # gemma-family ids are the only zero-cost ids this provider may carry.
 _GOOGLE_AIS_PREFIX_RE = re.compile(r"^google[-_]ais/", re.IGNORECASE)
 _GEMMA_FAMILY_MODEL_RE = re.compile(r"^gemma", re.IGNORECASE)
-# Stealth ox-alpha delisted 2026-08-26; canonical seat is zai/glm-5.3-flash via --agent glm.
+# Stealth ox-alpha delisted 2026-08-26; z.ai retired 2026-09-03 — use --agent cursor.
 _OX_ALPHA_RETIRED_RE = re.compile(
     r"openrouter/stealth/ox-alpha|stealth/ox-alpha|^ox-alpha$|^0x-alpha$",
     re.IGNORECASE,
@@ -84,9 +85,10 @@ def assert_model_routing_allowed(model: str | None, *, context: str) -> None:
     if _OX_ALPHA_RETIRED_RE.search(text):
         raise RoutingGuardError(
             f"{context}: {text!r} is the retired OpenRouter stealth ox-alpha pin "
-            "(delisted 2026-08-26). Use zai/glm-5.3-flash via "
-            "`delegate.py dispatch --agent glm` (default Flash workhorse). "
-            f"Set {_OVERRIDE_ENV}=1 only with explicit user authorization."
+            "(delisted 2026-08-26). z.ai GLM subscription is retired "
+            "(operator 2026-09-03). Default Flash/code workhorse: "
+            "`delegate.py dispatch --agent cursor`. OpenRouter glm only with "
+            f"explicit operator ask + {_OVERRIDE_ENV}=1."
         )
     if _QWEN_RE.search(text):
         raise RoutingGuardError(
@@ -114,12 +116,10 @@ def assert_model_routing_allowed(model: str | None, *, context: str) -> None:
     if _GLM_VIA_OPENROUTER_RE.search(text) or _OPENROUTER_GLM_MODEL_RE.search(text):
         raise RoutingGuardError(
             f"{context}: {text!r} routes GLM through OpenRouter. "
-            "Default is FIRST-PARTY z.ai (user order 2026-08-27; prepaid GLM "
-            "seats must not meter through OpenRouter). Flash workhorse: "
-            "zai/glm-5.3-flash via `delegate.py dispatch --agent glm`. "
-            "Coding Plan consult: zai-coding-plan/glm-5.3 via ask-glm / "
-            "`--model glm-5.3`. "
-            f"Set {_OVERRIDE_ENV}=1 only with explicit user authorization."
+            "z.ai GLM subscription is retired (operator 2026-09-03); do not "
+            "dispatch `--agent glm`. Default Flash/code workhorse: "
+            "`delegate.py dispatch --agent cursor`. OpenRouter glm only with "
+            f"explicit operator ask + {_OVERRIDE_ENV}=1."
         )
     direct_prefix = _DEEPSEEK_DIRECT_PREFIX_RE.match(text)
     if direct_prefix and not _DEEPSEEK_FAMILY_MODEL_RE.match(text[direct_prefix.end() :]):
