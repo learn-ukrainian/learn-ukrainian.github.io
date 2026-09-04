@@ -51,6 +51,8 @@ def test_shared_fleet_comms_rule_and_helper_exist() -> None:
     assert "authoritative" in helper
     assert "direct ask" in helper.lower() or "ask-" in helper
     assert "review-pr" in helper  # named as retired in the cold clause
+    assert "plane probe skipped: no project interpreter" in helper
+    assert "no project interpreter; starting on Mac" not in helper
 
 
 def test_epic_launchers_source_shared_helper_or_rule_pointer() -> None:
