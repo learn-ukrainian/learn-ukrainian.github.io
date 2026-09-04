@@ -170,25 +170,14 @@
     },
     "a2_residuals_carried_forward": {
       "type": "array",
-      "minItems": 8,
+      "minItems": 0,
       "maxItems": 8,
       "items": {
         "type": "object",
         "additionalProperties": false,
         "required": ["residual_id", "origin_stage", "status"],
         "properties": {
-          "residual_id": {
-            "enum": [
-              "a2-residual-standard-correct-rights-unknown",
-              "a2-residual-correction-coverage-blocked",
-              "a2-residual-literary-rights-unknown",
-              "a2-residual-dialect-regional-source-incomplete",
-              "a2-residual-archaic-historical-coverage-blocked",
-              "a2-residual-mixing-source-incomplete",
-              "a2-residual-quotation-interference-rights-unknown",
-              "a2-residual-abstention-source-incomplete"
-            ]
-          },
+          "residual_id": {"type": "string", "pattern": "^a2-residual-[a-z0-9-]+$"},
           "origin_stage": {"const": "A2"},
           "status": {"const": "unresolved_carried_to_a5"}
         }

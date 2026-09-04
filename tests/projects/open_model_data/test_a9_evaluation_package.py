@@ -14,6 +14,7 @@ import copy
 import json
 from pathlib import Path
 
+import _v4_synthetic_chain_fixture as fixture
 import pytest
 from jsonschema import Draft202012Validator
 
@@ -75,10 +76,12 @@ def _write_receipt_tree(tmp_path: Path, *, a2=None, a4=None, a5=None, a6=None, a
 def test_a9_gate_against_the_real_production_artifacts_stays_closed_today() -> None:
     gate = a9.check_evaluation_gate()
     assert gate["a8_receipt_valid"] is True
-    assert gate["all_slots_assigned"] is False
-    assert gate["a2_rights_resolved"] is False
+    assert gate["slots_prerequisite_eligible"] == 0
+    assert gate["slots_upstream_complete"] == 0
+    assert gate["slots_stage_complete"] == 0
+    assert gate["slots_residual"] == 100
     assert gate["evaluation_slice_ready"] is False
-    assert gate["blocked_reason_code"] == "rights_unresolved_and_slots_unassigned"
+    assert gate["blocked_reason_code"] == "no_slot_prerequisite_eligible"
 
 
 def test_a9_gate_closed_when_a_required_public_artifact_is_missing(tmp_path: Path) -> None:
@@ -95,60 +98,28 @@ def test_a9_gate_closed_when_a8_receipt_is_invalid(tmp_path: Path) -> None:
     _write_receipt_tree(tmp_path, a8=forged)
     gate = a9.check_evaluation_gate(tmp_path)
     assert gate["a8_receipt_valid"] is False
-    assert gate["blocked_reason_code"] == "a8_receipt_invalid"
+    assert gate["blocked_reason_code"] == "upstream_receipt_invalid"
 
 
-def test_a9_gate_opens_only_once_rights_are_resolved_and_every_slot_is_assigned(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    resolved_a2 = copy.deepcopy(REAL_A2_RECEIPT)
-    resolved_a2["residuals"] = []
-    for coverage in resolved_a2["stratum_coverage_map"]:
-        coverage["residual_ids"] = []
-    assigned_manifest = copy.deepcopy(REAL_MANIFEST)
-    for series in assigned_manifest["slot_series"]:
-        series["assignment_state"] = "ASSIGNED"
-    # A2 rights + manifest assignment alone are never sufficient -- A6's,
-    # A7's, *and* A8's own per-slot evidence must also genuinely clear for
-    # every frozen slot.
-    cleared_a6 = copy.deepcopy(REAL_A6_RECEIPT)
-    cleared_a6["a6_residuals"] = []
-    cleared_a7 = copy.deepcopy(REAL_A7_RECEIPT)
-    cleared_a7["a7_residuals"] = []
-    cleared_a8 = copy.deepcopy(REAL_A8_RECEIPT)
-    cleared_a8["a8_residuals"] = []
-    _write_receipt_tree(tmp_path, a2=resolved_a2, manifest=assigned_manifest, a6=cleared_a6, a7=cleared_a7, a8=cleared_a8)
-    monkeypatch.setattr(a9.a8, "validate_receipt_independently", lambda *a, **k: None)
+def test_a9_gate_reports_eligible_but_stays_closed_pending_upstream_a8_completion(tmp_path: Path) -> None:
+    """The A9-layer regression test for the same P1: A2 rights + manifest
+    assignment resolving a stratum must never, by itself, produce a
+    positive A9 completion count. Every validator here runs live (A6's,
+    A7's, and A8's own real builders/validators, never stubbed) against a
+    synthetic root where one stratum is genuinely prerequisite-eligible;
+    A8's own ``a8_completions`` stays empty, so A9 -- which requires A8's
+    positive completion evidence -- stays at 0 complete."""
+    fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
+    fixture.run_chain_a6_through_a9(tmp_path)
+
     gate = a9.check_evaluation_gate(tmp_path)
-    assert gate["a2_rights_resolved"] is True
-    assert gate["all_slots_assigned"] is True
-    assert gate["upstream_stage_evidence_present"] is True
-    assert gate["evaluation_slice_ready"] is True
-    assert gate["blocked_reason_code"] is None
-
-
-def test_a9_gate_stays_closed_when_a2_and_manifest_resolve_but_upstream_evidence_does_not(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """A2 rights + manifest assignment metadata alone must never open the
-    gate: this is exactly the previous scenario with A6's, A7's, and A8's
-    own per-slot evidence left untouched (still 100 residuals each)."""
-    resolved_a2 = copy.deepcopy(REAL_A2_RECEIPT)
-    resolved_a2["residuals"] = []
-    for coverage in resolved_a2["stratum_coverage_map"]:
-        coverage["residual_ids"] = []
-    assigned_manifest = copy.deepcopy(REAL_MANIFEST)
-    for series in assigned_manifest["slot_series"]:
-        series["assignment_state"] = "ASSIGNED"
-    _write_receipt_tree(tmp_path, a2=resolved_a2, manifest=assigned_manifest)
-    monkeypatch.setattr(a9.a8, "validate_receipt_independently", lambda *a, **k: None)
-    gate = a9.check_evaluation_gate(tmp_path)
-    assert gate["a2_rights_resolved"] is True
-    assert gate["all_slots_assigned"] is True
-    assert gate["upstream_stage_evidence_present"] is False
-    assert gate["slots_ready"] == 0
+    assert gate["a8_receipt_valid"] is True
+    assert gate["slots_prerequisite_eligible"] == 15
+    assert gate["slots_upstream_complete"] == 0
+    assert gate["slots_stage_complete"] == 0
+    assert gate["slots_residual"] == 100
     assert gate["evaluation_slice_ready"] is False
-    assert gate["blocked_reason_code"] == "upstream_stage_evidence_unavailable"
+    assert gate["blocked_reason_code"] == "eligible_slots_awaiting_upstream_stage_completion"
 
 
 # --- A9 residuals + consumer reproduction view ------------------------------------
@@ -224,9 +195,9 @@ def test_a9_receipt_binds_v4_sha_and_control_surfaces() -> None:
 
 
 def test_a9_receipt_binds_the_merged_a8_receipt_by_its_known_public_sha() -> None:
-    # The merged A8 receipt's public sha256, frozen at dispatch time (v4-per-slot-private-factory:
-    # A8's gate went per-slot instead of a single global AND, changing its content).
-    assert a9.sha256_file(A8_RECEIPT_PATH) == "848a4265c2b867f03ac418a60aefe3ddd3c29da6de67c0c25f64eef3d2bd3de0"
+    # The merged A8 receipt's public sha256, frozen at dispatch time (PR #7654 repair cycle 3:
+    # A7's own upstream hash changed (dropped the undecided A7-vs-A6 subset), rippling into A8).
+    assert a9.sha256_file(A8_RECEIPT_PATH) == "1e61360fe61732a87b96c219b446d241a90b9ea13339df187c9d470f392f130c"
 
 
 def test_a9_receipt_carries_forward_every_a2_a4_a5_a6_a7_a8_residual_unresolved() -> None:
@@ -250,8 +221,9 @@ def test_a9_receipt_carries_forward_every_a2_a4_a5_a6_a7_a8_residual_unresolved(
 def test_a9_receipt_does_not_claim_eval_artifact_ready_while_the_gate_is_closed() -> None:
     assert REAL_RECEIPT["evaluation_gate"]["evaluation_slice_ready"] is False
     assert REAL_RECEIPT["status"] != "EVAL_ARTIFACT_READY"
-    assert REAL_RECEIPT["execution_counters"]["slots_eval_ready"] == 0
-    assert REAL_RECEIPT["execution_counters"]["slots_blocked"] == 100
+    assert REAL_RECEIPT["execution_counters"]["slots_prerequisite_eligible"] == 0
+    assert REAL_RECEIPT["execution_counters"]["slots_stage_complete"] == 0
+    assert REAL_RECEIPT["execution_counters"]["slots_residual"] == 100
 
 
 def test_a9_receipt_never_claims_training_ready_silver_arena_slice_ready_or_admitted_slice_ready() -> None:

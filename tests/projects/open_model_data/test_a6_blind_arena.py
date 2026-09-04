@@ -11,8 +11,10 @@ from __future__ import annotations
 
 import copy
 import json
+import shutil
 from pathlib import Path
 
+import _v4_synthetic_chain_fixture as fixture
 import pytest
 from jsonschema import Draft202012Validator
 
@@ -49,13 +51,31 @@ def _all_keys(value: object) -> set[str]:
     return set()
 
 
+def _write_artifact(path: Path, override: dict | None, real_path: Path) -> None:
+    """Writes ``override`` if given, else the real file's exact on-disk
+    bytes (never a ``json.dumps`` round-trip of the already-parsed dict,
+    which would silently change the byte formatting and break any binding
+    hash computed against the real file)."""
+    if override is None:
+        path.write_bytes(real_path.read_bytes())
+    else:
+        path.write_text(json.dumps(override))
+
+
 def _write_receipt_tree(tmp_path: Path, *, a2=None, a4=None, a5=None, manifest=None) -> Path:
     admission_dir = tmp_path / "data/projects/open_model_data/admission"
     admission_dir.mkdir(parents=True)
-    (admission_dir / "dataset_v4_a2_source_operation_admission_receipt_v1.json").write_text(json.dumps(a2 if a2 is not None else REAL_A2_RECEIPT))
-    (admission_dir / "dataset_v4_a4_deterministic_extraction_receipt_v1.json").write_text(json.dumps(a4 if a4 is not None else REAL_A4_RECEIPT))
-    (admission_dir / "dataset_v4_a5_evidence_enrichment_receipt_v1.json").write_text(json.dumps(a5 if a5 is not None else REAL_A5_RECEIPT))
-    (admission_dir / "dataset_v4_pilot_slot_manifest_v1.json").write_text(json.dumps(manifest if manifest is not None else REAL_MANIFEST))
+    _write_artifact(admission_dir / "dataset_v4_a2_source_operation_admission_receipt_v1.json", a2, A2_RECEIPT_PATH)
+    _write_artifact(admission_dir / "dataset_v4_a4_deterministic_extraction_receipt_v1.json", a4, A4_RECEIPT_PATH)
+    _write_artifact(admission_dir / "dataset_v4_a5_evidence_enrichment_receipt_v1.json", a5, A5_RECEIPT_PATH)
+    _write_artifact(admission_dir / "dataset_v4_pilot_slot_manifest_v1.json", manifest, MANIFEST_PATH)
+    # A5's (and this module's own) bindings include a path to their own
+    # implementation script under scripts/ -- a symlink would resolve
+    # outside tmp_path and trip the path-escape refusal, so copy the one
+    # subtree that carries every V4 module referenced by a binding.
+    scripts_dir = tmp_path / "scripts/projects/open_model_data"
+    if not scripts_dir.exists():
+        shutil.copytree(ROOT / "scripts/projects/open_model_data", scripts_dir)
     return tmp_path
 
 
@@ -90,10 +110,11 @@ def test_a6_gate_against_the_real_production_artifacts_stays_closed_today() -> N
     # A2 still carries 8 unresolved rights/coverage residuals -- so the honest
     # gate state today is closed. If this ever flips to True, it means a real
     # A2/A3 slot assignment landed and the checked-in receipt must be regenerated.
-    assert gate["all_slots_assigned"] is False
-    assert gate["a2_rights_resolved"] is False
+    assert gate["slots_prerequisite_eligible"] == 0
+    assert gate["slots_stage_complete"] == 0
+    assert gate["slots_residual"] == 100
     assert gate["arena_slice_ready"] is False
-    assert gate["blocked_reason_code"] == "rights_unresolved_and_slots_unassigned"
+    assert gate["blocked_reason_code"] == "no_slot_prerequisite_eligible"
 
 
 def test_a6_gate_closed_when_a_required_public_artifact_is_missing(tmp_path: Path) -> None:
@@ -110,29 +131,26 @@ def test_a6_gate_closed_when_a5_receipt_is_invalid(tmp_path: Path) -> None:
     _write_receipt_tree(tmp_path, a5=forged)
     gate = a6.check_arena_gate(tmp_path)
     assert gate["a5_receipt_valid"] is False
-    assert gate["blocked_reason_code"] == "a5_receipt_invalid"
+    assert gate["blocked_reason_code"] == "upstream_receipt_invalid"
 
 
-def test_a6_gate_opens_only_once_rights_are_resolved_and_every_slot_is_assigned(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    resolved_a2 = copy.deepcopy(REAL_A2_RECEIPT)
-    resolved_a2["residuals"] = []
-    assigned_manifest = copy.deepcopy(REAL_MANIFEST)
-    for series in assigned_manifest["slot_series"]:
-        series["assignment_state"] = "ASSIGNED"
-    _write_receipt_tree(tmp_path, a2=resolved_a2, manifest=assigned_manifest)
-    # A5's own bindings still point at the *original* A2/A4 content hashes, so a
-    # real re-validation of A5 would (correctly) fail here -- this test isolates
-    # the rights-resolved / all-slots-assigned combination logic under test,
-    # standing in for a from-scratch-consistent A5 receipt a real A2/A3 slot
-    # assignment would actually produce.
-    monkeypatch.setattr(a6.evidence, "validate_receipt_independently", lambda *a, **k: None)
+def test_a6_gate_reports_prerequisite_eligibility_without_stubbing_any_validator(tmp_path: Path) -> None:
+    """Prerequisite eligibility (A2 rights resolved + manifest assignment) is
+    a real, live-validated fact -- never behind a stubbed validator. This
+    also proves eligibility is not completion: even with one whole stratum
+    eligible, ``arena_slice_ready`` stays false because A6 has no positive
+    ``a6_completions`` evidence (no execution mechanism exists yet). See
+    ``_v4_synthetic_chain_fixture`` for why the fixture only resolves one
+    stratum, not all eight (A4/A5's own residual cross-checks are not
+    root-parametric -- fully resolving A2 would desync them)."""
+    fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
     gate = a6.check_arena_gate(tmp_path)
-    assert gate["a2_rights_resolved"] is True
-    assert gate["all_slots_assigned"] is True
-    assert gate["arena_slice_ready"] is True
-    assert gate["blocked_reason_code"] is None
+    assert gate["a5_receipt_valid"] is True
+    assert gate["slots_prerequisite_eligible"] == 15
+    assert gate["slots_stage_complete"] == 0
+    assert gate["slots_residual"] == 100
+    assert gate["arena_slice_ready"] is False
+    assert gate["blocked_reason_code"] == "eligible_slots_awaiting_this_stage_execution"
 
 
 # --- A6 residuals ----------------------------------------------------------------
@@ -140,7 +158,7 @@ def test_a6_gate_opens_only_once_rights_are_resolved_and_every_slot_is_assigned(
 
 def test_a6_residuals_are_one_typed_independence_unavailable_entry_per_frozen_slot() -> None:
     gate = a6.check_arena_gate()
-    residuals = a6.derive_a6_slot_residuals(REAL_MANIFEST, gate)
+    residuals = a6.derive_a6_slot_residuals(REAL_MANIFEST, REAL_A2_RECEIPT, gate)
     assert len(residuals) == 100
     assert len({r["residual_id"] for r in residuals}) == 100
     assert {r["subject_id"] for r in residuals} == set(a6.all_frozen_slot_ids(REAL_MANIFEST))
@@ -188,8 +206,9 @@ def test_a6_receipt_carries_forward_every_a2_a4_a5_residual_unresolved() -> None
 def test_a6_receipt_does_not_claim_arena_slice_ready_while_the_gate_is_closed() -> None:
     assert REAL_RECEIPT["arena_gate"]["arena_slice_ready"] is False
     assert REAL_RECEIPT["status"] != "ARENA_SLICE_READY"
-    assert REAL_RECEIPT["execution_counters"]["slots_arena_ready"] == 0
-    assert REAL_RECEIPT["execution_counters"]["slots_independence_unavailable"] == 100
+    assert REAL_RECEIPT["execution_counters"]["slots_prerequisite_eligible"] == 0
+    assert REAL_RECEIPT["execution_counters"]["slots_stage_complete"] == 0
+    assert REAL_RECEIPT["execution_counters"]["slots_residual"] == 100
 
 
 def test_a6_receipt_eligibility_all_false_and_zero_rows_emitted() -> None:

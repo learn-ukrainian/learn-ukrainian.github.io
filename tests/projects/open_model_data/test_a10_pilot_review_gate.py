@@ -117,7 +117,7 @@ def test_a10_gate_carries_the_upstream_a9_blocked_reason_once_rights_and_slots_c
     # A9's own evaluation gate is still closed in REAL_A9_RECEIPT.
     assert gate["upstream_evaluation_slice_ready"] is False
     assert gate["pilot_review_slice_ready"] is False
-    assert gate["blocked_reason_code"] == "upstream_a9_blocked:rights_unresolved_and_slots_unassigned"
+    assert gate["blocked_reason_code"] == "upstream_a9_blocked:no_slot_prerequisite_eligible"
 
 
 def test_a10_gate_stays_closed_even_once_upstream_a9_gate_reports_ready(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -248,9 +248,9 @@ def test_a10_receipt_binds_v4_sha_and_control_surfaces() -> None:
 
 
 def test_a10_receipt_binds_the_merged_a9_receipt_by_its_known_public_sha() -> None:
-    # The merged A9 receipt's public sha256, frozen at dispatch time (v4-per-slot-private-factory:
-    # A9's gate went per-slot instead of a single global AND, changing its content).
-    assert a10.sha256_file(A9_RECEIPT_PATH) == "18aa92092813a655e42a98d91afb2b94b03a40f669107584fe7169c141854d88"
+    # The merged A9 receipt's public sha256, frozen at dispatch time (PR #7654 repair cycle 3:
+    # A7's own upstream hash changed (dropped the undecided A7-vs-A6 subset), rippling into A8/A9).
+    assert a10.sha256_file(A9_RECEIPT_PATH) == "dbd377c09a161158b7056b441abeda02f02b93b964492185c75317e857e053f6"
 
 
 def test_a10_receipt_carries_forward_every_a2_a4_a5_a6_a7_a8_a9_residual_unresolved() -> None:
