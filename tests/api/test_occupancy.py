@@ -959,6 +959,37 @@ def test_occupancy_empty_map_host_teacher_fresh_without_atlas_run_root(
         load_mod.clear_host_load_cache()
 
 
+def test_occupancy_empty_map_in_process_load_failure_atlas_job_unknown(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Unavailable in-process load must not report atlas_job clear (idle glance)."""
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
+    monkeypatch.delenv("LU_MONITOR_HOST_ID", raising=False)
+    monkeypatch.setattr("scripts.api.occupancy.sys.platform", "linux")
+
+    def _boom(*_args, **_kwargs):
+        raise OSError("collect_host_load failed")
+
+    monkeypatch.setattr(atlas_job, "collect_host_load", _boom)
+    fake = atlas_job.FakeHostAdapter()
+    atlas_job.set_host_adapter(fake)
+    try:
+        load_mod.clear_host_load_cache()
+        resp = client.get("/api/occupancy?host_id=host-teacher")
+        assert resp.status_code == 200
+        teacher = resp.json()["hosts"]["host-teacher"]
+        assert teacher["status"] == "unavailable"
+        assert teacher["error"] == "unreachable"
+        assert teacher["burn_sources"]["atlas_job"]["state"] == "unknown"
+        assert teacher["burn_sources"]["atlas_job"]["state"] != "clear"
+        assert teacher["burn_state"] == "unknown"
+        assert teacher["idle_or_empty"] is False
+    finally:
+        atlas_job.set_host_adapter(None)
+        load_mod.clear_host_load_cache()
+
+
 def test_cloud_observer_explicit_query_with_zero_heartbeats_is_unavailable(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

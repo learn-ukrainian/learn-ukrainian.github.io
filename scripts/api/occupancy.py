@@ -653,7 +653,10 @@ def _payload_from_entries(
             # Empty-map API host: no remote registry key; load is local.
             # Do not treat whole-machine loadavg as atlas_job burn — that signal
             # is for remote atlas runners with SSH load samples.
+            # Match remote atlas_job honesty: unavailable/failed load => unknown,
+            # never clear (which would imply a readable idle glance).
             atlas_occupants: list[dict[str, str | None]] = []
+            load_readable = str(load_entry.get("status") or "") in {"fresh", "stale"}
             job_unit = load_entry.get("job_unit")
             job_active = False
             if isinstance(job_unit, dict):
@@ -663,7 +666,7 @@ def _payload_from_entries(
                     job_active = False
             atlas_source = {
                 "state": _source_state(
-                    readable=True,
+                    readable=load_readable,
                     occupants=atlas_occupants,
                     active=job_active,
                 ),
