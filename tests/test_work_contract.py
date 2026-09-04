@@ -15,6 +15,7 @@ from scripts.work.relations import (
     extract_body_relations,
     issue_work_id,
     make_work_id,
+    resolve_live_blockers,
 )
 from scripts.work.schema import (
     SCHEMA_VERSION,
@@ -1763,6 +1764,72 @@ def test_relations_and_cycle_detection():
     assert issue_work_id(REPO, 1) in cycles[0]
 
 
+def test_resolve_live_blockers_ignores_closed_targets():
+    """#7177/#7185: a closed 'Depends on #N' is not a live blocker."""
+    items = [
+        {
+            "work_id": issue_work_id(REPO, 1),
+            "resource_kind": "issue",
+            "lifecycle": "open",
+            "flags": {"has_blocker": True},
+            "relationships": [
+                {"type": "blocked_by", "target_id": issue_work_id(REPO, 2), "evidence": "issue_body"},
+            ],
+        },
+        {
+            "work_id": issue_work_id(REPO, 2),
+            "resource_kind": "issue",
+            "lifecycle": "closed",
+            "flags": {},
+            "relationships": [],
+        },
+    ]
+    resolve_live_blockers(items)
+    assert items[0]["flags"]["has_blocker"] is False
+
+
+def test_resolve_live_blockers_keeps_open_target_blocking():
+    """An open blocker is still live — closed-target handling must not over-clear."""
+    items = [
+        {
+            "work_id": issue_work_id(REPO, 1),
+            "resource_kind": "issue",
+            "lifecycle": "open",
+            "flags": {},
+            "relationships": [
+                {"type": "blocked_by", "target_id": issue_work_id(REPO, 2), "evidence": "issue_body"},
+            ],
+        },
+        {
+            "work_id": issue_work_id(REPO, 2),
+            "resource_kind": "issue",
+            "lifecycle": "open",
+            "flags": {},
+            "relationships": [],
+        },
+    ]
+    resolve_live_blockers(items)
+    assert items[0]["flags"]["has_blocker"] is True
+
+
+def test_resolve_live_blockers_conservative_when_target_unknown():
+    """A blocker target not present in this projection can't be confirmed
+    closed, so it must conservatively remain a live blocker."""
+    items = [
+        {
+            "work_id": issue_work_id(REPO, 1),
+            "resource_kind": "issue",
+            "lifecycle": "open",
+            "flags": {},
+            "relationships": [
+                {"type": "blocked_by", "target_id": issue_work_id(REPO, 999), "evidence": "issue_body"},
+            ],
+        },
+    ]
+    resolve_live_blockers(items)
+    assert items[0]["flags"]["has_blocker"] is True
+
+
 def test_match_dispatch_requires_boundary_safe_issue_and_pr_ids():
     """Substring prefixes must not attach unrelated dispatch state.
 
@@ -2091,6 +2158,85 @@ def test_build_projection_joins_sources_deterministically():
     # Deterministic: same inputs → same first attention id
     again = build_projection(sections, repository_id=REPO)
     assert again["attention"][0]["work_id"] == projection["attention"][0]["work_id"]
+
+
+def _closed_depends_on_sections(*, blocker_state: str) -> dict[str, SectionResult]:
+    """Minimal sections mirroring #7185: one issue 'Depends on #1234'."""
+    return {
+        "issues": SectionResult(
+            "issues",
+            "ok",
+            payload=[
+                {
+                    "number": 7185,
+                    "title": "Downstream issue",
+                    "labels": [],
+                    "assignees": [],
+                    "body": "Depends on #1234",
+                    "createdAt": "2026-08-01T00:00:00Z",
+                    "updatedAt": "2026-08-02T00:00:00Z",
+                    "url": "https://example.test/issues/7185",
+                    "state": "OPEN",
+                },
+                {
+                    "number": 1234,
+                    "title": "Blocker one",
+                    "labels": [],
+                    "assignees": [],
+                    "body": "",
+                    "createdAt": "2026-08-01T00:00:00Z",
+                    "updatedAt": "2026-08-02T00:00:00Z",
+                    "url": "https://example.test/issues/1234",
+                    "state": blocker_state,
+                },
+            ],
+            count=2,
+        ),
+        "prs": SectionResult("prs", "ok", payload=[], count=0),
+        "streams": SectionResult(
+            "streams",
+            "ok",
+            payload={
+                "generated_at": 1,
+                "orphans": [],
+                "multi_homed": [],
+                "pending_native_link": [],
+                "ok": True,
+            },
+            count=0,
+        ),
+        "delegate_active": SectionResult("delegate_active", "ok", payload={"total": 0, "tasks": []}, count=0),
+        "delegate_tasks": SectionResult("delegate_tasks", "ok", payload={"total": 0, "tasks": []}, count=0),
+        "fleet_reviews": SectionResult("fleet_reviews", "ok", payload={"total": 0, "reviews": []}, count=0),
+    }
+
+
+def test_build_projection_closed_depends_on_is_not_a_live_blocker():
+    """#7177/#7185: a body 'Depends on #N' to a CLOSED issue must not read
+    AT_RISK / RESOLVE_BLOCKER / blocked_by / has_blocker."""
+    sections = _closed_depends_on_sections(blocker_state="CLOSED")
+    projection = build_projection(sections, repository_id=REPO)
+    validate_projection(projection)
+
+    item = next(i for i in projection["items"] if i["work_id"] == issue_work_id(REPO, 7185))
+    assert item["flags"]["has_blocker"] is False
+    assert item["health"] != "AT_RISK"
+    assert item["safe_next_action"]["code"] != "RESOLVE_BLOCKER"
+    assert "blocked_by" not in item["safe_next_action"]["reason_codes"]
+
+
+def test_build_projection_open_depends_on_still_blocks():
+    """An open dependency among the 'Depends on' targets keeps the issue
+    blocked — closed-target handling must not clear real blockers."""
+    sections = _closed_depends_on_sections(blocker_state="OPEN")
+    projection = build_projection(sections, repository_id=REPO)
+    validate_projection(projection)
+
+    item = next(i for i in projection["items"] if i["work_id"] == issue_work_id(REPO, 7185))
+    assert item["flags"]["has_blocker"] is True
+    assert item["health"] == "AT_RISK"
+    assert item["safe_next_action"]["code"] == "RESOLVE_BLOCKER"
+    assert "blocked_by" in item["safe_next_action"]["reason_codes"]
 
 
 def test_fetch_fleet_reviews_production_default_loader():

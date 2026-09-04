@@ -183,6 +183,39 @@ def detect_dependency_cycles(items: list[dict[str, Any]]) -> list[list[str]]:
     return unique
 
 
+def resolve_live_blockers(items: list[dict[str, Any]]) -> None:
+    """Demote ``blocked_by`` flags whose target issue is closed (#7177/#7185).
+
+    A ``Depends on #N`` / ``blocked by #N`` reference — body-derived, or
+    inferred from another issue's ``blocks`` via `invert_relationships` — is
+    only a *live* blocker while the target issue is still open. Call this
+    after `invert_relationships` (so inferred edges are covered) and before
+    health/safe-next-action derivation, which reads `flags["has_blocker"]`.
+
+    Targets not present in this projection (paginated out, cross-repo,
+    private-only, etc.) cannot be confirmed closed, so they conservatively
+    still count as blockers — this function only ever narrows
+    `has_blocker`, never widens it, and never touches the `relationships`
+    list itself (the closed edge stays visible as evidence).
+    """
+    lifecycle_by_id = {
+        item["work_id"]: str(item.get("lifecycle") or "").lower()
+        for item in items
+        if item.get("resource_kind") == "issue"
+    }
+    for item in items:
+        if item.get("resource_kind") != "issue":
+            continue
+        live = False
+        for rel in item.get("relationships") or []:
+            if rel.get("type") != "blocked_by":
+                continue
+            if lifecycle_by_id.get(rel.get("target_id")) == "closed":
+                continue
+            live = True
+        item.setdefault("flags", {})["has_blocker"] = live
+
+
 def annotate_cycles(items: list[dict[str, Any]], cycles: list[list[str]]) -> None:
     members = {node for cycle in cycles for node in cycle}
     for item in items:
