@@ -3,10 +3,13 @@ import type { EntryRecord } from "../lib/lexicon/atlas-data-source";
 import { atlasPracticeHref } from "../lib/lexicon/atlas-practice-link";
 import { safeHref } from "../lib/lexicon/safe-url";
 import {
+  buildFutureTenseNumbers,
   buildWordAtlasArticleView,
   CASE_ROWS,
   CONTEXT_LABELS_UK,
   FORM_NOTE_LABELS,
+  formatConditionalForm,
+  formatKhayImperative,
   IMPERATIVE_ROWS,
   isMirrorUrl,
   learnerFacingUrls,
@@ -30,6 +33,9 @@ export interface WordAtlasArticleProps {
   manifestVersion: string;
   /** Optional in-memory catalog for canonical lexical backlinks and tests. */
   atlasLinkCatalog?: AtlasLinkCatalog;
+  /** Optional partner entry record or paradigm for aspect pair display. */
+  partnerRecord?: EntryRecord | null;
+  partnerParadigm?: VerbParadigm | null;
   /** Optional typeahead slot (Astro AtlasTypeahead on prerendered pages). */
   children?: ReactNode;
 }
@@ -125,9 +131,17 @@ export default function WordAtlasArticle({
   generatedAt,
   manifestVersion,
   atlasLinkCatalog,
+  partnerRecord,
+  partnerParadigm: propPartnerParadigm,
   children,
 }: WordAtlasArticleProps) {
-  const view = buildWordAtlasArticleView(record, generatedAt, manifestVersion, atlasLinkCatalog);
+  const view = buildWordAtlasArticleView(
+    record,
+    generatedAt,
+    manifestVersion,
+    atlasLinkCatalog,
+    propPartnerParadigm ?? partnerRecord,
+  );
   const {
     entry,
     enrichment,
@@ -168,6 +182,9 @@ export default function WordAtlasArticle({
     verbPedagogy,
     hasVerbPedagogy,
     verbPedagogySources,
+    resolvedAspectPartnerSlug,
+    partnerParadigm,
+    hasAspectPartner,
     hasPractice,
     stressDisplay,
   } = view;
@@ -484,80 +501,223 @@ export default function WordAtlasArticle({
                   </tbody>
                 </table>
               ) : verbParadigm ? (
-                <>
-                  {verbParadigm.infinitive && (
-                    <p><strong>Інфінітив:</strong> <span className="ukr">{stressDisplay(verbParadigm.infinitive)}</span></p>
-                  )}
-                  {Object.entries(verbParadigm.tenses ?? {})
-                    .filter(([, numbers]) => hasTenseForms(numbers))
-                    .map(([tense, numbers]) => (
-                      <table key={tense} className="paradigm-table">
-                        <caption>{tense}</caption>
-                        <thead>
-                          <tr>
-                            <th scope="col" className="col-case">Особа</th>
-                            <th scope="col">Однина</th>
-                            <th scope="col">Множина</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {PERSON_ROWS.map((person) => (
-                            <tr key={person.key}>
-                              <td className="case-name">{person.label}</td>
-                              <td className="form">{stressDisplay(numbers["однина"]?.[person.key])}</td>
-                              <td className="form">{stressDisplay(numbers["множина"]?.[person.key])}</td>
+                (() => {
+                  const isImperfective =
+                    verbPedagogy?.aspect === "perfective"
+                      ? false
+                      : verbPedagogy?.aspect === "imperfective"
+                        ? true
+                        : Boolean(
+                            verbParadigm.tenses?.["теперішній"] &&
+                              hasTenseForms(verbParadigm.tenses["теперішній"]),
+                          ) || true;
+
+                  const presentNumbers = verbParadigm.tenses?.["теперішній"] ?? null;
+                  const futureNumbers = buildFutureTenseNumbers({
+                    infinitive: verbParadigm.infinitive,
+                    futureNumbers: verbParadigm.tenses?.["майбутній"] ?? null,
+                    presentNumbers,
+                    aspect: verbPedagogy?.aspect,
+                    formatForm: stressDisplay,
+                  });
+
+                  const tensesToRender: Array<{
+                    key: string;
+                    caption: string;
+                    numbers: Record<string, Record<string, string>>;
+                  }> = [];
+
+                  if (presentNumbers && hasTenseForms(presentNumbers)) {
+                    tensesToRender.push({
+                      key: "теперішній",
+                      caption: "теперішній",
+                      numbers: presentNumbers,
+                    });
+                  }
+                  if (futureNumbers && hasTenseForms(futureNumbers)) {
+                    tensesToRender.push({
+                      key: "майбутній",
+                      caption: "майбутній",
+                      numbers: futureNumbers,
+                    });
+                  }
+                  for (const [tense, numbers] of Object.entries(verbParadigm.tenses ?? {})) {
+                    if (tense !== "теперішній" && tense !== "майбутній" && hasTenseForms(numbers)) {
+                      tensesToRender.push({ key: tense, caption: tense, numbers });
+                    }
+                  }
+
+                  const pres3sg = verbParadigm.tenses?.["теперішній"]?.["однина"]?.["3"];
+                  const pres3pl = verbParadigm.tenses?.["теперішній"]?.["множина"]?.["3"];
+                  const hasKhay = Boolean(pres3sg?.trim());
+                  const showImperative = hasImperativeForms(verbParadigm.imperative) || hasKhay;
+
+                  const showPast = hasPastForms(verbParadigm.past);
+
+                  return (
+                    <>
+                      {verbParadigm.infinitive && (
+                        <p>
+                          <strong>Інфінітив:</strong>{" "}
+                          <span className="ukr">{stressDisplay(verbParadigm.infinitive)}</span>
+                        </p>
+                      )}
+                      {verbParadigm.impersonal && (
+                        <p>
+                          <strong>Безособова форма:</strong>{" "}
+                          <span className="ukr">{stressDisplay(verbParadigm.impersonal)}</span>
+                        </p>
+                      )}
+                      {tensesToRender.map(({ key, caption, numbers }) => (
+                        <table key={key} className="paradigm-table">
+                          <caption>{caption}</caption>
+                          <thead>
+                            <tr>
+                              <th scope="col" className="col-case">Особа</th>
+                              <th scope="col">Однина</th>
+                              <th scope="col">Множина</th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    ))}
-                  {hasImperativeForms(verbParadigm.imperative) && (
-                    <table className="paradigm-table">
-                      <caption>Наказовий</caption>
-                      <thead>
-                        <tr>
-                          <th scope="col" className="col-case">Особа</th>
-                          <th scope="col">Однина</th>
-                          <th scope="col">Множина</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {IMPERATIVE_ROWS.map((row) => {
-                          const form = verbParadigm.imperative?.[row.number]?.[row.person];
-                          return (
-                            <tr key={row.key}>
-                              <td className="case-name">{row.label}</td>
-                              <td className="form">{row.number === "однина" ? stressDisplay(form) : ""}</td>
-                              <td className="form">{row.number === "множина" ? stressDisplay(form) : ""}</td>
+                          </thead>
+                          <tbody>
+                            {PERSON_ROWS.map((person) => (
+                              <tr key={person.key}>
+                                <td className="case-name">{person.label}</td>
+                                <td className="form">{stressDisplay(numbers["однина"]?.[person.key])}</td>
+                                <td className="form">{stressDisplay(numbers["множина"]?.[person.key])}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      ))}
+                      {showImperative && (
+                        <table className="paradigm-table">
+                          <caption>Наказовий</caption>
+                          <thead>
+                            <tr>
+                              <th scope="col" className="col-case">Особа</th>
+                              <th scope="col">Однина</th>
+                              <th scope="col">Множина</th>
                             </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  )}
-                  {hasPastForms(verbParadigm.past) && (
-                    <table className="paradigm-table">
-                      <caption>Минулий</caption>
-                      <thead>
-                        <tr>
-                          <th scope="col" className="col-case">Рід / число</th>
-                          <th scope="col">Форма</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {PAST_ROWS.map((row) => {
-                          const form = verbParadigm.past?.[row.key];
-                          return form?.trim() ? (
-                            <tr key={row.key}>
-                              <td className="case-name">{row.label}</td>
-                              <td className="form">{stressDisplay(form)}</td>
+                          </thead>
+                          <tbody>
+                            {IMPERATIVE_ROWS.map((row) => {
+                              const form = verbParadigm.imperative?.[row.number]?.[row.person];
+                              return (
+                                <tr key={row.key}>
+                                  <td className="case-name">{row.label}</td>
+                                  <td className="form">{row.number === "однина" ? stressDisplay(form) : ""}</td>
+                                  <td className="form">{row.number === "множина" ? stressDisplay(form) : ""}</td>
+                                </tr>
+                              );
+                            })}
+                            {hasKhay && (
+                              <tr key="3-person">
+                                <td className="case-name">3 особа</td>
+                                <td className="form">{formatKhayImperative(stressDisplay(pres3sg))}</td>
+                                <td className="form">{formatKhayImperative(stressDisplay(pres3pl))}</td>
+                              </tr>
+                            )}
+                          </tbody>
+                        </table>
+                      )}
+                      {showPast && (
+                        <table className="paradigm-table">
+                          <caption>Минулий</caption>
+                          <thead>
+                            <tr>
+                              <th scope="col" className="col-case">Рід / число</th>
+                              {hasAspectPartner ? (
+                                <>
+                                  <th scope="col">Недоконаний вид</th>
+                                  <th scope="col">Доконаний вид</th>
+                                </>
+                              ) : (
+                                <th scope="col">Форма</th>
+                              )}
                             </tr>
-                          ) : null;
-                        })}
-                      </tbody>
-                    </table>
-                  )}
-                </>
+                          </thead>
+                          <tbody>
+                            {PAST_ROWS.map((row) => {
+                              if (hasAspectPartner) {
+                                const imperfPast = isImperfective
+                                  ? verbParadigm.past?.[row.key]
+                                  : partnerParadigm?.past?.[row.key];
+                                const perfPast = isImperfective
+                                  ? partnerParadigm?.past?.[row.key]
+                                  : verbParadigm.past?.[row.key];
+                                const imperfDisplay = stressDisplay(imperfPast);
+                                const perfDisplay = stressDisplay(perfPast);
+                                if (!imperfDisplay && !perfDisplay) return null;
+                                return (
+                                  <tr key={row.key}>
+                                    <td className="case-name">{row.label}</td>
+                                    <td className="form">{imperfDisplay}</td>
+                                    <td className="form">{perfDisplay}</td>
+                                  </tr>
+                                );
+                              }
+                              const form = verbParadigm.past?.[row.key];
+                              return form?.trim() ? (
+                                <tr key={row.key}>
+                                  <td className="case-name">{row.label}</td>
+                                  <td className="form">{stressDisplay(form)}</td>
+                                </tr>
+                              ) : null;
+                            })}
+                          </tbody>
+                        </table>
+                      )}
+                      {showPast && (
+                        <table className="paradigm-table">
+                          <caption>Умовний</caption>
+                          <thead>
+                            <tr>
+                              <th scope="col" className="col-case">Рід / число</th>
+                              {hasAspectPartner ? (
+                                <>
+                                  <th scope="col">Недоконаний вид</th>
+                                  <th scope="col">Доконаний вид</th>
+                                </>
+                              ) : (
+                                <th scope="col">Форма</th>
+                              )}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {PAST_ROWS.map((row) => {
+                              if (hasAspectPartner) {
+                                const imperfPast = isImperfective
+                                  ? verbParadigm.past?.[row.key]
+                                  : partnerParadigm?.past?.[row.key];
+                                const perfPast = isImperfective
+                                  ? partnerParadigm?.past?.[row.key]
+                                  : verbParadigm.past?.[row.key];
+                                const imperfCond = formatConditionalForm(stressDisplay(imperfPast));
+                                const perfCond = formatConditionalForm(stressDisplay(perfPast));
+                                if (!imperfCond && !perfCond) return null;
+                                return (
+                                  <tr key={row.key}>
+                                    <td className="case-name">{row.label}</td>
+                                    <td className="form">{imperfCond}</td>
+                                    <td className="form">{perfCond}</td>
+                                  </tr>
+                                );
+                              }
+                              const form = verbParadigm.past?.[row.key];
+                              const condForm = formatConditionalForm(stressDisplay(form));
+                              return condForm ? (
+                                <tr key={row.key}>
+                                  <td className="case-name">{row.label}</td>
+                                  <td className="form">{condForm}</td>
+                                </tr>
+                              ) : null;
+                            })}
+                          </tbody>
+                        </table>
+                      )}
+                    </>
+                  );
+                })()
               ) : participleParadigm ? (
                 <>
                   <p>
