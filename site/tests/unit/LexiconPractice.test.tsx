@@ -2802,6 +2802,56 @@ describe('LexiconPractice', () => {
     }
   });
 
+  test('focused lemma answer stays on practice, records the rating, and advances the counter (#7664)', async () => {
+    const originalLocation = window.location;
+    delete (window as any).location;
+    window.location = new URL('http://localhost/words-of-the-day/practice/?lemmaId=%D0%B2%D0%BE%D0%B4%D0%B0') as any;
+
+    try {
+      const water = lexeme('voda', 'вода', 'water', {
+        nominative: 'вода',
+        accusative: 'воду',
+        locative: 'воді',
+      });
+      const deck: PracticeDeckData = {
+        deckVersion: 'test-focused-water',
+        level: 'A1',
+        lexemes: [water],
+        index: [{
+          lemmaId: water.lemmaId,
+          lemma: water.lemma,
+          cefr: 'A1',
+          modes: ['flashcards'],
+          hasCloze: false,
+          clozeIds: [],
+          newOrder: 0,
+        }],
+        cloze: [],
+      };
+      const user = userEvent.setup();
+      const { fn } = mockShardFetch({ A1: 1 });
+      vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+
+      const { container } = render(<LexiconPractice initialDeck={deck} autoStart={false} />);
+      const card = await screen.findByRole('button', { name: /вода.*натисніть, щоб перевернути/i });
+      const pathnameBeforeAnswer = window.location.pathname;
+
+      await user.click(card);
+      await user.click(container.querySelector<HTMLButtonElement>('[data-rate="good"]')!);
+
+      expect(window.location.pathname).toBe(pathnameBeforeAnswer);
+      expect(window.location.pathname).toBe('/words-of-the-day/practice/');
+      expect(window.location.pathname).not.toBe('/a2/');
+      expect(screen.getByTestId('practice-session-progress')).toHaveTextContent('1/1');
+      expect(storedState().reviews).toEqual(expect.arrayContaining([
+        expect.objectContaining({ lemmaId: 'voda', mode: 'flashcards', rating: 'good' }),
+      ]));
+      expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+    } finally {
+      window.location = new URL(originalLocation.href) as any;
+    }
+  });
+
   test('focused deep link clears a transient deck-load error after its retry renders the exercise', async () => {
     const originalSearch = window.location.search;
     delete (window as any).location;
