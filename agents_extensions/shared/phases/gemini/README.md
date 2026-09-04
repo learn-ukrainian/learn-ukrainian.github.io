@@ -28,14 +28,25 @@ Templates use `{PLACEHOLDER}` syntax. Claude replaces these before writing the p
 | `{SLUG}` | Module slug |
 | `{TRACK}` | Track identifier |
 
+## Registry and retained templates
+
+The lifecycle prompt registry is
+`agents_extensions/shared/prompt-contracts/registry.v1.yaml`; its manifests
+select fragments under `prompt-contracts/`, not this directory. Legacy phase
+callers still use templates here, so registry absence alone is not deletion
+proof. The unused `v6-skeleton.md` and `v6-activities.md` copies were removed in
+#7686. `v6-write.md` and `v6-review.md` are retirement pointers for existing
+documentation links; build-owned templates remain under `scripts/build/phases/`.
+The `_retired/` archive remains for existing compatibility tests.
+
 ## Files
 
 | Template | Phase | Purpose |
 |----------|-------|---------|
 | `phase-0-research-seminar.md` | 0 | Deep research for seminar tracks |
-| `phase-0-research-core.md` | 0 | Lightweight research for core tracks |
-| `phase-0-5-enrich-plan.md` | 0.5 | Enrich plan content_outline + vocabulary_hints from research |
-| `phase-1-meta.md` | 1 | Refine content_outline with word allocations |
+| `_retired/phase-0-research-core.md` | 0 | Lightweight research for core tracks |
+| `_retired/phase-0-5-enrich-plan.md` | 0.5 | Enrich plan content_outline + vocabulary_hints from research |
+| `_retired/phase-1-meta.md` | 1 | Refine content_outline with word allocations |
 | `phase-2-content.md` | 2 | Write lesson prose (1.5x overshoot) |
 | `phase-3-activities.md` | 3 | Generate activities + vocabulary YAML |
 | `phase-5-review.md` | 5 | Critical 14-dimension deep review |
