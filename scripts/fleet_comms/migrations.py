@@ -517,6 +517,27 @@ _V7_STATEMENTS = (
     "CREATE INDEX IF NOT EXISTS idx_routing_reservations_active_credential ON routing_reservations(credential_bucket, status, expires_at)",
 )
 
+# V4 canonical authority store (PR #7662 repair 6): the sqlite-dialect twin
+# of ``scripts.fleet_comms.pg_schema``'s v3 (same table shapes, TEXT-parity
+# by design). See ``scripts.fleet_comms.v4_canonical_authority_store``.
+_V8_STATEMENTS = (
+    """CREATE TABLE IF NOT EXISTS v4_execution_observations (
+        task_id TEXT NOT NULL,
+        run_id TEXT NOT NULL,
+        role TEXT NOT NULL CHECK (role IN ('author', 'reviewer')),
+        record_sha256 TEXT NOT NULL,
+        record_json TEXT NOT NULL,
+        recorded_at TEXT NOT NULL,
+        PRIMARY KEY (task_id, run_id, role)
+    )""",
+    """CREATE TABLE IF NOT EXISTS v4_sources_invocations (
+        invocation_id TEXT PRIMARY KEY,
+        record_sha256 TEXT NOT NULL,
+        record_json TEXT NOT NULL,
+        recorded_at TEXT NOT NULL
+    )""",
+)
+
 MIGRATIONS = (
     Migration(version=1, name="fleet-comms-v1-contracts", statements=_V1_STATEMENTS),
     Migration(
@@ -544,6 +565,11 @@ MIGRATIONS = (
         version=7,
         name="fleet-comms-v7-routing-credential-admission",
         statements=_V7_STATEMENTS,
+    ),
+    Migration(
+        version=8,
+        name="fleet-comms-v8-v4-canonical-authority",
+        statements=_V8_STATEMENTS,
     ),
 )
 

@@ -17,6 +17,21 @@ needs stays outside git, outside prompts, and outside CLI arguments/logs;
 production custody lives on Hramatka. Every test here uses an ephemeral key
 generated fresh under ``tmp_path`` via ``v4_trust_authority
 .generate_test_keypair``.
+
+Repair 6 (PR #7662, operator-approved architecture -- see ``batch_state/
+briefs/v4-real-slot-mechanism-repair-6-approval.md``): the production
+entrypoint (``issue_verifier_attestation``) now accepts an opaque
+``invocation_id`` only. It resolves every evidentiary field from the
+canonical Sources invocation store (``scripts.fleet_comms.v4_canonical_
+authority_store``, written only by the Sources MCP wire handler after it
+independently confirms the claimed fields are present in the tool's own
+genuine result -- never a caller-created object), loads the signing key
+from fixed, root-owned Hramatka custody (``v4_trust_authority.load_
+production_signing_key``), and binds the pinned production trust-policy
+digest into the signed body as ``trust_policy_sha256``. The prior
+full-keyword signing engine is retained, unchanged, as the private
+``_issue_verifier_attestation_from_evidence`` -- production never calls it
+directly; only the opaque-ID wrapper and this module's own tests do.
 """
 
 from __future__ import annotations
@@ -25,6 +40,10 @@ import re
 from typing import Any
 
 from scripts.projects.open_model_data import v4_trust_authority as trust
+
+# The one outcome this attester ever signs for -- never a caller-supplied
+# argument (PR #7662 repair 6; see ``v4_a7_private_ledger.V4_SHA256``).
+V4_SHA256 = "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"
 
 SCHEMA_VERSION = "v4-sources-verifier-attestation-v1"
 ATTESTATION_DOMAIN = b"v4-sources-verifier-attestation-v1"
@@ -48,6 +67,7 @@ ATTESTATION_KEYS = frozenset(
         "success",
         "invocation_id",
         "signer_key_id",
+        "trust_policy_sha256",
     }
 )
 
@@ -61,7 +81,7 @@ def require(condition: bool, message: str) -> None:
         raise SourcesAuthorityError(message)
 
 
-def issue_verifier_attestation(
+def _issue_verifier_attestation_from_evidence(
     *,
     signing_key_hex: str,
     signer_key_id: str,
@@ -74,6 +94,7 @@ def issue_verifier_attestation(
     tool_result_sha256: str,
     lookup_ids: list[str],
     invocation_id: str,
+    trust_policy_sha256: str,
 ) -> dict[str, Any]:
     """Issue a signed, text-free attestation that a real, sanctioned
     ``mcp__sources__*`` verifier tool invocation happened and produced the
@@ -91,6 +112,7 @@ def issue_verifier_attestation(
     require(isinstance(request_id, str) and request_id, "request_id must be a nonempty string -- refusing")
     require(isinstance(invocation_id, str) and invocation_id, "invocation_id must be a nonempty string -- refusing")
     require(isinstance(signer_key_id, str) and signer_key_id, "signer_key_id must be a nonempty string -- refusing")
+    trust.require_sha256_hex(trust_policy_sha256, "trust_policy_sha256", error_cls=SourcesAuthorityError)
 
     body = {
         "schema_version": SCHEMA_VERSION,
@@ -105,9 +127,60 @@ def issue_verifier_attestation(
         "success": True,
         "invocation_id": invocation_id,
         "signer_key_id": signer_key_id,
+        "trust_policy_sha256": trust_policy_sha256,
     }
     signature_hex = trust.sign(signing_key_hex, ATTESTATION_DOMAIN, body)
     return {**body, "signature_hex": signature_hex}
+
+
+# --- production entrypoint: opaque invocation_id only (PR #7662 repair 6) --
+
+
+def _resolve_sources_invocation(*, invocation_id: str) -> dict[str, Any] | None:
+    from scripts.fleet_comms.artifacts import ArtifactStore
+
+    try:
+        with ArtifactStore(readonly=True) as store:
+            return store.resolve_v4_sources_invocation(invocation_id=invocation_id)
+    except Exception:
+        # See v4_fleet_execution_authority._resolve_execution_observation --
+        # any store-layer failure fails closed as "unknown", uniformly.
+        return None
+
+
+def _load_signing_key(role: str) -> tuple[str, str]:
+    return trust.load_production_signing_key(role)
+
+
+def issue_verifier_attestation(*, invocation_id: str) -> dict[str, Any]:
+    """The only production-facing way to obtain a signed verifier
+    attestation (PR #7662 repair 6, Sol minimal API). Accepts an opaque
+    ``invocation_id`` only: resolves every evidentiary field from the
+    canonical Sources invocation store (``_resolve_sources_invocation`` --
+    an unknown invocation refuses before any key access), requires the
+    canonical record to declare a successful invocation, loads the signing
+    key from fixed Hramatka custody, and binds the pinned production
+    trust-policy digest -- never from a caller-supplied argument."""
+    require(isinstance(invocation_id, str) and bool(invocation_id), "invocation_id must be a nonempty string -- refusing")
+    record = _resolve_sources_invocation(invocation_id=invocation_id)
+    require(record is not None, f"unknown invocation_id: {invocation_id!r} -- refusing (no key access)")
+    require(record.get("success") is True, f"invocation {invocation_id!r} is not recorded as successful -- refusing (no key access)")
+    signing_key_hex, signer_key_id = _load_signing_key("sources")
+    _, trust_policy_sha256 = trust.load_production_trust_policy()
+    return _issue_verifier_attestation_from_evidence(
+        signing_key_hex=signing_key_hex,
+        signer_key_id=signer_key_id,
+        outcome_sha256=V4_SHA256,
+        row_content_sha256=record["row_content_sha256"],
+        identifier=record["identifier"],
+        tool_id=record["tool_id"],
+        tool_version=record["tool_version"],
+        request_id=record["request_id"],
+        tool_result_sha256=record["tool_result_sha256"],
+        lookup_ids=list(record["lookup_ids"]),
+        invocation_id=record["invocation_id"],
+        trust_policy_sha256=trust_policy_sha256,
+    )
 
 
 def verify_verifier_attestation(attestation: dict[str, Any], *, trust_policy: dict[str, Any], outcome_sha256: str, row_content_sha256: str) -> None:
@@ -115,8 +188,9 @@ def verify_verifier_attestation(attestation: dict[str, Any], *, trust_policy: di
     ``trust_policy`` -- the only way anything downstream may treat
     ``attestation`` as authentic. Requires an exact
     ``outcome_sha256``/``row_content_sha256`` bind, a ``success``
-    disposition, and a signature that verifies against an active
-    (registered, non-revoked) key."""
+    disposition, a signature that verifies against an active (registered,
+    non-revoked) key, and an exact ``trust_policy_sha256`` match against the
+    policy actually being verified against."""
     require(isinstance(attestation, dict), "verifier attestation must be an object -- refusing")
     body = {k: v for k, v in attestation.items() if k != "signature_hex"}
     require(set(body) == ATTESTATION_KEYS, f"verifier attestation must declare exactly {sorted(ATTESTATION_KEYS)} -- refusing (unexpected or missing key)")
@@ -130,3 +204,4 @@ def verify_verifier_attestation(attestation: dict[str, Any], *, trust_policy: di
         trust.verify_with_policy(trust_policy, "sources", body.get("signer_key_id"), ATTESTATION_DOMAIN, body, signature_hex)
     except trust.TrustAuthorityError as exc:
         raise SourcesAuthorityError(f"verifier attestation failed signature verification -- refusing: {exc}") from exc
+    trust.require_trust_policy_binding(body, trust_policy, error_cls=SourcesAuthorityError)

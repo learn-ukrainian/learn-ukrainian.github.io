@@ -110,6 +110,29 @@ _V2_REQUEST_PLANE = (
 # Back-compat alias: older callers imported the request-plane tuple directly.
 PG_SCHEMA_STATEMENTS: tuple[str, ...] = _V2_REQUEST_PLANE
 
+# V4 canonical authority store (PR #7662 repair 6): the operator-approved
+# extension of this same pg plane for text-free full execution observations
+# and Sources invocation records. See ``scripts.fleet_comms.v4_canonical_
+# authority_store`` for the write/resolve contract. TEXT-parity with the
+# sqlite migration below, same as every other table in this ledger.
+_V3_V4_CANONICAL_AUTHORITY = (
+    """CREATE TABLE IF NOT EXISTS v4_execution_observations (
+        task_id TEXT NOT NULL,
+        run_id TEXT NOT NULL,
+        role TEXT NOT NULL CHECK (role IN ('author', 'reviewer')),
+        record_sha256 TEXT NOT NULL,
+        record_json TEXT NOT NULL,
+        recorded_at TEXT NOT NULL,
+        PRIMARY KEY (task_id, run_id, role)
+    )""",
+    """CREATE TABLE IF NOT EXISTS v4_sources_invocations (
+        invocation_id TEXT PRIMARY KEY,
+        record_sha256 TEXT NOT NULL,
+        record_json TEXT NOT NULL,
+        recorded_at TEXT NOT NULL
+    )""",
+)
+
 MIGRATIONS: tuple[PgMigration, ...] = (
     PgMigration(
         version=1,
@@ -120,6 +143,11 @@ MIGRATIONS: tuple[PgMigration, ...] = (
         version=2,
         name="fleet-comms-pg-v2-request-plane",
         statements=_V2_REQUEST_PLANE,
+    ),
+    PgMigration(
+        version=3,
+        name="fleet-comms-pg-v3-v4-canonical-authority",
+        statements=_V3_V4_CANONICAL_AUTHORITY,
     ),
 )
 

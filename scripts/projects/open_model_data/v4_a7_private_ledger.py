@@ -83,6 +83,16 @@ trust-boundary P1s fixed here.
   mechanism-only production ships an empty policy, so every one of these
   paths refuses closed until a future real-row PR provisions real keys.
 
+Repair 6 (PR #7662, operator-approved architecture -- see ``batch_state/
+briefs/v4-real-slot-mechanism-repair-6-approval.md``): ``construct_
+completion`` no longer accepts an ``allow_synthetic_fixture`` parameter at
+all -- ``evidence_receipt.production_capable`` must be ``True``
+unconditionally, with no admission-switch escape hatch. The CLI ``main()``
+below no longer exposes ``--trust-policy``; private replay always loads the
+one production policy via ``v4_trust_authority.load_production_trust_
+policy`` (fixed path, digest-pinned against a code-reviewed allowlist),
+never a caller-selected path or dict.
+
 No live corpus or model call happens here, and no real row exists yet in
 production -- every entrypoint in this module is exercised in this PR only
 against synthetic reference texts and a test-only salt (see
@@ -425,7 +435,6 @@ def construct_completion(
     replay_attestation: dict[str, Any],
     rights_receipt_id: str,
     trust_policy: dict[str, Any],
-    allow_synthetic_fixture: bool = False,
 ) -> dict[str, Any]:
     """Run every gate live and return ``{"private_entry", "public_completion"}``.
     Refuses (fail closed) unless every gate genuinely passes -- never
@@ -439,8 +448,11 @@ def construct_completion(
     ``v4_a7_evidence_binder``/``v4_a3_reference_check``) and bound to this
     row's content; this function never builds them from raw identifiers or
     reference text itself. ``evidence_receipt`` must be
-    ``production_capable`` unless the caller explicitly passes
-    ``allow_synthetic_fixture=True`` -- never the default.
+    ``production_capable`` unconditionally (PR #7662 repair 6, Sol
+    synthetic-separation requirement) -- there is no admission-switch
+    parameter that can opt out of this. Tests that need a non-production-
+    capable evidence receipt exercise the lower-level gates directly rather
+    than calling this production entrypoint.
 
     Repair C: ``manifest``/``a2_receipt`` (plus the seal receipt already
     loaded for the builder-eligible-unit check) are independently D1-checked
@@ -470,11 +482,10 @@ def construct_completion(
 
     evidence_binder.validate_evidence_receipt_integrity(evidence_receipt, trust_policy)
     require(evidence_receipt.get("row_content_sha256") == row_content_sha256, "evidence_receipt is not bound to this row's content hash -- refusing")
-    if not allow_synthetic_fixture:
-        require(
-            evidence_receipt.get("production_capable") is True,
-            "evidence_receipt is not production_capable -- refusing (pass allow_synthetic_fixture=True only from a test/fixture caller)",
-        )
+    require(
+        evidence_receipt.get("production_capable") is True,
+        "evidence_receipt is not production_capable -- refusing (no admission-switch escape hatch; PR #7662 repair 6)",
+    )
 
     reference_check.validate_reference_check_receipt_integrity(reference_check_receipt)
     candidate_fingerprint = near_duplicate.fingerprint(row_text).exact_fingerprint
@@ -755,7 +766,6 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--packet-dir", required=True, type=Path, help="the private A3 builder packet directory")
     parser.add_argument("--manifest", required=True, type=Path, help="the frozen 100-slot pilot slot manifest JSON (for Invariant D1)")
     parser.add_argument("--a2-receipt", required=True, type=Path, help="A2's public stratum_coverage_map receipt JSON (for Invariant D1)")
-    parser.add_argument("--trust-policy", type=Path, default=trust.DEFAULT_TRUST_POLICY_PATH, help="the text-free trust-policy JSON (default: the checked-in production policy)")
     parser.add_argument("--salt-hex", required=True, help="the private 32-byte A7 slot-unit-pick/lineage salt, hex-encoded (never the A3 salt)")
     parser.add_argument("--verify-private", action="store_true", required=True, help="run the private replay (the only supported mode)")
     args = parser.parse_args(argv)
@@ -769,7 +779,10 @@ def main(argv: list[str] | None = None) -> None:
     salt = bytes.fromhex(args.salt_hex)
 
     try:
-        trust_policy = trust.load_trust_policy(args.trust_policy)
+        # Repair 6 (PR #7662): no ``--trust-policy`` flag -- private replay
+        # always verifies against the one fixed, digest-pinned production
+        # policy, never a caller-selected path or dict.
+        trust_policy, _ = trust.load_production_trust_policy()
         verify_private_replay(
             public_receipt,
             ledger,

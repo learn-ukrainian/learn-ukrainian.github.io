@@ -88,13 +88,12 @@ def _real_slot_construction_kwargs(tmp_root: Path, sealed: dict) -> dict:
         "tier": "silver",
         "author_execution_receipt": author_execution_receipt,
         "reviewer_execution_receipt": reviewer_execution_receipt,
-        "evidence_receipt": evidence_binder.build_synthetic_fixture_evidence_receipt(row_content_sha256, list(fx.VESUM_IDS)),
+        "evidence_receipt": fx.build_verifier_backed_evidence_receipt(row_content_sha256),
         "reference_check_receipt": reference_check_receipt,
         "reference_check_signature": reference_check_signature,
         "replay_attestation": replay_attestation,
         "rights_receipt_id": fx.RIGHTS_RECEIPT_ID,
         "trust_policy": fx.TRUST_POLICY,
-        "allow_synthetic_fixture": True,
     }
 
 
@@ -348,7 +347,7 @@ def test_verify_private_replay_refuses_a_tampered_evidence_receipt_grade(tmp_pat
     tmp_root, info = fx.build_real_slot_root(tmp_path)
     stored_ledger = ledger.load_ledger(info["ledger_path"])
     entry = stored_ledger["entries"][fx.TARGET_SLOT_ID]
-    entry["evidence_receipt"] = {**entry["evidence_receipt"], "production_capable": True}
+    entry["evidence_receipt"] = {**entry["evidence_receipt"], "production_capable": False}
     with pytest.raises(ledger.PrivateLedgerError, match="evidence receipt failed replay integrity recheck"):
         ledger.verify_private_replay(info["a7_receipt"], stored_ledger, **_replay_kwargs(tmp_root, info))
 
@@ -436,7 +435,7 @@ def test_build_verifier_receipt_succeeds_with_a_genuine_signed_attestation() -> 
     """Repair A (PR #7662 repair 4): the only way to a production-capable
     verifier receipt is a signed sources-authority attestation."""
     row_content_sha256 = "a" * 64
-    attestation = sources_authority.issue_verifier_attestation(
+    attestation = sources_authority._issue_verifier_attestation_from_evidence(
         signing_key_hex=fx.SOURCES_SIGNING_KEY_HEX,
         signer_key_id=fx.SOURCES_KEY_ID,
         outcome_sha256=ledger.V4_SHA256,
@@ -448,6 +447,7 @@ def test_build_verifier_receipt_succeeds_with_a_genuine_signed_attestation() -> 
         tool_result_sha256="b" * 64,
         lookup_ids=["vesum-row-12345"],
         invocation_id="inv-1",
+        trust_policy_sha256=fx.TRUST_POLICY_SHA256,
     )
     verifier_receipt = evidence_binder.build_verifier_receipt(attestation=attestation, trust_policy=fx.TRUST_POLICY)
     receipt = evidence_binder.build_evidence_receipt(row_content_sha256, [verifier_receipt], trust_policy=fx.TRUST_POLICY)
@@ -482,7 +482,7 @@ def test_build_verifier_receipt_refuses_an_unsigned_self_fabricated_attestation(
 
 
 def test_build_verifier_receipt_refuses_an_unknown_signer_key() -> None:
-    attestation = sources_authority.issue_verifier_attestation(
+    attestation = sources_authority._issue_verifier_attestation_from_evidence(
         signing_key_hex=fx.SOURCES_SIGNING_KEY_HEX,
         signer_key_id="unregistered-key",
         outcome_sha256=ledger.V4_SHA256,
@@ -494,6 +494,7 @@ def test_build_verifier_receipt_refuses_an_unknown_signer_key() -> None:
         tool_result_sha256="b" * 64,
         lookup_ids=["vesum-row-12345"],
         invocation_id="inv-1",
+        trust_policy_sha256=fx.TRUST_POLICY_SHA256,
     )
     with pytest.raises(evidence_binder.EvidenceBinderError, match="authenticity"):
         evidence_binder.build_verifier_receipt(attestation=attestation, trust_policy=fx.TRUST_POLICY)
@@ -501,7 +502,7 @@ def test_build_verifier_receipt_refuses_an_unknown_signer_key() -> None:
 
 def test_build_verifier_receipt_refuses_a_revoked_signer_key() -> None:
     revoked_policy = trust.build_test_trust_policy(sources={fx.SOURCES_KEY_ID: fx.SOURCES_PUBLIC_KEY_HEX}, revoked_key_ids=frozenset({fx.SOURCES_KEY_ID}))
-    attestation = sources_authority.issue_verifier_attestation(
+    attestation = sources_authority._issue_verifier_attestation_from_evidence(
         signing_key_hex=fx.SOURCES_SIGNING_KEY_HEX,
         signer_key_id=fx.SOURCES_KEY_ID,
         outcome_sha256=ledger.V4_SHA256,
@@ -513,6 +514,7 @@ def test_build_verifier_receipt_refuses_a_revoked_signer_key() -> None:
         tool_result_sha256="b" * 64,
         lookup_ids=["vesum-row-12345"],
         invocation_id="inv-1",
+        trust_policy_sha256=trust.trust_policy_sha256(revoked_policy),
     )
     with pytest.raises(evidence_binder.EvidenceBinderError, match="revoked"):
         evidence_binder.build_verifier_receipt(attestation=attestation, trust_policy=revoked_policy)
@@ -521,7 +523,7 @@ def test_build_verifier_receipt_refuses_a_revoked_signer_key() -> None:
 def test_build_verifier_receipt_refuses_against_an_empty_production_trust_policy() -> None:
     """Mechanism-only production: an empty trust policy (no active
     ``sources`` key yet) refuses every production-capable receipt."""
-    attestation = sources_authority.issue_verifier_attestation(
+    attestation = sources_authority._issue_verifier_attestation_from_evidence(
         signing_key_hex=fx.SOURCES_SIGNING_KEY_HEX,
         signer_key_id=fx.SOURCES_KEY_ID,
         outcome_sha256=ledger.V4_SHA256,
@@ -533,6 +535,7 @@ def test_build_verifier_receipt_refuses_against_an_empty_production_trust_policy
         tool_result_sha256="b" * 64,
         lookup_ids=["vesum-row-12345"],
         invocation_id="inv-1",
+        trust_policy_sha256=trust.trust_policy_sha256(trust.empty_trust_policy()),
     )
     with pytest.raises(evidence_binder.EvidenceBinderError, match="authenticity"):
         evidence_binder.build_verifier_receipt(attestation=attestation, trust_policy=trust.empty_trust_policy())
@@ -540,7 +543,7 @@ def test_build_verifier_receipt_refuses_against_an_empty_production_trust_policy
 
 def test_verifier_attestation_refuses_a_tool_id_outside_the_sanctioned_prefix() -> None:
     with pytest.raises(sources_authority.SourcesAuthorityError, match="sanctioned"):
-        sources_authority.issue_verifier_attestation(
+        sources_authority._issue_verifier_attestation_from_evidence(
             signing_key_hex=fx.SOURCES_SIGNING_KEY_HEX,
             signer_key_id=fx.SOURCES_KEY_ID,
             outcome_sha256=ledger.V4_SHA256,
@@ -552,14 +555,26 @@ def test_verifier_attestation_refuses_a_tool_id_outside_the_sanctioned_prefix() 
             tool_result_sha256="b" * 64,
             lookup_ids=["vesum-row-12345"],
             invocation_id="inv-1",
+            trust_policy_sha256=fx.TRUST_POLICY_SHA256,
         )
 
 
-def test_construct_completion_refuses_synthetic_evidence_without_explicit_opt_in(tmp_path: Path) -> None:
+def test_construct_completion_has_no_synthetic_admission_switch() -> None:
+    """PR #7662 repair 6, Sol synthetic-separation requirement: production's
+    ``construct_completion`` no longer exposes an ``allow_synthetic_
+    fixture`` parameter (or any other admission-switch keyword) at all --
+    there is no runtime argument that could ever bypass the ``production_
+    capable`` requirement below."""
+    params = set(inspect.signature(ledger.construct_completion).parameters)
+    assert "allow_synthetic_fixture" not in params
+    assert not hasattr(evidence_binder, "build_synthetic_fixture_evidence_receipt"), "production evidence binder must expose no synthetic-fixture builder"
+
+
+def test_construct_completion_refuses_a_non_production_capable_evidence_receipt(tmp_path: Path) -> None:
     tmp_root = fx.base_fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
     sealed = fx.build_sealed_receipt_and_packet(tmp_path)
     kwargs = _real_slot_construction_kwargs(tmp_root, sealed)
-    kwargs["allow_synthetic_fixture"] = False
+    kwargs["evidence_receipt"] = fx.build_synthetic_fixture_evidence_receipt(kwargs["evidence_receipt"]["row_content_sha256"], list(fx.VESUM_IDS))
     with pytest.raises(ledger.PrivateLedgerError, match="not production_capable"):
         ledger.construct_completion(**kwargs)
 
@@ -1048,7 +1063,7 @@ def test_verify_author_execution_receipt_refuses_an_uppercase_hex_hash_even_when
 
 def test_issue_verifier_attestation_refuses_duplicate_lookup_ids() -> None:
     with pytest.raises(sources_authority.SourcesAuthorityError, match="duplicate"):
-        sources_authority.issue_verifier_attestation(
+        sources_authority._issue_verifier_attestation_from_evidence(
             signing_key_hex=fx.SOURCES_SIGNING_KEY_HEX,
             signer_key_id=fx.SOURCES_KEY_ID,
             outcome_sha256=ledger.V4_SHA256,
@@ -1060,11 +1075,12 @@ def test_issue_verifier_attestation_refuses_duplicate_lookup_ids() -> None:
             tool_result_sha256="b" * 64,
             lookup_ids=["dup-lookup", "dup-lookup"],
             invocation_id="inv-1",
+            trust_policy_sha256=fx.TRUST_POLICY_SHA256,
         )
 
 
 def test_verify_verifier_attestation_refuses_an_extra_field_even_when_resigned() -> None:
-    attestation = sources_authority.issue_verifier_attestation(
+    attestation = sources_authority._issue_verifier_attestation_from_evidence(
         signing_key_hex=fx.SOURCES_SIGNING_KEY_HEX,
         signer_key_id=fx.SOURCES_KEY_ID,
         outcome_sha256=ledger.V4_SHA256,
@@ -1076,6 +1092,7 @@ def test_verify_verifier_attestation_refuses_an_extra_field_even_when_resigned()
         tool_result_sha256="b" * 64,
         lookup_ids=["l-1"],
         invocation_id="inv-1",
+        trust_policy_sha256=fx.TRUST_POLICY_SHA256,
     )
     body = {k: v for k, v in attestation.items() if k != "signature_hex"}
     tampered_body = {**body, "extra_note": "should never be signable"}
@@ -1226,7 +1243,7 @@ def test_reference_check_receipt_integrity_catches_a_flipped_passed_flag() -> No
 
 def test_evidence_receipt_refuses_a_malformed_identifier() -> None:
     with pytest.raises(evidence_binder.EvidenceBinderError, match="VESUM/sources shape"):
-        evidence_binder.build_synthetic_fixture_evidence_receipt("a" * 64, ["not-a-valid-id"])
+        fx.build_synthetic_fixture_evidence_receipt("a" * 64, ["not-a-valid-id"])
 
 
 # --- repair B: reference-check receipt signature + replay attestation ------
@@ -1256,7 +1273,7 @@ def test_replay_attestation_refuses_when_the_recomputation_does_not_match() -> N
     the given receipt -- it can never attest a false replay."""
     receipt = fx.build_reference_check_receipt()
     with pytest.raises(reference_check.ReferenceCheckError, match="does not reproduce"):
-        reference_check.issue_replay_attestation(
+        reference_check._issue_replay_attestation_from_evidence(
             signing_key_hex=fx.A3_SIGNING_KEY_HEX,
             signer_key_id=fx.A3_KEY_ID,
             candidate_text=fx.ROW_TEXT,
@@ -1266,12 +1283,13 @@ def test_replay_attestation_refuses_when_the_recomputation_does_not_match() -> N
             outcome_sha256=ledger.V4_SHA256,
             row_content_sha256=ledger.sha256_text(fx.ROW_TEXT),
             replay_invocation_id="bad-replay",
+            trust_policy_sha256=fx.TRUST_POLICY_SHA256,
         )
 
 
 def test_replay_attestation_refuses_an_unknown_a3_signer_key() -> None:
     receipt = fx.build_reference_check_receipt()
-    attestation = reference_check.issue_replay_attestation(
+    attestation = reference_check._issue_replay_attestation_from_evidence(
         signing_key_hex=fx.A3_SIGNING_KEY_HEX,
         signer_key_id="unregistered-a3-key",
         candidate_text=fx.ROW_TEXT,
@@ -1281,6 +1299,7 @@ def test_replay_attestation_refuses_an_unknown_a3_signer_key() -> None:
         outcome_sha256=ledger.V4_SHA256,
         row_content_sha256=ledger.sha256_text(fx.ROW_TEXT),
         replay_invocation_id="r-1",
+        trust_policy_sha256=fx.TRUST_POLICY_SHA256,
     )
     with pytest.raises(reference_check.ReferenceCheckError, match="unregistered"):
         reference_check.verify_replay_attestation(attestation, receipt=receipt, trust_policy=fx.TRUST_POLICY, outcome_sha256=ledger.V4_SHA256, row_content_sha256=ledger.sha256_text(fx.ROW_TEXT))

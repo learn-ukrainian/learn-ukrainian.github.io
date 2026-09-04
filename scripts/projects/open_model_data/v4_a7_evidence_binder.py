@@ -20,14 +20,15 @@ refused, not promoted:
   this row's own content hash. A bare identifier string, with no bound
   verifier receipt, can never produce a ``production_capable`` evidence
   receipt.
-* ``build_synthetic_fixture_evidence_receipt`` is the explicit, unmistakably
-  named test/fixture path: shape-checked identifiers with no verifier
-  receipt at all. It always carries ``production_capable: False`` and
-  ``evidence_source: "synthetic_fixture"``, and
-  ``v4_a7_private_ledger.construct_completion`` refuses to build a
-  completion from it unless the caller explicitly passes
-  ``allow_synthetic_fixture=True`` -- never the default, and never reachable
-  from a caller that does not deliberately opt in.
+* The explicit, unmistakably named synthetic/fixture evidence builder
+  (shape-checked identifiers with no verifier receipt at all, always
+  ``production_capable: False``) lives only under ``tests/projects/
+  open_model_data/`` (PR #7662 repair 6, Sol synthetic-separation
+  requirement) -- this production module has no such callable, and
+  ``v4_a7_private_ledger.construct_completion`` has no admission-switch
+  parameter that could ever accept one. A non-``production_capable``
+  evidence receipt unconditionally refuses construction; there is no opt-in
+  escape hatch reachable from production code.
 * ``validate_evidence_receipt_integrity`` recomputes an evidence receipt's
   own ``receipt_id`` (and, for a verifier-backed one, every embedded
   verifier receipt's own ``receipt_id``) from its current body and refuses
@@ -198,35 +199,6 @@ def build_evidence_receipt(row_content_sha256: str, verifier_receipts: list[dict
         "disposition": "supported",
     }
     receipt_id = f"evidence:{_sha256_text(_canonical_json(payload))}"
-    return {**payload, "receipt_id": receipt_id}
-
-
-def build_synthetic_fixture_evidence_receipt(row_content_sha256: str, vesum_ids: list[str], *, uncertainty: str = "resolved") -> dict[str, Any]:
-    """Test/fixture-only evidence: shape-checked identifiers with no bound
-    verifier receipt. Always ``production_capable: False`` and
-    ``evidence_source: "synthetic_fixture"`` -- ``grade`` stays
-    ``"verified"`` only for the shared admission engine's own required
-    shape (``v4_original_row_admission.evaluate_row``), never as a claim of
-    real verification. ``v4_a7_private_ledger.construct_completion`` refuses
-    a completion built from this receipt unless the caller explicitly
-    passes ``allow_synthetic_fixture=True``."""
-    require(isinstance(vesum_ids, list) and vesum_ids, "vesum_ids must be a nonempty list")
-    require(len(vesum_ids) == len(set(vesum_ids)), "vesum_ids must not contain duplicates")
-    for identifier in vesum_ids:
-        require(verify_identifier_shape(identifier), f"identifier does not match the pinned VESUM/sources shape: {identifier!r}")
-    require(uncertainty in {"resolved", "bounded"}, "uncertainty must be resolved or bounded")
-
-    payload = {
-        "row_content_sha256": row_content_sha256,
-        "uncertainty": uncertainty,
-        "vesum_ids": sorted(vesum_ids),
-        "verifier_receipts": [],
-        "evidence_source": "synthetic_fixture",
-        "production_capable": False,
-        "grade": "verified",
-        "disposition": "supported",
-    }
-    receipt_id = f"evidence-synthetic-fixture:{_sha256_text(_canonical_json(payload))}"
     return {**payload, "receipt_id": receipt_id}
 
 

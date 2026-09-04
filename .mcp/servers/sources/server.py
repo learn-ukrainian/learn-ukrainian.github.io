@@ -1321,6 +1321,114 @@ async def handle_verify_source_attribution(args: dict) -> list[TextContent]:
     return [TextContent(type="text", text=json.dumps(payload, indent=2, ensure_ascii=False))]
 
 
+# --- V4 canonical Sources-invocation recording (PR #7662 repair 6) --------
+#
+# Opt-in only: an ordinary curriculum tool call never touches this path.
+# The V4 evidence-gathering caller additionally passes three underscore-
+# prefixed arguments (popped before the real handler ever sees them, same
+# convention as ``_privacy_mode``): ``_v4_evidence_request_id`` (the
+# caller's own fresh id), ``_v4_evidence_row_content_sha256`` (the row this
+# evidence is for), and ``_v4_evidence_lookup_ids`` (the immutable ids the
+# caller claims this call's result actually supports). This module is an
+# "invocation attester", never a passthrough recorder (the same pattern PR
+# #7662 repair 5 already applies to fleet execution): it independently
+# requires every claimed lookup id, and the tool's own bare identifier
+# (``name`` with the ``mcp__sources__`` prefix stripped, or the caller's
+# explicit ``_v4_evidence_identifier`` override), to actually appear as a
+# substring of the real result text this exact call produced -- a claim
+# that never appears in the genuine result is refused, never recorded.
+#
+# ``_V4_SANCTIONED_VERIFIER_TOOLS`` is deliberately a small, explicit
+# allowlist -- only local tool names shaped to answer "is this identifier
+# real" (never a free-text search tool, whose result shape this substring
+# check could not meaningfully police).
+_V4_SANCTIONED_VERIFIER_TOOLS = frozenset(
+    {
+        "verify_word",
+        "verify_words",
+        "verify_lemma",
+        "verify_stress",
+        "verify_quote",
+        "verify_source_attribution",
+        "vet_vocabulary",
+        "check_modern_form",
+        "check_russian_shadow",
+    }
+)
+
+
+def _pop_v4_evidence_request(arguments: dict[str, Any]) -> dict[str, Any] | None:
+    """Pop and validate the opt-in V4 evidentiary bundle, if present.
+    Returns ``None`` (never raises) when the bundle is absent or malformed
+    -- an ordinary call, or a caller that got the opt-in shape wrong, always
+    falls back to the unmodified tool response; recording is best-effort
+    and additive, never load-bearing for the tool call itself."""
+    if not isinstance(arguments, dict):
+        return None
+    request_id = arguments.pop("_v4_evidence_request_id", None)
+    row_content_sha256 = arguments.pop("_v4_evidence_row_content_sha256", None)
+    lookup_ids = arguments.pop("_v4_evidence_lookup_ids", None)
+    identifier = arguments.pop("_v4_evidence_identifier", None)
+    if request_id is None and row_content_sha256 is None and lookup_ids is None and identifier is None:
+        return None
+    if not (
+        isinstance(request_id, str) and request_id
+        and isinstance(row_content_sha256, str) and re.match(r"^[a-f0-9]{64}$", row_content_sha256)
+        and isinstance(lookup_ids, list) and lookup_ids and all(isinstance(x, str) and x for x in lookup_ids)
+        and isinstance(identifier, str) and identifier
+    ):
+        return None
+    return {"request_id": request_id, "row_content_sha256": row_content_sha256, "lookup_ids": lookup_ids, "identifier": identifier}
+
+
+def _record_v4_verifier_invocation(*, name: str, evidence_request: dict[str, Any], result_text: str) -> None:
+    """Independently confirm the claimed evidence is actually present in
+    the genuine result text, then durably record the invocation. Never
+    raises past this function -- a recording failure (missing Fleet Comms
+    authority, an unexpected conflict, an unconfirmed claim) is swallowed
+    here exactly like ``_log_tool_call``'s existing best-effort telemetry;
+    it can only ever prevent a *later* verifier attestation from being
+    issued for this call, never the call's own successful response."""
+    if name not in _V4_SANCTIONED_VERIFIER_TOOLS:
+        return
+    identifier = evidence_request["identifier"]
+    bare_identifier = identifier.split(":", 1)[-1]
+    claimed = [bare_identifier, *evidence_request["lookup_ids"]]
+    if not all(claim and claim in result_text for claim in claimed):
+        return  # a claim not actually present in the genuine result -- refuse silently, never record
+    try:
+        from scripts.fleet_comms import v4_canonical_authority_store as v4_store
+        from scripts.fleet_comms.artifacts import ArtifactStore
+
+        tool_id = f"mcp__sources__{name}"
+        tool_version = "v1"
+        tool_result_sha256 = hashlib.sha256(result_text.encode("utf-8")).hexdigest()
+        invocation_id = v4_store.compute_invocation_id(
+            tool_id=tool_id,
+            tool_version=tool_version,
+            request_id=evidence_request["request_id"],
+            row_content_sha256=evidence_request["row_content_sha256"],
+            identifier=identifier,
+            tool_result_sha256=tool_result_sha256,
+            lookup_ids=evidence_request["lookup_ids"],
+        )
+        record = {
+            "invocation_id": invocation_id,
+            "row_content_sha256": evidence_request["row_content_sha256"],
+            "identifier": identifier,
+            "tool_id": tool_id,
+            "tool_version": tool_version,
+            "request_id": evidence_request["request_id"],
+            "tool_result_sha256": tool_result_sha256,
+            "lookup_ids": sorted(evidence_request["lookup_ids"]),
+            "success": True,
+        }
+        with ArtifactStore() as store:
+            store.record_v4_sources_invocation(record)
+    except Exception:
+        pass  # best-effort durable recording must never break the tool call
+
+
 async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[list[TextContent], bool]:
     """Core tool-call dispatch. Returns ``(content, is_error)``; never raises.
 
@@ -1333,6 +1441,7 @@ async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[lis
     import time as _time
     _t0 = _time.monotonic()
     privacy_mode = bool(arguments.pop("_privacy_mode", False)) if isinstance(arguments, dict) else False
+    evidence_request = _pop_v4_evidence_request(arguments)
     try:
         # Dispatch to handler
         _handlers = {
@@ -1391,6 +1500,8 @@ async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[lis
             name, arguments, response_chars=len(_resp_text), duration_s=_elapsed,
             response_text=_resp_text, privacy_mode=privacy_mode,
         )
+        if evidence_request is not None:
+            _record_v4_verifier_invocation(name=name, evidence_request=evidence_request, result_text=_resp_text)
         return result, False
     except Exception as e:
         _elapsed = _time.monotonic() - _t0

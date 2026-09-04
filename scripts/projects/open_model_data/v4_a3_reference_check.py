@@ -85,9 +85,9 @@ REPLAY_ATTESTATION_DOMAIN = b"v4-a3-replay-attestation-v1"
 # Exact allowed key sets for these two signed A3 artifacts (PR #7662 repair
 # 5) -- a signature can never smuggle an extra field into an artifact
 # documented as text-free.
-RECEIPT_SIGNATURE_KEYS = frozenset({"schema_version", "outcome_sha256", "reference_check_receipt_sha256", "signer_key_id"})
+RECEIPT_SIGNATURE_KEYS = frozenset({"schema_version", "outcome_sha256", "reference_check_receipt_sha256", "signer_key_id", "trust_policy_sha256"})
 REPLAY_ATTESTATION_KEYS = frozenset(
-    {"schema_version", "outcome_sha256", "row_content_sha256", "reference_check_receipt_sha256", "policy_sha256", "replay_invocation_id", "signer_key_id"}
+    {"schema_version", "outcome_sha256", "row_content_sha256", "reference_check_receipt_sha256", "policy_sha256", "replay_invocation_id", "signer_key_id", "trust_policy_sha256"}
 )
 
 # A stricter band than the near-duplicate policy's own 0.9 near-duplicate
@@ -246,20 +246,43 @@ def verify_reference_check_receipt(receipt: dict[str, Any], candidate_text: str,
 # --- signed authenticity: receipt signature + replay attestation -----------
 
 
-def sign_reference_check_receipt(*, signing_key_hex: str, signer_key_id: str, receipt: dict[str, Any], outcome_sha256: str) -> dict[str, Any]:
-    """A3-role only: sign a text-free statement that ``receipt`` (already
-    self-consistent -- ``validate_reference_check_receipt_integrity`` is
-    re-run here) was produced by A3. Never callable by A7; never carries
-    candidate/reference text."""
+def _sign_reference_check_receipt_from_evidence(*, signing_key_hex: str, signer_key_id: str, receipt: dict[str, Any], outcome_sha256: str, trust_policy_sha256: str) -> dict[str, Any]:
+    """A3-role signing engine: sign a text-free statement that ``receipt``
+    (already self-consistent -- ``validate_reference_check_receipt_
+    integrity`` is re-run here) was produced by A3. Never callable by A7;
+    never carries candidate/reference text. Private (PR #7662 repair 6) --
+    production never calls this directly; see ``sign_reference_check_
+    receipt`` below."""
     validate_reference_check_receipt_integrity(receipt)
+    trust.require_sha256_hex(trust_policy_sha256, "trust_policy_sha256", error_cls=ReferenceCheckError)
     body = {
         "schema_version": RECEIPT_SIGNATURE_SCHEMA_VERSION,
         "outcome_sha256": outcome_sha256,
         "reference_check_receipt_sha256": _sha256_text(_canonical_json(receipt)),
         "signer_key_id": signer_key_id,
+        "trust_policy_sha256": trust_policy_sha256,
     }
     signature_hex = trust.sign(signing_key_hex, RECEIPT_SIGNATURE_DOMAIN, body)
     return {**body, "signature_hex": signature_hex}
+
+
+def _load_signing_key(role: str) -> tuple[str, str]:
+    return trust.load_production_signing_key(role)
+
+
+def sign_reference_check_receipt(*, receipt: dict[str, Any], outcome_sha256: str) -> dict[str, Any]:
+    """The only production-facing way to sign a reference-check receipt
+    (PR #7662 repair 6): the signing key is loaded from fixed Hramatka
+    custody (``_load_signing_key``, never a caller-supplied argument) and
+    the pinned production trust-policy digest is bound into the signed
+    body. Still requires ``receipt`` -- A3 itself must have already built it
+    from the real private reference material this module never receives
+    from any other caller."""
+    signing_key_hex, signer_key_id = _load_signing_key("a3")
+    _, trust_policy_sha256 = trust.load_production_trust_policy()
+    return _sign_reference_check_receipt_from_evidence(
+        signing_key_hex=signing_key_hex, signer_key_id=signer_key_id, receipt=receipt, outcome_sha256=outcome_sha256, trust_policy_sha256=trust_policy_sha256
+    )
 
 
 def verify_reference_check_receipt_signature(signature: dict[str, Any], *, receipt: dict[str, Any], trust_policy: dict[str, Any], outcome_sha256: str) -> None:
@@ -279,9 +302,10 @@ def verify_reference_check_receipt_signature(signature: dict[str, Any], *, recei
         trust.verify_with_policy(trust_policy, "a3", body.get("signer_key_id"), RECEIPT_SIGNATURE_DOMAIN, body, signature_hex)
     except trust.TrustAuthorityError as exc:
         raise ReferenceCheckError(f"reference-check receipt signature failed verification -- refusing: {exc}") from exc
+    trust.require_trust_policy_binding(body, trust_policy, error_cls=ReferenceCheckError)
 
 
-def issue_replay_attestation(
+def _issue_replay_attestation_from_evidence(
     *,
     signing_key_hex: str,
     signer_key_id: str,
@@ -292,16 +316,20 @@ def issue_replay_attestation(
     outcome_sha256: str,
     row_content_sha256: str,
     replay_invocation_id: str,
+    trust_policy_sha256: str,
     policy: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """The A3-role replay attestation: recompute the receipt live from the
-    real candidate text, reference-text set, salt, and policy, require it to
-    reproduce ``receipt`` exactly (never sign otherwise), and only then sign
-    a text-free attestation binding the outcome, row content, receipt
-    digest, policy hash, and a fresh replay invocation id/nonce. Can only
-    ever run in the A3 role -- it requires the same private reference
-    material A3 already holds."""
+    """The A3-role replay attestation engine: recompute the receipt live
+    from the real candidate text, reference-text set, salt, and policy,
+    require it to reproduce ``receipt`` exactly (never sign otherwise), and
+    only then sign a text-free attestation binding the outcome, row
+    content, receipt digest, policy hash, and a fresh replay invocation
+    id/nonce. Can only ever run in the A3 role -- it requires the same
+    private reference material A3 already holds. Private (PR #7662 repair
+    6) -- production never calls this directly; see ``issue_replay_
+    attestation`` below."""
     require(isinstance(replay_invocation_id, str) and replay_invocation_id, "replay_invocation_id must be a nonempty string -- refusing")
+    trust.require_sha256_hex(trust_policy_sha256, "trust_policy_sha256", error_cls=ReferenceCheckError)
     recomputed = build_reference_check_receipt(candidate_text, reference_texts, salt, policy=policy)
     require(recomputed == receipt, "reference_check_receipt does not reproduce from the candidate text, reference-text set, and salt -- refusing to attest replay")
     body = {
@@ -312,9 +340,44 @@ def issue_replay_attestation(
         "policy_sha256": recomputed["policy_sha256"],
         "replay_invocation_id": replay_invocation_id,
         "signer_key_id": signer_key_id,
+        "trust_policy_sha256": trust_policy_sha256,
     }
     signature_hex = trust.sign(signing_key_hex, REPLAY_ATTESTATION_DOMAIN, body)
     return {**body, "signature_hex": signature_hex}
+
+
+def issue_replay_attestation(
+    *,
+    candidate_text: str,
+    reference_texts: dict[str, str],
+    salt: bytes,
+    receipt: dict[str, Any],
+    outcome_sha256: str,
+    row_content_sha256: str,
+    replay_invocation_id: str,
+    policy: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """The only production-facing way to issue a replay attestation (PR
+    #7662 repair 6): the signing key is loaded from fixed Hramatka custody
+    (never a caller-supplied argument) and the pinned production
+    trust-policy digest is bound into the signed body. A3 itself must still
+    supply the real private ``candidate_text``/``reference_texts``/``salt``
+    -- no other caller ever holds them."""
+    signing_key_hex, signer_key_id = _load_signing_key("a3")
+    _, trust_policy_sha256 = trust.load_production_trust_policy()
+    return _issue_replay_attestation_from_evidence(
+        signing_key_hex=signing_key_hex,
+        signer_key_id=signer_key_id,
+        candidate_text=candidate_text,
+        reference_texts=reference_texts,
+        salt=salt,
+        receipt=receipt,
+        outcome_sha256=outcome_sha256,
+        row_content_sha256=row_content_sha256,
+        replay_invocation_id=replay_invocation_id,
+        trust_policy_sha256=trust_policy_sha256,
+        policy=policy,
+    )
 
 
 def verify_replay_attestation(attestation: dict[str, Any], *, receipt: dict[str, Any], trust_policy: dict[str, Any], outcome_sha256: str, row_content_sha256: str) -> None:
@@ -336,3 +399,4 @@ def verify_replay_attestation(attestation: dict[str, Any], *, receipt: dict[str,
         trust.verify_with_policy(trust_policy, "a3", body.get("signer_key_id"), REPLAY_ATTESTATION_DOMAIN, body, signature_hex)
     except trust.TrustAuthorityError as exc:
         raise ReferenceCheckError(f"replay attestation failed verification -- refusing: {exc}") from exc
+    trust.require_trust_policy_binding(body, trust_policy, error_cls=ReferenceCheckError)

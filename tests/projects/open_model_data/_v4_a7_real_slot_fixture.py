@@ -60,6 +60,24 @@ observation's ``execution_result_sha256`` must equal).
 assemble the role-specific structured observation from those two plus this
 fixture's own hashes and call ``issue_*_execution_receipt`` -- never the
 retired keyword-only signature.
+
+Repair (PR #7662 repair 6 -- operator-approved canonical-authority
+architecture): production's ``issue_author_execution_receipt``/``issue_
+reviewer_execution_receipt``/``issue_verifier_attestation``/``sign_
+reference_check_receipt``/``issue_replay_attestation`` now accept opaque
+IDs only and resolve/load everything else (evidence, signing key, trust-
+policy digest) internally. This fixture is not production: it plays each
+distinct signing-authority role directly, with its own ephemeral test keys
+and a synthetic trust-policy digest it computes itself
+(``TRUST_POLICY_SHA256``), so it calls each module's private, unchanged
+signing *engine* (``_issue_author_receipt_from_evidence``, ``_issue_
+reviewer_receipt_from_evidence``, ``_issue_verifier_attestation_from_
+evidence``, ``_sign_reference_check_receipt_from_evidence``, ``_issue_
+replay_attestation_from_evidence``) directly -- exercising the identical
+validation/signing logic the production wrappers delegate to, never a
+production bypass. Evidence is always verifier-backed and
+``production_capable`` here (``build_verifier_backed_evidence_receipt``) --
+``construct_completion`` has no synthetic-admission switch to opt out with.
 """
 
 from __future__ import annotations
@@ -130,6 +148,11 @@ TRUST_POLICY = trust.build_test_trust_policy(
     a3={A3_KEY_ID: A3_PUBLIC_KEY_HEX},
     fleet_execution={FLEET_KEY_ID: FLEET_PUBLIC_KEY_HEX},
 )
+# The digest every signed body this fixture issues binds as
+# ``trust_policy_sha256`` -- computed the identical way production does
+# (``v4_trust_authority.trust_policy_sha256``), just over this test-only
+# policy dict instead of the checked-in production file.
+TRUST_POLICY_SHA256 = trust.trust_policy_sha256(TRUST_POLICY)
 
 AUTHOR_TASK_ID = "fixture-author-task-001"
 AUTHOR_RUN_NONCE = "fixture-author-run-nonce-001"
@@ -213,8 +236,10 @@ def build_reference_check_authenticity(
     """Simulates the A3 authority: signs ``receipt`` and issues the
     mandatory replay attestation, both under the fixture's own ephemeral A3
     key (PR #7662 repair 4, repair B)."""
-    signature = reference_check.sign_reference_check_receipt(signing_key_hex=A3_SIGNING_KEY_HEX, signer_key_id=A3_KEY_ID, receipt=receipt, outcome_sha256=ledger.V4_SHA256)
-    attestation = reference_check.issue_replay_attestation(
+    signature = reference_check._sign_reference_check_receipt_from_evidence(
+        signing_key_hex=A3_SIGNING_KEY_HEX, signer_key_id=A3_KEY_ID, receipt=receipt, outcome_sha256=ledger.V4_SHA256, trust_policy_sha256=TRUST_POLICY_SHA256
+    )
+    attestation = reference_check._issue_replay_attestation_from_evidence(
         signing_key_hex=A3_SIGNING_KEY_HEX,
         signer_key_id=A3_KEY_ID,
         candidate_text=row_text,
@@ -224,6 +249,7 @@ def build_reference_check_authenticity(
         outcome_sha256=ledger.V4_SHA256,
         row_content_sha256=ledger.sha256_text(row_text),
         replay_invocation_id=replay_invocation_id,
+        trust_policy_sha256=TRUST_POLICY_SHA256,
     )
     return signature, attestation
 
@@ -235,7 +261,7 @@ def build_verifier_backed_evidence_receipt(row_content_sha256: str, *, vesum_ids
     identifiers = list(vesum_ids if vesum_ids is not None else VESUM_IDS)
     verifier_receipts = []
     for index, identifier in enumerate(identifiers):
-        attestation = sources_authority.issue_verifier_attestation(
+        attestation = sources_authority._issue_verifier_attestation_from_evidence(
             signing_key_hex=SOURCES_SIGNING_KEY_HEX,
             signer_key_id=SOURCES_KEY_ID,
             outcome_sha256=ledger.V4_SHA256,
@@ -247,9 +273,41 @@ def build_verifier_backed_evidence_receipt(row_content_sha256: str, *, vesum_ids
             tool_result_sha256=ledger.sha256_text(f"fixture-tool-result-{index}"),
             lookup_ids=[f"fixture-lookup-{index}"],
             invocation_id=f"fixture-invocation-{index}",
+            trust_policy_sha256=TRUST_POLICY_SHA256,
         )
         verifier_receipts.append(evidence_binder.build_verifier_receipt(attestation=attestation, trust_policy=TRUST_POLICY))
     return evidence_binder.build_evidence_receipt(row_content_sha256, verifier_receipts, trust_policy=TRUST_POLICY)
+
+
+def build_synthetic_fixture_evidence_receipt(row_content_sha256: str, vesum_ids: list[str], *, uncertainty: str = "resolved") -> dict[str, Any]:
+    """Test-only evidence (PR #7662 repair 6, Sol synthetic-separation
+    requirement -- moved out of production ``v4_a7_evidence_binder``):
+    shape-checked identifiers with no bound verifier receipt. Always
+    ``production_capable: False`` and ``evidence_source: "synthetic_
+    fixture"`` -- ``grade`` stays ``"verified"`` only for the shared
+    admission engine's own required shape, never as a claim of real
+    verification. ``v4_a7_private_ledger.construct_completion`` has no
+    parameter that could ever accept a receipt built by this function --
+    only tests exercising the lower-level gates directly (never
+    ``construct_completion`` itself) use it."""
+    evidence_binder.require(isinstance(vesum_ids, list) and bool(vesum_ids), "vesum_ids must be a nonempty list")
+    evidence_binder.require(len(vesum_ids) == len(set(vesum_ids)), "vesum_ids must not contain duplicates")
+    for identifier in vesum_ids:
+        evidence_binder.require(evidence_binder.verify_identifier_shape(identifier), f"identifier does not match the pinned VESUM/sources shape: {identifier!r}")
+    evidence_binder.require(uncertainty in {"resolved", "bounded"}, "uncertainty must be resolved or bounded")
+
+    payload = {
+        "row_content_sha256": row_content_sha256,
+        "uncertainty": uncertainty,
+        "vesum_ids": sorted(vesum_ids),
+        "verifier_receipts": [],
+        "evidence_source": "synthetic_fixture",
+        "production_capable": False,
+        "grade": "verified",
+        "disposition": "supported",
+    }
+    receipt_id = f"evidence-synthetic-fixture:{ledger.sha256_text(ledger.canonical_json(payload))}"
+    return {**payload, "receipt_id": receipt_id}
 
 
 def build_author_task_state(
@@ -322,7 +380,7 @@ def build_author_execution_receipt(
     }
     observation_kwargs.update(observation_overrides)
     observation = fleet_execution.AuthorExecutionObservation(**observation_kwargs)
-    return fleet_execution.issue_author_execution_receipt(
+    return fleet_execution._issue_author_receipt_from_evidence(
         signing_key_hex=signing_key_hex,
         signer_key_id=signer_key_id,
         outcome_sha256=ledger.V4_SHA256,
@@ -330,6 +388,7 @@ def build_author_execution_receipt(
         envelope=resolved_envelope,
         observation=observation,
         issuance_nonce="fixture-author-issuance-nonce-001",
+        trust_policy_sha256=TRUST_POLICY_SHA256,
     )
 
 
@@ -367,7 +426,7 @@ def build_reviewer_execution_receipt(
     }
     observation_kwargs.update(observation_overrides)
     observation = fleet_execution.ReviewerExecutionObservation(**observation_kwargs)
-    return fleet_execution.issue_reviewer_execution_receipt(
+    return fleet_execution._issue_reviewer_receipt_from_evidence(
         signing_key_hex=signing_key_hex,
         signer_key_id=signer_key_id,
         outcome_sha256=ledger.V4_SHA256,
@@ -375,6 +434,7 @@ def build_reviewer_execution_receipt(
         envelope=resolved_envelope,
         observation=observation,
         issuance_nonce="fixture-reviewer-issuance-nonce-001",
+        trust_policy_sha256=TRUST_POLICY_SHA256,
     )
 
 
@@ -388,17 +448,18 @@ def build_completion(
     row_text: str = ROW_TEXT,
     reference_texts: dict[str, str] | None = None,
     rights_receipt_id: str = RIGHTS_RECEIPT_ID,
-    allow_synthetic_fixture: bool = True,
 ) -> dict[str, Any]:
     """Run the real, live ``v4_a7_private_ledger.construct_completion``
     pipeline -- every gate genuinely evaluated -- and return
-    ``{"private_entry", "public_completion"}``. Defaults to the explicit
-    ``allow_synthetic_fixture=True`` opt-in (this fixture builds a
-    synthetic-fixture evidence receipt by default) -- never the silent
-    default. Every signed authenticity artifact (repair A/B/E) is built
-    fresh here under the fixture's own ephemeral keys."""
+    ``{"private_entry", "public_completion"}``. ``construct_completion`` has
+    no synthetic-admission switch (PR #7662 repair 6): evidence is always a
+    real, verifier-backed, ``production_capable`` receipt
+    (``build_verifier_backed_evidence_receipt``), signed here under the
+    fixture's own ephemeral "sources" test key. Every signed authenticity
+    artifact (repair A/B/E/6) is built fresh here under the fixture's own
+    ephemeral keys."""
     row_content_sha256 = ledger.sha256_text(row_text)
-    evidence_receipt = evidence_binder.build_synthetic_fixture_evidence_receipt(row_content_sha256, list(VESUM_IDS))
+    evidence_receipt = build_verifier_backed_evidence_receipt(row_content_sha256)
     reference_check_receipt = build_reference_check_receipt(row_text, reference_texts)
     reference_check_signature, replay_attestation = build_reference_check_authenticity(reference_check_receipt, row_text=row_text, reference_texts=reference_texts)
 
@@ -430,7 +491,6 @@ def build_completion(
         replay_attestation=replay_attestation,
         rights_receipt_id=rights_receipt_id,
         trust_policy=TRUST_POLICY,
-        allow_synthetic_fixture=allow_synthetic_fixture,
     )
 
 

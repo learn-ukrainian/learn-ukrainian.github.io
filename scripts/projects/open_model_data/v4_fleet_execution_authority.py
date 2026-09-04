@@ -50,6 +50,22 @@ allowed key set (``AUTHOR_RECEIPT_KEYS``/``REVIEWER_RECEIPT_KEYS``): a
 signature can never smuggle an unexpected extra field into an artifact
 documented as text-free, even one whose signature was correctly recomputed
 over the tampered body.
+
+Repair 6 (PR #7662, operator-approved architecture -- see ``batch_state/
+briefs/v4-real-slot-mechanism-repair-6-approval.md``): the production
+entrypoints (``issue_author_execution_receipt``/``issue_reviewer_execution_
+receipt``) now accept opaque ``task_id``/``run_id`` only. They resolve the
+trusted ``TaskExecutionState``/``ResponseEnvelope``/observation from the
+canonical Fleet Comms authority store (``scripts.fleet_comms.v4_canonical_
+authority_store``, written only by the real execution service boundary --
+never a caller-created object), load the signing key from fixed, root-owned
+Hramatka custody (``v4_trust_authority.load_production_signing_key``), and
+bind the pinned production trust-policy digest (``v4_trust_authority.load_
+production_trust_policy``) into every signed body as ``trust_policy_
+sha256``. The prior full-keyword signing engine is retained, unchanged,
+as the private ``_issue_author_receipt_from_evidence``/``_issue_reviewer_
+receipt_from_evidence`` -- production never calls it directly; only these
+two opaque-ID wrappers and this module's own tests do.
 """
 
 from __future__ import annotations
@@ -61,6 +77,11 @@ from scripts.fleet_comms.contracts import CompletionState, ResponseEnvelope
 from scripts.orchestration.thread_handoff import KNOWN_HARNESS_EXECUTABLES
 from scripts.projects.open_model_data import v4_trust_authority as trust
 from scripts.review.reviewer_resolver import CURSOR_AUTO_UNION_FAMILY, UNRESOLVED_AUTHOR_FAMILIES, resolve_author_family
+
+# The one outcome this attester ever signs for -- never a caller-supplied
+# argument (PR #7662 repair 6; see ``v4_a7_private_ledger.V4_SHA256`` for
+# the identical constant used by every other V4 module).
+V4_SHA256 = "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"
 
 SCHEMA_VERSION = "v4-fleet-execution-receipt-v1"
 AUTHOR_DOMAIN = b"v4-fleet-execution-author-v1"
@@ -90,6 +111,7 @@ AUTHOR_RECEIPT_KEYS = frozenset(
         "saw_eligible_unit_ids",
         "signer_key_id",
         "issuance_nonce",
+        "trust_policy_sha256",
     }
 )
 REVIEWER_RECEIPT_KEYS = AUTHOR_RECEIPT_KEYS | {"authorship_receipt_sha256", "rubric_sha256", "verdict"}
@@ -291,10 +313,21 @@ def _require_no_duplicate_tool_ids(verification_tool_ids: tuple[str, ...]) -> No
     )
 
 
-# --- issuance (attester-only; called only after the observed execution is confirmed) --
+# --- issuance engine (attester-only; called only after the observed execution is confirmed) --
+#
+# ``_issue_author_receipt_from_evidence``/``_issue_reviewer_receipt_from_
+# evidence`` are the unchanged repair-5 validation/signing engine -- private
+# now (PR #7662 repair 6) because production never calls them directly.
+# Tests may still call them directly to exercise this engine's own
+# validation branches against synthetic evidence they construct themselves
+# (that is testing internals, not a production bypass: neither function
+# ever becomes reachable from a production code path). The only production
+# entrypoints are ``issue_author_execution_receipt``/``issue_reviewer_
+# execution_receipt`` below, which accept opaque ``task_id``/``run_id``
+# only and resolve/derive every one of this engine's arguments internally.
 
 
-def issue_author_execution_receipt(
+def _issue_author_receipt_from_evidence(
     *,
     signing_key_hex: str,
     signer_key_id: str,
@@ -303,6 +336,7 @@ def issue_author_execution_receipt(
     envelope: ResponseEnvelope,
     observation: AuthorExecutionObservation,
     issuance_nonce: str,
+    trust_policy_sha256: str,
 ) -> dict[str, Any]:
     """Validate a trusted terminal execution observation and only then sign
     a text-free author execution receipt. Requires every ``saw_*``
@@ -340,6 +374,7 @@ def issue_author_execution_receipt(
         trust.require_sha256_hex(value, name, error_cls=FleetExecutionError)
     require(isinstance(issuance_nonce, str) and bool(issuance_nonce), "issuance_nonce must be a nonempty string -- refusing")
     require(isinstance(signer_key_id, str) and bool(signer_key_id), "signer_key_id must be a nonempty string -- refusing")
+    trust.require_sha256_hex(trust_policy_sha256, "trust_policy_sha256", error_cls=FleetExecutionError)
     tool_ids = tuple(observation.verification_tool_ids)
     _require_no_duplicate_tool_ids(tool_ids)
 
@@ -364,13 +399,14 @@ def issue_author_execution_receipt(
         "saw_eligible_unit_ids": False,
         "signer_key_id": signer_key_id,
         "issuance_nonce": issuance_nonce,
+        "trust_policy_sha256": trust_policy_sha256,
     }
     trust.require_exact_keys(body, AUTHOR_RECEIPT_KEYS, "author execution receipt", error_cls=FleetExecutionError)
     signature_hex = trust.sign(signing_key_hex, AUTHOR_DOMAIN, body)
     return {**body, "signature_hex": signature_hex}
 
 
-def issue_reviewer_execution_receipt(
+def _issue_reviewer_receipt_from_evidence(
     *,
     signing_key_hex: str,
     signer_key_id: str,
@@ -379,11 +415,12 @@ def issue_reviewer_execution_receipt(
     envelope: ResponseEnvelope,
     observation: ReviewerExecutionObservation,
     issuance_nonce: str,
+    trust_policy_sha256: str,
 ) -> dict[str, Any]:
     """Sign a text-free reviewer execution receipt, additionally binding
     the exact authorship-receipt digest, rubric hash, row hash, and
     verdict. Uses the identical trusted-observation validation and identity
-    derivation as ``issue_author_execution_receipt``."""
+    derivation as ``_issue_author_receipt_from_evidence``."""
     require(observation.saw_source_text is False, "reviewer must attest saw_source_text is false -- refusing")
     require(observation.saw_heldout is False, "reviewer must attest saw_heldout is false -- refusing")
     require(observation.saw_eligible_unit_ids is False, "reviewer must attest saw_eligible_unit_ids is false -- refusing")
@@ -413,6 +450,7 @@ def issue_reviewer_execution_receipt(
         trust.require_sha256_hex(value, name, error_cls=FleetExecutionError)
     require(isinstance(issuance_nonce, str) and bool(issuance_nonce), "issuance_nonce must be a nonempty string -- refusing")
     require(isinstance(signer_key_id, str) and bool(signer_key_id), "signer_key_id must be a nonempty string -- refusing")
+    trust.require_sha256_hex(trust_policy_sha256, "trust_policy_sha256", error_cls=FleetExecutionError)
     tool_ids = tuple(observation.verification_tool_ids)
     _require_no_duplicate_tool_ids(tool_ids)
 
@@ -440,10 +478,160 @@ def issue_reviewer_execution_receipt(
         "saw_eligible_unit_ids": False,
         "signer_key_id": signer_key_id,
         "issuance_nonce": issuance_nonce,
+        "trust_policy_sha256": trust_policy_sha256,
     }
     trust.require_exact_keys(body, REVIEWER_RECEIPT_KEYS, "reviewer execution receipt", error_cls=FleetExecutionError)
     signature_hex = trust.sign(signing_key_hex, REVIEWER_DOMAIN, body)
     return {**body, "signature_hex": signature_hex}
+
+
+# --- production entrypoints: opaque IDs only (PR #7662 repair 6) -----------
+#
+# The only two functions a real V4 dispatch caller may ever call. Neither
+# accepts a signing key, a task-state/envelope/observation object, or an
+# outcome/trust-policy argument -- every one of those is resolved or fixed
+# internally. ``_resolve_execution_observation``/``_load_signing_key`` are
+# the exact module-level indirection points tests monkeypatch with an
+# isolated fixture resolver/key; production's own defaults query the real
+# canonical Fleet Comms store and fixed Hramatka key custody.
+
+
+def _resolve_execution_observation(*, task_id: str, run_id: str, role: str) -> dict[str, Any] | None:
+    from scripts.fleet_comms.artifacts import ArtifactStore
+
+    try:
+        with ArtifactStore(readonly=True) as store:
+            return store.resolve_v4_execution_observation(task_id=task_id, run_id=run_id, role=role)
+    except Exception:
+        # Any store-layer failure (schema not yet applied, plane
+        # unreachable, etc.) is indistinguishable from "no observation was
+        # ever recorded" to this caller -- fail closed uniformly rather than
+        # leaking infrastructure state through a different exception shape.
+        return None
+
+
+def _load_signing_key(role: str) -> tuple[str, str]:
+    return trust.load_production_signing_key(role)
+
+
+def _task_state_from_record(record: dict[str, Any]) -> TaskExecutionState:
+    return TaskExecutionState(
+        task_id=record["task_id"],
+        run_nonce=record["run_id"],
+        status=record["status"],
+        return_code=record["return_code"],
+        seat_or_model=record["seat_or_model"],
+        harness=record["harness"],
+        session_id=record["session_id"],
+    )
+
+
+def _envelope_from_record(record: dict[str, Any]) -> ResponseEnvelope:
+    return ResponseEnvelope(
+        segments=(),
+        completion_state=CompletionState(record["completion_state"]),
+        terminal_event_observed=record["terminal_event_observed"],
+        process_returncode=record["process_returncode"],
+        raw_capture_artifact_id=record["raw_capture_artifact_id"],
+        raw_capture_sha256=record["raw_capture_sha256"],
+        session_id=record["session_id"],
+    )
+
+
+def _author_observation_from_record(record: dict[str, Any]) -> AuthorExecutionObservation:
+    return AuthorExecutionObservation(
+        task_id=record["task_id"],
+        run_nonce=record["run_id"],
+        observed_model=record["seat_or_model"],
+        row_content_sha256=record["row_content_sha256"],
+        prompt_sha256=record["prompt_sha256"],
+        packet_sha256=record["packet_sha256"],
+        execution_result_sha256=record["raw_capture_sha256"],
+        fleet_receipt_sha256=record["fleet_receipt_sha256"],
+        provider_session_id=record["session_id"],
+        verification_tool_ids=tuple(record["verification_tool_ids"]),
+        saw_source_text=record["saw_source_text"],
+        saw_heldout=record["saw_heldout"],
+        saw_eligible_unit_ids=record["saw_eligible_unit_ids"],
+    )
+
+
+def _reviewer_observation_from_record(record: dict[str, Any]) -> ReviewerExecutionObservation:
+    return ReviewerExecutionObservation(
+        task_id=record["task_id"],
+        run_nonce=record["run_id"],
+        observed_model=record["seat_or_model"],
+        row_content_sha256=record["row_content_sha256"],
+        prompt_sha256=record["prompt_sha256"],
+        packet_sha256=record["packet_sha256"],
+        execution_result_sha256=record["raw_capture_sha256"],
+        fleet_receipt_sha256=record["fleet_receipt_sha256"],
+        authorship_receipt_sha256=record["authorship_receipt_sha256"],
+        rubric_sha256=record["rubric_sha256"],
+        verdict=record["verdict"],
+        provider_session_id=record["session_id"],
+        verification_tool_ids=tuple(record["verification_tool_ids"]),
+        saw_source_text=record["saw_source_text"],
+        saw_heldout=record["saw_heldout"],
+        saw_eligible_unit_ids=record["saw_eligible_unit_ids"],
+    )
+
+
+def _issuance_nonce(*, role: str, task_id: str, run_id: str) -> str:
+    """Deterministic, never caller-supplied -- re-issuing against the same
+    resolved observation always reproduces the identical receipt (repeat
+    issuance is idempotent, not a fresh nonce every call)."""
+    return trust.sha256_text(f"v4-fleet-execution-issuance-v1\x00{role}\x00{task_id}\x00{run_id}")
+
+
+def issue_author_execution_receipt(*, task_id: str, run_id: str) -> dict[str, Any]:
+    """The only production-facing way to obtain a signed author execution
+    receipt (PR #7662 repair 6, Sol minimal API). Accepts opaque
+    ``task_id``/``run_id`` only: resolves the trusted execution observation
+    from the canonical Fleet Comms authority store
+    (``_resolve_execution_observation`` -- unknown/ambiguous/incomplete
+    records refuse before any key access), the signing key from fixed
+    Hramatka custody (``_load_signing_key``), and the pinned production
+    trust-policy digest (``v4_trust_authority.load_production_trust_
+    policy``) -- never from a caller-supplied argument."""
+    require(isinstance(task_id, str) and bool(task_id), "task_id must be a nonempty string -- refusing")
+    require(isinstance(run_id, str) and bool(run_id), "run_id must be a nonempty string -- refusing")
+    record = _resolve_execution_observation(task_id=task_id, run_id=run_id, role="author")
+    require(record is not None, f"unknown task_id/run_id for an author execution observation: {task_id!r}/{run_id!r} -- refusing (no key access)")
+    signing_key_hex, signer_key_id = _load_signing_key("fleet_execution")
+    _, resolved_trust_policy_sha256 = trust.load_production_trust_policy()
+    return _issue_author_receipt_from_evidence(
+        signing_key_hex=signing_key_hex,
+        signer_key_id=signer_key_id,
+        outcome_sha256=V4_SHA256,
+        task_state=_task_state_from_record(record),
+        envelope=_envelope_from_record(record),
+        observation=_author_observation_from_record(record),
+        issuance_nonce=_issuance_nonce(role="author", task_id=task_id, run_id=run_id),
+        trust_policy_sha256=resolved_trust_policy_sha256,
+    )
+
+
+def issue_reviewer_execution_receipt(*, task_id: str, run_id: str) -> dict[str, Any]:
+    """The only production-facing way to obtain a signed reviewer execution
+    receipt. Identical opaque-ID-only contract as ``issue_author_execution_
+    receipt``, resolving a reviewer-role canonical observation instead."""
+    require(isinstance(task_id, str) and bool(task_id), "task_id must be a nonempty string -- refusing")
+    require(isinstance(run_id, str) and bool(run_id), "run_id must be a nonempty string -- refusing")
+    record = _resolve_execution_observation(task_id=task_id, run_id=run_id, role="reviewer")
+    require(record is not None, f"unknown task_id/run_id for a reviewer execution observation: {task_id!r}/{run_id!r} -- refusing (no key access)")
+    signing_key_hex, signer_key_id = _load_signing_key("fleet_execution")
+    _, resolved_trust_policy_sha256 = trust.load_production_trust_policy()
+    return _issue_reviewer_receipt_from_evidence(
+        signing_key_hex=signing_key_hex,
+        signer_key_id=signer_key_id,
+        outcome_sha256=V4_SHA256,
+        task_state=_task_state_from_record(record),
+        envelope=_envelope_from_record(record),
+        observation=_reviewer_observation_from_record(record),
+        issuance_nonce=_issuance_nonce(role="reviewer", task_id=task_id, run_id=run_id),
+        trust_policy_sha256=resolved_trust_policy_sha256,
+    )
 
 
 # --- verification (A7's own private ledger; never mints a receipt) ---------
@@ -485,6 +673,7 @@ def _verify_common(
         trust.verify_with_policy(trust_policy, "fleet_execution", body.get("signer_key_id"), domain, body, signature_hex)
     except trust.TrustAuthorityError as exc:
         raise FleetExecutionError(f"{domain_name} execution receipt failed signature verification -- refusing: {exc}") from exc
+    trust.require_trust_policy_binding(body, trust_policy, error_cls=FleetExecutionError)
     return body
 
 

@@ -591,6 +591,24 @@ class RequestExecutor:
         self._commit()
 
 
+    # --- V4 canonical authority store (PR #7662 repair 6) ------------------
+    #
+    # The sanctioned execution-boundary call site: a V4 dispatch caller
+    # records the durable execution observation here only after this
+    # executor has *already* finalized the underlying request as
+    # ``CompletionState.COMPLETE`` (``execute_capture``) -- this is a thin
+    # passthrough to ``self.store`` (the one connection/dialect/root this
+    # executor actually owns), not a second re-verification of terminality.
+    # ``v4_fleet_execution_authority`` never calls this write path; it only
+    # ever resolves an already-recorded observation.
+
+    def record_v4_execution_observation(self, record: dict[str, Any]) -> None:
+        self.store.record_v4_execution_observation(record)
+
+    def resolve_v4_execution_observation(self, *, task_id: str, run_id: str, role: str) -> dict[str, Any] | None:
+        return self.store.resolve_v4_execution_observation(task_id=task_id, run_id=run_id, role=role)
+
+
 def open_executor(root: Path | None = None) -> RequestExecutor:
     """Factory used by CLI/tests."""
     return RequestExecutor(root=root)

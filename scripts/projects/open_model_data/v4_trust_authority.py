@@ -80,6 +80,18 @@ def sha256_text(value: str) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 
+def trust_policy_sha256(policy: dict[str, Any]) -> str:
+    """The one digest every signed body/receipt binds as ``trust_policy_
+    sha256`` (PR #7662 repair 6, Sol F2) -- the sha256 of the policy's own
+    canonical-JSON content, never the raw bytes of whatever file (if any) it
+    happened to be loaded from. A verifier always recomputes this from the
+    exact ``trust_policy`` object it was itself given, so a receipt claiming
+    one policy while being checked against a different one always disagrees
+    (``TrustAuthorityError``), independent of file formatting/whitespace."""
+    validate_trust_policy(policy)
+    return sha256_text(canonical_json(policy))
+
+
 def require_exact_keys(body: dict[str, Any], expected_keys: frozenset[str], label: str, *, error_cls: type[Exception] = TrustAuthorityError) -> None:
     """Fail closed unless ``body`` declares exactly ``expected_keys`` -- a
     signature (even a freshly, correctly recomputed one) can never smuggle
@@ -186,6 +198,110 @@ def load_trust_policy(path: Path | None = DEFAULT_TRUST_POLICY_PATH) -> dict[str
     policy = json.loads(path.read_text(encoding="utf-8"))
     validate_trust_policy(policy)
     return policy
+
+
+# --- production trust-policy digest pinning (PR #7662 repair 6, Sol F2) ---
+#
+# The checked-in mechanism-only policy's exact raw-byte sha256 -- pinned so
+# that even a purely cosmetic one-byte drift (a stray space, a reordered
+# key that happens to still parse) in the checked-in file refuses to load
+# as "production" until a code-reviewed PR adds its new byte digest here.
+# This is deliberately a *raw-byte* digest (not ``trust_policy_sha256``'s
+# canonical-JSON digest below): a policy file is the one artifact in this
+# project where even non-semantic byte drift must be caught, because
+# nothing else reviews the file's exact bytes before this loader treats it
+# as authoritative.
+#
+# Rotation: add the new version's file (e.g. ``v4_trust_policy_v2.json``)
+# and its byte digest here in one code-reviewed PR; do not mutate this
+# frozen v1 file in place. Revocation: remove a digest from this allowlist
+# -- ``load_production_trust_policy`` then refuses that exact file content
+# even though any signature it already produced remains cryptographically
+# valid on its own terms (the receipt-level ``trust_policy_sha256`` check
+# below is what makes that signature untrusted downstream).
+PRODUCTION_TRUST_POLICY_FILE_DIGEST_ALLOWLIST: frozenset[str] = frozenset(
+    {
+        "81ce6f7bfb68ed1c51f8633cb1ec0bc19eecc9c47b5bdaff9a20a9a9ea6d64ba",  # v1, empty mechanism-only policy
+    }
+)
+
+
+def load_production_trust_policy() -> tuple[dict[str, Any], str]:
+    """The only sanctioned way production code ever loads a trust policy:
+    no argument, a fixed repository-relative path, and the raw file bytes'
+    own sha256 must already be a code-reviewed entry in
+    ``PRODUCTION_TRUST_POLICY_FILE_DIGEST_ALLOWLIST`` -- never a caller-
+    selected path or a caller-constructed dict (PR #7662 repair 6, Sol F2;
+    ``v4_a7_private_ledger``'s CLI no longer exposes ``--trust-policy`` for
+    exactly this reason). Returns ``(policy, trust_policy_sha256(policy))``
+    so every caller binds the exact digest it already verified, never one
+    it merely trusts by convention."""
+    path = DEFAULT_TRUST_POLICY_PATH
+    require(path.is_file(), f"production trust-policy file is missing: {path} -- refusing")
+    raw = path.read_bytes()
+    file_digest = hashlib.sha256(raw).hexdigest()
+    require(
+        file_digest in PRODUCTION_TRUST_POLICY_FILE_DIGEST_ALLOWLIST,
+        f"production trust-policy file digest {file_digest!r} is not in the code-reviewed active allowlist -- refusing (drifted, rotated out, or revoked)",
+    )
+    policy = json.loads(raw.decode("utf-8"))
+    validate_trust_policy(policy)
+    return policy, trust_policy_sha256(policy)
+
+
+def require_trust_policy_binding(body: dict[str, Any], trust_policy: dict[str, Any], *, error_cls: type[Exception] = TrustAuthorityError) -> None:
+    """Every signed body this project verifies must declare the exact
+    ``trust_policy_sha256`` of the policy it is being checked against --
+    recomputed here from the live ``trust_policy`` object itself, never
+    trusted from the body or from a separately-passed digest string. Catches
+    both a stale/mismatched claim (cross-chain digest disagreement) and a
+    body that omits the field entirely."""
+    if not (isinstance(body.get("trust_policy_sha256"), str) and bool(HEX64_RE.match(body["trust_policy_sha256"]))):
+        raise error_cls("signed body carries no well-formed trust_policy_sha256 -- refusing")
+    expected = trust_policy_sha256(trust_policy)
+    if body.get("trust_policy_sha256") != expected:
+        raise error_cls(f"signed body trust_policy_sha256 does not match the trust policy being verified against -- refusing (expected {expected!r}, got {body.get('trust_policy_sha256')!r})")
+
+
+# --- production signing-key custody (PR #7662 repair 6) --------------------
+#
+# Root-owned, caller-inaccessible Hramatka path (operator-approved,
+# ``batch_state/briefs/v4-real-slot-mechanism-repair-6-approval.md``):
+# "Root-owned Hramatka signing credentials under the existing service
+# account; operator-owned rotation/revocation." No production code path
+# accepts a signing key through a public function argument, a CLI flag, a
+# caller-selected environment variable, or a policy object -- this fixed,
+# non-parameterizable path is the only place production ever reads one.
+#
+# Key/ACL provisioning is explicitly out of this mechanism repair's scope
+# (see the repair-6 dispatch brief): mechanism-only production has NO key
+# material at this path yet, so every role always refuses here until a
+# future first-real-row PR provisions it. Tests never call this directly --
+# they monkeypatch the module-level indirection point in each authority
+# module (``v4_fleet_execution_authority._load_signing_key``, ``v4_sources_
+# authority._load_signing_key``, ``v4_a3_reference_check._load_signing_
+# key``) with an isolated ephemeral test key, never this real loader.
+HRAMATKA_SIGNING_KEY_ROOT = Path("/etc/hramatka/v4-signing-keys")
+
+
+def load_production_signing_key(role: str) -> tuple[str, str]:
+    """Read ``(private_key_hex, signer_key_id)`` for ``role`` from fixed,
+    root-owned Hramatka custody. Refuses (fail closed, never a default key)
+    when the role is unknown or the key files are not provisioned -- the
+    only state mechanism-only production can be in today."""
+    require(role in KEYRING_ROLES, f"unknown signing-key role {role!r} -- refusing")
+    key_path = HRAMATKA_SIGNING_KEY_ROOT / f"{role}.key"
+    key_id_path = HRAMATKA_SIGNING_KEY_ROOT / f"{role}.key_id"
+    require(
+        key_path.is_file() and key_id_path.is_file(),
+        f"no production signing key is provisioned for role {role!r} at {HRAMATKA_SIGNING_KEY_ROOT} -- refusing "
+        "(mechanism-only production; key/ACL provisioning is a first-real-row-PR prerequisite)",
+    )
+    private_key_hex = key_path.read_text(encoding="utf-8").strip()
+    signer_key_id = key_id_path.read_text(encoding="utf-8").strip()
+    require(len(private_key_hex) == 64, f"production signing key at {key_path} is not 32 raw bytes, hex-encoded -- refusing")
+    require(bool(signer_key_id), f"production signer key id at {key_id_path} is empty -- refusing")
+    return private_key_hex, signer_key_id
 
 
 def resolve_public_key(policy: dict[str, Any], role: str, key_id: str) -> str:

@@ -743,6 +743,42 @@ class ArtifactStore:
                     reclaimed.append(digest)
         return reclaimed
 
+    # --- V4 canonical authority store (PR #7662 repair 6) ------------------
+    #
+    # Two narrow extensions of this same plane: the sole durable record of a
+    # terminal V4 fleet execution observation, and of a sanctioned Sources
+    # verifier-tool invocation. See ``scripts.fleet_comms.v4_canonical_
+    # authority_store`` for the schema/idempotency contract; these four
+    # methods only ever supply this store's own already-resolved connection
+    # and dialect -- they never open a second connection or resolve a
+    # second plane root, so a caller-injected ``root=`` (e.g. a test's
+    # ``tmp_path``) is honored exactly like every other ``ArtifactStore``
+    # operation.
+
+    def record_v4_execution_observation(self, record: dict[str, Any]) -> None:
+        self._refuse_readonly_write("record_v4_execution_observation")
+        from scripts.fleet_comms import v4_canonical_authority_store as v4_store
+
+        with self._transaction() as conn:
+            v4_store.record_execution_observation(record, conn=conn, is_pg=self._authority is Authority.PG)
+
+    def resolve_v4_execution_observation(self, *, task_id: str, run_id: str, role: str) -> dict[str, Any] | None:
+        from scripts.fleet_comms import v4_canonical_authority_store as v4_store
+
+        return v4_store.resolve_execution_observation(task_id=task_id, run_id=run_id, role=role, conn=self._conn, is_pg=self._authority is Authority.PG)
+
+    def record_v4_sources_invocation(self, record: dict[str, Any]) -> None:
+        self._refuse_readonly_write("record_v4_sources_invocation")
+        from scripts.fleet_comms import v4_canonical_authority_store as v4_store
+
+        with self._transaction() as conn:
+            v4_store.record_sources_invocation(record, conn=conn, is_pg=self._authority is Authority.PG)
+
+    def resolve_v4_sources_invocation(self, *, invocation_id: str) -> dict[str, Any] | None:
+        from scripts.fleet_comms import v4_canonical_authority_store as v4_store
+
+        return v4_store.resolve_sources_invocation(invocation_id=invocation_id, conn=self._conn, is_pg=self._authority is Authority.PG)
+
     def _write_blob_atomic(self, dest: Path, data: bytes) -> None:
         fd, tmp_name = tempfile.mkstemp(prefix=".art-", dir=str(dest.parent))
         tmp_path = Path(tmp_name)
