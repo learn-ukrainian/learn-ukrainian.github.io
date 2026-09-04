@@ -74,10 +74,13 @@ jobs:
               fail_closed()
 
           def is_docs(path: str) -> bool:
-              if path.endswith(".md"):
+              # Not every *.md: wiki/figures BIO capsules and docs/*.yaml
+              # must still hit contracts.
+              if "/" not in path and path.endswith(".md"):
+                  return True
+              if path.startswith("docs/") and path.endswith(".md"):
                   return True
               prefixes = (
-                  "docs/",
                   "agents_extensions/shared/skills/",
                   ".claude/",
                   ".codex/",
