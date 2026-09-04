@@ -235,7 +235,7 @@
       },
       {
         "path": "scripts/lexicon/promote_teacher_lesson_intake.py",
-        "sha256": "bbe8a3d21940946f8fb8bcf00f90c0fa6222fddad7495d5218162b0454293d25"
+        "sha256": "1fba6cd967661035b1c9f0f2129cce197c9b4cab21fbcb5f905684a12c61f5f0"
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
