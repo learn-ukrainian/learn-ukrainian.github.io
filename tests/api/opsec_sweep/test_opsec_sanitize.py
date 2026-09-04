@@ -84,3 +84,36 @@ def test_middleware_strips_paths_that_a_bare_route_would_leak() -> None:
     assert PLANTED_PATH not in json.dumps(sanitized)
     assert sanitized["repo_root"] == REDACTED_ABSOLUTE_PATH
     assert scan_body(sanitized) == []
+
+
+def test_repeated_strings_scan_once_without_cross_document_cache(monkeypatch):
+    """Large projections repeat values; memoization must remain request-local."""
+    from scripts.api import opsec_sanitize
+
+    original = opsec_sanitize.scan_text
+    calls = []
+
+    def counted(text):
+        calls.append(text)
+        return original(text)
+
+    monkeypatch.setattr(opsec_sanitize, "scan_text", counted)
+    path = "/home/synthetic-private/project/file.json"
+    safe = "public-monitor"
+    payload = {"items": [{"title": path, "source": safe}] * 20, "attention": [{"title": path, "source": safe}] * 20}
+    sanitized = opsec_sanitize.sanitize_document(payload)
+    assert calls == [path, safe]
+    assert all(row["title"] == "[redacted-path]" for rows in sanitized.values() for row in rows)
+    assert payload["items"][0]["title"] == path
+    opsec_sanitize.sanitize_document(payload)
+    assert calls == [path, safe, path, safe]
+
+
+def test_memo_preserves_equal_distinct_unchanged_values():
+    from scripts.api.opsec_sanitize import sanitize_document
+
+    first = "".join(["public", "-monitor"])
+    second = "".join(["public-", "monitor"])
+    assert first == second and first is not second
+    payload = {"list": [first, second], "tuple": (first, second)}
+    assert sanitize_document(payload) is payload

@@ -289,8 +289,9 @@ async function fetchJson(path) {
     const response = await fetch(path, { signal: controller.signal });
     const text = await response.text();
     let data = {};
-    try { data = text ? JSON.parse(text) : {}; } catch { data = { detail: text }; }
-    if (!response.ok) throw new Error(data.detail || data.error || `HTTP ${response.status}`);
+    try { data = JSON.parse(text); } catch { throw new Error('Invalid JSON response'); }
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    if (!data || typeof data !== 'object' || Array.isArray(data)) throw new Error('Invalid response');
     return data;
   } finally {
     clearTimeout(timeout);
@@ -466,7 +467,7 @@ function renderConversationContext(conversationId, payload, relatedPayload) {
     ${omissionCopy}`;
 }
 
-async function refreshConversationContext(contextStatus) {
+async function refreshConversationContext(contextStatus, isCurrent = () => true) {
   renderContextHealth(contextStatus);
   const conversationId = filters().conversation;
   if (!conversationId) {
@@ -482,9 +483,9 @@ async function refreshConversationContext(contextStatus) {
       const related = new URLSearchParams({ q: exact.git_sha, limit: '10' });
       relatedPayload = await fetchJson(`/api/ops/entire-context/search?${related}`);
     }
-    renderConversationContext(conversationId, payload, relatedPayload);
+    if (isCurrent()) renderConversationContext(conversationId, payload, relatedPayload);
   } catch {
-    renderConversationContext(conversationId, { available: false, reason: 'projection_request_failed' }, {});
+    if (isCurrent()) renderConversationContext(conversationId, { available: false, reason: 'projection_request_failed' }, {});
   }
 }
 
@@ -689,7 +690,10 @@ function renderMessages(data) {
   document.getElementById('messages-content').innerHTML = table(['When', 'Source', 'Agent', 'Via', 'Kind', 'Bounded preview'], rows, 'No messages match the current observer filters.');
 }
 
+let fleetGeneration = 0;
+
 async function refreshFleet() {
+  const generation = ++fleetGeneration;
   setError('');
   const common = ['state', 'agent', 'source', 'conversation'];
   const contextStatusFallback = {
@@ -699,48 +703,50 @@ async function refreshFleet() {
   // Each load applies on success as soon as its fetch settles so a slow/aborted
   // endpoint (e.g. workers/v1) cannot block health/overview paint.
   const loads = [
-    { label: '/api/fleet/health', url: '/api/fleet/health', apply: (data) => { renderHealth(data); } },
-    { label: '/api/fleet/overview', url: '/api/fleet/overview', apply: (data) => { renderOverview(data); } },
-    { label: '/api/fleet/operations', url: '/api/fleet/operations', apply: (data) => { renderOperations(data); } },
+    { label: '/api/fleet/health', targets: ['plane-mode', 'plane-status'], url: '/api/fleet/health', apply: (data) => { renderHealth(data); } },
     {
-      label: '/api/fleet/authority/jobs?kind=request',
+      label: '/api/fleet/overview', targets: ['requests-total', 'messages-total', 'reviews-total', 'acp-total', 'dead-total', 'requests-detail', 'messages-detail', 'reviews-detail', 'acp-detail', 'dead-detail', 'legacy-requests-note'],
+      url: '/api/fleet/overview', apply: (data) => { renderOverview(data); } },
+    { label: '/api/fleet/operations', targets: ['broker-operations-content', 'zombie-operations-content', 'batch-operations-content'], url: '/api/fleet/operations', apply: (data) => { renderOperations(data); } },
+    {
+      label: '/api/fleet/authority/jobs?kind=request', targets: ['requests-content'],
       url: query('/api/fleet/authority/jobs', ['state', 'agent', 'source', 'conversation'], { kind: 'request' }),
       apply: (data) => { renderRequests(data); },
     },
     {
-      label: '/api/fleet/authority/jobs',
+      label: '/api/fleet/authority/jobs', targets: ['authority-content'],
       url: query('/api/fleet/authority/jobs', ['kind', 'state', 'agent', 'source', 'pr', 'conversation']),
       apply: (data) => { renderAuthorityJobs(data); },
     },
     {
-      label: '/api/fleet/reviews',
+      label: '/api/fleet/reviews', targets: ['reviews-content'],
       url: query('/api/fleet/reviews', ['kind', 'state', 'source', 'pr']),
       apply: (data) => { renderReviews(data); },
     },
     {
-      label: '/api/fleet/acp/conversations',
+      label: '/api/fleet/acp/conversations', targets: ['acp-content'],
       url: query('/api/fleet/acp/conversations', common),
       apply: (data) => { renderAcp(data); },
     },
     {
-      label: '/api/fleet/dead-letters',
+      label: '/api/fleet/dead-letters', targets: ['dead-content'],
       url: query('/api/fleet/dead-letters', ['state', 'agent', 'source']),
       apply: (data) => { renderDeadLetters(data); },
     },
-    { label: '/api/fleet/workers/v1', url: '/api/fleet/workers/v1', apply: (data) => { renderWorkers(data); } },
+    { label: '/api/fleet/workers/v1', targets: ['workers-content'], url: '/api/fleet/workers/v1', apply: (data) => { renderWorkers(data); } },
     {
-      label: '/api/occupancy',
+      label: '/api/occupancy', targets: ['occupancy-content'],
       url: '/api/occupancy',
       apply: (data) => { renderOccupancy(data); renderOccupancyAttention(data.attention); },
     },
-    { label: '/api/fleet/projects/v1', url: '/api/fleet/projects/v1', apply: (data) => { renderProjects(data); } },
+    { label: '/api/fleet/projects/v1', targets: ['projects-content'], url: '/api/fleet/projects/v1', apply: (data) => { renderProjects(data); } },
     {
-      label: '/api/fleet/activity',
+      label: '/api/fleet/activity', targets: ['activity-content'],
       url: query('/api/fleet/activity', ['state', 'agent', 'source']),
       apply: (data) => { renderActivity(data); },
     },
     {
-      label: '/api/fleet/messages',
+      label: '/api/fleet/messages', targets: ['messages-content'],
       url: query('/api/fleet/messages', ['kind', ...common]),
       apply: (data) => { renderMessages(data); },
     },
@@ -748,14 +754,19 @@ async function refreshFleet() {
       label: '/api/ops/entire-context/status',
       url: '/api/ops/entire-context/status',
       softFail: true,
-      apply: async (data) => { await refreshConversationContext(data); },
+      apply: async (data) => { await refreshConversationContext(data, () => generation === fleetGeneration); },
     },
   ];
-  const settled = await Promise.allSettled(loads.map(async ({ label, url, apply, softFail }) => {
+  const settled = await Promise.allSettled(loads.map(async ({ label, url, apply, softFail, targets = [] }) => {
     try {
       const data = await fetchJson(url);
+      if (generation !== fleetGeneration) return label;
       await apply(data);
     } catch (error) {
+      if (generation !== fleetGeneration) return label;
+      for (const id of targets) document.getElementById(id).textContent = 'Unavailable — refresh to retry';
+      if (label === '/api/fleet/health') document.getElementById('plane-dot').className = 'signal-dot warn';
+      if (label === '/api/occupancy') renderOccupancyAttention([]);
       if (softFail) {
         await apply(contextStatusFallback);
         return label;
@@ -764,6 +775,7 @@ async function refreshFleet() {
     }
     return label;
   }));
+  if (generation !== fleetGeneration) return;
   const failed = settled
     .map((result, index) => (result.status === 'rejected' ? loads[index].label : null))
     .filter(Boolean);

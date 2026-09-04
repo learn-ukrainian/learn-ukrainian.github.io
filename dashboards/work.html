@@ -148,11 +148,11 @@ button, input, select { font: inherit; }
     <div>
       <div class="eyebrow">Evidence rail · public foundation</div>
       <h2 id="work-title">What needs attention now.</h2>
-      <p>GitHub issues and PRs remain the source of truth. This surface projects open public work with stream membership, dispatch/review summaries, health, and a safe next action. The browser fetches the public Monitor projection and, independently, a fixed loopback private adapter. The public server never proxies private data.</p>
+      <p>GitHub issues and PRs remain the source of truth. Review health, blockers, and next actions below. Source cards show freshness and missing evidence.</p>
     </div>
     <aside class="signal-card" aria-label="Foundation status">
       <strong id="foundation-label">FOUNDATION_COMPLETE</strong>
-      <p id="foundation-copy">No mutations. Dual-source browser merge only. Private adapter is loopback-only and optional.</p>
+      <p id="foundation-copy">Read-only. Private work appears when the optional local adapter is available.</p>
     </aside>
   </section>
 
@@ -1137,16 +1137,30 @@ button, input, select { font: inherit; }
     renderDetail(state.selectedId ? state.itemsById.get(state.selectedId) : null);
   }
 
+  let projectionGeneration = 0;
+
   async function loadProjection(opts) {
+    const generation = ++projectionGeneration;
     showError('');
     state.publicStatusOverride = null;
     const publicUrl = (opts && opts.fresh)
       ? (PUBLIC_PROJECTION_URL + '?fresh=true')
       : PUBLIC_PROJECTION_URL;
 
-    const publicPromise = fetchJson(publicUrl);
+    // Public results are usable while the optional private adapter is pending.
+    const publicPromise = fetchJson(publicUrl, { timeoutMs: 10000 }).then((doc) => {
+      if (generation === projectionGeneration) {
+        const admitted = admitPublicDocument(doc);
+        if (admitted.ok) {
+          state.privateStatusText = 'Checking capability…';
+          installView(admitted.doc);
+        }
+      }
+      return doc;
+    });
     const privatePromise = fetchJson(PRIVATE_PROJECTION_URL, { timeoutMs: PRIVATE_TIMEOUT_MS });
     const settled = await Promise.allSettled([publicPromise, privatePromise]);
+    if (generation !== projectionGeneration) return;
     const publicSettled = settled[0];
     const privateSettled = settled[1];
 

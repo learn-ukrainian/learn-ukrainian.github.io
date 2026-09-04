@@ -651,6 +651,7 @@ def _browser_scenario(
     private_status: int = 200,
     private_delay_ms: int = 0,
     private_hang_json: bool = False,
+    assert_early_public: bool = False,
     private_raw: bytes | None = None,
     public_raw: bytes | None = None,
     filter_query: str = "",
@@ -835,6 +836,11 @@ try {{
   // (non-2xx intercept fulfills can leave the lifecycle watcher pending).
   await page.goto(PAGE_URL, {{ waitUntil: 'domcontentloaded', timeout: 30000 }});
   await page.waitForSelector('#source-private-meta', {{ timeout: 15000 }});
+  if ({str(assert_early_public).lower()}) {{
+    await page.waitForFunction(() => document.querySelectorAll('.work-row').length > 0, {{ timeout: 2000 }});
+    const pending = await page.$eval('#source-private-meta', el => el.textContent);
+    if (pending !== 'Checking capability…') throw new Error('Public rows did not paint while private was pending');
+  }}
   // Wait until dual-source settlement replaces the loading placeholders.
   const settleBudget = Math.max({settle_floor_ms}, PRIVATE_DELAY_MS + 3000);
   await page.waitForFunction(() => {{
@@ -1076,6 +1082,7 @@ def test_browser_private_timeout_leaves_public_usable():
         public_doc=_public_min(),
         private_doc=_private_ok(),
         private_delay_ms=5500,
+        assert_early_public=True,
     )
     snap = result["snapshot"]
     assert snap["rowCount"] == 1
