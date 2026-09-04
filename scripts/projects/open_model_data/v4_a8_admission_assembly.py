@@ -23,10 +23,13 @@ ledger: its only inputs are six already-public artifacts --
 * A4's deterministic extraction receipt (only its own already-carried
   residuals, never A4's private ledger),
 * A5's evidence enrichment receipt (already-carried residuals only),
-* A6's blind arena receipt (already-carried residuals only),
+* A6's blind arena receipt (already-carried residuals *and* its own
+  per-slot ``a6_residuals`` -- real upstream stage evidence this module's
+  gate now consults directly, never just metadata),
 * A7's original-row factory receipt (already-carried residuals, its own
-  zero-row engine admission receipt, and its own gate state as the direct
-  upstream signal this module's gate builds on), and
+  per-slot ``a7_residuals``, its own zero-row engine admission receipt, and
+  its own gate state as the direct upstream signal this module's gate
+  builds on), and
 * the frozen 100-slot V4 pilot slot manifest (``slot_series`` -- public slot
   IDs only, never a real ``source_unit_id``).
 
@@ -35,13 +38,17 @@ Two independent parts:
 1. ``check_assembly_gate`` -- independently re-derives, from those six public
    artifacts alone, whether a real admitted slice may be assembled at all.
    Right now it cannot: A7 itself reports ``factory_slice_ready: false``
-   (every frozen slot is still ``UNASSIGNED_PENDING_A2_A3`` and A2 still
-   carries eight unresolved rights/coverage residuals), so A7's own engine
+   (every frozen slot is still ``UNASSIGNED_PENDING_A2_A3``, A2 still
+   carries eight unresolved rights/coverage residuals, and A6's own
+   already-public per-slot ``a6_residuals`` still lists every one of the
+   100 frozen slots as ``independence_unavailable``), so A7's own engine
    call admitted zero rows -- there is nothing rights-cleared to assemble.
-   Per the binding contract this module must *never* claim
-   ``ADMITTED_SLICE_READY`` while that is true; it reports
-   ``assembly_slice_ready: false`` and a typed ``blocked_reason_code``
-   instead.
+   A2 rights and manifest assignment metadata alone are never sufficient: a
+   slot is only ever counted ready once A6's *and* A7's own per-slot
+   evidence both agree no residual remains against it. Per the binding
+   contract this module must *never* claim ``ADMITTED_SLICE_READY`` while
+   that is true; it reports ``assembly_slice_ready: false`` and a typed
+   ``blocked_reason_code`` instead.
 2. ``build_receipt`` -- assembles the public receipt: the frozen 100-slot
    denominator (reusing, never duplicating,
    ``v4_a6_blind_arena.frozen_slot_strata``/``all_frozen_slot_ids``), the
@@ -175,8 +182,9 @@ def check_assembly_gate(root: Path = ROOT) -> dict[str, Any]:
     own missing-artifact handling."""
     manifest_path = (root / "data/projects/open_model_data/admission/dataset_v4_pilot_slot_manifest_v1.json").resolve()
     a2_path = (root / "data/projects/open_model_data/admission/dataset_v4_a2_source_operation_admission_receipt_v1.json").resolve()
+    a6_path = (root / "data/projects/open_model_data/admission/dataset_v4_a6_blind_arena_receipt_v1.json").resolve()
     a7_path = (root / "data/projects/open_model_data/admission/dataset_v4_a7_original_row_factory_receipt_v1.json").resolve()
-    required_paths = {"slot_manifest": manifest_path, "a2_receipt": a2_path, "a7_receipt": a7_path}
+    required_paths = {"slot_manifest": manifest_path, "a2_receipt": a2_path, "a6_receipt": a6_path, "a7_receipt": a7_path}
     for label, path in required_paths.items():
         require(root.resolve() in path.parents, f"{label} path escapes the repository root -- refusing")
 
@@ -187,6 +195,9 @@ def check_assembly_gate(root: Path = ROOT) -> dict[str, Any]:
             "a7_receipt_valid": False,
             "a2_rights_resolved": False,
             "all_slots_assigned": False,
+            "upstream_stage_evidence_present": False,
+            "slots_ready": 0,
+            "slots_residual": 100,
             "assembly_slice_ready": False,
             "owner_role": "A2_A3_PRIVATE_ARTIFACT",
             "blocked_reason_code": f"required_public_artifact_missing:{missing[0]}",
@@ -197,10 +208,8 @@ def check_assembly_gate(root: Path = ROOT) -> dict[str, Any]:
 
     a2_receipt = _load(a2_path)
     require(a2_receipt.get("controlling_outcome_sha256") == V4_SHA256, "A2 receipt is not bound to the expected V4 controlling outcome -- refusing")
-    rights_resolved = len(a2_receipt.get("residuals", [])) == 0
 
-    all_assigned = all(series["assignment_state"] == "ASSIGNED" for series in manifest["slot_series"])
-
+    a6_receipt = _load(a6_path)
     a7_receipt = _load(a7_path)
     try:
         a7.validate_receipt_independently(a7_receipt, root)
@@ -208,23 +217,55 @@ def check_assembly_gate(root: Path = ROOT) -> dict[str, Any]:
     except a7.OriginalRowFactoryError:
         a7_valid = False
 
-    assembly_slice_ready = rights_resolved and all_assigned and a7_valid
+    # Per-slot, never a single global AND across all 100 slots: resolving one
+    # stratum's residual never depends on, or unblocks, any other stratum.
+    # ``blocked_by_a6``/``blocked_by_a7`` are real upstream stage evidence,
+    # not metadata -- A2 rights and manifest assignment alone can never flip
+    # a slot ready while A6's or A7's own per-slot residual still lists it
+    # unresolved. A7's own receipt already independently re-derives A6's
+    # evidence as part of its own gate (``a7_valid`` above transitively
+    # covers that), but this module still reads A6's residuals directly so a
+    # single slot's readiness is never decided from a coarser signal than
+    # what actually exists.
+    blocked_by_a6 = a7.blocked_slot_ids_from_residuals(a6_receipt.get("a6_residuals", []))
+    blocked_by_a7 = a7.blocked_slot_ids_from_residuals(a7_receipt.get("a7_residuals", []))
+    readiness = a7.per_slot_readiness(manifest, a2_receipt, blocked_by_a6 | blocked_by_a7)
+    rights_resolved = all(record["rights_resolved"] for record in readiness)
+    all_assigned = all(record["assigned"] for record in readiness)
+    upstream_stage_evidence_present = all(record["upstream_stage_evidence_present"] for record in readiness)
+
+    slots_ready = sum(1 for record in readiness if record["slot_ready"]) if a7_valid else 0
+    slots_residual = len(readiness) - slots_ready
+    assembly_slice_ready = slots_ready == len(readiness)
+
     blocked_reason_code = None
     if not assembly_slice_ready:
         if not a7_valid:
             blocked_reason_code = "a7_receipt_invalid"
-        elif not rights_resolved and not all_assigned:
-            blocked_reason_code = "rights_unresolved_and_slots_unassigned"
-        elif not rights_resolved:
-            blocked_reason_code = "rights_unresolved"
+        elif slots_ready == 0:
+            if not rights_resolved and not all_assigned:
+                blocked_reason_code = "rights_unresolved_and_slots_unassigned"
+            elif not rights_resolved:
+                blocked_reason_code = "rights_unresolved"
+            elif not all_assigned:
+                blocked_reason_code = "slot_assignment_pending_a2_a3"
+            else:
+                # Rights are resolved and every slot is assigned, yet A6's
+                # or A7's own per-slot residual evidence still says no.
+                blocked_reason_code = "upstream_stage_evidence_unavailable"
         else:
-            blocked_reason_code = "slot_assignment_pending_a2_a3"
+            # Some, but not all, frozen slots are ready -- the case the old
+            # global-AND gate could never represent.
+            blocked_reason_code = "partial_slots_pending_a2_a3"
 
     return {
         "gate_id": "v4-a8-assembly-gate-v1",
         "a7_receipt_valid": a7_valid,
         "a2_rights_resolved": rights_resolved,
         "all_slots_assigned": all_assigned,
+        "upstream_stage_evidence_present": upstream_stage_evidence_present,
+        "slots_ready": slots_ready,
+        "slots_residual": slots_residual,
         "assembly_slice_ready": assembly_slice_ready,
         "owner_role": manifest["sealed_heldout_commitment"]["assignment_owner"],
         "blocked_reason_code": blocked_reason_code,
@@ -401,10 +442,18 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
         "frozen_slot_denominator": {"total_slots": len(frozen_slot_ids), "strata": strata},
         "assembly_gate": {
             "gate_id": gate["gate_id"],
-            "requires": ["a7_receipt_independently_valid", "a2_rights_fully_resolved", "all_frozen_slots_assigned"],
+            "requires": [
+                "a7_receipt_independently_valid",
+                "per_slot_a2_rights_resolved",
+                "per_slot_manifest_assignment",
+                "per_slot_upstream_stage_evidence",
+            ],
             "a7_receipt_valid": gate["a7_receipt_valid"],
             "a2_rights_resolved": gate["a2_rights_resolved"],
             "all_slots_assigned": gate["all_slots_assigned"],
+            "upstream_stage_evidence_present": gate["upstream_stage_evidence_present"],
+            "slots_ready": gate["slots_ready"],
+            "slots_residual": gate["slots_residual"],
             "assembly_slice_ready": gate["assembly_slice_ready"],
             "owner_role": gate["owner_role"],
             "blocked_reason_code": gate["blocked_reason_code"],
@@ -426,8 +475,8 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
             "dataset_rows_emitted": engine_admission_receipt["counts"]["admitted_rows"],
             "candidate_rows_assembled": engine_admission_receipt["counts"]["input_rows"],
             "frozen_slot_count": len(frozen_slot_ids),
-            "slots_admitted_ready": len(frozen_slot_ids) if gate["assembly_slice_ready"] else 0,
-            "slots_blocked": 0 if gate["assembly_slice_ready"] else len(frozen_slot_ids),
+            "slots_admitted_ready": gate["slots_ready"],
+            "slots_blocked": gate["slots_residual"],
         },
         "eligibility": dict(ASSEMBLY_ELIGIBILITY),
         "safety_assertions": {
@@ -485,6 +534,9 @@ def validate_gate_matches_receipt(receipt: dict[str, Any], root: Path) -> None:
         declared["a7_receipt_valid"] == gate["a7_receipt_valid"]
         and declared["a2_rights_resolved"] == gate["a2_rights_resolved"]
         and declared["all_slots_assigned"] == gate["all_slots_assigned"]
+        and declared["upstream_stage_evidence_present"] == gate["upstream_stage_evidence_present"]
+        and declared["slots_ready"] == gate["slots_ready"]
+        and declared["slots_residual"] == gate["slots_residual"]
         and declared["assembly_slice_ready"] == gate["assembly_slice_ready"]
         and declared["blocked_reason_code"] == gate["blocked_reason_code"],
         "receipt assembly_gate does not match the state independently re-derived from the live public artifacts "

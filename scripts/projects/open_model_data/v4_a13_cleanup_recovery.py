@@ -110,10 +110,12 @@ SELF_PATH = ROOT / "scripts/projects/open_model_data/v4_a13_cleanup_recovery.py"
 
 V4_SHA256 = "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"
 
-# The merged A12 receipt's public sha256, frozen at dispatch time (PR #7643).
+# The merged A12 receipt's public sha256, frozen at dispatch time (PR #7643;
+# updated by v4-per-slot-private-factory once A7-A9's per-slot gate fix
+# rippled A8's/A9's/A10's/A11's/A12's own upstream-binding hashes forward).
 # This module's bindings must reproduce this value on every run -- proving
 # A13 is bound to the *merged* A12 receipt, never a local unmerged draft.
-A12_RECEIPT_SHA256_AT_MERGE = "8d8c000fe3a3e20356a497fa94cacbbdd66a1343f52c5f4e1d80bccaaabb86a0"
+A12_RECEIPT_SHA256_AT_MERGE = "c3786c37526d1980da74b48dce268ff06ce0c1126bf40b72f905de3cc2f5e573"
 
 # This module's own frozen expectation of what the shared admission engine
 # must refuse as a silver/gold basis -- checked against the live

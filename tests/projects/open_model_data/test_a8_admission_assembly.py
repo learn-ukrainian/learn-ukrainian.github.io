@@ -100,6 +100,38 @@ def test_a8_gate_opens_only_once_rights_are_resolved_and_every_slot_is_assigned(
 ) -> None:
     resolved_a2 = copy.deepcopy(REAL_A2_RECEIPT)
     resolved_a2["residuals"] = []
+    for coverage in resolved_a2["stratum_coverage_map"]:
+        coverage["residual_ids"] = []
+    assigned_manifest = copy.deepcopy(REAL_MANIFEST)
+    for series in assigned_manifest["slot_series"]:
+        series["assignment_state"] = "ASSIGNED"
+    # A2 rights + manifest assignment alone are never sufficient -- A6's
+    # *and* A7's own per-slot evidence must also genuinely clear for every
+    # frozen slot.
+    cleared_a6 = copy.deepcopy(REAL_A6_RECEIPT)
+    cleared_a6["a6_residuals"] = []
+    cleared_a7 = copy.deepcopy(REAL_A7_RECEIPT)
+    cleared_a7["a7_residuals"] = []
+    _write_receipt_tree(tmp_path, a2=resolved_a2, manifest=assigned_manifest, a6=cleared_a6, a7=cleared_a7)
+    monkeypatch.setattr(a8.a7, "validate_receipt_independently", lambda *a, **k: None)
+    gate = a8.check_assembly_gate(tmp_path)
+    assert gate["a2_rights_resolved"] is True
+    assert gate["all_slots_assigned"] is True
+    assert gate["upstream_stage_evidence_present"] is True
+    assert gate["assembly_slice_ready"] is True
+    assert gate["blocked_reason_code"] is None
+
+
+def test_a8_gate_stays_closed_when_a2_and_manifest_resolve_but_upstream_evidence_does_not(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A2 rights + manifest assignment metadata alone must never open the
+    gate: this is exactly the previous scenario with A6's and A7's own
+    per-slot evidence left untouched (still 100 residuals each)."""
+    resolved_a2 = copy.deepcopy(REAL_A2_RECEIPT)
+    resolved_a2["residuals"] = []
+    for coverage in resolved_a2["stratum_coverage_map"]:
+        coverage["residual_ids"] = []
     assigned_manifest = copy.deepcopy(REAL_MANIFEST)
     for series in assigned_manifest["slot_series"]:
         series["assignment_state"] = "ASSIGNED"
@@ -108,8 +140,10 @@ def test_a8_gate_opens_only_once_rights_are_resolved_and_every_slot_is_assigned(
     gate = a8.check_assembly_gate(tmp_path)
     assert gate["a2_rights_resolved"] is True
     assert gate["all_slots_assigned"] is True
-    assert gate["assembly_slice_ready"] is True
-    assert gate["blocked_reason_code"] is None
+    assert gate["upstream_stage_evidence_present"] is False
+    assert gate["slots_ready"] == 0
+    assert gate["assembly_slice_ready"] is False
+    assert gate["blocked_reason_code"] == "upstream_stage_evidence_unavailable"
 
 
 # --- A8 residuals + admitted slice view ------------------------------------------
@@ -166,8 +200,9 @@ def test_a8_receipt_binds_v4_sha_and_control_surfaces() -> None:
 
 
 def test_a8_receipt_binds_the_merged_a7_receipt_by_its_known_public_sha() -> None:
-    # The merged A7 receipt's public sha256, frozen at dispatch time (PR #7638).
-    assert a8.sha256_file(A7_RECEIPT_PATH) == "fd4e734170e6862643c123a422847114a50eaabdcdfc48cb02d838773c3aece9"
+    # The merged A7 receipt's public sha256, frozen at dispatch time (v4-per-slot-private-factory:
+    # A7's gate went per-slot instead of a single global AND, changing its content).
+    assert a8.sha256_file(A7_RECEIPT_PATH) == "e06ab3ac39f922cffd4bd35b2c1a464f4df5cad2abfa04bee0ce03f16804d03c"
 
 
 def test_a8_receipt_carries_forward_every_a2_a4_a5_a6_a7_residual_unresolved() -> None:

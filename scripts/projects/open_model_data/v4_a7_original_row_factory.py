@@ -33,13 +33,19 @@ Two independent parts:
 1. ``check_factory_gate`` -- independently re-derives, from those five public
    artifacts alone, whether a real independently-constructed row may be
    produced at all. Right now it cannot: every frozen slot is still
-   ``UNASSIGNED_PENDING_A2_A3`` and A2 still carries eight unresolved
-   rights/coverage residuals -- so no source-derived row could be built
+   ``UNASSIGNED_PENDING_A2_A3``, A2 still carries eight unresolved
+   rights/coverage residuals, and A6's own already-public per-slot
+   ``a6_residuals`` still lists every one of the 100 frozen slots as
+   ``independence_unavailable`` -- so no source-derived row could be built
    without either transmitting a still-unresolved-rights source or
-   inventing one. Per the binding contract this module must *never* claim
-   the row-ready status while that is true; it reports
-   ``factory_slice_ready: false`` and a typed ``blocked_reason_code``
-   instead.
+   inventing one. A2 rights and manifest assignment metadata alone are
+   never sufficient: a slot is only ever counted ready once A6's own
+   per-slot evidence agrees no residual remains against it -- this module
+   must never advance a slot on metadata while the stage whose actual work
+   it depends on has not itself proven that work done. Per the binding
+   contract this module must *never* claim the row-ready status while that
+   is true; it reports ``factory_slice_ready: false`` and a typed
+   ``blocked_reason_code`` instead.
 2. ``build_receipt`` -- assembles the public receipt: the frozen 100-slot
    denominator (reusing, never duplicating,
    ``v4_a6_blind_arena.frozen_slot_strata``/``all_frozen_slot_ids``), the
@@ -174,6 +180,94 @@ def stratum_reason_codes(a2_receipt: dict[str, Any]) -> dict[str, str]:
     return resolved
 
 
+# --- per-slot readiness (public-only, no global AND) -------------------------
+#
+# Root-cause fix (per-stratum independence): the finest granularity A2 and
+# the manifest publish is per-stratum (A2's own ``stratum_coverage_map``
+# residual and the frozen manifest's own per-stratum ``assignment_state``).
+# The first bug this module carried was collapsing eight independent
+# per-stratum signals into two single, repo-wide booleans (`all(... for
+# every stratum)`) before a single slot's readiness was ever decided. That
+# turned one still-open stratum into a global veto over the other seven,
+# even when they have nothing to do with each other. ``per_slot_readiness``
+# never does that: every frozen slot's rights/assignment state is a pure
+# function of *its own* stratum's own state, so resolving stratum A can
+# never depend on, or be blocked by, stratum B's residual.
+#
+# Root-cause fix (truthful stage evidence): A2 rights and manifest
+# assignment are necessary but never sufficient. A second bug let those two
+# metadata signals alone flip a slot ready even though the upstream stage
+# (A6 for this module) had never independently proven it did the actual
+# work for that slot -- rights/assignment metadata is not stage evidence.
+# ``per_slot_readiness`` closes that gap with ``upstream_blocked_slot_ids``:
+# a slot is only ever ``slot_ready`` once the upstream stage's own already-
+# public per-slot residual list agrees no residual remains against it.
+
+
+def blocked_slot_ids_from_residuals(residuals: list[dict[str, Any]]) -> set[str]:
+    """The set of frozen slot IDs an upstream stage's own already-public
+    per-slot residual list still marks unresolved. This is the one place a
+    downstream per-slot readiness check reads *real stage evidence* -- never
+    trusting A2 rights/manifest assignment metadata alone to stand in for an
+    upstream stage's own proof that it actually did the work required for a
+    given slot."""
+    return {entry["subject_id"] for entry in residuals}
+
+
+def per_slot_readiness(manifest: dict[str, Any], a2_receipt: dict[str, Any], upstream_blocked_slot_ids: set[str]) -> list[dict[str, Any]]:
+    """One record per frozen public slot ID -- never a single repo-wide
+    boolean. A pure function of the manifest's own per-stratum
+    ``assignment_state``, A2's own per-stratum ``stratum_coverage_map``/
+    ``residuals``, and ``upstream_blocked_slot_ids`` (the immediately
+    upstream stage's own already-public per-slot residual subjects); never
+    opens any private state. A slot is ``slot_ready`` only when its *own*
+    stratum's rights/coverage residual is resolved *and* its *own* stratum
+    is assigned *and* the upstream stage's own evidence does not still list
+    this slot as unresolved -- another stratum's unresolved residual or
+    pending assignment never affects it, but A2 rights and manifest
+    assignment metadata alone can never advance a slot past a stage that has
+    not itself independently proven the work required for that slot is
+    done. ``upstream_blocked_slot_ids`` is mandatory (no default) so a call
+    site can never silently drop this check and reintroduce the metadata-
+    only false positive this function exists to close."""
+    unresolved_residual_ids = {entry["residual_id"] for entry in a2_receipt.get("residuals", [])}
+    coverage_by_stratum = {coverage["stratum"]: coverage for coverage in a2_receipt["stratum_coverage_map"]}
+    records = []
+    for stratum_entry in a6.frozen_slot_strata(manifest):
+        stratum = stratum_entry["stratum"]
+        coverage = coverage_by_stratum[stratum]
+        rights_resolved = not (set(coverage["residual_ids"]) & unresolved_residual_ids)
+        assigned = stratum_entry["assignment_state"] == "ASSIGNED"
+        for slot_id in stratum_entry["slot_ids"]:
+            upstream_stage_evidence_present = slot_id not in upstream_blocked_slot_ids
+            slot_ready = rights_resolved and assigned and upstream_stage_evidence_present
+            records.append(
+                {
+                    "slot_id": slot_id,
+                    "stratum": stratum,
+                    "rights_resolved": rights_resolved,
+                    "assigned": assigned,
+                    "upstream_stage_evidence_present": upstream_stage_evidence_present,
+                    "slot_ready": slot_ready,
+                }
+            )
+    records.sort(key=lambda record: record["slot_id"])
+    return records
+
+
+def factory_readiness(root: Path = ROOT) -> list[dict[str, Any]]:
+    """The full per-slot readiness list underlying ``check_factory_gate``,
+    derived from A2's residuals, the frozen slot manifest, and A6's own
+    already-public per-slot residual evidence -- reused (never duplicated)
+    by companion/downstream modules that need per-slot detail, not just the
+    gate's aggregate counts."""
+    manifest = _load(root / "data/projects/open_model_data/admission/dataset_v4_pilot_slot_manifest_v1.json")
+    a2_receipt = _load(root / "data/projects/open_model_data/admission/dataset_v4_a2_source_operation_admission_receipt_v1.json")
+    a6_receipt = _load(root / "data/projects/open_model_data/admission/dataset_v4_a6_blind_arena_receipt_v1.json")
+    blocked_by_a6 = blocked_slot_ids_from_residuals(a6_receipt.get("a6_residuals", []))
+    return per_slot_readiness(manifest, a2_receipt, blocked_by_a6)
+
+
 # --- factory gate (public-only) ----------------------------------------------
 
 
@@ -205,6 +299,9 @@ def check_factory_gate(root: Path = ROOT) -> dict[str, Any]:
             "a6_receipt_valid": False,
             "a2_rights_resolved": False,
             "all_slots_assigned": False,
+            "upstream_stage_evidence_present": False,
+            "slots_ready": 0,
+            "slots_residual": 100,
             "factory_slice_ready": False,
             "owner_role": "A2_A3_PRIVATE_ARTIFACT",
             "blocked_reason_code": f"required_public_artifact_missing:{missing[0]}",
@@ -215,9 +312,6 @@ def check_factory_gate(root: Path = ROOT) -> dict[str, Any]:
 
     a2_receipt = _load(a2_path)
     require(a2_receipt.get("controlling_outcome_sha256") == V4_SHA256, "A2 receipt is not bound to the expected V4 controlling outcome -- refusing")
-    rights_resolved = len(a2_receipt.get("residuals", [])) == 0
-
-    all_assigned = all(series["assignment_state"] == "ASSIGNED" for series in manifest["slot_series"])
 
     a6_receipt = _load(a6_path)
     try:
@@ -226,23 +320,52 @@ def check_factory_gate(root: Path = ROOT) -> dict[str, Any]:
     except a6.ArenaWiringError:
         a6_valid = False
 
-    factory_slice_ready = rights_resolved and all_assigned and a6_valid
+    # Per-slot, never a single global AND across all 100 slots: resolving one
+    # stratum's residual never depends on, or unblocks, any other stratum.
+    # ``blocked_by_a6`` is real upstream stage evidence, not metadata -- A2
+    # rights and manifest assignment alone can never flip a slot ready while
+    # A6's own per-slot residual still lists it unresolved.
+    blocked_by_a6 = blocked_slot_ids_from_residuals(a6_receipt.get("a6_residuals", []))
+    readiness = per_slot_readiness(manifest, a2_receipt, blocked_by_a6)
+    rights_resolved = all(record["rights_resolved"] for record in readiness)
+    all_assigned = all(record["assigned"] for record in readiness)
+    upstream_stage_evidence_present = all(record["upstream_stage_evidence_present"] for record in readiness)
+
+    slots_ready = sum(1 for record in readiness if record["slot_ready"]) if a6_valid else 0
+    slots_residual = len(readiness) - slots_ready
+    factory_slice_ready = slots_ready == len(readiness)
+
     blocked_reason_code = None
     if not factory_slice_ready:
         if not a6_valid:
             blocked_reason_code = "a6_receipt_invalid"
-        elif not rights_resolved and not all_assigned:
-            blocked_reason_code = "rights_unresolved_and_slots_unassigned"
-        elif not rights_resolved:
-            blocked_reason_code = "rights_unresolved"
+        elif slots_ready == 0:
+            if not rights_resolved and not all_assigned:
+                blocked_reason_code = "rights_unresolved_and_slots_unassigned"
+            elif not rights_resolved:
+                blocked_reason_code = "rights_unresolved"
+            elif not all_assigned:
+                blocked_reason_code = "slot_assignment_pending_a2_a3"
+            else:
+                # Rights are resolved and every slot is assigned, yet A6's
+                # own per-slot residual evidence still says no: the false
+                # positive this fix exists to close never reaches here.
+                blocked_reason_code = "upstream_stage_evidence_unavailable"
         else:
-            blocked_reason_code = "slot_assignment_pending_a2_a3"
+            # Some, but not all, frozen slots are ready -- the case the old
+            # global-AND gate could never represent (it could only ever
+            # report 0 or every slot ready). Never collapsed into the
+            # all-blocked reason codes above.
+            blocked_reason_code = "partial_slots_pending_a2_a3"
 
     return {
         "gate_id": "v4-a7-factory-gate-v1",
         "a6_receipt_valid": a6_valid,
         "a2_rights_resolved": rights_resolved,
         "all_slots_assigned": all_assigned,
+        "upstream_stage_evidence_present": upstream_stage_evidence_present,
+        "slots_ready": slots_ready,
+        "slots_residual": slots_residual,
         "factory_slice_ready": factory_slice_ready,
         "owner_role": manifest["sealed_heldout_commitment"]["assignment_owner"],
         "blocked_reason_code": blocked_reason_code,
@@ -385,10 +508,18 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
         "frozen_slot_denominator": {"total_slots": len(frozen_slot_ids), "strata": strata},
         "factory_gate": {
             "gate_id": gate["gate_id"],
-            "requires": ["a6_receipt_independently_valid", "a2_rights_fully_resolved", "all_frozen_slots_assigned"],
+            "requires": [
+                "a6_receipt_independently_valid",
+                "per_slot_a2_rights_resolved",
+                "per_slot_manifest_assignment",
+                "per_slot_upstream_stage_evidence",
+            ],
             "a6_receipt_valid": gate["a6_receipt_valid"],
             "a2_rights_resolved": gate["a2_rights_resolved"],
             "all_slots_assigned": gate["all_slots_assigned"],
+            "upstream_stage_evidence_present": gate["upstream_stage_evidence_present"],
+            "slots_ready": gate["slots_ready"],
+            "slots_residual": gate["slots_residual"],
             "factory_slice_ready": gate["factory_slice_ready"],
             "owner_role": gate["owner_role"],
             "blocked_reason_code": gate["blocked_reason_code"],
@@ -408,8 +539,8 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
             "dataset_rows_emitted": engine_admission_receipt["counts"]["admitted_rows"],
             "candidate_rows_constructed": engine_admission_receipt["counts"]["input_rows"],
             "frozen_slot_count": len(frozen_slot_ids),
-            "slots_factory_ready": len(frozen_slot_ids) if gate["factory_slice_ready"] else 0,
-            "slots_blocked": 0 if gate["factory_slice_ready"] else len(frozen_slot_ids),
+            "slots_factory_ready": gate["slots_ready"],
+            "slots_blocked": gate["slots_residual"],
         },
         "eligibility": dict(FACTORY_ELIGIBILITY),
         "safety_assertions": {
@@ -463,6 +594,9 @@ def validate_gate_matches_receipt(receipt: dict[str, Any], root: Path) -> None:
         declared["a6_receipt_valid"] == gate["a6_receipt_valid"]
         and declared["a2_rights_resolved"] == gate["a2_rights_resolved"]
         and declared["all_slots_assigned"] == gate["all_slots_assigned"]
+        and declared["upstream_stage_evidence_present"] == gate["upstream_stage_evidence_present"]
+        and declared["slots_ready"] == gate["slots_ready"]
+        and declared["slots_residual"] == gate["slots_residual"]
         and declared["factory_slice_ready"] == gate["factory_slice_ready"]
         and declared["blocked_reason_code"] == gate["blocked_reason_code"],
         "receipt factory_gate does not match the state independently re-derived from the live public artifacts "

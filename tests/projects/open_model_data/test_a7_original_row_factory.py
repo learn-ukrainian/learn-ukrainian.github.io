@@ -110,6 +110,35 @@ def test_a7_gate_opens_only_once_rights_are_resolved_and_every_slot_is_assigned(
 ) -> None:
     resolved_a2 = copy.deepcopy(REAL_A2_RECEIPT)
     resolved_a2["residuals"] = []
+    for coverage in resolved_a2["stratum_coverage_map"]:
+        coverage["residual_ids"] = []
+    assigned_manifest = copy.deepcopy(REAL_MANIFEST)
+    for series in assigned_manifest["slot_series"]:
+        series["assignment_state"] = "ASSIGNED"
+    # A2 rights + manifest assignment alone are never sufficient -- A6's own
+    # per-slot evidence must also genuinely clear for every frozen slot.
+    cleared_a6 = copy.deepcopy(REAL_A6_RECEIPT)
+    cleared_a6["a6_residuals"] = []
+    _write_receipt_tree(tmp_path, a2=resolved_a2, manifest=assigned_manifest, a6=cleared_a6)
+    monkeypatch.setattr(a7.a6, "validate_receipt_independently", lambda *a, **k: None)
+    gate = a7.check_factory_gate(tmp_path)
+    assert gate["a2_rights_resolved"] is True
+    assert gate["all_slots_assigned"] is True
+    assert gate["upstream_stage_evidence_present"] is True
+    assert gate["factory_slice_ready"] is True
+    assert gate["blocked_reason_code"] is None
+
+
+def test_a7_gate_stays_closed_when_a2_and_manifest_resolve_but_a6_evidence_does_not(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A2 rights + manifest assignment metadata alone must never open the
+    gate: this is exactly the previous scenario with A6's own per-slot
+    evidence left untouched (still 100 residuals)."""
+    resolved_a2 = copy.deepcopy(REAL_A2_RECEIPT)
+    resolved_a2["residuals"] = []
+    for coverage in resolved_a2["stratum_coverage_map"]:
+        coverage["residual_ids"] = []
     assigned_manifest = copy.deepcopy(REAL_MANIFEST)
     for series in assigned_manifest["slot_series"]:
         series["assignment_state"] = "ASSIGNED"
@@ -118,8 +147,10 @@ def test_a7_gate_opens_only_once_rights_are_resolved_and_every_slot_is_assigned(
     gate = a7.check_factory_gate(tmp_path)
     assert gate["a2_rights_resolved"] is True
     assert gate["all_slots_assigned"] is True
-    assert gate["factory_slice_ready"] is True
-    assert gate["blocked_reason_code"] is None
+    assert gate["upstream_stage_evidence_present"] is False
+    assert gate["slots_ready"] == 0
+    assert gate["factory_slice_ready"] is False
+    assert gate["blocked_reason_code"] == "upstream_stage_evidence_unavailable"
 
 
 # --- A7 residuals ----------------------------------------------------------------
