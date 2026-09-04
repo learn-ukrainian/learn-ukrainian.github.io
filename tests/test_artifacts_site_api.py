@@ -47,17 +47,10 @@ def _set_env(tmp_path: Path, monkeypatch):
 
     fake_levels = [{"id": "a1", "path": "l2-uk-en/a1"}]
     monkeypatch.setattr(artifacts_router, "LEVELS", fake_levels)
-    from dataclasses import replace
 
     from scripts.api.monitor_context import fixture_context
 
-    ctx = replace(
-        fixture_context(tmp_path),
-        roots=replace(
-            fixture_context(tmp_path).roots,
-            curriculum_root=tmp_path / "curriculum",
-        ),
-    )
+    ctx = fixture_context(tmp_path).with_roots(curriculum_root=tmp_path / "curriculum")
     monkeypatch.setattr(api_main.app.state, "ctx", ctx)
     return curr / "a1", plans
 

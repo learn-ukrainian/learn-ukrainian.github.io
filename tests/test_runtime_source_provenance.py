@@ -8,7 +8,6 @@ must not be forcibly collapsed to 'unknown'.
 from __future__ import annotations
 
 import json
-from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -41,7 +40,7 @@ def _ctx_with_batch_state_dir(batch_state_dir: Path):
     context is passed explicitly to direct-Python calls below.
     """
     base = app.state.ctx
-    return replace(base, roots=replace(base.roots, batch_state_dir=Path(batch_state_dir)))
+    return base.with_roots(batch_state_dir=Path(batch_state_dir))
 
 
 def test_explicit_provenance_preserved_when_initiator_fails_regex(

@@ -1,7 +1,6 @@
 import os
 import subprocess
 import time
-from dataclasses import replace
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -114,10 +113,7 @@ def test_hygiene_endpoint_is_registered_and_uses_project_root(
     monkeypatch,
 ) -> None:
     repo = _dirty_repo_with_all_buckets(tmp_path)
-    ctx = replace(
-        app.state.ctx,
-        roots=replace(app.state.ctx.roots, live_repo_root=repo, project_root=repo),
-    )
+    ctx = app.state.ctx.with_roots(live_repo_root=repo, project_root=repo)
     monkeypatch.setattr(app.state, "ctx", ctx)
 
     response = client.get("/api/git/hygiene")

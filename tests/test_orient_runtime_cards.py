@@ -13,7 +13,6 @@ import json
 import re
 import shutil
 import subprocess
-from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -35,7 +34,7 @@ def _patch_usage_batch_state_dir(monkeypatch, runtime_router, batch_state_dir: P
     import scripts.api.monitor_context as monitor_context
 
     base_ctx = monitor_context.production_context()
-    patched_ctx = replace(base_ctx, roots=replace(base_ctx.roots, batch_state_dir=Path(batch_state_dir)))
+    patched_ctx = base_ctx.with_roots(batch_state_dir=Path(batch_state_dir))
     monkeypatch.setattr(monitor_context, "production_context", lambda ctx=None: patched_ctx)
     monkeypatch.setattr(runtime_router, "production_context", lambda ctx=None: patched_ctx)
     return patched_ctx

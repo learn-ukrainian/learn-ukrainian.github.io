@@ -736,12 +736,11 @@ class TestDashboardModuleDetail:
         )
         monkeypatch.setattr(dashboard_router, "get_orchestration_info", lambda _orch_dir: {})
 
-        from dataclasses import replace
 
         from scripts.api.monitor_context import fixture_context
 
         ctx = fixture_context(tmp_path)
-        ctx = replace(ctx, roots=replace(ctx.roots, curriculum_root=tmp_path / "curriculum"))
+        ctx = ctx.with_roots(curriculum_root=tmp_path / "curriculum")
         result = asyncio.run(dashboard_router.module_detail("a1", "test-slug", ctx=ctx))
         assert result["status"] == {"overall": {"status": "pass"}}
         assert result["status_is_fresh"] is False

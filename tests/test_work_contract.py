@@ -2312,7 +2312,7 @@ def test_work_projection_single_flight_under_concurrent_load(monkeypatch):
     from scripts.api.state_helpers import cache_invalidate
 
     cache_invalidate(work_router.CACHE_KEY)
-    work_router._IN_FLIGHT_BUILDS.clear()
+    api_main.app.state.ctx.stores.work_in_flight.clear()
 
     build_calls = 0
     real_build_sync = work_router._build_sync
@@ -2357,7 +2357,7 @@ def test_work_projection_cold_timeout_completes_in_background_and_converges_on_r
     from scripts.api.state_helpers import cache_invalidate
 
     cache_invalidate(work_router.CACHE_KEY)
-    work_router._IN_FLIGHT_BUILDS.clear()
+    api_main.app.state.ctx.stores.work_in_flight.clear()
 
     real_build_sync = work_router._build_sync
 
@@ -2402,7 +2402,7 @@ def test_work_projection_serves_stale_on_rebuild_timeout(monkeypatch):
     from scripts.api.state_helpers import cache_invalidate, cache_set
 
     cache_invalidate(work_router.CACHE_KEY)
-    work_router._IN_FLIGHT_BUILDS.clear()
+    api_main.app.state.ctx.stores.work_in_flight.clear()
 
     # Populate stale cache
     key = work_router.projection_cache_key({})
@@ -2458,11 +2458,12 @@ def test_warm_projection_cache_schedules_startup_task():
     """Startup warmup schedules background task without blocking (#6859)."""
     import asyncio
 
+    import scripts.api.main as api_main
     import scripts.api.work_router as work_router
     from scripts.api.state_helpers import cache_invalidate
 
     cache_invalidate(work_router.CACHE_KEY)
-    work_router._IN_FLIGHT_BUILDS.clear()
+    api_main.app.state.ctx.stores.work_in_flight.clear()
 
     async def run_warmup():
         task = work_router.warm_projection_cache()
@@ -2472,4 +2473,3 @@ def test_warm_projection_cache_schedules_startup_task():
         assert result["schema_version"] == "work-projection.v1"
 
     asyncio.run(run_warmup())
-

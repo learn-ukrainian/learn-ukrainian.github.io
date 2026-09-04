@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import time
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import replace
 from pathlib import Path
 from urllib.parse import quote
 
@@ -39,14 +38,7 @@ def controlled_docs_tree(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dic
     dashboards.mkdir()
     (dashboards / "artifacts.html").write_text("<!doctype html><title>Artifacts</title>", encoding="utf-8")
 
-    ctx = replace(
-        fixture_context(tmp_path),
-        roots=replace(
-            fixture_context(tmp_path).roots,
-            effective_roots={"safe": safe_root},
-            dashboards_dir=dashboards,
-        ),
-    )
+    ctx = fixture_context(tmp_path).with_roots(effective_roots={"safe": safe_root}, dashboards_dir=dashboards)
     monkeypatch.setattr(app.state, "ctx", ctx)
 
     return {"safe": safe_root, "outside": outside_root}
@@ -130,13 +122,8 @@ def docs_tree_with_md(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[s
     dashboards.mkdir()
     (dashboards / "artifacts.html").write_text("<!doctype html><title>Artifacts</title>", encoding="utf-8")
 
-    ctx = replace(
-        fixture_context(tmp_path),
-        roots=replace(
-            fixture_context(tmp_path).roots,
-            effective_roots=docs_router.build_effective_roots(tmp_path),
-            dashboards_dir=dashboards,
-        ),
+    ctx = fixture_context(tmp_path).with_roots(
+        effective_roots=docs_router.build_effective_roots(tmp_path), dashboards_dir=dashboards
     )
     monkeypatch.setattr(app.state, "ctx", ctx)
 
@@ -269,14 +256,7 @@ def test_docs_router_serves_symlinked_root_with_logical_paths(
     (logical_root / "docs").symlink_to(real_docs_root, target_is_directory=True)
 
     roots = {"docs/reports": logical_root / "docs" / "reports"}
-    ctx = replace(
-        fixture_context(logical_root),
-        roots=replace(
-            fixture_context(logical_root).roots,
-            effective_roots=roots,
-            dashboards_dir=dashboards_root,
-        ),
-    )
+    ctx = fixture_context(logical_root).with_roots(effective_roots=roots, dashboards_dir=dashboards_root)
     monkeypatch.setattr(app.state, "ctx", ctx)
 
     client = TestClient(app, raise_server_exceptions=False)

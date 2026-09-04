@@ -244,7 +244,6 @@ def test_health_serving_fields_and_opaque_host(monkeypatch: pytest.MonkeyPatch) 
 
 
 def test_health_release_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Any) -> None:
-    from dataclasses import replace
     release_sha = SHA_MAIN
     release_dir = tmp_path / ".runtime" / "api" / "releases" / release_sha
     release_dir.mkdir(parents=True)
@@ -253,10 +252,7 @@ def test_health_release_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Any) 
         encoding="utf-8",
     )
     base_ctx = app.state.ctx
-    patched_ctx = replace(
-        base_ctx,
-        roots=replace(base_ctx.roots, project_root=release_dir),
-    )
+    patched_ctx = base_ctx.with_roots(project_root=release_dir)
     monkeypatch.setattr(app.state, "ctx", patched_ctx)
     monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-job")
     instance = client.get("/api/health").json()["instance"]

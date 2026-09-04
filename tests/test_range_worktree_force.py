@@ -8,7 +8,6 @@ Covers:
 
 from __future__ import annotations
 
-from dataclasses import replace
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -175,10 +174,7 @@ def test_worktrees_parses_porcelain_output(monkeypatch, tmp_path):
     monkeypatch.setattr(
         api_main.app.state,
         "ctx",
-        replace(
-            api_main.app.state.ctx,
-            roots=replace(api_main.app.state.ctx.roots, live_repo_root=primary),
-        ),
+        api_main.app.state.ctx.with_roots(live_repo_root=primary),
     )
 
     calls: list[list[str]] = []
@@ -311,17 +307,10 @@ def test_force_preview_enumerates_every_deletion_target(tmp_path, monkeypatch):
     proj = _lay_out_module(tmp_path)
     fake_levels = [{"id": "a1", "path": "l2-uk-en/a1"}]
     monkeypatch.setattr(artifacts_router, "LEVELS", fake_levels)
-    from dataclasses import replace
 
     from scripts.api.monitor_context import fixture_context
 
-    ctx = replace(
-        fixture_context(proj),
-        roots=replace(
-            fixture_context(proj).roots,
-            curriculum_root=proj / "curriculum",
-        ),
-    )
+    ctx = fixture_context(proj).with_roots(curriculum_root=proj / "curriculum")
     monkeypatch.setattr(api_main.app.state, "ctx", ctx)
 
     resp = client.get("/api/artifacts/a1/hello/force-preview")
@@ -360,17 +349,10 @@ def test_force_preview_empty_for_nonexistent_slug(tmp_path, monkeypatch):
     monkeypatch.setattr(
         artifacts_router, "LEVELS", [{"id": "a1", "path": "l2-uk-en/a1"}],
     )
-    from dataclasses import replace
 
     from scripts.api.monitor_context import fixture_context
 
-    ctx = replace(
-        fixture_context(proj),
-        roots=replace(
-            fixture_context(proj).roots,
-            curriculum_root=proj / "curriculum",
-        ),
-    )
+    ctx = fixture_context(proj).with_roots(curriculum_root=proj / "curriculum")
     monkeypatch.setattr(api_main.app.state, "ctx", ctx)
 
     body = client.get("/api/artifacts/a1/never-existed/force-preview").json()

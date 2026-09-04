@@ -39,7 +39,7 @@ def epics_app_for_store(
     """
     ctx = fixture_context(root)
     if live_repo_root is not None:
-        ctx = replace(ctx, roots=replace(ctx.roots, live_repo_root=Path(live_repo_root)))
+        ctx = ctx.with_roots(live_repo_root=Path(live_repo_root))
     ctx = replace(ctx, stores=replace(ctx.stores, epics_store=store))
     return create_app(ctx, lifespan=_stub_lifespan)
 

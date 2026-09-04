@@ -15,7 +15,6 @@ from __future__ import annotations
 
 import sqlite3
 import sys
-from dataclasses import replace
 from pathlib import Path
 from unittest.mock import patch
 
@@ -27,18 +26,14 @@ from scripts.ai_agent_bridge import _channels
 from scripts.ai_agent_bridge import _config as ab_config
 from scripts.ai_agent_bridge import _db as ab_db
 from scripts.api import comms_router
-from scripts.api.monitor_context import DatabaseHandle, MonitorContext, fixture_context
+from scripts.api.monitor_context import MonitorContext, fixture_context
 from scripts.api.state_helpers import cache_invalidate
 
 
 def _message_ctx(root: Path, message_db: Path) -> MonitorContext:
     """Fixture context whose broker DB is pinned to ``message_db``."""
     ctx = fixture_context(root)
-    return replace(
-        ctx,
-        roots=replace(ctx.roots, message_db_path=message_db),
-        stores=replace(ctx.stores, message_db=DatabaseHandle(message_db, ctx._open_db)),
-    )
+    return ctx.with_roots(message_db_path=message_db)
 
 
 @pytest.fixture(autouse=True)

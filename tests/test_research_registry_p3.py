@@ -20,7 +20,6 @@ from __future__ import annotations
 import json
 import os
 import urllib.error
-from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
@@ -44,10 +43,7 @@ def _ctx_with_live_repo_root(live_repo_root: Path):
     """
     base = api_main.app.state.ctx
     root = Path(live_repo_root)
-    return replace(
-        base,
-        roots=replace(base.roots, live_repo_root=root),
-    )
+    return base.with_roots(live_repo_root=root)
 
 
 # --------------------------------------------------------------------------- #

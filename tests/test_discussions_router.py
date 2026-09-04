@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import sqlite3
-from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -11,7 +10,7 @@ from fastapi.testclient import TestClient
 
 from scripts.ai_agent_bridge import _db
 from scripts.api import discussions_router
-from scripts.api.monitor_context import DatabaseHandle, fixture_context
+from scripts.api.monitor_context import fixture_context
 
 
 def _insert_message(
@@ -46,11 +45,7 @@ def _insert_message(
 
 def _discussions_client(root: Path, db_path: Path) -> TestClient:
     ctx = fixture_context(root)
-    pinned = replace(
-        ctx,
-        roots=replace(ctx.roots, message_db_path=db_path),
-        stores=replace(ctx.stores, message_db=DatabaseHandle(db_path, ctx._open_db)),
-    )
+    pinned = ctx.with_roots(message_db_path=db_path)
     app = FastAPI()
     app.state.ctx = pinned
     app.include_router(discussions_router.router, prefix="/api/discussions")
