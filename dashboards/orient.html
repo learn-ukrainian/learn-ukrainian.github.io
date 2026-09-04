@@ -277,7 +277,9 @@ function renderPipeline(pipeline) {
   }</div>`;
 }
 
-const RETIRED_AGENTS = new Set(['gemini']);
+// Permanently retired CLI seats (dispatch_fallbacks: gemini→agy, glm→cursor).
+// Historical /api/orient usage keys must not reappear as live cards.
+const RETIRED_AGENTS = new Set(['gemini', 'glm']);
 
 function extractRuntimeAgents(runtime) {
   const seen = new Set();
