@@ -1,5 +1,6 @@
 ---
 import LexiconPractice from '../components/LexiconPractice';
+import ChromeText from '../components/chrome/ChromeText.astro';
 ---
 
 <div id="lexicon-practice-mount" data-lexicon-practice-island>
@@ -27,9 +28,9 @@ import LexiconPractice from '../components/LexiconPractice';
 </div>
 
 <div id="lexicon-practice-fallback" class="lexicon-practice-fallback" hidden>
-  <p id="lexicon-practice-error" lang="uk">Не вдалося завантажити практику.</p>
+  <p id="lexicon-practice-error"><ChromeText k="practice.loadError" /></p>
   <button type="button" onclick="location.reload()">
-    <span lang="uk">Спробувати ще раз</span>
+    <ChromeText k="practice.retry" />
   </button>
 </div>
 
