@@ -175,9 +175,15 @@ def test_occupancy_foundry_marker_keeps_low_load_host_busy(tmp_path: Path, monke
         load_mod.clear_host_load_cache()
 
 
-def test_occupancy_marker_on_unavailable_host_is_not_idle(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_occupancy_marker_on_empty_map_linux_host_teacher_is_not_idle(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Empty-map Linux fills host-teacher in-process (fresh); a live marker still blocks idle."""
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    monkeypatch.setenv("ATLAS_RUN_ROOT", str(tmp_path / "run-root"))
+    (tmp_path / "run-root").mkdir()
     monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
+    monkeypatch.setattr("scripts.api.occupancy.sys.platform", "linux")
     markers = tmp_path / "markers"
     monkeypatch.setenv("MONITOR_OCCUPANCY_MARKERS", str(markers))
     write_marker(
@@ -194,10 +200,45 @@ def test_occupancy_marker_on_unavailable_host_is_not_idle(tmp_path: Path, monkey
         resp = _client(tmp_path).get("/api/occupancy?host_id=host-teacher")
         assert resp.status_code == 200
         host = resp.json()["hosts"]["host-teacher"]
-        assert host["status"] == "unavailable"
+        # One-VPS empty-map fill may report fresh/stale; the marker invariant is non-idle.
+        assert host["status"] in {"fresh", "stale"}
         assert host["idle_or_empty"] is False
         assert host["occupant_count"] == 1
         assert host["occupants"][0]["kind"] == "service"
+    finally:
+        atlas_job.set_host_adapter(None)
+        load_mod.clear_host_load_cache()
+
+
+def test_occupancy_marker_on_unavailable_mac_operator_is_not_idle(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """mac-operator stays unavailable without observers; a live marker still blocks idle."""
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
+    monkeypatch.setattr("scripts.api.occupancy.sys.platform", "linux")
+    markers = tmp_path / "markers"
+    monkeypatch.setenv("MONITOR_OCCUPANCY_MARKERS", str(markers))
+    write_marker(
+        kind="service",
+        agent="foundry",
+        task_id="evidence-compiler",
+        epic="7102",
+        host_id="mac-operator",
+        path=markers,
+    )
+    fake = atlas_job.FakeHostAdapter()
+    atlas_job.set_host_adapter(fake)
+    try:
+        resp = _client(tmp_path).get("/api/occupancy?host_id=mac-operator")
+        assert resp.status_code == 200
+        host = resp.json()["hosts"]["mac-operator"]
+        assert host["status"] == "unavailable"
+        assert host["error"] == "unreachable"
+        assert host["idle_or_empty"] is False
+        assert host["occupant_count"] == 1
+        assert host["occupants"][0]["kind"] == "service"
+        assert host["occupants"][0]["agent"] == "foundry"
     finally:
         atlas_job.set_host_adapter(None)
         load_mod.clear_host_load_cache()
