@@ -13,6 +13,112 @@ from pathlib import Path
 import yaml
 
 
+def load_annotations(worksheet_path: Path) -> list[dict[str, object]]:
+    """Load the reviewed ZNO annotations from their checked-in worksheet."""
+    with worksheet_path.open(encoding="utf-8") as worksheet:
+        data = yaml.safe_load(worksheet)
+    if not isinstance(data, dict) or "zno_annotations" not in data:
+        raise ValueError("'zno_annotations' key missing from worksheet")
+    annotations = data["zno_annotations"]
+    if not isinstance(annotations, list):
+        raise ValueError("'zno_annotations' must be a list")
+    return annotations
+
+
+def plan_annotations(
+    conn: sqlite3.Connection, annotations: list[dict[str, object]]
+) -> tuple[list[tuple[str, str, str, str, int]], list[dict[str, object]], dict[int, dict[str, str]], int]:
+    """Return all safe worksheet updates without changing the database.
+
+    Existing reviewed values are immutable unless the worksheet explicitly
+    lists the column in ``override_fields``.  Keeping planning separate lets a
+    clean HTML ingest re-apply the worksheet in its own transaction and lets
+    the command-line tool retain its all-or-nothing conflict refusal.
+    """
+    cursor = conn.execute("SELECT id, topic_norm, task_subtype, paronym_pair, stress_word FROM zno_tasks")
+    db_tasks = {
+        row[0]: {
+            "topic_norm": row[1] or "",
+            "task_subtype": row[2] or "",
+            "paronym_pair": row[3] or "",
+            "stress_word": row[4] or "",
+        }
+        for row in cursor.fetchall()
+    }
+    updates: list[tuple[str, str, str, str, int]] = []
+    conflicts: list[dict[str, object]] = []
+    skipped = 0
+
+    for annotation in annotations:
+        task_id = annotation.get("id")
+        if not isinstance(task_id, int) or task_id not in db_tasks:
+            continue
+        db_row = db_tasks[task_id]
+        override_fields = annotation.get("override_fields", [])
+        if not isinstance(override_fields, list) or not all(
+            isinstance(field, str) and field in {"topic_norm", "task_subtype", "paronym_pair", "stress_word"}
+            for field in override_fields
+        ):
+            raise ValueError(f"Task ID {task_id} has invalid override_fields")
+        override_fields_set = set(override_fields)
+        proposed = {
+            "topic_norm": annotation.get("topic_norm") or "",
+            "task_subtype": annotation.get("task_subtype") or "",
+            "paronym_pair": annotation.get("paronym_pair") or "",
+            "stress_word": annotation.get("stress_word") or "",
+        }
+        has_conflict = False
+        has_diff = False
+        for column, proposed_value in proposed.items():
+            existing_value = db_row[column]
+            if existing_value == proposed_value:
+                continue
+            if existing_value == "" or column in override_fields_set:
+                has_diff = True
+            else:
+                has_conflict = True
+                conflicts.append(
+                    {
+                        "id": task_id,
+                        "column": column,
+                        "db_value": existing_value,
+                        "proposed_value": proposed_value,
+                    }
+                )
+        if has_conflict:
+            continue
+        if has_diff:
+            updates.append(
+                (
+                    str(proposed["topic_norm"]),
+                    str(proposed["task_subtype"]),
+                    str(proposed["paronym_pair"]),
+                    str(proposed["stress_word"]),
+                    task_id,
+                )
+            )
+        else:
+            skipped += 1
+    return updates, conflicts, db_tasks, skipped
+
+
+def apply_worksheet_annotations(conn: sqlite3.Connection, worksheet_path: Path) -> dict[str, object]:
+    """Re-apply reviewed worksheet metadata after a source-only HTML ingest."""
+    updates, conflicts, _db_tasks, skipped = plan_annotations(conn, load_annotations(worksheet_path))
+    if conflicts:
+        raise ValueError(f"worksheet conflicts: {conflicts}")
+    if updates:
+        conn.executemany(
+            """
+            UPDATE zno_tasks
+            SET topic_norm = ?, task_subtype = ?, paronym_pair = ?, stress_word = ?
+            WHERE id = ?
+            """,
+            updates,
+        )
+    return {"updated": len(updates), "skipped": skipped}
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Apply zno_annotations to zno_tasks table in sources.db.")
     parser.add_argument(
@@ -43,115 +149,22 @@ def main() -> int:
         print(f"Error: Worksheet file does not exist: {worksheet_path}", file=sys.stderr)
         return 1
 
-    # Load worksheet
     try:
-        with open(worksheet_path, encoding="utf-8") as f:
-            data = yaml.safe_load(f)
+        annotations = load_annotations(worksheet_path)
     except Exception as e:
         print(f"Error parsing worksheet YAML: {e}", file=sys.stderr)
         return 1
 
-    if not data or "zno_annotations" not in data:
-        print("Error: 'zno_annotations' key missing from worksheet", file=sys.stderr)
-        return 1
-
-    annotations = data["zno_annotations"]
-
     # Connect to SQLite
     conn = sqlite3.connect(db_path)
     try:
-        cursor = conn.execute("SELECT id, topic_norm, task_subtype, paronym_pair, stress_word FROM zno_tasks")
-        db_tasks = {
-            row[0]: {
-                "topic_norm": row[1] or "",
-                "task_subtype": row[2] or "",
-                "paronym_pair": row[3] or "",
-                "stress_word": row[4] or "",
-            }
-            for row in cursor.fetchall()
-        }
-    except sqlite3.OperationalError as e:
+        updates_to_apply, conflicts_found, db_tasks, skipped_count = plan_annotations(conn, annotations)
+    except (sqlite3.OperationalError, ValueError) as e:
         print(f"Database error: {e}", file=sys.stderr)
         conn.close()
         return 1
-
-    updated_count = 0
-    skipped_count = 0
-    conflict_count = 0
-
-    updates_to_apply = []
-    conflicts_found = []
-
-    for annotation in annotations:
-        task_id = annotation.get("id")
-        if task_id is None:
-            continue
-
-        if task_id not in db_tasks:
-            # Task not found in DB - might be a test/trimmed DB, skip
-            continue
-
-        db_row = db_tasks[task_id]
-
-        prop_topic_norm = annotation.get("topic_norm")
-        prop_task_subtype = annotation.get("task_subtype")
-        prop_paronym_pair = annotation.get("paronym_pair")
-        prop_stress_word = annotation.get("stress_word")
-        override_fields = annotation.get("override_fields", [])
-        if not isinstance(override_fields, list) or not all(
-            isinstance(field, str) and field in {"topic_norm", "task_subtype", "paronym_pair", "stress_word"}
-            for field in override_fields
-        ):
-            print(f"Error: Task ID {task_id} has invalid override_fields", file=sys.stderr)
-            conn.close()
-            return 1
-        override_fields_set = set(override_fields)
-
-        prop_topic_norm_norm = prop_topic_norm if prop_topic_norm is not None else ""
-        prop_task_subtype_norm = prop_task_subtype if prop_task_subtype is not None else ""
-        prop_paronym_pair_norm = prop_paronym_pair if prop_paronym_pair is not None else ""
-        prop_stress_word_norm = prop_stress_word if prop_stress_word is not None else ""
-
-        has_conflict = False
-        has_diff = False
-
-        for col, prop_norm in [
-            ("topic_norm", prop_topic_norm_norm),
-            ("task_subtype", prop_task_subtype_norm),
-            ("paronym_pair", prop_paronym_pair_norm),
-            ("stress_word", prop_stress_word_norm),
-        ]:
-            db_norm = db_row[col]
-
-            if db_norm != prop_norm:
-                if db_norm == "" or col in override_fields_set:
-                    has_diff = True
-                else:
-                    has_conflict = True
-                    conflicts_found.append(
-                        {
-                            "id": task_id,
-                            "column": col,
-                            "db_value": db_norm,
-                            "proposed_value": prop_norm,
-                        }
-                    )
-
-        if has_conflict:
-            conflict_count += 1
-        elif has_diff:
-            updated_count += 1
-            updates_to_apply.append(
-                (
-                    prop_topic_norm_norm,
-                    prop_task_subtype_norm,
-                    prop_paronym_pair_norm,
-                    prop_stress_word_norm,
-                    task_id,
-                )
-            )
-        else:
-            skipped_count += 1
+    updated_count = len(updates_to_apply)
+    conflict_count = len({int(conflict["id"]) for conflict in conflicts_found})
 
     # Print conflicts if any
     if conflicts_found:
@@ -193,15 +206,15 @@ def main() -> int:
     # Apply updates if not dry-run
     if updated_count > 0:
         try:
-            with conn:
-                conn.executemany(
-                    """
-                    UPDATE zno_tasks
-                    SET topic_norm = ?, task_subtype = ?, paronym_pair = ?, stress_word = ?
-                    WHERE id = ?
+            conn.executemany(
+                """
+                UPDATE zno_tasks
+                SET topic_norm = ?, task_subtype = ?, paronym_pair = ?, stress_word = ?
+                WHERE id = ?
                 """,
-                    updates_to_apply,
-                )
+                updates_to_apply,
+            )
+            conn.commit()
         except sqlite3.Error as e:
             print(f"Error applying updates to database: {e}", file=sys.stderr)
             conn.close()

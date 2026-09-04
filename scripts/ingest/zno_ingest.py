@@ -11,6 +11,11 @@ import time
 import urllib.request
 from pathlib import Path
 
+from scripts.ingest.apply_zno_annotations import apply_worksheet_annotations
+
+ROOT = Path(__file__).resolve().parents[2]
+ZNO_ANNOTATIONS_WORKSHEET = ROOT / "data" / "lexicon" / "paronym_worksheet_candidates.yaml"
+
 # Verified 33 booklet documents from the matrix (2010 to 2025, excluding 2009 and 3 demo sessions)
 BOOKLETS = [
     {
@@ -589,8 +594,6 @@ def topic_norm_from_tag(topic_tag: str) -> str | None:
         return "phonetic"
     if "словотвір" in tag or "будова слова" in tag or "значущі частини слова" in tag:
         return "word_formation"
-    if any(marker in tag for marker in ("лексик", "паронім", "синонім", "антонім", "омонім")):
-        return "lexical_norm"
     if any(marker in tag for marker in ("синтаксис", "словосполуч", "реченн", "підмет", "присудок", "розділов")):
         return "syntactic_norm"
     if any(
@@ -611,6 +614,8 @@ def topic_norm_from_tag(topic_tag: str) -> str | None:
         )
     ):
         return "morphological_norm"
+    if any(marker in tag for marker in ("лексик", "паронім", "синонім", "антонім", "омонім")):
+        return "lexical_norm"
     if any(
         marker in tag
         for marker in ("літератур", "письменник", "творчість", "усна народна", "фольклор", "леся українка")
@@ -1034,7 +1039,6 @@ def parse_and_insert_tasks(conn: sqlite3.Connection, html: str, doc_id: int, yea
             correct_json = ""
 
         task_subtype, stress_word = derive_task_metadata(task_prompt, options_json, correct_json, task_format)
-        topic_norm = topic_norm_from_tag(topic_tag) or ""
 
         # Keep manually reviewed annotations on a refresh.  ``INSERT OR
         # REPLACE`` deletes the previous row before inserting a new one, which
@@ -1044,9 +1048,9 @@ def parse_and_insert_tasks(conn: sqlite3.Connection, html: str, doc_id: int, yea
             """
             INSERT INTO zno_tasks(
                 document_id, year, exam, session, task_no, subject, task_format,
-                stem, options_json, correct_json, topic_tag, topic_norm, task_subtype, stress_word
+                stem, options_json, correct_json, topic_tag, task_subtype, stress_word
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(document_id, task_no) DO UPDATE SET
                 year=excluded.year,
                 exam=excluded.exam,
@@ -1056,11 +1060,7 @@ def parse_and_insert_tasks(conn: sqlite3.Connection, html: str, doc_id: int, yea
                 stem=excluded.stem,
                 options_json=excluded.options_json,
                 correct_json=excluded.correct_json,
-                topic_tag=excluded.topic_tag,
-                topic_norm=CASE
-                    WHEN trim(zno_tasks.topic_norm) <> '' THEN zno_tasks.topic_norm
-                    ELSE excluded.topic_norm
-                END
+                topic_tag=excluded.topic_tag
         """,
             (
                 doc_id,
@@ -1074,7 +1074,6 @@ def parse_and_insert_tasks(conn: sqlite3.Connection, html: str, doc_id: int, yea
                 options_json,
                 correct_json,
                 topic_tag,
-                topic_norm,
                 task_subtype,
                 stress_word,
             ),
@@ -1127,6 +1126,9 @@ def ingest(db_path: Path, cache_dir: Path) -> int:
 
         # 2. Extract and ingest online tasks
         total_tasks = ingest_tasks(conn, cache_dir)
+        # HTML contains source text only; restore the checked-in reviewed
+        # worksheet before filling any remaining empty topic classifications.
+        apply_worksheet_annotations(conn, ZNO_ANNOTATIONS_WORKSHEET)
         backfill_topic_norm(conn)
         assert_session_completeness(conn)
         conn.commit()
