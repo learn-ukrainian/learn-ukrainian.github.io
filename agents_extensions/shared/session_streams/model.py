@@ -143,6 +143,14 @@ class Entry:
 
 
 @dataclass(frozen=True)
+class AppendResult:
+    """Outcome of ``append_entry``: the stored entry and whether it was a same-key replay."""
+
+    entry: Entry
+    is_replay: bool
+
+
+@dataclass(frozen=True)
 class StreamDigest:
     """Pinned entries followed by a bounded recent non-pinned tail."""
 

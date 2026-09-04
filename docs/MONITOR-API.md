@@ -398,13 +398,17 @@ boundary for another machine.
 HTTP header, as an alias for `body.idempotency_key`; a header that disagrees
 with a supplied body value is refused with `400` rather than silently
 preferring one, and a replayed key returns the original entry with an
-`Idempotent-Replayed: true` response header. `MonitorClient` (the stdlib
-`[A, B]` failover client in `scripts/ai_agent_bridge/monitor_client.py`) may
-retry a keyed mutation on base URL B only for routes on its
-cluster-authoritative allowlist — today exactly this `/api/epics/v1` family
-(handoff/bundles/release) — and only distinguishes an ambiguous edge failure
-(`502`/`503`/`504` with no app JSON and no `server: uvicorn`) from the API's
-own well-formed `503` busy answer; `500`/`501`/`408`/`429` never trigger a hop.
+`Idempotent-Replayed: true` response header (`append_entry` reports
+`{entry, is_replay}` so the router does not probe the digest for replay).
+`MonitorClient` (the stdlib `[A, B]` failover client in
+`scripts/ai_agent_bridge/monitor_client.py`) keeps GET failover and
+distinguishes an ambiguous edge failure (`502`/`503`/`504` whose JSON body
+is not the app's documented 503 shape) from the API's own well-formed `503`
+busy answer; `500`/`501`/`408`/`429` never trigger a hop. Keyed-mutation
+failover stays disabled while this family is loopback-fenced on one host —
+a hop would 403 at the fence, and per-host sqlite would duplicate if the
+fence relaxed. Re-enable only when a second host shares an atomic
+idempotency record (key, request digest, state, result).
 
 Driver leases are claimed on the API host through this surface. Remote mode is
 the default; `--local` is an offline-only fallback that prints a warning and

@@ -16,6 +16,7 @@ from .app_lifecycle import VerifiedAppLifecycleProof
 from .db import SessionStreamDatabase
 from .model import (
     PINNED_ENTRY_TYPES,
+    AppendResult,
     Entry,
     EntryRef,
     EntryType,
@@ -1411,8 +1412,12 @@ class SessionStreamStore:
         refs: Sequence[EntryRef] = (),
         now: datetime | None = None,
         app_proof: VerifiedAppLifecycleProof | None = None,
-    ) -> Entry:
-        """Append one typed entry under an exact, unexpired fenced lease."""
+    ) -> AppendResult:
+        """Append one typed entry under an exact, unexpired fenced lease.
+
+        Returns the stored entry and ``is_replay=True`` when the same
+        idempotency key already bound this exact immutable content (no new row).
+        """
         validate_entry_body(body)
         if not isinstance(entry_type, EntryType):
             entry_type = EntryType(entry_type)
@@ -1487,7 +1492,7 @@ class SessionStreamStore:
                         raise LeaseConflictError("idempotent append lacks exact immutable receipt evidence")
                 elif existing["writer_receipt_digest"] is not None:
                     raise LeaseConflictError("process append unexpectedly carries an app receipt")
-                return entry
+                return AppendResult(entry=entry, is_replay=True)
             lease_row = self._require_current_lease(connection, lease, require_valid_at=current_time)
             cursor = connection.execute(
                 "INSERT INTO entries("
@@ -1539,7 +1544,7 @@ class SessionStreamStore:
             row = connection.execute("SELECT * FROM entries WHERE entry_id = ?", (entry_id,)).fetchone()
             if row is None:
                 raise SessionStreamError("entry insert did not produce a readable row")
-            return self._entry_from_row(connection, row)
+            return AppendResult(entry=self._entry_from_row(connection, row), is_replay=False)
 
     def upload_rollover_bundle(
         self,

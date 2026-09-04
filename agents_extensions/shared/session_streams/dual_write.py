@@ -123,7 +123,7 @@ def mirror_handoff_file(
         idempotency_key=idempotency_key,
         refs=(EntryRef(kind="legacy_source", uri=f"legacy://{relative}?sha256={source_sha256}"),),
         now=now,
-    )
+    ).entry
     mirror_id = store.record_legacy_mirror(
         lease,
         profile=profile,

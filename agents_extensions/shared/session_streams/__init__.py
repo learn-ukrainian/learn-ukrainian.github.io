@@ -2,6 +2,7 @@
 
 from .db import SessionStreamDatabase, default_database_path
 from .model import (
+    AppendResult,
     Entry,
     EntryRef,
     EntryType,
@@ -15,6 +16,7 @@ from .model import (
 from .store import SessionStreamStore
 
 __all__ = [
+    "AppendResult",
     "Entry",
     "EntryRef",
     "EntryType",
