@@ -368,6 +368,163 @@ def test_build_verb_paradigm_collapses_variants() -> None:
     assert paradigm["past"]["множина"] == "навчались / навчалися"
 
 
+def test_build_verb_paradigm_maps_impers_to_first_class_field() -> None:
+    """VESUM ``verb:imperf:impers`` (читано) decodes to the label "безособова
+    форма" (dict_uk tagset doc: "impers    безособова форма") and must land in
+    its own paradigm field rather than being dropped as an unmatched cell (#7611)."""
+    forms = [
+        {"form": "читати", "label": "інфінітив"},
+        {"form": "читаю", "label": "теперішній, однина, 1 ос."},
+        {"form": "читано", "label": "безособова форма"},
+    ]
+
+    paradigm = _build_paradigm("verb", forms)
+
+    assert paradigm is not None
+    assert paradigm["impersonal"] == "читано"
+    assert paradigm["tenses"]["теперішній"]["однина"]["1"] == "читаю"
+
+
+def test_build_verb_paradigm_empty_label_quarantines_row_not_whole_paradigm() -> None:
+    """A row whose VESUM tag decoded to an empty label (the pre-fix impers bug,
+    or any future unmapped tag token) used to wipe the entire paradigm. It must
+    now be dropped on its own, keeping every other cell intact (#7611)."""
+    forms = [
+        {"form": "читати", "label": "інфінітив"},
+        {"form": "читаю", "label": "теперішній, однина, 1 ос."},
+        {"form": "читав", "label": "минулий, чол."},
+        {"form": "щось-незрозуміле", "label": ""},
+    ]
+
+    paradigm = _build_paradigm("verb", forms)
+
+    assert paradigm is not None
+    assert paradigm["tenses"]["теперішній"]["однина"]["1"] == "читаю"
+    assert paradigm["past"]["чол."] == "читав"
+    assert "щось-незрозуміле" not in _collect_paradigm_forms(paradigm)
+
+
+def test_build_verb_paradigm_unknown_nonempty_label_is_dropped_not_guessed() -> None:
+    """An unrecognized non-empty label must stay diagnostic: dropped from the
+    paradigm rather than silently folded into some other field (#7611)."""
+    forms = [
+        {"form": "читати", "label": "інфінітив"},
+        {"form": "читаю", "label": "теперішній, однина, 1 ос."},
+        {"form": "щосьновітаговічне", "label": "геть незнана мітка"},
+    ]
+
+    paradigm = _build_paradigm("verb", forms)
+
+    assert paradigm is not None
+    assert paradigm["tenses"]["теперішній"]["однина"]["1"] == "читаю"
+    assert "щосьновітаговічне" not in _collect_paradigm_forms(paradigm)
+
+
+def test_build_verb_paradigm_unrecognized_tense_cell_quarantines_row_only() -> None:
+    """An unparseable person/number cell under a known tense head (e.g. a
+    person token outside 1/2/3) must not wipe the tense — only that cell (#7611)."""
+    forms = [
+        {"form": "читати", "label": "інфінітив"},
+        {"form": "читаю", "label": "теперішній, однина, 1 ос."},
+        {"form": "щось", "label": "теперішній, однина, 9 ос."},
+    ]
+
+    paradigm = _build_paradigm("verb", forms)
+
+    assert paradigm is not None
+    assert paradigm["tenses"]["теперішній"]["однина"] == {"1": "читаю"}
+
+
+def test_build_verb_paradigm_partial_tense_keeps_only_attested_cells() -> None:
+    """Previously an incompletely-attested tense (missing persons) wiped the
+    whole paradigm. Now the tense reports only the cells that are attested (#7611)."""
+    forms = [
+        {"form": "читати", "label": "інфінітив"},
+        {"form": "читаю", "label": "теперішній, однина, 1 ос."},
+    ]
+
+    paradigm = _build_paradigm("verb", forms)
+
+    assert paradigm is not None
+    assert paradigm["tenses"]["теперішній"]["однина"] == {"1": "читаю"}
+    assert paradigm["tenses"]["теперішній"]["множина"] == {}
+
+
+def test_build_verb_paradigm_partial_past_keeps_only_attested_cells() -> None:
+    """Previously an incompletely-attested past (missing gender/number cells)
+    wiped the whole paradigm. Now ``past`` reports only attested cells (#7611)."""
+    forms = [
+        {"form": "читати", "label": "інфінітив"},
+        {"form": "читав", "label": "минулий, чол."},
+    ]
+
+    paradigm = _build_paradigm("verb", forms)
+
+    assert paradigm is not None
+    assert paradigm["past"] == {"чол.": "читав"}
+
+
+def _collect_paradigm_forms(paradigm: dict) -> set[str]:
+    """Flatten every form string a verb paradigm reports, for negative assertions."""
+    out: set[str] = set()
+
+    def _walk(value: object) -> None:
+        if isinstance(value, str):
+            out.update(part.strip() for part in value.split(" / "))
+        elif isinstance(value, dict):
+            for item in value.values():
+                _walk(item)
+
+    _walk(paradigm)
+    return out
+
+
+def test_morphology_verb_paradigm_includes_present_past_imperative_and_impersonal(
+    monkeypatch,
+) -> None:
+    """VESUM-backed fixture (data/vesum.db, ``lemma='читати' AND pos='verb'``):
+    real word forms and real tags, trimmed to the unmarked forms. Regression
+    test for #7611 — the impers row (читано) used to decode to an empty label
+    and wipe the whole paradigm; it must now survive as its own field alongside
+    present, past, and imperative."""
+
+    def fake_verify_lemma(lemma: str) -> list[dict[str, str]]:
+        assert lemma == "читати"
+        return [
+            {"word_form": "читати", "tags": "verb:imperf:inf", "pos": "verb"},
+            {"word_form": "читано", "tags": "verb:imperf:impers", "pos": "verb"},
+            {"word_form": "читаю", "tags": "verb:imperf:pres:s:1", "pos": "verb"},
+            {"word_form": "читаєш", "tags": "verb:imperf:pres:s:2", "pos": "verb"},
+            {"word_form": "читає", "tags": "verb:imperf:pres:s:3", "pos": "verb"},
+            {"word_form": "читаємо", "tags": "verb:imperf:pres:p:1", "pos": "verb"},
+            {"word_form": "читаєте", "tags": "verb:imperf:pres:p:2", "pos": "verb"},
+            {"word_form": "читають", "tags": "verb:imperf:pres:p:3", "pos": "verb"},
+            {"word_form": "читав", "tags": "verb:imperf:past:m", "pos": "verb"},
+            {"word_form": "читала", "tags": "verb:imperf:past:f", "pos": "verb"},
+            {"word_form": "читало", "tags": "verb:imperf:past:n", "pos": "verb"},
+            {"word_form": "читали", "tags": "verb:imperf:past:p", "pos": "verb"},
+            {"word_form": "читай", "tags": "verb:imperf:impr:s:2", "pos": "verb"},
+            {"word_form": "читаймо", "tags": "verb:imperf:impr:p:1", "pos": "verb"},
+            {"word_form": "читайте", "tags": "verb:imperf:impr:p:2", "pos": "verb"},
+        ]
+
+    monkeypatch.setattr(enrich_manifest_module, "verify_lemma", fake_verify_lemma)
+    monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+
+    morphology = _morphology("читати")
+
+    assert morphology is not None
+    paradigm = morphology["paradigm"]
+    assert paradigm["kind"] == "verb"
+    assert paradigm["infinitive"] == "читати"
+    assert paradigm["impersonal"] == "читано"
+    assert paradigm["tenses"]["теперішній"]["однина"] == {"1": "читаю", "2": "читаєш", "3": "читає"}
+    assert paradigm["tenses"]["теперішній"]["множина"] == {"1": "читаємо", "2": "читаєте", "3": "читають"}
+    assert paradigm["past"] == {"чол.": "читав", "жін.": "читала", "сер.": "читало", "множина": "читали"}
+    assert paradigm["imperative"]["однина"]["2"] == "читай"
+    assert paradigm["imperative"]["множина"] == {"1": "читаймо", "2": "читайте"}
+
+
 def test_build_paradigm_omits_unstructured_pos() -> None:
     assert _build_paradigm("adv", [{"form": "добре", "label": ""}]) is None
 
@@ -6447,4 +6604,3 @@ def test_enrich_entry_berehynia_sum20_goddess_rework(monkeypatch) -> None:
     assert "wikipedia" not in wiki_ref
     assert "русалк" not in str(wiki_ref).casefold()
     assert "нижчий дух" not in str(wiki_ref)
-
