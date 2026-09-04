@@ -153,21 +153,18 @@ or pad. The replacement must run the exact reserved-path commands emitted by
 `context_canary.py mint --snapshot`, `questions`, and strict `score --verdict` before
 the separate challenge proof and `confirm-started` can unlock cleanup.
 
-## Merge policy — ready PRs must not sit (#4703; landing order #7450; auto-arm #7539)
+## Merge policy — ready PRs must not sit (#4703; landing order #7450)
 
-The repo setting `allow_auto_merge` is ENABLED (was the root cause of ready PRs sitting
-for hours). The binding landing order (operator 2026-08-30, #7450): (1) independent
-cross-family exact-head CF APPROVE, (2) CI Gate green on that **same** head, (3) only then
-arm/queue. Never arm auto-merge ahead of either gate — early-armed auto-merge is how
-#7447–#7449 landed with empty reviews, and a moved head makes a prior APPROVE stale. Once
-both gates are green at the exact head, label the PR `automerge-ok`: the label-gated
-auto-arm pipeline (#7539/#7540) arms GitHub auto-merge on its next firing
-(`do-not-merge`/`hold` block it; manual `gh pr merge <N> --auto --squash` at that
-fully-green point is equivalent). Do **not** pass `--delete-branch` while this repo uses a
+The binding landing order (operator 2026-08-30, #7450; CF-attest retired 2026-09-03):
+(1) independent cross-family exact-head review APPROVE, (2) CI Gate green on that
+**same** head, (3) only then enqueue. Never arm auto-merge ahead of either gate —
+early-armed auto-merge is how #7447–#7449 landed with empty reviews, and a moved head
+makes a prior APPROVE stale. `auto-arm-merge.yml` and the `automerge-ok` label pipeline
+are retired; enqueue with `gh pr merge --squash` after both gates (never `--auto` as a
+substitute for review). Do **not** pass `--delete-branch` while this repo uses a
 merge queue (head deletion mid-queue can close without landing); delete the remote branch
-only after `MERGED`. Dispatched agents still do NOT self-enable auto-merge or self-label
-(review gate first — unchanged). `--auto` never bypasses blocking checks (#M-0.5 semantics
-unchanged).
+only after `MERGED`. Dispatched agents still do NOT self-enable auto-merge or self-label.
+`--auto` never bypasses blocking checks (#M-0.5 semantics unchanged).
 
 **Stream-scoped sweeps (user directive 2026-07-13 — parallel-stream chaos fix; supersedes the
 2026-07-07 one-hour out-of-lane backstop for TRACK sessions).** Multiple streams run in parallel, so a

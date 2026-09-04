@@ -63,23 +63,24 @@ jobs:
           cmd = [
               "gh", "api", "--paginate",
               f"repos/{repo}/compare/{spec}",
-              "--jq", ".files[].filename",
+              "--jq",
+              ".files[] | .filename, (.previous_filename // empty)",
           ]
           try:
               raw = subprocess.check_output(cmd, text=True, timeout=60)
           except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
               fail_closed()
-          paths = [line.strip() for line in raw.splitlines() if line.strip()]
+          paths = sorted({line.strip() for line in raw.splitlines() if line.strip()})
           # Compare API silently caps at 300 files; treat 300 as truncated.
           if not paths or len(paths) >= 300:
               fail_closed()
 
           def is_docs(path: str) -> bool:
               # Infra CI skips wiki/ and curriculum/ — Content CI owns those.
+              # docs/*.md yes; docs/lesson-schema.yaml still hits contracts.
               if path.endswith(".md"):
                   return True
               prefixes = (
-                  "docs/",
                   "wiki/",
                   "curriculum/",
                   "agents_extensions/shared/skills/",
