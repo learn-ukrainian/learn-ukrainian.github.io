@@ -629,10 +629,6 @@ def _extract_task_targets(plan: CleanupPlan) -> dict[str, TaskTarget]:
     return {target.task_id: target for target in plan.task_targets}
 
 
-def _extract_worktree_targets(plan: CleanupPlan) -> dict[str, WorktreeTarget]:
-    return {target.id: target for target in plan.worktree_targets}
-
-
 class CleanupExecutor:
     """Run and persist one cleanup sequence for a task family."""
 

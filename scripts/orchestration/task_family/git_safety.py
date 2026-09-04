@@ -612,10 +612,6 @@ def local_branch_exists(repo_root: Path, branch: str) -> bool:
     return proc.returncode == 0
 
 
-def _local_branch_exists(repo_root: Path, branch: str) -> bool:
-    return local_branch_exists(repo_root, branch)
-
-
 def remote_branch_present(repo_root: Path, branch: str) -> bool:
     ref = branch if branch.startswith("refs/heads/") else f"refs/heads/{branch}"
     proc = run_git(["ls-remote", "--heads", "--exit-code", "origin", ref], cwd=repo_root)

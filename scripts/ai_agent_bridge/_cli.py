@@ -1466,11 +1466,6 @@ def _dispatch_command(args):
     return True
 
 
-def _background_kwargs(args) -> dict[str, bool]:
-    """Only pass the new option when requested to preserve compatibility shims."""
-    return {"background": True} if getattr(args, "background", False) else {}
-
-
 def _review_target_kwargs(args) -> dict[str, str | int | None]:
     """Pass an explicit branch target only to a review ask."""
     branch = getattr(args, "branch", None)
