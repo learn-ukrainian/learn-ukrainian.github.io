@@ -20,7 +20,8 @@
     "saw_eligible_unit_ids",
     "verification_tool_ids",
     "verdict",
-    "rubric_sha256"
+    "rubric_sha256",
+    "execution_receipt"
   ],
   "properties": {
     "receipt_id": { "type": "string", "minLength": 1 },
@@ -37,7 +38,20 @@
     "saw_eligible_unit_ids": { "const": false },
     "verification_tool_ids": { "type": "array", "items": { "type": "string", "minLength": 1 } },
     "verdict": { "enum": ["PASS", "FAIL"] },
-    "rubric_sha256": { "$ref": "#/$defs/sha256" }
+    "rubric_sha256": { "$ref": "#/$defs/sha256" },
+    "execution_receipt": {
+      "type": "object",
+      "description": "The signed fleet-execution receipt this review receipt was derived from (see v4_fleet_execution_authority.py). Never a public artifact.",
+      "required": ["schema_version", "domain", "signature_hex", "signer_key_id", "task_id", "run_nonce"],
+      "properties": {
+        "schema_version": { "type": "string", "minLength": 1 },
+        "domain": { "const": "reviewer" },
+        "signature_hex": { "type": "string", "minLength": 1 },
+        "signer_key_id": { "type": "string", "minLength": 1 },
+        "task_id": { "type": "string", "minLength": 1 },
+        "run_nonce": { "type": "string", "minLength": 1 }
+      }
+    }
   },
   "$defs": {
     "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }

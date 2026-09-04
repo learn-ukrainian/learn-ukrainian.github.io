@@ -54,6 +54,35 @@ Repair (PR #7662, repair 2): three P1s fixed here.
   and only then re-derives the admission receipt and compares it to both
   the ledger's own stored copy and the public claim.
 
+Repair (PR #7662 repair 4, designated-advisor ``GO_REPAIR``): five further
+trust-boundary P1s fixed here.
+
+* **Repair B (mandatory A3 replay authenticity).** ``construct_completion``
+  and ``verify_private_replay`` now *require* a signed A3
+  ``reference_check_signature`` and a signed A3 ``replay_attestation`` for
+  every nonempty completion -- see ``v4_a3_reference_check.py``. There is no
+  ``None`` success path; a same-count-different-content reference-set swap
+  can no longer produce a valid attestation without the real A3 signing key.
+* **Repair C (Invariant D1 at every load-bearing path).** Both entrypoints
+  now call ``v4_a3_d1_transition_validator.validate_manifest_meets_d1``
+  unconditionally, against the caller-supplied frozen slot manifest, A2
+  receipt, and public A3 seal receipt -- never a caller assertion of "this
+  stratum is fine".
+* **Repair D (exact project-row rights binding).** ``build_admission_input_row``
+  now requires ``rights_receipt_id`` to equal the identifier derived from
+  the exact bytes of repository-root ``LICENSE-CONTENT.md`` -- see
+  ``derive_project_rights_receipt_id``.
+* **Repair E (authenticated author/reviewer executions).**
+  ``build_authorship_receipt``/``build_review_receipt`` no longer accept raw
+  caller-supplied identity dictionaries. They require a pre-issued, signed
+  fleet-execution receipt (see ``v4_fleet_execution_authority.py``) and
+  verify it against the pinned ``fleet_execution`` keyring before deriving
+  any identity field from it.
+* Every production-capable/authenticity check above threads a
+  ``trust_policy`` (see ``v4_trust_authority.py``) through explicitly --
+  mechanism-only production ships an empty policy, so every one of these
+  paths refuses closed until a future real-row PR provisions real keys.
+
 No live corpus or model call happens here, and no real row exists yet in
 production -- every entrypoint in this module is exercised in this PR only
 against synthetic reference texts and a test-only salt (see
@@ -77,10 +106,13 @@ from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_near_duplicate as near_duplicate
 from scripts.projects.open_model_data import v4_a3_builder_packet as builder_packet
+from scripts.projects.open_model_data import v4_a3_d1_transition_validator as d1_validator
 from scripts.projects.open_model_data import v4_a3_heldout_family_assignment as heldout
 from scripts.projects.open_model_data import v4_a3_reference_check as reference_check
 from scripts.projects.open_model_data import v4_a7_evidence_binder as evidence_binder
+from scripts.projects.open_model_data import v4_fleet_execution_authority as fleet_execution
 from scripts.projects.open_model_data import v4_original_row_admission as admission
+from scripts.projects.open_model_data import v4_trust_authority as trust
 
 ROOT = heldout.ROOT
 PRIMARY_ROOT = heldout.PRIMARY_ROOT
@@ -93,6 +125,12 @@ AUTHORSHIP_SCHEMA_PATH = ROOT / CONTRACTS_RELATIVE / "dataset_v4_a7_authorship_r
 REVIEW_SCHEMA_PATH = ROOT / CONTRACTS_RELATIVE / "dataset_v4_a7_review_receipt_v1.schema.json"
 
 V4_SHA256 = "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"
+
+# Repair D (PR #7662 repair 4): the only admissible project-row rights
+# identifier is derived from the exact bytes of repository-root
+# LICENSE-CONTENT.md -- never a caller-supplied string.
+LICENSE_CONTENT_RELATIVE = "LICENSE-CONTENT.md"
+PROJECT_RIGHTS_RECEIPT_PREFIX = "license.content.cc-by-sa-4.0@"
 
 # Domain-separation labels, distinct from every other private-salt use in
 # this project (see v4_a3_heldout_family_assignment.ASSIGNMENT_COMMITMENT_DOMAIN,
@@ -171,6 +209,19 @@ def validate_lineage_not_equal_to_a4_commitment(lineage_source_ids: list[str], a
     require(not colliding, f"lineage source id(s) collide with published A4 unit_commitments entries -- refusing: {sorted(colliding)}")
 
 
+# --- exact project-row rights binding (repair D) -----------------------------
+
+
+def derive_project_rights_receipt_id() -> str:
+    """The one admissible identifier for this row class: derived from the
+    exact bytes (no newline normalization) of repository-root
+    ``LICENSE-CONTENT.md``. Missing/unreadable license bytes fail closed."""
+    license_path = ROOT / LICENSE_CONTENT_RELATIVE
+    require(license_path.is_file(), f"{LICENSE_CONTENT_RELATIVE} is missing or unreadable -- refusing to derive the project rights_receipt_id")
+    digest = hashlib.sha256(license_path.read_bytes()).hexdigest()
+    return f"{PROJECT_RIGHTS_RECEIPT_PREFIX}{digest}"
+
+
 # --- authorship / review receipts (private; schema-validated) ---------------
 
 
@@ -195,86 +246,98 @@ def _recompute_receipt_id(domain: str, receipt: dict[str, Any]) -> str:
     return f"{domain}:{sha256_text(canonical_json(body))}"
 
 
-def build_authorship_receipt(
-    *,
-    model_family: str,
-    exact_model: str,
-    harness: str,
-    session_id: str,
-    prompt_sha256: str,
-    packet_sha256: str,
-    row_content_sha256: str,
-    saw_source_text: bool = False,
-    saw_heldout: bool = False,
-    saw_eligible_unit_ids: bool = False,
-    verification_tool_ids: list[str] = (),  # type: ignore[assignment]
-) -> dict[str, Any]:
-    """Independent-row-eligibility requires every ``saw_*`` attestation to
-    be false -- refuses (fail closed) otherwise, never silently coerces."""
-    require(saw_source_text is False, "author must attest saw_source_text is false -- refusing")
-    require(saw_heldout is False, "author must attest saw_heldout is false -- refusing")
-    require(saw_eligible_unit_ids is False, "author must attest saw_eligible_unit_ids is false -- refusing")
+def _execution_session_id(execution_receipt: dict[str, Any]) -> str:
+    """A stable per-execution session identity: the attester's own
+    ``provider_session_id`` when the provider exposes one, else the
+    ``task_id:run_nonce`` pair the attester always signs -- never a
+    caller-supplied string."""
+    provider_session_id = execution_receipt.get("provider_session_id")
+    if provider_session_id:
+        return provider_session_id
+    return f"{execution_receipt['task_id']}:{execution_receipt['run_nonce']}"
+
+
+def build_authorship_receipt(*, author_execution_receipt: dict[str, Any], trust_policy: dict[str, Any], row_content_sha256: str) -> dict[str, Any]:
+    """Repair E (PR #7662 repair 4): no longer accepts a raw caller-supplied
+    identity dictionary. Requires a pre-issued, signed fleet-execution
+    receipt (see ``v4_fleet_execution_authority.issue_author_execution_receipt``,
+    called only by the fleet execution attester, never by this module or any
+    A7 caller) and verifies it against the pinned ``fleet_execution``
+    keyring before deriving any identity field from it. Every ``saw_*``
+    attestation is re-checked false by that verification -- refuses (fail
+    closed) otherwise, never silently coerces."""
+    try:
+        fleet_execution.verify_author_execution_receipt(author_execution_receipt, trust_policy=trust_policy, outcome_sha256=V4_SHA256, row_content_sha256=row_content_sha256)
+    except fleet_execution.FleetExecutionError as exc:
+        raise PrivateLedgerError(f"author execution receipt failed authenticity verification -- refusing: {exc}") from exc
     body = {
         "role": "author",
-        "model_family": model_family,
-        "exact_model": exact_model,
-        "harness": harness,
-        "session_id": session_id,
-        "prompt_sha256": prompt_sha256,
-        "packet_sha256": packet_sha256,
+        "model_family": author_execution_receipt["model_family"],
+        "exact_model": author_execution_receipt["exact_model"],
+        "harness": author_execution_receipt["harness"],
+        "session_id": _execution_session_id(author_execution_receipt),
+        "prompt_sha256": author_execution_receipt["prompt_sha256"],
+        "packet_sha256": author_execution_receipt["packet_sha256"],
         "row_content_sha256": row_content_sha256,
         "saw_source_text": False,
         "saw_heldout": False,
         "saw_eligible_unit_ids": False,
-        "verification_tool_ids": sorted(verification_tool_ids),
+        "verification_tool_ids": sorted(author_execution_receipt.get("verification_tool_ids", [])),
+        "execution_receipt": author_execution_receipt,
     }
     receipt = _finalize_receipt("authorship", body)
     _validate_against_schema(receipt, AUTHORSHIP_SCHEMA_PATH)
     return receipt
 
 
-def build_review_receipt(
-    *,
-    authorship_receipt: dict[str, Any],
-    model_family: str,
-    exact_model: str,
-    harness: str,
-    session_id: str,
-    prompt_sha256: str,
-    packet_sha256: str,
-    row_content_sha256: str,
-    verdict: str,
-    rubric_sha256: str,
-    saw_source_text: bool = False,
-    saw_heldout: bool = False,
-    saw_eligible_unit_ids: bool = False,
-    verification_tool_ids: list[str] = (),  # type: ignore[assignment]
-) -> dict[str, Any]:
-    """Independent-row-eligibility requires the reviewer's model family and
-    session to be distinct from the author's -- refuses (fail closed) on a
-    same-family or same-session review, and on any ``saw_*`` attestation
-    true, exactly like the author's own receipt."""
-    require(model_family != authorship_receipt["model_family"], "reviewer must be a distinct model family from the author -- refusing (same-family review)")
+def build_review_receipt(*, authorship_receipt: dict[str, Any], reviewer_execution_receipt: dict[str, Any], trust_policy: dict[str, Any], row_content_sha256: str) -> dict[str, Any]:
+    """Repair E (PR #7662 repair 4): no longer accepts a raw caller-supplied
+    identity dictionary, verdict, or rubric hash. Requires a pre-issued,
+    signed fleet-execution receipt already bound (at signing time) to the
+    exact ``authorship_receipt`` digest, rubric hash, and row hash --
+    refuses (fail closed) if that binding, the signature, any ``saw_*``
+    attestation, or a same-family/same-run/same-session review does not
+    hold, exactly like the author's own receipt."""
+    authorship_receipt_sha256 = sha256_text(canonical_json(authorship_receipt))
+    rubric_sha256 = reviewer_execution_receipt.get("rubric_sha256") if isinstance(reviewer_execution_receipt, dict) else None
+    try:
+        fleet_execution.verify_reviewer_execution_receipt(
+            reviewer_execution_receipt,
+            trust_policy=trust_policy,
+            outcome_sha256=V4_SHA256,
+            row_content_sha256=row_content_sha256,
+            authorship_receipt_sha256=authorship_receipt_sha256,
+            rubric_sha256=rubric_sha256,
+        )
+    except fleet_execution.FleetExecutionError as exc:
+        raise PrivateLedgerError(f"reviewer execution receipt failed authenticity verification -- refusing: {exc}") from exc
+
+    author_execution_receipt = authorship_receipt["execution_receipt"]
+    require(reviewer_execution_receipt["model_family"] != author_execution_receipt["model_family"], "reviewer must be a distinct model family from the author -- refusing (same-family review)")
+    require(
+        (reviewer_execution_receipt["task_id"], reviewer_execution_receipt["run_nonce"]) != (author_execution_receipt["task_id"], author_execution_receipt["run_nonce"]),
+        "reviewer must be a distinct task run from the author -- refusing (same-run review)",
+    )
+    session_id = _execution_session_id(reviewer_execution_receipt)
     require(session_id != authorship_receipt["session_id"], "reviewer must be a distinct session from the author -- refusing (same-session review)")
-    require(saw_source_text is False, "reviewer must attest saw_source_text is false -- refusing")
-    require(saw_heldout is False, "reviewer must attest saw_heldout is false -- refusing")
-    require(saw_eligible_unit_ids is False, "reviewer must attest saw_eligible_unit_ids is false -- refusing")
-    require(verdict in {"PASS", "FAIL"}, "verdict must be PASS or FAIL")
+
+    verdict = reviewer_execution_receipt["verdict"]
     body = {
         "role": "reviewer",
-        "model_family": model_family,
-        "exact_model": exact_model,
-        "harness": harness,
+        "model_family": reviewer_execution_receipt["model_family"],
+        "exact_model": reviewer_execution_receipt["exact_model"],
+        "harness": reviewer_execution_receipt["harness"],
         "session_id": session_id,
-        "prompt_sha256": prompt_sha256,
-        "packet_sha256": packet_sha256,
+        "prompt_sha256": reviewer_execution_receipt["prompt_sha256"],
+        "packet_sha256": reviewer_execution_receipt["packet_sha256"],
         "row_content_sha256": row_content_sha256,
         "saw_source_text": False,
         "saw_heldout": False,
         "saw_eligible_unit_ids": False,
-        "verification_tool_ids": sorted(verification_tool_ids),
+        "verification_tool_ids": sorted(reviewer_execution_receipt.get("verification_tool_ids", [])),
         "verdict": verdict,
         "rubric_sha256": rubric_sha256,
+        "execution_receipt": reviewer_execution_receipt,
     }
     receipt = _finalize_receipt("review", body)
     _validate_against_schema(receipt, REVIEW_SCHEMA_PATH)
@@ -303,6 +366,13 @@ def build_admission_input_row(
     require(
         row_content_sha256 == authorship_receipt["row_content_sha256"] == review_receipt["row_content_sha256"] == evidence_receipt["row_content_sha256"],
         "row_content_sha256 mismatch across authorship/review/evidence receipts -- refusing",
+    )
+    # Repair D (PR #7662 repair 4): the only admissible rights_receipt_id is
+    # the one derived from the exact bytes of repository-root
+    # LICENSE-CONTENT.md -- never an arbitrary caller-supplied string.
+    require(
+        rights_receipt_id == derive_project_rights_receipt_id(),
+        "rights_receipt_id does not match the derived project license identifier (license.content.cc-by-sa-4.0@<sha256 of LICENSE-CONTENT.md>) -- refusing",
     )
     lineage_id = per_row_lineage_id(salt, slot_id, bound_unit_id)
     return {
@@ -343,13 +413,18 @@ def construct_completion(
     seal_receipt_path: Path,
     membership_dir: Path,
     packet_dir: Path,
+    manifest: dict[str, Any],
+    a2_receipt: dict[str, Any],
     row_text: str,
     tier: str,
-    author: dict[str, Any],
-    reviewer: dict[str, Any],
+    author_execution_receipt: dict[str, Any],
+    reviewer_execution_receipt: dict[str, Any],
     evidence_receipt: dict[str, Any],
     reference_check_receipt: dict[str, Any],
+    reference_check_signature: dict[str, Any],
+    replay_attestation: dict[str, Any],
     rights_receipt_id: str,
+    trust_policy: dict[str, Any],
     allow_synthetic_fixture: bool = False,
 ) -> dict[str, Any]:
     """Run every gate live and return ``{"private_entry", "public_completion"}``.
@@ -365,8 +440,26 @@ def construct_completion(
     row's content; this function never builds them from raw identifiers or
     reference text itself. ``evidence_receipt`` must be
     ``production_capable`` unless the caller explicitly passes
-    ``allow_synthetic_fixture=True`` -- never the default."""
+    ``allow_synthetic_fixture=True`` -- never the default.
+
+    Repair C: ``manifest``/``a2_receipt`` (plus the seal receipt already
+    loaded for the builder-eligible-unit check) are independently D1-checked
+    via ``v4_a3_d1_transition_validator`` -- never a caller assertion.
+    Repair B: ``reference_check_signature`` and ``replay_attestation`` are
+    mandatory signed A3 artifacts -- there is no ``None`` success path.
+    Repair E: ``author_execution_receipt``/``reviewer_execution_receipt`` are
+    pre-issued, signed fleet-execution receipts, never raw caller
+    dictionaries."""
     row_content_sha256 = sha256_text(row_text)
+
+    seal_receipt = json.loads(seal_receipt_path.read_text(encoding="utf-8"))
+    try:
+        d1_validator.validate_manifest_meets_d1(manifest, a2_receipt, seal_receipt)
+    except d1_validator.D1TransitionError as exc:
+        raise PrivateLedgerError(f"Invariant D1 (candidate-family floor) failed for the frozen slot manifest -- refusing: {exc}") from exc
+    # Derived, never a caller assertion -- fails closed if slot_id is not a
+    # member of any manifest stratum.
+    d1_validator.stratum_for_slot_id(manifest, slot_id)
 
     _, eligible_unit_ids = load_verified_eligible_unit_ids(seal_receipt_path, membership_dir, packet_dir)
     require(bool(candidate_unit_ids), "candidate_unit_ids must be nonempty")
@@ -375,7 +468,7 @@ def construct_completion(
     bound_unit_id = pick_bound_unit(salt, slot_id, candidate_unit_ids)
     require(bound_unit_id in eligible_unit_ids, "bound unit is not a member of the A3-verified builder-eligible set -- refusing")
 
-    evidence_binder.validate_evidence_receipt_integrity(evidence_receipt)
+    evidence_binder.validate_evidence_receipt_integrity(evidence_receipt, trust_policy)
     require(evidence_receipt.get("row_content_sha256") == row_content_sha256, "evidence_receipt is not bound to this row's content hash -- refusing")
     if not allow_synthetic_fixture:
         require(
@@ -390,10 +483,15 @@ def construct_completion(
         "reference_check_receipt is not bound to this row's text -- refusing",
     )
     require(reference_check_receipt.get("passed") is True, "A3 reference-check receipt did not pass -- refusing to construct a completion")
+    try:
+        reference_check.verify_reference_check_receipt_signature(reference_check_signature, receipt=reference_check_receipt, trust_policy=trust_policy, outcome_sha256=V4_SHA256)
+        reference_check.verify_replay_attestation(replay_attestation, receipt=reference_check_receipt, trust_policy=trust_policy, outcome_sha256=V4_SHA256, row_content_sha256=row_content_sha256)
+    except reference_check.ReferenceCheckError as exc:
+        raise PrivateLedgerError(f"A3 reference-check signed authenticity failed -- refusing: {exc}") from exc
 
-    authorship_receipt = build_authorship_receipt(row_content_sha256=row_content_sha256, **author)
+    authorship_receipt = build_authorship_receipt(author_execution_receipt=author_execution_receipt, trust_policy=trust_policy, row_content_sha256=row_content_sha256)
 
-    review_receipt = build_review_receipt(authorship_receipt=authorship_receipt, row_content_sha256=row_content_sha256, **reviewer)
+    review_receipt = build_review_receipt(authorship_receipt=authorship_receipt, reviewer_execution_receipt=reviewer_execution_receipt, trust_policy=trust_policy, row_content_sha256=row_content_sha256)
     require(review_receipt["verdict"] == "PASS", "review verdict is not PASS -- refusing to construct a completion")
 
     input_row = build_admission_input_row(
@@ -429,6 +527,8 @@ def construct_completion(
         "review_receipt": review_receipt,
         "evidence_receipt": evidence_receipt,
         "reference_check_receipt": reference_check_receipt,
+        "reference_check_signature": reference_check_signature,
+        "replay_attestation": replay_attestation,
         "admission_input_row": input_row,
         "admission_row_receipt": row_receipt,
     }
@@ -478,6 +578,9 @@ def verify_private_replay(
     seal_receipt_path: Path,
     membership_dir: Path,
     packet_dir: Path,
+    manifest: dict[str, Any],
+    a2_receipt: dict[str, Any],
+    trust_policy: dict[str, Any],
     reference_check_verifier: Callable[[str, dict[str, Any]], None] | None = None,
 ) -> None:
     """For every ``a7_completions`` entry in ``public_receipt``, require a
@@ -487,32 +590,41 @@ def verify_private_replay(
     declares.
 
     Never trusts a stored boolean/grade/receipt-id at face value: the
-    authorship/review receipts are re-validated against their own schemas
-    and their ``receipt_id``s recomputed from their bodies; the evidence
-    receipt's own integrity (and, for a verifier-backed receipt, every
-    embedded verifier receipt) is re-checked; the bound unit is re-verified
-    against A3's independently re-verified builder-eligible set; the
-    admission input row is independently rebuilt from those re-verified
-    pieces (never trusting the ledger's own stored copy); and only then is
-    the admission receipt re-derived and compared against both the
-    ledger's own stored copy and the public claim.
+    authorship/review receipts are re-validated against their own schemas,
+    their ``receipt_id``s recomputed from their bodies, and their embedded
+    fleet-execution receipts re-verified against ``trust_policy`` (repair
+    E); the evidence receipt's own integrity (and, for a verifier-backed
+    receipt, every embedded verifier receipt's signature) is re-checked
+    (repair A); the bound unit is re-verified against A3's independently
+    re-verified builder-eligible set; Invariant D1 is re-checked
+    unconditionally against ``manifest``/``a2_receipt``/the live seal
+    receipt (repair C); the admission input row is independently rebuilt
+    from those re-verified pieces (never trusting the ledger's own stored
+    copy); and only then is the admission receipt re-derived and compared
+    against both the ledger's own stored copy and the public claim.
 
-    The reference-check receipt's gate *results* were computed by A3
-    against private reference text this module never holds -- this
-    function always re-checks the receipt's own structural integrity (see
-    ``v4_a3_reference_check.validate_reference_check_receipt_integrity``)
-    and, when the caller supplies ``reference_check_verifier`` (a callable
+    Repair B: the ledger's own stored ``reference_check_signature`` and
+    ``replay_attestation`` are mandatorily re-verified against
+    ``trust_policy`` for every completion -- there is no ``None`` success
+    path. The reference-check receipt's gate *results* were computed by A3
+    against private reference text this module never holds; when the
+    caller additionally supplies ``reference_check_verifier`` (a callable
     that raises on failure -- a thin wrapper around
     ``v4_a3_reference_check.verify_reference_check_receipt`` closing over
-    the real reference-text set and salt, run in the A3 role), also fully
-    replays the gate content itself.
+    the real reference-text set and salt, run in the A3 role), the gate
+    content itself is also fully replayed.
 
     Refuses (fail closed) on a missing ledger entry (a forged public
     completion with no private replay), any hash/id mismatch, a
-    same-family/same-session author/reviewer, any ``saw_*`` attestation
-    true, a non-PASS verdict, an ineligible bound unit, or a lineage id
-    colliding with a published A4 commitment."""
+    same-family/same-run/same-session author/reviewer, any ``saw_*``
+    attestation true, a non-PASS verdict, an ineligible bound unit, a D1
+    violation, or a lineage id colliding with a published A4 commitment."""
     entries = ledger["entries"]
+    seal_receipt = json.loads(seal_receipt_path.read_text(encoding="utf-8"))
+    try:
+        d1_validator.validate_manifest_meets_d1(manifest, a2_receipt, seal_receipt)
+    except d1_validator.D1TransitionError as exc:
+        raise PrivateLedgerError(f"Invariant D1 (candidate-family floor) failed for the frozen slot manifest -- refusing: {exc}") from exc
     _, eligible_unit_ids = load_verified_eligible_unit_ids(seal_receipt_path, membership_dir, packet_dir)
     eligible_unit_id_set = set(eligible_unit_ids)
 
@@ -527,6 +639,8 @@ def verify_private_replay(
             recomputed_content_sha256 == entry["row_content_sha256"] == completion["row_content_sha256"],
             f"row_content_sha256 does not reproduce from the private ledger's own stored row text for slot {slot_id!r} -- refusing",
         )
+        # Derived from the frozen manifest, never a caller assertion.
+        d1_validator.stratum_for_slot_id(manifest, slot_id)
 
         bound_unit_id = entry["bound_unit_id"]
         require(bound_unit_id in eligible_unit_id_set, f"slot {slot_id!r}: bound unit is not a member of the A3-verified builder-eligible set -- refusing")
@@ -546,6 +660,28 @@ def verify_private_replay(
 
         require(authorship_receipt["model_family"] != review_receipt["model_family"], f"slot {slot_id!r}: author and reviewer share a model family -- refusing")
         require(authorship_receipt["session_id"] != review_receipt["session_id"], f"slot {slot_id!r}: author and reviewer share a session -- refusing")
+        author_execution_receipt = authorship_receipt.get("execution_receipt")
+        reviewer_execution_receipt = review_receipt.get("execution_receipt")
+        require(
+            author_execution_receipt is not None and reviewer_execution_receipt is not None,
+            f"slot {slot_id!r}: authorship/review receipt carries no fleet-execution receipt to replay -- refusing",
+        )
+        require(
+            (author_execution_receipt.get("task_id"), author_execution_receipt.get("run_nonce")) != (reviewer_execution_receipt.get("task_id"), reviewer_execution_receipt.get("run_nonce")),
+            f"slot {slot_id!r}: author and reviewer share a task run -- refusing",
+        )
+        try:
+            fleet_execution.verify_author_execution_receipt(author_execution_receipt, trust_policy=trust_policy, outcome_sha256=V4_SHA256, row_content_sha256=recomputed_content_sha256)
+            fleet_execution.verify_reviewer_execution_receipt(
+                reviewer_execution_receipt,
+                trust_policy=trust_policy,
+                outcome_sha256=V4_SHA256,
+                row_content_sha256=recomputed_content_sha256,
+                authorship_receipt_sha256=sha256_text(canonical_json(authorship_receipt)),
+                rubric_sha256=review_receipt.get("rubric_sha256"),
+            )
+        except fleet_execution.FleetExecutionError as exc:
+            raise PrivateLedgerError(f"slot {slot_id!r}: fleet-execution receipt failed replay authenticity verification -- refusing: {exc}") from exc
         for receipt, role in ((authorship_receipt, "author"), (review_receipt, "reviewer")):
             require(receipt["saw_source_text"] is False, f"slot {slot_id!r}: {role} attests saw_source_text is not false -- refusing")
             require(receipt["saw_heldout"] is False, f"slot {slot_id!r}: {role} attests saw_heldout is not false -- refusing")
@@ -555,7 +691,7 @@ def verify_private_replay(
         evidence_receipt = entry["evidence_receipt"]
         require(evidence_receipt.get("row_content_sha256") == recomputed_content_sha256, f"slot {slot_id!r}: evidence receipt is not bound to the replayed row content -- refusing")
         try:
-            evidence_binder.validate_evidence_receipt_integrity(evidence_receipt)
+            evidence_binder.validate_evidence_receipt_integrity(evidence_receipt, trust_policy)
         except evidence_binder.EvidenceBinderError as exc:
             raise PrivateLedgerError(f"slot {slot_id!r}: evidence receipt failed replay integrity recheck -- refusing: {exc}") from exc
 
@@ -570,6 +706,15 @@ def verify_private_replay(
         except reference_check.ReferenceCheckError as exc:
             raise PrivateLedgerError(f"slot {slot_id!r}: reference-check receipt failed replay integrity recheck -- refusing: {exc}") from exc
         require(reference_check_receipt.get("passed") is True, f"slot {slot_id!r}: reference-check receipt did not pass -- refusing")
+        # Repair B: mandatory signed A3 artifacts -- no None success path.
+        reference_check_signature = entry.get("reference_check_signature")
+        replay_attestation = entry.get("replay_attestation")
+        require(reference_check_signature is not None and replay_attestation is not None, f"slot {slot_id!r}: private ledger entry carries no signed A3 reference-check authenticity material -- refusing")
+        try:
+            reference_check.verify_reference_check_receipt_signature(reference_check_signature, receipt=reference_check_receipt, trust_policy=trust_policy, outcome_sha256=V4_SHA256)
+            reference_check.verify_replay_attestation(replay_attestation, receipt=reference_check_receipt, trust_policy=trust_policy, outcome_sha256=V4_SHA256, row_content_sha256=recomputed_content_sha256)
+        except reference_check.ReferenceCheckError as exc:
+            raise PrivateLedgerError(f"slot {slot_id!r}: A3 reference-check signed authenticity failed replay -- refusing: {exc}") from exc
         if reference_check_verifier is not None:
             try:
                 reference_check_verifier(entry["row_text"], reference_check_receipt)
@@ -608,6 +753,9 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--seal-receipt", required=True, type=Path, help="the sealed A3 receipt JSON (for the builder-eligible-unit re-verification)")
     parser.add_argument("--membership-dir", required=True, type=Path, help="the private A3 membership artifact directory")
     parser.add_argument("--packet-dir", required=True, type=Path, help="the private A3 builder packet directory")
+    parser.add_argument("--manifest", required=True, type=Path, help="the frozen 100-slot pilot slot manifest JSON (for Invariant D1)")
+    parser.add_argument("--a2-receipt", required=True, type=Path, help="A2's public stratum_coverage_map receipt JSON (for Invariant D1)")
+    parser.add_argument("--trust-policy", type=Path, default=trust.DEFAULT_TRUST_POLICY_PATH, help="the text-free trust-policy JSON (default: the checked-in production policy)")
     parser.add_argument("--salt-hex", required=True, help="the private 32-byte A7 slot-unit-pick/lineage salt, hex-encoded (never the A3 salt)")
     parser.add_argument("--verify-private", action="store_true", required=True, help="run the private replay (the only supported mode)")
     args = parser.parse_args(argv)
@@ -616,9 +764,12 @@ def main(argv: list[str] | None = None) -> None:
     ledger = load_ledger(args.ledger)
     a4_receipt = json.loads(args.a4_receipt.read_text(encoding="utf-8"))
     a4_unit_commitments = a4_receipt["builder_packet_consumption"]["unit_commitments"]
+    manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
+    a2_receipt = json.loads(args.a2_receipt.read_text(encoding="utf-8"))
     salt = bytes.fromhex(args.salt_hex)
 
     try:
+        trust_policy = trust.load_trust_policy(args.trust_policy)
         verify_private_replay(
             public_receipt,
             ledger,
@@ -627,8 +778,11 @@ def main(argv: list[str] | None = None) -> None:
             seal_receipt_path=args.seal_receipt,
             membership_dir=args.membership_dir,
             packet_dir=args.packet_dir,
+            manifest=manifest,
+            a2_receipt=a2_receipt,
+            trust_policy=trust_policy,
         )
-    except PrivateLedgerError as exc:
+    except (PrivateLedgerError, trust.TrustAuthorityError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         raise SystemExit(1) from exc
     print(json.dumps({"verified": True, "completions_replayed": len(public_receipt.get("a7_completions", []))}))

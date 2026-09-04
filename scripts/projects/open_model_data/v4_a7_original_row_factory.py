@@ -109,6 +109,7 @@ _SELF_ROOT = Path(__file__).resolve().parents[3]
 if str(_SELF_ROOT) not in sys.path:
     sys.path.insert(0, str(_SELF_ROOT))
 
+from scripts.projects.open_model_data import v4_a3_d1_transition_validator as d1_validator
 from scripts.projects.open_model_data import v4_a6_blind_arena as a6
 from scripts.projects.open_model_data import v4_original_row_admission as admission
 from scripts.projects.open_model_data import v4_stage_evidence as ev
@@ -124,6 +125,7 @@ A4_RECEIPT_RELATIVE = f"{ADMISSION_RELATIVE}/dataset_v4_a4_deterministic_extract
 A5_RECEIPT_RELATIVE = f"{ADMISSION_RELATIVE}/dataset_v4_a5_evidence_enrichment_receipt_v1.json"
 A6_RECEIPT_RELATIVE = f"{ADMISSION_RELATIVE}/dataset_v4_a6_blind_arena_receipt_v1.json"
 SLOT_MANIFEST_RELATIVE = f"{ADMISSION_RELATIVE}/dataset_v4_pilot_slot_manifest_v1.json"
+A3_SEAL_RECEIPT_RELATIVE = d1_validator.SEAL_RECEIPT_RELATIVE
 ADMISSION_ENGINE_RELATIVE = "scripts/projects/open_model_data/v4_original_row_admission.py"
 SELF_RELATIVE = "scripts/projects/open_model_data/v4_a7_original_row_factory.py"
 
@@ -213,7 +215,8 @@ def check_factory_gate(root: Path = ROOT, a7_completions: list[dict[str, Any]] =
     manifest_path = (root / SLOT_MANIFEST_RELATIVE).resolve()
     a2_path = (root / A2_RECEIPT_RELATIVE).resolve()
     a6_path = (root / A6_RECEIPT_RELATIVE).resolve()
-    required_paths = {"slot_manifest": manifest_path, "a2_receipt": a2_path, "a6_receipt": a6_path}
+    a3_seal_path = (root / A3_SEAL_RECEIPT_RELATIVE).resolve()
+    required_paths = {"slot_manifest": manifest_path, "a2_receipt": a2_path, "a6_receipt": a6_path, "a3_seal_receipt": a3_seal_path}
     for label, path in required_paths.items():
         require(root.resolve() in path.parents, f"{label} path escapes the repository root -- refusing")
 
@@ -236,6 +239,14 @@ def check_factory_gate(root: Path = ROOT, a7_completions: list[dict[str, Any]] =
 
     a2_receipt = _load(a2_path)
     require(a2_receipt.get("controlling_outcome_sha256") == V4_SHA256, "A2 receipt is not bound to the expected V4 controlling outcome -- refusing")
+
+    # Repair C (PR #7662 repair 4): Invariant D1, re-checked unconditionally
+    # here -- never trusted from the manifest's own assignment_state alone.
+    a3_seal_receipt = _load(a3_seal_path)
+    try:
+        d1_validator.validate_manifest_meets_d1(manifest, a2_receipt, a3_seal_receipt)
+    except d1_validator.D1TransitionError as exc:
+        raise OriginalRowFactoryError(f"Invariant D1 (candidate-family floor) failed for the frozen slot manifest -- refusing: {exc}") from exc
 
     a6_receipt = _load(a6_path)
     try:
@@ -419,6 +430,11 @@ def build_receipt(root: Path = ROOT, a7_completions: list[dict[str, Any]] = ()) 
                 "path": SLOT_MANIFEST_RELATIVE,
                 "sha256": sha256_file(root / SLOT_MANIFEST_RELATIVE),
                 "schema_version": "dataset_v4_pilot_slot_manifest_v1",
+            },
+            "a3_heldout_source_family_seal": {
+                "path": A3_SEAL_RECEIPT_RELATIVE,
+                "sha256": sha256_file(root / A3_SEAL_RECEIPT_RELATIVE),
+                "schema_version": "dataset_v4_a3_heldout_source_family_seal_receipt_v1",
             },
             "admission_engine_implementation": {
                 "path": ADMISSION_ENGINE_RELATIVE,

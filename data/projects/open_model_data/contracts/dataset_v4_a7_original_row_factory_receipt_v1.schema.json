@@ -53,7 +53,8 @@
       "additionalProperties": false,
       "required": [
         "a2_source_operation_admission", "a4_deterministic_extraction", "a5_evidence_enrichment",
-        "a6_blind_arena", "pilot_slot_manifest", "admission_engine_implementation", "wiring_implementation"
+        "a6_blind_arena", "pilot_slot_manifest", "a3_heldout_source_family_seal",
+        "admission_engine_implementation", "wiring_implementation"
       ],
       "properties": {
         "a2_source_operation_admission": {
@@ -89,6 +90,13 @@
           "properties": {
             "path": { "const": "data/projects/open_model_data/admission/dataset_v4_pilot_slot_manifest_v1.json" },
             "schema_version": { "const": "dataset_v4_pilot_slot_manifest_v1" }
+          }
+        },
+        "a3_heldout_source_family_seal": {
+          "allOf": [{ "$ref": "#/$defs/artifact_binding" }],
+          "properties": {
+            "path": { "const": "data/projects/open_model_data/admission/dataset_v4_a3_heldout_source_family_seal_receipt_v1.json" },
+            "schema_version": { "const": "dataset_v4_a3_heldout_source_family_seal_receipt_v1" }
           }
         },
         "admission_engine_implementation": {

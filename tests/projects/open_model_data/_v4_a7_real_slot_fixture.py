@@ -22,6 +22,28 @@ packet``), over a test-only salt, with ``CANDIDATE_UNIT_IDS`` registered as
 members of a builder-eligible family and ``HELDOUT_SENTINEL_UNIT_ID``
 registered as a member of that salt's held-out family -- so a tamper test
 can prove an ineligible/held-out unit is refused before row construction.
+
+Repair (PR #7662, repair 4 -- designated-advisor ``GO_REPAIR``): this
+fixture now also plays every distinct signing authority role the trust
+boundary requires, each with its own ephemeral Ed25519 keypair generated
+fresh under this process (never a production key):
+
+* the sources execution authority (``v4_sources_authority``), signing the
+  one verifier attestation behind ``AUTHOR``/``REVIEWER``'s evidence;
+* the A3 authority (``v4_a3_reference_check``), signing both the reference-
+  check receipt signature and the mandatory replay attestation;
+* the fleet execution attester (``v4_fleet_execution_authority``), signing
+  the author/reviewer execution receipts ``construct_completion`` now
+  requires instead of raw caller dictionaries.
+
+All three public keys are assembled into one explicit, unmistakably
+test-only trust policy (``TRUST_POLICY``, via
+``v4_trust_authority.build_test_trust_policy``) -- never reachable from any
+default production code path. ``RIGHTS_RECEIPT_ID`` is the real value
+derived from repository-root ``LICENSE-CONTENT.md`` (see
+``v4_a7_private_ledger.derive_project_rights_receipt_id``), not a
+placeholder -- ``ZERO_RIGHTS_RECEIPT_ID`` is kept as the explicit negative
+tamper case.
 """
 
 from __future__ import annotations
@@ -41,6 +63,9 @@ from scripts.projects.open_model_data import v4_a7_evidence_binder as evidence_b
 from scripts.projects.open_model_data import v4_a7_original_row_factory as a7
 from scripts.projects.open_model_data import v4_a7_private_ledger as ledger
 from scripts.projects.open_model_data import v4_a8_admission_assembly as a8
+from scripts.projects.open_model_data import v4_fleet_execution_authority as fleet_execution
+from scripts.projects.open_model_data import v4_sources_authority as sources_authority
+from scripts.projects.open_model_data import v4_trust_authority as trust
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -68,28 +93,31 @@ REFERENCE_TEXTS = {
     "synthetic-fixture-unit-beta": "Another unrelated placeholder passage, deliberately dissimilar in wording and structure.",
 }
 VESUM_IDS = ["vesum:lemma-synthetic-example-001", "sources:fixture-attestation-001"]
-RIGHTS_RECEIPT_ID = "license.content.cc-by-sa-4.0@0000000000000000000000000000000000000000000000000000000000000000"
 
-AUTHOR = {
-    "model_family": "fixture-author-family",
-    "exact_model": "fixture-author-model-v1",
-    "harness": "fixture-harness",
-    "session_id": "fixture-author-session-001",
-    "prompt_sha256": "1" * 64,
-    "packet_sha256": "2" * 64,
-    "verification_tool_ids": ["fixture-tool-1"],
-}
-REVIEWER = {
-    "model_family": "fixture-reviewer-family",
-    "exact_model": "fixture-reviewer-model-v1",
-    "harness": "fixture-harness",
-    "session_id": "fixture-reviewer-session-001",
-    "prompt_sha256": "3" * 64,
-    "packet_sha256": "4" * 64,
-    "verdict": "PASS",
-    "rubric_sha256": "5" * 64,
-    "verification_tool_ids": ["fixture-tool-2"],
-}
+RIGHTS_RECEIPT_ID = ledger.derive_project_rights_receipt_id()
+ZERO_RIGHTS_RECEIPT_ID = "license.content.cc-by-sa-4.0@0000000000000000000000000000000000000000000000000000000000000000"
+
+# --- test-only trust authority keypairs (PR #7662 repair 4) ----------------
+#
+# One ephemeral Ed25519 keypair per distinct signing authority, generated
+# fresh in this process -- never a production key, never persisted.
+SOURCES_SIGNING_KEY_HEX, SOURCES_PUBLIC_KEY_HEX = trust.generate_test_keypair()
+A3_SIGNING_KEY_HEX, A3_PUBLIC_KEY_HEX = trust.generate_test_keypair()
+FLEET_SIGNING_KEY_HEX, FLEET_PUBLIC_KEY_HEX = trust.generate_test_keypair()
+SOURCES_KEY_ID = "fixture-sources-key-1"
+A3_KEY_ID = "fixture-a3-key-1"
+FLEET_KEY_ID = "fixture-fleet-execution-key-1"
+
+TRUST_POLICY = trust.build_test_trust_policy(
+    sources={SOURCES_KEY_ID: SOURCES_PUBLIC_KEY_HEX},
+    a3={A3_KEY_ID: A3_PUBLIC_KEY_HEX},
+    fleet_execution={FLEET_KEY_ID: FLEET_PUBLIC_KEY_HEX},
+)
+
+AUTHOR_TASK_ID = "fixture-author-task-001"
+AUTHOR_RUN_NONCE = "fixture-author-run-nonce-001"
+REVIEWER_TASK_ID = "fixture-reviewer-task-001"
+REVIEWER_RUN_NONCE = "fixture-reviewer-run-nonce-001"
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -146,6 +174,104 @@ def build_reference_check_receipt(row_text: str = ROW_TEXT, reference_texts: dic
     return reference_check.build_reference_check_receipt(row_text, dict(reference_texts if reference_texts is not None else REFERENCE_TEXTS), A3_FIXTURE_SALT)
 
 
+def build_reference_check_authenticity(
+    receipt: dict[str, Any], *, row_text: str = ROW_TEXT, reference_texts: dict[str, str] | None = None, replay_invocation_id: str = "fixture-a3-replay-001"
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Simulates the A3 authority: signs ``receipt`` and issues the
+    mandatory replay attestation, both under the fixture's own ephemeral A3
+    key (PR #7662 repair 4, repair B)."""
+    signature = reference_check.sign_reference_check_receipt(signing_key_hex=A3_SIGNING_KEY_HEX, signer_key_id=A3_KEY_ID, receipt=receipt, outcome_sha256=ledger.V4_SHA256)
+    attestation = reference_check.issue_replay_attestation(
+        signing_key_hex=A3_SIGNING_KEY_HEX,
+        signer_key_id=A3_KEY_ID,
+        candidate_text=row_text,
+        reference_texts=dict(reference_texts if reference_texts is not None else REFERENCE_TEXTS),
+        salt=A3_FIXTURE_SALT,
+        receipt=receipt,
+        outcome_sha256=ledger.V4_SHA256,
+        row_content_sha256=ledger.sha256_text(row_text),
+        replay_invocation_id=replay_invocation_id,
+    )
+    return signature, attestation
+
+
+def build_verifier_backed_evidence_receipt(row_content_sha256: str, *, vesum_ids: list[str] | None = None) -> dict[str, Any]:
+    """Simulates the distinct sources execution authority: issues one
+    signed verifier attestation per identifier and wraps each into a
+    production-capable verifier receipt (PR #7662 repair 4, repair A)."""
+    identifiers = list(vesum_ids if vesum_ids is not None else VESUM_IDS)
+    verifier_receipts = []
+    for index, identifier in enumerate(identifiers):
+        attestation = sources_authority.issue_verifier_attestation(
+            signing_key_hex=SOURCES_SIGNING_KEY_HEX,
+            signer_key_id=SOURCES_KEY_ID,
+            outcome_sha256=ledger.V4_SHA256,
+            row_content_sha256=row_content_sha256,
+            identifier=identifier,
+            tool_id="mcp__sources__verify_word",
+            tool_version="v1",
+            request_id=f"fixture-request-{index}",
+            tool_result_sha256=ledger.sha256_text(f"fixture-tool-result-{index}"),
+            lookup_ids=[f"fixture-lookup-{index}"],
+            invocation_id=f"fixture-invocation-{index}",
+        )
+        verifier_receipts.append(evidence_binder.build_verifier_receipt(attestation=attestation, trust_policy=TRUST_POLICY))
+    return evidence_binder.build_evidence_receipt(row_content_sha256, verifier_receipts, trust_policy=TRUST_POLICY)
+
+
+def build_author_execution_receipt(row_content_sha256: str, *, prompt_sha256: str = "1" * 64, packet_sha256: str = "2" * 64) -> dict[str, Any]:
+    return fleet_execution.issue_author_execution_receipt(
+        signing_key_hex=FLEET_SIGNING_KEY_HEX,
+        signer_key_id=FLEET_KEY_ID,
+        outcome_sha256=ledger.V4_SHA256,
+        task_id=AUTHOR_TASK_ID,
+        run_nonce=AUTHOR_RUN_NONCE,
+        fleet_receipt_sha256=ledger.sha256_text("fixture-author-fleet-receipt"),
+        provider_session_id="fixture-author-session-001",
+        model_family="fixture-author-family",
+        exact_model="fixture-author-model-v1",
+        harness="fixture-harness",
+        prompt_sha256=prompt_sha256,
+        packet_sha256=packet_sha256,
+        row_content_sha256=row_content_sha256,
+        execution_result_sha256=ledger.sha256_text("fixture-author-execution-result"),
+        verification_tool_ids=["fixture-tool-1"],
+        issuance_nonce="fixture-author-issuance-nonce-001",
+    )
+
+
+def build_reviewer_execution_receipt(
+    row_content_sha256: str,
+    authorship_receipt_sha256: str,
+    *,
+    rubric_sha256: str = "5" * 64,
+    verdict: str = "PASS",
+    prompt_sha256: str = "3" * 64,
+    packet_sha256: str = "4" * 64,
+) -> dict[str, Any]:
+    return fleet_execution.issue_reviewer_execution_receipt(
+        signing_key_hex=FLEET_SIGNING_KEY_HEX,
+        signer_key_id=FLEET_KEY_ID,
+        outcome_sha256=ledger.V4_SHA256,
+        task_id=REVIEWER_TASK_ID,
+        run_nonce=REVIEWER_RUN_NONCE,
+        fleet_receipt_sha256=ledger.sha256_text("fixture-reviewer-fleet-receipt"),
+        provider_session_id="fixture-reviewer-session-001",
+        model_family="fixture-reviewer-family",
+        exact_model="fixture-reviewer-model-v1",
+        harness="fixture-harness",
+        prompt_sha256=prompt_sha256,
+        packet_sha256=packet_sha256,
+        row_content_sha256=row_content_sha256,
+        execution_result_sha256=ledger.sha256_text("fixture-reviewer-execution-result"),
+        authorship_receipt_sha256=authorship_receipt_sha256,
+        rubric_sha256=rubric_sha256,
+        verdict=verdict,
+        verification_tool_ids=["fixture-tool-2"],
+        issuance_nonce="fixture-reviewer-issuance-nonce-001",
+    )
+
+
 def build_completion(
     tmp_root: Path,
     sealed: dict[str, Any],
@@ -155,18 +281,29 @@ def build_completion(
     candidate_unit_ids: list[str] | None = None,
     row_text: str = ROW_TEXT,
     reference_texts: dict[str, str] | None = None,
-    author: dict[str, Any] | None = None,
-    reviewer: dict[str, Any] | None = None,
+    rights_receipt_id: str = RIGHTS_RECEIPT_ID,
     allow_synthetic_fixture: bool = True,
 ) -> dict[str, Any]:
     """Run the real, live ``v4_a7_private_ledger.construct_completion``
     pipeline -- every gate genuinely evaluated -- and return
     ``{"private_entry", "public_completion"}``. Defaults to the explicit
-    ``allow_synthetic_fixture=True`` opt-in (this fixture has no real
-    verifier-tool access) -- never the silent default."""
+    ``allow_synthetic_fixture=True`` opt-in (this fixture builds a
+    synthetic-fixture evidence receipt by default) -- never the silent
+    default. Every signed authenticity artifact (repair A/B/E) is built
+    fresh here under the fixture's own ephemeral keys."""
     row_content_sha256 = ledger.sha256_text(row_text)
     evidence_receipt = evidence_binder.build_synthetic_fixture_evidence_receipt(row_content_sha256, list(VESUM_IDS))
     reference_check_receipt = build_reference_check_receipt(row_text, reference_texts)
+    reference_check_signature, replay_attestation = build_reference_check_authenticity(reference_check_receipt, row_text=row_text, reference_texts=reference_texts)
+
+    author_execution_receipt = build_author_execution_receipt(row_content_sha256)
+    provisional_authorship_receipt = ledger.build_authorship_receipt(author_execution_receipt=author_execution_receipt, trust_policy=TRUST_POLICY, row_content_sha256=row_content_sha256)
+    authorship_receipt_sha256 = ledger.sha256_text(ledger.canonical_json(provisional_authorship_receipt))
+    reviewer_execution_receipt = build_reviewer_execution_receipt(row_content_sha256, authorship_receipt_sha256)
+
+    manifest = _load(tmp_root / "data/projects/open_model_data/admission/dataset_v4_pilot_slot_manifest_v1.json")
+    a2_receipt = _load(tmp_root / "data/projects/open_model_data/admission/dataset_v4_a2_source_operation_admission_receipt_v1.json")
+
     return ledger.construct_completion(
         slot_id=slot_id,
         salt=salt,
@@ -175,13 +312,18 @@ def build_completion(
         seal_receipt_path=sealed["seal_receipt_path"],
         membership_dir=sealed["membership_dir"],
         packet_dir=sealed["packet_dir"],
+        manifest=manifest,
+        a2_receipt=a2_receipt,
         row_text=row_text,
         tier="silver",
-        author=dict(author or AUTHOR),
-        reviewer=dict(reviewer or REVIEWER),
+        author_execution_receipt=author_execution_receipt,
+        reviewer_execution_receipt=reviewer_execution_receipt,
         evidence_receipt=evidence_receipt,
         reference_check_receipt=reference_check_receipt,
-        rights_receipt_id=RIGHTS_RECEIPT_ID,
+        reference_check_signature=reference_check_signature,
+        replay_attestation=replay_attestation,
+        rights_receipt_id=rights_receipt_id,
+        trust_policy=TRUST_POLICY,
         allow_synthetic_fixture=allow_synthetic_fixture,
     )
 

@@ -59,6 +59,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.projects.open_model_data import v4_a3_candidate_family_floor as floor
+from scripts.projects.open_model_data import v4_a3_d1_transition_validator as d1_validator
 from scripts.projects.open_model_data import v4_a3_heldout_family_assignment as heldout
 
 canonical_json = heldout.canonical_json
@@ -73,25 +74,19 @@ def require(condition: bool, message: str) -> None:
         raise ReissueError(message)
 
 
-def _coverage_entry_for_stratum(a2_receipt: dict[str, Any], stratum: str) -> dict[str, Any] | None:
-    for entry in a2_receipt["stratum_coverage_map"]:
-        if entry["stratum"] == stratum:
-            return entry
-    return None
-
-
-def validate_assigned_strata_meet_candidate_family_floor(manifest: dict[str, Any], a2_receipt: dict[str, Any], family_registry: dict[str, Any], heldout_count: int) -> None:
-    """Invariant D1 (see ``v4_a3_candidate_family_floor.py``), enforced
-    against every manifest stratum currently ``"ASSIGNED"`` -- fails closed
-    (never silently skips) on a stratum with no matching A2
-    ``stratum_coverage_map`` entry."""
-    for series in manifest["slot_series"]:
-        if series.get("assignment_state") != "ASSIGNED":
-            continue
-        stratum = series["stratum"]
-        coverage_entry = _coverage_entry_for_stratum(a2_receipt, stratum)
-        require(coverage_entry is not None, f"manifest stratum {stratum!r} is ASSIGNED but has no matching A2 stratum_coverage_map entry -- refusing")
-        floor.validate_candidate_family_floor(stratum, coverage_entry, family_registry, heldout_count)
+def validate_assigned_strata_meet_candidate_family_floor(manifest: dict[str, Any], a2_receipt: dict[str, Any], new_receipt: dict[str, Any]) -> None:
+    """Invariant D1 (see ``v4_a3_candidate_family_floor.py``), enforced via
+    the one shared validator (``v4_a3_d1_transition_validator
+    .validate_manifest_meets_d1`` -- also called, unconditionally, from
+    every A7 load-bearing entrypoint) against every manifest stratum
+    currently ``"ASSIGNED"``, using ``new_receipt``'s own public
+    ``source_family_registry``/``heldout_count``. Fails closed (never
+    silently skips) on a stratum with no matching A2 ``stratum_coverage_map``
+    entry."""
+    try:
+        d1_validator.validate_manifest_meets_d1(manifest, a2_receipt, new_receipt)
+    except d1_validator.D1TransitionError as exc:
+        raise floor.CandidateFamilyFloorError(str(exc)) from exc
 
 
 def reissue_private_artifact(
@@ -135,9 +130,7 @@ def reissue_private_artifact(
         "reissue changed source_family_registry between the old and new receipt -- this is a reseal, not a reissue -- refusing",
     )
     try:
-        validate_assigned_strata_meet_candidate_family_floor(
-            manifest, a2_receipt, new_receipt["source_family_registry"], new_receipt["heldout_partition_seal"]["heldout_count"]
-        )
+        validate_assigned_strata_meet_candidate_family_floor(manifest, a2_receipt, new_receipt)
     except floor.CandidateFamilyFloorError as exc:
         raise ReissueError(f"candidate-family floor (Invariant D1) not met -- refusing reissue: {exc}") from exc
     if expect_salt_commitment is not None:

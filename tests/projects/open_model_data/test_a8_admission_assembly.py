@@ -175,7 +175,7 @@ def test_a8_receipt_binds_v4_sha_and_control_surfaces() -> None:
 def test_a8_receipt_binds_the_merged_a7_receipt_by_its_known_public_sha() -> None:
     # The merged A7 receipt's public sha256, frozen at dispatch time (PR #7662 repair 1:
     # repaired stale pin from db80476d0a's A7 P1 fix, which changed A7 receipt content).
-    assert a8.sha256_file(A7_RECEIPT_PATH) == "1d807da2761cadc6d3578b123217096cec65260034470873b7e6ea41c0a70821"
+    assert a8.sha256_file(A7_RECEIPT_PATH) == "5472ff868c711d703b089bc5f9304b00b11e7fc7a50371aaef689deb995d2d2d"
 
 
 def test_a8_receipt_carries_forward_every_a2_a4_a5_a6_a7_residual_unresolved() -> None:

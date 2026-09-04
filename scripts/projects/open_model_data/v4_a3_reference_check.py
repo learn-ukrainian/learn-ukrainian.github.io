@@ -58,8 +58,29 @@ from typing import Any
 from scripts.projects.open_model_data import phase3_near_duplicate as near_duplicate
 from scripts.projects.open_model_data import v4_a3_split_duplicate_check as split_check
 from scripts.projects.open_model_data import v4_original_row_admission as admission
+from scripts.projects.open_model_data import v4_trust_authority as trust
 
 RECONSTRUCTION_GATES = admission.RECONSTRUCTION_GATES
+
+# --- signed authenticity (PR #7662 repair 4, blocking repair B) -------------
+#
+# Two distinct signed artifacts, both issued only by the A3 authority (which
+# alone holds the real reference-text set, salt, and A3 keyring key):
+#
+# * a receipt *signature* -- proves this exact reference_check_receipt was
+#   produced by A3, without re-running anything;
+# * a replay *attestation* -- proves A3 has *also* independently
+#   recomputed the receipt live from the real candidate text, reference-text
+#   set, salt, and policy, and it reproduced byte for byte. Bound to the
+#   receipt's own digest, so it goes stale the instant the receipt changes.
+#
+# Both are mandatory (no ``None`` success path) for every nonempty
+# completion in ``v4_a7_private_ledger.construct_completion``/
+# ``verify_private_replay``.
+RECEIPT_SIGNATURE_SCHEMA_VERSION = "v4-a3-reference-check-signature-v1"
+RECEIPT_SIGNATURE_DOMAIN = b"v4-a3-reference-check-signature-v1"
+REPLAY_ATTESTATION_SCHEMA_VERSION = "v4-a3-replay-attestation-v1"
+REPLAY_ATTESTATION_DOMAIN = b"v4-a3-replay-attestation-v1"
 
 # A stricter band than the near-duplicate policy's own 0.9 near-duplicate
 # minimum -- deliberately lower, so "structural" catches shorter shared
@@ -212,3 +233,96 @@ def verify_reference_check_receipt(receipt: dict[str, Any], candidate_text: str,
     material A3 already holds, so it can only run in the A3 role."""
     recomputed = build_reference_check_receipt(candidate_text, reference_texts, salt, policy=policy)
     require(recomputed == receipt, "reference_check_receipt does not reproduce from the candidate text, reference-text set, and salt -- refusing")
+
+
+# --- signed authenticity: receipt signature + replay attestation -----------
+
+
+def sign_reference_check_receipt(*, signing_key_hex: str, signer_key_id: str, receipt: dict[str, Any], outcome_sha256: str) -> dict[str, Any]:
+    """A3-role only: sign a text-free statement that ``receipt`` (already
+    self-consistent -- ``validate_reference_check_receipt_integrity`` is
+    re-run here) was produced by A3. Never callable by A7; never carries
+    candidate/reference text."""
+    validate_reference_check_receipt_integrity(receipt)
+    body = {
+        "schema_version": RECEIPT_SIGNATURE_SCHEMA_VERSION,
+        "outcome_sha256": outcome_sha256,
+        "reference_check_receipt_sha256": _sha256_text(_canonical_json(receipt)),
+        "signer_key_id": signer_key_id,
+    }
+    signature_hex = trust.sign(signing_key_hex, RECEIPT_SIGNATURE_DOMAIN, body)
+    return {**body, "signature_hex": signature_hex}
+
+
+def verify_reference_check_receipt_signature(signature: dict[str, Any], *, receipt: dict[str, Any], trust_policy: dict[str, Any], outcome_sha256: str) -> None:
+    """Fail-closed verification that ``signature`` was issued by an active
+    A3 key over exactly this ``receipt`` (a stale signature over a
+    previously-swapped receipt refuses, since the digest binds the exact
+    receipt content)."""
+    require(isinstance(signature, dict), "reference-check receipt signature must be an object -- refusing")
+    body = {k: v for k, v in signature.items() if k != "signature_hex"}
+    require(body.get("schema_version") == RECEIPT_SIGNATURE_SCHEMA_VERSION, "reference-check receipt signature schema_version mismatch -- refusing")
+    require(body.get("outcome_sha256") == outcome_sha256, "reference-check receipt signature is bound to a different outcome -- refusing")
+    require(body.get("reference_check_receipt_sha256") == _sha256_text(_canonical_json(receipt)), "reference-check receipt signature does not bind this exact receipt -- refusing (stale or altered receipt)")
+    signature_hex = signature.get("signature_hex")
+    require(isinstance(signature_hex, str) and bool(signature_hex), "reference-check receipt signature carries no signature_hex -- refusing")
+    try:
+        trust.verify_with_policy(trust_policy, "a3", body.get("signer_key_id"), RECEIPT_SIGNATURE_DOMAIN, body, signature_hex)
+    except trust.TrustAuthorityError as exc:
+        raise ReferenceCheckError(f"reference-check receipt signature failed verification -- refusing: {exc}") from exc
+
+
+def issue_replay_attestation(
+    *,
+    signing_key_hex: str,
+    signer_key_id: str,
+    candidate_text: str,
+    reference_texts: dict[str, str],
+    salt: bytes,
+    receipt: dict[str, Any],
+    outcome_sha256: str,
+    row_content_sha256: str,
+    replay_invocation_id: str,
+    policy: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """The A3-role replay attestation: recompute the receipt live from the
+    real candidate text, reference-text set, salt, and policy, require it to
+    reproduce ``receipt`` exactly (never sign otherwise), and only then sign
+    a text-free attestation binding the outcome, row content, receipt
+    digest, policy hash, and a fresh replay invocation id/nonce. Can only
+    ever run in the A3 role -- it requires the same private reference
+    material A3 already holds."""
+    require(isinstance(replay_invocation_id, str) and replay_invocation_id, "replay_invocation_id must be a nonempty string -- refusing")
+    recomputed = build_reference_check_receipt(candidate_text, reference_texts, salt, policy=policy)
+    require(recomputed == receipt, "reference_check_receipt does not reproduce from the candidate text, reference-text set, and salt -- refusing to attest replay")
+    body = {
+        "schema_version": REPLAY_ATTESTATION_SCHEMA_VERSION,
+        "outcome_sha256": outcome_sha256,
+        "row_content_sha256": row_content_sha256,
+        "reference_check_receipt_sha256": _sha256_text(_canonical_json(receipt)),
+        "policy_sha256": recomputed["policy_sha256"],
+        "replay_invocation_id": replay_invocation_id,
+        "signer_key_id": signer_key_id,
+    }
+    signature_hex = trust.sign(signing_key_hex, REPLAY_ATTESTATION_DOMAIN, body)
+    return {**body, "signature_hex": signature_hex}
+
+
+def verify_replay_attestation(attestation: dict[str, Any], *, receipt: dict[str, Any], trust_policy: dict[str, Any], outcome_sha256: str, row_content_sha256: str) -> None:
+    """Fail-closed verification that ``attestation`` was issued by an
+    active A3 key, binds exactly this receipt (a stale attestation over a
+    previously-swapped receipt refuses), the right outcome/row, and the
+    receipt's own declared policy hash."""
+    require(isinstance(attestation, dict), "replay attestation must be an object -- refusing")
+    body = {k: v for k, v in attestation.items() if k != "signature_hex"}
+    require(body.get("schema_version") == REPLAY_ATTESTATION_SCHEMA_VERSION, "replay attestation schema_version mismatch -- refusing")
+    require(body.get("outcome_sha256") == outcome_sha256, "replay attestation is bound to a different outcome -- refusing")
+    require(body.get("row_content_sha256") == row_content_sha256, "replay attestation is not bound to this row's content hash -- refusing")
+    require(body.get("reference_check_receipt_sha256") == _sha256_text(_canonical_json(receipt)), "replay attestation does not bind this exact receipt -- refusing (stale or altered receipt)")
+    require(body.get("policy_sha256") == receipt.get("policy_sha256"), "replay attestation policy_sha256 does not match the receipt's own policy_sha256 -- refusing")
+    signature_hex = attestation.get("signature_hex")
+    require(isinstance(signature_hex, str) and bool(signature_hex), "replay attestation carries no signature_hex -- refusing")
+    try:
+        trust.verify_with_policy(trust_policy, "a3", body.get("signer_key_id"), REPLAY_ATTESTATION_DOMAIN, body, signature_hex)
+    except trust.TrustAuthorityError as exc:
+        raise ReferenceCheckError(f"replay attestation failed verification -- refusing: {exc}") from exc
