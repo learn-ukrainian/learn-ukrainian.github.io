@@ -20,12 +20,14 @@ import threading
 import time
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
 
 from scripts.api import atlas_jobs_router as load_mod
+from scripts.api import config
 from scripts.api.monitor_context import MonitorContext, get_ctx
 from scripts.api.observer_presence import (
     PRESENCE_FRESHNESS_SECONDS,
@@ -166,11 +168,24 @@ def fills_in_process_api_host(opaque: str, mapping: dict[str, str]) -> bool:
     return sys.platform != "darwin"
 
 
+def _in_process_load_run_root() -> Path:
+    """Disk root for in-process load. Prefer ATLAS_RUN_ROOT; else checkout.
+
+    The API systemd unit does not set ``ATLAS_RUN_ROOT``. ``collect_host_load``
+    only uses the path for local disk_usage, so the Monitor checkout is a safe
+    checkout-mode default — never call ``atlas_job._run_root()`` here.
+    """
+    override = os.environ.get("ATLAS_RUN_ROOT", "").strip()
+    if override:
+        return Path(override)
+    return Path(config.PROJECT_ROOT)
+
+
 def _in_process_api_host_load(*, now: datetime | None = None) -> dict[str, Any]:
     """Collect load for the empty-map production Linux glance row (no SSH)."""
     clock = now or datetime.now(UTC)
     try:
-        metrics = atlas_job.collect_host_load(run_root=atlas_job._run_root())
+        metrics = atlas_job.collect_host_load(run_root=_in_process_load_run_root())
     except Exception:
         return _unavailable_load_entry(now=clock)
     if not isinstance(metrics, dict):

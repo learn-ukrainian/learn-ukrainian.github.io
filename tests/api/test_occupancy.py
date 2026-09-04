@@ -24,7 +24,7 @@ from scripts.api.observer_presence import (
     reset_observer_presence,
     upsert_presence,
 )
-from scripts.api.occupancy import MAC_OPERATOR_HOST_ID, parse_host_id_map
+from scripts.api.occupancy import MAC_OPERATOR_HOST_ID, _in_process_api_host_load, parse_host_id_map
 from scripts.api.occupancy_local import write_marker
 from scripts.api.occupancy_sanitize import occupant as _occupant
 from scripts.api.occupancy_sanitize import opaque_host_id as _opaque_host_id
@@ -918,6 +918,42 @@ def test_occupancy_unmapped_default_host_query(tmp_path, monkeypatch) -> None:
         assert teacher["occupant_count"] == 0
         assert teacher["ai_seats"] == []
         assert teacher["burn_sources"]["atlas_job"]["state"] == "clear"
+    finally:
+        atlas_job.set_host_adapter(None)
+        load_mod.clear_host_load_cache()
+
+
+def test_in_process_api_host_load_without_atlas_run_root(monkeypatch: pytest.MonkeyPatch) -> None:
+    """In-process glance must not require ATLAS_RUN_ROOT (API unit omits it)."""
+    monkeypatch.delenv("ATLAS_RUN_ROOT", raising=False)
+    entry = _in_process_api_host_load()
+    assert entry["status"] != "unavailable"
+    assert entry.get("error") != "unreachable"
+    assert entry["status"] == "fresh"
+    assert "cpu_count" in entry
+    assert "loadavg" in entry
+    assert "mem" in entry
+    assert "disk" in entry
+
+
+def test_occupancy_empty_map_host_teacher_fresh_without_atlas_run_root(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    monkeypatch.delenv("ATLAS_RUN_ROOT", raising=False)
+    monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
+    monkeypatch.delenv("LU_MONITOR_HOST_ID", raising=False)
+    monkeypatch.setattr("scripts.api.occupancy.sys.platform", "linux")
+    fake = atlas_job.FakeHostAdapter()
+    atlas_job.set_host_adapter(fake)
+    try:
+        resp = client.get("/api/occupancy?host_id=host-teacher")
+        assert resp.status_code == 200
+        teacher = resp.json()["hosts"]["host-teacher"]
+        assert teacher["status"] != "unavailable"
+        assert teacher.get("error") != "unreachable"
+        assert teacher["status"] in {"fresh", "stale"}
+        assert "cpu_count" in teacher
     finally:
         atlas_job.set_host_adapter(None)
         load_mod.clear_host_load_cache()

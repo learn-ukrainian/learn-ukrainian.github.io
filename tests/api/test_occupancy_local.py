@@ -63,6 +63,70 @@ def test_driver_seat_host_id_uses_explicit_opaque_then_self_host(monkeypatch: py
     assert driver_seat_host_id(mapping, selected) is None
 
 
+def test_darwin_empty_map_does_not_attach_session_stream_drivers_to_mac_operator(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Darwin empty-map is observer-only — never kind=driver on mac-operator."""
+    db_path = tmp_path / "session-streams.sqlite3"
+    _open_lease(db_path)
+    monkeypatch.delenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", raising=False)
+    monkeypatch.delenv("ATLAS_JOB_SELF_HOST", raising=False)
+    monkeypatch.setattr("scripts.api.occupancy_local.sys.platform", "darwin")
+    mapping: dict[str, str] = {}
+    selected: dict[str, str | None] = {"host-teacher": None, "mac-operator": None}
+
+    assert driver_seat_host_id(mapping, selected) is None
+    mac_occupants = occupants_from_session_streams(
+        host_id="mac-operator",
+        mapping=mapping,
+        selected=selected,
+        db_path=db_path,
+    )
+    assert mac_occupants == []
+    assert all(row.get("kind") != "driver" for row in mac_occupants)
+    assert (
+        occupants_from_session_streams(
+            host_id="host-teacher",
+            mapping=mapping,
+            selected=selected,
+            db_path=db_path,
+        )
+        == []
+    )
+
+
+def test_linux_empty_map_attaches_session_stream_drivers_to_host_teacher(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    db_path = tmp_path / "session-streams.sqlite3"
+    _open_lease(db_path)
+    monkeypatch.delenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", raising=False)
+    monkeypatch.delenv("ATLAS_JOB_SELF_HOST", raising=False)
+    monkeypatch.setattr("scripts.api.occupancy_local.sys.platform", "linux")
+    mapping: dict[str, str] = {}
+    selected: dict[str, str | None] = {"host-teacher": None, "mac-operator": None}
+
+    assert driver_seat_host_id(mapping, selected) == "host-teacher"
+    teacher = occupants_from_session_streams(
+        host_id="host-teacher",
+        mapping=mapping,
+        selected=selected,
+        db_path=db_path,
+    )
+    assert teacher == [
+        {"kind": "driver", "agent": "claude", "task_id": "infra-drive", "epic": "7139"}
+    ]
+    assert (
+        occupants_from_session_streams(
+            host_id="mac-operator",
+            mapping=mapping,
+            selected=selected,
+            db_path=db_path,
+        )
+        == []
+    )
+
+
 def test_resolve_launcher_host_id_uses_occupancy_mapping_and_fallbacks(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

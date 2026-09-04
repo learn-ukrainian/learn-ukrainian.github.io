@@ -88,15 +88,19 @@ def empty_map_api_host_opaque() -> str | None:
 
 
 def driver_seat_host_id(mapping: dict[str, str], selected: dict[str, str | None]) -> str | None:
-    """Opaque host that may claim local session-stream driver seats."""
+    """Opaque host that may claim local session-stream driver seats.
+
+    Empty-map fallback is Linux-only (``host-teacher``). Darwin remains
+    observer-only — never attach session-stream drivers to ``mac-operator``.
+    """
     explicit = os.environ.get(ENV_DRIVER_HOST_ID, "").strip().lower()
     if explicit:
         return explicit if _opaque_host_id(explicit) and explicit in selected else None
     claimed = self_host_opaque_ids(mapping) & set(selected)
     if len(claimed) == 1:
         return next(iter(claimed))
-    # Empty map: session-stream drivers attach to the in-process API glance row.
-    if not mapping:
+    # Empty map: Linux API owns production glance drivers. Darwin: no seat.
+    if not mapping and sys.platform != "darwin":
         fallback = empty_map_api_host_opaque()
         if fallback is not None and fallback in selected:
             return fallback
