@@ -14,7 +14,7 @@ import {
   registerBadgeLabel,
 } from "./register-markers";
 import { pluralizeUk } from "../i18n/plural";
-import type { EntryRecord } from "./atlas-data-source";
+import type { EntryRecord, LexiconEntry } from "./atlas-data-source";
 import { safeHref } from "./safe-url";
 import { formatOrigin, type FormattedOrigin } from "./format-origin";
 
@@ -1007,11 +1007,32 @@ export function sourceHost(url: string) {
   }
 }
 
+export function extractVerbParadigm(candidate: unknown): VerbParadigm | null {
+  if (!candidate || typeof candidate !== "object") return null;
+  if ("kind" in candidate && (candidate as { kind: unknown }).kind === "verb") {
+    return candidate as VerbParadigm;
+  }
+  if ("entry" in candidate && (candidate as { entry: unknown }).entry && typeof (candidate as { entry: unknown }).entry === "object") {
+    return extractVerbParadigm((candidate as { entry: unknown }).entry);
+  }
+  if ("enrichment" in candidate && (candidate as { enrichment: unknown }).enrichment && typeof (candidate as { enrichment: unknown }).enrichment === "object") {
+    return extractVerbParadigm((candidate as { enrichment: unknown }).enrichment);
+  }
+  if ("morphology" in candidate && (candidate as { morphology: unknown }).morphology && typeof (candidate as { morphology: unknown }).morphology === "object") {
+    const paradigm = (candidate as { morphology: { paradigm?: unknown } }).morphology?.paradigm;
+    if (paradigm && typeof paradigm === "object" && "kind" in paradigm && (paradigm as { kind: string }).kind === "verb") {
+      return paradigm as VerbParadigm;
+    }
+  }
+  return null;
+}
+
 export function buildWordAtlasArticleView(
   record: EntryRecord,
   generatedAt: string,
   manifestVersion: string,
   atlasLinkCatalog?: AtlasLinkCatalog,
+  partnerCandidate?: EntryRecord | LexiconEntry | Enrichment | VerbParadigm | null,
 ) {
   const rawEntry = record.entry as unknown as LexiconEntryView;
   const wikiReference = sanitizeWikiReference(rawEntry.lemma, rawEntry.wiki_reference);
@@ -1132,16 +1153,27 @@ export function buildWordAtlasArticleView(
   const resolvedAspectPartnerSlug = rawPartnerSlug
     ? linkResolver.resolveSlug(rawPartnerSlug, entry.url_slug)
     : null;
-  const partnerEntry = resolvedAspectPartnerSlug
+  const directPartnerParadigm =
+    extractVerbParadigm(partnerCandidate) ??
+    extractVerbParadigm(record.partnerRecord) ??
+    extractVerbParadigm((record as any).partnerParadigm) ??
+    extractVerbParadigm((record.renderContext as any)?.partnerRecord);
+  const partnerCatalogEntry = resolvedAspectPartnerSlug
     ? linkCatalog.entries.find(
         (e) => e.slug === resolvedAspectPartnerSlug && isCanonicalAtlasEntry(e),
       ) ?? null
     : null;
-  const partnerParadigm =
-    partnerEntry?.enrichment?.morphology?.paradigm?.kind === "verb"
-      ? partnerEntry.enrichment.morphology.paradigm
+  const catalogPartnerParadigm =
+    partnerCatalogEntry?.enrichment?.morphology?.paradigm?.kind === "verb"
+      ? partnerCatalogEntry.enrichment.morphology.paradigm
       : null;
-  const hasAspectPartner = Boolean(resolvedAspectPartnerSlug);
+  const partnerParadigm = directPartnerParadigm ?? catalogPartnerParadigm ?? null;
+  const partnerEntry =
+    partnerCatalogEntry ??
+    (partnerCandidate && typeof partnerCandidate === "object" && "entry" in partnerCandidate
+      ? (partnerCandidate.entry as unknown as AtlasLinkCatalogEntry)
+      : null);
+  const hasAspectPartner = Boolean(resolvedAspectPartnerSlug && partnerParadigm);
   const hasVerbPedagogy = Boolean(
     verbPedagogy &&
       (verbPedagogy.aspect ||

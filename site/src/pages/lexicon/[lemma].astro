@@ -16,6 +16,9 @@ import CourseLayout from "../../layouts/CourseLayout.astro";
 import WordAtlasPageShell from "../../lexicon/WordAtlasPageShell.astro";
 import WordAtlasClientShell from "../../lexicon/WordAtlasClientShell";
 import { buildAtlasStaticPaths } from "../../lib/lexicon/atlas-static-paths";
+import { SqliteAtlasDataSource } from "../../lib/lexicon/sqlite-atlas-data-source";
+import { atlasLinkCatalog } from "../../lib/lexicon/atlas-link-catalog";
+import { buildAtlasLinkResolver } from "../../lib/lexicon/word-atlas-article-model";
 import type { EntryRecord } from "../../lib/lexicon/atlas-data-source";
 import type { WordAtlasPageState } from "../../lib/lexicon/word-atlas-page-state";
 
@@ -31,6 +34,34 @@ const { record, generatedAt, manifestVersion } = Astro.props as Partial<{
   generatedAt: string;
   manifestVersion: string;
 }>;
+
+if (record && !record.partnerRecord) {
+  const enrichment = record.entry?.enrichment as
+    | { verb_pedagogy?: { aspect_partner?: { url_slug?: string } } }
+    | null
+    | undefined;
+  const rawPartnerSlug = enrichment?.verb_pedagogy?.aspect_partner?.url_slug?.trim();
+  if (rawPartnerSlug && typeof process !== "undefined" && process.env.ATLAS_STATIC_ROUTES === "1") {
+    const resolver = buildAtlasLinkResolver(
+      atlasLinkCatalog,
+      record.relations.map((relation) => relation.related_slug),
+    );
+    const resolvedPartnerSlug = resolver.resolveSlug(rawPartnerSlug, record.entry.url_slug);
+    if (resolvedPartnerSlug) {
+      try {
+        const globalKey = Symbol.for("learn_ukrainian.ssg_source");
+        const ssgSource: SqliteAtlasDataSource =
+          ((globalThis as Record<symbol, any>)[globalKey] ??= new SqliteAtlasDataSource());
+        const partnerResult = await ssgSource.getEntry(resolvedPartnerSlug);
+        if (partnerResult.kind === "entry") {
+          record.partnerRecord = partnerResult.record;
+        }
+      } catch {
+        // Fail closed: partner lookup failure leaves partnerRecord null/undefined
+      }
+    }
+  }
+}
 const entry = record?.entry;
 const readyState = record && generatedAt && manifestVersion
   ? {

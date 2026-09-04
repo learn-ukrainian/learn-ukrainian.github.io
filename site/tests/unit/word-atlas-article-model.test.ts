@@ -1125,23 +1125,58 @@ describe("verb future, conditional, хай, impersonal, and aspect columns (#760
       ]);
     });
 
-    test("resolved partner → two aspect columns: renders Недоконаний вид and Доконаний вид columns", () => {
+    test("resolved partner slug with production search catalog (no partner paradigm) → single-column headers, not empty two-column headers", () => {
       const catalog = buildAtlasLinkCatalogFromSearchRows([
         { l: "читати", s: "читати", g: "to read", t: "lemma" },
         { l: "прочитати", s: "прочитати", g: "to have read", t: "lemma" },
       ]);
-      (catalog.entries[1] as any).enrichment = {
-        morphology: {
+
+      const html = renderWordAtlasArticle({
+        ...testVerbProps({
+          lemma: "читати",
+          url_slug: "читати",
           paradigm: {
             kind: "verb",
-            infinitive: "прочитати",
-            past: {
-              "чол.": "прочитав",
-              "жін.": "прочитала",
-              "сер.": "прочитало",
-              множина: "прочитали",
+            infinitive: "читати",
+            past: { "чол.": "читав", "жін.": "читала", "сер.": "читало", множина: "читали" },
+          },
+          verb_pedagogy: {
+            aspect: "imperfective",
+            aspect_partner: {
+              lemma: "прочитати",
+              url_slug: "прочитати",
+              source: "VESUM",
             },
           },
+        }),
+        atlasLinkCatalog: catalog,
+      });
+
+      expect(tableHeaders(html, "Минулий")).toEqual(["Рід / число", "Форма"]);
+      expect(tableHeaders(html, "Умовний")).toEqual(["Рід / число", "Форма"]);
+      expect(tableRows(html, "Минулий")).toEqual([
+        ["чол.", "читав"],
+        ["жін.", "читала"],
+        ["сер.", "читало"],
+        ["множина", "читали"],
+      ]);
+      expect(html).not.toContain("Недоконаний вид");
+      expect(html).not.toContain("Доконаний вид");
+    });
+
+    test("resolved partner paradigm supplied via real data path → two aspect columns: renders Недоконаний вид and Доконаний вид columns", () => {
+      const catalog = buildAtlasLinkCatalogFromSearchRows([
+        { l: "читати", s: "читати", g: "to read", t: "lemma" },
+        { l: "прочитати", s: "прочитати", g: "to have read", t: "lemma" },
+      ]);
+      const partnerParadigm: VerbParadigm = {
+        kind: "verb",
+        infinitive: "прочитати",
+        past: {
+          "чол.": "прочитав",
+          "жін.": "прочитала",
+          "сер.": "прочитало",
+          множина: "прочитали",
         },
       };
 
@@ -1164,6 +1199,7 @@ describe("verb future, conditional, хай, impersonal, and aspect columns (#760
           },
         }),
         atlasLinkCatalog: catalog,
+        partnerParadigm,
       });
 
       expect(tableHeaders(html, "Минулий")).toEqual([
@@ -1189,6 +1225,122 @@ describe("verb future, conditional, хай, impersonal, and aspect columns (#760
         ["сер.", "читало б", "прочитало б"],
         ["множина", "читали б", "прочитали б"],
       ]);
+    });
+
+    test("resolved partner supplied via record.partnerRecord → two aspect columns render", () => {
+      const catalog = buildAtlasLinkCatalogFromSearchRows([
+        { l: "читати", s: "читати", g: "to read", t: "lemma" },
+        { l: "прочитати", s: "прочитати", g: "to have read", t: "lemma" },
+      ]);
+      const baseProps = testVerbProps({
+        lemma: "читати",
+        url_slug: "читати",
+        paradigm: {
+          kind: "verb",
+          infinitive: "читати",
+          past: { "чол.": "читав", "жін.": "читала", "сер.": "читало", множина: "читали" },
+        },
+        verb_pedagogy: {
+          aspect: "imperfective",
+          aspect_partner: {
+            lemma: "прочитати",
+            url_slug: "прочитати",
+            source: "VESUM",
+          },
+        },
+      });
+      baseProps.record.partnerRecord = {
+        slug: "прочитати",
+        kind: "article",
+        entry: {
+          lemma: "прочитати",
+          url_slug: "прочитати",
+          gloss: "to have read",
+          enrichment: {
+            morphology: {
+              paradigm: {
+                kind: "verb",
+                infinitive: "прочитати",
+                past: {
+                  "чол.": "прочитав",
+                  "жін.": "прочитала",
+                  "сер.": "прочитало",
+                  множина: "прочитали",
+                },
+              },
+            },
+          },
+        },
+        aliases: [],
+        relations: [],
+        provenance: [],
+        renderContext: { componentLinks: [], practiceLevels: [] },
+      };
+
+      const html = renderWordAtlasArticle({
+        ...baseProps,
+        atlasLinkCatalog: catalog,
+      });
+
+      expect(tableHeaders(html, "Минулий")).toEqual([
+        "Рід / число",
+        "Недоконаний вид",
+        "Доконаний вид",
+      ]);
+      expect(tableRows(html, "Минулий")).toEqual([
+        ["чол.", "читав", "прочитав"],
+        ["жін.", "читала", "прочитала"],
+        ["сер.", "читало", "прочитало"],
+        ["множина", "читали", "прочитали"],
+      ]);
+    });
+
+    test("buildWordAtlasArticleView accepts partnerCandidate as argument and extracts partnerParadigm", () => {
+      const catalog = buildAtlasLinkCatalogFromSearchRows([
+        { l: "читати", s: "читати", g: "to read", t: "lemma" },
+        { l: "прочитати", s: "прочитати", g: "to have read", t: "lemma" },
+      ]);
+      const baseProps = testVerbProps({
+        lemma: "читати",
+        url_slug: "читати",
+        paradigm: {
+          kind: "verb",
+          infinitive: "читати",
+          past: { "чол.": "читав", "жін.": "читала", "сер.": "читало", множина: "читали" },
+        },
+        verb_pedagogy: {
+          aspect: "imperfective",
+          aspect_partner: {
+            lemma: "прочитати",
+            url_slug: "прочитати",
+            source: "VESUM",
+          },
+        },
+      });
+      const partnerParadigm: VerbParadigm = {
+        kind: "verb",
+        infinitive: "прочитати",
+        past: {
+          "чол.": "прочитав",
+          "жін.": "прочитала",
+          "сер.": "прочитало",
+          множина: "прочитали",
+        },
+      };
+
+      const viewWithout = buildWordAtlasArticleView(baseProps.record, "test", "test", catalog);
+      expect(viewWithout.hasAspectPartner).toBe(false);
+      expect(viewWithout.partnerParadigm).toBeNull();
+
+      const viewWith = buildWordAtlasArticleView(
+        baseProps.record,
+        "test",
+        "test",
+        catalog,
+        partnerParadigm,
+      );
+      expect(viewWith.hasAspectPartner).toBe(true);
+      expect(viewWith.partnerParadigm).toEqual(partnerParadigm);
     });
   });
 });

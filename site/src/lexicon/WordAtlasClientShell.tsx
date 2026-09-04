@@ -30,9 +30,10 @@ import {
   preflightAtlasSlugInSearchIndex,
   type AtlasClientShellState,
 } from "../lib/lexicon/word-atlas-client-shell";
-import type {
-  AtlasLinkCatalog,
-  AtlasSearchArticleRow,
+import {
+  buildAtlasLinkResolver,
+  type AtlasLinkCatalog,
+  type AtlasSearchArticleRow,
 } from "../lib/lexicon/word-atlas-article-model";
 
 export interface WordAtlasClientShellProps {
@@ -159,6 +160,33 @@ export default function WordAtlasClientShell({
         loadAtlasClientShellEntry(slug, source),
         loadAtlasLinkCatalog(fetchFn, resolvedBase, articleRows),
       ]);
+      if (next.status === "ready") {
+        const enrichment = next.record.entry.enrichment as
+          | { verb_pedagogy?: { aspect_partner?: { url_slug?: string } } }
+          | null
+          | undefined;
+        const rawPartnerSlug = enrichment?.verb_pedagogy?.aspect_partner?.url_slug?.trim();
+        if (rawPartnerSlug && linkCatalog) {
+          const resolver = buildAtlasLinkResolver(
+            linkCatalog,
+            next.record.relations.map((r) => r.related_slug),
+          );
+          const resolvedPartnerSlug = resolver.resolveSlug(
+            rawPartnerSlug,
+            next.record.entry.url_slug,
+          );
+          if (resolvedPartnerSlug) {
+            try {
+              const partnerResult = await source.getEntry(resolvedPartnerSlug);
+              if (partnerResult.kind === "entry") {
+                next.record.partnerRecord = partnerResult.record;
+              }
+            } catch {
+              // Fail closed: partner lookup failure leaves partnerRecord null/undefined
+            }
+          }
+        }
+      }
       if (!cancelled) {
         setAtlasLinkCatalog(linkCatalog);
         setState(next);
@@ -285,6 +313,7 @@ export default function WordAtlasClientShell({
         generatedAt={state.generatedAt}
         manifestVersion={state.manifestVersion}
         atlasLinkCatalog={atlasLinkCatalog ?? undefined}
+        partnerRecord={state.record.partnerRecord}
       />
     </div>
   );

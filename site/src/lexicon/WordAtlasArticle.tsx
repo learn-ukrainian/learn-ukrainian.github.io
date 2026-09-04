@@ -33,6 +33,9 @@ export interface WordAtlasArticleProps {
   manifestVersion: string;
   /** Optional in-memory catalog for canonical lexical backlinks and tests. */
   atlasLinkCatalog?: AtlasLinkCatalog;
+  /** Optional partner entry record or paradigm for aspect pair display. */
+  partnerRecord?: EntryRecord | null;
+  partnerParadigm?: VerbParadigm | null;
   /** Optional typeahead slot (Astro AtlasTypeahead on prerendered pages). */
   children?: ReactNode;
 }
@@ -128,9 +131,17 @@ export default function WordAtlasArticle({
   generatedAt,
   manifestVersion,
   atlasLinkCatalog,
+  partnerRecord,
+  partnerParadigm: propPartnerParadigm,
   children,
 }: WordAtlasArticleProps) {
-  const view = buildWordAtlasArticleView(record, generatedAt, manifestVersion, atlasLinkCatalog);
+  const view = buildWordAtlasArticleView(
+    record,
+    generatedAt,
+    manifestVersion,
+    atlasLinkCatalog,
+    propPartnerParadigm ?? partnerRecord,
+  );
   const {
     entry,
     enrichment,

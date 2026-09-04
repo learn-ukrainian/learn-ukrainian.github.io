@@ -29,6 +29,7 @@ const { state } = Astro.props as Props;
       generatedAt={state.generatedAt}
       manifestVersion={state.manifestVersion}
       atlasLinkCatalog={atlasLinkCatalog}
+      partnerRecord={state.record.partnerRecord}
     >
       <AtlasTypeahead id="atlas-article-search" label="Шукати слово в Лексиконі" />
     </WordAtlasArticle>
