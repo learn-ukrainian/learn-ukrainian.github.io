@@ -3727,16 +3727,23 @@ function LexiconPracticeIsland({
     if (answerLocked || !answer) return;
     const cloze = selection.cloze;
     const correct = czNorm(answer) === czNorm(cloze.form);
+    const caseDrill = isCaseClozeDrill(cloze, selection.lemma);
     const caseMiss = isWrongCaseAnswer(answer, selection.lemma, cloze);
 
     if (correct) {
       const outcome = clozeAttemptRecorded
         ? { nextUnresolved: new Set(unresolvedCardKeys), nextDeferred: [...deferredLemmas] }
         : recordReview(selection, 'good');
+      const labelUk = caseDrill
+        ? cloze.caseRule.caseLabel
+        : (cloze.caseRule.triggerLabel || 'словникова форма');
+      const labelEn = caseDrill
+        ? translateGrammarTerm(cloze.caseRule.caseLabel)
+        : 'dictionary form';
       setClozeFeedback({
         kind: 'correct',
-        textUk: `✓ ${cloze.form} (${cloze.caseRule.caseLabel})`,
-        textEn: `✓ ${cloze.form} (${translateGrammarTerm(cloze.caseRule.caseLabel)})`,
+        textUk: `✓ ${cloze.form} (${labelUk})`,
+        textEn: `✓ ${cloze.form} (${labelEn})`,
       });
       setAnswerLocked(true);
       pendingOutcomeRef.current = outcome;

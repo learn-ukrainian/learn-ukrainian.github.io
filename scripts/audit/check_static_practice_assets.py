@@ -32,12 +32,22 @@ from generate_practice_deck import (
     validate_paradigm_item,
     validate_synonym_item,
 )
+from practice_linguistic import (
+    LINGUISTIC_GATE_VERSION,
+    audit_practice_payloads,
+    build_cloze_source_index,
+    format_findings,
+    index_from_generator_candidates,
+)
 
 from scripts.practice_deck.io import ensure_practice_deck_hydrated
 
 DEFAULT_DAILY_POOL = Path("site/src/data/lexicon-daily-pool.json")
 DEFAULT_PRACTICE_DIR = Path("site/public/lexicon")
 DEFAULT_REVIEWED_SOURCES = Path("site/src/data/lexicon-practice-reviewed-sources.json")
+DEFAULT_CLOZE_SOURCES = Path("site/src/data/lexicon-practice-cloze-sources.json")
+DEFAULT_SENTENCE_INVENTORY = Path("site/src/data/lexicon-sentence-inventory.json")
+DEFAULT_VESUM_DB = Path("data/vesum.db")
 DEFAULT_LEVELS = ("A1", "A2", "B1", "B2", "C1")
 # Shared SSOT with generate_daily_pool via daily_cefr (A1–C2). A sibling A1/A2/B1
 # copy rejected the true-CEFR B2/C1 rows that #6728 now emits into the daily pool.
@@ -330,6 +340,7 @@ def _check_level(
     warnings: list[str],
     *,
     lower_lexeme_ids: set[str] | None = None,
+    linguistic_shards: dict[str, dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     paths = {
         "index": practice_dir / f"practice-index.{level}.json",
@@ -370,6 +381,16 @@ def _check_level(
         if not isinstance(mode_items[kind], list):
             errors.append(f"{paths[kind]}: {MODE_BODY_KEYS[kind]} must be a list")
             mode_items[kind] = []
+
+    if linguistic_shards is not None:
+        linguistic_shards[level] = {
+            "lexemes": [item for item in lexemes if isinstance(item, dict)],
+            "cloze": [item for item in cloze_items if isinstance(item, dict)],
+            **{
+                kind: [item for item in mode_items[kind] if isinstance(item, dict)]
+                for kind in DRILL_MODES
+            },
+        }
 
     if len(index_items) < min_lexemes:
         errors.append(f"{paths['index']}: {len(index_items)} items, expected at least {min_lexemes}")
@@ -687,6 +708,92 @@ def _ensure_registered_mode_shards(
                 index_path.write_text(json.dumps(index, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def _run_linguistic_pack(
+    practice: dict[str, dict[str, Any]],
+    *,
+    vesum_db: Path,
+    cloze_sources_path: Path | None,
+    sentence_inventory_path: Path | None,
+    errors: list[str],
+) -> None:
+    """Fail closed on mechanical linguistic errors when VESUM is available."""
+    if not vesum_db.exists():
+        errors.append(
+            f"linguistic gate v{LINGUISTIC_GATE_VERSION}: VESUM database missing at {vesum_db}"
+        )
+        return
+    from generate_practice_deck import RealVesumVerifier, read_cloze_sources, read_sentence_inventory
+
+    verifier = RealVesumVerifier(vesum_db)
+    source_rows: list[dict[str, Any]] = []
+    if sentence_inventory_path and sentence_inventory_path.exists():
+        try:
+            source_rows.extend(read_sentence_inventory(sentence_inventory_path))
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            errors.append(f"linguistic gate: failed to read sentence inventory: {exc}")
+            return
+    if cloze_sources_path and cloze_sources_path.exists():
+        try:
+            source_rows.extend(read_cloze_sources(cloze_sources_path))
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            errors.append(f"linguistic gate: failed to read cloze sources: {exc}")
+            return
+    source_index = index_from_generator_candidates(source_rows) if source_rows else build_cloze_source_index()
+
+    lexeme_plain_by_id: dict[str, str] = {}
+    cloze_items: list[dict[str, Any]] = []
+    stress_items: list[dict[str, Any]] = []
+    paradigm_items: list[dict[str, Any]] = []
+    heritage_items: list[dict[str, Any]] = []
+    paronym_items: list[dict[str, Any]] = []
+    antonym_items: list[dict[str, Any]] = []
+    homonym_items: list[dict[str, Any]] = []
+
+    shards = practice.get("_linguistic_shards")
+    if not isinstance(shards, dict):
+        return
+    for level_shards in shards.values():
+        if not isinstance(level_shards, dict):
+            continue
+        lexemes = level_shards.get("lexemes")
+        if isinstance(lexemes, list):
+            for lexeme in lexemes:
+                if isinstance(lexeme, dict) and _has_text(lexeme.get("lemmaId")):
+                    lemma_id = str(lexeme["lemmaId"])
+                    lemma = lexeme.get("lemma") or lexeme.get("lemmaPlain") or lemma_id
+                    lexeme_plain_by_id[lemma_id] = str(lemma)
+        for key, bucket in (
+            ("cloze", cloze_items),
+            ("stress", stress_items),
+            ("paradigm", paradigm_items),
+            ("heritage", heritage_items),
+            ("paronym", paronym_items),
+            ("antonym", antonym_items),
+            ("homonym", homonym_items),
+        ):
+            payload = level_shards.get(key)
+            if isinstance(payload, list):
+                bucket.extend(item for item in payload if isinstance(item, dict))
+
+    findings = audit_practice_payloads(
+        cloze_items=cloze_items,
+        stress_items=stress_items,
+        paradigm_items=paradigm_items,
+        heritage_items=heritage_items,
+        paronym_items=paronym_items,
+        antonym_items=antonym_items,
+        homonym_items=homonym_items,
+        verifier=verifier,
+        source_index=source_index,
+        lexeme_plain_by_id=lexeme_plain_by_id,
+    )
+    if findings:
+        errors.append(
+            f"linguistic gate v{LINGUISTIC_GATE_VERSION} failed ({len(findings)}): "
+            f"{format_findings(findings)}"
+        )
+
+
 def check_assets(
     *,
     daily_pool: Path = DEFAULT_DAILY_POOL,
@@ -695,6 +802,9 @@ def check_assets(
     levels: tuple[str, ...] = DEFAULT_LEVELS,
     min_daily_pool_size: int = 250,
     min_practice_lexemes_per_level: int = 25,
+    vesum_db: Path | None = None,
+    cloze_sources: Path | None = None,
+    sentence_inventory: Path | None = None,
 ) -> dict[str, Any]:
     if practice_dir == DEFAULT_PRACTICE_DIR:
         ensure_practice_deck_hydrated(practice_dir)
@@ -705,6 +815,7 @@ def check_assets(
     daily = _check_daily_pool(daily_pool, min_daily_pool_size, errors)
     reviewed = _reviewed_source_keys(reviewed_sources, errors)
     practice: dict[str, dict[str, Any]] = {}
+    linguistic_shards: dict[str, dict[str, Any]] = {}
     # Levels are ordered (A1..C1); heritage items may reference native lexemes from
     # any LOWER level (availability floor, #4720) — accumulate ids as we ascend.
     seen_lexeme_ids: set[str] = set()
@@ -717,6 +828,7 @@ def check_assets(
             errors,
             warnings,
             lower_lexeme_ids=seen_lexeme_ids,
+            linguistic_shards=linguistic_shards,
         )
         seen_lexeme_ids |= set(row.pop("lexeme_ids", None) or ())
         practice[level] = row
@@ -733,6 +845,17 @@ def check_assets(
     total_cloze = sum(int(row["cloze"]) for row in practice.values())
     if total_cloze and not reviewed:
         errors.append(f"{reviewed_sources}: cloze shards are nonempty but reviewed allowlist is empty")
+
+    if vesum_db is not None:
+        practice["_linguistic_shards"] = linguistic_shards
+        _run_linguistic_pack(
+            practice,
+            vesum_db=vesum_db,
+            cloze_sources_path=cloze_sources,
+            sentence_inventory_path=sentence_inventory,
+            errors=errors,
+        )
+        practice.pop("_linguistic_shards", None)
 
     coverage = _build_coverage(practice, levels)
     for level_row in practice.values():
@@ -784,6 +907,17 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--levels", type=_parse_levels, default=DEFAULT_LEVELS)
     parser.add_argument("--min-daily-pool-size", type=int, default=250)
     parser.add_argument("--min-practice-lexemes-per-level", type=int, default=25)
+    parser.add_argument(
+        "--vesum-db",
+        type=Path,
+        default=None,
+        help=(
+            "When set, run the practice linguistic pack against hydrated shards. "
+            "CI stays schema-only by omitting this flag."
+        ),
+    )
+    parser.add_argument("--cloze-sources", type=Path, default=DEFAULT_CLOZE_SOURCES)
+    parser.add_argument("--sentence-inventory", type=Path, default=DEFAULT_SENTENCE_INVENTORY)
     parser.add_argument("--format", choices=("summary", "json"), default="summary")
     args = parser.parse_args(argv)
 
@@ -794,6 +928,9 @@ def main(argv: list[str] | None = None) -> int:
         levels=args.levels,
         min_daily_pool_size=args.min_daily_pool_size,
         min_practice_lexemes_per_level=args.min_practice_lexemes_per_level,
+        vesum_db=args.vesum_db,
+        cloze_sources=args.cloze_sources,
+        sentence_inventory=args.sentence_inventory,
     )
 
     if args.format == "json":
