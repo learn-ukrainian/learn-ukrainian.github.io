@@ -148,7 +148,7 @@ launcher_defaults() {
       LC_HARNESS="${LAUNCHER_HARNESS:-claude-code}"
       ;;
     codex)
-      LC_MODEL="${LAUNCHER_MODEL:-gpt-5.6-luna}"
+      LC_MODEL="${LAUNCHER_MODEL:-gpt-6-astra}"
       LC_HARNESS="${LAUNCHER_HARNESS:-codex}"
       ;;
     gemini)
@@ -179,6 +179,9 @@ launcher_defaults() {
     *) launcher_error "unknown provider '$LC_PROVIDER'"; exit 2 ;;
   esac
   LC_EFFORT="${LAUNCHER_EFFORT:-}"
+  if [ "$LC_PROVIDER" = codex ] && [ -z "$LC_EFFORT" ]; then
+    if [ "$LC_MODE" = driver ]; then LC_EFFORT=high; else LC_EFFORT=low; fi
+  fi
   LC_ENDPOINT="${LAUNCHER_ENDPOINT:-coding}"
   LC_ISOLATE_CONFIG="${LAUNCHER_ISOLATE_CONFIG:-1}"
   LC_DRY_RUN="${LAUNCHER_DRY_RUN:-0}"
@@ -344,7 +347,7 @@ launcher_validate_mode() {
       launcher_selector_help >&2
       exit 2
     fi
-    LC_MODEL="gpt-5.6-sol"
+    LC_MODEL="gpt-6-astra"
     unset SESSION_EPIC
     LC_GOVERNOR_PROMPT="Follow agents_extensions/shared/prompts/dynamic-area-epic-fleet-governor.md for one bounded supervision cycle. TARGET=$LC_EPIC GOAL=AUTO"
     LC_FORWARD_ARGS=("$LC_GOVERNOR_PROMPT" "${LC_FORWARD_ARGS[@]}")
@@ -385,7 +388,7 @@ launcher_validate_driver_certification() {
     return 0
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
-    claude:claude-opus-5|claude:claude-fable-5|claude:claude-fable-5-1|claude:claude-sonnet-5|codex:gpt-5.6-terra|codex:gpt-5.6-luna|codex:gpt-5.6-sol|gemini:gemini-3.8-flash-high|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.6|cursor:auto|cursor:grok-4.6|cursor:composer-2.5)
+    claude:claude-opus-5|claude:claude-fable-5|claude:claude-fable-5-1|claude:claude-sonnet-5|codex:gpt-6-astra|codex:gpt-5.6-terra|codex:gpt-5.6-luna|codex:gpt-5.6-sol|gemini:gemini-3.8-flash-high|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.6|cursor:auto|cursor:grok-4.6|cursor:composer-2.5)
       return 0
       ;;
     *)

@@ -148,10 +148,10 @@ class CodexAdapter:
     """Adapter for ``codex exec`` (OpenAI ChatGPT Codex CLI)."""
 
     name: str = "codex"
-    default_model: str = "gpt-5.6-luna"
-    # Operator 2026-08-13: omitted effort defaults to max for the Codex lane;
+    default_model: str = "gpt-6-astra"
+    # Operator 2026-09-04: omitted effort defaults to low for the Astra workhorse;
     # an explicit --effort always wins.
-    default_effort: str = "max"
+    default_effort: str = "low"
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
 
     # Per-invocation scoped $CODEX_HOME path. Set by ``build_invocation``

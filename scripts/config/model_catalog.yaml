@@ -1,5 +1,5 @@
 schema_version: model-catalog.v1
-reviewed_on: 2026-08-23
+reviewed_on: 2026-09-04
 refresh_after_days: 30
 
 # This is the preferred/current fleet, not every legacy model exposed by a
@@ -108,7 +108,7 @@ review_scheduler:
       capacity_weight: 1.0
     codex:
       formal_review_eligible: true
-      models: [gpt-5.6-sol, gpt-5.6-terra]
+      models: [gpt-6-astra, gpt-5.6-sol, gpt-5.6-terra]
       participant: codex
       adapter_transport: acp
       catalog_transport: native_codex
@@ -228,7 +228,7 @@ review_scheduler:
 execution_routing:
   sol_advised_bounded:
     advisor:
-      model_id: gpt-5.6-sol
+      model_id: gpt-6-astra
       effort: high
       role: bounded_advisory_envelope
       output_fields:
@@ -245,7 +245,7 @@ execution_routing:
       effort: max
       requires: [complete_advisory_envelope, objective_scope_ceiling]
       task_types: [bounded_implementation, bounded_investigation]
-      escalate_to: gpt-5.6-sol
+      escalate_to: gpt-6-astra
       prohibited_decisions:
         - consequential_architecture
         - security
@@ -262,8 +262,8 @@ execution_routing:
       task_types: [bounded_implementation, bounded_investigation, recon, bounded_checks, log_triage]
       constraints: [objective_scope_ceiling, no_consequential_decisions, no_final_disposition]
     autonomous_fallback:
-      model_id: gpt-5.6-terra
-      effort: high
+      model_id: gpt-6-astra
+      effort: low
       when: [missing_objective_scope_ceiling, broader_autonomous_integration, unresolved_consequential_ambiguity]
     review_boundary:
       advisory_family: openai
@@ -271,6 +271,20 @@ execution_routing:
       independent_cross_family_review_required: true
 
 models:
+  gpt-6-astra:
+    family: openai
+    tier: frontier_authority
+    lifecycle: active
+    roles: [implementation, investigation, standard_review, critical_review, bounded_advisory_envelope, architecture]
+    transports: [native_codex, cursor]
+    strengths: [agentic_coding, frontier_technical_judgment]
+    weaknesses: [not_independent_from_openai_authors]
+    notes: >-
+      Operator GO 2026-09-04: workhorse low, reviewer medium, advisor high.
+      Native Codex CLI 0.153.3 lists low/medium/high/xhigh/max/ultra; low is
+      the lighter-reasoning default. Sol and Terra remain explicit fallbacks.
+    sources:
+      - https://developers.openai.com/api/docs/models/gpt-6-astra
   gpt-5.6-sol:
     family: openai
     tier: frontier_authority
@@ -790,13 +804,20 @@ review_candidates:
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
   openai_frontier:
-    model_id: gpt-5.6-sol
+    model_id: gpt-6-astra
     route: codex
     transport: native_codex
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent codex
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-6-astra --effort high
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
     advisory_only_for_author_families: [openai]
+  gpt-6-astra:
+    model_id: gpt-6-astra
+    route: codex
+    transport: native_codex
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-6-astra --effort medium
+    review_profiles: [code, infra]
+    capabilities: [code_review, isolation, sealed_evidence]
   gpt-5.6-terra:
     model_id: gpt-5.6-terra
     route: codex
@@ -969,8 +990,8 @@ orchestrator_seats:
   claude:
     model_id: claude-fable-5-1
     effort: high
-    escalate_model_id: gpt-5.6-sol
-    escalate_effort: xhigh
+    escalate_model_id: gpt-6-astra
+    escalate_effort: high
     escalate_when: deep_single_shot_or_architecture
     note: >-
       Fable 5.1 is the Anthropic orchestration and designated-authority seat
@@ -981,14 +1002,14 @@ orchestrator_seats:
       1-2 short scheduled judgment sessions/day (verdict reads, course corrections,
       design locks, briefs) driven dispatch-heavy, never inline-heavy — measured
       2026-07-26 at ~2 weekly-quota points per orchestration hour in that style.
-      Escalation stays CROSS-FAMILY to Sol @ xhigh; Claude is an escalation TARGET,
+      Escalation stays CROSS-FAMILY to Astra @ high; Claude is an escalation TARGET,
       not an escalator. Opus 5 is not an orchestrator and its advisory output does
       not confer approval authority. Driving is `high`, not `xhigh`.
   codex:
-    model_id: gpt-5.6-terra
+    model_id: gpt-6-astra
     effort: high
-    escalate_model_id: gpt-5.6-sol
-    escalate_effort: xhigh
+    escalate_model_id: gpt-6-astra
+    escalate_effort: high
     escalate_when: deep_single_shot_or_architecture
     note: >
       Re-added as orchestrator seat 2026-07-23 (reverses the 2026-07-22 removal) specifically for
@@ -1022,8 +1043,8 @@ orchestrator_seats:
   cursor:
     model_id: auto
     effort: high
-    escalate_model_id: gpt-5.6-sol
-    escalate_effort: xhigh
+    escalate_model_id: gpt-6-astra
+    escalate_effort: high
     escalate_when: deep_single_shot_or_architecture
     auto_allowlist:
       - grok-4.6
@@ -1048,17 +1069,17 @@ orchestrator_seats:
       do not dispatch --agent cursor from within the driver session).
 
 # Formal CF transport defaults for review-pr (model + effort). Advisor/authority
-# seats (Sol/Fable and other designated-authority seats) are critical-ladder only —
-# not routine review-pr pins (operator 2026-08-03 + Sol GO). Fable remains off the
+# roles use high effort; Astra also fills the routine reviewer role at medium.
+# Fable remains off the
 # routine ladder. CodexBar health probes must never collapse routing to one seat.
 formal_cf_defaults:
   codex:
-    model_id: gpt-5.6-terra
-    effort: high
+    model_id: gpt-6-astra
+    effort: medium
     # Authority model for critical / hard CF. The one-shot Codex ACP participant
     # does not expose reasoning effort, so review-pr pins the model only.
-    escalate_model_id: gpt-5.6-sol
-    escalate_effort: provider_default
+    escalate_model_id: gpt-6-astra
+    escalate_effort: high
   claude:
     model_id: claude-sonnet-5
     effort: high
@@ -1109,8 +1130,8 @@ formal_cf_defaults:
 review_ladders:
   # #5293 quality-first: never let a later rung improve quality tier.
   # critical keeps frontier_authority first (false APPROVED is expensive).
-  # high/medium/low: Terra → Sonnet → Flash / Grok / K3 / DS / pool — not
-  # Sol/Fable/advisor seats on routine PRs. glm-5.3 is catalogued for explicit
+  # high/medium/low: Astra medium → Terra fallback → Sonnet → Flash / Grok / K3 / DS / pool.
+  # Fable/advisory roles stay off routine PRs. glm-5.3 is catalogued for explicit
   # `--reviewer glm-5.3` only (z.ai retired 2026-09-03); never an automatic rung.
   critical:
     - [openai_frontier]
@@ -1133,8 +1154,9 @@ review_ladders:
     - [pool]
     - [pool-xs, gemini-3.5-flash]
   high: &practical_first_code_review
-    # Routine CF order: Terra → Sonnet → Flash / Grok / K3… (glm off automatic
-    # ladders; advisors Sol/Fable stay critical-only).
+    # Routine CF order: Astra medium → Terra fallback → Sonnet → Flash / Grok / K3…
+    # glm stays off automatic ladders; Fable stays critical-only.
+    - [gpt-6-astra]
     - [gpt-5.6-terra]
     - [claude-sonnet-5]
     - [gemini-3.8-flash]

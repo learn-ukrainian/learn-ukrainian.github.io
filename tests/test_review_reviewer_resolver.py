@@ -44,6 +44,7 @@ def test_family_resolution_across_model_and_harness_aliases():
         "claude-fable-5": "anthropic",
         "codex": "openai",
         "codex-tools": "openai",
+        "gpt-6-astra": "openai",
         "gpt-5.6-sol": "openai",
         "gpt-5.6-terra": "openai",
         "gpt-5.6-luna": "openai",
@@ -208,10 +209,10 @@ def test_high_risk_anthropic_author_gets_strong_practical_formal_gate():
     assert resolution.selected.suitability_rank == 0
 
 
-def test_critical_anthropic_author_still_gets_sol_as_formal_gate():
+def test_critical_anthropic_author_gets_astra_as_formal_gate():
     resolution = resolve_reviewer(ResolverInputs(author_model="claude", risk="critical"))
     assert resolution.selected.name == "openai_frontier"
-    assert resolution.selected.concrete_model == "gpt-5.6-sol"
+    assert resolution.selected.concrete_model == "gpt-6-astra"
 
 
 def test_high_risk_openai_author_gets_sonnet_not_fable():
@@ -268,15 +269,15 @@ def test_medium_risk_uses_sonnet_and_keeps_pool_eligible():
     assert next(entry for entry in resolution.trace if entry.name == "pool").status == "excluded"
 
 
-def test_low_risk_pool_author_gets_terra_before_economical_routes():
+def test_low_risk_pool_author_gets_astra_before_economical_routes():
     resolution = resolve_reviewer(ResolverInputs(author_model="pool", risk="low"))
-    assert resolution.selected.name == "gpt-5.6-terra"
+    assert resolution.selected.name == "gpt-6-astra"
 
 
 def test_policy_receipt_exposes_catalog_version_date_and_risk():
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="high"))
     assert resolution.policy_version == "deterministic-formal-routing.v2"
-    assert resolution.catalog_reviewed_on == "2026-08-23"
+    assert resolution.catalog_reviewed_on == "2026-09-04"
     assert resolution.resolved_risk == "high"
 
 
@@ -442,7 +443,7 @@ def test_missing_health_signal_is_fail_open():
 
 def test_family_exclusion_is_not_mislabeled_as_a_substitution():
     resolution = resolve_reviewer(ResolverInputs(author_model="gemini", risk="medium"))
-    assert resolution.selected.name == "gpt-5.6-terra"
+    assert resolution.selected.name == "gpt-6-astra"
     assert resolution.substitution_note is None
 
 
@@ -962,17 +963,18 @@ def test_critical_ladder_keeps_authority_before_practical():
     ]
 
 
-def test_practical_ladder_starts_with_terra_then_sonnet():
+def test_practical_ladder_starts_with_astra_then_fallbacks():
     for risk in ("high", "medium", "low"):
         ladder = REVIEW_LADDERS[risk]
-        assert [rung[0].name for rung in ladder[:4]] == [
+        assert [rung[0].name for rung in ladder[:5]] == [
+            "gpt-6-astra",
             "gpt-5.6-terra",
             "claude-sonnet-5",
             "gemini-3.8-flash",
             "grok-4.6",
         ]
         assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
-        assert ladder[4][0].name == "grok-4.6-cursor-fallback"
+        assert ladder[5][0].name == "grok-4.6-cursor-fallback"
 
 
 def test_candidate_constants_preserve_expected_identity():
@@ -1025,3 +1027,13 @@ def test_glm_egress_exclusion_reason_names_unlock_flag():
     )
     assert result.status == "excluded"
     assert "requires --data-egress-policy local_interactive" in result.reason
+
+
+def test_astra_authors_never_receive_openai_cross_family_review():
+    for risk in ("low", "medium", "high", "critical"):
+        resolution = resolve_reviewer(ResolverInputs(author_model="gpt-6-astra", risk=risk))
+        assert resolution.selected is not None
+        assert resolution.selected.family != "openai"
+        for entry in resolution.trace:
+            if REVIEW_CANDIDATES[entry.name].family == "openai":
+                assert entry.status == ("advisory_only" if entry.name == "openai_frontier" else "excluded")

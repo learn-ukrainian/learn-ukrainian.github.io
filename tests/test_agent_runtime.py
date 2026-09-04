@@ -458,7 +458,7 @@ def test_claude_entry_has_bridge_only_resume_policy():
 def test_load_adapter_codex():
     adapter = _load_adapter("codex")
     assert adapter.name == "codex"
-    assert adapter.default_model == "gpt-5.6-luna"
+    assert adapter.default_model == "gpt-6-astra"
     assert adapter.supported_modes == frozenset({"read-only", "workspace-write", "danger"})
 
 
@@ -660,9 +660,9 @@ def test_codex_adapter_build_invocation_read_only(tmp_path):
     assert plan.output_file is not None
     assert "test-task" in plan.output_file.name
     # tool_config=None: no MCP -c overrides; the lane-default
-    # model_reasoning_effort=max (operator 2026-08-13) is the only -c flag.
+    # model_reasoning_effort=low (operator 2026-09-04) is the only -c flag.
     config_values = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "-c"]
-    assert config_values == ["model_reasoning_effort=max"]
+    assert config_values == ["model_reasoning_effort=low"]
     # Liveness paths should include the output file
     assert plan.output_file in plan.liveness_paths
 

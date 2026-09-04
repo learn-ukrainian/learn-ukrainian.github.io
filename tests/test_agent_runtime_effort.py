@@ -436,9 +436,9 @@ def test_codex_adapter_emits_effort_as_config_override(tmp_path):
     )
 
 
-def test_codex_adapter_no_effort_means_default_max_override(tmp_path):
+def test_codex_adapter_no_effort_means_default_low_override(tmp_path):
     """effort=None (default) applies the lane default
-    ``-c model_reasoning_effort=max`` (operator 2026-08-13); an explicit
+    ``-c model_reasoning_effort=low`` (operator 2026-09-04); an explicit
     --effort still wins over the default."""
     adapter = CodexAdapter()
     plan = adapter.build_invocation(
@@ -455,8 +455,9 @@ def test_codex_adapter_no_effort_means_default_max_override(tmp_path):
         for i in range(len(plan.cmd) - 1)
         if plan.cmd[i] == "-c"
     ]
-    assert ("-c", "model_reasoning_effort=max") in flag_pairs, (
-        f"expected ('-c', 'model_reasoning_effort=max') in flag pairs; "
+    assert plan.cmd[plan.cmd.index("-m") + 1] == "gpt-6-astra"
+    assert ("-c", "model_reasoning_effort=low") in flag_pairs, (
+        f"expected ('-c', 'model_reasoning_effort=low') in flag pairs; "
         f"plan.cmd={plan.cmd}"
     )
 
