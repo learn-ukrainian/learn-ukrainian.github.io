@@ -426,17 +426,13 @@ Every fleet launcher exports ACP as the routine transport. The project
 exactly two enabled participants: Codex, Grok, Claude, Kimi, KimiCC K3,
 Cursor, Pool, AGY/Gemini, GLM, or DeepSeek. The direct `acp-discuss` command remains available for
 operators and tests. Selection starts no process at cold start and does not
-change `delegate.py`. Use the default two rounds; three is the hard maximum.
-
-Bridge transport is an observable exception only for an unsupported
-participant/count, a per-participant model override, formal review until
-separately migrated, write / dispatch / inbox semantics, or a typed ACP
-unhealthy or partial failure. Record the named
-exception in the task handoff or other durable coordination evidence; do not
-silently fall back. Admission is one conversation repository-wide. If it is
-occupied, return `busy` immediately: there is no queue, wait, automatic retry,
-or hidden failover. A typed partial ACP outcome is valid evidence to inspect,
-but not a successful discussion, formal review, or coordination authority.
+change `delegate.py`. Any other count or invalid seat list is rejected loudly
+before it creates a conversation; there is no bridge/provider-execution
+fallback. Use the default two rounds; three is the hard maximum. Admission is
+one conversation repository-wide. If it is occupied, return `busy`
+immediately: there is no queue, wait, automatic retry, or hidden failover. A
+typed partial ACP outcome is valid evidence to inspect, but not a successful
+discussion, formal review, or coordination authority.
 
 The legacy `discuss` CLI is now a compatibility surface, not a second
 execution engine, for supported two-seat panels: it delegates to ACP and
@@ -677,8 +673,8 @@ printf '%s\n' 'Bounded read-only task.' | ACPX_AUTH_CHAT_GPT=1 \
 .venv/bin/python scripts/ai_agent_bridge/__main__.py discuss <channel> "..." \
   --with claude,kimicc
 
-# Three participants remain a named bridge exception until the bounded
-# controller supports that count.
+# More or fewer than two participants reject loudly before provider or
+# authority work; there is no bridge/provider-execution fallback.
 .venv/bin/python scripts/ai_agent_bridge/__main__.py discuss <channel> "..." \
   --with agy,codex,cursor
 

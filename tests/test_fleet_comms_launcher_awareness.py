@@ -81,7 +81,7 @@ def test_shared_launcher_clause_onboards_authority_and_acp_layers() -> None:
     for required in (
         "LU_AGENT_COMM_TRANSPORT",
         "All normal inter-agent asks",
-        "2–6 seat discussions",
+        "exactly two-seat discussions",
         "never fall back to bridge/provider execution",
         "fleet-comms owns durable state",
         "legacy bridge/channel stores are read-only",

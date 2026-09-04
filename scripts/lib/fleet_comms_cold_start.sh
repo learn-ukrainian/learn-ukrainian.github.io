@@ -79,7 +79,7 @@ fleet_comms_cold_clause() {
     "Topology: \`.venv/bin/python -m scripts.fleet_comms plane-status\` (+ metrics/backlog/dead-letters). " \
     "Cross-family CF: direct ask-<lane> for verdict+findings, post on the PR, merge when CI green " \
     "(sealed review-pr / lu-review temps RETIRED — do not use). Never self-seal. " \
-    "All normal inter-agent asks and 2–6 seat discussions use ACP; " \
+    "All normal inter-agent asks and exactly two-seat discussions use ACP; other seat counts reject loudly. " \
     "never fall back to bridge/provider execution. ACP transports; fleet-comms owns durable state. " \
     "After merge: reap worktrees (\`reap_worktrees.py --apply\`). " \
     "Continuity: stream lease already claimed; write durable receipts to fleet-comms."
