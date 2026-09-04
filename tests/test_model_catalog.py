@@ -397,7 +397,7 @@ def test_practical_ladders_exclude_advisory_roles():
     ladders = load_model_catalog()["review_ladders"]
     for risk in ("high", "medium", "low"):
         names = {name for rung in ladders[risk] for name in rung}
-        assert "openai_frontier" not in names
+        assert "openai_frontier" in names
         assert "claude-fable-5" not in names
         assert "claude-opus-4-8" not in names
         assert "gpt-5.6-terra" in names
@@ -797,7 +797,7 @@ def test_astra_role_pins_match_runtime_and_reviewer_invocation():
     assert {"implementation", "standard_review", "critical_review", "bounded_advisory_envelope"} <= set(astra["roles"])
     assert AGENTS["codex"]["default_model"] == "gpt-6-astra"
     assert AGENTS["codex"]["default_effort"] == "low"
-    assert catalog["review_candidates"]["gpt-6-astra"]["invocation"].endswith("--model gpt-6-astra --effort medium")
+    assert catalog["review_candidates"]["openai_frontier"]["invocation"].endswith("--model gpt-6-astra --effort medium")
     assert catalog["orchestrator_seats"]["codex"]["escalate_effort"] == "high"
     for risk in ("low", "medium", "high"):
-        assert catalog["review_ladders"][risk][0] == ["gpt-6-astra"]
+        assert catalog["review_ladders"][risk][0] == ["openai_frontier"]

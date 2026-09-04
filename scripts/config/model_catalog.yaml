@@ -807,17 +807,10 @@ review_candidates:
     model_id: gpt-6-astra
     route: codex
     transport: native_codex
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-6-astra --effort high
-    review_profiles: [code, infra]
-    capabilities: [code_review, isolation, sealed_evidence]
-    advisory_only_for_author_families: [openai]
-  gpt-6-astra:
-    model_id: gpt-6-astra
-    route: codex
-    transport: native_codex
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-6-astra --effort medium
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
+    advisory_only_for_author_families: [openai]
   gpt-5.6-terra:
     model_id: gpt-5.6-terra
     route: codex
@@ -1156,7 +1149,7 @@ review_ladders:
   high: &practical_first_code_review
     # Routine CF order: Astra medium → Terra fallback → Sonnet → Flash / Grok / K3…
     # glm stays off automatic ladders; Fable stays critical-only.
-    - [gpt-6-astra]
+    - [openai_frontier]
     - [gpt-5.6-terra]
     - [claude-sonnet-5]
     - [gemini-3.8-flash]

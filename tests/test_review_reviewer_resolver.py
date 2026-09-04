@@ -219,8 +219,8 @@ def test_high_risk_openai_author_gets_sonnet_not_fable():
     resolution = resolve_reviewer(ResolverInputs(author_model="gpt-5.6-terra", risk="high"))
     assert resolution.selected.name == "claude-sonnet-5"
     assert resolution.selected.transport == "native_claude"
-    # Authority seats are off the practical ladders — no Sol advisory on routine.
-    assert all(entry.name != "openai_frontier" for entry in resolution.trace)
+    # Astra remains same-family advisory context, never this author’s CF gate.
+    assert next(entry for entry in resolution.trace if entry.name == "openai_frontier").status == "advisory_only"
 
 
 def test_fable_uses_cursor_only_when_native_claude_is_unhealthy():
@@ -271,7 +271,7 @@ def test_medium_risk_uses_sonnet_and_keeps_pool_eligible():
 
 def test_low_risk_pool_author_gets_astra_before_economical_routes():
     resolution = resolve_reviewer(ResolverInputs(author_model="pool", risk="low"))
-    assert resolution.selected.name == "gpt-6-astra"
+    assert resolution.selected.name == "openai_frontier"
 
 
 def test_policy_receipt_exposes_catalog_version_date_and_risk():
@@ -443,7 +443,7 @@ def test_missing_health_signal_is_fail_open():
 
 def test_family_exclusion_is_not_mislabeled_as_a_substitution():
     resolution = resolve_reviewer(ResolverInputs(author_model="gemini", risk="medium"))
-    assert resolution.selected.name == "gpt-6-astra"
+    assert resolution.selected.name == "openai_frontier"
     assert resolution.substitution_note is None
 
 
@@ -967,7 +967,7 @@ def test_practical_ladder_starts_with_astra_then_fallbacks():
     for risk in ("high", "medium", "low"):
         ladder = REVIEW_LADDERS[risk]
         assert [rung[0].name for rung in ladder[:5]] == [
-            "gpt-6-astra",
+            "openai_frontier",
             "gpt-5.6-terra",
             "claude-sonnet-5",
             "gemini-3.8-flash",
