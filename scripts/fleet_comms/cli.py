@@ -1161,9 +1161,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     acp = sub.add_parser(
         "acp-discuss",
-        help="Bounded active ACPX Codex↔Grok discussion; prompt is accepted only on stdin",
+        help="Bounded active ACPX discussion between one enabled pair; prompt is accepted only on stdin",
     )
-    acp.add_argument("--cwd", required=True, help="Registered worktree for both fixed participants")
+    acp.add_argument("--cwd", required=True, help="Registered worktree for the enabled participant pair")
     acp.add_argument("--task-id", required=True)
     acp.add_argument("--correlation-id", required=True)
     acp.add_argument("--idempotency-key", required=True)
