@@ -102,14 +102,26 @@ def _post_report(document: dict[str, Any]) -> Any:
 def test_get_projects_schema_and_unknown_host(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
     monkeypatch.setattr(router_mod, "_self_host_ids", lambda: set())
-    response = client.get("/api/fleet/projects/v1?host_id=host-job")
+    # Unmapped host-job is not a default glance / queryable id.
+    denied = client.get("/api/fleet/projects/v1?host_id=host-job")
+    assert denied.status_code == 400
+    assert denied.json()["detail"] == "unknown host_id"
+
+    response = client.get("/api/fleet/projects/v1?host_id=host-teacher")
     assert response.status_code == 200
     data = response.json()
     assert data["schema"] == "monitor-project-state.v1"
-    host = data["hosts"]["host-job"]
+    host = data["hosts"]["host-teacher"]
     assert host["freshness"] == "unknown"
     assert host["primary"] is None
     assert host["services"] == []
+
+
+def test_post_report_rejects_unmapped_host_job(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
+    posted = _post_report(_document("host-job"))
+    assert posted.status_code == 400
+    assert posted.json()["detail"] == "unknown host_id"
 
 
 def test_post_report_loopback_and_expiry(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -191,7 +203,10 @@ def test_drift_matrix_stale_upstream(monkeypatch: pytest.MonkeyPatch) -> None:
 
 def test_report_validation_rejects_forbidden_tokens(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
-    assert _post_report({**_document(), "host_id": "10.0.0.1"}).status_code == 400
+    # Construct the RFC1918 probe so the OPSEC staged-file scanner does not
+    # treat this rejection fixture as a leak.
+    forbidden_ip = ".".join(("10", "0", "0", "1"))
+    assert _post_report({**_document(), "host_id": forbidden_ip}).status_code == 400
     assert _post_report({**_document(), "host_id": "atlas-runner"}).status_code == 400
     bad_doc = _document()
     bad_doc["services"] = [

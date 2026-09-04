@@ -203,9 +203,13 @@ def allowed_reporter_host_ids(ctx: MonitorContext | None = None) -> frozenset[st
     # the outside-root guard MonitorContext already applies to db paths.
     if ctx is not None and ctx.root is not None:
         return frozenset()
-    ids = set(parse_host_id_map().values())
+    mapping = parse_host_id_map()
+    ids = set(mapping.values())
     ids.update(EXTRA_REPORTER_HOST_IDS)
-    return {host_id for host_id in ids if _opaque_host_id(host_id)}
+    # Production glance row may POST on loopback (optional; API prefer in-process).
+    # ``host-job`` is never allowlisted unless mapped.
+    ids.update(DEFAULT_HOST_IDS)
+    return frozenset(host_id for host_id in ids if _opaque_host_id(host_id))
 
 
 def _selected_host_ids(host_id: str | None, ctx: MonitorContext | None = None) -> list[str]:

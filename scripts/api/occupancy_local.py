@@ -32,6 +32,8 @@ ENV_DRIVER_HOST_ID = "MONITOR_OCCUPANCY_DRIVER_HOST_ID"
 ENV_MARKERS = "MONITOR_OCCUPANCY_MARKERS"
 ENV_FOUNDRY_HOST_ID = "MONITOR_OCCUPANCY_FOUNDRY_HOST_ID"
 MAC_OPERATOR_HOST_ID = "mac-operator"
+# Keep in sync with scripts.api.occupancy.PRODUCTION_LINUX_HOST_ID (cycle-safe).
+PRODUCTION_LINUX_HOST_ID = "host-teacher"
 MARKERS_SCHEMA = "monitor-occupancy-markers.v1"
 MARKER_KINDS = frozenset({"driver", "worker", "job", "service"})
 DEFAULT_MARKER_TTL_S = 15 * 60
@@ -74,14 +76,34 @@ def self_host_opaque_ids(mapping: dict[str, str]) -> set[str]:
     return claimed
 
 
+def empty_map_api_host_opaque() -> str | None:
+    """Opaque glance id this API process fills when ``MONITOR_OCCUPANCY_HOST_IDS`` is empty.
+
+    One production Linux host + Mac observer: on Linux the API process is the
+    production glance row; on Darwin it is the Mac observer seat.
+    """
+    if sys.platform == "darwin":
+        return MAC_OPERATOR_HOST_ID
+    return PRODUCTION_LINUX_HOST_ID
+
+
 def driver_seat_host_id(mapping: dict[str, str], selected: dict[str, str | None]) -> str | None:
-    """Opaque host that may claim local session-stream driver seats."""
+    """Opaque host that may claim local session-stream driver seats.
+
+    Empty-map fallback is Linux-only (``host-teacher``). Darwin remains
+    observer-only — never attach session-stream drivers to ``mac-operator``.
+    """
     explicit = os.environ.get(ENV_DRIVER_HOST_ID, "").strip().lower()
     if explicit:
         return explicit if _opaque_host_id(explicit) and explicit in selected else None
     claimed = self_host_opaque_ids(mapping) & set(selected)
     if len(claimed) == 1:
         return next(iter(claimed))
+    # Empty map: Linux API owns production glance drivers. Darwin: no seat.
+    if not mapping and sys.platform != "darwin":
+        fallback = empty_map_api_host_opaque()
+        if fallback is not None and fallback in selected:
+            return fallback
     return None
 
 
@@ -440,10 +462,12 @@ def resolve_launcher_host_id() -> str:
         mapping = parse_host_id_map()
         claimed = self_host_opaque_ids(mapping)
     except Exception:
-        return MAC_OPERATOR_HOST_ID if sys.platform == "darwin" else "local"
+        return empty_map_api_host_opaque() or "local"
     if len(claimed) == 1:
         return next(iter(claimed))
-    return MAC_OPERATOR_HOST_ID if sys.platform == "darwin" and not mapping else "local"
+    if not mapping:
+        return empty_map_api_host_opaque() or "local"
+    return "local"
 
 
 def _build_parser() -> argparse.ArgumentParser:

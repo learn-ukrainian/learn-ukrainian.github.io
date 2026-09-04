@@ -3,7 +3,7 @@
 Proves:
 1. One card per inventory agent dynamically extracted (no hardcoded list).
 2. Per-agent outcome counts (no echoing global outcomes on every card).
-3. Retired agent 'gemini' is not presented as live.
+3. Retired agents 'gemini' and 'glm' are not presented as live.
 4. Agents with headroom keys (cursor, kimi, grok, deepseek, agy, etc.) are included.
 """
 
@@ -60,11 +60,14 @@ def test_orient_html_does_not_hardcode_agent_trio():
     assert "getAgentOutcomes" in html
 
 
-def test_orient_html_marks_gemini_as_retired():
-    """#7089: gemini is retired in /api/fleet/agents and must not be presented as live."""
+def test_orient_html_marks_retired_cli_lanes():
+    """gemini/glm are permanently retired and must not be presented as live."""
     html = ORIENT.read_text(encoding="utf-8")
     assert "RETIRED_AGENTS" in html
-    assert "'gemini'" in html or '"gemini"' in html
+    assert re.search(
+        r"RETIRED_AGENTS\s*=\s*new Set\(\[[^\]]*'(?:gemini|glm)'[^\]]*'(?:gemini|glm)'[^\]]*\]\)",
+        html,
+    )
 
 
 def _eval_orient_runtime_js(runtime_payload: dict) -> dict:
@@ -108,10 +111,10 @@ def _eval_orient_runtime_js(runtime_payload: dict) -> dict:
     return json.loads(result.stdout)
 
 
-def test_orient_runtime_cards_inventory_agents_and_gemini_retired():
-    """#7089: one card per inventory agent; gemini retired not presented as live."""
+def test_orient_runtime_cards_inventory_agents_and_retired_lanes_hidden():
+    """#7089: one card per inventory agent; gemini/glm not presented as live."""
     payload = {
-        "agents": ["claude", "codex", "cursor", "kimi", "grok", "deepseek", "agy", "gemini"],
+        "agents": ["claude", "codex", "cursor", "kimi", "grok", "deepseek", "agy", "gemini", "glm"],
         "headroom": {
             "claude": True,
             "codex": True,
@@ -121,6 +124,11 @@ def test_orient_runtime_cards_inventory_agents_and_gemini_retired():
             "deepseek": True,
             "agy": True,
             "gemini": True,
+            "glm": True,
+        },
+        "by_agent": {
+            "glm": {"ok": 4, "error": 0, "rate_limited": 0},
+            "gemini": {"ok": 2, "error": 0, "rate_limited": 0},
         },
     }
     out = _eval_orient_runtime_js(payload)
@@ -130,8 +138,9 @@ def test_orient_runtime_cards_inventory_agents_and_gemini_retired():
     for agent in ("claude", "codex", "cursor", "kimi", "grok", "deepseek", "agy"):
         assert f"<div class=\"title\">{agent}</div>" in html
 
-    # Retired agent gemini must NOT be present as a live card
+    # Retired CLI seats must NOT reappear from agents/headroom/by_agent history
     assert "<div class=\"title\">gemini</div>" not in html
+    assert "<div class=\"title\">glm</div>" not in html
 
 
 def test_orient_runtime_cards_headroom_keys_inclusion():
@@ -326,8 +335,9 @@ def test_orient_runtime_cards_real_collector_payload_contract(tmp_path: Path, mo
                 html,
             )
 
-    # Gemini (retired in registry) is not rendered
+    # Retired CLI seats are not rendered
     assert "<div class=\"title\">gemini</div>" not in html
+    assert "<div class=\"title\">glm</div>" not in html
 
 
 def test_orient_endpoint_to_render_contract(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
@@ -376,3 +386,4 @@ def test_orient_endpoint_to_render_contract(tmp_path: Path, monkeypatch: pytest.
         html,
     )
     assert "<div class=\"title\">gemini</div>" not in html
+    assert "<div class=\"title\">glm</div>" not in html

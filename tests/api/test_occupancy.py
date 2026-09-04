@@ -24,7 +24,7 @@ from scripts.api.observer_presence import (
     reset_observer_presence,
     upsert_presence,
 )
-from scripts.api.occupancy import MAC_OPERATOR_HOST_ID, parse_host_id_map
+from scripts.api.occupancy import MAC_OPERATOR_HOST_ID, _in_process_api_host_load, parse_host_id_map
 from scripts.api.occupancy_local import write_marker
 from scripts.api.occupancy_sanitize import occupant as _occupant
 from scripts.api.occupancy_sanitize import opaque_host_id as _opaque_host_id
@@ -123,7 +123,11 @@ def _assert_quiet_mac_row(host: dict) -> None:
 
 def test_occupancy_enumerates_both_default_hosts_without_opaque_map(tmp_path, monkeypatch) -> None:
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    monkeypatch.setenv("ATLAS_RUN_ROOT", str(tmp_path / "run-root"))
+    (tmp_path / "run-root").mkdir()
     monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
+    monkeypatch.delenv("LU_MONITOR_HOST_ID", raising=False)
+    monkeypatch.setattr("scripts.api.occupancy.sys.platform", "linux")
     fake = atlas_job.FakeHostAdapter()
     atlas_job.set_host_adapter(fake)
     try:
@@ -133,29 +137,29 @@ def test_occupancy_enumerates_both_default_hosts_without_opaque_map(tmp_path, mo
         data = resp.json()
         assert data["schema"] == "monitor-occupancy.v1"
         assert sorted(data["hosts"].keys()) == ["host-teacher", "mac-operator"]
-        for host_id in ("host-teacher",):
-            entry = data["hosts"][host_id]
-            assert entry["host_id"] == host_id
-            assert entry["status"] == "unavailable"
-            assert entry["error"] == "unreachable"
-            assert entry["idle_or_empty"] is False
-            assert entry["occupants"] == []
-            assert entry["occupant_count"] == 0
-            assert entry["ai_seats"] == []
-            assert "cpu_count" not in entry
-            assert "mem" not in entry
-            assert set(entry["burn_sources"]) == {
-                "atlas_job",
-                "driver",
-                "foundry",
-                "service",
-                "observer",
-            }
+        teacher = data["hosts"]["host-teacher"]
+        assert teacher["host_id"] == "host-teacher"
+        assert teacher["status"] == "fresh"
+        assert "error" not in teacher
+        assert "cpu_count" in teacher
+        assert teacher["occupant_count"] == 0
+        assert set(teacher["burn_sources"]) == {
+            "atlas_job",
+            "driver",
+            "foundry",
+            "service",
+            "observer",
+        }
+        assert teacher["burn_sources"]["atlas_job"]["state"] == "clear"
         _assert_quiet_mac_row(data["hosts"]["mac-operator"])
         text = resp.text
         for alias in _ALIAS_LEAKS:
             assert alias not in text
         assert "host-job" not in data["hosts"]
+        # Unmapped host-job is not queryable.
+        denied = client.get("/api/occupancy?host_id=host-job")
+        assert denied.status_code == 400
+        assert denied.json()["detail"] == "unknown host_id"
     finally:
         atlas_job.set_host_adapter(None)
         load_mod.clear_host_load_cache()
@@ -894,7 +898,11 @@ def test_occupancy_expired_marker_is_clear(tmp_path, monkeypatch) -> None:
 
 def test_occupancy_unmapped_default_host_query(tmp_path, monkeypatch) -> None:
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    monkeypatch.setenv("ATLAS_RUN_ROOT", str(tmp_path / "run-root"))
+    (tmp_path / "run-root").mkdir()
     monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
+    monkeypatch.delenv("LU_MONITOR_HOST_ID", raising=False)
+    monkeypatch.setattr("scripts.api.occupancy.sys.platform", "linux")
     fake = atlas_job.FakeHostAdapter()
     atlas_job.set_host_adapter(fake)
     try:
@@ -904,11 +912,79 @@ def test_occupancy_unmapped_default_host_query(tmp_path, monkeypatch) -> None:
         assert list(data["hosts"].keys()) == ["host-teacher"]
         teacher = data["hosts"]["host-teacher"]
         assert teacher["host_id"] == "host-teacher"
-        assert teacher["status"] == "unavailable"
-        assert teacher["error"] == "unreachable"
-        assert teacher["idle_or_empty"] is False
+        assert teacher["status"] == "fresh"
+        assert "error" not in teacher
+        assert "cpu_count" in teacher
         assert teacher["occupant_count"] == 0
         assert teacher["ai_seats"] == []
+        assert teacher["burn_sources"]["atlas_job"]["state"] == "clear"
+    finally:
+        atlas_job.set_host_adapter(None)
+        load_mod.clear_host_load_cache()
+
+
+def test_in_process_api_host_load_without_atlas_run_root(monkeypatch: pytest.MonkeyPatch) -> None:
+    """In-process glance must not require ATLAS_RUN_ROOT (API unit omits it)."""
+    monkeypatch.delenv("ATLAS_RUN_ROOT", raising=False)
+    entry = _in_process_api_host_load()
+    assert entry["status"] != "unavailable"
+    assert entry.get("error") != "unreachable"
+    assert entry["status"] == "fresh"
+    assert "cpu_count" in entry
+    assert "loadavg" in entry
+    assert "mem" in entry
+    assert "disk" in entry
+
+
+def test_occupancy_empty_map_host_teacher_fresh_without_atlas_run_root(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    monkeypatch.delenv("ATLAS_RUN_ROOT", raising=False)
+    monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
+    monkeypatch.delenv("LU_MONITOR_HOST_ID", raising=False)
+    monkeypatch.setattr("scripts.api.occupancy.sys.platform", "linux")
+    fake = atlas_job.FakeHostAdapter()
+    atlas_job.set_host_adapter(fake)
+    try:
+        resp = client.get("/api/occupancy?host_id=host-teacher")
+        assert resp.status_code == 200
+        teacher = resp.json()["hosts"]["host-teacher"]
+        assert teacher["status"] != "unavailable"
+        assert teacher.get("error") != "unreachable"
+        assert teacher["status"] in {"fresh", "stale"}
+        assert "cpu_count" in teacher
+    finally:
+        atlas_job.set_host_adapter(None)
+        load_mod.clear_host_load_cache()
+
+
+def test_occupancy_empty_map_in_process_load_failure_atlas_job_unknown(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Unavailable in-process load must not report atlas_job clear (idle glance)."""
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
+    monkeypatch.delenv("LU_MONITOR_HOST_ID", raising=False)
+    monkeypatch.setattr("scripts.api.occupancy.sys.platform", "linux")
+
+    def _boom(*_args, **_kwargs):
+        raise OSError("collect_host_load failed")
+
+    monkeypatch.setattr(atlas_job, "collect_host_load", _boom)
+    fake = atlas_job.FakeHostAdapter()
+    atlas_job.set_host_adapter(fake)
+    try:
+        load_mod.clear_host_load_cache()
+        resp = client.get("/api/occupancy?host_id=host-teacher")
+        assert resp.status_code == 200
+        teacher = resp.json()["hosts"]["host-teacher"]
+        assert teacher["status"] == "unavailable"
+        assert teacher["error"] == "unreachable"
+        assert teacher["burn_sources"]["atlas_job"]["state"] == "unknown"
+        assert teacher["burn_sources"]["atlas_job"]["state"] != "clear"
+        assert teacher["burn_state"] == "unknown"
+        assert teacher["idle_or_empty"] is False
     finally:
         atlas_job.set_host_adapter(None)
         load_mod.clear_host_load_cache()

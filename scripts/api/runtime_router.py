@@ -43,6 +43,7 @@ from agent_runtime.adapters.acpx import (
     TRANSPORT_ENV as ACPX_TRANSPORT_ENV,
 )
 from agent_runtime.adapters.gemini import has_gemini_oauth_credentials, resolve_gemini_auth_mode
+from agent_runtime.agent_identity import RETIRED_AGENT_ALIASES
 from agent_runtime.usage import has_headroom
 
 from scripts.fleet_comms import message_plane
@@ -442,6 +443,10 @@ def list_runtime_agents(ctx: MonitorContext) -> list[dict[str, Any]]:
                 binary = str(obj.name)
 
             agent_name = str(obj.name)
+            # Retired CLI seats (gemini→agy, glm→cursor) stay off the live roster.
+            # Usage history may still mention them; inventory must not.
+            if agent_name in RETIRED_AGENT_ALIASES:
+                break
             registry_default = _registry_models.get(agent_name, getattr(obj, "default_model", None))
             last_model = last_used.get(agent_name)
             headroom_model = last_model or registry_default

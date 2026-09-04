@@ -201,7 +201,7 @@ tr:last-child td { border-bottom: none; }
   </section>
 
   <section class="card purple">
-    <div class="card-header"><h2>&#9201; Headroom</h2><div class="muted">Using last-used or default model</div></div>
+    <div class="card-header"><h2>&#9201; Headroom</h2><div class="muted">Model used for the 5-min rate-limit probe for this adapter</div></div>
     <div class="banner" id="headroom-banner"></div>
     <div id="headroom-content" class="empty">Loading...</div>
   </section>
@@ -269,7 +269,7 @@ function renderAgents(agents) {
     document.getElementById('agents-content').innerHTML = '<div class="empty">No runtime agents found</div>';
     return;
   }
-  document.getElementById('agents-content').innerHTML = `<table>
+  document.getElementById('agents-content').innerHTML = `<p class="muted" style="margin:0 0 10px">Headroom Model = model used for the 5-min rate-limit probe for this adapter (last-used, else default).</p><table>
     <thead><tr><th>Name</th><th>Binary</th><th>Default Model</th><th>Headroom Model</th><th>Supported Modes</th></tr></thead>
     <tbody>${agents.map(agent => `<tr>
       <td>${escapeHtml(agent.name || '—')}</td>

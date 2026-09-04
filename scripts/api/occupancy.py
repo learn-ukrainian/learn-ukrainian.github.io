@@ -15,16 +15,19 @@ from __future__ import annotations
 import asyncio
 import math
 import os
+import sys
 import threading
 import time
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
 
 from scripts.api import atlas_jobs_router as load_mod
+from scripts.api import config
 from scripts.api.monitor_context import MonitorContext, get_ctx
 from scripts.api.observer_presence import (
     PRESENCE_FRESHNESS_SECONDS,
@@ -54,11 +57,14 @@ _FOUNDRY_TASK_IDS = frozenset({"ukrainian-data-foundry", "phase3-cycle007-eviden
 
 
 # Default glance: one production Linux host + Mac observer. ``host-job`` remains
-# queryable when mapped or requested explicitly, but is not a ghost glance row.
+# queryable only when mapped; it is never a ghost glance row.
 DEFAULT_GLANCE_HOST_IDS = ("host-teacher",)
 # Back-compat alias: callers that enumerate the default glance use this name.
 DEFAULT_HOST_IDS = DEFAULT_GLANCE_HOST_IDS
-QUERYABLE_DEFAULT_HOST_IDS = frozenset({"host-teacher", "host-job"})
+# Production Linux opaque id (empty-map API host fills this row in-process).
+PRODUCTION_LINUX_HOST_ID = DEFAULT_GLANCE_HOST_IDS[0]
+# Unmapped ``host-job`` is not queryable; mapped values come from the env map.
+QUERYABLE_DEFAULT_HOST_IDS = frozenset({PRODUCTION_LINUX_HOST_ID})
 MAC_OPERATOR_HOST_ID = "mac-operator"
 _BURN_SOURCE_NAMES = ("atlas_job", "driver", "foundry", "service", "observer")
 _BURN_SOURCE_STATES = frozenset({"active", "clear", "unknown"})
@@ -151,6 +157,76 @@ def _unavailable_load_entry(*, now: datetime | None = None) -> dict[str, Any]:
         "observed_at": clock.isoformat().replace("+00:00", "Z"),
         "age_seconds": 0.0,
     }
+
+
+def fills_in_process_api_host(opaque: str, mapping: dict[str, str]) -> bool:
+    """True when empty-map Linux API should collect this glance row locally."""
+    if mapping:
+        return False
+    if opaque != PRODUCTION_LINUX_HOST_ID:
+        return False
+    return sys.platform != "darwin"
+
+
+def _in_process_load_run_root() -> Path:
+    """Disk root for in-process load. Prefer ATLAS_RUN_ROOT; else checkout.
+
+    The API systemd unit does not set ``ATLAS_RUN_ROOT``. ``collect_host_load``
+    only uses the path for local disk_usage, so the Monitor checkout is a safe
+    checkout-mode default — never call ``atlas_job._run_root()`` here.
+    """
+    override = os.environ.get("ATLAS_RUN_ROOT", "").strip()
+    if override:
+        return Path(override)
+    return Path(config.PROJECT_ROOT)
+
+
+def _in_process_api_host_load(*, now: datetime | None = None) -> dict[str, Any]:
+    """Collect load for the empty-map production Linux glance row (no SSH)."""
+    clock = now or datetime.now(UTC)
+    try:
+        metrics = atlas_job.collect_host_load(run_root=_in_process_load_run_root())
+    except Exception:
+        return _unavailable_load_entry(now=clock)
+    if not isinstance(metrics, dict):
+        return _unavailable_load_entry(now=clock)
+    shaped: dict[str, Any] = {
+        "status": "fresh",
+        "observed_at": clock.isoformat().replace("+00:00", "Z"),
+        "age_seconds": 0.0,
+    }
+    shaped.update(metrics)
+    return shaped
+
+
+def _load_entry_for_selected(
+    opaque: str,
+    canonical: str | None,
+    *,
+    mapping: dict[str, str],
+    fresh: bool,
+    now: datetime,
+) -> dict[str, Any]:
+    if canonical is not None:
+        return load_mod._get_host_load_entry(canonical, fresh=fresh)
+    if fills_in_process_api_host(opaque, mapping):
+        return _in_process_api_host_load(now=now)
+    return _unavailable_load_entry(now=now)
+
+
+async def _load_entry_for_selected_async(
+    opaque: str,
+    canonical: str | None,
+    *,
+    mapping: dict[str, str],
+    fresh: bool,
+    now: datetime,
+) -> dict[str, Any]:
+    if canonical is not None:
+        return await load_mod._get_host_load_entry_async(canonical, fresh=fresh)
+    if fills_in_process_api_host(opaque, mapping):
+        return await asyncio.to_thread(_in_process_api_host_load, now=now)
+    return _unavailable_load_entry(now=now)
 
 
 def parse_host_id_map(raw: str | None = None) -> dict[str, str]:
@@ -573,7 +649,31 @@ def _payload_from_entries(
     mapping = snapshot.host_id_map
     for opaque, canonical in selected.items():
         load_entry = load_entries.get(opaque) or _unavailable_load_entry(now=snapshot.now)
-        atlas_occupants, atlas_source = _atlas_job_read(canonical, load_entry)
+        if canonical is None and fills_in_process_api_host(opaque, mapping):
+            # Empty-map API host: no remote registry key; load is local.
+            # Do not treat whole-machine loadavg as atlas_job burn — that signal
+            # is for remote atlas runners with SSH load samples.
+            # Match remote atlas_job honesty: unavailable/failed load => unknown,
+            # never clear (which would imply a readable idle glance).
+            atlas_occupants: list[dict[str, str | None]] = []
+            load_readable = str(load_entry.get("status") or "") in {"fresh", "stale"}
+            job_unit = load_entry.get("job_unit")
+            job_active = False
+            if isinstance(job_unit, dict):
+                try:
+                    job_active = int(job_unit.get("active_count") or 0) > 0
+                except (TypeError, ValueError):
+                    job_active = False
+            atlas_source = {
+                "state": _source_state(
+                    readable=load_readable,
+                    occupants=atlas_occupants,
+                    active=job_active,
+                ),
+                "observation_age_s": _safe_age(load_entry.get("age_seconds")),
+            }
+        else:
+            atlas_occupants, atlas_source = _atlas_job_read(canonical, load_entry)
         driver_read = read_session_streams(
             host_id=opaque,
             mapping=mapping,
@@ -652,10 +752,13 @@ def occupancy_payload(
 
     load_entries: dict[str, dict[str, Any]] = {}
     for opaque, canonical in selected.items():
-        if canonical is None:
-            load_entries[opaque] = _unavailable_load_entry(now=snapshot.now)
-        else:
-            load_entries[opaque] = load_mod._get_host_load_entry(canonical, fresh=fresh)
+        load_entries[opaque] = _load_entry_for_selected(
+            opaque,
+            canonical,
+            mapping=snapshot.host_id_map,
+            fresh=fresh,
+            now=snapshot.now,
+        )
     return _finalize_payload(
         _payload_from_entries(selected, load_entries, snapshot=snapshot),
         host_id,
@@ -686,10 +789,15 @@ async def _occupancy_payload_async(
     keys = []
     for opaque, canonical in selected.items():
         keys.append(opaque)
-        if canonical is None:
-            tasks.append(asyncio.sleep(0, result=_unavailable_load_entry(now=snapshot.now)))
-        else:
-            tasks.append(load_mod._get_host_load_entry_async(canonical, fresh=fresh))
+        tasks.append(
+            _load_entry_for_selected_async(
+                opaque,
+                canonical,
+                mapping=snapshot.host_id_map,
+                fresh=fresh,
+                now=snapshot.now,
+            )
+        )
 
     entries = await asyncio.gather(*tasks)
     load_entries = dict(zip(keys, entries, strict=True))

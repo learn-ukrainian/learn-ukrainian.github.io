@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Probe the tunneled job-host Monitor for notebook driver launchers.
+"""Probe the production Monitor plane on loopback for Mac tunnel clients.
 
-Drivers prefer the job-host plane at loopback (the persistent tunnel). If that
-Monitor is down, launchers must still start on the notebook — they must not
-enable the retired local sqlite. This module never prints host aliases or
-occupancy env.
+Drivers prefer the one production Linux Monitor at loopback (the persistent
+tunnel from the Mac observer). If that Monitor is down, launchers must still
+start on the Mac — they must not enable the retired local sqlite. This module
+never prints host aliases or occupancy env.
 """
 
 from __future__ import annotations
@@ -37,10 +37,10 @@ def _get_json(path: str, *, timeout: float) -> dict[str, Any]:
 
 
 def check_driver_plane(*, timeout: float = 2.0) -> tuple[PlaneStatus, str]:
-    """Return launcher posture for the job-host plane.
+    """Return launcher posture for the production Monitor plane.
 
-    ``ok`` — loopback Monitor is the job-host observer.
-    ``degraded`` — VPS/tunnel unreachable; start on the notebook anyway.
+    ``ok`` — loopback Monitor is the production Linux plane.
+    ``degraded`` — production Monitor/tunnel unreachable; start on the Mac anyway.
     ``skipped`` — hermetic tests opted out.
     """
     if os.environ.get(ENV_SKIP, "").strip() == "1":
@@ -58,23 +58,23 @@ def check_driver_plane(*, timeout: float = 2.0) -> tuple[PlaneStatus, str]:
     ):
         return (
             "degraded",
-            "job-host Monitor unreachable on loopback; starting on notebook. "
+            "production Monitor unreachable on loopback; starting on Mac. "
             "Fleet sqlite stays retired until the tunnel is back.",
         )
     if str(health.get("status") or "") != "ok":
         return (
             "degraded",
-            "job-host Monitor health is not ok; starting on notebook. "
+            "production Monitor health is not ok; starting on Mac. "
             "Fleet sqlite stays retired until the tunnel is back.",
         )
     schema = fleet.get("schema") if isinstance(fleet.get("schema"), dict) else {}
     if schema.get("db_exists") is not True:
         return (
             "degraded",
-            "job-host fleet db is not visible; starting on notebook. "
+            "production fleet db is not visible; starting on Mac. "
             "Fleet sqlite stays retired until the tunnel is back.",
         )
-    return "ok", "job-host plane reachable on loopback"
+    return "ok", "production plane reachable on loopback"
 
 
 def format_launcher_line(status: PlaneStatus, reason: str) -> str:
@@ -89,7 +89,7 @@ def build_parser() -> argparse.ArgumentParser:
     return argparse.ArgumentParser(
         prog="plane_tunnel_gate.py",
         description=(
-            "Probe the tunneled job-host Monitor before notebook driver launch.\n"
+            "Probe the production Monitor on loopback before Mac driver launch.\n"
             "Use it to warn when the plane is down; do not use it to start a "
             "second Monitor or reopen retired Mac sqlite."
         ),
@@ -99,13 +99,13 @@ def build_parser() -> argparse.ArgumentParser:
             "  LU_SKIP_PLANE_TUNNEL_CHECK=1 .venv/bin/python scripts/orchestration/plane_tunnel_gate.py\n\n"
             "Outputs:\n"
             "  Prints a one-line plane status. Degraded probes still exit 0 so "
-            "drivers start on the notebook; they never reopen retired sqlite.\n\n"
+            "drivers start on the Mac; they never reopen retired sqlite.\n\n"
             "Exit codes:\n"
             "  0 after a probe (ok, degraded, or skipped); 2 on CLI misuse.\n\n"
             "Related:\n"
             "  Dispatch: scripts/orchestration/job_host_exec.py\n"
             "  Fleet: scripts/lib/fleet_comms_cold_start.sh\n"
-            "  Issue: #7062\n"
+            "  Issue: #7177\n"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
