@@ -166,17 +166,18 @@
       "additionalProperties": false,
       "required": [
         "gate_id", "requires", "a6_receipt_valid", "a2_rights_resolved",
-        "all_slots_assigned", "slots_ready", "slots_residual",
+        "all_slots_assigned", "upstream_stage_evidence_present", "slots_ready", "slots_residual",
         "factory_slice_ready", "owner_role", "blocked_reason_code"
       ],
       "properties": {
         "gate_id": {"const": "v4-a7-factory-gate-v1"},
         "requires": {
-          "const": ["a6_receipt_independently_valid", "per_slot_a2_rights_resolved", "per_slot_manifest_assignment"]
+          "const": ["a6_receipt_independently_valid", "per_slot_a2_rights_resolved", "per_slot_manifest_assignment", "per_slot_upstream_stage_evidence"]
         },
         "a6_receipt_valid": {"type": "boolean"},
         "a2_rights_resolved": {"type": "boolean"},
         "all_slots_assigned": {"type": "boolean"},
+        "upstream_stage_evidence_present": {"type": "boolean"},
         "slots_ready": {"type": "integer", "minimum": 0, "maximum": 100},
         "slots_residual": {"type": "integer", "minimum": 0, "maximum": 100},
         "factory_slice_ready": {"type": "boolean"},

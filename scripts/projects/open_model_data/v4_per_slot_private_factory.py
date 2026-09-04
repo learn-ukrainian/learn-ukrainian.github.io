@@ -35,21 +35,30 @@ only inputs are three already-public artifacts --
 * the frozen 100-slot V4 pilot slot manifest (``slot_series`` -- public slot
   IDs only, never a real ``source_unit_id``).
 
+It reuses ``v4_a7_original_row_factory.factory_readiness`` for the per-slot
+signal itself, which is *also* a pure function of A6's own already-public
+per-slot ``a6_residuals`` -- A2 rights and manifest assignment metadata
+alone were never sufficient (see A7's own fix for the false-positive bug
+this closed); this module inherits that same truthful per-slot signal
+rather than re-deriving a metadata-only approximation of it.
+
 Three independent parts:
 
-1. ``per_slot_gate`` -- reuses (never duplicates)
-   ``v4_a7_original_row_factory.per_slot_readiness`` to independently
-   re-derive, per frozen slot, whether that slot's own stratum has a
-   resolved A2 rights/coverage residual *and* is marked ``ASSIGNED`` in the
-   manifest. Right now zero slots satisfy both: every one of the manifest's
-   eight strata is still ``UNASSIGNED_PENDING_A2_A3`` (an A2/A3-owned lever
-   this module does not control), so ``slots_ready`` is 0 and
+1. ``per_slot_gate`` -- reuses (never duplicates) A7's own
+   ``factory_readiness`` to independently re-derive, per frozen slot,
+   whether that slot's own stratum has a resolved A2 rights/coverage
+   residual, is marked ``ASSIGNED`` in the manifest, *and* has no remaining
+   residual against it in A6's own already-public per-slot evidence. Right
+   now zero slots satisfy all three: every one of the manifest's eight
+   strata is still ``UNASSIGNED_PENDING_A2_A3`` (an A2/A3-owned lever this
+   module does not control) and A6's own ``a6_residuals`` still lists every
+   frozen slot as ``independence_unavailable``, so ``slots_ready`` is 0 and
    ``slots_residual`` is 100 -- matching the public slot-commitment
    assignment receipt's own "0 assigned / 100 residual" count. Because the
-   manifest-level assignment lever is the actual blocker for every single
-   slot today, this module never needs to open A4's private extraction
-   ledger to decide readiness -- so it does not, keeping this pass's
-   private-artifact footprint at zero.
+   manifest-level assignment lever and A6's own upstream evidence are the
+   actual blockers for every single slot today, this module never needs to
+   open A4's private extraction ledger to decide readiness -- so it does
+   not, keeping this pass's private-artifact footprint at zero.
 2. ``build_private_ledger`` -- the private, per-slot working ledger this
    pass would populate with real candidate rows once slots go ready. Today
    it carries the same per-slot readiness signal already public via A7's own
@@ -143,8 +152,9 @@ def _load(path: Path) -> dict[str, Any]:
 
 def check_per_slot_gate(root: Path = ROOT) -> dict[str, Any]:
     """Independently re-derive per-slot readiness from A2's and the
-    manifest's own public state, reusing (never duplicating)
-    ``v4_a7_original_row_factory.per_slot_readiness`` -- never trusting A7's
+    manifest's own public state plus A6's own already-public per-slot
+    evidence, reusing (never duplicating)
+    ``v4_a7_original_row_factory.factory_readiness`` -- never trusting A7's
     own declared fields, never opening ``batch_state/``. Also independently
     re-validates the A7 receipt itself (structural validity only); a slot
     can never be counted ready if the upstream A7 receipt does not
@@ -184,7 +194,12 @@ def check_per_slot_gate(root: Path = ROOT) -> dict[str, Any]:
     except a7.OriginalRowFactoryError:
         a7_valid = False
 
-    readiness = a7.per_slot_readiness(manifest, a2_receipt)
+    # ``a7.factory_readiness`` reuses A7's own per-slot readiness, which
+    # already incorporates A6's own already-public per-slot evidence -- A2
+    # rights and manifest assignment metadata alone are never enough to
+    # advance a slot past a stage that has not itself proven the required
+    # work done.
+    readiness = a7.factory_readiness(root)
     slots_ready = sum(1 for record in readiness if record["slot_ready"]) if a7_valid else 0
     slots_residual = len(readiness) - slots_ready
 
@@ -225,16 +240,15 @@ def build_private_ledger(root: Path = ROOT) -> dict[str, Any]:
     """The private, never-committed, per-slot working ledger this pass would
     populate with real candidate rows once a slot's own stratum resolves.
     Every field here is already independently reproducible from public
-    artifacts alone (A2's residuals, the manifest's own assignment state) --
-    nothing secret lives here today. It is private only because
-    ``batch_state/`` is this repo's private operational-state home (never
-    committed), not because today's zero-row content needs confidentiality.
-    ``candidate_rows`` stays empty: independent authorship has no automated
-    source, and every frozen slot's own manifest assignment state still
-    blocks construction regardless."""
-    manifest = _load(root / "data/projects/open_model_data/admission/dataset_v4_pilot_slot_manifest_v1.json")
-    a2_receipt = _load(root / "data/projects/open_model_data/admission/dataset_v4_a2_source_operation_admission_receipt_v1.json")
-    readiness = a7.per_slot_readiness(manifest, a2_receipt)
+    artifacts alone (A2's residuals, the manifest's own assignment state,
+    and A6's own already-public per-slot ``a6_residuals``) -- nothing secret
+    lives here today. It is private only because ``batch_state/`` is this
+    repo's private operational-state home (never committed), not because
+    today's zero-row content needs confidentiality. ``candidate_rows`` stays
+    empty: independent authorship has no automated source, and every frozen
+    slot's own manifest assignment state and A6's own upstream evidence
+    still block construction regardless."""
+    readiness = a7.factory_readiness(root)
     return {
         "ledger_id": "v4-private-per-slot-factory-ledger-v1",
         "controlling_outcome_sha256": V4_SHA256,
