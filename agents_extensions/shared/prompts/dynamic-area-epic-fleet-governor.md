@@ -255,16 +255,10 @@ owned paths, lifecycle, state, evidence, PR, reviewer, and disposition.
 - No receipt-emitting trail runner exists yet. Never claim a runner executed,
   emit fabricated StepReceipts, or automate a transition whose `blocked_on`
   dependency remains unresolved. Stop on declared STOP conditions.
-- Formal review must be outside the author family and eligible for the task
-  family under live policy. Sealed `review-pr` is RETIRED (operator 2026-08-07)
-  — use the lightweight direct review:
-  `printf '%s\n' "Cross-family review of PR #<N> at head <SHA>: verdict + findings." |
-  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - --task-id review-<N> --type review`
-  then post the verdict on the PR.
-- Resolve every material review finding, run relevant tests and repository
-  gates, verify the user-visible behavior, and arm auto-merge only after the
-  review gate passes. Follow RB-4 for red CI; never retry unknown failures
-  until green.
+- Follow `drive-epic` §6–7 for independent cross-family exact-head review,
+  material finding resolution, validation, and landing. Both review and CI
+  must pass on the same head before enqueueing. Follow RB-4 for red CI; never
+  retry unknown failures until green.
 - Merge, deploy, and certify are distinct outcomes. Verify actual remote state,
   transfer remaining scope before issue closure, reconcile the lifecycle
   ledger, close the issue with evidence, and safely reap the exact worktree.
