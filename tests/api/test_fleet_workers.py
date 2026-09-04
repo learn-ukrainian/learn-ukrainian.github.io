@@ -34,7 +34,7 @@ loop_client = TestClient(
     raise_server_exceptions=False,
 )
 
-_PLACEHOLDER_MAP = "teach-box=host-teacher,job-box=host-job"
+_PLACEHOLDER_MAP = "teach-box=host-teacher,worker-box=host-worker"
 _IP = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")
 _ALIAS_LEAKS = ("atlas-runner", "hramatka", "vps")
 
@@ -74,7 +74,7 @@ def _service() -> dict[str, Any]:
 
 
 def _document(
-    host_id: str = "host-job",
+    host_id: str = "host-worker",
     *,
     workers: list[dict[str, Any]] | None = None,
     collected_at: str | None = None,
@@ -130,21 +130,32 @@ def test_workers_route_schema(monkeypatch: pytest.MonkeyPatch) -> None:
     assert isinstance(data["hosts"], list)
 
 
+def test_retired_host_job_mapping_never_yields_worker_listing(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A mapping that still points a canonical alias at the retired host-job
+    id must not resurrect it as a worker-listing host, mapped or not."""
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "atlas-runner=host-job")
+    monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: set())
+    response = client.get("/api/fleet/workers/v1?host_id=host-job")
+    assert response.status_code == 200
+    data = response.json()
+    assert not any(host.get("host_id") == "host-job" for host in data["hosts"])
+
+
 def test_v1_report_workers_unreported(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
     monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: set())
     loop_client.post("/api/fleet/projects/v1/report", json=_document())
-    host = _host_by_id(client.get("/api/fleet/workers/v1?host_id=host-job").json(), "host-job")
+    host = _host_by_id(client.get("/api/fleet/workers/v1?host_id=host-worker").json(), "host-worker")
     assert host["workers_status"] == "unreported"
     assert host["workers"] == []
-    assert "unreported:host-job" in client.get("/api/fleet/workers/v1").json()["attention"]
+    assert "unreported:host-worker" in client.get("/api/fleet/workers/v1").json()["attention"]
 
 
 def test_v2_empty_workers_verified_zero(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
     monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: set())
     loop_client.post("/api/fleet/projects/v1/report", json=_document(workers=[]))
-    host = _host_by_id(client.get("/api/fleet/workers/v1?host_id=host-job").json(), "host-job")
+    host = _host_by_id(client.get("/api/fleet/workers/v1?host_id=host-worker").json(), "host-worker")
     assert host["workers_status"] == "reported"
     assert host["workers"] == []
 
@@ -156,7 +167,7 @@ def test_remote_reported_workers_surface(monkeypatch: pytest.MonkeyPatch) -> Non
         "/api/fleet/projects/v1/report",
         json=_document(workers=[_worker_row()]),
     )
-    host = _host_by_id(client.get("/api/fleet/workers/v1?host_id=host-job").json(), "host-job")
+    host = _host_by_id(client.get("/api/fleet/workers/v1?host_id=host-worker").json(), "host-worker")
     assert host["workers_status"] == "reported"
     assert len(host["workers"]) == 1
     assert host["workers"][0]["source"] == "project_state"
@@ -175,7 +186,7 @@ def test_same_task_id_different_run_id_two_rows(monkeypatch: pytest.MonkeyPatch)
             ]
         ),
     )
-    workers = _host_by_id(client.get("/api/fleet/workers/v1?host_id=host-job").json(), "host-job")["workers"]
+    workers = _host_by_id(client.get("/api/fleet/workers/v1?host_id=host-worker").json(), "host-worker")["workers"]
     run_ids = {row["run_id"] for row in workers}
     assert run_ids == {"11111111", "22222222"}
 
@@ -210,12 +221,12 @@ def test_monotonic_ingest_rejects_stale_report(monkeypatch: pytest.MonkeyPatch) 
     older = (datetime.now(UTC) - timedelta(minutes=2)).isoformat().replace("+00:00", "Z")
     newer_doc = _document(workers=[], collected_at=newer)
     assert loop_client.post("/api/fleet/projects/v1/report", json=newer_doc).status_code == 200
-    stored_before = get_stored_report("host-job")
+    stored_before = get_stored_report("host-worker")
     assert stored_before is not None
     stale = loop_client.post("/api/fleet/projects/v1/report", json=_document(workers=[], collected_at=older))
     assert stale.status_code == 409
     assert stale.json()["detail"] == "stale_report"
-    stored_after = get_stored_report("host-job")
+    stored_after = get_stored_report("host-worker")
     assert stored_after is not None
     assert stored_after.document == stored_before.document
 
@@ -271,13 +282,13 @@ def test_oversized_task_id_dropped_not_500(
         encoding="utf-8",
     )
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
-    monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-job")
-    monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: {"host-job"})
+    monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-worker")
+    monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: {"host-worker"})
     monkeypatch.setattr("scripts.api.delegate_router._tasks_dir", lambda ctx=None: tasks)
-    response = client.get("/api/fleet/workers/v1?host_id=host-job")
+    response = client.get("/api/fleet/workers/v1?host_id=host-worker")
     assert response.status_code == 200
     data = response.json()
-    host = _host_by_id(data, "host-job")
+    host = _host_by_id(data, "host-worker")
     assert not any(worker["id"] == task_id for worker in host["workers"])
     assert data["counts"]["skipped"] == 1
 
@@ -289,13 +300,13 @@ def test_validate_workers_list_rejects_none() -> None:
 
 def test_marker_without_timestamps_not_live() -> None:
     now = datetime.now(UTC)
-    assert _marker_fresh({"host_id": "host-job", "kind": "service", "task_id": "x", "agent": "codex"}, now=now) is False
+    assert _marker_fresh({"host_id": "host-worker", "kind": "service", "task_id": "x", "agent": "codex"}, now=now) is False
 
 
 def test_marker_within_ttl_is_live() -> None:
     now = datetime.now(UTC)
     payload = {
-        "host_id": "host-job",
+        "host_id": "host-worker",
         "kind": "service",
         "task_id": "x",
         "agent": "codex",
@@ -308,7 +319,7 @@ def test_marker_past_ttl_not_live() -> None:
     now = datetime.now(UTC)
     stale = now - timedelta(hours=1)
     payload = {
-        "host_id": "host-job",
+        "host_id": "host-worker",
         "kind": "service",
         "task_id": "x",
         "agent": "codex",
@@ -465,7 +476,7 @@ def test_driver_opaque_host_claim_not_unattributed(tmp_path: Path) -> None:
     heartbeat = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     _insert_driver_lease(
         db,
-        holder_host_id="host-job",
+        holder_host_id="host-worker",
         heartbeat=heartbeat,
         expires=expires,
         instance_id="inst-real",
@@ -473,7 +484,7 @@ def test_driver_opaque_host_claim_not_unattributed(tmp_path: Path) -> None:
     attributed, unattributed = collect_mod.collect_driver_workers(db_path=db)
     assert unattributed == []
     assert len(attributed) == 1
-    assert attributed[0].host_id == "host-job"
+    assert attributed[0].host_id == "host-worker"
     assert attributed[0].row.id == "inst-real"
     payload = workers_payload(session_db=db)
     assert UNATTRIBUTED_HOST_ID not in {host["host_id"] for host in payload["hosts"]}
@@ -514,7 +525,7 @@ def test_related_links_equal_instance_id(tmp_path: Path) -> None:
     heartbeat = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     conn.execute("INSERT INTO sessions VALUES ('epic:1', 's1', 'open')")
     conn.execute(
-        "INSERT INTO stream_leases VALUES ('epic:1','s1','active','claude',NULL,'shared-inst','t1','host-job',?,?)",
+        "INSERT INTO stream_leases VALUES ('epic:1','s1','active','claude',NULL,'shared-inst','t1','host-worker',?,?)",
         (heartbeat, expires),
     )
     conn.commit()
@@ -532,7 +543,7 @@ def test_related_links_equal_instance_id(tmp_path: Path) -> None:
                 state="live",
                 age_s=1,
             ),
-            host_id="host-job",
+            host_id="host-worker",
             identity=collect_mod.WorkerIdentity("driver", "driver", "shared-inst"),
             instance_id="shared-inst",
             task_id="t1",
@@ -549,13 +560,13 @@ def test_related_links_equal_instance_id(tmp_path: Path) -> None:
                 state="live",
                 age_s=1,
             ),
-            host_id="host-job",
+            host_id="host-worker",
             identity=collect_mod.WorkerIdentity("marker", "service", "svc-1"),
             instance_id="shared-inst",
             task_id="t1",
         ),
     ]
-    collect_mod._related_links(workers, host_id="host-job")
+    collect_mod._related_links(workers, host_id="host-worker")
     assert workers[0].related
     assert workers[1].related
 
@@ -577,12 +588,12 @@ def test_marker_kind_normalization(tmp_path: Path) -> None:
         "agent": "codex",
         "task_id": "compile-1",
         "epic": None,
-        "host_id": "host-job",
+        "host_id": "host-worker",
         "updated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
         "expires_at": (datetime.now(UTC) + timedelta(minutes=5)).isoformat().replace("+00:00", "Z"),
     }
     (root / "foundry-compile-1.json").write_text(json.dumps(payload), encoding="utf-8")
-    rows = collect_mod.collect_marker_workers(host_id="host-job", root=root)
+    rows = collect_mod.collect_marker_workers(host_id="host-worker", root=root)
     assert rows[0].row.kind == "service"
 
 
@@ -620,9 +631,9 @@ def test_workers_payload_warm_cache_skips_delegate_collector(
         encoding="utf-8",
     )
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
-    monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-job")
+    monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-worker")
     monkeypatch.setattr("scripts.api.delegate_router._tasks_dir", lambda ctx=None: tasks)
-    monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: {"host-job"})
+    monkeypatch.setattr(collect_mod, "_self_host_ids", lambda: {"host-worker"})
     monkeypatch.setattr(
         collect_mod,
         "collect_job_workers",

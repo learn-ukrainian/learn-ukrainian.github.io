@@ -43,7 +43,7 @@ loop_client = TestClient(
 )
 client = TestClient(app, raise_server_exceptions=False)
 
-_PLACEHOLDER_MAP = "teach-box=host-teacher,job-box=host-job"
+_PLACEHOLDER_MAP = "teach-box=host-teacher,worker-box=host-worker"
 
 PII_CODEXBAR_FIXTURE = {
     "provider": "claude",
@@ -134,7 +134,7 @@ def _mac_operator_report() -> dict[str, Any]:
     }
 
 
-def _observer_presence_body(*, status: str, host_id: str = "host-job") -> dict[str, Any]:
+def _observer_presence_body(*, status: str, host_id: str = "host-worker") -> dict[str, Any]:
     return {
         "agent": "claude",
         "kind": "observer",
@@ -145,7 +145,7 @@ def _observer_presence_body(*, status: str, host_id: str = "host-job") -> dict[s
     }
 
 
-def _seed_host_job_empty_host_alarm(
+def _seed_host_worker_empty_host_alarm(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
@@ -155,10 +155,10 @@ def _seed_host_job_empty_host_alarm(
     fake = atlas_job.FakeHostAdapter()
     atlas_job.set_host_adapter(fake)
     load_mod.clear_host_load_cache()
-    load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
+    load_mod.set_host_load_cache("worker-box", fake.host_load("worker-box"))
     posted = loop_client.post("/api/fleet/projects/v1/report", json=_mac_operator_report())
     assert posted.status_code == 200
-    occupancy_mod._idle_since_mono["host-job"] = time.monotonic() - occupancy_mod.EMPTY_HOST_IDLE_THRESHOLD_S - 1
+    occupancy_mod._idle_since_mono["host-worker"] = time.monotonic() - occupancy_mod.EMPTY_HOST_IDLE_THRESHOLD_S - 1
 
 
 def test_collector_allowlist_strips_pii_from_codexbar_fixture(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -225,23 +225,23 @@ def test_stale_lane_usage_yields_unknown_capacity(monkeypatch: pytest.MonkeyPatc
     fake = atlas_job.FakeHostAdapter()
     atlas_job.set_host_adapter(fake)
     load_mod.clear_host_load_cache()
-    load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
+    load_mod.set_host_load_cache("worker-box", fake.host_load("worker-box"))
     try:
-        doc = _document_with_lane_usage(host_id="host-job")
+        doc = _document_with_lane_usage(host_id="host-worker")
         upsert_report(doc, now_mono=100.0)
         hosts = {
-            "host-job": {
-                "host_id": "host-job",
+            "host-worker": {
+                "host_id": "host-worker",
                 "status": "fresh",
                 "idle_or_empty": True,
             }
         }
-        occupancy_mod._idle_since_mono["host-job"] = 50.0
+        occupancy_mod._idle_since_mono["host-worker"] = 50.0
         payload_stale = occupancy_mod._evaluate_attention(
             hosts,
             now_mono=100.0 + REPORT_TTL_SECONDS + 1,
         )
-        assert "empty_host_unknown_capacity:host-job" in payload_stale
+        assert "empty_host_unknown_capacity:host-worker" in payload_stale
     finally:
         atlas_job.set_host_adapter(None)
         load_mod.clear_host_load_cache()
@@ -253,11 +253,11 @@ def test_idle_since_boot_blocks_alarm_before_threshold(monkeypatch: pytest.Monke
     fake = atlas_job.FakeHostAdapter()
     atlas_job.set_host_adapter(fake)
     load_mod.clear_host_load_cache()
-    load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
+    load_mod.set_host_load_cache("worker-box", fake.host_load("worker-box"))
     upsert_report(_document_with_lane_usage())
     try:
         payload = occupancy_mod.occupancy_payload()
-        assert payload["hosts"]["host-job"]["idle_or_empty"] is True
+        assert payload["hosts"]["host-worker"]["idle_or_empty"] is True
         assert payload["attention"] == []
     finally:
         atlas_job.set_host_adapter(None)
@@ -274,12 +274,12 @@ def test_alarm_after_idle_threshold_with_under_pace_lane(
     fake = atlas_job.FakeHostAdapter()
     atlas_job.set_host_adapter(fake)
     load_mod.clear_host_load_cache()
-    load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
+    load_mod.set_host_load_cache("worker-box", fake.host_load("worker-box"))
     upsert_report(_document_with_lane_usage(lane_usage=[_under_pace_lane_usage()]))
-    occupancy_mod._idle_since_mono["host-job"] = time.monotonic() - occupancy_mod.EMPTY_HOST_IDLE_THRESHOLD_S - 1
+    occupancy_mod._idle_since_mono["host-worker"] = time.monotonic() - occupancy_mod.EMPTY_HOST_IDLE_THRESHOLD_S - 1
     try:
         payload = occupancy_mod.occupancy_payload()
-        assert "empty_host_underused:host-job" in payload["attention"]
+        assert "empty_host_underused:host-worker" in payload["attention"]
     finally:
         atlas_job.set_host_adapter(None)
         load_mod.clear_host_load_cache()
@@ -294,9 +294,9 @@ def test_alarm_none_when_all_lanes_at_or_over_pace(
     fake = atlas_job.FakeHostAdapter()
     atlas_job.set_host_adapter(fake)
     load_mod.clear_host_load_cache()
-    load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
+    load_mod.set_host_load_cache("worker-box", fake.host_load("worker-box"))
     upsert_report(_document_with_lane_usage(lane_usage=[_lane_usage(used_pct=95.0)]))
-    occupancy_mod._idle_since_mono["host-job"] = time.monotonic() - occupancy_mod.EMPTY_HOST_IDLE_THRESHOLD_S - 1
+    occupancy_mod._idle_since_mono["host-worker"] = time.monotonic() - occupancy_mod.EMPTY_HOST_IDLE_THRESHOLD_S - 1
     try:
         payload = occupancy_mod.occupancy_payload()
         assert payload["attention"] == []
@@ -311,15 +311,15 @@ def test_activity_resets_idle_timer(monkeypatch: pytest.MonkeyPatch, tmp_path: P
     fake = atlas_job.FakeHostAdapter()
     atlas_job.set_host_adapter(fake)
     load_mod.clear_host_load_cache()
-    load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
+    load_mod.set_host_load_cache("worker-box", fake.host_load("worker-box"))
     upsert_report(_document_with_lane_usage())
-    occupancy_mod._idle_since_mono["host-job"] = time.monotonic() - occupancy_mod.EMPTY_HOST_IDLE_THRESHOLD_S - 1
-    occupancy_mod._ever_had_activity["host-job"] = True
+    occupancy_mod._idle_since_mono["host-worker"] = time.monotonic() - occupancy_mod.EMPTY_HOST_IDLE_THRESHOLD_S - 1
+    occupancy_mod._ever_had_activity["host-worker"] = True
     occupancy_mod._evaluate_attention(
-        {"host-job": {"idle_or_empty": False, "status": "fresh"}},
+        {"host-worker": {"idle_or_empty": False, "status": "fresh"}},
         now_mono=time.monotonic(),
     )
-    occupancy_mod._idle_since_mono.pop("host-job", None)
+    occupancy_mod._idle_since_mono.pop("host-worker", None)
     payload = occupancy_mod.occupancy_payload()
     assert payload["attention"] == []
 
@@ -354,7 +354,7 @@ def test_unmocked_post_lane_usage_then_occupancy_attention(
     fake = atlas_job.FakeHostAdapter()
     atlas_job.set_host_adapter(fake)
     load_mod.clear_host_load_cache()
-    load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
+    load_mod.set_host_load_cache("worker-box", fake.host_load("worker-box"))
     try:
         report = {
             "host_id": "mac-operator",
@@ -367,11 +367,11 @@ def test_unmocked_post_lane_usage_then_occupancy_attention(
         }
         posted = loop_client.post("/api/fleet/projects/v1/report", json=report)
         assert posted.status_code == 200
-        occupancy_mod._idle_since_mono["host-job"] = time.monotonic() - occupancy_mod.EMPTY_HOST_IDLE_THRESHOLD_S - 1
+        occupancy_mod._idle_since_mono["host-worker"] = time.monotonic() - occupancy_mod.EMPTY_HOST_IDLE_THRESHOLD_S - 1
         response = client.get("/api/occupancy")
         assert response.status_code == 200
         data = response.json()
-        assert "empty_host_underused:host-job" in data["attention"]
+        assert "empty_host_underused:host-worker" in data["attention"]
     finally:
         atlas_job.set_host_adapter(None)
         load_mod.clear_host_load_cache()
@@ -399,7 +399,7 @@ def test_empty_host_alarm_fires_with_idle_observer_seat(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
-    _seed_host_job_empty_host_alarm(monkeypatch, tmp_path)
+    _seed_host_worker_empty_host_alarm(monkeypatch, tmp_path)
     try:
         presence = loop_client.post(
             "/api/observer/presence",
@@ -410,10 +410,10 @@ def test_empty_host_alarm_fires_with_idle_observer_seat(
         response = client.get("/api/occupancy")
         assert response.status_code == 200
         data = response.json()
-        host = data["hosts"]["host-job"]
+        host = data["hosts"]["host-worker"]
         assert host["burn_state"] == "idle"
         assert host["idle_or_empty"] is True
-        assert "empty_host_underused:host-job" in data["attention"]
+        assert "empty_host_underused:host-worker" in data["attention"]
     finally:
         atlas_job.set_host_adapter(None)
         load_mod.clear_host_load_cache()
@@ -423,7 +423,7 @@ def test_empty_host_alarm_suppressed_by_active_observer_seat(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
-    _seed_host_job_empty_host_alarm(monkeypatch, tmp_path)
+    _seed_host_worker_empty_host_alarm(monkeypatch, tmp_path)
     try:
         presence = loop_client.post(
             "/api/observer/presence",
@@ -434,10 +434,10 @@ def test_empty_host_alarm_suppressed_by_active_observer_seat(
         response = client.get("/api/occupancy")
         assert response.status_code == 200
         data = response.json()
-        host = data["hosts"]["host-job"]
+        host = data["hosts"]["host-worker"]
         assert host["burn_state"] == "active"
         assert host["idle_or_empty"] is False
-        assert "empty_host_underused:host-job" not in data["attention"]
+        assert "empty_host_underused:host-worker" not in data["attention"]
     finally:
         atlas_job.set_host_adapter(None)
         load_mod.clear_host_load_cache()
