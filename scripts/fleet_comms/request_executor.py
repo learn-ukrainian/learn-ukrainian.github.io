@@ -11,7 +11,9 @@ via ``scripts.fleet_comms.message_plane`` without flipping production defaults.
 
 from __future__ import annotations
 
+import hashlib
 import json
+import re
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -23,7 +25,7 @@ from scripts.control_plane.storage import (
     StoreId,
     assert_component_supported,
 )
-from scripts.fleet_comms.adapter_conformance import CaptureInput, conform
+from scripts.fleet_comms.adapter_conformance import CaptureInput, conform, parse_capture_events
 from scripts.fleet_comms.artifacts import ArtifactStore
 from scripts.fleet_comms.contracts import CompletionState, ResponseEnvelope, new_id
 from scripts.fleet_comms.endpoints import EndpointRegistry, load_endpoint_registry
@@ -400,6 +402,11 @@ class RequestExecutor:
         # lands in ONE transaction below.
         request_state = self._map_completion_to_request_state(envelope.completion_state)
         now_s = _iso(_utc_now())
+        # The same event stream adapter conformance itself read: an explicit
+        # events tuple when the runtime supplied one, otherwise the JSONL the
+        # provider actually wrote to stdout. The V4 observation's runtime
+        # model identity is derived from these, never from a caller field.
+        observed_events = tuple(events) if events else tuple(parse_capture_events(stdout))
         if self._is_pg:
             # psycopg autocommit connection: all finalize writes share ONE
             # explicit transaction (create_request pg pattern).
@@ -411,6 +418,7 @@ class RequestExecutor:
                     envelope=envelope,
                     request_state=request_state,
                     now_s=now_s,
+                    events=observed_events,
                 )
         else:
             self._conn.execute("BEGIN IMMEDIATE")
@@ -422,6 +430,7 @@ class RequestExecutor:
                     envelope=envelope,
                     request_state=request_state,
                     now_s=now_s,
+                    events=observed_events,
                 )
             except Exception:
                 self._conn.rollback()
@@ -451,6 +460,7 @@ class RequestExecutor:
         envelope: ResponseEnvelope,
         request_state: str,
         now_s: str,
+        events: tuple[dict[str, Any], ...] = (),
     ) -> None:
         """All finalize writes; runs inside the caller's open transaction."""
         ph = "%s" if self._is_pg else "?"
@@ -471,6 +481,20 @@ class RequestExecutor:
                 spec = {}
         spec["raw_capture_artifact_id"] = art.artifact_id
         spec["completion_state"] = envelope.completion_state.value
+        # PR #7662 repair 7: the canonical execution observation is written
+        # here, in the same transaction that finalizes the request, from
+        # facts this boundary derives. Its text-free outcome code is
+        # persisted with the request so a refusal is auditable.
+        spec["v4_execution_observation"] = self._record_v4_execution_observation(
+            request_id=request_id,
+            req=req,
+            art=art,
+            envelope=envelope,
+            request_state=request_state,
+            events=events,
+            now_s=now_s,
+            conn=self._conn,
+        )
         self._conn.execute(
             f"""UPDATE requests SET state = {ph}, completion_state = {ph}, updated_at = {ph},
                invocation_spec_json = {ph}
@@ -590,23 +614,299 @@ class RequestExecutor:
         )
         self._commit()
 
-
-    # --- V4 canonical authority store (PR #7662 repair 6) ------------------
+    # --- V4 canonical execution authority (PR #7662 repair 6/7) ------------
     #
-    # The sanctioned execution-boundary call site: a V4 dispatch caller
-    # records the durable execution observation here only after this
-    # executor has *already* finalized the underlying request as
-    # ``CompletionState.COMPLETE`` (``execute_capture``) -- this is a thin
-    # passthrough to ``self.store`` (the one connection/dialect/root this
-    # executor actually owns), not a second re-verification of terminality.
-    # ``v4_fleet_execution_authority`` never calls this write path; it only
-    # ever resolves an already-recorded observation.
+    # This executor IS the execution service boundary the operator-approved
+    # architecture designates as the exclusive writer of
+    # ``v4_execution_observations``. Two halves, deliberately split around
+    # the execution itself:
+    #
+    # * ``authorize_v4_execution`` runs BEFORE the model does, while the
+    #   request is still ``queued``. It freezes the slot
+    #   (``task_id``/``run_id``/``role``), the frozen row/packet digests and
+    #   the model the dispatch boundary intends, and derives the harness
+    #   itself from the registry-resolved recipient. It cannot be called
+    #   after execution starts, so a binding can never be minted to describe
+    #   a run that already happened.
+    # * ``_build_v4_execution_observation`` runs inside
+    #   ``_finalize_capture``'s transaction, AFTER this executor has proven
+    #   the request terminal. It accepts nothing from any caller: the
+    #   envelope comes from adapter conformance, the result digest from the
+    #   artifact this store actually persisted, the runtime model identity
+    #   from the provider's own capture events, the harness from the
+    #   registry-resolved recipient, the verification tool ids from
+    #   canonically recorded Sources invocations, and (for a reviewer) the
+    #   verdict from a machine-readable marker in the model's own output.
+    #   Anything unobservable, non-terminal, mismatched against the frozen
+    #   binding, or cross-run refuses to record at all -- and a refusal is
+    #   itself recorded, text-free, as ``v4_execution_observation`` in the
+    #   request's own invocation spec, so an operator can see why a slot has
+    #   no admissible evidence.
 
-    def record_v4_execution_observation(self, record: dict[str, Any]) -> None:
-        self.store.record_v4_execution_observation(record)
+    #: The one machine-readable token a reviewer execution must emit for its
+    #: verdict to be independently observable. Only the token is ever
+    #: retained -- never the review text around it.
+    V4_REVIEW_VERDICT_RE = re.compile(r"^[ \t]*V4-REVIEW-VERDICT:[ \t]*(PASS|FAIL)[ \t]*$", re.MULTILINE)
+
+    def authorize_v4_execution(
+        self,
+        *,
+        request_id: str,
+        task_id: str,
+        run_id: str,
+        role: str,
+        expected_seat_or_model: str,
+        row_content_sha256: str,
+        packet_sha256: str,
+        authorship_receipt_sha256: str | None = None,
+        rubric_sha256: str | None = None,
+    ) -> dict[str, Any]:
+        """Bind a still-queued request to one V4 slot, before it executes.
+
+        Refuses once the request has left ``queued`` -- there is no path to
+        authorize an execution retroactively. ``expected_harness`` is
+        DERIVED here from the registry-resolved recipient, never accepted as
+        an argument; the prompt digest is derived later, at finalization,
+        from the exact request-body bytes this executor stored.
+        """
+        from scripts.fleet_comms import v4_canonical_authority_store as v4_store
+
+        req = self.get_request(request_id)
+        if req.state != "queued":
+            raise RequestExecutorError(
+                f"request {request_id} is not authorizable for a V4 slot "
+                f"(state={req.state}); only a still-queued request may be bound"
+            )
+        harness = self._derive_harness(req)
+        if harness is None:
+            raise RequestExecutorError(
+                f"request {request_id} resolves to recipient {req.resolved_recipient!r}, "
+                "which is not one of the canonical known harness executables -- refusing"
+            )
+        binding = {
+            "request_id": request_id,
+            "task_id": task_id,
+            "run_id": run_id,
+            "role": role,
+            "expected_seat_or_model": expected_seat_or_model,
+            "expected_harness": harness,
+            "row_content_sha256": row_content_sha256,
+            "packet_sha256": packet_sha256,
+            "authorship_receipt_sha256": authorship_receipt_sha256,
+            "rubric_sha256": rubric_sha256,
+        }
+        with self.store._transaction() as conn:
+            v4_store.record_execution_dispatch_binding(binding, conn=conn, is_pg=self._is_pg, commit=False)
+        return binding
+
+    def resolve_v4_execution_dispatch_binding(self, *, request_id: str) -> dict[str, Any] | None:
+        from scripts.fleet_comms import v4_canonical_authority_store as v4_store
+
+        return v4_store.resolve_execution_dispatch_binding(request_id=request_id, conn=self._conn, is_pg=self._is_pg)
 
     def resolve_v4_execution_observation(self, *, task_id: str, run_id: str, role: str) -> dict[str, Any] | None:
         return self.store.resolve_v4_execution_observation(task_id=task_id, run_id=run_id, role=role)
+
+    @staticmethod
+    def _derive_harness(req: RequestRecord) -> str | None:
+        """The harness is whatever durable agent-driver executable the
+        endpoint registry resolved this request to -- never the caller's
+        ``adapter=`` override and never a free string."""
+        from scripts.orchestration.thread_handoff import KNOWN_HARNESS_EXECUTABLES
+
+        candidate = (req.resolved_recipient or "").strip().lower()
+        return candidate if candidate in KNOWN_HARNESS_EXECUTABLES else None
+
+    @staticmethod
+    def _derive_observed_model(events: tuple[dict[str, Any], ...]) -> str | None:
+        """The exact runtime model identity, read out of the provider's own
+        capture events. Returns ``None`` unless the events name exactly one
+        model -- an unobserved or self-contradicting identity is never
+        guessed and never defaulted to the dispatch's expectation."""
+        seen: set[str] = set()
+        for event in events or ():
+            if not isinstance(event, dict):
+                continue
+            candidates = [event.get("model")]
+            message = event.get("message")
+            if isinstance(message, dict):
+                candidates.append(message.get("model"))
+            for value in candidates:
+                if isinstance(value, str) and value.strip():
+                    seen.add(value.strip())
+        return seen.pop() if len(seen) == 1 else None
+
+    def _derive_prompt_sha256(self, request_message_id: str) -> str | None:
+        """Hash the exact prompt bytes this executor durably stored for the
+        request -- the dispatch caller never supplies this digest."""
+        ph = "%s" if self._is_pg else "?"
+        row = self._conn.execute(
+            f"SELECT body_inline FROM comms_messages WHERE message_id = {ph}",
+            (request_message_id,),
+        ).fetchone()
+        if row is None:
+            return None
+        body = row["body_inline"]
+        if not isinstance(body, str) or not body:
+            return None
+        return hashlib.sha256(body.encode("utf-8")).hexdigest()
+
+    @staticmethod
+    def _fleet_receipt_sha256(*, req: RequestRecord, request_id: str, request_state: str, completion_state: str, artifact_id: str, now_s: str) -> str:
+        """A digest over this request's own durable lifecycle projection --
+        the executor's receipt that THIS request, resolved to THIS recipient,
+        reached THIS terminal state with THIS capture artifact."""
+        projection = {
+            "request_id": request_id,
+            "request_message_id": req.request_message_id,
+            "requested_recipient": req.requested_recipient,
+            "resolved_recipient": req.resolved_recipient,
+            "state": request_state,
+            "completion_state": completion_state,
+            "expires_at": req.expires_at,
+            "created_at": req.created_at,
+            "raw_capture_artifact_id": artifact_id,
+            "finalized_at": now_s,
+        }
+        return hashlib.sha256(
+            json.dumps(projection, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest()
+
+    @classmethod
+    def _derive_review_verdict(cls, response_text: str) -> str | None:
+        """The reviewer's own verdict token, read out of what the model
+        actually produced. Absent, or two different verdicts in one output,
+        is unobservable -- never resolved to a default."""
+        found = {match.group(1) for match in cls.V4_REVIEW_VERDICT_RE.finditer(response_text or "")}
+        return found.pop() if len(found) == 1 else None
+
+    def _build_v4_execution_observation(
+        self,
+        *,
+        binding: dict[str, Any],
+        req: RequestRecord,
+        request_id: str,
+        art: Any,
+        envelope: ResponseEnvelope,
+        request_state: str,
+        events: tuple[dict[str, Any], ...],
+        now_s: str,
+        conn: Any,
+    ) -> tuple[dict[str, Any] | None, str]:
+        """Derive one canonical execution observation, or explain the
+        refusal. Returns ``(record | None, reason_code)``."""
+        from scripts.fleet_comms import v4_canonical_authority_store as v4_store
+
+        if request_state != "complete" or envelope.completion_state is not CompletionState.COMPLETE:
+            return None, "refused:not-complete"
+        if envelope.terminal_event_observed is not True:
+            return None, "refused:no-terminal-event"
+        if envelope.process_returncode != 0:
+            return None, "refused:nonzero-returncode"
+        if not envelope.session_id:
+            return None, "refused:no-session-identity"
+        harness = self._derive_harness(req)
+        if harness is None or harness != binding["expected_harness"]:
+            return None, "refused:harness-mismatch"
+        observed_model = self._derive_observed_model(events)
+        if observed_model is None:
+            return None, "refused:model-unobserved"
+        if observed_model != binding["expected_seat_or_model"]:
+            return None, "refused:model-mismatch"
+        prompt_sha256 = self._derive_prompt_sha256(req.request_message_id)
+        if prompt_sha256 is None:
+            return None, "refused:prompt-unavailable"
+        verdict: str | None = None
+        if binding["role"] == "reviewer":
+            verdict = self._derive_review_verdict(envelope.response_text)
+            if verdict is None:
+                return None, "refused:verdict-unobserved"
+        record = {
+            "task_id": binding["task_id"],
+            "run_id": binding["run_id"],
+            "role": binding["role"],
+            "status": "done",
+            "return_code": 0,
+            "seat_or_model": observed_model,
+            "harness": harness,
+            "session_id": envelope.session_id,
+            "completion_state": envelope.completion_state.value,
+            "terminal_event_observed": True,
+            "process_returncode": 0,
+            "raw_capture_artifact_id": art.artifact_id,
+            "raw_capture_sha256": art.sha256,
+            "row_content_sha256": binding["row_content_sha256"],
+            "prompt_sha256": prompt_sha256,
+            "packet_sha256": binding["packet_sha256"],
+            "fleet_receipt_sha256": self._fleet_receipt_sha256(
+                req=req,
+                request_id=request_id,
+                request_state=request_state,
+                completion_state=envelope.completion_state.value,
+                artifact_id=art.artifact_id,
+                now_s=now_s,
+            ),
+            "verification_tool_ids": v4_store.resolve_sources_invocation_tool_ids(
+                request_id=request_id, conn=conn, is_pg=self._is_pg
+            ),
+            # Never a caller-declared attestation: only an execution
+            # dispatched through this blind V4 boundary can be observed at
+            # all, and the boundary has no argument that could set any of
+            # these true. The bytes those flags describe are pinned by
+            # ``prompt_sha256``/``packet_sha256`` above, whose blindness
+            # posture the A3 builder-packet receipt establishes.
+            "saw_source_text": False,
+            "saw_heldout": False,
+            "saw_eligible_unit_ids": False,
+            "authorship_receipt_sha256": binding["authorship_receipt_sha256"],
+            "rubric_sha256": binding["rubric_sha256"],
+            "verdict": verdict,
+        }
+        return record, "recorded"
+
+    def _record_v4_execution_observation(
+        self,
+        *,
+        request_id: str,
+        req: RequestRecord,
+        art: Any,
+        envelope: ResponseEnvelope,
+        request_state: str,
+        events: tuple[dict[str, Any], ...],
+        now_s: str,
+        conn: Any,
+    ) -> str:
+        """Runs inside ``_finalize_capture``'s open transaction. Returns the
+        text-free outcome code recorded in the request's invocation spec."""
+        from scripts.fleet_comms import v4_canonical_authority_store as v4_store
+
+        binding = v4_store.resolve_execution_dispatch_binding(request_id=request_id, conn=conn, is_pg=self._is_pg)
+        if binding is None:
+            return "unbound"
+        record, reason = self._build_v4_execution_observation(
+            binding=binding,
+            req=req,
+            request_id=request_id,
+            art=art,
+            envelope=envelope,
+            request_state=request_state,
+            events=events,
+            now_s=now_s,
+            conn=conn,
+        )
+        if record is None:
+            return reason
+        try:
+            v4_store._persist_execution_observation(
+                record, conn=conn, is_pg=self._is_pg, request_id=request_id, commit=False
+            )
+        except v4_store.CanonicalAuthorityStoreError:
+            # A conflicting observation already owns this slot. Leave the
+            # prior evidence exactly as it is and finalize the request
+            # normally -- the slot simply has no admissible evidence from
+            # this run, which is the fail-closed outcome.
+            return "refused:slot-conflict"
+        return "recorded"
 
 
 def open_executor(root: Path | None = None) -> RequestExecutor:

@@ -77,6 +77,17 @@ class CaptureInput:
     transport_metadata: Mapping[str, Any] | None = None
 
 
+def parse_capture_events(text: str) -> list[dict[str, Any]]:
+    """Public alias for the JSONL capture parser.
+
+    ``RequestExecutor`` reads the very same event stream this module
+    conforms, so that the V4 execution observation's runtime identity is
+    derived from the provider's own capture rather than a second, possibly
+    divergent, parse.
+    """
+    return _parse_jsonl(text)
+
+
 def _parse_jsonl(text: str) -> list[dict[str, Any]]:
     events: list[dict[str, Any]] = []
     for line in text.splitlines():

@@ -538,6 +538,28 @@ _V8_STATEMENTS = (
     )""",
 )
 
+# V4 canonical authority store, execution-boundary slice (PR #7662 repair 7):
+# the pre-execution dispatch authorization one V4 fleet request is bound to,
+# plus the request-correlation columns the execution boundary needs to derive
+# an observation's verification tool ids and to audit which request produced
+# which observation. Sqlite-dialect twin of ``pg_schema``'s v4.
+_V9_STATEMENTS = (
+    """CREATE TABLE IF NOT EXISTS v4_execution_dispatch_bindings (
+        request_id TEXT PRIMARY KEY,
+        task_id TEXT NOT NULL,
+        run_id TEXT NOT NULL,
+        role TEXT NOT NULL CHECK (role IN ('author', 'reviewer')),
+        record_sha256 TEXT NOT NULL,
+        record_json TEXT NOT NULL,
+        recorded_at TEXT NOT NULL,
+        UNIQUE (task_id, run_id, role)
+    )""",
+    "ALTER TABLE v4_execution_observations ADD COLUMN request_id TEXT",
+    "ALTER TABLE v4_sources_invocations ADD COLUMN request_id TEXT",
+    "CREATE UNIQUE INDEX IF NOT EXISTS idx_v4_execution_observations_request ON v4_execution_observations(request_id)",
+    "CREATE INDEX IF NOT EXISTS idx_v4_sources_invocations_request ON v4_sources_invocations(request_id)",
+)
+
 MIGRATIONS = (
     Migration(version=1, name="fleet-comms-v1-contracts", statements=_V1_STATEMENTS),
     Migration(
@@ -570,6 +592,11 @@ MIGRATIONS = (
         version=8,
         name="fleet-comms-v8-v4-canonical-authority",
         statements=_V8_STATEMENTS,
+    ),
+    Migration(
+        version=9,
+        name="fleet-comms-v9-v4-execution-dispatch-binding",
+        statements=_V9_STATEMENTS,
     ),
 )
 

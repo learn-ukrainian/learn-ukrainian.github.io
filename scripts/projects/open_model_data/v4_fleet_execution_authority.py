@@ -70,6 +70,7 @@ two opaque-ID wrappers and this module's own tests do.
 
 from __future__ import annotations
 
+import contextlib
 from dataclasses import dataclass
 from typing import Any
 
@@ -496,18 +497,41 @@ def _issue_reviewer_receipt_from_evidence(
 # canonical Fleet Comms store and fixed Hramatka key custody.
 
 
+def _open_canonical_authority_store() -> Any:
+    """The single module-level indirection point for canonical-authority
+    selection (PR #7662 repair 7). Production has exactly one implementation
+    and it takes no arguments: the operator-approved live Fleet Comms
+    PostgreSQL plane. There is no root, path, DSN, connection, store or
+    request-level parameter anywhere on this module's production surface
+    that could redirect it to a caller-owned SQLite plane, and a missing or
+    unavailable PG plane refuses rather than falling back. Tests substitute
+    an isolated ``tmp_path`` store here in-process -- the same
+    monkeypatch-the-fixed-internal-loader pattern the Sol acceptance matrix
+    sanctions for key custody and the production policy resolver."""
+    from scripts.fleet_comms import v4_canonical_authority_store as v4_store
+
+    return v4_store.open_production_authority_store()
+
+
 def _resolve_execution_observation(*, task_id: str, run_id: str, role: str) -> dict[str, Any] | None:
-    from scripts.fleet_comms.artifacts import ArtifactStore
+    """Resolve one canonical observation, or refuse. ``None`` means the
+    canonical authority was reachable and simply holds no record for this
+    opaque key; an authority that is not the approved PostgreSQL plane, or
+    that is unreachable, raises -- both outcomes refuse before any key
+    access, and neither ever degrades to a local store."""
+    from scripts.fleet_comms import v4_canonical_authority_store as v4_store
 
     try:
-        with ArtifactStore(readonly=True) as store:
-            return store.resolve_v4_execution_observation(task_id=task_id, run_id=run_id, role=role)
-    except Exception:
-        # Any store-layer failure (schema not yet applied, plane
-        # unreachable, etc.) is indistinguishable from "no observation was
-        # ever recorded" to this caller -- fail closed uniformly rather than
-        # leaking infrastructure state through a different exception shape.
-        return None
+        store = _open_canonical_authority_store()
+    except v4_store.CanonicalAuthorityUnavailableError as exc:
+        raise FleetExecutionError(f"canonical V4 execution authority unavailable -- refusing (no key access): {exc}") from exc
+    try:
+        return store.resolve_v4_execution_observation(task_id=task_id, run_id=run_id, role=role)
+    except Exception as exc:
+        raise FleetExecutionError("canonical V4 execution authority read failed -- refusing (no key access)") from exc
+    finally:
+        with contextlib.suppress(Exception):
+            store.close()
 
 
 def _load_signing_key(role: str) -> tuple[str, str]:

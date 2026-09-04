@@ -36,6 +36,7 @@ directly; only the opaque-ID wrapper and this module's own tests do.
 
 from __future__ import annotations
 
+import contextlib
 import re
 from typing import Any
 
@@ -136,16 +137,34 @@ def _issue_verifier_attestation_from_evidence(
 # --- production entrypoint: opaque invocation_id only (PR #7662 repair 6) --
 
 
+def _open_canonical_authority_store() -> Any:
+    """Fixed, argument-free canonical-authority selection -- see
+    ``v4_fleet_execution_authority._open_canonical_authority_store``. The
+    Sources resolver is held to the identical rule: only the
+    operator-approved live Fleet Comms PostgreSQL plane, never a
+    caller-owned SQLite store, path, connection or authority override."""
+    from scripts.fleet_comms import v4_canonical_authority_store as v4_store
+
+    return v4_store.open_production_authority_store()
+
+
 def _resolve_sources_invocation(*, invocation_id: str) -> dict[str, Any] | None:
-    from scripts.fleet_comms.artifacts import ArtifactStore
+    """``None`` means the canonical authority holds no record for this
+    opaque id; a non-PostgreSQL or unreachable authority raises. Both
+    refuse before any key access."""
+    from scripts.fleet_comms import v4_canonical_authority_store as v4_store
 
     try:
-        with ArtifactStore(readonly=True) as store:
-            return store.resolve_v4_sources_invocation(invocation_id=invocation_id)
-    except Exception:
-        # See v4_fleet_execution_authority._resolve_execution_observation --
-        # any store-layer failure fails closed as "unknown", uniformly.
-        return None
+        store = _open_canonical_authority_store()
+    except v4_store.CanonicalAuthorityUnavailableError as exc:
+        raise SourcesAuthorityError(f"canonical V4 Sources authority unavailable -- refusing (no key access): {exc}") from exc
+    try:
+        return store.resolve_v4_sources_invocation(invocation_id=invocation_id)
+    except Exception as exc:
+        raise SourcesAuthorityError("canonical V4 Sources authority read failed -- refusing (no key access)") from exc
+    finally:
+        with contextlib.suppress(Exception):
+            store.close()
 
 
 def _load_signing_key(role: str) -> tuple[str, str]:

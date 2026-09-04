@@ -133,6 +133,26 @@ _V3_V4_CANONICAL_AUTHORITY = (
     )""",
 )
 
+# V4 canonical authority store, execution-boundary slice (PR #7662 repair 7):
+# pre-execution dispatch authorization plus request-correlation columns. See
+# the sqlite twin ``scripts.fleet_comms.migrations._V9_STATEMENTS``.
+_V4_EXECUTION_DISPATCH_BINDING = (
+    """CREATE TABLE IF NOT EXISTS v4_execution_dispatch_bindings (
+        request_id TEXT PRIMARY KEY,
+        task_id TEXT NOT NULL,
+        run_id TEXT NOT NULL,
+        role TEXT NOT NULL CHECK (role IN ('author', 'reviewer')),
+        record_sha256 TEXT NOT NULL,
+        record_json TEXT NOT NULL,
+        recorded_at TEXT NOT NULL,
+        UNIQUE (task_id, run_id, role)
+    )""",
+    "ALTER TABLE v4_execution_observations ADD COLUMN IF NOT EXISTS request_id TEXT",
+    "ALTER TABLE v4_sources_invocations ADD COLUMN IF NOT EXISTS request_id TEXT",
+    "CREATE UNIQUE INDEX IF NOT EXISTS idx_v4_execution_observations_request ON v4_execution_observations(request_id)",
+    "CREATE INDEX IF NOT EXISTS idx_v4_sources_invocations_request ON v4_sources_invocations(request_id)",
+)
+
 MIGRATIONS: tuple[PgMigration, ...] = (
     PgMigration(
         version=1,
@@ -148,6 +168,11 @@ MIGRATIONS: tuple[PgMigration, ...] = (
         version=3,
         name="fleet-comms-pg-v3-v4-canonical-authority",
         statements=_V3_V4_CANONICAL_AUTHORITY,
+    ),
+    PgMigration(
+        version=4,
+        name="fleet-comms-pg-v4-execution-dispatch-binding",
+        statements=_V4_EXECUTION_DISPATCH_BINDING,
     ),
 )
 

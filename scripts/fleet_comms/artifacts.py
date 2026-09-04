@@ -743,36 +743,59 @@ class ArtifactStore:
                     reclaimed.append(digest)
         return reclaimed
 
-    # --- V4 canonical authority store (PR #7662 repair 6) ------------------
+    # --- V4 canonical authority store (PR #7662 repair 6/7) ----------------
     #
-    # Two narrow extensions of this same plane: the sole durable record of a
-    # terminal V4 fleet execution observation, and of a sanctioned Sources
-    # verifier-tool invocation. See ``scripts.fleet_comms.v4_canonical_
-    # authority_store`` for the schema/idempotency contract; these four
-    # methods only ever supply this store's own already-resolved connection
-    # and dialect -- they never open a second connection or resolve a
-    # second plane root, so a caller-injected ``root=`` (e.g. a test's
-    # ``tmp_path``) is honored exactly like every other ``ArtifactStore``
-    # operation.
-
-    def record_v4_execution_observation(self, record: dict[str, Any]) -> None:
-        self._refuse_readonly_write("record_v4_execution_observation")
-        from scripts.fleet_comms import v4_canonical_authority_store as v4_store
-
-        with self._transaction() as conn:
-            v4_store.record_execution_observation(record, conn=conn, is_pg=self._authority is Authority.PG)
+    # Read-only projections of this same plane, plus the exclusive Sources
+    # writer. There is deliberately NO method here that accepts a
+    # caller-built execution observation (PR #7662 repair 7, adjudicated F3
+    # blocker): the only writer of ``v4_execution_observations`` is
+    # ``RequestExecutor._finalize_capture``, which derives every field from
+    # the execution/capture/dispatch state it owns. These methods only ever
+    # supply this store's own already-resolved connection and dialect --
+    # they never open a second connection or resolve a second plane root,
+    # so a caller-injected ``root=`` (e.g. a test's ``tmp_path``) is honored
+    # exactly like every other ``ArtifactStore`` operation. Production never
+    # reaches this class with a caller-chosen root: it goes through
+    # ``v4_canonical_authority_store.open_production_authority_store``,
+    # which is argument-free and refuses anything but the approved
+    # PostgreSQL plane.
 
     def resolve_v4_execution_observation(self, *, task_id: str, run_id: str, role: str) -> dict[str, Any] | None:
         from scripts.fleet_comms import v4_canonical_authority_store as v4_store
 
         return v4_store.resolve_execution_observation(task_id=task_id, run_id=run_id, role=role, conn=self._conn, is_pg=self._authority is Authority.PG)
 
-    def record_v4_sources_invocation(self, record: dict[str, Any]) -> None:
-        self._refuse_readonly_write("record_v4_sources_invocation")
+    def record_v4_sources_invocation_from_tool_result(
+        self,
+        *,
+        tool_name: str,
+        arguments: dict[str, Any],
+        result_text: str,
+        tool_version: str,
+        request_id: str,
+        row_content_sha256: str,
+        claimed_lookup_ids: list[str],
+    ) -> dict[str, Any] | None:
+        """The exclusive Sources-invocation writer: builds the record from
+        the real call's own arguments and result, never from a caller-built
+        record (there is no such method). See ``v4_canonical_authority_
+        store.record_sources_invocation_from_tool_result``."""
+        self._refuse_readonly_write("record_v4_sources_invocation_from_tool_result")
         from scripts.fleet_comms import v4_canonical_authority_store as v4_store
 
         with self._transaction() as conn:
-            v4_store.record_sources_invocation(record, conn=conn, is_pg=self._authority is Authority.PG)
+            return v4_store.record_sources_invocation_from_tool_result(
+                conn=conn,
+                is_pg=self._authority is Authority.PG,
+                tool_name=tool_name,
+                arguments=arguments,
+                result_text=result_text,
+                tool_version=tool_version,
+                request_id=request_id,
+                row_content_sha256=row_content_sha256,
+                claimed_lookup_ids=claimed_lookup_ids,
+                commit=False,
+            )
 
     def resolve_v4_sources_invocation(self, *, invocation_id: str) -> dict[str, Any] | None:
         from scripts.fleet_comms import v4_canonical_authority_store as v4_store
