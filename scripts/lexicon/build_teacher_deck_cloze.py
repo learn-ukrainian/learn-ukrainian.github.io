@@ -75,7 +75,7 @@ def find_cloze_sentence(texts: list[str], forms: set[str]) -> tuple[str, str] | 
             sentence = sentence.strip()
             if not 15 <= len(sentence) <= 150 or "__" in sentence:
                 continue
-            for token in re.finditer(r"[а-щьюяєіїґА-ЩЬЮЯЄІЇҐ'’ʼ\-]+", sentence):
+            for token in re.finditer(r"[а-щьюяєіїґА-ЩЬЮЯЄІЇҐ'’ʼ\u0300\u0301\-]+", sentence):
                 if normalize_relation_word(token.group()) in forms:
                     return (
                         sentence[:token.start()] + "_____" + sentence[token.end():],

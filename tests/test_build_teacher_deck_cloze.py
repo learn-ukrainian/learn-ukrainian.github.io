@@ -35,6 +35,12 @@ def test_accepts_apostrophe_variants():
     )
 
 
+def test_stress_mark_stays_with_answer_not_blank():
+    assert find_cloze_sentence(["Я бачу нову бібліоте́ку."], {"бібліотеку"}) == (
+        "Я бачу нову _____.", "бібліоте́ку",
+    )
+
+
 def test_no_attested_context_means_no_invented_frame():
     assert find_cloze_sentence(["Це зовсім інше речення."], {"бібліотеку"}) is None
 
