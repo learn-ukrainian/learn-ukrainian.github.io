@@ -4,13 +4,21 @@ Extracts authentic textbook sentences from data/sources.db for all teacher vocab
 generates smart distractors, and writes site/public/lexicon/practice-cloze.teacher.json.
 """
 
+import argparse
 import json
 import random
 import re
 import sqlite3
+import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from scripts.lexicon.relation_pairs import normalize_relation_word
+from scripts.verification.vesum import verify_lemma
+
 INTAKE_JSON = REPO_ROOT / "data/lexicon/intake/private_teacher_lesson_intake_candidates.json"
 SOURCES_DB = REPO_ROOT / "data/sources.db"
 OUTPUT_PUBLIC_JSON = REPO_ROOT / "site/public/lexicon/practice-cloze.teacher.json"
@@ -60,10 +68,41 @@ def exclude_private_cloze_cards(cards: list[dict[str, object]]) -> list[dict[str
     ]
 
 
+def find_cloze_sentence(texts: list[str], forms: set[str]) -> tuple[str, str] | None:
+    """Blank one complete, VESUM-attested token, never a substring or other lemma."""
+    for text in texts:
+        for sentence in re.split(r"(?<=[.!?])\s+", text):
+            sentence = sentence.strip()
+            if not 15 <= len(sentence) <= 150 or "__" in sentence:
+                continue
+            for token in re.finditer(r"[а-щьюяєіїґА-ЩЬЮЯЄІЇҐ'’ʼ\-]+", sentence):
+                if normalize_relation_word(token.group()) in forms:
+                    return (
+                        sentence[:token.start()] + "_____" + sentence[token.end():],
+                        token.group(),
+                    )
+    return None
+
+
 def main():
-    if not INTAKE_JSON.exists() or not SOURCES_DB.exists():
-        print(f"Error: Missing {INTAKE_JSON} or {SOURCES_DB}")
-        return
+    parser = argparse.ArgumentParser(
+        description="Build teacher cloze from textbook sentences and VESUM forms. "
+        "Use for an authorized full rebuild, not a surgical update of the published deck.",
+        epilog="Example: /home/ops/learn-ukrainian/.venv/bin/python -m "
+        "scripts.lexicon.build_teacher_deck_cloze --sources-db data/sources.db "
+        "--vesum-db data/vesum.db\n"
+        "Outputs: both teacher-cloze JSON artifacts; no database writes.\n"
+        "Exit codes: 0 success; nonzero missing inputs or build failure.\n"
+        "Related: scripts/audit/check_teacher_cloze_content.py",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument("--sources-db", type=Path, default=SOURCES_DB,
+                        help="Textbook SQLite source (default: data/sources.db).")
+    parser.add_argument("--vesum-db", type=Path, default=REPO_ROOT / "data/vesum.db",
+                        help="VESUM SQLite dictionary (default: data/vesum.db).")
+    args = parser.parse_args()
+    if not INTAKE_JSON.exists() or not args.sources_db.exists() or not args.vesum_db.exists():
+        parser.error("Missing teacher intake, sources database, or VESUM database")
 
     with open(INTAKE_JSON, encoding="utf-8") as f:
         teacher_cand = json.load(f)
@@ -71,7 +110,7 @@ def main():
     teacher_entries = teacher_cand.get("auto_merge", [])
     teacher_lemmas = public_teacher_lemmas(teacher_entries)
 
-    conn = sqlite3.connect(SOURCES_DB)
+    conn = sqlite3.connect(f"file:{args.sources_db.resolve()}?mode=ro", uri=True)
 
     extracted_cloze = []
     cloze_count = 0
@@ -96,41 +135,25 @@ def main():
         if len(target_word) < 2:
             continue
 
-        try:
-            cursor = conn.execute(
-                "SELECT text FROM textbooks_fts WHERE text MATCH ? LIMIT 5",
-                (f'"{target_word}"',),
-            )
-            rows = cursor.fetchall()
-        except Exception:
+        # Filtering must not renumber later candidates from the same intake.
+        cloze_count += 1
+        forms = {
+            normalize_relation_word(row["word_form"])
+            for row in verify_lemma(target_word, db_path=args.vesum_db)
+        } - {None}
+        if not forms:
             continue
 
-        found_sentence = None
-        matched_word = None
+        cursor = conn.execute(
+            "SELECT text FROM textbooks_fts WHERE text MATCH ? LIMIT 5",
+            ('"' + target_word.replace('"', '""') + '"',),
+        )
+        rows = cursor.fetchall()
 
-        for row in rows:
-            text = row[0]
-            sentences = re.split(r"(?<=[.!?])\s+", text)
-            for s in sentences:
-                s_clean = s.strip()
-                if 15 <= len(s_clean) <= 150 and target_word.lower() in s_clean.lower():
-                    tokens = re.findall(r"[а-щьюяєіїґА-ЩЬЮЯЄІЇҐ'’ʼ\-]+", s_clean)
-                    for t in tokens:
-                        if target_word.lower() in t.lower():
-                            found_sentence = s_clean
-                            matched_word = t
-                            break
-                if found_sentence:
-                    break
-            if found_sentence:
-                break
-
-        if not (found_sentence and matched_word):
-            matched_word = target_word
-            found_sentence = f"Ключове слово для вивчення в цьому розділі: «{matched_word}»."
-
-        blanked = found_sentence.replace(matched_word, "_____")
-        cloze_count += 1
+        match = find_cloze_sentence([row[0] for row in rows], forms)
+        if match is None:
+            continue
+        blanked, matched_word = match
 
         # Select 3 distractors
         distractor_pool = [w for w in all_target_words if w.lower() != target_word.lower()]
@@ -164,6 +187,7 @@ def main():
             }
         )
 
+    conn.close()
     payload = {"cloze": exclude_private_cloze_cards(extracted_cloze)}
 
     OUTPUT_PUBLIC_JSON.parent.mkdir(parents=True, exist_ok=True)
@@ -175,6 +199,7 @@ def main():
         json.dump(payload, f, ensure_ascii=False, indent=2)
 
     print(f"Successfully generated {len(payload['cloze'])} Cloze items -> {OUTPUT_PUBLIC_JSON} and {OUTPUT_SRC_JSON}")
+
 
 if __name__ == "__main__":
     main()
