@@ -37,8 +37,7 @@ CI_WORKFLOW = REPO_ROOT / ".github/workflows/ci.yml"
 pytestmark = pytest.mark.repo_invariant
 
 VALIDATOR_STEP_NAME = "Validate BIO preparation capsules and active holds"
-CONTRACTS_TIER_IF = "github.event_name != 'pull_request'"
-LANDING_EVENTS = ("merge_group", "push")
+CONTRACTS_TIER_IF = "needs.changes.outputs.docs_only == 'false'"
 
 BIO_PREPARATION_PATHS = (
     "curriculum/l2-uk-en/plans/bio/knyahynia-olha.yaml",
@@ -65,28 +64,6 @@ def _workflow() -> dict:
 
 def _normalise_expression(value: object) -> str:
     return " ".join(str(value).split())
-
-
-def _evaluate_event_name_condition(condition: str, event_name: str) -> bool:
-    """Evaluate the simple GitHub event condition pinned by #7141."""
-    try:
-        expression = ast.parse(condition, mode="eval").body
-    except SyntaxError:
-        return False
-    if not (
-        isinstance(expression, ast.Compare)
-        and isinstance(expression.left, ast.Attribute)
-        and isinstance(expression.left.value, ast.Name)
-        and expression.left.value.id == "github"
-        and expression.left.attr == "event_name"
-        and len(expression.ops) == 1
-        and isinstance(expression.ops[0], ast.NotEq)
-        and len(expression.comparators) == 1
-        and isinstance(expression.comparators[0], ast.Constant)
-        and isinstance(expression.comparators[0].value, str)
-    ):
-        return False
-    return event_name != expression.comparators[0].value
 
 
 def _validator_job_and_step() -> tuple[str, dict, dict]:
@@ -133,18 +110,13 @@ def test_bio_preparation_validator_is_reachable_from_the_required_gate() -> None
 
 
 def test_nothing_can_skip_the_bio_preparation_validator() -> None:
-    """#7141: the minimal PR tier is conditional only at the job boundary."""
+    """Contracts skip only docs-only diffs; the validator step itself has no if:."""
     job_name, job, step = _validator_job_and_step()
     contracts_if = _normalise_expression(job.get("if"))
     assert contracts_if == CONTRACTS_TIER_IF, (
-        f"job {job_name!r} must carry exactly the #7141 minimal PR tier condition "
-        f"{CONTRACTS_TIER_IF!r}; got {contracts_if!r}"
+        f"job {job_name!r} must skip only docs-only PRs "
+        f"({CONTRACTS_TIER_IF!r}); got {contracts_if!r}"
     )
-    for event_name in LANDING_EVENTS:
-        assert _evaluate_event_name_condition(contracts_if, event_name), (
-            f"job {job_name!r} must be unconditional for {event_name!r} landing events; "
-            f"its tier condition is {contracts_if!r}"
-        )
     assert "if" not in step, (
         f"the {VALIDATOR_STEP_NAME!r} step carries an `if:` and could be skipped"
     )

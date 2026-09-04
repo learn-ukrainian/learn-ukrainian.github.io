@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Plan and verify duration-balanced pytest shards for the CI Gate.
+"""Plan and verify duration-balanced pytest shards for Cursor Cloud.
 
-Each full-tier shard collects the selected suite locally, groups every selected
+GitHub Actions CI no longer invokes this planner (``ci.yml`` uses a modulo
+file split). Cursor Cloud's ``cursor_cloud_full_pytest.sh`` still does.
+
+Each shard collects the selected suite locally, groups every selected
 node ID by test file, then uses deterministic longest-processing-time (LPT)
-assignment.  The collection and assignment run in parallel across the matrix;
-CI Gate reconstructs and verifies the complete partition from the shard
-artifacts.  ``write_plans`` remains available for offline tooling that wants
+assignment.  ``write_plans`` remains available for offline tooling that wants
 all four plans in one directory.
 
 Required selection (stage-1 slow-split): the identical mark expression

@@ -4610,7 +4610,7 @@ def test_gh_shim_blocks_pr_review_approve_without_opt_in(tmp_path):
     assert proc.returncode != 0
     assert "cannot merge or approve PRs" in proc.stderr
     assert "gh pr comment" in proc.stderr
-    assert "cf_attest" in proc.stderr
+    assert "resolved_model" in proc.stderr
     assert "real-gh" not in proc.stdout
 
 

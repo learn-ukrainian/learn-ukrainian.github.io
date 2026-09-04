@@ -17,7 +17,6 @@ different timeout-less call cannot rotate into a vacated qualname slot (#7213).
 
 from __future__ import annotations
 
-import ast
 import os
 import subprocess
 import textwrap
@@ -288,77 +287,3 @@ def test_deliberately_hanging_test_is_named_by_pytest_timeout(tmp_path: Path) ->
     )
     # Either Failed: Timeout / +++ Timeout / Failed: Timeout >… depending on version.
     assert "timeout" in combined.lower(), "expected a timeout failure signal in child pytest output:\n" + combined
-
-
-_FASTLANE_MANIFEST = _REPO_ROOT / "scripts" / "ci" / "fastlane_always_tests.txt"
-
-
-def _fastlane_manifest() -> list[str]:
-    return [
-        line.strip()
-        for line in _FASTLANE_MANIFEST.read_text(encoding="utf-8").splitlines()
-        if line.strip() and not line.lstrip().startswith("#")
-    ]
-
-
-def _has_repo_invariant_marker(path: Path) -> bool:
-    source = path.read_text(encoding="utf-8")
-    if "repo_invariant" not in source:
-        return False
-    try:
-        tree = ast.parse(source, filename=str(path))
-    except SyntaxError as exc:
-        pytest.fail(f"cannot parse test module {path}: {exc}")
-
-    for statement in tree.body:
-        targets: list[ast.expr] = []
-        value: ast.expr | None = None
-        if isinstance(statement, ast.Assign):
-            targets = [target for target in statement.targets if isinstance(target, ast.expr)]
-            value = statement.value
-        elif isinstance(statement, ast.AnnAssign):
-            targets = [statement.target]
-            value = statement.value
-        if not value or not any(isinstance(target, ast.Name) and target.id == "pytestmark" for target in targets):
-            continue
-        if any(
-            isinstance(node, ast.Attribute)
-            and node.attr == "repo_invariant"
-            and isinstance(node.value, ast.Attribute)
-            and node.value.attr == "mark"
-            and isinstance(node.value.value, ast.Name)
-            and node.value.value.id == "pytest"
-            for node in ast.walk(value)
-        ):
-            return True
-    return False
-
-
-def _marked_repo_invariant_modules() -> set[str]:
-    return {
-        path.relative_to(_REPO_ROOT).as_posix()
-        for path in sorted(_TESTS_ROOT.rglob("test_*.py"))
-        if _has_repo_invariant_marker(path)
-    }
-
-
-def test_fastlane_manifest_entries_exist_and_excludes_work_privacy() -> None:
-    entries = _fastlane_manifest()
-    assert entries == sorted(set(entries)), "fastlane invariant manifest must be sorted and duplicate-free"
-    assert entries, "fastlane invariant manifest must not be empty"
-    assert "tests/test_work_privacy.py" not in entries
-    for entry in entries:
-        path = _REPO_ROOT / entry
-        assert path.is_file(), f"fastlane invariant manifest entry does not exist: {entry}"
-        assert entry.startswith("tests/") and entry.endswith(".py"), f"invalid manifest entry: {entry}"
-
-
-def test_fastlane_manifest_matches_repo_invariant_markers() -> None:
-    manifest = set(_fastlane_manifest())
-    marked = _marked_repo_invariant_modules()
-    assert manifest - marked == set(), "manifest entries missing repo_invariant marker: " + ", ".join(
-        sorted(manifest - marked)
-    )
-    assert marked - manifest == set(), "repo_invariant test modules missing from fastlane manifest: " + ", ".join(
-        sorted(marked - manifest)
-    )

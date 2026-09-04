@@ -415,11 +415,10 @@ stale — re-run exact-head CF before any enqueue.
 
 PRs only — never commit or merge to `main` directly.
 
-**Binding public landing order (operator 2026-08-30 / #7450):** GitHub
-`required_approving_review_count` is 0 and the sole required check is CI Gate.
-Auto-merge / enqueue is **not** CF. That is how PRs #7447–#7449 hit `main` with
-empty reviews. Drivers follow this order, even when Gate already includes
-`cf-attest`:
+**Binding public landing order (operator 2026-08-30 / #7450; CF-attest retired
+2026-09-03):** GitHub `required_approving_review_count` is 0 and the sole required
+check is CI Gate. Auto-merge / enqueue is **not** review. That is how PRs
+#7447–#7449 hit `main` with empty reviews. Drivers follow this order:
 
 1. **Independent cross-family exact-head CF** — attested `resolved_model`,
    different family from the author, APPROVE on the current PR head.
@@ -445,8 +444,8 @@ green (lane model — there is no promoting orchestrator). Flag another lane's P
 Skill- or docs-only landings classify as merge_group `docs_skills` (#7018):
 the four pytest shards and coverage combine are no-op **success**, not skipped.
 
-**If the head moves, re-run exact-head CF before re-queue.** A new SHA makes the
-prior APPROVE stale (Gate `cf-attest` fail-closes on SHA mismatch).
+**If the head moves, re-run exact-head review before re-queue.** A new SHA makes the
+prior APPROVE stale.
 
 **Merge-queue kick is same-hour work (#7042).** A **kick** is `merge_group` CI Gate
 going red and GitHub dequeuing the PR — it lands back on the branch looking CLEAN,

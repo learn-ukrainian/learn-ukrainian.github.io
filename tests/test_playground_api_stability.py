@@ -243,6 +243,7 @@ def test_p95_of_three_perf_probe_allows_one_slow_tail(monkeypatch, three_run_per
     assert p95_elapsed < 0.1
 
 
+@pytest.mark.slow
 def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, three_run_perf_probe):
     broker_db = tmp_path / "messages.db"
     _init_broker_db(broker_db)

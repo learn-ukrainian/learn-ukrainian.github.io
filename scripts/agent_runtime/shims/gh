@@ -5,9 +5,9 @@
 # 1. Block prohibited PR merge/approval operations when AGENT_NO_MERGE=1 (#1403).
 #    Merge stays blocked. Native `gh pr review --approve` stays blocked too:
 #    with one shared GitHub identity a seat cannot approve its own authored
-#    PR anyway (#7472 / critical-rules §8.6.4). CF of record is a PR *comment*
-#    whose body matches scripts/ci/cf_attest.parse_attestation (marker +
-#    Verdict: APPROVE + exact head SHA + concrete reviewer family).
+#    PR anyway (#7472 / critical-rules §8.6.4). Review of record is a PR
+#    *comment* with VERDICT + exact head SHA + concrete resolved_model.
+#    The cf-attest Gate job is retired.
 # 2. Automatically retry operations throttled by GitHub secondary rate limits
 #    (HTTP 403 / 429) using bounded exponential backoff.
 #
@@ -27,10 +27,9 @@ _deny() {
   cat >&2 <<'EOF'
 error: agent invoked with AGENT_NO_MERGE=1 cannot merge or approve PRs.
        User reviews and merges. See INCIDENT #1403.
-       CF of record under a shared GitHub identity (#7472): post via
-       `gh pr comment` the shape accepted by scripts/ci/cf_attest.py
-       (cross-family / cf of record marker + Verdict: APPROVE + exact
-       head SHA + reviewer family) — not `gh pr review --approve`.
+       Review of record under a shared GitHub identity (#7472): post via
+       `gh pr comment` a VERDICT + exact head SHA + resolved_model —
+       not `gh pr review --approve`. The cf-attest Gate job is retired.
 EOF
   exit 1
 }
