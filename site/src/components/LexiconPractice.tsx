@@ -4613,17 +4613,20 @@ function LexiconPracticeIsland({
             >
               {progressLabel}
             </span>
-            {pendingOutcome ? (
-              <button
-                ref={advanceButtonRef}
-                type="button"
-                className="btn btn-accent queue-next-btn"
-                data-testid="practice-advance-button"
-                onClick={advancePending}
-              >
-                <PracticeChromeLabel k="practice.nextArrow" />
-              </button>
-            ) : null}
+            {/* Reserve the advance control's space so answer feedback cannot wrap
+                the toolbar and shift the exercise beneath a finishing pointer. */}
+            <button
+              ref={advanceButtonRef}
+              type="button"
+              className="btn btn-accent queue-next-btn"
+              data-testid={pendingOutcome ? 'practice-advance-button' : undefined}
+              disabled={!pendingOutcome}
+              aria-hidden={!pendingOutcome || undefined}
+              style={{ visibility: pendingOutcome ? 'visible' : 'hidden' }}
+              onClick={advancePending}
+            >
+              <PracticeChromeLabel k="practice.nextArrow" />
+            </button>
           </div>
 
           {deck && deck.index.length === 0 &&

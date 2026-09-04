@@ -3482,12 +3482,18 @@ describe('LexiconPractice', () => {
       // focus from «Далі →» after the answer dwell layout effect runs.
       await advanceFakeTimers(0);
 
+      const reservedAdvance = document.querySelector<HTMLButtonElement>('.queue-next-btn')!;
+      expect(reservedAdvance).not.toBeVisible();
+      expect(reservedAdvance).toBeDisabled();
       const focus = vi.spyOn(HTMLElement.prototype, 'focus');
       await user.click(
         within(screen.getByTestId('practice-heritage')).getByRole('button', { name: 'дім' }),
       );
 
       expect(focus).toHaveBeenCalledWith({ preventScroll: true });
+      expect(screen.getByTestId('practice-advance-button')).toBe(reservedAdvance);
+      expect(reservedAdvance).toBeVisible();
+      expect(reservedAdvance).toBeEnabled();
       // Correct answers dwell identically to wrong ones — «Далі →» is required.
       expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
       expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent('Правильно');
