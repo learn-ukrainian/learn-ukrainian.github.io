@@ -30,7 +30,9 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-PRIMARY_ROOT = Path("/home/ops/learn-ukrainian")
+from scripts.guardrails.worktree_containment import resolve_main_root
+
+PRIMARY_ROOT = resolve_main_root(PROJECT_ROOT) or PROJECT_ROOT
 
 
 def _resolve_repo_path(path: Path) -> Path:
