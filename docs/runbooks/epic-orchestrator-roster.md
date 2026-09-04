@@ -56,7 +56,7 @@ that digest into its own handoff.
 
 Every host must export `LU_MONITOR_HOST_ID=<opaque id>` before a driver claims a
 lease. Use the opaque IDs from the canonical `MONITOR_OCCUPANCY_HOST_IDS`
-mapping (for example, `host-teacher`, `host-job`, or `mac-operator`), so the
+mapping (for example, `host-teacher` or `mac-operator`), so the
 holder is not reported as `local`. Do not substitute a hostname, alias, or IP
 address for the opaque ID.
 

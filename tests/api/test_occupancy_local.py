@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -16,6 +17,7 @@ from scripts.api.occupancy_local import (
     occupancy_marker_scope,
     occupants_from_markers,
     occupants_from_session_streams,
+    read_session_streams,
     resolve_launcher_host_id,
     write_marker,
 )
@@ -28,6 +30,10 @@ def _open_lease(
     agent: str = "claude",
     task_id: str = "infra-drive",
     ttl_seconds: int = 600,
+    session_id: str | None = None,
+    lease_id: str | None = None,
+    instance_id: str = "runtime-1",
+    process_id: int = 41001,
 ) -> None:
     store = SessionStreamStore(SessionStreamDatabase(db_path))
     store.open_session(
@@ -35,14 +41,14 @@ def _open_lease(
         holder=LeaseHolder(
             agent=agent,
             harness="claude-code",
-            instance_id="runtime-1",
-            process_id=41001,
+            instance_id=instance_id,
+            process_id=process_id,
             task_id=task_id,
         ),
-        lineage_id="lineage-occupancy",
+        lineage_id=f"lineage-{stream_id}",
         ttl_seconds=ttl_seconds,
-        session_id="session-occupancy",
-        lease_id="lease-occupancy",
+        session_id=session_id or f"session-{stream_id}",
+        lease_id=lease_id or f"lease-{stream_id}",
     )
 
 
@@ -177,6 +183,116 @@ def test_occupants_from_session_streams_reads_active_lease_only(
         )
         == []
     )
+
+
+def test_occupants_from_session_streams_preserves_distinct_epics_sharing_task_id(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    db_path = tmp_path / "session-streams.sqlite3"
+    _open_lease(
+        db_path,
+        stream_id="epic:4387",
+        agent="grok",
+        task_id="launcher-grok-driver",
+        process_id=3176144,
+    )
+    _open_lease(
+        db_path,
+        stream_id="epic:6943",
+        agent="grok",
+        task_id="launcher-grok-driver",
+        process_id=3128086,
+    )
+    _open_lease(
+        db_path,
+        stream_id="epic:7177",
+        agent="grok",
+        task_id="launcher-grok-driver",
+        process_id=3172701,
+    )
+    mapping = {"teach-box": "host-teacher"}
+    selected = {"host-teacher": "teach-box"}
+    monkeypatch.setenv("ATLAS_JOB_SELF_HOST", "teach-box")
+    monkeypatch.delenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", raising=False)
+
+    occupants = occupants_from_session_streams(
+        host_id="host-teacher",
+        mapping=mapping,
+        selected=selected,
+        db_path=db_path,
+    )
+    assert len(occupants) == 3
+    assert occupants == [
+        {"kind": "driver", "agent": "grok", "task_id": "launcher-grok-driver", "epic": "4387"},
+        {"kind": "driver", "agent": "grok", "task_id": "launcher-grok-driver", "epic": "6943"},
+        {"kind": "driver", "agent": "grok", "task_id": "launcher-grok-driver", "epic": "7177"},
+    ]
+
+
+def test_read_session_streams_dedupes_same_epic_and_task_id(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    db_path = tmp_path / "session-streams.sqlite3"
+    _open_lease(
+        db_path,
+        stream_id="epic:7177",
+        agent="grok",
+        task_id="launcher-grok-driver",
+    )
+    mapping = {"teach-box": "host-teacher"}
+    selected = {"host-teacher": "teach-box"}
+    monkeypatch.setenv("ATLAS_JOB_SELF_HOST", "teach-box")
+    monkeypatch.delenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", raising=False)
+
+    clock = datetime.now(UTC)
+    duplicate_rows = [
+        {
+            "stream_id": "epic:7177",
+            "holder_agent": "grok",
+            "holder_task_id": "launcher-grok-driver",
+            "heartbeat_at": clock.isoformat().replace("+00:00", "Z"),
+            "expires_at": (clock + timedelta(minutes=10)).isoformat().replace("+00:00", "Z"),
+        },
+        {
+            "stream_id": "epic:7177",
+            "holder_agent": "grok",
+            "holder_task_id": "launcher-grok-driver",
+            "heartbeat_at": clock.isoformat().replace("+00:00", "Z"),
+            "expires_at": (clock + timedelta(minutes=10)).isoformat().replace("+00:00", "Z"),
+        },
+    ]
+
+    class _FakeCursor:
+        def fetchall(self) -> list[dict[str, Any]]:
+            return duplicate_rows
+
+    class _FakeConn:
+        def __enter__(self) -> _FakeConn:
+            return self
+
+        def __exit__(self, *args: Any) -> None:
+            pass
+
+        def execute(self, sql: str) -> _FakeCursor:
+            return _FakeCursor()
+
+    monkeypatch.setattr(
+        "scripts.api.occupancy_local.SessionStreamDatabase.connect",
+        lambda self, read_only=True: _FakeConn(),
+    )
+
+    read = read_session_streams(
+        host_id="host-teacher",
+        mapping=mapping,
+        selected=selected,
+        db_path=db_path,
+        now=clock,
+    )
+    assert read.readable is True
+    assert len(read.occupants) == 1
+    assert read.occupants == [
+        {"kind": "driver", "agent": "grok", "task_id": "launcher-grok-driver", "epic": "7177"}
+    ]
 
 
 def test_occupants_from_session_streams_skips_expired_and_broken_db(
