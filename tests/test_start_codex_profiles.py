@@ -284,6 +284,8 @@ def test_launcher_targets_canonical_main_without_creating_worktree(tmp_path: Pat
         os.fspath(linked),
         "--model",
         "gpt-5.6-sol",
+        "-c",
+        "model_reasoning_effort=low",
         "resume",
         "thread-id",
     ]
@@ -340,7 +342,9 @@ def test_launcher_binds_epic_when_no_codex_args_remain(tmp_path: Path) -> None:
     ]
     cd_index = forwarded.index("-C")
     assert forwarded[cd_index + 1] != values["canonical"]
-    assert forwarded[cd_index + 2 : cd_index + 4] == ["--model", "gpt-5.6-sol"]
+    assert forwarded[cd_index + 2 : cd_index + 6] == [
+        "--model", "gpt-5.6-sol", "-c", "model_reasoning_effort=high",
+    ]
     assert any("already claimed the hramatka lease" in arg for arg in forwarded)
 
 
@@ -400,7 +404,10 @@ def test_launcher_model_mismatch_fails_closed_but_still_starts(tmp_path: Path) -
     assert values["main_window"] == "0"
     assert values["reason"] == "model-mismatch"
     assert values["trusted"] == "0"
-    assert forwarded[-2:] == ["--model", "gpt-5.6-terra"]
+    model_index = forwarded.index("--model")
+    assert forwarded[model_index : model_index + 4] == [
+        "--model", "gpt-5.6-terra", "-c", "model_reasoning_effort=low",
+    ]
     assert "without a fabricated context window" not in result.stderr
 
 
