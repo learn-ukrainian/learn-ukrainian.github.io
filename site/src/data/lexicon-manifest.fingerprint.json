@@ -275,7 +275,7 @@
       },
       {
         "path": "scripts/lexicon/ulp_taught_pair_extractor.py",
-        "sha256": "707f527d3db608d1d4332234e9dc7b5113e8e2cacaea1055f5cfbad180b68a70"
+        "sha256": "566d9ecd75ae6d93d9028893fbcd3d2a0b5d24c950b29e3959555e0927710061"
       },
       {
         "path": "scripts/lexicon/verb_pedagogy_vesum_aspect.py",
