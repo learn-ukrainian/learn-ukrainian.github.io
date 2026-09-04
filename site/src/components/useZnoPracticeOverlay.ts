@@ -62,25 +62,39 @@ export const ZNO_MODE_META: Record<ZnoPracticeDeck['deckId'], ZnoModeMeta> = {
  * loads its dedicated chunk via `loadZnoDeck`, so `activeZnoDeck` starts `null`
  * for the id just selected until that load resolves (`activeZnoDeckLoading`
  * tracks that gap for the caller's loading affordance).
+ *
+ * #7673 CF: a rejected chunk load (offline, stale deploy after a redeploy
+ * shifts asset hashes) must not leave `activeZnoDeckLoading` stuck `true`
+ * forever — `activeZnoDeckError` surfaces that failure and `retryActiveZnoDeck`
+ * lets the caller retry the same deck without leaving the overlay.
  */
 export function useZnoPracticeOverlay() {
   const [hoveredZnoDeckId, setHoveredZnoDeckId] = useState<ZnoPracticeDeck['deckId'] | null>(null);
   const [activeZnoDeckId, setActiveZnoDeckId] = useState<ZnoPracticeDeck['deckId'] | null>(null);
   const [activeZnoDeck, setActiveZnoDeck] = useState<ZnoPracticeDeck | null>(null);
+  const [activeZnoDeckError, setActiveZnoDeckError] = useState(false);
+  const [retryToken, setRetryToken] = useState(0);
 
   useEffect(() => {
     // Reset synchronously so a still-loading new id never renders under the
-    // previously loaded deck's content.
+    // previously loaded deck's content (or a previous id's error).
     setActiveZnoDeck(null);
+    setActiveZnoDeckError(false);
     if (!activeZnoDeckId) return;
     let cancelled = false;
-    loadZnoDeck(activeZnoDeckId).then((deck) => {
-      if (!cancelled) setActiveZnoDeck(deck);
-    });
+    loadZnoDeck(activeZnoDeckId)
+      .then((deck) => {
+        if (!cancelled) setActiveZnoDeck(deck);
+      })
+      .catch((err: unknown) => {
+        if (cancelled) return;
+        console.error(`[practice] failed to load ZNO deck "${activeZnoDeckId}"`, err);
+        setActiveZnoDeckError(true);
+      });
     return () => {
       cancelled = true;
     };
-  }, [activeZnoDeckId]);
+  }, [activeZnoDeckId, retryToken]);
 
   return {
     hoveredZnoDeckId,
@@ -88,6 +102,8 @@ export function useZnoPracticeOverlay() {
     activeZnoDeckId,
     setActiveZnoDeckId,
     activeZnoDeck,
-    activeZnoDeckLoading: activeZnoDeckId !== null && activeZnoDeck === null,
+    activeZnoDeckLoading: activeZnoDeckId !== null && activeZnoDeck === null && !activeZnoDeckError,
+    activeZnoDeckError,
+    retryActiveZnoDeck: () => setRetryToken((n) => n + 1),
   };
 }

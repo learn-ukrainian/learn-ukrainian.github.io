@@ -2101,6 +2101,8 @@ function LexiconPracticeIsland({
     setActiveZnoDeckId,
     activeZnoDeck,
     activeZnoDeckLoading,
+    activeZnoDeckError,
+    retryActiveZnoDeck,
   } = useZnoPracticeOverlay();
   const [publishedLevels] = useState<Set<CefrLevel>>(
     () => new Set(PUBLISHED_PRACTICE_LEVELS as unknown as CefrLevel[]),
@@ -4562,6 +4564,20 @@ function LexiconPracticeIsland({
         <p className="lexicon-practice-muted" role="status" data-testid="practice-zno-loading">
           <PracticeChromeLabel k="practice.loading" />
         </p>
+      )}
+
+      {activeZnoDeckError && (
+        <div className="lexicon-practice-fallback" role="alert" data-testid="practice-zno-error">
+          <p className="lexicon-practice-warning">
+            <PracticeChromeLabel k="practice.loadError" />
+          </p>
+          <button type="button" className="btn btn-accent" onClick={retryActiveZnoDeck}>
+            <PracticeChromeLabel k="practice.retry" />
+          </button>
+          <button type="button" className="stage-back" onClick={() => setActiveZnoDeckId(null)}>
+            <PracticeChromeLabel k="practice.home" />
+          </button>
+        </div>
       )}
 
       {activeZnoDeck && (
