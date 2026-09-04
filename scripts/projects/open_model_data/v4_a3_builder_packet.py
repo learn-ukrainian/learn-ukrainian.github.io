@@ -256,6 +256,33 @@ def verify_packet(
     return public_commitment_summary(salt, stored_packet)
 
 
+def verify_and_load_eligible_units(
+    seal_receipt_path: Path = DEFAULT_SEAL_RECEIPT,
+    packet_dir: Path = DEFAULT_MEMBERSHIP_DIR,
+    membership_dir: Path = DEFAULT_MEMBERSHIP_DIR,
+) -> tuple[dict[str, Any], list[str]]:
+    """Full independent verification of the private builder packet
+    (``verify_packet``, which cross-checks the sealed receipt, the private
+    membership artifact, and the private packet against each other) plus
+    the raw ``builder_eligible_source_unit_ids`` list it actually names --
+    the only sanctioned source of a builder-eligible unit id for a
+    privileged, already-private caller (e.g. A7's private construction
+    ledger; see ``v4_a7_private_ledger.load_verified_eligible_unit_ids``).
+    ``verify_packet`` itself stays counts/commitments-only (safe to echo
+    into a public receipt); this function is for a private caller that
+    needs the real ids and must never leak them onward."""
+    summary = verify_packet(seal_receipt_path, packet_dir, membership_dir)
+    packet_path = packet_dir / PACKET_FILENAME
+    stored_packet = heldout.load_private_artifact(packet_path, required_fields=PRIVATE_PACKET_REQUIRED_FIELDS)
+    require(
+        stored_packet["seal_receipt_binding_sha256"] == summary["seal_receipt_binding_sha256"],
+        "private packet seal_receipt_binding_sha256 does not match the independently verified packet summary -- refusing",
+    )
+    eligible_unit_ids = list(stored_packet["builder_eligible_source_unit_ids"])
+    require(len(eligible_unit_ids) == len(set(eligible_unit_ids)), "builder-eligible source_unit_ids carries a duplicate -- refusing")
+    return summary, eligible_unit_ids
+
+
 def reissue_packet(
     old_seal_receipt_path: Path,
     new_seal_receipt_path: Path,
