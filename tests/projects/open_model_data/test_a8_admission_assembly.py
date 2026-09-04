@@ -14,6 +14,7 @@ import copy
 import json
 from pathlib import Path
 
+import _v4_synthetic_chain_fixture as fixture
 import pytest
 from jsonschema import Draft202012Validator
 
@@ -72,10 +73,12 @@ def _write_receipt_tree(tmp_path: Path, *, a2=None, a4=None, a5=None, a6=None, a
 def test_a8_gate_against_the_real_production_artifacts_stays_closed_today() -> None:
     gate = a8.check_assembly_gate()
     assert gate["a7_receipt_valid"] is True
-    assert gate["all_slots_assigned"] is False
-    assert gate["a2_rights_resolved"] is False
+    assert gate["slots_prerequisite_eligible"] == 0
+    assert gate["slots_upstream_complete"] == 0
+    assert gate["slots_stage_complete"] == 0
+    assert gate["slots_residual"] == 100
     assert gate["assembly_slice_ready"] is False
-    assert gate["blocked_reason_code"] == "rights_unresolved_and_slots_unassigned"
+    assert gate["blocked_reason_code"] == "no_slot_prerequisite_eligible"
 
 
 def test_a8_gate_closed_when_a_required_public_artifact_is_missing(tmp_path: Path) -> None:
@@ -92,58 +95,28 @@ def test_a8_gate_closed_when_a7_receipt_is_invalid(tmp_path: Path) -> None:
     _write_receipt_tree(tmp_path, a7=forged)
     gate = a8.check_assembly_gate(tmp_path)
     assert gate["a7_receipt_valid"] is False
-    assert gate["blocked_reason_code"] == "a7_receipt_invalid"
+    assert gate["blocked_reason_code"] == "upstream_receipt_invalid"
 
 
-def test_a8_gate_opens_only_once_rights_are_resolved_and_every_slot_is_assigned(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    resolved_a2 = copy.deepcopy(REAL_A2_RECEIPT)
-    resolved_a2["residuals"] = []
-    for coverage in resolved_a2["stratum_coverage_map"]:
-        coverage["residual_ids"] = []
-    assigned_manifest = copy.deepcopy(REAL_MANIFEST)
-    for series in assigned_manifest["slot_series"]:
-        series["assignment_state"] = "ASSIGNED"
-    # A2 rights + manifest assignment alone are never sufficient -- A6's
-    # *and* A7's own per-slot evidence must also genuinely clear for every
-    # frozen slot.
-    cleared_a6 = copy.deepcopy(REAL_A6_RECEIPT)
-    cleared_a6["a6_residuals"] = []
-    cleared_a7 = copy.deepcopy(REAL_A7_RECEIPT)
-    cleared_a7["a7_residuals"] = []
-    _write_receipt_tree(tmp_path, a2=resolved_a2, manifest=assigned_manifest, a6=cleared_a6, a7=cleared_a7)
-    monkeypatch.setattr(a8.a7, "validate_receipt_independently", lambda *a, **k: None)
+def test_a8_gate_reports_eligible_but_stays_closed_pending_upstream_a7_completion(tmp_path: Path) -> None:
+    """The A8-layer regression test for the same P1: A2 rights + manifest
+    assignment resolving a stratum must never, by itself, produce a
+    positive A8 completion count. Every validator here runs live (A6's and
+    A7's own real builders/validators, never stubbed) against a synthetic
+    root where one stratum is genuinely prerequisite-eligible; A7's own
+    ``a7_completions`` stays empty, so A8 -- which requires A7's positive
+    completion evidence -- stays at 0 complete."""
+    fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
+    fixture.run_chain_a6_through_a9(tmp_path)
+
     gate = a8.check_assembly_gate(tmp_path)
-    assert gate["a2_rights_resolved"] is True
-    assert gate["all_slots_assigned"] is True
-    assert gate["upstream_stage_evidence_present"] is True
-    assert gate["assembly_slice_ready"] is True
-    assert gate["blocked_reason_code"] is None
-
-
-def test_a8_gate_stays_closed_when_a2_and_manifest_resolve_but_upstream_evidence_does_not(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """A2 rights + manifest assignment metadata alone must never open the
-    gate: this is exactly the previous scenario with A6's and A7's own
-    per-slot evidence left untouched (still 100 residuals each)."""
-    resolved_a2 = copy.deepcopy(REAL_A2_RECEIPT)
-    resolved_a2["residuals"] = []
-    for coverage in resolved_a2["stratum_coverage_map"]:
-        coverage["residual_ids"] = []
-    assigned_manifest = copy.deepcopy(REAL_MANIFEST)
-    for series in assigned_manifest["slot_series"]:
-        series["assignment_state"] = "ASSIGNED"
-    _write_receipt_tree(tmp_path, a2=resolved_a2, manifest=assigned_manifest)
-    monkeypatch.setattr(a8.a7, "validate_receipt_independently", lambda *a, **k: None)
-    gate = a8.check_assembly_gate(tmp_path)
-    assert gate["a2_rights_resolved"] is True
-    assert gate["all_slots_assigned"] is True
-    assert gate["upstream_stage_evidence_present"] is False
-    assert gate["slots_ready"] == 0
+    assert gate["a7_receipt_valid"] is True
+    assert gate["slots_prerequisite_eligible"] == 15
+    assert gate["slots_upstream_complete"] == 0
+    assert gate["slots_stage_complete"] == 0
+    assert gate["slots_residual"] == 100
     assert gate["assembly_slice_ready"] is False
-    assert gate["blocked_reason_code"] == "upstream_stage_evidence_unavailable"
+    assert gate["blocked_reason_code"] == "eligible_slots_awaiting_upstream_stage_completion"
 
 
 # --- A8 residuals + admitted slice view ------------------------------------------
@@ -200,9 +173,9 @@ def test_a8_receipt_binds_v4_sha_and_control_surfaces() -> None:
 
 
 def test_a8_receipt_binds_the_merged_a7_receipt_by_its_known_public_sha() -> None:
-    # The merged A7 receipt's public sha256, frozen at dispatch time (v4-per-slot-private-factory:
-    # A7's gate went per-slot instead of a single global AND, changing its content).
-    assert a8.sha256_file(A7_RECEIPT_PATH) == "e06ab3ac39f922cffd4bd35b2c1a464f4df5cad2abfa04bee0ce03f16804d03c"
+    # The merged A7 receipt's public sha256, frozen at dispatch time (PR #7654 repair cycle 2:
+    # A7's gate now reports positive-completion evidence, not per-slot readiness, changing its content).
+    assert a8.sha256_file(A7_RECEIPT_PATH) == "50f555ea69fbc30a5f0a99035af700f6f6672ad45740d799c851f3d6725be5e2"
 
 
 def test_a8_receipt_carries_forward_every_a2_a4_a5_a6_a7_residual_unresolved() -> None:
@@ -224,8 +197,9 @@ def test_a8_receipt_carries_forward_every_a2_a4_a5_a6_a7_residual_unresolved() -
 def test_a8_receipt_does_not_claim_admitted_slice_ready_while_the_gate_is_closed() -> None:
     assert REAL_RECEIPT["assembly_gate"]["assembly_slice_ready"] is False
     assert REAL_RECEIPT["status"] != "ADMITTED_SLICE_READY"
-    assert REAL_RECEIPT["execution_counters"]["slots_admitted_ready"] == 0
-    assert REAL_RECEIPT["execution_counters"]["slots_blocked"] == 100
+    assert REAL_RECEIPT["execution_counters"]["slots_prerequisite_eligible"] == 0
+    assert REAL_RECEIPT["execution_counters"]["slots_stage_complete"] == 0
+    assert REAL_RECEIPT["execution_counters"]["slots_residual"] == 100
 
 
 def test_a8_receipt_never_claims_training_ready_silver_arena_slice_ready_or_eval_artifact_ready() -> None:

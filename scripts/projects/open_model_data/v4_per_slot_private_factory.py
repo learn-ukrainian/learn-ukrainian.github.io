@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""V4 per-slot private factory: the private-side companion to A7's now-fixed
-per-slot factory gate, bound to the merged A7 original-row factory receipt
-and the frozen V4 pilot slot manifest.
+"""V4 per-slot private factory: the private-side companion to A7's factory
+gate, bound to the merged A7 original-row factory receipt and the frozen V4
+pilot slot manifest.
 
 This is **not** a new A-stage number and **not** a new public identity
 scheme (see the frozen manifest's own ``role_ownership`` -- A7 already owns
@@ -31,49 +31,43 @@ only inputs are three already-public artifacts --
 * A2's source operation admission receipt (``stratum_coverage_map`` and
   ``residuals`` -- rights/coverage state, never source text),
 * A7's original-row factory receipt (its own already-public ``a7_residuals``
-  reason codes and its own independent validity), and
+  reason codes, its own typed, positive ``a7_completions``, and its own
+  independent validity), and
 * the frozen 100-slot V4 pilot slot manifest (``slot_series`` -- public slot
   IDs only, never a real ``source_unit_id``).
 
-It reuses ``v4_a7_original_row_factory.factory_readiness`` for the per-slot
-signal itself, which is *also* a pure function of A6's own already-public
-per-slot ``a6_residuals`` -- A2 rights and manifest assignment metadata
-alone were never sufficient (see A7's own fix for the false-positive bug
-this closed); this module inherits that same truthful per-slot signal
-rather than re-deriving a metadata-only approximation of it.
+**Prerequisite eligibility is not stage completion** (PR #7654 repair cycle
+2, Option A -- ``batch_state/tasks/design-7654-partial-stage-evidence.
+result``): this module's own counters keep those two names visibly distinct,
+matching every other V4 stage module. Three independent parts:
 
-Three independent parts:
-
-1. ``per_slot_gate`` -- reuses (never duplicates) A7's own
-   ``factory_readiness`` to independently re-derive, per frozen slot,
-   whether that slot's own stratum has a resolved A2 rights/coverage
-   residual, is marked ``ASSIGNED`` in the manifest, *and* has no remaining
-   residual against it in A6's own already-public per-slot evidence. Right
-   now zero slots satisfy all three: every one of the manifest's eight
-   strata is still ``UNASSIGNED_PENDING_A2_A3`` (an A2/A3-owned lever this
-   module does not control) and A6's own ``a6_residuals`` still lists every
-   frozen slot as ``independence_unavailable``, so ``slots_ready`` is 0 and
-   ``slots_residual`` is 100 -- matching the public slot-commitment
-   assignment receipt's own "0 assigned / 100 residual" count. Because the
-   manifest-level assignment lever and A6's own upstream evidence are the
-   actual blockers for every single slot today, this module never needs to
-   open A4's private extraction ledger to decide readiness -- so it does
-   not, keeping this pass's private-artifact footprint at zero.
+1. ``check_per_slot_gate`` -- reuses (never duplicates) the shared
+   ``v4_stage_evidence`` eligibility/completion model to independently
+   re-derive, per frozen slot, whether that slot's own stratum is
+   prerequisite-eligible (A2 rights resolved and manifest-assigned) *and*
+   whether A7's own typed ``a7_completions`` names it -- never trusting A7's
+   own declared fields, never opening ``batch_state/``. Right now zero slots
+   satisfy either: every one of the manifest's eight strata is still
+   ``UNASSIGNED_PENDING_A2_A3`` and A7's own ``a7_completions`` is empty
+   (A7 has no execution mechanism yet), so ``slots_prerequisite_eligible``
+   is 0 and ``slots_stage_complete`` is 0 -- matching the public slot-
+   commitment assignment receipt's own "0 assigned / 100 residual" count.
 2. ``build_private_ledger`` -- the private, per-slot working ledger this
-   pass would populate with real candidate rows once slots go ready. Today
-   it carries the same per-slot readiness signal already public via A7's own
-   ``a7_residuals`` (nothing secret) and an empty ``candidate_rows`` list --
-   *never* a fabricated row standing in for the independent authorship this
-   module cannot perform automatically, and never a slot -> source-unit or
-   slot -> commitment binding (this module never opens A4's private ledger,
-   so it never *has* one to publish or to leak).
+   pass would populate with real candidate rows once slots go complete.
+   Today it carries the same per-stratum eligibility signal already public
+   via this module's own receipt (nothing secret) and an empty
+   ``candidate_rows`` list -- *never* a fabricated row standing in for the
+   independent authorship this module cannot perform automatically, and
+   never a slot -> source-unit or slot -> commitment binding (this module
+   never opens A4's private ledger, so it never *has* one to publish or to
+   leak).
 3. ``build_receipt`` -- assembles the public, text-free receipt: the frozen
-   100-slot denominator, the per-slot gate's aggregate counts (never a
-   per-slot table), a reason-code total reused unchanged from A7's own
-   public ``a7_residuals`` (never a fourth, independently invented reason),
-   and ``private_rows_constructed`` -- always 0 today, because independent
-   authorship has no automated source and the manifest's own assignment
-   lever blocks every slot regardless.
+   100-slot denominator, the per-stratum eligibility table, the gate's
+   aggregate counts (never a per-slot table), a reason-code total reused
+   unchanged from A7's own public ``a7_residuals`` (never a fourth,
+   independently invented reason), and ``private_rows_constructed`` --
+   always 0 today, because independent authorship has no automated source
+   and no stage has an execution mechanism yet regardless.
 
 Run with no arguments to verify the checked-in receipt reproduces from the
 three public artifacts on disk -- no ``batch_state/`` required, so this
@@ -98,19 +92,23 @@ if str(_SELF_ROOT) not in sys.path:
     sys.path.insert(0, str(_SELF_ROOT))
 
 from scripts.projects.open_model_data import v4_a7_original_row_factory as a7
+from scripts.projects.open_model_data import v4_stage_evidence as ev
 
 ROOT = _SELF_ROOT
-ADMISSION = ROOT / "data/projects/open_model_data/admission"
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+ADMISSION_RELATIVE = "data/projects/open_model_data/admission"
+CONTRACTS_RELATIVE = "data/projects/open_model_data/contracts"
 BATCH_STATE_DIR = ROOT / "batch_state/open-model-data"
 PRIVATE_LEDGER_PATH = BATCH_STATE_DIR / "v4_private_per_slot_factory_ledger_v1.json"
 
-RECEIPT_PATH = ADMISSION / "dataset_v4_per_slot_private_factory_receipt_v1.json"
-SCHEMA_PATH = CONTRACTS / "dataset_v4_per_slot_private_factory_receipt_v1.schema.json"
-A2_RECEIPT_PATH = ADMISSION / "dataset_v4_a2_source_operation_admission_receipt_v1.json"
-A7_RECEIPT_PATH = ADMISSION / "dataset_v4_a7_original_row_factory_receipt_v1.json"
-SLOT_MANIFEST_PATH = ADMISSION / "dataset_v4_pilot_slot_manifest_v1.json"
-SELF_PATH = ROOT / "scripts/projects/open_model_data/v4_per_slot_private_factory.py"
+RECEIPT_RELATIVE = f"{ADMISSION_RELATIVE}/dataset_v4_per_slot_private_factory_receipt_v1.json"
+SCHEMA_RELATIVE = f"{CONTRACTS_RELATIVE}/dataset_v4_per_slot_private_factory_receipt_v1.schema.json"
+A2_RECEIPT_RELATIVE = f"{ADMISSION_RELATIVE}/dataset_v4_a2_source_operation_admission_receipt_v1.json"
+A7_RECEIPT_RELATIVE = f"{ADMISSION_RELATIVE}/dataset_v4_a7_original_row_factory_receipt_v1.json"
+SLOT_MANIFEST_RELATIVE = f"{ADMISSION_RELATIVE}/dataset_v4_pilot_slot_manifest_v1.json"
+SELF_RELATIVE = "scripts/projects/open_model_data/v4_per_slot_private_factory.py"
+
+RECEIPT_PATH = ROOT / RECEIPT_RELATIVE
+SCHEMA_PATH = ROOT / SCHEMA_RELATIVE
 
 V4_SHA256 = "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"
 
@@ -132,6 +130,8 @@ ELIGIBILITY = {"gold": False, "training": False, "evaluation": False, "teaching"
 
 canonical_json = a7.canonical_json
 sha256_file = a7.sha256_file
+frozen_slot_strata = a7.frozen_slot_strata
+all_frozen_slot_ids = a7.all_frozen_slot_ids
 
 
 class PrivateFactoryError(ValueError):
@@ -147,25 +147,25 @@ def _load(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-# --- per-slot gate (public-only, reuses A7's own per-slot readiness) --------
+# --- per-slot gate (public-only, reuses the shared eligibility model) -------
 
 
 def check_per_slot_gate(root: Path = ROOT) -> dict[str, Any]:
-    """Independently re-derive per-slot readiness from A2's and the
-    manifest's own public state plus A6's own already-public per-slot
-    evidence, reusing (never duplicating)
-    ``v4_a7_original_row_factory.factory_readiness`` -- never trusting A7's
-    own declared fields, never opening ``batch_state/``. Also independently
+    """Independently re-derive per-stratum eligibility from A2's and the
+    manifest's own public state, and A7's own already-public
+    ``a7_completions``, reusing (never duplicating)
+    ``v4_stage_evidence.stratum_eligibility`` -- never trusting A7's own
+    declared fields, never opening ``batch_state/``. Also independently
     re-validates the A7 receipt itself (structural validity only); a slot
-    can never be counted ready if the upstream A7 receipt does not
+    can never be counted complete if the upstream A7 receipt does not
     independently validate.
 
     Fails closed -- a *closed gate*, not an exception -- if any of the three
     required public artifacts (slot manifest, A2 receipt, A7 receipt) is
-    missing."""
-    manifest_path = (root / "data/projects/open_model_data/admission/dataset_v4_pilot_slot_manifest_v1.json").resolve()
-    a2_path = (root / "data/projects/open_model_data/admission/dataset_v4_a2_source_operation_admission_receipt_v1.json").resolve()
-    a7_path = (root / "data/projects/open_model_data/admission/dataset_v4_a7_original_row_factory_receipt_v1.json").resolve()
+    missing. Every path is derived from ``root``."""
+    manifest_path = (root / SLOT_MANIFEST_RELATIVE).resolve()
+    a2_path = (root / A2_RECEIPT_RELATIVE).resolve()
+    a7_path = (root / A7_RECEIPT_RELATIVE).resolve()
     required_paths = {"slot_manifest": manifest_path, "a2_receipt": a2_path, "a7_receipt": a7_path}
     for label, path in required_paths.items():
         require(root.resolve() in path.parents, f"{label} path escapes the repository root -- refusing")
@@ -175,7 +175,8 @@ def check_per_slot_gate(root: Path = ROOT) -> dict[str, Any]:
         return {
             "gate_id": "v4-per-slot-private-factory-gate-v1",
             "a7_receipt_valid": False,
-            "slots_ready": 0,
+            "slots_prerequisite_eligible": 0,
+            "slots_stage_complete": 0,
             "slots_residual": 100,
             "owner_role": "A2_A3_PRIVATE_ARTIFACT",
             "blocked_reason_code": f"required_public_artifact_missing:{missing[0]}",
@@ -194,27 +195,32 @@ def check_per_slot_gate(root: Path = ROOT) -> dict[str, Any]:
     except a7.OriginalRowFactoryError:
         a7_valid = False
 
-    # ``a7.factory_readiness`` reuses A7's own per-slot readiness, which
-    # already incorporates A6's own already-public per-slot evidence -- A2
-    # rights and manifest assignment metadata alone are never enough to
-    # advance a slot past a stage that has not itself proven the required
-    # work done.
-    readiness = a7.factory_readiness(root)
-    slots_ready = sum(1 for record in readiness if record["slot_ready"]) if a7_valid else 0
-    slots_residual = len(readiness) - slots_ready
+    eligibility = ev.stratum_eligibility(manifest, a2_receipt, error_cls=PrivateFactoryError)
+    eligible_ids = ev.eligible_slot_ids(eligibility)
+    total_ids = set(all_frozen_slot_ids(manifest))
+    a7_completion_ids = (
+        ev.completion_slot_ids(a7_receipt.get("a7_completions", []), stage="A7", total_slot_ids=total_ids, error_cls=PrivateFactoryError) if a7_valid else set()
+    )
+    ev.validate_subset(a7_completion_ids, eligible_ids, label="A7 completions vs prerequisite-eligible slots", error_cls=PrivateFactoryError)
 
-    blocked_reason_code = None
-    if not a7_valid:
-        blocked_reason_code = "a7_receipt_invalid"
-    elif slots_ready == 0:
-        blocked_reason_code = "all_slots_pending_a2_a3"
-    elif slots_ready < len(readiness):
-        blocked_reason_code = "partial_slots_pending_a2_a3"
+    slots_prerequisite_eligible = len(eligible_ids)
+    slots_stage_complete = len(a7_completion_ids)
+    slots_residual = 100 - slots_stage_complete
+
+    blocked_reason_code = ev.gate_blocked_reason_code(
+        upstream_valid=a7_valid,
+        slots_prerequisite_eligible=slots_prerequisite_eligible,
+        has_upstream_stage=True,
+        slots_upstream_complete=slots_stage_complete,  # this module mirrors A7's own completion, never a stage of its own
+        slots_stage_complete=slots_stage_complete,
+        total=100,
+    )
 
     return {
         "gate_id": "v4-per-slot-private-factory-gate-v1",
         "a7_receipt_valid": a7_valid,
-        "slots_ready": slots_ready,
+        "slots_prerequisite_eligible": slots_prerequisite_eligible,
+        "slots_stage_complete": slots_stage_complete,
         "slots_residual": slots_residual,
         "owner_role": manifest["sealed_heldout_commitment"]["assignment_owner"],
         "blocked_reason_code": blocked_reason_code,
@@ -227,7 +233,7 @@ def check_per_slot_gate(root: Path = ROOT) -> dict[str, Any]:
 def reason_code_totals(a7_receipt: dict[str, Any]) -> dict[str, int]:
     """Aggregate counts only -- never a per-slot table. Reuses A7's own
     already-public per-slot reason codes unchanged; never invents a fourth."""
-    totals = {"rights_unknown": 0, "source_incomplete": 0, "independence_unavailable": 0}
+    totals = dict.fromkeys(ev.RESIDUAL_REASON_CODES, 0)
     for residual in a7_receipt["a7_residuals"]:
         totals[residual["reason_code"]] += 1
     return totals
@@ -238,21 +244,23 @@ def reason_code_totals(a7_receipt: dict[str, Any]) -> dict[str, int]:
 
 def build_private_ledger(root: Path = ROOT) -> dict[str, Any]:
     """The private, never-committed, per-slot working ledger this pass would
-    populate with real candidate rows once a slot's own stratum resolves.
-    Every field here is already independently reproducible from public
-    artifacts alone (A2's residuals, the manifest's own assignment state,
-    and A6's own already-public per-slot ``a6_residuals``) -- nothing secret
-    lives here today. It is private only because ``batch_state/`` is this
-    repo's private operational-state home (never committed), not because
-    today's zero-row content needs confidentiality. ``candidate_rows`` stays
-    empty: independent authorship has no automated source, and every frozen
-    slot's own manifest assignment state and A6's own upstream evidence
-    still block construction regardless."""
-    readiness = a7.factory_readiness(root)
+    populate with real candidate rows once a slot's own stratum resolves and
+    A7 produces real completion evidence for it. Every field here is already
+    independently reproducible from public artifacts alone (A2's residuals,
+    the manifest's own assignment state, and A7's own already-public
+    ``a7_completions``) -- nothing secret lives here today. It is private
+    only because ``batch_state/`` is this repo's private operational-state
+    home (never committed), not because today's zero-row content needs
+    confidentiality. ``candidate_rows`` stays empty: independent authorship
+    has no automated source, and no stage has an execution mechanism yet
+    regardless."""
+    manifest = _load(root / SLOT_MANIFEST_RELATIVE)
+    a2_receipt = _load(root / A2_RECEIPT_RELATIVE)
+    eligibility = ev.stratum_eligibility(manifest, a2_receipt, error_cls=PrivateFactoryError)
     return {
         "ledger_id": "v4-private-per-slot-factory-ledger-v1",
         "controlling_outcome_sha256": V4_SHA256,
-        "slot_readiness": readiness,
+        "stratum_eligibility": ev.public_eligibility(eligibility),
         "candidate_rows": [],
     }
 
@@ -274,13 +282,14 @@ def write_private_ledger(ledger: dict[str, Any], path: Path = PRIVATE_LEDGER_PAT
 
 
 def build_receipt(root: Path = ROOT) -> dict[str, Any]:
-    manifest = _load(SLOT_MANIFEST_PATH)
-    a2_receipt = _load(A2_RECEIPT_PATH)
-    a7_receipt = _load(A7_RECEIPT_PATH)
+    manifest = _load(root / SLOT_MANIFEST_RELATIVE)
+    a2_receipt = _load(root / A2_RECEIPT_RELATIVE)
+    a7_receipt = _load(root / A7_RECEIPT_RELATIVE)
     gate = check_per_slot_gate(root)
 
-    strata = a7.a6.frozen_slot_strata(manifest)
-    frozen_slot_ids = a7.a6.all_frozen_slot_ids(manifest)
+    strata = frozen_slot_strata(manifest)
+    frozen_slot_ids = all_frozen_slot_ids(manifest)
+    eligibility = ev.stratum_eligibility(manifest, a2_receipt, error_cls=PrivateFactoryError)
 
     private_ledger = build_private_ledger(root)
     private_rows_constructed = len(private_ledger["candidate_rows"])
@@ -303,28 +312,29 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
         "control_surfaces": {"public_control_issue": 7423, "pilot_child_issue": 7430, "private_operational_board": 622},
         "bindings": {
             "a2_source_operation_admission": {
-                "path": str(A2_RECEIPT_PATH.relative_to(root)),
-                "sha256": sha256_file(A2_RECEIPT_PATH),
+                "path": A2_RECEIPT_RELATIVE,
+                "sha256": sha256_file(root / A2_RECEIPT_RELATIVE),
                 "schema_version": "dataset_v4_a2_source_operation_admission_receipt_v1",
             },
             "a7_original_row_factory": {
-                "path": str(A7_RECEIPT_PATH.relative_to(root)),
-                "sha256": sha256_file(A7_RECEIPT_PATH),
+                "path": A7_RECEIPT_RELATIVE,
+                "sha256": sha256_file(root / A7_RECEIPT_RELATIVE),
                 "schema_version": "dataset_v4_a7_original_row_factory_receipt_v1",
             },
             "pilot_slot_manifest": {
-                "path": str(SLOT_MANIFEST_PATH.relative_to(root)),
-                "sha256": sha256_file(SLOT_MANIFEST_PATH),
+                "path": SLOT_MANIFEST_RELATIVE,
+                "sha256": sha256_file(root / SLOT_MANIFEST_RELATIVE),
                 "schema_version": "dataset_v4_pilot_slot_manifest_v1",
             },
             "wiring_implementation": {
-                "path": str(SELF_PATH.relative_to(root)),
-                "sha256": sha256_file(SELF_PATH),
+                "path": SELF_RELATIVE,
+                "sha256": sha256_file(root / SELF_RELATIVE),
                 "schema_version": "v4_per_slot_private_factory_script_v1",
             },
         },
         "role_map": manifest["role_ownership"],
         "frozen_slot_denominator": {"total_slots": len(frozen_slot_ids), "strata": strata},
+        "prerequisite_eligibility": ev.public_eligibility(eligibility),
         "per_slot_gate": gate,
         "reason_code_totals": reason_code_totals(a7_receipt),
         "a2_residuals_carried_forward": a2_residuals_carried,
@@ -332,7 +342,8 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
         "execution_counters": {
             "dataset_rows_emitted": 0,
             "private_rows_constructed": private_rows_constructed,
-            "slots_ready": gate["slots_ready"],
+            "slots_prerequisite_eligible": gate["slots_prerequisite_eligible"],
+            "slots_stage_complete": gate["slots_stage_complete"],
             "slots_residual": gate["slots_residual"],
             "frozen_slot_count": len(frozen_slot_ids),
         },
@@ -359,14 +370,14 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
 # --- receipt verification ---------------------------------------------------
 
 
-def _load_schema() -> dict[str, Any]:
-    schema = _load(SCHEMA_PATH)
+def _load_schema(root: Path) -> dict[str, Any]:
+    schema = _load(root / SCHEMA_RELATIVE)
     Draft202012Validator.check_schema(schema)
     return schema
 
 
-def validate_receipt_schema(receipt: dict[str, Any]) -> None:
-    errors = sorted(Draft202012Validator(_load_schema()).iter_errors(receipt), key=lambda e: list(e.path))
+def validate_receipt_schema(receipt: dict[str, Any], root: Path = ROOT) -> None:
+    errors = sorted(Draft202012Validator(_load_schema(root)).iter_errors(receipt), key=lambda e: list(e.path))
     require(not errors, f"receipt fails schema validation: {errors[0].message}" if errors else "")
 
 
@@ -389,8 +400,8 @@ def validate_gate_matches_receipt(receipt: dict[str, Any], root: Path) -> None:
 
 
 def validate_frozen_slot_denominator(receipt: dict[str, Any], root: Path) -> None:
-    manifest = _load(SLOT_MANIFEST_PATH)
-    expected_strata = a7.a6.frozen_slot_strata(manifest)
+    manifest = _load(root / SLOT_MANIFEST_RELATIVE)
+    expected_strata = frozen_slot_strata(manifest)
     declared = receipt["frozen_slot_denominator"]
     require(declared["strata"] == expected_strata, "frozen_slot_denominator.strata does not reproduce from the live slot manifest -- refusing")
     all_ids = [slot_id for stratum in expected_strata for slot_id in stratum["slot_ids"]]
@@ -398,8 +409,15 @@ def validate_frozen_slot_denominator(receipt: dict[str, Any], root: Path) -> Non
     require(declared["total_slots"] == 100, "frozen_slot_denominator.total_slots is not 100 -- refusing")
 
 
+def validate_eligibility_field(receipt: dict[str, Any], root: Path) -> None:
+    manifest = _load(root / SLOT_MANIFEST_RELATIVE)
+    a2_receipt = _load(root / A2_RECEIPT_RELATIVE)
+    expected = ev.public_eligibility(ev.stratum_eligibility(manifest, a2_receipt, error_cls=PrivateFactoryError))
+    require(receipt["prerequisite_eligibility"] == expected, "prerequisite_eligibility does not reproduce from the live A2 receipt and slot manifest -- refusing")
+
+
 def validate_reason_code_totals(receipt: dict[str, Any], root: Path) -> None:
-    a7_receipt = _load(A7_RECEIPT_PATH)
+    a7_receipt = _load(root / A7_RECEIPT_RELATIVE)
     expected = reason_code_totals(a7_receipt)
     require(receipt["reason_code_totals"] == expected, "reason_code_totals does not reproduce from A7's own public a7_residuals -- refusing")
     require(sum(expected.values()) == 100, "reason_code_totals does not sum to the frozen 100-slot denominator -- refusing")
@@ -415,9 +433,9 @@ def validate_private_rows_constructed(receipt: dict[str, Any], root: Path) -> No
     require(receipt["execution_counters"]["dataset_rows_emitted"] == 0, "execution_counters.dataset_rows_emitted is not 0 -- refusing")
 
 
-def validate_residuals_carried_from_a2_a7(receipt: dict[str, Any]) -> None:
-    a2_receipt = _load(A2_RECEIPT_PATH)
-    a7_receipt = _load(A7_RECEIPT_PATH)
+def validate_residuals_carried_from_a2_a7(receipt: dict[str, Any], root: Path) -> None:
+    a2_receipt = _load(root / A2_RECEIPT_RELATIVE)
+    a7_receipt = _load(root / A7_RECEIPT_RELATIVE)
     for stage, source_ids, carried in (
         ("A2", {e["residual_id"] for e in a2_receipt["residuals"]}, receipt["a2_residuals_carried_forward"]),
         ("A7", {e["residual_id"] for e in a7_receipt["a7_residuals"]}, receipt["a7_residuals_carried_forward"]),
@@ -469,13 +487,14 @@ def validate_receipt_independently(receipt: dict[str, Any], root: Path = ROOT) -
     validate_bindings_hash_to_disk(receipt, root)
     validate_gate_matches_receipt(receipt, root)
     validate_frozen_slot_denominator(receipt, root)
+    validate_eligibility_field(receipt, root)
     validate_reason_code_totals(receipt, root)
     validate_private_rows_constructed(receipt, root)
-    validate_residuals_carried_from_a2_a7(receipt)
+    validate_residuals_carried_from_a2_a7(receipt, root)
     validate_no_forbidden_keys(receipt)
     validate_no_forbidden_completion_claims(receipt)
     validate_eligibility_and_safety_all_false(receipt)
-    validate_receipt_schema(receipt)
+    validate_receipt_schema(receipt, root)
 
 
 def main(argv: list[str] | None = None) -> None:

@@ -22,30 +22,30 @@ public artifacts --
 * A4's deterministic extraction receipt (only its own already-carried
   residuals, never A4's private ledger),
 * A5's evidence enrichment receipt (already-carried residuals only),
-* A6's blind arena receipt (already-carried residuals only),
-* A7's original-row factory receipt (its own ``a7_residuals`` only),
-* A8's admission/assembly receipt (its own ``a8_residuals``,
-  ``admitted_slice_view``, and ``engine_wiring.admission_receipt`` -- the
-  direct upstream signal this module's gate and consumer reproduction build
-  on), and
+* A6's blind arena receipt (already-carried residuals *and* its own typed,
+  positive ``a6_completions``),
+* A7's original-row factory receipt (its own typed, positive
+  ``a7_completions``),
+* A8's admission/assembly receipt (its own typed, positive
+  ``a8_completions``, ``admitted_slice_view``, and ``engine_wiring
+  .admission_receipt`` -- the direct upstream signal this module's gate and
+  consumer reproduction build on), and
 * the frozen 100-slot V4 pilot slot manifest (``slot_series`` -- public slot
   IDs only, never a real ``source_unit_id``).
 
-Three independent parts:
+**Prerequisite eligibility is not stage completion** (PR #7654 repair cycle
+2, Option A). A slot is only ever A9-complete once a real ``a9_completions``
+record exists for it *and* that slot is also present in A8's own
+``a8_completions`` (the upstream-subset invariant; A8's own validation
+already transitively covers the A8-vs-A7-vs-A6 chain). Three independent
+parts:
 
 1. ``check_evaluation_gate`` -- independently re-derives, from those seven
    public artifacts alone, whether a real evaluation artifact may be
-   produced at all. Right now it cannot: A8 itself reports
-   ``assembly_slice_ready: false`` (A8 admitted zero rows, so there is
-   nothing admitted to evaluate) and A6's/A7's/A8's own already-public
-   per-slot residuals still list every one of the 100 frozen slots as
-   unresolved. A2 rights and manifest assignment metadata alone are never
-   sufficient: a slot is only ever counted ready once A6's, A7's, *and*
-   A8's own per-slot evidence all agree no residual remains against it. Per
+   produced at all. Right now it cannot: A8 itself reports zero
+   ``slots_stage_complete``, so there is nothing admitted to evaluate. Per
    the binding contract this module must *never* claim
-   ``EVAL_ARTIFACT_READY`` while that is true; it reports
-   ``evaluation_slice_ready: false`` and a typed ``blocked_reason_code``
-   instead.
+   ``EVAL_ARTIFACT_READY`` while that is true.
 2. ``build_consumer_reproduction_view`` -- reproduces, per frozen slot,
    exactly what a consumer rebuilding A8's public admitted slice would see.
    It cross-checks every ``row_admitted`` claim in A8's own
@@ -53,23 +53,22 @@ Three independent parts:
    .admission_receipt.rows`` (the shared admission engine's own admitted
    rows) and fails closed -- refuses, never silently drops -- if a row ever
    appears in the view without a matching real A8 admission. Today every
-   entry is unadmitted, so this passes trivially; the check exists precisely
-   so it cannot be bypassed once a real row appears.
+   entry is unadmitted, so this passes trivially.
 3. ``build_receipt`` -- assembles the public receipt: the frozen 100-slot
-   denominator (reusing, never duplicating,
-   ``v4_a6_blind_arena.frozen_slot_strata``/``all_frozen_slot_ids``), the
-   gate, a real (zero-row) call into the shared, unmodified
+   denominator, the gate, a real (zero-row) call into the shared, unmodified
    ``v4_evaluation_scorer.score_rows`` engine proving A9's own wiring is
    live rather than declarative, every A2/A4/A5/A6/A7/A8 residual carried
-   forward unresolved, the consumer reproduction view, and one typed
-   per-slot A9 residual reusing A8's own already-public per-stratum reason
-   codes -- never a fourth, independently invented reason.
+   forward unresolved, the always-empty ``a9_completions``, the consumer
+   reproduction view, and one typed per-slot A9 residual for every slot not
+   yet complete.
 
 Run with no arguments to verify the checked-in A9 receipt reproduces from the
 seven public artifacts on disk -- no ``batch_state/`` required, so this
 passes in a fresh checkout. Pass ``--write-receipt`` to (re)assemble and
 persist it after a genuine change to one of those seven artifacts or to this
-module or the shared evaluation scorer.
+module or the shared evaluation scorer. Every path this module reads or
+writes is derived from its ``root`` argument, never a module-level
+production-path constant.
 """
 
 from __future__ import annotations
@@ -88,22 +87,39 @@ if str(_SELF_ROOT) not in sys.path:
 
 from scripts.projects.open_model_data import v4_a8_admission_assembly as a8
 from scripts.projects.open_model_data import v4_evaluation_scorer as scorer
+from scripts.projects.open_model_data import v4_stage_evidence as ev
 
 ROOT = _SELF_ROOT
-ADMISSION = ROOT / "data/projects/open_model_data/admission"
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+ADMISSION_RELATIVE = "data/projects/open_model_data/admission"
+CONTRACTS_RELATIVE = "data/projects/open_model_data/contracts"
 
-A9_RECEIPT_PATH = ADMISSION / "dataset_v4_a9_evaluation_package_receipt_v1.json"
-A9_SCHEMA_PATH = CONTRACTS / "dataset_v4_a9_evaluation_package_receipt_v1.schema.json"
-A2_RECEIPT_PATH = ADMISSION / "dataset_v4_a2_source_operation_admission_receipt_v1.json"
-A4_RECEIPT_PATH = ADMISSION / "dataset_v4_a4_deterministic_extraction_receipt_v1.json"
-A5_RECEIPT_PATH = ADMISSION / "dataset_v4_a5_evidence_enrichment_receipt_v1.json"
-A6_RECEIPT_PATH = ADMISSION / "dataset_v4_a6_blind_arena_receipt_v1.json"
-A7_RECEIPT_PATH = ADMISSION / "dataset_v4_a7_original_row_factory_receipt_v1.json"
-A8_RECEIPT_PATH = ADMISSION / "dataset_v4_a8_admission_assembly_receipt_v1.json"
-SLOT_MANIFEST_PATH = ADMISSION / "dataset_v4_pilot_slot_manifest_v1.json"
-SCORER_ENGINE_PATH = ROOT / "scripts/projects/open_model_data/v4_evaluation_scorer.py"
-SELF_PATH = ROOT / "scripts/projects/open_model_data/v4_a9_evaluation_package.py"
+A9_RECEIPT_RELATIVE = f"{ADMISSION_RELATIVE}/dataset_v4_a9_evaluation_package_receipt_v1.json"
+A9_SCHEMA_RELATIVE = f"{CONTRACTS_RELATIVE}/dataset_v4_a9_evaluation_package_receipt_v1.schema.json"
+A2_RECEIPT_RELATIVE = f"{ADMISSION_RELATIVE}/dataset_v4_a2_source_operation_admission_receipt_v1.json"
+A4_RECEIPT_RELATIVE = f"{ADMISSION_RELATIVE}/dataset_v4_a4_deterministic_extraction_receipt_v1.json"
+A5_RECEIPT_RELATIVE = f"{ADMISSION_RELATIVE}/dataset_v4_a5_evidence_enrichment_receipt_v1.json"
+A6_RECEIPT_RELATIVE = f"{ADMISSION_RELATIVE}/dataset_v4_a6_blind_arena_receipt_v1.json"
+A7_RECEIPT_RELATIVE = f"{ADMISSION_RELATIVE}/dataset_v4_a7_original_row_factory_receipt_v1.json"
+A8_RECEIPT_RELATIVE = f"{ADMISSION_RELATIVE}/dataset_v4_a8_admission_assembly_receipt_v1.json"
+SLOT_MANIFEST_RELATIVE = f"{ADMISSION_RELATIVE}/dataset_v4_pilot_slot_manifest_v1.json"
+SCORER_ENGINE_RELATIVE = "scripts/projects/open_model_data/v4_evaluation_scorer.py"
+SELF_RELATIVE = "scripts/projects/open_model_data/v4_a9_evaluation_package.py"
+
+A9_RECEIPT_PATH = ROOT / A9_RECEIPT_RELATIVE
+A9_SCHEMA_PATH = ROOT / A9_SCHEMA_RELATIVE
+# Absolute-path aliases kept for backward compatibility with downstream
+# modules (A10-A13) that still import these directly rather than deriving
+# from a ``root`` argument -- this module's own build/check functions never
+# use these, only the *_RELATIVE strings above plus an explicit root.
+A2_RECEIPT_PATH = ROOT / A2_RECEIPT_RELATIVE
+A4_RECEIPT_PATH = ROOT / A4_RECEIPT_RELATIVE
+A5_RECEIPT_PATH = ROOT / A5_RECEIPT_RELATIVE
+A6_RECEIPT_PATH = ROOT / A6_RECEIPT_RELATIVE
+A7_RECEIPT_PATH = ROOT / A7_RECEIPT_RELATIVE
+A8_RECEIPT_PATH = ROOT / A8_RECEIPT_RELATIVE
+SLOT_MANIFEST_PATH = ROOT / SLOT_MANIFEST_RELATIVE
+SCORER_ENGINE_PATH = ROOT / SCORER_ENGINE_RELATIVE
+SELF_PATH = ROOT / SELF_RELATIVE
 
 V4_SHA256 = "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"
 
@@ -129,6 +145,8 @@ EVALUATION_ELIGIBILITY = {"gold": False, "training": False, "evaluation": False,
 canonical_json = a8.canonical_json
 sha256_text = a8.sha256_text
 sha256_file = a8.sha256_file
+frozen_slot_strata = a8.frozen_slot_strata
+all_frozen_slot_ids = a8.all_frozen_slot_ids
 
 
 class EvaluationPackageError(ValueError):
@@ -144,57 +162,26 @@ def _load(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-# --- A8 reason -> A9 per-slot residual reason --------------------------------
-#
-# A8 already types each frozen slot's blocker as one of three reason codes
-# (reused unchanged from A7's own mapping). A9 never invents a fourth --
-# "why has A8 not assembled a row for this slot" is exactly "why can A9 not
-# score one".
-A9_NEXT_ACTION_BY_REASON = {
-    "rights_unknown": (
-        "no admitted row exists to evaluate for this frozen slot until A2 resolves unit-specific "
-        "training/derivation rights for its stratum's supporting source unit -- never score a placeholder row "
-        "while rights remain unknown"
-    ),
-    "source_incomplete": (
-        "no source unit is yet identified for this frozen slot's stratum, so A8 has nothing assembled and A9 "
-        "has nothing to score -- never invent or substitute a placeholder score"
-    ),
-    "independence_unavailable": (
-        "a supporting source unit is identified for this frozen slot's stratum but its coverage/rights review "
-        "is not yet complete, so A8 assembled no row for it and A9 has nothing to score yet"
-    ),
-}
-
-
 # --- evaluation gate (public-only) -------------------------------------------
 
 
 def check_evaluation_gate(root: Path = ROOT) -> dict[str, Any]:
     """Independently re-derive whether a real evaluation artifact may be
-    produced at all, from the frozen slot manifest's own ``assignment_state``
-    per stratum, A2's own residuals, and A8's independent validity -- never
-    trusting the A9 receipt's own declared fields, never opening
-    ``batch_state/``. ``evaluation_slice_ready`` is only ever true once every
-    frozen slot is assigned to a real source unit *and* A2 has zero
-    unresolved residuals *and* A8 itself still independently validates.
+    produced at all, from the frozen slot manifest's own per-stratum
+    ``assignment_state``, A2's own residuals, and A8's independent validity
+    -- never trusting the A9 receipt's own declared fields, never opening
+    ``batch_state/``. ``evaluation_slice_ready`` is only ever true once this
+    stage's own positive ``a9_completions`` cover all 100 frozen slots, each
+    one also present in A8's own ``a8_completions``.
 
     Fails closed -- a *closed gate*, not an exception -- if any of the three
     required public artifacts (slot manifest, A2 receipt, A8 receipt) is
     missing, mirroring ``v4_a8_admission_assembly.check_assembly_gate``'s own
-    missing-artifact handling."""
-    manifest_path = (root / "data/projects/open_model_data/admission/dataset_v4_pilot_slot_manifest_v1.json").resolve()
-    a2_path = (root / "data/projects/open_model_data/admission/dataset_v4_a2_source_operation_admission_receipt_v1.json").resolve()
-    a6_path = (root / "data/projects/open_model_data/admission/dataset_v4_a6_blind_arena_receipt_v1.json").resolve()
-    a7_path = (root / "data/projects/open_model_data/admission/dataset_v4_a7_original_row_factory_receipt_v1.json").resolve()
-    a8_path = (root / "data/projects/open_model_data/admission/dataset_v4_a8_admission_assembly_receipt_v1.json").resolve()
-    required_paths = {
-        "slot_manifest": manifest_path,
-        "a2_receipt": a2_path,
-        "a6_receipt": a6_path,
-        "a7_receipt": a7_path,
-        "a8_receipt": a8_path,
-    }
+    missing-artifact handling. Every path is derived from ``root``."""
+    manifest_path = (root / SLOT_MANIFEST_RELATIVE).resolve()
+    a2_path = (root / A2_RECEIPT_RELATIVE).resolve()
+    a8_path = (root / A8_RECEIPT_RELATIVE).resolve()
+    required_paths = {"slot_manifest": manifest_path, "a2_receipt": a2_path, "a8_receipt": a8_path}
     for label, path in required_paths.items():
         require(root.resolve() in path.parents, f"{label} path escapes the repository root -- refusing")
 
@@ -203,10 +190,9 @@ def check_evaluation_gate(root: Path = ROOT) -> dict[str, Any]:
         return {
             "gate_id": "v4-a9-evaluation-gate-v1",
             "a8_receipt_valid": False,
-            "a2_rights_resolved": False,
-            "all_slots_assigned": False,
-            "upstream_stage_evidence_present": False,
-            "slots_ready": 0,
+            "slots_prerequisite_eligible": 0,
+            "slots_upstream_complete": 0,
+            "slots_stage_complete": 0,
             "slots_residual": 100,
             "evaluation_slice_ready": False,
             "owner_role": "A2_A3_PRIVATE_ARTIFACT",
@@ -219,8 +205,6 @@ def check_evaluation_gate(root: Path = ROOT) -> dict[str, Any]:
     a2_receipt = _load(a2_path)
     require(a2_receipt.get("controlling_outcome_sha256") == V4_SHA256, "A2 receipt is not bound to the expected V4 controlling outcome -- refusing")
 
-    a6_receipt = _load(a6_path)
-    a7_receipt = _load(a7_path)
     a8_receipt = _load(a8_path)
     try:
         a8.validate_receipt_independently(a8_receipt, root)
@@ -228,56 +212,42 @@ def check_evaluation_gate(root: Path = ROOT) -> dict[str, Any]:
     except a8.AdmissionAssemblyError:
         a8_valid = False
 
-    # Per-slot, never a single global AND across all 100 slots: resolving one
-    # stratum's residual never depends on, or unblocks, any other stratum.
-    # ``blocked_by_a6``/``blocked_by_a7``/``blocked_by_a8`` are real upstream
-    # stage evidence, not metadata -- A2 rights and manifest assignment
-    # alone can never flip a slot ready while any upstream stage's own
-    # per-slot residual still lists it unresolved. A8's own receipt already
-    # independently re-derives A6's and A7's evidence as part of its own
-    # gate (``a8_valid`` above transitively covers that), but this module
-    # still reads each stage's residuals directly so a single slot's
-    # readiness is never decided from a coarser signal than what exists.
-    blocked_by_a6 = a8.a7.blocked_slot_ids_from_residuals(a6_receipt.get("a6_residuals", []))
-    blocked_by_a7 = a8.a7.blocked_slot_ids_from_residuals(a7_receipt.get("a7_residuals", []))
-    blocked_by_a8 = a8.a7.blocked_slot_ids_from_residuals(a8_receipt.get("a8_residuals", []))
-    readiness = a8.a7.per_slot_readiness(manifest, a2_receipt, blocked_by_a6 | blocked_by_a7 | blocked_by_a8)
-    rights_resolved = all(record["rights_resolved"] for record in readiness)
-    all_assigned = all(record["assigned"] for record in readiness)
-    upstream_stage_evidence_present = all(record["upstream_stage_evidence_present"] for record in readiness)
+    eligibility = ev.stratum_eligibility(manifest, a2_receipt, error_cls=EvaluationPackageError)
+    eligible_ids = ev.eligible_slot_ids(eligibility)
+    total_ids = set(all_frozen_slot_ids(manifest))
 
-    slots_ready = sum(1 for record in readiness if record["slot_ready"]) if a8_valid else 0
-    slots_residual = len(readiness) - slots_ready
-    evaluation_slice_ready = slots_ready == len(readiness)
+    a8_completion_ids = (
+        ev.completion_slot_ids(a8_receipt.get("a8_completions", []), stage="A8", total_slot_ids=total_ids, error_cls=EvaluationPackageError) if a8_valid else set()
+    )
 
-    blocked_reason_code = None
-    if not evaluation_slice_ready:
-        if not a8_valid:
-            blocked_reason_code = "a8_receipt_invalid"
-        elif slots_ready == 0:
-            if not rights_resolved and not all_assigned:
-                blocked_reason_code = "rights_unresolved_and_slots_unassigned"
-            elif not rights_resolved:
-                blocked_reason_code = "rights_unresolved"
-            elif not all_assigned:
-                blocked_reason_code = "slot_assignment_pending_a2_a3"
-            else:
-                # Rights are resolved and every slot is assigned, yet an
-                # upstream stage's own per-slot residual evidence still
-                # says no.
-                blocked_reason_code = "upstream_stage_evidence_unavailable"
-        else:
-            # Some, but not all, frozen slots are ready -- the case the old
-            # global-AND gate could never represent.
-            blocked_reason_code = "partial_slots_pending_a2_a3"
+    a9_completions: list[dict[str, Any]] = []  # A9 has no execution mechanism yet -- always empty (design F2).
+    a9_completion_ids = ev.completion_slot_ids(a9_completions, stage="A9", total_slot_ids=total_ids, error_cls=EvaluationPackageError)
+    residual_ids = ev.derive_residual_slot_ids(total_ids, a9_completion_ids)
+    ev.validate_partition(total_ids, a9_completion_ids, residual_ids, label="A9", error_cls=EvaluationPackageError)
+    ev.validate_subset(a9_completion_ids, eligible_ids, label="A9 completions vs prerequisite-eligible slots", error_cls=EvaluationPackageError)
+    ev.validate_subset(a9_completion_ids, a8_completion_ids, label="A9 completions vs A8 completions (upstream subset)", error_cls=EvaluationPackageError)
+
+    slots_prerequisite_eligible = len(eligible_ids)
+    slots_upstream_complete = len(a8_completion_ids)
+    slots_stage_complete = len(a9_completion_ids)
+    slots_residual = len(residual_ids)
+    evaluation_slice_ready = slots_stage_complete == 100
+
+    blocked_reason_code = ev.gate_blocked_reason_code(
+        upstream_valid=a8_valid,
+        slots_prerequisite_eligible=slots_prerequisite_eligible,
+        has_upstream_stage=True,
+        slots_upstream_complete=slots_upstream_complete,
+        slots_stage_complete=slots_stage_complete,
+        total=100,
+    )
 
     return {
         "gate_id": "v4-a9-evaluation-gate-v1",
         "a8_receipt_valid": a8_valid,
-        "a2_rights_resolved": rights_resolved,
-        "all_slots_assigned": all_assigned,
-        "upstream_stage_evidence_present": upstream_stage_evidence_present,
-        "slots_ready": slots_ready,
+        "slots_prerequisite_eligible": slots_prerequisite_eligible,
+        "slots_upstream_complete": slots_upstream_complete,
+        "slots_stage_complete": slots_stage_complete,
         "slots_residual": slots_residual,
         "evaluation_slice_ready": evaluation_slice_ready,
         "owner_role": manifest["sealed_heldout_commitment"]["assignment_owner"],
@@ -288,19 +258,24 @@ def check_evaluation_gate(root: Path = ROOT) -> dict[str, Any]:
 # --- A9's own per-slot residuals (public, source-free) -----------------------
 
 
-def derive_a9_slot_residuals(manifest: dict[str, Any], a2_receipt: dict[str, Any], gate: dict[str, Any]) -> list[dict[str, Any]]:
-    """One typed residual per frozen public slot ID -- never a silently
-    dropped slot and never an evaluation score invented in place of the
-    missing admitted row. A pure function of the manifest's own
-    ``slot_series``, A8's own already-public per-stratum reason codes, and
-    the gate this module itself re-derives; never opens any private state."""
+def derive_a9_slot_residuals(manifest: dict[str, Any], a2_receipt: dict[str, Any], gate: dict[str, Any], completion_slot_ids: set[str] = frozenset()) -> list[dict[str, Any]]:
+    """One typed residual per frozen public slot ID not yet in
+    ``completion_slot_ids`` -- never a silently dropped slot and never an
+    evaluation score invented in place of the missing admitted row. A pure
+    function of the manifest's own ``slot_series``, A2's own public reason
+    codes, the gate this module itself re-derives, and the stage's own
+    completion slot ids; never opens any private state."""
     owner_role = gate["owner_role"]
-    reasons_by_stratum = a8.a7.stratum_reason_codes(a2_receipt)
+    eligibility = ev.stratum_eligibility(manifest, a2_receipt, error_cls=EvaluationPackageError)
+    eligibility_by_stratum = {record["stratum"]: record for record in eligibility}
+    a2_reasons = ev.stratum_a2_reason_codes(a2_receipt, error_cls=EvaluationPackageError)
     residuals = []
-    for stratum_entry in a8.a7.a6.frozen_slot_strata(manifest):
+    for stratum_entry in frozen_slot_strata(manifest):
         stratum = stratum_entry["stratum"]
-        reason_code = reasons_by_stratum[stratum]
+        reason_code = ev.slot_residual_reason_code(stratum, eligibility_by_stratum, a2_reasons)
         for slot_id in stratum_entry["slot_ids"]:
+            if slot_id in completion_slot_ids:
+                continue
             residuals.append(
                 {
                     "residual_id": f"a9-residual-{reason_code.replace('_', '-')}-{slot_id}",
@@ -309,12 +284,16 @@ def derive_a9_slot_residuals(manifest: dict[str, Any], a2_receipt: dict[str, Any
                     "stage": "A9",
                     "reason_code": reason_code,
                     "owner_role": owner_role,
-                    "next_action": A9_NEXT_ACTION_BY_REASON[reason_code],
+                    "next_action": (
+                        "no admitted row exists to evaluate for this frozen slot until its stratum is "
+                        "prerequisite-eligible and A6, A7, A8, and A9 each produce real positive completion "
+                        "evidence for it -- never score a placeholder row"
+                    ),
                     "retryability": "retryable",
                     "evidence_refs": [
                         "admission.dataset_v4_pilot_slot_manifest_v1.slot_series",
                         "admission.dataset_v4_a2_source_operation_admission_receipt_v1.stratum_coverage_map",
-                        "admission.dataset_v4_a8_admission_assembly_receipt_v1.a8_residuals",
+                        "admission.dataset_v4_a8_admission_assembly_receipt_v1.a8_completions",
                     ],
                 }
             )
@@ -337,7 +316,7 @@ def build_consumer_reproduction_view(manifest: dict[str, Any], a8_receipt: dict[
     admitted_rows_by_id = {
         row["row_id"]: row for row in a8_receipt["engine_wiring"]["admission_receipt"]["rows"] if row.get("disposition") == "admitted"
     }
-    expected_slot_ids = set(a8.a7.a6.all_frozen_slot_ids(manifest))
+    expected_slot_ids = set(all_frozen_slot_ids(manifest))
     seen_slot_ids = {entry["slot_id"] for entry in a8_receipt["admitted_slice_view"]}
     require(seen_slot_ids == expected_slot_ids, "A8 admitted_slice_view does not cover exactly the frozen slot manifest -- refusing consumer reproduction")
 
@@ -391,17 +370,21 @@ def run_engine_scoring(admitted_rows: list[dict[str, Any]] = ()) -> dict[str, An
 
 
 def build_receipt(root: Path = ROOT) -> dict[str, Any]:
-    manifest = _load(SLOT_MANIFEST_PATH)
-    a2_receipt = _load(A2_RECEIPT_PATH)
-    a4_receipt = _load(A4_RECEIPT_PATH)
-    a5_receipt = _load(A5_RECEIPT_PATH)
-    a6_receipt = _load(A6_RECEIPT_PATH)
-    a7_receipt = _load(A7_RECEIPT_PATH)
-    a8_receipt = _load(A8_RECEIPT_PATH)
+    manifest = _load(root / SLOT_MANIFEST_RELATIVE)
+    a2_receipt = _load(root / A2_RECEIPT_RELATIVE)
+    a4_receipt = _load(root / A4_RECEIPT_RELATIVE)
+    a5_receipt = _load(root / A5_RECEIPT_RELATIVE)
+    a6_receipt = _load(root / A6_RECEIPT_RELATIVE)
+    a7_receipt = _load(root / A7_RECEIPT_RELATIVE)
+    a8_receipt = _load(root / A8_RECEIPT_RELATIVE)
     gate = check_evaluation_gate(root)
 
-    strata = a8.a7.a6.frozen_slot_strata(manifest)
-    frozen_slot_ids = a8.a7.a6.all_frozen_slot_ids(manifest)
+    strata = frozen_slot_strata(manifest)
+    frozen_slot_ids = all_frozen_slot_ids(manifest)
+    eligibility = ev.stratum_eligibility(manifest, a2_receipt, error_cls=EvaluationPackageError)
+
+    a9_completions: list[dict[str, Any]] = []  # Always empty today -- see module docstring.
+    completion_slot_ids = {record["slot_id"] for record in a9_completions}
 
     a2_residuals_carried = [
         {"residual_id": entry["residual_id"], "origin_stage": "A2", "status": "unresolved_carried_to_a9"}
@@ -429,7 +412,7 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
     ]
 
     scoring_receipt = run_engine_scoring([])
-    a9_residuals = derive_a9_slot_residuals(manifest, a2_receipt, gate)
+    a9_residuals = derive_a9_slot_residuals(manifest, a2_receipt, gate, completion_slot_ids)
     consumer_view = build_consumer_reproduction_view(manifest, a8_receipt, a9_residuals)
 
     return {
@@ -445,48 +428,48 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
         "control_surfaces": {"public_control_issue": 7423, "pilot_child_issue": 7430, "private_operational_board": 622},
         "bindings": {
             "a2_source_operation_admission": {
-                "path": str(A2_RECEIPT_PATH.relative_to(root)),
-                "sha256": sha256_file(A2_RECEIPT_PATH),
+                "path": A2_RECEIPT_RELATIVE,
+                "sha256": sha256_file(root / A2_RECEIPT_RELATIVE),
                 "schema_version": "dataset_v4_a2_source_operation_admission_receipt_v1",
             },
             "a4_deterministic_extraction": {
-                "path": str(A4_RECEIPT_PATH.relative_to(root)),
-                "sha256": sha256_file(A4_RECEIPT_PATH),
+                "path": A4_RECEIPT_RELATIVE,
+                "sha256": sha256_file(root / A4_RECEIPT_RELATIVE),
                 "schema_version": "dataset_v4_a4_deterministic_extraction_receipt_v1",
             },
             "a5_evidence_enrichment": {
-                "path": str(A5_RECEIPT_PATH.relative_to(root)),
-                "sha256": sha256_file(A5_RECEIPT_PATH),
+                "path": A5_RECEIPT_RELATIVE,
+                "sha256": sha256_file(root / A5_RECEIPT_RELATIVE),
                 "schema_version": "dataset_v4_a5_evidence_enrichment_receipt_v1",
             },
             "a6_blind_arena": {
-                "path": str(A6_RECEIPT_PATH.relative_to(root)),
-                "sha256": sha256_file(A6_RECEIPT_PATH),
+                "path": A6_RECEIPT_RELATIVE,
+                "sha256": sha256_file(root / A6_RECEIPT_RELATIVE),
                 "schema_version": "dataset_v4_a6_blind_arena_receipt_v1",
             },
             "a7_original_row_factory": {
-                "path": str(A7_RECEIPT_PATH.relative_to(root)),
-                "sha256": sha256_file(A7_RECEIPT_PATH),
+                "path": A7_RECEIPT_RELATIVE,
+                "sha256": sha256_file(root / A7_RECEIPT_RELATIVE),
                 "schema_version": "dataset_v4_a7_original_row_factory_receipt_v1",
             },
             "a8_admission_assembly": {
-                "path": str(A8_RECEIPT_PATH.relative_to(root)),
-                "sha256": sha256_file(A8_RECEIPT_PATH),
+                "path": A8_RECEIPT_RELATIVE,
+                "sha256": sha256_file(root / A8_RECEIPT_RELATIVE),
                 "schema_version": "dataset_v4_a8_admission_assembly_receipt_v1",
             },
             "pilot_slot_manifest": {
-                "path": str(SLOT_MANIFEST_PATH.relative_to(root)),
-                "sha256": sha256_file(SLOT_MANIFEST_PATH),
+                "path": SLOT_MANIFEST_RELATIVE,
+                "sha256": sha256_file(root / SLOT_MANIFEST_RELATIVE),
                 "schema_version": "dataset_v4_pilot_slot_manifest_v1",
             },
             "scorer_engine_implementation": {
-                "path": str(SCORER_ENGINE_PATH.relative_to(root)),
-                "sha256": sha256_file(SCORER_ENGINE_PATH),
+                "path": SCORER_ENGINE_RELATIVE,
+                "sha256": sha256_file(root / SCORER_ENGINE_RELATIVE),
                 "schema_version": "v4_evaluation_scorer_script_v1",
             },
             "wiring_implementation": {
-                "path": str(SELF_PATH.relative_to(root)),
-                "sha256": sha256_file(SELF_PATH),
+                "path": SELF_RELATIVE,
+                "sha256": sha256_file(root / SELF_RELATIVE),
                 "schema_version": "v4_a9_evaluation_package_script_v1",
             },
         },
@@ -496,15 +479,15 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
             "gate_id": gate["gate_id"],
             "requires": [
                 "a8_receipt_independently_valid",
-                "per_slot_a2_rights_resolved",
-                "per_slot_manifest_assignment",
-                "per_slot_upstream_stage_evidence",
+                "per_stratum_a2_rights_resolved",
+                "per_stratum_manifest_assignment",
+                "per_slot_a8_completion_evidence",
+                "per_slot_a9_completion_evidence",
             ],
             "a8_receipt_valid": gate["a8_receipt_valid"],
-            "a2_rights_resolved": gate["a2_rights_resolved"],
-            "all_slots_assigned": gate["all_slots_assigned"],
-            "upstream_stage_evidence_present": gate["upstream_stage_evidence_present"],
-            "slots_ready": gate["slots_ready"],
+            "slots_prerequisite_eligible": gate["slots_prerequisite_eligible"],
+            "slots_upstream_complete": gate["slots_upstream_complete"],
+            "slots_stage_complete": gate["slots_stage_complete"],
             "slots_residual": gate["slots_residual"],
             "evaluation_slice_ready": gate["evaluation_slice_ready"],
             "owner_role": gate["owner_role"],
@@ -516,12 +499,14 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
             "unscorable_residual_code": scorer.UNSCORABLE_RESIDUAL_CODE,
             "scoring_receipt": scoring_receipt,
         },
+        "prerequisite_eligibility": ev.public_eligibility(eligibility),
         "a2_residuals_carried_forward": a2_residuals_carried,
         "a4_residuals_carried_forward": a4_residuals_carried,
         "a5_residuals_carried_forward": a5_residuals_carried,
         "a6_residuals_carried_forward": a6_residuals_carried,
         "a7_residuals_carried_forward": a7_residuals_carried,
         "a8_residuals_carried_forward": a8_residuals_carried,
+        "a9_completions": a9_completions,
         "a9_residuals": a9_residuals,
         "consumer_reproduction_view": consumer_view,
         "execution_counters": {
@@ -529,8 +514,10 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
             "candidate_rows_scored": scoring_receipt["counts"]["scored_rows"],
             "rows_considered_for_scoring": scoring_receipt["counts"]["input_rows"],
             "frozen_slot_count": len(frozen_slot_ids),
-            "slots_eval_ready": gate["slots_ready"],
-            "slots_blocked": gate["slots_residual"],
+            "slots_prerequisite_eligible": gate["slots_prerequisite_eligible"],
+            "slots_upstream_complete": gate["slots_upstream_complete"],
+            "slots_stage_complete": gate["slots_stage_complete"],
+            "slots_residual": gate["slots_residual"],
         },
         "eligibility": dict(EVALUATION_ELIGIBILITY),
         "safety_assertions": {
@@ -560,14 +547,14 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
 # --- receipt verification ---------------------------------------------------
 
 
-def _load_schema() -> dict[str, Any]:
-    schema = _load(A9_SCHEMA_PATH)
+def _load_schema(root: Path) -> dict[str, Any]:
+    schema = _load(root / A9_SCHEMA_RELATIVE)
     Draft202012Validator.check_schema(schema)
     return schema
 
 
-def validate_receipt_schema(receipt: dict[str, Any]) -> None:
-    errors = sorted(Draft202012Validator(_load_schema()).iter_errors(receipt), key=lambda e: list(e.path))
+def validate_receipt_schema(receipt: dict[str, Any], root: Path = ROOT) -> None:
+    errors = sorted(Draft202012Validator(_load_schema(root)).iter_errors(receipt), key=lambda e: list(e.path))
     require(not errors, f"receipt fails schema validation: {errors[0].message}" if errors else "")
 
 
@@ -589,10 +576,9 @@ def validate_gate_matches_receipt(receipt: dict[str, Any], root: Path) -> None:
     declared = receipt["evaluation_gate"]
     require(
         declared["a8_receipt_valid"] == gate["a8_receipt_valid"]
-        and declared["a2_rights_resolved"] == gate["a2_rights_resolved"]
-        and declared["all_slots_assigned"] == gate["all_slots_assigned"]
-        and declared["upstream_stage_evidence_present"] == gate["upstream_stage_evidence_present"]
-        and declared["slots_ready"] == gate["slots_ready"]
+        and declared["slots_prerequisite_eligible"] == gate["slots_prerequisite_eligible"]
+        and declared["slots_upstream_complete"] == gate["slots_upstream_complete"]
+        and declared["slots_stage_complete"] == gate["slots_stage_complete"]
         and declared["slots_residual"] == gate["slots_residual"]
         and declared["evaluation_slice_ready"] == gate["evaluation_slice_ready"]
         and declared["blocked_reason_code"] == gate["blocked_reason_code"],
@@ -606,8 +592,8 @@ def validate_gate_matches_receipt(receipt: dict[str, Any], root: Path) -> None:
 
 
 def validate_frozen_slot_denominator(receipt: dict[str, Any], root: Path) -> None:
-    manifest = _load(SLOT_MANIFEST_PATH)
-    expected_strata = a8.a7.a6.frozen_slot_strata(manifest)
+    manifest = _load(root / SLOT_MANIFEST_RELATIVE)
+    expected_strata = frozen_slot_strata(manifest)
     declared = receipt["frozen_slot_denominator"]
     require(declared["strata"] == expected_strata, "frozen_slot_denominator.strata does not reproduce from the live slot manifest -- refusing")
     all_ids = [slot_id for stratum in expected_strata for slot_id in stratum["slot_ids"]]
@@ -640,15 +626,46 @@ def validate_scorer_wiring(receipt: dict[str, Any]) -> None:
     )
 
 
-def validate_residuals_and_consumer_view(receipt: dict[str, Any], root: Path) -> None:
-    a2_receipt = _load(A2_RECEIPT_PATH)
-    a4_receipt = _load(A4_RECEIPT_PATH)
-    a5_receipt = _load(A5_RECEIPT_PATH)
-    a6_receipt = _load(A6_RECEIPT_PATH)
-    a7_receipt = _load(A7_RECEIPT_PATH)
-    a8_receipt = _load(A8_RECEIPT_PATH)
-    manifest = _load(SLOT_MANIFEST_PATH)
+def validate_eligibility_and_completion_and_consumer_view(receipt: dict[str, Any], root: Path) -> None:
+    a2_receipt = _load(root / A2_RECEIPT_RELATIVE)
+    a8_receipt = _load(root / A8_RECEIPT_RELATIVE)
+    manifest = _load(root / SLOT_MANIFEST_RELATIVE)
     gate = check_evaluation_gate(root)
+
+    expected_eligibility = ev.public_eligibility(ev.stratum_eligibility(manifest, a2_receipt, error_cls=EvaluationPackageError))
+    require(receipt["prerequisite_eligibility"] == expected_eligibility, "prerequisite_eligibility does not reproduce from the live A2 receipt and slot manifest -- refusing")
+
+    total_ids = set(all_frozen_slot_ids(manifest))
+    eligible_ids = ev.eligible_slot_ids(ev.stratum_eligibility(manifest, a2_receipt, error_cls=EvaluationPackageError))
+    a8_completion_ids = ev.completion_slot_ids(a8_receipt.get("a8_completions", []), stage="A8", total_slot_ids=total_ids, error_cls=EvaluationPackageError)
+    completion_ids = ev.completion_slot_ids(receipt["a9_completions"], stage="A9", total_slot_ids=total_ids, error_cls=EvaluationPackageError)
+    ev.validate_subset(completion_ids, eligible_ids, label="A9 completions vs prerequisite-eligible slots", error_cls=EvaluationPackageError)
+    ev.validate_subset(completion_ids, a8_completion_ids, label="A9 completions vs A8 completions (upstream subset)", error_cls=EvaluationPackageError)
+    require(len(completion_ids) == gate["slots_stage_complete"], "a9_completions count does not match the gate's slots_stage_complete -- refusing")
+
+    residual_subject_ids = {entry["subject_id"] for entry in receipt["a9_residuals"]}
+    expected_residual_ids = total_ids - completion_ids
+    require(residual_subject_ids == expected_residual_ids, "a9_residuals does not exactly cover the complement of a9_completions over the frozen denominator -- refusing")
+    ev.validate_partition(total_ids, completion_ids, residual_subject_ids, label="A9", error_cls=EvaluationPackageError)
+
+    expected_a9_residuals = derive_a9_slot_residuals(manifest, a2_receipt, gate, completion_ids)
+    require(receipt["a9_residuals"] == expected_a9_residuals, "a9_residuals does not reproduce from the live slot manifest, A2 receipt, and gate -- refusing")
+
+    expected_view = build_consumer_reproduction_view(manifest, a8_receipt, expected_a9_residuals)
+    require(receipt["consumer_reproduction_view"] == expected_view, "consumer_reproduction_view does not reproduce from the live A8 receipt and a9_residuals -- refusing")
+    require(
+        all(entry["row_admitted"] is False and entry["row_id"] is None and entry["scored"] is False and entry["score"] is None for entry in receipt["consumer_reproduction_view"]),
+        "consumer_reproduction_view claims an admitted or scored row while no rights-cleared row exists -- refusing",
+    )
+
+
+def validate_residuals_carried(receipt: dict[str, Any], root: Path) -> None:
+    a2_receipt = _load(root / A2_RECEIPT_RELATIVE)
+    a4_receipt = _load(root / A4_RECEIPT_RELATIVE)
+    a5_receipt = _load(root / A5_RECEIPT_RELATIVE)
+    a6_receipt = _load(root / A6_RECEIPT_RELATIVE)
+    a7_receipt = _load(root / A7_RECEIPT_RELATIVE)
+    a8_receipt = _load(root / A8_RECEIPT_RELATIVE)
 
     for stage, source_ids, carried in (
         ("A2", {e["residual_id"] for e in a2_receipt["residuals"]}, receipt["a2_residuals_carried_forward"]),
@@ -665,16 +682,6 @@ def validate_residuals_and_consumer_view(receipt: dict[str, Any], root: Path) ->
                 entry["origin_stage"] == stage and entry["status"] == "unresolved_carried_to_a9",
                 f"{stage.lower()}_residuals_carried_forward entry has an unexpected origin_stage/status -- refusing",
             )
-
-    expected_a9_residuals = derive_a9_slot_residuals(manifest, a2_receipt, gate)
-    require(receipt["a9_residuals"] == expected_a9_residuals, "a9_residuals does not reproduce from the live slot manifest, A2 receipt, and gate -- refusing")
-
-    expected_view = build_consumer_reproduction_view(manifest, a8_receipt, expected_a9_residuals)
-    require(receipt["consumer_reproduction_view"] == expected_view, "consumer_reproduction_view does not reproduce from the live A8 receipt and a9_residuals -- refusing")
-    require(
-        all(entry["row_admitted"] is False and entry["row_id"] is None and entry["scored"] is False and entry["score"] is None for entry in receipt["consumer_reproduction_view"]),
-        "consumer_reproduction_view claims an admitted or scored row while no rights-cleared row exists -- refusing",
-    )
 
 
 def validate_no_forbidden_keys(receipt: dict[str, Any]) -> None:
@@ -714,11 +721,12 @@ def validate_receipt_independently(receipt: dict[str, Any], root: Path = ROOT) -
     validate_gate_matches_receipt(receipt, root)
     validate_frozen_slot_denominator(receipt, root)
     validate_scorer_wiring(receipt)
-    validate_residuals_and_consumer_view(receipt, root)
+    validate_eligibility_and_completion_and_consumer_view(receipt, root)
+    validate_residuals_carried(receipt, root)
     validate_no_forbidden_keys(receipt)
     validate_no_forbidden_completion_claims(receipt)
     validate_eligibility_and_safety_all_false(receipt)
-    validate_receipt_schema(receipt)
+    validate_receipt_schema(receipt, root)
 
 
 def main(argv: list[str] | None = None) -> None:

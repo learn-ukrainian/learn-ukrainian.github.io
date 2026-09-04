@@ -1,27 +1,34 @@
-"""V4 per-slot private factory: proves the global-AND root cause is gone
-from A7 (and A8/A9, which copied the same bug) and that the new private
-factory module never leaks a slot->HMAC/source-unit table, never claims a
-public row, and never touches A3's held-out membership.
+"""V4 per-slot prerequisite eligibility / positive completion / residual
+model (PR #7654 repair cycle 2, Option A -- ``batch_state/tasks/design-7654-
+partial-stage-evidence.result``): proves per-slot prerequisite eligibility is
+not stage completion for A6-A9 and the private per-slot factory companion,
+and that neither can be faked -- every positive result here comes from a
+real, live builder/validator, never a stubbed one.
 
-Everything here except the private-ledger permission checks runs against
-public artifacts only -- no ``batch_state/`` required for the gate/receipt
-functions themselves, so the bulk of this suite passes in a fresh checkout.
+Everything here except the private-ledger permission checks and the
+synthetic-chain fixture runs against public artifacts only -- no
+``batch_state/`` required for the gate/receipt functions themselves, so the
+bulk of this suite passes in a fresh checkout.
 """
 
 from __future__ import annotations
 
+import ast
 import copy
 import json
 import stat
 from pathlib import Path
 
+import _v4_synthetic_chain_fixture as fixture
 import pytest
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data import v4_a6_blind_arena as a6
 from scripts.projects.open_model_data import v4_a7_original_row_factory as a7
 from scripts.projects.open_model_data import v4_a8_admission_assembly as a8
 from scripts.projects.open_model_data import v4_a9_evaluation_package as a9
 from scripts.projects.open_model_data import v4_per_slot_private_factory as factory
+from scripts.projects.open_model_data import v4_stage_evidence as ev
 
 ROOT = Path(__file__).resolve().parents[3]
 ADMISSION = ROOT / "data/projects/open_model_data/admission"
@@ -43,13 +50,6 @@ REAL_A8_RECEIPT = json.loads(A8_RECEIPT_PATH.read_text(encoding="utf-8"))
 REAL_A9_RECEIPT = json.loads(A9_RECEIPT_PATH.read_text(encoding="utf-8"))
 REAL_FACTORY_RECEIPT = json.loads(FACTORY_RECEIPT_PATH.read_text(encoding="utf-8"))
 
-# The real A6 receipt's own per-slot evidence today: every one of the 100
-# frozen slots is still listed as independence_unavailable. Used throughout
-# as the "no real upstream stage evidence exists yet" ground truth.
-BLOCKED_BY_REAL_A6 = a7.blocked_slot_ids_from_residuals(REAL_A6_RECEIPT["a6_residuals"])
-BLOCKED_BY_REAL_A7 = a7.blocked_slot_ids_from_residuals(REAL_A7_RECEIPT["a7_residuals"])
-BLOCKED_BY_REAL_A8 = a7.blocked_slot_ids_from_residuals(REAL_A8_RECEIPT["a8_residuals"])
-
 # The forbidden slot->HMAC/source-unit vocabulary this dispatch exists to
 # keep out of every public V4 artifact -- see PR #7646's own
 # COMMITMENT_BINDING_POLICY and the binding contract's rights/firewall.
@@ -64,353 +64,180 @@ def _all_keys(value: object) -> set[str]:
     return set()
 
 
-def _resolved_a2_receipt(resolved_strata: set[str]) -> dict[str, object]:
-    """A synthetic A2 receipt where only ``resolved_strata`` have their
-    residual cleared -- the rest keep their real, unresolved residual. Used
-    to prove per-slot (not all-or-nothing) readiness."""
-    receipt = copy.deepcopy(REAL_A2_RECEIPT)
-    cleared_residual_ids = set()
-    for coverage in receipt["stratum_coverage_map"]:
-        if coverage["stratum"] in resolved_strata:
-            cleared_residual_ids.update(coverage["residual_ids"])
-            coverage["residual_ids"] = []
-    receipt["residuals"] = [r for r in receipt["residuals"] if r["residual_id"] not in cleared_residual_ids]
-    return receipt
+# --- prerequisite eligibility is a real, per-stratum, live-validated fact ---
 
 
-def _resolved_a6_receipt_for_slots(resolved_slot_ids: set[str]) -> dict[str, object]:
-    """A synthetic A6 receipt where ``resolved_slot_ids`` no longer carry an
-    unresolved ``a6_residuals`` entry -- simulating a future state where A6's
-    own per-slot evidence has genuinely cleared for those slots. Used to
-    prove downstream stages correctly advance a slot once *real* upstream
-    stage evidence exists for it, not just A2 rights + manifest assignment
-    metadata."""
-    receipt = copy.deepcopy(REAL_A6_RECEIPT)
-    receipt["a6_residuals"] = [r for r in receipt["a6_residuals"] if r["subject_id"] not in resolved_slot_ids]
-    return receipt
+def test_stratum_eligibility_covers_every_manifest_stratum_exactly_once() -> None:
+    eligibility = ev.stratum_eligibility(REAL_MANIFEST, REAL_A2_RECEIPT)
+    assert len(eligibility) == 8
+    assert {record["stratum"] for record in eligibility} == {s["stratum"] for s in REAL_MANIFEST["slot_series"]}
 
 
-def _slot_ids_for_stratum(manifest: dict[str, object], stratum: str) -> set[str]:
-    series = next(s for s in manifest["slot_series"] if s["stratum"] == stratum)
-    return set(a7.a6.slot_ids_for_series(series))
-
-
-# --- root cause #1: per_slot_readiness is a pure per-slot function, never --
-# --- a single global AND -----------------------------------------------------
-
-
-def test_per_slot_readiness_covers_every_frozen_slot_exactly_once() -> None:
-    readiness = a7.per_slot_readiness(REAL_MANIFEST, REAL_A2_RECEIPT, set())
-    assert len(readiness) == 100
-    assert len({r["slot_id"] for r in readiness}) == 100
-    assert {r["slot_id"] for r in readiness} == set(a7.a6.all_frozen_slot_ids(REAL_MANIFEST))
-
-
-def test_per_slot_readiness_against_real_production_data_is_zero_ready_hundred_residual() -> None:
+def test_stratum_eligibility_against_real_production_data_is_zero_eligible() -> None:
     # Matches the binding contract's own "0 assigned / 100 residual" count.
-    readiness = a7.per_slot_readiness(REAL_MANIFEST, REAL_A2_RECEIPT, BLOCKED_BY_REAL_A6)
-    assert sum(1 for r in readiness if r["slot_ready"]) == 0
-    assert sum(1 for r in readiness if not r["slot_ready"]) == 100
-
-
-def test_per_slot_readiness_resolving_one_stratum_never_needs_every_other_stratum_resolved() -> None:
-    """The regression test for the first root cause: the old gate computed
-    ``rights_resolved = len(a2_receipt["residuals"]) == 0`` -- a single
-    boolean across all eight strata -- so resolving just one stratum's
-    residual could never flip any slot to ready while a single other
-    stratum stayed open. The fixed per-slot function must show a partial
-    result here: exactly the resolved stratum's 15 slots ready, the other
-    85 still residual. Real upstream (A6) evidence is supplied for the
-    resolved stratum -- this test isolates the per-stratum-independence
-    property, not the separate metadata-vs-evidence property covered below."""
-    resolved_a2 = _resolved_a2_receipt({"standard_correct"})
-    assert len(resolved_a2["residuals"]) == 7  # seven of eight strata residuals remain
-
-    assigned_manifest = copy.deepcopy(REAL_MANIFEST)
-    for series in assigned_manifest["slot_series"]:
-        if series["stratum"] == "standard_correct":
-            series["assignment_state"] = "ASSIGNED"
-
-    standard_correct_slot_ids = _slot_ids_for_stratum(assigned_manifest, "standard_correct")
-    resolved_a6 = _resolved_a6_receipt_for_slots(standard_correct_slot_ids)
-    blocked_by_a6 = a7.blocked_slot_ids_from_residuals(resolved_a6["a6_residuals"])
-
-    readiness = a7.per_slot_readiness(assigned_manifest, resolved_a2, blocked_by_a6)
-    ready_slots = {r["slot_id"] for r in readiness if r["slot_ready"]}
-    assert len(ready_slots) == 15
-    assert ready_slots == standard_correct_slot_ids
-    # Every other stratum's slots stay exactly as unready as before --
-    # resolving standard_correct never touched them.
-    assert all(not r["slot_ready"] for r in readiness if r["stratum"] != "standard_correct")
-
-
-# --- root cause #2: A2 rights + manifest assignment metadata alone can ------
-# --- never advance a slot past a stage with no real upstream evidence -------
-
-
-def test_per_slot_readiness_a2_and_manifest_alone_cannot_produce_a_false_positive() -> None:
-    """The regression test for the second root cause this dispatch fixes:
-    A2 rights resolved *and* manifest assignment resolved for a stratum
-    must never flip that stratum's slots ready while the real A6 receipt
-    still lists every one of the 100 frozen slots as
-    ``independence_unavailable``. Metadata is not stage evidence -- before
-    this fix, this exact scenario produced 15 false-positive ready slots."""
-    resolved_a2 = _resolved_a2_receipt({"literary"})
-    assigned_manifest = copy.deepcopy(REAL_MANIFEST)
-    for series in assigned_manifest["slot_series"]:
-        if series["stratum"] == "literary":
-            series["assignment_state"] = "ASSIGNED"
-
-    readiness = a7.per_slot_readiness(assigned_manifest, resolved_a2, BLOCKED_BY_REAL_A6)
-    assert sum(1 for r in readiness if r["slot_ready"]) == 0
-    assert sum(1 for r in readiness if not r["upstream_stage_evidence_present"]) == 100
-
-
-def test_per_slot_readiness_one_stratum_advances_once_real_upstream_evidence_exists() -> None:
-    """The companion proof: once A6's own per-slot evidence *genuinely*
-    clears for a stratum's slots (not just A2 rights/manifest metadata),
-    that stratum -- and only that stratum -- advances."""
-    resolved_a2 = _resolved_a2_receipt({"correction"})
-    assigned_manifest = copy.deepcopy(REAL_MANIFEST)
-    for series in assigned_manifest["slot_series"]:
-        if series["stratum"] == "correction":
-            series["assignment_state"] = "ASSIGNED"
-
-    correction_slot_ids = _slot_ids_for_stratum(assigned_manifest, "correction")
-    resolved_a6 = _resolved_a6_receipt_for_slots(correction_slot_ids)
-    blocked_by_a6 = a7.blocked_slot_ids_from_residuals(resolved_a6["a6_residuals"])
-
-    readiness = a7.per_slot_readiness(assigned_manifest, resolved_a2, blocked_by_a6)
-    ready_slots = {r["slot_id"] for r in readiness if r["slot_ready"]}
-    assert ready_slots == correction_slot_ids
-    assert all(not r["slot_ready"] for r in readiness if r["stratum"] != "correction")
-
-
-# --- root cause fix proven at the gate level (A7, A8, A9) -------------------
-
-
-def _write_a7_gate_fixture(tmp_path: Path, resolved_a2: dict[str, object], assigned_manifest: dict[str, object], a6_receipt: dict[str, object]) -> Path:
-    admission_dir = tmp_path / "data/projects/open_model_data/admission"
-    admission_dir.mkdir(parents=True)
-    (admission_dir / "dataset_v4_a2_source_operation_admission_receipt_v1.json").write_text(json.dumps(resolved_a2))
-    (admission_dir / "dataset_v4_pilot_slot_manifest_v1.json").write_text(json.dumps(assigned_manifest))
-    (admission_dir / "dataset_v4_a6_blind_arena_receipt_v1.json").write_text(json.dumps(a6_receipt))
-    return tmp_path
-
-
-def test_a7_gate_cannot_report_ready_slots_from_a2_and_manifest_metadata_alone(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """The regression test for the false positive this dispatch exists to
-    close: A2 rights resolved + manifest assignment resolved for a stratum
-    must never flip that stratum's slots ready while the real (unmodified)
-    A6 receipt still lists every one of the 100 frozen slots as
-    ``independence_unavailable``. Before this fix, this exact scenario
-    (a synthetic single-stratum A2/manifest resolution against the real A6
-    receipt) produced 15 false-positive ready slots. ``a6.validate_receipt_
-    independently`` is stubbed so this test isolates the per-slot evidence
-    check itself, not a coincidental "a6_valid is False" zeroing."""
-    resolved_a2 = _resolved_a2_receipt({"literary"})
-    assigned_manifest = copy.deepcopy(REAL_MANIFEST)
-    for series in assigned_manifest["slot_series"]:
-        if series["stratum"] == "literary":
-            series["assignment_state"] = "ASSIGNED"
-
-    fixture_root = _write_a7_gate_fixture(tmp_path, resolved_a2, assigned_manifest, REAL_A6_RECEIPT)
-    monkeypatch.setattr(a7.a6, "validate_receipt_independently", lambda *a, **k: None)
-    gate = a7.check_factory_gate(fixture_root)
-
-    assert gate["a6_receipt_valid"] is True
-    assert gate["slots_ready"] == 0
-    assert gate["slots_residual"] == 100
-    assert gate["factory_slice_ready"] is False
-    assert gate["upstream_stage_evidence_present"] is False
-    assert gate["a2_rights_resolved"] is False  # seven other strata still unresolved
-    assert gate["all_slots_assigned"] is False  # seven other strata still unassigned
-    assert gate["blocked_reason_code"] == "rights_unresolved_and_slots_unassigned"
-
-
-def test_a7_gate_reports_upstream_stage_evidence_unavailable_when_all_metadata_clears_but_a6_does_not(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """The reason code the old gate could never produce: A2 rights resolved
-    *and* every frozen slot assigned (both global metadata checks pass) but
-    the real A6 receipt still lists every slot as
-    ``independence_unavailable``. This is the cleanest proof metadata alone
-    is insufficient -- there is no remaining metadata gap to blame."""
-    fully_resolved_a2 = copy.deepcopy(REAL_A2_RECEIPT)
-    fully_resolved_a2["residuals"] = []
-    for coverage in fully_resolved_a2["stratum_coverage_map"]:
-        coverage["residual_ids"] = []
-
-    fully_assigned_manifest = copy.deepcopy(REAL_MANIFEST)
-    for series in fully_assigned_manifest["slot_series"]:
-        series["assignment_state"] = "ASSIGNED"
-
-    fixture_root = _write_a7_gate_fixture(tmp_path, fully_resolved_a2, fully_assigned_manifest, REAL_A6_RECEIPT)
-    monkeypatch.setattr(a7.a6, "validate_receipt_independently", lambda *a, **k: None)
-    gate = a7.check_factory_gate(fixture_root)
-
-    assert gate["a2_rights_resolved"] is True
-    assert gate["all_slots_assigned"] is True
-    assert gate["upstream_stage_evidence_present"] is False
-    assert gate["slots_ready"] == 0
-    assert gate["factory_slice_ready"] is False
-    assert gate["blocked_reason_code"] == "upstream_stage_evidence_unavailable"
-
-
-def test_a7_gate_reports_partial_slots_ready_when_one_stratum_has_real_upstream_evidence(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """The companion proof: once A2 rights, manifest assignment, *and* A6's
-    own real per-slot evidence all agree for one stratum, that stratum's
-    slots -- and only that stratum's -- go ready. The old global-AND gate
-    could only ever report 0 or 100; this proves a genuine in-between value
-    is reachable, and that it requires real evidence, not metadata alone."""
-    resolved_a2 = _resolved_a2_receipt({"literary"})
-    assigned_manifest = copy.deepcopy(REAL_MANIFEST)
-    for series in assigned_manifest["slot_series"]:
-        if series["stratum"] == "literary":
-            series["assignment_state"] = "ASSIGNED"
-
-    literary_slot_ids = _slot_ids_for_stratum(assigned_manifest, "literary")
-    resolved_a6 = _resolved_a6_receipt_for_slots(literary_slot_ids)
-
-    fixture_root = _write_a7_gate_fixture(tmp_path, resolved_a2, assigned_manifest, resolved_a6)
-    monkeypatch.setattr(a7.a6, "validate_receipt_independently", lambda *a, **k: None)
-    gate = a7.check_factory_gate(fixture_root)
-
-    assert 0 < gate["slots_ready"] < 100
-    assert gate["slots_ready"] == 15
-    assert gate["slots_residual"] == 85
-    assert gate["factory_slice_ready"] is False  # not *every* slot is ready, so the aggregate claim stays closed
-    assert gate["blocked_reason_code"] == "partial_slots_pending_a2_a3"
-
-
-def test_a7_gate_against_real_production_artifacts_is_still_all_residual() -> None:
-    gate = a7.check_factory_gate()
-    assert gate["slots_ready"] == 0
-    assert gate["slots_residual"] == 100
-    assert gate["factory_slice_ready"] is False
-    assert gate["upstream_stage_evidence_present"] is False
-
-
-def test_a8_gate_against_real_production_artifacts_is_still_all_residual() -> None:
-    gate = a8.check_assembly_gate()
-    assert gate["slots_ready"] == 0
-    assert gate["slots_residual"] == 100
-    assert gate["assembly_slice_ready"] is False
-    assert gate["upstream_stage_evidence_present"] is False
-
-
-def test_a9_gate_against_real_production_artifacts_is_still_all_residual() -> None:
-    gate = a9.check_evaluation_gate()
-    assert gate["slots_ready"] == 0
-    assert gate["slots_residual"] == 100
-    assert gate["evaluation_slice_ready"] is False
-    assert gate["upstream_stage_evidence_present"] is False
-
-
-def test_a7_a8_a9_factory_gate_requires_no_longer_state_a_global_all_frozen_slots_assigned_requirement() -> None:
-    assert REAL_A7_RECEIPT["factory_gate"]["requires"] == [
-        "a6_receipt_independently_valid",
-        "per_slot_a2_rights_resolved",
-        "per_slot_manifest_assignment",
-        "per_slot_upstream_stage_evidence",
-    ]
-    assert REAL_A8_RECEIPT["assembly_gate"]["requires"] == [
-        "a7_receipt_independently_valid",
-        "per_slot_a2_rights_resolved",
-        "per_slot_manifest_assignment",
-        "per_slot_upstream_stage_evidence",
-    ]
-    assert REAL_A9_RECEIPT["evaluation_gate"]["requires"] == [
-        "a8_receipt_independently_valid",
-        "per_slot_a2_rights_resolved",
-        "per_slot_manifest_assignment",
-        "per_slot_upstream_stage_evidence",
-    ]
-    assert "all_frozen_slots_assigned" not in json.dumps(REAL_A7_RECEIPT["factory_gate"])
-
-
-# --- root cause fix proven at the A8/A9 chain-union level -------------------
-# A8 depends on *both* A6's and A7's own per-slot evidence; A9 depends on
-# A6's, A7's, *and* A8's. These prove the exact union each gate computes
-# (``blocked_by_a6 | blocked_by_a7`` / ``blocked_by_a6 | blocked_by_a7 |
-# blocked_by_a8``) cannot be defeated by A2 rights + manifest assignment
-# metadata alone, and that it correctly advances once every required
-# upstream stage's real evidence exists.
-
-
-def test_a8_chain_cannot_report_ready_slots_from_metadata_alone_when_upstream_evidence_is_unavailable() -> None:
-    resolved_a2 = _resolved_a2_receipt({"correction"})
-    assigned_manifest = copy.deepcopy(REAL_MANIFEST)
-    for series in assigned_manifest["slot_series"]:
-        if series["stratum"] == "correction":
-            series["assignment_state"] = "ASSIGNED"
-
-    readiness = a7.per_slot_readiness(assigned_manifest, resolved_a2, BLOCKED_BY_REAL_A6 | BLOCKED_BY_REAL_A7)
-    assert sum(1 for r in readiness if r["slot_ready"]) == 0
-
-
-def test_a8_chain_advances_one_stratum_once_both_a6_and_a7_evidence_exist() -> None:
-    resolved_a2 = _resolved_a2_receipt({"correction"})
-    assigned_manifest = copy.deepcopy(REAL_MANIFEST)
-    for series in assigned_manifest["slot_series"]:
-        if series["stratum"] == "correction":
-            series["assignment_state"] = "ASSIGNED"
-
-    correction_slot_ids = _slot_ids_for_stratum(assigned_manifest, "correction")
-    resolved_a6 = _resolved_a6_receipt_for_slots(correction_slot_ids)
-    blocked_by_a6 = a7.blocked_slot_ids_from_residuals(resolved_a6["a6_residuals"])
-    blocked_by_a7 = {slot_id for slot_id in BLOCKED_BY_REAL_A7 if slot_id not in correction_slot_ids}
-
-    readiness = a7.per_slot_readiness(assigned_manifest, resolved_a2, blocked_by_a6 | blocked_by_a7)
-    ready_slots = {r["slot_id"] for r in readiness if r["slot_ready"]}
-    assert ready_slots == correction_slot_ids
-
-
-def test_a9_chain_cannot_report_ready_slots_from_metadata_alone_when_upstream_evidence_is_unavailable() -> None:
-    resolved_a2 = _resolved_a2_receipt({"dialect_regional"})
-    assigned_manifest = copy.deepcopy(REAL_MANIFEST)
-    for series in assigned_manifest["slot_series"]:
-        if series["stratum"] == "dialect_regional":
-            series["assignment_state"] = "ASSIGNED"
-
-    readiness = a7.per_slot_readiness(assigned_manifest, resolved_a2, BLOCKED_BY_REAL_A6 | BLOCKED_BY_REAL_A7 | BLOCKED_BY_REAL_A8)
-    assert sum(1 for r in readiness if r["slot_ready"]) == 0
-
-
-def test_a9_chain_advances_one_stratum_once_a6_a7_and_a8_evidence_all_exist() -> None:
-    resolved_a2 = _resolved_a2_receipt({"dialect_regional"})
-    assigned_manifest = copy.deepcopy(REAL_MANIFEST)
-    for series in assigned_manifest["slot_series"]:
-        if series["stratum"] == "dialect_regional":
-            series["assignment_state"] = "ASSIGNED"
-
-    dialect_slot_ids = _slot_ids_for_stratum(assigned_manifest, "dialect_regional")
-    resolved_a6 = _resolved_a6_receipt_for_slots(dialect_slot_ids)
-    blocked_by_a6 = a7.blocked_slot_ids_from_residuals(resolved_a6["a6_residuals"])
-    blocked_by_a7 = {slot_id for slot_id in BLOCKED_BY_REAL_A7 if slot_id not in dialect_slot_ids}
-    blocked_by_a8 = {slot_id for slot_id in BLOCKED_BY_REAL_A8 if slot_id not in dialect_slot_ids}
-
-    readiness = a7.per_slot_readiness(assigned_manifest, resolved_a2, blocked_by_a6 | blocked_by_a7 | blocked_by_a8)
-    ready_slots = {r["slot_id"] for r in readiness if r["slot_ready"]}
-    assert ready_slots == dialect_slot_ids
-
-
-# --- public receipts still hold every prior invariant -----------------------
-
-
-def test_a7_receipt_still_validates_independently_after_the_per_slot_fix() -> None:
-    assert a7.validate_receipt_independently(REAL_A7_RECEIPT) is None
-
-
-def test_a8_receipt_still_validates_independently_after_the_per_slot_fix() -> None:
-    receipt = json.loads((ADMISSION / "dataset_v4_a8_admission_assembly_receipt_v1.json").read_text())
-    assert a8.validate_receipt_independently(receipt) is None
-
-
-def test_a9_receipt_still_validates_independently_after_the_per_slot_fix() -> None:
-    receipt = json.loads((ADMISSION / "dataset_v4_a9_evaluation_package_receipt_v1.json").read_text())
-    assert a9.validate_receipt_independently(receipt) is None
-
-
-# --- the new private factory module: public receipt -------------------------
+    eligibility = ev.stratum_eligibility(REAL_MANIFEST, REAL_A2_RECEIPT)
+    assert all(not record["prerequisite_eligible"] for record in eligibility)
+    assert ev.eligible_slot_ids(eligibility) == set()
+
+
+def test_stratum_eligibility_resolving_one_stratum_never_needs_every_other_stratum_resolved() -> None:
+    """The per-stratum-independence property: resolving one stratum's A2
+    residual and manifest assignment must never depend on any other
+    stratum's state."""
+    resolved_a2 = fixture.resolved_a2_receipt("standard_correct")
+    assigned_manifest = fixture.assigned_manifest("standard_correct")
+    eligibility = ev.stratum_eligibility(assigned_manifest, resolved_a2)
+    eligible = {record["stratum"] for record in eligibility if record["prerequisite_eligible"]}
+    assert eligible == {"standard_correct"}
+    assert len(ev.eligible_slot_ids(eligibility)) == 15
+
+
+def test_stratum_eligibility_refuses_a_coverage_entry_referencing_an_absent_residual() -> None:
+    """The first hole the cycle-1 stubbed tests exploited: a coverage entry
+    referencing a residual id absent from A2's own residuals list must
+    refuse, never silently drop the reference."""
+    tampered = copy.deepcopy(REAL_A2_RECEIPT)
+    tampered["stratum_coverage_map"][0]["residual_ids"] = ["a2-residual-does-not-exist"]
+    with pytest.raises(ValueError, match="absent from A2's own residuals"):
+        ev.stratum_eligibility(REAL_MANIFEST, tampered)
+
+
+def test_stratum_eligibility_refuses_an_empty_residual_list_without_a_resolved_coverage_state() -> None:
+    """The second hole: a coverage entry cannot legitimately clear its
+    residual_ids without a matching ``coverage_state: "resolved"``
+    transition -- deleting a residual without that transition refuses."""
+    tampered = copy.deepcopy(REAL_A2_RECEIPT)
+    tampered["stratum_coverage_map"][0]["residual_ids"] = []
+    # coverage_state left at its real, non-resolved value.
+    with pytest.raises(ValueError, match="coverage_state"):
+        ev.stratum_eligibility(REAL_MANIFEST, tampered)
+
+
+# --- the synthetic partial-prerequisite chain: every validator live --------
+
+
+def test_synthetic_chain_reports_fifteen_eligible_zero_complete_hundred_residual_at_a6_through_a9(tmp_path: Path) -> None:
+    """The acceptance proof for this repair: a fully valid synthetic chain
+    where exactly one manifest stratum (15 slots) is genuinely prerequisite-
+    eligible, built and verified with every A6-A9 validator running live --
+    no monkeypatch, no stub, no deleted residual standing in for real
+    upstream evidence. Every stage reports 15 eligible, 0 complete, 100
+    residual, proving eligibility and completion are visibly distinct
+    everywhere this repair touches."""
+    fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
+    receipts = fixture.run_chain_a6_through_a9(tmp_path)
+
+    for stage, gate_key, ready_key in (
+        ("a6", "arena_gate", "arena_slice_ready"),
+        ("a7", "factory_gate", "factory_slice_ready"),
+        ("a8", "assembly_gate", "assembly_slice_ready"),
+        ("a9", "evaluation_gate", "evaluation_slice_ready"),
+    ):
+        gate = receipts[stage][gate_key]
+        assert gate["slots_prerequisite_eligible"] == 15, stage
+        assert gate["slots_stage_complete"] == 0, stage
+        assert gate["slots_residual"] == 100, stage
+        assert gate[ready_key] is False, stage
+
+
+# --- tamper tests: overlap, gap, ineligible completion, upstream-missing ---
+
+
+def test_partition_refuses_a_slot_in_both_completion_and_residual_lists() -> None:
+    """Overlap: a slot claimed complete must never also carry a residual --
+    completion and residual must exactly partition the frozen denominator.
+    Exercises the shared validator ``v4_stage_evidence`` module directly --
+    the same function every A6-A9 gate calls -- since a stage's own gate
+    always independently recomputes today's real completion count as 0 (no
+    execution mechanism exists yet), which would otherwise mask which
+    specific check refused a hand-tampered receipt."""
+    total = set(a6.all_frozen_slot_ids(REAL_MANIFEST))
+    completion = {"v4p-standard-correct-001"}
+    residual = total - completion  # correct complement...
+    residual.add("v4p-standard-correct-001")  # ...deliberately re-added: now overlaps completion.
+    with pytest.raises(ValueError, match="overlap"):
+        ev.validate_partition(total, completion, residual, label="test")
+
+
+def test_partition_refuses_a_slot_dropped_from_both_completion_and_residual_lists() -> None:
+    """Gap: a slot that is neither complete nor residual must refuse --
+    never a silently forgotten slot."""
+    total = set(a6.all_frozen_slot_ids(REAL_MANIFEST))
+    completion = {"v4p-standard-correct-001"}
+    residual = total - completion - {"v4p-standard-correct-002"}  # a second slot silently dropped from both.
+    with pytest.raises(ValueError, match="partition"):
+        ev.validate_partition(total, completion, residual, label="test")
+
+
+def test_subset_refuses_a_completion_for_a_prerequisite_ineligible_slot() -> None:
+    """A completion claim for a slot whose stratum is not prerequisite-
+    eligible must refuse -- completion can never precede eligibility."""
+    eligible = {"v4p-standard-correct-001"}
+    completion = {"v4p-literary-001"}  # not in the eligible set.
+    with pytest.raises(ValueError, match="subset"):
+        ev.validate_subset(completion, eligible, label="test")
+
+
+def test_subset_refuses_a_completion_with_no_matching_upstream_completion() -> None:
+    """Upstream-missing: a downstream stage cannot claim a slot complete
+    unless the immediately upstream stage's own positive completion
+    evidence also names it -- eligibility, and even a real downstream-level
+    construction, can never stand in for the missing upstream proof."""
+    upstream_completion: set[str] = set()  # A6's own a6_completions, empty today.
+    completion = {"v4p-standard-correct-001"}  # A7 claims this slot complete anyway.
+    with pytest.raises(ValueError, match="subset"):
+        ev.validate_subset(completion, upstream_completion, label="test")
+
+
+def test_a2_deleting_a_residual_without_a_resolved_coverage_state_refuses() -> None:
+    """Tampered-A2-state: the coverage-state transition is the only
+    legitimate way a residual clears -- a receipt hand-edited to drop a
+    residual without it must be refused by every stage's own eligibility
+    derivation, not just by a schema shape check."""
+    tampered_a2 = copy.deepcopy(REAL_A2_RECEIPT)
+    tampered_a2["residuals"] = [r for r in tampered_a2["residuals"] if r["subject_id"] != "standard_correct"]
+    for coverage in tampered_a2["stratum_coverage_map"]:
+        if coverage["stratum"] == "standard_correct":
+            coverage["residual_ids"] = []
+            # coverage_state deliberately left at its real, unresolved value.
+    for module, error_cls in ((a6, a6.ArenaWiringError), (a7, a7.OriginalRowFactoryError), (a8, a8.AdmissionAssemblyError), (a9, a9.EvaluationPackageError)):
+        with pytest.raises(error_cls, match="coverage_state"):
+            module.ev.stratum_eligibility(REAL_MANIFEST, tampered_a2, error_cls=error_cls)
+
+
+# --- suite-level guard: no stubbed validator behind a nonzero-completion claim ---
+
+_STUB_PATTERN = "monkeypatch.setattr"
+_NONZERO_COMPLETION_PATTERNS = (
+    'slots_stage_complete"] > 0',
+    'factory_slice_ready"] is True',
+    'arena_slice_ready"] is True',
+    'assembly_slice_ready"] is True',
+    'evaluation_slice_ready"] is True',
+)
+
+
+def test_no_test_in_this_suite_asserts_nonzero_completion_behind_a_stubbed_validator() -> None:
+    """A static source guard: any test function that stubs a validator
+    (``monkeypatch.setattr(..., "validate_receipt_independently", ...)``)
+    must never also assert a stage reports positive completion. This is
+    exactly the cycle-1 anti-pattern the exact-head review flagged as a P1
+    -- this guard keeps it from coming back."""
+    suite_dir = Path(__file__).resolve().parent
+    offenders: list[str] = []
+    for test_file in [*sorted(suite_dir.glob("test_a[6-9]_*.py")), Path(__file__)]:
+        source = test_file.read_text(encoding="utf-8")
+        tree = ast.parse(source, filename=str(test_file))
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.FunctionDef) or not node.name.startswith("test_"):
+                continue
+            segment = ast.get_source_segment(source, node) or ""
+            if _STUB_PATTERN in segment and any(pattern in segment for pattern in _NONZERO_COMPLETION_PATTERNS):
+                offenders.append(f"{test_file.name}::{node.name}")
+    assert not offenders, f"stubbed validator behind a nonzero-completion assertion: {offenders}"
+
+
+# --- the private factory module: public receipt ------------------------------
 
 
 def test_factory_receipt_matches_schema() -> None:
@@ -431,9 +258,11 @@ def test_factory_receipt_denominator_is_the_frozen_100_public_slots() -> None:
 
 
 def test_factory_receipt_counts_match_the_binding_contracts_zero_assigned_hundred_residual() -> None:
-    assert REAL_FACTORY_RECEIPT["per_slot_gate"]["slots_ready"] == 0
+    assert REAL_FACTORY_RECEIPT["per_slot_gate"]["slots_prerequisite_eligible"] == 0
+    assert REAL_FACTORY_RECEIPT["per_slot_gate"]["slots_stage_complete"] == 0
     assert REAL_FACTORY_RECEIPT["per_slot_gate"]["slots_residual"] == 100
-    assert REAL_FACTORY_RECEIPT["execution_counters"]["slots_ready"] == 0
+    assert REAL_FACTORY_RECEIPT["execution_counters"]["slots_prerequisite_eligible"] == 0
+    assert REAL_FACTORY_RECEIPT["execution_counters"]["slots_stage_complete"] == 0
     assert REAL_FACTORY_RECEIPT["execution_counters"]["slots_residual"] == 100
 
 
@@ -445,7 +274,7 @@ def test_factory_receipt_dataset_rows_emitted_and_private_rows_constructed_stay_
 def test_factory_receipt_reason_code_totals_sum_to_the_full_denominator() -> None:
     totals = REAL_FACTORY_RECEIPT["reason_code_totals"]
     assert sum(totals.values()) == 100
-    assert set(totals) == {"rights_unknown", "source_incomplete", "independence_unavailable"}
+    assert set(totals) == set(ev.RESIDUAL_REASON_CODES)
 
 
 def test_factory_receipt_never_claims_a_stronger_release_state() -> None:
@@ -481,18 +310,17 @@ def test_factory_receipt_bindings_hash_to_disk() -> None:
         assert factory.sha256_file(path) == binding["sha256"], name
 
 
-# --- the new private factory module: private ledger (batch_state only) ------
+# --- the private factory module: private ledger (batch_state only) ----------
 
 
 def test_private_ledger_is_a_pure_function_of_public_artifacts_only() -> None:
     ledger = factory.build_private_ledger()
     assert ledger["candidate_rows"] == []
-    assert len(ledger["slot_readiness"]) == 100
-    # Identical to A7's own already-public per-slot readiness signal (which
-    # itself already incorporates A6's own per-slot evidence) -- nothing
-    # here is secret; it lives under batch_state/ only because that is this
-    # repo's private operational-state home.
-    assert ledger["slot_readiness"] == a7.factory_readiness()
+    assert len(ledger["stratum_eligibility"]) == 8
+    # Identical to this module's own already-public per-stratum eligibility
+    # signal -- nothing here is secret; it lives under batch_state/ only
+    # because that is this repo's private operational-state home.
+    assert ledger["stratum_eligibility"] == REAL_FACTORY_RECEIPT["prerequisite_eligibility"]
 
 
 def test_private_ledger_never_carries_a_slot_to_source_unit_or_commitment_binding() -> None:
@@ -519,12 +347,12 @@ def test_private_ledger_default_path_is_under_gitignored_batch_state() -> None:
     assert factory.PRIVATE_LEDGER_PATH.is_relative_to(ROOT / "batch_state")
 
 
-# --- fail-closed on tampering ------------------------------------------------
+# --- fail-closed on tampering (private factory) ------------------------------
 
 
 def test_factory_refuses_a_forged_slots_ready_claim() -> None:
     receipt = copy.deepcopy(REAL_FACTORY_RECEIPT)
-    receipt["per_slot_gate"] = {**receipt["per_slot_gate"], "slots_ready": 100, "slots_residual": 0, "blocked_reason_code": None}
+    receipt["per_slot_gate"] = {**receipt["per_slot_gate"], "slots_stage_complete": 100, "slots_residual": 0, "blocked_reason_code": None}
     with pytest.raises(factory.PrivateFactoryError):
         factory.validate_receipt_independently(receipt)
 

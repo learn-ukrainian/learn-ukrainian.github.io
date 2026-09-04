@@ -115,7 +115,7 @@ V4_SHA256 = "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"
 # rippled A8's/A9's/A10's/A11's/A12's own upstream-binding hashes forward).
 # This module's bindings must reproduce this value on every run -- proving
 # A13 is bound to the *merged* A12 receipt, never a local unmerged draft.
-A12_RECEIPT_SHA256_AT_MERGE = "c3786c37526d1980da74b48dce268ff06ce0c1126bf40b72f905de3cc2f5e573"
+A12_RECEIPT_SHA256_AT_MERGE = "2cf58f64339209a640014f62378f30a0b45c0d95b921b8aa3cd78e760c20f94f"
 
 # This module's own frozen expectation of what the shared admission engine
 # must refuse as a silver/gold basis -- checked against the live
