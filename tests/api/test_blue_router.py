@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import subprocess
-from dataclasses import replace
 from pathlib import Path
 from unittest.mock import patch
 
@@ -24,7 +23,7 @@ def _ctx_with_curriculum_root(curriculum_root: Path):
     so tests swap ``app.state.ctx`` instead of monkeypatching a module Path.
     """
     base = app.state.ctx
-    return replace(base, roots=replace(base.roots, curriculum_root=Path(curriculum_root)))
+    return base.with_roots(curriculum_root=Path(curriculum_root))
 
 
 def test_get_audit_status_passes_timeout(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

@@ -294,9 +294,6 @@ def _resolve_image_store(ctx: MonitorContext | None = None) -> ImageStore:
     )
 
 
-get_image_store = _resolve_image_store
-
-
 # ── Request/Response models ──────────────────────────────────────────
 
 class AnnotationUpdate(BaseModel):

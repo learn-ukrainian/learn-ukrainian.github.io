@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 import os
 import subprocess
-from dataclasses import replace
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -114,10 +113,7 @@ def _cleanup_fixture(tmp_path: Path, monkeypatch) -> Path:
     monkeypatch.setattr(
         app.state,
         "ctx",
-        replace(
-            app.state.ctx,
-            roots=replace(app.state.ctx.roots, live_repo_root=repo, project_root=repo),
-        ),
+        app.state.ctx.with_roots(live_repo_root=repo, project_root=repo),
     )
     return repo
 

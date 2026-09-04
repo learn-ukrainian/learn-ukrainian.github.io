@@ -6,7 +6,6 @@ Uses temp directories to isolate queue state from real data.
 
 import json
 import shutil
-from dataclasses import replace
 from unittest.mock import patch
 
 import pytest
@@ -322,7 +321,7 @@ class TestHistory:
         state_file = orch_dir / "state.json"
         state_file.write_text(json.dumps(SAMPLE_STATE_WITH_CONSULTATIONS))
 
-        ctx = replace(app.state.ctx, roots=replace(app.state.ctx.roots, curriculum_root=tmp_path))
+        ctx = app.state.ctx.with_roots(curriculum_root=tmp_path)
         monkeypatch.setattr(app.state, "ctx", ctx)
         resp = client.get("/api/consultation/history/a2/being-and-becoming")
         assert resp.status_code == 200
@@ -331,7 +330,7 @@ class TestHistory:
         assert data["consultations"][0]["outcome"] == "queued"
 
     def test_history_module_not_found(self, tmp_path, monkeypatch):
-        ctx = replace(app.state.ctx, roots=replace(app.state.ctx.roots, curriculum_root=tmp_path))
+        ctx = app.state.ctx.with_roots(curriculum_root=tmp_path)
         monkeypatch.setattr(app.state, "ctx", ctx)
         resp = client.get("/api/consultation/history/a2/nonexistent")
         assert resp.status_code == 404

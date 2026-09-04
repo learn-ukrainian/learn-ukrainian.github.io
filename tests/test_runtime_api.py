@@ -7,7 +7,6 @@ import os
 import sqlite3
 import sys
 import types
-from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -30,7 +29,7 @@ def _ctx_with_batch_state_dir(batch_state_dir: Path):
     by swapping ``app.state.ctx`` for the duration of the test instead.
     """
     base = app.state.ctx
-    return replace(base, roots=replace(base.roots, batch_state_dir=Path(batch_state_dir)))
+    return base.with_roots(batch_state_dir=Path(batch_state_dir))
 
 
 def _iso(dt: datetime) -> str:

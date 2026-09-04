@@ -4,14 +4,13 @@ from __future__ import annotations
 
 import json
 import sqlite3
-from dataclasses import replace
 from pathlib import Path
 
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from scripts.api.monitor_context import DatabaseHandle, MonitorContext, fixture_context, production_context
+from scripts.api.monitor_context import MonitorContext, fixture_context, production_context
 from scripts.fleet_comms.message_plane import read_plane_status
 from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
 
@@ -19,11 +18,7 @@ from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
 def _message_ctx(root: Path, message_db: Path) -> MonitorContext:
     """Fixture context whose broker DB is pinned to ``message_db``."""
     ctx = fixture_context(root)
-    return replace(
-        ctx,
-        roots=replace(ctx.roots, message_db_path=message_db),
-        stores=replace(ctx.stores, message_db=DatabaseHandle(message_db, ctx._open_db)),
-    )
+    return ctx.with_roots(message_db_path=message_db)
 
 
 def _client(ctx: MonitorContext | None = None) -> TestClient:

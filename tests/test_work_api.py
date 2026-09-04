@@ -513,7 +513,7 @@ def test_next_cold_cache_503_never_builds(monkeypatch):
     assert "detail" not in body
     assert response.headers.get("retry-after") == "3"
     assert scheduled == []
-    assert work_router._IN_FLIGHT_BUILDS == {}
+    assert app.state.ctx.stores.work_in_flight == {}
 
 
 def test_next_stale_cache_served_with_background_refresh(monkeypatch):
@@ -542,7 +542,7 @@ def test_next_stale_cache_served_with_background_refresh(monkeypatch):
     assert [r["work_id"] for r in data["queue"]] == [_wid(6004), _wid(6001)]
     # The shared single-flight refresh was scheduled (it may or may not have
     # completed and popped itself by the time the response returns).
-    assert called or key in work_router._IN_FLIGHT_BUILDS
+    assert called or key in app.state.ctx.stores.work_in_flight
 
 
 def test_next_max_stale_503_when_refresh_never_finishes(monkeypatch):
@@ -555,7 +555,7 @@ def test_next_max_stale_503_when_refresh_never_finishes(monkeypatch):
     _patch_known_streams(monkeypatch)
     # Drain any leftover single-flight builds from prior cases so a late
     # cache_set cannot rejuvenate the deliberately aged entry below.
-    work_router._IN_FLIGHT_BUILDS.clear()
+    app.state.ctx.stores.work_in_flight.clear()
     payload = _warm_next_cache()
     key = projection_cache_key({})
     age = work_router.NEXT_MAX_STALE_S + 15.0
@@ -974,7 +974,7 @@ def test_next_hung_refresh_frees_single_flight_slot(monkeypatch):
 
     # The hung build is abandoned at the timeout and the slot frees.
     work_router.wait_for_in_flight_build(key)
-    assert key not in work_router._IN_FLIGHT_BUILDS, "hung build wedged the single-flight slot"
+    assert key not in app.state.ctx.stores.work_in_flight, "hung build wedged the single-flight slot"
 
     # A healthy retry rebuilds and serves 200.
     def fast_build(*, filters=None, cache_age_s=0.0, **_kwargs):

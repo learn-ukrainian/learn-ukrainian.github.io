@@ -8,7 +8,6 @@ import os
 import subprocess
 import threading
 import time
-from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -195,10 +194,7 @@ def test_orient_git_exposes_primary_checkout_dirty_signal(monkeypatch, tmp_path)
     (repo / "tracked.txt").write_text("dirty\n", encoding="utf-8")
     _patch_orient_sources(monkeypatch)
     base_ctx = api_main.production_context()
-    patched_ctx = replace(
-        base_ctx,
-        roots=replace(base_ctx.roots, project_root=repo, live_repo_root=repo),
-    )
+    patched_ctx = base_ctx.with_roots(project_root=repo, live_repo_root=repo)
     import scripts.api.monitor_context as monitor_context
 
     monkeypatch.setattr(monitor_context, "production_context", lambda ctx=None: patched_ctx)
@@ -233,10 +229,7 @@ def test_orient_git_survives_primary_checkout_probe_failure(monkeypatch, tmp_pat
     repo = _init_orient_git_repo(tmp_path)
     _patch_orient_sources(monkeypatch)
     base_ctx = api_main.production_context()
-    patched_ctx = replace(
-        base_ctx,
-        roots=replace(base_ctx.roots, project_root=repo, live_repo_root=repo),
-    )
+    patched_ctx = base_ctx.with_roots(project_root=repo, live_repo_root=repo)
     import scripts.api.monitor_context as monitor_context
 
     monkeypatch.setattr(monitor_context, "production_context", lambda ctx=None: patched_ctx)

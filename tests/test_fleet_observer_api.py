@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import sqlite3
-from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -13,7 +12,7 @@ from fastapi.testclient import TestClient
 
 import scripts.api.fleet_router as fleet_router
 from scripts.api.config import LIVE_REPO_ROOT
-from scripts.api.monitor_context import DatabaseHandle, MonitorContext, fixture_context
+from scripts.api.monitor_context import MonitorContext, fixture_context
 from scripts.fleet_comms.migrations import MIGRATIONS, apply_migrations
 
 
@@ -31,11 +30,7 @@ def client(tmp_path: Path) -> TestClient:
 def _broker_ctx(root: Path, broker_path: Path) -> MonitorContext:
     """Fixture context whose legacy broker DB is pinned to ``broker_path``."""
     ctx = fixture_context(root)
-    return replace(
-        ctx,
-        roots=replace(ctx.roots, message_db_path=broker_path),
-        stores=replace(ctx.stores, message_db=DatabaseHandle(broker_path, ctx._open_db)),
-    )
+    return ctx.with_roots(message_db_path=broker_path)
 
 
 @pytest.fixture()

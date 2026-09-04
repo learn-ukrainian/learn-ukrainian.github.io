@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import os
-from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -24,7 +23,7 @@ def _ctx_with_curriculum_root(curriculum_root: Path):
     a module Path.
     """
     base = app.state.ctx
-    return replace(base, roots=replace(base.roots, curriculum_root=Path(curriculum_root)))
+    return base.with_roots(curriculum_root=Path(curriculum_root))
 
 
 def _iso(dt: datetime) -> str:
