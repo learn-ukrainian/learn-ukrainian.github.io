@@ -39,6 +39,7 @@ LINUX_CHROME_CANDIDATES: tuple[str, ...] = (
     "/usr/bin/chromium",
     "/usr/bin/chromium-browser",
 )
+CHROME_LAUNCH_TIMEOUT_MS = 60_000
 
 
 def _node_modules() -> Path | None:
@@ -115,7 +116,9 @@ def _puppeteer_launch_options(
     """Deterministic launch options shared by every Puppeteer script here."""
     options: dict[str, Any] = {
         "headless": "new",
-        "args": ["--no-sandbox", "--disable-setuid-sandbox"],
+        # CI containers can have a small /dev/shm and contend during cold start.
+        "args": ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
+        "timeout": CHROME_LAUNCH_TIMEOUT_MS,
     }
     executable = _resolve_chrome_executable(
         env=env,
@@ -630,7 +633,8 @@ def _run_puppeteer(script: str, *, node_modules: Path, timeout: int = 60) -> dic
         capture_output=True,
         text=True,
         env=env,
-        timeout=timeout,
+        # The caller's page/assertion budget is separate from browser startup.
+        timeout=timeout + CHROME_LAUNCH_TIMEOUT_MS / 1000,
         cwd=str(ROOT),
     )
     if proc.returncode != 0:
@@ -974,7 +978,8 @@ def test_puppeteer_launch_options_honors_env_executable():
     )
     assert opts["executablePath"] == "/custom/chrome"
     assert opts["headless"] == "new"
-    assert opts["args"] == ["--no-sandbox", "--disable-setuid-sandbox"]
+    assert opts["args"] == ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"]
+    assert opts["timeout"] == 60_000
 
 
 def test_puppeteer_launch_options_ignores_missing_env_and_picks_first_candidate():
