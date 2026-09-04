@@ -117,7 +117,7 @@ import {
   isMissingShard,
 } from '../lib/lexicon/practice-shard-fetch';
 import { LexiconCustomDeckManager } from './LexiconCustomDeckManager';
-import ZnoPractice, { ZNO_PRACTICE_DECKS } from './ZnoPractice';
+import ZnoPractice, { ZNO_PRACTICE_DECK_META } from './ZnoPractice';
 import { useZnoPracticeOverlay, ZNO_MODE_META } from './useZnoPracticeOverlay';
 
 
@@ -2100,6 +2100,7 @@ function LexiconPracticeIsland({
     setHoveredZnoDeckId,
     setActiveZnoDeckId,
     activeZnoDeck,
+    activeZnoDeckLoading,
   } = useZnoPracticeOverlay();
   const [publishedLevels] = useState<Set<CefrLevel>>(
     () => new Set(PUBLISHED_PRACTICE_LEVELS as unknown as CefrLevel[]),
@@ -3966,7 +3967,7 @@ function LexiconPracticeIsland({
         </p>
       )}
 
-      {sessionPhase === 'idle' && !activeZnoDeck && (
+      {sessionPhase === 'idle' && !activeZnoDeck && !activeZnoDeckLoading && (
         <>
           {focusedLemmaId && (
             <div
@@ -4370,9 +4371,9 @@ function LexiconPracticeIsland({
                     </button>
                   );
                 })}
-                {ZNO_PRACTICE_DECKS.map((znoDeck) => {
+                {ZNO_PRACTICE_DECK_META.map((znoDeck) => {
                   const meta = ZNO_MODE_META[znoDeck.deckId];
-                  const modeCount = znoDeck.items.length;
+                  const modeCount = znoDeck.itemCount;
                   return (
                     <button
                       key={znoDeck.deckId}
@@ -4555,6 +4556,12 @@ function LexiconPracticeIsland({
           }}
           onDone={finishPractice}
         />
+      )}
+
+      {activeZnoDeckLoading && (
+        <p className="lexicon-practice-muted" role="status" data-testid="practice-zno-loading">
+          <PracticeChromeLabel k="practice.loading" />
+        </p>
       )}
 
       {activeZnoDeck && (

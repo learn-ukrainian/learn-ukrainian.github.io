@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { ZNO_PRACTICE_DECKS, type ZnoPracticeDeck } from './ZnoPractice';
+import { useEffect, useState } from 'react';
+import { loadZnoDeck, type ZnoPracticeDeck } from './ZnoPractice';
 
 export type ZnoModeMeta = {
   description: string;
@@ -55,19 +55,39 @@ export const ZNO_MODE_META: Record<ZnoPracticeDeck['deckId'], ZnoModeMeta> = {
   },
 };
 
-/** Hover/active ZNO deck overlay for the Practice hub (UI stays in LexiconPractice). */
+/**
+ * Hover/active ZNO deck overlay for the Practice hub (UI stays in LexiconPractice).
+ *
+ * #7671: a deck's full task content is no longer eagerly bundled — opening one
+ * loads its dedicated chunk via `loadZnoDeck`, so `activeZnoDeck` starts `null`
+ * for the id just selected until that load resolves (`activeZnoDeckLoading`
+ * tracks that gap for the caller's loading affordance).
+ */
 export function useZnoPracticeOverlay() {
   const [hoveredZnoDeckId, setHoveredZnoDeckId] = useState<ZnoPracticeDeck['deckId'] | null>(null);
   const [activeZnoDeckId, setActiveZnoDeckId] = useState<ZnoPracticeDeck['deckId'] | null>(null);
-  const activeZnoDeck = useMemo(
-    () => ZNO_PRACTICE_DECKS.find((candidate) => candidate.deckId === activeZnoDeckId) ?? null,
-    [activeZnoDeckId],
-  );
+  const [activeZnoDeck, setActiveZnoDeck] = useState<ZnoPracticeDeck | null>(null);
+
+  useEffect(() => {
+    // Reset synchronously so a still-loading new id never renders under the
+    // previously loaded deck's content.
+    setActiveZnoDeck(null);
+    if (!activeZnoDeckId) return;
+    let cancelled = false;
+    loadZnoDeck(activeZnoDeckId).then((deck) => {
+      if (!cancelled) setActiveZnoDeck(deck);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [activeZnoDeckId]);
+
   return {
     hoveredZnoDeckId,
     setHoveredZnoDeckId,
     activeZnoDeckId,
     setActiveZnoDeckId,
     activeZnoDeck,
+    activeZnoDeckLoading: activeZnoDeckId !== null && activeZnoDeck === null,
   };
 }

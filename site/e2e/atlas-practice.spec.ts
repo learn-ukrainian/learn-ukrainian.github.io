@@ -319,7 +319,7 @@ test('Stress mode and ZNO decks remain available after choosing A2', async ({ pa
 
   await page.getByRole('button', { name: 'A2' }).click();
   await expect(page.locator('button[data-mode="stress"]')).toBeVisible();
-  // ZNO deck count tracks ZNO_PRACTICE_DECKS (site/src/components/ZnoPractice.tsx);
+  // ZNO deck count tracks ZNO_PRACTICE_DECK_META (site/src/components/ZnoPractice.tsx);
   // update both counts together when decks are added/removed.
   await expect(page.locator('button[data-zno-deck="true"]')).toHaveCount(9);
   await expect(page.locator('button[data-mode]')).toHaveCount(20);

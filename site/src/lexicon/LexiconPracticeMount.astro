@@ -43,8 +43,18 @@ import LexiconPractice from '../components/LexiconPractice';
   const SHELL_ID = 'lexicon-practice-shell';
   const FALLBACK_ID = 'lexicon-practice-fallback';
   const SUCCESS_SEL = '.lexicon-practice';
+  // #7671: TIMEOUT_MS is the grace period AFTER the island script finishes
+  // downloading (or if it never appears in Resource Timing at all) — the
+  // signal that actually means "stuck", not "still on the wire". A slow
+  // connection that is still transferring the chunk gets re-checked every
+  // WATCHDOG_POLL_MS instead of being painted as a failure, up to
+  // HARD_TIMEOUT_MS, which still bounds the worst case (dropped connection,
+  // Resource Timing unavailable, etc.).
   const TIMEOUT_MS = 10000;
+  const HARD_TIMEOUT_MS = 30000;
+  const WATCHDOG_POLL_MS = 1000;
   let done = false;
+  let watchdogStartedAt = 0;
 
   function hideShell() {
     const shell = document.getElementById(SHELL_ID);
@@ -73,6 +83,27 @@ import LexiconPractice from '../components/LexiconPractice';
     if (!target) return false;
     if (target.closest && target.closest(MOUNT_SEL)) return true;
     return false;
+  }
+
+  // #7671: true while the island's own script chunk is still on the wire, so the
+  // watchdog can tell "slow network" apart from "stuck/broken". Matches by name
+  // substring, not the content-hashed filename Astro emits (e.g.
+  // LexiconPractice.CTdQX-4o.js). No matching entry yet reads as in-flight too —
+  // Resource Timing can lag the actual request start, and we would rather wait
+  // than false-fail.
+  function isIslandDownloadInFlight() {
+    if (typeof performance === 'undefined' || !performance.getEntriesByType) return true;
+    let entries;
+    try {
+      entries = performance.getEntriesByType('resource');
+    } catch {
+      return true;
+    }
+    const entry = entries.find(
+      (e) => typeof e.name === 'string' && e.name.includes('LexiconPractice') && e.name.endsWith('.js'),
+    );
+    if (!entry) return true;
+    return entry.responseEnd === 0;
   }
 
   // Listen for astro-island hydration error events (dispatched by Astro runtime on import/hydrate fail)
@@ -117,16 +148,31 @@ import LexiconPractice from '../components/LexiconPractice';
     }
   }
 
-  // Watchdog: ~10s; does not fire if success marker seen; re-checks content before declaring failure
-  const watchdog = setTimeout(() => {
+  // Watchdog: polls instead of firing once at a fixed delay, so an island chunk
+  // that is still downloading past TIMEOUT_MS is not painted as a failure (#7671).
+  // Fails only once the download is no longer in-flight (finished or never
+  // observed) and TIMEOUT_MS has elapsed, or once HARD_TIMEOUT_MS is reached
+  // regardless — the latter still bounds a connection that never finishes.
+  function checkWatchdog() {
     if (done) return;
     const mount = document.querySelector(MOUNT_SEL);
     if (mount && mount.querySelector(SUCCESS_SEL)) {
       markSuccess();
       return;
     }
-    showFallback();
-  }, TIMEOUT_MS);
+    const elapsed = Date.now() - watchdogStartedAt;
+    if (elapsed >= HARD_TIMEOUT_MS) {
+      showFallback();
+      return;
+    }
+    if (elapsed >= TIMEOUT_MS && !isIslandDownloadInFlight()) {
+      showFallback();
+      return;
+    }
+    setTimeout(checkWatchdog, WATCHDOG_POLL_MS);
+  }
+  watchdogStartedAt = Date.now();
+  setTimeout(checkWatchdog, WATCHDOG_POLL_MS);
 
   function init() {
     setupObservers();
