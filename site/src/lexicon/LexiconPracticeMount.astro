@@ -27,162 +27,98 @@ import LexiconPractice from '../components/LexiconPractice';
 </div>
 
 <div id="lexicon-practice-fallback" class="lexicon-practice-fallback" hidden>
-  <p>
-    <span lang="uk">Не вдалося завантажити практику.</span>
-    <span lang="en">/ We couldn’t load practice.</span>
-  </p>
+  <p id="lexicon-practice-error" lang="uk">Не вдалося завантажити практику.</p>
   <button type="button" onclick="location.reload()">
     <span lang="uk">Спробувати ще раз</span>
-    <span class="btn-sub" lang="en">Try again</span>
   </button>
 </div>
 
 <script is:inline>
 (() => {
-  const MOUNT_SEL = '#lexicon-practice-mount';
-  const SHELL_ID = 'lexicon-practice-shell';
-  const FALLBACK_ID = 'lexicon-practice-fallback';
+  const mount = document.getElementById('lexicon-practice-mount');
+  const shell = document.getElementById('lexicon-practice-shell');
+  const fallback = document.getElementById('lexicon-practice-fallback');
+  const errorMessage = document.getElementById('lexicon-practice-error');
+  if (!mount || !fallback) return;
+
+  const island = mount.querySelector('astro-island');
   const SUCCESS_SEL = '.lexicon-practice';
-  // #7671: TIMEOUT_MS is the grace period AFTER the island script finishes
-  // downloading (or if it never appears in Resource Timing at all) — the
-  // signal that actually means "stuck", not "still on the wire". A slow
-  // connection that is still transferring the chunk gets re-checked every
-  // WATCHDOG_POLL_MS instead of being painted as a failure, up to
-  // HARD_TIMEOUT_MS, which still bounds the worst case (dropped connection,
-  // Resource Timing unavailable, etc.).
-  const TIMEOUT_MS = 10000;
-  const HARD_TIMEOUT_MS = 30000;
-  const WATCHDOG_POLL_MS = 1000;
-  let done = false;
-  let watchdogStartedAt = 0;
+  const RETRY_DELAY_MS = 30000;
+  let settled = false;
+  let retryTimer;
 
   function hideShell() {
-    const shell = document.getElementById(SHELL_ID);
     if (shell) shell.setAttribute('hidden', '');
   }
 
-  function showFallback() {
-    if (done) return;
-    done = true;
-    const mount = document.querySelector(MOUNT_SEL);
-    const fb = document.getElementById(FALLBACK_ID);
-    hideShell();
-    if (mount) mount.setAttribute('hidden', '');
-    if (fb) {
-      fb.removeAttribute('hidden');
-    }
+  function cleanup() {
+    clearTimeout(retryTimer);
+    observer.disconnect();
+    document.removeEventListener('astro:hydrate', onHydrate, true);
+    document.removeEventListener('astro:hydration-error', onError, true);
+    document.removeEventListener('astro:before-swap', dispose);
   }
 
   function markSuccess() {
-    if (done) return;
-    done = true;
+    if (settled) return;
+    settled = true;
     hideShell();
+    mount.removeAttribute('hidden');
+    fallback.setAttribute('hidden', '');
+    cleanup();
   }
 
-  function isOurIsland(target) {
-    if (!target) return false;
-    if (target.closest && target.closest(MOUNT_SEL)) return true;
-    return false;
+  function showFallback() {
+    if (settled) return;
+    clearTimeout(retryTimer);
+    hideShell();
+    mount.setAttribute('hidden', '');
+    if (errorMessage) errorMessage.removeAttribute('hidden');
+    fallback.removeAttribute('hidden');
+    // Keep observing: successful hydration can still recover without a reload.
   }
 
-  // #7671: true while the island's own script chunk is still on the wire, so the
-  // watchdog can tell "slow network" apart from "stuck/broken". Matches by name
-  // substring, not the content-hashed filename Astro emits (e.g.
-  // LexiconPractice.CTdQX-4o.js). No matching entry yet reads as in-flight too —
-  // Resource Timing can lag the actual request start, and we would rather wait
-  // than false-fail.
-  function isIslandDownloadInFlight() {
-    if (typeof performance === 'undefined' || !performance.getEntriesByType) return true;
-    let entries;
-    try {
-      entries = performance.getEntriesByType('resource');
-    } catch {
-      return true;
-    }
-    const entry = entries.find(
-      (e) => typeof e.name === 'string' && e.name.includes('LexiconPractice') && e.name.endsWith('.js'),
-    );
-    if (!entry) return true;
-    return entry.responseEnd === 0;
+  function isOurIsland(event) {
+    return event.target instanceof Node && mount.contains(event.target);
   }
 
-  // Listen for astro-island hydration error events (dispatched by Astro runtime on import/hydrate fail)
-  document.addEventListener('astro:hydration-error', (ev) => {
-    const d = (ev && ev.detail) || {};
-    const url = String(d.componentUrl || '');
-    if (url.includes('LexiconPractice') || isOurIsland(ev.target)) {
-      showFallback();
-    }
+  function onHydrate(event) {
+    if (isOurIsland(event)) markSuccess();
+  }
+
+  function onError(event) {
+    const componentUrl = island?.getAttribute('component-url');
+    if (isOurIsland(event) || (
+      event.target === document && componentUrl && event.detail?.componentUrl === componentUrl
+    )) showFallback();
+  }
+
+  function dispose() {
+    settled = true;
+    cleanup();
+  }
+
+  const observer = new MutationObserver(() => {
+    if (mount.querySelector(SUCCESS_SEL)) markSuccess();
   });
+  observer.observe(mount, { childList: true, subtree: true });
+  document.addEventListener('astro:hydrate', onHydrate, true);
+  document.addEventListener('astro:hydration-error', onError, true);
+  document.addEventListener('astro:before-swap', dispose, { once: true });
 
-  // Listen for successful hydration
-  document.addEventListener('astro:hydrate', (ev) => {
-    if (isOurIsland(ev.target)) {
-      markSuccess();
-    }
-  }, true);
-
-  function setupObservers() {
-    const mount = document.querySelector(MOUNT_SEL);
-    if (!mount) return;
-
-    // MutationObserver catches content render quickly on success path
-    const mo = new MutationObserver(() => {
-      if (mount.querySelector(SUCCESS_SEL)) {
-        markSuccess();
-        mo.disconnect();
-      }
-    });
-    mo.observe(mount, { childList: true, subtree: true });
-
-    // Direct listeners on the island element if already in DOM
-    const island = mount.querySelector('astro-island');
-    if (island) {
-      island.addEventListener('astro:hydrate', markSuccess, { once: true });
-      island.addEventListener('astro:hydration-error', showFallback, { once: true });
-    }
-
-    // If content already present (race or fast path)
+  // Elapsed time is not proof of failure: dependencies may still be downloading
+  // after the entry chunk completes. Offer retry once without hiding the island
+  // or replacing its loading status; actual hydration/error events own the UI.
+  retryTimer = setTimeout(() => {
     if (mount.querySelector(SUCCESS_SEL)) {
       markSuccess();
-    }
-  }
-
-  // Watchdog: polls instead of firing once at a fixed delay, so an island chunk
-  // that is still downloading past TIMEOUT_MS is not painted as a failure (#7671).
-  // Fails only once the download is no longer in-flight (finished or never
-  // observed) and TIMEOUT_MS has elapsed, or once HARD_TIMEOUT_MS is reached
-  // regardless — the latter still bounds a connection that never finishes.
-  function checkWatchdog() {
-    if (done) return;
-    const mount = document.querySelector(MOUNT_SEL);
-    if (mount && mount.querySelector(SUCCESS_SEL)) {
-      markSuccess();
       return;
     }
-    const elapsed = Date.now() - watchdogStartedAt;
-    if (elapsed >= HARD_TIMEOUT_MS) {
-      showFallback();
-      return;
-    }
-    if (elapsed >= TIMEOUT_MS && !isIslandDownloadInFlight()) {
-      showFallback();
-      return;
-    }
-    setTimeout(checkWatchdog, WATCHDOG_POLL_MS);
-  }
-  watchdogStartedAt = Date.now();
-  setTimeout(checkWatchdog, WATCHDOG_POLL_MS);
+    if (errorMessage) errorMessage.setAttribute('hidden', '');
+    fallback.removeAttribute('hidden');
+  }, RETRY_DELAY_MS);
 
-  function init() {
-    setupObservers();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init, { once: true });
-  } else {
-    init();
-  }
+  if (mount.querySelector(SUCCESS_SEL)) markSuccess();
 })();
 </script>
 

@@ -2857,7 +2857,7 @@ function LexiconPracticeIsland({
   // beneath the finishing pointer event, including its /a2/ link.
   useLayoutEffect(() => {
     if (!pendingOutcome) return;
-    advanceButtonRef.current?.focus();
+    advanceButtonRef.current?.focus({ preventScroll: true });
   }, [pendingOutcome]);
 
   useEffect(() => {
