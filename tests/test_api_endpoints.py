@@ -205,7 +205,7 @@ class TestBuildStatusEndpoint:
             assert all_tracks[track]["queued"] == per_track["queued"]
             assert all_tracks[track]["failed"] == per_track["failed"]
 
-    def test_per_track_counts_failed_audit_before_running_phase(self, monkeypatch):
+    def test_per_track_counts_failed_audit_before_running_phase(self, tmp_path, monkeypatch):
         from scripts.api import state_build
 
         monkeypatch.setattr(state_build, "get_plan_slugs", lambda _track_id, *args, **kwargs: [(1, "failed-module")])
@@ -216,7 +216,9 @@ class TestBuildStatusEndpoint:
             lambda _orch_dir, _version: ("write", "audit(FAIL)", "2026-06-07T00:00:00Z", "failed"),
         )
 
-        result = state_build.compute_build_status_track("folk", {"path": "folk"})
+        result = state_build.compute_build_status_track(
+            "folk", {"path": "folk"}, curriculum_root=tmp_path
+        )
 
         assert result["failed"] == 1
         assert result["building"] == 0

@@ -99,12 +99,16 @@ def test_compute_module_range_status_accepts_unpadded_score_module_numbers(
     assert result["remaining"] == []
 
 
-def test_compute_module_range_status_rejects_invalid_ranges() -> None:
+def test_compute_module_range_status_rejects_invalid_ranges(tmp_path: Path) -> None:
+    roots = dict(
+        curriculum_root=tmp_path / "curriculum" / "l2-uk-en",
+        project_root=tmp_path,
+    )
     with pytest.raises(ValueError, match="positive"):
-        state_build.compute_module_range_status("b2", {"path": "b2"}, start=0, end=1)
+        state_build.compute_module_range_status("b2", {"path": "b2"}, start=0, end=1, **roots)
 
     with pytest.raises(ValueError, match="greater than or equal"):
-        state_build.compute_module_range_status("b2", {"path": "b2"}, start=2, end=1)
+        state_build.compute_module_range_status("b2", {"path": "b2"}, start=2, end=1, **roots)
 
 
 def test_module_range_status_route_returns_computed_payload(

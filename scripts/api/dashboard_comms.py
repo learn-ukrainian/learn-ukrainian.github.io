@@ -12,7 +12,7 @@ import os
 import sqlite3
 from pathlib import Path
 
-from .monitor_context import MonitorContext, production_context
+from .monitor_context import MonitorContext, resolve_context
 
 # Schema column check cache for backward compat
 _BROKER_COLS: set | None = None
@@ -20,15 +20,10 @@ _BROKER_COLS: set | None = None
 _BROKER_DIR = Path(".mcp") / "servers" / "message-broker"
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    """Fall back to the live production context for plain-Python callers."""
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
 def _broker_dir(ctx: MonitorContext | None = None) -> Path:
-    return _resolve_context(ctx).roots.project_root / _BROKER_DIR
+    return resolve_context(ctx).roots.project_root / _BROKER_DIR
 
 
 def _watcher_pid_file(ctx: MonitorContext | None = None) -> Path:
@@ -51,7 +46,7 @@ def ensure_broker_cols(conn: sqlite3.Connection) -> set:
 
 def get_broker_db(ctx: MonitorContext | None = None):
     """Get a connection to the broker SQLite database via MonitorContext."""
-    resolved = _resolve_context(ctx)
+    resolved = resolve_context(ctx)
     handle = resolved.stores.message_db
     if handle is None or not handle.path.exists():
         return None
@@ -77,7 +72,7 @@ def is_watcher_running(ctx: MonitorContext | None = None) -> dict:
 
 def collect_stuck_tasks(ctx: MonitorContext | None = None) -> list[dict]:
     """Collect stuck tasks from filesystem directories."""
-    resolved = _resolve_context(ctx)
+    resolved = resolve_context(ctx)
     curriculum_root = resolved.roots.curriculum_root
     stuck_dir = curriculum_root / "stuck"
     stuck_tasks = []
@@ -143,7 +138,7 @@ def fetch_broker_messages(ctx: MonitorContext | None = None) -> list[dict]:
 
 def read_dispatcher_state(ctx: MonitorContext | None = None) -> dict:
     """Read the batch dispatcher state from disk."""
-    ds_file = _resolve_context(ctx).roots.batch_state_dir / "dispatcher_state.json"
+    ds_file = resolve_context(ctx).roots.batch_state_dir / "dispatcher_state.json"
     if not ds_file.exists():
         return {}
     try:

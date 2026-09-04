@@ -11,7 +11,7 @@ from fastapi import APIRouter, Depends
 
 from scripts.audit import check_adrs
 
-from .monitor_context import MonitorContext, get_ctx, production_context
+from .monitor_context import MonitorContext, get_ctx, resolve_context
 
 router = APIRouter(tags=["governance"])
 
@@ -29,21 +29,10 @@ _EMPTY_ADR_GOVERNANCE: dict[str, Any] = {
 }
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    """Fall back to the live production context for plain-Python callers.
-
-    Mirrors ``runtime_router._resolve_context`` (#7324 / #7393 / #6849):
-    every route handler gets ``ctx`` injected via ``Depends(get_ctx)``, but
-    this router's collectors are also called from ``main.py`` (orient) and
-    unit tests outside FastAPI request handling.
-    """
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
 def _decisions_file(ctx: MonitorContext | None = None) -> Path:
-    return _resolve_context(ctx).roots.project_root / "docs" / "decisions" / "decisions.yaml"
+    return resolve_context(ctx).roots.project_root / "docs" / "decisions" / "decisions.yaml"
 
 
 def _isoformat_z(value: datetime) -> str:
@@ -125,7 +114,7 @@ def collect_adr_governance(ctx: MonitorContext | None = None) -> dict[str, Any]:
     OPSEC ``collect_adr_governance`` sweep stub). Production and tests that
     keep ``ctx.root is None`` still call ``check_adrs`` as before.
     """
-    if _resolve_context(ctx).root is not None:
+    if resolve_context(ctx).root is not None:
         return dict(_EMPTY_ADR_GOVERNANCE)
     result = check_adrs.run_check(check_promotions_flag=True)
     broken_chains = _matching_findings(
@@ -153,7 +142,7 @@ def collect_adr_governance(ctx: MonitorContext | None = None) -> dict[str, Any]:
 
 
 def _collect_adr_governance_summary(ctx: MonitorContext | None = None) -> dict[str, int]:
-    if _resolve_context(ctx).root is not None:
+    if resolve_context(ctx).root is not None:
         return {"adrs_total": 0, "adrs_warnings": 0, "adrs_errors": 0}
     result = check_adrs.CheckResult()
     result.adrs = check_adrs._load_adrs()
@@ -184,7 +173,7 @@ def collect_governance_state(ctx: MonitorContext | None = None) -> dict[str, Any
     }
 
 
-def collect_governance_summary(ctx: MonitorContext | None = None) -> dict[str, int]:
+def collect_governance_summary(ctx: MonitorContext) -> dict[str, int]:
     decisions = collect_decision_governance(ctx=ctx)
     adrs = _collect_adr_governance_summary(ctx=ctx)
     return {

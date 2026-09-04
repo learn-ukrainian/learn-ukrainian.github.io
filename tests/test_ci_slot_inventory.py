@@ -52,7 +52,7 @@ def test_inventory_uses_named_pytest_shard_ceiling_for_runtime_matrix(tmp_path: 
         "ci.yml",
         """on: [pull_request, merge_group]
 jobs:
-  python:
+  pytest:
     strategy:
       matrix:
         shard: ${{ fromJSON(inputs.shards) }}
@@ -96,7 +96,7 @@ def test_static_pytest_shards_cannot_exceed_named_ceiling(tmp_path: Path) -> Non
         "ci.yml",
         """on: pull_request
 jobs:
-  python:
+  pytest:
     strategy:
       matrix:
         shard: [1, 2, 3, 4, 5]

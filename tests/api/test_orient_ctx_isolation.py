@@ -8,7 +8,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 import scripts.api.main as api_main
-from scripts.api.monitor_context import fixture_context
+from scripts.api.monitor_context import fixture_context, resolve_context
 
 pytestmark = pytest.mark.repo_invariant
 
@@ -47,14 +47,16 @@ def test_orient_cache_is_scoped_per_context(tmp_path: Path) -> None:
 
 
 def test_resolve_context_never_reads_the_module_global_app(tmp_path: Path) -> None:
-    """#7494 / 4.1: plain-Python resolution falls to production_context(),
+    """#7494 / #7496: shared resolve_context falls to production_context(),
     never to whatever app instance happens to sit in module globals."""
     ctx = fixture_context(tmp_path)
     assert api_main.app.state.ctx is not None  # the production app exists
-    resolved = api_main._resolve_context(None)
+    resolved = resolve_context(None)
     assert resolved is not ctx
     # and an explicitly passed ctx always wins
-    assert api_main._resolve_context(ctx) is ctx
+    assert resolve_context(ctx) is ctx
+    # main no longer owns a private copy
+    assert not hasattr(api_main, "_resolve_context")
 
 
 def test_idle_pr_last_good_is_not_shared_across_contexts(tmp_path: Path) -> None:
@@ -82,3 +84,32 @@ def test_detached_last_good_keyed_by_scoped_cache_key(tmp_path: Path) -> None:
         assert m._detached_orient_last_good.get("orient_pipeline") is None
     finally:
         m._detached_orient_last_good.pop(key_a, None)
+
+
+def test_no_router_owns_a_private_resolve_context_copy() -> None:
+    """#7496: byte-identical per-router _resolve_context copies are gone."""
+    import importlib
+    import pkgutil
+
+    import scripts.api as api_pkg
+
+    offenders: list[str] = []
+    for mod in pkgutil.iter_modules(api_pkg.__path__, api_pkg.__name__ + "."):
+        if mod.name.endswith(".monitor_context"):
+            continue
+        try:
+            module = importlib.import_module(mod.name)
+        except Exception:
+            continue
+        if hasattr(module, "_resolve_context"):
+            offenders.append(mod.name)
+    assert offenders == []
+
+
+def test_shared_resolve_context_is_the_only_plain_python_fallback(tmp_path: Path) -> None:
+    """#7496: one shared resolve_context; explicit ctx always wins."""
+    from scripts.api.monitor_context import production_context, resolve_context
+
+    ctx = fixture_context(tmp_path)
+    assert resolve_context(None) is production_context()
+    assert resolve_context(ctx) is ctx

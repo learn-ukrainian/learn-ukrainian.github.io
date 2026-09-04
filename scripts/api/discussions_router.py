@@ -9,16 +9,11 @@ from typing import Any
 from fastapi import APIRouter, Depends, Query
 from fastapi.responses import JSONResponse
 
-from .monitor_context import MonitorContext, get_ctx, production_context
+from .monitor_context import MonitorContext, get_ctx, resolve_context
 
 router = APIRouter(tags=["discussions"])
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    """Fall back to the live production context for plain-Python callers."""
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
 def _parse_ts(value: str | None) -> datetime | None:
@@ -67,7 +62,7 @@ def collect_active_discussions(
     ctx: MonitorContext | None = None,
 ) -> dict[str, Any]:
     """Return recent ab-discuss-style threads grouped from channel messages."""
-    resolved = _resolve_context(ctx)
+    resolved = resolve_context(ctx)
     handle = resolved.stores.message_db
     if handle is None or not handle.path.exists():
         return {"discussions": [], "count": 0, "error": "Broker DB not found"}

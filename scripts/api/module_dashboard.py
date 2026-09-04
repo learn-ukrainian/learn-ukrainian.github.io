@@ -20,10 +20,13 @@ from pathlib import Path
 
 import yaml
 
-PROJECT_ROOT = Path(__file__).parent.parent.parent
-CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
-
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from scripts.api.monitor_context import production_context
+
+_CTX = production_context()
+PROJECT_ROOT = _CTX.roots.project_root
+CURRICULUM_ROOT = _CTX.roots.curriculum_root
 
 from audit.status_cache import get_source_paths, read_status
 from common.thresholds import get_level_thresholds

@@ -29,7 +29,7 @@ from fastapi import APIRouter, Depends, Query
 
 from scripts.orchestration import issue_stream_audit as audit
 
-from .monitor_context import MonitorContext, get_ctx, production_context
+from .monitor_context import MonitorContext, get_ctx, resolve_context
 
 router = APIRouter(tags=["issues"])
 
@@ -61,14 +61,6 @@ _MERGED_IN_RE = re.compile(
 )
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    """Fall back to the live production context for plain-Python callers.
-
-    Mirrors ``runtime_router._resolve_context`` (#7324 / #7393 / #6849).
-    """
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
 def _run_gh(
@@ -80,7 +72,7 @@ def _run_gh(
     try:
         proc = subprocess.run(
             args,
-            cwd=_resolve_context(ctx).roots.project_root,
+            cwd=resolve_context(ctx).roots.project_root,
             capture_output=True,
             text=True,
             timeout=timeout_s,

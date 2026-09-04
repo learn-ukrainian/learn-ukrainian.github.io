@@ -23,7 +23,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 
 from scripts.audit.decision_lineage import build_lineage_response
 
-from .monitor_context import MonitorContext, get_ctx, production_context
+from .monitor_context import MonitorContext, get_ctx, resolve_context
 
 router = APIRouter(tags=["decisions"])
 
@@ -40,15 +40,10 @@ _lineage_cache: dict = {"data": None, "ts": 0.0, "root": None}
 _CACHE_TTL = 60  # seconds
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    """Fall back to the live production context for plain-Python callers."""
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
 def _decisions_file(ctx: MonitorContext | None = None) -> Path:
-    return _resolve_context(ctx).roots.project_root / "docs" / "decisions" / "decisions.yaml"
+    return resolve_context(ctx).roots.project_root / "docs" / "decisions" / "decisions.yaml"
 
 
 def _load_decisions(ctx: MonitorContext | None = None) -> list[dict]:
@@ -93,7 +88,7 @@ def _is_stale(dec: dict) -> bool:
 def _load_lineage(decision_id: str | None = None, ctx: MonitorContext | None = None) -> dict:
     """Load decision lineage with a short TTL because git history scans are heavier."""
     now = time.monotonic()
-    resolved = _resolve_context(ctx)
+    resolved = resolve_context(ctx)
     root_key = str(resolved.roots.live_repo_root)
     if (
         decision_id is None

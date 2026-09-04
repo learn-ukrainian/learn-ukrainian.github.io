@@ -12,13 +12,14 @@ from __future__ import annotations
 from fastapi.testclient import TestClient
 
 from scripts.api.main import app
+from scripts.api.monitor_context import production_context
 from scripts.api.runtime_router import list_runtime_agents
 
 client = TestClient(app, raise_server_exceptions=False)
 
 
 def test_list_runtime_agents_names_are_unique():
-    agents = list_runtime_agents()
+    agents = list_runtime_agents(production_context())
 
     names = [agent["name"] for agent in agents]
     assert len(names) == len(set(names)), f"duplicate agent names: {sorted(names)}"

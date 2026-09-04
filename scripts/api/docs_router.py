@@ -23,17 +23,13 @@ try:
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import
 
-from .monitor_context import MonitorContext, get_ctx, production_context
+from .monitor_context import MonitorContext, get_ctx, resolve_context
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["docs"])
 
 
-def _resolve_context(ctx: MonitorContext | None = None) -> MonitorContext:
-    if isinstance(ctx, MonitorContext):
-        return ctx
-    return production_context()
 
 
 # Path prefixes (relative to project_root) to exclude from discovery.
@@ -291,7 +287,7 @@ def collect_artifacts(
         types: Tuples of extensions to include (default: html, md).
         ctx: Application context providing filesystem roots.
     """
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     project_root = resolved_ctx.roots.project_root
     discovery_roots = (project_root / "docs", project_root / "audit")
     effective_roots = resolved_ctx.roots.effective_roots
@@ -388,7 +384,7 @@ async def list_roots(
     ctx: MonitorContext = Depends(get_ctx),
 ):
     """List all approved documentation roots."""
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     if request.url.path.startswith("/artifacts") and format != "json":
         return FileResponse(resolved_ctx.roots.dashboards_dir / "artifacts.html", media_type="text/html")
     return {
@@ -411,7 +407,7 @@ async def serve_artifact(
     ctx: MonitorContext = Depends(get_ctx),
 ):
     """Serve a documentation artifact or list a directory."""
-    resolved_ctx = _resolve_context(ctx)
+    resolved_ctx = resolve_context(ctx)
     if not path:
         return await list_roots(request, format, ctx=resolved_ctx)
 
