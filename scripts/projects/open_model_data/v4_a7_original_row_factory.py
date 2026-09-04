@@ -61,13 +61,30 @@ real state) never blocks A7 completion by itself.
 2. ``build_receipt`` -- assembles the public receipt: the frozen 100-slot
    denominator (reusing, never duplicating, ``v4_stage_evidence
    .frozen_slot_strata``/``all_frozen_slot_ids``), the per-stratum
-   eligibility table, the gate, a real (zero-row) call into the shared
-   ``v4_original_row_admission.admit_rows`` engine proving the wiring is
-   live rather than declarative, every A2/A4/A5/A6 residual carried forward
-   unresolved, the always-empty ``a7_completions``, and one typed per-slot
-   A7 residual for every slot not yet complete -- never a silently dropped
-   slot and never a synthesized row standing in for the missing independent
-   construction.
+   eligibility table, the gate, a real call into the shared
+   ``v4_original_row_admission`` engine proving the wiring is live rather
+   than declarative, every A2/A4/A5/A6 residual carried forward unresolved,
+   ``a7_completions`` (empty in every production receipt today -- no real
+   row exists yet), and one typed per-slot A7 residual for every slot not
+   yet complete -- never a silently dropped slot and never a synthesized
+   row standing in for the missing independent construction.
+
+**Real-slot mechanism (mechanism-only in this PR; zero real rows).**
+``a7_completions`` and ``check_factory_gate``/``build_receipt`` now take a
+completions list as an explicit parameter rather than hardcoding it empty,
+so a genuinely constructed, gate-passing row can be recorded as a positive
+completion. Each completion is a text-free, hash/id-only claim
+(``slot_id``, ``row_id``, ``row_content_sha256``, ``admission_receipt_sha256``,
+``authorship_receipt_sha256``, ``review_receipt_sha256``, and a copy of the
+row's own already-evaluated, self-consistent admission-engine
+``row_receipt``) -- never a source_unit_id, family id, or row text. Public,
+fresh-checkout validation here only proves the claim is *well-formed and
+internally self-consistent* (``validate_receipt_independently``); it does
+**not** prove the claim is *genuine* -- that is what
+``v4_a7_private_ledger.verify_private_replay`` is for, run separately
+against the private ledger that actually constructed the row. Production
+stays at zero completions in this PR; the synthetic 1-of-100 proof lives
+only in ``tests/projects/open_model_data``.
 
 Run with no arguments to verify the checked-in A7 receipt reproduces from the
 five public artifacts on disk -- no ``batch_state/`` required, so this passes
@@ -176,7 +193,7 @@ def stratum_reason_codes(a2_receipt: dict[str, Any]) -> dict[str, str]:
 # --- factory gate (public-only) ----------------------------------------------
 
 
-def check_factory_gate(root: Path = ROOT) -> dict[str, Any]:
+def check_factory_gate(root: Path = ROOT, a7_completions: list[dict[str, Any]] = ()) -> dict[str, Any]:
     """Independently re-derive whether a real, source-derived, independently
     constructed row may be produced at all, from the frozen slot manifest's
     own per-stratum ``assignment_state``, A2's own residuals, and A6's
@@ -231,7 +248,7 @@ def check_factory_gate(root: Path = ROOT) -> dict[str, Any]:
     eligible_ids = ev.eligible_slot_ids(eligibility)
     total_ids = set(all_frozen_slot_ids(manifest))
 
-    a7_completions: list[dict[str, Any]] = []  # A7 has no execution mechanism yet -- always empty (design F2).
+    a7_completions = list(a7_completions)
     a7_completion_ids = ev.completion_slot_ids(a7_completions, stage="A7", total_slot_ids=total_ids, error_cls=OriginalRowFactoryError)
     residual_ids = ev.derive_residual_slot_ids(total_ids, a7_completion_ids)
     ev.validate_partition(total_ids, a7_completion_ids, residual_ids, label="A7", error_cls=OriginalRowFactoryError)
@@ -317,32 +334,34 @@ def derive_a7_slot_residuals(manifest: dict[str, Any], a2_receipt: dict[str, Any
 # --- shared engine wiring (real call, zero rows today) ------------------------
 
 
-def run_engine_admission(rows: list[dict[str, Any]] = ()) -> dict[str, Any]:  # type: ignore[assignment]
-    """A real (never stubbed) call into the shared, already-on-main
-    ``v4_original_row_admission.admit_rows`` engine, bound to the V4
-    controlling outcome. Today there is no independently constructed,
-    rights-cleared row to submit, so ``rows`` stays empty and the engine's
-    own counters (``admitted_rows``, ``rejected_rows``) both come back 0 --
-    proving the wiring is live, never fabricating a row to exercise it."""
-    return admission.admit_rows(outcome_sha256=V4_SHA256, rows=list(rows))
+def assemble_engine_admission_receipt(a7_completions: list[dict[str, Any]]) -> dict[str, Any]:
+    """Assemble ``engine_wiring.admission_receipt`` from each completion's
+    own already-evaluated, self-consistent ``row_receipt`` -- never
+    re-executes ``evaluate_row`` here (the real row inputs, and the real
+    corpus/lineage facts behind them, live only in the private ledger; see
+    ``v4_a7_private_ledger.py``). Byte-identical to a live, zero-row
+    ``admission.admit_rows`` call when there are no completions, so
+    today's real, zero-completion production receipt is unaffected."""
+    row_receipts = [completion["row_receipt"] for completion in a7_completions]
+    return admission.assemble_receipt_from_row_receipts(outcome_sha256=V4_SHA256, row_receipts=row_receipts)
 
 
 # --- receipt assembly --------------------------------------------------------
 
 
-def build_receipt(root: Path = ROOT) -> dict[str, Any]:
+def build_receipt(root: Path = ROOT, a7_completions: list[dict[str, Any]] = ()) -> dict[str, Any]:
     manifest = _load(root / SLOT_MANIFEST_RELATIVE)
     a2_receipt = _load(root / A2_RECEIPT_RELATIVE)
     a4_receipt = _load(root / A4_RECEIPT_RELATIVE)
     a5_receipt = _load(root / A5_RECEIPT_RELATIVE)
     a6_receipt = _load(root / A6_RECEIPT_RELATIVE)
-    gate = check_factory_gate(root)
+    a7_completions = list(a7_completions)  # Empty in every production receipt today -- no real row exists yet.
+    gate = check_factory_gate(root, a7_completions)
 
     strata = frozen_slot_strata(manifest)
     frozen_slot_ids = all_frozen_slot_ids(manifest)
     eligibility = ev.stratum_eligibility(manifest, a2_receipt, error_cls=OriginalRowFactoryError)
 
-    a7_completions: list[dict[str, Any]] = []  # Always empty today -- see module docstring.
     completion_slot_ids = {record["slot_id"] for record in a7_completions}
 
     a2_residuals_carried = [
@@ -362,7 +381,7 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
         for entry in a6_receipt["a6_residuals"]
     ]
 
-    engine_admission_receipt = run_engine_admission([])
+    engine_admission_receipt = assemble_engine_admission_receipt(a7_completions)
 
     return {
         "schema_version": "dataset_v4_a7_original_row_factory_receipt_v1",
@@ -445,7 +464,10 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
         "a7_completions": a7_completions,
         "a7_residuals": derive_a7_slot_residuals(manifest, a2_receipt, gate, completion_slot_ids),
         "execution_counters": {
-            "dataset_rows_emitted": engine_admission_receipt["counts"]["admitted_rows"],
+            # Always 0: a dataset row is only ever emitted at A11 release
+            # (out of scope for this stage); never derived from the engine's
+            # own admitted_rows count, which now can be genuinely nonzero.
+            "dataset_rows_emitted": 0,
             "candidate_rows_constructed": engine_admission_receipt["counts"]["input_rows"],
             "frozen_slot_count": len(frozen_slot_ids),
             "slots_prerequisite_eligible": gate["slots_prerequisite_eligible"],
@@ -455,7 +477,10 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
         },
         "eligibility": dict(FACTORY_ELIGIBILITY),
         "safety_assertions": {
-            "rows_not_admitted": True,
+            # Truthfully reflects whether any row has actually been
+            # engine-admitted via a7_completions -- stays True while
+            # a7_completions is empty (every production receipt today).
+            "rows_not_admitted": len(a7_completions) == 0,
             "text_emitted": False,
             "source_text_loaded_into_model": False,
             "corpus_refetched": False,
@@ -499,7 +524,7 @@ def validate_bindings_hash_to_disk(receipt: dict[str, Any], root: Path) -> None:
 
 
 def validate_gate_matches_receipt(receipt: dict[str, Any], root: Path) -> None:
-    gate = check_factory_gate(root)
+    gate = check_factory_gate(root, receipt["a7_completions"])
     declared = receipt["factory_gate"]
     require(
         declared["a6_receipt_valid"] == gate["a6_receipt_valid"]
@@ -529,10 +554,21 @@ def validate_frozen_slot_denominator(receipt: dict[str, Any], root: Path) -> Non
 
 
 def validate_engine_wiring(receipt: dict[str, Any]) -> None:
-    """Re-runs the real shared engine call and requires a byte-identical
-    result, plus makes the engine independently verify its own nested
-    receipt (``v4_original_row_admission.verify_receipt``) -- proving this is
-    a live wire into the on-main engine, not a declared/stubbed shape."""
+    """Requires ``engine_wiring.admission_receipt`` to reproduce, byte for
+    byte, from the receipt's own ``a7_completions`` row receipts (never
+    from anything else), and makes the shared engine independently verify
+    the assembled receipt's own internal consistency
+    (``v4_original_row_admission.verify_receipt``) -- proving this is a
+    live wire into the on-main engine, not a declared/stubbed shape. With
+    zero completions this recomputation is byte-identical to a live,
+    zero-row ``admission.admit_rows`` call -- today's real production
+    receipt is unaffected.
+
+    This is a *structural* self-consistency proof, reachable in a fresh
+    checkout with no ``batch_state/`` access -- it does not, and cannot on
+    its own, prove a completion is genuine rather than well-formed. See
+    ``v4_a7_private_ledger.verify_private_replay`` for the private,
+    batch_state-backed proof of genuineness."""
     wiring = receipt["engine_wiring"]
     require(
         wiring["engine_schema_version"] == admission.SCHEMA_VERSION and wiring["engine_input_schema_version"] == admission.INPUT_SCHEMA_VERSION,
@@ -542,20 +578,43 @@ def validate_engine_wiring(receipt: dict[str, Any]) -> None:
         wiring["model_only_bases_blocked"] == sorted(admission.MODEL_ONLY_BASES),
         "engine_wiring.model_only_bases_blocked does not match the live engine's MODEL_ONLY_BASES -- refusing",
     )
-    recomputed = admission.admit_rows(outcome_sha256=V4_SHA256, rows=[])
-    require(wiring["admission_receipt"] == recomputed, "engine_wiring.admission_receipt does not reproduce from a live, zero-row v4_original_row_admission.admit_rows call -- refusing")
+    recomputed = assemble_engine_admission_receipt(receipt["a7_completions"])
+    require(
+        wiring["admission_receipt"] == recomputed,
+        "engine_wiring.admission_receipt does not reproduce from the receipt's own a7_completions row receipts -- refusing",
+    )
     admission.verify_receipt(wiring["admission_receipt"])
     require(
-        wiring["admission_receipt"]["counts"] == {"input_rows": 0, "admitted_rows": 0, "rejected_rows": 0},
-        "engine_wiring.admission_receipt does not report zero rows -- refusing (no rights-cleared, independently "
-        "constructed row exists yet; dataset_rows_emitted must stay 0)",
+        wiring["admission_receipt"]["counts"]["admitted_rows"] == len(receipt["a7_completions"]),
+        "engine_wiring.admission_receipt.counts.admitted_rows does not match the number of declared a7_completions -- refusing",
     )
+    if not receipt["a7_completions"]:
+        require(
+            wiring["admission_receipt"]["counts"] == {"input_rows": 0, "admitted_rows": 0, "rejected_rows": 0},
+            "engine_wiring.admission_receipt does not report zero rows -- refusing (no a7_completions declared)",
+        )
+
+
+def validate_a7_completions_shape(receipt: dict[str, Any]) -> None:
+    """Each ``a7_completions`` entry's own summary hashes must match its
+    own embedded, already-evaluated ``row_receipt`` exactly, and that
+    row_receipt must itself be admitted -- a claim inconsistent with its
+    own evidence refuses here, before any gate/partition check runs."""
+    for completion in receipt["a7_completions"]:
+        row_receipt = completion["row_receipt"]
+        require(row_receipt["row_id"] == completion["row_id"], "a7_completions.row_id does not match its own row_receipt.row_id -- refusing")
+        require(row_receipt["row_content_sha256"] == completion["row_content_sha256"], "a7_completions.row_content_sha256 does not match its own row_receipt.row_content_sha256 -- refusing")
+        require(row_receipt["receipt_sha256"] == completion["admission_receipt_sha256"], "a7_completions.admission_receipt_sha256 does not match its own row_receipt.receipt_sha256 -- refusing")
+        require(row_receipt["disposition"] == "admitted", "a7_completions row_receipt is not admitted -- refusing")
+        for field in ("authorship_receipt_sha256", "review_receipt_sha256"):
+            value = completion[field]
+            require(isinstance(value, str) and admission.SHA256_RE.fullmatch(value) is not None, f"a7_completions.{field} is not a well-formed sha256 -- refusing")
 
 
 def validate_eligibility_and_completion(receipt: dict[str, Any], root: Path) -> None:
     manifest = _load(root / SLOT_MANIFEST_RELATIVE)
     a2_receipt = _load(root / A2_RECEIPT_RELATIVE)
-    gate = check_factory_gate(root)
+    gate = check_factory_gate(root, receipt["a7_completions"])
 
     expected_eligibility = ev.public_eligibility(ev.stratum_eligibility(manifest, a2_receipt, error_cls=OriginalRowFactoryError))
     require(receipt["prerequisite_eligibility"] == expected_eligibility, "prerequisite_eligibility does not reproduce from the live A2 receipt and slot manifest -- refusing")
@@ -620,14 +679,34 @@ def validate_no_forbidden_completion_claims(receipt: dict[str, Any]) -> None:
     require(not leaked, f"receipt carries forbidden completion claim(s): {leaked} -- refusing")
 
 
-def validate_eligibility_and_safety_all_false(receipt: dict[str, Any]) -> None:
+def validate_eligibility_and_safety(receipt: dict[str, Any]) -> None:
+    """``eligibility`` stays the frozen all-false shape unconditionally
+    (this stage never grants gold/training/evaluation/teaching/coverage
+    eligibility, regardless of completions). ``safety_assertions
+    .rows_not_admitted`` must truthfully reflect whether any row has
+    actually been engine-admitted via ``a7_completions`` -- ``True`` while
+    ``a7_completions`` is empty (every production receipt today), ``False``
+    once a genuine completion exists. Every other safety flag stays
+    ``False`` unconditionally, and ``dataset_rows_emitted`` stays 0
+    unconditionally -- a dataset row is only ever emitted at A11 release,
+    never at this stage, however many rows the engine has admitted."""
     require(receipt["eligibility"] == FACTORY_ELIGIBILITY, "receipt eligibility does not equal the frozen all-false factory eligibility -- refusing")
     safety = receipt["safety_assertions"]
+    expected_rows_not_admitted = len(receipt["a7_completions"]) == 0
     require(
-        safety["rows_not_admitted"] is True and all(value is False for key, value in safety.items() if key != "rows_not_admitted"),
+        safety["rows_not_admitted"] == expected_rows_not_admitted,
+        "receipt safety_assertions.rows_not_admitted does not truthfully reflect whether any row has been "
+        "engine-admitted via a7_completions -- refusing",
+    )
+    require(
+        all(value is False for key, value in safety.items() if key != "rows_not_admitted"),
         "receipt safety_assertions does not hold the expected invariants -- refusing",
     )
-    require(receipt["execution_counters"]["dataset_rows_emitted"] == 0, "receipt execution_counters.dataset_rows_emitted is not 0 -- refusing")
+    require(
+        receipt["execution_counters"]["dataset_rows_emitted"] == 0,
+        "receipt execution_counters.dataset_rows_emitted is not 0 -- refusing (dataset rows are only ever "
+        "emitted at A11 release, out of scope for this stage)",
+    )
 
 
 def validate_receipt_independently(receipt: dict[str, Any], root: Path = ROOT) -> None:
@@ -635,11 +714,12 @@ def validate_receipt_independently(receipt: dict[str, Any], root: Path = ROOT) -
     validate_gate_matches_receipt(receipt, root)
     validate_frozen_slot_denominator(receipt, root)
     validate_engine_wiring(receipt)
+    validate_a7_completions_shape(receipt)
     validate_eligibility_and_completion(receipt, root)
     validate_residuals_carried_from_a2_a4_a5_a6(receipt, root)
     validate_no_forbidden_keys(receipt)
     validate_no_forbidden_completion_claims(receipt)
-    validate_eligibility_and_safety_all_false(receipt)
+    validate_eligibility_and_safety(receipt)
     validate_receipt_schema(receipt, root)
 
 

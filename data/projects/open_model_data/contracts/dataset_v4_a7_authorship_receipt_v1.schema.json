@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/dataset_v4_a7_authorship_receipt_v1.schema.json",
+  "title": "Dataset V4 A7 authorship receipt v1",
+  "description": "Private receipt (never a public artifact) recording who authored an independently-authored candidate row, and what they attest to never having seen. Never carries row text, source text, or a source_unit_id.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "receipt_id",
+    "role",
+    "model_family",
+    "exact_model",
+    "harness",
+    "session_id",
+    "prompt_sha256",
+    "packet_sha256",
+    "row_content_sha256",
+    "saw_source_text",
+    "saw_heldout",
+    "saw_eligible_unit_ids",
+    "verification_tool_ids"
+  ],
+  "properties": {
+    "receipt_id": { "type": "string", "minLength": 1 },
+    "role": { "const": "author" },
+    "model_family": { "type": "string", "minLength": 1 },
+    "exact_model": { "type": "string", "minLength": 1 },
+    "harness": { "type": "string", "minLength": 1 },
+    "session_id": { "type": "string", "minLength": 1 },
+    "prompt_sha256": { "$ref": "#/$defs/sha256" },
+    "packet_sha256": { "$ref": "#/$defs/sha256" },
+    "row_content_sha256": { "$ref": "#/$defs/sha256" },
+    "saw_source_text": { "const": false },
+    "saw_heldout": { "const": false },
+    "saw_eligible_unit_ids": { "const": false },
+    "verification_tool_ids": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  }
+}

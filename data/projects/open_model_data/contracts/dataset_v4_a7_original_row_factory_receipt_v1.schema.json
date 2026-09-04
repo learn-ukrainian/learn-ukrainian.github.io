@@ -173,8 +173,8 @@
             "schema_version": { "const": "v4-original-row-admission-v1" },
             "visibility": { "const": "machine_receipt_text_free" },
             "outcome_sha256": { "const": "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20" },
-            "rows": { "const": [] },
-            "counts": { "const": { "input_rows": 0, "admitted_rows": 0, "rejected_rows": 0 } },
+            "rows": { "type": "array", "minItems": 0, "maxItems": 100 },
+            "counts": { "$ref": "#/$defs/admission_counts" },
             "receipt_sha256": { "$ref": "#/$defs/sha256" }
           }
         }
@@ -265,7 +265,7 @@
       ],
       "properties": {
         "dataset_rows_emitted": { "const": 0 },
-        "candidate_rows_constructed": { "const": 0 },
+        "candidate_rows_constructed": { "type": "integer", "minimum": 0, "maximum": 100 },
         "frozen_slot_count": { "const": 100 },
         "slots_prerequisite_eligible": { "type": "integer", "minimum": 0, "maximum": 100 },
         "slots_upstream_complete": { "type": "integer", "minimum": 0, "maximum": 100 },
@@ -284,7 +284,7 @@
         "epic_done_claimed", "heldout_family_identity_leaked"
       ],
       "properties": {
-        "rows_not_admitted": { "const": true },
+        "rows_not_admitted": { "type": "boolean" },
         "text_emitted": { "const": false },
         "source_text_loaded_into_model": { "const": false },
         "corpus_refetched": { "const": false },
@@ -400,14 +400,61 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["slot_id", "stage", "row_id", "row_content_sha256", "admission_receipt_sha256"],
+        "required": [
+          "slot_id", "stage", "row_id", "row_content_sha256", "admission_receipt_sha256",
+          "authorship_receipt_sha256", "review_receipt_sha256", "row_receipt"
+        ],
         "properties": {
           "slot_id": { "type": "string", "pattern": "^v4p-[a-z-]+-[0-9]{3}$" },
           "stage": { "const": "A7" },
           "row_id": { "type": "string", "minLength": 1 },
           "row_content_sha256": { "$ref": "#/$defs/sha256" },
-          "admission_receipt_sha256": { "$ref": "#/$defs/sha256" }
+          "admission_receipt_sha256": { "$ref": "#/$defs/sha256" },
+          "authorship_receipt_sha256": { "$ref": "#/$defs/sha256" },
+          "review_receipt_sha256": { "$ref": "#/$defs/sha256" },
+          "row_receipt": { "$ref": "#/$defs/admission_row_receipt" }
         }
+      }
+    },
+    "admission_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_rows", "admitted_rows", "rejected_rows"],
+      "properties": {
+        "input_rows": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "admitted_rows": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "rejected_rows": { "type": "integer", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "admission_row_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "row_id", "row_content_sha256", "label_tier", "source_lineage_ids", "evidence_lineage_ids",
+        "disposition", "training_eligible", "residual_codes", "eligibility", "receipt_sha256"
+      ],
+      "properties": {
+        "row_id": { "type": "string", "minLength": 1 },
+        "row_content_sha256": { "$ref": "#/$defs/sha256" },
+        "label_tier": { "enum": ["silver", "gold"] },
+        "source_lineage_ids": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "evidence_lineage_ids": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "disposition": { "const": "admitted" },
+        "training_eligible": { "const": true },
+        "residual_codes": { "type": "array", "maxItems": 0 },
+        "eligibility": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["gold", "training", "evaluation", "teaching", "coverage"],
+          "properties": {
+            "gold": { "type": "boolean" },
+            "training": { "const": true },
+            "evaluation": { "const": false },
+            "teaching": { "const": false },
+            "coverage": { "const": false }
+          }
+        },
+        "receipt_sha256": { "$ref": "#/$defs/sha256" }
       }
     }
   }

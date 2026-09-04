@@ -180,6 +180,44 @@ def admit_rows(*, outcome_sha256: str, rows: Sequence[Mapping[str, Any]]) -> dic
     return result
 
 
+def assemble_receipt_from_row_receipts(*, outcome_sha256: str, row_receipts: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    """Assemble an aggregate admission receipt from already-evaluated row
+    receipts (each already produced by ``evaluate_row`` -- never re-derived
+    or trusted beyond its own shape here).
+
+    Downstream per-slot stages (A7/A8) carry forward already-evaluated,
+    text-free row receipts from a private replay rather than raw row
+    inputs (the raw inputs, and the real corpus/lineage facts behind them,
+    stay in the private ledger that produced these receipts -- never here).
+    The aggregate shape and hashing are byte-identical to ``admit_rows``'s
+    own post-processing, so a caller with zero row receipts gets exactly
+    ``admit_rows(rows=[])``'s output -- this never changes today's real,
+    zero-completion production behavior.
+    """
+    if not isinstance(row_receipts, Sequence) or isinstance(row_receipts, (str, bytes)):
+        raise OriginalRowAdmissionError("row_receipts must be a list")
+    outcome_sha256 = _sha256(outcome_sha256, "outcome_sha256", [])
+    if outcome_sha256 is None:
+        raise OriginalRowAdmissionError("OUTCOME_SHA256_INVALID")
+    receipts = list(row_receipts)
+    ids = [item.get("row_id") if isinstance(item, Mapping) else None for item in receipts]
+    if any(item is None for item in ids) or len(ids) != len(set(ids)):
+        raise OriginalRowAdmissionError("row IDs must be stable and unique in a batch")
+    result = {
+        "schema_version": SCHEMA_VERSION,
+        "visibility": "machine_receipt_text_free",
+        "outcome_sha256": outcome_sha256,
+        "rows": receipts,
+        "counts": {
+            "input_rows": len(receipts),
+            "admitted_rows": sum(item.get("disposition") == "admitted" for item in receipts),
+            "rejected_rows": sum(item.get("disposition") == "rejected" for item in receipts),
+        },
+    }
+    result["receipt_sha256"] = sha256_value(result)
+    return result
+
+
 def verify_receipt(receipt: Mapping[str, Any]) -> dict[str, Any]:
     if not isinstance(receipt, Mapping):
         raise OriginalRowAdmissionError("receipt must be an object")

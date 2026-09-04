@@ -75,6 +75,10 @@
           "$ref": "#/$defs/sha256",
           "description": "HMAC-SHA256 over the private packet payload, keyed by the same private salt as the A3 assignment_commitment_sha256 (domain-separated). Never a plain hash -- a plain sha256(packet) would be enumerable against the public family_id registry the same way an unsalted assignment commitment would be."
         },
+        "eligible_units_commitment_sha256": {
+          "$ref": "#/$defs/sha256",
+          "description": "Optional (added by the v4-real-slot-mechanism PR-A; absent on a packet sealed before it existed). A dedicated, separately-named HMAC-SHA256 over only builder_eligible_source_unit_ids, keyed by the same private salt -- lets a membership-preserving reissue prove the builder-eligible unit set is unchanged via one equality check on this field alone."
+        },
         "issued_to_role": {"const": "A4_deterministic_extraction"},
         "materialization_location": {"const": "private_batch_state_and_private_operational_board_622"},
         "membership_disclosed": {"const": false},

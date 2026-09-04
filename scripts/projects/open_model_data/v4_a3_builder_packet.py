@@ -78,6 +78,14 @@ SEAL_RECEIPT_SCHEMA_VERSION = "dataset_v4_a3_heldout_source_family_seal_receipt_
 # reduced to, the assignment commitment over the same secret.
 PACKET_COMMITMENT_DOMAIN = b"v4-a3-builder-packet-commitment-v1"
 
+# A dedicated, separately-named commitment over *only*
+# builder_eligible_source_unit_ids -- distinct from both
+# ASSIGNMENT_COMMITMENT_DOMAIN and PACKET_COMMITMENT_DOMAIN. Lets a reissue
+# prove "the builder-eligible unit set is unchanged" via one equality check
+# on this field alone, without needing the entire packet payload (which may
+# carry other, non-membership fields) to hash identically.
+ELIGIBLE_UNITS_COMMITMENT_DOMAIN = b"v4-a3-eligible-units-commitment-v1"
+
 PRIVATE_PACKET_REQUIRED_FIELDS = frozenset(
     {
         "packet_id",
@@ -152,8 +160,17 @@ def _private_packet_payload(
     }
 
 
+def eligible_units_commitment_sha256(salt: bytes, source_unit_ids: list[str]) -> str:
+    """A dedicated commitment over *only* ``builder_eligible_source_unit_ids``
+    -- see ``ELIGIBLE_UNITS_COMMITMENT_DOMAIN``. Lets a reissue prove the
+    builder-eligible unit set is unchanged with one equality check on this
+    field alone."""
+    message = ELIGIBLE_UNITS_COMMITMENT_DOMAIN + b"\x00" + canonical_json(sorted(source_unit_ids)).encode("utf-8")
+    return hmac.new(salt, message, hashlib.sha256).hexdigest()
+
+
 def public_commitment_summary(salt: bytes, packet_payload: dict[str, Any]) -> dict[str, Any]:
-    """Counts and one-way commitment only. Never a family_id or source_unit_id."""
+    """Counts and one-way commitments only. Never a family_id or source_unit_id."""
     return {
         "packet_id": packet_payload["packet_id"],
         "algorithm_id": packet_payload["algorithm_id"],
@@ -162,6 +179,7 @@ def public_commitment_summary(salt: bytes, packet_payload: dict[str, Any]) -> di
         "builder_eligible_count": packet_payload["builder_eligible_count"],
         "builder_eligible_source_unit_count": len(packet_payload["builder_eligible_source_unit_ids"]),
         "packet_commitment_sha256": packet_commitment_sha256(salt, packet_payload),
+        "eligible_units_commitment_sha256": eligible_units_commitment_sha256(salt, packet_payload["builder_eligible_source_unit_ids"]),
         "seal_receipt_binding_sha256": packet_payload["seal_receipt_binding_sha256"],
     }
 
@@ -238,6 +256,59 @@ def verify_packet(
     return public_commitment_summary(salt, stored_packet)
 
 
+def reissue_packet(
+    old_seal_receipt_path: Path,
+    new_seal_receipt_path: Path,
+    membership_dir: Path = DEFAULT_MEMBERSHIP_DIR,
+    packet_dir: Path = DEFAULT_MEMBERSHIP_DIR,
+    *,
+    expect_eligible_units_commitment: str | None = None,
+) -> dict[str, Any]:
+    """Membership-preserving reissue for the builder packet: rebind the
+    private packet's ``seal_receipt_binding_sha256`` to
+    ``new_seal_receipt_path``'s current content, having first proven --
+    via ``verify_packet`` against the *old* receipt, plus an explicit
+    equality check on ``eligible_units_commitment_sha256`` -- that the
+    builder-eligible unit set the packet already names is unchanged. Never
+    changes ``builder_eligible_family_ids``/``builder_eligible_source_unit_ids``
+    themselves; refuses if the new receipt's registry disagrees with the
+    old one (that is a reseal, not a reissue -- ``heldout
+    .reissue_private_artifact`` is the sanctioned path for the membership
+    artifact itself, and must run first)."""
+    old_summary = verify_packet(old_seal_receipt_path, packet_dir, membership_dir)
+    new_seal_receipt = json.loads(new_seal_receipt_path.read_text(encoding="utf-8"))
+    heldout.validate_receipt_independently(new_seal_receipt)
+    require(heldout.receipt_is_sealed(new_seal_receipt), "reissue requires the new seal receipt to already be sealed")
+
+    packet_path = packet_dir / PACKET_FILENAME
+    stored_packet = heldout.load_private_artifact(packet_path, required_fields=PRIVATE_PACKET_REQUIRED_FIELDS)
+    membership_path = membership_dir / heldout.MEMBERSHIP_FILENAME
+    stored_membership = heldout.load_private_artifact(membership_path)
+    salt = bytes.fromhex(stored_membership["salt_hex"])
+
+    new_eligible_commitment = eligible_units_commitment_sha256(salt, stored_packet["builder_eligible_source_unit_ids"])
+    require(
+        new_eligible_commitment == old_summary["eligible_units_commitment_sha256"],
+        "eligible_units_commitment_sha256 drift across reissue -- refusing (this would be a reseal, not a reissue)",
+    )
+    if expect_eligible_units_commitment is not None:
+        require(
+            new_eligible_commitment == expect_eligible_units_commitment,
+            "recomputed eligible_units_commitment_sha256 does not match --expect-eligible-units-commitment -- refusing",
+        )
+
+    new_binding = heldout.receipt_binding_sha256(new_seal_receipt)
+    payload = {**stored_packet, "seal_receipt_binding_sha256": new_binding}
+    # `_rewrite_private_artifact` is heldout's private atomic-replace
+    # primitive, reused here rather than duplicated -- see
+    # v4_a3_reissue.py's module docstring for why a public wrapper is not
+    # added to that file instead (its bytes are pinned in the sealed
+    # production seal receipt).
+    heldout._rewrite_private_artifact(packet_path, payload)
+
+    return public_commitment_summary(salt, payload)
+
+
 # --- public packet receipt --------------------------------------------------
 
 
@@ -271,6 +342,7 @@ def build_public_receipt(summary: dict[str, Any], seal_receipt_path: Path) -> di
             "builder_eligible_count": summary["builder_eligible_count"],
             "builder_eligible_source_unit_count": summary["builder_eligible_source_unit_count"],
             "packet_commitment_sha256": summary["packet_commitment_sha256"],
+            "eligible_units_commitment_sha256": summary["eligible_units_commitment_sha256"],
             "issued_to_role": ISSUED_TO_ROLE,
             "materialization_location": "private_batch_state_and_private_operational_board_622",
             "membership_disclosed": False,
@@ -349,6 +421,15 @@ def validate_public_receipt_independently(
         summary["packet_commitment_sha256"] == packet["packet_commitment_sha256"],
         "packet_commitment_sha256 drift between the recomputed private packet and the public receipt -- refusing",
     )
+    # Backward-compatible: eligible_units_commitment_sha256 is a newer,
+    # optional field (added by the v4-real-slot-mechanism PR-A). A receipt
+    # sealed before it existed simply omits it; only cross-check when the
+    # receipt actually declares it.
+    if "eligible_units_commitment_sha256" in packet:
+        require(
+            summary["eligible_units_commitment_sha256"] == packet["eligible_units_commitment_sha256"],
+            "eligible_units_commitment_sha256 drift between the recomputed private packet and the public receipt -- refusing",
+        )
     require(
         summary["seal_receipt_binding_sha256"] == seal_binding["receipt_binding_sha256"],
         "seal_receipt_binding_sha256 drift between the recomputed packet and the public receipt -- refusing",
@@ -381,7 +462,31 @@ def main(argv: list[str] | None = None) -> None:
         action="store_true",
         help="Write the recomputed public receipt (counts/commitments only) to --packet-receipt.",
     )
+    parser.add_argument(
+        "--reissue",
+        action="store_true",
+        help=(
+            "Membership-preserving reissue: rebind the private packet's seal_receipt_binding_sha256 to "
+            "--new-seal-receipt's current content, proving eligible_units_commitment_sha256 is unchanged "
+            "from --seal-receipt (the old seal receipt). Mutually exclusive with --issue."
+        ),
+    )
+    parser.add_argument("--new-seal-receipt", type=Path, help="the new sealed A3 receipt JSON to reissue against (required with --reissue).")
+    parser.add_argument("--expect-eligible-units-commitment", help="assert the recomputed eligible_units_commitment_sha256 equals this value (reissue only).")
     args = parser.parse_args(argv)
+    require(not (args.issue and args.reissue), "--issue and --reissue are mutually exclusive")
+    require(not args.reissue or args.new_seal_receipt is not None, "--reissue requires --new-seal-receipt")
+
+    if args.reissue:
+        summary = reissue_packet(
+            args.seal_receipt,
+            args.new_seal_receipt,
+            args.membership_dir,
+            args.packet_dir,
+            expect_eligible_units_commitment=args.expect_eligible_units_commitment,
+        )
+        print(canonical_json(summary))
+        return
 
     if args.issue:
         summary = issue_packet(args.seal_receipt, args.membership_dir, args.packet_dir)

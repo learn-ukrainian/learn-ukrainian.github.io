@@ -51,14 +51,25 @@ A7-vs-A6 relationship. Two independent parts:
    ``blocked_reason_code`` instead.
 2. ``build_receipt`` -- assembles the public receipt: the frozen 100-slot
    denominator (reusing, never duplicating, ``v4_stage_evidence
-   .frozen_slot_strata``/``all_frozen_slot_ids``), the gate, a real
-   (zero-row) call into the shared, unmodified
-   ``v4_original_row_admission.admit_rows`` engine proving A8's own wiring is
-   live rather than declarative, every A2/A4/A5/A6/A7 residual carried
-   forward unresolved, the always-empty ``a8_completions``, an append-only
-   per-slot ``admitted_slice_view`` (empty of rows today, one typed residual
-   reference per slot -- never a row and never a dropped slot), and one
-   typed per-slot A8 residual for every slot not yet complete.
+   .frozen_slot_strata``/``all_frozen_slot_ids``), the gate, a real call
+   into the shared, unmodified ``v4_original_row_admission`` engine proving
+   A8's own wiring is live rather than declarative, every A2/A4/A5/A6/A7
+   residual carried forward unresolved, ``a8_completions`` (empty in every
+   production receipt today), an append-only per-slot
+   ``admitted_slice_view`` (``row_admitted: true`` only for a slot with a
+   real completion, a typed residual reference otherwise -- never a row and
+   never a dropped slot), and one typed per-slot A8 residual for every slot
+   not yet complete.
+
+**Real-slot mechanism (mechanism-only in this PR; zero real rows).**
+``a8_completions`` and ``check_assembly_gate``/``build_receipt`` now take a
+completions list as an explicit parameter rather than hardcoding it empty.
+Every A8 completion must name the *exact same* row A7 already admitted for
+that slot (``validate_a8_completions_match_a7``) -- A8 never constructs a
+new row, it only assembles the one A7's factory produced. As with A7, this
+module's own fresh-checkout validation only proves a completion claim is
+well-formed and internally consistent; genuineness is proven separately by
+``v4_a7_private_ledger.verify_private_replay`` against the private ledger.
 
 Run with no arguments to verify the checked-in A8 receipt reproduces from the
 six public artifacts on disk -- no ``batch_state/`` required, so this passes
@@ -160,7 +171,7 @@ def _load(path: Path) -> dict[str, Any]:
 # --- assembly gate (public-only) ---------------------------------------------
 
 
-def check_assembly_gate(root: Path = ROOT) -> dict[str, Any]:
+def check_assembly_gate(root: Path = ROOT, a8_completions: list[dict[str, Any]] = ()) -> dict[str, Any]:
     """Independently re-derive whether a real admitted slice may be
     assembled at all, from the frozen slot manifest's own per-stratum
     ``assignment_state``, A2's own residuals, and A7's independent validity
@@ -215,12 +226,14 @@ def check_assembly_gate(root: Path = ROOT) -> dict[str, Any]:
         ev.completion_slot_ids(a7_receipt.get("a7_completions", []), stage="A7", total_slot_ids=total_ids, error_cls=AdmissionAssemblyError) if a7_valid else set()
     )
 
-    a8_completions: list[dict[str, Any]] = []  # A8 has no execution mechanism yet -- always empty (design F2).
+    a8_completions = list(a8_completions)
     a8_completion_ids = ev.completion_slot_ids(a8_completions, stage="A8", total_slot_ids=total_ids, error_cls=AdmissionAssemblyError)
     residual_ids = ev.derive_residual_slot_ids(total_ids, a8_completion_ids)
     ev.validate_partition(total_ids, a8_completion_ids, residual_ids, label="A8", error_cls=AdmissionAssemblyError)
     ev.validate_subset(a8_completion_ids, eligible_ids, label="A8 completions vs prerequisite-eligible slots", error_cls=AdmissionAssemblyError)
     ev.validate_subset(a8_completion_ids, a7_completion_ids, label="A8 completions vs A7 completions (upstream subset)", error_cls=AdmissionAssemblyError)
+    if a7_valid:
+        validate_a8_completions_match_a7(a8_completions, a7_receipt.get("a7_completions", []))
 
     slots_prerequisite_eligible = len(eligible_ids)
     slots_upstream_complete = len(a7_completion_ids)
@@ -248,6 +261,25 @@ def check_assembly_gate(root: Path = ROOT) -> dict[str, Any]:
         "owner_role": manifest["sealed_heldout_commitment"]["assignment_owner"],
         "blocked_reason_code": blocked_reason_code,
     }
+
+
+def validate_a8_completions_match_a7(a8_completions: list[dict[str, Any]], a7_completions: list[dict[str, Any]]) -> None:
+    """Every A8 completion must name the exact same row A7 already admitted
+    for that slot -- A8 never constructs a new row, it only assembles the
+    one A7's factory already produced. Refuses a slot_id with no matching
+    A7 completion, or a row_id/row_content_sha256 that drifts from it."""
+    a7_by_slot = {completion["slot_id"]: completion for completion in a7_completions}
+    for completion in a8_completions:
+        a7_completion = a7_by_slot.get(completion["slot_id"])
+        require(a7_completion is not None, f"a8 completion for slot {completion['slot_id']!r} has no matching a7 completion -- refusing")
+        require(
+            completion["row_id"] == a7_completion["row_id"],
+            f"a8 completion row_id does not match the corresponding a7 completion for slot {completion['slot_id']!r} -- refusing",
+        )
+        require(
+            completion["row_content_sha256"] == a7_completion["row_content_sha256"],
+            f"a8 completion row_content_sha256 does not match the corresponding a7 completion for slot {completion['slot_id']!r} -- refusing",
+        )
 
 
 # --- A8's own per-slot residuals (public, source-free) -----------------------
@@ -299,21 +331,21 @@ def derive_a8_slot_residuals(manifest: dict[str, Any], a2_receipt: dict[str, Any
 # --- append-only per-slot admitted view (public, source-free) ----------------
 
 
-def build_admitted_slice_view(manifest: dict[str, Any], a8_residuals: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def build_admitted_slice_view(manifest: dict[str, Any], a8_residuals: list[dict[str, Any]], a8_completions: list[dict[str, Any]] = ()) -> list[dict[str, Any]]:
     """One entry per frozen slot ID -- ``row_admitted`` is only ever true for
-    a slot that actually has an admitted row from the shared engine; every
-    other slot carries a reference to its own typed A8 residual, never a gap
-    silently renamed ``not_applicable``."""
+    a slot that actually has an admitted row from the shared engine (a real
+    ``a8_completions`` entry for it); every other slot carries a reference
+    to its own typed A8 residual, never a gap silently renamed
+    ``not_applicable``."""
     residual_by_slot = {residual["subject_id"]: residual["residual_id"] for residual in a8_residuals}
-    view = [
-        {
-            "slot_id": slot_id,
-            "row_admitted": False,
-            "row_id": None,
-            "residual_id": residual_by_slot.get(slot_id),
-        }
-        for slot_id in all_frozen_slot_ids(manifest)
-    ]
+    completion_by_slot = {completion["slot_id"]: completion for completion in a8_completions}
+    view = []
+    for slot_id in all_frozen_slot_ids(manifest):
+        completion = completion_by_slot.get(slot_id)
+        if completion is not None:
+            view.append({"slot_id": slot_id, "row_admitted": True, "row_id": completion["row_id"], "residual_id": None})
+        else:
+            view.append({"slot_id": slot_id, "row_admitted": False, "row_id": None, "residual_id": residual_by_slot.get(slot_id)})
     view.sort(key=lambda entry: entry["slot_id"])
     return view
 
@@ -321,34 +353,39 @@ def build_admitted_slice_view(manifest: dict[str, Any], a8_residuals: list[dict[
 # --- shared engine wiring (real call, zero rows today) ------------------------
 
 
-def run_engine_admission(rows: list[dict[str, Any]] = ()) -> dict[str, Any]:  # type: ignore[assignment]
-    """A real (never stubbed) call into the shared, already-on-main
-    ``v4_original_row_admission.admit_rows`` engine, bound to the V4
-    controlling outcome. A7's own factory admitted zero rows, so there is
-    nothing rights-cleared for A8 to assemble; ``rows`` stays empty and the
-    engine's own counters (``admitted_rows``, ``rejected_rows``) both come
-    back 0 -- proving A8's own wiring into the unmodified, contract/privacy-
-    gate-enforcing engine is live, never fabricating a row to exercise it."""
-    return admission.admit_rows(outcome_sha256=V4_SHA256, rows=list(rows))
+def assemble_engine_admission_receipt(a8_completions: list[dict[str, Any]], a7_receipt: dict[str, Any]) -> dict[str, Any]:
+    """Assemble ``engine_wiring.admission_receipt`` from the *same*
+    already-evaluated ``row_receipt`` A7's own completion for that slot
+    already carries -- A8 never re-runs ``evaluate_row``, it only confirms
+    the row A7 already admitted is now assembled. Byte-identical to a live,
+    zero-row ``admission.admit_rows`` call when there are no completions,
+    so today's real, zero-completion production receipt is unaffected."""
+    a7_by_slot = {completion["slot_id"]: completion for completion in a7_receipt.get("a7_completions", [])}
+    row_receipts = []
+    for completion in a8_completions:
+        a7_completion = a7_by_slot.get(completion["slot_id"])
+        require(a7_completion is not None, f"a8 completion for slot {completion['slot_id']!r} has no matching a7 completion -- refusing")
+        row_receipts.append(a7_completion["row_receipt"])
+    return admission.assemble_receipt_from_row_receipts(outcome_sha256=V4_SHA256, row_receipts=row_receipts)
 
 
 # --- receipt assembly --------------------------------------------------------
 
 
-def build_receipt(root: Path = ROOT) -> dict[str, Any]:
+def build_receipt(root: Path = ROOT, a8_completions: list[dict[str, Any]] = ()) -> dict[str, Any]:
     manifest = _load(root / SLOT_MANIFEST_RELATIVE)
     a2_receipt = _load(root / A2_RECEIPT_RELATIVE)
     a4_receipt = _load(root / A4_RECEIPT_RELATIVE)
     a5_receipt = _load(root / A5_RECEIPT_RELATIVE)
     a6_receipt = _load(root / A6_RECEIPT_RELATIVE)
     a7_receipt = _load(root / A7_RECEIPT_RELATIVE)
-    gate = check_assembly_gate(root)
+    a8_completions = list(a8_completions)  # Empty in every production receipt today -- no real row exists yet.
+    gate = check_assembly_gate(root, a8_completions)
 
     strata = frozen_slot_strata(manifest)
     frozen_slot_ids = all_frozen_slot_ids(manifest)
     eligibility = ev.stratum_eligibility(manifest, a2_receipt, error_cls=AdmissionAssemblyError)
 
-    a8_completions: list[dict[str, Any]] = []  # Always empty today -- see module docstring.
     completion_slot_ids = {record["slot_id"] for record in a8_completions}
 
     a2_residuals_carried = [
@@ -372,9 +409,9 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
         for entry in a7_receipt["a7_residuals"]
     ]
 
-    engine_admission_receipt = run_engine_admission([])
+    engine_admission_receipt = assemble_engine_admission_receipt(a8_completions, a7_receipt)
     a8_residuals = derive_a8_slot_residuals(manifest, a2_receipt, gate, completion_slot_ids)
-    admitted_slice_view = build_admitted_slice_view(manifest, a8_residuals)
+    admitted_slice_view = build_admitted_slice_view(manifest, a8_residuals, a8_completions)
 
     return {
         "schema_version": "dataset_v4_a8_admission_assembly_receipt_v1",
@@ -465,7 +502,10 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
         "a8_residuals": a8_residuals,
         "admitted_slice_view": admitted_slice_view,
         "execution_counters": {
-            "dataset_rows_emitted": engine_admission_receipt["counts"]["admitted_rows"],
+            # Always 0: a dataset row is only ever emitted at A11 release
+            # (out of scope for this stage); never derived from the engine's
+            # own admitted_rows count, which now can be genuinely nonzero.
+            "dataset_rows_emitted": 0,
             "candidate_rows_assembled": engine_admission_receipt["counts"]["input_rows"],
             "frozen_slot_count": len(frozen_slot_ids),
             "slots_prerequisite_eligible": gate["slots_prerequisite_eligible"],
@@ -475,7 +515,10 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
         },
         "eligibility": dict(ASSEMBLY_ELIGIBILITY),
         "safety_assertions": {
-            "rows_not_admitted": True,
+            # Truthfully reflects whether any row has actually been
+            # engine-admitted via a8_completions -- stays True while
+            # a8_completions is empty (every production receipt today).
+            "rows_not_admitted": len(a8_completions) == 0,
             "text_emitted": False,
             "source_text_loaded_into_model": False,
             "corpus_refetched": False,
@@ -523,7 +566,7 @@ def validate_bindings_hash_to_disk(receipt: dict[str, Any], root: Path) -> None:
 
 
 def validate_gate_matches_receipt(receipt: dict[str, Any], root: Path) -> None:
-    gate = check_assembly_gate(root)
+    gate = check_assembly_gate(root, receipt["a8_completions"])
     declared = receipt["assembly_gate"]
     require(
         declared["a7_receipt_valid"] == gate["a7_receipt_valid"]
@@ -552,12 +595,17 @@ def validate_frozen_slot_denominator(receipt: dict[str, Any], root: Path) -> Non
     require(declared["total_slots"] == 100, "frozen_slot_denominator.total_slots is not 100 -- refusing")
 
 
-def validate_engine_wiring(receipt: dict[str, Any]) -> None:
-    """Re-runs the real shared engine call and requires a byte-identical
-    result, plus makes the engine independently verify its own nested
-    receipt (``v4_original_row_admission.verify_receipt``) -- proving this is
-    a live wire into the on-main engine at the assembly layer too, not a
-    declared/stubbed shape."""
+def validate_engine_wiring(receipt: dict[str, Any], root: Path) -> None:
+    """Requires ``engine_wiring.admission_receipt`` to reproduce, byte for
+    byte, from the *same* row receipts A7's own completions already carry
+    for these slots (never re-executes ``evaluate_row``), and makes the
+    shared engine independently verify the assembled receipt's own internal
+    consistency (``v4_original_row_admission.verify_receipt``) -- proving
+    this is a live wire into the on-main engine at the assembly layer too,
+    not a declared/stubbed shape. With zero completions this recomputation
+    is byte-identical to a live, zero-row ``admission.admit_rows`` call --
+    today's real production receipt is unaffected."""
+    a7_receipt = _load(root / A7_RECEIPT_RELATIVE)
     wiring = receipt["engine_wiring"]
     require(
         wiring["engine_schema_version"] == admission.SCHEMA_VERSION and wiring["engine_input_schema_version"] == admission.INPUT_SCHEMA_VERSION,
@@ -567,21 +615,39 @@ def validate_engine_wiring(receipt: dict[str, Any]) -> None:
         wiring["model_only_bases_blocked"] == sorted(admission.MODEL_ONLY_BASES),
         "engine_wiring.model_only_bases_blocked does not match the live engine's MODEL_ONLY_BASES -- refusing",
     )
-    recomputed = admission.admit_rows(outcome_sha256=V4_SHA256, rows=[])
-    require(wiring["admission_receipt"] == recomputed, "engine_wiring.admission_receipt does not reproduce from a live, zero-row v4_original_row_admission.admit_rows call -- refusing")
+    recomputed = assemble_engine_admission_receipt(receipt["a8_completions"], a7_receipt)
+    require(
+        wiring["admission_receipt"] == recomputed,
+        "engine_wiring.admission_receipt does not reproduce from the matching a7_completions row receipts -- refusing",
+    )
     admission.verify_receipt(wiring["admission_receipt"])
     require(
-        wiring["admission_receipt"]["counts"] == {"input_rows": 0, "admitted_rows": 0, "rejected_rows": 0},
-        "engine_wiring.admission_receipt does not report zero rows -- refusing (no rights-cleared row exists yet; "
-        "dataset_rows_emitted must stay 0)",
+        wiring["admission_receipt"]["counts"]["admitted_rows"] == len(receipt["a8_completions"]),
+        "engine_wiring.admission_receipt.counts.admitted_rows does not match the number of declared a8_completions -- refusing",
     )
+    if not receipt["a8_completions"]:
+        require(
+            wiring["admission_receipt"]["counts"] == {"input_rows": 0, "admitted_rows": 0, "rejected_rows": 0},
+            "engine_wiring.admission_receipt does not report zero rows -- refusing (no a8_completions declared)",
+        )
+
+
+def validate_a8_completions_shape(receipt: dict[str, Any]) -> None:
+    """Each ``a8_completions`` entry must carry a well-formed
+    ``row_content_sha256`` and match its own upstream A7 completion --
+    a claim inconsistent with its own upstream evidence refuses here."""
+    for completion in receipt["a8_completions"]:
+        require(
+            isinstance(completion["row_content_sha256"], str) and admission.SHA256_RE.fullmatch(completion["row_content_sha256"]) is not None,
+            "a8_completions.row_content_sha256 is not a well-formed sha256 -- refusing",
+        )
 
 
 def validate_eligibility_and_completion(receipt: dict[str, Any], root: Path) -> None:
     manifest = _load(root / SLOT_MANIFEST_RELATIVE)
     a2_receipt = _load(root / A2_RECEIPT_RELATIVE)
     a7_receipt = _load(root / A7_RECEIPT_RELATIVE)
-    gate = check_assembly_gate(root)
+    gate = check_assembly_gate(root, receipt["a8_completions"])
 
     expected_eligibility = ev.public_eligibility(ev.stratum_eligibility(manifest, a2_receipt, error_cls=AdmissionAssemblyError))
     require(receipt["prerequisite_eligibility"] == expected_eligibility, "prerequisite_eligibility does not reproduce from the live A2 receipt and slot manifest -- refusing")
@@ -602,12 +668,15 @@ def validate_eligibility_and_completion(receipt: dict[str, Any], root: Path) -> 
     expected_residuals = derive_a8_slot_residuals(manifest, a2_receipt, gate, completion_ids)
     require(receipt["a8_residuals"] == expected_residuals, "a8_residuals does not reproduce from the live slot manifest, A2 receipt, and gate -- refusing")
 
-    expected_view = build_admitted_slice_view(manifest, expected_residuals)
-    require(receipt["admitted_slice_view"] == expected_view, "admitted_slice_view does not reproduce from the live slot manifest and a8_residuals -- refusing")
-    require(
-        all(entry["row_admitted"] is False and entry["row_id"] is None for entry in receipt["admitted_slice_view"]),
-        "admitted_slice_view claims an admitted row while no rights-cleared row exists -- refusing",
-    )
+    expected_view = build_admitted_slice_view(manifest, expected_residuals, receipt["a8_completions"])
+    require(receipt["admitted_slice_view"] == expected_view, "admitted_slice_view does not reproduce from the live slot manifest, a8_residuals, and a8_completions -- refusing")
+    for entry in receipt["admitted_slice_view"]:
+        if entry["row_admitted"]:
+            require(entry["row_id"] is not None and entry["residual_id"] is None, "admitted_slice_view entry claims row_admitted but is missing row_id or still carries a residual_id -- refusing")
+        else:
+            require(entry["row_id"] is None, "admitted_slice_view entry claims no admitted row but carries a row_id -- refusing")
+
+    validate_a8_completions_match_a7(receipt["a8_completions"], a7_receipt.get("a7_completions", []))
 
 
 def validate_residuals_carried_from_a2_a4_a5_a6_a7(receipt: dict[str, Any], root: Path) -> None:
@@ -655,26 +724,41 @@ def validate_no_forbidden_completion_claims(receipt: dict[str, Any]) -> None:
     require(not leaked, f"receipt carries forbidden completion claim(s): {leaked} -- refusing")
 
 
-def validate_eligibility_and_safety_all_false(receipt: dict[str, Any]) -> None:
+def validate_eligibility_and_safety(receipt: dict[str, Any]) -> None:
+    """See ``v4_a7_original_row_factory.validate_eligibility_and_safety``
+    for the identical rationale: ``rows_not_admitted`` must truthfully
+    reflect ``a8_completions``, every other safety flag stays False
+    unconditionally, and ``dataset_rows_emitted`` stays 0 unconditionally."""
     require(receipt["eligibility"] == ASSEMBLY_ELIGIBILITY, "receipt eligibility does not equal the frozen all-false assembly eligibility -- refusing")
     safety = receipt["safety_assertions"]
+    expected_rows_not_admitted = len(receipt["a8_completions"]) == 0
     require(
-        safety["rows_not_admitted"] is True and all(value is False for key, value in safety.items() if key != "rows_not_admitted"),
+        safety["rows_not_admitted"] == expected_rows_not_admitted,
+        "receipt safety_assertions.rows_not_admitted does not truthfully reflect whether any row has been "
+        "engine-admitted via a8_completions -- refusing",
+    )
+    require(
+        all(value is False for key, value in safety.items() if key != "rows_not_admitted"),
         "receipt safety_assertions does not hold the expected invariants -- refusing",
     )
-    require(receipt["execution_counters"]["dataset_rows_emitted"] == 0, "receipt execution_counters.dataset_rows_emitted is not 0 -- refusing")
+    require(
+        receipt["execution_counters"]["dataset_rows_emitted"] == 0,
+        "receipt execution_counters.dataset_rows_emitted is not 0 -- refusing (dataset rows are only ever "
+        "emitted at A11 release, out of scope for this stage)",
+    )
 
 
 def validate_receipt_independently(receipt: dict[str, Any], root: Path = ROOT) -> None:
     validate_bindings_hash_to_disk(receipt, root)
     validate_gate_matches_receipt(receipt, root)
     validate_frozen_slot_denominator(receipt, root)
-    validate_engine_wiring(receipt)
+    validate_engine_wiring(receipt, root)
+    validate_a8_completions_shape(receipt)
     validate_eligibility_and_completion(receipt, root)
     validate_residuals_carried_from_a2_a4_a5_a6_a7(receipt, root)
     validate_no_forbidden_keys(receipt)
     validate_no_forbidden_completion_claims(receipt)
-    validate_eligibility_and_safety_all_false(receipt)
+    validate_eligibility_and_safety(receipt)
     validate_receipt_schema(receipt, root)
 
 

@@ -184,8 +184,8 @@
             "schema_version": { "const": "v4-original-row-admission-v1" },
             "visibility": { "const": "machine_receipt_text_free" },
             "outcome_sha256": { "const": "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20" },
-            "rows": { "const": [] },
-            "counts": { "const": { "input_rows": 0, "admitted_rows": 0, "rejected_rows": 0 } },
+            "rows": { "type": "array", "minItems": 0, "maxItems": 100 },
+            "counts": { "$ref": "#/$defs/admission_counts" },
             "receipt_sha256": { "$ref": "#/$defs/sha256" }
           }
         }
@@ -296,13 +296,23 @@
         "required": ["slot_id", "row_admitted", "row_id", "residual_id"],
         "properties": {
           "slot_id": { "type": "string", "pattern": "^v4p-[a-z-]+-[0-9]{3}$" },
-          "row_admitted": { "const": false },
-          "row_id": { "const": null },
+          "row_admitted": { "type": "boolean" },
+          "row_id": { "type": ["string", "null"] },
           "residual_id": {
-            "type": "string",
+            "type": ["string", "null"],
             "pattern": "^a8-residual-(rights-unknown|source-incomplete|independence-unavailable|stage-completion-not-yet-available)-v4p-[a-z-]+-[0-9]{3}$"
           }
-        }
+        },
+        "oneOf": [
+          {
+            "properties": { "row_admitted": { "const": true }, "row_id": { "type": "string" }, "residual_id": { "const": null } },
+            "required": ["row_admitted", "row_id", "residual_id"]
+          },
+          {
+            "properties": { "row_admitted": { "const": false }, "row_id": { "const": null }, "residual_id": { "type": "string" } },
+            "required": ["row_admitted", "row_id", "residual_id"]
+          }
+        ]
       }
     },
     "execution_counters": {
@@ -314,7 +324,7 @@
       ],
       "properties": {
         "dataset_rows_emitted": { "const": 0 },
-        "candidate_rows_assembled": { "const": 0 },
+        "candidate_rows_assembled": { "type": "integer", "minimum": 0, "maximum": 100 },
         "frozen_slot_count": { "const": 100 },
         "slots_prerequisite_eligible": { "type": "integer", "minimum": 0, "maximum": 100 },
         "slots_upstream_complete": { "type": "integer", "minimum": 0, "maximum": 100 },
@@ -334,7 +344,7 @@
         "mac_corpus_copy_created", "epic_done_claimed", "heldout_family_identity_leaked"
       ],
       "properties": {
-        "rows_not_admitted": { "const": true },
+        "rows_not_admitted": { "type": "boolean" },
         "text_emitted": { "const": false },
         "source_text_loaded_into_model": { "const": false },
         "corpus_refetched": { "const": false },
@@ -461,6 +471,16 @@
           "row_id": { "type": "string", "minLength": 1 },
           "row_content_sha256": { "$ref": "#/$defs/sha256" }
         }
+      }
+    },
+    "admission_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_rows", "admitted_rows", "rejected_rows"],
+      "properties": {
+        "input_rows": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "admitted_rows": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "rejected_rows": { "type": "integer", "minimum": 0, "maximum": 100 }
       }
     }
   }

@@ -656,9 +656,23 @@ def validate_eligibility_and_completion_and_consumer_view(receipt: dict[str, Any
 
     expected_view = build_consumer_reproduction_view(manifest, a8_receipt, expected_a9_residuals)
     require(receipt["consumer_reproduction_view"] == expected_view, "consumer_reproduction_view does not reproduce from the live A8 receipt and a9_residuals -- refusing")
+    # A9 itself never scores (no execution mechanism yet, unconditionally --
+    # this stage's own a9_completions stays empty in every real and
+    # synthetic build alike, matching the acceptance proof's "A9 still
+    # 0/100"). row_admitted/row_id may truthfully reflect a real upstream
+    # A8 admission (see build_consumer_reproduction_view's own cross-check
+    # against A8's engine-admitted rows); they are never trusted here
+    # beyond internal consistency with each other.
     require(
-        all(entry["row_admitted"] is False and entry["row_id"] is None and entry["scored"] is False and entry["score"] is None for entry in receipt["consumer_reproduction_view"]),
-        "consumer_reproduction_view claims an admitted or scored row while no rights-cleared row exists -- refusing",
+        all(entry["scored"] is False and entry["score"] is None for entry in receipt["consumer_reproduction_view"]),
+        "consumer_reproduction_view claims a scored row while A9 has no scoring execution mechanism -- refusing",
+    )
+    require(
+        all(
+            (entry["row_admitted"] and isinstance(entry["row_id"], str)) or (not entry["row_admitted"] and entry["row_id"] is None)
+            for entry in receipt["consumer_reproduction_view"]
+        ),
+        "consumer_reproduction_view row_admitted/row_id are internally inconsistent -- refusing",
     )
 
 

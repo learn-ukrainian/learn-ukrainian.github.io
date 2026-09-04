@@ -322,15 +322,19 @@
         "required": ["slot_id", "row_admitted", "row_id", "scored", "score", "residual_id"],
         "properties": {
           "slot_id": { "type": "string", "pattern": "^v4p-[a-z-]+-[0-9]{3}$" },
-          "row_admitted": { "const": false },
-          "row_id": { "const": null },
+          "row_admitted": { "type": "boolean" },
+          "row_id": { "type": ["string", "null"] },
           "scored": { "const": false },
           "score": { "const": null },
           "residual_id": {
             "type": "string",
             "pattern": "^a9-residual-(rights-unknown|source-incomplete|independence-unavailable|stage-completion-not-yet-available)-v4p-[a-z-]+-[0-9]{3}$"
           }
-        }
+        },
+        "oneOf": [
+          { "properties": { "row_admitted": { "const": true }, "row_id": { "type": "string" } }, "required": ["row_admitted", "row_id"] },
+          { "properties": { "row_admitted": { "const": false }, "row_id": { "const": null } }, "required": ["row_admitted", "row_id"] }
+        ]
       }
     },
     "execution_counters": {

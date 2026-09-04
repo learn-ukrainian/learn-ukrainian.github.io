@@ -113,10 +113,13 @@ V4_SHA256 = "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"
 # The merged A12 receipt's public sha256, frozen at dispatch time (PR #7643;
 # updated by v4-per-slot-private-factory repair cycle 3 once A7's dropped,
 # undecided A7-vs-A6 upstream-completion subset rippled A8's/A9's/A10's/
-# A11's/A12's own upstream-binding hashes forward). This module's bindings
-# must reproduce this value on every run -- proving A13 is bound to the
-# *merged* A12 receipt, never a local unmerged draft.
-A12_RECEIPT_SHA256_AT_MERGE = "281db8794b83d4dd208470cfc23366012a8309577069d54e6ea28592695bb939"
+# A11's/A12's own upstream-binding hashes forward; updated again by the
+# v4-real-slot-mechanism PR-A once A7's/A8's own completion mechanism and
+# the shared admission engine's new helper rippled the same chain forward
+# -- still 0 real completions, only the source hashes moved). This module's
+# bindings must reproduce this value on every run -- proving A13 is bound
+# to the *merged* A12 receipt, never a local unmerged draft.
+A12_RECEIPT_SHA256_AT_MERGE = "6619b46973af5742571d2a8ff4907603f70743fa8a854c6c960a16bf6b662b42"
 
 # This module's own frozen expectation of what the shared admission engine
 # must refuse as a silver/gold basis -- checked against the live
