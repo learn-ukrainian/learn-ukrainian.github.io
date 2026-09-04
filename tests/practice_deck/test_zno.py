@@ -28,13 +28,15 @@ def _database(path: Path) -> Path:
     connection = sqlite3.connect(path)
     connection.executescript(
         """
-        CREATE TABLE zno_documents (id INTEGER PRIMARY KEY, fetch_status TEXT NOT NULL);
+        CREATE TABLE zno_documents (
+            id INTEGER PRIMARY KEY, fetch_status TEXT NOT NULL, year INTEGER NOT NULL, text_layer TEXT NOT NULL
+        );
         CREATE TABLE zno_tasks (
             id INTEGER PRIMARY KEY, document_id INTEGER, year INTEGER, exam TEXT, session TEXT,
             task_no INTEGER, task_format TEXT, stem TEXT, options_json TEXT, correct_json TEXT,
             topic_tag TEXT, topic_norm TEXT, task_subtype TEXT, paronym_pair TEXT
         );
-        INSERT INTO zno_documents VALUES (1, 'ok'), (2, 'dead');
+        INSERT INTO zno_documents VALUES (1, 'ok', 2021, 'garbled'), (2, 'dead', 2010, 'clean');
         """
     )
     rows = [
@@ -89,6 +91,8 @@ def test_builder_keeps_ukrainian_item_text_maps_letter_and_reports_drops(tmp_pat
     assert residual["decks"]["stress"]["dropped"] == {"invalid_options": 1}
     assert residual["namedResidual"]["emptyKeyOwnStatement"] == 1
     assert residual["namedResidual"]["documentsFetchNotOk"] == 1
+    assert residual["namedResidual"]["garbledPdfDocuments"] == 1
+    assert residual["namedResidual"]["excluded2009"] == 1
     assert fill_residual["schema"] == "zno-practice-fill-residual"
     assert fill_residual["deckDrops"]["stress"][0]["reason"] == "invalid_options"
 
