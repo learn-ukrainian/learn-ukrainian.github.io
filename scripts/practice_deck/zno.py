@@ -297,6 +297,16 @@ def _residual_counts(conn: sqlite3.Connection, emitted: int) -> dict[str, int]:
         ),
         "emptyKeyOwnStatement": int(conn.execute("SELECT count(*) FROM zno_tasks WHERE task_format = 'own-statement' AND trim(correct_json) = ''").fetchone()[0]),
         "documentsFetchNotOk": int(conn.execute("SELECT count(*) FROM zno_documents WHERE fetch_status <> 'ok'").fetchone()[0]),
+        "garbledPdfDocuments": int(
+            conn.execute("SELECT count(*) FROM zno_documents WHERE text_layer = 'garbled'").fetchone()[0]
+        ),
+        # 2009 has no verified booklet source in the ledger and is intentionally
+        # excluded rather than silently treated as an unparsed session.
+        "excluded2009": int(conn.execute("SELECT count(*) FROM zno_documents WHERE year = 2009").fetchone()[0] == 0),
+        # These values are reviewed worksheet annotations, not inferred pairs.
+        "worksheetOnlyParonymPairs": int(
+            conn.execute("SELECT count(*) FROM zno_tasks WHERE trim(paronym_pair) <> ''").fetchone()[0]
+        ),
         "emittedItems": emitted,
         "intentionalCut": corpus - emitted,
     }
