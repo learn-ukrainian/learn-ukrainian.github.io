@@ -14,6 +14,7 @@ from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.api.occupancy_local import (
     clear_marker,
     driver_seat_host_id,
+    foundry_marker_host_id,
     occupancy_marker_scope,
     occupants_from_markers,
     occupants_from_session_streams,
@@ -53,8 +54,8 @@ def _open_lease(
 
 
 def test_driver_seat_host_id_uses_explicit_opaque_then_self_host(monkeypatch: pytest.MonkeyPatch) -> None:
-    mapping = {"teach-box": "host-teacher", "job-box": "host-job"}
-    selected = {"host-teacher": "teach-box", "host-job": "job-box"}
+    mapping = {"teach-box": "host-teacher", "worker-box": "host-worker"}
+    selected = {"host-teacher": "teach-box", "host-worker": "worker-box"}
     monkeypatch.delenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", raising=False)
     monkeypatch.delenv("ATLAS_JOB_SELF_HOST", raising=False)
     assert driver_seat_host_id(mapping, selected) is None
@@ -62,11 +63,35 @@ def test_driver_seat_host_id_uses_explicit_opaque_then_self_host(monkeypatch: py
     monkeypatch.setenv("ATLAS_JOB_SELF_HOST", "teach-box")
     assert driver_seat_host_id(mapping, selected) == "host-teacher"
 
-    monkeypatch.setenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", "host-job")
-    assert driver_seat_host_id(mapping, selected) == "host-job"
+    monkeypatch.setenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", "host-worker")
+    assert driver_seat_host_id(mapping, selected) == "host-worker"
 
     monkeypatch.setenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", "atlas-runner")
     assert driver_seat_host_id(mapping, selected) is None
+
+
+def test_driver_seat_host_id_rejects_retired_host_job_even_when_explicit(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """``host-job`` is permanently retired: never usable even via explicit env var."""
+    mapping = {"teach-box": "host-teacher"}
+    selected = {"host-teacher": "teach-box"}
+    monkeypatch.delenv("ATLAS_JOB_SELF_HOST", raising=False)
+    monkeypatch.setenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", "host-job")
+    assert driver_seat_host_id(mapping, selected) is None
+
+
+def test_foundry_marker_host_id_rejects_retired_host_job_even_when_explicit(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """``host-job`` is permanently retired: never usable even via explicit env var."""
+    mapping = {"teach-box": "host-teacher"}
+    monkeypatch.delenv("ATLAS_JOB_SELF_HOST", raising=False)
+    monkeypatch.setenv("MONITOR_OCCUPANCY_FOUNDRY_HOST_ID", "host-job")
+    assert foundry_marker_host_id(mapping) is None
+
+    monkeypatch.setenv("MONITOR_OCCUPANCY_FOUNDRY_HOST_ID", "host-worker")
+    assert foundry_marker_host_id(mapping) == "host-worker"
 
 
 def test_darwin_empty_map_does_not_attach_session_stream_drivers_to_mac_operator(
@@ -138,9 +163,9 @@ def test_resolve_launcher_host_id_uses_occupancy_mapping_and_fallbacks(
 ) -> None:
     monkeypatch.delenv("LU_MONITOR_HOST_ID", raising=False)
     monkeypatch.delenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", raising=False)
-    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "teach-box=host-teacher,job-box=host-job")
-    monkeypatch.setenv("ATLAS_JOB_SELF_HOST", "job-box")
-    assert resolve_launcher_host_id() == "host-job"
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "teach-box=host-teacher,worker-box=host-worker")
+    monkeypatch.setenv("ATLAS_JOB_SELF_HOST", "worker-box")
+    assert resolve_launcher_host_id() == "host-worker"
 
     monkeypatch.setenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", "host-driver")
     assert resolve_launcher_host_id() == "host-driver"
@@ -163,7 +188,7 @@ def test_occupants_from_session_streams_reads_active_lease_only(
     db_path = tmp_path / "session-streams.sqlite3"
     _open_lease(db_path)
     mapping = {"teach-box": "host-teacher"}
-    selected = {"host-teacher": "teach-box", "host-job": "job-box"}
+    selected = {"host-teacher": "teach-box", "host-worker": "worker-box"}
     monkeypatch.setenv("ATLAS_JOB_SELF_HOST", "teach-box")
     monkeypatch.delenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", raising=False)
 
@@ -176,7 +201,7 @@ def test_occupants_from_session_streams_reads_active_lease_only(
     assert teacher == [{"kind": "driver", "agent": "claude", "task_id": "infra-drive", "epic": "7139"}]
     assert (
         occupants_from_session_streams(
-            host_id="host-job",
+            host_id="host-worker",
             mapping=mapping,
             selected=selected,
             db_path=db_path,
@@ -374,7 +399,7 @@ def test_marker_round_trip_and_expiry(tmp_path: Path) -> None:
             "epic": "7102",
         }
     ]
-    assert occupants_from_markers(host_id="host-job", root=markers) == []
+    assert occupants_from_markers(host_id="host-worker", root=markers) == []
 
     stale_time = datetime.now(UTC) + timedelta(minutes=30)
     assert occupants_from_markers(host_id="host-teacher", root=markers, now=stale_time) == []

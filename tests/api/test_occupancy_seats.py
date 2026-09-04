@@ -21,7 +21,7 @@ from scripts.lexicon.runner import atlas_job
 
 _IP = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")
 _ALIAS_LEAKS = ("atlas-runner", "hramatka", "vps")
-_PLACEHOLDER_MAP = "job-box=host-job,teach-box=host-teacher"
+_PLACEHOLDER_MAP = "worker-box=host-worker,teach-box=host-teacher"
 
 
 def _client(tmp_path: Path) -> TestClient:
@@ -81,7 +81,7 @@ def test_occupancy_session_stream_driver_keeps_low_load_host_busy(
         idle_load["loadavg"] = [0.10, 0.10, 0.10]
         idle_load["job_unit"] = {"active_count": 0, "job_id": None, "state": None}
         load_mod.set_host_load_cache("teach-box", idle_load)
-        load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
+        load_mod.set_host_load_cache("worker-box", fake.host_load("worker-box"))
         resp = _client(tmp_path).get("/api/occupancy?host_id=host-teacher")
         assert resp.status_code == 200
         host = resp.json()["hosts"]["host-teacher"]
@@ -117,7 +117,7 @@ def test_occupancy_driver_lease_without_host_claim_stays_idle(tmp_path: Path, mo
         idle_load["loadavg"] = [0.10, 0.10, 0.10]
         idle_load["job_unit"] = {"active_count": 0, "job_id": None, "state": None}
         load_mod.set_host_load_cache("teach-box", idle_load)
-        load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
+        load_mod.set_host_load_cache("worker-box", fake.host_load("worker-box"))
         resp = _client(tmp_path).get("/api/occupancy?host_id=host-teacher")
         assert resp.status_code == 200
         host = resp.json()["hosts"]["host-teacher"]
@@ -150,7 +150,7 @@ def test_occupancy_foundry_marker_keeps_low_load_host_busy(tmp_path: Path, monke
         idle_load["loadavg"] = [0.20, 0.20, 0.20]
         idle_load["job_unit"] = {"active_count": 0, "job_id": None, "state": None}
         load_mod.set_host_load_cache("teach-box", idle_load)
-        load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
+        load_mod.set_host_load_cache("worker-box", fake.host_load("worker-box"))
         resp = _client(tmp_path).get("/api/occupancy?host_id=host-teacher")
         assert resp.status_code == 200
         host = resp.json()["hosts"]["host-teacher"]

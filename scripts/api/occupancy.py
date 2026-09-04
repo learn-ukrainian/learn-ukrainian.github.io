@@ -36,7 +36,7 @@ from scripts.api.observer_presence import (
     list_live,
 )
 from scripts.api.occupancy_local import OccupancyRead, read_markers, read_session_streams
-from scripts.api.occupancy_sanitize import CLOUD_OBSERVER_HOST_ID
+from scripts.api.occupancy_sanitize import CLOUD_OBSERVER_HOST_ID, RETIRED_HOST_IDS
 from scripts.api.occupancy_sanitize import occupant as _occupant
 from scripts.api.occupancy_sanitize import opaque_host_id as _opaque_host_id
 from scripts.api.project_state_store import (
@@ -56,14 +56,17 @@ _FOUNDRY_AGENTS = frozenset({"foundry", "evidence-compiler"})
 _FOUNDRY_TASK_IDS = frozenset({"ukrainian-data-foundry", "phase3-cycle007-evidence-compiler"})
 
 
-# Default glance: one production Linux host + Mac observer. ``host-job`` remains
-# queryable only when mapped; it is never a ghost glance row.
+# Default glance: one production Linux host + Mac observer. ``host-job`` is a
+# retired batch-host role (see occupancy_sanitize.RETIRED_HOST_IDS): it is
+# never a glance row, and a MONITOR_OCCUPANCY_HOST_IDS mapping that still
+# points a canonical alias at it cannot resurrect it — parse_host_id_map
+# drops the entry outright.
 DEFAULT_GLANCE_HOST_IDS = ("host-teacher",)
 # Back-compat alias: callers that enumerate the default glance use this name.
 DEFAULT_HOST_IDS = DEFAULT_GLANCE_HOST_IDS
 # Production Linux opaque id (empty-map API host fills this row in-process).
 PRODUCTION_LINUX_HOST_ID = DEFAULT_GLANCE_HOST_IDS[0]
-# Unmapped ``host-job`` is not queryable; mapped values come from the env map.
+# Queryable defaults besides whatever the env map contributes.
 QUERYABLE_DEFAULT_HOST_IDS = frozenset({PRODUCTION_LINUX_HOST_ID})
 MAC_OPERATOR_HOST_ID = "mac-operator"
 _BURN_SOURCE_NAMES = ("atlas_job", "driver", "foundry", "service", "observer")
@@ -230,7 +233,12 @@ async def _load_entry_for_selected_async(
 
 
 def parse_host_id_map(raw: str | None = None) -> dict[str, str]:
-    """Parse ``canonical=opaque`` pairs. Drop anything that is not opaque."""
+    """Parse ``canonical=opaque`` pairs. Drop anything that is not opaque.
+
+    ``_opaque_host_id`` also rejects retired ids (``RETIRED_HOST_IDS``, e.g.
+    ``host-job``), so a mapping like ``atlas-runner=host-job`` is dropped
+    outright — a retired role can never be resurrected via env mapping.
+    """
     text = (raw if raw is not None else os.environ.get("MONITOR_OCCUPANCY_HOST_IDS", "")).strip()
     mapping: dict[str, str] = {}
     if not text:
@@ -581,9 +589,17 @@ def _selected_hosts(
 ) -> dict[str, str | None]:
     if host_id == CLOUD_OBSERVER_HOST_ID:
         return {}
+    if host_id in RETIRED_HOST_IDS:
+        # Belt-and-suspenders: parse_host_id_map already drops a mapping onto
+        # a retired id, so `reverse` never has one. Reject the query directly
+        # too, in case a caller ever builds a snapshot without going through
+        # parse_host_id_map.
+        raise HTTPException(status_code=400, detail="unknown host_id")
 
     mapping = snapshot.host_id_map
-    reverse = {opaque: canonical for canonical, opaque in mapping.items()}
+    reverse = {
+        opaque: canonical for canonical, opaque in mapping.items() if opaque not in RETIRED_HOST_IDS
+    }
     if host_id is not None:
         if host_id == MAC_OPERATOR_HOST_ID:
             return {host_id: None}

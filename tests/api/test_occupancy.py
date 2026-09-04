@@ -42,7 +42,7 @@ client = TestClient(app, raise_server_exceptions=False)
 _IP = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")
 _ALIAS_LEAKS = ("atlas-runner", "hramatka", "vps")
 # Fictional canonical keys — never pair real SSH aliases with opaque ids in git.
-_PLACEHOLDER_MAP = "job-box=host-job,teach-box=host-teacher"
+_PLACEHOLDER_MAP = "worker-box=host-worker,teach-box=host-teacher"
 
 
 @pytest.fixture(autouse=True)
@@ -75,7 +75,7 @@ def _plan(**overrides: object) -> dict:
     base: dict = {
         "schema": "atlas-job.v1",
         "id": "occupancy-job-example",
-        "host": "job-box",
+        "host": "worker-box",
         "kind": "reenrich",
         "args": ["--target", "missing-translation"],
         "pointer_write": False,
@@ -91,7 +91,7 @@ def _plan(**overrides: object) -> dict:
 
 def _warm_load(fake: atlas_job.FakeHostAdapter) -> None:
     load_mod.clear_host_load_cache()
-    load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
+    load_mod.set_host_load_cache("worker-box", fake.host_load("worker-box"))
     load_mod.set_host_load_cache("teach-box", fake.host_load("teach-box"))
 
 
@@ -181,6 +181,46 @@ def test_occupancy_enumerates_both_default_hosts_without_opaque_map(tmp_path, mo
         load_mod.clear_host_load_cache()
 
 
+def test_occupancy_mapped_host_job_alias_is_still_retired(tmp_path, monkeypatch) -> None:
+    """A leftover env mapping onto host-job must not resurrect it (#7679-adjacent).
+
+    Mirrors a real leftover prod env: some canonical alias (``atlas-runner``)
+    still maps to the retired ``host-job`` opaque id, alongside a live
+    ``hramatka=host-teacher`` mapping. ``host-job`` must never appear in the
+    glance, mapped or not, and querying it explicitly must still 400 -- not
+    resurrect a fresh/ghost row and not be treated as merely unavailable.
+    """
+    monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
+    monkeypatch.setenv("ATLAS_RUN_ROOT", str(tmp_path / "run-root"))
+    (tmp_path / "run-root").mkdir()
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "atlas-runner=host-job,hramatka=host-teacher")
+    fake = atlas_job.FakeHostAdapter()
+    atlas_job.set_host_adapter(fake)
+    try:
+        load_mod.clear_host_load_cache()
+        load_mod.set_host_load_cache("hramatka", fake.host_load("hramatka"))
+        resp = client.get("/api/occupancy")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert sorted(data["hosts"].keys()) == ["host-teacher", "mac-operator"]
+        assert "host-job" not in data["hosts"]
+        teacher = data["hosts"]["host-teacher"]
+        assert teacher["status"] == "fresh"
+        assert "cpu_count" in teacher
+
+        denied = client.get("/api/occupancy?host_id=host-job")
+        assert denied.status_code == 400
+        assert denied.json()["detail"] == "unknown host_id"
+
+        text = resp.text
+        for alias in _ALIAS_LEAKS:
+            assert alias not in text
+        assert "host-job" not in text
+    finally:
+        atlas_job.set_host_adapter(None)
+        load_mod.clear_host_load_cache()
+
+
 def test_occupancy_default_glance_keeps_quiet_mac(tmp_path, monkeypatch) -> None:
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
     monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
@@ -261,8 +301,8 @@ def test_occupancy_shape_uses_placeholders(tmp_path, monkeypatch) -> None:
         assert resp.headers.get("cache-control") == "no-store"
         data = resp.json()
         assert data["schema"] == "monitor-occupancy.v1"
-        assert sorted(data["hosts"].keys()) == ["host-job", "host-teacher", "mac-operator"]
-        for host_id in ("host-job", "host-teacher"):
+        assert sorted(data["hosts"].keys()) == ["host-teacher", "host-worker", "mac-operator"]
+        for host_id in ("host-worker", "host-teacher"):
             host = data["hosts"][host_id]
             assert host["host_id"] == host_id
             assert host["status"] == "fresh"
@@ -318,10 +358,10 @@ def test_occupancy_awaits_missing_expired_and_fresh_load_probes(tmp_path, monkey
     atlas_job.set_host_adapter(fake)
     try:
         load_mod.clear_host_load_cache()
-        expired = fake.host_load("job-box")
+        expired = fake.host_load("worker-box")
         expired["cpu_count"] = 1
         load_mod.set_host_load_cache(
-            "job-box",
+            "worker-box",
             expired,
             mono_ts=time.monotonic() - load_mod.HOST_LOAD_MAX_STALE_S - 1.0,
         )
@@ -329,17 +369,17 @@ def test_occupancy_awaits_missing_expired_and_fresh_load_probes(tmp_path, monkey
         resp = client.get("/api/occupancy")
         assert resp.status_code == 200
         hosts = resp.json()["hosts"]
-        assert hosts["host-job"]["status"] == "fresh"
-        assert hosts["host-job"]["cpu_count"] == 4
+        assert hosts["host-worker"]["status"] == "fresh"
+        assert hosts["host-worker"]["cpu_count"] == 4
         assert hosts["host-teacher"]["status"] == "fresh"
         assert hosts["host-teacher"]["cpu_count"] == 4
 
-        cached = fake.host_load("job-box")
+        cached = fake.host_load("worker-box")
         cached["cpu_count"] = 1
-        load_mod.set_host_load_cache("job-box", cached)
-        fresh_resp = client.get("/api/occupancy?host_id=host-job&fresh=true")
+        load_mod.set_host_load_cache("worker-box", cached)
+        fresh_resp = client.get("/api/occupancy?host_id=host-worker&fresh=true")
         assert fresh_resp.status_code == 200
-        fresh_host = fresh_resp.json()["hosts"]["host-job"]
+        fresh_host = fresh_resp.json()["hosts"]["host-worker"]
         assert fresh_host["status"] == "fresh"
         assert fresh_host["cpu_count"] == 4
     finally:
@@ -362,7 +402,7 @@ def test_occupancy_unavailable_has_no_metrics_or_ssh_text(tmp_path, monkeypatch)
 
         monkeypatch.setattr(fake, "host_load", host_load)
         load_mod.clear_host_load_cache()
-        load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
+        load_mod.set_host_load_cache("worker-box", fake.host_load("worker-box"))
         resp = client.get("/api/occupancy")
         assert resp.status_code == 200
         data = resp.json()
@@ -375,7 +415,7 @@ def test_occupancy_unavailable_has_no_metrics_or_ssh_text(tmp_path, monkeypatch)
         assert "cpu_count" not in dead
         assert "mem" not in dead
         assert "ssh" not in json.dumps(dead).lower()
-        live = data["hosts"]["host-job"]
+        live = data["hosts"]["host-worker"]
         assert live["status"] == "fresh"
         assert "cpu_count" in live
     finally:
@@ -394,7 +434,7 @@ def test_occupancy_occupants_from_registry_and_job_unit(tmp_path, monkeypatch) -
             {
                 "id": plan["id"],
                 "state": "running",
-                "host": "job-box",
+                "host": "worker-box",
                 "kind": "reenrich",
                 "unit": atlas_job.unit_name(plan["id"]),
                 "workdir": atlas_job.work_dir_for(plan["id"], plan),
@@ -411,11 +451,11 @@ def test_occupancy_occupants_from_registry_and_job_unit(tmp_path, monkeypatch) -
             }
         ]
         _warm_load(fake)
-        resp = client.get("/api/occupancy?host_id=host-job")
+        resp = client.get("/api/occupancy?host_id=host-worker")
         assert resp.status_code == 200
         data = resp.json()
-        assert list(data["hosts"].keys()) == ["host-job"]
-        occupants = data["hosts"]["host-job"]["occupants"]
+        assert list(data["hosts"].keys()) == ["host-worker"]
+        occupants = data["hosts"]["host-worker"]["occupants"]
         assert occupants == [
             {
                 "kind": "job",
@@ -461,8 +501,8 @@ def test_occupancy_stale_while_revalidate_reuse(tmp_path, monkeypatch) -> None:
         load_mod.clear_host_load_cache()
         now_mono = time.monotonic()
         load_mod.set_host_load_cache(
-            "job-box",
-            fake.host_load("job-box"),
+            "worker-box",
+            fake.host_load("worker-box"),
             mono_ts=now_mono - 60.0,
         )
         load_mod.set_host_load_cache(
@@ -473,8 +513,8 @@ def test_occupancy_stale_while_revalidate_reuse(tmp_path, monkeypatch) -> None:
         resp = client.get("/api/occupancy")
         assert resp.status_code == 200
         data = resp.json()
-        assert data["hosts"]["host-job"]["status"] == "stale"
-        assert "cpu_count" in data["hosts"]["host-job"]
+        assert data["hosts"]["host-worker"]["status"] == "stale"
+        assert "cpu_count" in data["hosts"]["host-worker"]
         assert data["hosts"]["host-teacher"]["status"] == "fresh"
     finally:
         atlas_job.set_host_adapter(None)
@@ -491,7 +531,7 @@ def test_occupancy_heartbeat_boundary_stays_fresh_while_probe_runs(tmp_path, mon
     original_host_load = fake.host_load
 
     def host_load(host: str) -> dict:
-        if host == "job-box":
+        if host == "worker-box":
             probe_started.set()
             assert release_probe.wait(timeout=1.0)
         return original_host_load(host)
@@ -500,8 +540,8 @@ def test_occupancy_heartbeat_boundary_stays_fresh_while_probe_runs(tmp_path, mon
     try:
         load_mod.clear_host_load_cache()
         load_mod.set_host_load_cache(
-            "job-box",
-            original_host_load("job-box"),
+            "worker-box",
+            original_host_load("worker-box"),
             mono_ts=time.monotonic() - 31.0,
         )
         load_mod.set_host_load_cache(
@@ -512,8 +552,8 @@ def test_occupancy_heartbeat_boundary_stays_fresh_while_probe_runs(tmp_path, mon
         resp = client.get("/api/occupancy")
         assert resp.status_code == 200
         data = resp.json()
-        assert data["hosts"]["host-job"]["status"] == "fresh"
-        assert 30.0 <= data["hosts"]["host-job"]["age_seconds"] <= 33.0
+        assert data["hosts"]["host-worker"]["status"] == "fresh"
+        assert 30.0 <= data["hosts"]["host-worker"]["age_seconds"] <= 33.0
         assert data["hosts"]["host-teacher"]["status"] == "fresh"
         assert probe_started.wait(timeout=1.0)
     finally:
@@ -523,15 +563,21 @@ def test_occupancy_heartbeat_boundary_stays_fresh_while_probe_runs(tmp_path, mon
 
 
 def test_parse_host_id_map_drops_non_opaque_values() -> None:
-    parsed = parse_host_id_map("job-box=host-job,teach-box=atlas-runner,bad=1.2.3.4,also=vps,ok=host-teacher")
-    assert parsed == {"job-box": "host-job", "ok": "host-teacher"}
+    parsed = parse_host_id_map(
+        "worker-box=host-worker,teach-box=atlas-runner,bad=1.2.3.4,also=vps,"
+        "ok=host-teacher,atlas-runner=host-job"
+    )
+    assert parsed == {"worker-box": "host-worker", "ok": "host-teacher"}
     assert not _opaque_host_id("atlas-runner")
     assert not _opaque_host_id("hramatka")
     assert not _opaque_host_id("vps")
     assert not _opaque_host_id("192.0.2.1")
     assert not _opaque_host_id("host.example")
     assert not _opaque_host_id("cloud-observer")
-    assert _opaque_host_id("host-job")
+    # host-job is a retired batch-host role: never opaque again, so a mapping
+    # onto it (e.g. atlas-runner=host-job) is dropped at parse time, same as
+    # any other invalid opaque id.
+    assert not _opaque_host_id("host-job")
 
 
 def test_safe_field_drops_aliases_addresses_and_fqdn() -> None:
@@ -605,18 +651,18 @@ def test_safe_summary_drops_paths_secrets_and_aliases() -> None:
 
 def test_occupancy_dual_host_partial_map(tmp_path, monkeypatch) -> None:
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path))
-    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "job-box=host-job")
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "worker-box=host-worker")
     fake = atlas_job.FakeHostAdapter()
     atlas_job.set_host_adapter(fake)
     try:
         load_mod.clear_host_load_cache()
-        load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
+        load_mod.set_host_load_cache("worker-box", fake.host_load("worker-box"))
         resp = client.get("/api/occupancy")
         assert resp.status_code == 200
         data = resp.json()
-        assert sorted(data["hosts"].keys()) == ["host-job", "host-teacher", "mac-operator"]
-        assert data["hosts"]["host-job"]["status"] == "fresh"
-        assert data["hosts"]["host-job"]["cpu_count"] == 4
+        assert sorted(data["hosts"].keys()) == ["host-teacher", "host-worker", "mac-operator"]
+        assert data["hosts"]["host-worker"]["status"] == "fresh"
+        assert data["hosts"]["host-worker"]["cpu_count"] == 4
         assert data["hosts"]["host-teacher"]["status"] == "unavailable"
         assert data["hosts"]["host-teacher"]["error"] == "unreachable"
         assert data["hosts"]["host-teacher"]["burn_state"] == "unknown"
@@ -635,50 +681,50 @@ def test_occupancy_idle_or_empty_flag_transitions(tmp_path, monkeypatch) -> None
     try:
         # Case 1: Low load, no occupants -> idle_or_empty is True
         load_mod.clear_host_load_cache()
-        idle_load = fake.host_load("job-box")
+        idle_load = fake.host_load("worker-box")
         idle_load["loadavg"] = [0.10, 0.15, 0.12]
         idle_load["job_unit"] = {"active_count": 0, "job_id": None, "state": None}
-        load_mod.set_host_load_cache("job-box", idle_load)
-        resp = client.get("/api/occupancy?host_id=host-job")
+        load_mod.set_host_load_cache("worker-box", idle_load)
+        resp = client.get("/api/occupancy?host_id=host-worker")
         assert resp.status_code == 200
-        idle_host = resp.json()["hosts"]["host-job"]
+        idle_host = resp.json()["hosts"]["host-worker"]
         assert idle_host["burn_state"] == "idle"
         assert idle_host["idle_or_empty"] is True
 
         # Case 2: High CPU load (>= 1.0) -> idle_or_empty is False
         load_mod.clear_host_load_cache()
-        busy_load = fake.host_load("job-box")
+        busy_load = fake.host_load("worker-box")
         busy_load["loadavg"] = [2.50, 1.80, 1.20]
-        load_mod.set_host_load_cache("job-box", busy_load)
-        resp = client.get("/api/occupancy?host_id=host-job")
+        load_mod.set_host_load_cache("worker-box", busy_load)
+        resp = client.get("/api/occupancy?host_id=host-worker")
         assert resp.status_code == 200
-        busy_host = resp.json()["hosts"]["host-job"]
+        busy_host = resp.json()["hosts"]["host-worker"]
         assert busy_host["burn_state"] == "active"
         assert busy_host["burn_sources"]["atlas_job"]["state"] == "active"
         assert busy_host["idle_or_empty"] is False
 
         # Case 3: Active job_unit -> idle_or_empty is False
         load_mod.clear_host_load_cache()
-        active_unit_load = fake.host_load("job-box")
+        active_unit_load = fake.host_load("worker-box")
         active_unit_load["loadavg"] = [0.10, 0.10, 0.10]
         active_unit_load["job_unit"] = {"active_count": 1, "job_id": "unit-job", "state": "running"}
-        load_mod.set_host_load_cache("job-box", active_unit_load)
-        resp = client.get("/api/occupancy?host_id=host-job")
+        load_mod.set_host_load_cache("worker-box", active_unit_load)
+        resp = client.get("/api/occupancy?host_id=host-worker")
         assert resp.status_code == 200
-        unit_host = resp.json()["hosts"]["host-job"]
+        unit_host = resp.json()["hosts"]["host-worker"]
         assert unit_host["burn_state"] == "active"
         assert unit_host["burn_sources"]["atlas_job"]["state"] == "active"
         assert unit_host["idle_or_empty"] is False
 
         # Case 4: Occupant in registry -> idle_or_empty is False
         load_mod.clear_host_load_cache()
-        load_mod.set_host_load_cache("job-box", idle_load)
+        load_mod.set_host_load_cache("worker-box", idle_load)
         plan = _plan()
         atlas_job.save_registry(
             {
                 "id": plan["id"],
                 "state": "running",
-                "host": "job-box",
+                "host": "worker-box",
                 "kind": "reenrich",
                 "unit": atlas_job.unit_name(plan["id"]),
                 "workdir": atlas_job.work_dir_for(plan["id"], plan),
@@ -688,9 +734,9 @@ def test_occupancy_idle_or_empty_flag_transitions(tmp_path, monkeypatch) -> None
                 "agent": "gemini",
             }
         )
-        resp = client.get("/api/occupancy?host_id=host-job")
+        resp = client.get("/api/occupancy?host_id=host-worker")
         assert resp.status_code == 200
-        host_entry = resp.json()["hosts"]["host-job"]
+        host_entry = resp.json()["hosts"]["host-worker"]
         assert host_entry["burn_state"] == "active"
         assert host_entry["burn_sources"]["atlas_job"]["state"] == "active"
         assert host_entry["idle_or_empty"] is False
@@ -704,7 +750,7 @@ def test_occupancy_idle_or_empty_flag_transitions(tmp_path, monkeypatch) -> None
 def test_occupancy_active_driver_lease_wins_at_low_hardware_load(tmp_path, monkeypatch) -> None:
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path / "registry"))
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
-    monkeypatch.setenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", "host-job")
+    monkeypatch.setenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", "host-worker")
     db_path = tmp_path / "session-streams.sqlite3"
     _open_lease(db_path)
     monkeypatch.setattr("scripts.api.occupancy_local.session_streams_db_path", lambda: db_path)
@@ -712,12 +758,12 @@ def test_occupancy_active_driver_lease_wins_at_low_hardware_load(tmp_path, monke
     atlas_job.set_host_adapter(fake)
     try:
         load_mod.clear_host_load_cache()
-        low_load = fake.host_load("job-box")
+        low_load = fake.host_load("worker-box")
         low_load["loadavg"] = [0.05, 0.05, 0.05]
         low_load["job_unit"] = {"active_count": 0, "job_id": None, "state": None}
-        load_mod.set_host_load_cache("job-box", low_load)
+        load_mod.set_host_load_cache("worker-box", low_load)
         load_mod.set_host_load_cache("teach-box", fake.host_load("teach-box"))
-        host = client.get("/api/occupancy?host_id=host-job").json()["hosts"]["host-job"]
+        host = client.get("/api/occupancy?host_id=host-worker").json()["hosts"]["host-worker"]
         assert host["burn_state"] == "active"
         assert host["burn_sources"]["driver"]["state"] == "active"
         assert host["burn_sources"]["driver"]["observation_age_s"] >= 0
@@ -781,7 +827,7 @@ def test_occupancy_glance_shows_every_epic_driver(tmp_path: Path, monkeypatch: p
     try:
         load_mod.clear_host_load_cache()
         load_mod.set_host_load_cache("teach-box", fake.host_load("teach-box"))
-        load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
+        load_mod.set_host_load_cache("worker-box", fake.host_load("worker-box"))
         resp = client.get("/api/occupancy?host_id=host-teacher")
         assert resp.status_code == 200
         host = resp.json()["hosts"]["host-teacher"]
@@ -806,18 +852,18 @@ def test_occupancy_fresh_compiler_marker_wins_at_low_hardware_load(tmp_path, mon
         agent="evidence-compiler",
         task_id="phase3-cycle007-evidence-compiler",
         epic="phase3-cycle007",
-        host_id="host-job",
+        host_id="host-worker",
         path=markers,
     )
     fake = atlas_job.FakeHostAdapter()
     atlas_job.set_host_adapter(fake)
     try:
         load_mod.clear_host_load_cache()
-        low_load = fake.host_load("job-box")
+        low_load = fake.host_load("worker-box")
         low_load["loadavg"] = [0.05, 0.05, 0.05]
         low_load["job_unit"] = {"active_count": 0, "job_id": None, "state": None}
-        load_mod.set_host_load_cache("job-box", low_load)
-        host = client.get("/api/occupancy?host_id=host-job").json()["hosts"]["host-job"]
+        load_mod.set_host_load_cache("worker-box", low_load)
+        host = client.get("/api/occupancy?host_id=host-worker").json()["hosts"]["host-worker"]
         assert host["burn_state"] == "active"
         assert host["burn_sources"]["foundry"]["state"] == "active"
         assert any(row["kind"] == "service" for row in host["occupants"])
@@ -838,18 +884,18 @@ def test_occupancy_generic_service_marker_explains_burn_via_service_source(
         agent="codex",
         task_id="lu-codex-6375",
         epic="6375",
-        host_id="host-job",
+        host_id="host-worker",
         path=markers,
     )
     fake = atlas_job.FakeHostAdapter()
     atlas_job.set_host_adapter(fake)
     try:
         load_mod.clear_host_load_cache()
-        low_load = fake.host_load("job-box")
+        low_load = fake.host_load("worker-box")
         low_load["loadavg"] = [0.05, 0.05, 0.05]
         low_load["job_unit"] = {"active_count": 0, "job_id": None, "state": None}
-        load_mod.set_host_load_cache("job-box", low_load)
-        host = client.get("/api/occupancy?host_id=host-job").json()["hosts"]["host-job"]
+        load_mod.set_host_load_cache("worker-box", low_load)
+        host = client.get("/api/occupancy?host_id=host-worker").json()["hosts"]["host-worker"]
         assert host["occupants"] == [
             {"kind": "service", "agent": "codex", "task_id": "lu-codex-6375", "epic": "6375"}
         ]
@@ -873,7 +919,7 @@ def test_occupancy_foundry_and_generic_markers_keep_foundry_burn_honest(
         kind="service",
         agent="cursor",
         task_id="routine-service",
-        host_id="host-job",
+        host_id="host-worker",
         path=markers,
     )
     write_marker(
@@ -881,18 +927,18 @@ def test_occupancy_foundry_and_generic_markers_keep_foundry_burn_honest(
         agent="evidence-compiler",
         task_id="phase3-cycle007-evidence-compiler",
         epic="phase3-cycle007",
-        host_id="host-job",
+        host_id="host-worker",
         path=markers,
     )
     fake = atlas_job.FakeHostAdapter()
     atlas_job.set_host_adapter(fake)
     try:
         load_mod.clear_host_load_cache()
-        low_load = fake.host_load("job-box")
+        low_load = fake.host_load("worker-box")
         low_load["loadavg"] = [0.05, 0.05, 0.05]
         low_load["job_unit"] = {"active_count": 0, "job_id": None, "state": None}
-        load_mod.set_host_load_cache("job-box", low_load)
-        host = client.get("/api/occupancy?host_id=host-job").json()["hosts"]["host-job"]
+        load_mod.set_host_load_cache("worker-box", low_load)
+        host = client.get("/api/occupancy?host_id=host-worker").json()["hosts"]["host-worker"]
         assert host["occupant_count"] == 2
         assert {row["agent"] for row in host["occupants"]} == {"cursor", "evidence-compiler"}
         assert host["burn_sources"]["foundry"]["state"] == "active"
@@ -915,8 +961,8 @@ def test_occupancy_unreadable_marker_store_is_unknown_and_opsec_safe(tmp_path, m
     atlas_job.set_host_adapter(fake)
     try:
         load_mod.clear_host_load_cache()
-        load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
-        host = client.get("/api/occupancy?host_id=host-job").json()["hosts"]["host-job"]
+        load_mod.set_host_load_cache("worker-box", fake.host_load("worker-box"))
+        host = client.get("/api/occupancy?host_id=host-worker").json()["hosts"]["host-worker"]
         assert host["burn_state"] == "unknown"
         assert host["burn_sources"]["foundry"]["state"] == "unknown"
         assert host["idle_or_empty"] is False
@@ -931,7 +977,7 @@ def test_occupancy_unreadable_marker_store_is_unknown_and_opsec_safe(tmp_path, m
 def test_occupancy_corrupt_driver_db_is_unknown_and_not_idle(tmp_path, monkeypatch) -> None:
     monkeypatch.setenv("ATLAS_JOB_REGISTRY", str(tmp_path / "registry"))
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
-    monkeypatch.setenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", "host-job")
+    monkeypatch.setenv("MONITOR_OCCUPANCY_DRIVER_HOST_ID", "host-worker")
     db_path = tmp_path / "broken-session-streams.sqlite3"
     db_path.write_text("not-a-database", encoding="utf-8")
     monkeypatch.setattr("scripts.api.occupancy_local.session_streams_db_path", lambda: db_path)
@@ -939,8 +985,8 @@ def test_occupancy_corrupt_driver_db_is_unknown_and_not_idle(tmp_path, monkeypat
     atlas_job.set_host_adapter(fake)
     try:
         load_mod.clear_host_load_cache()
-        load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
-        host = client.get("/api/occupancy?host_id=host-job").json()["hosts"]["host-job"]
+        load_mod.set_host_load_cache("worker-box", fake.host_load("worker-box"))
+        host = client.get("/api/occupancy?host_id=host-worker").json()["hosts"]["host-worker"]
         assert host["burn_state"] == "unknown"
         assert host["burn_sources"]["driver"]["state"] == "unknown"
         assert host["idle_or_empty"] is False
@@ -960,7 +1006,7 @@ def test_occupancy_expired_marker_is_clear(tmp_path, monkeypatch) -> None:
         agent="evidence-compiler",
         task_id="phase3-cycle007-evidence-compiler",
         epic="phase3-cycle007",
-        host_id="host-job",
+        host_id="host-worker",
         path=markers,
         ttl_seconds=1,
         now=datetime.now(UTC) - timedelta(seconds=5),
@@ -969,8 +1015,8 @@ def test_occupancy_expired_marker_is_clear(tmp_path, monkeypatch) -> None:
     atlas_job.set_host_adapter(fake)
     try:
         load_mod.clear_host_load_cache()
-        load_mod.set_host_load_cache("job-box", fake.host_load("job-box"))
-        host = client.get("/api/occupancy?host_id=host-job").json()["hosts"]["host-job"]
+        load_mod.set_host_load_cache("worker-box", fake.host_load("worker-box"))
+        host = client.get("/api/occupancy?host_id=host-worker").json()["hosts"]["host-worker"]
         assert host["burn_sources"]["foundry"]["state"] == "clear"
         assert host["burn_state"] == "idle"
         assert host["idle_or_empty"] is True
