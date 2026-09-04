@@ -656,6 +656,71 @@ Additional audit guardrails:
 - `scripts/atlas/fill_local.py` - Phase-1 offline local enrichment writer for `data/atlas.db`; reads local dictionary/cache data only and reports per-section before/after coverage
 - `site/scripts/benchmark-atlas-db.mjs` - benchmark Atlas DB build, preload, and getStaticPaths mapping at current and synthetic sizes
 - `scripts/audit/curriculum_qg_harness.py` - deterministic Ukrainian curriculum QG fixture harness; use it to calibrate B1-27, A1/A2 scaffolding, B1+ leakage, and seminar-register checks before changing QG behavior
+- `scripts/lexicon/promote_teacher_lesson_intake.py` - promote reviewed private teacher-lesson intake into the Word Atlas (`--apply --write --report`); also has two standalone, `--vesum-db`-free modes: `--emit-membership` (fold every approved lemma with an existing Atlas route into curated-practice membership) and `--record-source-shape` (append a weekly source-shape checksum to the intake journal's audit trail). See [Teacher-lesson intake: weekly delta recipe](#teacher-lesson-intake-weekly-delta-recipe) below.
+
+### Teacher-lesson intake: weekly delta recipe
+
+The private teacher-lesson vocabulary source is a living document — the teacher keeps
+appending rows. A "delta" batch is the set of headwords new since the last reviewed pass.
+Two mistakes to avoid, both seen in practice (#7623):
+
+1. **Diff the full document, not just the rows after the last known boundary.** A
+   post-boundary-only diff (`--post-boundary-row`) misses edits or insertions made
+   *above* the boundary between passes. Always compute triage buckets over the whole
+   current document, then union all three buckets — `high_frequency_missing`,
+   `post_boundary_table_missing`, **and** `needs_review_bulk` — into the delta. A prior
+   pass took only the first two buckets and silently dropped `needs_review_bulk`; the
+   operator flagged it. The practice tab only ever grows upward (older rows never move),
+   so a full-document diff against the cumulative committed decision ledgers is always
+   correct and never re-approves an already-reviewed row.
+2. **Never commit the raw source.** Only derived, privacy-safe headword metadata
+   (lemma + neutral locator, e.g. `private source unit N paragraph 1`) is committed —
+   see `OMITTED_PUBLIC_FIELDS` in `scripts/audit/private_teacher_lesson_intake.py`.
+
+```bash
+SOURCE=/path/to/local/teacher-lesson-vocabulary.docx   # never committed; local-only
+
+# 1) Checksum the current full document shape (safe to print/commit; no raw text).
+.venv/bin/python -m scripts.audit.private_teacher_lesson_intake "$SOURCE" \
+  --print-source-shape --source-shape-id private-teacher-lesson-vocabulary-YYYY-MM-DD-delta
+
+# 2) Full-document bulk triage — all three buckets, not just post-boundary.
+.venv/bin/python -m scripts.audit.private_teacher_lesson_intake "$SOURCE" \
+  --bulk-triage --triage-out /tmp/atlas-private-teacher-lesson-bulk-triage.json \
+  --triage-report-out /tmp/atlas-private-teacher-lesson-bulk-triage.md
+
+# 3) Set-diff the triage lemmas against every lemma already approved in
+#    data/lexicon/source-inventory-review-decisions/*teacher-lesson*.yaml (cumulative,
+#    not just the last batch) to get the new delta only, then hand-review and write:
+#      - data/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-<date>-delta.yaml
+#      - data/lexicon/source-inventory-review-decisions/<date>-teacher-lesson-delta-approve.yaml
+#    Both commit the source-shape SHA-256 from step 1 in their notes for traceability.
+
+# 4) Record the checksum in the intake journal's audit trail (append-only; never
+#    touches promotion phase/tx_id).
+.venv/bin/python -m scripts.lexicon.promote_teacher_lesson_intake \
+  --record-source-shape <sha256 from step 1> \
+  --source-shape-batch-id private-teacher-lesson-delta-<date> --report
+
+# 5) Promote for real (needs a VESUM shadow db; see scripts/rag/build_vesum_shadow.py):
+.venv/bin/python -m scripts.lexicon.promote_teacher_lesson_intake \
+  --curated-inventory data/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-<date>-delta.yaml \
+  --vesum-db /tmp/vesum-shadow.db --apply --write --report
+
+# 6) Fold every approved lemma that already has an Atlas route (not just the newly
+#    promoted heads) into curated-practice membership, recognition-only:
+.venv/bin/python -m scripts.lexicon.promote_teacher_lesson_intake \
+  --emit-membership site/src/data/lexicon-teacher-curated-membership.json \
+  --decisions-in /tmp/atlas-private-teacher-lesson-decisions.yaml \
+  --manifest site/src/data/lexicon-manifest.json \
+  --membership-in site/src/data/lexicon-teacher-curated-membership.json --report
+```
+
+Step 6 matters even when step 5 promotes zero new heads: most approved lemmas already
+have an Atlas route from an earlier batch or an unrelated source, and `--emit-membership`
+is the only step that admits those into curated-practice recognition. It never gates on
+gloss-fallback availability (unlike promotion), so it is stable across runs regardless of
+local dictionary-cache state.
 
 ### Build pipeline entry point
 
