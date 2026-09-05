@@ -540,5 +540,5 @@ def test_cached_id_token_can_expire_while_native_access_token_is_fresh():
 
     auth["tokens"]["access_token"] = jwt(int(time.time()) - 1)
     value["auth_json"] = json.dumps(auth)
-    with pytest.raises(OperationRefused, match="expired"):
+    with pytest.raises(OperationRefused, match="provider_credential_auth_json"):
         child.parse_provider_credential(json.dumps(value).encode(), harness="codex", mode="subscription")
