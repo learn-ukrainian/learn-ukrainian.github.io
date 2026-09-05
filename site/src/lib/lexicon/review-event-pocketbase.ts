@@ -12,11 +12,12 @@
  * authenticated session (§10.3 ⟦agy v4⟧).
  *
  * Push is idempotent by `eventId`: a duplicate create comes back as a 400
- * unique-constraint violation and is treated as already-held (ACKed), exactly
- * like `FakeReviewEventServer` in `review-event-sync.test.ts`. Pull pages by
- * the `serverSeq` cursor, oldest first. `exportUserEventsJson` is the server
- * half of the §10.2 export contract; the restore half is the existing
- * `importReviewEventExport` in `review-event-sync.ts`.
+ * unique-constraint violation and is ACKed **only when the authenticated
+ * account already owns that stored event** (global uniqueness alone must not
+ * clear another account's backlog). Pull pages by the `serverSeq` cursor,
+ * oldest first. `exportUserEventsJson` is the server half of the §10.2 export
+ * contract; the restore half is the existing `importReviewEventExport` in
+ * `review-event-sync.ts`.
  *
  * Offline stays the default: nothing constructs this adapter unless a base URL
  * and auth token are configured (`pocketBaseAdapterFromEnv` returns `null`
@@ -154,9 +155,32 @@ export class PocketBaseReviewEventAdapter implements ReviewEventSyncAdapter {
   }
 
   /**
-   * Idempotent per-`eventId` upsert. A unique-constraint 400 means the server
-   * already holds the event — it is ACKed, never re-written (append-only).
-   * Any other failure throws so the sync engine keeps the unACKed backlog and
+   * Resolve a duplicate `eventId` to the row owned by this session, if any.
+   * `listRule` scopes by `@request.auth.id`, so another account's globally
+   * unique row is invisible here — which is the ownership gate for ACK.
+   */
+  private async findOwnedEventById(eventId: string): Promise<ServerReviewEvent | null> {
+    const filter = encodeURIComponent(`eventId="${eventId}"`);
+    const path =
+      `/api/collections/${POCKETBASE_REVIEW_EVENTS_COLLECTION}/records` +
+      `?page=1&perPage=1&filter=${filter}`;
+    const response = await this.request('GET', path);
+    if (response.status < 200 || response.status >= 300) {
+      throw new Error(
+        `review_events ownership check failed for ${eventId}: HTTP ${response.status}`,
+      );
+    }
+    const body = response.body as { items?: unknown } | null;
+    const items = Array.isArray(body?.items) ? body.items : [];
+    if (items.length === 0) return null;
+    return toServerEvent(items[0]);
+  }
+
+  /**
+   * Idempotent per-`eventId` upsert. A unique-constraint 400 is an ACK only
+   * when this account already owns that stored event (append-only; never
+   * re-written). A cross-account collision must not clear the backlog.
+   * Any other failure throws so the sync engine keeps the unACKed ids and
    * re-pushes next round.
    */
   async push(events: readonly ReviewEvent[]): Promise<ReviewEventPushAck> {
@@ -172,6 +196,12 @@ export class PocketBaseReviewEventAdapter implements ReviewEventSyncAdapter {
         continue;
       }
       if (response.status === 400 && isDuplicateEventId(response.body)) {
+        const owned = await this.findOwnedEventById(event.eventId);
+        if (!owned) {
+          throw new Error(
+            `review_events push duplicate for ${event.eventId}: not owned by this account`,
+          );
+        }
         ackedEventIds.push(event.eventId);
         continue;
       }

@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, test } from 'vitest';
 import { PRACTICE_MODE_DECK_VERSION } from '@site/src/lib/lexicon/srs';
 import {
   REVIEW_EVENTS_SCHEMA,
+  FSRS_PARAMS_VERSION,
   canonicalReplayOrder,
   foldReviewEventsToCards,
   loadReviewEventLog,
@@ -50,23 +51,46 @@ interface FakeRequest {
   body?: Record<string, unknown>;
 }
 
+interface FakeUser {
+  userId: string;
+  /** Account-level §10.1 pin — ordinary clients cannot PATCH this. */
+  fsrsParamsVersion: number;
+}
+
 /**
- * In-memory stand-in for PocketBase + `pb_hooks/review_events.pb.js`. Replays
- * the adapter-visible contract: the hook stamps ingest through the same
- * `toServerReviewEvent` (per-user monotonic `serverSeq`, `serverReceivedAt`,
- * clock clamp), the unique `eventId` index answers duplicates with the 400
- * `validation_not_unique` shape, and list requests filter/sort/page by
- * `serverSeq`. Rows are scoped by the Authorization token — the client never
- * sends a userId (§10.3 ⟦agy v4⟧).
+ * In-memory stand-in for PocketBase + `pb_hooks/review_events.pb.js` + the
+ * users pin lock from the practice-hub migration. Replays the adapter-visible
+ * contract: the hook stamps ingest through the same `toServerReviewEvent`
+ * (per-user monotonic `serverSeq`, `serverReceivedAt`, clock clamp), rejects
+ * pin mismatches and mixed-version appends against existing history, the
+ * unique `eventId` index answers duplicates with the 400
+ * `validation_not_unique` shape (global across accounts), list requests
+ * filter/sort/page by `serverSeq` or `eventId` and are scoped by the
+ * Authorization token, and ordinary PATCH of `users.fsrsParamsVersion` is
+ * refused. Rows are scoped by the auth token — the client never sends a
+ * userId (§10.3 ⟦agy v4⟧).
  */
 class FakePocketBase {
   readonly requests: FakeRequest[] = [];
-  private readonly users = new Map<string, string>(); // token → userId
+  private readonly users = new Map<string, FakeUser>(); // token → user
   private readonly rows = new Map<string, ServerReviewEvent & { user: string }>();
   private readonly nextSeq = new Map<string, number>();
 
-  registerUser(token: string, userId: string): void {
-    this.users.set(token, userId);
+  registerUser(token: string, userId: string, fsrsParamsVersion = FSRS_PARAMS_VERSION): void {
+    this.users.set(token, { userId, fsrsParamsVersion });
+  }
+
+  /** Test-only: mutate the pin as a superuser/out-of-band bypass would. */
+  forceSetPin(token: string, fsrsParamsVersion: number): void {
+    const user = this.users.get(token);
+    if (!user) throw new Error(`unknown token ${token}`);
+    user.fsrsParamsVersion = fsrsParamsVersion;
+  }
+
+  pinFor(token: string): number {
+    const user = this.users.get(token);
+    if (!user) throw new Error(`unknown token ${token}`);
+    return user.fsrsParamsVersion;
   }
 
   get rowCount(): number {
@@ -88,19 +112,53 @@ class FakePocketBase {
     };
     this.requests.push(request);
 
-    const userId = this.users.get(init.headers.Authorization ?? '');
-    if (!userId) return { status: 401, body: { code: 401, message: 'unauthorized', data: {} } };
+    const user = this.users.get(init.headers.Authorization ?? '');
+    if (!user) return { status: 401, body: { code: 401, message: 'unauthorized', data: {} } };
 
     if (request.method === 'POST' && request.path === '/api/collections/review_events/records') {
-      return this.createRecord(userId, request.body ?? {});
+      return this.createRecord(user, request.body ?? {});
     }
     if (request.method === 'GET' && request.path === '/api/collections/review_events/records') {
-      return this.listRecords(userId, request.query);
+      return this.listRecords(user.userId, request.query);
+    }
+    const userPatch = /^\/api\/collections\/users\/records\/([^/]+)$/.exec(request.path);
+    if (request.method === 'PATCH' && userPatch) {
+      return this.patchUser(user, userPatch[1], request.body ?? {});
     }
     return { status: 404, body: { code: 404, message: 'not found', data: {} } };
   };
 
-  private createRecord(userId: string, body: Record<string, unknown>) {
+  private patchUser(user: FakeUser, recordId: string, body: Record<string, unknown>) {
+    // Ordinary clients may only PATCH their own record, and never the pin
+    // (migration updateRule + users onRecordUpdateRequest hook).
+    if (recordId !== user.userId) {
+      return { status: 404, body: { code: 404, message: 'not found', data: {} } };
+    }
+    if (Object.prototype.hasOwnProperty.call(body, 'fsrsParamsVersion')) {
+      const next = Number(body.fsrsParamsVersion);
+      if (next !== user.fsrsParamsVersion) {
+        return {
+          status: 400,
+          body: {
+            code: 400,
+            message: 'Failed to update record.',
+            data: {
+              fsrsParamsVersion: {
+                code: 'validation_not_allowed',
+                message: 'fsrsParamsVersion is account-pinned and not client-mutable',
+              },
+            },
+          },
+        };
+      }
+    }
+    return {
+      status: 200,
+      body: { id: user.userId, fsrsParamsVersion: user.fsrsParamsVersion },
+    };
+  }
+
+  private createRecord(user: FakeUser, body: Record<string, unknown>) {
     // The hook overwrites client-sent user/serverSeq/serverReceivedAt; a client
     // that smuggles one in gets the server stamp regardless.
     const eventId = typeof body.eventId === 'string' ? body.eventId : '';
@@ -114,24 +172,56 @@ class FakePocketBase {
         },
       };
     }
-    const serverSeq = this.nextSeq.get(userId) ?? 1;
+
+    const eventVersion =
+      typeof body.fsrsParamsVersion === 'number' && Number.isFinite(body.fsrsParamsVersion)
+        ? body.fsrsParamsVersion
+        : NaN;
+    if (user.fsrsParamsVersion > 0 && eventVersion !== user.fsrsParamsVersion) {
+      return {
+        status: 400,
+        body: {
+          code: 400,
+          message: `fsrsParamsVersion does not match the account pin ${user.fsrsParamsVersion}`,
+          data: {},
+        },
+      };
+    }
+    const prior = this.rowsFor(user.userId).sort((left, right) => left.serverSeq - right.serverSeq);
+    if (prior.length > 0 && eventVersion !== prior[0].fsrsParamsVersion) {
+      return {
+        status: 400,
+        body: {
+          code: 400,
+          message: `fsrsParamsVersion does not match existing log version ${prior[0].fsrsParamsVersion}`,
+          data: {},
+        },
+      };
+    }
+
+    const serverSeq = this.nextSeq.get(user.userId) ?? 1;
     const stamped = toServerReviewEvent(body, serverSeq, SERVER_NOW);
     if (!stamped) {
       return { status: 400, body: { code: 400, message: 'Failed to create record.', data: {} } };
     }
-    this.nextSeq.set(userId, serverSeq + 1);
-    this.rows.set(stamped.eventId, { ...stamped, user: userId });
+    this.nextSeq.set(user.userId, serverSeq + 1);
+    this.rows.set(stamped.eventId, { ...stamped, user: user.userId });
     return { status: 200, body: this.rows.get(stamped.eventId) };
   }
 
   private listRecords(userId: string, query: URLSearchParams) {
     const filter = query.get('filter') ?? '';
-    const match = /^serverSeq > (\d+)$/.exec(filter);
-    const since = match ? Number(match[1]) : 0;
+    const eventIdMatch = /^eventId="([0-9A-HJKMNP-TV-Z]{26})"$/.exec(filter);
+    const sinceMatch = /^serverSeq > (\d+)$/.exec(filter);
+    let due = this.rowsFor(userId);
+    if (eventIdMatch) {
+      due = due.filter((row) => row.eventId === eventIdMatch[1]);
+    } else if (sinceMatch) {
+      const since = Number(sinceMatch[1]);
+      due = due.filter((row) => row.serverSeq > since);
+    }
+    due = [...due].sort((left, right) => left.serverSeq - right.serverSeq);
     const perPage = Number(query.get('perPage') ?? '30');
-    const due = this.rowsFor(userId)
-      .filter((row) => row.serverSeq > since)
-      .sort((left, right) => left.serverSeq - right.serverSeq);
     const items = due.slice(0, perPage);
     const totalPages = Math.max(1, Math.ceil(due.length / perPage));
     return { status: 200, body: { page: 1, perPage, totalItems: due.length, totalPages, items } };
@@ -217,6 +307,13 @@ describe('PocketBaseReviewEventAdapter.push', () => {
     expect(fake.rowCount).toBe(1);
     // First ingest fixed the stamps; the duplicate did not move them.
     expect(fake.rowsFor('user-a')[0]).toMatchObject({ serverSeq: 1, serverReceivedAt: SERVER_NOW });
+    // Ownership check ran a filtered list for the duplicate path.
+    const ownershipGets = fake.requests.filter(
+      (request) =>
+        request.method === 'GET' &&
+        (request.query.get('filter') ?? '').startsWith('eventId='),
+    );
+    expect(ownershipGets).toHaveLength(1);
   });
 
   test('a non-duplicate failure throws so the backlog survives to the next round', async () => {
@@ -233,6 +330,77 @@ describe('PocketBaseReviewEventAdapter.push', () => {
     record(device, 'книга', 'flashcards', 'good', SERVER_NOW - 60 * 1000);
     const adapter = makeAdapter(fake, 'token-unknown');
     await expect(adapter.push(loadReviewEventLog(device).events)).rejects.toThrow('HTTP 401');
+  });
+
+  test('cross-account duplicate eventId does not ACK — backlog stays with B', async () => {
+    const fake = new FakePocketBase();
+    fake.registerUser('token-user-a', 'user-a');
+    fake.registerUser('token-user-b', 'user-b');
+    const deviceA = new MemoryStorage();
+    record(deviceA, 'книга', 'flashcards', 'good', SERVER_NOW - 60 * 1000);
+    const events = loadReviewEventLog(deviceA).events;
+    expect(events).toHaveLength(1);
+
+    const ackA = await makeAdapter(fake, 'token-user-a').push(events);
+    expect(ackA.ackedEventIds).toEqual([events[0].eventId]);
+    expect(fake.rowsFor('user-a')).toHaveLength(1);
+    expect(fake.rowsFor('user-b')).toHaveLength(0);
+
+    // B replays/restores the same portable export and tries to upload the same id.
+    await expect(makeAdapter(fake, 'token-user-b').push(events)).rejects.toThrow(
+      /not owned by this account/,
+    );
+    expect(fake.rowsFor('user-b')).toHaveLength(0);
+    // B still cannot list A's row — ownership check returned empty.
+    const pageB = await makeAdapter(fake, 'token-user-b').pull(0);
+    expect(pageB.events).toEqual([]);
+  });
+});
+
+describe('fsrsParamsVersion account pin (faithful hook + migration)', () => {
+  test('ordinary PATCH of the pin is rejected; mixed-version append fails; log stays uniform', async () => {
+    const fake = new FakePocketBase();
+    fake.registerUser('token-user-a', 'user-a', FSRS_PARAMS_VERSION);
+    const adapter = makeAdapter(fake);
+    const device = new MemoryStorage();
+    record(device, 'книга', 'flashcards', 'good', SERVER_NOW - 60 * 1000);
+    const [first] = loadReviewEventLog(device).events;
+    expect(first.fsrsParamsVersion).toBe(FSRS_PARAMS_VERSION);
+
+    await adapter.push([first]);
+    expect(fake.rowsFor('user-a').map((row) => row.fsrsParamsVersion)).toEqual([FSRS_PARAMS_VERSION]);
+
+    // Ordinary client tries to bump the pin (the Astra P1 sequence).
+    const patch = await fake.fetch('http://127.0.0.1:8090/api/collections/users/records/user-a', {
+      method: 'PATCH',
+      headers: { Authorization: 'token-user-a', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fsrsParamsVersion: 2 }),
+    });
+    expect(patch.status).toBe(400);
+    expect(fake.pinFor('token-user-a')).toBe(FSRS_PARAMS_VERSION);
+
+    const v2Event: ReviewEvent = { ...first, eventId: '01ARZ3NDEKTSV4RRFFQ69G5FB0', fsrsParamsVersion: 2 };
+    await expect(adapter.push([v2Event])).rejects.toThrow('HTTP 400');
+    expect(fake.rowsFor('user-a').map((row) => row.fsrsParamsVersion)).toEqual([FSRS_PARAMS_VERSION]);
+  });
+
+  test('even if the pin is force-changed, mixed-version append still fails against history', async () => {
+    const fake = new FakePocketBase();
+    fake.registerUser('token-user-a', 'user-a', FSRS_PARAMS_VERSION);
+    const adapter = makeAdapter(fake);
+    const device = new MemoryStorage();
+    record(device, 'книга', 'flashcards', 'good', SERVER_NOW - 60 * 1000);
+    const [first] = loadReviewEventLog(device).events;
+    await adapter.push([first]);
+
+    // Out-of-band pin change (superuser / bug) — history check must still hold.
+    fake.forceSetPin('token-user-a', 2);
+    expect(fake.pinFor('token-user-a')).toBe(2);
+
+    const v2Event: ReviewEvent = { ...first, eventId: '01ARZ3NDEKTSV4RRFFQ69G5FB1', fsrsParamsVersion: 2 };
+    await expect(adapter.push([v2Event])).rejects.toThrow('HTTP 400');
+    expect(fake.rowsFor('user-a').map((row) => row.fsrsParamsVersion)).toEqual([FSRS_PARAMS_VERSION]);
+    expect(uniformFsrsParamsVersion(fake.rowsFor('user-a'))).toBe(FSRS_PARAMS_VERSION);
   });
 });
 

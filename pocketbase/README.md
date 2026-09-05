@@ -11,7 +11,8 @@ configured (`pocketBaseAdapterFromEnv` returns `null` without a base URL).
 
 - `pb_migrations/20260905000000_practice_hub_collections.js` — §10.3 schema:
   extends the native `users` auth collection with the account-level
-  `fsrsParamsVersion` pin; creates `review_events` (append-only:
+  `fsrsParamsVersion` pin (ordinary clients cannot PATCH it; superusers still
+  manage via admin); creates `review_events` (append-only:
   `updateRule`/`deleteRule` null; unique `eventId`; unique per-user
   `(user, serverSeq)` pull cursor; `(user, reviewedAt)` analytics index;
   `cascadeDelete` on the user relation so account deletion hard-deletes
@@ -22,7 +23,9 @@ configured (`pocketBaseAdapterFromEnv` returns `null` without a base URL).
   `DEFAULT_REVIEW_EVENT_CLOCK_POLICY`): scopes rows to the authenticated
   session (clients never send a userId), clamps future/absurdly-old client
   clocks to `serverReceivedAt`, assigns the per-user monotonic `serverSeq`,
-  rejects events that break the account's `fsrsParamsVersion` pin.
+  rejects events that break the account's `fsrsParamsVersion` pin or that
+  would mix versions with existing history; also blocks ordinary clients
+  from mutating `users.fsrsParamsVersion`.
 
 ## Run it (binary)
 

@@ -4,13 +4,17 @@
  *
  * - users        PocketBase-native auth collection + the account-level
  *                `fsrsParamsVersion` pin (§10.1 ⟦codex v4⟧: devices never fold
- *                the same log under different parameters).
+ *                the same log under different parameters). Ordinary clients
+ *                cannot PATCH the pin (`updateRule` + hook); superusers still
+ *                manage via admin.
  * - review_events  the §10.1 append-only event log. Unique `eventId`
  *                (idempotent push), per-user monotonic `serverSeq` (the pull
  *                cursor), `serverReceivedAt` + clamped `reviewedAt` stamped by
  *                pb_hooks/review_events.pb.js. updateRule/deleteRule are null
  *                (append-only); user deletion hard-deletes events via
  *                `cascadeDelete` (§10.3: DB-layer cascade, not API rules).
+ *                Ingest also rejects mixed-version appends against existing
+ *                history so the log stays uniform for replay.
  * - snapshots    `(user, schemaVersion, blob, updatedAt)` — optional
  *                fast-restore cache, never authority.
  *
@@ -25,6 +29,12 @@ migrate((app) => {
     min: 1,
     noDecimal: true,
   }));
+  // Account pin is authority for replay (§10.1): ordinary clients may create
+  // with an initial value but must not PATCH it later. Superusers still manage
+  // via the admin UI (API rules do not apply to them). `:changed` is v0.23+.
+  const selfUpdate = users.updateRule || "id = @request.auth.id";
+  users.updateRule =
+    "(" + selfUpdate + ") && (@request.body.fsrsParamsVersion:changed = false)";
   app.save(users);
 
   const reviewEvents = new Collection({

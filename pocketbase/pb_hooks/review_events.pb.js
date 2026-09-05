@@ -16,8 +16,30 @@
  *   `idx_review_events_user_server_seq` makes a concurrent double-assign a
  *   rejected write; the client's idempotent push simply retries),
  * - enforces the account-level `fsrsParamsVersion` pin so no device folds the
- *   same log under different parameters.
+ *   same log under different parameters,
+ * - rejects appends that would mix versions with the account's existing
+ *   history (uniform log is a replay contract; the pin alone is not enough if
+ *   the pin were ever changed out of band).
+ *
+ * Ordinary clients also cannot PATCH `users.fsrsParamsVersion` (migration
+ * updateRule + the users update hook below); superusers still manage via admin.
  */
+onRecordUpdateRequest((e) => {
+  if (e.hasSuperuserAuth()) {
+    return e.next();
+  }
+  const original = e.record.original();
+  if (
+    Number(e.record.get("fsrsParamsVersion")) !==
+    Number(original.get("fsrsParamsVersion"))
+  ) {
+    throw new BadRequestError(
+      "fsrsParamsVersion is account-pinned and not client-mutable",
+    );
+  }
+  e.next();
+}, "users");
+
 onRecordCreateRequest((e) => {
   const auth = e.requestInfo().auth;
   if (!auth || !auth.id) {
@@ -42,12 +64,34 @@ onRecordCreateRequest((e) => {
     record.set("reviewedAt", now);
   }
 
+  const eventVersion = Number(record.get("fsrsParamsVersion"));
+
   // ⟦codex v4⟧ fsrsParamsVersion pin — the account record is the authority.
   const pinned = Number(auth.get("fsrsParamsVersion"));
-  if (pinned > 0 && Number(record.get("fsrsParamsVersion")) !== pinned) {
+  if (pinned > 0 && eventVersion !== pinned) {
     throw new BadRequestError(
       "fsrsParamsVersion does not match the account pin " + pinned,
     );
+  }
+
+  // Uniform append-only log: reject mixed-version history even if the account
+  // pin was changed out of band (superuser / bug). Oldest row is enough —
+  // prior writes already enforced uniformity.
+  const prior = $app.findRecordsByFilter(
+    "review_events",
+    "user = {:user}",
+    "serverSeq",
+    1,
+    0,
+    { user: auth.id },
+  );
+  if (prior.length > 0) {
+    const logVersion = Number(prior[0].get("fsrsParamsVersion"));
+    if (eventVersion !== logVersion) {
+      throw new BadRequestError(
+        "fsrsParamsVersion does not match existing log version " + logVersion,
+      );
+    }
   }
 
   // Server-assigned per-user monotonic ingest sequence (the pull cursor).
