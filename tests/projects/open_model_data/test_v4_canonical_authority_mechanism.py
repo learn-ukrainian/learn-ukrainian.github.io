@@ -573,9 +573,11 @@ def test_load_production_signing_key_succeeds_once_provisioned(tmp_path: Path, m
 # --- production trust-policy digest pinning / rotation / revocation --------
 
 
-def test_load_production_trust_policy_returns_the_checked_in_empty_policy(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_load_production_trust_policy_returns_the_reviewed_active_policy(monkeypatch: pytest.MonkeyPatch) -> None:
     policy, digest = trust.load_production_trust_policy()
-    assert policy == trust.empty_trust_policy()
+    assert set(policy["keyrings"]) == set(trust.KEYRING_ROLES)
+    assert all(len(ring) == 1 for ring in policy["keyrings"].values())
+    assert all(entry["revoked"] is False for ring in policy["keyrings"].values() for entry in ring.values())
     assert digest == trust.trust_policy_sha256(policy)
 
 

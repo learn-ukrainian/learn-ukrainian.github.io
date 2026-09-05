@@ -210,6 +210,7 @@ def test_actual_parent_refuses_failed_child_without_artifact_or_observation(
                 if entry["source"] == str(executable):
                     entry["sha256"] = digest(executable.read_bytes())
         profile_path.write_text(json.dumps(profile))
+        monkeypatch.setattr(child_runtime, "PRODUCTION_CHILD_PROFILE_SHA256", digest(profile_path.read_bytes()))
         with role_connection(pg_cluster, "hramatka_v4_control_writer") as conn:
             owned = claim(conn, prepared)
             if failure == "execution_timeout":
