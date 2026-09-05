@@ -10,6 +10,10 @@
         "sha256": "8aeffd076ce7079479de18a71019a72489cd448987cebd63708e076841f1f32e"
       },
       {
+        "path": "scripts/lexicon/admit_textbook_book_glossary.py",
+        "sha256": "87e5db42115d1e8f0b830523a3193b8799825a5c7dcaf9be72e70fe91e819622"
+      },
+      {
         "path": "scripts/lexicon/anchor_curation_evidence.py",
         "sha256": "7ce12b35ce0eaa897c003646465851b3ee347ca49d73ca380b9b26b6d47e39aa"
       },
@@ -120,6 +124,10 @@
       {
         "path": "scripts/lexicon/extract_grinchyshyn_paronym_candidates.py",
         "sha256": "3801153cf530992f44354a31ac724377cdee33bc2977dc79bac41099016b677e"
+      },
+      {
+        "path": "scripts/lexicon/extract_textbook_chunk_headword_inventory.py",
+        "sha256": "43d79199222294d5c05863506084c16f9f0faa389881adecdadaba1beb4cc504"
       },
       {
         "path": "scripts/lexicon/fill_from_content.py",
