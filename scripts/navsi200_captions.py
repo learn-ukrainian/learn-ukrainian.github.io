@@ -28,7 +28,7 @@ DEFAULT_CATALOG_PATH = PROJECT_ROOT / "data" / "corpus_audit" / "navsi200-catalo
 DEFAULT_LEDGER_PATH = PROJECT_ROOT / "data" / "corpus_audit" / "navsi200-captions-ledger.json"
 DEFAULT_CAPTIONS_DIR = PROJECT_ROOT / "data" / "native-reviewer-lessons" / "navsi200-captions"
 
-DEFAULT_YT_DLP_BIN = "/home/ops/learn-ukrainian/.venv/bin/yt-dlp"
+DEFAULT_YT_DLP_BIN = ".venv/bin/yt-dlp"
 
 TEACHER_NAME_PATTERNS = (
     re.compile(r"\s*від\s+Анни\s+Огойко\b", re.IGNORECASE),
@@ -369,14 +369,28 @@ def load_caption_ledger(path: Path | str | None = None) -> dict[str, Any]:
 
 def main() -> None:
     """CLI entrypoint for navsi200 caption fetching."""
-    parser = argparse.ArgumentParser(description="Fetch navsi200 YouTube captions and generate ledger")
-    parser.add_argument("--catalog", type=Path, default=DEFAULT_CATALOG_PATH, help="Path to catalog JSON")
-    parser.add_argument("--output", type=Path, default=DEFAULT_LEDGER_PATH, help="Output ledger JSON path")
-    parser.add_argument("--captions-dir", type=Path, default=DEFAULT_CAPTIONS_DIR, help="Directory for raw captions")
-    parser.add_argument("--max-workers", type=int, default=8, help="Max worker threads")
-    parser.add_argument("--limit", type=int, default=None, help="Limit number of videos processed")
-    parser.add_argument("--priority-only", action="store_true", help="Process only priority topics")
-    parser.add_argument("--yt-dlp", type=str, default=DEFAULT_YT_DLP_BIN, help="Path to yt-dlp binary")
+    parser = argparse.ArgumentParser(
+        description=(
+            "Fetch navsi200 YouTube captions and generate a coverage ledger.\n"
+            "Use to refresh caption coverage; not for publishing raw transcripts."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples (run from the repository root):
+  .venv/bin/python scripts/navsi200_captions.py --priority-only --limit 5
+  .venv/bin/python scripts/navsi200_captions.py --max-workers 4
+
+Outputs: Raw captions in the captions directory and a JSON coverage ledger.
+Exit codes: 0 on success; nonzero on invalid arguments or processing errors.
+Related: scripts/navsi200_catalog.py; #4705.
+""",
+    )
+    parser.add_argument("--catalog", type=Path, default=DEFAULT_CATALOG_PATH, help="Catalog JSON path (default: data/corpus_audit/navsi200-catalog.json)")
+    parser.add_argument("--output", type=Path, default=DEFAULT_LEDGER_PATH, help="Output ledger JSON path (default: data/corpus_audit/navsi200-captions-ledger.json)")
+    parser.add_argument("--captions-dir", type=Path, default=DEFAULT_CAPTIONS_DIR, help="Raw captions directory (default: data/native-reviewer-lessons/navsi200-captions)")
+    parser.add_argument("--max-workers", type=int, default=8, help="Max worker threads (default: 8; example: 4)")
+    parser.add_argument("--limit", type=int, default=None, help="Limit videos processed (default: all; example: 5)")
+    parser.add_argument("--priority-only", action="store_true", help="Process only priority topics (default: process all topics)")
+    parser.add_argument("--yt-dlp", type=str, default=DEFAULT_YT_DLP_BIN, help="Path to yt-dlp binary (default: .venv/bin/yt-dlp; relative to current directory)")
 
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
