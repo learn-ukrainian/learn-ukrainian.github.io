@@ -88,7 +88,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="Build teacher cloze from textbook sentences and VESUM forms. "
         "Use for an authorized full rebuild, not a surgical update of the published deck.",
-        epilog="Example: /home/ops/learn-ukrainian/.venv/bin/python -m "
+        epilog="Example: .venv/bin/python -m "
         "scripts.lexicon.build_teacher_deck_cloze --sources-db data/sources.db "
         "--vesum-db data/vesum.db\n"
         "Outputs: both teacher-cloze JSON artifacts; no database writes.\n"

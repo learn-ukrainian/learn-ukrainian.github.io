@@ -2,9 +2,25 @@
 
 import json
 import sqlite3
+from pathlib import PurePosixPath, PureWindowsPath
+
+import pytest
 
 from scripts.lexicon import build_teacher_deck_cloze as builder
 from scripts.lexicon.build_teacher_deck_cloze import find_cloze_sentence
+
+
+def test_help_uses_repo_relative_interpreter(monkeypatch, capsys):
+    monkeypatch.setattr("sys.argv", ["build_teacher_deck_cloze", "--help"])
+    with pytest.raises(SystemExit) as exc:
+        builder.main()
+    assert exc.value.code == 0
+    help_text = capsys.readouterr().out
+    assert ".venv/bin/python -m scripts.lexicon.build_teacher_deck_cloze" in help_text
+    assert "/home/" not in help_text
+    interpreter = help_text.split("Example: ", 1)[1].split()[0]
+    assert not PurePosixPath(interpreter).is_absolute()
+    assert not PureWindowsPath(interpreter).is_absolute()
 
 
 def test_does_not_treat_prefixed_verb_as_target_lemma():
