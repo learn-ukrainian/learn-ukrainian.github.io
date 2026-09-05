@@ -88,6 +88,7 @@ async def handle_check_modern_form(args: dict):
         "success": success,
         "evidence_identifiers": identifiers,
         "result": payload,
+        "supporting_records": {"word": word, "matches": matches},
     }
     return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))], outcome
 

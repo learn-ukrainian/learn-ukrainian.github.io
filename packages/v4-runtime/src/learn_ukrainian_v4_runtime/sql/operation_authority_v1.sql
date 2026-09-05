@@ -70,19 +70,25 @@ BEGIN
  IF p_tool IS NULL AND p_version IS NULL AND p_outcome IS NULL THEN
    RETURN jsonb_build_object('attempt_id',a.attempt_id,'state',a.state)::text;
  END IF;
- IF p_tool NOT IN ('verify_word', 'verify_words', 'verify_lemma', 'verify_stress', 'check_modern_form')
+ IF p_tool IS NULL OR p_version IS NULL OR p_outcome IS NULL
+    OR p_tool NOT IN ('verify_word', 'verify_words', 'verify_lemma', 'verify_stress', 'check_modern_form')
     OR p_version !~ '^[a-f0-9]{64}$' OR octet_length(p_outcome) > 1048576 THEN
    RAISE EXCEPTION 'invalid V4 Sources result';
  END IF;
  outcome := p_outcome::jsonb;
- IF outcome->>'tool' IS DISTINCT FROM p_tool OR outcome->>'disposition' IS NULL THEN
+ IF outcome->>'tool' IS DISTINCT FROM p_tool
+    OR outcome->>'disposition' NOT IN ('supported','partial','negative','invalid_input','not_found','ambiguous')
+    OR outcome->>'disposition' IS NULL
+    OR jsonb_typeof(outcome->'success') IS DISTINCT FROM 'boolean' THEN
    RAISE EXCEPTION 'invalid V4 Sources disposition';
  END IF;
  ok := outcome->'success' = 'true'::jsonb AND outcome->>'disposition' = 'supported';
  IF ok AND (jsonb_typeof(outcome->'evidence_identifiers') IS DISTINCT FROM 'array'
    OR jsonb_array_length(outcome->'evidence_identifiers') NOT BETWEEN 1 AND 64
    OR EXISTS (SELECT FROM jsonb_array_elements_text(outcome->'evidence_identifiers') AS x(value)
-       WHERE value !~ '^(vesum|sources):[a-f0-9]{64}$')) THEN
+       WHERE value !~ '^(vesum|sources):[a-f0-9]{64}$')
+   OR (SELECT count(DISTINCT value) FROM jsonb_array_elements_text(outcome->'evidence_identifiers'))
+       <> jsonb_array_length(outcome->'evidence_identifiers')) THEN
    RAISE EXCEPTION 'invalid V4 evidence identifiers';
  END IF;
  SELECT count(*) + 1 INTO ordinal FROM public.v4_sources_invocations WHERE attempt_id = a.attempt_id;

@@ -229,8 +229,13 @@ def test_a8_receipt_never_names_source_text_a_held_out_family_or_a_plaintext_sou
 
 
 def test_a8_bindings_hash_to_disk_for_every_bound_artifact() -> None:
+    from learn_ukrainian_v4_runtime.resources import resource_root
+
     for name, binding in REAL_RECEIPT["bindings"].items():
-        path = ROOT / binding["path"]
+        path = resource_root() / (
+            "provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"
+            if binding["path"].startswith("scripts/") else binding["path"]
+        )
         assert path.is_file(), name
         assert a8.sha256_file(path) == binding["sha256"], name
 

@@ -96,6 +96,7 @@ REVIEWER_DOMAIN = b"v4-fleet-execution-reviewer-v1"
 # produces or verifies (PR #7662 repair 5). See module docstring.
 AUTHOR_RECEIPT_KEYS = frozenset(
     {
+        "runtime_identity",
         "schema_version",
         "domain",
         "outcome_sha256",
@@ -215,6 +216,7 @@ class AuthorExecutionObservation:
     fleet_receipt_sha256: str
     provider_session_id: str | None = None
     verification_tool_ids: tuple[str, ...] = ()
+    runtime_identity: dict | None = None
     saw_source_text: bool = False
     saw_heldout: bool = False
     saw_eligible_unit_ids: bool = False
@@ -241,6 +243,7 @@ class ReviewerExecutionObservation:
     verdict: str
     provider_session_id: str | None = None
     verification_tool_ids: tuple[str, ...] = ()
+    runtime_identity: dict | None = None
     saw_source_text: bool = False
     saw_heldout: bool = False
     saw_eligible_unit_ids: bool = False
@@ -452,6 +455,7 @@ def _issue_author_receipt_from_evidence(
         "signer_key_id": signer_key_id,
         "issuance_nonce": issuance_nonce,
         "trust_policy_sha256": trust_policy_sha256,
+        "runtime_identity": observation.runtime_identity,
     }
     trust.require_exact_keys(body, AUTHOR_RECEIPT_KEYS, "author execution receipt", error_cls=FleetExecutionError)
     signature_hex = trust.sign(signing_key_hex, AUTHOR_DOMAIN, body)
@@ -537,6 +541,7 @@ def _issue_reviewer_receipt_from_evidence(
         "signer_key_id": signer_key_id,
         "issuance_nonce": issuance_nonce,
         "trust_policy_sha256": trust_policy_sha256,
+        "runtime_identity": observation.runtime_identity,
     }
     trust.require_exact_keys(body, REVIEWER_RECEIPT_KEYS, "reviewer execution receipt", error_cls=FleetExecutionError)
     signature_hex = trust.sign(signing_key_hex, REVIEWER_DOMAIN, body)
@@ -633,6 +638,7 @@ def _author_observation_from_record(record: dict[str, Any]) -> AuthorExecutionOb
         fleet_receipt_sha256=record["fleet_receipt_sha256"],
         provider_session_id=record["session_id"],
         verification_tool_ids=tuple(record["verification_tool_ids"]),
+        runtime_identity=record["runtime_identity"],
         saw_source_text=record["saw_source_text"],
         saw_heldout=record["saw_heldout"],
         saw_eligible_unit_ids=record["saw_eligible_unit_ids"],
@@ -654,6 +660,7 @@ def _reviewer_observation_from_record(record: dict[str, Any]) -> ReviewerExecuti
         verdict=record["verdict"],
         provider_session_id=record["session_id"],
         verification_tool_ids=tuple(record["verification_tool_ids"]),
+        runtime_identity=record["runtime_identity"],
         saw_source_text=record["saw_source_text"],
         saw_heldout=record["saw_heldout"],
         saw_eligible_unit_ids=record["saw_eligible_unit_ids"],
@@ -684,6 +691,12 @@ def issue_author_execution_receipt(*, task_id: str, run_id: str) -> dict[str, An
         record is not None,
         f"unknown task_id/run_id for an author execution observation: {task_id!r}/{run_id!r} -- refusing (no key access)",
     )
+    from learn_ukrainian_v4_runtime.execution_identity import validate_execution_identity
+
+    try:
+        validate_execution_identity(record.get("runtime_identity"))
+    except ValueError as exc:
+        raise FleetExecutionError(str(exc)) from exc
     signing_key_hex, signer_key_id = _load_signing_key("fleet_execution")
     _, resolved_trust_policy_sha256 = trust.load_production_trust_policy()
     return _issue_author_receipt_from_evidence(
@@ -709,6 +722,12 @@ def issue_reviewer_execution_receipt(*, task_id: str, run_id: str) -> dict[str, 
         record is not None,
         f"unknown task_id/run_id for a reviewer execution observation: {task_id!r}/{run_id!r} -- refusing (no key access)",
     )
+    from learn_ukrainian_v4_runtime.execution_identity import validate_execution_identity
+
+    try:
+        validate_execution_identity(record.get("runtime_identity"))
+    except ValueError as exc:
+        raise FleetExecutionError(str(exc)) from exc
     signing_key_hex, signer_key_id = _load_signing_key("fleet_execution")
     _, resolved_trust_policy_sha256 = trust.load_production_trust_policy()
     return _issue_reviewer_receipt_from_evidence(
@@ -784,6 +803,12 @@ def _verify_common(
         raise FleetExecutionError(
             f"{domain_name} execution receipt failed signature verification -- refusing: {exc}"
         ) from exc
+    from learn_ukrainian_v4_runtime.execution_identity import validate_execution_identity
+
+    try:
+        validate_execution_identity(body.get("runtime_identity"))
+    except ValueError as exc:
+        raise FleetExecutionError(str(exc)) from exc
     trust.require_trust_policy_binding(body, trust_policy, error_cls=FleetExecutionError)
     return body
 

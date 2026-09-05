@@ -543,7 +543,7 @@ def validate_receipt_independently(receipt: dict[str, Any], root: Path = ROOT) -
     validate_receipt_schema(receipt)
     from learn_ukrainian_v4_runtime.provenance import validate_receipt_bindings
 
-    validate_receipt_bindings(receipt, root, validate_bindings_hash_to_disk)
+    validate_receipt_bindings(receipt, root, validate_bindings_hash_to_disk, require)
     validate_local_store_binding_descriptor(receipt)
     validate_admitted_source_units_reproduce(receipt)
 

@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 import secrets
 from contextlib import contextmanager
+from datetime import datetime
 from typing import Any
 
 from learn_ukrainian_v4_runtime.operation_auth import (
@@ -139,6 +140,8 @@ class OperationStore:
                 or (binding["slot_id"] or binding["authorship_receipt_id"]) != auth["target"]
             ):
                 raise OperationRefused("binding_ownership")
+            if datetime.fromisoformat(request["expires_at"]) != auth["expires_at"]:
+                raise OperationRefused("request_deadline_ownership")
             jti = self._consume_jti(conn, principal)
             from learn_ukrainian_v4_runtime.semantic_inputs import prompt_from_snapshot
 
@@ -200,11 +203,11 @@ class OperationStore:
                 FROM v4_execution_attempts WHERE attempt_id=%s FOR UPDATE""",
                 (claim["attempt_id"],),
             ).fetchone()
+            req = conn.execute(
+                "SELECT state, expires_at FROM requests WHERE request_id=%s FOR UPDATE", (claim["request_id"],)
+            ).fetchone()
             binding = conn.execute(
                 "SELECT * FROM v4_execution_dispatch_bindings WHERE request_id=%s FOR UPDATE", (claim["request_id"],)
-            ).fetchone()
-            req = conn.execute(
-                "SELECT state FROM requests WHERE request_id=%s FOR UPDATE", (claim["request_id"],)
             ).fetchone()
             if (
                 auth is None
@@ -223,6 +226,10 @@ class OperationStore:
                 or attempt["run_id"] != claim["binding"]["run_id"]
                 or attempt["role"] != claim["binding"]["role"]
                 or attempt["deadline_at"] != auth["deadline_at"]
+                or datetime.fromisoformat(req["expires_at"]) != auth["deadline_at"]
+                or claim["deadline_at"] != auth["deadline_at"]
+                or claim["trust_policy_sha256"] != auth["trust_policy_sha256"]
+                or digest(claim["capability_token"].encode()) != attempt["capability_digest"]
             ):
                 raise OperationRefused("finalization_ownership")
             yield conn, bool(attempt["fresh"])

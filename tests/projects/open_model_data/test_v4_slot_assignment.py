@@ -276,8 +276,13 @@ def test_receipt_never_binds_a_commitment_to_a_slot_no_stratum_commitment_link()
 
 
 def test_bindings_hash_to_disk_for_every_bound_artifact() -> None:
+    from learn_ukrainian_v4_runtime.resources import resource_root
+
     for name, binding in REAL_RECEIPT["bindings"].items():
-        path = ROOT / binding["path"]
+        path = resource_root() / (
+            "provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"
+            if binding["path"].startswith("scripts/") else binding["path"]
+        )
         assert path.is_file(), name
         assert assignment.sha256_file(path) == binding["sha256"], name
 

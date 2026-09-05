@@ -57,6 +57,8 @@ def prompt_from_snapshot(binding: dict, snapshot: dict) -> str:
             raise OperationRefused("authored_row_required")
         if not set(row) <= {"row_text", "explanation", "answer", "instruction"}:
             raise OperationRefused("authored_row_keys")
+        if any(not isinstance(value, str) for value in row.values()):
+            raise OperationRefused("authored_row_values")
         rubric = rubric_bytes()
         if snapshot["rubric_sha256"] != digest(rubric) or binding["rubric_sha256"] != digest(rubric):
             raise OperationRefused("rubric_digest")
@@ -94,7 +96,7 @@ def freeze_semantic_input(conn, *, request_id: str, snapshot: dict) -> None:
         binding = json.loads(row["record_json"])
         if binding["role"] == "reviewer":
             authorship = conn.execute(
-                "SELECT record_json FROM v4_authorship_receipts WHERE receipt_id=%s",
+                "SELECT record_json,task_id,run_id FROM v4_authorship_receipts WHERE receipt_id=%s",
                 (binding["authorship_receipt_id"],),
             ).fetchone()
             if authorship is None:
@@ -102,6 +104,42 @@ def freeze_semantic_input(conn, *, request_id: str, snapshot: dict) -> None:
             receipt = json.loads(authorship["record_json"])
             if digest(snapshot["authored_row"]["row_text"].encode()) != receipt["row_content_sha256"]:
                 raise OperationRefused("authored_row_digest")
+            # Resolve the complete authored object and constraints from the
+            # parent's captured bytes, not from a preparer's row-text assertion.
+            origin = conn.execute(
+                """SELECT o.record_json AS observation,b.record_json AS binding,
+                b.semantic_input_json AS snapshot,a.payload AS capture
+                FROM v4_execution_observations o
+                JOIN v4_execution_attempts t ON t.attempt_id=(o.record_json::jsonb->>'attempt_id')
+                JOIN v4_execution_dispatch_bindings b ON b.request_id=t.request_id
+                JOIN fleet_comms_artifact_blobs a ON a.sha256=(o.record_json::jsonb->>'raw_capture_sha256')
+                WHERE o.task_id=%s AND o.run_id=%s AND o.role='author'""",
+                (authorship["task_id"], authorship["run_id"]),
+            ).fetchone()
+            if origin is None:
+                raise OperationRefused("authored_capture_unresolved")
+            from learn_ukrainian_v4_runtime.child_runtime import CapturedChild, parse_child
+
+            observation = json.loads(origin["observation"])
+            author_binding = json.loads(origin["binding"])
+            raw = bytes(origin["capture"])
+            if digest(raw) != observation["raw_capture_sha256"]:
+                raise OperationRefused("authored_capture_digest")
+            captured = CapturedChild(
+                request_id=author_binding["request_id"],
+                attempt_id=observation["attempt_id"],
+                argv_sha256=observation["argv_digest"],
+                prompt_sha256=observation["prompt_sha256"],
+                stdout=raw,
+                stderr=b"",
+                returncode=observation["process_returncode"],
+                harness=observation["harness"],
+            )
+            if (
+                parse_child(captured, author_binding)["row"] != snapshot["authored_row"]
+                or json.loads(origin["snapshot"])["constraints"] != snapshot["constraints"]
+            ):
+                raise OperationRefused("reviewer_semantic_origin_mismatch")
         prompt = prompt_from_snapshot(binding, snapshot)
         binding["prompt_sha256"] = digest(prompt.encode())
         body = canonical_bytes(binding)

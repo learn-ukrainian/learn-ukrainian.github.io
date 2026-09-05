@@ -489,7 +489,7 @@ def validate_receipt_independently(receipt: dict[str, Any], root: Path = ROOT) -
     validate_cycle007_denial_invariants(receipt)
     from learn_ukrainian_v4_runtime.provenance import validate_receipt_bindings
 
-    validate_receipt_bindings(receipt, root, validate_bindings_hash_to_disk)
+    validate_receipt_bindings(receipt, root, validate_bindings_hash_to_disk, require)
     if _receipt_is_sealed(receipt):
         validate_receipt_schema(receipt)
 

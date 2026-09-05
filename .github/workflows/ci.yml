@@ -225,6 +225,8 @@ jobs:
           grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt \
             > "${RUNNER_TEMP}/requirements-ci.txt"
           .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
+          .venv/bin/python -m pip install --no-deps --no-build-isolation ./packages/v4-runtime
+          .venv/bin/python packages/v4-runtime/build_assets.py
       - run: npm ci --ignore-scripts
       - name: Hydrate Atlas lexicon manifest
         run: |

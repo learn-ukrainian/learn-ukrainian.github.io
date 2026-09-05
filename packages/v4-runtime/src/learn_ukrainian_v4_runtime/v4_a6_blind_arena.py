@@ -614,7 +614,7 @@ def validate_eligibility_and_safety_all_false(receipt: dict[str, Any]) -> None:
 def validate_receipt_independently(receipt: dict[str, Any], root: Path = ROOT) -> None:
     from learn_ukrainian_v4_runtime.provenance import validate_receipt_bindings
 
-    validate_receipt_bindings(receipt, root, validate_bindings_hash_to_disk)
+    validate_receipt_bindings(receipt, root, validate_bindings_hash_to_disk, require)
     validate_gate_matches_receipt(receipt, root)
     validate_frozen_slot_denominator(receipt, root)
     validate_packet_matches_engine(receipt)

@@ -376,7 +376,10 @@ def build_author_execution_receipt(
     execution_result_sha256 = ledger.sha256_text("fixture-author-execution-result")
     resolved_task_state = task_state if task_state is not None else build_author_task_state()
     resolved_envelope = envelope if envelope is not None else build_terminal_envelope(raw_capture_sha256=execution_result_sha256, session_id=AUTHOR_SESSION_ID, raw_capture_artifact_id="fixture-author-raw-capture-001")
+    from learn_ukrainian_v4_runtime.provenance import verify_current_identity
+
     observation_kwargs: dict[str, Any] = {
+        "runtime_identity": {**verify_current_identity(), "wheel_sha256": "f" * 64},
         "task_id": resolved_task_state.task_id,
         "run_nonce": resolved_task_state.run_nonce,
         "observed_model": resolved_task_state.seat_or_model,
@@ -419,7 +422,10 @@ def build_reviewer_execution_receipt(
     execution_result_sha256 = ledger.sha256_text("fixture-reviewer-execution-result")
     resolved_task_state = task_state if task_state is not None else build_reviewer_task_state()
     resolved_envelope = envelope if envelope is not None else build_terminal_envelope(raw_capture_sha256=execution_result_sha256, session_id=REVIEWER_SESSION_ID, raw_capture_artifact_id="fixture-reviewer-raw-capture-001")
+    from learn_ukrainian_v4_runtime.provenance import verify_current_identity
+
     observation_kwargs: dict[str, Any] = {
+        "runtime_identity": {**verify_current_identity(), "wheel_sha256": "f" * 64},
         "task_id": resolved_task_state.task_id,
         "run_nonce": resolved_task_state.run_nonce,
         "observed_model": resolved_task_state.seat_or_model,

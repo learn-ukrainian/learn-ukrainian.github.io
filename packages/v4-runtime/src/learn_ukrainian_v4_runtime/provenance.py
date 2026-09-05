@@ -236,10 +236,13 @@ def validate_package_bindings(receipt: dict) -> None:
         )
 
 
-def validate_receipt_bindings(receipt, root, repository_validator):
+def validate_receipt_bindings(receipt, root, repository_validator, require):
     """Dispatch by explicit resource type; repository validation stays strict."""
     if type(root) is resources.PackageResource and not root.relative:
-        validate_package_bindings(receipt)
+        try:
+            validate_package_bindings(receipt)
+        except ProvenanceError as exc:
+            require(False, str(exc))
     else:
         repository_validator(receipt, root)
 

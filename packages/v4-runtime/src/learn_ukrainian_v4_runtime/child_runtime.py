@@ -47,6 +47,8 @@ def _verified_file(path: str, expected: str) -> Path:
 
 @dataclass(frozen=True)
 class CapturedChild:
+    request_id: str
+    attempt_id: str
     argv_sha256: str
     prompt_sha256: str
     stdout: bytes
@@ -233,6 +235,8 @@ def run_child(claim: dict, *, provider_credential: str) -> CapturedChild:
                                 raise OperationRefused("capture_limit")
             rc = process.wait(timeout=max(0.01, deadline - time.monotonic()))
         return CapturedChild(
+            claim["request_id"],
+            claim["attempt_id"],
             digest(canonical_bytes(cmd)),
             digest(prompt),
             bytes(streams["stdout"]),
@@ -251,7 +255,11 @@ def run_child(claim: dict, *, provider_credential: str) -> CapturedChild:
 
 def parse_child(capture: CapturedChild, binding: dict) -> dict:
     """Derive semantic output and identity from the same owned capture."""
-    if capture.returncode != 0 or capture.prompt_sha256 != binding["prompt_sha256"]:
+    if (
+        capture.request_id != binding["request_id"]
+        or capture.returncode != 0
+        or capture.prompt_sha256 != binding["prompt_sha256"]
+    ):
         raise OperationRefused("child_unsuccessful")
     try:
         events = [json.loads(line) for line in capture.stdout.decode().splitlines() if line.strip()]
@@ -293,6 +301,10 @@ def parse_child(capture: CapturedChild, binding: dict) -> dict:
             raise OperationRefused("author_row_json") from exc
         if not isinstance(row, dict) or not isinstance(row.get("row_text"), str) or not row["row_text"].strip():
             raise OperationRefused("author_row_absent")
+        if not set(row) <= {"row_text", "explanation", "answer", "instruction"} or any(
+            not isinstance(value, str) for value in row.values()
+        ):
+            raise OperationRefused("author_row_shape")
         result["row"] = row
     else:
         verdicts = [

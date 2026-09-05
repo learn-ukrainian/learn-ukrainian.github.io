@@ -814,7 +814,7 @@ def validate_receipt_independently(receipt: dict[str, Any], root: Path = ROOT) -
     validate_stage_policy(receipt)
     from learn_ukrainian_v4_runtime.provenance import validate_receipt_bindings
 
-    validate_receipt_bindings(receipt, root, validate_bindings_hash_to_disk)
+    validate_receipt_bindings(receipt, root, validate_bindings_hash_to_disk, require)
     validate_gate_matches_receipt(receipt, root)
     validate_frozen_slot_denominator(receipt, root)
     validate_engine_wiring(receipt)

@@ -12,6 +12,7 @@ import json
 from learn_ukrainian_v4_runtime import child_runtime
 from learn_ukrainian_v4_runtime import v4_canonical_authority_store as authority
 from learn_ukrainian_v4_runtime import v4_trust_authority as trust
+from learn_ukrainian_v4_runtime.execution_identity import VerifiedReleaseProvider, execution_identity
 from learn_ukrainian_v4_runtime.operation_auth import (
     ActionsVerifier,
     OperationRefused,
@@ -24,9 +25,10 @@ from learn_ukrainian_v4_runtime.readiness import require_execution_enabled, requ
 
 
 class V4ServiceRuntime:
-    def __init__(self, *, store: OperationStore, verifier: ActionsVerifier):
+    def __init__(self, *, store: OperationStore, verifier: ActionsVerifier, release_provider: VerifiedReleaseProvider):
         self._store = store
         self._verifier = verifier
+        self._release_provider = release_provider
 
     def authorize(self, raw_body: bytes, *, oidc_token: str, github_bearer: str) -> dict | None:
         parse_request(raw_body, execution=False)
@@ -34,6 +36,7 @@ class V4ServiceRuntime:
         principal.ownership()
         require_execution_enabled()
         require_readiness()
+        execution_identity(self._release_provider)
         _, policy_digest = trust.load_production_trust_policy()
         identifier = self._store.authorize(principal=principal, raw=raw_body, policy_digest=policy_digest)
         return {"authorization_id": identifier} if identifier else None
@@ -44,6 +47,7 @@ class V4ServiceRuntime:
         principal.ownership()
         require_execution_enabled()
         require_readiness()
+        release = execution_identity(self._release_provider)
         _, policy_digest = trust.load_production_trust_policy()
         claim = self._store.claim(
             principal=principal, raw=raw_body, authorization_id=body["authorization_id"], policy_digest=policy_digest
@@ -52,7 +56,16 @@ class V4ServiceRuntime:
             capture = child_runtime.run_child(
                 claim, provider_credential=_provider_credential(claim["binding"]["expected_harness"])
             )
+            if capture.request_id != claim["request_id"] or capture.attempt_id != claim["attempt_id"]:
+                raise OperationRefused("foreign_child_capture")
             parsed = child_runtime.parse_child(capture, claim["binding"])
+            from learn_ukrainian_v4_runtime.v4_execution_origin import blindness_from_prompt_profile
+
+            saw_source, saw_heldout, saw_eligible = blindness_from_prompt_profile(
+                prompt_profile=claim["binding"]["prompt_profile"],
+                transported_digest=capture.prompt_sha256,
+                authorized_digest=claim["binding"]["prompt_sha256"],
+            )
             with self._store.finalization(claim) as (conn, fresh):
                 if not fresh:
                     self._store.finish(conn, claim, success=False)
@@ -80,7 +93,10 @@ class V4ServiceRuntime:
                     if authorship is None:
                         raise OperationRefused("authorship_unresolved")
                     row_hash = authorship["row_content_sha256"]
+                if execution_identity(self._release_provider) != release:
+                    raise OperationRefused("execution_release_changed")
                 record = {
+                    "runtime_identity": release,
                     "task_id": binding["task_id"],
                     "run_id": binding["run_id"],
                     "role": binding["role"],
@@ -126,9 +142,9 @@ class V4ServiceRuntime:
                     "verification_tool_ids": authority.resolve_sources_invocation_tool_ids(
                         attempt_id=claim["attempt_id"], conn=conn, is_pg=True
                     ),
-                    "saw_source_text": False,
-                    "saw_heldout": False,
-                    "saw_eligible_unit_ids": False,
+                    "saw_source_text": saw_source,
+                    "saw_heldout": saw_heldout,
+                    "saw_eligible_unit_ids": saw_eligible,
                     "authorship_receipt_sha256": binding["authorship_receipt_sha256"],
                     "rubric_sha256": binding["rubric_sha256"],
                     "verdict": parsed.get("verdict"),

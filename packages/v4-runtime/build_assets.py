@@ -115,6 +115,30 @@ def write_manifest(destination: Path, *, development: bool = False) -> None:
     }
     provenance = canonical(manifest)
     (destination / "provenance/v1/manifest.json").write_bytes(provenance)
+    tracked = subprocess.check_output(
+        ["git", "ls-files", "packages/v4-runtime/src/" + NAMESPACE], cwd=REPOSITORY, text=True
+    ).splitlines()
+    prefix = "packages/v4-runtime/src/" + NAMESPACE + "/"
+    source_files = {name.removeprefix(prefix) for name in tracked}
+    allowed = (
+        source_files
+        | set(json.loads((PACKAGE / "asset_allowlist.json").read_bytes()))
+        | {
+            "data/projects/open_model_data/trust/v4_child_profile_v1.json",
+            "provenance/v1/manifest.json",
+            "release_manifest.json",
+            "_build_identity.py",
+        }
+    )
+    for path in destination.rglob("*"):
+        if path.is_file() and "__pycache__" not in path.parts:
+            relative = str(path.relative_to(destination))
+            if relative not in allowed:
+                raise ValueError("unreviewed file in build output: " + relative)
+            if relative in source_files and not development:
+                committed = subprocess.check_output(["git", "show", sha + ":" + prefix + relative], cwd=REPOSITORY)
+                if path.read_bytes() != committed:
+                    raise ValueError("build file differs from actual source commit: " + relative)
     installed = {
         str(p.relative_to(destination)): digest(p.read_bytes())
         for p in sorted(destination.rglob("*"))

@@ -34,10 +34,12 @@ def qualification_path() -> Path:
 
 
 def require_readiness() -> None:
-    from learn_ukrainian_v4_runtime.provenance import verify_current_identity
+    from learn_ukrainian_v4_runtime.provenance import validate_package_bindings, verify_current_identity
+    from learn_ukrainian_v4_runtime.v4_a3_heldout_family_assignment import DEFAULT_RECEIPT
 
     try:
         identity = verify_current_identity()
+        validate_package_bindings(json.loads(DEFAULT_RECEIPT.read_bytes()))
         profile = load_profile()
         _verified_file(profile["bwrap"], profile["bwrap_sha256"])
         _, policy_digest = trust.load_production_trust_policy()
