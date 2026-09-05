@@ -216,7 +216,14 @@ jobs:
           npm run agents:deploy --silent
           bash scripts/check_rules_deployment.sh
 
+      # Compat alias scripts/agent_runtime/agent_identity.py imports
+      # learn_ukrainian_v4_runtime. CI Gate installs ./packages/v4-runtime
+      # after the lockfile (setuptools + --no-build-isolation). This slim
+      # venv does not; PYTHONPATH exposes the src layout without running
+      # setup.py's asset build hook.
       - name: Run focused agent config tests
+        env:
+          PYTHONPATH: packages/v4-runtime/src
         run: |
           .venv/bin/python -m pytest \
             tests/test_deploy_script_idempotency.py \
