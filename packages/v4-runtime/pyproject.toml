@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "learn-ukrainian-v4-runtime"
+version = "1.0.0"
+description = "Reviewed V4 execution, Sources provenance and admission runtime"
+requires-python = ">=3.12"
+dependencies = ["cryptography>=44", "jsonschema>=4.23", "psycopg[binary]>=3.2", "mcp", "starlette"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+learn_ukrainian_v4_runtime = ["data/**/*.json", "data/**/*.txt", "sql/*.sql", "provenance/v1/*.json", "provenance/v1/blobs/sha256/*.blob", "LICENSE-CONTENT.md", "release_manifest.json"]

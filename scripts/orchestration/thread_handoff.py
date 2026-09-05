@@ -117,9 +117,8 @@ THREAD_LEASE_SCHEMA_VERSION = 2
 # Executable basenames trusted as durable agent-driver harness processes. The
 # ancestor walk in _find_harness_ancestor stops at the nearest one of these; a
 # transient hook-launcher subshell is never mistaken for the long-lived owner.
-KNOWN_HARNESS_EXECUTABLES = frozenset(
-    {"claude", "codex", "agy", "kimi", "cursor", "opencode", "hermes"}
-)
+from learn_ukrainian_v4_runtime.identity import KNOWN_HARNESS_EXECUTABLES as KNOWN_HARNESS_EXECUTABLES
+
 MAX_HARNESS_ANCESTOR_HOPS = 10
 # Start times are compared at whole-second resolution, not a wider tolerance.
 # psutil reports sub-second precision; the `ps -o lstart=` fallback only has

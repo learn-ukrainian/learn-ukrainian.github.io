@@ -52,16 +52,7 @@ DATA_BOUNDARIES = (
 WORD_PATTERN = r"[^\W\d_]+(?:[’'][^\W\d_]+)*"
 WORD_RE = re.compile(WORD_PATTERN, re.UNICODE)
 
-PRIVATE_TEXTBOOK_SOURCES = (
-    "anna-ohoiko-1000-words-2nd-ed",
-    "anna-ohoiko-500-verbs",
-    "ulp-1-00-lesson-notes",
-    "ulp-2-00-lesson-notes",
-    "ulp-3-00-lesson-notes",
-    "ulp-4-00-lesson-notes",
-    "ulp-5-00-lesson-notes",
-    "ulp-6-00-lesson-notes",
-)
+from learn_ukrainian_v4_runtime.inventory_existing_assets import PRIVATE_TEXTBOOK_SOURCES
 
 PRIVATE_RAW_PATHS = {
     "anna-ohoiko-1000-words-2nd-ed": "private_curriculum/ohoiko/1000-words-2nd-ed.jsonl",
