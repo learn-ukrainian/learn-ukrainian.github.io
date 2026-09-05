@@ -198,6 +198,24 @@ def test_missing_credential_propagates_file_not_found(tmp_path):
         custody.read_credential(tmp_path / "absent")
 
 
+def test_missing_namespace_propagates_file_not_found(tmp_path):
+    # An unprovisioned unit has no $CREDENTIALS_DIRECTORY at all: callers keep
+    # their "not provisioned" taxonomy instead of receiving a custody verdict.
+    before = open_fds()
+    with pytest.raises(FileNotFoundError):
+        custody.read_credential(tmp_path / "absent-namespace" / "credential")
+    assert open_fds() == before
+
+
+def test_non_directory_namespace_is_a_custody_refusal(tmp_path):
+    # Something occupying the namespace path that is not a directory is an
+    # inspectable wrong shape, not an absence; it must not leak ENOTDIR.
+    (tmp_path / "namespace").write_text("synthetic")
+    with pytest.raises(custody.CredentialCustodyError) as error:
+        custody.read_credential(tmp_path / "namespace" / "credential")
+    assert error.value.code == "credential_directory"
+
+
 @pytest.mark.parametrize(
     "mutation",
     [
@@ -215,7 +233,7 @@ def test_missing_credential_propagates_file_not_found(tmp_path):
         "writable_parent",
         "symlink_parent",
         "relative",
-        "foreign_principal",
+        "foreign_namespace",
     ],
 )
 def test_refuses_unsafe_objects_through_the_descriptor(tmp_path, mutation):
@@ -252,7 +270,9 @@ def test_refuses_unsafe_objects_through_the_descriptor(tmp_path, mutation):
             path = tmp_path / "alias" / "credential"
         elif mutation == "relative":
             path = Path(os.path.relpath(path))
-        elif mutation == "foreign_principal":
+        elif mutation == "foreign_namespace":
+            # The namespace belongs to neither root nor the service principal:
+            # refused at the directory before the credential is ever opened.
             kwargs["principal_uid"] = os.geteuid() + 1
     expected = {
         "writable": "credential_mode",
@@ -269,7 +289,7 @@ def test_refuses_unsafe_objects_through_the_descriptor(tmp_path, mutation):
         "writable_parent": "credential_directory",
         "symlink_parent": "credential_directory",
         "relative": "credential_directory",
-        "foreign_principal": "credential_owner",
+        "foreign_namespace": "credential_directory",
     }[mutation]
     before = open_fds()
     with pytest.raises(custody.CredentialCustodyError) as error:

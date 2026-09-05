@@ -46,8 +46,12 @@ ACL_READ, ACL_WRITE, ACL_EXECUTE = 0o4, 0o2, 0o1
 
 _ENTRY = struct.Struct("<HHI")
 _HEADER = struct.Struct("<I")
-# Not provisioned for this principal: propagated unchanged, never a custody verdict.
-_UNAVAILABLE = (FileNotFoundError, NotADirectoryError, PermissionError)
+# Not provisioned for this principal (absent, or the kernel denies us a look):
+# propagated unchanged, never a custody verdict. ``NotADirectoryError`` is
+# deliberately excluded: on Linux ``O_DIRECTORY|O_NOFOLLOW`` reports a symlinked
+# namespace as ENOTDIR, and a namespace path occupied by a non-directory is a
+# shape we could inspect and must refuse, not an absence.
+_UNAVAILABLE = (FileNotFoundError, PermissionError)
 
 
 class CredentialCustodyError(Exception):
@@ -190,9 +194,11 @@ def opened_credential(path: Path, *, principal_uid: int | None = None) -> Iterat
     the credential is then opened relative to that descriptor with
     ``O_NOFOLLOW`` and judged from ``fstat``/``fgetxattr`` on the descriptor
     itself. An absent or inaccessible namespace or credential propagates its
-    own ``OSError`` (``FileNotFoundError``, ``NotADirectoryError``,
-    ``PermissionError``): that is "not provisioned for this principal", not a
-    custody verdict about an object we could inspect.
+    own ``OSError`` (``FileNotFoundError``, ``PermissionError``): that is "not
+    provisioned for this principal", not a custody verdict about an object we
+    could inspect. A namespace that is a symlink or otherwise not a directory,
+    or is owned by anyone but root or the principal, is refused as
+    ``credential_directory`` before the credential itself is examined.
     """
     principal_uid = os.geteuid() if principal_uid is None else principal_uid
     if not path.is_absolute() or path.name in ("", ".", ".."):
