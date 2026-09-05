@@ -46,6 +46,7 @@ from typing import Any
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey, Ed25519PublicKey
 
+from learn_ukrainian_v4_runtime import credential_custody as custody
 from learn_ukrainian_v4_runtime.resources import resource_root
 
 SCHEMA_VERSION = "v4-trust-policy-v1"
@@ -305,42 +306,55 @@ def require_trust_policy_binding(
 # caller-selected environment variable, or a policy object -- this fixed,
 # non-parameterizable path is the only place production ever reads one.
 #
-# Key/ACL provisioning is explicitly out of this mechanism repair's scope
-# (see the repair-6 dispatch brief): mechanism-only production has NO key
-# material at this path yet, so every role always refuses here until a
-# future first-real-row PR provisions it. Tests never call this directly --
-# they monkeypatch the module-level indirection point in each authority
-# module (``v4_fleet_execution_authority._load_signing_key``, ``v4_sources_
-# authority._load_signing_key``, ``v4_a3_reference_check._load_signing_
-# key``) with an isolated ephemeral test key, never this real loader.
-HRAMATKA_SIGNING_KEY_ROOT = Path("/run/credentials/hramatka-api.service/v4-signing-keys")
+# Provisioning is the operator's: the unit loads the key directory with
+# ``LoadCredential=v4-signing-keys:<directory>``. systemd FLATTENS a
+# directory credential into the unit's single credential namespace as
+# ``v4-signing-keys_<filename>`` (no nested ``v4-signing-keys/`` directory is
+# ever created), so the production files are
+# ``/run/credentials/hramatka-api.service/v4-signing-keys_<role>.key`` and
+# ``..._<role>.key_id`` for the fixed role set. That is the only layout this
+# loader reads; there is no path fallback. Tests that exercise other
+# authorities monkeypatch the module-level indirection point in each
+# authority module (``v4_fleet_execution_authority._load_signing_key``,
+# ``v4_sources_authority._load_signing_key``, ``v4_a3_reference_check.
+# _load_signing_key``) with an isolated ephemeral test key.
+HRAMATKA_CREDENTIAL_NAMESPACE = Path("/run/credentials/hramatka-api.service")
+SIGNING_KEY_CREDENTIAL = "v4-signing-keys"
+SIGNING_KEY_SUFFIXES = (".key", ".key_id")
+
+
+def signing_credential_path(role: str, suffix: str) -> Path:
+    """The flattened systemd credential for one production role file."""
+    require(role in KEYRING_ROLES, f"unknown signing-key role {role!r} -- refusing")
+    require(suffix in SIGNING_KEY_SUFFIXES, f"unknown signing credential suffix {suffix!r} -- refusing")
+    return HRAMATKA_CREDENTIAL_NAMESPACE / f"{SIGNING_KEY_CREDENTIAL}_{role}{suffix}"
 
 
 def load_production_signing_key(role: str) -> tuple[str, str]:
-    """Read ``(private_key_hex, signer_key_id)`` for ``role`` from fixed,
-    root-owned Hramatka custody. Refuses (fail closed, never a default key)
-    when the role is unknown or the key files are not provisioned -- the
-    only state mechanism-only production can be in today."""
+    """Read ``(private_key_hex, signer_key_id)`` for ``role`` from the unit's
+    own systemd credential namespace. Refuses (fail closed, never a default
+    key) when the role is unknown, the files are not provisioned, or their
+    custody is not private to this service principal -- owner-private or the
+    root-owned access-ACL form systemd produces (``credential_custody``)."""
     require(role in KEYRING_ROLES, f"unknown signing-key role {role!r} -- refusing")
-    try:
-        key_path = HRAMATKA_SIGNING_KEY_ROOT / f"{role}.key"
-        key_id_path = HRAMATKA_SIGNING_KEY_ROOT / f"{role}.key_id"
-        require(
-            key_path.is_file() and key_id_path.is_file(),
-            f"no production signing key is provisioned for role {role!r} at {HRAMATKA_SIGNING_KEY_ROOT} -- refusing "
-            "(mechanism-only production; key/ACL provisioning is a first-real-row-PR prerequisite)",
-        )
-        for path in (key_path, key_id_path):
-            require(not path.is_symlink() and not path.stat().st_mode & 0o077, "signing credential permissions -- refusing")
-        private_key_hex = key_path.read_text(encoding="utf-8").strip()
-        signer_key_id = key_id_path.read_text(encoding="utf-8").strip()
-        require(
-            bool(HEX64_RE.fullmatch(private_key_hex)), f"production signing key at {key_path} is not 32 raw bytes, hex-encoded -- refusing"
-        )
-        require(bool(signer_key_id), f"production signer key id at {key_id_path} is empty -- refusing")
-        return private_key_hex, signer_key_id
-    except OSError as exc:
-        raise TrustAuthorityError("no production signing key is provisioned or accessible -- refusing") from exc
+    values = []
+    for suffix in SIGNING_KEY_SUFFIXES:
+        path = signing_credential_path(role, suffix)
+        try:
+            values.append(custody.read_credential(path).decode("utf-8").strip())
+        except OSError as exc:
+            raise TrustAuthorityError(
+                f"no production signing key is provisioned or accessible for role {role!r} at {path} -- refusing "
+                "(the unit must load it as a systemd credential; provisioning is operator-owned)"
+            ) from exc
+        except custody.CredentialCustodyError as exc:
+            raise TrustAuthorityError(f"signing credential custody -- refusing ({exc})") from exc
+        except UnicodeDecodeError:
+            raise TrustAuthorityError("signing credential encoding -- refusing") from None
+    private_key_hex, signer_key_id = values
+    require(bool(HEX64_RE.fullmatch(private_key_hex)), f"production signing key for role {role!r} is not 32 raw bytes, hex-encoded -- refusing")
+    require(bool(signer_key_id), f"production signer key id for role {role!r} is empty -- refusing")
+    return private_key_hex, signer_key_id
 
 
 def resolve_public_key(policy: dict[str, Any], role: str, key_id: str) -> str:

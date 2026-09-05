@@ -6,6 +6,7 @@ import json
 import os
 from pathlib import Path
 
+from learn_ukrainian_v4_runtime import credential_custody as custody
 from learn_ukrainian_v4_runtime import v4_trust_authority as trust
 from learn_ukrainian_v4_runtime.child_runtime import _verified_file, load_profile
 from learn_ukrainian_v4_runtime.operation_auth import OperationRefused, digest
@@ -33,6 +34,17 @@ def qualification_path() -> Path:
     return Path("/run/credentials/hramatka-api.service/v4-unit-qualification.json")
 
 
+def scoped_credential_paths() -> list[Path]:
+    """Every fixed credential the qualified unit must hold under scoped custody:
+    the control DSN and the flattened ``v4-signing-keys_<role>.key[_id]`` pair
+    systemd materializes for each production keyring role."""
+    credentials = [qualification_path().parent / "v4-control-dsn"]
+    credentials.extend(
+        trust.signing_credential_path(role, suffix) for role in trust.KEYRING_ROLES for suffix in (".key", ".key_id")
+    )
+    return credentials
+
+
 def require_readiness() -> None:
     from learn_ukrainian_v4_runtime.provenance import validate_package_bindings, verify_current_identity
     from learn_ukrainian_v4_runtime.v4_a3_heldout_family_assignment import DEFAULT_RECEIPT
@@ -43,7 +55,7 @@ def require_readiness() -> None:
         profile = load_profile()
         _verified_file(profile["bwrap"], profile["bwrap_sha256"])
         _, policy_digest = trust.load_production_trust_policy()
-        qualification = json.loads(qualification_path().read_bytes())
+        qualification = json.loads(custody.read_credential(qualification_path()))
         if (
             qualification.get("schema") != "hramatka-v4-actual-unit-qualification.v1"
             or qualification.get("unit") != "hramatka-api.service"
@@ -61,14 +73,10 @@ def require_readiness() -> None:
             or any(value is not True for value in qualification["canaries"].values())
         ):
             raise OperationRefused("actual_unit_qualification_required")
-        credentials = [qualification_path().parent / "v4-control-dsn"]
-        credentials.extend(
-            trust.HRAMATKA_SIGNING_KEY_ROOT / (role + suffix)
-            for role in trust.KEYRING_ROLES
-            for suffix in (".key", ".key_id")
-        )
-        for path in credentials:
-            if not path.is_file() or path.is_symlink() or path.stat().st_mode & 0o077:
-                raise OperationRefused("scoped_custody_required")
-    except (OSError, KeyError, ValueError) as exc:
+        for path in scoped_credential_paths():
+            try:
+                custody.verify_credential(path)
+            except (OSError, custody.CredentialCustodyError) as exc:
+                raise OperationRefused("scoped_custody_required") from exc
+    except (OSError, KeyError, ValueError, custody.CredentialCustodyError) as exc:
         raise OperationRefused("readiness_unproved") from exc
