@@ -9,6 +9,10 @@ with A13 open. Execution and admission default OFF. The package contains no
 production keys, private membership, packets, corpus, or qualified provider
 profile.
 
+The service fixes native reasoning effort by role: original-row authors use
+medium, and independent row reviewers use high. Both native CLI invocations
+receive explicit effort arguments; requests cannot select another effort.
+
 ## Build and test
 
 Use the interpreter specified by the dispatch contract. Set

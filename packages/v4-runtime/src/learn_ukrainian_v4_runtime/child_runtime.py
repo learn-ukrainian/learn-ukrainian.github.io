@@ -126,6 +126,10 @@ def _plan(profile: dict, claim: dict, provider_credential: str) -> tuple[list[st
         adapter["provider_env"]: provider_credential,
         "V4_SOURCES_ATTEMPT_CAPABILITY": claim["capability_token"],
     }
+    try:
+        effort = {"author": "medium", "reviewer": "high"}[binding["role"]]
+    except KeyError as exc:
+        raise OperationRefused("operation_role") from exc
     model = binding["expected_seat_or_model"]
     url = profile["sources_url"]
     if harness == "claude":
@@ -148,6 +152,8 @@ def _plan(profile: dict, claim: dict, provider_credential: str) -> tuple[list[st
             "stream-json",
             "--model",
             model,
+            "--effort",
+            effort,
             "--setting-sources",
             "",
             "--tools",
@@ -169,6 +175,8 @@ def _plan(profile: dict, claim: dict, provider_credential: str) -> tuple[list[st
             "read-only",
             "--model",
             model,
+            "-c",
+            "model_reasoning_effort=" + json.dumps(effort),
             "-c",
             "features.shell_tool=false",
             "-c",
