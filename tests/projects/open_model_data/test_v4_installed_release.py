@@ -13,6 +13,8 @@ import tomllib
 from pathlib import Path
 
 import pytest
+from packaging.markers import Marker, default_environment
+from packaging.requirements import Requirement
 
 pytest_plugins = ("test_v4_protected_parent_mechanism",)
 
@@ -87,9 +89,21 @@ def isolated_install(built_wheel, tmp_path_factory):
     return target
 
 
-def _distribution_name(requirement: str) -> str | None:
-    match = re.match(r"\s*([A-Za-z0-9][A-Za-z0-9._-]*)", requirement)
-    return match.group(1) if match else None
+def _requirement_spec(requirement: str) -> tuple[str, set[str], Marker | None] | None:
+    try:
+        parsed = Requirement(requirement)
+    except Exception:
+        return None
+    return parsed.name, set(parsed.extras), parsed.marker
+
+
+def _marker_applies(marker: Marker | None, extras: set[str]) -> bool:
+    if marker is None:
+        return True
+    environment = default_environment()
+    if "extra" in str(marker):
+        return any(marker.evaluate({**environment, "extra": extra}) for extra in extras)
+    return marker.evaluate(environment)
 
 
 @pytest.fixture(scope="module")
@@ -105,24 +119,33 @@ def external_dependencies(tmp_path_factory):
         for dist in importlib.metadata.distributions()
         if dist.metadata.get("Name")
     }
-    pending = {
-        name
-        for requirement in package_metadata["dependencies"]
-        if (name := _distribution_name(requirement))
-    }
+    pending = []
+    for requirement in package_metadata["dependencies"]:
+        spec = _requirement_spec(requirement)
+        if spec is not None:
+            name, extras, marker = spec
+            if _marker_applies(marker, extras):
+                pending.append((name, extras))
     selected = set()
+    processed = set()
     while pending:
-        name = pending.pop()
+        name, extras = pending.pop()
         normalized = re.sub(r"[-_.]+", "-", name).lower()
-        if normalized in selected:
+        state = (normalized, tuple(sorted(extras)))
+        if state in processed:
             continue
+        processed.add(state)
         distribution = distributions.get(normalized)
         assert distribution is not None, f"declared runtime dependency is not installed: {name}"
         selected.add(normalized)
         for requirement in distribution.requires or ():
-            dependency = _distribution_name(requirement)
-            if dependency:
-                pending.add(dependency)
+            spec = _requirement_spec(requirement)
+            if spec is None:
+                continue
+            dependency, dependency_extras, marker = spec
+            if not _marker_applies(marker, extras):
+                continue
+            pending.append((dependency, dependency_extras))
 
     for normalized in sorted(selected):
         distribution = distributions[normalized]
