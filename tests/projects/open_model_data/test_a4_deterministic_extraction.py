@@ -170,7 +170,7 @@ def _run_fresh_python(source: str, *args: str) -> subprocess.CompletedProcess[st
         # group before re-raising instead of orphaning the probe on timeout.
         with contextlib.suppress(ProcessLookupError):
             os.killpg(process.pid, signal.SIGKILL)
-        process.communicate()
+        process.communicate(timeout=5)
         raise
     return subprocess.CompletedProcess(process.args, process.returncode, stdout, stderr)
 
@@ -464,6 +464,18 @@ def test_current_rss_bytes_is_positive_on_this_platform() -> None:
 
 
 def test_fresh_process_isolation_resets_inherited_rss_high_water_mark() -> None:
+    """Keep deliberate RSS contamination in an owned transient process."""
+    result = _run_fresh_python(
+        "import runpy\n"
+        "import sys\n"
+        "probe = runpy.run_path(sys.argv[1])\n"
+        "probe['_assert_inherited_rss_isolation']()\n",
+        str(Path(__file__).resolve()),
+    )
+    assert result.returncode == 0, result.stderr
+
+
+def _assert_inherited_rss_isolation() -> None:
     """A direct exec inherits the worker high-water mark; the two-hop probe does not."""
     memory_cap = extraction.DEFAULT_A4_MEMORY_CAP_BYTES
     allocation = bytearray(memory_cap + 32 * 1024 * 1024)
