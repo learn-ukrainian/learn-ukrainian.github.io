@@ -174,8 +174,8 @@ model ID available through your authenticated CLI instead of a moving alias:
   "provider": "anthropic",
   "model": "REPLACE_WITH_CONCRETE_MODEL_ID",
   "effort": "high",
-  "timeout_seconds": 300,
-  "max_output_tokens": 4096,
+  "timeout_seconds": 600,
+  "max_output_tokens": 32768,
   "max_tool_calls": 20,
   "repeats": 3,
   "tools": ["verify_word", "verify_stress", "search_text", "query_pravopys"],
@@ -189,6 +189,11 @@ put endpoint URLs, tokens or private machine details in a checked-in config.
 An unsupported effort setting must not silently become a different setting.
 Requested effort and proven effective effort are different facts; absent
 runtime evidence stays unknown.
+
+Freeze budgets before the scored experiment. Reasoning can consume the native
+output budget even when the requested final JSON is short: the complete demo
+paper exceeded a 4,096-token budget in live verification. Preserve such failures;
+changing the budget starts a new experiment, not a replacement successful trial.
 
 ## Run without MCP
 
