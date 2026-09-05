@@ -243,7 +243,9 @@ def sha256_text(value: str) -> str:
 
 
 def sha256_file(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    from learn_ukrainian_v4_runtime.provenance import binding_sha256
+
+    return binding_sha256(path)
 
 
 # --- frozen byte-level extraction algorithm (real code, real corpus not yet

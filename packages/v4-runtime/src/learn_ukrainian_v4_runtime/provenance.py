@@ -155,6 +155,30 @@ def verify_current_identity() -> dict:
     }
 
 
+def binding_sha256(path) -> str:
+    """Hash a real file/resource, or the fixed blob for historical metadata.
+
+    Historical logical names never become readable/importable resource aliases.
+    Repository Paths always hash their actual bytes, retaining strict old-pin
+    rejection. Only package metadata uses the built-in frozen binding set.
+    """
+    if type(path) is not resources.PackageResource or not path.relative.startswith("scripts/"):
+        return _sha(path.read_bytes())
+    verify_current_identity()
+    spec = _json(_read(SPEC))
+    pins = {
+        binding["sha256"]
+        for receipt in spec["receipts"]
+        for binding in receipt["bindings"].values()
+        if binding["path"] == path.relative
+    }
+    _require(len(pins) == 1, "unknown or conflicting historical binding")
+    pin = pins.pop()
+    actual = _sha(_read("provenance/v1/blobs/sha256/" + pin + ".blob"))
+    _require(actual == pin, "historical blob digest mismatch")
+    return actual
+
+
 def validate_package_bindings(receipt: dict) -> None:
     """Validate one exact built-in receipt AND the entire fixed binding closure."""
     scope = _validation_scope.get()

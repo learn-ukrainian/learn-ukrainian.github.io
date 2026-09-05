@@ -69,7 +69,8 @@ def test_heldout_membership_file_is_never_opened_by_this_module_or_suite() -> No
     # real guarantee: no module-level Path constant this module defines
     # (the only paths its functions ever open) resolves under batch_state/,
     # and it never imports the A3 held-out-membership module.
-    path_constants = [value for value in vars(assignment).values() if isinstance(value, Path)]
+    from learn_ukrainian_v4_runtime.resources import PackageResource
+    path_constants = [value for value in vars(assignment).values() if isinstance(value, (Path, PackageResource))]
     assert path_constants  # sanity: the module does define path constants
     assert not any("batch_state" in str(path) for path in path_constants)
     assert not hasattr(assignment, "v4_a3_heldout_family_assignment")
@@ -82,19 +83,19 @@ def test_this_test_module_never_reads_the_private_heldout_or_builder_packet_file
     assert isinstance(HELDOUT_MEMBERSHIP_PATH, Path)
     assert isinstance(BUILDER_PACKET_PATH, Path)
     opened_paths: set[Path] = set()
-    real_read_text = Path.read_text
+    real_open = Path.open
 
-    def _tracking_read_text(self: Path, *args: object, **kwargs: object) -> str:
+    def _tracking_open(self: Path, *args: object, **kwargs: object):
         opened_paths.add(self)
-        return real_read_text(self, *args, **kwargs)
+        return real_open(self, *args, **kwargs)
 
-    original = Path.read_text
-    Path.read_text = _tracking_read_text  # type: ignore[method-assign]
+    original = Path.open
+    Path.open = _tracking_open  # type: ignore[method-assign]
     try:
         assignment.check_assignment_gate()
         assignment.build_receipt()
     finally:
-        Path.read_text = original  # type: ignore[method-assign]
+        Path.open = original  # type: ignore[method-assign]
     assert HELDOUT_MEMBERSHIP_PATH not in opened_paths
     assert BUILDER_PACKET_PATH not in opened_paths
 

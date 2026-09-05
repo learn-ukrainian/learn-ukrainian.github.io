@@ -410,27 +410,27 @@ def build_receipt(root: Path = ROOT) -> dict[str, Any]:
         "control_surfaces": {"public_control_issue": 7423, "pilot_child_issue": 7430, "private_operational_board": 622},
         "bindings": {
             "a2_source_operation_admission": {
-                "path": str(A2_RECEIPT_PATH.relative_to(root)),
+                "path": str(A2_RECEIPT_PATH.relative_to(ROOT)),
                 "sha256": sha256_file(A2_RECEIPT_PATH),
                 "schema_version": "dataset_v4_a2_source_operation_admission_receipt_v1",
             },
             "a4_deterministic_extraction": {
-                "path": str(A4_RECEIPT_PATH.relative_to(root)),
+                "path": str(A4_RECEIPT_PATH.relative_to(ROOT)),
                 "sha256": sha256_file(A4_RECEIPT_PATH),
                 "schema_version": "dataset_v4_a4_deterministic_extraction_receipt_v1",
             },
             "pilot_slot_manifest": {
-                "path": str(SLOT_MANIFEST_PATH.relative_to(root)),
+                "path": str(SLOT_MANIFEST_PATH.relative_to(ROOT)),
                 "sha256": sha256_file(SLOT_MANIFEST_PATH),
                 "schema_version": "dataset_v4_pilot_slot_manifest_v1",
             },
             "admission_engine_implementation": {
-                "path": str(ADMISSION_ENGINE_PATH.relative_to(root)),
+                "path": str(ADMISSION_ENGINE_PATH.relative_to(ROOT)),
                 "sha256": sha256_file(ADMISSION_ENGINE_PATH),
                 "schema_version": "v4_original_row_admission_script_v1",
             },
             "wiring_implementation": {
-                "path": str(SELF_PATH.relative_to(root)),
+                "path": str(SELF_PATH.relative_to(ROOT)),
                 "sha256": sha256_file(SELF_PATH),
                 "schema_version": "v4_public_slot_commitment_assignment_script_v1",
             },

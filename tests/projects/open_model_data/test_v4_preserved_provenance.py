@@ -118,3 +118,17 @@ async def test_unknown_source_version_refuses_evidence(lexical_resources, monkey
 @pytest.fixture
 def anyio_backend():
     return "asyncio"
+
+
+@pytest.mark.parametrize("name", [
+    "v4_a7_original_row_factory", "v4_a8_admission_assembly", "v4_a9_evaluation_package",
+    "v4_per_slot_private_factory", "v4_a13_cleanup_recovery",
+])
+def test_default_packaged_builders_preserve_the_frozen_receipt_bindings(name):
+    import importlib
+
+    module = importlib.import_module("learn_ukrainian_v4_runtime." + name)
+    built = module.build_receipt()
+    frozen = json.loads(module.DEFAULT_RECEIPT.read_bytes())
+    assert built["bindings"] == frozen["bindings"]
+    module.validate_receipt_independently(built)

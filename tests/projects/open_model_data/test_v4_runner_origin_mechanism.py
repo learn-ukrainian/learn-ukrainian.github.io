@@ -196,7 +196,7 @@ pytest_plugins = ("test_v4_protected_parent_mechanism",)
 
 
 @pytest.fixture
-def synthetic_trust_bundle():
+def synthetic_trust_bundle(signing_resources):
     with fx.installed_fixture_policy():
         yield
 

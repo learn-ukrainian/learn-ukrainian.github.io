@@ -142,7 +142,9 @@ def sha256_text(value: str) -> str:
 
 
 def sha256_file(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    from learn_ukrainian_v4_runtime.provenance import binding_sha256
+
+    return binding_sha256(path)
 
 
 # --- frozen local-store binding (real, hashed, never touches row text) -----
@@ -436,7 +438,7 @@ def build_receipt(root: Path = ROOT, primary_root: Path = PRIMARY_ROOT) -> dict[
         "control_surfaces": {"public_control_issue": 7423, "pilot_child_issue": 7430, "private_operational_board": 622},
         "bindings": {
             "a2_source_operation_admission": {
-                "path": str(A2_RECEIPT_PATH.relative_to(root)),
+                "path": str(A2_RECEIPT_PATH.relative_to(ROOT)),
                 "sha256": sha256_file(A2_RECEIPT_PATH),
                 "schema_version": "dataset_v4_a2_source_operation_admission_receipt_v1",
             },
