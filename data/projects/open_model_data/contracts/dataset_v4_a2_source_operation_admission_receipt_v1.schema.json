@@ -603,8 +603,30 @@
           "enum": [
             "candidate_support_identified",
             "support_identified_with_residual",
-            "source_incomplete"
+            "source_incomplete",
+            "resolved"
           ]
+        }
+      },
+      "if": {
+        "properties": {
+          "coverage_state": {
+            "const": "resolved"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "residual_ids": {
+            "maxItems": 0
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "residual_ids": {
+            "minItems": 1
+          }
         }
       }
     },
