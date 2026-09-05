@@ -22,8 +22,8 @@ check to the descriptor it reads from (directory descriptor, ``O_NOFOLLOW``,
 a concurrent rewrite cannot slip past the check. It never logs, formats or
 chains credential bytes; only stable refusal codes leave this module.
 
-A missing credential propagates as the original ``FileNotFoundError`` so every
-caller keeps its existing "not provisioned" taxonomy.
+An absent or inaccessible namespace or credential propagates its own
+``OSError`` so every caller keeps its existing "not provisioned" taxonomy.
 """
 
 from __future__ import annotations
@@ -46,6 +46,8 @@ ACL_READ, ACL_WRITE, ACL_EXECUTE = 0o4, 0o2, 0o1
 
 _ENTRY = struct.Struct("<HHI")
 _HEADER = struct.Struct("<I")
+# Not provisioned for this principal: propagated unchanged, never a custody verdict.
+_UNAVAILABLE = (FileNotFoundError, NotADirectoryError, PermissionError)
 
 
 class CredentialCustodyError(Exception):
@@ -187,7 +189,10 @@ def opened_credential(path: Path, *, principal_uid: int | None = None) -> Iterat
     be a directory owned by root or the principal that nobody else can write;
     the credential is then opened relative to that descriptor with
     ``O_NOFOLLOW`` and judged from ``fstat``/``fgetxattr`` on the descriptor
-    itself. A missing credential raises the original ``FileNotFoundError``.
+    itself. An absent or inaccessible namespace or credential propagates its
+    own ``OSError`` (``FileNotFoundError``, ``NotADirectoryError``,
+    ``PermissionError``): that is "not provisioned for this principal", not a
+    custody verdict about an object we could inspect.
     """
     principal_uid = os.geteuid() if principal_uid is None else principal_uid
     if not path.is_absolute() or path.name in ("", ".", ".."):
@@ -197,6 +202,8 @@ def opened_credential(path: Path, *, principal_uid: int | None = None) -> Iterat
         try:
             directory_fd = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
             directory = os.fstat(directory_fd)
+        except _UNAVAILABLE:
+            raise
         except OSError as exc:
             raise CredentialCustodyError("credential_directory") from exc
         if (
@@ -208,7 +215,7 @@ def opened_credential(path: Path, *, principal_uid: int | None = None) -> Iterat
         try:
             fd = os.open(path.name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC, dir_fd=directory_fd)
             status = os.fstat(fd)
-        except FileNotFoundError:
+        except _UNAVAILABLE:
             raise
         except OSError as exc:
             raise CredentialCustodyError(

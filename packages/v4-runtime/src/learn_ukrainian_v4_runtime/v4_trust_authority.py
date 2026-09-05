@@ -342,12 +342,12 @@ def load_production_signing_key(role: str) -> tuple[str, str]:
         path = signing_credential_path(role, suffix)
         try:
             values.append(custody.read_credential(path).decode("utf-8").strip())
-        except FileNotFoundError as exc:
+        except OSError as exc:
             raise TrustAuthorityError(
-                f"no production signing key is provisioned for role {role!r} at {path} -- refusing "
+                f"no production signing key is provisioned or accessible for role {role!r} at {path} -- refusing "
                 "(the unit must load it as a systemd credential; provisioning is operator-owned)"
             ) from exc
-        except (OSError, custody.CredentialCustodyError) as exc:
+        except custody.CredentialCustodyError as exc:
             raise TrustAuthorityError(f"signing credential custody -- refusing ({exc})") from exc
         except UnicodeDecodeError:
             raise TrustAuthorityError("signing credential encoding -- refusing") from None
