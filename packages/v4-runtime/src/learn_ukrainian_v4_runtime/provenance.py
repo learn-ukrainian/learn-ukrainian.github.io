@@ -62,9 +62,40 @@ def _read(relative):
         raise ProvenanceError("missing or invalid package resource") from exc
 
 
+def _read_build_identity():
+    """Read fixed generated identity bytes without importing or executing them."""
+    import ast
+    from types import SimpleNamespace
+
+    raw = _read("_build_identity.py")
+    names = ("PUBLIC_COMMIT", "PACKAGE_VERSION", "RELEASE_MANIFEST_SHA256", "PROVENANCE_MANIFEST_SHA256")
+    try:
+        nodes = ast.parse(raw).body
+        _require(len(nodes) == 5, "build identity fields")
+        values = {}
+        for name, node in zip(names, nodes[1:], strict=True):
+            _require(
+                isinstance(node, ast.Assign)
+                and len(node.targets) == 1
+                and isinstance(node.targets[0], ast.Name)
+                and node.targets[0].id == name,
+                "build identity assignment",
+            )
+            values[name] = ast.literal_eval(node.value)
+        canonical = (
+            '"""Reproducible build identity; externally anchored by private vendor verification."""\n'
+            + "".join(f"{name} = {values[name]!r}\n" for name in names)
+        ).encode()
+        _require(raw == canonical, "noncanonical build identity")
+        return SimpleNamespace(**values)
+    except (ValueError, SyntaxError, TypeError) as exc:
+        raise ProvenanceError("invalid build identity resource") from exc
+
+
 def verify_current_identity() -> dict:
     from learn_ukrainian_v4_runtime import __version__
-    from learn_ukrainian_v4_runtime import _build_identity as identity
+
+    identity = _read_build_identity()
 
     _require(
         isinstance(identity.PUBLIC_COMMIT, str) and re.fullmatch("[a-f0-9]{40}", identity.PUBLIC_COMMIT),

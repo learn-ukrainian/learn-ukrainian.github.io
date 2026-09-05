@@ -11,7 +11,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 import shutil
 import sqlite3
 import stat
@@ -28,7 +27,6 @@ import _v4_a7_real_slot_fixture as fx
 import _v4_synthetic_chain_fixture as base_fixture
 import pytest
 
-from scripts.agent_runtime import runner as runtime_runner
 from scripts.fleet_comms import v4_canonical_authority_store as v4_store
 from scripts.fleet_comms.artifacts import ArtifactStore
 from scripts.fleet_comms.request_executor import RequestExecutor, RequestExecutorError
@@ -386,109 +384,39 @@ def test_sources_echoed_lexical_argument_is_not_the_identifier() -> None:
     assert "книга" not in identifier
 
 
-def test_boundary_to_boundary_positive_source_free(
-    tmp_path: Path, isolated_plane: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """Service authorize/claim → real runner → real Sources wire → observation
-    → opaque issuers → construct/replay → A7/A8."""
-    vesum_db = _write_vesum_fixture(tmp_path / "vesum.db")
-    claude_bin = _write_claude_fixture(tmp_path / "bin" / "claude")
-    _write_codex_fixture(tmp_path / "bin" / "codex")
-    monkeypatch.setenv("PATH", str(claude_bin.parent) + os.pathsep + os.environ.get("PATH", ""))
-    from scripts.agent_runtime.adapters import claude as claude_adapter
+pytest_plugins = ("test_v4_protected_parent_mechanism",)
 
-    claude_adapter._probe_claude_cli_version.cache_clear()
-    monkeypatch.setattr("scripts.agent_runtime.adapters.claude._default_claude_bin", lambda: str(claude_bin))
-    url, _server = _start_sources_http(monkeypatch, vesum_db)
-    monkeypatch.setenv("V4_SOURCES_MCP_URL", url)
-    _install_fixture_attesters(monkeypatch, isolated_plane)
 
-    mcp_config = tmp_path / "mcp.json"
-    mcp_config.write_text(json.dumps({"mcpServers": {"sources": {"type": "streamable-http", "url": url}}}))
+def test_boundary_to_boundary_positive_source_free(tmp_path, monkeypatch, pg_cluster, built_wheel, signing_resources) -> None:
+    """Parent capture → actual Sources HTTP → opaque issuance → A7/A8 replay.
 
-    with RequestExecutor(root=isolated_plane) as executor:
-        request = executor.create_request(recipient="claude", body="ignored-caller-prompt")
-        binding = executor.authorize_author_execution(
-            request_id=request.request_id,
-            slot_id=fx.TARGET_SLOT_ID,
-            expected_seat=FIXTURE_MODEL,
-        )
-        assert "ignored-caller-prompt" not in binding["authorized_prompt"]
-        result = runtime_runner.invoke(
-            "claude",
-            "caller prompt must not be transported",
-            cwd=tmp_path,
-            model=FIXTURE_MODEL,
-            tool_config={"mcp_config_path": str(mcp_config), "allowed_tools": "mcp__sources__verify_word", "use_bare": True},
-            v4_authorization_id=request.request_id,
-            hard_timeout=30,
-        )
-        assert result.ok is True
-        record = executor.resolve_v4_execution_observation(
-            task_id=binding["task_id"], run_id=binding["run_id"], role="author"
-        )
-        assert record is not None
-        assert record["seat_or_model"] == FIXTURE_MODEL
-        assert record["session_id"] == FIXTURE_SESSION
-        assert record["harness"] == "claude"
-        assert record["row_content_sha256"] == _sha(ROW_TEXT)
-        assert record["saw_source_text"] is False
-        assert record["prompt_sha256"] == binding["prompt_sha256"]
-        assert "mcp__sources__verify_word" in record["verification_tool_ids"]
+    This proves the public mechanism below the separate private auth adapter.
+    """
+    from test_v4_protected_parent_mechanism import _run_real_pair
 
-    author_receipt = fleet_execution.issue_author_execution_receipt(task_id=binding["task_id"], run_id=binding["run_id"])
-    authorship = ledger.build_authorship_receipt(
-        author_execution_receipt=author_receipt, row_content_sha256=_sha(ROW_TEXT)
-    )
-    with RequestExecutor(root=isolated_plane) as executor:
-        executor.persist_v4_authorship_receipt(authorship, task_id=binding["task_id"], run_id=binding["run_id"])
-        review_request = executor.create_request(recipient="codex", body="ignored-reviewer-prompt")
-        review_binding = executor.authorize_reviewer_execution(
-            request_id=review_request.request_id,
-            authorship_receipt_id=authorship["receipt_id"],
-            expected_seat=REVIEWER_MODEL,
-        )
-        review_result = runtime_runner.invoke(
-            "codex",
-            "caller reviewer prompt must not be transported",
-            cwd=tmp_path,
-            model=REVIEWER_MODEL,
-            v4_authorization_id=review_request.request_id,
-            hard_timeout=30,
-        )
-        assert review_result.ok is True
-        review_record = executor.resolve_v4_execution_observation(
-            task_id=review_binding["task_id"], run_id=review_binding["run_id"], role="reviewer"
-        )
-        assert review_record is not None
-        assert review_record["harness"] == "codex"
-        assert review_record["seat_or_model"] == REVIEWER_MODEL
-        assert review_record["verdict"] == "PASS"
-        assert review_record["prompt_sha256"] == review_binding["prompt_sha256"]
-
-    reviewer_receipt = fleet_execution.issue_reviewer_execution_receipt(
-        task_id=review_binding["task_id"], run_id=review_binding["run_id"]
-    )
-
-    with ArtifactStore(root=isolated_plane) as store:
-        inv_rows = store.connection.execute("SELECT record_json FROM v4_sources_invocations").fetchall()
-    assert inv_rows, "real Sources wire must have recorded a typed invocation for the running attempt"
-    inv = json.loads(str(inv_rows[0]["record_json"]))
-    assert inv["success"] is True
-    assert inv["identifier"].startswith(("vesum:", "sources:"))
-    assert inv["identifier"] != "книга"
+    pair = _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, False)
+    row_text = pair["row"]["row_text"]
+    author_receipt = pair["author_receipt"]
+    reviewer_receipt = pair["reviewer_receipt"]
+    record = pair["record"]
+    assert record["harness"] == "claude" and record["seat_or_model"] == FIXTURE_MODEL
+    assert record["row_content_sha256"] == _sha(row_text)
+    assert not any(record[key] for key in ("saw_source_text", "saw_heldout", "saw_eligible_unit_ids"))
+    inv = pair["invocation"]
+    assert inv["success"] is True and inv["identifier"].startswith(("vesum:", "sources:"))
     attestation = sources_authority.issue_verifier_attestation(invocation_id=inv["invocation_id"])
     assert attestation["identifier"] == inv["identifier"]
     verifier_receipt = evidence_binder.build_verifier_receipt(attestation=attestation)
-    evidence_receipt = evidence_binder.build_evidence_receipt(_sha(ROW_TEXT), [verifier_receipt])
+    evidence_receipt = evidence_binder.build_evidence_receipt(_sha(row_text), [verifier_receipt])
+    monkeypatch.setenv("HRAMATKA_V4_ADMISSION_ENABLED", "1")
 
     tmp_root = base_fixture.build_synthetic_chain_root(tmp_path / "slot-root", resolved_stratum="standard_correct")
     sealed = fx.build_sealed_receipt_and_packet(tmp_path / "slot-root")
     a6_receipt = a6.build_receipt(tmp_root)
     a6.validate_receipt_independently(a6_receipt, tmp_root)
     (tmp_root / "data/projects/open_model_data/admission/dataset_v4_a6_blind_arena_receipt_v1.json").write_text(json.dumps(a6_receipt))
-    reference_check_receipt = fx.build_reference_check_receipt()
-    reference_check_signature, replay_attestation = fx.build_reference_check_authenticity(reference_check_receipt)
+    reference_check_receipt = fx.build_reference_check_receipt(row_text=row_text)
+    reference_check_signature, replay_attestation = fx.build_reference_check_authenticity(reference_check_receipt, row_text=row_text)
     completion = ledger.construct_completion(
         slot_id=fx.TARGET_SLOT_ID,
         salt=fx.TEST_SALT,
@@ -499,7 +427,7 @@ def test_boundary_to_boundary_positive_source_free(
         packet_dir=sealed["packet_dir"],
         manifest=json.loads((tmp_root / "data/projects/open_model_data/admission/dataset_v4_pilot_slot_manifest_v1.json").read_text()),
         a2_receipt=json.loads((tmp_root / "data/projects/open_model_data/admission/dataset_v4_a2_source_operation_admission_receipt_v1.json").read_text()),
-        row_text=ROW_TEXT,
+        row_text=row_text,
         tier="silver",
         author_execution_receipt=author_receipt,
         reviewer_execution_receipt=reviewer_receipt,

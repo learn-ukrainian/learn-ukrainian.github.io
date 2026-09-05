@@ -696,7 +696,7 @@ def _generate_sealed_receipt(tmp_path: Path, salt_hex: str) -> tuple[dict, Path]
     """Build a minimal, schema-conformant, freshly-sealed A3 receipt over a
     small synthetic family registry, using a test-only salt -- never the
     real production salt or membership file."""
-    real_receipt = json.loads((ROOT / heldout.DEFAULT_RECEIPT.relative_to(ROOT)).read_text(encoding="utf-8"))
+    real_receipt = json.loads(heldout.DEFAULT_RECEIPT.read_text(encoding="utf-8"))
     receipt = copy.deepcopy(real_receipt)
     private_dir = tmp_path / "v4-a3-heldout"
     import os

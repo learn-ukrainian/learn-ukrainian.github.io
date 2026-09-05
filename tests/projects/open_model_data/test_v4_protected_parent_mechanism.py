@@ -71,10 +71,7 @@ def signing_resources(tmp_path, monkeypatch):
     monkeypatch.setattr(trust, "HRAMATKA_SIGNING_KEY_ROOT", root)
 
 
-@pytest.mark.parametrize("defect", [False, True])
-def test_real_parent_consumes_author_constraints_and_reviewer_row(
-    pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect
-):
+def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect):
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", pg_cluster.info.dsn)
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
     io = RuntimeResources(tmp_path, pg_cluster, monkeypatch, defect=defect)
@@ -157,5 +154,23 @@ def test_real_parent_consumes_author_constraints_and_reviewer_row(
                 ).fetchone()["n"]
                 == 1
             )
+            invocation = conn.execute(
+                "SELECT record_json FROM v4_sources_invocations WHERE attempt_id=%s", (owned["attempt_id"],)
+            ).fetchone()
+            return {
+                "author_receipt": signed,
+                "reviewer_receipt": signed_review,
+                "row": row,
+                "invocation": json.loads(invocation["record_json"]),
+                "record": record,
+                "review_record": review,
+            }
     finally:
         io.close()
+
+
+@pytest.mark.parametrize("defect", [False, True])
+def test_real_parent_consumes_author_constraints_and_reviewer_row(
+    pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect
+):
+    _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect)

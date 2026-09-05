@@ -300,13 +300,13 @@ def test_issue_author_execution_receipt_refuses_a_cross_run_lookup(tmp_path: Pat
 @pytest.mark.parametrize("mutation", [{"status": "running"}, {"return_code": 1}, {"completion_state": "failed"}, {"terminal_event_observed": False}])
 def test_issue_author_execution_receipt_refuses_a_nonterminal_canonical_record(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: dict[str, Any]) -> None:
     _binding, base = _recorded_author_record(tmp_path, monkeypatch)
-    bad = {**base, **mutation, "task_id": "task-bad", "run_id": "run-bad"}
+    bad = {**base, **mutation, "task_id": base["task_id"] + "-bad", "run_id": base["run_id"] + "-bad"}
     _seed_observation(tmp_path, bad)
     priv, pub = trust.generate_test_keypair()
     policy = trust.build_test_trust_policy(fleet_execution={"k1": pub})
     _patch_fleet(monkeypatch, tmp_path=tmp_path, key_loader=lambda role: (priv, "k1"), trust_policy=(policy, trust.trust_policy_sha256(policy)))
     with pytest.raises((fleet_execution.FleetExecutionError, ValueError)):
-        fleet_execution.issue_author_execution_receipt(task_id="task-bad", run_id="run-bad")
+        fleet_execution.issue_author_execution_receipt(task_id=bad["task_id"], run_id=bad["run_id"])
 
 
 # --- canonical store: idempotency / conflict / rollback ---------------------
@@ -523,11 +523,9 @@ def test_issue_verifier_attestation_refuses_an_unknown_invocation_before_key_acc
         sources_authority.issue_verifier_attestation(invocation_id="ghost")
 
 
-def test_issue_verifier_attestation_refuses_an_unsuccessful_canonical_record(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    record = _record_invocation(
-        tmp_path,
-        typed_outcome={"tool": "verify_word", "disposition": "not_found", "success": False, "evidence_identifiers": [], "result": {}},
-    )
+def test_issue_verifier_attestation_refuses_an_unsuccessful_canonical_record(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, pg_cluster, prepared) -> None:
+    from _v4_packaged_runtime_fixture import record_sources_without_terminal
+    record = record_sources_without_terminal(tmp_path, pg_cluster, monkeypatch, prepared, supported=False)
     assert record is not None
     assert record["success"] is False
     _patch_sources(monkeypatch, tmp_path, key_loader=lambda role: (_ for _ in ()).throw(AssertionError("no key access for a failed invocation")))
@@ -535,8 +533,9 @@ def test_issue_verifier_attestation_refuses_an_unsuccessful_canonical_record(tmp
         sources_authority.issue_verifier_attestation(invocation_id=record["invocation_id"])
 
 
-def test_issue_verifier_attestation_refuses_without_a_terminal_author_observation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    record = _record_invocation(tmp_path)
+def test_issue_verifier_attestation_refuses_without_a_terminal_author_observation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, pg_cluster, prepared) -> None:
+    from _v4_packaged_runtime_fixture import record_sources_without_terminal
+    record = record_sources_without_terminal(tmp_path, pg_cluster, monkeypatch, prepared, supported=True)
     assert record is not None
     _patch_sources(monkeypatch, tmp_path, key_loader=lambda role: (_ for _ in ()).throw(AssertionError("no key access without a terminal author join")))
     with pytest.raises(sources_authority.SourcesAuthorityError, match="no terminal author execution"):

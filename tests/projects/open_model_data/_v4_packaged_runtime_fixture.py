@@ -239,3 +239,39 @@ def produce_author_record(root, pg, monkeypatch, wheel):
             return owned["binding"], record
     finally:
         io.close()
+
+
+def record_sources_without_terminal(root, pg, monkeypatch, prepared, *, supported):
+    """Invoke the actual HTTP handler while its canonical operation is running."""
+    import urllib.request
+
+    from test_v4_operation_lifecycle import claim, role_connection
+
+    io = RuntimeResources(root, pg, monkeypatch)
+    try:
+        with role_connection(pg, "hramatka_v4_control_writer") as conn:
+            owned = claim(conn, prepared)
+        params = (
+            {"name": "verify_word", "arguments": {"word": "fixture-one"}}
+            if supported
+            else {"name": "verify_words", "arguments": {"words": []}}
+        )
+        body = json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": params}).encode()
+        request = urllib.request.Request(
+            io.url,
+            data=body,
+            headers={
+                "Content-Type": "application/json",
+                "Accept": "application/json, text/event-stream",
+                "Authorization": "Bearer " + owned["capability_token"],
+            },
+        )
+        with urllib.request.urlopen(request, timeout=10) as response:
+            assert "error" not in json.load(response)
+        record = pg.execute(
+            "SELECT record_json FROM v4_sources_invocations WHERE attempt_id=%s", (owned["attempt_id"],)
+        ).fetchone()
+        assert record
+        return json.loads(record["record_json"])
+    finally:
+        io.close()

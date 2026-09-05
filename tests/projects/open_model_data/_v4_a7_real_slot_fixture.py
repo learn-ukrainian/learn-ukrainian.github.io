@@ -164,6 +164,8 @@ def installed_fixture_policy():
     import os
     import tempfile
 
+    from _v4_provenance_resource_fixture import synthetic_resources
+
     with tempfile.TemporaryDirectory(prefix="v4-policy-") as temporary:
         policy_path = Path(temporary) / "policy.json"
         raw = json.dumps(TRUST_POLICY, sort_keys=True).encode()
@@ -172,6 +174,7 @@ def installed_fixture_policy():
             patch.object(trust, "DEFAULT_TRUST_POLICY_PATH", policy_path),
             patch.object(trust, "PRODUCTION_TRUST_POLICY_FILE_DIGEST_ALLOWLIST", frozenset({hashlib.sha256(raw).hexdigest()})),
             patch.dict(os.environ, {"HRAMATKA_V4_ADMISSION_ENABLED": "1"}),
+            synthetic_resources(),
         ):
             yield
 
@@ -214,7 +217,7 @@ def build_sealed_receipt_and_packet(tmp_path: Path) -> dict[str, Any]:
     member of ``HELDOUT_FAMILY_ID``, plus a real, live-issued private
     builder packet over it. Returns the paths a privileged caller (A7's
     private ledger) needs to independently re-verify the packet."""
-    real_receipt = json.loads((ROOT / heldout.DEFAULT_RECEIPT.relative_to(ROOT)).read_text(encoding="utf-8"))
+    real_receipt = json.loads(heldout.DEFAULT_RECEIPT.read_text(encoding="utf-8"))
     receipt = copy.deepcopy(real_receipt)
     for family in receipt["source_family_registry"]["families"]:
         if family["family_id"] == ELIGIBLE_FAMILY_ID:
@@ -233,6 +236,10 @@ def build_sealed_receipt_and_packet(tmp_path: Path) -> dict[str, Any]:
         summary = heldout.public_commitment_summary(A3_FIXTURE_SALT, result)
         receipt["heldout_partition_seal"]["assignment_algorithm"]["salt_commitment_sha256"] = summary["salt_commitment_sha256"]
         receipt["heldout_partition_seal"]["assignment_algorithm"]["assignment_commitment_sha256"] = summary["assignment_commitment_sha256"]
+        from _v4_provenance_resource_fixture import ACTIVE
+        bundle = ACTIVE.get()
+        assert bundle is not None, "synthetic seal requires the isolated resource fixture"
+        receipt = bundle.install_seal(receipt, tmp_path)
         heldout.write_private_artifact(private_dir / heldout.MEMBERSHIP_FILENAME, A3_FIXTURE_SALT, result, heldout.receipt_binding_sha256(receipt))
     finally:
         del os.environ[heldout.TEST_SALT_ENV_VAR]
