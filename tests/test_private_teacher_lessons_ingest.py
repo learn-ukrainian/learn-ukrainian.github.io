@@ -167,7 +167,7 @@ def test_cli_counts_only_and_no_extracted_files(tmp_path, db):
     source = docx(tmp_path, paragraph("01/01/2025") + paragraph("SYNTHETIC_SECRET_SENTINEL"))
     before = set(tmp_path.iterdir())
     result = subprocess.run([sys.executable, "-m", "scripts.ingest.private_teacher_lessons_ingest",
-        "--docx", str(source), "--db", str(db_path)], capture_output=True, text=True)
+        "--docx", str(source), "--db", str(db_path)], capture_output=True, text=True, timeout=30)
     assert result.returncode == 0, result.stderr
     assert "BEFORE: source_rows=0" in result.stdout
     assert "AFTER: source_rows=1 inserted=1 skipped=0" in result.stdout
