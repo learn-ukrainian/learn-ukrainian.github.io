@@ -73,7 +73,7 @@ def test_cli_json(tmp_path, capsys):
 def test_cli_help_uses_portable_example():
     result = subprocess.run(
         [sys.executable, "-m", "scripts.ingest.verify_stem_coverage", "--help"],
-        capture_output=True, text=True, check=True,
+        capture_output=True, text=True, check=True, timeout=30,
     )
     assert "/home/" not in result.stdout
     assert ".venv/bin/python -m scripts.ingest.verify_stem_coverage" in result.stdout
