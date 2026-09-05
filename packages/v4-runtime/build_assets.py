@@ -168,7 +168,7 @@ def write_manifest(destination: Path, *, development: bool = False) -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Prepare fixed package resources for local tests. Release builds require committed source.",
-        epilog="Example: /home/ops/learn-ukrainian/.venv/bin/python packages/v4-runtime/build_assets.py --development\n"
+        epilog="Example: .venv/bin/python packages/v4-runtime/build_assets.py --development\n"
         "Outputs: ignored local resource copies and identity. Exit codes: 0 success; 1 invalid source. Related: PR #7662.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
