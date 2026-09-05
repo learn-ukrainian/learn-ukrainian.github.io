@@ -129,6 +129,7 @@ def test_default_packaged_builders_preserve_the_frozen_receipt_bindings(name):
 
     module = importlib.import_module("learn_ukrainian_v4_runtime." + name)
     built = module.build_receipt()
-    frozen = json.loads(module.DEFAULT_RECEIPT.read_bytes())
+    receipt_path = getattr(module, "RECEIPT_PATH" if name == "v4_per_slot_private_factory" else name.split("_", 2)[1].upper() + "_RECEIPT_PATH")
+    frozen = json.loads(receipt_path.read_bytes())
     assert built["bindings"] == frozen["bindings"]
     module.validate_receipt_independently(built)

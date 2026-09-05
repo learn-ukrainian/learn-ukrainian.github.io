@@ -51,8 +51,14 @@ FORBIDDEN_PUBLIC_TERMS = ("fam-", "db.", "historical.", "heldout_membership", "s
 
 
 @pytest.fixture(autouse=True)
-def _fixture_policy_seam():
-    with fx.installed_fixture_policy():
+def _fixture_policy_seam(monkeypatch, tmp_path):
+    from _v4_provenance_resource_fixture import synthetic_resources
+
+    # Use the same pytest restoration stack as per-test policy mutations.
+    # Nesting unittest.patch around monkeypatch could restore a deleted path.
+    fx.install_policy_resource(monkeypatch, tmp_path, fx.TRUST_POLICY)
+    monkeypatch.setenv("HRAMATKA_V4_ADMISSION_ENABLED", "1")
+    with synthetic_resources():
         yield
 
 EMPTY_MANIFEST: dict = {"slot_series": []}

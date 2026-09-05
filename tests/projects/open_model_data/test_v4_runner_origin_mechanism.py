@@ -196,8 +196,11 @@ pytest_plugins = ("test_v4_protected_parent_mechanism",)
 
 
 @pytest.fixture
-def synthetic_trust_bundle(signing_resources):
-    with fx.installed_fixture_policy():
+def synthetic_trust_bundle(signing_resources, monkeypatch):
+    from _v4_provenance_resource_fixture import synthetic_resources
+
+    monkeypatch.setenv("HRAMATKA_V4_ADMISSION_ENABLED", "1")
+    with synthetic_resources():
         yield
 
 

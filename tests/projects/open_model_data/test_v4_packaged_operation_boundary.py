@@ -55,8 +55,10 @@ def pg_cluster(tmp_path_factory):
     root = tmp_path_factory.mktemp("v4-pg")
     data = root / "data"
     sock = Path(tempfile.mkdtemp(prefix="v4pg-", dir="/tmp"))
-    binary = Path(subprocess.run(["pg_config", "--bindir"], check=True, capture_output=True, text=True).stdout.strip())
-    assert (binary / "initdb").is_file() and (binary / "pg_ctl").is_file(), "install the PostgreSQL server test dependency"
+    reported = Path(subprocess.run(["pg_config", "--bindir"], check=True, capture_output=True, text=True).stdout.strip())
+    # CI declares server 16; a newer libpq-dev can report a different bindir.
+    binary = next((path for path in (reported, Path("/usr/lib/postgresql/16/bin")) if all((path / tool).is_file() for tool in ("initdb", "pg_ctl"))), None)
+    assert binary is not None, "install the PostgreSQL server test dependency"
     subprocess.run(
         [str(binary / "initdb"), "-D", str(data), "--encoding=UTF8", "--locale=C", "--auth=trust"],
         check=True,
