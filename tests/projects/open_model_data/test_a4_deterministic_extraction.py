@@ -12,11 +12,14 @@ family_id/source_unit_id below is synthetic, never a real V4 family.
 
 from __future__ import annotations
 
+import contextlib
 import copy
+import gc
 import hashlib
 import json
 import os
 import secrets
+import signal
 import stat
 import subprocess
 import sys
@@ -130,15 +133,46 @@ def _load(path: Path) -> dict[str, Any]:
 
 
 def _run_fresh_python(source: str, *args: str) -> subprocess.CompletedProcess[str]:
-    """Run an unpatched memory probe outside the long-lived pytest worker."""
-    return subprocess.run(
-        [sys.executable, "-c", source, *args],
-        cwd=ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=30,
+    """Run an unpatched memory probe from a genuinely fresh process.
+
+    Linux preserves the caller's ``ru_maxrss`` across the first fork/exec, so
+    a direct child of an xdist worker can inherit a high-water mark even after
+    exec has replaced the worker's address space. First exec a tiny launcher,
+    then fork from that low-live-RSS interpreter and exec the probe there. The
+    second child starts with the launcher's actual small address space, not the
+    worker's inherited high-water mark.
+    """
+    launcher_source = (
+        "import os\n"
+        "import sys\n"
+        "pid = os.fork()\n"
+        "if pid == 0:\n"
+        "    os.execv(sys.executable, [sys.executable, '-c', sys.argv[1], *sys.argv[2:]])\n"
+        "_, status = os.waitpid(pid, 0)\n"
+        "if os.WIFEXITED(status):\n"
+        "    raise SystemExit(os.WEXITSTATUS(status))\n"
+        "if os.WIFSIGNALED(status):\n"
+        "    raise SystemExit(128 + os.WTERMSIG(status))\n"
+        "raise SystemExit(1)\n"
     )
+    process = subprocess.Popen(
+        [sys.executable, "-c", launcher_source, source, *args],
+        cwd=ROOT,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        start_new_session=True,
+    )
+    try:
+        stdout, stderr = process.communicate(timeout=30)
+    except subprocess.TimeoutExpired:
+        # The launcher waits for the forked probe, so kill the whole process
+        # group before re-raising instead of orphaning the probe on timeout.
+        with contextlib.suppress(ProcessLookupError):
+            os.killpg(process.pid, signal.SIGKILL)
+        process.communicate()
+        raise
+    return subprocess.CompletedProcess(process.args, process.returncode, stdout, stderr)
 
 
 def _all_keys(value: Any) -> set[str]:
@@ -427,6 +461,41 @@ def test_current_rss_bytes_is_positive_on_this_platform() -> None:
     )
     assert result.returncode == 0, result.stderr
     assert int(result.stdout.strip()) > 0
+
+
+def test_fresh_process_isolation_resets_inherited_rss_high_water_mark() -> None:
+    """A direct exec inherits the worker high-water mark; the two-hop probe does not."""
+    memory_cap = extraction.DEFAULT_A4_MEMORY_CAP_BYTES
+    allocation = bytearray(memory_cap + 32 * 1024 * 1024)
+    probe_source = (
+        "from scripts.projects.open_model_data import v4_a4_deterministic_extraction as extraction\n"
+        "rss = extraction._current_rss_bytes()\n"
+        "assert rss > 0, rss\n"
+        "extraction._require_within_memory_budget(extraction.DEFAULT_A4_MEMORY_CAP_BYTES)\n"
+        "print(rss)\n"
+    )
+    try:
+        for offset in range(0, len(allocation), 4096):
+            allocation[offset] = 1
+        assert extraction._current_rss_bytes() > memory_cap
+
+        direct = subprocess.run(
+            [sys.executable, "-c", "import resource; print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024)"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+        assert direct.returncode == 0, direct.stderr
+        assert int(direct.stdout.strip()) > memory_cap
+
+        isolated = _run_fresh_python(probe_source)
+        assert isolated.returncode == 0, isolated.stderr
+        assert 0 < int(isolated.stdout.strip()) < memory_cap
+    finally:
+        del allocation
+        gc.collect()
 
 
 def test_require_within_memory_budget_passes_under_a_generous_cap() -> None:
