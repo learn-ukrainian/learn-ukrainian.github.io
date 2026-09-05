@@ -646,7 +646,7 @@ def test_a3_heldout_main_refuses_receipt_with_altered_binding_hash(tmp_path: Pat
     receipt_path = _write_receipt(tmp_path, receipt)
     private_dir = tmp_path / "private"
 
-    with pytest.raises(assignment.AssignmentError, match="on-disk sha256"):
+    with pytest.raises(assignment.AssignmentError, match="direct resource digest mismatch"):
         assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--generate"])
     assert not (private_dir / assignment.MEMBERSHIP_FILENAME).exists()
 

@@ -38,6 +38,11 @@ class SyntheticResources:
             if name.startswith("data/projects/open_model_data/") and candidate.is_file():
                 raw[name] = candidate.read_bytes()
         raw[SEAL] = provenance._canonical(receipt)
+        packet_name = "data/projects/open_model_data/admission/dataset_v4_a3_builder_packet_receipt_v1.json"
+        packet = json.loads(raw[packet_name])
+        packet["seal_receipt_binding"]["sha256"] = provenance._sha(raw[SEAL])
+        packet["seal_receipt_binding"]["receipt_binding_sha256"] = a3.receipt_binding_sha256(receipt)
+        raw[packet_name] = provenance._canonical(packet)
         spec = json.loads(self.original(provenance.SPEC))
         # The fixed receipt list supplies this finite DAG. Strings in arbitrary
         # objects never discover a path, and historical implementations stay exact.

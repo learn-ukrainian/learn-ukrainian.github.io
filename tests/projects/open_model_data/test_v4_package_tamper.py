@@ -113,3 +113,59 @@ def test_missing_extra_or_duplicate_receipt_mapping_refuses(mutation, monkeypatc
     )
     with pytest.raises(provenance.ProvenanceError):
         provenance.validate_package_bindings(json.loads(a3.DEFAULT_RECEIPT.read_bytes()))
+
+
+def _manifest_resource_override(monkeypatch, manifest_bytes):
+    """Make the outer self-hashes coherent so the inner contract must reject.
+
+    This changes resource bytes only. It is not a private vendor attestation.
+    """
+    original = resources.read_bytes
+    identity = provenance._read_build_identity()
+    release = json.loads(original("release_manifest.json"))
+    sha = provenance._sha(manifest_bytes)
+    release["provenance_sha256"] = sha
+    release["files"][provenance.MANIFEST] = sha
+    release_bytes = provenance._canonical(release)
+    identity_bytes = (
+        '"""Reproducible build identity; externally anchored by private vendor verification."""\n'
+        + f"PUBLIC_COMMIT = {identity.PUBLIC_COMMIT!r}\nPACKAGE_VERSION = {identity.PACKAGE_VERSION!r}\n"
+        + f"RELEASE_MANIFEST_SHA256 = {provenance._sha(release_bytes)!r}\nPROVENANCE_MANIFEST_SHA256 = {sha!r}\n"
+    ).encode()
+    replacements = {provenance.MANIFEST: manifest_bytes, "release_manifest.json": release_bytes, "_build_identity.py": identity_bytes}
+    monkeypatch.setattr(resources, "read_bytes", lambda name: replacements.get(name, original(name)))
+
+
+@pytest.mark.parametrize("mutation", [
+    "relationship", "context", "descriptor", "version", "commit", "missing", "extra", "duplicate",
+    "binding_missing", "binding_extra", "absolute", "traversal", "unknown_successor", "duplicate_json_key",
+])
+def test_inner_manifest_contract_rejects_even_with_coherent_self_hashes(mutation, monkeypatch):
+    manifest = json.loads(resources.read_bytes(provenance.MANIFEST))
+    occurrence = next(o for r in manifest["receipts"] for o in r["occurrences"].values() if "successor_resource" in o)
+    if mutation == "relationship":
+        occurrence["relationship"] = "same_code"
+    elif mutation == "context":
+        manifest["a3"]["receipt_binding_sha256"] = "a" * 64
+    elif mutation == "descriptor":
+        manifest["a3"]["algorithm_descriptor_sha256"] = "a" * 64
+    elif mutation in {"version", "commit"}:
+        manifest[{"version": "package_version", "commit": "public_commit"}[mutation]] = "foreign"
+    elif mutation == "missing":
+        manifest["receipts"].pop()
+    elif mutation == "extra":
+        manifest["receipts"].append({"resource": "foreign", "sha256": "a" * 64, "bindings": {}, "occurrences": {}})
+    elif mutation == "duplicate":
+        manifest["receipts"].append(manifest["receipts"][0])
+    elif mutation == "binding_missing":
+        manifest["receipts"][0]["occurrences"].pop(next(iter(manifest["receipts"][0]["occurrences"])))
+    elif mutation == "binding_extra":
+        manifest["receipts"][0]["occurrences"]["foreign"] = {}
+    elif mutation in {"absolute", "traversal", "unknown_successor"}:
+        occurrence["successor_resource"] = {"absolute": "/foreign.py", "traversal": "../foreign.py", "unknown_successor": "foreign.py"}[mutation]
+    raw = provenance._canonical(manifest)
+    if mutation == "duplicate_json_key":
+        raw = b'{"schema":"duplicate",' + raw[1:]
+    _manifest_resource_override(monkeypatch, raw)
+    with pytest.raises(provenance.ProvenanceError):
+        provenance.validate_package_bindings(json.loads(a3.DEFAULT_RECEIPT.read_bytes()))

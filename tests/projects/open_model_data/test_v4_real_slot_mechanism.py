@@ -709,6 +709,9 @@ def _generate_sealed_receipt(tmp_path: Path, salt_hex: str) -> tuple[dict, Path]
         summary = heldout.public_commitment_summary(salt, result)
         receipt["heldout_partition_seal"]["assignment_algorithm"]["salt_commitment_sha256"] = summary["salt_commitment_sha256"]
         receipt["heldout_partition_seal"]["assignment_algorithm"]["assignment_commitment_sha256"] = summary["assignment_commitment_sha256"]
+        from _v4_provenance_resource_fixture import ACTIVE
+
+        ACTIVE.get().install_seal(receipt, tmp_path)
         heldout.write_private_artifact(private_dir / heldout.MEMBERSHIP_FILENAME, salt, result, heldout.receipt_binding_sha256(receipt))
     finally:
         del os.environ["V4_A3_HELDOUT_TEST_SALT_HEX_ONLY"]
@@ -719,20 +722,24 @@ def test_reissue_refuses_a_changed_assignment_commitment(tmp_path: Path) -> None
     old_receipt, membership_path = _generate_sealed_receipt(tmp_path, "11" * 32)
     new_receipt = copy.deepcopy(old_receipt)
     new_receipt["heldout_partition_seal"]["assignment_algorithm"]["assignment_commitment_sha256"] = "0" * 64
-    with pytest.raises(reissue.ReissueError, match="reseal, not a reissue"):
+    before = membership_path.read_bytes()
+    with pytest.raises(heldout.AssignmentError, match="unknown receipt or incomplete manifest"):
         reissue.reissue_private_artifact(
             membership_path, old_receipt, new_receipt, sorted(f["family_id"] for f in old_receipt["source_family_registry"]["families"]), EMPTY_A2_RECEIPT, EMPTY_MANIFEST
         )
+    assert membership_path.read_bytes() == before
 
 
 def test_reissue_refuses_a_changed_family_registry(tmp_path: Path) -> None:
     old_receipt, membership_path = _generate_sealed_receipt(tmp_path, "22" * 32)
     new_receipt = copy.deepcopy(old_receipt)
     new_receipt["source_family_registry"]["families"][0]["member_source_unit_ids"].append("a-new-unit")
-    with pytest.raises(reissue.ReissueError, match="reseal, not a reissue"):
+    before = membership_path.read_bytes()
+    with pytest.raises(heldout.AssignmentError, match="unknown receipt or incomplete manifest"):
         reissue.reissue_private_artifact(
             membership_path, old_receipt, new_receipt, sorted(f["family_id"] for f in old_receipt["source_family_registry"]["families"]), EMPTY_A2_RECEIPT, EMPTY_MANIFEST
         )
+    assert membership_path.read_bytes() == before
 
 
 def test_reissue_succeeds_and_rebinds_when_membership_is_provably_unchanged(tmp_path: Path) -> None:

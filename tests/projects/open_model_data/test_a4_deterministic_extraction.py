@@ -215,7 +215,18 @@ def _sealed_receipt(salt: bytes, family_ids: list[str]) -> tuple[dict, dict]:
     return receipt, result
 
 
+@pytest.fixture(autouse=True)
+def _fixed_synthetic_provenance_resources():
+    from _v4_provenance_resource_fixture import synthetic_resources
+
+    with synthetic_resources():
+        yield
+
+
 def _write_seal_receipt(tmp_path: Path, receipt: dict, name: str = "seal_receipt.json") -> Path:
+    from _v4_provenance_resource_fixture import ACTIVE
+
+    ACTIVE.get().install_seal(receipt, tmp_path)
     path = tmp_path / name
     path.write_text(json.dumps(receipt))
     return path
