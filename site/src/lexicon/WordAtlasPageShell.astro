@@ -100,3 +100,12 @@ const { state } = Astro.props as Props;
     <p><button type="button" data-word-atlas-retry>Оновити</button></p>
   </div>
 )}
+
+<script>
+  import { mountAtlasPronunciation, unmountAtlasPronunciation } from "../lib/lexicon/pronunciation-player";
+  mountAtlasPronunciation();
+  document.addEventListener("astro:page-load", mountAtlasPronunciation);
+  document.addEventListener("astro:before-swap", unmountAtlasPronunciation);
+  window.addEventListener("pagehide", unmountAtlasPronunciation);
+  window.addEventListener("pageshow", mountAtlasPronunciation);
+</script>

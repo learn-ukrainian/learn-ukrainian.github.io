@@ -26,6 +26,7 @@ import { morphologyFormCountLabel } from "../lib/lexicon/register-markers";
 import ChromeText from "../lib/i18n/ChromeText";
 import { CHROME_STRINGS } from "../lib/i18n/chrome";
 import styles from "./WordAtlasArticle.module.css";
+import PronunciationPlayer from "../components/PronunciationPlayer";
 
 export interface WordAtlasArticleProps {
   record: EntryRecord;
@@ -243,6 +244,7 @@ export default function WordAtlasArticle({
               {entry.lemma}
               {headerStress && <span className="word-stress">{`[${headerStress}]`}</span>}
             </h1>
+            <PronunciationPlayer lemma={entry.lemma} />
             <div className="word-pos">
               {[posLabel, headwordIpa, entry.gloss ? `«${entry.gloss}»` : null].filter(Boolean).join(" · ")}
             </div>

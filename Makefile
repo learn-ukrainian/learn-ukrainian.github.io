@@ -83,3 +83,14 @@ open-dataset:
 
 open-dataset-publish: open-dataset
 	$(PYTHON) scripts/open_dataset/publish.py
+
+# Local neural pronunciation slice; hard generator cap: 500 eligible lemmas.
+PRONUNCIATION_LIMIT ?= 200
+.PHONY: pronunciation-audio pronunciation-setup
+pronunciation-setup:
+	$(PYTHON) -m pip install --target batch_state/tts-runtime piper-tts==1.3.0 marisa-trie==1.4.1 PyYAML==6.0.3
+	$(PYTHON) -m pip install --target batch_state/tts-runtime --no-deps ukrainian-word-stress==2.1.0
+
+pronunciation-audio:
+	npm --prefix site run hydrate:practice
+	$(PYTHON) -m scripts.audio.generate_pronunciation --limit $(PRONUNCIATION_LIMIT) --download-model

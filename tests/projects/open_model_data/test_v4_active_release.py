@@ -145,5 +145,5 @@ def test_exact_wheel_active_resources_outside_checkout(isolated_install, externa
     assert result.returncode == 0, result.stderr
     proof = json.loads(result.stdout)
     assert proof["profile"] == PROFILE_RAW_SHA256
-    assert proof["public_commit"] == subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+    assert proof["public_commit"] == subprocess.check_output(["git", "rev-parse", "HEAD"], text=True, timeout=10).strip()
     print(result.stdout.strip())

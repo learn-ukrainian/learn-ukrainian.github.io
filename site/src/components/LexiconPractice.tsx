@@ -893,6 +893,7 @@ function displayPracticeForm(value: string, learnerLevel: CefrLevel): string {
 function cardData(entry: PracticeLexeme, learnerLevel: CefrLevel, chromeLocale: 'en' | 'uk') {
   return {
     front: displayPracticeForm(entry.lemma, learnerLevel),
+    pronunciationLemma: entry.lemmaPlain,
     back: entry.gloss,
     subtitle: entry.ipa ?? entry.pos ?? undefined,
     tag: entry.cefr ?? undefined,
