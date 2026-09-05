@@ -196,11 +196,11 @@ class RuntimeResources:
         ]:
             path = root / (role + ".dsn")
             path.write_text(make_conninfo(pg.info.dsn, user=role))
-            path.chmod(0o600)
+            path.chmod(0o400)
             monkeypatch.setattr(module, attribute, lambda path=path: path)
         key = root / "provider.json"
         key.write_text('{"credential":"source-free-fixture"}')
-        key.chmod(0o600)
+        key.chmod(0o400)
         monkeypatch.setattr(service_runtime, "provider_credential_path", lambda harness: key)
         monkeypatch.setattr(sources_handlers, "_backend", LexicalResources())
         listener = socket.socket()

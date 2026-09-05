@@ -8,6 +8,7 @@ from pathlib import Path
 import psycopg
 from psycopg.rows import dict_row
 
+from learn_ukrainian_v4_runtime import credential_custody as custody
 from learn_ukrainian_v4_runtime import v4_canonical_authority_store as records
 from learn_ukrainian_v4_runtime.operation_auth import OperationRefused
 
@@ -24,10 +25,16 @@ class ScopedAuthorityStore:
     authority = Authority.PG
 
     def __init__(self, *, write: bool = False):
-        path = control_credential_path()
-        if not path.is_file() or path.is_symlink() or path.stat().st_mode & 0o077:
-            raise OperationRefused("scoped_control_credential_required")
-        self.connection = psycopg.connect(path.read_text().strip(), autocommit=True, row_factory=dict_row)
+        # The unit's own systemd credential: owner-private, or root-owned with
+        # an access ACL naming only this service uid (kernel ACL semantics,
+        # descriptor-bound; see credential_custody).
+        try:
+            dsn = custody.read_credential(control_credential_path()).decode("utf-8").strip()
+        except (OSError, custody.CredentialCustodyError) as exc:
+            raise OperationRefused("scoped_control_credential_required") from exc
+        except UnicodeDecodeError:
+            raise OperationRefused("scoped_control_credential_required") from None
+        self.connection = psycopg.connect(dsn, autocommit=True, row_factory=dict_row)
         principal = self.connection.execute("SELECT current_user AS principal").fetchone()["principal"]
         if principal != "hramatka_v4_control_writer":
             self.connection.close()

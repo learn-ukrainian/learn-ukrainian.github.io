@@ -7,10 +7,8 @@ parsing, artifact insertion and terminalization stay in this parent process.
 
 from __future__ import annotations
 
-import os
-import stat
-
 from learn_ukrainian_v4_runtime import child_runtime
+from learn_ukrainian_v4_runtime import credential_custody as custody
 from learn_ukrainian_v4_runtime import v4_canonical_authority_store as authority
 from learn_ukrainian_v4_runtime import v4_trust_authority as trust
 from learn_ukrainian_v4_runtime.execution_identity import VerifiedReleaseProvider, execution_identity
@@ -183,36 +181,18 @@ def _provider_credential(harness: str) -> child_runtime.ProviderCredential:
     # Qualify the fixed adapter BEFORE reading its sole systemd credential.
     # Neither request fields nor the payload can select the file or the mode.
     mode = child_runtime.credential_mode(child_runtime.load_profile(), harness)
-    fd = None
+    # Descriptor-bound, ACL-aware custody (owner-private or root-owned with an
+    # ACL naming only this service uid) with the same size and before/after
+    # identity protections as before; see credential_custody.
     try:
-        fd = os.open(provider_credential_path(harness), os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC)
-        before = os.fstat(fd)
-        if (
-            not stat.S_ISREG(before.st_mode)
-            or before.st_uid not in (0, os.geteuid())
-            or before.st_mode & 0o077
-            or not 0 < before.st_size <= child_runtime.MAX_CREDENTIAL_BYTES
-        ):
-            raise OperationRefused("provider_credential_file")
-        chunks = bytearray()
-        while len(chunks) <= child_runtime.MAX_CREDENTIAL_BYTES:
-            chunk = os.read(fd, child_runtime.MAX_CREDENTIAL_BYTES + 1 - len(chunks))
-            if not chunk:
-                break
-            chunks.extend(chunk)
-        after = os.fstat(fd)
-        if before.st_size != len(chunks) or (before.st_size, before.st_mtime_ns, before.st_ctime_ns) != (
-            after.st_size,
-            after.st_mtime_ns,
-            after.st_ctime_ns,
-        ):
-            raise OperationRefused("provider_credential_file_changed")
-        return child_runtime.parse_provider_credential(bytes(chunks), harness=harness, mode=mode)
+        raw = custody.read_credential(provider_credential_path(harness), max_bytes=child_runtime.MAX_CREDENTIAL_BYTES)
+    except custody.CredentialCustodyError as exc:
+        if exc.code == "credential_changed":
+            raise OperationRefused("provider_credential_file_changed") from None
+        raise OperationRefused("provider_credential_file") from None
     except OSError:
         raise OperationRefused("provider_credential_file") from None
-    finally:
-        if fd is not None:
-            os.close(fd)
+    return child_runtime.parse_provider_credential(raw, harness=harness, mode=mode)
 
 
 def provider_credential_path(harness: str):

@@ -206,7 +206,7 @@ def _patch_authority_plane(monkeypatch: pytest.MonkeyPatch, module: Any, tmp_pat
     _OWNED_PG.execute("ALTER ROLE hramatka_v4_control_writer LOGIN")
     path = tmp_path / "control.dsn"
     path.write_text(make_conninfo(_OWNED_PG.info.dsn, user="hramatka_v4_control_writer"))
-    path.chmod(0o600)
+    path.chmod(0o400)
     monkeypatch.setattr(scoped_store, "control_credential_path", lambda: path)
 
 
@@ -548,23 +548,25 @@ def test_load_production_signing_key_refuses_an_unknown_role() -> None:
         trust.load_production_signing_key("not-a-real-role")
 
 
+def _provision_flattened_key(namespace: Path, role: str, private: str, key_id: str) -> None:
+    """systemd's flattened ``v4-signing-keys_<role>.key[_id]`` credential names, owner-private."""
+    for suffix, value in ((".key", private), (".key_id", key_id)):
+        path = namespace / f"{trust.SIGNING_KEY_CREDENTIAL}_{role}{suffix}"
+        path.write_text(value, encoding="utf-8")
+        path.chmod(0o400)
+
+
 def test_load_production_signing_key_refuses_a_malformed_provisioned_key(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(trust, "HRAMATKA_SIGNING_KEY_ROOT", tmp_path)
-    (tmp_path / "fleet_execution.key").write_text("not-hex", encoding="utf-8")
-    (tmp_path / "fleet_execution.key_id").write_text("k1", encoding="utf-8")
-    (tmp_path / "fleet_execution.key").chmod(0o600)
-    (tmp_path / "fleet_execution.key_id").chmod(0o600)
+    monkeypatch.setattr(trust, "HRAMATKA_CREDENTIAL_NAMESPACE", tmp_path)
+    _provision_flattened_key(tmp_path, "fleet_execution", "not-hex", "k1")
     with pytest.raises(trust.TrustAuthorityError, match="32 raw bytes"):
         trust.load_production_signing_key("fleet_execution")
 
 
 def test_load_production_signing_key_succeeds_once_provisioned(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(trust, "HRAMATKA_SIGNING_KEY_ROOT", tmp_path)
+    monkeypatch.setattr(trust, "HRAMATKA_CREDENTIAL_NAMESPACE", tmp_path)
     priv, _pub = trust.generate_test_keypair()
-    (tmp_path / "fleet_execution.key").write_text(priv, encoding="utf-8")
-    (tmp_path / "fleet_execution.key_id").write_text("prod-key-1", encoding="utf-8")
-    (tmp_path / "fleet_execution.key").chmod(0o600)
-    (tmp_path / "fleet_execution.key_id").chmod(0o600)
+    _provision_flattened_key(tmp_path, "fleet_execution", priv, "prod-key-1")
     got_priv, got_key_id = trust.load_production_signing_key("fleet_execution")
     assert got_priv == priv
     assert got_key_id == "prod-key-1"

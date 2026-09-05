@@ -125,7 +125,7 @@ def test_parent_reads_only_selected_typed_file(tmp_path, monkeypatch, plan_profi
     monkeypatch.setattr(child, "load_profile", lambda: profile)
     selected = tmp_path / harness
     selected.write_text(json.dumps(payload(harness, mode)))
-    selected.chmod(0o600)
+    selected.chmod(0o400)
     reads = []
 
     def path(selected_harness):
@@ -293,7 +293,7 @@ def test_credential_file_boundary(tmp_path, monkeypatch, plan_profile, mutation)
         os.mkfifo(path)
     elif mutation != "missing":
         path.write_bytes(b"x" * 65537 if mutation == "oversize" else b"{}")
-        path.chmod(0o644 if mutation == "permissions" else 0o600)
+        path.chmod(0o644 if mutation == "permissions" else 0o400)
     monkeypatch.setattr(child, "load_profile", lambda: plan_profile)
     monkeypatch.setattr(service, "provider_credential_path", lambda _: path)
     before = set(os.listdir("/proc/self/fd"))
@@ -377,7 +377,7 @@ def test_actual_source_free_bwrap_transport(tmp_path, monkeypatch, native_profil
     selected = tmp_path / ("v4-provider-" + harness)
     original = json.dumps(payload(harness, mode)).encode()
     selected.write_bytes(original)
-    selected.chmod(0o600)
+    selected.chmod(0o400)
 
     def selected_path(name):
         assert name == harness
@@ -509,7 +509,7 @@ def test_credential_does_not_enter_digests_or_mutate_profile(monkeypatch, native
 def test_invalid_parent_payload_closes_file(tmp_path, monkeypatch, plan_profile):
     selected = tmp_path / "selected"
     selected.write_bytes(b'{"credential":"synthetic-secret","credential":"duplicate"}')
-    selected.chmod(0o600)
+    selected.chmod(0o400)
     monkeypatch.setattr(child, "load_profile", lambda: plan_profile)
     monkeypatch.setattr(service, "provider_credential_path", lambda _: selected)
     before = set(os.listdir("/proc/self/fd"))
