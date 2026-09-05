@@ -1,12 +1,12 @@
 [Unit]
-Description=Learn Ukrainian Git worktree garbage collection (report-only default)
+Description=Learn Ukrainian Git worktree garbage collection
 After=network.target
 
 [Service]
 Type=oneshot
 WorkingDirectory=@REPO_ROOT@
 Environment=PYTHONUNBUFFERED=1
-ExecStart=/usr/bin/env bash @REPO_ROOT@/scripts/orchestration/run_scheduled_worktree_cleanup.sh --repo-root @REPO_ROOT@
+ExecStart=/usr/bin/env bash @REPO_ROOT@/scripts/orchestration/run_scheduled_worktree_cleanup.sh --repo-root @REPO_ROOT@ --apply
 
 [Install]
 WantedBy=default.target

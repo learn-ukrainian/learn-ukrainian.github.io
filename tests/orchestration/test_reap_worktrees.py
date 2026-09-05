@@ -1008,6 +1008,7 @@ def test_merged_pr_head_must_match_worktree_head(
 ) -> None:
     repo = init_repo(tmp_path)
     worktree = add_worktree(repo, "codex/mismatched")
+    git(worktree, "push", "-u", "origin", "codex/mismatched")
     patch_gh(
         monkeypatch,
         {"codex/mismatched": [{"number": 10, "state": "MERGED", "headRefOid": "0" * 40}]},
@@ -1020,6 +1021,36 @@ def test_merged_pr_head_must_match_worktree_head(
 
     assert result.action == "skipped"
     assert worktree.exists()
+
+
+def test_merged_pr_mismatched_head_origin_gone_is_removed(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    branch = "codex/merged-reconcile"
+    worktree = add_worktree(repo, branch)
+    pr_head = git(worktree, "rev-parse", "HEAD")
+    git(worktree, "push", "-u", "origin", branch)
+    (worktree / "reconcile.txt").write_text("local reconcile\n", encoding="utf-8")
+    git(worktree, "add", "reconcile.txt")
+    git(worktree, "commit", "-m", "reconcile after squash merge")
+    git(repo, "push", "origin", "--delete", branch)
+    patch_gh(
+        monkeypatch,
+        {branch: [{"number": 10, "state": "MERGED", "headRefOid": pr_head}]},
+    )
+
+    result = result_for(
+        rw.reap_worktrees(repo_root=repo, apply=True, safe_only=True),
+        worktree,
+    )
+
+    assert result.action == "removed"
+    assert "MERGED" in result.reason
+    assert "origin branch gone" in result.reason
+    assert not worktree.exists()
+    assert_main_checkout_unchanged(repo)
 
 
 def test_closed_pr_requires_matching_worktree_head(
@@ -2128,6 +2159,8 @@ def test_aged_build_worktree_is_still_reaped_when_no_pr_is_open(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, label: str, pr_state
 ) -> None:
     """The guard must not make aged build worktrees unreapable."""
+    # Keep the MERGED case on the build-age path, not the gone-origin path.
+    monkeypatch.setattr(rw, "_origin_branch_present", lambda _p, _b: True)
     monkeypatch.setattr(rw, "_worktree_age_hours", lambda _p, now=None: 99.0)
 
     reason = _build_branch_reason(tmp_path, pr_state=pr_state, pr_unknown=False)

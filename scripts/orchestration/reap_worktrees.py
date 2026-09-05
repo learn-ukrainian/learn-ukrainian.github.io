@@ -719,8 +719,13 @@ def _qualifying_reason(
     """
     if pr_state is not None:
         pr_label = f"PR #{pr_state.number}" if pr_state.number is not None else "PR"
-        if pr_state.state == "MERGED" and _pr_matches_worktree_head(info, pr_state):
-            return f"{pr_label} MERGED"
+        if pr_state.state == "MERGED":
+            if _pr_matches_worktree_head(info, pr_state):
+                return f"{pr_label} MERGED"
+            # Squash merges may leave extra local reconcile commits. A gone
+            # origin branch permits cleanup without an exact PR-head match.
+            if info.branch is not None and not _origin_branch_present(info.path, info.branch):
+                return f"{pr_label} MERGED; origin branch gone"
         if (
             not merged_pr_only
             and pr_state.state == "CLOSED"
@@ -1666,7 +1671,19 @@ def format_text_results(results: list[ReapResult], *, apply: bool) -> str:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Safely reap completed git worktrees under .worktrees/.",
+        description=(
+            "Safely reap completed git worktrees under .worktrees/.\n"
+            "Use for completed-work cleanup; active or unverifiable worktrees are preserved."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.orchestration.reap_worktrees --dry-run\n"
+            "  .venv/bin/python -m scripts.orchestration.reap_worktrees --apply --merged\n"
+            "Outputs: removal results; apply writes local journals and recovery refs.\n"
+            "Exit codes: 0 on success; nonzero on errors.\n"
+            "Related: docs/runbooks/worktree-cleanup.md; issue #7724."
+        ),
     )
     parser.add_argument(
         "--repo-root",
@@ -1725,7 +1742,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--merged",
         action="store_true",
         help=(
-            "Restrict cleanup to exact MERGED PR heads and enable branch "
+            "Restrict cleanup to MERGED PRs with matching heads or gone origin branches; enable branch "
             "pruning. Dirty trees remain untouched unless "
             "--preserve-then-reap is explicit."
         ),

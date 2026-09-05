@@ -59,10 +59,10 @@ runner, and orchestrator hosts).
 
 - **Frequency**: Daily (`OnCalendar=daily`, `RandomizedDelaySec=1800`, `Persistent=true`).
 - **What it does**: Runs `scripts/orchestration/run_scheduled_worktree_cleanup.sh` to prune stale worktree registrations, clean up merged/closed PR branches, and run automatic git maintenance with receipt logging.
-- **Default mode**: Report-only (dry-run). The underlying script defaults to dry-run unless `--apply` is explicitly passed.
-- **Dry-run → Apply promotion**: To enable active pruning, edit `~/.config/systemd/user/learn-ukrainian-worktree-gc.service` to append `--apply`:
-  ```ini
-  ExecStart=/usr/bin/env bash @REPO_ROOT@/scripts/orchestration/run_scheduled_worktree_cleanup.sh --repo-root @REPO_ROOT@ --apply
+- **Default mode**: Apply. The shipped unit passes `--apply`, matching macOS launchd. The reaper stays fail-closed for OPEN PRs, live working directories, dirty worktrees, and unreadable GitHub state.
+- **Disable automatic reaping**: Set `LU_REAPER_DISABLED=1` in the user unit environment to stop automatic reaps, or `LU_REAPER_TERMINAL_DISPATCHES=0` to disable only the optional terminal-dispatch class. Reload systemd after changing the unit:
+  ```bash
+  systemctl --user daemon-reload
   ```
 - **Enable command**:
   ```bash

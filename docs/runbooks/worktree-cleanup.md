@@ -1,7 +1,7 @@
 # Worktree cleanup
 
-This runbook covers immediate post-merge cleanup and the local macOS Git
-hygiene backstop for both Learn Ukrainian repositories.
+This runbook covers immediate post-merge cleanup and the local Linux systemd and macOS launchd Git
+hygiene backstops for both Learn Ukrainian repositories.
 
 ## Shared Python environment
 
@@ -26,7 +26,8 @@ environment residue.
 Cleanup is fail-closed. A worktree is preserved when any of these is true:
 
 - its pull request is open;
-- its pull-request head does not exactly match the worktree HEAD;
+- its pull-request head does not exactly match the worktree HEAD, unless the PR
+  is `MERGED` and the origin branch is gone;
 - its task is active or non-terminal;
 - a live process has a working directory inside it;
 - it is dirty, locked, outside the repository's `.worktrees/` subtree, or its
@@ -41,7 +42,9 @@ pointers are reported as recovery candidates and are never deleted
 automatically.
 
 P0 automatic reaping includes clean `.worktrees/` checkouts whose GitHub PR is
-`MERGED` at the exact local head. The scheduled job also enables a separately
+`MERGED` at the exact local head, or whose PR is `MERGED` and origin branch is
+gone despite extra local reconcile commits after a squash merge. All P0 guards
+still apply. The scheduled job also enables a separately
 guarded terminal-dispatch class: only worktrees below `.worktrees/dispatch/`
 whose task record is explicitly `done`, `failed`, or `no_deliverable`, whose PID
 is dead, whose active-task and live-CWD probes are available and clear, and
@@ -124,7 +127,7 @@ cd "$PRIMARY_REPO"
   --worktree "$EXACT_WORKTREE_PATH"
 ```
 
-The command revalidates GitHub PR state, the exact PR-head SHA, local HEAD,
+The command validates GitHub PR state, PR-head or origin-branch-gone evidence, local HEAD,
 cleanliness, task state, and process activity. A skipped result is a blocker,
 not permission to retry with `--force`.
 
@@ -168,7 +171,8 @@ Each run performs the following in both repository roots:
 1. fetches `origin` and prunes deleted remote refs;
 2. prunes stale Git worktree registrations;
 3. automatically removes only clean, inactive worktrees with exact merged-PR
-   head evidence (including same-tree squash siblings), plus the terminal-dispatch
+   head evidence (including same-tree squash siblings) or MERGED PR evidence with
+   the origin branch gone, plus the terminal-dispatch
    class described above; open or GitHub-unknown PR state remains a hard skip;
 4. deletes origin heads whose GitHub PR is MERGED or CLOSED at the exact live
    origin SHA (`ls-remote` + `--force-with-lease`), or whose tip is already an
@@ -192,6 +196,13 @@ unmerged branch heads remain untouched.
 
 An unavailable fetch or process-activity probe blocks apply for that
 repository. Standard output contains the same summary as the receipt.
+
+## Linux systemd default
+
+The shipped `packaging/systemd/learn-ukrainian-worktree-gc.service` passes
+`--apply`, the same as macOS launchd. Its daily timer uses the existing cleanup
+wrapper and P0 reaper; this adds no daemon or cleanup class. See
+`packaging/systemd/README.md` for enable and disable instructions.
 
 ## Inspect the LaunchAgent
 
@@ -272,4 +283,3 @@ not match `sweep_review_temp_orphans` and will refill the disk within hours.
 The scheduled git-hygiene runner (`scheduled_worktree_cleanup.py`) invokes the same
 sweep after the review-temp reaper. Age gates: 2h normally, 30m when free space is
 under 15 GiB. Live process paths are skipped.
-
