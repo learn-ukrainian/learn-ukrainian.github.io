@@ -87,6 +87,7 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from learn_ukrainian_v4_runtime.provenance import validation_session
 from learn_ukrainian_v4_runtime.resources import resource_root
 
 ROOT = resource_root()
@@ -462,6 +463,7 @@ def validate_bindings_hash_to_disk(receipt: dict[str, Any], root: Path) -> None:
         )
 
 
+@validation_session
 def validate_receipt_independently(receipt: dict[str, Any], root: Path = ROOT) -> None:
     """Run every salt-independent check that does not trust a declared field
     at face value: algorithm metadata/hash, pool counts, the access-firewall

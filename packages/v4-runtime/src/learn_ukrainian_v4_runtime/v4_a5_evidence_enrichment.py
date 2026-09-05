@@ -81,6 +81,7 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from learn_ukrainian_v4_runtime.provenance import validation_session
 from learn_ukrainian_v4_runtime.resources import resource_root
 
 try:
@@ -817,6 +818,7 @@ def validate_residuals_carried_from_a2_and_a4(receipt: dict[str, Any]) -> None:
     )
 
 
+@validation_session
 def validate_receipt_independently(receipt: dict[str, Any], root: Path = ROOT) -> None:
     validate_algorithm_metadata(receipt)
     from learn_ukrainian_v4_runtime.provenance import validate_receipt_bindings

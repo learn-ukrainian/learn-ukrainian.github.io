@@ -126,6 +126,10 @@ def verify_current_identity() -> dict:
 
 def validate_package_bindings(receipt: dict) -> None:
     """Validate one exact built-in receipt AND the entire fixed binding closure."""
+    scope = _validation_scope.get()
+    fingerprint = _sha(_canonical(receipt))
+    if scope is not None and fingerprint in scope:
+        return
     identity = verify_current_identity()
     manifest = _json(_read(MANIFEST))
     spec = _json(_read(SPEC))
@@ -225,6 +229,12 @@ def validate_package_bindings(receipt: dict) -> None:
         "A3 frozen descriptor changed",
     )
 
+    if scope is not None:
+        # All built-in receipts and their complete bindings were verified above.
+        scope.update(
+            {_sha(_canonical(_json(_read(item["resource"]), canonical=False))): True for item in manifest["receipts"]}
+        )
+
 
 def validate_receipt_bindings(receipt, root, repository_validator):
     """Dispatch by explicit resource type; repository validation stays strict."""
@@ -232,3 +242,26 @@ def validate_receipt_bindings(receipt, root, repository_validator):
         validate_package_bindings(receipt)
     else:
         repository_validator(receipt, root)
+
+
+# One immutable installed release is verified once per nested validation call
+# tree. The context ends before the next operation; policy is never cached.
+# This avoids re-hashing the entire release for every node of A13's upstream DAG.
+from contextvars import ContextVar
+from functools import wraps
+
+_validation_scope = ContextVar("v4_package_validation_scope", default=None)
+
+
+def validation_session(function):
+    @wraps(function)
+    def validate(*args, **kwargs):
+        if _validation_scope.get() is not None:
+            return function(*args, **kwargs)
+        token = _validation_scope.set({})
+        try:
+            return function(*args, **kwargs)
+        finally:
+            _validation_scope.reset(token)
+
+    return validate

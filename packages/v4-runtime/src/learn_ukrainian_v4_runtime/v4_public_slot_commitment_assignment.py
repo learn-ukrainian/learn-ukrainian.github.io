@@ -80,6 +80,7 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from learn_ukrainian_v4_runtime.provenance import validation_session
 from learn_ukrainian_v4_runtime.resources import resource_root
 
 _SELF_ROOT = resource_root()
@@ -681,6 +682,7 @@ def validate_eligibility_and_safety(receipt: dict[str, Any]) -> None:
     )
 
 
+@validation_session
 def validate_receipt_independently(receipt: dict[str, Any], root: Path = ROOT) -> None:
     from learn_ukrainian_v4_runtime.provenance import validate_receipt_bindings
 
