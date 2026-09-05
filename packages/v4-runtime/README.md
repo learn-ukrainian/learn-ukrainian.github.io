@@ -13,6 +13,75 @@ The service fixes native reasoning effort by role: original-row authors use
 medium, and independent row reviewers use high. Both native CLI invocations
 receive explicit effort arguments; requests cannot select another effort.
 
+## Native provider credentials
+
+The parent reads only its harness-selected `v4-provider-claude` or
+`v4-provider-codex` systemd credential, after checking the fixed reviewed child
+profile. Requests cannot supply credentials, paths, modes, models or effort.
+No adapter is qualified in the shipped profile; these interfaces do not enable
+execution or admission and do not qualify an installed native CLI.
+
+Adapters may explicitly set `credential_mode` to `api_key` or `subscription`.
+The existing profile shape without that field means legacy API-key transport
+only, with its exact provider environment name. Mode/environment mismatches
+fail closed. There is no subscription-to-API-key fallback.
+
+| Harness | Mode | Required `provider_env` | Typed payload value |
+| --- | --- | --- | --- |
+| Claude | `api_key` | `ANTHROPIC_API_KEY` | `credential` string |
+| Codex | `api_key` | `OPENAI_API_KEY` | `credential` string |
+| Claude | `subscription` | `CLAUDE_CODE_OAUTH_TOKEN` | `access_token` string |
+| Codex | `subscription` | JSON `null` | `auth_json` string containing selected native JSON bytes |
+
+Typed payloads contain exactly `schema: "hramatka-v4-provider-credential.v1"`,
+`harness`, `mode`, and the listed value field. Subscription payloads additionally
+require `expires_at`, an integer Unix timestamp in seconds at least 60 seconds
+in the future. The legacy `{ "credential": "..." }` payload is accepted only
+for an API-key profile. Credential files must be regular, non-symlink, owned
+by the service user or root, inaccessible to group/others, and at most 64 KiB.
+Duplicate JSON keys, extra fields, invalid types and file changes during reads
+are refused. Token strings are bounded printable ASCII without whitespace.
+
+Codex `auth_json` requires `auth_mode: "chatgpt"` and exactly one `tokens`
+object with `id_token`, `access_token`, `refresh_token` and `account_id`.
+Only optional `OPENAI_API_KEY: null` and an already elapsed, timezone-aware
+`last_refresh` timestamp are accepted alongside those fields. Both JWTs must
+have a structurally valid RS256 header and a positive bounded integer `exp`.
+The access token must be fresh; a cached identity token may have expired while
+the access token remains valid. This is schema/freshness validation, not
+signature verification or proof of provider acceptance. Expired access or
+incompatible credentials require operator action;
+the package adds no credential provisioning or refresh service.
+
+Claude receives only its selected OAuth access token, without a provider-home
+copy. Codex receives the validated UTF-8 auth bytes via a sealed anonymous Linux
+memfd and bwrap `--ro-bind-data`, read-only at `CODEX_HOME/auth.json` inside the
+blank disposable home. The libc memfd interface also supports Python builds
+without the corresponding `os` wrapper. The FD closes in the parent after
+launch, including launch failure, and is consumed by bwrap before native exec.
+No host auth path is mounted and child writes cannot mutate host credentials.
+Codex is explicitly configured to use file credential storage, consistent with
+the [native authentication documentation](https://learn.chatgpt.com/docs/auth#credential-storage).
+Native refresh/write compatibility remains part of later protected-unit
+qualification; the read-only selected auth file must not be relaxed implicitly.
+
+The same reviewed, hash-pinned adapter file list may include only the exact
+network data destinations `/etc/resolv.conf` and
+`/etc/ssl/certs/ca-certificates.crt` outside the existing runtime/library paths.
+Each must be a separately verified regular file mounted read-only. No host
+`/etc` directory, arbitrary configuration, proxy environment or home is exposed.
+Actual resolver and TLS behavior remains part of protected-unit qualification.
+
+Credential values are excluded from representations and argv. The argv digest
+uses an opaque descriptor placeholder and never hashes auth bytes. Captures
+containing a selected token, selected auth JSON, or Sources capability are
+refused before artifact retention or digesting. This check detects literal
+disclosure, including across pipe reads; it is not a general detector for
+arbitrary encodings or transformations by a compromised adapter. Immutable
+adapter qualification remains required. Synthetic tests exercise both modes
+for both harnesses in the actual source-free bwrap closure, with denial and
+cleanup cases. They do not establish actual-unit/provider qualification.
+
 ## Build and test
 
 Use the interpreter specified by the dispatch contract. Set
