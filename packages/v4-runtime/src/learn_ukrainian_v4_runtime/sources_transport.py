@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import contextvars
 import json
+import os
 from contextlib import contextmanager
 from pathlib import Path
 
@@ -14,16 +15,45 @@ from starlette.responses import Response
 from learn_ukrainian_v4_runtime.operation_auth import OperationRefused, canonical_bytes, digest
 
 ACTIVE_ATTEMPT = contextvars.ContextVar("v4_sources_active_attempt", default=None)
+SOURCES_UNIT = "learn-ukrainian-sources.service"
+CREDENTIAL_NAME = "v4-sources-dsn"
+
+
+def credential_namespaces(uid: int | None = None) -> tuple[Path, Path]:
+    """The two systemd credential directories the Sources unit can legitimately own.
+
+    systemd places ``LoadCredential=`` files under ``/run/credentials/<unit>`` for a
+    system-manager unit and under ``/run/user/<uid>/credentials/<unit>`` for a unit of
+    that uid's per-user manager. The existing Sources unit is a per-user unit, so the
+    system path alone would never resolve there.
+    """
+    uid = os.getuid() if uid is None else uid
+    return (
+        Path("/run/credentials") / SOURCES_UNIT,
+        Path("/run/user") / str(uid) / "credentials" / SOURCES_UNIT,
+    )
+
+
+def credential_directory() -> Path:
+    """``$CREDENTIALS_DIRECTORY`` as set by the manager, accepted only when it is one of
+    this unit's own credential namespaces; an unset, relative or foreign path refuses."""
+    raw = os.environ.get("CREDENTIALS_DIRECTORY", "")
+    if raw not in {str(namespace) for namespace in credential_namespaces()}:
+        raise OperationRefused("Sources scoped credential unavailable")
+    return Path(raw)
 
 
 def credential_path() -> Path:
-    return Path("/run/credentials/learn-ukrainian-sources.service/v4-sources-dsn")
+    return credential_directory() / CREDENTIAL_NAME
 
 
 @contextmanager
 def sources_connection():
     path = credential_path()
-    if not path.is_file() or path.is_symlink() or path.stat().st_mode & 0o077:
+    if path.is_symlink() or not path.is_file():
+        raise OperationRefused("Sources scoped credential unavailable")
+    status = path.stat()
+    if status.st_mode & 0o077 or status.st_uid != os.getuid():
         raise OperationRefused("Sources scoped credential unavailable")
     with psycopg.connect(path.read_text().strip(), autocommit=True, row_factory=dict_row) as conn:
         if conn.execute("SELECT current_user AS principal").fetchone()["principal"] != "hramatka_v4_sources_writer":
@@ -43,7 +73,7 @@ def resolve_attempt(token: str) -> dict | None:
             result = json.loads(row["record"])
             result["capability_token"] = token
             return result
-    except (OSError, ValueError, psycopg.Error):
+    except (OSError, ValueError, OperationRefused, psycopg.Error):
         return None
 
 
