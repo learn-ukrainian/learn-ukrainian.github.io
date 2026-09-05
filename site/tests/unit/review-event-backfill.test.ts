@@ -18,8 +18,10 @@ import {
   foldReviewEventsToCards,
   loadReviewEventLog,
   mintUlid,
+  resetReviewEventDurableStateForTests,
   resetReviewEventEntropy,
   reviewEventCardKey,
+  setReviewEventIdbDriverForTests,
   type ReviewEvent,
 } from '@site/src/lib/lexicon/review-events';
 import {
@@ -107,6 +109,8 @@ function orphanCard(overrides: Partial<CardState> = {}): CardState {
 beforeEach(() => {
   localStorage.clear();
   resetReviewEventEntropy();
+  resetReviewEventDurableStateForTests();
+  setReviewEventIdbDriverForTests(null);
   loadState(localStorage, NOW);
 });
 

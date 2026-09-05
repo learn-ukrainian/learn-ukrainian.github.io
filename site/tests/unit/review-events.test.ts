@@ -9,16 +9,25 @@ import {
   FSRS_PARAMS_VERSION,
   REVIEW_EVENTS_SCHEMA,
   REVIEW_EVENTS_STORAGE_KEY,
+  REVIEW_EVENTS_IDB_MIGRATED_KEY,
+  REVIEW_EVENTS_MAX_RETAINED,
   appendReviewEvent,
   canonicalReplayOrder,
+  createMemoryReviewEventIdbDriver,
+  ensureReviewEventLogReady,
   exportReviewEventLog,
   foldReviewEventsToCards,
   loadReviewEventLog,
+  migrateReviewEventsLocalStorageToIdb,
   mintDeterministicUlid,
   mintUlid,
+  persistReviewEventLogWithOverflow,
   recordCardReviewEvent,
+  resetReviewEventDurableStateForTests,
   resetReviewEventEntropy,
   reviewEventCardKey,
+  setReviewEventIdbDriverForTests,
+  trimReviewEventLog,
   upsertReviewEvents,
   type ReviewEvent,
 } from '@site/src/lib/lexicon/review-events';
@@ -66,6 +75,8 @@ class EventWriteFailingStorage extends MemoryStorage {
 beforeEach(() => {
   localStorage.clear();
   resetReviewEventEntropy();
+  resetReviewEventDurableStateForTests();
+  setReviewEventIdbDriverForTests(null);
   loadState(localStorage, NOW);
 });
 
@@ -202,5 +213,158 @@ describe('rateCard records the §10.1 log', () => {
     expect(card.reps).toBe(1);
     expect(loadReviewEventLog(storage).events).toHaveLength(0);
     expect(JSON.parse(storage.getItem('lu-lexicon-srs') ?? '{}').cards[cardKey('alpha', 'flashcards')].reps).toBe(1);
+  });
+});
+
+describe('IndexedDB durable store', () => {
+  test('migrates localStorage log to IDB and stops growing localStorage', async () => {
+    const driver = createMemoryReviewEventIdbDriver();
+    setReviewEventIdbDriverForTests(driver);
+
+    const first = event({ eventId: mintUlid(NOW.getTime()), reviewedAt: NOW.getTime(), lemmaId: 'книга' });
+    const second = event({
+      eventId: mintUlid(LATER.getTime()),
+      reviewedAt: LATER.getTime(),
+      lemmaId: 'дім',
+      rating: 'hard',
+    });
+    localStorage.setItem(
+      REVIEW_EVENTS_STORAGE_KEY,
+      JSON.stringify({
+        schema: REVIEW_EVENTS_SCHEMA,
+        schemaVersion: 1,
+        clientId: 'migrate-client',
+        fsrsParamsVersion: FSRS_PARAMS_VERSION,
+        events: [first, second],
+      }),
+    );
+
+    const result = await migrateReviewEventsLocalStorageToIdb(localStorage);
+    expect(result.migrated).toBe(2);
+    expect(result.log.events).toHaveLength(2);
+    expect(localStorage.getItem(REVIEW_EVENTS_STORAGE_KEY)).toBeNull();
+    expect(localStorage.getItem(REVIEW_EVENTS_IDB_MIGRATED_KEY)).toBe('1');
+
+    const raw = await driver.getRaw();
+    expect(raw).toMatchObject({ clientId: 'migrate-client' });
+    expect((raw as { events: unknown[] }).events).toHaveLength(2);
+
+    // Second migrate is idempotent and does not revive the LS key.
+    const again = await migrateReviewEventsLocalStorageToIdb(localStorage);
+    expect(again.log.events).toHaveLength(2);
+    expect(localStorage.getItem(REVIEW_EVENTS_STORAGE_KEY)).toBeNull();
+  });
+
+  test('reads and writes the log through the IDB driver', async () => {
+    const driver = createMemoryReviewEventIdbDriver();
+    setReviewEventIdbDriverForTests(driver);
+
+    recordCardReviewEvent(
+      {
+        lemmaId: 'море',
+        mode: 'flashcards',
+        rating: 'good',
+        reviewedAt: NOW,
+        deckVersion: PRACTICE_MODE_DECK_VERSION,
+      },
+      localStorage,
+    );
+    await ensureReviewEventLogReady(localStorage);
+
+    expect(driver.writes).toBeGreaterThan(0);
+    expect(loadReviewEventLog(localStorage).events).toHaveLength(1);
+    expect(localStorage.getItem(REVIEW_EVENTS_STORAGE_KEY)).toBeNull();
+
+    resetReviewEventDurableStateForTests();
+    const reloaded = await ensureReviewEventLogReady(localStorage);
+    expect(reloaded.events).toHaveLength(1);
+    expect(reloaded.events[0]?.lemmaId).toBe('море');
+  });
+
+  test('evicts oldest events on QuotaExceeded so persist stays best-effort', async () => {
+    const driver = createMemoryReviewEventIdbDriver();
+    driver.failNextWrites = 1;
+    setReviewEventIdbDriverForTests(driver);
+
+    const events = Array.from({ length: 8 }, (_, index) =>
+      event({
+        eventId: mintUlid(NOW.getTime() + index),
+        reviewedAt: NOW.getTime() + index * 1000,
+        lemmaId: `lemma-${index}`,
+      }),
+    );
+    const log = {
+      schema: REVIEW_EVENTS_SCHEMA,
+      schemaVersion: 1 as const,
+      clientId: 'overflow-client',
+      fsrsParamsVersion: FSRS_PARAMS_VERSION,
+      events,
+    };
+
+    const result = await persistReviewEventLogWithOverflow(log, driver, 8);
+    expect(result.ok).toBe(true);
+    expect(result.evicted).toBeGreaterThan(0);
+    expect(result.log.events.length).toBeLessThan(8);
+    // Newest events survive.
+    expect(result.log.events.at(-1)?.lemmaId).toBe('lemma-7');
+    expect(result.log.events.some((item) => item.lemmaId === 'lemma-0')).toBe(false);
+  });
+
+  test('trimReviewEventLog keeps newest N by replay order', () => {
+    const events = [
+      event({ eventId: mintUlid(LATER.getTime()), reviewedAt: LATER.getTime(), lemmaId: 'new' }),
+      event({ eventId: mintUlid(NOW.getTime()), reviewedAt: NOW.getTime(), lemmaId: 'old' }),
+    ];
+    const trimmed = trimReviewEventLog(
+      {
+        schema: REVIEW_EVENTS_SCHEMA,
+        schemaVersion: 1,
+        clientId: 'trim',
+        fsrsParamsVersion: FSRS_PARAMS_VERSION,
+        events,
+      },
+      1,
+    );
+    expect(trimmed.events).toHaveLength(1);
+    expect(trimmed.events[0]?.lemmaId).toBe('new');
+    expect(REVIEW_EVENTS_MAX_RETAINED).toBeGreaterThan(1000);
+  });
+
+  test('export/import round-trips the remaining durable log without identity fields', async () => {
+    const driver = createMemoryReviewEventIdbDriver();
+    setReviewEventIdbDriverForTests(driver);
+
+    upsertReviewEvents(
+      [
+        event({ eventId: mintUlid(NOW.getTime()), reviewedAt: NOW.getTime(), lemmaId: 'alpha' }),
+        event({
+          eventId: mintUlid(LATER.getTime()),
+          reviewedAt: LATER.getTime(),
+          lemmaId: 'beta',
+          rating: 'easy',
+        }),
+      ],
+      localStorage,
+    );
+    await ensureReviewEventLogReady(localStorage);
+
+    const exported = exportReviewEventLog(localStorage, LATER.getTime());
+    expect(exported.events.map((item) => item.lemmaId)).toEqual(['alpha', 'beta']);
+    expect(exported).not.toHaveProperty('userId');
+    expect(JSON.stringify(exported)).not.toMatch(/userId|email|oauth|pocketbase|supabase/i);
+
+    const otherDriver = createMemoryReviewEventIdbDriver();
+    setReviewEventIdbDriverForTests(otherDriver);
+    resetReviewEventDurableStateForTests();
+    localStorage.clear();
+
+    const { importReviewEventExport } = await import('@site/src/lib/lexicon/review-event-sync');
+    const imported = importReviewEventExport(exported, localStorage);
+    expect(imported?.added).toBe(2);
+    await ensureReviewEventLogReady(localStorage);
+    expect(loadReviewEventLog(localStorage).events).toHaveLength(2);
+    expect(JSON.stringify(exportReviewEventLog(localStorage, LATER.getTime()))).not.toMatch(
+      /userId|email|oauth|pocketbase|supabase/i,
+    );
   });
 });

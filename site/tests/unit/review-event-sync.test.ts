@@ -8,7 +8,9 @@ import {
   foldReviewEventsToCards,
   loadReviewEventLog,
   recordCardReviewEvent,
+  resetReviewEventDurableStateForTests,
   resetReviewEventEntropy,
+  setReviewEventIdbDriverForTests,
   type ReviewEvent,
 } from '@site/src/lib/lexicon/review-events';
 import {
@@ -139,6 +141,8 @@ function folded(storage: MemoryStorage) {
 beforeEach(() => {
   localStorage.clear();
   resetReviewEventEntropy();
+  resetReviewEventDurableStateForTests();
+  setReviewEventIdbDriverForTests(null);
 });
 
 describe('clampReviewEventTime', () => {
