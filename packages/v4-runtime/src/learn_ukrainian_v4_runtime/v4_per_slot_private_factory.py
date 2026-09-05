@@ -98,7 +98,9 @@ from learn_ukrainian_v4_runtime import v4_stage_evidence as ev
 ROOT = _SELF_ROOT
 ADMISSION_RELATIVE = "data/projects/open_model_data/admission"
 CONTRACTS_RELATIVE = "data/projects/open_model_data/contracts"
-BATCH_STATE_DIR = ROOT / "batch_state/open-model-data"
+# Writable operational state is relative to the explicit invocation cwd;
+# immutable package resources never serve as a private output directory.
+BATCH_STATE_DIR = Path("batch_state/open-model-data")
 PRIVATE_LEDGER_PATH = BATCH_STATE_DIR / "v4_private_per_slot_factory_ledger_v1.json"
 
 RECEIPT_RELATIVE = f"{ADMISSION_RELATIVE}/dataset_v4_per_slot_private_factory_receipt_v1.json"

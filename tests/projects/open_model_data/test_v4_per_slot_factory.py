@@ -353,7 +353,8 @@ def test_private_ledger_write_uses_0700_directory_and_0600_file_permissions(tmp_
 
 def test_private_ledger_default_path_is_under_gitignored_batch_state() -> None:
     assert "batch_state/open-model-data" in str(factory.PRIVATE_LEDGER_PATH)
-    assert factory.PRIVATE_LEDGER_PATH.is_relative_to(ROOT / "batch_state")
+    assert not factory.PRIVATE_LEDGER_PATH.is_absolute()
+    assert factory.PRIVATE_LEDGER_PATH.resolve().is_relative_to(ROOT / "batch_state")
 
 
 # --- fail-closed on tampering (private factory) ------------------------------
