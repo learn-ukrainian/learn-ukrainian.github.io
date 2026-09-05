@@ -51,7 +51,7 @@
       },
       {
         "path": "scripts/lexicon/build_teacher_deck_cloze.py",
-        "sha256": "9d8c668e03690e8e041e656d182821d84768dcc0f74168d9dcf34ae591ea4c51"
+        "sha256": "226b7a1071e92657c68ed6a34a18143ad3c90fd22f8c6f712e6381305ce3f885"
       },
       {
         "path": "scripts/lexicon/calque_corrections.py",
