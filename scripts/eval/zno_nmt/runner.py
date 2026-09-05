@@ -131,7 +131,9 @@ def run_exam(
         raise ExamError("condition must be closed-book or sources")
     try:
         capability = preflight(checked_config, condition, sources_url)
-        prompt = adapters.build_prompt(checked_packet, condition)
+        prompt = adapters.build_prompt(
+            checked_packet, condition, max_tool_calls=checked_config["max_tool_calls"]
+        )
         if checked_config["adapter"] == "claude":
             trial = adapters.run_claude(
                 checked_packet,

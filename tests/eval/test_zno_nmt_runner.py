@@ -77,7 +77,7 @@ def test_http_malicious_tool_never_reaches_broker(monkeypatch: pytest.MonkeyPatc
             "choices": [{"message": {"tool_calls": [{"id": "call-1", "function": {"name": "mcp__sources__shell", "arguments": "{}"}}]}}],
         },
     )
-    with pytest.raises(adapters.AdapterError, match="tool boundary"):
+    with pytest.raises(adapters.AdapterError, match="tool_policy_error"):
         adapters.run_chat_http(_packet(), _config(), "sources", sources_url="https://sources.invalid/mcp", prompt="exam")
     assert not called
 
@@ -222,6 +222,37 @@ def test_provider_json_rejects_duplicate_keys_and_nonfinite_numbers() -> None:
         adapters._strict_json_loads('{"value":NaN}')
 
 
+def test_sources_prompt_discloses_exact_call_cap_only_for_sources() -> None:
+    sources_prompt = adapters.build_prompt(_packet(), "sources", max_tool_calls=20)
+    closed_prompt = adapters.build_prompt(_packet(), "closed-book", max_tool_calls=20)
+    assert "at most 20 total reference-tool calls" in sources_prompt
+    assert "including failed attempts" in sources_prompt
+    assert "submit answers without further calls" in sources_prompt
+    assert "reference-tool calls" not in closed_prompt
+
+
+def test_tool_policy_and_limit_failures_have_distinct_safe_reasons() -> None:
+    policy_stream = "\n".join(
+        [
+            json.dumps({"type": "system", "subtype": "init", "model": "fixture", "tools": ["mcp__sources__verify_word"]}),
+            json.dumps({"type": "tool_use", "name": "mcp__sources__not_allowed"}),
+        ]
+    )
+    limit_stream = "\n".join(
+        [
+            json.dumps({"type": "system", "subtype": "init", "model": "fixture", "tools": ["mcp__sources__verify_word"]}),
+            json.dumps({"type": "tool_use", "name": "mcp__sources__verify_word"}),
+            json.dumps({"type": "tool_use", "name": "mcp__sources__verify_word"}),
+        ]
+    )
+    with pytest.raises(adapters.AdapterError, match="tool_policy_error") as policy:
+        adapters._parse_stream_json(policy_stream, _packet(), {"mcp__sources__verify_word"}, 1)
+    with pytest.raises(adapters.AdapterError, match="tool_limit_error") as limit:
+        adapters._parse_stream_json(limit_stream, _packet(), {"mcp__sources__verify_word"}, 1)
+    assert adapters.normalized_reason(policy.value) == "tool_policy_error"
+    assert adapters.normalized_reason(limit.value) == "tool_limit_error"
+
+
 def test_response_schema_closes_every_object_and_preserves_item_kinds() -> None:
     packet = {
         "items": [
@@ -265,7 +296,13 @@ def test_runner_retains_preflight_hashes_without_provider_logs(monkeypatch: pyte
     packet, _key = prepare_exam(exam)
     cap = {"tool_schema_sha256": "b" * 64, "mcp_server_identity_sha256": "c" * 64}
     monkeypatch.setattr(runner, "preflight", lambda *_args, **_kwargs: cap)
-    monkeypatch.setattr(runner.adapters, "build_prompt", lambda *_args: "exam")
+    prompt_args: dict[str, Any] = {}
+
+    def build_prompt(*_args: Any, **kwargs: Any) -> str:
+        prompt_args.update(kwargs)
+        return "exam"
+
+    monkeypatch.setattr(runner.adapters, "build_prompt", build_prompt)
     trial = {
         "responses": {"q0001": "A"},
         "identity": {"adapter": "chat-http", "harness": "chat-http", "model": "local-test-model", "effective_effort": "unknown"},
@@ -277,6 +314,7 @@ def test_runner_retains_preflight_hashes_without_provider_logs(monkeypatch: pyte
     assert result["identity"]["preflight_tool_schema_sha256"] == "b" * 64
     assert "provider output" not in json.dumps(result)
     assert result["comparison"]["constants_sha256"]
+    assert prompt_args["max_tool_calls"] == 2
 
 
 def test_native_timeout_kills_its_whole_process_group(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:

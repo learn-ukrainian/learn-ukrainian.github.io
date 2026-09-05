@@ -225,6 +225,9 @@ reuse the current coding task's conversation.
 Reference calls run through an allowlisted bridge. General browsing, local
 files and shell tools are not exposed. Available access and actual tool use
 are reported separately: an agent may choose not to use its references.
+The assisted prompt states the configured total call limit, including failed
+attempts, so the candidate can allocate its references before hitting the cap.
+Exceeding that limit is reported separately from attempting a forbidden tool.
 Time and tool-call limits apply to candidate execution; capability probes add
 startup time outside the recorded native execution duration and timeout.
 Native cost is the CLI-reported estimate, not a subscription billing receipt;

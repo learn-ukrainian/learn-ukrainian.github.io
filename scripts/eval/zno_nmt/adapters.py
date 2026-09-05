@@ -36,6 +36,8 @@ _SERVER_IDENTITY_TOOL = "mcp_server_identity"
 _SERVER_IDENTITY_HASH_KEYS = frozenset({"server_code_sha256", "sources_db_sha256", "vesum_db_sha256"})
 _SERVER_IDENTITY_SAFE_KEYS = _SERVER_IDENTITY_HASH_KEYS | frozenset({"sources_db_bytes", "vesum_db_bytes"})
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+_TOOL_POLICY_ERROR = "tool_policy_error"
+_TOOL_LIMIT_ERROR = "tool_limit_error"
 _CLAUDE_FLAGS = frozenset(
     {
         "--restricted",
@@ -71,6 +73,8 @@ def _tool_ref(name: str) -> str:
 
 def normalized_reason(exc: BaseException) -> str:
     """Keep failures useful without exporting command output or credentials."""
+    if str(exc) in {_TOOL_POLICY_ERROR, _TOOL_LIMIT_ERROR}:
+        return str(exc)
     if isinstance(exc, subprocess.TimeoutExpired):
         return "timeout"
     if isinstance(exc, urllib.error.HTTPError):
@@ -239,11 +243,23 @@ def preflight(config: Mapping[str, Any], condition: str, sources_url: str | None
     return capability
 
 
-def build_prompt(packet: Mapping[str, Any], condition: str) -> str:
+def build_prompt(
+    packet: Mapping[str, Any], condition: str, *, max_tool_calls: int | None = None
+) -> str:
     """Create the shared, gold-free exam prompt used by each fresh trial."""
-    policy = "No tools are available. Answer from your own knowledge." if condition == "closed-book" else (
-        "Only the explicitly provided Sources reference tools may be used. Do not use a tool to find answers outside that reference corpus."
-    )
+    if condition == "closed-book":
+        policy = "No tools are available. Answer from your own knowledge."
+    elif condition == "sources":
+        if isinstance(max_tool_calls, bool) or not isinstance(max_tool_calls, int) or max_tool_calls <= 0:
+            raise AdapterError("tool limit configuration invalid")
+        policy = (
+            "Only the explicitly provided Sources reference tools may be used. "
+            "Do not use a tool to find answers outside that reference corpus. "
+            f"You have at most {max_tool_calls} total reference-tool calls for this trial, including failed attempts. "
+            "Use them selectively, and submit answers without further calls before you exceed this limit."
+        )
+    else:
+        raise AdapterError("condition is invalid")
     return (
         "You are taking a Ukrainian exam. Answer every opaque item id exactly once. "
         "Do not explain your reasoning. Return only JSON matching the response schema: "
@@ -432,10 +448,10 @@ def _mcp_list_tools(url: str, timeout: int) -> tuple[list[dict[str, Any]], str |
 
 def _mcp_call(url: str, tool_name: str, arguments: Mapping[str, Any], timeout: int) -> Any:
     if not tool_name.startswith("mcp__sources__"):
-        raise AdapterError("model requested invalid tool")
+        raise AdapterError(_TOOL_POLICY_ERROR)
     upstream = tool_name.removeprefix("mcp__sources__")
     if not _TOOL_RE.fullmatch(upstream) or upstream not in REFERENCE_TOOLS:
-        raise AdapterError("model requested invalid tool")
+        raise AdapterError(_TOOL_POLICY_ERROR)
     initialized, session = _mcp_request(url, {"jsonrpc": "2.0", "id": "zno-nmt-init", "method": "initialize", "params": {"protocolVersion": "2024-11-05", "capabilities": {}, "clientInfo": {"name": "zno-nmt-eval", "version": "1"}}}, timeout)
     if not isinstance(initialized.get("result"), Mapping):
         raise AdapterError("MCP initialize failed")
@@ -493,11 +509,11 @@ def _parse_stream_json(
                 raise AdapterError("CLI init tool surface is malformed")
             announced = {item if isinstance(item, str) else item.get("name") for item in raw_tools if isinstance(item, (str, Mapping))}
             if None in announced or not announced.issubset(tools | {"StructuredOutput"}):
-                raise AdapterError("CLI init tool boundary violation")
+                raise AdapterError(_TOOL_POLICY_ERROR)
             if not tools and announced - {"StructuredOutput"}:
-                raise AdapterError("CLI closed-book tool boundary violation")
+                raise AdapterError(_TOOL_POLICY_ERROR)
             if tools and not tools.issubset(announced):
-                raise AdapterError("CLI Sources tool surface incomplete")
+                raise AdapterError(_TOOL_POLICY_ERROR)
         content = event.get("message", {}).get("content", []) if isinstance(event.get("message"), Mapping) else []
         if isinstance(content, list):
             for block in content:
@@ -527,8 +543,10 @@ def _parse_stream_json(
             usage["cost_usd"] = _nonnegative_number(event.get("total_cost_usd", event.get("cost_usd")))
         elif event.get("type") == "result" and event.get("is_error") is True:
             raise AdapterError("CLI result is error")
-    if any(name not in tools for name in observed_tools) or len(observed_tools) > max_tools:
-        raise AdapterError("CLI tool boundary violation")
+    if any(name not in tools for name in observed_tools):
+        raise AdapterError(_TOOL_POLICY_ERROR)
+    if len(observed_tools) > max_tools:
+        raise AdapterError(_TOOL_LIMIT_ERROR)
     if not init_seen:
         raise AdapterError("CLI init evidence missing")
     if len(observed_models) > 1:
@@ -747,17 +765,19 @@ def run_chat_http(packet: Mapping[str, Any], config: Mapping[str, Any], conditio
                 raise AdapterError("HTTP completion is not JSON") from exc
             break
         if condition != "sources" or not isinstance(calls, list):
-            raise AdapterError("HTTP tool boundary violation")
+            raise AdapterError(_TOOL_POLICY_ERROR)
         messages.append(dict(message))
         for call in calls:
             tool_calls += 1
-            if tool_calls > checked["max_tool_calls"] or not isinstance(call, Mapping):
-                raise AdapterError("HTTP tool boundary violation")
+            if tool_calls > checked["max_tool_calls"]:
+                raise AdapterError(_TOOL_LIMIT_ERROR)
+            if not isinstance(call, Mapping):
+                raise AdapterError(_TOOL_POLICY_ERROR)
             function = call.get("function")
             name = function.get("name") if isinstance(function, Mapping) else None
             raw_args = function.get("arguments") if isinstance(function, Mapping) else None
             if not isinstance(name, str) or name not in {_tool_ref(tool) for tool in checked["tools"]} or not isinstance(raw_args, str):
-                raise AdapterError("HTTP tool boundary violation")
+                raise AdapterError(_TOOL_POLICY_ERROR)
             try:
                 arguments = _strict_json_loads(raw_args)
             except AdapterError as exc:
