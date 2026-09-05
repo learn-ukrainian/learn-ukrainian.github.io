@@ -152,14 +152,16 @@ def test_partial_matching_and_repeated_columns_score_per_pair() -> None:
         responses={"q0002": {"r1": "A", "r2": "A"}},
     )
     result = score_run(packet, key, run)
-    assert result["raw_points"] == 0
+    assert result["raw_points"] == 1
     assert result["max_points"] == 4
     assert result["correct_items"] == 0
     assert result["missing_items"] == 2
     assert result["invalid_items"] == 0
     matching = result["items"][1]
-    assert matching["points"] == 0
-    assert matching["rows"][0]["correct"] is False
+    assert matching["points"] == 1
+    assert matching["rows"][0]["correct"] is True
+    assert matching["rows"][0]["duplicate"] is True
+    assert matching["rows"][1]["correct"] is False
     assert matching["rows"][1]["duplicate"] is True
 
 

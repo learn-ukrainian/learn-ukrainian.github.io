@@ -592,6 +592,7 @@ def _failed_item_detail(item: dict[str, Any]) -> dict[str, Any]:
 def _score_item(
     item: dict[str, Any], gold: Any, response: Any
 ) -> tuple[dict[str, Any], int, bool, bool, bool]:
+    """Score one item; matching duplicate selections remain informational."""
     item_id = item["id"]
     kind = item["kind"]
     max_points = 1 if kind == "single" else len(item["rows"])
@@ -707,7 +708,10 @@ def _score_item(
         selected = response.get(row_id)
         missing = selected is None
         duplicate = selected is not None and selected_counts[selected] > 1
-        is_correct = not missing and not duplicate and selected == gold[row_id]
+        # Official NMT descriptions award points per correctly determined
+        # logical pair. A repeated option is exposed in ``duplicate`` for
+        # diagnostics, but does not erase an independently correct pair.
+        is_correct = not missing and selected == gold[row_id]
         points += int(is_correct)
         row_details.append(
             {
