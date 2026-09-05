@@ -80,6 +80,7 @@ import {
   type SessionScopeStats,
   type PracticeClassifySet,
 } from '../lib/lexicon/srs';
+import { ensureReviewEventLogReady } from '../lib/lexicon/review-events';
 import {
   focusModeForWeakness,
   matchesWeakness,
@@ -2226,6 +2227,8 @@ function LexiconPracticeIsland({
     didInitRef.current = true;
 
     const state = loadState();
+    // §10.1: hydrate IndexedDB review-event log (migrates localStorage once).
+    void ensureReviewEventLogReady();
     setStreak(readStreak());
     setMastered(masteredCount(MASTERED_THRESHOLD));
     setDailyNewCount(readNewCardsDailyState().count);
