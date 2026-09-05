@@ -140,3 +140,36 @@ def test_blank_explicit_idempotency_key_is_rejected(
     )
     assert "--idempotency-key must not be empty" in capsys.readouterr().err
     assert _discussion_roots(discuss_plane) == []
+
+
+def test_failed_discussion_can_retry_same_channel_with_new_idempotency_key(
+    discuss_plane: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    attempts = 0
+
+    def fail_once(**_kwargs):
+        nonlocal attempts
+        attempts += 1
+        return {
+            "conversation_id": "conversation_" + ("b" if attempts == 1 else "c") * 32,
+            "state": "PARTIAL_COMPLETE" if attempts == 1 else "COMPLETE",
+            "rounds_completed": 0 if attempts == 1 else 1,
+            "synthesis": "partial" if attempts == 1 else "done",
+        }
+
+    monkeypatch.setattr("agent_runtime.acpx_discuss.run_discussion", fail_once)
+
+    assert (
+        _channels_cli._handle_discuss(
+            _args(channel="alpha", body="Retry safely.", idempotency_key="attempt-1")
+        )
+        == 1
+    )
+    assert (
+        _channels_cli._handle_discuss(
+            _args(channel="alpha", body="Retry safely.", idempotency_key="attempt-2")
+        )
+        == 0
+    )
+    assert attempts == 2
+    assert len(_discussion_roots(discuss_plane)) == 2

@@ -344,6 +344,116 @@ def fetch_open_prs(
     )
 
 
+_ISSUE_STATE_CACHE: dict[tuple[str, int], tuple[float, str | None]] = {}
+_ISSUE_STATE_CACHE_TTL_S = 300.0
+
+
+def clear_issue_state_cache() -> None:
+    """Clear the batched issue state cache (for tests)."""
+    _ISSUE_STATE_CACHE.clear()
+
+
+def fetch_issue_states_batched(
+    numbers: list[int] | set[int],
+    repository_id: str | None = None,
+    *,
+    runner: Callable[[list[str], float], tuple[int, str, str]] | None = None,
+    timeout_s: float = SECTION_TIMEOUT_S,
+    cache_ttl_s: float = _ISSUE_STATE_CACHE_TTL_S,
+) -> dict[str, str]:
+    """Fetch lifecycles for specific issue numbers in one batched GraphQL query.
+
+    Warm-path compliant: single request using GraphQL field aliases; never
+    enumerates or loops per item.
+
+    Returns a mapping of `{work_id: "closed" | "open", str(number): "closed" | "open"}`.
+    If the lookup fails, times out, or an issue is not found, it is omitted
+    from the returned mapping so callers conservatively treat it as an unknown blocker.
+    """
+    if not numbers:
+        return {}
+    repo = admit_public_repository_id(repository_id)
+    owner, name = repo.split("/", 1)
+
+    unique_numbers = sorted({int(n) for n in numbers if int(n) > 0})
+    if not unique_numbers:
+        return {}
+
+    from scripts.work.relations import issue_work_id
+
+    now = time.monotonic()
+    states: dict[str, str] = {}
+    needed: list[int] = []
+
+    # If runner is not custom injected, check in-memory cache
+    if runner is None and cache_ttl_s > 0:
+        for num in unique_numbers:
+            cached = _ISSUE_STATE_CACHE.get((repo, num))
+            if cached is not None:
+                cached_at, cached_state = cached
+                if now - cached_at < cache_ttl_s:
+                    if cached_state is not None:
+                        states[issue_work_id(repo, num)] = cached_state
+                        states[str(num)] = cached_state
+                    continue
+            needed.append(num)
+    else:
+        needed = list(unique_numbers)
+
+    if not needed:
+        return states
+
+    aliases = "\n".join(
+        f"    i{num}: issue(number: {num}) {{ number state }}"
+        for num in needed
+    )
+    query = (
+        f"query {{\n"
+        f"  repository(owner: {json.dumps(owner)}, name: {json.dumps(name)}) {{\n"
+        f"{aliases}\n"
+        f"  }}\n"
+        f"}}"
+    )
+
+    run = runner or _run_gh
+    code, stdout, _stderr = run(
+        ["gh", "api", "graphql", "-f", f"query={query}"],
+        timeout_s,
+    )
+    if code == 124 or not stdout:
+        return states
+
+    try:
+        payload = json.loads(stdout)
+    except (json.JSONDecodeError, TypeError):
+        return states
+
+    if not isinstance(payload, dict):
+        return states
+
+    data = payload.get("data")
+    if not isinstance(data, dict):
+        return states
+
+    repo_data = data.get("repository")
+    if not isinstance(repo_data, dict):
+        return states
+
+    for num in needed:
+        entry = repo_data.get(f"i{num}")
+        if isinstance(entry, dict) and "state" in entry:
+            state_str = str(entry["state"]).lower()
+            states[issue_work_id(repo, num)] = state_str
+            states[str(num)] = state_str
+            if runner is None and cache_ttl_s > 0:
+                _ISSUE_STATE_CACHE[(repo, num)] = (now, state_str)
+        else:
+            if runner is None and cache_ttl_s > 0:
+                _ISSUE_STATE_CACHE[(repo, num)] = (now, None)
+
+    return states
+
+
 def registry_stream_names(report: dict[str, Any] | None) -> frozenset[str]:
     """Stream keys admitted by the public registry map in a streams payload."""
     if not isinstance(report, dict):

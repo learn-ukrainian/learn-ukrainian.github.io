@@ -51,7 +51,7 @@
       },
       {
         "path": "scripts/lexicon/build_teacher_deck_cloze.py",
-        "sha256": "9d8c668e03690e8e041e656d182821d84768dcc0f74168d9dcf34ae591ea4c51"
+        "sha256": "226b7a1071e92657c68ed6a34a18143ad3c90fd22f8c6f712e6381305ce3f885"
       },
       {
         "path": "scripts/lexicon/calque_corrections.py",
@@ -275,7 +275,7 @@
       },
       {
         "path": "scripts/lexicon/ulp_taught_pair_extractor.py",
-        "sha256": "707f527d3db608d1d4332234e9dc7b5113e8e2cacaea1055f5cfbad180b68a70"
+        "sha256": "566d9ecd75ae6d93d9028893fbcd3d2a0b5d24c950b29e3959555e0927710061"
       },
       {
         "path": "scripts/lexicon/verb_pedagogy_vesum_aspect.py",

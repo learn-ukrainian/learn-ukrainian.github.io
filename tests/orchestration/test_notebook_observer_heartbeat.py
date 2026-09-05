@@ -32,7 +32,7 @@ def test_resolver_darwin_without_map_and_linux_fallback(monkeypatch) -> None:
     monkeypatch.setattr(occupancy_local.sys, "platform", "darwin")
     assert occupancy_local.resolve_launcher_host_id() == "mac-operator"
     monkeypatch.setattr(occupancy_local.sys, "platform", "linux")
-    assert occupancy_local.resolve_launcher_host_id() == "local"
+    assert occupancy_local.resolve_launcher_host_id() == "host-teacher"
     monkeypatch.setenv("LU_MONITOR_HOST_ID", "operator-seat")
     assert occupancy_local.resolve_launcher_host_id() == "operator-seat"
 

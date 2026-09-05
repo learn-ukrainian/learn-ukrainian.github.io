@@ -153,6 +153,7 @@ launcher_adapter_exec() {
       codex --dangerously-bypass-approvals-and-sandbox --search
       -c 'tui.status_line=["model-with-reasoning","status","context-used","context-window-size","five-hour-limit","weekly-limit","git-branch","task-progress"]'
       -C "$LC_SESSION_ROOT" --model "$LC_MODEL"
+      -c "model_reasoning_effort=$LC_EFFORT"
     )
   else
     cmd=(claude --model "$LC_MODEL")

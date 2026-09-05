@@ -2,15 +2,16 @@
 
 from __future__ import annotations
 
+import concurrent.futures
 import inspect
 import os
 import threading
-from collections.abc import Callable, Iterator, Mapping
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field, replace
 from functools import lru_cache
 from pathlib import Path
 from types import MappingProxyType
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from fastapi import Request
 
@@ -22,6 +23,11 @@ from agents_extensions.shared.session_streams.store import SessionStreamStore
 
 from . import config
 from .resilience import connect_sqlite
+
+if TYPE_CHECKING:
+    from .images_router import ImageStore
+    from .observer_presence import ObserverPresence
+    from .project_state_store import StoredReport
 
 # Production singleton for work-router single-flight handles. Fixture contexts
 # get a fresh dict; production_context() reuses this object so existing tests
@@ -67,9 +73,6 @@ class MonitorRoots:
                 _frozen_mapping(self.effective_roots),
             )
 
-    def __getitem__(self, name: str) -> Path | Mapping[str, Path] | None:
-        return getattr(self, name)
-
 
 @dataclass(frozen=True)
 class DatabaseHandle:
@@ -81,8 +84,6 @@ class DatabaseHandle:
     def connect(self, *, read_only: bool = False) -> Any:
         return self._opener(self.path, read_only=read_only)
 
-    open = connect
-
 
 @dataclass(frozen=True)
 class MonitorStores:
@@ -90,21 +91,14 @@ class MonitorStores:
 
     sources_db: DatabaseHandle | None = None
     message_db: DatabaseHandle | None = None
-    presence_store: dict[Any, Any] | None = None
-    report_store: dict[Any, Any] | None = None
+    presence_store: dict[tuple[str, str, str], ObserverPresence] | None = None
+    report_store: dict[str, StoredReport] | None = None
     session_streams_database: SessionStreamDatabase | None = None
     session_streams_store: SessionStreamStore | None = None
     epics_database: SessionStreamDatabase | None = None
     epics_store: SessionStreamStore | None = None
-    image_store: Any = None
-    work_in_flight: dict[Any, Any] | None = None
-
-    def __getitem__(self, name: str) -> Any:
-        return getattr(self, name)
-
-    def items(self) -> Iterator[tuple[str, Any]]:
-        for name in self.__dataclass_fields__:
-            yield name, getattr(self, name)
+    image_store: ImageStore | None = None
+    work_in_flight: dict[str, concurrent.futures.Future[dict[str, Any]]] | None = None
 
 
 @dataclass
@@ -202,6 +196,21 @@ class MonitorContext:
     stores: MonitorStores
     root: Path | None = field(default=None, repr=False, compare=False)
     runtime: MonitorRuntime = field(default_factory=MonitorRuntime, repr=False, compare=False)
+
+    def with_roots(self, **overrides: Any) -> MonitorContext:
+        """Return a new context with ``roots`` overridden and stores rebuilt against it.
+
+        ``replace(self, roots=replace(self.roots, **overrides))`` looks
+        equivalent but is not: it leaves ``stores`` bound to the *old*
+        roots (e.g. ``stores.message_db`` still points at the pre-override
+        path). This mirrors ``_build_context``'s two-step build instead —
+        an interim context with the overridden roots, empty stores, and a
+        fresh runtime, then stores rebuilt against that interim context so
+        handles bind to the final roots.
+        """
+        new_roots = replace(self.roots, **overrides)
+        interim = MonitorContext(roots=new_roots, stores=MonitorStores(), root=self.root)
+        return replace(interim, stores=_stores(interim, fixture=self.root is not None))
 
     def _resolve_db_path(self, database: os.PathLike[str] | str) -> Path:
         """Resolve a database target and enforce a fixture root, if present."""

@@ -6,7 +6,6 @@ import json
 import sqlite3
 import stat
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -33,7 +32,7 @@ def client(tmp_path: Path, telemetry_db: Path):
     # (#7269 step 5); pin the context at a missing broker DB exactly like
     # the old MESSAGE_DB patch did.
     base = fixture_context(tmp_path)
-    ctx = replace(base, roots=replace(base.roots, message_db_path=tmp_path / "missing-broker.db"))
+    ctx = base.with_roots(message_db_path=tmp_path / "missing-broker.db")
     app = FastAPI()
     app.state.ctx = ctx
     app.include_router(comms_router.router, prefix="/api/comms")

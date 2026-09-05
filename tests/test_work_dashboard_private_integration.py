@@ -39,6 +39,7 @@ LINUX_CHROME_CANDIDATES: tuple[str, ...] = (
     "/usr/bin/chromium",
     "/usr/bin/chromium-browser",
 )
+CHROME_LAUNCH_TIMEOUT_MS = 60_000
 
 
 def _node_modules() -> Path | None:
@@ -115,7 +116,9 @@ def _puppeteer_launch_options(
     """Deterministic launch options shared by every Puppeteer script here."""
     options: dict[str, Any] = {
         "headless": "new",
-        "args": ["--no-sandbox", "--disable-setuid-sandbox"],
+        # CI containers can have a small /dev/shm and contend during cold start.
+        "args": ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
+        "timeout": CHROME_LAUNCH_TIMEOUT_MS,
     }
     executable = _resolve_chrome_executable(
         env=env,
@@ -630,7 +633,8 @@ def _run_puppeteer(script: str, *, node_modules: Path, timeout: int = 60) -> dic
         capture_output=True,
         text=True,
         env=env,
-        timeout=timeout,
+        # The caller's page/assertion budget is separate from browser startup.
+        timeout=timeout + CHROME_LAUNCH_TIMEOUT_MS / 1000,
         cwd=str(ROOT),
     )
     if proc.returncode != 0:
@@ -651,6 +655,7 @@ def _browser_scenario(
     private_status: int = 200,
     private_delay_ms: int = 0,
     private_hang_json: bool = False,
+    assert_early_public: bool = False,
     private_raw: bytes | None = None,
     public_raw: bytes | None = None,
     filter_query: str = "",
@@ -835,6 +840,11 @@ try {{
   // (non-2xx intercept fulfills can leave the lifecycle watcher pending).
   await page.goto(PAGE_URL, {{ waitUntil: 'domcontentloaded', timeout: 30000 }});
   await page.waitForSelector('#source-private-meta', {{ timeout: 15000 }});
+  if ({str(assert_early_public).lower()}) {{
+    await page.waitForFunction(() => document.querySelectorAll('.work-row').length > 0, {{ timeout: 2000 }});
+    const pending = await page.$eval('#source-private-meta', el => el.textContent);
+    if (pending !== 'Checking capability…') throw new Error('Public rows did not paint while private was pending');
+  }}
   // Wait until dual-source settlement replaces the loading placeholders.
   const settleBudget = Math.max({settle_floor_ms}, PRIVATE_DELAY_MS + 3000);
   await page.waitForFunction(() => {{
@@ -968,7 +978,8 @@ def test_puppeteer_launch_options_honors_env_executable():
     )
     assert opts["executablePath"] == "/custom/chrome"
     assert opts["headless"] == "new"
-    assert opts["args"] == ["--no-sandbox", "--disable-setuid-sandbox"]
+    assert opts["args"] == ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"]
+    assert opts["timeout"] == 60_000
 
 
 def test_puppeteer_launch_options_ignores_missing_env_and_picks_first_candidate():
@@ -1076,6 +1087,7 @@ def test_browser_private_timeout_leaves_public_usable():
         public_doc=_public_min(),
         private_doc=_private_ok(),
         private_delay_ms=5500,
+        assert_early_public=True,
     )
     snap = result["snapshot"]
     assert snap["rowCount"] == 1

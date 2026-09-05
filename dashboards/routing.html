@@ -202,6 +202,15 @@ function codexbarHostToolingMissing(routing) {
     && snapshots.every(codexbarSnapshotIsMissingBinary);
 }
 
+// Retired CLI seats → live display names (do not revive gemini/glm as live seats).
+const RETIRED_RECOMMENDATION_ALIASES = { gemini: 'agy', glm: 'cursor' };
+
+function displayRecommendationAgent(name) {
+  if (name == null || name === '') return name;
+  const key = String(name).trim().toLowerCase();
+  return RETIRED_RECOMMENDATION_ALIASES[key] || name;
+}
+
 function routingRecommendationDisplay(routing) {
   const rec = routing.recommendation || {};
   const hostToolingSkip = !rec.primary_agent_for_code && codexbarHostToolingMissing(routing);
@@ -220,7 +229,7 @@ function routingRecommendationDisplay(routing) {
   }
   return {
     title: 'Primary Agent',
-    value: rec.primary_agent_for_code || 'unknown',
+    value: displayRecommendationAgent(rec.primary_agent_for_code) || 'unknown',
     detail: rec.rationale || '',
     panelClass: 'ok',
     warnings: sourceWarnings
@@ -449,13 +458,26 @@ function renderApiAccounts(routing) {
   </table>`;
 }
 
+function resolveSubscriptionAgent(agents, name) {
+  // Budget API keys Gemini-family allotment as `gemini`; live seat is `agy`.
+  if (name === 'agy') return agents.agy || agents.gemini || null;
+  return agents[name] || null;
+}
+
+function resolveSubscriptionInFlight(inFlight, name) {
+  if (name === 'agy') return inFlight.agy ?? inFlight.gemini ?? 0;
+  return inFlight[name] ?? 0;
+}
+
 function renderSubscriptions(routing) {
   const agents = routing.agents || {};
-  const subscriptionLanes = ['cursor', 'claude', 'codex', 'gemini', 'grok', 'kimi', 'glm'];
+  const inFlight = routing.in_flight || {};
+  // Live subscription lanes only — retired gemini CLI / glm stay off the roster.
+  const subscriptionLanes = ['cursor', 'claude', 'codex', 'grok', 'kimi', 'agy'];
   const rows = subscriptionLanes
-    .filter(name => agents[name])
     .map(name => {
-      const agent = agents[name];
+      const agent = resolveSubscriptionAgent(agents, name);
+      if (!agent) return '';
       const isCursor = name === 'cursor';
       const needLogin = agent.login_state === 'NEED_LOGIN' || agent.probe_state === 'NEED_LOGIN';
       const needProbe = !needLogin && agent.probe_state === 'NEED_PROBE';
@@ -489,7 +511,7 @@ function renderSubscriptions(routing) {
         <td>${statusPill(agent.status)}</td>
         <td>${windowsHtml}${renderLaneFreshness(agent)}</td>
         <td>${renderFleetBurnCell(agent)}</td>
-        <td>${escapeHtml((routing.in_flight || {})[name] ?? 0)}</td>
+        <td>${escapeHtml(resolveSubscriptionInFlight(inFlight, name))}</td>
       </tr>`;
     }).join('');
 

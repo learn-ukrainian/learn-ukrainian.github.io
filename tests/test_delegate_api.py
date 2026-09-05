@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -19,7 +18,7 @@ def _pin_tasks_dir(monkeypatch, tasks_dir: Path):
     """Redirect delegate task reads to a disposable tasks directory."""
     tasks_dir = Path(tasks_dir)
     tasks_dir.mkdir(parents=True, exist_ok=True)
-    ctx = replace(app.state.ctx, roots=replace(app.state.ctx.roots, batch_state_dir=tasks_dir.parent))
+    ctx = app.state.ctx.with_roots(batch_state_dir=tasks_dir.parent)
     monkeypatch.setattr(app.state, "ctx", ctx)
     # Patch the canonical factory (used by shared resolve_context) and the
     # router re-export kept for monkeypatch compatibility after #7496.

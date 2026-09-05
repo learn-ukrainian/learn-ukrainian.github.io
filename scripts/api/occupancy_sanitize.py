@@ -24,7 +24,13 @@ _SUMMARY_SECRET = re.compile(
 _HOST_TRAIL_CHARS = ".-_!?;,)'\""
 _SUMMARY_OK = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 ,'!?;()-]{0,79}$")
 _CANONICAL_ALIASES = frozenset({"atlas-runner", "hramatka", "vps"})
-_RESERVED_HOST_IDS = frozenset({CLOUD_OBSERVER_HOST_ID})
+# Retired batch-host roles: never a legitimate opaque glance id again, even if
+# an operator's MONITOR_OCCUPANCY_HOST_IDS mapping still points a canonical
+# alias at one. A mapping must not resurrect a retired id — it is dropped at
+# parse time (see occupancy.parse_host_id_map), same as any other invalid
+# opaque id.
+RETIRED_HOST_IDS = frozenset({"host-job"})
+_RESERVED_HOST_IDS = frozenset({CLOUD_OBSERVER_HOST_ID}) | RETIRED_HOST_IDS
 
 
 def _looks_like_host(text: str) -> bool:

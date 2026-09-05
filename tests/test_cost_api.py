@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-from dataclasses import replace
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -24,10 +23,7 @@ def _ctx_with_cost_roots(curriculum_root: Path):
     """
     base = app.state.ctx
     root = Path(curriculum_root)
-    return replace(
-        base,
-        roots=replace(base.roots, curriculum_root=root, batch_state_dir=root / "batch_state"),
-    )
+    return base.with_roots(curriculum_root=root, batch_state_dir=root / "batch_state")
 
 
 def _write_meta(root: Path, level: str, slug: str, filename: str, phase: str, prompt_chars: int, response_chars: int) -> None:

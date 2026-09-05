@@ -201,7 +201,7 @@ tr:last-child td { border-bottom: none; }
   </section>
 
   <section class="card purple">
-    <div class="card-header"><h2>&#9201; Headroom</h2><div class="muted">Using last-used or default model</div></div>
+    <div class="card-header"><h2>&#9201; Headroom</h2><div class="muted">Model used for the 5-min rate-limit probe for this adapter</div></div>
     <div class="banner" id="headroom-banner"></div>
     <div id="headroom-content" class="empty">Loading...</div>
   </section>
@@ -269,7 +269,7 @@ function renderAgents(agents) {
     document.getElementById('agents-content').innerHTML = '<div class="empty">No runtime agents found</div>';
     return;
   }
-  document.getElementById('agents-content').innerHTML = `<table>
+  document.getElementById('agents-content').innerHTML = `<p class="muted" style="margin:0 0 10px">Headroom Model = model used for the 5-min rate-limit probe for this adapter (last-used, else default).</p><table>
     <thead><tr><th>Name</th><th>Binary</th><th>Default Model</th><th>Headroom Model</th><th>Supported Modes</th></tr></thead>
     <tbody>${agents.map(agent => `<tr>
       <td>${escapeHtml(agent.name || '—')}</td>
@@ -767,70 +767,112 @@ function startRefresh() {
   if (!refreshTimer) refreshTimer = setInterval(loadRuntime, REFRESH_MS);
 }
 
+let runtimeLoading = false;
+
 async function loadRuntime() {
-  let agents = [];
-
+  if (runtimeLoading) return;
+  runtimeLoading = true;
   try {
-    const data = await fetchJson('/api/runtime/acpx?days=7');
-    renderAcpx(data && typeof data === 'object' ? data : {});
-    setBanner('acpx-banner', '');
-  } catch (error) {
-    setBanner('acpx-banner', `ACPX snapshot unavailable: ${error.message}`);
-    document.getElementById('acpx-content').innerHTML = '<div class="empty">Shadow transport evidence is unavailable. No agent or provider health is inferred.</div>';
+    const agentsPromise = (async () => {
+      try {
+        const data = await fetchJson('/api/runtime/agents');
+        if (!Array.isArray(data.agents)) throw new Error('Invalid agent list');
+        const agents = data.agents;
+        renderAgents(agents);
+        setBanner('agents-banner', '');
+        return agents;
+      } catch (error) {
+        setBanner('agents-banner', `API unavailable: ${error.message}`);
+        document.getElementById('agents-content').innerHTML =
+          '<div class="empty">Unable to load agents</div>';
+      }
+      return null;
+    })();
+    await Promise.all([
+      agentsPromise,
+      (async () => {
+        try {
+          const data = await fetchJson('/api/runtime/acpx?days=7');
+          renderAcpx(data && typeof data === 'object' ? data : {});
+          setBanner('acpx-banner', '');
+        } catch (error) {
+          setBanner('acpx-banner', `ACPX snapshot unavailable: ${error.message}`);
+          document.getElementById('acpx-content').innerHTML =
+            '<div class="empty">Shadow transport evidence is unavailable. No agent or provider health is inferred.</div>';
+        }
+      })(),
+      (async () => {
+        try {
+          document.getElementById('routing-assignments-content').setAttribute('aria-busy', 'true');
+          const data = await fetchJson('/api/runtime/routing-assignments?limit=100');
+          renderRoutingAssignments(data && typeof data === 'object' ? data : {});
+          setBanner('routing-assignments-banner', '');
+        } catch (error) {
+          setBanner(
+            'routing-assignments-banner',
+            `Routing authority history unavailable: ${error.message}`,
+          );
+          const content = document.getElementById('routing-assignments-content');
+          content.innerHTML =
+            '<div class="empty">Routing authority history is unavailable. No assignment or plane state is inferred.</div>';
+          content.setAttribute('aria-busy', 'false');
+          document.getElementById('routing-assignments-status').textContent =
+            'Assignments unavailable; matching count unknown.';
+        }
+      })(),
+      (async () => {
+        try {
+          const data = await fetchJson('/api/runtime/usage?days=7');
+          renderUsage(data.by_agent || {});
+          setBanner('usage-banner', '');
+        } catch (error) {
+          setBanner('usage-banner', `API unavailable: ${error.message}`);
+          document.getElementById('usage-content').innerHTML =
+            '<div class="empty">Unable to load usage data</div>';
+        }
+      })(),
+      (async () => {
+        try {
+          const agents = await agentsPromise;
+          if (agents === null) throw new Error('Agent list unavailable');
+          if (!agents.length) {
+            setBanner('headroom-banner', '');
+            document.getElementById('headroom-content').innerHTML =
+              '<div class="empty">No runtime agents to check</div>';
+            return;
+          }
+          const cards = await Promise.all(
+            agents.map((agent) =>
+              fetchJson(
+                `/api/runtime/headroom?agent=${encodeURIComponent(agent.name)}&model=${encodeURIComponent(agent.headroom_model || agent.last_used_model || agent.default_model || '')}`,
+              ),
+            ),
+          );
+          renderHeadroom(cards);
+          setBanner('headroom-banner', '');
+        } catch (error) {
+          setBanner('headroom-banner', `API unavailable: ${error.message}`);
+          document.getElementById('headroom-content').innerHTML =
+            '<div class="empty">Unable to load headroom status</div>';
+        }
+      })(),
+      (async () => {
+        try {
+          const data = await fetchJson('/api/runtime/recent?limit=50');
+          renderRecent(Array.isArray(data.records) ? data.records : []);
+          setBanner('recent-banner', '');
+        } catch (error) {
+          setBanner('recent-banner', `API unavailable: ${error.message}`);
+          document.getElementById('recent-content').innerHTML =
+            '<div class="empty">Unable to load recent calls</div>';
+        }
+      })(),
+    ]);
+    document.getElementById('last-refresh').textContent =
+      `Refresh attempted ${new Date().toLocaleTimeString()}`;
+  } finally {
+    runtimeLoading = false;
   }
-
-  try {
-    document.getElementById('routing-assignments-content').setAttribute('aria-busy', 'true');
-    const data = await fetchJson('/api/runtime/routing-assignments?limit=100');
-    renderRoutingAssignments(data && typeof data === 'object' ? data : {});
-    setBanner('routing-assignments-banner', '');
-  } catch (error) {
-    setBanner('routing-assignments-banner', `Routing authority history unavailable: ${error.message}`);
-    const content = document.getElementById('routing-assignments-content');
-    content.innerHTML = '<div class="empty">Routing authority history is unavailable. No assignment or plane state is inferred.</div>';
-    content.setAttribute('aria-busy', 'false');
-    document.getElementById('routing-assignments-status').textContent = '0 shown of 0 matching assignments from 0 loaded.';
-  }
-
-  try {
-    const data = await fetchJson('/api/runtime/agents');
-    agents = Array.isArray(data.agents) ? data.agents : [];
-    renderAgents(agents);
-    setBanner('agents-banner', '');
-  } catch (error) {
-    setBanner('agents-banner', `API unavailable: ${error.message}`);
-    document.getElementById('agents-content').innerHTML = '<div class="empty">Unable to load agents</div>';
-  }
-
-  try {
-    const data = await fetchJson('/api/runtime/usage?days=7');
-    renderUsage(data.by_agent || {});
-    setBanner('usage-banner', '');
-  } catch (error) {
-    setBanner('usage-banner', `API unavailable: ${error.message}`);
-    document.getElementById('usage-content').innerHTML = '<div class="empty">Unable to load usage data</div>';
-  }
-
-  try {
-    if (!agents.length) throw new Error('Need agent list before checking headroom');
-    const cards = await Promise.all(agents.map(agent => fetchJson(`/api/runtime/headroom?agent=${encodeURIComponent(agent.name)}&model=${encodeURIComponent(agent.headroom_model || agent.last_used_model || agent.default_model || '')}`)));
-    renderHeadroom(cards);
-    setBanner('headroom-banner', '');
-  } catch (error) {
-    setBanner('headroom-banner', `API unavailable: ${error.message}`);
-    document.getElementById('headroom-content').innerHTML = '<div class="empty">Unable to load headroom status</div>';
-  }
-
-  try {
-    const data = await fetchJson('/api/runtime/recent?limit=50');
-    renderRecent(Array.isArray(data.records) ? data.records : []);
-    setBanner('recent-banner', '');
-  } catch (error) {
-    setBanner('recent-banner', `API unavailable: ${error.message}`);
-    document.getElementById('recent-content').innerHTML = '<div class="empty">Unable to load recent calls</div>';
-  }
-
-  document.getElementById('last-refresh').textContent = `Updated ${new Date().toLocaleTimeString()}`;
 }
 
 function refreshRuntime() {
@@ -855,7 +897,7 @@ startRefresh();
 async function refreshAgentMonitor() {
   try {
     const res = await fetch('/api/agent-monitor/status');
-    if (!res.ok) return;
+    if (!res.ok) throw new Error('Monitor unavailable');
     const data = await res.json();
     const badge = document.getElementById('agent-monitor-status-badge');
     if (badge) {
@@ -871,7 +913,12 @@ async function refreshAgentMonitor() {
     const reserved = document.getElementById('reserved-ram');
     if (reserved) reserved.textContent = `${data.capacity_reservations.total_reserved_ram_mb} MB`;
   } catch (e) {
-    console.error('Agent monitor fetch failed', e);
+    const badge = document.getElementById('agent-monitor-status-badge');
+    if (badge) { badge.textContent = 'UNAVAILABLE'; badge.className = 'pill warn'; }
+    for (const id of ['ram-avail', 'sys-load', 'active-leases-count', 'reserved-ram']) {
+      const field = document.getElementById(id);
+      if (field) field.textContent = 'Unknown';
+    }
   }
 }
 document.addEventListener('DOMContentLoaded', () => {

@@ -33,3 +33,13 @@ def test_agents_endpoint_names_are_unique_with_single_deepseek():
     names = [agent["name"] for agent in agents]
     assert len(names) == len(set(names)), f"duplicate agent names: {sorted(names)}"
     assert names.count("deepseek") == 1
+
+
+def test_agents_endpoint_excludes_retired_cli_lanes():
+    response = client.get("/api/runtime/agents")
+    assert response.status_code == 200
+    names = {agent["name"] for agent in response.json()["agents"]}
+    assert "gemini" not in names
+    assert "glm" not in names
+    assert "agy" in names
+    assert "cursor" in names

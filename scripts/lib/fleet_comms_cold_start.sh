@@ -79,7 +79,7 @@ fleet_comms_cold_clause() {
     "Topology: \`.venv/bin/python -m scripts.fleet_comms plane-status\` (+ metrics/backlog/dead-letters). " \
     "Cross-family CF: direct ask-<lane> for verdict+findings, post on the PR, merge when CI green " \
     "(sealed review-pr / lu-review temps RETIRED — do not use). Never self-seal. " \
-    "All normal inter-agent asks and 2–6 seat discussions use ACP; " \
+    "All normal inter-agent asks and exactly two-seat discussions use ACP; other seat counts reject loudly. " \
     "never fall back to bridge/provider execution. ACP transports; fleet-comms owns durable state. " \
     "After merge: reap worktrees (\`reap_worktrees.py --apply\`). " \
     "Continuity: stream lease already claimed; write durable receipts to fleet-comms."
@@ -107,8 +107,9 @@ fleet_comms_print_banner_line() {
   esac
 }
 
-# Prefer the tunneled job-host Monitor. If it is down, warn and continue on the
-# notebook — never start a second Mac Monitor, never lift the retired sqlite.
+# Prefer the production Monitor on loopback (Mac tunnel client). If it is down,
+# warn and continue on the Mac — never start a second Monitor, never lift the
+# retired sqlite.
 fleet_comms_warn_if_plane_unreachable() {
   local root="${PROJECT_DIR:-${LC_ROOT:-.}}"
   local py=""
@@ -116,7 +117,7 @@ fleet_comms_warn_if_plane_unreachable() {
     return 0
   fi
   if ! py="$(fleet_comms_resolve_python "$root")"; then
-    echo "⚠️  plane fallback: no project interpreter; starting on notebook." >&2
+    echo "⚠️  plane probe skipped: no project interpreter; continuing without plane status." >&2
     return 0
   fi
   (

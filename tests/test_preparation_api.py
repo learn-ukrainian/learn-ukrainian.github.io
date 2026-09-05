@@ -529,14 +529,11 @@ def test_release_route_reads_from_the_reported_primary_checkout(
         json.dumps({"sha": release_sha, "file_count": 1, "tree_sha256": "f" * 64}),
         encoding="utf-8",
     )
-    from dataclasses import replace
-
-    test_roots = replace(
-        app.state.ctx.roots,
-        project_root=release,
-        live_repo_root=dispatch,
+    monkeypatch.setattr(
+        app.state,
+        "ctx",
+        app.state.ctx.with_roots(project_root=release, live_repo_root=dispatch),
     )
-    monkeypatch.setattr(app.state, "ctx", replace(app.state.ctx, roots=test_roots))
 
     response = CLIENT.get("/api/state/preparation?track=a1")
 

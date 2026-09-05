@@ -17,6 +17,10 @@ from scripts.lexicon.ulp_taught_pair_extractor import (
 )
 
 
+def test_source_has_no_baked_ops_home_defaults() -> None:
+    assert "/home/ops" not in Path(extractor.__file__).read_text(encoding="utf-8")
+
+
 def test_extract_basic_margin_pair() -> None:
     sample_text = (
         "Ви не уявляєте, яка я щаслива говорити до вас знову.              уявля́ти ― to imagine\n"

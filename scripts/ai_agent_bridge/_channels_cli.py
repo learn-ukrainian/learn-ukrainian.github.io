@@ -1545,14 +1545,16 @@ def _handle_discuss(args) -> int:
     )
     with_agents = _parse_csv(args.with_agents)
     if not with_agents:
-        print("❌ --with requires 2 to 6 agents", file=sys.stderr)
+        print("❌ --with requires exactly two enabled ACP seats", file=sys.stderr)
         return 1
-    if len(with_agents) < 2:
-        print("❌ --with requires at least 2 agents", file=sys.stderr)
-        return 1
-    if len(with_agents) > 6:
+    allowed_acp_seats = tuple(sorted(acp_participant_routes))
+    if len(with_agents) != 2 or len(set(with_agents)) != 2 or any(
+        agent not in acp_participant_routes for agent in with_agents
+    ):
         print(
-            f"❌ --with accepts at most 6 agents, got {len(with_agents)}",
+            "❌ unsupported ACP discussion seat list: "
+            f"{', '.join(with_agents)}; requested exactly two distinct enabled ACP seats "
+            f"(allowed: {', '.join(allowed_acp_seats)})",
             file=sys.stderr,
         )
         return 1
@@ -1719,16 +1721,11 @@ def _handle_discuss(args) -> int:
     print()
 
     # ACP is the only provider transport for normal inter-agent discussion.
-    # A refusal, partial result, timeout, or cancellation never replays the
-    # provider call over the retired bridge path.
+    # Participant admission above runs before authority writes, so a malformed
+    # seat list cannot create a conversation that the read-only status surface
+    # would later need to normalize. A refusal, partial result, timeout, or
+    # cancellation never replays the provider call over the retired bridge path.
     if acp_routine:
-        unsupported = [agent for agent in with_agents if agent not in acp_participant_routes]
-        if unsupported:
-            print(
-                "❌ unsupported ACP participant(s): " + ", ".join(unsupported),
-                file=sys.stderr,
-            )
-            return 1
         from agent_runtime.acpx_discuss import run_discussion
 
         from ._acp_compat import _discussion_failure_metadata, _failure_metadata
@@ -1824,7 +1821,7 @@ def _handle_discuss(args) -> int:
                 )
         print(f"   transport: ACP ({', '.join(with_agents)})")
         print(f"   conversation: /fleet.html?conversation={conversation_id}")
-        print(f"   state: {state}; rounds: {payload.get('rounds_completed', 0)}")
+        print(f"   state: {state}; rounds completed: {payload.get('rounds_completed', 0)}")
         return 0 if state == "COMPLETE" else 1
 
     discussion_session_ids: dict[str, str] = {}

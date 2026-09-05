@@ -815,16 +815,6 @@ def _bundle_local_members(repo_root: Path, state_root: Path, *, agent: str, line
     return _bundle_source_members(repo_root, state_root, agent=agent, state=state, stream_id=stream_id)
 
 
-def _bundle_write_member(repo_root: Path, state_root: Path, name: str, payload: bytes) -> None:
-    target_root = state_root if name.startswith(".agent/thread-rollovers/") else repo_root
-    target = (target_root / name).resolve()
-    target.relative_to(target_root.resolve())
-    if _bundle_text_member(name):
-        payload = _bundle_rewrite(payload, repo_root=repo_root)
-    target.parent.mkdir(parents=True, exist_ok=True)
-    write_bytes_atomic(target, payload)
-
-
 def _bundle_archive_local_lineage(
     state_root: Path,
     *,
@@ -1056,23 +1046,6 @@ def _bundle_commit_install(
             shutil.rmtree(stage_root, ignore_errors=True)
 
 
-def _bundle_status_manifest(state_root: Path, *, agent: str, lineage_id: str) -> dict[str, Any] | None:
-    state_path = state_root / ".agent" / "thread-rollovers" / agent / lineage_id / "lease.json"
-    if not state_path.is_file():
-        return None
-    state = load_state(state_path)
-    try:
-        receipt_path = state_root / ".agent" / "thread-rollovers" / agent / "_bundle-receipts" / f"{lineage_id}.json"
-        receipt = load_state(receipt_path) if receipt_path.is_file() else {}
-        return _bundle_state_manifest(
-            state,
-            stream_id="shared:rollover",
-            upload_seq=int(receipt.get("upload_seq", 0)),
-        )
-    except (TypeError, ValueError):
-        return None
-
-
 class RolloverBundleAPIUnavailable(RuntimeError):
     """The optional remote bundle authority cannot be reached (transient).
 
@@ -1264,30 +1237,6 @@ def _bundle_api_upload(args: argparse.Namespace, *, stream_id: str, manifest: Ma
     if not isinstance(value, dict):
         raise RuntimeError("bundle API returned a non-object JSON document")
     return value
-
-
-def _bundle_api_latest(
-    args: argparse.Namespace,
-    *,
-    stream_id: str,
-    agent: str | None = None,
-) -> tuple[dict[str, Any], bytes]:
-    query = urlencode({"agent": agent}) if agent is not None else ""
-    suffix = f"?{query}" if query else ""
-    payload = _bundle_api_request(
-        args.monitor_base_url,
-        method="GET",
-        path=f"/api/epics/v1/{stream_id}/bundles/latest{suffix}",
-    )
-    manifest = payload.get("manifest")
-    encoded = payload.get("blob")
-    if not isinstance(manifest, dict) or not isinstance(encoded, str):
-        raise ValueError("bundle API latest response omitted its manifest or blob")
-    try:
-        blob = base64.b64decode(encoded.encode("ascii"), validate=True)
-    except (ValueError, binascii.Error) as exc:
-        raise ValueError("bundle API latest blob is not valid base64") from exc
-    return manifest, blob
 
 
 def _bundle_api_list(
@@ -5940,21 +5889,6 @@ def _candidate_task_family(state: dict[str, Any], replacement: dict[str, Any]) -
         if family:
             return family
     return ""
-
-
-def _filter_live_leases_by_task_family(
-    live_leases: list[tuple[Path, dict[str, Any], dict[str, Any]]],
-    task_family: str,
-) -> list[tuple[Path, dict[str, Any], dict[str, Any]]]:
-    wanted = task_family.strip().lower()
-    if not wanted:
-        return live_leases
-    matched = [
-        item
-        for item in live_leases
-        if _candidate_task_family(item[1], item[2]) == wanted
-    ]
-    return matched
 
 
 def _render_multiple_pending_session_start(

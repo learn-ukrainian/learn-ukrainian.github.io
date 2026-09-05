@@ -1,8 +1,6 @@
 """GitHub integration: posting reviews to issues."""
 
-import re
 import subprocess
-from datetime import UTC, datetime
 
 from secret_redactor import redact_text
 
@@ -93,44 +91,3 @@ def _post_to_existing_issue(issue_num: int, chunks: list[str], model: str, total
             return None
     print(f"   📎 Review posted to #{issue_num} ({total_parts} part{'s' if total_parts > 1 else ''})")
     return issue_num
-
-
-def _post_as_new_issue(task_id: str, chunks: list[str], model: str, total_parts: int) -> int | None:
-    """Create a new GitHub issue and post review as body + comments."""
-    safe_task_id = redact_text(task_id) or ""
-    title = f"Review: {safe_task_id}" if task_id else f"Review: {datetime.now(UTC).isoformat()}"
-    first_body = _format_review_chunk(chunks[0], model, 1, total_parts)
-
-    # Try with label first, fall back to no label if it doesn't exist
-    result = subprocess.run(
-        ["gh", "issue", "create", "--title", title, "--label", "review-result", "-F", "-"],
-        input=first_body, text=True, capture_output=True, timeout=15
-    )
-    if result.returncode != 0 and "label" in result.stderr.lower():
-        # Label doesn't exist — retry without it
-        result = subprocess.run(
-            ["gh", "issue", "create", "--title", title, "-F", "-"],
-            input=first_body, text=True, capture_output=True, timeout=15
-        )
-    if result.returncode != 0:
-        stderr = redact_text(result.stderr or "") or ""
-        print(f"⚠️  GitHub issue creation failed: {stderr[:200]}")
-        return None
-
-    # Parse issue number from URL output
-    url = result.stdout.strip()
-    url_match = re.search(r'/issues/(\d+)', url)
-    if not url_match:
-        print(f"⚠️  Could not parse issue number from: {url}")
-        return None
-    new_issue_num = int(url_match.group(1))
-
-    # Post remaining chunks as comments
-    for i, chunk in enumerate(chunks[1:], start=2):
-        body = _format_review_chunk(chunk, model, i, total_parts)
-        if not _gh_comment(new_issue_num, body):
-            print(f"⚠️  Failed to post part {i}/{total_parts} — earlier parts were posted")
-            break
-
-    print(f"   📎 Review posted as new issue #{new_issue_num} ({total_parts} part{'s' if total_parts > 1 else ''})")
-    return new_issue_num

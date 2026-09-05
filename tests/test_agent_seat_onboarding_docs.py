@@ -347,17 +347,10 @@ def test_routine_acp_panel_selection_hierarchy_is_bounded_and_non_authoritative(
     assert "busy" in lower
     assert "no queue" in lower
     assert "automatic retry" in lower
-    assert "bridge transport is an observable exception only" in lower
-    for exception in (
-        "unsupported\nparticipant/count",
-        "per-participant model override",
-        "formal review until\nseparately migrated",
-        "write / dispatch / inbox semantics",
-        "typed acp\nunhealthy or partial failure",
-        "do not\nsilently fall back",
-    ):
-        assert exception in lower
-    assert "partial" in lower and "not a successful discussion" in lower
+    assert "any other count or invalid seat list is rejected loudly" in lower
+    assert "before it creates a conversation" in lower
+    assert "no bridge/provider-execution\nfallback" in lower
+    assert "partial" in lower and "not a successful\ndiscussion" in lower
     assert "shared primary checkout" in lower
     assert "e2e/replay" in lower
     assert "identical" in lower and "idempotency" in lower

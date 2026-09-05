@@ -10,7 +10,6 @@ Covers:
 from __future__ import annotations
 
 import json
-from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -25,13 +24,7 @@ client = TestClient(api_main.app, raise_server_exceptions=False)
 
 
 def _set_test_ctx(proj: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    ctx = replace(
-        fixture_context(proj),
-        roots=replace(
-            fixture_context(proj).roots,
-            curriculum_root=proj / "curriculum",
-        ),
-    )
+    ctx = fixture_context(proj).with_roots(curriculum_root=proj / "curriculum")
     monkeypatch.setattr(api_main.app.state, "ctx", ctx)
 
 

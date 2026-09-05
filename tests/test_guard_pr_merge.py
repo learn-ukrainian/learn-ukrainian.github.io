@@ -552,6 +552,41 @@ def test_rollup_fallback_allows_only_unambiguous_green(monkeypatch, rows, expect
     assert (guard._judge(["5", "--squash"]) is None) == (expected == ([], []))
 
 
+@pytest.mark.parametrize("failed_job", [None, "pytest (1)", "Frontend", "CI Gate"])
+@pytest.mark.parametrize("conclusion", ["CANCELLED", "FAILURE"])
+def test_cancelled_matrix_parent_does_not_hide_real_job_failures(monkeypatch, failed_job, conclusion):
+    def row(name, result, minute):
+        return {
+            "name": name, "workflowName": "CI", "status": "COMPLETED",
+            "conclusion": result, "startedAt": f"2026-09-04T22:{minute}:00Z",
+        }
+
+    jobs = ["CI Gate", "Frontend", *(f"pytest ({i})" for i in range(1, 5))]
+    rows = [row("pytest (${{ matrix.shard }})", "CANCELLED", "25")]
+    rows += [row(name, "CANCELLED", "25") for name in jobs]
+    rows += [row(name, "SUCCESS", "32") for name in jobs]
+    if failed_job:
+        rows.append(row(failed_job, conclusion, "40"))
+    # Newest-first also proves selection does not depend on response order.
+    states = _rollup_states(monkeypatch, list(reversed(rows)))
+    assert states == ([failed_job] if failed_job else [], [])
+    monkeypatch.setattr(guard, "_pr_meta", lambda *_a, **_k: {"isDraft": False})
+    result = guard._judge(["5", "--squash"])
+    if failed_job:
+        assert f"FAILING checks: {failed_job}" in result
+    else:
+        assert result is None
+
+
+def test_checks_json_ignores_unexpanded_matrix_parent(monkeypatch):
+    _fake_gh(monkeypatch, returncode=0, stdout=json.dumps([
+        {"name": "pytest (${{ matrix.shard }})", "bucket": "fail", "state": "CANCELLED"},
+        {"name": "CI Gate", "bucket": "pass", "state": "SUCCESS"},
+        {"name": "pytest (1)", "bucket": "fail", "state": "CANCELLED"},
+    ]))
+    assert guard._check_states("5") == (["pytest (1)"], [])
+
+
 @pytest.mark.parametrize(
     "returncode,stdout,stderr",
     [

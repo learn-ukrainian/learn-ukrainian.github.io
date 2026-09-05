@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from dataclasses import replace
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -81,7 +80,7 @@ def _patch_governance_paths(monkeypatch, tmp_path: Path) -> tuple[Path, Path]:
     monkeypatch.setattr(
         api_main.app.state,
         "ctx",
-        replace(base, roots=replace(base.roots, project_root=tmp_path)),
+        base.with_roots(project_root=tmp_path),
     )
     monkeypatch.setattr(check_adrs, "PROJECT_ROOT", tmp_path)
     monkeypatch.setattr(check_adrs, "DECISIONS_YAML", decisions_file)

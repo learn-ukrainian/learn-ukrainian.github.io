@@ -14,7 +14,7 @@ import {
   registerBadgeLabel,
 } from "./register-markers";
 import { pluralizeUk } from "../i18n/plural";
-import type { EntryRecord } from "./atlas-data-source";
+import type { EntryRecord, LexiconEntry } from "./atlas-data-source";
 import { safeHref } from "./safe-url";
 import { formatOrigin, type FormattedOrigin } from "./format-origin";
 
@@ -64,6 +64,7 @@ export interface VerbParadigm {
   tenses?: Record<string, Record<string, Record<string, string>>>;
   imperative?: Record<string, Record<string, string>>;
   past?: Record<string, string>;
+  impersonal?: string;
 }
 
 export interface ParticipleParadigm {
@@ -331,6 +332,108 @@ export const PAST_ROWS = [
   { key: "сер.", label: "сер." },
   { key: "множина", label: "множина" },
 ] as const;
+
+/**
+ * Format a past form with conditional particle «би / б» (named construction, #7608).
+ * Standard Ukrainian orthography: after vowels -> «б», after consonants -> «би».
+ */
+export function formatConditionalForm(pastForm: string | undefined | null): string {
+  if (!pastForm?.trim()) return "";
+  return pastForm
+    .split(" / ")
+    .map((variant) => {
+      const trimmed = variant.trim();
+      if (!trimmed) return "";
+      const clean = trimmed.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      const lastChar = clean.slice(-1).toLowerCase();
+      const isVowel = /[аеєиіїоуюя]/.test(lastChar);
+      return `${trimmed} ${isVowel ? "б" : "би"}`;
+    })
+    .filter(Boolean)
+    .join(" / ");
+}
+
+/**
+ * Format 3rd person imperative construction: «(не)хай» + 3sg/3pl present (#7608).
+ */
+export function formatKhayImperative(form: string | undefined | null): string {
+  if (!form?.trim()) return "";
+  return form
+    .split(" / ")
+    .map((variant) => {
+      const trimmed = variant.trim();
+      if (!trimmed) return "";
+      return `(не)хай ${trimmed}`;
+    })
+    .filter(Boolean)
+    .join(" / ");
+}
+
+const BUDU_FORMS = {
+  однина: { "1": "буду", "2": "будеш", "3": "буде" },
+  множина: { "1": "будемо", "2": "будете", "3": "будуть" },
+} as const;
+
+export function buildFutureTenseNumbers(args: {
+  infinitive?: string | null;
+  futureNumbers?: Record<string, Record<string, string>> | null;
+  presentNumbers?: Record<string, Record<string, string>> | null;
+  aspect?: "imperfective" | "perfective" | null;
+  formatForm?: (form: string | undefined | null) => string;
+}): Record<string, Record<string, string>> | null {
+  const { infinitive, futureNumbers, presentNumbers, aspect, formatForm } = args;
+  const inf = infinitive?.trim();
+  const isButy = inf === "бути";
+
+  const hasSyntheticImperf = Object.values(futureNumbers ?? {}).some((num) =>
+    Object.values(num).some((f) =>
+      /(?:тиму|тимеш|тиме|тимемо|тимете|тимуть)\b/u.test(
+        f.normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+      ),
+    ),
+  );
+
+  const hasPresent = Boolean(
+    presentNumbers &&
+      Object.values(presentNumbers).some((num) =>
+        Object.values(num).some((f) => Boolean(f?.trim())),
+      ),
+  );
+
+  const isImperfective =
+    aspect === "imperfective" ||
+    (aspect !== "perfective" && (hasSyntheticImperf || hasPresent));
+
+  const canHaveAnalytic = Boolean(inf && !isButy && isImperfective);
+
+  const result: Record<string, Record<string, string>> = {
+    однина: {},
+    множина: {},
+  };
+
+  let hasAny = false;
+  const infDisplay = (formatForm && inf ? formatForm(inf) : inf) || "";
+
+  for (const number of ["однина", "множина"] as const) {
+    for (const person of ["1", "2", "3"] as const) {
+      const syntheticRaw = futureNumbers?.[number]?.[person]?.trim();
+      const synthetic =
+        syntheticRaw && formatForm ? formatForm(syntheticRaw) : syntheticRaw;
+      const analytic = canHaveAnalytic ? `${BUDU_FORMS[number][person]} ${infDisplay}` : undefined;
+
+      const forms: string[] = [];
+      if (analytic) forms.push(analytic);
+      if (synthetic && synthetic !== analytic) forms.push(synthetic);
+
+      if (forms.length > 0) {
+        result[number][person] = forms.join(" / ");
+        hasAny = true;
+      }
+    }
+  }
+
+  return hasAny ? result : null;
+}
 
 /** Ukrainian track labels for «У курсі» (CEFR codes stay Latin; seminar tracks are localized). */
 export const TRACK_LABELS_UK: Record<string, string> = {
@@ -904,11 +1007,32 @@ export function sourceHost(url: string) {
   }
 }
 
+export function extractVerbParadigm(candidate: unknown): VerbParadigm | null {
+  if (!candidate || typeof candidate !== "object") return null;
+  if ("kind" in candidate && (candidate as { kind: unknown }).kind === "verb") {
+    return candidate as VerbParadigm;
+  }
+  if ("entry" in candidate && (candidate as { entry: unknown }).entry && typeof (candidate as { entry: unknown }).entry === "object") {
+    return extractVerbParadigm((candidate as { entry: unknown }).entry);
+  }
+  if ("enrichment" in candidate && (candidate as { enrichment: unknown }).enrichment && typeof (candidate as { enrichment: unknown }).enrichment === "object") {
+    return extractVerbParadigm((candidate as { enrichment: unknown }).enrichment);
+  }
+  if ("morphology" in candidate && (candidate as { morphology: unknown }).morphology && typeof (candidate as { morphology: unknown }).morphology === "object") {
+    const paradigm = (candidate as { morphology: { paradigm?: unknown } }).morphology?.paradigm;
+    if (paradigm && typeof paradigm === "object" && "kind" in paradigm && (paradigm as { kind: string }).kind === "verb") {
+      return paradigm as VerbParadigm;
+    }
+  }
+  return null;
+}
+
 export function buildWordAtlasArticleView(
   record: EntryRecord,
   generatedAt: string,
   manifestVersion: string,
   atlasLinkCatalog?: AtlasLinkCatalog,
+  partnerCandidate?: EntryRecord | LexiconEntry | Enrichment | VerbParadigm | null,
 ) {
   const rawEntry = record.entry as unknown as LexiconEntryView;
   const wikiReference = sanitizeWikiReference(rawEntry.lemma, rawEntry.wiki_reference);
@@ -1025,6 +1149,31 @@ export function buildWordAtlasArticleView(
   });
   const translationSource = formatTranslationSource(enrichment?.translation?.source);
   const verbPedagogy = enrichment?.verb_pedagogy ?? null;
+  const rawPartnerSlug = verbPedagogy?.aspect_partner?.url_slug?.trim() || null;
+  const resolvedAspectPartnerSlug = rawPartnerSlug
+    ? linkResolver.resolveSlug(rawPartnerSlug, entry.url_slug)
+    : null;
+  const directPartnerParadigm =
+    extractVerbParadigm(partnerCandidate) ??
+    extractVerbParadigm(record.partnerRecord) ??
+    extractVerbParadigm((record as any).partnerParadigm) ??
+    extractVerbParadigm((record.renderContext as any)?.partnerRecord);
+  const partnerCatalogEntry = resolvedAspectPartnerSlug
+    ? linkCatalog.entries.find(
+        (e) => e.slug === resolvedAspectPartnerSlug && isCanonicalAtlasEntry(e),
+      ) ?? null
+    : null;
+  const catalogPartnerParadigm =
+    partnerCatalogEntry?.enrichment?.morphology?.paradigm?.kind === "verb"
+      ? partnerCatalogEntry.enrichment.morphology.paradigm
+      : null;
+  const partnerParadigm = directPartnerParadigm ?? catalogPartnerParadigm ?? null;
+  const partnerEntry =
+    partnerCatalogEntry ??
+    (partnerCandidate && typeof partnerCandidate === "object" && "entry" in partnerCandidate
+      ? (partnerCandidate.entry as unknown as AtlasLinkCatalogEntry)
+      : null);
+  const hasAspectPartner = Boolean(resolvedAspectPartnerSlug && partnerParadigm);
   const hasVerbPedagogy = Boolean(
     verbPedagogy &&
       (verbPedagogy.aspect ||
@@ -1093,6 +1242,10 @@ export function buildWordAtlasArticleView(
     verbPedagogy,
     hasVerbPedagogy,
     verbPedagogySources,
+    resolvedAspectPartnerSlug,
+    partnerEntry,
+    partnerParadigm,
+    hasAspectPartner,
     hasPractice,
     generatedAt,
     manifestVersion,

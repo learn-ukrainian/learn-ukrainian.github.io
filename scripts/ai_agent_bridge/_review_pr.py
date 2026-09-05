@@ -43,7 +43,7 @@ REVIEWER_KIMI = "kimi"
 REVIEWER_AUTO = "auto"
 
 EXPLICIT_REVIEWER_CANDIDATE: dict[str, str] = {
-    REVIEWER_CODEX: "gpt-5.6-terra",
+    REVIEWER_CODEX: "openai_frontier",
     REVIEWER_CLAUDE: "claude-sonnet-5",
     REVIEWER_AGY: "gemini-3.8-flash",
     REVIEWER_GLM: "glm-5.3",
@@ -54,7 +54,7 @@ EXPLICIT_REVIEWER_CANDIDATE: dict[str, str] = {
 
 # Practical formal CF pins — keep in sync with model_catalog formal_cf_defaults.
 FORMAL_CF_MODEL: dict[str, str] = {
-    REVIEWER_CODEX: "gpt-5.6-terra",
+    REVIEWER_CODEX: "gpt-6-astra",
     REVIEWER_CLAUDE: "claude-sonnet-5",
     REVIEWER_AGY: "gemini-3.8-flash-high",
     REVIEWER_GLM: "glm-5.3",
@@ -63,7 +63,7 @@ FORMAL_CF_MODEL: dict[str, str] = {
     "kimicc": "kimi-code/k3",
 }
 FORMAL_CF_EFFORT: dict[str, str] = {
-    REVIEWER_CODEX: "high",
+    REVIEWER_CODEX: "medium",
     REVIEWER_CLAUDE: "high",
     REVIEWER_AGY: "high",
     REVIEWER_GLM: "high",

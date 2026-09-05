@@ -21,7 +21,6 @@ from __future__ import annotations
 import json
 import sys
 import time
-from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -48,10 +47,7 @@ def _ctx_with_live_repo_root(live_repo_root: Path):
     """
     base = api_main.app.state.ctx
     root = Path(live_repo_root)
-    return replace(
-        base,
-        roots=replace(base.roots, live_repo_root=root),
-    )
+    return base.with_roots(live_repo_root=root)
 
 # A real declared stream epic (core-quality) — validate_registry loads streams from
 # the committed issue_streams.yaml, so strict-gate CLI tests use a real epic number.

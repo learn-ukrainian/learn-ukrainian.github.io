@@ -11,6 +11,11 @@ import time
 import urllib.request
 from pathlib import Path
 
+from scripts.ingest.apply_zno_annotations import apply_worksheet_annotations
+
+ROOT = Path(__file__).resolve().parents[2]
+ZNO_ANNOTATIONS_WORKSHEET = ROOT / "data" / "lexicon" / "paronym_worksheet_candidates.yaml"
+
 # Verified 33 booklet documents from the matrix (2010 to 2025, excluding 2009 and 3 demo sessions)
 BOOKLETS = [
     {
@@ -518,6 +523,173 @@ ONLINE_TEST_MAPPING = {
     (2025, "sesiya-2", "mova"): ("ukrmova", 668),
 }
 
+# The online-test catalogue is not itself a completeness signal: it has one
+# entry per booklet, while each entry expands to a full task set.  Keep this
+# ledger next to the mapping so a missing or truncated HTML extraction fails
+# closed.  ``expected_single_choice_with_letter_key`` is also the expected
+# number of all single-choice rows: every such row must have an А–Д key.
+def _expected_session(tasks: int, single_choice: int, own_statement: int) -> dict[str, int]:
+    return {
+        "expected_tasks": tasks,
+        "expected_single_choice_with_letter_key": single_choice,
+        "own_statement_count": own_statement,
+    }
+
+
+SESSION_COMPLETENESS = {
+    (2010, "zno", "sesiya-1"): _expected_session(61, 51, 1),
+    (2010, "zno", "sesiya-2"): _expected_session(61, 51, 1),
+    (2010, "zno", "sesiya-3"): _expected_session(61, 51, 1),
+    (2011, "zno", "sesiya-1"): _expected_session(61, 51, 1),
+    (2011, "zno", "sesiya-2"): _expected_session(61, 51, 1),
+    (2012, "zno", "sesiya-1"): _expected_session(61, 51, 1),
+    (2012, "zno", "sesiya-2"): _expected_session(61, 51, 1),
+    (2013, "zno", "sesiya-1"): _expected_session(61, 51, 1),
+    (2013, "zno", "sesiya-2"): _expected_session(61, 51, 1),
+    (2014, "zno", "sesiya-1"): _expected_session(61, 51, 1),
+    (2014, "zno", "sesiya-2"): _expected_session(61, 51, 1),
+    (2014, "zno", "dodatkova"): _expected_session(61, 51, 1),
+    (2015, "zno", "osnovna"): _expected_session(58, 48, 1),
+    (2016, "zno", "osnovna"): _expected_session(58, 48, 1),
+    (2017, "zno", "osnovna"): _expected_session(58, 48, 1),
+    (2017, "zno", "dodatkova"): _expected_session(58, 48, 1),
+    (2018, "zno", "osnovna"): _expected_session(58, 48, 1),
+    (2018, "zno", "dodatkova"): _expected_session(58, 48, 1),
+    (2019, "zno", "osnovna"): _expected_session(58, 48, 1),
+    (2019, "zno", "dodatkova"): _expected_session(58, 48, 1),
+    (2020, "zno", "osnovna"): _expected_session(58, 48, 1),
+    (2020, "zno", "dodatkova"): _expected_session(58, 48, 1),
+    (2021, "zno", "osnovna"): _expected_session(67, 54, 4),
+    (2021, "zno", "dodatkova"): _expected_session(67, 54, 4),
+    (2022, "nmt", "osnovna"): _expected_session(20, 15, 0),
+    (2023, "nmt", "sesiya-1"): _expected_session(30, 25, 0),
+    (2023, "nmt", "sesiya-2"): _expected_session(30, 25, 0),
+    (2024, "nmt", "sesiya-1"): _expected_session(30, 25, 0),
+    (2024, "nmt", "sesiya-2"): _expected_session(30, 25, 0),
+    (2025, "nmt", "sesiya-1"): _expected_session(30, 25, 0),
+    (2025, "nmt", "sesiya-2"): _expected_session(30, 25, 0),
+}
+MINIMUM_COMPLETE_TASK_COUNT = 1646
+
+
+def topic_norm_from_tag(topic_tag: str) -> str | None:
+    """Map the source's verbatim Ukrainian topic label into our finite vocabulary.
+
+    This deliberately uses Python ``casefold`` rather than SQLite ``lower``:
+    SQLite's built-in lower() only handles ASCII and would miss Ukrainian
+    uppercase labels.  ``None`` is reserved for an actually unrecognised tag
+    so callers can put it on the residual list rather than silently assigning
+    an empty value.
+    """
+    tag = " ".join(topic_tag.casefold().split())
+    if not tag:
+        return None
+    if "фразеолог" in tag:
+        return "phraseology"
+    if "орфоеп" in tag or "наголос" in tag:
+        return "orthoepic_norm"
+    if "орфограф" in tag or "подвоєння букв" in tag:
+        return "orthographic_norm"
+    if "фонетик" in tag or "графік" in tag or "звуків" in tag or "звуки" in tag:
+        return "phonetic"
+    if "словотвір" in tag or "будова слова" in tag or "значущі частини слова" in tag:
+        return "word_formation"
+    if any(marker in tag for marker in ("синтаксис", "словосполуч", "реченн", "підмет", "присудок", "розділов")):
+        return "syntactic_norm"
+    if any(
+        marker in tag
+        for marker in (
+            "морфолог",
+            "іменник",
+            "прикметник",
+            "числівник",
+            "займенник",
+            "дієслов",
+            "прислівник",
+            "відмінок",
+            "відмінюван",
+            "кличн",
+            "ступенів порівняння",
+            "частини мови",
+        )
+    ):
+        return "morphological_norm"
+    if any(marker in tag for marker in ("лексик", "паронім", "синонім", "антонім", "омонім")):
+        return "lexical_norm"
+    if any(
+        marker in tag
+        for marker in ("літератур", "письменник", "творчість", "усна народна", "фольклор", "леся українка")
+    ):
+        return "literature"
+    if any(marker in tag for marker in ("текст", "мовлення", "стилістик")):
+        return "text"
+    return None
+
+
+def backfill_topic_norm(conn: sqlite3.Connection) -> dict[str, object]:
+    """Fill only empty topic norms and report every non-empty tag not mapped.
+
+    Reviewed worksheet values are intentionally immutable here.  The returned
+    residual is JSON-serialisable so callers can expose it in the Practice
+    residual report rather than hiding an unmapped source label.
+    """
+    rows = conn.execute(
+        "SELECT id, topic_tag FROM zno_tasks WHERE trim(topic_tag) <> '' AND trim(topic_norm) = '' ORDER BY id"
+    ).fetchall()
+    updates: list[tuple[str, int]] = []
+    residual: dict[str, int] = {}
+    for task_id, topic_tag in rows:
+        topic_norm = topic_norm_from_tag(str(topic_tag))
+        if topic_norm is None:
+            residual[str(topic_tag)] = residual.get(str(topic_tag), 0) + 1
+            continue
+        updates.append((topic_norm, int(task_id)))
+    if updates:
+        conn.executemany(
+            "UPDATE zno_tasks SET topic_norm = ? WHERE id = ? AND trim(topic_norm) = ''",
+            updates,
+        )
+    return {"updated": len(updates), "unmapped": dict(sorted(residual.items()))}
+
+
+def assert_session_completeness(conn: sqlite3.Connection) -> None:
+    """Fail closed unless all mapped ZNO/NMT sessions match the source ledger."""
+    rows = conn.execute(
+        """
+        SELECT year, exam, session,
+               count(*) AS tasks,
+               sum(CASE WHEN task_format = 'single-choice' THEN 1 ELSE 0 END) AS single_choice,
+               sum(CASE WHEN task_format = 'single-choice' AND correct_json IN ('А', 'Б', 'В', 'Г', 'Д') THEN 1 ELSE 0 END) AS letter_keyed,
+               sum(CASE WHEN task_format = 'own-statement' THEN 1 ELSE 0 END) AS own_statement
+        FROM zno_tasks
+        GROUP BY year, exam, session
+        ORDER BY year, exam, session
+        """
+    ).fetchall()
+    actual = {(int(year), str(exam), str(session)): (int(tasks), int(letter_keyed), int(own_statement), int(single_choice)) for year, exam, session, tasks, single_choice, letter_keyed, own_statement in rows}
+    errors: list[str] = []
+    if set(actual) != set(SESSION_COMPLETENESS):
+        errors.append(f"session keys differ: expected={sorted(SESSION_COMPLETENESS)} actual={sorted(actual)}")
+    for key, expected in SESSION_COMPLETENESS.items():
+        observed = actual.get(key)
+        if observed is None:
+            continue
+        tasks, letter_keyed, own_statement, single_choice = observed
+        observed_counts = {
+            "expected_tasks": tasks,
+            "expected_single_choice_with_letter_key": letter_keyed,
+            "own_statement_count": own_statement,
+        }
+        if observed_counts != expected:
+            errors.append(f"{key}: expected={expected} actual={observed_counts}")
+        if single_choice != letter_keyed:
+            errors.append(f"{key}: {single_choice - letter_keyed} single-choice rows lack an А–Д key")
+    total_tasks = sum(value[0] for value in actual.values())
+    if total_tasks < MINIMUM_COMPLETE_TASK_COUNT:
+        errors.append(f"task count dropped below {MINIMUM_COMPLETE_TASK_COUNT}: {total_tasks}")
+    if errors:
+        raise ValueError("ZNO/NMT completeness ledger failed:\n" + "\n".join(errors))
+
 
 def init_db(conn: sqlite3.Connection):
     """
@@ -954,6 +1126,11 @@ def ingest(db_path: Path, cache_dir: Path) -> int:
 
         # 2. Extract and ingest online tasks
         total_tasks = ingest_tasks(conn, cache_dir)
+        # HTML contains source text only; restore the checked-in reviewed
+        # worksheet before filling any remaining empty topic classifications.
+        apply_worksheet_annotations(conn, ZNO_ANNOTATIONS_WORKSHEET)
+        backfill_topic_norm(conn)
+        assert_session_completeness(conn)
         conn.commit()
 
         # Optimize FTS

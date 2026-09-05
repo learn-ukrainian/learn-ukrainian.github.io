@@ -8,13 +8,16 @@ from pathlib import Path
 
 import pytest
 
-from scripts.work.attention import apply_health_and_actions, derive_health, derive_safe_next_action
-from scripts.work.normalize import _match_dispatch, build_projection
+from scripts.work.attention import _pr_check_state, apply_health_and_actions, derive_health, derive_safe_next_action
+from scripts.work.normalize import _build_pr_item, _match_dispatch, build_projection
 from scripts.work.relations import (
+    collect_missing_blocked_by_issue_numbers,
     detect_dependency_cycles,
     extract_body_relations,
     issue_work_id,
     make_work_id,
+    parse_issue_work_id,
+    resolve_live_blockers,
 )
 from scripts.work.schema import (
     SCHEMA_VERSION,
@@ -34,6 +37,57 @@ from scripts.work.sources_public import (
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "tests" / "fixtures" / "work" / "projection_public_min.json"
 REPO = "learn-ukrainian/learn-ukrainian.github.io"
+
+
+@pytest.fixture
+def green_rollup_with_matrix_leftover():
+    return [
+        {"name": "pytest (${{ matrix.shard }})", "conclusion": "CANCELLED"},
+        *[{"name": f"pytest ({shard})", "conclusion": "SUCCESS"} for shard in range(1, 5)],
+        {"name": "CI Gate", "conclusion": "SUCCESS"},
+        {"name": "Frontend", "conclusion": "SUCCESS"},
+    ]
+
+
+def test_pr_check_state_ignores_cancelled_matrix_leftover(green_rollup_with_matrix_leftover):
+    assert _pr_check_state({"statusCheckRollup": green_rollup_with_matrix_leftover}) == "passing"
+
+
+@pytest.mark.parametrize("name", ["pytest (1)", "Frontend", "CI Gate"])
+@pytest.mark.parametrize("conclusion", ["CANCELLED", "FAILURE"])
+def test_pr_check_state_preserves_real_failure(green_rollup_with_matrix_leftover, name, conclusion):
+    for check in green_rollup_with_matrix_leftover:
+        if check["name"] == name:
+            check["conclusion"] = conclusion
+    assert _pr_check_state({"statusCheckRollup": green_rollup_with_matrix_leftover}) == "failing"
+
+
+def test_pr_check_state_expanded_pending_shards():
+    checks = [{"name": f"pytest ({shard})", "state": "PENDING"} for shard in range(1, 5)]
+    assert _pr_check_state({"statusCheckRollup": checks}) == "pending"
+
+
+@pytest.mark.parametrize("state", ["CANCELLED", "PENDING", "SUCCESS"])
+def test_pr_check_state_unexpanded_only_is_unknown(state):
+    checks = [{"name": "pytest (${{ matrix.shard }})", "state": state}]
+    assert _pr_check_state({"statusCheckRollup": checks}) == "unknown"
+
+
+@pytest.mark.parametrize(
+    ("decision", "health", "action"),
+    [("REVIEW_REQUIRED", "AT_RISK", "REQUEST_CF_REVIEW"), ("APPROVED", "ON_TRACK", "MERGE_WHEN_READY")],
+)
+def test_pr_matrix_leftover_projection_routes_to_review_or_merge(
+    green_rollup_with_matrix_leftover, decision, health, action,
+):
+    item = _build_pr_item(
+        {"number": 7691, "reviewDecision": decision, "statusCheckRollup": green_rollup_with_matrix_leftover},
+        repository_id=REPO, tasks=[], reviews=[], section_times={},
+    )
+    apply_health_and_actions([item], source_ok=True)
+    assert item["projections"]["verification"]["ci_state"] == "passing"
+    assert item["health"] == health
+    assert item["safe_next_action"]["code"] == action
 
 
 def test_schema_loads_and_fixture_validates():
@@ -1763,6 +1817,198 @@ def test_relations_and_cycle_detection():
     assert issue_work_id(REPO, 1) in cycles[0]
 
 
+def test_resolve_live_blockers_ignores_closed_targets():
+    """#7177/#7185: a closed 'Depends on #N' is not a live blocker."""
+    items = [
+        {
+            "work_id": issue_work_id(REPO, 1),
+            "resource_kind": "issue",
+            "lifecycle": "open",
+            "flags": {"has_blocker": True},
+            "relationships": [
+                {"type": "blocked_by", "target_id": issue_work_id(REPO, 2), "evidence": "issue_body"},
+            ],
+        },
+        {
+            "work_id": issue_work_id(REPO, 2),
+            "resource_kind": "issue",
+            "lifecycle": "closed",
+            "flags": {},
+            "relationships": [],
+        },
+    ]
+    resolve_live_blockers(items)
+    assert items[0]["flags"]["has_blocker"] is False
+
+
+def test_resolve_live_blockers_keeps_open_target_blocking():
+    """An open blocker is still live — closed-target handling must not over-clear."""
+    items = [
+        {
+            "work_id": issue_work_id(REPO, 1),
+            "resource_kind": "issue",
+            "lifecycle": "open",
+            "flags": {},
+            "relationships": [
+                {"type": "blocked_by", "target_id": issue_work_id(REPO, 2), "evidence": "issue_body"},
+            ],
+        },
+        {
+            "work_id": issue_work_id(REPO, 2),
+            "resource_kind": "issue",
+            "lifecycle": "open",
+            "flags": {},
+            "relationships": [],
+        },
+    ]
+    resolve_live_blockers(items)
+    assert items[0]["flags"]["has_blocker"] is True
+
+
+def test_resolve_live_blockers_conservative_when_target_unknown():
+    """A blocker target not present in this projection can't be confirmed
+    closed (lookup is unknown or omitted), so it must conservatively remain
+    a live blocker."""
+    items = [
+        {
+            "work_id": issue_work_id(REPO, 1),
+            "resource_kind": "issue",
+            "lifecycle": "open",
+            "flags": {},
+            "relationships": [
+                {"type": "blocked_by", "target_id": issue_work_id(REPO, 999), "evidence": "issue_body"},
+            ],
+        },
+    ]
+    # No lookup provided -> conservative live blocker
+    resolve_live_blockers(items)
+    assert items[0]["flags"]["has_blocker"] is True
+
+    # Empty lookup map (failed/timed out lookup) -> stays conservative
+    resolve_live_blockers(items, target_lifecycle_by_id={})
+    assert items[0]["flags"]["has_blocker"] is True
+
+    # Lookup resolved a different issue -> 999 stays unknown and conservative
+    resolve_live_blockers(items, target_lifecycle_by_id={issue_work_id(REPO, 888): "closed"})
+    assert items[0]["flags"]["has_blocker"] is True
+
+    # Lookup says open -> still a live blocker
+    resolve_live_blockers(items, target_lifecycle_by_id={issue_work_id(REPO, 999): "open"})
+    assert items[0]["flags"]["has_blocker"] is True
+
+
+def test_resolve_live_blockers_absent_target_cleared_by_lifecycle_map():
+    """Absent blocker target is cleared when a provided/fixture lifecycle map confirms it closed."""
+    items = [
+        {
+            "work_id": issue_work_id(REPO, 1),
+            "resource_kind": "issue",
+            "lifecycle": "open",
+            "flags": {},
+            "relationships": [
+                {"type": "blocked_by", "target_id": issue_work_id(REPO, 999), "evidence": "issue_body"},
+            ],
+        },
+    ]
+    # Target absent from items, but lifecycle map says closed -> has_blocker False
+    resolve_live_blockers(items, target_lifecycle_by_id={issue_work_id(REPO, 999): "closed"})
+    assert items[0]["flags"]["has_blocker"] is False
+
+    # Also cleared when keyed by issue number (int or str)
+    resolve_live_blockers(items, target_lifecycle_by_id={999: "closed"})
+    assert items[0]["flags"]["has_blocker"] is False
+
+    resolve_live_blockers(items, target_lifecycle_by_id={"999": "closed"})
+    assert items[0]["flags"]["has_blocker"] is False
+
+
+def test_collect_missing_blocked_by_issue_numbers():
+    """collect_missing_blocked_by_issue_numbers identifies absent blocked_by targets."""
+    items = [
+        {
+            "work_id": issue_work_id(REPO, 1),
+            "resource_kind": "issue",
+            "relationships": [
+                {"type": "blocked_by", "target_id": issue_work_id(REPO, 2)},
+                {"type": "blocked_by", "target_id": issue_work_id(REPO, 3)},
+                {"type": "related", "target_id": issue_work_id(REPO, 4)},
+                {"type": "blocked_by", "target_id": issue_work_id("foreign/repo", 5)},
+            ],
+        },
+        {
+            "work_id": issue_work_id(REPO, 2),
+            "resource_kind": "issue",
+            "relationships": [],
+        },
+    ]
+    # Issue 2 is present in items, issue 4 is not blocked_by, issue 5 is foreign repo.
+    # Only issue 3 is missing and within REPO.
+    assert collect_missing_blocked_by_issue_numbers(items, repository_id=REPO) == [3]
+
+
+def test_parse_issue_work_id():
+    """parse_issue_work_id parses valid issue work IDs and rejects invalid forms."""
+    assert parse_issue_work_id(issue_work_id(REPO, 123)) == (REPO, 123)
+    assert parse_issue_work_id("wp1:public-monitor:owner/repo:issue:456") == ("owner/repo", 456)
+    assert parse_issue_work_id(None) is None
+    assert parse_issue_work_id("wp1:public-monitor:owner/repo:pr:123") is None
+    assert parse_issue_work_id("invalid") is None
+
+
+def test_fetch_issue_states_batched_runner_handling():
+    """fetch_issue_states_batched handles empty, foreign, success, not-found, and timeout."""
+    from scripts.work.sources_public import fetch_issue_states_batched
+
+    # 1. Empty numbers -> zero calls
+    assert fetch_issue_states_batched([], repository_id=REPO) == {}
+
+    # 2. Foreign repo -> raises ValueError before runner
+    with pytest.raises(ValueError, match="public repository_id must be exactly"):
+        fetch_issue_states_batched([7178], repository_id="other/repo")
+
+    # 3. Successful runner
+    def mock_runner(args, timeout_s):
+        stdout = json.dumps({
+            "data": {
+                "repository": {
+                    "i7178": {"number": 7178, "state": "CLOSED"},
+                    "i7184": {"number": 7184, "state": "OPEN"},
+                }
+            }
+        })
+        return 0, stdout, ""
+
+    res = fetch_issue_states_batched([7178, 7184], repository_id=REPO, runner=mock_runner)
+    assert res[issue_work_id(REPO, 7178)] == "closed"
+    assert res[issue_work_id(REPO, 7184)] == "open"
+    assert res["7178"] == "closed"
+    assert res["7184"] == "open"
+
+    # 4. Timeout runner -> returns {}
+    def timeout_runner(args, timeout_s):
+        return 124, "", "timeout"
+
+    assert fetch_issue_states_batched([7178], repository_id=REPO, runner=timeout_runner) == {}
+
+    # 5. Missing / NOT_FOUND issue in data -> omitted from result
+    def not_found_runner(args, timeout_s):
+        stdout = json.dumps({
+            "data": {
+                "repository": {
+                    "i7178": {"number": 7178, "state": "CLOSED"},
+                    "i999": None,
+                }
+            },
+            "errors": [{"type": "NOT_FOUND"}],
+        })
+        return 1, stdout, "not found"
+
+    res_nf = fetch_issue_states_batched([7178, 999], repository_id=REPO, runner=not_found_runner)
+    assert res_nf[issue_work_id(REPO, 7178)] == "closed"
+    assert issue_work_id(REPO, 999) not in res_nf
+    assert "999" not in res_nf
+
+
 def test_match_dispatch_requires_boundary_safe_issue_and_pr_ids():
     """Substring prefixes must not attach unrelated dispatch state.
 
@@ -2093,6 +2339,179 @@ def test_build_projection_joins_sources_deterministically():
     assert again["attention"][0]["work_id"] == projection["attention"][0]["work_id"]
 
 
+def _closed_depends_on_sections(*, blocker_state: str) -> dict[str, SectionResult]:
+    """Minimal sections mirroring #7185: one issue 'Depends on #1234'."""
+    return {
+        "issues": SectionResult(
+            "issues",
+            "ok",
+            payload=[
+                {
+                    "number": 7185,
+                    "title": "Downstream issue",
+                    "labels": [],
+                    "assignees": [],
+                    "body": "Depends on #1234",
+                    "createdAt": "2026-08-01T00:00:00Z",
+                    "updatedAt": "2026-08-02T00:00:00Z",
+                    "url": "https://example.test/issues/7185",
+                    "state": "OPEN",
+                },
+                {
+                    "number": 1234,
+                    "title": "Blocker one",
+                    "labels": [],
+                    "assignees": [],
+                    "body": "",
+                    "createdAt": "2026-08-01T00:00:00Z",
+                    "updatedAt": "2026-08-02T00:00:00Z",
+                    "url": "https://example.test/issues/1234",
+                    "state": blocker_state,
+                },
+            ],
+            count=2,
+        ),
+        "prs": SectionResult("prs", "ok", payload=[], count=0),
+        "streams": SectionResult(
+            "streams",
+            "ok",
+            payload={
+                "generated_at": 1,
+                "orphans": [],
+                "multi_homed": [],
+                "pending_native_link": [],
+                "ok": True,
+            },
+            count=0,
+        ),
+        "delegate_active": SectionResult("delegate_active", "ok", payload={"total": 0, "tasks": []}, count=0),
+        "delegate_tasks": SectionResult("delegate_tasks", "ok", payload={"total": 0, "tasks": []}, count=0),
+        "fleet_reviews": SectionResult("fleet_reviews", "ok", payload={"total": 0, "reviews": []}, count=0),
+    }
+
+
+def test_build_projection_closed_depends_on_is_not_a_live_blocker():
+    """#7177/#7185: a body 'Depends on #N' to a CLOSED issue must not read
+    AT_RISK / RESOLVE_BLOCKER / blocked_by / has_blocker."""
+    sections = _closed_depends_on_sections(blocker_state="CLOSED")
+    projection = build_projection(sections, repository_id=REPO)
+    validate_projection(projection)
+
+    item = next(i for i in projection["items"] if i["work_id"] == issue_work_id(REPO, 7185))
+    assert item["flags"]["has_blocker"] is False
+    assert item["health"] != "AT_RISK"
+    assert item["safe_next_action"]["code"] != "RESOLVE_BLOCKER"
+    assert "blocked_by" not in item["safe_next_action"]["reason_codes"]
+
+
+def test_build_projection_open_depends_on_still_blocks():
+    """An open dependency among the 'Depends on' targets keeps the issue
+    blocked — closed-target handling must not clear real blockers."""
+    sections = _closed_depends_on_sections(blocker_state="OPEN")
+    projection = build_projection(sections, repository_id=REPO)
+    validate_projection(projection)
+
+    item = next(i for i in projection["items"] if i["work_id"] == issue_work_id(REPO, 7185))
+    assert item["flags"]["has_blocker"] is True
+    assert item["health"] == "AT_RISK"
+    assert item["safe_next_action"]["code"] == "RESOLVE_BLOCKER"
+    assert "blocked_by" in item["safe_next_action"]["reason_codes"]
+
+
+def _missing_target_depends_on_sections(
+    *,
+    body: str = "Parent: #7177 (M2). Depends on #7178 M1 and held-out resume (#7184).",
+) -> dict[str, SectionResult]:
+    """Mirror #7185: issue 7185 in items, but target #7178 absent from items."""
+    return {
+        "issues": SectionResult(
+            "issues",
+            "ok",
+            payload=[
+                {
+                    "number": 7185,
+                    "title": "Downstream issue",
+                    "labels": [],
+                    "assignees": [],
+                    "body": body,
+                    "createdAt": "2026-08-01T00:00:00Z",
+                    "updatedAt": "2026-08-02T00:00:00Z",
+                    "url": "https://example.test/issues/7185",
+                    "state": "OPEN",
+                },
+            ],
+            count=1,
+        ),
+        "prs": SectionResult("prs", "ok", payload=[], count=0),
+        "streams": SectionResult(
+            "streams",
+            "ok",
+            payload={
+                "generated_at": 1,
+                "orphans": [],
+                "multi_homed": [],
+                "pending_native_link": [],
+                "ok": True,
+            },
+            count=0,
+        ),
+        "delegate_active": SectionResult("delegate_active", "ok", payload={"total": 0, "tasks": []}, count=0),
+        "delegate_tasks": SectionResult("delegate_tasks", "ok", payload={"total": 0, "tasks": []}, count=0),
+        "fleet_reviews": SectionResult("fleet_reviews", "ok", payload={"total": 0, "reviews": []}, count=0),
+    }
+
+
+def test_build_projection_closed_missing_target_clears_blocker_via_injected_lookup():
+    """#7185-style body + closed #7178 not in items -> not RESOLVE_BLOCKER."""
+    sections = _missing_target_depends_on_sections()
+    projection = build_projection(
+        sections,
+        repository_id=REPO,
+        target_lifecycle_lookup={issue_work_id(REPO, 7178): "closed"},
+    )
+    validate_projection(projection)
+
+    item = next(i for i in projection["items"] if i["work_id"] == issue_work_id(REPO, 7185))
+    assert item["flags"]["has_blocker"] is False
+    assert item["health"] != "AT_RISK"
+    assert item["safe_next_action"]["code"] != "RESOLVE_BLOCKER"
+    assert "blocked_by" not in item["safe_next_action"]["reason_codes"]
+
+
+def test_build_projection_open_missing_target_still_blocks_via_injected_lookup():
+    """Open missing target still blocks when injected lookup returns open."""
+    sections = _missing_target_depends_on_sections()
+    projection = build_projection(
+        sections,
+        repository_id=REPO,
+        target_lifecycle_lookup={issue_work_id(REPO, 7178): "open"},
+    )
+    validate_projection(projection)
+
+    item = next(i for i in projection["items"] if i["work_id"] == issue_work_id(REPO, 7185))
+    assert item["flags"]["has_blocker"] is True
+    assert item["health"] == "AT_RISK"
+    assert item["safe_next_action"]["code"] == "RESOLVE_BLOCKER"
+    assert "blocked_by" in item["safe_next_action"]["reason_codes"]
+
+
+def test_build_projection_missing_target_lookup_failure_still_conservative():
+    """Lookup failure/timeout for missing target still keeps conservative live blocker."""
+    sections = _missing_target_depends_on_sections()
+    projection = build_projection(
+        sections,
+        repository_id=REPO,
+        target_lifecycle_lookup={},
+    )
+    validate_projection(projection)
+
+    item = next(i for i in projection["items"] if i["work_id"] == issue_work_id(REPO, 7185))
+    assert item["flags"]["has_blocker"] is True
+    assert item["health"] == "AT_RISK"
+    assert item["safe_next_action"]["code"] == "RESOLVE_BLOCKER"
+    assert "blocked_by" in item["safe_next_action"]["reason_codes"]
+
+
 def test_fetch_fleet_reviews_production_default_loader():
     """Default loader in fetch_fleet_reviews calls fleet_reviews directly without
     raising AttributeError on Query sentinels (#6849)."""
@@ -2312,7 +2731,7 @@ def test_work_projection_single_flight_under_concurrent_load(monkeypatch):
     from scripts.api.state_helpers import cache_invalidate
 
     cache_invalidate(work_router.CACHE_KEY)
-    work_router._IN_FLIGHT_BUILDS.clear()
+    api_main.app.state.ctx.stores.work_in_flight.clear()
 
     build_calls = 0
     real_build_sync = work_router._build_sync
@@ -2357,7 +2776,7 @@ def test_work_projection_cold_timeout_completes_in_background_and_converges_on_r
     from scripts.api.state_helpers import cache_invalidate
 
     cache_invalidate(work_router.CACHE_KEY)
-    work_router._IN_FLIGHT_BUILDS.clear()
+    api_main.app.state.ctx.stores.work_in_flight.clear()
 
     real_build_sync = work_router._build_sync
 
@@ -2402,7 +2821,7 @@ def test_work_projection_serves_stale_on_rebuild_timeout(monkeypatch):
     from scripts.api.state_helpers import cache_invalidate, cache_set
 
     cache_invalidate(work_router.CACHE_KEY)
-    work_router._IN_FLIGHT_BUILDS.clear()
+    api_main.app.state.ctx.stores.work_in_flight.clear()
 
     # Populate stale cache
     key = work_router.projection_cache_key({})
@@ -2458,11 +2877,12 @@ def test_warm_projection_cache_schedules_startup_task():
     """Startup warmup schedules background task without blocking (#6859)."""
     import asyncio
 
+    import scripts.api.main as api_main
     import scripts.api.work_router as work_router
     from scripts.api.state_helpers import cache_invalidate
 
     cache_invalidate(work_router.CACHE_KEY)
-    work_router._IN_FLIGHT_BUILDS.clear()
+    api_main.app.state.ctx.stores.work_in_flight.clear()
 
     async def run_warmup():
         task = work_router.warm_projection_cache()
@@ -2472,4 +2892,3 @@ def test_warm_projection_cache_schedules_startup_task():
         assert result["schema_version"] == "work-projection.v1"
 
     asyncio.run(run_warmup())
-

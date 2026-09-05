@@ -54,21 +54,21 @@ def test_unmocked_workers_route_with_fixture_stores(tmp_path: Path, monkeypatch)
     )
 
     markers = tmp_path / "markers"
-    write_marker(kind="service", task_id="svc-1", host_id="host-job", agent="codex", path=markers)
+    write_marker(kind="service", task_id="svc-1", host_id="host-worker", agent="codex", path=markers)
 
     upsert_presence(PresenceRequest(agent="cursor", task_id="observe-1", status="working"))
 
-    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "teach-box=host-teacher,job-box=host-job")
-    monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-job")
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "teach-box=host-teacher,worker-box=host-worker")
+    monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-worker")
     monkeypatch.setenv("MONITOR_OCCUPANCY_MARKERS", str(markers))
     monkeypatch.setattr("scripts.api.delegate_router._tasks_dir", lambda ctx=None: tasks)
 
-    response = client.get("/api/fleet/workers/v1?host_id=host-job")
+    response = client.get("/api/fleet/workers/v1?host_id=host-worker")
     assert response.status_code == 200
     payload = response.json()
     assert payload["schema"] == "monitor-fleet-workers.v1"
     assert isinstance(payload["hosts"], list)
-    host = _host_by_id(payload, "host-job")
+    host = _host_by_id(payload, "host-worker")
     assert host["workers_status"] == "reported"
     kinds = {row["kind"] for row in host["workers"]}
     assert "delegate" in kinds
@@ -132,7 +132,7 @@ def test_unmocked_local_host_driver_lease_in_unattributed_bucket(tmp_path: Path,
     db = tmp_path / "session_streams.db"
     _seed_local_driver_lease(db)
     monkeypatch.setattr("scripts.api.fleet_workers_collect.session_streams_db_path", lambda: db)
-    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "teach-box=host-teacher,job-box=host-job")
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "teach-box=host-teacher,worker-box=host-worker")
     monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-teacher")
 
     response = client.get("/api/fleet/workers/v1")

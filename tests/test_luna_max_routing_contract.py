@@ -1,7 +1,7 @@
 """Contract for the Luna @ max bounded-worker routing policy.
 
 Focused on the machine-readable invariants of the 2026-08-01 routing change:
-Luna @ max is the default bounded worker, Terra @ high is the autonomous
+Luna @ max is the default bounded worker, Astra @ low is the autonomous
 fallback, and neither promotion weakens the independent cross-family review
 gate. Large structural assertions stay in ``test_model_catalog.py`` and
 ``test_codex_hooks_contract.py``; this file guards only the routing contract.
@@ -28,7 +28,7 @@ def test_codex_source_config_defaults_subagents_to_luna_max() -> None:
     assert agents["default_subagent_reasoning_effort"] == "max"
 
 
-def test_catalog_routes_bounded_workers_to_luna_max_terra_high_fallback() -> None:
+def test_catalog_routes_bounded_workers_to_luna_max_astra_low_fallback() -> None:
     route = load_model_catalog()["execution_routing"]["sol_advised_bounded"]
 
     preferred = route["preferred_worker"]
@@ -42,8 +42,8 @@ def test_catalog_routes_bounded_workers_to_luna_max_terra_high_fallback() -> Non
     assert "no_final_disposition" in direct["constraints"]
 
     fallback = route["autonomous_fallback"]
-    assert fallback["model_id"] == "gpt-5.6-terra"
-    assert fallback["effort"] == "high"
+    assert fallback["model_id"] == "gpt-6-astra"
+    assert fallback["effort"] == "low"
     assert "missing_objective_scope_ceiling" in fallback["when"]
 
 

@@ -51,6 +51,7 @@ export interface EntryRecord {
   relations: PublicRelation[];
   provenance: ArticleProvenance[];
   renderContext: EntryRenderContext;
+  partnerRecord?: EntryRecord | null;
 }
 
 export type EntryResult =

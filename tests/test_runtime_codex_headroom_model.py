@@ -10,7 +10,6 @@ for the active model.
 from __future__ import annotations
 
 import json
-from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -38,7 +37,7 @@ def _ctx_with_batch_state_dir(batch_state_dir: Path):
     ``app.state.ctx`` covers HTTP calls through ``client`` too.
     """
     base = app.state.ctx
-    return replace(base, roots=replace(base.roots, batch_state_dir=Path(batch_state_dir)))
+    return base.with_roots(batch_state_dir=Path(batch_state_dir))
 
 
 def test_agents_endpoint_reports_last_used_and_headroom_model(tmp_path: Path, monkeypatch) -> None:
@@ -50,9 +49,9 @@ def test_agents_endpoint_reports_last_used_and_headroom_model(tmp_path: Path, mo
     # 1. Without usage records, last_used_model is None and headroom_model falls back to default_model.
     agents = list_runtime_agents(ctx)
     codex = next(a for a in agents if a["name"] == "codex")
-    assert codex["default_model"] == "gpt-5.6-luna"
+    assert codex["default_model"] == "gpt-6-astra"
     assert codex["last_used_model"] is None
-    assert codex["headroom_model"] == "gpt-5.6-luna"
+    assert codex["headroom_model"] == "gpt-6-astra"
 
     # 2. Write live usage record for Codex with gpt-5.6-terra.
     today_file = usage_dir / f"usage_codex-delegate_{now:%Y-%m-%d}.jsonl"
@@ -74,7 +73,7 @@ def test_agents_endpoint_reports_last_used_and_headroom_model(tmp_path: Path, mo
     assert response.status_code == 200
     agents_json = response.json()["agents"]
     codex_json = next(a for a in agents_json if a["name"] == "codex")
-    assert codex_json["default_model"] == "gpt-5.6-luna"
+    assert codex_json["default_model"] == "gpt-6-astra"
     assert codex_json["last_used_model"] == "gpt-5.6-terra"
     assert codex_json["headroom_model"] == "gpt-5.6-terra"
 
@@ -118,4 +117,4 @@ def test_runtime_dashboard_queries_headroom_with_headroom_or_last_used_model() -
     html = (DASHBOARDS_DIR / "runtime.html").read_text(encoding="utf-8")
     assert "agent.headroom_model || agent.last_used_model || agent.default_model" in html
     assert "<th>Headroom Model</th>" in html
-    assert "Using last-used or default model" in html
+    assert "Model used for the 5-min rate-limit probe for this adapter" in html

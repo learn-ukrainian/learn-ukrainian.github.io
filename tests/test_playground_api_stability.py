@@ -5,16 +5,14 @@ from __future__ import annotations
 import sqlite3
 import time
 from collections.abc import Callable
-from dataclasses import replace
 from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
 
-import scripts.api.images_router as images_router
 from scripts.ai_agent_bridge import _db
 from scripts.api.main import app
-from scripts.api.monitor_context import DatabaseHandle, production_context
+from scripts.api.monitor_context import production_context
 from tests.latency_budget import assert_under_budget
 
 SAMPLE_COUNT = 3
@@ -259,25 +257,10 @@ def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, th
     textbooks_dir = tmp_path / "textbooks"
     image_root.mkdir()
     textbooks_dir.mkdir()
-    image_store = images_router.ImageStore(
+    test_ctx = base_ctx.with_roots(
+        message_db_path=broker_db,
         images_dir=image_root,
         textbooks_dir=textbooks_dir,
-        annotations_file=image_root / "image_text_pairs.jsonl",
-        project_root=base_ctx.roots.project_root,
-    )
-    test_ctx = replace(
-        base_ctx,
-        roots=replace(
-            base_ctx.roots,
-            message_db_path=broker_db,
-            images_dir=image_root,
-            textbooks_dir=textbooks_dir,
-        ),
-        stores=replace(
-            base_ctx.stores,
-            message_db=DatabaseHandle(broker_db, base_ctx._open_db),
-            image_store=image_store,
-        ),
     )
     monkeypatch.setattr(app.state, "ctx", test_ctx)
     app.state.ctx.stores.image_store.index.reload()

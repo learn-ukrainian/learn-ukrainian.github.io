@@ -2,7 +2,7 @@
 
 **Failure prevented:** Epic drivers (especially Grok) fixate on a small subset of
 seats (e.g. Claude Sonnet only), under-use heap/economical workers, and rarely
-use **advisor → cheap implement** even when a Sol/Fable brief would unlock Luna
+use **advisor → cheap implement** even when an Astra/Fable brief would unlock Luna
 or weaker models. Measured incident: atlas night drive 2026-08-06 used 2/9
 catalog seats with 33% dispatch `done` rate while free lanes sat idle.
 
@@ -17,7 +17,7 @@ attach tool-backed breadth evidence on handoff; missing card is a process defect
 only, PATH/tool outage already substituted) is allowed; silent single-seat
 marathons are not.
 
-**Escape:** Operator or advisor (Fable/Sol) may waive breadth for one named
+**Escape:** Operator or advisor (Fable/Astra) may waive breadth for one named
 session with a written NOTE on the issue/handoff. Cannot become the default.
 
 **Sunset review:** 2026-09-06 or when breadth report shows median driver
@@ -29,18 +29,18 @@ breadth ≥3 agents and ≥2 tiers for 14 consecutive days.
 
 | Operator name | Catalog tier | Role | Examples (confirm live ids in `model_catalog.yaml`) |
 | --- | --- | --- | --- |
-| **Big brain / advisor** | `frontier_authority` | One-shot judgment, **briefs**, contested design, high-stakes CF of record | **claude-fable-5** (Fable), **gpt-5.6-sol** (Sol), Opus-class when roster says so |
-| **Hard implement / practical** | `frontier_practical` | Autonomous multi-file when scope is clear; standard CF | gpt-5.6-terra, claude-sonnet-5, gemini-3.6-flash-high, kimi K3, grok-4.6 (review/CF not judge) |
+| **Big brain / advisor** | `frontier_authority` | One-shot judgment, **briefs**, contested design, high-stakes CF of record | **claude-fable-5** (Fable), **gpt-6-astra** (Astra @ high), Opus-class when roster says so |
+| **Hard implement / practical** | `frontier_practical` (Astra model: `frontier_authority`) | Autonomous multi-file when scope is clear; standard CF | gpt-6-astra @ low (workhorse) / medium (reviewer), gpt-5.6-terra (fallback), claude-sonnet-5, gemini-3.6-flash-high, kimi K3, grok-4.6 (review/CF not judge) |
 | **Heap / volume** | `economical` / strong_efficient | Bounded implement after a complete advisory envelope | **gpt-5.6-luna** (max), Flash-class, other volume seats |
 
 **Standing operator preference (2026-08-06):** Fable remains the Anthropic
 authority seat even if the operator shrinks the Claude subscription. Reach Fable via:
 
-1. Native Claude seat with model pin **claude-fable-5** (preferred when available), or  
+1. Native Claude seat with model pin **claude-fable-5** (preferred when available), or
 2. **Cursor** multi-model pin to Fable (use composite identity for CF author/review
    bookkeeping, e.g. `cursor:claude-fable-5` per `resolve_author_family` rules).
 
-Do **not** burn Fable/Sol on lockfiles, pointer publishes, rsync gates, or smoke
+Do **not** use the Fable/Astra advisory role on lockfiles, pointer publishes, rsync gates, or smoke
 `--limit 5` jobs.
 
 ---
@@ -93,7 +93,7 @@ stampede one hot lane.
 
 **Codex near_cap / timed pause / deficit:** shed mechanical CI to Cursor Auto / Flash / AGY /
 k3-256k / GLM (`capacity_pick` + `dispatch_fallbacks: codex → cursor`). **Return-at example:** Codex weekly window **2026-08-10T19:47Z** → auto-return
-to rotation. Novel/hard may stay on Terra/Luna among the 1–4 Codex drivers.
+to rotation. Novel/hard may stay on Astra/Luna among the 1–4 Codex drivers.
 
 Full table: `model-assignment.md` § *No-idle utilization + transport map*. Issue: **#6468** / stream **#4707**.
 
@@ -103,14 +103,14 @@ For **bounded** work (clear owned paths, objective acceptance command, no open
 architecture decision):
 
 ```text
-1) AUTHORITY brief (Sol or Fable) → task_contract, owned_paths, scope ceiling,
+1) AUTHORITY brief (Astra or Fable) → task_contract, owned_paths, scope ceiling,
    acceptance_evidence, escalation_triggers
 2) HEAP / PRACTICAL worker(s) execute ONLY that packet
 3) Driver integrates; formal CF = independent cross-family (discussion ≠ CF)
 ```
 
 This is the catalog `execution_routing.sol_advised_bounded` idea generalized to
-**Fable or Sol** as advisor. Advisory family **never** satisfies cross-family PR CF.
+**Fable or Astra** as advisor. Advisory family **never** satisfies cross-family PR CF.
 
 For **unbounded / ambiguous** work: practical or authority implementer only after
 the routing card records why heap was refused.
@@ -129,7 +129,7 @@ task_id: <id>
 tier: authority | practical | heap
 model_x_harness: <e.g. codex/gpt-5.6-luna>   # both axes
 why_this_tier: <one sentence>
-advisor_packet: none | sol | fable | other=<id>  # required for heap
+advisor_packet: none | astra | fable | other=<id>  # required for heap
 owned_paths: <paths>
 acceptance_cmd: <deterministic command that proves done>
 alternatives_considered:
@@ -141,8 +141,8 @@ NOTE_if_single_seat: <required if only one worker family used this session so fa
 
 **Refuse to dispatch** (process defect) if:
 
-- `tier: heap` and `advisor_packet: none`, or  
-- `alternatives_considered` has fewer than two rows without a tool-backed NOTE, or  
+- `tier: heap` and `advisor_packet: none`, or
+- `alternatives_considered` has fewer than two rows without a tool-backed NOTE, or
 - the same practical seat is chosen for the 3rd consecutive implement dispatch
   without a breadth NOTE (near_cap / PATH / language-lane).
 
@@ -171,7 +171,7 @@ Trivial one-shot (typo, single-file comment) is exempt if labeled
 | VPS launcher scripts, health probes, rsync gates | practical |
 | Residual lemma EN strategy, morphology policy | **authority brief** → heap fill |
 | Routine formal CF | practical cross-family |
-| Contested CF / architecture / process | authority (Fable or Sol) |
+| Contested CF / architecture / process | authority (Fable or Astra) |
 | UK content authoring | language-lane only (existing model-assignment) |
 
 ---
@@ -195,9 +195,9 @@ deferred (#6998).
 
 ## 7. Relationship to other rules
 
-- Does **not** weaken operator-expectations §4 (whole fleet) or §5 (route by fit).  
+- Does **not** weaken operator-expectations §4 (whole fleet) or §5 (route by fit).
 - Does **not** replace model-assignment live ladders — it **forces the card** and
-  **advisor→heap default**.  
+  **advisor→heap default**.
 - Cross-family review remains independent (`model-assignment` + direct `ask-*`);
-  shielded formal `review-pr` is retired.  
+  shielded formal `review-pr` is retired.
 - Advisor approval gate for architecture still binds (operator-expectations §12).

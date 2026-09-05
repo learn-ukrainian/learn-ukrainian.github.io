@@ -29,7 +29,7 @@ def _row(**overrides: object) -> dict[str, object]:
     "field,value",
     [
         ("id", "/Users/foo/task"),
-        ("agent", "10.0.0.1"),
+        ("agent", "203.0.113.7"),
         ("harness", "atlas-runner"),
         ("epic", "branch:main"),
         ("id", "pid:1234"),
@@ -56,7 +56,7 @@ def test_valid_worker_row_round_trip() -> None:
 
 def test_report_document_accepts_workers_block() -> None:
     document = {
-        "host_id": "host-job",
+        "host_id": "host-worker",
         "primary": {
             "head_sha": "a" * 40,
             "origin_main_sha": "b" * 40,

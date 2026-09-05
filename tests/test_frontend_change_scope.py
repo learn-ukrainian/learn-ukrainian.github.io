@@ -408,3 +408,24 @@ def test_ci_yml_frontend_job_is_gated_by_changes_output() -> None:
     assert "frontend-e2e" not in jobs
     assert "needs.changes.outputs.frontend == 'true'" in str(jobs["frontend"].get("if"))
     assert "frontend" in jobs["ci-gate"]["needs"]
+
+
+def test_ci_gate_pytest_installer_preserves_locked_dependency_scope() -> None:
+    """The faster installer must retain the lock, exclusions and interpreter."""
+    jobs = yaml.safe_load(_CI.read_text(encoding="utf-8"))["jobs"]
+    steps = jobs["pytest"]["steps"]
+    uv = next(step for step in steps if step.get("name") == "Set up uv")
+    action, revision = uv["uses"].split("@")
+    assert action == "astral-sh/setup-uv"
+    assert len(revision) == 40 and all(c in "0123456789abcdef" for c in revision)
+    assert uv["with"]["version"] == "0.12.9"
+    assert uv["with"]["enable-cache"] is True
+    assert uv["with"]["cache-dependency-glob"] == "requirements-lock.txt"
+    install = next(step["run"] for step in steps if step.get("name") == "Install Python deps")
+    assert "python -m venv .venv" in install
+    assert "grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt" in install
+    assert 'uv pip install --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"' in install
+    assert "--upgrade" not in install
+    setup_python = next(step for step in steps if step.get("uses", "").startswith("actions/setup-python@"))
+    assert setup_python["with"]["python-version-file"] == ".python-version"
+    assert "cache" not in setup_python["with"]  # uv owns the wheel cache now.

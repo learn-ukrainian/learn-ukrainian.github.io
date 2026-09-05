@@ -44,7 +44,7 @@ thread-rollover and lane handoff context, not a competing lease store.
 
 Every host must export `LU_MONITOR_HOST_ID=<opaque id>` before claiming. The
 value must be one of the opaque IDs in the canonical `MONITOR_OCCUPANCY_HOST_IDS`
-mapping (for example, `host-teacher`, `host-job`, or `mac-operator`) so the
+mapping (for example, `host-teacher` or `mac-operator`) so the
 holder is not reported as `local`. Do not use a hostname, alias, or IP address
 as the host ID.
 

@@ -7,7 +7,6 @@ import os
 import sqlite3
 import sys
 import types
-from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -30,7 +29,7 @@ def _ctx_with_batch_state_dir(batch_state_dir: Path):
     by swapping ``app.state.ctx`` for the duration of the test instead.
     """
     base = app.state.ctx
-    return replace(base, roots=replace(base.roots, batch_state_dir=Path(batch_state_dir)))
+    return base.with_roots(batch_state_dir=Path(batch_state_dir))
 
 
 def _iso(dt: datetime) -> str:
@@ -426,11 +425,13 @@ def test_agents_endpoint_returns_known_adapters():
     assert response.status_code == 200
     agents = response.json()["agents"]
     names = {agent["name"] for agent in agents}
-    assert {"claude", "gemini", "codex"} <= names
+    assert {"claude", "codex"} <= names
+    assert "gemini" not in names
+    assert "glm" not in names
     assert not any(name.startswith("acpx-") for name in names)
     codex = next(agent for agent in agents if agent["name"] == "codex")
     assert codex["binary"] == "codex"
-    assert codex["default_model"] == "gpt-5.6-luna"
+    assert codex["default_model"] == "gpt-6-astra"
 
 
 def test_agents_endpoint_refreshes_registry_defaults_after_mtime_update(tmp_path, monkeypatch):
@@ -733,7 +734,7 @@ def test_acp_conversation_api_is_ordered_allowlisted_and_read_only(tmp_path, mon
             "classification": "complete",
             "participants": ["codex", "grok"],
             "rounds_requested": 2,
-            "rounds_completed": 1,
+            "rounds_completed": 0,
             "created_at": _iso(now - timedelta(minutes=5)),
             "deadline_at": _iso(now + timedelta(minutes=5)),
             "expired": False,

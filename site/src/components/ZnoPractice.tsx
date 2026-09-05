@@ -1,14 +1,6 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import { cardKey, loadState, rateCard, type PracticeRating } from '../lib/lexicon/srs';
-import stressDeck from '../data/practice-zno.stress.json';
-import paronymDeck from '../data/practice-zno.paronym.json';
-import lexicalNormDeck from '../data/practice-zno.lexical-norm.json';
-import morphologicalNormDeck from '../data/practice-zno.morphological-norm.json';
-import syntacticNormDeck from '../data/practice-zno.syntactic-norm.json';
-import orthographyDeck from '../data/practice-zno.orthography.json';
-import morphologyDeck from '../data/practice-zno.morphology.json';
-import syntaxDeck from '../data/practice-zno.syntax.json';
-import phoneticsDeck from '../data/practice-zno.phonetics.json';
+import znoDeckMeta from '../data/practice-zno-meta.json';
 
 export interface ZnoCharMark {
   start: number;
@@ -51,17 +43,41 @@ export interface ZnoPracticeProps {
   onBackToDecks?: () => void;
 }
 
-export const ZNO_PRACTICE_DECKS = [
-  stressDeck,
-  paronymDeck,
-  lexicalNormDeck,
-  morphologicalNormDeck,
-  syntacticNormDeck,
-  orthographyDeck,
-  morphologyDeck,
-  syntaxDeck,
-  phoneticsDeck,
-] as ZnoPracticeDeck[];
+export interface ZnoPracticeDeckMeta {
+  deckId: string;
+  title: string;
+  thinDeck: boolean;
+  itemCount: number;
+}
+
+/**
+ * Deck picker metadata (title, thin-deck note, item count) with no task
+ * content — pre-derived at build time by scripts/generate-zno-deck-meta.ts.
+ * The practice hub's deck grid renders from this; a deck's actual items load
+ * on demand via `loadZnoDeck` only once the learner opens it (#7671).
+ */
+export const ZNO_PRACTICE_DECK_META = znoDeckMeta as ZnoPracticeDeckMeta[];
+
+/** One dynamic-import chunk per deck, so opening one deck never pulls in the rest. */
+const ZNO_DECK_LOADERS: Record<string, () => Promise<{ default: ZnoPracticeDeck }>> = {
+  'zno-stress': () => import('../data/practice-zno.stress.json') as Promise<{ default: ZnoPracticeDeck }>,
+  'zno-paronym': () => import('../data/practice-zno.paronym.json') as Promise<{ default: ZnoPracticeDeck }>,
+  'zno-lexical-norm': () => import('../data/practice-zno.lexical-norm.json') as Promise<{ default: ZnoPracticeDeck }>,
+  'zno-morphological-norm': () => import('../data/practice-zno.morphological-norm.json') as Promise<{ default: ZnoPracticeDeck }>,
+  'zno-syntactic-norm': () => import('../data/practice-zno.syntactic-norm.json') as Promise<{ default: ZnoPracticeDeck }>,
+  'zno-orthography': () => import('../data/practice-zno.orthography.json') as Promise<{ default: ZnoPracticeDeck }>,
+  'zno-morphology': () => import('../data/practice-zno.morphology.json') as Promise<{ default: ZnoPracticeDeck }>,
+  'zno-syntax': () => import('../data/practice-zno.syntax.json') as Promise<{ default: ZnoPracticeDeck }>,
+  'zno-phonetics': () => import('../data/practice-zno.phonetics.json') as Promise<{ default: ZnoPracticeDeck }>,
+};
+
+/** Loads one ZNO deck's full task content on demand. `null` for an unknown deckId. */
+export async function loadZnoDeck(deckId: string): Promise<ZnoPracticeDeck | null> {
+  const loader = ZNO_DECK_LOADERS[deckId];
+  if (!loader) return null;
+  const mod = await loader();
+  return mod.default;
+}
 
 function taskCountLabel(count: number): string {
   const tail = count % 100;
@@ -168,7 +184,7 @@ function znoOptionAttrs(index: number, correctIndex: number, selectedIndex: numb
 }
 
 export default function ZnoPractice({
-  decks = ZNO_PRACTICE_DECKS,
+  decks = [],
   deck: controlledDeck,
   onBackToDecks,
 }: ZnoPracticeProps) {

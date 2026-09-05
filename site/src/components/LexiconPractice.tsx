@@ -117,7 +117,7 @@ import {
   isMissingShard,
 } from '../lib/lexicon/practice-shard-fetch';
 import { LexiconCustomDeckManager } from './LexiconCustomDeckManager';
-import ZnoPractice, { ZNO_PRACTICE_DECKS } from './ZnoPractice';
+import ZnoPractice, { ZNO_PRACTICE_DECK_META } from './ZnoPractice';
 import { useZnoPracticeOverlay, ZNO_MODE_META } from './useZnoPracticeOverlay';
 
 
@@ -2100,6 +2100,9 @@ function LexiconPracticeIsland({
     setHoveredZnoDeckId,
     setActiveZnoDeckId,
     activeZnoDeck,
+    activeZnoDeckLoading,
+    activeZnoDeckError,
+    retryActiveZnoDeck,
   } = useZnoPracticeOverlay();
   const [publishedLevels] = useState<Set<CefrLevel>>(
     () => new Set(PUBLISHED_PRACTICE_LEVELS as unknown as CefrLevel[]),
@@ -2112,8 +2115,13 @@ function LexiconPracticeIsland({
   // Consumption source of truth for the parked answer outcome. `advancePending`
   // claims it via this ref (not the closed-over `pendingOutcome` state) so a rapid
   // double-advance (double-Enter, or Enter+click) before React re-renders resolves to
-  // exactly ONE `completeSelection` — the second call reads a null ref and no-ops.
+  // exactly ONE `advanceSelection` — the second call reads a null ref and no-ops.
   const pendingOutcomeRef = useRef<CompletionOutcome | null>(null);
+  // The answer is committed when the learner rates it, while «Далі →» only
+  // dismisses the teaching feedback and reveals the next card. Keep that
+  // committed count outside React state so a rapid Enter/click can never make
+  // the advance path count the same answer twice.
+  const pendingCompletionRef = useRef<number | null>(null);
   const advanceButtonRef = useRef<HTMLButtonElement | null>(null);
   // Selection ref used to stabilize the in-flight item across live deck merges (pool growth from
   // background level shards). While history length is unchanged we keep returning the
@@ -2208,6 +2216,7 @@ function LexiconPracticeIsland({
     setChoiceFeedback(null);
     setPendingOutcome(null);
     pendingOutcomeRef.current = null;
+    pendingCompletionRef.current = null;
     matchedSelectedRatingRef.current = null;
     matchingTargetOutcomeRef.current = null;
   }, []);
@@ -2843,16 +2852,11 @@ function LexiconPracticeIsland({
   }, [pendingOutcome, selection]);
 
   // Answer dwell: move focus to «Далі →» so keyboard/SR users keep their place
-  // after the clicked (now-disabled) option blurs to <body>. D6 moved Далі into the
-  // top status row specifically so it is reachable without scrolling — but a tall
-  // prompt (e.g. rating buttons below the fold) can leave the page scrolled down
-  // from answering, and a plain `.focus()` only nudges the nearest edge into view.
-  // Reset scroll to the top explicitly so the status row (and Далі) is guaranteed
-  // visible. `useLayoutEffect` (not `useEffect`) runs before the browser paints, so
-  // there is no visible scroll-jump flash after the result renders.
+  // after the clicked (now-disabled) option blurs to <body>. Do not reset the
+  // viewport here: on touch devices that can put the sticky course navigation
+  // beneath the finishing pointer event, including its /a2/ link.
   useLayoutEffect(() => {
     if (!pendingOutcome) return;
-    window.scrollTo({ top: 0, behavior: 'auto' });
     advanceButtonRef.current?.focus({ preventScroll: true });
   }, [pendingOutcome]);
 
@@ -3575,17 +3579,32 @@ function LexiconPracticeIsland({
     return { nextUnresolved, nextDeferred };
   }
 
-  function completeSelection(
+  function commitAnsweredSelection(
     current: PracticeSelection,
-    outcome: { nextUnresolved: Set<string>; nextDeferred: PracticeLexeme[] },
+    outcome: CompletionOutcome,
   ) {
-    setHistory((items) => [...items.slice(-49), historyFromSelection(current)]);
     const nextCompleted = sessionCompleted + 1;
     setSessionCompleted(nextCompleted);
     refreshProgress();
-    persistSessionSnapshot({ completed: nextCompleted });
-    const decision = resolveSessionCompletion({
+    // Persist the answered card immediately, but leave in-memory history alone
+    // until «Далі →» so its feedback remains visible during the dwell state.
+    persistSessionSnapshot({
       completed: nextCompleted,
+      history: [...history.slice(-49), historyFromSelection(current)],
+    });
+    pendingCompletionRef.current = nextCompleted;
+    pendingOutcomeRef.current = outcome;
+    setPendingOutcome(outcome);
+  }
+
+  function advanceSelection(
+    current: PracticeSelection,
+    outcome: CompletionOutcome,
+    completed: number,
+  ) {
+    setHistory((items) => [...items.slice(-49), historyFromSelection(current)]);
+    const decision = resolveSessionCompletion({
+      completed,
       plannedTotal,
       extensionUsed,
       unresolvedCount: outcome.nextUnresolved.size,
@@ -3602,17 +3621,11 @@ function LexiconPracticeIsland({
     openSummary();
   }
 
-  function rateAndComplete(current: PracticeSelection, rating: PracticeRating) {
-    const outcome = recordReview(current, rating);
-    completeSelection(current, outcome);
-  }
-
   function handleFlashcardRating(rating: PracticeRating) {
-    if (!selection) return;
+    if (!selection || answerLocked || pendingOutcomeRef.current) return;
     const outcome = recordReview(selection, rating);
     setAnswerLocked(true);
-    pendingOutcomeRef.current = outcome;
-    setPendingOutcome(outcome);
+    commitAnsweredSelection(selection, outcome);
   }
 
   function handleMatchingComplete() {
@@ -3630,8 +3643,7 @@ function LexiconPracticeIsland({
       }
     }
     setAnswerLocked(true);
-    pendingOutcomeRef.current = outcome;
-    setPendingOutcome(outcome);
+    commitAnsweredSelection(selection, outcome);
   }
 
   /** Complete the parked selection once the learner chooses to advance. */
@@ -3640,10 +3652,10 @@ function LexiconPracticeIsland({
     // double-Enter, or Enter racing a «Далі» click) reads null and no-ops — the closed-over
     // `pendingOutcome` state is stale within the same tick and cannot guard against this.
     const outcome = pendingOutcomeRef.current;
-    if (!outcome || !selection) return;
-    pendingOutcomeRef.current = null;
+    const completed = pendingCompletionRef.current;
+    if (!outcome || !selection || completed === null) return;
     resetItemFeedback();
-    completeSelection(selection, outcome);
+    advanceSelection(selection, outcome, completed);
   }
 
   function handleStressSelect(position: number) {
@@ -3658,8 +3670,7 @@ function LexiconPracticeIsland({
       en: `${selection.stress.unstressed}: ${correct ? 'Correct' : 'Again'}`,
     });
     setAnswerLocked(true);
-    pendingOutcomeRef.current = outcome;
-    setPendingOutcome(outcome);
+    commitAnsweredSelection(selection, outcome);
   }
 
   function handleChoice(option: ChoiceOption) {
@@ -3699,8 +3710,7 @@ function LexiconPracticeIsland({
       en: option.correct ? `${selection.lemma.lemma}: Correct` : `${selection.lemma.lemma}: Again`,
     });
     // Correct and wrong both dwell — never auto-advance; learner continues via «Далі →» / Enter.
-    pendingOutcomeRef.current = outcome;
-    setPendingOutcome(outcome);
+    commitAnsweredSelection(selection, outcome);
   }
 
   function handleHeritageActivityComplete(correct: boolean) {
@@ -3712,8 +3722,7 @@ function LexiconPracticeIsland({
       uk: `${selection.lemma.lemma}: ${correct ? 'Правильно' : 'Ще раз'}`,
       en: `${selection.lemma.lemma}: ${correct ? 'Correct' : 'Again'}`,
     });
-    pendingOutcomeRef.current = outcome;
-    setPendingOutcome(outcome);
+    commitAnsweredSelection(selection, outcome);
   }
 
   function submitCloze(value: string, source: 'typed' | 'chip') {
@@ -3746,8 +3755,7 @@ function LexiconPracticeIsland({
         textEn: `✓ ${cloze.form} (${labelEn})`,
       });
       setAnswerLocked(true);
-      pendingOutcomeRef.current = outcome;
-      setPendingOutcome(outcome);
+      commitAnsweredSelection(selection, outcome);
       return;
     }
 
@@ -3769,8 +3777,7 @@ function LexiconPracticeIsland({
       if (exhausted) {
         setAnswerLocked(true);
         if (clozeCaseMissOutcomeRef.current) {
-          pendingOutcomeRef.current = clozeCaseMissOutcomeRef.current;
-          setPendingOutcome(clozeCaseMissOutcomeRef.current);
+          commitAnsweredSelection(selection, clozeCaseMissOutcomeRef.current);
         }
       }
       return;
@@ -3785,8 +3792,7 @@ function LexiconPracticeIsland({
         textEn: '✗ Not that word',
       });
       setAnswerLocked(true);
-      pendingOutcomeRef.current = outcome;
-      setPendingOutcome(outcome);
+      commitAnsweredSelection(selection, outcome);
       return;
     }
 
@@ -3963,7 +3969,7 @@ function LexiconPracticeIsland({
         </p>
       )}
 
-      {sessionPhase === 'idle' && !activeZnoDeck && (
+      {sessionPhase === 'idle' && !activeZnoDeck && !activeZnoDeckLoading && (
         <>
           {focusedLemmaId && (
             <div
@@ -4367,9 +4373,9 @@ function LexiconPracticeIsland({
                     </button>
                   );
                 })}
-                {ZNO_PRACTICE_DECKS.map((znoDeck) => {
+                {ZNO_PRACTICE_DECK_META.map((znoDeck) => {
                   const meta = ZNO_MODE_META[znoDeck.deckId];
-                  const modeCount = znoDeck.items.length;
+                  const modeCount = znoDeck.itemCount;
                   return (
                     <button
                       key={znoDeck.deckId}
@@ -4554,6 +4560,26 @@ function LexiconPracticeIsland({
         />
       )}
 
+      {activeZnoDeckLoading && (
+        <p className="lexicon-practice-muted" role="status" data-testid="practice-zno-loading">
+          <PracticeChromeLabel k="practice.loading" />
+        </p>
+      )}
+
+      {activeZnoDeckError && (
+        <div className="lexicon-practice-fallback" role="alert" data-testid="practice-zno-error">
+          <p className="lexicon-practice-warning">
+            <PracticeChromeLabel k="practice.loadError" />
+          </p>
+          <button type="button" className="btn btn-accent" onClick={retryActiveZnoDeck}>
+            <PracticeChromeLabel k="practice.retry" />
+          </button>
+          <button type="button" className="stage-back" onClick={() => setActiveZnoDeckId(null)}>
+            <PracticeChromeLabel k="practice.home" />
+          </button>
+        </div>
+      )}
+
       {activeZnoDeck && (
         <div className="lexicon-practice-stage-shell" data-testid="practice-zno-session">
           <div className="lexicon-practice-stage-bar">
@@ -4587,17 +4613,20 @@ function LexiconPracticeIsland({
             >
               {progressLabel}
             </span>
-            {pendingOutcome ? (
-              <button
-                ref={advanceButtonRef}
-                type="button"
-                className="btn btn-accent queue-next-btn"
-                data-testid="practice-advance-button"
-                onClick={advancePending}
-              >
-                <PracticeChromeLabel k="practice.nextArrow" />
-              </button>
-            ) : null}
+            {/* Reserve the advance control's space so answer feedback cannot wrap
+                the toolbar and shift the exercise beneath a finishing pointer. */}
+            <button
+              ref={advanceButtonRef}
+              type="button"
+              className="btn btn-accent queue-next-btn"
+              data-testid={pendingOutcome ? 'practice-advance-button' : undefined}
+              disabled={!pendingOutcome}
+              aria-hidden={!pendingOutcome || undefined}
+              style={{ visibility: pendingOutcome ? 'visible' : 'hidden' }}
+              onClick={advancePending}
+            >
+              <PracticeChromeLabel k="practice.nextArrow" />
+            </button>
           </div>
 
           {deck && deck.index.length === 0 &&

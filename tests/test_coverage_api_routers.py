@@ -108,13 +108,12 @@ def _comms_ctx(project_root, **root_overrides):
     ``root_overrides`` replace individual ``MonitorRoots`` fields (e.g.
     ``pid_dir=Path("/nonexistent")``).
     """
-    from dataclasses import replace
 
     from scripts.api.monitor_context import fixture_context
 
     ctx = fixture_context(project_root)
     if root_overrides:
-        ctx = replace(ctx, roots=replace(ctx.roots, **root_overrides))
+        ctx = ctx.with_roots(**root_overrides)
     return ctx
 
 
@@ -827,12 +826,8 @@ class TestAdminBackup:
         assert data["backups"] == []
 
     def test_list_backups_no_dir(self, admin_client, admin_app):
-        from dataclasses import replace
 
-        admin_app.state.ctx = replace(
-            admin_app.state.ctx,
-            roots=replace(admin_app.state.ctx.roots, backup_dir=Path("/nonexistent")),
-        )
+        admin_app.state.ctx = admin_app.state.ctx.with_roots(backup_dir=Path("/nonexistent"))
         r = admin_client.get("/api/admin/backup/list")
         assert r.json()["backups"] == []
 
@@ -963,12 +958,8 @@ class TestAdminMaintenance:
         assert data["source_files"] == 1
 
     def test_annotation_stats_no_dir(self, admin_client, admin_app):
-        from dataclasses import replace
 
-        admin_app.state.ctx = replace(
-            admin_app.state.ctx,
-            roots=replace(admin_app.state.ctx.roots, images_dir=Path("/nonexistent")),
-        )
+        admin_app.state.ctx = admin_app.state.ctx.with_roots(images_dir=Path("/nonexistent"))
         r = admin_client.get("/api/admin/maintenance/annotation-stats")
         assert "error" in r.json()
 
@@ -1711,4 +1702,3 @@ class TestContractsRoutes:
         data_default = asyncio.run(route_contracts())
         assert "route_contracts" in data_default
         assert "page_contracts" in data_default
-

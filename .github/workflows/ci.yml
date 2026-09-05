@@ -206,8 +206,12 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
-          cache: pip
-          cache-dependency-path: requirements-lock.txt
+      - name: Set up uv
+        uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6.8.0
+        with:
+          version: '0.12.9'
+          enable-cache: true
+          cache-dependency-glob: requirements-lock.txt
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '22'
@@ -234,14 +238,13 @@ jobs:
         run: |
           set -euo pipefail
           python -m venv .venv
-          .venv/bin/python -m pip install --upgrade pip
           # Lockfile is internally inconsistent (marker-pdf vs pillow; see
           # requirements.txt). Documented CI install is `--no-deps`. Drop
           # live-ML wheels — the unit suite does not import them and they
           # blow the 15m budget.
           grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt \
             > "${RUNNER_TEMP}/requirements-ci.txt"
-          .venv/bin/python -m pip install --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
+          uv pip install --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
           .venv/bin/python -m pip install --no-deps --no-build-isolation ./packages/v4-runtime
           .venv/bin/python packages/v4-runtime/build_assets.py
       - run: npm ci --ignore-scripts
@@ -476,7 +479,7 @@ jobs:
     needs: [changes]
     if: needs.changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -499,6 +502,15 @@ jobs:
         run: npm ci
       - working-directory: site
         run: npm run build
+      - name: Fail on generated practice-artifact drift (#7673 CF)
+        # `npm run build` above already ran hydrate, which regenerates these
+        # two derived files from their sources. If the freshly-generated
+        # content differs from what's committed, hydrate silently rewrote a
+        # stale artifact in place — generated-practice-artifacts.test.ts can't
+        # catch that on its own because test:unit also runs hydrate first, so
+        # by the time it reads "committed", hydrate has already made it match.
+        # This step reads the tree before test:unit's hydrate re-runs.
+        run: git diff --exit-code -- site/src/data/lexicon-teacher-lesson-keys.json site/src/data/practice-zno-meta.json
       - working-directory: site
         run: npm run test:unit
       - working-directory: site

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-from dataclasses import replace
 
 import pytest
 from fastapi.testclient import TestClient
@@ -67,8 +66,9 @@ def folk_llm_qg_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
             return _FOLK_LLM_QG_SLUGS
         return compute_get_plan_slugs(track_id, *args, **kwargs)
 
-    new_roots = replace(api_main.app.state.ctx.roots, curriculum_root=curriculum_root)
-    monkeypatch.setattr(api_main.app.state, "ctx", replace(api_main.app.state.ctx, roots=new_roots))
+    monkeypatch.setattr(
+        api_main.app.state, "ctx", api_main.app.state.ctx.with_roots(curriculum_root=curriculum_root)
+    )
     monkeypatch.setattr(state_router, "get_plan_slugs", fake_get_plan_slugs)
     monkeypatch.setattr(state_compute, "get_plan_slugs", fake_compute_get_plan_slugs)
 

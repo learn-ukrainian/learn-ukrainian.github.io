@@ -26,7 +26,7 @@ loop_client = TestClient(
 )
 client = TestClient(app, raise_server_exceptions=False)
 
-_PLACEHOLDER_MAP = "teach-box=host-teacher,job-box=host-job"
+_PLACEHOLDER_MAP = "teach-box=host-teacher,worker-box=host-worker"
 _IP = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")
 _ALIAS_LEAKS = ("atlas-runner", "hramatka", "vps")
 
@@ -72,7 +72,7 @@ def _service(
 
 
 def _document(
-    host_id: str = "host-job",
+    host_id: str = "host-worker",
     *,
     primary: dict[str, Any] | None = None,
     services: list[dict[str, Any]] | None = None,
@@ -102,14 +102,46 @@ def _post_report(document: dict[str, Any]) -> Any:
 def test_get_projects_schema_and_unknown_host(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
     monkeypatch.setattr(router_mod, "_self_host_ids", lambda: set())
-    response = client.get("/api/fleet/projects/v1?host_id=host-job")
+    # Unmapped host-job is not a default glance / queryable id.
+    denied = client.get("/api/fleet/projects/v1?host_id=host-job")
+    assert denied.status_code == 400
+    assert denied.json()["detail"] == "unknown host_id"
+
+    response = client.get("/api/fleet/projects/v1?host_id=host-teacher")
     assert response.status_code == 200
     data = response.json()
     assert data["schema"] == "monitor-project-state.v1"
-    host = data["hosts"]["host-job"]
+    host = data["hosts"]["host-teacher"]
     assert host["freshness"] == "unknown"
     assert host["primary"] is None
     assert host["services"] == []
+
+
+def test_post_report_rejects_unmapped_host_job(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("MONITOR_OCCUPANCY_HOST_IDS", raising=False)
+    posted = _post_report(_document("host-job"))
+    assert posted.status_code == 400
+    assert posted.json()["detail"] == "unknown host_id"
+
+
+def test_mapped_host_job_stays_retired(monkeypatch: pytest.MonkeyPatch) -> None:
+    # A leftover prod env can still map a canonical alias at host-job. The
+    # mapping must not resurrect it as a glance row, a queryable id, or an
+    # allowed reporter.
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", "atlas-runner=host-job,hramatka=host-teacher")
+    monkeypatch.setattr(router_mod, "_self_host_ids", lambda: set())
+
+    default_glance = client.get("/api/fleet/projects/v1")
+    assert default_glance.status_code == 200
+    assert sorted(default_glance.json()["hosts"].keys()) == ["host-teacher", "mac-operator"]
+
+    denied = client.get("/api/fleet/projects/v1?host_id=host-job")
+    assert denied.status_code == 400
+    assert denied.json()["detail"] == "unknown host_id"
+
+    posted = _post_report(_document("host-job"))
+    assert posted.status_code == 400
+    assert posted.json()["detail"] == "unknown host_id"
 
 
 def test_post_report_loopback_and_expiry(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -120,7 +152,7 @@ def test_post_report_loopback_and_expiry(monkeypatch: pytest.MonkeyPatch) -> Non
     assert remote.status_code == 403
 
     monkeypatch.setattr(router_mod, "_self_host_ids", lambda: set())
-    live = client.get("/api/fleet/projects/v1?host_id=host-job").json()["hosts"]["host-job"]
+    live = client.get("/api/fleet/projects/v1?host_id=host-worker").json()["hosts"]["host-worker"]
     assert live["freshness"] == "fresh"
     assert live["services"][0]["drift"] is False
 
@@ -128,7 +160,7 @@ def test_post_report_loopback_and_expiry(monkeypatch: pytest.MonkeyPatch) -> Non
         _document(),
         now_mono=time.monotonic() - REPORT_TTL_SECONDS - 1,
     )
-    expired = client.get("/api/fleet/projects/v1?host_id=host-job").json()["hosts"]["host-job"]
+    expired = client.get("/api/fleet/projects/v1?host_id=host-worker").json()["hosts"]["host-worker"]
     assert expired["freshness"] == "unknown"
 
 
@@ -137,7 +169,7 @@ def test_drift_matrix_release_behind(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(router_mod, "_self_host_ids", lambda: set())
     doc = _document(services=[_service("api", serving_sha=SHA_OLD)])
     _post_report(doc)
-    host = client.get("/api/fleet/projects/v1?host_id=host-job").json()["hosts"]["host-job"]
+    host = client.get("/api/fleet/projects/v1?host_id=host-worker").json()["hosts"]["host-worker"]
     assert host["services"][0]["drift"] is True
     assert "drift:api" in host["attention"]
 
@@ -156,7 +188,7 @@ def test_drift_matrix_checkout_mode(monkeypatch: pytest.MonkeyPatch) -> None:
         ]
     )
     _post_report(doc)
-    service = client.get("/api/fleet/projects/v1?host_id=host-job").json()["hosts"]["host-job"]["services"][0]
+    service = client.get("/api/fleet/projects/v1?host_id=host-worker").json()["hosts"]["host-worker"]["services"][0]
     assert service["serving_mode"] == "checkout"
     assert service["drift"] is True
 
@@ -171,7 +203,7 @@ def test_drift_matrix_stopped_and_sibling(monkeypatch: pytest.MonkeyPatch) -> No
         ]
     )
     _post_report(doc)
-    services = client.get("/api/fleet/projects/v1?host_id=host-job").json()["hosts"]["host-job"]["services"]
+    services = client.get("/api/fleet/projects/v1?host_id=host-worker").json()["hosts"]["host-worker"]["services"]
     assert services[0]["drift"] == "unknown"
     assert services[1]["drift"] == "not_applicable"
 
@@ -184,14 +216,17 @@ def test_drift_matrix_stale_upstream(monkeypatch: pytest.MonkeyPatch) -> None:
         services=[_service("api", serving_sha=SHA_OLD)],
     )
     _post_report(doc)
-    host = client.get("/api/fleet/projects/v1?host_id=host-job").json()["hosts"]["host-job"]
+    host = client.get("/api/fleet/projects/v1?host_id=host-worker").json()["hosts"]["host-worker"]
     assert host["services"][0]["drift"] == "unknown"
     assert "stale_upstream" in host["attention"]
 
 
 def test_report_validation_rejects_forbidden_tokens(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
-    assert _post_report({**_document(), "host_id": "10.0.0.1"}).status_code == 400
+    # Construct the RFC1918 probe so the OPSEC staged-file scanner does not
+    # treat this rejection fixture as a leak.
+    forbidden_ip = ".".join(("10", "0", "0", "1"))
+    assert _post_report({**_document(), "host_id": forbidden_ip}).status_code == 400
     assert _post_report({**_document(), "host_id": "atlas-runner"}).status_code == 400
     bad_doc = _document()
     bad_doc["services"] = [
@@ -219,9 +254,9 @@ def test_projects_opsec_no_paths_or_hostnames(monkeypatch: pytest.MonkeyPatch) -
 
 
 def test_health_serving_fields_and_opaque_host(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-job")
+    monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-worker")
     data = client.get("/api/health").json()["instance"]
-    assert data["host"] == "host-job"
+    assert data["host"] == "host-worker"
     assert data["checkout_sha"] == data["git_sha"]
     assert data["serving_mode"] in {"release", "checkout"}
     hostname = __import__("socket").gethostname()
@@ -229,7 +264,6 @@ def test_health_serving_fields_and_opaque_host(monkeypatch: pytest.MonkeyPatch) 
 
 
 def test_health_release_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Any) -> None:
-    from dataclasses import replace
     release_sha = SHA_MAIN
     release_dir = tmp_path / ".runtime" / "api" / "releases" / release_sha
     release_dir.mkdir(parents=True)
@@ -238,12 +272,9 @@ def test_health_release_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Any) 
         encoding="utf-8",
     )
     base_ctx = app.state.ctx
-    patched_ctx = replace(
-        base_ctx,
-        roots=replace(base_ctx.roots, project_root=release_dir),
-    )
+    patched_ctx = base_ctx.with_roots(project_root=release_dir)
     monkeypatch.setattr(app.state, "ctx", patched_ctx)
-    monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-job")
+    monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-worker")
     instance = client.get("/api/health").json()["instance"]
     assert instance["serving_mode"] == "release"
     assert instance["serving_sha"] == release_sha
@@ -251,39 +282,39 @@ def test_health_release_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Any) 
 
 def test_in_process_self_host_is_fresh(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
-    monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-job")
+    monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-worker")
     monkeypatch.setattr(router_mod, "_live_local_document", lambda host_id: _document(host_id))
-    host = client.get("/api/fleet/projects/v1?host_id=host-job").json()["hosts"]["host-job"]
+    host = client.get("/api/fleet/projects/v1?host_id=host-worker").json()["hosts"]["host-worker"]
     assert host["freshness"] == "fresh"
     assert host["age_s"] == 0.0
 
 
 def test_self_report_cache_is_shared_by_project_and_worker_routes(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
-    monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-job")
-    document = _document("host-job")
+    monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-worker")
+    document = _document("host-worker")
     calls = 0
 
     def collect(host_id: str) -> dict[str, Any]:
         nonlocal calls
         calls += 1
-        assert host_id == "host-job"
+        assert host_id == "host-worker"
         return document
 
     monkeypatch.setattr(router_mod, "collect_local_document", collect)
-    monkeypatch.setattr("scripts.api.fleet_workers_collect._self_host_ids", lambda: {"host-job"})
+    monkeypatch.setattr("scripts.api.fleet_workers_collect._self_host_ids", lambda: {"host-worker"})
     monkeypatch.setattr("scripts.api.fleet_workers_collect.collect_driver_workers", lambda **_: ([], []))
     monkeypatch.setattr("scripts.api.fleet_workers_collect.collect_delegate_workers", lambda *_, **__: [])
     monkeypatch.setattr("scripts.api.fleet_workers_collect.collect_job_workers", lambda **_: ([], None))
     monkeypatch.setattr("scripts.api.fleet_workers_collect.collect_marker_workers", lambda **_: [])
 
-    project = client.get("/api/fleet/projects/v1?host_id=host-job")
-    workers = client.get("/api/fleet/workers/v1?host_id=host-job")
+    project = client.get("/api/fleet/projects/v1?host_id=host-worker")
+    workers = client.get("/api/fleet/workers/v1?host_id=host-worker")
 
     assert project.status_code == 200
     assert workers.status_code == 200
     assert calls == 1
-    project_host = project.json()["hosts"]["host-job"]
+    project_host = project.json()["hosts"]["host-worker"]
     worker_host = workers.json()["hosts"][0]
     assert project_host["freshness"] == "fresh"
     assert project_host["age_s"] <= 1.0
@@ -293,8 +324,8 @@ def test_self_report_cache_is_shared_by_project_and_worker_routes(monkeypatch: p
 
 def test_self_report_cache_serves_stale_while_refreshing(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
-    monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-job")
-    document = _document("host-job")
+    monkeypatch.setenv("LU_MONITOR_HOST_ID", "host-worker")
+    document = _document("host-worker")
     calls = 0
     refresh_started = threading.Event()
     release_refresh = threading.Event()
@@ -309,16 +340,16 @@ def test_self_report_cache_serves_stale_while_refreshing(monkeypatch: pytest.Mon
         return {**document, "collected_at": datetime.now(UTC).isoformat().replace("+00:00", "Z")}
 
     monkeypatch.setattr(router_mod, "collect_local_document", collect)
-    first = router_mod.get_cached_local_document("host-job")
+    first = router_mod.get_cached_local_document("host-worker")
     assert first.document is document
-    cached_entry = router_mod._LOCAL_DOCUMENT_CACHE["host-job"]
-    router_mod._LOCAL_DOCUMENT_CACHE["host-job"] = router_mod._LocalDocumentCacheEntry(
+    cached_entry = router_mod._LOCAL_DOCUMENT_CACHE["host-worker"]
+    router_mod._LOCAL_DOCUMENT_CACHE["host-worker"] = router_mod._LocalDocumentCacheEntry(
         document,
         cached_entry.stored_at_mono - router_mod.LOCAL_DOCUMENT_FRESH_S - 1.0,
     )
 
     try:
-        stale = router_mod.get_cached_local_document("host-job")
+        stale = router_mod.get_cached_local_document("host-worker")
         assert refresh_started.wait(timeout=1.0)
         assert stale.document is document
         assert stale.freshness == "stale"

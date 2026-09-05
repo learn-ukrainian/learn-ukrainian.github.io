@@ -18,11 +18,11 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 | Epic | Recommended seat | Run |
 | --- | --- | --- |
 | **harness / infra** | Gemini (AGY) | `./start-gemini-driver.sh --epic infra` |
-| **harness / infra** (named alternate) | Codex / gpt-5.6-terra | `./start-codex-driver.sh --epic infra` |
+| **harness / infra** (named alternate) | Codex / gpt-6-astra @ high | `./start-codex-driver.sh --epic infra` |
 | **devops** | Gemini (AGY) | `./start-gemini-driver.sh --epic devops` |
-| **devops** (named alternate) | Codex / gpt-5.6-terra | `./start-codex-driver.sh --epic devops` |
+| **devops** (named alternate) | Codex / gpt-6-astra @ high | `./start-codex-driver.sh --epic devops` |
 | **monitor** | Gemini (AGY) | `./start-gemini-driver.sh --epic monitor` |
-| **monitor** (named alternate) | Codex / gpt-5.6-terra | `./start-codex-driver.sh --epic monitor` |
+| **monitor** (named alternate) | Codex / gpt-6-astra @ high | `./start-codex-driver.sh --epic monitor` |
 | **corpus** (acquisition & ingestion) | Gemini (AGY) | `./start-gemini-driver.sh --epic corpus` |
 | **atlas** (Word Atlas + Practice Hub product) | Grok 4.6 | `./start-grok-driver.sh --epic atlas` |
 | **hramatka** (teacher lesson service) | Grok 4.6 · Fable if judgment-heavy | `./start-grok-driver.sh --epic hramatka` |
@@ -56,7 +56,7 @@ that digest into its own handoff.
 
 Every host must export `LU_MONITOR_HOST_ID=<opaque id>` before a driver claims a
 lease. Use the opaque IDs from the canonical `MONITOR_OCCUPANCY_HOST_IDS`
-mapping (for example, `host-teacher`, `host-job`, or `mac-operator`), so the
+mapping (for example, `host-teacher` or `mac-operator`), so the
 holder is not reported as `local`. Do not substitute a hostname, alias, or IP
 address for the opaque ID.
 
@@ -115,9 +115,9 @@ Exact tables below must match `scripts/config/model_catalog.yaml` → `orchestra
 | seat | model_id | effort | escalate_model_id | escalate_effort |
 | --- | --- | --- | --- | --- |
 | agy | gemini-3.8-flash-high | high | gemini-3.1-pro-high | high |
-| claude | claude-fable-5-1 | high | gpt-5.6-sol | xhigh |
-| codex | gpt-5.6-terra | high | gpt-5.6-sol | xhigh |
-| cursor | auto | high | gpt-5.6-sol | xhigh |
+| claude | claude-fable-5-1 | high | gpt-6-astra | high |
+| codex | gpt-6-astra | high | gpt-6-astra | high |
+| cursor | auto | high | gpt-6-astra | high |
 | grok | grok-4.6 | high | grok-4.6 | high |
 <!-- fleet-roster-projection:end orchestrator_seats -->
 
@@ -204,7 +204,7 @@ The launchers already speak the **session-stream/lease** half of fleet-comms (#5
 A driver escalates instead of deciding solo when it hits: (1) an architecture/layout/process
 change, (2) a contested cross-family verdict, (3) a fragile fix whose right layer is unclear,
 (4) a high-risk route that would trip the `model_catalog.yaml` risk floor, or (5) a repo-wide
-safety interruption of another lane. Advisors for those calls: **Fable, Sol**.
+safety interruption of another lane. Advisors for those calls: **Fable, Astra @ high**.
 
 Everything else the driver runs to completion and reports past-tense — no "should I?" menus.
 

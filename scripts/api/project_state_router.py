@@ -16,6 +16,7 @@ from scripts.api.monitor_context import MonitorContext, get_ctx
 from scripts.api.observer_presence import _direct_loopback_peer
 from scripts.api.occupancy import DEFAULT_HOST_IDS, QUERYABLE_DEFAULT_HOST_IDS, parse_host_id_map
 from scripts.api.occupancy_local import resolve_launcher_host_id, self_host_opaque_ids
+from scripts.api.occupancy_sanitize import RETIRED_HOST_IDS
 from scripts.api.occupancy_sanitize import opaque_host_id as _opaque_host_id
 from scripts.api.project_state_collect import collect_local_document
 from scripts.api.project_state_sanitize import ProjectStateValidationError, validate_report_document
@@ -203,14 +204,22 @@ def allowed_reporter_host_ids(ctx: MonitorContext | None = None) -> frozenset[st
     # the outside-root guard MonitorContext already applies to db paths.
     if ctx is not None and ctx.root is not None:
         return frozenset()
-    ids = set(parse_host_id_map().values())
+    mapping = parse_host_id_map()
+    ids = set(mapping.values())
     ids.update(EXTRA_REPORTER_HOST_IDS)
-    return {host_id for host_id in ids if _opaque_host_id(host_id)}
+    # Production glance row may POST on loopback (optional; API prefer in-process).
+    # ``host-job`` is retired (RETIRED_HOST_IDS) and never allowlisted, mapped
+    # or not — the `_opaque_host_id` filter below drops it regardless of how
+    # it got into `ids`.
+    ids.update(DEFAULT_HOST_IDS)
+    return frozenset(host_id for host_id in ids if _opaque_host_id(host_id))
 
 
 def _selected_host_ids(host_id: str | None, ctx: MonitorContext | None = None) -> list[str]:
     allowed = allowed_reporter_host_ids(ctx)
     if host_id is not None:
+        if host_id in RETIRED_HOST_IDS:
+            raise HTTPException(status_code=400, detail="unknown host_id")
         if host_id not in allowed and host_id not in QUERYABLE_DEFAULT_HOST_IDS:
             raise HTTPException(status_code=400, detail="unknown host_id")
         return [host_id]
