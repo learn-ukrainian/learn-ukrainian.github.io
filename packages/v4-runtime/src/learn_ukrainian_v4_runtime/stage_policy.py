@@ -31,3 +31,38 @@ def validate_completion_policy(completions) -> str:
     if any(completion.get("trust_policy_sha256") != active for completion in completions):
         raise ProvenanceError("completion trust policy is not active")
     return active
+
+
+def current_stage_schema(frozen_schema: dict) -> dict:
+    """Strict current envelope extension; the sealed schema resource stays exact.
+
+    The only added field binds the current active policy. All historical shape
+    constraints remain, including additionalProperties=false. Positive records
+    require this field through validate_stage_policy; frozen empty receipts do not.
+    """
+    from copy import deepcopy
+
+    schema = deepcopy(frozen_schema)
+    schema["properties"]["trust_policy_sha256"] = {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+    return schema
+
+
+def bind_constructed_stage(function):
+    """Preserve frozen empty output; bind every constructed positive envelope."""
+    from functools import wraps
+
+    @wraps(function)
+    def construct(*args, **kwargs):
+        receipt = function(*args, **kwargs)
+        completions = [
+            item
+            for name, value in receipt.items()
+            if name.endswith("_completions") and isinstance(value, list)
+            for item in value
+        ]
+        if completions:
+            receipt["trust_policy_sha256"] = validate_completion_policy(completions)
+        validate_stage_policy(receipt)
+        return receipt
+
+    return construct

@@ -91,6 +91,7 @@ from jsonschema import Draft202012Validator
 
 from learn_ukrainian_v4_runtime.provenance import validation_session
 from learn_ukrainian_v4_runtime.resources import resource_root
+from learn_ukrainian_v4_runtime.stage_policy import bind_constructed_stage, current_stage_schema
 
 _SELF_ROOT = resource_root()
 
@@ -427,6 +428,7 @@ def assemble_engine_admission_receipt(
 # --- receipt assembly --------------------------------------------------------
 
 
+@bind_constructed_stage
 def build_receipt(root: Path = ROOT, a8_completions: list[dict[str, Any]] = ()) -> dict[str, Any]:
     manifest = _load(root / SLOT_MANIFEST_RELATIVE)
     a2_receipt = _load(root / A2_RECEIPT_RELATIVE)
@@ -603,7 +605,7 @@ def _load_schema(root: Path) -> dict[str, Any]:
 
 
 def validate_receipt_schema(receipt: dict[str, Any], root: Path = ROOT) -> None:
-    errors = sorted(Draft202012Validator(_load_schema(root)).iter_errors(receipt), key=lambda e: list(e.path))
+    errors = sorted(Draft202012Validator(current_stage_schema(_load_schema(root))).iter_errors(receipt), key=lambda e: list(e.path))
     require(not errors, f"receipt fails schema validation: {errors[0].message}" if errors else "")
 
 

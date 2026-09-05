@@ -130,6 +130,16 @@ def build_synthetic_chain_root(tmp_path: Path, *, resolved_stratum: str) -> Path
     (admission_dir / "dataset_v4_a5_evidence_enrichment_receipt_v1.json").write_text(json.dumps(synthetic_a5))
     (admission_dir / "dataset_v4_pilot_slot_manifest_v1.json").write_text(json.dumps(manifest))
     shutil.copytree(ROOT / "scripts/projects/open_model_data", tmp_path / "scripts/projects/open_model_data", dirs_exist_ok=True)
+    # Hash original implementation bytes in this synthetic legacy repository.
+    # Test imports execute the package; these mode-0600 fixture files are not loaded.
+    from learn_ukrainian_v4_runtime import resources
+    spec = json.loads(resources.read_bytes("provenance/v1/bindings.json"))
+    for receipt in spec["receipts"]:
+        for binding in receipt["bindings"].values():
+            if binding["path"].startswith("scripts/"):
+                path = tmp_path / binding["path"]
+                path.write_bytes(resources.read_bytes("provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"))
+                path.chmod(0o600)
     return tmp_path
 
 

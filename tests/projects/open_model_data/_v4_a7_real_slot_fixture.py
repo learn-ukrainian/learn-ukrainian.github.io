@@ -159,9 +159,21 @@ TRUST_POLICY_SHA256 = trust.trust_policy_sha256(TRUST_POLICY)
 
 @contextmanager
 def installed_fixture_policy():
-    """Isolated test-policy seam: cannot serve production admission."""
-    with patch.object(trust, "load_production_trust_policy", lambda: (TRUST_POLICY, TRUST_POLICY_SHA256)):
-        yield
+    """Owned policy bytes and test enablement; use the real fixed loader."""
+    import hashlib
+    import os
+    import tempfile
+
+    with tempfile.TemporaryDirectory(prefix="v4-policy-") as temporary:
+        policy_path = Path(temporary) / "policy.json"
+        raw = json.dumps(TRUST_POLICY, sort_keys=True).encode()
+        policy_path.write_bytes(raw)
+        with (
+            patch.object(trust, "DEFAULT_TRUST_POLICY_PATH", policy_path),
+            patch.object(trust, "PRODUCTION_TRUST_POLICY_FILE_DIGEST_ALLOWLIST", frozenset({hashlib.sha256(raw).hexdigest()})),
+            patch.dict(os.environ, {"HRAMATKA_V4_ADMISSION_ENABLED": "1"}),
+        ):
+            yield
 
 AUTHOR_TASK_ID = "fixture-author-task-001"
 AUTHOR_RUN_NONCE = "fixture-author-run-nonce-001"

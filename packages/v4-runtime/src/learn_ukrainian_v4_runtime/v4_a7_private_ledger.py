@@ -509,6 +509,9 @@ def construct_completion(
     Repair E: ``author_execution_receipt``/``reviewer_execution_receipt`` are
     pre-issued, signed fleet-execution receipts, never raw caller
     dictionaries."""
+    from learn_ukrainian_v4_runtime.readiness import require_admission_enabled
+
+    require_admission_enabled()
     row_content_sha256 = sha256_text(row_text)
     trust_policy, policy_digest = trust.load_production_trust_policy()
 

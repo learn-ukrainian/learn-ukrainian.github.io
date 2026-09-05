@@ -286,6 +286,13 @@ def completion_slot_ids(
     ships today (no stage has an execution mechanism yet); this function
     exists so that changes, whenever they arrive, are proven by real
     partition/subset checks instead of trusted."""
+    if stage in {"A7", "A8", "A9", "A10", "A11", "A12", "A13"} and completions:
+        from learn_ukrainian_v4_runtime.stage_policy import validate_completion_policy
+
+        try:
+            validate_completion_policy(completions)
+        except ValueError as exc:
+            raise error_cls(str(exc)) from exc
     ids: list[str] = []
     for record in completions:
         require(
