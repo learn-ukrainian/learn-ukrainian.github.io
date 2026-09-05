@@ -108,6 +108,7 @@ def test_help_runs_without_engine():
         text=True,
         capture_output=True,
         check=True,
+        timeout=30,
     )
     assert "Exit codes:" in result.stdout
     assert "--limit" in result.stdout
