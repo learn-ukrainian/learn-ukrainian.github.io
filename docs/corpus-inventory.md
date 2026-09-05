@@ -78,6 +78,11 @@
   an `AFTER INSERT` trigger — no delete/update trigger. After any delete/bulk change, resync with
   `INSERT INTO <name>_fts(<name>_fts) VALUES('rebuild')`.
 
+For the #4593 STEM books, follow the
+[incremental textbook recipe](runbooks/stem-textbook-incremental-ingest.md),
+including guarded acquisition, explicit database selection, and native-text
+admission. A worktree database copy is not the live Sources MCP database.
+
 ### Safe recipe to ADD literary content (no destructive rebuild)
 
 Used 2026-06-15 to land the expanded folk corpus (#3193) without a `--force`:

@@ -850,6 +850,27 @@ def test_title_verified_bilyk_author_mapping_enriches_staged_source() -> None:
     assert entry["author_uk"] == "Катерина Білик"
 
 
+def test_bondarenko_informatics_rows_have_author_subject_and_grade(tmp_path) -> None:
+    slug = "6-klas-informatyka-bondarenko-2023"
+    path = tmp_path / "grade-06" / f"{slug}.jsonl"
+    path.parent.mkdir()
+    path.write_text(
+        json.dumps({
+            "chunk_id": f"{slug}_s0000",
+            "section_title": "Сторінка 1",
+            "text": "Інформатика",
+            "author": "bondarenko",
+            "author_uk": None,
+            "grade": 6,
+        }, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    row = iti.build_rows(slug, chunks_root=tmp_path)[0]
+
+    assert row[3:8] == (slug, "informatyka", 6, "bondarenko", "Бондаренко")
+
+
 def test_university_source_without_audience_policy_is_quarantined(tmp_path):
     root = tmp_path / "university_corpus" / "jsonl"
     slug = "uni-ukrmova-unknown-2026"
