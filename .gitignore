@@ -360,6 +360,7 @@ data/corpus_audit/*
 !data/corpus_audit/draft_tickets/*.md
 !data/corpus_audit/navsi200-catalog.json
 !data/corpus_audit/navsi200-captions-ledger.json
+!data/corpus_audit/navsi200-asr-bakeoff-ledger.json
 
 
 .gemini/
