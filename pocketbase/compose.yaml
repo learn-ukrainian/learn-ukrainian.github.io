@@ -1,0 +1,24 @@
+---
+# Localhost-only PocketBase for Practice Hub backend dev (§10.2, GH #4384/#4920).
+# Not a production topology: no TLS, no public bind, no backups.
+services:
+  pocketbase:
+    build: .
+    command:
+      - serve
+      - --http
+      - 0.0.0.0:8090
+      - --dir
+      - /pb_data
+      - --migrationsDir
+      - /pb_migrations
+      - --hooksDir
+      - /pb_hooks
+    volumes:
+      - ./pb_migrations:/pb_migrations:ro
+      - ./pb_hooks:/pb_hooks:ro
+      - pb_data:/pb_data
+    ports:
+      - 127.0.0.1:8090:8090
+volumes:
+  pb_data:
