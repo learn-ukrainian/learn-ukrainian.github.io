@@ -2926,10 +2926,9 @@ def _invoke_impl(
     # a caller's explicit ``None`` for those adapters while retaining the
     # effective label for headroom and usage records.
     if v4_authorization_id:
-        from scripts.fleet_comms.request_executor import RequestExecutor
+        from scripts.fleet_comms.request_executor import RequestExecutorError
 
-        with RequestExecutor() as executor:
-            prompt = executor.resolve_authorized_prompt(request_id=v4_authorization_id)
+        raise RequestExecutorError("legacy V4 runner execution is retired; use the protected packaged V4 service runtime")
     plan_model = model if allow_direct_only else effective_model
     plan = adapter.build_invocation(
         prompt=prompt,

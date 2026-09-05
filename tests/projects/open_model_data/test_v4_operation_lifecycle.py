@@ -280,3 +280,45 @@ def test_sources_recording_commits_before_waiting_finalization(pg_cluster, prepa
                 assert waiting.wait(5)
                 assert not future.done()
             assert future.result(timeout=5) == 1
+
+
+@pytest.mark.parametrize(
+    "field",
+    [
+        "authorization_digest",
+        "request_id",
+        "attempt_id",
+        "capability_token",
+        "trust_policy_sha256",
+        "binding",
+        "deadline_at",
+    ],
+)
+def test_foreign_internal_claim_refuses_before_parent_side_effects(pg_cluster, prepared, field):
+    from datetime import timedelta
+
+    from learn_ukrainian_v4_runtime.service_runtime import V4ServiceRuntime
+
+    with role_connection(pg_cluster, "hramatka_v4_control_writer") as conn:
+        owned = claim(conn, prepared)
+        foreign = dict(owned)
+        if field == "binding":
+            foreign[field] = {**owned[field], "task_id": "foreign"}
+        elif field == "deadline_at":
+            foreign[field] = owned[field] + timedelta(seconds=1)
+        else:
+            foreign[field] = "foreign"
+        before = conn.execute("SELECT count(*) AS n FROM fleet_comms_artifact_blobs").fetchone()["n"]
+        service = V4ServiceRuntime(store=OperationStore(conn), verifier=None, release_provider=None)
+        with pytest.raises(OperationRefused, match="ownership"):
+            service._execute_owned_claim(foreign)
+        assert conn.execute("SELECT count(*) AS n FROM fleet_comms_artifact_blobs").fetchone()["n"] == before
+        assert (
+            conn.execute(
+                "SELECT count(*) AS n FROM v4_execution_observations WHERE request_id=%s", (owned["request_id"],)
+            ).fetchone()["n"]
+            == 0
+        )
+        with OperationStore(conn).finalization(owned) as (tx, fresh):
+            assert fresh
+            OperationStore.finish(tx, owned, success=False)

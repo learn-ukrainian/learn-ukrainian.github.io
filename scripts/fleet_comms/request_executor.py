@@ -761,6 +761,8 @@ class RequestExecutor:
         """Atomically require the exact binding and ``queued -> running``
         while creating the one-attempt capability. Called by the native
         runner immediately before Popen."""
+        if self._is_pg:
+            raise RequestExecutorError("legacy V4 runner claim is retired; use the protected packaged V4 service runtime")
         from scripts.fleet_comms import v4_canonical_authority_store as v4_store
         from scripts.fleet_comms import v4_execution_origin as origin
 

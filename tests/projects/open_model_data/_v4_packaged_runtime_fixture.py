@@ -134,7 +134,10 @@ class WheelRelease:
         with zipfile.ZipFile(self.wheel) as archive:
             for name, sha in actual["installed_files"].items():
                 assert digest(archive.read("learn_ukrainian_v4_runtime/" + name)) == sha
-        return {**actual, "wheel_sha256": digest(self.wheel.read_bytes())}
+            names = [item.filename for item in archive.infolist() if not item.is_dir()]
+            assert len(names) == len(set(names))
+            wheel_files = {name: digest(archive.read(name)) for name in names}
+        return {**actual, "wheel_sha256": digest(self.wheel.read_bytes()), "wheel_files": wheel_files}
 
 
 class RuntimeResources:

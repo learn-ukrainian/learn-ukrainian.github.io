@@ -381,6 +381,17 @@ def build_terminal_envelope(*, raw_capture_sha256: str, session_id: str, raw_cap
     )
 
 
+def _synthetic_execution_identity():
+    """Low-level signing-engine fixture only; not an actual wheel attestation."""
+    from learn_ukrainian_v4_runtime.provenance import verify_current_identity
+    identity = verify_current_identity()
+    prefix = "learn_ukrainian_v4_runtime/"
+    metadata = "learn_ukrainian_v4_runtime-" + identity["package_version"] + ".dist-info/"
+    files = {prefix + name: sha for name, sha in identity["installed_files"].items()}
+    files.update({metadata + name: ledger.sha256_text("synthetic-" + name) for name in ("METADATA", "WHEEL", "RECORD")})
+    return {**identity, "wheel_sha256": "f" * 64, "wheel_files": files}
+
+
 def build_author_execution_receipt(
     row_content_sha256: str,
     *,
@@ -395,10 +406,8 @@ def build_author_execution_receipt(
     execution_result_sha256 = ledger.sha256_text("fixture-author-execution-result")
     resolved_task_state = task_state if task_state is not None else build_author_task_state()
     resolved_envelope = envelope if envelope is not None else build_terminal_envelope(raw_capture_sha256=execution_result_sha256, session_id=AUTHOR_SESSION_ID, raw_capture_artifact_id="fixture-author-raw-capture-001")
-    from learn_ukrainian_v4_runtime.provenance import verify_current_identity
-
     observation_kwargs: dict[str, Any] = {
-        "runtime_identity": {**verify_current_identity(), "wheel_sha256": "f" * 64},
+        "runtime_identity": _synthetic_execution_identity(),
         "task_id": resolved_task_state.task_id,
         "run_nonce": resolved_task_state.run_nonce,
         "observed_model": resolved_task_state.seat_or_model,
@@ -441,10 +450,8 @@ def build_reviewer_execution_receipt(
     execution_result_sha256 = ledger.sha256_text("fixture-reviewer-execution-result")
     resolved_task_state = task_state if task_state is not None else build_reviewer_task_state()
     resolved_envelope = envelope if envelope is not None else build_terminal_envelope(raw_capture_sha256=execution_result_sha256, session_id=REVIEWER_SESSION_ID, raw_capture_artifact_id="fixture-reviewer-raw-capture-001")
-    from learn_ukrainian_v4_runtime.provenance import verify_current_identity
-
     observation_kwargs: dict[str, Any] = {
-        "runtime_identity": {**verify_current_identity(), "wheel_sha256": "f" * 64},
+        "runtime_identity": _synthetic_execution_identity(),
         "task_id": resolved_task_state.task_id,
         "run_nonce": resolved_task_state.run_nonce,
         "observed_model": resolved_task_state.seat_or_model,

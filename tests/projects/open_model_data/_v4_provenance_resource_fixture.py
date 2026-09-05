@@ -109,6 +109,10 @@ class SyntheticResources:
             + f"RELEASE_MANIFEST_SHA256 = {provenance._sha(raw['release_manifest.json'])!r}\nPROVENANCE_MANIFEST_SHA256 = {release['provenance_sha256']!r}\n"
         ).encode()
         self.overrides = raw
+        for name, value in raw.items():
+            candidate = fixture_root / name
+            if name.startswith("data/projects/open_model_data/") and candidate.is_file():
+                candidate.write_bytes(value)
         provenance.validate_package_bindings(sealed)
         return sealed
 
@@ -125,3 +129,54 @@ def synthetic_resources():
             yield bundle
     finally:
         ACTIVE.reset(token)
+
+
+def synthetic_wheel(base_wheel, destination):
+    """Materialize test resource bytes before execution, with an exact RECORD.
+
+    The base wheel is independently built from committed code. This owned
+    derivative is visibly marked as a fixture and never used for release proof.
+    """
+    import base64
+    import csv
+    import hashlib
+    import io
+    import zipfile
+
+    bundle = ACTIVE.get()
+    assert bundle is not None and bundle.overrides
+    with zipfile.ZipFile(base_wheel) as archive:
+        entries = {item.filename: archive.read(item) for item in archive.infolist() if not item.is_dir()}
+    prefix = "learn_ukrainian_v4_runtime/"
+    for name, value in bundle.overrides.items():
+        assert prefix + name in entries
+        entries[prefix + name] = value
+    metadata = next(name for name in entries if name.endswith(".dist-info/METADATA"))
+    lines = entries[metadata].decode().splitlines()
+    entries[metadata] = (
+        "\n".join(
+            "Summary: Synthetic resource fixture; not a deployment release" if line.startswith("Summary:") else line
+            for line in lines
+        )
+        + "\n"
+    ).encode()
+    record = next(name for name in entries if name.endswith(".dist-info/RECORD"))
+    stream = io.StringIO(newline="")
+    writer = csv.writer(stream)
+    for name, raw in sorted(entries.items()):
+        if name != record:
+            writer.writerow(
+                [
+                    name,
+                    "sha256=" + base64.urlsafe_b64encode(hashlib.sha256(raw).digest()).decode().rstrip("="),
+                    len(raw),
+                ]
+            )
+    writer.writerow([record, "", ""])
+    entries[record] = stream.getvalue().encode()
+    with zipfile.ZipFile(destination, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+        for name, raw in sorted(entries.items()):
+            info = zipfile.ZipInfo(name, date_time=(2020, 1, 1, 0, 0, 0))
+            info.external_attr = 0o100644 << 16
+            archive.writestr(info, raw)
+    return destination

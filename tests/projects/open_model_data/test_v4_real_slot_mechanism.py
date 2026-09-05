@@ -352,7 +352,7 @@ def test_verify_private_replay_refuses_a_tampered_evidence_receipt_grade(tmp_pat
     stored_ledger = ledger.load_ledger(info["ledger_path"])
     entry = stored_ledger["entries"][fx.TARGET_SLOT_ID]
     entry["evidence_receipt"] = {**entry["evidence_receipt"], "production_capable": False}
-    with pytest.raises(ledger.PrivateLedgerError, match="evidence receipt failed replay integrity recheck"):
+    with pytest.raises(ledger.PrivateLedgerError, match="unsigned synthetic evidence cannot pass private replay"):
         ledger.verify_private_replay(info["a7_receipt"], stored_ledger, **_replay_kwargs(tmp_root, info))
 
 

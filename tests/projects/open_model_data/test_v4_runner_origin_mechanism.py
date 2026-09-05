@@ -387,14 +387,24 @@ def test_sources_echoed_lexical_argument_is_not_the_identifier() -> None:
 pytest_plugins = ("test_v4_protected_parent_mechanism",)
 
 
-def test_boundary_to_boundary_positive_source_free(tmp_path, monkeypatch, pg_cluster, built_wheel, signing_resources) -> None:
+@pytest.fixture
+def synthetic_trust_bundle():
+    with fx.installed_fixture_policy():
+        yield
+
+
+def test_boundary_to_boundary_positive_source_free(tmp_path, monkeypatch, pg_cluster, built_wheel, signing_resources, synthetic_trust_bundle) -> None:
     """Parent capture → actual Sources HTTP → opaque issuance → A7/A8 replay.
 
     This proves the public mechanism below the separate private auth adapter.
     """
+    from _v4_provenance_resource_fixture import synthetic_wheel
     from test_v4_protected_parent_mechanism import _run_real_pair
 
-    pair = _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, False)
+    tmp_root = base_fixture.build_synthetic_chain_root(tmp_path / "slot-root", resolved_stratum="standard_correct")
+    sealed = fx.build_sealed_receipt_and_packet(tmp_path / "slot-root")
+    fixture_wheel = synthetic_wheel(built_wheel, tmp_path / "synthetic-runtime.whl")
+    pair = _run_real_pair(pg_cluster, tmp_path, monkeypatch, fixture_wheel, signing_resources, False)
     row_text = pair["row"]["row_text"]
     author_receipt = pair["author_receipt"]
     reviewer_receipt = pair["reviewer_receipt"]
@@ -410,8 +420,6 @@ def test_boundary_to_boundary_positive_source_free(tmp_path, monkeypatch, pg_clu
     evidence_receipt = evidence_binder.build_evidence_receipt(_sha(row_text), [verifier_receipt])
     monkeypatch.setenv("HRAMATKA_V4_ADMISSION_ENABLED", "1")
 
-    tmp_root = base_fixture.build_synthetic_chain_root(tmp_path / "slot-root", resolved_stratum="standard_correct")
-    sealed = fx.build_sealed_receipt_and_packet(tmp_path / "slot-root")
     a6_receipt = a6.build_receipt(tmp_root)
     a6.validate_receipt_independently(a6_receipt, tmp_root)
     (tmp_root / "data/projects/open_model_data/admission/dataset_v4_a6_blind_arena_receipt_v1.json").write_text(json.dumps(a6_receipt))
@@ -469,19 +477,13 @@ def test_boundary_to_boundary_positive_source_free(tmp_path, monkeypatch, pg_clu
 
 
 @pytest.mark.postgres
-def test_authorization_race_against_start_postgres(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    from scripts.control_plane.storage import Authority
+def test_authorization_race_against_start_postgres(tmp_path, monkeypatch, pg_cluster, prepared) -> None:
+    from test_v4_operation_lifecycle import claim, role_connection
 
-    with _ephemeral_postgres(monkeypatch):
-        with RequestExecutor(root=tmp_path / "pg-a") as authorizer, RequestExecutor(root=tmp_path / "pg-b") as starter:
-            assert authorizer.authority is Authority.PG
-            assert starter.authority is Authority.PG
-            request = authorizer.create_request(recipient="claude", body="pg-race")
-            authorizer.authorize_author_execution(
-                request_id=request.request_id, slot_id=fx.TARGET_SLOT_ID, expected_seat=FIXTURE_MODEL
-            )
-            starter.claim_v4_runner_execution(request_id=request.request_id)
-            with pytest.raises(RequestExecutorError, match="not authorizable"):
-                authorizer.authorize_author_execution(
-                    request_id=request.request_id, slot_id="v4p-standard-correct-002", expected_seat=FIXTURE_MODEL
-                )
+    with role_connection(pg_cluster, "hramatka_v4_control_writer") as conn:
+        owned = claim(conn, prepared)
+    with RequestExecutor(root=tmp_path) as authorizer:
+        with pytest.raises(RequestExecutorError, match="not authorizable"):
+            authorizer.authorize_author_execution(request_id=owned["request_id"], slot_id="v4p-standard-correct-002", expected_seat=FIXTURE_MODEL)
+        with pytest.raises(RequestExecutorError, match="retired"):
+            authorizer.claim_v4_runner_execution(request_id=owned["request_id"])

@@ -49,7 +49,7 @@ class OperationStore:
         with self.transaction() as conn:
             jti = self._consume_jti(conn, principal)
             row = conn.execute("""
-                SELECT r.request_id, b.record_json, b.record_sha256, b.semantic_input_json
+                SELECT r.request_id, r.expires_at, b.record_json, b.record_sha256, b.semantic_input_json
                 FROM requests r JOIN v4_execution_dispatch_bindings b USING (request_id)
                 WHERE r.state = 'queued' AND r.expires_at::timestamptz > clock_timestamp()
                   AND b.semantic_input_json IS NOT NULL
@@ -74,7 +74,7 @@ class OperationStore:
                   authorization_digest,request_id,operation,target,role,seat,harness,timeout_seconds,
                   principal_json,authz_policy_sha256,trust_policy_sha256,binding_sha256,
                   authorization_body_sha256,execution_body_sha256,authorization_jti_digest,state,expires_at)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,1800,%s,%s,%s,%s,%s,%s,%s,'armed',clock_timestamp()+interval '5 minutes')
+                VALUES (%s,%s,%s,%s,%s,%s,%s,1800,%s,%s,%s,%s,%s,%s,%s,'armed',LEAST(clock_timestamp()+interval '5 minutes',%s::timestamptz))
             """,
                 (
                     digest(opaque_id.encode()),
@@ -91,6 +91,7 @@ class OperationStore:
                     digest(raw),
                     digest(execution_body),
                     jti,
+                    row["expires_at"],
                 ),
             )
             conn.execute(

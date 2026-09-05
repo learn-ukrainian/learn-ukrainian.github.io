@@ -16,7 +16,7 @@ from learn_ukrainian_v4_runtime.provenance import verify_current_identity
 
 class VerifiedReleaseProvider(Protocol):
     def verify(self, installed_identity: dict) -> dict:
-        """Return current identity plus wheel_sha256 after private vendor verification."""
+        """Return current identity plus wheel_sha256 and complete wheel_files after private vendor verification."""
         ...
 
 
@@ -24,7 +24,7 @@ def execution_identity(provider: VerifiedReleaseProvider) -> dict:
     current = verify_current_identity()
     verified = provider.verify(current)
     validate_execution_identity(verified)
-    if {key: value for key, value in verified.items() if key != "wheel_sha256"} != current:
+    if {key: value for key, value in verified.items() if key not in {"wheel_sha256", "wheel_files"}} != current:
         raise OperationRefused("verified_vendor_install_mismatch")
     return verified
 
@@ -34,6 +34,7 @@ def validate_execution_identity(proof: dict) -> None:
         "public_commit",
         "package_version",
         "wheel_sha256",
+        "wheel_files",
         "release_manifest_sha256",
         "provenance_manifest_sha256",
         "installed_files",
@@ -66,6 +67,20 @@ def validate_execution_identity(proof: dict) -> None:
     ):
         raise OperationRefused("execution_manifest_binding")
 
+    wheel_files = proof["wheel_files"]
+    prefix = "learn_ukrainian_v4_runtime/"
+    metadata = "learn_ukrainian_v4_runtime-" + proof["package_version"] + ".dist-info/"
+    if not isinstance(wheel_files, dict) or not {metadata + name for name in ("METADATA", "WHEEL", "RECORD")} <= set(
+        wheel_files
+    ):
+        raise OperationRefused("execution_complete_wheel_files_required")
+    for name, sha in wheel_files.items():
+        safe_relative(name)
+        if not name.startswith((prefix, metadata)) or not isinstance(sha, str) or not re.fullmatch("[a-f0-9]{64}", sha):
+            raise OperationRefused("execution_wheel_file_binding")
+    if {name.removeprefix(prefix): sha for name, sha in wheel_files.items() if name.startswith(prefix)} != files:
+        raise OperationRefused("execution_wheel_install_mismatch")
+
     current = verify_current_identity()
-    if {key: value for key, value in proof.items() if key != "wheel_sha256"} != current:
+    if {key: value for key, value in proof.items() if key not in {"wheel_sha256", "wheel_files"}} != current:
         raise OperationRefused("execution_identity_does_not_match_installed_release")

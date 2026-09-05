@@ -63,7 +63,9 @@ BEGIN
    RAISE EXCEPTION 'inactive V4 Sources capability';
  END IF;
  IF NOT EXISTS (SELECT FROM public.v4_operation_authorizations o
-   WHERE o.request_id = a.request_id AND o.state = 'claimed'
+   JOIN public.requests r ON r.request_id=o.request_id
+   WHERE r.state = 'running' AND r.expires_at::timestamptz=a.deadline_at
+     AND o.request_id = a.request_id AND o.state = 'claimed'
      AND o.deadline_at = a.deadline_at AND o.deadline_at > clock_timestamp()) THEN
    RAISE EXCEPTION 'unowned V4 Sources capability';
  END IF;
