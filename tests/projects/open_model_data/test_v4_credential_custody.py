@@ -159,7 +159,7 @@ def test_parser_matches_the_kernel_wire_format(tmp_path):
     path = tmp_path / "credential"
     path.write_text("synthetic")
     path.chmod(0o400)
-    subprocess.run(["setfacl", "-m", f"u:{API_UID}:r", str(path)], check=True, capture_output=True)
+    subprocess.run(["setfacl", "-m", f"u:{API_UID}:r", str(path)], check=True, capture_output=True, timeout=30)
     fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
     try:
         status = os.fstat(fd)
@@ -260,9 +260,9 @@ def test_refuses_unsafe_objects_through_the_descriptor(tmp_path, mutation):
         if mutation == "oversize":
             kwargs["max_bytes"] = 4
         elif mutation == "named_user_acl":
-            subprocess.run(["setfacl", "-m", f"u:{API_UID}:r", str(path)], check=True, capture_output=True)
+            subprocess.run(["setfacl", "-m", f"u:{API_UID}:r", str(path)], check=True, capture_output=True, timeout=30)
         elif mutation == "named_group_acl":
-            subprocess.run(["setfacl", "-m", f"g:{os.getgid()}:r", str(path)], check=True, capture_output=True)
+            subprocess.run(["setfacl", "-m", f"g:{os.getgid()}:r", str(path)], check=True, capture_output=True, timeout=30)
         elif mutation == "writable_parent":
             parent.chmod(0o722)
         elif mutation == "symlink_parent":
