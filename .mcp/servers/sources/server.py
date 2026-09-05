@@ -1838,9 +1838,10 @@ async def handle_vet_vocabulary(args: dict) -> list[TextContent]:
     words = submitted_words[:500]
     include_definitions = bool(args.get("include_definitions", False))
 
+    import wiki.sources_db as sdb
+
     from scripts.verification.check_ru_morph import check_russian_patterns_batch
     from scripts.verification.vesum import verify_words
-    from wiki import sources_db as sdb
 
     vesum_results = await asyncio.to_thread(verify_words, words)
     lookup_terms = list(dict.fromkeys(
