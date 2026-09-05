@@ -55,7 +55,8 @@ def pg_cluster(tmp_path_factory):
     root = tmp_path_factory.mktemp("v4-pg")
     data = root / "data"
     sock = Path(tempfile.mkdtemp(prefix="v4pg-", dir="/tmp"))
-    binary = Path("/usr/lib/postgresql/18/bin")
+    binary = Path(subprocess.run(["pg_config", "--bindir"], check=True, capture_output=True, text=True).stdout.strip())
+    assert (binary / "initdb").is_file() and (binary / "pg_ctl").is_file(), "install the PostgreSQL server test dependency"
     subprocess.run(
         [str(binary / "initdb"), "-D", str(data), "--encoding=UTF8", "--locale=C", "--auth=trust"],
         check=True,

@@ -176,13 +176,28 @@ def test_expired_authorization_refuses(pg_cluster, prepared):
             claim(conn, prepared)
 
 
+def _wait_for_blocker(pg, waiting_pid, blocker_pid):
+    import time
+
+    deadline = time.monotonic() + 5
+    while time.monotonic() < deadline:
+        if pg.execute("SELECT %s=ANY(pg_blocking_pids(%s)) AS blocked", (blocker_pid, waiting_pid)).fetchone()[
+            "blocked"
+        ]:
+            return
+        time.sleep(0.01)
+    raise AssertionError("expected real PostgreSQL lock wait did not occur")
+
+
 def test_sources_waits_for_terminalization_and_then_refuses(pg_cluster, prepared):
     with role_connection(pg_cluster, "hramatka_v4_control_writer") as conn:
         value = claim(conn, prepared)
         started = threading.Event()
+        process = {}
 
         def record():
             with role_connection(pg_cluster, "hramatka_v4_sources_writer") as sources:
+                process["pid"] = sources.info.backend_pid
                 started.set()
                 try:
                     sources.execute(
@@ -198,6 +213,7 @@ def test_sources_waits_for_terminalization_and_then_refuses(pg_cluster, prepared
                 assert fresh
                 future = pool.submit(record)
                 assert started.wait(5)
+                _wait_for_blocker(pg_cluster, process["pid"], conn.info.backend_pid)
                 OperationStore.finish(tx, value, success=False)
             assert future.result(timeout=5) == "refused"
 
@@ -252,9 +268,11 @@ def test_sources_recording_commits_before_waiting_finalization(pg_cluster, prepa
     with patch.object(sources_handlers, "_backend", LexicalResources()):
         _, outcome = asyncio.run(sources_handlers.handle_verify_word({"word": "fixture-one"}))
     waiting = threading.Event()
+    process = {}
 
     def finalize():
         with role_connection(pg_cluster, "hramatka_v4_control_writer") as control:
+            process["pid"] = control.info.backend_pid
             waiting.set()
             with OperationStore(control).finalization(value) as (tx, fresh):
                 assert fresh
@@ -278,6 +296,7 @@ def test_sources_recording_commits_before_waiting_finalization(pg_cluster, prepa
                 )
                 future = pool.submit(finalize)
                 assert waiting.wait(5)
+                _wait_for_blocker(pg_cluster, process["pid"], sources.info.backend_pid)
                 assert not future.done()
             assert future.result(timeout=5) == 1
 
@@ -322,3 +341,48 @@ def test_foreign_internal_claim_refuses_before_parent_side_effects(pg_cluster, p
         with OperationStore(conn).finalization(owned) as (tx, fresh):
             assert fresh
             OperationStore.finish(tx, owned, success=False)
+
+
+def test_finalization_rechecks_database_deadline_after_actual_lock_wait(pg_cluster, prepared):
+    import time
+
+    with role_connection(pg_cluster, "hramatka_v4_control_writer") as conn:
+        owned = claim(conn, prepared)
+        with conn.transaction():
+            deadline = conn.execute("SELECT clock_timestamp()+interval '2 seconds' AS deadline").fetchone()["deadline"]
+            conn.execute(
+                "UPDATE v4_operation_authorizations SET deadline_at=%s WHERE request_id=%s",
+                (deadline, owned["request_id"]),
+            )
+            conn.execute(
+                "UPDATE v4_execution_attempts SET deadline_at=%s WHERE attempt_id=%s", (deadline, owned["attempt_id"])
+            )
+            conn.execute("UPDATE requests SET expires_at=%s WHERE request_id=%s", (str(deadline), owned["request_id"]))
+        owned["deadline_at"] = deadline
+    waiting = threading.Event()
+    process = {}
+
+    def finalize():
+        with role_connection(pg_cluster, "hramatka_v4_control_writer") as control:
+            process["pid"] = control.info.backend_pid
+            waiting.set()
+            with OperationStore(control).finalization(owned) as (tx, fresh):
+                OperationStore.finish(tx, owned, success=False)
+                return fresh
+
+    with ThreadPoolExecutor(max_workers=1) as pool:
+        with role_connection(pg_cluster, "hramatka_v4_sources_writer") as sources:
+            with sources.transaction():
+                sources.execute(
+                    "SELECT hramatka_v4_record_sources_invocation_v1(%s,NULL,NULL,NULL)",
+                    (digest(owned["capability_token"].encode()),),
+                )
+                future = pool.submit(finalize)
+                assert waiting.wait(5)
+                _wait_for_blocker(pg_cluster, process["pid"], sources.info.backend_pid)
+                assert pg_cluster.execute("SELECT clock_timestamp()<%s AS fresh", (deadline,)).fetchone()["fresh"]
+                stop = time.monotonic() + 5
+                while pg_cluster.execute("SELECT clock_timestamp()<%s AS fresh", (deadline,)).fetchone()["fresh"]:
+                    assert time.monotonic() < stop
+                    time.sleep(0.01)
+            assert future.result(timeout=5) is False

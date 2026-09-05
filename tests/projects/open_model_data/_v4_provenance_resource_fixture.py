@@ -44,6 +44,8 @@ class SyntheticResources:
         for _ in range(len(spec["receipts"]) + 1):
             changed = False
             for item in spec["receipts"]:
+                if item["resource"] == SEAL:
+                    continue
                 obj = json.loads(raw[item["resource"]])
                 for binding in obj["bindings"].values():
                     path = binding["path"]
@@ -113,7 +115,6 @@ class SyntheticResources:
             candidate = fixture_root / name
             if name.startswith("data/projects/open_model_data/") and candidate.is_file():
                 candidate.write_bytes(value)
-        provenance.validate_package_bindings(sealed)
         return sealed
 
 

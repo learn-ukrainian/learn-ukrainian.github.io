@@ -213,6 +213,10 @@ jobs:
           node-version: '22'
           cache: npm
           cache-dependency-path: package-lock.json
+      - name: Install native mechanism test dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y bubblewrap postgresql-16 libpq-dev
       - name: Install Python deps
         run: |
           set -euo pipefail

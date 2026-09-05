@@ -521,9 +521,11 @@ def test_a5_receipt_schema_and_v4_control_binding() -> None:
 def test_a5_receipt_bindings_match_exact_inputs() -> None:
     receipt = _receipt()
     for binding in receipt["bindings"].values():
-        bound_path = ROOT / binding["path"]
-        assert bound_path.is_file()
-        assert hashlib.sha256(bound_path.read_bytes()).hexdigest() == binding["sha256"]
+        from learn_ukrainian_v4_runtime import resources
+        logical = binding["path"]
+        if logical.startswith("scripts/"):
+            logical = "provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"
+        assert hashlib.sha256(resources.read_bytes(logical)).hexdigest() == binding["sha256"]
     assert receipt["bindings"]["a4_deterministic_extraction"]["path"] == str(A4_RECEIPT_PATH.relative_to(ROOT))
 
 
@@ -608,6 +610,9 @@ def test_a5_script_refuses_evidence_commitment_drift() -> None:
     tampered = copy.deepcopy(receipt)
     tampered["evidence_enrichment"]["evidence_commitment_sha256"] = "0" * 64
     with pytest.raises(enrichment.EnrichmentError, match="evidence_commitment_sha256"):
+        enrichment.validate_evidence_enrichment_shape(tampered)
+
+    with pytest.raises(enrichment.EnrichmentError, match="unknown receipt or incomplete manifest"):
         enrichment.validate_receipt_independently(tampered)
 
 
@@ -621,6 +626,9 @@ def test_a5_script_refuses_a5_residuals_that_drift_from_per_unit_evidence() -> N
     victim["reason_code"] = "structural_evidence_computed"
     victim["retryability"] = "not_retryable"
     with pytest.raises(enrichment.EnrichmentError, match="a5_residuals"):
+        enrichment.validate_residuals_carried_from_a2_and_a4(tampered)
+
+    with pytest.raises(enrichment.EnrichmentError, match="unknown receipt or incomplete manifest"):
         enrichment.validate_receipt_independently(tampered)
 
 
@@ -629,4 +637,7 @@ def test_a5_script_refuses_a_carried_forward_residual_with_wrong_status() -> Non
     tampered = copy.deepcopy(receipt)
     tampered["a2_residuals_carried_forward"][0]["status"] = "unresolved_carried_to_a4"
     with pytest.raises(enrichment.EnrichmentError, match="a2_residuals_carried_forward"):
+        enrichment.validate_residuals_carried_from_a2_and_a4(tampered)
+
+    with pytest.raises(enrichment.EnrichmentError, match="unknown receipt or incomplete manifest"):
         enrichment.validate_receipt_independently(tampered)

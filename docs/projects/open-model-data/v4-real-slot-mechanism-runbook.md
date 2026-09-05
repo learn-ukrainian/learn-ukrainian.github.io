@@ -1,193 +1,207 @@
-# V4 real-slot mechanism — runbook (native-runner origin)
+# V4 real-slot mechanism: packaged parent execution
 
-PR #7662 repair 8. Designated-advisor Sol GO_REPAIR after repair 7 failed
-exact-head review: `RequestExecutor.execute_capture` ingests caller captures
-and is **not** a V4 execution authority. The only production origin is
-`scripts.agent_runtime.runner._execute_invocation_plan` after actual
-InvocationPlan isolation, argv resolution, Popen, stream capture, and parse.
+PR #7662 preserves the A3 seal and frozen public receipts while moving current
+execution into `learn_ukrainian_v4_runtime`. The existing protected API parent
+owns process launch, capture, parsing, artifact writes and terminalization.
 
-Frozen epic outcome SHA-256
+Frozen outcome:
 `78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20`.
-Controls #7423 / pilot #7430. Mechanism only: **0 completed / 100 residual /
-0 emitted**, A13 open. No production keys, live PG migrations, corpus, or
-first-real-row deployment.
+Controls #7423 and pilot #7430 are unchanged. Default public output remains
+**0 completed / 100 residual / 0 emitted; A13 open**.
 
-This runbook describes what is **implemented and tested at this head**.
-Residuals are listed as residuals. There is no claim that every
-trust-boundary gap is closed.
+This is a source-free merge mechanism. Actual protected-unit qualification,
+private API integration, deployment and admission enablement belong to A0's
+later controlled integration work.
 
-## What repair 8 changes
+## Package and historical identity
 
-Repair 6/7 built the canonical Fleet Comms store, opaque-ID issuers, and
-Hramatka key custody. Those remain. Repair 8 moves the **writer**:
+The canonical package lives in `packages/v4-runtime`. Repository scripts adapt
+to its modules; they require the declared package dependency. Build/test commands
+are in the [package README](../../../packages/v4-runtime/README.md).
 
-1. V4 observation writing is removed from `execute_capture` /
-   `_finalize_capture`. Generic message-plane capture may remain; it is
-   non-authoritative for V4.
-2. The native runner accepts an opaque authorization id, resolves the
-   authorized prompt internally, atomically claims the exact binding
-   immediately before Popen, injects a one-attempt Sources capability, and
-   finalizes from that process's actual transported prompt, post-isolation
-   argv/executable, stdout/stderr/output artifacts, terminal rc, and parsed
-   row or verdict.
-3. Authorization is role-specific: `authorize_author_execution(request_id,
-   slot_id, expected_seat)` and `authorize_reviewer_execution(request_id,
-   authorship_receipt_id, expected_seat)`. No caller row/packet/rubric/
-   content hash. Blindness is derived from the validated source-blind prompt
-   profile plus the exact transported digest.
-4. Sources recording uses existing MCP HTTP Bearer auth. Caller
-   `_v4_evidence_*` arguments are discarded. Typed handler outcomes drive
-   success and `vesum:`/`sources:` identifiers. Mixed/shadow tools stay
-   excluded until they have a typed supporting-claim contract.
-5. Production wrappers load `load_production_trust_policy()` internally.
-   There is no caller policy argument and no synthetic production toggle.
-   Isolated test-policy seams cannot serve production admission.
+The approved fixed resource layout is:
 
-## 1. Canonical authority store
+- `provenance/v1/manifest.json`: complete receipt-binding occurrences and their
+  raw receipt digests, historical paths/schemas/digests, current successors,
+  package version, public commit and relationship.
+- `provenance/v1/blobs/sha256/<sealed-sha>.blob`: seventeen exact historical
+  implementations, read only for hashing.
+- `release_manifest.json`: current product file digests, including the explicit
+  data resources, license, empty trust policy and fixed rubric.
+- `_build_identity.py`: reproducible byte data binding the actual build commit,
+  version, release digest and provenance digest.
 
-Tables on the existing Fleet Comms plane (pg in production, sqlite under
-the default dev/test authority):
+The A3 seal digest remains
+`d3147b0201d0f358677825ea6700e3e3e81b7e2fad551fe6c4e7b174d402f860`.
+Its creator implementation remains
+`0691c83969b2312f01f111d2eac98fa6aadb5daa9ce059b7750ca28faf52359d`;
+its binding context remains
+`1c0d736aa729ba7836ce3b5732a1ef7b3a9fdba71455a30185b76f1c24e3dd0a`.
+The current A3 descriptor must reproduce
+`b2abbb8e45f60abb098b8976dec7e7f2b4668137f55bfab8eee3999bd65a1928`.
 
-| Table | Key | Written by |
-| --- | --- | --- |
-| `v4_execution_dispatch_bindings` | `request_id`, unique on `(task_id, run_id, role)` | `authorize_author_execution` / `authorize_reviewer_execution`, while the request is still `queued` |
-| `v4_execution_attempts` | `attempt_id` | `claim_v4_runner_execution`, atomically with `queued → running`. Stores only the capability **digest**. |
-| `v4_execution_observations` | `(task_id, run_id, role)` | `RequestExecutor.finalize_v4_runner_execution`, called only from the native runner |
-| `v4_sources_invocations` | `invocation_id` | Sources MCP HTTP handler via `record_v4_sources_invocation_from_typed_outcome`, joined to a running attempt |
-| `v4_authorship_receipts` | `receipt_id` | `persist_v4_authorship_receipt`, so reviewer authorization can resolve an opaque id |
+The relationship is `runtime_successor_validating_frozen_receipt`. Current
+execution does not claim to execute historical source or to be byte-equivalent
+to its creator. Membership, packets and downstream frozen public receipts are
+not resealed or rewritten. The strict repository validator still rejects
+relocated current code against the original sealed pin.
 
-**No public function accepts a caller-built execution observation or
-Sources record.** `execute_capture` does not write V4 observations even
-when the caller supplies a well-formed capture.
+The package validator reads only fixed built-in resources. It validates the
+entire manifest and binding set, rejects unknown/duplicate/missing/extra
+mappings and unsafe paths, hashes historical and current resources, and checks
+the frozen A3 context and descriptor before private operations.
 
-Migrations: `scripts/fleet_comms/pg_schema.py` v5,
-`scripts/fleet_comms/migrations.py` v10.
+## Private integration interface
 
-## 2. Native-runner origin
+`V4ServiceRuntime(store=..., verifier=..., release_provider=...)` exposes two
+route methods:
 
-`scripts.agent_runtime.runner.invoke(..., v4_authorization_id=...)`:
+| Method | Exact canonical UTF-8 body |
+| --- | --- |
+| `authorize(raw_body, oidc_token=..., github_bearer=...)` | `{"schema":"hramatka-v4-operation-authorize.v1"}` |
+| `execute(raw_body, oidc_token=..., github_bearer=...)` | `{"authorization_id":"<43-character opaque id>","schema":"hramatka-v4-operation-execute.v1"}` |
 
-1. Resolves the authorized source-blind prompt from the frozen binding
-   (`resolve_authorized_prompt`) and uses those bytes as the InvocationPlan
-   prompt. The caller's prompt argument is not transported.
-2. After final isolation/argv resolution, `claim_v4_runner_execution`
-   requires the exact binding and `queued → running`, and mints a
-   one-attempt capability. PostgreSQL locks the request row `FOR UPDATE`;
-   SQLite uses `BEGIN IMMEDIATE` with the same inside-transaction recheck.
-3. The capability is placed in the child environment
-   (`V4_SOURCES_ATTEMPT_CAPABILITY`) and stamped onto the existing MCP HTTP
-   config (`headers.Authorization` / `bearer_token_env_var`). The plaintext
-   token is never stored.
-4. After parse (and on failure in `finally`), `_finalize_v4_runner_origin`
-   derives one observation from that process. Absent actual-model/session
-   telemetry refuses rather than defaulting the requested identity.
+Bodies are at most 1 KiB. Duplicates, extra fields and noncanonical encodings
+refuse. Bodies cannot choose a target, role, seat, model, packet, row, rubric,
+policy, executable or runtime observation. Authorization selects an already
+prepared canonical assignment internally.
 
-Author `row_content_sha256` comes from the structured `V4-AUTHOR-ROW`
-output. Reviewer verdict comes from `V4-REVIEW-VERDICT: PASS|FAIL`.
-`verification_tool_ids` are resolved by **attempt id**, not request-only
-correlation.
+The trusted `ActionsVerifier.authenticate` returns `ActionsPrincipal` with:
+`repository_id`, `workflow_ref`, `ref`, `subject`, `workflow_sha256`, `run_id`,
+`run_attempt`, `check_run_id`, `runner_id`, `runner_group_id`, `runner_label`,
+`authz_policy_sha256`, and `jti`. Numeric identifiers must be positive integers;
+digests must be lowercase SHA-256. Ownership includes every field except the
+one-use JTI. The separate private verifier must perform the approved fresh
+OIDC and authoritative GitHub checks. Teacher/review authentication is not a
+substitute. Binding this interface to the existing private component remains
+A0's integration work.
 
-## 3. Role-specific authorization
+`VerifiedReleaseProvider.verify(installed_identity)` must run the existing
+private vendor verification and return the same current identity plus:
 
-`authorize_author_execution` loads the frozen public slot and A3 packet
-receipt, builds `v4-author-source-blind-v1`, and records the prompt digest.
-It does not accept a row hash.
+- `wheel_sha256`: digest of the externally verified wheel;
+- `wheel_files`: complete wheel file digest map, including distribution metadata.
 
-`authorize_reviewer_execution` resolves the authorship receipt and the
-fixed rubric (`data/projects/open_model_data/trust/v4_review_rubric_v1.txt`)
-internally and builds `v4-reviewer-source-blind-v1`.
+Current identity includes the full public commit, package version, release and
+provenance manifest digests, and the complete installed runtime file digest map.
+Opaque author/reviewer receipts bind this outer current identity. It is never
+added to the old A3 binding context. The private startup adapter must verify the
+vendor/installed chain before importing and exposing the runtime. Public
+self-consistency checks do not establish that external anchor.
 
-Blindness flags are the result of `blindness_from_prompt_profile`: the
-profile must be one of the two source-blind profiles and the transported
-digest must equal the authorized digest. They are not independently
-hard-coded `False` on a caller-ingest path.
+## Canonical preparation and execution
 
-## 4. Sources typed recording
+The existing trusted preparation owner resolves the admitted expression-free
+author constraints and fixed assignment. `freeze_semantic_input` records an
+immutable snapshot before authorization. Constraints contain only the task
+kind, CEFR level, required field names and sanctioned evidence tool names.
 
-`.mcp/servers/sources/server.py`:
+Reviewer preparation resolves a verified authorship receipt, the complete row
+from the parent's stored capture, the author's constraints and the fixed rubric.
+A matching row-text hash alone is insufficient: every authored field and the
+constraint set must agree with their canonical origin.
 
-- `_v4_evidence_*` keys are popped and ignored.
-- HTTP middleware resolves `Authorization: Bearer` to a running attempt.
-  Missing Authorization is ordinary curriculum traffic (no V4 recording).
-  Unknown, foreign, stale, or terminal tokens fail closed (401).
-- Sanctioned handlers (`verify_word`, `verify_words`, `verify_lemma`,
-  `verify_stress`, `check_modern_form`) return `(prose, typed_outcome)`.
-  `CallToolResult.structured_content` carries the typed outcome.
-- `success` is true only for disposition `supported` with server-derived
-  `vesum:`/`sources:` identifiers. Invalid input, not found, ambiguous,
-  negative, and partial lists are `success=false`. `vet_vocabulary` and
-  `check_russian_shadow` are Sol-approved exclusions from positive V4
-  evidence until they have a typed supporting-claim contract.
-- `issue_verifier_attestation(invocation_id=...)` joins the invocation to
-  the terminal **author** observation for the row hash. There is no caller
-  row-hash argument.
+`OperationStore` requires the control role on the canonical Fleet PostgreSQL
+connection. Authorization is bounded by the request expiry and five minutes.
+Claiming atomically consumes a fresh JTI, binds the exact owner and request,
+creates a Sources capability and sets the canonical 1800-second execution
+deadline. Request, authorization and attempt identities/deadlines must agree.
+Freshness is rechecked using the database clock after ownership locks are held.
 
-## 5. Fixed production policy resolver
+The parent builds the fixed bwrap plan after capability creation. The child gets
+an empty filesystem with only pinned runtime files, an isolated PID/proc view,
+its selected provider credential and Sources-only configuration. Claude carries
+the MCP configuration in argv and the semantic prompt on stdin. Codex carries
+its isolated Sources configuration in argv, the capability in its designated
+environment variable, and the prompt on stdin. Unqualified adapters or missing
+actual model/session/terminal evidence refuse.
 
-`load_production_trust_policy()` takes no arguments. Production wrappers
-(`construct_completion`, `verify_private_replay`, `build_authorship_receipt`,
-`build_review_receipt`, `build_verifier_receipt`, `build_evidence_receipt`,
-and their integrity validators) load it internally. `trust_policy_sha256`
-is bound through signed bodies, authorship/review receipts, private and
-public A7 completions, and A8 completions when present.
+The same parent captures and parses the child output. It checks request/attempt
+correlation before artifacts or observations are written, rechecks ownership,
+expiry, policy and release identity, and terminalizes in the canonical
+transaction. The legacy runner's PG claim and caller-fact finalization paths
+are retired. Generic message-plane capture remains non-authoritative for V4.
 
-The checked-in production policy file is empty. Its digest stays on the
-allowlist; an empty keyring refuses every production-capable receipt.
-Test-only policy seams (`installed_fixture_policy`, monkeypatched loaders)
-cannot serve production admission. Key revocation / allowlist removal
-invalidates a previous chain.
+## Sources and scoped privileges
 
-Crypto helpers (`verify_author_execution_receipt`,
-`verify_reviewer_execution_receipt`, `verify_verifier_attestation`) still
-take an explicit `trust_policy` because they are verification engines, not
-production admission wrappers.
+The schema includes `v4_operation_authorizations`, `v4_operation_jtis`, attempt
+deadlines and immutable semantic snapshots. The existing migration owner applies
+PG schema version 6 during controlled deployment; this task does not apply it to
+a live database.
 
-## Residuals (honest)
+| Principal | Authority |
+| --- | --- |
+| `hramatka_v4_control_writer` | Canonical control DML and Sources observation reads; no Sources invocation insert/execute authority |
+| `hramatka_v4_sources_writer` | EXECUTE on the fixed Sources stored operation; no direct V4 table DML |
+| Generic Fleet/worker roles | No V4 table grants or signing credentials |
 
-1. **No production keys, no live DSN, no first real row.** Mechanism-only.
-   The first-real-row PR owns provisioning, live migration, and a real
-   author/reviewer exercise. Required executable-writer integration is
-   **not** deferred there — it is in this PR and tested against fixture
-   executables/backends at the lowest IO edge.
-2. **Adapters without structured actual-model/session telemetry are
-   ineligible.** The runner refuses rather than defaulting requested
-   identity. Widening that set is separate work.
-3. **Reviewer verdict requires a cooperating reviewer prompt.** The
-   source-blind profile instructs `V4-REVIEW-VERDICT: PASS|FAIL`. A
-   reviewer that never emits the marker produces no observation.
-4. **Only harnesses in `KNOWN_HARNESS_EXECUTABLES` can be authorized.**
-5. **PostgreSQL dialect is exercised by an owned ephemeral UTF-8 cluster
-   in the two-connection race test**, not against a live production DSN.
-   Applying v5 to the real Fleet Comms DSN remains a deploy step.
-6. **Signed text-free A3 replay remains the approved alternative to a raw
-   callback.** A3 packet/reference-check authenticity is unchanged.
-7. **Root-owned caller-inaccessible signing under the existing service
-   account**, with operator rotation/revocation, remains approved and
-   unimplemented at this head (no key files are provisioned).
+The Sources stored operation locks the attempt, checks request/authorization
+ownership and expiry, assigns the invocation identity and ordinal, and records
+the typed result. Its lock ordering is tested against terminalization in both
+orders using independent PG connections and observed database lock waits.
 
-## First-real-row prerequisites (out of scope)
+Sanctioned tools are `verify_word`, `verify_words`, `verify_lemma`,
+`verify_stress` and `check_modern_form`. Evidence identifiers bind the actual
+lexical supporting records and a known source/tool version. Invalid input,
+not-found, ambiguous, negative and partial results remain unsuccessful.
+Ordinary unauthenticated Sources traffic creates no V4 evidence; a presented
+invalid or expired capability refuses. There are no shared MCP configuration
+edits or unrelated child MCPs.
 
-1. Apply `pg_schema.py` v5 against the real Fleet Comms PostgreSQL DSN as
-   part of the same deploy step that ships this code.
-2. Provision `/etc/hramatka/v4-signing-keys/{fleet_execution,sources,a3}.key`
-   + `.key_id`, register public keys in a new versioned trust-policy file,
-   and add its digest to `PRODUCTION_TRUST_POLICY_FILE_DIGEST_ALLOWLIST`.
-3. Wire the real V4 dispatch caller to `authorize_author_execution` /
-   `authorize_reviewer_execution` and `runner.invoke(...,
-   v4_authorization_id=...)`. Do not call `execute_capture` as a V4 origin.
-   Do not pass `_v4_evidence_*` correlation arguments.
-4. Only then: generate real task/run/invocation IDs from actual executions
-   and claim the first nonzero A7 completion after private replay and
-   exact-head cross-family review.
+Opaque Sources issuance joins a successful invocation to its actual terminal
+author observation. Execution and Sources issuers check that the execution's
+captured policy is still active before accessing signing keys.
 
-## Verification (this head)
+## Policy, custody and switches
 
-See the PR body for the exact commands and recorded results. Progress
-criterion: one boundary-to-boundary positive source-free path (service
-authorize/claim → real runner → real Sources HTTP on a typed fixture
-backend → runner-owned observation → opaque issuers → construct/replay
-→ A7/A8) plus the six accepted P1 adversarial repros. Fixtures substitute
-executable, VESUM backend, and custody roots at the lowest IO edge. They
-do not insert canonical observation rows, fake terminal observations,
-replace the runtime writer/authorization/resolvers, or add a test-only
-admission bypass.
+Both `HRAMATKA_V4_EXECUTION_ENABLED` and `HRAMATKA_V4_ADMISSION_ENABLED` default
+to OFF. Admission construction requires the admission switch and active keys.
+The shipped trust policy remains empty. A7–A13 validation, positive construction,
+aggregation and replay resolve the fixed active policy. Current positive
+records require matching top-level and completion policy bindings. Frozen empty
+receipts retain their original bytes and absence of the newer field.
+
+The current schema envelope adds only the policy digest; sealed schema resource
+bytes remain preserved. Existing shape and semantic checks remain active.
+Unsigned synthetic replay evidence and unresolved opaque authority IDs refuse.
+Signed text-free A3 replay attestation remains the approved alternative to a raw
+reference callback.
+
+Fixed credential locations use the existing systemd credential namespaces:
+control DSN, selected provider credential, actual-unit qualification and
+`v4-signing-keys/{fleet_execution,sources,a3}.key` plus `.key_id` under the API
+unit; Sources has its separate scoped DSN under its own unit. No new service,
+OS account, general writer or key-custody plane is introduced.
+
+Readiness also requires package integrity, a pinned child profile, actual-unit
+qualification and scoped credentials. The shipped child profile is unqualified.
+No production canary or enablement is implied by an isolated bwrap test.
+
+## Evidence and remaining ownership
+
+The tests distinguish unmodified release-wheel proofs from coherent synthetic
+trust-resource fixtures. Synthetic wheels are visibly marked as fixtures and
+are never deployment evidence. Resource/key fixtures do not replace the parent
+runner, parser, finalizer, authentication implementation or canonical observation
+writer. Public mechanism tests below the private authentication adapter do not
+claim end-to-end private authentication qualification.
+
+Source-free checks cover frozen provenance and fixed-salt invariance, manifest
+and resource tampering, parent-owned process capture, input-consuming valid and
+structurally defective cases, real Sources HTTP, scoped PG roles/interleavings,
+opaque issuance and private replay. Exact commands, elapsed times and final
+results are reported with delivery; task logs and build artifacts are not product
+files and are not committed.
+
+The minimal shared helper closure preserves the existing family-resolution,
+agent-identity, transport-contract and PG-schema behavior needed by runtime
+attesters. Repository `model_families`/`agent_identity` adapters share those
+canonical definitions; reviewer resolution and thread handoff import only the
+required family/known-harness helpers. Inventory orchestration stays in its
+original module; the package shares only the required source-type constant.
+
+A0 owns independent cross-family review at the exact head, required same-head CI,
+merge and worktree cleanup, then private endpoint/PG/vendor binding, actual-unit
+canaries and the first real row/full epic. There is no claim of completed private
+API deployment, live grants/migrations, provider execution or admission
+turn-on in this public change.

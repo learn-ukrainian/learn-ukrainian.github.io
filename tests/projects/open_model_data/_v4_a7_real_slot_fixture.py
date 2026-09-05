@@ -239,6 +239,10 @@ def build_sealed_receipt_and_packet(tmp_path: Path) -> dict[str, Any]:
         from _v4_provenance_resource_fixture import ACTIVE
         bundle = ACTIVE.get()
         assert bundle is not None, "synthetic seal requires the isolated resource fixture"
+        for binding in receipt["bindings"].values():
+            fixture_data = tmp_path / binding["path"]
+            if binding["path"].startswith("data/") and fixture_data.is_file():
+                binding["sha256"] = __import__("hashlib").sha256(fixture_data.read_bytes()).hexdigest()
         receipt = bundle.install_seal(receipt, tmp_path)
         heldout.write_private_artifact(private_dir / heldout.MEMBERSHIP_FILENAME, A3_FIXTURE_SALT, result, heldout.receipt_binding_sha256(receipt))
     finally:

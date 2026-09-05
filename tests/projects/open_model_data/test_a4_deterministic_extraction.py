@@ -994,9 +994,11 @@ def test_a4_extraction_bindings_match_exact_inputs() -> None:
     receipt = _receipt()
 
     for binding in receipt["bindings"].values():
-        bound_path = ROOT / binding["path"]
-        assert bound_path.is_file()
-        assert hashlib.sha256(bound_path.read_bytes()).hexdigest() == binding["sha256"]
+        from learn_ukrainian_v4_runtime import resources
+        logical = binding["path"]
+        if logical.startswith("scripts/"):
+            logical = "provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"
+        assert hashlib.sha256(resources.read_bytes(logical)).hexdigest() == binding["sha256"]
 
     assert receipt["bindings"]["a3_heldout_source_family_seal"]["path"] == str(REAL_SEAL_RECEIPT_PATH.relative_to(ROOT))
     assert receipt["bindings"]["a3_builder_packet_receipt"]["path"] == str(REAL_PACKET_RECEIPT_PATH.relative_to(ROOT))
@@ -1209,6 +1211,9 @@ def test_a4_script_refuses_a4_residuals_that_drift_from_a2() -> None:
     forged["a4_residuals"][0]["reason_code"] = "metadata_only"
 
     with pytest.raises(extraction.ExtractionError, match="does not reproduce from A2"):
+        extraction.validate_a4_residuals_derivable_from_a2(forged)
+
+    with pytest.raises(extraction.ExtractionError, match="unknown receipt or incomplete manifest"):
         extraction.validate_receipt_independently(forged)
 
 
@@ -1219,6 +1224,9 @@ def test_a4_script_refuses_an_a4_residual_naming_a_plaintext_source_unit_id() ->
     forged["a4_residuals"][0]["subject_kind"] = "source_unit"
 
     with pytest.raises(extraction.ExtractionError, match="does not reproduce from A2"):
+        extraction.validate_a4_residuals_derivable_from_a2(forged)
+
+    with pytest.raises(extraction.ExtractionError, match="unknown receipt or incomplete manifest"):
         extraction.validate_receipt_independently(forged)
 
 

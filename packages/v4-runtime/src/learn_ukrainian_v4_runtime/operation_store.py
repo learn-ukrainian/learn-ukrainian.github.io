@@ -143,6 +143,9 @@ class OperationStore:
                 raise OperationRefused("binding_ownership")
             if datetime.fromisoformat(request["expires_at"]) != auth["expires_at"]:
                 raise OperationRefused("request_deadline_ownership")
+            now = conn.execute("SELECT clock_timestamp() AS now").fetchone()["now"]
+            if auth["expires_at"] <= now or datetime.fromisoformat(request["expires_at"]) <= now:
+                raise OperationRefused("authorization_inactive")
             jti = self._consume_jti(conn, principal)
             from learn_ukrainian_v4_runtime.semantic_inputs import prompt_from_snapshot
 
@@ -233,7 +236,10 @@ class OperationStore:
                 or digest(claim["capability_token"].encode()) != attempt["capability_digest"]
             ):
                 raise OperationRefused("finalization_ownership")
-            yield conn, bool(attempt["fresh"])
+            # FOR UPDATE may wait after its target-list expression was evaluated.
+            # Read the database clock again after every ownership lock is held.
+            now = conn.execute("SELECT clock_timestamp() AS now").fetchone()["now"]
+            yield conn, attempt["deadline_at"] > now
 
     @staticmethod
     def finish(conn, claim: dict, *, success: bool):
