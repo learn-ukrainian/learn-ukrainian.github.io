@@ -85,8 +85,10 @@ from __future__ import annotations
 import copy
 import json
 import os
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
+from unittest.mock import patch
 
 import _v4_synthetic_chain_fixture as base_fixture
 
@@ -153,6 +155,13 @@ TRUST_POLICY = trust.build_test_trust_policy(
 # (``v4_trust_authority.trust_policy_sha256``), just over this test-only
 # policy dict instead of the checked-in production file.
 TRUST_POLICY_SHA256 = trust.trust_policy_sha256(TRUST_POLICY)
+
+
+@contextmanager
+def installed_fixture_policy():
+    """Isolated test-policy seam: cannot serve production admission."""
+    with patch.object(trust, "load_production_trust_policy", lambda: (TRUST_POLICY, TRUST_POLICY_SHA256)):
+        yield
 
 AUTHOR_TASK_ID = "fixture-author-task-001"
 AUTHOR_RUN_NONCE = "fixture-author-run-nonce-001"
@@ -258,25 +267,26 @@ def build_verifier_backed_evidence_receipt(row_content_sha256: str, *, vesum_ids
     """Simulates the distinct sources execution authority: issues one
     signed verifier attestation per identifier and wraps each into a
     production-capable verifier receipt (PR #7662 repair 4, repair A)."""
-    identifiers = list(vesum_ids if vesum_ids is not None else VESUM_IDS)
-    verifier_receipts = []
-    for index, identifier in enumerate(identifiers):
-        attestation = sources_authority._issue_verifier_attestation_from_evidence(
-            signing_key_hex=SOURCES_SIGNING_KEY_HEX,
-            signer_key_id=SOURCES_KEY_ID,
-            outcome_sha256=ledger.V4_SHA256,
-            row_content_sha256=row_content_sha256,
-            identifier=identifier,
-            tool_id="mcp__sources__verify_word",
-            tool_version="v1",
-            request_id=f"fixture-request-{index}",
-            tool_result_sha256=ledger.sha256_text(f"fixture-tool-result-{index}"),
-            lookup_ids=[f"fixture-lookup-{index}"],
-            invocation_id=f"fixture-invocation-{index}",
-            trust_policy_sha256=TRUST_POLICY_SHA256,
-        )
-        verifier_receipts.append(evidence_binder.build_verifier_receipt(attestation=attestation, trust_policy=TRUST_POLICY))
-    return evidence_binder.build_evidence_receipt(row_content_sha256, verifier_receipts, trust_policy=TRUST_POLICY)
+    with installed_fixture_policy():
+        identifiers = list(vesum_ids if vesum_ids is not None else VESUM_IDS)
+        verifier_receipts = []
+        for index, identifier in enumerate(identifiers):
+            attestation = sources_authority._issue_verifier_attestation_from_evidence(
+                signing_key_hex=SOURCES_SIGNING_KEY_HEX,
+                signer_key_id=SOURCES_KEY_ID,
+                outcome_sha256=ledger.V4_SHA256,
+                row_content_sha256=row_content_sha256,
+                identifier=identifier,
+                tool_id="mcp__sources__verify_word",
+                tool_version="v1",
+                request_id=f"fixture-request-{index}",
+                tool_result_sha256=ledger.sha256_text(f"fixture-tool-result-{index}"),
+                lookup_ids=[f"fixture-lookup-{index}"],
+                invocation_id=f"fixture-invocation-{index}",
+                trust_policy_sha256=TRUST_POLICY_SHA256,
+            )
+            verifier_receipts.append(evidence_binder.build_verifier_receipt(attestation=attestation))
+        return evidence_binder.build_evidence_receipt(row_content_sha256, verifier_receipts)
 
 
 def build_synthetic_fixture_evidence_receipt(row_content_sha256: str, vesum_ids: list[str], *, uncertainty: str = "resolved") -> dict[str, Any]:
@@ -458,40 +468,40 @@ def build_completion(
     fixture's own ephemeral "sources" test key. Every signed authenticity
     artifact (repair A/B/E/6) is built fresh here under the fixture's own
     ephemeral keys."""
-    row_content_sha256 = ledger.sha256_text(row_text)
-    evidence_receipt = build_verifier_backed_evidence_receipt(row_content_sha256)
-    reference_check_receipt = build_reference_check_receipt(row_text, reference_texts)
-    reference_check_signature, replay_attestation = build_reference_check_authenticity(reference_check_receipt, row_text=row_text, reference_texts=reference_texts)
+    with installed_fixture_policy():
+        row_content_sha256 = ledger.sha256_text(row_text)
+        evidence_receipt = build_verifier_backed_evidence_receipt(row_content_sha256)
+        reference_check_receipt = build_reference_check_receipt(row_text, reference_texts)
+        reference_check_signature, replay_attestation = build_reference_check_authenticity(reference_check_receipt, row_text=row_text, reference_texts=reference_texts)
 
-    author_execution_receipt = build_author_execution_receipt(row_content_sha256)
-    provisional_authorship_receipt = ledger.build_authorship_receipt(author_execution_receipt=author_execution_receipt, trust_policy=TRUST_POLICY, row_content_sha256=row_content_sha256)
-    authorship_receipt_sha256 = ledger.sha256_text(ledger.canonical_json(provisional_authorship_receipt))
-    reviewer_execution_receipt = build_reviewer_execution_receipt(row_content_sha256, authorship_receipt_sha256)
+        author_execution_receipt = build_author_execution_receipt(row_content_sha256)
+        provisional_authorship_receipt = ledger.build_authorship_receipt(author_execution_receipt=author_execution_receipt, row_content_sha256=row_content_sha256)
+        authorship_receipt_sha256 = ledger.sha256_text(ledger.canonical_json(provisional_authorship_receipt))
+        reviewer_execution_receipt = build_reviewer_execution_receipt(row_content_sha256, authorship_receipt_sha256)
 
-    manifest = _load(tmp_root / "data/projects/open_model_data/admission/dataset_v4_pilot_slot_manifest_v1.json")
-    a2_receipt = _load(tmp_root / "data/projects/open_model_data/admission/dataset_v4_a2_source_operation_admission_receipt_v1.json")
+        manifest = _load(tmp_root / "data/projects/open_model_data/admission/dataset_v4_pilot_slot_manifest_v1.json")
+        a2_receipt = _load(tmp_root / "data/projects/open_model_data/admission/dataset_v4_a2_source_operation_admission_receipt_v1.json")
 
-    return ledger.construct_completion(
-        slot_id=slot_id,
-        salt=salt,
-        candidate_unit_ids=list(candidate_unit_ids or CANDIDATE_UNIT_IDS),
-        a4_unit_commitments=a4_unit_commitments(tmp_root),
-        seal_receipt_path=sealed["seal_receipt_path"],
-        membership_dir=sealed["membership_dir"],
-        packet_dir=sealed["packet_dir"],
-        manifest=manifest,
-        a2_receipt=a2_receipt,
-        row_text=row_text,
-        tier="silver",
-        author_execution_receipt=author_execution_receipt,
-        reviewer_execution_receipt=reviewer_execution_receipt,
-        evidence_receipt=evidence_receipt,
-        reference_check_receipt=reference_check_receipt,
-        reference_check_signature=reference_check_signature,
-        replay_attestation=replay_attestation,
-        rights_receipt_id=rights_receipt_id,
-        trust_policy=TRUST_POLICY,
-    )
+        return ledger.construct_completion(
+            slot_id=slot_id,
+            salt=salt,
+            candidate_unit_ids=list(candidate_unit_ids or CANDIDATE_UNIT_IDS),
+            a4_unit_commitments=a4_unit_commitments(tmp_root),
+            seal_receipt_path=sealed["seal_receipt_path"],
+            membership_dir=sealed["membership_dir"],
+            packet_dir=sealed["packet_dir"],
+            manifest=manifest,
+            a2_receipt=a2_receipt,
+            row_text=row_text,
+            tier="silver",
+            author_execution_receipt=author_execution_receipt,
+            reviewer_execution_receipt=reviewer_execution_receipt,
+            evidence_receipt=evidence_receipt,
+            reference_check_receipt=reference_check_receipt,
+            reference_check_signature=reference_check_signature,
+            replay_attestation=replay_attestation,
+            rights_receipt_id=rights_receipt_id,
+        )
 
 
 def build_real_slot_root(tmp_path: Path) -> tuple[Path, dict[str, Any]]:
@@ -526,6 +536,7 @@ def build_real_slot_root(tmp_path: Path) -> tuple[Path, dict[str, Any]]:
         "slot_id": public_completion["slot_id"],
         "row_id": public_completion["row_id"],
         "row_content_sha256": public_completion["row_content_sha256"],
+        "trust_policy_sha256": public_completion.get("trust_policy_sha256"),
     }
     a8_receipt = a8.build_receipt(tmp_root, a8_completions=[a8_completion])
     a8.validate_receipt_independently(a8_receipt, tmp_root)

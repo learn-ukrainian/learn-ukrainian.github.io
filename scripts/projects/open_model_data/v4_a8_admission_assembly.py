@@ -280,6 +280,11 @@ def validate_a8_completions_match_a7(a8_completions: list[dict[str, Any]], a7_co
             completion["row_content_sha256"] == a7_completion["row_content_sha256"],
             f"a8 completion row_content_sha256 does not match the corresponding a7 completion for slot {completion['slot_id']!r} -- refusing",
         )
+        if "trust_policy_sha256" in a7_completion or "trust_policy_sha256" in completion:
+            require(
+                completion.get("trust_policy_sha256") == a7_completion.get("trust_policy_sha256"),
+                f"a8 completion trust_policy_sha256 does not match the corresponding a7 completion for slot {completion['slot_id']!r} -- refusing",
+            )
 
 
 # --- A8's own per-slot residuals (public, source-free) -----------------------

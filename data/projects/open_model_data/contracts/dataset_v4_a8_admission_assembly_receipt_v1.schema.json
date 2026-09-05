@@ -469,7 +469,8 @@
           "slot_id": { "type": "string", "pattern": "^v4p-[a-z-]+-[0-9]{3}$" },
           "stage": { "const": "A8" },
           "row_id": { "type": "string", "minLength": 1 },
-          "row_content_sha256": { "$ref": "#/$defs/sha256" }
+          "row_content_sha256": { "$ref": "#/$defs/sha256" },
+          "trust_policy_sha256": { "$ref": "#/$defs/sha256" }
         }
       }
     },

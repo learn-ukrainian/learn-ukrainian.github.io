@@ -560,6 +560,34 @@ _V9_STATEMENTS = (
     "CREATE INDEX IF NOT EXISTS idx_v4_sources_invocations_request ON v4_sources_invocations(request_id)",
 )
 
+# V4 runner-owned execution attempts + per-attempt Sources capability
+# (PR #7662 repair 8). Sqlite-dialect twin of ``pg_schema``'s v5.
+_V10_STATEMENTS = (
+    """CREATE TABLE IF NOT EXISTS v4_execution_attempts (
+        attempt_id TEXT PRIMARY KEY,
+        request_id TEXT NOT NULL UNIQUE,
+        task_id TEXT NOT NULL,
+        run_id TEXT NOT NULL,
+        role TEXT NOT NULL CHECK (role IN ('author', 'reviewer')),
+        state TEXT NOT NULL CHECK (state IN ('running', 'terminal')),
+        capability_digest TEXT NOT NULL UNIQUE,
+        binding_sha256 TEXT NOT NULL,
+        started_at TEXT NOT NULL,
+        terminal_at TEXT
+    )""",
+    "ALTER TABLE v4_sources_invocations ADD COLUMN attempt_id TEXT",
+    "CREATE INDEX IF NOT EXISTS idx_v4_sources_invocations_attempt ON v4_sources_invocations(attempt_id)",
+    """CREATE TABLE IF NOT EXISTS v4_authorship_receipts (
+        receipt_id TEXT PRIMARY KEY,
+        task_id TEXT NOT NULL,
+        run_id TEXT NOT NULL,
+        record_sha256 TEXT NOT NULL,
+        record_json TEXT NOT NULL,
+        recorded_at TEXT NOT NULL,
+        UNIQUE (task_id, run_id)
+    )""",
+)
+
 MIGRATIONS = (
     Migration(version=1, name="fleet-comms-v1-contracts", statements=_V1_STATEMENTS),
     Migration(
@@ -597,6 +625,11 @@ MIGRATIONS = (
         version=9,
         name="fleet-comms-v9-v4-execution-dispatch-binding",
         statements=_V9_STATEMENTS,
+    ),
+    Migration(
+        version=10,
+        name="fleet-comms-v10-v4-runner-attempts",
+        statements=_V10_STATEMENTS,
     ),
 )
 

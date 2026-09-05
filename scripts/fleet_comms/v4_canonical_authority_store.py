@@ -1,90 +1,33 @@
-"""V4 canonical authority store (PR #7662 repair 6/7 -- operator-approved
-architecture; see ``batch_state/briefs/v4-real-slot-mechanism-repair-6-
-approval.md`` and the Sol advisor packet at ``batch_state/tasks/
-v4-real-slot-authority-store-advisor.result``).
+"""V4 canonical authority store (PR #7662 repair 8 -- designated-advisor
+GO_REPAIR after repair 7 failed exact-head review).
 
-Before this module existed, no independently-controlled store proved a V4
-fleet execution's terminal-event observation, exact runtime identity, or a
-sanctioned Sources invocation actually happened -- ``v4_fleet_execution_
-authority``/``v4_sources_authority`` accepted that evidence as plain
-caller-supplied keyword arguments (``TaskExecutionState``, ``ResponseEnv
-elope``, role observations, invocation fields), which only ever proved
-internal self-consistency, never genuine execution. The operator approved
-extending the live Fleet Comms Postgres plane (``StoreId.FLEET_COMMS``) as
-the single canonical authority for both facts.
+The operator-approved architecture still holds: the live Fleet Comms
+PostgreSQL plane is the single canonical authority for text-free execution
+observations and Sources invocation records. Repair 8 moves the *writer*:
+``RequestExecutor.execute_capture`` is not a V4 execution origin. Only the
+native runner (``scripts.agent_runtime.runner._execute_invocation_plan``)
+may claim a binding and persist a terminal observation, from facts of the
+process it actually spawned.
 
-Three narrow, idempotent, conflict-refusing tables:
+Tables:
 
-* ``v4_execution_dispatch_bindings`` -- the *pre-execution* authorization
-  for one V4 fleet request: which slot (``task_id``/``run_id``/``role``),
-  which row/packet, which model/harness the dispatch boundary expects. It
-  is written by ``RequestExecutor.authorize_v4_execution`` while the
-  request is still ``queued``, so it can never be minted after the fact to
-  describe an execution that already happened. Keyed by ``request_id``,
-  with a uniqueness constraint on ``(task_id, run_id, role)`` so two
-  requests can never both claim one slot.
-* ``v4_execution_observations`` -- the sole durable record of one terminal
-  V4 author/reviewer fleet execution. Written ONLY by
-  ``RequestExecutor._finalize_capture``, inside the same transaction that
-  finalizes the request, from facts that boundary itself derives (see
-  ``RequestExecutor._build_v4_execution_observation``): the envelope the
-  adapter-conformance layer computed, the artifact digest the store
-  actually persisted, the runtime model identity read out of the provider's
-  own capture events, the harness implied by the registry-resolved
-  recipient, and the pre-frozen dispatch binding. Keyed by
-  ``(task_id, run_id, role)``.
-* ``v4_sources_invocations`` -- the sole durable record of one sanctioned
-  ``mcp__sources__*`` verifier-tool invocation. Written only by the Sources
-  MCP wire handler through ``record_sources_invocation_from_tool_result``,
-  which builds the record itself out of the arguments the tool was really
-  called with and the tool's own genuine result text. Keyed by
-  ``invocation_id``.
+* ``v4_execution_dispatch_bindings`` -- role-specific pre-execution
+  authorization. Author bindings resolve a frozen slot and A3 packet and
+  record the service-built source-blind prompt digest; they never accept a
+  row hash. Reviewer bindings resolve an authorship receipt and the fixed
+  rubric internally.
+* ``v4_execution_attempts`` -- one attempt per claimed request. Created
+  atomically with ``queued -> running``. Stores only the capability digest.
+* ``v4_execution_observations`` -- runner-owned terminal facts for one
+  author/reviewer execution.
+* ``v4_sources_invocations`` -- typed Sources outcomes keyed by attempt,
+  not by a caller-declared request/row correlation.
+* ``v4_authorship_receipts`` -- service-resolved author receipts the
+  reviewer authorization looks up by opaque id.
 
-**There is no public function anywhere that accepts a caller-built
-execution-observation or Sources-invocation record and writes it.** Both
-writers construct the record from primary evidence; the private
-``_persist_execution_observation``/``_persist_sources_invocation``
-primitives exist only so this module's own writers (and this project's
-tests, which exercise validation branches directly) can reach the SQL. The
-remaining enforcement below that line is the credential boundary the
-operator approved: the canonical authority is the live Fleet Comms
-PostgreSQL plane, reachable only through the deployed service
-configuration (``open_production_authority_store``), so a process without
-the service account's plane credentials cannot write these tables at all.
-That, not a naming convention, is what makes the writer exclusive; the
-runbook states this residual explicitly.
-
-Both writes are idempotent by primary key: re-recording a byte-identical
-record is a silent no-op (needed for an at-least-once execution boundary
-retrying after a crash); re-recording a *different* body under the same key
-is refused (``ExecutionObservationConflictError``/``SourcesInvocation
-ConflictError``/``ExecutionDispatchBindingConflictError``) -- a caller can
-never silently overwrite a previously recorded terminal fact. All use the
-dialect-aware pg/sqlite ``INSERT ... DO NOTHING`` + verify-by-readback
-idiom this project already uses elsewhere, so the conflict check itself is
-race-safe against concurrent writers, not merely a check-then-act sequence.
-
-Resolution (``resolve_execution_observation``/``resolve_sources_
-invocation``) is the ONLY way ``v4_fleet_execution_authority``/``v4_sources
-_authority`` ever learn these facts in production -- neither resolver
-accepts or trusts a caller-constructed record; both read back exactly what
-a service boundary already durably wrote, or ``None`` if nothing was ever
-recorded for that opaque key (which the calling authority module must treat
-as an unconditional refusal before any key access, per the Sol acceptance
-matrix).
-
-Schema DDL lives in the same numbered-migration-ledger pattern the rest of
-this plane uses (``scripts.fleet_comms.pg_schema`` for pg, ``scripts.fleet
-_comms.migrations`` for sqlite); ``ArtifactStore.__init__`` already applies
-both ledgers in full on every (non-readonly) open, so the tables exist by
-the time any function here runs.
-
-Every function except ``open_production_authority_store`` is deliberately
-connection-agnostic (it takes an already-open ``conn``/``is_pg`` pair) --
-it never opens its own connection or resolves its own plane root, so it
-never has to duplicate ``ArtifactStore``/``RequestExecutor``'s
-authority-resolution logic (and can never accidentally point a test at the
-shared default plane root instead of an isolated ``tmp_path`` one).
+There is no public function that accepts a caller-built observation or
+Sources record. Production resolution still requires the approved
+PostgreSQL plane (``open_production_authority_store``).
 """
 
 from __future__ import annotations
@@ -99,7 +42,21 @@ from typing import Any
 EXECUTION_OBSERVATION_TABLE = "v4_execution_observations"
 SOURCES_INVOCATION_TABLE = "v4_sources_invocations"
 EXECUTION_DISPATCH_BINDING_TABLE = "v4_execution_dispatch_bindings"
+EXECUTION_ATTEMPT_TABLE = "v4_execution_attempts"
+AUTHORSHIP_RECEIPT_TABLE = "v4_authorship_receipts"
 EXECUTION_OBSERVATION_ROLES = frozenset({"author", "reviewer"})
+AUTHOR_PROMPT_PROFILE = "v4-author-source-blind-v1"
+REVIEWER_PROMPT_PROFILE = "v4-reviewer-source-blind-v1"
+POSITIVE_V4_VERIFIER_TOOLS = frozenset(
+    {
+        "verify_word",
+        "verify_words",
+        "verify_lemma",
+        "verify_stress",
+        "check_modern_form",
+    }
+)
+EXCLUDED_POSITIVE_V4_TOOLS = frozenset({"vet_vocabulary", "check_russian_shadow"})
 
 HEX64_RE = re.compile(r"^[a-f0-9]{64}$")
 
@@ -112,17 +69,26 @@ EXECUTION_OBSERVATION_KEYS = frozenset(
         "task_id",
         "run_id",
         "role",
+        "attempt_id",
         "status",
         "return_code",
         "seat_or_model",
+        "requested_model",
         "harness",
+        "executable",
+        "argv_digest",
         "session_id",
         "completion_state",
         "terminal_event_observed",
         "process_returncode",
         "raw_capture_artifact_id",
         "raw_capture_sha256",
+        "stdout_sha256",
+        "stderr_sha256",
+        "output_artifact_sha256",
+        "aggregate_artifact_sha256",
         "row_content_sha256",
+        "prompt_profile",
         "prompt_sha256",
         "packet_sha256",
         "fleet_receipt_sha256",
@@ -139,34 +105,35 @@ EXECUTION_OBSERVATION_KEYS = frozenset(
 SOURCES_INVOCATION_KEYS = frozenset(
     {
         "invocation_id",
-        "row_content_sha256",
+        "attempt_id",
+        "ordinal",
         "identifier",
         "tool_id",
         "tool_version",
-        "request_id",
-        "tool_result_sha256",
+        "structured_result_sha256",
         "lookup_ids",
         "success",
+        "disposition",
+        "recorded_at",
     }
 )
 
-# The pre-execution dispatch authorization. Deliberately carries only the
-# facts that are genuinely knowable BEFORE the model runs: which slot, which
-# frozen row/packet, and which model/harness the dispatch boundary intends.
-# Everything an execution *produces* (session id, result digest, terminal
-# state, return code, verdict, verification tool ids) is absent here by
-# design -- those are derived at finalization from the runtime's own
-# evidence and can never be pre-declared.
+# Pre-execution dispatch authorization. Author bindings never carry a row
+# hash: the runner derives that from structured author output. Reviewer
+# bindings never accept packet/rubric/content hashes from the caller.
 EXECUTION_DISPATCH_BINDING_KEYS = frozenset(
     {
         "request_id",
         "task_id",
         "run_id",
         "role",
+        "slot_id",
         "expected_seat_or_model",
         "expected_harness",
-        "row_content_sha256",
+        "prompt_profile",
+        "prompt_sha256",
         "packet_sha256",
+        "authorship_receipt_id",
         "authorship_receipt_sha256",
         "rubric_sha256",
     }
@@ -191,6 +158,14 @@ class ExecutionDispatchBindingConflictError(CanonicalAuthorityStoreError):
 
 class SourcesInvocationConflictError(CanonicalAuthorityStoreError):
     """A different Sources invocation is already recorded for this invocation_id."""
+
+
+class ExecutionAttemptConflictError(CanonicalAuthorityStoreError):
+    """A request already has a V4 execution attempt, or the capability is not active."""
+
+
+class AuthorshipReceiptConflictError(CanonicalAuthorityStoreError):
+    """A different authorship receipt is already recorded for this id or slot."""
 
 
 def _require(condition: bool, message: str) -> None:
@@ -270,26 +245,31 @@ def validate_execution_dispatch_binding(binding: dict[str, Any]) -> None:
         isinstance(binding, dict) and set(binding) == EXECUTION_DISPATCH_BINDING_KEYS,
         f"execution dispatch binding must declare exactly {sorted(EXECUTION_DISPATCH_BINDING_KEYS)} -- refusing (unexpected or missing key)",
     )
-    for name in ("request_id", "task_id", "run_id", "expected_seat_or_model", "expected_harness"):
+    for name in ("request_id", "task_id", "run_id", "expected_seat_or_model", "expected_harness", "prompt_profile"):
         _require(isinstance(binding.get(name), str) and bool(binding[name]), f"dispatch binding {name} must be a nonempty string -- refusing")
     _require(binding.get("role") in EXECUTION_OBSERVATION_ROLES, "dispatch binding role must be 'author' or 'reviewer' -- refusing")
-    for name in ("row_content_sha256", "packet_sha256"):
-        _require_hex64(binding.get(name), f"dispatch binding {name}")
-    reviewer_only = ("authorship_receipt_sha256", "rubric_sha256")
+    _require_hex64(binding.get("prompt_sha256"), "dispatch binding prompt_sha256")
+    _require_hex64(binding.get("packet_sha256"), "dispatch binding packet_sha256")
+    reviewer_only = ("authorship_receipt_id", "authorship_receipt_sha256", "rubric_sha256")
     if binding["role"] == "author":
+        _require(isinstance(binding.get("slot_id"), str) and bool(binding["slot_id"]), "author dispatch binding slot_id must be a nonempty string -- refusing")
+        _require(binding.get("prompt_profile") == AUTHOR_PROMPT_PROFILE, "author dispatch binding must use the source-blind author prompt profile -- refusing")
         _require(
             all(binding.get(field) is None for field in reviewer_only),
             "an author dispatch binding must not carry reviewer-only fields -- refusing",
         )
     else:
-        for field in reviewer_only:
-            _require_hex64(binding.get(field), f"dispatch binding {field}")
+        _require(binding.get("slot_id") is None, "a reviewer dispatch binding must not carry an author slot_id -- refusing")
+        _require(binding.get("prompt_profile") == REVIEWER_PROMPT_PROFILE, "reviewer dispatch binding must use the source-blind reviewer prompt profile -- refusing")
+        _require(isinstance(binding.get("authorship_receipt_id"), str) and bool(binding["authorship_receipt_id"]), "reviewer dispatch binding authorship_receipt_id must be a nonempty string -- refusing")
+        _require_hex64(binding.get("authorship_receipt_sha256"), "dispatch binding authorship_receipt_sha256")
+        _require_hex64(binding.get("rubric_sha256"), "dispatch binding rubric_sha256")
 
 
 def record_execution_dispatch_binding(binding: dict[str, Any], *, conn: Any, is_pg: bool, commit: bool = True) -> None:
     """Idempotent, conflict-refusing write of one pre-execution dispatch
-    authorization. Called only by ``RequestExecutor.authorize_v4_execution``,
-    which additionally requires the request to still be ``queued``."""
+    authorization. Called only by the role-specific authorize methods, which
+    recheck ``queued`` inside the same locked transaction."""
     validate_execution_dispatch_binding(binding)
     body_sha256 = _sha256_text(_canonical_json(binding))
     ph = "%s" if is_pg else "?"
@@ -348,12 +328,16 @@ def validate_execution_observation(record: dict[str, Any]) -> None:
     )
     _require(isinstance(record.get("task_id"), str) and bool(record["task_id"]), "execution observation task_id must be a nonempty string -- refusing")
     _require(isinstance(record.get("run_id"), str) and bool(record["run_id"]), "execution observation run_id must be a nonempty string -- refusing")
+    _require(isinstance(record.get("attempt_id"), str) and bool(record["attempt_id"]), "execution observation attempt_id must be a nonempty string -- refusing")
     _require(record.get("role") in EXECUTION_OBSERVATION_ROLES, "execution observation role must be 'author' or 'reviewer' -- refusing")
+    _require_hex64(record.get("row_content_sha256"), "execution observation row_content_sha256")
     reviewer_only = ("authorship_receipt_sha256", "rubric_sha256", "verdict")
     if record["role"] == "author":
         _require(all(record.get(field) is None for field in reviewer_only), "an author execution observation must not carry reviewer-only fields -- refusing")
+        _require(record.get("prompt_profile") == AUTHOR_PROMPT_PROFILE, "author observation must bind the source-blind author prompt profile -- refusing")
     else:
         _require(all(record.get(field) is not None for field in reviewer_only), "a reviewer execution observation must carry every reviewer-only field -- refusing")
+        _require(record.get("prompt_profile") == REVIEWER_PROMPT_PROFILE, "reviewer observation must bind the source-blind reviewer prompt profile -- refusing")
 
 
 def _persist_execution_observation(
@@ -367,9 +351,9 @@ def _persist_execution_observation(
     """Low-level, idempotent, conflict-refusing, race-safe persistence of one
     execution observation.
 
-    Private on purpose: the only production writer is ``RequestExecutor.
-    _finalize_capture``, which *derives* every field of ``record`` from its
-    own execution/capture/dispatch state before calling here. Nothing public
+    Private on purpose: the only production writer is the native runner
+    via ``RequestExecutor.finalize_v4_runner_execution``, which derives
+    every field from the process it actually spawned. Nothing public
     accepts a caller-built observation. Tests call this directly to exercise
     the negative issuer matrix against records they construct themselves --
     that is testing internals against an isolated ``tmp_path`` plane, never
@@ -423,24 +407,163 @@ def resolve_execution_observation(*, task_id: str, run_id: str, role: str, conn:
     return record
 
 
+def resolve_execution_observation_for_attempt(*, attempt_id: str, conn: Any, is_pg: bool) -> dict[str, Any] | None:
+    _require(isinstance(attempt_id, str) and bool(attempt_id), "attempt_id must be a nonempty string -- refusing")
+    ph = "%s" if is_pg else "?"
+    row = conn.execute(
+        f"SELECT record_json FROM {EXECUTION_OBSERVATION_TABLE} WHERE request_id = "
+        f"(SELECT request_id FROM {EXECUTION_ATTEMPT_TABLE} WHERE attempt_id = {ph})",
+        (attempt_id,),
+    ).fetchone()
+    if row is None:
+        return None
+    record = json.loads(_row_get(row, "record_json", 0))
+    validate_execution_observation(record)
+    return record
+
+
+# --- execution attempts (one-attempt capability) ---------------------------
+
+
+def record_execution_attempt(
+    *,
+    attempt_id: str,
+    request_id: str,
+    task_id: str,
+    run_id: str,
+    role: str,
+    capability_digest: str,
+    binding_sha256: str,
+    conn: Any,
+    is_pg: bool,
+    commit: bool = True,
+) -> None:
+    _require(isinstance(attempt_id, str) and bool(attempt_id), "attempt_id must be a nonempty string -- refusing")
+    _require(isinstance(request_id, str) and bool(request_id), "request_id must be a nonempty string -- refusing")
+    _require(role in EXECUTION_OBSERVATION_ROLES, "attempt role must be 'author' or 'reviewer' -- refusing")
+    _require_hex64(capability_digest, "capability_digest")
+    _require_hex64(binding_sha256, "binding_sha256")
+    ph = "%s" if is_pg else "?"
+    params = (attempt_id, request_id, task_id, run_id, role, "running", capability_digest, binding_sha256, _utc_now())
+    columns = "(attempt_id, request_id, task_id, run_id, role, state, capability_digest, binding_sha256, started_at)"
+    values = f"({ph}, {ph}, {ph}, {ph}, {ph}, {ph}, {ph}, {ph}, {ph})"
+    if is_pg:
+        conn.execute(
+            f"INSERT INTO {EXECUTION_ATTEMPT_TABLE} {columns} VALUES {values} ON CONFLICT DO NOTHING",
+            params,
+        )
+    else:
+        conn.execute(f"INSERT OR IGNORE INTO {EXECUTION_ATTEMPT_TABLE} {columns} VALUES {values}", params)
+        if commit:
+            conn.commit()
+    existing = conn.execute(
+        f"SELECT attempt_id, capability_digest FROM {EXECUTION_ATTEMPT_TABLE} WHERE request_id = {ph}",
+        (request_id,),
+    ).fetchone()
+    _require(existing is not None, "execution attempt write did not persist -- refusing")
+    if _row_get(existing, "attempt_id", 0) != attempt_id or _row_get(existing, "capability_digest", 1) != capability_digest:
+        raise ExecutionAttemptConflictError(f"request {request_id!r} already has a V4 execution attempt -- refusing")
+
+
+def mark_execution_attempt_terminal(*, attempt_id: str, conn: Any, is_pg: bool, commit: bool = True) -> None:
+    ph = "%s" if is_pg else "?"
+    conn.execute(
+        f"UPDATE {EXECUTION_ATTEMPT_TABLE} SET state = 'terminal', terminal_at = {ph} WHERE attempt_id = {ph} AND state = 'running'",
+        (_utc_now(), attempt_id),
+    )
+    if not is_pg and commit:
+        conn.commit()
+
+
+def resolve_active_attempt_by_capability_digest(*, capability_digest: str, conn: Any, is_pg: bool) -> dict[str, Any] | None:
+    _require_hex64(capability_digest, "capability_digest")
+    ph = "%s" if is_pg else "?"
+    row = conn.execute(
+        f"SELECT attempt_id, request_id, task_id, run_id, role, state FROM {EXECUTION_ATTEMPT_TABLE} WHERE capability_digest = {ph}",
+        (capability_digest,),
+    ).fetchone()
+    if row is None:
+        return None
+    return {
+        "attempt_id": _row_get(row, "attempt_id", 0),
+        "request_id": _row_get(row, "request_id", 1),
+        "task_id": _row_get(row, "task_id", 2),
+        "run_id": _row_get(row, "run_id", 3),
+        "role": _row_get(row, "role", 4),
+        "state": _row_get(row, "state", 5),
+    }
+
+
+def resolve_execution_attempt(*, attempt_id: str, conn: Any, is_pg: bool) -> dict[str, Any] | None:
+    _require(isinstance(attempt_id, str) and bool(attempt_id), "attempt_id must be a nonempty string -- refusing")
+    ph = "%s" if is_pg else "?"
+    row = conn.execute(
+        f"SELECT attempt_id, request_id, task_id, run_id, role, state FROM {EXECUTION_ATTEMPT_TABLE} WHERE attempt_id = {ph}",
+        (attempt_id,),
+    ).fetchone()
+    if row is None:
+        return None
+    return {
+        "attempt_id": _row_get(row, "attempt_id", 0),
+        "request_id": _row_get(row, "request_id", 1),
+        "task_id": _row_get(row, "task_id", 2),
+        "run_id": _row_get(row, "run_id", 3),
+        "role": _row_get(row, "role", 4),
+        "state": _row_get(row, "state", 5),
+    }
+
+
+def persist_authorship_receipt(receipt: dict[str, Any], *, task_id: str, run_id: str, conn: Any, is_pg: bool, commit: bool = True) -> None:
+    _require(isinstance(receipt, dict) and isinstance(receipt.get("receipt_id"), str) and receipt["receipt_id"], "authorship receipt_id must be a nonempty string -- refusing")
+    body_sha256 = _sha256_text(_canonical_json(receipt))
+    ph = "%s" if is_pg else "?"
+    params = (receipt["receipt_id"], task_id, run_id, body_sha256, _canonical_json(receipt), _utc_now())
+    columns = "(receipt_id, task_id, run_id, record_sha256, record_json, recorded_at)"
+    values = f"({ph}, {ph}, {ph}, {ph}, {ph}, {ph})"
+    if is_pg:
+        conn.execute(
+            f"INSERT INTO {AUTHORSHIP_RECEIPT_TABLE} {columns} VALUES {values} ON CONFLICT DO NOTHING",
+            params,
+        )
+    else:
+        conn.execute(f"INSERT OR IGNORE INTO {AUTHORSHIP_RECEIPT_TABLE} {columns} VALUES {values}", params)
+        if commit:
+            conn.commit()
+    existing = conn.execute(
+        f"SELECT record_sha256 FROM {AUTHORSHIP_RECEIPT_TABLE} WHERE receipt_id = {ph}",
+        (receipt["receipt_id"],),
+    ).fetchone()
+    _require(existing is not None, "authorship receipt write did not persist -- refusing")
+    if _row_get(existing, "record_sha256", 0) != body_sha256:
+        raise AuthorshipReceiptConflictError(f"a different authorship receipt is already recorded for {receipt['receipt_id']!r} -- refusing")
+
+
+def resolve_authorship_receipt(*, receipt_id: str, conn: Any, is_pg: bool) -> dict[str, Any] | None:
+    _require(isinstance(receipt_id, str) and bool(receipt_id), "receipt_id must be a nonempty string -- refusing")
+    ph = "%s" if is_pg else "?"
+    row = conn.execute(
+        f"SELECT record_json FROM {AUTHORSHIP_RECEIPT_TABLE} WHERE receipt_id = {ph}",
+        (receipt_id,),
+    ).fetchone()
+    if row is None:
+        return None
+    return json.loads(_row_get(row, "record_json", 0))
+
+
 # --- sanctioned Sources verifier-tool invocations --------------------------
 
-# Only tools whose primary argument is itself a lexical identifier are
-# sanctioned for V4 evidence. ``verify_quote``/``verify_source_attribution``
-# are deliberately NOT here (PR #7662 repair 7): their primary argument is
-# quote/claim *text*, which must never enter a record documented as
-# text-free, and whose presence in a rendered result cannot be policed
-# without handling that text. Each entry maps the tool's bare name to the
-# argument key the invocation identifier is derived from, and whether that
-# argument is a single term or a list of terms.
+# Only tools with a typed supporting-claim contract are sanctioned for
+# positive V4 evidence. ``verify_quote``/``verify_source_attribution`` remain
+# excluded (text arguments). ``vet_vocabulary`` and ``check_russian_shadow``
+# are Sol-approved exclusions until they gain a typed supporting-claim
+# contract -- they may still run as ordinary tools, but they never mint
+# positive V4 evidence.
 SANCTIONED_VERIFIER_TOOLS: dict[str, tuple[str, str]] = {
     "verify_word": ("word", "term"),
     "verify_words": ("words", "terms"),
     "verify_lemma": ("lemma", "term"),
     "verify_stress": ("word", "term"),
-    "vet_vocabulary": ("words", "terms"),
     "check_modern_form": ("word", "term"),
-    "check_russian_shadow": ("word", "term"),
 }
 
 # A claimed lookup id shorter than this cannot be meaningfully distinguished
@@ -462,30 +585,31 @@ def compute_invocation_id(
     *,
     tool_id: str,
     tool_version: str,
-    request_id: str,
-    row_content_sha256: str,
+    attempt_id: str,
+    ordinal: int,
     identifier: str,
-    tool_result_sha256: str,
+    structured_result_sha256: str,
     lookup_ids: list[str],
 ) -> str:
-    """The deterministic, content-addressed ``invocation_id`` for a Sources
-    verifier-tool invocation record. Both the writer (the Sources MCP wire
-    handler, which knows every one of these fields at call time) and any
-    later caller building an evidence request (who independently knows
-    ``request_id`` -- its own claim -- and can hash the tool's returned
-    result text itself) compute the identical id from the same public
-    formula; nothing about ``invocation_id`` is a secret or a database
-    auto-increment a caller would have to be told out-of-band."""
+    """Content-addressed invocation id. Bound to the authenticated attempt,
+    never to a caller-declared request/row correlation."""
     payload = {
         "tool_id": tool_id,
         "tool_version": tool_version,
-        "request_id": request_id,
-        "row_content_sha256": row_content_sha256,
+        "attempt_id": attempt_id,
+        "ordinal": ordinal,
         "identifier": identifier,
-        "tool_result_sha256": tool_result_sha256,
+        "structured_result_sha256": structured_result_sha256,
         "lookup_ids": sorted(lookup_ids),
     }
     return f"v4invocation:{_sha256_text(_canonical_json(payload))}"
+
+
+def immutable_evidence_identifier(*, namespace: str, source_version: str, typed_result: dict[str, Any]) -> str:
+    """Server-derived ``vesum:``/``sources:`` id. Never an echoed lexical argument."""
+    _require(namespace in {"vesum", "sources"}, "evidence identifier namespace must be vesum or sources -- refusing")
+    digest = _sha256_text(_canonical_json({"source_version": source_version, "typed_result": typed_result}))
+    return f"{namespace}:{digest}"
 
 
 def _appears_as_delimited_token(text: str, term: str) -> bool:
@@ -517,34 +641,78 @@ def _is_word_char(char: str) -> bool:
     return bool(char) and (char.isalnum() or char in {"_", "-", "'", "’"})
 
 
-def derive_invocation_identifier(*, tool_name: str, arguments: dict[str, Any]) -> tuple[str, tuple[str, ...]] | None:
-    """Derive the invocation identifier from the arguments the tool was
-    ACTUALLY called with -- never from a caller-declared identifier field.
+def next_sources_invocation_ordinal(*, attempt_id: str, conn: Any, is_pg: bool) -> int:
+    ph = "%s" if is_pg else "?"
+    row = conn.execute(
+        f"SELECT COUNT(*) AS n FROM {SOURCES_INVOCATION_TABLE} WHERE attempt_id = {ph}",
+        (attempt_id,),
+    ).fetchone()
+    return int(_row_get(row, "n", 0)) + 1 if row is not None else 1
 
-    Returns ``(identifier, terms_that_must_appear_in_the_result)`` or
-    ``None`` when the tool is unsanctioned or its primary argument is
-    missing/malformed. For a single-term tool the identifier is the term
-    itself; for a list tool it is a digest of the canonical sorted term
-    list, so a long word list never lands in the record verbatim.
-    """
-    spec = SANCTIONED_VERIFIER_TOOLS.get(tool_name)
-    if spec is None or not isinstance(arguments, dict):
+
+def record_sources_invocation_from_typed_outcome(
+    *,
+    conn: Any,
+    is_pg: bool,
+    attempt_id: str,
+    tool_name: str,
+    tool_version: str,
+    typed_outcome: dict[str, Any],
+    commit: bool = True,
+) -> dict[str, Any] | None:
+    """The only Sources writer. Builds the record from a typed handler
+    outcome and an authenticated attempt. Never accepts a caller row hash,
+    request id, or lookup-id list. Unsuccessful dispositions are stored
+    with ``success=false`` and are not issuable."""
+    if tool_name not in SANCTIONED_VERIFIER_TOOLS or tool_name in EXCLUDED_POSITIVE_V4_TOOLS:
         return None
-    argument_key, kind = spec
-    value = arguments.get(argument_key)
-    if kind == "term":
-        if not isinstance(value, str) or not value.strip():
+    if not isinstance(typed_outcome, dict):
+        return None
+    attempt = resolve_execution_attempt(attempt_id=attempt_id, conn=conn, is_pg=is_pg)
+    if attempt is None or attempt.get("state") != "running":
+        return None
+    disposition = typed_outcome.get("disposition")
+    if not isinstance(disposition, str) or not disposition:
+        return None
+    success = typed_outcome.get("success") is True and disposition == "supported"
+    identifiers = typed_outcome.get("evidence_identifiers") if success else []
+    if success:
+        if not (isinstance(identifiers, list) and identifiers):
             return None
-        term = value.strip()
-        return term, (term,)
-    if not isinstance(value, list) or not value:
-        return None
-    terms = [item.strip() for item in value if isinstance(item, str) and item.strip()]
-    if len(terms) != len(value):
-        return None
-    unique_terms = tuple(sorted(set(terms)))
-    identifier = f"v4termset:{_sha256_text(_canonical_json(list(unique_terms)))}"
-    return identifier, unique_terms
+        if not all(isinstance(item, str) and (item.startswith("vesum:") or item.startswith("sources:")) for item in identifiers):
+            return None
+        if len(set(identifiers)) != len(identifiers) or len(identifiers) > MAX_CLAIMED_LOOKUP_IDS:
+            return None
+    else:
+        identifiers = []
+    ordinal = next_sources_invocation_ordinal(attempt_id=attempt_id, conn=conn, is_pg=is_pg)
+    structured_digest = _sha256_text(_canonical_json(typed_outcome))
+    identifier = identifiers[0] if identifiers else f"sources:unsuccessful-{structured_digest}"
+    recorded_at = _utc_now()
+    tool_id = f"mcp__sources__{tool_name}"
+    record = {
+        "invocation_id": compute_invocation_id(
+            tool_id=tool_id,
+            tool_version=tool_version,
+            attempt_id=attempt_id,
+            ordinal=ordinal,
+            identifier=identifier,
+            structured_result_sha256=structured_digest,
+            lookup_ids=list(identifiers) if identifiers else [identifier],
+        ),
+        "attempt_id": attempt_id,
+        "ordinal": ordinal,
+        "identifier": identifier,
+        "tool_id": tool_id,
+        "tool_version": tool_version,
+        "structured_result_sha256": structured_digest,
+        "lookup_ids": sorted(identifiers) if identifiers else [identifier],
+        "success": success,
+        "disposition": disposition,
+        "recorded_at": recorded_at,
+    }
+    _persist_sources_invocation(record, conn=conn, is_pg=is_pg, commit=commit)
+    return record
 
 
 def record_sources_invocation_from_tool_result(
@@ -555,69 +723,29 @@ def record_sources_invocation_from_tool_result(
     arguments: dict[str, Any],
     result_text: str,
     tool_version: str,
-    request_id: str,
-    row_content_sha256: str,
-    claimed_lookup_ids: list[str],
+    request_id: str | None = None,
+    row_content_sha256: str | None = None,
+    claimed_lookup_ids: list[str] | None = None,
+    attempt_id: str | None = None,
+    typed_outcome: dict[str, Any] | None = None,
     commit: bool = True,
 ) -> dict[str, Any] | None:
-    """Independently build and record ONE genuine Sources invocation.
-
-    This is the only Sources writer. It never accepts a caller-built record
-    or a caller-declared identifier: the identifier comes from the arguments
-    the tool was really invoked with, ``tool_result_sha256`` is hashed from
-    the tool's own returned text, ``tool_version`` is the running server's
-    own code digest, and every claimed lookup id must actually occur in that
-    result as a delimited token. Returns the recorded record, or ``None``
-    when nothing may be recorded (unsanctioned tool, unusable arguments,
-    empty result, or an unconfirmed claim). ``request_id`` is the caller's
-    own correlation id -- it is stored as declared correlation and is the
-    one field here the server cannot independently observe (see the
-    runbook's residuals).
-    """
-    derived = derive_invocation_identifier(tool_name=tool_name, arguments=arguments)
-    if derived is None:
+    """Retired caller-correlation path. Production must call
+    ``record_sources_invocation_from_typed_outcome`` with an authenticated
+    attempt. Remaining keyword arguments are accepted only so stale callers
+    fail closed instead of recording."""
+    _ = arguments, result_text, request_id, row_content_sha256, claimed_lookup_ids
+    if typed_outcome is None or not attempt_id:
         return None
-    identifier, required_terms = derived
-    if not isinstance(result_text, str) or not result_text.strip():
-        return None
-    if not (isinstance(request_id, str) and request_id):
-        return None
-    if not (isinstance(row_content_sha256, str) and HEX64_RE.match(row_content_sha256)):
-        return None
-    if not (isinstance(claimed_lookup_ids, list) and claimed_lookup_ids):
-        return None
-    if len(claimed_lookup_ids) > MAX_CLAIMED_LOOKUP_IDS:
-        return None
-    if not all(isinstance(item, str) and len(item) >= MIN_LOOKUP_ID_LENGTH for item in claimed_lookup_ids):
-        return None
-    if len(set(claimed_lookup_ids)) != len(claimed_lookup_ids):
-        return None
-    for term in (*required_terms, *claimed_lookup_ids):
-        if not _appears_as_delimited_token(result_text, term):
-            return None
-
-    tool_id = f"mcp__sources__{tool_name}"
-    record = {
-        "invocation_id": compute_invocation_id(
-            tool_id=tool_id,
-            tool_version=tool_version,
-            request_id=request_id,
-            row_content_sha256=row_content_sha256,
-            identifier=identifier,
-            tool_result_sha256=_sha256_text(result_text),
-            lookup_ids=list(claimed_lookup_ids),
-        ),
-        "row_content_sha256": row_content_sha256,
-        "identifier": identifier,
-        "tool_id": tool_id,
-        "tool_version": tool_version,
-        "request_id": request_id,
-        "tool_result_sha256": _sha256_text(result_text),
-        "lookup_ids": sorted(claimed_lookup_ids),
-        "success": True,
-    }
-    _persist_sources_invocation(record, conn=conn, is_pg=is_pg, commit=commit)
-    return record
+    return record_sources_invocation_from_typed_outcome(
+        conn=conn,
+        is_pg=is_pg,
+        attempt_id=attempt_id,
+        tool_name=tool_name,
+        tool_version=tool_version,
+        typed_outcome=typed_outcome,
+        commit=commit,
+    )
 
 
 def _persist_sources_invocation(record: dict[str, Any], *, conn: Any, is_pg: bool, commit: bool = True) -> None:
@@ -628,8 +756,8 @@ def _persist_sources_invocation(record: dict[str, Any], *, conn: Any, is_pg: boo
     validate_sources_invocation(record)
     body_sha256 = _sha256_text(_canonical_json(record))
     ph = "%s" if is_pg else "?"
-    params = (record["invocation_id"], body_sha256, _canonical_json(record), _utc_now(), record.get("request_id"))
-    columns = "(invocation_id, record_sha256, record_json, recorded_at, request_id)"
+    params = (record["invocation_id"], body_sha256, _canonical_json(record), record.get("recorded_at") or _utc_now(), record.get("attempt_id"))
+    columns = "(invocation_id, record_sha256, record_json, recorded_at, attempt_id)"
     values = f"({ph}, {ph}, {ph}, {ph}, {ph})"
     if is_pg:
         conn.execute(
@@ -667,16 +795,15 @@ def resolve_sources_invocation(*, invocation_id: str, conn: Any, is_pg: bool) ->
     return record
 
 
-def resolve_sources_invocation_tool_ids(*, request_id: str, conn: Any, is_pg: bool) -> list[str]:
+def resolve_sources_invocation_tool_ids(*, attempt_id: str, conn: Any, is_pg: bool) -> list[str]:
     """Every distinct sanctioned verifier ``tool_id`` durably recorded for
-    ``request_id``. This is how ``RequestExecutor`` derives an observation's
-    ``verification_tool_ids`` from canonical evidence instead of accepting a
-    caller's list."""
-    _require(isinstance(request_id, str) and bool(request_id), "request_id must be a nonempty string -- refusing")
+    this authenticated attempt. Request-only correlation is not a source of
+    V4 evidence."""
+    _require(isinstance(attempt_id, str) and bool(attempt_id), "attempt_id must be a nonempty string -- refusing")
     ph = "%s" if is_pg else "?"
     rows = conn.execute(
-        f"SELECT record_json FROM {SOURCES_INVOCATION_TABLE} WHERE request_id = {ph}",
-        (request_id,),
+        f"SELECT record_json FROM {SOURCES_INVOCATION_TABLE} WHERE attempt_id = {ph}",
+        (attempt_id,),
     ).fetchall()
     tool_ids: set[str] = set()
     for row in rows or ():

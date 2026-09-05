@@ -747,53 +747,37 @@ class ArtifactStore:
     #
     # Read-only projections of this same plane, plus the exclusive Sources
     # writer. There is deliberately NO method here that accepts a
-    # caller-built execution observation (PR #7662 repair 7, adjudicated F3
-    # blocker): the only writer of ``v4_execution_observations`` is
-    # ``RequestExecutor._finalize_capture``, which derives every field from
-    # the execution/capture/dispatch state it owns. These methods only ever
-    # supply this store's own already-resolved connection and dialect --
-    # they never open a second connection or resolve a second plane root,
-    # so a caller-injected ``root=`` (e.g. a test's ``tmp_path``) is honored
-    # exactly like every other ``ArtifactStore`` operation. Production never
-    # reaches this class with a caller-chosen root: it goes through
-    # ``v4_canonical_authority_store.open_production_authority_store``,
-    # which is argument-free and refuses anything but the approved
-    # PostgreSQL plane.
+    # caller-built execution observation (PR #7662 repair 8): the only
+    # writer of ``v4_execution_observations`` is the native runner via
+    # ``RequestExecutor.finalize_v4_runner_execution``. These methods only
+    # ever supply this store's own already-resolved connection and dialect.
 
     def resolve_v4_execution_observation(self, *, task_id: str, run_id: str, role: str) -> dict[str, Any] | None:
         from scripts.fleet_comms import v4_canonical_authority_store as v4_store
 
         return v4_store.resolve_execution_observation(task_id=task_id, run_id=run_id, role=role, conn=self._conn, is_pg=self._authority is Authority.PG)
 
-    def record_v4_sources_invocation_from_tool_result(
+    def record_v4_sources_invocation_from_typed_outcome(
         self,
         *,
+        attempt_id: str,
         tool_name: str,
-        arguments: dict[str, Any],
-        result_text: str,
         tool_version: str,
-        request_id: str,
-        row_content_sha256: str,
-        claimed_lookup_ids: list[str],
+        typed_outcome: dict[str, Any],
     ) -> dict[str, Any] | None:
         """The exclusive Sources-invocation writer: builds the record from
-        the real call's own arguments and result, never from a caller-built
-        record (there is no such method). See ``v4_canonical_authority_
-        store.record_sources_invocation_from_tool_result``."""
-        self._refuse_readonly_write("record_v4_sources_invocation_from_tool_result")
+        a typed handler outcome and an authenticated attempt."""
+        self._refuse_readonly_write("record_v4_sources_invocation_from_typed_outcome")
         from scripts.fleet_comms import v4_canonical_authority_store as v4_store
 
         with self._transaction() as conn:
-            return v4_store.record_sources_invocation_from_tool_result(
+            return v4_store.record_sources_invocation_from_typed_outcome(
                 conn=conn,
                 is_pg=self._authority is Authority.PG,
+                attempt_id=attempt_id,
                 tool_name=tool_name,
-                arguments=arguments,
-                result_text=result_text,
                 tool_version=tool_version,
-                request_id=request_id,
-                row_content_sha256=row_content_sha256,
-                claimed_lookup_ids=claimed_lookup_ids,
+                typed_outcome=typed_outcome,
                 commit=False,
             )
 

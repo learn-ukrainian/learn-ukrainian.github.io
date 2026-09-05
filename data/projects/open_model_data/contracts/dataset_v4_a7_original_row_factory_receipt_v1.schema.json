@@ -410,7 +410,7 @@
         "additionalProperties": false,
         "required": [
           "slot_id", "stage", "row_id", "row_content_sha256", "admission_receipt_sha256",
-          "authorship_receipt_sha256", "review_receipt_sha256", "row_receipt"
+          "authorship_receipt_sha256", "review_receipt_sha256", "row_receipt", "trust_policy_sha256"
         ],
         "properties": {
           "slot_id": { "type": "string", "pattern": "^v4p-[a-z-]+-[0-9]{3}$" },
@@ -420,7 +420,8 @@
           "admission_receipt_sha256": { "$ref": "#/$defs/sha256" },
           "authorship_receipt_sha256": { "$ref": "#/$defs/sha256" },
           "review_receipt_sha256": { "$ref": "#/$defs/sha256" },
-          "row_receipt": { "$ref": "#/$defs/admission_row_receipt" }
+          "row_receipt": { "$ref": "#/$defs/admission_row_receipt" },
+          "trust_policy_sha256": { "$ref": "#/$defs/sha256" }
         }
       }
     },

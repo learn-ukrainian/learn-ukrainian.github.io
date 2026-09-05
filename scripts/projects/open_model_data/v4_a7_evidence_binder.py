@@ -122,7 +122,7 @@ def _require_verifier_receipt_body_shape(body: dict[str, Any]) -> None:
     require(isinstance(lookup_ids, list) and bool(lookup_ids) and all(isinstance(x, str) and x for x in lookup_ids), "verifier receipt lookup_ids must be a nonempty list of immutable identifiers -- refusing")
 
 
-def build_verifier_receipt(*, attestation: dict[str, Any], trust_policy: dict[str, Any]) -> dict[str, Any]:
+def build_verifier_receipt(*, attestation: dict[str, Any]) -> dict[str, Any]:
     """The only way to obtain a production-capable verifier receipt:
     verify ``attestation`` (see ``v4_sources_authority
     .issue_verifier_attestation``) against the pinned ``sources`` keyring in
@@ -132,7 +132,10 @@ def build_verifier_receipt(*, attestation: dict[str, Any], trust_policy: dict[st
     distinct sources execution authority. Fails closed (never falls back to
     self-integrity alone) if the signature does not verify against an
     active, registered, non-revoked ``sources`` key."""
+    from scripts.projects.open_model_data import v4_trust_authority as trust
+
     require(isinstance(attestation, dict), "attestation must be an object -- refusing")
+    trust_policy, policy_digest = trust.load_production_trust_policy()
     row_content_sha256 = attestation.get("row_content_sha256")
     try:
         sources_authority.verify_verifier_attestation(attestation, trust_policy=trust_policy, outcome_sha256=V4_SHA256, row_content_sha256=row_content_sha256)
@@ -143,22 +146,26 @@ def build_verifier_receipt(*, attestation: dict[str, Any], trust_policy: dict[st
     body = {k: v for k, v in attestation.items() if k != "signature_hex"}
     _require_verifier_receipt_body_shape(body)
     receipt_id = f"verifier:{_sha256_text(_canonical_json(body))}"
-    return {**body, "signature_hex": signature_hex, "receipt_id": receipt_id}
+    return {**body, "signature_hex": signature_hex, "receipt_id": receipt_id, "trust_policy_sha256": policy_digest}
 
 
-def validate_verifier_receipt_integrity(receipt: dict[str, Any], trust_policy: dict[str, Any]) -> None:
+def validate_verifier_receipt_integrity(receipt: dict[str, Any]) -> None:
     """Recompute ``receipt``'s own unkeyed ``receipt_id`` from its current
     body (catching tamper/hand-fabrication of the content address) *and*
     re-verify its embedded signature against the pinned ``sources`` keyring
     in ``trust_policy`` (catching a correctly recomputed self-hash with a
     missing, wrong, unknown, or revoked signature) -- both must pass."""
+    from scripts.projects.open_model_data import v4_trust_authority as trust
+
     require(isinstance(receipt, dict), "verifier receipt must be an object -- refusing")
     signature_hex = receipt.get("signature_hex")
     require(isinstance(signature_hex, str) and bool(signature_hex), "verifier receipt carries no signature -- refusing")
+    trust_policy, policy_digest = trust.load_production_trust_policy()
     body = {k: v for k, v in receipt.items() if k not in ("receipt_id", "signature_hex")}
     _require_verifier_receipt_body_shape(body)
     recomputed = f"verifier:{_sha256_text(_canonical_json(body))}"
     require(recomputed == receipt.get("receipt_id"), "verifier receipt fails its own integrity recheck (tampered or hand-fabricated) -- refusing")
+    require(receipt.get("trust_policy_sha256") == policy_digest, "verifier receipt trust_policy_sha256 does not match the active production policy -- refusing")
     try:
         sources_authority.verify_verifier_attestation(
             {**body, "signature_hex": signature_hex}, trust_policy=trust_policy, outcome_sha256=V4_SHA256, row_content_sha256=body.get("row_content_sha256")
@@ -170,7 +177,7 @@ def validate_verifier_receipt_integrity(receipt: dict[str, Any], trust_policy: d
 # --- evidence receipts (production-capable vs. explicitly-synthetic) -------
 
 
-def build_evidence_receipt(row_content_sha256: str, verifier_receipts: list[dict[str, Any]], *, uncertainty: str = "resolved", trust_policy: dict[str, Any]) -> dict[str, Any]:
+def build_evidence_receipt(row_content_sha256: str, verifier_receipts: list[dict[str, Any]], *, uncertainty: str = "resolved") -> dict[str, Any]:
     """Production-capable evidence: requires a nonempty list of real,
     integrity-checked, *authentically signed* verifier receipts, each bound
     to this row's own content hash. Refuses (fail closed) a duplicate
@@ -178,10 +185,13 @@ def build_evidence_receipt(row_content_sha256: str, verifier_receipts: list[dict
     signature verification against ``trust_policy``, or one not bound to
     ``row_content_sha256`` -- a bare well-shaped identifier with no signed
     verifier receipt can never reach ``production_capable: True``."""
+    from scripts.projects.open_model_data import v4_trust_authority as trust
+
     require(isinstance(verifier_receipts, list) and verifier_receipts, "verifier_receipts must be a nonempty list of real verifier receipts (see build_verifier_receipt)")
+    _, policy_digest = trust.load_production_trust_policy()
     identifiers: list[str] = []
     for verifier_receipt in verifier_receipts:
-        validate_verifier_receipt_integrity(verifier_receipt, trust_policy)
+        validate_verifier_receipt_integrity(verifier_receipt)
         require(verifier_receipt["row_content_sha256"] == row_content_sha256, "verifier receipt is not bound to this row's content hash -- refusing")
         identifiers.append(verifier_receipt["identifier"])
     require(len(identifiers) == len(set(identifiers)), "verifier_receipts carries a duplicate identifier -- refusing")
@@ -197,12 +207,13 @@ def build_evidence_receipt(row_content_sha256: str, verifier_receipts: list[dict
         "production_capable": True,
         "grade": "verified",
         "disposition": "supported",
+        "trust_policy_sha256": policy_digest,
     }
     receipt_id = f"evidence:{_sha256_text(_canonical_json(payload))}"
     return {**payload, "receipt_id": receipt_id}
 
 
-def validate_evidence_receipt_integrity(evidence_receipt: dict[str, Any], trust_policy: dict[str, Any] | None = None) -> None:
+def validate_evidence_receipt_integrity(evidence_receipt: dict[str, Any]) -> None:
     """Recompute ``evidence_receipt``'s own ``receipt_id`` from its current
     body (and, for a verifier-backed receipt, every embedded verifier
     receipt's own ``receipt_id`` *and signature*) and refuse on any
@@ -222,12 +233,15 @@ def validate_evidence_receipt_integrity(evidence_receipt: dict[str, Any], trust_
     require(recomputed == evidence_receipt.get("receipt_id"), "evidence_receipt fails its own integrity recheck (tampered or hand-fabricated) -- refusing")
 
     if source == "verifier_receipt":
+        from scripts.projects.open_model_data import v4_trust_authority as trust
+
         require(evidence_receipt.get("production_capable") is True, "verifier-backed evidence_receipt must declare production_capable true -- refusing")
-        require(trust_policy is not None, "trust_policy is required to validate a verifier-backed evidence receipt -- refusing")
+        _, policy_digest = trust.load_production_trust_policy()
+        require(evidence_receipt.get("trust_policy_sha256") == policy_digest, "evidence_receipt trust_policy_sha256 does not match the active production policy -- refusing")
         verifier_receipts = evidence_receipt.get("verifier_receipts")
         require(isinstance(verifier_receipts, list) and verifier_receipts, "verifier-backed evidence_receipt must carry a nonempty verifier_receipts list -- refusing")
         for verifier_receipt in verifier_receipts:
-            validate_verifier_receipt_integrity(verifier_receipt, trust_policy)
+            validate_verifier_receipt_integrity(verifier_receipt)
             require(verifier_receipt["row_content_sha256"] == evidence_receipt["row_content_sha256"], "verifier receipt is not bound to this evidence receipt's row_content_sha256 -- refusing")
     else:
         require(evidence_receipt.get("production_capable") is False, "synthetic-fixture evidence_receipt must declare production_capable false -- refusing")

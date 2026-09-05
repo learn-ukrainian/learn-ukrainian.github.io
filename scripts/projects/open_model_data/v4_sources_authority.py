@@ -167,6 +167,35 @@ def _resolve_sources_invocation(*, invocation_id: str) -> dict[str, Any] | None:
             store.close()
 
 
+def _resolve_terminal_observation_for_invocation(record: dict[str, Any]) -> dict[str, Any] | None:
+    """Join the Sources invocation to the terminal author observation.
+
+    Row hash is obtained from the runner-owned author execution, never from
+    a caller-supplied field on the invocation record.
+    """
+    from scripts.fleet_comms import v4_canonical_authority_store as v4_store
+
+    attempt_id = record.get("attempt_id")
+    if not isinstance(attempt_id, str) or not attempt_id:
+        return None
+    try:
+        store = _open_canonical_authority_store()
+    except v4_store.CanonicalAuthorityUnavailableError:
+        return None
+    try:
+        observation = v4_store.resolve_execution_observation_for_attempt(
+            attempt_id=attempt_id, conn=store.connection, is_pg=store.authority.value == "pg"
+        )
+    except Exception:
+        return None
+    finally:
+        with contextlib.suppress(Exception):
+            store.close()
+    if observation is None or observation.get("role") != "author":
+        return None
+    return observation
+
+
 def _load_signing_key(role: str) -> tuple[str, str]:
     return trust.load_production_signing_key(role)
 
@@ -184,18 +213,20 @@ def issue_verifier_attestation(*, invocation_id: str) -> dict[str, Any]:
     record = _resolve_sources_invocation(invocation_id=invocation_id)
     require(record is not None, f"unknown invocation_id: {invocation_id!r} -- refusing (no key access)")
     require(record.get("success") is True, f"invocation {invocation_id!r} is not recorded as successful -- refusing (no key access)")
+    observation = _resolve_terminal_observation_for_invocation(record)
+    require(observation is not None, f"invocation {invocation_id!r} has no terminal author execution to join -- refusing (no key access)")
     signing_key_hex, signer_key_id = _load_signing_key("sources")
     _, trust_policy_sha256 = trust.load_production_trust_policy()
     return _issue_verifier_attestation_from_evidence(
         signing_key_hex=signing_key_hex,
         signer_key_id=signer_key_id,
         outcome_sha256=V4_SHA256,
-        row_content_sha256=record["row_content_sha256"],
+        row_content_sha256=observation["row_content_sha256"],
         identifier=record["identifier"],
         tool_id=record["tool_id"],
         tool_version=record["tool_version"],
-        request_id=record["request_id"],
-        tool_result_sha256=record["tool_result_sha256"],
+        request_id=record["attempt_id"],
+        tool_result_sha256=record["structured_result_sha256"],
         lookup_ids=list(record["lookup_ids"]),
         invocation_id=record["invocation_id"],
         trust_policy_sha256=trust_policy_sha256,

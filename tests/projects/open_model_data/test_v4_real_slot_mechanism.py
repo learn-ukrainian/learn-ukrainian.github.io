@@ -49,6 +49,12 @@ from scripts.projects.open_model_data import v4_trust_authority as trust
 ROOT = Path(__file__).resolve().parents[3]
 FORBIDDEN_PUBLIC_TERMS = ("fam-", "db.", "historical.", "heldout_membership", "source_unit_id")
 
+
+@pytest.fixture(autouse=True)
+def _fixture_policy_seam():
+    with fx.installed_fixture_policy():
+        yield
+
 EMPTY_MANIFEST: dict = {"slot_series": []}
 EMPTY_A2_RECEIPT: dict = {"stratum_coverage_map": []}
 
@@ -71,7 +77,7 @@ def _real_slot_construction_kwargs(tmp_root: Path, sealed: dict) -> dict:
     reference_check_receipt = fx.build_reference_check_receipt()
     reference_check_signature, replay_attestation = fx.build_reference_check_authenticity(reference_check_receipt)
     author_execution_receipt = fx.build_author_execution_receipt(row_content_sha256)
-    authorship_receipt = ledger.build_authorship_receipt(author_execution_receipt=author_execution_receipt, trust_policy=fx.TRUST_POLICY, row_content_sha256=row_content_sha256)
+    authorship_receipt = ledger.build_authorship_receipt(author_execution_receipt=author_execution_receipt, row_content_sha256=row_content_sha256)
     authorship_receipt_sha256 = ledger.sha256_text(ledger.canonical_json(authorship_receipt))
     reviewer_execution_receipt = fx.build_reviewer_execution_receipt(row_content_sha256, authorship_receipt_sha256)
     return {
@@ -93,7 +99,6 @@ def _real_slot_construction_kwargs(tmp_root: Path, sealed: dict) -> dict:
         "reference_check_signature": reference_check_signature,
         "replay_attestation": replay_attestation,
         "rights_receipt_id": fx.RIGHTS_RECEIPT_ID,
-        "trust_policy": fx.TRUST_POLICY,
     }
 
 
@@ -109,7 +114,6 @@ def _replay_kwargs(tmp_root: Path, info: dict) -> dict:
         "packet_dir": sealed["packet_dir"],
         "manifest": manifest,
         "a2_receipt": a2_receipt,
-        "trust_policy": fx.TRUST_POLICY,
     }
 
 
@@ -238,7 +242,7 @@ def test_a7_ledger_and_review_receipts_carry_no_source_or_membership_fields(tmp_
 def test_review_receipt_refuses_same_model_family_as_author() -> None:
     row_content_sha256 = "a" * 64
     author_execution_receipt = fx.build_author_execution_receipt(row_content_sha256)
-    authorship = ledger.build_authorship_receipt(author_execution_receipt=author_execution_receipt, trust_policy=fx.TRUST_POLICY, row_content_sha256=row_content_sha256)
+    authorship = ledger.build_authorship_receipt(author_execution_receipt=author_execution_receipt, row_content_sha256=row_content_sha256)
     authorship_receipt_sha256 = ledger.sha256_text(ledger.canonical_json(authorship))
     # A distinct task/run/session, properly signed under the fixture's own
     # fleet key, but the reviewer's task-state seat_or_model resolves (via
@@ -247,13 +251,13 @@ def test_review_receipt_refuses_same_model_family_as_author() -> None:
     same_family_task_state = fx.build_reviewer_task_state(seat_or_model=fx.AUTHOR_SEAT_OR_MODEL)
     reviewer_execution_receipt = fx.build_reviewer_execution_receipt(row_content_sha256, authorship_receipt_sha256, task_state=same_family_task_state)
     with pytest.raises(ledger.PrivateLedgerError, match="model family"):
-        ledger.build_review_receipt(authorship_receipt=authorship, reviewer_execution_receipt=reviewer_execution_receipt, trust_policy=fx.TRUST_POLICY, row_content_sha256=row_content_sha256)
+        ledger.build_review_receipt(authorship_receipt=authorship, reviewer_execution_receipt=reviewer_execution_receipt, row_content_sha256=row_content_sha256)
 
 
 def test_review_receipt_refuses_same_session_as_author() -> None:
     row_content_sha256 = "a" * 64
     author_execution_receipt = fx.build_author_execution_receipt(row_content_sha256)
-    authorship = ledger.build_authorship_receipt(author_execution_receipt=author_execution_receipt, trust_policy=fx.TRUST_POLICY, row_content_sha256=row_content_sha256)
+    authorship = ledger.build_authorship_receipt(author_execution_receipt=author_execution_receipt, row_content_sha256=row_content_sha256)
     authorship_receipt_sha256 = ledger.sha256_text(ledger.canonical_json(authorship))
     # A distinct model_family/task/run, but the same provider session
     # identity (the envelope's own session_id, cross-checked against the
@@ -267,7 +271,7 @@ def test_review_receipt_refuses_same_session_as_author() -> None:
         row_content_sha256, authorship_receipt_sha256, task_state=same_session_task_state, envelope=same_session_envelope
     )
     with pytest.raises(ledger.PrivateLedgerError, match="session"):
-        ledger.build_review_receipt(authorship_receipt=authorship, reviewer_execution_receipt=reviewer_execution_receipt, trust_policy=fx.TRUST_POLICY, row_content_sha256=row_content_sha256)
+        ledger.build_review_receipt(authorship_receipt=authorship, reviewer_execution_receipt=reviewer_execution_receipt, row_content_sha256=row_content_sha256)
 
 
 # --- tamper: saw_source_text / saw_heldout / saw_eligible_unit_ids ---------
@@ -428,7 +432,7 @@ def test_construct_completion_refuses_an_arbitrary_unit_mixed_with_an_eligible_o
 
 def test_build_evidence_receipt_refuses_without_a_nonempty_verifier_receipts_list() -> None:
     with pytest.raises(evidence_binder.EvidenceBinderError, match="verifier_receipts must be a nonempty list"):
-        evidence_binder.build_evidence_receipt("a" * 64, [], trust_policy=trust.empty_trust_policy())
+        evidence_binder.build_evidence_receipt("a" * 64, [])
 
 
 def test_build_verifier_receipt_succeeds_with_a_genuine_signed_attestation() -> None:
@@ -449,12 +453,12 @@ def test_build_verifier_receipt_succeeds_with_a_genuine_signed_attestation() -> 
         invocation_id="inv-1",
         trust_policy_sha256=fx.TRUST_POLICY_SHA256,
     )
-    verifier_receipt = evidence_binder.build_verifier_receipt(attestation=attestation, trust_policy=fx.TRUST_POLICY)
-    receipt = evidence_binder.build_evidence_receipt(row_content_sha256, [verifier_receipt], trust_policy=fx.TRUST_POLICY)
+    verifier_receipt = evidence_binder.build_verifier_receipt(attestation=attestation)
+    receipt = evidence_binder.build_evidence_receipt(row_content_sha256, [verifier_receipt])
     assert receipt["grade"] == "verified"
     assert receipt["production_capable"] is True
     assert receipt["evidence_source"] == "verifier_receipt"
-    evidence_binder.validate_evidence_receipt_integrity(receipt, fx.TRUST_POLICY)
+    evidence_binder.validate_evidence_receipt_integrity(receipt)
 
 
 def test_build_verifier_receipt_refuses_an_unsigned_self_fabricated_attestation() -> None:
@@ -478,7 +482,7 @@ def test_build_verifier_receipt_refuses_an_unsigned_self_fabricated_attestation(
         "signature_hex": "00" * 64,
     }
     with pytest.raises(evidence_binder.EvidenceBinderError, match="authenticity"):
-        evidence_binder.build_verifier_receipt(attestation=forged_attestation, trust_policy=fx.TRUST_POLICY)
+        evidence_binder.build_verifier_receipt(attestation=forged_attestation)
 
 
 def test_build_verifier_receipt_refuses_an_unknown_signer_key() -> None:
@@ -497,11 +501,13 @@ def test_build_verifier_receipt_refuses_an_unknown_signer_key() -> None:
         trust_policy_sha256=fx.TRUST_POLICY_SHA256,
     )
     with pytest.raises(evidence_binder.EvidenceBinderError, match="authenticity"):
-        evidence_binder.build_verifier_receipt(attestation=attestation, trust_policy=fx.TRUST_POLICY)
+        evidence_binder.build_verifier_receipt(attestation=attestation)
 
 
-def test_build_verifier_receipt_refuses_a_revoked_signer_key() -> None:
+def test_build_verifier_receipt_refuses_a_revoked_signer_key(monkeypatch: pytest.MonkeyPatch) -> None:
     revoked_policy = trust.build_test_trust_policy(sources={fx.SOURCES_KEY_ID: fx.SOURCES_PUBLIC_KEY_HEX}, revoked_key_ids=frozenset({fx.SOURCES_KEY_ID}))
+    revoked_digest = trust.trust_policy_sha256(revoked_policy)
+    monkeypatch.setattr(trust, "load_production_trust_policy", lambda: (revoked_policy, revoked_digest))
     attestation = sources_authority._issue_verifier_attestation_from_evidence(
         signing_key_hex=fx.SOURCES_SIGNING_KEY_HEX,
         signer_key_id=fx.SOURCES_KEY_ID,
@@ -514,15 +520,18 @@ def test_build_verifier_receipt_refuses_a_revoked_signer_key() -> None:
         tool_result_sha256="b" * 64,
         lookup_ids=["vesum-row-12345"],
         invocation_id="inv-1",
-        trust_policy_sha256=trust.trust_policy_sha256(revoked_policy),
+        trust_policy_sha256=revoked_digest,
     )
     with pytest.raises(evidence_binder.EvidenceBinderError, match="revoked"):
-        evidence_binder.build_verifier_receipt(attestation=attestation, trust_policy=revoked_policy)
+        evidence_binder.build_verifier_receipt(attestation=attestation)
 
 
-def test_build_verifier_receipt_refuses_against_an_empty_production_trust_policy() -> None:
+def test_build_verifier_receipt_refuses_against_an_empty_production_trust_policy(monkeypatch: pytest.MonkeyPatch) -> None:
     """Mechanism-only production: an empty trust policy (no active
     ``sources`` key yet) refuses every production-capable receipt."""
+    empty = trust.empty_trust_policy()
+    empty_digest = trust.trust_policy_sha256(empty)
+    monkeypatch.setattr(trust, "load_production_trust_policy", lambda: (empty, empty_digest))
     attestation = sources_authority._issue_verifier_attestation_from_evidence(
         signing_key_hex=fx.SOURCES_SIGNING_KEY_HEX,
         signer_key_id=fx.SOURCES_KEY_ID,
@@ -535,10 +544,10 @@ def test_build_verifier_receipt_refuses_against_an_empty_production_trust_policy
         tool_result_sha256="b" * 64,
         lookup_ids=["vesum-row-12345"],
         invocation_id="inv-1",
-        trust_policy_sha256=trust.trust_policy_sha256(trust.empty_trust_policy()),
+        trust_policy_sha256=empty_digest,
     )
     with pytest.raises(evidence_binder.EvidenceBinderError, match="authenticity"):
-        evidence_binder.build_verifier_receipt(attestation=attestation, trust_policy=trust.empty_trust_policy())
+        evidence_binder.build_verifier_receipt(attestation=attestation)
 
 
 def test_verifier_attestation_refuses_a_tool_id_outside_the_sanctioned_prefix() -> None:
@@ -566,6 +575,7 @@ def test_construct_completion_has_no_synthetic_admission_switch() -> None:
     there is no runtime argument that could ever bypass the ``production_
     capable`` requirement below."""
     params = set(inspect.signature(ledger.construct_completion).parameters)
+    assert "trust_policy" not in params
     assert "allow_synthetic_fixture" not in params
     assert not hasattr(evidence_binder, "build_synthetic_fixture_evidence_receipt"), "production evidence binder must expose no synthetic-fixture builder"
 
@@ -857,7 +867,7 @@ def test_build_authorship_receipt_refuses_a_caller_supplied_signature() -> None:
     real = fx.build_author_execution_receipt(row_content_sha256)
     forged = {**real, "model_family": "attacker-controlled-family", "signature_hex": real["signature_hex"]}
     with pytest.raises(ledger.PrivateLedgerError, match="authenticity"):
-        ledger.build_authorship_receipt(author_execution_receipt=forged, trust_policy=fx.TRUST_POLICY, row_content_sha256=row_content_sha256)
+        ledger.build_authorship_receipt(author_execution_receipt=forged, row_content_sha256=row_content_sha256)
 
 
 def test_build_authorship_receipt_refuses_missing_signature() -> None:
@@ -872,15 +882,16 @@ def test_build_authorship_receipt_refuses_an_unknown_signer_key() -> None:
     row_content_sha256 = "a" * 64
     forged = fx.build_author_execution_receipt(row_content_sha256, signer_key_id="unregistered-fleet-key")
     with pytest.raises(ledger.PrivateLedgerError, match="authenticity"):
-        ledger.build_authorship_receipt(author_execution_receipt=forged, trust_policy=fx.TRUST_POLICY, row_content_sha256=row_content_sha256)
+        ledger.build_authorship_receipt(author_execution_receipt=forged, row_content_sha256=row_content_sha256)
 
 
-def test_build_authorship_receipt_refuses_a_revoked_signer_key() -> None:
+def test_build_authorship_receipt_refuses_a_revoked_signer_key(monkeypatch: pytest.MonkeyPatch) -> None:
     row_content_sha256 = "a" * 64
     real = fx.build_author_execution_receipt(row_content_sha256)
     revoked_policy = trust.build_test_trust_policy(fleet_execution={fx.FLEET_KEY_ID: fx.FLEET_PUBLIC_KEY_HEX}, revoked_key_ids=frozenset({fx.FLEET_KEY_ID}))
+    monkeypatch.setattr(trust, "load_production_trust_policy", lambda: (revoked_policy, trust.trust_policy_sha256(revoked_policy)))
     with pytest.raises(ledger.PrivateLedgerError, match="authenticity"):
-        ledger.build_authorship_receipt(author_execution_receipt=real, trust_policy=revoked_policy, row_content_sha256=row_content_sha256)
+        ledger.build_authorship_receipt(author_execution_receipt=real, row_content_sha256=row_content_sha256)
 
 
 @pytest.mark.parametrize("field", ["model_family", "exact_model", "harness", "task_id", "run_nonce", "row_content_sha256", "prompt_sha256", "packet_sha256"])
@@ -889,28 +900,33 @@ def test_build_authorship_receipt_refuses_any_signed_field_mutation(field: str) 
     real = fx.build_author_execution_receipt(row_content_sha256)
     tampered = {**real, field: "tampered-value" if field not in {"prompt_sha256", "packet_sha256", "row_content_sha256"} else "f" * 64}
     with pytest.raises(ledger.PrivateLedgerError, match="authenticity"):
-        ledger.build_authorship_receipt(author_execution_receipt=tampered, trust_policy=fx.TRUST_POLICY, row_content_sha256=row_content_sha256)
+        ledger.build_authorship_receipt(author_execution_receipt=tampered, row_content_sha256=row_content_sha256)
 
 
 def test_build_review_receipt_refuses_a_review_swapped_across_a_different_authorship_receipt() -> None:
     row_content_sha256 = "a" * 64
     author_execution_receipt = fx.build_author_execution_receipt(row_content_sha256)
-    authorship = ledger.build_authorship_receipt(author_execution_receipt=author_execution_receipt, trust_policy=fx.TRUST_POLICY, row_content_sha256=row_content_sha256)
+    authorship = ledger.build_authorship_receipt(author_execution_receipt=author_execution_receipt, row_content_sha256=row_content_sha256)
     other_authorship = {**authorship, "session_id": "a-different-session"}
     reviewer_execution_receipt = fx.build_reviewer_execution_receipt(row_content_sha256, ledger.sha256_text(ledger.canonical_json(authorship)))
     with pytest.raises(ledger.PrivateLedgerError, match="authenticity"):
-        ledger.build_review_receipt(authorship_receipt=other_authorship, reviewer_execution_receipt=reviewer_execution_receipt, trust_policy=fx.TRUST_POLICY, row_content_sha256=row_content_sha256)
+        ledger.build_review_receipt(authorship_receipt=other_authorship, reviewer_execution_receipt=reviewer_execution_receipt, row_content_sha256=row_content_sha256)
 
 
 def test_build_review_receipt_refuses_a_rubric_hash_mismatch() -> None:
     row_content_sha256 = "a" * 64
     author_execution_receipt = fx.build_author_execution_receipt(row_content_sha256)
-    authorship = ledger.build_authorship_receipt(author_execution_receipt=author_execution_receipt, trust_policy=fx.TRUST_POLICY, row_content_sha256=row_content_sha256)
+    authorship = ledger.build_authorship_receipt(author_execution_receipt=author_execution_receipt, row_content_sha256=row_content_sha256)
     authorship_receipt_sha256 = ledger.sha256_text(ledger.canonical_json(authorship))
     signed_for_one_rubric = fx.build_reviewer_execution_receipt(row_content_sha256, authorship_receipt_sha256, rubric_sha256="a" * 64)
     with pytest.raises(fleet_execution.FleetExecutionError, match="rubric"):
         fleet_execution.verify_reviewer_execution_receipt(
-            signed_for_one_rubric, trust_policy=fx.TRUST_POLICY, outcome_sha256=ledger.V4_SHA256, row_content_sha256=row_content_sha256, authorship_receipt_sha256=authorship_receipt_sha256, rubric_sha256="b" * 64
+            signed_for_one_rubric,
+            trust_policy=fx.TRUST_POLICY,
+            outcome_sha256=ledger.V4_SHA256,
+            row_content_sha256=row_content_sha256,
+            authorship_receipt_sha256=authorship_receipt_sha256,
+            rubric_sha256="b" * 64,
         )
 
 

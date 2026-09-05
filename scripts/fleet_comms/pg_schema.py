@@ -153,6 +153,37 @@ _V4_EXECUTION_DISPATCH_BINDING = (
     "CREATE INDEX IF NOT EXISTS idx_v4_sources_invocations_request ON v4_sources_invocations(request_id)",
 )
 
+# V4 runner-owned execution attempts + per-attempt Sources capability
+# (PR #7662 repair 8). The native runner claims one attempt immediately
+# before Popen and stores only the capability digest; Sources HTTP auth
+# resolves that digest to the active attempt. Sqlite twin:
+# ``scripts.fleet_comms.migrations._V10_STATEMENTS``.
+_V5_V4_RUNNER_ATTEMPTS = (
+    """CREATE TABLE IF NOT EXISTS v4_execution_attempts (
+        attempt_id TEXT PRIMARY KEY,
+        request_id TEXT NOT NULL UNIQUE,
+        task_id TEXT NOT NULL,
+        run_id TEXT NOT NULL,
+        role TEXT NOT NULL CHECK (role IN ('author', 'reviewer')),
+        state TEXT NOT NULL CHECK (state IN ('running', 'terminal')),
+        capability_digest TEXT NOT NULL UNIQUE,
+        binding_sha256 TEXT NOT NULL,
+        started_at TEXT NOT NULL,
+        terminal_at TEXT
+    )""",
+    "ALTER TABLE v4_sources_invocations ADD COLUMN IF NOT EXISTS attempt_id TEXT",
+    "CREATE INDEX IF NOT EXISTS idx_v4_sources_invocations_attempt ON v4_sources_invocations(attempt_id)",
+    """CREATE TABLE IF NOT EXISTS v4_authorship_receipts (
+        receipt_id TEXT PRIMARY KEY,
+        task_id TEXT NOT NULL,
+        run_id TEXT NOT NULL,
+        record_sha256 TEXT NOT NULL,
+        record_json TEXT NOT NULL,
+        recorded_at TEXT NOT NULL,
+        UNIQUE (task_id, run_id)
+    )""",
+)
+
 MIGRATIONS: tuple[PgMigration, ...] = (
     PgMigration(
         version=1,
@@ -173,6 +204,11 @@ MIGRATIONS: tuple[PgMigration, ...] = (
         version=4,
         name="fleet-comms-pg-v4-execution-dispatch-binding",
         statements=_V4_EXECUTION_DISPATCH_BINDING,
+    ),
+    PgMigration(
+        version=5,
+        name="fleet-comms-pg-v5-v4-runner-attempts",
+        statements=_V5_V4_RUNNER_ATTEMPTS,
     ),
 )
 

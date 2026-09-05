@@ -1305,6 +1305,7 @@ def _execute_invocation_plan(
     event_sink: Callable[..., None] | None = None,
     stdout_silence_timeout: int | None = None,
     initial_response_timeout: int | None = None,
+    v4_authorization_id: str | None = None,
 ) -> _ExecutionOutcome:
     """Spawn one plan, run watchdog/parse flow, and return raw execution state."""
     # Exact-target review isolation (#5285): when tool_config requests
@@ -1377,6 +1378,7 @@ def _execute_invocation_plan(
     fleet_capture: FleetCapture | None = None
     kill_reason: str | None = None
     escaped_primary: list[str] = []
+    v4_claim: dict[str, Any] | None = None
     # Mid-dispatch primary-tree tripwire (#6818): the spawn-time guard above
     # proved cwd isolation, but a child can still resolve absolute paths into
     # the primary checkout while running (the agy escape class). Baseline is
@@ -1404,6 +1406,16 @@ def _execute_invocation_plan(
                 else:
                     stdin_handle, stdin_temp_path = _prepare_stdin_handle(plan.stdin_payload)
             review_cmd, env = _prepare_spawn_command(review_cmd, env)
+            if v4_authorization_id:
+                from scripts.fleet_comms import v4_execution_origin as origin
+                from scripts.fleet_comms.request_executor import RequestExecutor
+
+                with RequestExecutor() as executor:
+                    v4_claim = executor.claim_v4_runner_execution(request_id=v4_authorization_id)
+                env = origin.inject_sources_capability(env=env, token=v4_claim["capability_token"])
+                tool_config = origin.apply_mcp_capability_to_tool_config(
+                    tool_config, token=v4_claim["capability_token"]
+                )
             proc, stdout_master_fd, stderr_master_fd = _spawn_subprocess(
                 review_cmd,
                 cwd=review_cwd,
@@ -1666,6 +1678,19 @@ def _execute_invocation_plan(
                 route_metadata=route_metadata,
             )
             fleet_capture = None
+        if v4_claim is not None:
+            _finalize_v4_runner_origin(
+                authorization_id=v4_authorization_id or "",
+                claim=v4_claim,
+                plan=plan,
+                review_cmd=review_cmd,
+                stdout_text=stdout_text,
+                stderr_text=stderr_text,
+                returncode=final_returncode,
+                parse=parse,
+                requested_model=model,
+            )
+            v4_claim = None
         return _ExecutionOutcome(
             parse=parse,
             duration_s=duration_s,
@@ -1740,6 +1765,57 @@ def _execute_invocation_plan(
                 cleanup_invocation(plan)
 
         _cleanup_stdin_temp(stdin_temp_path, stdin_handle)
+        if v4_claim is not None and v4_authorization_id:
+            with contextlib.suppress(Exception):
+                _finalize_v4_runner_origin(
+                    authorization_id=v4_authorization_id,
+                    claim=v4_claim,
+                    plan=plan,
+                    review_cmd=review_cmd,
+                    stdout_text="",
+                    stderr_text="",
+                    returncode=None if proc is None else proc.returncode,
+                    parse=ParseResult(ok=False, response=""),
+                    requested_model=model,
+                )
+
+
+def _finalize_v4_runner_origin(
+    *,
+    authorization_id: str,
+    claim: dict[str, Any],
+    plan: Any,
+    review_cmd: list[str],
+    stdout_text: str,
+    stderr_text: str,
+    returncode: int | None,
+    parse: ParseResult,
+    requested_model: str,
+) -> None:
+    """Persist the runner-owned V4 observation from this exact process."""
+    from scripts.fleet_comms import v4_execution_origin as origin
+    from scripts.fleet_comms.request_executor import RequestExecutor
+
+    output_bytes = b""
+    if getattr(plan, "output_file", None) is not None:
+        output_path = Path(plan.output_file)
+        if output_path.is_file():
+            output_bytes = output_path.read_bytes()
+    with RequestExecutor() as executor:
+        executor.finalize_v4_runner_execution(
+            request_id=authorization_id,
+            attempt_id=claim["attempt_id"],
+            review_cmd=list(review_cmd),
+            transported_prompt=origin.transported_prompt_bytes(plan=plan, review_cmd=review_cmd),
+            stdout=stdout_text.encode("utf-8", errors="replace"),
+            stderr=stderr_text.encode("utf-8", errors="replace"),
+            output_bytes=output_bytes,
+            returncode=returncode,
+            parse_ok=bool(parse.ok),
+            parse_response=parse.response or "",
+            parse_session_id=parse.session_id,
+            requested_model=requested_model,
+        )
 
 
 def _raise_for_kill_reason(
@@ -2682,6 +2758,7 @@ def _invoke_impl(
     effort: str | None = None,
     allow_direct_only: bool = False,
     allow_runner_failover: bool = True,
+    v4_authorization_id: str | None = None,
 ) -> Result:
     """Runner implementation after any parent-owned isolation preparation.
 
@@ -2848,6 +2925,11 @@ def _invoke_impl(
     # intentionally a telemetry label rather than an argv override. Preserve
     # a caller's explicit ``None`` for those adapters while retaining the
     # effective label for headroom and usage records.
+    if v4_authorization_id:
+        from scripts.fleet_comms.request_executor import RequestExecutor
+
+        with RequestExecutor() as executor:
+            prompt = executor.resolve_authorized_prompt(request_id=v4_authorization_id)
     plan_model = model if allow_direct_only else effective_model
     plan = adapter.build_invocation(
         prompt=prompt,
@@ -2885,6 +2967,7 @@ def _invoke_impl(
         event_sink=event_sink,
         stdout_silence_timeout=stdout_silence_timeout,
         initial_response_timeout=initial_response_timeout,
+        v4_authorization_id=v4_authorization_id,
     )
     parse = execution.parse
 
@@ -3011,6 +3094,7 @@ def invoke(
     event_sink: Callable[..., None] | None = None,
     effort: str | None = None,
     initiator: str | None = None,
+    v4_authorization_id: str | None = None,
 ) -> Result:
     """Invoke an agent CLI, provisioning trail isolation before any spawn.
 
@@ -3047,6 +3131,7 @@ def invoke(
             initial_response_timeout=initial_response_timeout,
             event_sink=event_sink,
             effort=effort,
+            v4_authorization_id=v4_authorization_id,
         )
     finally:
         if launch is not None:

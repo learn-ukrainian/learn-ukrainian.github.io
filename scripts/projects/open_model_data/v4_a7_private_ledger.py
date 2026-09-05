@@ -267,7 +267,7 @@ def _execution_session_id(execution_receipt: dict[str, Any]) -> str:
     return f"{execution_receipt['task_id']}:{execution_receipt['run_nonce']}"
 
 
-def build_authorship_receipt(*, author_execution_receipt: dict[str, Any], trust_policy: dict[str, Any], row_content_sha256: str) -> dict[str, Any]:
+def build_authorship_receipt(*, author_execution_receipt: dict[str, Any], row_content_sha256: str) -> dict[str, Any]:
     """Repair E (PR #7662 repair 4): no longer accepts a raw caller-supplied
     identity dictionary. Requires a pre-issued, signed fleet-execution
     receipt (see ``v4_fleet_execution_authority.issue_author_execution_receipt``,
@@ -276,8 +276,9 @@ def build_authorship_receipt(*, author_execution_receipt: dict[str, Any], trust_
     keyring before deriving any identity field from it. Every ``saw_*``
     attestation is re-checked false by that verification -- refuses (fail
     closed) otherwise, never silently coerces."""
+    resolved_policy, policy_digest = trust.load_production_trust_policy()
     try:
-        fleet_execution.verify_author_execution_receipt(author_execution_receipt, trust_policy=trust_policy, outcome_sha256=V4_SHA256, row_content_sha256=row_content_sha256)
+        fleet_execution.verify_author_execution_receipt(author_execution_receipt, trust_policy=resolved_policy, outcome_sha256=V4_SHA256, row_content_sha256=row_content_sha256)
     except fleet_execution.FleetExecutionError as exc:
         raise PrivateLedgerError(f"author execution receipt failed authenticity verification -- refusing: {exc}") from exc
     body = {
@@ -294,13 +295,14 @@ def build_authorship_receipt(*, author_execution_receipt: dict[str, Any], trust_
         "saw_eligible_unit_ids": False,
         "verification_tool_ids": sorted(author_execution_receipt.get("verification_tool_ids", [])),
         "execution_receipt": author_execution_receipt,
+        "trust_policy_sha256": policy_digest,
     }
     receipt = _finalize_receipt("authorship", body)
     _validate_against_schema(receipt, AUTHORSHIP_SCHEMA_PATH)
     return receipt
 
 
-def build_review_receipt(*, authorship_receipt: dict[str, Any], reviewer_execution_receipt: dict[str, Any], trust_policy: dict[str, Any], row_content_sha256: str) -> dict[str, Any]:
+def build_review_receipt(*, authorship_receipt: dict[str, Any], reviewer_execution_receipt: dict[str, Any], row_content_sha256: str) -> dict[str, Any]:
     """Repair E (PR #7662 repair 4): no longer accepts a raw caller-supplied
     identity dictionary, verdict, or rubric hash. Requires a pre-issued,
     signed fleet-execution receipt already bound (at signing time) to the
@@ -310,10 +312,11 @@ def build_review_receipt(*, authorship_receipt: dict[str, Any], reviewer_executi
     hold, exactly like the author's own receipt."""
     authorship_receipt_sha256 = sha256_text(canonical_json(authorship_receipt))
     rubric_sha256 = reviewer_execution_receipt.get("rubric_sha256") if isinstance(reviewer_execution_receipt, dict) else None
+    resolved_policy, policy_digest = trust.load_production_trust_policy()
     try:
         fleet_execution.verify_reviewer_execution_receipt(
             reviewer_execution_receipt,
-            trust_policy=trust_policy,
+            trust_policy=resolved_policy,
             outcome_sha256=V4_SHA256,
             row_content_sha256=row_content_sha256,
             authorship_receipt_sha256=authorship_receipt_sha256,
@@ -348,6 +351,7 @@ def build_review_receipt(*, authorship_receipt: dict[str, Any], reviewer_executi
         "verdict": verdict,
         "rubric_sha256": rubric_sha256,
         "execution_receipt": reviewer_execution_receipt,
+        "trust_policy_sha256": policy_digest,
     }
     receipt = _finalize_receipt("review", body)
     _validate_against_schema(receipt, REVIEW_SCHEMA_PATH)
@@ -434,7 +438,6 @@ def construct_completion(
     reference_check_signature: dict[str, Any],
     replay_attestation: dict[str, Any],
     rights_receipt_id: str,
-    trust_policy: dict[str, Any],
 ) -> dict[str, Any]:
     """Run every gate live and return ``{"private_entry", "public_completion"}``.
     Refuses (fail closed) unless every gate genuinely passes -- never
@@ -463,6 +466,7 @@ def construct_completion(
     pre-issued, signed fleet-execution receipts, never raw caller
     dictionaries."""
     row_content_sha256 = sha256_text(row_text)
+    trust_policy, policy_digest = trust.load_production_trust_policy()
 
     seal_receipt = json.loads(seal_receipt_path.read_text(encoding="utf-8"))
     try:
@@ -480,7 +484,7 @@ def construct_completion(
     bound_unit_id = pick_bound_unit(salt, slot_id, candidate_unit_ids)
     require(bound_unit_id in eligible_unit_ids, "bound unit is not a member of the A3-verified builder-eligible set -- refusing")
 
-    evidence_binder.validate_evidence_receipt_integrity(evidence_receipt, trust_policy)
+    evidence_binder.validate_evidence_receipt_integrity(evidence_receipt)
     require(evidence_receipt.get("row_content_sha256") == row_content_sha256, "evidence_receipt is not bound to this row's content hash -- refusing")
     require(
         evidence_receipt.get("production_capable") is True,
@@ -500,9 +504,9 @@ def construct_completion(
     except reference_check.ReferenceCheckError as exc:
         raise PrivateLedgerError(f"A3 reference-check signed authenticity failed -- refusing: {exc}") from exc
 
-    authorship_receipt = build_authorship_receipt(author_execution_receipt=author_execution_receipt, trust_policy=trust_policy, row_content_sha256=row_content_sha256)
+    authorship_receipt = build_authorship_receipt(author_execution_receipt=author_execution_receipt, row_content_sha256=row_content_sha256)
 
-    review_receipt = build_review_receipt(authorship_receipt=authorship_receipt, reviewer_execution_receipt=reviewer_execution_receipt, trust_policy=trust_policy, row_content_sha256=row_content_sha256)
+    review_receipt = build_review_receipt(authorship_receipt=authorship_receipt, reviewer_execution_receipt=reviewer_execution_receipt, row_content_sha256=row_content_sha256)
     require(review_receipt["verdict"] == "PASS", "review verdict is not PASS -- refusing to construct a completion")
 
     input_row = build_admission_input_row(
@@ -542,6 +546,7 @@ def construct_completion(
         "replay_attestation": replay_attestation,
         "admission_input_row": input_row,
         "admission_row_receipt": row_receipt,
+        "trust_policy_sha256": policy_digest,
     }
     public_completion = {
         "stage": "A7",
@@ -552,6 +557,7 @@ def construct_completion(
         "authorship_receipt_sha256": authorship_sha256,
         "review_receipt_sha256": review_sha256,
         "row_receipt": row_receipt,
+        "trust_policy_sha256": policy_digest,
     }
     return {"private_entry": private_entry, "public_completion": public_completion}
 
@@ -591,7 +597,6 @@ def verify_private_replay(
     packet_dir: Path,
     manifest: dict[str, Any],
     a2_receipt: dict[str, Any],
-    trust_policy: dict[str, Any],
     reference_check_verifier: Callable[[str, dict[str, Any]], None] | None = None,
 ) -> None:
     """For every ``a7_completions`` entry in ``public_receipt``, require a
@@ -631,6 +636,7 @@ def verify_private_replay(
     attestation true, a non-PASS verdict, an ineligible bound unit, a D1
     violation, or a lineage id colliding with a published A4 commitment."""
     entries = ledger["entries"]
+    trust_policy, active_policy_digest = trust.load_production_trust_policy()
     seal_receipt = json.loads(seal_receipt_path.read_text(encoding="utf-8"))
     try:
         d1_validator.validate_manifest_meets_d1(manifest, a2_receipt, seal_receipt)
@@ -649,6 +655,10 @@ def verify_private_replay(
         require(
             recomputed_content_sha256 == entry["row_content_sha256"] == completion["row_content_sha256"],
             f"row_content_sha256 does not reproduce from the private ledger's own stored row text for slot {slot_id!r} -- refusing",
+        )
+        require(
+            completion.get("trust_policy_sha256") == active_policy_digest == entry.get("trust_policy_sha256"),
+            f"slot {slot_id!r}: trust_policy_sha256 does not match the currently active production policy -- refusing",
         )
         # Derived from the frozen manifest, never a caller assertion.
         d1_validator.stratum_for_slot_id(manifest, slot_id)
@@ -702,7 +712,7 @@ def verify_private_replay(
         evidence_receipt = entry["evidence_receipt"]
         require(evidence_receipt.get("row_content_sha256") == recomputed_content_sha256, f"slot {slot_id!r}: evidence receipt is not bound to the replayed row content -- refusing")
         try:
-            evidence_binder.validate_evidence_receipt_integrity(evidence_receipt, trust_policy)
+            evidence_binder.validate_evidence_receipt_integrity(evidence_receipt)
         except evidence_binder.EvidenceBinderError as exc:
             raise PrivateLedgerError(f"slot {slot_id!r}: evidence receipt failed replay integrity recheck -- refusing: {exc}") from exc
 
@@ -779,10 +789,8 @@ def main(argv: list[str] | None = None) -> None:
     salt = bytes.fromhex(args.salt_hex)
 
     try:
-        # Repair 6 (PR #7662): no ``--trust-policy`` flag -- private replay
-        # always verifies against the one fixed, digest-pinned production
-        # policy, never a caller-selected path or dict.
-        trust_policy, _ = trust.load_production_trust_policy()
+        # Repair 8: no ``--trust-policy`` flag -- private replay loads the
+        # fixed production policy internally.
         verify_private_replay(
             public_receipt,
             ledger,
@@ -793,7 +801,6 @@ def main(argv: list[str] | None = None) -> None:
             packet_dir=args.packet_dir,
             manifest=manifest,
             a2_receipt=a2_receipt,
-            trust_policy=trust_policy,
         )
     except (PrivateLedgerError, trust.TrustAuthorityError) as exc:
         print(f"error: {exc}", file=sys.stderr)

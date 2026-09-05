@@ -1,34 +1,24 @@
-"""PR #7662 repair 6/7 acceptance tests: the operator-approved canonical
-Fleet Comms authority store, the real execution-boundary writer, the fixed
-canonical-PostgreSQL production resolution, the opaque-ID-only production
-issuer entrypoints, fixed Hramatka signing-key custody, and the
-digest-pinned/rotatable production trust policy.
-
-Mechanism-only: no test here ever provisions a real production key, applies
-a live migration, or writes to the real default Fleet Comms plane. Every
-store test opens an isolated ``ArtifactStore(root=tmp_path)``/
-``RequestExecutor(root=tmp_path)``.
-
-Repair 7 moves the issuer test seam DOWN a layer: instead of replacing the
-resolver wholesale, tests substitute the single fixed store opener
-(``_open_canonical_authority_store``) with an isolated ``tmp_path`` plane,
-so the real resolve path -- including record validation and readback --
-runs for real. Execution observations are produced by driving the actual
-``RequestExecutor.execute_capture`` finalization against a controlled,
-source-free runtime capture; no test hands the executor a pre-built
-observation, because no such API exists.
+"""PR #7662 repair 8 acceptance tests: canonical Fleet Comms authority store,
+opaque-ID issuers, Hramatka signing-key custody, and digest-pinned trust
+policy. ``RequestExecutor.execute_capture`` is not a V4 origin; runner-owned
+observations are produced in ``test_v4_runner_origin_mechanism.py``.
 """
 
 from __future__ import annotations
 
-import json
-import sqlite3
+import os
 from pathlib import Path
 from typing import Any
 
 import _v4_a7_real_slot_fixture as fx
 import pytest
+from test_v4_runner_origin_mechanism import (
+    FIXTURE_MODEL,
+    FIXTURE_SESSION,
+    _write_claude_fixture,
+)
 
+from scripts.agent_runtime import runner as runtime_runner
 from scripts.fleet_comms import v4_canonical_authority_store as v4_store
 from scripts.fleet_comms.artifacts import ArtifactStore
 from scripts.fleet_comms.request_executor import RequestExecutor, RequestExecutorError
@@ -37,17 +27,15 @@ from scripts.projects.open_model_data import v4_fleet_execution_authority as fle
 from scripts.projects.open_model_data import v4_sources_authority as sources_authority
 from scripts.projects.open_model_data import v4_trust_authority as trust
 
+# Bound at import, before any test-policy seam is installed.
+_REAL_LOAD_PRODUCTION_TRUST_POLICY = trust.load_production_trust_policy
+
 ROW_SHA = "b" * 64
 PACKET_SHA = "d" * 64
 AUTHORSHIP_SHA = "f" * 64
 RUBRIC_SHA = "1" * 64
-FIXTURE_MODEL = "claude-sonnet-5-fixture"
-FIXTURE_SESSION = "session-fixture-1"
 
-# A source-free controlled runtime capture: Claude stream-json shaped, with
-# a terminal ``result`` event, one assistant segment, and the provider's own
-# model/session identity. Nothing here is Ukrainian source text, a row, or
-# corpus content.
+
 def _capture_events(*, model: str = FIXTURE_MODEL, session_id: str = FIXTURE_SESSION, text: str = "fixture output", terminal: bool = True) -> tuple[dict[str, Any], ...]:
     events: list[dict[str, Any]] = [
         {"type": "system", "subtype": "init", "session_id": session_id, "model": model},
@@ -62,168 +50,72 @@ def _capture_events(*, model: str = FIXTURE_MODEL, session_id: str = FIXTURE_SES
     return tuple(events)
 
 
-def _authorized_author_request(executor: RequestExecutor, *, task_id: str = "task-1", run_id: str = "run-1", model: str = FIXTURE_MODEL) -> str:
+def _authorized_author_request(executor: RequestExecutor, *, model: str = FIXTURE_MODEL) -> tuple[str, dict[str, Any]]:
     request = executor.create_request(recipient="claude", body="source-free fixture prompt")
-    executor.authorize_v4_execution(
+    binding = executor.authorize_author_execution(
         request_id=request.request_id,
-        task_id=task_id,
-        run_id=run_id,
-        role="author",
-        expected_seat_or_model=model,
-        row_content_sha256=ROW_SHA,
-        packet_sha256=PACKET_SHA,
+        slot_id=fx.TARGET_SLOT_ID,
+        expected_seat=model,
     )
-    return request.request_id
+    return request.request_id, binding
 
 
-def _authorized_reviewer_request(executor: RequestExecutor, *, task_id: str = "task-2", run_id: str = "run-2") -> str:
-    request = executor.create_request(recipient="claude", body="source-free reviewer fixture prompt")
-    executor.authorize_v4_execution(
-        request_id=request.request_id,
-        task_id=task_id,
-        run_id=run_id,
-        role="reviewer",
-        expected_seat_or_model=FIXTURE_MODEL,
-        row_content_sha256=ROW_SHA,
-        packet_sha256=PACKET_SHA,
-        authorship_receipt_sha256=AUTHORSHIP_SHA,
-        rubric_sha256=RUBRIC_SHA,
-    )
-    return request.request_id
+def _isolate_plane(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path))
+    monkeypatch.setenv("FLEET_COMMS_ALLOW_LOCAL_SHADOW", "1")
+    monkeypatch.setattr(v4_store, "open_production_authority_store", lambda *, write=False: ArtifactStore(root=tmp_path))
 
 
-def _observation_outcome(executor: RequestExecutor, request_id: str) -> str:
-    row = executor._conn.execute(
-        "SELECT invocation_spec_json FROM requests WHERE request_id = ?", (request_id,)
-    ).fetchone()
-    return json.loads(str(row["invocation_spec_json"])).get("v4_execution_observation", "")
+def _run_author_via_runner(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Produce one runner-owned author observation. Lowest-IO fixture only."""
+    _isolate_plane(monkeypatch, tmp_path)
+    claude_bin = _write_claude_fixture(tmp_path / "bin" / "claude")
+    monkeypatch.setenv("PATH", str(claude_bin.parent) + os.pathsep + os.environ.get("PATH", ""))
+    from scripts.agent_runtime.adapters import claude as claude_adapter
 
-
-# --- the real execution boundary produces the observation -------------------
-
-
-def test_execution_finalization_derives_a_complete_author_observation(tmp_path: Path) -> None:
-    """The genuine capture path -- not a caller-built record -- is what
-    produces an admissible author observation, and every runtime fact in it
-    is derived from the boundary's own evidence."""
+    claude_adapter._probe_claude_cli_version.cache_clear()
+    monkeypatch.setattr("scripts.agent_runtime.adapters.claude._default_claude_bin", lambda: str(claude_bin))
     with RequestExecutor(root=tmp_path) as executor:
-        request_id = _authorized_author_request(executor)
+        request_id, binding = _authorized_author_request(executor)
+        result = runtime_runner.invoke(
+            "claude",
+            "caller prompt must not be transported",
+            cwd=tmp_path,
+            model=FIXTURE_MODEL,
+            v4_authorization_id=request_id,
+            hard_timeout=30,
+        )
+        assert result.ok is True
+        record = executor.resolve_v4_execution_observation(
+            task_id=binding["task_id"], run_id=binding["run_id"], role="author"
+        )
+    assert record is not None
+    return binding, record
+
+
+# --- execute_capture is not a V4 origin ------------------------------------
+
+
+def test_execute_capture_never_writes_a_v4_observation(tmp_path: Path) -> None:
+    with RequestExecutor(root=tmp_path) as executor:
+        request_id, binding = _authorized_author_request(executor)
         result = executor.execute_capture(request_id, events=_capture_events(), returncode=0)
-        assert result.state == "complete"
-        assert _observation_outcome(executor, request_id) == "recorded"
-
-        record = executor.resolve_v4_execution_observation(task_id="task-1", run_id="run-1", role="author")
-        assert record is not None
-        # Runtime identity comes from the provider's own capture events.
-        assert record["seat_or_model"] == FIXTURE_MODEL
-        assert record["session_id"] == FIXTURE_SESSION
-        # Harness comes from the registry-resolved recipient.
-        assert record["harness"] == "claude"
-        # Result digest comes from the artifact the store actually persisted.
-        assert record["raw_capture_artifact_id"] == result.raw_capture_artifact_id
-        assert record["raw_capture_sha256"] == result.envelope.raw_capture_sha256
-        # Terminality comes from the conformance envelope.
-        assert record["status"] == "done"
-        assert record["return_code"] == 0
-        assert record["completion_state"] == "complete"
-        assert record["terminal_event_observed"] is True
-        # Blindness is structural: the boundary has no argument that could
-        # ever set one of these true.
-        assert record["saw_source_text"] is False
-        assert record["saw_heldout"] is False
-        assert record["saw_eligible_unit_ids"] is False
-        # Author observations carry no reviewer-only field.
-        assert record["verdict"] is None
-        assert record["authorship_receipt_sha256"] is None
+        assert result.state in {"complete", "incomplete", "failed"}
+        assert executor.resolve_v4_execution_observation(
+            task_id=binding["task_id"], run_id=binding["run_id"], role="author"
+        ) is None
+        rows = executor._conn.execute("SELECT COUNT(*) AS n FROM v4_execution_observations").fetchone()
+        assert int(rows["n"]) == 0
 
 
-def test_execution_finalization_derives_the_prompt_digest_from_the_stored_body(tmp_path: Path) -> None:
-    """``prompt_sha256`` is the digest of the exact bytes this executor
-    durably stored as the request body -- never a caller-supplied digest
-    (``authorize_v4_execution`` has no such parameter)."""
-    import hashlib
+def test_authorize_author_execution_takes_no_caller_hashes() -> None:
     import inspect
 
-    assert "prompt_sha256" not in inspect.signature(RequestExecutor.authorize_v4_execution).parameters
-    body = "source-free fixture prompt"
-    with RequestExecutor(root=tmp_path) as executor:
-        request_id = _authorized_author_request(executor)
-        executor.execute_capture(request_id, events=_capture_events(), returncode=0)
-        record = executor.resolve_v4_execution_observation(task_id="task-1", run_id="run-1", role="author")
-        assert record is not None
-        assert record["prompt_sha256"] == hashlib.sha256(body.encode("utf-8")).hexdigest()
-
-
-def test_reviewer_observation_derives_the_verdict_from_the_models_own_output(tmp_path: Path) -> None:
-    with RequestExecutor(root=tmp_path) as executor:
-        request_id = _authorized_reviewer_request(executor)
-        executor.execute_capture(
-            request_id,
-            events=_capture_events(text="review body\nV4-REVIEW-VERDICT: PASS\n"),
-            returncode=0,
-        )
-        record = executor.resolve_v4_execution_observation(task_id="task-2", run_id="run-2", role="reviewer")
-        assert record is not None
-        assert record["verdict"] == "PASS"
-        assert record["authorship_receipt_sha256"] == AUTHORSHIP_SHA
-        assert record["rubric_sha256"] == RUBRIC_SHA
-
-
-@pytest.mark.parametrize(
-    ("kwargs", "expected"),
-    [
-        pytest.param({"returncode": 1, "events": _capture_events(terminal=False)}, "refused:not-complete", id="failed-process"),
-        pytest.param({"returncode": 0, "events": _capture_events(terminal=False)}, "refused:not-complete", id="interrupted-no-terminal-event"),
-        pytest.param({"returncode": 0, "events": _capture_events(model="some-other-model")}, "refused:model-mismatch", id="cross-model"),
-        pytest.param({"returncode": 0, "events": ({"type": "result", "subtype": "success", "session_id": FIXTURE_SESSION},)}, "refused:model-unobserved", id="model-unobserved"),
-    ],
-)
-def test_no_observation_is_recorded_for_an_inadmissible_execution(tmp_path: Path, kwargs: dict[str, Any], expected: str) -> None:
-    with RequestExecutor(root=tmp_path) as executor:
-        request_id = _authorized_author_request(executor)
-        executor.execute_capture(request_id, **kwargs)
-        assert _observation_outcome(executor, request_id) == expected
-        assert executor.resolve_v4_execution_observation(task_id="task-1", run_id="run-1", role="author") is None
-
-
-def test_ambiguous_capture_model_is_never_resolved_to_the_dispatch_expectation(tmp_path: Path) -> None:
-    """Two disagreeing model identities in one capture are unobservable --
-    the boundary must not fall back to what the dispatch expected."""
-    contradictory = (
-        {"type": "system", "subtype": "init", "session_id": FIXTURE_SESSION, "model": FIXTURE_MODEL},
-        {"type": "assistant", "session_id": FIXTURE_SESSION, "message": {"model": "other-model", "content": [{"type": "text", "text": "x"}]}},
-        {"type": "result", "subtype": "success", "session_id": FIXTURE_SESSION},
-    )
-    with RequestExecutor(root=tmp_path) as executor:
-        request_id = _authorized_author_request(executor)
-        executor.execute_capture(request_id, events=contradictory, returncode=0)
-        assert _observation_outcome(executor, request_id) == "refused:model-unobserved"
-
-
-def test_reviewer_execution_without_an_observable_verdict_records_nothing(tmp_path: Path) -> None:
-    with RequestExecutor(root=tmp_path) as executor:
-        request_id = _authorized_reviewer_request(executor)
-        executor.execute_capture(request_id, events=_capture_events(text="a review with no verdict marker"), returncode=0)
-        assert _observation_outcome(executor, request_id) == "refused:verdict-unobserved"
-        assert executor.resolve_v4_execution_observation(task_id="task-2", run_id="run-2", role="reviewer") is None
-
-
-def test_contradictory_reviewer_verdicts_are_unobservable(tmp_path: Path) -> None:
-    with RequestExecutor(root=tmp_path) as executor:
-        request_id = _authorized_reviewer_request(executor)
-        executor.execute_capture(
-            request_id,
-            events=_capture_events(text="V4-REVIEW-VERDICT: PASS\nV4-REVIEW-VERDICT: FAIL\n"),
-            returncode=0,
-        )
-        assert _observation_outcome(executor, request_id) == "refused:verdict-unobserved"
-
-
-def test_an_unauthorized_execution_produces_no_observation(tmp_path: Path) -> None:
-    with RequestExecutor(root=tmp_path) as executor:
-        request = executor.create_request(recipient="claude", body="unbound fixture prompt")
-        executor.execute_capture(request.request_id, events=_capture_events(), returncode=0)
-        assert _observation_outcome(executor, request.request_id) == "unbound"
+    params = inspect.signature(RequestExecutor.authorize_author_execution).parameters
+    assert "prompt_sha256" not in params
+    assert "row_content_sha256" not in params
+    assert "packet_sha256" not in params
+    assert list(params) == ["self", "request_id", "slot_id", "expected_seat"]
 
 
 def test_a_slot_cannot_be_authorized_after_execution_starts(tmp_path: Path) -> None:
@@ -233,41 +125,22 @@ def test_a_slot_cannot_be_authorized_after_execution_starts(tmp_path: Path) -> N
         request = executor.create_request(recipient="claude", body="late-binding fixture prompt")
         executor.execute_capture(request.request_id, events=_capture_events(), returncode=0)
         with pytest.raises(RequestExecutorError, match="not authorizable"):
-            executor.authorize_v4_execution(
+            executor.authorize_author_execution(
                 request_id=request.request_id,
-                task_id="task-late",
-                run_id="run-late",
-                role="author",
-                expected_seat_or_model=FIXTURE_MODEL,
-                row_content_sha256=ROW_SHA,
-                packet_sha256=PACKET_SHA,
+                slot_id=fx.TARGET_SLOT_ID,
+                expected_seat=FIXTURE_MODEL,
             )
-        assert executor.resolve_v4_execution_observation(task_id="task-late", run_id="run-late", role="author") is None
 
 
-def test_two_requests_cannot_claim_one_slot(tmp_path: Path) -> None:
+def test_an_already_bound_request_cannot_be_rebound(tmp_path: Path) -> None:
     with RequestExecutor(root=tmp_path) as executor:
-        _authorized_author_request(executor)
-        with pytest.raises((v4_store.ExecutionDispatchBindingConflictError, sqlite3.IntegrityError)):
-            _authorized_author_request(executor)
-
-
-def test_a_completed_request_can_neither_re_execute_nor_re_record(tmp_path: Path) -> None:
-    """Two layers of at-least-once safety: the executor refuses to re-run a
-    request that already finalized, and even a direct retry of the identical
-    canonical write is a silent no-op rather than a second row."""
-    with RequestExecutor(root=tmp_path) as executor:
-        request_id = _authorized_author_request(executor)
-        executor.execute_capture(request_id, events=_capture_events(), returncode=0)
-        first = executor.resolve_v4_execution_observation(task_id="task-1", run_id="run-1", role="author")
-        assert first is not None
-        with pytest.raises(RequestExecutorError, match="not executable"):
-            executor.execute_capture(request_id, events=_capture_events(), returncode=0, reclaim=True)
-        with executor.store._transaction() as conn:
-            v4_store._persist_execution_observation(first, conn=conn, is_pg=False, request_id=request_id, commit=False)
-        assert executor.resolve_v4_execution_observation(task_id="task-1", run_id="run-1", role="author") == first
-        rows = executor._conn.execute("SELECT COUNT(*) AS n FROM v4_execution_observations").fetchone()
-        assert int(rows["n"]) == 1
+        request_id, _binding = _authorized_author_request(executor)
+        with pytest.raises(v4_store.ExecutionDispatchBindingConflictError):
+            executor.authorize_author_execution(
+                request_id=request_id,
+                slot_id="v4p-standard-correct-002",
+                expected_seat=FIXTURE_MODEL,
+            )
 
 
 def test_the_execution_boundary_exposes_no_caller_built_observation_writer() -> None:
@@ -326,15 +199,8 @@ def test_issue_verifier_attestation_refuses_a_non_pg_authority_before_key_access
         sources_authority.issue_verifier_attestation(invocation_id="inv-1")
 
 
-def test_a_caller_selected_sqlite_plane_is_not_production_authority(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """An adversary who populates their own SQLite plane with a perfectly
-    well-formed observation still cannot make production resolve it: the
-    production selector never consults a caller-chosen root."""
-    with RequestExecutor(root=tmp_path) as executor:
-        request_id = _authorized_author_request(executor)
-        executor.execute_capture(request_id, events=_capture_events(), returncode=0)
-        assert executor.resolve_v4_execution_observation(task_id="task-1", run_id="run-1", role="author") is not None
-
+def test_a_caller_selected_sqlite_plane_is_not_production_authority(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The production selector never consults a caller-chosen SQLite root."""
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "sqlite")
     monkeypatch.setattr(fleet_execution, "_load_signing_key", lambda role: (_ for _ in ()).throw(AssertionError("no key access")))
     with pytest.raises(fleet_execution.FleetExecutionError, match="unavailable"):
@@ -378,13 +244,8 @@ def _seed_observation(tmp_path: Path, record: dict[str, Any]) -> None:
             v4_store._persist_execution_observation(record, conn=conn, is_pg=False, commit=False)
 
 
-def _recorded_author_record(tmp_path: Path) -> dict[str, Any]:
-    with RequestExecutor(root=tmp_path) as executor:
-        request_id = _authorized_author_request(executor)
-        executor.execute_capture(request_id, events=_capture_events(), returncode=0)
-        record = executor.resolve_v4_execution_observation(task_id="task-1", run_id="run-1", role="author")
-    assert record is not None
-    return record
+def _recorded_author_record(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[dict[str, Any], dict[str, Any]]:
+    return _run_author_via_runner(tmp_path, monkeypatch)
 
 
 def test_issue_author_execution_receipt_signature_accepts_only_task_and_run_id() -> None:
@@ -408,58 +269,49 @@ def test_issue_author_execution_receipt_refuses_an_unknown_task_run_before_key_a
 def test_issue_author_execution_receipt_refuses_without_a_provisioned_production_key(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Unmonkeypatched key custody: the real ``load_production_signing_key``
     always refuses in mechanism-only production (no key file exists)."""
-    _recorded_author_record(tmp_path)
+    binding, _record = _recorded_author_record(tmp_path, monkeypatch)
     _patch_fleet(monkeypatch, tmp_path=tmp_path)
     with pytest.raises(trust.TrustAuthorityError, match="no production signing key is provisioned"):
-        fleet_execution.issue_author_execution_receipt(task_id="task-1", run_id="run-1")
+        fleet_execution.issue_author_execution_receipt(task_id=binding["task_id"], run_id=binding["run_id"])
 
 
 def test_issue_author_execution_receipt_end_to_end_and_idempotent_repeat(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """The full chain: a genuine controlled execution produces the
+    """The full chain: a genuine runner-owned execution produces the
     observation, the production issuer resolves it by opaque id alone, and
     repeat issuance is byte-identical."""
-    record = _recorded_author_record(tmp_path)
+    binding, record = _recorded_author_record(tmp_path, monkeypatch)
     priv, pub = trust.generate_test_keypair()
     policy = trust.build_test_trust_policy(fleet_execution={"k1": pub})
     _patch_fleet(monkeypatch, tmp_path=tmp_path, key_loader=lambda role: (priv, "k1"), trust_policy=(policy, trust.trust_policy_sha256(policy)))
 
-    receipt = fleet_execution.issue_author_execution_receipt(task_id="task-1", run_id="run-1")
+    receipt = fleet_execution.issue_author_execution_receipt(task_id=binding["task_id"], run_id=binding["run_id"])
     fleet_execution.verify_author_execution_receipt(
         receipt, trust_policy=policy, outcome_sha256=fleet_execution.V4_SHA256, row_content_sha256=record["row_content_sha256"]
     )
     assert receipt["exact_model"] == FIXTURE_MODEL
     assert receipt["harness"] == "claude"
     assert receipt["provider_session_id"] == FIXTURE_SESSION
-    again = fleet_execution.issue_author_execution_receipt(task_id="task-1", run_id="run-1")
+    again = fleet_execution.issue_author_execution_receipt(task_id=binding["task_id"], run_id=binding["run_id"])
     assert receipt == again, "repeat issuance against the identical resolved observation must reproduce byte for byte"
 
 
-def test_issue_reviewer_execution_receipt_resolves_the_reviewer_role(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    with RequestExecutor(root=tmp_path) as executor:
-        request_id = _authorized_reviewer_request(executor)
-        executor.execute_capture(request_id, events=_capture_events(text="V4-REVIEW-VERDICT: PASS"), returncode=0)
-    priv, pub = trust.generate_test_keypair()
-    policy = trust.build_test_trust_policy(fleet_execution={"k1": pub})
-    _patch_fleet(monkeypatch, tmp_path=tmp_path, key_loader=lambda role: (priv, "k1"), trust_policy=(policy, trust.trust_policy_sha256(policy)))
-
-    receipt = fleet_execution.issue_reviewer_execution_receipt(task_id="task-2", run_id="run-2")
-    assert receipt["domain"] == "reviewer"
-    assert receipt["verdict"] == "PASS"
-    # An author receipt must not resolve from a reviewer-role slot.
+def test_issue_reviewer_execution_receipt_refuses_an_author_slot(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    binding, _record = _recorded_author_record(tmp_path, monkeypatch)
+    _patch_fleet(monkeypatch, tmp_path=tmp_path, key_loader=lambda role: (_ for _ in ()).throw(AssertionError("no key access")))
     with pytest.raises(fleet_execution.FleetExecutionError, match="unknown task_id/run_id"):
-        fleet_execution.issue_author_execution_receipt(task_id="task-2", run_id="run-2")
+        fleet_execution.issue_reviewer_execution_receipt(task_id=binding["task_id"], run_id=binding["run_id"])
 
 
 def test_issue_author_execution_receipt_refuses_a_cross_run_lookup(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    _recorded_author_record(tmp_path)
+    binding, _record = _recorded_author_record(tmp_path, monkeypatch)
     _patch_fleet(monkeypatch, tmp_path=tmp_path, key_loader=lambda role: (_ for _ in ()).throw(AssertionError("no key access")))
     with pytest.raises(fleet_execution.FleetExecutionError, match="unknown task_id/run_id"):
-        fleet_execution.issue_author_execution_receipt(task_id="task-1", run_id="run-OTHER")
+        fleet_execution.issue_author_execution_receipt(task_id=binding["task_id"], run_id="run-OTHER")
 
 
 @pytest.mark.parametrize("mutation", [{"status": "running"}, {"return_code": 1}, {"completion_state": "failed"}, {"terminal_event_observed": False}])
 def test_issue_author_execution_receipt_refuses_a_nonterminal_canonical_record(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: dict[str, Any]) -> None:
-    base = _recorded_author_record(tmp_path)
+    _binding, base = _recorded_author_record(tmp_path, monkeypatch)
     bad = {**base, **mutation, "task_id": "task-bad", "run_id": "run-bad"}
     _seed_observation(tmp_path, bad)
     priv, pub = trust.generate_test_keypair()
@@ -472,13 +324,13 @@ def test_issue_author_execution_receipt_refuses_a_nonterminal_canonical_record(t
 # --- canonical store: idempotency / conflict / rollback ---------------------
 
 
-def test_execution_observation_write_refuses_a_conflicting_duplicate(tmp_path: Path) -> None:
-    base = _recorded_author_record(tmp_path)
+def test_execution_observation_write_refuses_a_conflicting_duplicate(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    binding, base = _recorded_author_record(tmp_path, monkeypatch)
     with ArtifactStore(root=tmp_path) as store, store._transaction() as conn:
         with pytest.raises(v4_store.ExecutionObservationConflictError, match="different execution observation"):
             v4_store._persist_execution_observation({**base, "status": "failed"}, conn=conn, is_pg=False, commit=False)
     with ArtifactStore(root=tmp_path) as store:
-        assert store.resolve_v4_execution_observation(task_id="task-1", run_id="run-1", role="author") == base
+        assert store.resolve_v4_execution_observation(task_id=binding["task_id"], run_id=binding["run_id"], role="author") == base
 
 
 def test_execution_observation_resolves_none_for_an_unknown_key(tmp_path: Path) -> None:
@@ -486,121 +338,153 @@ def test_execution_observation_resolves_none_for_an_unknown_key(tmp_path: Path) 
         assert store.resolve_v4_execution_observation(task_id="nope", run_id="nope", role="author") is None
 
 
-def test_execution_observation_write_rejects_a_malformed_record_before_any_persistence(tmp_path: Path) -> None:
+def test_execution_observation_write_rejects_a_malformed_record_before_any_persistence(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Validation runs before the DB is touched -- a rejected write leaves
     no partial row behind (rollback/failure handling)."""
-    base = dict(_recorded_author_record(tmp_path))
+    _binding, base = _recorded_author_record(tmp_path, monkeypatch)
     malformed = {k: v for k, v in base.items() if k != "harness"}
     malformed["task_id"] = "task-malformed"
     with ArtifactStore(root=tmp_path) as store, store._transaction() as conn:
         with pytest.raises(v4_store.CanonicalAuthorityStoreError, match="exactly"):
             v4_store._persist_execution_observation(malformed, conn=conn, is_pg=False, commit=False)
     with ArtifactStore(root=tmp_path) as store:
-        assert store.resolve_v4_execution_observation(task_id="task-malformed", run_id="run-1", role="author") is None
+        assert store.resolve_v4_execution_observation(task_id="task-malformed", run_id=base["run_id"], role="author") is None
 
 
-def test_author_execution_observation_refuses_reviewer_only_fields(tmp_path: Path) -> None:
-    base = _recorded_author_record(tmp_path)
+def test_author_execution_observation_refuses_reviewer_only_fields(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _binding, base = _recorded_author_record(tmp_path, monkeypatch)
     with ArtifactStore(root=tmp_path) as store, store._transaction() as conn:
         with pytest.raises(v4_store.CanonicalAuthorityStoreError, match="reviewer-only"):
             v4_store._persist_execution_observation({**base, "task_id": "t-x", "verdict": "PASS"}, conn=conn, is_pg=False, commit=False)
 
 
-def test_reviewer_execution_observation_requires_every_reviewer_only_field(tmp_path: Path) -> None:
-    base = _recorded_author_record(tmp_path)
+def test_reviewer_execution_observation_requires_every_reviewer_only_field(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _binding, base = _recorded_author_record(tmp_path, monkeypatch)
     incomplete = {**base, "task_id": "t-y", "role": "reviewer", "authorship_receipt_sha256": AUTHORSHIP_SHA, "rubric_sha256": RUBRIC_SHA, "verdict": None}
     with ArtifactStore(root=tmp_path) as store, store._transaction() as conn:
         with pytest.raises(v4_store.CanonicalAuthorityStoreError, match="reviewer-only"):
             v4_store._persist_execution_observation(incomplete, conn=conn, is_pg=False, commit=False)
 
 
-def test_execution_observation_store_is_isolated_by_role(tmp_path: Path) -> None:
-    _recorded_author_record(tmp_path)
+def test_execution_observation_store_is_isolated_by_role(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    binding, _record = _recorded_author_record(tmp_path, monkeypatch)
     with ArtifactStore(root=tmp_path) as store:
-        assert store.resolve_v4_execution_observation(task_id="task-1", run_id="run-1", role="reviewer") is None
+        assert store.resolve_v4_execution_observation(task_id=binding["task_id"], run_id=binding["run_id"], role="reviewer") is None
 
 
 # --- the real Sources recording boundary -----------------------------------
 
-VERIFY_WORD_ARGS = {"word": "книга"}
-VERIFY_WORD_RESULT = "книга | VESUM: valid (lemma=книга, id=vesum:12345, tag=noun)"
 TOOL_VERSION = "e" * 64
+TYPED_IDENTIFIER = "vesum:" + "c" * 64
+TYPED_SUPPORTED = {
+    "tool": "verify_word",
+    "disposition": "supported",
+    "success": True,
+    "evidence_identifiers": [TYPED_IDENTIFIER],
+    "result": {"word": "книга", "matches": [{"lemma": "книга"}]},
+}
 
 
-def _record_invocation(store: ArtifactStore, **overrides: Any) -> dict[str, Any] | None:
-    kwargs: dict[str, Any] = {
-        "tool_name": "verify_word",
-        "arguments": VERIFY_WORD_ARGS,
-        "result_text": VERIFY_WORD_RESULT,
-        "tool_version": TOOL_VERSION,
-        "request_id": "req-1",
-        "row_content_sha256": ROW_SHA,
-        "claimed_lookup_ids": ["vesum:12345"],
-    }
-    kwargs.update(overrides)
-    return store.record_v4_sources_invocation_from_tool_result(**kwargs)
+def _running_attempt(tmp_path: Path) -> dict[str, Any]:
+    with RequestExecutor(root=tmp_path) as executor:
+        request_id, binding = _authorized_author_request(executor)
+        claim = executor.claim_v4_runner_execution(request_id=request_id)
+    return {**claim, "binding": binding, "request_id": request_id}
 
 
-def test_sources_invocation_records_a_genuine_call(tmp_path: Path) -> None:
+def _record_invocation(tmp_path: Path, *, tool_name: str = "verify_word", typed_outcome: dict[str, Any] | None = None) -> dict[str, Any] | None:
+    claim = _running_attempt(tmp_path)
     with ArtifactStore(root=tmp_path) as store:
-        record = _record_invocation(store)
-        assert record is not None
-        # The identifier is derived from the arguments the tool really ran on.
-        assert record["identifier"] == "книга"
-        assert record["tool_id"] == "mcp__sources__verify_word"
-        assert record["tool_version"] == TOOL_VERSION
-        assert record["success"] is True
+        return store.record_v4_sources_invocation_from_typed_outcome(
+            attempt_id=claim["attempt_id"],
+            tool_name=tool_name,
+            tool_version=TOOL_VERSION,
+            typed_outcome=typed_outcome if typed_outcome is not None else TYPED_SUPPORTED,
+        )
+
+
+def test_sources_invocation_records_a_typed_call(tmp_path: Path) -> None:
+    record = _record_invocation(tmp_path)
+    assert record is not None
+    assert record["identifier"] == TYPED_IDENTIFIER
+    assert record["identifier"] != "книга"
+    assert record["tool_id"] == "mcp__sources__verify_word"
+    assert record["tool_version"] == TOOL_VERSION
+    assert record["success"] is True
+    with ArtifactStore(root=tmp_path) as store:
         assert store.resolve_v4_sources_invocation(invocation_id=record["invocation_id"]) == record
 
 
 def test_sources_invocation_identifier_cannot_be_declared_by_the_caller() -> None:
-    """The retired ``_v4_evidence_identifier`` has no replacement parameter:
-    a spoofed identifier is structurally impossible, not merely rejected."""
+    """The retired caller identifier/row-hash path has no replacement
+    parameter: a spoofed identifier is structurally impossible."""
     import inspect
 
-    params = inspect.signature(v4_store.record_sources_invocation_from_tool_result).parameters
+    params = inspect.signature(v4_store.record_sources_invocation_from_typed_outcome).parameters
     assert "identifier" not in params
     assert "tool_id" not in params
-    assert "tool_result_sha256" not in params
+    assert "row_content_sha256" not in params
+    assert "request_id" not in params
     assert "success" not in params
 
 
 @pytest.mark.parametrize(
-    ("overrides", "why"),
+    ("kwargs", "why"),
     [
         pytest.param({"tool_name": "search_literary"}, "unsanctioned tool", id="unsanctioned-tool"),
         pytest.param({"tool_name": "verify_quote"}, "text-argument tool is not sanctioned", id="text-argument-tool"),
-        pytest.param({"result_text": ""}, "an empty result proves nothing", id="empty-result"),
-        pytest.param({"claimed_lookup_ids": ["vesum:99999"]}, "claim absent from the genuine result", id="fabricated-lookup-id"),
-        pytest.param({"claimed_lookup_ids": ["123"]}, "substring coincidence inside vesum:12345", id="substring-coincidence"),
-        pytest.param({"claimed_lookup_ids": []}, "no claim at all", id="no-claims"),
-        pytest.param({"claimed_lookup_ids": ["vesum:12345", "vesum:12345"]}, "duplicate claims", id="duplicate-claims"),
-        pytest.param({"arguments": {"word": "інше"}}, "the result does not mention this word", id="argument-result-mismatch"),
-        pytest.param({"arguments": {}}, "no primary argument to derive an identifier from", id="missing-argument"),
-        pytest.param({"row_content_sha256": "not-a-digest"}, "malformed row binding", id="malformed-row-binding"),
-        pytest.param({"request_id": ""}, "no request correlation", id="missing-request-id"),
+        pytest.param({"tool_name": "vet_vocabulary"}, "Sol-approved exclusion until typed contract", id="excluded-vet"),
+        pytest.param(
+            {"typed_outcome": {"tool": "verify_word", "disposition": "supported", "success": True, "evidence_identifiers": ["книга"]}},
+            "lexical echo is not a vesum:/sources: identifier",
+            id="echoed-word",
+        ),
     ],
 )
-def test_sources_invocation_refuses_to_record_a_fabricated_or_failed_call(tmp_path: Path, overrides: dict[str, Any], why: str) -> None:
+def test_sources_invocation_refuses_to_record_a_fabricated_or_failed_call(tmp_path: Path, kwargs: dict[str, Any], why: str) -> None:
+    assert _record_invocation(tmp_path, **kwargs) is None, why
     with ArtifactStore(root=tmp_path) as store:
-        assert _record_invocation(store, **overrides) is None, why
+        rows = store.connection.execute("SELECT COUNT(*) AS n FROM v4_sources_invocations").fetchone()
+        assert int(rows["n"]) == 0
+
+
+def test_retired_caller_correlation_path_records_nothing(tmp_path: Path) -> None:
+    claim = _running_attempt(tmp_path)
+    with ArtifactStore(root=tmp_path) as store:
+        assert (
+            v4_store.record_sources_invocation_from_tool_result(
+                conn=store.connection,
+                is_pg=False,
+                tool_name="verify_word",
+                arguments={"word": "книга"},
+                result_text="книга | VESUM: valid",
+                tool_version=TOOL_VERSION,
+                request_id=claim["request_id"],
+                row_content_sha256=ROW_SHA,
+                claimed_lookup_ids=["vesum:12345"],
+            )
+            is None
+        )
         rows = store.connection.execute("SELECT COUNT(*) AS n FROM v4_sources_invocations").fetchone()
         assert int(rows["n"]) == 0
 
 
 def test_sources_invocation_is_idempotent_on_a_canonical_retry(tmp_path: Path) -> None:
+    first = _record_invocation(tmp_path)
+    assert first is not None
+    with ArtifactStore(root=tmp_path) as store, store._transaction() as conn:
+        v4_store._persist_sources_invocation(first, conn=conn, is_pg=False, commit=False)
+        v4_store._persist_sources_invocation(first, conn=conn, is_pg=False, commit=False)
     with ArtifactStore(root=tmp_path) as store:
-        first = _record_invocation(store)
-        second = _record_invocation(store)
-        assert first == second
         rows = store.connection.execute("SELECT COUNT(*) AS n FROM v4_sources_invocations").fetchone()
         assert int(rows["n"]) == 1
+        assert store.resolve_v4_sources_invocation(invocation_id=first["invocation_id"]) == first
 
 
 def test_sources_invocation_conflicting_duplicate_leaves_prior_evidence_unchanged(tmp_path: Path) -> None:
+    original = _record_invocation(tmp_path)
+    assert original is not None
     with ArtifactStore(root=tmp_path) as store:
-        original = _record_invocation(store)
-        assert original is not None
         with store._transaction() as conn:
             with pytest.raises(v4_store.SourcesInvocationConflictError, match="different sources invocation"):
                 v4_store._persist_sources_invocation({**original, "success": False}, conn=conn, is_pg=False, commit=False)
@@ -612,34 +496,28 @@ def test_sources_invocation_resolves_none_for_an_unknown_invocation_id(tmp_path:
         assert store.resolve_v4_sources_invocation(invocation_id="nope") is None
 
 
-def test_verification_tool_ids_are_derived_from_canonical_invocations(tmp_path: Path) -> None:
-    """An observation's ``verification_tool_ids`` come from canonically
-    recorded invocations bound to the same request -- never from a list the
-    dispatch caller supplies (there is no such parameter)."""
-    with RequestExecutor(root=tmp_path) as executor:
-        request_id = _authorized_author_request(executor)
-        recorded = executor.store.record_v4_sources_invocation_from_tool_result(
-            tool_name="verify_word",
-            arguments=VERIFY_WORD_ARGS,
-            result_text=VERIFY_WORD_RESULT,
-            tool_version=TOOL_VERSION,
-            request_id=request_id,
-            row_content_sha256=ROW_SHA,
-            claimed_lookup_ids=["vesum:12345"],
-        )
-        assert recorded is not None
-        executor.execute_capture(request_id, events=_capture_events(), returncode=0)
-        record = executor.resolve_v4_execution_observation(task_id="task-1", run_id="run-1", role="author")
-        assert record is not None
-        assert record["verification_tool_ids"] == ["mcp__sources__verify_word"]
+def test_verification_tool_ids_join_attempt_not_request() -> None:
+    import inspect
+
+    params = inspect.signature(v4_store.resolve_sources_invocation_tool_ids).parameters
+    assert "attempt_id" in params
+    assert "request_id" not in params
 
 
 def test_compute_invocation_id_is_deterministic_and_content_addressed() -> None:
-    kwargs = dict(tool_id="mcp__sources__verify_word", tool_version="v1", request_id="r1", row_content_sha256="a" * 64, identifier="vesum:x", tool_result_sha256="b" * 64, lookup_ids=["l1", "l2"])
+    kwargs = dict(
+        tool_id="mcp__sources__verify_word",
+        tool_version="v1",
+        attempt_id="a1",
+        ordinal=1,
+        identifier="vesum:x",
+        structured_result_sha256="b" * 64,
+        lookup_ids=["l1", "l2"],
+    )
     first = v4_store.compute_invocation_id(**kwargs)
     second = v4_store.compute_invocation_id(**kwargs)
     assert first == second
-    assert v4_store.compute_invocation_id(**{**kwargs, "tool_result_sha256": "c" * 64}) != first
+    assert v4_store.compute_invocation_id(**{**kwargs, "structured_result_sha256": "c" * 64}) != first
 
 
 def _patch_sources(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, *, key_loader=None, trust_policy=None) -> None:
@@ -658,38 +536,23 @@ def test_issue_verifier_attestation_refuses_an_unknown_invocation_before_key_acc
 
 
 def test_issue_verifier_attestation_refuses_an_unsuccessful_canonical_record(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    with ArtifactStore(root=tmp_path) as store:
-        record = _record_invocation(store)
-        assert record is not None
-        failed = {**record, "invocation_id": "inv-failed", "success": False}
-        with store._transaction() as conn:
-            v4_store._persist_sources_invocation(failed, conn=conn, is_pg=False, commit=False)
+    record = _record_invocation(
+        tmp_path,
+        typed_outcome={"tool": "verify_word", "disposition": "not_found", "success": False, "evidence_identifiers": [], "result": {}},
+    )
+    assert record is not None
+    assert record["success"] is False
     _patch_sources(monkeypatch, tmp_path, key_loader=lambda role: (_ for _ in ()).throw(AssertionError("no key access for a failed invocation")))
     with pytest.raises(sources_authority.SourcesAuthorityError, match="not recorded as successful"):
-        sources_authority.issue_verifier_attestation(invocation_id="inv-failed")
-
-
-def test_issue_verifier_attestation_refuses_without_a_provisioned_production_key(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    with ArtifactStore(root=tmp_path) as store:
-        record = _record_invocation(store)
-    assert record is not None
-    _patch_sources(monkeypatch, tmp_path)
-    with pytest.raises(trust.TrustAuthorityError, match="no production signing key is provisioned"):
         sources_authority.issue_verifier_attestation(invocation_id=record["invocation_id"])
 
 
-def test_issue_verifier_attestation_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    with ArtifactStore(root=tmp_path) as store:
-        record = _record_invocation(store)
+def test_issue_verifier_attestation_refuses_without_a_terminal_author_observation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    record = _record_invocation(tmp_path)
     assert record is not None
-    priv, pub = trust.generate_test_keypair()
-    policy = trust.build_test_trust_policy(sources={"k1": pub})
-    _patch_sources(monkeypatch, tmp_path, key_loader=lambda role: (priv, "k1"), trust_policy=(policy, trust.trust_policy_sha256(policy)))
-    attestation = sources_authority.issue_verifier_attestation(invocation_id=record["invocation_id"])
-    sources_authority.verify_verifier_attestation(
-        attestation, trust_policy=policy, outcome_sha256=sources_authority.V4_SHA256, row_content_sha256=ROW_SHA
-    )
-    assert attestation["tool_id"] == "mcp__sources__verify_word"
+    _patch_sources(monkeypatch, tmp_path, key_loader=lambda role: (_ for _ in ()).throw(AssertionError("no key access without a terminal author join")))
+    with pytest.raises(sources_authority.SourcesAuthorityError, match="no terminal author execution"):
+        sources_authority.issue_verifier_attestation(invocation_id=record["invocation_id"])
 
 
 # --- signing-key custody: no public-argument path ---------------------------
@@ -726,13 +589,15 @@ def test_load_production_signing_key_succeeds_once_provisioned(tmp_path: Path, m
 # --- production trust-policy digest pinning / rotation / revocation --------
 
 
-def test_load_production_trust_policy_returns_the_checked_in_empty_policy() -> None:
+def test_load_production_trust_policy_returns_the_checked_in_empty_policy(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(trust, "load_production_trust_policy", _REAL_LOAD_PRODUCTION_TRUST_POLICY)
     policy, digest = trust.load_production_trust_policy()
     assert policy == trust.empty_trust_policy()
     assert digest == trust.trust_policy_sha256(policy)
 
 
 def test_load_production_trust_policy_refuses_a_one_byte_drift(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(trust, "load_production_trust_policy", _REAL_LOAD_PRODUCTION_TRUST_POLICY)
     drifted = trust.DEFAULT_TRUST_POLICY_PATH.read_bytes() + b" "  # one extra byte, still valid JSON whitespace
     drifted_path = tmp_path / "drifted.json"
     drifted_path.write_bytes(drifted)
@@ -742,6 +607,7 @@ def test_load_production_trust_policy_refuses_a_one_byte_drift(tmp_path: Path, m
 
 
 def test_load_production_trust_policy_refuses_a_revoked_digest(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(trust, "load_production_trust_policy", _REAL_LOAD_PRODUCTION_TRUST_POLICY)
     monkeypatch.setattr(trust, "PRODUCTION_TRUST_POLICY_FILE_DIGEST_ALLOWLIST", frozenset())
     with pytest.raises(trust.TrustAuthorityError, match="not in the code-reviewed active allowlist"):
         trust.load_production_trust_policy()
@@ -750,7 +616,7 @@ def test_load_production_trust_policy_refuses_a_revoked_digest(monkeypatch: pyte
 def test_load_production_trust_policy_takes_no_arguments() -> None:
     import inspect
 
-    assert list(inspect.signature(trust.load_production_trust_policy).parameters) == []
+    assert list(inspect.signature(_REAL_LOAD_PRODUCTION_TRUST_POLICY).parameters) == []
 
 
 def test_a7_private_ledger_cli_exposes_no_trust_policy_flag() -> None:

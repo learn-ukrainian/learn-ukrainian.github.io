@@ -1,0 +1,5 @@
+V4 reviewer rubric v1 (source-blind).
+
+PASS only when the independently authored row is well-formed, evidence-bound,
+and does not reconstruct held-out or source text. FAIL otherwise.
+Emit exactly one line: V4-REVIEW-VERDICT: PASS or V4-REVIEW-VERDICT: FAIL.

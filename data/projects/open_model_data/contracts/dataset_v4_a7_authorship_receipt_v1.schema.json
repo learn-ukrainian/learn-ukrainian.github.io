@@ -19,7 +19,8 @@
     "saw_heldout",
     "saw_eligible_unit_ids",
     "verification_tool_ids",
-    "execution_receipt"
+    "execution_receipt",
+    "trust_policy_sha256"
   ],
   "properties": {
     "receipt_id": { "type": "string", "minLength": 1 },
@@ -35,6 +36,7 @@
     "saw_heldout": { "const": false },
     "saw_eligible_unit_ids": { "const": false },
     "verification_tool_ids": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "trust_policy_sha256": { "$ref": "#/$defs/sha256" },
     "execution_receipt": {
       "type": "object",
       "description": "The signed fleet-execution receipt this authorship receipt was derived from (see v4_fleet_execution_authority.py). Never a public artifact.",

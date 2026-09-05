@@ -122,7 +122,7 @@ V4_SHA256 = "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"
 # moved). This module's bindings must reproduce this value on every run --
 # proving A13 is bound to the *merged* A12 receipt, never a local unmerged
 # draft.
-A12_RECEIPT_SHA256_AT_MERGE = "e7e9d4e12d616f1ffbc9fc38c878d63488f6706bc1e804759fdd697ae57f6db1"
+A12_RECEIPT_SHA256_AT_MERGE = "150b7532d814c35bf27176943206fa8caaf4650f220ce498f60b015a62f9e538"
 
 # This module's own frozen expectation of what the shared admission engine
 # must refuse as a silver/gold basis -- checked against the live
