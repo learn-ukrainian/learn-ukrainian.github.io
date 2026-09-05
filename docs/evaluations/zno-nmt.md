@@ -220,7 +220,11 @@ reuse the current coding task's conversation.
 Reference calls run through an allowlisted bridge. General browsing, local
 files and shell tools are not exposed. Available access and actual tool use
 are reported separately: an agent may choose not to use its references.
-Time and tool-call limits apply. Missing corpus identity remains a limitation,
+Time and tool-call limits apply to candidate execution; capability probes add
+startup time outside the recorded native execution duration and timeout.
+Native cost is the CLI-reported estimate, not a subscription billing receipt;
+reported input tokens may exclude separately accounted cache tokens.
+Missing corpus identity remains a limitation,
 not an invented version. A configured corpus label alone is not proof that the
 underlying corpus stayed unchanged.
 
@@ -290,8 +294,9 @@ prompt hash, repeat count, tool allowlist, non-sensitive corpus version and
 limitations separately. Do not publish private retrieval snippets to make a
 result look more reproducible.
 
-Public-paper closed-book results are reproducible with the same accessible
-model and data. LU Sources-assisted results depend on a private corpus and
+Exact public-paper reproduction requires the same accessible model and verified
+presentation packet; the raw upstream text alone does not reproduce restored
+typography. LU Sources-assisted results depend on a private corpus and
 must say so. Community users can substitute their own corpus/MCP and report
 that as a distinct treatment, not the same benchmark condition.
 
