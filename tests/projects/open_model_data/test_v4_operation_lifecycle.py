@@ -13,6 +13,7 @@ from dataclasses import replace
 
 import psycopg
 import pytest
+from _v4_linguistic_context_fixture import stored_preparation
 from learn_ukrainian_v4_runtime import semantic_inputs
 from learn_ukrainian_v4_runtime import v4_trust_authority as trust
 from learn_ukrainian_v4_runtime.operation_auth import ActionsPrincipal, OperationRefused, canonical_bytes, digest
@@ -62,14 +63,7 @@ def prepared(pg_cluster, monkeypatch, tmp_path):
         semantic_inputs.freeze_semantic_input(
             conn,
             request_id=request.request_id,
-            snapshot={
-                "constraints": {
-                    "task_kind": "original_row",
-                    "cefr_level": "A1",
-                    "required_fields": ["row_text", "answer"],
-                    "allowed_evidence_tools": ["verify_word"],
-                }
-            },
+            snapshot=stored_preparation(conn, request.request_id),
         )
         store = OperationStore(conn)
         policy = trust.load_production_trust_policy()[1]

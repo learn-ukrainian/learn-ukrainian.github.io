@@ -27,7 +27,7 @@ REVIEWER_PROMPT_PROFILE = "v4-reviewer-source-blind-v1"
 V4_SOURCES_CAPABILITY_ENV = "V4_SOURCES_ATTEMPT_CAPABILITY"
 V4_REVIEW_VERDICT_RE = re.compile(r"^[ \t]*V4-REVIEW-VERDICT:[ \t]*(PASS|FAIL)[ \t]*$", re.MULTILINE)
 V4_AUTHOR_ROW_RE = re.compile(r"V4-AUTHOR-ROW:\s*(\{.*\})\s*$", re.DOTALL)
-DEFAULT_REVIEW_RUBRIC_RELATIVE = "data/projects/open_model_data/trust/v4_review_rubric_v1.txt"
+DEFAULT_REVIEW_RUBRIC_RELATIVE = "data/projects/open_model_data/trust/v4_review_rubric_v2.txt"
 HEX64_RE = re.compile(r"^[a-f0-9]{64}$")
 
 
@@ -102,7 +102,11 @@ def load_a3_packet_commitment() -> str:
 def load_review_rubric_sha256() -> str:
     path = review_rubric_path()
     _require(path.is_file(), f"V4 review rubric is missing: {path} -- refusing")
-    return _sha256_bytes(path.read_bytes())
+    from learn_ukrainian_v4_runtime.semantic_inputs import REVIEW_RUBRIC_SHA256
+
+    value = _sha256_bytes(path.read_bytes())
+    _require(value == REVIEW_RUBRIC_SHA256, "V4 current review rubric digest drift -- refusing")
+    return value
 
 
 def build_author_prompt(*, slot_id: str, packet_sha256: str, expected_seat: str) -> str:

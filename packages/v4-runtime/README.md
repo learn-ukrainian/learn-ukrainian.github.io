@@ -43,6 +43,72 @@ qualify the protected unit, or change either OFF switch. A0 and the private
 qualification worker own those remaining steps and vendor binding. Readiness
 still requires exact release/policy/profile-bound actual-unit evidence.
 
+## Source-qualified linguistic preparation
+
+The current fixed linguistic contract is the digest-pinned
+`v4_review_rubric_v2.txt`; v1 remains byte-exact historical data. Both the author
+and independent reviewer receive the actual atomic target facts and qualified
+evidence scope. Proper Ukrainian, stratum-sensitive correctness, protected
+variation/quotations, contextual review, originality and refusal on unknown
+authority are required. Word/morphology verification alone proves neither syntax
+nor whole-sentence meaning. No linguistic gold examples or efficacy threshold
+are introduced.
+
+`freeze_semantic_input` remains a trusted preparation operation, with no HTTP
+route. Its author input is exactly `{"preparation_sha256": "<canonical artifact digest>"}`.
+The existing preparation owner must first resolve and qualify actual source
+evidence, then store the expression-free admitted context using the existing
+owned Fleet artifact primitives. The package resolves that artifact from the
+existing store, verifies its canonical JSON/hash, freezes its full permitted
+content and binds the resulting prompt before authorization. A caller's inline
+constraints, observation, `verified` flag, source prompt, path or policy are
+not accepted. HTTP still accepts only its existing opaque authorization ID.
+No store, service, API or signing authority is added.
+
+The canonical artifact has exactly `schema: "v4-admitted-linguistic-context.v1"`,
+`slot_id`, `packet_sha256`, `constraints` and `evidence`. Constraints retain
+`task_kind`, `cefr_level`, `required_fields` and `allowed_evidence_tools`, and
+require `language: "uk"`, the frozen `stratum`, and one `target`. The target uses
+Phase 3 `claim_type`, `mechanism`, `scope`, `matcher` and `protections` concepts.
+Its minimal structured matcher admits morphology, government/valency and syntax:
+up to four POS/feature records and four indexed dependency relations, with
+bounded UD feature values and no lemmas, expressions or source quotation. Scope
+has register/period/genre labels of at most 32 lowercase ASCII identifier
+characters; protected context roles reuse the Phase 3 contact contract. Targets
+needing lexical expressions or another matcher cannot be smuggled through a
+label: they remain outside this minimal projection. These structural limits do
+not establish that any particular grammatical rule is true.
+
+Evidence must bind the exact target hash, matching claim type, source role,
+source-supported/exact-sufficient qualification, one to four opaque evidence
+locator hashes, and exact frozen A4/A5 receipt hashes. **The existing A5 receipt
+is structural only:** span lengths/counts are not normative evidence, and its
+completion is not reinterpreted. The source-qualified preparation artifact is a
+separate prerequisite, not something this package generates from A5 statistics.
+Its custody is the existing trusted preparation boundary, not a new signature
+scheme: a digest proves correspondence, not the correctness of a qualifier's
+judgment. The trusted owner must verify source authority and locator scope
+before storing it; a model proposal or dictionary occurrence is insufficient.
+No such production artifact or target is included in this release.
+
+Reviewer preparation supplies the same `preparation_sha256`, the actual
+`authored_row` and the fixed `rubric_sha256`. It rechecks the canonical author
+receipt, captured bytes, author binding and prompt digest, and refuses any
+change to the complete row, target, evidence or preparation origin. For
+correction rows, separate answer, explanation and instruction fields are
+required. Unsupported authority refuses preparation; author abstention emits
+no row and follows the existing missing-row refusal, and reviewer uncertainty
+returns FAIL. This adds no admission bypass or new abstention output format.
+
+Before the first paid row, A0/the existing preparation owner must supply a real,
+source-qualified artifact for the selected frozen slot and current packet,
+with sufficient permitted target facts and verified evidence locators. Private
+actual-unit qualification, release/vendor binding, A3 originality checks,
+Sources attestations and independent contextual row review remain required.
+Public defaults stay **0 completed / 100 residual / 0 emitted**, switches OFF.
+Synthetic tests verify contract/custody mechanisms only; they do not verify
+actual model semantic quality or establish held-out performance.
+
 ## Native provider credentials
 
 The parent reads only its harness-selected `v4-provider-claude` or
