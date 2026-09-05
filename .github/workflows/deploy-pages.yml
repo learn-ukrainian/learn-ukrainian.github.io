@@ -179,6 +179,7 @@ jobs:
 
       # #5274: normal build leaves BUILD_ETYMOLOGY_ROUTES off (~296 MB). build:full
       # prerenders ~25k standalone etymology pages and blew the 1 GiB Pages budget.
+      # Pronunciation audio stays a local Makefile target (gitignored); Pages CI must not invoke TTS.
       - name: Build Site
         run: npm run build
 
