@@ -263,8 +263,8 @@ def test_a13_receipt_binds_v4_sha_and_control_surfaces() -> None:
 def test_a13_receipt_binds_the_merged_a12_receipt_by_its_known_public_sha() -> None:
     # The merged A12 receipt's public sha256, frozen at dispatch time (PR #7662 repair 3:
     # A9's content changed under the Repair 2 real-slot-mechanism fix, rippling into A10-A13).
-    assert a13.sha256_file(A12_RECEIPT_PATH) == "e7e9d4e12d616f1ffbc9fc38c878d63488f6706bc1e804759fdd697ae57f6db1"
-    assert a13.A12_RECEIPT_SHA256_AT_MERGE == "e7e9d4e12d616f1ffbc9fc38c878d63488f6706bc1e804759fdd697ae57f6db1"
+    assert a13.sha256_file(A12_RECEIPT_PATH) == "150b7532d814c35bf27176943206fa8caaf4650f220ce498f60b015a62f9e538"
+    assert a13.A12_RECEIPT_SHA256_AT_MERGE == "150b7532d814c35bf27176943206fa8caaf4650f220ce498f60b015a62f9e538"
 
 
 def test_a13_receipt_carries_forward_every_a2_a4_a5_a6_a7_a8_a9_a10_a11_a12_residual_unresolved() -> None:

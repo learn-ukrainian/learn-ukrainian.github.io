@@ -182,11 +182,13 @@ def _ephemeral_postgres(monkeypatch: pytest.MonkeyPatch) -> Iterator[str]:
             [str(PG_BIN / "initdb"), "-D", str(tmp / "db"), "--auth=trust", "--no-locale", "--encoding=UTF8"],
             check=True,
             capture_output=True,
+            timeout=60,
         )
         subprocess.run(
             [str(PG_BIN / "pg_ctl"), "-D", str(tmp / "db"), "-l", str(tmp / "server.log"), "-o", f"-k {sock} -h '' -p {port}", "-w", "start"],
             check=True,
             capture_output=True,
+            timeout=60,
         )
         started = True
         dsn = f"host={sock} port={port} dbname=postgres user=ops"
@@ -195,7 +197,12 @@ def _ephemeral_postgres(monkeypatch: pytest.MonkeyPatch) -> Iterator[str]:
         yield dsn
     finally:
         if started:
-            subprocess.run([str(PG_BIN / "pg_ctl"), "-D", str(tmp / "db"), "-m", "fast", "-w", "stop"], capture_output=True, check=False)
+            subprocess.run(
+                [str(PG_BIN / "pg_ctl"), "-D", str(tmp / "db"), "-m", "fast", "-w", "stop"],
+                capture_output=True,
+                check=False,
+                timeout=30,
+            )
         shutil.rmtree(tmp, ignore_errors=True)
 
 

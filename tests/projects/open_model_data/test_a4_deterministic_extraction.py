@@ -18,6 +18,8 @@ import json
 import os
 import secrets
 import stat
+import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -125,6 +127,18 @@ def _load(path: Path) -> dict[str, Any]:
     value = json.loads(path.read_text(encoding="utf-8"))
     assert isinstance(value, dict)
     return value
+
+
+def _run_fresh_python(source: str, *args: str) -> subprocess.CompletedProcess[str]:
+    """Run an unpatched memory probe outside the long-lived pytest worker."""
+    return subprocess.run(
+        [sys.executable, "-c", source, *args],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
 
 
 def _all_keys(value: Any) -> set[str]:
@@ -369,10 +383,13 @@ def test_stream_sentence_spans_matches_segment_sentence_spans_for_joined_rows() 
         assert streamed == reference, rows
 
 
-def test_stream_ledger_rows_for_units_matches_run_deterministic_extraction() -> None:
+def test_stream_ledger_rows_for_units_matches_run_deterministic_extraction(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     """The real streaming pass and the small-scale reference pass must agree
     row-for-row given equivalent inputs (whole bytes vs. the same bytes
     split into rows)."""
+    monkeypatch.setattr(extraction, "_current_rss_bytes", lambda: 1)
     salt = secrets.token_bytes(32)
     ids = ["synthetic.unit-a", "synthetic.unit-b", "synthetic.unit-c"]
     whole_bytes_by_unit = {
@@ -391,7 +408,10 @@ def test_stream_ledger_rows_for_units_matches_run_deterministic_extraction() -> 
     assert streamed == reference
 
 
-def test_stream_ledger_rows_for_units_skips_units_the_provider_yields_nothing_for() -> None:
+def test_stream_ledger_rows_for_units_skips_units_the_provider_yields_nothing_for(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(extraction, "_current_rss_bytes", lambda: 1)
     salt = secrets.token_bytes(32)
     ordered = [(extraction.unit_commitment_sha256(salt, "synthetic.empty"), "synthetic.empty")]
     streamed = list(extraction.stream_ledger_rows_for_units(ordered, _rows_by_row_texts({})))
@@ -399,22 +419,53 @@ def test_stream_ledger_rows_for_units_skips_units_the_provider_yields_nothing_fo
 
 
 def test_current_rss_bytes_is_positive_on_this_platform() -> None:
-    assert extraction._current_rss_bytes() > 0
+    result = _run_fresh_python(
+        "from scripts.projects.open_model_data import v4_a4_deterministic_extraction as extraction\n"
+        "rss = extraction._current_rss_bytes()\n"
+        "assert rss > 0, rss\n"
+        "print(rss)\n"
+    )
+    assert result.returncode == 0, result.stderr
+    assert int(result.stdout.strip()) > 0
 
 
 def test_require_within_memory_budget_passes_under_a_generous_cap() -> None:
-    extraction._require_within_memory_budget(extraction.DEFAULT_A4_MEMORY_CAP_BYTES)  # must not raise
+    result = _run_fresh_python(
+        "from scripts.projects.open_model_data import v4_a4_deterministic_extraction as extraction\n"
+        "rss = extraction._current_rss_bytes()\n"
+        "assert rss > 0, rss\n"
+        "extraction._require_within_memory_budget(extraction.DEFAULT_A4_MEMORY_CAP_BYTES)\n"
+        "print(rss)\n"
+    )
+    assert result.returncode == 0, result.stderr
+    assert int(result.stdout.strip()) > 0
 
 
 def test_require_within_memory_budget_fails_closed_against_a_near_zero_cap() -> None:
     """A cap far below the interpreter's own baseline RSS trips immediately
     -- proves the mechanism fires without needing to actually allocate
     gigabytes of memory inside a test."""
-    with pytest.raises(extraction.MemoryBudgetExceeded, match="exceeded the configured cap"):
-        extraction._require_within_memory_budget(1)
+    result = _run_fresh_python(
+        "from scripts.projects.open_model_data import v4_a4_deterministic_extraction as extraction\n"
+        "assert extraction._current_rss_bytes() > 1\n"
+        "try:\n"
+        "    extraction._require_within_memory_budget(1)\n"
+        "except extraction.MemoryBudgetExceeded as exc:\n"
+        "    assert 'exceeded the configured cap' in str(exc)\n"
+        "    print('over-cap')\n"
+        "else:\n"
+        "    raise AssertionError('the fresh process did not fail over the one-byte cap')\n"
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == "over-cap"
 
 
-def test_stream_ledger_rows_for_units_fails_closed_against_a_near_zero_memory_cap() -> None:
+def test_stream_ledger_rows_for_units_fails_closed_against_a_near_zero_memory_cap(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # This exercises stream-control logic, not ru_maxrss measurement. Keep it
+    # deterministic so an inherited worker high-water mark cannot decide it.
+    monkeypatch.setattr(extraction, "_current_rss_bytes", lambda: 2)
     salt = secrets.token_bytes(32)
     ordered = [(extraction.unit_commitment_sha256(salt, "synthetic.unit-a"), "synthetic.unit-a")]
     provider = _rows_by_row_texts({"synthetic.unit-a": ["One. Two. Three. Four."]})
@@ -424,6 +475,38 @@ def test_stream_ledger_rows_for_units_fails_closed_against_a_near_zero_memory_ca
                 ordered, provider, memory_cap_bytes=1, memory_check_interval=1
             )
         )
+
+
+def test_fresh_process_over_cap_aborts_before_partial_ledger(tmp_path: Path) -> None:
+    ledger_path = tmp_path / extraction.A4_LEDGER_FILENAME
+    result = _run_fresh_python(
+        "from pathlib import Path\n"
+        "import sys\n"
+        "from scripts.projects.open_model_data import v4_a4_deterministic_extraction as extraction\n"
+        "ledger_path = Path(sys.argv[1])\n"
+        "assert extraction._current_rss_bytes() > 1\n"
+        "def provider(_unit_id):\n"
+        "    yield 'One sentence.'\n"
+        "try:\n"
+        "    extraction.materialize_streaming_ledger(\n"
+        "        extraction.stream_ledger_rows_for_units(\n"
+        "            [('a' * 64, 'synthetic.unit')],\n"
+        "            provider,\n"
+        "            memory_cap_bytes=1,\n"
+        "            memory_check_interval=1,\n"
+        "        ),\n"
+        "        ledger_path,\n"
+        "    )\n"
+        "except extraction.MemoryBudgetExceeded:\n"
+        "    assert not ledger_path.exists()\n"
+        "    assert list(ledger_path.parent.iterdir()) == []\n"
+        "    print('aborted-before-link')\n"
+        "else:\n"
+        "    raise AssertionError('the fresh process did not abort over the one-byte cap')\n",
+        str(ledger_path),
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == "aborted-before-link"
 
 
 # --- ledger rolling commitment: content-blind, streaming-computable --------
@@ -641,7 +724,12 @@ def test_gate_never_reads_the_a3_seals_own_eternal_false_temporal_field() -> Non
 # --- real builder-packet consumption (synthetic private fixtures) ----------
 
 
-def test_consume_builder_packet_computes_real_reproducible_id_free_commitments(tmp_path: Path) -> None:
+def test_consume_builder_packet_computes_real_reproducible_id_free_commitments(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # This is a synthetic integration test; keep its RSS observation
+    # deterministic and leave real measurement to the fresh-process probes.
+    monkeypatch.setattr(extraction, "_current_rss_bytes", lambda: 1)
     seal_receipt_path, packet_dir, result = _issue_synthetic_packet(tmp_path)
     a4_private_dir = tmp_path / "a4-private"
 
@@ -674,11 +762,13 @@ def test_consume_builder_packet_computes_real_reproducible_id_free_commitments(t
 
 def test_consume_builder_packet_streams_real_rows_to_a_private_ledger_and_reruns_without_the_provider(
     tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """Every one of the 9 synthetic units gets exactly one real sentence, so
     regardless of which single family the (random-salt) A3 assignment holds
     out, the consumed 8 always contribute exactly 8 spans -- deterministic
     without needing to know or depend on which one was excluded."""
+    monkeypatch.setattr(extraction, "_current_rss_bytes", lambda: 1)
     seal_receipt_path, packet_dir, _ = _issue_synthetic_packet(tmp_path)
     a4_private_dir = tmp_path / "a4-private"
     rows_by_unit = {f"synthetic.{fid}": [f"Sentence for {index}."] for index, fid in enumerate(FAMILY_IDS)}
@@ -740,10 +830,13 @@ def test_consume_builder_packet_refuses_a_tampered_private_packet(tmp_path: Path
         extraction.consume_builder_packet(seal_receipt_path, packet_dir, tmp_path / "a4-private")
 
 
-def test_consume_builder_packet_salt_artifact_refuses_drift_on_rerun(tmp_path: Path) -> None:
+def test_consume_builder_packet_salt_artifact_refuses_drift_on_rerun(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """A second consumption against *different* seal/packet content but the
     same A4 salt path must refuse (drift), not silently regenerate -- mirrors
     A3's own fail-closed rerun discipline for the membership artifact."""
+    monkeypatch.setattr(extraction, "_current_rss_bytes", lambda: 1)
     seal_receipt_path, packet_dir, _ = _issue_synthetic_packet(tmp_path)
     a4_private_dir = tmp_path / "a4-private"
     extraction.consume_builder_packet(seal_receipt_path, packet_dir, a4_private_dir)
@@ -759,7 +852,10 @@ def test_consume_builder_packet_salt_artifact_refuses_drift_on_rerun(tmp_path: P
         extraction.consume_builder_packet(other_seal_receipt_path, other_packet_dir, a4_private_dir)
 
 
-def test_verify_builder_packet_consumption_privately_reproduces(tmp_path: Path) -> None:
+def test_verify_builder_packet_consumption_privately_reproduces(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(extraction, "_current_rss_bytes", lambda: 1)
     seal_receipt_path, packet_dir, _ = _issue_synthetic_packet(tmp_path)
     a4_private_dir = tmp_path / "a4-private"
     summary = extraction.consume_builder_packet(seal_receipt_path, packet_dir, a4_private_dir)
@@ -768,7 +864,10 @@ def test_verify_builder_packet_consumption_privately_reproduces(tmp_path: Path) 
     extraction.verify_builder_packet_consumption_privately(receipt, seal_receipt_path, packet_dir, a4_private_dir)
 
 
-def test_verify_builder_packet_consumption_privately_detects_tampered_commitment(tmp_path: Path) -> None:
+def test_verify_builder_packet_consumption_privately_detects_tampered_commitment(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(extraction, "_current_rss_bytes", lambda: 1)
     seal_receipt_path, packet_dir, _ = _issue_synthetic_packet(tmp_path)
     a4_private_dir = tmp_path / "a4-private"
     summary = extraction.consume_builder_packet(seal_receipt_path, packet_dir, a4_private_dir)
@@ -1191,7 +1290,10 @@ def test_cli_default_verify_prints_gate_and_status(capsys: pytest.CaptureFixture
     assert printed["builder_packet_gate"]["gate_open"] is True
 
 
-def test_cli_consume_wired_to_path_overrides(tmp_path: Path, capsys: pytest.CaptureFixture) -> None:
+def test_cli_consume_wired_to_path_overrides(
+    tmp_path: Path, capsys: pytest.CaptureFixture, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(extraction, "_current_rss_bytes", lambda: 1)
     seal_receipt_path, packet_dir, _ = _issue_synthetic_packet(tmp_path)
     a4_private_dir = tmp_path / "a4-private"
 
@@ -1211,6 +1313,7 @@ def test_cli_consume_wired_to_path_overrides(tmp_path: Path, capsys: pytest.Capt
 def test_cli_consume_defaults_to_the_real_row_provider(
     tmp_path: Path, capsys: pytest.CaptureFixture, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    monkeypatch.setattr(extraction, "_current_rss_bytes", lambda: 1)
     seal_receipt_path, packet_dir, _ = _issue_synthetic_packet(tmp_path)
     a4_private_dir = tmp_path / "a4-private"
     seen: list[object] = []
@@ -1231,6 +1334,7 @@ def test_cli_consume_defaults_to_the_real_row_provider(
 def test_cli_consume_no_real_bytes_forces_the_no_op_provider(
     tmp_path: Path, capsys: pytest.CaptureFixture, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    monkeypatch.setattr(extraction, "_current_rss_bytes", lambda: 1)
     seal_receipt_path, packet_dir, _ = _issue_synthetic_packet(tmp_path)
     a4_private_dir = tmp_path / "a4-private"
     seen: list[object] = []
@@ -1257,6 +1361,7 @@ def test_cli_consume_no_real_bytes_forces_the_no_op_provider(
 def test_cli_consume_memory_cap_bytes_is_wired_through(
     tmp_path: Path, capsys: pytest.CaptureFixture, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    monkeypatch.setattr(extraction, "_current_rss_bytes", lambda: 1)
     seal_receipt_path, packet_dir, _ = _issue_synthetic_packet(tmp_path)
     a4_private_dir = tmp_path / "a4-private"
     seen: list[int] = []
