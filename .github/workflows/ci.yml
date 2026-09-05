@@ -216,7 +216,20 @@ jobs:
       - name: Install native mechanism test dependencies
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y bubblewrap postgresql-16 libpq-dev
+          sudo apt-get install -y bubblewrap postgresql-16 libpq-dev apparmor
+          # Ubuntu-hosted runners require an application-specific userns grant.
+          # This profile belongs only to the disposable CI VM.
+          if [ -f /proc/sys/kernel/apparmor_restrict_unprivileged_userns ]; then
+            cat > "${RUNNER_TEMP}/v4-ci-bwrap.apparmor" <<'PROFILE'
+          abi <abi/4.0>,
+          include <tunables/global>
+          profile v4_ci_bwrap /usr/bin/bwrap flags=(unconfined) {
+            userns,
+          }
+          PROFILE
+            sudo apparmor_parser -r "${RUNNER_TEMP}/v4-ci-bwrap.apparmor"
+          fi
+          bwrap --unshare-user --unshare-pid --ro-bind / / -- /usr/bin/true
       - name: Install Python deps
         run: |
           set -euo pipefail

@@ -16,6 +16,7 @@ from pathlib import Path
 import _v4_a7_real_slot_fixture as fx
 import _v4_synthetic_chain_fixture as base_fixture
 import pytest
+from test_v4_operation_lifecycle import prepared as prepared
 
 from scripts.fleet_comms import v4_canonical_authority_store as v4_store
 from scripts.fleet_comms.artifacts import ArtifactStore
@@ -295,11 +296,13 @@ def test_boundary_to_boundary_positive_source_free(tmp_path, monkeypatch, pg_clu
 
 
 @pytest.mark.postgres
-def test_authorization_race_against_start_postgres(tmp_path, monkeypatch, pg_cluster, prepared) -> None:
+def test_authorization_race_against_start_postgres(tmp_path, monkeypatch, pg_cluster, request) -> None:
     from test_v4_operation_lifecycle import claim, role_connection
 
+    prepared_binding = request.getfixturevalue("prepared")
+
     with role_connection(pg_cluster, "hramatka_v4_control_writer") as conn:
-        owned = claim(conn, prepared)
+        owned = claim(conn, prepared_binding)
     with RequestExecutor(root=tmp_path) as authorizer:
         with pytest.raises(RequestExecutorError, match="not authorizable"):
             authorizer.authorize_author_execution(request_id=owned["request_id"], slot_id="v4p-standard-correct-002", expected_seat=FIXTURE_MODEL)

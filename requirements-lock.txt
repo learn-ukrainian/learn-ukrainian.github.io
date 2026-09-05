@@ -228,3 +228,6 @@ youtube-transcript-api==1.2.4
 yt-dlp==2026.7.4
 zeroconf==0.150.0
 zlib-state==0.1.12
+
+# Repository runtime dependency; install requirements from the repository root.
+./packages/v4-runtime
