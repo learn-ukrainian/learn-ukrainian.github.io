@@ -111,10 +111,15 @@ Freshness is rechecked using the database clock after ownership locks are held.
 The parent builds the fixed bwrap plan after capability creation. The child gets
 an empty filesystem with only pinned runtime files, an isolated PID/proc view,
 its selected provider credential and Sources-only configuration. Claude carries
-the MCP configuration in argv and the semantic prompt on stdin. Codex carries
-its isolated Sources configuration in argv, the capability in its designated
-environment variable, and the prompt on stdin. Unqualified adapters or missing
-actual model/session/terminal evidence refuse.
+the Sources URL and the literal `Bearer ${V4_SOURCES_ATTEMPT_CAPABILITY}`
+placeholder in its MCP argv; the installed CLI expands that placeholder from
+the child-only environment at request time. The actual capability is never in
+argv, the prompt or normal logs. Codex carries its isolated Sources
+configuration in argv, the capability in its designated environment variable,
+and the prompt on stdin. The fixture’s placeholder check is not an installed
+Claude compatibility proof; validate the installed config path separately with
+a source-free, no-provider CLI probe. Unqualified adapters or missing actual
+model/session/terminal evidence refuse.
 
 The same parent captures and parses the child output. It checks request/attempt
 correlation before artifacts or observations are written, rechecks ownership,
@@ -167,11 +172,19 @@ Unsigned synthetic replay evidence and unresolved opaque authority IDs refuse.
 Signed text-free A3 replay attestation remains the approved alternative to a raw
 reference callback.
 
-Fixed credential locations use the existing systemd credential namespaces:
-control DSN, selected provider credential, actual-unit qualification and
-`v4-signing-keys/{fleet_execution,sources,a3}.key` plus `.key_id` under the API
-unit; Sources has its separate scoped DSN under its own unit. No new service,
-OS account, general writer or key-custody plane is introduced.
+Fixed credential locations use the existing private systemd credential
+namespaces: control DSN, selected provider credential, actual-unit
+qualification and `v4-signing-keys/{fleet_execution,sources,a3}.key` plus
+`.key_id` under the API unit; Sources has its separate scoped DSN under its own
+unit. The public
+`packaging/systemd/learn-ukrainian-sources.service` intentionally supplies no
+deployment-specific OS account or credential path. Before a private deployment
+enables it, an existing private drop-in must set the protected service account
+and group, the Sources DSN `LoadCredential` binding, and the
+`InaccessiblePaths` entries for the API credential namespace and signing-key
+root. Those bindings are private deployment obligations, not public-template
+defaults. No new service, OS account, general writer or key-custody plane is
+introduced.
 
 Readiness also requires package integrity, a pinned child profile, actual-unit
 qualification and scoped credentials. The shipped child profile is unqualified.

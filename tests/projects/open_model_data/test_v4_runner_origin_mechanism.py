@@ -192,7 +192,14 @@ def test_sources_echoed_lexical_argument_is_not_the_identifier() -> None:
     assert "книга" not in identifier
 
 
-pytest_plugins = ("test_v4_protected_parent_mechanism",)
+# Register the owners of every cross-module fixture explicitly. This test must
+# collect the real PostgreSQL cluster and prepared operation without depending
+# on another module's collection order.
+pytest_plugins = (
+    "test_v4_packaged_operation_boundary",
+    "test_v4_operation_lifecycle",
+    "test_v4_protected_parent_mechanism",
+)
 
 
 @pytest.fixture

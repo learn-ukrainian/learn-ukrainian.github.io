@@ -3,6 +3,8 @@
 No auth verifier, canonical row, observation writer, child runner, parser or
 finalizer is replaced. The private adapter boundary is deliberately not tested.
 The fixture CLI consumes stdin and Sources HTTP but makes no model-quality claim.
+Its Claude branch checks the documented environment-placeholder shape; it is
+not an installed Claude compatibility proof.
 """
 
 from __future__ import annotations
@@ -31,19 +33,25 @@ prompt=sys.stdin.read()
 assert prompt.count("V4-SEMANTIC-INPUT: ")==1
 payload=json.loads(prompt.split("V4-SEMANTIC-INPUT: ",1)[1])
 model=args[args.index("--model")+1]
+capability=os.environ["V4_SOURCES_ATTEMPT_CAPABILITY"]
+provider=os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("OPENAI_API_KEY")
+assert provider and capability not in args and capability not in prompt
+assert provider not in args and provider not in prompt
 if "--mcp-config" in args:
     config=json.loads(args[args.index("--mcp-config")+1])
     assert set(config["mcpServers"])=={"sources"}
     source=config["mcpServers"]["sources"]
     url=source["url"]
-    token=source["headers"]["Authorization"]
+    configured_token=source["headers"]["Authorization"]
+    assert configured_token=="Bearer ${V4_SOURCES_ATTEMPT_CAPABILITY}"
+    token="Bearer "+capability
     assert "--strict-mcp-config" in args and args[args.index("--tools")+1]==""
 else:
     values=[args[i+1] for i,x in enumerate(args) if x=="-c"]
     url=json.loads(next(x.split("=",1)[1] for x in values if x.startswith("mcp_servers.sources.url=")))
     assert 'mcp_servers.sources.bearer_token_env_var="V4_SOURCES_ATTEMPT_CAPABILITY"' in values
-    token="Bearer "+os.environ["V4_SOURCES_ATTEMPT_CAPABILITY"]
-assert token=="Bearer "+os.environ["V4_SOURCES_ATTEMPT_CAPABILITY"]
+    token="Bearer "+capability
+assert token=="Bearer "+capability
 assert not os.path.exists("/home/ops") and not os.path.exists("/run/credentials")
 assert not os.path.exists("/usr/bin/sh") and not os.path.exists("/usr/bin/psql")
 body=json.dumps({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"verify_word","arguments":{"word":"fixture-one"}}}).encode()
@@ -66,35 +74,61 @@ for event in [{"type":"system","subtype":"init","model":model,"session_id":sessi
 
 
 def pinned_profile(root, *, sources_url, defect=False):
-    """Pin an owned fixture executable and its CPython closure, one file per mount."""
+    """Pin the fixture and a compact, portable CPython runtime closure."""
     executable = root / "fixture-cli"
     executable.write_text(CHILD.replace("DEFECT", repr(defect)))
     executable.chmod(0o700)
-    base = Path(sys.base_prefix)
-    stdlib = Path(sysconfig.get_path("stdlib"))
-    selected = {Path(sys.executable).resolve(): "/runtime/py/bin/python", executable: "/runtime/fixture-cli"}
-    for path in stdlib.rglob("*"):
-        if (
-            path.is_file()
-            and path.suffix in (".py", ".so")
-            and not {"site-packages", "__pycache__", "test", "tests"} & set(path.parts)
-        ):
-            selected[path.resolve()] = "/runtime/py/" + str(path.relative_to(base))
-    for path in (base / "lib").glob("*.so*"):
+    base = Path(sys.base_prefix).resolve()
+    stdlib = Path(sysconfig.get_path("stdlib")).resolve()
+    version = f"{sys.version_info.major}{sys.version_info.minor}"
+    selected = {
+        Path(sys.executable).resolve(): "/runtime/py/bin/python",
+        executable.resolve(): "/runtime/fixture-cli",
+    }
+
+    # CPython searches this exact zip before the unpacked stdlib directory.
+    # Keeping pure-Python modules in one immutable file avoids thousands of
+    # repeated --dir arguments when the fixture runs under bubblewrap.
+    stdlib_zip = (root / f"python{version}.zip").resolve()
+    with zipfile.ZipFile(stdlib_zip, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+        for path in sorted(stdlib.rglob("*.py")):
+            if path.is_file() and not {"site-packages", "__pycache__", "test", "tests"} & set(path.parts):
+                archive.write(path, Path(path.relative_to(stdlib)).as_posix())
+    stdlib_zip.chmod(0o600)
+    selected[stdlib_zip] = f"/runtime/py/lib/python{version}.zip"
+
+    library_name = sysconfig.get_config_var("LDLIBRARY")
+    if not isinstance(library_name, str) or not library_name:
+        raise AssertionError("the fixture interpreter must expose LDLIBRARY")
+    libpython = (base / "lib" / library_name).resolve()
+    if not libpython.is_file():
+        raise AssertionError("the fixture interpreter libpython is missing")
+    selected[libpython] = "/runtime/py/lib/" + libpython.name
+
+    extension_sources = []
+    dynload = stdlib / "lib-dynload"
+    for path in sorted(dynload.glob("*.so*")):
         if path.is_file():
-            selected[path.resolve()] = "/runtime/py/lib/" + path.resolve().name
+            resolved = path.resolve()
+            selected[resolved] = f"/runtime/py/lib/python{sys.version_info.major}.{sys.version_info.minor}/lib-dynload/{path.name}"
+            extension_sources.append(resolved)
+
     # This is only test interpreter dependency discovery, not product asset
     # discovery. Never expose loader addresses or local dependency paths in logs.
-    for binary in [Path(sys.executable).resolve(), *[p for p in selected if p.suffix == ".so"]]:
-        result = subprocess.run(["ldd", str(binary)], capture_output=True, text=True, check=False)
+    for binary in [Path(sys.executable).resolve(), libpython, *extension_sources]:
+        result = subprocess.run(["ldd", str(binary)], capture_output=True, text=True, check=False, timeout=30)
         for name in re.findall(r"(/[\w./+\-]+)", result.stdout):
             path = Path(name)
-            if path.is_file() and not path.is_relative_to(base):
-                selected[path.resolve()] = name
+            if path.is_file():
+                resolved = path.resolve()
+                if not resolved.is_relative_to(base):
+                    selected[resolved] = name
+    if len(selected) >= 256:
+        raise AssertionError("fixture runtime closure is not bounded")
     files = []
     closure = root / "fixture-interpreter-files"
     closure.mkdir()
-    for index, (path, target) in enumerate(sorted(selected.items())):
+    for index, (path, target) in enumerate(sorted(selected.items(), key=lambda item: (item[1], str(item[0])))):
         if path.stat().st_mode & 0o022:
             copied = closure / str(index)
             copied.write_bytes(path.read_bytes())

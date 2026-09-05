@@ -5,11 +5,12 @@ from __future__ import annotations
 import importlib
 import inspect
 import json
+from pathlib import Path
 
 import pytest
-from learn_ukrainian_v4_runtime import resources
+from learn_ukrainian_v4_runtime import child_runtime, resources
 from learn_ukrainian_v4_runtime import v4_a7_private_ledger as ledger
-from learn_ukrainian_v4_runtime.operation_auth import OperationRefused
+from learn_ukrainian_v4_runtime.operation_auth import OperationRefused, digest
 
 STAGES = [
     "a7_original_row_factory",
@@ -45,3 +46,44 @@ def test_admission_default_off_precedes_any_private_input_read(monkeypatch):
     arguments = {name: None for name in inspect.signature(ledger.construct_completion).parameters}
     with pytest.raises(OperationRefused, match="admission_disabled"):
         ledger.construct_completion(**arguments)
+
+
+def test_claude_sources_capability_stays_out_of_launched_argv(tmp_path: Path) -> None:
+    adapter = tmp_path / "fixture-cli"
+    adapter.write_bytes(b"source-free fixture executable")
+    adapter.chmod(0o400)
+    capability = "synthetic-attempt-capability"
+    provider_credential = "synthetic-provider-credential"
+    profile = {
+        "bwrap": "/usr/bin/bwrap",
+        "bwrap_sha256": digest(Path("/usr/bin/bwrap").read_bytes()),
+        "sources_url": "http://127.0.0.1:8766/mcp",
+        "adapters": {
+            "claude": {
+                "version": "fixture",
+                "models": ["fixture-model"],
+                "files": [{
+                    "source": str(adapter),
+                    "destination": "/runtime/fixture-cli",
+                    "sha256": digest(adapter.read_bytes()),
+                }],
+                "executable": "/runtime/fixture-cli",
+                "provider_env": "ANTHROPIC_API_KEY",
+            }
+        },
+    }
+    claim = {
+        "binding": {"expected_harness": "claude", "expected_seat_or_model": "fixture-model"},
+        "capability_token": capability,
+    }
+
+    command, environment = child_runtime._plan(profile, claim, provider_credential)
+    launched_argv = "\x00".join(command)
+    assert capability not in launched_argv
+    assert provider_credential not in launched_argv
+    assert environment["V4_SOURCES_ATTEMPT_CAPABILITY"] == capability
+    assert environment["ANTHROPIC_API_KEY"] == provider_credential
+    mcp_config = json.loads(command[command.index("--mcp-config") + 1])
+    assert mcp_config["mcpServers"]["sources"]["headers"] == {
+        "Authorization": "Bearer ${V4_SOURCES_ATTEMPT_CAPABILITY}"
+    }

@@ -46,6 +46,7 @@ def built_wheel(tmp_path_factory):
         ],
         check=True,
         capture_output=True,
+        timeout=120,
     )
     return next(output.glob("*.whl"))
 

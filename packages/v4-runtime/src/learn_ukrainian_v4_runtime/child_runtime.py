@@ -135,7 +135,7 @@ def _plan(profile: dict, claim: dict, provider_credential: str) -> tuple[list[st
                     "sources": {
                         "type": "http",
                         "url": url,
-                        "headers": {"Authorization": "Bearer " + claim["capability_token"]},
+                        "headers": {"Authorization": "Bearer ${V4_SOURCES_ATTEMPT_CAPABILITY}"},
                     }
                 }
             }

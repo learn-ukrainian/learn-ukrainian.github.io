@@ -28,6 +28,8 @@ import rapidfuzz  # noqa: F401  # Declares the quote-verification runtime depend
 import requests  # noqa: F401  # Declares the Sources HTTP dependency to the CI fastlane.
 
 SOURCES_SERVER_PATH = Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "sources" / "server.py"
+VESUM_FIXTURE_VERSION = "a" * 64
+VESUM_FIXTURE_MATCH = {"lemma": "читати", "pos": "verb", "tags": "verb:imperf:impr:s:2"}
 
 
 @pytest.fixture
@@ -377,8 +379,9 @@ class TestVerifyWordHandler:
             assert outcome["disposition"] == "not_found"
             assert outcome["success"] is False
 
-    def test_found(self, server_module):
-        mock_matches = [{"lemma": "читати", "pos": "verb", "tags": "verb:imperf:impr:s:2"}]
+    def test_found(self, server_module, monkeypatch):
+        monkeypatch.setattr(server_module, "_vesum_source_version", lambda: VESUM_FIXTURE_VERSION)
+        mock_matches = [VESUM_FIXTURE_MATCH]
         with patch("scripts.verification.vesum.verify_word", return_value=mock_matches):
             content, outcome = _run(server_module.handle_verify_word({"word": "читай"}))
             assert "читати" in content[0].text
@@ -386,6 +389,20 @@ class TestVerifyWordHandler:
             assert "1 match" in content[0].text
             assert outcome["disposition"] == "supported"
             assert outcome["success"] is True
+            assert outcome["result"] == {
+                "word": "читай", "pos_filter": None, "matches": mock_matches,
+            }
+            assert outcome["evidence_identifiers"] == [
+                server_module._typed_identifier("vesum", outcome["result"])
+            ]
+
+    def test_found_refuses_unversioned_source(self, server_module, monkeypatch):
+        monkeypatch.setattr(server_module, "_vesum_source_version", lambda: "vesum-source-unversioned")
+        with (
+            patch("scripts.verification.vesum.verify_word", return_value=[VESUM_FIXTURE_MATCH]),
+            pytest.raises(server_module.v4_handlers.OperationRefused, match="Sources version unproved"),
+        ):
+            _run(server_module.handle_verify_word({"word": "читай"}))
 
     def test_passes_pos_filter(self, server_module):
         with patch("scripts.verification.vesum.verify_word", return_value=[]) as mock:

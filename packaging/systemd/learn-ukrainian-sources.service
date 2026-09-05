@@ -5,8 +5,6 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-User=hramatka
-Group=hramatka
 UMask=0077
 NoNewPrivileges=yes
 PrivateMounts=yes
@@ -19,8 +17,6 @@ SystemCallFilter=~@debug
 RestrictSUIDSGID=yes
 LockPersonality=yes
 CapabilityBoundingSet=
-LoadCredential=v4-sources-dsn:/etc/hramatka/v4-sources-dsn
-InaccessiblePaths=-/run/credentials/hramatka-api.service -/etc/hramatka/v4-signing-keys
 Environment=HRAMATKA_V4_EXECUTION_ENABLED=0
 Environment=HRAMATKA_V4_ADMISSION_ENABLED=0
 WorkingDirectory=@REPO_ROOT@
