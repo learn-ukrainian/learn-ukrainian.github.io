@@ -148,6 +148,20 @@ def test_force_rejects_empty_or_duplicate_input_without_deleting(db, items):
     assert conn.execute("SELECT count(*) FROM textbooks").fetchone()[0] == 3
 
 
+def test_cli_help_uses_portable_example():
+    result = subprocess.run(
+        [sys.executable, "-m", "scripts.ingest.private_teacher_lessons_ingest", "--help"],
+        cwd=Path(__file__).resolve().parents[1],
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=10,
+    )
+    help_text = result.stdout + result.stderr
+    assert ".venv/bin/python -m scripts.ingest.private_teacher_lessons_ingest" in help_text
+    assert "/home/" not in help_text
+
+
 def test_cli_counts_only_and_no_extracted_files(tmp_path, db):
     _, db_path = db
     source = docx(tmp_path, paragraph("01/01/2025") + paragraph("SYNTHETIC_SECRET_SENTINEL"))

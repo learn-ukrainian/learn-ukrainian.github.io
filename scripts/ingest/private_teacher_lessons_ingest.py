@@ -180,8 +180,8 @@ def main(argv: list[str] | None = None) -> int:
         "Use for machine-local corpus intake, never for publishing private text.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""Examples:
-  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.ingest.private_teacher_lessons_ingest --docx /private/lessons.docx --dry-run
-  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.ingest.private_teacher_lessons_ingest --docx /private/lessons.docx --db /private/sources.db --force
+  .venv/bin/python -m scripts.ingest.private_teacher_lessons_ingest --docx /private/lessons.docx --dry-run
+  .venv/bin/python -m scripts.ingest.private_teacher_lessons_ingest --docx /private/lessons.docx --db /private/sources.db --force
 Outputs: counts only; updates textbooks and textbook_sections in the specified DB.
 No extracted files, images, or lesson snippets are written or printed.
 Exit codes: 0 success; 2 invalid arguments, extraction, validation, or DB failure.
