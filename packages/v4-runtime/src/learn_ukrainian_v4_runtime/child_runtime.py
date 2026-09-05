@@ -125,8 +125,14 @@ def _codex_auth(raw: str) -> dict:
             header = _credential_json(decoded[0])
             if header.get("alg") != "RS256" or header.get("typ", "JWT") != "JWT" or not decoded[2]:
                 raise ValueError
-            # Expiry is a local freshness check, NOT signature/provider verification.
-            _fresh(_credential_json(decoded[1]).get("exp"))
+            expiry = _credential_json(decoded[1]).get("exp")
+            if type(expiry) is not int or not 0 < expiry < 253402300800:
+                raise ValueError
+            # The access token authenticates native API calls. Cached ID tokens
+            # can outlive their identity-token expiry while access stays fresh.
+            # Neither check is signature/provider verification.
+            if name == "access_token":
+                _fresh(expiry)
         if "last_refresh" in auth:
             refreshed = datetime.fromisoformat(auth["last_refresh"].replace("Z", "+00:00"))
             if refreshed.tzinfo is None or not 0 < refreshed.timestamp() <= time.time():

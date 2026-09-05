@@ -46,9 +46,11 @@ Codex `auth_json` requires `auth_mode: "chatgpt"` and exactly one `tokens`
 object with `id_token`, `access_token`, `refresh_token` and `account_id`.
 Only optional `OPENAI_API_KEY: null` and an already elapsed, timezone-aware
 `last_refresh` timestamp are accepted alongside those fields. Both JWTs must
-have a structurally valid RS256 header and a fresh integer `exp`. This is
-schema/freshness validation, not signature verification or proof of provider
-acceptance. Expired or incompatible credentials require operator action;
+have a structurally valid RS256 header and a positive bounded integer `exp`.
+The access token must be fresh; a cached identity token may have expired while
+the access token remains valid. This is schema/freshness validation, not
+signature verification or proof of provider acceptance. Expired access or
+incompatible credentials require operator action;
 the package adds no credential provisioning or refresh service.
 
 Claude receives only its selected OAuth access token, without a provider-home

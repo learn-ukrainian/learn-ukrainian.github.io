@@ -216,7 +216,7 @@ def test_expiry_requires_bounded_fresh_integer(harness, expiry):
         "extra_token",
         "missing_token",
         "expired_access",
-        "expired_id",
+        "invalid_id_expiry",
         "malformed_jwt",
         "missing_exp",
         "duplicate",
@@ -237,8 +237,10 @@ def test_codex_native_schema_and_expiry(mutation):
         auth["tokens"]["other"] = "unknown"
     elif mutation == "missing_token":
         del auth["tokens"]["access_token"]
-    elif mutation.startswith("expired_"):
-        auth["tokens"]["access_token" if mutation == "expired_access" else "id_token"] = jwt(int(time.time()) - 1)
+    elif mutation == "expired_access":
+        auth["tokens"]["access_token"] = jwt(int(time.time()) - 1)
+    elif mutation == "invalid_id_expiry":
+        auth["tokens"]["id_token"] = jwt(0)
     elif mutation == "malformed_jwt":
         auth["tokens"]["access_token"] = "malformed"
     elif mutation == "missing_exp":
@@ -525,4 +527,18 @@ def test_malformed_or_unsigned_jwt_header_is_refused(header):
     auth["tokens"]["access_token"] = ".".join(parts)
     value["auth_json"] = json.dumps(auth)
     with pytest.raises(OperationRefused):
+        child.parse_provider_credential(json.dumps(value).encode(), harness="codex", mode="subscription")
+
+
+def test_cached_id_token_can_expire_while_native_access_token_is_fresh():
+    value = payload("codex", "subscription")
+    auth = json.loads(value["auth_json"])
+    auth["tokens"]["id_token"] = jwt(int(time.time()) - 3600)
+    value["auth_json"] = json.dumps(auth)
+    selected = child.parse_provider_credential(json.dumps(value).encode(), harness="codex", mode="subscription")
+    assert json.loads(selected.value)["tokens"] == auth["tokens"]
+
+    auth["tokens"]["access_token"] = jwt(int(time.time()) - 1)
+    value["auth_json"] = json.dumps(auth)
+    with pytest.raises(OperationRefused, match="expired"):
         child.parse_provider_credential(json.dumps(value).encode(), harness="codex", mode="subscription")
