@@ -74,7 +74,7 @@ node --version
 npm --version
 git rev-parse HEAD
 node -e 'const p=require("./site/package.json"),l=require("./site/package-lock.json"); console.log(p.dependencies,p.devDependencies,Object.keys(l.packages).length-1)'
-/home/ops/learn-ukrainian/.venv/bin/python - <<'PY'
+.venv/bin/python - <<'PY'
 from pathlib import Path
 from collections import Counter
 import re
@@ -109,7 +109,7 @@ values, decompressed it, and counted `entries`; it did not query Postgres,
 modify the atlas lease, or regenerate source data. Reproduction:
 
 ```bash
-/home/ops/learn-ukrainian/.venv/bin/python - <<'PY'
+.venv/bin/python - <<'PY'
 from pathlib import Path
 import gzip, hashlib, json, urllib.request
 p = json.loads(Path('site/src/data/lexicon-manifest.pointer.json').read_text())
@@ -125,8 +125,8 @@ PY
 
 ```bash
 npm ci --prefix site --ignore-scripts --no-audit --no-fund
-PYTHON=/home/ops/learn-ukrainian/.venv/bin/python npm run build:shell --prefix site
-DEPLOY_PROFILE=github-pages /home/ops/learn-ukrainian/.venv/bin/python scripts/deploy/check_site_size.py site/dist
+PYTHON=.venv/bin/python npm run build:shell --prefix site
+DEPLOY_PROFILE=github-pages .venv/bin/python scripts/deploy/check_site_size.py site/dist
 ```
 
 Installation reported `added 645 packages in 9s`; it warned that npm `9.2.0` is
