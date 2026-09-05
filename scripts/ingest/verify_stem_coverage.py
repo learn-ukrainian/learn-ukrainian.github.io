@@ -87,8 +87,8 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Example:\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.ingest.verify_stem_coverage "
-            "--db /home/ops/learn-ukrainian/data/sources.db\n"
+            "  .venv/bin/python -m scripts.ingest.verify_stem_coverage "
+            "--db /path/to/sources.db\n"
             "Outputs: JSON on stdout; no files written or database changes.\n"
             "Exit codes: 0 = census read successfully (gaps may remain); 2 = database/read failure.\n"
             "Related: #4593; scripts/ingest/incremental_textbook_ingest.py; "
