@@ -1,6 +1,11 @@
 """Setuptools build hook: public assets and provenance are wheel resources."""
 
-from build_assets import collect_assets, write_manifest
+from pathlib import Path
+from runpy import run_path
+
+_build = run_path(str(Path(__file__).with_name("build_assets.py")))
+collect_assets = _build["collect_assets"]
+write_manifest = _build["write_manifest"]
 from setuptools import setup
 from setuptools.command.build_py import build_py
 
