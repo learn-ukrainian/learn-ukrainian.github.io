@@ -40,7 +40,7 @@ describe('practice first-paint shell (#6715)', () => {
   });
 
   test('inline script hides the shell on success and on fallback', () => {
-    expect(src).toContain("const SHELL_ID = 'lexicon-practice-shell';");
+    expect(src).toContain("document.getElementById('lexicon-practice-shell')");
     expect(src).toMatch(/function hideShell\(\)[\s\S]{0,200}setAttribute\('hidden', ''\)/);
     expect(src).toMatch(/function markSuccess\(\)[\s\S]{0,150}hideShell\(\)/);
     expect(src).toMatch(/function showFallback\(\)[\s\S]{0,300}hideShell\(\)/);
