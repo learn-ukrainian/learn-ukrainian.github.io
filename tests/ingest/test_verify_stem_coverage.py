@@ -3,6 +3,8 @@
 import hashlib
 import json
 import sqlite3
+import subprocess
+import sys
 
 from scripts.ingest.verify_stem_coverage import census, main
 
@@ -66,3 +68,14 @@ def test_cli_json(tmp_path, capsys):
         )
     assert main(["--db", str(db)]) == 0
     assert json.loads(capsys.readouterr().out)["total_textbook_chunks"] == 0
+
+
+def test_cli_help_uses_portable_example():
+    result = subprocess.run(
+        [sys.executable, "-m", "scripts.ingest.verify_stem_coverage", "--help"],
+        capture_output=True, text=True, check=True, timeout=30,
+    )
+    assert "/home/" not in result.stdout
+    assert ".venv/bin/python -m scripts.ingest.verify_stem_coverage" in result.stdout
+    assert "--db /path/to/sources.db" in result.stdout
+    assert not result.stderr
