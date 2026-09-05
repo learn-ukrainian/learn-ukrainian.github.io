@@ -22,7 +22,7 @@ import time
 import uuid
 from collections.abc import Awaitable, Callable
 from concurrent.futures import ThreadPoolExecutor
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, suppress
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -109,7 +109,7 @@ from .state_router import router as state_router
 from .telemetry.response import add_json_telemetry, session_id_from_request
 from .telemetry_router import router as telemetry_router
 from .wiki_router import router as wiki_router
-from .work_router import drain_context_background_work, warm_projection_cache
+from .work_router import drain_context_background_work, refresh_projection_cache_periodically, warm_projection_cache
 from .work_router import router as work_router
 from .worktrees_router import router as worktrees_router
 
@@ -124,6 +124,7 @@ async def _lifespan(_app: FastAPI):
     See scripts/api/_signal_log.py for the wrapper rationale.
     """
     ctx = _app.state.ctx
+    projection_refresh_task = None
     try:
         preload_all()
         install_signal_logging()
@@ -142,9 +143,16 @@ async def _lifespan(_app: FastAPI):
             warm_projection_cache(ctx=ctx)
         except Exception as exc:
             logger.warning("Work projection warmup schedule on startup failed: %s", exc)
+        projection_refresh_task = asyncio.create_task(
+            refresh_projection_cache_periodically(ctx), name="work-projection-refresh"
+        )
         start_periodic_refresh()
         yield
     finally:
+        if projection_refresh_task is not None:
+            projection_refresh_task.cancel()
+            with suppress(asyncio.CancelledError):
+                await projection_refresh_task
         try:
             stop_periodic_refresh()
         finally:
