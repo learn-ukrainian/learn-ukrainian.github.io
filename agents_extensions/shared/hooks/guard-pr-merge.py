@@ -978,7 +978,9 @@ def _parse_status_rollup_rows(rows: list) -> tuple[list[str], list[str]] | None:
         name = _rollup_name(row)
         if name is None:
             return None
-        if not _is_advisory(name):
+        # Cancelled runs can retain an unexpanded matrix parent. It is not an
+        # executed job and cannot be superseded by the differently named shards.
+        if "${{" not in name and not _is_advisory(name):
             named.append(row)
     latest = _latest_rollup_rows(named)
     if latest is None:
@@ -1074,7 +1076,7 @@ def _check_states(pr: str, repo: str | None = None, cwd: str | None = None) -> t
         if not isinstance(r, dict):
             return None
         name = str(r.get("name") or "")
-        if _is_advisory(name):
+        if "${{" in name or _is_advisory(name):
             continue
         bucket = str(r.get("bucket") or r.get("state") or "").lower()
         if bucket in _FAIL_BUCKETS:
