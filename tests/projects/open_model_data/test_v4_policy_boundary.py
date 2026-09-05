@@ -48,7 +48,11 @@ def test_admission_default_off_precedes_any_private_input_read(monkeypatch):
         ledger.construct_completion(**arguments)
 
 
-def test_claude_sources_capability_stays_out_of_launched_argv(tmp_path: Path) -> None:
+@pytest.mark.parametrize("harness", ["claude", "codex"])
+@pytest.mark.parametrize(("role", "effort"), [("author", "medium"), ("reviewer", "high")])
+def test_native_plan_binds_effort_and_keeps_secrets_out_of_argv(
+    tmp_path: Path, harness: str, role: str, effort: str
+) -> None:
     adapter = tmp_path / "fixture-cli"
     adapter.write_bytes(b"source-free fixture executable")
     adapter.chmod(0o400)
@@ -59,7 +63,7 @@ def test_claude_sources_capability_stays_out_of_launched_argv(tmp_path: Path) ->
         "bwrap_sha256": digest(Path("/usr/bin/bwrap").read_bytes()),
         "sources_url": "http://127.0.0.1:8766/mcp",
         "adapters": {
-            "claude": {
+            harness: {
                 "version": "fixture",
                 "models": ["fixture-model"],
                 "files": [{
@@ -68,12 +72,12 @@ def test_claude_sources_capability_stays_out_of_launched_argv(tmp_path: Path) ->
                     "sha256": digest(adapter.read_bytes()),
                 }],
                 "executable": "/runtime/fixture-cli",
-                "provider_env": "ANTHROPIC_API_KEY",
+                "provider_env": {"claude": "ANTHROPIC_API_KEY", "codex": "OPENAI_API_KEY"}[harness],
             }
         },
     }
     claim = {
-        "binding": {"expected_harness": "claude", "expected_seat_or_model": "fixture-model"},
+        "binding": {"expected_harness": harness, "expected_seat_or_model": "fixture-model", "role": role},
         "capability_token": capability,
     }
 
@@ -82,8 +86,16 @@ def test_claude_sources_capability_stays_out_of_launched_argv(tmp_path: Path) ->
     assert capability not in launched_argv
     assert provider_credential not in launched_argv
     assert environment["V4_SOURCES_ATTEMPT_CAPABILITY"] == capability
-    assert environment["ANTHROPIC_API_KEY"] == provider_credential
-    mcp_config = json.loads(command[command.index("--mcp-config") + 1])
-    assert mcp_config["mcpServers"]["sources"]["headers"] == {
-        "Authorization": "Bearer ${V4_SOURCES_ATTEMPT_CAPABILITY}"
-    }
+    provider_env = {"claude": "ANTHROPIC_API_KEY", "codex": "OPENAI_API_KEY"}[harness]
+    assert environment[provider_env] == provider_credential
+    if harness == "claude":
+        assert command[command.index("--effort") + 1] == effort
+        mcp_config = json.loads(command[command.index("--mcp-config") + 1])
+        assert mcp_config["mcpServers"]["sources"]["headers"] == {
+            "Authorization": "Bearer ${V4_SOURCES_ATTEMPT_CAPABILITY}"
+        }
+    else:
+        assert "model_reasoning_effort=" + json.dumps(effort) in command
+    claim["binding"]["role"] = "caller-selected"
+    with pytest.raises(OperationRefused, match="operation_role"):
+        child_runtime._plan(profile, claim, provider_credential)
