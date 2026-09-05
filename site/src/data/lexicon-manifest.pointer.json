@@ -1,19 +1,19 @@
 {
-  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest-dc1d73a434e2.json.gz",
+  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest-e86b996daca4.json.gz",
   "release_tag": "atlas-manifest",
   "manifest_version": "0.1",
-  "manifest_fingerprint": "35f3a9f61d1fdaa731d28326f338c8ae3532fac07b750ff11e3511ac527730c3",
+  "manifest_fingerprint": "d91172531ae577c646db0c4b1ccbc85851708aaf05da77228c39dfa86158c0e7",
   "fingerprint_schema_version": 1,
-  "generated_at": "2026-08-30T22:10:42.155942+00:00",
-  "gz_sha256": "0d341cd7f4422d2927acad1530a7970ea261886e41811138a3beb0a18b6caaf7",
-  "json_sha256": "dc1d73a434e2f136a81ece811bc346f38f4bd057e208bae88998bfce925419ec",
-  "gz_bytes": 28030067,
-  "json_bytes": 203539688,
+  "generated_at": "2026-09-05T20:25:42+00:00",
+  "gz_sha256": "54380ea3e904e4c5dca1631ed251acec54d2686dca6d82ac13598610083b6615",
+  "json_sha256": "e86b996daca4975536be6d70d2fe92bc8da85621a649dcce6a9c7360f295aa05",
+  "gz_bytes": 28231468,
+  "json_bytes": 205148371,
   "richness_gate": {
     "baseline": {
-      "poc_thin_pages": 5499,
+      "poc_thin_pages": 5498,
       "search_no_visible_gloss": 5,
-      "old_gate_no_english_anchor": 474
+      "old_gate_no_english_anchor": 473
     },
     "candidate": {
       "poc_thin_pages": 5498,
