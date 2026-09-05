@@ -8,8 +8,8 @@ from pathlib import Path
 
 import pytest
 
-from scripts.work.attention import apply_health_and_actions, derive_health, derive_safe_next_action
-from scripts.work.normalize import _match_dispatch, build_projection
+from scripts.work.attention import _pr_check_state, apply_health_and_actions, derive_health, derive_safe_next_action
+from scripts.work.normalize import _build_pr_item, _match_dispatch, build_projection
 from scripts.work.relations import (
     collect_missing_blocked_by_issue_numbers,
     detect_dependency_cycles,
@@ -37,6 +37,57 @@ from scripts.work.sources_public import (
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "tests" / "fixtures" / "work" / "projection_public_min.json"
 REPO = "learn-ukrainian/learn-ukrainian.github.io"
+
+
+@pytest.fixture
+def green_rollup_with_matrix_leftover():
+    return [
+        {"name": "pytest (${{ matrix.shard }})", "conclusion": "CANCELLED"},
+        *[{"name": f"pytest ({shard})", "conclusion": "SUCCESS"} for shard in range(1, 5)],
+        {"name": "CI Gate", "conclusion": "SUCCESS"},
+        {"name": "Frontend", "conclusion": "SUCCESS"},
+    ]
+
+
+def test_pr_check_state_ignores_cancelled_matrix_leftover(green_rollup_with_matrix_leftover):
+    assert _pr_check_state({"statusCheckRollup": green_rollup_with_matrix_leftover}) == "passing"
+
+
+@pytest.mark.parametrize("name", ["pytest (1)", "Frontend", "CI Gate"])
+@pytest.mark.parametrize("conclusion", ["CANCELLED", "FAILURE"])
+def test_pr_check_state_preserves_real_failure(green_rollup_with_matrix_leftover, name, conclusion):
+    for check in green_rollup_with_matrix_leftover:
+        if check["name"] == name:
+            check["conclusion"] = conclusion
+    assert _pr_check_state({"statusCheckRollup": green_rollup_with_matrix_leftover}) == "failing"
+
+
+def test_pr_check_state_expanded_pending_shards():
+    checks = [{"name": f"pytest ({shard})", "state": "PENDING"} for shard in range(1, 5)]
+    assert _pr_check_state({"statusCheckRollup": checks}) == "pending"
+
+
+@pytest.mark.parametrize("state", ["CANCELLED", "PENDING", "SUCCESS"])
+def test_pr_check_state_unexpanded_only_is_unknown(state):
+    checks = [{"name": "pytest (${{ matrix.shard }})", "state": state}]
+    assert _pr_check_state({"statusCheckRollup": checks}) == "unknown"
+
+
+@pytest.mark.parametrize(
+    ("decision", "health", "action"),
+    [("REVIEW_REQUIRED", "AT_RISK", "REQUEST_CF_REVIEW"), ("APPROVED", "ON_TRACK", "MERGE_WHEN_READY")],
+)
+def test_pr_matrix_leftover_projection_routes_to_review_or_merge(
+    green_rollup_with_matrix_leftover, decision, health, action,
+):
+    item = _build_pr_item(
+        {"number": 7691, "reviewDecision": decision, "statusCheckRollup": green_rollup_with_matrix_leftover},
+        repository_id=REPO, tasks=[], reviews=[], section_times={},
+    )
+    apply_health_and_actions([item], source_ok=True)
+    assert item["projections"]["verification"]["ci_state"] == "passing"
+    assert item["health"] == health
+    assert item["safe_next_action"]["code"] == action
 
 
 def test_schema_loads_and_fixture_validates():

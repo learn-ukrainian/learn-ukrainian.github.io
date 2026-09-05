@@ -47,6 +47,9 @@ def _pr_check_state(pr: dict[str, Any] | None) -> str:
     if isinstance(rollup, list):
         for entry in rollup:
             if isinstance(entry, dict):
+                # Cancelled runs can leave an unexpanded matrix parent, not a real check.
+                if "${{" in str(entry.get("name") or ""):
+                    continue
                 states.append(str(entry.get("state") or entry.get("conclusion") or "").upper())
             else:
                 states.append(str(entry).upper())
