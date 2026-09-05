@@ -84,7 +84,8 @@ def validate_target(target: dict) -> None:
         for key, value in features.items():
             _choice(value, FEATURES[key], "linguistic_feature_value")
     dependencies = matcher["dependency_constraints"]
-    if not isinstance(dependencies, list) or not 1 <= len(dependencies) <= 4:
+    minimum_dependencies = 0 if target["mechanism"] == "lemma_morphology" else 1
+    if not isinstance(dependencies, list) or not minimum_dependencies <= len(dependencies) <= 4:
         raise OperationRefused("linguistic_dependencies")
     for relation in dependencies:
         _keys(relation, {"head", "dependent", "relation"}, "linguistic_dependency")
@@ -111,6 +112,30 @@ def validate_constraints(value: dict) -> None:
         raise OperationRefused("correction_authority_required")
     if value["stratum"] == "correction" and not {"answer", "explanation", "instruction"} <= set(value["required_fields"]):
         raise OperationRefused("correction_target_separate")
+
+
+
+def validate_authored_row(row: dict, constraints: dict) -> None:
+    """Required output fields are a deterministic contract, not a model promise."""
+    validate_constraints(constraints)
+    required = constraints["required_fields"]
+    if (not isinstance(row, dict) or not set(required) <= set(row)
+            or any(not isinstance(row[key], str) or not row[key].strip() for key in required)):
+        raise OperationRefused("author_required_fields")
+
+
+def validate_owned_authored_row(conn, binding: dict, row: dict) -> None:
+    """Resolve the immutable assignment contract before any author artifact is stored."""
+    stored = conn.execute(
+        "SELECT semantic_input_json FROM v4_execution_dispatch_bindings WHERE request_id=%s",
+        (binding["request_id"],),
+    ).fetchone()
+    if stored is None or stored["semantic_input_json"] is None:
+        raise OperationRefused("author_semantic_input_missing")
+    snapshot = json.loads(stored["semantic_input_json"])
+    if digest(prompt_from_snapshot(binding, snapshot).encode()) != binding["prompt_sha256"]:
+        raise OperationRefused("semantic_input_digest")
+    validate_authored_row(row, snapshot["constraints"])
 
 
 def rubric_bytes() -> bytes:
@@ -223,6 +248,7 @@ def prompt_from_snapshot(binding: dict, snapshot: dict) -> str:
             raise OperationRefused("authored_row_keys")
         if any(not isinstance(value, str) for value in row.values()):
             raise OperationRefused("authored_row_values")
+        validate_authored_row(row, snapshot["constraints"])
         rubric = rubric_bytes()
         if snapshot["rubric_sha256"] != digest(rubric) or binding["rubric_sha256"] != digest(rubric):
             raise OperationRefused("rubric_digest")

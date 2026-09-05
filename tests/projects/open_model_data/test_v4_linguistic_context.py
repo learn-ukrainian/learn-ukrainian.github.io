@@ -183,3 +183,45 @@ def test_http_cannot_select_semantic_authority(key):
     body = {"schema": "hramatka-v4-operation-execute.v1", "authorization_id": "A" * 43, key: "caller"}
     with pytest.raises(OperationRefused, match="request_keys"):
         parse_request(canonical_bytes(body), execution=True)
+
+def test_single_token_morphology_preparation_needs_no_invented_dependency(pg_cluster, tmp_path, monkeypatch):
+    binding = _assignment(pg_cluster, tmp_path, monkeypatch)
+    value = constraints()
+    value["target"]["mechanism"] = "lemma_morphology"
+    value["target"]["matcher"] = {
+        "kind": "lemma_morphology",
+        "tokens": [{"pos": "NOUN", "features": {"Case": "Acc", "Number": "Sing", "Gender": "Fem"}}],
+        "dependency_constraints": [],
+    }
+    with role_connection(pg_cluster, "hramatka_v4_control_writer") as conn:
+        reference = store_artifact(conn, preparation(binding, value))
+        semantic.freeze_semantic_input(conn, request_id=binding["request_id"], snapshot=reference)
+        frozen = conn.execute(
+            "SELECT semantic_input_json FROM v4_execution_dispatch_bindings WHERE request_id=%s",
+            (binding["request_id"],),
+        ).fetchone()
+        assert json.loads(frozen["semantic_input_json"])["constraints"]["target"] == value["target"]
+
+
+@pytest.mark.parametrize("mechanism", ["syntax", "government_valency"])
+def test_relational_targets_still_require_dependencies(mechanism):
+    value = constraints()
+    value["target"]["mechanism"] = mechanism
+    value["target"]["matcher"]["kind"] = mechanism
+    value["target"]["matcher"]["dependency_constraints"] = []
+    with pytest.raises(OperationRefused, match="linguistic_dependencies"):
+        semantic.validate_constraints(value)
+
+
+@pytest.mark.parametrize("field", ["row_text", "answer", "instruction", "explanation"])
+@pytest.mark.parametrize("bad_value", [None, "", "   "])
+def test_required_row_fields_are_present_and_nonempty(field, bad_value):
+    value = constraints()
+    value["required_fields"] = ["row_text", "answer", "instruction", "explanation"]
+    row = dict.fromkeys(value["required_fields"], "synthetic fixture")
+    if bad_value is None:
+        del row[field]
+    else:
+        row[field] = bad_value
+    with pytest.raises(OperationRefused, match="author_required_fields"):
+        semantic.validate_authored_row(row, value)

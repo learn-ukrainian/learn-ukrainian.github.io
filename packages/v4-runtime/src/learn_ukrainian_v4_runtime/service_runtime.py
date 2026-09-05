@@ -85,6 +85,10 @@ class V4ServiceRuntime:
                     self._store.finish(conn, claim, success=False)
                     return {"state": "terminal", "outcome": "policy_changed"}
                 binding = claim["binding"]
+                if binding["role"] == "author":
+                    from learn_ukrainian_v4_runtime.semantic_inputs import validate_owned_authored_row
+
+                    validate_owned_authored_row(conn, binding, parsed["row"])
                 art_id = "v4capture_" + digest(capture.stdout)
                 conn.execute(
                     """INSERT INTO fleet_comms_artifact_blobs(sha256,artifact_id,bytes,mime_type,

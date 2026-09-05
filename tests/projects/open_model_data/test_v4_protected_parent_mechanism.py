@@ -180,7 +180,24 @@ def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resou
 def test_real_parent_consumes_author_constraints_and_reviewer_row(
     pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect
 ):
-    _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect)
+    if defect:
+        from learn_ukrainian_v4_runtime.operation_auth import OperationRefused
+
+        queries = [
+            "SELECT count(*) AS n FROM v4_execution_observations",
+            "SELECT count(*) AS n FROM v4_authorship_receipts",
+            "SELECT count(*) AS n FROM fleet_comms_artifact_blobs WHERE producer='v4-service'",
+        ]
+        with role_connection(pg_cluster, "hramatka_v4_control_writer") as conn:
+            before = [conn.execute(query).fetchone()["n"] for query in queries]
+            failed_before = conn.execute("SELECT count(*) AS n FROM requests WHERE state='failed'").fetchone()["n"]
+        with pytest.raises(OperationRefused, match="author_required_fields"):
+            _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect)
+        with role_connection(pg_cluster, "hramatka_v4_control_writer") as conn:
+            assert [conn.execute(query).fetchone()["n"] for query in queries] == before
+            assert conn.execute("SELECT count(*) AS n FROM requests WHERE state='failed'").fetchone()["n"] == failed_before + 1
+    else:
+        _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect)
 
 
 @pytest.mark.parametrize("failure", ["capture_limit", "execution_timeout"])
