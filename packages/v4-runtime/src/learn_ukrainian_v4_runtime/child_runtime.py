@@ -94,6 +94,8 @@ def _plan(profile: dict, claim: dict, provider_credential: str) -> tuple[list[st
         "/work",
         "--dev",
         "/dev",
+        "--proc",
+        "/proc",
     ]
     destinations = set()
     for entry in adapter["files"]:

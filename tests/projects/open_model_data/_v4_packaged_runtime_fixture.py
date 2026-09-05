@@ -82,7 +82,7 @@ def pinned_profile(root, *, sources_url, defect=False):
             selected[path.resolve()] = "/runtime/py/" + str(path.relative_to(base))
     for path in (base / "lib").glob("*.so*"):
         if path.is_file():
-            selected[path.resolve()] = "/runtime/py/lib/" + path.name
+            selected[path.resolve()] = "/runtime/py/lib/" + path.resolve().name
     # This is only test interpreter dependency discovery, not product asset
     # discovery. Never expose loader addresses or local dependency paths in logs.
     for binary in [Path(sys.executable).resolve(), *[p for p in selected if p.suffix == ".so"]]:
@@ -91,10 +91,16 @@ def pinned_profile(root, *, sources_url, defect=False):
             path = Path(name)
             if path.is_file() and not path.is_relative_to(base):
                 selected[path.resolve()] = name
-    files = [
-        {"source": str(path), "destination": target, "sha256": digest(path.read_bytes())}
-        for path, target in sorted(selected.items())
-    ]
+    files = []
+    closure = root / "fixture-interpreter-files"
+    closure.mkdir()
+    for index, (path, target) in enumerate(sorted(selected.items())):
+        if path.stat().st_mode & 0o022:
+            copied = closure / str(index)
+            copied.write_bytes(path.read_bytes())
+            copied.chmod(0o700 if path.stat().st_mode & 0o111 else 0o600)
+            path = copied
+        files.append({"source": str(path), "destination": target, "sha256": digest(path.read_bytes())})
     adapter = {
         "version": "input-consuming-fixture.v1",
         "models": ["claude-sonnet-5", "gpt-5.6-luna"],
