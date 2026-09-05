@@ -310,7 +310,11 @@ def test_factory_receipt_never_references_a4_private_ledger_or_a3_heldout_member
 
 def test_factory_receipt_bindings_hash_to_disk() -> None:
     for name, binding in REAL_FACTORY_RECEIPT["bindings"].items():
-        path = ROOT / binding["path"]
+        from learn_ukrainian_v4_runtime import resources
+        logical = binding["path"]
+        if logical.startswith("scripts/"):
+            logical = "provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"
+        path = resources.resource_root() / logical
         assert path.is_file(), name
         assert factory.sha256_file(path) == binding["sha256"], name
 

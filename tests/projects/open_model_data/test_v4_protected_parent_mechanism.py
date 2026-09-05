@@ -174,3 +174,49 @@ def test_real_parent_consumes_author_constraints_and_reviewer_row(
     pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect
 ):
     _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect)
+
+
+@pytest.mark.parametrize("failure", ["capture_limit", "execution_timeout"])
+def test_actual_parent_refuses_failed_child_without_artifact_or_observation(
+    pg_cluster, tmp_path, monkeypatch, built_wheel, prepared, failure
+):
+    from learn_ukrainian_v4_runtime import child_runtime
+    from learn_ukrainian_v4_runtime.operation_auth import OperationRefused
+    from test_v4_operation_lifecycle import claim
+
+    io = RuntimeResources(tmp_path, pg_cluster, monkeypatch)
+    try:
+        # Executable/profile bytes are the only child fixture seam. The parent
+        # still owns planning, Popen, bounded pipes, parsing and terminalization.
+        profile_path = child_runtime.profile_path()
+        profile = json.loads(profile_path.read_bytes())
+        executable = tmp_path / "fixture-cli"
+        action = (
+            "sys.stdout.write('x' * 2097152);sys.stdout.flush();raise SystemExit(0)"
+            if failure == "capture_limit" else "import time;time.sleep(10)"
+        )
+        executable.write_text(executable.read_text().replace("prompt=sys.stdin.read()", "prompt=sys.stdin.read()\n" + action))
+        for adapter in profile["adapters"].values():
+            for entry in adapter["files"]:
+                if entry["source"] == str(executable):
+                    entry["sha256"] = digest(executable.read_bytes())
+        profile_path.write_text(json.dumps(profile))
+        with role_connection(pg_cluster, "hramatka_v4_control_writer") as conn:
+            owned = claim(conn, prepared)
+            if failure == "execution_timeout":
+                # Shorten the actual canonical lease, with no clock replacement.
+                with conn.transaction():
+                    deadline = conn.execute("SELECT clock_timestamp()+interval '2 seconds' AS value").fetchone()["value"]
+                    conn.execute("UPDATE v4_operation_authorizations SET deadline_at=%s WHERE request_id=%s", (deadline, owned["request_id"]))
+                    conn.execute("UPDATE v4_execution_attempts SET deadline_at=%s WHERE attempt_id=%s", (deadline, owned["attempt_id"]))
+                    conn.execute("UPDATE requests SET expires_at=%s WHERE request_id=%s", (str(deadline), owned["request_id"]))
+                owned["deadline_at"] = deadline
+            before = conn.execute("SELECT count(*) AS n FROM fleet_comms_artifact_blobs").fetchone()["n"]
+            runtime = service_runtime.V4ServiceRuntime(store=OperationStore(conn), verifier=None, release_provider=WheelRelease(built_wheel))
+            with pytest.raises(OperationRefused, match=failure):
+                runtime._execute_owned_claim(owned)
+            assert conn.execute("SELECT state FROM requests WHERE request_id=%s", (owned["request_id"],)).fetchone()["state"] == "failed"
+            assert conn.execute("SELECT count(*) AS n FROM fleet_comms_artifact_blobs").fetchone()["n"] == before
+            assert conn.execute("SELECT count(*) AS n FROM v4_execution_observations WHERE request_id=%s", (owned["request_id"],)).fetchone()["n"] == 0
+    finally:
+        io.close()

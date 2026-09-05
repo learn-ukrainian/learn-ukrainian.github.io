@@ -691,3 +691,24 @@ def test_a3_production_entrypoints_accept_no_signing_key_argument() -> None:
     assert "signer_key_id" not in inspect.signature(reference_check.sign_reference_check_receipt).parameters
     assert "signing_key_hex" not in inspect.signature(reference_check.issue_replay_attestation).parameters
     assert "signer_key_id" not in inspect.signature(reference_check.issue_replay_attestation).parameters
+
+
+@pytest.mark.parametrize("mutation", [
+    {"status": "running"}, {"return_code": 1}, {"completion_state": "failed"},
+    {"terminal_event_observed": False}, {"attempt_id": "foreign-attempt"},
+])
+def test_sources_issuer_refuses_corrupted_actual_author_join_before_key_access(tmp_path, monkeypatch, mutation):
+    import json
+
+    binding, original = _recorded_author_record(tmp_path, monkeypatch)
+    invocation = _OWNED_PG.execute(
+        "SELECT invocation_id FROM v4_sources_invocations WHERE attempt_id=%s", (original["attempt_id"],)
+    ).fetchone()
+    assert invocation is not None
+    assert _OWNED_PG.execute(
+        "UPDATE v4_execution_observations SET record_json=%s WHERE task_id=%s AND run_id=%s",
+        (json.dumps({**original, **mutation}), binding["task_id"], binding["run_id"]),
+    ).rowcount == 1
+    _patch_sources(monkeypatch, tmp_path, key_loader=lambda role: (_ for _ in ()).throw(AssertionError("no key access for corrupted join")))
+    with pytest.raises(sources_authority.SourcesAuthorityError, match="no terminal author execution"):
+        sources_authority.issue_verifier_attestation(invocation_id=invocation["invocation_id"])
