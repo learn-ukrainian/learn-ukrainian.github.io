@@ -42,6 +42,8 @@ def collect_assets(destination: Path) -> None:
         target = destination / path
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(raw)
+    # Preserve the historical generated v1 bytes. The reviewed v2 profile is
+    # copied exclusively through the digest allowlist above, never generated.
     profile = destination / "data/projects/open_model_data/trust/v4_child_profile_v1.json"
     profile.write_bytes(
         canonical(

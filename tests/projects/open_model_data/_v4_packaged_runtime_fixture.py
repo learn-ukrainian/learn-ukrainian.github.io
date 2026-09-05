@@ -217,6 +217,7 @@ class RuntimeResources:
         self.url = f"http://{socket.gethostbyname('localhost')}:{listener.getsockname()[1]}/mcp"
         path = pinned_profile(root, sources_url=self.url, defect=defect)
         monkeypatch.setattr(child_runtime, "profile_path", lambda: path)
+        monkeypatch.setattr(child_runtime, "PRODUCTION_CHILD_PROFILE_SHA256", digest(path.read_bytes()))
 
     def close(self):
         self.server.should_exit = True

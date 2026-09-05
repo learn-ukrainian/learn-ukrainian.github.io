@@ -6,20 +6,51 @@ compatibility adapters and require the package to be installed.
 
 The default public receipts remain **0 completed / 100 residual / 0 emitted**,
 with A13 open. Execution and admission default OFF. The package contains no
-production keys, private membership, packets, corpus, or qualified provider
-profile.
+private signing keys, private membership, packets, or corpus. Its reviewed
+native profile does not establish actual-unit/provider qualification.
 
 The service fixes native reasoning effort by role: original-row authors use
 medium, and independent row reviewers use high. Both native CLI invocations
 receive explicit effort arguments; requests cannot select another effort.
+
+## Active public release prerequisite
+
+The fixed production loaders select `v4_trust_policy_v2.json` and
+`v4_child_profile_v2.json`. Both are checked-in, digest-allowlisted build inputs
+and hashed by the release manifest; each loader independently refuses raw-byte
+drift. The active policy allowlist contains only v2. The original empty v1
+policy, generated empty v1 profile, A3 receipts and provenance remain exact
+historical resources. Current positive bodies bind the canonical v2 policy
+digest; historical empty receipts acquire no retroactive attribution.
+
+The public policy contains the three operator-staged Ed25519 public keys only.
+Its raw SHA-256 is
+`847f14c4ef30ed1755612eef0614bcf606de2967b1ae6ac5c0ede2ade2b4ce72`.
+Private key custody, rotation and revocation remain operator-owned.
+
+The native profile pins Codex 0.153.4 to `gpt-6-astra` and Claude 2.1.258 to
+`claude-fable-5-1`, with author medium/reviewer high effort. Binary source paths
+are the immutable regular copies at `/opt/hramatka/current/v4-native/codex`
+and `/opt/hramatka/current/v4-native/claude`. The private installer must supply
+root-owned copies without write permission; the observed mutable installation
+paths are never mounted. bwrap and each resolved library, resolver file and TLS
+bundle are individually hash-pinned. Resolver/TLS updates require a reviewed
+profile revision. Sources uses `http://localhost:8766/mcp`; a source-free
+resolver probe resolved that hostname without credentials or a provider call.
+
+Publishing this prerequisite does not install those copies, load credentials,
+qualify the protected unit, or change either OFF switch. A0 and the private
+qualification worker own those remaining steps and vendor binding. Readiness
+still requires exact release/policy/profile-bound actual-unit evidence.
 
 ## Native provider credentials
 
 The parent reads only its harness-selected `v4-provider-claude` or
 `v4-provider-codex` systemd credential, after checking the fixed reviewed child
 profile. Requests cannot supply credentials, paths, modes, models or effort.
-No adapter is qualified in the shipped profile; these interfaces do not enable
-execution or admission and do not qualify an installed native CLI.
+The shipped v2 profile selects subscription mode for both native adapters;
+these interfaces do not enable execution or admission and do not qualify an
+installed native CLI.
 
 Adapters may explicitly set `credential_mode` to `api_key` or `subscription`.
 The existing profile shape without that field means legacy API-key transport

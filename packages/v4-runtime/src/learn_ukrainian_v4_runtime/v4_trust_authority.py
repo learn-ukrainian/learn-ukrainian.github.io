@@ -19,10 +19,10 @@ A7 (and every other caller in this project) never holds a private signing
 key. It only ever *verifies* a signature against a public key pinned in a
 checked-in, text-free trust-policy artifact (``TrustPolicy`` below) --
 counts/ids/hex-encoded public keys only, never a private key, never source
-text, never held-out membership. Mechanism-only production ships with an
-*empty* trust policy (no active key in any of the three keyrings): every
-production-capable receipt therefore refuses closed until a future real-row
-PR provisions real public keys here. The corresponding private signing keys
+text, never held-out membership. The current versioned release selects the
+reviewed v2 public keys. Frozen v1 remains historical data, outside the active
+allowlist. Active public keys alone do not enable execution, qualify a unit,
+or establish a completed row. The corresponding private signing keys
 never enter git, prompts, CLI arguments, or logs -- they remain on Hramatka
 under hardened custody, held by whichever process actually plays the
 sources/A3/fleet-execution role.
@@ -61,7 +61,7 @@ SIGNATURE_HEX_RE = re.compile(r"^[a-f0-9]{128}$")
 KEYRING_ENTRY_KEYS = frozenset({"public_key_hex", "revoked"})
 
 _SELF_ROOT = resource_root()
-DEFAULT_TRUST_POLICY_RELATIVE = "data/projects/open_model_data/trust/v4_trust_policy_v1.json"
+DEFAULT_TRUST_POLICY_RELATIVE = "data/projects/open_model_data/trust/v4_trust_policy_v2.json"
 DEFAULT_TRUST_POLICY_PATH = _SELF_ROOT / DEFAULT_TRUST_POLICY_RELATIVE
 
 
@@ -174,9 +174,8 @@ def verify(public_key_hex: str, domain: bytes, payload: dict[str, Any], signatur
 
 
 def empty_trust_policy() -> dict[str, Any]:
-    """The mechanism-only production default: every keyring empty, so every
-    production-capable receipt refuses closed until real public keys are
-    provisioned by a future real-row PR."""
+    """Historical mechanism-only policy and explicit non-production fallback.
+    The fixed production loader never falls back to this empty policy."""
     return {"schema_version": SCHEMA_VERSION, "keyrings": {role: {} for role in KEYRING_ROLES}}
 
 
@@ -231,7 +230,7 @@ def load_trust_policy(path: Path | None = DEFAULT_TRUST_POLICY_PATH) -> dict[str
 
 # --- production trust-policy digest pinning (PR #7662 repair 6, Sol F2) ---
 #
-# The checked-in mechanism-only policy's exact raw-byte sha256 -- pinned so
+# The current reviewed policy's exact raw-byte sha256 -- pinned so
 # that even a purely cosmetic one-byte drift (a stray space, a reordered
 # key that happens to still parse) in the checked-in file refuses to load
 # as "production" until a code-reviewed PR adds its new byte digest here.
@@ -250,7 +249,7 @@ def load_trust_policy(path: Path | None = DEFAULT_TRUST_POLICY_PATH) -> dict[str
 # below is what makes that signature untrusted downstream).
 PRODUCTION_TRUST_POLICY_FILE_DIGEST_ALLOWLIST: frozenset[str] = frozenset(
     {
-        "81ce6f7bfb68ed1c51f8633cb1ec0bc19eecc9c47b5bdaff9a20a9a9ea6d64ba",  # v1, empty mechanism-only policy
+        "847f14c4ef30ed1755612eef0614bcf606de2967b1ae6ac5c0ede2ade2b4ce72",  # v2, reviewed public keys
     }
 )
 

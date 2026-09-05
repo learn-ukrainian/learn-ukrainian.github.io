@@ -38,6 +38,8 @@
   "data/projects/open_model_data/contracts/dataset_v4_source_byte_ingestion_admission_receipt_v1.schema.json": "9d6ec18bdd32fb10c95cab9c5a7cc3e85b188064060d0011746f68e8a5bb5d5d",
   "data/projects/open_model_data/evidence/correction_protection_near_duplicate_policy_v1.json": "fa30e82d7a5f90b7bf4b58d3aef6106b255dda270e81459a91ba011489fdb4b4",
   "data/projects/open_model_data/evidence/phase3_scope_circularity_firewall_v1.json": "4470448c6d0f665196375cf28255d7c092148700a99934b2d0dd1f43a8a3e24c",
+  "data/projects/open_model_data/trust/v4_child_profile_v2.json": "3f5e9ccf4d97860dbf5bcbca54f6fee7796873d8aed59060a4bea0860813b25f",
   "data/projects/open_model_data/trust/v4_review_rubric_v1.txt": "15b09ef4544086c7e2ad1a9c7218500dccf6a53f36b95cb6f6766bed2abae322",
-  "data/projects/open_model_data/trust/v4_trust_policy_v1.json": "81ce6f7bfb68ed1c51f8633cb1ec0bc19eecc9c47b5bdaff9a20a9a9ea6d64ba"
+  "data/projects/open_model_data/trust/v4_trust_policy_v1.json": "81ce6f7bfb68ed1c51f8633cb1ec0bc19eecc9c47b5bdaff9a20a9a9ea6d64ba",
+  "data/projects/open_model_data/trust/v4_trust_policy_v2.json": "847f14c4ef30ed1755612eef0614bcf606de2967b1ae6ac5c0ede2ade2b4ce72"
 }
