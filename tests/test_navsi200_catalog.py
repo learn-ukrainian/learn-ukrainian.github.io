@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 import sys
 from pathlib import Path
+from urllib.parse import urlparse
 
 import pytest
 
@@ -82,8 +83,10 @@ class TestNavsi200Catalog:
 
             # URL checks
             url = lesson.get("url")
-            assert isinstance(url, str) and url.startswith("https://")
-            assert "navsi200.com" in url or "youtube.com" in url
+            assert isinstance(url, str)
+            parsed_url = urlparse(url)
+            assert parsed_url.scheme == "https"
+            assert parsed_url.netloc in {"navsi200.com", "www.navsi200.com", "youtube.com", "www.youtube.com"}
 
             yt_url = lesson.get("youtube_url")
             assert isinstance(yt_url, str) and yt_url.startswith("https://www.youtube.com/watch?v=")
