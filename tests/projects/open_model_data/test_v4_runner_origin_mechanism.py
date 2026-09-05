@@ -11,17 +11,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-import shutil
-import sqlite3
-import stat
-import subprocess
-import tempfile
-import threading
-import time
-from collections.abc import Iterator
-from contextlib import contextmanager
 from pathlib import Path
-from typing import Any
 
 import _v4_a7_real_slot_fixture as fx
 import _v4_synthetic_chain_fixture as base_fixture
@@ -35,7 +25,6 @@ from scripts.projects.open_model_data import v4_a7_evidence_binder as evidence_b
 from scripts.projects.open_model_data import v4_a7_original_row_factory as a7
 from scripts.projects.open_model_data import v4_a7_private_ledger as ledger
 from scripts.projects.open_model_data import v4_a8_admission_assembly as a8
-from scripts.projects.open_model_data import v4_fleet_execution_authority as fleet_execution
 from scripts.projects.open_model_data import v4_sources_authority as sources_authority
 from scripts.projects.open_model_data import v4_trust_authority as trust
 
@@ -44,7 +33,6 @@ FIXTURE_SESSION = "v4-runner-session-1"
 REVIEWER_MODEL = "gpt-5.6-luna"
 REVIEWER_SESSION = "11111111-1111-1111-1111-111111111111"
 ROW_TEXT = fx.ROW_TEXT
-PG_BIN = Path("/usr/lib/postgresql/18/bin")
 
 
 def _sha(data: bytes | str) -> str:
@@ -58,187 +46,7 @@ def isolated_plane(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     plane = tmp_path / "fleet-plane"
     monkeypatch.setenv("FLEET_COMMS_ROOT", str(plane))
     monkeypatch.setenv("FLEET_COMMS_ALLOW_LOCAL_SHADOW", "1")
-    monkeypatch.setattr(v4_store, "open_production_authority_store", lambda *, write=False: ArtifactStore(root=plane))
     return plane
-
-
-def _write_vesum_fixture(path: Path) -> Path:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(str(path))
-    conn.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)")
-    conn.execute("INSERT INTO forms VALUES ('книга', 'книга', 'noun', '')")
-    conn.commit()
-    conn.close()
-    return path
-
-
-def _write_claude_fixture(path: Path) -> Path:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
-        """#!/usr/bin/env python3
-import json, os, sys, urllib.request
-from pathlib import Path
-if "--version" in sys.argv:
-    print("2.1.200 (Claude Code)")
-    raise SystemExit(0)
-token = os.environ.get("V4_SOURCES_ATTEMPT_CAPABILITY", "")
-url = os.environ.get("V4_SOURCES_MCP_URL", "")
-args = sys.argv[1:]
-for i, arg in enumerate(args):
-    if arg == "--mcp-config" and i + 1 < len(args):
-        payload = json.loads(Path(args[i + 1]).read_text(encoding="utf-8"))
-        sources = (payload.get("mcpServers") or {}).get("sources") or {}
-        url = sources.get("url") or url
-        headers = sources.get("headers") or {}
-        auth = headers.get("Authorization") or ""
-        if auth.lower().startswith("bearer "):
-            token = auth[7:].strip() or token
-        break
-if token and url:
-    body = json.dumps({
-        "jsonrpc": "2.0",
-        "id": 1,
-        "method": "tools/call",
-        "params": {"name": "verify_word", "arguments": {"word": "книга"}},
-    }).encode("utf-8")
-    req = urllib.request.Request(url, data=body, method="POST", headers={
-        "Content-Type": "application/json",
-        "Accept": "application/json, text/event-stream",
-        "Authorization": "Bearer " + token,
-    })
-    with urllib.request.urlopen(req, timeout=10) as resp:
-        resp.read()
-prompt = " ".join(sys.argv)
-if "role=reviewer" in prompt:
-    text = "V4-REVIEW-VERDICT: PASS"
-    session = "v4-runner-session-reviewer"
-else:
-    row = json.dumps({"row_text": """
-        + json.dumps(ROW_TEXT)
-        + """}, ensure_ascii=False)
-    text = "V4-AUTHOR-ROW: " + row
-    session = "v4-runner-session-1"
-events = [
-    {"type": "system", "subtype": "init", "session_id": session, "model": "claude-sonnet-5"},
-    {"type": "assistant", "session_id": session, "message": {"model": "claude-sonnet-5", "content": [{"type": "text", "text": text}]}},
-    {"type": "result", "subtype": "success", "session_id": session, "is_error": False},
-]
-for event in events:
-    print(json.dumps(event, ensure_ascii=False), flush=True)
-raise SystemExit(0)
-"""
-    )
-    path.chmod(path.stat().st_mode | stat.S_IEXEC)
-    return path
-
-
-def _write_codex_fixture(path: Path) -> Path:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
-        """#!/usr/bin/env python3
-import json, sys
-from pathlib import Path
-if "--version" in sys.argv:
-    print("codex-cli 0.0.0-fixture")
-    raise SystemExit(0)
-args = sys.argv[1:]
-out = None
-for i, arg in enumerate(args):
-    if arg == "-o" and i + 1 < len(args):
-        out = args[i + 1]
-if out:
-    Path(out).write_text("V4-REVIEW-VERDICT: PASS\\n", encoding="utf-8")
-session = "11111111-1111-1111-1111-111111111111"
-print("session id: " + session, flush=True)
-events = [
-    {"type": "system", "subtype": "init", "session_id": session, "model": "gpt-5.6-luna"},
-    {"type": "assistant", "session_id": session, "message": {"model": "gpt-5.6-luna", "content": [{"type": "text", "text": "V4-REVIEW-VERDICT: PASS"}]}},
-    {"type": "result", "subtype": "success", "session_id": session, "is_error": False},
-]
-for event in events:
-    print(json.dumps(event), flush=True)
-raise SystemExit(0)
-"""
-    )
-    path.chmod(path.stat().st_mode | stat.S_IEXEC)
-    return path
-
-
-@contextmanager
-def _ephemeral_postgres(monkeypatch: pytest.MonkeyPatch) -> Iterator[str]:
-    """Owned UTF-8 PG18 cluster. Never a live production DSN."""
-    if not (PG_BIN / "initdb").is_file():
-        pytest.skip("PostgreSQL 18 binaries are not installed")
-    tmp = Path(tempfile.mkdtemp(prefix="v4-repair8-pg-", dir="/var/tmp"))
-    tmp.chmod(0o700)
-    sock = tmp / "socket"
-    sock.mkdir(mode=0o700)
-    port = 55481
-    started = False
-    try:
-        subprocess.run(
-            [str(PG_BIN / "initdb"), "-D", str(tmp / "db"), "--auth=trust", "--no-locale", "--encoding=UTF8"],
-            check=True,
-            capture_output=True,
-            timeout=60,
-        )
-        subprocess.run(
-            [str(PG_BIN / "pg_ctl"), "-D", str(tmp / "db"), "-l", str(tmp / "server.log"), "-o", f"-k {sock} -h '' -p {port}", "-w", "start"],
-            check=True,
-            capture_output=True,
-            timeout=60,
-        )
-        started = True
-        dsn = f"host={sock} port={port} dbname=postgres user=ops"
-        monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", dsn)
-        monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
-        yield dsn
-    finally:
-        if started:
-            subprocess.run(
-                [str(PG_BIN / "pg_ctl"), "-D", str(tmp / "db"), "-m", "fast", "-w", "stop"],
-                capture_output=True,
-                check=False,
-                timeout=30,
-            )
-        shutil.rmtree(tmp, ignore_errors=True)
-
-
-def _install_fixture_attesters(monkeypatch: pytest.MonkeyPatch, plane: Path) -> None:
-    monkeypatch.setattr(trust, "load_production_trust_policy", lambda: (fx.TRUST_POLICY, fx.TRUST_POLICY_SHA256))
-    monkeypatch.setattr(fleet_execution, "_load_signing_key", lambda role: (fx.FLEET_SIGNING_KEY_HEX, fx.FLEET_KEY_ID))
-    monkeypatch.setattr(sources_authority, "_load_signing_key", lambda role: (fx.SOURCES_SIGNING_KEY_HEX, fx.SOURCES_KEY_ID))
-    monkeypatch.setattr(fleet_execution, "_open_canonical_authority_store", lambda: ArtifactStore(root=plane))
-    monkeypatch.setattr(sources_authority, "_open_canonical_authority_store", lambda: ArtifactStore(root=plane))
-
-
-def _start_sources_http(monkeypatch: pytest.MonkeyPatch, vesum_db: Path) -> tuple[str, Any]:
-    import importlib.util
-    import sys
-
-    from scripts.verification import vesum as vesum_mod
-
-    monkeypatch.setattr(vesum_mod, "_resolve_vesum_db_path", lambda db_path=None: vesum_db)
-    vesum_mod._vesum_conn = None
-    vesum_mod._vesum_conn_path = None
-    server_path = Path(__file__).resolve().parents[3] / ".mcp" / "servers" / "sources" / "server.py"
-    spec = importlib.util.spec_from_file_location("sources_server_v4_origin", server_path)
-    srv = importlib.util.module_from_spec(spec)
-    sys.modules["sources_server_v4_origin"] = srv
-    spec.loader.exec_module(srv)
-    app = srv.create_http_app()
-    import uvicorn
-
-    config = uvicorn.Config(app, host="127.0.0.1", port=0, log_level="error")
-    server = uvicorn.Server(config)
-    thread = threading.Thread(target=server.run, daemon=True)
-    thread.start()
-    for _ in range(50):
-        if server.started:
-            break
-        time.sleep(0.05)
-    port = server.servers[0].sockets[0].getsockname()[1]
-    return f"http://127.0.0.1:{port}/mcp", server
 
 
 def test_execute_capture_does_not_write_v4_observations(isolated_plane: Path) -> None:
@@ -361,14 +169,14 @@ def test_caller_policy_is_not_an_admission_argument() -> None:
         ledger.construct_completion(trust_policy={"schema_version": "nope"})  # type: ignore[call-arg]
 
 
-def test_revoked_production_policy_invalidates_the_previous_chain(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_revoked_production_policy_invalidates_the_previous_chain(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     row_content_sha256 = _sha(ROW_TEXT)
     real = fx.build_author_execution_receipt(row_content_sha256)
     revoked = trust.build_test_trust_policy(
         fleet_execution={fx.FLEET_KEY_ID: fx.FLEET_PUBLIC_KEY_HEX},
         revoked_key_ids=frozenset({fx.FLEET_KEY_ID}),
     )
-    monkeypatch.setattr(trust, "load_production_trust_policy", lambda: (revoked, trust.trust_policy_sha256(revoked)))
+    fx.install_policy_resource(monkeypatch, tmp_path, revoked)
     with pytest.raises(ledger.PrivateLedgerError, match="authenticity"):
         ledger.build_authorship_receipt(author_execution_receipt=real, row_content_sha256=row_content_sha256)
 

@@ -1,15 +1,10 @@
-"""V4 native-runner execution origin (PR #7662 repair 8).
+"""Shared parsing and blindness rules for current V4 execution evidence.
 
-``RequestExecutor.execute_capture`` ingests caller captures and is not a V4
-execution authority. The only production origin is
-``scripts.agent_runtime.runner._execute_invocation_plan`` after the runner
-has resolved an opaque authorization, atomically claimed the exact binding,
-spawned the authorized plan, and derived facts from that process.
-
-This module owns the source-blind prompt profiles, the serializable
-authorize/claim protocol, and runner-owned observation derivation. Persistence
-stays on the Fleet Comms PostgreSQL plane via
-``v4_canonical_authority_store``.
+The protected packaged service owns process capture, parsing and persistence.
+It uses the fixed prompt-profile/digest rules here. Repository runner callers
+cannot finalize V4 observations from supplied captures. Remaining parse helpers
+support transport conformance and explicit synthetic unit tests, not an
+alternative production writer.
 """
 
 from __future__ import annotations

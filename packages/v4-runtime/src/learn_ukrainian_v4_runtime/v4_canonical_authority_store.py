@@ -1,33 +1,11 @@
-"""V4 canonical authority store (PR #7662 repair 8 -- designated-advisor
-GO_REPAIR after repair 7 failed exact-head review).
+"""Canonical V4 bindings, owned observations and Sources invocation records.
 
-The operator-approved architecture still holds: the live Fleet Comms
-PostgreSQL plane is the single canonical authority for text-free execution
-observations and Sources invocation records. Repair 8 moves the *writer*:
-``RequestExecutor.execute_capture`` is not a V4 execution origin. Only the
-native runner (``scripts.agent_runtime.runner._execute_invocation_plan``)
-may claim a binding and persist a terminal observation, from facts of the
-process it actually spawned.
-
-Tables:
-
-* ``v4_execution_dispatch_bindings`` -- role-specific pre-execution
-  authorization. Author bindings resolve a frozen slot and A3 packet and
-  record the service-built source-blind prompt digest; they never accept a
-  row hash. Reviewer bindings resolve an authorship receipt and the fixed
-  rubric internally.
-* ``v4_execution_attempts`` -- one attempt per claimed request. Created
-  atomically with ``queued -> running``. Stores only the capability digest.
-* ``v4_execution_observations`` -- runner-owned terminal facts for one
-  author/reviewer execution.
-* ``v4_sources_invocations`` -- typed Sources outcomes keyed by attempt,
-  not by a caller-declared request/row correlation.
-* ``v4_authorship_receipts`` -- service-resolved author receipts the
-  reviewer authorization looks up by opaque id.
-
-There is no public function that accepts a caller-built observation or
-Sources record. Production resolution still requires the approved
-PostgreSQL plane (``open_production_authority_store``).
+The protected packaged service parent owns current execution capture and
+terminalization. Production opaque issuers resolve that canonical FleetPG
+state through fixed scoped credentials. Sources has only the sanctioned
+EXECUTE operation; it cannot manufacture a parent observation or authorship.
+Repository RequestExecutor retains generic Fleet behavior and preparation
+compatibility; its former raw V4 finalizer is retired.
 """
 
 from __future__ import annotations
@@ -394,18 +372,12 @@ def _persist_execution_observation(
     request_id: str | None = None,
     commit: bool = True,
 ) -> None:
-    """Low-level, idempotent, conflict-refusing, race-safe persistence of one
-    execution observation.
+    """Persist the protected parent's validated observation in its transaction.
 
-    Private on purpose: the only production writer is the native runner
-    via ``RequestExecutor.finalize_v4_runner_execution``, which derives
-    every field from the process it actually spawned. Nothing public
-    accepts a caller-built observation. Tests call this directly to exercise
-    the negative issuer matrix against records they construct themselves --
-    that is testing internals against an isolated ``tmp_path`` plane, never
-    a production path (production reaches the canonical plane only through
-    ``open_production_authority_store``, which requires the deployed
-    PostgreSQL service credentials)."""
+    Production calls originate in service_runtime after ownership correlation
+    and actual child capture. The fixed control credential is required to write
+    canonical FleetPG; Sources cannot call this operation with its SQL role.
+    """
     validate_execution_observation(record)
     body_sha256 = _sha256_text(_canonical_json(record))
     ph = "%s" if is_pg else "?"

@@ -216,20 +216,7 @@ def _patch_fleet(monkeypatch: pytest.MonkeyPatch, *, tmp_path: Path | None = Non
     if key_loader is not None:
         monkeypatch.setattr(fleet_execution, "_load_signing_key", key_loader)
     if trust_policy is not None:
-        monkeypatch.setattr(trust, "load_production_trust_policy", lambda: trust_policy)
-
-
-def _seed_observation(tmp_path: Path, record: dict[str, Any]) -> None:
-    """Write a record straight through the private persistence primitive.
-
-    Used only to reach issuer branches an honest execution boundary can
-    never produce (a canonical row that is somehow non-terminal). Production
-    has no path here: the primitive is private, and the canonical plane is
-    reachable only with the deployed PostgreSQL service credentials.
-    """
-    with ArtifactStore(root=tmp_path) as store:
-        with store._transaction() as conn:
-            v4_store._persist_execution_observation(record, conn=conn, is_pg=store.authority.value == "pg", commit=False)
+        fx.install_policy_resource(monkeypatch, tmp_path, trust_policy[0])
 
 
 def _recorded_author_record(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -300,13 +287,19 @@ def test_issue_author_execution_receipt_refuses_a_cross_run_lookup(tmp_path: Pat
 @pytest.mark.parametrize("mutation", [{"status": "running"}, {"return_code": 1}, {"completion_state": "failed"}, {"terminal_event_observed": False}])
 def test_issue_author_execution_receipt_refuses_a_nonterminal_canonical_record(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: dict[str, Any]) -> None:
     _binding, base = _recorded_author_record(tmp_path, monkeypatch)
-    bad = {**base, **mutation, "task_id": base["task_id"] + "-bad", "run_id": base["run_id"] + "-bad"}
-    _seed_observation(tmp_path, bad)
-    priv, pub = trust.generate_test_keypair()
-    policy = trust.build_test_trust_policy(fleet_execution={"k1": pub})
-    _patch_fleet(monkeypatch, tmp_path=tmp_path, key_loader=lambda role: (priv, "k1"), trust_policy=(policy, trust.trust_policy_sha256(policy)))
-    with pytest.raises((fleet_execution.FleetExecutionError, ValueError)):
+    # Adversarially corrupt an actual parent-produced record in this owned PG
+    # cluster. Keep its task/run/attempt, so rejection must inspect the record.
+    import json
+    bad = {**base, **mutation}
+    changed = _OWNED_PG.execute(
+        "UPDATE v4_execution_observations SET record_json=%s WHERE task_id=%s AND run_id=%s",
+        (json.dumps(bad), base["task_id"], base["run_id"]),
+    ).rowcount
+    assert changed == 1
+    _patch_fleet(monkeypatch, tmp_path=tmp_path, key_loader=lambda role: (_ for _ in ()).throw(AssertionError("no key access for nonterminal evidence")))
+    with pytest.raises(fleet_execution.FleetExecutionError, match=r"terminal|complete|return"):
         fleet_execution.issue_author_execution_receipt(task_id=bad["task_id"], run_id=bad["run_id"])
+
 
 
 # --- canonical store: idempotency / conflict / rollback ---------------------
@@ -513,7 +506,7 @@ def _patch_sources(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, *, key_loade
     if key_loader is not None:
         monkeypatch.setattr(sources_authority, "_load_signing_key", key_loader)
     if trust_policy is not None:
-        monkeypatch.setattr(trust, "load_production_trust_policy", lambda: trust_policy)
+        fx.install_policy_resource(monkeypatch, tmp_path, trust_policy[0])
 
 
 def test_issue_verifier_attestation_refuses_an_unknown_invocation_before_key_access(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -581,14 +574,12 @@ def test_load_production_signing_key_succeeds_once_provisioned(tmp_path: Path, m
 
 
 def test_load_production_trust_policy_returns_the_checked_in_empty_policy(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(trust, "load_production_trust_policy", _REAL_LOAD_PRODUCTION_TRUST_POLICY)
     policy, digest = trust.load_production_trust_policy()
     assert policy == trust.empty_trust_policy()
     assert digest == trust.trust_policy_sha256(policy)
 
 
 def test_load_production_trust_policy_refuses_a_one_byte_drift(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(trust, "load_production_trust_policy", _REAL_LOAD_PRODUCTION_TRUST_POLICY)
     drifted = trust.DEFAULT_TRUST_POLICY_PATH.read_bytes() + b" "  # one extra byte, still valid JSON whitespace
     drifted_path = tmp_path / "drifted.json"
     drifted_path.write_bytes(drifted)
@@ -598,7 +589,6 @@ def test_load_production_trust_policy_refuses_a_one_byte_drift(tmp_path: Path, m
 
 
 def test_load_production_trust_policy_refuses_a_revoked_digest(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(trust, "load_production_trust_policy", _REAL_LOAD_PRODUCTION_TRUST_POLICY)
     monkeypatch.setattr(trust, "PRODUCTION_TRUST_POLICY_FILE_DIGEST_ALLOWLIST", frozenset())
     with pytest.raises(trust.TrustAuthorityError, match="not in the code-reviewed active allowlist"):
         trust.load_production_trust_policy()

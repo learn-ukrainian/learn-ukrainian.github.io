@@ -504,10 +504,10 @@ def test_build_verifier_receipt_refuses_an_unknown_signer_key() -> None:
         evidence_binder.build_verifier_receipt(attestation=attestation)
 
 
-def test_build_verifier_receipt_refuses_a_revoked_signer_key(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_build_verifier_receipt_refuses_a_revoked_signer_key(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     revoked_policy = trust.build_test_trust_policy(sources={fx.SOURCES_KEY_ID: fx.SOURCES_PUBLIC_KEY_HEX}, revoked_key_ids=frozenset({fx.SOURCES_KEY_ID}))
     revoked_digest = trust.trust_policy_sha256(revoked_policy)
-    monkeypatch.setattr(trust, "load_production_trust_policy", lambda: (revoked_policy, revoked_digest))
+    fx.install_policy_resource(monkeypatch, tmp_path, revoked_policy)
     attestation = sources_authority._issue_verifier_attestation_from_evidence(
         signing_key_hex=fx.SOURCES_SIGNING_KEY_HEX,
         signer_key_id=fx.SOURCES_KEY_ID,
@@ -526,12 +526,12 @@ def test_build_verifier_receipt_refuses_a_revoked_signer_key(monkeypatch: pytest
         evidence_binder.build_verifier_receipt(attestation=attestation)
 
 
-def test_build_verifier_receipt_refuses_against_an_empty_production_trust_policy(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_build_verifier_receipt_refuses_against_an_empty_production_trust_policy(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """Mechanism-only production: an empty trust policy (no active
     ``sources`` key yet) refuses every production-capable receipt."""
     empty = trust.empty_trust_policy()
     empty_digest = trust.trust_policy_sha256(empty)
-    monkeypatch.setattr(trust, "load_production_trust_policy", lambda: (empty, empty_digest))
+    fx.install_policy_resource(monkeypatch, tmp_path, empty)
     attestation = sources_authority._issue_verifier_attestation_from_evidence(
         signing_key_hex=fx.SOURCES_SIGNING_KEY_HEX,
         signer_key_id=fx.SOURCES_KEY_ID,
@@ -892,11 +892,11 @@ def test_build_authorship_receipt_refuses_an_unknown_signer_key() -> None:
         ledger.build_authorship_receipt(author_execution_receipt=forged, row_content_sha256=row_content_sha256)
 
 
-def test_build_authorship_receipt_refuses_a_revoked_signer_key(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_build_authorship_receipt_refuses_a_revoked_signer_key(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     row_content_sha256 = "a" * 64
     real = fx.build_author_execution_receipt(row_content_sha256)
     revoked_policy = trust.build_test_trust_policy(fleet_execution={fx.FLEET_KEY_ID: fx.FLEET_PUBLIC_KEY_HEX}, revoked_key_ids=frozenset({fx.FLEET_KEY_ID}))
-    monkeypatch.setattr(trust, "load_production_trust_policy", lambda: (revoked_policy, trust.trust_policy_sha256(revoked_policy)))
+    fx.install_policy_resource(monkeypatch, tmp_path, revoked_policy)
     with pytest.raises(ledger.PrivateLedgerError, match="authenticity"):
         ledger.build_authorship_receipt(author_execution_receipt=real, row_content_sha256=row_content_sha256)
 

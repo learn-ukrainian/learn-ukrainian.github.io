@@ -25,7 +25,6 @@ Tools:
 """
 
 import asyncio
-import contextvars
 import hashlib
 import json
 import re
@@ -1332,9 +1331,12 @@ async def handle_verify_source_attribution(args: dict) -> list[TextContent]:
 
 from learn_ukrainian_v4_runtime.sources_transport import (
     ACTIVE_ATTEMPT as _V4_ACTIVE_ATTEMPT,
+)
+from learn_ukrainian_v4_runtime.sources_transport import (
     AttemptAuthMiddleware as _V4AttemptAuthMiddleware,
+)
+from learn_ukrainian_v4_runtime.sources_transport import (
     record_typed_invocation as _record_v4_typed_invocation,
-    resolve_attempt as _resolve_v4_attempt_from_bearer,
 )
 
 
@@ -1745,6 +1747,7 @@ def _is_archaic(tags):
 
 
 from learn_ukrainian_v4_runtime import sources_handlers as v4_handlers
+
 
 class _V4VerificationResources:
     def source_version(self):

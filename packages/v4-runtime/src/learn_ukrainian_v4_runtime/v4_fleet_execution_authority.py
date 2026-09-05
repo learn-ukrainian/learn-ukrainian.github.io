@@ -1,71 +1,17 @@
 #!/usr/bin/env python3
-"""V4 fleet execution attester: the sole authority permitted to sign an
-author/reviewer execution receipt admissible to A7's private ledger (PR
-#7662 repair 4, blocking repair E -- designated-advisor ``GO_REPAIR``;
-PR #7662 repair 5 -- accountable-review blocker: the signer must actually be
-an execution *attester*, not a passthrough signer of caller-asserted
-identity).
+"""Opaque author/reviewer attestation from canonical protected-parent execution.
 
-Before repair 4, ``v4_a7_private_ledger.build_authorship_receipt``/
-``build_review_receipt`` accepted raw caller-supplied identity dictionaries
-(model family, session id, ``saw_*`` attestations, verdict) and only ever
-self-hashed them -- a consistently fabricated distinct-family ``PASS`` pair
-survived every check, including replay. Repair 4 introduced this module as
-the distinct signing authority, but its issuing functions still accepted
-``model_family``/``exact_model``/``harness``/``task_id``/``run_nonce`` as
-plain caller-supplied keyword arguments -- a holder/caller at the signing
-boundary could still sign a fabricated terminal execution and an invented
-distinct family. Repair 5 closes that gap: the public issuing API now
-consumes a trusted execution *observation* -- an authoritative
-``TaskExecutionState`` (task-tracking evidence: task id, run nonce, terminal
-status, return code, the exact runtime-resolved model/seat, and a canonical
-harness) plus a typed ``ResponseEnvelope`` (see
-``scripts.fleet_comms.contracts``, the shared transport-neutral completion
-contract: ``CompletionState.COMPLETE``, an observed terminal event, a
-successful process return code, and the raw-capture digest of what the
-model actually produced) -- validates that the two agree with each other and
-with the role-specific structured observation, and only then *derives*
-model family (via the canonical cross-family resolver,
-``scripts.review.reviewer_resolver.resolve_author_family`` -- never a second
-family table) and harness (against the same canonical known-harness
-allowlist ``scripts.orchestration.thread_handoff.KNOWN_HARNESS_EXECUTABLES``
-uses to recognize a durable agent-driver process -- never a free string) from
-that authoritative evidence. There is no keyword path left that lets a
-caller assert its own family, harness, session, or terminal-success claim.
+Production issuers accept task/run identifiers only. They resolve the actual
+FleetPG observation, require terminal success, observed model/session/harness,
+current execution identity and the fixed active policy, then load the signing
+key from the protected service credential resource. The package shares family
+resolution and transport contracts with the repository compatibility adapters.
 
-``issue_author_execution_receipt``/``issue_reviewer_execution_receipt`` are
-called only by the attester itself (production custody: Hramatka, outside
-git/prompts/CLI arguments/logs; every test here uses an ephemeral key
-generated fresh under ``tmp_path`` plus synthetic terminal task-state/
-envelope evidence built explicitly under ``tmp_path`` -- there is no
-production bypass flag). A7's private ledger only ever calls
-``verify_author_execution_receipt``/``verify_reviewer_execution_receipt``,
-against the pinned ``fleet_execution`` keyring in the trust policy -- it can
-verify a receipt already issued here, never mint one itself.
-
-The resulting receipts carry hashes, ids, and booleans only -- no row text,
-source text, membership, or corpus text ever passes through this module.
-Every signed body -- issued or verified -- is checked against its exact
-allowed key set (``AUTHOR_RECEIPT_KEYS``/``REVIEWER_RECEIPT_KEYS``): a
-signature can never smuggle an unexpected extra field into an artifact
-documented as text-free, even one whose signature was correctly recomputed
-over the tampered body.
-
-Repair 6 (PR #7662, operator-approved architecture -- see ``batch_state/
-briefs/v4-real-slot-mechanism-repair-6-approval.md``): the production
-entrypoints (``issue_author_execution_receipt``/``issue_reviewer_execution_
-receipt``) now accept opaque ``task_id``/``run_id`` only. They resolve the
-trusted ``TaskExecutionState``/``ResponseEnvelope``/observation from the
-canonical Fleet Comms authority store (``scripts.fleet_comms.v4_canonical_
-authority_store``, written only by the real execution service boundary --
-never a caller-created object), load the signing key from fixed, root-owned
-Hramatka custody (``v4_trust_authority.load_production_signing_key``), and
-bind the pinned production trust-policy digest (``v4_trust_authority.load_
-production_trust_policy``) into every signed body as ``trust_policy_
-sha256``. The prior full-keyword signing engine is retained, unchanged,
-as the private ``_issue_author_receipt_from_evidence``/``_issue_reviewer_
-receipt_from_evidence`` -- production never calls it directly; only these
-two opaque-ID wrappers and this module's own tests do.
+Low-level evidence structures remain useful for explicit synthetic unit tests.
+They are not an alternative production authority or proof of native execution.
+The separate private authentication/vendor adapter and actual-unit qualification
+are deployment integration requirements, not capabilities asserted by these
+source-free tests.
 """
 
 from __future__ import annotations
@@ -699,6 +645,7 @@ def issue_author_execution_receipt(*, task_id: str, run_id: str) -> dict[str, An
         raise FleetExecutionError(str(exc)) from exc
     _, resolved_trust_policy_sha256 = trust.load_production_trust_policy()
     require(record.get("trust_policy_sha256") == resolved_trust_policy_sha256, "execution policy is not active -- refusing before key access")
+    _require_terminal_execution(_task_state_from_record(record), _envelope_from_record(record))
     signing_key_hex, signer_key_id = _load_signing_key("fleet_execution")
     return _issue_author_receipt_from_evidence(
         signing_key_hex=signing_key_hex,
@@ -731,6 +678,7 @@ def issue_reviewer_execution_receipt(*, task_id: str, run_id: str) -> dict[str, 
         raise FleetExecutionError(str(exc)) from exc
     _, resolved_trust_policy_sha256 = trust.load_production_trust_policy()
     require(record.get("trust_policy_sha256") == resolved_trust_policy_sha256, "execution policy is not active -- refusing before key access")
+    _require_terminal_execution(_task_state_from_record(record), _envelope_from_record(record))
     signing_key_hex, signer_key_id = _load_signing_key("fleet_execution")
     return _issue_reviewer_receipt_from_evidence(
         signing_key_hex=signing_key_hex,

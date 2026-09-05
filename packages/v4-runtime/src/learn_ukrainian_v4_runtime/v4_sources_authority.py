@@ -205,7 +205,16 @@ def _resolve_terminal_observation_for_invocation(record: dict[str, Any]) -> dict
     finally:
         with contextlib.suppress(Exception):
             store.close()
-    if observation is None or observation.get("role") != "author":
+    if (
+        observation is None
+        or observation.get("role") != "author"
+        or observation.get("attempt_id") != attempt_id
+        or observation.get("status") != "done"
+        or observation.get("return_code") != 0
+        or observation.get("completion_state") != "complete"
+        or observation.get("terminal_event_observed") is not True
+        or observation.get("process_returncode") != 0
+    ):
         return None
     return observation
 

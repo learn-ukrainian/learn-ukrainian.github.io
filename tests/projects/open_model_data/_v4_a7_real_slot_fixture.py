@@ -157,6 +157,17 @@ TRUST_POLICY = trust.build_test_trust_policy(
 TRUST_POLICY_SHA256 = trust.trust_policy_sha256(TRUST_POLICY)
 
 
+def install_policy_resource(monkeypatch, tmp_path, policy):
+    """Change owned trust bytes while retaining the fixed production loader."""
+    import hashlib
+
+    path = tmp_path / "active-policy.json"
+    raw = json.dumps(policy, sort_keys=True).encode()
+    path.write_bytes(raw)
+    monkeypatch.setattr(trust, "DEFAULT_TRUST_POLICY_PATH", path)
+    monkeypatch.setattr(trust, "PRODUCTION_TRUST_POLICY_FILE_DIGEST_ALLOWLIST", frozenset({hashlib.sha256(raw).hexdigest()}))
+
+
 @contextmanager
 def installed_fixture_policy():
     """Owned policy bytes and test enablement; use the real fixed loader."""
