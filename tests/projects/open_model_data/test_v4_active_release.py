@@ -7,6 +7,7 @@ import json
 import os
 import subprocess
 import sys
+from pathlib import Path
 
 import pytest
 from learn_ukrainian_v4_runtime import child_runtime as child
@@ -90,8 +91,16 @@ def test_active_policy_never_creates_completion_or_enables_switches(monkeypatch)
 
 
 def test_reviewed_profile_without_actual_qualification_refuses(tmp_path, monkeypatch):
-    # Real package/profile/policy verification. Replace only the credential
-    # locator with an absent isolated path; never read production credentials.
+    # Real package/profile/policy verification, with a local bwrap metadata
+    # surrogate so CI need not run the production bwrap build. This never
+    # qualifies the production binary or reads production credentials.
+    profile = child.load_profile()
+
+    def local_bwrap(path, expected):
+        assert (path, expected) == (profile["bwrap"], profile["bwrap_sha256"])
+        return child._verified_file(path, digest(Path(path).read_bytes()))
+
+    monkeypatch.setattr(readiness, "_verified_file", local_bwrap)
     monkeypatch.setattr(readiness, "qualification_path", lambda: tmp_path / "absent-qualification.json")
     with pytest.raises(OperationRefused, match="readiness_unproved") as error:
         readiness.require_readiness()
