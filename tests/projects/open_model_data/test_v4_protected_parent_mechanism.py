@@ -130,6 +130,9 @@ def test_real_parent_consumes_author_constraints_and_reviewer_row(
             authored = ledger.build_authorship_receipt(
                 author_execution_receipt=signed, row_content_sha256=record["row_content_sha256"]
             )
+            authority.persist_authorship_receipt(
+                authored, task_id=record["task_id"], run_id=record["run_id"], conn=conn, is_pg=True
+            )
             row = {"row_text": "fixture-one"}
             if not defect:
                 row["answer"] = "fixture-one"

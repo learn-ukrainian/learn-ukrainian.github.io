@@ -575,6 +575,22 @@ def persist_authorship_receipt(
         isinstance(receipt, dict) and isinstance(receipt.get("receipt_id"), str) and receipt["receipt_id"],
         "authorship receipt_id must be a nonempty string -- refusing",
     )
+    from learn_ukrainian_v4_runtime import v4_a7_private_ledger as ledger
+
+    observation = resolve_execution_observation(task_id=task_id, run_id=run_id, role="author", conn=conn, is_pg=is_pg)
+    _require(observation is not None, "authorship origin is unresolved -- refusing")
+    signed = receipt.get("execution_receipt", {})
+    _require(
+        signed.get("task_id") == task_id and signed.get("run_nonce") == run_id
+        and signed.get("execution_result_sha256") == observation["raw_capture_sha256"],
+        "authorship origin does not match canonical capture -- refusing",
+    )
+    _require(
+        ledger.build_authorship_receipt(
+            author_execution_receipt=signed, row_content_sha256=observation["row_content_sha256"]
+        ) == receipt,
+        "authorship receipt does not match verified execution -- refusing",
+    )
     body_sha256 = _sha256_text(_canonical_json(receipt))
     ph = "%s" if is_pg else "?"
     params = (receipt["receipt_id"], task_id, run_id, body_sha256, _canonical_json(receipt), _utc_now())

@@ -171,7 +171,7 @@ class RuntimeResources:
         while not self.server.started and self.thread.is_alive() and time.monotonic() < deadline:
             time.sleep(0.01)
         assert self.server.started
-        self.url = f"http://localhost:{listener.getsockname()[1]}/mcp"
+        self.url = f"http://{socket.gethostbyname('localhost')}:{listener.getsockname()[1]}/mcp"
         path = pinned_profile(root, sources_url=self.url, defect=defect)
         monkeypatch.setattr(child_runtime, "profile_path", lambda: path)
 
