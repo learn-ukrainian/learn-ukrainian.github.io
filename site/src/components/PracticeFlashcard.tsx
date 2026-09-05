@@ -160,8 +160,8 @@ export default function PracticeFlashcard({
         </div>
       </div>
       {card.pronunciationLemma && (
-        <div className="flashcard-pronunciation">
-          {card.subtitle && <span>{card.subtitle} </span>}
+        <div className="flashcard-pronunciation" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+          {card.subtitle && <span className="flashcard-subtitle">{card.subtitle}</span>}
           <PronunciationPlayer lemma={card.pronunciationLemma} locale={chromeLocale} />
         </div>
       )}

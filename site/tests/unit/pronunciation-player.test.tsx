@@ -91,8 +91,10 @@ describe('pronunciation player', () => {
     render(<><Player lemma="автобус" /><Player lemma="аеропорт" /></>);
     await waitFor(() => expect(screen.getAllByRole('button')).toHaveLength(2));
     fireEvent.click(screen.getAllByRole('button')[0]);
+    instances[0].currentTime = 0.3;
     fireEvent.click(screen.getAllByRole('button')[1]);
     expect(instances[0].pause).toHaveBeenCalled();
+    expect(instances[0].currentTime).toBe(0);
     document.documentElement.dataset.chromeLocale = 'en';
     await screen.findByRole('button', { name: 'Stop pronunciation' });
   });

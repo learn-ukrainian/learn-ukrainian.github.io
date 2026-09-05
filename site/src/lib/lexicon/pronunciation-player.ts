@@ -59,8 +59,12 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
     event.stopPropagation();
     if (!audio) return;
     if (playing) { stop(); return; }
-    if (active && active !== audio) active.pause();
+    if (active && active !== audio) {
+      active.pause();
+      active.currentTime = 0;
+    }
     active = audio;
+    audio.currentTime = 0;
     hasError = false;
     playing = true;
     label();

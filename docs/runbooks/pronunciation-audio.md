@@ -38,6 +38,8 @@ runs use the local model. For an offline run after hydration/download:
 
 Run the ordinary site build after generation. The Pages workflow executes these
 steps before its build, so ignored audio is included in the deployed artifact.
+The Pages workflow caches the voice under its pinned revision; restored files
+still undergo checksum verification on every run.
 Local builds without generation offer no pronunciation buttons. No browser TTS,
 remote speech API, microphone access or autoplay is used.
 
