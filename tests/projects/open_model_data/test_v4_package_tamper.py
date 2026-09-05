@@ -42,6 +42,7 @@ def _historical_resources():
         "LICENSE-CONTENT.md",
         "data/projects/open_model_data/trust/v4_trust_policy_v1.json",
         "data/projects/open_model_data/trust/v4_review_rubric_v1.txt",
+        "data/projects/open_model_data/trust/v4_review_rubric_v2.txt",
     ],
 )
 def test_each_historical_blob_and_current_trust_input_tamper_refuses(target, monkeypatch):

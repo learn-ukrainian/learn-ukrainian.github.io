@@ -1,0 +1,90 @@
+{
+  "adapters": {
+    "claude": {
+      "credential_mode": "subscription",
+      "executable": "/runtime/claude",
+      "files": [
+        {
+          "destination": "/runtime/claude",
+          "sha256": "704f1334ac65d3e89e1c6c1d7663293ad786a6166afdb71b5075337df630f976",
+          "source": "/opt/hramatka/current/v4-native/claude"
+        },
+        {
+          "destination": "/lib/x86_64-linux-gnu/librt.so.1",
+          "sha256": "5df2508a1ef33bd8024d77271e2a4a2607cb63e59dd753dd46f8e7a2ed44962d",
+          "source": "/usr/lib/x86_64-linux-gnu/librt.so.1"
+        },
+        {
+          "destination": "/lib/x86_64-linux-gnu/libc.so.6",
+          "sha256": "a3947513a02831ec692ebf13053c07614882ab54a2101fb91a1b15724062ed0c",
+          "source": "/usr/lib/x86_64-linux-gnu/libc.so.6"
+        },
+        {
+          "destination": "/lib64/ld-linux-x86-64.so.2",
+          "sha256": "c5e80a563850d6ab5c2f2482e4202d9c1b71fbf44854b8c399e63527202c64e1",
+          "source": "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2"
+        },
+        {
+          "destination": "/lib/x86_64-linux-gnu/libpthread.so.0",
+          "sha256": "f93acb6e78dcf0213c8a85f922d21916249148e24de426079c40b6304c42085d",
+          "source": "/usr/lib/x86_64-linux-gnu/libpthread.so.0"
+        },
+        {
+          "destination": "/lib/x86_64-linux-gnu/libdl.so.2",
+          "sha256": "7d293f8361fcead4f9691561adc0413f724f3607b959abe0d4fb243072956079",
+          "source": "/usr/lib/x86_64-linux-gnu/libdl.so.2"
+        },
+        {
+          "destination": "/lib/x86_64-linux-gnu/libm.so.6",
+          "sha256": "beea4eeacfcfa2cd96011b959a826c97cf4a774017e214f6a34d7eea3d49cd88",
+          "source": "/usr/lib/x86_64-linux-gnu/libm.so.6"
+        },
+        {
+          "destination": "/etc/resolv.conf",
+          "sha256": "ebdf560272a77357195c39e98340b77e18c8a8ce2025ee950e9e0c7b01467ab8",
+          "source": "/run/systemd/resolve/stub-resolv.conf"
+        },
+        {
+          "destination": "/etc/ssl/certs/ca-certificates.crt",
+          "sha256": "80eedd808e4cbd6fd42e125da2ea225fd1365d8e29edef8bcc45ff8bc7044ce2",
+          "source": "/etc/ssl/certs/ca-certificates.crt"
+        }
+      ],
+      "models": [
+        "claude-fable-5-1"
+      ],
+      "provider_env": "CLAUDE_CODE_OAUTH_TOKEN",
+      "version": "2.1.258 (Claude Code)"
+    },
+    "codex": {
+      "credential_mode": "subscription",
+      "executable": "/runtime/codex",
+      "files": [
+        {
+          "destination": "/runtime/codex",
+          "sha256": "56ef98ab4032d317ab26e9b5e5a175650717351edb16ed9cde0cb6d1734d62da",
+          "source": "/opt/hramatka/current/v4-native/codex"
+        },
+        {
+          "destination": "/etc/resolv.conf",
+          "sha256": "ebdf560272a77357195c39e98340b77e18c8a8ce2025ee950e9e0c7b01467ab8",
+          "source": "/run/systemd/resolve/stub-resolv.conf"
+        },
+        {
+          "destination": "/etc/ssl/certs/ca-certificates.crt",
+          "sha256": "80eedd808e4cbd6fd42e125da2ea225fd1365d8e29edef8bcc45ff8bc7044ce2",
+          "source": "/etc/ssl/certs/ca-certificates.crt"
+        }
+      ],
+      "models": [
+        "gpt-6-astra"
+      ],
+      "provider_env": null,
+      "version": "codex-cli 0.153.4"
+    }
+  },
+  "bwrap": "/usr/bin/bwrap",
+  "bwrap_sha256": "0abea81db798ebf6b4742ac0664802d97521547a353c2a0dbdc21d76cbbfd2c0",
+  "schema": "hramatka-v4-child-profile.v1",
+  "sources_url": "http://localhost:8766/mcp"
+}

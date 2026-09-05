@@ -16,6 +16,8 @@ from pathlib import Path
 
 import _v4_a7_real_slot_fixture as fx
 import pytest
+from _v4_linguistic_context_fixture import constraints as linguistic_constraints
+from _v4_linguistic_context_fixture import stored_preparation
 from _v4_packaged_runtime_fixture import RuntimeResources, WheelRelease
 from learn_ukrainian_v4_runtime import semantic_inputs, service_runtime
 from learn_ukrainian_v4_runtime import v4_a7_private_ledger as ledger
@@ -80,16 +82,11 @@ def signing_resources(tmp_path, monkeypatch):
     monkeypatch.setattr(trust, "HRAMATKA_SIGNING_KEY_ROOT", root)
 
 
-def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect):
+def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect, review_transform=None):
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", pg_cluster.info.dsn)
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
     io = RuntimeResources(tmp_path, pg_cluster, monkeypatch, defect=defect)
-    constraints = {
-        "task_kind": "original_row",
-        "cefr_level": "A1",
-        "required_fields": ["row_text", "answer"],
-        "allowed_evidence_tools": ["verify_word"],
-    }
+    constraints = linguistic_constraints()
     release = WheelRelease(built_wheel)
     try:
         with role_connection(pg_cluster, "hramatka_v4_control_writer") as conn:
@@ -131,7 +128,8 @@ def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resou
                 executor.authorize_author_execution(
                     request_id=request.request_id, slot_id="v4p-standard-correct-001", expected_seat="claude-sonnet-5"
                 )
-            owned, record = run(request.request_id, {"constraints": constraints})
+            preparation = stored_preparation(conn, request.request_id, constraints)
+            owned, record = run(request.request_id, preparation)
             signed = fleet.issue_author_execution_receipt(task_id=record["task_id"], run_id=record["run_id"])
             authored = ledger.build_authorship_receipt(
                 author_execution_receipt=signed, row_content_sha256=record["row_content_sha256"]
@@ -149,10 +147,10 @@ def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resou
                     authorship_receipt_id=authored["receipt_id"],
                     expected_seat="gpt-5.6-luna",
                 )
-            _, review = run(
-                reviewer.request_id,
-                {"authored_row": row, "constraints": constraints, "rubric_sha256": binding["rubric_sha256"]},
-            )
+            review_snapshot = {**preparation, "authored_row": row, "rubric_sha256": binding["rubric_sha256"]}
+            if review_transform is not None:
+                review_snapshot = review_transform(conn, owned, review_snapshot)
+            _, review = run(reviewer.request_id, review_snapshot)
             signed_review = fleet.issue_reviewer_execution_receipt(task_id=review["task_id"], run_id=review["run_id"])
             assert signed_review["verdict"] == ("FAIL" if defect else "PASS")
             assert review["row_content_sha256"] == record["row_content_sha256"]
@@ -182,7 +180,24 @@ def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resou
 def test_real_parent_consumes_author_constraints_and_reviewer_row(
     pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect
 ):
-    _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect)
+    if defect:
+        from learn_ukrainian_v4_runtime.operation_auth import OperationRefused
+
+        queries = [
+            "SELECT count(*) AS n FROM v4_execution_observations",
+            "SELECT count(*) AS n FROM v4_authorship_receipts",
+            "SELECT count(*) AS n FROM fleet_comms_artifact_blobs WHERE producer='v4-service'",
+        ]
+        with role_connection(pg_cluster, "hramatka_v4_control_writer") as conn:
+            before = [conn.execute(query).fetchone()["n"] for query in queries]
+            failed_before = conn.execute("SELECT count(*) AS n FROM requests WHERE state='failed'").fetchone()["n"]
+        with pytest.raises(OperationRefused, match="author_required_fields"):
+            _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect)
+        with role_connection(pg_cluster, "hramatka_v4_control_writer") as conn:
+            assert [conn.execute(query).fetchone()["n"] for query in queries] == before
+            assert conn.execute("SELECT count(*) AS n FROM requests WHERE state='failed'").fetchone()["n"] == failed_before + 1
+    else:
+        _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect)
 
 
 @pytest.mark.parametrize("failure", ["capture_limit", "execution_timeout"])
@@ -210,6 +225,7 @@ def test_actual_parent_refuses_failed_child_without_artifact_or_observation(
                 if entry["source"] == str(executable):
                     entry["sha256"] = digest(executable.read_bytes())
         profile_path.write_text(json.dumps(profile))
+        monkeypatch.setattr(child_runtime, "PRODUCTION_CHILD_PROFILE_SHA256", digest(profile_path.read_bytes()))
         with role_connection(pg_cluster, "hramatka_v4_control_writer") as conn:
             owned = claim(conn, prepared)
             if failure == "execution_timeout":

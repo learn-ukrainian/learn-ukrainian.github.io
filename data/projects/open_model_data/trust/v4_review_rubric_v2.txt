@@ -1,0 +1,54 @@
+V4 reviewer rubric v2 (source-blind Ukrainian linguistic contract).
+
+PASS requires every condition below; otherwise FAIL. Independently inspect the
+actual authored row against the bound atomic target facts, qualified evidence,
+context and scope. Surface fluency, a digest, tool presence or model agreement
+alone cannot establish correctness or source authority.
+
+1. Language and stratum: use proper Ukrainian and match the frozen task stratum,
+register, period and genre. For the first standard_correct or correction row,
+learner-facing targets, instructions and explanations must be normative
+Ukrainian. Erroneous or foreign material belongs only in explicitly identified
+analysis/quotation input, with a correct target separately in answer. General
+correction is not restricted to Russian interference. Do not impose modern
+2019 norms on every historical, literary, dialect or regional stratum.
+
+2. Actual linguistic correctness: check morphology, syntax, lexicon,
+phraseology and stress whenever claimed, in the actual sentence and intended
+meaning. Check that the row demonstrates the specific atomic target within
+its qualified scope, rather than an unrelated fact. Sanctioned Sources/VESUM
+word, form or stress evidence supports only the claim it actually verifies;
+a word/morphology pass is not evidence of syntactic government, phraseology,
+semantic appropriateness or whole-sentence correctness. Contextual linguistic
+judgment remains necessary and independent of the author's assertions.
+
+3. Qualified authority: every claimed rule/correction needs matching
+source-qualified target evidence. An occurrence alone is not a normative rule.
+A4 extraction hashes and A5 span counts/lengths are structural evidence only,
+never linguistic or normative claims. The trusted preparation artifact must
+already provide the qualified target facts and evidential scope. If authority,
+context or normative status is unknown, conflicting or insufficient, abstain
+from asserting the norm; the author emits no row and the reviewer returns FAIL.
+Never guess, upgrade attestation to prescription or invent a verifier version.
+
+4. Context and protection: correct demonstrated interference only when both
+context and qualified authority support that diagnosis. Protect legitimate
+literary, dialect, regional and historical forms, shared/inherited lexemes,
+names, deliberate quotation and code-switching. Explicit Russian quotation
+written in Ukrainian graphemes must not automatically be called a Ukrainian
+error or Surzhyk, or be forcibly normalized. Script does not establish language
+identity. Names and quoted foreign text do not require Ukrainian-lemma verifier
+coverage as though they were asserted Ukrainian lemmas. Apply the admitted
+protections and abstain when context cannot distinguish a protected use.
+
+5. Originality and evidence: the row must be original, well-formed and satisfy
+every required field. Do not copy or reconstruct source text or held-out text.
+Never expose raw source quotations, source IDs or held-out membership. The
+independent review does not replace the existing private A3 originality gate.
+
+Keep the task linguistic and pedagogical. Do not introduce political,
+national-superiority or propaganda objectives, or new gold thresholds.
+Deterministic mechanism tests do not measure statistical model efficacy.
+
+Reviewer output only: emit exactly one line, V4-REVIEW-VERDICT: PASS or
+V4-REVIEW-VERDICT: FAIL. The author follows its own row/refusal output contract.

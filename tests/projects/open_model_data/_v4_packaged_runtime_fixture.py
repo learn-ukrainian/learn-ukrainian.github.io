@@ -21,6 +21,7 @@ import zipfile
 from pathlib import Path
 
 import uvicorn
+from _v4_linguistic_context_fixture import stored_preparation
 from learn_ukrainian_v4_runtime import child_runtime, scoped_store, service_runtime, sources_handlers, sources_transport
 from learn_ukrainian_v4_runtime.operation_auth import digest
 from learn_ukrainian_v4_runtime.provenance import verify_current_identity
@@ -217,6 +218,7 @@ class RuntimeResources:
         self.url = f"http://{socket.gethostbyname('localhost')}:{listener.getsockname()[1]}/mcp"
         path = pinned_profile(root, sources_url=self.url, defect=defect)
         monkeypatch.setattr(child_runtime, "profile_path", lambda: path)
+        monkeypatch.setattr(child_runtime, "PRODUCTION_CHILD_PROFILE_SHA256", digest(path.read_bytes()))
 
     def close(self):
         self.server.should_exit = True
@@ -250,14 +252,7 @@ def produce_author_record(root, pg, monkeypatch, wheel):
             semantic_inputs.freeze_semantic_input(
                 conn,
                 request_id=request.request_id,
-                snapshot={
-                    "constraints": {
-                        "task_kind": "original_row",
-                        "cefr_level": "A1",
-                        "required_fields": ["row_text", "answer"],
-                        "allowed_evidence_tools": ["verify_word"],
-                    }
-                },
+                snapshot=stored_preparation(conn, request.request_id),
             )
             store = OperationStore(conn)
             auth = principal(request.request_id + "-auth")
