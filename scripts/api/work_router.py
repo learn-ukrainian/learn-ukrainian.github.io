@@ -434,6 +434,24 @@ def warm_projection_cache(
     return _follow_cfuture(_get_or_create_build_task(key, canonical, ctx))
 
 
+async def refresh_projection_cache_periodically(ctx: MonitorContext) -> None:
+    """Keep the default public queue warm while the application is idle.
+
+    Startup warmup handles the first build. Each TTL tick joins the same
+    bounded single-flight job as HTTP callers; failures retry on the next
+    tick and never relax /next's maximum stale age.
+    """
+    key = projection_cache_key({}, ctx)
+    while True:
+        await asyncio.sleep(CACHE_TTL_S)
+        if cache_get_with_age(key, CACHE_TTL_S) is not None:
+            continue
+        try:
+            await _follow_cfuture(_get_or_create_build_task(key, {}, ctx))
+        except Exception as exc:
+            log.warning("Work projection periodic refresh failed: %s", type(exc).__name__)
+
+
 @router.get("/v1/projection", response_class=JSONResponse)
 async def work_projection(
     request: Request,

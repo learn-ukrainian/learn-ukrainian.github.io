@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 
+import pytest
 from fastapi.testclient import TestClient
 
 import scripts.api.work_router as work_router
@@ -988,3 +989,84 @@ def test_next_hung_refresh_frees_single_flight_slot(monkeypatch):
     second = client.get("/api/work/v1/next?stream=infra-harness")
     assert second.status_code == 200, "slot stayed wedged after the hung build"
     assert second.json()["cache_age_s"] < work_router.NEXT_MAX_STALE_S
+
+
+@pytest.mark.parametrize("hung_first_build", [False, True])
+def test_periodic_refresh_keeps_idle_next_warm(monkeypatch, tmp_path, hung_first_build):
+    """#7697: lifespan timer rebuilds after TTL with no intervening HTTP calls.
+
+    A timed-out build must free the slot for the timer's next attempt, and
+    lifespan exit must cancel the timer before draining background work.
+    """
+    import threading
+    import time
+    from unittest.mock import Mock
+
+    import scripts.api.main as api_main
+    from scripts.api.monitor_context import fixture_context
+    from scripts.api.state_helpers import cache_set
+
+    ctx = fixture_context(tmp_path)
+    key = work_router.projection_cache_key({}, ctx)
+    payload = build_projection(_next_sections(), repository_id=REPO)
+    cache_set(key, payload)
+    original_stamp = work_router.cache_get_with_age(key, float("inf"))[1]
+    assert original_stamp < work_router.CACHE_TTL_S
+    _patch_known_streams(monkeypatch)
+    monkeypatch.setattr(work_router, "CACHE_TTL_S", 0.1)
+    monkeypatch.setattr(work_router, "NEXT_BUILD_TIMEOUT_S", 0.2)
+    # Multiple successful refreshes over a whole max-stale window prove that
+    # this is recurring maintenance, rather than another one-shot warmup.
+    monkeypatch.setattr(work_router, "NEXT_MAX_STALE_S", 1.0)
+    for name in (
+        "preload_all", "install_signal_logging", "ensure_broker_db_ready",
+        "seed_manifest_inventory", "warm_projection_cache",
+        "start_periodic_refresh", "stop_periodic_refresh",
+    ):
+        monkeypatch.setattr(api_main, name, Mock())
+    monkeypatch.setattr(api_main.isa, "schedule_refresh", Mock())
+
+    refreshed = threading.Event()
+    release_hung = threading.Event()
+    timer_stopped = threading.Event()
+    builds = []
+    started = time.monotonic()
+    real_cache_set = work_router.cache_set
+    real_refresh = work_router.refresh_projection_cache_periodically
+
+    def build(**_kwargs):
+        builds.append(time.monotonic())
+        if hung_first_build and len(builds) == 1:
+            assert release_hung.wait(5.0)
+        return payload.copy()
+
+    def record_cache_set(cache_key, value):
+        real_cache_set(cache_key, value)
+        if cache_key == key and time.monotonic() - started > work_router.NEXT_MAX_STALE_S:
+            refreshed.set()
+
+    async def refresh(context):
+        try:
+            await real_refresh(context)
+        finally:
+            timer_stopped.set()
+
+    monkeypatch.setattr(work_router, "build_public_projection", build)
+    monkeypatch.setattr(work_router, "cache_set", record_cache_set)
+    monkeypatch.setattr(api_main, "refresh_projection_cache_periodically", refresh)
+    try:
+        with TestClient(api_main.create_app(ctx)) as idle_client:
+            assert refreshed.wait(5.0), "idle timer did not refresh after TTL"
+            assert len(builds) >= 2
+            assert builds[0] - started >= work_router.CACHE_TTL_S
+            work_router.wait_for_in_flight_build(key, ctx=ctx)
+            assert key not in ctx.stores.work_in_flight
+            response = idle_client.get("/api/work/v1/next?stream=infra-harness")
+            assert response.status_code == 200, response.text
+            assert response.json()["cache_age_s"] < work_router.NEXT_MAX_STALE_S
+            assert [row["work_id"] for row in response.json()["queue"]] == [_wid(6004), _wid(6001)]
+            release_hung.set()
+    finally:
+        release_hung.set()
+        cache_invalidate(key)
+    assert timer_stopped.is_set(), "lifespan leaked the refresh timer"
