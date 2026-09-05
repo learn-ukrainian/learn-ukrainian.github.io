@@ -542,3 +542,32 @@ def test_cached_id_token_can_expire_while_native_access_token_is_fresh():
     value["auth_json"] = json.dumps(auth)
     with pytest.raises(OperationRefused, match="provider_credential_auth_json"):
         child.parse_provider_credential(json.dumps(value).encode(), harness="codex", mode="subscription")
+
+
+@pytest.mark.parametrize("target", ["/etc/resolv.conf", "/etc/ssl/certs/ca-certificates.crt"])
+def test_native_network_data_is_individually_pinned_read_only(plan_profile, tmp_path, target):
+    source = tmp_path / "network-data"
+    source.write_bytes(b"synthetic network configuration")
+    source.chmod(0o400)
+    profile = select_mode(plan_profile, "claude", "subscription")
+    profile["adapters"]["claude"]["files"].append(
+        {"source": str(source), "destination": target, "sha256": digest(source.read_bytes())}
+    )
+    argv, _ = child._plan(profile, claim("claude"), credential("claude", "subscription"))
+    index = argv.index(str(source))
+    assert argv[index - 1 : index + 2] == ["--ro-bind", str(source), target]
+    source.chmod(0o600)
+    source.write_bytes(b"changed network configuration")
+    with pytest.raises(OperationRefused, match="runtime_closure_digest"):
+        child._plan(profile, claim("claude"), credential("claude", "subscription"))
+
+
+@pytest.mark.parametrize(
+    "target", ["/etc/passwd", "/etc/environment", "/etc/resolv.conf.d/extra", "/etc/ssl/certs", "/etc"]
+)
+def test_native_network_allowance_does_not_admit_other_configuration(plan_profile, target):
+    profile = select_mode(plan_profile, "claude", "subscription")
+    original = profile["adapters"]["claude"]["files"][0]
+    profile["adapters"]["claude"]["files"].append({**original, "destination": target})
+    with pytest.raises(OperationRefused, match="runtime_closure_mount"):
+        child._plan(profile, claim("claude"), credential("claude", "subscription"))

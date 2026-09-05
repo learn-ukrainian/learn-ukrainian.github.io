@@ -65,6 +65,13 @@ the [native authentication documentation](https://learn.chatgpt.com/docs/auth#cr
 Native refresh/write compatibility remains part of later protected-unit
 qualification; the read-only selected auth file must not be relaxed implicitly.
 
+The same reviewed, hash-pinned adapter file list may include only the exact
+network data destinations `/etc/resolv.conf` and
+`/etc/ssl/certs/ca-certificates.crt` outside the existing runtime/library paths.
+Each must be a separately verified regular file mounted read-only. No host
+`/etc` directory, arbitrary configuration, proxy environment or home is exposed.
+Actual resolver and TLS behavior remains part of protected-unit qualification.
+
 Credential values are excluded from representations and argv. The argv digest
 uses an opaque descriptor placeholder and never hashes auth bytes. Captures
 containing a selected token, selected auth JSON, or Sources capability are

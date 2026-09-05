@@ -26,6 +26,8 @@ from learn_ukrainian_v4_runtime.operation_auth import OperationRefused, canonica
 from learn_ukrainian_v4_runtime.resources import resource_root
 
 MAX_CAPTURE_BYTES = 1048576
+# Required native network data only; no directory or arbitrary /etc mount.
+_NETWORK_DATA_TARGETS = frozenset({"/etc/resolv.conf", "/etc/ssl/certs/ca-certificates.crt"})
 MAX_CREDENTIAL_BYTES = 65536
 CREDENTIAL_SCHEMA = "hramatka-v4-provider-credential.v1"
 CODEX_AUTH_DESTINATION = "/home/v4/.codex/auth.json"
@@ -294,7 +296,7 @@ def _plan(
             not target.is_absolute()
             or ".." in target.parts
             or str(target) in destinations
-            or target.parts[1] not in ("runtime", "lib", "lib64", "usr")
+            or (target.parts[1] not in ("runtime", "lib", "lib64", "usr") and str(target) not in _NETWORK_DATA_TARGETS)
             or target.name in ("sh", "bash", "dash", "zsh", "psql", "sudo", "env", "bwrap")
         ):
             raise OperationRefused("runtime_closure_mount")
