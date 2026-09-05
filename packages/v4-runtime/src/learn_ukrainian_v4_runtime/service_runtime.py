@@ -105,6 +105,7 @@ class V4ServiceRuntime:
                     raise OperationRefused("execution_release_changed")
                 record = {
                     "runtime_identity": release,
+                    "trust_policy_sha256": claim["trust_policy_sha256"],
                     "task_id": binding["task_id"],
                     "run_id": binding["run_id"],
                     "role": binding["role"],

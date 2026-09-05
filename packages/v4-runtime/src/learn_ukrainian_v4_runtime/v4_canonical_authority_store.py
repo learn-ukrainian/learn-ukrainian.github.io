@@ -66,6 +66,7 @@ HEX64_RE = re.compile(r"^[a-f0-9]{64}$")
 EXECUTION_OBSERVATION_KEYS = frozenset(
     {
         "runtime_identity",
+        "trust_policy_sha256",
         "task_id",
         "run_id",
         "role",
@@ -337,7 +338,12 @@ def resolve_execution_dispatch_binding(*, request_id: str, conn: Any, is_pg: boo
 def validate_execution_observation(record: dict[str, Any]) -> None:
     from learn_ukrainian_v4_runtime.execution_identity import validate_execution_identity
 
-    validate_execution_identity(record.get("runtime_identity"))
+    _require(isinstance(record, dict), "execution observation must be an object -- refusing")
+    try:
+        validate_execution_identity(record.get("runtime_identity"))
+    except ValueError as exc:
+        raise CanonicalAuthorityStoreError(str(exc)) from exc
+    _require_hex64(record.get("trust_policy_sha256"), "execution observation trust policy")
     _require(
         isinstance(record, dict) and set(record) == EXECUTION_OBSERVATION_KEYS,
         f"execution observation record must declare exactly {sorted(EXECUTION_OBSERVATION_KEYS)} -- refusing (unexpected or missing key)",

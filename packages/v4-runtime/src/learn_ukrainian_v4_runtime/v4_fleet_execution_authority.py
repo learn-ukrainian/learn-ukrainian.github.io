@@ -697,8 +697,9 @@ def issue_author_execution_receipt(*, task_id: str, run_id: str) -> dict[str, An
         validate_execution_identity(record.get("runtime_identity"))
     except ValueError as exc:
         raise FleetExecutionError(str(exc)) from exc
-    signing_key_hex, signer_key_id = _load_signing_key("fleet_execution")
     _, resolved_trust_policy_sha256 = trust.load_production_trust_policy()
+    require(record.get("trust_policy_sha256") == resolved_trust_policy_sha256, "execution policy is not active -- refusing before key access")
+    signing_key_hex, signer_key_id = _load_signing_key("fleet_execution")
     return _issue_author_receipt_from_evidence(
         signing_key_hex=signing_key_hex,
         signer_key_id=signer_key_id,
@@ -728,8 +729,9 @@ def issue_reviewer_execution_receipt(*, task_id: str, run_id: str) -> dict[str, 
         validate_execution_identity(record.get("runtime_identity"))
     except ValueError as exc:
         raise FleetExecutionError(str(exc)) from exc
-    signing_key_hex, signer_key_id = _load_signing_key("fleet_execution")
     _, resolved_trust_policy_sha256 = trust.load_production_trust_policy()
+    require(record.get("trust_policy_sha256") == resolved_trust_policy_sha256, "execution policy is not active -- refusing before key access")
+    signing_key_hex, signer_key_id = _load_signing_key("fleet_execution")
     return _issue_reviewer_receipt_from_evidence(
         signing_key_hex=signing_key_hex,
         signer_key_id=signer_key_id,

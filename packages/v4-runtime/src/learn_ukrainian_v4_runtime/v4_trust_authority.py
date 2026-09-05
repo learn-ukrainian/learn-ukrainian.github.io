@@ -323,22 +323,25 @@ def load_production_signing_key(role: str) -> tuple[str, str]:
     when the role is unknown or the key files are not provisioned -- the
     only state mechanism-only production can be in today."""
     require(role in KEYRING_ROLES, f"unknown signing-key role {role!r} -- refusing")
-    key_path = HRAMATKA_SIGNING_KEY_ROOT / f"{role}.key"
-    key_id_path = HRAMATKA_SIGNING_KEY_ROOT / f"{role}.key_id"
-    require(
-        key_path.is_file() and key_id_path.is_file(),
-        f"no production signing key is provisioned for role {role!r} at {HRAMATKA_SIGNING_KEY_ROOT} -- refusing "
-        "(mechanism-only production; key/ACL provisioning is a first-real-row-PR prerequisite)",
-    )
-    for path in (key_path, key_id_path):
-        require(not path.is_symlink() and not path.stat().st_mode & 0o077, "signing credential permissions -- refusing")
-    private_key_hex = key_path.read_text(encoding="utf-8").strip()
-    signer_key_id = key_id_path.read_text(encoding="utf-8").strip()
-    require(
-        len(private_key_hex) == 64, f"production signing key at {key_path} is not 32 raw bytes, hex-encoded -- refusing"
-    )
-    require(bool(signer_key_id), f"production signer key id at {key_id_path} is empty -- refusing")
-    return private_key_hex, signer_key_id
+    try:
+        key_path = HRAMATKA_SIGNING_KEY_ROOT / f"{role}.key"
+        key_id_path = HRAMATKA_SIGNING_KEY_ROOT / f"{role}.key_id"
+        require(
+            key_path.is_file() and key_id_path.is_file(),
+            f"no production signing key is provisioned for role {role!r} at {HRAMATKA_SIGNING_KEY_ROOT} -- refusing "
+            "(mechanism-only production; key/ACL provisioning is a first-real-row-PR prerequisite)",
+        )
+        for path in (key_path, key_id_path):
+            require(not path.is_symlink() and not path.stat().st_mode & 0o077, "signing credential permissions -- refusing")
+        private_key_hex = key_path.read_text(encoding="utf-8").strip()
+        signer_key_id = key_id_path.read_text(encoding="utf-8").strip()
+        require(
+            bool(HEX64_RE.fullmatch(private_key_hex)), f"production signing key at {key_path} is not 32 raw bytes, hex-encoded -- refusing"
+        )
+        require(bool(signer_key_id), f"production signer key id at {key_id_path} is empty -- refusing")
+        return private_key_hex, signer_key_id
+    except OSError as exc:
+        raise TrustAuthorityError("no production signing key is provisioned or accessible -- refusing") from exc
 
 
 def resolve_public_key(policy: dict[str, Any], role: str, key_id: str) -> str:

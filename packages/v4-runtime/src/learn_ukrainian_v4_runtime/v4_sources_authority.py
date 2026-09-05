@@ -237,8 +237,9 @@ def issue_verifier_attestation(*, invocation_id: str) -> dict[str, Any]:
         observation is not None,
         f"invocation {invocation_id!r} has no terminal author execution to join -- refusing (no key access)",
     )
-    signing_key_hex, signer_key_id = _load_signing_key("sources")
     _, trust_policy_sha256 = trust.load_production_trust_policy()
+    require(observation.get("trust_policy_sha256") == trust_policy_sha256, "execution policy is not active -- refusing before key access")
+    signing_key_hex, signer_key_id = _load_signing_key("sources")
     return _issue_verifier_attestation_from_evidence(
         signing_key_hex=signing_key_hex,
         signer_key_id=signer_key_id,

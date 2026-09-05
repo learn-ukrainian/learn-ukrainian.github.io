@@ -179,3 +179,63 @@ class RuntimeResources:
         self.server.should_exit = True
         self.thread.join(timeout=10)
         assert not self.thread.is_alive()
+
+
+def produce_author_record(root, pg, monkeypatch, wheel):
+    """Produce a record through the public parent, never through a fixture writer."""
+    from dataclasses import replace
+
+    from learn_ukrainian_v4_runtime import semantic_inputs
+    from learn_ukrainian_v4_runtime import v4_canonical_authority_store as authority
+    from learn_ukrainian_v4_runtime import v4_trust_authority as trust
+    from learn_ukrainian_v4_runtime.operation_auth import canonical_bytes
+    from learn_ukrainian_v4_runtime.operation_store import OperationStore
+    from test_v4_operation_lifecycle import principal, role_connection
+
+    from scripts.fleet_comms.request_executor import RequestExecutor
+
+    monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", pg.info.dsn)
+    monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
+    io = RuntimeResources(root, pg, monkeypatch)
+    try:
+        with RequestExecutor(root=root) as executor:
+            request = executor.create_request(recipient="claude", body="source-free operation")
+            executor.authorize_author_execution(
+                request_id=request.request_id, slot_id="v4p-standard-correct-001", expected_seat="claude-sonnet-5"
+            )
+        with role_connection(pg, "hramatka_v4_control_writer") as conn:
+            semantic_inputs.freeze_semantic_input(
+                conn,
+                request_id=request.request_id,
+                snapshot={
+                    "constraints": {
+                        "task_kind": "original_row",
+                        "cefr_level": "A1",
+                        "required_fields": ["row_text", "answer"],
+                        "allowed_evidence_tools": ["verify_word"],
+                    }
+                },
+            )
+            store = OperationStore(conn)
+            auth = principal(request.request_id + "-auth")
+            policy = trust.load_production_trust_policy()[1]
+            identifier = store.authorize(
+                principal=auth,
+                raw=canonical_bytes({"schema": "hramatka-v4-operation-authorize.v1"}),
+                policy_digest=policy,
+            )
+            owned = store.claim(
+                principal=replace(auth, jti=request.request_id + "-execute"),
+                raw=canonical_bytes({"schema": "hramatka-v4-operation-execute.v1", "authorization_id": identifier}),
+                authorization_id=identifier,
+                policy_digest=policy,
+            )
+            runtime = service_runtime.V4ServiceRuntime(store=store, verifier=None, release_provider=WheelRelease(wheel))
+            result = runtime._execute_owned_claim(owned)
+            record = authority.resolve_execution_observation(
+                task_id=result["task_id"], run_id=result["run_id"], role="author", conn=conn, is_pg=True
+            )
+            assert record
+            return owned["binding"], record
+    finally:
+        io.close()

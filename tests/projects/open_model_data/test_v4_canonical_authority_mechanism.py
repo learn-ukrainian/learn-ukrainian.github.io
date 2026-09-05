@@ -6,7 +6,6 @@ observations are produced in ``test_v4_runner_origin_mechanism.py``.
 
 from __future__ import annotations
 
-import os
 from pathlib import Path
 from typing import Any
 
@@ -15,10 +14,8 @@ import pytest
 from test_v4_runner_origin_mechanism import (
     FIXTURE_MODEL,
     FIXTURE_SESSION,
-    _write_claude_fixture,
 )
 
-from scripts.agent_runtime import runner as runtime_runner
 from scripts.fleet_comms import v4_canonical_authority_store as v4_store
 from scripts.fleet_comms.artifacts import ArtifactStore
 from scripts.fleet_comms.request_executor import RequestExecutor, RequestExecutorError
@@ -66,31 +63,23 @@ def _isolate_plane(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     monkeypatch.setattr(v4_store, "open_production_authority_store", lambda *, write=False: ArtifactStore(root=tmp_path))
 
 
-def _run_author_via_runner(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[dict[str, Any], dict[str, Any]]:
-    """Produce one runner-owned author observation. Lowest-IO fixture only."""
-    _isolate_plane(monkeypatch, tmp_path)
-    claude_bin = _write_claude_fixture(tmp_path / "bin" / "claude")
-    monkeypatch.setenv("PATH", str(claude_bin.parent) + os.pathsep + os.environ.get("PATH", ""))
-    from scripts.agent_runtime.adapters import claude as claude_adapter
+_OWNED_PG = None
+_OWNED_WHEEL = None
 
-    claude_adapter._probe_claude_cli_version.cache_clear()
-    monkeypatch.setattr("scripts.agent_runtime.adapters.claude._default_claude_bin", lambda: str(claude_bin))
-    with RequestExecutor(root=tmp_path) as executor:
-        request_id, binding = _authorized_author_request(executor)
-        result = runtime_runner.invoke(
-            "claude",
-            "caller prompt must not be transported",
-            cwd=tmp_path,
-            model=FIXTURE_MODEL,
-            v4_authorization_id=request_id,
-            hard_timeout=30,
-        )
-        assert result.ok is True
-        record = executor.resolve_v4_execution_observation(
-            task_id=binding["task_id"], run_id=binding["run_id"], role="author"
-        )
-    assert record is not None
-    return binding, record
+
+@pytest.fixture(autouse=True)
+def _owned_resources(pg_cluster, built_wheel, monkeypatch):
+    monkeypatch.setitem(globals(), "_OWNED_PG", pg_cluster)
+    monkeypatch.setitem(globals(), "_OWNED_WHEEL", built_wheel)
+
+
+pytest_plugins = ("test_v4_protected_parent_mechanism",)
+
+
+def _run_author_via_runner(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Compatibility helper now produces actual parent-owned PG observations."""
+    from _v4_packaged_runtime_fixture import produce_author_record
+    return produce_author_record(tmp_path, _OWNED_PG, monkeypatch, _OWNED_WHEEL)
 
 
 # --- execute_capture is not a V4 origin ------------------------------------
@@ -211,15 +200,14 @@ def test_a_caller_selected_sqlite_plane_is_not_production_authority(monkeypatch:
 
 
 def _patch_authority_plane(monkeypatch: pytest.MonkeyPatch, module: Any, tmp_path: Path) -> None:
-    """Substitute the single fixed store opener with an isolated plane.
-
-    This is the only in-process seam, and it is the same
-    monkeypatch-the-fixed-internal-loader pattern the Sol acceptance matrix
-    sanctions for key custody and the production policy resolver. There is
-    no runtime argument, environment variable, or admission switch that can
-    do this in production.
-    """
-    monkeypatch.setattr(module, "_open_canonical_authority_store", lambda: ArtifactStore(root=tmp_path))
+    """Use only an owned scoped credential resource with the real PG opener."""
+    from learn_ukrainian_v4_runtime import scoped_store
+    from psycopg.conninfo import make_conninfo
+    _OWNED_PG.execute("ALTER ROLE hramatka_v4_control_writer LOGIN")
+    path = tmp_path / "control.dsn"
+    path.write_text(make_conninfo(_OWNED_PG.info.dsn, user="hramatka_v4_control_writer"))
+    path.chmod(0o600)
+    monkeypatch.setattr(scoped_store, "control_credential_path", lambda: path)
 
 
 def _patch_fleet(monkeypatch: pytest.MonkeyPatch, *, tmp_path: Path | None = None, key_loader=None, trust_policy=None) -> None:
@@ -241,7 +229,7 @@ def _seed_observation(tmp_path: Path, record: dict[str, Any]) -> None:
     """
     with ArtifactStore(root=tmp_path) as store:
         with store._transaction() as conn:
-            v4_store._persist_execution_observation(record, conn=conn, is_pg=False, commit=False)
+            v4_store._persist_execution_observation(record, conn=conn, is_pg=store.authority.value == "pg", commit=False)
 
 
 def _recorded_author_record(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -279,10 +267,10 @@ def test_issue_author_execution_receipt_end_to_end_and_idempotent_repeat(tmp_pat
     """The full chain: a genuine runner-owned execution produces the
     observation, the production issuer resolves it by opaque id alone, and
     repeat issuance is byte-identical."""
-    binding, record = _recorded_author_record(tmp_path, monkeypatch)
     priv, pub = trust.generate_test_keypair()
     policy = trust.build_test_trust_policy(fleet_execution={"k1": pub})
     _patch_fleet(monkeypatch, tmp_path=tmp_path, key_loader=lambda role: (priv, "k1"), trust_policy=(policy, trust.trust_policy_sha256(policy)))
+    binding, record = _recorded_author_record(tmp_path, monkeypatch)
 
     receipt = fleet_execution.issue_author_execution_receipt(task_id=binding["task_id"], run_id=binding["run_id"])
     fleet_execution.verify_author_execution_receipt(
@@ -290,7 +278,7 @@ def test_issue_author_execution_receipt_end_to_end_and_idempotent_repeat(tmp_pat
     )
     assert receipt["exact_model"] == FIXTURE_MODEL
     assert receipt["harness"] == "claude"
-    assert receipt["provider_session_id"] == FIXTURE_SESSION
+    assert receipt["provider_session_id"] == record["session_id"]
     again = fleet_execution.issue_author_execution_receipt(task_id=binding["task_id"], run_id=binding["run_id"])
     assert receipt == again, "repeat issuance against the identical resolved observation must reproduce byte for byte"
 
@@ -328,7 +316,7 @@ def test_execution_observation_write_refuses_a_conflicting_duplicate(tmp_path: P
     binding, base = _recorded_author_record(tmp_path, monkeypatch)
     with ArtifactStore(root=tmp_path) as store, store._transaction() as conn:
         with pytest.raises(v4_store.ExecutionObservationConflictError, match="different execution observation"):
-            v4_store._persist_execution_observation({**base, "status": "failed"}, conn=conn, is_pg=False, commit=False)
+            v4_store._persist_execution_observation({**base, "status": "failed"}, conn=conn, is_pg=store.authority.value == "pg", commit=False)
     with ArtifactStore(root=tmp_path) as store:
         assert store.resolve_v4_execution_observation(task_id=binding["task_id"], run_id=binding["run_id"], role="author") == base
 
@@ -346,7 +334,7 @@ def test_execution_observation_write_rejects_a_malformed_record_before_any_persi
     malformed["task_id"] = "task-malformed"
     with ArtifactStore(root=tmp_path) as store, store._transaction() as conn:
         with pytest.raises(v4_store.CanonicalAuthorityStoreError, match="exactly"):
-            v4_store._persist_execution_observation(malformed, conn=conn, is_pg=False, commit=False)
+            v4_store._persist_execution_observation(malformed, conn=conn, is_pg=store.authority.value == "pg", commit=False)
     with ArtifactStore(root=tmp_path) as store:
         assert store.resolve_v4_execution_observation(task_id="task-malformed", run_id=base["run_id"], role="author") is None
 
@@ -355,7 +343,7 @@ def test_author_execution_observation_refuses_reviewer_only_fields(tmp_path: Pat
     _binding, base = _recorded_author_record(tmp_path, monkeypatch)
     with ArtifactStore(root=tmp_path) as store, store._transaction() as conn:
         with pytest.raises(v4_store.CanonicalAuthorityStoreError, match="reviewer-only"):
-            v4_store._persist_execution_observation({**base, "task_id": "t-x", "verdict": "PASS"}, conn=conn, is_pg=False, commit=False)
+            v4_store._persist_execution_observation({**base, "task_id": "t-x", "verdict": "PASS"}, conn=conn, is_pg=store.authority.value == "pg", commit=False)
 
 
 def test_reviewer_execution_observation_requires_every_reviewer_only_field(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -363,7 +351,7 @@ def test_reviewer_execution_observation_requires_every_reviewer_only_field(tmp_p
     incomplete = {**base, "task_id": "t-y", "role": "reviewer", "authorship_receipt_sha256": AUTHORSHIP_SHA, "rubric_sha256": RUBRIC_SHA, "verdict": None}
     with ArtifactStore(root=tmp_path) as store, store._transaction() as conn:
         with pytest.raises(v4_store.CanonicalAuthorityStoreError, match="reviewer-only"):
-            v4_store._persist_execution_observation(incomplete, conn=conn, is_pg=False, commit=False)
+            v4_store._persist_execution_observation(incomplete, conn=conn, is_pg=store.authority.value == "pg", commit=False)
 
 
 def test_execution_observation_store_is_isolated_by_role(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -473,8 +461,8 @@ def test_sources_invocation_is_idempotent_on_a_canonical_retry(tmp_path: Path) -
     first = _record_invocation(tmp_path)
     assert first is not None
     with ArtifactStore(root=tmp_path) as store, store._transaction() as conn:
-        v4_store._persist_sources_invocation(first, conn=conn, is_pg=False, commit=False)
-        v4_store._persist_sources_invocation(first, conn=conn, is_pg=False, commit=False)
+        v4_store._persist_sources_invocation(first, conn=conn, is_pg=store.authority.value == "pg", commit=False)
+        v4_store._persist_sources_invocation(first, conn=conn, is_pg=store.authority.value == "pg", commit=False)
     with ArtifactStore(root=tmp_path) as store:
         rows = store.connection.execute("SELECT COUNT(*) AS n FROM v4_sources_invocations").fetchone()
         assert int(rows["n"]) == 1
@@ -487,7 +475,7 @@ def test_sources_invocation_conflicting_duplicate_leaves_prior_evidence_unchange
     with ArtifactStore(root=tmp_path) as store:
         with store._transaction() as conn:
             with pytest.raises(v4_store.SourcesInvocationConflictError, match="different sources invocation"):
-                v4_store._persist_sources_invocation({**original, "success": False}, conn=conn, is_pg=False, commit=False)
+                v4_store._persist_sources_invocation({**original, "success": False}, conn=conn, is_pg=store.authority.value == "pg", commit=False)
         assert store.resolve_v4_sources_invocation(invocation_id=original["invocation_id"]) == original
 
 
@@ -572,6 +560,8 @@ def test_load_production_signing_key_refuses_a_malformed_provisioned_key(tmp_pat
     monkeypatch.setattr(trust, "HRAMATKA_SIGNING_KEY_ROOT", tmp_path)
     (tmp_path / "fleet_execution.key").write_text("not-hex", encoding="utf-8")
     (tmp_path / "fleet_execution.key_id").write_text("k1", encoding="utf-8")
+    (tmp_path / "fleet_execution.key").chmod(0o600)
+    (tmp_path / "fleet_execution.key_id").chmod(0o600)
     with pytest.raises(trust.TrustAuthorityError, match="32 raw bytes"):
         trust.load_production_signing_key("fleet_execution")
 
@@ -581,6 +571,8 @@ def test_load_production_signing_key_succeeds_once_provisioned(tmp_path: Path, m
     priv, _pub = trust.generate_test_keypair()
     (tmp_path / "fleet_execution.key").write_text(priv, encoding="utf-8")
     (tmp_path / "fleet_execution.key_id").write_text("prod-key-1", encoding="utf-8")
+    (tmp_path / "fleet_execution.key").chmod(0o600)
+    (tmp_path / "fleet_execution.key_id").chmod(0o600)
     got_priv, got_key_id = trust.load_production_signing_key("fleet_execution")
     assert got_priv == priv
     assert got_key_id == "prod-key-1"
