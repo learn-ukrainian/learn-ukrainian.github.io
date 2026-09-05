@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import subprocess
 import sys
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -14,6 +15,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from navsi200_captions import (
     DEFAULT_LEDGER_PATH,
+    DEFAULT_YT_DLP_BIN,
     clean_vtt_text,
     fetch_single_caption,
     load_caption_ledger,
@@ -212,3 +214,18 @@ Language: uk
         assert status == "bot_blocked"
         assert char_count == 0
         assert sha256_hash is None
+
+
+def test_cli_help_has_no_home_paths() -> None:
+    result = subprocess.run(
+        [sys.executable, "scripts/navsi200_captions.py", "--help"],
+        cwd=Path(__file__).resolve().parent.parent,
+        capture_output=True,
+        text=True,
+        timeout=10,
+        check=True,
+    )
+    assert "--yt-dlp" in result.stdout
+    assert ".venv/bin/python scripts/navsi200_captions.py" in result.stdout
+    assert "/home/" not in result.stdout + result.stderr
+    assert DEFAULT_YT_DLP_BIN == ".venv/bin/yt-dlp"
