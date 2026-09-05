@@ -292,9 +292,9 @@ def test_a11_receipt_binds_v4_sha_and_control_surfaces() -> None:
 
 
 def test_a11_receipt_binds_the_merged_a10_receipt_by_its_known_public_sha() -> None:
-    # The merged A10 receipt's public sha256, frozen at dispatch time (PR #7654 repair cycle 3:
-    # A7's own upstream hash changed (dropped the undecided A7-vs-A6 subset), rippling into A8-A10).
-    assert a11.sha256_file(A10_RECEIPT_PATH) == "db9b28e570639675ea4fd546fc610727b94886125879a7478286651d95a59ab8"
+    # The merged A10 receipt's public sha256, frozen at dispatch time (PR #7662 repair 3:
+    # A9's content changed under the Repair 2 real-slot-mechanism fix, rippling into A10-A13).
+    assert a11.sha256_file(A10_RECEIPT_PATH) == "ebf9f2814601195d67a6faac808da579140a7fba6fc767bfb2eedf873236c57f"
 
 
 def test_a11_receipt_carries_forward_every_a2_a4_a5_a6_a7_a8_a9_a10_residual_unresolved() -> None:
@@ -378,8 +378,13 @@ def test_a11_receipt_never_opens_held_out_membership() -> None:
 
 
 def test_a11_bindings_hash_to_disk_for_every_bound_artifact() -> None:
+    from learn_ukrainian_v4_runtime.resources import resource_root
+
     for name, binding in REAL_RECEIPT["bindings"].items():
-        path = ROOT / binding["path"]
+        path = resource_root() / (
+            "provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"
+            if binding["path"].startswith("scripts/") else binding["path"]
+        )
         assert path.is_file(), name
         assert a11.sha256_file(path) == binding["sha256"], name
 

@@ -517,6 +517,77 @@ _V7_STATEMENTS = (
     "CREATE INDEX IF NOT EXISTS idx_routing_reservations_active_credential ON routing_reservations(credential_bucket, status, expires_at)",
 )
 
+# V4 canonical authority store (PR #7662 repair 6): the sqlite-dialect twin
+# of ``scripts.fleet_comms.pg_schema``'s v3 (same table shapes, TEXT-parity
+# by design). See ``scripts.fleet_comms.v4_canonical_authority_store``.
+_V8_STATEMENTS = (
+    """CREATE TABLE IF NOT EXISTS v4_execution_observations (
+        task_id TEXT NOT NULL,
+        run_id TEXT NOT NULL,
+        role TEXT NOT NULL CHECK (role IN ('author', 'reviewer')),
+        record_sha256 TEXT NOT NULL,
+        record_json TEXT NOT NULL,
+        recorded_at TEXT NOT NULL,
+        PRIMARY KEY (task_id, run_id, role)
+    )""",
+    """CREATE TABLE IF NOT EXISTS v4_sources_invocations (
+        invocation_id TEXT PRIMARY KEY,
+        record_sha256 TEXT NOT NULL,
+        record_json TEXT NOT NULL,
+        recorded_at TEXT NOT NULL
+    )""",
+)
+
+# V4 canonical authority store, execution-boundary slice (PR #7662 repair 7):
+# the pre-execution dispatch authorization one V4 fleet request is bound to,
+# plus the request-correlation columns the execution boundary needs to derive
+# an observation's verification tool ids and to audit which request produced
+# which observation. Sqlite-dialect twin of ``pg_schema``'s v4.
+_V9_STATEMENTS = (
+    """CREATE TABLE IF NOT EXISTS v4_execution_dispatch_bindings (
+        request_id TEXT PRIMARY KEY,
+        task_id TEXT NOT NULL,
+        run_id TEXT NOT NULL,
+        role TEXT NOT NULL CHECK (role IN ('author', 'reviewer')),
+        record_sha256 TEXT NOT NULL,
+        record_json TEXT NOT NULL,
+        recorded_at TEXT NOT NULL,
+        UNIQUE (task_id, run_id, role)
+    )""",
+    "ALTER TABLE v4_execution_observations ADD COLUMN request_id TEXT",
+    "ALTER TABLE v4_sources_invocations ADD COLUMN request_id TEXT",
+    "CREATE UNIQUE INDEX IF NOT EXISTS idx_v4_execution_observations_request ON v4_execution_observations(request_id)",
+    "CREATE INDEX IF NOT EXISTS idx_v4_sources_invocations_request ON v4_sources_invocations(request_id)",
+)
+
+# V4 runner-owned execution attempts + per-attempt Sources capability
+# (PR #7662 repair 8). Sqlite-dialect twin of ``pg_schema``'s v5.
+_V10_STATEMENTS = (
+    """CREATE TABLE IF NOT EXISTS v4_execution_attempts (
+        attempt_id TEXT PRIMARY KEY,
+        request_id TEXT NOT NULL UNIQUE,
+        task_id TEXT NOT NULL,
+        run_id TEXT NOT NULL,
+        role TEXT NOT NULL CHECK (role IN ('author', 'reviewer')),
+        state TEXT NOT NULL CHECK (state IN ('running', 'terminal')),
+        capability_digest TEXT NOT NULL UNIQUE,
+        binding_sha256 TEXT NOT NULL,
+        started_at TEXT NOT NULL,
+        terminal_at TEXT
+    )""",
+    "ALTER TABLE v4_sources_invocations ADD COLUMN attempt_id TEXT",
+    "CREATE INDEX IF NOT EXISTS idx_v4_sources_invocations_attempt ON v4_sources_invocations(attempt_id)",
+    """CREATE TABLE IF NOT EXISTS v4_authorship_receipts (
+        receipt_id TEXT PRIMARY KEY,
+        task_id TEXT NOT NULL,
+        run_id TEXT NOT NULL,
+        record_sha256 TEXT NOT NULL,
+        record_json TEXT NOT NULL,
+        recorded_at TEXT NOT NULL,
+        UNIQUE (task_id, run_id)
+    )""",
+)
+
 MIGRATIONS = (
     Migration(version=1, name="fleet-comms-v1-contracts", statements=_V1_STATEMENTS),
     Migration(
@@ -544,6 +615,21 @@ MIGRATIONS = (
         version=7,
         name="fleet-comms-v7-routing-credential-admission",
         statements=_V7_STATEMENTS,
+    ),
+    Migration(
+        version=8,
+        name="fleet-comms-v8-v4-canonical-authority",
+        statements=_V8_STATEMENTS,
+    ),
+    Migration(
+        version=9,
+        name="fleet-comms-v9-v4-execution-dispatch-binding",
+        statements=_V9_STATEMENTS,
+    ),
+    Migration(
+        version=10,
+        name="fleet-comms-v10-v4-runner-attempts",
+        statements=_V10_STATEMENTS,
     ),
 )
 

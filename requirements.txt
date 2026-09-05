@@ -101,3 +101,6 @@ zeroconf>=0.150.0
 # provably over-strict for our usage; (b) downgrading to satisfy them
 # would revert security/feature bumps in cryptography/anthropic/regex
 # that ARE used elsewhere. Hence `--no-deps` install in CI/local.
+
+# Repository runtime dependency; install requirements from the repository root.
+./packages/v4-runtime

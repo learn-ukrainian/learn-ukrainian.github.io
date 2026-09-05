@@ -28,6 +28,8 @@ import rapidfuzz  # noqa: F401  # Declares the quote-verification runtime depend
 import requests  # noqa: F401  # Declares the Sources HTTP dependency to the CI fastlane.
 
 SOURCES_SERVER_PATH = Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "sources" / "server.py"
+VESUM_FIXTURE_VERSION = "a" * 64
+VESUM_FIXTURE_MATCH = {"lemma": "читати", "pos": "verb", "tags": "verb:imperf:impr:s:2"}
 
 
 @pytest.fixture
@@ -372,21 +374,43 @@ class TestVerifyWordHandler:
 
     def test_not_found(self, server_module):
         with patch("scripts.verification.vesum.verify_word", return_value=[]):
-            result = _run(server_module.handle_verify_word({"word": "взяйте"}))
-            assert "NOT FOUND" in result[0].text
+            content, outcome = _run(server_module.handle_verify_word({"word": "взяйте"}))
+            assert "NOT FOUND" in content[0].text
+            assert outcome["disposition"] == "not_found"
+            assert outcome["success"] is False
 
-    def test_found(self, server_module):
-        mock_matches = [{"lemma": "читати", "pos": "verb", "tags": "verb:imperf:impr:s:2"}]
+    def test_found(self, server_module, monkeypatch):
+        monkeypatch.setattr(server_module, "_vesum_source_version", lambda: VESUM_FIXTURE_VERSION)
+        mock_matches = [VESUM_FIXTURE_MATCH]
         with patch("scripts.verification.vesum.verify_word", return_value=mock_matches):
-            result = _run(server_module.handle_verify_word({"word": "читай"}))
-            assert "читати" in result[0].text
-            assert "verb" in result[0].text
-            assert "1 match" in result[0].text
+            content, outcome = _run(server_module.handle_verify_word({"word": "читай"}))
+            assert "читати" in content[0].text
+            assert "verb" in content[0].text
+            assert "1 match" in content[0].text
+            assert outcome["disposition"] == "supported"
+            assert outcome["success"] is True
+            assert outcome["result"] == {
+                "word": "читай", "pos_filter": None, "matches": mock_matches,
+            }
+            assert outcome["evidence_identifiers"] == [
+                server_module._typed_identifier("vesum", outcome["result"])
+            ]
+
+    def test_found_refuses_unversioned_source(self, server_module, monkeypatch):
+        monkeypatch.setattr(server_module, "_vesum_source_version", lambda: "vesum-source-unversioned")
+        with (
+            patch("scripts.verification.vesum.verify_word", return_value=[VESUM_FIXTURE_MATCH]),
+            pytest.raises(server_module.v4_handlers.OperationRefused, match="Sources version unproved"),
+        ):
+            _run(server_module.handle_verify_word({"word": "читай"}))
 
     def test_passes_pos_filter(self, server_module):
         with patch("scripts.verification.vesum.verify_word", return_value=[]) as mock:
-            _run(server_module.handle_verify_word({"word": "тест", "pos_filter": "noun"}))
+            content, outcome = _run(server_module.handle_verify_word({"word": "тест", "pos_filter": "noun"}))
             mock.assert_called_once_with("тест", "noun")
+            assert "NOT FOUND" in content[0].text
+            assert outcome["disposition"] == "not_found"
+            assert outcome["success"] is False
 
 
 class TestVerifyWordsHandler:
@@ -398,11 +422,13 @@ class TestVerifyWordsHandler:
             "взяйте": [],
         }
         with patch("scripts.verification.vesum.verify_words", return_value=mock_results):
-            result = _run(server_module.handle_verify_words({"words": ["стій", "взяйте"]}))
-            text = result[0].text
+            content, outcome = _run(server_module.handle_verify_words({"words": ["стій", "взяйте"]}))
+            text = content[0].text
             assert "Found: 1/2" in text
             assert "**стій** — FOUND" in text
             assert "**взяйте** — NOT FOUND" in text
+            assert outcome["disposition"] == "partial"
+            assert outcome["success"] is False
 
 
 class TestVerifyStressHandler:
@@ -418,14 +444,21 @@ class TestVerifyStressHandler:
             "source": {"dictionary": "ukrainian-word-stress (ULIF-derived)"},
         }
         with patch("scripts.verification.stress.verify_stress", return_value=payload) as mock:
-            result = _run(server_module.handle_verify_stress({"word": "замок"}))
+            content, outcome = _run(server_module.handle_verify_stress({"word": "замок"}))
             mock.assert_called_once_with("замок", None, None)
-            assert json.loads(result[0].text) == payload
+            assert json.loads(content[0].text) == payload
+            assert outcome["disposition"] == "ambiguous"
+            assert outcome["success"] is False
 
     def test_passes_pos_and_tags(self, server_module):
         with patch("scripts.verification.stress.verify_stress", return_value={}) as mock:
-            _run(server_module.handle_verify_stress({"word": "замок", "pos": "VERB", "tags": "Number=Sing"}))
+            content, outcome = _run(
+                server_module.handle_verify_stress({"word": "замок", "pos": "VERB", "tags": "Number=Sing"})
+            )
             mock.assert_called_once_with("замок", "VERB", "Number=Sing")
+            assert json.loads(content[0].text) == {}
+            assert outcome["disposition"] == "negative"
+            assert outcome["success"] is False
 
 
 @pytest.fixture
@@ -783,15 +816,19 @@ class TestIntegrationSmoke:
 
     def test_smoke_verify_word_archaic(self, server_module):
         """Test verify_word with a word that has an archaic tag."""
-        result = _run(server_module.handle_verify_word({"word": "звір"}))
-        assert "**is_archaic**: True" in result[0].text
-        assert "**is_archaic**: False" in result[0].text  # Because it has modern forms too
+        content, outcome = _run(server_module.handle_verify_word({"word": "звір"}))
+        assert "**is_archaic**: True" in content[0].text
+        assert "**is_archaic**: False" in content[0].text  # Because it has modern forms too
+        assert outcome["disposition"] == "supported"
+        assert outcome["success"] is True
 
     def test_smoke_verify_lemma_archaic(self, server_module):
         """Test verify_lemma with a lemma that has archaic forms."""
-        result = _run(server_module.handle_verify_lemma({"lemma": "звір"}))
-        assert "has_archaic_forms: True" in result[0].text
-        assert "**is_archaic**: True" in result[0].text
+        content, outcome = _run(server_module.handle_verify_lemma({"lemma": "звір"}))
+        assert "has_archaic_forms: True" in content[0].text
+        assert "**is_archaic**: True" in content[0].text
+        assert outcome["disposition"] == "supported"
+        assert outcome["success"] is True
 
     def test_smoke_check_modern_form_mixed(self, server_module):
         """Test check_modern_form with a word that has both modern and archaic tags."""
@@ -879,9 +916,10 @@ class TestHealthEndpoint:
 
     def test_handle_health_response(self, server_module):
         app = server_module.create_http_app()
-        # #7037 wraps the ASGI app to 405 GET/DELETE on /mcp; unwrap the raw
-        # Starlette app for route introspection.
-        app = getattr(app, "app", app)
+        # The HTTP app has two real middleware layers: attempt auth outside
+        # the unsupported-method guard. Unwrap both before route inspection.
+        while not hasattr(app, "routes"):
+            app = app.app
         route_paths = {getattr(r, "path", None) for r in app.routes}
         assert "/health" in route_paths
         assert "/sse" not in route_paths

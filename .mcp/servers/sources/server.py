@@ -31,6 +31,7 @@ import re
 import sys
 import unicodedata
 from difflib import SequenceMatcher
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -1321,8 +1322,70 @@ async def handle_verify_source_attribution(args: dict) -> list[TextContent]:
     return [TextContent(type="text", text=json.dumps(payload, indent=2, ensure_ascii=False))]
 
 
-async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[list[TextContent], bool]:
-    """Core tool-call dispatch. Returns ``(content, is_error)``; never raises.
+# --- V4 canonical Sources-invocation recording (PR #7662 repair 8) ---------
+#
+# Authenticated per-attempt capability arrives through the existing MCP HTTP
+# Authorization header. Ordinary curriculum calls without a Bearer token
+# never record. Caller ``_v4_evidence_*`` correlation arguments are ignored
+# and discarded so they cannot mint authority.
+
+from learn_ukrainian_v4_runtime.sources_transport import (
+    ACTIVE_ATTEMPT as _V4_ACTIVE_ATTEMPT,
+)
+from learn_ukrainian_v4_runtime.sources_transport import (
+    AttemptAuthMiddleware as _V4AttemptAuthMiddleware,
+)
+from learn_ukrainian_v4_runtime.sources_transport import (
+    record_typed_invocation as _record_v4_typed_invocation,
+)
+
+
+@lru_cache(maxsize=1)
+def _v4_server_code_digest() -> str:
+    """The running server file's own sha256 -- the tool version recorded for
+    every V4 invocation. A caller cannot assert it, and a changed server
+    yields a different version (and therefore a different invocation id)."""
+    return _sha256_of_file(Path(__file__).resolve())
+
+
+def _vesum_source_version() -> str:
+    try:
+        from scripts.rag.config import VESUM_DB_PATH
+
+        path = Path(VESUM_DB_PATH)
+        if path.is_file():
+            return _sha256_of_file(path)
+    except Exception:
+        pass
+    return "vesum-source-unversioned"
+
+
+def _discard_retired_v4_evidence_args(arguments: dict[str, Any]) -> None:
+    if not isinstance(arguments, dict):
+        return
+    for key in (
+        "_v4_evidence_request_id",
+        "_v4_evidence_row_content_sha256",
+        "_v4_evidence_lookup_ids",
+        "_v4_evidence_identifier",
+    ):
+        arguments.pop(key, None)
+
+
+
+
+def _typed_identifier(namespace: str, typed_result: dict[str, Any]) -> str:
+    from scripts.fleet_comms import v4_canonical_authority_store as v4_store
+
+    return v4_store.immutable_evidence_identifier(
+        namespace=namespace,
+        source_version=_vesum_source_version(),
+        typed_result=typed_result,
+    )
+
+
+async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[list[TextContent], bool, dict[str, Any] | None]:
+    """Core tool-call dispatch. Returns ``(content, is_error, typed_outcome)``; never raises.
 
     This is the one place that turns a handler exception or an unknown tool
     name into a result — both ``call_tool`` (the legacy module-level
@@ -1333,6 +1396,9 @@ async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[lis
     import time as _time
     _t0 = _time.monotonic()
     privacy_mode = bool(arguments.pop("_privacy_mode", False)) if isinstance(arguments, dict) else False
+    _discard_retired_v4_evidence_args(arguments)
+    if _V4_ACTIVE_ATTEMPT.get() is not None and name not in {"verify_word", "verify_words", "verify_lemma", "verify_stress", "check_modern_form"}:
+        return [TextContent(type="text", text="V4 tool capability refused")], True, None
     try:
         # Dispatch to handler
         _handlers = {
@@ -1382,8 +1448,11 @@ async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[lis
         else:
             result = [TextContent(type="text", text=f"Unknown tool: {name}")]
             _log_tool_call(name, arguments, error="unknown tool", privacy_mode=privacy_mode)
-            return result, True
+            return result, True, None
 
+        typed_outcome = None
+        if isinstance(result, tuple) and len(result) == 2:
+            result, typed_outcome = result
         # Log successful call
         _elapsed = _time.monotonic() - _t0
         _resp_text = "\n".join(t.text for t in result) if result else ""
@@ -1391,11 +1460,13 @@ async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[lis
             name, arguments, response_chars=len(_resp_text), duration_s=_elapsed,
             response_text=_resp_text, privacy_mode=privacy_mode,
         )
-        return result, False
+        if typed_outcome is not None:
+            _record_v4_typed_invocation(name=name, typed_outcome=typed_outcome)
+        return result, False, typed_outcome
     except Exception as e:
         _elapsed = _time.monotonic() - _t0
         _log_tool_call(name, arguments, duration_s=_elapsed, error=f"{type(e).__name__}: {e}", privacy_mode=privacy_mode)
-        return [TextContent(type="text", text=f"Error in {name}: {type(e).__name__}: {e}")], True
+        return [TextContent(type="text", text=f"Error in {name}: {type(e).__name__}: {e}")], True, None
 
 
 async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
@@ -1410,7 +1481,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
     refuses to trust this exact prose marker defensively, in case a legacy
     or downgraded server ever puts it on the wire.
     """
-    content, _is_error = await _dispatch_tool_call(name, arguments)
+    content, _is_error, _typed = await _dispatch_tool_call(name, arguments)
     return content
 
 
@@ -1428,12 +1499,12 @@ async def _on_call_tool(_ctx: Any, params: CallToolRequestParams) -> CallToolRes
     server-side only, in the hash-only privacy log (``_log_tool_call``).
     """
     try:
-        _content, is_error = await _dispatch_tool_call(params.name, dict(params.arguments or {}))
+        _content, is_error, typed_outcome = await _dispatch_tool_call(params.name, dict(params.arguments or {}))
     except Exception:
         return CallToolResult(content=[TextContent(type="text", text="Tool call failed.")], isError=True)
     if is_error:
         return CallToolResult(content=[TextContent(type="text", text=f"Tool call failed: {params.name}.")], isError=True)
-    return CallToolResult(content=_content, isError=False)
+    return CallToolResult(content=_content, structured_content=typed_outcome, isError=False)
 
 
 server = Server("sources", on_list_tools=_on_list_tools, on_call_tool=_on_call_tool)
@@ -1669,81 +1740,50 @@ async def handle_mcp_server_identity(args: dict) -> list[TextContent]:
     return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
 
 
-def _is_archaic(tags: str | None) -> bool:
-    """Helper to check if 'arch' tag exists in VESUM tag string."""
-    if not tags:
-        return False
-    return "arch" in tags.split(":")
+def _is_archaic(tags):
+    return v4_handlers._is_archaic(tags)
 
 
-async def handle_check_modern_form(args: dict) -> list[TextContent]:
-    word = args["word"]
-
-    from scripts.verification.vesum import verify_word
-    matches = await asyncio.to_thread(verify_word, word, None)
-
-    if not matches:
-        return [TextContent(type="text", text=json.dumps({
-            "is_modern_codified": False,
-            "has_archaic_form": False,
-            "has_only_archaic_form": False,
-            "error": "Word not found in VESUM."
-        }))]
-
-    has_archaic = False
-    has_modern = False
-    for m in matches:
-        if _is_archaic(m.get("tags")):
-            has_archaic = True
-        else:
-            has_modern = True
-
-    return [TextContent(type="text", text=json.dumps({
-        "is_modern_codified": has_modern,
-        "has_archaic_form": has_archaic,
-        "has_only_archaic_form": has_archaic and not has_modern
-    }))]
 
 
-async def handle_verify_word(args: dict) -> list[TextContent]:
-    word = args["word"]
-    pos_filter = args.get("pos_filter")
-
-    from scripts.verification.vesum import verify_word
-    matches = await asyncio.to_thread(verify_word, word, pos_filter)
-
-    if not matches:
-        return [TextContent(type="text", text=f"'{word}' — NOT FOUND in VESUM. This word form may not exist in standard Ukrainian.")]
-
-    lines = [f"'{word}' — {len(matches)} match(es) in VESUM:\n"]
-    for m in matches:
-        tags = m.get("tags") or ""
-        archaic = _is_archaic(tags)
-        lines.append(f"- **lemma**: {m.get('lemma')}  |  **pos**: {m.get('pos')}  |  **tags**: `{tags}`  |  **is_archaic**: {archaic}")
-
-    return [TextContent(type="text", text="\n".join(lines))]
+from learn_ukrainian_v4_runtime import sources_handlers as v4_handlers
 
 
-async def handle_verify_words(args: dict) -> list[TextContent]:
-    words = args["words"]
-    pos_filter = args.get("pos_filter")
+class _V4VerificationResources:
+    def source_version(self):
+        return _vesum_source_version()
 
-    from scripts.verification.vesum import verify_words
-    results = await asyncio.to_thread(verify_words, words, pos_filter)
+    def verify_word(self, *args):
+        from scripts.verification.vesum import verify_word
+        return verify_word(*args)
 
-    lines = [f"Batch verification: {len(words)} words\n"]
-    found = 0
-    for word in words:
-        matches = results.get(word, [])
-        if matches:
-            found += 1
-            tags_str = ", ".join(f"{m['lemma']}({m['pos']})" for m in matches[:3])
-            lines.append(f"- **{word}** — FOUND ({len(matches)} match): {tags_str}")
-        else:
-            lines.append(f"- **{word}** — NOT FOUND")
+    def verify_words(self, *args):
+        from scripts.verification.vesum import verify_words
+        return verify_words(*args)
 
-    lines.insert(1, f"Found: {found}/{len(words)}\n")
-    return [TextContent(type="text", text="\n".join(lines))]
+    def verify_lemma(self, *args):
+        from scripts.verification.vesum import verify_lemma
+        return verify_lemma(*args)
+
+    def verify_stress(self, *args):
+        from scripts.verification.stress import verify_stress
+        return verify_stress(*args)
+
+v4_handlers.configure_backend(_V4VerificationResources())
+
+async def handle_check_modern_form(args: dict):
+    return await v4_handlers.handle_check_modern_form(args)
+
+
+
+async def handle_verify_word(args: dict):
+    return await v4_handlers.handle_verify_word(args)
+
+
+
+async def handle_verify_words(args: dict):
+    return await v4_handlers.handle_verify_words(args)
+
 
 
 def _compact_vocabulary_value(value: object, *, max_chars: int | None = None) -> str:
@@ -1798,9 +1838,10 @@ async def handle_vet_vocabulary(args: dict) -> list[TextContent]:
     words = submitted_words[:500]
     include_definitions = bool(args.get("include_definitions", False))
 
+    import wiki.sources_db as sdb
+
     from scripts.verification.check_ru_morph import check_russian_patterns_batch
     from scripts.verification.vesum import verify_words
-    from wiki import sources_db as sdb
 
     vesum_results = await asyncio.to_thread(verify_words, words)
     lookup_terms = list(dict.fromkeys(
@@ -1844,46 +1885,14 @@ async def handle_vet_vocabulary(args: dict) -> list[TextContent]:
     return [TextContent(type="text", text="\n".join(lines))]
 
 
-async def handle_verify_lemma(args: dict) -> list[TextContent]:
-    lemma = args["lemma"]
-
-    from scripts.verification.vesum import verify_lemma
-    forms = await asyncio.to_thread(verify_lemma, lemma)
-
-    if not forms:
-        return [TextContent(type="text", text=f"Lemma '{lemma}' — NOT FOUND in VESUM.")]
-
-    # Group forms by POS for readability
-    by_pos: dict[str, list] = {}
-    has_archaic_forms = False
-    for f in forms:
-        is_archaic = _is_archaic(f.get("tags"))
-        if is_archaic:
-            has_archaic_forms = True
-        f["is_archaic"] = is_archaic
-        by_pos.setdefault(f.get("pos", "unknown"), []).append(f)
-
-    lines = [f"'{lemma}' — {len(forms)} form(s) across {len(by_pos)} POS (has_archaic_forms: {has_archaic_forms}):\n"]
-    for pos, pos_forms in by_pos.items():
-        lines.append(f"### {pos} ({len(pos_forms)} forms)")
-        for f in pos_forms:
-            tags = f.get("tags") or ""
-            is_archaic = f.get("is_archaic", False)
-            lines.append(f"- {f.get('word_form')}  |  `{tags}`  |  **is_archaic**: {is_archaic}")
-        lines.append("")
-
-    return [TextContent(type="text", text="\n".join(lines))]
+async def handle_verify_lemma(args: dict):
+    return await v4_handlers.handle_verify_lemma(args)
 
 
-async def handle_verify_stress(args: dict) -> list[TextContent]:
-    word = args["word"]
-    pos = args.get("pos")
-    tags = args.get("tags")
 
-    from scripts.verification.stress import verify_stress
-    payload = await asyncio.to_thread(verify_stress, word, pos, tags)
+async def handle_verify_stress(args: dict):
+    return await v4_handlers.handle_verify_stress(args)
 
-    return [TextContent(type="text", text=json.dumps(payload, indent=2, ensure_ascii=False))]
 
 
 def _lookup_wikipedia_in_db(query: str) -> dict | None:
@@ -2637,7 +2646,9 @@ def create_http_app():
         stateless_http=True,
         custom_starlette_routes=custom_routes,
     )
-    return _RejectUnsupportedStatelessMcpMethods(app)
+    return _V4AttemptAuthMiddleware(_RejectUnsupportedStatelessMcpMethods(app))
+
+
 
 
 async def main_sse(host: str = "127.0.0.1", port: int = 8766):

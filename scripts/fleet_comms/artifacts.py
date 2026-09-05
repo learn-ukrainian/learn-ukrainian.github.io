@@ -743,6 +743,49 @@ class ArtifactStore:
                     reclaimed.append(digest)
         return reclaimed
 
+    # --- V4 canonical authority store (PR #7662 repair 6/7) ----------------
+    #
+    # Read-only projections of this same plane, plus the exclusive Sources
+    # writer. There is deliberately NO method here that accepts a
+    # caller-built execution observation (PR #7662 repair 8): the only
+    # writer of ``v4_execution_observations`` is the native runner via
+    # ``RequestExecutor.finalize_v4_runner_execution``. These methods only
+    # ever supply this store's own already-resolved connection and dialect.
+
+    def resolve_v4_execution_observation(self, *, task_id: str, run_id: str, role: str) -> dict[str, Any] | None:
+        from scripts.fleet_comms import v4_canonical_authority_store as v4_store
+
+        return v4_store.resolve_execution_observation(task_id=task_id, run_id=run_id, role=role, conn=self._conn, is_pg=self._authority is Authority.PG)
+
+    def record_v4_sources_invocation_from_typed_outcome(
+        self,
+        *,
+        attempt_id: str,
+        tool_name: str,
+        tool_version: str,
+        typed_outcome: dict[str, Any],
+    ) -> dict[str, Any] | None:
+        """The exclusive Sources-invocation writer: builds the record from
+        a typed handler outcome and an authenticated attempt."""
+        self._refuse_readonly_write("record_v4_sources_invocation_from_typed_outcome")
+        from scripts.fleet_comms import v4_canonical_authority_store as v4_store
+
+        with self._transaction() as conn:
+            return v4_store.record_sources_invocation_from_typed_outcome(
+                conn=conn,
+                is_pg=self._authority is Authority.PG,
+                attempt_id=attempt_id,
+                tool_name=tool_name,
+                tool_version=tool_version,
+                typed_outcome=typed_outcome,
+                commit=False,
+            )
+
+    def resolve_v4_sources_invocation(self, *, invocation_id: str) -> dict[str, Any] | None:
+        from scripts.fleet_comms import v4_canonical_authority_store as v4_store
+
+        return v4_store.resolve_sources_invocation(invocation_id=invocation_id, conn=self._conn, is_pg=self._authority is Authority.PG)
+
     def _write_blob_atomic(self, dest: Path, data: bytes) -> None:
         fd, tmp_name = tempfile.mkstemp(prefix=".art-", dir=str(dest.parent))
         tmp_path = Path(tmp_name)

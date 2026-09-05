@@ -31,6 +31,7 @@ A4_RECEIPT_PATH = ADMISSION / "dataset_v4_a4_deterministic_extraction_receipt_v1
 A5_RECEIPT_PATH = ADMISSION / "dataset_v4_a5_evidence_enrichment_receipt_v1.json"
 A6_RECEIPT_PATH = ADMISSION / "dataset_v4_a6_blind_arena_receipt_v1.json"
 MANIFEST_PATH = ADMISSION / "dataset_v4_pilot_slot_manifest_v1.json"
+A3_SEAL_RECEIPT_PATH = ADMISSION / "dataset_v4_a3_heldout_source_family_seal_receipt_v1.json"
 
 V4_SHA256 = "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"
 
@@ -40,6 +41,7 @@ REAL_A4_RECEIPT = json.loads(A4_RECEIPT_PATH.read_text(encoding="utf-8"))
 REAL_A5_RECEIPT = json.loads(A5_RECEIPT_PATH.read_text(encoding="utf-8"))
 REAL_A6_RECEIPT = json.loads(A6_RECEIPT_PATH.read_text(encoding="utf-8"))
 REAL_MANIFEST = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+REAL_A3_SEAL_RECEIPT = json.loads(A3_SEAL_RECEIPT_PATH.read_text(encoding="utf-8"))
 
 FORBIDDEN_KEYS = a7.FORBIDDEN_KEYS
 FORBIDDEN_SUBSTRINGS = a7.FORBIDDEN_SUBSTRINGS
@@ -53,7 +55,7 @@ def _all_keys(value: object) -> set[str]:
     return set()
 
 
-def _write_receipt_tree(tmp_path: Path, *, a2=None, a4=None, a5=None, a6=None, manifest=None) -> Path:
+def _write_receipt_tree(tmp_path: Path, *, a2=None, a4=None, a5=None, a6=None, manifest=None, a3_seal=None) -> Path:
     admission_dir = tmp_path / "data/projects/open_model_data/admission"
     admission_dir.mkdir(parents=True)
     (admission_dir / "dataset_v4_a2_source_operation_admission_receipt_v1.json").write_text(json.dumps(a2 if a2 is not None else REAL_A2_RECEIPT))
@@ -61,6 +63,7 @@ def _write_receipt_tree(tmp_path: Path, *, a2=None, a4=None, a5=None, a6=None, m
     (admission_dir / "dataset_v4_a5_evidence_enrichment_receipt_v1.json").write_text(json.dumps(a5 if a5 is not None else REAL_A5_RECEIPT))
     (admission_dir / "dataset_v4_a6_blind_arena_receipt_v1.json").write_text(json.dumps(a6 if a6 is not None else REAL_A6_RECEIPT))
     (admission_dir / "dataset_v4_pilot_slot_manifest_v1.json").write_text(json.dumps(manifest if manifest is not None else REAL_MANIFEST))
+    (admission_dir / "dataset_v4_a3_heldout_source_family_seal_receipt_v1.json").write_text(json.dumps(a3_seal if a3_seal is not None else REAL_A3_SEAL_RECEIPT))
     return tmp_path
 
 
@@ -222,8 +225,13 @@ def test_a7_receipt_never_names_source_text_a_held_out_family_or_a_plaintext_sou
 
 
 def test_a7_bindings_hash_to_disk_for_every_bound_artifact() -> None:
+    from learn_ukrainian_v4_runtime.resources import resource_root
+
     for name, binding in REAL_RECEIPT["bindings"].items():
-        path = ROOT / binding["path"]
+        path = resource_root() / (
+            "provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"
+            if binding["path"].startswith("scripts/") else binding["path"]
+        )
         assert path.is_file(), name
         assert a7.sha256_file(path) == binding["sha256"], name
 

@@ -242,8 +242,13 @@ def test_a6_packet_reuses_the_live_arena_engine_constants_never_a_stale_copy() -
 
 
 def test_a6_bindings_hash_to_disk_for_every_bound_artifact() -> None:
+    from learn_ukrainian_v4_runtime.resources import resource_root
+
     for name, binding in REAL_RECEIPT["bindings"].items():
-        path = ROOT / binding["path"]
+        path = resource_root() / (
+            "provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"
+            if binding["path"].startswith("scripts/") else binding["path"]
+        )
         assert path.is_file(), name
         assert a6.sha256_file(path) == binding["sha256"], name
 

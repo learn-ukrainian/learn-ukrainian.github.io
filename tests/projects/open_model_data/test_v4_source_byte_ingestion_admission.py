@@ -333,6 +333,8 @@ def test_validate_receipt_independently_refuses_a_tampered_descriptor_hash() -> 
     tampered = copy.deepcopy(_receipt())
     tampered["local_store_binding_descriptor"]["descriptor_sha256"] = "0" * 64
     with pytest.raises(admission.ByteIngestionAdmissionError, match="descriptor_sha256"):
+        admission.validate_local_store_binding_descriptor(tampered)
+    with pytest.raises(admission.ByteIngestionAdmissionError, match="unknown receipt or incomplete manifest"):
         admission.validate_receipt_independently(tampered)
 
 
@@ -359,6 +361,8 @@ def test_validate_receipt_independently_refuses_a_binding_mismatch() -> None:
     tampered = copy.deepcopy(_receipt())
     tampered["admitted_source_units"][0]["sqlite_table"] = "not_the_real_table"
     with pytest.raises(admission.ByteIngestionAdmissionError, match="frozen LOCAL_STORE_BINDINGS"):
+        admission.validate_admitted_source_units_reproduce(tampered)
+    with pytest.raises(admission.ByteIngestionAdmissionError, match="unknown receipt or incomplete manifest"):
         admission.validate_receipt_independently(tampered)
 
 
@@ -367,8 +371,13 @@ def test_validate_receipt_independently_refuses_a_binding_mismatch() -> None:
 
 def test_build_receipt_records_live_reachability_against_a_synthetic_store(tmp_path: Path) -> None:
     _make_sources_db(tmp_path)
-    receipt = admission.build_receipt(root=ROOT, primary_root=tmp_path)
-    admission.validate_receipt_independently(receipt, root=ROOT)
+    receipt = admission.build_receipt(primary_root=tmp_path)
+    admission.validate_receipt_schema(receipt)
+    admission.validate_local_store_binding_descriptor(receipt)
+    admission.validate_admitted_source_units_reproduce(receipt)
+    # A live reachability report is not the exact frozen production receipt.
+    with pytest.raises(admission.ByteIngestionAdmissionError, match="unknown receipt or incomplete manifest"):
+        admission.validate_receipt_independently(receipt)
     by_id = {unit["source_unit_id"]: unit for unit in receipt["admitted_source_units"]}
     assert by_id["db.external_articles"]["local_store_reachable_at_admission"] is True
     assert by_id["db.external_articles"]["row_count_observed_at_admission"] == 2
@@ -376,7 +385,7 @@ def test_build_receipt_records_live_reachability_against_a_synthetic_store(tmp_p
 
 
 def test_build_receipt_records_unreachable_when_local_store_absent(tmp_path: Path) -> None:
-    receipt = admission.build_receipt(root=ROOT, primary_root=tmp_path)
+    receipt = admission.build_receipt(primary_root=tmp_path)
     for unit in receipt["admitted_source_units"]:
         assert unit["local_store_reachable_at_admission"] is False
         assert unit["row_count_observed_at_admission"] is None

@@ -134,9 +134,11 @@ def test_a3_heldout_seal_bindings_match_exact_inputs() -> None:
     receipt = _receipt()
 
     for binding in receipt["bindings"].values():
-        bound_path = ROOT / binding["path"]
-        assert bound_path.is_file()
-        assert hashlib.sha256(bound_path.read_bytes()).hexdigest() == binding["sha256"]
+        from learn_ukrainian_v4_runtime import resources
+        logical = binding["path"]
+        if logical.startswith("scripts/"):
+            logical = "provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"
+        assert hashlib.sha256(resources.read_bytes(logical)).hexdigest() == binding["sha256"]
 
     assert receipt["bindings"]["cycle007_scope_circularity_evidence"]["v3_only"] is True
     assert receipt["bindings"]["cycle007_scope_circularity_evidence"]["used_for_denial_only"] is True

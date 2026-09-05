@@ -5,6 +5,20 @@ Wants=network-online.target
 
 [Service]
 Type=simple
+UMask=0077
+NoNewPrivileges=yes
+PrivateMounts=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectProc=invisible
+ProcSubset=pid
+SystemCallFilter=~@debug
+RestrictSUIDSGID=yes
+LockPersonality=yes
+CapabilityBoundingSet=
+Environment=HRAMATKA_V4_EXECUTION_ENABLED=0
+Environment=HRAMATKA_V4_ADMISSION_ENABLED=0
 WorkingDirectory=@REPO_ROOT@
 Environment=PYTHONUNBUFFERED=1
 ExecStart=@REPO_ROOT@/.venv/bin/python .mcp/servers/sources/server.py --standalone --host 127.0.0.1 --port 8766

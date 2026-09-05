@@ -121,14 +121,37 @@ def _call_on_call_tool(server, name: str, arguments: dict):
     return asyncio.run(server._on_call_tool(None, params))
 
 
-def test_on_call_tool_marks_a_handler_exception_iserror_true(server):
+def test_on_call_tool_marks_typed_invalid_input_as_semantic_failure(server):
     private_word = "СЕКРЕТНЕ_СЛОВО_ІНТЕГРАЦІЙНОГО_ТЕСТУ"
     result = _call_on_call_tool(server, "verify_word", {"word_typo": private_word})
-    assert result.is_error is True
+    assert result.is_error is False
+    assert result.structured_content["tool"] == "verify_word"
+    assert result.structured_content["disposition"] == "invalid_input"
+    assert result.structured_content["success"] is False
     dumped = json.dumps([block.text for block in result.content])
-    # No raw exception message or argument value ever reaches the wire result.
+    # No raw exception marker, private argument name, or argument value reaches
+    # the semantic-failure wire result.
     assert private_word not in dumped
     assert "word_typo" not in dumped
+    assert "Error in " not in dumped
+
+
+def test_on_call_tool_marks_a_genuine_handler_exception_as_transport_error(server, monkeypatch):
+    private_word = "СЕКРЕТНЕ_СЛОВО_ІНТЕГРАЦІЙНОГО_ТЕСТУ_EXCEPTION"
+
+    async def _boom(_arguments):
+        raise RuntimeError(private_word)
+
+    monkeypatch.setattr(server, "handle_verify_word", _boom)
+    result = _call_on_call_tool(server, "verify_word", {"word": "книга"})
+
+    assert result.is_error is True
+    assert result.structured_content is None
+    dumped = json.dumps([block.text for block in result.content])
+    assert dumped == '["Tool call failed: verify_word."]'
+    assert private_word not in dumped
+    assert "RuntimeError" not in dumped
+    assert "Error in " not in dumped
 
 
 def test_on_call_tool_marks_unknown_tool_iserror_true(server):
@@ -168,6 +191,8 @@ def test_on_call_tool_mcp_server_identity_returns_public_safe_hashes(server):
 def test_call_tool_legacy_error_marker_never_appears_on_the_real_wire_path(server):
     """The legacy 'Error in ...' prose marker stays inside call_tool(); the real MCP path never emits it."""
     result = _call_on_call_tool(server, "verify_word", {})  # missing required "word"
-    assert result.is_error is True
+    assert result.is_error is False
+    assert result.structured_content["disposition"] == "invalid_input"
+    assert result.structured_content["success"] is False
     for block in result.content:
         assert not block.text.startswith("Error in ")

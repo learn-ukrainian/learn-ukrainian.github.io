@@ -91,13 +91,97 @@ def _selection(context: object) -> RoutingSelection:
     )
 
 
-def test_v6_migration_is_idempotent_and_has_authority_tables(tmp_path: Path) -> None:
+def test_v10_migration_is_idempotent_and_has_authority_tables(tmp_path: Path) -> None:
+    """Ledger head applies once, replays as a no-op, and carries every
+    authority table this plane is responsible for.
+
+    The pinned version is deliberately a literal, not ``MIGRATIONS[-1]``
+    compared to itself: adding a migration must be a conscious edit here,
+    with the new tables asserted below. Head is 10 since PR #7662 repair 8
+    added runner-owned attempts, the per-attempt capability column/index, and
+    authorship receipts (v10) on top of the V4 execution dispatch binding (v9).
+    """
     connection = sqlite3.connect(tmp_path / "comms.sqlite3")
     try:
-        assert apply_migrations(connection) == MIGRATIONS[-1].version == 7
-        assert apply_migrations(connection) == 7
+        assert apply_migrations(connection) == MIGRATIONS[-1].version == 10
+        assert apply_migrations(connection) == 10, "re-applying the ledger must be an idempotent no-op"
         tables = {row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
         assert {"routing_reservations", "routing_reservation_decisions", "routing_circuit_state"} <= tables
+        assert {
+            "v4_execution_observations",
+            "v4_sources_invocations",
+            "v4_execution_dispatch_bindings",
+            "v4_execution_attempts",
+            "v4_authorship_receipts",
+        } <= tables
+        # The V4 authority tables must carry the columns their writers rely
+        # on, including the repair-7 request correlation used to derive an
+        # observation's verification tool ids and to audit provenance.
+        observation_columns = {row[1] for row in connection.execute("PRAGMA table_info(v4_execution_observations)")}
+        assert {"task_id", "run_id", "role", "record_sha256", "record_json", "request_id"} <= observation_columns
+        invocation_columns = {row[1] for row in connection.execute("PRAGMA table_info(v4_sources_invocations)")}
+        assert {"invocation_id", "record_sha256", "record_json", "request_id", "attempt_id"} <= invocation_columns
+        binding_columns = {row[1] for row in connection.execute("PRAGMA table_info(v4_execution_dispatch_bindings)")}
+        assert {"request_id", "task_id", "run_id", "role", "record_sha256", "record_json"} <= binding_columns
+        attempt_columns = {row[1]: row for row in connection.execute("PRAGMA table_info(v4_execution_attempts)")}
+        assert {
+            "attempt_id",
+            "request_id",
+            "task_id",
+            "run_id",
+            "role",
+            "state",
+            "capability_digest",
+            "binding_sha256",
+            "started_at",
+            "terminal_at",
+        } <= attempt_columns.keys()
+        assert attempt_columns["attempt_id"][2] == "TEXT"
+        assert attempt_columns["attempt_id"][5] == 1
+        assert attempt_columns["request_id"][3] == 1
+        assert attempt_columns["capability_digest"][3] == 1
+        authorship_columns = {row[1] for row in connection.execute("PRAGMA table_info(v4_authorship_receipts)")}
+        assert {"receipt_id", "task_id", "run_id", "record_sha256", "record_json", "recorded_at"} <= authorship_columns
+
+        observation_indexes = {str(row[1]) for row in connection.execute("PRAGMA index_list('v4_execution_observations')")}
+        assert "idx_v4_execution_observations_request" in observation_indexes
+        invocation_indexes = {str(row[1]) for row in connection.execute("PRAGMA index_list('v4_sources_invocations')")}
+        assert {"idx_v4_sources_invocations_request", "idx_v4_sources_invocations_attempt"} <= invocation_indexes
+        attempt_unique_indexes = {
+            str(row[1])
+            for row in connection.execute("PRAGMA index_list('v4_execution_attempts')")
+            if int(row[2]) == 1
+        }
+        assert len(attempt_unique_indexes) >= 2  # request_id and capability_digest
+        authorship_unique_indexes = {
+            str(row[1])
+            for row in connection.execute("PRAGMA index_list('v4_authorship_receipts')")
+            if int(row[2]) == 1
+        }
+        assert authorship_unique_indexes
+
+        connection.execute(
+            "INSERT INTO v4_execution_attempts("
+            "attempt_id, request_id, task_id, run_id, role, state, capability_digest, binding_sha256, started_at"
+            ") VALUES ('attempt-a', 'request-a', 'task-a', 'run-a', 'author', 'running', 'cap-a', 'bind-a', 'now')"
+        )
+        with pytest.raises(sqlite3.IntegrityError):
+            connection.execute(
+                "INSERT INTO v4_execution_attempts("
+                "attempt_id, request_id, task_id, run_id, role, state, capability_digest, binding_sha256, started_at"
+                ") VALUES ('attempt-b', 'request-b', 'task-b', 'run-b', 'reviewer', 'running', 'cap-a', 'bind-b', 'now')"
+            )
+        # One slot may be bound by exactly one request, and one request may
+        # produce exactly one observation.
+        connection.execute(
+            "INSERT INTO v4_execution_dispatch_bindings(request_id, task_id, run_id, role, record_sha256, record_json, recorded_at)"
+            " VALUES ('req-a', 't', 'r', 'author', 'x', '{}', 'now')"
+        )
+        with pytest.raises(sqlite3.IntegrityError):
+            connection.execute(
+                "INSERT INTO v4_execution_dispatch_bindings(request_id, task_id, run_id, role, record_sha256, record_json, recorded_at)"
+                " VALUES ('req-b', 't', 'r', 'author', 'y', '{}', 'now')"
+            )
     finally:
         connection.close()
 

@@ -261,10 +261,10 @@ def test_a13_receipt_binds_v4_sha_and_control_surfaces() -> None:
 
 
 def test_a13_receipt_binds_the_merged_a12_receipt_by_its_known_public_sha() -> None:
-    # The merged A12 receipt's public sha256, frozen at dispatch time (PR #7654 repair cycle 3:
-    # A7's own upstream hash changed (dropped the undecided A7-vs-A6 subset), rippling into A8-A12).
-    assert a13.sha256_file(A12_RECEIPT_PATH) == "281db8794b83d4dd208470cfc23366012a8309577069d54e6ea28592695bb939"
-    assert a13.A12_RECEIPT_SHA256_AT_MERGE == "281db8794b83d4dd208470cfc23366012a8309577069d54e6ea28592695bb939"
+    # The merged A12 receipt's public sha256, frozen at dispatch time (PR #7662 repair 3:
+    # A9's content changed under the Repair 2 real-slot-mechanism fix, rippling into A10-A13).
+    assert a13.sha256_file(A12_RECEIPT_PATH) == "150b7532d814c35bf27176943206fa8caaf4650f220ce498f60b015a62f9e538"
+    assert a13.A12_RECEIPT_SHA256_AT_MERGE == "150b7532d814c35bf27176943206fa8caaf4650f220ce498f60b015a62f9e538"
 
 
 def test_a13_receipt_carries_forward_every_a2_a4_a5_a6_a7_a8_a9_a10_a11_a12_residual_unresolved() -> None:
@@ -338,8 +338,13 @@ def test_a13_receipt_never_names_source_text_a_held_out_family_or_a_plaintext_so
 
 
 def test_a13_bindings_hash_to_disk_for_every_bound_artifact() -> None:
+    from learn_ukrainian_v4_runtime.resources import resource_root
+
     for name, binding in REAL_RECEIPT["bindings"].items():
-        path = ROOT / binding["path"]
+        path = resource_root() / (
+            "provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"
+            if binding["path"].startswith("scripts/") else binding["path"]
+        )
         assert path.is_file(), name
         assert a13.sha256_file(path) == binding["sha256"], name
 

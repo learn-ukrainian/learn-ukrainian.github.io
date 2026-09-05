@@ -32,6 +32,7 @@ import shutil
 from pathlib import Path
 from typing import Any
 
+from scripts.projects.open_model_data import v4_a3_candidate_family_floor as floor
 from scripts.projects.open_model_data import v4_a4_deterministic_extraction as a4
 from scripts.projects.open_model_data import v4_a6_blind_arena as a6
 from scripts.projects.open_model_data import v4_a7_original_row_factory as a7
@@ -50,12 +51,41 @@ REAL_A2 = _load("dataset_v4_a2_source_operation_admission_receipt_v1.json")
 REAL_A4 = _load("dataset_v4_a4_deterministic_extraction_receipt_v1.json")
 REAL_A5 = _load("dataset_v4_a5_evidence_enrichment_receipt_v1.json")
 REAL_MANIFEST = _load("dataset_v4_pilot_slot_manifest_v1.json")
+REAL_SEAL_RECEIPT = _load("dataset_v4_a3_heldout_source_family_seal_receipt_v1.json")
+
+
+def _top_up_supporting_units_for_candidate_family_floor(supporting_ids: list[str]) -> list[str]:
+    """Ensure ``supporting_ids`` names units from at least
+    ``heldout_count + 1`` distinct families under the real seal receipt's
+    own public registry (Invariant D1, PR #7662 repair 4 -- D1 is now
+    enforced unconditionally at every A7 load-bearing path, including this
+    fixture's own manifest ``ASSIGNED`` transition). Appends additional
+    real, unmutated unit ids from other registered families,
+    deterministically, only when the stratum's own real supporting ids do
+    not already meet the floor -- never invents a fake unit id."""
+    registry = REAL_SEAL_RECEIPT["source_family_registry"]
+    heldout_count = REAL_SEAL_RECEIPT["heldout_partition_seal"]["heldout_count"]
+    mapping = floor.unit_to_family_map(registry)
+    supporting = list(supporting_ids)
+    have_families = {mapping[u] for u in supporting if u in mapping}
+    if len(have_families) >= heldout_count + 1:
+        return supporting
+    for family in sorted(registry["families"], key=lambda f: f["family_id"]):
+        if family["family_id"] in have_families or not family["member_source_unit_ids"]:
+            continue
+        supporting.append(sorted(family["member_source_unit_ids"])[0])
+        have_families.add(family["family_id"])
+        if len(have_families) >= heldout_count + 1:
+            break
+    return supporting
 
 
 def resolved_a2_receipt(resolved_stratum: str) -> dict[str, Any]:
     """A2 with exactly ``resolved_stratum``'s residual cleared (``residual_
     ids: []``, ``coverage_state: "resolved"``) -- every other stratum's
-    real, unresolved residual stays untouched."""
+    real, unresolved residual stays untouched. ``resolved_stratum``'s own
+    ``supporting_existing_source_unit_ids`` is topped up (real ids only) so
+    the stratum's manifest ``ASSIGNED`` transition below meets Invariant D1."""
     receipt = copy.deepcopy(REAL_A2)
     resolved_ids: set[str] = set()
     for coverage in receipt["stratum_coverage_map"]:
@@ -63,6 +93,7 @@ def resolved_a2_receipt(resolved_stratum: str) -> dict[str, Any]:
             resolved_ids.update(coverage["residual_ids"])
             coverage["residual_ids"] = []
             coverage["coverage_state"] = "resolved"
+            coverage["supporting_existing_source_unit_ids"] = _top_up_supporting_units_for_candidate_family_floor(coverage["supporting_existing_source_unit_ids"])
     receipt["residuals"] = [r for r in receipt["residuals"] if r["residual_id"] not in resolved_ids]
     return receipt
 
@@ -99,6 +130,16 @@ def build_synthetic_chain_root(tmp_path: Path, *, resolved_stratum: str) -> Path
     (admission_dir / "dataset_v4_a5_evidence_enrichment_receipt_v1.json").write_text(json.dumps(synthetic_a5))
     (admission_dir / "dataset_v4_pilot_slot_manifest_v1.json").write_text(json.dumps(manifest))
     shutil.copytree(ROOT / "scripts/projects/open_model_data", tmp_path / "scripts/projects/open_model_data", dirs_exist_ok=True)
+    # Hash original implementation bytes in this synthetic legacy repository.
+    # Test imports execute the package; these mode-0600 fixture files are not loaded.
+    from learn_ukrainian_v4_runtime import resources
+    spec = json.loads(resources.read_bytes("provenance/v1/bindings.json"))
+    for receipt in spec["receipts"]:
+        for binding in receipt["bindings"].values():
+            if binding["path"].startswith("scripts/"):
+                path = tmp_path / binding["path"]
+                path.write_bytes(resources.read_bytes("provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"))
+                path.chmod(0o600)
     return tmp_path
 
 

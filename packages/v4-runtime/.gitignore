@@ -1,0 +1,10 @@
+/build/
+/dist/
+/src/*.egg-info/
+/src/learn_ukrainian_v4_runtime/data/
+/src/learn_ukrainian_v4_runtime/docs/
+/src/learn_ukrainian_v4_runtime/schemas/
+/src/learn_ukrainian_v4_runtime/LICENSE*
+/src/learn_ukrainian_v4_runtime/release_manifest.json
+/src/learn_ukrainian_v4_runtime/_build_identity.py
+/src/learn_ukrainian_v4_runtime/provenance/v1/manifest.json

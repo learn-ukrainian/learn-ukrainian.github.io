@@ -87,7 +87,16 @@ def _fresh_receipt(salt: bytes, family_ids: list[str]) -> dict:
     return receipt
 
 
+@pytest.fixture(autouse=True)
+def _fixed_synthetic_provenance_resources():
+    from _v4_provenance_resource_fixture import synthetic_resources
+    with synthetic_resources():
+        yield
+
+
 def _write_receipt(tmp_path: Path, receipt: dict) -> Path:
+    from _v4_provenance_resource_fixture import ACTIVE
+    ACTIVE.get().install_seal(receipt, tmp_path)
     receipt_path = tmp_path / "receipt.json"
     receipt_path.write_text(json.dumps(receipt))
     return receipt_path
@@ -637,7 +646,7 @@ def test_a3_heldout_main_refuses_receipt_with_altered_binding_hash(tmp_path: Pat
     receipt_path = _write_receipt(tmp_path, receipt)
     private_dir = tmp_path / "private"
 
-    with pytest.raises(assignment.AssignmentError, match="on-disk sha256"):
+    with pytest.raises(assignment.AssignmentError, match="direct resource digest mismatch"):
         assignment.main(["--receipt", str(receipt_path), "--private-dir", str(private_dir), "--generate"])
     assert not (private_dir / assignment.MEMBERSHIP_FILENAME).exists()
 
@@ -928,76 +937,39 @@ def test_a3_heldout_assignment_migrate_refuses_commitment_drift(tmp_path: Path) 
 # invokes this script.
 
 
-def _init_primary_repo(path: Path) -> None:
-    path.mkdir(parents=True, exist_ok=True)
-    subprocess.run(["git", "init", "-q"], cwd=path, check=True, timeout=30)
-    subprocess.run(["git", "config", "user.email", "test@example.invalid"], cwd=path, check=True, timeout=30)
-    subprocess.run(["git", "config", "user.name", "Test"], cwd=path, check=True, timeout=30)
-    (path / "seed.txt").write_text("seed\n")
-    subprocess.run(["git", "add", "."], cwd=path, check=True, timeout=30)
-    subprocess.run(["git", "commit", "-q", "-m", "seed"], cwd=path, check=True, timeout=30)
-
-
-def test_discover_primary_root_resolves_worktree_to_primary_not_itself(tmp_path: Path) -> None:
-    primary = tmp_path / "primary"
-    _init_primary_repo(primary)
+def test_package_resources_are_fixed_across_worktree_metadata(tmp_path, monkeypatch) -> None:
+    baseline = assignment.DEFAULT_RECEIPT.read_bytes()
     worktree = tmp_path / "dispatch-worktree"
-    subprocess.run(
-        ["git", "worktree", "add", "-q", "-b", "dispatch-branch", str(worktree)],
-        cwd=primary,
-        check=True,
-        timeout=30,
-    )
-
-    assert assignment._discover_primary_root(worktree) == primary.resolve()
-    # Resolving from the primary checkout itself must also land on primary --
-    # the same function, same result, regardless of which checkout asks.
-    assert assignment._discover_primary_root(primary) == primary.resolve()
-    # And critically: never the worktree's own path.
-    assert assignment._discover_primary_root(worktree) != worktree.resolve()
+    worktree.mkdir()
+    (worktree / ".git").write_text("gitdir: deliberately-unresolvable-fixture\n")
+    monkeypatch.chdir(worktree)
+    assignment.validate_receipt_independently(json.loads(baseline))
+    assert assignment.DEFAULT_RECEIPT.read_bytes() == baseline
+    assert not (worktree / "batch_state").exists()
 
 
-def test_discover_primary_root_worktree_private_artifact_lands_on_primary(tmp_path: Path) -> None:
-    """End-to-end reproduction: --generate invoked from a dispatch-worktree-
-    shaped directory must still write the private artifact under the
-    *primary* checkout's batch_state/, never the worktree's own."""
-    primary = tmp_path / "primary"
-    _init_primary_repo(primary)
-    worktree = tmp_path / "dispatch-worktree"
-    subprocess.run(
-        ["git", "worktree", "add", "-q", "-b", "dispatch-branch-2", str(worktree)],
-        cwd=primary,
-        check=True,
-        timeout=30,
-    )
-
-    primary_batch_state = assignment._discover_primary_root(worktree) / "batch_state"
-    worktree_batch_state = worktree / "batch_state"
-    assert primary_batch_state == primary.resolve() / "batch_state"
-    assert not primary_batch_state.exists()
-    assert not worktree_batch_state.exists()
+def test_explicit_private_fixture_directory_is_independent_of_checkout(tmp_path, monkeypatch) -> None:
+    salt = bytes(range(32))
+    receipt = _write_receipt(tmp_path, _fresh_receipt(salt, FAMILY_IDS))
+    private = tmp_path / "explicit-private"
+    unrelated = tmp_path / "unrelated-working-directory"
+    unrelated.mkdir()
+    monkeypatch.chdir(unrelated)
+    _generate(monkeypatch, ["--receipt", str(receipt), "--private-dir", str(private), "--generate"], salt_hex=salt.hex())
+    assert (private / assignment.MEMBERSHIP_FILENAME).is_file()
+    assert not (unrelated / "batch_state").exists()
 
 
-def test_discover_primary_root_falls_back_when_git_unavailable(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """If git cannot be invoked at all (missing binary, not a repo), resolution
-    falls back to the caller's own root rather than raising -- so a non-git
-    sandbox still gets a usable (if unshared) private root instead of a crash."""
-    import subprocess as subprocess_module
-
-    def _raise_missing_git(*args: object, **kwargs: object) -> None:
-        raise FileNotFoundError("git not found")
-
-    monkeypatch.setattr(subprocess_module, "run", _raise_missing_git)
-    not_a_repo = tmp_path / "not-a-repo"
-    not_a_repo.mkdir()
-
-    assert assignment._discover_primary_root(not_a_repo) == not_a_repo
+def test_package_validation_does_not_invoke_git(tmp_path, monkeypatch) -> None:
+    def unavailable(*args, **kwargs):
+        raise AssertionError("package validation must not invoke a process")
+    monkeypatch.setattr(subprocess, "run", unavailable)
+    monkeypatch.chdir(tmp_path)
+    assignment.validate_receipt_independently(json.loads(assignment.DEFAULT_RECEIPT.read_bytes()))
 
 
-def test_discover_primary_root_falls_back_on_non_git_directory(tmp_path: Path) -> None:
-    """A real, non-mocked non-git directory (git exits non-zero) also falls
-    back to the caller's own root."""
-    not_a_repo = tmp_path / "not-a-repo"
-    not_a_repo.mkdir()
-
-    assert assignment._discover_primary_root(not_a_repo) == not_a_repo
+def test_package_validation_works_without_git_or_a_checkout(tmp_path, monkeypatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("PATH", "")
+    assignment.validate_receipt_independently(json.loads(assignment.DEFAULT_RECEIPT.read_bytes()))
+    assert list(tmp_path.iterdir()) == []
