@@ -390,6 +390,8 @@ AUTHOR_UK_BY_TRANSLIT: dict[str, str] = {
     "voron": "Ворон",
     # #4593 wave-1 STEM authors (title-probed from source pages 2026-07-06)
     "ryvkind": "Ривкінд",
+    # Grade 6 informatics title guard, shkola.in.ua/2894, verified 2026-09-05.
+    "bondarenko": "Бондаренко",
     "ister": "Істер",
     "merzliak": "Мерзляк",
     "zadorozhnyi": "Задорожний",
