@@ -61,8 +61,13 @@ def require_readiness() -> None:
             or any(value is not True for value in qualification["canaries"].values())
         ):
             raise OperationRefused("actual_unit_qualification_required")
-        for credential in ("v4-control-dsn", "v4-fleet_execution", "v4-sources_verifier", "v4-a3_reference"):
-            path = qualification_path().parent / credential
+        credentials = [qualification_path().parent / "v4-control-dsn"]
+        credentials.extend(
+            trust.HRAMATKA_SIGNING_KEY_ROOT / (role + suffix)
+            for role in trust.KEYRING_ROLES
+            for suffix in (".key", ".key_id")
+        )
+        for path in credentials:
             if not path.is_file() or path.is_symlink() or path.stat().st_mode & 0o077:
                 raise OperationRefused("scoped_custody_required")
     except (OSError, KeyError, ValueError) as exc:

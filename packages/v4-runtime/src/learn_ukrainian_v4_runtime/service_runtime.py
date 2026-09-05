@@ -47,11 +47,19 @@ class V4ServiceRuntime:
         principal.ownership()
         require_execution_enabled()
         require_readiness()
-        release = execution_identity(self._release_provider)
+        execution_identity(self._release_provider)
         _, policy_digest = trust.load_production_trust_policy()
         claim = self._store.claim(
             principal=principal, raw=raw_body, authorization_id=body["authorization_id"], policy_digest=policy_digest
         )
+        return self._execute_owned_claim(claim)
+
+    def _execute_owned_claim(self, claim: dict) -> dict:
+        """Internal parent path; the route supplies only its atomic store claim."""
+        with self._store.finalization(claim) as (_, fresh):
+            if not fresh:
+                raise OperationRefused("execution_expired")
+        release = execution_identity(self._release_provider)
         try:
             capture = child_runtime.run_child(
                 claim, provider_credential=_provider_credential(claim["binding"]["expected_harness"])
@@ -166,11 +174,15 @@ class V4ServiceRuntime:
 
 
 def _provider_credential(harness: str) -> str:
+    payload = json.loads(provider_credential_path(harness).read_bytes())
+    if set(payload) != {"credential"} or not isinstance(payload["credential"], str) or not payload["credential"]:
+        raise OperationRefused("provider_credential_missing")
+    return payload["credential"]
+
+
+def provider_credential_path(harness: str):
     from pathlib import Path
 
     if harness not in ("claude", "codex"):
         raise OperationRefused("adapter_unqualified")
-    payload = json.loads((Path("/run/credentials/hramatka-api.service") / ("v4-provider-" + harness)).read_bytes())
-    if set(payload) != {"credential"} or not isinstance(payload["credential"], str) or not payload["credential"]:
-        raise OperationRefused("provider_credential_missing")
-    return payload["credential"]
+    return Path("/run/credentials/hramatka-api.service") / ("v4-provider-" + harness)

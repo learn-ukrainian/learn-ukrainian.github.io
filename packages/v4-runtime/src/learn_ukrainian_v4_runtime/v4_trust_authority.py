@@ -314,7 +314,7 @@ def require_trust_policy_binding(
 # module (``v4_fleet_execution_authority._load_signing_key``, ``v4_sources_
 # authority._load_signing_key``, ``v4_a3_reference_check._load_signing_
 # key``) with an isolated ephemeral test key, never this real loader.
-HRAMATKA_SIGNING_KEY_ROOT = Path("/etc/hramatka/v4-signing-keys")
+HRAMATKA_SIGNING_KEY_ROOT = Path("/run/credentials/hramatka-api.service/v4-signing-keys")
 
 
 def load_production_signing_key(role: str) -> tuple[str, str]:
@@ -330,6 +330,8 @@ def load_production_signing_key(role: str) -> tuple[str, str]:
         f"no production signing key is provisioned for role {role!r} at {HRAMATKA_SIGNING_KEY_ROOT} -- refusing "
         "(mechanism-only production; key/ACL provisioning is a first-real-row-PR prerequisite)",
     )
+    for path in (key_path, key_id_path):
+        require(not path.is_symlink() and not path.stat().st_mode & 0o077, "signing credential permissions -- refusing")
     private_key_hex = key_path.read_text(encoding="utf-8").strip()
     signer_key_id = key_id_path.read_text(encoding="utf-8").strip()
     require(
