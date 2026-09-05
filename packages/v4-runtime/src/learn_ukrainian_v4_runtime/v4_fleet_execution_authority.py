@@ -645,7 +645,10 @@ def issue_author_execution_receipt(*, task_id: str, run_id: str) -> dict[str, An
         raise FleetExecutionError(str(exc)) from exc
     _, resolved_trust_policy_sha256 = trust.load_production_trust_policy()
     require(record.get("trust_policy_sha256") == resolved_trust_policy_sha256, "execution policy is not active -- refusing before key access")
-    _require_terminal_execution(_task_state_from_record(record), _envelope_from_record(record))
+    try:
+        _require_terminal_execution(_task_state_from_record(record), _envelope_from_record(record))
+    except ValueError as exc:
+        raise FleetExecutionError(str(exc)) from exc
     signing_key_hex, signer_key_id = _load_signing_key("fleet_execution")
     return _issue_author_receipt_from_evidence(
         signing_key_hex=signing_key_hex,
@@ -678,7 +681,10 @@ def issue_reviewer_execution_receipt(*, task_id: str, run_id: str) -> dict[str, 
         raise FleetExecutionError(str(exc)) from exc
     _, resolved_trust_policy_sha256 = trust.load_production_trust_policy()
     require(record.get("trust_policy_sha256") == resolved_trust_policy_sha256, "execution policy is not active -- refusing before key access")
-    _require_terminal_execution(_task_state_from_record(record), _envelope_from_record(record))
+    try:
+        _require_terminal_execution(_task_state_from_record(record), _envelope_from_record(record))
+    except ValueError as exc:
+        raise FleetExecutionError(str(exc)) from exc
     signing_key_hex, signer_key_id = _load_signing_key("fleet_execution")
     return _issue_reviewer_receipt_from_evidence(
         signing_key_hex=signing_key_hex,
