@@ -134,7 +134,13 @@ def pinned_profile(root, *, sources_url, defect=False):
             copied.write_bytes(path.read_bytes())
             copied.chmod(0o700 if path.stat().st_mode & 0o111 else 0o600)
             path = copied
-        files.append({"source": str(path), "destination": target, "sha256": digest(path.read_bytes())})
+        entry = {"source": str(path), "destination": target, "sha256": digest(path.read_bytes())}
+        files.append(entry)
+        if target == "/runtime/py/lib/" + libpython.name:
+            # uv CPython names its origin-relative library explicitly; GitHub
+            # setup-python relies on loader search. Pin the same immutable bytes
+            # at both locations without inheriting a host library directory.
+            files.append({**entry, "destination": "/usr/lib/" + libpython.name})
     adapter = {
         "version": "input-consuming-fixture.v1",
         "models": ["claude-sonnet-5", "gpt-5.6-luna"],

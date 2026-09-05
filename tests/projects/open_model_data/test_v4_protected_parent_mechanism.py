@@ -7,10 +7,12 @@ This deliberately makes no actual-unit, provider or private JWT integration clai
 
 from __future__ import annotations
 
+import fcntl
 import json
 import subprocess
 import sys
 from dataclasses import replace
+from pathlib import Path
 
 import _v4_a7_real_slot_fixture as fx
 import pytest
@@ -32,22 +34,28 @@ pytest_plugins = ("test_v4_operation_lifecycle",)
 @pytest.fixture(scope="module")
 def built_wheel(tmp_path_factory):
     output = tmp_path_factory.mktemp("owned-wheel")
-    subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "pip",
-            "wheel",
-            "--no-deps",
-            "--no-build-isolation",
-            "packages/v4-runtime",
-            "--wheel-dir",
-            str(output),
-        ],
-        check=True,
-        capture_output=True,
-        timeout=120,
-    )
+    # xdist workers share setuptools in-place build paths in this checkout.
+    # Serialize wheel creation, while the behavioral tests remain parallel.
+    lock_path = Path(__file__).resolve().parents[3] / "batch_state/v4-runtime-build.lock"
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with lock_path.open("a") as build_lock:
+        fcntl.flock(build_lock, fcntl.LOCK_EX)
+        subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "pip",
+                "wheel",
+                "--no-deps",
+                "--no-build-isolation",
+                "packages/v4-runtime",
+                "--wheel-dir",
+                str(output),
+            ],
+            check=True,
+            capture_output=True,
+            timeout=120,
+        )
     return next(output.glob("*.whl"))
 
 
