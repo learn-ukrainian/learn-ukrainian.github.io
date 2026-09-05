@@ -18,6 +18,10 @@ a:hover { text-decoration: underline; }
 .topbar .meta { text-align: right; font-size: 12px; color: var(--text3); }
 .btn { background: var(--bg3); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 7px 12px; font-size: 12px; cursor: pointer; }
 .btn:hover { border-color: var(--accent); color: var(--accent); }
+.glance-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-bottom: 16px; }
+.glance-grid .section { margin-bottom: 0; min-width: 0; }
+.glance-body { max-height: 240px; overflow: auto; overflow-wrap: anywhere; }
+@media (max-width: 900px) { .glance-grid { grid-template-columns: 1fr; } }
 .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
 .page-banner, .card-banner { display: none; border-radius: 8px; padding: 10px 12px; margin-bottom: 16px; background: rgba(248,81,73,0.14); border: 1px solid rgba(248,81,73,0.35); color: var(--red); font-size: 13px; }
 .section { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 10px; padding: 18px; margin-bottom: 16px; }
@@ -105,6 +109,12 @@ tr:last-child td { border-bottom: none; }
 <div class="container">
   <div class="page-banner" id="page-banner"></div>
 
+<div class="glance-grid" aria-label="Fleet at a glance">
+<section class="section cyan"><div class="section-header"><h2>Epics · driver and lease</h2></div><div id="glance-epics" class="glance-body" aria-live="polite">Unknown — loading...</div></section>
+<section class="section cyan"><div class="section-header"><h2>Hosts · occupancy</h2></div><div id="glance-hosts" class="glance-body" aria-live="polite">Unknown — loading...</div></section>
+<section class="section cyan"><div class="section-header"><h2>AI workers · live seats</h2></div><div id="glance-workers" class="glance-body" aria-live="polite">Unknown — loading...</div></section>
+<section class="section cyan"><div class="section-header"><h2>Projects · serving vs origin/main</h2></div><div id="glance-projects" class="glance-body" aria-live="polite">Unknown — loading...</div></section>
+</div>
   <section class="section cyan">
     <div class="section-header"><h2>&#128187; Git</h2><div class="muted" id="git-muted"></div></div>
     <div id="git-content" class="empty">Loading...</div>
@@ -190,9 +200,9 @@ function truncate(value, max) {
   return text.length > max ? `${text.slice(0, max - 1)}…` : text;
 }
 
-async function fetchJson(url) {
+async function fetchJson(url, timeoutMs = API_TIMEOUT_MS) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
   try {
     const response = await fetch(url, { signal: controller.signal });
     const text = await response.text();
@@ -520,6 +530,140 @@ function renderSessionHints(hints) {
   `;
 }
 
+// Independent projections: a session snapshot failure cannot hide fleet state.
+function opaqueHost(value) {
+  return typeof value === 'string' && /^[a-z][a-z0-9-]{0,62}$/.test(value)
+    && !['atlas-runner', 'hramatka', 'vps', 'host-job', 'local'].includes(value)
+    ? value : 'unknown';
+}
+
+function glanceTable(headers, rows) {
+  return `<table><thead><tr>${headers.map(h => `<th>${escapeHtml(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(row => `<tr>${row.map(cell => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+}
+
+function glanceHosts(data) {
+  if (!data || !data.hosts || typeof data.hosts !== 'object' || Array.isArray(data.hosts)) throw new Error('Invalid hosts');
+  return [...new Set(['host-teacher', 'mac-operator', ...Object.keys(data.hosts)])]
+    .filter(id => opaqueHost(id) !== 'unknown').map(id => [id, data.hosts[id] || {}]);
+}
+
+function renderGlanceEpics(data) {
+  if (!Array.isArray(data?.streams)) throw new Error('Invalid epics');
+  const rows = data.streams.map(stream => {
+    const lease = stream.lease;
+    let health = lease ? lease.state || 'unknown' : 'no lease';
+    if (health === 'active') {
+      const expiry = Date.parse(lease.expires_at);
+      health = !Number.isFinite(expiry) ? 'unknown' : expiry <= Date.now() ? 'expired' : 'active';
+    }
+    return [stream.stream_id || 'unknown', lease?.holder?.agent || 'unknown', opaqueHost(lease?.holder?.host_id), health];
+  });
+  return rows.length ? glanceTable(['Epic', 'Driver', 'Host', 'Lease'], rows) : 'No epics reported';
+}
+
+function renderGlanceHosts(data) {
+  return glanceTable(['Host', 'Observation', 'Occupancy'], glanceHosts(data).map(([id, host]) => {
+    const fresh = host.status === 'fresh';
+    const burn = ['active', 'idle', 'unknown'].includes(host.burn_state) ? host.burn_state : 'unknown';
+    return [id, ['fresh', 'stale', 'unavailable'].includes(host.status) ? host.status : 'unknown', fresh ? burn : 'unknown'];
+  }));
+}
+
+// The API links multiple observations of a seat by instance/task identity.
+// Only collapse an unambiguous link; distinct run ids remain distinct seats.
+function uniqueSeats(workers) {
+  const unique = new Map();
+  for (const worker of workers.filter(row => row.kind !== 'service')) {
+    const key = JSON.stringify([worker.source, worker.kind, worker.agent, worker.id, worker.run_id || null]);
+    if (!unique.has(key)) unique.set(key, worker);
+  }
+  const seats = [...unique.values()];
+  const parents = seats.map((_, i) => i);
+  const root = i => parents[i] === i ? i : (parents[i] = root(parents[i]));
+  seats.forEach((seat, i) => {
+    for (const link of Array.isArray(seat.related) ? seat.related : []) {
+      const matches = seats.map((other, j) => ({other, j})).filter(({other}) =>
+        other.source === link.source && other.id === link.id && other.agent === seat.agent);
+      if (matches.length !== 1) continue;
+      const {other, j} = matches[0];
+      const left = root(i), right = root(j);
+      const runs = new Set(seats.filter((_, k) => [left, right].includes(root(k))).map(row => row.run_id).filter(Boolean));
+      if (runs.size <= 1 && (!seat.run_id || !other.run_id || seat.run_id === other.run_id)) parents[right] = left;
+    }
+  });
+  const groups = new Map();
+  seats.forEach((seat, i) => {
+    const key = root(i);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(seat);
+  });
+  return [...groups.values()].map(group => {
+    const states = new Set(group.map(row => row.state || 'unknown'));
+    return {...group[0], state: states.size === 1 ? [...states][0] : 'unknown (conflicting reports)'};
+  });
+}
+
+function renderGlanceWorkers(data) {
+  if (!Array.isArray(data?.hosts)) throw new Error('Invalid workers');
+  const seen = new Set();
+  const rows = [];
+  for (const host of data.hosts) {
+    const id = opaqueHost(host.host_id);
+    if (id === 'unknown') continue;
+    if (host.freshness !== 'fresh' || host.workers_status !== 'reported' || !Array.isArray(host.workers)) {
+      rows.push([id, 'unknown', 'unknown / unavailable']);
+      continue;
+    }
+    for (const worker of uniqueSeats(host.workers)) {
+      const key = JSON.stringify([id, worker.kind, worker.agent, worker.id, worker.run_id || null]);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      rows.push([id, `${worker.agent || 'unknown'} · ${worker.id || 'unknown'}`, worker.state || 'unknown']);
+    }
+    if (!host.workers.some(worker => worker.kind !== 'service')) rows.push([id, 'No AI workers reported', 'fresh']);
+  }
+  return rows.length ? glanceTable(['Host', 'Seat', 'State'], rows) : 'Unknown — no host reports';
+}
+
+function shortSha(value) {
+  return typeof value === 'string' && /^[a-f0-9]{40}$/i.test(value) ? value.slice(0, 8) : 'unknown';
+}
+
+function renderGlanceProjects(data) {
+  const rows = [];
+  for (const [id, host] of glanceHosts(data)) {
+    const services = Array.isArray(host.services) ? host.services : [];
+    if (!services.length) rows.push([id, 'unknown', 'unknown', 'unknown', 'unknown']);
+    for (const service of services) {
+      const serving = shortSha(service.serving_mode === 'checkout' ? service.checkout_sha : service.serving_sha);
+      const origin = service.repo === 'sibling' ? 'unknown' : shortSha(host.primary?.origin_main_sha);
+      const comparable = host.freshness === 'fresh' && service.state === 'running' && serving !== 'unknown' && origin !== 'unknown';
+      const drift = service.drift === 'not_applicable' ? 'not applicable' : !comparable ? 'unknown' : service.drift === true ? 'drift' : service.drift === false ? 'in sync' : 'unknown';
+      const state = host.freshness === 'fresh' ? service.state || 'unknown' : 'unknown (stale / unavailable)';
+      rows.push([`${id} · ${service.name || 'unknown'}`, state, host.freshness === 'fresh' ? serving : 'unknown', host.freshness === 'fresh' ? origin : 'unknown', drift]);
+    }
+  }
+  return glanceTable(['Host / service', 'State', 'Serving SHA', 'origin/main', 'Drift'], rows);
+}
+
+let glanceLoading = false;
+async function loadGlance() {
+  if (glanceLoading) return;
+  glanceLoading = true;
+  try {
+    await Promise.all([
+      ['epics', '/api/epics/v1', renderGlanceEpics],
+      ['hosts', '/api/occupancy', renderGlanceHosts],
+      ['workers', '/api/fleet/workers/v1', renderGlanceWorkers],
+      ['projects', '/api/fleet/projects/v1', renderGlanceProjects],
+    ].map(async ([key, url, render]) => {
+      const node = document.getElementById(`glance-${key}`);
+      try { node.innerHTML = render(await fetchJson(url, 4000)); }
+      catch { node.textContent = 'Unknown — lookup unavailable'; }
+    }));
+  } finally { glanceLoading = false; }
+}
+
 function stopRefresh() {
   if (refreshTimer) {
     clearInterval(refreshTimer);
@@ -533,6 +677,7 @@ function startRefresh() {
 }
 
 async function loadOrient() {
+  void loadGlance();
   try {
     const [orientResult, discussionsResult] = await Promise.allSettled([
       fetchJson('/api/orient'),
@@ -563,8 +708,8 @@ async function loadOrient() {
     console.info(`[orient] refreshed branch=${data.git && data.git.branch ? data.git.branch : 'unknown'} issues=${Array.isArray(data.issues) ? data.issues.length : 0} generated_at=${data.generated_at || 'unknown'}`);
     startRefresh();
   } catch (error) {
-    setPageBanner(`API unavailable: ${error.message}`);
-    document.getElementById('refresh-status').textContent = 'Auto-refresh stopped after API failure';
+    setPageBanner(`Session snapshot unavailable: ${error.message}`);
+    document.getElementById('refresh-status').textContent = 'Session refresh stopped; fleet retries every 30s';
     document.getElementById('generated-at').textContent = 'Waiting for refresh';
     refreshHalted = true;
     stopRefresh();
@@ -587,6 +732,7 @@ document.addEventListener('visibilitychange', () => {
 });
 
 loadOrient();
+setInterval(() => { if (!document.hidden) void loadGlance(); }, REFRESH_MS);
 </script>
 </body>
 </html>
