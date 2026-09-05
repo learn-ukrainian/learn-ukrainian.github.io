@@ -177,6 +177,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Generate bounded Ukrainian pronunciation slice
+        working-directory: .
+        run: |
+          make pronunciation-setup PYTHON=.venv/bin/python
+          make pronunciation-audio PYTHON=.venv/bin/python PRONUNCIATION_LIMIT=200
+
       # #5274: normal build leaves BUILD_ETYMOLOGY_ROUTES off (~296 MB). build:full
       # prerenders ~25k standalone etymology pages and blew the 1 GiB Pages budget.
       - name: Build Site

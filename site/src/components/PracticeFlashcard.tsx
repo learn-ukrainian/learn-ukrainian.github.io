@@ -1,10 +1,16 @@
 import { useEffect, useState } from 'react';
+import PronunciationPlayer from './PronunciationPlayer';
 import { CHROME_STRINGS } from '../lib/i18n/chrome';
 import type { ChromeLocale } from '../lib/i18n/chrome';
 import type { PracticeRating } from '../lib/lexicon/srs';
 
 export interface PracticeFlashcardData {
   front: string;
+  /**
+   * @schemaDescription Source lemma used for pronunciation playback.
+   * @ukrainianText true
+   */
+  pronunciationLemma?: string;
   back: string;
   subtitle?: string;
   tag?: string;
@@ -116,7 +122,7 @@ export default function PracticeFlashcard({
         <div className="flashcard-inner">
           <div className="flashcard-front">
             <span className="flashcard-word">{card.front}</span>
-            {card.subtitle && <span className="flashcard-subtitle">{card.subtitle}</span>}
+            {card.subtitle && !card.pronunciationLemma && <span className="flashcard-subtitle">{card.subtitle}</span>}
             {card.tag && (
               <span
                 className="flashcard-tag"
@@ -129,7 +135,7 @@ export default function PracticeFlashcard({
           </div>
           <div className="flashcard-back">
             <span className="flashcard-word">{card.back}</span>
-            {card.subtitle && <span className="flashcard-subtitle">{card.subtitle}</span>}
+            {card.subtitle && !card.pronunciationLemma && <span className="flashcard-subtitle">{card.subtitle}</span>}
             {(card.tag || card.heritageLabel) && (
               <span className="flashcard-back-tags">
                 {card.tag && (
@@ -153,6 +159,12 @@ export default function PracticeFlashcard({
           </div>
         </div>
       </div>
+      {card.pronunciationLemma && (
+        <div className="flashcard-pronunciation">
+          {card.subtitle && <span>{card.subtitle} </span>}
+          <PronunciationPlayer lemma={card.pronunciationLemma} locale={chromeLocale} />
+        </div>
+      )}
       <div
         className="lexicon-rating-bar rating-bar"
         role="group"

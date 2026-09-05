@@ -518,3 +518,6 @@ data/telemetry/*
 
 # Local enrichment scratch (3-byte lemma-frequency cruft class, atlas handoff 2026-07-13)
 .cache/
+
+# Build-time pronunciation slice; only test fixtures are tracked (#4696).
+/site/public/audio/pronunciation/
