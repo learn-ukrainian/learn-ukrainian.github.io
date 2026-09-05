@@ -125,17 +125,45 @@ export function createMemoryReviewEventIdbDriver(): ReviewEventIdbDriver & {
   failError: Error;
   writes: number;
   raw: unknown | null;
+  /** When set, the next `setRaw` waits until `releaseWrite()` before continuing. */
+  holdNextWrite(): Promise<void>;
+  releaseWrite(): void;
 } {
+  let holdGate: Promise<void> | null = null;
+  let releaseHold: (() => void) | null = null;
+  let signalEntered: (() => void) | null = null;
+
   const driver = {
     failNextWrites: 0,
     failError: new DOMException('The quota has been exceeded.', 'QuotaExceededError'),
     writes: 0,
     raw: null as unknown | null,
+    holdNextWrite(): Promise<void> {
+      holdGate = new Promise<void>((resolve) => {
+        releaseHold = resolve;
+      });
+      return new Promise<void>((resolve) => {
+        signalEntered = resolve;
+      });
+    },
+    releaseWrite(): void {
+      const release = releaseHold;
+      releaseHold = null;
+      holdGate = null;
+      release?.();
+    },
     async getRaw(): Promise<unknown | null> {
       return driver.raw === null ? null : structuredClone(driver.raw);
     },
     async setRaw(value: unknown): Promise<void> {
       driver.writes += 1;
+      const gate = holdGate;
+      if (gate) {
+        holdGate = null;
+        signalEntered?.();
+        signalEntered = null;
+        await gate;
+      }
       if (driver.failNextWrites > 0) {
         driver.failNextWrites -= 1;
         throw driver.failError;

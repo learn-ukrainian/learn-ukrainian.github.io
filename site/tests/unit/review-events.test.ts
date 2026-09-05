@@ -367,4 +367,163 @@ describe('IndexedDB durable store', () => {
       /userId|email|oauth|pocketbase|supabase/i,
     );
   });
+
+  test('failed migration preserves legacy localStorage until IDB write succeeds', async () => {
+    const driver = createMemoryReviewEventIdbDriver();
+    driver.failNextWrites = 99;
+    driver.failError = new DOMException('The operation failed.', 'UnknownError');
+    setReviewEventIdbDriverForTests(driver);
+
+    const legacyEvent = event({
+      eventId: mintUlid(NOW.getTime()),
+      reviewedAt: NOW.getTime(),
+      lemmaId: 'книга',
+    });
+    const legacyRaw = JSON.stringify({
+      schema: REVIEW_EVENTS_SCHEMA,
+      schemaVersion: 1,
+      clientId: 'legacy-client',
+      fsrsParamsVersion: FSRS_PARAMS_VERSION,
+      events: [legacyEvent],
+    });
+    localStorage.setItem(REVIEW_EVENTS_STORAGE_KEY, legacyRaw);
+
+    await ensureReviewEventLogReady(localStorage);
+
+    expect(await driver.getRaw()).toBeNull();
+    expect(localStorage.getItem(REVIEW_EVENTS_STORAGE_KEY)).toBe(legacyRaw);
+    expect(localStorage.getItem(REVIEW_EVENTS_IDB_MIGRATED_KEY)).toBeNull();
+    expect(loadReviewEventLog(localStorage).events.map((item) => item.lemmaId)).toEqual(['книга']);
+  });
+
+  test('explicit migrate leaves legacy key when terminal write fails', async () => {
+    const driver = createMemoryReviewEventIdbDriver();
+    driver.failNextWrites = 99;
+    driver.failError = new DOMException('The operation failed.', 'UnknownError');
+    setReviewEventIdbDriverForTests(driver);
+
+    const legacyEvent = event({
+      eventId: mintUlid(NOW.getTime()),
+      reviewedAt: NOW.getTime(),
+      lemmaId: 'дім',
+    });
+    const legacyRaw = JSON.stringify({
+      schema: REVIEW_EVENTS_SCHEMA,
+      schemaVersion: 1,
+      clientId: 'migrate-fail',
+      fsrsParamsVersion: FSRS_PARAMS_VERSION,
+      events: [legacyEvent],
+    });
+    localStorage.setItem(REVIEW_EVENTS_STORAGE_KEY, legacyRaw);
+
+    const result = await migrateReviewEventsLocalStorageToIdb(localStorage);
+    expect(result.migrated).toBe(0);
+    expect(await driver.getRaw()).toBeNull();
+    expect(localStorage.getItem(REVIEW_EVENTS_STORAGE_KEY)).toBe(legacyRaw);
+    expect(localStorage.getItem(REVIEW_EVENTS_IDB_MIGRATED_KEY)).toBeNull();
+  });
+
+  test('AbortError triggers overflow trim like QuotaExceeded', async () => {
+    const driver = createMemoryReviewEventIdbDriver();
+    driver.failNextWrites = 1;
+    driver.failError = new DOMException('The transaction was aborted.', 'AbortError');
+    setReviewEventIdbDriverForTests(driver);
+
+    const events = Array.from({ length: 8 }, (_, index) =>
+      event({
+        eventId: mintUlid(NOW.getTime() + index),
+        reviewedAt: NOW.getTime() + index * 1000,
+        lemmaId: `abort-${index}`,
+      }),
+    );
+    const log = {
+      schema: REVIEW_EVENTS_SCHEMA,
+      schemaVersion: 1 as const,
+      clientId: 'abort-client',
+      fsrsParamsVersion: FSRS_PARAMS_VERSION,
+      events,
+    };
+
+    const result = await persistReviewEventLogWithOverflow(log, driver, 8);
+    expect(result.ok).toBe(true);
+    expect(result.evicted).toBeGreaterThan(0);
+    expect(result.log.events.at(-1)?.lemmaId).toBe('abort-7');
+    expect(result.log.events.some((item) => item.lemmaId === 'abort-0')).toBe(false);
+  });
+
+  test('terminal UnknownError stops overflow without claiming success', async () => {
+    const driver = createMemoryReviewEventIdbDriver();
+    driver.failNextWrites = 99;
+    driver.failError = new DOMException('The operation failed.', 'UnknownError');
+
+    const events = Array.from({ length: 4 }, (_, index) =>
+      event({
+        eventId: mintUlid(NOW.getTime() + index),
+        reviewedAt: NOW.getTime() + index * 1000,
+        lemmaId: `term-${index}`,
+      }),
+    );
+    const result = await persistReviewEventLogWithOverflow(
+      {
+        schema: REVIEW_EVENTS_SCHEMA,
+        schemaVersion: 1,
+        clientId: 'terminal',
+        fsrsParamsVersion: FSRS_PARAMS_VERSION,
+        events,
+      },
+      driver,
+      4,
+    );
+    expect(result.ok).toBe(false);
+    expect(await driver.getRaw()).toBeNull();
+    expect(result.log.events).toHaveLength(4);
+  });
+
+  test('in-flight persist keeps ratings appended during the await', async () => {
+    const driver = createMemoryReviewEventIdbDriver();
+    setReviewEventIdbDriverForTests(driver);
+    await ensureReviewEventLogReady(localStorage);
+
+    const entered = driver.holdNextWrite();
+    const first = recordCardReviewEvent(
+      {
+        lemmaId: 'first',
+        mode: 'flashcards',
+        rating: 'good',
+        reviewedAt: NOW,
+        deckVersion: PRACTICE_MODE_DECK_VERSION,
+      },
+      localStorage,
+    );
+    expect(first).not.toBeNull();
+    await entered;
+
+    const second = recordCardReviewEvent(
+      {
+        lemmaId: 'second',
+        mode: 'flashcards',
+        rating: 'hard',
+        reviewedAt: LATER,
+        deckVersion: PRACTICE_MODE_DECK_VERSION,
+      },
+      localStorage,
+    );
+    expect(second).not.toBeNull();
+    expect(loadReviewEventLog(localStorage).events.map((item) => item.lemmaId)).toEqual([
+      'first',
+      'second',
+    ]);
+
+    driver.releaseWrite();
+    await ensureReviewEventLogReady(localStorage);
+
+    expect(loadReviewEventLog(localStorage).events.map((item) => item.lemmaId)).toEqual([
+      'first',
+      'second',
+    ]);
+
+    resetReviewEventDurableStateForTests();
+    const reloaded = await ensureReviewEventLogReady(localStorage);
+    expect(reloaded.events.map((item) => item.lemmaId)).toEqual(['first', 'second']);
+  });
 });

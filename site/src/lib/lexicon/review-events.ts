@@ -459,6 +459,22 @@ export function trimReviewEventLog(log: ReviewEventLog, maxCount: number): Revie
 }
 
 /**
+ * After a successful IDB write of `attempted` → `persisted`, fold any events
+ * appended to `current` during the await back in. Evictions from overflow trim
+ * still apply; intervening ratings must not be wiped by the stale snapshot.
+ */
+function reconcileAfterSuccessfulPersist(
+  current: ReviewEventLog,
+  attempted: ReviewEventLog,
+  persisted: ReviewEventLog,
+): ReviewEventLog {
+  const attemptedIds = new Set(attempted.events.map((event) => event.eventId));
+  const intervening = current.events.filter((event) => !attemptedIds.has(event.eventId));
+  if (intervening.length === 0) return persisted;
+  return unionLogs(persisted, { ...current, events: intervening });
+}
+
+/**
  * Persist with overflow recovery: on QuotaExceeded / AbortError, drop oldest
  * events and retry so a rating persist never blocks.
  */
@@ -511,8 +527,43 @@ function markLocalStorageMigrated(storage: ReviewEventStorageLike): void {
   }
 }
 
+function legacyAuthorityPresent(storage: ReviewEventStorageLike): boolean {
+  try {
+    return storage.getItem(REVIEW_EVENTS_STORAGE_KEY) != null;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Write the in-memory snapshot to IDB. On success, reconcile any appends that
+ * landed during the await and only then drop the legacy localStorage key.
+ */
+async function persistDurableSnapshot(
+  storage: ReviewEventStorageLike,
+  driver: ReviewEventIdbDriver,
+): Promise<boolean> {
+  if (!durableMemoryLog) return false;
+  const snapshot = cloneLog(durableMemoryLog);
+  const result = await persistReviewEventLogWithOverflow(snapshot, driver);
+  if (!result.ok) return false;
+  durableMemoryLog = reconcileAfterSuccessfulPersist(
+    durableMemoryLog ?? snapshot,
+    snapshot,
+    result.log,
+  );
+  markLocalStorageMigrated(storage);
+  return true;
+}
+
 async function hydrateDurableLog(storage: ReviewEventStorageLike): Promise<void> {
-  if (durableHydrated) return;
+  if (durableHydrated) {
+    // Prior write may have failed; retry until legacy is cleared.
+    if (legacyAuthorityPresent(storage)) {
+      await persistDurableSnapshot(storage, resolveIdbDriver());
+    }
+    return;
+  }
   if (durableHydratePromise) {
     await durableHydratePromise;
     return;
@@ -549,10 +600,10 @@ async function hydrateDurableLog(storage: ReviewEventStorageLike): Promise<void>
       legacy.events.length > 0 ||
       (pending !== null && pending.events.length > 0);
     if (needsPersist) {
-      const result = await persistReviewEventLogWithOverflow(merged, driver);
-      durableMemoryLog = result.log;
+      await persistDurableSnapshot(storage, driver);
+    } else {
+      markLocalStorageMigrated(storage);
     }
-    markLocalStorageMigrated(storage);
   })();
   try {
     await durableHydratePromise;
@@ -565,10 +616,7 @@ function scheduleDurablePersist(storage: ReviewEventStorageLike): void {
   durablePersistChain = durablePersistChain
     .then(async () => {
       await hydrateDurableLog(storage);
-      if (!durableMemoryLog) return;
-      const result = await persistReviewEventLogWithOverflow(durableMemoryLog, resolveIdbDriver());
-      durableMemoryLog = result.log;
-      markLocalStorageMigrated(storage);
+      await persistDurableSnapshot(storage, resolveIdbDriver());
     })
     .catch(() => {
       // Event-log writes stay best-effort; derived SRS state is separate.
@@ -627,14 +675,18 @@ export async function migrateReviewEventsLocalStorageToIdb(
   }
 
   const result = await persistReviewEventLogWithOverflow(merged, driver);
+  if (!result.ok) {
+    // Keep legacy localStorage as the durable authority until IDB accepts the write.
+    durableMemoryLog = merged;
+    durableHydrated = true;
+    return {
+      migrated: 0,
+      log: cloneLog(merged),
+    };
+  }
   durableMemoryLog = result.log;
   durableHydrated = true;
-  try {
-    storage.removeItem(REVIEW_EVENTS_STORAGE_KEY);
-    storage.setItem(REVIEW_EVENTS_IDB_MIGRATED_KEY, '1');
-  } catch {
-    // best-effort — IDB is already the authority
-  }
+  markLocalStorageMigrated(storage);
   return {
     migrated: Math.max(0, result.log.events.length - beforeCount),
     log: cloneLog(result.log),
