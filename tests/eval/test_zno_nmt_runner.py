@@ -222,6 +222,39 @@ def test_provider_json_rejects_duplicate_keys_and_nonfinite_numbers() -> None:
         adapters._strict_json_loads('{"value":NaN}')
 
 
+def test_response_schema_closes_every_object_and_preserves_item_kinds() -> None:
+    packet = {
+        "items": [
+            {"id": "single", "kind": "single", "rows": []},
+            {
+                "id": "matching",
+                "kind": "matching",
+                "rows": [{"id": "row-1"}, {"id": "row-2"}],
+            },
+        ]
+    }
+    schema = adapters.response_schema(packet)
+
+    def assert_closed(value: Any) -> None:
+        if isinstance(value, dict):
+            if value.get("type") == "object":
+                assert value["additionalProperties"] is False
+                assert set(value["required"]) == set(value["properties"])
+            for child in value.values():
+                assert_closed(child)
+        elif isinstance(value, list):
+            for child in value:
+                assert_closed(child)
+
+    assert_closed(schema)
+    responses = schema["properties"]["responses"]["properties"]
+    assert responses["single"] == {"anyOf": [{"type": "string"}, {"type": "null"}]}
+    matching = responses["matching"]["anyOf"][0]
+    assert matching["required"] == ["row-1", "row-2"]
+    assert set(matching["properties"]) == {"row-1", "row-2"}
+    assert "correct" not in json.dumps(schema)
+
+
 def test_runner_retains_preflight_hashes_without_provider_logs(monkeypatch: pytest.MonkeyPatch) -> None:
     exam = {
         "schema": "zno-nmt.exam.v1", "title": "fixture", "subject": "Ukrainian", "year": 2022,

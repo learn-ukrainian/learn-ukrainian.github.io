@@ -261,8 +261,8 @@ custody after answers are frozen:
 ```
 
 Single-choice items earn one point for the correct choice. Matching items earn
-one point per correct pair; repeated selected columns invalidate the affected
-pairs. Missing/invalid answers stay in the denominator. A failed execution is
+one point per correct pair independently; repeated selected columns are flagged
+without erasing a correct pair. Missing/invalid answers stay in the denominator. A failed execution is
 not a passing exam. `official` scoring needs a policy URL, explicit threshold
 and complete expected item/point counts; a `benchmark` score has no pass claim.
 For other subjects, years or response types, verify the applicable official

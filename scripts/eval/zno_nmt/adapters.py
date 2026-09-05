@@ -255,8 +255,26 @@ def build_prompt(packet: Mapping[str, Any], condition: str) -> str:
 
 
 def response_schema(packet: Mapping[str, Any]) -> dict[str, Any]:
-    ids = [str(item["id"]) for item in packet.get("items", []) if isinstance(item, Mapping) and "id" in item]
-    answer = {"anyOf": [{"type": "string"}, {"type": "object"}, {"type": "null"}]}
+    items = [item for item in packet.get("items", []) if isinstance(item, Mapping) and "id" in item]
+    ids = [str(item["id"]) for item in items]
+    answers: dict[str, dict[str, Any]] = {}
+    for item in items:
+        item_id = str(item["id"])
+        if item.get("kind") == "matching":
+            row_ids = [str(row["id"]) for row in item.get("rows", []) if isinstance(row, Mapping) and "id" in row]
+            answers[item_id] = {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "additionalProperties": False,
+                        "required": row_ids,
+                        "properties": {row_id: {"type": "string"} for row_id in row_ids},
+                    },
+                    {"type": "null"},
+                ]
+            }
+        else:
+            answers[item_id] = {"anyOf": [{"type": "string"}, {"type": "null"}]}
     return {
         "type": "object",
         "additionalProperties": False,
@@ -266,7 +284,7 @@ def response_schema(packet: Mapping[str, Any]) -> dict[str, Any]:
                 "type": "object",
                 "additionalProperties": False,
                 "required": ids,
-                "properties": {item_id: answer for item_id in ids},
+                "properties": answers,
             }
         },
     }
