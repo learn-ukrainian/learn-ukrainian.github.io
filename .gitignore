@@ -358,6 +358,7 @@ data/corpus_audit/*
 !data/corpus_audit/ingestion_roadmap.md
 !data/corpus_audit/draft_tickets/
 !data/corpus_audit/draft_tickets/*.md
+!data/corpus_audit/navsi200-catalog.json
 
 
 .gemini/
