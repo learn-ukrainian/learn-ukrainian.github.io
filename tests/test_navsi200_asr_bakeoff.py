@@ -181,6 +181,7 @@ class TestAsrBakeoffLedgerAndPrivacy:
             cwd=Path(__file__).resolve().parent.parent,
             capture_output=True,
             text=True,
+            timeout=30,
             check=False,
         )
         assert res.returncode == 0, "Raw ASR dumps directory must be ignored by git"
