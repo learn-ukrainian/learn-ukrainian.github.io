@@ -25,13 +25,16 @@ environment residue.
 
 Cleanup is fail-closed. A worktree is preserved when any of these is true:
 
-- its pull request is open;
+- its pull request is open (`open_pr`);
 - its pull-request head does not exactly match the worktree HEAD, unless the PR
-  is `MERGED` and the origin branch is gone;
-- its task is active or non-terminal;
-- a live process has a working directory inside it;
-- it is dirty, locked, outside the repository's `.worktrees/` subtree, or its
-  state cannot be verified.
+  is `MERGED` and the origin branch is gone, or it lacks merge proof (`unmerged`);
+- its task is active or non-terminal, a live process has a working directory inside it,
+  or an active task lease, rollover lease, write-ownership claim, or reap reservation exists (`active_dispatch`);
+- it is the repository's primary checkout (`primary`);
+- it has uncommitted changes or untracked files (`dirty`), which are retained as exceptions and never force-deleted;
+- it is in a detached HEAD or unresolvable state (`detached_unknown`);
+- it encountered filesystem permission errors during evaluation or removal (`permission_error`), which are retained as exceptions;
+- it is outside the repository's `.worktrees/` directory or not a registered worktree (`foreign`).
 
 The scheduled job never commits work on the operator's behalf. It uses
 `git worktree remove --force` only as the final deletion step after all P0
@@ -40,6 +43,25 @@ ignored residue such as a worker `.venv`, not a bypass for cleanliness, PR,
 task, or live-process guards. Unregistered directories with broken `.git`
 pointers are reported as recovery candidates and are never deleted
 automatically.
+
+### Canonical preservation classes
+
+The dual-repo reaper and scheduler categorize all worktrees into strict canonical preservation classes:
+
+| Preservation class | Description | Default disposition |
+|---|---|---|
+| `primary` | Primary repository checkout root | Preserved |
+| `active_dispatch` | Live process CWD, active task, active worker/rollover lease, write claim, or reap reservation | Preserved |
+| `open_pr` | Worktree branch has an OPEN pull request | Preserved |
+| `dirty` | Uncommitted modifications or untracked changes | Preserved as exception |
+| `detached_unknown` | Detached HEAD or unverifiable branch state | Preserved |
+| `permission_error` | Filesystem permission denied during inspection or removal | Retained as exception |
+| `foreign` | Outside repository `.worktrees/` subtree | Preserved |
+| `unmerged` | Unpushed commits or lacking exact merged-PR / origin-main ancestry proof | Preserved |
+
+### Aggregate-only public reporting
+
+Public stdout emissions from both `scheduled_worktree_cleanup.py` and `reap_worktrees.py --aggregate` emit strictly aggregate summaries containing counts, owners, and retained exceptions with **zero host path dumps**. Full diagnostic receipts containing individual filesystem paths are written only to private local storage (`~/.codex/worktree-cleanup/receipts/v2/`) with strict owner-only permissions (`0600`/`0700`) for recovery.
 
 P0 automatic reaping includes clean `.worktrees/` checkouts whose GitHub PR is
 `MERGED` at the exact local head, or whose PR is `MERGED` and origin branch is

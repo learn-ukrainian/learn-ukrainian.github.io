@@ -689,6 +689,60 @@ def find_orphaned_worktree_directories(repo_root: Path) -> list[dict[str, Any]]:
     return sorted(orphans, key=lambda item: item["path"])
 
 
+def classify_repo_results(results: list[dict[str, Any]]) -> dict[str, Any]:
+    preservation_classes = {
+        "primary": 0,
+        "active_dispatch": 0,
+        "open_pr": 0,
+        "dirty": 0,
+        "detached_unknown": 0,
+        "permission_error": 0,
+        "foreign": 0,
+        "unmerged": 0,
+    }
+    by_owner: dict[str, int] = {}
+    reaped = 0
+    reaped_by_owner: dict[str, int] = {}
+    retained_exceptions = 0
+
+    for row in results:
+        res = reap_worktrees.ReapResult(
+            path=row.get("path", ""),
+            branch=row.get("branch"),
+            action=row.get("action", ""),
+            reason=row.get("reason", ""),
+            dirty=row.get("dirty"),
+            pr=row.get("pr"),
+            error=row.get("error"),
+            branch_pruned=bool(row.get("branch_pruned")),
+            recovery_ref=row.get("recovery_ref"),
+            owner=row.get("owner"),
+        )
+        owner = res.owner or "unattributed"
+        by_owner[owner] = by_owner.get(owner, 0) + 1
+        cls = reap_worktrees.classify_preservation(res)
+        if cls == "eligible":
+            reaped += 1
+            reaped_by_owner[owner] = reaped_by_owner.get(owner, 0) + 1
+        else:
+            if cls in preservation_classes:
+                preservation_classes[cls] += 1
+            else:
+                preservation_classes[cls] = preservation_classes.get(cls, 0) + 1
+            if cls in {"dirty", "permission_error"}:
+                retained_exceptions += 1
+
+    return {
+        "total": len(results),
+        "reaped": reaped,
+        "retained": len(results) - reaped,
+        "retained_exceptions": retained_exceptions,
+        "by_preservation_class": preservation_classes,
+        "by_owner": dict(sorted(by_owner.items())),
+        "reaped_by_owner": dict(sorted(reaped_by_owner.items())),
+    }
+
+
 def _empty_repo_result(repo_root: Path) -> dict[str, Any]:
     return {
         "repo_root": str(repo_root),
@@ -697,6 +751,19 @@ def _empty_repo_result(repo_root: Path) -> dict[str, Any]:
         "worktree_prune": None,
         "activity_probe": None,
         "results": [],
+        "retained": 0,
+        "retained_exceptions": 0,
+        "by_preservation_class": {
+            "primary": 0,
+            "active_dispatch": 0,
+            "open_pr": 0,
+            "dirty": 0,
+            "detached_unknown": 0,
+            "permission_error": 0,
+            "foreign": 0,
+            "unmerged": 0,
+        },
+        "by_owner": {},
         "adopted": [],
         "origin_branches": [],
         "branches": [],
@@ -831,6 +898,11 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
             result["errors"].append(f"tmp leak sweep failed: {exc}")
 
         result["needs_finalize_worktrees"] = reap_worktrees.find_needs_finalize_worktrees(repo_root)
+        counts = classify_repo_results(result["results"])
+        result["retained"] = counts["retained"]
+        result["retained_exceptions"] = counts["retained_exceptions"]
+        result["by_preservation_class"] = counts["by_preservation_class"]
+        result["by_owner"] = counts["by_owner"]
     except RuntimeError as exc:
         result["errors"].append(str(exc))
     return result
@@ -862,6 +934,8 @@ def build_receipt(
         for row in repository["results"]
         if row["action"] in {"removed", "preserved_then_removed"}
     )
+    all_results = [row for repository in repositories for row in repository["results"]]
+    aggregate = classify_repo_results(all_results)
     errors = sum(len(repository["errors"]) for repository in repositories)
     orphans = sum(len(repository["orphans"]) for repository in repositories)
     origin_branches_deleted = sum(
@@ -895,6 +969,10 @@ def build_receipt(
         "summary": {
             "repositories": len(repositories),
             "removed": removed,
+            "retained": aggregate["retained"],
+            "retained_exceptions": aggregate["retained_exceptions"],
+            "by_preservation_class": aggregate["by_preservation_class"],
+            "by_owner": aggregate["by_owner"],
             "branches_deleted": branches_deleted,
             "origin_branches_deleted": origin_branches_deleted,
             "orphans_reported": orphans,
@@ -968,6 +1046,61 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def build_public_summary(
+    receipt: dict[str, Any],
+    receipt_path: Path | str | None = None,
+) -> dict[str, Any]:
+    summary = receipt.get("summary", {})
+    repos_summary: dict[str, Any] = {}
+    for repo_dict in receipt.get("repositories", []):
+        raw_root = repo_dict.get("repo_root", "")
+        repo_name = Path(raw_root).name if raw_root else "unknown"
+        repos_summary[repo_name] = {
+            "reaped": sum(
+                1
+                for row in repo_dict.get("results", [])
+                if row.get("action") in {"removed", "preserved_then_removed"}
+            ),
+            "retained": repo_dict.get("retained", 0),
+            "retained_exceptions": repo_dict.get("retained_exceptions", 0),
+            "by_preservation_class": repo_dict.get("by_preservation_class", {}),
+            "by_owner": repo_dict.get("by_owner", {}),
+            "orphans_reported": len(repo_dict.get("orphans", [])),
+            "errors": len(repo_dict.get("errors", [])),
+            "branches_deleted": (
+                sum(1 for row in repo_dict.get("branches", []) if row.get("action") == "deleted")
+                + sum(1 for row in repo_dict.get("results", []) if row.get("branch_pruned") is True)
+                + sum(1 for row in repo_dict.get("origin_branches", []) if row.get("action") == "deleted")
+            ),
+        }
+
+    public_payload: dict[str, Any] = {
+        "schema_version": receipt.get("schema_version", SCHEMA_VERSION),
+        "observed_at": receipt.get("observed_at"),
+        "mode": receipt.get("mode"),
+        "summary": {
+            "repositories": summary.get("repositories", len(repos_summary)),
+            "removed": summary.get("removed", 0),
+            "retained": summary.get("retained", 0),
+            "retained_exceptions": summary.get("retained_exceptions", 0),
+            "by_preservation_class": summary.get("by_preservation_class", {}),
+            "by_owner": summary.get("by_owner", {}),
+            "branches_deleted": summary.get("branches_deleted", 0),
+            "origin_branches_deleted": summary.get("origin_branches_deleted", 0),
+            "orphans_reported": summary.get("orphans_reported", 0),
+            "errors": summary.get("errors", 0),
+            "review_temp_reaped": summary.get("review_temp_reaped", 0),
+            "review_temp_bytes_freed": summary.get("review_temp_bytes_freed", 0),
+        },
+        "repositories": repos_summary,
+    }
+    if "home_session_retention" in receipt:
+        public_payload["home_session_retention"] = receipt["home_session_retention"]
+    if receipt_path is not None:
+        public_payload["receipt_id"] = Path(receipt_path).name
+    return public_payload
+
+
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     repo_roots = args.repo_root or args.default_repo_roots
@@ -977,8 +1110,8 @@ def main(argv: list[str] | None = None) -> int:
     for line in home_session_retention_check.warning_lines(home_session_retention):
         sys.stderr.write(f"{line}\n")
     receipt_path = write_receipt(receipt, args.receipt_dir.expanduser().resolve())
-    payload = {**receipt, "receipt_path": str(receipt_path)}
-    print(json.dumps(payload, ensure_ascii=False, sort_keys=True))
+    public_summary = build_public_summary(receipt, receipt_path)
+    print(json.dumps(public_summary, ensure_ascii=False, sort_keys=True))
     return 1 if receipt["summary"]["errors"] else 0
 
 
