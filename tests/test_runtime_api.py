@@ -107,8 +107,12 @@ def _write_acp_db(root, conversations: list[tuple], events: list[tuple]) -> None
         connection.close()
 
 
-def test_routing_assignments_api_projects_authority_records(monkeypatch):
+def test_routing_assignments_api_projects_authority_records(monkeypatch, tmp_path):
     """Runtime aggregates canonical nested ledger events by reservation."""
+    # The reader is mocked, but its root is still resolved before invocation.
+    # Keep that resolution independent of the operator's retired local plane.
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path / "plane"))
+    monkeypatch.delenv("FLEET_COMMS_ALLOW_LOCAL_SHADOW", raising=False)
     ledger = types.SimpleNamespace(
         list_routing_decisions=lambda **_kwargs: [
             {
@@ -273,7 +277,10 @@ def test_routing_assignments_api_projects_authority_records(monkeypatch):
     ]
 
 
-def test_routing_assignments_reports_absent_or_malformed_reader(monkeypatch):
+def test_routing_assignments_reports_absent_or_malformed_reader(monkeypatch, tmp_path):
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path / "plane"))
+    monkeypatch.delenv("FLEET_COMMS_ALLOW_LOCAL_SHADOW", raising=False)
+
     def missing_reader(_name: str):
         raise ImportError
 
@@ -1253,7 +1260,7 @@ def test_transport_health_returns_sanitized_cached_probe(tmp_path, monkeypatch):
     receipt_path.write_text(
         json.dumps(
             {
-                "schema_version": "codex-transport-health.v1",
+                "schema_version": "codex-transport-health.v2",
                 "status": "healthy",
                 "checked_at": _iso(now - timedelta(seconds=5)),
                 "expires_at": _iso(now + timedelta(minutes=10)),
@@ -1261,7 +1268,7 @@ def test_transport_health_returns_sanitized_cached_probe(tmp_path, monkeypatch):
                 "effort": "low",
                 "task_id": "codex-transport-probe-test",
                 "failure_class": None,
-                "source": "fresh_bridge_probe",
+                "source": "fresh_native_probe",
             }
         ),
         encoding="utf-8",

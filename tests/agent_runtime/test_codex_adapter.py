@@ -136,3 +136,55 @@ def test_codex_pins_gpt6_and_preserves_effort(tmp_path, monkeypatch, model, effo
     )
     assert plan.cmd[plan.cmd.index("-m") + 1] == "gpt-6-astra"
     assert any(expected in arg and "model_reasoning_effort" in arg for arg in plan.cmd)
+
+
+@pytest.mark.parametrize("returncode", [1, -9])
+@pytest.mark.parametrize("evidence", ["none", "no-terminal", "stale", "foreign", "complete"])
+def test_nonzero_exit_requires_matching_terminal_completion(tmp_path, monkeypatch, returncode, evidence):
+    adapter = CodexAdapter()
+    rollout_dir = tmp_path / "sessions"
+    rollout_dir.mkdir()
+    monkeypatch.setattr(adapter, "_candidate_rollout_dirs", lambda: [rollout_dir])
+    prompt = "current invocation"
+    rollout = rollout_dir / "rollout-test.jsonl"
+    events = [
+        {
+            "type": "event_msg",
+            "payload": {"type": "user_message", "message": "another invocation" if evidence == "foreign" else prompt},
+        },
+    ]
+    if evidence != "no-terminal":
+        events.append(
+            {"type": "event_msg", "payload": {"type": "task_complete", "last_agent_message": "Verified final answer"}}
+        )
+    content = "\n".join(json.dumps(event) for event in events) + "\n"
+    if evidence == "stale":
+        rollout.write_text(content)
+    adapter._reset_per_invocation_state()
+    if evidence not in {"none", "stale"}:
+        rollout.write_text(content)
+    output = tmp_path / "last-message.txt"
+    output.write_text("arbitrary partial bytes")
+    plan = InvocationPlan(cmd=["codex"], cwd=tmp_path, stdin_payload=prompt)
+    result = adapter.parse_response(stdout="", stderr="", returncode=returncode, output_file=output, plan=plan)
+    assert result.ok is (evidence == "complete")
+    assert result.response == ("Verified final answer" if evidence == "complete" else "")
+    assert not result.rate_limited
+    if evidence != "complete":
+        assert "arbitrary partial bytes" in result.stderr_excerpt
+
+
+@pytest.mark.parametrize("content,expected", [("", False), ("final answer", True)])
+def test_zero_exit_requires_content(tmp_path, content, expected):
+    output = tmp_path / "last-message.txt"
+    output.write_text(content)
+    result = CodexAdapter().parse_response(stdout="", stderr="", returncode=0, output_file=output)
+    assert result.ok is expected
+
+
+def test_nonzero_output_quota_error_remains_rate_limited(tmp_path):
+    output = tmp_path / "last-message.txt"
+    output.write_text("usage limit reached")
+    result = CodexAdapter().parse_response(stdout="", stderr="", returncode=1, output_file=output)
+    assert not result.ok
+    assert result.rate_limited

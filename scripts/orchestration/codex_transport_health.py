@@ -1,6 +1,6 @@
-"""Bounded fresh-process health probe for the Codex bridge transport.
+"""Bounded fresh-process health probe for the native Codex transport.
 
-The probe deliberately launches a new Codex CLI process through ``ask-codex``.
+The probe deliberately launches a new ``codex exec`` process through the native runtime adapter.
 Static config checks cannot detect server-side reserved-tool schema rejection.
 The resulting receipt is sanitized, TTL-cached runtime state; it never stores
 the prompt, model response, or raw error text.
@@ -11,7 +11,6 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import subprocess
 import tempfile
 import tomllib
 import uuid
@@ -20,9 +19,17 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from scripts.agent_runtime.errors import (
+    AgentRuntimeError,
+    AgentStalledError,
+    AgentTimeoutError,
+    AgentUnavailableError,
+    RateLimitedError,
+)
+from scripts.agent_runtime.result import Result
 from scripts.common.repo_root import main_checkout_root
 
-SCHEMA_VERSION = "codex-transport-health.v1"
+SCHEMA_VERSION = "codex-transport-health.v2"
 HEALTHY = "healthy"
 DEGRADED = "degraded"
 UNKNOWN = "unknown"
@@ -36,12 +43,16 @@ DEFAULT_EFFORT = "low"
 SOURCE_REPO_ROOT = Path(__file__).resolve().parents[2]
 RUNTIME_REPO_ROOT = main_checkout_root(SOURCE_REPO_ROOT)
 DEFAULT_CONFIG_PATH = SOURCE_REPO_ROOT / "agents_extensions" / "codex" / "config.toml"
-TRANSPORT_RECEIPT_PATH = (
-    RUNTIME_REPO_ROOT / "batch_state" / "runtime" / "codex-transport-health.json"
-)
+TRANSPORT_RECEIPT_PATH = RUNTIME_REPO_ROOT / "batch_state" / "runtime" / "codex-transport-health.json"
 
-CommandRunner = Callable[..., subprocess.CompletedProcess[str]]
-ReplyLoader = Callable[[str], list[dict[str, str]]]
+NativeInvoker = Callable[..., Result]
+
+
+def _invoke_native(*args: Any, **kwargs: Any) -> Result:
+    # Keep read-only receipt queries independent of the execution machinery.
+    from scripts.agent_runtime.runner import invoke
+
+    return invoke(*args, **kwargs)
 
 
 def _utc_now() -> datetime:
@@ -133,11 +144,7 @@ def current_transport_health(
             "schema_version": SCHEMA_VERSION,
             "status": DEGRADED if namespace != EXPECTED_TOOL_NAMESPACE else UNKNOWN,
             "fresh": False,
-            "failure_class": (
-                "invalid_tool_namespace"
-                if namespace != EXPECTED_TOOL_NAMESPACE
-                else "no_probe_receipt"
-            ),
+            "failure_class": ("invalid_tool_namespace" if namespace != EXPECTED_TOOL_NAMESPACE else "no_probe_receipt"),
             "tool_namespace": _sanitized_namespace(namespace),
             "namespace_valid": namespace == EXPECTED_TOOL_NAMESPACE,
             "checked_at": None,
@@ -183,40 +190,9 @@ def current_transport_health(
     }
 
 
-def _load_bridge_replies(task_id: str) -> list[dict[str, str]]:
-    from scripts.ai_agent_bridge._db import get_db
-
-    conn = get_db()
-    try:
-        rows = conn.execute(
-            """
-            SELECT message_type, from_llm, to_llm, content
-            FROM messages
-            WHERE task_id = ?
-            ORDER BY id
-            """,
-            (task_id,),
-        ).fetchall()
-    finally:
-        conn.close()
-    return [
-        {
-            "message_type": str(row[0]),
-            "from_llm": str(row[1]),
-            "to_llm": str(row[2]),
-            "content": str(row[3]),
-        }
-        for row in rows
-    ]
-
-
-def _classify_failure(output: str, replies: list[dict[str, str]]) -> str:
-    reply_text = "\n".join(reply.get("content", "") for reply in replies)
-    combined = f"{output}\n{reply_text}".lower()
-    if (
-        "collaboration.spawn_agent" in combined
-        and "reserved for use by this model" in combined
-    ):
+def _classify_failure(output: str) -> str:
+    combined = output.lower()
+    if "collaboration.spawn_agent" in combined and "reserved for use by this model" in combined:
         return RESERVED_SCHEMA_FAILURE
     if "rate limited" in combined or "usage limit" in combined:
         return "codex_rate_limited"
@@ -246,7 +222,7 @@ def _receipt(
         "effort": effort,
         "task_id": task_id,
         "failure_class": failure_class,
-        "source": "fresh_bridge_probe",
+        "source": "fresh_native_probe",
     }
 
 
@@ -261,8 +237,7 @@ def probe_codex_transport(
     effort: str = DEFAULT_EFFORT,
     force_fresh: bool = False,
     now: datetime | None = None,
-    command_runner: CommandRunner = subprocess.run,
-    reply_loader: ReplyLoader = _load_bridge_replies,
+    invoker: NativeInvoker = _invoke_native,
 ) -> dict[str, Any]:
     """Probe one genuinely fresh Codex worker or reuse an unexpired receipt."""
     checked_now = now or _utc_now()
@@ -272,7 +247,7 @@ def probe_codex_transport(
             config_path=config_path,
             now=checked_now,
         )
-        if cached["fresh"] and cached.get("model") == model:
+        if cached["fresh"] and cached.get("model") == model and cached.get("effort") == effort:
             return cached
 
     namespace = configured_tool_namespace(config_path)
@@ -295,64 +270,64 @@ def probe_codex_transport(
         )
 
     sentinel = f"CODEX-TRANSPORT-OK-{uuid.uuid4().hex}"
-    prompt = (
-        "Transport health probe. Return exactly this sentinel and nothing else: "
-        f"{sentinel}"
-    )
-    python_path = runtime_repo_root / ".venv" / "bin" / "python"
-    bridge_path = runtime_repo_root / "scripts" / "ai_agent_bridge" / "__main__.py"
-    command = [
-        str(python_path),
-        str(bridge_path),
-        "ask-codex",
-        "-",
-        "--task-id",
-        task_id,
-        "--from",
-        "health-probe",
-        "--to-model",
-        model,
-        "--effort",
-        effort,
-        "--new-session",
-    ]
-    env = os.environ.copy()
-    env["CODEX_BRIDGE_TIMEOUT"] = str(timeout_seconds)
-    env["AB_REPO_ROOT"] = str(runtime_repo_root)
-
-    output = ""
+    prompt = f"Transport health probe. Return exactly this sentinel and nothing else: {sentinel}"
     try:
-        completed = command_runner(
-            command,
+        result = invoker(
+            "codex",
+            prompt,
+            mode="read-only",
             cwd=runtime_repo_root,
-            env=env,
-            input=prompt,
-            text=True,
-            capture_output=True,
-            timeout=timeout_seconds + 15,
-            check=False,
+            model=model,
+            effort=effort,
+            task_id=task_id,
+            session_id=None,
+            tool_config=None,
+            entrypoint="codex-transport-health",
+            hard_timeout=timeout_seconds,
         )
-        output = f"{completed.stdout}\n{completed.stderr}"
-        replies = reply_loader(task_id)
-        matched = any(
-            reply.get("message_type") == "response"
-            and reply.get("from_llm") == "codex"
-            and reply.get("to_llm") == "health-probe"
-            and reply.get("content", "").strip() == sentinel
-            for reply in replies
+        # Native recovery is legitimate only when the adapter proves terminal
+        # completion for this invocation. Never treat a partial file or prompt
+        # echo as success; rely on Result.ok, then verify the exact final nonce.
+        identity_matches = (
+            result.agent == "codex"
+            and result.model == model
+            and result.effort == effort
+            and not (result.substitution or {}).get("substituted")
         )
-        if matched:
+        if (
+            result.ok
+            and not result.rate_limited
+            and not result.stalled
+            and identity_matches
+            and result.response.strip() == sentinel
+        ):
             status = HEALTHY
             failure_class = None
         else:
             status = DEGRADED
-            failure_class = _classify_failure(output, replies)
-    except subprocess.TimeoutExpired:
+            if result.rate_limited:
+                failure_class = "codex_rate_limited"
+            elif result.stalled:
+                failure_class = "fresh_codex_probe_timeout"
+            elif not identity_matches:
+                failure_class = "native_probe_identity_mismatch"
+            else:
+                failure_class = _classify_failure(result.stderr_excerpt or "")
+    except (AgentTimeoutError, AgentStalledError):
         status = DEGRADED
         failure_class = "fresh_codex_probe_timeout"
-    except OSError:
+    except RateLimitedError:
+        status = DEGRADED
+        failure_class = "codex_rate_limited"
+    except (AgentUnavailableError, OSError):
         status = DEGRADED
         failure_class = "codex_cli_unavailable"
+    except ValueError:
+        status = DEGRADED
+        failure_class = "invalid_native_probe_configuration"
+    except AgentRuntimeError as error:
+        status = DEGRADED
+        failure_class = _classify_failure(str(error))
 
     receipt = _receipt(
         status=status,
