@@ -6,6 +6,7 @@ import inspect
 import json
 import os
 import shutil
+import sqlite3
 import subprocess
 import time
 from pathlib import Path
@@ -973,7 +974,8 @@ def test_open_pr_matching_origin_is_not_reaped(
 
     result = result_for(results, worktree)
     assert result.action == "skipped"
-    assert "no reap condition matched" in (result.reason or "")
+    assert "open PR" in (result.reason or "")
+    assert rw.classify_preservation(result) == "open_pr"
     assert worktree.exists()
     assert_main_checkout_unchanged(repo)
 
@@ -2344,3 +2346,106 @@ def test_aggregate_summary_json_zero_path_dumps(tmp_path: Path, capsys: pytest.C
     assert str(tmp_path) not in dumped
     assert str(wt1) not in dumped
     assert "/.worktrees/" not in dumped
+
+
+def test_active_write_ownership_claim_in_write_claims_blocks_reaping(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    task_id = "write-claim-task"
+    branch = f"codex/{task_id}"
+    worktree = add_worktree(repo, branch, path=repo / ".worktrees" / "dispatch" / "codex" / task_id)
+    head_sha = git(worktree, "rev-parse", "HEAD")
+    patch_gh(monkeypatch, {branch: [{"number": 77, "state": "MERGED", "headRefOid": head_sha}]})
+
+    db_path = repo / "batch_state" / "tasks" / "write-ownership.sqlite3"
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(db_path)
+    conn.execute(
+        "CREATE TABLE write_claims (task_id TEXT NOT NULL, claim_json TEXT NOT NULL, pid INTEGER, created_at REAL NOT NULL, PRIMARY KEY (task_id, claim_json))"
+    )
+    conn.execute(
+        "INSERT INTO write_claims (task_id, claim_json, pid, created_at) VALUES (?, ?, ?, ?)",
+        (task_id, '["src/file.py"]', os.getpid(), time.time()),
+    )
+    conn.commit()
+    conn.close()
+
+    monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_LEDGER", str(db_path))
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, target_paths=[worktree])
+    res = result_for(results, worktree)
+    assert res.action == "skipped"
+    assert f"active write claim task-id={task_id}" in (res.reason or "")
+    assert rw.classify_preservation(res) == "active_dispatch"
+    assert worktree.exists()
+
+
+def test_write_claims_query_error_fails_closed_without_empty_skip(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    task_id = "query-err-task"
+    branch = f"codex/{task_id}"
+    worktree = add_worktree(repo, branch, path=repo / ".worktrees" / "dispatch" / "codex" / task_id)
+    head_sha = git(worktree, "rev-parse", "HEAD")
+    patch_gh(monkeypatch, {branch: [{"number": 78, "state": "MERGED", "headRefOid": head_sha}]})
+
+    db_path = repo / "batch_state" / "tasks" / "write-ownership.sqlite3"
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(db_path)
+    conn.execute("CREATE TABLE wrong_table (dummy TEXT)")
+    conn.commit()
+    conn.close()
+
+    monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_LEDGER", str(db_path))
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+
+    claim_reason = rw._has_active_ownership_claim(repo, task_id)
+    assert claim_reason is not None
+    assert "active write claim check failed" in claim_reason
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, target_paths=[worktree])
+    res = result_for(results, worktree)
+    assert res.action == "skipped"
+    assert "active write claim check failed" in (res.reason or "")
+    assert rw.classify_preservation(res) == "active_dispatch"
+    assert worktree.exists()
+
+
+def test_open_pr_worktree_counted_as_open_pr_not_unmerged(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/feature-open")
+    (worktree / "code.py").write_text("# code\n", encoding="utf-8")
+    git(worktree, "add", "code.py")
+    git(worktree, "commit", "-m", "add code")
+    git(worktree, "push", "-u", "origin", "codex/feature-open")
+    patch_gh(
+        monkeypatch,
+        {"codex/feature-open": [{"number": 105, "state": "OPEN"}]},
+    )
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True)
+    res = result_for(results, worktree)
+    assert res.action == "skipped"
+    assert "open PR #105" in (res.reason or "")
+    assert rw.classify_preservation(res) == "open_pr"
+
+    counts = rw.aggregate_counts(results)
+    assert counts["by_preservation_class"]["open_pr"] == 1
+    assert counts["by_preservation_class"]["unmerged"] == 0
+
+
+def test_missing_requested_repository_fails_closed_nonzero(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    missing_repo = tmp_path / "does_not_exist"
+    rc = rw.main(["--repo-root", str(missing_repo)])
+    assert rc == 2
+    captured = capsys.readouterr()
+    assert "repository not found" in captured.err

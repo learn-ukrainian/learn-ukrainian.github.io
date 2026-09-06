@@ -23,10 +23,15 @@ from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from typing import Any
 
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.control_plane.storage import StoreId
+from scripts.control_plane.storage import connect as cp_connect
 from scripts.orchestration import reaper_lifecycle
 from scripts.path_safety import assert_delete_target
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_BUILD_AGE_HOURS = 6
 
 _GIT_ENV_DENYLIST = {
@@ -498,7 +503,7 @@ def classify_preservation(result: ReapResult) -> str:
         or "reservation" in reason
     ):
         return "active_dispatch"
-    if "open" in reason and "pr" in reason:
+    if (result.pr and result.pr.get("state") == "OPEN") or ("open" in reason and "pr" in reason):
         return "open_pr"
     if result.dirty is True or reason.startswith("dirty"):
         return "dirty"
@@ -550,15 +555,16 @@ def _has_active_ownership_claim(repo_root: Path, task_id: str | None) -> str | N
     if not task_id:
         return None
     db_path = primary_checkout_root(repo_root) / "batch_state" / "tasks" / "write-ownership.sqlite3"
-    if not db_path.is_file():
+    env_override = (os.environ.get("LEARN_UKRAINIAN_OWNERSHIP_LEDGER") or "").strip()
+    if env_override and Path(env_override).is_file():
+        db_path = Path(env_override).expanduser().resolve()
+    elif not db_path.is_file():
         return None
     try:
-        import sqlite3
-
-        conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+        conn = cp_connect(StoreId.WRITE_OWNERSHIP, path=db_path, read_only=True)
         try:
             cur = conn.cursor()
-            cur.execute("SELECT task_id, pid FROM path_claims WHERE task_id = ?", (task_id,))
+            cur.execute("SELECT task_id, pid FROM write_claims WHERE task_id = ?", (task_id,))
             rows = cur.fetchall()
             for _row_tid, row_pid in rows:
                 if row_pid is not None and int(row_pid) > 0:
@@ -571,8 +577,8 @@ def _has_active_ownership_claim(repo_root: Path, task_id: str | None) -> str | N
                         return f"active write claim task-id={task_id}"
         finally:
             conn.close()
-    except Exception:
-        pass
+    except Exception as exc:
+        return f"active write claim check failed task-id={task_id}: {exc}"
     return None
 
 
@@ -1654,27 +1660,30 @@ def reap_worktrees(
                 pr_unknown=pr_unknown,
             )
             if reason is None:
-                is_settled, _ = _is_settled_dispatch_task(
-                    repo_root=repo_root,
-                    info=info,
-                    active_ids=active_ids,
-                )
-                if (
-                    is_settled
-                    and is_under_worktrees(repo_root, info.path)
-                    and (include_terminal_dispatches or not merged_pr_only)
-                    and (pr_state is None or pr_state.state != "OPEN")
-                    and not _is_head_reachable_from_remote(info.path, info.head)
-                ):
-                    reason = "unpushed_head"
-                elif info.detached or info.branch is None:
-                    reason = "detached HEAD unknown"
+                if pr_state is not None and pr_state.state == "OPEN":
+                    pr_label = f"PR #{pr_state.number}" if pr_state.number is not None else "PR"
+                    reason = f"open {pr_label}"
                 else:
-                    reason = (
-                        f"no reap condition matched; {pr_error}"
-                        if pr_error
-                        else "no reap condition matched"
+                    is_settled, _ = _is_settled_dispatch_task(
+                        repo_root=repo_root,
+                        info=info,
+                        active_ids=active_ids,
                     )
+                    if (
+                        is_settled
+                        and is_under_worktrees(repo_root, info.path)
+                        and (include_terminal_dispatches or not merged_pr_only)
+                        and not _is_head_reachable_from_remote(info.path, info.head)
+                    ):
+                        reason = "unpushed_head"
+                    elif info.detached or info.branch is None:
+                        reason = "detached HEAD unknown"
+                    else:
+                        reason = (
+                            f"no reap condition matched; {pr_error}"
+                            if pr_error
+                            else "no reap condition matched"
+                        )
                 results.append(
                     ReapResult(
                         path=str(info.path),
@@ -2054,6 +2063,12 @@ def main(argv: list[str] | None = None) -> int:
     else:
         repo_roots = [primary_checkout_root(resolve_repo_root())]
 
+    missing = [p for p in repo_roots if not p.is_dir()]
+    if missing:
+        for p in missing:
+            print(f"reap_worktrees.py: repository not found: {p}", file=sys.stderr)
+        return 2
+
     apply = bool(args.apply) or args.command == "apply"
     merged_mode = bool(args.merged) or (
         not bool(args.legacy_classes) and not bool(args.terminal_dispatches)
@@ -2082,8 +2097,6 @@ def main(argv: list[str] | None = None) -> int:
     results_by_repo: dict[str, list[ReapResult]] = {}
     all_results: list[ReapResult] = []
     for repo_root in repo_roots:
-        if not repo_root.is_dir():
-            continue
         repo_results = reap_worktrees(
             repo_root=repo_root,
             apply=apply,
