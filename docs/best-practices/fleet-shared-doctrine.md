@@ -103,10 +103,10 @@ Assign by **role × task family × harness × route/egress**, not marketing rank
 
 | Activity | Entry |
 |---|---|
-| Thin orchestration | Interactive Opus / Terra (one owner per stream) |
+| Thin orchestration | One accountable lead selected from the current catalog for the stream |
 | Implementation | `scripts/delegate.py dispatch --worktree` |
-| Formal code CF review | `scripts/ai_agent_bridge` **`review-pr`** (pointer-only; sealed when available) |
-| Advisory design | Bounded Sol/Fable ask with **explicit decision question** |
+| Formal code CF review | Qualified native toolful lane resolved through the canonical `local-code-review` workflow |
+| Advisory design | Qualified advisor from the current catalog with an **explicit decision question** |
 | Multi-agent debate | `discuss` — **not** the merge gate |
 
 Interactive orchestrators stay **thin** (status, route, approve, merge). Workers hold bulk context in worktrees.
@@ -119,7 +119,7 @@ For work in the **repository review-gate scope** (consequential PRs that must pa
 
 1. Reviewer **family ≠ author family**.  
 2. Reviewer must be **qualified for the task family** (code/infra vs VESUM language vs folk).  
-3. Prefer `review-pr` / sealed isolation; never primary-checkout toolful review.  
+3. Use a qualified native toolful review lane and the review-worktree contract in `agents_extensions/shared/skills/local-code-review/SKILL.md`; sealed formal review is retired.
 4. Record provenance on the PR (implementer + reviewer model/family/harness; note advisor if material).  
 5. **Conditional selection:** do not offer Terra as CF for OpenAI-authored PRs, or Sonnet as CF for Anthropic-authored PRs, etc.
 

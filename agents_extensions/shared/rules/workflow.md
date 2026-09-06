@@ -168,8 +168,9 @@ only after `MERGED`. Dispatched agents still do NOT self-enable auto-merge or se
 
 **Stream-scoped sweeps (user directive 2026-07-13 — parallel-stream chaos fix; supersedes the
 2026-07-07 one-hour out-of-lane backstop for TRACK sessions).** Multiple streams run in parallel, so a
-session's start/end sweep is **OWN-STREAM ONLY**: it may review, review-route, arm auto-merge, or merge
-**only** PRs in its own stream.
+session's start/end sweep is **OWN-STREAM ONLY**: it may review or review-route
+**only** PRs in its own stream. Only the accountable lead may enqueue them, after
+current-head cross-family approval and green CI. Workers never enqueue or arm auto-merge.
 
 **Stream membership is AUTHORITATIVE + FAIL-CLOSED.** A PR is *in-stream* iff its linked issue resolves
 to the session's stream-epic in the issue→epic membership registry — `/api/issues/streams` (from
@@ -178,7 +179,7 @@ lanes, NOT streams — never use them for membership.** If a PR does not resolve
 stream-epic there (no link, multiple/conflicting `Closes/Refs`, or not yet indexed), it is
 **out-of-stream → hands-off** for every track session. Out-of-stream — another stream's PR, OR any PR
 with no / multiple / conflicting / not-yet-indexed stream-epic membership (the fail-closed default) —
-means do NOT shepherd, review-route, or arm auto-merge on it: **no time threshold, no exception.** Rationale: the old
+means do NOT shepherd, review-route, or enqueue it: **no time threshold, no exception.** Rationale: the old
 one-hour timer could not tell an *abandoned* PR from an *owner-paused* one, so with parallel streams it
 made two sessions grab the same PR, or one merge another live stream's paused PR.
 
@@ -188,8 +189,9 @@ integration + final merge judgment). Only that role sweeps out-of-stream PRs, an
 (CI + review gate passed) idle for MORE THAN 1 HOUR. **To avoid a liveness gap** (a down role-holder
 stranding a green PR forever), this net MUST run as a **scheduled integration sweep** owned by the role
 — it must not depend on any interactive session being live. (Until that scheduled sweep is wired, the
-role-holder runs it at session start/end — see follow-up.) Per-lane `--auto` merge already keeps
-in-stream PRs from sitting, so this net is a rare safety valve, not the primary path.
+role-holder runs it at session start/end — see follow-up.) The accountable lead enqueues
+in-stream PRs once current-head cross-family approval and green CI are verified;
+the merge queue is the primary landing path, and this net is a rare safety valve.
 
 **Merge-cadence soft check (#5737 — operator/orchestrator expectation, not a hard gate).**
 No lane should routinely land **>5 PRs/day against one feature area**. Prefer one shippable
@@ -276,11 +278,14 @@ After the frontmatter, the body is a **bullet-list summary**, NOT narrative. Rec
 6. `## Pending decisions` (if any) — links to `docs/decisions/pending/*`.
 7. `## Cold-start orientation for next agent` — explicit instructions to the next session.
 
-Reserve all narrative, anecdotes, KPIs, and rich rationale for the `.html` companion. The brief is a state snapshot, not a story.
+When an HTML companion is requested or warranted by a major milestone, reserve
+extended narrative, anecdotes, KPIs, and rich rationale for that companion. The brief is a state snapshot, not a story.
 
 ### Pair authoring rule
 
-Brief and HTML are authored together in the same orchestrator turn. Never ship one without the other for sessions going forward.
+When an HTML companion is explicitly requested or warranted by a major milestone,
+author it with the brief in the same orchestrator turn. Otherwise ship the MD brief
+only, as required by the default above.
 
 Every approved compatibility-router update to `docs/session-state/current.md`
 MUST keep the top-level `Latest-Brief:` marker and the `Agent-Handoff:` mapping
@@ -379,11 +384,10 @@ Every task follows this workflow. No exceptions for non-trivial changes.
    reviewed SHA; never copy a `behavior_proof_status` string.
 6. **Pass the independent review and CI gates** — ONE cross-family review round:
    reviewer outside the author model family, verdict + findings posted on the PR,
-   bound to the current head. Direct ask is the default mechanism; the formal
-   sealed path is opt-in for high-risk code only. Docs/report-only PRs: the
-   merging orchestrator folds trivial findings (typos, counts, path scrubs — no
-   behavior change) in at merge, recorded in the merge commit body; re-review is
-   only for behavior-changing deltas or a contested verdict.
+   bound to the current head. Use a qualified, toolful native review lane; the
+   shielded formal path remains retired, including for high-risk code. Non-blocking
+   findings may remain documented. If a fix changes the head, obtain approval and
+   green CI for that new head before enqueue. Do not fold unreviewed edits into merge.
 7. **Reach the explicit terminal goal** — `merge`, `deploy`, and `certify` are
    distinct and cannot substitute for one another.
 8. **Reconcile and close** — read actual GitHub state, transfer any remaining

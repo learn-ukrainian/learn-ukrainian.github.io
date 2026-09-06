@@ -120,7 +120,7 @@ def _build_full_execution_prompt(msg: dict, delimiters: str | None) -> str:
         delimiter_instruction = "Your ONLY text output must be between the ===TAG_START=== / ===TAG_END=== delimiters defined in your task."
 
     context = _load_gemini_context()
-    return f"""{context}ROLE: You are a SILENT EXECUTION AGENT with FULL read-write access.
+    return f"""{context}ROLE: You are a SILENT EXECUTION AGENT. Use only the tools and permissions granted by the runtime for the assigned task.
 
 TOOLS YOU MUST USE (not simulate):
 - run_shell_command: scripts/audit_module.sh, .venv/bin/python scripts/*.py, grep, wc
@@ -263,20 +263,16 @@ _CODEX_STANDING_RULES = """\
 # NON-NEGOTIABLE RULES FOR CODEX (apply to EVERY task from this bridge)
 
 ## Git branch safety — HARD CONSTRAINT
-You are invoked from the caller's current working directory, which is normally on `main`.
-You MUST NOT leave `main` under any circumstances:
+The primary checkout is read-only and its branch must stay unchanged.
+Perform authorized edits only in the assigned dispatch worktree:
+`.worktrees/dispatch/<agent>/<task>/`.
 
-- FORBIDDEN commands: `git checkout <branch>`, `git switch <branch>`, `git reset --hard`,
-  `git branch -D`, `git checkout .`, `git restore .`, `git clean -f`, `git rebase`,
-  `git merge`, `git pull` with rebase, `git push --force`.
-- If you need isolation for experimental work, create a dedicated worktree:
-    `git worktree add ../codex-wt-<task-id> -b codex/<task-id>`
-  then `cd` into that worktree and work there. Never modify the caller's branch state.
-- When you finish a worktree task, leave the worktree in place — the human will clean it up.
-- If a task seems to require switching the caller's branch, STOP and reply explaining
-  the conflict. Do not improvise.
-
-Violating this rule destroys the caller's work in progress. There is no exception.
+- Use the assigned worktree; if one is needed, follow the repository's dispatch-worktree contract.
+- Never switch, reset, clean, rebase, or merge the caller's primary checkout.
+- Preserve user and other workers' changes. Do not run destructive Git operations without explicit authorization.
+- The accountable lead owns post-merge cleanup. Helpers must not remove shared worktrees;
+  return their exact worktree and branch status to the lead.
+- If the assigned task conflicts with these constraints, report the blocker to the lead.
 
 ## Scope discipline
 - Stay strictly within the files the task names. Do not "clean up" unrelated code.

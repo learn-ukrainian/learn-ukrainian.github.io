@@ -903,3 +903,19 @@ def test_timeout_error_names_seat_profile_and_no_timeout_escape(
     assert "defaults to 1800s" in message
     assert "generic default 300s" in message
     assert "--no-timeout" in message
+
+
+def test_codex_prompt_preserves_runtime_and_dispatch_boundaries() -> None:
+    from scripts.ai_agent_bridge._prompts import (
+        _build_full_execution_prompt,
+        build_codex_prompt,
+    )
+
+    message = {"from": "user", "task_id": "test-boundaries", "type": "query", "content": "Inspect the change", "data": None}
+    prompt = build_codex_prompt(message)
+    assert "primary checkout is read-only" in prompt
+    assert ".worktrees/dispatch/<agent>/<task>/" in prompt
+    assert "Helpers must not remove shared worktrees" in prompt
+    execution = _build_full_execution_prompt(message, delimiters=None)
+    assert "tools and permissions granted by the runtime" in execution
+    assert "full read-write" not in execution.lower()
