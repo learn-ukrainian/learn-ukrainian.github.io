@@ -1,0 +1,1031 @@
+version: 1
+schema_version: 1
+kind: heritage_wave1_construction_review
+audit_date: '2026-09-06'
+curator_wave: script:heritage_calque_wave-2026-08-11
+summary:
+  total: 170
+  keep: 161
+  drop: 7
+  rewrite_span: 2
+pairs:
+- calqueLabel: так як
+  nativeLemma: оскільки
+  nativeSlug: оскільки
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «так як»; standard Ukrainian uses «оскільки» (VESUM: conj). Source: ua-gec:F/Calque
+    n=20.'
+- calqueLabel: все
+  nativeLemma: дедалі
+  nativeSlug: дедалі
+  decision: keep
+  reason: 'Semantic calque / false friend «все» from Russian; standard Ukrainian specifies «дедалі» (VESUM: adv) in this context.
+    Source: ua-gec:F/Calque n=9.'
+- calqueLabel: в якості
+  nativeLemma: як
+  nativeSlug: як
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «в якості»; standard Ukrainian uses «як» (VESUM: adv). Source: ua-gec:F/Calque
+    n=7.'
+- calqueLabel: По-моєму
+  nativeLemma: здається
+  nativeSlug: здається
+  decision: keep
+  reason: 'Semantic calque / false friend «По-моєму» from Russian; standard Ukrainian specifies «здається» (VESUM: verb) in
+    this context. Source: ua-gec:F/Calque n=6.'
+- calqueLabel: в першу чергу
+  nativeLemma: насамперед
+  nativeSlug: насамперед
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «в першу чергу»; standard Ukrainian uses «насамперед» (VESUM: adv). Source:
+    ua-gec:F/Calque n=6.'
+- calqueLabel: в тому числі
+  nativeLemma: зокрема
+  nativeSlug: зокрема
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «в тому числі»; standard Ukrainian uses «зокрема» (VESUM: adv). Source: ua-gec:F/Calque
+    n=5.'
+- calqueLabel: Як тільки
+  nativeLemma: щойно
+  nativeSlug: щойно
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «Як тільки»; standard Ukrainian uses «щойно» (VESUM: adv). Source: ua-gec:F/Calque
+    n=5.'
+- calqueLabel: як би
+  nativeLemma: наче
+  nativeSlug: наче
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «як би»; standard Ukrainian uses «наче» (VESUM: conj). Source: ua-gec:F/Calque
+    n=4.'
+- calqueLabel: З тих пір
+  nativeLemma: відтоді
+  nativeSlug: відтоді
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «З тих пір»; standard Ukrainian uses «відтоді» (VESUM: adv). Source: ua-gec:F/Calque
+    n=3.'
+- calqueLabel: Брись
+  nativeLemma: геть
+  nativeSlug: геть
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «Брись» absent from standard Ukrainian; standard lemma is «геть» (VESUM:
+    adv). Source: ua-gec:F/Calque n=3.'
+- calqueLabel: довкруги
+  nativeLemma: довкола
+  nativeSlug: довкола
+  decision: drop
+  reason: UA-GEC doc 1086 marked stylistic variant; «довкруги» is native Ukrainian adverb/preposition attested in VESUM (adv),
+    not a Russian calque.
+- calqueLabel: Повинно
+  nativeLemma: мабуть
+  nativeSlug: мабуть
+  decision: keep
+  reason: 'Semantic calque / false friend «Повинно» from Russian; standard Ukrainian specifies «мабуть» (VESUM: adv) in this
+    context. Source: ua-gec:F/Calque n=3.'
+- calqueLabel: вести себе
+  nativeLemma: поводитися
+  nativeSlug: поводитися
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «вести себе»; standard Ukrainian uses «поводитися» (VESUM: verb). Source: ua-gec:F/Calque
+    n=3.'
+- calqueLabel: до того
+  nativeLemma: такий
+  nativeSlug: такий
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «до того»; standard Ukrainian uses «такий» (VESUM: adj). Source: ua-gec:F/Calque
+    n=3.'
+- calqueLabel: в сторону
+  nativeLemma: до
+  nativeSlug: до
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «в сторону»; standard Ukrainian uses «до» (VESUM: noun). Source: ua-gec:F/Calque
+    n=2.'
+- calqueLabel: В залежності
+  nativeLemma: залежно
+  nativeSlug: залежно
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «В залежності»; standard Ukrainian uses «залежно» (VESUM: adv). Source: ua-gec:F/Calque
+    n=2.'
+- calqueLabel: з моєї точки зору
+  nativeLemma: на мою думку
+  nativeSlug: на-мою-думку
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «з моєї точки зору»; standard Ukrainian parenthetical is «на мою думку» (VESUM:
+    думка noun). Source: ua-gec:F/Calque n=2.'
+- calqueLabel: в рази
+  nativeLemma: суттєво
+  nativeSlug: суттєво
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «в рази»; standard Ukrainian uses «суттєво» (VESUM: adv). Source: ua-gec:F/Calque
+    n=2.'
+- calqueLabel: на даний момент
+  nativeLemma: сьогодні
+  nativeSlug: сьогодні
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «на даний момент»; standard Ukrainian uses «сьогодні» (VESUM: adv). Source:
+    ua-gec:F/Calque n=2.'
+- calqueLabel: Таким чином
+  nativeLemma: тож
+  nativeSlug: тож
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «Таким чином»; standard Ukrainian uses «тож» (VESUM: conj). Source: ua-gec:F/Calque
+    n=2.'
+- calqueLabel: пару речень
+  nativeLemma: трохи
+  nativeSlug: трохи
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «пару речень»; standard Ukrainian uses «трохи» (VESUM: adv). Source: ua-gec:F/Calque
+    n=2.'
+- calqueLabel: всякий раз
+  nativeLemma: щоразу
+  nativeSlug: щоразу
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «всякий раз»; standard Ukrainian uses «щоразу» (VESUM: adv). Source: ua-gec:F/Calque
+    n=2.'
+- calqueLabel: так як
+  nativeLemma: бо
+  nativeSlug: бо
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «так як»; standard Ukrainian uses «бо» (VESUM: conj). Source: ua-gec:F/Calque
+    n=1.'
+- calqueLabel: прийняти рішення
+  nativeLemma: вирішити
+  nativeSlug: вирішити
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «прийняти рішення»; standard Ukrainian uses «вирішити» (VESUM: verb). Source:
+    ua-gec:F/Calque n=1.'
+- calqueLabel: за рахунок
+  nativeLemma: внаслідок
+  nativeSlug: внаслідок
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «за рахунок»; standard Ukrainian uses «внаслідок» (VESUM: prep). Source: ua-gec:F/Calque
+    n=1.'
+- calqueLabel: по відношенню до
+  nativeLemma: відносно
+  nativeSlug: відносно
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «по відношенню до»; standard Ukrainian uses «відносно» (VESUM: adv). Source:
+    ua-gec:F/Calque n=1.'
+- calqueLabel: в живих
+  nativeLemma: живий
+  nativeSlug: живий
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «в живих»; standard Ukrainian uses «живий» (VESUM: adj). Source: ua-gec:F/Calque
+    n=1.'
+- calqueLabel: в більшості
+  nativeLemma: здебільшого
+  nativeSlug: здебільшого
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «в більшості»; standard Ukrainian uses «здебільшого» (VESUM: adv). Source: ua-gec:F/Calque
+    n=1.'
+- calqueLabel: на додачу
+  nativeLemma: крім того
+  nativeSlug: крім-того
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «на додачу»; standard Ukrainian connective is «крім того» (VESUM: крім prep,
+    те pron). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: в сторону
+  nativeLemma: на
+  nativeSlug: на
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «в сторону»; standard Ukrainian uses «на» (VESUM: intj). Source: ua-gec:F/Calque
+    n=1.'
+- calqueLabel: Благо
+  nativeLemma: на щастя
+  nativeSlug: на-щастя
+  decision: keep
+  reason: 'Russian borrowing / parenthetical «Благо»; standard Ukrainian parenthetical is «на щастя» (VESUM: щастя noun).
+    Source: ua-gec:F/Calque n=1.'
+- calqueLabel: в рази
+  nativeLemma: набагато
+  nativeSlug: набагато
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «в рази»; standard Ukrainian uses «набагато» (VESUM: adv). Source: ua-gec:F/Calque
+    n=1.'
+- calqueLabel: до такої міри
+  nativeLemma: настільки
+  nativeSlug: настільки
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «до такої міри»; standard Ukrainian uses «настільки» (VESUM: adv). Source: ua-gec:F/Calque
+    n=1.'
+- calqueLabel: в замін
+  nativeLemma: натомість
+  nativeSlug: натомість
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «в замін»; standard Ukrainian uses «натомість» (VESUM: adv). Source: ua-gec:F/Calque
+    n=1.'
+- calqueLabel: як би
+  nativeLemma: нібито
+  nativeSlug: нібито
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «як би»; standard Ukrainian uses «нібито» (VESUM: conj). Source: ua-gec:F/Calque
+    n=1.'
+- calqueLabel: Також після того
+  nativeLemma: по-друге
+  nativeSlug: по-друге
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «Також після того»; standard Ukrainian uses «по-друге» (VESUM: adv). Source:
+    ua-gec:F/Calque n=1.'
+- calqueLabel: в першу чергу
+  nativeLemma: по-перше
+  nativeSlug: по-перше
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «в першу чергу»; standard Ukrainian uses «по-перше» (VESUM: adv). Source: ua-gec:F/Calque
+    n=1.'
+- calqueLabel: по крайній мірі
+  nativeLemma: принаймні
+  nativeSlug: принаймні
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «по крайній мірі»; standard Ukrainian uses «принаймні» (VESUM: adv). Source:
+    ua-gec:F/Calque n=1.'
+- calqueLabel: в ході
+  nativeLemma: під час
+  nativeSlug: під-час
+  decision: keep
+  reason: 'Prepositional phrase calqued on Russian «в ході»; standard Ukrainian temporal preposition is «під час» (VESUM:
+    час noun). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: Перший час
+  nativeLemma: спочатку
+  nativeSlug: спочатку
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «Перший час»; standard Ukrainian uses «спочатку» (VESUM: adv). Source: ua-gec:F/Calque
+    n=1.'
+- calqueLabel: в той час
+  nativeLemma: тоді
+  nativeSlug: тоді
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «в той час»; standard Ukrainian uses «тоді» (VESUM: adv). Source: ua-gec:F/Calque
+    n=1.'
+- calqueLabel: за рахунок
+  nativeLemma: через
+  nativeSlug: через
+  decision: keep
+  reason: 'Multiword calque phrase on Russian «за рахунок»; standard Ukrainian uses «через» (VESUM: prep). Source: ua-gec:F/Calque
+    n=1.'
+- calqueLabel: докторе
+  nativeLemma: лікарю
+  nativeSlug: лікарю
+  decision: keep
+  reason: 'Semantic calque / false friend «докторе» from Russian; standard Ukrainian specifies «лікарю» (VESUM: noun) in this
+    context. Source: ua-gec:F/Calque n=23.'
+- calqueLabel: вірно
+  nativeLemma: правильно
+  nativeSlug: правильно
+  decision: keep
+  reason: 'Semantic calque / false friend «вірно» from Russian; standard Ukrainian specifies «правильно» (VESUM: adv) in this
+    context. Source: ua-gec:F/Calque n=8.'
+- calqueLabel: прийшлось
+  nativeLemma: довелося
+  nativeSlug: довелося
+  decision: keep
+  reason: 'Semantic calque / false friend «прийшлось» from Russian; standard Ukrainian specifies «довелося» (VESUM: verb)
+    in this context. Source: ua-gec:F/Calque n=6.'
+- calqueLabel: виключно
+  nativeLemma: лише
+  nativeSlug: лише
+  decision: keep
+  reason: 'Semantic calque / false friend «виключно» from Russian; standard Ukrainian specifies «лише» (VESUM: conj) in this
+    context. Source: ua-gec:F/Calque n=6.'
+- calqueLabel: відношення
+  nativeLemma: стосунок
+  nativeSlug: стосунок
+  decision: keep
+  reason: 'Semantic calque / false friend «відношення» from Russian; standard Ukrainian specifies «стосунок» (VESUM: noun)
+    in this context. Source: ua-gec:F/Calque n=6.'
+- calqueLabel: тим
+  nativeLemma: то
+  nativeSlug: то
+  decision: rewrite_span
+  reason: UA-GEC doc 1082 marked second token of comparative correlative «чим … тим …» (RU calque) -> «що … то …»; «тим» alone
+    is native Ukrainian pronoun/adverb (VESUM те/той/тим); requires paired construction span.
+- calqueLabel: заставити
+  nativeLemma: змусити
+  nativeSlug: змусити
+  decision: keep
+  reason: 'Semantic calque / false friend «заставити» from Russian; standard Ukrainian specifies «змусити» (VESUM: verb) in
+    this context. Source: ua-gec:F/Calque n=4.'
+- calqueLabel: Чим
+  nativeLemma: що
+  nativeSlug: що
+  decision: rewrite_span
+  reason: UA-GEC doc 1082 marked first token of comparative correlative «чим … тим …» (RU calque) -> «що … то …»; «чим» alone
+    is native Ukrainian pronoun/conjunction (VESUM чим/що); requires paired construction span.
+- calqueLabel: відбивають
+  nativeLemma: є
+  nativeSlug: є
+  decision: keep
+  reason: 'Semantic calque / false friend «відбивають» from Russian; standard Ukrainian specifies «є» (VESUM: verb) in this
+    context. Source: ua-gec:F/Calque n=4.'
+- calqueLabel: відправитись
+  nativeLemma: вирушити
+  nativeSlug: вирушити
+  decision: keep
+  reason: 'Semantic calque / false friend «відправитись» from Russian; standard Ukrainian specifies «вирушити» (VESUM: verb)
+    in this context. Source: ua-gec:F/Calque n=3.'
+- calqueLabel: жизні
+  nativeLemma: життя
+  nativeSlug: життя
+  decision: keep
+  reason: 'Semantic calque / false friend «жизні» from Russian; standard Ukrainian specifies «життя» (VESUM: noun) in this
+    context. Source: ua-gec:F/Calque n=3.'
+- calqueLabel: сторона
+  nativeLemma: бік
+  nativeSlug: бік
+  decision: keep
+  reason: 'Semantic calque / false friend «сторона» from Russian; standard Ukrainian specifies «бік» (VESUM: noun) in this
+    context. Source: ua-gec:F/Calque n=2.'
+- calqueLabel: Зимою
+  nativeLemma: взимку
+  nativeSlug: взимку
+  decision: keep
+  reason: 'Semantic calque / false friend «Зимою» from Russian; standard Ukrainian specifies «взимку» (VESUM: adv) in this
+    context. Source: ua-gec:F/Calque n=2.'
+- calqueLabel: вид
+  nativeLemma: вигляд
+  nativeSlug: вигляд
+  decision: keep
+  reason: 'Semantic calque / false friend «вид» from Russian; standard Ukrainian specifies «вигляд» (VESUM: noun) in this
+    context. Source: ua-gec:F/Calque n=2.'
+- calqueLabel: літом
+  nativeLemma: влітку
+  nativeSlug: влітку
+  decision: keep
+  reason: 'Semantic calque / false friend «літом» from Russian; standard Ukrainian specifies «влітку» (VESUM: adv) in this
+    context. Source: ua-gec:F/Calque n=2.'
+- calqueLabel: вклад
+  nativeLemma: внесок
+  nativeSlug: внесок
+  decision: keep
+  reason: 'Semantic calque / false friend «вклад» from Russian; standard Ukrainian specifies «внесок» (VESUM: noun) in this
+    context. Source: ua-gec:F/Calque n=2.'
+- calqueLabel: близько
+  nativeLemma: десь
+  nativeSlug: десь
+  decision: drop
+  reason: UA-GEC doc 0437 marked approximation token; «близько» is native Ukrainian adverb/preposition attested in VESUM (adv/prep),
+    not a Russian calque.
+- calqueLabel: рідкість
+  nativeLemma: диво
+  nativeSlug: диво
+  decision: keep
+  reason: 'Semantic calque / false friend «рідкість» from Russian; standard Ukrainian specifies «диво» (VESUM: noun) in this
+    context. Source: ua-gec:F/Calque n=2.'
+- calqueLabel: заказ
+  nativeLemma: замовлення
+  nativeSlug: замовлення
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «заказ» absent from standard Ukrainian; standard lemma is «замовлення» (VESUM:
+    noun). Source: ua-gec:F/Calque n=2.'
+- calqueLabel: канєшно
+  nativeLemma: звісно
+  nativeSlug: звісно
+  decision: keep
+  reason: 'Semantic calque / false friend «канєшно» from Russian; standard Ukrainian specifies «звісно» (VESUM: adv) in this
+    context. Source: ua-gec:F/Calque n=2.'
+- calqueLabel: співставлення
+  nativeLemma: зіставлення
+  nativeSlug: зіставлення
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «співставлення» absent from standard Ukrainian; standard lemma is «зіставлення»
+    (VESUM: noun). Source: ua-gec:F/Calque n=2.'
+- calqueLabel: коментарій
+  nativeLemma: коментар
+  nativeSlug: коментар
+  decision: keep
+  reason: 'Semantic calque / false friend «коментарій» from Russian; standard Ukrainian specifies «коментар» (VESUM: noun)
+    in this context. Source: ua-gec:F/Calque n=2.'
+- calqueLabel: койку
+  nativeLemma: ліжко
+  nativeSlug: ліжко
+  decision: keep
+  reason: 'Semantic calque / false friend «койку» from Russian; standard Ukrainian specifies «ліжко» (VESUM: noun) in this
+    context. Source: ua-gec:F/Calque n=2.'
+- calqueLabel: Весною
+  nativeLemma: навесні
+  nativeSlug: навесні
+  decision: keep
+  reason: 'Semantic calque / false friend «Весною» from Russian; standard Ukrainian specifies «навесні» (VESUM: adv) in this
+    context. Source: ua-gec:F/Calque n=2.'
+- calqueLabel: навпроти
+  nativeLemma: навпаки
+  nativeSlug: навпаки
+  decision: keep
+  reason: 'Semantic calque / false friend «навпроти» from Russian; standard Ukrainian specifies «навпаки» (VESUM: adv) in
+    this context. Source: ua-gec:F/Calque n=2.'
+- calqueLabel: отоплення
+  nativeLemma: опалення
+  nativeSlug: опалення
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «отоплення» absent from standard Ukrainian; standard lemma is «опалення»
+    (VESUM: noun). Source: ua-gec:F/Calque n=2.'
+- calqueLabel: во
+  nativeLemma: ось
+  nativeSlug: ось
+  decision: keep
+  reason: 'Semantic calque / false friend «во» from Russian; standard Ukrainian specifies «ось» (VESUM: part) in this context.
+    Source: ua-gec:F/Calque n=2.'
+- calqueLabel: оточуючих
+  nativeLemma: оточення
+  nativeSlug: оточення
+  decision: keep
+  reason: 'Russian active participle calque (-уч-/-яч-) «оточуючих»; standard Ukrainian uses «оточення» (VESUM: noun). Source:
+    ua-gec:F/Calque n=2.'
+- calqueLabel: бумажку
+  nativeLemma: папірець
+  nativeSlug: папірець
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «бумажку» absent from standard Ukrainian; standard lemma is «папірець» (VESUM:
+    noun). Source: ua-gec:F/Calque n=2.'
+- calqueLabel: любитель
+  nativeLemma: прихильник
+  nativeSlug: прихильник
+  decision: keep
+  reason: 'Semantic calque / false friend «любитель» from Russian; standard Ukrainian specifies «прихильник» (VESUM: noun)
+    in this context. Source: ua-gec:F/Calque n=2.'
+- calqueLabel: Жарко
+  nativeLemma: спекотно
+  nativeSlug: спекотно
+  decision: keep
+  reason: 'Semantic calque / false friend «Жарко» from Russian; standard Ukrainian specifies «спекотно» (VESUM: adv) in this
+    context. Source: ua-gec:F/Calque n=2.'
+- calqueLabel: Старик
+  nativeLemma: старий
+  nativeSlug: старий
+  decision: keep
+  reason: 'Semantic calque / false friend «Старик» from Russian; standard Ukrainian specifies «старий» (VESUM: adj) in this
+    context. Source: ua-gec:F/Calque n=2.'
+- calqueLabel: хотя
+  nativeLemma: хоча
+  nativeSlug: хоча
+  decision: keep
+  reason: 'Semantic calque / false friend «хотя» from Russian; standard Ukrainian specifies «хоча» (VESUM: conj) in this context.
+    Source: ua-gec:F/Calque n=2.'
+- calqueLabel: худощавий
+  nativeLemma: худорлявий
+  nativeSlug: худорлявий
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «худощавий» absent from standard Ukrainian; standard lemma is «худорлявий»
+    (VESUM: adj). Source: ua-gec:F/Calque n=2.'
+- calqueLabel: лотку
+  nativeLemma: човен
+  nativeSlug: човен
+  decision: keep
+  reason: 'Semantic calque / false friend «лотку» from Russian; standard Ukrainian specifies «човен» (VESUM: noun) in this
+    context. Source: ua-gec:F/Calque n=2.'
+- calqueLabel: Правда
+  nativeLemma: щоправда
+  nativeSlug: щоправда
+  decision: keep
+  reason: 'Semantic calque / false friend «Правда» from Russian; standard Ukrainian specifies «щоправда» (VESUM: adv) in this
+    context. Source: ua-gec:F/Calque n=2.'
+- calqueLabel: безпорядок
+  nativeLemma: безлад
+  nativeSlug: безлад
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «безпорядок» absent from standard Ukrainian; standard lemma is «безлад»
+    (VESUM: noun). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: вийшло
+  nativeLemma: вдалося
+  nativeSlug: вдалося
+  decision: keep
+  reason: 'Semantic calque / false friend «вийшло» from Russian; standard Ukrainian specifies «вдалося» (VESUM: verb) in this
+    context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: медвідь
+  nativeLemma: ведмідь
+  nativeSlug: ведмідь
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «медвідь» absent from standard Ukrainian; standard lemma is «ведмідь» (VESUM:
+    noun). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: байк
+  nativeLemma: велосипед
+  nativeSlug: велосипед
+  decision: keep
+  reason: 'Semantic calque / false friend «байк» from Russian; standard Ukrainian specifies «велосипед» (VESUM: noun) in this
+    context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: вобще
+  nativeLemma: взагалі
+  nativeSlug: взагалі
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «вобще» absent from standard Ukrainian; standard lemma is «взагалі» (VESUM:
+    adv). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: Вы
+  nativeLemma: ви
+  nativeSlug: ви
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «Вы» absent from standard Ukrainian; standard lemma is «ви» (VESUM: noun).
+    Source: ua-gec:F/Calque n=1.'
+- calqueLabel: вибачення
+  nativeLemma: вибачити
+  nativeSlug: вибачити
+  decision: keep
+  reason: 'Semantic calque / false friend «вибачення» from Russian; standard Ukrainian specifies «вибачити» (VESUM: verb)
+    in this context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: видумати
+  nativeLemma: вигадати
+  nativeSlug: вигадати
+  decision: keep
+  reason: 'Semantic calque / false friend «видумати» from Russian; standard Ukrainian specifies «вигадати» (VESUM: verb) in
+    this context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: виключення
+  nativeLemma: вилучення
+  nativeSlug: вилучення
+  decision: keep
+  reason: 'Semantic calque / false friend «виключення» from Russian; standard Ukrainian specifies «вилучення» (VESUM: noun)
+    in this context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: нечайно
+  nativeLemma: випадково
+  nativeSlug: випадково
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «нечайно» absent from standard Ukrainian; standard lemma is «випадково»
+    (VESUM: adv). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: осінню
+  nativeLemma: восени
+  nativeSlug: восени
+  decision: keep
+  reason: 'Semantic calque / false friend «осінню» from Russian; standard Ukrainian specifies «восени» (VESUM: adv) in this
+    context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: лайки
+  nativeLemma: вподобання
+  nativeSlug: вподобання
+  decision: keep
+  reason: 'Semantic calque / false friend «лайки» from Russian; standard Ukrainian specifies «вподобання» (VESUM: noun) in
+    this context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: справитися
+  nativeLemma: впоратися
+  nativeSlug: впоратися
+  decision: keep
+  reason: 'Semantic calque / false friend «справитися» from Russian; standard Ukrainian specifies «впоратися» (VESUM: verb)
+    in this context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: спасти
+  nativeLemma: врятувати
+  nativeSlug: врятувати
+  decision: keep
+  reason: 'Semantic calque / false friend «спасти» from Russian; standard Ukrainian specifies «врятувати» (VESUM: verb) in
+    this context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: внутрі
+  nativeLemma: всередині
+  nativeSlug: всередині
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «внутрі» absent from standard Ukrainian; standard lemma is «всередині» (VESUM:
+    adv). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: проти
+  nativeLemma: від
+  nativeSlug: від
+  decision: drop
+  reason: UA-GEC doc 0925 marked context-specific preposition substitution; «проти» is native Ukrainian preposition/adverb
+    attested in VESUM (prep/adv), not a calque.
+- calqueLabel: відношення
+  nativeLemma: відносини
+  nativeSlug: відносини
+  decision: keep
+  reason: 'Semantic calque / false friend «відношення» from Russian; standard Ukrainian specifies «відносини» (VESUM: noun)
+    in this context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: обчєствєнность
+  nativeLemma: громадськість
+  nativeSlug: громадськість
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «обчєствєнность» absent from standard Ukrainian; standard lemma is «громадськість»
+    (VESUM: noun). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: Горький
+  nativeLemma: гіркий
+  nativeSlug: гіркий
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «Горький» absent from standard Ukrainian; standard lemma is «гіркий» (VESUM:
+    adj). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: дверь
+  nativeLemma: двері
+  nativeSlug: двері
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «дверь» absent from standard Ukrainian; standard lemma is «двері» (VESUM:
+    noun). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: Шафер
+  nativeLemma: дружба
+  nativeSlug: дружба
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «Шафер» absent from standard Ukrainian; standard lemma is «дружба» (VESUM:
+    noun). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: Гхост
+  nativeLemma: дух
+  nativeSlug: дух
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «Гхост» absent from standard Ukrainian; standard lemma is «дух» (VESUM:
+    noun). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: взнати
+  nativeLemma: дізнатися
+  nativeSlug: дізнатися
+  decision: keep
+  reason: 'Semantic calque / false friend «взнати» from Russian; standard Ukrainian specifies «дізнатися» (VESUM: verb) in
+    this context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: дойти
+  nativeLemma: дійти
+  nativeSlug: дійти
+  decision: keep
+  reason: 'Semantic calque / false friend «дойти» from Russian; standard Ukrainian specifies «дійти» (VESUM: verb) in this
+    context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: ніж
+  nativeLemma: за
+  nativeSlug: за
+  decision: drop
+  reason: UA-GEC doc 1084 marked prepositional comparative mismatch; «ніж» is native Ukrainian conjunction attested in VESUM
+    (conj:subord), invalid single-blank fill.
+- calqueLabel: обично
+  nativeLemma: зазвичай
+  nativeSlug: зазвичай
+  decision: keep
+  reason: 'Semantic calque / false friend «обично» from Russian; standard Ukrainian specifies «зазвичай» (VESUM: adv) in this
+    context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: попередження
+  nativeLemma: запобігання
+  nativeSlug: запобігання
+  decision: keep
+  reason: 'Semantic calque / false friend «попередження» from Russian; standard Ukrainian specifies «запобігання» (VESUM:
+    noun) in this context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: примінити
+  nativeLemma: застосувати
+  nativeSlug: застосувати
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «примінити» absent from standard Ukrainian; standard lemma is «застосувати»
+    (VESUM: verb). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: угон
+  nativeLemma: захоплення
+  nativeSlug: захоплення
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «угон» absent from standard Ukrainian; standard lemma is «захоплення» (VESUM:
+    noun). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: дивлячись
+  nativeLemma: зважаючи
+  nativeSlug: зважаючи
+  decision: drop
+  reason: UA-GEC doc 0320 marked token of multiword calque «не дивлячись на» (RU «не смотря на»); «дивлячись» alone is native
+    Ukrainian adverbial participle (VESUM дивитися advp:rev:imperf).
+- calqueLabel: Ранком
+  nativeLemma: зранку
+  nativeSlug: зранку
+  decision: keep
+  reason: 'Semantic calque / false friend «Ранком» from Russian; standard Ukrainian specifies «зранку» (VESUM: adv) in this
+    context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: взійти
+  nativeLemma: зійти
+  nativeSlug: зійти
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «взійти» absent from standard Ukrainian; standard lemma is «зійти» (VESUM:
+    verb). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: білет
+  nativeLemma: квиток
+  nativeSlug: квиток
+  decision: keep
+  reason: 'Semantic calque / false friend «білет» from Russian; standard Ukrainian specifies «квиток» (VESUM: noun) in this
+    context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: карманний
+  nativeLemma: кишеньковий
+  nativeSlug: кишеньковий
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «карманний» absent from standard Ukrainian; standard lemma is «кишеньковий»
+    (VESUM: adj). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: коренастий
+  nativeLemma: кремезний
+  nativeSlug: кремезний
+  decision: keep
+  reason: 'Semantic calque / false friend «коренастий» from Russian; standard Ukrainian specifies «кремезний» (VESUM: adj)
+    in this context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: Куда
+  nativeLemma: куди
+  nativeSlug: куди
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «Куда» absent from standard Ukrainian; standard lemma is «куди» (VESUM:
+    adv). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: Поштальйон
+  nativeLemma: листоноша
+  nativeSlug: листоноша
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «Поштальйон» absent from standard Ukrainian; standard lemma is «листоноша»
+    (VESUM: noun). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: ліцо
+  nativeLemma: лице
+  nativeSlug: лице
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «ліцо» absent from standard Ukrainian; standard lemma is «лице» (VESUM:
+    noun). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: доктор
+  nativeLemma: лікарка
+  nativeSlug: лікарка
+  decision: keep
+  reason: 'Semantic calque / false friend «доктор» from Russian; standard Ukrainian specifies «лікарка» (VESUM: noun) in this
+    context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: невільно
+  nativeLemma: мимоволі
+  nativeSlug: мимоволі
+  decision: keep
+  reason: 'Semantic calque / false friend «невільно» from Russian; standard Ukrainian specifies «мимоволі» (VESUM: adv) in
+    this context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: луна
+  nativeLemma: місяць
+  nativeSlug: місяць
+  decision: keep
+  reason: 'Semantic calque / false friend «луна» from Russian; standard Ukrainian specifies «місяць» (VESUM: noun) in this
+    context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: навики
+  nativeLemma: навички
+  nativeSlug: навички
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «навики» absent from standard Ukrainian; standard lemma is «навички» (VESUM:
+    noun). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: навкруг
+  nativeLemma: навколо
+  nativeSlug: навколо
+  decision: drop
+  reason: UA-GEC doc 0121 marked stylistic preference; «навкруг» is native Ukrainian preposition/adverb attested in VESUM
+    (prep/adv), not a Russian calque (RU «вокруг»).
+- calqueLabel: самих
+  nativeLemma: найбільш
+  nativeSlug: найбільш
+  decision: drop
+  reason: UA-GEC doc 1179 marked Russian compound superlative calque «самый ...»; «самий» alone is native Ukrainian pronoun/determiner
+    attested in VESUM (adj/pron сам/самий).
+- calqueLabel: приказ
+  nativeLemma: наказ
+  nativeSlug: наказ
+  decision: keep
+  reason: 'Semantic calque / false friend «приказ» from Russian; standard Ukrainian specifies «наказ» (VESUM: noun) in this
+    context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: напуганий
+  nativeLemma: наляканий
+  nativeSlug: наляканий
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «напуганий» absent from standard Ukrainian; standard lemma is «наляканий»
+    (VESUM: adj). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: приплив
+  nativeLemma: напад
+  nativeSlug: напад
+  decision: keep
+  reason: 'Semantic calque / false friend «приплив» from Russian; standard Ukrainian specifies «напад» (VESUM: noun) in this
+    context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: написания
+  nativeLemma: написання
+  nativeSlug: написання
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «написания» absent from standard Ukrainian; standard lemma is «написання»
+    (VESUM: noun). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: напиток
+  nativeLemma: напій
+  nativeSlug: напій
+  decision: keep
+  reason: 'Semantic calque / false friend «напиток» from Russian; standard Ukrainian specifies «напій» (VESUM: noun) in this
+    context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: насєлєнія
+  nativeLemma: населення
+  nativeSlug: населення
+  decision: keep
+  reason: 'Semantic calque / false friend «насєлєнія» from Russian; standard Ukrainian specifies «населення» (VESUM: noun)
+    in this context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: нету
+  nativeLemma: нема
+  nativeSlug: нема
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «нету» absent from standard Ukrainian; standard lemma is «нема» (VESUM:
+    noninfl). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: невірно
+  nativeLemma: неправильно
+  nativeSlug: неправильно
+  decision: keep
+  reason: 'Semantic calque / false friend «невірно» from Russian; standard Ukrainian specifies «неправильно» (VESUM: adv)
+    in this context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: внезапно
+  nativeLemma: несподівано
+  nativeSlug: несподівано
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «внезапно» absent from standard Ukrainian; standard lemma is «несподівано»
+    (VESUM: adv). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: нє
+  nativeLemma: ні
+  nativeSlug: ні
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «нє» absent from standard Ukrainian; standard lemma is «ні» (VESUM: part).
+    Source: ua-gec:F/Calque n=1.'
+- calqueLabel: оправа
+  nativeLemma: обкладинка
+  nativeSlug: обкладинка
+  decision: keep
+  reason: 'Semantic calque / false friend «оправа» from Russian; standard Ukrainian specifies «обкладинка» (VESUM: noun) in
+    this context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: апдейт
+  nativeLemma: оновлення
+  nativeSlug: оновлення
+  decision: keep
+  reason: 'Semantic calque / false friend «апдейт» from Russian; standard Ukrainian specifies «оновлення» (VESUM: noun) in
+    this context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: розкажчик
+  nativeLemma: оповідач
+  nativeSlug: оповідач
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «розкажчик» absent from standard Ukrainian; standard lemma is «оповідач»
+    (VESUM: noun). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: опозорити
+  nativeLemma: осоромити
+  nativeSlug: осоромити
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «опозорити» absent from standard Ukrainian; standard lemma is «осоромити»
+    (VESUM: verb). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: бажаючі
+  nativeLemma: охочі
+  nativeSlug: охочі
+  decision: keep
+  reason: 'Russian active participle calque (-уч-/-яч-) «бажаючі»; standard Ukrainian uses «охочі» (VESUM: adj). Source: ua-gec:F/Calque
+    n=1.'
+- calqueLabel: очистки
+  nativeLemma: очищення
+  nativeSlug: очищення
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «очистки» absent from standard Ukrainian; standard lemma is «очищення» (VESUM:
+    noun). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: холм
+  nativeLemma: пагорб
+  nativeSlug: пагорб
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «холм» absent from standard Ukrainian; standard lemma is «пагорб» (VESUM:
+    noun). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: Кульок
+  nativeLemma: пакет
+  nativeSlug: пакет
+  decision: keep
+  reason: 'Semantic calque / false friend «Кульок» from Russian; standard Ukrainian specifies «пакет» (VESUM: noun) in this
+    context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: перегружать
+  nativeLemma: перевантажувати
+  nativeSlug: перевантажувати
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «перегружать» absent from standard Ukrainian; standard lemma is «перевантажувати»
+    (VESUM: verb). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: провірити
+  nativeLemma: перевірити
+  nativeSlug: перевірити
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «провірити» absent from standard Ukrainian; standard lemma is «перевірити»
+    (VESUM: verb). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: переключити
+  nativeLemma: перемкнути
+  nativeSlug: перемкнути
+  decision: keep
+  reason: 'Semantic calque / false friend «переключити» from Russian; standard Ukrainian specifies «перемкнути» (VESUM: verb)
+    in this context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: Вибачаюсь
+  nativeLemma: перепрошую
+  nativeSlug: перепрошую
+  decision: keep
+  reason: 'Semantic calque / false friend «Вибачаюсь» from Russian; standard Ukrainian specifies «перепрошую» (VESUM: verb)
+    in this context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: меседжі
+  nativeLemma: повідомлення
+  nativeSlug: повідомлення
+  decision: keep
+  reason: 'Semantic calque / false friend «меседжі» from Russian; standard Ukrainian specifies «повідомлення» (VESUM: noun)
+    in this context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: ссилочку
+  nativeLemma: посилання
+  nativeSlug: посилання
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «ссилочку» absent from standard Ukrainian; standard lemma is «посилання»
+    (VESUM: noun). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: торопитись
+  nativeLemma: поспішити
+  nativeSlug: поспішити
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «торопитись» absent from standard Ukrainian; standard lemma is «поспішити»
+    (VESUM: verb). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: Прівет
+  nativeLemma: Привіт
+  nativeSlug: привіт
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «Прівет» absent from standard Ukrainian; standard lemma is «Привіт» (VESUM:
+    noun). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: проведения
+  nativeLemma: проведення
+  nativeSlug: проведення
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «проведения» absent from standard Ukrainian; standard lemma is «проведення»
+    (VESUM: noun). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: Приказчик
+  nativeLemma: продавець
+  nativeSlug: продавець
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «Приказчик» absent from standard Ukrainian; standard lemma is «продавець»
+    (VESUM: noun). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: гайд
+  nativeLemma: путівник
+  nativeSlug: путівник
+  decision: keep
+  reason: 'Semantic calque / false friend «гайд» from Russian; standard Ukrainian specifies «путівник» (VESUM: noun) in this
+    context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: пойду
+  nativeLemma: піду
+  nativeSlug: піду
+  decision: keep
+  reason: 'Semantic calque / false friend «пойду» from Russian; standard Ukrainian specifies «піду» (VESUM: verb) in this
+    context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: радіях
+  nativeLemma: радіо
+  nativeSlug: радіо
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «радіях» absent from standard Ukrainian; standard lemma is «радіо» (VESUM:
+    noun). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: вдруг
+  nativeLemma: раптом
+  nativeSlug: раптом
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «вдруг» absent from standard Ukrainian; standard lemma is «раптом» (VESUM:
+    adv). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: родня
+  nativeLemma: родина
+  nativeSlug: родина
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «родня» absent from standard Ukrainian; standard lemma is «родина» (VESUM:
+    noun). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: свой
+  nativeLemma: свій
+  nativeSlug: свій
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «свой» absent from standard Ukrainian; standard lemma is «свій» (VESUM:
+    adj). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: смуглявий
+  nativeLemma: смаглявий
+  nativeSlug: смаглявий
+  decision: keep
+  reason: 'Semantic calque / false friend «смуглявий» from Russian; standard Ukrainian specifies «смаглявий» (VESUM: adj)
+    in this context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: плейлист
+  nativeLemma: список
+  nativeSlug: список
+  decision: keep
+  reason: 'Semantic calque / false friend «плейлист» from Russian; standard Ukrainian specifies «список» (VESUM: noun) in
+    this context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: стул
+  nativeLemma: стілець
+  nativeSlug: стілець
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «стул» absent from standard Ukrainian; standard lemma is «стілець» (VESUM:
+    noun). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: тоже
+  nativeLemma: теж
+  nativeSlug: теж
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «тоже» absent from standard Ukrainian; standard lemma is «теж» (VESUM: adv).
+    Source: ua-gec:F/Calque n=1.'
+- calqueLabel: Тёща
+  nativeLemma: теща
+  nativeSlug: теща
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «Тёща» absent from standard Ukrainian; standard lemma is «теща» (VESUM:
+    noun). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: войті
+  nativeLemma: увійти
+  nativeSlug: увійти
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «войті» absent from standard Ukrainian; standard lemma is «увійти» (VESUM:
+    verb). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: напротязі
+  nativeLemma: упродовж
+  nativeSlug: упродовж
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «напротязі» absent from standard Ukrainian; standard lemma is «упродовж»
+    (VESUM: adv). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: ладно
+  nativeLemma: хай
+  nativeSlug: хай
+  decision: keep
+  reason: 'Semantic calque / false friend «ладно» from Russian; standard Ukrainian specifies «хай» (VESUM: part) in this context.
+    Source: ua-gec:F/Calque n=1.'
+- calqueLabel: парень
+  nativeLemma: хлопець
+  nativeSlug: хлопець
+  decision: keep
+  reason: 'Semantic calque / false friend «парень» from Russian; standard Ukrainian specifies «хлопець» (VESUM: noun) in this
+    context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: четверг
+  nativeLemma: четвер
+  nativeSlug: четвер
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «четверг» absent from standard Ukrainian; standard lemma is «четвер» (VESUM:
+    noun). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: трогати
+  nativeLemma: чіпати
+  nativeSlug: чіпати
+  decision: keep
+  reason: 'Semantic calque / false friend «трогати» from Russian; standard Ukrainian specifies «чіпати» (VESUM: verb) in this
+    context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: царапати
+  nativeLemma: шкрябати
+  nativeSlug: шкрябати
+  decision: keep
+  reason: 'Russian lexical/orthographic borrowing «царапати» absent from standard Ukrainian; standard lemma is «шкрябати»
+    (VESUM: verb). Source: ua-gec:F/Calque n=1.'
+- calqueLabel: благо
+  nativeLemma: щастя
+  nativeSlug: щастя
+  decision: keep
+  reason: 'Semantic calque / false friend «благо» from Russian; standard Ukrainian specifies «щастя» (VESUM: noun) in this
+    context. Source: ua-gec:F/Calque n=1.'
+- calqueLabel: с
+  nativeLemma: із
+  nativeSlug: із
+  decision: keep
+  reason: 'Semantic calque / false friend «с» from Russian; standard Ukrainian specifies «із» (VESUM: prep) in this context.
+    Source: ua-gec:F/Calque n=1.'
