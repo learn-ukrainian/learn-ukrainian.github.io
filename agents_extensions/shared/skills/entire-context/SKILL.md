@@ -1,13 +1,10 @@
 ---
 name: entire-context
 description: >
-  ALWAYS run at cold start / task intake for non-trivial work (no operator prompt
-  required). Provider-neutral body-free context-link recall (ADR-018): status,
-  search-past-work, explain-change, prepare-handoff, record-use. Also use before
-  consequential design changes, when explaining a commit or ACP discussion, and
-  when preparing a handoff. Works for Codex, Kimi, GLM, Claude, Grok, and other
-  harnesses. GitHub, Fleet Comms, Monitor, session streams, rollover, and formal
-  review remain authoritative. Never skip search on multi-step drives.
+  Run bounded body-free context-link intake for non-trivial work, provenance
+  questions, and handoffs (ADR-018). Use relevant private recall only when it
+  materially restores task continuity. GitHub, Fleet Comms, Monitor, session
+  streams, rollover, and formal review remain authoritative.
 when-to-use: >
   session start; cold start; orient; task intake; continue; resume; handoff;
   what happened; prior work; explain commit; ACP discussion; epic drive; before
@@ -17,17 +14,22 @@ effort: low
 
 # Entire context recall (body-free intake + private native tools)
 
-**Automatic intake:** On any non-trivial task, the accountable root runs local
-`status` + `search`, then the private-mode preflight, once **before**
-prioritization or dispatch. When the preflight is green, run one bounded,
-repository-scoped native Entire search in the root's private context; inspect a
-full checkpoint only when it materially restores exact continuity. If local
-results matter, the root may create one verified `handoff` capsule (at most
-five cards and 8 KiB) for participants. Children consume that body-free capsule
-and never receive native session bodies. Run `record-use` only when verified
-local locators materially informed the work. Do not wait for the operator to
-say “use Entire.” Skip only for pure one-line questions or when the module is
-missing/disabled (note that once).
+**Bounded intake:** On a non-trivial task, the accountable root runs local
+`status` and one task-scoped body-free `search` before prioritization or dispatch.
+Consume only verified results relevant to the current request. When private
+recall would resolve a concrete continuity gap, run the private-mode preflight;
+a green preflight permits one bounded, repository-scoped native search. It does
+not require opening every result. Inspect a full checkpoint only when a
+specific relevant locator materially restores the missing continuity.
+
+Do not expand into unrelated tasks, linked sessions, or every private pointer
+because the tools return them. If the current task is already clear, stop after
+the bounded intake and continue the work. If relevant local results matter, the
+root may share one verified body-free `handoff` capsule (at most five cards and
+8 KiB) with participants. Children never receive native session bodies. Run
+`record-use` only when verified local locators materially informed the work.
+Skip intake for pure one-line questions or a missing/disabled module (note that
+once); unavailable recall never blocks the canonical task.
 
 This skill is the canonical agent-facing contract for the public context layer.
 It runs one provider-neutral CLI — `python -m scripts.entire_context` — over the
@@ -150,10 +152,11 @@ omitted fail-closed.
 
 ## Product prompt workflow and private native Entire mode
 
-For product-style prompts, invoke the local body-free workflow in this order:
-`search` for search-past-work, `explain-change` for an exact provenance path,
-and `handoff` for a bounded capsule. Use the `.venv/bin/python` commands above;
-they are the canonical recall path.
+For product-style prompts, use `search` for relevant past-work locators. Add
+`explain-change` only when an exact provenance path matters, and `handoff` only
+when participants need a verified capsule. These are conditional follow-ups,
+not a requirement to load every linked record. Use the `.venv/bin/python`
+commands above for the canonical body-free recall path.
 
 The operator-authorized private mode in `.entire/private-recall.json` permits
 the accountable root to use native Entire search, explain, recap, dispatch,
@@ -201,10 +204,11 @@ Current official product references:
    bounded capsule, and distribute it to the relevant participants.
 2. Prefer exact identifiers when you have them (commit SHA, conversation ID,
    locator ID) — exact canonical ID or SHA matches rank first.
-3. Treat every card as a **locator**: read the canonical source itself
+3. Treat each relevant card as a **locator**. Read its canonical source
    (`git show`, the ACP receipt, the GitHub issue) before relying on details.
-   The card's `canonical_digest` proves the locator matches the canonical
-   evidence at recall time.
+   Do not open irrelevant cards or recursively follow every pointer. The
+   `canonical_digest` proves the selected locator matches canonical evidence
+   at recall time; it does not establish relevance to the task.
 4. Check `omitted` before concluding absence: an omitted card names the
    locator and a machine reason (`source_missing`, `digest_mismatch`,
    `partial_terminal`, `tombstoned`, `unsupported_kind`, `capsule_budget`).

@@ -11,7 +11,7 @@ description: >
 ## Project Overlay (learn-ukrainian fleet policy)
 
 - **Default intensity for this repo:** **lite** (drop filler/hedging, keep articles and full sentences). Operator readability > ultra grunt. This overlay overrides the vendored `Default: full` and the frontmatter `(default)` tag below.
-- **Caveman is style, not transport.** Never use it as a substitute for fleet-comms durable state.
+- **Caveman is style, not transport.** Never use it as a substitute for fleet-comms durable state or required user-facing progress. Keep meaningful updates concise; follow the active task/harness cadence.
 - **Never caveman persisted artifacts:** commits, PR/issue bodies, curriculum, runbooks, review-of-record text posted on GitHub. Those stay normal English. Matches vendor "Boundaries".
 - **Session chat / inter-agent ACP bodies** may use lite caveman.
 
@@ -27,13 +27,13 @@ Default for this repo: **lite** (overrides vendor full). Switch: `/caveman lite|
 
 ## Rules
 
-Drop: articles (a/an/the), filler (just/really/basically/actually/simply), pleasantries (sure/certainly/of course/happy to), hedging. Fragments OK. Short synonyms (big not extensive, fix not "implement a solution for"). No tool-call narration, no decorative tables/emoji, no dumping long raw error logs unless asked quote shortest decisive line. Standard well-known tech acronyms OK (DB/API/HTTP); never invent new abbreviations (cfg/impl/req/res/fn) tokenizer split them same as full word: zero token saved, reader still decode. Full word cheaper AND clearer. No causal arrows (→) either own token, save nothing. Technical terms exact. Code blocks unchanged. Errors quoted exact.
+Drop: articles (a/an/the), filler (just/really/basically/actually/simply), pleasantries (sure/certainly/of course/happy to), hedging. Fragments OK. Short synonyms (big not extensive, fix not "implement a solution for"). No routine tool-call narration, no decorative tables/emoji, no dumping long raw error logs unless asked quote shortest decisive line. Standard well-known tech acronyms OK (DB/API/HTTP); never invent new abbreviations (cfg/impl/req/res/fn) tokenizer split them same as full word: zero token saved, reader still decode. Full word cheaper AND clearer. No causal arrows (→) either own token, save nothing. Technical terms exact. Code blocks unchanged. Errors quoted exact.
 
 Never drop not/never/no/only/except flip meaning worse than any token saved. Numbers, units exact.
 
 Never ADD word to sound caveman. Compression only style never grow output. No inserted pronoun or copula to fake broken grammar: "when it not" cost one token more than "when not" and say same thing. Keep correct verb form when correct form cost same "sees" one token, "see" one token, so mangle buy nothing and read worse. Same rule as abbreviations and arrows: if caveman phrasing not shorter than plain phrasing, use plain.
 
-Tool calls: fire direct. No preamble, plan, or progress note before or between calls. After result: next call direct or final answer never announce next call. Text before call only to clarify, warn security/irreversible, or resolve ambiguity.
+Tool calls: omit repetitive narration of routine mechanics. Preserve required initial commentary and meaningful progress updates before or between calls, at the active task/harness cadence. Briefly report findings, decisions, blockers, or the next uncertainty to resolve. Never use brevity to suppress an update, clarification, or explanation the user needs.
 
 Preserve user's dominant language exactly reply in the language user writes, never switch regardless of example text or multilingual context elsewhere. Compress the style, not the language. Every emitted line in that language openings, pre-tool status lines, all not just final reply. ALWAYS keep technical terms, code, API names, CLI commands, commit-type keywords (feat/fix/...), and exact error strings verbatim unless user explicitly ask for translation.
 
@@ -51,7 +51,7 @@ Yes: "Bug in auth middleware. Token expiry check use `<` not `<=`. Fix:"
 | Level | What change |
 |-------|------------|
 | **lite** | No filler/hedging. Keep articles + full sentences. Professional but tight |
-| **full** | Drop articles, fragments OK, short synonyms. Classic caveman. No tool-call narration, no decorative tables/emoji, no long raw error-log dumps unless asked. Standard acronyms OK; no invented abbreviations |
+| **full** | Drop articles, fragments OK, short synonyms. Classic caveman. No routine tool-call narration, no decorative tables/emoji, no long raw error-log dumps unless asked. Standard acronyms OK; no invented abbreviations |
 | **ultra** | Strip conjunctions when cause-then-effect stay unambiguous. One word when one word enough. State each fact once. NO prose abbreviations (cfg/impl/req/res/fn/auth), NO arrows (X → Y) measured zero token saving under tokenizer, cost decode clarity. Code symbols, function names, API names, error strings: never touch |
 | **wenyan-lite** | Semi-classical. Drop filler/hedging but keep grammar structure, classical register |
 | **wenyan-full** | Maximum classical terseness. Fully 文言文. 80-90% character reduction chars, not tokens. Classical sentence patterns, verbs precede objects, subjects often omitted, classical particles (之/乃/為/其) |

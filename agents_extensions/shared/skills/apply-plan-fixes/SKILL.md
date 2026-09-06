@@ -1,6 +1,6 @@
 ---
 name: apply-plan-fixes
-description: Apply fixes from plan review reports. Reads audit reports, shows proposed changes for approval, then applies them. Respects plan versioning rules.
+description: Apply plan-review fixes within the operator-authorized scope, preserving plan versions. Prepare concrete diffs for any unresolved scope or decision; prior authorization remains valid and silence never grants approval.
 argument-hint: "<track> [modules: all | 1 | 5-10 | slug-name] [--severity CRITICAL,HIGH | --all-fixes]"
 ---
 
@@ -24,6 +24,16 @@ Optional flags (appended after module selector):
 - Default (no flag): CRITICAL, HIGH, and MEDIUM
 
 **Plans directory**: `curriculum/l2-uk-en/plans/{track}/*.yaml`
+
+## Authorization
+
+Use the current request and earlier explicit authorization to determine which
+fixes are already covered. Apply those fixes without asking for the same
+permission again, including structural or semantic edits already decided by
+the operator. A review report supplies proposed changes, not authorization to
+expand scope. Prepare concrete diffs for unresolved choices; ask only for the
+missing decision and continue independent authorized work. Silence or elapsed
+time is never approval.
 
 ## Execute
 
