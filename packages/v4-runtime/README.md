@@ -54,7 +54,11 @@ independent backend-model attestation. Default app connectors are disabled; only
 the five named Sources verification tools have fixed call permission. Every
 server-to-client request is rejected. Missing companion files and native Code
 Mode-unavailable warnings refuse; full Sources callability still needs actual
-qualification evidence.
+qualification evidence. Before storing a reviewer capture or observation, the
+parent requires at least one successful sanctioned Sources invocation recorded
+for that exact authenticated reviewer attempt. An author's call, advertised tool
+inventory, or model-reported call cannot satisfy this requirement. This proves
+verification occurred, not that the row is linguistically correct.
 
 ## Source-qualified linguistic preparation
 

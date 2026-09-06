@@ -342,13 +342,16 @@ for fd in Path("/proc/self/fd").iterdir():
     except FileNotFoundError:
         pass
 if request["action"]=="timeout":
+    import subprocess
+    subprocess.Popen([sys.executable,"-c","import time;time.sleep(30)"])
     time.sleep(30)
 if request["action"]=="closed_pipes":
     os.close(1); os.close(2); time.sleep(30)
-if request["action"] in ("stdout_leak", "stderr_leak"):
-    output=sys.stdout if request["action"]=="stdout_leak" else sys.stderr
+if request["action"] in ("stdout_leak", "stdout_leak_newline", "stderr_leak"):
+    output=sys.stderr if request["action"]=="stderr_leak" else sys.stdout
     output.write(secret[:10]); output.flush(); time.sleep(.02)
     output.write(secret[10:]); output.flush()
+    if request["action"]=="stdout_leak_newline":output.write(chr(10));output.flush()
 else:
     if rpc:
         emit({"id":4,"result":{"turn":{"id":"fixture-turn","status":"inProgress"}}})
@@ -407,7 +410,7 @@ def test_actual_source_free_bwrap_transport(tmp_path, monkeypatch, native_profil
     assert selected.read_bytes() == original
 
 
-@pytest.mark.parametrize("action", ["timeout", "closed_pipes", "stdout_leak", "stderr_leak"])
+@pytest.mark.parametrize("action", ["timeout", "closed_pipes", "stdout_leak", "stdout_leak_newline", "stderr_leak"])
 def test_child_failure_discards_secrets_and_closes_fd(monkeypatch, native_profile, action, caplog):
     profile = select_mode(native_profile, "codex", "subscription")
     monkeypatch.setattr(child, "load_profile", lambda: profile)
@@ -417,8 +420,11 @@ def test_child_failure_discards_secrets_and_closes_fd(monkeypatch, native_profil
         owned["deadline_at"] = datetime.now(UTC) + timedelta(seconds=0.5)
     before = set(os.listdir("/proc/self/fd"))
     expected = "execution_timeout" if action in ("timeout", "closed_pipes") else "child_credential_disclosure"
+    started = time.monotonic()
     with pytest.raises(OperationRefused, match=expected) as error:
         child.run_child(owned, provider_credential=value)
+    assert time.monotonic() - started < 5
+    assert error.value.__cause__ is None
     assert set(os.listdir("/proc/self/fd")) == before
     assert SYNTHETIC_TOKEN not in str(error.value) + caplog.text
 

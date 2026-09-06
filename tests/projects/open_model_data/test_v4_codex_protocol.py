@@ -122,10 +122,8 @@ def test_byte_fragmented_protocol_preserves_capture_and_fixed_request_order():
     protocol = _CodexProtocol(binding(), "fixture prompt")
     outgoing = bytearray(protocol.initial())
     raw = capture(events()).stdout
-    original = raw
     for byte in raw:
         outgoing.extend(protocol.feed(bytes([byte])))
-    assert raw == original
     requests = [json.loads(line) for line in outgoing.splitlines()]
     assert [row["method"] for row in requests] == [
         "initialize", "initialized", "thread/start", "mcpServerStatus/list", "turn/start"]
@@ -182,3 +180,11 @@ def test_recorded_native_protocol_projection_matches_actual_event_order():
              and row["params"]["item"]["type"] == "mcpToolCall"]
     assert len(calls) == 1
     assert (calls[0]["server"], calls[0]["tool"], calls[0]["status"]) == ("sources", "verify_word", "completed")
+
+
+@pytest.mark.parametrize("raw", [b"not-json-secret\n", b"\xffinvalid-utf8\n"])
+def test_malformed_child_bytes_are_not_chained_into_public_refusal(raw):
+    with pytest.raises(OperationRefused, match="child_capture_invalid") as error:
+        _CodexProtocol(binding()).feed(raw)
+    assert error.value.__cause__ is None
+    assert error.value.__suppress_context__ is True

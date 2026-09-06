@@ -85,10 +85,11 @@ def signing_resources(tmp_path, monkeypatch):
     monkeypatch.setattr(trust, "HRAMATKA_CREDENTIAL_NAMESPACE", namespace)
 
 
-def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect, review_transform=None):
+def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect, review_transform=None,
+                   reviewer_sources=True):
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", pg_cluster.info.dsn)
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
-    io = RuntimeResources(tmp_path, pg_cluster, monkeypatch, defect=defect)
+    io = RuntimeResources(tmp_path, pg_cluster, monkeypatch, defect=defect, reviewer_sources=reviewer_sources)
     constraints = linguistic_constraints()
     release = WheelRelease(built_wheel)
     try:
@@ -153,6 +154,18 @@ def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resou
             review_snapshot = {**preparation, "authored_row": row, "rubric_sha256": binding["rubric_sha256"]}
             if review_transform is not None:
                 review_snapshot = review_transform(conn, owned, review_snapshot)
+            if not reviewer_sources:
+                from learn_ukrainian_v4_runtime.operation_auth import OperationRefused
+
+                before = conn.execute("SELECT count(*) AS n FROM fleet_comms_artifact_blobs").fetchone()["n"]
+                with pytest.raises(OperationRefused, match="reviewer_sources_evidence_absent"):
+                    run(reviewer.request_id, review_snapshot)
+                assert conn.execute("SELECT state FROM requests WHERE request_id=%s",
+                                    (reviewer.request_id,)).fetchone()["state"] == "failed"
+                assert conn.execute("SELECT count(*) AS n FROM fleet_comms_artifact_blobs").fetchone()["n"] == before
+                assert conn.execute("SELECT count(*) AS n FROM v4_execution_observations WHERE request_id=%s",
+                                    (reviewer.request_id,)).fetchone()["n"] == 0
+                return None
             _, review = run(reviewer.request_id, review_snapshot)
             signed_review = fleet.issue_reviewer_execution_receipt(task_id=review["task_id"], run_id=review["run_id"])
             assert signed_review["verdict"] == ("FAIL" if defect else "PASS")
@@ -253,3 +266,13 @@ def test_actual_parent_refuses_failed_child_without_artifact_or_observation(
             assert conn.execute("SELECT count(*) AS n FROM v4_execution_observations WHERE request_id=%s", (owned["request_id"],)).fetchone()["n"] == 0
     finally:
         io.close()
+
+
+def test_reviewer_pass_without_own_sources_call_is_not_observed_or_receipted(
+    pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources
+):
+    # A real author has verified Sources, but that attempt cannot satisfy the
+    # reviewer. The fixture advertises all five tools and emits PASS without
+    # calling Sources; the real parent must refuse before artifact persistence.
+    _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources,
+                   False, reviewer_sources=False)

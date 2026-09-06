@@ -423,8 +423,8 @@ class _CodexProtocol:
                 continue
             try:
                 event = json.loads(line)
-            except (UnicodeError, ValueError) as exc:
-                raise OperationRefused("child_capture_invalid") from exc
+            except (UnicodeError, ValueError):
+                raise OperationRefused("child_capture_invalid") from None
             outgoing.extend(self.event(event))
         return bytes(outgoing)
 
@@ -654,6 +654,8 @@ def run_child(claim: dict, *, provider_credential: ProviderCredential) -> Captur
                             streams[key.data].extend(chunk)
                             if sum(map(len, streams.values())) > MAX_CAPTURE_BYTES:
                                 raise OperationRefused("capture_limit")
+                            if any(secret in output for secret in secrets for output in streams.values()):
+                                raise OperationRefused("child_credential_disclosure")
                             if protocol is not None and key.data == "stdout":
                                 outgoing = protocol.feed(chunk)
                                 if outgoing:
@@ -707,8 +709,8 @@ def parse_child(capture: CapturedChild, binding: dict) -> dict:
     else:
         try:
             events = [json.loads(line) for line in capture.stdout.decode().splitlines() if line.strip()]
-        except (UnicodeError, ValueError) as exc:
-            raise OperationRefused("child_capture_invalid") from exc
+        except (UnicodeError, ValueError):
+            raise OperationRefused("child_capture_invalid") from None
         models = set()
         sessions = set()
         text = []

@@ -71,11 +71,12 @@ else:
 assert token=="Bearer "+capability
 assert not os.path.exists("/home/ops") and not os.path.exists("/run/credentials")
 assert not os.path.exists("/usr/bin/sh") and not os.path.exists("/usr/bin/psql")
-body=json.dumps({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"verify_word","arguments":{"word":"fixture-one"}}}).encode()
-request=urllib.request.Request(url,data=body,headers={"Content-Type":"application/json","Accept":"application/json, text/event-stream","Authorization":token})
-with urllib.request.urlopen(request,timeout=10) as response:
-    evidence=json.load(response)
-assert "error" not in evidence, evidence
+if payload["role"]!="reviewer" or REVIEWER_SOURCES:
+    body=json.dumps({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"verify_word","arguments":{"word":"fixture-one"}}}).encode()
+    request=urllib.request.Request(url,data=body,headers={"Content-Type":"application/json","Accept":"application/json, text/event-stream","Authorization":token})
+    with urllib.request.urlopen(request,timeout=10) as response:
+        evidence=json.load(response)
+    assert "error" not in evidence, evidence
 if payload["role"]=="author":
     row={key:"fixture-one" for key in payload["constraints"]["required_fields"]}
     if DEFECT: row.pop("answer",None)
@@ -97,10 +98,10 @@ else:
 """
 
 
-def pinned_profile(root, *, sources_url, defect=False):
+def pinned_profile(root, *, sources_url, defect=False, reviewer_sources=True):
     """Pin the fixture and a compact, portable CPython runtime closure."""
     executable = root / "fixture-cli"
-    executable.write_text(CHILD.replace("DEFECT", repr(defect)))
+    executable.write_text(CHILD.replace("DEFECT", repr(defect)).replace("REVIEWER_SOURCES", repr(reviewer_sources)))
     executable.chmod(0o700)
     base = Path(sys.base_prefix).resolve()
     stdlib = Path(sysconfig.get_path("stdlib")).resolve()
@@ -209,7 +210,7 @@ class WheelRelease:
 
 
 class RuntimeResources:
-    def __init__(self, root, pg, monkeypatch, *, defect=False):
+    def __init__(self, root, pg, monkeypatch, *, defect=False, reviewer_sources=True):
         self.root = root
         # LOGIN applies only to this owned ephemeral cluster. Production roles,
         # credentials and services are never touched.
@@ -243,7 +244,7 @@ class RuntimeResources:
             time.sleep(0.01)
         assert self.server.started
         self.url = f"http://{socket.gethostbyname('localhost')}:{listener.getsockname()[1]}/mcp"
-        path = pinned_profile(root, sources_url=self.url, defect=defect)
+        path = pinned_profile(root, sources_url=self.url, defect=defect, reviewer_sources=reviewer_sources)
         monkeypatch.setattr(child_runtime, "profile_path", lambda: path)
         monkeypatch.setattr(child_runtime, "PRODUCTION_CHILD_PROFILE_SHA256", digest(path.read_bytes()))
 
