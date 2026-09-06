@@ -758,6 +758,8 @@ def _route_metadata(
     # prevents a response cache from crossing a flat-contract revision.
     if str(args.judge_family).casefold() == "grok":
         bridge_config["family_internal_sha"] = layerb_judge_bridge.grok_flat_contract_fingerprint()
+    if str(args.judge_family).casefold() == "gpt":
+        bridge_config["strict_identity_policy"] = layerb_judge_bridge.codex_identity_policy()
     route_data = {
         "family": args.judge_family,
         "resolved_model": args.judge_model,
@@ -771,6 +773,8 @@ def _route_metadata(
             "layerb_shadow.SubprocessJudge exposes no in-process tool client"
         ),
     }
+    if str(args.judge_family).casefold() == "gpt":
+        route_data["model_identity"] = layerb_judge_bridge.codex_model_identity()
     effective = layerb_qualify.EffectiveRoute.from_mapping(route_data)
     route = layerb_shadow.JudgeRoute(
         family=effective.family,
@@ -922,6 +926,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.judge_input_usd_per_mtok < 0 or args.judge_output_usd_per_mtok < 0:
             raise CollectionError("judge USD-per-Mtok rates must be non-negative")
         effective_route, judge_route, seat_key, seat_metadata = _route_metadata(args)
+        if effective_route.family == "gpt" and not args.dry_run:
+            raise CollectionError("provider_model_identity_unavailable")
         if args.eligibility == "deepseek-only" and effective_route.family != "gemini":
             raise CollectionError("--eligibility deepseek-only is reserved for the gemini route")
         seat_caps = _parse_seat_caps(args.seat_cap)

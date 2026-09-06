@@ -83,7 +83,8 @@ class Result:
         ok: True iff the invocation succeeded end-to-end (no exceptions,
             no stall, no hard timeout, adapter.parse_response returned ok).
         agent: Registry name of the agent that served this call.
-        model: Actual model used (adapter.default_model if none passed).
+        model: Resolved routing/accounting identity. For native Codex this is
+            the configured request, not provider-observed model evidence.
         mode: Sandbox mode requested ("read-only", "workspace-write", "danger").
         response: Clean text output (empty on failure).
         stderr_excerpt: Diagnostic stderr tail on failure, None on success.
@@ -94,8 +95,8 @@ class Result:
         stalled: True iff the failure was stall detection firing.
             Distinguishes "agent went silent" from "agent hit wall clock."
         returncode: Subprocess exit code, or None if killed before exit.
-        effort: Actual effort / reasoning level applied, or "unknown" if the
-            runtime could not resolve it without guessing.
+        effort: Resolved invocation effort / reasoning setting, or "unknown".
+            Native Codex reads this from the request, not provider observation.
         cli_version: Version string from ``<agent> --version``, cached per
             process by the telemetry helpers. "unknown" on probe failure.
         usage_record: The exact dict written to batch_state/api_usage/. Callers
@@ -138,3 +139,5 @@ class Result:
     # and Via are sealed by the runner, not accepted from caller metadata.
     transport_metadata: dict[str, str] | None = None
     transport_outcome: str | None = None
+    # Optional provenance; absent historical records imply no provider observation.
+    model_identity: dict[str, str | None] | None = None

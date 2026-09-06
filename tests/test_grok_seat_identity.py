@@ -104,7 +104,7 @@ def test_budget_agent_key_dual_reads_historical_alias():
 
 
 def test_codex_print_config_sha_unchanged_by_grok_seat_rename(capsys):
-    """Identity rename must not touch codex judge attestation bytes."""
+    """Grok rename leaves the current strict Codex identity-policy fingerprint intact."""
     from audit import layerb_judge_bridge
 
     assert layerb_judge_bridge.main(["--print-config"]) == 0
@@ -115,7 +115,7 @@ def test_codex_print_config_sha_unchanged_by_grok_seat_rename(capsys):
     assert config["family"] == "codex"
     assert (
         config["config_sha256"]
-        == "bf3cf90b670ce6411a84aa9a2875ae64562f75dfac7803dfbf007d9d1708d588"
+        == "e40e47ac45b7f488ce7e2140dc6006b57b37f187f978aad568babc40c1d5352b"
     )
 
 

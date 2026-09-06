@@ -56,6 +56,7 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(project_root))
     sys.path.insert(0, str(project_root / "scripts"))
 
+from scripts.agent_runtime.telemetry import codex_model_identity  # isort: skip
 from scripts.audit import layerb_shadow, model_families  # isort: skip
 
 
@@ -153,6 +154,7 @@ class EffectiveRoute:
     provider_account_lane: str
     tools_disabled: bool
     tools_disabled_evidence: str
+    model_identity: Mapping[str, Any] | None = None
 
     @classmethod
     def from_mapping(cls, value: Mapping[str, Any]) -> EffectiveRoute:
@@ -182,10 +184,16 @@ class EffectiveRoute:
             provider_account_lane=str(value["provider_account_lane"]),
             tools_disabled=True,
             tools_disabled_evidence=str(value["tools_disabled_evidence"]),
+            model_identity=(
+                codex_model_identity(source=(
+                    "configured_request" if value.get("model_identity") == codex_model_identity()
+                    else "legacy_unverified"
+                )) if family == "gpt" else None
+            ),
         )
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        result = {
             "family": self.family,
             "normalized_family": ROUTE_LINEAGES[self.family],
             "resolved_model": self.resolved_model,
@@ -196,6 +204,14 @@ class EffectiveRoute:
             "tools_disabled": self.tools_disabled,
             "tools_disabled_evidence": self.tools_disabled_evidence,
         }
+
+        if self.family == "gpt":
+            # Caller-supplied identity metadata cannot manufacture observation.
+            result["model_identity"] = codex_model_identity(source=(
+                "configured_request" if self.model_identity == codex_model_identity()
+                else "legacy_unverified"
+            ))
+        return result
 
 
 def _canonical_json(value: Any) -> str:
@@ -1488,6 +1504,8 @@ def create_attestation(
     if not isinstance(checklist, Mapping) or checklist.get("complete") is not True:
         raise AttestationError("human-audit-of-new-accepts checklist is incomplete")
     route = EffectiveRoute.from_mapping(report.get("effective_route", {}))
+    if route.family == "gpt":
+        raise AttestationError("provider_model_identity_unavailable")
     if require_frozen_main_hash and _sha256_file(labels_path) != FROZEN_MAIN_LABEL_SHA256:
         raise AttestationError("main label-set byte hash differs from the frozen qualification input")
     if expires_at.tzinfo is None:
@@ -1561,6 +1579,8 @@ def verify_attestation(
     if attestation.get("thresholds_version") != THRESHOLDS_VERSION:
         raise AttestationError("threshold version drifted")
     route = EffectiveRoute.from_mapping(attestation.get("effective_route", {}))
+    if route.family == "gpt":
+        raise AttestationError("provider_model_identity_unavailable")
     report = _read_json(report_path)
     if _sha256_file(report_path) != attestation.get("report_sha256"):
         raise AttestationError("qualification report bytes drifted")

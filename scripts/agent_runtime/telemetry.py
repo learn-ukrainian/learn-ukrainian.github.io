@@ -3,8 +3,8 @@
 Resolves the observability-only metadata we want to persist for delegated
 tasks:
 
-- the effective model string
-- the effective effort / reasoning level
+- the configured invocation model string
+- the configured effort / reasoning setting
 - the CLI version
 
 The runtime uses ``resolve_invocation_telemetry()`` after an adapter has
@@ -14,7 +14,8 @@ actually about to invoke rather than a guessed default.
 ``resolve_dispatch_start_telemetry()`` is a best-effort preflight variant
 used by ``delegate.py dispatch`` so the task state file already contains the
 fields while the task is still spawning/running. The worker backfills the
-runtime-resolved values on completion.
+runtime-resolved values on completion. These are request-side routing metadata,
+not proof of the backend model or reasoning effort observed by the provider.
 """
 
 from __future__ import annotations
@@ -45,11 +46,28 @@ _ORIGINAL_SUBPROCESS_POPEN = subprocess.Popen
 
 @dataclass(frozen=True)
 class InvocationTelemetry:
-    """Resolved observability metadata for one agent invocation."""
+    """Resolved request-side metadata; native Codex has no provider identity proof."""
 
     model: str
     effort: str
     cli_version: str
+
+
+def codex_model_identity(*, source: str = "configured_request") -> dict[str, str | None]:
+    """Describe native Codex request provenance without claiming backend observation.
+
+    There is no qualified provider-origin model/version evidence source for this
+    transport. Configuration, a successful answer, and client rollout metadata
+    do not change that fact. Legacy receipts have no stronger provenance.
+    """
+    if source not in {"configured_request", "legacy_unverified"}:
+        raise ValueError("unsupported Codex model identity source")
+    return {
+        "source": source,
+        "provider_observed_model": None,
+        "provider_observed_model_version": None,
+        "provider_observation": "unknown",
+    }
 
 
 def _warn_unknown(field: str, agent_name: str, detail: str) -> None:
