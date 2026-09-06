@@ -3505,8 +3505,9 @@ installed CLI/capture state. After the private preflight is green, an
 accountable root may run
 `.venv/bin/python -m scripts.entire_context refresh-provider-capabilities
 --query "<non-sensitive checkpoint canary>"`. The latter performs scoped search
-and a `generate:false` dispatch-routing probe. The query and every provider
-body are discarded; the cache contains only booleans, bounded reason codes,
+and a dispatch probe in the ready source mirror's jurisdiction, followed by
+immediate deletion of the temporary job. Cleanup failure reports a provider
+error. The query and every provider body are discarded; the cache contains only booleans, bounded reason codes,
 HTTP status, and aggregate counts.
 
 `provider.capabilities.private_boundary.ready` proves the routing/ACL gate.

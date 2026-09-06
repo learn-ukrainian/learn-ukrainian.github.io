@@ -7,6 +7,7 @@ import subprocess
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+import pytest
 from fastapi.testclient import TestClient
 
 from scripts.agent_runtime import acpx_discuss
@@ -219,9 +220,25 @@ def _write_provider_policy(root: Path) -> None:
     )
 
 
-def test_provider_capability_refresh_is_body_free_and_uses_generate_false(
-    tmp_path: Path, monkeypatch
-) -> None:
+def _mirror_result():
+    return subprocess.CompletedProcess(
+        [],
+        0,
+        json.dumps(
+            [
+                {
+                    "owner": "learn-ukrainian",
+                    "repo": "learn-ukrainian.github.io",
+                    "status": "ready",
+                    "jurisdiction": "eu",
+                }
+            ]
+        ),
+        "",
+    )
+
+
+def test_provider_capability_refresh_is_body_free_and_deletes_eu_dispatch(tmp_path: Path, monkeypatch) -> None:
     _write_provider_policy(tmp_path)
     query = "PRIVATE_CANARY_TERM"
     observed: dict[str, object] = {}
@@ -237,6 +254,13 @@ def test_provider_capability_refresh_is_body_free_and_uses_generate_false(
     )
 
     def fake_run(_root: Path, *args: str):
+        if args[:3] == ("repo", "mirror", "list"):
+            assert args == ("repo", "mirror", "list", "--name", "learn-ukrainian", "--json")
+            return _mirror_result()
+        if "DELETE" in args:
+            assert "dispatch_input" in observed
+            observed["delete_args"] = args
+            return subprocess.CompletedProcess(args, 0, "", "HTTP/2.0 204 No Content\n")
         observed["search_args"] = args
         return subprocess.CompletedProcess(
             list(args),
@@ -265,6 +289,7 @@ def test_provider_capability_refresh_is_body_free_and_uses_generate_false(
             0,
             json.dumps(
                 {
+                    "id": "test-dispatch-id",
                     "totals": {
                         "checkpoints": 3,
                         "used_checkpoint_count": 3,
@@ -275,7 +300,7 @@ def test_provider_capability_refresh_is_body_free_and_uses_generate_false(
                     "generated_markdown": "provider dispatch body must not persist",
                 }
             ),
-            "HTTP/2.0 200 OK\nContent-Type: application/json\n",
+            "HTTP/2.0 202 Accepted\nContent-Type: application/json\n",
         )
 
     monkeypatch.setattr(provider, "_run", fake_run)
@@ -298,8 +323,31 @@ def test_provider_capability_refresh_is_body_free_and_uses_generate_false(
     assert refreshed["cloud"]["search"]["indexed_history"] is True
     assert refreshed["cloud"]["dispatch"]["history_available"] is True
     assert query in observed["search_args"]
-    assert observed["dispatch_input"]["generate"] is False
-    assert "--include" in observed["dispatch_args"]
+    assert set(observed["dispatch_input"]) == {"repos", "since", "until"}
+    assert observed["dispatch_input"]["repos"] == ["learn-ukrainian/learn-ukrainian.github.io"]
+    assert datetime.fromisoformat(observed["dispatch_input"]["until"]) - datetime.fromisoformat(
+        observed["dispatch_input"]["since"]
+    ) == timedelta(days=7)
+    assert observed["dispatch_args"] == [
+        "api",
+        "--jurisdiction",
+        "eu",
+        "-X",
+        "POST",
+        "/api/v1/me/dispatches",
+        "--input",
+        "-",
+        "--include",
+    ]
+    assert observed["delete_args"] == (
+        "api",
+        "--jurisdiction",
+        "eu",
+        "-X",
+        "DELETE",
+        "/api/v1/me/dispatches/test-dispatch-id",
+        "--include",
+    )
     assert loaded["stale"] is True
     assert query not in cached
     assert "provider search body" not in cached
@@ -307,9 +355,7 @@ def test_provider_capability_refresh_is_body_free_and_uses_generate_false(
     assert "forbidden_body" not in cached
 
 
-def test_provider_capability_refresh_reports_empty_index_and_region_failure(
-    tmp_path: Path, monkeypatch
-) -> None:
+def test_provider_capability_refresh_reports_empty_index_and_region_failure(tmp_path: Path, monkeypatch) -> None:
     _write_provider_policy(tmp_path)
     monkeypatch.setattr(
         provider,
@@ -319,21 +365,25 @@ def test_provider_capability_refresh_reports_empty_index_and_region_failure(
     monkeypatch.setattr(
         provider,
         "_run",
-        lambda _root, *_args: subprocess.CompletedProcess(
-            [],
-            0,
-            json.dumps(
-                {
-                    "total": 0,
-                    "counts": {
-                        "repos": 1,
-                        "checkpoints": 0,
-                        "commits": 0,
-                        "sessions": 0,
-                    },
-                }
-            ),
-            "",
+        lambda _root, *_args: (
+            _mirror_result()
+            if _args[:3] == ("repo", "mirror", "list")
+            else subprocess.CompletedProcess(
+                [],
+                0,
+                json.dumps(
+                    {
+                        "total": 0,
+                        "counts": {
+                            "repos": 1,
+                            "checkpoints": 0,
+                            "commits": 0,
+                            "sessions": 0,
+                        },
+                    }
+                ),
+                "",
+            )
         ),
     )
     monkeypatch.setattr(
@@ -661,3 +711,79 @@ def test_monitor_search_reverifies_typed_issue_from_shared_local_cache(
     stale = TestClient(app).get("/api/ops/entire-context/search", params={"q": "6183"}).json()
     assert stale["results"] == []
     assert stale["omitted"] == [{"locator_id": admitted.locator_id, "reason": "partial_terminal"}]
+@pytest.mark.parametrize(
+    "mirror_output",
+    [
+        "not json",
+        "{}",
+        "[]",
+        '[{"owner":"other","repo":"repo","status":"ready","jurisdiction":"eu"}]',
+        '[{"owner":"learn-ukrainian","repo":"learn-ukrainian.github.io","status":"ready"}]',
+    ],
+)
+def test_dispatch_requires_source_mirror_jurisdiction(tmp_path, monkeypatch, mirror_output):
+    monkeypatch.setattr(provider, "_run", lambda *_: subprocess.CompletedProcess([], 0, mirror_output, ""))
+    monkeypatch.setattr(provider, "_run_with_input", lambda *_: pytest.fail("must not POST without jurisdiction"))
+    assert provider._probe_cloud_dispatch(tmp_path, "learn-ukrainian/learn-ukrainian.github.io") == {
+        "reachable": False,
+        "history_available": False,
+        "reason": "repository_unavailable_or_region",
+    }
+
+
+@pytest.mark.parametrize(
+    "body,location,delete_status,reason",
+    [
+        ('{"totals":{"checkpoints":12}}', "Location: /api/v1/me/dispatches/test-id\n", 204, None),
+        (
+            '{"totals":{"checkpoints":0}}',
+            "Location: https://example.com/api/v1/me/dispatches/test-id\n",
+            204,
+            "no_checkpoint_history",
+        ),
+        ("not json", "Location: /api/v1/me/dispatches/test-id\n", 204, "provider_error"),
+        ('{"id":"test-id","totals":{"checkpoints":12}}', "", 500, "provider_error"),
+        ('{"id":"test-id","totals":{"checkpoints":12}}', "", "timeout", "provider_error"),
+        ('{"totals":{"checkpoints":12}}', "", 204, "provider_error"),
+    ],
+)
+def test_dispatch_cleanup_and_failures(tmp_path, monkeypatch, body, location, delete_status, reason):
+    deleted = []
+
+    def run(_root, *args):
+        if args[:3] == ("repo", "mirror", "list"):
+            return _mirror_result()
+        assert args == ("api", "--jurisdiction", "eu", "-X", "DELETE", "/api/v1/me/dispatches/test-id", "--include")
+        deleted.append(args)
+        if delete_status == "timeout":
+            raise subprocess.TimeoutExpired(args, 30)
+        return subprocess.CompletedProcess(args, 0 if delete_status == 204 else 1, "", f"HTTP/2.0 {delete_status}\n")
+
+    monkeypatch.setattr(provider, "_run", run)
+    monkeypatch.setattr(
+        provider,
+        "_run_with_input",
+        lambda *_: subprocess.CompletedProcess([], 0, body, "HTTP/2.0 202 Accepted\n" + location),
+    )
+    result = provider._probe_cloud_dispatch(tmp_path, "learn-ukrainian/learn-ukrainian.github.io")
+    assert result["reason"] == reason
+    assert result["history_available"] is (reason is None)
+    assert len(deleted) == (1 if location or '"id"' in body else 0)
+
+
+@pytest.mark.parametrize("status,reason", [(404, "repository_unavailable_or_region"), (422, "provider_error")])
+def test_dispatch_post_failure_does_not_delete(tmp_path, monkeypatch, status, reason):
+    def run(_root, *args):
+        assert args[:3] == ("repo", "mirror", "list")
+        return _mirror_result()
+
+    monkeypatch.setattr(provider, "_run", run)
+    monkeypatch.setattr(
+        provider, "_run_with_input", lambda *_: subprocess.CompletedProcess([], 1, "{}", f"HTTP/2.0 {status}\n")
+    )
+    assert provider._probe_cloud_dispatch(tmp_path, "learn-ukrainian/learn-ukrainian.github.io") == {
+        "reachable": False,
+        "history_available": False,
+        "reason": reason,
+        "http_status": status,
+    }

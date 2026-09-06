@@ -105,9 +105,10 @@ projection; provider refreshes write only sanitized local caches.
 
 The capability probe is operator/root initiated, never part of automatic
 intake. It repeats the private-boundary preflight, runs repository-scoped
-search, and sends a `generate:false` dispatch request. It persists only
-booleans, reason codes, HTTP status, and aggregate counts. Monitor reads that
-cache without a synchronous Entire call. An empty index or dispatch routing
+search, and sends a dispatch request in the ready source mirror's jurisdiction.
+It immediately deletes the temporary job; cleanup failure reports a provider
+error. It persists only booleans, reason codes, HTTP status, and aggregate
+counts. Monitor reads that cache without a synchronous Entire call. An empty index or dispatch routing
 failure is a degraded provider feature, not a failure of local body-free
 recall or of the canonical workflow.
 
