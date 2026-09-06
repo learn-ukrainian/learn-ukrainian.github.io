@@ -486,6 +486,20 @@ def test_receipt_aggregates_both_repositories(tmp_path: Path, monkeypatch) -> No
     assert receipt["summary"] == {
         "repositories": 2,
         "removed": 1,
+        "retained": 1,
+        "retained_exceptions": 0,
+        "by_preservation_class": {
+            "primary": 0,
+            "active_dispatch": 0,
+            "open_pr": 0,
+            "dirty": 0,
+            "detached_unknown": 0,
+            "permission_error": 0,
+            "foreign": 0,
+            "unmerged": 0,
+            "uncertain": 1,
+        },
+        "by_owner": {"unattributed": 2},
         "branches_deleted": 2,
         "origin_branches_deleted": 0,
         "orphans_reported": 1,
@@ -831,3 +845,118 @@ def test_report_mode_preserves_review_temp_orphans(tmp_path: Path, monkeypatch) 
     assert result_apply.get("review_temp_sweep") is not None
     assert result_apply["review_temp_sweep"]["roots_reaped"] == 1
     assert not root.exists(), "review temp orphan should be reaped during apply mode"
+
+
+def test_default_parser_targets_both_repositories() -> None:
+    parser = cleanup.build_parser()
+    args = parser.parse_args([])
+    assert len(args.default_repo_roots) == 2
+    assert args.default_repo_roots[0] == cleanup.default_public_repo()
+    assert args.default_repo_roots[1] == cleanup.default_private_repo(cleanup.default_public_repo())
+
+
+def test_build_public_summary_zero_path_dumps(tmp_path: Path) -> None:
+    receipt = {
+        "schema_version": cleanup.SCHEMA_VERSION,
+        "observed_at": "2026-09-06T20:00:00Z",
+        "mode": "dry_run",
+        "summary": {
+            "repositories": 2,
+            "removed": 1,
+            "retained": 3,
+            "retained_exceptions": 2,
+            "by_preservation_class": {
+                "primary": 1,
+                "dirty": 1,
+                "permission_error": 1,
+                "unmerged": 0,
+            },
+            "by_owner": {"codex": 2, "claude": 1},
+            "branches_deleted": 0,
+            "origin_branches_deleted": 0,
+            "orphans_reported": 0,
+            "errors": 0,
+            "review_temp_reaped": 0,
+            "review_temp_bytes_freed": 0,
+        },
+        "repositories": [
+            {
+                "repo_root": "/home/secret/host/learn-ukrainian",
+                "retained": 2,
+                "retained_exceptions": 1,
+                "by_preservation_class": {"primary": 1, "dirty": 1},
+                "by_owner": {"codex": 2},
+                "results": [
+                    {
+                        "path": "/home/secret/host/learn-ukrainian/.worktrees/dispatch/codex/t1",
+                        "branch": "codex/t1",
+                        "action": "skipped",
+                        "reason": "dirty",
+                        "dirty": True,
+                        "owner": "codex",
+                    },
+                ],
+                "branches": [],
+                "origin_branches": [],
+                "orphans": [],
+                "errors": [],
+            },
+            {
+                "repo_root": "/home/secret/host/learn-ukrainian-infra-private",
+                "retained": 1,
+                "retained_exceptions": 1,
+                "by_preservation_class": {"permission_error": 1},
+                "by_owner": {"claude": 1},
+                "results": [
+                    {
+                        "path": "/home/secret/host/learn-ukrainian-infra-private/.worktrees/dispatch/claude/t2",
+                        "branch": "claude/t2",
+                        "action": "error",
+                        "reason": "permission denied",
+                        "error": "permission denied",
+                        "dirty": False,
+                        "owner": "claude",
+                    },
+                ],
+                "branches": [],
+                "origin_branches": [],
+                "orphans": [],
+                "errors": [],
+            },
+        ],
+    }
+
+    receipt_path = Path("/home/secret/state/receipts/v2/20260906T200000Z-abcdef123456.json")
+    public = cleanup.build_public_summary(receipt, receipt_path)
+
+    assert public["receipt_id"] == "20260906T200000Z-abcdef123456.json"
+    assert "learn-ukrainian" in public["repositories"]
+    assert "learn-ukrainian-infra-private" in public["repositories"]
+    assert public["summary"]["retained_exceptions"] == 2
+    assert public["summary"]["by_owner"] == {"codex": 2, "claude": 1}
+
+    # Verify zero host paths dumped anywhere
+    dumped = json.dumps(public)
+    assert "/home/secret" not in dumped
+    assert ".worktrees" not in dumped
+    assert "t1" not in dumped
+    assert "t2" not in dumped
+
+
+def test_classify_repo_results_retains_exceptions_and_owners() -> None:
+    results = [
+        {"action": "removed", "reason": "merged", "owner": "codex"},
+        {"action": "skipped", "reason": "dirty worktree", "dirty": True, "owner": "codex"},
+        {"action": "error", "reason": "failed", "error": "permission denied removing worktree", "owner": "claude"},
+        {"action": "skipped", "reason": "primary checkout", "owner": "unattributed"},
+    ]
+    counts = cleanup.classify_repo_results(results)
+    assert counts["total"] == 4
+    assert counts["reaped"] == 1
+    assert counts["retained"] == 3
+    assert counts["retained_exceptions"] == 2  # dirty + permission_error
+    assert counts["by_preservation_class"]["primary"] == 1
+    assert counts["by_preservation_class"]["dirty"] == 1
+    assert counts["by_preservation_class"]["permission_error"] == 1
+    assert counts["by_owner"] == {"claude": 1, "codex": 2, "unattributed": 1}
+    assert counts["reaped_by_owner"] == {"codex": 1}

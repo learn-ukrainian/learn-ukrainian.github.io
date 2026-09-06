@@ -19,7 +19,7 @@ import os
 import subprocess
 import sys
 import time
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from typing import Any
 
@@ -68,6 +68,7 @@ class ReapResult:
     error: str | None = None
     branch_pruned: bool = False
     recovery_ref: str | None = None
+    owner: str | None = None
 
 
 def sanitized_git_env() -> dict[str, str]:
@@ -454,10 +455,131 @@ def _dispatch_task_id(repo_root: Path, info: WorktreeInfo) -> str | None:
     return relative.parts[1] if len(relative.parts) == 2 else None
 
 
+def _dispatch_owner(repo_root: Path, info: WorktreeInfo) -> str:
+    dispatch_root = (repo_root / ".worktrees" / "dispatch").resolve()
+    try:
+        relative = info.path.resolve().relative_to(dispatch_root)
+        if len(relative.parts) >= 1 and relative.parts[0]:
+            return relative.parts[0]
+    except ValueError:
+        pass
+    if info.branch:
+        branch_name = info.branch
+        for prefix in ("refs/heads/", "refs/remotes/origin/"):
+            if branch_name.startswith(prefix):
+                branch_name = branch_name[len(prefix) :]
+                break
+        if "/" in branch_name:
+            owner = branch_name.split("/", 1)[0]
+            if owner in {"codex", "claude", "agy", "grok", "cursor", "hermes"}:
+                return owner
+    return "unattributed"
+
+
+def classify_preservation(result: ReapResult) -> str:
+    if result.action in {"removed", "preserved_then_removed", "would_remove", "would_preserve_then_remove"}:
+        return "eligible"
+    if result.action == "error":
+        err_lower = f"{result.error or ''} {result.reason or ''}".lower()
+        if "permission" in err_lower or "denied" in err_lower or "access" in err_lower:
+            return "permission_error"
+        return "error"
+    reason = result.reason.lower()
+    if "permission" in reason or "denied" in reason:
+        return "permission_error"
+    if "primary checkout" in reason:
+        return "primary"
+    if (
+        "active dispatch" in reason
+        or "non-terminal dispatch" in reason
+        or "live process" in reason
+        or "lease" in reason
+        or "claim" in reason
+        or "reservation" in reason
+    ):
+        return "active_dispatch"
+    if "open" in reason and "pr" in reason:
+        return "open_pr"
+    if result.dirty is True or reason.startswith("dirty"):
+        return "dirty"
+    if "unpushed" in reason or "not merged" in reason or "no reap condition" in reason or "ancestry" in reason:
+        return "unmerged"
+    if (
+        "detached" in reason
+        or "missing branch" in reason
+        or "unknown" in reason
+        or "unavailable" in reason
+        or "unable to determine" in reason
+    ):
+        return "detached_unknown"
+    if "outside repo" in reason or "foreign" in reason or "not a registered" in reason:
+        return "foreign"
+    return "uncertain"
+
+
+def _has_active_rollover_lease(repo_root: Path, info: WorktreeInfo) -> str | None:
+    primary = primary_checkout_root(repo_root)
+    for candidate_dir in (
+        primary / ".agent" / "thread-rollovers",
+        primary / "batch_state" / "thread-rollovers",
+    ):
+        if not candidate_dir.is_dir():
+            continue
+        try:
+            for lease_file in candidate_dir.glob("*/*/lease.json"):
+                try:
+                    data = json.loads(lease_file.read_text(encoding="utf-8"))
+                    if not isinstance(data, dict):
+                        continue
+                    cleanup_info = data.get("cleanup", {})
+                    if cleanup_info.get("old_automation_ready_to_delete") is True:
+                        continue
+                    replacement = data.get("replacement", {})
+                    if replacement.get("status") in {"prepared", "pending_start", "resumed"}:
+                        source_checkout = replacement.get("source_checkout", {})
+                        if source_checkout.get("full_head") and source_checkout.get("full_head") == info.head:
+                            return f"active rollover lease {lease_file.parent.name}"
+                except Exception:
+                    continue
+        except Exception:
+            continue
+    return None
+
+
+def _has_active_ownership_claim(repo_root: Path, task_id: str | None) -> str | None:
+    if not task_id:
+        return None
+    db_path = primary_checkout_root(repo_root) / "batch_state" / "tasks" / "write-ownership.sqlite3"
+    if not db_path.is_file():
+        return None
+    try:
+        import sqlite3
+
+        conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+        try:
+            cur = conn.cursor()
+            cur.execute("SELECT task_id, pid FROM path_claims WHERE task_id = ?", (task_id,))
+            rows = cur.fetchall()
+            for _row_tid, row_pid in rows:
+                if row_pid is not None and int(row_pid) > 0:
+                    try:
+                        os.kill(int(row_pid), 0)
+                        return f"active write claim task-id={task_id}"
+                    except (ProcessLookupError, ValueError):
+                        pass
+                    except PermissionError:
+                        return f"active write claim task-id={task_id}"
+        finally:
+            conn.close()
+    except Exception:
+        pass
+    return None
+
+
 def _task_record(repo_root: Path, task_id: str | None) -> dict[str, Any] | None:
     if not task_id:
         return None
-    task_file = repo_root / "batch_state" / "tasks" / f"{task_id}.json"
+    task_file = primary_checkout_root(repo_root) / "batch_state" / "tasks" / f"{task_id}.json"
     try:
         payload = json.loads(task_file.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
@@ -502,7 +624,11 @@ def _activity_reason(
     info: WorktreeInfo,
     active_ids: set[str] | None,
     live_cwds: set[Path] | None,
+    check_pending: bool = True,
 ) -> str | None:
+    if check_pending and reaper_lifecycle.is_reap_pending(repo_root, info.path):
+        return "active reap reservation"
+
     task_id = _dispatch_task_id(repo_root, info)
     if task_id and active_ids is not None and task_id in active_ids:
         return f"active dispatch task-id={task_id}"
@@ -511,6 +637,12 @@ def _activity_reason(
     if task_payload is not None:
         raw_status = task_payload.get("status")
         task_status = str(raw_status) if raw_status else None
+        lease = task_payload.get("lease")
+        if isinstance(lease, dict) and lease.get("state") == "active":
+            return f"active worker lease task-id={task_id}"
+        if task_payload.get("lease_state") == "active":
+            return f"active worker lease task-id={task_id}"
+
     # Stale "running" rows with a dead worker PID must not block reaping forever
     # (observed: multi-hour dispatch workers left status=running after exit).
     if (
@@ -523,6 +655,15 @@ def _activity_reason(
         for cwd in live_cwds:
             if _path_contains(worktree, cwd):
                 return f"live process cwd={cwd}"
+
+    rollover_reason = _has_active_rollover_lease(repo_root, info)
+    if rollover_reason is not None:
+        return rollover_reason
+
+    claim_reason = _has_active_ownership_claim(repo_root, task_id)
+    if claim_reason is not None:
+        return claim_reason
+
     return None
 
 
@@ -946,12 +1087,20 @@ def _remove_worktree(repo_root: Path, info: WorktreeInfo) -> str | None:
         target = assert_delete_target(info.path, repo_root=repo_root)
     except ValueError as exc:
         return f"delete guard refused worktree target: {exc}"
-    proc = _run(
-        ["git", "worktree", "remove", "--force", str(target)],
-        cwd=repo_root,
-    )
+    try:
+        proc = _run(
+            ["git", "worktree", "remove", "--force", str(target)],
+            cwd=repo_root,
+        )
+    except PermissionError as exc:
+        return f"permission denied removing worktree: {exc}"
+    except OSError as exc:
+        return f"OS error removing worktree: {exc}"
     if proc.returncode != 0:
-        return _format_failure(proc)
+        failure_msg = _format_failure(proc)
+        if "permission" in failure_msg.lower() or "denied" in failure_msg.lower():
+            return f"permission denied removing worktree: {failure_msg}"
+        return failure_msg
     return None
 
 
@@ -1134,6 +1283,7 @@ def _reap_qualified_worktree(
                 info=info,
                 active_ids=current_active_ids,
                 live_cwds=current_live_cwds,
+                check_pending=False,
             )
             if not _is_head_reachable_from_remote(info.path, current_head):
                 return ReapResult(
@@ -1191,6 +1341,7 @@ def _reap_qualified_worktree(
                 info=info,
                 active_ids=current_active_ids,
                 live_cwds=current_live_cwds,
+                check_pending=False,
             )
             if activity is not None:
                 return ReapResult(
@@ -1374,6 +1525,22 @@ def reap_worktrees(
         for info in list_git_worktrees(repo_root):
             if targets is not None and info.path.resolve() not in targets:
                 continue
+            if (
+                info.path.resolve() == repo_root.resolve()
+                or info.path.resolve() == primary_checkout_root(repo_root).resolve()
+            ):
+                results.append(
+                    ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason="primary checkout",
+                        dirty=None,
+                        owner=_dispatch_owner(repo_root, info),
+                    )
+                )
+                continue
+
             if not is_under_worktrees(repo_root, info.path):
                 results.append(
                     ReapResult(
@@ -1382,6 +1549,7 @@ def reap_worktrees(
                         action="skipped",
                         reason="outside repo .worktrees/",
                         dirty=None,
+                        owner=_dispatch_owner(repo_root, info),
                     )
                 )
                 continue
@@ -1397,6 +1565,7 @@ def reap_worktrees(
                             "run git worktree prune"
                         ),
                         dirty=None,
+                        owner=_dispatch_owner(repo_root, info),
                     )
                 )
                 continue
@@ -1415,6 +1584,7 @@ def reap_worktrees(
                         action="skipped",
                         reason=activity,
                         dirty=None,
+                        owner=_dispatch_owner(repo_root, info),
                     )
                 )
                 continue
@@ -1459,6 +1629,7 @@ def reap_worktrees(
                         reason=f"PR guard unavailable; {pr_error}",
                         dirty=dirty,
                         pr=_pr_dict(pr_state),
+                        owner=_dispatch_owner(repo_root, info),
                     )
                 )
                 continue
@@ -1496,8 +1667,8 @@ def reap_worktrees(
                     and not _is_head_reachable_from_remote(info.path, info.head)
                 ):
                     reason = "unpushed_head"
-                elif info.branch is None:
-                    reason = "detached or missing branch"
+                elif info.detached or info.branch is None:
+                    reason = "detached HEAD unknown"
                 else:
                     reason = (
                         f"no reap condition matched; {pr_error}"
@@ -1512,6 +1683,7 @@ def reap_worktrees(
                         reason=reason,
                         dirty=dirty,
                         pr=_pr_dict(pr_state),
+                        owner=_dispatch_owner(repo_root, info),
                     )
                 )
                 continue
@@ -1536,23 +1708,24 @@ def reap_worktrees(
             sum(1 for _, _, dirty, _ in qualified if dirty is False) if apply else None
         )
         for info, reason, dirty, pr_state in qualified:
-            results.append(
-                _reap_qualified_worktree(
-                    repo_root=repo_root,
-                    info=info,
-                    reason=reason,
-                    dirty=dirty,
-                    pr_state=pr_state,
-                    apply=apply,
-                    preserve_then_reap=preserve_then_reap,
-                    prune_merged_branches=prune_merged_branches,
-                    require_terminal_dispatch_guards=(
-                        include_terminal_dispatches
-                        and reason.startswith("settled dispatch task-id=")
-                    ),
-                    eligible_backlog=eligible_backlog,
-                )
+            res = _reap_qualified_worktree(
+                repo_root=repo_root,
+                info=info,
+                reason=reason,
+                dirty=dirty,
+                pr_state=pr_state,
+                apply=apply,
+                preserve_then_reap=preserve_then_reap,
+                prune_merged_branches=prune_merged_branches,
+                require_terminal_dispatch_guards=(
+                    include_terminal_dispatches
+                    and reason.startswith("settled dispatch task-id=")
+                ),
+                eligible_backlog=eligible_backlog,
             )
+            if res.owner is None:
+                res = replace(res, owner=_dispatch_owner(repo_root, info))
+            results.append(res)
 
     if targets is not None:
         seen = {Path(result.path).resolve() for result in results}
@@ -1564,6 +1737,7 @@ def reap_worktrees(
                     action="skipped",
                     reason="target path is not a registered git worktree",
                     dirty=None,
+                    owner="unattributed",
                 )
             )
 
@@ -1607,9 +1781,11 @@ def reap_success_worktree(
             action="skipped",
             reason="target path is not a registered git worktree",
             dirty=None,
+            owner="unattributed",
         )
 
     info = matching[0]
+    owner = _dispatch_owner(repo_root, info)
     if not is_under_worktrees(repo_root, info.path):
         return ReapResult(
             path=str(info.path),
@@ -1617,6 +1793,7 @@ def reap_success_worktree(
             action="skipped",
             reason="outside repo .worktrees/",
             dirty=None,
+            owner=owner,
         )
     clean = _worktree_clean(info.path)
     dirty = None if clean is None else not clean
@@ -1627,8 +1804,9 @@ def reap_success_worktree(
             action="skipped",
             reason="unpushed_head",
             dirty=dirty,
+            owner=owner,
         )
-    return _reap_qualified_worktree(
+    res = _reap_qualified_worktree(
         repo_root=repo_root,
         info=info,
         reason=reason,
@@ -1639,6 +1817,9 @@ def reap_success_worktree(
         prune_merged_branches=False,
         require_terminal_dispatch_guards=False,
     )
+    if res.owner is None:
+        res = replace(res, owner=owner)
+    return res
 
 
 def _result_payload(result: ReapResult) -> dict[str, Any]:
@@ -1669,6 +1850,82 @@ def format_text_results(results: list[ReapResult], *, apply: bool) -> str:
     return "\n".join(lines)
 
 
+def aggregate_counts(results: list[ReapResult]) -> dict[str, Any]:
+    preservation_classes = {
+        "primary": 0,
+        "active_dispatch": 0,
+        "open_pr": 0,
+        "dirty": 0,
+        "detached_unknown": 0,
+        "permission_error": 0,
+        "foreign": 0,
+        "unmerged": 0,
+    }
+    by_owner: dict[str, int] = {}
+    reaped = 0
+    reaped_by_owner: dict[str, int] = {}
+    retained_exceptions = 0
+
+    for r in results:
+        owner = r.owner or "unattributed"
+        by_owner[owner] = by_owner.get(owner, 0) + 1
+        cls = classify_preservation(r)
+        if cls == "eligible":
+            reaped += 1
+            reaped_by_owner[owner] = reaped_by_owner.get(owner, 0) + 1
+        else:
+            if cls in preservation_classes:
+                preservation_classes[cls] += 1
+            else:
+                preservation_classes[cls] = preservation_classes.get(cls, 0) + 1
+            if cls in {"dirty", "permission_error"}:
+                retained_exceptions += 1
+
+    return {
+        "total": len(results),
+        "reaped": reaped,
+        "retained": len(results) - reaped,
+        "retained_exceptions": retained_exceptions,
+        "by_preservation_class": preservation_classes,
+        "by_owner": dict(sorted(by_owner.items())),
+        "reaped_by_owner": dict(sorted(reaped_by_owner.items())),
+    }
+
+
+def format_aggregate_results(counts: dict[str, Any], *, apply: bool) -> str:
+    mode = "APPLY" if apply else "DRY RUN"
+    lines = [
+        f"{mode} AGGREGATE SUMMARY: {counts['total']} worktree(s) inspected",
+        f"  Reaped: {counts['reaped']}",
+        f"  Retained: {counts['retained']} (exceptions: {counts['retained_exceptions']})",
+        "  By preservation class:",
+    ]
+    for cls, count in sorted(counts.get("by_preservation_class", {}).items()):
+        if count > 0:
+            lines.append(f"    {cls}: {count}")
+    lines.append("  By owner:")
+    for owner, count in sorted(counts.get("by_owner", {}).items()):
+        lines.append(f"    {owner}: {count}")
+    return "\n".join(lines)
+
+
+def build_aggregate_summary(
+    results_by_repo: dict[str, list[ReapResult]],
+    *,
+    apply: bool,
+) -> dict[str, Any]:
+    all_results = [res for res_list in results_by_repo.values() for res in res_list]
+    summary = aggregate_counts(all_results)
+    repos_summary: dict[str, Any] = {}
+    for repo_name, res_list in results_by_repo.items():
+        repos_summary[repo_name] = aggregate_counts(res_list)
+    return {
+        "mode": "apply" if apply else "dry_run",
+        "summary": summary,
+        "repositories": repos_summary,
+    }
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
@@ -1687,9 +1944,20 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--repo-root",
+        action="append",
         type=Path,
         default=None,
-        help="Repository root to inspect (default: current git worktree root).",
+        help="Repository root to inspect. Repeatable.",
+    )
+    parser.add_argument(
+        "--both-repos",
+        action="store_true",
+        help="Inspect both public and private repository roots.",
+    )
+    parser.add_argument(
+        "--aggregate",
+        action="store_true",
+        help="Emit aggregate summary of counts and owners without path dumps.",
     )
     parser.add_argument(
         "command",
@@ -1776,11 +2044,16 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
-    repo_root = (
-        args.repo_root.resolve()
-        if args.repo_root
-        else primary_checkout_root(resolve_repo_root())
-    )
+
+    if args.both_repos:
+        public_root = primary_checkout_root(resolve_repo_root())
+        private_root = public_root.parent / "learn-ukrainian-infra-private"
+        repo_roots = [public_root, private_root]
+    elif args.repo_root:
+        repo_roots = [p.resolve() for p in args.repo_root]
+    else:
+        repo_roots = [primary_checkout_root(resolve_repo_root())]
+
     apply = bool(args.apply) or args.command == "apply"
     merged_mode = bool(args.merged) or (
         not bool(args.legacy_classes) and not bool(args.terminal_dispatches)
@@ -1788,15 +2061,17 @@ def main(argv: list[str] | None = None) -> int:
     preserve = bool(args.preserve_then_reap)
     prune = bool(args.prune_merged_branches) or bool(args.merged)
     safe_only = bool(args.safe_only) or merged_mode
+
     if args.command == "journal":
-        journal = reaper_lifecycle.journal_path(repo_root)
-        print(journal.read_text(encoding="utf-8") if journal.exists() else "")
+        for repo_root in repo_roots:
+            journal = reaper_lifecycle.journal_path(repo_root)
+            print(journal.read_text(encoding="utf-8") if journal.exists() else "")
         return 0
     if args.command == "restore":
         if not (args.restore_ref and args.restore_branch and args.restore_worktree):
             parser.error("restore requires --restore-ref, --restore-branch, and --restore-worktree")
         restored, error = reaper_lifecycle.restore_worktree(
-            repo_root,
+            repo_roots[0],
             recovery_ref=args.restore_ref,
             branch=args.restore_branch,
             worktree_path=args.restore_worktree,
@@ -1804,22 +2079,38 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps({"restored": restored, "error": error}, indent=2))
         return 0 if restored else 2
 
-    results = reap_worktrees(
-        repo_root=repo_root,
-        apply=apply,
-        build_age_hours=args.build_age_hours,
-        preserve_then_reap=preserve,
-        prune_merged_branches=prune,
-        target_paths=args.worktree,
-        safe_only=safe_only,
-        merged_pr_only=merged_mode,
-        require_activity_probe=apply,
-        include_terminal_dispatches=bool(args.terminal_dispatches),
-    )
-    if args.json:
-        print(json.dumps([_result_payload(result) for result in results], indent=2))
+    results_by_repo: dict[str, list[ReapResult]] = {}
+    all_results: list[ReapResult] = []
+    for repo_root in repo_roots:
+        if not repo_root.is_dir():
+            continue
+        repo_results = reap_worktrees(
+            repo_root=repo_root,
+            apply=apply,
+            build_age_hours=args.build_age_hours,
+            preserve_then_reap=preserve,
+            prune_merged_branches=prune,
+            target_paths=args.worktree,
+            safe_only=safe_only,
+            merged_pr_only=merged_mode,
+            require_activity_probe=apply,
+            include_terminal_dispatches=bool(args.terminal_dispatches),
+        )
+        results_by_repo[repo_root.name] = repo_results
+        all_results.extend(repo_results)
+
+    is_multi_or_aggregate = args.both_repos or args.aggregate or len(repo_roots) > 1
+    if is_multi_or_aggregate:
+        if args.json:
+            print(json.dumps(build_aggregate_summary(results_by_repo, apply=apply), indent=2, sort_keys=True))
+        else:
+            print(format_aggregate_results(aggregate_counts(all_results), apply=apply))
     else:
-        print(format_text_results(results, apply=apply))
+        if args.json:
+            print(json.dumps([_result_payload(result) for result in all_results], indent=2))
+        else:
+            print(format_text_results(all_results, apply=apply))
+
     # Always sweep formal CF temp roots (including $TMPDIR/shielded-reviews)
     # when applying — worktree reaps alone left multi-GB lu-review snaps.
     if apply:
@@ -1838,7 +2129,7 @@ def main(argv: list[str] | None = None) -> int:
             )
         except Exception as exc:
             print(f"review_temp_sweep: skipped ({exc})", file=sys.stderr)
-    return 1 if any(result.action == "error" for result in results) else 0
+    return 1 if any(result.action == "error" for result in all_results) else 0
 
 
 if __name__ == "__main__":

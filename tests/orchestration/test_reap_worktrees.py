@@ -2167,3 +2167,180 @@ def test_aged_build_worktree_is_still_reaped_when_no_pr_is_open(
 
     assert reason is not None, label
     assert "build branch age" in reason
+
+
+def test_classify_preservation_canonical_classes() -> None:
+    assert rw.classify_preservation(rw.ReapResult("p", "b", "removed", "reason", False)) == "eligible"
+    assert rw.classify_preservation(rw.ReapResult("p", "b", "would_remove", "reason", False)) == "eligible"
+
+    # primary
+    assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "primary checkout", None)) == "primary"
+
+    # active_dispatch
+    assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "active dispatch task-id=t1", None)) == "active_dispatch"
+    assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "active worker lease task-id=t1", None)) == "active_dispatch"
+    assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "active rollover lease thread1", None)) == "active_dispatch"
+    assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "active write claim task-id=t1", None)) == "active_dispatch"
+    assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "active reap reservation", None)) == "active_dispatch"
+    assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "live process cwd=/foo", None)) == "active_dispatch"
+
+    # open_pr
+    assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "open PR #42", False)) == "open_pr"
+
+    # dirty
+    assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "dirty worktree", True)) == "dirty"
+
+    # detached_unknown
+    assert rw.classify_preservation(rw.ReapResult("p", None, "skipped", "detached HEAD unknown", None)) == "detached_unknown"
+    assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "PR guard unavailable; timeout", False)) == "detached_unknown"
+
+    # permission_error
+    assert rw.classify_preservation(rw.ReapResult("p", "b", "error", "some reason", False, error="permission denied")) == "permission_error"
+    assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "permission denied removing worktree: foo", False)) == "permission_error"
+
+    # foreign
+    assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "outside repo .worktrees/", None)) == "foreign"
+    assert rw.classify_preservation(rw.ReapResult("p", None, "skipped", "target path is not a registered git worktree", None)) == "foreign"
+
+    # unmerged
+    assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "unpushed_head", False)) == "unmerged"
+    assert rw.classify_preservation(rw.ReapResult("p", "b", "skipped", "no reap condition matched; not merged", False)) == "unmerged"
+
+
+def test_primary_checkout_is_always_preserved_and_classified_primary(tmp_path: Path) -> None:
+    repo = init_repo(tmp_path)
+    results = rw.reap_worktrees(
+        repo_root=repo,
+        apply=True,
+    )
+    primary_res = next((r for r in results if Path(r.path).resolve() == repo.resolve()), None)
+    assert primary_res is not None
+    assert primary_res.action == "skipped"
+    assert primary_res.reason == "primary checkout"
+    assert rw.classify_preservation(primary_res) == "primary"
+    assert repo.exists()
+
+
+def test_active_worker_lease_reconciliation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    repo = init_repo(tmp_path)
+    task_id = "lease-task-123"
+    branch = f"codex/{task_id}"
+    worktree = add_worktree(repo, branch, path=repo / ".worktrees" / "dispatch" / "codex" / task_id)
+    tasks_dir = repo / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    (tasks_dir / f"{task_id}.json").write_text(
+        json.dumps({"status": "running", "lease": {"state": "active"}}),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, target_paths=[worktree])
+    res = result_for(results, worktree)
+    assert res.action == "skipped"
+    assert "active worker lease" in res.reason
+    assert rw.classify_preservation(res) == "active_dispatch"
+    assert worktree.exists()
+
+
+def test_active_rollover_lease_reconciliation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    repo = init_repo(tmp_path)
+    task_id = "rollover-task-456"
+    branch = f"codex/{task_id}"
+    worktree = add_worktree(repo, branch, path=repo / ".worktrees" / "dispatch" / "codex" / task_id)
+    head_sha = git(worktree, "rev-parse", "HEAD")
+    rollover_dir = repo / ".agent" / "thread-rollovers" / "thread_1" / "cycle_1"
+    rollover_dir.mkdir(parents=True, exist_ok=True)
+    (rollover_dir / "lease.json").write_text(
+        json.dumps({
+            "cleanup": {"old_automation_ready_to_delete": False},
+            "replacement": {"status": "resumed", "source_checkout": {"full_head": head_sha}},
+        }),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, target_paths=[worktree])
+    res = result_for(results, worktree)
+    assert res.action == "skipped"
+    assert "active rollover lease" in res.reason
+    assert rw.classify_preservation(res) == "active_dispatch"
+    assert worktree.exists()
+
+
+def test_permission_error_retained_as_exception(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    repo = init_repo(tmp_path)
+    task_id = "perm-task-789"
+    branch = f"codex/{task_id}"
+    worktree = add_worktree(repo, branch, path=repo / ".worktrees" / "dispatch" / "codex" / task_id)
+    tasks_dir = repo / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    (tasks_dir / f"{task_id}.json").write_text(json.dumps({"status": "done"}), encoding="utf-8")
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+    patch_gh(monkeypatch, {branch: []})
+
+    def fake_remove(repo_root: Path, info: rw.WorktreeInfo) -> str:
+        return "permission denied removing worktree: [Errno 13] Permission denied"
+
+    monkeypatch.setattr(rw, "_remove_worktree", fake_remove)
+
+    results = rw.reap_worktrees(
+        repo_root=repo,
+        apply=True,
+        target_paths=[worktree],
+        merged_pr_only=True,
+        include_terminal_dispatches=True,
+    )
+    res = result_for(results, worktree)
+    assert res.action == "error"
+    assert rw.classify_preservation(res) == "permission_error"
+    assert worktree.exists()
+
+    counts = rw.aggregate_counts(results)
+    assert counts["retained_exceptions"] >= 1
+    assert counts["by_preservation_class"]["permission_error"] >= 1
+
+
+def test_aggregate_summary_zero_path_dumps(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    repo1_dir = tmp_path / "repo1"
+    repo1_dir.mkdir()
+    repo1 = init_repo(repo1_dir)
+    repo2_dir = tmp_path / "repo2"
+    repo2_dir.mkdir()
+    repo2 = init_repo(repo2_dir)
+    wt1 = add_worktree(repo1, "codex/wt1", path=repo1 / ".worktrees" / "dispatch" / "codex" / "wt1")
+    wt2 = add_worktree(repo2, "claude/wt2", path=repo2 / ".worktrees" / "dispatch" / "claude" / "wt2")
+
+    rc = rw.main(["--repo-root", str(repo1), "--repo-root", str(repo2), "--aggregate"])
+    assert rc == 0
+    captured = capsys.readouterr()
+    out = captured.out
+    assert "AGGREGATE SUMMARY" in out
+    assert "By preservation class:" in out
+    assert "By owner:" in out
+    assert str(tmp_path) not in out
+    assert str(wt1) not in out
+    assert str(wt2) not in out
+    assert "/.worktrees/" not in out
+
+
+def test_aggregate_summary_json_zero_path_dumps(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    repo1_dir = tmp_path / "repo1"
+    repo1_dir.mkdir()
+    repo1 = init_repo(repo1_dir)
+    wt1 = add_worktree(repo1, "codex/wt1", path=repo1 / ".worktrees" / "dispatch" / "codex" / "wt1")
+
+    rc = rw.main(["--repo-root", str(repo1), "--aggregate", "--json"])
+    assert rc == 0
+    captured = capsys.readouterr()
+    data = json.loads(captured.out)
+    assert "summary" in data
+    assert "repositories" in data
+    assert "by_preservation_class" in data["summary"]
+    assert "by_owner" in data["summary"]
+    dumped = json.dumps(data)
+    assert str(tmp_path) not in dumped
+    assert str(wt1) not in dumped
+    assert "/.worktrees/" not in dumped
