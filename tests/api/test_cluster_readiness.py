@@ -34,6 +34,11 @@ _PG_DSN_ENV = "LEARN_UKRAINIAN_CP_PG_DSN"
 _PROBED_SQLITE_STORES = (StoreId.FLEET_COMMS, StoreId.WRITE_OWNERSHIP)
 
 
+@pytest.fixture(autouse=True)
+def _isolate_readiness_stores(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("LEARN_UKRAINIAN_OWNERSHIP_LEDGER", raising=False)
+
+
 def _ready_context(tmp_path: Path):
     """Fixture context with every probed sqlite database actually present."""
     ctx = fixture_context(tmp_path)

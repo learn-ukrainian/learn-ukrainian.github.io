@@ -2064,9 +2064,10 @@ def main(argv: list[str] | None = None) -> int:
     else:
         repo_roots = [primary_checkout_root(resolve_repo_root())]
 
+    is_multi_or_aggregate = bool(args.both_repos or args.aggregate or len(repo_roots) > 1)
     missing = [p for p in repo_roots if not p.is_dir()]
     if missing:
-        sanitize = bool(args.aggregate) or bool(args.both_repos and args.json)
+        sanitize = bool(args.aggregate) or bool(is_multi_or_aggregate and args.json)
         for p in missing:
             target = (p.name or str(p)) if sanitize else str(p)
             print(f"reap_worktrees.py: repository not found: {target}", file=sys.stderr)

@@ -2451,6 +2451,20 @@ def test_missing_requested_repository_fails_closed_nonzero(
     assert "repository not found" in captured.err
 
 
+def test_missing_requested_repository_sanitizes_stderr_under_multi_repo_json(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    valid_dir = tmp_path / "valid"
+    valid_dir.mkdir()
+    repo = init_repo(valid_dir)
+    missing_repo = tmp_path / "does_not_exist"
+    rc = rw.main(["--repo-root", str(repo), "--repo-root", str(missing_repo), "--json"])
+    assert rc == 2
+    captured = capsys.readouterr()
+    assert "repository not found: does_not_exist" in captured.err
+    assert str(missing_repo) not in captured.err
+
+
 def test_missing_configured_ownership_ledger_fails_closed_without_fallback(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

@@ -341,6 +341,30 @@ def test_no_pr_open_pr_retain(hermetic_reap, monkeypatch):
 
     report = post_task_reap.post_task_reap("open-pr-task", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
 
+    assert report["main_worktree"]["action"] in {"skipped", "retained"}
+    assert "open PR" in report["main_worktree"]["reason"]
+    assert worktree.exists()
+
+
+def test_no_pr_fallback_open_pr_retain(hermetic_reap, monkeypatch):
+    """When the canonical reaper declines without PR info, the shared probe
+    (#7127) must independently confirm an open PR and retain the worktree."""
+    repo_root, tasks_dir = hermetic_reap
+    worktree = _add_dispatch_worktree(repo_root, "kimi", "open-pr-fallback-task")
+    _write_task_state(tasks_dir, "open-pr-fallback-task", "done", worktree)
+
+    monkeypatch.setattr(post_task_reap.reap_worktrees, "_query_pr_states", _no_pr_states)
+    monkeypatch.setattr(post_task_reap.reap_worktrees, "_active_task_ids", lambda: None)
+    monkeypatch.setattr(
+        post_task_reap.pr_identity,
+        "probe_open_pr_for_branch",
+        lambda **_kwargs: (True, None),
+    )
+
+    report = post_task_reap.post_task_reap(
+        "open-pr-fallback-task", tasks_dir=tasks_dir, repo_root=repo_root, apply=True
+    )
+
     assert report["main_worktree"]["action"] == "retained"
     assert "open PR" in report["main_worktree"]["reason"]
     assert worktree.exists()
