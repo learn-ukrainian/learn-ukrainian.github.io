@@ -14,6 +14,7 @@ from __future__ import annotations
 import contextlib
 
 from ._acp_compat import require_compat_target, resolve_compat_model, run_compat_ask
+from ._ask_contract import requested_effort
 from ._ask_lifecycle import ask_target_model, record_ask_failure, record_ask_reply
 from ._db import get_db
 from ._messaging import acknowledge, read_message, send_message
@@ -126,6 +127,7 @@ def process_message_for_recipient(
             task_id=task_id,
             source=msg.get("from"),
             model=selected_model,
+            effort=requested_effort(msg),
             hard_timeout=_NO_TIMEOUT_CEILING_S if no_timeout else None,
         )
     except Exception as exc:

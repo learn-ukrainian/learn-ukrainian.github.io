@@ -566,7 +566,12 @@ def process_all_codex(new_session: bool = False):
         preview = preview.replace("\n", " ")[:40]
         print(f"━━━ Processing [{msg_id}] from {from_llm}: {preview}...")
         try:
-            process_for_codex(msg_id, new_session)
+            from ._ask_lifecycle import _process_target
+
+            if _process_target(msg_id, "codex", {"new_session": new_session}) is False:
+                failed += 1
+                print("    ❌ Failed (message left unconsumed)\n")
+                continue
             success += 1
             print("    ✅ Done\n")
         except Exception as e:

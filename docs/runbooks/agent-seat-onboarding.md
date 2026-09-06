@@ -436,11 +436,13 @@ discussion, formal review, or coordination authority.
 
 The legacy `discuss` CLI is now a compatibility surface, not a second
 execution engine, for supported two-seat panels: it delegates to ACP and
-records the durable ACP conversation. Legacy `ask-*` one-shots remain only
-until the single-recipient ACP controller and initiator/quota telemetry land;
-do not add new provider launch logic to those modules. The retirement order is
-compatibility shim → deprecation event → measured zero direct launches → code
-removal. Fleet-comms persistence, leases, inbox delivery, formal verdicts,
+records the durable ACP conversation. Ordinary `ask-*` calls also use the
+two-seat ACP controller; queued ordinary `process-*` calls drain through that
+same transport. Do not add one-shot provider launch logic. Toolful tasks use
+`delegate.py`; explicit review asks retain headless toolful dispatch.
+The retirement order is compatibility shim → deprecation event → measured zero
+use → operator GO → code removal. Keep telemetry, Broker Ops, and legacy HTTP
+routes until that gate passes; #6106 remains open during caller migration. Fleet-comms persistence, leases, inbox delivery, formal verdicts,
 and crash recovery are durable-plane responsibilities and are not retired by
 this transport migration.
 

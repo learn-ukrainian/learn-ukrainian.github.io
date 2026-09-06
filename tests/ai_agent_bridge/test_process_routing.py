@@ -582,3 +582,138 @@ def test_process_all_gemini_counts_failures_without_consuming(bridge_db, monkeyp
     assert _row(bad_id)[0] == 0
     out = capsys.readouterr().out
     assert "1 succeeded, 1 failed" in out
+
+
+@pytest.fixture
+def forbid_legacy_processors(monkeypatch):
+    from unittest.mock import Mock
+
+    for module, name in [
+        ("_claude", "process_for_claude"), ("_codex", "process_for_codex"),
+        ("_agy", "process_for_agy"), ("_grok_build", "process_for_grok_build"),
+        ("_kimi", "process_for_kimi"), ("_hermes", "process_for_hermes"),
+        ("_opencode", "process_for_opencode"),
+    ]:
+        monkeypatch.setattr(
+            f"scripts.ai_agent_bridge.{module}.{name}",
+            Mock(side_effect=AssertionError("ordinary ask reached legacy provider processor")),
+        )
+
+
+@pytest.mark.parametrize("command", [
+    "process-claude", "process-codex", "process-grok", "process-grok-build", "process-kimi",
+])
+def test_ordinary_seat_process_commands_use_acp(bridge_db, monkeypatch, command, forbid_legacy_processors):
+    from unittest.mock import Mock
+
+    from scripts.ai_agent_bridge import _cli
+
+    target = command.removeprefix("process-")
+    message_id = _send(target, sender="agy")
+    acp = Mock(return_value=_ok_result())
+    monkeypatch.setattr(_process, "run_compat_ask", acp)
+    _cli._dispatch_command(_cli._build_parser().parse_args([command, str(message_id)]))
+
+    acp.assert_called_once()
+    assert acp.call_args.args[0] == target
+    assert acp.call_args.kwargs["source"] == "agy"
+    assert _row(message_id)[0] == 1
+
+
+@pytest.mark.parametrize("target", ["claude", "codex", "agy", "grok", "kimi", "pool", "glm", "hermes"])
+def test_detached_ordinary_worker_uses_acp_without_provider_fallback(bridge_db, monkeypatch, target, forbid_legacy_processors):
+    from unittest.mock import Mock
+
+    from scripts.ai_agent_bridge import _ask_lifecycle
+
+    message_id = _send(target, sender="agy" if target != "agy" else "codex")
+    acp = Mock(side_effect=RuntimeError("ACP unavailable"))
+    monkeypatch.setattr(_process, "run_compat_ask", acp)
+    _ask_lifecycle._process_target(message_id, target, {"no_timeout": True})
+
+    acp.assert_called_once()
+    assert acp.call_args.kwargs["hard_timeout"] == 86400
+    assert _row(message_id)[0] == 0
+    assert _row(message_id)[1].startswith("failed:")
+    assert len(_replies(message_id)) == 1
+    assert _replies(message_id)[0][2] == "error"
+
+
+@pytest.mark.parametrize("review_intent", ["flag", "type", "target"])
+def test_queued_review_keeps_toolful_processor(bridge_db, monkeypatch, review_intent):
+    from unittest.mock import Mock
+
+    from scripts.ai_agent_bridge import _ask_lifecycle, _claude
+
+    message_id = send_message(
+        "Review the exact branch head.", task_id="review-6106",
+        from_llm="codex", to_llm="claude", quiet=True,
+        msg_type="review" if review_intent == "type" else "query",
+        review_target={"pr": 6106} if review_intent == "target" else None,
+    )
+    native = Mock()
+    acp = Mock(side_effect=AssertionError("review must not enter ACP"))
+    monkeypatch.setattr(_claude, "process_for_claude", native)
+    monkeypatch.setattr(_process, "run_compat_ask", acp)
+    _ask_lifecycle._process_target(message_id, "claude", {"review": review_intent == "flag"})
+
+    native.assert_called_once_with(message_id, False, no_timeout=False, review=True)
+    acp.assert_not_called()
+
+
+def test_queued_ask_preserves_effort_and_model(bridge_db, monkeypatch):
+    from unittest.mock import Mock
+
+    message_id = send_message(
+        "State transfer.", task_id="task-6106", from_llm="claude", to_llm="codex",
+        to_model="registry-model", effort="high", quiet=True,
+    )
+    acp = Mock(return_value=_ok_result())
+    monkeypatch.setattr(_process, "run_compat_ask", acp)
+    assert _process.process_message_for_recipient(message_id)
+    assert acp.call_args.kwargs["effort"] == "high"
+    assert acp.call_args.kwargs["model"] == "registry-model"
+
+
+@pytest.mark.parametrize("target", ["claude", "codex"])
+def test_batch_ordinary_drains_use_acp_and_report_failures(bridge_db, monkeypatch, capsys, target, forbid_legacy_processors):
+    from unittest.mock import Mock
+
+    from scripts.ai_agent_bridge import _cli, _codex
+
+    message_id = _send(target, sender="agy")
+    acp = Mock(return_value=_ok_result(response=""))
+    monkeypatch.setattr(_process, "run_compat_ask", acp)
+    batch = _cli.process_all_claude if target == "claude" else _codex.process_all_codex
+    batch()
+    acp.assert_called_once()
+    assert _row(message_id)[0] == 0
+    assert "0 succeeded, 1 failed" in capsys.readouterr().out
+
+
+def test_ordinary_process_failure_is_nonzero(bridge_db, monkeypatch):
+    from unittest.mock import Mock
+
+    from scripts.ai_agent_bridge import _cli
+
+    message_id = _send("codex", sender="agy")
+    monkeypatch.setattr(_process, "run_compat_ask", Mock(return_value=_ok_result(response="")))
+    args = _cli._build_parser().parse_args(["process-codex", str(message_id)])
+    with pytest.raises(SystemExit, match="message left unconsumed"):
+        _cli._dispatch_command(args)
+    assert _row(message_id)[0] == 0
+
+
+def test_ordinary_async_process_refuses_before_acp(bridge_db, monkeypatch):
+    from unittest.mock import Mock
+
+    from scripts.ai_agent_bridge import _cli
+
+    message_id = _send("claude", sender="agy")
+    acp = Mock(side_effect=AssertionError("async must fail before provider execution"))
+    monkeypatch.setattr(_process, "run_compat_ask", acp)
+    args = _cli._build_parser().parse_args(["process-claude", str(message_id), "--async"])
+    with pytest.raises(ValueError, match="enqueue through fleet-comms"):
+        _cli._dispatch_command(args)
+    acp.assert_not_called()
+    assert _row(message_id)[0] == 0
