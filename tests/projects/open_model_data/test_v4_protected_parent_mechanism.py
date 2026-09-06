@@ -86,10 +86,11 @@ def signing_resources(tmp_path, monkeypatch):
 
 
 def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect, review_transform=None,
-                   reviewer_sources=True):
+                   reviewer_sources=True, reviewer_negative=False):
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", pg_cluster.info.dsn)
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
-    io = RuntimeResources(tmp_path, pg_cluster, monkeypatch, defect=defect, reviewer_sources=reviewer_sources)
+    io = RuntimeResources(tmp_path, pg_cluster, monkeypatch, defect=defect, reviewer_sources=reviewer_sources,
+                          reviewer_negative=reviewer_negative)
     constraints = linguistic_constraints()
     release = WheelRelease(built_wheel)
     try:
@@ -119,7 +120,18 @@ def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resou
                 record = authority.resolve_execution_observation(
                     task_id=result["task_id"], run_id=result["run_id"], role=result["role"], conn=conn, is_pg=True
                 )
-                assert record and record["verification_tool_ids"]
+                assert record
+                if reviewer_negative and record["role"] == "reviewer":
+                    assert record["verification_tool_ids"] == []
+                    invocation = conn.execute(
+                        "SELECT record_json FROM v4_sources_invocations WHERE attempt_id=%s",
+                        (owned["attempt_id"],),
+                    ).fetchone()
+                    assert invocation is not None
+                    evidence = json.loads(invocation["record_json"])
+                    assert evidence["success"] is False and evidence["disposition"] == "partial"
+                else:
+                    assert record["verification_tool_ids"]
                 assert record["runtime_identity"] == release.verify(
                     __import__(
                         "learn_ukrainian_v4_runtime.provenance", fromlist=["verify_current_identity"]
@@ -168,7 +180,7 @@ def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resou
                 return None
             _, review = run(reviewer.request_id, review_snapshot)
             signed_review = fleet.issue_reviewer_execution_receipt(task_id=review["task_id"], run_id=review["run_id"])
-            assert signed_review["verdict"] == ("FAIL" if defect else "PASS")
+            assert signed_review["verdict"] == ("FAIL" if defect or reviewer_negative else "PASS")
             assert review["row_content_sha256"] == record["row_content_sha256"]
             assert review["seat_or_model"] != record["seat_or_model"]
             assert (
@@ -276,3 +288,12 @@ def test_reviewer_pass_without_own_sources_call_is_not_observed_or_receipted(
     # calling Sources; the real parent must refuse before artifact persistence.
     _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources,
                    False, reviewer_sources=False)
+
+
+def test_reviewer_sources_negative_evidence_retains_real_fail_verdict(
+    pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources
+):
+    result = _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources,
+                            False, reviewer_negative=True)
+    assert result["reviewer_receipt"]["verdict"] == "FAIL"
+    assert result["review_record"]["verification_tool_ids"] == []

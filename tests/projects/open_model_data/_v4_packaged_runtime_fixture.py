@@ -72,7 +72,10 @@ assert token=="Bearer "+capability
 assert not os.path.exists("/home/ops") and not os.path.exists("/run/credentials")
 assert not os.path.exists("/usr/bin/sh") and not os.path.exists("/usr/bin/psql")
 if payload["role"]!="reviewer" or REVIEWER_SOURCES:
-    body=json.dumps({"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"verify_word","arguments":{"word":"fixture-one"}}}).encode()
+    check={"name":"verify_word","arguments":{"word":"fixture-one"}}
+    if payload["role"]=="reviewer" and REVIEWER_NEGATIVE:
+        check={"name":"verify_words","arguments":{"words":["fixture-one","absent"]}}
+    body=json.dumps({"jsonrpc":"2.0","id":1,"method":"tools/call","params":check}).encode()
     request=urllib.request.Request(url,data=body,headers={"Content-Type":"application/json","Accept":"application/json, text/event-stream","Authorization":token})
     with urllib.request.urlopen(request,timeout=10) as response:
         evidence=json.load(response)
@@ -85,7 +88,7 @@ else:
     assert payload["rubric"] and len(payload["authorship_receipt_sha256"])==64
     assert "Use the Sources MCP tools" in prompt
     valid=all(isinstance(payload["authored_row"].get(key),str) and payload["authored_row"][key] for key in payload["constraints"]["required_fields"])
-    text="V4-REVIEW-VERDICT: "+("PASS" if valid else "FAIL")
+    text="V4-REVIEW-VERDICT: "+("PASS" if valid and not REVIEWER_NEGATIVE else "FAIL")
 session="fixture-"+payload["role"]
 if rpc:
     emit({"id":4,"result":{"turn":{"id":"fixture-turn","status":"inProgress"}}})
@@ -98,10 +101,13 @@ else:
 """
 
 
-def pinned_profile(root, *, sources_url, defect=False, reviewer_sources=True):
+def pinned_profile(root, *, sources_url, defect=False, reviewer_sources=True, reviewer_negative=False):
     """Pin the fixture and a compact, portable CPython runtime closure."""
     executable = root / "fixture-cli"
-    executable.write_text(CHILD.replace("DEFECT", repr(defect)).replace("REVIEWER_SOURCES", repr(reviewer_sources)))
+    executable.write_text(
+        CHILD.replace("DEFECT", repr(defect)).replace("REVIEWER_SOURCES", repr(reviewer_sources))
+        .replace("REVIEWER_NEGATIVE", repr(reviewer_negative))
+    )
     executable.chmod(0o700)
     base = Path(sys.base_prefix).resolve()
     stdlib = Path(sysconfig.get_path("stdlib")).resolve()
@@ -210,7 +216,7 @@ class WheelRelease:
 
 
 class RuntimeResources:
-    def __init__(self, root, pg, monkeypatch, *, defect=False, reviewer_sources=True):
+    def __init__(self, root, pg, monkeypatch, *, defect=False, reviewer_sources=True, reviewer_negative=False):
         self.root = root
         # LOGIN applies only to this owned ephemeral cluster. Production roles,
         # credentials and services are never touched.
@@ -244,7 +250,8 @@ class RuntimeResources:
             time.sleep(0.01)
         assert self.server.started
         self.url = f"http://{socket.gethostbyname('localhost')}:{listener.getsockname()[1]}/mcp"
-        path = pinned_profile(root, sources_url=self.url, defect=defect, reviewer_sources=reviewer_sources)
+        path = pinned_profile(root, sources_url=self.url, defect=defect, reviewer_sources=reviewer_sources,
+                              reviewer_negative=reviewer_negative)
         monkeypatch.setattr(child_runtime, "profile_path", lambda: path)
         monkeypatch.setattr(child_runtime, "PRODUCTION_CHILD_PROFILE_SHA256", digest(path.read_bytes()))
 

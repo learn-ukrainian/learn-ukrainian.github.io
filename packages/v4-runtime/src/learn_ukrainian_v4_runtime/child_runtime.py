@@ -423,7 +423,7 @@ class _CodexProtocol:
                 continue
             try:
                 event = json.loads(line)
-            except (UnicodeError, ValueError):
+            except (UnicodeError, ValueError, RecursionError):
                 raise OperationRefused("child_capture_invalid") from None
             outgoing.extend(self.event(event))
         return bytes(outgoing)
@@ -709,7 +709,7 @@ def parse_child(capture: CapturedChild, binding: dict) -> dict:
     else:
         try:
             events = [json.loads(line) for line in capture.stdout.decode().splitlines() if line.strip()]
-        except (UnicodeError, ValueError):
+        except (UnicodeError, ValueError, RecursionError):
             raise OperationRefused("child_capture_invalid") from None
         models = set()
         sessions = set()

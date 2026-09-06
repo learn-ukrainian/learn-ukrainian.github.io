@@ -182,7 +182,7 @@ def test_recorded_native_protocol_projection_matches_actual_event_order():
     assert (calls[0]["server"], calls[0]["tool"], calls[0]["status"]) == ("sources", "verify_word", "completed")
 
 
-@pytest.mark.parametrize("raw", [b"not-json-secret\n", b"\xffinvalid-utf8\n"])
+@pytest.mark.parametrize("raw", [b"not-json-secret\n", b"\xffinvalid-utf8\n", b"[" * 2000 + b"\n"])
 def test_malformed_child_bytes_are_not_chained_into_public_refusal(raw):
     with pytest.raises(OperationRefused, match="child_capture_invalid") as error:
         _CodexProtocol(binding()).feed(raw)

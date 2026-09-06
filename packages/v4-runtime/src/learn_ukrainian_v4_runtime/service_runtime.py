@@ -86,8 +86,16 @@ class V4ServiceRuntime:
                 verification_tool_ids = authority.resolve_sources_invocation_tool_ids(
                     attempt_id=claim["attempt_id"], conn=conn, is_pg=True
                 )
-                if binding["role"] == "reviewer" and not verification_tool_ids:
-                    raise OperationRefused("reviewer_sources_evidence_absent")
+                if binding["role"] == "reviewer":
+                    # The protected recorder validates the tool and attempt.
+                    # Negative/partial evidence still proves a lookup occurred;
+                    # positive evidence IDs keep their existing receipt meaning.
+                    invocation = conn.execute(
+                        "SELECT 1 FROM v4_sources_invocations WHERE attempt_id=%s LIMIT 1",
+                        (claim["attempt_id"],),
+                    ).fetchone()
+                    if invocation is None:
+                        raise OperationRefused("reviewer_sources_evidence_absent")
                 if binding["role"] == "author":
                     from learn_ukrainian_v4_runtime.semantic_inputs import validate_owned_authored_row
 
