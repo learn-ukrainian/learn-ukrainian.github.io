@@ -4126,6 +4126,7 @@ pairs:
   - sentence_with_slot: А ви маєте якийсь ___ до військових заводів? — Не маю ніякого. — Мені теж так здається, що не маєте.
     answer_form: стосунок
     calque_form: відношення
+    origin: ua-gec-calque-wave1:literary_texts/6bb17922_c0012
 - calqueLabel: чим … тим
   calqueSurfaces:
   - чим … тим
