@@ -1962,15 +1962,20 @@ paths, credentials, signals, and provider text remain private.
 ### `GET /api/runtime/transport-health`
 
 Read-only snapshot of the latest bounded fresh Codex CLI probe. The endpoint
-never launches a model. `healthy` requires a new `ask-codex` process to return
-its unique broker sentinel while the configured V2 namespace is `agents`;
-missing or expired behavior evidence is `unknown` when the namespace is valid,
-while an invalid or absent namespace is `degraded`. Health applies only to the
-exact model named in the receipt.
+never launches a model. The probe uses the public native runtime to start a
+fresh read-only Codex process. `healthy` requires a successful runtime result
+with the exact unique sentinel, matching configured model and effort, and no
+substitution while the configured V2 namespace is `agents`. Nonzero process
+recovery requires invocation-bound terminal completion evidence; partial output
+alone cannot establish health. Missing or expired evidence is `unknown` when
+the namespace is valid, while an invalid or absent namespace is `degraded`.
+Cached probes are reused only for the same model and effort. The receipt records
+configured runtime identity, not independently observed provider identity.
+Legacy v1 bridge receipts are invalidated.
 
 ```json
 {
-  "schema_version": "codex-transport-health.v1",
+  "schema_version": "codex-transport-health.v2",
   "status": "healthy",
   "fresh": true,
   "failure_class": null,
@@ -1979,7 +1984,7 @@ exact model named in the receipt.
   "checked_at": "2026-07-28T13:56:41Z",
   "expires_at": "2026-07-28T14:11:41Z",
   "age_seconds": 5,
-  "model": "gpt-5.6-terra",
+  "model": "gpt-6-astra",
   "effort": "low",
   "source": "receipt"
 }
