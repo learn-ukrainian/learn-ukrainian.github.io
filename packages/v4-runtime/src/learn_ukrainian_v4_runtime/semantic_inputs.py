@@ -273,7 +273,8 @@ def prompt_from_snapshot(binding: dict, snapshot: dict) -> str:
         }
         instructions = (
             "Independently evaluate the actual authored row against the bound target facts, evidence, context, "
-            "scope and fixed rubric, including originality. A Sources word/morphology pass is not syntax or "
+            "scope and fixed rubric, including originality. Use the Sources MCP tools to verify the relevant "
+            "Ukrainian word, stress and morphology claims before deciding. A Sources word/morphology pass is not syntax or "
             "whole-sentence semantic proof. Unknown authority requires FAIL, never a guessed norm. "
             "Emit exactly V4-REVIEW-VERDICT: PASS or V4-REVIEW-VERDICT: FAIL."
         )

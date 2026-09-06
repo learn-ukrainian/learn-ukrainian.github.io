@@ -1,0 +1,113 @@
+[
+  {
+    "id": 1,
+    "result": {
+      "userAgent": "redacted-native-client"
+    }
+  },
+  {
+    "method": "remoteControl/status/changed",
+    "params": {
+      "status": "disabled"
+    }
+  },
+  {
+    "id": 2,
+    "result": {
+      "model": "gpt-6-astra",
+      "modelProvider": "openai",
+      "approvalPolicy": "never",
+      "cwd": "/work",
+      "sandbox": {
+        "type": "readOnly",
+        "networkAccess": false
+      },
+      "thread": {
+        "id": "recorded-thread"
+      }
+    }
+  },
+  {
+    "method": "thread/started",
+    "params": {
+      "thread": {
+        "id": "recorded-thread"
+      }
+    }
+  },
+  {
+    "id": 3,
+    "result": {
+      "data": [
+        {
+          "name": "sources",
+          "tools": {
+            "verify_word": {},
+            "check_modern_form": {},
+            "verify_lemma": {},
+            "verify_stress": {},
+            "verify_words": {}
+          }
+        }
+      ],
+      "nextCursor": null
+    }
+  },
+  {
+    "method": "turn/started",
+    "params": {
+      "threadId": "recorded-thread",
+      "turn": {
+        "id": "recorded-turn",
+        "status": "inProgress",
+        "error": null
+      }
+    }
+  },
+  {
+    "id": 4,
+    "result": {
+      "turn": {
+        "id": "recorded-turn",
+        "status": "inProgress"
+      }
+    }
+  },
+  {
+    "method": "item/completed",
+    "params": {
+      "threadId": "recorded-thread",
+      "turnId": "recorded-turn",
+      "item": {
+        "type": "mcpToolCall",
+        "server": "sources",
+        "tool": "verify_word",
+        "status": "completed",
+        "id": "recorded-call"
+      }
+    }
+  },
+  {
+    "method": "item/completed",
+    "params": {
+      "threadId": "recorded-thread",
+      "turnId": "recorded-turn",
+      "item": {
+        "type": "agentMessage",
+        "text": "V4-REVIEW-VERDICT: PASS",
+        "id": "recorded-final"
+      }
+    }
+  },
+  {
+    "method": "turn/completed",
+    "params": {
+      "threadId": "recorded-thread",
+      "turn": {
+        "id": "recorded-turn",
+        "status": "completed",
+        "error": null
+      }
+    }
+  }
+]

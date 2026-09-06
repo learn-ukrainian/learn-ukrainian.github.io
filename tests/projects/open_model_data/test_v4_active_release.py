@@ -19,7 +19,7 @@ from test_v4_installed_release import REPO_ROOT
 pytest_plugins = ("test_v4_installed_release",)
 
 POLICY_RAW_SHA256 = "847f14c4ef30ed1755612eef0614bcf606de2967b1ae6ac5c0ede2ade2b4ce72"
-PROFILE_RAW_SHA256 = "3f5e9ccf4d97860dbf5bcbca54f6fee7796873d8aed59060a4bea0860813b25f"
+PROFILE_RAW_SHA256 = "462d73fefcc49a22776d4f2fe071146e7759f2184779d2ecc1325302f1a81088"
 
 
 def test_active_policy_is_exact_public_release_and_old_policy_is_inactive(monkeypatch):
@@ -71,6 +71,14 @@ def test_fixed_native_profile_scope():
             "/etc/resolv.conf", "/etc/ssl/certs/ca-certificates.crt",
         }
         assert all(set(entry) == {"source", "destination", "sha256"} for entry in entries.values())
+        if harness == "codex":
+            assert entries["/runtime/codex-code-mode-host"] == {
+                "source": "/opt/hramatka/current/v4-native/codex-code-mode-host",
+                "destination": "/runtime/codex-code-mode-host",
+                "sha256": "3e85d67471825f73d02ff5f7e047ca1f6ca8caa3f59e4c6e8d9ca6ca7302cb45",
+            }
+    historical = resources.resource_root() / "data/projects/open_model_data/trust/v4_child_profile_v2.json"
+    assert digest(historical.read_bytes()) == "3f5e9ccf4d97860dbf5bcbca54f6fee7796873d8aed59060a4bea0860813b25f"
 
 
 def test_active_policy_never_creates_completion_or_enables_switches(monkeypatch):

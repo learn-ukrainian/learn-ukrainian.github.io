@@ -11,6 +11,7 @@ import fcntl
 import json
 import subprocess
 import sys
+import time
 from dataclasses import replace
 from pathlib import Path
 
@@ -84,10 +85,12 @@ def signing_resources(tmp_path, monkeypatch):
     monkeypatch.setattr(trust, "HRAMATKA_CREDENTIAL_NAMESPACE", namespace)
 
 
-def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect, review_transform=None):
+def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect, review_transform=None,
+                   reviewer_sources=True, reviewer_negative=False, reviewer_invalid=False):
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", pg_cluster.info.dsn)
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
-    io = RuntimeResources(tmp_path, pg_cluster, monkeypatch, defect=defect)
+    io = RuntimeResources(tmp_path, pg_cluster, monkeypatch, defect=defect, reviewer_sources=reviewer_sources,
+                          reviewer_negative=reviewer_negative, reviewer_invalid=reviewer_invalid)
     constraints = linguistic_constraints()
     release = WheelRelease(built_wheel)
     try:
@@ -117,7 +120,18 @@ def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resou
                 record = authority.resolve_execution_observation(
                     task_id=result["task_id"], run_id=result["run_id"], role=result["role"], conn=conn, is_pg=True
                 )
-                assert record and record["verification_tool_ids"]
+                assert record
+                if reviewer_negative and record["role"] == "reviewer":
+                    assert record["verification_tool_ids"] == []
+                    invocation = conn.execute(
+                        "SELECT record_json FROM v4_sources_invocations WHERE attempt_id=%s",
+                        (owned["attempt_id"],),
+                    ).fetchone()
+                    assert invocation is not None
+                    evidence = json.loads(invocation["record_json"])
+                    assert evidence["success"] is False and evidence["disposition"] == "partial"
+                else:
+                    assert record["verification_tool_ids"]
                 assert record["runtime_identity"] == release.verify(
                     __import__(
                         "learn_ukrainian_v4_runtime.provenance", fromlist=["verify_current_identity"]
@@ -152,9 +166,28 @@ def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resou
             review_snapshot = {**preparation, "authored_row": row, "rubric_sha256": binding["rubric_sha256"]}
             if review_transform is not None:
                 review_snapshot = review_transform(conn, owned, review_snapshot)
+            if not reviewer_sources or reviewer_invalid:
+                from learn_ukrainian_v4_runtime.operation_auth import OperationRefused
+
+                before = conn.execute("SELECT count(*) AS n FROM fleet_comms_artifact_blobs").fetchone()["n"]
+                with pytest.raises(OperationRefused, match="reviewer_sources_evidence_absent"):
+                    run(reviewer.request_id, review_snapshot)
+                assert conn.execute("SELECT state FROM requests WHERE request_id=%s",
+                                    (reviewer.request_id,)).fetchone()["state"] == "failed"
+                if reviewer_invalid:
+                    rows = conn.execute(
+                        "SELECT record_json FROM v4_sources_invocations WHERE request_id=%s",
+                        (reviewer.request_id,),
+                    ).fetchall()
+                    assert len(rows) == 1
+                    assert json.loads(rows[0]["record_json"])["disposition"] == "invalid_input"
+                assert conn.execute("SELECT count(*) AS n FROM fleet_comms_artifact_blobs").fetchone()["n"] == before
+                assert conn.execute("SELECT count(*) AS n FROM v4_execution_observations WHERE request_id=%s",
+                                    (reviewer.request_id,)).fetchone()["n"] == 0
+                return None
             _, review = run(reviewer.request_id, review_snapshot)
             signed_review = fleet.issue_reviewer_execution_receipt(task_id=review["task_id"], run_id=review["run_id"])
-            assert signed_review["verdict"] == ("FAIL" if defect else "PASS")
+            assert signed_review["verdict"] == ("FAIL" if defect or reviewer_negative else "PASS")
             assert review["row_content_sha256"] == record["row_content_sha256"]
             assert review["seat_or_model"] != record["seat_or_model"]
             assert (
@@ -219,9 +252,12 @@ def test_actual_parent_refuses_failed_child_without_artifact_or_observation(
         executable = tmp_path / "fixture-cli"
         action = (
             "sys.stdout.write('x' * 2097152);sys.stdout.flush();raise SystemExit(0)"
-            if failure == "capture_limit" else "import time;time.sleep(10)"
+            if failure == "capture_limit" else (
+                "import subprocess,time;"
+                "subprocess.Popen([sys.executable,'-c','import time;time.sleep(30)']);time.sleep(10)"
+            )
         )
-        executable.write_text(executable.read_text().replace("prompt=sys.stdin.read()", "prompt=sys.stdin.read()\n" + action))
+        executable.write_text(executable.read_text().replace("prompt=sys.stdin.read()", "prompt=sys.stdin.read()\n    " + action))
         for adapter in profile["adapters"].values():
             for entry in adapter["files"]:
                 if entry["source"] == str(executable):
@@ -240,10 +276,38 @@ def test_actual_parent_refuses_failed_child_without_artifact_or_observation(
                 owned["deadline_at"] = deadline
             before = conn.execute("SELECT count(*) AS n FROM fleet_comms_artifact_blobs").fetchone()["n"]
             runtime = service_runtime.V4ServiceRuntime(store=OperationStore(conn), verifier=None, release_provider=WheelRelease(built_wheel))
+            started = time.monotonic()
             with pytest.raises(OperationRefused, match=failure):
                 runtime._execute_owned_claim(owned)
+            assert time.monotonic() - started < 7
             assert conn.execute("SELECT state FROM requests WHERE request_id=%s", (owned["request_id"],)).fetchone()["state"] == "failed"
             assert conn.execute("SELECT count(*) AS n FROM fleet_comms_artifact_blobs").fetchone()["n"] == before
             assert conn.execute("SELECT count(*) AS n FROM v4_execution_observations WHERE request_id=%s", (owned["request_id"],)).fetchone()["n"] == 0
     finally:
         io.close()
+
+
+def test_reviewer_pass_without_own_sources_call_is_not_observed_or_receipted(
+    pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources
+):
+    # A real author has verified Sources, but that attempt cannot satisfy the
+    # reviewer. The fixture advertises all five tools and emits PASS without
+    # calling Sources; the real parent must refuse before artifact persistence.
+    _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources,
+                   False, reviewer_sources=False)
+
+
+def test_reviewer_sources_negative_evidence_retains_real_fail_verdict(
+    pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources
+):
+    result = _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources,
+                            False, reviewer_negative=True)
+    assert result["reviewer_receipt"]["verdict"] == "FAIL"
+    assert result["review_record"]["verification_tool_ids"] == []
+
+
+def test_reviewer_malformed_sources_call_does_not_count_as_verification(
+    pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources
+):
+    _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources,
+                   False, reviewer_invalid=True)

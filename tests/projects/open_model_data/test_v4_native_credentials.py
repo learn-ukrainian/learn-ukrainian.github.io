@@ -14,7 +14,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
-from _v4_packaged_runtime_fixture import pinned_profile
+from _v4_packaged_runtime_fixture import CHILD, pinned_profile
 from learn_ukrainian_v4_runtime import child_runtime as child
 from learn_ukrainian_v4_runtime import service_runtime as service
 from learn_ukrainian_v4_runtime.operation_auth import OperationRefused, digest
@@ -114,7 +114,10 @@ def plan_profile(tmp_path):
         "sources_url": "http://localhost:8766/mcp",
         "adapters": {
             "claude": {**adapter, "provider_env": "ANTHROPIC_API_KEY"},
-            "codex": {**adapter, "provider_env": "OPENAI_API_KEY"},
+            "codex": {**adapter, "provider_env": "OPENAI_API_KEY", "files": [
+                *adapter["files"], {"source": str(executable), "destination": "/runtime/codex-code-mode-host",
+                                    "sha256": digest(executable.read_bytes())},
+            ]},
         },
     }
 
@@ -302,10 +305,10 @@ def test_credential_file_boundary(tmp_path, monkeypatch, plan_profile, mutation)
     assert set(os.listdir("/proc/self/fd")) == before
 
 
-NATIVE_CHILD = """#!/runtime/py/bin/python
-import json, os, sys, time
+NATIVE_CHILD = CHILD.partition('assert prompt.count("V4-SEMANTIC-INPUT: ")')[0] + """
+import time
 from pathlib import Path
-request=json.loads(sys.stdin.read())
+request=json.loads(prompt)
 harness=request["harness"]
 keys={"ANTHROPIC_API_KEY", "OPENAI_API_KEY", "CLAUDE_CODE_OAUTH_TOKEN"}
 selected=keys & set(os.environ)
@@ -339,15 +342,24 @@ for fd in Path("/proc/self/fd").iterdir():
     except FileNotFoundError:
         pass
 if request["action"]=="timeout":
+    import subprocess
+    subprocess.Popen([sys.executable,"-c","import time;time.sleep(30)"])
     time.sleep(30)
 if request["action"]=="closed_pipes":
     os.close(1); os.close(2); time.sleep(30)
-if request["action"] in ("stdout_leak", "stderr_leak"):
-    output=sys.stdout if request["action"]=="stdout_leak" else sys.stderr
+if request["action"] in ("stdout_leak", "stdout_leak_newline", "stderr_leak"):
+    output=sys.stderr if request["action"]=="stderr_leak" else sys.stdout
     output.write(secret[:10]); output.flush(); time.sleep(.02)
     output.write(secret[10:]); output.flush()
+    if request["action"]=="stdout_leak_newline":output.write(chr(10));output.flush()
 else:
-    print("synthetic-native-transport-ok")
+    if rpc:
+        emit({"id":4,"result":{"turn":{"id":"fixture-turn","status":"inProgress"}}})
+        emit({"method":"item/completed","params":{"threadId":"fixture-thread","turnId":"fixture-turn","item":{"id":"fixture-message","type":"agentMessage","text":"synthetic-native-transport-ok"}}})
+        emit({"method":"turn/completed","params":{"threadId":"fixture-thread","turn":{"id":"fixture-turn","status":"completed","error":None}}})
+        assert sys.stdin.read()==""
+    else:
+        print("synthetic-native-transport-ok")
 """
 
 
@@ -361,7 +373,7 @@ def native_profile(tmp_path_factory):
     for adapter in profile["adapters"].values():
         adapter["models"] = ["fixture-model"]
         for entry in adapter["files"]:
-            if entry["destination"] == "/runtime/fixture-cli":
+            if entry["source"] == str(executable):
                 entry["sha256"] = digest(executable.read_bytes())
     return profile
 
@@ -387,13 +399,18 @@ def test_actual_source_free_bwrap_transport(tmp_path, monkeypatch, native_profil
     value = service._provider_credential(harness)
     capture = child.run_child(claim(harness), provider_credential=value)
     assert capture.returncode == 0, capture.stderr.decode()
-    assert capture.stdout == b"synthetic-native-transport-ok\n"
+    if harness == "codex":
+        protocol = child._CodexProtocol(claim(harness)["binding"])
+        protocol.feed(capture.stdout)
+        assert protocol.result()["response"] == "synthetic-native-transport-ok"
+    else:
+        assert capture.stdout == b"synthetic-native-transport-ok\n"
     assert capture.stderr == b""
     assert SYNTHETIC_TOKEN not in repr(capture) + caplog.text
     assert selected.read_bytes() == original
 
 
-@pytest.mark.parametrize("action", ["timeout", "closed_pipes", "stdout_leak", "stderr_leak"])
+@pytest.mark.parametrize("action", ["timeout", "closed_pipes", "stdout_leak", "stdout_leak_newline", "stderr_leak"])
 def test_child_failure_discards_secrets_and_closes_fd(monkeypatch, native_profile, action, caplog):
     profile = select_mode(native_profile, "codex", "subscription")
     monkeypatch.setattr(child, "load_profile", lambda: profile)
@@ -403,8 +420,11 @@ def test_child_failure_discards_secrets_and_closes_fd(monkeypatch, native_profil
         owned["deadline_at"] = datetime.now(UTC) + timedelta(seconds=0.5)
     before = set(os.listdir("/proc/self/fd"))
     expected = "execution_timeout" if action in ("timeout", "closed_pipes") else "child_credential_disclosure"
+    started = time.monotonic()
     with pytest.raises(OperationRefused, match=expected) as error:
         child.run_child(owned, provider_credential=value)
+    assert time.monotonic() - started < 5
+    assert error.value.__cause__ is None
     assert set(os.listdir("/proc/self/fd")) == before
     assert SYNTHETIC_TOKEN not in str(error.value) + caplog.text
 
@@ -457,12 +477,13 @@ def test_credential_mismatch_and_revalidation_before_launch(monkeypatch, plan_pr
 def test_mode_does_not_select_model_effort_or_tools(plan_profile, harness, mode, role, effort):
     profile = select_mode(plan_profile, harness, mode)
     command, _ = child._plan(profile, claim(harness, role=role), credential(harness, mode))
-    assert command[command.index("--model") + 1] == "fixture-model"
     if harness == "claude":
+        assert command[command.index("--model") + 1] == "fixture-model"
         assert command[command.index("--effort") + 1] == effort
         assert command[command.index("--tools") + 1] == ""
         assert "--strict-mcp-config" in command
     else:
+        assert child._codex_requests(claim(harness)["binding"])[2]["params"]["model"] == "fixture-model"
         assert 'model_reasoning_effort="' + effort + '"' in command
         assert "features.shell_tool=false" in command and "features.multi_agent=false" in command
 
