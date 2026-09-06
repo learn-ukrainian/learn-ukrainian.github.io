@@ -1,10 +1,11 @@
-"""Contract for the Luna @ max bounded-worker routing policy.
+"""Contracts for fleet routing and the Codex subagent default.
 
 Focused on the machine-readable invariants of the 2026-08-01 routing change:
-Luna @ max is the default bounded worker, Astra @ low is the autonomous
-fallback, and neither promotion weakens the independent cross-family review
-gate. Large structural assertions stay in ``test_model_catalog.py`` and
-``test_codex_hooks_contract.py``; this file guards only the routing contract.
+The fleet catalog's bounded-worker routes are separate from Codex's native
+subagent default, which is Astra @ low. Neither selection weakens the
+independent cross-family review gate. Large structural assertions stay in
+``test_model_catalog.py`` and ``test_codex_hooks_contract.py``; this file guards
+only the routing contract.
 """
 
 from __future__ import annotations
@@ -20,12 +21,12 @@ SHARED_DOCTRINE = REPO_ROOT / "docs" / "best-practices" / "fleet-shared-doctrine
 ROLE_SCORECARD = REPO_ROOT / "docs" / "best-practices" / "fleet-role-scorecard.md"
 
 
-def test_codex_source_config_defaults_subagents_to_luna_max() -> None:
+def test_codex_source_config_defaults_subagents_to_astra_low() -> None:
     config = tomllib.loads(CODEX_PROJECT_CONFIG.read_text(encoding="utf-8"))
 
     agents = config["agents"]
-    assert agents["default_subagent_model"] == "gpt-5.6-luna"
-    assert agents["default_subagent_reasoning_effort"] == "max"
+    assert agents["default_subagent_model"] == "gpt-6-astra"
+    assert agents["default_subagent_reasoning_effort"] == "low"
 
 
 def test_catalog_routes_bounded_workers_to_luna_max_astra_low_fallback() -> None:
