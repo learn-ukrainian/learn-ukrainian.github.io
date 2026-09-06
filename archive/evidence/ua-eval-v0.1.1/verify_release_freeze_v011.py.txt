@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""Verify the immutable 0.1.1 release against its historical source bytes.
-
-Three logical source artifacts resolve to exact archived evidence: the inherited
-runner and the two verifiers. This does not certify their active replacements.
-"""
+"""Build or verify the immutable public UA evaluation release 0.1.1 freeze."""
 
 from __future__ import annotations
 
@@ -230,28 +226,11 @@ def _sha256_text(value: str) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 
-# v0.1.1 records both compatibility and current verifier source. Their original
-# bytes stay immutable even while active verification resolves archived sources.
-HISTORICAL_VERIFIER_SOURCES = {
-    Path("scripts/projects/ua_eval_harness/verify_release_freeze.py"):
-        Path("archive/evidence/ua-eval-v0.1.1/verify_release_freeze.py.txt"),
-    Path("scripts/projects/ua_eval_harness/verify_release_freeze_v011.py"):
-        Path("archive/evidence/ua-eval-v0.1.1/verify_release_freeze_v011.py.txt"),
-}
-
-
-def _frozen_artifact_path(path: Path) -> Path:
-    """Resolve only the three proven historical source artifacts for 0.1.1."""
-    if path == v010.RUNNER:
-        return ROOT / v010.HISTORICAL_RUNNER_SOURCE
-    return ROOT / HISTORICAL_VERIFIER_SOURCES.get(path, path)
-
-
 def _artifact(path: Path, role: str) -> dict[str, str]:
     return {
         "path": path.as_posix(),
         "role": role,
-        "sha256": _sha256(_frozen_artifact_path(path)),
+        "sha256": _sha256(ROOT / path),
     }
 
 
@@ -661,10 +640,8 @@ def validate_freeze(freeze: Mapping[str, Any]) -> None:
         role = str(artifact.get("role", ""))
         if path in actual or expected.get(path) != role:
             raise FreezeError(f"unexpected v0.1.1 artifact receipt: {path}")
-        artifact_source = _frozen_artifact_path(Path(path))
-        if artifact.get("sha256") != _sha256(artifact_source):
-            source_note = f" (historical source: {artifact_source})" if artifact_source != ROOT / path else ""
-            raise FreezeError(f"frozen artifact hash mismatch: {path}{source_note}")
+        if artifact.get("sha256") != _sha256(ROOT / path):
+            raise FreezeError(f"frozen artifact hash mismatch: {path}")
         actual[path] = role
     if actual != expected:
         raise FreezeError("v0.1.1 frozen artifact paths do not match")
@@ -731,10 +708,6 @@ def main(argv: Sequence[str] | None = None) -> int:
             f"UA evaluation freeze valid: {freeze['release']['id']} "
             f"v{freeze['release']['version']}, "
             f"{len(freeze['artifacts'])} artifacts"
-        )
-        print(
-            "Historical source snapshots verified; active runner/verifier "
-            "replacements are not certified by this release."
         )
         return 0
     except (FreezeError, ValueError) as exc:
