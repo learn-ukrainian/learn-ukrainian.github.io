@@ -8,6 +8,7 @@ import signal
 import subprocess
 import sys
 import time
+from contextlib import suppress
 from datetime import timedelta
 from pathlib import Path
 
@@ -178,6 +179,10 @@ def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, destination)
+    watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
+    watcher.parent.mkdir(parents=True)
+    watcher.write_text("#!/usr/bin/env bash\nexec sleep 300\n", encoding="utf-8")
+    watcher.chmod(0o755)
 
     claim_marker = tmp_path / "lease-claimed"
     close_marker = tmp_path / "lease-closed"
@@ -265,6 +270,10 @@ def _core_driver_exit_fixture(
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, destination)
+    watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
+    watcher.parent.mkdir(parents=True)
+    watcher.write_text("#!/usr/bin/env bash\nexec sleep 300\n", encoding="utf-8")
+    watcher.chmod(0o755)
 
     close_attempts = tmp_path / "close-attempts"
     close_marker = tmp_path / "lease-closed"
@@ -410,6 +419,50 @@ def test_all_driver_adapters_use_common_closure_wrapper() -> None:
         assert 'launcher_exec_command "${cmd[@]}"' in body
 
 
+def test_driver_signal_between_watcher_spawn_and_pid_capture_reaps_children(tmp_path: Path) -> None:
+    """A startup signal cannot orphan a watcher holding the output pipe open."""
+    child_started = tmp_path / "child-started"
+    signal_marker = tmp_path / "signal-received"
+    launcher, close_attempts, close_marker, _ = _core_driver_exit_fixture(
+        tmp_path,
+        provider_body=(
+            f"trap 'touch {os.fspath(signal_marker)!r}; exit 0' TERM\n"
+            f"touch {os.fspath(child_started)!r}\n"
+            "while :; do sleep 0.1; done\n"
+        ),
+    )
+    helper = launcher.parent / "scripts/lib/session_supervisor.sh"
+    # Inject at the exact scheduling boundary instead of depending on CI load.
+    body = helper.read_text(encoding="utf-8")
+    boundary = "  LC_SUPERVISORY_WATCH_PID=$!"
+    assert body.count(boundary) == 1
+    helper.write_text(
+        body.replace(
+            boundary,
+            f"  while [ ! -f {os.fspath(child_started)!r} ]; do sleep 0.01; done\n"
+            '  kill -TERM "$$"\n' + boundary,
+        ),
+        encoding="utf-8",
+    )
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    process = subprocess.Popen(
+        ["bash", os.fspath(launcher), "--epic", "devops"],
+        cwd=launcher.parent, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        text=True, start_new_session=True,
+    )
+    try:
+        stdout, stderr = process.communicate(timeout=10)
+        assert process.returncode == 143, stdout + stderr
+        assert signal_marker.is_file()
+        assert close_marker.is_file()
+        assert close_attempts.read_text(encoding="utf-8").strip() == "1"
+    finally:
+        # Also reap fixture descendants if the regression leaves an orphan.
+        with suppress(ProcessLookupError):
+            os.killpg(process.pid, signal.SIGKILL)
+        process.communicate(timeout=10)
+
+
 def test_real_store_driver_close_successor_and_expired_recovery(tmp_path: Path) -> None:
     root = tmp_path / "repo"
     for relative in (
@@ -423,6 +476,10 @@ def test_real_store_driver_close_successor_and_expired_recovery(tmp_path: Path) 
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, destination)
+    watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
+    watcher.parent.mkdir(parents=True)
+    watcher.write_text("#!/usr/bin/env bash\nexec sleep 300\n", encoding="utf-8")
+    watcher.chmod(0o755)
     python_bin = root / ".venv" / "bin" / "python"
     python_bin.parent.mkdir(parents=True)
     python_bin.write_text(

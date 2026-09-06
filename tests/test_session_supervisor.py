@@ -6,6 +6,7 @@ import importlib
 import json
 import os
 import re
+import shlex
 import subprocess
 import sys
 from dataclasses import replace
@@ -25,6 +26,40 @@ from scripts.session_supervisor import (
     main,
     strip_lease_credentials,
 )
+
+
+def test_supervisory_successor_exec_requires_release_and_preserves_argv(tmp_path: Path) -> None:
+    helper = Path(__file__).resolve().parents[1] / "scripts/lib/session_supervisor.sh"
+    successor = tmp_path / "start-codex-driver.sh"
+    successor.write_text(
+        "#!/usr/bin/env bash\n"
+        "[ -z \"${SESSION_STREAM_SESSION_ID+x}\" ] || exit 31\n"
+        "[ -z \"${SESSION_STREAM_GENERATION+x}\" ] || exit 32\n"
+        "[ \"$SESSION_SUPERVISOR_WAKE_STREAM\" = epic:9999 ] || exit 33\n"
+        "[ \"$SESSION_SUPERVISOR_WAKE_DELIVERY\" = fixture-delivery ] || exit 34\n"
+        "printf '%s\\n' \"$@\"\n",
+        encoding="utf-8",
+    )
+    successor.chmod(0o755)
+    script = f"""
+set -euo pipefail
+source {shlex.quote(str(helper))}
+LC_ROOT={shlex.quote(str(tmp_path))}
+LC_PROVIDER=codex
+LC_SUPERVISORY_DELIVERY=fixture-delivery
+LC_DRIVER_ORIGINAL_ARGS=(--epic fixture 'literal $(false) argument')
+export SESSION_STREAM_ID=epic:9999
+export SESSION_STREAM_SESSION_ID=fixture-predecessor
+export SESSION_STREAM_GENERATION=1
+LC_DRIVER_LEASE_CLOSED=0
+if session_supervisor_exec_successor; then exit 35; fi
+LC_DRIVER_LEASE_CLOSED=1
+session_supervisor_exec_successor
+exit 36
+"""
+    result = subprocess.run(["bash", "-c", script], capture_output=True, text=True, timeout=15)
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.splitlines() == ["--epic", "fixture", "literal $(false) argument"]
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _ISSUE_STREAMS = _REPO_ROOT / "scripts" / "config" / "issue_streams.yaml"

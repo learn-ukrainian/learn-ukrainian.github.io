@@ -106,14 +106,13 @@ claim_session_supervisor_env() {
   local launcher="$7"
   local epic="$8"
 
-  local python_bin="$project_dir/.venv/bin/python"
+  local state_root
+  state_root="$(_canonical_state_root "$project_dir")" || return 1
+  local python_bin="$state_root/.venv/bin/python"
   if [ ! -x "$python_bin" ]; then
     echo "Error: project Python not found at ${python_bin}" >&2
     return 1
   fi
-
-  local state_root
-  state_root="$(_canonical_state_root "$project_dir")" || return 1
 
   local supervisor_tmp
   supervisor_tmp="$(mktemp)"
@@ -154,6 +153,20 @@ claim_session_supervisor_env() {
   )
   if [ -n "$task_id" ]; then
     supervisor_args+=("--task-id" "$task_id")
+  fi
+
+  local expected_generation=""
+  if [ -n "${SESSION_SUPERVISOR_WAKE_DELIVERY:-}" ]; then
+    if [ "${SESSION_SUPERVISOR_WAKE_STREAM:-}" != "$stream" ]; then
+      echo "Error: supervisory event stream does not match this launcher." >&2
+      return 1
+    fi
+    local watcher launch_plan launch_identity
+    watcher="$(cd "$(dirname "${BASH_SOURCE[0]}")/../ai_agent_bridge" && pwd)/inbox_watch.sh"
+    launch_plan="$("$watcher" "$agent" --launch-plan "$SESSION_SUPERVISOR_WAKE_DELIVERY" --stream "$stream")" || return 1
+    launch_identity="$("$python_bin" -c 'import json,sys; p=json.loads(sys.argv[1]); print(p["session_id"]); print(p["generation"])' "$launch_plan")" || return 1
+    expected_generation="${launch_identity##*$'\n'}"
+    supervisor_args+=("--session-id" "${launch_identity%%$'\n'*}")
   fi
 
   if ! "$python_bin" "${supervisor_args[@]}" > "$supervisor_tmp" 2>&1; then
@@ -211,6 +224,14 @@ PY
 
   # shellcheck source=/dev/null
   eval "$exports"
+
+  # Read/claim races can advance the stream between preflight and CAS. Never
+  # start a provider for a generation beyond this event's one-successor budget.
+  if [ -n "$expected_generation" ] && [ "${SESSION_STREAM_GENERATION:-}" != "$expected_generation" ]; then
+    "$python_bin" -m scripts.session_supervisor close --role driver >/dev/null || true
+    echo "Error: supervisory wake was superseded before the lease claim." >&2
+    return 1
+  fi
 
   # Required envelope check.
   if [ -z "${SESSION_STREAM_ID:-}" ] || [ -z "${SESSION_STREAM_SESSION_ID:-}" ] || [ -z "${SESSION_STREAM_LEASE_ID:-}" ]; then
@@ -271,4 +292,87 @@ EOF
 
   # Export the capsule path for consumers / tests.
   export SESSION_SUPERVISOR_CAPSULE_PATH="$capsule_path"
+}
+
+# These hooks are called by the existing launcher process loop. The watcher
+# may prepare a handoff, but never owns lease renewal/release or process exit.
+session_supervisor_start_inbox_watch() {
+  local watcher
+  watcher="$(cd "$(dirname "${BASH_SOURCE[0]}")/../ai_agent_bridge" && pwd)/inbox_watch.sh" || return 1
+  [ -x "$watcher" ] || return 1
+  LC_SUPERVISORY_WAKE_FILE="$(mktemp)" || return 1
+  # Read by the launcher_core.sh process wait loop.
+  # shellcheck disable=SC2034
+  LC_SUPERVISORY_EVENT=0
+  LC_SUPERVISORY_DELIVERY=""
+  trap 'LC_SUPERVISORY_EVENT=1' USR1
+  (
+    trap - EXIT INT TERM HUP USR1
+    exec "$watcher" "${LC_DRIVER_HANDOFF:-$LC_PROVIDER}" --live-supervisory --notify-parent
+  ) > "$LC_SUPERVISORY_WAKE_FILE" &
+  LC_SUPERVISORY_WATCH_PID=$!
+}
+
+session_supervisor_read_wake() {
+  local watcher_rc=0
+  wait "$LC_SUPERVISORY_WATCH_PID" || watcher_rc=$?
+  LC_SUPERVISORY_WATCH_PID=""
+  if [ "$watcher_rc" -ne 75 ]; then
+    echo "Error: supervisory inbox watcher failed; stopping this driver closed." >&2
+    return 1
+  fi
+  IFS= read -r LC_SUPERVISORY_DELIVERY < "$LC_SUPERVISORY_WAKE_FILE" || return 1
+  [ -n "$LC_SUPERVISORY_DELIVERY" ] || return 1
+}
+
+session_supervisor_stop_inbox_watch() {
+  local attempt
+  if [ -n "${LC_SUPERVISORY_WATCH_PID:-}" ]; then
+    kill "$LC_SUPERVISORY_WATCH_PID" 2>/dev/null || true
+    # A provider can exit while the watcher is still crossing its exec boundary.
+    # Bound cleanup even if that startup race loses the initial TERM.
+    for ((attempt=0; attempt<20; attempt++)); do
+      kill -0 "$LC_SUPERVISORY_WATCH_PID" 2>/dev/null || break
+      sleep 0.05
+    done
+    if kill -0 "$LC_SUPERVISORY_WATCH_PID" 2>/dev/null; then
+      kill -KILL "$LC_SUPERVISORY_WATCH_PID" 2>/dev/null || true
+    fi
+    wait "$LC_SUPERVISORY_WATCH_PID" 2>/dev/null || true
+    LC_SUPERVISORY_WATCH_PID=""
+  fi
+  trap - USR1
+  if [ -n "${LC_SUPERVISORY_WAKE_FILE:-}" ]; then
+    rm -f "$LC_SUPERVISORY_WAKE_FILE"
+    LC_SUPERVISORY_WAKE_FILE=""
+  fi
+}
+
+session_supervisor_stop_provider_for_wake() {
+  local attempt
+  kill -TERM "$LC_DRIVER_CHILD_PID" 2>/dev/null || true
+  # Preparation is already durable. Give the provider a bounded clean exit;
+  # never release its lease while its launcher-owned process is still alive.
+  for ((attempt=0; attempt<100; attempt++)); do
+    kill -0 "$LC_DRIVER_CHILD_PID" 2>/dev/null || break
+    sleep 0.1
+  done
+  if kill -0 "$LC_DRIVER_CHILD_PID" 2>/dev/null; then
+    kill -KILL "$LC_DRIVER_CHILD_PID" 2>/dev/null || true
+  fi
+  wait "$LC_DRIVER_CHILD_PID" 2>/dev/null || true
+}
+
+session_supervisor_exec_successor() {
+  [ "${LC_DRIVER_LEASE_CLOSED:-0}" = 1 ] || return 1
+  [ -n "${LC_SUPERVISORY_DELIVERY:-}" ] || return 1
+  export SESSION_SUPERVISOR_WAKE_DELIVERY="$LC_SUPERVISORY_DELIVERY"
+  export SESSION_SUPERVISOR_WAKE_STREAM="$SESSION_STREAM_ID"
+  local name
+  for name in ${!SESSION_STREAM_@}; do
+    unset "$name"
+  done
+  # Replace this supervisor shell. Its successor uses the same approved public
+  # entrypoint and original argv, then makes a fresh Monitor TTL/CAS claim.
+  exec "$LC_ROOT/start-${LC_PROVIDER}-driver.sh" "${LC_DRIVER_ORIGINAL_ARGS[@]}"
 }

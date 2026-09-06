@@ -149,11 +149,61 @@ before returning the capsule. Rollover resume requires the prepared durable
 handoff to be present and nonempty. Restore missing continuity evidence before
 retrying; a successful claim alone does not prove rollover continuity.
 
-## Claude
+## Supervisory event integration
 
-Claude's SessionStart hook currently owns its own lease binding. PR-J2 will
-integrate the common supervisor into `start-claude.sh` so `--epic` claims the
-lease before SessionStart binds it.
+The inbox watcher has explicit Fleet Comms modes in addition to its legacy
+read-only notification mode. These require the generation-bound consumption API
+from PR #7781; a missing API fails closed, without generic acknowledgment fallback.
+
+The common launcher process loop starts and stops the supervisory watcher,
+handles its wake notification, reaps the provider, and closes the exact lease
+before executing the existing driver entrypoint with the original arguments.
+Watcher failure stops the provider without authorizing a successor; failed
+lease release also prevents successor execution.
+
+Supervisory requests use the existing authority message/delivery store and the
+recipient `supervisor:epic:<number>`, keeping automatic events out of ordinary
+driver inbox traffic. Enqueue through `enqueue_supervisory_request` with an
+idempotency key and a bounded JSON body:
+
+```json
+{"schema":"supervisory-wake.v1","action":"restart","stream_id":"epic:9999","generation":1}
+```
+
+Only `wake` and `restart` are accepted. The generation names the predecessor;
+zero denotes a stream without a previous lease. The body cannot choose a
+launcher, model, command, approval setting, or filesystem path.
+
+The intended host-resident invocation uses the existing watcher process:
+
+```bash
+scripts/ai_agent_bridge/inbox_watch.sh grok-infra --wake-driver grok --epic infra
+scripts/ai_agent_bridge/inbox_watch.sh grok-atlas --wake-driver grok --epic atlas
+```
+
+Run it in an existing persistent host terminal or service allocation. The
+watcher does not install another service or make an offline host available.
+It checks at most 64 pending events per tick and invokes only the selected
+existing launcher. The launcher remains the sole process/lease supervisor.
+An active remote lease prevents startup; unknown authority fails closed.
+
+For a clean restart, launcher-owned consumption records the exact generation
+before preparing a durable stream handoff. The process loop must stop and reap
+the provider, stop renewal, and release the exact envelope before replacing
+itself with the same entrypoint and original arguments. A deterministic
+successor session identity plus the post-claim generation check allows at most
+one provider start for a predecessor generation. Remote crash recovery remains
+TTL/CAS, and `release --force` is never part of this path.
+
+The successor reclaims the delivery through its existing 60-second delivery
+lease and new fence, records its own generation-bound consumption, and only
+then acknowledges its verified live envelope. Delivery attempts are bounded at
+three. A consumption receipt alone never proves successor startup. Failed or
+ambiguous outcomes retain reconciliation work; they do not authorize a blind
+second start. A later generation requires a new explicitly targeted event.
+
+All certified provider driver entrypoints, including Claude, use the common
+launcher lease boundary before starting their provider adapters.
 
 ## Related
 

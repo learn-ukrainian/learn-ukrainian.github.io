@@ -71,6 +71,13 @@ def _prepare_repo(
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(_REPO_ROOT / relative, destination)
 
+    # Profile tests have no message service. Supply the idle watcher process
+    # that the real launcher owns and must reap when the provider exits.
+    _write_executable(
+        primary / "scripts/ai_agent_bridge/inbox_watch.sh",
+        "#!/usr/bin/env bash\nexec sleep 300\n",
+    )
+
     venv_bin = primary / ".venv" / "bin"
     venv_bin.mkdir(parents=True)
     _write_executable(

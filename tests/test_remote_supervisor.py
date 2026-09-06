@@ -271,3 +271,132 @@ def test_remote_successor_real_api_cycle_preserves_handoff_and_fences_predecesso
         with pytest.raises(RemoteLeaseLostError):
             supervisor.build_capsule(role="driver", stream_id=lease.stream_id, lease=lease)
         assert supervisor.close_driver(role="driver", lease=successor) == "closed"
+
+
+@pytest.fixture
+def supervisory_cycle(tmp_path):
+    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+    from agents_extensions.shared.session_streams.store import SessionStreamStore
+    from scripts.fleet_comms.authority import AuthorityService
+    from scripts.session_supervisor import SessionSupervisor
+    from tests.epics_monitor_stub import epics_monitor_stub
+
+    store = SessionStreamStore(SessionStreamDatabase(tmp_path / "wake.sqlite3"))
+    with AuthorityService(root=tmp_path / "fleet") as service, epics_monitor_stub(store) as base:
+        supervisor = SessionSupervisor(None, repo_root=tmp_path, remote=RemoteEpicClient(base=base))
+        yield service, supervisor
+
+
+def _supervisory_event(service, *, action="restart", generation=1, key="restart-event"):
+    from scripts.ai_agent_bridge._inbox_watch import supervisory_recipient
+
+    return service.publish_message(
+        sender="fixture-operator", recipients=(supervisory_recipient("epic:7178"),),
+        body=json.dumps({"schema": "supervisory-wake.v1", "action": action,
+                         "stream_id": "epic:7178", "generation": generation}),
+        kind="supervisory-request", correlation_id="fixture-cycle", idempotency_key=key,
+    ).delivery_ids[0]
+
+
+def _open_supervisory_driver(supervisor, *, instance="predecessor", session_id=None):
+    return supervisor.open_driver(
+        role="driver", stream_id="epic:7178",
+        holder=LeaseHolder("codex", "cli", instance, process_id=1234, host_id="fixture-host"),
+        lineage_id="wake-cycle", ttl_seconds=900, session_id=session_id,
+    )
+
+
+def test_supervisory_duplicate_wake_never_starts_second_live_driver(supervisory_cycle):
+    from unittest.mock import Mock
+
+    from scripts.ai_agent_bridge._inbox_watch import supervisory_launch_plan, wake_driver_once
+
+    service, supervisor = supervisory_cycle
+    lease = _open_supervisory_driver(supervisor)
+    did = _supervisory_event(service, action="wake")
+    assert _supervisory_event(service, action="wake") == did
+    start = Mock()
+    for _ in range(2):
+        assert supervisory_launch_plan(service, supervisor.remote, did, lease.stream_id) is None
+        assert not wake_driver_once(service, supervisor.remote, stream_id=lease.stream_id,
+                                    launcher=Path("start-codex-driver.sh"), epic="fixture", run=start)
+    start.assert_not_called()
+    with pytest.raises(RemoteSupervisorError, match="live session"):
+        _open_supervisory_driver(supervisor, instance="duplicate")
+    assert service.supervisory_delivery_status(did) == "queued"
+    assert supervisor.close_driver(role="driver", lease=lease) == "closed"
+
+
+def test_supervisory_consumed_released_generation_starts_exactly_one_successor(supervisory_cycle):
+    from datetime import UTC, datetime, timedelta
+    from types import SimpleNamespace
+
+    from scripts.ai_agent_bridge._inbox_watch import (
+        consume_supervisory_event,
+        supervisory_launch_plan,
+        wake_driver_once,
+    )
+
+    service, supervisor = supervisory_cycle
+    lease = _open_supervisory_driver(supervisor)
+    did = _supervisory_event(service)
+    now = datetime.now(UTC)
+    request = consume_supervisory_event(service, supervisor, lease, now=now.isoformat())
+    assert request.delivery_id == did
+    assert service.supervisory_delivery_status(did) == "live_driver_consumed"
+    assert supervisory_launch_plan(service, supervisor.remote, did, lease.stream_id) is None
+    assert supervisor.close_driver(role="driver", lease=lease) == "closed"
+    plan = supervisory_launch_plan(service, supervisor.remote, did, lease.stream_id)
+    assert plan == request
+    starts = []
+
+    def start(argv, *, env, check):
+        assert argv == ["start-codex-driver.sh", "--epic", "fixture"]
+        assert env["SESSION_SUPERVISOR_WAKE_DELIVERY"] == did
+        assert not any(name.startswith("SESSION_STREAM_") for name in env)
+        starts.append(_open_supervisory_driver(
+            supervisor, instance="successor", session_id=plan.successor_session_id,
+        ))
+        return SimpleNamespace(returncode=0)
+
+    assert wake_driver_once(service, supervisor.remote, stream_id=lease.stream_id,
+                            launcher=Path("start-codex-driver.sh"), epic="fixture", run=start)
+    assert not wake_driver_once(service, supervisor.remote, stream_id=lease.stream_id,
+                                launcher=Path("start-codex-driver.sh"), epic="fixture", run=start)
+    successor, = starts
+    assert successor.generation == lease.generation + 1
+    assert supervisory_launch_plan(service, supervisor.remote, did, lease.stream_id) is None
+    # Reclamation is via the delivery API's TTL/fence, never a copied old token.
+    consume_supervisory_event(service, supervisor, successor, now=(now + timedelta(seconds=61)).isoformat())
+    assert service.supervisory_delivery_status(did) == "acted_on"
+    assert service.get_delivery(did).fence_token == 2
+    assert supervisor.close_driver(role="driver", lease=successor) == "closed"
+    assert supervisory_launch_plan(service, supervisor.remote, did, lease.stream_id) is None
+    assert not wake_driver_once(service, supervisor.remote, stream_id=lease.stream_id,
+                                launcher=Path("start-codex-driver.sh"), epic="fixture", run=start)
+    assert len(starts) == 1
+
+
+def test_supervisory_clean_release_without_preparation_cannot_restart(supervisory_cycle):
+    from scripts.ai_agent_bridge._inbox_watch import supervisory_launch_plan
+
+    service, supervisor = supervisory_cycle
+    lease = _open_supervisory_driver(supervisor)
+    did = _supervisory_event(service)
+    assert supervisor.close_driver(role="driver", lease=lease) == "closed"
+    assert supervisory_launch_plan(service, supervisor.remote, did, lease.stream_id) is None
+
+
+def test_supervisory_stale_envelope_cannot_consume_or_prepare(supervisory_cycle):
+    from scripts.ai_agent_bridge._inbox_watch import consume_supervisory_event
+    from scripts.session_supervisor.remote import RemoteLeaseLostError
+
+    service, supervisor = supervisory_cycle
+    lease = _open_supervisory_driver(supervisor)
+    did = _supervisory_event(service)
+    assert supervisor.close_driver(role="driver", lease=lease) == "closed"
+    successor = _open_supervisory_driver(supervisor, instance="successor")
+    with pytest.raises(RemoteLeaseLostError):
+        consume_supervisory_event(service, supervisor, lease)
+    assert service.supervisory_delivery_status(did) == "queued"
+    assert supervisor.close_driver(role="driver", lease=successor) == "closed"
