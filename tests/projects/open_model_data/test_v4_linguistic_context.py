@@ -8,6 +8,7 @@ from copy import deepcopy
 import pytest
 from _v4_linguistic_context_fixture import constraints, preparation, store_artifact
 from learn_ukrainian_v4_runtime import semantic_inputs as semantic
+from learn_ukrainian_v4_runtime.child_runtime import CapturedChild, parse_child
 from learn_ukrainian_v4_runtime.operation_auth import OperationRefused, canonical_bytes, digest, parse_request
 from learn_ukrainian_v4_runtime.v4_execution_origin import load_review_rubric_sha256
 from test_v4_operation_lifecycle import claim, role_connection
@@ -225,3 +226,45 @@ def test_required_row_fields_are_present_and_nonempty(field, bad_value):
         row[field] = bad_value
     with pytest.raises(OperationRefused, match="author_required_fields"):
         semantic.validate_authored_row(row, value)
+
+
+def test_frozen_author_output_contract_matches_strict_parser(pg_cluster, prepared):
+    """Synthetic shape proof only; this does not certify Ukrainian row quality."""
+    with role_connection(pg_cluster, "hramatka_v4_control_writer") as conn:
+        owned = claim(conn, prepared)
+    payload = json.loads(owned["prompt"].split("V4-SEMANTIC-INPUT: ", 1)[1])
+    contract = payload["output_contract"]
+    assert contract == {
+        "marker": "V4-AUTHOR-ROW:",
+        "allowed_fields": ["row_text", "explanation", "answer", "instruction"],
+        "required_fields": payload["constraints"]["required_fields"],
+        "field_value_type": "string",
+        "additional_fields_allowed": False,
+    }
+    assert "Do not wrap the object in Markdown or add text after it." in owned["prompt"]
+    binding = owned["binding"]
+    row = {field: "Synthetic shape fixture" for field in contract["allowed_fields"]}
+
+    def capture(candidate):
+        events = [
+            {
+                "type": "assistant", "session_id": "shape-fixture",
+                "message": {
+                    "model": binding["expected_seat_or_model"],
+                    "content": [{"type": "text", "text": contract["marker"] + json.dumps(candidate)}],
+                },
+            },
+            {"type": "result", "subtype": "success", "is_error": False, "session_id": "shape-fixture"},
+        ]
+        return CapturedChild(
+            request_id=binding["request_id"], attempt_id=owned["attempt_id"],
+            argv_sha256="0" * 64, prompt_sha256=binding["prompt_sha256"],
+            stdout=("\n".join(json.dumps(event) for event in events) + "\n").encode(),
+            stderr=b"", returncode=0, harness=binding["expected_harness"],
+        )
+
+    assert parse_child(capture(row), binding)["row"] == row
+    semantic.validate_authored_row(row, payload["constraints"])
+    for invalid in ({**row, "language": "uk"}, {**row, "explanation": {"value": "nested"}}):
+        with pytest.raises(OperationRefused, match="author_row_shape"):
+            parse_child(capture(invalid), binding)

@@ -228,13 +228,23 @@ def prompt_from_snapshot(binding: dict, snapshot: dict) -> str:
             "constraints": snapshot["constraints"],
             "target_evidence": snapshot["evidence"],
             "preparation_sha256": snapshot["preparation_sha256"],
+            "output_contract": {
+                "marker": "V4-AUTHOR-ROW:",
+                "allowed_fields": ["row_text", "explanation", "answer", "instruction"],
+                "required_fields": snapshot["constraints"]["required_fields"],
+                "field_value_type": "string",
+                "additional_fields_allowed": False,
+            },
         }
         instructions = (
             "Author one original row in proper Ukrainian (language uk), satisfying the actual atomic target facts, "
             "evidence and scope in every admitted constraint and the fixed linguistic contract below. "
             "Fluency alone is insufficient. If authority or context is unsupported or unknown, abstain: "
             "do not emit V4-AUTHOR-ROW; the existing missing-row refusal terminates execution. "
-            "Otherwise emit V4-AUTHOR-ROW: followed by its JSON object.\n" + rubric_bytes().decode()
+            "Otherwise emit only V4-AUTHOR-ROW: followed by one JSON object matching output_contract. "
+            "Use only row_text, explanation, answer and instruction as keys, with string values only; "
+            "include every required_fields entry. Do not add language, evidence, status or other metadata keys. "
+            "Do not wrap the object in Markdown or add text after it.\n" + rubric_bytes().decode()
         )
     elif binding["role"] == "reviewer":
         if set(snapshot) != {"authored_row", "constraints", "rubric_sha256", "evidence", "preparation_sha256"}:
