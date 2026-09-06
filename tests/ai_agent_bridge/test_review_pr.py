@@ -505,9 +505,11 @@ def test_list_eligible_prints_seat_status_without_provisioning(capsys) -> None:
     names = {s["name"] for s in seats}
     assert "claude-sonnet-5" in names
     assert output["selected"]["name"] == "claude-sonnet-5"
-    terra = next(s for s in seats if s["name"] == "gpt-5.6-terra")
-    assert terra["status"] == "excluded"
-    assert "same family" in terra["reason"]
+    astra = next(s for s in seats if s["name"] == "openai_frontier")
+    assert astra["model"] == "gpt-6-astra"
+    assert astra["status"] == "advisory_only"
+    assert "same family" in astra["reason"]
+    assert "not a formal cross-family gate" in astra["reason"]
 
 
 def test_list_eligible_requires_author_identity(capsys) -> None:

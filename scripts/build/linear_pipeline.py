@@ -106,7 +106,7 @@ WRITER_CHOICES = (
 WRITER_DEFAULTS: dict[str, dict[str, str]] = {
     "claude-tools": {"model": "claude-opus-4-8", "effort": "xhigh"},
     "gemini-tools": {"model": "gemini-3.1-pro-preview", "effort": "high"},
-    "codex-tools": {"model": "gpt-5.5", "effort": "high"},
+    "codex-tools": {"model": "gpt-6-astra", "effort": "high"},
     "grok-tools": {"model": "grok-4.5", "effort": "medium"},
     "cursor-tools": {"model": "composer-2.5", "effort": "medium"},
     "deepseek-tools": {"model": "deepseek-v4-pro", "effort": "medium"},
@@ -154,7 +154,7 @@ REVIEWER_CHOICES = (
 REVIEWER_DEFAULTS: dict[str, dict[str, str]] = {
     "claude-tools": {"model": "claude-opus-4-8", "effort": "xhigh"},
     "gemini-tools": {"model": "gemini-3.1-pro-preview", "effort": "high"},
-    "codex-tools": {"model": "gpt-5.5", "effort": "high"},
+    "codex-tools": {"model": "gpt-6-astra", "effort": "high"},
     "grok-tools": {"model": "grok-4.5", "effort": "medium"},
     "cursor-tools": {"model": "grok-4.5", "effort": "medium"},
     "deepseek-tools": {"model": "deepseek-v4-pro", "effort": "medium"},

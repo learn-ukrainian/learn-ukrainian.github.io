@@ -240,7 +240,7 @@ BareRunner = ProviderRunner
 
 
 CLAUDE_SUBSCRIPTION_BARE_MODEL_ID = "claude-opus-4-8"
-GPT_SUBSCRIPTION_BARE_MODEL_ID = "gpt-5.5"
+GPT_SUBSCRIPTION_BARE_MODEL_ID = "gpt-6-astra"
 GEMINI_SUBSCRIPTION_BARE_MODEL_ID = "gemini-3.1-pro-high"
 _SUBSCRIPTION_PRICING_BASIS = (
     "subscription runtime bare seat; marginal token pricing is not exposed by the CLI, "
@@ -270,6 +270,8 @@ def _runtime_bridge_command(agent: str, model: str, *, entrypoint: str = BARE_RU
             "use_bare=false,output_format=stream-json",
         )
     if agent == "codex":
+        if model != GPT_SUBSCRIPTION_BARE_MODEL_ID:
+            raise BakeoffConfigError(f"Codex model {model!r} rejected; only gpt-6-astra is approved")
         return (
             "agent_runtime.invoke",
             "codex",
@@ -723,6 +725,8 @@ def _subscription_identity(route: llm_reviewer_dispatch.ReviewerRoute) -> RouteI
     identity = _route_identity(route)
     if not identity.runtime_agent:
         raise BakeoffConfigError(f"route is not a subscription-runtime route: {route.route_name!r}")
+    if identity.runtime_agent == "codex" and route.reviewer_model_id != GPT_SUBSCRIPTION_BARE_MODEL_ID:
+        raise BakeoffConfigError(f"Codex model {route.reviewer_model_id!r} rejected; only gpt-6-astra is approved")
     return identity
 
 
@@ -2706,7 +2710,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         help=(
             "Comma-separated or repeated model pins. opencode provider/model pins "
             "(including deepseek-direct/... and OpenRouter baselines) work for tooled/bare; "
-            "subscription native pins (claude-opus-4-8,gpt-5.5,gemini-3.1-pro-high) are --arm bare only. "
+            "subscription native pins (claude-opus-4-8,gpt-6-astra,gemini-3.1-pro-high) are --arm bare only. "
             "LU_ROUTING_GUARD_OVERRIDE=1 is invalid for published scorecards."
         ),
     )

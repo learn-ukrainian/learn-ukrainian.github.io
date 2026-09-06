@@ -131,6 +131,8 @@ def _run_batch(
     schema_path: Path,
     timeout: int,
 ) -> tuple[list[dict[str, str]], dict[str, Any]]:
+    if model != "gpt-6-astra":
+        raise RunnerError(f"Codex model {model!r} rejected; only gpt-6-astra is approved")
     model_input = {
         "instruction": prompt_text,
         "records": [{"item_id": row["item_id"], "source": row["source"]} for row in batch],
@@ -209,6 +211,8 @@ def run(
     workers: int,
     timeout: int,
 ) -> None:
+    if model != "gpt-6-astra":
+        raise RunnerError(f"Codex model {model!r} rejected; only gpt-6-astra is approved")
     if batch_size < 1:
         raise RunnerError("batch size must be positive")
     if workers < 1:
@@ -291,7 +295,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--schema", type=Path, default=DEFAULT_SCHEMA)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--metadata-output", type=Path, required=True)
-    parser.add_argument("--model", default="gpt-5.6-terra")
+    parser.add_argument("--model", default="gpt-6-astra")
     parser.add_argument("--codex-bin", default="codex")
     parser.add_argument("--batch-size", type=int, default=40)
     parser.add_argument("--workers", type=int, default=1)

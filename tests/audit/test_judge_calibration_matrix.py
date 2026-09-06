@@ -133,3 +133,18 @@ def test_leaderboard_sorted_by_f1_descending(tmp_path: Path) -> None:
     assert text.index("| openai | gpt-5.5 | hermes |") < text.index(
         "| openai | gpt-5.4-mini | native_cli |"
     )
+
+
+def test_native_codex_rejects_old_model_before_subprocess(monkeypatch):
+    def forbidden(*args, **kwargs):
+        pytest.fail("unapproved Codex model reached subprocess")
+    monkeypatch.setattr(matrix, "run_subprocess", forbidden)
+    cell = matrix.Cell("openai", "gpt-5.5", "native_cli", "medium", "with_mcp")
+    with pytest.raises(ValueError, match="only gpt-6-astra"):
+        matrix.run_native_cli(cell, "prompt")
+
+
+def test_native_codex_accepts_approved_model():
+    cell = matrix.Cell("openai", "gpt-6-astra", "native_cli", "medium", "with_mcp")
+    command = matrix.build_native_command(cell, "prompt")
+    assert command[command.index("--model") + 1] == "gpt-6-astra"

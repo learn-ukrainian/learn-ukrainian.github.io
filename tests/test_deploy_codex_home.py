@@ -209,7 +209,7 @@ def test_partial_failure_retains_recovery(source, monkeypatch):
 
 
 def test_cli_requires_explicit_home():
-    result = subprocess.run([sys.executable, str(Path(deployer.__file__))], capture_output=True, text=True)
+    result = subprocess.run([sys.executable, str(Path(deployer.__file__))], capture_output=True, text=True, timeout=30)
     assert result.returncode == 2
     assert "--codex-home" in result.stderr
 

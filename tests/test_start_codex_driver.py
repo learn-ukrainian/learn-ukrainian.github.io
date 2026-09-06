@@ -221,6 +221,6 @@ def test_native_model_guard_preserves_claude_code_harness():
     result = subprocess.run(
         ["bash", "-c", 'source "$1"; LC_HARNESS=claude-code; LC_MODEL=gpt-5.6-sol; launcher_adapter_validate',
          "test", str(REPO / "scripts/launchers/codex.sh")],
-        capture_output=True, text=True, check=False,
+        capture_output=True, text=True, check=False, timeout=30,
     )
     assert result.returncode == 0, result.stderr

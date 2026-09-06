@@ -455,7 +455,7 @@ def dispatch_agent(
             from batch_gemini_config import PRO_MODEL
             model = PRO_MODEL
         elif is_codex:
-            model = "gpt-5.5"
+            model = "gpt-6-astra"
         else:
             from batch_gemini_config import CLAUDE_MODEL_CORE_CONTENT
             model = CLAUDE_MODEL_CORE_CONTENT

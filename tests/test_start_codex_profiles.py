@@ -396,15 +396,16 @@ def test_launcher_rejects_missing_or_invalid_epic_before_codex_starts(
         assert "--epic" in result.stderr
 
 
+@pytest.mark.parametrize("driver", [False, True])
 @pytest.mark.parametrize("model", ["gpt-5.6-sol", "gpt-5.6-terra"])
-def test_launcher_rejects_old_native_model_before_provider_or_lease(tmp_path: Path, model: str) -> None:
+def test_launcher_rejects_old_native_model_before_provider_or_lease(tmp_path: Path, model: str, driver: bool) -> None:
     order = tmp_path / "launcher-order.txt"
     _, _, result, _, linked = _launch(
-        tmp_path, ["--epic", "devops", "--model", model], driver=True,
+        tmp_path, (["--epic", "devops"] if driver else []) + ["--model", model], driver=driver,
         order_capture=order, expect_success=False,
     )
-    assert result.returncode == 2
-    assert "only gpt-6-astra is approved" in result.stderr
+    assert result.returncode == (4 if driver else 2)
+    assert ("not certified" if driver else "only gpt-6-astra is approved") in result.stderr
     assert not (tmp_path / "capture.txt").exists()
     assert not order.exists()
     assert not (linked / ".claude" / "devops-epic" / "session-lease.env").exists()
