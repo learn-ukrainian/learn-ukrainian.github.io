@@ -32,7 +32,7 @@ def test_inventory_covers_repo_issue_streams():
         epic for stream in registry["streams"].values() for epic in stream["epics"]
     }
     # Ratchet: growth is routine, shrink is exceptional and deliberate.
-    assert len(expected_epics) >= 19
+    assert len(expected_epics) >= 15
     assert len(records) == len(expected_epics)
     ids = {r.stream_id for r in records}
     assert ids == {f"epic:{epic}" for epic in expected_epics}

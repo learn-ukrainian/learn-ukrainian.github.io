@@ -73,6 +73,8 @@ areas:
         name: "Word Atlas full-corpus intake"
       - number: 5224  # intake epic + entry-model DB epic
         name: "Word Atlas full-corpus intake"
+      - number: 4920  # backend phase duplicate of #4387
+        name: "Word Atlas backend phase & serving at scale"
   core:
     id: core
     aliases:
