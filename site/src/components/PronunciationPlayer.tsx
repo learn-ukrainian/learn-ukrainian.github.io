@@ -3,7 +3,7 @@ import { mountPronunciationPlayer } from '../lib/lexicon/pronunciation-player';
 
 interface PronunciationPlayerProps {
   /**
-   * @schemaDescription Source lemma to look up in the generated pronunciation slice.
+   * @schemaDescription Ukrainian source lemma for on-device speech or an optional local clip.
    * @ukrainianText true
    */
   lemma: string;

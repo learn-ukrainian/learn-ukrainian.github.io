@@ -121,7 +121,7 @@ export default function PracticeFlashcard({
       >
         <div className="flashcard-inner">
           <div className="flashcard-front">
-            <span className="flashcard-word">{card.front}</span>
+            <span className="flashcard-word" lang={card.pronunciationLemma ? "uk" : undefined}>{card.front}</span>
             {card.subtitle && !card.pronunciationLemma && <span className="flashcard-subtitle">{card.subtitle}</span>}
             {card.tag && (
               <span
