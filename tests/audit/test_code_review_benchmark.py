@@ -378,3 +378,18 @@ def test_raw_response_persistence(tmp_path: Path) -> None:
     assert judgment["raw_response"] == raw_response[:8000]
     assert judgment["raw_response_truncated"] is True
     assert judgment["raw_response_chars"] == len(raw_response)
+
+
+def test_native_codex_rejects_old_model_before_subprocess(monkeypatch):
+    def forbidden(*args, **kwargs):
+        pytest.fail("unapproved Codex model reached subprocess")
+    monkeypatch.setattr(bench, "run_subprocess", forbidden)
+    cell = bench.Cell("openai", "gpt-5.5", "native_cli", "medium", "with_mcp")
+    with pytest.raises(ValueError, match="only gpt-6-astra"):
+        bench.run_native_cli(cell, "prompt")
+
+
+def test_native_codex_accepts_approved_model():
+    cell = bench.Cell("openai", "gpt-6-astra", "native_cli", "medium", "with_mcp")
+    command = bench.build_native_command(cell, "prompt")
+    assert command[command.index("--model") + 1] == "gpt-6-astra"

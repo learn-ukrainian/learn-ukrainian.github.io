@@ -143,8 +143,10 @@ def ask_codex(
     )
     from_llm = _resolve_codex_from_llm(from_llm)
     effective_model = resolve_model_selection(
-        lane="ask-codex", to_model=to_model, model=None, default="gpt-5.6-terra"
+        lane="ask-codex", to_model=to_model, model=None, default="gpt-6-astra"
     )
+    if effective_model != "gpt-6-astra":
+        raise ValueError("ask-codex: only gpt-6-astra is approved")
     msg_id = send_message(
         content,
         task_id,
@@ -238,7 +240,7 @@ def has_codex_headroom(model: str | None = None) -> tuple[bool, str]:
     """Return whether Codex has quota headroom for a new bridge call."""
     from agent_runtime.usage import has_headroom
 
-    effective_model = model or "gpt-5.6-terra"
+    effective_model = model or "gpt-6-astra"
     return has_headroom("codex", effective_model)
 
 
@@ -300,6 +302,9 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
     timeout_val = _resolve_codex_bridge_timeout(no_timeout)
     model = _extract_target_model(msg)
     effort = _extract_effort(msg)
+    if model is not None and model != "gpt-6-astra":
+        _handle_codex_error(msg, message_id, f"Codex model {model!r} rejected; only gpt-6-astra is approved")
+        return
     has_room, reason = has_codex_headroom(model)
     if not has_room:
         _handle_codex_rate_limited(msg, message_id, reason)
@@ -390,6 +395,9 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
     except ReviewWorktreeError as exc:
         _handle_codex_error(msg, message_id, f"Codex review checkout failed: {exc}")
         return
+    except ValueError as exc:
+        _handle_codex_error(msg, message_id, f"Codex invocation rejected: {exc}")
+        return
 
     if not result.ok:
         _handle_codex_error(
@@ -412,7 +420,7 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
     effort_applied, effort_reason = _reported_codex_effort(result)
     provenance_data, actual_model = response_provenance(
         msg,
-        actual_model=getattr(result, "model", None) or model or "gpt-5.6-terra",
+        actual_model=getattr(result, "model", None) or model or "gpt-6-astra",
         harness="codex",
         effort_applied=effort_applied,
         effort_reason=effort_reason,

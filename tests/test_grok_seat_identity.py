@@ -115,7 +115,7 @@ def test_codex_print_config_sha_unchanged_by_grok_seat_rename(capsys):
     assert config["family"] == "codex"
     assert (
         config["config_sha256"]
-        == "18a92b5adec75a0ea8dd72c192b7b6663dc611377d13047c569d4d68c5a66a62"
+        == "bf3cf90b670ce6411a84aa9a2875ae64562f75dfac7803dfbf007d9d1708d588"
     )
 
 

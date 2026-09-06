@@ -6,6 +6,7 @@ import sys
 from dataclasses import replace
 from pathlib import Path
 
+import pytest
 import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -20,12 +21,12 @@ from scripts.review.reviewer_resolver import (
     GROK_4_6,
     GROK_4_6_CURSOR_FALLBACK,
     KIMI_K3,
+    OPENAI_FRONTIER,
     POOL,
     QWEN,
     REVIEW_CANDIDATES,
     REVIEW_LADDERS,
     SONNET_5,
-    TERRA,
     UNKNOWN_AUTHOR_FAMILY,
     ResolverInputs,
     evaluate_candidate,
@@ -33,6 +34,20 @@ from scripts.review.reviewer_resolver import (
     resolve_family,
     resolve_reviewer,
 )
+
+# Synthetic same-tier OpenAI candidate for ranking tests, never a fleet route.
+PRACTICAL_ASTRA = replace(
+    OPENAI_FRONTIER,
+    name="synthetic-practical-astra",
+    quality_tier="frontier_practical",
+    model_roles=frozenset({"implementation", "investigation", "standard_review"}),
+)
+
+
+@pytest.fixture
+def practical_astra(monkeypatch):
+    monkeypatch.setitem(REVIEW_CANDIDATES, PRACTICAL_ASTRA.name, PRACTICAL_ASTRA)
+    return PRACTICAL_ASTRA
 
 
 def test_family_resolution_across_model_and_harness_aliases():
@@ -309,9 +324,9 @@ def test_unhealthy_route_is_unavailable_and_falls_to_the_next_quality_tier():
             routing_snapshot={"codex": "unhealthy", "cursor": "healthy"},
         )
     )
-    # Practical ladder: Terra dark → Sonnet 5 (Claude healthy by default).
+    # Practical ladder: Astra dark → Sonnet 5 (Claude healthy by default).
     assert resolution.selected.name == "claude-sonnet-5"
-    terra = next(entry for entry in resolution.trace if entry.name == "gpt-5.6-terra")
+    terra = next(entry for entry in resolution.trace if entry.name == "openai_frontier")
     assert terra.status == "excluded"
     assert "unhealthy" in terra.reason
 
@@ -399,7 +414,7 @@ def test_near_cap_receives_no_new_automatic_assignment_and_uses_eligible_fallbac
     )
     assert resolution.selected is not None
     assert resolution.selected.name == "grok-4.6"
-    terra = next(item for item in resolution.trace if item.name == "gpt-5.6-terra")
+    terra = next(item for item in resolution.trace if item.name == "openai_frontier")
     assert terra.status == "excluded"
     assert "automatic assignments are prohibited" in terra.reason
 
@@ -604,11 +619,11 @@ def test_custom_ladder_still_supported_for_focused_callers():
     assert resolution.trace[0].status == "excluded"
 
 
-def test_same_tier_balancing_is_stable_and_yaml_order_independent():
+def test_same_tier_balancing_is_stable_and_yaml_order_independent(practical_astra):
     sonnet = REVIEW_CANDIDATES["claude-sonnet-5"]
     inputs = ResolverInputs(author_model="gemini", exact_head="a" * 40)
-    forward = resolve_reviewer(inputs, ladder=((TERRA, sonnet),))
-    reverse = resolve_reviewer(inputs, ladder=((sonnet, TERRA),))
+    forward = resolve_reviewer(inputs, ladder=((PRACTICAL_ASTRA, sonnet),))
+    reverse = resolve_reviewer(inputs, ladder=((sonnet, PRACTICAL_ASTRA),))
 
     assert forward.selected is not None
     assert forward.selected.name == reverse.selected.name
@@ -616,9 +631,9 @@ def test_same_tier_balancing_is_stable_and_yaml_order_independent():
     assert forward.selected.selection_score is not None
 
 
-def test_load_capacity_headroom_and_freshness_balance_only_within_best_tier():
+def test_load_capacity_headroom_and_freshness_balance_only_within_best_tier(practical_astra):
     sonnet = REVIEW_CANDIDATES["claude-sonnet-5"]
-    ladder = ((TERRA, sonnet),)
+    ladder = ((PRACTICAL_ASTRA, sonnet),)
     inputs = ResolverInputs(author_model="gemini", exact_head="b" * 40, requested_role="implementation")
     capacity_weighted = {
         "agents": {
@@ -626,9 +641,9 @@ def test_load_capacity_headroom_and_freshness_balance_only_within_best_tier():
             "claude": {"scheduler": {"completed_input_bytes": 600, "active_reserved_input_bytes": 0}},
         }
     }
-    weighted_terra = replace(TERRA, capacity_weight=2.0)
+    weighted_terra = replace(PRACTICAL_ASTRA, capacity_weight=2.0)
     weighted = resolve_reviewer(inputs, ladder=((weighted_terra, sonnet),), runtime_state=capacity_weighted)
-    assert weighted.selected.name == "gpt-5.6-terra"
+    assert weighted.selected.name == "synthetic-practical-astra"
 
     headroom = {
         "agents": {
@@ -739,11 +754,11 @@ def test_ineligible_kimi_k3_never_receives_automatic_review_load():
     assert assigned_bytes == {"grok": 20_000, "kimi": 0}
 
 
-def test_weaker_idle_or_cheaper_route_never_beats_the_best_suitable_quality_tier():
+def test_weaker_idle_or_cheaper_route_never_beats_the_best_suitable_quality_tier(practical_astra):
     weaker = REVIEW_CANDIDATES["pool-xs"]
     resolution = resolve_reviewer(
         ResolverInputs(author_model="gemini", formal_review=False, exact_head="e" * 40),
-        ladder=((TERRA,), (weaker,)),
+        ladder=((PRACTICAL_ASTRA,), (weaker,)),
         runtime_state={
             "agents": {
                 "codex": {
@@ -763,29 +778,29 @@ def test_weaker_idle_or_cheaper_route_never_beats_the_best_suitable_quality_tier
             }
         },
     )
-    assert resolution.selected.name == "gpt-5.6-terra"
+    assert resolution.selected.name == "synthetic-practical-astra"
     assert resolution.selected.quality_tier == "frontier_practical"
     weaker_trace = next(item for item in resolution.trace if item.name == "pool-xs")
     assert weaker_trace.status == "excluded"
     assert "suitability" in weaker_trace.reason
 
 
-def test_near_cap_falls_to_a_healthy_same_quality_suitable_candidate():
+def test_near_cap_falls_to_a_healthy_same_quality_suitable_candidate(practical_astra):
     sonnet = REVIEW_CANDIDATES["claude-sonnet-5"]
     resolution = resolve_reviewer(
         ResolverInputs(author_model="gemini", risk="high"),
-        ladder=((sonnet, TERRA),),
+        ladder=((sonnet, PRACTICAL_ASTRA),),
         runtime_state={"agents": {"claude": {"status": "near_cap"}, "codex": {"status": "healthy"}}},
     )
-    assert resolution.selected.name == "gpt-5.6-terra"
+    assert resolution.selected.name == "synthetic-practical-astra"
     sonnet_trace = next(item for item in resolution.trace if item.name == "claude-sonnet-5")
     assert sonnet_trace.status == "excluded"
     assert "near cap" in sonnet_trace.reason
 
 
-def test_circuit_and_shared_bucket_are_hard_exclusions_before_balancing():
+def test_circuit_and_shared_bucket_are_hard_exclusions_before_balancing(practical_astra):
     sonnet = REVIEW_CANDIDATES["claude-sonnet-5"]
-    ladder = ((TERRA, sonnet),)
+    ladder = ((PRACTICAL_ASTRA, sonnet),)
     inputs = ResolverInputs(author_model="gemini", exact_head="c" * 40)
     circuit = resolve_reviewer(
         inputs,
@@ -793,11 +808,11 @@ def test_circuit_and_shared_bucket_are_hard_exclusions_before_balancing():
         runtime_state={"agents": {"codex": {"scheduler": {"circuit_open": True}}}},
     )
     assert circuit.selected.name == "claude-sonnet-5"
-    assert "circuit is open" in next(item.reason for item in circuit.trace if item.name == "gpt-5.6-terra")
+    assert "circuit is open" in next(item.reason for item in circuit.trace if item.name == "synthetic-practical-astra")
 
     bucket = resolve_reviewer(inputs, ladder=ladder, excluded_quota_buckets=frozenset({"codex"}))
     assert bucket.selected.name == "claude-sonnet-5"
-    assert "already reserved" in next(item.reason for item in bucket.trace if item.name == "gpt-5.6-terra")
+    assert "already reserved" in next(item.reason for item in bucket.trace if item.name == "synthetic-practical-astra")
 
     full_credential = resolve_reviewer(
         inputs,
@@ -806,14 +821,14 @@ def test_circuit_and_shared_bucket_are_hard_exclusions_before_balancing():
     )
     assert full_credential.selected.name == "claude-sonnet-5"
     assert "no unreserved concurrency slot" in next(
-        item.reason for item in full_credential.trace if item.name == "gpt-5.6-terra"
+        item.reason for item in full_credential.trace if item.name == "synthetic-practical-astra"
     )
 
 
-def test_explicit_pin_requires_reason_and_cannot_bypass_formal_transport_gate():
+def test_explicit_pin_requires_reason_and_cannot_bypass_formal_transport_gate(practical_astra):
     sonnet = REVIEW_CANDIDATES["claude-sonnet-5"]
     missing_reason = resolve_reviewer(
-        ResolverInputs(author_model="gemini", pinned_candidate=sonnet.name), ladder=((TERRA, sonnet),)
+        ResolverInputs(author_model="gemini", pinned_candidate=sonnet.name), ladder=((PRACTICAL_ASTRA, sonnet),)
     )
     assert missing_reason.selected is None
     assert "pressure_override_reason" in missing_reason.fail_closed_reason
@@ -959,26 +974,25 @@ def test_critical_ladder_keeps_authority_before_practical():
         "openai_frontier",
         "claude-fable-5",
         "claude-fable-5-cursor-fallback",
-        "gpt-5.6-terra",
+        "claude-sonnet-5",
     ]
 
 
 def test_practical_ladder_starts_with_astra_then_fallbacks():
     for risk in ("high", "medium", "low"):
         ladder = REVIEW_LADDERS[risk]
-        assert [rung[0].name for rung in ladder[:5]] == [
+        assert [rung[0].name for rung in ladder[:4]] == [
             "openai_frontier",
-            "gpt-5.6-terra",
             "claude-sonnet-5",
             "gemini-3.8-flash",
             "grok-4.6",
         ]
         assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
-        assert ladder[5][0].name == "grok-4.6-cursor-fallback"
+        assert ladder[4][0].name == "grok-4.6-cursor-fallback"
 
 
 def test_candidate_constants_preserve_expected_identity():
-    assert TERRA.concrete_model == "gpt-5.6-terra"
+    assert OPENAI_FRONTIER.concrete_model == "gpt-6-astra"
     assert KIMI_K3.concrete_model == "kimi-code/k3"
     assert KIMI_K3.transport == "native_kimi"
     assert POOL.concrete_model == "poolside/laguna-s-2.1"
@@ -1007,7 +1021,7 @@ def test_contradictory_snapshot_surfaces_degraded_telemetry_reason():
             },
         )
     )
-    codex_entry = next(entry for entry in resolution.trace if entry.name == "gpt-5.6-terra")
+    codex_entry = next(entry for entry in resolution.trace if entry.name == "openai_frontier")
     assert codex_entry.status == "excluded"
     assert "degraded_telemetry" in codex_entry.reason
     assert "healthy=true, status=unavailable" in codex_entry.reason
@@ -1037,3 +1051,10 @@ def test_astra_authors_never_receive_openai_cross_family_review():
         for entry in resolution.trace:
             if REVIEW_CANDIDATES[entry.name].family == "openai":
                 assert entry.status == ("advisory_only" if entry.name == "openai_frontier" else "excluded")
+
+
+def test_actual_catalog_resolver_imports_and_selects_approved_codex_model():
+    assert "gpt-5.6-terra" not in REVIEW_CANDIDATES
+    result = resolve_reviewer(ResolverInputs(author_model="claude", risk="medium"))
+    assert result.selected is not None
+    assert result.selected.concrete_model == "gpt-6-astra"

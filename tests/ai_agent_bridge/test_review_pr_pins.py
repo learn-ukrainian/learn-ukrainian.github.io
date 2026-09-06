@@ -53,7 +53,6 @@ def test_formal_cross_family_pins_match_enabled_acp_routes():
         ("claude", "claude-fable-5", "claude-fable-5"),
         ("claude", "claude-opus-5", "claude-opus-5"),
         ("claude", "claude-opus-4-8", "claude-opus-4-8"),
-        ("codex", "gpt-5.6-terra", "gpt-5.6-terra"),
         ("codex", "gpt-6-astra", "openai_frontier"),
         ("glm", "glm-5.3", "glm-5.3"),
         ("grok", "grok-4.6", "grok-4.6"),
@@ -87,6 +86,8 @@ def test_model_only_pin_ignores_non_formal_fallback_with_same_model():
 
 
 def test_explicit_model_refuses_wrong_route_and_ineligible_endpoint():
+    with pytest.raises(ReviewSafetyError, match="model_not_formal_review_eligible"):
+        resolve_requested_review_candidate("codex", "gpt-5.6-terra", REVIEW_CANDIDATES)
     with pytest.raises(ReviewSafetyError, match="model_not_formal_review_eligible"):
         resolve_requested_review_candidate("claude", "gpt-5.6-sol", REVIEW_CANDIDATES)
     with pytest.raises(ReviewSafetyError, match="reviewer_not_formal_review_eligible"):

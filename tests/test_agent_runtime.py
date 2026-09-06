@@ -426,7 +426,7 @@ def test_codex_entry_has_bridge_only_resume_policy():
 def test_codex_desktop_entry_is_human_invoked():
     entry = get_agent_entry("codex-desktop")
     assert entry["adapter"] == "scripts.agent_runtime.adapters.codex:CodexAdapter"
-    assert entry["default_model"] == "gpt-5.6-terra"
+    assert entry["default_model"] == "gpt-6-astra"
     assert entry["cost_tier"] == "high"
     assert entry["cli_available"] is False
     assert entry["resume_policy"] == "never"
@@ -720,7 +720,7 @@ def test_codex_adapter_build_invocation_workspace_write(tmp_path):
         prompt="hello",
         mode="workspace-write",
         cwd=tmp_path,
-        model="gpt-5.5-mini",
+        model="gpt-6-astra",
         task_id=None,
         session_id=None,
         tool_config=None,
@@ -729,7 +729,7 @@ def test_codex_adapter_build_invocation_workspace_write(tmp_path):
     assert "--enable" in plan.cmd
     assert "multi_agent" in plan.cmd
     assert "--full-auto" not in plan.cmd  # legacy flag must not regress
-    assert "gpt-5.5-mini" in plan.cmd  # model override honored
+    assert "gpt-6-astra" in plan.cmd  # approved explicit model honored
 
 
 def test_codex_adapter_mcp_tool_config(tmp_path):

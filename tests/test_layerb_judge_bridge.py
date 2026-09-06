@@ -10,7 +10,7 @@ import pytest
 
 from scripts.audit import layerb_collect_emissions, layerb_judge_bridge, layerb_qualify, layerb_shadow
 
-PINNED_CODEX_MODEL = "gpt-5.6-terra"
+PINNED_CODEX_MODEL = "gpt-6-astra"
 PINNED_GROK_MODEL = "grok-4.6"
 
 
@@ -1414,7 +1414,7 @@ def test_gemini_family_is_unqualified_and_never_invokes_a_metered_transport(monk
     assert _relation(response)["relation"] == "ABSTAIN"
 
 
-def test_codex_print_config_sha_is_unchanged_by_grok_model_rotation(
+def test_codex_print_config_astra_golden(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     assert layerb_judge_bridge.main(["--print-config"]) == 0
@@ -1430,7 +1430,7 @@ def test_codex_print_config_sha_is_unchanged_by_grok_model_rotation(
     assert config["seat_transport"]["argv_sha256"]
     assert config["seat_transport"]["tokens"] is None
     assert config["tool_access"]["mcp"] is False
-    assert config["config_sha256"] == "18a92b5adec75a0ea8dd72c192b7b6663dc611377d13047c569d4d68c5a66a62"
+    assert config["config_sha256"] == "bf3cf90b670ce6411a84aa9a2875ae64562f75dfac7803dfbf007d9d1708d588"
 
 
 def test_grok_print_config_golden(capsys: pytest.CaptureFixture[str]) -> None:
@@ -1502,3 +1502,28 @@ def test_codex_trace_keys_normalization(monkeypatch: pytest.MonkeyPatch) -> None
         response = layerb_judge_bridge.run_bridge(_request(), _config())
         assert _relation(response)["relation"] == "ABSTAIN", f"Failed to reject wrong model with key: {key}"
         assert response.get("_bridge_conservative_reason") == "model_pin", f"Failed to reject wrong model with key: {key}"
+
+
+def test_codex_config_rejects_old_model_or_version_before_preparation(monkeypatch):
+    def forbidden(*args, **kwargs):
+        raise AssertionError("unauthorized model reached preparation")
+
+    monkeypatch.setattr(layerb_judge_bridge.tempfile, "TemporaryDirectory", forbidden)
+    monkeypatch.setattr(layerb_judge_bridge.subprocess, "run", forbidden)
+    for model, version in (("gpt-5.6-terra", "gpt-5.6-terra"), ("gpt-6-astra", "gpt-5.6-terra")):
+        with pytest.raises(layerb_judge_bridge.BridgeInputError, match="must use gpt-6-astra"):
+            layerb_judge_bridge.BridgeConfig(
+                family="codex", model=model, model_version=version, timeout_seconds=90,
+            )
+        with pytest.raises(layerb_judge_bridge.BridgeInputError):
+            layerb_judge_bridge._config_from_args(layerb_judge_bridge.parse_args([
+                "--judge-model", model, "--judge-model-version", version,
+            ]))
+
+
+def test_astra_config_has_new_model_bound_qualification_identity():
+    config = layerb_judge_bridge._config_from_args(layerb_judge_bridge.parse_args([])).to_dict()
+    assert config["model"] == config["model_version"] == "gpt-6-astra"
+    assert config["config_sha256"] != "18a92b5adec75a0ea8dd72c192b7b6663dc611377d13047c569d4d68c5a66a62"
+    material = {key: value for key, value in config.items() if key != "config_sha256"}
+    assert config["config_sha256"] == layerb_judge_bridge._sha256_json(material)

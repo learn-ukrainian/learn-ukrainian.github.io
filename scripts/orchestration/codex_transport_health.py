@@ -30,7 +30,7 @@ RESERVED_SCHEMA_FAILURE = "reserved_collaboration_schema"
 EXPECTED_TOOL_NAMESPACE = "agents"
 DEFAULT_TTL_SECONDS = 900
 DEFAULT_TIMEOUT_SECONDS = 120
-DEFAULT_MODEL = "gpt-5.6-terra"
+DEFAULT_MODEL = "gpt-6-astra"
 DEFAULT_EFFORT = "low"
 
 SOURCE_REPO_ROOT = Path(__file__).resolve().parents[2]

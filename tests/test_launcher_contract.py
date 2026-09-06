@@ -134,7 +134,7 @@ def test_dry_run_does_not_require_a_provider_binary(tmp_path: Path) -> None:
 
 
 def test_codex_driver_preserves_transport_probe_and_lease_guard() -> None:
-    sustained = run_launcher("start-codex-driver.sh", "--epic", "devops", "--model", "gpt-5.6-sol")
+    sustained = run_launcher("start-codex-driver.sh", "--epic", "devops", "--model", "gpt-6-astra")
     assert sustained.returncode == 0, sustained.stderr
     assert "would probe" in sustained.stdout
     assert sustained.stdout.index("would claim lease") < sustained.stdout.index("would mint and bootstrap")
@@ -152,10 +152,10 @@ def test_codex_driver_preserves_transport_probe_and_lease_guard() -> None:
     [
         ("start-codex.sh", [], "gpt-6-astra", "low"),
         ("start-codex-driver.sh", ["--epic", "devops"], "gpt-6-astra", "high"),
-        ("start-codex.sh", ["--model", "gpt-5.6-luna", "--effort", "max"], "gpt-5.6-luna", "max"),
+        ("start-codex.sh", ["--model", "gpt-6-astra", "--effort", "max"], "gpt-6-astra", "max"),
     ],
 )
-def test_codex_launchers_pin_roles_and_preserve_explicit_scout(launcher, args, model, effort):
+def test_codex_launchers_pin_roles_and_preserve_explicit_effort(launcher, args, model, effort):
     result = run_launcher(launcher, *args)
     assert result.returncode == 0, result.stderr
     assert f"--model {model}" in result.stdout

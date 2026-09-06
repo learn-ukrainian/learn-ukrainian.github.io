@@ -185,9 +185,12 @@ class CodexAdapter:
 
         ``effort``: appended as ``-c model_reasoning_effort=<level>`` so it
         overrides ``~/.codex/config.toml`` for this invocation only. When
-        None, the lane default ``max`` is applied (operator 2026-08-13).
+        None, the lane default ``low`` is applied.
         See #1396.
         """
+        if model is not None and model != self.default_model:
+            raise ValueError(f"CodexAdapter: model={model!r} rejected; only {self.default_model!r} is approved")
+
         tc_early = tool_config or {}
         review_write_root: Path | None = None
         if tc_early.get("review_isolation"):

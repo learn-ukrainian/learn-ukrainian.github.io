@@ -302,7 +302,7 @@ def test_composer_is_conservatively_moonshot_for_independence():
 def test_gpt_and_grok_primary_formal_routes_are_native():
     candidates = load_model_catalog()["review_candidates"]
     assert candidates["openai_frontier"]["transport"] == "native_codex"
-    assert candidates["gpt-5.6-terra"]["transport"] == "native_codex"
+    assert "gpt-5.6-terra" not in candidates
     assert candidates["grok-4.6"]["transport"] == "native_grok"
     # Explicit Cursor pin when native grok is dark — never Cursor auto.
     assert candidates["grok-4.6-cursor-fallback"]["transport"] == "cursor"
@@ -400,7 +400,7 @@ def test_practical_ladders_exclude_advisory_roles():
         assert "openai_frontier" in names
         assert "claude-fable-5" not in names
         assert "claude-opus-4-8" not in names
-        assert "gpt-5.6-terra" in names
+        assert "gpt-5.6-terra" not in names
         assert "claude-sonnet-5" in names
         assert "pool" in names
         assert "grok-4.6-cursor-fallback" in names
@@ -659,8 +659,8 @@ def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
     ]
 
     preferred = route["preferred_worker"]
-    assert preferred["model_id"] == "gpt-5.6-luna"
-    assert preferred["effort"] == "max"
+    assert preferred["model_id"] == "gpt-6-astra"
+    assert preferred["effort"] == "low"
     assert {
         "bounded_implementation",
         "bounded_investigation",
@@ -683,8 +683,8 @@ def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
 
     direct = route["direct_worker"]
     assert direct == {
-        "model_id": "gpt-5.6-luna",
-        "effort": "max",
+        "model_id": "gpt-6-astra",
+        "effort": "low",
         "task_types": [
             "bounded_implementation",
             "bounded_investigation",
@@ -801,3 +801,21 @@ def test_astra_role_pins_match_runtime_and_reviewer_invocation():
     assert catalog["orchestrator_seats"]["codex"]["escalate_effort"] == "high"
     for risk in ("low", "medium", "high"):
         assert catalog["review_ladders"][risk][0] == ["openai_frontier"]
+
+
+def test_active_codex_routes_are_gpt6_only():
+    catalog = load_model_catalog()
+    assert catalog["review_scheduler"]["endpoints"]["codex"]["models"] == ["gpt-6-astra"]
+    for model_id, model in catalog["models"].items():
+        if "native_codex" in model["transports"] and model["lifecycle"] == "active":
+            assert model_id == "gpt-6-astra"
+    for candidate in catalog["review_candidates"].values():
+        if candidate["route"] == "codex":
+            assert candidate["model_id"] == "gpt-6-astra"
+
+
+def test_gpt5_cursor_routes_remain_available():
+    models = load_model_catalog()["models"]
+    for model_id in ("gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna"):
+        assert models[model_id]["lifecycle"] == "active"
+        assert models[model_id]["transports"] == ["cursor"]

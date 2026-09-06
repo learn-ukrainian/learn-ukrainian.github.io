@@ -158,12 +158,14 @@ def test_ordinary_codex_start_is_concise_and_compact_session_start_is_silent(
         {
             "CLAUDE_PROJECT_DIR": os.fspath(PRIMARY_ROOT),
             "CODEX_CANONICAL_REPO_ROOT": os.fspath(PRIMARY_ROOT),
+            "CLAUDE_PROFILE_RESOLVER_SH": os.fspath(REPO_ROOT / "scripts/lib/profile_resolver.sh"),
+            "CLAUDE_PROFILE_RESOLVER_PY": os.fspath(REPO_ROOT / "scripts/lib/context_profiles.py"),
             "HOME": os.fspath(tmp_path / "home"),
         }
     )
     started = subprocess.run(
         ["bash", os.fspath(session_hook)],
-        input=json.dumps({"source": "startup", "model": "gpt-5.6-sol"}),
+        input=json.dumps({"source": "startup", "model": "gpt-6-astra"}),
         text=True,
         capture_output=True,
         check=False,
@@ -182,7 +184,7 @@ def test_ordinary_codex_start_is_concise_and_compact_session_start_is_silent(
 
     compacted = subprocess.run(
         ["bash", os.fspath(compact_hook)],
-        input=json.dumps({"source": "compact", "model": "gpt-5.6-sol"}),
+        input=json.dumps({"source": "compact", "model": "gpt-6-astra"}),
         text=True,
         capture_output=True,
         check=False,
@@ -208,7 +210,7 @@ def test_explicit_non_driver_codex_compact_session_start_is_silent(tmp_path: Pat
 
     completed = subprocess.run(
         ["bash", os.fspath(compact_hook)],
-        input=json.dumps({"source": "compact", "model": "gpt-5.6-sol"}),
+        input=json.dumps({"source": "compact", "model": "gpt-6-astra"}),
         text=True,
         capture_output=True,
         check=False,
@@ -257,7 +259,7 @@ def test_bound_codex_driver_hydrates_exact_stream_and_points_to_shadow_diary(
 
     compacted = subprocess.run(
         ["bash", os.fspath(compact_hook)],
-        input=json.dumps({"source": "compact", "model": "gpt-5.6-sol"}),
+        input=json.dumps({"source": "compact", "model": "gpt-6-astra"}),
         text=True,
         capture_output=True,
         check=False,
@@ -311,7 +313,7 @@ def test_bound_codex_driver_without_exact_diary_is_blocked_without_fallback(
 
     completed = subprocess.run(
         ["bash", os.fspath(compact_hook)],
-        input=json.dumps({"source": "compact", "model": "gpt-5.6-sol"}),
+        input=json.dumps({"source": "compact", "model": "gpt-6-astra"}),
         text=True,
         capture_output=True,
         check=False,

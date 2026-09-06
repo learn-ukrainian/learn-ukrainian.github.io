@@ -29,6 +29,7 @@ from scripts.ai_agent_bridge._codex import (
     _codex_bridge_runtime_mode,
     _reported_codex_effort,
     _resolve_codex_bridge_timeout,
+    ask_codex,
     ask_codex_chain,
     process_for_codex,
 )
@@ -281,7 +282,7 @@ def test_codex_bridge_runtime_mode_invalid_mode_falls_back_read_only():
         "to": "codex",
         "type": "query",
         "content": "bridge content",
-        "data": json.dumps({"to_model": "gpt-5.4"}),
+        "data": json.dumps({"to_model": "gpt-6-astra"}),
         "timestamp": "2026-04-10T12:00:00Z",
     },
 )
@@ -298,7 +299,7 @@ def test_process_for_codex_invokes_runtime_with_bridge_shape(
     mock_invoke.return_value = Result(
         ok=True,
         agent="codex",
-        model="gpt-5.4",
+        model="gpt-6-astra",
         mode="read-only",
         response="Codex response",
         stderr_excerpt=None,
@@ -318,7 +319,7 @@ def test_process_for_codex_invokes_runtime_with_bridge_shape(
     mock_build_prompt.assert_called_once()
     kwargs = mock_invoke.call_args.kwargs
     assert kwargs["mode"] == "read-only"
-    assert kwargs["model"] == "gpt-5.4"
+    assert kwargs["model"] == "gpt-6-astra"
     assert kwargs["entrypoint"] == "bridge"
     assert kwargs["tool_config"] is None
     assert kwargs["session_id"] == "session-existing"
@@ -331,13 +332,13 @@ def test_process_for_codex_invokes_runtime_with_bridge_shape(
     assert send_kwargs["msg_type"] == "response"
     assert send_kwargs["from_llm"] == "codex"
     assert send_kwargs["to_llm"] == "gemini"
-    assert send_kwargs["from_model"] == "gpt-5.4"
+    assert send_kwargs["from_model"] == "gpt-6-astra"
     provenance = json.loads(send_kwargs["data"])
     assert provenance["effort_requested"] is None
     assert provenance["effort_applied"] is None
     assert provenance["effort_reason"] == "Codex runtime did not report the applied effort"
-    assert provenance["from_model"] == "gpt-5.4"
-    assert provenance["model_requested"] == "gpt-5.4"
+    assert provenance["from_model"] == "gpt-6-astra"
+    assert provenance["model_requested"] == "gpt-6-astra"
     assert provenance["harness"] == "codex"
     assert mock_send_message.call_count == 1
     mock_acknowledge.assert_called_once_with(7)
@@ -374,7 +375,7 @@ def test_process_for_codex_new_session_starts_cold_even_when_session_exists(
     mock_invoke.return_value = Result(
         ok=True,
         agent="codex",
-        model="gpt-5.4",
+        model="gpt-6-astra",
         mode="workspace-write",
         response="Codex response",
         stderr_excerpt=None,
@@ -411,10 +412,10 @@ def test_process_for_codex_new_session_starts_cold_even_when_session_exists(
     assert send_kwargs["msg_type"] == "response"
     assert send_kwargs["from_llm"] == "codex"
     assert send_kwargs["to_llm"] == "gemini"
-    assert send_kwargs["from_model"] == "gpt-5.4"
+    assert send_kwargs["from_model"] == "gpt-6-astra"
     provenance = json.loads(send_kwargs["data"])
-    assert provenance["from_model"] == "gpt-5.4"
-    assert provenance["model_requested"] == "gpt-5.4"
+    assert provenance["from_model"] == "gpt-6-astra"
+    assert provenance["model_requested"] == "gpt-6-astra"
     assert provenance["harness"] == "codex"
     assert mock_send_message.call_count == 1
     mock_acknowledge.assert_called_once_with(8)
@@ -435,7 +436,7 @@ def test_process_for_codex_cold_starts_without_stored_session(monkeypatch):
     result = Result(
         ok=True,
         agent="codex",
-        model="gpt-5.6-terra",
+        model="gpt-6-astra",
         mode="read-only",
         response="Codex response",
         stderr_excerpt=None,
@@ -661,7 +662,7 @@ def test_codex_branch_review_invokes_from_provisioned_checkout(monkeypatch, tmp_
             or Result(
                 ok=True,
                 agent="codex",
-                model="gpt-5.6-terra",
+                model="gpt-6-astra",
                 mode="read-only",
                 response="reply",
                 stderr_excerpt=None,
@@ -744,7 +745,7 @@ def test_rate_limit_error_defers_message(bridge_db):
         ),
         patch(
             "agent_runtime.runner.invoke",
-            side_effect=RateLimitedError("codex", "gpt-5.4", "quota exceeded"),
+            side_effect=RateLimitedError("codex", "gpt-6-astra", "quota exceeded"),
         ),
     ):
         process_for_codex(message_id)
@@ -861,3 +862,37 @@ def test_codex_usage_cli_reports_counts(capsys, tmp_path):
     assert "Total calls: 3" in out
     assert re.search(r"ok\s+2", out)
     assert re.search(r"rate_limited\s+1", out)
+
+
+def test_legacy_callable_defaults_to_astra_before_message_creation():
+    with (
+        patch("scripts.ai_agent_bridge._codex.send_message", return_value=91) as send,
+        patch("scripts.ai_agent_bridge._codex.register_ask"),
+        patch("scripts.ai_agent_bridge._codex.process_for_codex") as invoke,
+    ):
+        assert ask_codex("bounded fixture", from_llm="claude") == 91
+    assert send.call_args.kwargs["to_model"] == "gpt-6-astra"
+    invoke.assert_called_once_with(91, False, False, review=False)
+
+
+@pytest.mark.parametrize("model", ["gpt-5.6-terra", "gpt-5.5"])
+def test_legacy_callable_rejects_old_model_before_message_creation(model):
+    with patch("scripts.ai_agent_bridge._codex.send_message") as send:
+        with pytest.raises(ValueError, match="only gpt-6-astra"):
+            ask_codex("bounded fixture", from_llm="claude", to_model=model)
+    send.assert_not_called()
+
+
+def test_stale_queued_model_returns_error_before_headroom_or_invoke():
+    msg = {"id": 91, "task_id": None, "data": json.dumps({"to_model": "gpt-5.6-sol"})}
+    with (
+        patch("scripts.ai_agent_bridge._codex._fetch_codex_message", return_value=msg),
+        patch("scripts.ai_agent_bridge._codex._handle_codex_error") as error,
+        patch("scripts.ai_agent_bridge._codex.has_codex_headroom") as headroom,
+        patch("agent_runtime.runner.invoke") as invoke,
+    ):
+        process_for_codex(91)
+    error.assert_called_once()
+    assert "only gpt-6-astra" in error.call_args.args[2]
+    headroom.assert_not_called()
+    invoke.assert_not_called()

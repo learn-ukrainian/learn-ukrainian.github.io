@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Build or verify the immutable public UA evaluation release freeze."""
+"""Build or verify the immutable public UA evaluation release freeze.
+
+The historical runner artifact resolves to its byte-preserved evidence snapshot;
+the same-named active runner has a separate execution contract and is not
+certified by this historical release verification.
+"""
 
 from __future__ import annotations
 
@@ -46,6 +51,7 @@ DISPOSITION_BUILDER = Path("scripts/projects/ua_eval_harness/build_scoring_dispo
 VESUM_LOCK = Path("scripts/config/vesum_source.lock.json")
 VESUM_PARSER = Path("scripts/rag/vesum_reingest.py")
 RUNNER = Path("scripts/projects/ua_eval_harness/run_codex_baseline.py")
+HISTORICAL_RUNNER_SOURCE = Path("archive/evidence/ua-eval-v0.1.0/run_codex_baseline.py.txt")
 BASELINE_DIR = Path("data/projects/ua_eval_harness/baselines/v1")
 RESPONSE_FILES = (
     BASELINE_DIR / "identity.responses.jsonl",
@@ -137,8 +143,13 @@ def _read_jsonl(path: Path) -> list[dict[str, Any]]:
     return rows
 
 
+def _frozen_artifact_path(path: Path) -> Path:
+    """Resolve the one archived runner; all other artifact paths stay exact."""
+    return ROOT / (HISTORICAL_RUNNER_SOURCE if path == RUNNER else path)
+
+
 def _artifact(path: Path, role: str) -> dict[str, str]:
-    return {"path": path.as_posix(), "role": role, "sha256": _sha256(ROOT / path)}
+    return {"path": path.as_posix(), "role": role, "sha256": _sha256(_frozen_artifact_path(path))}
 
 
 def build_split_receipt(root: Path, config: Mapping[str, Any]) -> dict[str, Any]:
@@ -459,8 +470,10 @@ def validate_freeze(freeze: Mapping[str, Any]) -> None:
         role = str(artifact.get("role", ""))
         if path in actual or expected.get(path) != role:
             raise FreezeError(f"unexpected artifact receipt: {path}")
-        if artifact.get("sha256") != _sha256(ROOT / path):
-            raise FreezeError(f"frozen artifact hash mismatch: {path}")
+        artifact_source = _frozen_artifact_path(Path(path))
+        if artifact.get("sha256") != _sha256(artifact_source):
+            source_note = f" (historical source: {HISTORICAL_RUNNER_SOURCE})" if Path(path) == RUNNER else ""
+            raise FreezeError(f"frozen artifact hash mismatch: {path}{source_note}")
         actual[path] = role
     if actual != expected:
         raise FreezeError("frozen artifact paths do not match the v0.1.0 contract")
@@ -524,6 +537,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(
             f"UA evaluation freeze valid: {freeze['release']['id']} "
             f"v{freeze['release']['version']}, {len(freeze['artifacts'])} artifacts"
+        )
+        print(
+            "Historical source snapshots verified; active runner/verifier "
+            "replacements are not certified by this release."
         )
         return 0
     except FreezeError as exc:

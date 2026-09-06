@@ -1772,10 +1772,8 @@ class AcpxAdapter:
     """
 
     name: str = "acpx-codex-shadow"
-    # ACPX/codex-acp resolves its own default when --model is omitted; this
-    # is a telemetry label, not a value ever passed on argv (see
-    # build_invocation: --model is only emitted when the caller supplies one).
-    default_model: str = "codex-acp-default"
+    # Pin omitted requests too: the participant default is not routing policy.
+    default_model: str = "gpt-6-astra"
     supported_modes: frozenset[str] = frozenset({"read-only"})
 
     def build_invocation(
@@ -1820,6 +1818,10 @@ class AcpxAdapter:
         ``stdin_payload``, and are never published to fleet-comms, dispatch
         authority, or review evidence.
         """
+        if model is not None and model != self.default_model:
+            raise AcpxShadowRefusalError(
+                f"AcpxAdapter: model={model!r} rejected; only {self.default_model!r} is approved"
+            )
         if mode not in self.supported_modes:
             raise ValueError(
                 f"AcpxAdapter: unsupported mode {mode!r}; only 'read-only' is permitted for the ACPX shadow seat"
@@ -1859,8 +1861,7 @@ class AcpxAdapter:
             sealed_review_mcp_config=sealed_review_mcp_config,
             max_turns=max_turns,
         )
-        if model:
-            cmd.extend(["--model", model])
+        cmd.extend(["--model", model or self.default_model])
         if effort is not None:
             # ACPX has no reasoning-effort flag today. Per the AgentAdapter
             # protocol, adapters must warn and proceed rather than hard-fail

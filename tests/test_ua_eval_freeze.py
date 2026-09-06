@@ -127,3 +127,54 @@ def test_split_receipt_proves_disjoint_upstream_sets() -> None:
     tampered["test_document_ids"].sort()
     with pytest.raises(FreezeError, match="train/test overlap"):
         validate_split_receipt(tampered, heldout=heldout, config=config)
+
+
+def test_historical_runner_archive_tamper_fails_without_active_fallback(tmp_path, monkeypatch):
+    freeze = json.loads(DEFAULT_OUTPUT.read_text(encoding="utf-8"))
+    original = freeze_module.ROOT / freeze_module.HISTORICAL_RUNNER_SOURCE
+    tampered = tmp_path / "run_codex_baseline.py.txt"
+    tampered.write_bytes(original.read_bytes() + b"\n# corrupt archived evidence\n")
+    monkeypatch.setattr(freeze_module, "HISTORICAL_RUNNER_SOURCE", tampered)
+    with pytest.raises(FreezeError, match="historical source"):
+        validate_freeze(freeze)
+
+
+def test_historical_runner_resolution_does_not_certify_active_code():
+    assert freeze_module._frozen_artifact_path(freeze_module.RUNNER) == (
+        freeze_module.ROOT / freeze_module.HISTORICAL_RUNNER_SOURCE
+    )
+    assert freeze_module._frozen_artifact_path(freeze_module.EVALUATOR) == freeze_module.ROOT / freeze_module.EVALUATOR
+    assert freeze_module._sha256(freeze_module.ROOT / freeze_module.RUNNER) != freeze_module._sha256(
+        freeze_module.ROOT / freeze_module.HISTORICAL_RUNNER_SOURCE
+    )
+
+
+def test_active_codex_runner_still_rejects_historical_model_before_spawn(tmp_path, monkeypatch):
+    from scripts.projects.ua_eval_harness import run_codex_baseline as active
+    def forbidden(*args, **kwargs):
+        pytest.fail("historical model reached native execution")
+    monkeypatch.setattr(active.subprocess, "run", forbidden)
+    with pytest.raises(active.RunnerError, match="only gpt-6-astra"):
+        active._run_batch([], prompt_text="test", model="gpt-5.6-terra", codex_bin="codex",
+            schema_path=tmp_path / "schema.json", timeout=1)
+
+
+@pytest.mark.parametrize("logical", [
+    "scripts/projects/ua_eval_harness/run_codex_baseline.py",
+    "scripts/projects/ua_eval_harness/verify_release_freeze.py",
+    "scripts/projects/ua_eval_harness/verify_release_freeze_v011.py",
+])
+def test_v011_each_historical_source_tamper_fails(tmp_path, monkeypatch, logical):
+    from scripts.projects.ua_eval_harness import verify_release_freeze_v011 as v011
+    freeze = json.loads(v011.DEFAULT_OUTPUT.read_text())
+    logical_path = Path(logical)
+    archived = v011._frozen_artifact_path(logical_path)
+    tampered = tmp_path / archived.name
+    tampered.write_bytes(archived.read_bytes() + b"\n# tampered\n")
+    if logical_path == freeze_module.RUNNER:
+        monkeypatch.setattr(freeze_module, "HISTORICAL_RUNNER_SOURCE", tampered)
+    else:
+        monkeypatch.setitem(v011.HISTORICAL_VERIFIER_SOURCES, logical_path, tampered)
+    with pytest.raises(v011.FreezeError, match="frozen artifact hash mismatch") as failure:
+        v011.validate_freeze(freeze)
+    assert logical in str(failure.value)

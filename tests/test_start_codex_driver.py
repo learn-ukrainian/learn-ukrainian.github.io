@@ -14,6 +14,13 @@ import pytest
 from tests.test_launcher_contract import REPO, run_launcher
 
 
+@pytest.fixture(autouse=True)
+def _use_checkout_context_profile(monkeypatch):
+    # The launcher resolves the human checkout as canonical; exercise this
+    # checkout's profile contract without depending on its deployed version.
+    monkeypatch.setenv("CLAUDE_PROFILE_RESOLVER_PY", str(REPO / "scripts/lib/context_profiles.py"))
+
+
 def _would_exec_argv(result: subprocess.CompletedProcess[str]) -> list[str]:
     """Return the redacted, exact CLI argv emitted by a launcher dry run."""
     return shlex.split(result.stdout.split("would exec ", maxsplit=1)[1].strip())
@@ -103,7 +110,7 @@ def _run_runtime_governor(
 
 def test_sustained_driver_probes_then_claims_lease_then_binds_drive_epic() -> None:
     result = run_launcher(
-        "start-codex-driver.sh", "--epic", "devops", "--model", "gpt-5.6-sol"
+        "start-codex-driver.sh", "--epic", "devops", "--model", "gpt-6-astra"
     )
     assert result.returncode == 0, result.stderr
     assert "would probe" in result.stdout
@@ -167,7 +174,7 @@ def test_codex_driver_rejects_unknown_selector_in_default_and_governor_modes(
 
 def test_default_driver_forwards_epic_binding_and_extra_provider_flags() -> None:
     result = run_launcher(
-        "start-codex-driver.sh", "devops", "--model", "gpt-5.6-sol", "--verbose", "--foo=bar"
+        "start-codex-driver.sh", "devops", "--model", "gpt-6-astra", "--verbose", "--foo=bar"
     )
     assert result.returncode == 0, result.stderr
     assert "would claim lease" in result.stdout
@@ -204,7 +211,54 @@ def test_governor_execs_astra_after_healthy_transport_probe(tmp_path: Path) -> N
 
 def test_sustained_codex_driver_revalidates_certification() -> None:
     rejected = run_launcher("start-codex-driver.sh", "--epic", "devops", "--model", "gpt-unknown")
-    sol = run_launcher("start-codex-driver.sh", "--epic", "devops", "--model", "gpt-5.6-sol")
+    astra = run_launcher("start-codex-driver.sh", "--epic", "devops", "--model", "gpt-6-astra")
     assert rejected.returncode == 4
-    assert sol.returncode == 0, sol.stderr
-    assert "--model gpt-5.6-sol" in sol.stdout
+    assert astra.returncode == 0, astra.stderr
+    assert "--model gpt-6-astra" in astra.stdout
+
+
+def test_model_guard_rejects_old_codex_model_in_claude_code_harness():
+    result = subprocess.run(
+        ["bash", "-c", 'launcher_error() { echo "$*" >&2; }; source "$1"; LC_HARNESS=claude-code; LC_MODEL=gpt-5.6-sol; launcher_adapter_validate',
+         "test", str(REPO / "scripts/launchers/codex.sh")],
+        capture_output=True, text=True, check=False, timeout=30,
+    )
+    assert result.returncode == 2
+    assert "only gpt-6-astra is approved" in result.stderr
+
+
+@pytest.mark.parametrize("harness", ["codex", "claude-code"])
+@pytest.mark.parametrize("forwarded", [
+    ["--model", "gpt-5.5"], ["--model=gpt-5.5"],
+    ["-m", "gpt-5.5"], ["-mgpt-5.5"], ["-m=gpt-5.5"],
+])
+def test_forwarded_model_overrides_rejected_before_preflight(harness, forwarded):
+    result = run_launcher("start-codex.sh", "--harness", harness, "--", *forwarded)
+    assert result.returncode == 2
+    assert "Forwarded model overrides are forbidden" in result.stderr
+    assert "would exec" not in result.stdout
+    assert "would probe" not in result.stdout
+    assert "would require binary" not in result.stdout
+
+
+@pytest.mark.parametrize("harness", ["codex", "claude-code"])
+def test_non_model_passthrough_remains_available(harness):
+    result = run_launcher("start-codex.sh", "--harness", harness, "--", "--verbose", "inspect this")
+    assert result.returncode == 0, result.stderr
+    assert "--model gpt-6-astra" in result.stdout
+    assert "--verbose" in result.stdout
+
+
+@pytest.mark.parametrize("forwarded", [
+    ["--fallback-model", "claude-sonnet-5"],
+    ["--fallback-model=claude-sonnet-5"],
+    ["--agents", '{"reviewer":{"description":"Review","prompt":"Review","model":"sonnet"}}'],
+    ['--agents={"reviewer":{"description":"Review","prompt":"Review","model":"sonnet"}}'],
+])
+def test_claude_code_forwarded_agent_and_fallback_models_rejected_before_preflight(forwarded):
+    result = run_launcher("start-codex.sh", "--harness", "claude-code", "--", *forwarded)
+    assert result.returncode == 2
+    assert "Forwarded model overrides are forbidden" in result.stderr
+    assert "would exec" not in result.stdout
+    assert "would probe" not in result.stdout
+    assert "would require binary" not in result.stdout

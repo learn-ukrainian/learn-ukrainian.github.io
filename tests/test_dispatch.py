@@ -590,3 +590,17 @@ class TestDispatchAgent:
             "test", agent="llama", phase="write", orch_dir=tmp_path,
         )
         assert ok is False
+
+
+@patch.dict("os.environ", {}, clear=True)
+@patch("agent_runtime.runner.invoke")
+def test_codex_dispatch_omitted_model_uses_astra(mock_invoke, tmp_path):
+    from agent_runtime.result import Result
+    mock_invoke.return_value = Result(
+        ok=True, agent="codex", model="gpt-6-astra", mode="workspace-write",
+        response="OK", stderr_excerpt=None, duration_s=1.0, session_id=None,
+        rate_limited=False, stalled=False, returncode=0, usage_record={},
+    )
+    ok, _ = dispatch_agent("prompt", agent="codex-tools", phase="write", orch_dir=tmp_path, timeout=600)
+    assert ok
+    assert mock_invoke.call_args.kwargs["model"] == "gpt-6-astra"

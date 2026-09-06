@@ -915,17 +915,17 @@ def test_build_invocation_argv_is_fully_confined(tmp_path, monkeypatch):
     assert "--no-fs" in plan.cmd
     assert "--no-terminal" in plan.cmd
     assert "--json-strict" in plan.cmd
-    assert "--model" not in plan.cmd  # omitted entirely when caller passes none
+    assert ("--model", "gpt-6-astra") in pairs
 
 
-def test_build_invocation_passes_model_only_when_given(tmp_path, monkeypatch):
+def test_build_invocation_accepts_approved_explicit_model(tmp_path, monkeypatch):
     _shadow_env(monkeypatch)
     _stub_binary(monkeypatch, tmp_path)
     adapter = AcpxAdapter()
 
-    plan = _build(adapter, cwd=tmp_path, model="gpt-5.6-terra")
+    plan = _build(adapter, cwd=tmp_path, model="gpt-6-astra")
     pairs = list(zip(plan.cmd, plan.cmd[1:], strict=False))
-    assert ("--model", "gpt-5.6-terra") in pairs
+    assert ("--model", "gpt-6-astra") in pairs
 
 
 def test_build_invocation_ignores_unsupported_effort_without_raising(tmp_path, monkeypatch):
@@ -2967,3 +2967,12 @@ def test_probe_grok_cli_compatibility_checks_required_command_surface(monkeypatc
         "0.3.7",
         ("agent stdio",),
     )
+
+
+@pytest.mark.parametrize("model", ["gpt-5.6-terra", "gpt-5.5", "", "auto"])
+def test_codex_rejects_unapproved_model_before_binary_probe(tmp_path, monkeypatch, model):
+    def unexpected_probe(**kwargs):
+        pytest.fail("unapproved model reached binary probe")
+    monkeypatch.setattr(acpx_module, "_require_compatible_acpx_binary", unexpected_probe)
+    with pytest.raises(AcpxShadowRefusalError, match=r"model=.*rejected"):
+        _build(AcpxAdapter(), cwd=tmp_path, model=model)

@@ -4,6 +4,8 @@ import sys
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.result import Result
@@ -15,7 +17,7 @@ def _result(
     ok: bool,
     response: str = "",
     stderr_excerpt: str | None = None,
-    model: str = "gpt-5.5",
+    model: str = "gpt-6-astra",
 ) -> Result:
     return Result(
         ok=ok,
@@ -93,8 +95,27 @@ def test_respects_max_retries(tmp_path):
     ]
 
 
-def test_codex_model_ladder_contains_gpt_5_6_terra_and_gpt_5_5():
+def test_codex_model_ladder_is_gpt6_only():
     from ai_llm.codex_call import CODEX_MODEL_LADDER
 
-    assert CODEX_MODEL_LADDER[0] == "gpt-5.6-terra"
-    assert "gpt-5.5" in CODEX_MODEL_LADDER
+    assert CODEX_MODEL_LADDER == ("gpt-6-astra",)
+
+
+def test_retry_exhaustion_never_falls_back_to_gpt5(tmp_path):
+    with patch(
+        "ai_llm.agent_runtime_call.runner.invoke", return_value=_result(ok=False, stderr_excerpt="broken")
+    ) as invoke:
+        result = call_codex_with_fallback(
+            "prompt", task_name="test", cwd=tmp_path, max_retries=2, logger=lambda _: None, sleep_fn=lambda *_: None
+        )
+    assert result.error_message == "broken"
+    assert invoke.call_count == 2
+    assert {call.kwargs["model"] for call in invoke.call_args_list} == {"gpt-6-astra"}
+    assert {call.kwargs["effort"] for call in invoke.call_args_list} == {"low"}
+
+
+def test_unapproved_preference_never_calls_runner(tmp_path):
+    with patch("ai_llm.agent_runtime_call.runner.invoke") as invoke:
+        with pytest.raises(ValueError, match="rejected"):
+            call_codex_with_fallback("prompt", task_name="test", preferred_model="gpt-5.5", cwd=tmp_path)
+    invoke.assert_not_called()

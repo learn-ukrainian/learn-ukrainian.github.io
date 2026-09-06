@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import shlex
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -54,10 +55,10 @@ def test_production_registry_separates_sol_capacity_values() -> None:
     assert profiles["native_codex"] == {
         "profile_id": "native_codex",
         "transport": "native_codex",
-        "main_model_id": "gpt-5.6-sol",
-        "model_id_patterns": [r"^gpt-5\.6-sol$"],
+        "main_model_id": "gpt-6-astra",
+        "model_id_patterns": [r"^gpt-6-astra$"],
         "main_context_window_tokens": 272_000,
-        "auto_compact_capacity_tokens": 258_400,
+        "auto_compact_capacity_tokens": None,
         "cold_start_profile": "compact",
         "cold_start_budget_tokens": 27_200,
         "rollover_warning_percentages": [75.0, 85.0, 92.0],
@@ -112,8 +113,8 @@ def test_production_registry_separates_sol_capacity_values() -> None:
     }
 
 
-def test_native_codex_profile_accepts_sol_and_rejects_other_models() -> None:
-    trusted = resolve_profile("native_codex", "gpt-5.6-sol")
+def test_native_codex_profile_accepts_astra_and_rejects_other_models() -> None:
+    trusted = resolve_profile("native_codex", "gpt-6-astra")
     mismatch = resolve_profile("native_codex", "gpt-5.6-terra")
 
     assert trusted["profile_id"] == "native_codex"
@@ -210,7 +211,7 @@ def test_registry_rejects_emergency_warning_after_auto_compaction(
 def test_env0_output_is_exact_allow_list() -> None:
     result = subprocess.run(
         [
-            os.fspath(PROJECT_ROOT / ".venv" / "bin" / "python"),
+            sys.executable,
             os.fspath(RESOLVER),
             "--profile",
             "sol_lead",
@@ -239,6 +240,7 @@ def test_shell_resolver_exports_only_project_private_fields() -> None:
     command = f"""
         set -euo pipefail
         PROJECT_DIR={shlex.quote(os.fspath(PROJECT_ROOT))}
+        CLAUDE_PROFILE_RESOLVER_PYTHON={shlex.quote(sys.executable)}
         env | LC_ALL=C sort
         printf '%s\n' '__AFTER_PROFILE_RESOLUTION__'
         source {shlex.quote(os.fspath(SHELL_RESOLVER))}

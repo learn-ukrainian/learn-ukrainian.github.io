@@ -13,7 +13,7 @@ CLI:
     # Fire a task. Returns immediately with the task-id.
     # Write-capable modes (workspace-write / danger) require a dispatch worktree.
     delegate.py dispatch --agent codex --task-id my-task \
-        --prompt "do the thing" [--mode workspace-write --worktree] [--model gpt-5.6-terra]
+        --prompt "do the thing" [--mode workspace-write --worktree] [--model gpt-6-astra]
         [--allow-merge] [--force-new]
 
     # Check status without blocking.
@@ -7516,7 +7516,7 @@ def build_parser() -> argparse.ArgumentParser:
         "pointing at an existing added worktree); read-only may run from repo root.",
     )
     d.add_argument(
-        "--model", default=None, help="Optional model override, e.g. gpt-5.6-terra or gemini-3.1-pro-preview."
+        "--model", default=None, help="Optional model override, e.g. gpt-6-astra or gemini-3.1-pro-preview."
     )
     d.add_argument(
         "--provider",

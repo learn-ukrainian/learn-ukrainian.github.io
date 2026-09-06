@@ -29,16 +29,16 @@ def test_codex_source_config_defaults_subagents_to_astra_low() -> None:
     assert agents["default_subagent_reasoning_effort"] == "low"
 
 
-def test_catalog_routes_bounded_workers_to_luna_max_astra_low_fallback() -> None:
+def test_catalog_routes_bounded_codex_workers_to_astra_low() -> None:
     route = load_model_catalog()["execution_routing"]["sol_advised_bounded"]
 
     preferred = route["preferred_worker"]
-    assert preferred["model_id"] == "gpt-5.6-luna"
-    assert preferred["effort"] == "max"
+    assert preferred["model_id"] == "gpt-6-astra"
+    assert preferred["effort"] == "low"
 
     direct = route["direct_worker"]
-    assert direct["model_id"] == "gpt-5.6-luna"
-    assert direct["effort"] == "max"
+    assert direct["model_id"] == "gpt-6-astra"
+    assert direct["effort"] == "low"
     assert "objective_scope_ceiling" in direct["constraints"]
     assert "no_final_disposition" in direct["constraints"]
 
