@@ -115,3 +115,73 @@ def test_validate_result_rejects_high_unknown_rate() -> None:
     }
     with pytest.raises(extractor.ExtractionError):
         extractor.validate_result(payload)
+
+
+def test_validate_result_default_threshold_matches_module_constant() -> None:
+    payload = {
+        "sources": [{"headwords": [{"lemma": "мама", "pos": "noun"}]}],
+        "stats": {"unknown_rate": extractor.MAX_UNKNOWN_FORM_RATE + 0.01, "unknown_forms": 21, "unique_forms": 100},
+    }
+    with pytest.raises(extractor.ExtractionError):
+        extractor.validate_result(payload)
+
+
+def test_validate_result_accepts_explicit_higher_override() -> None:
+    payload = {
+        "sources": [{"headwords": [{"lemma": "мама", "pos": "noun"}]}],
+        "stats": {"unknown_rate": 0.25, "unknown_forms": 25, "unique_forms": 100},
+    }
+    # Still rejected at the unchanged default...
+    with pytest.raises(extractor.ExtractionError):
+        extractor.validate_result(payload)
+    # ...but passes with an explicit, book-scoped override.
+    extractor.validate_result(payload, max_unknown_rate=0.30)
+
+
+def test_cli_rejects_override_without_reason(tmp_path: Path) -> None:
+    jsonl = tmp_path / "book.jsonl"
+    _write_jsonl(jsonl, [_chunk(text="мама")])
+    out = tmp_path / "out.yaml"
+    rc = extractor.main(
+        [
+            "--jsonl",
+            str(jsonl),
+            "--source-id",
+            "x",
+            "--title",
+            "x",
+            "--out",
+            str(out),
+            "--max-unknown-rate",
+            "0.5",
+        ]
+    )
+    assert rc == 2
+    assert not out.exists()
+
+
+def test_cli_override_with_reason_reports_it(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    jsonl = tmp_path / "book.jsonl"
+    # "змпщт" is not a real Ukrainian word; it deliberately drives the unknown
+    # rate above 20% to exercise a gate only an explicit override can clear.
+    _write_jsonl(jsonl, [_chunk(text="мама змпщт")])
+    out = tmp_path / "out.yaml"
+    rc = extractor.main(
+        [
+            "--jsonl",
+            str(jsonl),
+            "--source-id",
+            "x",
+            "--title",
+            "x",
+            "--out",
+            str(out),
+            "--max-unknown-rate",
+            "0.6",
+            "--unknown-rate-override-reason",
+            "known upstream PDF glyph-drop defect (issue #7551)",
+        ]
+    )
+    assert rc == 0
+    assert out.exists()
+    assert "known upstream PDF glyph-drop defect" in capsys.readouterr().out
