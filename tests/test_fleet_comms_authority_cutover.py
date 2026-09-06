@@ -1412,3 +1412,204 @@ def test_concurrent_substitution_requests_converge_under_high_contention(
         reservation = ledger.latest_for_authority_key(request.authority_key)
         assert reservation is not None and reservation.attempt == 2
         assert service.get_job(job.job_id).state == "queued"
+
+
+def _supervisory_message(service: AuthorityService):
+    return service.enqueue_supervisory_request(
+        sender="operator", recipient="driver", body="restart after handoff",
+        correlation_id="handoff-1", idempotency_key="supervisory-1",
+    )
+
+
+def test_supervisory_duplicate_across_successor_start(tmp_path: Path) -> None:
+    root = _root(tmp_path)
+    restarts = []
+    with AuthorityService(root=root) as service:
+        message = _supervisory_message(service)
+        did = message.delivery_ids[0]
+        assert _supervisory_message(service) == message
+        assert service.supervisory_delivery_status(did) == "queued"
+        lease = service.claim_next_delivery(
+            "driver", "worker-a", lease_seconds=1, now="2036-01-01T00:00:00Z"
+        )
+        assert lease is not None
+        assert service.supervisory_delivery_status(did) == "delivered"
+        args = dict(worker_id="worker-a", fence_token=lease.fence_token,
+                    driver_generation="generation-a", now="2036-01-01T00:00:00Z")
+        receipt = service.record_supervisory_consumption(did, **args)
+        assert not receipt["replay"] and not receipt["reconciliation"]
+        restarts.append("generation-a")
+        assert service.record_supervisory_consumption(did, **args)["replay"]
+        with pytest.raises(AuthorityServiceError, match="different_payload"):
+            service.record_supervisory_consumption(
+                did, **{**args, "driver_generation": "generation-b"}
+            )
+        assert service.supervisory_delivery_status(did) == "live_driver_consumed"
+
+    # Crash after restart but before acknowledgement; the database is reopened.
+    with AuthorityService(root=root) as service:
+        lease = service.claim_next_delivery(
+            "driver", "worker-b", lease_seconds=1, now="2036-01-01T00:00:02Z"
+        )
+        assert lease is not None and lease.fence_token == 2
+        with pytest.raises(AuthorityStaleLeaseError):
+            service.record_supervisory_consumption(
+                did, **{**args, "now": "2036-01-01T00:00:02Z"}
+            )
+        # Previous consumption does not authorize terminalizing the new lease.
+        with pytest.raises(AuthorityServiceError, match="consumption_required"):
+            service.act_on_supervisory_delivery(
+                did, worker_id="worker-b", fence_token=2, now="2036-01-01T00:00:02Z"
+            )
+        receipt = service.record_supervisory_consumption(
+            did, worker_id="worker-b", fence_token=2,
+            driver_generation="generation-b", now="2036-01-01T00:00:02Z",
+        )
+        assert receipt["reconciliation"] and not receipt["replay"]
+        assert receipt["reconciled_generation"] == "generation-a"
+        if not receipt["reconciliation"]:
+            restarts.append("generation-b")
+        assert restarts == ["generation-a"]
+
+    # A further crash must retain the original generation, not just the last one.
+    with AuthorityService(root=root) as service:
+        lease = service.claim_next_delivery(
+            "driver", "worker-c", now="2036-01-01T00:00:04Z"
+        )
+        assert lease is not None and lease.fence_token == 3
+        receipt = service.record_supervisory_consumption(
+            did, worker_id="worker-c", fence_token=3,
+            driver_generation="generation-c", now="2036-01-01T00:00:04Z",
+        )
+        assert receipt["reconciled_generation"] == "generation-a"
+        result = service.act_on_supervisory_delivery(
+            did, worker_id="worker-c", fence_token=3,
+            acknowledgment=b"restart verified", now="2036-01-01T00:00:04Z",
+        )
+        assert service.act_on_supervisory_delivery(
+            did, worker_id="worker-c", fence_token=3,
+            acknowledgment=b"restart verified", now="2036-01-01T00:10:00Z",
+        ) == result
+        assert service.supervisory_delivery_status(did) == "acted_on"
+        with pytest.raises(AuthorityStaleLeaseError, match="terminalization_conflict"):
+            service.refuse_supervisory_delivery(
+                did, worker_id="worker-c", fence_token=3, now="2036-01-01T00:00:04Z"
+            )
+
+
+def test_supervisory_subscriber_disconnect(tmp_path: Path) -> None:
+    root = _root(tmp_path)
+    with AuthorityService(root=root) as publisher:
+        message = _supervisory_message(publisher)
+        did = message.delivery_ids[0]
+    # No subscriber or active driver existed at publish time.
+    with AuthorityService(root=root) as driver:
+        assert driver.supervisory_delivery_status(did) == "queued"
+        lease = driver.claim_next_delivery("driver", "worker")
+        assert lease is not None and lease.delivery.delivery_id == did
+        assert driver.claim_next_delivery("driver", "other") is None
+        driver.record_supervisory_consumption(
+            did, worker_id="worker", fence_token=lease.fence_token,
+            driver_generation="generation",
+        )
+        driver.refuse_supervisory_delivery(
+            did, worker_id="worker", fence_token=lease.fence_token,
+            result=b"restart no longer needed",
+        )
+        assert driver.supervisory_delivery_status(did) == "refused"
+
+
+@pytest.mark.parametrize("finish", ["act_on_supervisory_delivery", "refuse_supervisory_delivery",
+                                    "acknowledge_delivery", "finish_delivery"])
+def test_supervisory_terminal_requires_fenced_consumption(tmp_path: Path, finish: str) -> None:
+    with AuthorityService(root=_root(tmp_path)) as service:
+        did = _supervisory_message(service).delivery_ids[0]
+        lease = service.claim_next_delivery("driver", "worker")
+        assert lease is not None
+        args = dict(worker_id="worker", fence_token=lease.fence_token)
+        with pytest.raises(AuthorityServiceError, match="consumption_required"):
+            getattr(service, finish)(did, **args, **({"state": "failed"} if finish == "finish_delivery" else {}))
+        for invalid in ({"worker_id": "other"}, {"fence_token": 42}):
+            with pytest.raises(AuthorityStaleLeaseError):
+                service.record_supervisory_consumption(
+                    did, **{**args, **invalid}, driver_generation="generation"
+                )
+        assert service.supervisory_delivery_status(did) == "delivered"
+        # A generic wake receipt cannot masquerade as generation-bound consumption.
+        service.record_wake_receipt(did, fence_token=lease.fence_token, state="consumed")
+        assert service.supervisory_delivery_status(did) == "delivered"
+        with pytest.raises(AuthorityServiceError, match="consumption_required"):
+            service.act_on_supervisory_delivery(did, **args)
+
+
+def test_supervisory_worker_completion_during_handoff(tmp_path: Path) -> None:
+    root = _root(tmp_path)
+    with AuthorityService(root=root) as service:
+        did = _supervisory_message(service).delivery_ids[0]
+        job = service.enqueue_request(recipient="worker", body="work", idempotency_key="work")
+        job_lease = service.claim_next_job("job-worker", now="2036-01-01T00:00:00Z")
+        lease = service.claim_next_delivery(
+            "driver", "old-driver", lease_seconds=1, now="2036-01-01T00:00:00Z"
+        )
+        assert lease is not None and job_lease is not None
+        service.record_supervisory_consumption(
+            did, worker_id="old-driver", fence_token=lease.fence_token,
+            driver_generation="old", now="2036-01-01T00:00:00Z",
+        )
+        service.finish_job(
+            job.job_id, worker_id="job-worker", fence_token=job_lease.fence_token,
+            state="complete", result=b"completed during handoff", now="2036-01-01T00:00:02Z",
+        )
+    with AuthorityService(root=root) as successor:
+        lease = successor.claim_next_delivery("driver", "new-driver", now="2036-01-01T00:00:03Z")
+        assert lease is not None
+        receipt = successor.record_supervisory_consumption(
+            did, worker_id="new-driver", fence_token=lease.fence_token,
+            driver_generation="new", now="2036-01-01T00:00:03Z",
+        )
+        assert receipt["reconciliation"]
+        assert successor.get_job(job.job_id).state == "complete"
+        successor.act_on_supervisory_delivery(
+            did, worker_id="new-driver", fence_token=lease.fence_token,
+            acknowledgment=b"completion reconciled", now="2036-01-01T00:00:03Z",
+        )
+        assert successor.supervisory_delivery_status(did) == "acted_on"
+
+
+def test_supervisory_unconsumed_reclaim_does_not_invent_restart(tmp_path: Path) -> None:
+    with AuthorityService(root=_root(tmp_path)) as service:
+        did = _supervisory_message(service).delivery_ids[0]
+        service.claim_next_delivery(
+            "driver", "old", lease_seconds=1, now="2036-01-01T00:00:00Z"
+        )
+        with pytest.raises(AuthorityStaleLeaseError):
+            service.record_supervisory_consumption(
+                did, worker_id="old", fence_token=1, driver_generation="old",
+                now="2036-01-01T00:00:01Z",
+            )
+        lease = service.claim_next_delivery("driver", "new", now="2036-01-01T00:00:02Z")
+        assert lease is not None
+        receipt = service.record_supervisory_consumption(
+            did, worker_id="new", fence_token=lease.fence_token, driver_generation="new",
+            now="2036-01-01T00:00:02Z",
+        )
+        assert not receipt["reconciliation"] and not receipt["replay"]
+        assert receipt["reconciled_generation"] is None
+
+
+def test_supervisory_helpers_reject_ordinary_delivery(tmp_path: Path) -> None:
+    with AuthorityService(root=_root(tmp_path)) as service:
+        did = service.publish_message(
+            sender="operator", recipients=("driver",), body="ordinary"
+        ).delivery_ids[0]
+        lease = service.claim_next_delivery("driver", "worker")
+        assert lease is not None
+        args = dict(worker_id="worker", fence_token=lease.fence_token)
+        with pytest.raises(AuthorityServiceError, match="not_supervisory_delivery"):
+            service.record_supervisory_consumption(did, **args, driver_generation="generation")
+        for method in (service.act_on_supervisory_delivery, service.refuse_supervisory_delivery):
+            with pytest.raises(AuthorityServiceError, match="not_supervisory_delivery"):
+                method(did, **args)
+        with pytest.raises(AuthorityServiceError, match="not_supervisory_delivery"):
+            service.supervisory_delivery_status(did)
+        assert service.acknowledge_delivery(did, **args).state == "acknowledged"
