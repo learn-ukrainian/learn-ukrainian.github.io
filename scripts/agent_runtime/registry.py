@@ -41,7 +41,7 @@ AGENTS: dict[str, AgentEntry] = {
     "codex": {
         "adapter": "scripts.agent_runtime.adapters.codex:CodexAdapter",
         # Operator 2026-09-04: workhorse Astra @ low; explicit --model/--effort
-        # still win. Scout: --model gpt-5.6-luna --effort max.
+        # still win for the approved GPT-6 model.
         "default_model": "gpt-6-astra",
         "default_effort": "low",
         "cost_tier": "medium",
@@ -58,7 +58,7 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "codex-desktop": {
         "adapter": "scripts.agent_runtime.adapters.codex:CodexAdapter",
-        "default_model": "gpt-5.6-terra",
+        "default_model": "gpt-6-astra",
         "cost_tier": "high",
         "capabilities": frozenset(
             {

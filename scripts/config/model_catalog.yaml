@@ -108,7 +108,7 @@ review_scheduler:
       capacity_weight: 1.0
     codex:
       formal_review_eligible: true
-      models: [gpt-6-astra, gpt-5.6-sol, gpt-5.6-terra]
+      models: [gpt-6-astra]
       participant: codex
       adapter_transport: acp
       catalog_transport: native_codex
@@ -241,8 +241,8 @@ execution_routing:
         - acceptance_evidence
         - escalation_triggers
     preferred_worker:
-      model_id: gpt-5.6-luna
-      effort: max
+      model_id: gpt-6-astra
+      effort: low
       requires: [complete_advisory_envelope, objective_scope_ceiling]
       task_types: [bounded_implementation, bounded_investigation]
       escalate_to: gpt-6-astra
@@ -257,8 +257,8 @@ execution_routing:
         - broader_integration
         - final_disposition
     direct_worker:
-      model_id: gpt-5.6-luna
-      effort: max
+      model_id: gpt-6-astra
+      effort: low
       task_types: [bounded_implementation, bounded_investigation, recon, bounded_checks, log_triage]
       constraints: [objective_scope_ceiling, no_consequential_decisions, no_final_disposition]
     autonomous_fallback:
@@ -275,14 +275,14 @@ models:
     family: openai
     tier: frontier_authority
     lifecycle: active
-    roles: [implementation, investigation, standard_review, critical_review, bounded_advisory_envelope, architecture]
+    roles: [implementation, investigation, standard_review, critical_review, bounded_advisory_envelope, architecture, recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation]
     transports: [native_codex, cursor]
     strengths: [agentic_coding, frontier_technical_judgment]
     weaknesses: [not_independent_from_openai_authors]
     notes: >-
       Operator GO 2026-09-04: workhorse low, reviewer medium, advisor high.
       Native Codex CLI 0.153.3 lists low/medium/high/xhigh/max/ultra; low is
-      the lighter-reasoning default. Sol and Terra remain explicit fallbacks.
+      the lighter-reasoning default. All Codex routes require GPT-6 Astra.
     sources:
       - https://developers.openai.com/api/docs/models/gpt-6-astra
   gpt-5.6-sol:
@@ -290,7 +290,7 @@ models:
     tier: frontier_authority
     lifecycle: active
     roles: [architecture, critical_review, bounded_advisory_envelope, difficult_debugging, final_synthesis]
-    transports: [native_codex, cursor]
+    transports: [cursor]
     strengths: [frontier_technical_judgment, long_horizon_reasoning, programmatic_tools]
     weaknesses: [scarce_frontier_quota, wasteful_for_routine_work, not_a_speed_winner]
     notes: >-
@@ -303,7 +303,7 @@ models:
     tier: frontier_practical
     lifecycle: active
     roles: [implementation, investigation, standard_review]
-    transports: [native_codex, cursor]
+    transports: [cursor]
     strengths: [balanced_quality_cost, agentic_coding]
     weaknesses: [not_default_final_authority]
     sources:
@@ -313,7 +313,7 @@ models:
     tier: economical
     lifecycle: active
     roles: [recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation]
-    transports: [native_codex, cursor]
+    transports: [cursor]
     strengths: [speed, high_volume, max_effort_bounded_execution, quality_cost_frontier]
     weaknesses: [not_sole_consequential_authority]
     sources:
@@ -811,13 +811,6 @@ review_candidates:
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
     advisory_only_for_author_families: [openai]
-  gpt-5.6-terra:
-    model_id: gpt-5.6-terra
-    route: codex
-    transport: native_codex
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-5.6-terra
-    review_profiles: [code, infra]
-    capabilities: [code_review, isolation, sealed_evidence]
   claude-fable-5-1:
     model_id: claude-fable-5-1
     route: claude
@@ -1123,7 +1116,7 @@ formal_cf_defaults:
 review_ladders:
   # #5293 quality-first: never let a later rung improve quality tier.
   # critical keeps frontier_authority first (false APPROVED is expensive).
-  # high/medium/low: Astra medium → Terra fallback → Sonnet → Flash / Grok / K3 / DS / pool.
+  # high/medium/low: Astra medium → Sonnet → Flash / Grok / K3 / DS / pool.
   # Fable/advisory roles stay off routine PRs. glm-5.3 is catalogued for explicit
   # `--reviewer glm-5.3` only (z.ai retired 2026-09-03); never an automatic rung.
   critical:
@@ -1133,7 +1126,6 @@ review_ladders:
     # NOT on the authority ladder at all; it remains a practical/coding seat.
     - [claude-fable-5]
     - [claude-fable-5-cursor-fallback]
-    - [gpt-5.6-terra]
     - [claude-sonnet-5]
     - [gemini-3.8-flash]
     - [grok-4.6]
@@ -1147,10 +1139,9 @@ review_ladders:
     - [pool]
     - [pool-xs, gemini-3.5-flash]
   high: &practical_first_code_review
-    # Routine CF order: Astra medium → Terra fallback → Sonnet → Flash / Grok / K3…
+    # Routine CF order: Astra medium → Sonnet → Flash / Grok / K3…
     # glm stays off automatic ladders; Fable stays critical-only.
     - [openai_frontier]
-    - [gpt-5.6-terra]
     - [claude-sonnet-5]
     - [gemini-3.8-flash]
     - [grok-4.6]

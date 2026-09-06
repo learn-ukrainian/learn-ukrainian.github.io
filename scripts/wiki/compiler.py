@@ -54,7 +54,7 @@ _PARENT_ENV["GEMINI_SESSION"] = "1"
 WIKI_META_RE = re.compile(r"<!--\s*wiki-meta\b(?P<body>.*?)-->", re.DOTALL)
 DOSSIER_CHUNK_ID_RE = re.compile(r"(?<![0-9A-Za-z_-])(?P<chunk_id>[0-9A-Za-z][0-9A-Za-z_-]*_c\d{4,})(?![0-9A-Za-z_-])")
 _MCP_WARNING_PREFIX_RE = re.compile(r"^MCP issues detected\. Run /mcp list for status\.")
-WRITER_CHOICES = ("agy", "gemini", "claude", "gpt-5.5")
+WRITER_CHOICES = ("agy", "gemini", "claude", "gpt-6-astra")
 
 
 def compile_article(
@@ -80,7 +80,7 @@ def compile_article(
         track: Track name (e.g., "a1", "folk") — selects the prompt template.
         force: Recompile even if already compiled.
         dry_run: Print prompt but don't call the writer.
-        writer: Writer agent key: "agy", "gemini", "claude", or "gpt-5.5".
+        writer: Writer agent key: "agy", "gemini", "claude", or "gpt-6-astra".
         dossier_text: Verified research dossier text for authoritative grounding.
 
     Returns:
@@ -1057,12 +1057,12 @@ def _call_writer(prompt: str, *, writer: str, max_retries: int = 3) -> CallResul
             logger=lambda msg: print(msg, flush=True),
             sleep_fn=_visible_sleep,
         )
-    if writer == "gpt-5.5":
-        # pinned workflow: flip to 5.6-terra only after post-reset spot-check (model-assignment.md)
+    if writer == "gpt-6-astra":
+        # Codex compilation stays on the approved GPT-6 model.
         return call_codex_with_fallback(
             prompt,
             task_name="wiki compiler",
-            preferred_model="gpt-5.5",
+            preferred_model="gpt-6-astra",
             max_retries=max_retries,
             cwd=Path(__file__).resolve().parents[2],
             base_env=_PARENT_ENV,

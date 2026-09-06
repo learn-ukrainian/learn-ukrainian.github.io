@@ -4,11 +4,12 @@ profiles:
   native_codex:
     profile_id: native_codex
     transport: native_codex
-    main_model_id: gpt-5.6-sol
+    main_model_id: gpt-6-astra
     model_id_patterns:
-      - '^gpt-5\.6-sol$'
+      - '^gpt-6-astra$'
     main_context_window_tokens: 272000
-    auto_compact_capacity_tokens: 258400
+    # Native Codex owns compaction; effective window capacity is not its trigger.
+    auto_compact_capacity_tokens: null
     cold_start_profile: compact
     cold_start_budget_tokens: 27200
     rollover_warning_percentages: [75.0, 85.0, 92.0]

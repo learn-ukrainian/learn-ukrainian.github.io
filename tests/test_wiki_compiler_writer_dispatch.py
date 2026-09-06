@@ -68,11 +68,11 @@ def test_call_writer_routes_gpt55_to_call_codex():
         "wiki.compiler.call_codex_with_fallback",
         return_value=_call_result(),
     ) as call:
-        result = _call_writer("prompt", writer="gpt-5.5")
+        result = _call_writer("prompt", writer="gpt-6-astra")
 
     assert result.response_text == "ok"
     call.assert_called_once()
-    assert call.call_args[1].get("preferred_model") == "gpt-5.5"
+    assert call.call_args[1].get("preferred_model") == "gpt-6-astra"
 
 
 def test_call_writer_rejects_unknown_writer():
