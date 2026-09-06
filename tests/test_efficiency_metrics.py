@@ -98,7 +98,9 @@ def test_dead_letters_and_metrics(tmp_path: Path) -> None:
     assert m["dead_letters"] == 1
     assert m["deliveries"]["delivered"] == 1
     assert m["retired_endpoint_pending"]["gemini"] == 1
-    assert m["latency_seconds"]["delivery_dispatch_to_done"]["n"] == 1
+    assert m["latency_seconds"]["delivery_dispatch_to_done"] == {
+        "n": 1, "avg": 5.0, "min": 5.0, "max": 5.0,
+    }
 
 
 def test_legacy_messages_without_status_column(tmp_path: Path) -> None:
@@ -110,3 +112,13 @@ def test_legacy_messages_without_status_column(tmp_path: Path) -> None:
     assert m["messages_legacy"]["by_message_type"]["reply"] == 1
     assert m["messages_legacy"]["distinct_task_ids"] == 2
     assert "by_status" not in m["messages_legacy"]
+
+
+def test_legacy_collectors_stay_on_broker_when_authority_is_pg(tmp_path, monkeypatch):
+    db = tmp_path / "broker.db"
+    _mini_db(db)
+    monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
+    monkeypatch.delenv("LEARN_UKRAINIAN_CP_PG_DSN", raising=False)
+    assert collect_delivery_backlog(db)["total"] == 1
+    assert collect_dead_letters(db)["total"] == 1
+    assert collect_efficiency_metrics(db)["deliveries"]["delivered"] == 1

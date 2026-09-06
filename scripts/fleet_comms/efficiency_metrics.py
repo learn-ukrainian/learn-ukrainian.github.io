@@ -16,7 +16,13 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
 
-from scripts.control_plane.storage import StoreId, assert_component_supported
+from scripts.control_plane.storage import (
+    Authority,
+    ControlPlaneError,
+    StoreId,
+    assert_component_supported,
+    resolve_authority,
+)
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.message_plane import resolve_plane_mode
 from scripts.fleet_comms.opsec_store import batch_tasks_store, comms_plane_store
@@ -33,7 +39,7 @@ _RETIRED_AGENTS = frozenset({"gemini"})
 
 
 @contextmanager
-def _connect(db_path: Path) -> Iterator[sqlite3.Connection]:
+def _connect_legacy(db_path: Path) -> Iterator[sqlite3.Connection]:
     """Open a read path connection and always close it (sqlite3 `with` only commits)."""
     conn = sqlite3.connect(str(db_path))
     conn.row_factory = sqlite3.Row
@@ -43,30 +49,94 @@ def _connect(db_path: Path) -> Iterator[sqlite3.Connection]:
         conn.close()
 
 
+class EfficiencyMetricsReadError(ControlPlaneError):
+    """Authority metrics could not be read; contains no driver details or content."""
+
+
+def _authority_file_missing(db_path: Path) -> bool:
+    """Only file-backed authorities depend on a local database file."""
+    return resolve_authority(StoreId.FLEET_COMMS) is not Authority.PG and not db_path.is_file()
+
+
 @contextmanager
-def _connect_ro(db_path: Path) -> Iterator[sqlite3.Connection]:
-    """Open an existing SQLite file read-only (never creates/writes)."""
-    if not db_path.is_file():
+def _connect_ro(db_path: Path) -> Iterator[Any]:
+    """Open the configured authority read-only, without creating schema or files."""
+    import psycopg
+    from psycopg.rows import dict_row
+
+    authority = assert_component_supported(StoreId.FLEET_COMMS, "efficiency_metrics")
+    if authority is not Authority.PG and not db_path.is_file():
         raise FileNotFoundError(db_path)
-    assert_component_supported(StoreId.FLEET_COMMS, "efficiency_metrics")  # #7482
     conn = cp_connect(StoreId.FLEET_COMMS, path=db_path, read_only=True)
-    conn.row_factory = sqlite3.Row
     try:
+        if authority is Authority.PG:
+            conn.row_factory = dict_row
+            conn.autocommit = True
+            conn.execute("SET TIME ZONE 'UTC'")
+        else:
+            conn.row_factory = sqlite3.Row
         yield conn
+    except psycopg.Error as exc:
+        raise EfficiencyMetricsReadError("control-plane store 'fleet_comms' metrics read failed") from exc
     finally:
         conn.close()
 
 
-def _table_exists(conn: sqlite3.Connection, name: str) -> bool:
+def _placeholder(conn: Any) -> str:
+    return "?" if isinstance(conn, sqlite3.Connection) else "%s"
+
+
+def _table_exists(conn: Any, name: str) -> bool:
+    if isinstance(conn, sqlite3.Connection):
+        query = "SELECT 1 FROM sqlite_master WHERE type='table' AND name=?"
+    else:
+        query = "SELECT 1 FROM pg_class WHERE oid = to_regclass(%s) AND relkind IN ('r', 'p')"
+    exists = conn.execute(query, (name,)).fetchone() is not None
+    if not exists and not isinstance(conn, sqlite3.Connection):
+        raise EfficiencyMetricsReadError("control-plane store 'fleet_comms' metrics table unavailable")
+    return exists
+
+
+def _column_names(conn: Any, table: str) -> set[str]:
+    if isinstance(conn, sqlite3.Connection):
+        return {str(r[1]) for r in conn.execute(f"PRAGMA table_info({table})").fetchall()}
+    return {
+        str(r["attname"])
+        for r in conn.execute(
+            "SELECT attname FROM pg_attribute WHERE attrelid = to_regclass(%s) "
+            "AND attnum > 0 AND NOT attisdropped",
+            (table,),
+        ).fetchall()
+    }
+
+
+def _delivery_latency(
+    conn: Any, *, table: str, start: str, end: str, delivered_only: bool = False,
+) -> dict[str, Any] | None:
+    """Aggregate durable timestamps; identifiers are collector-owned constants."""
+    if isinstance(conn, sqlite3.Connection):
+        duration = f"(julianday({end}) - julianday({start})) * 86400.0"
+    else:
+        duration = f"EXTRACT(EPOCH FROM ({end}::timestamptz - {start}::timestamptz))"
+    state_filter = "AND status = 'delivered'" if delivered_only else ""
     row = conn.execute(
-        "SELECT 1 FROM sqlite_master WHERE type='table' AND name=?",
-        (name,),
+        f"""
+        SELECT COUNT(*) AS n, AVG({duration}) AS avg_s,
+               MIN({duration}) AS min_s, MAX({duration}) AS max_s
+        FROM {table}
+        WHERE {end} IS NOT NULL AND {end} != ''
+          AND {start} IS NOT NULL AND {start} != ''
+          {state_filter}
+        """
     ).fetchone()
-    return row is not None
-
-
-def _column_names(conn: sqlite3.Connection, table: str) -> set[str]:
-    return {str(r[1]) for r in conn.execute(f"PRAGMA table_info({table})").fetchall()}
+    if not row or not row["n"]:
+        return None
+    return {
+        "n": int(row["n"]),
+        "avg": round(float(row["avg_s"] or 0.0), 3),
+        "min": round(float(row["min_s"] or 0.0), 3),
+        "max": round(float(row["max_s"] or 0.0), 3),
+    }
 
 
 def resolve_metrics_source(*, force_legacy: bool = False) -> MetricsSource:
@@ -86,7 +156,7 @@ def collect_delivery_backlog(
 ) -> dict[str, Any]:
     """Pending/dispatched delivery backlog without message bodies."""
     retired = set(_RETIRED_AGENTS)
-    with _connect(db_path) as conn:
+    with _connect_legacy(db_path) as conn:
         if not _table_exists(conn, "deliveries"):
             return {"total": 0, "by_agent": {}, "by_status": {}, "rows": []}
         cols = _column_names(conn, "deliveries")
@@ -154,7 +224,7 @@ def collect_delivery_backlog(
 
 def collect_dead_letters(db_path: Path, *, limit: int = 100) -> dict[str, Any]:
     """Dead-letter counts and metadata rows (no message content)."""
-    with _connect(db_path) as conn:
+    with _connect_legacy(db_path) as conn:
         if not _table_exists(conn, "dead_letters"):
             return {"total": 0, "by_reason": {}, "rows": []}
         total = conn.execute("SELECT COUNT(*) AS c FROM dead_letters").fetchone()["c"]
@@ -180,7 +250,7 @@ def collect_dead_letters(db_path: Path, *, limit: int = 100) -> dict[str, Any]:
 
 def collect_efficiency_metrics(db_path: Path) -> dict[str, Any]:
     """Aggregate ask/reply efficiency from durable timestamps only."""
-    with _connect(db_path) as conn:
+    with _connect_legacy(db_path) as conn:
         metrics: dict[str, Any] = {
             "content_included": False,
             "deliveries": {},
@@ -195,35 +265,12 @@ def collect_efficiency_metrics(db_path: Path) -> dict[str, Any]:
                 "SELECT status, COUNT(*) AS c FROM deliveries GROUP BY status"
             ):
                 metrics["deliveries"][str(r["status"])] = int(r["c"])
-            # latency for delivered rows with both timestamps
-            lat = conn.execute(
-                """
-                SELECT
-                  COUNT(*) AS n,
-                  AVG(
-                    (julianday(delivered_at) - julianday(dispatched_at)) * 86400.0
-                  ) AS avg_s,
-                  MIN(
-                    (julianday(delivered_at) - julianday(dispatched_at)) * 86400.0
-                  ) AS min_s,
-                  MAX(
-                    (julianday(delivered_at) - julianday(dispatched_at)) * 86400.0
-                  ) AS max_s
-                FROM deliveries
-                WHERE status = 'delivered'
-                  AND delivered_at IS NOT NULL
-                  AND dispatched_at IS NOT NULL
-                  AND delivered_at != ''
-                  AND dispatched_at != ''
-                """
-            ).fetchone()
-            if lat and lat["n"]:
-                metrics["latency_seconds"]["delivery_dispatch_to_done"] = {
-                    "n": int(lat["n"]),
-                    "avg": round(float(lat["avg_s"] or 0.0), 3),
-                    "min": round(float(lat["min_s"] or 0.0), 3),
-                    "max": round(float(lat["max_s"] or 0.0), 3),
-                }
+            latency = _delivery_latency(
+                conn, table="deliveries", start="dispatched_at", end="delivered_at",
+                delivered_only=True,
+            )
+            if latency:
+                metrics["latency_seconds"]["delivery_dispatch_to_done"] = latency
 
         if _table_exists(conn, "requests"):
             for r in conn.execute(
@@ -300,12 +347,12 @@ def collect_delivery_backlog_authority(
     exclude_retired: bool = True,
 ) -> dict[str, Any]:
     """Authority-plane backlog from ``authority_deliveries`` (queued/running)."""
-    if not plane_db.is_file():
+    if _authority_file_missing(plane_db):
         return _empty_backlog(exclude_retired=exclude_retired)
     with _connect_ro(plane_db) as conn:
         if not _table_exists(conn, "authority_deliveries"):
             return _empty_backlog(exclude_retired=exclude_retired)
-        placeholders = ",".join("?" for _ in _AUTHORITY_BACKLOG_STATES)
+        placeholders = ",".join(_placeholder(conn) for _ in _AUTHORITY_BACKLOG_STATES)
         rows = conn.execute(
             f"""
             SELECT delivery_id, message_id, recipient, state, attempt_count,
@@ -313,7 +360,7 @@ def collect_delivery_backlog_authority(
             FROM authority_deliveries
             WHERE state IN ({placeholders})
             ORDER BY COALESCE(updated_at, created_at, '') DESC
-            LIMIT ?
+            LIMIT {_placeholder(conn)}
             """,
             (*_AUTHORITY_BACKLOG_STATES, limit),
         ).fetchall()
@@ -349,7 +396,7 @@ def collect_delivery_backlog_authority(
 def collect_dead_letters_authority(plane_db: Path, *, limit: int = 100) -> dict[str, Any]:
     """Authority-plane dead letters from ``authority_dead_letters`` (metadata only)."""
     empty: dict[str, Any] = {"total": 0, "by_reason": {}, "rows": []}
-    if not plane_db.is_file():
+    if _authority_file_missing(plane_db):
         return empty
     with _connect_ro(plane_db) as conn:
         if not _table_exists(conn, "authority_dead_letters"):
@@ -364,11 +411,11 @@ def collect_dead_letters_authority(plane_db: Path, *, limit: int = 100) -> dict[
             """
         ).fetchall()
         rows = conn.execute(
-            """
+            f"""
             SELECT dead_letter_id, delivery_id, job_id, reason_code, created_at
             FROM authority_dead_letters
             ORDER BY created_at DESC
-            LIMIT ?
+            LIMIT {_placeholder(conn)}
             """,
             (limit,),
         ).fetchall()
@@ -398,7 +445,7 @@ def collect_efficiency_metrics_authority(plane_db: Path) -> dict[str, Any]:
         "dead_letters": 0,
         "latency_seconds": {},
     }
-    if not plane_db.is_file():
+    if _authority_file_missing(plane_db):
         return metrics
     with _connect_ro(plane_db) as conn:
         if _table_exists(conn, "authority_deliveries"):
@@ -406,38 +453,16 @@ def collect_efficiency_metrics_authority(plane_db: Path) -> dict[str, Any]:
                 "SELECT state, COUNT(*) AS c FROM authority_deliveries GROUP BY state"
             ):
                 metrics["deliveries"][str(r["state"])] = int(r["c"])
-            lat = conn.execute(
-                """
-                SELECT
-                  COUNT(*) AS n,
-                  AVG(
-                    (julianday(completed_at) - julianday(created_at)) * 86400.0
-                  ) AS avg_s,
-                  MIN(
-                    (julianday(completed_at) - julianday(created_at)) * 86400.0
-                  ) AS min_s,
-                  MAX(
-                    (julianday(completed_at) - julianday(created_at)) * 86400.0
-                  ) AS max_s
-                FROM authority_deliveries
-                WHERE completed_at IS NOT NULL
-                  AND completed_at != ''
-                  AND created_at IS NOT NULL
-                  AND created_at != ''
-                """
-            ).fetchone()
-            if lat and lat["n"]:
-                metrics["latency_seconds"]["delivery_created_to_done"] = {
-                    "n": int(lat["n"]),
-                    "avg": round(float(lat["avg_s"] or 0.0), 3),
-                    "min": round(float(lat["min_s"] or 0.0), 3),
-                    "max": round(float(lat["max_s"] or 0.0), 3),
-                }
+            latency = _delivery_latency(
+                conn, table="authority_deliveries", start="created_at", end="completed_at",
+            )
+            if latency:
+                metrics["latency_seconds"]["delivery_created_to_done"] = latency
             gemini_pending = conn.execute(
                 f"""
                 SELECT COUNT(*) AS c FROM authority_deliveries
                 WHERE recipient = 'gemini'
-                  AND state IN ({",".join("?" for _ in _AUTHORITY_BACKLOG_STATES)})
+                  AND state IN ({",".join(_placeholder(conn) for _ in _AUTHORITY_BACKLOG_STATES)})
                 """,
                 _AUTHORITY_BACKLOG_STATES,
             ).fetchone()["c"]
@@ -669,9 +694,10 @@ def collect_stream_bottleneck_metrics(
 
     merged_cache: dict[tuple[str, int], tuple[datetime | None, str | None]] = {}
     try:
-        if not plane_db.is_file():
+        if _authority_file_missing(plane_db):
             raise FileNotFoundError("plane_db_missing")
         with _connect_ro(plane_db) as conn:
+            plane_store = comms_plane_store(reachable=True)
             if not (_table_exists(conn, "formal_review_jobs") and _table_exists(conn, "github_publications")):
                 raise sqlite3.DatabaseError("required formal_review_jobs/github_publications tables missing")
             columns = _column_names(conn, "formal_review_jobs")
@@ -739,7 +765,7 @@ def collect_stream_bottleneck_metrics(
                 )
     except FileNotFoundError:
         errors.append(_plane_error("plane_db_missing"))
-    except (OSError, sqlite3.Error):
+    except (OSError, sqlite3.Error, ControlPlaneError):
         errors.append(_plane_error("plane_db_unreadable"))
 
     def summarize(groups: dict[str, dict[str, dict[str, list[float]]]]) -> dict[str, Any]:

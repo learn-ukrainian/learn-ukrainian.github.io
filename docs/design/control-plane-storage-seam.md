@@ -79,7 +79,12 @@ unchanged). `reference` / `is_referenced` / `garbage_collect_unreferenced`
 remain sqlite-only in this slice (out of scope; they hang off the sqlite
 `comms_messages` / authority tables that don't exist under `pg` here).
 
-Phase 0b residuals on private #603 (not this PR): HTTP Idempotency-Key,
-`efficiency_metrics` move.
+Authority efficiency metrics, backlog, and dead-letter collectors use the same
+storage switch (#7486). Their read-only connections use dialect-aware metadata
+queries, parameters, and latency aggregation; pg reads do not depend on a local
+SQLite file. Legacy broker collectors remain explicit file-backed projections.
+Dual-engine coverage lives in `tests/fleet_comms/test_efficiency_metrics_authority.py`.
+
+Phase 0b residuals on private #603 (not this PR): HTTP Idempotency-Key.
 
 No Patroni, dual-write, public bind, live DSN flip, or DSN in git.
