@@ -3104,39 +3104,6 @@ pairs:
     answer_form: геть
     calque_form: ні в якому разі
     origin: ua-gec-calque-wave1:literary_texts/4959f1d3_c0003
-- calqueLabel: довкруги
-  calqueSurfaces:
-  - довкруги
-  - круг
-  - по сторонам
-  nativeSlug: довкола
-  nativeLemma: довкола
-  kind: lexical
-  corrections:
-  - довкола
-  rationale: 'UA-GEC F/Calque corpus evidence (native + fluency annotator correction, n=3 occurrence(s) across 3 document(s)):
-    «довкруги» flagged non-standard; reviewed correction «довкола».'
-  citations:
-  - ua-gec:F/Calque n=3
-  sourceFamily: ua-gec
-  sourceFamilies:
-  - ua-gec
-  severity: enrichment
-  curator: script:heritage_calque_wave-2026-08-11
-  notes: 'Wave-1 mechanical GEC-calque densification (#6623): nativeSlug resolved via exact Atlas lemma match; frame sentences
-    are corpus-attested carriers with the sole `correct` occurrence substituted by the UA-GEC `error` surface. No curator
-    linguistic review beyond mechanical POS-admission and carrier-sentence gates; severity defaults to enrichment pending
-    curator upgrade to russianism where warranted.'
-  frames:
-  - sentence_with_slot: Ночами ___ гуртожитку відбувалось якесь життя.
-    answer_form: довкола
-    calque_form: довкруги
-    origin: ua-gec-calque-wave1:literary_texts/e27925aa_c0026
-  - sentence_with_slot: І дощ, дощ, який не вщухає, і пики, пики, їх усе більшає, вони розмножуються діленням і плавають ___
-      вас, наче риби, глибоководні плескаті риби з дна найчорніших океанів.
-    answer_form: довкола
-    calque_form: круг
-    origin: ua-gec-calque-wave1:literary_texts/e27925aa_c0039
 - calqueLabel: Повинно
   calqueSurfaces:
   - Повинно
@@ -4160,39 +4127,6 @@ pairs:
     answer_form: стосунок
     calque_form: відношення
     origin: ua-gec-calque-wave1:literary_texts/6bb17922_c0012
-- calqueLabel: тим
-  calqueSurfaces:
-  - Так
-  - тим
-  nativeSlug: то
-  nativeLemma: то
-  kind: lexical
-  corrections:
-  - То
-  - то
-  rationale: 'UA-GEC F/Calque corpus evidence (native + fluency annotator correction, n=6 occurrence(s) across 3 document(s)):
-    «тим» flagged non-standard; reviewed correction «то».'
-  citations:
-  - ua-gec:F/Calque n=6
-  sourceFamily: ua-gec
-  sourceFamilies:
-  - ua-gec
-  severity: enrichment
-  curator: script:heritage_calque_wave-2026-08-11
-  notes: 'Wave-1 mechanical GEC-calque densification (#6623): nativeSlug resolved via exact Atlas lemma match; frame sentences
-    are corpus-attested carriers with the sole `correct` occurrence substituted by the UA-GEC `error` surface. No curator
-    linguistic review beyond mechanical POS-admission and carrier-sentence gates; severity defaults to enrichment pending
-    curator upgrade to russianism where warranted.'
-  frames:
-  - sentence_with_slot: Ти вже хочби пильнував вилову, а ___ розтрусив на подвір'ї найліпшу рибу.
-    answer_form: то
-    calque_form: тим
-    origin: ua-gec-calque-wave1:literary_texts/5cbffa78_c0005
-  - sentence_with_slot: 'Однак дуже часто натрапляємо на фрази з орудним відмінком іменника: "___ був волом, а то хочеш зостатися
-      конем" (М.'
-    answer_form: То
-    calque_form: Так
-    origin: ua-gec-calque-wave1:textbooks/antonenko-davydovych-yak-my-hovorymo_p010
 - calqueLabel: заставити
   calqueSurfaces:
   - заставити
@@ -4224,33 +4158,6 @@ pairs:
     answer_form: змусити
     calque_form: принудити
     origin: ua-gec-calque-wave1:literary_texts/6bb17922_c0056
-- calqueLabel: Чим
-  calqueSurfaces:
-  - Чим
-  nativeSlug: що
-  nativeLemma: що
-  kind: lexical
-  corrections:
-  - Що
-  rationale: 'UA-GEC F/Calque corpus evidence (native + fluency annotator correction, n=4 occurrence(s) across 1 document(s)):
-    «Чим» flagged non-standard; reviewed correction «що».'
-  citations:
-  - ua-gec:F/Calque n=4
-  sourceFamily: ua-gec
-  sourceFamilies:
-  - ua-gec
-  severity: enrichment
-  curator: script:heritage_calque_wave-2026-08-11
-  notes: 'Wave-1 mechanical GEC-calque densification (#6623): nativeSlug resolved via exact Atlas lemma match; frame sentences
-    are corpus-attested carriers with the sole `correct` occurrence substituted by the UA-GEC `error` surface. No curator
-    linguistic review beyond mechanical POS-admission and carrier-sentence gates; severity defaults to enrichment pending
-    curator upgrade to russianism where warranted.'
-  frames:
-  - sentence_with_slot: ___ ви хочете і звідки ви? — Наша батьківщина Рука так далеко звідси, що навряд чи вістка про неї
-      дійшла сюди.
-    answer_form: Що
-    calque_form: Чим
-    origin: ua-gec-calque-wave1:literary_texts/8ab09c52_c0003
 - calqueLabel: відбивають
   calqueSurfaces:
   - відбивають
@@ -4493,38 +4400,6 @@ pairs:
     answer_form: внесок
     calque_form: вклад
     origin: ua-gec-calque-wave1:literary_texts/8cd79e3f_c0004
-- calqueLabel: близько
-  calqueSurfaces:
-  - близько
-  - порядка
-  nativeSlug: десь
-  nativeLemma: десь
-  kind: lexical
-  corrections:
-  - десь
-  rationale: 'UA-GEC F/Calque corpus evidence (native + fluency annotator correction, n=2 occurrence(s) across 2 document(s)):
-    «близько» flagged non-standard; reviewed correction «десь».'
-  citations:
-  - ua-gec:F/Calque n=2
-  sourceFamily: ua-gec
-  sourceFamilies:
-  - ua-gec
-  severity: enrichment
-  curator: script:heritage_calque_wave-2026-08-11
-  notes: 'Wave-1 mechanical GEC-calque densification (#6623): nativeSlug resolved via exact Atlas lemma match; frame sentences
-    are corpus-attested carriers with the sole `correct` occurrence substituted by the UA-GEC `error` surface. No curator
-    linguistic review beyond mechanical POS-admission and carrier-sentence gates; severity defaults to enrichment pending
-    curator upgrade to russianism where warranted.'
-  frames:
-  - sentence_with_slot: А то мале відчуло голод, який спонукав його пошукати, чи не лежить ___, бува, пелюстка стокротки.
-    answer_form: десь
-    calque_form: близько
-    origin: ua-gec-calque-wave1:literary_texts/e0c444ed_c0002
-  - sentence_with_slot: Ось тобі сонце й місяць — це два віники, якими ти підмітатимеш, а плата моя — одне зернятко". — Гаразд,—
-      мовив чоловік й заходився підмітати дідове подвір'я, чуючи водночас, що його сумніви ___ щезли.
-    answer_form: десь
-    calque_form: порядка
-    origin: ua-gec-calque-wave1:literary_texts/62268b3b_c0001
 - calqueLabel: рідкість
   calqueSurfaces:
   - рідкість
@@ -5461,33 +5336,6 @@ pairs:
     answer_form: всередині
     calque_form: внутрі
     origin: ua-gec-calque-wave1:literary_texts/4959f1d3_c0005
-- calqueLabel: проти
-  calqueSurfaces:
-  - проти
-  nativeSlug: від
-  nativeLemma: від
-  kind: lexical
-  corrections:
-  - від
-  rationale: 'UA-GEC F/Calque corpus evidence (native + fluency annotator correction, n=1 occurrence(s) across 1 document(s)):
-    «проти» flagged non-standard; reviewed correction «від».'
-  citations:
-  - ua-gec:F/Calque n=1
-  sourceFamily: ua-gec
-  sourceFamilies:
-  - ua-gec
-  severity: enrichment
-  curator: script:heritage_calque_wave-2026-08-11
-  notes: 'Wave-1 mechanical GEC-calque densification (#6623): nativeSlug resolved via exact Atlas lemma match; frame sentences
-    are corpus-attested carriers with the sole `correct` occurrence substituted by the UA-GEC `error` surface. No curator
-    linguistic review beyond mechanical POS-admission and carrier-sentence gates; severity defaults to enrichment pending
-    curator upgrade to russianism where warranted.'
-  frames:
-  - sentence_with_slot: Казка У великих водах, що існують ___ віків, серед табунів мовчазної риби у шанованих риб'ячою громадою
-      батьків, народилася балакуща риба.
-    answer_form: від
-    calque_form: проти
-    origin: ua-gec-calque-wave1:literary_texts/5cbffa78_c0000
 - calqueLabel: відношення
   calqueSurfaces:
   - відношення
@@ -5701,33 +5549,6 @@ pairs:
     answer_form: дійти
     calque_form: дойти
     origin: ua-gec-calque-wave1:literary_texts/e4b5541c_c0187
-- calqueLabel: ніж
-  calqueSurfaces:
-  - ніж
-  nativeSlug: за
-  nativeLemma: за
-  kind: lexical
-  corrections:
-  - за
-  rationale: 'UA-GEC F/Calque corpus evidence (native + fluency annotator correction, n=1 occurrence(s) across 1 document(s)):
-    «ніж» flagged non-standard; reviewed correction «за».'
-  citations:
-  - ua-gec:F/Calque n=1
-  sourceFamily: ua-gec
-  sourceFamilies:
-  - ua-gec
-  severity: enrichment
-  curator: script:heritage_calque_wave-2026-08-11
-  notes: 'Wave-1 mechanical GEC-calque densification (#6623): nativeSlug resolved via exact Atlas lemma match; frame sentences
-    are corpus-attested carriers with the sole `correct` occurrence substituted by the UA-GEC `error` surface. No curator
-    linguistic review beyond mechanical POS-admission and carrier-sentence gates; severity defaults to enrichment pending
-    curator upgrade to russianism where warranted.'
-  frames:
-  - sentence_with_slot: Усе тут було нове, зовнішньо нібито великої різниці не помічалося, але крізь кущі не можна було проплисти,
-      і в повітрі, яке так нагадувало глибину, вимовлені слова не лишали ___ собою найменшої бульки.
-    answer_form: за
-    calque_form: ніж
-    origin: ua-gec-calque-wave1:literary_texts/5cbffa78_c0001
 - calqueLabel: обично
   calqueSurfaces:
   - обично
@@ -5834,32 +5655,6 @@ pairs:
     answer_form: захоплення
     calque_form: угон
     origin: ua-gec-calque-wave1:literary_texts/b8bb76e1_c0002
-- calqueLabel: дивлячись
-  calqueSurfaces:
-  - дивлячись
-  nativeSlug: зважаючи
-  nativeLemma: зважаючи
-  kind: lexical
-  corrections:
-  - зважаючи
-  rationale: 'UA-GEC F/Calque corpus evidence (native + fluency annotator correction, n=1 occurrence(s) across 1 document(s)):
-    «дивлячись» flagged non-standard; reviewed correction «зважаючи».'
-  citations:
-  - ua-gec:F/Calque n=1
-  sourceFamily: ua-gec
-  sourceFamilies:
-  - ua-gec
-  severity: enrichment
-  curator: script:heritage_calque_wave-2026-08-11
-  notes: 'Wave-1 mechanical GEC-calque densification (#6623): nativeSlug resolved via exact Atlas lemma match; frame sentences
-    are corpus-attested carriers with the sole `correct` occurrence substituted by the UA-GEC `error` surface. No curator
-    linguistic review beyond mechanical POS-admission and carrier-sentence gates; severity defaults to enrichment pending
-    curator upgrade to russianism where warranted.'
-  frames:
-  - sentence_with_slot: І завербували б вас, ображеного на радянську владу, не ___ на те, що ви патріот.
-    answer_form: зважаючи
-    calque_form: дивлячись
-    origin: ua-gec-calque-wave1:literary_texts/e27925aa_c0082
 - calqueLabel: Ранком
   calqueSurfaces:
   - Ранком
@@ -6175,58 +5970,6 @@ pairs:
     answer_form: навички
     calque_form: навики
     origin: ua-gec-calque-wave1:literary_texts/e6077fa0_c0009
-- calqueLabel: навкруг
-  calqueSurfaces:
-  - навкруг
-  nativeSlug: навколо
-  nativeLemma: навколо
-  kind: lexical
-  corrections:
-  - навколо
-  rationale: 'UA-GEC F/Calque corpus evidence (native + fluency annotator correction, n=1 occurrence(s) across 1 document(s)):
-    «навкруг» flagged non-standard; reviewed correction «навколо».'
-  citations:
-  - ua-gec:F/Calque n=1
-  sourceFamily: ua-gec
-  sourceFamilies:
-  - ua-gec
-  severity: enrichment
-  curator: script:heritage_calque_wave-2026-08-11
-  notes: 'Wave-1 mechanical GEC-calque densification (#6623): nativeSlug resolved via exact Atlas lemma match; frame sentences
-    are corpus-attested carriers with the sole `correct` occurrence substituted by the UA-GEC `error` surface. No curator
-    linguistic review beyond mechanical POS-admission and carrier-sentence gates; severity defaults to enrichment pending
-    curator upgrade to russianism where warranted.'
-  frames:
-  - sentence_with_slot: Коли Джалапіта втомлювався, він сідав просто на землю і перетасовував ___ себе всі ляндшафти.
-    answer_form: навколо
-    calque_form: навкруг
-    origin: ua-gec-calque-wave1:literary_texts/0e81c7c8_c0002
-- calqueLabel: самих
-  calqueSurfaces:
-  - самих
-  nativeSlug: найбільш
-  nativeLemma: найбільш
-  kind: lexical
-  corrections:
-  - найбільш
-  rationale: 'UA-GEC F/Calque corpus evidence (native + fluency annotator correction, n=1 occurrence(s) across 1 document(s)):
-    «самих» flagged non-standard; reviewed correction «найбільш».'
-  citations:
-  - ua-gec:F/Calque n=1
-  sourceFamily: ua-gec
-  sourceFamilies:
-  - ua-gec
-  severity: enrichment
-  curator: script:heritage_calque_wave-2026-08-11
-  notes: 'Wave-1 mechanical GEC-calque densification (#6623): nativeSlug resolved via exact Atlas lemma match; frame sentences
-    are corpus-attested carriers with the sole `correct` occurrence substituted by the UA-GEC `error` surface. No curator
-    linguistic review beyond mechanical POS-admission and carrier-sentence gates; severity defaults to enrichment pending
-    curator upgrade to russianism where warranted.'
-  frames:
-  - sentence_with_slot: Але ___ рішучі серед маніпуляторів бралися залагодити й це.
-    answer_form: найбільш
-    calque_form: самих
-    origin: ua-gec-calque-wave1:literary_texts/cbf65c13_c0117
 - calqueLabel: приказ
   calqueSurfaces:
   - приказ
