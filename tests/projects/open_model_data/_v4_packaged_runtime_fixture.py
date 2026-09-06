@@ -30,10 +30,26 @@ from test_v4_preserved_provenance import LexicalResources
 CHILD = """#!/runtime/py/bin/python
 import json, os, sys, urllib.request
 args=sys.argv[1:]
-prompt=sys.stdin.read()
+rpc=args[0]=="app-server"
+def emit(event): print(json.dumps(event),flush=True)
+if rpc:
+    init=json.loads(sys.stdin.readline());assert init["id"]==1 and init["method"]=="initialize"
+    emit({"id":1,"result":{"userAgent":"source-free-fixture"}})
+    ready=json.loads(sys.stdin.readline());assert ready["method"]=="initialized"
+    start=json.loads(sys.stdin.readline());assert start["id"]==2 and start["method"]=="thread/start"
+    options=start["params"];model=options["model"]
+    assert options["approvalPolicy"]=="never" and options["sandbox"]=="read-only" and options["cwd"]=="/work"
+    emit({"method":"remoteControl/status/changed","params":{"status":"disabled"}})
+    emit({"id":2,"result":{"model":model,"modelProvider":"openai","approvalPolicy":"never","sandbox":{"type":"readOnly"},"cwd":"/work","thread":{"id":"fixture-thread"}}})
+    inventory=json.loads(sys.stdin.readline());assert inventory["id"]==3 and inventory["method"]=="mcpServerStatus/list" and inventory["params"]["threadId"]=="fixture-thread"
+    emit({"id":3,"result":{"data":[{"name":"sources","tools":{name:{} for name in ("verify_word","verify_words","verify_lemma","verify_stress","check_modern_form")}}],"nextCursor":None}})
+    turn=json.loads(sys.stdin.readline());assert turn["id"]==4 and turn["method"]=="turn/start" and turn["params"]["threadId"]=="fixture-thread"
+    prompt=turn["params"]["input"][0]["text"]
+else:
+    prompt=sys.stdin.read()
+    model=args[args.index("--model")+1]
 assert prompt.count("V4-SEMANTIC-INPUT: ")==1
 payload=json.loads(prompt.split("V4-SEMANTIC-INPUT: ",1)[1])
-model=args[args.index("--model")+1]
 capability=os.environ["V4_SOURCES_ATTEMPT_CAPABILITY"]
 provider=os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("OPENAI_API_KEY")
 assert provider and capability not in args and capability not in prompt
@@ -66,11 +82,18 @@ if payload["role"]=="author":
     text="V4-AUTHOR-ROW: "+json.dumps(row)
 else:
     assert payload["rubric"] and len(payload["authorship_receipt_sha256"])==64
+    assert "Use the Sources MCP tools" in prompt
     valid=all(isinstance(payload["authored_row"].get(key),str) and payload["authored_row"][key] for key in payload["constraints"]["required_fields"])
     text="V4-REVIEW-VERDICT: "+("PASS" if valid else "FAIL")
 session="fixture-"+payload["role"]
-for event in [{"type":"system","subtype":"init","model":model,"session_id":session},{"type":"assistant","session_id":session,"message":{"model":model,"content":[{"type":"text","text":text}]}},{"type":"result","subtype":"success","session_id":session,"is_error":False}]:
-    print(json.dumps(event),flush=True)
+if rpc:
+    emit({"id":4,"result":{"turn":{"id":"fixture-turn","status":"inProgress"}}})
+    emit({"method":"item/completed","params":{"threadId":"fixture-thread","turnId":"fixture-turn","item":{"id":"fixture-message","type":"agentMessage","text":text}}})
+    emit({"method":"turn/completed","params":{"threadId":"fixture-thread","turn":{"id":"fixture-turn","status":"completed","error":None}}})
+    assert sys.stdin.read()==""
+else:
+    for event in [{"type":"system","subtype":"init","model":model,"session_id":session},{"type":"assistant","session_id":session,"message":{"model":model,"content":[{"type":"text","text":text}]}},{"type":"result","subtype":"success","session_id":session,"is_error":False}]:
+        emit(event)
 """
 
 

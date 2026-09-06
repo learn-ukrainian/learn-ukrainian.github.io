@@ -96,6 +96,13 @@ def test_native_plan_binds_effort_and_keeps_secrets_out_of_argv(
         }
     else:
         assert "model_reasoning_effort=" + json.dumps(effort) in command
+        assert command[command.index("--") + 2:command.index("--") + 5] == ["app-server", "--listen", "stdio://"]
+        assert "--model" not in command and "--json" not in command
+        requests = child_runtime._codex_requests(claim["binding"])
+        assert requests[2]["params"]["model"] == "fixture-model"
+        assert requests[2]["params"]["approvalPolicy"] == "never"
+        assert requests[2]["params"]["sandbox"] == "read-only"
+        assert requests[3]["method"] == "mcpServerStatus/list"
     claim["binding"]["role"] = "caller-selected"
     with pytest.raises(OperationRefused, match="operation_role"):
         child_runtime._plan(profile, claim, provider_credential)
