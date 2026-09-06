@@ -32,17 +32,37 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.audit.source_inventory_review_decisions import source_inventory_key
+from scripts.guardrails.worktree_containment import resolve_main_root
+
+PRIMARY_ROOT = resolve_main_root(PROJECT_ROOT) or PROJECT_ROOT
+
+
+def _resolve_repo_path(path: Path) -> Path:
+    """Resolve a path against the worktree root first, then primary checkout for gitignored data."""
+    if path.exists():
+        return path
+    try:
+        rel = path.relative_to(PROJECT_ROOT)
+        primary_fallback = PRIMARY_ROOT / rel
+        if primary_fallback.exists():
+            return primary_fallback
+    except ValueError:
+        pass
+    return path
+
+
 from scripts.lexicon import curated_ohoiko_ulp_repromote as promo
 from scripts.lexicon.build_data_manifest import _lemma_key
 from scripts.lexicon.heritage_classifier import classify_lemma
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 from scripts.verification.vesum import verify_word
 
-DEFAULT_INVENTORY = (
+DEFAULT_INVENTORY = _resolve_repo_path(
     PROJECT_ROOT
     / "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml"
 )
-DEFAULT_MANIFEST = PROJECT_ROOT / "site/src/data/lexicon-manifest.json"
+DEFAULT_MANIFEST = _resolve_repo_path(PROJECT_ROOT / "site/src/data/lexicon-manifest.json")
+DEFAULT_ATLAS_DB = _resolve_repo_path(PROJECT_ROOT / "data/atlas.db")
 DEFAULT_BATCH_ID = "ohoiko-ulp-paired-split-legs-2026-08-12"
 SPACE_COLLAPSE_BATCH_ID = "ohoiko-ulp-ocr-space-collapse-2026-08-14"
 DEFAULT_SPACE_COLLAPSE_INVENTORY = (
@@ -206,11 +226,25 @@ def load_inventory_records(inventory_path: Path) -> list[dict[str, Any]]:
     return records
 
 
-def atlas_lemma_keys(manifest_path: Path) -> tuple[int, set[str]]:
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+def atlas_lemma_keys(manifest_path: Path = DEFAULT_MANIFEST) -> tuple[int, set[str]]:
+    resolved = _resolve_repo_path(manifest_path)
+    manifest = json.loads(resolved.read_text(encoding="utf-8"))
     entries = manifest["entries"]
     keys = {_lemma_key(str(e.get("lemma") or "")) for e in entries if isinstance(e, dict)}
     return len(entries), keys
+
+
+def atlas_db_lemma_keys(db_path: Path = DEFAULT_ATLAS_DB) -> tuple[int, set[str]]:
+    """Return total article count and set of normalized lemma keys from data/atlas.db."""
+    resolved = _resolve_repo_path(db_path)
+    if not resolved.exists():
+        return 0, set()
+    import sqlite3
+
+    with sqlite3.connect(f"file:{resolved}?mode=ro", uri=True) as conn:
+        rows = conn.execute("SELECT lemma FROM articles").fetchall()
+        keys = {_lemma_key(str(r[0])) for r in rows if r[0]}
+        return len(rows), keys
 
 
 def unique_by_lemma_key(records: Iterable[Mapping[str, Any]]) -> dict[str, dict[str, Any]]:
@@ -249,10 +283,20 @@ def derive_inventory_residual(
             }
 
     counts = {c: len(v) for c, v in sorted(cats.items())}
+    inv_rel = (
+        str(inventory_path.relative_to(PROJECT_ROOT))
+        if inventory_path.is_relative_to(PROJECT_ROOT)
+        else str(inventory_path)
+    )
+    man_rel = (
+        str(manifest_path.relative_to(PROJECT_ROOT))
+        if manifest_path.is_relative_to(PROJECT_ROOT)
+        else str(manifest_path)
+    )
     return {
         "schema": "atlas-6370-ohoiko-residual.v1",
-        "inventory_path": str(inventory_path),
-        "manifest_path": str(manifest_path),
+        "inventory_path": inv_rel,
+        "manifest_path": man_rel,
         "manifest_entries": entry_count,
         "inventory_records": len(records),
         "unique_inventory_lemma_keys": len(by_key),
@@ -884,8 +928,9 @@ def write_space_collapse_artifacts(
 
 def analyze_all_curated_leftovers(
     *,
-    inventory_path: Path,
-    manifest_path: Path,
+    inventory_path: Path = DEFAULT_INVENTORY,
+    manifest_path: Path = DEFAULT_MANIFEST,
+    atlas_db_path: Path | None = DEFAULT_ATLAS_DB,
 ) -> dict[str, Any]:
     """Audit and classify all 250 curated Ohoiko/ULP leftover keys against live Atlas (#7550).
 
@@ -895,7 +940,11 @@ def analyze_all_curated_leftovers(
       - 3 clean tokens (ого!, ой!, тваринa [latin-a OCR])
       - 3 ULP taught leftovers (переключити, кримчанин, просвітитель)
     """
-    _entry_count, atlas_keys = atlas_lemma_keys(manifest_path)
+    entry_count, atlas_keys = atlas_lemma_keys(manifest_path)
+    db_articles_count = 0
+    db_keys: set[str] = set()
+    if atlas_db_path is not None:
+        db_articles_count, db_keys = atlas_db_lemma_keys(atlas_db_path)
     records = load_inventory_records(inventory_path)
     unique_raw_records: dict[str, dict[str, Any]] = {str(r["lemma"]): r for r in records}
 
@@ -934,37 +983,41 @@ def analyze_all_curated_leftovers(
         if k in ("ого!", "ой!"):
             canonical = k.rstrip("!")
             in_atlas = _lemma_key(canonical) in atlas_keys
+            in_db = _lemma_key(canonical) in db_keys if db_keys else in_atlas
             disp = "hold(interjection_punctuation_canonical_in_atlas)"
             leg_disposition_counts[disp] = leg_disposition_counts.get(disp, 0) + 1
-            table_rows.append(
-                {
-                    "bucket": "clean_tokens",
-                    "key": k,
-                    "legs": [canonical],
-                    "vesum_heritage": "interjection token",
-                    "in_atlas": in_atlas,
-                    "disposition": disp,
-                    "source_id": r.get("source_id"),
-                    "locator": r.get("locator"),
-                }
-            )
+            row_item = {
+                "bucket": "clean_tokens",
+                "key": k,
+                "legs": [canonical],
+                "vesum_heritage": "interjection token",
+                "in_atlas": in_atlas,
+                "disposition": disp,
+                "source_id": r.get("source_id"),
+                "locator": r.get("locator"),
+            }
+            if db_keys:
+                row_item["in_atlas_db"] = in_db
+            table_rows.append(row_item)
         elif k == "тваринa":
             canonical = recover_latin_lookalike(k)
             in_atlas = _lemma_key(canonical) in atlas_keys
+            in_db = _lemma_key(canonical) in db_keys if db_keys else in_atlas
             disp = "hold(ocr_latin_lookalike_canonical_in_atlas)"
             leg_disposition_counts[disp] = leg_disposition_counts.get(disp, 0) + 1
-            table_rows.append(
-                {
-                    "bucket": "clean_tokens",
-                    "key": k,
-                    "legs": [canonical],
-                    "vesum_heritage": "VESUM ok, standard",
-                    "in_atlas": in_atlas,
-                    "disposition": disp,
-                    "source_id": r.get("source_id"),
-                    "locator": r.get("locator"),
-                }
-            )
+            row_item = {
+                "bucket": "clean_tokens",
+                "key": k,
+                "legs": [canonical],
+                "vesum_heritage": "VESUM ok, standard",
+                "in_atlas": in_atlas,
+                "disposition": disp,
+                "source_id": r.get("source_id"),
+                "locator": r.get("locator"),
+            }
+            if db_keys:
+                row_item["in_atlas_db"] = in_db
+            table_rows.append(row_item)
 
     # 2. ULP leftovers
     for r in ulp_3:
@@ -974,41 +1027,45 @@ def analyze_all_curated_leftovers(
         cl = str(hs.get("classification") or "")
         is_ru = bool(hs.get("is_russianism"))
         in_atlas = _lemma_key(eff) in atlas_keys
+        in_db = _lemma_key(eff) in db_keys if db_keys else in_atlas
         hits = bool(verify_word(eff) or [])
         disp = f"hold(heritage_{cl})" if (is_ru or cl in HERITAGE_HOLD) else ("admit" if (hits and not in_atlas) else "hold")
         leg_disposition_counts[disp] = leg_disposition_counts.get(disp, 0) + 1
-        table_rows.append(
-            {
-                "bucket": "ulp_leftovers",
-                "key": k,
-                "legs": [eff],
-                "vesum_heritage": f"VESUM ok, {cl}" if hits else "vesum_absent",
-                "in_atlas": in_atlas,
-                "disposition": disp,
-                "source_id": r.get("source_id"),
-                "locator": r.get("locator"),
-            }
-        )
+        row_item = {
+            "bucket": "ulp_leftovers",
+            "key": k,
+            "legs": [eff],
+            "vesum_heritage": f"VESUM ok, {cl}" if hits else "vesum_absent",
+            "in_atlas": in_atlas,
+            "disposition": disp,
+            "source_id": r.get("source_id"),
+            "locator": r.get("locator"),
+        }
+        if db_keys:
+            row_item["in_atlas_db"] = in_db
+        table_rows.append(row_item)
 
     # 3. 500-verbs trailing comma
     for r in verbs_31:
         k = str(r["lemma"])
         canonical = k.rstrip(",")
         in_atlas = _lemma_key(canonical) in atlas_keys
+        in_db = _lemma_key(canonical) in db_keys if db_keys else in_atlas
         disp = "hold(trailing_comma_canonical_in_atlas)"
         leg_disposition_counts[disp] = leg_disposition_counts.get(disp, 0) + 1
-        table_rows.append(
-            {
-                "bucket": "verbs_500_trailing_comma",
-                "key": k,
-                "legs": [canonical],
-                "vesum_heritage": "VESUM ok, standard",
-                "in_atlas": in_atlas,
-                "disposition": disp,
-                "source_id": r.get("source_id"),
-                "locator": r.get("locator"),
-            }
-        )
+        row_item = {
+            "bucket": "verbs_500_trailing_comma",
+            "key": k,
+            "legs": [canonical],
+            "vesum_heritage": "VESUM ok, standard",
+            "in_atlas": in_atlas,
+            "disposition": disp,
+            "source_id": r.get("source_id"),
+            "locator": r.get("locator"),
+        }
+        if db_keys:
+            row_item["in_atlas_db"] = in_db
+        table_rows.append(row_item)
 
     # 4. 1000-words pair / comma keys
     for r in words_213:
@@ -1042,24 +1099,28 @@ def analyze_all_curated_leftovers(
                     leg_disposition_counts[cat] = leg_disposition_counts.get(cat, 0) + 1
 
         all_in_a = all(_lemma_key(l) in atlas_keys for l in eff_legs)
+        all_in_db = all(_lemma_key(l) in db_keys for l in eff_legs) if db_keys else all_in_a
         key_disp = "hold(already_in_atlas)" if all_in_a else f"hold({', '.join(leg_disps)})"
 
-        table_rows.append(
-            {
-                "bucket": "words_1000_pair_keys",
-                "key": k,
-                "legs": eff_legs,
-                "vesum_heritage": "VESUM / split classified",
-                "in_atlas": all_in_a,
-                "disposition": key_disp,
-                "source_id": r.get("source_id"),
-                "locator": r.get("locator"),
-            }
-        )
+        row_item = {
+            "bucket": "words_1000_pair_keys",
+            "key": k,
+            "legs": eff_legs,
+            "vesum_heritage": "VESUM / split classified",
+            "in_atlas": all_in_a,
+            "disposition": key_disp,
+            "source_id": r.get("source_id"),
+            "locator": r.get("locator"),
+        }
+        if db_keys:
+            row_item["in_atlas_db"] = all_in_db
+        table_rows.append(row_item)
 
     return {
         "schema": "atlas-7550-anna-unit-a-leftovers-census.v1",
         "total_keys": len(table_rows),
+        "manifest_entries": entry_count,
+        "atlas_db_articles": db_articles_count,
         "bucket_counts": bucket_counts,
         "leg_disposition_counts": leg_disposition_counts,
         "promote_candidate_count": len(promote_candidates),
@@ -1072,6 +1133,7 @@ def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--inventory", type=Path, default=DEFAULT_INVENTORY)
     p.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
+    p.add_argument("--atlas-db", type=Path, default=DEFAULT_ATLAS_DB, help="Path to data/atlas.db")
     p.add_argument("--out", type=Path, help="Write residual / split analysis JSON")
     p.add_argument("--rederive", action="store_true", help="Re-derive inventory residual")
     p.add_argument("--analyze-paired", action="store_true", help="Analyze paired splits")
@@ -1256,12 +1318,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         census = analyze_all_curated_leftovers(
             inventory_path=args.inventory,
             manifest_path=args.manifest,
+            atlas_db_path=args.atlas_db,
         )
         payload["census_250"] = census
         print(
             json.dumps(
                 {
                     "total_keys": census["total_keys"],
+                    "manifest_entries": census.get("manifest_entries"),
+                    "atlas_db_articles": census.get("atlas_db_articles"),
                     "bucket_counts": census["bucket_counts"],
                     "leg_disposition_counts": census["leg_disposition_counts"],
                     "promote_candidate_count": census["promote_candidate_count"],

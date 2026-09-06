@@ -306,3 +306,30 @@ def test_analyze_all_curated_leftovers_disposition(
     assert res["bucket_counts"]["words_1000_pair_keys"] == 1
     assert res["bucket_counts"]["ulp_leftovers"] == 1
     assert res["promote_candidate_count"] == 0
+
+
+def test_live_curated_unit_a_leftovers_census_invariants(requires_vesum_db) -> None:
+    manifest_path = paired_split.DEFAULT_MANIFEST
+    inventory_path = paired_split.DEFAULT_INVENTORY
+    atlas_db_path = paired_split.DEFAULT_ATLAS_DB
+    if not manifest_path.exists() or not inventory_path.exists():
+        pytest.skip("requires live manifest and inventory")
+
+    res = paired_split.analyze_all_curated_leftovers(
+        inventory_path=inventory_path,
+        manifest_path=manifest_path,
+        atlas_db_path=atlas_db_path,
+    )
+    assert res["total_keys"] == 250
+    assert res["bucket_counts"]["words_1000_pair_keys"] == 213
+    assert res["bucket_counts"]["verbs_500_trailing_comma"] == 31
+    assert res["bucket_counts"]["clean_tokens"] == 3
+    assert res["bucket_counts"]["ulp_leftovers"] == 3
+    assert res["promote_candidate_count"] == 0
+    assert res["leg_disposition_counts"]["already_in_atlas"] == 406
+    assert res["leg_disposition_counts"]["multiword_after_split"] == 15
+    assert res["leg_disposition_counts"]["single_word_vesum_absent"] == 1
+    assert res["leg_disposition_counts"]["hold(trailing_comma_canonical_in_atlas)"] == 31
+    assert res["leg_disposition_counts"]["hold(heritage_russianism)"] == 3
+    if atlas_db_path and atlas_db_path.exists():
+        assert res["atlas_db_articles"] == 19785
