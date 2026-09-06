@@ -511,6 +511,29 @@ class AuthorityService:
                 idempotency_key=message_key,
             )
 
+    def enqueue_supervisory_request(
+        self,
+        *,
+        sender: str,
+        recipient: str,
+        body: str,
+        correlation_id: str,
+        idempotency_key: str,
+        deadline_at: str | None = None,
+        created_at: str | None = None,
+    ) -> AuthorityMessage:
+        """Durably enqueue one supervisory request, even while its driver is offline."""
+        return self.publish_message(
+            sender=sender,
+            recipients=(_nonempty(recipient, field="recipient"),),
+            body=body,
+            kind="supervisory-request",
+            correlation_id=_nonempty(correlation_id, field="correlation_id"),
+            idempotency_key=_nonempty(idempotency_key, field="idempotency_key"),
+            deadline_at=deadline_at,
+            created_at=created_at,
+        )
+
     def get_message(self, message_id: str) -> AuthorityMessage:
         mid = _nonempty(message_id, field="message_id")
         row = self._conn.execute(
@@ -1150,6 +1173,111 @@ class AuthorityService:
                 content_sha256=str(claimed["content_sha256"]),
             )
 
+    def record_supervisory_consumption(
+        self,
+        delivery_id: str,
+        *,
+        worker_id: str,
+        fence_token: int,
+        driver_generation: str,
+        now: str | None = None,
+    ) -> dict[str, Any]:
+        """Bind consumption to a leased generation before performing a side effect.
+
+        A replay or reconciliation must not blindly repeat the side effect. An
+        earlier consumption proves intent, not completion: the successor must
+        inspect the external outcome before terminalizing the delivery.
+        """
+        did = _nonempty(delivery_id, field="delivery_id")
+        worker = _nonempty(worker_id, field="worker_id")
+        generation = _nonempty(driver_generation, field="driver_generation")
+        now_value = self._now_string(now)
+        namespace = f"supervisory-consumption:{did}"
+        digest = _sha256_json({"driver_generation": generation})
+        with self._write_transaction():
+            row = self._require_supervisory_delivery_tx(did)
+            self._assert_current_delivery_lease(row, worker, fence_token, now_value)
+            existing = self._check_idempotency_tx(namespace, str(fence_token), digest)
+            previous = self._conn.execute(
+                """SELECT subject_id FROM authority_idempotency
+                   WHERE namespace = ? AND CAST(idempotency_key AS INTEGER) < ?
+                   ORDER BY CAST(idempotency_key AS INTEGER) ASC LIMIT 1""",
+                (namespace, fence_token),
+            ).fetchone()
+            if existing is None:
+                self._insert_idempotency_tx(namespace, str(fence_token), digest, generation)
+            self._record_wake_receipt_tx(
+                did, str(row["recipient"]), fence_token, state="consumed", now=now_value
+            )
+            return {
+                "delivery_id": did,
+                "fence_token": fence_token,
+                "driver_generation": generation,
+                "replay": existing is not None,
+                "reconciliation": previous is not None,
+                "reconciled_generation": str(previous["subject_id"]) if previous else None,
+            }
+
+    def act_on_supervisory_delivery(
+        self,
+        delivery_id: str,
+        *,
+        worker_id: str,
+        fence_token: int,
+        acknowledgment: bytes | None = None,
+        now: str | None = None,
+    ) -> AuthorityDelivery:
+        """Record the verified action outcome after durable consumption."""
+        self._require_supervisory_delivery_tx(delivery_id)
+        return self.acknowledge_delivery(
+            delivery_id, worker_id=worker_id, fence_token=fence_token,
+            acknowledgment=acknowledgment, now=now,
+        )
+
+    def refuse_supervisory_delivery(
+        self,
+        delivery_id: str,
+        *,
+        worker_id: str,
+        fence_token: int,
+        result: bytes | None = None,
+        now: str | None = None,
+    ) -> AuthorityDelivery:
+        """Record a driver's refusal after durable consumption."""
+        self._require_supervisory_delivery_tx(delivery_id)
+        return self.finish_delivery(
+            delivery_id, worker_id=worker_id, fence_token=fence_token,
+            state="failed", result=result, now=now,
+        )
+
+    def supervisory_delivery_status(self, delivery_id: str) -> str:
+        """Project durable delivery and consumption evidence into supervisory state."""
+        row = self._conn.execute(
+            """SELECT d.*, m.kind, EXISTS(
+                   SELECT 1 FROM authority_idempotency i
+                   WHERE i.namespace = 'supervisory-consumption:' || d.delivery_id
+               ) AS has_consumption
+               FROM authority_deliveries d JOIN comms_messages m USING (message_id)
+               WHERE d.delivery_id = ?""",
+            (_nonempty(delivery_id, field="delivery_id"),),
+        ).fetchone()
+        if row is None:
+            raise AuthorityServiceError("delivery_not_found")
+        if row["kind"] != "supervisory-request":
+            raise AuthorityServiceError("not_supervisory_delivery")
+        state = str(row["state"])
+        if state in _DELIVERY_TERMINAL:
+            return {"acknowledged": "acted_on", "failed": "refused"}.get(state, state)
+        if row["has_consumption"]:
+            return "live_driver_consumed"
+        return "delivered" if state == "running" else state
+
+    def _require_supervisory_delivery_tx(self, delivery_id: str) -> sqlite3.Row:
+        row = self._require_delivery_tx(_nonempty(delivery_id, field="delivery_id"))
+        if self.get_message(str(row["message_id"])).kind != "supervisory-request":
+            raise AuthorityServiceError("not_supervisory_delivery")
+        return row
+
     def acknowledge_delivery(
         self,
         delivery_id: str,
@@ -1208,6 +1336,14 @@ class AuthorityService:
                 )
                 return self._delivery_from_row(row)
             self._assert_current_delivery_lease(row, worker, fence_token, now_value)
+            if self.get_message(str(row["message_id"])).kind == "supervisory-request":
+                consumed = self._conn.execute(
+                    """SELECT 1 FROM authority_idempotency
+                       WHERE namespace = ? AND idempotency_key = ?""",
+                    (f"supervisory-consumption:{did}", str(fence_token)),
+                ).fetchone()
+                if consumed is None:
+                    raise AuthorityServiceError("supervisory_consumption_required")
             self._conn.execute(
                 """UPDATE authority_deliveries
                    SET state = ?, acknowledgment_artifact_id = ?, terminal_sha256 = ?,
