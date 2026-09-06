@@ -298,15 +298,18 @@ EOF
 # may prepare a handoff, but never owns lease renewal/release or process exit.
 session_supervisor_start_inbox_watch() {
   local watcher
-  watcher="$(cd "$(dirname "${BASH_SOURCE[0]}")/../ai_agent_bridge" && pwd)/inbox_watch.sh"
-  LC_SUPERVISORY_WAKE_FILE="$(mktemp)"
+  watcher="$(cd "$(dirname "${BASH_SOURCE[0]}")/../ai_agent_bridge" && pwd)/inbox_watch.sh" || return 1
+  [ -x "$watcher" ] || return 1
+  LC_SUPERVISORY_WAKE_FILE="$(mktemp)" || return 1
   # Read by the launcher_core.sh process wait loop.
   # shellcheck disable=SC2034
   LC_SUPERVISORY_EVENT=0
   LC_SUPERVISORY_DELIVERY=""
   trap 'LC_SUPERVISORY_EVENT=1' USR1
-  "$watcher" "${LC_DRIVER_HANDOFF:-$LC_PROVIDER}" --live-supervisory --notify-parent \
-    > "$LC_SUPERVISORY_WAKE_FILE" &
+  (
+    trap - EXIT INT TERM HUP USR1
+    exec "$watcher" "${LC_DRIVER_HANDOFF:-$LC_PROVIDER}" --live-supervisory --notify-parent
+  ) > "$LC_SUPERVISORY_WAKE_FILE" &
   LC_SUPERVISORY_WATCH_PID=$!
 }
 
@@ -323,8 +326,18 @@ session_supervisor_read_wake() {
 }
 
 session_supervisor_stop_inbox_watch() {
+  local attempt
   if [ -n "${LC_SUPERVISORY_WATCH_PID:-}" ]; then
     kill "$LC_SUPERVISORY_WATCH_PID" 2>/dev/null || true
+    # A provider can exit while the watcher is still crossing its exec boundary.
+    # Bound cleanup even if that startup race loses the initial TERM.
+    for ((attempt=0; attempt<20; attempt++)); do
+      kill -0 "$LC_SUPERVISORY_WATCH_PID" 2>/dev/null || break
+      sleep 0.05
+    done
+    if kill -0 "$LC_SUPERVISORY_WATCH_PID" 2>/dev/null; then
+      kill -KILL "$LC_SUPERVISORY_WATCH_PID" 2>/dev/null || true
+    fi
     wait "$LC_SUPERVISORY_WATCH_PID" 2>/dev/null || true
     LC_SUPERVISORY_WATCH_PID=""
   fi

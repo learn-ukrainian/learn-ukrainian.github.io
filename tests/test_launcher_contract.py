@@ -178,6 +178,10 @@ def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, destination)
+    watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
+    watcher.parent.mkdir(parents=True)
+    watcher.write_text("#!/usr/bin/env bash\nexec sleep 300\n", encoding="utf-8")
+    watcher.chmod(0o755)
 
     claim_marker = tmp_path / "lease-claimed"
     close_marker = tmp_path / "lease-closed"
@@ -265,6 +269,10 @@ def _core_driver_exit_fixture(
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, destination)
+    watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
+    watcher.parent.mkdir(parents=True)
+    watcher.write_text("#!/usr/bin/env bash\nexec sleep 300\n", encoding="utf-8")
+    watcher.chmod(0o755)
 
     close_attempts = tmp_path / "close-attempts"
     close_marker = tmp_path / "lease-closed"
@@ -423,6 +431,10 @@ def test_real_store_driver_close_successor_and_expired_recovery(tmp_path: Path) 
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, destination)
+    watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
+    watcher.parent.mkdir(parents=True)
+    watcher.write_text("#!/usr/bin/env bash\nexec sleep 300\n", encoding="utf-8")
+    watcher.chmod(0o755)
     python_bin = root / ".venv" / "bin" / "python"
     python_bin.parent.mkdir(parents=True)
     python_bin.write_text(

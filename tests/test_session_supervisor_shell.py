@@ -217,6 +217,7 @@ printf 'INSTANCE=%s\\n' "$SESSION_STREAM_INSTANCE_ID"
 def test_claim_resolves_unset_host_id_and_preserves_explicit_override(tmp_path: Path) -> None:
     project, supervisor_capture = _build_fake_project(tmp_path)
     env = _clean_environ()
+    env.pop("LU_MONITOR_HOST_ID", None)
     env["FAKE_RESOLVED_HOST_ID"] = "host-job"
 
     script = f"""
@@ -340,3 +341,74 @@ exit 0
     )
     assert result.returncode == 43, result.stderr + result.stdout
     assert "session supervisor failed" in result.stderr
+
+
+def test_launcher_wake_process_lifecycle(tmp_path: Path) -> None:
+    """A real watcher signal reaps the provider before exact close and exec."""
+    import shlex
+    import sys
+
+    for scenario in ("wake", "watcher_failure", "close_failure", "normal_exit", "watcher_ignores_term"):
+        root = tmp_path / scenario
+        lib = root / "scripts" / "lib"
+        lib.mkdir(parents=True)
+        for name in ("launcher_core.sh", "session_supervisor.sh"):
+            (lib / name).write_text((_REPO_ROOT / "scripts" / "lib" / name).read_text())
+        watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
+        watcher.parent.mkdir()
+        log = root / "events"
+        provider_pid = root / "provider-pid"
+        _write_executable(watcher, f'''#!/usr/bin/env bash
+while [ ! -f {shlex.quote(str(provider_pid))} ]; do sleep 0.01; done
+if [ '{scenario}' = normal_exit ]; then exec sleep 30; fi
+if [ '{scenario}' = watcher_ignores_term ]; then trap '' TERM; exec sleep 30; fi
+printf 'delivery-test\\n'
+kill -USR1 "$PPID"
+if [ '{scenario}' = watcher_failure ]; then exit 2; fi
+exit 75
+''')
+        provider = root / "provider.py"
+        provider.write_text(f'''import os, signal, time
+from pathlib import Path
+log = Path({str(log)!r})
+def stop(*args):
+    with log.open("a") as f: f.write("stopped\\n")
+    raise SystemExit(0)
+signal.signal(signal.SIGTERM, stop)
+Path({str(provider_pid)!r}).write_text(str(os.getpid()))
+if {scenario!r} in ("normal_exit", "watcher_ignores_term"):
+    time.sleep(0.1)
+    stop()
+while True: time.sleep(0.01)
+''')
+        successor = root / "start-codex-driver.sh"
+        _write_executable(successor, f'''#!/usr/bin/env bash
+[ "$SESSION_SUPERVISOR_WAKE_DELIVERY" = delivery-test ] || exit 41
+[ "$SESSION_SUPERVISOR_WAKE_STREAM" = epic:9999 ] || exit 42
+[ -z "${{SESSION_STREAM_LEASE_ID:-}}" ] || exit 43
+[ "$#" = 2 ] && [ "$1" = '--fixture' ] && [ "$2" = 'two words' ] || exit 44
+printf 'successor\\n' >> {shlex.quote(str(log))}
+''')
+        script = f'''
+source {shlex.quote(str(lib / 'launcher_core.sh'))}
+source {shlex.quote(str(lib / 'session_supervisor.sh'))}
+LC_ROOT={shlex.quote(str(root))}
+LC_MODE=driver LC_PROVIDER=codex LC_DRIVER_LEASE_CLAIMED=1 LC_DRY_RUN=0
+LC_DRIVER_ORIGINAL_ARGS=(--fixture 'two words')
+export SESSION_STREAM_ID=epic:9999 SESSION_STREAM_LEASE_ID=lease-test
+launcher_driver_renew_loop() {{ :; }}
+launcher_cursor_observer_renew_loop() {{ :; }}
+launcher_close_driver_lease() {{
+  if kill -0 "$(cat {shlex.quote(str(provider_pid))})" 2>/dev/null; then return 45; fi
+  printf 'close\\n' >> {shlex.quote(str(log))}
+  [ '{scenario}' != close_failure ] || return 1
+  LC_DRIVER_LEASE_CLOSED=1
+}}
+launcher_exec_command {shlex.quote(sys.executable)} {shlex.quote(str(provider))}
+'''
+        result = subprocess.run(["bash", "-c", script], capture_output=True, text=True, timeout=15)
+        assert result.returncode == (1 if scenario in ("watcher_failure", "close_failure") else 0), result.stderr
+        expected = ["stopped", "close"]
+        if scenario == "wake":
+            expected.append("successor")
+        assert log.read_text().splitlines() == expected

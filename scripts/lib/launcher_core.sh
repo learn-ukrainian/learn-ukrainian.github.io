@@ -451,7 +451,7 @@ launcher_claim_driver_lease() {
   source "$LC_ROOT/scripts/lib/session_supervisor.sh"
   task_id="${SESSION_TASK_ID:-launcher-${LC_PROVIDER}-driver}"
   instance_id="${SESSION_INSTANCE_ID:-${LC_PROVIDER}-$$}"
-  claim_session_supervisor_env "$stream" "$LC_PROVIDER" "$LC_DRIVER_HARNESS" "$task_id" "$instance_id" "$LC_SESSION_ROOT" "start-${LC_PROVIDER}-driver.sh" "$LC_EPIC"
+  claim_session_supervisor_env "$stream" "$LC_PROVIDER" "$LC_DRIVER_HARNESS" "$task_id" "$instance_id" "$LC_SESSION_ROOT" "start-${LC_PROVIDER}-driver.sh" "$LC_EPIC" || return 1
   LC_DRIVER_LEASE_CLAIMED=1
   launcher_cursor_observer_presence
 }
@@ -594,6 +594,7 @@ launcher_forward_driver_signal() {
     wait "$LC_DRIVER_CHILD_PID" 2>/dev/null || true
   fi
   LC_DRIVER_CHILD_PID=""
+  session_supervisor_stop_inbox_watch
   launcher_stop_driver_renew
   launcher_stop_cursor_observer_renew
   launcher_close_driver_lease || true
@@ -616,7 +617,7 @@ launcher_exec_command() {
   LC_DRIVER_CHILD_PID=""
   LC_DRIVER_LEASE_CLOSED=0
   LC_DRIVER_RENEW_PID=""
-  trap 'launcher_close_driver_lease || true' EXIT
+  trap 'session_supervisor_stop_inbox_watch; launcher_close_driver_lease || true' EXIT
   trap 'launcher_forward_driver_signal INT 130' INT
   trap 'launcher_forward_driver_signal TERM 143' TERM
   trap 'launcher_forward_driver_signal HUP 129' HUP
@@ -632,12 +633,26 @@ launcher_exec_command() {
   LC_DRIVER_CHILD_PID=$!
   launcher_driver_renew_loop "$LC_DRIVER_CHILD_PID"
   launcher_cursor_observer_renew_loop "$LC_DRIVER_CHILD_PID"
-  if wait "$LC_DRIVER_CHILD_PID"; then
-    provider_rc=0
-  else
-    provider_rc=$?
+  if ! session_supervisor_start_inbox_watch; then
+    session_supervisor_stop_provider_for_wake
+    provider_rc=1
+  fi
+  # USR1 interrupts Bash wait. Check the flag before waiting too: the watcher
+  # may have already completed between startup and this process boundary.
+  if [ "$provider_rc" -eq 0 ] && [ "${LC_SUPERVISORY_EVENT:-0}" != 1 ]; then
+    wait "$LC_DRIVER_CHILD_PID" || provider_rc=$?
+  fi
+  if [ "${LC_SUPERVISORY_EVENT:-0}" = 1 ]; then
+    if session_supervisor_read_wake; then
+      provider_rc=0
+    else
+      provider_rc=1
+      LC_SUPERVISORY_DELIVERY=""
+    fi
+    session_supervisor_stop_provider_for_wake
   fi
   LC_DRIVER_CHILD_PID=""
+  session_supervisor_stop_inbox_watch
   launcher_stop_driver_renew
   launcher_stop_cursor_observer_renew
   launcher_close_driver_lease || close_rc=$?
@@ -645,6 +660,10 @@ launcher_exec_command() {
 
   if [ "$close_rc" -ne 0 ] && [ "$provider_rc" -eq 0 ]; then
     return "$close_rc"
+  fi
+  if [ "$close_rc" -eq 0 ] && [ -n "${LC_SUPERVISORY_DELIVERY:-}" ]; then
+    session_supervisor_exec_successor
+    return 1
   fi
   return "$provider_rc"
 }
@@ -715,6 +734,9 @@ launcher_main() {
   LC_PROVIDER="$1"
   LC_MODE="$2"
   shift 2
+  # Consumed by session_supervisor_exec_successor in the sourced helper.
+  # shellcheck disable=SC2034
+  LC_DRIVER_ORIGINAL_ARGS=("$@")
   LC_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
   # Keep route selection self-contained for minimal/synthetic launchers while
   # sourcing the richer cold-start clause whenever the full checkout is
@@ -781,7 +803,7 @@ launcher_main() {
       launcher_adapter_exec
       return
     fi
-    launcher_claim_driver_lease
+    launcher_claim_driver_lease || exit 1
     launcher_adapter_canary || canary_rc=$?
     if [ "$canary_rc" -ne 0 ]; then
       launcher_close_failed_driver_lease

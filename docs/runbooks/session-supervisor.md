@@ -155,10 +155,11 @@ The inbox watcher has explicit Fleet Comms modes in addition to its legacy
 read-only notification mode. These require the generation-bound consumption API
 from PR #7781; a missing API fails closed, without generic acknowledgment fallback.
 
-**Integration status:** the wake bridge and launcher helper hooks exist, but
-the live process-loop callsites in `scripts/lib/launcher_core.sh` are pending.
-Until those callsites are connected, this is not a working unattended restart
-loop. Do not deploy or advertise it as one.
+The common launcher process loop starts and stops the supervisory watcher,
+handles its wake notification, reaps the provider, and closes the exact lease
+before executing the existing driver entrypoint with the original arguments.
+Watcher failure stops the provider without authorizing a successor; failed
+lease release also prevents successor execution.
 
 Supervisory requests use the existing authority message/delivery store and the
 recipient `supervisor:epic:<number>`, keeping automatic events out of ordinary
