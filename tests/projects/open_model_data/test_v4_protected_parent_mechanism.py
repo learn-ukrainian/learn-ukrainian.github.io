@@ -86,11 +86,11 @@ def signing_resources(tmp_path, monkeypatch):
 
 
 def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect, review_transform=None,
-                   reviewer_sources=True, reviewer_negative=False):
+                   reviewer_sources=True, reviewer_negative=False, reviewer_invalid=False):
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", pg_cluster.info.dsn)
     monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
     io = RuntimeResources(tmp_path, pg_cluster, monkeypatch, defect=defect, reviewer_sources=reviewer_sources,
-                          reviewer_negative=reviewer_negative)
+                          reviewer_negative=reviewer_negative, reviewer_invalid=reviewer_invalid)
     constraints = linguistic_constraints()
     release = WheelRelease(built_wheel)
     try:
@@ -166,7 +166,7 @@ def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resou
             review_snapshot = {**preparation, "authored_row": row, "rubric_sha256": binding["rubric_sha256"]}
             if review_transform is not None:
                 review_snapshot = review_transform(conn, owned, review_snapshot)
-            if not reviewer_sources:
+            if not reviewer_sources or reviewer_invalid:
                 from learn_ukrainian_v4_runtime.operation_auth import OperationRefused
 
                 before = conn.execute("SELECT count(*) AS n FROM fleet_comms_artifact_blobs").fetchone()["n"]
@@ -174,6 +174,13 @@ def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resou
                     run(reviewer.request_id, review_snapshot)
                 assert conn.execute("SELECT state FROM requests WHERE request_id=%s",
                                     (reviewer.request_id,)).fetchone()["state"] == "failed"
+                if reviewer_invalid:
+                    rows = conn.execute(
+                        "SELECT record_json FROM v4_sources_invocations WHERE request_id=%s",
+                        (reviewer.request_id,),
+                    ).fetchall()
+                    assert len(rows) == 1
+                    assert json.loads(rows[0]["record_json"])["disposition"] == "invalid_input"
                 assert conn.execute("SELECT count(*) AS n FROM fleet_comms_artifact_blobs").fetchone()["n"] == before
                 assert conn.execute("SELECT count(*) AS n FROM v4_execution_observations WHERE request_id=%s",
                                     (reviewer.request_id,)).fetchone()["n"] == 0
@@ -297,3 +304,10 @@ def test_reviewer_sources_negative_evidence_retains_real_fail_verdict(
                             False, reviewer_negative=True)
     assert result["reviewer_receipt"]["verdict"] == "FAIL"
     assert result["review_record"]["verification_tool_ids"] == []
+
+
+def test_reviewer_malformed_sources_call_does_not_count_as_verification(
+    pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources
+):
+    _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources,
+                   False, reviewer_invalid=True)

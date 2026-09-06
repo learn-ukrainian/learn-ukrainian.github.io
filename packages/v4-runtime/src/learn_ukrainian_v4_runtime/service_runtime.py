@@ -91,7 +91,9 @@ class V4ServiceRuntime:
                     # Negative/partial evidence still proves a lookup occurred;
                     # positive evidence IDs keep their existing receipt meaning.
                     invocation = conn.execute(
-                        "SELECT 1 FROM v4_sources_invocations WHERE attempt_id=%s LIMIT 1",
+                        f"SELECT 1 FROM {authority.SOURCES_INVOCATION_TABLE} WHERE attempt_id=%s "
+                        "AND record_json::jsonb->>'disposition' IN "
+                        "('supported','partial','negative','not_found','ambiguous') LIMIT 1",
                         (claim["attempt_id"],),
                     ).fetchone()
                     if invocation is None:

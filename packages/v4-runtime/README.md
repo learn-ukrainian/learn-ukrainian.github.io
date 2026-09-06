@@ -57,7 +57,8 @@ Mode-unavailable warnings refuse; full Sources callability still needs actual
 qualification evidence. Before storing a reviewer capture or observation, the
 parent requires at least one sanctioned Sources invocation recorded for that
 exact authenticated reviewer attempt. Negative, missing, ambiguous and partial
-lookup results count as performed verification; positive evidence identifiers
+lookup results count as performed verification; malformed `invalid_input`
+requests do not. Positive evidence identifiers
 retain their existing stricter receipt meaning. An author's call, advertised tool
 inventory, or model-reported call cannot satisfy this requirement. This proves
 verification occurred, not that the row is linguistically correct.

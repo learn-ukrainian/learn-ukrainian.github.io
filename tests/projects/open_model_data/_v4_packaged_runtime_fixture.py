@@ -75,6 +75,8 @@ if payload["role"]!="reviewer" or REVIEWER_SOURCES:
     check={"name":"verify_word","arguments":{"word":"fixture-one"}}
     if payload["role"]=="reviewer" and REVIEWER_NEGATIVE:
         check={"name":"verify_words","arguments":{"words":["fixture-one","absent"]}}
+    if payload["role"]=="reviewer" and REVIEWER_INVALID:
+        check={"name":"verify_words","arguments":{"words":[]}}
     body=json.dumps({"jsonrpc":"2.0","id":1,"method":"tools/call","params":check}).encode()
     request=urllib.request.Request(url,data=body,headers={"Content-Type":"application/json","Accept":"application/json, text/event-stream","Authorization":token})
     with urllib.request.urlopen(request,timeout=10) as response:
@@ -101,12 +103,13 @@ else:
 """
 
 
-def pinned_profile(root, *, sources_url, defect=False, reviewer_sources=True, reviewer_negative=False):
+def pinned_profile(root, *, sources_url, defect=False, reviewer_sources=True, reviewer_negative=False,
+                   reviewer_invalid=False):
     """Pin the fixture and a compact, portable CPython runtime closure."""
     executable = root / "fixture-cli"
     executable.write_text(
         CHILD.replace("DEFECT", repr(defect)).replace("REVIEWER_SOURCES", repr(reviewer_sources))
-        .replace("REVIEWER_NEGATIVE", repr(reviewer_negative))
+        .replace("REVIEWER_NEGATIVE", repr(reviewer_negative)).replace("REVIEWER_INVALID", repr(reviewer_invalid))
     )
     executable.chmod(0o700)
     base = Path(sys.base_prefix).resolve()
@@ -216,7 +219,8 @@ class WheelRelease:
 
 
 class RuntimeResources:
-    def __init__(self, root, pg, monkeypatch, *, defect=False, reviewer_sources=True, reviewer_negative=False):
+    def __init__(self, root, pg, monkeypatch, *, defect=False, reviewer_sources=True, reviewer_negative=False,
+                 reviewer_invalid=False):
         self.root = root
         # LOGIN applies only to this owned ephemeral cluster. Production roles,
         # credentials and services are never touched.
@@ -251,7 +255,7 @@ class RuntimeResources:
         assert self.server.started
         self.url = f"http://{socket.gethostbyname('localhost')}:{listener.getsockname()[1]}/mcp"
         path = pinned_profile(root, sources_url=self.url, defect=defect, reviewer_sources=reviewer_sources,
-                              reviewer_negative=reviewer_negative)
+                              reviewer_negative=reviewer_negative, reviewer_invalid=reviewer_invalid)
         monkeypatch.setattr(child_runtime, "profile_path", lambda: path)
         monkeypatch.setattr(child_runtime, "PRODUCTION_CHILD_PROFILE_SHA256", digest(path.read_bytes()))
 
