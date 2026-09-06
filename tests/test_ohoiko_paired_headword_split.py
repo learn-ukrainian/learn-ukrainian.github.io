@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import pytest
+import yaml
 
 from scripts.lexicon import ohoiko_paired_headword_split as paired_split
 from scripts.lexicon.ohoiko_paired_headword_split import (
@@ -390,12 +392,43 @@ def test_live_taught_residual_census_invariants(requires_vesum_db) -> None:
     )
     assert census["schema"] == "atlas-7550-taught-residual-census.v1"
     summary = census["summary"]
+    source_units = census["taught_source_units"]
+
+    # Live computation invariants from extractors (#7572 and Ohoiko lists)
+    assert summary["total_taught_records"] == sum(u["records"] for u in source_units.values())
     assert summary["total_taught_records"] == 5938
     assert summary["total_taught_unique_keys"] == 5934
     assert summary["taught_present_in_atlas"] == 5684
     assert summary["residual_missing_candidates"] == 250
     assert summary["p1_admit_count"] == 0
     assert summary["p1_admit_candidates"] == []
+
+    # Source unit breakdowns computed live
+    assert source_units["ohoiko-1000-words"]["records"] == 1073
+    assert source_units["ohoiko-1000-words"]["unique"] == 1072
+    assert source_units["ohoiko-1000-words"]["in_atlas"] == 856
+    assert source_units["ohoiko-1000-words"]["missing"] == 216
+    assert source_units["ohoiko-1000-words"]["category_breakdown"] == {
+        "pair_key": 213,
+        "already_in_atlas": 2,
+        "ocr": 1,
+    }
+
+    assert source_units["ohoiko-500-verbs"]["records"] == 959
+    assert source_units["ohoiko-500-verbs"]["unique"] == 959
+    assert source_units["ohoiko-500-verbs"]["in_atlas"] == 928
+    assert source_units["ohoiko-500-verbs"]["missing"] == 31
+    assert source_units["ohoiko-500-verbs"]["category_breakdown"] == {
+        "already_in_atlas": 31,
+    }
+
+    assert source_units["ulp-seasons-1-6"]["records"] == 3906
+    assert source_units["ulp-seasons-1-6"]["unique"] == 3906
+    assert source_units["ulp-seasons-1-6"]["in_atlas"] == 3903
+    assert source_units["ulp-seasons-1-6"]["missing"] == 3
+    assert source_units["ulp-seasons-1-6"]["category_breakdown"] == {
+        "heritage_hold": 3,
+    }
 
     # 6 standard categories for the 250 candidates
     cand_cats = summary["candidate_category_counts"]
@@ -426,6 +459,109 @@ def test_live_taught_residual_census_invariants(requires_vesum_db) -> None:
         assert census["atlas_db_articles"] == 19785
 
 
+def test_measure_curated_ohoiko_lists_with_dummy_files(tmp_path: Path) -> None:
+    dummy_manifest = tmp_path / "manifest.json"
+    dummy_manifest.write_text(
+        json.dumps({
+            "entries": [
+                {"lemma": "актор"},
+                {"lemma": "акторка"},
+                {"lemma": "випити"},
+            ]
+        }),
+        encoding="utf-8",
+    )
+
+    dummy_inv = tmp_path / "inventory.yaml"
+    dummy_inv.write_text(
+        yaml.safe_dump({
+            "sources": [
+                {
+                    "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+                    "source_family": "ohoiko",
+                    "headwords": [
+                        {"lemma": "актор", "locator": "ohoiko-1000-words entry 1"},
+                        {"lemma": "акторка", "locator": "ohoiko-1000-words entry 2"},
+                        {"lemma": "випити,", "locator": "ohoiko-500-verbs entry 1"},
+                    ],
+                }
+            ]
+        }),
+        encoding="utf-8",
+    )
+
+    measured = paired_split.measure_curated_ohoiko_lists(
+        inventory_path=dummy_inv,
+        manifest_path=dummy_manifest,
+    )
+    assert "ohoiko-1000-words" in measured
+    assert "ohoiko-500-verbs" in measured
+    assert measured["ohoiko-1000-words"]["records"] == 2
+    assert measured["ohoiko-1000-words"]["unique"] == 2
+    assert measured["ohoiko-1000-words"]["in_atlas"] == 2
+    assert measured["ohoiko-1000-words"]["missing"] == 0
+    assert measured["ohoiko-500-verbs"]["records"] == 1
+    assert measured["ohoiko-500-verbs"]["unique"] == 1
+    assert measured["ohoiko-500-verbs"]["missing"] == 1
+
+
+def test_taught_residual_census_fails_if_source_files_change(tmp_path: Path) -> None:
+    """Census totals must be computed live from source files, not hardcoded literals."""
+    dummy_manifest = tmp_path / "manifest.json"
+    dummy_manifest.write_text(
+        json.dumps({
+            "entries": [
+                {"lemma": "актор"},
+                {"lemma": "випити"},
+            ]
+        }),
+        encoding="utf-8",
+    )
+
+    # Modified inventory with only 3 records and omitting 500-verbs
+    dummy_inv = tmp_path / "inventory.yaml"
+    dummy_inv.write_text(
+        yaml.safe_dump({
+            "sources": [
+                {
+                    "id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+                    "source_family": "ohoiko",
+                    "headwords": [
+                        {"lemma": "актор", "locator": "ohoiko-1000-words entry 1"},
+                        {"lemma": "невідомеслово", "locator": "ohoiko-1000-words entry 2"},
+                    ],
+                },
+                {
+                    "id": "ohoiko-ulp-curated-2026-07-19-bulk-ulp",
+                    "source_family": "ulp",
+                    "headwords": [
+                        {"lemma": "актор", "locator": "ulp-1-00-lesson-notes lesson 1"},
+                    ],
+                },
+            ]
+        }),
+        encoding="utf-8",
+    )
+
+    census = paired_split.analyze_taught_residual_census(
+        inventory_path=dummy_inv,
+        manifest_path=dummy_manifest,
+        atlas_db_path=None,
+    )
+    summary = census["summary"]
+    source_units = census["taught_source_units"]
+
+    # 500-verbs was not in the file, so it MUST be omitted honestly
+    assert "ohoiko-500-verbs" not in source_units
+    assert "ohoiko-1000-words" in source_units
+    assert "ulp-seasons-1-6" in source_units
+
+    # Totals MUST reflect the 3 records in the file, proving non-hardcoded behavior
+    assert summary["total_taught_records"] == 3
+    assert summary["total_taught_records"] != 5938
+    assert summary["total_taught_unique_keys"] == 2
+
+
 def test_taught_residual_census_artifact_file_integrity() -> None:
     artifact_path = paired_split.PROJECT_ROOT / "data/lexicon/recovery-audit/2026-09-06-anna-taught-residual-census.json"
     if not artifact_path.exists():
@@ -434,6 +570,10 @@ def test_taught_residual_census_artifact_file_integrity() -> None:
     data = json.loads(artifact_path.read_text(encoding="utf-8"))
     assert data["schema"] == "atlas-7550-taught-residual-census.v1"
     summary = data["summary"]
+    source_units = data["taught_source_units"]
+    assert summary["total_taught_records"] == 5938
+    assert summary["total_taught_unique_keys"] == 5934
+    assert summary["taught_present_in_atlas"] == 5684
     assert summary["residual_missing_candidates"] == 250
     assert summary["p1_admit_count"] == 0
     assert summary["candidate_category_counts"]["already_in_atlas"] == 33
@@ -442,6 +582,9 @@ def test_taught_residual_census_artifact_file_integrity() -> None:
     assert summary["candidate_category_counts"]["heritage_hold"] == 3
     assert summary["candidate_category_counts"]["vesum_unrecognized"] == 0
     assert summary["candidate_category_counts"]["p1_admit"] == 0
+    assert source_units["ohoiko-1000-words"]["records"] == 1073
+    assert source_units["ohoiko-500-verbs"]["records"] == 959
+    assert source_units["ulp-seasons-1-6"]["records"] == 3906
     assert len(data["table_rows"]) == 250
     assert len(summary["heritage_holds"]) == 3
     assert {h["lemma"] for h in summary["heritage_holds"]} == {"переключити", "кримчанин", "просвітитель"}
@@ -451,6 +594,37 @@ def test_format_taught_residual_markdown() -> None:
     dummy_census = {
         "manifest_entries": 20121,
         "manifest_pointer": "dc1d73a434e2f136a81ece811bc346f38f4bd057e208bae88998bfce925419ec",
+        "taught_source_units": {
+            "ohoiko-1000-words": {
+                "records": 1073,
+                "unique": 1072,
+                "in_atlas": 856,
+                "missing": 216,
+                "category_breakdown": {
+                    "pair_key": 213,
+                    "already_in_atlas": 2,
+                    "ocr": 1,
+                },
+            },
+            "ohoiko-500-verbs": {
+                "records": 959,
+                "unique": 959,
+                "in_atlas": 928,
+                "missing": 31,
+                "category_breakdown": {
+                    "already_in_atlas": 31,
+                },
+            },
+            "ulp-seasons-1-6": {
+                "records": 3906,
+                "unique": 3906,
+                "in_atlas": 3903,
+                "missing": 3,
+                "category_breakdown": {
+                    "heritage_hold": 3,
+                },
+            },
+        },
         "summary": {
             "total_taught_records": 5938,
             "total_taught_unique_keys": 5934,
@@ -480,9 +654,13 @@ def test_format_taught_residual_markdown() -> None:
         },
     }
     md = paired_split.format_taught_residual_markdown(dummy_census)
-    assert "## Census: Remaining Taught-List Lemmas vs Live Atlas (#7550)" in md
+    assert "## Census: Measured Taught-List Residual vs Live Atlas (#7550)" in md
+    assert "`ohoiko-1000-words` | 1,072 | 856 | **216** |" in md
+    assert "`ohoiko-500-verbs` | 959 | 928 | **31** |" in md
+    assert "`ulp-seasons-1-6` | 3,906 | 3,903 | **3** |" in md
     assert "**250** | **0 admits** |" in md
     assert "`переключити`" in md
     assert "`кримчанин`" in md
     assert "`просвітитель`" in md
     assert "0 P1-eligible admits" in md
+    assert "agy/7782-live-totals" in md

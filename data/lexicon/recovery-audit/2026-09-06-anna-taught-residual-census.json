@@ -48,7 +48,7 @@
       },
       {
         "lemma": "просвітитель",
-        "source": "ulp-6-00-lesson-notes lesson 225",
+        "source": "ulp-6-00-lesson-notes lesson 219",
         "source_unit": "ULP Season 6",
         "category": "heritage_hold",
         "classification": "russianism",
@@ -59,18 +59,18 @@
   },
   "taught_source_units": {
     "ohoiko-1000-words": {
-      "records": 1072,
+      "records": 1073,
       "unique": 1072,
       "in_atlas": 856,
       "missing": 216,
       "category_breakdown": {
-        "pair_key": 213,
         "already_in_atlas": 2,
-        "ocr": 1
+        "ocr": 1,
+        "pair_key": 213
       }
     },
     "ohoiko-500-verbs": {
-      "records": 960,
+      "records": 959,
       "unique": 959,
       "in_atlas": 928,
       "missing": 31,

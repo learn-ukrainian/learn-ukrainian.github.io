@@ -1383,6 +1383,67 @@ def classify_taught_candidate(
     }
 
 
+def measure_curated_ohoiko_lists(
+    inventory_path: Path = DEFAULT_INVENTORY,
+    manifest_path: Path = DEFAULT_MANIFEST,
+    *,
+    census_rows: Sequence[Mapping[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """Measure curated Ohoiko 1000-words and 500-verbs lists vs live Atlas (#7550)."""
+    resolved_inv = _resolve_repo_path(inventory_path)
+    if not resolved_inv.exists():
+        return {}
+    records = load_inventory_records(resolved_inv)
+
+    w1000_recs = [r for r in records if "1000-words" in str(r.get("locator") or "")]
+    v500_recs = [r for r in records if "500-verbs" in str(r.get("locator") or "")]
+
+    if census_rows is None:
+        census = analyze_all_curated_leftovers(
+            inventory_path=resolved_inv,
+            manifest_path=manifest_path,
+            atlas_db_path=None,
+        )
+        census_rows = census.get("table_rows", [])
+
+    res: dict[str, Any] = {}
+    if w1000_recs:
+        w1000_unique = {str(r["lemma"]) for r in w1000_recs}
+        cands_1000 = [r for r in census_rows if "1000-words" in str(r.get("locator") or "")]
+        cat_counts_1000: dict[str, int] = {}
+        for r in cands_1000:
+            c = str(r.get("category") or "")
+            cat_counts_1000[c] = cat_counts_1000.get(c, 0) + 1
+        missing_count = len(cands_1000)
+        in_atlas_count = len(w1000_unique) - missing_count
+        res["ohoiko-1000-words"] = {
+            "records": len(w1000_recs),
+            "unique": len(w1000_unique),
+            "in_atlas": in_atlas_count,
+            "missing": missing_count,
+            "category_breakdown": cat_counts_1000,
+        }
+
+    if v500_recs:
+        v500_unique = {str(r["lemma"]) for r in v500_recs}
+        cands_500 = [r for r in census_rows if "500-verbs" in str(r.get("locator") or "")]
+        cat_counts_500: dict[str, int] = {}
+        for r in cands_500:
+            c = str(r.get("category") or "")
+            cat_counts_500[c] = cat_counts_500.get(c, 0) + 1
+        missing_count = len(cands_500)
+        in_atlas_count = len(v500_unique) - missing_count
+        res["ohoiko-500-verbs"] = {
+            "records": len(v500_recs),
+            "unique": len(v500_unique),
+            "in_atlas": in_atlas_count,
+            "missing": missing_count,
+            "category_breakdown": cat_counts_500,
+        }
+
+    return res
+
+
 def analyze_taught_residual_census(
     *,
     inventory_path: Path = DEFAULT_INVENTORY,
@@ -1393,7 +1454,7 @@ def analyze_taught_residual_census(
 
     Produces immutable census artifact under schema atlas-7550-taught-residual-census.v1.
     """
-    entry_count, _atlas_keys = atlas_lemma_keys(manifest_path)
+    entry_count, atlas_keys = atlas_lemma_keys(manifest_path)
     db_articles_count = 0
     if atlas_db_path is not None:
         db_articles_count, _db_keys = atlas_db_lemma_keys(atlas_db_path)
@@ -1413,34 +1474,77 @@ def analyze_taught_residual_census(
         except Exception:
             pass
 
+    # Live computation of taught source units from extractors (#7572 and Ohoiko lists)
+    taught_source_units: dict[str, Any] = {}
+    ohoiko_units = measure_curated_ohoiko_lists(
+        inventory_path=inventory_path,
+        manifest_path=manifest_path,
+        census_rows=census_250["table_rows"],
+    )
+    taught_source_units.update(ohoiko_units)
+
+    try:
+        from scripts.lexicon.ulp_taught_pair_extractor import measure_curated_ulp_lists
+
+        ulp_measure = measure_curated_ulp_lists(
+            inventory_path=inventory_path,
+            manifest_path=manifest_path,
+        )
+        if not ulp_measure.get("error") and ulp_measure.get("total_curated_rows", 0) > 0:
+            ulp_missing_lemmas = [
+                m
+                for s_data in ulp_measure.get("per_season", {}).values()
+                for m in s_data.get("missing_lemmas", [])
+            ]
+            ulp_cats: dict[str, int] = {}
+            for m in ulp_missing_lemmas:
+                c = classify_taught_candidate(m, atlas_keys=atlas_keys)["category"]
+                ulp_cats[c] = ulp_cats.get(c, 0) + 1
+
+            ulp_unique = ulp_measure.get("total_in_atlas", 0) + ulp_measure.get("total_missing", 0)
+            taught_source_units["ulp-seasons-1-6"] = {
+                "records": ulp_measure["total_curated_rows"],
+                "unique": ulp_unique,
+                "in_atlas": ulp_measure["total_in_atlas"],
+                "missing": ulp_measure["total_missing"],
+                "category_breakdown": ulp_cats,
+            }
+    except Exception:
+        pass
+
+    # Live summary calculations from computed units
+    resolved_inv = _resolve_repo_path(inventory_path)
+    records = load_inventory_records(resolved_inv) if resolved_inv.exists() else []
+    computed_loc_filters = []
+    if "ohoiko-1000-words" in taught_source_units:
+        computed_loc_filters.append("1000-words")
+    if "ohoiko-500-verbs" in taught_source_units:
+        computed_loc_filters.append("500-verbs")
+    if "ulp-seasons-1-6" in taught_source_units:
+        computed_loc_filters.append("ulp-")
+
+    all_computed_lemmas = {
+        str(r["lemma"])
+        for r in records
+        if any(filt in str(r.get("locator") or "") for filt in computed_loc_filters)
+    }
+    total_records = sum(u["records"] for u in taught_source_units.values())
+    total_unique_keys = len(all_computed_lemmas)
+    residual_missing = sum(u["missing"] for u in taught_source_units.values())
+    taught_present_in_atlas = total_unique_keys - residual_missing
+
     heritage_holds = [
         {
-            "lemma": "переключити",
-            "source": "ulp-4-00-lesson-notes lesson 152",
-            "source_unit": "ULP Season 4",
+            "lemma": r["key"],
+            "source": str(r.get("locator") or ""),
+            "source_unit": "ULP Season " + str(re.search(r"ulp-(\d)", str(r.get("locator") or "")).group(1)) if re.search(r"ulp-(\d)", str(r.get("locator") or "")) else "ULP",
             "category": "heritage_hold",
             "classification": "russianism",
-            "disposition": "hold(heritage_russianism)",
+            "disposition": r.get("disposition") or "hold(heritage_russianism)",
             "rationale": "Attested in VESUM but classified as Russianism under heritage policy",
-        },
-        {
-            "lemma": "кримчанин",
-            "source": "ulp-6-00-lesson-notes lesson 219",
-            "source_unit": "ULP Season 6",
-            "category": "heritage_hold",
-            "classification": "russianism",
-            "disposition": "hold(heritage_russianism)",
-            "rationale": "Attested in VESUM but classified as Russianism under heritage policy",
-        },
-        {
-            "lemma": "просвітитель",
-            "source": "ulp-6-00-lesson-notes lesson 225",
-            "source_unit": "ULP Season 6",
-            "category": "heritage_hold",
-            "classification": "russianism",
-            "disposition": "hold(heritage_russianism)",
-            "rationale": "Attested in VESUM but classified as Russianism under heritage policy",
-        },
+        }
+        for r in census_250["table_rows"]
+        if r.get("category") == "heritage_hold"
     ]
 
     return {
@@ -1451,47 +1555,17 @@ def analyze_taught_residual_census(
         "manifest_entries": entry_count,
         "atlas_db_articles": db_articles_count,
         "summary": {
-            "total_taught_records": 5938,
-            "total_taught_unique_keys": 5934,
-            "taught_present_in_atlas": 5684,
-            "residual_missing_candidates": census_250["total_keys"],
+            "total_taught_records": total_records,
+            "total_taught_unique_keys": total_unique_keys,
+            "taught_present_in_atlas": taught_present_in_atlas,
+            "residual_missing_candidates": residual_missing,
             "candidate_category_counts": census_250.get("candidate_category_counts", {}),
             "pair_key_leg_counts": census_250.get("leg_category_counts", {}),
             "p1_admit_count": census_250.get("promote_candidate_count", 0),
             "p1_admit_candidates": census_250.get("promote_candidates", []),
             "heritage_holds": heritage_holds,
         },
-        "taught_source_units": {
-            "ohoiko-1000-words": {
-                "records": 1072,
-                "unique": 1072,
-                "in_atlas": 856,
-                "missing": 216,
-                "category_breakdown": {
-                    "pair_key": 213,
-                    "already_in_atlas": 2,
-                    "ocr": 1,
-                },
-            },
-            "ohoiko-500-verbs": {
-                "records": 960,
-                "unique": 959,
-                "in_atlas": 928,
-                "missing": 31,
-                "category_breakdown": {
-                    "already_in_atlas": 31,
-                },
-            },
-            "ulp-seasons-1-6": {
-                "records": 3906,
-                "unique": 3906,
-                "in_atlas": 3903,
-                "missing": 3,
-                "category_breakdown": {
-                    "heritage_hold": 3,
-                },
-            },
-        },
+        "taught_source_units": taught_source_units,
         "table_rows": census_250["table_rows"],
     }
 
@@ -1502,18 +1576,29 @@ def format_taught_residual_markdown(census: Mapping[str, Any]) -> str:
     cats = summary.get("candidate_category_counts", {})
     legs = summary.get("pair_key_leg_counts", {})
     holds = summary.get("heritage_holds", [])
+    source_units = census.get("taught_source_units", {})
 
     lines = [
-        "## Census: Remaining Taught-List Lemmas vs Live Atlas (#7550)",
+        "## Census: Measured Taught-List Residual vs Live Atlas (#7550)",
         "",
-        f"### 1. Taught-List Source Units vs Live Atlas {census.get('manifest_entries', 20121):,} (`dc1d73a434e2`)",
+        f"### 1. Measured Taught-List Source Units vs Live Atlas {census.get('manifest_entries', 20121):,} (`{str(census.get('manifest_pointer', 'dc1d73a434e2'))[:12]}`)",
         "",
         "| Source Unit | Curated Unique | In Atlas | Missing Candidates | Category Breakdown & Disposition |",
         "| :--- | ---: | ---: | ---: | :--- |",
-        "| `ohoiko-1000-words` | 1,072 | 856 | **216** | 213 `pair_key`, 2 `already_in_atlas` (`ого!`, `ой!`), 1 `ocr` (`тваринa`) |",
-        "| `ohoiko-500-verbs` | 959 | 928 | **31** | 31 `already_in_atlas` (trailing-comma keys, canonical in Atlas) |",
-        "| ULP Seasons 1–6 (`ulp-1` .. `ulp-6`) | 3,906 | 3,903 | **3** | 3 `heritage_hold` (`переключити`, `кримчанин`, `просвітитель`) |",
-        f"| **Total** | **{summary.get('total_taught_unique_keys', 5934):,}** | **{summary.get('taught_present_in_atlas', 5684):,}** | **{summary.get('residual_missing_candidates', 250)}** | **0 admits** |",
+    ]
+
+    for unit_name, unit_data in source_units.items():
+        unique = unit_data.get("unique", 0)
+        in_atlas = unit_data.get("in_atlas", 0)
+        missing = unit_data.get("missing", 0)
+        breakdown = unit_data.get("category_breakdown", {})
+        breakdown_str = ", ".join(f"{cnt} `{cat}`" for cat, cnt in breakdown.items()) if breakdown else "none"
+        lines.append(
+            f"| `{unit_name}` | {unique:,} | {in_atlas:,} | **{missing}** | {breakdown_str} |"
+        )
+
+    lines.extend([
+        f"| **Total** | **{summary.get('total_taught_unique_keys', 0):,}** | **{summary.get('taught_present_in_atlas', 0):,}** | **{summary.get('residual_missing_candidates', 0)}** | **0 admits** |",
         "",
         "---",
         "",
@@ -1521,26 +1606,26 @@ def format_taught_residual_markdown(census: Mapping[str, Any]) -> str:
         "",
         "| Category | Candidate Count | Disposition Summary |",
         "| :--- | ---: | :--- |",
-        f"| `already_in_atlas` | {cats.get('already_in_atlas', 33)} | 31 trailing-comma verbs (`випити,` etc.) + 2 clean tokens (`ого!`, `ой!`) |",
-        f"| `pair_key` | {cats.get('pair_key', 213)} | 1000-words compound pair keys (`актор, акторка` etc.) |",
-        f"| `ocr` | {cats.get('ocr', 1)} | 1 Latin lookalike token (`тваринa` latin-a -> Cyrillic `тварина` in Atlas) |",
-        f"| `heritage_hold` | {cats.get('heritage_hold', 3)} | Russianisms in VESUM: `переключити` (ULP 4), `кримчанин` (ULP 6), `просвітитель` (ULP 6) |",
+        f"| `already_in_atlas` | {cats.get('already_in_atlas', 0)} | 31 trailing-comma verbs (`випити,` etc.) + 2 clean tokens (`ого!`, `ой!`) |",
+        f"| `pair_key` | {cats.get('pair_key', 0)} | 1000-words compound pair keys (`актор, акторка` etc.) |",
+        f"| `ocr` | {cats.get('ocr', 0)} | 1 Latin lookalike token (`тваринa` latin-a -> Cyrillic `тварина` in Atlas) |",
+        f"| `heritage_hold` | {cats.get('heritage_hold', 0)} | Russianisms in VESUM: `переключити` (ULP 4), `кримчанин` (ULP 6), `просвітитель` (ULP 6) |",
         f"| `vesum_unrecognized` | {cats.get('vesum_unrecognized', 0)} | 0 unrecognized at candidate level |",
         f"| `p1_admit` | **{summary.get('p1_admit_count', 0)}** | **0 P1-eligible admits** |",
-        f"| **Total Candidates** | **{summary.get('residual_missing_candidates', 250)}** | **0 admits** |",
+        f"| **Total Candidates** | **{summary.get('residual_missing_candidates', 0)}** | **0 admits** |",
         "",
         "---",
         "",
-        "### 3. Leg-Level Classification for 213 `pair_key` Headwords (423 Legs)",
+        f"### 3. Leg-Level Classification for {cats.get('pair_key', 0)} `pair_key` Headwords ({sum(legs.values())} Legs)",
         "",
         "| Leg Category | Leg Count | Details |",
         "| :--- | ---: | :--- |",
-        f"| `already_in_atlas` | {legs.get('already_in_atlas', 406)} | Canonical single-word legs present in Atlas |",
-        f"| `ocr` | {legs.get('ocr', 16)} | 15 space-collapse OCR multiword legs (`боя тися`, `бу ти`, etc.) + 1 English fragment |",
-        f"| `vesum_unrecognized` | {legs.get('vesum_unrecognized', 1)} | `поліцейський` (absent from standard VESUM) |",
+        f"| `already_in_atlas` | {legs.get('already_in_atlas', 0)} | Canonical single-word legs present in Atlas |",
+        f"| `ocr` | {legs.get('ocr', 0)} | 15 space-collapse OCR multiword legs (`боя тися`, `бу ти`, etc.) + 1 English fragment |",
+        f"| `vesum_unrecognized` | {legs.get('vesum_unrecognized', 0)} | `поліцейський` (absent from standard VESUM) |",
         f"| `heritage_hold` | {legs.get('heritage_hold', 0)} | 0 legs held independently |",
         f"| `p1_admit` | **{legs.get('p1_admit', 0)}** | **0 P1 admits** |",
-        "| **Total Legs** | **423** | **0 admits** |",
+        f"| **Total Legs** | **{sum(legs.values())}** | **0 admits** |",
         "",
         "---",
         "",
@@ -1548,22 +1633,21 @@ def format_taught_residual_markdown(census: Mapping[str, Any]) -> str:
         "",
         "| Lemma | Source | Classification | Disposition |",
         "| :--- | :--- | :--- | :--- |",
-    ]
+    ])
     for h in holds:
         lines.append(f"| `{h['lemma']}` | `{h.get('source', '')}` | {h.get('classification', '')} | `{h.get('disposition', '')}` |")
     lines.extend([
         "",
         "**Policy Verification & Acceptance Invariants:**",
         "- **Zero admits:** `p1_admit` is empty (0 candidates).",
-        f"- **Manifest pointer untouched:** `site/src/data/lexicon-manifest.json` sha256 `{census.get('manifest_pointer', 'dc1d73a434e2')[:12]}` preserved.",
+        f"- **Manifest pointer untouched:** `site/src/data/lexicon-manifest.json` sha256 `{str(census.get('manifest_pointer', 'dc1d73a434e2'))[:12]}` preserved.",
         "- **No soup dumped:** 11k note tokens kept frozen in Unit C; 500-verb conjugation grids omitted.",
         "- **Audit ledger:** committed to `data/lexicon/recovery-audit/2026-09-06-anna-taught-residual-census.json`.",
         "- **Status:** #7550 stays OPEN for future curriculum/textbook slices (Unit C / non-goals).",
         "",
-        "X-Agent: `agy/7550-taught-residual`",
+        "X-Agent: `agy/7782-live-totals`",
     ])
     return "\n".join(lines)
-
 
 
 def build_parser() -> argparse.ArgumentParser:
