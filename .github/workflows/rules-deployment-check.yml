@@ -9,6 +9,8 @@ on:
     paths:
       - '.github/workflows/rules-deployment-check.yml'
       - 'scripts/deploy_prompts.sh'
+      - 'scripts/deploy_orphan_paths.sh'
+      - 'scripts/deploy/**'
       - 'scripts/check_rules_deployment.sh'
       - 'scripts/lint_prompts.py'
       - 'scripts/lint/**/*.py'
@@ -25,6 +27,8 @@ on:
     paths:
       - '.github/workflows/rules-deployment-check.yml'
       - 'scripts/deploy_prompts.sh'
+      - 'scripts/deploy_orphan_paths.sh'
+      - 'scripts/deploy/**'
       - 'scripts/check_rules_deployment.sh'
       - 'scripts/lint_prompts.py'
       - 'scripts/lint/**/*.py'

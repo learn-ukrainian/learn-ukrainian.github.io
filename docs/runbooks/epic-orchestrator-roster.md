@@ -152,8 +152,9 @@ language + review lanes free and puts the loop on the most replaceable capacity:
   subscription window, so driving it doesn't steal review or writing capacity.
 - **Sonnet-5** → judgment-dense: near-Opus judgment at much lower cost, and it's *extra*
   Anthropic capacity that does **not** consume the Opus review-of-record seat.
-- **HydrationCapsuleV1** gives Codex (272K) a measured, low-overhead score-and-hydrate path, so it
-  can serve as the harness / infra / devops alternate without co-owning Gemini's stream lease.
+- **HydrationCapsuleV1** supplies the score-and-hydrate path for the authorized Codex alternate.
+  Use the selected runtime's validated context profile; a historical model's window is not
+  a current capability or permission grant. The alternate never co-owns Gemini's stream lease.
   Infra (`epic:6943`) and DevOps (`epic:5703`) are independent streams: one live driver does
   not block the other, while a second driver on either same stream still fails closed.
 

@@ -379,11 +379,10 @@ Every task follows this workflow. No exceptions for non-trivial changes.
    reviewed SHA; never copy a `behavior_proof_status` string.
 6. **Pass the independent review and CI gates** — ONE cross-family review round:
    reviewer outside the author model family, verdict + findings posted on the PR,
-   bound to the current head. Direct ask is the default mechanism; the formal
-   sealed path is opt-in for high-risk code only. Docs/report-only PRs: the
-   merging orchestrator folds trivial findings (typos, counts, path scrubs — no
-   behavior change) in at merge, recorded in the merge commit body; re-review is
-   only for behavior-changing deltas or a contested verdict.
+   bound to the current head. Use a qualified, toolful native review lane; the
+   shielded formal path remains retired, including for high-risk code. Non-blocking
+   findings may remain documented. If a fix changes the head, obtain approval and
+   green CI for that new head before enqueue. Do not fold unreviewed edits into merge.
 7. **Reach the explicit terminal goal** — `merge`, `deploy`, and `certify` are
    distinct and cannot substitute for one another.
 8. **Reconcile and close** — read actual GitHub state, transfer any remaining

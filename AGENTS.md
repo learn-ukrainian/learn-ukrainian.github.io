@@ -89,9 +89,10 @@ non-skippable:
 - For standalone TUI/UI drivers, read
   `agents_extensions/shared/rules/fleet-comms-coordination.md`; file
   dual-write remains authoritative in every plane mode. Use `plane-status` and
-  the `drive-epic` skill; Codex is a coding or review seat, not an epic-driver
-  loop. Do not change plane, retention, or formal-review eligibility without
-  operator/advisor GO.
+  the `drive-epic` skill. Codex may lead an explicitly assigned, authorized
+  stream as a catalogued alternate; it must never co-own a live same-stream
+  lease. Otherwise its role is coding or review. Do not change plane, retention,
+  or formal-review eligibility without operator/advisor GO.
 - On non-trivial work, use the `entire-context` skill: run status and one
   bounded search before prioritization or dispatch. Treat results as body-free,
   supplemental locators; record use only when a verified locator informed work.

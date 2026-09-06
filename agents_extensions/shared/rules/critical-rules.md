@@ -135,46 +135,31 @@ everything" cannot survive this repo's merge rate and is corporate dual-control 
   security or secret-handling defect; a change outside the PR's declared scope; coverage or a gate
   weakened or skipped; a factual claim in shipped prose that is wrong or unsupported (a wrong statement
   in an autopsy or a rule changes what readers conclude, so it blocks).
-- **No → NON-BLOCKING.** Fix and merge, or file a follow-up; **no re-review**. Includes: naming, comment
-  wording, formatting, and refactors that provably cannot change behaviour.
+- **No → NON-BLOCKING.** The finding may remain documented without delaying enqueue. Includes:
+  naming, comment wording, formatting, and refactors that provably cannot change behaviour.
+  If a fix changes the head, obtain approval and green CI for that new head before enqueue (§8.5).
 - **Unsure → treat as BLOCKING.** The tie-break is fail-closed, so an ambiguous finding never merges on
   an optimistic reading.
 - The tier is the **reviewer's** call, recorded explicitly in the verdict, not the author's. An author
   who disagrees escalates to a second reviewer rather than re-tiering their own finding.
 
-**8.5 — Auto-merge protocol.**
-- **Workers never merge and never arm auto-merge.** Only the driver owning that PR's lane arms it.
-- Arm **only** when all three hold (landing order #7450): the review gate is satisfied — exact-head
-  cross-family CF APPROVE with **no BLOCKING finding outstanding** per §8.4 (a non-blocking nit does
-  **not** hold arming) · PR is **not a draft** · **CI Gate green on that same head** (pending is not
-  green — never arm and wait for Gate; early-armed auto-merge is how #7447–#7449 landed with empty
-  reviews). Standard form: label `automerge-ok` — the auto-arm pipeline (#7539/#7540) arms GitHub
-  auto-merge; manual `gh pr merge <N> --auto --squash -R <owner/repo>` at that fully-green point is
-  equivalent.
-  Do **not** pass `--delete-branch` while this repo uses a merge queue — deleting the head
-  mid-queue can close the PR without landing. Delete the remote branch only after
+**8.5 — Merge queue protocol.**
+- **Workers never merge, enqueue, or arm auto-merge.** Only the accountable owner of that PR's lane enqueues it.
+- Enqueue **only** when all three hold (landing order #7450): exact-head cross-family CF APPROVE
+  with **no BLOCKING finding outstanding** per §8.4 · PR is **not a draft** · **CI Gate green on
+  that same head**. Pending is not green; a documented non-blocking finding does not hold enqueue.
+- Use `gh pr merge <N> --squash -R <owner/repo>` after both gates. The `automerge-ok` label and
+  auto-arm pipeline are retired; `--auto` is not a substitute for either gate. See
+  [`workflow.md`](workflow.md) for the binding landing order.
+- Do **not** pass `--delete-branch` while the PR is queued. Delete the remote branch only after
   `MERGED`, as part of post-merge cleanup (§7a / worktree-cleanup).
-- **Arm the moment all three gates hold, then leave it alone.** The binding policy in
-  [`workflow.md`](workflow.md) (§ merge policy) matches: once armed, *"GitHub merges it,
-  nobody babysits."* A moved head makes the prior APPROVE stale — re-run exact-head CF before
-  re-arming.
-- **Our review gate is agent-enforced, not GitHub-enforced.** Branch protection may require only a
-  single status check and **zero approving reviews**, so nothing external will stop a premature merge.
-  That is precisely why the review gate must gate *arming*.
-- **Never merge ahead of the verdict, even under pressure.** On 2026-07-25 PR #5741 was armed while
-  green and merged before its review returned; that review then found a factual omission and an
-  overstatement in the merged document, needing a follow-up PR to correct.
-- **ARMED ≠ MERGED.** A PR leaves the books only at state `MERGED`. Once armed, GitHub is responsible for
-  merging it — **do not babysit for arming.** A watcher's only legitimate jobs are to notice
-  *exceptions*: an outage-failed check that needs re-running, a base-branch fix that needs
-  `gh pr update-branch`, a conflict, or a PR that has sat armed-and-green without merging. If a watcher
-  is doing anything else, it has become a substitute for configuration.
-  > **Known gap that makes a watcher necessary today, stated so it is fixed rather than institutionalised:**
-  > `guard-pr-merge` refuses to arm while checks are red — correctly, since red is red — but that means a
-  > PR whose checks are still running or transiently red **cannot be armed early**, which is exactly what
-  > [`workflow.md`](workflow.md) intends. Until arming is permitted before green (or a merge queue removes
-  > the question), something must notice when a PR becomes armable. That gap is **under-automation**, not
-  > diligence, and it is infra debt — not a pattern to build on.
+- A moved head makes the prior APPROVE stale. Obtain exact-head CF approval and green CI again
+  before enqueue; never merge ahead of the verdict, even under pressure.
+- **Our review gate is agent-enforced.** Do not assume GitHub will prevent enqueue without
+  an independent exact-head verdict; the accountable owner must verify both gates.
+- **QUEUED ≠ MERGED.** A PR leaves the books only at state `MERGED`. Observe exceptions:
+  failed checks, a changed base, conflicts, queue removal, or a queued-and-green PR that does
+  not land. Resolve the exception and re-establish the required gates before enqueueing again.
 - **Never `--admin`-bypass blocking CI** (pytest, ruff, frontend, schema-drift, gitleaks, radon,
   prompt-lint).
 - A **`cancelled`** required check is a gate failure, not a pass — re-run it. But after fixing the
