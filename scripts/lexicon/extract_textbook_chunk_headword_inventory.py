@@ -251,14 +251,14 @@ def extract_headword_inventory_from_chunks(
     }
 
 
-def validate_result(payload: dict[str, Any]) -> None:
+def validate_result(payload: dict[str, Any], *, max_unknown_rate: float = MAX_UNKNOWN_FORM_RATE) -> None:
     stats = payload["stats"]
     headwords = payload["sources"][0]["headwords"]
     if not headwords:
         raise ExtractionError("empty headword output")
-    if stats["unknown_rate"] > MAX_UNKNOWN_FORM_RATE:
+    if stats["unknown_rate"] > max_unknown_rate:
         raise ExtractionError(
-            "unknown forms exceed 20% "
+            f"unknown forms exceed {max_unknown_rate:.0%} "
             f"({stats['unknown_forms']}/{stats['unique_forms']})"
         )
 
@@ -297,20 +297,49 @@ def build_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--out", type=Path, required=True, help="Inventory YAML destination")
     parser.add_argument("--dry-run", action="store_true", help="Validate but do not write YAML")
     parser.add_argument("--report", action="store_true", help="Print extraction stats")
+    parser.add_argument(
+        "--max-unknown-rate",
+        type=float,
+        default=MAX_UNKNOWN_FORM_RATE,
+        help=(
+            "Override the default 20%% unknown-forms gate for one book whose own "
+            "source JSONL is independently known to carry an upstream PDF-extraction "
+            "defect (e.g. dropped glyphs). Requires --unknown-rate-override-reason. "
+            "Never use this to paper over a real vocabulary gap."
+        ),
+    )
+    parser.add_argument(
+        "--unknown-rate-override-reason",
+        help="Required justification when --max-unknown-rate differs from the 20%% default; echoed in the report.",
+    )
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     args = build_argument_parser().parse_args(argv)
+    if args.max_unknown_rate != MAX_UNKNOWN_FORM_RATE and not args.unknown_rate_override_reason:
+        print(
+            "ERROR: --max-unknown-rate override requires --unknown-rate-override-reason",
+            file=sys.stderr,
+        )
+        return 2
     try:
         chunks = load_chunks(args.jsonl)
+        # Resolve the lookup at call time (not at def time) so tests can swap
+        # in a fake VESUM without a real data/vesum.db.
         payload = extract_headword_inventory_from_chunks(
-            chunks, source_id=args.source_id, title=args.title, subject=args.subject
+            chunks,
+            source_id=args.source_id,
+            title=args.title,
+            subject=args.subject,
+            vesum_lookup=verify_words,
         )
-        validate_result(payload)
+        validate_result(payload, max_unknown_rate=args.max_unknown_rate)
     except ExtractionError as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
+    if args.unknown_rate_override_reason:
+        print(f"UNKNOWN-RATE OVERRIDE ({args.max_unknown_rate:.0%}): {args.unknown_rate_override_reason}")
 
     print(format_report(payload))
     if args.dry_run:
