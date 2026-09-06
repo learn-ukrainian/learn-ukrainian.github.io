@@ -72,6 +72,15 @@ PARONYM_PAIRS = FIXTURES / "lexicon-practice-paronym-pairs.yaml"
 CURATED_V5_SEED = FIXTURES / "atlas" / "curated_v5_practice_seed.json"
 
 
+@pytest.fixture(autouse=True)
+def synthetic_creation_baseline(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Existing factory scenarios use a fixed historical synthetic corpus."""
+    from scripts.practice.creation_review import CreationReview
+
+    policy = CreationReview.from_path(FIXTURES / "lexicon-practice-creation-review.json")
+    monkeypatch.setattr(CreationReview, "from_path", classmethod(lambda cls: policy))
+
+
 def test_default_target_preserves_committed_practice_surface() -> None:
     assert DEFAULT_TARGET >= 6000
     assert BuildConfig().target == DEFAULT_TARGET

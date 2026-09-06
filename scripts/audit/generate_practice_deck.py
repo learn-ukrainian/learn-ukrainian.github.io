@@ -46,6 +46,7 @@ from scripts.lexicon.curated_membership import (
     apply_membership,
     read_membership,
 )
+from scripts.practice.creation_review import CreationReview, heritage_source
 from scripts.practice_deck.end_dictionaries import (
     coverage_intersection_report,
     load_inventory,
@@ -1999,8 +2000,10 @@ def _build_cloze_items(
     deck_version: str,
     *,
     source_index: Any | None = None,
+    creation_review: CreationReview | None = None,
 ) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
+    creation_review = creation_review if creation_review is not None else CreationReview.from_path()
     for index, candidate in enumerate(cloze_rows):
         provenance = candidate.get("provenance")
         if not allowlist.allows(provenance):
@@ -2073,6 +2076,8 @@ def _build_cloze_items(
         if not sentence or "___" not in sentence or (not inventory_candidate and not cloze_en):
             continue
         if not _cloze_blank_context_agrees(sentence, form, verifier):
+            continue
+        if not creation_review.allows("cloze", sentence, form, lexeme["lemmaPlain"], candidate):
             continue
         frame_key = "\x1f".join((deck_version, lexeme["lemmaId"], sentence, rule_id))
         sentence_frame_id = "sf_" + hashlib.sha1(frame_key.encode("utf-8")).hexdigest()[:12]
@@ -3356,7 +3361,9 @@ def _build_heritage_items(
     *,
     verifier: VesumVerifier | None = None,
     public_options: bool = True,
+    creation_review: CreationReview | None = None,
 ) -> list[dict[str, Any]]:
+    creation_review = creation_review if creation_review is not None else CreationReview.from_path()
     frames = _valid_heritage_frames(pair)
     if not frames:
         return []
@@ -3390,6 +3397,8 @@ def _build_heritage_items(
                 f"WARN: heritage_pair {pair_label!r} frame {index} dropped: missing required field",
                 file=sys.stderr,
             )
+            continue
+        if not creation_review.allows("heritage", sentence, answer_form, calque_form, heritage_source(pair, frame)):
             continue
         distractors = _valid_heritage_distractors(lexeme, frame, pair, all_lexemes, level, verifier=verifier)
         if len(distractors) < 2:
@@ -4438,7 +4447,9 @@ def build_practice_shards(
     antonym_pairs: list[dict[str, Any]] | None = None,
     homonym_pairs: list[dict[str, Any]] | None = None,
     aspect_residuals: list[dict[str, str]] | None = None,
+    creation_review: CreationReview | None = None,
 ) -> dict[str, dict[str, dict[str, Any]]]:
+    creation_review = creation_review if creation_review is not None else CreationReview.from_path()
     if isinstance(cloze_sources, BuildConfig) and config is None:
         config = cloze_sources
         cloze_sources = None
@@ -4471,6 +4482,7 @@ def build_practice_shards(
         SCHEMA_VERSION,
         antonym_pairs=antonym_pairs,
         homonym_pairs=homonym_pairs,
+        creation_review=creation_review.version_payload(),
     )
     # Seed from the DATA-ONLY fingerprint, not deck_version: builder-version
     # bumps mint new asset names but must not reshuffle seeded content.
@@ -4552,6 +4564,7 @@ def build_practice_shards(
             verifier,
             deck_version,
             source_index=cloze_source_index,
+            creation_review=creation_review,
         )
         for item in items:
             item["options"] = _make_options(item, lexeme, all_lexemes, rng)
@@ -4649,6 +4662,7 @@ def build_practice_shards(
             deck_version,
             verifier=verifier,
             public_options=False,
+            creation_review=creation_review,
         ):
             level = str(item.get("cefr") or "")
             if level not in mode_by_level:
