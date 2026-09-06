@@ -116,28 +116,28 @@ above (default behavior for every other book is identical to grade 7):
 
 | Book | VESUM content candidates | Attempted (top 300 by freq) | Admitted | Richness | Residual (not yet attempted) |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| algebra-tarasenkova | 3,168 | 300 | 263 | 87.7% | 2,868 |
-| biolohiya-anderson | 6,333 | 300 | 274 | 91.3% | 6,033 |
-| finans-plastun | 4,658 | 300 | 279 | 93.0% | 4,358 |
-| fizyka-bariakhtar | 5,075 | 300 | 268 | 89.3% | 4,775 |
-| heohrafiya-hilberh | 6,495 | 300 | 272 | 90.7% | 6,195 |
-| heometriya-burda-tarasenkova | 2,298 | 300 | 241 | 80.3% | 1,998 |
-| hromadianska-osvita-vasylkiv | 4,118 | 300 | 281 | 93.7% | 3,818 |
-| informatyka-ryvkind | 5,115 | 300 | 274 | 91.3% | 4,815 |
-| istoria-ukr-hlibovska | 8,834 | 300 | 267 | 89.0% | 8,534 |
-| istoria-ukr-schupak | 7,370 | 300 | 265 | 88.3% | 7,070 |
-| istoria-vsesvitnia-ladychenko | 7,850 | 300 | 265 | 88.3% | 7,550 |
-| khimiya-hryhorovych | 4,506 | 300 | 263 | 87.7% | 4,206 |
-| mystetstvo-komarovska | 6,483 | 300 | 262 | 87.3% | 6,183 |
-| pryrodnychi-nauky-mandrenko | 5,474 | 300 | 276 | 92.0% | 5,174 |
-| tekhnolohiyi-bilenko | 5,701 | 300 | 277 | 92.3% | 5,401 |
-| ukrlit-avramenko | 12,361 | 300 | 270 | 90.0% | 12,061 |
-| ukrlit-zabolotnyi | 11,587 | 300 | 272 | 90.7% | 11,287 |
-| ukrmova-avramenko | 9,915 | 300 | 276 | 92.0% | 9,615 |
-| ukrmova-zabolotnyi | 10,962 | 300 | 276 | 92.0% | 10,662 |
-| zarlit-voloschuk | 11,895 | 300 | 276 | 92.0% | 11,595 |
-| zdorovia-vasylenko | 7,307 | 300 | 284 | 94.7% | 7,007 |
-| **Total** | **147,505** | **6,300** | **5,681** | **90.2%** | **141,205** |
+| algebra-tarasenkova | 1,917 | 300 | 263 | 87.7% | 1,617 |
+| biolohiya-anderson | 4,268 | 300 | 274 | 91.3% | 3,968 |
+| finans-plastun | 4,449 | 300 | 279 | 93.0% | 4,149 |
+| fizyka-bariakhtar | 4,878 | 300 | 268 | 89.3% | 4,578 |
+| heohrafiya-hilberh | 6,307 | 300 | 272 | 90.7% | 6,007 |
+| heometriya-burda-tarasenkova | 2,156 | 300 | 241 | 80.3% | 1,856 |
+| hromadianska-osvita-vasylkiv | 3,947 | 300 | 281 | 93.7% | 3,647 |
+| informatyka-ryvkind | 4,940 | 300 | 274 | 91.3% | 4,640 |
+| istoria-ukr-hlibovska | 8,584 | 300 | 267 | 89.0% | 8,284 |
+| istoria-ukr-schupak | 7,158 | 300 | 265 | 88.3% | 6,858 |
+| istoria-vsesvitnia-ladychenko | 7,624 | 300 | 265 | 88.3% | 7,324 |
+| khimiya-hryhorovych | 4,303 | 300 | 263 | 87.7% | 4,003 |
+| mystetstvo-komarovska | 6,286 | 300 | 262 | 87.3% | 5,986 |
+| pryrodnychi-nauky-mandrenko | 5,285 | 300 | 276 | 92.0% | 4,985 |
+| tekhnolohiyi-bilenko | 5,524 | 300 | 277 | 92.3% | 5,224 |
+| ukrlit-avramenko | 12,006 | 300 | 270 | 90.0% | 11,706 |
+| ukrlit-zabolotnyi | 11,223 | 300 | 272 | 90.7% | 10,923 |
+| ukrmova-avramenko | 9,620 | 300 | 276 | 92.0% | 9,320 |
+| ukrmova-zabolotnyi | 10,675 | 300 | 276 | 92.0% | 10,375 |
+| zarlit-voloschuk | 11,591 | 300 | 276 | 92.0% | 11,291 |
+| zdorovia-vasylenko | 7,092 | 300 | 284 | 94.7% | 6,792 |
+| **Total** | **139,833** | **6,300** | **5,681** | **90.2%** | **133,533** |
 
 Richness floor for this program is 40% (`--allow-richness-regression` not
 used, not needed — every book cleared 80%+). "Residual (not yet attempted)"
