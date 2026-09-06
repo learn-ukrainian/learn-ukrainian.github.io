@@ -505,8 +505,13 @@ def test_measure_curated_ohoiko_lists_with_dummy_files(tmp_path: Path) -> None:
     assert measured["ohoiko-500-verbs"]["missing"] == 1
 
 
-def test_taught_residual_census_fails_if_source_files_change(tmp_path: Path) -> None:
+def test_taught_residual_census_fails_if_source_files_change(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """Census totals must be computed live from source files, not hardcoded literals."""
+    monkeypatch.setattr(paired_split, "verify_word", lambda *args, **kwargs: [])
+    monkeypatch.setattr(paired_split, "classify_split_leg", lambda leg: "single_word_vesum_absent")
+
     dummy_manifest = tmp_path / "manifest.json"
     dummy_manifest.write_text(
         json.dumps({
