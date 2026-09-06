@@ -2449,3 +2449,102 @@ def test_missing_requested_repository_fails_closed_nonzero(
     assert rc == 2
     captured = capsys.readouterr()
     assert "repository not found" in captured.err
+
+
+def test_missing_configured_ownership_ledger_fails_closed_without_fallback(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    task_id = "missing-ledger-task"
+    branch = f"codex/{task_id}"
+    worktree = add_worktree(repo, branch, path=repo / ".worktrees" / "dispatch" / "codex" / task_id)
+    head_sha = git(worktree, "rev-parse", "HEAD")
+    patch_gh(monkeypatch, {branch: [{"number": 79, "state": "MERGED", "headRefOid": head_sha}]})
+
+    # Create default ledger without any claims; fallback must not silently occur.
+    default_db = repo / "batch_state" / "tasks" / "write-ownership.sqlite3"
+    default_db.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(default_db)
+    conn.execute(
+        "CREATE TABLE write_claims (task_id TEXT NOT NULL, claim_json TEXT NOT NULL, pid INTEGER, created_at REAL NOT NULL, PRIMARY KEY (task_id, claim_json))"
+    )
+    conn.commit()
+    conn.close()
+
+    missing_ledger = tmp_path / "does_not_exist.sqlite3"
+    monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_LEDGER", str(missing_ledger))
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+
+    claim_reason = rw._has_active_ownership_claim(repo, task_id)
+    assert claim_reason is not None
+    assert "active write claim check failed" in claim_reason
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, target_paths=[worktree])
+    res = result_for(results, worktree)
+    assert res.action == "skipped"
+    assert "active write claim check failed" in (res.reason or "")
+    assert rw.classify_preservation(res) == "active_dispatch"
+    assert worktree.exists()
+
+
+def test_missing_configured_ownership_ledger_no_default_db_fails_closed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    task_id = "missing-ledger-no-default"
+    branch = f"codex/{task_id}"
+    worktree = add_worktree(repo, branch, path=repo / ".worktrees" / "dispatch" / "codex" / task_id)
+    head_sha = git(worktree, "rev-parse", "HEAD")
+    patch_gh(monkeypatch, {branch: [{"number": 80, "state": "MERGED", "headRefOid": head_sha}]})
+
+    # Default DB explicitly does not exist
+    default_db = repo / "batch_state" / "tasks" / "write-ownership.sqlite3"
+    assert not default_db.exists()
+
+    missing_ledger = tmp_path / "does_not_exist.sqlite3"
+    monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_LEDGER", str(missing_ledger))
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+
+    claim_reason = rw._has_active_ownership_claim(repo, task_id)
+    assert claim_reason is not None
+    assert "active write claim check failed" in claim_reason
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, target_paths=[worktree])
+    res = result_for(results, worktree)
+    assert res.action == "skipped"
+    assert "active write claim check failed" in (res.reason or "")
+    assert rw.classify_preservation(res) == "active_dispatch"
+    assert worktree.exists()
+
+
+def test_missing_requested_repository_aggregate_json_sanitizes_stderr(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    missing_repo = tmp_path / "does_not_exist"
+    rc = rw.main(["--repo-root", str(missing_repo), "--aggregate", "--json"])
+    assert rc == 2
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert str(tmp_path) not in captured.out
+    assert str(missing_repo) not in captured.out
+    assert "repository not found: does_not_exist" in captured.err
+    assert str(missing_repo) not in captured.err
+    assert str(tmp_path) not in captured.err
+
+
+def test_missing_requested_repository_both_repos_aggregate_json_sanitizes_stderr(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    public_dir = tmp_path / "public"
+    public_dir.mkdir()
+    repo = init_repo(public_dir)
+    monkeypatch.setattr(rw, "resolve_repo_root", lambda: repo)
+    rc = rw.main(["--both-repos", "--aggregate", "--json"])
+    assert rc == 2
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert str(tmp_path) not in captured.out
+    assert "repository not found: learn-ukrainian-infra-private" in captured.err
+    assert str(tmp_path) not in captured.err

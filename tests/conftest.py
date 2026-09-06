@@ -168,7 +168,14 @@ def _isolate_write_ownership_ledger(tmp_path_factory, monkeypatch):
     first version of this fixture did exactly that.
     """
     ledger_dir = tmp_path_factory.mktemp("write-ownership")
-    monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_LEDGER", str(ledger_dir / "write-ownership.sqlite3"))
+    db_file = ledger_dir / "write-ownership.sqlite3"
+    conn = sqlite3.connect(db_file)
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS write_claims (task_id TEXT NOT NULL, claim_json TEXT NOT NULL, pid INTEGER, created_at REAL NOT NULL, PRIMARY KEY (task_id, claim_json))"
+    )
+    conn.commit()
+    conn.close()
+    monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_LEDGER", str(db_file))
     monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_TASK_STATE_DIR", str(ledger_dir))
 
 

@@ -554,12 +554,13 @@ def _has_active_rollover_lease(repo_root: Path, info: WorktreeInfo) -> str | Non
 def _has_active_ownership_claim(repo_root: Path, task_id: str | None) -> str | None:
     if not task_id:
         return None
-    db_path = primary_checkout_root(repo_root) / "batch_state" / "tasks" / "write-ownership.sqlite3"
     env_override = (os.environ.get("LEARN_UKRAINIAN_OWNERSHIP_LEDGER") or "").strip()
-    if env_override and Path(env_override).is_file():
+    if env_override:
         db_path = Path(env_override).expanduser().resolve()
-    elif not db_path.is_file():
-        return None
+    else:
+        db_path = primary_checkout_root(repo_root) / "batch_state" / "tasks" / "write-ownership.sqlite3"
+        if not db_path.is_file():
+            return None
     try:
         conn = cp_connect(StoreId.WRITE_OWNERSHIP, path=db_path, read_only=True)
         try:
@@ -2065,8 +2066,10 @@ def main(argv: list[str] | None = None) -> int:
 
     missing = [p for p in repo_roots if not p.is_dir()]
     if missing:
+        sanitize = bool(args.aggregate) or bool(args.both_repos and args.json)
         for p in missing:
-            print(f"reap_worktrees.py: repository not found: {p}", file=sys.stderr)
+            target = (p.name or str(p)) if sanitize else str(p)
+            print(f"reap_worktrees.py: repository not found: {target}", file=sys.stderr)
         return 2
 
     apply = bool(args.apply) or args.command == "apply"
