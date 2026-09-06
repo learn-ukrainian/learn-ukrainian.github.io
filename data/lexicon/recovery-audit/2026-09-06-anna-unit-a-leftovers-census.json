@@ -1,0 +1,3782 @@
+{
+  "schema": "atlas-6370-paired-split-residual.v1",
+  "generated_from": "ohoiko_paired_headword_split",
+  "residual": {
+    "schema": "atlas-6370-ohoiko-residual.v1",
+    "inventory_path": "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml",
+    "manifest_path": "site/src/data/lexicon-manifest.json",
+    "manifest_entries": 20121,
+    "inventory_records": 5938,
+    "unique_inventory_lemma_keys": 5933,
+    "inventory_present_in_atlas": 5720,
+    "residual_missing": 213,
+    "counts": {
+      "multiword_phrases_other": 5,
+      "paired_headwords_comma": 205,
+      "single_word_heritage_flag": 3
+    },
+    "lemmas_by_category": {
+      "paired_headwords_comma": [
+        "актор, акторка",
+        "бачити, побачити",
+        "бити, побити",
+        "битися, побитися (1),",
+        "боліти, заболіти",
+        "боя тися, забоя тися",
+        "брати, взяти",
+        "бу ти, побу ти",
+        "будувати, збудувати",
+        "біг ти, побігти",
+        "бігати, побігати",
+        "бік, боки",
+        "вбивати, вбити",
+        "весь, всі",
+        "вечеряти, повечеряти",
+        "вживати, вжити",
+        "вибачте, вибач",
+        "викладач, викладачка",
+        "вимовляти, вимовити",
+        "вирішувати, вирішити",
+        "виходити заміж, вийти",
+        "водій, водійка",
+        "вставати, встати",
+        "вухо, вуха",
+        "вчитель, вчителька",
+        "відбуватися, відбутися",
+        "відкривати, відкрити",
+        "відкриватися, відкритися",
+        "відпочивати, відпочити",
+        "відчувати, відчути",
+        "герой, героїня",
+        "говорити, поговорити",
+        "готувати, приготувати",
+        "гра, ігри",
+        "грати, пограти",
+        "гратися, погратися",
+        "губа, губи",
+        "губити, загубити",
+        "гуляти, погуляти",
+        "гість, гостя",
+        "давати, дати",
+        "день, дні",
+        "дерево, дерева",
+        "дзвонити, задзвонити (1), 1) to ring;",
+        "дивитися, подивитися",
+        "допомагати, допомогти",
+        "друг, подруга; друзі",
+        "дружина, жiнка",
+        "думати, подумати",
+        "дієслово, дієслова",
+        "жити, прожити",
+        "журналіст, журналістка",
+        "забувати, забути",
+        "займатися, зайнятися",
+        "закохуватися, закохатися",
+        "закривати, закрити",
+        "залишатися, залишитися",
+        "замовляти, замовити",
+        "замок, замки",
+        "заходити, зайти",
+        "знаходити, знайти",
+        "зуб, зуби",
+        "зупинятися, зупинитися",
+        "зірка, зірки",
+        "йти, піти",
+        "казати, сказати",
+        "колір, кольори",
+        "копійка, копійки",
+        "кохати, покохати",
+        "кричати, закричати",
+        "курити, покурити",
+        "кінь, коні",
+        "кіт, кішка; коти",
+        "ламати, зламати",
+        "ламатися, зламатися",
+        "лежати, полежати",
+        "летіти, полетіти",
+        "ловити, зловити",
+        "любити, полюбити",
+        "людина, люди",
+        "лягати, лягти",
+        "лікар, лікарка",
+        "літати, політати",
+        "малювати, намалювати",
+        "мити, помити",
+        "митися, помитися",
+        "могти, змогти",
+        "молитися, помолитися",
+        "міст, мости",
+        "місто, міста",
+        "надсилати, надіслати",
+        "називатися, назватися",
+        "напій, напої",
+        "науковець, науковиця,",
+        "начальник, начальниця",
+        "нести, понести",
+        "новина, новини",
+        "нога, ноги",
+        "носити, поносити",
+        "ніс, носи",
+        "ніч, ночі",
+        "обидва, обидві",
+        "обідати, пообідати",
+        "овоч, овочі",
+        "одягатися, одягнутися",
+        "озеро, озера",
+        "око, очі",
+        "олівець, олівці",
+        "острів, острови",
+        "отримувати, отримати",
+        "офіціант, офіціантка",
+        "падати, впасти",
+        "палець, пальці",
+        "палити, спалити",
+        "пам'ятати, запам'ятати",
+        "папір, папери",
+        "перемагати, перемогти",
+        "писати, написати",
+        "пити, попити",
+        "плавати, поплавати",
+        "плакати, поплакати",
+        "платити, заплатити",
+        "плече, плечі",
+        "пливти, припливти",
+        "повертати, повернути",
+        "повертатися, повернутися to return, to come back",
+        "повторювати, повторити",
+        "подобатися, сподобатися to like, to be liked",
+        "поліцейський,",
+        "помирати, померти",
+        "поцілунок, поцілунки",
+        "починати, почати",
+        "пояснювати, пояснити",
+        "прасувати, попрасувати",
+        "прати, попрати",
+        "працювати, попрацювати to work",
+        "прибирати, прибрати",
+        "прибувати, прибути",
+        "приходити, прийти",
+        "пробачати, пробачити",
+        "пробувати, спробувати",
+        "програвати, програти",
+        "продавати, продати",
+        "професор, професорка",
+        "пісня, пісні",
+        "робити, зробити",
+        "розуміти, зрозуміти",
+        "рости, вирости (1),",
+        "рука, руки",
+        "різати, порізати",
+        "рік, роки",
+        "річ, речі",
+        "село, села",
+        "сестра, сестри",
+        "сидіти, посидіти",
+        "слухати, послухати",
+        "сльоза, сльози",
+        "сміятися, посміятися",
+        "снідати, поснідати",
+        "спати, поспати",
+        "спортсмен, спортсменка",
+        "співак, співачка",
+        "співати, поспівати",
+        "ставати, стати",
+        "ставити, поставити",
+        "стояти, постояти",
+        "стрибати, стрибнути",
+        "студент, студентка",
+        "стіл, столи",
+        "стілець, стільці",
+        "сусід, сусідка",
+        "сідати, сісти",
+        "сік, соки",
+        "танець, танці",
+        "танцювати, потанцювати",
+        "тиждень, тижні",
+        "торкатися, торкнутися",
+        "тримати, потримати",
+        "убивати, to kill (imperfective, perfective)",
+        "увесь, усі",
+        "українець, українка",
+        "усміхатися, усміхнутися",
+        "учень, учениця, учні",
+        "футболiст, футболістка",
+        "хворіти, захворіти",
+        "хлопець, хлопці",
+        "ходити, походити",
+        "хотіти, захотіти",
+        "художник, художниця",
+        "цілувати, поцілувати",
+        "цілуватися, поцілуватися to kiss each other",
+        "чекати, почекати",
+        "число, числа",
+        "читати, почитати",
+        "човен, човни",
+        "чоловік, чоловіки",
+        "чути, почути",
+        "шукати, пошукати",
+        "щастити, пощастити",
+        "юрист, юристка",
+        "яйце, яйця",
+        "ім'я, імена",
+        "їздити, з'їздити, поїздити",
+        "їсти, поїсти",
+        "їхати, поїхати"
+      ],
+      "multiword_phrases_other": [
+        "достатньо (2)",
+        "зліва (1)",
+        "мати (verb)",
+        "справа (1)",
+        "і (1)"
+      ],
+      "single_word_heritage_flag": [
+        "кримчанин",
+        "переключити",
+        "просвітитель"
+      ]
+    },
+    "samples": {
+      "paired_headwords_comma": [
+        "актор, акторка",
+        "бачити, побачити",
+        "бити, побити",
+        "битися, побитися (1),",
+        "боліти, заболіти",
+        "боя тися, забоя тися",
+        "брати, взяти",
+        "бу ти, побу ти",
+        "будувати, збудувати",
+        "біг ти, побігти",
+        "бігати, побігати",
+        "бік, боки",
+        "вбивати, вбити",
+        "весь, всі",
+        "вечеряти, повечеряти",
+        "вживати, вжити",
+        "вибачте, вибач",
+        "викладач, викладачка",
+        "вимовляти, вимовити",
+        "вирішувати, вирішити"
+      ],
+      "multiword_phrases_other": [
+        "достатньо (2)",
+        "зліва (1)",
+        "мати (verb)",
+        "справа (1)",
+        "і (1)"
+      ],
+      "single_word_heritage_flag": [
+        "кримчанин",
+        "переключити",
+        "просвітитель"
+      ]
+    },
+    "heritage_details": {
+      "кримчанин": {
+        "classification": "russianism",
+        "is_russianism": true,
+        "russian_shadow": false,
+        "warning_severity": "russianism_red"
+      },
+      "переключити": {
+        "classification": "russianism",
+        "is_russianism": true,
+        "russian_shadow": false,
+        "warning_severity": "russianism_red"
+      },
+      "просвітитель": {
+        "classification": "russianism",
+        "is_russianism": true,
+        "russian_shadow": false,
+        "warning_severity": "russianism_red"
+      }
+    }
+  },
+  "census_250": {
+    "schema": "atlas-7550-anna-unit-a-leftovers-census.v1",
+    "total_keys": 250,
+    "manifest_entries": 20121,
+    "atlas_db_articles": 19785,
+    "bucket_counts": {
+      "words_1000_pair_keys": 213,
+      "verbs_500_trailing_comma": 31,
+      "clean_tokens": 3,
+      "ulp_leftovers": 3
+    },
+    "leg_disposition_counts": {
+      "hold(interjection_punctuation_canonical_in_atlas)": 2,
+      "hold(ocr_latin_lookalike_canonical_in_atlas)": 1,
+      "hold(heritage_russianism)": 3,
+      "hold(trailing_comma_canonical_in_atlas)": 31,
+      "already_in_atlas": 406,
+      "multiword_after_split": 15,
+      "single_word_vesum_absent": 1,
+      "multiword_phrases_other": 1
+    },
+    "promote_candidate_count": 0,
+    "promote_candidates": [],
+    "table_rows": [
+      {
+        "bucket": "clean_tokens",
+        "key": "ого!",
+        "legs": [
+          "ого"
+        ],
+        "vesum_heritage": "interjection token",
+        "in_atlas": true,
+        "disposition": "hold(interjection_punctuation_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 537",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "clean_tokens",
+        "key": "ой!",
+        "legs": [
+          "ой"
+        ],
+        "vesum_heritage": "interjection token",
+        "in_atlas": true,
+        "disposition": "hold(interjection_punctuation_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 549",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "clean_tokens",
+        "key": "тваринa",
+        "legs": [
+          "тварина"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(ocr_latin_lookalike_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 849",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "ulp_leftovers",
+        "key": "переключити",
+        "legs": [
+          "переключити"
+        ],
+        "vesum_heritage": "VESUM ok, russianism",
+        "in_atlas": false,
+        "disposition": "hold(heritage_russianism)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ulp",
+        "locator": "ulp-4-00-lesson-notes lesson 152",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "ulp_leftovers",
+        "key": "кримчанин",
+        "legs": [
+          "кримчанин"
+        ],
+        "vesum_heritage": "VESUM ok, russianism",
+        "in_atlas": false,
+        "disposition": "hold(heritage_russianism)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ulp",
+        "locator": "ulp-6-00-lesson-notes lesson 219",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "ulp_leftovers",
+        "key": "просвітитель",
+        "legs": [
+          "просвітитель"
+        ],
+        "vesum_heritage": "VESUM ok, russianism",
+        "in_atlas": false,
+        "disposition": "hold(heritage_russianism)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ulp",
+        "locator": "ulp-6-00-lesson-notes lesson 219",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "випити,",
+        "legs": [
+          "випити"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 315",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "вкрасти,",
+        "legs": [
+          "вкрасти"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 224",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "впасти,",
+        "legs": [
+          "впасти"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 296",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "встигти,",
+        "legs": [
+          "встигти"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 92",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "входити,",
+        "legs": [
+          "входити"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 99",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "відреагувати,",
+        "legs": [
+          "відреагувати"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 393",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "відремонтувати,",
+        "legs": [
+          "відремонтувати"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 397",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "досягти,",
+        "legs": [
+          "досягти"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 130",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "з'їздити,",
+        "legs": [
+          "з'їздити"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 212",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "з'їсти,",
+        "legs": [
+          "з'їсти"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 213",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "забракувати,",
+        "legs": [
+          "забракувати"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 13",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "завагатися,",
+        "legs": [
+          "завагатися"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 20",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "замерзнути,",
+        "legs": [
+          "замерзнути"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 158",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "замінювати,",
+        "legs": [
+          "замінювати"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 159",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "засумувати,",
+        "legs": [
+          "засумувати"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 460",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "збудувати,",
+        "legs": [
+          "збудувати"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 18",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "звикнути,",
+        "legs": [
+          "звикнути"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 187",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "змерзнути,",
+        "legs": [
+          "змерзнути"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 246",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "зрадіти,",
+        "legs": [
+          "зрадіти"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 390",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "користуватися,",
+        "legs": [
+          "користуватися"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 221",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "мерзнути,",
+        "legs": [
+          "мерзнути"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 246",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "наснитися,",
+        "legs": [
+          "наснитися"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 436",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "пливти,",
+        "legs": [
+          "пливти"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 328",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "подзвонити,",
+        "legs": [
+          "подзвонити"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 113",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "попливти,",
+        "legs": [
+          "попливти"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 328",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "потривати,",
+        "legs": [
+          "потривати"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 472",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "почекати,",
+        "legs": [
+          "почекати"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 495",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "почитати,",
+        "legs": [
+          "почитати"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 497",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "проспівати,",
+        "legs": [
+          "проспівати"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 439",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "розкритикувати,",
+        "legs": [
+          "розкритикувати"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 225",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "verbs_500_trailing_comma",
+        "key": "спалити,",
+        "legs": [
+          "спалити"
+        ],
+        "vesum_heritage": "VESUM ok, standard",
+        "in_atlas": true,
+        "disposition": "hold(trailing_comma_canonical_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-500-verbs entry 297",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "актор, акторка",
+        "legs": [
+          "актор",
+          "акторка"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 6",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "бачити, побачити",
+        "legs": [
+          "бачити",
+          "побачити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 23",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "бити, побити",
+        "legs": [
+          "бити",
+          "побити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 28",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "битися, побитися (1),",
+        "legs": [
+          "битися",
+          "побитися"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 29",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "боліти, заболіти",
+        "legs": [
+          "боліти",
+          "заболіти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 45",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "боя тися, забоя тися",
+        "legs": [
+          "боя тися",
+          "забоя тися"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": false,
+        "disposition": "hold(multiword_after_split, multiword_after_split)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 47",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "брати, взяти",
+        "legs": [
+          "брати",
+          "взяти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 49",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "бу ти, побу ти",
+        "legs": [
+          "бу ти",
+          "побу ти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": false,
+        "disposition": "hold(multiword_after_split, multiword_after_split)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 57",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "будувати, збудувати",
+        "legs": [
+          "будувати",
+          "збудувати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 53",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "біг ти, побігти",
+        "legs": [
+          "біг ти",
+          "побігти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": false,
+        "disposition": "hold(multiword_after_split, already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 33",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "бігати, побігати",
+        "legs": [
+          "бігати",
+          "побігати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 32",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "бік, боки",
+        "legs": [
+          "бік",
+          "боки"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 35",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "вбивати, вбити",
+        "legs": [
+          "вбивати",
+          "вбити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 67",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "весь, всі",
+        "legs": [
+          "весь",
+          "всі"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 80",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "вечеряти, повечеряти",
+        "legs": [
+          "вечеряти",
+          "повечеряти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 82",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "вживати, вжити",
+        "legs": [
+          "вживати",
+          "вжити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 85",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "вибачте, вибач",
+        "legs": [
+          "вибачте",
+          "вибач"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 89",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "викладач, викладачка",
+        "legs": [
+          "викладач",
+          "викладачка"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 92",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "вимовляти, вимовити",
+        "legs": [
+          "вимовляти",
+          "вимовити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 94",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "вирішувати, вирішити",
+        "legs": [
+          "вирішувати",
+          "вирішити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 96",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "виходити заміж, вийти",
+        "legs": [
+          "виходити заміж",
+          "вийти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 99",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "водій, водійка",
+        "legs": [
+          "водій",
+          "водійка"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 121",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "вставати, встати",
+        "legs": [
+          "вставати",
+          "встати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 136",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "вухо, вуха",
+        "legs": [
+          "вухо",
+          "вуха"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 139",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "вчитель, вчителька",
+        "legs": [
+          "вчитель",
+          "вчителька"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 141",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "відбуватися, відбутися",
+        "legs": [
+          "відбуватися",
+          "відбутися"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 102",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "відкривати, відкрити",
+        "legs": [
+          "відкривати",
+          "відкрити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 103",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "відкриватися, відкритися",
+        "legs": [
+          "відкриватися",
+          "відкритися"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 104",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "відпочивати, відпочити",
+        "legs": [
+          "відпочивати",
+          "відпочити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 106",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "відчувати, відчути",
+        "legs": [
+          "відчувати",
+          "відчути"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 108",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "герой, героїня",
+        "legs": [
+          "герой",
+          "героїня"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 154",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "говорити, поговорити",
+        "legs": [
+          "говорити",
+          "поговорити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 159",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "готувати, приготувати",
+        "legs": [
+          "готувати",
+          "приготувати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 172",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "гра, ігри",
+        "legs": [
+          "гра",
+          "ігри"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 173",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "грати, пограти",
+        "legs": [
+          "грати",
+          "пограти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 175",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "гратися, погратися",
+        "legs": [
+          "гратися",
+          "погратися"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 176",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "губа, губи",
+        "legs": [
+          "губа",
+          "губи"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 183",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "губити, загубити",
+        "legs": [
+          "губити",
+          "загубити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 184",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "гуляти, погуляти",
+        "legs": [
+          "гуляти",
+          "погуляти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 185",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "гість, гостя",
+        "legs": [
+          "гість",
+          "гостя"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 155",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "давати, дати",
+        "legs": [
+          "давати",
+          "дати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 187",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "день, дні",
+        "legs": [
+          "день",
+          "дні"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 207",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "дерево, дерева",
+        "legs": [
+          "дерево",
+          "дерева"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 209",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "дзвонити, задзвонити (1), 1) to ring;",
+        "legs": [
+          "дзвонити",
+          "задзвонити",
+          "1) to ring;"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": false,
+        "disposition": "hold(already_in_atlas, already_in_atlas, multiword_after_split)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 214",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "дивитися, подивитися",
+        "legs": [
+          "дивитися",
+          "подивитися"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 215",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "допомагати, допомогти",
+        "legs": [
+          "допомагати",
+          "допомогти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 231",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "достатньо (2)",
+        "legs": [
+          "достатньо"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 236",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "друг, подруга; друзі",
+        "legs": [
+          "друг",
+          "подруга; друзі"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": false,
+        "disposition": "hold(already_in_atlas, multiword_after_split)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 239",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "дружина, жiнка",
+        "legs": [
+          "дружина",
+          "жінка"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 241",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "думати, подумати",
+        "legs": [
+          "думати",
+          "подумати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 243",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "дієслово, дієслова",
+        "legs": [
+          "дієслово",
+          "дієслова"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 218",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "жити, прожити",
+        "legs": [
+          "жити",
+          "прожити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 254",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "журналіст, журналістка",
+        "legs": [
+          "журналіст",
+          "журналістка"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 261",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "забувати, забути",
+        "legs": [
+          "забувати",
+          "забути"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 264",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "займатися, зайнятися",
+        "legs": [
+          "займатися",
+          "зайнятися"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 268",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "закохуватися, закохатися",
+        "legs": [
+          "закохуватися",
+          "закохатися"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 271",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "закривати, закрити",
+        "legs": [
+          "закривати",
+          "закрити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 272",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "залишатися, залишитися",
+        "legs": [
+          "залишатися",
+          "залишитися"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 274",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "замовляти, замовити",
+        "legs": [
+          "замовляти",
+          "замовити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 276",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "замок, замки",
+        "legs": [
+          "замок",
+          "замки"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 277",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "заходити, зайти",
+        "legs": [
+          "заходити",
+          "зайти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 287",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "зліва (1)",
+        "legs": [
+          "зліва"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 405",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "знаходити, знайти",
+        "legs": [
+          "знаходити",
+          "знайти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 303",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "зуб, зуби",
+        "legs": [
+          "зуб",
+          "зуби"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 306",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "зупинятися, зупинитися",
+        "legs": [
+          "зупинятися",
+          "зупинитися"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 308",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "зірка, зірки",
+        "legs": [
+          "зірка",
+          "зірки"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 310",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "йти, піти",
+        "legs": [
+          "йти",
+          "піти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 320",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "казати, сказати",
+        "legs": [
+          "казати",
+          "сказати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 329",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "колір, кольори",
+        "legs": [
+          "колір",
+          "кольори"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 359",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "копійка, копійки",
+        "legs": [
+          "копійка",
+          "копійки"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 366",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "кохати, покохати",
+        "legs": [
+          "кохати",
+          "покохати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 376",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "кричати, закричати",
+        "legs": [
+          "кричати",
+          "закричати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 379",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "купляти,",
+        "legs": [
+          "купляти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 386",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "курити, покурити",
+        "legs": [
+          "курити",
+          "покурити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 387",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "кінь, коні",
+        "legs": [
+          "кінь",
+          "коні"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 350",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "кіт, кішка; коти",
+        "legs": [
+          "кіт",
+          "кішка; коти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": false,
+        "disposition": "hold(already_in_atlas, multiword_after_split)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 349",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "ламати, зламати",
+        "legs": [
+          "ламати",
+          "зламати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 393",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "ламатися, зламатися",
+        "legs": [
+          "ламатися",
+          "зламатися"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 394",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "лежати, полежати",
+        "legs": [
+          "лежати",
+          "полежати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 398",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "летіти, полетіти",
+        "legs": [
+          "летіти",
+          "полетіти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 399",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "ловити, зловити",
+        "legs": [
+          "ловити",
+          "зловити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 417",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "любити, полюбити",
+        "legs": [
+          "любити",
+          "полюбити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 421",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "людина, люди",
+        "legs": [
+          "людина",
+          "люди"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 423",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "лягати, лягти",
+        "legs": [
+          "лягати",
+          "лягти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 425",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "лікар, лікарка",
+        "legs": [
+          "лікар",
+          "лікарка"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 408",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "літати, політати",
+        "legs": [
+          "літати",
+          "політати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 414",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "малювати, намалювати",
+        "legs": [
+          "малювати",
+          "намалювати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 434",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "мати (verb)",
+        "legs": [
+          "мати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 437",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "мити, помити",
+        "legs": [
+          "мити",
+          "помити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 451",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "митися, помитися",
+        "legs": [
+          "митися",
+          "помитися"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 452",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "могти, змогти",
+        "legs": [
+          "могти",
+          "змогти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 461",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "молитися, помолитися",
+        "legs": [
+          "молитися",
+          "помолитися"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 465",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "міст, мости",
+        "legs": [
+          "міст",
+          "мости"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 458",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "місто, міста",
+        "legs": [
+          "місто",
+          "міста"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 473",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "надсилати, надіслати",
+        "legs": [
+          "надсилати",
+          "надіслати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 486",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "називатися, назватися",
+        "legs": [
+          "називатися",
+          "назватися"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 488",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "напій, напої",
+        "legs": [
+          "напій",
+          "напої"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 490",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "науковець, науковиця,",
+        "legs": [
+          "науковець",
+          "науковиця"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 497",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "начальник, начальниця",
+        "legs": [
+          "начальник",
+          "начальниця"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 499",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "нести, понести",
+        "legs": [
+          "нести",
+          "понести"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 511",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "новина, новини",
+        "legs": [
+          "новина",
+          "новини"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 522",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "нога, ноги",
+        "legs": [
+          "нога",
+          "ноги"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 523",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "носити, поносити",
+        "legs": [
+          "носити",
+          "поносити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 525",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "ніс, носи",
+        "legs": [
+          "ніс",
+          "носи"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 517",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "ніч, ночі",
+        "legs": [
+          "ніч",
+          "ночі"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 519",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "обидва, обидві",
+        "legs": [
+          "обидва",
+          "обидві"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 530",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "обідати, пообідати",
+        "legs": [
+          "обідати",
+          "пообідати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 535",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "овоч, овочі",
+        "legs": [
+          "овоч",
+          "овочі"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 536",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "одружуватися,",
+        "legs": [
+          "одружуватися"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 543",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "одягатися, одягнутися",
+        "legs": [
+          "одягатися",
+          "одягнутися"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 545",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "озеро, озера",
+        "legs": [
+          "озеро",
+          "озера"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 547",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "око, очі",
+        "legs": [
+          "око",
+          "очі"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 551",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "олівець, олівці",
+        "legs": [
+          "олівець",
+          "олівці"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 552",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "острів, острови",
+        "legs": [
+          "острів",
+          "острови"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 563",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "отримувати, отримати",
+        "legs": [
+          "отримувати",
+          "отримати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 565",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "офіціант, офіціантка",
+        "legs": [
+          "офіціант",
+          "офіціантка"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 567",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "падати, впасти",
+        "legs": [
+          "падати",
+          "впасти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 575",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "палець, пальці",
+        "legs": [
+          "палець",
+          "пальці"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 577",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "палити, спалити",
+        "legs": [
+          "палити",
+          "спалити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 578",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "пам'ятати, запам'ятати",
+        "legs": [
+          "пам'ятати",
+          "запам'ятати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 580",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "папір, папери",
+        "legs": [
+          "папір",
+          "папери"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 582",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "перемагати, перемогти",
+        "legs": [
+          "перемагати",
+          "перемогти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 590",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "писати, написати",
+        "legs": [
+          "писати",
+          "написати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 594",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "письменник,",
+        "legs": [
+          "письменник"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 595",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "пити, попити",
+        "legs": [
+          "пити",
+          "попити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 596",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "плавати, поплавати",
+        "legs": [
+          "плавати",
+          "поплавати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 605",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "плакати, поплакати",
+        "legs": [
+          "плакати",
+          "поплакати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 606",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "платити, заплатити",
+        "legs": [
+          "платити",
+          "заплатити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 608",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "плече, плечі",
+        "legs": [
+          "плече",
+          "плечі"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 609",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "пливти, припливти",
+        "legs": [
+          "пливти",
+          "припливти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 610",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "повертати, повернути",
+        "legs": [
+          "повертати",
+          "повернути"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 615",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "повертатися, повернутися to return, to come back",
+        "legs": [
+          "повертатися",
+          "повернутися to return",
+          "to come back"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": false,
+        "disposition": "hold(already_in_atlas, multiword_after_split, multiword_after_split)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 616",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "повторювати, повторити",
+        "legs": [
+          "повторювати",
+          "повторити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 619",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "подобатися, сподобатися to like, to be liked",
+        "legs": [
+          "подобатися",
+          "сподобатися to like",
+          "to be liked"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": false,
+        "disposition": "hold(already_in_atlas, multiword_after_split, multiword_after_split)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 628",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "поліцейський,",
+        "legs": [
+          "поліцейський"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": false,
+        "disposition": "hold(single_word_vesum_absent)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 634",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "помирати, померти",
+        "legs": [
+          "помирати",
+          "померти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 638",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "поцілунок, поцілунки",
+        "legs": [
+          "поцілунок",
+          "поцілунки"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 647",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "починати, почати",
+        "legs": [
+          "починати",
+          "почати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 649",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "пояснювати, пояснити",
+        "legs": [
+          "пояснювати",
+          "пояснити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 652",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "прасувати, попрасувати",
+        "legs": [
+          "прасувати",
+          "попрасувати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 661",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "прати, попрати",
+        "legs": [
+          "прати",
+          "попрати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 662",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "працювати, попрацювати to work",
+        "legs": [
+          "працювати",
+          "попрацювати to work"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": false,
+        "disposition": "hold(already_in_atlas, multiword_after_split)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 663",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "прибирати, прибрати",
+        "legs": [
+          "прибирати",
+          "прибрати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 665",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "прибувати, прибути",
+        "legs": [
+          "прибувати",
+          "прибути"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 666",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "приходити, прийти",
+        "legs": [
+          "приходити",
+          "прийти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 673",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "пробачати, пробачити",
+        "legs": [
+          "пробачати",
+          "пробачити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 677",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "пробувати, спробувати",
+        "legs": [
+          "пробувати",
+          "спробувати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 679",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "програвати, програти",
+        "legs": [
+          "програвати",
+          "програти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 680",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "продавати, продати",
+        "legs": [
+          "продавати",
+          "продати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 682",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "професор, професорка",
+        "legs": [
+          "професор",
+          "професорка"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 690",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "пісня, пісні",
+        "legs": [
+          "пісня",
+          "пісні"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 603",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "робити, зробити",
+        "legs": [
+          "робити",
+          "зробити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 719",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "розуміти, зрозуміти",
+        "legs": [
+          "розуміти",
+          "зрозуміти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 725",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "рости, вирости (1),",
+        "legs": [
+          "рости",
+          "вирости"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 727",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "рука, руки",
+        "legs": [
+          "рука",
+          "руки"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 729",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "різати, порізати",
+        "legs": [
+          "різати",
+          "порізати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 713",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "рік, роки",
+        "legs": [
+          "рік",
+          "роки"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 716",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "річ, речі",
+        "legs": [
+          "річ",
+          "речі"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 717",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "село, села",
+        "legs": [
+          "село",
+          "села"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 743",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "сестра, сестри",
+        "legs": [
+          "сестра",
+          "сестри"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 751",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "сидіти, посидіти",
+        "legs": [
+          "сидіти",
+          "посидіти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 753",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "слухати, послухати",
+        "legs": [
+          "слухати",
+          "послухати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 779",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "сльоза, сльози",
+        "legs": [
+          "сльоза",
+          "сльози"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 780",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "сміятися, посміятися",
+        "legs": [
+          "сміятися",
+          "посміятися"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 785",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "снідати, поснідати",
+        "legs": [
+          "снідати",
+          "поснідати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 788",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "спати, поспати",
+        "legs": [
+          "спати",
+          "поспати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 796",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "спортсмен, спортсменка",
+        "legs": [
+          "спортсмен",
+          "спортсменка"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 803",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "справа (1)",
+        "legs": [
+          "справа"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 658",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "співак, співачка",
+        "legs": [
+          "співак",
+          "співачка"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 798",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "співати, поспівати",
+        "legs": [
+          "співати",
+          "поспівати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 799",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "ставати, стати",
+        "legs": [
+          "ставати",
+          "стати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 806",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "ставити, поставити",
+        "legs": [
+          "ставити",
+          "поставити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 807",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "стояти, постояти",
+        "legs": [
+          "стояти",
+          "постояти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 818",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "стрибати, стрибнути",
+        "legs": [
+          "стрибати",
+          "стрибнути"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 821",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "студент, студентка",
+        "legs": [
+          "студент",
+          "студентка"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 822",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "стіл, столи",
+        "legs": [
+          "стіл",
+          "столи"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 812",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "стілець, стільці",
+        "legs": [
+          "стілець",
+          "стільці"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 813",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "сусід, сусідка",
+        "legs": [
+          "сусід",
+          "сусідка"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 831",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "сідати, сісти",
+        "legs": [
+          "сідати",
+          "сісти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 759",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "сік, соки",
+        "legs": [
+          "сік",
+          "соки"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 760",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "танець, танці",
+        "legs": [
+          "танець",
+          "танці"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 846",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "танцювати, потанцювати",
+        "legs": [
+          "танцювати",
+          "потанцювати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 847",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "тиждень, тижні",
+        "legs": [
+          "тиждень",
+          "тижні"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 864",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "торкатися, торкнутися",
+        "legs": [
+          "торкатися",
+          "торкнутися"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 877",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "тримати, потримати",
+        "legs": [
+          "тримати",
+          "потримати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 888",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "убивати, to kill (imperfective, perfective)",
+        "legs": [
+          "убивати",
+          "to kill (imperfective",
+          "perfective)"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": false,
+        "disposition": "hold(already_in_atlas, multiword_after_split, multiword_phrases_other)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 67",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "увесь, усі",
+        "legs": [
+          "увесь",
+          "усі"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 80",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "українець, українка",
+        "legs": [
+          "українець",
+          "українка"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 898",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "усміхатися, усміхнутися",
+        "legs": [
+          "усміхатися",
+          "усміхнутися"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 901",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "учень, учениця, учні",
+        "legs": [
+          "учень",
+          "учениця",
+          "учні"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 903",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "футболiст, футболістка",
+        "legs": [
+          "футболіст",
+          "футболістка"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 918",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "хворіти, захворіти",
+        "legs": [
+          "хворіти",
+          "захворіти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 923",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "хлопець, хлопці",
+        "legs": [
+          "хлопець",
+          "хлопці"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 925",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "ходити, походити",
+        "legs": [
+          "ходити",
+          "походити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 927",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "хотіти, захотіти",
+        "legs": [
+          "хотіти",
+          "захотіти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 929",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "художник, художниця",
+        "legs": [
+          "художник",
+          "художниця"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 932",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "цілувати, поцілувати",
+        "legs": [
+          "цілувати",
+          "поцілувати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 938",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "цілуватися, поцілуватися to kiss each other",
+        "legs": [
+          "цілуватися",
+          "поцілуватися to kiss each other"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": false,
+        "disposition": "hold(already_in_atlas, multiword_after_split)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 939",
+        "in_atlas_db": false
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "чекати, почекати",
+        "legs": [
+          "чекати",
+          "почекати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 949",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "число, числа",
+        "legs": [
+          "число",
+          "числа"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 956",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "читати, почитати",
+        "legs": [
+          "читати",
+          "почитати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 958",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "човен, човни",
+        "legs": [
+          "човен",
+          "човни"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 959",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "чоловік, чоловіки",
+        "legs": [
+          "чоловік",
+          "чоловіки"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 960",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "чути, почути",
+        "legs": [
+          "чути",
+          "почути"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 968",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "шукати, пошукати",
+        "legs": [
+          "шукати",
+          "пошукати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 984",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "щастити, пощастити",
+        "legs": [
+          "щастити",
+          "пощастити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 986",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "юрист, юристка",
+        "legs": [
+          "юрист",
+          "юристка"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 993",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "яйце, яйця",
+        "legs": [
+          "яйце",
+          "яйця"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 997",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "і (1)",
+        "legs": [
+          "і"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 839",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "ім'я, імена",
+        "legs": [
+          "ім'я",
+          "імена"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 314",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "їздити, з'їздити, поїздити",
+        "legs": [
+          "їздити",
+          "з'їздити",
+          "поїздити"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 322",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "їсти, поїсти",
+        "legs": [
+          "їсти",
+          "поїсти"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 324",
+        "in_atlas_db": true
+      },
+      {
+        "bucket": "words_1000_pair_keys",
+        "key": "їхати, поїхати",
+        "legs": [
+          "їхати",
+          "поїхати"
+        ],
+        "vesum_heritage": "VESUM / split classified",
+        "in_atlas": true,
+        "disposition": "hold(already_in_atlas)",
+        "source_id": "ohoiko-ulp-curated-2026-07-19-bulk-ohoiko",
+        "locator": "ohoiko-1000-words entry 325",
+        "in_atlas_db": true
+      }
+    ]
+  }
+}
