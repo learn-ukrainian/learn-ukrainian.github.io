@@ -93,6 +93,10 @@ def compute_deck_version(
     homonym_pairs: list[dict[str, Any]] | None = None,
     creation_review: dict[str, Any] | None = None,
 ) -> str:
+    if creation_review is None:
+        from scripts.practice.creation_review import CreationReview
+
+        creation_review = CreationReview.from_path().version_payload()
     payload = {
         "builder_version": PRACTICE_DECK_BUILDER_VERSION,
         "creation_review": creation_review or {},

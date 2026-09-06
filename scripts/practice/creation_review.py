@@ -69,6 +69,9 @@ class CreationReview:
             print(f'WARN: creation-review ledger unavailable ({type(exc).__name__}); fail-closed', file=sys.stderr)
             return cls()
 
+    def version_payload(self) -> dict[str, Any]:
+        return {"grandfathered": sorted(self.grandfathered), "receipts": self.receipts}
+
     def allows(self, kind: str, prompt: str, answer: str, contrast: str, source: dict) -> bool:
         identity = frame_identity(kind, prompt, answer, contrast)
         if identity in self.grandfathered:

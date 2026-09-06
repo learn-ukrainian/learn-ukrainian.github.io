@@ -4482,7 +4482,7 @@ def build_practice_shards(
         SCHEMA_VERSION,
         antonym_pairs=antonym_pairs,
         homonym_pairs=homonym_pairs,
-        creation_review={"grandfathered": sorted(creation_review.grandfathered), "receipts": creation_review.receipts},
+        creation_review=creation_review.version_payload(),
     )
     # Seed from the DATA-ONLY fingerprint, not deck_version: builder-version
     # bumps mint new asset names but must not reshuffle seeded content.
