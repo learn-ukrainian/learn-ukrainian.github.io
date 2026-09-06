@@ -34,7 +34,7 @@ DRAFT_TICKETS_DIR = OUTPUT_DIR / "draft_tickets"
 A1_REPORT_PATH = PROJECT_ROOT / "docs" / "architecture" / "corpus-coverage-map-a1.md"
 
 DEFAULT_TRACKS = ("a1", "a2", "b1")
-DEFAULT_MODEL = "gpt-5.5"
+DEFAULT_MODEL = "gpt-6-astra"
 CODEX_TIMEOUT_S = 300
 DEFAULT_CHUNKS_PER_PAGE = 1.4
 MAX_CONCEPTS_PER_ARTICLE = 15
@@ -632,6 +632,8 @@ def build_concept_prompt(track: str, slug: str, query_keywords: list[str], objec
 
 
 def run_codex_concept_extraction(prompt: str, model: str = DEFAULT_MODEL) -> dict[str, Any]:
+    if model != DEFAULT_MODEL:
+        raise ValueError("Codex concept extraction requires gpt-6-astra")
     schema = {
         "type": "object",
         "properties": {

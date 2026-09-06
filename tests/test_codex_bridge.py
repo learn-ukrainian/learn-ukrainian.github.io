@@ -29,6 +29,7 @@ from scripts.ai_agent_bridge._codex import (
     _codex_bridge_runtime_mode,
     _reported_codex_effort,
     _resolve_codex_bridge_timeout,
+    ask_codex,
     ask_codex_chain,
     process_for_codex,
 )
@@ -861,3 +862,22 @@ def test_codex_usage_cli_reports_counts(capsys, tmp_path):
     assert "Total calls: 3" in out
     assert re.search(r"ok\s+2", out)
     assert re.search(r"rate_limited\s+1", out)
+
+
+def test_legacy_callable_defaults_to_astra_before_message_creation():
+    with (
+        patch("scripts.ai_agent_bridge._codex.send_message", return_value=91) as send,
+        patch("scripts.ai_agent_bridge._codex.register_ask"),
+        patch("scripts.ai_agent_bridge._codex.process_for_codex") as invoke,
+    ):
+        assert ask_codex("bounded fixture", from_llm="claude") == 91
+    assert send.call_args.kwargs["to_model"] == "gpt-6-astra"
+    invoke.assert_called_once_with(91, False, False, review=False)
+
+
+@pytest.mark.parametrize("model", ["gpt-5.6-terra", "gpt-5.5"])
+def test_legacy_callable_rejects_old_model_before_message_creation(model):
+    with patch("scripts.ai_agent_bridge._codex.send_message") as send:
+        with pytest.raises(ValueError, match="only gpt-6-astra"):
+            ask_codex("bounded fixture", from_llm="claude", to_model=model)
+    send.assert_not_called()

@@ -205,9 +205,16 @@ def _hermes_python_argv() -> list[str]:
     return python_argv
 
 
+class CodexModelSelectionError(ValueError):
+    """The direct Codex route selected an unauthorized model."""
+
+
 def _codex_backend(model: str, messages: list[Message], **kwargs: Any) -> CompletionResponse:
     prompt = str(kwargs.get("prompt") or _flatten_messages(messages))
-    codex_model = os.environ.get("BRIDGE_PROXY_CODEX_MODEL", "gpt-5.6-terra")
+    codex_model = os.environ.get("BRIDGE_PROXY_CODEX_MODEL", "gpt-6-astra")
+
+    if codex_model != "gpt-6-astra":
+        raise CodexModelSelectionError("Codex backend requires gpt-6-astra")
 
     with tempfile.NamedTemporaryFile(prefix="openai-proxy-codex-", suffix=".txt", delete=False) as handle:
         output_path = Path(handle.name)
@@ -509,6 +516,10 @@ def chat_completions(request: ChatCompletionRequest) -> dict[str, object] | JSON
             request.messages,
             prompt=prompt,
             user=request.user,
+        )
+    except CodexModelSelectionError:
+        return _openai_error(
+            400, "Codex backend requires gpt-6-astra", "invalid_request_error", "model_not_allowed"
         )
     except subprocess.TimeoutExpired as exc:
         return _openai_error(

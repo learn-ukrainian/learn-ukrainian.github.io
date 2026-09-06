@@ -320,3 +320,35 @@ def test_healthz_endpoint_returns_backend_status(monkeypatch):
             "hermes": False,
         },
     }
+
+
+def test_codex_backend_defaults_to_astra(monkeypatch):
+    monkeypatch.delenv("BRIDGE_PROXY_CODEX_MODEL", raising=False)
+    seen = []
+
+    def backend(name, argv, **kwargs):
+        seen.append(argv)
+        return subprocess.CompletedProcess(argv, 0, stdout="fixture", stderr="")
+
+    monkeypatch.setattr(proxy, "_run_backend_command", backend)
+    proxy._codex_backend("codex", [proxy.Message(role="user", content="fixture")])
+    assert seen[0][seen[0].index("-m") + 1] == "gpt-6-astra"
+    monkeypatch.setenv("BRIDGE_PROXY_CODEX_MODEL", "gpt-6-astra")
+    proxy._codex_backend("codex", [proxy.Message(role="user", content="fixture")])
+    assert len(seen) == 2
+
+
+def test_codex_backend_rejects_override_before_preparation(monkeypatch):
+    def forbidden(*args, **kwargs):
+        raise AssertionError("unauthorized model reached preparation")
+
+    monkeypatch.setattr(proxy.tempfile, "NamedTemporaryFile", forbidden)
+    monkeypatch.setattr(proxy, "_run_backend_command", forbidden)
+    for model in ("gpt-5.6-terra", "unknown", ""):
+        monkeypatch.setenv("BRIDGE_PROXY_CODEX_MODEL", model)
+        response = _client().post(
+            "/v1/chat/completions",
+            json={"model": "codex", "messages": [{"role": "user", "content": "fixture"}]},
+        )
+        assert response.status_code == 400
+        assert response.json()["error"]["code"] == "model_not_allowed"

@@ -923,7 +923,7 @@ def main() -> None:
             "Writer agent to use for compilation. Default: agy (unmetered "
             "Gemini-family, MCP-enabled). Use 'claude' for cultural/decolonization-sensitive "
             "tracks (literature, figures, periods, historiography, folk). Use "
-            "'gpt-5.5' for mechanical/structural content (grammar, academic, "
+            "'gpt-6-astra' for mechanical/structural content (grammar, academic, "
             "pedagogy)."
         ),
     )

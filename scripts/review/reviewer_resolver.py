@@ -195,7 +195,6 @@ REVIEW_LADDERS: dict[str, tuple[tuple[ReviewerCandidate, ...], ...]] = {
 # explicitly imported the old default. Medium is the balanced default risk.
 CLAUDE_OPUS_4_8 = REVIEW_CANDIDATES["claude-opus-4-8"]
 OPENAI_FRONTIER = REVIEW_CANDIDATES["openai_frontier"]
-TERRA = REVIEW_CANDIDATES["gpt-5.6-terra"]
 GROK_4_6 = REVIEW_CANDIDATES["grok-4.6"]
 GROK_4_6_CURSOR_FALLBACK = REVIEW_CANDIDATES["grok-4.6-cursor-fallback"]
 SONNET_5 = REVIEW_CANDIDATES["claude-sonnet-5"]

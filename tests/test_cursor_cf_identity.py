@@ -32,8 +32,8 @@ from scripts.review.reviewer_resolver import (
     CURSOR_AUTO_MODEL_TOKENS,
     CURSOR_AUTO_UNION_FAMILIES,
     CURSOR_AUTO_UNION_FAMILY,
+    OPENAI_FRONTIER,
     REVIEW_CANDIDATES,
-    TERRA,
     UNATTESTED_AUTHOR_FAMILY,
     ResolverInputs,
     evaluate_candidate,
@@ -218,7 +218,7 @@ def test_cursor_unattested_quorum_fail_closed_and_pin_cannot_substitute(monkeypa
     # Fewer than two eligible distinct families fails closed — no quorum.
     one_family = reviewer_resolver.resolve_reviewer(
         ResolverInputs(author_model="generic-unattested-harness"),
-        ladder=((TERRA,),),
+        ladder=((OPENAI_FRONTIER,),),
     )
     assert one_family.selected is None
     assert one_family.quorum == ()

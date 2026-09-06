@@ -143,8 +143,10 @@ def ask_codex(
     )
     from_llm = _resolve_codex_from_llm(from_llm)
     effective_model = resolve_model_selection(
-        lane="ask-codex", to_model=to_model, model=None, default="gpt-5.6-terra"
+        lane="ask-codex", to_model=to_model, model=None, default="gpt-6-astra"
     )
+    if effective_model != "gpt-6-astra":
+        raise ValueError("ask-codex: only gpt-6-astra is approved")
     msg_id = send_message(
         content,
         task_id,
@@ -238,7 +240,7 @@ def has_codex_headroom(model: str | None = None) -> tuple[bool, str]:
     """Return whether Codex has quota headroom for a new bridge call."""
     from agent_runtime.usage import has_headroom
 
-    effective_model = model or "gpt-5.6-terra"
+    effective_model = model or "gpt-6-astra"
     return has_headroom("codex", effective_model)
 
 

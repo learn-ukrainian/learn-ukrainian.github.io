@@ -240,7 +240,7 @@ def build_parser() -> argparse.ArgumentParser:
     score.add_argument("--out-dir", default=None)
     score.add_argument("--answers", required=True)
     score.add_argument("--context-tokens", type=int, default=0)
-    score.add_argument("--model", default="gpt-5.6-terra")
+    score.add_argument("--model", default="gpt-6-astra")
     score.add_argument("--pass-ratio", type=float, default=_gl.DEFAULT_PASS_RATIO)
     score.add_argument("--threshold", type=float, default=_gl.DEFAULT_SIM_THRESHOLD)
     score.add_argument("--handoff", default=None)

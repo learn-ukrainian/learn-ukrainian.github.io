@@ -371,3 +371,34 @@ def test_render_a1_report_markdown_includes_summary_and_sources():
     assert "## Summary" in report
     assert "## Priority Ukrainian Sources" in report
     assert "ввічливе прохання про меню" in report
+
+
+def test_concept_extraction_defaults_to_astra(monkeypatch):
+    import json
+    import subprocess
+
+    seen = []
+
+    def backend(argv, **kwargs):
+        seen.append(argv)
+        Path(argv[argv.index("--output-last-message") + 1]).write_text(json.dumps({"concepts": []}))
+        return subprocess.CompletedProcess(argv, 0, stdout="", stderr="")
+
+    monkeypatch.setattr(audit.subprocess, "run", backend)
+    assert audit.run_codex_concept_extraction("fixture") == {"concepts": []}
+    assert seen[0][seen[0].index("-m") + 1] == "gpt-6-astra"
+    audit.run_codex_concept_extraction("fixture", model="gpt-6-astra")
+    assert len(seen) == 2
+
+
+def test_concept_extraction_rejects_override_before_preparation(monkeypatch):
+    import pytest
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("unauthorized model reached preparation")
+
+    monkeypatch.setattr(audit.tempfile, "TemporaryDirectory", forbidden)
+    monkeypatch.setattr(audit.subprocess, "run", forbidden)
+    for model in ("gpt-5.5", "unknown", ""):
+        with pytest.raises(ValueError, match="requires gpt-6-astra"):
+            audit.run_codex_concept_extraction("fixture", model=model)
