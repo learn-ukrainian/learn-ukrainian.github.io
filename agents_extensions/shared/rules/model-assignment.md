@@ -21,9 +21,10 @@ official model documentation, checking local bakeoff deltas, updating `reviewed_
 ```
 
 Selection order is binding: **independence and hard gates → review quality tier → health/quota within
-that tier → cost among equivalent fits**. For formal code review, everyday routine PRs use practical seats
-(**Astra @ medium → Sonnet 5 → Gemini 3.7 Flash → GLM → DeepSeek V4 Flash High**). Escalatory authority reviews select from the advisor quality prior (**Astra → Opus
-→ Fable → Pro**) (#5293). Legacy Terra qualification is historical evidence; the approved Codex model is Astra.
+that tier → cost among equivalent fits**. Formal code review uses the catalog's `review_ladders`
+and the reviewer resolver for current routine and authority seat order; do not reconstruct a ladder
+from historical prose. The routine Codex seat is **Astra @ medium**. Legacy Terra qualification is
+historical evidence; the approved Codex model is Astra.
 Cost never lowers the quality floor. An `unhealthy` route is unavailable; `degraded` and `near_cap`
 only break ties inside a quality rung. `cursor:auto` is never an acceptable formal-review identity;
 Composer is eligible only with its concrete `composer-2.5` model identity.
