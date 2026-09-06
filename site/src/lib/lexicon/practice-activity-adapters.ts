@@ -36,6 +36,38 @@ export type HeritageMarkTheWordsQuestion = Pick<
 
 const BLANK = '___';
 const CONTENT_TOKEN = /[\p{L}\p{N}]/u;
+// These tokens are not calques on their own. Only a visible construction can
+// justify presenting one as a correction target.
+const FUNCTION_WORD_TARGETS = new Set([
+  'чим', 'тим', 'що', 'то', 'так', 'як', 'і', 'й', 'а', 'та', 'бо', 'чи',
+  'не', 'ні', 'би', 'б', 'же', 'ж', 'аж', 'в', 'у', 'на', 'до', 'за', 'по', 'з', 'із', 'зі',
+]);
+const PAIRED_CONSTRUCTIONS = [['чим', 'тим'], ['що', 'то']] as const;
+
+function normalizedWords(text: string): string[] {
+  return contentWords(text).map((word) => word.toLocaleLowerCase().replace(/\u0301/g, ''));
+}
+
+function isFunctionWordTarget(item: PracticeHeritageItem): boolean {
+  const words = normalizedWords(item.calque);
+  return words.length === 1 && FUNCTION_WORD_TARGETS.has(words[0]!);
+}
+
+function hasConstructionContext(item: PracticeHeritageItem, replacement: string): boolean {
+  if (!isFunctionWordTarget(item)) return true;
+  const [before, after] = item.prompt.split(BLANK);
+  if (after === undefined) return false;
+  // Anchor the pair to the blank, within the same sentence. An unrelated pair
+  // elsewhere in the prompt must not license an isolated function-word target.
+  const left = normalizedWords(before!.split(/[.!?;\n]/u).at(-1)!);
+  const right = normalizedWords(after.split(/[.!?;\n]/u)[0]!);
+  const target = normalizedWords(replacement);
+  if (target.length !== 1) return false;
+  return PAIRED_CONSTRUCTIONS.some(([first, second]) =>
+    (target[0] === first && right.includes(second)) ||
+    (target[0] === second && left.includes(first)),
+  );
+}
 
 function fillSingleBlank(prompt: string, replacement: string): string | null {
   if (!prompt || !replacement) return null;
@@ -77,6 +109,8 @@ function sourceOptions(item: PracticeHeritageItem): string[] | null {
 }
 
 function heritageMatchPair(item: PracticeHeritageItem): MatchPair | null {
+  // MatchUp drops the frame entirely, so it cannot carry a paired construction.
+  if (isFunctionWordTarget(item)) return null;
   const options = sourceOptions(item);
   const left = item.calque.trim();
   const right = item.answer.trim();
@@ -121,6 +155,7 @@ export function heritageToErrorCorrection(
   const options = sourceOptions(item);
   if (!sentence || !options || !item.calque.trim() || !item.answer.trim()) return null;
   if (contentWords(item.calque).length !== 1) return null;
+  if (!hasConstructionContext(item, item.calque)) return null;
   if (!appearsExactlyOnce(sentence, item.calque)) return null;
   return {
     sentence,
@@ -157,6 +192,8 @@ export function heritageToUnjumble(
 export function heritageToFillIn(item: PracticeHeritageItem): HeritageFillInQuestion | null {
   const options = sourceOptions(item);
   if (!fillSingleBlank(item.prompt, item.answer) || !options) return null;
+  if (!hasConstructionContext(item, item.calque) && !hasConstructionContext(item, item.answer))
+    return null;
   return {
     sentence: item.prompt,
     answer: item.answer,
@@ -178,6 +215,7 @@ export function heritageToMarkTheWords(
   if (
     !options ||
     !text ||
+    !hasConstructionContext(item, item.answer) ||
     correctWords.length === 0 ||
     !appearsExactlyOnce(text, item.answer) ||
     !targetWordsAppearExactlyOnce(text, correctWords)

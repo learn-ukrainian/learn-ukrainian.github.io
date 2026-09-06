@@ -32,6 +32,66 @@ function heritage(overrides: Partial<PracticeHeritageItem> = {}): PracticeHerita
 }
 
 describe('heritage practice activity adapters', () => {
+  // Exact source frames from data/lexicon/heritage_pairs.yaml at issue #7769.
+  test.each([
+    ["Ти вже хочби пильнував вилову, а ___ розтрусив на подвір'ї найліпшу рибу.", 'тим', 'то'],
+    ['___ ви хочете і звідки ви? — Наша батьківщина Рука так далеко звідси, що навряд чи вістка про неї дійшла сюди.', 'Чим', 'Що'],
+    ['а ___ розтрусив', 'тим', 'то'],
+    ['___ ви хочете', 'Чим', 'Що'],
+  ])('refuses isolated function-word corrections in %s', (prompt, calque, answer) => {
+    const item = heritage({ prompt, calque, answer, options: [{ label: answer }, { label: calque }] });
+    expect(heritageToErrorCorrection(item)).toBeNull();
+    expect(heritageToFillIn(item)).toBeNull();
+    expect(heritageToMarkTheWords(item)).toBeNull();
+    expect(heritageToMatchUp(item, [item, heritage()], 42)).toBeNull();
+    for (let seed = 0; seed < 64; seed += 1) {
+      expect(['mc', 'unjumble']).toContain(
+        selectHeritagePracticePresentation(item, seed, [item, heritage()]).kind,
+      );
+    }
+  });
+
+  test.each(['чим', 'тим', 'що', 'то', 'так', 'як', 'чи', 'би', 'та', 'ЧИМ', 'ти́м'])(
+    'fails closed for the isolated function-word target %s', (calque) => {
+      const item = heritage({ calque });
+      expect(heritageToErrorCorrection(item)).toBeNull();
+      expect(heritageToFillIn(item)).toBeNull();
+      expect(heritageToMarkTheWords(item)).toBeNull();
+    },
+  );
+
+  test.each([
+    ['___ більше, тим краще.', 'Чим', 'Що', true, false],
+    ['Чим більше, ___ краще.', 'тим', 'то', true, false],
+    ['___ більше, то краще.', 'Чим', 'Що', false, true],
+    ['Що більше, ___ краще.', 'тим', 'то', false, true],
+  ])('requires the pair in the displayed frame: %s', (prompt, calque, answer, errorAllowed, markAllowed) => {
+    const item = heritage({ prompt, calque, answer, options: [{ label: answer }, { label: calque }] });
+    expect(heritageToErrorCorrection(item) !== null).toBe(errorAllowed);
+    expect(heritageToFillIn(item)).not.toBeNull();
+    expect(heritageToMarkTheWords(item) !== null).toBe(markAllowed);
+    // Even a complete source frame is lost on a match-up board.
+    expect(heritageToMatchUp(item, [item, heritage()], 42)).toBeNull();
+  });
+
+  test.each([
+    'Тим краще, ___ більше.',
+    '___ більше. Тим краще.',
+    '___ більше, тимчасом краще.',
+    '___ ви хочете? Чим більше, тим краще.',
+  ])('does not accept reversed, substring, or unrelated pairs: %s', (prompt) => {
+    const item = heritage({ prompt, calque: 'Чим', answer: 'Що', options: [{ label: 'Що' }, { label: 'Чим' }] });
+    expect(heritageToErrorCorrection(item)).toBeNull();
+    expect(heritageToFillIn(item)).toBeNull();
+    expect(heritageToMarkTheWords(item)).toBeNull();
+  });
+
+  test('excludes isolated function-word companions from match-up boards', () => {
+    const item = heritage();
+    const companion = heritage({ heritageId: 'isolated', calque: 'тим', answer: 'то', options: [{ label: 'то' }] });
+    expect(heritageToMatchUp(item, [item, companion], 42)).toBeNull();
+  });
+
   test('adapts a full heritage frame into exact ErrorCorrection props', () => {
     expect(heritageToErrorCorrection(heritage())).toEqual({
       sentence: 'Я бачу дом щодня.',
