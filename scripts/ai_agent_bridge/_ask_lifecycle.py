@@ -869,15 +869,34 @@ def ask_sender_model(msg: dict[str, Any]) -> str | None:
     return str(model) if model else None
 
 
-def _process_target(message_id: int, target: str, options: dict[str, Any]) -> None:
-    """Route the worker to the same processor as its synchronous ask path."""
+def _process_target(message_id: int, target: str, options: dict[str, Any]) -> bool | None:
+    """Drain ordinary asks via ACP; retain the toolful legacy review processors.
+
+    Ordinary drains return success; review processors retain their None return.
+    """
     no_timeout = bool(options.get("no_timeout", False))
     review = bool(options.get("review", False))
     new_session = bool(options.get("new_session", False))
+    from ._messaging import read_message
+    from ._process import process_message_for_recipient
+
+    if not review:
+        msg = read_message(message_id, quiet=True)
+        if not msg:
+            return
+        review = str(msg.get("type", "")).strip().casefold() == "review"
+        review = review or "review_target" in _ask_metadata(msg)
+    if not review:
+        # Drain existing queued asks through the same two-seat ACP controller
+        # as ordinary CLI asks. Never fall back to a one-shot provider worker.
+        if options.get("fire_and_forget"):
+            raise ValueError("ordinary process --async is retired; enqueue through fleet-comms")
+        return bool(process_message_for_recipient(message_id, no_timeout=no_timeout))
     if target == "claude":
         from ._claude import process_for_claude
 
-        process_for_claude(message_id, new_session, no_timeout=no_timeout, review=review)
+        async_options = {"fire_and_forget": True} if options.get("fire_and_forget") else {}
+        process_for_claude(message_id, new_session, no_timeout=no_timeout, review=review, **async_options)
     elif target == "codex":
         from ._codex import process_for_codex
 

@@ -421,14 +421,20 @@ via `DEFAULT_MAX_HISTORY_CHARS`), so even a 4-round, 4-agent
 discussion stays inside a ~12KB budget per call instead of exploding
 to 40–60KB of copy-pasted transcript.
 
-**Tradeoff:** the first round of any new channel pays a small
-one-time cost — the pinned `context.md` + the Monitor API snapshot
-are concatenated into the prompt even if the agent doesn't strictly
-need them. For drive-by one-shots, the legacy `ask-*` commands are
-still cheaper. `ask-*` commands infer `--from` from wrapper environment
-such as `CLAUDE_AGENT_NAME`, `CODEX_SESSION`, or `GEMINI_SESSION`; pass
-`--from` explicitly when running them from a plain shell. Use channels
-when the conversation will have at least two turns.
+For ordinary inter-agent communication, `ask-*` uses the durable ACP controller
+with exactly two enabled seats: sender and recipient. Pass `--from` explicitly
+from a plain shell; launchers can supply the sender identity. `discuss` also
+requires exactly two enabled seats. Neither surface falls back to a one-shot
+provider process on failure.
+
+Use `delegate.py dispatch --worktree` for planning, creation, design, or other
+toolful work. Explicit `ask-* --type review`, `--review`, and `--pr` requests
+retain their headless toolful dispatch path. The `process-*` commands exist to
+drain old queued messages; do not create new one-shot jobs for them. Ordinary
+queued asks use ACP, including detached `process-ask` workers.
+
+Bridge telemetry, Broker Ops, and legacy HTTP routes remain in place. #6106
+stays open until measured zero use and operator approval permit retirement.
 
 ## Web dashboard
 

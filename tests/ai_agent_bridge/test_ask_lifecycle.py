@@ -473,7 +473,7 @@ def test_background_ask_reply_remains_unacked_for_requester(bridge_db, monkeypat
         model="claude-sonnet-5",
         effort=None,
     )
-    monkeypatch.setattr("scripts.ai_agent_bridge._claude.runtime_invoke", Mock(return_value=mock_result))
+    monkeypatch.setattr("scripts.ai_agent_bridge._process.run_compat_ask", Mock(return_value=mock_result))
     monkeypatch.setattr(lifecycle, "_background_options", lambda *_args: {})
 
     lifecycle.process_background_ask(ask_id, "claude")

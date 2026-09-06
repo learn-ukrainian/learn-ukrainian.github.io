@@ -356,14 +356,19 @@ re-typed. The B.2 prompt assembler caps history at 5KB (configurable
 via <code>DEFAULT_MAX_HISTORY_CHARS</code>), so even a 4-round, 4-agent
 discussion stays inside a ~12KB budget per call instead of exploding
 to 40–60KB of copy-pasted transcript.</p>
-<p><strong>Tradeoff:</strong> the first round of any new channel pays a small
-one-time cost — the pinned <code>context.md</code> + the Monitor API snapshot
-are concatenated into the prompt even if the agent doesn't strictly
-need them. For drive-by one-shots, the legacy <code>ask-*</code> commands are
-still cheaper. <code>ask-*</code> commands infer <code>--from</code> from wrapper environment
-such as <code>CLAUDE_AGENT_NAME</code>, <code>CODEX_SESSION</code>, or <code>GEMINI_SESSION</code>; pass
-<code>--from</code> explicitly when running them from a plain shell. Use channels
-when the conversation will have at least two turns.</p>
+<p>For ordinary inter-agent communication, <code>ask-*</code> uses the durable ACP
+controller with exactly two enabled seats: sender and recipient. Pass
+<code>--from</code> explicitly from a plain shell; launchers can supply the sender
+identity. <code>discuss</code> also requires exactly two enabled seats. Neither
+surface falls back to a one-shot provider process on failure.</p>
+<p>Use <code>delegate.py dispatch --worktree</code> for planning, creation, design,
+or other toolful work. Explicit <code>ask-* --type review</code>,
+<code>--review</code>, and <code>--pr</code> requests retain their headless toolful
+dispatch path. The <code>process-*</code> commands exist to drain old queued
+messages; do not create new one-shot jobs for them. Ordinary queued asks use ACP,
+including detached <code>process-ask</code> workers.</p>
+<p>Bridge telemetry, Broker Ops, and legacy HTTP routes remain in place. #6106
+stays open until measured zero use and operator approval permit retirement.</p>
 <h2>Web dashboard</h2>
 <p><code>playgrounds/channels.html</code> — read-only monitor plus post form,
 localhost only. Shows:</p>

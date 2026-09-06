@@ -11,13 +11,11 @@ from agent_runtime import usage as runtime_usage
 from agent_runtime.errors import AgentTimeoutError
 
 from ._ask_contract import EFFORT_CHOICES
-from ._ask_lifecycle import maybe_print_timeout_notice, print_asks, process_background_ask
+from ._ask_lifecycle import _process_target, maybe_print_timeout_notice, print_asks, process_background_ask
 from ._broker import bridge_status, broker_cleanup
-from ._claude import process_for_claude
 from ._codex import (
     has_codex_headroom,
     process_all_codex,
-    process_for_codex,
 )
 from ._cursor import CURSOR_DEFAULT_MODEL
 from ._db import get_db
@@ -30,10 +28,9 @@ from ._dispatch_wrappers import (
 from ._gemini import converse_gemini
 from ._grok_build import (
     GROK_BUILD_DEFAULT_MODEL,
-    process_for_grok_build,
 )
 from ._hermes import HERMES_DEFAULT_MODEL
-from ._kimi import KIMI_BRIDGE_DEFAULT_MODEL, process_for_kimi
+from ._kimi import KIMI_BRIDGE_DEFAULT_MODEL
 from ._messaging import (
     acknowledge,
     acknowledge_all,
@@ -257,7 +254,10 @@ def process_all_claude(new_session: bool = False):
         print(f"━━━ Processing [{msg_id}] from {from_llm}: {preview}...")
 
         try:
-            process_for_claude(msg_id, new_session)
+            if _process_target(msg_id, "claude", {"new_session": new_session}) is False:
+                failed += 1
+                print("    ❌ Failed (message left unconsumed)\n")
+                continue
             success += 1
             print("    ✅ Done\n")
         except Exception as e:
@@ -439,8 +439,8 @@ def _build_parser() -> argparse.ArgumentParser:
         epilog=(
             "Examples:\n"
             "  .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for gemini\n"
-            "  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex - --task-id review-123 < prompt.md\n"
-            "  .venv/bin/python scripts/ai_agent_bridge/__main__.py process-codex 4812 --new-session\n\n"
+            "  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex - --from claude --task-id query-123 < prompt.md\n"
+            "  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude - --type review --task-id review-123 < prompt.md\n\n"
             "Outputs:\n"
             "  Reads and writes broker messages, may invoke agent CLIs, and can post follow-up data to GitHub.\n\n"
             "Exit codes:\n"
@@ -544,7 +544,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     # process-claude
-    proc_claude_parser = subparsers.add_parser("process-claude", help="Process message with Claude CLI (headless)")
+    proc_claude_parser = subparsers.add_parser("process-claude", help="Drain a queued ask via ACP; explicit reviews remain toolful")
     proc_claude_parser.add_argument("message_id", type=int, help="Message ID for Claude to process")
     proc_claude_parser.add_argument(
         "--new-session",
@@ -553,7 +553,7 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Force new session even if one exists for this task",
     )
     proc_claude_parser.add_argument(
-        "--async", dest="fire_and_forget", action="store_true", help="Launch Claude in background (no timeout)."
+        "--async", dest="fire_and_forget", action="store_true", help="Legacy review background option; rejected for ordinary ACP asks."
     )
     proc_claude_parser.add_argument(
         "--no-timeout",
@@ -563,7 +563,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     # process-codex
-    proc_codex_parser = subparsers.add_parser("process-codex", help="Process message with Codex CLI (headless)")
+    proc_codex_parser = subparsers.add_parser("process-codex", help="Drain a queued ask via ACP; explicit reviews remain toolful")
     proc_codex_parser.add_argument("message_id", type=int, help="Message ID for Codex to process")
     proc_codex_parser.add_argument(
         "--new-session", dest="new_session", action="store_true", help="Force new session even if one exists"
@@ -576,7 +576,7 @@ def _build_parser() -> argparse.ArgumentParser:
     proc_grok_build_parser = subparsers.add_parser(
         "process-grok",
         aliases=["process-grok-build"],
-        help="Process message with native grok CLI (headless; alias: process-grok-build)",
+        help="Drain a queued ask via ACP; explicit reviews remain toolful (alias: process-grok-build)",
     )
     proc_grok_build_parser.add_argument("message_id", type=int, help="Message ID for grok to process")
     proc_grok_build_parser.add_argument(
@@ -590,7 +590,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     proc_grok_build_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
 
-    proc_kimi_parser = subparsers.add_parser("process-kimi", help="Process message with native Kimi CLI (headless)")
+    proc_kimi_parser = subparsers.add_parser("process-kimi", help="Drain a queued ask via ACP; explicit reviews remain toolful")
     proc_kimi_parser.add_argument("message_id", type=int, help="Message ID for kimi to process")
     proc_kimi_parser.add_argument("--new-session", dest="new_session", action="store_true", help="Accepted for parity; Kimi always starts fresh")
     proc_kimi_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true", help="Run sync without timeout")
@@ -897,7 +897,7 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_grok_build_parser = subparsers.add_parser(
         "ask-grok",
         aliases=["ask-grok-build"],
-        help="Send message AND invoke native grok CLI one-shot (alias: ask-grok-build)",
+        help="Ordinary ask via two-seat ACP; reviews via toolful dispatch (alias: ask-grok-build)",
     )
     ask_grok_build_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
     ask_grok_build_parser.add_argument("--task-id", required=True, help="Task ID")
@@ -921,7 +921,7 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_grok_build_parser.add_argument("--review", action="store_true", help="Review ask (same as --type review): reply must state VERDICT grounded in evidence; sealed review-pr is retired")
 
     ask_kimi_parser = subparsers.add_parser(
-        "ask-kimi", help="Send message AND invoke native Kimi Code one-shot (use '-' to read from stdin)"
+        "ask-kimi", help="Ordinary ask via two-seat ACP; reviews via toolful dispatch (use '-' for stdin)"
     )
     ask_kimi_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
     ask_kimi_parser.add_argument("--task-id", required=True, help="Task ID")
@@ -1320,14 +1320,9 @@ def _dispatch_command(args):
         process_message_for_recipient(
             args.message_id, model=args.model, no_timeout=args.no_timeout
         )
-    elif args.command == "process-claude":
-        process_for_claude(args.message_id, args.new_session, args.fire_and_forget, args.no_timeout)
-    elif args.command == "process-codex":
-        process_for_codex(args.message_id, args.new_session, args.no_timeout)
-    elif args.command in {"process-grok", "process-grok-build"}:
-        process_for_grok_build(args.message_id, args.new_session, args.no_timeout, args.review)
-    elif args.command == "process-kimi":
-        process_for_kimi(args.message_id, args.new_session, args.no_timeout, args.review)
+    elif args.command in {"process-claude", "process-codex", "process-grok", "process-grok-build", "process-kimi"}:
+        if _process_target(args.message_id, args.command.removeprefix("process-"), vars(args)) is False:
+            raise SystemExit("ACP processing failed; message left unconsumed")
     elif args.command == "process-ask":
         process_background_ask(args.message_id, args.target)
     elif args.command == "asks":
