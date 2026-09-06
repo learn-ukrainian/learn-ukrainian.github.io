@@ -219,3 +219,60 @@ def test_remote_claim_never_probes_holder_pid(tmp_path: Path) -> None:
     )
     assert outcome == "claimed"
     assert lease.holder.process_id == 1234
+
+
+@pytest.mark.parametrize("host_id", [None, "synthetic-host"])
+@pytest.mark.parametrize("expired", [False, True])
+def test_local_pid_recovery_cannot_close_remote_lease(tmp_path: Path, host_id, expired) -> None:
+    from agents_extensions.shared.session_streams.handoff import diagnose_handoff
+
+    store = _store(tmp_path)
+    now = utc_now()
+    holder = replace(_holder("codex", "remote", "alpha"), host_id=host_id)
+    lease, _ = store.claim_remote_session(
+        stream_id="epic:7178", holder=holder, lineage_id="remote-lineage",
+        ttl_seconds=30, session_id="remote-session", lease_id="remote-lease", now=now,
+    )
+    # Heartbeats must not erase the acquisition's recovery mode.
+    store.heartbeat(lease, now=now + timedelta(seconds=1))
+    store._process_probe = lambda pid: pid == 5678
+    observed = now + timedelta(seconds=60 if expired else 2)
+    before = store.dump_stream(lease.stream_id)
+    status = diagnose_handoff(store, lease.stream_id, now=observed)
+    assert status.claimable_force_close is False
+    assert status.holder_process_alive is None
+    candidate = LeaseHolder(agent="codex", harness="cli", instance_id="local", process_id=5678)
+    with pytest.raises(LeaseConflictError, match=r"remote.*TTL"):
+        store.force_close_expired_session(
+            stream_id=lease.stream_id, session_id=lease.session_id, candidate=candidate, now=observed,
+        )
+    assert store.dump_stream(lease.stream_id) == before
+
+
+def test_dead_local_process_recovers_but_same_dead_pid_is_not_remote_authority(tmp_path: Path) -> None:
+    import os
+    import subprocess
+    import sys
+
+    from scripts.session_supervisor import SessionSupervisor
+
+    store = _store(tmp_path)
+    supervisor = SessionSupervisor(store, repo_root=tmp_path)
+    child = subprocess.Popen([sys.executable, "-c", "import sys; sys.stdin.read()"], stdin=subprocess.PIPE)
+    try:
+        holder = LeaseHolder("codex", "cli", "local-predecessor", process_id=child.pid)
+        local = supervisor.open_driver(role="driver", stream_id="epic:7178", holder=holder, lineage_id="local", ttl_seconds=900)
+        remote, _ = store.claim_remote_session(
+            stream_id="epic:7179", holder=replace(holder, instance_id="remote-predecessor"),
+            lineage_id="remote", ttl_seconds=900, session_id="remote", lease_id="remote-lease",
+        )
+    finally:
+        child.communicate(timeout=10)
+    candidate = LeaseHolder("codex", "cli", "local-successor", process_id=os.getpid())
+    successor = supervisor.open_driver(role="driver", stream_id=local.stream_id, holder=candidate, lineage_id="local", ttl_seconds=900)
+    assert successor.generation == local.generation + 1
+    before = store.dump_stream(remote.stream_id)
+    with pytest.raises(LeaseConflictError, match="remote lease requires TTL"):
+        store.force_close_expired_session(stream_id=remote.stream_id, session_id=remote.session_id, candidate=candidate)
+    assert store.dump_stream(remote.stream_id) == before
+    assert supervisor.close_driver(role="driver", lease=successor) == "closed"
