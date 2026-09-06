@@ -1,0 +1,2568 @@
+version: 1
+kind: atlas_source_inventory
+sources:
+- id: matematyka-ister-grade5-2022
+  source_family: textbook
+  extraction_mode: headword_inventory
+  title: Істер О.С., «Математика», підручник для 5 класу ЗЗСО (НУШ), 2022
+  notes: 'Admission gate: VESUM (upstream extraction) + public UK definition (СУМ-20/ВТС, never СУМ-11) + learner English gloss (dmklinger UK->EN, slovnyk.me ukreng fallback). Residual candidates missing either gate are listed separately, never guessed.'
+  headwords:
+  - lemma: число
+    pos: noun
+    count: 743
+    locator: p.105
+    gloss: number (abstract entity used to describe quantity); amount (total or sum of items); numeral (non-word symbol that represents a number)
+    gloss_source: dmklinger
+    context: ЧИСЛО́, а́, с. 1. Поняття, за допомогою якого передається кількість і здійснюється лічба. Астрономія і геодезія уже в минулому столітті висували задачі, розв'язання яких вимагало кількох десятків або навіть сотень тисяч арифметичних операцій над багатозначними числами (з наук.-попул.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%87%D0%B8%D1%81%D0%BB%D0%BE
+  - lemma: год
+    pos: noun
+    count: 274
+    locator: p.118
+    gloss: (dialectal or colloquial or poetic) year
+    gloss_source: dmklinger
+    context: ГОД, у, ч., розм., фольк., поет. Те саме, що рік. Старять годи і тяжкі пригоди (прислів'я); Сей Евріал був молоденький, Так годів з дев'ятнадцять мав (І. Котляревський); Оживала нова Україна, год за год оживала, як оживає весною степова трава після великої пожежі (Д. Мордовець); – Я третій год вже їжджу за тобою.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B3%D0%BE%D0%B4
+  - lemma: один
+    pos: numr
+    count: 199
+    locator: p.100
+    gloss: one (cardinal number 1); one (1); alone (by oneself)
+    gloss_source: dmklinger
+    context: ОДИ́Н, одного́, ч.; ОДНА́, одніє́ї і одно́ї, ж.; ОДНО́ і ОДНЕ́, одного́, с. (мн. одні́, одни́х), числ. кільк. 1. Назва числа 1 і його цифрового позначення. До одного додати два; // Кількість із 1 одиниці. Багато ж тих корінців – страх як багато. Один, два, три... десять, ціла жменя, ціла купа... (М.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BE%D0%B4%D0%B8%D0%BD
+  - lemma: знати
+    pos: verb
+    count: 165
+    locator: p.106
+    gloss: know (be certain or sure about (something)); to know; know (be acquainted or familiar with)
+    gloss_source: dmklinger
+    context: зна́ти знаю, знаєш, недок. 1》 перех., також про кого – що і з підрядним реченням. Мати якісь дані, відомості про кого-, що-небудь. || що за ким, перев. із запереч. част. не – вважати щось властивим кому-небудь. Знаю я вас ірон. — уживається як вияв недовір'я, сумніву.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%BD%D0%B0%D1%82%D0%B8
+  - lemma: записати
+    pos: verb
+    count: 162
+    locator: p.102
+    gloss: 'save (computing: to write a file to a storage medium); (transitive) to write down, to note down, to put down, to record (set down in writing); enlist (to recruit others)'
+    gloss_source: dmklinger
+    context: записа́ти див. записувати.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%B0%D0%BF%D0%B8%D1%81%D0%B0%D1%82%D0%B8
+  - lemma: дорівнювати
+    pos: verb
+    count: 157
+    locator: p.106
+    gloss: come to (to total, to amount to)
+    gloss_source: dmklinger
+    context: дорі́внювати I -юю, -юєш, недок., дорівняти, -яю, -яєш, док., перех., до кого – чого. Ставити в один ряд із ким-, чим-небудь, вважати рівним, однаковим щодо якості і т. ін. з кимось, із чимось. II -ює, недок., чому. Бути рівним, величиною відповідати чому-небудь.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D0%BE%D1%80%D1%96%D0%B2%D0%BD%D1%8E%D0%B2%D0%B0%D1%82%D0%B8
+  - lemma: сторона
+    pos: noun
+    count: 152
+    locator: p.114
+    gloss: side (bounding straight edge of an object); party, side; country, land
+    gloss_source: dmklinger
+    context: СТОРОНА́, и́, ж. 1. Простір, місцевість, розташовані в якому-небудь напрямку від когось, чогось, а також цей напрямок.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%81%D1%82%D0%BE%D1%80%D0%BE%D0%BD%D0%B0
+  - lemma: відрізок
+    pos: noun
+    count: 136
+    locator: p.100
+    gloss: 'line (geometry: continuous finite segment of such a figure); piece, section, segment; segment (length of some object)'
+    gloss_source: dmklinger
+    context: ВІДРІ́ЗОК, зка, ч. 1. Невелика відрізана частина чого-небудь. В той час викинуто з вагонного вікна паперовий жмут. Розгорнувши його, хлопець знайшов скоринки, огіркові відрізки з хвостиками, курячі кісточки з шматочками шкіри і великі крихти (В. Барка); До шашок прикріпили коротенькі відрізки бікфордового шнура (В.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D1%96%D0%B4%D1%80%D1%96%D0%B7%D0%BE%D0%BA
+  - lemma: швидкість
+    pos: noun
+    count: 131
+    locator: p.149
+    gloss: speed (rapidity); speediness, swiftness, quickness, rapidity, celerity; celerity (speed)
+    gloss_source: dmklinger
+    context: ШВИ́ДКІСТЬ, кості, ж. 1. Стрімкість руху кого-, чого-небудь або поширення чогось; бистрота. Кінь наче розумів, що вершникове життя залежить від його швидкості (З. Тулуб); Поїзд набирав швидкість. Вагон гуркотів уже так, що ми один одного не чули (С. Олійник); Почали готуватись до запливу на швидкість (О.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%88%D0%B2%D0%B8%D0%B4%D0%BA%D1%96%D1%81%D1%82%D1%8C
+  - lemma: частина
+    pos: noun
+    count: 122
+    locator: p.101
+    gloss: piece (part of a larger whole); part (fraction of a whole); portion (allocated amount)
+    gloss_source: dmklinger
+    context: ЧАСТИ́НА, и, ж. 1. Складова чогось цілого. Хіба не рівна частина досталася на долю братів? Усе ж пополам паювали (Панас Мирний); Коли б хоч десята частина з його бажань здійснилась, земля б стала вільною від панів, ба й сама пам'ять про них щезла б на віки вічні (М.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%87%D0%B0%D1%81%D1%82%D0%B8%D0%BD%D0%B0
+  - lemma: натуральний
+    pos: adj
+    count: 114
+    locator: p.105
+    gloss: natural (as expected); natural (without additives)
+    gloss_source: dmklinger
+    context: НАТУРА́ЛЬНИЙ, а, е. 1. заст. Природознавчий. – Я дуже люблю натуральну історію, – говорила Катерина (І. Нечуй-Левицький); [Агафія:] Записався [син] на натуральні науки, на якусь фізику та хімію (І. Франко). 2. Природного походження; протилежне штучний.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BD%D0%B0%D1%82%D1%83%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D0%B8%D0%B9
+  - lemma: трикутник
+    pos: noun
+    count: 112
+    locator: p.128
+    gloss: triangle (polygon)
+    gloss_source: dmklinger
+    context: 'ТРИКУ́ТНИК, а, ч. 1. Геометрична фігура на площині, обмежена трьома прямими, які взаємно перетинаються й утворюють три кути. – А в голові так і миготить: периметр, трикутник, гіпотенуза, конус... (О. Донченко); Прямокутний трикутник; * У порівн.…'
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%82%D1%80%D0%B8%D0%BA%D1%83%D1%82%D0%BD%D0%B8%D0%BA
+  - lemma: обчислити
+    pos: verb
+    count: 106
+    locator: p.103
+    gloss: calculate ((transitive) to determine the value or solution of sth.); (transitive) to calculate, to compute, to figure out
+    gloss_source: dmklinger
+    context: ОБЧИ́СЛИТИ див. обчи́слювати.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BE%D0%B1%D1%87%D0%B8%D1%81%D0%BB%D0%B8%D1%82%D0%B8
+  - lemma: цифра
+    pos: noun
+    count: 106
+    locator: p.155
+    gloss: number (numeral); figure, cipher, digit; digit (numeral)
+    gloss_source: dmklinger
+    context: 'ЦИ́ФРА, и, ж. 1. Знак, що позначає число. Цифри та латинські літери прудко чергувалися і або роздималися в іще ширші формули, або .. значно скорочувалися (А. Кримський); П''ять цифр І кілька букв: то номер телефону І прізвище таке болюче рідне... (М.…'
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%86%D0%B8%D1%84%D1%80%D0%B0
+  - lemma: значення
+    pos: noun
+    count: 96
+    locator: p.103
+    gloss: sense (meaning or reason); importance, significance; meaning (definition or connotation of a word)
+    gloss_source: dmklinger
+    context: зна́чення -я, с. 1》 Громадська, політична, історична і т. ін. вага, роль кого-, чого-небудь; важливість. 2》 Сутність чого-небудь; зміст.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%BD%D1%8F
+  - lemma: периметр
+    pos: noun
+    count: 80
+    locator: p.128
+    gloss: perimeter (sum of the distance of all the lengths of the sides of an object)
+    gloss_source: dmklinger
+    context: ПЕРИ́МЕТР, а, ч. Довжина замкненого контура, або сума довжин усіх сторін замкненого многокутника на площині. Ламана лінія, що обмежує многокутник, називається контуром його, а відрізок, що дорівнює сумі всіх його сторін, – периметром (з навч.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%B5%D1%80%D0%B8%D0%BC%D0%B5%D1%82%D1%80
+  - lemma: площа
+    pos: noun
+    count: 79
+    locator: p.111
+    gloss: square (open space in a town); (mathematics) area; place (open space, courtyard, market square)
+    gloss_source: dmklinger
+    context: ПЛО́ЩА, і, ж. 1. Яка-небудь ділянка поверхні землі, природно обмежована або спеціально виділена з якоюсь метою. І ось, нарешті, вершина. Це була площа значних розмірів, безладно завалена голим камінням, хоча знизу здавалася майже гострим шпилем (О. Гончар); Лісівництво займало досить велику площу (П.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BB%D0%BE%D1%89%D0%B0
+  - lemma: прямокутник
+    pos: noun
+    count: 75
+    locator: p.136
+    gloss: rectangle (quadrilateral)
+    gloss_source: dmklinger
+    context: ПРЯМОКУ́ТНИК, а, ч. Чотирикутник, у якого всі кути прямі. Паралелограм, в якого всі кути прямі, називається прямокутником (з навч. літ.); // Предмет, силует, т. ін., який має форму такого чотирикутника. Тарас зупинився біля порогу. Лице невиразно біліло на тлі темного прямокутника дверей (В.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D1%80%D1%8F%D0%BC%D0%BE%D0%BA%D1%83%D1%82%D0%BD%D0%B8%D0%BA
+  - lemma: задача
+    pos: noun
+    count: 74
+    locator: p.103
+    gloss: problem (schoolwork exercise); assignment (task); task (piece of work done as part of one's duties)
+    gloss_source: dmklinger
+    context: 'зада́ча -і, ж. 1》 Питання (перев. математичного характеру), що розв''язується обчисленнями за визначеною умовою. Коректна задача — задача, що задовольняє вимоги коректності: розв''язок якої визначається однозначно. 2》 Проблема, що підлягає аналізу та розв''язанню.…'
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%B0%D0%B4%D0%B0%D1%87%D0%B0
+  - lemma: дільник
+    pos: noun
+    count: 73
+    locator: p.152
+    gloss: (arithmetic) divisor
+    gloss_source: dmklinger
+    context: дільни́к -а, ч. 1》 Число, на яке ділять інше число. 2》 Деталь у деяких механізмах, машинах, яка відокремлює, відділяє що-небудь у процесі роботи механізму.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D1%96%D0%BB%D1%8C%D0%BD%D0%B8%D0%BA
+  - lemma: г
+    pos: noun
+    count: 70
+    locator: p.125
+    gloss: (скороч. від грам) g, gr., gram(me)
+    gloss_source: ukreng
+    context: Г, невідм., с. Четверта літера українського алфавіту на позначення приголосного звука “г” (вимовляється “ге”).
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B3
+  - lemma: ділення
+    pos: noun
+    count: 70
+    locator: p.152
+    gloss: 'division (act or process of dividing anything); division (arithmetic: calculation involving this process); division (arithmetic: process of dividing a number by another)'
+    gloss_source: dmklinger
+    context: ді́лення -я, с. 1》 Дія за знач. ділити 1). 2》 Математична дія, за допомогою якої дізнаються, скільки разів одна величина вміщається в іншій, одне число – в іншому або у якому відношенні вони знаходяться.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D1%96%D0%BB%D0%B5%D0%BD%D0%BD%D1%8F
+  - lemma: наприклад
+    pos: adv
+    count: 69
+    locator: p.101
+    gloss: e.g. (abbreviation for "for example"); for example; for example (as an example) (prepositional phrase)
+    gloss_source: dmklinger
+    context: НАПРИ́КЛАД, вставн. сл. Уживається при переліку, уточненні, при поясненні слова в реченні, для ілюстрації попереднього викладу.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BD%D0%B0%D0%BF%D1%80%D0%B8%D0%BA%D0%BB%D0%B0%D0%B4
+  - lemma: рівняння
+    pos: noun
+    count: 68
+    locator: p.128
+    gloss: 'equation (mathematics: assertion)'
+    gloss_source: dmklinger
+    context: РІВНЯ́ННЯ, я, с. 1. Дія за знач. рівня́ти і рівня́тися. Дослідження проблеми художньої різноманітності мусить цікавити критика й літературознавця не як самоціль, а як один із засобів .. рівняння літератури по життю (з наук. літ.); – Солдат Підгайко, стру-унко! Рівняння на середину! (В. Нестайко). 2. мат.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%80%D1%96%D0%B2%D0%BD%D1%8F%D0%BD%D0%BD%D1%8F
+  - lemma: такий
+    pos: adj
+    count: 68
+    locator: p.101
+    gloss: such (used to make a comparison with something implied by context) (determiner); such, suchlike (determiner)
+    gloss_source: dmklinger
+    context: 'ТАКИ́Й, а́, е́, займ. 1. вказ. Уживається в значенні: саме цей, про який ішла або йде мова, вказуючи на властивість особи, якість предмета тощо; вищезгаданий. Ще треті півні не співали, Ніхто нігде не гомонів .. В таку добу під горою, Біля того гаю, Що чорніє над водою, Щось біле блукає (Т.…'
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%82%D0%B0%D0%BA%D0%B8%D0%B9
+  - lemma: малюнок
+    pos: noun
+    count: 66
+    locator: p.101
+    gloss: picture (representation of visible reality produced by drawing, etc); pattern (motif or decoration); drawing (picture, likeness, diagram or representation)
+    gloss_source: dmklinger
+    context: МАЛЮ́НОК, ч. 1. род. нка. Зображення предмета на площині, зроблене олівцем, пером, фарбами і т. ін. Усе село з своєю дерев'яною старою церквою схоже на малюнок, вирваний з історичного альбома (І. Нечуй-Левицький); Малюнок було зроблено фарбами на аркуші паперу (О.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BC%D0%B0%D0%BB%D1%8E%D0%BD%D0%BE%D0%BA
+  - lemma: усно
+    pos: adv
+    count: 63
+    locator: p.123
+    gloss: Orally, verbally; by word of mouth
+    gloss_source: ukreng
+    context: 'У́СНО. Присл. до у́сний. Народ творить і усно? Так, можемо порадувати прихильників обов''язкової усності фольклору: здебільшого усно (М. Рильський).'
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%83%D1%81%D0%BD%D0%BE
+  - lemma: ділитися
+    pos: verb
+    count: 62
+    locator: p.152
+    gloss: 'share (to give); to divide, to be divided (into: на, + accusative) (be or become separated into two or more parts); (+ instrumental case) to share'
+    gloss_source: dmklinger
+    context: діли́тися ділюся, ділишся, недок. 1》 Розпадатися на частини. || Мати властивість розпадатися на частини. || Мати у своєму складі частини; розділятися. || Розподілятися на групи, категорії. || Здійснювати поділ майна.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D1%96%D0%BB%D0%B8%D1%82%D0%B8%D1%81%D1%8F
+  - lemma: вигляд
+    pos: noun
+    count: 57
+    locator: p.164
+    gloss: look (physical appearance); (usually in the singular) appearance, look, aspect; prospect (picturesque or panoramic view; landscape, sketch of landscape)
+    gloss_source: dmklinger
+    context: ВИ́ГЛЯД, у, ч. 1. Сукупність зовнішніх ознак, особливостей кого-, чого-небудь, що створює відповідне враження. Все село має невеселий, непривітний вигляд (І. Нечуй-Левицький); Та чалма, вкупі з білою довгою бородою, надавала йому вигляд старозаконного патріарха (М.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D0%B8%D0%B3%D0%BB%D1%8F%D0%B4
+  - lemma: одиниця
+    pos: noun
+    count: 57
+    locator: p.105
+    gloss: unit (standard measure of a quantity); one (name of the digit 1); unit (organized group comprising people and/or equipment)
+    gloss_source: dmklinger
+    context: ОДИНИ́ЦЯ, і, ж. 1. Найменше ціле число, перше в десятку, а також цифра 1, якою воно позначається; // тільки мн. Числа від 1 до 9, а також цифри, що їх позначають. До п'яти років дитина повинна вміти додавати й віднімати одиниці (із журн.); // тільки мн. Останні цифри багатозначних чисел.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BE%D0%B4%D0%B8%D0%BD%D0%B8%D1%86%D1%8F
+  - lemma: множник
+    pos: noun
+    count: 55
+    locator: p.162
+    gloss: factor (mathematical sense); (arithmetic) multiplier; multiplier (number)
+    gloss_source: dmklinger
+    context: МНО́ЖНИК, а, ч. Число, на яке множиться інше число. Множення на ціле число є дія, з допомогою якої одне число (множене) повторюється доданком стільки разів, скільки одиниць у другому числі (множнику) (з навч. літ.).
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BC%D0%BD%D0%BE%D0%B6%D0%BD%D0%B8%D0%BA
+  - lemma: називати
+    pos: verb
+    count: 53
+    locator: p.114
+    gloss: 'to give a name to; (transitive) to name, to call (somebody something: кого́сь (accusative) чи́мось (instrumental)); entitle (to give a title to a book etc.)'
+    gloss_source: dmklinger
+    context: НАЗИВА́ТИ, а́ю, а́єш, недок., НАЗВА́ТИ, ву́, ве́ш, док., кого, що. 1. перев. док. Давати кому-, чому-небудь назву, ім'я. Любяч – так здавна називали люди полянського племені городище роду Воїнів над Дніпром (С. Скляренко); Громадою при долині Його поховали І долину і криницю На пам'ять назвали Москалевою (Т.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BD%D0%B0%D0%B7%D0%B8%D0%B2%D0%B0%D1%82%D0%B8
+  - lemma: позначити
+    pos: verb
+    count: 53
+    locator: p.102
+    gloss: to mark; to designate, to indicate
+    gloss_source: dmklinger
+    context: ПОЗНА́ЧИ́ТИ див. познача́ти.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D0%B7%D0%BD%D0%B0%D1%87%D0%B8%D1%82%D0%B8
+  - lemma: віднімання
+    pos: noun
+    count: 51
+    locator: p.202
+    gloss: subtraction (process); subtraction (calculation)
+    gloss_source: dmklinger
+    context: ВІДНІМА́ННЯ, ВІДІЙМА́ННЯ, я, с. 1. Дія за знач. відніма́ти, відійма́ти 1, 2. Мені здається, що сумний випадок силуваного однімання землі в дрібних білоцерківських православних українських дворян трапився не тільки на Білоцерківщині, а практикувався скрізь на Правобережній Україні й Білій Русі за часу панування на Укра…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D1%96%D0%B4%D0%BD%D1%96%D0%BC%D0%B0%D0%BD%D0%BD%D1%8F
+  - lemma: спільний
+    pos: adj
+    count: 51
+    locator: p.103
+    gloss: joint (done by two or more people or organisations working together); common, joint; mutual (possessed in common)
+    gloss_source: dmklinger
+    context: СПІ́ЛЬНИЙ, а, е. 1. Який належить усім або багатьом. Щоб лиха не знати, треба спільним плугом спільне поле орати (прислів'я); Ще в димних просторах моєї держави, ладнаючи спільні мости, Іван з Краснодона і Ян із Варшави здружились, як рідні брати (М.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%81%D0%BF%D1%96%D0%BB%D1%8C%D0%BD%D0%B8%D0%B9
+  - lemma: властивість
+    pos: noun
+    count: 50
+    locator: p.143
+    gloss: feature (important or main item); property, feature, attribute; property (an attribute characteristic of a class of objects)
+    gloss_source: dmklinger
+    context: ВЛАСТИ́ВІСТЬ, вості, ж. Якість, ознака, характерні для кого-, чого-небудь. Вона [Маріора] мала властивість усе обнюхувати, і за хвилину не було речі в хаті, дух якої не був би їй знайомим (М.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D0%BB%D0%B0%D1%81%D1%82%D0%B8%D0%B2%D1%96%D1%81%D1%82%D1%8C
+  - lemma: подолати
+    pos: verb
+    count: 50
+    locator: p.150
+    gloss: overcome (to surmount, get the better of); (transitive) to overcome, to get the better of; conquer (defeat in combat)
+    gloss_source: dmklinger
+    context: ПОДОЛА́ТИ див. подо́лувати.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D0%B4%D0%BE%D0%BB%D0%B0%D1%82%D0%B8
+  - lemma: правильний
+    pos: adj
+    count: 50
+    locator: p.123
+    gloss: regular (demonstrating consistent set of rules); correct, right; proper (following the established standards of behavior or manners)
+    gloss_source: dmklinger
+    context: ПРАВИ́ЛЬНИЙ, а, е, спец. 1. Прикм. до прави́ло. Правильна чавунна плита. 2. Признач. для правлення (див. пра́влення⁴). Гарячокатані прутки перед розрізанням повинні піддаватись випрямленню на прави́льних верстатах (з навч. літ.). 3. у знач. ім. прави́льний, ного, ч.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D1%8C%D0%BD%D0%B8%D0%B9
+  - lemma: т
+    pos: noun
+    count: 50
+    locator: p.142
+    gloss: (скороч. від тонна) t., ton, tonne
+    gloss_source: ukreng
+    context: 'Т, невідм., с. Двадцять третя літера українського алфавіту на позначення приголосного звука “т” (вимовляється “те”); уживається як умовне скорочення в сполученнях: і т. ін. (і таке інше); і т. д. (і так далі).'
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%82
+  - lemma: множення
+    pos: noun
+    count: 48
+    locator: p.243
+    gloss: 'multiplication (process); verbal noun of мно́жити: multiplication; multiplication (calculation)'
+    gloss_source: dmklinger
+    context: 'МНО́ЖЕННЯ, я, с. Математична дія повторення даного числа як доданка стільки разів, скільки одиниць в іншому даному числі. Знав [хлопець] множення й складання, сам я бачив у вікно: як дадуть йому завдання – вмить розв''язане воно! (Н. Забіла); На обкладинці [зошита] надрукована таблиця множення й метричні міри (О.…'
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BC%D0%BD%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8F
+  - lemma: отримати
+    pos: verb
+    count: 48
+    locator: p.100
+    gloss: acquire (to get); (transitive) to receive; receive (to take what is offered, accept from another)
+    gloss_source: dmklinger
+    context: ОТРИ́МАТИ див. отри́мувати.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BE%D1%82%D1%80%D0%B8%D0%BC%D0%B0%D1%82%D0%B8
+  - lemma: с
+    pos: noun
+    count: 48
+    locator: p.105
+    gloss: с. (скороч. від село) village
+    gloss_source: ukreng
+    context: С, невідм., с. 1. Двадцять друга літера українського алфавіту на позначення приголосного звука “с” (вимовляється “ес”). 2. Літера с. вживається як умовне позначення скорочення на середній рід іменників. 3. Літера с. або с. вживається як умовне скорочення в значенні “сторінка” або кількість сторінок; вживається С.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%81
+  - lemma: середній
+    pos: adj
+    count: 48
+    locator: p.2
+    gloss: 'neuter (grammar: having a form which is not masculine nor feminine); having the mean as its value; mediocre (having no peculiar or outstanding features)'
+    gloss_source: dmklinger
+    context: СЕРЕ́ДНІЙ, я, є. 1. Який міститься, знаходиться в середині, між двома особами, предметами, смугами і т. ін.; який однаково віддалений від кінців, країв чого-небудь.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%81%D0%B5%D1%80%D0%B5%D0%B4%D0%BD%D1%96%D0%B9
+  - lemma: частка
+    pos: noun
+    count: 48
+    locator: p.152
+    gloss: particle (body with very small size); fraction; share (portion of something)
+    gloss_source: dmklinger
+    context: ЧА́СТКА, и, ж. 1. Те саме, що части́на 1, 2. Ґазда Стромовський .. дає своєму мірошникові третю частку всього заробітку з млина (І.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%87%D0%B0%D1%81%D1%82%D0%BA%D0%B0
+  - lemma: година
+    pos: noun
+    count: 47
+    locator: p.163
+    gloss: hour (time period of sixty minutes); one o'clock (the start of the second hour); (poetic) time
+    gloss_source: dmklinger
+    context: ГОДИ́НА¹, и, ж. 1. Одиниця виміру часу, що дорівнює 1/24 доби, або 60 хвилинам. Згадаю що чи що набачу, То так утну, що аж заплачу. І ніби сам перелечу Хоч на годину на Вкраїну (Т. Шевченко); Години цілі ми дивилися, як оси Серйозно повзають у селищах своїх (М. Рильський). 2. з числ.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B3%D0%BE%D0%B4%D0%B8%D0%BD%D0%B0
+  - lemma: добуток
+    pos: noun
+    count: 46
+    locator: p.163
+    gloss: product (multiplication result); product, output, yield, gain (something that is obtained or acquired through work); prey (booty, anything taken by force)
+    gloss_source: dmklinger
+    context: добу́ток -тку, ч. 1》 Те, що одержано, добуто працею. 2》 мат. Число, одержане після множення.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D0%BE%D0%B1%D1%83%D1%82%D0%BE%D0%BA
+  - lemma: спосіб
+    pos: noun
+    count: 45
+    locator: p.117
+    gloss: means (instrument or condition for attaining a purpose); way, means, manner; grammatical mood (in grammar, type of the relationship)
+    gloss_source: dmklinger
+    context: СПО́СІБ, собу, ч. 1. Певна дія, прийом або система прийомів, яка дає можливість зробити, здійснити що-небудь, досягти чогось. Єремія побачив, що треба змінити спосіб діяння, щоб часом його слободи не спустошились зовсім вкрай, до решти (І.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%81%D0%BF%D0%BE%D1%81%D1%96%D0%B1
+  - lemma: течія
+    pos: noun
+    count: 44
+    locator: p.210
+    gloss: brook (a small stream); (figuratively) flow (of sounds, words, language); (rare) course, passage (of time)
+    gloss_source: dmklinger
+    context: ТЕЧІЯ́, ї, ж. 1. Рух води в річці від верхів'я до гирла; плин. І шумлять, і дзвенять їх пісні над невпинною течією Дніпра-Славути, як голос правди, і слави... (М. Рильський); Річка була тут вузенька, течія бистра, човен несло швидко (Я. Гримайло); // Напрям потоку води в річці від верхів'я до гирла.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%82%D0%B5%D1%87%D1%96%D1%8F
+  - lemma: додавання
+    pos: noun
+    count: 42
+    locator: p.202
+    gloss: 'addition (arithmetic: process of adding)'
+    gloss_source: dmklinger
+    context: додава́ння -я, с. 1》 Дія за знач. додавати 1-3) і додаватися 1). 2》 Математична дія, за допомогою якої з двох або декількох чисел (доданків) одержують нове (суму), що має стільки одиниць, скільки було у всіх заданих числах разом.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D0%BE%D0%B4%D0%B0%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F
+  - lemma: третій
+    pos: adj
+    count: 42
+    locator: p.129
+    gloss: third (the ordinal form of the cardinal number three)
+    gloss_source: dmklinger
+    context: ТРЕ́ТІЙ, тя, тє. 1. Числівник порядковий, який відповідає кількісному числівнику три. За думою дума роєм вилітає; Одна давить серце, друга роздирає, А третя тихо, тихесенько плаче У самому серці, може й бог не бачить (Т.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%82%D1%80%D0%B5%D1%82%D1%96%D0%B9
+  - lemma: л
+    pos: noun
+    count: 41
+    locator: p.141
+    gloss: (скороч. від літр) l, litre(s); амер. liter(s)
+    gloss_source: ukreng
+    context: Л, невідм., с. Шістнадцята літера українського алфавіту на позначення приголосного звука “л” (вимовляється “ел”).
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BB
+  - lemma: міра
+    pos: noun
+    count: 41
+    locator: p.120
+    gloss: measure (prescribed quantity or extent); measure, scale, standard; extent (space, area, volume to which something extends)
+    gloss_source: dmklinger
+    context: МІ́РА, и, ж. 1. Одиниця виміру чого-небудь. Міри виникли в зв'язку з потребою людини вимірювати розміри навколишніх предметів (з навч. літ.); Слово це [маршрут] стоїть першим у Кузьчиному зошиті. В тому синенькому зошиті, де на обкладинці надрукована таблиця множення й метричні міри (О.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BC%D1%96%D1%80%D0%B0
+  - lemma: неправильний
+    pos: adj
+    count: 38
+    locator: p.191
+    gloss: wrong (incorrect); incorrect, wrong; incorrect (erroneous)
+    gloss_source: dmklinger
+    context: НЕПРА́ВИЛЬНИЙ, а, е. 1. Який не відповідає певним нормам, правилам, вимогам. Перед виконанням вправ треба продемонструвати учням .. приклади правильного і неправильного вимірювання (з навч. літ.); Неправильний обробіток землі; // Який не задовольняє вимог пропорції, симетрії і т. ін.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BD%D0%B5%D0%BF%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D1%8C%D0%BD%D0%B8%D0%B9
+  - lemma: відповідь
+    pos: noun
+    count: 37
+    locator: p.128
+    gloss: answer (response); answer, reply, response; response (an answer or reply)
+    gloss_source: dmklinger
+    context: ВІ́ДПОВІДЬ, і, ж. 1. Усне або письмове висловлювання, повідомлення, пояснення з приводу чийогось запитання, звертання і т. ін. Хто вухо своє затикає від зойку убогого, то й він буде кликати, та не отримає відповіді (Біблія. Пер. І.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D1%96%D0%B4%D0%BF%D0%BE%D0%B2%D1%96%D0%B4%D1%8C
+  - lemma: зошит
+    pos: noun
+    count: 37
+    locator: p.101
+    gloss: notebook (empty book able to be used for notes); textbook, exercise book, notebook; exercise book (booklet for students)
+    gloss_source: dmklinger
+    context: зо́шит -а, ч. 1》 Зшиті аркуші чистого паперу в обкладинці для писання або малювання. 2》 Окремий випуск періодичного видання або великого друкованого твору, що виходить частинами.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%BE%D1%88%D0%B8%D1%82
+  - lemma: знак
+    pos: noun
+    count: 35
+    locator: p.109
+    gloss: astrological sign (sign that is used as the basis of astrology); sign (trace, impression, token); omen
+    gloss_source: dmklinger
+    context: ч. 1》 род. -а.Предмет, позначка, зображення і т. ін., які вказують на що-небудь, підтверджують, означають щось; сигнал. || Клеймо, мітка. Дорожній знак — технічний засіб регулювання, що містить символи чи написи, призначений для інформування учасників дорожнього руху та встановлення порядку їхніх дій.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%BD%D0%B0%D0%BA
+  - lemma: рівність
+    pos: noun
+    count: 35
+    locator: p.138
+    gloss: equality (fact of being equal); flatness, evenness; equality (equal treatment of people irrespective of social or cultural differences)
+    gloss_source: dmklinger
+    context: РІ́ВНІСТЬ, ності, ж. 1. Абстр. ім. до рі́вний 1–6. Рівність стовбура і вузькість крони та швидкість росту пірамідальної тополі є гарантією того, що закладені з неї лісонасадження будуть високопродуктивними (із журн.); В її [теорії тяжіння] основу він [А.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%80%D1%96%D0%B2%D0%BD%D1%96%D1%81%D1%82%D1%8C
+  - lemma: кількість
+    pos: noun
+    count: 34
+    locator: p.167
+    gloss: quantity (fundamental, generic term used when referring to the measurement); quantity, number, amount; amount (quantity or volume)
+    gloss_source: dmklinger
+    context: КІ́ЛЬКІСТЬ, кості, ж. 1. Число, величина, об'єм, маса. Вона подала докладні відомості про її [корови] годівлю, норови, кількість удою та якість молока (М. Коцюбинський); А на подвір'ї вражала неймовірно велика кількість варти (І.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BA%D1%96%D0%BB%D1%8C%D0%BA%D1%96%D1%81%D1%82%D1%8C
+  - lemma: мішаний
+    pos: adj
+    count: 34
+    locator: p.196
+    gloss: mixed
+    gloss_source: dmklinger
+    context: 'МІ́ШАНИЙ, а, е. Дієпр. пас. до міша́ти¹. На стінах і на сволоці хрестами звисає сухий чебрець, мішаний з чорнобривцями (Я. Качура); // у знач. прикм. – Тут неначе товар в мішаній череді: є й овечки та телята, .. – говорила говорлива Мокрієвська (І.…'
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BC%D1%96%D1%88%D0%B0%D0%BD%D0%B8%D0%B9
+  - lemma: порівняти
+    pos: verb
+    count: 34
+    locator: p.109
+    gloss: compare (to assess the similarities between two things or between one thing and another); (transitive) to compare
+    gloss_source: dmklinger
+    context: ПОРІВНЯ́ТИ¹ див. порі́внювати¹. ПОРІВНЯ́ТИ² див. порі́внювати².
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D1%80%D1%96%D0%B2%D0%BD%D1%8F%D1%82%D0%B8
+  - lemma: допомога
+    pos: noun
+    count: 33
+    locator: p.102
+    gloss: help (action given to provide assistance); (uncountable) help, assistance, aid; dole, financial support
+    gloss_source: dmklinger
+    context: допомо́га -и, ж. 1》 Сприяння, підтримка в чому-небудь. || Матеріальна підтримка. || Захист, порятунок у біді. || Сприяння в лікуванні, полегшення страждань. || Ті, хто приходить на допомогу кому-небудь.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D0%BE%D0%BF%D0%BE%D0%BC%D0%BE%D0%B3%D0%B0
+  - lemma: ящик
+    pos: noun
+    count: 32
+    locator: p.200
+    gloss: box (cuboid space; container); box, case, chest; chest (strong box)
+    gloss_source: dmklinger
+    context: Я́ЩИК, а, ч. Виріб з дощок, фанери, лози і т. ін. (перев. чотирикутний), який використовують для пакування, зберігання або перенесення чого-небудь. Вчора я отримала гроші, але ще їх не чіпала, а сховала в ящик (Леся Українка); Зранку до ночі Шевченко пиляв і стругав, збивав ящики, щось пакував або зашивав у рогожу (З.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%8F%D1%89%D0%B8%D0%BA
+  - lemma: квадрат
+    pos: noun
+    count: 31
+    locator: p.136
+    gloss: square (type of polygon)
+    gloss_source: dmklinger
+    context: КВАДРА́Т, а, ч. 1. Рівнобічний прямокутник. Тихович, мов полковник той, визначує місця бойовища, відмірюючи ланцюгом стосажневий квадрат (М. Коцюбинський); Квадратом називається паралелограм, у якого всі сторони рівні і всі кути прямі (з навч. літ.); // перев. чого. Про що-небудь такої форми.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BA%D0%B2%D0%B0%D0%B4%D1%80%D0%B0%D1%82
+  - lemma: нуль
+    pos: noun
+    count: 31
+    locator: p.17
+    gloss: nil (zero (in sports)); zero (cardinal number before 1, denoting nothing); zero (0)
+    gloss_source: dmklinger
+    context: НУЛЬ, я́, ч. 1. Цифра 0, що означає відсутність величини, а при підставлянні її до іншого числа справа означає збільшення його в десять разів. Сума двох протилежних чисел дорівнює нулеві (з навч. літ.); Якщо нам, наприклад, треба записати мільйон, ми можемо поставити одиницю і за нею шість нулів (з наук.-попул.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BD%D1%83%D0%BB%D1%8C
+  - lemma: метр
+    pos: noun
+    count: 30
+    locator: p.131
+    gloss: metre (unit of length); meter/metre (SI unit of measure); metre measure ruler, metre-stick
+    gloss_source: dmklinger
+    context: '...МЕТР. Друга частина складних слів, що 1) відповідає поняттю вимі́рювач, напр.: баро́метр, термо́метр, фото́метр; 2) означає одиницю довжини в метричній системі, напр.: кіломе́тр, сантиме́тр.'
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BC%D0%B5%D1%82%D1%80
+  - lemma: рух
+    pos: noun
+    count: 30
+    locator: p.213
+    gloss: traffic (pedestrians or vehicles on roads or on the air); movement (trend in various fields or social categories); movement (physical motion)
+    gloss_source: dmklinger
+    context: РУХ, у, ч. 1. філос. Спосіб існування матерії, який полягає в безперервній зміні всього сущого і виявляється в безпосередній єдності перервності і неперервності простору і часу. 2. Процес розвитку, в результаті якого відбувається зміна якості предмета, явища і т.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%80%D1%83%D1%85
+  - lemma: доданок
+    pos: noun
+    count: 29
+    locator: p.18
+    gloss: (arithmetic) addend
+    gloss_source: dmklinger
+    context: дода́нок -нка, ч., мат. Величина (число), яка (яке) додається до другої величини (числа).
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D0%BE%D0%B4%D0%B0%D0%BD%D0%BE%D0%BA
+  - lemma: запис
+    pos: noun
+    count: 29
+    locator: p.106
+    gloss: 'recording (reproduction stored in a permanent medium); verbal noun of запи́сувати: writing down, noting down, recording; entry (article in a dictionary or encyclopedia)'
+    gloss_source: dmklinger
+    context: за́пис -у, ч. 1》 Дія за знач. записувати 1), 2). Ксерографічний запис — запис, що здійснюється на поверхні, покритій шаром напівпровідника, який змінює свій потенціал під дією світла. Лазерний запис — запис, який здійснюється за допомогою лазерного променя.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%B0%D0%BF%D0%B8%D1%81
+  - lemma: виміряти
+    pos: verb
+    count: 28
+    locator: p.102
+    gloss: недок. вимірювати, виміряти, док. виміряти, вимірити to measure (out); (глибину води) to sound, to fathom, to plumb; (землю) to survey; (температуру, висоту) to take;…
+    gloss_source: ukreng
+    context: ВИМІРЯ́ТИ див. вимі́рювати. ВИ́МІРЯТИ див. вимі́рювати.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D0%B8%D0%BC%D1%96%D1%80%D1%8F%D1%82%D0%B8
+  - lemma: різниця
+    pos: noun
+    count: 28
+    locator: p.18
+    gloss: 'difference (quality of being different); disparity (the state of being unequal; difference); remainder (mathematics: amount left over after repeatedly subtracting the divisor)'
+    gloss_source: dmklinger
+    context: РІЗНИ́ЦЯ¹, і, ж. 1. Несхожість, відмінність у чомусь, між ким-, чим-небудь. Різниця в поглядах та в смаках довела, врешті, до того, що вони обридли одно одному і мусили розійтись (М. Коцюбинський); Вони обидва були такі вже старі, що важко було розпізнати, хто з них вчений, хто чорнороб.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%80%D1%96%D0%B7%D0%BD%D0%B8%D1%86%D1%8F
+  - lemma: сторінка
+    pos: noun
+    count: 28
+    locator: p.133
+    gloss: page (one side of a leaf of a book); webpage; (figuratively) phase, period, epoch
+    gloss_source: dmklinger
+    context: СТОРІ́НКА, и, ж. 1. Один бік аркуша паперу в зошиті, книжці і т. ін. Прочитавши перших дві-три сторінки, я спинилась, щоб одвести голос, і почула голосне, мірне дихання Алли Михайлівни, – вона спала (Леся Українка); Він подав мені розгорнуту книжку ..…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%81%D1%82%D0%BE%D1%80%D1%96%D0%BD%D0%BA%D0%B0
+  - lemma: знаменник
+    pos: noun
+    count: 27
+    locator: p.178
+    gloss: denominator (number or expression written below the line in a fraction)
+    gloss_source: dmklinger
+    context: знаме́нник -а, ч., мат. Число дробу, яке показує, на скільки частин поділене ціле.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%BD%D0%B0%D0%BC%D0%B5%D0%BD%D0%BD%D0%B8%D0%BA
+  - lemma: складений
+    pos: adj
+    count: 27
+    locator: p.162
+    gloss: compound, composite; (qualified by adverb) built (having a certain type of body)
+    gloss_source: dmklinger
+    context: СКЛА́ДЕНИЙ, а, е. 1. Дієпр. пас. до склада́ти 1–9. Вже невод складений в човен (І. Нечуй-Левицький); Чемодани складені на платформі вагона вузькоколійки (М. Томчаній); Стіжок був недавно складений, отже, не дуже злежаний (В. Гжицький); Невідомий ..…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%81%D0%BA%D0%BB%D0%B0%D0%B4%D0%B5%D0%BD%D0%B8%D0%B9
+  - lemma: тисяча
+    pos: noun
+    count: 27
+    locator: p.163
+    gloss: thousand; thousand (cardinal number 1000)
+    gloss_source: dmklinger
+    context: ТИ́СЯЧА, і, ж. 1. числ. кільк. Число, що дорівнює десяти сотням; назва числа 1000 і його цифрового позначення. – Так то ж Левко. Він такий тямовитий, що вже сам до тисячі лічить (М. Стельмах); // Кількість із 1000 одиниць.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%82%D0%B8%D1%81%D1%8F%D1%87%D0%B0
+  - lemma: маса
+    pos: noun
+    count: 26
+    locator: p.111
+    gloss: mass (quantity of matter cohering together to make one body); throng (group of things; host or swarm); array (large collection)
+    gloss_source: dmklinger
+    context: МА́СА, и, ж. 1. Кількість, об'єм речовини якого-небудь предмета; сама речовина, матерія, з якої складається предмет. – Не знаю, чи ми розмовляли наголос, чи мовчки, але ми плили в широкім просторі, рядом, плече з плечем, і вся маса морського повітря, ввесь запах солі, полинів, сонця – проходив крізь нас (М.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BC%D0%B0%D1%81%D0%B0
+  - lemma: обчислення
+    pos: noun
+    count: 26
+    locator: p.132
+    gloss: calculation (act or process of calculating)
+    gloss_source: dmklinger
+    context: ОБЧИ́СЛЕННЯ, я, с. 1. Дія за знач. обчи́слити. Сагайдаків олівець знову заметушився на папері. Але обчислення несподівано перервав Кужель (С. Добровольський). 2. перев. мн. Цифрові розрахунки, викладки. Серед хитрих багатоповерхових формул і обчислень в книжках були вміщені портрети корифеїв науки (Д.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BE%D0%B1%D1%87%D0%B8%D1%81%D0%BB%D0%B5%D0%BD%D0%BD%D1%8F
+  - lemma: фігура
+    pos: noun
+    count: 26
+    locator: p.101
+    gloss: 'piece (chess: figure other than pawn; similar counter in other games); figure (shape of a human body); figure (shape)'
+    gloss_source: dmklinger
+    context: ФІГУ́РА, и, ж. 1. Те саме, що по́стать¹ 1–4. В зареві з'являється у хмарах фігура Кармелюка на коні (С. Васильченко); З усієї його фігури віяло силою (В. Гжицький); Леонід Семенович вхопився обома руками за кілки, підобгав ноги і в одну мить перекинув свою легку фігуру на другий бік тину (І.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%84%D1%96%D0%B3%D1%83%D1%80%D0%B0
+  - lemma: ділянка
+    pos: noun
+    count: 25
+    locator: p.111
+    gloss: bed (garden plot); plot, parcel (of land); site (place fitted or chosen for any certain permanent use or occupation)
+    gloss_source: dmklinger
+    context: діля́нка -и, ж. 1》 Окрема частина земельної площі, використовувана з якоюсь метою, виокремлена за якою-небудь ознакою. || Частина поверхні, площі чого-небудь. || Відтинок чого-небудь, що має протяжність. || Частина фронту, що є місцем дії якого-небудь військового з'єднання.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D1%96%D0%BB%D1%8F%D0%BD%D0%BA%D0%B0
+  - lemma: деталь
+    pos: noun
+    count: 24
+    locator: p.189
+    gloss: detail (part small enough to escape casual notice); circumstance (circumlocution; detail); detail (part considered trivial enough to ignore)
+    gloss_source: dmklinger
+    context: дета́ль -і, ж. 1》 Окремий факт; подробиця. 2》 Складова частина механізму, машини і т. ін.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D0%B5%D1%82%D0%B0%D0%BB%D1%8C
+  - lemma: тоді
+    pos: adv
+    count: 24
+    locator: p.111
+    gloss: then (at that time); then, at that time; then (in that case)
+    gloss_source: dmklinger
+    context: ТОДІ́, присл. 1. В той час, колись у минулому чи в майбутньому; не тепер. Його батько чумакував, і бере було його з собою малого, то ще тоді він закохався у дорогах (Марко Вовчок); Вже хоч там як, а на той рік і я піду на поле.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%82%D0%BE%D0%B4%D1%96
+  - lemma: формула
+    pos: noun
+    count: 24
+    locator: p.142
+    gloss: formula (in mathematics); formula (in chemistry)
+    gloss_source: dmklinger
+    context: ФО́РМУЛА, и, ж. 1. Загальне коротке визначення якогось положення, відношення, закону і т. ін., яке можна застосувати до відповідного конкретного випадку. – Ну, Марійко, чи вийде з моєї дочки письменниця? Загадка, правда? А ти, Ніно, спробуй сама себе розгадати.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%84%D0%BE%D1%80%D0%BC%D1%83%D0%BB%D0%B0
+  - lemma: яблуко
+    pos: noun
+    count: 24
+    locator: p.194
+    gloss: apple (fruit)
+    gloss_source: dmklinger
+    context: Я́БЛУКО, а, с. 1. Плід яблуні (перев. кулястої форми). Надворі схопився вітер. Яблуні загойдали гілками .. На стіл посипались яблука (І. Нечуй-Левицький); Вздовж виноградників, мов обрамлення, тяглися сади. В них достигали яблука, пізні персики (М. Томчаній); На самім споді тачанки лежали в сіні пахучі яблука (О.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%8F%D0%B1%D0%BB%D1%83%D0%BA%D0%BE
+  - lemma: зручний
+    pos: adj
+    count: 22
+    locator: p.141
+    gloss: comfortable (providing physical comfort and ease); convenient (of or pertaining to convenience; simple; easy; expedient)
+    gloss_source: dmklinger
+    context: зру́чний -а, -е. 1》 Добре пристосований для чого-небудь, приємний у користуванні. || Який відповідає певним вимогам; придатний для кого-, чого-небудь. 2》 Такий, як треба для здійснення чого-небудь; сприятливий. || Яким легко, вигідно скористатися.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D1%80%D1%83%D1%87%D0%BD%D0%B8%D0%B9
+  - lemma: книжка
+    pos: noun
+    count: 22
+    locator: p.18
+    gloss: book (collection of sheets of paper bound together containing printed or written material); omasum (the third part of the stomach of a ruminant)
+    gloss_source: dmklinger
+    context: КНИ́ЖКА, и, ж. 1. Зброшурована в одне ціле й оправлена певна кількість друкованих або рукописних аркушів. Минають дні собі поволі, Петрусь до школи та із школи З книжками ходить та росте (Т. Шевченко); Книжки рядками стоять на поличках, на столi ясно горить лампа (А.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BA%D0%BD%D0%B8%D0%B6%D0%BA%D0%B0
+  - lemma: нерівність
+    pos: noun
+    count: 22
+    locator: p.163
+    gloss: disparity (the state of being unequal; difference); unevenness; inequality (statement that one quantity is less (or greater) than another)
+    gloss_source: dmklinger
+    context: НЕРІ́ВНІСТЬ¹, ності, ж. 1. Становище, коли не всі мають однакові, рівні права. Геть змести, поклали ми Бідування підневільне Та нерівність між людьми (П. Грабовський). 2. мат. Алгебраїчний вираз із двох величин, з яких одна більша або менша від іншої.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BD%D0%B5%D1%80%D1%96%D0%B2%D0%BD%D1%96%D1%81%D1%82%D1%8C
+  - lemma: округлити
+    pos: verb
+    count: 22
+    locator: p.228
+    gloss: недок. округляти, округлювати, док. округлити 1) (заокруглювати) to round off 2) (виражати приблизно) to approximate, to round off, to express in round numbers
+    gloss_source: ukreng
+    context: ОКРУГЛИ́ТИ див. окру́глювати.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BE%D0%BA%D1%80%D1%83%D0%B3%D0%BB%D0%B8%D1%82%D0%B8
+  - lemma: сотий
+    pos: adj
+    count: 22
+    locator: p.176
+    gloss: hundredth (ordinal of 100)
+    gloss_source: dmklinger
+    context: 'СО́ТИЙ, а, е. 1. Числівник порядковий, який відповідає кількісному числівнику сто. Килигей стояв перед строєм і з затаєною радістю слухав переклик: десятий... двадцятий... сотий... двохсотий! (О.…'
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%81%D0%BE%D1%82%D0%B8%D0%B9
+  - lemma: ти
+    pos: noun
+    count: 22
+    locator: p.105
+    gloss: 'thou (singular nominative form of you); you (singular); thou; you (subject pronoun: the person being addressed)'
+    gloss_source: dmklinger
+    context: ТИ, тебе́ (з прийм. від те́бе, до те́бе і т. ін.), займ. особ. 2 ос. одн. 1. Уживається при звертанні до однієї особи (звичайно близької, а також до будь-якої особи в грубому, фамільярному плані). Гей ти, проклятий стариганю! На землю з неба не зиркнеш, Не чуєш, як тебе я ганю, Зевес! (І.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%82%D0%B8
+  - lemma: взаємно
+    pos: adv
+    count: 21
+    locator: p.168
+    gloss: mutually (in the same way, each to the other; reciprocally); mutually, reciprocally
+    gloss_source: dmklinger
+    context: ВЗАЄ́МНО. Присл. до взає́мний. Література й народна поезія – рідні сестри, що взаємно збагачуються, що живуть і житимуть у добрій творчій злагоді (М. Рильський); Зустріч двох колон, хай навіть пошарпаних, втомлених, обтяжених масою хворих та поранених, якось одразу взаємно посилила, збадьорила людей (О.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D0%B7%D0%B0%D1%94%D0%BC%D0%BD%D0%BE
+  - lemma: десятий
+    pos: adj
+    count: 20
+    locator: p.215
+    gloss: tenth (ordinal form of ten)
+    gloss_source: dmklinger
+    context: деся́тий -а, -е. Числівник порядковий, відповідний до кількісного числівника десять.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D0%B5%D1%81%D1%8F%D1%82%D0%B8%D0%B9
+  - lemma: кілограм
+    pos: noun
+    count: 20
+    locator: p.176
+    gloss: kilogram (unit of mass equal to 1000 grams)
+    gloss_source: dmklinger
+    context: КІЛОГРА́М, а, ч. Одиниця ваги в метричній системі мір, що дорівнює 1000 грамів. Колись було впіймано сома вагою на 400 кілограмів! Он який сом! (Остап Вишня); Взяла вдова кілограм борошна і пішла годувати сина (В.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BA%D1%96%D0%BB%D0%BE%D0%B3%D1%80%D0%B0%D0%BC
+  - lemma: початок
+    pos: noun
+    count: 20
+    locator: p.100
+    gloss: start (beginning of an activity); ear (grains); beginning (act of doing that which begins anything)
+    gloss_source: dmklinger
+    context: ПОЧА́ТОК¹, тку, ч. 1. Вихідний пункт протяжності предмета, площини тощо, а також те, що прилягає до такого пункту; протилежне кінець. Ті-бо простори всесвітні кінця і початку не мають І у керунках розбіжних одкриті без краю (М. Зеров); Далі всі розглядали якогось селюка, що був намальований в початку книжки (С.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D1%87%D0%B0%D1%82%D0%BE%D0%BA
+  - lemma: результат
+    pos: noun
+    count: 20
+    locator: p.123
+    gloss: product (consequence of efforts); effect, result, return, outcome; conclusion (outcome)
+    gloss_source: dmklinger
+    context: РЕЗУЛЬТА́Т, у, ч. Остаточний, кінцевий підсумок якого-небудь заняття, діяльності, розвитку і т. ін. – Ось і траншея, по якій ми вели вогонь, – сказав Брянський, і всіх потягло глянути на результати своєї роботи (О.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%80%D0%B5%D0%B7%D1%83%D0%BB%D1%8C%D1%82%D0%B0%D1%82
+  - lemma: ви
+    pos: noun
+    count: 19
+    locator: p.144
+    gloss: 'you (subject pronoun: the group being addressed); you (second-person plural or formal); you (subject pronoun: the person being addressed)'
+    gloss_source: dmklinger
+    context: ВИ, вас, займ. особ. 2 ос. мн. Уживається при звертанні до двох чи багатьох осіб або у ввічливій формі до однієї особи. – Ви не журіться, мамо. Я піду в найми (М. Коцюбинський); [Мар'яна:] Щирі мої подруги! Не знаєте ви, що я сама нещасніша між вами (С. Васильченко); Побачивши Марка й Люду, Знайда здивувалася.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D0%B8
+  - lemma: могти
+    pos: verb
+    count: 19
+    locator: p.103
+    gloss: can (to be able); (intransitive) to be able; can; be able to (have ability to)
+    gloss_source: dmklinger
+    context: МОГТИ́, мо́жу, мо́жеш, недок., з інфін., який іноді випускається. 1. Бути в змозі, в силах що-небудь робити. Ніхто не може світа [світу] пережити (Номис); Сто два роки бабусі моїй, і вона вже й ходить не може (В. Сосюра); – Без сонця я не можу (М. Коцюбинський); – Як собі знаєш, а я не можу [так жити] (І.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BC%D0%BE%D0%B3%D1%82%D0%B8
+  - lemma: одночасно
+    pos: adv
+    count: 19
+    locator: p.149
+    gloss: simultaneously (occurring at the same time); simultaneously, at the same time; at the same time (simultaneously) (prepositional phrase)
+    gloss_source: dmklinger
+    context: ОДНОЧА́СНО. Присл. до одноча́сний. Обидві пари розмовляють кожна окремо, але одночасно (Леся Українка); Звістка про напад опришків у трьох місцях одночасно викликала переполох у всій окрузі (В. Гжицький).
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BE%D0%B4%D0%BD%D0%BE%D1%87%D0%B0%D1%81%D0%BD%D0%BE
+  - lemma: перевірити
+    pos: verb
+    count: 19
+    locator: p.14
+    gloss: check (to inspect, examine); (transitive) to check, to verify, to test (ascertain the presence, quality or accuracy of); check out (to examine, inspect, look at closely)
+    gloss_source: dmklinger
+    context: ПЕРЕВІ́РИТИ¹ див. перевіря́ти. ПЕРЕВІ́РИТИ² див. переві́рювати.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%B5%D1%80%D0%B5%D0%B2%D1%96%D1%80%D0%B8%D1%82%D0%B8
+  - lemma: придбати
+    pos: verb
+    count: 19
+    locator: p.141
+    gloss: to acquire, to obtain, to gain; to purchase
+    gloss_source: dmklinger
+    context: ПРИДБА́ТИ див. придбава́ти.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D1%80%D0%B8%D0%B4%D0%B1%D0%B0%D1%82%D0%B8
+  - lemma: складати
+    pos: verb
+    count: 19
+    locator: p.178
+    gloss: compose (to make something by merging parts); to lay together, to put together, to assemble; make up (to constitute, to compose)
+    gloss_source: dmklinger
+    context: СКЛАДА́ТИ, рідко ІСКЛАДА́ТИ, а́ю, а́єш, недок., СКЛА́СТИ, рідко ІСКЛА́СТИ, складу́, складе́ш, док., що і без дод. 1. Розміщувати що-небудь у певному порядку, в одному місці. Наймит усім вслуговує, подає, носить, возить, мете, складає (Марко Вовчок); Вона .. на ранок склала свої речі .. і поїхала в місто (О.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%81%D0%BA%D0%BB%D0%B0%D0%B4%D0%B0%D1%82%D0%B8
+  - lemma: степінь
+    pos: noun
+    count: 19
+    locator: p.142
+    gloss: 'power (maths: product of equal factors); (mathematics) power (product of equal factors)'
+    gloss_source: dmklinger
+    context: СТЕ́ПІНЬ, пеня, ч., мат. Добуток декількох однакових співмножників. Степінь числа дорівнюватиме 1 тоді і тільки тоді, коли або основа дорівнює 1, а показник – будь-яке число, або коли показник степеня дорівнює 0, за умови, що основа не дорівнює 0 (з навч. літ.).
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%81%D1%82%D0%B5%D0%BF%D1%96%D0%BD%D1%8C
+  - lemma: числовий
+    pos: adj
+    count: 19
+    locator: p.22
+    gloss: numerical (of or pertaining to numbers)
+    gloss_source: dmklinger
+    context: ЧИСЛОВИ́Й, а́, е́. Прикм. до число́ 1, 5. Числова величина многочлена не змінюється від перестановки його членів (з їх знаками) (з навч. літ.); Числові назви тисяча, мільйон, мільярд мають усі ознаки іменника – рід, число і відмінок (з наук.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%87%D0%B8%D1%81%D0%BB%D0%BE%D0%B2%D0%B8%D0%B9
+  - lemma: чотири
+    pos: numr
+    count: 19
+    locator: p.102
+    gloss: four (the cardinal number 4); four (4)
+    gloss_source: dmklinger
+    context: ЧОТИ́РИ, рьо́х, ор. рма́ числ. кільк. 1. Назва числа 4 та його цифрового позначення. Чотири ділиться на два; // кого, чого. Кількість із 4 одиниць. Поруч з Джерихою сиділи чотири молодиці, позав'язувані здоровими хустками на високих очіпках (І.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%87%D0%BE%D1%82%D0%B8%D1%80%D0%B8
+  - lemma: ще
+    pos: adv
+    count: 19
+    locator: p.143
+    gloss: yet (in addition); yet, more; as well (in addition, also)
+    gloss_source: dmklinger
+    context: ЩЕ, ІЩЕ́, присл. 1. Додатково до того самого; знову, заново, повторно. Листочки з вітриком, жартуючи, шептались; – Ану, голубчику, ще, ще дихни! (Л.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%89%D0%B5
+  - lemma: вершина
+    pos: noun
+    count: 18
+    locator: p.115
+    gloss: top (uppermost part); peak, top, summit; summit (peak, top of mountain)
+    gloss_source: dmklinger
+    context: ВЕРШИ́НА, и, ж. 1. Верхня, найвища частина чого-небудь (перев. дерева, гори). Настане літо; жовтий цвіт Укриє липу до вершини (Я. Щоголів); Гірські вершини потопали в хмарах (В. Кучер); Забравшись з командирами рот на вершину горба, що здіймався перед вогневою, Черниш терпляче вів пристрілювання (О. Гончар). 2.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D0%B5%D1%80%D1%88%D0%B8%D0%BD%D0%B0
+  - lemma: відповідати
+    pos: verb
+    count: 18
+    locator: p.105
+    gloss: answer (to make a reply or response to); to answer, to respond; to correspond
+    gloss_source: dmklinger
+    context: ВІДПОВІДА́ТИ, а́ю, а́єш, недок., ВІДПОВІ́СТИ́, і́м, іси́; мин. ч. відпові́в, віла́, ло́; док. 1. Давати відповідь на питання, звертання і т. ін. На мої питання відповідав коротко і неначе нерадо (І. Франко); – Я й не кажу, що я гарний, – усміхаючись, одповідав Зінько, лежачи в своєму садку під гіллястим дубом (Б.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D1%96%D0%B4%D0%BF%D0%BE%D0%B2%D1%96%D0%B4%D0%B0%D1%82%D0%B8
+  - lemma: остача
+    pos: noun
+    count: 18
+    locator: p.153
+    gloss: change (balance returned after a purchase); remnant; That which is left; relic; remainder
+    gloss_source: dmklinger
+    context: ОСТА́ЧА, і, ж. 1. Залишок від чого-небудь; лишок. – Не враждуй на мене, молодичко, – казала вона, доручаючи Прісьці остачу зароблених грошей – три карбованці (Л. Яновська); Всіх яблук не розпродали і остачу довелось везти додому (А. Шиян); // рідко. Частина, відрізок, що залишається до кінця чого-небудь; решта.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BE%D1%81%D1%82%D0%B0%D1%87%D0%B0
+  - lemma: сотня
+    pos: noun
+    count: 18
+    locator: p.17
+    gloss: company (military unit); hundred; (historical) sotnia, company (Cossack military unit)
+    gloss_source: dmklinger
+    context: СО́ТНЯ, і, ж. 1. Сто якихось одиниць, предметів, людей і т. ін. Де один панує, там сотня бідує (прислів'я); Сем'я [сім'я] моя щодень росла І вже до сотні доростала (Т. Шевченко); Був місяць січень чи лютий, море замерзло на сотню метрів (Ю. Яновський); // розм. Сто грошових одиниць.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%81%D0%BE%D1%82%D0%BD%D1%8F
+  - lemma: заповнити
+    pos: verb
+    count: 17
+    locator: p.109
+    gloss: fill (occupy fully, take up all of); to fill, to fill up (:space); fill up (to make full)
+    gloss_source: dmklinger
+    context: запо́внити див. заповнювати.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%B0%D0%BF%D0%BE%D0%B2%D0%BD%D0%B8%D1%82%D0%B8
+  - lemma: звичайний
+    pos: adj
+    count: 17
+    locator: p.202
+    gloss: regular (having expected characteristics); customary, habitual; trivial (common, ordinary)
+    gloss_source: dmklinger
+    context: звича́йний -а, -е. 1》 Який нічим не вирізняється з-поміж інших, не має яких-небудь специфічних, визначних особливостей, якостей; простий; ординарний. || Буденний, прозаїчний. || у знач. ім. звичайне, -ного, с. Те, що є буденним, прозаїчним.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%B2%D0%B8%D1%87%D0%B0%D0%B9%D0%BD%D0%B8%D0%B9
+  - lemma: лежати
+    pos: verb
+    count: 17
+    locator: p.102
+    gloss: 'lie (be in horizontal position); to lie (to be in a horizontal position); rest (intransitive: lie or lean or be supported)'
+    gloss_source: dmklinger
+    context: ЛЕЖА́ТИ, жу́, жи́ш, недок. 1. без дод., на чому, в чому. Перебувати в горизонтальному положенні, бути розпластаним усім тілом на чому-небудь (про людей та деяких тварин).…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BB%D0%B5%D0%B6%D0%B0%D1%82%D0%B8
+  - lemma: напрямок
+    pos: noun
+    count: 17
+    locator: p.239
+    gloss: line (direction, path); direction (indication of the point toward which an object is moving)
+    gloss_source: dmklinger
+    context: НА́ПРЯМОК, мку, ч. Те саме, що на́прям. Тепер Соломія вагалась, в якому напрямку йти (М. Коцюбинський); Юнак пішов далі, намагаючися весь час триматися вірного напрямку – на північ (О. Донченко); Нема що таїти, покійник .. вельми цінив послух і поважання батьків і старших родичів і любив напучувати в цім напрямку (М.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BD%D0%B0%D0%BF%D1%80%D1%8F%D0%BC%D0%BE%D0%BA
+  - lemma: транспортир
+    pos: noun
+    count: 17
+    locator: p.121
+    gloss: Protractor
+    gloss_source: ukreng
+    context: ТРАНСПОРТИ́Р, а, ч. Креслярський прилад, що має форму півкола, поділеного на 180°, з лінійкою; за його допомогою будують і вимірюють кути на кресленнях. Для вимірювання кутів застосовується особливий прилад – транспортир. Цей прилад .. являє собою півколо, дуга якого поділена на 180° (з навч.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%82%D1%80%D0%B0%D0%BD%D1%81%D0%BF%D0%BE%D1%80%D1%82%D0%B8%D1%80
+  - lemma: ширина
+    pos: noun
+    count: 17
+    locator: p.111
+    gloss: width (measurement of something from side to side); width, breadth (the extent or measure of how broad or wide something is); (figuratively) breadth (scope or range, especially of knowledge or skill)
+    gloss_source: dmklinger
+    context: ШИРИНА́, и́, ж. 1. Протяжність чого-небудь у поперечнику. Ідуть тепер разом дві дараби, заповняючи усю ширину ріки (Г. Хоткевич); Врожай цукрових буряків і технологічні якості продукції значною мірою залежать від ширини міжрядь і густоти насадження (з наук. літ.). 2. перен. Те саме, що широчі́нь 2.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%88%D0%B8%D1%80%D0%B8%D0%BD%D0%B0
+  - lemma: деякий
+    pos: adj
+    count: 16
+    locator: p.108
+    gloss: some (certain number); some (certain, unspecified or unknown) (determiner); certain (having been determined but not specified) (determiner)
+    gloss_source: dmklinger
+    context: де́який -а, -е. 1》 Конкретно, точно не визначений; якийсь. 2》 Незначний, невеликий. 3》 тільки мн. Якась частина; поодинокі, не всі. || у знач. ім. деякі, -ких, мн. Якась частина людей або тварин; не всі. Деякою мірою — в якійсь невеликій частині; частково.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D0%B5%D1%8F%D0%BA%D0%B8%D0%B9
+  - lemma: записувати
+    pos: verb
+    count: 16
+    locator: p.105
+    gloss: capture (store, record); (transitive) to write down, to note down, to put down, to record (set down in writing); enlist (to recruit others)
+    gloss_source: dmklinger
+    context: запи́сувати -ую, -уєш, недок., записати, -ишу, -ишеш, док., перех. 1》 що і без додатка. Занотовувати на папері, передавати, викладати у письмовій формі. || Фіксувати з допомогою звукозаписувального апарата на плівці, пластинці для наступного відтворення звуку.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%B0%D0%BF%D0%B8%D1%81%D1%83%D0%B2%D0%B0%D1%82%D0%B8
+  - lemma: клітинка
+    pos: noun
+    count: 16
+    locator: p.140
+    gloss: (на папері) square
+    gloss_source: ukreng
+    context: КЛІТИ́НКА, и, ж. Зменш. до кліти́на. Запліднена клітинка починає ділитися (з навч. літ.); Марко розірвав конверт і витяг з нього аркуш паперу в клітинку (І. Микитенко); Лісові голуби воркотіли вгорі, в своїй клітинці; інші голуби вже спали (В. Шкляр); * У порівн.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BA%D0%BB%D1%96%D1%82%D0%B8%D0%BD%D0%BA%D0%B0
+  - lemma: кошик
+    pos: noun
+    count: 16
+    locator: p.153
+    gloss: basket (container); Diminutive of кіш; recycle bin ((computing) in Microsoft Windows, a storage location for deleted files)
+    gloss_source: dmklinger
+    context: КО́ШИК, а, ч. 1. Місткість, різна за формою та розміром, виплетена з лози, стебел рогозу, дранки і т. ін., яку використовують у побуті для зберігання або перенесення чого-небудь. Сухорляві, але міцненькі руки держали на плечі великий кошик, повний малини (Леся Українка); Жінки в лозяних кошиках зносили огірки до ..…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BA%D0%BE%D1%88%D0%B8%D0%BA
+  - lemma: коштувати
+    pos: verb
+    count: 16
+    locator: p.141
+    gloss: cost (to incur a charge, a price); (intransitive) to cost
+    gloss_source: dmklinger
+    context: КОШТУВА́ТИ див. ко́штувати. КО́ШТУВАТИ, ую, уєш, рідко КОШТУВА́ТИ, у́ю, у́єш, недок. 1. Мати певну ціну, вартість у грошовому вираженні або іншому еквіваленті. Груші були здорові і дорого коштували на ярмарку (І. Нечуй-Левицький); Одна лише біда, що кошик з ягідками коштував аж цілих десять крейцерів (Н.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BA%D0%BE%D1%88%D1%82%D1%83%D0%B2%D0%B0%D1%82%D0%B8
+  - lemma: очко
+    pos: noun
+    count: 16
+    locator: p.272
+    gloss: endearing diminutive of о́ко; eye (organ); (rare) small window, peephole (in a door or similar)
+    gloss_source: dmklinger
+    context: ОЧКО́, а, с. 1. Одиниця рахунку у спортивних змаганнях та різних іграх. На червоному щиті суддя-інформатор крейдою пише очки, завойовані командами (В. Собко); Вони грали до тридцяти. Він набрав багато очок (Б. Харчук); Розігравшись і прагнучи тільки виграшу, класні команди інтенсивно набирають очки (з газ.). 2. розм.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BE%D1%87%D0%BA%D0%BE
+  - lemma: подільність
+    pos: noun
+    count: 16
+    locator: p.155
+    gloss: Divisibility; separability
+    gloss_source: ukreng
+    context: ПОДІ́ЛЬНІСТЬ, ності, ж. Властивість за знач. поді́льний. Подільність атомів.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D0%B4%D1%96%D0%BB%D1%8C%D0%BD%D1%96%D1%81%D1%82%D1%8C
+  - lemma: таблиця
+    pos: noun
+    count: 16
+    locator: p.136
+    gloss: table (grid of data in rows and columns); table (a grid of data arranged in rows and columns); table (collection of arithmetic calculations)
+    gloss_source: dmklinger
+    context: ТАБЛИ́ЦЯ, і, ж. 1. Відомості, цифрові дані, розташовані в певному порядку за графами. У комірчині, де звичайно стояли бідони з молоком та висіли білі халати доярок, сидів Дорош, звіряючи таблицю надоїв (Григорій Тютюнник);…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%86%D1%8F
+  - lemma: удвічі
+    pos: adv
+    count: 16
+    locator: p.126
+    gloss: див. вдвічі
+    gloss_source: ukreng
+    context: УДВІ́ЧІ див. вдві́чі.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%83%D0%B4%D0%B2%D1%96%D1%87%D1%96
+  - lemma: ми
+    pos: noun
+    count: 15
+    locator: p.116
+    gloss: generic we (the speaker and at least one other person, regardless of whether it's the person being addressed); we (first-person plural)
+    gloss_source: dmklinger
+    context: 'МИ, нас, займ. особ. 1 ос. мн. 1. Уживається для називання двох чи багатьох осіб разом з тим, хто говорить. Ми вкупочці колись росли, Маленькими собі любились (Т. Шевченко); Сиділи ми при згаслому багатті усі гуртом, – а гурт нас був чималий (Леся Українка); Ми вийшли з готелю: Сев, я й актор-тубілець (Ю.…'
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BC%D0%B8
+  - lemma: наступний
+    pos: adj
+    count: 15
+    locator: p.145
+    gloss: next (following in a sequence); next, following; following (next in sequence or time)
+    gloss_source: dmklinger
+    context: НАСТУ́ПНИЙ, а, е. Який настає, розташовується або з'являється слідом за ким-, чим-небудь; найближчий після когось, чогось. Наступного дня вони обоє [Іваненко й Заболотова] (нарізно одне від одного) кпорядкували паспортові формальності (В. Винниченко); Проїхали так з кілометр до наступного повороту (О.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BD%D0%B0%D1%81%D1%82%D1%83%D0%BF%D0%BD%D0%B8%D0%B9
+  - lemma: ознака
+    pos: noun
+    count: 15
+    locator: p.155
+    gloss: characteristic (distinguishing feature); sign; indication
+    gloss_source: dmklinger
+    context: ОЗНА́КА, и, ж. 1. Риса, властивість, особливість кого-, чого-небудь; відзнака, відзнак. Давнішими дослідниками визначались, як істотні ознаки фольклору, масовість його побутування і усність його творення та передачі (М. Рильський); Викінчений корабель набував у нашій уяві ознак живої істоти (Ю.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BE%D0%B7%D0%BD%D0%B0%D0%BA%D0%B0
+  - lemma: означати
+    pos: verb
+    count: 15
+    locator: p.106
+    gloss: signify (to mean, to betoken); to mean, to signify, to denote; mean (to result in; bring about)
+    gloss_source: dmklinger
+    context: ОЗНАЧА́ТИ, а́ю, а́єш, недок., що. 1. Мати певне значення, певний зміст. – Ось що воно означа! Тривай же! – подумав собі Трохим і пішов тихою ступою (Г. Квітка-Основ'яненко); Наступного дня до Кобзаревих скирт пришкандибав Іван Сидорчук.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BE%D0%B7%D0%BD%D0%B0%D1%87%D0%B0%D1%82%D0%B8
+  - lemma: провести
+    pos: verb
+    count: 15
+    locator: p.100
+    gloss: lead (guide or conduct with the hand, or by means of some physical contact connection); to see off (accompany someone to a point of departure); see off (to accompany someone to a point of departure)
+    gloss_source: dmklinger
+    context: ПРОВЕСТИ́ див. прово́дити.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D1%80%D0%BE%D0%B2%D0%B5%D1%81%D1%82%D0%B8
+  - lemma: річка
+    pos: noun
+    count: 15
+    locator: p.171
+    gloss: river (large stream which drains a landmass); stream (small river)
+    gloss_source: dmklinger
+    context: РІ́ЧКА, и, ж. Те саме, що ріка́. Улітку, саме серед дня, Пустуючи, дурне Ягня Само забилося до річки – Напитися водички (Л. Глібов); По цім боці Дунаю, де розкинулось місто Рені, над самою річкою сиділо двоє людей (М. Коцюбинський); А життя йде, сміється, плаче, розливається тисячами річок (В.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%80%D1%96%D1%87%D0%BA%D0%B0
+  - lemma: самостійний
+    pos: adj
+    count: 15
+    locator: p.150
+    gloss: independent (not dependent; not contingent or depending on something else; free); independent (not politically subordinate); stand-alone (operating without additions or assistance)
+    gloss_source: dmklinger
+    context: САМОСТІ́ЙНИЙ, заст. САМОСТА́ЙНИЙ, а, е. 1. Який не перебуває під чиєюсь владою; не підпорядкований, не підлеглий кому-, чому-небудь (про держави, політичні організації тощо).…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%81%D0%B0%D0%BC%D0%BE%D1%81%D1%82%D1%96%D0%B9%D0%BD%D0%B8%D0%B9
+  - lemma: сто
+    pos: numr
+    count: 15
+    locator: p.115
+    gloss: hundred (cardinal number 100)
+    gloss_source: dmklinger
+    context: СТО, ста, числ. кільк. 1. Назва числа 100 і його цифрового позначення; // чого. Кількість із 100 одиниць. Хазяїн .. при прощанні дав йому аж сто рублів (Г. Квітка-Основ'яненко); Сто два роки бабусі моїй (В. Сосюра); Кроків за сто попереду гострозорий Марко помітив биків (Григорій Тютюнник). 2. розм.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%81%D1%82%D0%BE
+  - lemma: буквений
+    pos: adj
+    count: 14
+    locator: p.132
+    gloss: By letter(s), in letters
+    gloss_source: ukreng
+    context: БУ́КВЕНИЙ, а, е. Прикм. до бу́ква 1. Сьогодні вже п'ятирічні малюки починають писати друковані літери, і якщо дитина не уловлює буквеного складу слова, то вона не сприймає його звукового образу (з наук.-попул. літ.); Буквене письмо; // Позначений буквою (буквами). Буквений співмножник.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B1%D1%83%D0%BA%D0%B2%D0%B5%D0%BD%D0%B8%D0%B9
+  - lemma: випадок
+    pos: noun
+    count: 14
+    locator: p.103
+    gloss: case (actual event, situation, or fact); case, occurrence, event; instance (recurring occasion, case)
+    gloss_source: dmklinger
+    context: 'ВИ́ПАДОК, дку, ч. 1. Те, що сталося, трапилося (звичайно несподівано); подія. Сей маленький випадок зробив дуже багато: в перший раз почула Маруся, де вона є і що з нею тут [серед опришків] може статися (Г. Хоткевич); Вартовий міліціонер повідомив його [начальника міліції], що ніяких випадків уночі не трапилось (І.…'
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D0%B8%D0%BF%D0%B0%D0%B4%D0%BE%D0%BA
+  - lemma: зробити
+    pos: verb
+    count: 14
+    locator: p.124
+    gloss: do (perform, execute); (transitive) to do, to make; make (to construct)
+    gloss_source: dmklinger
+    context: зроби́ти зроблю, зробиш; мн. зроблять; док. 1》 перех. Виготовити який-небудь предмет, якусь річ і т. ін. || Приготувати їжу, виготовити напій. || Створити що-небудь.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D1%80%D0%BE%D0%B1%D0%B8%D1%82%D0%B8
+  - lemma: катер
+    pos: noun
+    count: 14
+    locator: p.210
+    gloss: cutter (heavy-duty motor boat for official use)
+    gloss_source: dmklinger
+    context: КА́ТЕР, а, ч. Невелике легке судно (парове, моторне чи веслове) перев. для недалекого плавання. Маленький катер з дрібним і проникливим ляскотом виїздив за мол (Леся Українка); Дніпро велично котить могутні хвилі, річкою снують катери, буксири, стоять коло берега баржі (Ю.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BA%D0%B0%D1%82%D0%B5%D1%80
+  - lemma: кілометр
+    pos: noun
+    count: 14
+    locator: p.144
+    gloss: kilometre (unit of measure); kilometer, kilometre
+    gloss_source: dmklinger
+    context: КІЛОМЕ́ТР, а, ч. Одиниця вимірювання довжини, що дорівнює 1000 метрів. [Коваль:] Тут не більше двох кілометрів, а машини одна за другою ходять (З. Мороз); Я на мить уявляю собі, як ці самі зорі за кілометр відціля тихо відбиваються в темному плесі озер (Б.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BA%D1%96%D0%BB%D0%BE%D0%BC%D0%B5%D1%82%D1%80
+  - lemma: розглянути
+    pos: verb
+    count: 14
+    locator: p.102
+    gloss: (transitive) to examine, to look at, to look into, to consider, to review, to scrutinize
+    gloss_source: dmklinger
+    context: РОЗГЛЯ́НУТИ див. розгляда́ти.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%80%D0%BE%D0%B7%D0%B3%D0%BB%D1%8F%D0%BD%D1%83%D1%82%D0%B8
+  - lemma: рухатися
+    pos: verb
+    count: 14
+    locator: p.200
+    gloss: stir (to change the place of in any manner; to move); to move; move (to change place or posture; to go)
+    gloss_source: dmklinger
+    context: РУ́ХАТИСЯ, аюся, аєшся, недок., РУ́ШИТИСЯ, шуся, шишся, недок. і док. 1. тільки недок. Перебувати в постійному русі (у просторі й часі). Все, куди тільки не гляне око, рухалось, пливло, летіло. Рухалась .. вся природа (О. Довженко); Все кругом мене крутилося, рушилось... (Панас Мирний). 2. недок. тільки ру́хатися.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%80%D1%83%D1%85%D0%B0%D1%82%D0%B8%D1%81%D1%8F
+  - lemma: чисельник
+    pos: noun
+    count: 14
+    locator: p.178
+    gloss: numerator (number or expression written above the line in a fraction)
+    gloss_source: dmklinger
+    context: ЧИСЕ́ЛЬНИК, а, ч., мат. Ділене в дробовому числі, що стоїть над рискою і вказує на кількість часток, із яких складається дріб. Дробові числівники мають аналітичну будову. Кожний з них компонується з власне кількісного числівника (у чисельнику) і порядкового прикметника (у знаменнику) (з навч.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%87%D0%B8%D1%81%D0%B5%D0%BB%D1%8C%D0%BD%D0%B8%D0%BA
+  - lemma: автомобіль
+    pos: noun
+    count: 13
+    locator: p.108
+    gloss: car (automobile, a vehicle steered by a driver); automobile (passenger vehicle)
+    gloss_source: dmklinger
+    context: АВТОМОБІ́ЛЬ, я, ч. Самохідна машина з двигуном внутрішнього згоряння для перевезення пасажирів і вантажів по безрейкових дорогах. Пробіг автомобіль, і синя хмарка диму За ним розвіялась (М. Рильський); – У нас щороку збільшується кількість тракторів, автомобілів, аеропланів, – захоплено говорила вона (О.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%BE%D0%B1%D1%96%D0%BB%D1%8C
+  - lemma: вартість
+    pos: noun
+    count: 13
+    locator: p.258
+    gloss: cost (amount of money spent for a purpose); value, worth, cost; worth (value)
+    gloss_source: dmklinger
+    context: ВА́РТІСТЬ, тості, ж. 1. Виражена у грошах ціна чого-небудь або величина витрат на що-небудь. На гравюрі невеликої вартості Геркулес, піднявши здорову довбню, замірявся на страшного лева (І. Нечуй-Левицький); Ці вагони коштували дуже дорого.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D0%B0%D1%80%D1%82%D1%96%D1%81%D1%82%D1%8C
+  - lemma: округлення
+    pos: noun
+    count: 13
+    locator: p.228
+    gloss: the act of rounding a mathematical value
+    gloss_source: dmklinger
+    context: ОКРУ́ГЛЕННЯ, я, с. Дія за знач. округли́ти і стан за знач. округли́тися. В роботі запропоновано алгоритм зменшення похибки, що пов'язана з округленням при обчисленнях (з наук. літ.); Йому .. поставили на карб і масло, і округлення цифр (Ю. Мушкетик); Великий державний розум ..…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BE%D0%BA%D1%80%D1%83%D0%B3%D0%BB%D0%B5%D0%BD%D0%BD%D1%8F
+  - lemma: порівняння
+    pos: noun
+    count: 13
+    locator: p.105
+    gloss: verbal noun of порівня́ти; comparison
+    gloss_source: dmklinger
+    context: ПОРІВНЯ́ННЯ¹, я, с. 1. Дія за знач. порівня́ти¹ 1. При порівнянні середніх місячних температур виходить, що найтеплішим місяцем у північній півкулі є липень, а найхолоднішим січень (з навч. літ.); Чудним видалось йому самому порівняння тонконогої в коротенькій спідниці дівчинки з перепеленям на стерні (А. Головко). 2.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D1%80%D1%96%D0%B2%D0%BD%D1%8F%D0%BD%D0%BD%D1%8F
+  - lemma: проїхати
+    pos: verb
+    count: 13
+    locator: p.149
+    gloss: To pass, to drive, to ride (through) (див. проїжджати) як туди проїхати? — what is the way there?…
+    gloss_source: ukreng
+    context: ПРОЇ́ХАТИ див. проїжджа́ти¹.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D1%80%D0%BE%D1%97%D1%85%D0%B0%D1%82%D0%B8
+  - lemma: товар
+    pos: noun
+    count: 13
+    locator: p.289
+    gloss: merchandise (goods offered for sale); commodity, article, product; commodity (anything movable traded)
+    gloss_source: dmklinger
+    context: ТОВА́Р¹, у, ч. 1. тільки одн., екон. Признач. для обміну продукт праці, що має споживну вартість і вартість (див. ва́ртість 3). Що ж являють собою гроші з точки зору політекономії? Це особливий товар, у якому всі інші товари виражають свою вартість (з наук.-попул. літ.). 2. Все те, що становить предмет торгівлі.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%82%D0%BE%D0%B2%D0%B0%D1%80
+  - lemma: шлях
+    pos: noun
+    count: 13
+    locator: p.178
+    gloss: road (a way for travel); way, path; track (permanent way; the rails)
+    gloss_source: dmklinger
+    context: ШЛЯХ, у, ч. 1. Смуга землі, признач. для їзди та ходіння; дорога. У неділеньку та ранесенько, Ще сонечко не зіходило, А я, молоденька, На шлях, на дорогу Невеселая виходила (Т.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%88%D0%BB%D1%8F%D1%85
+  - lemma: буква
+    pos: noun
+    count: 12
+    locator: p.21
+    gloss: letter (a symbol in an alphabet)
+    gloss_source: dmklinger
+    context: БУ́КВА, и, ж. 1. Письмовий знак, що позначає звук або сполучення звуків мови; літера. Писар переписав свій утвір церковними буквами (І. Нечуй-Левицький); Софія схопила книжку, розгорнула її раптово, не читаючи, дивилась на букви (Леся Українка). 2. перен. Суто формальне значення, зміст чого-небудь.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B1%D1%83%D0%BA%D0%B2%D0%B0
+  - lemma: визначити
+    pos: verb
+    count: 12
+    locator: p.111
+    gloss: name (to identify, define, specify); to determine; assess (to determine the value of)
+    gloss_source: dmklinger
+    context: ВИ́ЗНАЧИТИ див. визнача́ти.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D0%B8%D0%B7%D0%BD%D0%B0%D1%87%D0%B8%D1%82%D0%B8
+  - lemma: відомо
+    pos: adv
+    count: 12
+    locator: p.140
+    gloss: '(parenthetical, dated) Used to introduce generally known information as an explanation: as you know, needless to say, of course; (it is) known, well known (predicative)'
+    gloss_source: dmklinger
+    context: ВІДО́МО, невідм. 1. пред. Про наявність відомостей про кого-, що-небудь. Всім відомо, куди він звик ходить і де він лиха набирався (Л. Глібов); Всім було відомо, що царський гнів вибухав несподівано, як улітку громи (Б.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D1%96%D0%B4%D0%BE%D0%BC%D0%BE
+  - lemma: дерево
+    pos: noun
+    count: 12
+    locator: p.125
+    gloss: tree (large woody plant); wood from a particular species; wood (substance)
+    gloss_source: dmklinger
+    context: де́рево -а, с. 1》 Багаторічна рослина з твердим стовбуром і гіллям, що утворює крону. || тільки одн. Зрізані стовбури цієї рослини, очищені від гілля; колоди. Родовідне дерево — таблиця у вигляді дерева, що вказує на розгалуження роду, сім'ї; схеми родоводу.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE
+  - lemma: залишитися
+    pos: verb
+    count: 12
+    locator: p.182
+    gloss: remain (to stay behind while others withdraw); to remain, to stay; to be left; remain (to continue in a state of being)
+    gloss_source: dmklinger
+    context: залиши́тися див. залишатися.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%B0%D0%BB%D0%B8%D1%88%D0%B8%D1%82%D0%B8%D1%81%D1%8F
+  - lemma: зірочка
+    pos: noun
+    count: 12
+    locator: p.156
+    gloss: star (asterisk); starlet, little star; star-shaped symbol "; something resembling or shaped like an asterisk symbol
+    gloss_source: dmklinger
+    context: зі́рочка -и, ж. 1》 Зменш.-пестл. до зірка 1), 3-5). || Пестливе звертання до людини. 2》 Умовна позначка, вживана з різною метою в книжках, рукописах і т. ін. 3》 тех. Зубчасте колесо в ланцюгових передачах. 4》 мн. Рід трав'янистих рослин родини лілійних.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D1%96%D1%80%D0%BE%D1%87%D0%BA%D0%B0
+  - lemma: множити
+    pos: verb
+    count: 12
+    locator: p.164
+    gloss: 'multiply (increase the amount, degree or number of); (arithmetic) to multiply, to times; multiply (intransitive: perform multiplication)'
+    gloss_source: dmklinger
+    context: МНО́ЖИТИ, жу, жиш, недок., що. 1. Виконувати множення. Потім друзі множать 21 на 12 (О. Донченко). 2. Збільшувати що-небудь кількісно.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BC%D0%BD%D0%BE%D0%B6%D0%B8%D1%82%D0%B8
+  - lemma: поняття
+    pos: noun
+    count: 12
+    locator: p.100
+    gloss: notion (mental apprehension of whatever may be known or imagined; an idea; a conception); concept (something understood and retained in the mind)
+    gloss_source: dmklinger
+    context: ПОНЯ́ТТЯ, я, с. 1. Одна із форм мислення, результат узагальнення суттєвих ознак об'єкта дійсності. Поняття, на відміну від уявлень, відбивають суть речей (з навч. літ.); Неологізми, новотвори родяться щодня – в міру того як щодня родяться нові явища й поняття (М. Рильський). 2.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D0%BD%D1%8F%D1%82%D1%82%D1%8F
+  - lemma: порядок
+    pos: noun
+    count: 12
+    locator: p.199
+    gloss: order (arrangement, disposition); order, sequence; order (good arrangement)
+    gloss_source: dmklinger
+    context: ПОРЯ́ДОК, дку, ч. 1. Стан, коли де-небудь чисто прибрано, всі речі на своїх місцях; чистота, лад; протилежне безладдя. Непосидяча Онися вешталась до самого вечора по покоях та по пекарні, та по коморах, – і ввечері вже скрізь був порядок та чистота (І.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D0%BA
+  - lemma: поїзд
+    pos: noun
+    count: 12
+    locator: p.239
+    gloss: train (line of connected cars or carriages)
+    gloss_source: dmklinger
+    context: ПО́ЇЗД, а, ч. 1. Ряд з'єднаних між собою залізничних вагонів, що рухаються з допомогою локомотива; потяг¹. Кажуть, що той поїзд, яким ми мали їхати, прибув на другий вокзал (М. Коцюбинський); Поїзд метрополітену рухається зі швидкістю 34–35 кілометрів на годину (з наук.-попул. літ.). 2. Ряд візків, саней і т.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D1%97%D0%B7%D0%B4
+  - lemma: пункт
+    pos: noun
+    count: 12
+    locator: p.239
+    gloss: point (location or place); item (line of text having a particular meaning); spot
+    gloss_source: dmklinger
+    context: ПУНКТ, у, ч. 1. Певне місце у просторі, на земній поверхні. Кавалькада виїхала на найвищий пункт дороги (М. Коцюбинський); Повне сонячне затемнення спостерігається в будь-якому пункті в середньому один раз приблизно в 300 років (з навч.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D1%83%D0%BD%D0%BA%D1%82
+  - lemma: розрізати
+    pos: verb
+    count: 12
+    locator: p.171
+    gloss: недок. розрізувати, розрізати, док. розрізати to cut; (вздовж) to slit; (на частини) to section; (жарене м'ясо, дичину) to cane; (ножицями) to snip; (розпорювати) to rip; (навпіл) to bisect
+    gloss_source: ukreng
+    context: РОЗРІЗА́ТИ див. розрі́зувати. РОЗРІ́ЗАТИ див. розрі́зувати.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%80%D0%BE%D0%B7%D1%80%D1%96%D0%B7%D0%B0%D1%82%D0%B8
+  - lemma: свій
+    pos: adj
+    count: 12
+    locator: p.133
+    gloss: (possessive) one's, my, his, her, its, our, your, their (always refers to the subject of the sentence); its (belonging to it) (determiner); one's (belonging to one) (determiner)
+    gloss_source: dmklinger
+    context: СВІЙ, своя́, своє́, займ., присв. 1. Який належить собі, який є в себе. Еней з ягою розглядали Всі дива там, які були, Роти свої пороззявляли І очі на лоби п'яли (І. Котляревський); Хаєцький .. глянув на свої шкарубкі, вкриті мозолями долоні (О. Гончар); // Стос. до себе.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%81%D0%B2%D1%96%D0%B9
+  - lemma: використовувати
+    pos: verb
+    count: 11
+    locator: p.111
+    gloss: bestow (to apply or make use of (someone or something)); put to use (to utilise); utilise (to make use of; to use)
+    gloss_source: dmklinger
+    context: ВИКОРИСТО́ВУВАТИ, ую, уєш, недок., ВИ́КОРИСТАТИ, аю, аєш, док., кого, що. Застосовувати кого-, що-небудь для якої-небудь справи, знаходити застосування кому-, чому-небудь. – Шістдесят п'ять гектарів іще стоять [необроблені]. А погода, дивись, яка! Кожну погожу днину використовувати треба (А.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D0%B8%D0%BA%D0%BE%D1%80%D0%B8%D1%81%D1%82%D0%BE%D0%B2%D1%83%D0%B2%D0%B0%D1%82%D0%B8
+  - lemma: відняти
+    pos: verb
+    count: 11
+    locator: p.234
+    gloss: subtract (to remove or reduce)
+    gloss_source: dmklinger
+    context: ВІДНЯ́ТИ див. відніма́ти.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D1%96%D0%B4%D0%BD%D1%8F%D1%82%D0%B8
+  - lemma: клас
+    pos: noun
+    count: 11
+    locator: p.17
+    gloss: year (a level or grade at school or college); class (set of objects that have the same features, quality, rank etc.); classroom (room in a school)
+    gloss_source: dmklinger
+    context: КЛАС, у, ч. 1. Сукупність предметів, явищ, що мають спільні ознаки, однакові якості; розряд, підрозділ. Весь мінеральний світ поділяється на 20 класів (з наук. літ.); // Сукупність однорідних предметів чи явищ зі спільними істотними ознаками; розглядається як єдине ціле.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BA%D0%BB%D0%B0%D1%81
+  - lemma: косинець
+    pos: noun
+    count: 11
+    locator: p.115
+    gloss: тех. set square; triangle
+    gloss_source: ukreng
+    context: КОСИ́НЕЦЬ, нця, ч. 1. Лінійка у формі прямокутного трикутника для креслення й перевірки прямих кутів. Якого тільки слюсарного інструментарію не побачила вона в чемодані..! Ціла купа різних лінійок і мікрометрів, .. косинців і штангенциркулів (І.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BA%D0%BE%D1%81%D0%B8%D0%BD%D0%B5%D1%86%D1%8C
+  - lemma: кість
+    pos: noun
+    count: 11
+    locator: p.108
+    gloss: bone (material)
+    gloss_source: dmklinger
+    context: КІСТЬ, ко́сті, ж. 1. Те саме, що кі́стка 1–3. Погляньте на руки Мої та на ноги Мої, це ж Я Сам! Доторкніться до Мене й дізнайтесь, бо не має дух тіла й костей, а Я, бачите, маю (Біблія. Пер. І.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BA%D1%96%D1%81%D1%82%D1%8C
+  - lemma: навести
+    pos: verb
+    count: 11
+    locator: p.108
+    gloss: недок. наводити, док. навести 1) (вказувати шлях) to direct (at), to guide, to lead навести когось на думку — to suggest an idea to someone навести на слід — to put on the track 2) (націлювати) to ai…
+    gloss_source: ukreng
+    context: НАВЕСТИ́ див. наво́дити.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BD%D0%B0%D0%B2%D0%B5%D1%81%D1%82%D0%B8
+  - lemma: належати
+    pos: verb
+    count: 11
+    locator: p.101
+    gloss: belong (be part of a group); to belong (+ dative) (be the property of); (transitive, colloquial) to make (a body part) numb by lying on it
+    gloss_source: dmklinger
+    context: НАЛЕ́ЖАТИ¹, жу, жиш, недок. 1. кому, чому і рідше до кого – чого. Бути чиєю-небудь власністю, перебувати в чиємусь розпорядженні, володінні.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BD%D0%B0%D0%BB%D0%B5%D0%B6%D0%B0%D1%82%D0%B8
+  - lemma: прямокутний
+    pos: adj
+    count: 11
+    locator: p.130
+    gloss: right-angled (having a right angle); right-angled, orthogonal; rectangular
+    gloss_source: dmklinger
+    context: ПРЯМОКУ́ТНИЙ, а, е. Який має прямий кут або прямі кути. Відносно величини кутів трикутники бувають гострокутні, коли всі кути гострі, прямокутні, коли серед кутів є прямий (з навч. літ.); З порога в прямокутному блискучому свічаді він бачив усю свою постать (В.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D1%80%D1%8F%D0%BC%D0%BE%D0%BA%D1%83%D1%82%D0%BD%D0%B8%D0%B9
+  - lemma: пішохід
+    pos: noun
+    count: 11
+    locator: p.246
+    gloss: pedestrian (somebody walking rather than using a vehicle)
+    gloss_source: dmklinger
+    context: ПІШОХІ́Д¹, хо́да, ч. Той, хто йде пішки. Верхом полонини, стежкою .. ішли два пішоходи (І. Франко); Двірники мастили вапном дерева і обіччя тротуарів, щоб ночами видно було дорогу машинам і пішоходам (В. Кучер). ПІШОХІ́Д², хо́ду, ч., заст. Тротуар. На пішоході нас минають, штовхають (А.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D1%96%D1%88%D0%BE%D1%85%D1%96%D0%B4
+  - lemma: спочатку
+    pos: adv
+    count: 11
+    locator: p.20
+    gloss: first (before anything else); first, at first, initially, in the first instance (before something else); originally (as it was in the beginning)
+    gloss_source: dmklinger
+    context: СПОЧА́ТКУ, присл. 1. Перед чимсь іншим; спершу, раніше. Спочатку вона пам'ятає себе чорною, вічно в сажі, коло панських свиней (М.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%81%D0%BF%D0%BE%D1%87%D0%B0%D1%82%D0%BA%D1%83
+  - lemma: тисячний
+    pos: adj
+    count: 11
+    locator: p.176
+    gloss: thousandth (ordinal form of 1000); thousandth (1,000th)
+    gloss_source: dmklinger
+    context: ТИ́СЯЧНИЙ, а, е. 1. Числівник порядковий, який відповідає кількісному числівнику ти́сяча 1. Тисячну з початку року плавку видано вчора на печі № 1 першого мартенівського цеху Макіївського заводу (з газ.). 2. Який складається з тисячі яких-небудь одиниць.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%82%D0%B8%D1%81%D1%8F%D1%87%D0%BD%D0%B8%D0%B9
+  - lemma: аркуш
+    pos: noun
+    count: 10
+    locator: p.101
+    gloss: sheet of paper; sheet, leaf
+    gloss_source: dmklinger
+    context: А́РКУШ, а, ч. 1. Лист паперу. Та й куплю Паперу аркуш. І зроблю Маленьку книжечку (Т. Шевченко); Перед Густавом лежав цілий аркуш, покритий цифрами (І. Франко); Каргат вийняв з кишені аркуш паперу, обережно розгорнув і поклав на стіл (Ю. Шовкопляс). 2. спец.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B0%D1%80%D0%BA%D1%83%D1%88
+  - lemma: власний
+    pos: adj
+    count: 10
+    locator: p.237
+    gloss: own (belonging to (determiner)); own, personal; proper
+    gloss_source: dmklinger
+    context: 'ВЛА́СНИЙ, а, е. 1. Належний кому-, чому-небудь за правом власності. – Велике діло, паничу, власна хата, – казав він, походжаючи по світлиці (О. Стороженко); Вони йшли по власній землі, але ніби зовсім того й не знали чи не хотіли знати (І. Багряний); Він посвідки приніс, що відбув Сибір: все відробив.…'
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D0%BB%D0%B0%D1%81%D0%BD%D0%B8%D0%B9
+  - lemma: додати
+    pos: verb
+    count: 10
+    locator: p.234
+    gloss: to append (e.g. a statement); to say further information; to add on; to perform the arithmetical operation of addition, to add up; to make an addition; to augment; to increase; to add on
+    gloss_source: dmklinger
+    context: дода́ти див. додавати.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D0%BE%D0%B4%D0%B0%D1%82%D0%B8
+  - lemma: нити
+    pos: verb
+    count: 10
+    locator: p.199
+    gloss: to whine, to yammer; to ache, to hurt (about prolonged mild pain)
+    gloss_source: dmklinger
+    context: НИ́ТИ, ни́ю, ни́єш, недок. 1. Давати відчуття тупого болю. Трудно бути веселим, коли зуб ниє (М. Коцюбинський); У нього терпли ноги, нила спина (С. Чорнобривець); // безос. У Вови нило всередині, і він нічого не слухав (С. Васильченко); Петрусь відчув, як у нього ниє в лікті (І. Багмут). 2. розм.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BD%D0%B8%D1%82%D0%B8
+  - lemma: попередній
+    pos: adj
+    count: 10
+    locator: p.145
+    gloss: previous (prior); previous, prior, preceding; preceding (foregoing; occurring before or in front of something else)
+    gloss_source: dmklinger
+    context: ПОПЕРЕ́ДНІЙ, я, є. 1. Який міститься перед іншим. Читала [Лукія] по складах і спочатку багато дечого не розуміла. Доки прочитає якесь довге слово – забуде двоє попередніх (О. Донченко); Дірку розширили і стали по одному пролазити в неї. Знов опинилися в бункері, ще більшому, ніж попередній (О. Гончар). 2.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D0%BF%D0%B5%D1%80%D0%B5%D0%B4%D0%BD%D1%96%D0%B9
+  - lemma: потім
+    pos: adv
+    count: 10
+    locator: p.126
+    gloss: then (soon afterward); further (in addition); afterwards (at a later or succeeding time)
+    gloss_source: dmklinger
+    context: 'ПО́ТІМ, присл. 1. Після чого-небудь (для позначення послідовності у часі). Всяк розумний по-своєму: один спершу, а другий потім (прислів''я); Коло осіннього Миколи, Обідрані, трохи́ не голі, Бендерським шляхом уночі ішли цигане .. Ішли, ішли, а потім стали (Т.…'
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D1%82%D1%96%D0%BC
+  - lemma: решта
+    pos: noun
+    count: 10
+    locator: p.133
+    gloss: change (balance returned after a purchase); rest, remainder (that which is left over); surplus (funds in public treasury greater than ordinary needs)
+    gloss_source: dmklinger
+    context: РЕ́ШТА, и, ж. 1. Те, що залишилося невикористаним, невитраченим, незайнятим ким-небудь і т. ін. Його жінка була шляхетського роду й дістала в придане той невеличкий куток в Хохітві. Всю решту села забрав її брат (І.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%80%D0%B5%D1%88%D1%82%D0%B0
+  - lemma: ручка
+    pos: noun
+    count: 10
+    locator: p.141
+    gloss: pen (writing tool); pen (writing implement); ballpoint pen (pen)
+    gloss_source: dmklinger
+    context: РУ́ЧКА, и, ж. 1. Зменш. до рука́ 1. [Печариця (підскакуючи):] Вашу ручку! (Подав руку). [Галя:] Ні, я не звикла під руку ходити (Панас Мирний); За порогом, посіпуючи довжелезну .. бороду, стояв дід і тримав за ручку маленьку дівчинку (Ю. Смолич); * У порівн. Віти білуваті .. Ручками маляти Тягнуться в вікно (Т.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%80%D1%83%D1%87%D0%BA%D0%B0
+  - lemma: ряд
+    pos: noun
+    count: 10
+    locator: p.18
+    gloss: row (line of objects); row, line; range (selection, array)
+    gloss_source: dmklinger
+    context: РЯД, у, ч. 1. Сукупність однорідних предметів або живих істот, розташованих одне поруч з одним, одне за одним, витягнутих в одну лінію. Ряди домів, ряди дерев, як білі тіні, йшли кудись в далеч і розпливались в тумані (М. Коцюбинський); Василь побачив ряд бочок і в кутку якусь безладно накидану купу (Г.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%80%D1%8F%D0%B4
+  - lemma: рів
+    pos: noun
+    count: 10
+    locator: p.150
+    gloss: moat (defensive ditch); ditch, trench, moat; foxhole (small pit dug into the ground as a shelter)
+    gloss_source: dmklinger
+    context: РІВ, ро́ву, ч. Довга глибока канава, розмита водою або викопана в землі. Між двома горами послався той шлях, порізаний ровами, що повикручувала весняна вода, стікаючи з гір (Панас Мирний); [Стась:] Кругом двору викопав [пан Яницький] глибоченний рів (С.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%80%D1%96%D0%B2
+  - lemma: турист
+    pos: noun
+    count: 10
+    locator: p.182
+    gloss: tourist (someone who travels for pleasure); hiker (one who hikes, especially frequently)
+    gloss_source: dmklinger
+    context: ТУРИ́СТ, а, ч. Той, хто займається туризмом. По цьому шосе скрізь поставлені лавочки. Тут одпочивають туристи (І. Нечуй-Левицький); Як добре, що людей в чужі краї Нужда не гонить з батьківської хати. Широкий світ побачити, пізнати Туристи їдуть – земляки мої (Д. Павличко).
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%82%D1%83%D1%80%D0%B8%D1%81%D1%82
+  - lemma: великий
+    pos: adj
+    count: 9
+    locator: p.105
+    gloss: big (of a great size); big, large; large (of greater size)
+    gloss_source: dmklinger
+    context: ВЕЛИ́КИЙ, а, е. 1. Значний своїми розмірами, величиною; протилежне малий. І Йона встав, і пішов до Ніневії за Господнім словом. А Ніневія була місто велике-превелике, на три дні ходи (Біблія. Пер. І. Огієнка); Над селами, над нивами, Лугами та долинами Велика хмара йшла (Л.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D0%B5%D0%BB%D0%B8%D0%BA%D0%B8%D0%B9
+  - lemma: виїхати
+    pos: verb
+    count: 9
+    locator: p.149
+    gloss: 'to depart, to exit, to go, to go out, to drive out, to leave, to ride out, to travel out (perform outbound movement by means of transportation); to move out (vacate one''s place of residence); (figuratively, colloquial) to exploit, to take advantage (of somebody, by shifting one''s responsibilities to that person: на, + locative)'
+    gloss_source: dmklinger
+    context: ВИ́ЇХАТИ див. виїжджа́ти.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D0%B8%D1%97%D1%85%D0%B0%D1%82%D0%B8
+  - lemma: господарство
+    pos: noun
+    count: 9
+    locator: p.111
+    gloss: economy (production and distribution and consumption); farm (a place where agricultural activities take place); farming
+    gloss_source: dmklinger
+    context: ГОСПОДА́РСТВО, а, с. 1. Сукупність виробничих відносин того чи іншого суспільного укладу; спосіб виробництва. Кріпосне господарство стало пристосовуватися до ринку, що розвивався в XVII ст. (з навч. літ.). 2. Все, що складає виробництво, служить виробництву; економіка.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B3%D0%BE%D1%81%D0%BF%D0%BE%D0%B4%D0%B0%D1%80%D1%81%D1%82%D0%B2%D0%BE
+  - lemma: довший
+    pos: adj
+    count: 9
+    locator: p.128
+    gloss: Longer
+    gloss_source: ukreng
+    context: до́вший -а, -е. Вищ. ст. до довгий.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D0%BE%D0%B2%D1%88%D0%B8%D0%B9
+  - lemma: діаграма
+    pos: noun
+    count: 9
+    locator: p.111
+    gloss: graph of a function; diagram, chart; diagram (graph or chart)
+    gloss_source: dmklinger
+    context: діагра́ма -и, ж. 1》 Графічне зображення, що наочно у вигляді певних геометричних фігур показує співвідношення між різними величинами, які порівнюються. 2》 спец. Зображення шахівниці у спеціальній літературі.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D1%96%D0%B0%D0%B3%D1%80%D0%B0%D0%BC%D0%B0
+  - lemma: зібрати
+    pos: verb
+    count: 9
+    locator: p.194
+    gloss: collect (to gather together); to gather, to collect; gather (to bring together; to collect)
+    gloss_source: dmklinger
+    context: зібра́ти див. збирати.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D1%96%D0%B1%D1%80%D0%B0%D1%82%D0%B8
+  - lemma: корінь
+    pos: noun
+    count: 9
+    locator: p.69
+    gloss: 'stem (linguistics: main part of a word); (botany, anatomy, linguistics, figuratively) root; root (linguistic morphology: primary lexical unit of a word)'
+    gloss_source: dmklinger
+    context: КО́РІНЬ, реня, ч. 1. Один з основних вегетативних органів вищих листостеблових рослин, що міститься в землі й за допомогою якої рослина всмоктує з ґрунту воду та поживні речовини. Дніпро берег риє-риє, Яворові корінь миє (Т.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BA%D0%BE%D1%80%D1%96%D0%BD%D1%8C
+  - lemma: містити
+    pos: verb
+    count: 9
+    locator: p.159
+    gloss: involve (to entangle, intertwine, or mingle (something with one or more other things, or several things together); to entangle (someone or something) in a confusing or troublesome situation); to contain, to hold, to include (have within itself); comprise (include)
+    gloss_source: dmklinger
+    context: МІСТИ́ТИ, міщу́, мі́стиш, недок., що. 1. Мати в собі, у своєму складі. Перша [книга] містить думи юнацькі, друга пісні битові [побутові].., а третя обрядові (І. Франко); Насіння з високою абсолютною вагою містить більше поживних речовин і дає міцніші рослини (з наук.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BC%D1%96%D1%81%D1%82%D0%B8%D1%82%D0%B8
+  - lemma: непарний
+    pos: adj
+    count: 9
+    locator: p.155
+    gloss: odd (indivisible by two)
+    gloss_source: dmklinger
+    context: НЕПА́РНИЙ, а, е. 1. Який не створює разом з іншим пари. Статева система у самця непарна (з наук. літ.). 2. Який не ділиться на два без остачі.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BD%D0%B5%D0%BF%D0%B0%D1%80%D0%BD%D0%B8%D0%B9
+  - lemma: обсяг
+    pos: noun
+    count: 9
+    locator: p.204
+    gloss: volume, extent, scope, size
+    gloss_source: dmklinger
+    context: О́БСЯГ, у, ч. 1. Розмір, величина чого-небудь. Чорна, сира і затхла просторінь пожирала собою уяву про обсяг і світ (Іван Ле); З осінніми днями збільшився обсяг .. робіт (С. Журахович); Величезна обсягом і значенням праця академіка Возняка в галузі франкознавства заслуговує на дуже високу оцінку (з наук.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BE%D0%B1%D1%81%D1%8F%D0%B3
+  - lemma: показувати
+    pos: verb
+    count: 9
+    locator: p.108
+    gloss: point (to extend finger); to show; evince (to show or demonstrate clearly)
+    gloss_source: dmklinger
+    context: ПОКА́ЗУВАТИ, ую, уєш, недок., ПОКАЗА́ТИ, ажу́, а́жеш, док. 1. кому, кому що. Давати змогу бачити, розглядати, роздивлятися кого-, що-небудь. – Мабуть, той хазяїн дуже любив овесець та сам його їв, а нам [коням] тільки показував (І. Нечуй-Левицький); – Показуй, що ти купила? (М.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D0%BA%D0%B0%D0%B7%D1%83%D0%B2%D0%B0%D1%82%D0%B8
+  - lemma: потрібно
+    pos: adv
+    count: 9
+    locator: p.244
+    gloss: 'used to express necessity: (one) must (one) has to (it is) necessary (impersonal, + dative (optionally) + infinitive) (predicative)'
+    gloss_source: dmklinger
+    context: ПОТРІ́БНО, пред. 1. Необхідно, слід (робити, виконувати що-небудь). Коли будете посилати мені книжки, звістіть, що саме посилаєте. Це потрібно (М. Коцюбинський); Ріст рослин при вивченні стану їх живлення особливо потрібно враховувати в садах (з наук.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D1%82%D1%80%D1%96%D0%B1%D0%BD%D0%BE
+  - lemma: початковий
+    pos: adj
+    count: 9
+    locator: p.122
+    gloss: initial (chronologically first); initial, first, opening; primary, elementary
+    gloss_source: dmklinger
+    context: ПОЧАТКО́ВИЙ, а, е. 1. Який перебуває на початку чого-небудь, передує чомусь. На початкових дільницях каналу вода вже наповнила русло (О. Гончар); // Характерний для початку якої-небудь дії або якогось процесу; вихідний.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D1%87%D0%B0%D1%82%D0%BA%D0%BE%D0%B2%D0%B8%D0%B9
+  - lemma: праця
+    pos: noun
+    count: 9
+    locator: p.141
+    gloss: work (labour, employment, occupation, job); work, labor; employment (the work or occupation for which one is paid)
+    gloss_source: dmklinger
+    context: ПРА́ЦЯ, і, ж. 1. Діяльність людини; сукупність цілеспрямованих дій, що потребують фізичної або розумової енергії і мають своїм призначенням створення матеріальних та духовних цінностей; труд. Чесна праця – наше багатство (приказка); Ніколи не думав Дьяконов, що праця може впливати на людину так цілюще (О.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D1%80%D0%B0%D1%86%D1%8F
+  - lemma: продати
+    pos: verb
+    count: 9
+    locator: p.271
+    gloss: sell (to agree to transfer goods or provide services for payment); to sell (to agree to transfer goods or provide services)
+    gloss_source: dmklinger
+    context: ПРОДА́ТИ див. продава́ти.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D1%80%D0%BE%D0%B4%D0%B0%D1%82%D0%B8
+  - lemma: схема
+    pos: noun
+    count: 9
+    locator: p.128
+    gloss: plan (technical drawing); scheme, layout, plan, outline; layout (map or a drawing of a construction site)
+    gloss_source: dmklinger
+    context: СХЕ́МА, и, ж. 1. Зображення в загальних рисах системи, будови чого-небудь або взаєморозташування, зв'язку частин чогось. Другий урок відбувався в класі зв'язку. Столи з телефонними апаратами, телеграфні ключі, скатки проводу, на стінах схеми різних апаратів (І.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%81%D1%85%D0%B5%D0%BC%D0%B0
+  - lemma: тонна
+    pos: noun
+    count: 9
+    locator: p.179
+    gloss: ton (various units of mass notionally equivalent to a tun)
+    gloss_source: dmklinger
+    context: 'ТО́ННА, и, ж. Міра ваги, яка дорівнює тисячі кілограмів; що-небудь, що має таку вагу. Дівчина засміялася й махнула рукою: – Ми самі спочатку не вірили. Хвилину струже [струг], а сиплеться тонна вугілля (Ю. Яновський); Сто батарей Жбурнули у ворога тонни металу! (І.…'
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%82%D0%BE%D0%BD%D0%BD%D0%B0
+  - lemma: читати
+    pos: verb
+    count: 9
+    locator: p.115
+    gloss: read (to look at and interpret letters or other information); (transitive) to read
+    gloss_source: dmklinger
+    context: ЧИТА́ТИ, а́ю, а́єш, недок. 1. що. Сприймати що-небудь записане літерами, письмовими знаками і т. ін.; вимовляти для слухачів щось написане, надруковане.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%87%D0%B8%D1%82%D0%B0%D1%82%D0%B8
+  - lemma: автобус
+    pos: noun
+    count: 8
+    locator: p.149
+    gloss: bus (vehicle); bus, motorbus; coach (long-distance bus)
+    gloss_source: dmklinger
+    context: 'АВТО́БУС, а, ч. Багатомісний автомобіль для перевезення пасажирів. [Надія:] Андрію, а може б, ти поїхав собі автобусом або й трамваєм? (З. Мороз); З автобуса зійде він у кураївськім степу, сліпнучи від сонця, озирнеться довкруг: в усі чотири сторони світу – самотність (О.…'
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B0%D0%B2%D1%82%D0%BE%D0%B1%D1%83%D1%81
+  - lemma: бічний
+    pos: adj
+    count: 8
+    locator: p.129
+    gloss: Lateral, sidelong
+    gloss_source: ukreng
+    context: БІЧНИ́Й, а́, е́. Те саме, що бокови́й. Тільки задня стіна мурована, а дві бічні заміняються завісами, що можуть розсуватися (Леся Українка); Неофіційна публіка .. нескінченним потоком лилася в тісні бічні двері (М. Грушевський); Це була бічна вулиця, що йшла від левади (О.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B1%D1%96%D1%87%D0%BD%D0%B8%D0%B9
+  - lemma: вважати
+    pos: verb
+    count: 8
+    locator: p.114
+    gloss: believe (to consider likely); (transitive) to consider, to deem, to regard, to think
+    gloss_source: dmklinger
+    context: ВВАЖА́ТИ див. уважа́ти.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D0%B2%D0%B0%D0%B6%D0%B0%D1%82%D0%B8
+  - lemma: виконання
+    pos: noun
+    count: 8
+    locator: p.203
+    gloss: execution (carrying out of an instruction by a computer); (uncountable) execution, performance; performance (amount of useful work accomplished)
+    gloss_source: dmklinger
+    context: ВИКОНА́ННЯ, я, с. Дія за знач. вико́нувати, ви́конати. – Дорогий професоре, невже ви не скажете, як ви досягаєте такого швидкого виконання ваших наказів? (Ю. Смолич); Мелодії були всім знайомі, та проте виконання було якесь незвичайне, що зворушувало душу (І. Франко). △ (1) Викона́ння ви́року, юр.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D0%B8%D0%BA%D0%BE%D0%BD%D0%B0%D0%BD%D0%BD%D1%8F
+  - lemma: годинник
+    pos: noun
+    count: 8
+    locator: p.106
+    gloss: clock (instrument to measure or keep track of time); wristwatch (watch worn on the wrist); watch (portable or wearable timepiece)
+    gloss_source: dmklinger
+    context: ГОДИ́ННИК, а, ч. Прилад для вимірювання часу в межах доби. Мабуть, усі ви, діточки, бачили годинник; можна дізнатись, глянувши на нього чи вдень, чи вночі, котра година (М. Коцюбинський); Годинник на руці показував одинадцяту (Іван Ле); Годинник Петропавловської пробив дев'яту (Василь Шевчук). Ста́вити годи́нника див.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B3%D0%BE%D0%B4%D0%B8%D0%BD%D0%BD%D0%B8%D0%BA
+  - lemma: давати
+    pos: verb
+    count: 8
+    locator: p.101
+    gloss: give (transfer the possession of something to someone else); to give
+    gloss_source: dmklinger
+    context: дава́ти даю, даєш; мин. ч. давав, давала, давало; наказ. сп. давай; недок., дати, дам, даси, дасть; дамо, дасте, дадуть; мин. ч. дав, дала, дало; наказ. сп. дай; док.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D0%B0%D0%B2%D0%B0%D1%82%D0%B8
+  - lemma: збільшитися
+    pos: verb
+    count: 8
+    locator: p.149
+    gloss: 'multiply (intransitive: grow in number); to get larger, to grow, to increase, to rise (of a quantity: become larger or greater)'
+    gloss_source: dmklinger
+    context: збі́льшитися див. збільшуватися.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%B1%D1%96%D0%BB%D1%8C%D1%88%D0%B8%D1%82%D0%B8%D1%81%D1%8F
+  - lemma: зліва
+    pos: adv
+    count: 8
+    locator: p.105
+    gloss: on the left side; from the left; on the left, left
+    gloss_source: dmklinger
+    context: злі́ва присл. З лівого боку; прот. справа.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%BB%D1%96%D0%B2%D0%B0
+  - lemma: ноутбук
+    pos: noun
+    count: 8
+    locator: p.262
+    gloss: '(computing) laptop, notebook computer; computing: a laptop computer'
+    gloss_source: dmklinger
+    context: НО́УТБУК, а, ч. Портативний персональний комп'ютер, формою і величиною подібний до книги. Користуватися ноутбуком.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BD%D0%BE%D1%83%D1%82%D0%B1%D1%83%D0%BA
+  - lemma: основний
+    pos: adj
+    count: 8
+    locator: p.262
+    gloss: essential (in basic form); basic, fundamental; basic (elementary, simple, merely functional)
+    gloss_source: dmklinger
+    context: ОСНОВНИ́Й, а́, е́. Найважливіший, головний. Він з'явився на місце роботи, але основного знаряддя праці – скриньки – він не взяв (Ю. Смолич); Ївга ходила гомінка, задиркувата .. За останні два тижні вона виправила оцінки з основних дисциплін (О. Донченко); Кури ..…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BE%D1%81%D0%BD%D0%BE%D0%B2%D0%BD%D0%B8%D0%B9
+  - lemma: починатися
+    pos: verb
+    count: 8
+    locator: p.3
+    gloss: begin (to start, to initiate or take the first step into something); to begin, to start, to commence; commence (begin, start)
+    gloss_source: dmklinger
+    context: ПОЧИНА́ТИСЯ, а́ється, недок., ПОЧА́ТИСЯ, чне́ться, док. 1. Починати здійснюватися, відбуватися, виявлятися. Вечірнє життя починалось по окремих хатах (М. Коцюбинський); Справжня робота, Докіє, починається навкруги, в усій країні (М. Стельмах); Почалося прощання, обнімання, почувся плач, голосіння...…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D1%87%D0%B8%D0%BD%D0%B0%D1%82%D0%B8%D1%81%D1%8F
+  - lemma: правильно
+    pos: adv
+    count: 8
+    locator: p.121
+    gloss: properly (in a proper manner); correctly, properly, right, rightly (in a correct manner); (it is) correct, right (predicative)
+    gloss_source: dmklinger
+    context: ПРА́ВИЛЬНО. Присл. до пра́вильний. [Галя:] Учитель читає що-небудь, а ми пишемо; потім він дивиться, чи правильно написано (Панас Мирний); – Ось наше “Л” .. Значить, ідемо правильно (О. Гончар); Невпинно і солодко б'ються серця і правильно, і з перебоями в цей час, коли ми йдемо з тобою (В. Сосюра); // у знач. пред.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D1%8C%D0%BD%D0%BE
+  - lemma: протилежний
+    pos: adj
+    count: 8
+    locator: p.239
+    gloss: cross (opposite, opposed to); contradictory (that is diametrically opposed to something); opposed, contrary, adverse
+    gloss_source: dmklinger
+    context: ПРОТИЛЕ́ЖНИЙ, а, е. 1. Розташований напроти кого-, чого-небудь. Орест сідає біля Люби на тому стільці, де стояло пуделко.. Лікар з Олімпіадою Іванівною за столом на протилежному кінці (Леся Українка); Перед тим, ніж перебратися на протилежний берег Дніпра, Претич об'їхав табір (Б.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D1%80%D0%BE%D1%82%D0%B8%D0%BB%D0%B5%D0%B6%D0%BD%D0%B8%D0%B9
+  - lemma: підручник
+    pos: noun
+    count: 8
+    locator: p.2
+    gloss: textbook (formal manual of instruction); textbook, coursebook, manual
+    gloss_source: dmklinger
+    context: 'ПІДРУ́ЧНИК, а, ч. 1. Книга, за якою вивчають навчальний предмет; посібник. Ватя познаходила свої шкільні підручники (І. Нечуй-Левицький); Батько складав алгебраїчний підручник (Ю. Смолич); Читав він запоєм, .. читав усе, що потрапляло до рук: ..…'
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D1%96%D0%B4%D1%80%D1%83%D1%87%D0%BD%D0%B8%D0%BA
+  - lemma: сантиметр
+    pos: noun
+    count: 8
+    locator: p.142
+    gloss: centimetre (one-hundredth of a metre); (colloquial) ruler or tape divided in centimeters
+    gloss_source: dmklinger
+    context: САНТИМЕ́ТР, а, ч. 1. Одиниця виміру довжини, що дорівнює одній сотій метра. Ями для садіння дерев копають не менш як 120 сантиметрів завширшки та 60–70 сантиметрів завглибшки (з наук. літ.); Як грав воротар! Здавалося, що він гумовий і може заповнити собою кожен сантиметр воріт (Ю. Яновський). 2.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%81%D0%B0%D0%BD%D1%82%D0%B8%D0%BC%D0%B5%D1%82%D1%80
+  - lemma: становити
+    pos: verb
+    count: 8
+    locator: p.21
+    gloss: (transitive) Synonym of ста́вити; to place in an upright or standing position; to be, to constitute, to pose
+    gloss_source: dmklinger
+    context: СТАНОВИ́ТИ¹, новлю́, но́виш; мн. стано́влять; недок., кого, що, розм. Те саме, що ста́вити 1–9, 11–17, 19, 20. Зриває [жінка] з себе покривало, встає, старшу дитину становить на лаву, меншу підіймає вгору одною рукою, другою рукою махає покривалом (Леся Українка); Катерина породила на світ сина ..…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%B8%D1%82%D0%B8
+  - lemma: стрілка
+    pos: noun
+    count: 8
+    locator: p.108
+    gloss: hand (index or pointer on a dial, such as on an analogue/analog clock); arrow, pointer; points (movable rails used to switch a train from one track to another)
+    gloss_source: dmklinger
+    context: 'СТРІ́ЛКА, и, ж. 1. Зменш. до стріла́ 1. Хлопчик якийсь із луком та із стрілкою націлявся з-за рожевих кущів (Марко Вовчок); На широкому й високому чолі неначе бігли дві довгі чорні темні стрілки: то чорніли тонкі довгі брови (І. Нечуй-Левицький); * У порівн.…'
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%81%D1%82%D1%80%D1%96%D0%BB%D0%BA%D0%B0
+  - lemma: школа
+    pos: noun
+    count: 8
+    locator: p.150
+    gloss: school (an institution dedicated to teaching and learning); schoolhouse; school of thought (opinion subscribed to by some connected or arbitrary group)
+    gloss_source: dmklinger
+    context: ШКО́ЛА, и, ж. 1. Навчальний заклад, який здійснює загальну освіту і виховання молодого покоління. Дурний школяр Денис, запрігши шкапу в санки, Із школи поспішав до батька ночувать (Є. Гребінка); Кирилик скінчив школу шістнадцяти літ (Панас Мирний); Улас учився в школі в дяка й був письменний (І.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%88%D0%BA%D0%BE%D0%BB%D0%B0
+  - lemma: банан
+    pos: noun
+    count: 7
+    locator: p.200
+    gloss: banana (fruit); banana (tree or fruit)
+    gloss_source: dmklinger
+    context: БАНА́Н, а, ч. 1. Пальмоподібна тропічна рослина родини бананових з величезним листям, великим суцвіттям і довгастими солодкуватими плодами з товстою шкіркою жовтого або зеленувато-жовтого кольору.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B1%D0%B0%D0%BD%D0%B0%D0%BD
+  - lemma: бік
+    pos: noun
+    count: 7
+    locator: p.143
+    gloss: side (bounding straight edge of an object); side, flank; side (portion of the human torso generally covered by the arms)
+    gloss_source: dmklinger
+    context: БІК, бо́ку, ч. 1. Права або ліва частина тулуба від плеча до стегна. Тріщали кості, ребра, боки. Летіли зуби, пухли щоки (І. Котляревський); Перевертаюся з боку на бік і не можу вснути [заснути] (Б. Лепкий); Він, видобувшись на ґанок, став до людей так, щоб усім було видно бомби, що теліпаються в нього при боці (О.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B1%D1%96%D0%BA
+  - lemma: вика
+    pos: noun
+    count: 7
+    locator: p.115
+    gloss: бот. Vetch, tare, chickling
+    gloss_source: ukreng
+    context: ВИ́КА, и, ж. Кормова рослина родини бобових, плоди якої мають форму довгих стручків. Лийся, дощику, кругом, А найбільше над вівсом, Заіскрись на сочевиці, На люцерні і на виці (М. Стельмах); Межи каміння вилася туга неспокійна вика, виставивши на чатах сині квіточки (Ю. Винничук).
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D0%B8%D0%BA%D0%B0
+  - lemma: витратити
+    pos: verb
+    count: 7
+    locator: p.194
+    gloss: spend (to pay out); to spend, to expend; spend (to wear out, to exhaust)
+    gloss_source: dmklinger
+    context: ВИ́ТРАТИТИ див. витрача́ти.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D0%B8%D1%82%D1%80%D0%B0%D1%82%D0%B8%D1%82%D0%B8
+  - lemma: відлік
+    pos: noun
+    count: 7
+    locator: p.107
+    gloss: a countdown; count, counting (act of enumerating or tallying)
+    gloss_source: dmklinger
+    context: 'ВІ́ДЛІК, у, ч. Дія за знач. відлі́чувати і відлічи́ти. Ритм життя визначається тут змінами пір року, погодою, стихіями, відлік часу ведеться від однієї події до другої! (П. Загребельний); Відлік часу йде на хвилини: їх Лавочкіну дано лиш п''ятнадцять (А.…'
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D1%96%D0%B4%D0%BB%D1%96%D0%BA
+  - lemma: доповняльний
+    pos: adj
+    count: 7
+    locator: p.101
+    gloss: complementary, supplementary
+    gloss_source: dmklinger
+    context: доповня́льний -а, -е. Який використовується (призначений) для доповнення.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D0%BE%D0%BF%D0%BE%D0%B2%D0%BD%D1%8F%D0%BB%D1%8C%D0%BD%D0%B8%D0%B9
+  - lemma: завдання
+    pos: noun
+    count: 7
+    locator: p.150
+    gloss: problem (schoolwork exercise); task, job, assignment; assignment (task)
+    gloss_source: dmklinger
+    context: завда́ння -я, с. 1》 Наперед визначений, запланований для виконання обсяг роботи, справа і т. ін. || Настанова, розпорядження виконати певне доручення. Бойове завдання. Технічне завдання — документ, що вміщує загальні відомості з розробки виробу. 2》 Мета, до якої прагнуть; те, що хочуть здійснити.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%B0%D0%B2%D0%B4%D0%B0%D0%BD%D0%BD%D1%8F
+  - lemma: закінчуватися
+    pos: verb
+    count: 7
+    locator: p.155
+    gloss: end up (turn out); to end, to come to an end, to conclude, to terminate; run out (to expire, to come to an end)
+    gloss_source: dmklinger
+    context: закі́нчуватися -ується, недок., закінчитися, -кінчиться, док. 1》 Доходити до кінця, до завершення; кінчатися в часі. || Досягати кінця, межі в просторі. 2》 чим. Мати своїм кінцем, бути завершенням чого-небудь.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%B0%D0%BA%D1%96%D0%BD%D1%87%D1%83%D0%B2%D0%B0%D1%82%D0%B8%D1%81%D1%8F
+  - lemma: зустрітися
+    pos: verb
+    count: 7
+    locator: p.269
+    gloss: to meet (with), to encounter, to come across (з, + instrumental); to be found, to be met with, to occur, to happen
+    gloss_source: dmklinger
+    context: зустрі́тися див. зустрічатися.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D1%83%D1%81%D1%82%D1%80%D1%96%D1%82%D0%B8%D1%81%D1%8F
+  - lemma: казати
+    pos: verb
+    count: 7
+    locator: p.152
+    gloss: say (to pronounce); (transitive) to say, to tell; tell (to say)
+    gloss_source: dmklinger
+    context: каза́ти кажу, кажеш, недок., перех. і без додатка. 1》 Передавати словами (думки, почуття тощо); висловлювати, говорити (у 2 знач.). || Розповідати що-небудь. || 3 ос. мн. Ходять чутки, поголоски; розповідають. До слова кажучи у знач. вставн. сл. — до речі, у зв'язку зі сказаним. Правду кажучи у знач. вставн. сл.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D0%B8
+  - lemma: куб
+    pos: noun
+    count: 7
+    locator: p.300
+    gloss: 'cube (geometry: polyhedron having of six identical square faces)'
+    gloss_source: dmklinger
+    context: КУБ¹, а, ч. 1. мат. Правильний шестигранник, усі грані якого – квадрати. Чотири перерізи куба є правильними шестикутниками – ці перерізи проходять через центр куба перпендикулярно чотирьом його головним діагоналям (з наук. літ.); Фан Савич мовчки діставав чи то конуса, чи куба, .. ставив перед класом на ..…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BA%D1%83%D0%B1
+  - lemma: місце
+    pos: noun
+    count: 7
+    locator: p.17
+    gloss: point (location or place); place, spot; site (place where anything is fixed; situation; local position)
+    gloss_source: dmklinger
+    context: МІ́СЦЕ, я, с. 1. Простір земної поверхні, зайнятий або який може бути зайнятий ким-, чим-небудь. От і вибрав [Пархім] собі місце на горбику (Г. Квітка-Основ'яненко); Гарне, вигідне було місце, де вони поставили свої курені (О. Гончар); // чого, яке. Простір, пункт, де що-небудь розміщене, відбувається тощо.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BC%D1%96%D1%81%D1%86%D0%B5
+  - lemma: основа
+    pos: noun
+    count: 7
+    locator: p.129
+    gloss: 'stem (linguistics: main part of a word); basis, base, foundation; foundation (that upon which anything is founded)'
+    gloss_source: dmklinger
+    context: 'ОСНО́ВА, и, ж. 1. Нижня опорна частина чого-небудь (будівлі, споруди, конструкції і т. ін.). Кожну фігуру будували з двадцятьох смоляних бочок ось як: в основу ставили по шість бочок сторч (О. Стороженко); Були тут і грубі деревини, сантиметрів по сорок завширшки – на основу та на стовпи, і тонші – на оструб (І.…'
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BE%D1%81%D0%BD%D0%BE%D0%B2%D0%B0
+  - lemma: пакет
+    pos: noun
+    count: 7
+    locator: p.266
+    gloss: package (something which is packed); small bag, parcel; packet (small pack)
+    gloss_source: dmklinger
+    context: ПАКЕ́Т, а, ч. 1. Конверт з листом, переважно офіційного змісту. Вибачай, що розпечатала .. пакета, але ж ти знаєш, що я його не читала (Леся Українка); Він ніс при собі терміновий пакет, який мав віддати у власні руки контр-адміралу Багрову (В.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%B0%D0%BA%D0%B5%D1%82
+  - lemma: печиво
+    pos: noun
+    count: 7
+    locator: p.208
+    gloss: cookie (small, flat baked good); pastry (baked good); biscuit (small, flat baked good)
+    gloss_source: dmklinger
+    context: ПЕ́ЧИВО, а, с. 1. Кондитерські вироби з борошна. Видно, вже було по вечері, бо стіл був заставлений тільки різного роду винами, лікерами та купами закусок – усякого солодкого печива (І. Франко); // Здобне тісто, вирізане та спечене у формі кружечків, зірочок і т. ін.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%B5%D1%87%D0%B8%D0%B2%D0%BE
+  - lemma: подвійний
+    pos: adj
+    count: 7
+    locator: p.200
+    gloss: double (made up of two matching or complementary elements); double, dual, twofold, binary (having two parts or aspects; manifested in two ways); double (twice the quantity)
+    gloss_source: dmklinger
+    context: ПОДВІ́ЙНИЙ, а, е. 1. Який складається з двох однорідних або подібних частин, предметів. Недалеко від храму між двома кипарисами статуя Артеміди на високому подвійному п'єдесталі (Леся Українка); Чуйне вухо однаково могло розібрати навіть крізь подвійні рами та товсті мури – негучний, але дружний спів (Ю. Смолич). 2.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D0%B4%D0%B2%D1%96%D0%B9%D0%BD%D0%B8%D0%B9
+  - lemma: позначення
+    pos: noun
+    count: 7
+    locator: p.115
+    gloss: denomination (name, designation, or title)
+    gloss_source: dmklinger
+    context: ПОЗНА́ЧЕННЯ, я, с. 1. Дія за знач. позна́чи́ти, познача́ти. Беллінсгаузен наносить на карту групу нововідкритих островів з позначенням навіть крижаних полів (О. Довженко); Написав [Начко] на конверті ім'я Владка без ніякого .. позначення адреси (І. Франко). 2. Позначка (у 1 знач.).…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%BD%D1%8F
+  - lemma: постріл
+    pos: noun
+    count: 7
+    locator: p.272
+    gloss: shot (result of launching a projectile); (Military) shot, fire; bang
+    gloss_source: dmklinger
+    context: ПО́СТРІЛ, у, ч. Виліт кулі або снаряда з каналу ствола вогнепальної зброї, спричинений вибухом порохового заряду. Панас приклав рушницю мало не до обличчя [Прокопа] і бахнув. А в одповідь на постріл лице плюнуло цівкою крові і обілляло Панасові руки і груди (М.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D1%81%D1%82%D1%80%D1%96%D0%BB
+  - lemma: потрібний
+    pos: adj
+    count: 7
+    locator: p.140
+    gloss: necessary (needed, required); necessary, needed, required; requisite (essential; required)
+    gloss_source: dmklinger
+    context: ПОТРІ́БНИЙ, ПОТРІ́БЕН, бна, бне. Такий, без якого не можна здійснити, виконати що-небудь, необхідний для чогось. На великому столі були порозкидані пилочки, напильники, рубанок, обценьки, бруски дерева і багато іншого приладдя, потрібного для будування моделі аероплана (С.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D1%82%D1%80%D1%96%D0%B1%D0%BD%D0%B8%D0%B9
+  - lemma: пояснити
+    pos: verb
+    count: 7
+    locator: p.144
+    gloss: explain (report); to explain, to explicate
+    gloss_source: dmklinger
+    context: ПОЯСНИ́ТИ див. поя́снювати.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D1%8F%D1%81%D0%BD%D0%B8%D1%82%D0%B8
+  - lemma: працювати
+    pos: verb
+    count: 7
+    locator: p.283
+    gloss: work (to do a specific task); (intransitive) to work (physically or mentally); operate (to perform a work or labour)
+    gloss_source: dmklinger
+    context: ПРАЦЮВА́ТИ, ю́ю, ю́єш, недок. 1. Затрачаючи фізичну й розумову енергію, брати участь у створенні матеріальних і духовних цінностей; трудитися. Людям хотілося жити, тобто творити, працювати (О. Довженко); // Вкладати багато сил у виконання якоїсь роботи.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D1%80%D0%B0%D1%86%D1%8E%D0%B2%D0%B0%D1%82%D0%B8
+  - lemma: складатися
+    pos: verb
+    count: 7
+    locator: p.140
+    gloss: 'consist (to be composed (of)); (third person only) to form, to be formed, to develop, to turn out, to take shape, to arise; (third person only) to consist, to be composed, to be made up (of: з, + genitive)'
+    gloss_source: dmklinger
+    context: СКЛАДА́ТИСЯ, а́юся, а́єшся, недок., СКЛА́СТИСЯ, складу́ся, складе́шся, док. 1. тільки 3 ос. Утворюватися з яких-небудь елементів, частин і т. ін., мати своїми складовими частинами. Деякі альманахи лежать ще в цензурі, деякі друкуються, а деякі складаються ще (М.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%81%D0%BA%D0%BB%D0%B0%D0%B4%D0%B0%D1%82%D0%B8%D1%81%D1%8F
+  - lemma: стовпчик
+    pos: noun
+    count: 7
+    locator: p.108
+    gloss: column (vertical line of entries in a table); column (a vertical body of text)
+    gloss_source: dmklinger
+    context: СТО́ВПЧИК, а, ч. 1. Зменш.-пестл. до стовп 1, 2. На довгих шнурах, причеплених до стовпчиків, теліпаються колоритні спідниці, .. жупани, піджаки, чемерки, козачини (І. Нечуй-Левицький); Обіпершись на різьблений стовпчик ґанку, стояв Кутень (М. Зарудний); Вітер шугнув убік, зігнав з дороги стовпчик пилюки (С.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%81%D1%82%D0%BE%D0%B2%D0%BF%D1%87%D0%B8%D0%BA
+  - lemma: форма
+    pos: noun
+    count: 7
+    locator: p.106
+    gloss: shape (appearance or outline); form, shape; uniform (distinctive outfit as a means of identifying members of a group)
+    gloss_source: dmklinger
+    context: ФО́РМА, и, ж. 1. Обриси, контури, зовнішні межі предмета, що визначають його зовнішній вигляд. Рідини набувають форму посудини, оскільки вони текучі (з навч. літ.); Легенькі тіні від диму швидко пересувалися по землі, безперестанку зміняючи фантастичні форми (М.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%84%D0%BE%D1%80%D0%BC%D0%B0
+  - lemma: бідон
+    pos: noun
+    count: 6
+    locator: p.236
+    gloss: canteen (water bottle)
+    gloss_source: dmklinger
+    context: БІДО́Н, а, ч. Бляшана, емальована чи пластикова посудина циліндричної форми зі звуженим отвором, який щільно закривається. Від залізних бочок, з котрих цівкою ллється паруюча рідина, раз у раз бігають з повними бідонами носії (М. Коцюбинський); З'являються на березі доярки з порожніми бідонами.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B1%D1%96%D0%B4%D0%BE%D0%BD
+  - lemma: висновок
+    pos: noun
+    count: 6
+    locator: p.124
+    gloss: conclusion (decision, judgment); inference (act or process of inferring by deduction or induction)
+    gloss_source: dmklinger
+    context: ВИ́СНОВОК, вку, ч. Остаточна думка про що-небудь, логічний підсумок, зроблений на основі спостережень, міркувань або розгляду певних фактів. – Коли місто бомбардують, це значить, що й мене бомбардують .. Гомеричний сміх був відповіддю на ці жалібні висновки (І.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D0%B8%D1%81%D0%BD%D0%BE%D0%B2%D0%BE%D0%BA
+  - lemma: вистачати
+    pos: verb
+    count: 6
+    locator: p.172
+    gloss: suffice (be enough, sufficient, adequate); (intransitive, impersonal) to suffice, to be sufficient, to be enough
+    gloss_source: dmklinger
+    context: ВИСТАЧА́ТИ, а́ю, а́єш, недок., ВИ́СТАЧИТИ, чу, чиш, док. 1. чого і без дод., безос. Бути достатнім для чого-небудь. – Чи вистачає ж вам на прожиток? – спитав Кміта (І.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D0%B8%D1%81%D1%82%D0%B0%D1%87%D0%B0%D1%82%D0%B8
+  - lemma: відповідний
+    pos: adj
+    count: 6
+    locator: p.106
+    gloss: fit (suitable, proper); suitable, fit, appropriate; suitable (appropriate to a certain occasion)
+    gloss_source: dmklinger
+    context: ВІДПОВІДНИ́Й, а́, е́. Який дається у відповідь. М. Драгоманов із Женеви написав Кулішеві листа, в якому просив надіслати йому деякі українські книги. Відомо, що П. Куліш відписав йому, але відповідний лист не зберігся (із журн.). ВІДПОВІ́ДНИЙ, а, е. 1. чому, до чого. Який відповідає чому-небудь.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B2%D1%96%D0%B4%D0%BF%D0%BE%D0%B2%D1%96%D0%B4%D0%BD%D0%B8%D0%B9
+  - lemma: градус
+    pos: noun
+    count: 6
+    locator: p.120
+    gloss: 'degree (geometry: unit of measurement of angle); (mathematics, physics, meteorology) degree; degree (unit of measurement of temperature)'
+    gloss_source: dmklinger
+    context: ГРА́ДУС, а, ч. 1. Одиниця виміру плоского кута, що дорівнює 1/90 частини прямого кута. За добу він [Місяць] проходить видимий шлях, який вимірюється кутом 13,5 градуса (з наук.-попул. літ.); // Одиниця виміру дуги кола, що дорівнює 1/360 довжини кола.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%B3%D1%80%D0%B0%D0%B4%D1%83%D1%81
+  - lemma: доба
+    pos: noun
+    count: 6
+    locator: p.179
+    gloss: day (full 24 hours); age, era, period
+    gloss_source: dmklinger
+    context: доба́ -и, ж. 1》 Період часу, протягом якого Земля робить один оберт навколо своєї осі; день і ніч. || Позасистемна одиниця виміру часу, яка дорівнює 24 годинам (86 400 с); тривалість дня і ночі. 2》 розм. Те саме, що пора. || чого. Період, пов'язаний з якою-небудь подією, явищем.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D0%BE%D0%B1%D0%B0
+  - lemma: завжди
+    pos: adv
+    count: 6
+    locator: p.164
+    gloss: always (at all times); always (constantly during a certain period, or regularly at stated intervals); ever (always)
+    gloss_source: dmklinger
+    context: за́вжди присл. О будь-якій порі, повсякчас, постійно. || У віках, навіки; довічно. || Протягом віків; споконвіку.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%B0%D0%B2%D0%B6%D0%B4%D0%B8
+  - lemma: зразок
+    pos: noun
+    count: 6
+    locator: p.126
+    gloss: pattern (that from which a copy is made); model, sample, example, specimen; sample (part taken for inspection)
+    gloss_source: dmklinger
+    context: зразо́к -зка, ч. 1》 Пробний виріб; окремий предмет, річ із ряду однакових. || Предмет, за яким можна скласти уявлення про інші подібні предмети. Дослідно-промисловий зразок — зразок продукції, виготовлений для перевірки працездатності його за умов промислового випуску.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D1%80%D0%B0%D0%B7%D0%BE%D0%BA
+  - lemma: крок
+    pos: noun
+    count: 6
+    locator: p.150
+    gloss: step (pace); step, pace; gait (manner of walking)
+    gloss_source: dmklinger
+    context: КРОК, у, ч. 1. Рух ногою вперед, убік або назад, що його робить людина або тварина, ідучи або біжучи; сту́пі́нь (у 1 знач.). Він увесь тремтів. Зробив кілька кроків услід Варварі і став... (М. Коцюбинський); Зінька ступила крок.., ще прислухалась (А.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BA%D1%80%D0%BE%D0%BA
+  - lemma: набирати
+    pos: verb
+    count: 6
+    locator: p.272
+    gloss: to collect, to gather; to take in, to take on (absorb); to take on (:project, responsibility, task, work, etc.)
+    gloss_source: dmklinger
+    context: НАБИРА́ТИ, а́ю, а́єш, недок., НАБРА́ТИ, беру́, бере́ш, док. 1. що, чого. Брати, збирати яку-небудь кількість чого-небудь. Набирала вона пригощами запашний цей порох [тирсу], а теслярі посміхалися – грайся, дівчинко, грайся (А.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BD%D0%B0%D0%B1%D0%B8%D1%80%D0%B0%D1%82%D0%B8
+  - lemma: окремий
+    pos: adj
+    count: 6
+    locator: p.22
+    gloss: distinct (different from one another); separate, discrete, distinct, individual; particular (specific; discrete; concrete)
+    gloss_source: dmklinger
+    context: ОКРЕ́МИЙ, а, е. 1. Який не є частиною чого-небудь цілого. Київська держава в XII віці розпалася на окремі князівства (М. Бажан); Чоловіки лежать на зеленій траві окремим гурточком, жінки згрупувалися окремо (Григорій Тютюнник); // Відділений, ізольований від інших.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BE%D0%BA%D1%80%D0%B5%D0%BC%D0%B8%D0%B9
+  - lemma: папір
+    pos: noun
+    count: 6
+    locator: p.114
+    gloss: paper (sheet material); (uncountable) paper (material for writing on); (countable) paper, document
+    gloss_source: dmklinger
+    context: 'ПАПІ́Р, ч. 1. род. пе́ру. Матеріал для писання, друку, малювання і т. ін., виготовлений з ганчіркової, деревної та іншої маси. – На другому вікні стояли інші Квіти: З паперу зроблені і шовком перевиті (Л. Глібов); Співробітники при своїх бюрках мовчки кінчають кождий [кожний] свою роботу.…'
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%B0%D0%BF%D1%96%D1%80
+  - lemma: побудова
+    pos: noun
+    count: 6
+    locator: p.115
+    gloss: '(uncountable) verbal noun of побудува́ти: building, construction (the act of building or constructing something); (uncountable) construction, structure (the manner in which something is built); (countable, by extension) construction (structured set of ideas, principles or propositions)'
+    gloss_source: dmklinger
+    context: ПОБУДО́ВА, и, ж. 1. тільки одн. Дія за знач. побудува́ти. – Люди, парафіяни мої, – хвилювався Аркадій.., – зрозумійте, що в побудові санаторію перш за все ваш, а не мій інтерес (Ірина Вільде); В оповіданнях “Цілюща вода” та “Черешні цвітуть” прагне [О.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D0%B1%D1%83%D0%B4%D0%BE%D0%B2%D0%B0
+  - lemma: порівну
+    pos: adv
+    count: 6
+    locator: p.153
+    gloss: Equally, in equal parts (portions) одержувати порівну — to get equal parts (portions)
+    gloss_source: ukreng
+    context: ПО́РІ́ВНУ, ПОРІ́ВНО, присл. Рівними, однаковими частинами; на рівні частини. Чоловіки ловили рибу; жінки їх перепродували – і заробітком ділилися порівну (Панас Мирний); – Вона [земля] має належати всьому народові і роздаватися порівну в користування тим, хто обробляє її (М.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D1%80%D1%96%D0%B2%D0%BD%D1%83
+  - lemma: продовжити
+    pos: verb
+    count: 6
+    locator: p.100
+    gloss: 'continue (transitive: proceed); to continue; go on (continue)'
+    gloss_source: dmklinger
+    context: ПРОДО́ВЖИТИ див. продо́вжувати.
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D1%80%D0%BE%D0%B4%D0%BE%D0%B2%D0%B6%D0%B8%D1%82%D0%B8
+  - lemma: пшениця
+    pos: noun
+    count: 6
+    locator: p.149
+    gloss: wheat (grain)
+    gloss_source: dmklinger
+    context: ПШЕНИ́ЦЯ, і, ж. 1. Рослина родини злакових, з зерна якої виробляють біле борошно, крупи та інші продукти. Надійшли жнива, достигла Василева пшениця – така гарна, колос у колосі (Марко Вовчок);…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D0%BF%D1%88%D0%B5%D0%BD%D0%B8%D1%86%D1%8F
+  - lemma: сканувати
+    pos: verb
+    count: 6
+    locator: p.126
+    gloss: create an image of something with the use of a scanner; to scan (inspect, analyse or go over, often to find something); (computing, medicine) to scan (create an image of something with the use of a scanner)
+    gloss_source: dmklinger
+    context: СКАНУВА́ТИ, у́ю, у́єш, недок., що і без дод., спец. 1. Послідовно переглядати щось шляхом переміщення променя зору або радіопроменя. 2. Здійснювати безперервне обстежування, просвічення радіолокаційним променем якогось простору для виявлення певних (сторонніх) об'єктів. 3.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%81%D0%BA%D0%B0%D0%BD%D1%83%D0%B2%D0%B0%D1%82%D0%B8
+  - lemma: слово
+    pos: noun
+    count: 6
+    locator: p.141
+    gloss: word (unit of language); a word; a verbal expression, utterance, or phrase
+    gloss_source: dmklinger
+    context: СЛО́ВО, а, с. 1. Мовна одиниця, що являє собою звукове вираження поняття про предмет або явище об'єктивного світу. Він бачив, як з літер складалися слова, і дивувався дуже (Панас Мирний); Майор говорив не голосно, а майже шелестів, як те листя. Проте всі чули кожне його слово (О.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%81%D0%BB%D0%BE%D0%B2%D0%BE
+  - lemma: тарілка
+    pos: noun
+    count: 6
+    locator: p.187
+    gloss: dish (vessel for holding/serving food); cymbal (concave plate of brass or bronze that produces a sharp, ringing sound when struck); (music) cymbal
+    gloss_source: dmklinger
+    context: ТАРІ́ЛКА, и, ж. 1. Кругла посудина з широким плескатим дном і низькими вінцями, куди насипають або накладають страву. Поставила тарілку з хлібом Перед старим Еолом-дідом (І. Котляревський); Нахиливсь [Карпо Петрович] над тарілкою і потиху почав сьорбати юшку (М.…
+    context_source: sum20
+    context_url: https://slovnyk.me/dict/newsum/%D1%82%D0%B0%D1%80%D1%96%D0%BB%D0%BA%D0%B0
+  subject: matematyka
+residual:
+- lemma: см
+  pos: noun
+  count: 387
+  reasons:
+  - no_uk_definition
+- lemma: км
+  pos: noun
+  count: 307
+  reasons:
+  - no_uk_definition
+- lemma: кг
+  pos: noun
+  count: 185
+  reasons:
+  - no_uk_definition
+- lemma: м
+  pos: noun
+  count: 165
+  reasons:
+  - no_en_gloss
+- lemma: грн
+  pos: noun
+  count: 131
+  reasons:
+  - no_uk_definition
+- lemma: дм
+  pos: noun
+  count: 103
+  reasons:
+  - no_uk_definition
+  - no_en_gloss
+- lemma: розв'язання
+  pos: noun
+  count: 60
+  reasons:
+  - no_uk_definition
+- lemma: хв
+  pos: noun
+  count: 55
+  reasons:
+  - no_uk_definition
+  - no_en_gloss
+- lemma: мм
+  pos: noun
+  count: 54
+  reasons:
+  - no_uk_definition
+- lemma: координатний
+  pos: adj
+  count: 43
+  reasons:
+  - no_uk_definition
+  - no_en_gloss
+- lemma: ц
+  pos: noun
+  count: 43
+  reasons:
+  - no_en_gloss
+- lemma: градусний
+  pos: adj
+  count: 34
+  reasons:
+  - no_en_gloss
+- lemma: рата
+  pos: noun
+  count: 32
+  reasons:
+  - no_en_gloss
+- lemma: об'єкт
+  pos: noun
+  count: 26
+  reasons:
+  - no_uk_definition
+- lemma: вимірювання
+  pos: noun
+  count: 21
+  reasons:
+  - no_uk_definition
+- lemma: завдовжки
+  pos: adv
+  count: 21
+  reasons:
+  - no_uk_definition
+- lemma: від'ємник
+  pos: noun
+  count: 17
+  reasons:
+  - no_uk_definition
+- lemma: розгорнутий
+  pos: adj
+  count: 17
+  reasons:
+  - no_uk_definition
+  - no_en_gloss
+- lemma: з'ясувати
+  pos: verb
+  count: 16
+  reasons:
+  - no_uk_definition
+- lemma: використовуючи
+  pos: advp
+  count: 15
+  reasons:
+  - no_uk_definition
+  - no_en_gloss
+- lemma: одиничний
+  pos: adj
+  count: 15
+  reasons:
+  - no_uk_definition
+  - no_en_gloss
+- lemma: розрядний
+  pos: adj
+  count: 15
+  reasons:
+  - no_en_gloss
+- lemma: рівнобедрений
+  pos: adj
+  count: 13
+  reasons:
+  - no_uk_definition
+  - no_en_gloss
+- lemma: утворитися
+  pos: verb
+  count: 13
+  reasons:
+  - no_en_gloss
+- lemma: координата
+  pos: noun
+  count: 12
+  reasons:
+  - no_uk_definition
+  - no_en_gloss
+- lemma: автівка
+  pos: noun
+  count: 11
+  reasons:
+  - no_uk_definition
+  - no_en_gloss
+- lemma: отриманий
+  pos: adj
+  count: 11
+  reasons:
+  - no_uk_definition
+  - no_en_gloss
+- lemma: трицифровий
+  pos: adj
+  count: 11
+  reasons:
+  - no_uk_definition
+  - no_en_gloss
+- lemma: знаючи
+  pos: advp
+  count: 10
+  reasons:
+  - no_uk_definition
+  - no_en_gloss
+- lemma: узявши
+  pos: advp
+  count: 9
+  reasons:
+  - no_uk_definition
+  - no_en_gloss
+- lemma: чотирицифровий
+  pos: adj
+  count: 9
+  reasons:
+  - no_en_gloss
+- lemma: велосипедист
+  pos: noun
+  count: 8
+  reasons:
+  - no_uk_definition
+- lemma: велосипедистка
+  pos: noun
+  count: 8
+  reasons:
+  - no_uk_definition
+- lemma: зображений
+  pos: adj
+  count: 8
+  reasons:
+  - no_en_gloss
+- lemma: му
+  pos: noninfl
+  count: 8
+  reasons:
+  - no_en_gloss
+- lemma: рівносторонній
+  pos: adj
+  count: 8
+  reasons:
+  - no_uk_definition
+- lemma: ар
+  pos: noun
+  count: 6
+  reasons:
+  - no_en_gloss
+- lemma: вильний
+  pos: adj
+  count: 6
+  reasons:
+  - no_en_gloss
+- lemma: відокремити
+  pos: verb
+  count: 6
+  reasons:
+  - no_uk_definition
+- lemma: користуючись
+  pos: advp
+  count: 6
+  reasons:
+  - no_uk_definition
+  - no_en_gloss
+- lemma: млн
+  pos: noun
+  count: 6
+  reasons:
+  - no_uk_definition
+stats:
+  total_content_candidates: 1330
+  attempted: 300
+  admitted: 259
+  residual_this_batch: 41
+  residual_not_attempted: 1030
+  richness: 0.8633
