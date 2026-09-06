@@ -338,6 +338,12 @@ def test_process_for_codex_invokes_runtime_with_bridge_shape(
     assert provenance["effort_applied"] is None
     assert provenance["effort_reason"] == "Codex runtime did not report the applied effort"
     assert provenance["from_model"] == "gpt-6-astra"
+    assert provenance["model_identity"] == {
+        "source": "configured_request",
+        "provider_observed_model": None,
+        "provider_observed_model_version": None,
+        "provider_observation": "unknown",
+    }
     assert provenance["model_requested"] == "gpt-6-astra"
     assert provenance["harness"] == "codex"
     assert mock_send_message.call_count == 1
@@ -402,7 +408,7 @@ def test_process_for_codex_new_session_starts_cold_even_when_session_exists(
     assert kwargs["hard_timeout"] == 900
     assert kwargs["stall_timeout"] == 600
     mock_set_session.assert_not_called()
-    # Replies now carry provenance (#5761): which model actually answered, what was
+    # Replies now carry provenance (#5761): the configured model, what was
     # requested, and the harness that carried it. Assert the identity fields
     # explicitly rather than pinning the whole call, so adding a field later is not
     # a false failure.
@@ -415,6 +421,12 @@ def test_process_for_codex_new_session_starts_cold_even_when_session_exists(
     assert send_kwargs["from_model"] == "gpt-6-astra"
     provenance = json.loads(send_kwargs["data"])
     assert provenance["from_model"] == "gpt-6-astra"
+    assert provenance["model_identity"] == {
+        "source": "configured_request",
+        "provider_observed_model": None,
+        "provider_observed_model_version": None,
+        "provider_observation": "unknown",
+    }
     assert provenance["model_requested"] == "gpt-6-astra"
     assert provenance["harness"] == "codex"
     assert mock_send_message.call_count == 1

@@ -418,13 +418,20 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
 
     print(f"\n✅ Codex finished ({len(response)} chars)")
     effort_applied, effort_reason = _reported_codex_effort(result)
-    provenance_data, actual_model = response_provenance(
+    provenance_data, configured_model = response_provenance(
         msg,
         actual_model=getattr(result, "model", None) or model or "gpt-6-astra",
         harness="codex",
         effort_applied=effort_applied,
         effort_reason=effort_reason,
     )
+    # The shared helper's legacy actual_model parameter/from_model key is a
+    # routing label here. Native Codex has no qualified backend observation.
+    from scripts.agent_runtime.telemetry import codex_model_identity
+
+    provenance = json.loads(provenance_data)
+    provenance["model_identity"] = codex_model_identity()
+    provenance_data = json.dumps(provenance, sort_keys=True)
     reply_id = send_message(
         content=response,
         task_id=msg["task_id"],
@@ -432,7 +439,7 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
         from_llm="codex",
         to_llm=msg["from"],
         data=provenance_data,
-        from_model=actual_model,
+        from_model=configured_model,
     )
     acknowledge(message_id)
     record_ask_reply(message_id, reply_id)

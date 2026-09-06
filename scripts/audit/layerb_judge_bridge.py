@@ -7,12 +7,11 @@ operator-supplied boundary used by :class:`layerb_shadow.SubprocessJudge` and
 the qualification-emissions collector; it deliberately has no in-process
 tools, MCP client, filesystem prompt attachment, or retrieval path.
 
-The qualified Codex route invokes ``codex exec`` directly rather than routing
-through the shared adapter.  A judge must fail closed on a non-zero exit,
-missing strict JSON, model-version mismatch, or any rollout tool event; the
-shared adapter deliberately has more recovery behavior than this boundary may
-allow.  ``codex exec`` accepts one prompt, so this bridge uses the documented
-flattened-prompt mitigation set for the lean qualification only.
+The strict Codex route is unavailable: no qualified provider-origin model/version
+observation exists for its native transport. It refuses before temporary-home,
+authentication, or process preparation. Configured pins and client rollout model
+keys cannot satisfy that evidence requirement. Ordinary native Codex execution
+uses the general runtime and is unaffected by this stricter judge boundary.
 
 The qualified Grok Build route invokes the native ``grok`` CLI directly.  It
 uses a fresh ``GROK_HOME`` with only its OAuth credential, an empty built-in
@@ -51,7 +50,8 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(project_root))
     sys.path.insert(0, str(project_root / "scripts"))
 
-from scripts.agent_runtime.tool_calls import normalize_tool_calls, parse_json_events
+from scripts.agent_runtime.telemetry import codex_model_identity
+from scripts.agent_runtime.tool_calls import normalize_tool_calls
 from scripts.audit import layerb_shadow
 
 BRIDGE_VERSION = "qg-layer-b-judge-bridge.v5"
@@ -107,6 +107,7 @@ CONSERVATIVE_REASONS = frozenset(
         "output_decode",
         "rollout_tool_activity",
         "model_pin",
+        "provider_model_identity_unavailable",
         "envelope_alignment",
         "trace_missing",
         "trace_unrecognized",
@@ -299,9 +300,9 @@ class BridgeConfig:
             )
         else:
             argv_template = None
-        scoped_home = self.family in {"codex", "grok"}
+        scoped_home = self.family == "grok"
         if self.family == "codex":
-            tool_enforcement = "CLI disabled-features + scoped no-MCP home + fail-closed trace screen"
+            tool_enforcement = "provider identity unavailable; strict transport is never invoked"
             disabled_features = list(CODEX_DISABLED_FEATURES)
             config_overrides = list(CODEX_CONFIG_OVERRIDES)
         elif self.family == "grok":
@@ -336,13 +337,13 @@ class BridgeConfig:
             "seat_transport": {
                 "argv_template": argv_template,
                 "argv_sha256": _sha256_json(argv_template) if argv_template is not None else None,
-                "scoped_codex_home": self.family == "codex",
+                "scoped_codex_home": False,
                 "scoped_grok_home": self.family == "grok",
                 "minimal_config_has_mcp_servers": False,
                 "auth": "user-auth.json symlink only" if scoped_home else "not invoked",
                 "trace_tool_screen": scoped_home,
                 "trace_evidence": (
-                    "fresh scoped Codex rollout JSONL"
+                    None
                     if self.family == "codex"
                     else "fresh UUID session authoritative updates.jsonl plus events.jsonl"
                     if self.family == "grok"
@@ -366,6 +367,9 @@ class BridgeConfig:
                 "note": "Neither subscription CLI exposes a judge-specific setting; unavailable values are attested, not fabricated.",
             },
         }
+        if self.family == "codex":
+            material["model_identity"] = codex_model_identity()
+            material["strict_identity_policy"] = codex_identity_policy()
         if grok_flat_contract is not None:
             material["grok_flat_contract"] = grok_flat_contract
         return material
@@ -374,6 +378,16 @@ class BridgeConfig:
         material = self.material()
         material["config_sha256"] = _sha256_json(material)
         return material
+
+
+def codex_identity_policy() -> dict[str, str]:
+    """Fingerprint the strict capability requirement, not a model observation."""
+    return {
+        "version": "codex-provider-identity.v1",
+        "required_evidence": "qualified_provider_origin_model_version",
+        "capability": "unavailable",
+        "failure_reason": "provider_model_identity_unavailable",
+    }
 
 
 @dataclass(frozen=True, slots=True)
@@ -831,20 +845,6 @@ def build_grok_judge_argv(
     return argv
 
 
-def _prepare_scoped_codex_home(scoped_home: Path) -> None:
-    """Create a no-MCP Codex home with only a live link to user authentication."""
-
-    scoped_home.mkdir(parents=True, exist_ok=False)
-    (scoped_home / "config.toml").write_text(
-        "# Layer-B judge scoped home: intentionally no MCP configuration.\n",
-        encoding="utf-8",
-    )
-    real_home = Path(os.environ.get("CODEX_HOME") or Path.home() / ".codex")
-    real_auth = real_home / "auth.json"
-    if real_auth.is_file():
-        (scoped_home / "auth.json").symlink_to(real_auth)
-
-
 def _prepare_scoped_grok_home(scoped_home: Path) -> None:
     """Create a fresh Grok home with no configured MCP/plugins and live OAuth."""
 
@@ -861,36 +861,6 @@ def _prepare_scoped_grok_home(scoped_home: Path) -> None:
         source = real_home / credential
         if source.is_file():
             (scoped_home / credential).symlink_to(source)
-
-
-def _rollout_trace(scoped_home: Path) -> str:
-    """Read every fresh Codex rollout generated inside this invocation's home."""
-
-    rollouts = sorted((scoped_home / "sessions").glob("**/rollout-*.jsonl"))
-    if not rollouts:
-        raise BridgeInvocationError("transport_exit")
-    try:
-        return "\n".join(path.read_text(encoding="utf-8", errors="replace") for path in rollouts)
-    except OSError as exc:
-        raise BridgeInvocationError("transport_exit") from exc
-
-
-def _strict_rollout_events(trace: str) -> list[dict[str, Any]]:
-    """Require a complete JSONL rollout before inspecting it for tool events."""
-
-    for line in trace.splitlines():
-        if not line.strip():
-            continue
-        try:
-            value = json.loads(line)
-        except json.JSONDecodeError as exc:
-            raise BridgeInvocationError("transport_exit") from exc
-        if not isinstance(value, Mapping):
-            raise BridgeInvocationError("transport_exit")
-    events = parse_json_events(trace, source="layerb-codex-judge", logger=_LOGGER)
-    if not events:
-        raise BridgeInvocationError("transport_exit")
-    return events
 
 
 def _mapping_values(value: Any) -> list[Mapping[str, Any]]:
@@ -928,19 +898,6 @@ def _trace_has_tool_activity(events: Sequence[Mapping[str, Any]]) -> bool:
                 if isinstance(value, str) and _TRACE_ACTIVITY_RE.search(value):
                     return True
     return False
-
-
-def _resolved_models(events: Sequence[Mapping[str, Any]]) -> set[str]:
-    """Collect explicit model metadata from the fresh rollout only."""
-
-    models: set[str] = set()
-    for event in events:
-        for payload in _mapping_values(event):
-            for key, value in payload.items():
-                normalized_key = re.sub(r"[^a-z0-9]", "", str(key).lower())
-                if normalized_key in _NORMALIZED_TRACE_MODEL_KEYS and isinstance(value, str) and value.strip():
-                    models.add(value.strip())
-    return models
 
 
 def _read_strict_json_object(path: Path) -> dict[str, Any]:
@@ -1215,7 +1172,7 @@ def _validate_grok_trace(*, config: BridgeConfig, scoped_home: Path, scratch_dir
     if not _grok_events_allowlisted(events) or not _grok_updates_allowlisted(updates):
         raise BridgeInvocationError("trace_unrecognized")
     # Every model identifier attested anywhere in either trace must be the
-    # pinned model — mirrors the Codex _resolved_models whole-trace sweep so a
+    # pinned model throughout the authoritative Grok trace so a
     # mid-session fallback recorded outside turn_started cannot pass the pin.
     trace_models = _grok_trace_models(updates=updates, events=events)
     if trace_models and trace_models != {config.model_version}:
@@ -1223,47 +1180,13 @@ def _validate_grok_trace(*, config: BridgeConfig, scoped_home: Path, scratch_dir
 
 
 def invoke_codex(parsed: ParsedRequest, config: BridgeConfig) -> ModelResult:
-    """Run one strict schema Codex subscription-seat judge invocation."""
+    """Refuse strict judging before execution when identity cannot be proven.
 
-    with tempfile.TemporaryDirectory(prefix="layerb-codex-judge-") as temp_dir:
-        root = Path(temp_dir)
-        scratch_dir = root / "scratch"
-        scratch_dir.mkdir()
-        schema_path = root / "output-schema.json"
-        output_path = root / "output-last-message.json"
-        scoped_home = root / "codex-home"
-        schema_path.write_text(_canonical_json(output_json_schema()), encoding="utf-8")
-        _prepare_scoped_codex_home(scoped_home)
-        environment = dict(os.environ)
-        environment["CODEX_HOME"] = str(scoped_home)
-        completed = subprocess.run(
-            build_codex_judge_argv(
-                config=config,
-                scratch_dir=scratch_dir,
-                schema_path=schema_path,
-                output_path=output_path,
-            ),
-            input=build_codex_prompt(parsed),
-            text=True,
-            capture_output=True,
-            timeout=config.timeout_seconds,
-            check=False,
-            env=environment,
-        )
-        if completed.returncode != 0:
-            raise BridgeInvocationError("transport_exit")
-        if not output_path.is_file():
-            raise BridgeInvocationError("output_missing")
-        text = output_path.read_text(encoding="utf-8")
-        if not text.strip():
-            raise BridgeInvocationError("output_missing")
-        events = _strict_rollout_events(_rollout_trace(scoped_home))
-        if _trace_has_tool_activity(events):
-            raise BridgeInvocationError("rollout_tool_activity")
-        models = _resolved_models(events)
-        if models != {config.model_version}:
-            raise BridgeInvocationError("model_pin")
-        return ModelResult(text=text)
+    This is a transport capability refusal, not a replacement parser. Reopening
+    this route requires independently qualifying a provider-origin observation;
+    neither caller-supplied provenance nor arbitrary trace keys can do that.
+    """
+    raise BridgeInvocationError("provider_model_identity_unavailable")
 
 
 def invoke_grok(parsed: ParsedRequest, config: BridgeConfig) -> ModelResult:
@@ -1441,7 +1364,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--judge-model")
     parser.add_argument(
         "--judge-model-version",
-        help="Pinned subscription model/version. Defaults to --judge-model and must match rollout metadata.",
+        help="Configured subscription model/version. Codex provider identity is unavailable, so strict judging refuses.",
     )
     parser.add_argument("--timeout-seconds", type=float, default=90.0)
     parser.add_argument(

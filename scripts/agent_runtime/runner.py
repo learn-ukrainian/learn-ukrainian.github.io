@@ -95,7 +95,7 @@ from .failover import (
 from .primary_tree_watch import PrimaryTreeWatch
 from .registry import AGENTS, get_agent_entry
 from .result import ParseResult, Result
-from .telemetry import InvocationTelemetry, resolve_invocation_telemetry
+from .telemetry import InvocationTelemetry, codex_model_identity, resolve_invocation_telemetry
 from .trail_isolation import prepare_trail_isolation
 from .usage import has_headroom, write_record
 from .watchdog import (
@@ -923,6 +923,8 @@ def _build_usage_record(
         ),
         "tokens": tokens,
     }
+    if agent == "codex":
+        record["model_identity"] = codex_model_identity()
     safe_substitution = _safe_substitution_record(substitution)
     if safe_substitution is not None:
         record["substitution"] = safe_substitution
@@ -2243,6 +2245,7 @@ def _invoke_gemini_with_fallback(
             stalled=False,
             returncode=returncode,
             usage_record=record,
+            model_identity=record.get("model_identity"),
             tool_calls=last_tool_calls,
             tool_calls_total=len(last_tool_calls),
             isolation_evidence=None,
@@ -2329,6 +2332,7 @@ def _invoke_gemini_with_fallback(
         stalled=False,
         returncode=returncode,
         usage_record=record,
+        model_identity=record.get("model_identity"),
         tool_calls=last_tool_calls,
         tool_calls_total=len(last_tool_calls),
         isolation_evidence=None,
@@ -2708,6 +2712,7 @@ def _invoke_with_runner_failover(
             stalled=False,
             returncode=execution.returncode,
             usage_record=record,
+            model_identity=record.get("model_identity"),
             tool_calls=list(parse.tool_calls),
             tool_calls_total=getattr(parse, "tool_calls_total", len(parse.tool_calls)),
             substitution=substitution,
@@ -3059,6 +3064,7 @@ def _invoke_impl(
         stalled=False,
         returncode=execution.returncode,
         usage_record=record,
+        model_identity=record.get("model_identity"),
         tool_calls=list(parse.tool_calls),
         tool_calls_total=getattr(parse, "tool_calls_total", len(parse.tool_calls)),
         substitution=substitution,

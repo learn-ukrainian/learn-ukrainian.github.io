@@ -222,6 +222,13 @@ def test_runner_invoke_preserves_observed_terminal_returncode_and_telemetry(tmp_
             entrypoint="delegate",
         )
 
+    assert result.model_identity == {
+        "source": "configured_request",
+        "provider_observed_model": None,
+        "provider_observed_model_version": None,
+        "provider_observation": "unknown",
+    }
+    assert result.usage_record["model_identity"] == result.model_identity
     assert result.model == "gpt-5.5"
     assert result.effort == "high"
     assert result.cli_version == "0.123.0"

@@ -1054,3 +1054,27 @@ def test_shadow_attestation_round_trip_binds_tier_capacity_and_stability_wobble(
             fixture_manifests=[fixture_manifest],
             tier="shadow",
         )
+
+
+@pytest.mark.parametrize("identity", [None, {"source": "provider", "provider_observed_model": "gpt-6-astra", "provider_observation": "verified"}])
+def test_codex_legacy_or_forged_identity_stays_unknown_and_cannot_attest(tmp_path, identity):
+    route = {**ROUTE.to_dict(), "family": "gpt", "resolved_model": "gpt-6-astra", "resolved_model_version": "gpt-6-astra"}
+    if identity is not None:
+        route["model_identity"] = identity
+    normalized = layerb_qualify.EffectiveRoute.from_mapping(route).to_dict()
+    assert normalized["model_identity"] == {
+        "source": "legacy_unverified", "provider_observed_model": None,
+        "provider_observed_model_version": None, "provider_observation": "unknown",
+    }
+    report = _attestation_report(tier="cutover")
+    report["effective_route"] = route
+    report_path = tmp_path / "report.json"
+    report_path.write_text(json.dumps(report))
+    common = dict(report_path=report_path, raw_call_manifest_path=tmp_path / "missing-raw", labels_path=tmp_path / "missing-labels", corpus_manifests=[], fixture_manifests=[])
+    with pytest.raises(layerb_qualify.AttestationError, match="provider_model_identity_unavailable"):
+        layerb_qualify.create_attestation(**common, expires_at=datetime.now(UTC) + timedelta(days=1))
+    attestation = {"schema_version": layerb_qualify.ATTESTATION_VERSION, "tier": "cutover", "qualification_verdict": "PASS", "thresholds_version": layerb_qualify.THRESHOLDS_VERSION, "effective_route": route}
+    attestation_path = tmp_path / "attestation.json"
+    attestation_path.write_text(json.dumps(attestation))
+    with pytest.raises(layerb_qualify.AttestationError, match="provider_model_identity_unavailable"):
+        layerb_qualify.verify_attestation(**common, attestation_path=attestation_path)

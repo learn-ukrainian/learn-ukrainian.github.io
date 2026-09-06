@@ -14,6 +14,9 @@ Key design points:
 - **All three modes supported:** read-only, workspace-write, danger.
   Mode → flag mapping matches ``_codex.py::_codex_bridge_flags`` and
   ``dispatch.py::_codex_dispatch_flags``.
+- **Identity remains request-side.** The model flag selects a configured
+  request. A successful final response or rollout context does not establish
+  provider-observed model/version identity; this adapter does not claim it.
 - **Output file always used.** ``codex exec -o <tmpfile>`` writes the final
   agent message to a file; we read it in ``parse_response``. The file path
   goes into ``liveness_signal_paths`` so the runner's mtime poller catches

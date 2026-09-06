@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -12,7 +13,7 @@ import pytest
 from scripts.audit import layerb_candidates, layerb_collect_emissions, layerb_judge_bridge, layerb_qualify
 
 ROOT = Path(__file__).resolve().parents[1]
-VENV_PYTHON = ROOT / ".venv" / "bin" / "python"
+VENV_PYTHON = Path(sys.executable)
 STUB = ROOT / "tests" / "fixtures" / "layerb" / "fake_layerb_qualification_judge.py"
 
 
@@ -947,3 +948,12 @@ def test_planner_rejects_unknown_lineage_in_all_mode(capsys: pytest.CaptureFixtu
 
     assert modules == []
     assert "UNKNOWN_LINEAGE=1" in capsys.readouterr().err
+
+
+def test_codex_collection_refuses_before_reading_labels(tmp_path, capsys):
+    args = _collector_args(tmp_path / "missing-main.json", tmp_path / "missing-probe.json", tmp_path / "out", calls=1, family="gpt")
+    effective, _, _, _ = layerb_collect_emissions._route_metadata(layerb_collect_emissions.parse_args(args))
+    assert effective.to_dict()["model_identity"]["provider_observation"] == "unknown"
+    assert layerb_collect_emissions.main(args) == 2
+    assert "provider_model_identity_unavailable" in capsys.readouterr().err
+    assert not (tmp_path / "out").exists()
