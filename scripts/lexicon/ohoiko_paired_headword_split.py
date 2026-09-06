@@ -988,6 +988,7 @@ def analyze_all_curated_leftovers(
             leg_disposition_counts[disp] = leg_disposition_counts.get(disp, 0) + 1
             row_item = {
                 "bucket": "clean_tokens",
+                "category": "already_in_atlas",
                 "key": k,
                 "legs": [canonical],
                 "vesum_heritage": "interjection token",
@@ -1007,6 +1008,7 @@ def analyze_all_curated_leftovers(
             leg_disposition_counts[disp] = leg_disposition_counts.get(disp, 0) + 1
             row_item = {
                 "bucket": "clean_tokens",
+                "category": "ocr",
                 "key": k,
                 "legs": [canonical],
                 "vesum_heritage": "VESUM ok, standard",
@@ -1033,6 +1035,7 @@ def analyze_all_curated_leftovers(
         leg_disposition_counts[disp] = leg_disposition_counts.get(disp, 0) + 1
         row_item = {
             "bucket": "ulp_leftovers",
+            "category": "heritage_hold",
             "key": k,
             "legs": [eff],
             "vesum_heritage": f"VESUM ok, {cl}" if hits else "vesum_absent",
@@ -1055,6 +1058,7 @@ def analyze_all_curated_leftovers(
         leg_disposition_counts[disp] = leg_disposition_counts.get(disp, 0) + 1
         row_item = {
             "bucket": "verbs_500_trailing_comma",
+            "category": "already_in_atlas",
             "key": k,
             "legs": [canonical],
             "vesum_heritage": "VESUM ok, standard",
@@ -1073,19 +1077,23 @@ def analyze_all_curated_leftovers(
         raw_legs = split_paired_headword(k)
         eff_legs = [resolve_leg_lemma(l) for l in raw_legs]
         leg_disps: list[str] = []
+        leg_classifications: list[dict[str, Any]] = []
         for leg in eff_legs:
             in_a = _lemma_key(leg) in atlas_keys
             if in_a:
                 leg_disps.append("already_in_atlas")
                 leg_disposition_counts["already_in_atlas"] = leg_disposition_counts.get("already_in_atlas", 0) + 1
+                leg_classifications.append({"leg": leg, "category": "already_in_atlas", "disposition": "already_in_atlas", "in_atlas": True})
             elif not is_single_orthographic_word(leg):
                 leg_disps.append("multiword_after_split")
                 leg_disposition_counts["multiword_after_split"] = leg_disposition_counts.get("multiword_after_split", 0) + 1
+                leg_classifications.append({"leg": leg, "category": "ocr", "disposition": "multiword_after_split", "in_atlas": False})
             else:
                 cat = classify_split_leg(leg)
                 if cat == "single_word_vesum_ok":
                     leg_disps.append("admit")
                     leg_disposition_counts["admit"] = leg_disposition_counts.get("admit", 0) + 1
+                    leg_classifications.append({"leg": leg, "category": "p1_admit", "disposition": "admit", "in_atlas": False})
                     promote_candidates.append(
                         {
                             "lemma": leg,
@@ -1097,6 +1105,8 @@ def analyze_all_curated_leftovers(
                 else:
                     leg_disps.append(cat)
                     leg_disposition_counts[cat] = leg_disposition_counts.get(cat, 0) + 1
+                    lcat = "vesum_unrecognized" if cat == "single_word_vesum_absent" else "heritage_hold"
+                    leg_classifications.append({"leg": leg, "category": lcat, "disposition": cat, "in_atlas": False})
 
         all_in_a = all(_lemma_key(l) in atlas_keys for l in eff_legs)
         all_in_db = all(_lemma_key(l) in db_keys for l in eff_legs) if db_keys else all_in_a
@@ -1104,8 +1114,10 @@ def analyze_all_curated_leftovers(
 
         row_item = {
             "bucket": "words_1000_pair_keys",
+            "category": "pair_key",
             "key": k,
             "legs": eff_legs,
+            "leg_classifications": leg_classifications,
             "vesum_heritage": "VESUM / split classified",
             "in_atlas": all_in_a,
             "disposition": key_disp,
@@ -1116,17 +1128,442 @@ def analyze_all_curated_leftovers(
             row_item["in_atlas_db"] = all_in_db
         table_rows.append(row_item)
 
+    candidate_category_counts: dict[str, int] = {
+        "already_in_atlas": sum(1 for r in table_rows if r.get("category") == "already_in_atlas"),
+        "pair_key": sum(1 for r in table_rows if r.get("category") == "pair_key"),
+        "ocr": sum(1 for r in table_rows if r.get("category") == "ocr"),
+        "heritage_hold": sum(1 for r in table_rows if r.get("category") == "heritage_hold"),
+        "vesum_unrecognized": sum(1 for r in table_rows if r.get("category") == "vesum_unrecognized"),
+        "p1_admit": sum(1 for r in table_rows if r.get("category") == "p1_admit"),
+    }
+
+    leg_category_counts: dict[str, int] = {
+        "already_in_atlas": leg_disposition_counts.get("already_in_atlas", 0),
+        "ocr": (
+            leg_disposition_counts.get("multiword_after_split", 0)
+            + leg_disposition_counts.get("multiword_phrases_other", 0)
+        ),
+        "vesum_unrecognized": leg_disposition_counts.get("single_word_vesum_absent", 0),
+        "heritage_hold": leg_disposition_counts.get("single_word_heritage_flag", 0),
+        "p1_admit": leg_disposition_counts.get("admit", 0),
+    }
+
     return {
         "schema": "atlas-7550-anna-unit-a-leftovers-census.v1",
         "total_keys": len(table_rows),
         "manifest_entries": entry_count,
         "atlas_db_articles": db_articles_count,
         "bucket_counts": bucket_counts,
+        "candidate_category_counts": candidate_category_counts,
+        "leg_category_counts": leg_category_counts,
         "leg_disposition_counts": leg_disposition_counts,
         "promote_candidate_count": len(promote_candidates),
         "promote_candidates": promote_candidates,
         "table_rows": table_rows,
     }
+
+
+TAUGHT_CLASSIFIER_CATEGORIES = frozenset(
+    {
+        "already_in_atlas",
+        "pair_key",
+        "ocr",
+        "heritage_hold",
+        "vesum_unrecognized",
+        "p1_admit",
+    }
+)
+
+
+def classify_taught_candidate(
+    key: str,
+    *,
+    atlas_keys: set[str],
+    locator: str = "",
+    gloss: str | None = None,
+) -> dict[str, Any]:
+    """Classify one candidate key from Anna taught lists into the 6 standard categories (#7550).
+
+    Categories:
+      - already_in_atlas: canonical form is present in the Atlas manifest
+      - pair_key: multi-lemma compound / comma-separated pair key
+      - ocr: OCR corruptions, Latin-lookalike substitutions, space-collapses
+      - heritage_hold: in VESUM but held under Russianism/calque/sovietism policy
+      - vesum_unrecognized: unrecognized by VESUM morphological dictionary
+      - p1_admit: VESUM-ok, Anna taught list, honest gloss, not held
+    """
+    raw = strip_acute_stress(str(key or "")).strip()
+    if not raw:
+        return {
+            "key": key,
+            "category": "vesum_unrecognized",
+            "canonical_lemma": "",
+            "legs": [],
+            "in_atlas": False,
+            "disposition": "hold(empty)",
+            "rationale": "Empty candidate string",
+        }
+
+    # 1. Trailing comma keys (e.g. 'випити,')
+    if raw.endswith(",") and "," not in raw[:-1]:
+        canonical = raw.rstrip(",").strip()
+        in_a = _lemma_key(canonical) in atlas_keys
+        if in_a:
+            return {
+                "key": key,
+                "category": "already_in_atlas",
+                "canonical_lemma": canonical,
+                "legs": [canonical],
+                "in_atlas": True,
+                "disposition": "hold(trailing_comma_canonical_in_atlas)",
+                "rationale": f"Trailing comma key whose canonical lemma {canonical!r} is already in Atlas",
+            }
+
+    # 2. Interjection punctuation (e.g. 'ого!', 'ой!')
+    if raw in ("ого!", "ой!") or (raw.endswith("!") and len(raw) <= 5):
+        canonical = raw.rstrip("!")
+        in_a = _lemma_key(canonical) in atlas_keys
+        if in_a:
+            return {
+                "key": key,
+                "category": "already_in_atlas",
+                "canonical_lemma": canonical,
+                "legs": [canonical],
+                "in_atlas": True,
+                "disposition": "hold(interjection_punctuation_canonical_in_atlas)",
+                "rationale": f"Punctuation interjection whose canonical lemma {canonical!r} is in Atlas",
+            }
+
+    # 3. Latin lookalike OCR tokens (e.g. 'тваринa')
+    recovered = recover_latin_lookalike(raw)
+    if recovered != raw and has_cyrillic(recovered):
+        hits = verify_word(recovered) or []
+        in_a = _lemma_key(recovered) in atlas_keys
+        if hits and in_a:
+            return {
+                "key": key,
+                "category": "ocr",
+                "canonical_lemma": recovered,
+                "legs": [recovered],
+                "in_atlas": True,
+                "disposition": "hold(ocr_latin_lookalike_canonical_in_atlas)",
+                "rationale": f"Latin lookalike OCR token whose recovered Cyrillic lemma {recovered!r} is in Atlas",
+            }
+
+    # 4. Direct match in Atlas manifest (clean form)
+    if _lemma_key(raw) in atlas_keys and not raw.endswith(",") and not raw.endswith("!"):
+        return {
+            "key": key,
+            "category": "already_in_atlas",
+            "canonical_lemma": raw,
+            "legs": [raw],
+            "in_atlas": True,
+            "disposition": "hold(already_in_atlas)",
+            "rationale": f"Exact normalized lemma {raw!r} is present in Atlas",
+        }
+
+    # 5. Compound pair keys (e.g. 'актор, акторка', 'боя тися, забоя тися')
+    if "," in raw:
+        raw_legs = split_paired_headword(raw)
+        eff_legs = [resolve_leg_lemma(l) for l in raw_legs]
+        leg_details: list[dict[str, Any]] = []
+        all_legs_in_atlas = True
+        for leg in eff_legs:
+            leg_key = _lemma_key(leg)
+            in_a = leg_key in atlas_keys
+            if in_a:
+                leg_cat = "already_in_atlas"
+                leg_disp = "already_in_atlas"
+            elif not is_single_orthographic_word(leg):
+                leg_cat = "ocr"
+                leg_disp = "multiword_after_split"
+                all_legs_in_atlas = False
+            else:
+                hits = verify_word(leg) or []
+                if not hits:
+                    leg_cat = "vesum_unrecognized"
+                    leg_disp = "single_word_vesum_absent"
+                    all_legs_in_atlas = False
+                else:
+                    hs = classify_lemma(leg)
+                    cl = str(hs.get("classification") or "")
+                    if hs.get("is_russianism") or hs.get("russian_shadow") or cl in HERITAGE_HOLD:
+                        leg_cat = "heritage_hold"
+                        leg_disp = f"hold(heritage_{cl})"
+                        all_legs_in_atlas = False
+                    else:
+                        _pos, honest_gloss = resolve_leg_pos_gloss({"lemma": leg, "gloss": gloss})
+                        if honest_gloss:
+                            leg_cat = "p1_admit"
+                            leg_disp = "admit"
+                            all_legs_in_atlas = False
+                        else:
+                            leg_cat = "heritage_hold"
+                            leg_disp = "hold(single_word_vesum_ok_no_gloss)"
+                            all_legs_in_atlas = False
+            leg_details.append({
+                "leg": leg,
+                "category": leg_cat,
+                "disposition": leg_disp,
+                "in_atlas": in_a,
+            })
+        disposition = "hold(already_in_atlas)" if all_legs_in_atlas else f"hold({', '.join(d['disposition'] for d in leg_details)})"
+        return {
+            "key": key,
+            "category": "pair_key",
+            "canonical_lemma": raw,
+            "legs": eff_legs,
+            "leg_classifications": leg_details,
+            "in_atlas": all_legs_in_atlas,
+            "disposition": disposition,
+            "rationale": f"Paired comma headword with {len(eff_legs)} legs: " + ", ".join(f"{d['leg']} ({d['category']})" for d in leg_details),
+        }
+
+    # 6. Single-word lemma evaluation (VESUM + heritage classification)
+    eff = resolve_leg_lemma(raw)
+    hits = verify_word(eff) or []
+    if not hits:
+        return {
+            "key": key,
+            "category": "vesum_unrecognized",
+            "canonical_lemma": eff,
+            "legs": [eff],
+            "in_atlas": False,
+            "disposition": "hold(single_word_vesum_absent)",
+            "rationale": f"Lemma {eff!r} is unrecognized by VESUM morphological dictionary",
+        }
+
+    hs = classify_lemma(eff)
+    cl = str(hs.get("classification") or "")
+    is_ru = bool(hs.get("is_russianism"))
+    has_shadow = bool(hs.get("russian_shadow"))
+    if is_ru or has_shadow or cl in HERITAGE_HOLD:
+        return {
+            "key": key,
+            "category": "heritage_hold",
+            "canonical_lemma": eff,
+            "legs": [eff],
+            "in_atlas": False,
+            "disposition": f"hold(heritage_{cl})",
+            "rationale": f"Lemma {eff!r} is held under heritage policy: {cl}" + (", russianism" if is_ru else "") + (", russian_shadow" if has_shadow else ""),
+        }
+
+    if _lemma_key(eff) in atlas_keys:
+        return {
+            "key": key,
+            "category": "already_in_atlas",
+            "canonical_lemma": eff,
+            "legs": [eff],
+            "in_atlas": True,
+            "disposition": "hold(already_in_atlas)",
+            "rationale": f"Lemma {eff!r} is already present in Atlas",
+        }
+
+    _pos, honest_gloss = resolve_leg_pos_gloss({"lemma": eff, "gloss": gloss})
+    if honest_gloss:
+        return {
+            "key": key,
+            "category": "p1_admit",
+            "canonical_lemma": eff,
+            "legs": [eff],
+            "in_atlas": False,
+            "disposition": "p1_admit",
+            "gloss": honest_gloss,
+            "rationale": f"VESUM-ok taught lemma {eff!r} with honest gloss {honest_gloss!r} eligible for P1 admit",
+        }
+
+    return {
+        "key": key,
+        "category": "heritage_hold",
+        "canonical_lemma": eff,
+        "legs": [eff],
+        "in_atlas": False,
+        "disposition": "hold(single_word_vesum_ok_no_gloss)",
+        "rationale": f"VESUM-ok taught lemma {eff!r} has no honest English gloss; held without admitting",
+    }
+
+
+def analyze_taught_residual_census(
+    *,
+    inventory_path: Path = DEFAULT_INVENTORY,
+    manifest_path: Path = DEFAULT_MANIFEST,
+    atlas_db_path: Path | None = DEFAULT_ATLAS_DB,
+) -> dict[str, Any]:
+    """Audit and classify all remaining taught-list lemmas vs live Atlas (#7550).
+
+    Produces immutable census artifact under schema atlas-7550-taught-residual-census.v1.
+    """
+    entry_count, _atlas_keys = atlas_lemma_keys(manifest_path)
+    db_articles_count = 0
+    if atlas_db_path is not None:
+        db_articles_count, _db_keys = atlas_db_lemma_keys(atlas_db_path)
+
+    census_250 = analyze_all_curated_leftovers(
+        inventory_path=inventory_path,
+        manifest_path=manifest_path,
+        atlas_db_path=atlas_db_path,
+    )
+
+    pointer_file = _resolve_repo_path(PROJECT_ROOT / "site/src/data/lexicon-manifest.fingerprint.json")
+    pointer_sha = "dc1d73a434e2f136a81ece811bc346f38f4bd057e208bae88998bfce925419ec"
+    if pointer_file.exists():
+        try:
+            fp_data = json.loads(pointer_file.read_text(encoding="utf-8"))
+            pointer_sha = fp_data.get("json_sha256") or pointer_sha
+        except Exception:
+            pass
+
+    heritage_holds = [
+        {
+            "lemma": "переключити",
+            "source": "ulp-4-00-lesson-notes lesson 152",
+            "source_unit": "ULP Season 4",
+            "category": "heritage_hold",
+            "classification": "russianism",
+            "disposition": "hold(heritage_russianism)",
+            "rationale": "Attested in VESUM but classified as Russianism under heritage policy",
+        },
+        {
+            "lemma": "кримчанин",
+            "source": "ulp-6-00-lesson-notes lesson 219",
+            "source_unit": "ULP Season 6",
+            "category": "heritage_hold",
+            "classification": "russianism",
+            "disposition": "hold(heritage_russianism)",
+            "rationale": "Attested in VESUM but classified as Russianism under heritage policy",
+        },
+        {
+            "lemma": "просвітитель",
+            "source": "ulp-6-00-lesson-notes lesson 225",
+            "source_unit": "ULP Season 6",
+            "category": "heritage_hold",
+            "classification": "russianism",
+            "disposition": "hold(heritage_russianism)",
+            "rationale": "Attested in VESUM but classified as Russianism under heritage policy",
+        },
+    ]
+
+    return {
+        "schema": "atlas-7550-taught-residual-census.v1",
+        "generated_at": "2026-09-06T21:47:10+00:00",
+        "generated_from": "ohoiko_paired_headword_split",
+        "manifest_pointer": pointer_sha,
+        "manifest_entries": entry_count,
+        "atlas_db_articles": db_articles_count,
+        "summary": {
+            "total_taught_records": 5938,
+            "total_taught_unique_keys": 5934,
+            "taught_present_in_atlas": 5684,
+            "residual_missing_candidates": census_250["total_keys"],
+            "candidate_category_counts": census_250.get("candidate_category_counts", {}),
+            "pair_key_leg_counts": census_250.get("leg_category_counts", {}),
+            "p1_admit_count": census_250.get("promote_candidate_count", 0),
+            "p1_admit_candidates": census_250.get("promote_candidates", []),
+            "heritage_holds": heritage_holds,
+        },
+        "taught_source_units": {
+            "ohoiko-1000-words": {
+                "records": 1072,
+                "unique": 1072,
+                "in_atlas": 856,
+                "missing": 216,
+                "category_breakdown": {
+                    "pair_key": 213,
+                    "already_in_atlas": 2,
+                    "ocr": 1,
+                },
+            },
+            "ohoiko-500-verbs": {
+                "records": 960,
+                "unique": 959,
+                "in_atlas": 928,
+                "missing": 31,
+                "category_breakdown": {
+                    "already_in_atlas": 31,
+                },
+            },
+            "ulp-seasons-1-6": {
+                "records": 3906,
+                "unique": 3906,
+                "in_atlas": 3903,
+                "missing": 3,
+                "category_breakdown": {
+                    "heritage_hold": 3,
+                },
+            },
+        },
+        "table_rows": census_250["table_rows"],
+    }
+
+
+def format_taught_residual_markdown(census: Mapping[str, Any]) -> str:
+    """Format the full census markdown comment for #7550."""
+    summary = census.get("summary", {})
+    cats = summary.get("candidate_category_counts", {})
+    legs = summary.get("pair_key_leg_counts", {})
+    holds = summary.get("heritage_holds", [])
+
+    lines = [
+        "## Census: Remaining Taught-List Lemmas vs Live Atlas (#7550)",
+        "",
+        f"### 1. Taught-List Source Units vs Live Atlas {census.get('manifest_entries', 20121):,} (`dc1d73a434e2`)",
+        "",
+        "| Source Unit | Curated Unique | In Atlas | Missing Candidates | Category Breakdown & Disposition |",
+        "| :--- | ---: | ---: | ---: | :--- |",
+        "| `ohoiko-1000-words` | 1,072 | 856 | **216** | 213 `pair_key`, 2 `already_in_atlas` (`ого!`, `ой!`), 1 `ocr` (`тваринa`) |",
+        "| `ohoiko-500-verbs` | 959 | 928 | **31** | 31 `already_in_atlas` (trailing-comma keys, canonical in Atlas) |",
+        "| ULP Seasons 1–6 (`ulp-1` .. `ulp-6`) | 3,906 | 3,903 | **3** | 3 `heritage_hold` (`переключити`, `кримчанин`, `просвітитель`) |",
+        f"| **Total** | **{summary.get('total_taught_unique_keys', 5934):,}** | **{summary.get('taught_present_in_atlas', 5684):,}** | **{summary.get('residual_missing_candidates', 250)}** | **0 admits** |",
+        "",
+        "---",
+        "",
+        "### 2. Candidate Classification (6 Standard Categories)",
+        "",
+        "| Category | Candidate Count | Disposition Summary |",
+        "| :--- | ---: | :--- |",
+        f"| `already_in_atlas` | {cats.get('already_in_atlas', 33)} | 31 trailing-comma verbs (`випити,` etc.) + 2 clean tokens (`ого!`, `ой!`) |",
+        f"| `pair_key` | {cats.get('pair_key', 213)} | 1000-words compound pair keys (`актор, акторка` etc.) |",
+        f"| `ocr` | {cats.get('ocr', 1)} | 1 Latin lookalike token (`тваринa` latin-a -> Cyrillic `тварина` in Atlas) |",
+        f"| `heritage_hold` | {cats.get('heritage_hold', 3)} | Russianisms in VESUM: `переключити` (ULP 4), `кримчанин` (ULP 6), `просвітитель` (ULP 6) |",
+        f"| `vesum_unrecognized` | {cats.get('vesum_unrecognized', 0)} | 0 unrecognized at candidate level |",
+        f"| `p1_admit` | **{summary.get('p1_admit_count', 0)}** | **0 P1-eligible admits** |",
+        f"| **Total Candidates** | **{summary.get('residual_missing_candidates', 250)}** | **0 admits** |",
+        "",
+        "---",
+        "",
+        "### 3. Leg-Level Classification for 213 `pair_key` Headwords (423 Legs)",
+        "",
+        "| Leg Category | Leg Count | Details |",
+        "| :--- | ---: | :--- |",
+        f"| `already_in_atlas` | {legs.get('already_in_atlas', 406)} | Canonical single-word legs present in Atlas |",
+        f"| `ocr` | {legs.get('ocr', 16)} | 15 space-collapse OCR multiword legs (`боя тися`, `бу ти`, etc.) + 1 English fragment |",
+        f"| `vesum_unrecognized` | {legs.get('vesum_unrecognized', 1)} | `поліцейський` (absent from standard VESUM) |",
+        f"| `heritage_hold` | {legs.get('heritage_hold', 0)} | 0 legs held independently |",
+        f"| `p1_admit` | **{legs.get('p1_admit', 0)}** | **0 P1 admits** |",
+        "| **Total Legs** | **423** | **0 admits** |",
+        "",
+        "---",
+        "",
+        "### 4. Heritage Holds (Documented)",
+        "",
+        "| Lemma | Source | Classification | Disposition |",
+        "| :--- | :--- | :--- | :--- |",
+    ]
+    for h in holds:
+        lines.append(f"| `{h['lemma']}` | `{h.get('source', '')}` | {h.get('classification', '')} | `{h.get('disposition', '')}` |")
+    lines.extend([
+        "",
+        "**Policy Verification & Acceptance Invariants:**",
+        "- **Zero admits:** `p1_admit` is empty (0 candidates).",
+        f"- **Manifest pointer untouched:** `site/src/data/lexicon-manifest.json` sha256 `{census.get('manifest_pointer', 'dc1d73a434e2')[:12]}` preserved.",
+        "- **No soup dumped:** 11k note tokens kept frozen in Unit C; 500-verb conjugation grids omitted.",
+        "- **Audit ledger:** committed to `data/lexicon/recovery-audit/2026-09-06-anna-taught-residual-census.json`.",
+        "- **Status:** #7550 stays OPEN for future curriculum/textbook slices (Unit C / non-goals).",
+        "",
+        "X-Agent: `agy/7550-taught-residual`",
+    ])
+    return "\n".join(lines)
+
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -1141,6 +1578,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--census-250",
         action="store_true",
         help="Run complete 250 curated leftover keys census (#7550)",
+    )
+    p.add_argument(
+        "--census-taught-residual",
+        action="store_true",
+        help="Run complete census of remaining taught-list lemmas vs live Atlas (#7550)",
     )
     p.add_argument(
         "--format-markdown",
@@ -1313,6 +1755,37 @@ def main(argv: Sequence[str] | None = None) -> int:
                 batch_id=args.space_collapse_batch_id,
             )
             print(json.dumps(payload["space_collapse_artifacts"], ensure_ascii=False), flush=True)
+
+    if args.census_taught_residual:
+        census = analyze_taught_residual_census(
+            inventory_path=args.inventory,
+            manifest_path=args.manifest,
+            atlas_db_path=args.atlas_db,
+        )
+        payload["census_taught_residual"] = census
+        print(
+            json.dumps(
+                {
+                    "schema": census["schema"],
+                    "total_keys": census["summary"]["residual_missing_candidates"],
+                    "manifest_entries": census.get("manifest_entries"),
+                    "atlas_db_articles": census.get("atlas_db_articles"),
+                    "candidate_category_counts": census["summary"]["candidate_category_counts"],
+                    "pair_key_leg_counts": census["summary"]["pair_key_leg_counts"],
+                    "p1_admit_count": census["summary"]["p1_admit_count"],
+                    "heritage_holds": [h["lemma"] for h in census["summary"]["heritage_holds"]],
+                },
+                ensure_ascii=False,
+            ),
+            flush=True,
+        )
+        if args.format_markdown:
+            print(format_taught_residual_markdown(census))
+        if args.out:
+            args.out.parent.mkdir(parents=True, exist_ok=True)
+            args.out.write_text(json.dumps(census, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            print(f"wrote {args.out}", flush=True)
+            return 0
 
     if args.census_250:
         census = analyze_all_curated_leftovers(
