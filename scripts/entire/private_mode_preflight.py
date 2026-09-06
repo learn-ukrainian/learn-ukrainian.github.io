@@ -111,7 +111,10 @@ def preflight(root: Path, *, runner: Runner = _run) -> dict[str, Any]:
     checks["private_checkpoint_ref"] = private_refs.returncode == 0 and CHECKPOINT_REF in private_ref_names
 
     auth = _invoke(runner, ("entire", "auth", "status"), root)
-    checks["entire_authenticated"] = auth.returncode == 0
+    auth_stdout = auth.stdout.lower()
+    checks["entire_authenticated"] = auth.returncode == 0 and not any(
+        marker in auth_stdout for marker in ("not logged in", "run 'entire login'")
+    )
 
     mirrors = _load_json(
         _invoke(
@@ -192,8 +195,23 @@ def preflight(root: Path, *, runner: Runner = _run) -> dict[str, Any]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Verify private Entire routing without reading session bodies.")
-    parser.add_argument("--repo-root", type=Path, default=Path.cwd())
+    parser = argparse.ArgumentParser(
+        description=(
+            "Verify private Entire routing without reading session bodies.\n"
+            "Use before native recall; this does not log in or configure mirrors."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Example: scripts/entire/private_mode_preflight.py --repo-root .\n"
+            "Outputs: body-free JSON receipt on stdout; no files written.\n"
+            "Exit codes: 0 = ready; 2 = preflight failed.\n"
+            "Related: .entire/private-recall.json; Entire CLI 0.8.42; #6283."
+        ),
+    )
+    parser.add_argument(
+        "--repo-root", type=Path, default=Path.cwd(),
+        help="Repository to verify (default: current directory; example: .).",
+    )
     args = parser.parse_args()
     receipt = preflight(args.repo_root)
     print(json.dumps(receipt, indent=2, sort_keys=True))

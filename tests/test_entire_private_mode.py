@@ -5,6 +5,8 @@ import subprocess
 from collections.abc import Sequence
 from pathlib import Path
 
+import pytest
+
 from scripts.entire.private_mode_preflight import preflight
 from scripts.entire.validate_checkpoint_routing import EXPECTED_PRIVATE_RECALL
 
@@ -223,6 +225,34 @@ def test_private_mode_preflight_fails_closed_without_entire_auth(tmp_path: Path)
     assert receipt["ready"] is False
     assert receipt["checks"]["entire_authenticated"] is False
     assert receipt["issues"] == ["entire_authenticated_failed"]
+
+
+@pytest.mark.parametrize(
+    "auth_stdout",
+    [
+        "Not logged in.\nRun 'entire login' to authenticate.\n",
+        "Not logged in.\n",
+        "NOT LOGGED IN.\n",
+        "Run 'entire login' to authenticate.\n",
+        "RUN 'ENTIRE LOGIN' TO AUTHENTICATE.\n",
+    ],
+)
+def test_private_mode_preflight_rejects_logged_out_success(tmp_path: Path, auth_stdout: str) -> None:
+    _write_config(tmp_path)
+
+    def logged_out_runner(command: Sequence[str], cwd: Path):
+        if tuple(command) == ("entire", "auth", "status"):
+            return _completed(command, auth_stdout)
+        return _healthy_runner(command, cwd)
+
+    receipt = preflight(tmp_path, runner=logged_out_runner)
+
+    assert receipt["checks"]["entire_authenticated"] is False
+    assert receipt["ready"] is False
+    assert receipt["issues"] == ["entire_authenticated_failed"]
+    serialized = json.dumps(receipt).lower()
+    assert "not logged in" not in serialized
+    assert "entire login" not in serialized
 
 
 def test_private_mode_preflight_fails_closed_without_ready_mirror(
