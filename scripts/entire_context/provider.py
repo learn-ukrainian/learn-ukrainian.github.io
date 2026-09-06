@@ -186,22 +186,86 @@ def _probe_cloud_search(root: Path, source_repo: str, query: str) -> dict[str, A
     }
 
 
+def _dispatch_jurisdiction(root: Path, source_repo: str) -> str | None:
+    result = _run(root, "repo", "mirror", "list", "--name", "learn-ukrainian", "--json")
+    if result.returncode != 0:
+        return None
+    try:
+        rows = json.loads(result.stdout)
+    except (TypeError, json.JSONDecodeError):
+        return None
+    if not isinstance(rows, list):
+        return None
+    slugs = {
+        row["jurisdiction"]
+        for row in rows
+        if isinstance(row, dict)
+        and f"{row.get('owner')}/{row.get('repo')}" == source_repo
+        and row.get("status") == "ready"
+        and isinstance(row.get("jurisdiction"), str)
+        and re.fullmatch(r"[a-z][a-z0-9-]*", row["jurisdiction"])
+    }
+    return slugs.pop() if len(slugs) == 1 else None
+
+
+def _delete_dispatch(
+    root: Path,
+    jurisdiction: str,
+    result: subprocess.CompletedProcess[str],
+    payload: dict[str, Any] | None,
+) -> bool:
+    dispatch_id = payload.get("id") if payload else None
+    if not isinstance(dispatch_id, str) or not re.fullmatch(r"[A-Za-z0-9_-]+", dispatch_id):
+        location = re.search(
+            r"(?im)^Location:\s*(?:https://[^/\s]+)?/api/v1/me/dispatches/([A-Za-z0-9_-]+)\s*$",
+            result.stderr,
+        )
+        dispatch_id = location.group(1) if location else None
+    if dispatch_id is None:
+        return False
+    try:
+        deleted = _run(
+            root,
+            "api",
+            "--jurisdiction",
+            jurisdiction,
+            "-X",
+            "DELETE",
+            f"/api/v1/me/dispatches/{dispatch_id}",
+            "--include",
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    return deleted.returncode == 0 and _http_status(deleted) == 204
+
+
 def _probe_cloud_dispatch(root: Path, source_repo: str) -> dict[str, Any]:
+    try:
+        jurisdiction = _dispatch_jurisdiction(root, source_repo)
+    except (OSError, subprocess.TimeoutExpired):
+        jurisdiction = None
+    if jurisdiction is None:
+        return {
+            "reachable": False,
+            "history_available": False,
+            "reason": "repository_unavailable_or_region",
+        }
     now = datetime.now(UTC)
     request = {
         "repos": [source_repo],
         "since": (now - timedelta(days=7)).isoformat().replace("+00:00", "Z"),
         "until": now.isoformat().replace("+00:00", "Z"),
-        "generate": False,
     }
     try:
         result = _run_with_input(
             root,
             [
                 "api",
+                "--jurisdiction",
+                jurisdiction,
                 "-X",
                 "POST",
-                "/api/v1/dispatches/generate",
+                "/api/v1/me/dispatches",
                 "--input",
                 "-",
                 "--include",
@@ -213,7 +277,14 @@ def _probe_cloud_dispatch(root: Path, source_repo: str) -> dict[str, Any]:
     except OSError:
         return {"reachable": False, "history_available": False, "reason": "provider_error"}
     payload = _json_object(result)
-    if payload is None:
+    status = _http_status(result)
+    if status is not None and 200 <= status < 300 and not _delete_dispatch(root, jurisdiction, result, payload):
+        return {
+            "reachable": False,
+            "history_available": False,
+            "reason": "provider_error",
+        }
+    if payload is None or status != 202:
         return {
             "reachable": False,
             "history_available": False,
@@ -242,8 +313,8 @@ def refresh_provider_capabilities(
 
     The search query and every provider body stay in memory. The persisted
     receipt contains only booleans, bounded reason codes, HTTP status, and
-    aggregate counts. Dispatch uses ``generate:false`` so this health probe
-    never asks the service to create or return an AI-generated summary.
+    aggregate counts. Dispatch targets the ready mirror's jurisdiction and
+    immediately deletes the temporary job before reporting success.
     """
     root = Path(repo_root).expanduser().resolve()
     target = output_path or provider_capabilities_path(root)

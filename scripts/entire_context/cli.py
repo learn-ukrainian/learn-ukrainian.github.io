@@ -903,7 +903,8 @@ def build_parser() -> argparse.ArgumentParser:
     provider_capabilities = sub.add_parser(
         "refresh-provider-capabilities",
         help=(
-            "Explicit private-boundary, cloud-index, and generate:false dispatch probe; writes a body-free local cache"
+            "Explicit private-boundary, cloud-index, and jurisdiction-aware dispatch probe "
+            "with immediate cleanup; writes a body-free local cache"
         ),
     )
     provider_capabilities.add_argument(
