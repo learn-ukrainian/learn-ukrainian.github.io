@@ -542,3 +542,42 @@ def test_budgets_and_safety_guardrails_documented(onboarding: str) -> None:
     assert "correlation" in lower
     assert "idempoten" in lower
     assert "troubleshoot" in lower
+
+
+def test_cold_start_refuses_competing_authority(onboarding: str) -> None:
+    body = " ".join(onboarding.split())
+    for contract in (
+        "assigned dispatch worktree",
+        "configured Monitor endpoint",
+        "launcher has already claimed",
+        "occupied lease fails closed",
+        "no second supervisor",
+        "no local lease fallback",
+        "`expires_at`",
+        "`SESSION_HANDOFF_AGENT`",
+        "ack --consumed-by-live-driver",
+        "operational evidence private",
+    ):
+        assert contract in body
+    fleet = _read(FLEET_COMMS)
+    assert "ack --consumed-by-live-driver" in fleet
+    assert "do not start a second" in fleet
+    workflow = _read(REPO / "agents_extensions/shared/rules/workflow.md")
+    assert "default off" not in workflow
+
+
+def test_onboarding_retires_sealed_review_instructions(onboarding: str) -> None:
+    review = onboarding.split("### Discuss is not formal review", 1)[1].split(
+        "### Delegate is execution", 1
+    )[0]
+    for contract in (
+        "ask-<lane> --type review",
+        "native toolful",
+        "head SHA",
+        "PR comment",
+        "retired — do not use",
+    ):
+        assert contract in review
+    assert not re.search(r"__main__\.py\s+(review-pr|publish-review-verdict)", onboarding)
+    assert "sealed Fleet review" not in onboarding
+    assert "formal `review-pr` correctly" not in onboarding

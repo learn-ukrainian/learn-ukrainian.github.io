@@ -40,7 +40,7 @@ curl -s "http://localhost:8765/api/orient?lean=true&session=$S"         # lean, 
 curl -s 'http://localhost:8765/api/knowledge/cold-start?role=quality'  # role-scoped pointers
 # Generic or genuinely role-unknown session: skip the role-scoped request; remain pointer-free.
 curl -s 'http://localhost:8765/api/comms/inbox?agent=claude'  # unread messages
-# Fleet-comms mid-cutover (#5512): plane mode + parity (default off — dual-aware; see fleet-comms-coordination.md)
+# Fleet-comms durable authority: query live mode + parity (see fleet-comms-coordination.md)
 .venv/bin/python -m scripts.fleet_comms plane-status
 ```
 
