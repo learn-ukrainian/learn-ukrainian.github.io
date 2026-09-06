@@ -34,6 +34,7 @@ def _lease_payload() -> dict[str, object]:
         "stream_id": "epic:7178",
         "session_id": "session-client",
         "lease_id": "lease-client",
+        "state": "active",
         "generation": 1,
         "fencing_token": 1,
         "heartbeat_at": "2026-08-23T00:00:00Z",
@@ -47,6 +48,7 @@ def _lease_payload() -> dict[str, object]:
             "process_id": 1234,
             "holder_kind": "process",
             "host_id": "client-host",
+            "task_id": None,
         },
     }
 
@@ -212,3 +214,60 @@ def test_local_flag_warns_and_keeps_stdout_as_one_json_document(tmp_path: Path, 
     output = capsys.readouterr()
     assert "LOCAL-ONLY LEASE — not visible to the fleet" in output.err
     json.loads(output.out)
+
+
+@pytest.mark.parametrize("mismatch", ["fencing_token", "session_id", "released", "missing"])
+def test_successor_capsule_refuses_lost_live_authority(tmp_path: Path, mismatch) -> None:
+    from scripts.session_supervisor import SessionSupervisor
+    from scripts.session_supervisor.remote import RemoteLeaseLostError
+
+    original = _lease_payload()
+    current = _lease_payload()
+    current["state"] = "active"
+    if mismatch == "released":
+        current["state"] = "released"
+    elif mismatch == "fencing_token":
+        current["fencing_token"] = 2
+    elif mismatch == "session_id":
+        current["session_id"] = "successor-session"
+    client = RemoteEpicClient(opener=lambda *a, **kw: _Response({
+        "lease": None if mismatch == "missing" else current,
+        "digest": {"stream_id": "epic:7178", "limit": 20, "pinned": [], "recent": []},
+    }))
+    holder = LeaseHolder(agent="codex", harness="cli", instance_id="fixture", process_id=1234)
+    lease = client._lease_from_response(original, holder)
+    supervisor = SessionSupervisor(None, repo_root=tmp_path, remote=client)
+    with pytest.raises(RemoteLeaseLostError):
+        supervisor.build_capsule(role="driver", stream_id=lease.stream_id, lease=lease)
+
+
+def test_remote_successor_real_api_cycle_preserves_handoff_and_fences_predecessor(tmp_path: Path) -> None:
+    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+    from agents_extensions.shared.session_streams.store import SessionStreamStore
+    from scripts.session_supervisor import SessionSupervisor, SupervisorError
+    from scripts.session_supervisor.remote import RemoteLeaseLostError
+    from tests.epics_monitor_stub import epics_monitor_stub
+
+    store = SessionStreamStore(SessionStreamDatabase(tmp_path / "cycle.sqlite3"))
+    first = LeaseHolder("codex", "cli", "predecessor", process_id=1234, host_id="fixture-host")
+    second = LeaseHolder("codex", "cli", "successor", process_id=5678, host_id="other-fixture")
+    with epics_monitor_stub(store) as base:
+        supervisor = SessionSupervisor(store, repo_root=tmp_path, remote=RemoteEpicClient(base=base))
+        lease = supervisor.open_driver(role="driver", stream_id="epic:7178", holder=first, lineage_id="cycle", ttl_seconds=900)
+        entry = supervisor.handoff_driver(role="driver", lease=lease, entry_type="state", body="Prepared continuity: verify outstanding work before dispatch.", idempotency_key="cycle-handoff")
+        before = store.dump_stream(lease.stream_id)
+        with pytest.raises(RemoteSupervisorError, match="live session"):
+            supervisor.open_driver(role="driver", stream_id=lease.stream_id, holder=second, lineage_id="cycle", ttl_seconds=900)
+        with pytest.raises(SupervisorError, match="remote recovery"):
+            supervisor.recover_expired_driver(role="driver", stream_id=lease.stream_id, holder=second)
+        assert store.dump_stream(lease.stream_id) == before
+        assert supervisor.close_driver(role="driver", lease=lease) == "closed"
+        successor = supervisor.open_driver(role="driver", stream_id=lease.stream_id, holder=second, lineage_id="cycle", ttl_seconds=900)
+        capsule = supervisor.build_capsule(role="driver", stream_id=lease.stream_id, lease=successor)
+        assert successor.generation == lease.generation + 1
+        assert any(item.entry_id == entry["entry"]["entry_id"] for item in capsule.digest.recent)
+        with pytest.raises(RemoteLeaseLostError):
+            supervisor.close_driver(role="driver", lease=lease)
+        with pytest.raises(RemoteLeaseLostError):
+            supervisor.build_capsule(role="driver", stream_id=lease.stream_id, lease=lease)
+        assert supervisor.close_driver(role="driver", lease=successor) == "closed"

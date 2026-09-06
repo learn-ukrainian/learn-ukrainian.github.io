@@ -128,33 +128,26 @@ operation for launcher integration tests.
   launcher exits with an error; no session is started.
 - Incomplete supervisor output → launcher fails closed.
 
-### Stale dead-holder lease (no operator memory required)
+### Recovery authority: remote TTL/CAS and local dead-process proof
 
-If a previous driver crashed without `hook close`, the stream can keep an
-`open` session with an **active** lease and a **dead** holder PID — even while
-the wall-clock TTL (often 6h from the launcher) has not yet expired. On the next
-`open`, the supervisor **automatically** proof-gated force-closes that session
-and opens a new one when the holder PID is gone (same gates as `handoff-claim`
-/ #5530, plus dead-unexpired reclaim).
+Remote drivers claim through Monitor. An unexpired remote lease remains live
+regardless of whether a PID happens to exist on the successor host. A successor
+must wait for an exact-envelope clean release or TTL expiry; Monitor atomically
+claims the next generation and fencing token. A late predecessor is fenced
+once that successor claim commits. Remote unavailability fails closed.
 
-You do **not** need to wait for lease expiry. Just relaunch:
+Clean exits release only their exact lease envelope. Attributed `release --force`
+is an exceptional, separately authorized operator action, never automatic recovery.
 
-```bash
-./start-grok-driver.sh --epic=harness
-# same for the other certified provider driver entrypoints
-```
+Explicit `--local` mode can recover a local process lease before TTL expiry when
+the exact holder PID is absent and the distinct candidate process is live.
+It cannot use local PID evidence to close a lease acquired through Monitor,
+even after that remote lease expires. A still-running local holder is refused.
 
-Still refused (by design):
-
-- lease held by a process that is still running (`alive=True`)
-- force-close candidate that reuses the dead holder's `instance_id`
-
-Diagnose only when a launch still fails:
-
-```bash
-.venv/bin/python -m agents_extensions.shared.session_streams handoff-status \
-  --stream epic:4707
-```
+A successor bootstrap reconciles its exact lease with Monitor's active projection
+before returning the capsule. Rollover resume requires the prepared durable
+handoff to be present and nonempty. Restore missing continuity evidence before
+retrying; a successful claim alone does not prove rollover continuity.
 
 ## Claude
 

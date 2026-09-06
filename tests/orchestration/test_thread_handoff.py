@@ -4796,7 +4796,7 @@ def test_bundle_monitor_url_accepts_loopback_only() -> None:
     assert th._bundle_monitor_url("http://localhost:8765") == "http://127.0.0.1:8765"
     assert th._bundle_monitor_url("http://127.0.0.1:9999/api/state/summary") == "http://127.0.0.1:9999"
     with pytest.raises(ValueError, match="loopback"):
-        th._bundle_monitor_url("http://10.0.0.5:8765")
+        th._bundle_monitor_url("http://example.invalid:8765")
     with pytest.raises(ValueError, match="loopback"):
         th._bundle_monitor_url("https://127.0.0.1:8765")
 
@@ -4917,3 +4917,27 @@ def test_bundle_upload_success_returns_payload(monkeypatch: pytest.MonkeyPatch) 
         blob=b"blob",
     )
     assert result["upload_seq"] == 7
+
+
+@pytest.mark.parametrize("command", ["resume", "bootstrap-replacement"])
+@pytest.mark.parametrize("damage", ["missing", "empty"])
+def test_successor_refuses_missing_durable_handoff(tmp_path, capsys, monkeypatch, command, damage):
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    assert th.main(["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--harness", "headless", "--active-thread-id", "old"]) == 0
+    packet = json.loads(capsys.readouterr().out)
+    state_path = tmp_path / packet["state_file"]
+    if command == "resume":
+        assert th.main(["--repo-root", str(tmp_path), "bind-replacement", "--agent", "codex", "--lineage-id", packet["lineage_id"], "--rollover-id", packet["rollover_id"], "--replacement-task-id", "new", "--evidence", "synthetic binding"]) == 0
+        capsys.readouterr()
+    handoff = tmp_path / packet["handoff_file"]
+    if damage == "missing":
+        handoff.rename(handoff.with_suffix(".unavailable"))
+    else:
+        handoff.write_text("")
+    before = state_path.read_bytes()
+    args = ["--repo-root", str(tmp_path), command, "--agent", "codex", "--lineage-id", packet["lineage_id"], "--rollover-id", packet["rollover_id"], "--replacement-thread-id", "new"]
+    if command == "bootstrap-replacement":
+        args += ["--evidence", "synthetic binding"]
+    assert th.main(args) == 2
+    assert "durable handoff" in capsys.readouterr().out
+    assert state_path.read_bytes() == before

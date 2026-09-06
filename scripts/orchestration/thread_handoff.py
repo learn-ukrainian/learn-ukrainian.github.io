@@ -5014,6 +5014,19 @@ def cmd_resume(args: argparse.Namespace) -> int:
         return _cmd_resume_locked(args)
 
 
+def require_durable_handoff(replacement: Mapping[str, Any], state_root: Path) -> None:
+    """Refuse successor startup when the prepared continuity artifact is absent."""
+    value = replacement.get("handoff_path")
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError("durable handoff path is missing; restore the exact prepared packet")
+    try:
+        path = repo_local_path(state_root, Path(value))
+        if not path.read_text(encoding="utf-8").strip():
+            raise ValueError("durable handoff is empty; restore the exact prepared packet")
+    except (OSError, UnicodeError) as exc:
+        raise ValueError("durable handoff is unavailable; restore the exact prepared packet") from exc
+
+
 def _cmd_resume_locked(args: argparse.Namespace) -> int:
     try:
         repo_root, state_root = resolve_roots(args.repo_root)
@@ -5040,6 +5053,11 @@ def _cmd_resume_locked(args: argparse.Namespace) -> int:
     state_error = state_error_payload(state, state_path, state_root)
     if state_error:
         print(json.dumps(state_error, indent=2))
+        return 2
+    try:
+        require_durable_handoff(state.get("replacement") or {}, state_root)
+    except ValueError as exc:
+        print(json.dumps({"error": str(exc), "state_file": rel(state_path, state_root)}, indent=2))
         return 2
     try:
         state, migrated = normalize_identity_state(state, agent=agent, now=utc_now())
@@ -5112,6 +5130,7 @@ def _wrapper_packet_context(
             raise ValueError("run prepare first")
         if args.rollover_id != replacement.get("rollover_id"):
             raise ValueError("--rollover-id does not match the isolated pending rollover")
+        require_durable_handoff(replacement, state_root)
     except (OSError, ValueError) as exc:
         print(json.dumps({"error": str(exc)}, indent=2))
         return None

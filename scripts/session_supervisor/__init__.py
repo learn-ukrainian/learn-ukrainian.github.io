@@ -39,7 +39,7 @@ from agents_extensions.shared.session_streams.store import (
     SessionStreamStore,
 )
 
-from .remote import RemoteEpicClient, RemoteSupervisorError
+from .remote import RemoteEpicClient, RemoteLeaseLostError, RemoteSupervisorError
 
 CAPSULE_SCHEMA = "session-supervisor-bootstrap.v1"
 LEASE_ENV_PREFIX = "SESSION_STREAM_"
@@ -299,7 +299,9 @@ class SessionSupervisor:
         Returns False when there is no open/rolling session to recover.
         """
         self._require_driver(role)
-        status = diagnose_handoff(self.store, stream_id)
+        if self.remote is not None:
+            raise SupervisorError("remote recovery requires Monitor TTL/CAS claim; local PID recovery refused")
+        status = diagnose_handoff(self._require_store(), stream_id)
         if not status.session_id or status.session_state not in {"open", "rolling"}:
             return False
         if not status.claimable_force_close:
@@ -378,6 +380,15 @@ class SessionSupervisor:
 
         if self.remote is not None:
             response = self.remote.stream(stream_id, digest_limit=digest_limit)
+            if lease is not None:
+                current = response.get("lease")
+                expected = self.remote._lease_payload(lease)
+                if (
+                    not isinstance(current, dict)
+                    or current.get("state") != "active"
+                    or any(current.get(key) != value for key, value in expected.items())
+                ):
+                    raise RemoteLeaseLostError("LEASE LOST: live-state reconciliation fenced the bootstrap lease")
             digest = self.remote.digest_from_response(response)
             handoff_paths = ()
             active = None

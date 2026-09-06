@@ -1060,6 +1060,13 @@ class SessionStreamStore:
             ).fetchone()
             if row is None or row["state"] != "active":
                 raise LeaseConflictError("crashed session has no exact active lease to prove and close")
+            remote_claim = connection.execute(
+                "SELECT 1 FROM session_events WHERE stream_id = ? AND session_id = ? "
+                "AND json_extract(proof_json, '$.kind') = 'remote_epic_claim.v1' LIMIT 1",
+                (stream_id, session_id),
+            ).fetchone()
+            if remote_claim is not None:
+                raise LeaseConflictError("remote lease requires TTL/CAS recovery; local PID proof is not authority")
             if row["holder_kind"] != HolderKind.PROCESS.value:
                 raise LeaseConflictError("PID force-close is unavailable for an app_thread holder")
             if candidate.holder_kind is not HolderKind.PROCESS:

@@ -7,6 +7,7 @@ it composes ``force_close_expired_session`` + ``open_session`` + typed pins.
 
 from __future__ import annotations
 
+import json
 import os
 import uuid
 from dataclasses import dataclass
@@ -127,15 +128,22 @@ def diagnose_handoff(
         expired = current >= parse_timestamp(expires_at)
     holder_kind = str(lease.get("holder_kind") or "process")
     pid = int(lease.get("holder_process_id") or 0)
+    remote_ttl = any(
+        event.get("session_id") == session_id
+        and json.loads(event.get("proof_json") or "{}").get("kind") == "remote_epic_claim.v1"
+        for event in dump.get("session_events", ())
+    )
     probe = getattr(store, "_process_probe", None)
-    alive = bool(probe(pid)) if callable(probe) else _process_alive(pid)
+    alive = None if remote_ttl else (bool(probe(pid)) if callable(probe) else _process_alive(pid))
 
     lease_state = str(lease.get("state") or "")
     # Dead holder PID is claimable even before wall-clock TTL expires. A crashed
     # local process cannot renew; requiring expiry left launchers blocked for the
     # full launcher TTL (often 6h). Live holders remain untouchable.
-    claimable = lease_state == "active" and holder_kind == "process" and not alive
-    if lease_state == "active" and holder_kind != "process":
+    claimable = not remote_ttl and lease_state == "active" and holder_kind == "process" and not alive
+    if remote_ttl:
+        reason = "remote lease requires Monitor TTL/CAS recovery; local PID recovery refused"
+    elif lease_state == "active" and holder_kind != "process":
         reason = "app-thread holder requires verified GUI lifecycle recovery; PID handoff refused"
     elif lease_state == "active" and alive and not expired:
         reason = "live unexpired lease — only the holder may close; claim refused"
