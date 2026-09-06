@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -79,3 +80,22 @@ def test_codex_claude_code_dry_run_redacts_explicit_proxy_token() -> None:
     assert result.returncode == 0, result.stderr
     assert "credential_source=CODEX_CC_AUTH_TOKEN" in result.stdout
     assert secret not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize("model", ["gpt-5.6-sol", "gpt-5.6-terra"])
+def test_codex_claude_code_rejects_old_model_before_provider(model):
+    result = run_launcher("start-codex.sh", "--harness", "claude-code", "--model", model)
+    assert result.returncode == 2
+    assert "only gpt-6-astra is approved" in result.stderr
+    assert "would exec" not in result.stdout
+
+
+def test_direct_codex_proxy_configuration_rejects_old_pin_without_exports():
+    route = Path(__file__).resolve().parents[1] / "scripts/lib/codex_cc_route.sh"
+    result = subprocess.run(
+        ["bash", "-c", 'source "$1"; ANTHROPIC_MODEL=sentinel; codex_cc_configure_route gpt-5.6-sol; rc=$?; '
+         '[ "$ANTHROPIC_MODEL" = sentinel ] || exit 99; exit "$rc"', "test", str(route)],
+        text=True, capture_output=True, check=False, timeout=10,
+    )
+    assert result.returncode == 2
+    assert "only gpt-6-astra is approved" in result.stderr

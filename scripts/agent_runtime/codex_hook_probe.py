@@ -231,6 +231,8 @@ def _tool_names(events: list[dict[str, Any]]) -> list[str]:
 
 
 def _run_case(repo: Path, case: ProbeCase, model: str | None, timeout: int) -> dict[str, Any]:
+    if model not in {None, "gpt-6-astra"}:
+        raise ValueError(f"Codex model {model!r} rejected; only gpt-6-astra is approved")
     log_path = repo / f"{case.name}.jsonl"
     env = os.environ.copy()
     env["CODEX_HOOK_PROBE_LOG"] = str(log_path)
@@ -248,8 +250,7 @@ def _run_case(repo: Path, case: ProbeCase, model: str | None, timeout: int) -> d
         "--output-last-message",
         str(output_file),
     ]
-    if model:
-        command.extend(["--model", model])
+    command.extend(["--model", model or "gpt-6-astra", "-c", 'model_reasoning_effort="low"'])
     command.append(case.prompt)
 
     result = _run(command, cwd=repo, env=env, timeout=timeout)
@@ -303,7 +304,7 @@ def _self_test() -> int:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--model", default=os.environ.get("CODEX_HOOK_PROBE_MODEL"))
+    parser.add_argument("--model", default=os.environ.get("CODEX_HOOK_PROBE_MODEL", "gpt-6-astra"))
     parser.add_argument("--timeout", type=int, default=DEFAULT_TIMEOUT_SECONDS)
     parser.add_argument(
         "--keep-workdir",
@@ -315,7 +316,10 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Validate probe repo generation without invoking Codex.",
     )
-    return parser.parse_args()
+    args = parser.parse_args()
+    if args.model != "gpt-6-astra":
+        parser.error("only gpt-6-astra is approved for Codex hook probes")
+    return args
 
 
 def main() -> int:

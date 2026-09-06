@@ -217,10 +217,33 @@ def test_sustained_codex_driver_revalidates_certification() -> None:
     assert "--model gpt-6-astra" in astra.stdout
 
 
-def test_native_model_guard_preserves_claude_code_harness():
+def test_model_guard_rejects_old_codex_model_in_claude_code_harness():
     result = subprocess.run(
-        ["bash", "-c", 'source "$1"; LC_HARNESS=claude-code; LC_MODEL=gpt-5.6-sol; launcher_adapter_validate',
+        ["bash", "-c", 'launcher_error() { echo "$*" >&2; }; source "$1"; LC_HARNESS=claude-code; LC_MODEL=gpt-5.6-sol; launcher_adapter_validate',
          "test", str(REPO / "scripts/launchers/codex.sh")],
         capture_output=True, text=True, check=False, timeout=30,
     )
+    assert result.returncode == 2
+    assert "only gpt-6-astra is approved" in result.stderr
+
+
+@pytest.mark.parametrize("harness", ["codex", "claude-code"])
+@pytest.mark.parametrize("forwarded", [
+    ["--model", "gpt-5.5"], ["--model=gpt-5.5"],
+    ["-m", "gpt-5.5"], ["-mgpt-5.5"], ["-m=gpt-5.5"],
+])
+def test_forwarded_model_overrides_rejected_before_preflight(harness, forwarded):
+    result = run_launcher("start-codex.sh", "--harness", harness, "--", *forwarded)
+    assert result.returncode == 2
+    assert "Forwarded model overrides are forbidden" in result.stderr
+    assert "would exec" not in result.stdout
+    assert "would probe" not in result.stdout
+    assert "would require binary" not in result.stdout
+
+
+@pytest.mark.parametrize("harness", ["codex", "claude-code"])
+def test_non_model_passthrough_remains_available(harness):
+    result = run_launcher("start-codex.sh", "--harness", harness, "--", "--verbose", "inspect this")
     assert result.returncode == 0, result.stderr
+    assert "--model gpt-6-astra" in result.stdout
+    assert "--verbose" in result.stdout

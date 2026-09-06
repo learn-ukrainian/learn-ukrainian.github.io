@@ -302,6 +302,9 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
     timeout_val = _resolve_codex_bridge_timeout(no_timeout)
     model = _extract_target_model(msg)
     effort = _extract_effort(msg)
+    if model is not None and model != "gpt-6-astra":
+        _handle_codex_error(msg, message_id, f"Codex model {model!r} rejected; only gpt-6-astra is approved")
+        return
     has_room, reason = has_codex_headroom(model)
     if not has_room:
         _handle_codex_rate_limited(msg, message_id, reason)
@@ -392,6 +395,9 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
     except ReviewWorktreeError as exc:
         _handle_codex_error(msg, message_id, f"Codex review checkout failed: {exc}")
         return
+    except ValueError as exc:
+        _handle_codex_error(msg, message_id, f"Codex invocation rejected: {exc}")
+        return
 
     if not result.ok:
         _handle_codex_error(
@@ -414,7 +420,7 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
     effort_applied, effort_reason = _reported_codex_effort(result)
     provenance_data, actual_model = response_provenance(
         msg,
-        actual_model=getattr(result, "model", None) or model or "gpt-5.6-terra",
+        actual_model=getattr(result, "model", None) or model or "gpt-6-astra",
         harness="codex",
         effort_applied=effort_applied,
         effort_reason=effort_reason,

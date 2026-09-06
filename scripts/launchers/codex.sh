@@ -6,10 +6,19 @@
 export GIT_OPTIONAL_LOCKS=0
 
 launcher_adapter_validate() {
-  if [ "$LC_HARNESS" = codex ] && [ "$LC_MODEL" != gpt-6-astra ]; then
-    launcher_error "native Codex model $LC_MODEL rejected; only gpt-6-astra is approved."
+  if [ "$LC_MODEL" != gpt-6-astra ]; then
+    launcher_error "Codex model $LC_MODEL rejected; only gpt-6-astra is approved."
     exit 2
   fi
+  local forwarded
+  for forwarded in "${LC_FORWARD_ARGS[@]}"; do
+    case "$forwarded" in
+      --model|--model=*|-m|-m?*)
+        launcher_error 'Forwarded model overrides are forbidden; use --model gpt-6-astra before --.'
+        exit 2
+        ;;
+    esac
+  done
   case "$LC_HARNESS" in codex|claude-code) ;; *) launcher_error 'Codex supports --harness codex|claude-code.'; exit 2 ;; esac
 }
 
