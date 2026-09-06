@@ -17,6 +17,24 @@ client = TestClient(app, raise_server_exceptions=False)
 REPO = "learn-ukrainian/learn-ukrainian.github.io"
 
 
+def _reset_work_state():
+    """Settle cache writers before invalidating shared state (#7768)."""
+    ctx = app.state.ctx
+    for key in list(ctx.stores.work_in_flight):
+        work_router.wait_for_in_flight_build(key, ctx=ctx)
+    ctx.stores.work_in_flight.clear()
+    cache_invalidate("work:v1:projection")
+
+
+@pytest.fixture(autouse=True)
+def _isolate_work_refreshes(monkeypatch):
+    # Depend on monkeypatch so teardown drains while each test's fakes remain
+    # installed. The dedicated worker loop survives TestClient requests.
+    _reset_work_state()
+    yield
+    _reset_work_state()
+
+
 def _sections_with_canary() -> dict[str, SectionResult]:
     return {
         "issues": SectionResult(
@@ -554,9 +572,6 @@ def test_next_max_stale_503_when_refresh_never_finishes(monkeypatch):
     from scripts.api.work_router import projection_cache_key
 
     _patch_known_streams(monkeypatch)
-    # Drain any leftover single-flight builds from prior cases so a late
-    # cache_set cannot rejuvenate the deliberately aged entry below.
-    app.state.ctx.stores.work_in_flight.clear()
     payload = _warm_next_cache()
     key = projection_cache_key({})
     age = work_router.NEXT_MAX_STALE_S + 15.0
@@ -578,6 +593,78 @@ def test_next_max_stale_503_when_refresh_never_finishes(monkeypatch):
     assert "detail" not in body
     assert response.headers.get("retry-after") == "3"
     assert scheduled == [key]
+
+
+@pytest.mark.parametrize("drain_before_reset", [False, True])
+def test_next_refresh_completion_after_registry_clear(monkeypatch, drain_before_reset):
+    """A cleared slot still writes; draining before reset protects the next case."""
+    import threading
+    import time
+
+    from scripts.api.state_helpers import _ttl_cache
+
+    _patch_known_streams(monkeypatch)
+    payload = _warm_next_cache()
+    key = work_router.projection_cache_key({})
+    started = threading.Event()
+    release = threading.Event()
+
+    def blocked_build(**_kwargs):
+        started.set()
+        assert release.wait(timeout=5.0), "test did not release the refresh"
+        return build_projection(_next_sections(), repository_id=REPO)
+
+    monkeypatch.setattr(work_router, "build_public_projection", blocked_build)
+    _ttl_cache[key] = (time.monotonic() - 45.0, payload)
+    handle = None
+    try:
+        first = client.get("/api/work/v1/next?stream=infra-harness")
+        assert first.status_code == 200, first.text
+        assert started.wait(timeout=5.0), "refresh did not start"
+        handle = app.state.ctx.stores.work_in_flight[key]
+        assert not handle.done()
+
+        if drain_before_reset:
+            wait_for_build = work_router.wait_for_in_flight_build
+
+            def release_then_wait(*args, **kwargs):
+                # Only the drain may release this job. Removing the drain
+                # must fail even if the worker happens to run immediately.
+                release.set()
+                return wait_for_build(*args, **kwargs)
+
+            with monkeypatch.context() as drain_patch:
+                drain_patch.setattr(work_router, "wait_for_in_flight_build", release_then_wait)
+                _reset_work_state()
+            assert handle.done()
+        else:
+            # Reproduce the old isolation bug: forget the job while it is
+            # blocked, then seed the next test's deliberately old entry.
+            app.state.ctx.stores.work_in_flight.clear()
+            assert not handle.done()
+
+        age = work_router.NEXT_MAX_STALE_S + 15.0
+        _ttl_cache[key] = (time.monotonic() - age, payload)
+        release.set()
+        handle.result(timeout=5.0)
+        # Model the next test's refresh never completing.
+        monkeypatch.setattr(work_router, "_get_or_create_build_task", lambda *args, **kwargs: None)
+        response = client.get("/api/work/v1/next?stream=infra-harness")
+        body = response.json()
+        if drain_before_reset:
+            assert response.status_code == 503, response.text
+            assert body["error"] == "stale"
+            assert body["max_stale_s"] == work_router.NEXT_MAX_STALE_S
+            assert body["cache_age_s"] >= work_router.NEXT_MAX_STALE_S
+        else:
+            assert response.status_code == 200, response.text
+            assert body["cache_age_s"] < work_router.NEXT_MAX_STALE_S
+    finally:
+        release.set()
+        if handle is not None:
+            handle.result(timeout=5.0)
+        else:
+            work_router.wait_for_in_flight_build(key, ctx=app.state.ctx)
 
 
 def test_next_rejects_unknown_and_missing_stream(monkeypatch):
