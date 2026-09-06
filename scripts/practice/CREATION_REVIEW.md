@@ -8,8 +8,8 @@ Other validation (provenance, morphology, levels, distractors) still applies.
 The committed grandfather list is frozen at `baseline_commit`, this PR's merge
 base with `origin/main`. `baseline_sources` records SHA-256 of the exact source
 files, including the heritage overlay and sentence-inventory residual. Do not
-refresh the baseline when adding frames. Grandfathering takes precedence over
-receipts: existing identities remain exempt from this creation-only gate.
+refresh the baseline when adding frames. Existing identities are exempt from the PASS-receipt requirement; an explicit
+FAIL receipt suppresses even a grandfathered identity.
 
 Identity is SHA-256 of UTF-8 canonical JSON `[kind,prompt,answer,contrast]`, using
 `ensure_ascii=False`, `sort_keys=True`, `separators=(',', ':')`, and no trailing

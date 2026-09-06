@@ -60,6 +60,14 @@ def test_grandfathered_fixture_emits(frame_case):
     assert len(emit(CreationReview(frozenset({frame_identity(*args)})))) == 1
 
 
+def test_explicit_fail_receipt_suppresses_grandfathered_frame(frame_case):
+    args, source, emit, _ = frame_case
+    review = receipt(args, source)
+    review['verdict'] = 'fail'
+    identity = frame_identity(*args)
+    assert emit(CreationReview(frozenset({identity}), {identity: review})) == []
+
+
 def test_new_frame_without_receipt_does_not_emit(frame_case, capsys):
     args, _, emit, _ = frame_case
     assert emit(CreationReview()) == []

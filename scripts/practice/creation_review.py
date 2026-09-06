@@ -74,9 +74,12 @@ class CreationReview:
 
     def allows(self, kind: str, prompt: str, answer: str, contrast: str, source: dict) -> bool:
         identity = frame_identity(kind, prompt, answer, contrast)
+        receipt = self.receipts.get(identity)
+        if isinstance(receipt, dict) and receipt.get("verdict") == "fail":
+            print(f"WARN: creation-review {kind} {identity} dropped: explicit FAIL receipt", file=sys.stderr)
+            return False
         if identity in self.grandfathered:
             return True
-        receipt = self.receipts.get(identity)
         if isinstance(receipt, dict):
             reviewed_at = receipt.get('reviewed_at')
             try:
