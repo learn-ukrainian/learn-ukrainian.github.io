@@ -247,3 +247,18 @@ def test_non_model_passthrough_remains_available(harness):
     assert result.returncode == 0, result.stderr
     assert "--model gpt-6-astra" in result.stdout
     assert "--verbose" in result.stdout
+
+
+@pytest.mark.parametrize("forwarded", [
+    ["--fallback-model", "claude-sonnet-5"],
+    ["--fallback-model=claude-sonnet-5"],
+    ["--agents", '{"reviewer":{"description":"Review","prompt":"Review","model":"sonnet"}}'],
+    ['--agents={"reviewer":{"description":"Review","prompt":"Review","model":"sonnet"}}'],
+])
+def test_claude_code_forwarded_agent_and_fallback_models_rejected_before_preflight(forwarded):
+    result = run_launcher("start-codex.sh", "--harness", "claude-code", "--", *forwarded)
+    assert result.returncode == 2
+    assert "Forwarded model overrides are forbidden" in result.stderr
+    assert "would exec" not in result.stdout
+    assert "would probe" not in result.stdout
+    assert "would require binary" not in result.stdout

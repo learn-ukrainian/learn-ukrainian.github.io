@@ -17,6 +17,12 @@ launcher_adapter_validate() {
         launcher_error 'Forwarded model overrides are forbidden; use --model gpt-6-astra before --.'
         exit 2
         ;;
+      --fallback-model|--fallback-model=*|--agents|--agents=*)
+        if [ "$LC_HARNESS" = claude-code ]; then
+          launcher_error 'Forwarded model overrides are forbidden in the Codex Claude Code harness.'
+          exit 2
+        fi
+        ;;
     esac
   done
   case "$LC_HARNESS" in codex|claude-code) ;; *) launcher_error 'Codex supports --harness codex|claude-code.'; exit 2 ;; esac
