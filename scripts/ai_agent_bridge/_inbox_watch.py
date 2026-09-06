@@ -286,7 +286,7 @@ def run_supervisory_wake_watcher(agent: str, provider: str, epic: str, *, interv
     resolved = subprocess.run(
         ["bash", "-c", 'source "$1/scripts/lib/handoff_identity.sh"; launcher_selector_stream "$2"',
          "supervisory-selector", str(repo_root), epic],
-        check=True, capture_output=True, text=True,
+        check=True, capture_output=True, text=True, timeout=30,
     )
     stream_id = resolved.stdout.strip()
     supervisory_recipient(stream_id)

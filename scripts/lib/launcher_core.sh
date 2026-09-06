@@ -617,10 +617,15 @@ launcher_exec_command() {
   LC_DRIVER_CHILD_PID=""
   LC_DRIVER_LEASE_CLOSED=0
   LC_DRIVER_RENEW_PID=""
+  LC_DRIVER_PENDING_SIGNAL=""
+  LC_DRIVER_PENDING_EXIT=0
   trap 'session_supervisor_stop_inbox_watch; launcher_close_driver_lease || true' EXIT
-  trap 'launcher_forward_driver_signal INT 130' INT
-  trap 'launcher_forward_driver_signal TERM 143' TERM
-  trap 'launcher_forward_driver_signal HUP 129' HUP
+  # Bash may deliver a trap between an asynchronous spawn and its $! capture.
+  # Defer shutdown until every child has an owned PID, or cleanup can orphan
+  # the watcher/renewal process and leave inherited output pipes open.
+  trap 'LC_DRIVER_PENDING_SIGNAL=INT; LC_DRIVER_PENDING_EXIT=130' INT
+  trap 'LC_DRIVER_PENDING_SIGNAL=TERM; LC_DRIVER_PENDING_EXIT=143' TERM
+  trap 'LC_DRIVER_PENDING_SIGNAL=HUP; LC_DRIVER_PENDING_EXIT=129' HUP
 
   # Explicitly duplicate stdin: Bash otherwise redirects asynchronous commands
   # from /dev/null when job control is disabled, which would break TUIs. Reset
@@ -636,6 +641,12 @@ launcher_exec_command() {
   if ! session_supervisor_start_inbox_watch; then
     session_supervisor_stop_provider_for_wake
     provider_rc=1
+  fi
+  trap 'launcher_forward_driver_signal INT 130' INT
+  trap 'launcher_forward_driver_signal TERM 143' TERM
+  trap 'launcher_forward_driver_signal HUP 129' HUP
+  if [ -n "$LC_DRIVER_PENDING_SIGNAL" ]; then
+    launcher_forward_driver_signal "$LC_DRIVER_PENDING_SIGNAL" "$LC_DRIVER_PENDING_EXIT"
   fi
   # USR1 interrupts Bash wait. Check the flag before waiting too: the watcher
   # may have already completed between startup and this process boundary.
