@@ -104,12 +104,18 @@ def cmd_plane_status(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
-def fleet_status_payload(status: dict[str, Any]) -> dict[str, Any]:
+def fleet_status_payload(
+    status: dict[str, Any],
+    repo_root: Path | None = None,
+) -> dict[str, Any]:
     """Return the shared facade status payload for CLI and Monitor callers."""
+    from scripts.fleet_comms.fleet_overview import build_fleet_overview
+
     return {
         "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
         "plane_status": status,
         "health": _short_plane_health(status),
+        "overview": build_fleet_overview(repo_root=repo_root),
     }
 
 
@@ -140,7 +146,7 @@ def cmd_fleet_status(args: argparse.Namespace) -> int:
         telemetry_path=telemetry,
         recent_limit=args.recent_limit,
     )
-    sys.stdout.write(_json_dump(fleet_status_payload(status)))
+    sys.stdout.write(_json_dump(fleet_status_payload(status, repo_root=repo_root)))
     return EXIT_OK
 
 

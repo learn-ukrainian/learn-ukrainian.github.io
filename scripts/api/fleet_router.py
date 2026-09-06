@@ -569,7 +569,7 @@ def fleet_facade_help(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
 def fleet_facade_status(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
     """Expose the CLI fleet-status payload without a second health authority."""
     status = read_plane_status(repo_root=ctx.roots.project_root, recent_limit=50)
-    payload = fleet_status_payload(status)
+    payload = fleet_status_payload(status, repo_root=ctx.roots.project_root)
     payload["read_only"] = True
     return payload
 
