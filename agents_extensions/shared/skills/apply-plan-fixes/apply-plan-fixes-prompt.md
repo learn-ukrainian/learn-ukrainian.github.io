@@ -24,41 +24,44 @@ Filter by the severity flag:
 - `--severity CRITICAL,HIGH` : CRITICAL + HIGH (no MEDIUM)
 - `--all-fixes` : all severities including LOW
 
-## Step 3: Classify Fixes
+## Step 3: Classify Fixes and Check Existing Authorization
 
-Categorize each fix as one of:
+Classify fixes to identify the evidence and decision they require; the category
+does not reopen an operator decision already made.
 
-| Category | Examples | Risk | Approval |
-|----------|----------|------|----------|
-| **SAFE** | Fix version string, fix YAML quoting, remove ghost words from vocab, fix typos in Ukrainian text | Low | Apply directly |
-| **STRUCTURAL** | Change word_target, add/remove sections, modify content_outline, change objectives | Medium | Show diff, ask user |
-| **SEMANTIC** | Rewrite objectives, change decolonization framing, modify grammar scope, alter pedagogical approach | High | Show diff, ask user |
+| Category | Examples | Handling |
+|----------|----------|----------|
+| **SAFE** | Version format, YAML quoting, a verified typo or ghost vocabulary item | Apply within the requested review-fix scope after checking the report against the current plan. |
+| **STRUCTURAL** | Increase word_target, add/remove sections, modify content_outline or objectives | Apply when the requested change is already authorized; otherwise prepare the exact diff and identify the missing scope decision. |
+| **SEMANTIC** | Change grammar scope, pedagogical approach, or decolonization framing | Verify the evidence and existing operator decision; apply the authorized change or present the unresolved alternatives. |
 
-## Step 4: Present Changes for Approval
+Use required linguistic sources for Ukrainian word, stress, or morphology
+claims. The report's recommendation alone does not prove linguistic validity.
 
-**For SAFE fixes:** List them all, then apply in batch. Tell the user what you did.
+## Step 4: Make Pending Decisions Concrete
 
-**For STRUCTURAL and SEMANTIC fixes:** Present each one as a diff:
+Read current plans and prepare the applicable edits before requesting a missing
+decision. Group proposed changes by plan, with severity, category, and the
+relevant old/new YAML. Apply independently authorized fixes and report them.
 
+For a structural or semantic change already covered by operator authorization,
+proceed; do not add another approval round merely because of its category.
+If a change introduces an unapproved scope decision, an unresolved conflict, or
+a removal lacking explicit authorization, show the concrete diff and ask only
+for that decision. Hold the dependent edit until an actual answer arrives.
+Never write “applying unless you object” or interpret silence, elapsed time,
+or an unanswered question as approval.
+
+Example pending diff:
+
+```diff
+ # curriculum/l2-uk-en/plans/{track}/{slug}.yaml
+-word_target: 3500
++word_target: 5000
 ```
-## Plan: {slug} (sequence {N})
 
-### Fix 1: {description} [{severity}] — STRUCTURAL
-
-File: curriculum/l2-uk-en/plans/{track}/{slug}.yaml
-
-```yaml
-# Line ~{N}: OLD
-word_target: 3500
-
-# NEW
-word_target: 5000
-```
-
-Apply? [Applying unless you object]
-```
-
-Group by plan file. Apply all SAFE fixes first, then present STRUCTURAL/SEMANTIC for each plan.
+State what authorization is missing for this change. A generic category label
+is not a reason to pause work that the operator already ordered.
 
 ## Step 5: Apply Fixes
 
@@ -66,12 +69,12 @@ When applying fixes to a plan:
 
 1. **Read the current plan** with the Read tool
 2. **Bump the version** — increment the minor version (e.g., `'2.0'` → `'2.1'`). This is MANDATORY for any change.
-3. **Apply all approved fixes** to the plan in one Edit call
+3. **Apply all authorized fixes** to the plan in one Edit call
 4. **Verify the result** — re-read the file and check YAML validity
 
 **NEVER:**
 - Change word_target downward (even if the review suggests it — reviews never suggest this, but guard against it)
-- Remove content_outline sections without explicit user approval
+- Remove content_outline sections without explicit user authorization (earlier authorization still applies)
 - Modify fields not mentioned in the review report
 - Skip the version bump
 
@@ -91,7 +94,7 @@ After processing all plans, output:
 
 | Plan | Severity | Fix | Category |
 |------|----------|-----|----------|
-| {slug} | CRITICAL | Fixed word_target 3500→5000 | SAFE |
+| {slug} | CRITICAL | Increased word_target 3500→5000 | STRUCTURAL |
 | {slug} | HIGH | Removed ghost word "казновий" | SAFE |
 | {slug} | HIGH | Rewrote objective for analysis | SEMANTIC |
 
@@ -108,5 +111,5 @@ After processing all plans, output:
 - **Plan has no review report** — Skip, note in summary
 - **Review says PASS** — Skip, note in summary
 - **Review says FAIL but no suggested fixes** — Flag for manual review, don't modify
-- **Multiple conflicting fixes for same field** — Present both to user, let them choose
+- **Multiple conflicting fixes for same field** — Follow an existing operator decision if it resolves the conflict; otherwise prepare the alternatives and ask for that decision
 - **Fix would make plan inconsistent** (e.g., removing a section but objectives still reference it) — Flag as deferred, don't apply partial fix
