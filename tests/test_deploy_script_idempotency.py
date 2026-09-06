@@ -703,10 +703,7 @@ def test_codex_config_and_hooks_are_managed_sources_not_orphans() -> None:
 
     assert (REPO_ROOT / "agents_extensions" / "codex" / "hooks.json").exists()
     assert (REPO_ROOT / "agents_extensions" / "codex" / "config.toml").exists()
-    assert (
-        'ORPHAN_PATHS_CODEX="agents/curriculum-orchestrator.toml '
-        'agents/curriculum-writer.toml settings.local.json"'
-    ) in shared
+    assert 'ORPHAN_PATHS_CODEX="settings.local.json"' in shared
     assert 'CODEX_OVERLAY_PATHS="config.toml hooks.json memory"' in shared
     assert "$CODEX_OVERLAY_PATHS" in check
 

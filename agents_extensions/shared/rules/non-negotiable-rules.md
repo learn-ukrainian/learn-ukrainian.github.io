@@ -11,10 +11,10 @@ All rules are hard requirements. Partial compliance = failure.
 | Building content | Check `config.py` target_words FIRST — never hardcode from memory |
 | Module under word target | Add only source-backed necessary pedagogy; if grounded material is exhausted, emit `SIZE_POLICY_MISMATCH` and route to plan review. Never lower the target or auto-pad |
 | Audit gate shows ❌ | Fix it. ALL gates must be GREEN or the module fails |
-| Fixing a module | Reviewer provides `<fixes>` — apply deterministically (rule 4) |
+| Fixing a module | Follow the current build correction or module-completion contract (rule 4) |
 | Reviewing content | Cite SPECIFIC examples from the text, or the review is invalid (rule 6) |
 | Plan can't be met | STOP building. Report to user. Propose new plan version (rule 7) |
-| Review verdict REVISE | Reviewer outputs `<fixes>` find/replace pairs → pipeline applies them (rule 4) |
+| Review verdict REVISE | Follow the owning workflow’s repair budget and obtain fresh review evidence (rule 4) |
 | Creating JSONL/data | Add ingestion flag + update tracking doc in SAME commit (rule 11) |
 | Making any verifiable claim | Run a tool — VESUM/Monitor API/grep/etc. (rule 12) |
 
@@ -72,19 +72,24 @@ section quota with repeated prose.
 
 ---
 
-## 4. Review + Fix Loop (V6 Pipeline)
+## 4. Build Corrections and Module Completion
 
-V6 uses **reviewer-as-fixer**: Gemini reviews, finds issues, outputs `<fixes>` with exact find/replace pairs. Pipeline applies them deterministically — no LLM regeneration, no rewriting from scratch.
+Current builds use V7 (`scripts/build/v7_build.py` and `scripts/build/linear_pipeline.py`).
+The linear pipeline owns its bounded deterministic correction proposals; it does not
+expose a general LLM rewrite or regeneration loop. Follow the
+[`build-monitoring` skill](../skills/build-monitoring/SKILL.md) when launching or watching builds.
 
-**Flow:**
-1. Writer generates content → ENRICH adds tabs/словнік → REVIEW
-2. If REVISE: reviewer outputs `<fixes>` → pipeline applies find/replace → re-ENRICH → re-REVIEW
-3. Max 2 fix rounds. Score should go UP (9.0→9.4→9.7), never down.
-4. If still failing after 2 rounds → problem is in the PROMPT or PLAN, not the content.
+Module completion follows [`track-completion`](../skills/track-completion/SKILL.md),
+which owns the durable lifecycle ledger and repair budgets. Its canonical
+[`post-build-review`](../skills/post-build-review/SKILL.md) remains read-only.
+Repair the owning source and obtain fresh review evidence through that workflow;
+do not substitute a historical build-loop budget for the current completion contract.
 
-**Critical:** Reviewer sees PROSE ONLY (enrichment stripped before review). Deterministic word count injected into review prompt. Reviewer must NOT estimate word count — use the injected number.
-
-**Never rewrite from scratch.** Gemini proved: "FROM SCRATCH" rewrites degrade content (9.6→9.2→8.4). PATCH fixes only what's broken.
+**Historical V6 behavior:** reviewer-authored `<fixes>` find/replace pairs and a
+maximum of two fix rounds described the former V6 loop. They are not the current
+V7 or module-completion protocol. Preserve the underlying constraint: patch the
+root cause rather than rewriting sound content from scratch, and use deterministic
+word counts instead of reviewer estimates.
 
 ---
 

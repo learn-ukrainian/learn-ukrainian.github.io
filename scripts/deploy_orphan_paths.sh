@@ -40,9 +40,8 @@ ORPHAN_PATHS_AGENT=""  # .agent/ is preserve-by-default (#4741); see deploy_prom
 ORPHAN_PATHS_AGENTS=""
 
 # --- shared → .codex (rsync orphan excludes only; overlay paths below) ---
-# agents/curriculum-orchestrator.toml and agents/curriculum-writer.toml —
-# Codex agent definitions with no source equivalent.
-ORPHAN_PATHS_CODEX="agents/curriculum-orchestrator.toml agents/curriculum-writer.toml settings.local.json"
+# settings.local.json is machine-local runtime configuration.
+ORPHAN_PATHS_CODEX="settings.local.json"
 
 # --- deploy-owned: Codex overlay paths (checker mirrors for .codex drift) ---
 # Managed by agents_extensions/codex/, not by the shared tree. Exclude them from
