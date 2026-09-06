@@ -160,10 +160,15 @@ def test_cli_rejects_override_without_reason(tmp_path: Path) -> None:
     assert not out.exists()
 
 
-def test_cli_override_with_reason_reports_it(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+def test_cli_override_with_reason_reports_it(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The CLI path resolves the module-level VESUM lookup; CI has no data/vesum.db,
+    # so swap in the synthetic lookup ("мама" known, everything else unknown).
+    monkeypatch.setattr(extractor, "verify_words", _fake_vesum)
     jsonl = tmp_path / "book.jsonl"
     # "змпщт" is not a real Ukrainian word; it deliberately drives the unknown
-    # rate above 20% to exercise a gate only an explicit override can clear.
+    # rate above 20% (1 of 2 forms) to exercise a gate only an explicit override can clear.
     _write_jsonl(jsonl, [_chunk(text="мама змпщт")])
     out = tmp_path / "out.yaml"
     rc = extractor.main(
@@ -184,4 +189,6 @@ def test_cli_override_with_reason_reports_it(tmp_path: Path, capsys: pytest.Capt
     )
     assert rc == 0
     assert out.exists()
-    assert "known upstream PDF glyph-drop defect" in capsys.readouterr().out
+    captured = capsys.readouterr().out
+    assert "UNKNOWN-RATE OVERRIDE (60%)" in captured
+    assert "known upstream PDF glyph-drop defect" in captured

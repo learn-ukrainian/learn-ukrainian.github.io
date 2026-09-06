@@ -127,7 +127,7 @@
       },
       {
         "path": "scripts/lexicon/extract_textbook_chunk_headword_inventory.py",
-        "sha256": "cbcc2ec2c1157e03059dad33f94cf2007ea3827e5af93c41107c1aa88dcaf0e2"
+        "sha256": "198e5a27c0168f39bd758e0f6887ffd8a5e7f9f97ce549032fed0d95314322d5"
       },
       {
         "path": "scripts/lexicon/fill_from_content.py",

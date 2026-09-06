@@ -325,8 +325,14 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     try:
         chunks = load_chunks(args.jsonl)
+        # Resolve the lookup at call time (not at def time) so tests can swap
+        # in a fake VESUM without a real data/vesum.db.
         payload = extract_headword_inventory_from_chunks(
-            chunks, source_id=args.source_id, title=args.title, subject=args.subject
+            chunks,
+            source_id=args.source_id,
+            title=args.title,
+            subject=args.subject,
+            vesum_lookup=verify_words,
         )
         validate_result(payload, max_unknown_rate=args.max_unknown_rate)
     except ExtractionError as exc:
