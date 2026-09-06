@@ -711,6 +711,8 @@ def test_monitor_search_reverifies_typed_issue_from_shared_local_cache(
     stale = TestClient(app).get("/api/ops/entire-context/search", params={"q": "6183"}).json()
     assert stale["results"] == []
     assert stale["omitted"] == [{"locator_id": admitted.locator_id, "reason": "partial_terminal"}]
+
+
 @pytest.mark.parametrize(
     "mirror_output",
     [
@@ -787,3 +789,60 @@ def test_dispatch_post_failure_does_not_delete(tmp_path, monkeypatch, status, re
         "reason": reason,
         "http_status": status,
     }
+
+
+def test_api_search_retired_acp_preserves_git_and_honors_override(tmp_path, monkeypatch):
+    from scripts.entire_context.resolvers import resolve_git_commit
+    from scripts.fleet_comms.paths import RETIRED_LOCAL_MARKER
+
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _run_git(repo, "init", "-q")
+    _run_git(repo, "config", "user.email", "test@example.invalid")
+    _run_git(repo, "config", "user.name", "tester")
+    (repo / "seed.txt").write_text("seed\n")
+    _run_git(repo, "add", "seed.txt")
+    _run_git(repo, "commit", "-qm", "seed")
+    sha = _run_git(repo, "rev-parse", "HEAD")
+    store = ContextLinkStore(projection_path(repo))
+    resolution = resolve_git_commit(sha, repo=repo)
+    git_id = store.admit(resolution.link, resolution.verification, actor="test").locator_id
+    acp = ContextLink(
+        kind=LinkKind.ACP_CONVERSATION,
+        canonical_namespace="acp:conversations",
+        canonical_id="conversation_" + "a" * 32,
+        canonical_digest="sha256:" + "a" * 64,
+        git_sha=sha,
+        facets={},
+    )
+    evidence = VerificationEvidence(
+        verifier="test", canonical_digest=acp.canonical_digest,
+        status=VerificationStatus.VERIFIED, evidence_locator="test:fixture",
+        checked_at=isoformat_z(datetime.now(UTC)),
+    )
+    acp_id = store.admit(acp, evidence, actor="test").locator_id
+    plane = repo / "batch_state" / "fleet-comms" / "v1"
+    plane.mkdir(parents=True)
+    (plane / RETIRED_LOCAL_MARKER).write_text("retired\n")
+    monkeypatch.delenv("FLEET_COMMS_ALLOW_LOCAL_SHADOW", raising=False)
+    monkeypatch.delenv("FLEET_COMMS_ROOT", raising=False)
+    monkeypatch.delenv("ENTIRE_CONTEXT_ACP_ROOT", raising=False)
+    monkeypatch.setattr(entire_context_router, "_repo_root", lambda *_a, **_k: repo)
+    observed = []
+    real_search = entire_context_router.search_past_work
+
+    def observe(*args, **kwargs):
+        observed.append(kwargs["acp_root"])
+        return real_search(*args, **kwargs)
+
+    monkeypatch.setattr(entire_context_router, "search_past_work", observe)
+    for override in (None, tmp_path / "explicit-acp"):
+        if override is not None:
+            monkeypatch.setenv("ENTIRE_CONTEXT_ACP_ROOT", str(override))
+        response = TestClient(app).get("/api/ops/entire-context/search", params={"q": sha})
+        assert response.status_code == 200
+        payload = response.json()
+        assert [card["locator_id"] for card in payload["results"]] == [git_id]
+        assert payload["omitted"] == [{"locator_id": acp_id, "reason": "source_missing"}]
+    assert observed == [None, tmp_path / "explicit-acp"]
+    assert sorted(p.name for p in plane.iterdir()) == [RETIRED_LOCAL_MARKER]

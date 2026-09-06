@@ -6,7 +6,7 @@ import os
 import subprocess
 from pathlib import Path
 
-from scripts.fleet_comms.paths import default_plane_root
+from scripts.fleet_comms.paths import default_plane_root, local_plane_is_retired
 
 DEFAULT_STATE_RELATIVE = Path("batch_state") / "entire-context" / "v1"
 DEFAULT_DB_NAME = "context-links.sqlite3"
@@ -76,6 +76,21 @@ def acp_root(cwd: Path | str, explicit: Path | str | None = None) -> Path:
     if configured:
         return Path(configured).expanduser().resolve()
     return default_plane_root(repo_root=Path(cwd))
+
+
+def optional_acp_root(cwd: Path | str, explicit: Path | str | None = None) -> Path | None:
+    """Omit retired ACP storage for recall without weakening strict root resolution.
+
+    Explicit Entire overrides retain their precedence. Other anchoring errors
+    still propagate; only a retired selected plane is an unavailable source.
+    """
+    override = explicit if explicit is not None else os.environ.get(ENV_ACP_ROOT)
+    if explicit is not None or override:
+        root = Path(override).expanduser().resolve()
+        return None if local_plane_is_retired(root=root) else root
+    if local_plane_is_retired(repo_root=Path(cwd)):
+        return None
+    return acp_root(cwd)
 
 
 def provider_status_path(cwd: Path | str) -> Path:

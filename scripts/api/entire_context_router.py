@@ -10,7 +10,7 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, Query
 
-from scripts.entire_context.paths import projection_path, shared_repository_root
+from scripts.entire_context.paths import optional_acp_root, projection_path, shared_repository_root
 from scripts.entire_context.provider import load_provider_capabilities, load_provider_status
 from scripts.entire_context.recall import RecallInputError, search_past_work
 from scripts.entire_context.resolvers import (
@@ -19,7 +19,6 @@ from scripts.entire_context.resolvers import (
     default_monitor_root,
 )
 from scripts.entire_context.store import ContextLinkStore
-from scripts.fleet_comms import message_plane
 
 from .monitor_context import MonitorContext, get_ctx, resolve_context
 from .repository_authority import preparation_data_root
@@ -241,12 +240,7 @@ def entire_context_search(
             "reason": status.get("reason", "projection_unavailable"),
             "results": [],
         }
-    acp_root = Path(
-        os.environ.get(
-            "ENTIRE_CONTEXT_ACP_ROOT",
-            message_plane.default_plane_root(repo_root=root),
-        )
-    )
+    acp_root = optional_acp_root(root)
     try:
         payload = search_past_work(
             ContextLinkStore(projection_path(root)),
