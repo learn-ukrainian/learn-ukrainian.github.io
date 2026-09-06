@@ -2,7 +2,7 @@
 const BASE = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/audio/pronunciation/`;
 type Manifest = { schemaVersion: number; entries: Record<string, { file: string }> };
 let manifestRequest: Promise<Manifest> | undefined;
-let active: HTMLAudioElement | undefined;
+let active: (() => void) | undefined;
 const mounted = new WeakMap<HTMLElement, () => void>();
 
 const COPY = {
@@ -32,7 +32,10 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
   mounted.get(root)?.();
   const button = root.querySelector('button')!;
   const status = root.querySelector<HTMLElement>('[role="status"]')!;
-  const lemma = pronunciationKey(root.dataset.pronunciationLemma ?? '');
+  const spoken = (root.dataset.pronunciationLemma ?? '').trim();
+  const lemma = pronunciationKey(spoken);
+  const synthesis = window.speechSynthesis;
+  let utterance: SpeechSynthesisUtterance | undefined;
   let disposed = false;
   let audio: HTMLAudioElement | undefined;
   let playing = false;
@@ -40,11 +43,19 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
   let attempt = 0;
   const copy = () => COPY[(root.dataset.locale || document.documentElement.dataset.chromeLocale) === 'en' ? 'en' : 'uk'];
   const label = () => {
+    const locale = copy() === COPY.en ? 'en' : 'uk';
+    button.lang = status.lang = locale;
     button.textContent = playing ? copy().stop : copy().play;
     status.textContent = hasError ? copy().error : '';
   };
   const stop = () => {
     attempt++;
+    if (active === stop) active = undefined;
+    if (utterance) {
+      utterance.onend = utterance.onerror = null;
+      utterance = undefined;
+      synthesis.cancel();
+    }
     audio?.pause();
     if (audio) audio.currentTime = 0;
     playing = false;
@@ -57,27 +68,46 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
   };
   const click = async (event: Event) => {
     event.stopPropagation();
-    if (!audio) return;
     if (playing) { stop(); return; }
-    if (active && active !== audio) {
-      active.pause();
-      active.currentTime = 0;
-    }
-    active = audio;
-    audio.currentTime = 0;
+    active?.();
+    active = stop;
     hasError = false;
     playing = true;
     label();
     const current = ++attempt;
     try {
-      await audio.play();
-      if (disposed || !playing || active !== audio) audio.pause();
+      if (audio) {
+        audio.currentTime = 0;
+        await audio.play();
+        if (disposed || !playing || active !== stop) audio.pause();
+      } else {
+        // Read on each click: installed voices may arrive after initial mount.
+        const voices = synthesis?.getVoices() ?? [];
+        const voice = voices.find((voice) => voice.lang.toLowerCase().startsWith('uk') && voice.localService);
+        if (!voice || !window.SpeechSynthesisUtterance) { failed(); return; }
+        utterance = new SpeechSynthesisUtterance(spoken);
+        utterance.lang = 'uk-UA';
+        utterance.voice = voice;
+        utterance.onend = () => {
+          if (disposed || current !== attempt) return;
+          utterance = undefined;
+          if (active === stop) active = undefined;
+          playing = false;
+          label();
+        };
+        utterance.onerror = () => {
+          if (!disposed && current === attempt) failed();
+        };
+        synthesis.speak(utterance);
+      }
     } catch {
       if (!disposed && current === attempt) failed();
     }
   };
   const keydown = (event: KeyboardEvent) => event.stopPropagation();
-  button.hidden = true;
+  root.lang = 'uk';
+  button.hidden = !lemma;
+  label();
   status.textContent = '';
   button.addEventListener('click', click);
   button.addEventListener('keydown', keydown);
@@ -94,13 +124,13 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
     audio.onerror = failed;
     label();
     button.hidden = false;
-  }).catch(() => { /* No assets: no false promise of playback outside this slice. */ });
+  }).catch(() => { /* The optional manifest never gates on-device speech. */ });
   const cleanup = () => {
     disposed = true;
     stop();
     if (audio) {
       audio.onended = audio.onpause = audio.onerror = null;
-      if (active === audio) active = undefined;
+      if (active === stop) active = undefined;
       audio.removeAttribute('src');
       audio.load();
     }

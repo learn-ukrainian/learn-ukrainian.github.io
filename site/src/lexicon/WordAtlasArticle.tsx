@@ -207,7 +207,7 @@ export default function WordAtlasArticle({
             <div className="word-hero">
               <div className="word-hero-inner">
                 <span className="lexicon-badge">Лексикон · Форма слова</span>
-                <h1 className="word-title">{entry.lemma}</h1>
+                <h1 className="word-title" lang="uk">{entry.lemma}</h1>
                 <div className="word-pos">
                   {[posLabel, headwordIpa, entry.gloss ? `«${entry.gloss}»` : null].filter(Boolean).join(" · ")}
                 </div>
@@ -240,7 +240,7 @@ export default function WordAtlasArticle({
             <div className="word-hero">
           <div className="word-hero-inner">
             <span className="lexicon-badge">{entryTypeLabel ? `Лексикон · ${entryTypeLabel}` : `Лексикон · A-Я · ${letter}`}</span>
-            <h1 className="word-title">
+            <h1 className="word-title" lang="uk">
               {entry.lemma}
               {headerStress && <span className="word-stress">{`[${headerStress}]`}</span>}
             </h1>
