@@ -125,7 +125,8 @@ def resolve_authority(store: StoreId) -> Authority:
 # --- Phase 0b component interlock (#7482) -----------------------------------
 # Which components may open which authorities. pg-capable components in this
 # slice: the byte-plane ArtifactStore (#603) and, since the public #605 slice,
-# the request plane (RequestExecutor/MessagePlane) for create/get only.
+# the request plane (RequestExecutor/MessagePlane) for create/get, plus
+# authority efficiency/backlog/dead-letter collectors (#7486).
 # Everything else is sqlite-shaped (BEGIN IMMEDIATE, ``?`` placeholders,
 # PRAGMA/sqlite_master, triggers) and must refuse ``pg`` at
 # construction/entry. ``session_streams`` is explicitly sqlite-only: it has
@@ -141,7 +142,7 @@ COMPONENT_AUTHORITIES: dict[str, frozenset[Authority]] = {
     "message_plane": _PG_CAPABLE,
     "session_streams": _SQLITE_SHAPED,
     "plane_status": _SQLITE_SHAPED,
-    "efficiency_metrics": _SQLITE_SHAPED,
+    "efficiency_metrics": _PG_CAPABLE,
     "cold_start_board": _SQLITE_SHAPED,
     "routing_reservations": _SQLITE_SHAPED,
     "comms_cli": _SQLITE_SHAPED,

@@ -7,7 +7,6 @@ errors, ``UndefinedTable`` 500s) instead of failing closed at construction.
 
 from __future__ import annotations
 
-import sqlite3
 from pathlib import Path
 
 import pytest
@@ -38,7 +37,7 @@ def _pg_authority(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 _PG_CAPABLE_COMPONENTS = frozenset(
-    {"artifact_store", "request_executor", "message_plane"}
+    {"artifact_store", "request_executor", "message_plane", "efficiency_metrics"}
 )
 
 
@@ -149,12 +148,13 @@ def test_apply_migrations_refuses_non_sqlite_connection() -> None:
         apply_migrations(FakePgConnection())  # type: ignore[arg-type]
 
 
-def test_read_paths_refuse_pg(tmp_path: Path) -> None:
+def test_metrics_read_pg_unreachable_fails_closed(tmp_path: Path) -> None:
     from scripts.fleet_comms.efficiency_metrics import _connect_ro
 
     db = tmp_path / "comms.sqlite3"
-    sqlite3.connect(db).close()
-    with pytest.raises(ControlPlaneUnsupportedComponentError):
+    from scripts.control_plane.storage import ControlPlanePgConnectError
+
+    with pytest.raises(ControlPlanePgConnectError):
         with _connect_ro(db):
             pass
 
