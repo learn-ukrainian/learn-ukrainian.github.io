@@ -295,6 +295,7 @@ pairs:
   nativeLemma: то
   nativeSlug: то
   decision: rewrite_span
+  rewritten_as: чим … тим
   reason: UA-GEC doc 1082 marked second token of comparative correlative «чим … тим …» (RU calque) -> «що … то …»; «тим» alone
     is native Ukrainian pronoun/adverb (VESUM те/той/тим); requires paired construction span.
 - calqueLabel: заставити
@@ -307,6 +308,7 @@ pairs:
   nativeLemma: що
   nativeSlug: що
   decision: rewrite_span
+  rewritten_as: чим … тим
   reason: UA-GEC doc 1082 marked first token of comparative correlative «чим … тим …» (RU calque) -> «що … то …»; «чим» alone
     is native Ukrainian pronoun/conjunction (VESUM чим/що); requires paired construction span.
 - calqueLabel: відбивають

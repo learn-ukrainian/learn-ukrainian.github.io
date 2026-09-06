@@ -4126,7 +4126,50 @@ pairs:
   - sentence_with_slot: А ви маєте якийсь ___ до військових заводів? — Не маю ніякого. — Мені теж так здається, що не маєте.
     answer_form: стосунок
     calque_form: відношення
-    origin: ua-gec-calque-wave1:literary_texts/6bb17922_c0012
+- calqueLabel: чим … тим
+  calqueSurfaces:
+  - чим … тим
+  - Чим … тим
+  - Чим
+  - чим
+  - тим
+  nativeSlug: що
+  nativeLemma: що
+  kind: lexical
+  corrections:
+  - Що
+  - що
+  - то
+  rationale: 'Корелятивна конструкція «чим … тим …» (рос. «чем … тем …») є калькою з російської мови; стандартна українська літературна норма вимагає конструкції «що … то …» (СУМ-20, ВТС). Поодинокі сполучники «чим» і «тим» є питомими, але їх парне вживання у порівняльно-градаційних реченнях становить синтаксично-лексичну кальку.'
+  citations:
+  - ua-gec:F/Calque doc=1082
+  - sum-20:що
+  - vts:що
+  sourceFamily: mixed
+  sourceFamilies:
+  - ua-gec
+  - sum-20
+  - vts
+  severity: russianism
+  curator: agy-2026-09-06-7769-span
+  notes: 'Construction-span pair replacing isolated wave-1 cards (#7769, #7771). Teaches correlative «чим … тим …» -> «що … то …» as a span item where the paired word is visible in the same clause as the blank.'
+  frames:
+  - sentence_with_slot: '___ більше деформоване тіло, тим більшими є сили пружності.'
+    answer_form: Що
+    calque_form: Чим
+    origin: ua-gec:doc_1082;textbooks:10-klas-fizyka-barjakhtar-2018_s0342
+  - sentence_with_slot: 'Чим більше деформоване тіло, ___ більшими є сили пружності.'
+    answer_form: то
+    calque_form: тим
+    origin: ua-gec:doc_1082;textbooks:10-klas-fizyka-barjakhtar-2018_s0342
+  - sentence_with_slot: '___ більше набігали татари, тим далі посувався на північ український люд.'
+    answer_form: Що
+    calque_form: Чим
+    origin: literary_texts/c846b4d3_c0205
+  - sentence_with_slot: 'Чим більше набігали татари, ___ далі посувався на північ український люд.'
+    answer_form: то
+    calque_form: тим
+    origin: literary_texts/c846b4d3_c0205
 - calqueLabel: заставити
   calqueSurfaces:
   - заставити

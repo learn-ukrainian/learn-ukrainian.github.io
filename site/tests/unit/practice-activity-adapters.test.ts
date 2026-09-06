@@ -92,6 +92,23 @@ describe('heritage practice activity adapters', () => {
     expect(heritageToMatchUp(item, [item, companion], 42)).toBeNull();
   });
 
+  // Authored span frames from data/lexicon/heritage_pairs.yaml for «чим … тим» -> «що … то».
+  test.each([
+    ['___ більше деформоване тіло, тим більшими є сили пружності.', 'Чим', 'Що'],
+    ['Чим більше деформоване тіло, ___ більшими є сили пружності.', 'тим', 'то'],
+    ['___ більше набігали татари, тим далі посувався на північ український люд.', 'Чим', 'Що'],
+    ['Чим більше набігали татари, ___ далі посувався на північ український люд.', 'тим', 'то'],
+  ])('allows error-correction and fill-in for authored span frame: %s', (prompt, calque, answer) => {
+    const item = heritage({ prompt, calque, answer, options: [{ label: answer }, { label: calque }] });
+    const ec = heritageToErrorCorrection(item);
+    expect(ec).not.toBeNull();
+    expect(ec?.errorWord).toBe(calque);
+    expect(ec?.correctForm).toBe(answer);
+    expect(heritageToFillIn(item)).not.toBeNull();
+    // Function-word targets must never be presented on a contextless match-up board.
+    expect(heritageToMatchUp(item, [item, heritage()], 42)).toBeNull();
+  });
+
   test('adapts a full heritage frame into exact ErrorCorrection props', () => {
     expect(heritageToErrorCorrection(heritage())).toEqual({
       sentence: 'Я бачу дом щодня.',
