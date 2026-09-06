@@ -10,17 +10,17 @@ private signing keys, private membership, packets, or corpus. Its reviewed
 native profile does not establish actual-unit/provider qualification.
 
 The service fixes native reasoning effort by role: original-row authors use
-medium, and independent row reviewers use high. Both native CLI invocations
-receive explicit effort arguments; requests cannot select another effort.
+medium, and independent row reviewers use high. Both native adapters
+receive explicit effort settings; requests cannot select another effort.
 
 ## Active public release prerequisite
 
 The fixed production loaders select `v4_trust_policy_v2.json` and
-`v4_child_profile_v2.json`. Both are checked-in, digest-allowlisted build inputs
+`v4_child_profile_v3.json`. Both are checked-in, digest-allowlisted build inputs
 and hashed by the release manifest; each loader independently refuses raw-byte
 drift. The active policy allowlist contains only v2. The original empty v1
 policy, generated empty v1 profile, A3 receipts and provenance remain exact
-historical resources. Current positive bodies bind the canonical v2 policy
+historical resources; the v2 native profile is also retained byte-exact. Current positive bodies bind the canonical v2 policy
 digest; historical empty receipts acquire no retroactive attribution.
 
 The public policy contains the three operator-staged Ed25519 public keys only.
@@ -31,7 +31,9 @@ Private key custody, rotation and revocation remain operator-owned.
 The native profile pins Codex 0.153.4 to `gpt-6-astra` and Claude 2.1.258 to
 `claude-fable-5-1`, with author medium/reviewer high effort. Binary source paths
 are the immutable regular copies at `/opt/hramatka/current/v4-native/codex`
-and `/opt/hramatka/current/v4-native/claude`. The private installer must supply
+and `/opt/hramatka/current/v4-native/claude`. Codex also requires its matching
+0.153.4 companion at `/opt/hramatka/current/v4-native/codex-code-mode-host`.
+The private installer must supply
 root-owned copies without write permission; the observed mutable installation
 paths are never mounted. bwrap and each resolved library, resolver file and TLS
 bundle are individually hash-pinned. Resolver/TLS updates require a reviewed
@@ -42,6 +44,17 @@ Publishing this prerequisite does not install those copies, load credentials,
 qualify the protected unit, or change either OFF switch. A0 and the private
 qualification worker own those remaining steps and vendor binding. Readiness
 still requires exact release/policy/profile-bound actual-unit evidence.
+
+The Codex adapter runs the same pinned executable as an ephemeral app-server
+over stdio. It binds server-reported model/provider, thread and turn identity,
+read-only sandbox, no interactive approval, disabled remote control, exact Sources
+inventory, terminal success and process exit. The transport digest includes its
+fixed RPC request template. This is resolved native-harness identity, not an
+independent backend-model attestation. Default app connectors are disabled; only
+the five named Sources verification tools have fixed call permission. Every
+server-to-client request is rejected. Missing companion files and native Code
+Mode-unavailable warnings refuse; full Sources callability still needs actual
+qualification evidence.
 
 ## Source-qualified linguistic preparation
 

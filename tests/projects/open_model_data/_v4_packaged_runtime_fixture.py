@@ -34,7 +34,7 @@ rpc=args[0]=="app-server"
 def emit(event): print(json.dumps(event),flush=True)
 if rpc:
     init=json.loads(sys.stdin.readline());assert init["id"]==1 and init["method"]=="initialize"
-    emit({"id":1,"result":{"userAgent":"source-free-fixture"}})
+    emit({"id":1,"result":{"userAgent":"fixture-protocol-client"}})
     ready=json.loads(sys.stdin.readline());assert ready["method"]=="initialized"
     start=json.loads(sys.stdin.readline());assert start["id"]==2 and start["method"]=="thread/start"
     options=start["params"];model=options["model"]
@@ -177,7 +177,11 @@ def pinned_profile(root, *, sources_url, defect=False):
         "bwrap_sha256": digest(Path("/usr/bin/bwrap").read_bytes()),
         "sources_url": sources_url,
         "adapters": {
-            name: {**adapter, "provider_env": env}
+            name: {**adapter, "provider_env": env, "files": [
+                *files,
+                *([{"source": str(executable.resolve()), "destination": "/runtime/codex-code-mode-host",
+                    "sha256": digest(executable.read_bytes())}] if name == "codex" else []),
+            ]}
             for name, env in [("claude", "ANTHROPIC_API_KEY"), ("codex", "OPENAI_API_KEY")]
         },
     }

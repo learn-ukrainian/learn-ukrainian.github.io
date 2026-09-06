@@ -27,7 +27,7 @@ from learn_ukrainian_v4_runtime.resources import resource_root
 
 MAX_CAPTURE_BYTES = 1048576
 # Versioned reviewed public release; historical v1 is never an active profile.
-PRODUCTION_CHILD_PROFILE_SHA256 = "3f5e9ccf4d97860dbf5bcbca54f6fee7796873d8aed59060a4bea0860813b25f"
+PRODUCTION_CHILD_PROFILE_SHA256 = "462d73fefcc49a22776d4f2fe071146e7759f2184779d2ecc1325302f1a81088"
 # Required native network data only; no directory or arbitrary /etc mount.
 _NETWORK_DATA_TARGETS = frozenset({"/etc/resolv.conf", "/etc/ssl/certs/ca-certificates.crt"})
 MAX_CREDENTIAL_BYTES = 65536
@@ -215,7 +215,7 @@ def _sealed_auth_fd(raw: bytes) -> int:
 
 
 def profile_path() -> Path:
-    return resource_root() / "data/projects/open_model_data/trust/v4_child_profile_v2.json"
+    return resource_root() / "data/projects/open_model_data/trust/v4_child_profile_v3.json"
 
 
 def load_profile() -> dict:
@@ -319,8 +319,12 @@ class _CodexProtocol:
         if "id" in event and "method" in event:
             # No approval, user-input, dynamic tool or credential request may
             # broaden the child. Send only a protocol rejection, then close.
+            request_id = event["id"]
+            if not (type(request_id) is int or
+                    (isinstance(request_id, str) and 0 < len(request_id) <= 256)):
+                raise OperationRefused("child_event_invalid")
             self.refused = self.finished = True
-            return self._frames([{"id": event["id"], "error": {
+            return self._frames([{"id": request_id, "error": {
                 "code": -32601, "message": "Client requests are disabled",
             }}])
         if "id" in event:
@@ -366,6 +370,8 @@ class _CodexProtocol:
         method, params = event.get("method"), event.get("params")
         if not isinstance(method, str) or not isinstance(params, dict):
             raise OperationRefused("child_event_invalid")
+        if method == "warning" and str(params.get("message", "")).startswith("Code Mode is unavailable"):
+            raise OperationRefused("child_sources_tools_unavailable")
         if method in ("error", "model/rerouted"):
             raise OperationRefused("child_identity_or_terminal_unproved")
         if method == "remoteControl/status/changed":
@@ -491,6 +497,8 @@ def _plan(
         cmd.extend(["--ro-bind", str(path), str(target)])
     if adapter["executable"] not in destinations:
         raise OperationRefused("adapter_executable_unpinned")
+    if harness == "codex" and "/runtime/codex-code-mode-host" not in destinations:
+        raise OperationRefused("adapter_tool_runner_unpinned")
     env = {
         "HOME": "/home/v4",
         "TMPDIR": "/tmp",
@@ -553,6 +561,8 @@ def _plan(
             "-c",
             "features.multi_agent=false",
             "-c",
+            "features.apps=false",
+            "-c",
             'cli_auth_credentials_store="file"',
             "-c",
             "mcp_servers.sources.url=" + json.dumps(url),
@@ -561,6 +571,10 @@ def _plan(
             "-c",
             'mcp_servers.sources.enabled_tools=["verify_word","verify_words","verify_lemma","verify_stress","check_modern_form"]',
         ]
+        # The fixed, read-only Sources operations are already authorized.
+        # Unknown tools/servers and every server-to-client request still refuse.
+        for tool in sorted(_CODEX_TOOLS):
+            argv.extend(["-c", f'mcp_servers.sources.tools.{tool}.approval_mode="approve"'])
     cmd.extend(["--chdir", "/work", "--", *argv])
     return cmd, env
 

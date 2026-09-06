@@ -11,6 +11,7 @@ import fcntl
 import json
 import subprocess
 import sys
+import time
 from dataclasses import replace
 from pathlib import Path
 
@@ -219,9 +220,12 @@ def test_actual_parent_refuses_failed_child_without_artifact_or_observation(
         executable = tmp_path / "fixture-cli"
         action = (
             "sys.stdout.write('x' * 2097152);sys.stdout.flush();raise SystemExit(0)"
-            if failure == "capture_limit" else "import time;time.sleep(10)"
+            if failure == "capture_limit" else (
+                "import subprocess,time;"
+                "subprocess.Popen([sys.executable,'-c','import time;time.sleep(30)']);time.sleep(10)"
+            )
         )
-        executable.write_text(executable.read_text().replace("prompt=sys.stdin.read()", "prompt=sys.stdin.read()\n" + action))
+        executable.write_text(executable.read_text().replace("prompt=sys.stdin.read()", "prompt=sys.stdin.read()\n    " + action))
         for adapter in profile["adapters"].values():
             for entry in adapter["files"]:
                 if entry["source"] == str(executable):
@@ -240,8 +244,10 @@ def test_actual_parent_refuses_failed_child_without_artifact_or_observation(
                 owned["deadline_at"] = deadline
             before = conn.execute("SELECT count(*) AS n FROM fleet_comms_artifact_blobs").fetchone()["n"]
             runtime = service_runtime.V4ServiceRuntime(store=OperationStore(conn), verifier=None, release_provider=WheelRelease(built_wheel))
+            started = time.monotonic()
             with pytest.raises(OperationRefused, match=failure):
                 runtime._execute_owned_claim(owned)
+            assert time.monotonic() - started < 7
             assert conn.execute("SELECT state FROM requests WHERE request_id=%s", (owned["request_id"],)).fetchone()["state"] == "failed"
             assert conn.execute("SELECT count(*) AS n FROM fleet_comms_artifact_blobs").fetchone()["n"] == before
             assert conn.execute("SELECT count(*) AS n FROM v4_execution_observations WHERE request_id=%s", (owned["request_id"],)).fetchone()["n"] == 0

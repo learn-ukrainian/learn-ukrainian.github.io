@@ -81,6 +81,11 @@ def test_native_plan_binds_effort_and_keeps_secrets_out_of_argv(
         "capability_token": capability,
     }
 
+    if harness == "codex":
+        profile["adapters"][harness]["files"].append({
+            "source": str(adapter), "destination": "/runtime/codex-code-mode-host",
+            "sha256": digest(adapter.read_bytes()),
+        })
     command, environment = child_runtime._plan(profile, claim, provider_credential)
     launched_argv = "\x00".join(command)
     assert capability not in launched_argv
@@ -98,6 +103,12 @@ def test_native_plan_binds_effort_and_keeps_secrets_out_of_argv(
         assert "model_reasoning_effort=" + json.dumps(effort) in command
         assert command[command.index("--") + 2:command.index("--") + 5] == ["app-server", "--listen", "stdio://"]
         assert "--model" not in command and "--json" not in command
+        assert "features.apps=false" in command
+        permissions = {value for value in command if ".approval_mode=" in value}
+        assert permissions == {
+            f'mcp_servers.sources.tools.{name}.approval_mode="approve"'
+            for name in ("verify_word", "verify_words", "verify_lemma", "verify_stress", "check_modern_form")
+        }
         requests = child_runtime._codex_requests(claim["binding"])
         assert requests[2]["params"]["model"] == "fixture-model"
         assert requests[2]["params"]["approvalPolicy"] == "never"
@@ -106,3 +117,23 @@ def test_native_plan_binds_effort_and_keeps_secrets_out_of_argv(
     claim["binding"]["role"] = "caller-selected"
     with pytest.raises(OperationRefused, match="operation_role"):
         child_runtime._plan(profile, claim, provider_credential)
+
+
+def test_codex_tool_runner_must_be_pinned_before_launch(tmp_path):
+    binary = tmp_path / "fixture"
+    binary.write_bytes(b"fixture")
+    binary.chmod(0o400)
+    profile = {
+        "bwrap": "/usr/bin/bwrap", "bwrap_sha256": digest(Path("/usr/bin/bwrap").read_bytes()),
+        "sources_url": "http://localhost:8766/mcp",
+        "adapters": {"codex": {
+            "version": "fixture", "models": ["fixture-model"], "provider_env": "OPENAI_API_KEY",
+            "executable": "/runtime/fixture",
+            "files": [{"source": str(binary), "destination": "/runtime/fixture",
+                       "sha256": digest(binary.read_bytes())}],
+        }},
+    }
+    claim = {"binding": {"expected_harness": "codex", "expected_seat_or_model": "fixture-model",
+                         "role": "reviewer"}, "capability_token": "fixture-capability"}
+    with pytest.raises(OperationRefused, match="adapter_tool_runner_unpinned"):
+        child_runtime._plan(profile, claim, "fixture-provider")

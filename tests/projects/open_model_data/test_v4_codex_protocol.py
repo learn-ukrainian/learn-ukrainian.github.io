@@ -2,6 +2,7 @@
 
 import json
 from copy import deepcopy
+from pathlib import Path
 
 import pytest
 from learn_ukrainian_v4_runtime.child_runtime import (
@@ -151,3 +152,33 @@ def test_unterminated_json_record_is_not_terminal_evidence():
                             raw.stdout.rstrip(b"\n"), raw.stderr, 0, raw.harness)
     with pytest.raises(OperationRefused):
         parse_child(damaged, binding())
+
+
+@pytest.mark.parametrize("request_id", [None, True, [], {}, "", "x" * 257])
+def test_invalid_server_request_identifier_is_not_echoed(request_id):
+    with pytest.raises(OperationRefused, match="child_event_invalid"):
+        _CodexProtocol(binding()).feed(canonical_bytes({
+            "id": request_id, "method": "item/commandExecution/requestApproval", "params": {},
+        }) + b"\n")
+
+
+def test_missing_native_tool_runner_warning_refuses():
+    rows = events()
+    rows.insert(3, {"method": "warning", "params": {
+        "message": "Code Mode is unavailable because the host executable was not found",
+    }})
+    with pytest.raises(OperationRefused, match="child_sources_tools_unavailable"):
+        parse_child(capture(rows), binding())
+
+
+def test_recorded_native_protocol_projection_matches_actual_event_order():
+    # Actual 0.153.4 stdio controls, with opaque IDs mapped and payload bodies
+    # omitted. This records wire shape/order, not a linguistic or provider proof.
+    rows = json.loads(Path(__file__).with_name("_v4_codex_recorded_protocol.json").read_text())
+    result = parse_child(capture(rows), binding())
+    assert result["model"] == "gpt-6-astra"
+    assert result["verdict"] == "PASS"
+    calls = [row["params"]["item"] for row in rows if row.get("method") == "item/completed"
+             and row["params"]["item"]["type"] == "mcpToolCall"]
+    assert len(calls) == 1
+    assert (calls[0]["server"], calls[0]["tool"], calls[0]["status"]) == ("sources", "verify_word", "completed")
