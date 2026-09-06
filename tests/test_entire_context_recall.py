@@ -2494,3 +2494,81 @@ def test_rollover_resolution_never_invokes_entire_or_writes_state_root(
     assert len(result["results"]) == 1
     assert _snapshot_files(root) == before  # recall is also read-only
     assert not marker.exists()  # entire was never invoked
+
+
+@pytest.mark.parametrize("command", [
+    "search", "explain-change", "handoff", "handoff-query",
+    "handoff-query-duplicate", "handoff-query-budget",
+])
+def test_retired_acp_keeps_git_recall(tmp_path, git_repo, capsys, monkeypatch, command):
+    from scripts.fleet_comms.paths import RETIRED_LOCAL_MARKER
+
+    repo = git_repo["repo"]
+    sha = str(git_repo["sha2"])
+    plane = make_acp_plane(tmp_path, correlation_id=sha)
+    store = make_store(tmp_path)
+    git_id = bootstrap_git(store, repo, sha)
+    acp_id = bootstrap_acp(store, plane, git_sha=sha)
+    (plane / RETIRED_LOCAL_MARKER).write_text("retired\n")
+    before = (plane / "comms.sqlite3").read_bytes()
+    monkeypatch.delenv("FLEET_COMMS_ALLOW_LOCAL_SHADOW", raising=False)
+    monkeypatch.delenv(ENV_ACP_ROOT, raising=False)
+    monkeypatch.setenv("FLEET_COMMS_ROOT", str(plane))
+    arguments = {
+        "search": ["search", "--query", sha],
+        "explain-change": ["explain-change", "--sha", sha],
+        "handoff": ["handoff", "--locator-id", git_id, "--locator-id", acp_id],
+        "handoff-query": ["handoff", "--query", sha],
+        "handoff-query-duplicate": ["handoff", "--query", sha, "--locator-id", acp_id],
+        "handoff-query-budget": ["handoff", "--query", sha],
+    }[command]
+    if command == "handoff-query-budget":
+        baseline = recall.prepare_handoff(store, [git_id], repo=repo, acp_root=None)
+        monkeypatch.setattr(cli, "MAX_CAPSULE_BYTES", len(canonical_json(baseline).encode("utf-8")))
+    code, out = run_cli(capsys, *arguments, "--repo", str(repo), "--db", str(store.db_path))
+    assert code == 0
+    payload = json.loads(out)
+    key = "results" if command == "search" else "nodes" if command == "explain-change" else "items"
+    assert [card["locator_id"] for card in payload[key]] == [git_id]
+    if command == "handoff-query-budget":
+        assert payload["omitted"] == []
+        assert payload["omissions_truncated"] is True
+        assert payload["complete"] is False
+        assert len(canonical_json(payload).encode("utf-8")) <= cli.MAX_CAPSULE_BYTES
+    else:
+        assert payload["omitted"] == [{"locator_id": acp_id, "reason": REASON_SOURCE_MISSING}]
+    assert (plane / "comms.sqlite3").read_bytes() == before
+    assert_body_free(out)
+    with pytest.raises(PlaneRootAnchorError):
+        run_cli(capsys, "bootstrap-acp", CONV_ID, "--db", str(store.db_path))
+
+
+def test_optional_acp_root_retirement_and_override_precedence(tmp_path, monkeypatch):
+    from scripts.entire_context.paths import optional_acp_root
+    from scripts.fleet_comms.paths import RETIRED_LOCAL_MARKER
+
+    primary = make_git_repo(tmp_path, name="primary")
+    commit_files(primary, {"tracked.txt": "one\n"}, "primary")
+    linked = primary / ".worktrees" / "dispatch" / "codex" / "optional-acp"
+    git(primary, "worktree", "add", "-q", "-b", "optional-acp", str(linked))
+    plane = primary / "batch_state" / "fleet-comms" / "v1"
+    plane.mkdir(parents=True)
+    (plane / RETIRED_LOCAL_MARKER).write_text("retired\n")
+    monkeypatch.delenv("FLEET_COMMS_ALLOW_LOCAL_SHADOW", raising=False)
+    monkeypatch.delenv("FLEET_COMMS_ROOT", raising=False)
+    monkeypatch.delenv(ENV_ACP_ROOT, raising=False)
+    for repo in (primary, linked):
+        assert optional_acp_root(repo) is None
+        with pytest.raises(PlaneRootAnchorError):
+            acp_root(repo)
+    explicit = tmp_path / "explicit"
+    env = tmp_path / "environment"
+    monkeypatch.setenv(ENV_ACP_ROOT, str(env))
+    assert optional_acp_root(linked) == env
+    assert optional_acp_root(linked, explicit) == explicit
+    assert optional_acp_root(linked, plane) is None
+    monkeypatch.delenv(ENV_ACP_ROOT)
+    assert optional_acp_root(linked, explicit) == explicit
+    with pytest.raises(PlaneRootAnchorError):
+        optional_acp_root(tmp_path)
+    assert sorted(p.name for p in plane.iterdir()) == [RETIRED_LOCAL_MARKER]

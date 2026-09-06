@@ -35,9 +35,10 @@ from .model import (
     canonical_json,
     validate_identity,
 )
-from .paths import ENV_ACP_ROOT, acp_root, projection_path
+from .paths import ENV_ACP_ROOT, acp_root, optional_acp_root, projection_path
 from .provider import refresh_provider_capabilities, refresh_provider_status
 from .recall import (
+    MAX_CAPSULE_BYTES,
     MAX_RESULTS,
     MAX_SCAN_ROWS,
     RecallInputError,
@@ -459,7 +460,7 @@ def cmd_search(args: argparse.Namespace) -> int:
             ContextLinkStore(db_path),
             args.query,
             repo=_resolve_repo(args),
-            acp_root=_resolve_acp_root(args),
+            acp_root=optional_acp_root(_resolve_repo(args), args.acp_root),
             rollover_root=_resolve_rollover_root(args),
             fleet_root=_resolve_fleet_root(args),
             monitor_root=_resolve_monitor_root(args),
@@ -495,7 +496,7 @@ def cmd_explain_change(args: argparse.Namespace) -> int:
             canonical_id=args.canonical_id,
             git_sha=args.sha,
             repo=_resolve_repo(args),
-            acp_root=_resolve_acp_root(args),
+            acp_root=optional_acp_root(_resolve_repo(args), args.acp_root),
             rollover_root=_resolve_rollover_root(args),
             fleet_root=_resolve_fleet_root(args),
             monitor_root=_resolve_monitor_root(args),
@@ -527,13 +528,14 @@ def cmd_handoff(args: argparse.Namespace) -> int:
         return EXIT_REFUSED
     store = ContextLinkStore(db_path)
     locator_ids = list(args.locator_id or [])
+    search = None
     try:
         if args.query is not None:
             search = search_past_work(
                 store,
                 args.query,
                 repo=_resolve_repo(args),
-                acp_root=_resolve_acp_root(args),
+                acp_root=optional_acp_root(_resolve_repo(args), args.acp_root),
                 rollover_root=_resolve_rollover_root(args),
                 fleet_root=_resolve_fleet_root(args),
                 monitor_root=_resolve_monitor_root(args),
@@ -547,12 +549,28 @@ def cmd_handoff(args: argparse.Namespace) -> int:
             store,
             locator_ids,
             repo=_resolve_repo(args),
-            acp_root=_resolve_acp_root(args),
+            acp_root=optional_acp_root(_resolve_repo(args), args.acp_root),
             rollover_root=_resolve_rollover_root(args),
             fleet_root=_resolve_fleet_root(args),
             monitor_root=_resolve_monitor_root(args),
             issue_cache_path=_resolve_issue_cache(args),
         )
+        if search is not None and (search["omitted"] or search.get("omissions_truncated")):
+            capsule["complete"] = False
+            capsule["omissions_truncated"] |= search.get("omissions_truncated", False)
+            seen = {item["locator_id"] for item in capsule["omitted"] + capsule["items"]}
+            for omission in search["omitted"]:
+                if omission["locator_id"] in seen:
+                    continue
+                seen.add(omission["locator_id"])
+                capsule["omitted"].append(omission)
+                if len(canonical_json(capsule).encode("utf-8")) > MAX_CAPSULE_BYTES:
+                    capsule["omitted"].pop()
+                    capsule["omissions_truncated"] = True
+            # Changing complete to false can add one byte to a full capsule;
+            # the truncation flag offsets it without removing verified items.
+            if len(canonical_json(capsule).encode("utf-8")) > MAX_CAPSULE_BYTES:
+                capsule["omissions_truncated"] = True
     except RecallInputError as exc:
         _emit({"error": str(exc)})
         return EXIT_REFUSED
