@@ -481,21 +481,10 @@ class CodexAdapter:
     ) -> ParseResult:
         """Parse the codex exec output into a ParseResult.
 
-        Codex writes its final message to the ``-o <file>`` path. We read
-        it regardless of returncode — some failure modes still leave a
-        useful partial message in the file, and it's often more informative
-        than stderr.
-
-        Fallback recovery (added 2026-04-10): codex-cli 0.118 has a
-        post-completion hang bug where the CLI generates the full answer,
-        writes a ``task_complete`` event to
-        ``~/.codex/sessions/YYYY/MM/DD/rollout-*.jsonl``, then hangs at
-        0% CPU without ever flushing ``-o <file>`` or exiting. Previously
-        this meant the runtime waited the full hard_timeout and returned
-        an empty response. Now, if ``-o <file>`` is empty, we scan the
-        newest rollout file for a ``task_complete`` event and extract
-        its ``last_agent_message``. Parallels the Gemini adapter's
-        session-file fallback.
+        A zero exit requires final content. Nonzero exits may leave partial
+        bytes in the output file, so recovery requires a task_complete message
+        from this invocation's bound rollout. This preserves completed-turn
+        recovery after early reap without treating partial output as success.
         """
         # Read the output file if it exists. Tolerate all errors.
         file_output = ""
@@ -505,26 +494,25 @@ class CodexAdapter:
             except OSError:
                 file_output = ""
 
-        # Fallback: if the -o file is empty, scan the rollout JSONL for
-        # a task_complete event. This handles the 0.118 post-completion
-        # hang where Codex has the answer on disk but never flushes -o.
+        # Empty output and nonzero exits require invocation-bound completion
+        # evidence, even when the output file already contains partial text.
         rollout_response = ""
         rollout_source_note: str | None = None
-        if not file_output and plan is not None:
+        if (returncode != 0 or not file_output) and plan is not None:
             rollout_response = self._read_latest_rollout_task_complete(
                 plan,
                 call_start_time=call_start_time,
-            )
+            ).strip()
             if rollout_response:
-                reason = "rc=0 but -o empty (post-completion hang)" if returncode == 0 else f"rc={returncode}, -o empty"
+                reason = "rc=0 but -o empty" if returncode == 0 else f"rc={returncode}, terminal completion verified"
                 rollout_source_note = (
                     f"recovered {len(rollout_response)} chars from "
                     f"~/.codex/sessions/.../rollout-*.jsonl (reason: {reason})"
                 )
 
-        # durable_output is the response we'll return on success:
-        # either the -o file or the rollout-recovered answer.
-        durable_output = file_output or rollout_response
+        # Prefer the terminal message on recovery; file bytes alone cannot
+        # prove successful completion after a nonzero exit.
+        durable_output = (file_output or rollout_response) if returncode == 0 else rollout_response
 
         # Rate-limit detection — with THREE critical caveats.
         #
@@ -564,7 +552,7 @@ class CodexAdapter:
             rate_limited = False
         else:
             stderr_for_check = _strip_codex_prompt_echo(stderr)
-            combined_for_rl_check = "\n".join(part for part in (stdout, stderr_for_check, durable_output) if part)
+            combined_for_rl_check = "\n".join(part for part in (stdout, stderr_for_check, file_output, rollout_response) if part)
             pattern_hit = bool(_RATE_LIMIT_RE.search(combined_for_rl_check))
             # Call failed if neither -o nor rollout gave us content.
             call_failed = returncode != 0 or not durable_output
@@ -590,12 +578,8 @@ class CodexAdapter:
         )
         tool_calls = normalize_tool_calls(trace_events)
 
-        # Success classification: we have content (from either -o or the
-        # rollout fallback) AND we're not rate-limited. Note that a
-        # post-completion hang will have returncode == -9 (because WE
-        # killed it after the early-reap detector fires) but durable_output
-        # will be populated from rollout. That's a successful recovery,
-        # NOT a failure. So returncode is no longer a veto — content is.
+        # Nonzero exit content is admitted only through the bound terminal
+        # recovery above. Provider quota failures still veto that recovery.
         ok = bool(durable_output) and not rate_limited
         response = durable_output if ok else ""
         stderr_excerpt: str | None = None
