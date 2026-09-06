@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "description": "Fixed grandfathered identities for the pre-gate synthetic factory test corpus; not production review evidence.",
+  "grandfathered": [
+    "10d6dec3004c150af2d2c03b1fd88454bea74e6d59b9d0f21a3a232caab18c4d",
+    "188dbe13dea3e433b1e33302dbbffab50c8656848c1c7272c20a4a3e13dd459e",
+    "24e6da9853635d0837bedafbb358921b1fabb3ae6155224ede3ab0c2684d12ff",
+    "321e71f877e248d8a9203575c0ce0d24602dd12dfde8b026feb0e0ff8b6854bc",
+    "5a18a2041341a8578b3e551109923403e8799e3023ddae8f725711000d0b81c7",
+    "7df1701e4670f9bb8904fda20a16b4553a12af37b77e0ce2b2cb94b1b50a3ba4",
+    "9291d5528864a9b4c352711d8664f8827db7a3402738d812d0eed4edb02c2013",
+    "c8f3941a1600b101355992d943e81927626d21195f6c3016295596e0381381b1",
+    "e0fd835102deb5a175762430811820af270eee6d43d45640cc5a4fee2a367e4c"
+  ],
+  "receipts": {}
+}

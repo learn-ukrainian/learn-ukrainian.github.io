@@ -91,9 +91,11 @@ def compute_deck_version(
     schema_version: int,
     antonym_pairs: list[dict[str, Any]] | None = None,
     homonym_pairs: list[dict[str, Any]] | None = None,
+    creation_review: dict[str, Any] | None = None,
 ) -> str:
     payload = {
         "builder_version": PRACTICE_DECK_BUILDER_VERSION,
+        "creation_review": creation_review or {},
         "schema_version": schema_version,
         "entries": entries or [],
         "heritage_pairs": heritage_pairs or [],
