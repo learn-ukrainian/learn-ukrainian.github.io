@@ -50,7 +50,18 @@ at the **onboarding contract** for ownership and experimental ACPX scope; this r
 | **Session stream / lease** | Live | `claim_session_supervisor_env`, `SESSION_STREAM_*`, stream tail/digest, canary mint (hook-less seats) |
 | **Message plane + CF-comms** | Authority | `scripts.fleet_comms`; PR CF via direct `ask-*` + PR comment (sealed `review-pr` RETIRED) |
 
-Launchers already claim leases. Drivers must **also** speak the message-plane + CF half.
+Driver launchers already claim stream leases. Drivers must **also** speak the
+message-plane + CF half. An occupied lease fails closed: do not start a second
+supervisor, open/resume the stream yourself, or switch to local lease authority.
+Remote leases remain live until `expires_at`; a local PID is not remote liveness
+proof. Wait for expiry or an attributed operator release through the existing
+supervisor flow.
+
+The live driver reads and applies its inbox, then acknowledges consumption with
+`ack --consumed-by-live-driver <message-id>` through the project bridge CLI.
+Plain `ack` and detached worker receipts do not prove live-driver consumption.
+Use the launcher's `SESSION_HANDOFF_AGENT` identity; do not borrow another seat's
+identity or infer it from the provider/model name.
 
 ## Plane modes
 

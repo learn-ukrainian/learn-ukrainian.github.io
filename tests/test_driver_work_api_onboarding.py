@@ -85,3 +85,19 @@ def test_no_launcher_prompt_branch_names_review_pr() -> None:
     # The richer clause is allowed to name the retired command only to say
     # "do not use" — never as an instruction to run it.
     assert "RETIRED — do not use" in cold_start
+
+
+def test_seat_onboarding_teaches_work_authority_failures() -> None:
+    body = (REPO / "docs/runbooks/agent-seat-onboarding.md").read_text(encoding="utf-8")
+    for term in (
+        "/api/work/v1/projection",
+        "/api/work/v1/next?stream=<your-stream>",
+        "attention_rank",
+        "safe_next_action",
+        "INSPECT_UNKNOWN",
+        "503 building",
+        "retry_after_s",
+        "valid_streams",
+        "queue input",
+    ):
+        assert term in body

@@ -22,7 +22,7 @@ caps or live modes.
 1. Operator contract + model assignment via `GET /api/rules` (offline fallbacks
    under `agents_extensions/shared/rules/`).
 2. This runbook — ownership matrix, experimental ACPX boundary, Kimi routes.
-3. Fleet-comms mid-cutover rule:
+3. Fleet-comms durable-authority rule:
    [`agents_extensions/shared/rules/fleet-comms-coordination.md`](../../agents_extensions/shared/rules/fleet-comms-coordination.md).
 4. Epic seat routing (operator launch reminder only):
    [`epic-orchestrator-roster.md`](epic-orchestrator-roster.md).
@@ -35,6 +35,44 @@ caps or live modes.
    [`entire-context`](../../agents_extensions/shared/skills/entire-context/SKILL.md).
 
 ---
+
+## Infra, Atlas, and supervisor cold-start
+
+Use the assigned stream and launcher contract for every seat. Fleet-comms is
+the durable coordination authority; this runbook teaches entry and ownership,
+and `drive-epic` teaches the driver loop. Neither a Work projection nor a local
+handoff creates a competing authority.
+
+- **Entry and execution:** an epic driver uses the supported
+  `start-<provider>-driver.sh --epic <epic>` entrypoint. An interactive seat is
+  not a driver. Keep implementation and tests in the assigned dispatch worktree;
+  use the shared primary interpreter described below. For a remote seat, use
+  its configured Monitor endpoint and assigned execution checkout; do not
+  assume the UI machine is the execution host or fall back to local authority
+  when the remote endpoint is unavailable.
+- **Lease and identity:** the driver launcher has already claimed the stream
+  lease and supplied `SESSION_STREAM_*`, `SESSION_EPIC`, and
+  `SESSION_HANDOFF_AGENT`. Do not open/resume it yourself. An occupied lease
+  fails closed: no second supervisor, no alternate identity, and no local
+  lease fallback. Remote leases remain live until `expires_at`, regardless of
+  local PID observations; wait for expiry or an attributed operator release.
+- **Orient:** read rules, `plane-status`, and the assigned stream's continuity.
+  Query `GET /api/work/v1/projection` and
+  `GET /api/work/v1/next?stream=<your-stream>` through the configured Monitor
+  endpoint. Work is a queue input alongside canonical stream and GitHub state.
+  Inspect `health`, `attention_rank`, and `safe_next_action`; `UNKNOWN` means
+  missing/stale authority, with `INSPECT_UNKNOWN`, not permission to execute.
+  A cold next-queue cache returns `503 building` with `retry_after_s`; an
+  unknown stream returns `400` with `valid_streams`. Do not invent an empty
+  queue or another stream to bypass these responses.
+- **Live delivery:** the live driver reads and applies its own inbox, then runs
+  the project bridge `ack --consumed-by-live-driver <message-id>`. Plain `ack`,
+  detached worker processing, and a wake signal are not live-consumption proof.
+  Continue the required inbox drain in `drive-epic`; do not launch another
+  supervisor to wake the current one.
+- **Privacy:** public guidance and PR evidence remain environment-neutral.
+  Keep host topology, concrete execution paths, endpoint configuration,
+  credentials, and operational transcripts in private operational evidence.
 
 ## Cleanup ownership
 
@@ -108,9 +146,9 @@ For each non-trivial task, the accountable root performs this contract:
 5. Continue normally when recall is unavailable. Git/GitHub remain
    authoritative for code; Fleet Comms for durable coordination; ACP for live
    discussion and terminal receipts; Monitor for runtime state; session-stream
-   handoffs and rollover for continuity; sealed Fleet review for the formal
-   review gate. Legacy message-plane files are read-only projections in
-   `authority` mode.
+   handoffs and rollover for continuity; direct toolful cross-family review
+   with an exact-head PR comment for the review gate. Legacy message-plane files
+   are read-only projections in `authority` mode.
 
 After the private preflight passes, the accountable root or operator may use
 Entire's product workflows for
@@ -177,20 +215,20 @@ job/reservation state. Never infer provider health from route counts alone.
 `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` produces design
 input and transcripts. It does **not** satisfy independent cross-family review.
 
-Formal CF uses:
+Formal CF uses one direct `ask-<lane> --type review` request to a qualified
+reviewer outside the author's model family, followed by a verdict and findings
+posted as a PR comment (`gh pr comment` or `gh pr review`) bound to the exact
+head SHA. Review requests route to a native toolful worktree seat; ordinary
+ACP/ACPX transport is toolless and cannot ground a tree review. Follow the canonical
+[fleet-comms review method](../../agents_extensions/shared/rules/fleet-comms-coordination.md#required-primitives-tool-backed)
+and [local-code-review workflow](../../agents_extensions/shared/skills/local-code-review/SKILL.md).
 
-```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <PR_NUMBER> --reviewer codex|claude|glm|grok
-.venv/bin/python scripts/ai_agent_bridge/__main__.py publish-review-verdict ...
-```
-
-Reviewer aliases keep practical defaults. A present operator may select a
-different formally eligible model on that native route with `--model` plus
-`--override-reason` (for example Claude/Fable or Codex/Astra). Recognized AGY
-and Kimi request identities remain fail-closed until their catalog endpoints
-are formally eligible.
-
-Same-family helper output, design panels, and channel chat never seal a PR.
+Sealed `review-pr`, `publish-review-verdict`, and `lu-review-*` trees are
+**retired — do not use**. Do not enable a test-only bypass. Resolve current
+model/family/harness identity from the live catalog; unknown identity cannot
+establish cross-family independence. Same-family helpers, design panels, and
+channel chat do not satisfy the review gate. Required CI and the exact-head
+cross-family verdict must pass before the accountable owner merges.
 
 ### Delegate is execution, not coordination
 
@@ -554,7 +592,8 @@ Standard ACP token `size` means context-window capacity, never consumed-token
 accounting.
 
 This is deliberation transport, not formal cross-family review. It cannot
-replace `review-pr` / `publish-review-verdict` or provide review eligibility.
+replace direct toolful review + an exact-head PR verdict or establish reviewer
+independence. Sealed review commands remain retired.
 
 #### Explicit comparison pilot
 
@@ -616,9 +655,9 @@ counts and outcomes.
 | `acp_adapter_missing` / `acp_adapter_incompatible` | Run `npm install` in the canonical primary checkout and verify the locked `@agentclientprotocol/claude-agent-acp` package; do not use a global install or permit dynamic package execution |
 | `acp_agent_startup` / `acp_agent_disconnected` | Inspect the provider and adapter installation outside the privacy-limited runtime record; the persisted code deliberately contains no stderr or transcript body |
 | `acp_session_create_timeout` | Treat as a terminal Claude adapter session-creation failure for that call; do not retry or bridge-fallback automatically |
-| `acp_turn_limit` | Ordinary no-tool calls remain capped at one turn. Claude sealed reviews derive a bounded cap from parent-owned, serialized-result-limited evidence chunks, plus ToolSearch, verdict, and four smaller-chunk recovery turns. Prompt retries stay at zero |
-| `acp_review_evidence_invalid` / `acp_review_evidence_too_large` | Repair the parent-owned sealed snapshot or route the oversized formal review to another eligible provider; Claude ACP refuses scopes above its reviewed 96-chunk ceiling before spawn |
-| `acp_permission_denied` / `acp_permission_unavailable` | Fix the bounded permission configuration; do not broaden the no-tool or sealed-review allowlist |
+| `acp_turn_limit` | Ordinary no-tool calls remain capped at one turn. Prompt retries stay at zero; tree review uses the direct toolful route |
+| `acp_review_evidence_invalid` / `acp_review_evidence_too_large` | Legacy sealed-review diagnostic; do not repair or restart the retired flow. Use the direct toolful review method above |
+| `acp_permission_denied` / `acp_permission_unavailable` | Fix the bounded permission configuration; do not broaden the no-tool allowlist or enable retired sealed review |
 | Timeout / cancel | Treat as terminal for that prompt; no auto-replay |
 | Crash / malformed NDJSON | Classify and record; do not promote partial output to authority |
 | Duplicate correlation id | Treat as replay protection; do not double-apply side effects (there should be none) |
@@ -680,9 +719,11 @@ printf '%s\n' 'Bounded read-only task.' | ACPX_AUTH_CHAT_GPT=1 \
 .venv/bin/python scripts/ai_agent_bridge/__main__.py discuss <channel> "..." \
   --with agy,codex,cursor
 
-# Formal CF
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <PR_NUMBER> --reviewer codex
-.venv/bin/python scripts/ai_agent_bridge/__main__.py publish-review-verdict ...
+# Direct toolful CF: choose a qualified lane outside the author family.
+# Request verdict + findings at the exact PR head, then post them on the PR.
+printf '%s\n' 'Review PR #<N> at head <SHA>: verdict + findings.' | \
+  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - \
+  --task-id review-<N> --type review
 
 # Execution
 .venv/bin/python scripts/delegate.py dispatch --agent <lane> --worktree ...
@@ -727,8 +768,14 @@ git status --short
 ```
 
 **Pass criteria:** the seat selects discuss vs delegate vs plane-status vs
-formal `review-pr` correctly in prose, quotes live `plane-status` rather than a
-memorized mode, refuses to treat discuss as CF, and leaves a clean worktree.
+direct toolful CF + exact-head PR comment correctly in prose, quotes live
+`plane-status` rather than a memorized mode, and leaves a clean worktree.
+Without starting a session, the seat must explain why an occupied remote lease,
+an unavailable authority endpoint, unknown reviewer identity, a plain `ack`,
+and a Work item with `UNKNOWN` health cannot authorize a second supervisor,
+local fallback, review approval, live-consumption claim, or execution. It must
+identify its assigned execution location and reject discuss and retired sealed
+review as CF. Keep the resulting operational evidence private.
 
 ---
 
@@ -797,7 +844,7 @@ quotes the same substitutions):
 
 | Doc | Role |
 | --- | --- |
-| [`fleet-comms-coordination.md`](../../agents_extensions/shared/rules/fleet-comms-coordination.md) | Binding mid-cutover musts on `/api/rules` |
+| [`fleet-comms-coordination.md`](../../agents_extensions/shared/rules/fleet-comms-coordination.md) | Binding durable-authority musts on `/api/rules` |
 | [`epic-orchestrator-roster.md`](epic-orchestrator-roster.md) | Which seat drives which epic (operator) |
 | [`agent-cooperation.md`](../best-practices/agent-cooperation.md) | Deliberation, V2, review discipline |
 | [`agent-runtime-guide.md`](../agent-runtime-guide.md) | `runner.invoke`, KimiCC headless, session policy |
