@@ -9,7 +9,7 @@
 
 | Field | Value |
 | --- | --- |
-| **Last refreshed** | 2026-08-29 (Cyrillic-Slavic dataset delivery active under #7423; Cycle007 retained as historical evidence; training remains prohibited) |
+| **Last refreshed** | 2026-09-06 (atlas streams merged into umbrella #4387; intake epics folded) |
 | **Refresh trigger** | Every session handoff that lands a milestone; every stream-epic board change |
 | **Curriculum KPI** | Modules passing audit per week (curriculum streams; each milestone carries its own outcome measure) |
 | **Mission** | Help people and AI produce measurably better, authentically Ukrainian language through decolonized learning products and reusable, evidence-backed open-model infrastructure. Quality non-negotiable. |
@@ -59,8 +59,7 @@ is the single source of truth for membership (auditor:
 
 | Stream | Epic(s) | Scope |
 | --- | --- | --- |
-| atlas-practice | #4387, #4700 | Word Atlas + Practice Hub product & UX |
-| atlas-intake | #4220, #4378, #5224 | Full-corpus intake into the Atlas |
+| atlas-practice | #4387 | Word Atlas + Practice Hub product & UX (intake epics #4220, #4378, #5224 and UX epic #4700 folded into umbrella #4387) |
 | corpus-channels | #4706 | Acquisition & ingestion (textbooks · ZNO · Ohoiko-media · press · academic) |
 | infra-harness | #6943 (successor to closed #4707) | Infra & fleet reliability (hooks, dispatch, routing) |
 | devops | #5703 | DevOps automation, CI, release & launcher reliability |
@@ -99,8 +98,7 @@ epic-board state and bind only once that stream's driver (State: the operator) c
 | infra-harness | ACTIVE *(proposed)* | Weak-driver rails T1 (T1.1 slot addressing ✅ #5878; T1.2 lease lifecycle; T1.3 glm canary lane) | T1.2 + T1.3 merged with mutation-checked tests. (The fleet-comms decision packet — dual-write parity + authority-signal evidence for any future plane change, file handoff never dropped unilaterally per `fleet-comms-coordination.md` — is the NEXT milestone, not this one.) |
 | eval-harness | *(operator to set)* | Internal product-quality machinery under #4913 *(driver to confirm)* | Current internal milestone is confirmed on #4913 without absorbing public gold or release work |
 | open-model-data | ACTIVE | Execute #7423: Cyrillic-Slavic Ukrainian dataset delivery with protected Old East Slavic/Kyivan Rus, Middle Ukrainian, Church Slavonic recension, and source-attested Rusyn boundaries; retain #6375/Cycle007 as completed historical evaluation evidence. | The #7423 contract and issue DAG are merged and hash-bound; source/rights/applicability, atomic rules, historical protection, held-out/lineage firewall, pilot, scale, consumer reproduction, and final residual gates pass; Phase 4 remains blocked. |
-| atlas-practice | ACTIVE *(proposed)* | Practice Hub deck experience stable after the D10 wave (#5877–#5883) *(driver to confirm)* | A bounded soak: 7 days with no new daily-deck defect filed; then next #4700 item |
-| atlas-intake | ACTIVE *(proposed)* | 20k enrichment run with durable storage (#5884) *(driver to confirm)* | Enriched dataset persisted off-repo with a tracked pointer; refetch never needed |
+| atlas-practice | ACTIVE *(proposed)* | Practice Hub deck experience stable after the D10 wave (#5877–#5883) *(driver to confirm)* | A bounded soak: 7 days with no new daily-deck defect filed; then next #4387 item |
 | corpus-channels | *(operator to set)* | *(VACANT — driver to set from #4706; the slot-addressing work formerly listed here is infra-harness scope)* | — |
 | devops | *(operator to set)* | Post-#5703 launcher/lease separation soak *(driver to confirm)* | 7 consecutive days, ≥10 real session launches observed in lease telemetry, zero cross-stream lease collisions — zero-traffic days do not count |
 | core-quality | *(operator to set)* | *(VACANT — driver to set from #4274)* | — |

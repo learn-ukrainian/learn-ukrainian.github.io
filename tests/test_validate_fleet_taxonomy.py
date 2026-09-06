@@ -34,7 +34,7 @@ def test_happy_path_real_files() -> None:
     res = validate_fleet_taxonomy()
     assert res["ok"] is True
     assert res["areas_count"] == 9
-    assert res["epics_count"] == 20
+    assert res["epics_count"] == 21
     assert res["assignments_count"] == 9
 
 

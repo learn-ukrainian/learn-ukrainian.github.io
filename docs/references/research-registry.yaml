@@ -64,7 +64,7 @@ records:
     cold_start_roles: [tts]
     ownership:
       issue: 4696
-      stream: 4700
+      stream: 4387
     consumer: null
     reason: >-
       Integration is blocked by the user-gated #4696 engine-versus-recorded-audio

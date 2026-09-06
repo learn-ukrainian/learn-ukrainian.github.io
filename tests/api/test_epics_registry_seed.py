@@ -104,7 +104,7 @@ def test_startup_seed_registers_all_canonical_release_epics(tmp_path: Path) -> N
     )
     # Ratchet: growth is routine (new epic registered), shrink is exceptional
     # and must be a deliberate test update alongside the registry change.
-    assert expected >= 19
+    assert expected >= 15
     assert health["status"] == "ok"
     assert health["records"] == expected
     assert health["registered"] == expected

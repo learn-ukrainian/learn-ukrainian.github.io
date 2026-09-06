@@ -12,10 +12,7 @@ schema_version: 1
 streams:
   atlas-practice:
     title: "Word Atlas + Practice Hub product"
-    epics: [4387, 4700]  # umbrella + UX-quality-wave (closed #5331 fill_local divergence removed)
-  atlas-intake:
-    title: "Word Atlas full-corpus intake"
-    epics: [4220, 4378, 5224]        # intake epic + entry-model DB epic
+    epics: [4387]  # umbrella (closed #4700 UX-quality + intake #4220/#4378/#5224 folded into #4387; closed #5331 removed)
   corpus-channels:
     title: "Corpus channels — acquisition & ingestion"
     epics: [4706]

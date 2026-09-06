@@ -907,7 +907,7 @@ def test_issue_streams_atlas_practice_drops_closed_5331() -> None:
     epics = doc["streams"]["atlas-practice"]["epics"]
     assert 5331 not in epics
     assert 4387 in epics
-    assert 4700 in epics
+    assert 4700 not in epics
     # Do not claim infra's issue; infra anchors on successor #6943.
     infra = doc["streams"]["infra-harness"]["epics"]
     assert 5331 not in infra
