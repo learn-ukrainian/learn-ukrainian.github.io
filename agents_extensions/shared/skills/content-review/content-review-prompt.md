@@ -68,7 +68,7 @@ Apply the appropriate tier rubric, then also check:
 Read the activities YAML and check:
 
 - [ ] **Schema compliance** -- Each activity matches its type's schema. Check required fields (type, title, items/pairs, correct answers). Read `docs/ACTIVITY-YAML-REFERENCE.md` for schema details if needed.
-- [ ] **Language testing, not content testing** -- Can the learner answer without reading the Ukrainian text? If YES, the activity tests content recall, not language. Flag as **HIGH** (Rule 10a). Exempt: ZNO-format activities.
+- [ ] **Language testing, not content testing** -- Can the learner answer without reading the Ukrainian text? If YES, the activity tests content recall, not language. Flag as **HIGH** (Rule 9a). Exempt: ZNO-format activities.
 - [ ] **Correct answers are correct** -- Verify that marked correct answers are actually correct Ukrainian. Use `mcp__sources__verify_word` for any suspicious answer.
 - [ ] **Distractors are plausible** -- Wrong answers should be plausible but clearly wrong. Not absurd, not trick questions.
 - [ ] **Variety** -- Check activity type distribution. Flag if >50% are the same type as **LOW**.
@@ -76,7 +76,7 @@ Read the activities YAML and check:
 
 ### 5. ENGAGEMENT & FORMATTING
 
-- [ ] **Engagement boxes** -- Count callout boxes (> [!cultural], > [!myth-buster], > [!tip], > [!warning], etc.). Minimum: A1/A2 = 3+, B1/B2 = 6+, C1+ = 7+. Flag as **MEDIUM** if under.
+- [ ] **Engagement boxes** -- Count callout boxes (> [!cultural], > [!myth-buster], > [!tip], > [!warning], etc.). The per-level minimum is `min_engagement` in `scripts/audit/config.py` (the pipeline gate counts it; A1 has no count minimum by design). Judge quality — placement, Ukrainian mnemonic value, relevance — and flag as **MEDIUM** when the level's minimum is missed or the boxes are filler.
 - [ ] **Tables** -- Grammar explanations should use tables, not prose. Flag prose-only grammar as **LOW**.
 - [ ] **Wall of text** -- Flag any section >300 words without a table, list, callout box, or heading break as **MEDIUM**.
 - [ ] **Videos embedded** -- If the plan references pronunciation videos, are they embedded as markdown links in the content? Flag missing embeds as **MEDIUM**.
@@ -93,7 +93,7 @@ Read the activities YAML and check:
 
 ### CORE MODE (A1-C2)
 
-- [ ] **Immersion ratio appropriate** -- Estimate Ukrainian vs English word ratio. Compare against tier targets (A1 uses scaffolded immersion; A2 is banded — M01-20: 85-100%, M21-50: 90-100%, M51-70: 95-100%; B1+ is Ukrainian-only body prose).
+- [ ] **Immersion ratio appropriate** -- Estimate Ukrainian vs English word ratio. Compare against tier targets (A1 uses scaffolded immersion; A2 bands come from `IMMERSION_POLICIES` in `scripts/config.py` — `a2-bridge` M01-03: 75-100%, `a2-ramp` M04-07: 85-100%, M08-20: 85-100%, M21-50: 90-100%, M51+: 95-100%; B1+ is Ukrainian-only body prose).
 - [ ] **Grammar accuracy** -- Verify grammar explanations against textbooks using `mcp__sources__search_text`. Flag incorrect rules as **CRITICAL**.
 
 ### HISTORY/BIO/ISTORIO MODE

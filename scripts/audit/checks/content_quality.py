@@ -624,73 +624,6 @@ Respond with ONLY valid JSON, no markdown fences or explanations."""
         return None
 
 
-def call_claude_api(lesson_content: str, metadata: dict) -> dict | None:
-    """Call Claude API to evaluate content quality."""
-    try:
-        import anthropic
-
-        api_key = os.getenv('ANTHROPIC_API_KEY')
-        if not api_key:
-            return None
-
-        client = anthropic.Anthropic(api_key=api_key)
-
-        prompt = f"""You are a Ukrainian language curriculum auditor. Evaluate this lesson content for educational quality.
-
-**Module Metadata:**
-- Title: {metadata.get('title', 'Unknown')}
-- Level: {metadata.get('phase', 'Unknown')}
-- Topic: {metadata.get('topic', 'Unknown')}
-- Pedagogy: {metadata.get('pedagogy', 'Unknown')}
-
-**Lesson Content:**
-{lesson_content[:4000]}  # Limit to avoid token overflow
-
-**Evaluation Criteria:**
-1. **Coherence**: Is the content logically organized and easy to follow?
-2. **Relevance**: Does it actually teach what the title/topic claims?
-3. **Educational Value**: Are there clear explanations and useful examples?
-4. **Language Quality**: Is it well-written, not repetitive or confusing?
-5. **Word Salad Check**: Does it contain meaningless filler or repetitive patterns?
-
-**Response Format (JSON only):**
-{{
-  "coherence_score": 1-5,
-  "relevance_score": 1-5,
-  "educational_score": 1-5,
-  "language_score": 1-5,
-  "overall_score": 1-5,
-  "is_word_salad": true/false,
-  "issues": ["issue 1", "issue 2"],
-  "strengths": ["strength 1", "strength 2"],
-  "recommendation": "PASS" or "NEEDS_IMPROVEMENT" or "REWRITE"
-}}
-
-Respond with ONLY valid JSON."""
-
-        message = client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=2000,
-            messages=[{"role": "user", "content": prompt}]
-        )
-
-        response_text = message.content[0].text.strip()
-
-        # Remove markdown code fences if present
-        response_text = re.sub(r'^```json\s*', '', response_text)
-        response_text = re.sub(r'\s*```$', '', response_text)
-
-        result = json.loads(response_text)
-        return result
-
-    except ImportError:
-        print("⚠️  anthropic not installed. Install with: pip install anthropic")
-        return None
-    except Exception as e:
-        print(f"⚠️  Claude API error: {e}")
-        return None
-
-
 def check_content_quality(
     content: str,
     level_code: str,
@@ -750,17 +683,14 @@ def check_content_quality(
         })
         return violations
 
-    # Try Gemini first, fall back to Claude
     evaluation = call_gemini_api(lesson_content, metadata)
-    if evaluation is None:
-        evaluation = call_claude_api(lesson_content, metadata)
 
     if evaluation is None:
         # LLM evaluation unavailable
         violations.append({
             'type': 'CONTENT_QUALITY',
             'severity': 'info',
-            'issue': 'LLM evaluation unavailable (set GEMINI_API_KEY or ANTHROPIC_API_KEY)',
+            'issue': 'LLM evaluation unavailable (set GEMINI_API_KEY)',
             'fix': 'Set API key in environment to enable content quality checks'
         })
         return violations

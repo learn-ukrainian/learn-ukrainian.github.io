@@ -239,7 +239,7 @@ failure — the dim's rubric must absorb the audit evidence. A dim scoring low
 without any audit FLAGs is allowed, but evidence_quotes must justify the score
 from the residual rubric alone.
 
-## Reasoning checklist (do this BEFORE scoring — #1673)
+## Reasoning checklist (do this before scoring)
 
 Before producing the JSON response, reason through this dimension explicitly.
 If the model supports extended thinking (Claude, Gemini, GPT-5.5), use it
@@ -311,7 +311,7 @@ reviewer-protocol failure and will be discarded/retried.
 For each finding, include at minimum `issue_id`, `quote`, `severity`, and
 `explanation`. Leave `issue_ids` empty when no concrete defect applies.
 
-## Tier-1 verification audit (do this DURING evidence search — #1661)
+## Tier-1 verification audit (do this during evidence search)
 
 Сибір case study (May 2026): an unhardened reviewer let two fabricated
 citations and a fused Shevchenko line pass on the writer's first try.

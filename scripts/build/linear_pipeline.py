@@ -5364,7 +5364,7 @@ def render_reviewer_correction_prompt(
             reviewer_role,
             "Return a single <fixes> block. Use these two shapes only:",
             "  - `<fix><find>...</find><replace>...</replace></fix>` for textual"
-            " swaps. Each `<replace>` body MUST be ≤ 6 lines OR ≤ 240 chars.",
+            " swaps. Each `<replace>` body MUST be ≤ 6 lines AND ≤ 240 chars.",
             "  - `<fix><insert_after>ANCHOR</insert_after><text>...</text></fix>` for"
             " ADDITIONS. Use this when the gate failure is 'missing/insufficient X'"
             " (l2_exposure_floor, inject_activity_ids, n_resources, etc.).",
@@ -15748,9 +15748,9 @@ _CALLOUT_PATTERN = re.compile(
     flags=re.IGNORECASE,
 )
 
-#: English META_NARRATION patterns from V6 ``v6-review.md`` line 118
-#: (engagement DEDUCT list) AND the V7 writer prompt's own banned list at
-#: ``linear-write.md`` § "Tone and immersion (mandatory)". The writer's
+#: English META_NARRATION patterns: the V7 writer prompt's banned list at
+#: ``linear-write.md`` § "Tone and immersion (mandatory)" (the retired V6
+#: review rubric's engagement DEDUCT list carried the same patterns). The writer's
 #: persona is a teacher addressing the learner, not a narrator describing
 #: the lesson container. Self-referential framing ("In this lesson...")
 #: breaks immersion and adds zero pedagogical signal. V7 already TELLS the

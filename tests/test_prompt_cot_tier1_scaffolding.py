@@ -36,16 +36,16 @@ REVIEWER_TEMPLATE = (
 )
 
 WRITER_COT_HEADER = (
-    "## Mandatory visible verification block (emit BEFORE drafting — #1673/#1661)"
+    "## Mandatory visible verification block (emit before drafting)"
 )
 WRITER_TIER1_HEADER = (
-    "## Tier-1 verification discipline (do this WHILE drafting — #1661)"
+    "## Tier-1 verification discipline (do this while drafting)"
 )
 REVIEWER_COT_HEADER = (
-    "## Reasoning checklist (do this BEFORE scoring — #1673)"
+    "## Reasoning checklist (do this before scoring)"
 )
 REVIEWER_TIER1_HEADER = (
-    "## Tier-1 verification audit (do this DURING evidence search — #1661)"
+    "## Tier-1 verification audit (do this during evidence search)"
 )
 
 # The visible <plan_reasoning> block requires structured XML subnodes.
@@ -339,7 +339,3 @@ def test_writer_and_reviewer_share_sibir_provenance() -> None:
     # named, reproducible failure rather than a vague "be careful" instruction.
     assert "Сибір case study" in writer
     assert "Сибір case study" in reviewer
-    assert "#1661" in writer
-    assert "#1661" in reviewer
-    assert "#1673" in writer
-    assert "#1673" in reviewer
