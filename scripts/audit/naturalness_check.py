@@ -108,7 +108,6 @@ def call_agy(prompt: str, task_id: str) -> tuple[str, dict]:
                 "-",  # read prompt from stdin
                 "--task-id", task_id,
                 "--from", "claude",
-                "--from-model", "claude-opus-4-5-20251101",  # Track sender model
                 "--to-model", "gemini-3.1-pro-high",
                 "--stdout-only",
             ],
@@ -159,8 +158,6 @@ def call_claude_headless(prompt: str, task_id: str) -> tuple[str, dict]:
                 "--task-id", task_id,
                 "--new-session",  # Fresh session for each evaluation
                 "--from", "claude",  # Claude (this session) asking Claude (headless)
-                "--from-model", "claude-opus-4-5-20251101",  # Current model
-                "--to-model", "claude-sonnet-4"  # Headless typically uses sonnet
             ],
             capture_output=True,
             text=True,

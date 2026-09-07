@@ -33,9 +33,9 @@ commit. Don't leave it worse than you found it.
 
 ## Reference implementation
 
-`scripts/build/pilot_uk_lesson.py` — mirror this pattern.
+`scripts/build/v7_build.py` — mirror this pattern.
 
-Run: `.venv/bin/python scripts/build/pilot_uk_lesson.py --help`
+Run: `.venv/bin/python scripts/build/v7_build.py --help`
 
 ## Why this matters
 

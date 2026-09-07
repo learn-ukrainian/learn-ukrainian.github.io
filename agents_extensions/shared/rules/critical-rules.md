@@ -14,7 +14,7 @@
 **English**: all technical work. **Ukrainian**: curriculum content only.
 
 ### 4. External LLM Access
-Use `gemini-cli` (Google AI Pro subscription). No direct API keys.
+Gemini-family work goes through the AGY lane (`ab ask-agy`, `delegate.py --agent agy`) per `model-assignment.md`; never Gemini CLI or Gemini Code Assist. No direct provider API keys — every model call goes through a fleet lane.
 
 ### 5. Word Targets Are Minimums
 **NEVER** reduce content or change `word_target` to match short content. Expand the content instead.
@@ -114,15 +114,10 @@ A `FAIL` that is blocked purely by missing evidence (no network, sandboxed files
 pass — get the missing evidence from a lane that can obtain it, then finalise.
 
 > **What this is, and what it is NOT.** It is a **quality control** — a second model, unlike the
-> author, hunting defects. It found real ones this week: an omitted root cause in a merged autopsy, and
-> a wrong "nothing imports torch" claim. Keep it for that.
-> It is **NOT** the review *requirement* itself, and must never be presented as equivalent to a human
-> approving review. Precisely: **OpenSSF gives bot/AI review ZERO credit toward a review requirement.**
-> Two independent audits agreed on that fact and split on the tone — one called presenting it as a
-> Scorecard-grade gate "security theatre", the other noted the same sentence *validates the intent*
-> while proving it is **not sufficient**. Both readings land in the same place: keep it as defect-finding,
-> never claim it satisfies a review requirement, and optimise for control continuity rather than badge
-> maths.
+> author, hunting defects (it has caught an omitted root cause in a merged autopsy and a wrong
+> "nothing imports torch" claim). It is **not** a review *requirement*: OpenSSF gives bot/AI review
+> zero credit toward one, so never present it as equivalent to a human approving review. Keep it as
+> defect-finding and optimise for control continuity, not badge maths.
 
 **Severity tiers — do not restart the world for a nit.** Blanket "fix every finding, then re-review
 everything" cannot survive this repo's merge rate and is corporate dual-control cosplay. The boundary is

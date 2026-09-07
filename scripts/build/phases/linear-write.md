@@ -56,7 +56,7 @@ authoring artifacts: `module.md`, `activities.yaml`, `vocabulary.yaml`, and
 
 {WRITER_SPECIFIC_DIRECTIVES}
 
-## Mandatory visible verification block (emit BEFORE drafting — #1673/#1661)
+## Mandatory visible verification block (emit before drafting)
 
 Emit one `<plan_reasoning section="...">...</plan_reasoning>` block per section (<=200 words).
 
@@ -81,7 +81,7 @@ If `M < N`, fix the map before artifacts. If `bad_form_audit.remaining != 0`,
 convert remaining italic/bare bad forms to `<!-- bad -->...<!-- /bad -->`.
 If `activity_split_audit.split_valid=false`, rebalance inline/workbook first.
 
-## Tier-1 verification discipline (do this WHILE drafting — #1661)
+## Tier-1 verification discipline (do this while drafting)
 
 <!-- rule_id: #R-CITE-HONEST -->
 Сибір case study (May 2026): a prior answer fabricated a Грінченко citation, an Антоненко-Давидович claim, and a fused Shevchenko line. Verify before citing; do not ship authority theatre.
@@ -442,7 +442,7 @@ Before artifacts, make the in-scope MCP calls your draft depends on:
 
 If a required call is missing for your level, make it now. Do not emit artifacts first and hope the gate catches it.
 
-## PRE-EMIT HARD STOP — read this NOW, before any artifact fence
+## PRE-EMIT HARD STOP — three checks before any artifact fence
 
 Re-check these three hard-stop items BEFORE emitting:
 
@@ -454,7 +454,7 @@ Re-check these three hard-stop items BEFORE emitting:
 
 If tool history lacks items 1 or 2, STOP and make the calls. `<end_gate>` counts are cross-checked against telemetry; lying fails via `tool_theatre`.
 
-## Artifact emission format (STRICT — restored 2026-05-23 after PR-C strip)
+## Artifact emission format (strict — the parser depends on it)
 
 Return the visible `<plan_reasoning>` blocks first, then exactly these four fenced blocks in the order below, then the `<end_gate>` block. Do not add any other prose anywhere.
 
@@ -499,10 +499,8 @@ The CLOSE fence is four bare backticks on their own line.
 
 ## HARD STOP RULE
 
-After emitting all required `<plan_reasoning>` blocks, the 4 artifact fences
-(`module.md`, `activities.yaml`, `vocabulary.yaml`, `resources.yaml`), and the
-`<end_gate>` block, STOP. Do not write a summary, status report, completion
-confirmation, or any meta-commentary about what you did. The 4 fences are the
-deliverable. Anything after the `<end_gate>` block will be discarded by the
-parser. If you feel the urge to write "Module drafted under..." or "All forms
-verified...", DON'T. The verification is in the `<end_gate>` block, not in prose.
+After the required `<plan_reasoning>` blocks, the four artifact fences
+(`module.md`, `activities.yaml`, `vocabulary.yaml`, `resources.yaml`) and the
+`<end_gate>` block, end the reply. The parser discards anything after
+`<end_gate>`, so a summary, status line or completion note there is lost
+output; the verification record is the `<end_gate>` block itself.

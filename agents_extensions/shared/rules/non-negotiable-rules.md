@@ -85,11 +85,12 @@ which owns the durable lifecycle ledger and repair budgets. Its canonical
 Repair the owning source and obtain fresh review evidence through that workflow;
 do not substitute a historical build-loop budget for the current completion contract.
 
-**Historical V6 behavior:** reviewer-authored `<fixes>` find/replace pairs and a
-maximum of two fix rounds described the former V6 loop. They are not the current
-V7 or module-completion protocol. Preserve the underlying constraint: patch the
-root cause rather than rewriting sound content from scratch, and use deterministic
-word counts instead of reviewer estimates.
+**Reviewer fixes are bounded patches, not rewrites.** The per-dimension reviewer
+returns one `<fixes>` block of `<find>/<replace>` or `<insert_after>` entries (each
+replacement at most 6 lines or 240 characters); `linear_pipeline.py` applies them
+deterministically and records what applied. Patch the root cause rather than
+rewriting sound content, and take word counts from the deterministic counter, never
+from reviewer estimates.
 
 ---
 

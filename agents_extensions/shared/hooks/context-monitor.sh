@@ -71,9 +71,9 @@ WINDOW=""
 WINDOW_PROVENANCE="unavailable"
 WARNING_TIERS=""
 # The session record is plain JSON at <canonical>/.agent/sessions/<id>.json —
-# read it with jq directly instead of spawning a ~130 ms python interpreter on
+# read it with jq directly instead of spawning a ~130 ms interpreter on
 # EVERY tool call (PR #6413 finding #3). This also fixes worktree sessions,
-# where the old $PROJECT_DIR/.venv python check silently disabled the monitor
+# where the old $PROJECT_DIR/.venv interpreter check silently disabled the monitor
 # (linked worktrees carry no venv — F001 r5 class).
 RECORD_FILE="${LEARN_UKRAINIAN_SESSION_RECORD:-}"
 if [ -z "$RECORD_FILE" ] || [ ! -f "$RECORD_FILE" ]; then
@@ -163,6 +163,23 @@ unset HANDOFF_IDENTITY_SH ROLLOVER_STREAM ROLLOVER_STREAM_EPIC
 BOOTSTRAP_FILE=".agent/${HANDOFF_AGENT}-thread-bootstrap.md"
 HANDOFF_FILE=".agent/${HANDOFF_AGENT}-thread-handoff.md"
 CONTEXT_FACT="${PCT}% of the ${WINDOW}-token context window [~${TOKENS}/${WINDOW}; ${USAGE_SOURCE}; capacity: ${WINDOW_PROVENANCE}]"
+
+# Announce each tier once per session, when it is first crossed. Re-injecting the
+# same rollover instruction on every tool call is the trap the Codex/Grok guards
+# above describe, and a running context-budget countdown makes the model wrap up
+# early (claude-api skill, model-migration.md -> Claude Fable 5.1 "context
+# anxiety"). Tier state lives in gitignored runtime storage.
+if [ "$PCT" -ge "$TIER3_PCT" ]; then TIER=3
+elif [ "$PCT" -ge "$TIER2_PCT" ]; then TIER=2
+elif [ "$PCT" -ge "$TIER1_PCT" ]; then TIER=1
+else exit 0
+fi
+TIER_STATE_DIR="$PROJECT_DIR/batch_state/context_monitor"
+TIER_STATE_FILE="$TIER_STATE_DIR/${SESSION_ID}.tier"
+if [ -f "$TIER_STATE_FILE" ] && [ "$(cat "$TIER_STATE_FILE" 2>/dev/null)" = "$TIER" ]; then
+  exit 0
+fi
+mkdir -p "$TIER_STATE_DIR" 2>/dev/null && printf '%s\n' "$TIER" > "$TIER_STATE_FILE" 2>/dev/null
 
 if [ "$PCT" -ge "$TIER3_PCT" ]; then
   MSG=$(printf '%s\n%s\n%s\n%s\n%s\n%s\n' \

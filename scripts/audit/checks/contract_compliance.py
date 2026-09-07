@@ -23,8 +23,8 @@ _ACTIVITY_RE = re.compile(r"<!--\s*INJECT_ACTIVITY:\s*(.+?)\s*-->")
 # the third sentence of a paragraph, which is ordinary teacher phrasing
 # and not a meta-narration signpost. Only phrases acting as a formulaic
 # OPENER of a paragraph should count. This regex set is kept in sync with
-# the forbidden list in ``scripts/build/phases/v6-write.md`` rule 4 and
-# the Dimension 6 deduction rubric in ``scripts/build/phases/v6-review.md``.
+# the banned-opener list in ``scripts/build/phases/linear-write.md``
+# § "Tone and immersion (mandatory)".
 _META_OPENER_PATTERNS = (
     re.compile(r"^In this (?:section|module|lesson)\b", re.IGNORECASE),
     re.compile(r"^This section teaches\b", re.IGNORECASE),

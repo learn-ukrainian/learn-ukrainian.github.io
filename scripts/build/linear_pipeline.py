@@ -15748,9 +15748,9 @@ _CALLOUT_PATTERN = re.compile(
     flags=re.IGNORECASE,
 )
 
-#: English META_NARRATION patterns from V6 ``v6-review.md`` line 118
-#: (engagement DEDUCT list) AND the V7 writer prompt's own banned list at
-#: ``linear-write.md`` § "Tone and immersion (mandatory)". The writer's
+#: English META_NARRATION patterns: the V7 writer prompt's banned list at
+#: ``linear-write.md`` § "Tone and immersion (mandatory)" (the retired V6
+#: review rubric's engagement DEDUCT list carried the same patterns). The writer's
 #: persona is a teacher addressing the learner, not a narrator describing
 #: the lesson container. Self-referential framing ("In this lesson...")
 #: breaks immersion and adds zero pedagogical signal. V7 already TELLS the
