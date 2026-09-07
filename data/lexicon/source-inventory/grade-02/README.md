@@ -77,3 +77,40 @@ its glossary YAML with the specific reason(s) (`no_uk_definition` /
   scope for this pass.
 - Not a re-run or extension of the 2026-07-19 oneshot bulk mine.
 - Not grade 3+. Next grade in the #7551 queue is grade 3.
+
+## Drive extras (this PR, #7551)
+
+A second dispatch surfaced 7 more grade-2 Drive PDFs not covered by the
+original pass above, all copied with `rclone copy` (never `sync`) into
+gitignored `data/textbook_chunks/grade-02/` and run through
+`scripts/rag/extract_text.py --native-only` (never `--force-ocr`):
+
+| PDF | Native extraction | Notes |
+| --- | --- | --- |
+| `2-klas-matematyka-his-2025.pdf` | **Failed closed** (0.00% content-page coverage) | Pure image scan — every sampled page has 0 native characters (checked directly with PyMuPDF). Correct fail-closed behavior, not an extractor defect. |
+| `2-klas-ukrmova-kravcova-2019-1.pdf` | **Passed** (97.7% coverage) | Кравцова Н., Романова В., Савчук А., «Українська мова та читання», 2 клас, 2019, ч. 1 |
+| `2-klas-ukrmova-kravcova-2019-2.pdf` | **Passed** (99.1% coverage) | Same book, ч. 2 (confirmed via in-PDF title-page text: `Кравцова Н. К77 Українська мова та читання : підруч. для 2 кл. ... У 2 ч.`) |
+| `2-klas-ukrmova-kravtsova-2025-1.pdf` | **Failed closed** (0.00% coverage) | Pure image scan. Distinct book/author spelling from `kravcova-2019` above — different textbook, not a duplicate. |
+| `2-klas-ukrmova-savchuk-2025-2.pdf` | **Failed closed** (0.00% coverage) | Pure image scan. |
+| `2-klas-ukrmova-tsepova-2025-1.pdf` | **Failed closed** (0.00% coverage) | Pure image scan. |
+| `2-klas-ukrmova-tsepova-2025-2.pdf` | **Failed closed** (0.00% coverage) | Pure image scan. |
+
+Only the two `kravcova-2019` parts (one book, ч. 1 + ч. 2) cleared native
+extraction; they were merged into a single source-inventory entry and run
+through the same two-stage pipeline as the original pass, top-300-by-frequency
+content-word cap, same admission gates:
+
+| Book | VESUM content candidates | Attempted (top 300 by freq) | Admitted | Richness | Residual (not yet attempted) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| ukrmova-kravcova | 3,704 | 300 | 279 | 93.0% | 3,404 |
+
+Richness floor is 40%; `--allow-richness-regression` not used, not needed.
+Output: `ukrmova-kravcova-grade2-2019-headwords.yaml` (candidate pool) and
+`ukrmova-kravcova-grade2-2019-glossary.yaml` (admitted glossary + this
+batch's residual, reasons `no_uk_definition` / `no_en_gloss`).
+
+The 5 image-scan PDFs are **not** re-added to the "Books processed" table
+above — they have no extracted JSONL and no glossary. Per the `#7551` receipts
+policy, their failure is documented here rather than silently dropped; a
+future OCR-eligible pass (out of scope for this native-only dispatch) is the
+path to covering them.
