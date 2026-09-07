@@ -13,6 +13,48 @@ a Grade-1-wide single dump. Books processed:
 | Жаркова І., «Я досліджую світ», 2024 (2 parts) | ya-doslidzhuiu-svit | `1-klas-ya-doslidzhuiu-svit-zharkova-2024-{1,2}.jsonl` | — |
 | Рубля Т., «Мистецтво», 2024 | mystetstvo | `1-klas-mystetstvo-rublia-2024.jsonl` | — |
 | Пухта Г., «Англійська мова», 2024 | — | `1-klas-angliiska-mova-pukhta-2024.jsonl` | English textbook, not a UK-headword source |
+| Большакова І., Пристінська М., «Українська мова. Буквар», 2018, частина 1 | bukvar | `1-klas-bukvar-bolshakova-2018-1.jsonl` | — |
+
+## Extras (Drive residual, this pass)
+
+A further six Drive PDFs for grade 1 had no local JSONL before this pass —
+three books (Большакова 2018, Большакова 2025, Кравцова 2025), each split
+across two parts. Every PDF was copied via `rclone copy` (never `sync`) into
+the gitignored local cache
+(`/home/ops/learn-ukrainian/data/textbook_chunks/grade-01/`, PDFs and JSONL
+not committed) and run through `scripts/rag/extract_text.py --native-only`,
+which fails closed rather than falling back to OCR:
+
+| PDF | Native content-page coverage | Result |
+| --- | ---: | --- |
+| `1-klas-bukvar-bolshakova-2018-1.pdf` | 98.75% (79/80) | **Passed** — JSONL extracted, glossary below |
+| `1-klas-bukvar-bolshakova-2018-2.pdf` | 17.50% (14/80) | Failed closed — scanned, not digital text |
+| `1-klas-bukvar-bolshakova-2025-1.pdf` | 0.00% (0/133) | Failed closed — scanned, not digital text |
+| `1-klas-bukvar-bolshakova-2025-2.pdf` | 0.00% (0/134) | Failed closed — scanned, not digital text |
+| `1-klas-bukvar-kravcova-2025-1.pdf` | 0.00% (0/115) | Failed closed — scanned, not digital text |
+| `1-klas-bukvar-kravcova-2025-2.pdf` | 0.00% (0/114) | Failed closed — scanned, not digital text |
+
+Only Большакова 2018 part 1 cleared the native-text floor (≥60% of pages);
+the other five are image-only scans that `--native-only` correctly refuses
+(no `--force-ocr` was used, per #7551 scope — OCR recovery for these five, if
+ever authorized, is a separate follow-up). Большакова 2018 part 2 belongs to
+the same book as the admitted part 1 but itself failed extraction, so the
+`bukvar-bolshakova-grade1-2018` glossary below is built from part 1 alone;
+part 2's content is real residual, not invented or guessed at, and is not
+represented in the glossary. Extraction receipts for all six PDFs are kept
+locally (gitignored, not committed) alongside their source-directory
+siblings for audit.
+
+Большакова 2018 part 1's headword inventory and glossary follow the same
+two-stage pipeline as the four original books above:
+
+| Book | VESUM content candidates | Attempted (top 300 by freq) | Admitted | Richness | Residual (not yet attempted) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| bukvar-bolshakova-grade1-2018 (part 1 only) | 961 | 300 | 279 | 93.0% | 661 |
+
+Richness floor is 40% (`--allow-richness-regression` not used, not needed).
+Unknown-forms rate against the default 20% gate: 12.18% (277/2,274 unique
+forms), passed cleanly without an override.
 
 ## Pipeline
 
