@@ -88,3 +88,39 @@ its glossary YAML with the specific reason(s) (`no_uk_definition` /
   scope for this pass.
 - Not a re-run or extension of the 2026-07-19 oneshot bulk mine.
 - Not grade 5+. Next grade in the #7551 queue is grade 5.
+
+## Drive extras (this pass)
+
+Native-extract + VESUM/СУМ-20/ВТС glossary pass over two grade-4 Drive PDFs
+not covered by the original grade-4 pass above — the pre-NUS Варзацька
+"Українська мова та читання" edition (`docs/l2-uk-direct/pidruchnyk-catalog.yaml`
+id `650-ukrayinska-mova-varzacka-4-klas`; author surname only — no initials
+are printed on the catalog page, so none are invented here):
+
+| Book | JSONL | Native coverage | Outcome |
+| --- | --- | --- | --- |
+| Варзацька, «Українська мова та читання», підручник для 4 класу ЗЗСО, частина 1, 2021 | `4-klas-ukrayinska-mova-varzatska-2021-1.jsonl` | 99.38% (159/160 content pages) | Passed native-only extraction; ran through the standard two-stage pipeline |
+| Варзацька, «Українська мова та читання», частина 2, 2021 | — | 0.00% (0/208 content pages) | Pure image scan; native extraction failed closed per `--native-only` (no OCR run) |
+
+Part 1 pipeline result (`extract_textbook_chunk_headword_inventory.py` then
+`admit_textbook_book_glossary.py`, top-300-by-frequency content-word cap,
+СУМ-20/ВТС + dmklinger/ukreng gates, same selection rule as the table above —
+conj/prep/pron/part/intj POS, ambiguous forms, and proper-noun candidates
+dropped before ranking):
+
+| Book | VESUM content candidates | Attempted (top 300 by freq) | Admitted | Richness | Residual (not yet attempted) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| ukrmova-varzatska (part 1) | 2,612 | 300 | 281 | 93.7% | 2,312 |
+
+Richness floor for this program is 40% (`--allow-richness-regression` not
+used, not needed). Unknown-forms rate for part 1 was 9.74% (floor 20%, no
+override needed). Output: `ukrmova-varzatska-grade4-2021-headwords.yaml`
+(candidate pool, no gloss/admission decision) and
+`ukrmova-varzatska-grade4-2021-glossary.yaml` (281 admitted headwords plus
+the 19 residual-this-batch candidates that failed one or both gates, with
+reasons).
+
+Part 2 produced no local JSONL and no glossary — native extraction failed
+closed with 0% content-page coverage (all 208 pages native-unusable); per
+#7551 scope this is not force-OCR'd. No existing grade-4 glossary rewritten.
+Siblings #7800/#7801/#7802 (grade-1/2/3 extras) untouched.
