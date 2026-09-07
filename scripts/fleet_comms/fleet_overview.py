@@ -1,12 +1,20 @@
 """Compact fleet overview projection (private #670 AC-OVERVIEW).
 
 Read-only, fail-open overview of session streams, leases, and holders across the fleet.
+Uses authoritative remote GET /api/epics/v1 (or injected epics_store in Monitor facade).
+Never opens local session-stream SQLite.
 """
 
 from __future__ import annotations
 
+import contextlib
+import json
+import os
 import re
-import subprocess
+import urllib.error
+import urllib.parse
+import urllib.request
+from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -16,7 +24,6 @@ from scripts.api.occupancy_sanitize import opaque_host_id, safe_field
 try:
     from agents_extensions.shared.session_streams.db import (
         SessionStreamDatabase,
-        default_database_path,
     )
     from agents_extensions.shared.session_streams.model import (
         SessionState,
@@ -28,14 +35,14 @@ try:
     HAS_SESSION_STREAMS = True
 except ImportError:
     HAS_SESSION_STREAMS = False
-    default_database_path = None  # type: ignore[assignment]
     SessionState = None  # type: ignore[assignment]
     parse_timestamp = None  # type: ignore[assignment]
     utc_now = None  # type: ignore[assignment]
     SessionStreamStore = None  # type: ignore[assignment]
     SessionStreamDatabase = None  # type: ignore[assignment]
 
-SESSION_STREAMS_REL = Path(".agent/session-streams/v1/session-streams.sqlite3")
+DEFAULT_MONITOR_URL = "http://127.0.0.1:8765"
+DEFAULT_TIMEOUT_SECONDS = 3.0
 REGISTRY_TEXT_MAX = 160
 _REGISTRY_IPV4_RE = re.compile(r"(?<![A-Za-z0-9])(?:\d{1,3}\.){3}\d{1,3}(?![A-Za-z0-9])")
 _REGISTRY_IPV6_RE = re.compile(r"(?i)(?<![A-Za-z0-9])(?:[0-9a-f]{0,4}:){2,}[0-9a-f:]{0,4}(?![A-Za-z0-9])")
@@ -53,6 +60,8 @@ _REGISTRY_PRIVATE_TOKEN_RE = re.compile(
     r"-----BEGIN [^-]{0,40}PRIVATE KEY-----|"
     r"\beyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,})"
 )
+
+OMITTED = object()
 
 
 def _response_registry_text(value: Any) -> str | None:
@@ -89,66 +98,187 @@ def _response_host(value: Any) -> str | None:
     return None if value is None else value if isinstance(value, str) and opaque_host_id(value) else "[redacted]"
 
 
-def _resolve_session_streams_db(repo_root: Path | None) -> Path:
-    """Resolve primary-checkout session-streams DB (not worktree-local Path.cwd())."""
-    if repo_root is not None:
-        repo_root_path = Path(repo_root)
-        if repo_root_path.is_file():
-            return repo_root_path
-
-    if HAS_SESSION_STREAMS and default_database_path is not None:
-        try:
-            return default_database_path(repo_root)
-        except Exception:
-            pass
-
-    active = (Path(repo_root) if repo_root else Path.cwd()).resolve()
-    if active.is_file():
-        return active
-    if (active / SESSION_STREAMS_REL).is_file():
-        return active / SESSION_STREAMS_REL
-
+def resolve_monitor_url(raw: str | None = None) -> str:
+    """Resolve configured Monitor base URL without exposing internal credentials."""
+    candidate = (
+        raw
+        or os.environ.get("LU_MONITOR_LOOPBACK")
+        or os.environ.get("MONITOR_API_BASE_URL")
+        or os.environ.get("MONITOR_API_URL")
+        or DEFAULT_MONITOR_URL
+    ).strip()
     try:
-        result = subprocess.run(
-            ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
-            cwd=active,
-            check=False,
-            capture_output=True,
-            text=True,
-            timeout=2.0,
-        )
-        common_dir_text = result.stdout.strip()
-        if result.returncode == 0 and common_dir_text:
-            common_dir = Path(common_dir_text)
-            if common_dir.is_absolute() and common_dir.name == ".git":
-                return common_dir.parent.resolve() / SESSION_STREAMS_REL
+        from scripts.session_supervisor.remote import monitor_url
+
+        return monitor_url(candidate)
     except Exception:
-        pass
-    return active / SESSION_STREAMS_REL
+        parsed = urllib.parse.urlparse(candidate)
+        port = parsed.port or 8765
+        return f"http://127.0.0.1:{port}"
 
 
-def build_fleet_overview(
-    repo_root: Path | None = None,
+def _project_stream_from_remote(
+    stream: dict[str, Any],
+    *,
+    current_time: datetime,
+) -> dict[str, Any]:
+    stream_id = str(stream.get("stream_id") or "")
+    stream_name = _response_registry_text(stream.get("stream_name"))
+    lease = stream.get("lease")
+    if not isinstance(lease, dict):
+        return {
+            "stream_id": stream_id,
+            "stream_name": stream_name,
+            "lease_state": "unleased",
+            "holder": None,
+            "heartbeat_age_seconds": None,
+            "expires_at": None,
+            "session_state": None,
+            "unknown": True,
+            "stale": False,
+        }
+
+    raw_state = str(lease.get("state") or "")
+    expires_at = lease.get("expires_at")
+    if expires_at is not None:
+        expires_at = str(expires_at)
+
+    is_expired = False
+    if parse_timestamp is not None and expires_at:
+        try:
+            exp_dt = parse_timestamp(expires_at)
+            is_expired = raw_state == "active" and current_time >= exp_dt
+        except Exception:
+            is_expired = False
+
+    if is_expired:
+        lease_state = "expired"
+    elif raw_state in ("active", "released", "expired"):
+        lease_state = raw_state
+    else:
+        lease_state = raw_state or "expired"
+
+    heartbeat_age_seconds = None
+    heartbeat_at = lease.get("heartbeat_at")
+    if parse_timestamp is not None and heartbeat_at:
+        try:
+            hb_dt = parse_timestamp(str(heartbeat_at))
+            heartbeat_age_seconds = max(0, int((current_time - hb_dt).total_seconds()))
+        except Exception:
+            heartbeat_age_seconds = None
+    if heartbeat_age_seconds is None and lease.get("age_seconds") is not None:
+        with contextlib.suppress(ValueError, TypeError):
+            heartbeat_age_seconds = max(0, int(lease["age_seconds"]))
+
+    holder_payload = lease.get("holder")
+    holder = None
+    if isinstance(holder_payload, dict):
+        holder = {
+            "agent": _response_token(holder_payload.get("agent")),
+            "harness": _response_token(holder_payload.get("harness")),
+            "instance_id": _response_token(holder_payload.get("instance_id")),
+            "host_id": _response_host(holder_payload.get("host_id")),
+        }
+
+    expired_session_val = SessionState.EXPIRED.value if SessionState is not None else "expired"
+    session_state = (
+        str(stream["session_state"])
+        if stream.get("session_state") is not None
+        else (str(lease["session_state"]) if lease.get("session_state") is not None else None)
+    )
+
+    is_stale = lease_state == "expired" or session_state == expired_session_val
+
+    return {
+        "stream_id": stream_id,
+        "stream_name": stream_name,
+        "lease_state": lease_state,
+        "holder": holder,
+        "heartbeat_age_seconds": heartbeat_age_seconds,
+        "expires_at": expires_at,
+        "session_state": session_state,
+        "unknown": False,
+        "stale": is_stale,
+    }
+
+
+def fetch_remote_fleet_overview(
+    *,
+    monitor_url: str | None = None,
+    now: datetime | None = None,
+    opener: Callable[..., Any] | None = None,
+    timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
+) -> dict[str, Any]:
+    """Read existing GET /api/epics/v1 from configured Monitor endpoint (fail-open)."""
+    try:
+        base = resolve_monitor_url(monitor_url)
+        url = f"{base}/api/epics/v1"
+        req = urllib.request.Request(
+            url,
+            headers={
+                "Accept": "application/json",
+                "User-Agent": "fleet-comms-overview/1.0",
+            },
+            method="GET",
+        )
+        urlopen = opener or urllib.request.urlopen
+        with urlopen(req, timeout=timeout_seconds) as resp:
+            status_code = int(getattr(resp, "status", getattr(resp, "code", 200)))
+            if status_code != 200:
+                return {"available": False, "streams": []}
+            raw = resp.read()
+            text = raw.decode("utf-8") if isinstance(raw, bytes) else str(raw)
+            data = json.loads(text)
+    except Exception:
+        return {"available": False, "streams": []}
+
+    if not isinstance(data, dict):
+        return {"available": False, "streams": []}
+
+    raw_streams = data.get("streams")
+    if not isinstance(raw_streams, list):
+        return {"available": False, "streams": []}
+
+    current_time = now or (utc_now() if utc_now is not None else datetime.now(UTC))
+    if current_time.tzinfo is None:
+        current_time = current_time.replace(tzinfo=UTC)
+
+    streams: list[dict[str, Any]] = []
+    for item in raw_streams:
+        if isinstance(item, dict):
+            try:
+                streams.append(_project_stream_from_remote(item, current_time=current_time))
+            except Exception:
+                streams.append(
+                    {
+                        "stream_id": str(item.get("stream_id") or ""),
+                        "stream_name": _response_registry_text(item.get("stream_name")),
+                        "lease_state": "unleased",
+                        "holder": None,
+                        "heartbeat_age_seconds": None,
+                        "expires_at": None,
+                        "session_state": None,
+                        "unknown": True,
+                        "stale": False,
+                    }
+                )
+
+    return {
+        "available": True,
+        "streams": streams,
+    }
+
+
+def build_fleet_overview_from_store(
+    store: Any,
     *,
     now: datetime | None = None,
 ) -> dict[str, Any]:
-    """Build a compact, read-only overview of fleet session streams and leases.
-
-    Fail-open: returns available=False on missing DB or error without raising.
-    """
-    if not HAS_SESSION_STREAMS:
+    """Build fleet overview from the injected SessionStreamStore (no local DB construction)."""
+    if store is None or not HAS_SESSION_STREAMS:
         return {"available": False, "streams": []}
 
     try:
-        db_path = _resolve_session_streams_db(repo_root)
-    except Exception:
-        return {"available": False, "streams": []}
-
-    if not db_path.is_file():
-        return {"available": False, "streams": []}
-
-    try:
-        store = SessionStreamStore(SessionStreamDatabase(db_path))
         projections = store.list_remote_projections()
     except Exception:
         return {"available": False, "streams": []}
@@ -164,7 +294,7 @@ def build_fleet_overview(
 
     streams: list[dict[str, Any]] = []
     for row in projections:
-        stream_id = str(row["stream_id"])
+        stream_id = str(row.get("stream_id") or "")
 
         stream_name = None
         try:
@@ -205,10 +335,8 @@ def build_fleet_overview(
 
             if is_expired:
                 lease_state = "expired"
-            elif raw_state == "released":
-                lease_state = "released"
-            elif raw_state == "active":
-                lease_state = "active"
+            elif raw_state in ("active", "released", "expired"):
+                lease_state = raw_state
             else:
                 lease_state = raw_state or "expired"
 
@@ -268,3 +396,31 @@ def build_fleet_overview(
         "available": True,
         "streams": streams,
     }
+
+
+def build_fleet_overview(
+    repo_root: Path | None = None,
+    *,
+    epics_store: Any = OMITTED,
+    monitor_url: str | None = None,
+    now: datetime | None = None,
+    opener: Callable[..., Any] | None = None,
+) -> dict[str, Any]:
+    """Build a compact, read-only overview of fleet session streams and leases.
+
+    Authority order:
+    1. If an epics_store is injected (Monitor facade), project from the store.
+       If explicitly passed as None, returns available=False.
+    2. Otherwise (CLI fleet status / remote callers), query GET /api/epics/v1
+       against the configured Monitor loopback endpoint.
+    3. Fail-open: returns available=False if unreachable or error.
+       Never constructs or opens local session-stream SQLite.
+    """
+    if epics_store is not OMITTED:
+        return build_fleet_overview_from_store(epics_store, now=now)
+
+    return fetch_remote_fleet_overview(
+        monitor_url=monitor_url,
+        now=now,
+        opener=opener,
+    )
