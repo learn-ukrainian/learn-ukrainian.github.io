@@ -62,14 +62,33 @@ handoff creates a competing authority.
   reconciliation, and it is never grounds for an automatic primary-checkout
   update or for borrowing another session's identity.
 - **Orient:** read rules, `plane-status`, and the assigned stream's continuity.
-  Query `GET /api/work/v1/projection` and
-  `GET /api/work/v1/next?stream=<your-stream>` through the configured Monitor
-  endpoint. Work is a queue input alongside canonical stream and GitHub state.
-  Inspect `health`, `attention_rank`, and `safe_next_action`; `UNKNOWN` means
+  Query the public Work surfaces through the configured Monitor endpoint:
+  `GET /api/work/v1/projection` (normalized attention list, denominator,
+  `cache_age_s`), `GET /api/work/v1/next?stream=<your-stream>` (stream-scoped
+  pick list), `GET /api/work/v1/capabilities` (schema digest, budgets,
+  private-source seam), and `GET /api/work/v1/health` (cheap liveness only —
+  not a substitute for the projection's own health/attention fields). GitHub
+  Issues and PRs remain the source of truth; Work is a queue input alongside
+  canonical stream and GitHub state, never a replacement for either. Inspect
+  `health`, `attention_rank`, and `safe_next_action`; `UNKNOWN` means
   missing/stale authority, with `INSPECT_UNKNOWN`, not permission to execute.
-  A cold next-queue cache returns `503 building` with `retry_after_s`; an
-  unknown stream returns `400` with `valid_streams`. Do not invent an empty
-  queue or another stream to bypass these responses.
+  A cold next-queue cache returns `503 building` with `retry_after_s`; a
+  cache older than `max_stale_s` returns `503 stale`; an unknown stream
+  returns `400` with `valid_streams`. Do not invent an empty queue or another
+  stream to bypass these responses. The projection's denominator (capped-1000
+  open issues/PRs, the streams response, and class-4 summaries) sets
+  `truncated=true` when a cap is hit; treat a truncated, stale, or `UNKNOWN`
+  Work signal as reduced coverage, not as proof no work exists — consult
+  GitHub Issues/PRs directly for anything Work reports that way. A sibling
+  private Work adapter exists for the browser-local dual-source projection
+  (`docs/monitor-api/work.md`): it answers its own loopback-only
+  `GET /v1/health` and `GET /v1/projection` for that browser client, the
+  public server never fetches or proxies it, and it is not reachable or
+  configurable from an agent seat. The public capability seam reporting
+  `available: false` / `reason_if_unavailable: not_configured` is that
+  privacy seam holding by design, not evidence the private adapter is down —
+  do not read `not_configured` as an outage, and do not try to reach, guess,
+  or configure a private endpoint from this seat.
 - **Live delivery:** the live driver reads and applies its own inbox, then runs
   the project bridge `ack --consumed-by-live-driver <message-id>`. Plain `ack`,
   detached worker processing, and a wake signal are not live-consumption proof.
@@ -78,6 +97,9 @@ handoff creates a competing authority.
 - **Privacy:** public guidance and PR evidence remain environment-neutral.
   Keep host topology, concrete execution paths, endpoint configuration,
   credentials, and operational transcripts in private operational evidence.
+  This covers the private Work adapter: its role and read-only contract are
+  documented in `docs/monitor-api/work.md`, but its concrete host, port, and
+  deployment location are operational topology and stay private.
 
 ## Cleanup ownership
 
