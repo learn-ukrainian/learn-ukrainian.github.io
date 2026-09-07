@@ -56,6 +56,11 @@ handoff creates a competing authority.
   fails closed: no second supervisor, no alternate identity, and no local
   lease fallback. Remote leases remain live until `expires_at`, regardless of
   local PID observations; wait for expiry or an attributed operator release.
+  Local Git checkout HEAD (`git status` / `git rev-parse`) and the tunneled
+  Monitor service's reported HEAD are independent facts from independent
+  sources; a mismatch between them alone is not a defect requiring
+  reconciliation, and it is never grounds for an automatic primary-checkout
+  update or for borrowing another session's identity.
 - **Orient:** read rules, `plane-status`, and the assigned stream's continuity.
   Query `GET /api/work/v1/projection` and
   `GET /api/work/v1/next?stream=<your-stream>` through the configured Monitor
