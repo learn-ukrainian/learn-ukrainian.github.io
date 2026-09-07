@@ -11,7 +11,7 @@
       },
       {
         "path": "scripts/lexicon/admit_textbook_book_glossary.py",
-        "sha256": "87e5db42115d1e8f0b830523a3193b8799825a5c7dcaf9be72e70fe91e819622"
+        "sha256": "61fec40227a7097a01bc6f0c115d8efdb838fa829413618dcf01b00dd4c0d3b1"
       },
       {
         "path": "scripts/lexicon/anchor_curation_evidence.py",

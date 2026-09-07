@@ -36,17 +36,45 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sqlite3
 import subprocess
 import sys
 import time
 import urllib.parse
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+
+try:
+    from scripts.storage.topology import (
+        ActiveDatabaseNetworkError,
+        is_network_filesystem_path,
+    )
+except ImportError:
+    try:
+        from storage.topology import (  # type: ignore[no-redef]
+            ActiveDatabaseNetworkError,
+            is_network_filesystem_path,
+        )
+    except ImportError:
+
+        class ActiveDatabaseNetworkError(ValueError):  # type: ignore[no-redef]
+            """Raised when a caller tries to use a network path as active sources.db."""
+
+        def is_network_filesystem_path(path: Path) -> bool:  # type: ignore[no-redef]
+            s = str(path)
+            return (
+                s.startswith("//")
+                or s.startswith("\\\\")
+                or "/volumes/ukrainiandata" in s.lower()
+                or "\\ukrainiandata\\" in s.lower()
+            )
+
 
 from scripts.lexicon.enrich_manifest import (
     _SLOVNYK_CACHE_SCHEMA_VERSION,
@@ -64,6 +92,112 @@ SLOVNYK_SLUGS = ("newsum", "vts", "ukreng")
 SLEEP_SECONDS = 0.3
 DEFINITION_CHAR_LIMIT = 320
 GLOSS_MAX_SENSES = 3
+
+
+@lru_cache(maxsize=16)
+def _cached_resolve_main_root(path_str: str) -> Path | None:
+    try:
+        from scripts.guardrails.worktree_containment import (
+            NotAGitRepositoryError,
+            resolve_main_root,
+        )
+    except ImportError:
+        try:
+            from guardrails.worktree_containment import (  # type: ignore[no-redef]
+                NotAGitRepositoryError,
+                resolve_main_root,
+            )
+        except ImportError:
+            return None
+    try:
+        return resolve_main_root(Path(path_str))
+    except (NotAGitRepositoryError, RuntimeError):
+        return None
+
+
+def _resolve_primary_checkout(root: Path | None = None) -> Path | None:
+    """Primary checkout root via the shared ``.git`` common dir (#6571, #7551).
+
+    Dispatch worktrees sparse-exclude the large ``data/`` artifacts, so they
+    live only in the primary checkout. Resolve that root from git (works on any
+    operator's machine) instead of a hardcoded absolute path. Returns None
+    outside a git repo so callers fall back honestly.
+    """
+    target = root if root is not None else PROJECT_ROOT
+    return _cached_resolve_main_root(str(target))
+
+
+def is_valid_sources_db(path: Path) -> bool:
+    """True if path exists, is a regular file, and contains SQLite format 3 data."""
+    try:
+        if not path.is_file() or path.stat().st_size < 100:
+            return False
+        with path.open("rb") as f:
+            header = f.read(16)
+        return header == b"SQLite format 3\x00"
+    except OSError:
+        return False
+
+
+def resolve_sources_db(
+    explicit: Path | str | None = None,
+    *,
+    project_root: Path | None = None,
+) -> Path:
+    """Resolve active sources.db: worktree path if valid, else primary checkout.
+
+    Never symlinks. Refuses network/SMB paths. Fails closed with FileNotFoundError
+    if neither exists.
+    """
+    root = project_root if project_root is not None else PROJECT_ROOT
+
+    # 1. Explicit override or environment variable
+    candidate_str = explicit or os.environ.get("SOURCES_DB_PATH") or os.environ.get("LU_SOURCES_DB")
+    if candidate_str:
+        candidate = Path(candidate_str).expanduser()
+        if is_network_filesystem_path(candidate) or (
+            candidate.exists() and is_network_filesystem_path(candidate.resolve())
+        ):
+            raise ActiveDatabaseNetworkError(
+                f"Active sources.db must remain on local storage; refused network path: {candidate}"
+            )
+        if is_valid_sources_db(candidate):
+            return candidate
+        raise FileNotFoundError(
+            f"sources.db specified at '{candidate}' does not exist or is not a valid SQLite database"
+        )
+
+    # 2. Worktree path if present and valid
+    worktree_db = root / "data" / "sources.db"
+    if is_network_filesystem_path(worktree_db) or (
+        worktree_db.exists() and is_network_filesystem_path(worktree_db.resolve())
+    ):
+        raise ActiveDatabaseNetworkError(
+            f"Active sources.db must remain on local storage; refused network path: {worktree_db}"
+        )
+    if is_valid_sources_db(worktree_db):
+        return worktree_db
+
+    # 3. Primary-checkout fallback
+    primary = _resolve_primary_checkout(root)
+    if primary is not None and primary.resolve() != root.resolve():
+        primary_db = primary / "data" / "sources.db"
+        if is_network_filesystem_path(primary_db) or (
+            primary_db.exists() and is_network_filesystem_path(primary_db.resolve())
+        ):
+            raise ActiveDatabaseNetworkError(
+                f"Active sources.db must remain on local storage; refused network path: {primary_db}"
+            )
+        if is_valid_sources_db(primary_db):
+            return primary_db
+        raise FileNotFoundError(
+            f"sources.db not found: checked worktree '{worktree_db}' and primary checkout '{primary_db}'"
+        )
+
+    primary_desc = (
+        f"'{primary / 'data' / 'sources.db'}'" if primary is not None else "could not resolve primary checkout"
+    )
+    raise FileNotFoundError(f"sources.db not found: checked worktree '{worktree_db}' and {primary_desc}")
 
 
 def fetch_slovnyk_curl(word: str, slug: str, *, timeout: int = 15) -> tuple[int, str]:
@@ -167,21 +301,28 @@ def uk_definition(cache: dict[str, Any], lemma: str) -> tuple[str, str, str] | N
         if not isinstance(row, dict) or not row.get("text"):
             continue
         text = _definition_body(
-            row["text"], headword=str(row.get("word") or lookup_word), strip_leading_headword=True, limit=DEFINITION_CHAR_LIMIT
+            row["text"],
+            headword=str(row.get("word") or lookup_word),
+            strip_leading_headword=True,
+            limit=DEFINITION_CHAR_LIMIT,
         )
         if text:
             return text, label, str(row.get("source_url") or "")
     return None
 
 
-def en_gloss(cache: dict[str, Any], lemma: str, dmklinger_index: dict[str, list[tuple[str, str]]]) -> tuple[str, str] | None:
+def en_gloss(
+    cache: dict[str, Any], lemma: str, dmklinger_index: dict[str, list[tuple[str, str]]]
+) -> tuple[str, str] | None:
     gloss = dmklinger_gloss(dmklinger_index, lemma)
     if gloss:
         return gloss, "dmklinger"
     lookups = cache.get("lookups") or {}
     row = lookups.get("ukreng")
     if isinstance(row, dict) and row.get("text"):
-        text = _definition_body(row["text"], headword=str(row.get("word") or lemma), strip_leading_headword=True, limit=200)
+        text = _definition_body(
+            row["text"], headword=str(row.get("word") or lemma), strip_leading_headword=True, limit=200
+        )
         if text:
             return text, "ukreng"
     return None
@@ -234,6 +375,12 @@ def build_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--subject", help="Optional subject label")
     parser.add_argument("--out", type=Path, required=True, help="Glossary YAML destination")
     parser.add_argument("--report", action="store_true", help="Print admission stats")
+    parser.add_argument(
+        "--sources-db",
+        type=Path,
+        default=None,
+        help="Optional path to sources.db (default: auto-resolved from worktree or primary checkout)",
+    )
     return parser
 
 
@@ -242,7 +389,8 @@ def main(argv: list[str] | None = None) -> int:
     payload = json.loads(args.candidates.read_text(encoding="utf-8"))
     attempted = payload["attempted"]
 
-    conn = sqlite3.connect(str(PROJECT_ROOT / "data" / "sources.db"))
+    sources_db = resolve_sources_db(args.sources_db)
+    conn = sqlite3.connect(str(sources_db))
     try:
         dmklinger_index = load_dmklinger_index(conn)
     finally:
