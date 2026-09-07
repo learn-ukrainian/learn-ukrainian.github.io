@@ -736,3 +736,143 @@ def test_claude_driver_injects_lane_agent_type() -> None:
     alias = run_launcher("start-claude-driver.sh", "--epic", "atlas-practice")
     assert alias.returncode == 0, alias.stderr
     assert "launcher: would select agent infra-orchestrator for lane atlas-practice" in alias.stdout
+
+
+def hermes_stub_env(tmp_path: Path, *, help_text: str | None = None) -> dict[str, str]:
+    """No inference or credentials: emulate the installed Hermes probe/argv surface."""
+    import shlex
+
+    binary = tmp_path / "hermes"
+    help_text = help_text if help_text is not None else (
+        "  -m MODEL, --model MODEL\n"
+        "  --provider PROVIDER\n"
+        "  -q QUERY, --query QUERY\n"
+        "  --in DIR\n"
+        "  --cli\n"
+        "  --reasoning LEVEL  Reasoning effort: low, medium, high, xhigh, max.\n"
+    )
+    binary.write_text(
+        "#!/usr/bin/env bash\n"
+        'if [[ "$*" == "chat --help" ]]; then\n'
+        f"  printf '%s\\n' {shlex.quote(help_text)}\n"
+        'elif [[ "$*" == "fallback list" ]]; then\n'
+        '  if [[ "${TEST_HERMES_FALLBACK:-0}" == 1 ]]; then\n'
+        "    printf 'Fallback chain: private-test-credential\\n'\n"
+        "  else\n"
+        "    printf '\\n  No fallback providers configured.\\n\\n  Add one with:  hermes fallback add\\n'\n"
+        "  fi\n"
+        "else\n"
+        "  printf '%s\\0' \"$@\"\n"
+        "fi\n",
+        encoding="utf-8",
+    )
+    binary.chmod(0o755)
+    return {"PATH": f"{tmp_path}{os.pathsep}{os.defpath}"}
+
+
+@pytest.mark.parametrize("provider", ("grok", "codex"))
+def test_hermes_absent_binary_fails_before_lifecycle(provider: str) -> None:
+    assert shutil.which("hermes", path=os.defpath) is None
+    result = run_launcher(
+        f"start-{provider}.sh", "--harness", "hermes", env={"PATH": os.defpath}, dry_run=False,
+    )
+    assert result.returncode == 3
+    assert "Hermes executable is unavailable" in result.stderr
+    assert "lease" not in result.stdout
+
+
+@pytest.mark.parametrize("provider", ("grok", "codex"))
+def test_hermes_environment_is_not_opt_in(provider: str) -> None:
+    result = run_launcher(f"start-{provider}.sh", env={"LAUNCHER_HARNESS": "hermes"})
+    assert result.returncode == 2
+    assert "explicit --harness hermes" in result.stderr
+
+
+@pytest.mark.parametrize("provider", ("grok", "codex"))
+@pytest.mark.parametrize("override", (
+    "--provider=openrouter", "--model=other", "-mother", "--reasoning=ultra",
+    "--yolo", "--safe-mode", "--ignore-rules", "--api-key=private-test-credential",
+    "--resume=latest", "--oneshot", "--query=override",
+))
+def test_hermes_forwarded_flags_fail_closed_without_echoing_values(provider: str, override: str) -> None:
+    result = run_launcher(f"start-{provider}.sh", "--harness", "hermes", "--", override)
+    assert result.returncode == 2
+    assert "forwarded CLI flags are forbidden" in result.stderr
+    assert "private-test-credential" not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize("provider", ("grok", "codex"))
+def test_hermes_unproven_effort_is_rejected(tmp_path: Path, provider: str) -> None:
+    env = hermes_stub_env(tmp_path, help_text=(
+        "  --model MODEL\n  --provider PROVIDER\n  --query QUERY\n  --in DIR\n  --cli\n"
+        "  --reasoning LEVEL  Reasoning effort: medium, high.\n"
+        "  --verbosity LEVEL  Verbosity: low, high.\n"
+    ))
+    result = run_launcher(f"start-{provider}.sh", "--harness", "hermes", "--effort", "low", env=env)
+    assert result.returncode == 2
+    assert "does not advertise" in result.stderr
+    assert "would claim lease" not in result.stdout
+
+
+@pytest.mark.parametrize("provider", ("grok", "codex"))
+def test_hermes_configured_fallback_is_refused_and_redacted(tmp_path: Path, provider: str) -> None:
+    env = hermes_stub_env(tmp_path) | {"TEST_HERMES_FALLBACK": "1"}
+    result = run_launcher(f"start-{provider}.sh", "--harness", "hermes", env=env)
+    assert result.returncode == 2
+    assert "empty fallback chain" in result.stderr
+    assert "private-test-credential" not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize("provider", ("grok", "codex"))
+def test_hermes_help_never_probes_or_claims(provider: str) -> None:
+    result = run_launcher(
+        f"start-{provider}-driver.sh", "--harness", "hermes", "--help", env={"PATH": os.defpath},
+    )
+    assert result.returncode == 0
+    assert "Rollback: omit --harness hermes" in result.stdout
+    assert "would claim lease" not in result.stdout
+
+
+@pytest.mark.parametrize("provider,model,route", (
+    ("grok", "grok-4.6", "xai-oauth"), ("codex", "gpt-6-astra", "openai-codex"),
+))
+def test_hermes_real_exec_preserves_literal_prompt_argv(
+    tmp_path: Path, provider: str, model: str, route: str,
+) -> None:
+    """Run the real adapter against a fake binary, without deployment/lease effects."""
+    import shlex
+
+    env = os.environ | hermes_stub_env(tmp_path)
+    prompt = "quotes ' and \"; $(touch never-execute) `false`\nsecond line"
+    command = (
+        f"source {shlex.quote(str(REPO / 'scripts/lib/launcher_core.sh'))}\n"
+        f"source {shlex.quote(str(REPO / f'scripts/launchers/{provider}.sh'))}\n"
+        f"LC_PROVIDER={provider}; LC_MODE=interactive; launcher_defaults\n"
+        f"LC_SESSION_ROOT={shlex.quote(str(tmp_path / 'repo with spaces'))}\n"
+        f"launcher_parse --harness hermes --effort low -- {shlex.quote(prompt)}\n"
+        "launcher_adapter_validate\nlauncher_adapter_preflight\nlauncher_adapter_exec\n"
+    )
+    result = subprocess.run(
+        ["bash", "-eu", "-c", command], cwd=REPO, env=env,
+        capture_output=True, text=True, check=False, timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.split("\0") == [
+        "chat", "--cli", "--provider", route, "--model", model,
+        "--in", str(tmp_path / "repo with spaces"), "--reasoning", "low", "--query", prompt, "",
+    ]
+
+
+@pytest.mark.parametrize("provider", ("grok", "codex"))
+def test_hermes_missing_required_cli_flag_fails_closed(tmp_path: Path, provider: str) -> None:
+    env = hermes_stub_env(tmp_path, help_text="  --model MODEL\n  --reasoning LEVEL low, high.\n")
+    result = run_launcher(f"start-{provider}.sh", "--harness", "hermes", env=env)
+    assert result.returncode == 2
+    assert "lacks a required launcher option" in result.stderr
+
+
+@pytest.mark.parametrize("provider", ("grok", "codex"))
+def test_hermes_rejects_effort_that_transport_would_clamp(provider: str) -> None:
+    result = run_launcher(f"start-{provider}.sh", "--harness", "hermes", "--effort", "max")
+    assert result.returncode == 2
+    assert "supports only low|medium|high|xhigh effort" in result.stderr

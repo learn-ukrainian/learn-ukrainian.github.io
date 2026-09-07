@@ -68,3 +68,37 @@ def test_grok_forwards_provider_arguments_only_after_separator() -> None:
     result = run_launcher("start-grok.sh", "--", "--reasoning", "high")
     assert result.returncode == 0, result.stderr
     assert "--reasoning high" in result.stdout
+
+
+def test_grok_hermes_opt_in_pins_route_and_reuses_driver_lifecycle(tmp_path) -> None:
+    from tests.test_launcher_contract import hermes_stub_env
+
+    result = run_launcher(
+        "start-grok-driver.sh", "--epic", "devops", "--harness", "hermes", "--effort", "high",
+        env=hermes_stub_env(tmp_path),
+    )
+    assert result.returncode == 0, result.stderr
+    assert "agent=grok harness=hermes" in result.stdout
+    assert "would exec hermes chat --cli --provider xai-oauth --model grok-4.6" in result.stdout
+    assert "--reasoning high" in result.stdout
+    assert result.stdout.index("would claim lease") < result.stdout.index("would run provider canary")
+    assert result.stdout.index("would run provider canary") < result.stdout.index("would bind drive-epic")
+    assert "Load\\ agents_extensions/shared/skills/drive-epic/SKILL.md" in result.stdout
+    assert "--query" in result.stdout
+
+
+def test_grok_hermes_omitted_effort_is_not_attested(tmp_path) -> None:
+    from tests.test_launcher_contract import hermes_stub_env
+
+    result = run_launcher("start-grok.sh", "--harness=hermes", env=hermes_stub_env(tmp_path))
+    assert result.returncode == 0, result.stderr
+    assert "requested_effort=default" in result.stdout
+    assert "--reasoning" not in result.stdout
+
+
+def test_grok_hermes_refuses_unsupported_model_and_effort() -> None:
+    model = run_launcher("start-grok.sh", "--harness", "hermes", "--model", "openai-codex")
+    effort = run_launcher("start-grok.sh", "--harness", "hermes", "--effort", "max")
+    assert model.returncode == 4
+    assert effort.returncode == 2
+    assert "supports only low|medium|high" in effort.stderr
