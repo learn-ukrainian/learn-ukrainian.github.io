@@ -642,6 +642,26 @@ def test_cold_start_refuses_competing_authority(onboarding: str) -> None:
     assert "default off" not in workflow
 
 
+def test_lease_identity_separates_local_git_head_from_monitor_head(onboarding: str) -> None:
+    """#669 AC-IDENTITY — local checkout HEAD and Monitor-reported HEAD are
+    independent facts; a mismatch alone must not be taught as a defect."""
+    lease = " ".join(
+        onboarding.split("**Lease and identity:**", 1)[1]
+        .split("**Orient:**", 1)[0]
+        .split()
+    )
+    for contract in (
+        "git status",
+        "git rev-parse",
+        "independent facts",
+        "not a defect requiring",
+        "reconciliation",
+        "automatic primary-checkout update",
+        "borrowing another session's identity",
+    ):
+        assert contract in lease, f"missing lease/identity contract: {contract}"
+
+
 def test_onboarding_retires_sealed_review_instructions(onboarding: str) -> None:
     review = onboarding.split("### Discuss is not formal review", 1)[1].split(
         "### Delegate is execution", 1
