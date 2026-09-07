@@ -555,8 +555,22 @@ def test_deepseek_live_acp_contract_uses_opencode(onboarding: str) -> None:
         "### Selecting the ACP panel", 1
     )[0]
     assert "DeepSeek's standing route is first-party via `opencode acp --pure`" in acpx
-    assert "Hermes is permanently removed and is not a live DeepSeek route" in acpx
+    assert "historical `text-oneshot-isolated-v1` Hermes contract is retired" in acpx
+    assert "not a live DeepSeek route" in acpx
+    assert "does not forbid the separately authorized Grok/Codex launcher `--harness hermes`" in acpx
+    assert "private #667 / public #6943" in acpx
+    assert "### DeepSeek ACP — historical Hermes route retired" in body
+    assert "(#deepseek-acp--historical-hermes-route-retired)" in body
+    assert "DeepSeek ACP seat / `ask-hermes` alias no longer uses a Hermes binary" in body
+    assert "no Hermes provisioning recipe applies to that alias" in body
+    assert "not a blanket ban on operator-authorized Grok/Codex `--harness hermes`" in body
+    assert "DeepSeek ACP standing path is first-party opencode" in body
+    assert "`ask-hermes` remains that alias, not the launcher harness" in body
     for stale in (
+        "Hermes is permanently removed",
+        "Hermes was permanently removed from this host",
+        "Hermes permanently removed — DeepSeek routes via opencode",
+        "not awaiting reinstall, and no provisioning recipe applies anymore",
         "AGY and DeepSeek use the project-owned text ACP server",
         "DeepSeek runs Hermes",
         "ACPX, Grok, AGY, OpenCode, and Hermes use rolling compatibility contracts",
