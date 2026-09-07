@@ -400,3 +400,246 @@ def test_supervisory_stale_envelope_cannot_consume_or_prepare(supervisory_cycle)
         consume_supervisory_event(service, supervisor, lease)
     assert service.supervisory_delivery_status(did) == "queued"
     assert supervisor.close_driver(role="driver", lease=successor) == "closed"
+
+
+@pytest.mark.parametrize("released_before_crash", [False, True])
+def test_prepared_restart_survives_process_loss_without_early_takeover(
+    tmp_path, monkeypatch, released_before_crash,
+):
+    from datetime import timedelta
+    from types import SimpleNamespace
+
+    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
+    from agents_extensions.shared.session_streams.model import utc_now
+    from agents_extensions.shared.session_streams.store import SessionStreamStore
+    from scripts.ai_agent_bridge._inbox_watch import consume_supervisory_event, wake_driver_once
+    from scripts.fleet_comms.authority import AuthorityService
+    from scripts.session_supervisor import SessionSupervisor
+    from tests.epics_monitor_stub import epics_monitor_stub
+
+    now = utc_now()
+    monkeypatch.setattr("scripts.api.epics_router.utc_now", lambda: now)
+    monkeypatch.setattr("agents_extensions.shared.session_streams.store.utc_now", lambda: now)
+    database = tmp_path / "restart.sqlite3"
+    fleet_root = tmp_path / "fleet"
+    store = SessionStreamStore(SessionStreamDatabase(database))
+    with AuthorityService(root=fleet_root) as service, epics_monitor_stub(store) as base:
+        supervisor = SessionSupervisor(None, repo_root=tmp_path, remote=RemoteEpicClient(base=base))
+        predecessor = _open_supervisory_driver(supervisor)
+        did = _supervisory_event(service)
+        request = consume_supervisory_event(service, supervisor, predecessor, now=now.isoformat())
+        assert request is not None and request.delivery_id == did
+        if released_before_crash:
+            assert supervisor.close_driver(role="driver", lease=predecessor) == "closed"
+
+    # Drop both clients and reopen both databases. No desktop, external driver,
+    # or provider is involved; only the established lifecycle primitives run.
+    store = SessionStreamStore(SessionStreamDatabase(database))
+    with AuthorityService(root=fleet_root) as service, epics_monitor_stub(store) as base:
+        supervisor = SessionSupervisor(None, repo_root=tmp_path, remote=RemoteEpicClient(base=base))
+        starts = []
+
+        def start(_argv, *, env, check):
+            assert env["SESSION_SUPERVISOR_WAKE_DELIVERY"] == did
+            assert check is False
+            starts.append(_open_supervisory_driver(
+                supervisor, instance="successor", session_id=request.successor_session_id,
+            ))
+            return SimpleNamespace(returncode=0)
+
+        wake_args = dict(stream_id=predecessor.stream_id, launcher=Path("start-codex-driver.sh"),
+                         epic="fixture", run=start)
+        if not released_before_crash:
+            before = store.dump_stream(predecessor.stream_id)
+            assert not wake_driver_once(service, supervisor.remote, **wake_args)
+            assert starts == []
+            assert store.dump_stream(predecessor.stream_id) == before
+            # Advance the API clock past TTL; never simulate expiry by force release.
+            now += timedelta(seconds=901)
+
+        assert wake_driver_once(service, supervisor.remote, **wake_args)
+        successor, = starts
+        assert successor.generation == predecessor.generation + 1
+        capsule = supervisor.build_capsule(role="driver", stream_id=successor.stream_id, lease=successor)
+        assert sum(entry.body == request.prepared_body for entry in capsule.digest.recent) == 1
+        assert consume_supervisory_event(
+            service, supervisor, successor, now=(now + timedelta(seconds=61)).isoformat(),
+        ) is None
+        assert service.supervisory_delivery_status(did) == "acted_on"
+        assert supervisor.close_driver(role="driver", lease=successor) == "closed"
+        assert not wake_driver_once(service, supervisor.remote, **wake_args)
+        assert len(starts) == 1
+        sessions = store.dump_stream(predecessor.stream_id)["sessions"]
+        assert len(sessions) == 2
+        assert [session["state"] for session in sessions] == ["closed", "closed"]
+        assert store.session_state(predecessor.stream_id, predecessor.session_id).value == (
+            "closed" if released_before_crash else "expired"
+        )
+
+
+@pytest.mark.parametrize("damage", ["missing", "mismatched"])
+def test_supervisory_wake_refuses_event_file_database_drift(supervisory_cycle, damage):
+    from unittest.mock import Mock
+
+    from scripts.ai_agent_bridge._inbox_watch import supervisory_launch_plan, wake_driver_once
+    from scripts.fleet_comms.artifacts import ArtifactStoreError
+
+    service, supervisor = supervisory_cycle
+    lease = _open_supervisory_driver(supervisor)
+    assert supervisor.close_driver(role="driver", lease=lease) == "closed"
+    did = _supervisory_event(service, action="wake", generation=lease.generation)
+    assert supervisory_launch_plan(service, supervisor.remote, did, lease.stream_id) is not None
+    delivery = service.get_delivery(did)
+    message = service.get_message(delivery.message_id)
+    artifact = service.store.get(message.body_artifact_id)
+    before = supervisor.remote.stream("epic:7178")  # allow-hardcoded-epic: remote supervisor request fixture
+    if damage == "missing":
+        artifact.blob_path.rename(artifact.blob_path.with_suffix(".unavailable"))
+    else:
+        # Keep valid JSON and byte length: the database's SHA must detect this.
+        payload = artifact.blob_path.read_bytes()
+        changed = payload.replace(b'"generation": 1', b'"generation": 2')
+        assert changed != payload and len(changed) == len(payload)
+        artifact.blob_path.write_bytes(changed)
+    start = Mock(side_effect=AssertionError("corrupt event must not reach the launcher"))
+    with pytest.raises(ArtifactStoreError, match=r"missing blob|blob digest mismatch"):
+        wake_driver_once(service, supervisor.remote, stream_id="epic:7178",  # allow-hardcoded-epic: remote supervisor request fixture
+                         launcher=Path("start-codex-driver.sh"), epic="fixture", run=start)
+    start.assert_not_called()
+    assert service.get_delivery(did) == delivery
+    assert supervisor.remote.stream("epic:7178") == before  # allow-hardcoded-epic: remote supervisor request fixture
+
+
+def test_successor_preserves_real_worker_needs_finalize(supervisory_cycle, tmp_path, monkeypatch):
+    import signal
+    import subprocess
+    import sys
+    from datetime import UTC, datetime, timedelta
+    from types import SimpleNamespace
+
+    from scripts import delegate
+    from scripts.ai_agent_bridge._inbox_watch import consume_supervisory_event
+    from scripts.fleet_comms.authority import AuthorityService
+
+    repo = tmp_path / "worker"
+    repo.mkdir()
+    for args in (["init", "-b", "main"], ["-c", "user.name=Fixture", "-c",
+                 "user.email=fixture@example.invalid", "commit", "--allow-empty", "-m", "fixture"],
+                 ["update-ref", "refs/remotes/origin/main", "HEAD"]):
+        subprocess.run(["git", *args], cwd=repo, env=delegate._sanitized_git_env(),
+                       check=True, capture_output=True, timeout=10)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
+    monkeypatch.setattr(delegate, "_TASKS_DIR", tmp_path / "tasks")
+    monkeypatch.setattr(delegate, "_emit_terminal_dispatch_event", lambda **kwargs: None)
+    # Host diagnostics are outside this fixture; settlement and Git checks stay real.
+    for module in ("primary", "node_modules", "venv", "worktree_cleanup"):
+        monkeypatch.setattr(
+            f"scripts.audit.check_{module}_integrity.check_{module}_integrity",
+            lambda *args, **kwargs: (True, "fixture-only"),
+        )
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "scripts"))
+
+    def synthetic_provider(_agent, _prompt, **kwargs):
+        # Execute a child that really leaves work uncommitted. The lifecycle
+        # result comes from its exit code; no worker completion result is mocked.
+        child = subprocess.run(
+            [sys.executable, "-c", "from pathlib import Path; Path('work.txt').write_text('retain me')"],
+            cwd=kwargs["cwd"], check=False, capture_output=True, text=True, timeout=10,
+        )
+        return SimpleNamespace(ok=child.returncode == 0, returncode=child.returncode,
+                               response=child.stdout, stderr_excerpt=child.stderr, rate_limited=False)
+
+    monkeypatch.setattr("agent_runtime.runner.invoke", synthetic_provider)
+    state_path = delegate._state_path("held-out-worker")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "held-out-worker", "worktree_path": str(repo), "worktree_base": "main",
+        "cli_version": "synthetic",
+    })
+    service, supervisor = supervisory_cycle
+    job = service.enqueue_request(recipient="worker", body="synthetic work", idempotency_key="held-out-worker")
+    job_lease = service.claim_job(job.job_id, "fixture-worker")
+    predecessor = _open_supervisory_driver(supervisor)
+    did = _supervisory_event(service)
+    now = datetime.now(UTC)
+    request = consume_supervisory_event(service, supervisor, predecessor, now=now.isoformat())
+    assert request is not None
+    previous_handler = signal.getsignal(signal.SIGTERM)
+    try:
+        assert delegate._run_worker(
+            task_id="held-out-worker", agent="codex", prompt="synthetic work",
+            mode="workspace-write", cwd_str=str(repo), model="gpt-6-astra", hard_timeout=10,
+        ) == 1
+    finally:
+        signal.signal(signal.SIGTERM, previous_handler)
+    settled = json.loads(state_path.read_text())
+    assert settled["status"] == "needs_finalize"
+    assert settled["worktree_dirty_on_exit"] is True
+    assert settled["commits_ahead"] == 0
+    assert settled["returncode"] == 0
+    before = state_path.read_bytes()
+    # Publish measured settlement, not a fabricated worker "done" response.
+    # Transport completion must retain the distinct needs_finalize outcome.
+    service.finish_job(job.job_id, worker_id="fixture-worker", fence_token=job_lease.fence_token,
+                       state="complete", result=before)
+
+    assert supervisor.close_driver(role="driver", lease=predecessor) == "closed"
+    successor = _open_supervisory_driver(
+        supervisor, instance="successor", session_id=request.successor_session_id,
+    )
+    # Reopen the message database as a successor would, then consume the delayed
+    # delivery. Its restart acknowledgment must not finalize the worker's work.
+    with AuthorityService(root=service.store.root) as reopened:
+        assert consume_supervisory_event(
+            reopened, supervisor, successor, now=(now + timedelta(seconds=61)).isoformat(),
+        ) is None
+        assert reopened.supervisory_delivery_status(did) == "acted_on"
+        assert reopened.read_job_result(job.job_id) == before
+        assert json.loads(reopened.read_job_result(job.job_id))["needs_finalize"] is True
+    assert state_path.read_bytes() == before
+    assert (repo / "work.txt").read_text() == "retain me"
+    assert delegate._worktree_is_dirty(repo) is True
+    assert supervisor.close_driver(role="driver", lease=successor) == "closed"
+
+
+def test_delayed_event_after_successor_exit_cannot_restart_again(supervisory_cycle):
+    from datetime import UTC, datetime, timedelta
+    from types import SimpleNamespace
+    from unittest.mock import Mock
+
+    from scripts.ai_agent_bridge._inbox_watch import consume_supervisory_event, wake_driver_once
+    from scripts.fleet_comms.authority import AuthorityService
+
+    service, supervisor = supervisory_cycle
+    predecessor = _open_supervisory_driver(supervisor)
+    did = _supervisory_event(service)
+    now = datetime.now(UTC)
+    request = consume_supervisory_event(service, supervisor, predecessor, now=now.isoformat())
+    assert request is not None
+    assert supervisor.close_driver(role="driver", lease=predecessor) == "closed"
+    starts = []
+
+    def start(_argv, **_kwargs):
+        successor = _open_supervisory_driver(
+            supervisor, instance="short-lived-successor", session_id=request.successor_session_id,
+        )
+        starts.append(successor)
+        assert supervisor.close_driver(role="driver", lease=successor) == "closed"
+        return SimpleNamespace(returncode=0)
+
+    args = dict(stream_id=predecessor.stream_id, launcher=Path("start-codex-driver.sh"), epic="fixture")
+    assert wake_driver_once(service, supervisor.remote, **args, run=start)
+    # The successor exited before claiming the delivery. No live-holder check
+    # or terminal acknowledgment can prevent a duplicate now: the generation must.
+    with AuthorityService(root=service.store.root) as reopened:
+        assert reopened.supervisory_delivery_status(did) == "live_driver_consumed"
+        forbidden_start = Mock(side_effect=AssertionError("delayed delivery repeated a restart"))
+        assert not wake_driver_once(reopened, supervisor.remote, **args, run=forbidden_start)
+        forbidden_start.assert_not_called()
+        later = _open_supervisory_driver(supervisor, instance="independent-later-driver")
+        assert later.generation == starts[0].generation + 1
+        assert consume_supervisory_event(
+            reopened, supervisor, later, now=(now + timedelta(seconds=61)).isoformat(),
+        ) is None
+        assert reopened.supervisory_delivery_status(did) == "refused"
+        assert supervisor.close_driver(role="driver", lease=later) == "closed"
+    assert len(starts) == 1

@@ -1446,3 +1446,49 @@ def test_real_grok_driver_launches_single_holder(tmp_path: Path) -> None:
     assert stream["lease"]["holder_agent"] == "grok"
     assert stream["lease"]["state"] == "released"
     assert "heartbeat" in [event["event_type"] for event in stream["lease_events"]]
+
+
+@pytest.mark.parametrize("failure", ["startup", "approval-required"])
+def test_provider_refusal_or_startup_failure_releases_only_its_exact_lease(tmp_path: Path, failure: str) -> None:
+    primary, _ = init_repo(tmp_path, bootstrap_sources=True)
+    store = seed_driver_stream(primary, stream_id="epic:5703", close=True)
+    env, started = launcher_environment(tmp_path, "grok")
+    provider = Path(env["HOME"]) / ".local/bin/grok"
+    command = [primary / "start-grok-driver.sh", "devops"]
+    if failure == "approval-required":
+        # The synthetic provider models an unavailable consent decision. It
+        # rejects unless the configured approval arguments arrive unchanged,
+        # then refuses the operation; the launcher must propagate that refusal.
+        provider.write_text(
+            '#!/bin/bash\n[ "$#" = 3 ] && [ "$1" = --approval-mode ] && [ "$2" = required ] || exit 99\n'
+            'case "$3" in "Load agents_extensions/"*) ;; *) exit 99 ;; esac\n'
+            'echo approval-required >&2\nexit 23\n', encoding="utf-8",
+        )
+        command += ["--", "--approval-mode", "required"]
+    else:
+        provider.write_text("#!/bin/bash\nexit 17\n", encoding="utf-8")
+
+    with epics_monitor_stub(store) as monitor_url:
+        env["LU_MONITOR_LOOPBACK"] = monitor_url
+        failed = run(command, cwd=primary, env=env)
+        assert failed.returncode == (23 if failure == "approval-required" else 17), failed.stderr + failed.stdout
+        if failure == "approval-required":
+            assert "approval-required" in failed.stderr
+        assert not started["grok"].exists()
+        after_failure = store.dump_stream("epic:5703")
+        assert [session["state"] for session in after_failure["sessions"]] == ["closed", "closed"]
+        assert after_failure["lease"]["state"] == "released"
+        assert after_failure["lease"]["generation"] == 2
+
+        if failure == "approval-required":
+            return
+
+        # A subsequent ordinary launch can acquire immediately, without a TTL
+        # wait or a force-release repair of the failed provider's generation.
+        provider.write_text("#!/bin/bash\nexit 0\n", encoding="utf-8")
+        retried = run([primary / "start-grok-driver.sh", "devops"], cwd=primary, env=env)
+        assert retried.returncode == 0, retried.stderr + retried.stdout
+        after_retry = store.dump_stream("epic:5703")
+        assert after_retry["lease"]["generation"] == 3
+        assert [session["state"] for session in after_retry["sessions"]] == ["closed"] * 3
+        assert after_retry["lease"]["state"] == "released"
