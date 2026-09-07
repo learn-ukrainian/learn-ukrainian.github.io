@@ -662,6 +662,59 @@ def test_lease_identity_separates_local_git_head_from_monitor_head(onboarding: s
         assert contract in lease, f"missing lease/identity contract: {contract}"
 
 
+def test_orient_documents_public_and_private_work_surfaces(onboarding: str) -> None:
+    """#669 AC-WORK — cold-start guidance names public and private Work
+    surfaces, correct endpoint paths, privacy boundaries, source
+    denominators, truncation/freshness caveats, and when to consult GitHub."""
+    orient = " ".join(
+        onboarding.split("**Orient:**", 1)[1]
+        .split("**Live delivery:**", 1)[0]
+        .split()
+    )
+    for contract in (
+        "GET /api/work/v1/projection",
+        "GET /api/work/v1/next?stream=<your-stream>",
+        "GET /api/work/v1/capabilities",
+        "GET /api/work/v1/health",
+        "GitHub Issues and PRs remain the source of truth",
+        "`503 building`",
+        "`503 stale`",
+        "`400`",
+        "`valid_streams`",
+        "`truncated=true`",
+        "reduced coverage",
+        "consult GitHub Issues/PRs directly",
+        "sibling private Work adapter",
+        "`GET /v1/health`",
+        "`GET /v1/projection`",
+        "public server never fetches or proxies it",
+        "not reachable or configurable from an agent seat",
+        "not_configured",
+        "privacy seam holding by design",
+        "not evidence the private adapter is down",
+    ):
+        assert contract in orient, f"missing Work contract in Orient: {contract}"
+    # No concrete host/port for the private adapter in this owned doc.
+    assert "8769" not in orient
+    assert "127.0.0.1" not in orient
+
+
+def test_privacy_bullet_covers_private_work_adapter_topology(onboarding: str) -> None:
+    """#669 AC-WORK — the private Work adapter's role is documented, but its
+    concrete deployment location stays private (AC-WARTIME-safe wording)."""
+    privacy = " ".join(
+        onboarding.split("**Privacy:**", 1)[1].split("## Cleanup ownership", 1)[0].split()
+    )
+    for contract in (
+        "environment-neutral",
+        "private Work adapter",
+        "docs/monitor-api/work.md",
+        "operational topology",
+        "stay private",
+    ):
+        assert contract in privacy, f"missing privacy contract: {contract}"
+
+
 def test_onboarding_retires_sealed_review_instructions(onboarding: str) -> None:
     review = onboarding.split("### Discuss is not formal review", 1)[1].split(
         "### Delegate is execution", 1
