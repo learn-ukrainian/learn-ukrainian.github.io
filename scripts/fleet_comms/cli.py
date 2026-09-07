@@ -137,10 +137,10 @@ def _short_plane_health(status: dict[str, Any]) -> dict[str, Any]:
     schema = status.get("schema") or {}
     enabled = status.get("enabled") is True
     read_only = status.get("read_only") is True
-    db_exists = schema.get("db_exists") is True
+    db_exists = schema.get("db_exists")
     return {
         "healthy": (
-            enabled and read_only and db_exists
+            enabled and read_only and db_exists is True
             and (status.get("store") or {}).get("reachable") is True
             and not schema.get("db_error")
             and schema.get("applied_version") is not None

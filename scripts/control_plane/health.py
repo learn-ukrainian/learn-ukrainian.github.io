@@ -51,6 +51,8 @@ def authority_collector_payload(
             payload["db_error"] = "schema_read_failed"
         except Exception as exc:
             payload["db_error"] = read_failure_code(exc, authority)
+            if payload["db_error"] == "authority_unsupported_component":
+                store["reachable"] = None
     payload.update(
         response_schema_version=COMMS_RESPONSE_SCHEMA_VERSION,
         content_included=False,

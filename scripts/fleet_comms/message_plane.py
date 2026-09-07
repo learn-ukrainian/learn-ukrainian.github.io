@@ -675,6 +675,8 @@ def _read_applied_schema_version(db_path: Path) -> dict[str, Any]:
         payload["db_error"] = "schema_read_failed"
     except Exception as exc:
         payload["db_error"] = read_failure_code(exc, authority)
+        if payload["db_error"] == "authority_unsupported_component":
+            payload["store"]["reachable"] = None
     finally:
         if conn is not None:
             try:

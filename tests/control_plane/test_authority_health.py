@@ -129,6 +129,7 @@ def test_missing_pg_dsn_is_not_component_refusal_or_missing_sqlite(monkeypatch, 
     status = message_plane.read_plane_status(root=tmp_path / "absent")
     assert status["schema"]["db_error"] == "pg_dsn_missing"
     assert status["schema"]["db_exists"] is None
+    assert _short_plane_health(status)["db_exists"] is None
     assert status["store"]["reachable"] is False
     assert _short_plane_health(status)["healthy"] is False
     assert not (tmp_path / "absent").exists()
@@ -201,6 +202,8 @@ def test_unsupported_probe_is_not_database_absence(monkeypatch, tmp_path):
     status = message_plane.read_plane_status(root=tmp_path)
     assert status["schema"]["db_error"] == "authority_unsupported_component"
     assert status["schema"]["db_exists"] is None
+    assert status["store"]["reachable"] is None
+    assert _short_plane_health(status)["db_exists"] is None
     assert not conn.statements
 
 
