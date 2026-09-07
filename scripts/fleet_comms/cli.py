@@ -104,12 +104,30 @@ def cmd_plane_status(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
-def fleet_status_payload(status: dict[str, Any]) -> dict[str, Any]:
+from scripts.fleet_comms.fleet_overview import OMITTED
+
+
+def fleet_status_payload(
+    status: dict[str, Any],
+    repo_root: Path | None = None,
+    epics_store: Any = OMITTED,
+    overview: dict[str, Any] | None = None,
+    monitor_url: str | None = None,
+) -> dict[str, Any]:
     """Return the shared facade status payload for CLI and Monitor callers."""
+    from scripts.fleet_comms.fleet_overview import build_fleet_overview
+
+    if overview is None:
+        overview = build_fleet_overview(
+            repo_root=repo_root,
+            epics_store=epics_store,
+            monitor_url=monitor_url,
+        )
     return {
         "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
         "plane_status": status,
         "health": _short_plane_health(status),
+        "overview": overview,
     }
 
 
@@ -134,13 +152,22 @@ def cmd_fleet_status(args: argparse.Namespace) -> int:
     root = Path(args.root).expanduser() if args.root else None
     repo_root = Path(args.repo_root).expanduser() if args.repo_root else None
     telemetry = Path(args.telemetry).expanduser() if args.telemetry else None
+    monitor_url = getattr(args, "monitor_url", None)
     status = read_plane_status(
         repo_root=repo_root,
         root=root,
         telemetry_path=telemetry,
         recent_limit=args.recent_limit,
     )
-    sys.stdout.write(_json_dump(fleet_status_payload(status)))
+    sys.stdout.write(
+        _json_dump(
+            fleet_status_payload(
+                status,
+                repo_root=repo_root,
+                monitor_url=monitor_url,
+            )
+        )
+    )
     return EXIT_OK
 
 
@@ -836,6 +863,7 @@ def build_parser() -> argparse.ArgumentParser:
     fleet_status.add_argument("--repo-root", default=None, help="Repo root for plane resolution")
     fleet_status.add_argument("--telemetry", default=None, help="Parity telemetry JSONL path")
     fleet_status.add_argument("--recent-limit", type=int, default=50, help="Max recent parity events")
+    fleet_status.add_argument("--monitor-url", default=None, help="Monitor API base URL for epic authority")
     fleet_status.set_defaults(func=cmd_fleet_status)
 
     fleet_board = fleet_sub.add_parser("board", help="Delegate to cold-start-board")
