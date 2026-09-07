@@ -91,7 +91,7 @@ def test_fleet_status_local_empty_remote_live(tmp_path: Path) -> None:
         assert len(overview["streams"]) == 1
 
         stream = overview["streams"][0]
-        assert stream["stream_id"] == "epic:201"
+        assert stream["stream_id"] == "epic:201"  # allow-hardcoded-epic: synthetic overview fixture
         assert stream["lease_state"] == "active"
         assert stream["unknown"] is False
         assert stream["stale"] is False
@@ -149,7 +149,7 @@ def test_fleet_status_local_stale_remote_live(tmp_path: Path) -> None:
         assert len(overview["streams"]) == 1
 
         stream = overview["streams"][0]
-        assert stream["stream_id"] == "epic:301"
+        assert stream["stream_id"] == "epic:301"  # allow-hardcoded-epic: synthetic overview fixture
         assert stream["lease_state"] == "active"
         assert stream["unknown"] is False
         assert stream["stale"] is False
@@ -180,7 +180,7 @@ def test_fleet_status_remote_unleased_stream(tmp_path: Path) -> None:
         assert len(overview["streams"]) == 1
 
         stream = overview["streams"][0]
-        assert stream["stream_id"] == "epic:101"
+        assert stream["stream_id"] == "epic:101"  # allow-hardcoded-epic: synthetic overview fixture
         assert stream["lease_state"] == "unleased"
         assert stream["unknown"] is True
         assert stream["stale"] is False
@@ -352,7 +352,7 @@ def test_fleet_status_cli_emits_overview(
         assert "overview" in data
         assert data["overview"]["available"] is True
         assert len(data["overview"]["streams"]) == 1
-        assert data["overview"]["streams"][0]["stream_id"] == "epic:401"
+        assert data["overview"]["streams"][0]["stream_id"] == "epic:401"  # allow-hardcoded-epic: synthetic overview fixture
         assert data["overview"]["streams"][0]["unknown"] is True
 
     # Fail-open when unreachable
@@ -413,7 +413,7 @@ def test_fleet_facade_status_router(tmp_path: Path, monkeypatch: pytest.MonkeyPa
     assert payload["overview"]["available"] is True
     assert len(payload["overview"]["streams"]) == 1
     # Must use injected store, not local DB
-    assert payload["overview"]["streams"][0]["stream_id"] == "epic:501"
+    assert payload["overview"]["streams"][0]["stream_id"] == "epic:501"  # allow-hardcoded-epic: synthetic overview fixture
 
     # When injected store is None -> available: False
     mock_ctx_none = MagicMock()
