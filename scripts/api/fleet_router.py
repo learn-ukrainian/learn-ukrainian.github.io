@@ -1,9 +1,8 @@
 """Unified, read-only observer for the durable fleet communications plane.
 
-This router deliberately opens the fleet-comms SQLite database in ``mode=ro``
-and projects only bounded metadata. It never initializes schema, writes a
-receipt, invokes an agent, or retrieves artifact bodies. File handoffs remain
-authoritative during the pre-flip soak.
+Health and overview read the resolved authority through read-only storage
+handles. SQLite-shaped detail routes refuse PostgreSQL explicitly. No read
+initializes schema, writes a receipt, invokes an agent, or retrieves artifacts.
 """
 
 from __future__ import annotations
@@ -22,9 +21,12 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Annotated, Any
 
+import psycopg
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import JSONResponse
 
+from scripts.control_plane import storage
+from scripts.control_plane.health import authority_collector_payload, read_failure_code
 from scripts.fleet_comms import message_plane
 from scripts.fleet_comms.cli import fleet_help_payload, fleet_status_payload
 from scripts.fleet_comms.cold_start_board import build_cold_start_board
@@ -37,7 +39,7 @@ from scripts.fleet_comms.endpoints import load_endpoint_registry
 from scripts.fleet_comms.legacy_broker_report import build_legacy_broker_report
 from scripts.fleet_comms.message_plane import read_plane_status
 from scripts.fleet_comms.migrations import MIGRATIONS
-from scripts.fleet_comms.opsec_store import COMMS_RESPONSE_SCHEMA_VERSION, store_descriptor
+from scripts.fleet_comms.opsec_store import COMMS_RESPONSE_SCHEMA_VERSION
 from scripts.orchestration import reap_worktrees
 
 from . import comms_router as legacy_comms
@@ -125,36 +127,56 @@ def _plane_db_path(ctx: MonitorContext | None = None) -> Path:
 @contextmanager
 def _read_connection(
     ctx: MonitorContext | None = None,
-) -> Iterator[tuple[sqlite3.Connection | None, str]]:
+    *,
+    pg_supported: bool = False,
+) -> Iterator[tuple[Any | None, str]]:
     """Yield a query-only connection, never creating a database or schema."""
     resolved_ctx = resolve_context(ctx)
     db_path = _plane_db_path(resolved_ctx)
-    if not db_path.is_file():
+    authority = storage.resolve_authority(storage.StoreId.FLEET_COMMS)
+    if authority is storage.Authority.PG and not pg_supported:
+        # Detail routes still use SQLite-shaped SQL. Do not read a stale
+        # local file or mistake this component limit for database absence.
+        yield None, "authority_unsupported_component"
+        return
+    if authority is not storage.Authority.PG and not db_path.is_file():
         yield None, "db_missing"
         return
 
-    connection: sqlite3.Connection | None = None
+    connection = None
+    availability = "available"
     try:
-        connection = sqlite3.connect(
-            f"{db_path.resolve().as_uri()}?mode=ro",
-            uri=True,
+        connection = storage.connect(
+            storage.StoreId.FLEET_COMMS,
+            path=db_path,
+            read_only=True,
             timeout=0.25,
         )
-        connection.row_factory = sqlite3.Row
-        connection.execute("PRAGMA query_only = ON")
-        yield connection, "available"
-    except (OSError, ValueError, sqlite3.Error):
-        logger.warning("Fleet observer could not open its read-only plane database")
-        yield None, "db_unavailable"
+        if authority is storage.Authority.PG:
+            connection.autocommit = True
+            connection.execute("SET statement_timeout = 2000")
+        else:
+            connection.row_factory = sqlite3.Row
+            connection.execute("PRAGMA query_only = ON")
+    except Exception as exc:
+        availability = read_failure_code(exc, authority)
+    try:
+        yield connection if availability == "available" else None, availability
     finally:
         if connection is not None:
-            connection.close()
+            try:
+                connection.close()
+            except Exception:
+                logger.warning("Fleet observer read-only connection close failed")
 
 
-def _table_exists(connection: sqlite3.Connection, table: str) -> bool:
-    row = connection.execute(
-        "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?", (table,)
-    ).fetchone()
+def _table_exists(connection: Any, table: str) -> bool:
+    query = (
+        "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?"
+        if isinstance(connection, sqlite3.Connection)
+        else "SELECT 1 FROM pg_class WHERE oid = to_regclass(%s) AND relkind IN ('r', 'p')"
+    )
+    row = connection.execute(query, (table,)).fetchone()
     return row is not None
 
 
@@ -379,7 +401,8 @@ def _safe_plane_status(ctx: MonitorContext | None = None) -> dict[str, Any]:
             "known_version": schema.get("known_version"),
             "applied_version": schema.get("applied_version"),
             "applied_name": schema.get("applied_name"),
-            "db_exists": bool(schema.get("db_exists")),
+            "db_exists": schema.get("db_exists"),
+            "authority": schema.get("authority"),
             "db_error": schema.get("db_error"),
             "store": schema.get("store"),
         },
@@ -393,125 +416,31 @@ def _safe_plane_status(ctx: MonitorContext | None = None) -> dict[str, Any]:
     }
 
 
-def _authority_store_descriptor(db_path: Path) -> dict[str, Any]:
-    return store_descriptor(kind="comms-plane", reachable=db_path.is_file())
-
-
 def _facade_authority_payload(
     collector: Callable[[Path], dict[str, Any]],
     ctx: MonitorContext | None = None,
 ) -> dict[str, Any]:
-    """Run an authority collector fail-open without creating a plane database."""
-    resolved_ctx = resolve_context(ctx)
-    db_path = _plane_db_path(resolved_ctx)
-    if not db_path.is_file():
-        return {
-            "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
-            "content_included": False,
-            "db_missing": True,
-            "store": _authority_store_descriptor(db_path),
-            "read_only": True,
-            "source": "authority",
-        }
-    try:
-        payload = collector(db_path)
-    except (OSError, sqlite3.Error, ValueError) as exc:
-        logger.warning("Fleet facade authority collector unavailable: %s", type(exc).__name__)
-        return {
-            "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
-            "content_included": False,
-            "db_error": type(exc).__name__,
-            "store": _authority_store_descriptor(db_path),
-            "read_only": True,
-            "source": "authority",
-        }
-    payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
-    payload["store"] = _authority_store_descriptor(db_path)
-    payload["read_only"] = True
-    payload["source"] = "authority"
-    return payload
+    """Read the configured authority through the PG-capable collector."""
+    return authority_collector_payload(collector, _plane_db_path(ctx))
 
 
 def _facade_backlog_payload(limit: int, ctx: MonitorContext | None = None) -> dict[str, Any]:
-    """Return the existing authority backlog projection for the thin facade."""
-    resolved_ctx = resolve_context(ctx)
-    db_path = _plane_db_path(resolved_ctx)
-    if not db_path.is_file():
-        return {
-            "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
-            "total": 0,
-            "by_agent": {},
-            "by_status": {},
-            "rows": [],
-            "content_included": False,
-            "db_missing": True,
-            "store": _authority_store_descriptor(db_path),
-            "read_only": True,
-            "source": "authority",
-        }
-    try:
-        payload = collect_delivery_backlog_authority(
-            db_path, limit=limit, exclude_retired=True
-        )
-    except (OSError, sqlite3.Error, ValueError) as exc:
-        logger.warning("Fleet facade authority backlog unavailable: %s", type(exc).__name__)
-        return {
-            "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
-            "total": 0,
-            "by_agent": {},
-            "by_status": {},
-            "rows": [],
-            "content_included": False,
-            "db_error": type(exc).__name__,
-            "store": _authority_store_descriptor(db_path),
-            "read_only": True,
-            "source": "authority",
-        }
-    payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
-    payload["content_included"] = False
-    payload["store"] = _authority_store_descriptor(db_path)
-    payload["read_only"] = True
-    payload["source"] = "authority"
-    return payload
+    return authority_collector_payload(
+        collect_delivery_backlog_authority,
+        _plane_db_path(ctx),
+        empty_fields={"total": 0, "by_agent": {}, "by_status": {}, "rows": []},
+        limit=limit,
+        exclude_retired=True,
+    )
 
 
 def _facade_dead_letters_payload(limit: int, ctx: MonitorContext | None = None) -> dict[str, Any]:
-    """Return the existing authority dead-letter projection for the thin facade."""
-    resolved_ctx = resolve_context(ctx)
-    db_path = _plane_db_path(resolved_ctx)
-    if not db_path.is_file():
-        return {
-            "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
-            "total": 0,
-            "by_reason": {},
-            "rows": [],
-            "content_included": False,
-            "db_missing": True,
-            "store": _authority_store_descriptor(db_path),
-            "read_only": True,
-            "source": "authority",
-        }
-    try:
-        payload = collect_dead_letters_authority(db_path, limit=limit)
-    except (OSError, sqlite3.Error, ValueError) as exc:
-        logger.warning("Fleet facade authority dead letters unavailable: %s", type(exc).__name__)
-        return {
-            "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
-            "total": 0,
-            "by_reason": {},
-            "rows": [],
-            "content_included": False,
-            "db_error": type(exc).__name__,
-            "store": _authority_store_descriptor(db_path),
-            "read_only": True,
-            "source": "authority",
-        }
-    payload["response_schema_version"] = COMMS_RESPONSE_SCHEMA_VERSION
-    payload["content_included"] = False
-    payload["store"] = _authority_store_descriptor(db_path)
-    payload["read_only"] = True
-    payload["source"] = "authority"
-    return payload
+    return authority_collector_payload(
+        collect_dead_letters_authority,
+        _plane_db_path(ctx),
+        empty_fields={"total": 0, "by_reason": {}, "rows": []},
+        limit=limit,
+    )
 
 
 def _facade_reap_report(ctx: MonitorContext | None = None) -> dict[str, Any]:
@@ -645,7 +574,7 @@ def fleet_facade_reap_report(ctx: MonitorContext = Depends(get_ctx)) -> dict[str
     return _facade_reap_report(ctx)
 
 
-def _count_by_state(connection: sqlite3.Connection, table: str, column: str) -> dict[str, int]:
+def _count_by_state(connection: Any, table: str, column: str) -> dict[str, int]:
     if not _table_exists(connection, table):
         return {}
     try:
@@ -658,7 +587,7 @@ def _count_by_state(connection: sqlite3.Connection, table: str, column: str) -> 
 
 
 def _count_by_state_where(
-    connection: sqlite3.Connection,
+    connection: Any,
     table: str,
     column: str,
     *,
@@ -667,19 +596,16 @@ def _count_by_state_where(
 ) -> dict[str, int]:
     if not _table_exists(connection, table):
         return {}
-    try:
-        rows = connection.execute(
-            f"SELECT {column}, COUNT(*) FROM {table} WHERE {where} "
-            f"GROUP BY {column} ORDER BY {column}",
-            params,
-        ).fetchall()
-    except sqlite3.Error:
-        return {}
+    rows = connection.execute(
+        f"SELECT {column}, COUNT(*) FROM {table} WHERE {where} "
+        f"GROUP BY {column} ORDER BY {column}",
+        params,
+    ).fetchall()
     return {_safe_text(row[0], fallback="unknown"): int(row[1]) for row in rows}
 
 
 def _authority_health_snapshot(
-    connection: sqlite3.Connection | None,
+    connection: Any | None,
     *,
     now: datetime | None = None,
     availability: str = "available",
@@ -701,21 +627,24 @@ def _authority_health_snapshot(
         "overdue_nonterminal": 0,
         "dead_letters": 0,
     }
-    if connection is None or not _table_exists(connection, "authority_jobs"):
+    if connection is None:
         return unavailable
+    placeholder = "?" if isinstance(connection, sqlite3.Connection) else "%s"
     try:
+        if not _table_exists(connection, "authority_jobs"):
+            return {**unavailable, "availability": "schema_read_failed"}
         states = _count_by_state_where(
             connection,
             "authority_jobs",
             "state",
-            where="updated_at >= ?",
+            where=f"updated_at >= {placeholder}",
             params=(window["since"],),
         )
         overdue = int(
             connection.execute(
-                """SELECT COUNT(*) FROM authority_jobs
+                f"""SELECT COUNT(*) FROM authority_jobs
                    WHERE state IN ('queued', 'running')
-                     AND deadline_at IS NOT NULL AND deadline_at < ?""",
+                     AND deadline_at IS NOT NULL AND deadline_at < {placeholder}""",
                 (window["until"],),
             ).fetchone()[0]
         )
@@ -723,13 +652,13 @@ def _authority_health_snapshot(
         if _table_exists(connection, "authority_dead_letters"):
             dead_letters = int(
                 connection.execute(
-                    "SELECT COUNT(*) FROM authority_dead_letters WHERE created_at >= ?",
+                    f"SELECT COUNT(*) FROM authority_dead_letters WHERE created_at >= {placeholder}",
                     (window["since"],),
                 ).fetchone()[0]
             )
-    except sqlite3.Error:
+    except (sqlite3.Error, psycopg.Error):
         logger.warning("Fleet observer could not derive authority health")
-        return unavailable
+        return {**unavailable, "availability": "schema_read_failed"}
     total = sum(states.values())
     failures = sum(
         states.get(name, 0) for name in ("failed", "expired", "dead_lettered")
@@ -1061,7 +990,7 @@ async def fleet_operations(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, 
 def fleet_health(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
     """Read-only health, mode, schema, and current authority posture."""
     status = _safe_plane_status(ctx)
-    with _read_connection(ctx) as (connection, availability):
+    with _read_connection(ctx, pg_supported=True) as (connection, availability):
         authority_health = (
             _authority_health_snapshot(connection, availability=availability)
             if status["mode"] == "authority"
@@ -1083,7 +1012,11 @@ def fleet_health(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
         )
     runtime_activity = _runtime_activity_snapshot(since, ctx)
     return {
-        "ok": bool(status["enabled"]) and bool(authority_health["ok"]),
+        "ok": (
+            bool(status["enabled"]) and bool(authority_health["ok"])
+            and status["store"]["reachable"] is True
+            and not status["schema"].get("db_error")
+        ),
         "observer": "fleet-comms-v1",
         "read_only": True,
         "writes_enabled": False,
@@ -1113,11 +1046,22 @@ def fleet_overview(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
         },
         "availability": "db_missing",
     }
-    with _read_connection(ctx) as (connection, availability):
+    try:
+        return _populate_fleet_overview(result, status, ctx)
+    except (sqlite3.Error, psycopg.Error, storage.ControlPlaneError):
+        # Never expose a driver exception or leave partial counts looking complete.
+        result["availability"] = "schema_read_failed"
+        return result
+
+
+def _populate_fleet_overview(
+    result: dict[str, Any], status: dict[str, Any], ctx: MonitorContext,
+) -> dict[str, Any]:
+    with _read_connection(ctx, pg_supported=True) as (connection, availability):
         if connection is None:
             result["availability"] = availability
             return result
-        counts = result["counts"]
+        counts = {key: dict(value) for key, value in result["counts"].items()}
         legacy_request_states = _count_by_state(connection, "requests", "state")
         if status["mode"] == "authority":
             request_states = _count_by_state_where(
@@ -1160,6 +1104,7 @@ def fleet_overview(ctx: MonitorContext = Depends(get_ctx)) -> dict[str, Any]:
             counts["acp_conversations"]["total"] = int(
                 connection.execute("SELECT COUNT(*) FROM acp_conversations").fetchone()[0]
             )
+        result["counts"] = counts
         result["availability"] = "available" if any(
             section["total"] for section in counts.values()
         ) else "empty"

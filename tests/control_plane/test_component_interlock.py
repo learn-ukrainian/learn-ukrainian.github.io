@@ -37,7 +37,7 @@ def _pg_authority(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 _PG_CAPABLE_COMPONENTS = frozenset(
-    {"artifact_store", "request_executor", "message_plane", "efficiency_metrics"}
+    {"artifact_store", "request_executor", "message_plane", "efficiency_metrics", "plane_status"}
 )
 
 
@@ -127,7 +127,7 @@ def test_session_streams_refuses_pg_cleanly(
     assert not db_target.exists()
 
 
-def test_plane_status_reports_typed_refusal_not_500(tmp_path: Path) -> None:
+def test_plane_status_reports_real_pg_failure_not_component_refusal(tmp_path: Path) -> None:
     from scripts.fleet_comms.message_plane import read_plane_status
 
     # A stale local sqlite file must NOT be probed as if it were the plane.
@@ -135,7 +135,9 @@ def test_plane_status_reports_typed_refusal_not_500(tmp_path: Path) -> None:
     payload = read_plane_status(root=tmp_path)
     schema = payload.get("schema", payload)
     found = schema.get("db_error") or payload.get("db_error")
-    assert found == "authority_unsupported_component"
+    assert found == "pg_probe_failed"
+    assert schema["db_exists"] is None
+    assert payload["store"]["reachable"] is False
 
 
 def test_apply_migrations_refuses_non_sqlite_connection() -> None:

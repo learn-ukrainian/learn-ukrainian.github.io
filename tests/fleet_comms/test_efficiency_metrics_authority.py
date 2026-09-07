@@ -157,7 +157,9 @@ def test_backlog_defaults_authority_when_plane_authority(
     )
     assert payload["source"] == "authority"
     assert payload["response_schema_version"] == COMMS_RESPONSE_SCHEMA_VERSION
-    assert payload["store"] == {"kind": "comms-plane", "reachable": True}
+    assert payload["store"] == {
+        "kind": "comms-plane", "authority": "sqlite", "reachable": True,
+    }
     assert "db_path" not in payload
     assert payload["total"] == 2
     assert payload["by_agent"] == {"claude": 1, "codex": 1}
