@@ -35,6 +35,23 @@ On clean exit the launcher (or a wrapper) calls the matching lifecycle action:
 `SESSION_STREAM_*` envelope. Fencing is enforced by
 `agents_extensions.shared.session_streams`; a stale envelope is refused.
 
+### Close-failure observability
+
+`scripts/lib/launcher_core.sh`'s `launcher_close_driver_lease` retries the
+close command once, then reports failure without echoing raw stderr (which
+may carry host paths or other operational detail). `launcher_classify_close_failure`
+maps known-safe marker substrings to one of a fixed set of stable, privacy-safe
+codes, appended to the failure message as `close_failure_reason=<code>`:
+
+| Code | Meaning |
+| --- | --- |
+| `missing-required-environment` | The `SESSION_STREAM_*` envelope was stripped or incomplete (e.g. after wake). |
+| `lease-fenced` | The lease was fenced out from under this holder (superseded generation/fencing token). |
+| `monitor-unreachable` | The remote Monitor API could not be reached. |
+| `monitor-error` | The remote Monitor API reachable but refused or errored the request. |
+| `store-error` | A local session-stream store error not covered above. |
+| `unknown` | No known-safe marker matched; check the host's own logs, not this classification. |
+
 ## Environment envelope
 
 A launcher that claims a lease must export every `SESSION_STREAM_*` variable the

@@ -256,8 +256,15 @@ def _core_driver_exit_fixture(
     *,
     provider_body: str,
     failed_close_attempts: int = 0,
+    close_stderr: str = "",
 ) -> tuple[Path, Path, Path, Path]:
-    """Build a provider-neutral driver with observable close attempts."""
+    """Build a provider-neutral driver with observable close attempts.
+
+    ``close_stderr`` (when a close attempt is configured to fail) is written
+    to a file the stub cats to its own stderr, rather than interpolated into
+    the stub's bash source — a hostile marker (quotes, `` ` ``, `$()`) must
+    never become executable just by being a close failure's stderr.
+    """
     root = tmp_path / "repo"
     for relative in (
         "start-claude-driver.sh",
@@ -278,6 +285,8 @@ def _core_driver_exit_fixture(
     close_attempts = tmp_path / "close-attempts"
     close_marker = tmp_path / "lease-closed"
     child_started = tmp_path / "child-started"
+    close_stderr_path = tmp_path / "close-stderr.txt"
+    close_stderr_path.write_text(close_stderr, encoding="utf-8")
     python_stub = root / ".venv" / "bin" / "python"
     python_stub.parent.mkdir(parents=True)
     python_stub.write_text(
@@ -293,7 +302,10 @@ if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:
   if [[ -f {os.fspath(close_attempts)!r} ]]; then count="$(< {os.fspath(close_attempts)!r})"; fi
   count=$((count + 1))
   printf '%s\n' "$count" > {os.fspath(close_attempts)!r}
-  if [[ "$count" -le {failed_close_attempts} ]]; then exit 1; fi
+  if [[ "$count" -le {failed_close_attempts} ]]; then
+    cat {os.fspath(close_stderr_path)!r} >&2
+    exit 1
+  fi
   touch {os.fspath(close_marker)!r}
   exit 0
 fi
@@ -409,6 +421,136 @@ def test_driver_termination_forwards_signal_and_closes_exact_lease(
         assert process.returncode == expected_exit, stdout + stderr
         assert close_marker.is_file()
         assert close_attempts.read_text(encoding="utf-8").strip() == "1"
+    finally:
+        signal.signal(termination_signal, original_handler)
+
+
+def test_close_failure_after_two_attempts_reports_classification_without_raw_stderr(
+    tmp_path: Path,
+) -> None:
+    """#671: two exhausted close attempts must classify, never echo raw stderr."""
+    hostile_stderr = (
+        "session-supervisor: missing required hook environment: SESSION_STREAM_ID\n"
+        "SECRET_TOKEN_MUST_NOT_LEAK=s3kr1t\n"
+        "`rm -rf /nonexistent`\n"
+        "$(echo injected)\n"
+    )
+    launcher, close_attempts, close_marker, _child_started = _core_driver_exit_fixture(
+        tmp_path,
+        provider_body="exit 0",
+        failed_close_attempts=2,
+        close_stderr=hostile_stderr,
+    )
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    result = subprocess.run(
+        ["bash", os.fspath(launcher), "--epic", "devops"],
+        cwd=launcher.parent,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert result.returncode == 1
+    assert not close_marker.is_file()
+    assert close_attempts.read_text(encoding="utf-8").strip() == "2"
+    assert "close_failure_reason=missing-required-environment" in result.stderr
+    combined = result.stdout + result.stderr
+    assert "SECRET_TOKEN_MUST_NOT_LEAK" not in combined
+    assert "rm -rf /nonexistent" not in combined
+    assert "echo injected" not in combined
+
+
+def test_provider_nonzero_with_close_failure_keeps_provider_exit_and_classifies(
+    tmp_path: Path,
+) -> None:
+    """#671: a failed canary/provider run must not have its exit code stolen by close."""
+    hostile_stderr = "session-supervisor: LEASE LOST: Monitor fenced the exact lease\n`id`\n"
+    launcher, close_attempts, close_marker, child_started = _core_driver_exit_fixture(
+        tmp_path,
+        provider_body=f"touch {os.fspath(tmp_path / 'child-started')!r}\nexit 7",
+        failed_close_attempts=2,
+        close_stderr=hostile_stderr,
+    )
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    result = subprocess.run(
+        ["bash", os.fspath(launcher), "--epic", "devops"],
+        cwd=launcher.parent,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert result.returncode == 7, result.stdout + result.stderr
+    assert child_started.is_file()
+    assert not close_marker.is_file()
+    assert close_attempts.read_text(encoding="utf-8").strip() == "2"
+    assert "close_failure_reason=lease-fenced" in result.stderr
+    assert "`id`" not in (result.stdout + result.stderr)
+
+
+@pytest.mark.parametrize(
+    ("termination_signal", "expected_exit"),
+    ((signal.SIGTERM, 143), (signal.SIGHUP, 129)),
+)
+def test_signal_forwarding_with_close_failure_keeps_signal_exit_and_classifies(
+    tmp_path: Path,
+    termination_signal: signal.Signals,
+    expected_exit: int,
+) -> None:
+    """#671: a forwarded TERM/HUP exit code must not become the close failure's."""
+    signal_marker = tmp_path / "signal-received"
+    child_started = tmp_path / "child-started"
+    hostile_stderr = "session-supervisor: Monitor API unreachable; no remote claim was made\n$(evil)\n"
+    launcher, close_attempts, close_marker, child_started = _core_driver_exit_fixture(
+        tmp_path,
+        provider_body=(
+            f"trap 'touch {os.fspath(signal_marker)!r}; exit 0' INT TERM HUP\n"
+            f"touch {os.fspath(child_started)!r}\n"
+            "for _ in {1..20}; do\n"
+            "  sleep 0.1\n"
+            "done\n"
+            "exit 88\n"
+        ),
+        failed_close_attempts=2,
+        close_stderr=hostile_stderr,
+    )
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    original_handler = signal.signal(termination_signal, signal.SIG_DFL)
+    try:
+        process = subprocess.Popen(
+            ["bash", os.fspath(launcher), "--epic", "devops"],
+            cwd=launcher.parent,
+            env=env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        deadline = time.monotonic() + 30
+        while time.monotonic() < deadline:
+            if child_started.is_file():
+                break
+            if process.poll() is not None:
+                break
+            time.sleep(0.01)
+        if not child_started.is_file():
+            process.kill()
+            stdout, stderr = process.communicate(timeout=10)
+            pytest.fail(f"provider child never started (launcher rc={process.returncode}):\n{stdout}{stderr}")
+
+        process.send_signal(termination_signal)
+        stdout, stderr = process.communicate(timeout=30)
+        assert signal_marker.is_file(), (
+            f"provider child never received forwarded signal (rc={process.returncode}):\n{stdout}{stderr}"
+        )
+        assert process.returncode == expected_exit, stdout + stderr
+        assert not close_marker.is_file()
+        assert close_attempts.read_text(encoding="utf-8").strip() == "2"
+        assert "close_failure_reason=monitor-unreachable" in stderr
+        assert "$(evil)" not in (stdout + stderr)
     finally:
         signal.signal(termination_signal, original_handler)
 

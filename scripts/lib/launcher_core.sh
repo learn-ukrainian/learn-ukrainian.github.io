@@ -647,6 +647,29 @@ launcher_stop_driver_renew() {
   fi
 }
 
+launcher_classify_close_failure() {
+  # Map known-safe marker substrings from scripts.session_supervisor's stderr
+  # to a stable, privacy-safe class. The caller never echoes the raw text this
+  # matches against — only the fixed code names below are safe to log, so this
+  # function must never print anything but one of them, regardless of how
+  # hostile the captured stderr is.
+  local stderr_text="$1"
+  case "$stderr_text" in
+    *'missing required hook environment'*)
+      printf 'missing-required-environment' ;;
+    *'LEASE LOST'*|*'fenced the exact lease'*|*'not the current fenced lease'*|*'does not match the supplied historical lease'*|*'has no exact active lease'*)
+      printf 'lease-fenced' ;;
+    *'Monitor API unreachable'*)
+      printf 'monitor-unreachable' ;;
+    *'Monitor API'*|*'monitor URL must be an HTTP loopback URL'*)
+      printf 'monitor-error' ;;
+    *'session-supervisor:'*)
+      printf 'store-error' ;;
+    *)
+      printf 'unknown' ;;
+  esac
+}
+
 launcher_close_driver_lease() {
   # Close only the exact exported, fenced lease. The store operation is
   # idempotent, so a bounded retry is safe when the first client invocation is
@@ -654,10 +677,12 @@ launcher_close_driver_lease() {
   [ "${LC_DRIVER_LEASE_CLOSED:-0}" = "1" ] && return 0
 
   local attempt
+  local close_stderr=""
   for attempt in 1 2; do
-    # Linked worktrees carry no venv; the durable helper root does.
-    if "${LC_DURABLE_HELPER_ROOT:-$LC_SESSION_ROOT}/.venv/bin/python" \
-        -m scripts.session_supervisor close --role driver >/dev/null 2>&1; then
+    # Linked worktrees carry no venv; the durable helper root does. Capture
+    # stderr per attempt for classification only — it is never echoed.
+    if close_stderr="$("${LC_DURABLE_HELPER_ROOT:-$LC_SESSION_ROOT}/.venv/bin/python" \
+        -m scripts.session_supervisor close --role driver 2>&1 >/dev/null)"; then
       LC_DRIVER_LEASE_CLOSED=1
       return 0
     fi
@@ -667,7 +692,9 @@ launcher_close_driver_lease() {
       break
     fi
   done
-  launcher_error "failed to close the exact ${LC_PROVIDER} driver lease after two attempts."
+  local close_failure_reason
+  close_failure_reason="$(launcher_classify_close_failure "$close_stderr")"
+  launcher_error "failed to close the exact ${LC_PROVIDER} driver lease after two attempts. close_failure_reason=${close_failure_reason}"
   return 1
 }
 
