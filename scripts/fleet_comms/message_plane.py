@@ -29,6 +29,7 @@ import json
 import logging
 import os
 import sqlite3
+import time
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -607,60 +608,80 @@ def verify_authority_cutover(*, root: Path | None = None) -> None:
 
 
 def _read_applied_schema_version(db_path: Path) -> dict[str, Any]:
-    """Read comms_schema_migrations without writing or migrating."""
-    from scripts.fleet_comms.migrations import MIGRATIONS
+    """Read and validate the resolved authority's bounded migration receipts.
 
-    known = MIGRATIONS[-1].version if MIGRATIONS else 0
-    try:
-        assert_component_supported(StoreId.FLEET_COMMS, "plane_status")
-    except ControlPlaneError:
-        # Authority-aware refusal (#7482): under pg the local sqlite file is
-        # NOT the plane; probing it (or querying pg with sqlite SQL) produced
-        # an uncaught driver error before. Report a typed, OPSEC-safe status.
-        return {
-            "known_version": known,
-            "applied_version": None,
-            "applied_name": None,
-            "db_exists": False,
-            "authority": resolve_authority(StoreId.FLEET_COMMS).value,
-            "db_error": "authority_unsupported_component",
-            "store": store_descriptor(
-                kind="comms-plane",
-                reachable=False,
-                schema_versions={"known": known, "applied": None},
-            ),
-        }
-    db_exists = db_path.is_file()
+    File existence is not a successful read. PG never inspects the SQLite
+    target; unknown existence stays null until a connection succeeds. No
+    migration initializer or writer is used by this diagnostic.
+    """
+    import psycopg
+
+    from scripts.control_plane.health import read_failure_code
+    from scripts.fleet_comms import migrations, pg_schema
+
+    authority = resolve_authority(StoreId.FLEET_COMMS)
+    ledger = pg_schema if authority is Authority.PG else migrations
+    known = {migration.version: migration for migration in ledger.MIGRATIONS}
+    version = max(known, default=0)
     payload: dict[str, Any] = {
-        "known_version": known,
+        "known_version": version,
         "applied_version": None,
         "applied_name": None,
-        "db_exists": db_exists,
-        "store": store_descriptor(
-            kind="comms-plane",
-            reachable=db_exists,
-            schema_versions={"known": known, "applied": None},
-        ),
+        "db_exists": None,
+        "authority": authority.value,
+        "store": {
+            **store_descriptor(
+                kind="comms-plane",
+                reachable=False,
+                schema_versions={"known": version, "applied": None},
+            ),
+            "authority": authority.value,
+        },
     }
-    if not db_exists:
-        return payload
+    conn = None
     try:
-        conn = cp_connect(StoreId.FLEET_COMMS, path=db_path, read_only=True)
-        try:
-            row = conn.execute(
-                "SELECT version, name FROM comms_schema_migrations ORDER BY version DESC LIMIT 1"
-            ).fetchone()
-            if row is not None:
-                payload["applied_version"] = int(row[0])
-                payload["applied_name"] = str(row[1]) if row[1] is not None else None
-                payload["store"]["schema_versions"]["applied"] = payload["applied_version"]
-        finally:
-            conn.close()
-    except (sqlite3.Error, ControlPlaneError):
-        # Opaque code only — exception text must not reach HTTP clients
-        # (CodeQL py/stack-trace-exposure via /api/comms/v1/plane-status).
-        logger.exception("plane schema read failed: %s", db_path)
+        assert_component_supported(StoreId.FLEET_COMMS, "plane_status")
+        if authority is not Authority.PG:
+            payload["db_exists"] = db_path.is_file()
+            if not payload["db_exists"]:
+                payload["db_error"] = "sqlite_database_missing"
+                return payload
+        conn = cp_connect(StoreId.FLEET_COMMS, path=db_path, read_only=True, timeout=0.25)
+        payload["db_exists"] = True
+        if authority is Authority.PG:
+            conn.execute("SET statement_timeout = 2000")
+            table = pg_schema.PG_MIGRATION_TABLE
+        else:
+            deadline = time.monotonic() + 2.0
+            conn.set_progress_handler(lambda: int(time.monotonic() >= deadline), 1000)
+            table = "comms_schema_migrations"
+        # One extra row detects a future schema without loading an unbounded
+        # ledger. Names/checksums in responses come only from validated code.
+        rows = conn.execute(
+            f"SELECT version, name, checksum FROM {table} ORDER BY version LIMIT {len(known) + 1}"
+        ).fetchall()
+        payload["store"]["reachable"] = True
+        applied = {int(row[0]): (str(row[1]), str(row[2])) for row in rows}
+        ledger._validate_applied_migrations(applied, known)
+        if set(applied) != set(known) or len(rows) != len(known):
+            payload["db_error"] = "schema_incompatible"
+        else:
+            payload["applied_version"] = version
+            payload["applied_name"] = known[version].name if known else None
+            payload["store"]["schema_versions"]["applied"] = version
+    except (migrations.CommsMigrationError, pg_schema.PgSchemaError, ValueError, TypeError):
+        payload["db_error"] = "schema_incompatible"
+    except (psycopg.errors.UndefinedTable, psycopg.errors.UndefinedColumn, sqlite3.DatabaseError):
         payload["db_error"] = "schema_read_failed"
+    except Exception as exc:
+        payload["db_error"] = read_failure_code(exc, authority)
+    finally:
+        if conn is not None:
+            try:
+                conn.close()
+            except Exception:
+                payload["store"]["reachable"] = False
+                payload["db_error"] = "pg_probe_failed" if authority is Authority.PG else "sqlite_probe_failed"
     return payload
 
 
@@ -752,14 +773,8 @@ def read_plane_status(
         "mode": mode,
         "enabled": mode not in {"off", "invalid"},
         "read_only": True,
-        "store": store_descriptor(
-            kind="comms-plane",
-            reachable=bool(schema.get("db_exists")),
-            schema_versions={
-                "known": schema.get("known_version"),
-                "applied": schema.get("applied_version"),
-            },
-        ),
+        "authority": schema["authority"],
+        "store": schema["store"],
         "schema": schema,
         "parity_telemetry": _summarize_parity_telemetry(tele_path, limit=recent_limit),
     }

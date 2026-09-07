@@ -26,7 +26,6 @@ from fastapi import APIRouter, Depends
 
 from scripts.control_plane import storage
 from scripts.control_plane.storage import StoreId
-from scripts.fleet_comms.message_plane import read_plane_status
 
 from .monitor_context import MonitorContext, get_ctx, resolve_context
 
@@ -129,35 +128,26 @@ def _probe_store(
     return entry
 
 
-def _interlock_status(
-    ctx: MonitorContext, repo_root: Path | None
-) -> dict[str, dict[str, Any]]:
+def _interlock_status() -> dict[str, dict[str, Any]]:
     """Project a current #7482 refusal without running the authority flip gate.
 
     Readiness remains a reachability endpoint.  It must not apply migrations or
     decide a cutover, but an already-refused component combination makes the
     reason observable from this endpoint alone.
     """
-    try:
-        plane_root = _sqlite_path_for(StoreId.FLEET_COMMS, ctx, repo_root).parent
-        plane = read_plane_status(
-            repo_root=repo_root,
-            root=plane_root,
-            recent_limit=0,
-        )
-    except Exception:
-        return {}
-    schema = plane.get("schema")
-    if not isinstance(schema, dict):
-        return {}
-    if schema.get("db_error") != _REASON_AUTHORITY_UNSUPPORTED_COMPONENT:
-        return {}
-    return {
-        StoreId.FLEET_COMMS.value: {
-            "allowed": False,
-            "reason": _REASON_AUTHORITY_UNSUPPORTED_COMPONENT,
-        }
-    }
+    interlocks = {}
+    for store_id, component in (
+        (StoreId.FLEET_COMMS, "plane_status"),
+        (StoreId.SESSION_STREAMS, "session_streams"),
+    ):
+        try:
+            storage.assert_component_supported(store_id, component)
+        except storage.ControlPlaneUnsupportedComponentError:
+            interlocks[store_id.value] = {
+                "allowed": False,
+                "reason": _REASON_AUTHORITY_UNSUPPORTED_COMPONENT,
+            }
+    return interlocks
 
 
 def check_cluster_readiness(ctx: MonitorContext | None = None) -> dict[str, Any]:
@@ -206,7 +196,7 @@ def check_cluster_readiness(ctx: MonitorContext | None = None) -> dict[str, Any]
     can_serve_cluster_reads = all(
         entry["accessible"] for entry in stores_status.values()
     )
-    interlocks = _interlock_status(resolved_ctx, repo_root)
+    interlocks = _interlock_status()
     if any(entry["allowed"] is False for entry in interlocks.values()):
         can_serve_cluster_reads = False
 

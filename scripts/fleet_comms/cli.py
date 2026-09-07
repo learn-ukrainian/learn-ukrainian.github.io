@@ -36,6 +36,7 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
+from scripts.control_plane.health import authority_collector_payload
 from scripts.control_plane.storage import StoreId, assert_component_supported
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.efficiency_metrics import (
@@ -138,7 +139,14 @@ def _short_plane_health(status: dict[str, Any]) -> dict[str, Any]:
     read_only = status.get("read_only") is True
     db_exists = schema.get("db_exists") is True
     return {
-        "healthy": enabled and read_only and db_exists,
+        "healthy": (
+            enabled and read_only and db_exists
+            and (status.get("store") or {}).get("reachable") is True
+            and not schema.get("db_error")
+            and schema.get("applied_version") is not None
+        ),
+        "authority": schema.get("authority"),
+        "db_error": schema.get("db_error"),
         "enabled": enabled,
         "mode": status.get("mode"),
         "read_only": read_only,
@@ -254,22 +262,11 @@ def cmd_metrics(args: argparse.Namespace) -> int:
     """Efficiency metrics from durable timestamps (no content)."""
     source = resolve_metrics_source(force_legacy=_force_legacy(args))
     if source == "authority":
-        db = _resolve_plane_db(args)
-        store = comms_plane_store(reachable=db.is_file())
-        if not db.is_file():
-            sys.stdout.write(
-                _json_dump(
-                    {
-                        "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
-                        "content_included": False,
-                        "db_missing": True,
-                        "store": store,
-                        "source": source,
-                    }
-                )
-            )
-            return EXIT_OK
-        payload = collect_efficiency_metrics_authority(db)
+        payload = authority_collector_payload(
+            collect_efficiency_metrics_authority, _resolve_plane_db(args),
+        )
+        sys.stdout.write(_json_dump(payload))
+        return EXIT_OK
     else:
         db = _resolve_message_db(args)
         store = legacy_broker_store(reachable=db.is_file())
@@ -320,29 +317,13 @@ def cmd_backlog(args: argparse.Namespace) -> int:
     source = resolve_metrics_source(force_legacy=_force_legacy(args))
     exclude_retired = not args.include_retired
     if source == "authority":
-        db = _resolve_plane_db(args)
-        store = comms_plane_store(reachable=db.is_file())
-        if not db.is_file():
-            sys.stdout.write(
-                _json_dump(
-                    {
-                        "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
-                        "total": 0,
-                        "by_agent": {},
-                        "by_status": {},
-                        "rows": [],
-                        "db_missing": True,
-                        "store": store,
-                        "source": source,
-                    }
-                )
-            )
-            return EXIT_OK
-        payload = collect_delivery_backlog_authority(
-            db,
-            limit=args.limit,
-            exclude_retired=exclude_retired,
+        payload = authority_collector_payload(
+            collect_delivery_backlog_authority, _resolve_plane_db(args),
+            empty_fields={"total": 0, "by_agent": {}, "by_status": {}, "rows": []},
+            limit=args.limit, exclude_retired=exclude_retired,
         )
+        sys.stdout.write(_json_dump(payload))
+        return EXIT_OK
     else:
         db = _resolve_message_db(args)
         store = legacy_broker_store(reachable=db.is_file())
@@ -379,24 +360,13 @@ def cmd_dead_letters(args: argparse.Namespace) -> int:
     """Dead-letter inventory (metadata only)."""
     source = resolve_metrics_source(force_legacy=_force_legacy(args))
     if source == "authority":
-        db = _resolve_plane_db(args)
-        store = comms_plane_store(reachable=db.is_file())
-        if not db.is_file():
-            sys.stdout.write(
-                _json_dump(
-                    {
-                        "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
-                        "total": 0,
-                        "by_reason": {},
-                        "rows": [],
-                        "db_missing": True,
-                        "store": store,
-                        "source": source,
-                    }
-                )
-            )
-            return EXIT_OK
-        payload = collect_dead_letters_authority(db, limit=args.limit)
+        payload = authority_collector_payload(
+            collect_dead_letters_authority, _resolve_plane_db(args),
+            empty_fields={"total": 0, "by_reason": {}, "rows": []},
+            limit=args.limit,
+        )
+        sys.stdout.write(_json_dump(payload))
+        return EXIT_OK
     else:
         db = _resolve_message_db(args)
         store = legacy_broker_store(reachable=db.is_file())
@@ -800,9 +770,19 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python -m scripts.fleet_comms",
         description=(
-            "Fleet-comms CLI: plane-status, formal-job get (read-only), "
-            "formal-job accept (writer + optional GitHub publish), "
-            "authority-import, metrics/backlog/dead-letters (Sol PR-M)."
+            "Inspect Fleet Comms status, requests, metrics, and review jobs.\n"
+            "Use read commands for diagnostics; explicit accept/import commands perform writes."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.fleet_comms plane-status\n"
+            "  .venv/bin/python -m scripts.fleet_comms fleet status\n"
+            "  .venv/bin/python -m scripts.fleet_comms metrics\n"
+            "Outputs: JSON on stdout. Status/metrics reads do not initialize stores.\n"
+            "Exit codes: 0 = report produced (inspect health/error fields), "
+            "1 = operation error, 2 = usage error, 3 = not found.\n"
+            "Related: scripts.fleet_comms.message_plane; fleet help."
         ),
     )
     sub = parser.add_subparsers(dest="command", required=True)
