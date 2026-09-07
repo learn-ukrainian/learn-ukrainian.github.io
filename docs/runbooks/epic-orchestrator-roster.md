@@ -44,15 +44,18 @@ launch without acquiring a lane.
 ### Remote lease and handoff authority
 
 Driver leases are claimed on the API host through `/api/epics/v1`; remote mode is
-the default. The explicit `--local` mode is offline-only and prints a warning;
-it is not a fleet-visible lease. A handoff is an API mutation at
+the default. `--local` is an explicit operator-offline fallback and prints a
+warning; it is not a fleet-visible lease. Drivers must not use `--local` as
+recovery when the remote endpoint is unavailable. A handoff is an API mutation at
 `POST /api/epics/v1/epic:<N>/handoff`, not a second local ownership record.
 
-A driver on any machine resumes a lane by launching with `--epic <epic>` and
-claiming the corresponding remote stream. Before driving, it reads the remote
+A driver on any machine resumes a lane by launching with `--epic <epic>`; the
+successor launcher claims the corresponding remote stream. Live drivers do not
+claim again. Before driving, the driver reads the remote
 lease and digest surfaced at SessionStart; at the end of a batch it appends the
-typed handoff through the API. The successor claims the same stream and folds
-that digest into its own handoff.
+typed handoff through the API. The successor folds that digest into its own
+handoff. Remote recovery uses Monitor TTL/CAS or an attributed operator release;
+local PID death is not remote liveness proof.
 
 Every host must export `LU_MONITOR_HOST_ID=<opaque id>` before a driver claims a
 lease. Use the opaque IDs from the canonical `MONITOR_OCCUPANCY_HOST_IDS`
@@ -182,21 +185,25 @@ language + review lanes free and puts the loop on the most replaceable capacity:
 
 ---
 
-## Fleet-comms dependency (why the old start scripts felt "off the new plane")
+## Fleet-comms authority and review
 
-The launchers already speak the **session-stream/lease** half of fleet-comms (#5512). The
-**message-plane + cross-family-comms** half (`fleet_comms plane-status`, `review-pr`,
-`publish-review-verdict`) is wired into the `drive-epic` skill but is **mid-cutover**:
+The launchers claim **session-stream/lease** authority (#5512); `drive-epic`
+teaches the message-plane and cross-family review loop.
 
-- `dual_write` is an operator/advisor-gated flip **owned by the infra/harness lane**
-  (parity receipt → approved enable). Check state:
-  `.venv/bin/python -m scripts.fleet_comms plane-status` (currently `mode: off`).
-- Plane modes are only `off → shadow → dual_write`; in **all** of them **file handoffs
-  stay authoritative** and the skill dual-writes. `dual_write` is shadow/mirror, **not**
-  cutover — there is **no implemented post-cutover authority state** yet.
-- Retiring file handoffs is a future infra step gated on an implemented authority signal
-  (not a `fleet_communications.yaml` edit a driver makes). Because the drivers work today
-  on the file path, you do **not** need to wait for the rollout to start using them.
+- Production default is **`authority`** (#6159). Query live data with
+  `.venv/bin/python -m scripts.fleet_comms plane-status`; the default is not a
+  substitute for that observation.
+- Implemented modes are `off` | `shadow` | `dual_write` | `authority`.
+  Fleet-comms is the durable message-plane source of truth in `authority`;
+  legacy stores are read-only migration/projection inputs. Session handoff
+  files still carry continuity, not competing message or lease authority.
+  `dual_write` is a compatibility soak/rollback mode, not normal operation.
+- Sealed formal CF (`review-pr`, `publish-review-verdict`, `lu-review-*` trees)
+  is **retired — do not use**. Use a qualified native toolful cross-family
+  reviewer and post its verdict and findings on the PR at the exact head SHA,
+  following the [local-code-review workflow](../../agents_extensions/shared/skills/local-code-review/SKILL.md).
+- Plane, retention, and review-eligibility changes remain infra/harness actions
+  requiring present-tense operator/advisor approval; drivers do not flip them.
 
 ---
 

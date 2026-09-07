@@ -19,6 +19,8 @@ SCRIPTS = REPO / "docs/SCRIPTS.md"
 COOPERATION = REPO / "docs/best-practices/agent-cooperation.md"
 RUNTIME = REPO / "docs/agent-runtime-guide.md"
 ROSTER = REPO / "docs/runbooks/epic-orchestrator-roster.md"
+HANDOFF = REPO / "docs/runbooks/epic-stream-handoff.md"
+DRIVE_EPIC = REPO / "agents_extensions/shared/skills/drive-epic/SKILL.md"
 FLEET_COMMS = REPO / "agents_extensions/shared/rules/fleet-comms-coordination.md"
 OPEN_GAPS = REPO / "docs/runbooks/fleet-comms-open-gaps.md"
 
@@ -69,7 +71,7 @@ def test_onboarding_runbook_is_canonical_entry_point(onboarding: str, all_owned:
     # Other owned surfaces must point at the onboarding contract. The roster
     # is exempt: its own onboarding pointer was reverted as a redundant
     # duplicate (fleet-comms/agent-runtime-guide/agent-cooperation/SCRIPTS
-    # already carry it) — see test_roster_intentionally_left_unchanged_by_6027.
+    # already carry it).
     for rel, body in all_owned.items():
         if rel.endswith("agent-seat-onboarding.md") or rel.endswith("epic-orchestrator-roster.md"):
             continue
@@ -197,13 +199,8 @@ def test_plane_status_is_the_live_mode_query(all_owned: dict[str, str]) -> None:
 
 
 def test_no_hardcoded_live_plane_mode_claim(all_owned: dict[str, str]) -> None:
-    # The roster's hard-coded "currently `mode: off`" wording predates #6027
-    # and is a separate, pre-existing concern out of scope for this
-    # integration — see test_roster_intentionally_left_unchanged_by_6027.
     failures: list[str] = []
     for rel, body in all_owned.items():
-        if rel.endswith("epic-orchestrator-roster.md"):
-            continue
         for line_no, line in enumerate(body.splitlines(), start=1):
             if _HARDCODED_PLANE_MODE.search(line):
                 failures.append(f"{rel}:{line_no}: {line.strip()}")
@@ -509,17 +506,82 @@ def test_fresh_agent_smoke_is_readonly_no_github(onboarding: str) -> None:
             assert not re.search(pattern, stripped), f"writeful smoke step: {stripped}"
 
 
-def test_roster_intentionally_left_unchanged_by_6027() -> None:
-    """#6027's docs integration deliberately restored this file to its
-    pre-integration (``origin/main``) content rather than adding an
-    onboarding-contract pointer: `fleet-comms-coordination.md`,
-    `agent-runtime-guide.md`, `agent-cooperation.md`, and `SCRIPTS.md` already
-    link the onboarding contract, so a roster copy would be a redundant
-    duplicate surface. The roster's own live-plane-mode wording is a
-    separate, pre-existing concern out of scope for this integration.
-    """
-    body = _read(ROSTER)
+def test_roster_teaches_authority_default_and_retires_sealed_review() -> None:
+    body = " ".join(_read(ROSTER).split())
     assert "plane-status" in body
+    assert "Production default is **`authority`** (#6159)" in body
+    assert "legacy stores are read-only migration/projection inputs" in body
+    assert "Session handoff files still carry continuity" in body
+    assert "Sealed formal CF" in body and "retired — do not use" in body
+    assert "native toolful cross-family" in body
+    assert "exact head SHA" in body
+    for stale in (
+        "mid-cutover",
+        "currently `mode: off`",
+        "Plane modes are only",
+        "no implemented post-cutover authority state",
+        "file handoffs stay authoritative",
+    ):
+        assert stale not in body
+
+
+def test_handoff_scopes_pid_force_close_to_local_offline() -> None:
+    body = " ".join(_read(HANDOFF).split())
+    contract = body.split("## Contract (v0)", 1)[1].split("2. **Successor", 1)[0]
+    assert "Remote authority (default)" in contract
+    assert "Monitor TTL/CAS or an attributed operator release" in contract
+    assert "Local PID death is not remote liveness proof" in contract
+    local = contract.split("**Local/offline only:**", 1)[1]
+    assert "proof-gated force-close" in local
+    assert "holder PID dead **and** claimer is a distinct live instance" in local
+    assert "unavailable remote endpoint is unknown authority" in body
+
+
+@pytest.mark.parametrize("path", [HANDOFF, ROSTER])
+def test_local_fallback_is_operator_offline_only(path: Path) -> None:
+    body = " ".join(_read(path).split())
+    assert "`--local` is an explicit operator-offline fallback" in body
+    assert "warning" in body
+    assert re.search(
+        r"Drivers must not use `--local` as recovery when the remote endpoint is unavailable",
+        body,
+    )
+    assert "successor launcher claims" in body
+
+
+def test_deepseek_live_acp_contract_uses_opencode(onboarding: str) -> None:
+    body = " ".join(onboarding.split())
+    acpx = body.split("### ACPX — structured transport boundary", 1)[1].split(
+        "### Selecting the ACP panel", 1
+    )[0]
+    assert "DeepSeek's standing route is first-party via `opencode acp --pure`" in acpx
+    assert "Hermes is permanently removed and is not a live DeepSeek route" in acpx
+    for stale in (
+        "AGY and DeepSeek use the project-owned text ACP server",
+        "DeepSeek runs Hermes",
+        "ACPX, Grok, AGY, OpenCode, and Hermes use rolling compatibility contracts",
+    ):
+        assert stale not in body
+
+
+def test_acp_replay_section_allows_any_supported_two_seat_pair(onboarding: str) -> None:
+    body = " ".join(onboarding.split())
+    replay = body.split("### Shared ACPX install and E2E/replay verification", 1)[1]
+    assert "Participants are exactly two enabled seats from the supported set" in replay
+    assert "[Selecting the ACP panel](#selecting-the-acp-panel)" in replay
+    assert "`codex,grok` is an example pair, not the only pair" in replay
+    assert "Participants are exactly `codex,grok`" not in body
+
+
+def test_live_driver_diagnostics_never_claim_again() -> None:
+    body = " ".join(_read(DRIVE_EPIC).split())
+    assert "Live-driver diagnostics use `session_streams handoff-status`" in body
+    assert "Live drivers never run `handoff-claim`" in body
+    assert "launcher has already claimed the lease" in body
+    assert "`handoff-claim` belongs to the successor launcher" in body
+    assert "local/offline contract only; it cannot recover a remote lease" in body
+    assert "Remote recovery uses Monitor TTL/CAS or an attributed operator release" in body
+    assert "`handoff-status` / `handoff-claim`" not in body
 
 
 def test_fleet_comms_points_to_onboarding_not_mutable_caps() -> None:

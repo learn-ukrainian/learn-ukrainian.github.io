@@ -364,13 +364,14 @@ not permanent routing weights and do not override current CodexBar headroom.
   `acpx-cursor-shadow`, `acpx-pool-shadow`, `acpx-agy-shadow`,
   `acpx-glm-shadow`, `acpx-gemma-shadow`, and `acpx-deepseek-shadow`; never
   registered for dispatch, routing, review, or failover.
-- ACPX, Grok, AGY, OpenCode, and Hermes use rolling compatibility contracts.
+- ACPX, Grok, AGY, and OpenCode use rolling compatibility contracts.
   Immediately before spawn, each adapter checks the exact command and flags
   it will invoke; versions are recorded for telemetry but are not allowlists.
   An observed version is diagnostic evidence, not an allowlist or runtime pin.
   The contracts are `json-one-shot-v1` (ACPX), `agent-stdio-v1` (Grok),
-  `text-plan-sandbox-v1` (AGY), `native-acp-pure-v1` (OpenCode), and
-  `text-oneshot-isolated-v1` (Hermes).
+  `text-plan-sandbox-v1` (AGY), and `native-acp-pure-v1` (OpenCode).
+  The historical `text-oneshot-isolated-v1` Hermes contract is retired;
+  Hermes is permanently removed and is not a live DeepSeek route.
   ACPX built-ins are checked through their `<seat> exec --file` surface rather
   than by duplicating pins for the hidden provider executables. The project
   text ACP server remains digest-checked before use.
@@ -404,11 +405,12 @@ not permanent routing weights and do not override current CodexBar headroom.
   memory, web, MCP, and LSP tools inside the Grok ACP server. This is required
   in addition to ACPX `--deny-all --no-fs --no-terminal --allowed-tools ""`:
   ACPX client flags alone do not remove native Grok tools.
-- AGY and DeepSeek use the project-owned text ACP server. It accepts one text
+- AGY uses the project-owned text ACP server. It accepts one text
   prompt, runs source-blind in a fresh temporary directory, and removes that
   directory after the turn. AGY runs `plan` + sandbox without permission
-  bypasses. DeepSeek runs Hermes against an isolated empty-tool/no-fallback
-  config while reusing only the existing local credential files.
+  bypasses. DeepSeek's standing route is first-party via
+  `opencode acp --pure`, with deny-all tool confinement; see
+  [the DeepSeek route contract](#hermes-permanently-removed--deepseek-routes-via-opencode).
 - GLM uses native `opencode acp --pure`, pinned to
   `zai-coding-plan/glm-5.3`, with both `permission.*=deny` and `tools.*=false`.
   GLM and first-party DeepSeek retain their local-only/never-CI egress guards.
@@ -530,8 +532,10 @@ The verifier is read-only and body-free. `verified: true` requires the fixed
 participants to succeed in every requested round, successful native synthesis,
 terminal `COMPLETE`, and an observed replay. It never authorizes a retry.
 
-Participants are exactly `codex,grok`. Two rounds are the default and three is
-the hard maximum: parallel initial participant calls, a bounded peer
+Participants are exactly two enabled seats from the supported set in
+[Selecting the ACP panel](#selecting-the-acp-panel). `codex,grok` is an example
+pair, not the only pair. Two rounds are the default and three is the hard
+maximum: parallel initial participant calls, a bounded peer
 cross-response, then authoritative native-Codex synthesis. The controller
 allows at most two participant calls and five model calls by default,
 including synthesis. It starts no persistent session, tool-enabled run,
