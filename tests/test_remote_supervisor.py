@@ -492,7 +492,7 @@ def test_supervisory_wake_refuses_event_file_database_drift(supervisory_cycle, d
     delivery = service.get_delivery(did)
     message = service.get_message(delivery.message_id)
     artifact = service.store.get(message.body_artifact_id)
-    before = supervisor.remote.stream("epic:7178")
+    before = supervisor.remote.stream("epic:7178")  # allow-hardcoded-epic: remote supervisor request fixture
     if damage == "missing":
         artifact.blob_path.rename(artifact.blob_path.with_suffix(".unavailable"))
     else:
@@ -503,11 +503,11 @@ def test_supervisory_wake_refuses_event_file_database_drift(supervisory_cycle, d
         artifact.blob_path.write_bytes(changed)
     start = Mock(side_effect=AssertionError("corrupt event must not reach the launcher"))
     with pytest.raises(ArtifactStoreError, match=r"missing blob|blob digest mismatch"):
-        wake_driver_once(service, supervisor.remote, stream_id="epic:7178",
+        wake_driver_once(service, supervisor.remote, stream_id="epic:7178",  # allow-hardcoded-epic: remote supervisor request fixture
                          launcher=Path("start-codex-driver.sh"), epic="fixture", run=start)
     start.assert_not_called()
     assert service.get_delivery(did) == delivery
-    assert supervisor.remote.stream("epic:7178") == before
+    assert supervisor.remote.stream("epic:7178") == before  # allow-hardcoded-epic: remote supervisor request fixture
 
 
 def test_successor_preserves_real_worker_needs_finalize(supervisory_cycle, tmp_path, monkeypatch):
