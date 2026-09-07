@@ -17,6 +17,8 @@ import shutil
 import stat
 import struct
 import subprocess
+from collections import Counter
+from contextlib import contextmanager
 from pathlib import Path
 
 import pytest
@@ -179,18 +181,56 @@ def test_parser_matches_the_kernel_wire_format(tmp_path):
 # --- descriptor-bound reading ---------------------------------------------------
 
 
-def open_fds():
-    return set(os.listdir("/proc/self/fd"))
+@contextmanager
+def tracked_fds():
+    """Yield ``(opened, closed)`` lists that accumulate every fd number
+    ``os.open``/``os.close`` handle while active.
+
+    Asserting ``set(os.listdir("/proc/self/fd")) == before`` proves nothing:
+    the kernel recycles fd numbers, so unrelated activity elsewhere in the
+    interpreter (pytest-xdist, resource trackers, even pytest's own capture
+    machinery) can open a *different* descriptor that happens to land on a
+    number the code under test already closed, and the snapshot flags it as
+    if it were never closed (observed on merge-group CI shard 1, runs
+    34158474932 and 34159266702, on two different parametrizations of
+    ``test_refuses_unsafe_objects_through_the_descriptor``, and reproduced
+    locally on the plain success path). Pairing every open with its close
+    proves the call under test closes everything *it* opened regardless of
+    what the rest of the process does with the freed numbers afterward.
+    """
+    opened: list[int] = []
+    closed: list[int] = []
+    real_open, real_close = os.open, os.close
+
+    def open_spy(*args, **kwargs):
+        fd = real_open(*args, **kwargs)
+        opened.append(fd)
+        return fd
+
+    def close_spy(fd):
+        real_close(fd)
+        closed.append(fd)
+
+    os.open, os.close = open_spy, close_spy
+    try:
+        yield opened, closed
+    finally:
+        os.open, os.close = real_open, real_close
+
+
+def assert_closes_every_descriptor(opened, closed):
+    leaked = Counter(opened) - Counter(closed)
+    assert not leaked, f"descriptor(s) opened were never closed: {sorted(leaked.elements())}"
 
 
 def test_reads_an_owner_private_credential_and_closes_descriptors(tmp_path):
     path = tmp_path / "credential"
     path.write_bytes(b"synthetic-credential\n")
     path.chmod(0o400)
-    before = open_fds()
-    custody.verify_credential(path)
-    assert custody.read_credential(path) == b"synthetic-credential\n"
-    assert open_fds() == before
+    with tracked_fds() as (opened, closed):
+        custody.verify_credential(path)
+        assert custody.read_credential(path) == b"synthetic-credential\n"
+    assert_closes_every_descriptor(opened, closed)
 
 
 def test_missing_credential_propagates_file_not_found(tmp_path):
@@ -201,10 +241,10 @@ def test_missing_credential_propagates_file_not_found(tmp_path):
 def test_missing_namespace_propagates_file_not_found(tmp_path):
     # An unprovisioned unit has no $CREDENTIALS_DIRECTORY at all: callers keep
     # their "not provisioned" taxonomy instead of receiving a custody verdict.
-    before = open_fds()
-    with pytest.raises(FileNotFoundError):
-        custody.read_credential(tmp_path / "absent-namespace" / "credential")
-    assert open_fds() == before
+    with tracked_fds() as (opened, closed):
+        with pytest.raises(FileNotFoundError):
+            custody.read_credential(tmp_path / "absent-namespace" / "credential")
+    assert_closes_every_descriptor(opened, closed)
 
 
 def test_non_directory_namespace_is_a_custody_refusal(tmp_path):
@@ -291,11 +331,11 @@ def test_refuses_unsafe_objects_through_the_descriptor(tmp_path, mutation):
         "relative": "credential_directory",
         "foreign_namespace": "credential_directory",
     }[mutation]
-    before = open_fds()
-    with pytest.raises(custody.CredentialCustodyError) as error:
-        custody.read_credential(path, **kwargs)
+    with tracked_fds() as (opened, closed):
+        with pytest.raises(custody.CredentialCustodyError) as error:
+            custody.read_credential(path, **kwargs)
     assert error.value.code == expected
-    assert open_fds() == before
+    assert_closes_every_descriptor(opened, closed)
 
 
 def test_refuses_a_credential_rewritten_during_the_read(tmp_path, monkeypatch):
