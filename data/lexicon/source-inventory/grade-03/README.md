@@ -75,3 +75,40 @@ its glossary YAML with the specific reason(s) (`no_uk_definition` /
   scope for this pass.
 - Not a re-run or extension of the 2026-07-19 oneshot bulk mine.
 - Not grade 4+. Next grade in the #7551 queue is grade 4.
+
+## Drive extras (this PR, #7551)
+
+A second dispatch surfaced 5 more grade-3 Drive PDFs not covered by the
+original pass above, all copied with `rclone copy` (never `sync`) into
+gitignored `data/textbook_chunks/grade-03/` and run through
+`scripts/rag/extract_text.py --native-only` (never `--force-ocr`):
+
+| PDF | Native extraction | Notes |
+| --- | --- | --- |
+| `3-klas-ukrainska-mova-kravtsova-2020-1.pdf` | **Passed** (99.3% coverage) | Кравцова Н., Романова В., «Українська мова та читання», підручник для 3 класу ЗЗСО, частина 1, 2020 |
+| `3-klas-ukrainska-mova-ponomarova-2020-1.pdf` | **Failed closed** (42.5% content-page coverage) | Below the 60% floor — recovered native text too sparse to trust; not an extractor defect, no `--force-ocr` used. |
+| `3-klas-ukrainska-mova-savchuk-2020-2.pdf` | **Failed closed** (0.69% coverage) | Effectively a pure image scan. |
+| `3-klas-ukrainska-mova-vashulenko-2020-1.pdf` | **Failed closed** (3.75% coverage) | Effectively a pure image scan. |
+| `3-klas-ukrainska-mova-vashulenko-2020-2.pdf` | **Failed closed** (37.5% coverage) | Below the 60% floor; part 1 of the same book also failed, so no part of this book cleared native extraction. |
+
+Only `kravtsova-2020-1` cleared native extraction; it was run through the
+same two-stage pipeline as the original pass, top-300-by-frequency
+content-word cap, same admission gates:
+
+| Book | VESUM content candidates | Attempted (top 300 by freq) | Admitted | Richness | Residual (not yet attempted) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| ukrmova-kravtsova | 2,828 | 300 | 276 | 92.0% | 2,528 |
+
+Unknown-forms rate on the upstream headword extraction was 9.87% (floor 20%,
+no override needed). Richness floor is 40%; `--allow-richness-regression`
+not used, not needed. Output: `ukrmova-kravtsova-grade3-2020-headwords.yaml`
+(candidate pool) and `ukrmova-kravtsova-grade3-2020-glossary.yaml` (admitted
+glossary + this batch's residual, reasons `no_uk_definition` /
+`no_en_gloss`).
+
+The 4 low-native-coverage PDFs (`ponomarova-2020-1`, `savchuk-2020-2`,
+`vashulenko-2020-1`, `vashulenko-2020-2`) are **not** added to the "Books
+processed" table above — they have no extracted JSONL and no glossary. Per
+the `#7551` receipts policy, their failure is documented here rather than
+silently dropped; a future OCR-eligible pass (out of scope for this
+native-only dispatch) is the path to covering them.
