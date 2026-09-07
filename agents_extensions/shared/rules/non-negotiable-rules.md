@@ -85,12 +85,15 @@ which owns the durable lifecycle ledger and repair budgets. Its canonical
 Repair the owning source and obtain fresh review evidence through that workflow;
 do not substitute a historical build-loop budget for the current completion contract.
 
-**Reviewer fixes are bounded patches, not rewrites.** The per-dimension reviewer
-returns one `<fixes>` block of `<find>/<replace>` or `<insert_after>` entries (each
-replacement at most 6 lines or 240 characters); `linear_pipeline.py` applies them
-deterministically and records what applied. Patch the root cause rather than
-rewriting sound content, and take word counts from the deterministic counter, never
-from reviewer estimates.
+**Reviewer fixes are bounded patches, not rewrites.** Per-dimension reviewers
+return structured JSON findings and never rewrite content. When a Python QG gate
+fails, the bounded correction step (`render_reviewer_correction_prompt` in
+`linear_pipeline.py`) asks the reviewer-as-fixer for one `<fixes>` block of
+`<find>/<replace>` or `<insert_after>` entries, each replacement at most 6 lines
+**and** 240 characters (`_validate_reviewer_fix_shapes`); the pipeline validates
+and applies them deterministically and records what applied. Patch the root cause
+rather than rewriting sound content, and take word counts from the deterministic
+counter, never from reviewer estimates.
 
 ---
 

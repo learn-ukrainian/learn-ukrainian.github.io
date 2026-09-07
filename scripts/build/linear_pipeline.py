@@ -5364,7 +5364,7 @@ def render_reviewer_correction_prompt(
             reviewer_role,
             "Return a single <fixes> block. Use these two shapes only:",
             "  - `<fix><find>...</find><replace>...</replace></fix>` for textual"
-            " swaps. Each `<replace>` body MUST be ≤ 6 lines OR ≤ 240 chars.",
+            " swaps. Each `<replace>` body MUST be ≤ 6 lines AND ≤ 240 chars.",
             "  - `<fix><insert_after>ANCHOR</insert_after><text>...</text></fix>` for"
             " ADDITIONS. Use this when the gate failure is 'missing/insufficient X'"
             " (l2_exposure_floor, inject_activity_ids, n_resources, etc.).",

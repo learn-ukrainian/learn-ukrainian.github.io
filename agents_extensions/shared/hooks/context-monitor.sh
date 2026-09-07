@@ -164,22 +164,36 @@ BOOTSTRAP_FILE=".agent/${HANDOFF_AGENT}-thread-bootstrap.md"
 HANDOFF_FILE=".agent/${HANDOFF_AGENT}-thread-handoff.md"
 CONTEXT_FACT="${PCT}% of the ${WINDOW}-token context window [~${TOKENS}/${WINDOW}; ${USAGE_SOURCE}; capacity: ${WINDOW_PROVENANCE}]"
 
-# Announce each tier once per session, when it is first crossed. Re-injecting the
-# same rollover instruction on every tool call is the trap the Codex/Grok guards
-# above describe, and a running context-budget countdown makes the model wrap up
-# early (claude-api skill, model-migration.md -> Claude Fable 5.1 "context
-# anxiety"). Tier state lives in gitignored runtime storage.
+# Announce each tier once per session, the first time it is crossed. Re-injecting
+# the same rollover instruction on every tool call is the trap the Codex/Grok
+# guards above describe, and a running context-budget countdown makes the model
+# wrap up early (claude-api skill, model-migration.md -> Claude Fable 5.1
+# "context anxiety"). Tiers are monotonic: a usage estimate that dips and rises
+# around a boundary does not re-announce. Only a compaction-scale drop - usage
+# below 60% of the level at the last announcement - re-arms the tiers, so a fresh
+# climb after compaction is announced again. State lives in gitignored runtime
+# storage as "<tier> <tokens>".
+TIER_STATE_DIR="$PROJECT_DIR/batch_state/context_monitor"
+TIER_STATE_FILE="$TIER_STATE_DIR/${SESSION_ID}.tier"
+LAST_TIER=0
+LAST_TOKENS=0
+if [ -f "$TIER_STATE_FILE" ]; then
+  read -r LAST_TIER LAST_TOKENS < "$TIER_STATE_FILE" 2>/dev/null || true
+fi
+case "$LAST_TIER" in ''|*[!0-9]*) LAST_TIER=0 ;; esac
+case "$LAST_TOKENS" in ''|*[!0-9]*) LAST_TOKENS=0 ;; esac
+if [ "$LAST_TIER" -gt 0 ] && [ $((TOKENS * 100)) -lt $((LAST_TOKENS * 60)) ]; then
+  rm -f "$TIER_STATE_FILE" 2>/dev/null
+  LAST_TIER=0
+  LAST_TOKENS=0
+fi
 if [ "$PCT" -ge "$TIER3_PCT" ]; then TIER=3
 elif [ "$PCT" -ge "$TIER2_PCT" ]; then TIER=2
 elif [ "$PCT" -ge "$TIER1_PCT" ]; then TIER=1
-else exit 0
+else TIER=0
 fi
-TIER_STATE_DIR="$PROJECT_DIR/batch_state/context_monitor"
-TIER_STATE_FILE="$TIER_STATE_DIR/${SESSION_ID}.tier"
-if [ -f "$TIER_STATE_FILE" ] && [ "$(cat "$TIER_STATE_FILE" 2>/dev/null)" = "$TIER" ]; then
-  exit 0
-fi
-mkdir -p "$TIER_STATE_DIR" 2>/dev/null && printf '%s\n' "$TIER" > "$TIER_STATE_FILE" 2>/dev/null
+[ "$TIER" -gt "$LAST_TIER" ] || exit 0
+mkdir -p "$TIER_STATE_DIR" 2>/dev/null && printf '%s %s\n' "$TIER" "$TOKENS" > "$TIER_STATE_FILE" 2>/dev/null
 
 if [ "$PCT" -ge "$TIER3_PCT" ]; then
   MSG=$(printf '%s\n%s\n%s\n%s\n%s\n%s\n' \
