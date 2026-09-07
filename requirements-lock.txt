@@ -62,7 +62,7 @@ httpcore2==2.9.1
 httpx-sse==0.4.3
 httpx==0.28.1
 httpx2==2.9.1
-huggingface_hub==1.24.0
+huggingface_hub==1.29.0
 humanfriendly==10.0
 hyperframe==6.1.0
 identify==2.6.19
