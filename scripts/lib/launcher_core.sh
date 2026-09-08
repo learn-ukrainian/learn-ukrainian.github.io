@@ -577,8 +577,33 @@ launcher_cursor_observer_renew_loop() {
   [ "$LC_DRY_RUN" != "1" ] || return 0
   local child_pid="$1"
   (
-    while kill -0 "$child_pid" 2>/dev/null; do
-      sleep 480
+    # Same orphan class as the driver renew loop (#7832): an untracked
+    # `sleep 480` outlives a TERM'd subshell and holds the launcher's output
+    # pipes open past any caller timeout. Wait on an anonymous FIFO instead.
+    local observer_stop=""
+    local slices=0
+    local wait_fifo wait_fd=""
+    trap 'observer_stop=1' INT TERM HUP
+    if wait_fifo="$(mktemp -u)" && mkfifo "$wait_fifo"; then
+      if { exec 215<>"$wait_fifo"; }; then
+        wait_fd=215
+      fi
+      rm -f "$wait_fifo"
+    fi
+    while [ -z "$observer_stop" ] && kill -0 "$child_pid" 2>/dev/null; do
+      # Short slices only: a long `read -t` resumes its full timeout after a
+      # trapped signal instead of returning, which would stall teardown.
+      slices=4800
+      while [ "$slices" -gt 0 ] && [ -z "$observer_stop" ] && kill -0 "$child_pid" 2>/dev/null; do
+        if [ -n "$wait_fd" ]; then
+          read -r -t 0.1 -u "$wait_fd" _ 2>/dev/null || true
+        else
+          # FIFO setup failed: a stop can orphan at most one 0.1s sleep.
+          sleep 0.1
+        fi
+        slices=$((slices - 1))
+      done
+      [ -n "$observer_stop" ] && break
       if ! kill -0 "$child_pid" 2>/dev/null; then
         break
       fi
@@ -606,15 +631,36 @@ launcher_driver_renew_loop() {
   local renew_interval="${SESSION_STREAM_RENEW_INTERVAL_SECONDS:-300}"
   local renew_jitter="${SESSION_STREAM_RENEW_JITTER_SECONDS:-30}"
   (
-    local sleep_pid=""
-    trap '[ -n "$sleep_pid" ] && kill "$sleep_pid" 2>/dev/null || true; exit 143' INT TERM HUP
-    trap '[ -n "$sleep_pid" ] && kill "$sleep_pid" 2>/dev/null || true' EXIT
-    while kill -0 "$child_pid" 2>/dev/null; do
+    # A backgrounded interval sleep can be orphaned when TERM lands between its
+    # spawn and the PID capture; the orphan keeps the launcher's output pipes
+    # open past any caller timeout (#7832). Wait on an anonymous FIFO instead:
+    # with no child process, nothing can outlive this subshell. These libraries
+    # do not require Bash 4; reserve fd 214 instead of {var} FDs.
+    local renew_stop=""
+    local slices=0
+    local wait_fifo wait_fd=""
+    trap 'renew_stop=1' INT TERM HUP
+    if wait_fifo="$(mktemp -u)" && mkfifo "$wait_fifo"; then
+      if { exec 214<>"$wait_fifo"; }; then
+        wait_fd=214
+      fi
+      rm -f "$wait_fifo"
+    fi
+    while [ -z "$renew_stop" ] && kill -0 "$child_pid" 2>/dev/null; do
       # Five minutes with a bounded +/-30s jitter avoids synchronized renewals.
-      sleep $((renew_interval - renew_jitter + RANDOM % (2 * renew_jitter + 1))) &
-      sleep_pid=$!
-      wait "$sleep_pid" || break
-      sleep_pid=""
+      # Short slices only: a long `read -t` resumes its full timeout after a
+      # trapped signal instead of returning, which would stall teardown.
+      slices=$(( (renew_interval - renew_jitter + RANDOM % (2 * renew_jitter + 1)) * 10 ))
+      while [ "$slices" -gt 0 ] && [ -z "$renew_stop" ] && kill -0 "$child_pid" 2>/dev/null; do
+        if [ -n "$wait_fd" ]; then
+          read -r -t 0.1 -u "$wait_fd" _ 2>/dev/null || true
+        else
+          # FIFO setup failed: a stop can orphan at most one 0.1s sleep.
+          sleep 0.1
+        fi
+        slices=$((slices - 1))
+      done
+      [ -n "$renew_stop" ] && break
       if ! kill -0 "$child_pid" 2>/dev/null; then
         break
       fi

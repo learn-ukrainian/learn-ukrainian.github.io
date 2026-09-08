@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import signal
 import subprocess
@@ -559,6 +560,25 @@ def test_all_driver_adapters_use_common_closure_wrapper() -> None:
     for provider in ("claude", "codex", "gemini", "grok"):
         body = (REPO / "scripts" / "launchers" / f"{provider}.sh").read_text(encoding="utf-8")
         assert 'launcher_exec_command "${cmd[@]}"' in body
+
+
+def test_renew_loops_spawn_no_orphanable_sleeps() -> None:
+    """#7832: renew subshells must not create children that can outlive them.
+
+    A background `sleep &` orphaned between its spawn and the `$!` capture (or
+    a long foreground `sleep` in an untrapped subshell) survives the launcher's
+    TERM teardown and holds the launcher's output pipes open past any caller
+    timeout. The subshells wait on anonymous FIFO slices instead.
+    """
+    body = (REPO / "scripts" / "lib" / "launcher_core.sh").read_text(encoding="utf-8")
+    for name in ("launcher_driver_renew_loop", "launcher_cursor_observer_renew_loop"):
+        section = body.split(f"{name}() {{", 1)[1].split("\n}", 1)[0]
+        subshell = section.split("(\n", 1)[1].rsplit(") &", 1)[0]
+        assert not re.search(r"sleep[^\n|;]*&", subshell), f"{name} backgrounds a sleep"
+        assert "$!" not in subshell, f"{name} captures a background child PID"
+        assert not re.search(r"^\s+sleep (?!0\.1\b)", subshell, re.MULTILINE), (
+            f"{name} runs a long foreground sleep"
+        )
 
 
 def test_driver_signal_between_watcher_spawn_and_pid_capture_reaps_children(tmp_path: Path) -> None:
