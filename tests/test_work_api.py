@@ -1040,6 +1040,7 @@ def test_next_hung_refresh_frees_single_flight_slot(monkeypatch):
     The background build is bounded by NEXT_BUILD_TIMEOUT_S; once it times
     out the slot frees and the next caller's refresh can succeed.
     """
+    import threading
     import time
 
     from scripts.api.state_helpers import _ttl_cache
@@ -1049,33 +1050,55 @@ def test_next_hung_refresh_frees_single_flight_slot(monkeypatch):
     payload = _warm_next_cache()
     key = projection_cache_key({})
     _ttl_cache[key] = (time.monotonic() - (work_router.NEXT_MAX_STALE_S + 15.0), payload)
+    production_timeout = work_router.NEXT_BUILD_TIMEOUT_S
     monkeypatch.setattr(work_router, "NEXT_BUILD_TIMEOUT_S", 0.2)
 
+    # Block on an explicit event instead of a long sleep: the abandoned
+    # worker never runs to completion silently, and teardown always frees it.
+    release_hung = threading.Event()
+
     def hanging_build(**_kwargs):
-        time.sleep(2.0)
+        release_hung.wait(30.0)
         return build_projection(_next_sections(), repository_id=REPO)
 
     monkeypatch.setattr(work_router, "build_public_projection", hanging_build)
-    first = client.get("/api/work/v1/next?stream=infra-harness")
-    assert first.status_code == 503, first.text
-    assert first.json()["error"] == "stale"
+    try:
+        first = client.get("/api/work/v1/next?stream=infra-harness")
+        assert first.status_code == 503, first.text
+        assert first.json()["error"] == "stale"
 
-    # The hung build is abandoned at the timeout and the slot frees.
-    work_router.wait_for_in_flight_build(key)
-    assert key not in app.state.ctx.stores.work_in_flight, "hung build wedged the single-flight slot"
+        # The hung build is abandoned at the timeout and the slot frees.
+        work_router.wait_for_in_flight_build(key)
+        assert key not in app.state.ctx.stores.work_in_flight, "hung build wedged the single-flight slot"
 
-    # A healthy retry rebuilds and serves 200.
-    def fast_build(*, filters=None, cache_age_s=0.0, **_kwargs):
-        return build_projection(_next_sections(), repository_id=REPO, filters=filters, cache_age_s=cache_age_s)
+        # Only the hung build is bounded tightly. The bound is read when the
+        # build is kicked, so restoring the production value here leaves the
+        # hung build at 0.2s while the healthy retry gets the full budget —
+        # under CPU contention loop/thread scheduling alone can otherwise eat
+        # the whole 0.2s and abandon the retry too (#7829).
+        monkeypatch.setattr(work_router, "NEXT_BUILD_TIMEOUT_S", production_timeout)
 
-    monkeypatch.setattr(work_router, "build_public_projection", fast_build)
-    retry = client.get("/api/work/v1/next?stream=infra-harness")
-    assert retry.status_code == 503, retry.text
-    assert retry.json()["error"] == "stale"
-    work_router.wait_for_in_flight_build(key)
-    second = client.get("/api/work/v1/next?stream=infra-harness")
-    assert second.status_code == 200, "slot stayed wedged after the hung build"
-    assert second.json()["cache_age_s"] < work_router.NEXT_MAX_STALE_S
+        # A healthy retry rebuilds and serves 200.
+        def fast_build(*, filters=None, cache_age_s=0.0, **_kwargs):
+            return build_projection(_next_sections(), repository_id=REPO, filters=filters, cache_age_s=cache_age_s)
+
+        monkeypatch.setattr(work_router, "build_public_projection", fast_build)
+        retry = client.get("/api/work/v1/next?stream=infra-harness")
+        assert retry.status_code == 503, retry.text
+        assert retry.json()["error"] == "stale"
+
+        # Serve the retry from the slot future's result, not wall-clock: a
+        # failed retry build raises here instead of surfacing as a later 503.
+        with work_router._IN_FLIGHT_LOCK:
+            handle = app.state.ctx.stores.work_in_flight.get(key)
+        assert handle is not None, "retry did not kick a refresh build"
+        handle.result(timeout=10.0)
+
+        second = client.get("/api/work/v1/next?stream=infra-harness")
+        assert second.status_code == 200, "slot stayed wedged after the hung build"
+        assert second.json()["cache_age_s"] < work_router.NEXT_MAX_STALE_S
+    finally:
+        release_hung.set()
 
 
 @pytest.mark.parametrize("hung_first_build", [False, True])
@@ -1101,6 +1124,7 @@ def test_periodic_refresh_keeps_idle_next_warm(monkeypatch, tmp_path, hung_first
     assert original_stamp < work_router.CACHE_TTL_S
     _patch_known_streams(monkeypatch)
     monkeypatch.setattr(work_router, "CACHE_TTL_S", 0.1)
+    production_timeout = work_router.NEXT_BUILD_TIMEOUT_S
     monkeypatch.setattr(work_router, "NEXT_BUILD_TIMEOUT_S", 0.2)
     # Multiple successful refreshes over a whole max-stale window prove that
     # this is recurring maintenance, rather than another one-shot warmup.
@@ -1123,6 +1147,13 @@ def test_periodic_refresh_keeps_idle_next_warm(monkeypatch, tmp_path, hung_first
 
     def build(**_kwargs):
         builds.append(time.monotonic())
+        if len(builds) == 1:
+            # Only the first build is bounded tightly: the bound is read when
+            # the build is kicked, so restoring the production value here
+            # keeps build #1 at 0.2s while later timer builds get the full
+            # budget — CPU contention cannot then abandon a healthy build and
+            # starve the TTL window (#7829).
+            monkeypatch.setattr(work_router, "NEXT_BUILD_TIMEOUT_S", production_timeout)
         if hung_first_build and len(builds) == 1:
             assert release_hung.wait(5.0)
         return payload.copy()
