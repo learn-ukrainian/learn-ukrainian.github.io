@@ -709,7 +709,6 @@ launcher_forward_driver_signal() {
   local signal="$1"
   local exit_code="$2"
   trap - "$signal"
-  exec 213>&-
   if [ -n "${LC_DRIVER_CHILD_PID:-}" ] && kill -0 "$LC_DRIVER_CHILD_PID" 2>/dev/null; then
     kill -s "$signal" "$LC_DRIVER_CHILD_PID" 2>/dev/null || true
     wait "$LC_DRIVER_CHILD_PID" 2>/dev/null || true
@@ -785,6 +784,11 @@ launcher_exec_command() {
       fi
       rm -f "$wait_fifo"
     fi
+    # Cleanup that waits or exits inside a trapped read can abort Bash. Record
+    # termination here and forward it only after the bounded slice returns.
+    trap 'LC_DRIVER_PENDING_SIGNAL=INT; LC_DRIVER_PENDING_EXIT=130' INT
+    trap 'LC_DRIVER_PENDING_SIGNAL=TERM; LC_DRIVER_PENDING_EXIT=143' TERM
+    trap 'LC_DRIVER_PENDING_SIGNAL=HUP; LC_DRIVER_PENDING_EXIT=129' HUP
     while [ "${LC_SUPERVISORY_EVENT:-0}" != 1 ] && kill -0 "$LC_DRIVER_CHILD_PID" 2>/dev/null; do
       launcher_driver_wait_hook
       if [ -n "$wait_fd" ]; then
@@ -793,8 +797,19 @@ launcher_exec_command() {
         # FIFO setup failed: retain the old slice (and its race) rather than spin.
         sleep 0.1 & wait "$!" 2>/dev/null || true
       fi
+      if [ -n "$LC_DRIVER_PENDING_SIGNAL" ]; then
+        exec 213>&-
+        launcher_forward_driver_signal "$LC_DRIVER_PENDING_SIGNAL" "$LC_DRIVER_PENDING_EXIT"
+      fi
     done
     exec 213>&-
+    trap 'launcher_forward_driver_signal INT 130' INT
+    trap 'launcher_forward_driver_signal TERM 143' TERM
+    trap 'launcher_forward_driver_signal HUP 129' HUP
+    # Include a signal recorded between the last slice and restoring the traps.
+    if [ -n "$LC_DRIVER_PENDING_SIGNAL" ]; then
+      launcher_forward_driver_signal "$LC_DRIVER_PENDING_SIGNAL" "$LC_DRIVER_PENDING_EXIT"
+    fi
     if [ "${LC_SUPERVISORY_EVENT:-0}" != 1 ]; then
       wait "$LC_DRIVER_CHILD_PID" || provider_rc=$?
     fi
