@@ -10,6 +10,12 @@ concurrency:
 permissions:
   contents: read
 
+env:
+  # Declared once (docs/decisions/2026-07-22-pytest-four-shard-matrix.md); the
+  # `changes` job's `shards` output and the pytest job's `plan-files
+  # --shard-count` both read this instead of a second hardcoded "4".
+  PYTEST_SHARD_COUNT: '4'
+
 on:
   pull_request:
     types: [opened, synchronize, reopened, edited]
@@ -46,14 +52,16 @@ jobs:
           head = os.environ.get("HEAD") or ""
           repo = os.environ["REPO"]
           token = os.environ["GH_TOKEN"]
-          docs_only, frontend, shards = "false", "true", "[1,2,3,4]"
+          shard_count = int(os.environ["PYTEST_SHARD_COUNT"])
+          all_shards = json.dumps(list(range(1, shard_count + 1)))
+          docs_only, frontend, shards = "false", "true", all_shards
 
           def fail_closed():
-              print("docs_only=false\nfrontend=true\nshards=[1,2,3,4]")
+              print(f"docs_only=false\nfrontend=true\nshards={all_shards}")
               out = os.environ.get("GITHUB_OUTPUT")
               if out:
                   pathlib.Path(out).write_text(
-                      "docs_only=false\nfrontend=true\nshards=[1,2,3,4]\n", encoding="utf-8"
+                      f"docs_only=false\nfrontend=true\nshards={all_shards}\n", encoding="utf-8"
                   )
               sys.exit(0)
 
@@ -106,7 +114,7 @@ jobs:
 
           docs_only = "true" if all(is_docs(p) for p in paths) else "false"
           frontend = "true" if any(is_frontend(p) for p in paths) else "false"
-          shards = "[1]" if docs_only == "true" else "[1,2,3,4]"
+          shards = "[1]" if docs_only == "true" else all_shards
           print(f"files={len(paths)} docs_only={docs_only} frontend={frontend} shards={shards}")
           out = os.environ.get("GITHUB_OUTPUT")
           if out:
@@ -251,6 +259,20 @@ jobs:
       - name: Hydrate Atlas lexicon manifest
         run: |
           .venv/bin/python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+      - name: Plan pytest shard files
+        if: needs.changes.outputs.docs_only == 'false'
+        env:
+          SHARD: ${{ matrix.shard }}
+          SHARD_COUNT: ${{ env.PYTEST_SHARD_COUNT }}
+        run: |
+          set -euo pipefail
+          allowlist="${RUNNER_TEMP}/pytest-shard-${SHARD}-files.txt"
+          git ls-files -- tests | grep -E '/test_[^/]+\.py$' | sort | \
+            .venv/bin/python scripts/ci/pytest_shards.py plan-files \
+              --shard-id "$SHARD" --shard-count "$SHARD_COUNT" \
+              --durations scripts/ci/pytest-file-durations.json \
+              --output "$allowlist"
+          echo "LU_PYTEST_SHARD_FILES=${allowlist}" >> "$GITHUB_ENV"
       - name: Run pytest
         env:
           DOCS_ONLY: ${{ needs.changes.outputs.docs_only }}
@@ -262,10 +284,22 @@ jobs:
               --timeout-method=thread --override-ini addopts=-v
             exit 0
           fi
-          mapfile -t files < <(git ls-files -- tests | grep -E '/test_[^/]+\.py$' | sort | sed -n "${SHARD}~4p")
-          .venv/bin/python -m pytest "${files[@]}" -n auto --dist=loadfile --timeout=120 \
+          mkdir -p ci-artifacts
+          # Single initial path + tests/conftest.py's pytest_ignore_collect allowlist
+          # hook (LU_PYTEST_SHARD_FILES, exported above) replaces positional file
+          # arguments — cheap collection, not a change in which tests run.
+          .venv/bin/python -m pytest tests -n logical --dist=loadfile --timeout=120 \
             --timeout-method=thread -m 'not atlas_release and not slow' --strict-markers \
-            --override-ini addopts=-v
+            --override-ini addopts=-v --durations=25 \
+            --junitxml="ci-artifacts/pytest-shard-${SHARD}.xml"
+      - name: Upload pytest JUnit report
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pytest-junit-shard-${{ matrix.shard }}
+          path: ci-artifacts/pytest-shard-*.xml
+          if-no-files-found: ignore
+          retention-days: 14
 
   contracts:
     name: Contracts

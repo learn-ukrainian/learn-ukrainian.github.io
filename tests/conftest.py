@@ -5,6 +5,7 @@ Provides reusable content snippets and module templates for testing.
 """
 
 import contextlib
+import functools
 import ipaddress
 import os
 import socket
@@ -20,6 +21,70 @@ import pytest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
+
+# =============================================================================
+# CI FILE-PLANE SHARD ALLOWLIST (ci-shard-balance-2026-09-07)
+# =============================================================================
+# GitHub Actions collects through one initial `tests` path instead of ~1,300
+# positional file arguments (collection cost, not test selection); this hook
+# narrows that single-path collection back down to one shard's files. See
+# scripts/ci/pytest_shards.py `plan-files` and docs/runbooks/ci-gate.md.
+
+LU_PYTEST_SHARD_FILES_ENV_VAR = "LU_PYTEST_SHARD_FILES"
+
+
+@functools.lru_cache(maxsize=1)
+def _load_shard_allowlist() -> frozenset[str] | None:
+    """Load this shard's file allowlist once per session.
+
+    Unset ``LU_PYTEST_SHARD_FILES``: returns ``None`` and every caller treats
+    that as "don't filter" — local/default collection is byte-for-byte
+    unchanged. Set: the file must exist, be readable, and contain at least
+    one non-blank, non-duplicate ``.../test_*.py`` line — anything else is a
+    loud failure raised here at first collection, never a silent full run
+    (allowlist ignored) or silent empty run (everything ignored).
+    """
+    allowlist_path_str = os.environ.get(LU_PYTEST_SHARD_FILES_ENV_VAR)
+    if not allowlist_path_str:
+        return None
+    allowlist_path = Path(allowlist_path_str)
+    try:
+        text = allowlist_path.read_text(encoding="utf-8")
+    except OSError as error:
+        raise RuntimeError(
+            f"{LU_PYTEST_SHARD_FILES_ENV_VAR}={allowlist_path_str!r} is set but unreadable: {error}"
+        ) from error
+    entries = [line.strip() for line in text.splitlines() if line.strip()]
+    if not entries:
+        raise RuntimeError(f"{LU_PYTEST_SHARD_FILES_ENV_VAR}={allowlist_path_str!r} is empty")
+    if len(set(entries)) != len(entries):
+        raise RuntimeError(f"{LU_PYTEST_SHARD_FILES_ENV_VAR}={allowlist_path_str!r} contains a duplicate entry")
+    for entry in entries:
+        if not entry.endswith(".py") or not Path(entry).name.startswith("test_"):
+            raise RuntimeError(
+                f"{LU_PYTEST_SHARD_FILES_ENV_VAR}={allowlist_path_str!r} has a malformed entry: {entry!r}"
+            )
+    return frozenset(entries)
+
+
+def pytest_ignore_collect(collection_path: Path, config: pytest.Config) -> bool | None:
+    """Ignore test files this shard's allowlist doesn't include.
+
+    Directories are never filtered: filtering a directory could prune an
+    allowed file's whole subtree, so only ``test_*.py`` files are ever
+    subject to the allowlist, and every other path (directories, conftest.py,
+    __init__.py, non-test helper modules) always collects normally.
+    """
+    allowlist = _load_shard_allowlist()
+    if allowlist is None or collection_path.is_dir():
+        return None
+    if collection_path.suffix != ".py" or not collection_path.name.startswith("test_"):
+        return None
+    try:
+        relative = collection_path.resolve().relative_to(_REPO_ROOT).as_posix()
+    except ValueError:
+        return None
+    return relative not in allowlist
 
 
 def _get_breadcrumb_file() -> Path | None:
