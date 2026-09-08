@@ -911,11 +911,12 @@ def _resolve_host_node_binary(*, adapter_label: str = "ACPX") -> Path:
         return resolved
     raise AcpxShadowRefusalError(
         f"{adapter_label}: no Node {required_major}.x binary found on PATH or "
-        "fixed host install locations (Homebrew node@{major} keg, "
+        f"fixed host install locations (Homebrew node@{required_major} keg, "
         "/opt/homebrew/bin, /usr/local/bin, ~/.hermes/node/bin); each candidate "
         "must report a Node semver via --version matching .nvmrc "
         f"(required major {required_major}); required by the project-local acpx "
-        "``#!/usr/bin/env node`` shim (#6953)"
+        "``#!/usr/bin/env node`` shim (#6953)",
+        failure_code="node_runtime_unavailable",
     )
 
 
@@ -998,7 +999,7 @@ def _probe_acpx_version(binary: str) -> str:
             check=False,
             env=_acpx_runtime_env_overrides(),
         )
-    except (OSError, subprocess.TimeoutExpired, AcpxShadowRefusalError):
+    except (OSError, subprocess.TimeoutExpired):
         return "unknown"
     observed = "\n".join(part for part in (proc.stdout, proc.stderr) if part).strip()
     return observed.splitlines()[0][:100] if proc.returncode == 0 and observed else "unknown"
@@ -1015,7 +1016,7 @@ def _probe_cli_help(binary: str, *args: str) -> str:
             check=False,
             env=_acpx_runtime_env_overrides(),
         )
-    except (OSError, subprocess.TimeoutExpired, AcpxShadowRefusalError):
+    except (OSError, subprocess.TimeoutExpired):
         return ""
     if proc.returncode != 0:
         return ""
@@ -1211,13 +1212,12 @@ def _require_non_primary_worktree(cwd: Path, *, adapter_label: str) -> None:
         )
 
 
-def _require_compatible_acpx_binary(
+def _resolve_acpx_binary(
     *,
     adapter_label: str,
     cwd: Path,
-    builtin_agent: str | None,
-) -> tuple[str, str]:
-    """Resolve and capability-check local ACPX, sharing it with worktrees.
+) -> str:
+    """Resolve local ACPX, sharing it with worktrees.
 
     A source worktree normally has no independent ``node_modules`` tree.  If
     this module's default local candidate is absent, resolve the canonical
@@ -1254,7 +1254,17 @@ def _require_compatible_acpx_binary(
             "`npm install` in the canonical primary checkout. "
             "A global/PATH acpx binary is never used as a substitute."
         )
-    binary = str(candidate)
+    return str(candidate)
+
+
+def _require_compatible_acpx_binary(
+    *,
+    adapter_label: str,
+    cwd: Path,
+    builtin_agent: str | None,
+) -> tuple[str, str]:
+    """Require the resolved binary's exact one-shot command contract."""
+    binary = _resolve_acpx_binary(adapter_label=adapter_label, cwd=cwd)
     observed_version, missing = _probe_acpx_cli_compatibility(
         binary,
         builtin_agent=builtin_agent,
@@ -1263,7 +1273,8 @@ def _require_compatible_acpx_binary(
         raise AcpxShadowRefusalError(
             f"{adapter_label}: resolved acpx binary is incompatible with "
             f"{ACPX_CLI_COMPATIBILITY_CONTRACT!r}; missing capabilities: "
-            f"{', '.join(missing)}; refusing to spawn"
+            f"{', '.join(missing)}; refusing to spawn",
+            failure_code="cli_incompatible",
         )
     return binary, observed_version
 
@@ -1707,7 +1718,8 @@ def _resolve_participant_binary(
     if missing:
         raise AcpxShadowRefusalError(
             f"{adapter_label}: resolved {executable} binary is incompatible with "
-            f"{contract!r}; missing capabilities: {', '.join(missing)}; refusing to spawn"
+            f"{contract!r}; missing capabilities: {', '.join(missing)}; refusing to spawn",
+            failure_code="cli_incompatible",
         )
     return str(resolved), observed
 

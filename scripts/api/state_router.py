@@ -58,6 +58,7 @@ try:
 except ImportError:
     from scripts.agent_runtime.agent_identity import normalize_seat, seat_read_aliases
 
+from scripts.agent_runtime.acp_health import probe_acp_health
 from scripts.research.registry import research_manifest_component
 
 from . import delegate_router as delegate_api
@@ -477,6 +478,8 @@ def _recommend_agent(
     empty.
     Reset-aware: if top pick resets within N hours, note deferral warning (N configurable).
     """
+    # Hard admission failures cannot use the soft all-unhealthy budget fallback.
+    agents = {lane: info for lane, info in agents.items() if info.get("eligible", True)}
     if is_stale:
         warnings.append("snapshot stale (>15min old data) — advisory only, verify manually before trusting numbers")
 
@@ -875,7 +878,7 @@ def _ranked_api_entries(
     return ranked_apis
 
 
-def compute_routing_budget(
+def _compute_dispatch_routing_budget(
     now: datetime | None = None,
     *,
     fresh_codexbar: bool = False,
@@ -1605,11 +1608,102 @@ def compute_routing_budget(
     }
 
 
+def compute_routing_budget(
+    now: datetime | None = None,
+    *,
+    transport: Literal["dispatch", "acp"] = "dispatch",
+    fresh_codexbar: bool = False,
+    refresh_requested: bool | None = None,
+    budget_config_path: Path | None = None,
+    tasks_dir: Path | None = None,
+    project_root: Path | None = None,
+    curriculum_root: Path | None = None,
+    batch_state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Budget recommendations for native dispatch or ordinary ACP asks.
+
+    ACP compatibility never changes native dispatch health. ACP requests run
+    bounded version/help probes, not provider prompts, and exclude incompatible
+    or unknown routes even when every participant is unavailable.
+    """
+    if transport not in {"dispatch", "acp"}:
+        raise ValueError("transport must be dispatch or acp")
+    budget = _compute_dispatch_routing_budget(
+        now,
+        fresh_codexbar=fresh_codexbar,
+        refresh_requested=refresh_requested,
+        budget_config_path=budget_config_path,
+        tasks_dir=tasks_dir,
+        project_root=project_root,
+        curriculum_root=curriculum_root,
+        batch_state_dir=batch_state_dir,
+    )
+    budget["transport"] = transport
+    if transport == "dispatch":
+        return budget
+
+    health = probe_acp_health(project_root or Path(__file__).resolve().parents[2])
+    warnings = list(budget["recommendation"].get("warnings", []))
+    for lane in health:
+        if lane not in budget["agents"]:
+            account = budget.get("api_accounts", {}).get(lane)
+            status = _api_lane_status_from_account(lane, account) if account else "unknown"
+            budget["agents"][lane] = {"status": status}
+    for lane, info in budget["agents"].items():
+        info["dispatch_health"] = info.get("health")
+        info["health"] = health.get(
+            lane,
+            {
+                "healthy": False,
+                "eligible": False,
+                "scope": "acp_cli_compatibility",
+                "failure_code": "acp_route_unregistered",
+            },
+        )
+        info["eligible"] = info["health"].get("eligible") is True
+        if not info["eligible"]:
+            warnings.append(f"ACP lane {lane} excluded: {info['health']['failure_code']}")
+    diagnostics = budget["diagnostics"]
+    budget["recommendation"] = _recommend_agent(
+        budget["agents"],
+        warnings,
+        current_time=now,
+        records_loaded=diagnostics.get("records_loaded", 0),
+        authoritative_data_available=bool(
+            diagnostics.get("codexbar_data_available")
+            or diagnostics.get("notebook_report_available")
+            or diagnostics.get("fleet_burn_available")
+        ),
+        reset_imminent_hours=diagnostics.get("reset_imminent_hours", 6),
+        is_stale=diagnostics.get("stale", False),
+    )
+    primary = budget["recommendation"]["primary_agent_for_code"]
+    if primary and budget["agents"].get(primary, {}).get("eligible") is not True:
+        budget["recommendation"]["primary_agent_for_code"] = None
+        budget["recommendation"]["rationale"] = "No eligible ACP lane; native/inline fallback is not an ACP route."
+    budget["ranked_by_headroom"] = [
+        {**row, "health": budget["agents"][row["lane"]]["health"]}
+        for row in budget["ranked_by_headroom"]
+        if budget["agents"].get(row.get("lane"), {}).get("eligible") is True
+    ]
+    ranked_lanes = {row["lane"] for row in budget["ranked_by_headroom"]}
+    budget["ranked_by_headroom"].extend(
+        {"lane": lane, "status": info.get("status", "unknown"), "health": info["health"]}
+        for lane, info in budget["agents"].items()
+        if info["eligible"] and lane not in ranked_lanes
+    )
+    return budget
+
+
 # ==================== ENDPOINTS ====================
 
 
 @router.get("/routing-budget")
-async def routing_budget(fresh_codexbar: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)):
+async def routing_budget(
+    fresh_codexbar: bool = Query(False),
+    transport: Literal["dispatch", "acp"] = Query("dispatch"),
+    ctx: MonitorContext = Depends(get_ctx),
+):
     """Per-agent soft-cap burn and routing recommendation for dispatch planning.
 
     HTTP never waits for the CodexBar CLI. ``?fresh_codexbar=true`` kicks a
@@ -1623,6 +1717,7 @@ async def routing_budget(fresh_codexbar: bool = Query(False), ctx: MonitorContex
     tasks_dir = ctx.roots.batch_state_dir / "tasks"
     return await asyncio.to_thread(
         compute_routing_budget,
+        transport=transport,
         fresh_codexbar=False,
         refresh_requested=fresh_codexbar,
         budget_config_path=budget_config_path,

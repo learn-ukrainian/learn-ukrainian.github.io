@@ -7,6 +7,7 @@ import os
 import re
 import stat
 import subprocess
+import sys
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
@@ -782,12 +783,11 @@ def test_runner_starts_after_spawn_and_always_finishes(tmp_path: Path, monkeypat
             return ParseResult(ok=True, response="provider-ok")
 
     monkeypatch.setattr(runtime_runner, "FleetCapture", FakeCapture)
-    python = Path(__file__).resolve().parents[1] / ".venv" / "bin" / "python"
     outcome = runtime_runner._execute_invocation_plan(
         agent_name="deepseek",
         adapter=Adapter(),
         plan=InvocationPlan(
-            cmd=[str(python), "-c", "print('provider-ok')"],
+            cmd=[sys.executable, "-c", "print('provider-ok')"],
             cwd=tmp_path,
             host_harness="hermes",
         ),
