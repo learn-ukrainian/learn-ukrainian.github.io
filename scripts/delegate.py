@@ -6457,9 +6457,13 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         worker_env["LU_RUNTIME_RUN_NONCE"] = run_nonce
         # Explicit dispatch-worker identity (#7827): the SessionStart gate uses
         # this marker to skip the per-agent thread lease, which belongs to the
-        # orchestrator of the agent family, never to a headless worker. Set
-        # once here; the worker subprocess passes its environment through to
-        # every harness.
+        # orchestrator of the agent family, never to a headless worker. Both
+        # names are allowlisted in agent_runtime/env_sanitize.py (name and
+        # value lists — a task id containing "sk-" must survive the secret
+        # redactor), so the marker reaches the harness CLI's SessionStart hook.
+        # The marker is the primary signal: a read-only dispatch without
+        # --worktree runs from the primary checkout, so the
+        # .worktrees/dispatch/<agent>/<task>/ path is only the fallback.
         worker_env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] = task_id
         worker_env["LEARN_UKRAINIAN_DISPATCH_AGENT"] = dispatch_agent
         _inject_gh_token_for_agent(worker_env, dispatch_agent)

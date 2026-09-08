@@ -39,6 +39,12 @@ _SAFE_NAME_ALLOWLIST = {
     "AGENT_NO_MERGE",
     "HOME",
     "LANG",
+    # Dispatch-worker identity markers (#7827): delegate.py exports these into
+    # every worker environment; the SessionStart gate reads them to skip the
+    # per-agent thread lease. Values are a task id and an agent lane name —
+    # process-control metadata, never credentials.
+    "LEARN_UKRAINIAN_DISPATCH_AGENT",
+    "LEARN_UKRAINIAN_DISPATCH_TASK_ID",
     "LOGNAME",
     "PATH",
     "TMPDIR",
@@ -57,7 +63,11 @@ _GIT_TIMEOUT_SECONDS = 30
 # ``task-4956`` contains the substring ``sk-`` and otherwise looks like an
 # OpenAI key to the generic value redactor, so keep the tmp lease controls
 # before the value-pattern filter. Their names remain narrowly allowlisted.
+# The #7827 dispatch markers ride here for the same reason: a task id
+# containing ``sk-`` must still reach the worker's SessionStart gate.
 _SAFE_VALUE_NAME_ALLOWLIST = {
+    "LEARN_UKRAINIAN_DISPATCH_AGENT",
+    "LEARN_UKRAINIAN_DISPATCH_TASK_ID",
     "TMPDIR",
     "LU_RUNTIME_TMP_BASE_ROOT",
     "LU_RUNTIME_TMP_ROOT",

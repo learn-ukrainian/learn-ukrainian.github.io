@@ -193,14 +193,23 @@ claim timeout. A later claim will reclaim a confirmed-dead owner automatically.
 Dispatched workers are exempt from the per-agent thread lease (#7827). A headless
 worker launched by `delegate.py dispatch` carries
 `LEARN_UKRAINIAN_DISPATCH_TASK_ID`/`LEARN_UKRAINIAN_DISPATCH_AGENT` in its
-environment, and always runs from `.worktrees/dispatch/<agent>/<task>/` under the
-primary checkout; either signal tells the SessionStart gate to skip the lease
-claim entirely and log one informational line naming the recorded owner and
-generation. The lease exists to keep two interactive drivers of the same agent
-family from steering one queue — a worker is launched by that driver and shares
-its authority, so evaluating the lease would conflict with the orchestrator's own
-live claim on every dispatch. Orchestrator sessions are unaffected: a live owner
-is still a conflict, and there is still no clock-based takeover.
+environment (both names are allowlisted in `agent_runtime/env_sanitize.py`, name
+and value lists, so the markers survive sanitization for every dispatched
+provider — including a task id that contains `sk-`). The marker is the primary
+signal; the layout fallback — the session checkout sitting under
+`.worktrees/dispatch/<agent>/<task>/` — covers the case where the marker is
+absent, because not every dispatch is write-capable: a read-only dispatch
+without `--worktree` runs from the primary checkout itself. Either signal tells
+the SessionStart gate to skip the lease claim entirely and log one informational
+line naming the recorded owner and generation. By design, an interactive session
+started from a dispatch worktree path without the marker is also treated as a
+worker — layout A makes that path shape unambiguous, and such a session still
+operates under the dispatching orchestrator's authority. The lease exists to
+keep two interactive drivers of the same agent family from steering one queue —
+a worker is launched by that driver and shares its authority, so evaluating the
+lease would conflict with the orchestrator's own live claim on every dispatch.
+Orchestrator sessions are unaffected: a live owner is still a conflict, and
+there is still no clock-based takeover.
 
 Broad curriculum scans, service probes, GitHub issue listings, and governance
 audits were removed from the synchronous hook. The hook now points to
