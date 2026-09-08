@@ -722,6 +722,9 @@ launcher_forward_driver_signal() {
   exit "$exit_code"
 }
 
+# Test seam: tests may widen the check-to-wait window; production leaves this a no-op.
+launcher_driver_wait_hook() { :; }
+
 launcher_exec_command() {
   # Interactive sessions retain the direct exec contract. A lease-owning
   # driver keeps this small supervisor shell alive so normal exit and
@@ -768,10 +771,17 @@ launcher_exec_command() {
   if [ -n "$LC_DRIVER_PENDING_SIGNAL" ]; then
     launcher_forward_driver_signal "$LC_DRIVER_PENDING_SIGNAL" "$LC_DRIVER_PENDING_EXIT"
   fi
-  # USR1 interrupts Bash wait. Check the flag before waiting too: the watcher
-  # may have already completed between startup and this process boundary.
-  if [ "$provider_rc" -eq 0 ] && [ "${LC_SUPERVISORY_EVENT:-0}" != 1 ]; then
-    wait "$LC_DRIVER_CHILD_PID" || provider_rc=$?
+  if [ "$provider_rc" -eq 0 ]; then
+    # A USR1 that lands between the flag check and `wait` would otherwise be a
+    # lost wakeup: the trap runs between commands, and the provider never exits
+    # on its own. Wait in bounded, signal-interruptible slices and re-check.
+    while [ "${LC_SUPERVISORY_EVENT:-0}" != 1 ] && kill -0 "$LC_DRIVER_CHILD_PID" 2>/dev/null; do
+      launcher_driver_wait_hook
+      sleep 0.1 & wait "$!" 2>/dev/null || true
+    done
+    if [ "${LC_SUPERVISORY_EVENT:-0}" != 1 ]; then
+      wait "$LC_DRIVER_CHILD_PID" || provider_rc=$?
+    fi
   fi
   if [ "${LC_SUPERVISORY_EVENT:-0}" = 1 ]; then
     if session_supervisor_read_wake; then
