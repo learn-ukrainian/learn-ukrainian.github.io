@@ -1,0 +1,73 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "number": 7814,
+        "title": "frictions 2026-09-07: bridge/ACP lanes, guards, review sandbox",
+        "state": "OPEN",
+        "merged": false,
+        "mergeable": "MERGEABLE",
+        "mergeStateStatus": "CLEAN",
+        "isInMergeQueue": true,
+        "isMergeQueueEnabled": true,
+        "headRefName": "agy/fix-7814-mq-visibility",
+        "headRefOid": "2cc5a531afe3b14e49db60ffbc7639ebd849dd26",
+        "baseRefName": "main",
+        "mergeQueueEntry": {
+          "id": "MQE_kwDO...",
+          "position": 2,
+          "state": "QUEUED",
+          "enqueuedAt": "2026-09-08T18:00:00Z",
+          "estimatedTimeToMerge": 600,
+          "jump": false,
+          "solo": false,
+          "headCommit": {
+            "oid": "2cc5a531afe3b14e49db60ffbc7639ebd849dd26",
+            "checkSuites": {
+              "nodes": []
+            }
+          }
+        }
+      },
+      "mergeQueue": {
+        "url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/queue/main",
+        "nextEntryEstimatedTimeToMerge": 300,
+        "entries": {
+          "totalCount": 2,
+          "nodes": [
+            {
+              "position": 1,
+              "state": "AWAITING_CHECKS",
+              "enqueuedAt": "2026-09-08T17:55:00Z",
+              "estimatedTimeToMerge": 300,
+              "pullRequest": {
+                "number": 7813
+              }
+            },
+            {
+              "position": 2,
+              "state": "QUEUED",
+              "enqueuedAt": "2026-09-08T18:00:00Z",
+              "estimatedTimeToMerge": 600,
+              "pullRequest": {
+                "number": 7814
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "actions_runs": [
+    {
+      "id": 12345678,
+      "name": "CI",
+      "head_branch": "gh-readonly-queue/main/pr-7814-2cc5a531afe3b14e49db60ffbc7639ebd849dd26",
+      "html_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/actions/runs/12345678",
+      "status": "in_progress",
+      "conclusion": null,
+      "created_at": "2026-09-08T18:01:00Z",
+      "updated_at": "2026-09-08T18:05:00Z"
+    }
+  ]
+}
