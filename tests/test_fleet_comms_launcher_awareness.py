@@ -112,11 +112,15 @@ def test_no_launcher_starts_an_acp_process_at_cold_start() -> None:
 def test_agents_md_carries_fleet_comms_mid_cutover_digest() -> None:
     """Codex-family boots from AGENTS.md — need a non-skippable digest pointer."""
     body = (REPO / "AGENTS.md").read_text(encoding="utf-8")
+    lower = body.lower()
     assert "fleet-comms-coordination.md" in body
     assert "plane-status" in body
     assert "dual_write" in body or "dual-write" in body or "plane" in body
     assert "drive-epic" in body
-    assert "authoritative" in body.lower()
+    # Authority-mode wording (not the retired dual-write-as-authority claim).
+    assert "authority" in lower
+    assert "dual-write remains authoritative" not in lower
+    assert "fleet comms" in lower
 
 
 def test_driver_wrappers_use_the_shared_core() -> None:
