@@ -343,23 +343,28 @@ exit 0
     assert "session supervisor failed" in result.stderr
 
 
-def test_launcher_wake_process_lifecycle(tmp_path: Path) -> None:
-    """A real watcher signal reaps the provider before exact close and exec."""
+def _run_launcher_wake_scenario(
+    tmp_path: Path, scenario: str, *, widen_wait_window: bool = False, timeout: int = 15,
+) -> tuple[subprocess.CompletedProcess[str], list[str], float]:
     import shlex
     import sys
+    import time
 
-    for scenario in ("wake", "watcher_failure", "close_failure", "normal_exit", "watcher_ignores_term"):
-        root = tmp_path / scenario
-        lib = root / "scripts" / "lib"
-        lib.mkdir(parents=True)
-        for name in ("launcher_core.sh", "session_supervisor.sh"):
-            (lib / name).write_text((_REPO_ROOT / "scripts" / "lib" / name).read_text())
-        watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
-        watcher.parent.mkdir()
-        log = root / "events"
-        provider_pid = root / "provider-pid"
-        _write_executable(watcher, f'''#!/usr/bin/env bash
+    root = tmp_path / scenario
+    lib = root / "scripts" / "lib"
+    lib.mkdir(parents=True)
+    for name in ("launcher_core.sh", "session_supervisor.sh"):
+        (lib / name).write_text((_REPO_ROOT / "scripts" / "lib" / name).read_text())
+    watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
+    watcher.parent.mkdir()
+    log = root / "events"
+    provider_pid = root / "provider-pid"
+    wait_window = root / "wait-window"
+    _write_executable(watcher, f'''#!/usr/bin/env bash
 while [ ! -f {shlex.quote(str(provider_pid))} ]; do sleep 0.01; done
+if [ '{widen_wait_window}' = True ]; then
+  while [ ! -f {shlex.quote(str(wait_window))} ]; do sleep 0.01; done
+fi
 if [ '{scenario}' = normal_exit ]; then exec sleep 30; fi
 if [ '{scenario}' = watcher_ignores_term ]; then trap '' TERM; exec sleep 30; fi
 printf 'delivery-test\\n'
@@ -367,8 +372,8 @@ kill -USR1 "$PPID"
 if [ '{scenario}' = watcher_failure ]; then exit 2; fi
 exit 75
 ''')
-        provider = root / "provider.py"
-        provider.write_text(f'''import os, signal, time
+    provider = root / "provider.py"
+    provider.write_text(f'''import os, signal, time
 from pathlib import Path
 log = Path({str(log)!r})
 def stop(*args):
@@ -381,15 +386,15 @@ if {scenario!r} in ("normal_exit", "watcher_ignores_term"):
     stop()
 while True: time.sleep(0.01)
 ''')
-        successor = root / "start-codex-driver.sh"
-        _write_executable(successor, f'''#!/usr/bin/env bash
+    successor = root / "start-codex-driver.sh"
+    _write_executable(successor, f'''#!/usr/bin/env bash
 [ "$SESSION_SUPERVISOR_WAKE_DELIVERY" = delivery-test ] || exit 41
 [ "$SESSION_SUPERVISOR_WAKE_STREAM" = epic:9999 ] || exit 42
 [ -z "${{SESSION_STREAM_LEASE_ID:-}}" ] || exit 43
 [ "$#" = 2 ] && [ "$1" = '--fixture' ] && [ "$2" = 'two words' ] || exit 44
 printf 'successor\\n' >> {shlex.quote(str(log))}
 ''')
-        script = f'''
+    script = f'''
 source {shlex.quote(str(lib / 'launcher_core.sh'))}
 source {shlex.quote(str(lib / 'session_supervisor.sh'))}
 LC_ROOT={shlex.quote(str(root))}
@@ -398,6 +403,9 @@ LC_DRIVER_ORIGINAL_ARGS=(--fixture 'two words')
 export SESSION_STREAM_ID=epic:9999 SESSION_STREAM_LEASE_ID=lease-test
 launcher_driver_renew_loop() {{ :; }}
 launcher_cursor_observer_renew_loop() {{ :; }}
+if [ '{widen_wait_window}' = True ]; then
+  launcher_driver_wait_hook() {{ touch {shlex.quote(str(wait_window))}; sleep 0.3; }}
+fi
 launcher_close_driver_lease() {{
   if kill -0 "$(cat {shlex.quote(str(provider_pid))})" 2>/dev/null; then return 45; fi
   printf 'close\\n' >> {shlex.quote(str(log))}
@@ -406,9 +414,25 @@ launcher_close_driver_lease() {{
 }}
 launcher_exec_command {shlex.quote(sys.executable)} {shlex.quote(str(provider))}
 '''
-        result = subprocess.run(["bash", "-c", script], capture_output=True, text=True, timeout=15)
+    started = time.monotonic()
+    result = subprocess.run(["bash", "-c", script], capture_output=True, text=True, timeout=timeout)
+    return result, log.read_text().splitlines(), time.monotonic() - started
+
+
+def test_launcher_wake_process_lifecycle(tmp_path: Path) -> None:
+    """A real watcher signal reaps the provider before exact close and exec."""
+    for scenario in ("wake", "watcher_failure", "close_failure", "normal_exit", "watcher_ignores_term"):
+        result, events, _ = _run_launcher_wake_scenario(tmp_path, scenario)
         assert result.returncode == (1 if scenario in ("watcher_failure", "close_failure") else 0), result.stderr
         expected = ["stopped", "close"]
         if scenario == "wake":
             expected.append("successor")
-        assert log.read_text().splitlines() == expected
+        assert events == expected
+
+
+def test_launcher_wake_survives_signal_between_check_and_wait(tmp_path: Path) -> None:
+    """Deliver USR1 inside the widened check-to-wait window, without retries."""
+    result, events, elapsed = _run_launcher_wake_scenario(tmp_path, "wake", widen_wait_window=True, timeout=20)
+    assert result.returncode == 0, result.stderr
+    assert events == ["stopped", "close", "successor"]
+    assert elapsed < 5, f"Supervisory wake took {elapsed:.3f}s"
