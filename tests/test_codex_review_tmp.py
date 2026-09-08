@@ -40,12 +40,12 @@ def test_review_gh_shim_creates_and_cleans_tempfiles(tmp_path, args):
     backend.chmod(0o755)
     shim = Path(__file__).resolve().parents[1] / "scripts/agent_runtime/shims/gh"
     env = {**os.environ, "TMPDIR": str(tmp_path / "missing"), "AGENT_REAL_GH": str(backend), "AGENT_NO_MERGE": "1"}
-    before = subprocess.run([str(shim), *args], env=env, capture_output=True, text=True)
+    before = subprocess.run([str(shim), *args], env=env, capture_output=True, text=True, timeout=30)
     assert before.returncode != 0
     assert "mktemp" in before.stderr
 
     plan = review_plan(checkout, lease)
-    after = subprocess.run([str(shim), *args], env={**env, **plan.env_overrides}, capture_output=True, text=True)
+    after = subprocess.run([str(shim), *args], env={**env, **plan.env_overrides}, capture_output=True, text=True, timeout=30)
     assert after.returncode == 0, after.stderr
     assert after.stdout.splitlines() == list(args)
     assert not list(lease.glob("agent-gh.*"))
