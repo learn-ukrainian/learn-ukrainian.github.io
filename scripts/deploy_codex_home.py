@@ -21,11 +21,20 @@ class DeployError(Exception):
 
 EXPECTED = {
     "model": "gpt-6-astra",
+    "model_reasoning_effort": "medium",
     "agents": {
         "default_subagent_model": "gpt-6-astra",
         "default_subagent_reasoning_effort": "low",
     },
 }
+PROFILE_ROLES = {
+    "luna_explorer_medium": ("gpt-5.6-luna", "medium", "read-only"),
+    "luna_explorer_high": ("gpt-5.6-luna", "high", "read-only"),
+    "astra_worker_low": ("gpt-6-astra", "low", "workspace-write"),
+    "astra_red_team_high": ("gpt-6-astra", "high", "read-only"),
+    "astra_advisor_high": ("gpt-6-astra", "high", "read-only"),
+}
+ROOT_SETTINGS = {key: value for key, value in EXPECTED.items() if key != "agents"}
 
 
 def safe_path(path: Path) -> Path:
@@ -50,14 +59,14 @@ def merge_config(data: bytes) -> bytes:
     if not isinstance(original.get("agents", {}), dict):
         raise DeployError("unsupported agents shape; use a standard [agents] table")
     expected = copy.deepcopy(original)
-    expected["model"] = EXPECTED["model"]
+    expected.update(ROOT_SETTINGS)
     expected.setdefault("agents", {}).update(EXPECTED["agents"])
     if original == expected:
         return data
     lines = data.decode().splitlines(keepends=True)
     section, found, insert_at = "", set(), None
     assignment = re.compile(
-        r"""^(\s*)(model|default_subagent_model|default_subagent_reasoning_effort)(\s*=\s*)("(?:[^"\\\r\n]|\\.)*"|'[^'\r\n]*')([ \t]*(?:\#.*)?)(\r?\n)?$"""
+        r"""^(\s*)(model|model_reasoning_effort|default_subagent_model|default_subagent_reasoning_effort)(\s*=\s*)("(?:[^"\\\r\n]|\\.)*"|'[^'\r\n]*')([ \t]*(?:\#.*)?)(\r?\n)?$"""
     )
     for index, line in enumerate(lines):
         if line.lstrip().startswith("["):
@@ -68,12 +77,13 @@ def merge_config(data: bytes) -> bytes:
         if not match:
             continue
         key = match[2]
-        if (section == "" and key == "model") or (section == "agents" and key in EXPECTED["agents"]):
-            value = EXPECTED["model"] if section == "" else EXPECTED["agents"][key]
+        if (section == "" and key in ROOT_SETTINGS) or (section == "agents" and key in EXPECTED["agents"]):
+            value = ROOT_SETTINGS[key] if section == "" else EXPECTED["agents"][key]
             lines[index] = match[1] + key + match[3] + json.dumps(value) + match[5] + (match[6] or "")
             found.add((section, key))
-    if "model" in original and ("", "model") not in found:
-        raise DeployError("unsupported model assignment; use a single-line root string")
+    for key in ROOT_SETTINGS:
+        if key in original and ("", key) not in found:
+            raise DeployError(f"unsupported {key} assignment; use a single-line root string")
     missing = []
     for key, value in EXPECTED["agents"].items():
         if ("agents", key) not in found:
@@ -87,8 +97,7 @@ def merge_config(data: bytes) -> bytes:
             lines[insert_at:insert_at] = missing
         else:
             lines += ["\n[agents]\n", *missing]
-    if ("", "model") not in found:
-        lines.insert(0, f"model = {json.dumps(EXPECTED['model'])}\n")
+    lines[:0] = [f"{key} = {json.dumps(value)}\n" for key, value in ROOT_SETTINGS.items() if ("", key) not in found]
     merged = "".join(lines).encode()
     try:
         valid = parse(merged) == expected
@@ -116,19 +125,18 @@ def source_assets(root: Path) -> dict[str, bytes]:
             parsed = parse(data)
             if path == root / "config.toml":
                 if parsed != EXPECTED:
-                    raise DeployError("source config must contain exactly the three approved settings")
+                    raise DeployError("source config must contain exactly the four approved settings")
             else:
-                if parsed.get("model") != EXPECTED["model"]:
-                    raise DeployError("source profile must use the approved model")
+                if path.stem not in PROFILE_ROLES:
+                    raise DeployError("source profile must use an approved role name")
                 if parsed.get("name") != path.stem:
                     raise DeployError("source profile name must match its filename")
                 for field in ("description", "developer_instructions"):
                     if not isinstance(parsed.get(field), str) or not parsed[field].strip():
                         raise DeployError(f"source profile requires nonempty {field}")
-                if parsed.get("model_reasoning_effort") not in ("low", "medium", "high", "xhigh", "max", "ultra"):
-                    raise DeployError("source profile requires a recognized explicit reasoning effort")
-                if parsed.get("sandbox_mode") not in ("read-only", "workspace-write"):
-                    raise DeployError("source profile requires read-only or workspace-write sandbox mode")
+                role = tuple(parsed.get(field) for field in ("model", "model_reasoning_effort", "sandbox_mode"))
+                if role != PROFILE_ROLES[path.stem]:
+                    raise DeployError("source profile must match its approved model, effort, and sandbox role")
         elif not data.strip():
             raise DeployError("source AGENTS.md is empty")
         assets[path.relative_to(root).as_posix()] = data
