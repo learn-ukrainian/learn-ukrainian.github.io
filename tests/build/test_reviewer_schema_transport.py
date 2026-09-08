@@ -79,6 +79,11 @@ def adapter_for(route: str, monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(module.shutil, "which", lambda command: f"/usr/bin/{command}")
     if route == "claude":
         monkeypatch.setattr(module, "_ensure_supported_claude_cli_version", lambda _: (2, 1, 200))
+    if route == "glm":
+        # These tests only build plans; no provider executes. Exercise the
+        # unsupported-schema contract in CI independently of the egress guard,
+        # whose refusal behavior is covered by test_agent_runtime_glm_adapter.
+        monkeypatch.setattr(module, "assert_glm_egress_allowed", lambda _: None)
     return getattr(module, class_name)()
 
 
