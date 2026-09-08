@@ -2024,7 +2024,7 @@ def test_run_worker_emits_one_terminal_dispatch_event_with_cost_fields(
         },
     )()
 
-    with patch("agent_runtime.runner.invoke", return_value=mock_result):
+    with patch("agent_runtime.runner.invoke", return_value=mock_result) as invoke:
         rc = delegate._run_worker(
             task_id="worker-dispatch-event",
             agent="deepseek",
@@ -2039,6 +2039,7 @@ def test_run_worker_emits_one_terminal_dispatch_event_with_cost_fields(
         )
 
     assert rc == 0
+    assert invoke.call_args.kwargs["tool_config"]["read_only_tmp_root"] == str(runtime_tmp_root)
     event_files = sorted(event_dir.glob("*.jsonl"))
     assert len(event_files) == 1
     events = [json.loads(line) for line in event_files[0].read_text(encoding="utf-8").splitlines()]

@@ -4810,6 +4810,8 @@ def _run_worker(
                 tool_config["output_schema_sha256"] = output_schema_sha256
             if harness is not None:
                 tool_config["harness"] = harness
+            if mode == "read-only" and runtime_tmp_root is not None:
+                tool_config["read_only_tmp_root"] = runtime_tmp_root
             tool_config = tool_config or None
             result = runtime_invoke(
                 agent,
