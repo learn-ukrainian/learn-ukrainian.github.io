@@ -478,11 +478,19 @@ def test_prepared_restart_survives_process_loss_without_early_takeover(
 
 
 @pytest.mark.parametrize("damage", ["missing", "mismatched"])
-def test_supervisory_wake_refuses_event_file_database_drift(supervisory_cycle, damage):
+def test_supervisory_wake_refuses_event_file_database_drift(supervisory_cycle, damage, monkeypatch):
+    from datetime import timedelta
     from unittest.mock import Mock
 
+    from agents_extensions.shared.session_streams.model import utc_now
     from scripts.ai_agent_bridge._inbox_watch import supervisory_launch_plan, wake_driver_once
     from scripts.fleet_comms.artifacts import ArtifactStoreError
+
+    now = utc_now()
+    monkeypatch.setattr("agents_extensions.shared.session_streams.store.utc_now", lambda: now)
+    # The API runs in-process. Pin its projection clock for whole-payload equality,
+    # including lease.age_seconds and the time-derived active/expired state.
+    monkeypatch.setattr("scripts.api.epics_router.utc_now", lambda now=now: now)
 
     service, supervisor = supervisory_cycle
     lease = _open_supervisory_driver(supervisor)
@@ -507,6 +515,8 @@ def test_supervisory_wake_refuses_event_file_database_drift(supervisory_cycle, d
                          launcher=Path("start-codex-driver.sh"), epic="fixture", run=start)
     start.assert_not_called()
     assert service.get_delivery(did) == delivery
+    # Cross a second boundary in the backing clock: the projection must stay pinned.
+    now += timedelta(seconds=1)
     assert supervisor.remote.stream("epic:7178") == before  # allow-hardcoded-epic: remote supervisor request fixture
 
 
