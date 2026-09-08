@@ -15,6 +15,7 @@ assignments:
       - gemini-infra
       - grok-infra
       - kimi-infra
+      - cursor-infra
   devops:
     driver_agent_type: infra-orchestrator
     slots:
@@ -23,6 +24,7 @@ assignments:
       - gemini-devops
       - grok-devops
       - kimi-devops
+      - cursor-devops
   monitor:
     driver_agent_type: infra-orchestrator
     slots: []
@@ -34,6 +36,7 @@ assignments:
       - gemini-corpus
       - grok-corpus
       - kimi-corpus
+      - cursor-corpus
   open-model-data:
     driver_agent_type: infra-orchestrator
     slots: []
@@ -45,6 +48,7 @@ assignments:
       - gemini-atlas
       - grok-atlas
       - kimi-atlas
+      - cursor-atlas
   core:
     driver_agent_type: curriculum-orchestrator
     # no launcher selector mints a core slot (C7)
@@ -64,11 +68,13 @@ assignments:
       - gemini-folk
       - grok-folk
       - kimi-folk
+      - cursor-folk
       - claude-bio
       - codex-bio
       - gemini-bio
       - grok-bio
       - kimi-bio
+      - cursor-bio
   hramatka:
     driver_agent_type: curriculum-orchestrator
     slots:
@@ -77,3 +83,4 @@ assignments:
       - gemini-hramatka
       - grok-hramatka
       - kimi-hramatka
+      - cursor-hramatka

@@ -40,29 +40,41 @@ def test_roster_slots_accepted_by_validation() -> None:
     assert "kimi-hramatka" in all_valids
     assert "claude-folk" in all_valids
     assert "codex-corpus" in all_valids
+    assert "cursor-infra" in all_valids
+    assert "cursor-atlas" in all_valids
+    assert "cursor-hramatka" in all_valids
 
     # Verify _validate_agent, _validate_post_agent, _validate_recipient_agent do not raise
     _channels._validate_agent("grok-infra", assignments_path=_AREA_ASSIGNMENTS_YAML)
     _channels._validate_post_agent("claude-atlas", assignments_path=_AREA_ASSIGNMENTS_YAML)
     _channels._validate_recipient_agent("codex-devops", assignments_path=_AREA_ASSIGNMENTS_YAML)
+    _channels._validate_recipient_agent("cursor-infra", assignments_path=_AREA_ASSIGNMENTS_YAML)
     _inbox._validate_agent("grok-infra")
+    _inbox._validate_agent("cursor-infra")
 
 
-def test_roster_slot_count_is_35() -> None:
-    """Verify area_assignments.yaml contains exactly 35 mintable roster slots (5 providers x 7 lanes)."""
+def test_roster_slot_count_is_42() -> None:
+    """Verify area_assignments.yaml contains exactly 42 mintable roster slots (6 providers x 7 lanes)."""
     text = _AREA_ASSIGNMENTS_YAML.read_text(encoding="utf-8")
     data = yaml.safe_load(text)
     slots = []
     for area_data in data["assignments"].values():
         if isinstance(area_data, dict):
             slots.extend(area_data.get("slots", []))
-    assert len(slots) == 35
+    assert len(slots) == 42
+    assert "cursor-infra" in slots
+    assert "cursor-devops" in slots
+    assert "cursor-corpus" in slots
+    assert "cursor-atlas" in slots
+    assert "cursor-folk" in slots
+    assert "cursor-bio" in slots
+    assert "cursor-hramatka" in slots
 
 
 def test_phantom_slots_absent_from_valid_agents() -> None:
     """Guard test: *-harness, *-seminars, and *-core phantom slots are NOT in get_valid_agents()."""
     valids = _channels.get_valid_agents(assignments_path=_AREA_ASSIGNMENTS_YAML)
-    providers = ("claude", "codex", "gemini", "grok", "kimi")
+    providers = ("claude", "codex", "gemini", "grok", "kimi", "cursor")
     phantoms = ("harness", "seminars", "core")
     for provider in providers:
         for suffix in phantoms:

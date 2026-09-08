@@ -900,6 +900,27 @@ def test_recipient_choices_cover_every_valid_agent():
         assert parser.parse_args(["send", "hi", "--to", agent]).to_llm == agent
 
 
+def test_recipient_choices_cover_registered_cursor_seats():
+    # Launcher mints cursor-<lane> via handoff_identity_for_cursor_epic; those
+    # seats must be argparse-valid so live cursor drivers can drain supervisor
+    # mail (cursor-infra was rejected on main before the roster backfill).
+    parser = _cli._build_parser()
+    for agent in (
+        "cursor-infra",
+        "cursor-devops",
+        "cursor-corpus",
+        "cursor-atlas",
+        "cursor-folk",
+        "cursor-bio",
+        "cursor-hramatka",
+    ):
+        assert agent in _channels.get_valid_recipient_agents()
+        assert parser.parse_args(["inbox", "--for", agent]).for_llm == agent
+        assert parser.parse_args(["ack-all", agent]).agent == agent
+        assert parser.parse_args(["send", "hi", "--to", agent]).to_llm == agent
+        assert parser.parse_args(["inbox", "show", agent]).agent == agent
+
+
 # ── #7597: phantom {provider}-{empty-slots-area} aliases ──────────────
 
 
@@ -910,10 +931,22 @@ def test_resolve_recipient_alias_maps_empty_roster_phantoms_to_provider():
     assert _channels.resolve_recipient_alias("grok-open-model-data") == "grok"
     assert _channels.resolve_recipient_alias("claude-monitor") == "claude"
     assert _channels.resolve_recipient_alias("kimi-open-model-data") == "kimi"
+    assert _channels.resolve_recipient_alias("cursor-monitor") == "cursor"
+    assert _channels.resolve_recipient_alias("cursor-open-model-data") == "cursor"
 
 
 def test_resolve_recipient_alias_keeps_registered_and_static_identities():
-    for agent in ("grok", "grok-build", "grok-hermes", "grok-infra", "claude-atlas", "claude-desktop"):
+    for agent in (
+        "grok",
+        "grok-build",
+        "grok-hermes",
+        "grok-infra",
+        "claude-atlas",
+        "claude-desktop",
+        "cursor",
+        "cursor-infra",
+        "cursor-atlas",
+    ):
         assert _channels.resolve_recipient_alias(agent) == agent
 
 
@@ -925,6 +958,8 @@ def test_resolve_recipient_alias_rejects_typos_and_unknown_providers():
     assert _channels.resolve_recipient_alias("nosuch-open-model-data") == "nosuch-open-model-data"
     assert _channels.resolve_recipient_alias("nosuch") == "nosuch"
     assert _channels.resolve_recipient_alias("") == ""
+    assert _channels.resolve_recipient_alias("cursor-nosucharea") == "cursor-nosucharea"
+    assert _channels.resolve_recipient_alias("cursor-infa") == "cursor-infa"
 
 
 def test_inbox_for_accepts_phantom_empty_roster_identity():
@@ -934,6 +969,8 @@ def test_inbox_for_accepts_phantom_empty_roster_identity():
     assert parser.parse_args(["send", "hi", "--to", "grok-open-model-data"]).to_llm == "grok"
     assert parser.parse_args(["inbox", "show", "grok-open-model-data"]).agent == "grok"
     assert parser.parse_args(["inbox", "run", "grok-open-model-data", "--once"]).agent == "grok"
+    assert parser.parse_args(["inbox", "--for", "cursor-monitor"]).for_llm == "cursor"
+    assert parser.parse_args(["send", "hi", "--to", "cursor-open-model-data"]).to_llm == "cursor"
 
 
 def test_inbox_for_still_rejects_unknown_identities():
@@ -942,6 +979,12 @@ def test_inbox_for_still_rejects_unknown_identities():
         parser.parse_args(["inbox", "--for", "claude-infa"])
     with pytest.raises(SystemExit):
         parser.parse_args(["inbox", "--for", "grok-nosucharea"])
+    with pytest.raises(SystemExit):
+        parser.parse_args(["inbox", "--for", "cursor-nosucharea"])
+    with pytest.raises(SystemExit):
+        parser.parse_args(["inbox", "--for", "cursor-infa"])
+    with pytest.raises(SystemExit):
+        parser.parse_args(["send", "hi", "--to", "cursor-nosucharea"])
 
 
 def test_check_inbox_phantom_identity_drains_provider_inbox(capsys):
