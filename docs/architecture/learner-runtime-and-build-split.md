@@ -48,7 +48,7 @@ Normal author iteration builds the learner surface only:
 npm run build
 ```
 
-Word Atlas routes are generated via `ATLAS_STATIC_ROUTES=1`. Standalone ESUM dynamic routes (`/etymology/[slug]`) have been retired (#7059) in favor of Word Atlas (`/lexicon/`), so `BUILD_ETYMOLOGY_ROUTES` is no longer used and `/etymology/` serves as a clean redirect/moved page to Word Atlas.
+Word Atlas production builds run in client-shell mode (`ATLAS_STATIC_ROUTES` unset) to serve articles dynamically via JSON objects on GitHub Pages 404, while diagnostic full SSG remains available via `npm run build:full` (`ATLAS_STATIC_ROUTES=1`). Standalone ESUM dynamic routes (`/etymology/[slug]`) have been retired (#7059) in favor of Word Atlas (`/lexicon/`), so `BUILD_ETYMOLOGY_ROUTES` is no longer used and `/etymology/` serves as a clean redirect/moved page to Word Atlas.
 
 ## Service Wrapper
 

@@ -190,13 +190,13 @@ public-domain metadata for published readings. A replacement must preserve
 these semantics, not merely accept an `.mdx` extension.
 
 **Word Atlas:** `src/pages/lexicon/[lemma].astro` is one template over
-`EntryRecord`, not one MDX source per entry. `buildAtlasStaticPaths()` returns
-`[]` in shell mode. Publisher scripts hydrate `data/atlas.db` and set
-`ATLAS_STATIC_ROUTES=1`; the helper then enumerates the pinned
-`SqliteAtlasDataSource` catalog and retains a paths array containing records.
-The source prepares `recordsBySlug`; the awaited loop is not proof of one SQL
-query per route. The template renders `WordAtlasPageShell` for available records;
-client-shell recovery uses static projections and the 404 route. Preserving that
+`EntryRecord`, not one MDX source per entry. `buildAtlasStaticPaths()` returns `[]` in shell/default build mode. Publisher
+scripts hydrate `data/atlas.db`; production `npm run build` leaves `ATLAS_STATIC_ROUTES`
+unset to build in client-shell mode, avoiding 20k+ HTML files and serving word
+detail dynamically via WordAtlasClientShell on 404, while diagnostic `npm run build:full`
+retains `ATLAS_STATIC_ROUTES=1` to enumerate the pinned `SqliteAtlasDataSource` catalog.
+The template renders `WordAtlasPageShell` when static records are available, while
+runtime delivery on GitHub Pages uses static projections and the 404 route. Preserving that
 fallback does not turn GitHub Pages into an application server or make missing
 article URLs return HTTP 200. A 256k-entry data catalog is feasible separately
 from deciding how many full article HTML files to prerender.
