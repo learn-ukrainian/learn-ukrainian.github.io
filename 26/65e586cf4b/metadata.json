@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "2665e586cf4b",
+  "strategy": "manual-commit",
+  "branch": "codex/qg-reviewer-schema-7810",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/build/test_reviewer_scoring_parity.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/26/65e586cf4b/0/metadata.json",
+      "transcript": "/26/65e586cf4b/0/full.jsonl",
+      "compact_transcript": "/26/65e586cf4b/0/transcript.jsonl",
+      "content_hash": "/26/65e586cf4b/0/content_hash.txt",
+      "prompt": "/26/65e586cf4b/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 117046,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 744320,
+    "output_tokens": 2178,
+    "api_call_count": 12
+  }
+}

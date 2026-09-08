@@ -1,0 +1,90 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /home/ops/learn-ukrainian/.worktrees/dispatch/codex/qg-reviewer-schema-7810
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/home/ops/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Brief: QG reviewer findings schema through the harness (issue #7810) — rev 3.3
+
+## Shippable unit (one PR)
+Both reviewer paths — the per-dimension QG reviewer and the direct review — hand the authoritative findings schema to every reviewer harness that can enforce one, and consume the harness's structured result. On schema-capable routes, consuming findings must not depend on prose-only formatting instructions or code-fence stripping. Explicit unsupported-route fallback may retain existing parsing behaviour, limited to harnesses confirmed unsupported.
+
+## Problem (evidence)
+- `scripts/audit/prompts/reviewer_prompt.md:150-174` carries the output contract as prose; `scripts/audit/llm_reviewer.py:288-292` splits on "```json" before `json.loads`.
+- `agents_extensions/shared/phases/claude/direct-review.md:52` has the same prose scaffold.
+- The Claude adapter emits `--json-schema` for isolated reviews (`scripts/agent_runtime/adapters/claude.py:89-108, 317`); the Codex adapter emits `--output-schema` from `output_schema_path` + `output_schema_sha256` (`scripts/agent_runtime/adapters/codex.py:405-448`); `delegate.py dispatch --output-schema FILE` exists. The QG reviewer dispatch passes none of these (`grep -n json-schema scripts/build/linear_pipeline.py` → no matches).
+- `scripts/audit/qg_schema.py:89` says it is kept "in exact sync with reviewer_prompt.md" by hand.
+Source: prompt audit 2026-09-07 finding M19 (PR #7809 body).
+
+## Constraints
+- Reviewer routing, cross-family lineage checks and the canary contract (`scripts/audit/llm_reviewer_dispatch.py`, `llm_qg_canaries`) stay as they are; no change to which lane reviews which module.
+- Preserve substantive reviewer instructions, dimension rubrics, severity taxonomy, and the writer prompt. Changes to the output-contract scaffold and its documentation are permitted within this outcome.
+- One source of truth for the findings schema; a test proves prompt and schema agree.
+- Coverage denominator (freeze before implementing, post on issue #7810): the reviewer-path × harness × family matrix — reviewer paths {per-dimension QG, direct review}; harnesses = every adapter under `scripts/agent_runtime/adapters/` that the reviewer dispatch can select — with, per cell, schema-capability evidence (the adapter code line or a probe output), the baseline revision, module inputs, the exact canary command and its success criteria. Report every required route you cannot exercise as an uncovered residual with an owner (orchestrator: claude/prompt-audit-2026-09-07); availability never shrinks the denominator.
+- Independent held-out evaluation: the cross-family reviewer of record owns the held-out cases — one clean case and one defect-bearing case as recorded reviewer outputs with known expected parse and scoring outcomes — and executes them through the changed result-consumption paths at the exact PR head, recording the head SHA, commands, expected and actual findings/scoring outcomes, and pass/fail assertions on the PR before its verdict. Both reviewer paths must be covered; merely attaching recorded outputs does not satisfy this evaluation. You must not author those inputs or expectations. Your own tests cover mechanics; the held-out cases verify semantics. Separately verify, deterministically, that scoring is unchanged on identical recorded findings before and after your change.
+- Stop conditions: any semantic regression on a held-out case, or a required route in the matrix left uncovered without an owner, stops the work and is reported — never normalized away.
+- Interpreter: `/home/ops/learn-ukrainian/.venv/bin/python` on the primary host; on a worker host, the interpreter the task/worktree contract prescribes. Never bare `python`/`python3`.
+
+## Acceptance criteria (verify before `gh pr create`)
+1. Tests prove both per-dimension QG and direct review pass the authoritative findings schema into each supported harness and consume its structured result. Cover invalid, truncated and missing results: those failures must not become successful empty reviews and must not silently enter compatibility fallback.
+2. A test proves prompt/schema agreement from the single source of truth.
+3. Tests prove fallback is explicit and limited to harnesses confirmed unsupported; schema rejection or execution failure on a supported harness does not trigger a silent downgrade.
+4. `tests/build/test_llm_qg_evidence_quotes.py`, `tests/build/test_reviewer_correction_multiartifact.py`, `tests/build/test_linear_pipeline.py` pass. Full suite on the shared host (amended rev 3.3 — this host lacks Node 22, Chrome, the UA-eval interpreter override and a worktree `.venv`, so a green local suite is unattainable; CI is the green gate): run `/home/ops/learn-ukrainian/.venv/bin/python -m pytest tests -n 4 --dist=loadfile -m 'not atlas_release and not slow' --timeout=120 -q -p no:cacheprovider --junitxml=/home/ops/learn-ukrainian/batch_state/qg-reviewer-schema-7810/suite-H.xml` once at head H, extract the sorted failing node IDs, then replay exactly those node IDs at baseline B (detach the worktree at B, run, restore H). Acceptance = every node ID failing at H also fails at B (no new failures), with both raw summaries and the two sorted lists quoted. The PR's CI Gate is the green requirement.
+5. `/home/ops/learn-ukrainian/.venv/bin/python -m ruff check scripts/ tests/` clean.
+6. PR body includes: exact commands with cwd, baseline and head revisions, the frozen coverage matrix with per-cell status, the deterministic scoring comparison on recorded findings (raw before/after), the pytest summary line, and the ruff result — raw tool output, never "I checked X". Publish raw live findings only when they contain no private corpus text or credentials; otherwise summarize counts and quote the assertion output.
+
+## Verifiable claims this work produces → deterministic tool → evidence format (#M-4)
+| Claim | Tool | Evidence in PR body |
+| --- | --- | --- |
+| Schema passed and consumed per supported harness | the new tests (criterion 1), run with pytest | pytest summary line + test names |
+| Scoring unchanged on identical recorded findings | the deterministic comparison script/test you add | raw before/after scoring output |
+| Fallback explicit and bounded | criterion 3 tests | pytest summary line |
+| Coverage matrix honoured | the matrix posted on #7810 with per-cell evidence | matrix table with status and residual owners |
+| Suite green | criterion 4 command | summary line with counts |
+
+## Out of scope
+Substantive reviewer instructions, dimension rubrics, severity taxonomy, writer prompt, model routing and lineage checks, the retired sealed/shielded review path, anything under `curriculum/`, and the held-out case authorship (reviewer-owned).
+
+## Owned paths
+`scripts/audit/llm_reviewer.py`, `scripts/audit/llm_reviewer_dispatch.py`, `scripts/audit/qg_schema.py`, `scripts/audit/prompts/reviewer_prompt.md` (output-contract section only), `scripts/build/linear_pipeline.py` (reviewer dispatch only), `scripts/agent_runtime/adapters/*.py` (schema pass-through only), `agents_extensions/shared/phases/claude/direct-review.md` (output-contract section only), `scripts/build/build_module_direct.py` (review phase only), `scripts/build/phases/linear-review-dim.md` and `linear-review-dim.generated.md` (output-contract scaffold only, together with whatever generator/source produces the generated copy — rubric text untouched), `tests/**` for the above, `docs/agent-runtime-guide.md` (contract documentation). Clarification rev 3.1 (2026-09-07, orchestrator, after the step-3 design note): the direct review phase invokes the native Claude runtime adapter with `claude-opus-4-8` (the operator's formal CF pin) instead of the bridge shim; PR #7809 already moves that call off `ask-gemini` and must be rebased onto once it lands.
+
+## Role map and completion vocabulary
+Accountable lead: orchestrator (claude/prompt-audit-2026-09-07). Implementer: codex/gpt-6-astra (this dispatch). Independent held-out evaluation owner: the cross-family reviewer of record, resolved by `scripts.review.closeout_cli resolve-reviewer` at PR time. Critic of this brief: codex review seat (rev 1 and rev 2 verdicts REVISE, both reconciled; recorded on #7810 with the frozen SHA-256 of each revision). Material revisions of outcome, denominator, acceptance or evaluation ownership are re-reviewed before dispatch. "Implementation verified" = every acceptance criterion above holds with evidence; "landed" additionally requires passing reviewer-owned held-out evaluation at the exact head, green CI, an exact-head cross-family APPROVE, and orchestrator landing — nothing else counts as done.
+
+## Steps (explicit, numbered)
+1. Work only in the dispatch worktree the runtime created (`.worktrees/dispatch/codex/qg-reviewer-schema-7810`), branched from `origin/main`; never touch the primary checkout.
+2. Read `docs/agent-runtime-guide.md` and `docs/best-practices/v7-design-and-corpus.md` before touching adapters or the pipeline; trace the reviewer dispatch flow end-to-end first.
+3. Post the frozen coverage matrix and a short design note on issue #7810 before implementing (what you propose, what cannot be done, alternatives rejected, how it could be bypassed) — non-negotiable rule 11b, two stages. Wait for the orchestrator's acknowledgement on the issue before step 4.
+4. Implement the unit; add the tests in criteria 1-3 and the deterministic scoring comparison.
+5. Run criteria 4 and 5; collect raw outputs; fill the matrix with per-cell status and residual owners.
+6. Commit with a conventional message and the trailer `X-Agent: codex/qg-reviewer-schema-7810`.
+7. `git push -u origin codex/qg-reviewer-schema-7810`.
+8. `gh pr create` with the evidence from criterion 6; title `feat(audit): QG reviewer findings schema through the harness (#7810)`.
+9. NO auto-merge, no `--auto`, no merge. Cross-family review, held-out evaluation and landing belong to the orchestrator and the reviewer of record.
+10. If genuinely blocked, report with the four-line blocker template (non-negotiable rule 11a); otherwise state assumptions and proceed.
+
+## ROUTING_CARD_V1
+task_id: qg-reviewer-schema-7810
+tier: practical
+model_x_harness: codex/gpt-6-astra
+why_this_tier: bounded adapter/pipeline wiring with a frozen coverage matrix and test-defined acceptance; design judgment is small and gated by the issue-thread design note
+advisor_packet: none (brief authored by the authority seat; design note reviewed on the issue)
+owned_paths: see "Owned paths"
+acceptance_cmd: /home/ops/learn-ukrainian/.venv/bin/python -m pytest tests -n 4 --dist=loadfile -m 'not atlas_release and not slow' --timeout=120 -q  (host courtesy: never -n auto on the shared host)
+alternatives_considered:
+  - claude/sonnet-5 — free — same family as the brief author; Anthropic seats reserved for the cross-family review of record
+  - agy/gemini-3.8-flash-high — refusing to spawn (issue #7812) — unavailable
+  - cursor (Auto) — refusing to spawn via ACP (issue #7812); budget hint preferred it — unattested Auto model would blur the review family
+parallel_free_seats: delegate active_count=0 at 2026-09-07T23:20Z (/api/orient); ACP ask lanes down (#7812), native dispatch lanes ok
+NOTE_if_single_seat: codex is the first worker family used this session; the cross-family review will use a non-OpenAI seat
+
+## Re-dispatch note (rev 3.2, orchestrator, 2026-09-07)
+This is a re-dispatch of the same task after a checkout blocker (sparse worktree lacked `wiki/`; now included). Step 3 is complete: the design note and frozen 18-cell coverage matrix are on issue #7810 and were acknowledged there, with decision 1 (direct review through the native Claude runtime adapter with `claude-opus-4-8`) and decision 2 (output-contract-only edits to the two review templates and their generator) approved. Resume at step 4. Baseline remains `fac26422de47d2c7cfbac2bb1bf9875d53229f32` unless `origin/main` has moved, in which case branch from the current `origin/main` and note the new baseline on the issue. Before ruff or the named tests, confirm `wiki/` is present in the worktree.
+
+## Re-dispatch note (rev 3.3, orchestrator, 2026-09-08 ~00:57Z)
+Third run, attached to the pushed branch `codex/qg-reviewer-schema-7810` at head `ec2e08be94ab883b201f00797633f3d6208ca016` (do not rebase away the two commits; rebase onto current `origin/main` only if it has moved and note the new baseline). Criterion 4 is amended as above after your disposition on #7810: the seven reproduced baseline failures are accepted as environment failures; complete the full failing-set replay at B, then proceed to steps 6–8 (`gh pr create`). Use `-n 4` on this host. Everything else in this brief is unchanged.

@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "2665e586cf4b",
+  "session_id": "01a07e87-53a1-7a21-9851-6ca5bc801413",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-08T01:02:21.365410752Z",
+  "branch": "codex/qg-reviewer-schema-7810",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/build/test_reviewer_scoring_parity.py"
+  ],
+  "agent": "Codex",
+  "model": "gpt-6-astra",
+  "turn_id": "290481f574b8",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 117046,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 744320,
+    "output_tokens": 2178,
+    "api_call_count": 12
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-08T01:02:21.134719821Z",
+    "agent_lines": 1,
+    "agent_removed": 1,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 1,
+    "total_lines_changed": 2,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
