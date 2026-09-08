@@ -455,6 +455,29 @@ def test_credentialed_proxy_rejected() -> None:
 # ---------------------------------------------------------------------------
 
 
+def test_reviewer_env_strips_dispatch_markers(tmp_path: Path) -> None:
+    """#7827: the dispatch markers do not cross into an isolated reviewer
+    spawn. Review workers themselves are dispatched via delegate.py and get
+    the marker through the runtime env sanitizer; the reviewer *engine*
+    subprocess they spawn runs with hooks/skills/plugins/MCP disabled
+    (``review_isolation_tool_config`` sets ``disable_hooks``) from a snapshot
+    root outside any live checkout, so its SessionStart gate never fires and
+    it never evaluates the thread lease. The fail-closed reviewer env
+    therefore keeps stripping them."""
+    env = build_reviewer_env(
+        engine="claude",
+        reject_root=tmp_path,
+        source={
+            "PATH": "/usr/bin",
+            "HOME": str(Path.home()),
+            "LEARN_UKRAINIAN_DISPATCH_TASK_ID": "task-7828-sk-something",
+            "LEARN_UKRAINIAN_DISPATCH_AGENT": "kimi",
+        },
+    )
+    assert "LEARN_UKRAINIAN_DISPATCH_TASK_ID" not in env
+    assert "LEARN_UKRAINIAN_DISPATCH_AGENT" not in env
+
+
 def test_reviewer_env_strips_injection_and_unrelated_creds(tmp_path: Path) -> None:
     ant = _secret_ant_env()
     openai = _secret_openai_env()

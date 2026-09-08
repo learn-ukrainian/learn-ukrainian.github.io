@@ -29,6 +29,7 @@ import argparse
 import contextlib
 import io
 import json
+import os
 import platform
 import signal
 import sys
@@ -194,9 +195,79 @@ def _import_thread_handoff() -> Any:
     return thread_handoff
 
 
+def _dispatch_worker_identity(args: argparse.Namespace) -> tuple[str, str] | None:
+    """Return ``(agent, task_id)`` when this session is a delegate.py dispatch
+    worker, else ``None``.
+
+    Deterministic, two signals (either suffices): the explicit marker
+    ``LEARN_UKRAINIAN_DISPATCH_TASK_ID`` that delegate.py exports into every
+    worker environment, or — the layout-A fallback — the session checkout
+    sitting under the primary's ``.worktrees/dispatch/<agent>/<task>/``
+    (layout A is binding, so that path shape is unambiguous).
+    """
+    task_id = os.environ.get("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "").strip()
+    if task_id:
+        agent = os.environ.get("LEARN_UKRAINIAN_DISPATCH_AGENT", "").strip()
+        return agent or args.agent, task_id
+    try:
+        dispatch_root = Path(args.repo_root).resolve() / ".worktrees" / "dispatch"
+        relative = Path(args.project_dir).resolve().relative_to(dispatch_root)
+    except (OSError, ValueError):
+        return None
+    parts = relative.parts
+    if len(parts) >= 2 and parts[0] and parts[1]:
+        return parts[0], parts[1]
+    return None
+
+
+def _recorded_lease_owner(args: argparse.Namespace) -> tuple[str, str]:
+    """Best-effort read of the recorded lease owner for the informational line.
+
+    Never raises and never evaluates liveness or claims anything: a dispatch
+    worker does not participate in lease semantics at all (#7827).
+    """
+    try:
+        thread_handoff = _import_thread_handoff()
+        lease_path = thread_handoff.repo_local_path(
+            Path(args.repo_root), thread_handoff.default_thread_lease_path(args.agent)
+        )
+        raw, _corrupt = thread_handoff._read_lease_json(lease_path)
+    except Exception:
+        return "unknown", "unknown"
+    if not isinstance(raw, dict):
+        return "none", "n/a"
+    owner = raw.get("owner_thread_id")
+    generation = raw.get("generation")
+    owner_text = owner.strip() if isinstance(owner, str) and owner.strip() else "none"
+    generation_text = str(generation) if isinstance(generation, int) and generation >= 1 else "n/a"
+    return owner_text, generation_text
+
+
 def phase_thread_lease(args: argparse.Namespace) -> dict[str, Any]:
     if not args.claim_lease:
         return {"status": "skipped", "reason": "not a claude lane"}
+    # #7827: a headless worker dispatched by delegate.py shares the agent
+    # family's checkout state with the orchestrator that legitimately holds
+    # the per-agent thread lease. Evaluating the lease here would conflict
+    # with that live owner on every dispatch, so the worker neither claims
+    # nor evaluates it; orchestrator sessions (no dispatch context) keep
+    # today's behavior exactly.
+    dispatch_identity = _dispatch_worker_identity(args)
+    if dispatch_identity is not None:
+        worker_agent, worker_task = dispatch_identity
+        owner, generation = _recorded_lease_owner(args)
+        return {
+            "status": "ok",
+            "generation": "",
+            # The shell hook surfaces takeover_banner as an INFO line when the
+            # lease phase reports "ok"; reusing that channel keeps the hook
+            # unchanged.
+            "takeover_banner": (
+                f"dispatch worker ({worker_agent}/{worker_task}): thread lease not evaluated; "
+                f"owner {owner} generation {generation}"
+            ),
+            "dispatch_worker": {"agent": worker_agent, "task_id": worker_task},
+        }
     if not args.session_id:
         return {
             "status": "stop",

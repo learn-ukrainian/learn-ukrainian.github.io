@@ -25,6 +25,15 @@ sys.path.insert(0, str(REPO_ROOT))
 from scripts.hooks import session_start_gate as gate
 
 
+@pytest.fixture(autouse=True)
+def _no_inherited_dispatch_context(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Pytest itself may run inside a dispatch worker (which exports these
+    markers); every test in this file must start from a non-dispatch context
+    unless it sets the markers explicitly."""
+    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
+    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_AGENT", raising=False)
+
+
 def _args(**overrides: object) -> argparse.Namespace:
     base: dict[str, object] = {
         "repo_root": str(REPO_ROOT),
@@ -254,6 +263,114 @@ def test_lease_without_session_id_stops(monkeypatch: pytest.MonkeyPatch) -> None
     result = gate.phase_thread_lease(_args(session_id=""))
     assert result["status"] == "stop"
     assert "did not provide a current thread id" in result["context"]
+
+
+# --- dispatch-worker lease exemption (issue #7827) ---------------------------
+
+
+def _write_held_live_lease(repo: Path, agent: str = "claude-testlane") -> Path:
+    """Write a held lease whose recorded owner process is THIS test process.
+
+    Liveness is genuinely checkable (real pid, real start time, real machine
+    id), so a non-exempt claim against it must conflict with a live owner —
+    never a silent takeover.
+    """
+    from scripts.orchestration import thread_handoff
+
+    snapshot = thread_handoff._default_process_snapshot(os.getpid())
+    record: dict[str, object] = {
+        "schema_version": thread_handoff.THREAD_LEASE_SCHEMA_VERSION,
+        "agent": agent,
+        "state": "held",
+        "generation": 4,
+        "owner_thread_id": "orchestrator-thread",
+        "acquired_at": "2026-09-08T00:00:00Z",
+        "heartbeat_at": "2026-09-08T00:00:00Z",
+    }
+    machine_id = thread_handoff._default_machine_id()
+    if snapshot is not None and snapshot.started_at is not None and machine_id:
+        record["owner_pid"] = os.getpid()
+        record["owner_pid_started_at"] = snapshot.started_at
+        record["owner_machine_id"] = machine_id
+    lease_dir = repo / ".agent"
+    lease_dir.mkdir(parents=True, exist_ok=True)
+    lease_path = lease_dir / f"{agent}-thread-lease.json"
+    lease_path.write_text(json.dumps(record), encoding="utf-8")
+    return lease_path
+
+
+def _clear_dispatch_markers(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
+    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_AGENT", raising=False)
+
+
+def test_dispatch_worker_marker_skips_lease_evaluation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """(a) Held live lease + dispatch marker: no claim, no conflict — one
+    informational line and the lease file left byte-for-byte untouched."""
+    lease_path = _write_held_live_lease(tmp_path)
+    before = lease_path.read_bytes()
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "lease-gate-dispatch-7827")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_AGENT", "kimi")
+    result = gate.phase_thread_lease(
+        _args(repo_root=str(tmp_path), project_dir=str(tmp_path), session_id="worker-session-1")
+    )
+    assert result["status"] == "ok"
+    assert result["generation"] == ""
+    banner = result["takeover_banner"]
+    assert "dispatch worker (kimi/lease-gate-dispatch-7827)" in banner
+    assert "thread lease not evaluated" in banner
+    assert "owner orchestrator-thread generation 4" in banner
+    assert lease_path.read_bytes() == before
+
+
+def test_dispatch_worktree_layout_skips_lease_without_marker(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """(b) Held live lease + project dir under .worktrees/dispatch/ with NO
+    marker env: layout A alone is sufficient for the exemption."""
+    _write_held_live_lease(tmp_path)
+    _clear_dispatch_markers(monkeypatch)
+    worker_dir = tmp_path / ".worktrees" / "dispatch" / "kimi" / "task-7827"
+    worker_dir.mkdir(parents=True)
+    result = gate.phase_thread_lease(
+        _args(repo_root=str(tmp_path), project_dir=str(worker_dir), session_id="worker-session-2")
+    )
+    assert result["status"] == "ok"
+    banner = result["takeover_banner"]
+    assert "dispatch worker (kimi/task-7827)" in banner
+    assert "owner orchestrator-thread generation 4" in banner
+
+
+def test_live_owner_conflict_preserved_outside_dispatch_context(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """(c) Held live lease with NEITHER signal: the conflict behavior is
+    byte-for-byte today's — a real claim runs and a live owner stops the
+    session."""
+    _write_held_live_lease(tmp_path)
+    _clear_dispatch_markers(monkeypatch)
+    result = gate.phase_thread_lease(
+        _args(repo_root=str(tmp_path), project_dir=str(tmp_path), session_id="worker-session-3")
+    )
+    assert result["status"] == "stop"
+    assert "DURABLE THREAD LEASE CONFLICT" in result["context"]
+
+
+def test_marker_with_empty_value_does_not_exempt(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A set-but-empty marker is not a dispatch context (the hook exports the
+    variable unconditionally in some test harnesses)."""
+    _write_held_live_lease(tmp_path)
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "")
+    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_AGENT", raising=False)
+    result = gate.phase_thread_lease(
+        _args(repo_root=str(tmp_path), project_dir=str(tmp_path), session_id="worker-session-4")
+    )
+    assert result["status"] == "stop"
+    assert "DURABLE THREAD LEASE CONFLICT" in result["context"]
 
 
 def test_detect_crash_is_crashed_not_silent(monkeypatch: pytest.MonkeyPatch) -> None:
