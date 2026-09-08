@@ -25,7 +25,7 @@ from scripts.build import build_module_direct as direct
 from scripts.build import linear_pipeline as linear
 from tests.build.test_reviewer_schema_transport import direct_context, mechanical_payload
 
-BASELINE = "e22ead90994d6d0a967a01f8468f8cfed0f2fa1a"
+BASELINE = "1fc2efe46f712a98ead2301e029f1c88227776fd"
 ROOT = Path(__file__).resolve().parents[2]
 
 
