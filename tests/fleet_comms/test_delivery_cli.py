@@ -211,7 +211,7 @@ def test_delivery_cli_help(operation):
     args = [sys.executable, "-m", "scripts.fleet_comms", "deliveries"]
     if operation:
         args.append(operation)
-    result = subprocess.run([*args, "--help"], capture_output=True, text=True, check=False)
+    result = subprocess.run([*args, "--help"], capture_output=True, text=True, check=False, timeout=30)
     assert result.returncode == 0
     for section in ("Examples:", "Outputs:", "Exit codes:", "Related:"):
         assert section in result.stdout
@@ -224,19 +224,19 @@ def test_delivery_cli_subprocess_claim_ack_and_usage(plane):
     env = {**os.environ, "FLEET_COMMS_ROOT": str(plane.parent / "wrong-root")}
     result = subprocess.run(
         [*command, "claim", "--recipient", "codex", "--worker-id", "seat-1", "--root", str(plane)],
-        env=env, capture_output=True, text=True, check=False,
+        env=env, capture_output=True, text=True, check=False, timeout=30,
     )
     assert result.returncode == EXIT_OK
     delivery = json.loads(result.stdout)
     assert delivery["delivery_id"] == message.delivery_ids[0]
     result = subprocess.run(
         [*command, *fenced("ack", delivery), "--root", str(plane)],
-        env=env, capture_output=True, text=True, check=False,
+        env=env, capture_output=True, text=True, check=False, timeout=30,
     )
     assert result.returncode == EXIT_OK
     assert json.loads(result.stdout)["state"] == "acknowledged"
     for operation, args in (("claim", []), ("ack", [message.delivery_ids[0]]),
                             ("consume", fenced("consume", delivery)[1:])):
-        result = subprocess.run([*command, operation, *args], capture_output=True, text=True, check=False)
+        result = subprocess.run([*command, operation, *args], capture_output=True, text=True, check=False, timeout=30)
         assert result.returncode == 2
         assert "required" in result.stderr
