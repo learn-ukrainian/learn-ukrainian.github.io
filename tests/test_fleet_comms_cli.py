@@ -218,6 +218,16 @@ def test_supported_bridge_command_defaults_to_durable_acp(
     monkeypatch.delenv("LU_AGENT_COMM_TRANSPORT", raising=False)
     monkeypatch.delenv("LU_RUNTIME_INITIATOR", raising=False)
     monkeypatch.delenv("LU_RUNTIME_INITIATOR_SOURCE", raising=False)
+    # Keep launcher-provided seat identity out of the default-initiator check.
+    for variable in (
+        "SESSION_HANDOFF_AGENT",
+        "SESSION_STREAM_AGENT",
+        "CODEX_SESSION",
+        "CLAUDE_AGENT_NAME",
+        "GROK_AGENT",
+        "GEMINI_SESSION",
+    ):
+        monkeypatch.delenv(variable, raising=False)
     monkeypatch.setenv("CODEX_THREAD_ID", "thread-6159")
     _channels.create_channel("architecture", exist_ok=False)
     observed: dict[str, object] = {}
