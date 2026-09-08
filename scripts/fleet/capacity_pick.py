@@ -86,6 +86,8 @@ def is_avoid_lane(agent_info: dict[str, Any] | None, *, lane: str | None = None)
     if lane is not None and lane.strip().lower() in RETIRED_AGENT_ALIASES:
         return True
     info = agent_info or {}
+    if info.get("eligible") is False or (info.get("health") or {}).get("healthy") is False:
+        return True
     if info.get("login_state") == "NEED_LOGIN" or info.get("probe_state") == "NEED_LOGIN":
         return True
     status = lane_status(agent_info)
@@ -164,6 +166,8 @@ def build_lane_rows(
     rows: list[dict[str, Any]] = []
     for lane in lanes:
         info = agents.get(lane) if isinstance(agents.get(lane), dict) else {}
+        if budget.get("transport") == "acp" and info.get("eligible") is not True:
+            info = {**info, "eligible": False}
         status = lane_status(info)
         will_last = will_last_to_reset(info)
         retired_target = RETIRED_AGENT_ALIASES.get(lane)
@@ -172,6 +176,8 @@ def build_lane_rows(
         notes: list[str] = []
         if avoid:
             notes.append("AVOID")
+            if info.get("eligible") is False:
+                notes.append(str(info.get("health", {}).get("failure_code") or "ineligible"))
             if info.get("login_state") == "NEED_LOGIN" or info.get("probe_state") == "NEED_LOGIN":
                 notes.append("NEED_LOGIN")
             if retired_target:
@@ -303,7 +309,11 @@ def build_report(
             f"— capacity_pick substituted {retired_target!r}."
         )
         primary = retired_target
+    if primary and any(row["lane"] == primary and row["avoid"] for row in rows):
+        warnings.append(f"recommendation {primary!r} suppressed: lane is AVOID")
+        primary = None
     return {
+        "transport": budget.get("transport", "dispatch"),
         "generated_at": budget.get("generated_at"),
         "rows": rows,
         "pick_order": pick_order,
@@ -320,7 +330,7 @@ def build_report(
 
 def format_human(report: dict[str, Any]) -> str:
     lines = [
-        "capacity_pick — capacity-first dispatch routing",
+        f"capacity_pick — capacity-first {report.get('transport', 'dispatch')} routing",
         format_table(list(report.get("rows") or [])),
         "",
     ]
@@ -343,6 +353,15 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="python -m scripts.fleet.capacity_pick",
         description="Print capacity-first lane pick order before implement dispatch.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.fleet.capacity_pick --json\n"
+            "  .venv/bin/python -m scripts.fleet.capacity_pick --transport acp --strict\n\n"
+            "Outputs: routing table or JSON; no provider prompts.\n"
+            "Exit codes: 0 success; 2 invalid arguments or no cool/warm lane with --strict.\n"
+            "Related: /api/state/routing-budget?transport=acp; issue #7812."
+        ),
     )
     parser.add_argument(
         "--fresh",
@@ -350,6 +369,12 @@ def main(argv: list[str] | None = None) -> int:
         help="Pass fresh_codexbar=True to compute_routing_budget (may be slow).",
     )
     parser.add_argument("--json", action="store_true", help="Machine-readable JSON only.")
+    parser.add_argument(
+        "--transport",
+        choices=("dispatch", "acp"),
+        default="dispatch",
+        help="Select native implementation dispatch (default) or ordinary ask-* ACP compatibility.",
+    )
     parser.add_argument(
         "--strict",
         action="store_true",
@@ -362,7 +387,7 @@ def main(argv: list[str] | None = None) -> int:
     except ImportError:  # pragma: no cover - script path fallback
         from api.state_router import compute_routing_budget  # type: ignore
 
-    budget = compute_routing_budget(fresh_codexbar=bool(args.fresh))
+    budget = compute_routing_budget(fresh_codexbar=bool(args.fresh), transport=args.transport)
     active = fetch_active_in_flight()
     report = build_report(budget, active_in_flight=active)
 
