@@ -1,5 +1,8 @@
 # Current — Claude Session Handoff (2026-06-19 — queue grind: 7 merged, 3 closed, lexicon bugs fixed)
 
+> **Latest Claude session handoff (2026-09-08):** `docs/session-state/2026-09-08-prompt-audit-session-handoff.md` — prompt audit landed (#7809), reviewer schema landed (#7810 → #7818), CI shard PR #7819 in flight, decisions and hazards listed there.
+
+
 > **ROLE:** main orchestrator (standalone session). Cold-started, ground the queue end-to-end:
 > reviewed/merged the gemini batch + my own PRs, root-caused the two failing lexicon PRs and drove
 > fixes via codex, kept Atlas honest. Quality non-negotiable; used the fleet (#M-12), self-merged on
