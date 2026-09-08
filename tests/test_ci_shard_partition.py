@@ -343,7 +343,7 @@ def test_planned_shard_collects_build_tests_through_directory(tmp_path) -> None:
     """The CI entry path must not let pytest's default `build` exclusion win."""
     tracked = subprocess.run(
         ["git", "ls-files", "--", "tests"], cwd=_REPO_ROOT,
-        capture_output=True, text=True, check=True,
+        capture_output=True, text=True, check=True, timeout=30,
     ).stdout.splitlines()
     paths = [path for path in tracked if re.search(r"/test_[^/]+\.py$", path)]
     durations = load_durations(_REPO_ROOT / "scripts/ci/pytest-file-durations.json")
