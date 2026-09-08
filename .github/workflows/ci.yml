@@ -281,16 +281,21 @@ jobs:
           set -euo pipefail
           mkdir -p ci-artifacts
           mem_log="ci-artifacts/mem-shard-${SHARD}.log"
-          # Whole-VM `free -m` every 15s: on a GitHub-hosted runner nothing
-          # else of consequence shares the box, so this is a reasonable proxy
-          # for aggregate memory across the pytest controller and all -n
-          # logical workers. Before/after readings alone don't prove peak
-          # usage (ci-shard-balance-2026-09-07) — this is a sampled series
-          # for the same reason.
+          # Sample controller + execnet worker RSS and whole-VM memory every
+          # 15s. RSS sums shared pages more than once; `free` also shows the
+          # runner capacity. Neither is a before/after-only peak estimate.
           (
+            echo "sampling_interval_seconds=15"
+            if [ -r /sys/fs/cgroup/memory.max ]; then
+              echo "cgroup_memory_max_bytes=$(cat /sys/fs/cgroup/memory.max)"
+            fi
             while true; do
               date -u +%FT%TZ
               free -m
+              { ps -C python -C python3 -o rss=,args= || true; } | awk '
+                /-m pytest|import sys;exec[(]eval/ { rss += $1; processes++ }
+                END { printf "pytest_rss_mib=%.1f pytest_processes=%d\n", rss / 1024, processes }
+              '
               echo "---"
               sleep 15
             done
@@ -311,7 +316,7 @@ jobs:
           # Single initial path + tests/conftest.py's pytest_ignore_collect allowlist
           # hook (LU_PYTEST_SHARD_FILES, exported above) replaces positional file
           # arguments — cheap collection, not a change in which tests run.
-          .venv/bin/python -m pytest tests -n logical --dist=loadfile --timeout=120 \
+          .venv/bin/python -m pytest tests -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \
             --timeout-method=thread -m 'not atlas_release and not slow' --strict-markers \
             --override-ini addopts=-v --durations=25 \
             --junitxml="ci-artifacts/pytest-shard-${SHARD}.xml"

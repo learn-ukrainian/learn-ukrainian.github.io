@@ -32,14 +32,19 @@ duration instead of a modulo split. Shard count (`4`) is declared once in
 `ci.yml`'s workflow-level `env: PYTEST_SHARD_COUNT`, read by both the
 `changes` job's `shards` output and the pytest job's `plan-files` call.
 
+`--max-worker-restart=0` fails the job on a worker crash: pytest-timeout's
+thread method terminates the process, and replacing it can leave xdist
+hanging until the job limit.
+
 **Collection — allowlist hook.** `tests/conftest.py` implements
 `pytest_ignore_collect`, gated on env var `LU_PYTEST_SHARD_FILES`: unset,
 collection is completely unchanged (local dev, `docs_skills` lane); set, it
 must point at a readable, non-empty, newline-delimited list of repo-relative
 `test_*.py` paths with no duplicates — anything else (missing, unreadable,
 malformed, empty) raises loudly at first collection. Directories are never
-filtered by the hook (filtering a directory could prune an allowed file's
-whole subtree); only `test_*.py` files are ever subject to the allowlist.
+filtered by the hook: it explicitly admits them and allowed files, overriding
+pytest's default `norecursedirs` exclusions such as `build`; other files are
+ignored. This preserves the tracked-file selection, including `tests/build/`.
 
 **Balance — `scripts/ci/pytest_shards.py` file plane.** Two new subcommands,
 extending the existing planner (Cursor Cloud's node-ID plane — `plan` /

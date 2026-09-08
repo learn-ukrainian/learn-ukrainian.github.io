@@ -13,7 +13,9 @@ from __future__ import annotations
 
 import io
 import json
+import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -307,7 +309,7 @@ def test_pytest_ignore_collect_directories_never_filtered(tmp_path, monkeypatch)
     monkeypatch.setenv(LU_PYTEST_SHARD_FILES_ENV_VAR, str(allowlist_path))
     a_dir = tmp_path / "some_dir"
     a_dir.mkdir()
-    assert pytest_ignore_collect(a_dir, config=None) is None
+    assert pytest_ignore_collect(a_dir, config=None) is False
 
 
 def test_pytest_ignore_collect_honours_allowlist(tmp_path, monkeypatch) -> None:
@@ -324,6 +326,7 @@ def test_pytest_ignore_collect_honours_allowlist(tmp_path, monkeypatch) -> None:
 
     assert pytest_ignore_collect(allowed, config=None) is False
     assert pytest_ignore_collect(disallowed, config=None) is True
+    assert pytest_ignore_collect(allowed.parent, config=None) is False
 
 
 def test_pytest_ignore_collect_ignores_non_test_files(tmp_path, monkeypatch) -> None:
@@ -333,7 +336,36 @@ def test_pytest_ignore_collect_ignores_non_test_files(tmp_path, monkeypatch) -> 
     conftest_file = tmp_path / "tests" / "conftest.py"
     conftest_file.parent.mkdir(parents=True, exist_ok=True)
     conftest_file.write_text("", encoding="utf-8")
-    assert pytest_ignore_collect(conftest_file, config=None) is None
+    assert pytest_ignore_collect(conftest_file, config=None) is True
+
+
+def test_planned_shard_collects_build_tests_through_directory(tmp_path) -> None:
+    """The CI entry path must not let pytest's default `build` exclusion win."""
+    tracked = subprocess.run(
+        ["git", "ls-files", "--", "tests"], cwd=_REPO_ROOT,
+        capture_output=True, text=True, check=True,
+    ).stdout.splitlines()
+    paths = [path for path in tracked if re.search(r"/test_[^/]+\.py$", path)]
+    durations = load_durations(_REPO_ROOT / "scripts/ci/pytest-file-durations.json")
+    target = "tests/build/test_linear_pipeline.py"
+    owners = []
+    for shard_id in range(1, 5):
+        allowlist = tmp_path / f"shard-{shard_id}.txt"
+        write_file_shard_plan(
+            paths=paths, shard_id=shard_id, shard_count=4,
+            durations=durations, output=allowlist,
+        )
+        if target in allowlist.read_text().splitlines():
+            owners.append(allowlist)
+    assert len(owners) == 1
+    env = {**os.environ, LU_PYTEST_SHARD_FILES_ENV_VAR: str(owners[0])}
+    collected = subprocess.run(
+        [sys.executable, "-m", "pytest", "tests", "--collect-only", "-q",
+         "-o", "addopts=", "-m", "not atlas_release and not slow"],
+        cwd=_REPO_ROOT, env=env, capture_output=True, text=True, timeout=90,
+    )
+    assert collected.returncode == 0, collected.stdout + collected.stderr
+    assert any(line.startswith(target + "::") for line in collected.stdout.splitlines()), collected.stdout
 
 
 def test_load_shard_allowlist_missing_file_raises_loudly(monkeypatch) -> None:
@@ -409,6 +441,11 @@ def test_ci_yml_uses_n_logical_on_all_four_vcpus() -> None:
     assert "-n auto" not in ci_text
 
 
+def test_ci_yml_fails_on_worker_crash() -> None:
+    ci_text = _ci_text()
+    assert "--max-worker-restart=0" in ci_text
+
+
 def test_ci_yml_docs_only_lane_untouched() -> None:
     ci_text = _ci_text()
     match = re.search(
@@ -456,3 +493,5 @@ def test_ci_yml_samples_memory_around_pytest_step() -> None:
     assert "Stop memory sampler" in ci_text
     assert "mem-shard-" in ci_text
     assert "mem-sample-shard-${{ matrix.shard }}" in ci_text
+    assert "pytest_rss_mib=" in ci_text
+    assert "sampling_interval_seconds=15" in ci_text

@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import hashlib
+import importlib
 import json
+from functools import cache
 from pathlib import Path
 
 import pytest
@@ -120,13 +122,37 @@ def anyio_backend():
     return "asyncio"
 
 
+@pytest.fixture(scope="module")
+def packaged_builder_schemas():
+    """Check each immutable packaged schema once, still validate every receipt.
+
+    A13's upstream DAG loads A6's unchanged schema 128 times per build/check
+    pair. Cache only schema loading and metaschema checks for these frozen
+    inputs; receipt construction, bindings, policy and independent validation
+    all run normally. Restore the loaders before another test module runs.
+    """
+    names = (
+        "v4_a4_deterministic_extraction", "v4_a5_evidence_enrichment",
+        "v4_a6_blind_arena", "v4_a7_original_row_factory",
+        "v4_a8_admission_assembly", "v4_a9_evaluation_package",
+        "v4_a10_pilot_review_gate", "v4_a11_silver_release_gate",
+        "v4_a12_gold_overlay_gate", "v4_a13_cleanup_recovery",
+        "v4_per_slot_private_factory",
+    )
+    with pytest.MonkeyPatch.context() as patch:
+        for name in names:
+            module = importlib.import_module("learn_ukrainian_v4_runtime." + name)
+            patch.setattr(module, "_load_schema", cache(module._load_schema))
+        patch.setattr(a3, "_load_receipt_schema", cache(a3._load_receipt_schema))
+        patch.setattr(packet, "_load_packet_receipt_schema", cache(packet._load_packet_receipt_schema))
+        yield
+
+
 @pytest.mark.parametrize("name", [
     "v4_a7_original_row_factory", "v4_a8_admission_assembly", "v4_a9_evaluation_package",
     "v4_per_slot_private_factory", "v4_a13_cleanup_recovery",
 ])
-def test_default_packaged_builders_preserve_the_frozen_receipt_bindings(name):
-    import importlib
-
+def test_default_packaged_builders_preserve_the_frozen_receipt_bindings(name, packaged_builder_schemas):
     module = importlib.import_module("learn_ukrainian_v4_runtime." + name)
     built = module.build_receipt()
     receipt_path = getattr(module, "RECEIPT_PATH" if name == "v4_per_slot_private_factory" else name.split("_", 2)[1].upper() + "_RECEIPT_PATH")

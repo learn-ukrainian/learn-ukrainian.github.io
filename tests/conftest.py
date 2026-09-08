@@ -71,20 +71,19 @@ def _load_shard_allowlist() -> frozenset[str] | None:
 def pytest_ignore_collect(collection_path: Path, config: pytest.Config) -> bool | None:
     """Ignore test files this shard's allowlist doesn't include.
 
-    Directories are never filtered: filtering a directory could prune an
-    allowed file's whole subtree, so only ``test_*.py`` files are ever
-    subject to the allowlist, and every other path (directories, conftest.py,
-    __init__.py, non-test helper modules) always collects normally.
+    Explicitly admit directories so pytest's default ``norecursedirs``
+    (including ``build``) cannot hide an allowed file. Inactive local
+    collection still defers to pytest's normal traversal rules.
     """
     allowlist = _load_shard_allowlist()
-    if allowlist is None or collection_path.is_dir():
+    if allowlist is None:
         return None
-    if collection_path.suffix != ".py" or not collection_path.name.startswith("test_"):
-        return None
+    if collection_path.is_dir():
+        return False
     try:
         relative = collection_path.resolve().relative_to(_REPO_ROOT).as_posix()
     except ValueError:
-        return None
+        return True
     return relative not in allowlist
 
 
