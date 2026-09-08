@@ -317,6 +317,12 @@ session_supervisor_read_wake() {
   local watcher_rc=0
   wait "$LC_SUPERVISORY_WATCH_PID" || watcher_rc=$?
   LC_SUPERVISORY_WATCH_PID=""
+  if [ "$watcher_rc" -eq 76 ]; then
+    echo "supervisory inbox watcher: waiting for Monitor API to recover; restarting watcher" >&2
+    session_supervisor_stop_inbox_watch
+    session_supervisor_start_inbox_watch || return 1
+    return 76
+  fi
   if [ "$watcher_rc" -ne 75 ]; then
     echo "Error: supervisory inbox watcher failed; stopping this driver closed." >&2
     return 1

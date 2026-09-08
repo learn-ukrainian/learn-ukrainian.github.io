@@ -722,9 +722,15 @@ launcher_close_driver_lease() {
   # interrupted after the transaction commits but before it returns.
   [ "${LC_DRIVER_LEASE_CLOSED:-0}" = "1" ] && return 0
 
-  local attempt
-  local close_stderr=""
-  for attempt in 1 2; do
+  local attempt=0 delay=1 remaining
+  local close_stderr="" close_failure_reason
+  local retry_seconds="${LC_DRIVER_CLOSE_RETRY_SECONDS:-600}"
+  case "$retry_seconds" in
+    ''|*[!0-9]*) retry_seconds=600 ;;
+  esac
+  local deadline=$((SECONDS + 10#$retry_seconds))
+  while :; do
+    attempt=$((attempt + 1))
     # Linked worktrees carry no venv; the durable helper root does. Capture
     # stderr per attempt for classification only — it is never echoed.
     if close_stderr="$("${LC_DURABLE_HELPER_ROOT:-$LC_SESSION_ROOT}/.venv/bin/python" \
@@ -732,15 +738,22 @@ launcher_close_driver_lease() {
       LC_DRIVER_LEASE_CLOSED=1
       return 0
     fi
-    if [ "$attempt" -eq 1 ]; then
-      continue
-    else
-      break
-    fi
+    close_failure_reason="$(launcher_classify_close_failure "$close_stderr")"
+    case "$close_failure_reason" in
+      lease-fenced|missing-required-environment) break ;;
+      monitor-unreachable|monitor-error)
+        remaining=$((deadline - SECONDS))
+        [ "$remaining" -gt 0 ] || break
+        [ "$delay" -le "$remaining" ] || delay=$remaining
+        echo "waiting for Monitor API to recover (close attempt $attempt)" >&2
+        sleep "$delay"
+        delay=$((delay * 2))
+        [ "$delay" -le 30 ] || delay=30
+        ;;
+      *) [ "$attempt" -lt 2 ] || break ;;
+    esac
   done
-  local close_failure_reason
-  close_failure_reason="$(launcher_classify_close_failure "$close_stderr")"
-  launcher_error "failed to close the exact ${LC_PROVIDER} driver lease after two attempts. close_failure_reason=${close_failure_reason}"
+  launcher_error "failed to close the exact ${LC_PROVIDER} driver lease after $attempt attempts. close_failure_reason=${close_failure_reason}"
   return 1
 }
 
@@ -835,7 +848,20 @@ launcher_exec_command() {
     trap 'LC_DRIVER_PENDING_SIGNAL=INT; LC_DRIVER_PENDING_EXIT=130' INT
     trap 'LC_DRIVER_PENDING_SIGNAL=TERM; LC_DRIVER_PENDING_EXIT=143' TERM
     trap 'LC_DRIVER_PENDING_SIGNAL=HUP; LC_DRIVER_PENDING_EXIT=129' HUP
-    while [ "${LC_SUPERVISORY_EVENT:-0}" != 1 ] && kill -0 "$LC_DRIVER_CHILD_PID" 2>/dev/null; do
+    local wake_rc watcher_finished=0
+    while kill -0 "$LC_DRIVER_CHILD_PID" 2>/dev/null; do
+      # Failure exits intentionally send no USR1. Observe child death as well
+      # as notifications, and never wait on a still-running watcher after USR1.
+      if [ -n "${LC_SUPERVISORY_WATCH_PID:-}" ] && ! kill -0 "$LC_SUPERVISORY_WATCH_PID" 2>/dev/null; then
+        wake_rc=0
+        session_supervisor_read_wake || wake_rc=$?
+        if [ "$wake_rc" -ne 76 ]; then
+          watcher_finished=1
+          provider_rc=$wake_rc
+          [ "$wake_rc" -eq 0 ] || LC_SUPERVISORY_DELIVERY=""
+          break
+        fi
+      fi
       launcher_driver_wait_hook
       if [ -n "$wait_fd" ]; then
         read -r -t 0.1 -u "$wait_fd" _ 2>/dev/null || true
@@ -856,17 +882,11 @@ launcher_exec_command() {
     if [ -n "$LC_DRIVER_PENDING_SIGNAL" ]; then
       launcher_forward_driver_signal "$LC_DRIVER_PENDING_SIGNAL" "$LC_DRIVER_PENDING_EXIT"
     fi
-    if [ "${LC_SUPERVISORY_EVENT:-0}" != 1 ]; then
+    if [ "$watcher_finished" != 1 ]; then
       wait "$LC_DRIVER_CHILD_PID" || provider_rc=$?
     fi
   fi
-  if [ "${LC_SUPERVISORY_EVENT:-0}" = 1 ]; then
-    if session_supervisor_read_wake; then
-      provider_rc=0
-    else
-      provider_rc=1
-      LC_SUPERVISORY_DELIVERY=""
-    fi
+  if [ "${watcher_finished:-0}" = 1 ]; then
     session_supervisor_stop_provider_for_wake
   fi
   LC_DRIVER_CHILD_PID=""

@@ -29,7 +29,11 @@ class RemoteSupervisorError(RuntimeError):
     """Base error for a refused or unavailable Monitor API operation."""
 
 
-class RemoteUnreachableError(RemoteSupervisorError):
+class RemoteUnavailableError(RemoteSupervisorError):
+    """A transport outage or temporary server failure can be retried."""
+
+
+class RemoteUnreachableError(RemoteUnavailableError):
     """The Monitor API could not be reached; no claim is inferred."""
 
 
@@ -109,6 +113,8 @@ class RemoteEpicClient:
                 raw = response.read().decode("utf-8")
                 status = int(getattr(response, "status", 200))
         except urllib.error.HTTPError as exc:
+            if exc.code >= 500:
+                raise RemoteUnavailableError(f"Monitor API temporarily unavailable ({exc.code})") from None
             try:
                 raw = exc.read().decode("utf-8")
                 detail = json.loads(raw).get("detail", "request refused")
@@ -124,6 +130,8 @@ class RemoteEpicClient:
             raise RemoteSupervisorError(f"Monitor API refused request ({exc.code}): {detail}") from None
         except (urllib.error.URLError, TimeoutError, OSError) as exc:
             raise RemoteUnreachableError("Monitor API unreachable; no remote claim was made") from exc
+        if status >= 500:
+            raise RemoteUnavailableError(f"Monitor API temporarily unavailable ({status})")
         if status >= 400:
             if status == 409 and not path.endswith("/claim"):
                 raise RemoteLeaseLostError("LEASE LOST: Monitor fenced the exact lease")
