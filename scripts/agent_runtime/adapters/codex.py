@@ -122,7 +122,10 @@ def _read_only_tmp_flags(root: Path) -> list[str]:
         'default_permissions="lu_review"',
         "-c",
         'permissions={lu_review={filesystem={":root"="read",'
-        + _json.dumps(str(root), ensure_ascii=False) + '="write"},network={enabled=true}}}',
+        + _json.dumps(str(root), ensure_ascii=False)
+        + '="write"},network={enabled=true,domains={"github.com"="allow","api.github.com"="allow"}}}}',
+        "-c",
+        "features.network_proxy=true",
         "-c",
         'approval_policy="never"',
     ]

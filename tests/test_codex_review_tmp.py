@@ -63,6 +63,8 @@ def test_review_permissions_only_write_lease(tmp_path, session_id):
     profile = config["permissions"][config["default_permissions"]]
     assert profile["filesystem"] == {":root": "read", str(lease): "write"}
     assert profile["network"]["enabled"] is True
+    assert profile["network"]["domains"] == {"github.com": "allow", "api.github.com": "allow"}
+    assert config["features"]["network_proxy"] is True
     assert config["approval_policy"] == "never"
     assert "-s" not in plan.cmd
     assert "--dangerously-bypass-approvals-and-sandbox" not in plan.cmd
