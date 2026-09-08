@@ -432,7 +432,17 @@ after CF APPROVE on the exact head **and** Gate is green:
 ```bash
 # Only after §7 steps 1 and 2 on this exact head. Never --auto.
 gh pr merge --squash
+
+# Check merge-queue status / position / ETA after enqueue (#7814 item 13):
+.venv/bin/python -m scripts.gh_merge_queue_status <pr>
 ```
+
+**Merge-queue visibility after enqueue (#7814 item 13).** After `gh pr merge`, GitHub
+prints `! The merge strategy for main is set by the merge queue` while the PR stays
+`OPEN` / `CLEAN`. Do not stall or query raw GraphQL by hand — run
+`.venv/bin/python -m scripts.gh_merge_queue_status <pr>` (or `--line` / `--json`) to
+inspect queue membership (`queued=yes/no`), position in line, ETA, and the active
+`merge_group` CI run URL if building (or clear `in queue, position unknown`).
 
 Do **not** pass `--delete-branch` here while this repo uses a merge queue — deleting the
 head mid-queue can close the PR without landing. Delete the remote branch only after

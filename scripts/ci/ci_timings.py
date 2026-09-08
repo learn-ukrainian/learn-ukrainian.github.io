@@ -860,12 +860,36 @@ def build_arg_parser() -> argparse.ArgumentParser:
         default=None,
         help="Path to a recorded JSON fixture of runs and jobs (offline mode).",
     )
+    parser.add_argument(
+        "--pr",
+        dest="pr_target",
+        default=None,
+        help="Inspect merge-queue status for a specific PR (delegate to gh_merge_queue_status).",
+    )
+    parser.add_argument(
+        "--line",
+        "--text",
+        action="store_true",
+        dest="line_output",
+        help="Output single human-readable line only (used with --pr).",
+    )
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = build_arg_parser()
     args = parser.parse_args(argv)
+
+    if args.pr_target:
+        from scripts.gh_merge_queue_status import check_and_report_pr_status
+
+        return check_and_report_pr_status(
+            pr=args.pr_target,
+            repo=args.repo,
+            json_only=args.json_output,
+            line_only=args.line_output,
+            fixture_file=args.fixture_file,
+        )
 
     since_dt: datetime | None = None
     if args.since:

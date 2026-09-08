@@ -1,0 +1,23 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": null,
+      "mergeQueue": {
+        "url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/queue/main",
+        "nextEntryEstimatedTimeToMerge": 520,
+        "entries": {
+          "totalCount": 0,
+          "nodes": []
+        }
+      }
+    }
+  },
+  "errors": [
+    {
+      "type": "NOT_FOUND",
+      "path": ["repository", "pullRequest"],
+      "message": "Could not resolve to a PullRequest with the number of 999999."
+    }
+  ],
+  "actions_runs": []
+}

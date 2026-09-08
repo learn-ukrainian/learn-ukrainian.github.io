@@ -1,0 +1,29 @@
+{
+  "data": {
+    "repository": {
+      "pullRequest": {
+        "number": 7814,
+        "title": "frictions 2026-09-07: bridge/ACP lanes, guards, review sandbox",
+        "state": "OPEN",
+        "merged": false,
+        "mergeable": "MERGEABLE",
+        "mergeStateStatus": "CLEAN",
+        "isInMergeQueue": true,
+        "isMergeQueueEnabled": true,
+        "headRefName": "agy/fix-7814-mq-visibility",
+        "headRefOid": "2cc5a531afe3b14e49db60ffbc7639ebd849dd26",
+        "baseRefName": "main",
+        "mergeQueueEntry": null
+      },
+      "mergeQueue": {
+        "url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/queue/main",
+        "nextEntryEstimatedTimeToMerge": 520,
+        "entries": {
+          "totalCount": 0,
+          "nodes": []
+        }
+      }
+    }
+  },
+  "actions_runs": []
+}
