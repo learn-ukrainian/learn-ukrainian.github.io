@@ -397,6 +397,7 @@ while True: time.sleep(0.01)
 printf 'successor\\n' >> {shlex.quote(str(log))}
 ''')
     script = f'''
+set -euo pipefail
 source {shlex.quote(str(lib / 'launcher_core.sh'))}
 source {shlex.quote(str(lib / 'session_supervisor.sh'))}
 LC_ROOT={shlex.quote(str(root))}
@@ -406,7 +407,7 @@ export SESSION_STREAM_ID=epic:9999 SESSION_STREAM_LEASE_ID=lease-test
 launcher_driver_renew_loop() {{ :; }}
 launcher_cursor_observer_renew_loop() {{ :; }}
 if [ '{widen_wait_window}' = True ]; then
-  launcher_driver_wait_hook() {{ touch {shlex.quote(str(wait_window))}; sleep 0.3; }}
+  launcher_driver_wait_hook() {{ touch {shlex.quote(str(wait_window))}; sleep 0.3 || true; }}
 fi
 launcher_close_driver_lease() {{
   if kill -0 "$(cat {shlex.quote(str(provider_pid))})" 2>/dev/null; then return 45; fi
