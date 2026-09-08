@@ -25,8 +25,9 @@ _REPO_ROOT = Path(__file__).resolve().parents[1]
 # =============================================================================
 # CI FILE-PLANE SHARD ALLOWLIST (ci-shard-balance-2026-09-07)
 # =============================================================================
-# GitHub Actions collects through one initial `tests` path instead of ~1,300
-# positional file arguments (collection cost, not test selection); this hook
+# GitHub Actions collects through one initial `tests` path instead of ~337
+# positional file arguments per shard (1,345 test files total on the baseline
+# head; collection cost, not test selection); this hook
 # narrows that single-path collection back down to one shard's files. See
 # scripts/ci/pytest_shards.py `plan-files` and docs/runbooks/ci-gate.md.
 

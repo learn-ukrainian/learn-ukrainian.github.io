@@ -273,6 +273,29 @@ jobs:
               --durations scripts/ci/pytest-file-durations.json \
               --output "$allowlist"
           echo "LU_PYTEST_SHARD_FILES=${allowlist}" >> "$GITHUB_ENV"
+      - name: Start memory sampler
+        if: needs.changes.outputs.docs_only == 'false'
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: |
+          set -euo pipefail
+          mkdir -p ci-artifacts
+          mem_log="ci-artifacts/mem-shard-${SHARD}.log"
+          # Whole-VM `free -m` every 15s: on a GitHub-hosted runner nothing
+          # else of consequence shares the box, so this is a reasonable proxy
+          # for aggregate memory across the pytest controller and all -n
+          # logical workers. Before/after readings alone don't prove peak
+          # usage (ci-shard-balance-2026-09-07) — this is a sampled series
+          # for the same reason.
+          (
+            while true; do
+              date -u +%FT%TZ
+              free -m
+              echo "---"
+              sleep 15
+            done
+          ) >> "$mem_log" 2>&1 &
+          echo "$!" > "${RUNNER_TEMP}/mem-sampler.pid"
       - name: Run pytest
         env:
           DOCS_ONLY: ${{ needs.changes.outputs.docs_only }}
@@ -292,13 +315,32 @@ jobs:
             --timeout-method=thread -m 'not atlas_release and not slow' --strict-markers \
             --override-ini addopts=-v --durations=25 \
             --junitxml="ci-artifacts/pytest-shard-${SHARD}.xml"
+      - name: Stop memory sampler
+        if: always() && needs.changes.outputs.docs_only == 'false'
+        run: |
+          if [ -f "${RUNNER_TEMP}/mem-sampler.pid" ]; then
+            kill "$(cat "${RUNNER_TEMP}/mem-sampler.pid")" 2>/dev/null || true
+          fi
       - name: Upload pytest JUnit report
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: pytest-junit-shard-${{ matrix.shard }}
           path: ci-artifacts/pytest-shard-*.xml
-          if-no-files-found: ignore
+          # docs_only runs skip the "Plan pytest shard files"/junitxml path
+          # entirely (short-circuited `docs_skills` run above), so no report
+          # ever exists there — "ignore" is correct only for that lane. Any
+          # other run that fails to produce a report is a real gap, so it
+          # must fail loudly instead of silently uploading nothing.
+          if-no-files-found: ${{ needs.changes.outputs.docs_only == 'true' && 'ignore' || 'error' }}
+          retention-days: 14
+      - name: Upload memory sample log
+        if: always() && needs.changes.outputs.docs_only == 'false'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: mem-sample-shard-${{ matrix.shard }}
+          path: ci-artifacts/mem-shard-*.log
+          if-no-files-found: error
           retention-days: 14
 
   contracts:

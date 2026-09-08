@@ -431,6 +431,28 @@ def test_ci_yml_uploads_per_shard_junit_artifact() -> None:
     assert "pytest-junit-shard-${{ matrix.shard }}" in ci_text
 
 
+def test_ci_yml_junit_upload_fails_loudly_outside_docs_only() -> None:
+    """A non-docs_only run that produces no JUnit report is a real gap, not a
+    silent no-op: only the docs_only lane (which skips the junitxml path
+    entirely) may swallow a missing report."""
+    ci_text = _ci_text()
+    assert (
+        "if-no-files-found: ${{ needs.changes.outputs.docs_only == 'true' && 'ignore' || 'error' }}"
+        in ci_text
+    )
+    assert "if-no-files-found: ignore\n" not in ci_text
+
+
 def test_ci_yml_run_pytest_reports_slowest_tests() -> None:
     ci_text = _ci_text()
     assert "--durations=25" in ci_text
+
+
+def test_ci_yml_samples_memory_around_pytest_step() -> None:
+    """4-worker memory headroom is unverified (ci-shard-balance-2026-09-07);
+    a sampled series is the only way to catch a peak between two snapshots."""
+    ci_text = _ci_text()
+    assert "Start memory sampler" in ci_text
+    assert "Stop memory sampler" in ci_text
+    assert "mem-shard-" in ci_text
+    assert "mem-sample-shard-${{ matrix.shard }}" in ci_text
