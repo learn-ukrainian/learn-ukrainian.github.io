@@ -6455,6 +6455,13 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         worker_env["LU_RUNTIME_INITIATOR"] = attribution.initiator
         worker_env["LU_RUNTIME_INITIATOR_SOURCE"] = attribution.source
         worker_env["LU_RUNTIME_RUN_NONCE"] = run_nonce
+        # Explicit dispatch-worker identity (#7827): the SessionStart gate uses
+        # this marker to skip the per-agent thread lease, which belongs to the
+        # orchestrator of the agent family, never to a headless worker. Set
+        # once here; the worker subprocess passes its environment through to
+        # every harness.
+        worker_env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] = task_id
+        worker_env["LEARN_UKRAINIAN_DISPATCH_AGENT"] = dispatch_agent
         _inject_gh_token_for_agent(worker_env, dispatch_agent)
         _scrub_unusable_gh_config_dir(worker_env)
         worker_env["AGENT_NO_TELEMETRY_FOOTER"] = "1"

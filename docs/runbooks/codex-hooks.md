@@ -190,6 +190,18 @@ and can land after a claim is persisted but before SessionStart receives its
 result. In that case the session must stop; do not force-release based only on a
 claim timeout. A later claim will reclaim a confirmed-dead owner automatically.
 
+Dispatched workers are exempt from the per-agent thread lease (#7827). A headless
+worker launched by `delegate.py dispatch` carries
+`LEARN_UKRAINIAN_DISPATCH_TASK_ID`/`LEARN_UKRAINIAN_DISPATCH_AGENT` in its
+environment, and always runs from `.worktrees/dispatch/<agent>/<task>/` under the
+primary checkout; either signal tells the SessionStart gate to skip the lease
+claim entirely and log one informational line naming the recorded owner and
+generation. The lease exists to keep two interactive drivers of the same agent
+family from steering one queue — a worker is launched by that driver and shares
+its authority, so evaluating the lease would conflict with the orchestrator's own
+live claim on every dispatch. Orchestrator sessions are unaffected: a live owner
+is still a conflict, and there is still no clock-based takeover.
+
 Broad curriculum scans, service probes, GitHub issue listings, and governance
 audits were removed from the synchronous hook. The hook now points to
 `/api/orient` for those optional diagnostics. Multiple pending rollovers remain

@@ -4712,6 +4712,51 @@ def test_dispatch_defaults_worker_env_to_no_merge(tmp_tasks_dir, monkeypatch):
     assert "AGENT_ALLOW_MERGE" not in env
 
 
+def test_dispatch_worker_env_carries_dispatch_identity_markers(tmp_tasks_dir, monkeypatch):
+    """#7827: every dispatched worker must carry the explicit dispatch marker
+    the SessionStart gate uses to skip the orchestrator-owned thread lease."""
+    import argparse
+
+    recorded: dict[str, object] = {}
+
+    class _FakeStdin:
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 24682
+        stdin = _FakeStdin()
+
+    def fake_popen(*args, **kwargs):
+        recorded["env"] = kwargs.get("env", {})
+        return _FakeProc()
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+
+    args = argparse.Namespace(
+        agent="codex",
+        task_id="dispatch-marker-check",
+        prompt="test",
+        prompt_file=None,
+        mode="read-only",
+        model=None,
+        cwd=None,
+        worktree=None,
+        hard_timeout=3600,
+        allow_merge=False,
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    env = recorded["env"]
+    assert env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] == "dispatch-marker-check"
+    assert env["LEARN_UKRAINIAN_DISPATCH_AGENT"] == "codex"
+
+
 def test_dispatch_worker_env_pins_project_venv(tmp_tasks_dir, monkeypatch):
     import argparse
 

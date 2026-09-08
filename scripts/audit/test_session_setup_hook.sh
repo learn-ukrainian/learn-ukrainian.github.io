@@ -87,6 +87,8 @@ run_hook() {
   local supervisor_run_id="${7:-}"
   local supervisor_generation="${8:-}"
   local session_epic="${9:-}"
+  local dispatch_task="${10:-}"
+  local project_dir_override="${11:-}"
 
   # Native SessionStart always supplies an official session id. Keep fixtures
   # equally realistic so the durable Claude slot lease can be exercised.
@@ -96,10 +98,11 @@ run_hook() {
 
   printf '%s' "$hook_json" | \
     HOME="$TMP_ROOT/home" XDG_CONFIG_HOME="$TMP_ROOT/xdg-config" XDG_CACHE_HOME="$TMP_ROOT/xdg-cache" XDG_DATA_HOME="$TMP_ROOT/xdg-data" XDG_STATE_HOME="$TMP_ROOT/xdg-state" GH_CONFIG_DIR="$TMP_ROOT/gh" PATH="/usr/bin:/bin" \
-    CLAUDE_PROJECT_DIR="$root" \
+    CLAUDE_PROJECT_DIR="${project_dir_override:-$root}" \
     CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS=32000 \
     CODEX_THREAD_ID="$current_thread_id" \
     CODEX_CANONICAL_REPO_ROOT="$root" \
+    LEARN_UKRAINIAN_DISPATCH_TASK_ID="$dispatch_task" \
     LEARN_UKRAINIAN_REQUESTED_PROFILE_ID="$requested_profile" \
     LEARN_UKRAINIAN_CLAUDEX_RUN_ID="$supervisor_run_id" \
     LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION="$supervisor_generation" \
@@ -501,7 +504,7 @@ assert_not_contains "$output_harness" "COLD START: NO LIVE THREAD ROLLOVER" "epi
 # 17b. An exhausted aggregate budget leaves the durable lease state unknown;
 # it is not evidence of a thread lease conflict and must never suggest force
 # release. Session-record, venv-pin, primary-on-main, thread-lease, and
-# rollover-detect all run inside ONE python process now (the consolidated
+# rollover-detect all run inside ONE interpreter process now (the consolidated
 # gate — see session_start_gate.py), so the way to simulate budget exhaustion
 # is to slow the gate's OWN interpreter, not a downstream rollover helper: a
 # slow THREAD_ROLLOVER_PYTHON no longer touches the lease claim, which runs
@@ -521,6 +524,74 @@ assert_contains "$output" \
   "ERROR: SESSION GATE COULD NOT RUN (timeout/budget/runner missing) — stop; lease state UNKNOWN; do NOT force-release." \
   "gate budget exhaustion"
 assert_not_contains "$output" "DURABLE THREAD LEASE CONFLICT" "gate budget exhaustion"
+
+# 17c. #7827: a dispatched worker never evaluates the per-agent thread lease.
+#      A lease held by a live orchestrator must stop a normal session but not
+#      a dispatch worker — whether the worker is recognized by the explicit
+#      delegate.py marker or by the layout-A dispatch worktree path alone.
+write_held_lease() {
+  local root="$1"
+  local holder_pid="$2"
+
+  "$VENV_PYTHON" - "$REPO_ROOT" "$root" "$holder_pid" <<'PYEOF'
+import json
+import sys
+from pathlib import Path
+
+sys.path.insert(0, sys.argv[1])
+from scripts.orchestration import thread_handoff as th
+
+root = Path(sys.argv[2])
+pid = int(sys.argv[3])
+record = {
+    "schema_version": th.THREAD_LEASE_SCHEMA_VERSION,
+    "agent": "claude",
+    "state": "held",
+    "generation": 4,
+    "owner_thread_id": "orchestrator-thread",
+    "acquired_at": "2026-09-08T00:00:00Z",
+    "heartbeat_at": "2026-09-08T00:00:00Z",
+}
+snapshot = th._default_process_snapshot(pid)
+machine_id = th._default_machine_id()
+if snapshot is not None and snapshot.started_at is not None and machine_id:
+    record["owner_pid"] = pid
+    record["owner_pid_started_at"] = snapshot.started_at
+    record["owner_machine_id"] = machine_id
+lease_path = root / ".agent" / "claude-thread-lease.json"
+lease_path.parent.mkdir(parents=True, exist_ok=True)
+lease_path.write_text(json.dumps(record), encoding="utf-8")
+PYEOF
+}
+
+setup_fixture "$fixture_root"
+sleep 120 &
+holder_pid=$!
+write_held_lease "$fixture_root" "$holder_pid"
+
+# 17c-i. Control: a normal (non-dispatch) session still stops on the live owner.
+output="$(run_hook "$fixture_root" 0 claude)"
+assert_contains "$output" "DURABLE THREAD LEASE CONFLICT" "dispatch exemption control"
+assert_not_contains "$output" "thread lease not evaluated" "dispatch exemption control"
+
+# 17c-ii. The explicit delegate.py marker exempts the worker and logs one
+#      informational line naming the recorded owner and generation.
+output="$(run_hook "$fixture_root" 0 claude "" "" native_claude "" "" "" "task-7827")"
+assert_contains "$output" "dispatch worker (claude/task-7827): thread lease not evaluated; owner orchestrator-thread generation 4" \
+  "dispatch marker exemption"
+assert_not_contains "$output" "DURABLE THREAD LEASE CONFLICT" "dispatch marker exemption"
+
+# 17c-iii. Layout A alone (project dir under .worktrees/dispatch/<agent>/<task>/,
+#      no marker) exempts the worker.
+dispatch_project_dir="$fixture_root/.worktrees/dispatch/claude/task-7827"
+mkdir -p "$dispatch_project_dir"
+output="$(run_hook "$fixture_root" 0 claude "" "" native_claude "" "" "" "" "$dispatch_project_dir")"
+assert_contains "$output" "dispatch worker (claude/task-7827): thread lease not evaluated" \
+  "dispatch layout exemption"
+assert_not_contains "$output" "DURABLE THREAD LEASE CONFLICT" "dispatch layout exemption"
+
+kill "$holder_pid" 2>/dev/null || true
+wait "$holder_pid" 2>/dev/null || true
 
 # 18. Official SessionStart fields drive the native profile and exact transcript record.
 setup_fixture "$fixture_root"
