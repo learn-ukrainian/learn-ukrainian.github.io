@@ -189,11 +189,7 @@ Unverified items become FLAG strings in your evidence and weigh the score down.
    to 1 decimal).
 4. Final verdict. Score ≥8 → PASS. 6-7.99 → REVISE. <6 → REJECT.
 
-Return only JSON:
-
-```json
-{"score": 0.0, "evidence_quotes": ["verbatim quote 1", "verbatim quote 2", "verbatim quote 3"], "rubric_mapping": "Quote 1: ...; Quote 2: ...; Quote 3: ...", "evidence": "\"verbatim quote from evidence_quotes\"", "flags": ["out_of_level_literary", "..."], "verdict": "REVISE"}
-```
+{REVIEWER_OUTPUT_SCHEMA}
 
 The `flags` array MUST contain any FLAG strings (audits A-J) and any `#R-*` ids
 (universal-rules section) that apply to your assigned dim. An empty array is fine

@@ -174,6 +174,7 @@ def _reviewer_response(dim: str) -> str:
             "evidence": f"\"{quote_a}\"",
             "evidence_quotes": [quote_a, quote_b, quote_c],
             "rubric_mapping": f"{dim} quotes map directly to the rubric.",
+            "findings": [], "issue_ids": [], "flags": [],
             "verdict": "PASS",
         }
     )
@@ -267,11 +268,12 @@ def test_reviewer_telemetry_events_and_rollup_fire_from_dim_wrappers() -> None:
     events: list[dict[str, Any]] = []
 
     def invoker(agent: str, prompt: str, **kwargs: Any) -> SimpleNamespace:
-        assert agent == "gemini"
+        assert agent == "claude"
         assert kwargs["entrypoint"] == "dispatch"
         dim = kwargs["task_id"].removeprefix("phase-4-review-")
         assert prompt == _reviewer_prompt(dim)
         return SimpleNamespace(
+            ok=True,
             response=_reviewer_response(dim),
             tool_calls=_reviewer_audit_calls(dim),
         )
@@ -280,9 +282,9 @@ def test_reviewer_telemetry_events_and_rollup_fire_from_dim_wrappers() -> None:
     for dim in QG_DIMS:
         response = linear_pipeline.invoke_reviewer_dim(
             _reviewer_prompt(dim),
-            "gemini-tools",
+            "claude-tools",
             dim=dim,
-            writer_under_review="claude-tools",
+            writer_under_review="codex-tools",
             invoker=invoker,
             event_sink=_event_sink(events),
         )
@@ -296,9 +298,9 @@ def test_reviewer_telemetry_events_and_rollup_fire_from_dim_wrappers() -> None:
     linear_pipeline.aggregate_llm_review(
         report,
         "A1",
-        reviewer="gemini-tools",
+        reviewer="claude-tools",
         module="a1/20",
-        writer_under_review="claude-tools",
+        writer_under_review="codex-tools",
         audit_calls_total=audit_calls_total,
         flags_raised_total=flags_raised_total,
         event_sink=_event_sink(events),
@@ -309,7 +311,7 @@ def test_reviewer_telemetry_events_and_rollup_fire_from_dim_wrappers() -> None:
     assert {event["dim"] for event in dim_events} == set(QG_DIMS)
     assert all(len(event["evidence_quotes"]) == 3 for event in dim_events)
     assert all(len(event["rubric_mapping"]) <= 500 for event in dim_events)
-    assert all(event["writer_under_review"] == "claude-tools" for event in dim_events)
+    assert all(event["writer_under_review"] == "codex-tools" for event in dim_events)
 
     audit_events = _events_named(events, "reviewer_audit_call")
     assert len(audit_events) == 8

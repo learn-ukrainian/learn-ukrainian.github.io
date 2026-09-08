@@ -4558,6 +4558,8 @@ def review_context(
     obligation_checklist: Mapping[str, Any] | None = None,
 ) -> dict[str, str]:
     """Build context for one independent per-dimension LLM QG prompt."""
+    from scripts.audit.qg_schema import render_reviewer_output_contract
+
     if dim not in QG_DIMS:
         raise LinearPipelineError(f"Unknown LLM QG dimension: {dim}")
     level = str(plan["level"])
@@ -4610,6 +4612,7 @@ def review_context(
         "WIKI_MANIFEST": wiki_manifest_text,
         "IMPLEMENTATION_MAP_CONTRACT": impl_map_contract,
         "DIM": dim,
+        "REVIEWER_OUTPUT_SCHEMA": render_reviewer_output_contract("dimension"),
     }
     if use_generator:
         # V7.2 Step 5: inject the registry-composed reviewer-rules block + the
@@ -5084,7 +5087,7 @@ def invoke_reviewer_dim(
     module: str | None = None,
     event_sink: Callable[..., None] | None = None,
     stdout_silence_timeout: int | None = None,
-) -> str:
+) -> dict[str, Any] | str:
     """Call one per-dimension reviewer and emit response/audit telemetry."""
     if reviewer not in REVIEWER_CHOICES:
         raise LinearPipelineError(f"Unknown reviewer {reviewer!r}; expected one of {REVIEWER_CHOICES}")
@@ -5092,30 +5095,24 @@ def invoke_reviewer_dim(
         from scripts.agent_runtime.runner import invoke as invoker
 
     from scripts.agent_runtime.agent_identity import tools_writer_runtime_agent
+    from scripts.audit.llm_reviewer import invoke_reviewer_with_schema
 
     defaults = REVIEWER_DEFAULTS[reviewer]
     agent_name = tools_writer_runtime_agent(reviewer)
-    result = invoker(
-        agent_name,
-        prompt,
-        mode="read-only",
-        cwd=cwd,
-        model=defaults["model"],
-        task_id=f"phase-4-review-{dim}",
-        entrypoint="dispatch",
-        effort=defaults["effort"],
-        tool_config=_runtime_tool_config(reviewer, workspace_dir=cwd, event_sink=event_sink),
-        event_sink=event_sink,
-        stdout_silence_timeout=stdout_silence_timeout,
-    )
-    response = getattr(result, "response", None)
-    if not response:
-        raise LinearPipelineError(f"Reviewer call for {dim} returned no response")
-    response_text = str(response)
+    try:
+        response, result = invoke_reviewer_with_schema(
+            agent_name, prompt, profile="dimension", invoker=invoker,
+            mode="read-only", cwd=cwd, model=defaults["model"],
+            task_id=f"phase-4-review-{dim}", entrypoint="dispatch", effort=defaults["effort"],
+            tool_config=_runtime_tool_config(reviewer, workspace_dir=cwd, event_sink=event_sink),
+            event_sink=event_sink, stdout_silence_timeout=stdout_silence_timeout,
+        )
+    except ValueError as exc:
+        raise LinearPipelineError(f"Reviewer call for {dim}: {exc}") from exc
     module_ref = module or _prompt_module_ref(prompt)
     if module_ref:
         parse_review_response(
-            response_text,
+            response,
             dim,
             reviewer=reviewer,
             module=module_ref,
@@ -5132,7 +5129,7 @@ def invoke_reviewer_dim(
                 dim=dim,
                 event_sink=event_sink,
             )
-    return response_text
+    return response
 
 
 def _gate_int(gate_report: Mapping[str, Any], *keys: str, default: int = 0) -> int:
@@ -5388,7 +5385,7 @@ def render_reviewer_correction_prompt(
 
 
 def parse_review_response(
-    response: str,
+    response: str | Mapping[str, Any],
     dim: str,
     *,
     reviewer: str | None = None,
@@ -5400,7 +5397,9 @@ def parse_review_response(
     if dim not in QG_DIMS:
         raise LinearPipelineError(f"Unknown LLM QG dimension: {dim}")
 
-    payload = _parse_json_or_yaml_mapping(response)
+    # Schema-capable harnesses hand us the already-validated object. Only the
+    # explicitly unsupported route (or recorded legacy caller) parses prose.
+    payload = dict(response) if isinstance(response, Mapping) else _parse_json_or_yaml_mapping(response)
     if dim in payload and isinstance(payload[dim], Mapping):
         payload = dict(payload[dim])
 

@@ -467,11 +467,7 @@ job here is to cross-check that the self-grading matches reality. A green audit
 line on broken content is a more serious failure than a red audit line on
 broken content (the writer is lying to its own audit).
 
-Return only JSON:
-
-```json
-{"score": 0.0, "evidence_quotes": ["verbatim quote 1", "verbatim quote 2", "verbatim quote 3"], "rubric_mapping": "Quote 1: ...; Quote 2: ...; Quote 3: ...", "evidence": "\"verbatim quote from evidence_quotes\"", "issue_ids": ["AWKWARD_PASSIVE_RESULT_STATE"], "findings": [{"issue_id": "AWKWARD_PASSIVE_RESULT_STATE", "quote": "verbatim offending phrase", "severity": "high", "explanation": "why this fails the assigned dimension"}], "flags": ["activity_split_audit_missing", "out_of_level_literary", "..."], "verdict": "REVISE"}
-```
+{REVIEWER_OUTPUT_SCHEMA}
 
 The `flags` array MUST contain any FLAG strings raised during audits A-J that
 apply to your assigned dim per the per-dim labeling in §"Scope". An empty array

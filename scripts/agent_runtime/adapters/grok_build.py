@@ -56,6 +56,7 @@ from ..trail_isolation import (
     assert_trail_isolation_config,
     trail_isolation_requested,
 )
+from ._output_schema import json_value, load_output_schema, plan_output_schema, schema_metadata, structured_result
 from .base import InvocationPlan
 
 _logger = logging.getLogger(__name__)
@@ -275,6 +276,9 @@ class GrokBuildAdapter:
             cmd.extend(["-p", prompt])
 
         cmd.extend(["--output-format", "json", "--no-alt-screen"])
+        output_schema = load_output_schema(tc)
+        if output_schema is not None:
+            cmd.extend(["--json-schema", json.dumps(output_schema, separators=(",", ":"))])
         # Issue #7583 / #7594: ordinary read-only maps to grok `auto` so non-shell
         # read tools can run, with fail-closed `--deny` on Bash + write tools.
         # Prefix-only Bash denies are not a closed allowlist under `auto`.
@@ -397,6 +401,7 @@ class GrokBuildAdapter:
             env_overrides={},
         )
         metadata: dict[str, object] = {
+            **schema_metadata(output_schema),
             "entire_fleet": {
                 "requested_model": requested_model,
                 "actual_model": requested_model,
@@ -436,6 +441,17 @@ class GrokBuildAdapter:
         call_start_time: float | None = None,
     ) -> ParseResult:
         _ = (output_file, plan, call_start_time)  # grok -p flushes to stdout
+
+        output_schema = plan_output_schema(plan)
+        if output_schema is not None:
+            envelope = json_value(stdout)
+            envelope = envelope if isinstance(envelope, dict) else {}
+            return structured_result(
+                envelope.get("structuredOutput"), output_schema, returncode=returncode,
+                terminal_ok=("structuredOutput" in envelope and envelope.get("stopReason") == "end_turn"
+                             and "structuredOutputError" not in envelope and envelope.get("type") != "error"),
+                session_id=envelope.get("sessionId"),
+            )
 
         obj = _parse_json_object(stdout)
         if obj is not None:

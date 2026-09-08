@@ -12,6 +12,7 @@ import hashlib
 import json
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 SCHEMA_VERSION = "ua_contact_quality_evidence.v1"
@@ -86,9 +87,7 @@ FACT_CHECK_VERDICTS = frozenset(
 )
 MAX_REVIEWER_FACT_CHECKS = 40
 GROUNDING_REQUIRED_DIMENSIONS = frozenset({"seminar_sensitivity", "decolonization"})
-# Keep in exact sync with scripts/audit/prompts/reviewer_prompt.md. The prompt's
-# earlier broader "russicism/contact" wording was narrowed because the schema
-# exposes no separate russicism or heritage-contact issue_class.
+# The prompt's substantive grounding rule uses these same canonical classes.
 GROUNDING_REQUIRED_SEMINAR_CLASSES = frozenset({"calque", "false_friend"})
 GROUNDING_KEYS = frozenset({"tool", "query", "evidence_excerpt", "tool_call_id"})
 
@@ -99,6 +98,110 @@ DEFAULT_ATTRIBUTION = {
     "pair_id": None,
     "evidence": None,
 }
+
+
+def _review_object(properties: dict[str, Any]) -> dict[str, Any]:
+    # Requiring every property (nullable where appropriate) also satisfies
+    # Codex's strict structured-output subset. Empty lists represent no items;
+    # a missing list is never interpreted as a successful empty review.
+    return {
+        "type": "object", "properties": properties,
+        "required": list(properties), "additionalProperties": False,
+    }
+
+
+def _review_array(items: dict[str, Any]) -> dict[str, Any]:
+    return {"type": "array", "items": items}
+
+
+def _review_nullable(value: dict[str, Any]) -> dict[str, Any]:
+    return {"anyOf": [value, {"type": "null"}]}
+
+
+def reviewer_output_schema(profile: str) -> dict[str, Any]:
+    """Authoritative harness schemas for the three existing review dialects.
+
+    These are wire projections, not a replacement severity/scoring taxonomy.
+    Render prompt scaffolds from this function; do not copy its fields into
+    handwritten examples or adapter-specific schemas.
+    """
+    text = {"type": "string"}
+    nonempty = {"type": "string", "minLength": 1}
+    strings = _review_array(nonempty)
+    if profile == "dimension":
+        return _review_object({
+            "score": {"type": "number", "minimum": 0, "maximum": 10},
+            "evidence": _review_nullable(text),
+            "evidence_quotes": strings,
+            "rubric_mapping": _review_nullable(text),
+            "issue_ids": strings,
+            "findings": _review_array(_review_object({
+                "issue_id": nonempty, "quote": nonempty,
+                "severity": nonempty, "explanation": nonempty,
+                "replacement": _review_nullable(text),
+                "dimension": _review_nullable(text),
+            })),
+            "flags": strings,
+            "verdict": {"type": "string", "enum": ["PASS", "REVISE", "REJECT"]},
+        })
+    if profile == "direct":
+        dimensions = {
+            dim: _review_object({
+                "status": {"type": "string", "enum": (
+                    ["PASS", "FAIL", "SKIP"] if dim == "decodability" else ["PASS", "FAIL"]
+                )},
+                "notes": text,
+            })
+            for dim in ("language", "pedagogy", "activities", "l1_agnosticism", "decodability")
+        }
+        return _review_object({
+            "verdict": {"type": "string", "enum": ["PASS", "FAIL"]},
+            "summary": nonempty, "dimensions": _review_object(dimensions),
+            "issues": strings,
+        })
+    if profile == "audit":
+        grounding = _review_nullable(_review_object({key: nonempty for key in sorted(GROUNDING_KEYS)}))
+        return _review_object({
+            "findings": _review_array(_review_object({
+                "issue_id": nonempty,
+                "issue_class": {"type": "string", "enum": sorted(ISSUE_CLASSES)},
+                "dimension": {"type": "string", "enum": sorted(DIMENSIONS)},
+                "severity": {"type": "string", "enum": sorted(SEVERITIES)},
+                "excerpt": nonempty, "message": nonempty,
+                "suggested_replacement": _review_nullable(text), "grounding": grounding,
+            })),
+            "fact_checks": _review_array(_review_object({
+                "claim": nonempty,
+                "verdict": {"type": "string", "enum": sorted(FACT_CHECK_VERDICTS)},
+                "grounding": grounding, "searches": strings,
+                "deep_read_attempted": {"type": "boolean"},
+                "budget_exhausted": {"type": "boolean"},
+            })),
+            "evidence_gaps": _review_array(_review_object({
+                "claim": nonempty, "suspected_issue": nonempty, "searches": strings,
+                "status": nonempty, "reason": nonempty,
+            })),
+        })
+    raise ValueError(f"unknown reviewer output profile: {profile}")
+
+
+def render_reviewer_output_contract(profile: str) -> str:
+    """Render the same schema supplied to the harness into every prompt."""
+    schema = json.dumps(reviewer_output_schema(profile), ensure_ascii=False, indent=2)
+    return (
+        "Return the review object conforming to this authoritative JSON Schema "
+        f"(qg_schema.py, {profile} profile). Use empty arrays for no findings/items "
+        "and null only where the schema permits it.\n\n"
+        f"```json\n{schema}\n```"
+    )
+
+
+def write_reviewer_output_schema(directory: Path, profile: str) -> dict[str, str]:
+    """Write an invocation-owned schema file and bind the exact bytes."""
+    path = directory / f"{profile}.schema.json"
+    payload = (_stable_json(reviewer_output_schema(profile)) + "\n").encode("utf-8")
+    path.write_bytes(payload)
+    return {"output_schema_path": str(path.resolve()), "output_schema_sha256": hashlib.sha256(payload).hexdigest()}
 
 
 @dataclass(frozen=True, slots=True)

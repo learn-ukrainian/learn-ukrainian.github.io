@@ -49,21 +49,6 @@ Check each dimension. For each, cite specific examples from the content.
 
 ## Output Format
 
-Return a JSON object (no markdown fences):
-
-```
-{
-  "verdict": "PASS" or "FAIL",
-  "summary": "One-sentence overall assessment",
-  "dimensions": {
-    "language": {"status": "PASS/FAIL", "notes": "..."},
-    "pedagogy": {"status": "PASS/FAIL", "notes": "..."},
-    "activities": {"status": "PASS/FAIL", "notes": "..."},
-    "l1_agnosticism": {"status": "PASS/FAIL", "notes": "..."},
-    "decodability": {"status": "PASS/SKIP", "notes": "..."}
-  },
-  "issues": ["issue 1 description", "issue 2 description"]
-}
-```
+{{REVIEWER_OUTPUT_SCHEMA}}
 
 Any dimension with FAIL → overall verdict is FAIL. Be specific in issues — cite the exact field, item index, and what's wrong.
