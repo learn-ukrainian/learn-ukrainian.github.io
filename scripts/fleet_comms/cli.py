@@ -569,6 +569,111 @@ def _authority_root(args: argparse.Namespace) -> Path | None:
     return Path(args.root).expanduser() if args.root else None
 
 
+def cmd_deliveries(args: argparse.Namespace) -> int:
+    """Expose authority delivery operations without loading message bodies."""
+    from scripts.control_plane.storage import ControlPlaneError
+    from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
+
+    try:
+        with AuthorityService(root=_authority_root(args)) as service:
+            if args.deliveries_command == "claim":
+                lease = service.claim_next_delivery(
+                    args.recipient, args.worker_id,
+                    lease_seconds=args.lease_seconds, max_attempts=args.max_attempts,
+                )
+                if lease is None:
+                    sys.stdout.write(_json_dump({"delivery": None, "content_included": False}))
+                    return EXIT_NOT_FOUND
+                payload = asdict(lease.delivery)
+                payload.update(
+                    body_artifact_id=lease.body_artifact_id,
+                    content_sha256=lease.content_sha256,
+                )
+            elif args.deliveries_command == "consume":
+                payload = service.record_supervisory_consumption(
+                    args.delivery_id, worker_id=args.worker_id,
+                    fence_token=args.fence_token, driver_generation=args.driver_generation,
+                )
+            elif args.deliveries_command == "ack":
+                payload = asdict(service.acknowledge_delivery(
+                    args.delivery_id, worker_id=args.worker_id,
+                    fence_token=args.fence_token,
+                    acknowledgment_artifact_id=args.acknowledgment_artifact_id,
+                ))
+            else:
+                payload = asdict(service.get_delivery(args.delivery_id))
+    except AuthorityServiceError as exc:
+        sys.stdout.write(_json_dump({"error": str(exc), "content_included": False}))
+        return EXIT_NOT_FOUND if str(exc) == "delivery_not_found" else EXIT_ERROR
+    except (OSError, sqlite3.Error, PlaneRootAnchorError, ControlPlaneError):
+        # Storage exceptions may contain private paths or SQL; never echo them.
+        sys.stdout.write(_json_dump({"error": "delivery_store_unavailable", "content_included": False}))
+        return EXIT_ERROR
+    payload["content_included"] = False
+    sys.stdout.write(_json_dump(payload))
+    return EXIT_OK
+
+
+def _add_deliveries_parser(sub: Any) -> None:
+    description = (
+        "Claim, inspect, consume, and acknowledge durable authority deliveries.\n"
+        "Use for seat delivery processing; legacy inbox/wake receipts are not authority proof."
+    )
+    epilog = (
+        "Examples:\n"
+        "  .venv/bin/python -m scripts.fleet_comms deliveries claim --recipient codex --worker-id seat-1\n"
+        "  .venv/bin/python -m scripts.fleet_comms deliveries consume DELIVERY --worker-id seat-1 --fence-token 1 --driver-generation gen-1\n"
+        "  .venv/bin/python -m scripts.fleet_comms deliveries ack DELIVERY --worker-id seat-1 --fence-token 1\n"
+        "Outputs: JSON metadata and artifact references on stdout; never message bodies.\n"
+        "  Claim leases one delivery and reclaims expired leases (defaults: 300 seconds, 3 attempts).\n"
+        "  Consume records supervisory intent before any side effect. On replay/reconciliation,\n"
+        "  inspect the external outcome before repeating an action. Ack records its verified outcome;\n"
+        "  supervisory requests require consumption for the current fence. Status reads metadata.\n"
+        "  These commands open the authority store, initializing/migrating it if necessary.\n"
+        "Exit codes: 0 = success, 1 = no claimable delivery or delivery not found,\n"
+        "  2 = usage error, 3 = operation refused or storage error.\n"
+        "Related: scripts.fleet_comms.authority.AuthorityService; channels publish; plane-status."
+    )
+    deliveries = sub.add_parser(
+        "deliveries", help="Process fenced authority deliveries without message bodies",
+        description=description, epilog=epilog,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    operations = deliveries.add_subparsers(dest="deliveries_command", required=True)
+    for name, summary in (
+        ("claim", "Lease the next eligible delivery for a recipient"),
+        ("status", "Read one delivery's current metadata"),
+        ("consume", "Record supervisory consumption before acting"),
+        ("ack", "Acknowledge a delivery after verifying its outcome"),
+    ):
+        operation = operations.add_parser(
+            name, help=summary, description=f"{summary}.\n{description}", epilog=epilog,
+            formatter_class=argparse.RawDescriptionHelpFormatter,
+        )
+        operation.add_argument(
+            "--root", default=None,
+            help="Authority storage directory (default: FLEET_COMMS_ROOT or shared plane root; e.g. /tmp/test-plane)",
+        )
+        if name == "claim":
+            operation.add_argument("--recipient", required=True, help="Exact recipient seat, e.g. codex")
+            operation.add_argument("--lease-seconds", type=int, default=300, help="Positive lease duration in seconds (default: 300)")
+            operation.add_argument("--max-attempts", type=int, default=3, help="Positive delivery attempt limit (default: 3)")
+        else:
+            operation.add_argument("delivery_id", help="Exact delivery_id returned by claim")
+        if name != "status":
+            operation.add_argument("--worker-id", required=True, help="Lease owner identity; reuse the claim value, e.g. seat-1")
+        if name in {"consume", "ack"}:
+            operation.add_argument("--fence-token", type=int, required=True, help="Positive fence_token returned by the current claim, e.g. 1")
+        if name == "consume":
+            operation.add_argument("--driver-generation", required=True, help="Driver generation consuming the request, e.g. gen-1")
+        if name == "ack":
+            operation.add_argument(
+                "--acknowledgment-artifact-id", default=None,
+                help="Existing sealed outcome artifact ID (default: no artifact); reuse on idempotent ack",
+            )
+        operation.set_defaults(func=cmd_deliveries)
+
+
 def _body_argument(value: str) -> str:
     return sys.stdin.read() if value == "-" else value
 
@@ -771,7 +876,7 @@ def build_parser() -> argparse.ArgumentParser:
         prog="python -m scripts.fleet_comms",
         description=(
             "Inspect Fleet Comms status, requests, metrics, and review jobs.\n"
-            "Use read commands for diagnostics; explicit accept/import commands perform writes."
+            "Use read commands for diagnostics; delivery processing and explicit accept/import commands perform writes."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
@@ -779,13 +884,14 @@ def build_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python -m scripts.fleet_comms plane-status\n"
             "  .venv/bin/python -m scripts.fleet_comms fleet status\n"
             "  .venv/bin/python -m scripts.fleet_comms metrics\n"
-            "Outputs: JSON on stdout. Status/metrics reads do not initialize stores.\n"
+            "Outputs: JSON on stdout. Plane-status/metrics reads do not initialize stores.\n"
             "Exit codes: 0 = report produced (inspect health/error fields), "
-            "1 = operation error, 2 = usage error, 3 = not found.\n"
+            "1 = not found/no delivery, 2 = usage error, 3 = operation error.\n"
             "Related: scripts.fleet_comms.message_plane; fleet help."
         ),
     )
     sub = parser.add_subparsers(dest="command", required=True)
+    _add_deliveries_parser(sub)
 
     plane = sub.add_parser(
         "plane-status",
