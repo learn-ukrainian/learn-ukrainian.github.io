@@ -1,0 +1,33 @@
+<task-notification>
+<task-id>bjut02mp5</task-id>
+<summary>Monitor event: "Watching CI run 34188281383 pytest shards + CI Gate on PR 7819 new head"</summary>
+<event>=== 04:48:44 ===
+pytest (1): in_progress/pending
+pytest (2): in_progress/pending
+pytest (3): in_progress/pending
+pytest (4): in_progress/pending</event>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>bjut02mp5</task-id>
+<summary>Monitor event: "Watching CI run 34188281383 pytest shards + CI Gate on PR 7819 new head"</summary>
+<event>=== 04:54:20 ===
+pytest (1): in_progress/pending
+pytest (2): completed/failure
+pytest (3): in_progress/pending
+pytest (4): in_progress/pending</event>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>bjut02mp5</task-id>
+<summary>Monitor event: "Watching CI run 34188281383 pytest shards + CI Gate on PR 7819 new head"</summary>
+<event>=== 04:56:23 ===
+pytest (1): in_progress/pending
+pytest (2): completed/failure
+pytest (3): completed/success
+pytest (4): completed/success</event>
+</task-notification>

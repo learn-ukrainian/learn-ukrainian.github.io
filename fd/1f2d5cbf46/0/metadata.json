@@ -1,0 +1,46 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "fd1f2d5cbf46",
+  "session_id": "6fa81feb-daa4-4dad-9646-487cd13510a8",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-08T05:03:07.691171318Z",
+  "branch": "claude/ci-shard-balance-2026-09-07",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_session_supervisor_shell.py"
+  ],
+  "agent": "Claude Code",
+  "model": "",
+  "turn_id": "8579510a43e1",
+  "checkpoint_transcript_start": 899,
+  "transcript_lines_at_start": 899,
+  "compact_transcript_start": 152,
+  "token_usage": {
+    "input_tokens": 60,
+    "cache_creation_tokens": 32160,
+    "cache_read_tokens": 8881494,
+    "output_tokens": 21744,
+    "api_call_count": 30
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-08T05:03:07.523357384Z",
+    "agent_lines": 55,
+    "agent_removed": 31,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 55,
+    "total_lines_changed": 86,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

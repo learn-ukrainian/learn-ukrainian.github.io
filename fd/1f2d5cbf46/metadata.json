@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "fd1f2d5cbf46",
+  "strategy": "manual-commit",
+  "branch": "claude/ci-shard-balance-2026-09-07",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_session_supervisor_shell.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/fd/1f2d5cbf46/0/metadata.json",
+      "transcript": "/fd/1f2d5cbf46/0/full.jsonl",
+      "compact_transcript": "/fd/1f2d5cbf46/0/transcript.jsonl",
+      "content_hash": "/fd/1f2d5cbf46/0/content_hash.txt",
+      "prompt": "/fd/1f2d5cbf46/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 60,
+    "cache_creation_tokens": 32160,
+    "cache_read_tokens": 8881494,
+    "output_tokens": 21744,
+    "api_call_count": 30
+  }
+}
