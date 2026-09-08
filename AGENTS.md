@@ -87,8 +87,11 @@ non-skippable:
 ## Fleet, context, and delegation
 
 - For standalone TUI/UI drivers, read
-  `agents_extensions/shared/rules/fleet-comms-coordination.md`; file
-  dual-write remains authoritative in every plane mode. Use `plane-status` and
+  `agents_extensions/shared/rules/fleet-comms-coordination.md`; Fleet Comms
+  owns durable messages/jobs in `authority` mode; legacy stores are read-only
+  migration/projection inputs. Session handoff files still carry continuity,
+  not competing message or lease authority. Preserve existing stream ownership;
+  do not create legacy message/job writes or another control plane. Use `plane-status` and
   the `drive-epic` skill. Codex may lead an explicitly assigned, authorized
   stream as a catalogued alternate; it must never co-own a live same-stream
   lease. Otherwise its role is coding or review. Do not change plane, retention,
