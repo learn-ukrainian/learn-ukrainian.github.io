@@ -1,0 +1,32 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "371b7d9ee0ef",
+  "strategy": "manual-commit",
+  "branch": "claude/ci-shard-balance-2026-09-07",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".github/workflows/ci.yml",
+    "docs/decisions/2026-07-22-pytest-four-shard-matrix.md",
+    "docs/runbooks/ci-gate.md",
+    "scripts/ci/pytest-file-durations.json",
+    "scripts/ci/pytest_shards.py",
+    "tests/conftest.py",
+    "tests/test_ci_shard_partition.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/37/1b7d9ee0ef/0/metadata.json",
+      "transcript": "/37/1b7d9ee0ef/0/full.jsonl",
+      "compact_transcript": "/37/1b7d9ee0ef/0/transcript.jsonl",
+      "content_hash": "/37/1b7d9ee0ef/0/content_hash.txt",
+      "prompt": "/37/1b7d9ee0ef/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 130,
+    "cache_creation_tokens": 224868,
+    "cache_read_tokens": 8526383,
+    "output_tokens": 45044,
+    "api_call_count": 65
+  }
+}
