@@ -32,7 +32,7 @@ ROOT = Path(__file__).resolve().parents[2]
 def baseline_module(path: str, monkeypatch: pytest.MonkeyPatch):
     source = subprocess.run(
         ["git", "show", f"{BASELINE}:{path}"], cwd=ROOT, check=True,
-        capture_output=True, text=True,
+        capture_output=True, text=True, timeout=30,
     ).stdout
     name = "_qg7810_baseline_" + Path(path).stem
     module = types.ModuleType(name)
