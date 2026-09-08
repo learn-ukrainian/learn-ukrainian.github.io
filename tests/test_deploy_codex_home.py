@@ -105,7 +105,7 @@ def test_read_only_clean_install(source):
         "agents = {max_threads = 8}\n",
         '"model" = "old"\n',
         '"model_reasoning_effort" = "high"\n',
-        'model_reasoning_effort = 3\n',
+        "model_reasoning_effort = 3\n",
         'model_reasoning_effort = """high"""\n',
         'agents = "invalid"\n',
     ],
