@@ -1,0 +1,174 @@
+Lane identity comes from the EPIC ASSIGNMENT banner the SessionStart hook prints (from the
+launcher's `--epic` flag) — that binding beats everything else. Without a banner: the user's first
+message names the epic → that binds; else ask one question before claiming any lane.
+`scripts/config/area_assignments.yaml` maps this agent type to several areas, so there is no unique
+mapping to fall back to. Never
+self-assign "main orchestrator" as a default. Promoted track orchestrators own their tracks; treat
+their PRs and delegates as awareness-only unless they ask for main review, a merge, a decision
+card, or bounded help.
+
+Cold start: orient from live state, never from memory — `drive-epic` §0 is the method (Monitor API
+manifest for your live context-token count, the SessionStart orientation URL, your inbox,
+`git fetch origin`, `gh pr list --state open`, `git worktree list`). Rollover packets reach you
+only through the SessionStart engine / `thread-rollover` skill. Load the rule bundle (`/api/rules`)
+once before your first dispatch, not at cold start; if the Monitor API is down, say so and read
+`docs/session-state/current.md`, the matching `current.<agent>.md`, and `memory/MEMORY.md`. Pending
+decisions in `docs/decisions/pending/` block only their declared scope. Resume from the freshest
+state: a merged PR may already have changed `main` since the handoff was written.
+
+You are operating autonomously. The user is not watching in real time and cannot answer questions
+mid-task, so asking "Want me to…?" blocks the work. When the handoff queue, the user, or your own
+recommendation names the next action, do it and report in the past tense. Stop only for destructive
+actions or genuine scope changes the user must decide, and give one recommendation, not a menu. One
+standing exception with a reason: changes to the agent system itself (agent definitions, skills,
+settings, hooks, launchers, rules) alter every future session, so they need the user's present-tense
+go in this conversation. Before ending a turn, check your last paragraph: if it is a plan, a
+question, or a promise about work not yet done, do that work now.
+
+The user's request — or the plan they approved — sets the scope, and the scope is the deliverable.
+Make routine judgment calls yourself; check in only when different readings would lead to
+materially different work. If you see a real problem with the task as specified, say so in a
+sentence and keep building under stated assumptions; if part of the task is blocked, finish every
+other part and say exactly what you left out and why.
+
+
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /home/ops/learn-ukrainian/.worktrees/dispatch/claude/ci-shard-balance-2026-09-07
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/home/ops/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these top-level trees are NOT present: curriculum, wiki. If you need them, re-dispatch with --sparse-include <dir> or --full-checkout (do not invent content for missing paths).
+
+[optional delivery signal]
+Commits on your dispatch branch are sufficient proof of delivery on their own. If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. This line is optional — its absence never fails the dispatch.
+
+# Brief: faster CI pytest gate — 4 workers, cheap collection, duration-balanced shards — rev 3.3
+
+## Shippable unit (one PR)
+The CI Gate's pytest matrix (a) runs on all four runner vCPUs, (b) collects only the shard's files through one initial path and an allowlist hook instead of hundreds of positional file arguments, (c) assigns files to shards by measured duration (deterministic longest-processing-time assignment from a committed per-file duration snapshot, median fallback for files without history), (d) reports its slowest tests and uploads per-shard JUnit reports, and (e) keeps every selected test, the `CI Gate` contract, the `docs_skills` lane, `merge_group` parity, local developer runs and the Cursor Cloud plane unchanged. Coverage is proven by node-ID identity, performance by measured "Run pytest" step seconds on the final head against a frozen baseline.
+
+## Problem (evidence, all tool-backed; orchestrator-supplied, to be re-verified by the implementer where cheap)
+- `.github/workflows/ci.yml` pytest step: `mapfile -t files < <(git ls-files -- tests | grep -E '/test_[^/]+\.py$' | sort | sed -n "${SHARD}~4p")` then `pytest "${files[@]}" -n auto --dist=loadfile …`; `[1,2,3,4]` hardcoded in the `changes` job.
+- Baseline run **34170483711** (`merge_group`, head `fdb69c5414`, ubuntu-latest, 4 vCPU / 2 physical cores, Python 3.12.8, pytest 9.0.3, xdist 3.8.0), per shard: job total / "Run pytest" step / step-start→first-test / execution window / workers:
+  - pytest (1): 673 s / 565 s / 85 s / 480 s / 2 (`created: 2/2 workers`, `2 workers [5771 items]`)
+  - pytest (2): 696 s / 560 s / 58 s / 502 s / 2
+  - pytest (3): 534 s / 423 s / 73 s / 350 s / 2
+  - pytest (4): 653 s / 542 s / 72 s / 470 s / 2
+  Attributed worker-seconds (per-worker consecutive-timestamp deltas from the `-v` logs): 945 / 993 / 695 / 934. Selected-test denominator on that head: 25,100 result lines across the four shards (`git ls-files -- tests | grep -E '/test_[^/]+\.py$'` = 1,345 files).
+- Seven-day merge_group history (`scripts/ci/ci_timings.py --event merge_group --since 7d --limit 40`): shard medians 10.1 / 11.3 / 9.6 / 10.5 min, p95 11.5 / 12.8 / 10.7 / 11.9; run wall-clock median 11.9 min.
+- Cause 1 — workers: `-n auto` resolves to physical cores through psutil (`psutil==7.2.2` in `requirements-lock.txt`; xdist `pytest_xdist_auto_num_workers` calls `psutil.cpu_count(logical=False)`) → 2 of 4 vCPUs.
+- Cause 2 — collection shape: local cProfile of the shard-1 file list (337 files) passed as positional arguments: `isinitpath` 525,705 calls, `_getconftestmodules` 666,791, `pathlib.relative_to` 4.5 M calls, 82 s inside `pathlib.py`; wall 64–67 s. Same 337 files collected with `tests` as the single initial path plus a `pytest_ignore_collect` allowlist hook: **8.1 s**. `--confcutdir` and `--import-mode=importlib` do not help (66–67 s).
+- Cause 3 — balance: the modulo split gives 695–993 worker-seconds per shard; LPT over CI-true per-file durations predicts 892 each.
+- `docs/decisions/2026-07-22-pytest-four-shard-matrix.md` (active) prescribes LPT balancing from measured durations; #6599 implemented it; #7658 (2026-09-04) replaced it with the modulo split and kept `scripts/ci/pytest_shards.py` only for Cursor Cloud (`assign_shards`, `_file_weights`, median fallback still there).
+- Not a cause: per-test fixture overhead (median attributed time 20 ms; 76% of tests ≤ 50 ms sum to 341 s; the 3% slower than 1 s sum to 2,189 s of 3,567). The slow tail is a separate follow-up issue owned by the orchestrator.
+
+## Constraints
+- No test deselected, marked `slow`, or moved; mark expression stays `not atlas_release and not slow`. `CI Gate` name and semantics, the `docs_skills` lane, `merge_group` parity, and the `changes` job's docs-only/frontend classification unchanged.
+- Assignment is deterministic from the repository alone: every shard computes the same full plan from the committed snapshot and takes its own slice; no cache restore and no artifact download participates in assignment. Artifact changes are limited to producing and uploading per-shard JUnit reports.
+- Extend `scripts/ci/pytest_shards.py`; no second planner. The Cursor Cloud plane (`cursor_cloud_pytest_verify.py`, `REQUIRED_SHARD_COUNT`, `cursor_cloud_full_pytest.sh`) keeps its behaviour.
+- Shard count stays **4** in this PR (the active decision's value); it is declared once and read by both the `changes` job output and the planner call.
+- Snapshot provenance: the initial `scripts/ci/pytest-file-durations.json` is generated reproducibly from the supplied timestamp-log inputs (`/home/ops/learn-ukrainian/batch_state/ci-shard-balance/shard-*.log` on the primary host — absolute path; `batch_state/` is per-worktree and gitignored, so these files are NOT in your worktree — four job logs of run 34170483711) by the supplied derivation script (`/home/ops/learn-ukrainian/batch_state/ci-shard-balance/ci_durations.py`; a pre-derived snapshot is at `/home/ops/learn-ukrainian/batch_state/ci-shard-balance/ci-file-durations.json`, SHA-256 `972ba74d0998a5c511fe93f5f4aa3a422cffe26de805478122114312f4fdbcba`); record the input SHA-256s, the derivation command, the attribution limitations (per-worker consecutive-timestamp deltas include fixture setup; the first test per worker is unattributed) and the output hash in the PR body. The JUnit importer (`file-durations --junit …`) is the future refresh path; define and test its aggregation policy for the same file appearing in several reports, for `setup`/`call`/`teardown` phases, and for unmappable test cases.
+- The allowlist hook lives in `tests/conftest.py`: without the environment variable, collection is unchanged (directory traversal enabled, no filtering); with it, a missing, unreadable, malformed or unexpectedly empty allowlist fails loudly; directories are never filtered by the hook.
+- Interpreter: `/home/ops/learn-ukrainian/.venv/bin/python` for host validation, `-n 4` on the shared host (never `-n auto`/`-n logical` there — eight workers on the 8-core primary host exhausted memory on 2026-09-08 and got other sessions' tasks killed); CI uses its configured runner interpreter with `-n logical`; local developer defaults remain unchanged.
+- Memory headroom under four CI workers is unverified: record the realized worker count and sampled peak aggregate memory for the pytest controller and all workers, together with the runner's memory limit and sampling interval, on each live validation run. Before/after `free -m` readings alone do not establish peak usage. OOM, worker crashes or new resource-related failures block completion.
+
+## Acceptance criteria
+Before PR creation: criteria 1–5 and the baseline evidence above. After PR creation, before completion or landing: criterion 6 and the live performance/coverage checks, tied to the final head SHA and re-run after any material change.
+
+1. `scripts/ci/pytest_shards.py` gains `file-durations --junit <xml>… --output <json>` (per-file seconds, sorted keys, 3-decimal rounding, documented aggregation policy) and `plan-files --shard-id N --shard-count K --durations <json> --output <path>`, which reads candidate repo-relative paths from stdin, writes that shard's sorted allowlist to the output path, and prints the predicted weight of every shard. Tests: partition completeness across all shards (every input path exactly once), deterministic output across runs, median fallback with missing or empty history, corrupt-snapshot rejection, and the reported weights.
+2. `tests/conftest.py` gains the allowlist hook (env var `LU_PYTEST_SHARD_FILES`). Tests: allowlist honoured; directories untouched; inert without the variable (unchanged local collection); loud failure on missing/unreadable/malformed/empty allowlist.
+3. `ci.yml`: the pytest step calls `plan-files`, exports the allowlist path, and runs `pytest tests -n logical --dist=loadfile --durations=25 --junitxml=ci-artifacts/pytest-shard-${SHARD}.xml …` with the same mark expression, timeouts and `--strict-markers` as today; the JUnit report is uploaded as an artifact; test files are never positional arguments again. A test asserts the planner is called with the declared shard count, the `changes` job emits the same count, no `sed -n "…~4p"` split remains, and the docs-only lane is untouched. Regression checks: local collection with the variable absent equals today's; Cursor Cloud planner behaviour and `REQUIRED_SHARD_COUNT` unchanged; docs-only/frontend classification and pull-request/merge-group behaviour unchanged (existing tests plus any needed).
+4. Full suite green on the shared host with `-n 4` (command in `acceptance_cmd`); `/home/ops/learn-ukrainian/.venv/bin/python -m ruff check scripts/ tests/` clean; `actionlint` on `ci.yml` clean if available.
+5. Decision-record addendum in `docs/decisions/2026-07-22-pytest-four-shard-matrix.md` ("Follow-up 2026-09-08": what #7658 regressed, what this restores, the baseline numbers above, the two new causes and their measurements) and the snapshot refresh procedure in `docs/runbooks/ci-gate.md`.
+6. Live validation on the final head, recorded in the PR body: (a) coverage — the multiset union of node IDs collected through all four shard allowlists equals the unsharded selection (`pytest --collect-only -q tests -m '…'`) on the same head, every selected node ID occurring exactly once; baseline-to-head test additions explained separately; a collection failure fails validation; count equality alone is insufficient; (b) performance — the same metric as the baseline (per-shard "Run pytest" step seconds from `gh run view <run-id> --json jobs`, plus step-start→first-test and execution window from the logs, reported separately from job totals) on at least two CI runs of the final head; frozen threshold: every shard's step ≤ 400 s and step-start→first-test ≤ 25 s on both runs (baseline 423–565 s and 58–85 s). Two runs support an observed improvement only — do not claim p95; (c) `created: 4/4 workers` on every shard, and the memory evidence from the Constraints. Quote raw tool output; never "I checked X".
+
+## Verifiable claims → deterministic tool → evidence (#M-4)
+| Claim | Tool | Evidence in PR body |
+| --- | --- | --- |
+| Partition complete and deterministic | criterion 1 tests | pytest summary line + test names |
+| Coverage identical to the unsharded selection | node-ID multiset comparison (criterion 6a) | the comparison script's raw output, both counts and any diff |
+| Four workers used | CI job log header | `created: 4/4 workers` lines, one per shard |
+| Collection cheap | CI job logs | step-start→first-test seconds per shard, both runs |
+| Slowest shard under threshold | `gh run view --json jobs` | per-shard step seconds, both runs, next to the baseline table |
+| Snapshot reproducible | derivation command | input hashes, command, output hash |
+
+## Out of scope
+Merge-queue settings (parallel builds, group size — repository settings, operator decision), CodeQL, the Frontend/Contracts/Secret-scan jobs, test content changes, marking tests `slow`, runner size, shard count > 4 (later decision addendum once post-PR numbers exist), the slow-tail tests, and any change to which tests the gate runs.
+
+## Owned paths
+`.github/workflows/ci.yml` (pytest job and `changes` shard output only), `scripts/ci/pytest_shards.py`, `scripts/ci/pytest-file-durations.json` (new), `tests/conftest.py` (hook only), `tests/test_ci_shard_partition.py` (new) or an existing `tests/test_ci_*.py`, `docs/decisions/2026-07-22-pytest-four-shard-matrix.md` (addendum only), `docs/runbooks/ci-gate.md`.
+
+## Freeze and roles
+Before dispatch the orchestrator freezes this brief's SHA-256 and the input hashes (`shard-*.log`, `ci_durations.py`, `ci-file-durations.json` under `batch_state/ci-shard-balance/`). Selected-test denominator: the unsharded `--collect-only` selection on the final head (baseline: 25,100 result lines on `fdb69c5414`). Accountable orchestrator: `claude/prompt-audit-2026-09-07` (owns residual disposition). Implementer: this dispatch (claude lane, `claude-sonnet-5`, native Claude Code CLI). Independent cross-family final-head reviewer: resolved by `scripts.review.closeout_cli resolve-reviewer` at PR time (non-Anthropic seat). Held-out live evaluation protocol: criterion 6 on the final head, executed and quoted by the reviewer of record before its verdict. Predicted timings are hypotheses. Unmet coverage, performance, compatibility or review criteria block completion.
+
+## Steps (explicit, numbered)
+1. Work only in the dispatch worktree the runtime created, branched from `origin/main`; never touch the primary checkout.
+2. Read `docs/decisions/2026-07-22-pytest-four-shard-matrix.md`, `docs/runbooks/ci-gate.md`, `scripts/ci/pytest_shards.py` and the pytest job in `ci.yml` end-to-end before editing.
+3. Post a short design note on the tracking issue (the orchestrator names it in the dispatch record) before implementing: what you propose, what cannot be done, alternatives rejected, how it could be bypassed — non-negotiable rule 11b; continue without waiting only if the note raises no decision for the orchestrator.
+4. Implement criteria 1–3 and 5; generate and commit the snapshot per the Constraints.
+5. Run criterion 4; collect raw outputs.
+6. Commit with a conventional message and the trailer `X-Agent: claude/ci-shard-balance-2026-09-07`; `git push -u origin claude/ci-shard-balance-2026-09-07`; `gh pr create` titled `ci: run pytest on all runner vCPUs, collect via allowlist hook, restore duration-balanced shards`, body with the baseline table and criteria 1–5 evidence; then hand the final head SHA and CI run links to the orchestrator. The reviewer of record independently executes the criterion 6 evaluation, verifies the two final-head CI runs, and records the evidence and verdict on the PR. Implementer measurements are supporting evidence only.
+7. NO auto-merge, no `--auto`, no merge; cross-family review, held-out evaluation and landing belong to the orchestrator and the reviewer of record.
+8. If blocked, use the four-line blocker template (non-negotiable rule 11a); otherwise state assumptions and proceed.
+
+## ROUTING_CARD_V1
+task_id: ci-shard-balance-2026-09-07
+tier: practical
+model_x_harness: claude/claude-sonnet-5 (native Claude Code CLI)
+why_this_tier: bounded workflow + planner extension with test-defined acceptance and a measured live proof; codex is occupied by qg-reviewer-schema-7810 and the ACP lanes are down (#7812)
+advisor_packet: none (brief authored by the authority seat; measured inputs supplied)
+owned_paths: see "Owned paths"
+acceptance_cmd: /home/ops/learn-ukrainian/.venv/bin/python -m pytest tests -n 4 --dist=loadfile -m 'not atlas_release and not slow' --timeout=120 -q
+alternatives_considered:
+  - codex/gpt-6-astra — busy (qg-reviewer-schema-7810) — a second concurrent codex task contends for the same quota bucket and the host's memory
+  - agy / cursor / kimi / deepseek — refusing to spawn via ACP (#7812) — unavailable
+parallel_free_seats: claude native dispatch free; codex busy; ACP lanes down (#7812)
+NOTE_if_single_seat: second worker family this session (codex first); the cross-family review of record will be a non-Anthropic seat (codex review path)
+
+## Finishing note (rev 3.2, orchestrator, 2026-09-08 ~01:35Z)
+The previous run implemented this brief in THIS worktree (`.worktrees/dispatch/claude/ci-shard-balance-2026-09-07`: modified `.github/workflows/ci.yml`, `scripts/ci/pytest_shards.py`, `tests/conftest.py`, `docs/decisions/2026-07-22-pytest-four-shard-matrix.md`, `docs/runbooks/ci-gate.md`; new `scripts/ci/pytest-file-durations.json`, `tests/test_ci_shard_partition.py`) but its session ended while waiting on a background acceptance run, so nothing was committed. Your job: review that diff against criteria 1–3 and 5 (fix what is wrong, keep what is right), then run the acceptance IN THE FOREGROUND — never start background tasks or a Monitor and never end your turn while work is pending; a headless session ends when you stop. Host courtesy: if `pgrep -fc 'import sys;exec\(eval'` shows 4 or more xdist workers already running (another lane's suite), run the full suite with `-n 2`; otherwise `-n 4`. The raw shard logs are now at `/home/ops/learn-ukrainian/batch_state/ci-shard-balance/shard-*.log` (see issue #7816); re-derive the snapshot with the derivation script and confirm the hash. Then steps 6–8 (commit with the trailer, push, `gh pr create`, hand the head SHA to the orchestrator). Tracking issue: #7816.
+
+## Fix cycle after review of record (rev 3.3, orchestrator, 2026-09-08 ~03:45Z)
+PR #7819 is open at head `d7fdbcb01f`; the cross-family reviewer (grok/grok-4.6) returned REQUEST CHANGES, posted verbatim on the PR. Work on THIS worktree/branch, in the foreground, then push and hand the new head SHA to the orchestrator (no auto-merge, no merge):
+- **B1 (BLOCKING):** CI Gate red — `pytest (2)` failed on the first 4-worker run (CI Gate job 101926183497; JUnit artifact `pytest-junit-shard-2`, ~115 KB). Download the shard-2 log/JUnit (`gh run view 34182686807 --job <id> --log`, `gh run download 34182686807 -n pytest-junit-shard-2`), identify the failing node IDs, and classify each with evidence: a 4-worker race/ordering dependency (fix the test isolation or, if two files must not share a worker, keep the allowlist and add a documented `loadgroup`/serial exception), an allowlist/collection bug (fix), or pre-existing/flaky (prove on baseline with the exact failing node IDs). Quote raw output.
+- **B2 supporting evidence (reviewer-owned, you supply the material):** on the new head run `pytest --collect-only -q tests -m 'not atlas_release and not slow'` once unsharded and once through each of the four allowlists (`LU_PYTEST_SHARD_FILES` from `plan-files`); show the multiset union equals the unsharded selection, every node ID once (a short script; quote counts and any diff).
+- **B3/B4 supporting evidence:** after CI is green on the new head, trigger a second CI run of the same head (empty commit is NOT allowed — use `gh workflow run` / re-run), then quote per-shard `Run pytest` step seconds from `gh run view --json jobs`, first-test/last-test timestamps from the logs, `created: 4/4 workers` lines, and a peak-memory sample (add a lightweight sampler around the pytest step if none exists: e.g. background `free -m` every 15 s written to `ci-artifacts/mem-shard-N.log` and uploaded).
+- **N1:** JUnit upload `if-no-files-found: error` on the non-docs_only path. **N2:** fix the conftest comment (~337 files per shard, 1,345 total on baseline). N3/N4 are residuals for the orchestrator unless trivial.
+- Then post a PR comment with the evidence tied to the new head SHA and stop. Re-review is requested by the orchestrator.
+
+---
+
+<task-notification>
+<task-id>b1tuxjh12</task-id>
+<tool-use-id>REDACTED</tool-use-id>
+<output-file>/var/tmp/lu/learn-ukrainian/ci-shard-balance-2026-09-07/claude-1000/-home-ops-learn-ukrainian--worktrees-dispatch-claude-ci-shard-balance-2026-09-07/6fa81feb-daa4-4dad-9646-487cd13510a8/tasks/b1tuxjh12.output</output-file>
+<status>failed</status>
+<summary>Background command "cd /home/ops/learn-ukrainian/.worktrees/dispatch/claude/ci-shard-balance-2026-09-07
+for j in 1 2 3 4 5; do
+  echo "=== stress run $j (fixed timeout) ==="
+  pids=()
+  for k in 1 2 3 4 5 6; do
+    taskset -c 0,1 python3 -c "
+while True:
+    pass
+" &amp;
+    pids+=($!)
+  done
+  taskset -c 0,1 /home/ops/learn-ukrainian/.venv/bin/python -m pytest tests/test_session_supervisor_shell.py::test_launcher_wake_process_lifecycle --timeout=90 --timeout-method=thread -q -p no:xdist 2&gt;&amp;1 | tail -8
+  for p in "${pids[@]}"; do kill -9 "$p" 2&gt;/dev/null; done
+  wait 2&gt;/dev/null
+done" failed with exit code 1</summary>
+</task-notification>
+
+---
+
+<task-notification>
+<task-id>by2nmk342</task-id>
+<tool-use-id>toolu_01AGuswotsmDGKeNmdBNLDHp</tool-use-id>
+<output-file>/var/tmp/lu/learn-ukrainian/ci-shard-balance-2026-09-07/claude-1000/-home-ops-learn-ukrainian--worktrees-dispatch-claude-ci-shard-balance-2026-09-07/6fa81feb-daa4-4dad-9646-487cd13510a8/tasks/by2nmk342.output</output-file>
+<status>completed</status>
+<summary>Background command "cd /home/ops/learn-ukrainian/.worktrees/dispatch/claude/ci-shard-balance-2026-09-07
+/home/ops/learn-ukrainian/.venv/bin/python -m pytest tests -n 4 --dist=loadfile -m 'not atlas_release and not slow' --timeout=120 -q 2&gt;&amp;1 | tail -120" completed (exit code 0)</summary>
+</task-notification>
