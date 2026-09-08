@@ -371,23 +371,25 @@ def _cmd_resolve_reviewer(args: argparse.Namespace) -> int:
         author_family=args.author_family,
     )
     resolution = resolve_reviewer(inputs)
-    print(
-        json.dumps(
-            {
-                "selected": asdict(resolution.selected) if resolution.selected else None,
-                "quorum": [asdict(q) for q in resolution.quorum],
-                "quorum_rule": resolution.quorum_rule,
-                "advisory": [asdict(a) for a in resolution.advisory],
-                "trace": [asdict(t) for t in resolution.trace],
-                "substitution_note": resolution.substitution_note,
-                "policy_version": resolution.policy_version,
-                "catalog_reviewed_on": resolution.catalog_reviewed_on,
-                "resolved_risk": resolution.resolved_risk,
-                "fail_closed_reason": resolution.fail_closed_reason,
-            },
-            indent=2,
-        )
-    )
+    payload = {
+        "selected": asdict(resolution.selected) if resolution.selected else None,
+        "quorum": [asdict(q) for q in resolution.quorum],
+        "quorum_rule": resolution.quorum_rule,
+        "advisory": [asdict(a) for a in resolution.advisory],
+        "trace": [asdict(t) for t in resolution.trace],
+        "substitution_note": resolution.substitution_note,
+        "policy_version": resolution.policy_version,
+        "catalog_reviewed_on": resolution.catalog_reviewed_on,
+        "resolved_risk": resolution.resolved_risk,
+        "fail_closed_reason": resolution.fail_closed_reason,
+    }
+    # Persist the durable receipt: drivers downstream expect the resolution on
+    # disk, not just on stdout. Merge with any prior state (a state file does
+    # not need to exist yet — resolve-reviewer is a valid first step).
+    state = _load_state(args.state_file)
+    state["resolved_reviewer"] = payload
+    _save_state(args.state_file, state)
+    print(json.dumps(payload, indent=2))
     if resolution.fail_closed_reason:
         return 1
     # A dual-family quorum plan (unattested-harness author) is a successful
@@ -507,8 +509,19 @@ def _cmd_behavior_proof(args: argparse.Namespace) -> int:
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--state-file", required=True, type=Path)
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        epilog="NOTE: --state-file is a global argument and must precede the subcommand.",
+    )
+    parser.add_argument(
+        "--state-file",
+        required=True,
+        type=Path,
+        help=(
+            "Path to the closeout state JSON file (global argument — must precede the "
+            "subcommand). Created on first write; subcommands merge into any existing state."
+        ),
+    )
     sub = parser.add_subparsers(dest="command", required=True)
 
     p_target = sub.add_parser("target", help="Resolve the review target (local/commit/branch/pr)")

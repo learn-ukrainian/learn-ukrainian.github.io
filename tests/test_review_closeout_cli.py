@@ -137,6 +137,56 @@ def test_full_flow_target_freeze_expansion_cycle_reviewer_findings(tmp_path):
     assert len(state["findings"]) == 3  # raised, adjudicated, applied
 
 
+def test_resolve_reviewer_persists_resolution_to_state_file(tmp_path):
+    """resolve-reviewer must write a durable receipt to --state-file, not
+    just print JSON to stdout — drivers read the resolution back from disk."""
+    state_file = tmp_path / "state.json"
+    assert not state_file.exists()
+
+    proc = _run_cli(state_file, "resolve-reviewer", "--author-model", "claude")
+    assert proc.returncode == 0, proc.stderr
+
+    assert state_file.exists()
+    state = json.loads(state_file.read_text(encoding="utf-8"))
+    resolution = state["resolved_reviewer"]
+    selected = resolution["selected"]
+    assert selected["concrete_model"] == "gpt-6-astra"
+    assert selected["family"] == "openai"
+    assert selected["route"] == "codex"
+    assert resolution["policy_version"] == "deterministic-formal-routing.v2"
+    # On-disk receipt matches the stdout payload exactly.
+    assert resolution == json.loads(proc.stdout)
+
+
+def test_resolve_reviewer_merges_into_existing_state_file(tmp_path):
+    repo = _init_repo(tmp_path)
+    (repo / "feature.py").write_text("value = 1\n", encoding="utf-8")
+    state_file = tmp_path / "state.json"
+
+    assert _run_cli(state_file, "target", "--mode", "local", "--repo-root", str(repo)).returncode == 0
+    assert _run_cli(state_file, *_freeze_kwargs()).returncode == 0
+
+    proc = _run_cli(state_file, "resolve-reviewer", "--author-model", "claude")
+    assert proc.returncode == 0, proc.stderr
+
+    state = json.loads(state_file.read_text(encoding="utf-8"))
+    # Prior lifecycle state survives the merge.
+    assert state["baseline"]["issue_ref"] == "#5283"
+    assert state["target"]["changed_paths"] == ["feature.py"]
+    assert state["resolved_reviewer"]["selected"]["concrete_model"] == "gpt-6-astra"
+
+
+def test_resolve_reviewer_persists_fail_closed_resolution(tmp_path):
+    state_file = tmp_path / "state.json"
+    proc = _run_cli(state_file, "resolve-reviewer", "--author-model", "unknown-seat")
+    assert proc.returncode != 0
+
+    state = json.loads(state_file.read_text(encoding="utf-8"))
+    resolution = state["resolved_reviewer"]
+    assert resolution["selected"] is None
+    assert resolution["fail_closed_reason"] is not None
+
+
 def test_resolve_reviewer_cli_rejects_invalid_risk_and_fail_closed_identity(tmp_path):
     state_file = tmp_path / "state.json"
     invalid_risk = _run_cli(
