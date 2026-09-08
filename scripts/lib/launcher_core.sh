@@ -709,6 +709,7 @@ launcher_forward_driver_signal() {
   local signal="$1"
   local exit_code="$2"
   trap - "$signal"
+  exec 213>&-
   if [ -n "${LC_DRIVER_CHILD_PID:-}" ] && kill -0 "$LC_DRIVER_CHILD_PID" 2>/dev/null; then
     kill -s "$signal" "$LC_DRIVER_CHILD_PID" 2>/dev/null || true
     wait "$LC_DRIVER_CHILD_PID" 2>/dev/null || true
@@ -742,7 +743,7 @@ launcher_exec_command() {
   LC_DRIVER_RENEW_PID=""
   LC_DRIVER_PENDING_SIGNAL=""
   LC_DRIVER_PENDING_EXIT=0
-  trap 'session_supervisor_stop_inbox_watch; launcher_close_driver_lease || true' EXIT
+  trap 'exec 213>&-; session_supervisor_stop_inbox_watch; launcher_close_driver_lease || true' EXIT
   # Bash may deliver a trap between an asynchronous spawn and its $! capture.
   # Defer shutdown until every child has an owned PID, or cleanup can orphan
   # the watcher/renewal process and leave inherited output pipes open.
@@ -772,13 +773,28 @@ launcher_exec_command() {
     launcher_forward_driver_signal "$LC_DRIVER_PENDING_SIGNAL" "$LC_DRIVER_PENDING_EXIT"
   fi
   if [ "$provider_rc" -eq 0 ]; then
-    # A USR1 that lands between the flag check and `wait` would otherwise be a
-    # lost wakeup: the trap runs between commands, and the provider never exits
-    # on its own. Wait in bounded, signal-interruptible slices and re-check.
+    # A trapped USR1 must not interrupt a child wait: Bash can reap the exiting
+    # watcher inside it and lose its status, leaving the later watcher wait
+    # blocked in waitpid(-1) forever (#7824). Read bounded slices on an anonymous
+    # FIFO instead: the trap runs, read -t finishes its timeout, then we re-check.
+    # These libraries do not require Bash 4; reserve fd 213 instead of {var} FDs.
+    local wait_fifo wait_fd=""
+    if wait_fifo="$(mktemp -u)" && mkfifo "$wait_fifo"; then
+      if { exec 213<>"$wait_fifo"; }; then
+        wait_fd=213
+      fi
+      rm -f "$wait_fifo"
+    fi
     while [ "${LC_SUPERVISORY_EVENT:-0}" != 1 ] && kill -0 "$LC_DRIVER_CHILD_PID" 2>/dev/null; do
       launcher_driver_wait_hook
-      sleep 0.1 & wait "$!" 2>/dev/null || true
+      if [ -n "$wait_fd" ]; then
+        read -r -t 0.1 -u "$wait_fd" _ 2>/dev/null || true
+      else
+        # FIFO setup failed: retain the old slice (and its race) rather than spin.
+        sleep 0.1 & wait "$!" 2>/dev/null || true
+      fi
     done
+    exec 213>&-
     if [ "${LC_SUPERVISORY_EVENT:-0}" != 1 ]; then
       wait "$LC_DRIVER_CHILD_PID" || provider_rc=$?
     fi
