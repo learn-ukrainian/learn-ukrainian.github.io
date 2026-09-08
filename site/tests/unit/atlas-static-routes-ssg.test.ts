@@ -37,11 +37,11 @@ describe("ATLAS_STATIC_ROUTES publisher SSG contract (#4385)", () => {
     resetCaches();
   });
 
-  test("npm run build / build:full enable ATLAS_STATIC_ROUTES; build:shell does not", () => {
-    expect(packageJson.scripts.build).toContain("ATLAS_STATIC_ROUTES=1");
+  test("npm run build / build:shell do not enable ATLAS_STATIC_ROUTES; build:full enables it", () => {
+    expect(packageJson.scripts.build).not.toContain("ATLAS_STATIC_ROUTES");
+    expect(packageJson.scripts["build:shell"]).not.toContain("ATLAS_STATIC_ROUTES");
     expect(packageJson.scripts["build:full"]).toContain("ATLAS_STATIC_ROUTES=1");
     expect(packageJson.scripts.build).toContain("hydrate");
-    expect(packageJson.scripts["build:shell"]).not.toContain("ATLAS_STATIC_ROUTES");
     expect(atlasStaticRoutesEnabled({})).toBe(false);
     expect(atlasStaticRoutesEnabled({ ATLAS_STATIC_ROUTES: "1" })).toBe(true);
   });

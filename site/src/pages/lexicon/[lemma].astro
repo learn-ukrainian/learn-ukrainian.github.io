@@ -23,9 +23,10 @@ import type { EntryRecord } from "../../lib/lexicon/atlas-data-source";
 import type { WordAtlasPageState } from "../../lib/lexicon/word-atlas-page-state";
 
 export async function getStaticPaths() {
-  // Publisher builds (`npm run build`) set ATLAS_STATIC_ROUTES=1 after hydrate
-  // so Astro prerenders from data/atlas.db. Shell/dev builds leave it unset and
-  // serve the client shell from committed public projections.
+  // Production builds (`npm run build`) leave ATLAS_STATIC_ROUTES unset to avoid
+  // prerendering 20k+ HTML pages (which exceeds the Pages byte cap) and serve
+  // word detail dynamically via WordAtlasClientShell on 404.
+  // Full SSG remains available via ATLAS_STATIC_ROUTES=1 (`npm run build:full`).
   return buildAtlasStaticPaths();
 }
 

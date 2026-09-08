@@ -65,11 +65,11 @@ async function main() {
   ok(`vendored fixture atlas → ${DIST_ATLAS}`);
 
   const prerendered = pickPrerenderedSlug();
-  if (!prerendered) {
-    fail("no prerendered lexicon article found under dist/lexicon/");
-    return;
+  if (prerendered) {
+    ok(`prerendered slug: ${prerendered}`);
+  } else {
+    ok("client-shell mode active: no prerendered lexicon articles under dist/lexicon/");
   }
-  ok(`prerendered slug: ${prerendered}`);
 
   if (existsSync(resolve(DIST, "lexicon", TAIL_SLUG, "index.html"))) {
     fail(`tail slug ${TAIL_SLUG} is unexpectedly prerendered`);
@@ -136,24 +136,26 @@ async function main() {
     await page.waitForSelector("[data-word-atlas]", { timeout: 20_000 });
     ok("tail slug without trailing slash still renders article");
 
-    const preStatus = await page.request.get(`${baseUrl}/lexicon/${prerendered}/`);
-    if (preStatus.status() !== 200) {
-      fail(`prerendered slug expected 200, got ${preStatus.status()}`);
-    } else {
-      ok(`HTTP 200 for prerendered /lexicon/${prerendered}/`);
-    }
-    await page.goto(`${baseUrl}/lexicon/${prerendered}/`, { waitUntil: "networkidle" });
-    await page.waitForSelector("[data-word-atlas]", { timeout: 10_000 });
-    const clientArticle = await page.locator("[data-atlas-client-article]").count();
-    const atlasShellPending = await page.evaluate(
-      () => document.documentElement.dataset.atlasShell || "",
-    );
-    if (clientArticle > 0 || atlasShellPending === "active" || atlasShellPending === "pending") {
-      fail(
-        `prerendered page should not boot atlas shell (clientArticle=${clientArticle}, dataset=${atlasShellPending})`,
+    if (prerendered) {
+      const preStatus = await page.request.get(`${baseUrl}/lexicon/${prerendered}/`);
+      if (preStatus.status() !== 200) {
+        fail(`prerendered slug expected 200, got ${preStatus.status()}`);
+      } else {
+        ok(`HTTP 200 for prerendered /lexicon/${prerendered}/`);
+      }
+      await page.goto(`${baseUrl}/lexicon/${prerendered}/`, { waitUntil: "networkidle" });
+      await page.waitForSelector("[data-word-atlas]", { timeout: 10_000 });
+      const clientArticle = await page.locator("[data-atlas-client-article]").count();
+      const atlasShellPending = await page.evaluate(
+        () => document.documentElement.dataset.atlasShell || "",
       );
-    } else {
-      ok("prerendered page has no atlas shell boot");
+      if (clientArticle > 0 || atlasShellPending === "active" || atlasShellPending === "pending") {
+        fail(
+          `prerendered page should not boot atlas shell (clientArticle=${clientArticle}, dataset=${atlasShellPending})`,
+        );
+      } else {
+        ok("prerendered page has no atlas shell boot");
+      }
     }
 
     await page.goto(`${baseUrl}/this-route-does-not-exist-xyz/`, { waitUntil: "networkidle" });
