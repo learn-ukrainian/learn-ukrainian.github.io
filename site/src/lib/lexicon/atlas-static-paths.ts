@@ -1,10 +1,10 @@
 /**
  * Publisher SSG path enumeration for `/lexicon/[lemma]` (GH #4385).
  *
- * Local `dev` / `build:shell` leave `ATLAS_STATIC_ROUTES` unset so the client
- * shell resolves detail from committed public projections without needing
- * `data/atlas.db`. Production `npm run build` sets `ATLAS_STATIC_ROUTES=1`,
- * hydrates the DB, and prerenders every public route from SqliteAtlasDataSource.
+ * Production `npm run build` leaves `ATLAS_STATIC_ROUTES` unset so the site
+ * builds in client-shell mode, avoiding thousands of prerendered HTML pages and
+ * serving word detail dynamically via WordAtlasClientShell on 404.
+ * Full diagnostic SSG remains available via `npm run build:full` (`ATLAS_STATIC_ROUTES=1`).
  */
 
 import { SqliteAtlasDataSource } from "./sqlite-atlas-data-source.ts";

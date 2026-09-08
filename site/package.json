@@ -14,7 +14,7 @@
     "verify:artifacts": "node ./scripts/verify-consumed-artifacts.mjs",
     "dev": "npm run verify:artifacts && astro dev",
     "start": "npm run dev",
-    "build": "npm run hydrate && ATLAS_STATIC_ROUTES=1 astro build",
+    "build": "npm run hydrate && astro build",
     "build:shell": "npm run verify:artifacts && astro build",
     "build:full": "npm run hydrate && ATLAS_STATIC_ROUTES=1 astro build",
     "preview": "astro preview",
