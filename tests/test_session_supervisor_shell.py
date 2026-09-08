@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import contextlib
 import os
+import signal
 import subprocess
 from pathlib import Path
 
@@ -344,7 +346,7 @@ exit 0
 
 
 def _run_launcher_wake_scenario(
-    tmp_path: Path, scenario: str, *, widen_wait_window: bool = False, timeout: int = 15,
+    tmp_path: Path, scenario: str, *, widen_wait_window: bool = False, timeout: int = 45,
 ) -> tuple[subprocess.CompletedProcess[str], list[str], float]:
     import shlex
     import sys
@@ -395,6 +397,7 @@ while True: time.sleep(0.01)
 printf 'successor\\n' >> {shlex.quote(str(log))}
 ''')
     script = f'''
+set -euo pipefail
 source {shlex.quote(str(lib / 'launcher_core.sh'))}
 source {shlex.quote(str(lib / 'session_supervisor.sh'))}
 LC_ROOT={shlex.quote(str(root))}
@@ -404,7 +407,7 @@ export SESSION_STREAM_ID=epic:9999 SESSION_STREAM_LEASE_ID=lease-test
 launcher_driver_renew_loop() {{ :; }}
 launcher_cursor_observer_renew_loop() {{ :; }}
 if [ '{widen_wait_window}' = True ]; then
-  launcher_driver_wait_hook() {{ touch {shlex.quote(str(wait_window))}; sleep 0.3; }}
+  launcher_driver_wait_hook() {{ touch {shlex.quote(str(wait_window))}; sleep 0.3 || true; }}
 fi
 launcher_close_driver_lease() {{
   if kill -0 "$(cat {shlex.quote(str(provider_pid))})" 2>/dev/null; then return 45; fi
@@ -415,7 +418,26 @@ launcher_close_driver_lease() {{
 launcher_exec_command {shlex.quote(sys.executable)} {shlex.quote(str(provider))}
 '''
     started = time.monotonic()
-    result = subprocess.run(["bash", "-c", script], capture_output=True, text=True, timeout=timeout)
+    # A provider or watcher can retain the pipes after bash exits. Kill the
+    # entire process group on timeout so communicate can reach EOF, and surface
+    # the first failure without retrying the scenario.
+    with subprocess.Popen(
+        ["bash", "-c", script],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        start_new_session=True,
+    ) as process:
+        try:
+            stdout, stderr = process.communicate(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            with contextlib.suppress(ProcessLookupError):
+                os.killpg(process.pid, signal.SIGKILL)
+            stdout, stderr = process.communicate()
+            raise subprocess.TimeoutExpired(
+                process.args, timeout, output=stdout, stderr=stderr
+            ) from None
+    result = subprocess.CompletedProcess(process.args, process.returncode, stdout, stderr)
     return result, log.read_text().splitlines(), time.monotonic() - started
 
 
@@ -432,7 +454,7 @@ def test_launcher_wake_process_lifecycle(tmp_path: Path) -> None:
 
 def test_launcher_wake_survives_signal_between_check_and_wait(tmp_path: Path) -> None:
     """Deliver USR1 inside the widened check-to-wait window, without retries."""
-    result, events, elapsed = _run_launcher_wake_scenario(tmp_path, "wake", widen_wait_window=True, timeout=20)
+    result, events, elapsed = _run_launcher_wake_scenario(tmp_path, "wake", widen_wait_window=True)
     assert result.returncode == 0, result.stderr
     assert events == ["stopped", "close", "successor"]
     assert elapsed < 5, f"Supervisory wake took {elapsed:.3f}s"
