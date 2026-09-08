@@ -1056,11 +1056,31 @@ def test_next_hung_refresh_frees_single_flight_slot(monkeypatch):
     # Block on an explicit event instead of a long sleep: the abandoned
     # worker never runs to completion silently, and teardown always frees it.
     release_hung = threading.Event()
+    hung_started = threading.Event()
+    hung_exited = threading.Event()
 
     def hanging_build(**_kwargs):
-        release_hung.wait(30.0)
-        return build_projection(_next_sections(), repository_id=REPO)
+        hung_started.set()
+        try:
+            release_hung.wait(30.0)
+            return build_projection(_next_sections(), repository_id=REPO)
+        finally:
+            hung_exited.set()
 
+    # Capture every kick's single-flight handle at kick time. The slot is
+    # popped as soon as the worker future settles, so a healthy build that
+    # completes before its /next response returns is already gone from
+    # work_in_flight — reading the map afterwards is a fresh scheduling race
+    # of the very class this test removes (#7829).
+    kicked = []
+    real_kick = work_router._get_or_create_build_task
+
+    def recording_kick(kick_key, filters, ctx=None):
+        handle = real_kick(kick_key, filters, ctx)
+        kicked.append(handle)
+        return handle
+
+    monkeypatch.setattr(work_router, "_get_or_create_build_task", recording_kick)
     monkeypatch.setattr(work_router, "build_public_projection", hanging_build)
     try:
         first = client.get("/api/work/v1/next?stream=infra-harness")
@@ -1070,6 +1090,8 @@ def test_next_hung_refresh_frees_single_flight_slot(monkeypatch):
         # The hung build is abandoned at the timeout and the slot frees.
         work_router.wait_for_in_flight_build(key)
         assert key not in app.state.ctx.stores.work_in_flight, "hung build wedged the single-flight slot"
+        assert len(kicked) == 1, "stale /next did not kick exactly one refresh build"
+        kicked.clear()
 
         # Only the hung build is bounded tightly. The bound is read when the
         # build is kicked, so restoring the production value here leaves the
@@ -1087,18 +1109,22 @@ def test_next_hung_refresh_frees_single_flight_slot(monkeypatch):
         assert retry.status_code == 503, retry.text
         assert retry.json()["error"] == "stale"
 
-        # Serve the retry from the slot future's result, not wall-clock: a
-        # failed retry build raises here instead of surfacing as a later 503.
-        with work_router._IN_FLIGHT_LOCK:
-            handle = app.state.ctx.stores.work_in_flight.get(key)
-        assert handle is not None, "retry did not kick a refresh build"
-        handle.result(timeout=10.0)
+        # Serve the retry from the handle captured at kick time, never from a
+        # post-hoc work_in_flight lookup: a healthy build may settle and pop
+        # its slot before the 503 response returns, so the map can legitimately
+        # be empty here. A failed retry build raises from result() instead of
+        # surfacing as a later 503.
+        assert len(kicked) == 1, "retry did not kick exactly one refresh build"
+        kicked[0].result(timeout=10.0)
 
         second = client.get("/api/work/v1/next?stream=infra-harness")
         assert second.status_code == 200, "slot stayed wedged after the hung build"
         assert second.json()["cache_age_s"] < work_router.NEXT_MAX_STALE_S
     finally:
         release_hung.set()
+        # Do not let the abandoned hung thread run into the next test.
+        if hung_started.is_set():
+            assert hung_exited.wait(10.0), "abandoned hung build never exited"
 
 
 @pytest.mark.parametrize("hung_first_build", [False, True])
