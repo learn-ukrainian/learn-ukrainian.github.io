@@ -83,6 +83,54 @@ _CODEX_DIVIDER_LINE_RE = re.compile(r"^-{3,}\s*$", re.MULTILINE)
 _DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
 
 
+def _read_only_tmp_root(tool_config: dict, cwd: Path, mode: str) -> Path | None:
+    """Validate the delegate-owned scratch lease before granting shell writes."""
+    raw = tool_config.get("read_only_tmp_root")
+    if raw is None:
+        return None
+    from scripts.common.scratch import resolve_scratch_root
+
+    root = Path(str(raw))
+    base = Path(os.environ.get("LU_RUNTIME_TMP_BASE_ROOT") or resolve_scratch_root())
+    resolved = root.resolve()
+    namespace = base.resolve() / "learn-ukrainian"
+    checkout = cwd.resolve()
+    if (
+        mode != "read-only"
+        or tool_config.get("review_isolation")
+        or not root.is_absolute()
+        or root.is_symlink()
+        or not root.is_dir()
+        or resolved.parent != namespace
+        or checkout.is_relative_to(resolved)
+        or resolved.is_relative_to(checkout)
+        or any(char in str(resolved) for char in "*?[]{}")
+    ):
+        raise ValueError("CodexAdapter: read_only_tmp_root must be an existing isolated runtime tmp lease")
+    return resolved
+
+
+def _read_only_tmp_flags(root: Path) -> list[str]:
+    # Replace the entire permissions map so inherited entries cannot add
+    # writable paths. The legacy mode is a fail-closed fallback for old CLIs.
+    # HOME and the checkout remain read-only; gh authentication is inherited
+    # through the existing runtime environment. Only scratch needs writes.
+    return [
+        "-c",
+        'sandbox_mode="read-only"',
+        "-c",
+        'default_permissions="lu_review"',
+        "-c",
+        'permissions={lu_review={filesystem={":root"="read",'
+        + _json.dumps(str(root), ensure_ascii=False)
+        + '="write"},network={enabled=true,domains={"github.com"="allow","api.github.com"="allow"}}}}',
+        "-c",
+        "features.network_proxy=true",
+        "-c",
+        'approval_policy="never"',
+    ]
+
+
 def _normalize_payload_for_rollout_match(payload: str) -> str:
     """Normalize Codex-stored prompt text before rollout binding."""
     normalized = unicodedata.normalize("NFC", payload)
@@ -196,6 +244,7 @@ class CodexAdapter:
             raise ValueError(f"CodexAdapter: model={model!r} rejected; only {self.default_model!r} is approved")
 
         tc_early = tool_config or {}
+        read_only_tmp_root = _read_only_tmp_root(tc_early, cwd, mode)
         review_write_root: Path | None = None
         if tc_early.get("review_isolation"):
             from scripts.review.isolation import validated_review_write_root
@@ -282,6 +331,7 @@ class CodexAdapter:
             with tempfile.NamedTemporaryFile(
                 prefix=f"codex-runtime{safe_suffix}-",
                 suffix=".txt",
+                dir=read_only_tmp_root,
                 delete=False,
             ) as output_fd:
                 output_path = Path(output_fd.name)
@@ -328,6 +378,8 @@ class CodexAdapter:
             # the review boundary, so bypass only the nested Codex sandbox to
             # keep the sole sealed read-only MCP tool usable.
             cmd.append("--dangerously-bypass-approvals-and-sandbox")
+        elif read_only_tmp_root is not None:
+            cmd.extend(_read_only_tmp_flags(read_only_tmp_root))
         elif has_session_to_resume and mode == "read-only":
             # ``resume`` has no -s/--sandbox flag, but accepts config
             # overrides. Reassert the requested boundary instead of inheriting
@@ -348,6 +400,8 @@ class CodexAdapter:
         cmd.append("-")  # Read prompt from stdin.
 
         env_overrides: dict[str, str] = {}
+        if read_only_tmp_root is not None:
+            env_overrides["TMPDIR"] = str(read_only_tmp_root)
         if discussion_readonly:
             env_overrides["AB_DISCUSS_READONLY"] = "1"
         codex_home_override = effective_codex_home
