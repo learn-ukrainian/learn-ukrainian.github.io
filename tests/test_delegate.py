@@ -1105,6 +1105,55 @@ def test_read_only_change_discussion_is_not_misclassified_as_write_intent():
     )
 
 
+def test_read_only_critique_of_fenced_brief_is_not_misclassified_as_write_intent():
+    prompt = (
+        "Critique the attached brief for gaps and contradictions; do not edit files.\n"
+        "\n"
+        "```markdown\n"
+        "# Brief\n"
+        "- Add a CLI for authority delivery.\n"
+        "- Fix the status command output.\n"
+        "```\n"
+        "\n"
+        "Report findings only.\n"
+    )
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=prompt) is None
+
+
+def test_read_only_critique_of_blockquoted_brief_is_not_misclassified_as_write_intent():
+    prompt = (
+        "Review the brief quoted below and list its weaknesses.\n"
+        "\n"
+        "> ## Work\n"
+        "> 1. Implement the delivery guard in scripts/delegate.py.\n"
+        "> 2. Add regression tests.\n"
+    )
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=prompt) is None
+
+
+def test_read_only_write_directive_outside_quoted_content_is_still_refused():
+    prompt = (
+        "The attached brief says:\n"
+        "\n"
+        "```markdown\n"
+        "- Add a CLI for authority delivery.\n"
+        "```\n"
+        "\n"
+        "Please implement the brief in scripts/delegate.py and add tests.\n"
+    )
+    error = delegate._read_only_write_intent_error(mode="read-only", prompt=prompt)
+    assert error is not None
+    assert "write-shaped prompt" in error
+
+
+def test_strip_quoted_content_handles_tilde_fences_and_unclosed_fence():
+    prompt = "~~~\nFix the thing.\n~~~\nReview only."
+    assert "Fix the thing." not in delegate._strip_quoted_content(prompt)
+    unclosed = "Critique this:\n```\nAdd a CLI."
+    # An unclosed fence is not quoted content; the scan still sees it.
+    assert "Add a CLI." in delegate._strip_quoted_content(unclosed)
+
+
 @pytest.mark.parametrize("agent", ["grok", "grok-build"])
 @pytest.mark.parametrize("effort", ["low", "medium", "high"])
 def test_dispatch_accepts_native_grok_effort_vocabulary(agent, effort):

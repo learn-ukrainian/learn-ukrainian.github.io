@@ -1246,6 +1246,8 @@ _WRITE_SHAPED_PROMPT_RE = re.compile(
     write\s+(?:(?:new|the)\s+)?(?:code|tests?|scripts?|files?|documentation|docs?)\b
     """,
 )
+_FENCED_BLOCK_RE = re.compile(r"^(`{3,}|~{3,}).*?^\1", re.DOTALL | re.MULTILINE)
+_BLOCKQUOTE_LINE_RE = re.compile(r"^\s*>.*$", re.MULTILINE)
 _NO_DELIVERABLE_STATUS = "no_deliverable"
 # Explicit unattested classification for Cursor Auto when no concrete model was
 # extracted (#6964 / #6953). Never record a bare ``"unknown"`` here.
@@ -1336,6 +1338,18 @@ _CROSS_REPO_BINDING_HINT = (
 )
 
 
+def _strip_quoted_content(prompt: str) -> str:
+    """Drop fenced blocks and Markdown blockquotes before the write-intent scan.
+
+    A critique dispatch attaches or includes the brief under review, and that
+    brief legitimately contains write-shaped lines ("Add a CLI …").  Quoted
+    content is data for the worker to critique, not a directive to mutate the
+    repository, so it must not trip the read-only gate (#7814 item 6).
+    """
+    without_fences = _FENCED_BLOCK_RE.sub("", prompt)
+    return _BLOCKQUOTE_LINE_RE.sub("", without_fences)
+
+
 def _read_only_write_intent_error(*, mode: str, prompt: str) -> str | None:
     """Reject clearly write-shaped briefs before a read-only worker starts.
 
@@ -1344,9 +1358,13 @@ def _read_only_write_intent_error(*, mode: str, prompt: str) -> str | None:
     its requested deliverable in that mode and must fail before it can look
     like a successful no-op.  The conservative expression intentionally
     requires an instruction-shaped line, rather than matching incidental
-    words such as "changes" in a review prompt.
+    words such as "changes" in a review prompt.  Fenced blocks and blockquote
+    lines are excluded from the scan: they carry the brief under critique,
+    not the worker's own instructions.
     """
-    if mode != "read-only" or not _WRITE_SHAPED_PROMPT_RE.search(prompt):
+    if mode != "read-only":
+        return None
+    if not _WRITE_SHAPED_PROMPT_RE.search(_strip_quoted_content(prompt)):
         return None
     return (
         "❌ write-shaped prompt cannot run with --mode read-only. "
