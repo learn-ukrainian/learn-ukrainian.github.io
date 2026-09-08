@@ -57,6 +57,7 @@ from typing import Any
 
 from ..result import ParseResult
 from ..tool_calls import normalize_tool_calls, parse_json_events
+from ._output_schema import json_value, load_output_schema, plan_output_schema, schema_metadata, structured_result
 from .base import InvocationPlan
 
 _logger = logging.getLogger(__name__)
@@ -362,6 +363,12 @@ class ClaudeAdapter:
                     effective_effort,
                 )
 
+        output_schema = load_output_schema(tc)
+        if output_schema is not None:
+            if review_isolation:
+                raise ValueError("ClaudeAdapter: caller output schema conflicts with isolated review schema")
+            cmd.extend(["--json-schema", json.dumps(output_schema, separators=(",", ":"))])
+
         # Output format
         output_format = str(tc.get("output_format", "stream-json"))
         if output_format != "stream-json":
@@ -416,11 +423,10 @@ class ClaudeAdapter:
             output_file=None,
             env_overrides={"AB_DISCUSS_READONLY": "1"} if discussion_readonly else {},
             liveness_paths=self._resolve_liveness_paths(cwd),
-            metadata=(
-                {"claude_home": str(review_write_root / "home")}
-                if review_write_root is not None
-                else {}
-            ),
+            metadata={
+                **schema_metadata(output_schema),
+                **({"claude_home": str(review_write_root / "home")} if review_write_root is not None else {}),
+            },
         )
 
     def parse_response(
@@ -470,6 +476,19 @@ class ClaudeAdapter:
                 recovered = _tool_calls_from_claude_session_jsonl(session_path)
                 if len(recovered) > len(tool_calls):
                     tool_calls = recovered
+
+        output_schema = plan_output_schema(plan)
+        if output_schema is not None:
+            strict_events = [json_value(line) for line in stdout.splitlines() if line.strip()]
+            intact = bool(strict_events) and all(isinstance(event, dict) for event in strict_events)
+            terminal = strict_events[-1] if intact else {}
+            return structured_result(
+                terminal.get("structured_output"), output_schema, returncode=returncode,
+                terminal_ok=(intact and "structured_output" in terminal and terminal.get("type") == "result"
+                             and terminal.get("subtype") == "success" and terminal.get("is_error") is False
+                             and sum(event.get("type") == "result" for event in strict_events) == 1),
+                session_id=session_id, tool_calls=tool_calls,
+            )
 
         # Claude Code 2.1.117 does not document a dedicated rate-limit exit
         # code in `claude --help`. The safest remaining signal is a

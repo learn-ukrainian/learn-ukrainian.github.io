@@ -428,6 +428,23 @@ def phase_validate(ctx: DirectModuleContext) -> bool:
 
 
 # ── Phase: Review ─────────────────────────────────────────────────────────────
+def parse_direct_review_response(response: dict[str, Any] | str) -> dict[str, Any]:
+    """Consume a review object, retaining the legacy unsupported-CLI dialect."""
+    from scripts.agent_runtime.adapters._output_schema import validate_output
+    from scripts.audit.qg_schema import reviewer_output_schema
+
+    if isinstance(response, str):
+        # Only invoke_reviewer_with_schema's confirmed-unsupported branch
+        # returns text. The production direct Claude route returns an object.
+        start, end = response.find("{"), response.rfind("}") + 1
+        response = json.loads(response[start:end])
+    verdict = validate_output(response, reviewer_output_schema("direct"))
+    failed = any(dim["status"] == "FAIL" for dim in verdict["dimensions"].values())
+    if failed and verdict["verdict"] != "FAIL":
+        raise ValueError("direct review PASS contradicts a FAIL dimension")
+    return verdict
+
+
 def phase_review(ctx: DirectModuleContext) -> bool:
     if not ctx.do_review:
         log("  [review] Skipped (use --review to enable)")
@@ -451,59 +468,39 @@ def phase_review(ctx: DirectModuleContext) -> bool:
     prompt = prompt.replace("{{SLUG}}", ctx.slug)
     prompt = prompt.replace("{{LEVEL}}", ctx.level.upper())
     prompt = prompt.replace("{{MODULE_TYPE}}", ctx.module_data.get("type", ""))
+    from scripts.audit.llm_reviewer import invoke_reviewer_with_schema
+    from scripts.audit.qg_schema import render_reviewer_output_contract
+
+    prompt = prompt.replace("{{REVIEWER_OUTPUT_SCHEMA}}", render_reviewer_output_contract("direct"))
 
     save_artifact(ctx, "review", "prompt.md", prompt)
     log("  [review] Dispatching to Claude...")
     task_id = f"direct-review-{ctx.level}-{ctx.slug}"
 
-    args = [
-        VENV_PYTHON,
-        str(SCRIPTS_DIR / "ai_agent_bridge/__main__.py"), "ask-claude",
-        "-",
-        "--task-id", task_id,
-        "--to-model", "claude-opus-4-8",
-    ]
-
     try:
-        result = subprocess.run(
-            args, input=prompt, capture_output=True, text=True,
-            timeout=600, cwd=str(PROJECT_ROOT),
+        response, result = invoke_reviewer_with_schema(
+            "claude", prompt, profile="direct", cwd=PROJECT_ROOT,
+            mode="read-only", model="claude-opus-4-8", task_id=task_id,
+            entrypoint="dispatch", hard_timeout=600,
         )
-    except subprocess.TimeoutExpired:
-        log("  [review] TIMEOUT exceeded 600s")
-        mark_phase(ctx, "review", "failed", error="timeout")
+        verdict = parse_direct_review_response(response)
+    except Exception as exc:
+        log(f"  [review] Failed: {type(exc).__name__}")
+        mark_phase(ctx, "review", "failed", error="review_result_invalid")
         return False
 
-    if result.returncode != 0:
-        log(f"  [review] Dispatch failed (rc={result.returncode})")
-        mark_phase(ctx, "review", "failed", error="dispatch_failed")
-        return False
-
-    raw_output = result.stdout.strip()
-    save_artifact(ctx, "review", "output-raw.json", raw_output)
-
-    # Try to extract JSON verdict
-    try:
-        # Look for JSON block in output
-        json_start = raw_output.find("{")
-        json_end = raw_output.rfind("}") + 1
-        if json_start >= 0 and json_end > json_start:
-            verdict = json.loads(raw_output[json_start:json_end])
-        else:
-            verdict = {"verdict": "UNKNOWN", "raw": raw_output[:500]}
-    except json.JSONDecodeError:
-        verdict = {"verdict": "UNKNOWN", "raw": raw_output[:500]}
+    save_artifact(ctx, "review", "output-raw.json", result.response)
 
     if verdict.get("verdict") == "PASS":
         log("  [review] PASSED")
-        mark_phase(ctx, "review", "complete", verdict="PASS")
+        mark_phase(ctx, "review", "complete", **verdict)
         return True
     elif verdict.get("verdict") == "FAIL":
         issues = verdict.get("issues", [])
         log(f"  [review] FAILED — {len(issues)} issues found")
         for issue in issues[:5]:
             log(f"    - {issue}")
-        mark_phase(ctx, "review", "failed", verdict="FAIL", issues=issues)
+        mark_phase(ctx, "review", "failed", **verdict)
         return False
     else:
         log(f"  [review] Unclear verdict: {verdict.get('verdict', 'UNKNOWN')}")

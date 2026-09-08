@@ -45,6 +45,7 @@ from typing import Any
 
 from ..result import ParseResult
 from ..tool_calls import normalize_tool_calls, parse_json_events
+from ._output_schema import json_value, load_output_schema, plan_output_schema, schema_metadata, structured_result
 from .base import InvocationPlan
 
 _logger = logging.getLogger(__name__)
@@ -367,6 +368,7 @@ class CodexAdapter:
             output_file=output_path,
             env_overrides=env_overrides,
             liveness_paths=(output_path,),
+            metadata=schema_metadata(load_output_schema(tool_config)),
         )
 
     @classmethod
@@ -497,11 +499,13 @@ class CodexAdapter:
             except OSError:
                 file_output = ""
 
+        output_schema = plan_output_schema(plan)
+
         # Empty output and nonzero exits require invocation-bound completion
         # evidence, even when the output file already contains partial text.
         rollout_response = ""
         rollout_source_note: str | None = None
-        if (returncode != 0 or not file_output) and plan is not None:
+        if output_schema is None and (returncode != 0 or not file_output) and plan is not None:
             rollout_response = self._read_latest_rollout_task_complete(
                 plan,
                 call_start_time=call_start_time,
@@ -581,6 +585,14 @@ class CodexAdapter:
         )
         tool_calls = normalize_tool_calls(trace_events)
 
+        if output_schema is not None:
+            # Only this invocation's -o result is schema-constrained. Preserve
+            # tool telemetry, but never recover unconstrained rollout prose.
+            return structured_result(
+                json_value(file_output), output_schema, returncode=returncode,
+                session_id=session_id, tool_calls=tool_calls,
+            )
+
         # Nonzero exit content is admitted only through the bound terminal
         # recovery above. Provider quota failures still veto that recovery.
         ok = bool(durable_output) and not rate_limited
@@ -646,6 +658,11 @@ class CodexAdapter:
            rollout file's mtime and only re-scan when it advances.
         """
         import time as _time
+
+        if plan_output_schema(plan) is not None:
+            # Schema calls require the CLI to finish writing its constrained
+            # -o result and exit successfully; a rollout is not that result.
+            return False
 
         now = _time.monotonic()
 

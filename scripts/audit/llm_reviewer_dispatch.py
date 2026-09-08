@@ -9,6 +9,7 @@ exactness, and local spend persistence. The workflow calls it through the same
 from __future__ import annotations
 
 import json
+import logging
 import os
 import re
 import shutil
@@ -31,6 +32,7 @@ from scripts.audit.content_surface_gates import policy_for_level
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DAILY_SPEND_PATH = PROJECT_ROOT / "data" / "telemetry" / "llm_reviewer_spend.jsonl"
 CANARY_SCHEMA_VERSION = "llm_reviewer_dispatch_canary.v1"
+_logger = logging.getLogger(__name__)
 
 # DELIBERATELY still the OpenRouter endpoint (NOT the 2026-07-07 $0
 # `google-ais/gemma-4-31b-it` bridge default, #4767): this calibration layer's
@@ -763,14 +765,13 @@ def invoke_bridge_route(
 ) -> DispatchResult:
     """Invoke the route's approved backend and return response text.
 
-    Gemma uses the same opencode helper behind ``ask-gemma`` because that bridge
-    command records responses in the inbox rather than returning them. AGY and
-    Claude are invoked through their public bridge commands with temporary
-    output files where supported.
+    Gemma uses the opencode helper. The legacy AGY review bridge has no caller
+    schema argument; native Claude uses the digest-bound schema runtime path.
     """
 
     assert_route_allowed(route)
     if route.route_name == GEMMA_SURFACE_ROUTE.route_name:
+        _logger.warning("Reviewer schema compatibility fallback: OpenCode run CLI has no output-schema option")
         # Surface/register review is prompt-only per design D1 — no MCP gate.
         return _invoke_opencode_reviewer(
             prompt,
@@ -782,6 +783,7 @@ def invoke_bridge_route(
             module_dir=module_dir,
         )
     if route.route_name == FRONTIER_OPENCODE_ROUTE.route_name:
+        _logger.warning("Reviewer schema compatibility fallback: OpenCode run CLI has no output-schema option")
         # Seminar/factual review MUST be grounded — fail-fast if the sources MCP
         # is not configured + reachable (design D0; step-1 lesson). Browsing +
         # dense tool sweeps run long, so allow a wider timeout than gemma.
@@ -797,6 +799,7 @@ def invoke_bridge_route(
             module_dir=module_dir,
         )
     if route.route_name == FRONTIER_FACTUAL_ROUTE.route_name:
+        _logger.warning("Reviewer schema compatibility fallback: legacy ask-agy review bridge has no schema argument")
         return _invoke_output_path_bridge(
             route,
             prompt,
@@ -1148,10 +1151,10 @@ def _invoke_output_path_bridge(
 def _invoke_agent_runtime(agent: str, route: ReviewerRoute, prompt: str, task_id: str) -> DispatchResult:
     try:
         from scripts.agent_runtime import runner as agent_runner
+        from scripts.audit.llm_reviewer import invoke_reviewer_with_schema
 
-        result = agent_runner.invoke(
-            agent,
-            prompt,
+        _payload, result = invoke_reviewer_with_schema(
+            agent, prompt, profile="audit", invoker=agent_runner.invoke,
             mode="read-only",
             cwd=PROJECT_ROOT,
             model=route.reviewer_model_id,

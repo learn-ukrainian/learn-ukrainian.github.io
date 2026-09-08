@@ -8,6 +8,8 @@ Conforms to the canonical schema version ua_contact_quality_evidence.v1.
 from __future__ import annotations
 
 import json
+import logging
+import tempfile
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
@@ -19,13 +21,71 @@ from scripts.audit import qg_schema
 PROMPTS_DIR = Path(__file__).resolve().parent / "prompts"
 DEFAULT_PROMPT_PATH = PROMPTS_DIR / "reviewer_prompt.md"
 
+# Capability is a harness property. Unknown is deliberately not unsupported.
+# Evidence: native help surfaces, recorded in #7810's frozen coverage matrix.
+SCHEMA_HARNESSES = frozenset({"claude", "codex", "agy", "grok"})
+UNSUPPORTED_SCHEMA_HARNESSES = {
+    "cursor": "cursor-agent print CLI exposes no output-schema option",
+    "deepseek": "OpenCode run CLI exposes JSON events but no output-schema option",
+    "glm": "OpenCode run CLI exposes JSON events but no output-schema option",
+}
+_logger = logging.getLogger(__name__)
+
+
+def invoke_reviewer_with_schema(
+    agent: str,
+    prompt: str,
+    *,
+    profile: str,
+    cwd: Path,
+    invoker: Any = None,
+    tool_config: dict[str, Any] | None = None,
+    **kwargs: Any,
+) -> tuple[dict[str, Any] | str, Any]:
+    """Supply the authoritative schema and consume the runtime's final result.
+
+    Unsupported CLI compatibility is selected before invocation. Execution or
+    schema errors on supported routes propagate; they cannot select fallback.
+    The second return value preserves the runtime's existing tool telemetry.
+    """
+    from scripts.agent_runtime.adapters._output_schema import json_value, validate_output
+
+    schema = qg_schema.reviewer_output_schema(profile)
+    supported = agent in SCHEMA_HARNESSES
+    if not supported and agent not in UNSUPPORTED_SCHEMA_HARNESSES:
+        raise ValueError(f"reviewer schema capability unknown or route not selectable: {agent}")
+    if invoker is None:
+        from scripts.agent_runtime.runner import invoke as invoker
+
+    config = dict(tool_config or {})
+    # The reviewer cwd can be a curriculum directory or a read-only checkout.
+    # Schema transport must not write into that source tree.
+    with tempfile.TemporaryDirectory(prefix="qg-reviewer-schema-") as directory:
+        if supported:
+            config.update(qg_schema.write_reviewer_output_schema(Path(directory), profile))
+        else:
+            if "output_schema_path" in config or "output_schema_sha256" in config:
+                raise ValueError("unsupported reviewer harness cannot enforce a requested output schema")
+            _logger.warning("Reviewer schema compatibility fallback: %s: %s", agent, UNSUPPORTED_SCHEMA_HARNESSES[agent])
+        result = invoker(agent, prompt, cwd=cwd, tool_config=config or None, **kwargs)
+    if getattr(result, "ok", False) is not True:
+        raise ValueError("reviewer execution failed")
+    response = getattr(result, "response", None)
+    if not isinstance(response, str) or not response.strip():
+        raise ValueError("reviewer returned no result")
+    if supported:
+        return validate_output(json_value(response), schema), result
+    return response, result
+
 
 def load_reviewer_prompt_template(path: Path | None = None) -> str:
     """Load the LLM reviewer prompt template from disk."""
     resolved_path = path or DEFAULT_PROMPT_PATH
     if not resolved_path.exists():
         raise FileNotFoundError(f"Reviewer prompt template not found at {resolved_path}")
-    return resolved_path.read_text(encoding="utf-8")
+    return resolved_path.read_text(encoding="utf-8").replace(
+        "{{REVIEWER_OUTPUT_SCHEMA}}", qg_schema.render_reviewer_output_contract("audit")
+    )
 
 
 def build_reviewer_prompt(
@@ -285,11 +345,17 @@ def validate_reviewer_payload(payload: Mapping[str, Any], policy_family: str | N
 
 def _json_payload_from_response(response_text: str) -> Mapping[str, Any]:
     clean_text = response_text.strip()
-    if "```json" in clean_text:
-        clean_text = clean_text.split("```json")[1].split("```")[0].strip()
-    elif "```" in clean_text:
-        clean_text = clean_text.split("```")[1].split("```")[0].strip()
-    data = json.loads(clean_text)
+    try:
+        # Native schema results are canonical JSON already. Never inspect their
+        # string contents for fences (an offending excerpt may contain one).
+        data = json.loads(clean_text)
+    except json.JSONDecodeError:
+        # Legacy recorded reviews and explicitly unsupported live transports.
+        if "```json" in clean_text:
+            clean_text = clean_text.split("```json")[1].split("```")[0].strip()
+        elif "```" in clean_text:
+            clean_text = clean_text.split("```")[1].split("```")[0].strip()
+        data = json.loads(clean_text)
     if not isinstance(data, Mapping):
         raise ValueError("reviewer response JSON must be an object")
     return data

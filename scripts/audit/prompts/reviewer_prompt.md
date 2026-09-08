@@ -45,48 +45,8 @@ Use at most 3 tool calls per claim and at most 40 tool calls total. After the bu
 
 ### Grounded Output Shape
 
-Findings may include a grounding object:
-
-```json
-{
-  "grounding": {
-    "tool": "sources_query_wikipedia",
-    "query": "Веснянки mode=section",
-    "evidence_excerpt": "exact excerpt copied from a tool result",
-    "tool_call_id": "call_123"
-  }
-}
-```
-
-Seminar responses MUST also include:
-
-```json
-{
-  "fact_checks": [
-    {
-      "claim": "A factual claim from the content.",
-      "verdict": "CONFIRMED",
-      "grounding": {
-        "tool": "sources_query_wikipedia",
-        "query": "Веснянки",
-        "evidence_excerpt": "exact excerpt copied from a tool result",
-        "tool_call_id": "call_123"
-      },
-      "deep_read_attempted": false,
-      "budget_exhausted": false
-    }
-  ],
-  "evidence_gaps": [
-    {
-      "claim": "A suspected issue that cannot yet be grounded.",
-      "suspected_issue": "Possible invented ritual detail.",
-      "searches": ["sources_search_text: веснянки гаї стрічками"],
-      "status": "unresolved",
-      "reason": "Required sources did not attest the specific detail."
-    }
-  ]
-}
-```
+Findings may include `grounding` as defined in the authoritative output schema below.
+Seminar responses MUST also include `fact_checks` and `evidence_gaps` from that schema.
 
 > [!IMPORTANT]
 > **Deterministic Layer Precedence & Grammar/Mechanics Deferral**:
@@ -147,28 +107,9 @@ Identify unidiomatic syntax or expressions, even if they are not lexical Russian
 
 ## 3. Required Output Format
 
-You must output a JSON object containing a list of findings. Do not output any markdown wrapper (no ```json ... ```) or explanation before/after. Return ONLY the JSON object.
-
-The output shape must be:
-```json
-{
-  "findings": [
-    {
-      "issue_id": "AWKWARD_PASSIVE_RESULT_STATE",
-      "issue_class": "calque",
-      "dimension": "ukrainian_style",
-      "severity": "critical",
-      "excerpt": "застосунок має бути відкритий",
-      "message": "Use active or impersonal Ukrainian instruction instead of a literal passive state.",
-      "suggested_replacement": "відкрийте застосунок"
-    }
-  ]
-}
-```
+{{REVIEWER_OUTPUT_SCHEMA}}
 
 ### Constraints:
 * The `excerpt` MUST be an exact substring from the provided content.
-* The `issue_class` must be one of: `calque`, `grammar`, `collocation`, `false_friend`, `register`, `leakage`, `pedagogy`, `fluency`, `mechanics`, `other`.
-* The `dimension` must be one of: `contact_calque`, `contact_grammar`, `ukrainian_style`, `level_policy`, `surface_leakage`, `naturalness`, `pedagogical`, `decolonization`, `engagement`, `tone`, `seminar_sensitivity`, `mechanics`.
-* The `severity` must be one of: `critical`, `warning`, `info`.
-* Be extremely rigorous and literal. If the text has no issues, return `{"findings": []}`.
+* Use the enum values in the authoritative schema above for `issue_class`, `dimension`, and `severity`.
+* Be extremely rigorous and literal. If the text has no issues, return an empty `findings` array.

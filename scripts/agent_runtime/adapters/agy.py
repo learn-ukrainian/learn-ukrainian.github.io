@@ -61,6 +61,7 @@ from typing import Any
 
 from ..result import ParseResult
 from ..tool_calls import summarize_tool_output
+from ._output_schema import json_value, load_output_schema, plan_output_schema, schema_metadata, structured_result
 from .base import InvocationPlan
 
 _logger = logging.getLogger(__name__)
@@ -297,6 +298,10 @@ class AgyAdapter:
             add_dir = tc.get("repo_read_root") or tc.get("review_snapshot_root") or str(cwd)
             cmd += ["--add-dir", str(add_dir)]
 
+        output_schema = load_output_schema(tc)
+        if output_schema is not None:
+            cmd.extend(["--output-format", "json", "--json-schema", json.dumps(output_schema, separators=(",", ":"))])
+
         return InvocationPlan(
             cmd=cmd,
             cwd=cwd,
@@ -306,6 +311,7 @@ class AgyAdapter:
             env_unsets=(),
             liveness_paths=(log_path,),
             metadata={
+                **schema_metadata(output_schema),
                 "entire_fleet": {
                     "requested_model": model or self.default_model,
                     "actual_model": resolved_model or model or self.default_model,
@@ -349,6 +355,19 @@ class AgyAdapter:
         _ = call_start_time
 
         stdout_response = (stdout or "").strip()
+        output_schema = plan_output_schema(plan)
+        if output_schema is not None:
+            # https://antigravity.google/docs/cli/headless/ specifies the
+            # terminal JSON envelope. Free-text response is never a substitute.
+            envelope = json_value(stdout_response)
+            envelope = envelope if isinstance(envelope, dict) else {}
+            return structured_result(
+                envelope.get("structured_output"), output_schema, returncode=returncode,
+                terminal_ok=("structured_output" in envelope and envelope.get("status") == "SUCCESS"
+                             and not envelope.get("error")),
+                session_id=envelope.get("conversation_id"),
+                tool_calls=_parse_transcript_tool_calls(plan),
+            )
         stderr_text = (stderr or "").strip()
         combined = f"{stdout_response}\n{stderr_text}"
         hard_limit_hit = bool(_RATE_LIMIT_RE.search(combined))

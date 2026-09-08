@@ -255,6 +255,62 @@ callers — the adapter's argv is fully confined and callers only ever set
 Done. The runner handles everything else: stall detection, usage logging,
 rate-limit headroom checks, mode validation, cwd enforcement.
 
+## Reviewer findings schemas
+
+Quality-gate callers use `scripts.audit.llm_reviewer.invoke_reviewer_with_schema`.
+`scripts/audit/qg_schema.py` defines the authoritative `dimension`, `direct`, and
+`audit` wire profiles. They preserve the existing field meanings and scoring
+taxonomies. The audit prompt, both per-dimension templates (including the
+generator-fed template), and the direct-review template render their output
+contracts from these definitions. `prompt_builder.py` registers the generator's
+`REVIEWER_OUTPUT_SCHEMA` token; rubric and writer rules remain separate.
+
+The caller writes an invocation-owned schema file, passes its absolute
+`output_schema_path` and exact `output_schema_sha256` in `tool_config`, and keeps
+it alive until the runtime returns. Adapters verify the digest before spawn and
+retain the schema on that invocation's plan for result validation:
+
+| Native harness | Flag | Authoritative result |
+| --- | --- | --- |
+| Claude | `--json-schema <JSON>` | Final `result` event's `structured_output`, with `subtype=success` and `is_error=false` |
+| Codex | `--output-schema <FILE>` | This invocation's `-o` file, after successful process exit |
+| AGY | `--output-format json --json-schema <JSON>` | `structured_output` in the JSON envelope with `status=SUCCESS` |
+| Grok | `--json-schema <JSON>` with JSON output | `structuredOutput` in the final envelope with `stopReason=end_turn`, without `structuredOutputError` |
+
+AGY's envelope is specified in its
+[headless documentation](https://antigravity.google/docs/cli/headless/).
+Grok's native field names come from its
+[terminal result projector](https://github.com/xai-org/grok-build/blob/main/crates/codegen/xai-grok-pager/src/headless.rs)
+and [structured-output attachment](https://github.com/xai-org/grok-build/blob/main/crates/codegen/xai-grok-pager/src/headless/reducer/mod.rs).
+Adapters return validated canonical JSON in the existing runtime `response`
+field. Review callers validate it against the authoritative profile and pass an
+object into the dimension/direct consumers. Missing, malformed, truncated,
+unsuccessful or schema-rejected results fail; assistant prose cannot rescue
+them. Codex schema calls neither recover rollout prose nor reap before the CLI
+has written its constrained output and exited. Existing tool-call telemetry is
+preserved.
+
+Compatibility parsing is selected **before invocation** and logged explicitly,
+only for confirmed unsupported CLI surfaces: Cursor `cursor-agent` and OpenCode
+`run` via DeepSeek/GLM. Native Gemini capability is unknown and fails closed.
+An unknown or non-selectable route does not become an unsupported route. Schema
+rejection never triggers a retry without the schema. Legacy recorded audit
+responses retain compatibility parsing; the live Claude audit route validates
+its structured result before delivering canonical JSON to that parser.
+
+Reviewer choices, configured model pins, lineage checks and QG canaries are
+unchanged. Direct review uses the native Claude adapter with its existing
+`claude-opus-4-8` pin. A schema-capable adapter does not establish availability,
+policy admission or semantic correctness for every configured model. Issue
+#7810's frozen 18-cell matrix retains those residuals; held-out evaluation and
+cross-family approval belong to the reviewer of record at the exact PR head.
+
+Mechanism coverage: `tests/build/test_reviewer_schema_transport.py`.
+Deterministic scoring replay: `tests/build/test_reviewer_scoring_parity.py`
+(run with `-q -s` to print before/after summaries). The opt-in `direct_live` test
+requires `QG_SCHEMA_DIRECT_LIVE=1`, reads the frozen public module, and redirects
+all module artifacts into a temporary test context.
+
 ## Session resume policy — the rule that matters
 
 | Path | Resume? | Why |
