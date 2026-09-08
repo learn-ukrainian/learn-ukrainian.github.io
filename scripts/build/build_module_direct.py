@@ -458,11 +458,10 @@ def phase_review(ctx: DirectModuleContext) -> bool:
 
     args = [
         VENV_PYTHON,
-        str(SCRIPTS_DIR / "ai_agent_bridge/__main__.py"), "ask-gemini",
+        str(SCRIPTS_DIR / "ai_agent_bridge/__main__.py"), "ask-claude",
         "-",
         "--task-id", task_id,
-        "--model", "claude-opus-4-8",
-        "--stdout-only",
+        "--to-model", "claude-opus-4-8",
     ]
 
     try:

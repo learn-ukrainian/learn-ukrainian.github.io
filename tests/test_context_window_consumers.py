@@ -504,3 +504,44 @@ def test_statusline_prefer_handoff_over_compaction(tmp_path: Path) -> None:
 
     assert "[compacts: 1]" in completed.stdout
     assert "HANDOFF SUGGESTED" in completed.stdout
+
+
+def test_context_monitor_announces_each_tier_once_and_rearms_after_compaction(
+    tmp_path: Path,
+) -> None:
+    """Tier warnings are monotonic per session: a repeat, a dip-and-rise around a
+    boundary, or a lower tier stays silent; a strictly higher tier announces; only a
+    compaction-scale drop (below 60% of the last announced usage) re-arms."""
+    project, record_path = _fake_project(tmp_path, _record(actual_window=360_000))
+    transcript = tmp_path / "monitor.jsonl"
+    payload = json.dumps(
+        {"session_id": "status-session", "transcript_path": os.fspath(transcript)}
+    )
+    state_file = project / "batch_state/context_monitor/status-session.tier"
+
+    def run(input_tokens: int) -> str:
+        _write_transcript(transcript, input_tokens=input_tokens, cache_tokens=0)
+        completed = subprocess.run(
+            [os.fspath(CONTEXT_MONITOR)],
+            input=payload,
+            text=True,
+            capture_output=True,
+            check=True,
+            cwd=tmp_path,
+            env=_environment(project, record_path),
+            timeout=30,
+        )
+        if not completed.stdout.strip():
+            return ""
+        return json.loads(completed.stdout)["hookSpecificOutput"]["additionalContext"]
+
+    assert run(306_000).startswith("CRITICAL: Context is at 85%")  # tier 2 announced
+    assert state_file.read_text(encoding="utf-8").split() == ["2", "306000"]
+    assert run(306_000) == ""  # same tier: silent
+    assert run(266_000) == ""  # dip below tier 1
+    assert run(288_000) == ""  # rise back to tier 1 (< announced tier 2): silent
+    assert run(335_000).startswith("EMERGENCY: Context is at 93%")  # tier 3 announced
+    assert run(108_000) == ""  # compaction-scale drop: re-arms, nothing to announce
+    assert not state_file.exists()
+    assert run(288_000).startswith("HEADS UP: Context is at 80%")  # fresh climb announces
+    assert state_file.read_text(encoding="utf-8").split() == ["1", "288000"]
