@@ -591,8 +591,12 @@ stores are read-only migration/projection inputs, not a live write target.
 - **File handoff still matters:** fleet-comms is durable authority for messages/jobs,
   but you still write file continuity where the epic uses one (`.claude/<epic>-epic/
   *DRIVER-HANDOFF.md` — gitignored local state — or `docs/session-state/` for infra); see
-  the file-handoff steps in §8. Successor-claim diagnostics: `session_streams
-  handoff-status` / `handoff-claim` (#5530).
+  the file-handoff steps in §8. Live-driver diagnostics use `session_streams
+  handoff-status` (#5530). Live drivers never run `handoff-claim`: the launcher
+  has already claimed the lease. `handoff-claim` belongs to the successor
+  launcher / proof-gated dead-holder recovery in the local/offline contract
+  only; it cannot recover a remote lease. Remote recovery uses Monitor TTL/CAS
+  or an attributed operator release, never local PID observations or `--local`.
 - **Sealed formal CF is retired** — CF is the direct `ask-<lane>` + PR-post flow in §6,
   not `review-pr` / sealed `lu-review-*`.
 - **ACP provider transport:** ACP is toolless intercomm only (state transfer / ordinary asks and `discuss` with exactly two enabled seats; every other participant count rejects); CF, design, and plan use toolful seats (`delegate.py` or native harnesses), and caveman lite is style.

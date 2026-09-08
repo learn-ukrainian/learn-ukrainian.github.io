@@ -51,7 +51,7 @@ rapidfuzz>=3.14  # .mcp/servers/sources/server.py (handle_verify_quote), scripts
 # from-scratch `requirements.txt`-only install: `test_esum_abbyy_parser.py`,
 # `test_plan_latin_fix.py`, and 15 `test_open_model_phase3_*` modules).
 lxml>=6.1         # scripts/ingest/esum_abbyy_parser.py
-pypdf>=6.15       # scripts/projects/open_model_data/*.py, scripts/rag/scrape_diasporiana.py
+pypdf>=6.16.2       # scripts/projects/open_model_data/*.py, scripts/rag/scrape_diasporiana.py
 PyMuPDF>=1.28     # scripts/rag/{extract_images,annotate_images,poc_pair_page}.py, scripts/tools/analyze_textbook_pages.py
 ruamel.yaml>=0.19 # scripts/tools/{fix_plan_latin_refs,convert_seminar_plans_v6}.py
 

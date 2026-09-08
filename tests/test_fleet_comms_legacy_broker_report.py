@@ -194,6 +194,8 @@ def test_fleet_status_and_help_expose_the_facade_contract(tmp_path: Path, capsys
     assert rc == EXIT_OK
     status = json.loads(capsys.readouterr().out)
     assert status["health"] == {
+        "authority": "sqlite",
+        "db_error": "sqlite_database_missing",
         "db_exists": False,
         "enabled": True,
         "healthy": False,
@@ -213,7 +215,9 @@ def test_fleet_status_and_help_expose_the_facade_contract(tmp_path: Path, capsys
 
 def test_health_and_usage_helpers_tolerate_optional_values() -> None:
     assert _short_plane_health({"schema": None}) == {
-        "db_exists": False,
+        "authority": None,
+        "db_error": None,
+        "db_exists": None,
         "enabled": False,
         "healthy": False,
         "mode": None,

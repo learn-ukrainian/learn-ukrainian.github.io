@@ -256,8 +256,15 @@ def _core_driver_exit_fixture(
     *,
     provider_body: str,
     failed_close_attempts: int = 0,
+    close_stderr: str = "",
 ) -> tuple[Path, Path, Path, Path]:
-    """Build a provider-neutral driver with observable close attempts."""
+    """Build a provider-neutral driver with observable close attempts.
+
+    ``close_stderr`` (when a close attempt is configured to fail) is written
+    to a file the stub cats to its own stderr, rather than interpolated into
+    the stub's bash source — a hostile marker (quotes, `` ` ``, `$()`) must
+    never become executable just by being a close failure's stderr.
+    """
     root = tmp_path / "repo"
     for relative in (
         "start-claude-driver.sh",
@@ -278,6 +285,8 @@ def _core_driver_exit_fixture(
     close_attempts = tmp_path / "close-attempts"
     close_marker = tmp_path / "lease-closed"
     child_started = tmp_path / "child-started"
+    close_stderr_path = tmp_path / "close-stderr.txt"
+    close_stderr_path.write_text(close_stderr, encoding="utf-8")
     python_stub = root / ".venv" / "bin" / "python"
     python_stub.parent.mkdir(parents=True)
     python_stub.write_text(
@@ -293,7 +302,10 @@ if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:
   if [[ -f {os.fspath(close_attempts)!r} ]]; then count="$(< {os.fspath(close_attempts)!r})"; fi
   count=$((count + 1))
   printf '%s\n' "$count" > {os.fspath(close_attempts)!r}
-  if [[ "$count" -le {failed_close_attempts} ]]; then exit 1; fi
+  if [[ "$count" -le {failed_close_attempts} ]]; then
+    cat {os.fspath(close_stderr_path)!r} >&2
+    exit 1
+  fi
   touch {os.fspath(close_marker)!r}
   exit 0
 fi
@@ -409,6 +421,136 @@ def test_driver_termination_forwards_signal_and_closes_exact_lease(
         assert process.returncode == expected_exit, stdout + stderr
         assert close_marker.is_file()
         assert close_attempts.read_text(encoding="utf-8").strip() == "1"
+    finally:
+        signal.signal(termination_signal, original_handler)
+
+
+def test_close_failure_after_two_attempts_reports_classification_without_raw_stderr(
+    tmp_path: Path,
+) -> None:
+    """#671: two exhausted close attempts must classify, never echo raw stderr."""
+    hostile_stderr = (
+        "session-supervisor: missing required hook environment: SESSION_STREAM_ID\n"
+        "SECRET_TOKEN_MUST_NOT_LEAK=s3kr1t\n"
+        "`rm -rf /nonexistent`\n"
+        "$(echo injected)\n"
+    )
+    launcher, close_attempts, close_marker, _child_started = _core_driver_exit_fixture(
+        tmp_path,
+        provider_body="exit 0",
+        failed_close_attempts=2,
+        close_stderr=hostile_stderr,
+    )
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    result = subprocess.run(
+        ["bash", os.fspath(launcher), "--epic", "devops"],
+        cwd=launcher.parent,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert result.returncode == 1
+    assert not close_marker.is_file()
+    assert close_attempts.read_text(encoding="utf-8").strip() == "2"
+    assert "close_failure_reason=missing-required-environment" in result.stderr
+    combined = result.stdout + result.stderr
+    assert "SECRET_TOKEN_MUST_NOT_LEAK" not in combined
+    assert "rm -rf /nonexistent" not in combined
+    assert "echo injected" not in combined
+
+
+def test_provider_nonzero_with_close_failure_keeps_provider_exit_and_classifies(
+    tmp_path: Path,
+) -> None:
+    """#671: a failed canary/provider run must not have its exit code stolen by close."""
+    hostile_stderr = "session-supervisor: LEASE LOST: Monitor fenced the exact lease\n`id`\n"
+    launcher, close_attempts, close_marker, child_started = _core_driver_exit_fixture(
+        tmp_path,
+        provider_body=f"touch {os.fspath(tmp_path / 'child-started')!r}\nexit 7",
+        failed_close_attempts=2,
+        close_stderr=hostile_stderr,
+    )
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    result = subprocess.run(
+        ["bash", os.fspath(launcher), "--epic", "devops"],
+        cwd=launcher.parent,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert result.returncode == 7, result.stdout + result.stderr
+    assert child_started.is_file()
+    assert not close_marker.is_file()
+    assert close_attempts.read_text(encoding="utf-8").strip() == "2"
+    assert "close_failure_reason=lease-fenced" in result.stderr
+    assert "`id`" not in (result.stdout + result.stderr)
+
+
+@pytest.mark.parametrize(
+    ("termination_signal", "expected_exit"),
+    ((signal.SIGTERM, 143), (signal.SIGHUP, 129)),
+)
+def test_signal_forwarding_with_close_failure_keeps_signal_exit_and_classifies(
+    tmp_path: Path,
+    termination_signal: signal.Signals,
+    expected_exit: int,
+) -> None:
+    """#671: a forwarded TERM/HUP exit code must not become the close failure's."""
+    signal_marker = tmp_path / "signal-received"
+    child_started = tmp_path / "child-started"
+    hostile_stderr = "session-supervisor: Monitor API unreachable; no remote claim was made\n$(evil)\n"
+    launcher, close_attempts, close_marker, child_started = _core_driver_exit_fixture(
+        tmp_path,
+        provider_body=(
+            f"trap 'touch {os.fspath(signal_marker)!r}; exit 0' INT TERM HUP\n"
+            f"touch {os.fspath(child_started)!r}\n"
+            "for _ in {1..20}; do\n"
+            "  sleep 0.1\n"
+            "done\n"
+            "exit 88\n"
+        ),
+        failed_close_attempts=2,
+        close_stderr=hostile_stderr,
+    )
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    original_handler = signal.signal(termination_signal, signal.SIG_DFL)
+    try:
+        process = subprocess.Popen(
+            ["bash", os.fspath(launcher), "--epic", "devops"],
+            cwd=launcher.parent,
+            env=env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        deadline = time.monotonic() + 30
+        while time.monotonic() < deadline:
+            if child_started.is_file():
+                break
+            if process.poll() is not None:
+                break
+            time.sleep(0.01)
+        if not child_started.is_file():
+            process.kill()
+            stdout, stderr = process.communicate(timeout=10)
+            pytest.fail(f"provider child never started (launcher rc={process.returncode}):\n{stdout}{stderr}")
+
+        process.send_signal(termination_signal)
+        stdout, stderr = process.communicate(timeout=30)
+        assert signal_marker.is_file(), (
+            f"provider child never received forwarded signal (rc={process.returncode}):\n{stdout}{stderr}"
+        )
+        assert process.returncode == expected_exit, stdout + stderr
+        assert not close_marker.is_file()
+        assert close_attempts.read_text(encoding="utf-8").strip() == "2"
+        assert "close_failure_reason=monitor-unreachable" in stderr
+        assert "$(evil)" not in (stdout + stderr)
     finally:
         signal.signal(termination_signal, original_handler)
 
@@ -736,3 +878,143 @@ def test_claude_driver_injects_lane_agent_type() -> None:
     alias = run_launcher("start-claude-driver.sh", "--epic", "atlas-practice")
     assert alias.returncode == 0, alias.stderr
     assert "launcher: would select agent infra-orchestrator for lane atlas-practice" in alias.stdout
+
+
+def hermes_stub_env(tmp_path: Path, *, help_text: str | None = None) -> dict[str, str]:
+    """No inference or credentials: emulate the installed Hermes probe/argv surface."""
+    import shlex
+
+    binary = tmp_path / "hermes"
+    help_text = help_text if help_text is not None else (
+        "  -m MODEL, --model MODEL\n"
+        "  --provider PROVIDER\n"
+        "  -q QUERY, --query QUERY\n"
+        "  --in DIR\n"
+        "  --cli\n"
+        "  --reasoning LEVEL  Reasoning effort: low, medium, high, xhigh, max.\n"
+    )
+    binary.write_text(
+        "#!/usr/bin/env bash\n"
+        'if [[ "$*" == "chat --help" ]]; then\n'
+        f"  printf '%s\\n' {shlex.quote(help_text)}\n"
+        'elif [[ "$*" == "fallback list" ]]; then\n'
+        '  if [[ "${TEST_HERMES_FALLBACK:-0}" == 1 ]]; then\n'
+        "    printf 'Fallback chain: private-test-credential\\n'\n"
+        "  else\n"
+        "    printf '\\n  No fallback providers configured.\\n\\n  Add one with:  hermes fallback add\\n'\n"
+        "  fi\n"
+        "else\n"
+        "  printf '%s\\0' \"$@\"\n"
+        "fi\n",
+        encoding="utf-8",
+    )
+    binary.chmod(0o755)
+    return {"PATH": f"{tmp_path}{os.pathsep}{os.defpath}"}
+
+
+@pytest.mark.parametrize("provider", ("grok", "codex"))
+def test_hermes_absent_binary_fails_before_lifecycle(provider: str) -> None:
+    assert shutil.which("hermes", path=os.defpath) is None
+    result = run_launcher(
+        f"start-{provider}.sh", "--harness", "hermes", env={"PATH": os.defpath}, dry_run=False,
+    )
+    assert result.returncode == 3
+    assert "Hermes executable is unavailable" in result.stderr
+    assert "lease" not in result.stdout
+
+
+@pytest.mark.parametrize("provider", ("grok", "codex"))
+def test_hermes_environment_is_not_opt_in(provider: str) -> None:
+    result = run_launcher(f"start-{provider}.sh", env={"LAUNCHER_HARNESS": "hermes"})
+    assert result.returncode == 2
+    assert "explicit --harness hermes" in result.stderr
+
+
+@pytest.mark.parametrize("provider", ("grok", "codex"))
+@pytest.mark.parametrize("override", (
+    "--provider=openrouter", "--model=other", "-mother", "--reasoning=ultra",
+    "--yolo", "--safe-mode", "--ignore-rules", "--api-key=private-test-credential",
+    "--resume=latest", "--oneshot", "--query=override",
+))
+def test_hermes_forwarded_flags_fail_closed_without_echoing_values(provider: str, override: str) -> None:
+    result = run_launcher(f"start-{provider}.sh", "--harness", "hermes", "--", override)
+    assert result.returncode == 2
+    assert "forwarded CLI flags are forbidden" in result.stderr
+    assert "private-test-credential" not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize("provider", ("grok", "codex"))
+def test_hermes_unproven_effort_is_rejected(tmp_path: Path, provider: str) -> None:
+    env = hermes_stub_env(tmp_path, help_text=(
+        "  --model MODEL\n  --provider PROVIDER\n  --query QUERY\n  --in DIR\n  --cli\n"
+        "  --reasoning LEVEL  Reasoning effort: medium, high.\n"
+        "  --verbosity LEVEL  Verbosity: low, high.\n"
+    ))
+    result = run_launcher(f"start-{provider}.sh", "--harness", "hermes", "--effort", "low", env=env)
+    assert result.returncode == 2
+    assert "does not advertise" in result.stderr
+    assert "would claim lease" not in result.stdout
+
+
+@pytest.mark.parametrize("provider", ("grok", "codex"))
+def test_hermes_configured_fallback_is_refused_and_redacted(tmp_path: Path, provider: str) -> None:
+    env = hermes_stub_env(tmp_path) | {"TEST_HERMES_FALLBACK": "1"}
+    result = run_launcher(f"start-{provider}.sh", "--harness", "hermes", env=env)
+    assert result.returncode == 2
+    assert "empty fallback chain" in result.stderr
+    assert "private-test-credential" not in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize("provider", ("grok", "codex"))
+def test_hermes_help_never_probes_or_claims(provider: str) -> None:
+    result = run_launcher(
+        f"start-{provider}-driver.sh", "--harness", "hermes", "--help", env={"PATH": os.defpath},
+    )
+    assert result.returncode == 0
+    assert "Rollback: omit --harness hermes" in result.stdout
+    assert "would claim lease" not in result.stdout
+
+
+@pytest.mark.parametrize("provider,model,route", (
+    ("grok", "grok-4.6", "xai-oauth"), ("codex", "gpt-6-astra", "openai-codex"),
+))
+def test_hermes_real_exec_preserves_literal_prompt_argv(
+    tmp_path: Path, provider: str, model: str, route: str,
+) -> None:
+    """Run the real adapter against a fake binary, without deployment/lease effects."""
+    import shlex
+
+    env = os.environ | hermes_stub_env(tmp_path)
+    prompt = "quotes ' and \"; $(touch never-execute) `false`\nsecond line"
+    command = (
+        f"source {shlex.quote(str(REPO / 'scripts/lib/launcher_core.sh'))}\n"
+        f"source {shlex.quote(str(REPO / f'scripts/launchers/{provider}.sh'))}\n"
+        f"LC_PROVIDER={provider}; LC_MODE=interactive; launcher_defaults\n"
+        f"LC_SESSION_ROOT={shlex.quote(str(tmp_path / 'repo with spaces'))}\n"
+        f"launcher_parse --harness hermes --effort low -- {shlex.quote(prompt)}\n"
+        "launcher_adapter_validate\nlauncher_adapter_preflight\nlauncher_adapter_exec\n"
+    )
+    result = subprocess.run(
+        ["bash", "-eu", "-c", command], cwd=REPO, env=env,
+        capture_output=True, text=True, check=False, timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.split("\0") == [
+        "chat", "--cli", "--provider", route, "--model", model,
+        "--in", str(tmp_path / "repo with spaces"), "--reasoning", "low", "--query", prompt, "",
+    ]
+
+
+@pytest.mark.parametrize("provider", ("grok", "codex"))
+def test_hermes_missing_required_cli_flag_fails_closed(tmp_path: Path, provider: str) -> None:
+    env = hermes_stub_env(tmp_path, help_text="  --model MODEL\n  --reasoning LEVEL low, high.\n")
+    result = run_launcher(f"start-{provider}.sh", "--harness", "hermes", env=env)
+    assert result.returncode == 2
+    assert "lacks a required launcher option" in result.stderr
+
+
+@pytest.mark.parametrize("provider", ("grok", "codex"))
+def test_hermes_rejects_effort_that_transport_would_clamp(provider: str) -> None:
+    result = run_launcher(f"start-{provider}.sh", "--harness", "hermes", "--effort", "max")
+    assert result.returncode == 2
+    assert "supports only low|medium|high|xhigh effort" in result.stderr

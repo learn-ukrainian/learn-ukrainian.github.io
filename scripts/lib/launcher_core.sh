@@ -84,6 +84,20 @@ Examples:
   LAUNCHER_DRY_RUN=1 ./${name} --model ${LC_MODEL:-MODEL}
   $example_three
 EOF
+  if [ "$LC_PROVIDER" = grok ] || [ "$LC_PROVIDER" = codex ]; then
+    cat <<'EOF'
+
+Hermes (opt-in only):
+  --harness hermes           Use the existing Hermes OAuth login; no paid fallback.
+                             Grok pins grok-4.6 via xai-oauth; Codex pins
+                             gpt-6-astra via openai-codex (interactive only).
+                             --effort maps to the probed Hermes --reasoning flag.
+                             Hermes accepts prompt text, not forwarded CLI flags.
+                             Requires an installed CLI and an empty fallback chain,
+                             including for dry-run. Help never probes or claims leases.
+  Rollback: omit --harness hermes to use the native launcher again.
+EOF
+  fi
   if [ "$LC_MODE" = "driver" ]; then
     cat <<'EOF'
 
@@ -116,6 +130,82 @@ launcher_require_binary() {
     launcher_error "$error_message"
     return "$exit_code"
   }
+}
+
+launcher_hermes_validate() {
+  if [ "$LC_HARNESS_EXPLICIT" != 1 ]; then
+    launcher_error 'Hermes requires explicit --harness hermes; environment opt-in is refused.'
+    exit 2
+  fi
+  local arg
+  for arg in "${LC_FORWARD_ARGS[@]}"; do
+    case "$arg" in
+      -*)
+        launcher_error 'Hermes accepts prompt text only; forwarded CLI flags are forbidden.'
+        exit 2
+        ;;
+    esac
+  done
+}
+
+launcher_hermes_preflight() {
+  # Unlike native dry-run, Hermes must prove its CLI surface before emitting
+  # an argv. Capture probe output: config/provider failures may contain secrets.
+  command -v hermes >/dev/null 2>&1 || {
+    launcher_error 'Hermes executable is unavailable.'
+    exit 3
+  }
+  local help flag fallback reasoning_help
+  help="$(hermes chat --help 2>/dev/null)" || {
+    launcher_error 'Hermes CLI capability probe failed.'
+    exit 3
+  }
+  for flag in --model --provider --query --in --cli; do
+    if ! grep -Eq -- "(^|[[:space:],])${flag}([[:space:]=,]|$)" <<< "$help"; then
+      launcher_error 'Hermes CLI lacks a required launcher option.'
+      exit 2
+    fi
+  done
+  if [ -n "$LC_EFFORT" ]; then
+    reasoning_help="$(awk '
+      /^  --reasoning / { found=1; print; next }
+      found && /^  -/ { exit }
+      found { print }
+    ' <<< "$help")"
+    if ! grep -Eq -- "(^|[[:space:],])${LC_EFFORT}([[:space:],.]|$)" <<< "$reasoning_help"; then
+      launcher_error 'Hermes CLI does not advertise the requested reasoning effort.'
+      exit 2
+    fi
+  fi
+  fallback="$(hermes fallback list 2>/dev/null)" || {
+    launcher_error 'Hermes fallback configuration could not be verified.'
+    exit 3
+  }
+  # Fail closed on changed/unknown output, not merely absence of a paid label.
+  if [ "$fallback" != $'\n  No fallback providers configured.\n\n  Add one with:  hermes fallback add' ]; then
+    launcher_error 'Hermes requires an empty fallback chain; refusing unverified or configured fallback.'
+    exit 2
+  fi
+  LC_AUTH_SOURCE="hermes-existing-oauth"
+}
+
+launcher_hermes_exec() {
+  local cmd=(hermes chat --cli --provider "$LC_HERMES_PROVIDER" --model "$LC_MODEL" --in "$LC_SESSION_ROOT")
+  local prompt="" arg
+  if [ -n "$LC_EFFORT" ]; then cmd+=(--reasoning "$LC_EFFORT"); fi
+  for arg in "${LC_FORWARD_ARGS[@]}"; do
+    if [ -n "$prompt" ]; then prompt+=$'\n'; fi
+    prompt+="$arg"
+  done
+  if [ "${#LC_FORWARD_ARGS[@]}" -gt 0 ]; then cmd+=(--query "$prompt"); fi
+  if [ "$LC_DRY_RUN" = 1 ]; then
+    printf 'LAUNCHER_DRY_RUN=1: credential_source=%s provider=%s model=%s requested_effort=%s harness=hermes\nwould exec ' \
+      "$LC_AUTH_SOURCE" "$LC_HERMES_PROVIDER" "$LC_MODEL" "${LC_EFFORT:-default}"
+    printf '%q ' "${cmd[@]}"
+    printf '\n'
+    return 0
+  fi
+  launcher_exec_command "${cmd[@]}"
 }
 
 launcher_clear_foreign_route_state() {
@@ -188,6 +278,7 @@ launcher_defaults() {
   LC_EPIC=""
   LC_GOVERNOR="0"
   LC_DRIVER_LEASE_CLAIMED=0
+  LC_HARNESS_EXPLICIT=0
   LC_FORWARD_ARGS=()
 }
 
@@ -226,10 +317,11 @@ launcher_parse() {
       --effort=*) LC_EFFORT="${1#*=}"; shift ;;
       --harness)
         launcher_need_value "$1" "${2:-}"
+        LC_HARNESS_EXPLICIT=1
         LC_HARNESS="$2"
         shift 2
         ;;
-      --harness=*) LC_HARNESS="${1#*=}"; shift ;;
+      --harness=*) LC_HARNESS_EXPLICIT=1; LC_HARNESS="${1#*=}"; shift ;;
       --epic)
         launcher_need_value "$1" "${2:-}"
         LC_EPIC="$2"
@@ -407,6 +499,7 @@ launcher_prepare_driver_identity() {
     grok) handoff="$(handoff_identity_for_grok_epic "$LC_EPIC")"; harness="grok-tui" ;;
     cursor) handoff="$(handoff_identity_for_cursor_epic "$LC_EPIC")"; harness="cursor-agent" ;;
   esac
+  if [ "$LC_HARNESS" = hermes ]; then harness=hermes; fi
   LC_DRIVER_HANDOFF="$handoff"
   LC_DRIVER_HARNESS="$harness"
   export SESSION_EPIC="$LC_EPIC"
@@ -554,6 +647,29 @@ launcher_stop_driver_renew() {
   fi
 }
 
+launcher_classify_close_failure() {
+  # Map known-safe marker substrings from scripts.session_supervisor's stderr
+  # to a stable, privacy-safe class. The caller never echoes the raw text this
+  # matches against — only the fixed code names below are safe to log, so this
+  # function must never print anything but one of them, regardless of how
+  # hostile the captured stderr is.
+  local stderr_text="$1"
+  case "$stderr_text" in
+    *'missing required hook environment'*)
+      printf 'missing-required-environment' ;;
+    *'LEASE LOST'*|*'fenced the exact lease'*|*'not the current fenced lease'*|*'does not match the supplied historical lease'*|*'has no exact active lease'*)
+      printf 'lease-fenced' ;;
+    *'Monitor API unreachable'*)
+      printf 'monitor-unreachable' ;;
+    *'Monitor API'*|*'monitor URL must be an HTTP loopback URL'*)
+      printf 'monitor-error' ;;
+    *'session-supervisor:'*)
+      printf 'store-error' ;;
+    *)
+      printf 'unknown' ;;
+  esac
+}
+
 launcher_close_driver_lease() {
   # Close only the exact exported, fenced lease. The store operation is
   # idempotent, so a bounded retry is safe when the first client invocation is
@@ -561,10 +677,12 @@ launcher_close_driver_lease() {
   [ "${LC_DRIVER_LEASE_CLOSED:-0}" = "1" ] && return 0
 
   local attempt
+  local close_stderr=""
   for attempt in 1 2; do
-    # Linked worktrees carry no venv; the durable helper root does.
-    if "${LC_DURABLE_HELPER_ROOT:-$LC_SESSION_ROOT}/.venv/bin/python" \
-        -m scripts.session_supervisor close --role driver >/dev/null 2>&1; then
+    # Linked worktrees carry no venv; the durable helper root does. Capture
+    # stderr per attempt for classification only — it is never echoed.
+    if close_stderr="$("${LC_DURABLE_HELPER_ROOT:-$LC_SESSION_ROOT}/.venv/bin/python" \
+        -m scripts.session_supervisor close --role driver 2>&1 >/dev/null)"; then
       LC_DRIVER_LEASE_CLOSED=1
       return 0
     fi
@@ -574,7 +692,9 @@ launcher_close_driver_lease() {
       break
     fi
   done
-  launcher_error "failed to close the exact ${LC_PROVIDER} driver lease after two attempts."
+  local close_failure_reason
+  close_failure_reason="$(launcher_classify_close_failure "$close_stderr")"
+  launcher_error "failed to close the exact ${LC_PROVIDER} driver lease after two attempts. close_failure_reason=${close_failure_reason}"
   return 1
 }
 

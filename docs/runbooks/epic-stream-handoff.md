@@ -15,10 +15,13 @@ driver (e.g. Codex on hramatka) leaves, content dual-write alone is not enough:
 
 ## Contract (v0)
 
-1. **Predecessor** clean-exits (`hook close`) **or** successor runs **proof-gated
-   force-close** (holder PID dead **and** claimer is a distinct live instance;
-   wall-clock TTL need not have expired — a dead process cannot renew).
-2. **Successor opens a NEW session/lease** on the same `epic:N` — never reopens a
+1. **Remote authority (default):** predecessor cleanly releases the remote lease;
+   otherwise recovery uses Monitor TTL/CAS or an attributed operator release.
+   Local PID death is not remote liveness proof and cannot authorize early recovery.
+   **Local/offline only:** predecessor clean-exits (`hook close`) or the successor
+   launcher uses **proof-gated force-close** (holder PID dead **and** claimer is a
+   distinct live instance; local wall-clock TTL need not have expired).
+2. **Successor launcher opens a NEW session/lease** on the same `epic:N` — never reopens a
    closed session.
 3. **Pin transfer:** append a binding order that names the new driver; do not leave
    “interim until return” as the only ownership signal.
@@ -32,12 +35,15 @@ driver (e.g. Codex on hramatka) leaves, content dual-write alone is not enough:
 ## Remote lease and handoff authority
 
 Driver leases are claimed on the API host through `/api/epics/v1`; remote mode
-is the default. `--local` is offline-only, prints a warning, and does not make
-the lease visible to other machines. Handoffs are appended with
+is the default. `--local` is an explicit operator-offline fallback, prints a
+warning, and does not make the lease visible to other machines. Drivers must not
+use `--local` as recovery when the remote endpoint is unavailable; stop and
+preserve remote authority. Handoffs are appended with
 `POST /api/epics/v1/epic:<N>/handoff`.
 
-A driver on any machine resumes by launching with `--epic <name>` and claiming
-the same remote stream. It then reads the current holder, lease state, and
+A driver on any machine resumes by launching with `--epic <name>`; the successor
+launcher claims the same remote stream. The live driver does not claim again.
+It then reads the current holder, lease state, and
 latest digest at SessionStart, and writes the next typed handoff through the
 API. The remote API host is the lease authority; local files remain the
 thread-rollover and lane handoff context, not a competing lease store.
@@ -74,8 +80,9 @@ LU_MONITOR_HOST_ID="<opaque id>" \
 # Typed handoff: POST /api/epics/v1/epic:4542/handoff
 ```
 
-The driver launcher normally performs the claim. `--local` is the explicit
-offline fallback and prints its warning; it is not a remote handoff path.
+The successor launcher performs the claim above; it is not a live-driver command.
+`--local` is the explicit operator-offline fallback and prints its warning;
+drivers must not use it for remote recovery.
 
 ## Cross-host rollover bundle (#7260)
 
@@ -146,9 +153,12 @@ for operator review and are never swept automatically.
 ## Manual checklist (until CLI is habitual)
 
 1. Read `GET /api/epics/v1/epic:<N>` or the equivalent SessionStart remote state.
-2. If the remote holder is expired/released, relaunch with `--epic <name>` and
-   claim the stream; no local store promotion is needed.
-3. If a live foreign holder remains, **stop** — ask that driver to close.
+2. If Monitor confirms the remote holder is expired/released, relaunch with
+   `--epic <name>` so the successor launcher claims through Monitor TTL/CAS;
+   no local store promotion is permitted.
+3. If the remote holder remains unexpired, **stop** — wait for expiry or an
+   attributed operator release, regardless of local PID observations. An
+   unavailable remote endpoint is unknown authority, not proof of release.
 4. Read the remote digest surfaced at SessionStart and fold it into your handoff file.
 5. Bind exact rollover IDs if any, then drive.
 6. Append a typed `POST …/handoff` after each batch and cleanly release on end.

@@ -99,6 +99,52 @@ attempted candidate that failed one or both gates — is recorded per book in
 the `residual:` block of its glossary YAML with the specific reason(s)
 (`no_uk_definition` / `no_en_gloss`).
 
+## Drive extras (this pass)
+
+Native-extract + VESUM/СУМ-20/ВТС glossary pass over three grade-5 Drive PDFs
+not covered by the original grade-5 pass above:
+
+| Book | JSONL | Native coverage | Outcome |
+| --- | --- | --- | --- |
+| Ривкінд Ф. М., Лисенко Т. І., Чернікова Л. А., Шакотько В. В., «Інформатика», підручник для 5 класу ЗЗСО (НУШ), 2022 ([pidruchnyk.com.ua/1660](https://pidruchnyk.com.ua/1660-informatyka-5-klas-ryvkind-2022.html)) | — | 0.41% (1/244 content pages) | Pure image scan; native extraction failed closed per `--native-only` (no OCR run) |
+| Заболотний О. В., Заболотний В. В., «Українська література», підручник для 5 класу ЗЗСО, 2022 ([pidruchnyk.com.ua/1684](https://pidruchnyk.com.ua/1684-5_ukrlit_zabolotnyi.html)) | — | 42.11% (88/209 content pages) | Below the 60% floor; native extraction failed closed per `--native-only` (no OCR run) |
+| Літвінова О., «Українська мова», підручник для 5 класу ЗЗСО, 2022 ([pidruchnyk.com.ua/1648](https://pidruchnyk.com.ua/1648-ukrmova-5-klas-litvinova.html)) | `5-klas-ukrmova-litvinova-2022.jsonl` | 97.84% (272/278 content pages) | Passed native-only extraction; ran through the standard two-stage pipeline |
+
+Author names for Заболотний/Ривкінд are the surnames listed on the
+pidruchnyk.com.ua catalog page for this exact title/grade/year (no initials
+printed there beyond what's shown, so none beyond that are invented); the
+Ривкінд byline (Лисенко, Чернікова, Шакотько) is confirmed from the same
+catalog page. This is a separate ukrlit textbook from the already-processed
+Авраменко ukrlit book above — Заболотний and Авраменко are two distinct
+authors/editions both teaching grade-5 Ukrainian literature, and this is also
+a separate `ukrmova` textbook from the four Ukrainian-language books above
+(Авраменко, Голуб, Zabolotnyi's own `ukrmova` edition), following the same
+"separate books, separate authors, all processed" rule from the header above.
+
+Litvinova pipeline result (`extract_textbook_chunk_headword_inventory.py`
+then `admit_textbook_book_glossary.py`, top-300-by-frequency content-word
+cap, СУМ-20/ВТС + dmklinger/ukreng gates, same selection rule as the table
+above — conj/prep/pron/part/intj POS, ambiguous forms, and proper-noun
+candidates dropped before ranking):
+
+| Book | VESUM content candidates | Attempted (top 300 by freq) | Admitted | Richness | Residual (not yet attempted) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| ukrmova-litvinova | 4,320 | 300 | 278 | 92.7% | 4,020 |
+
+Richness floor for this program is 40% (`--allow-richness-regression` not
+used, not needed). Unknown-forms rate for the headword extraction stage was
+15.85% (floor 20%, no override needed). Output:
+`ukrmova-litvinova-grade5-2022-headwords.yaml` (candidate pool, no
+gloss/admission decision) and `ukrmova-litvinova-grade5-2022-glossary.yaml`
+(278 admitted headwords plus the 22 residual-this-batch candidates that
+failed one or both gates, with reasons).
+
+Ривкінд and Заболотний produced no local JSONL and no glossary — native
+extraction failed closed for both (0.41% and 42.11% content-page coverage
+respectively, both below the 60% floor); per #7551 scope this is not
+force-OCR'd. No existing grade-5 glossary rewritten. Siblings
+#7800/#7801/#7802/#7803 (grade-1/2/3/4 extras) untouched.
+
 ## What this is not
 
 - Not the Atlas manifest. Nothing here has been promoted into

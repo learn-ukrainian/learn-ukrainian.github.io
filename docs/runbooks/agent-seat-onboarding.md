@@ -56,6 +56,11 @@ handoff creates a competing authority.
   fails closed: no second supervisor, no alternate identity, and no local
   lease fallback. Remote leases remain live until `expires_at`, regardless of
   local PID observations; wait for expiry or an attributed operator release.
+  Local Git checkout HEAD (`git status` / `git rev-parse`) and the tunneled
+  Monitor service's reported HEAD are independent facts from independent
+  sources; a mismatch between them alone is not a defect requiring
+  reconciliation, and it is never grounds for an automatic primary-checkout
+  update or for borrowing another session's identity.
 - **Orient:** read rules, `plane-status`, and the assigned stream's continuity.
   Query `GET /api/work/v1/projection` and
   `GET /api/work/v1/next?stream=<your-stream>` through the configured Monitor
@@ -364,13 +369,15 @@ not permanent routing weights and do not override current CodexBar headroom.
   `acpx-cursor-shadow`, `acpx-pool-shadow`, `acpx-agy-shadow`,
   `acpx-glm-shadow`, `acpx-gemma-shadow`, and `acpx-deepseek-shadow`; never
   registered for dispatch, routing, review, or failover.
-- ACPX, Grok, AGY, OpenCode, and Hermes use rolling compatibility contracts.
+- ACPX, Grok, AGY, and OpenCode use rolling compatibility contracts.
   Immediately before spawn, each adapter checks the exact command and flags
   it will invoke; versions are recorded for telemetry but are not allowlists.
   An observed version is diagnostic evidence, not an allowlist or runtime pin.
   The contracts are `json-one-shot-v1` (ACPX), `agent-stdio-v1` (Grok),
-  `text-plan-sandbox-v1` (AGY), `native-acp-pure-v1` (OpenCode), and
-  `text-oneshot-isolated-v1` (Hermes).
+  `text-plan-sandbox-v1` (AGY), and `native-acp-pure-v1` (OpenCode).
+  The historical `text-oneshot-isolated-v1` Hermes contract is retired;
+  it is not a live DeepSeek route. This does not forbid the separately authorized
+  Grok/Codex launcher `--harness hermes` path (private #667 / public #6943).
   ACPX built-ins are checked through their `<seat> exec --file` surface rather
   than by duplicating pins for the hidden provider executables. The project
   text ACP server remains digest-checked before use.
@@ -404,11 +411,12 @@ not permanent routing weights and do not override current CodexBar headroom.
   memory, web, MCP, and LSP tools inside the Grok ACP server. This is required
   in addition to ACPX `--deny-all --no-fs --no-terminal --allowed-tools ""`:
   ACPX client flags alone do not remove native Grok tools.
-- AGY and DeepSeek use the project-owned text ACP server. It accepts one text
+- AGY uses the project-owned text ACP server. It accepts one text
   prompt, runs source-blind in a fresh temporary directory, and removes that
   directory after the turn. AGY runs `plan` + sandbox without permission
-  bypasses. DeepSeek runs Hermes against an isolated empty-tool/no-fallback
-  config while reusing only the existing local credential files.
+  bypasses. DeepSeek's standing route is first-party via
+  `opencode acp --pure`, with deny-all tool confinement; see
+  [the DeepSeek route contract](#deepseek-acp--historical-hermes-route-retired).
 - GLM uses native `opencode acp --pure`, pinned to
   `zai-coding-plan/glm-5.3`, with both `permission.*=deny` and `tools.*=false`.
   GLM and first-party DeepSeek retain their local-only/never-CI egress guards.
@@ -530,8 +538,10 @@ The verifier is read-only and body-free. `verified: true` requires the fixed
 participants to succeed in every requested round, successful native synthesis,
 terminal `COMPLETE`, and an observed replay. It never authorizes a retry.
 
-Participants are exactly `codex,grok`. Two rounds are the default and three is
-the hard maximum: parallel initial participant calls, a bounded peer
+Participants are exactly two enabled seats from the supported set in
+[Selecting the ACP panel](#selecting-the-acp-panel). `codex,grok` is an example
+pair, not the only pair. Two rounds are the default and three is the hard
+maximum: parallel initial participant calls, a bounded peer
 cross-response, then authoritative native-Codex synthesis. The controller
 allows at most two participant calls and five model calls by default,
 including synthesis. It starts no persistent session, tool-enabled run,
@@ -794,16 +804,18 @@ immediately before spawn. Both paths emit the same remediation text.
 
 | Error excerpt | Meaning |
 | --- | --- |
-| `hermes binary not found on PATH` | Hermes was permanently removed from this host (operator order 2026-08-16) — only legacy direct-Hermes paths still resolve it; the DeepSeek ACP seat no longer does |
+| `hermes binary not found on PATH` | The DeepSeek ACP seat / `ask-hermes` alias no longer uses a Hermes binary; this does not restrict the separately authorized Grok/Codex launcher opt-in |
 | `opencode binary not found on PATH` | The GLM, Gemma, DeepSeek, and Pool ACP seats are down |
 | `agy binary not found on PATH` | The AGY ACP seat is down |
 | `legacy ask target '<x>' has no enabled ACP route` | The seat is not wired under authority mode; do not assume a fallback — check this runbook and #6805 |
 | `non-evidentiary review reply` | The seat answered a `--type review` ask without a VERDICT grounded in evidence; the ask terminalized `failed:non_evidentiary` — re-ask with a fresh task-id or reroute, never count it as a review |
 
-### Hermes permanently removed — DeepSeek routes via opencode
+### DeepSeek ACP — historical Hermes route retired
 
-Hermes was permanently removed from this host (operator order 2026-08-16) —
-it is **not** awaiting reinstall, and no provisioning recipe applies anymore.
+The historical Hermes transport for the DeepSeek ACP seat / `ask-hermes` alias
+is retired: that seat is **not** awaiting a Hermes reinstall, and no Hermes
+provisioning recipe applies to that alias. This is not a blanket ban on
+operator-authorized Grok/Codex `--harness hermes`.
 The DeepSeek seat's **standing route** is first-party via opencode:
 
 - Bridge asks use `ask-deepseek` (or the `ask-hermes` alias) — both ride the
@@ -820,7 +832,7 @@ The DeepSeek seat's **standing route** is first-party via opencode:
 - Tool-heavy work goes to `delegate.py dispatch --agent deepseek` from a
   dispatch worktree.
 
-Any legacy route that still names a `hermes` binary keeps the admission-time
+Any legacy DeepSeek ACP route that still names a `hermes` binary keeps the admission-time
 refusal; its message points at the opencode route above, not at a reinstall.
 
 ### Documented fallbacks while a seat is down
@@ -828,10 +840,10 @@ refusal; its message points at the opencode route above, not at a reinstall.
 Per `agents_extensions/shared/rules/model-assignment.md` (the error text
 quotes the same substitutions):
 
-- **ask-deepseek / ask-hermes (DeepSeek seat):** Hermes is permanently
-  removed, so the opencode first-party route above is the standing path —
-  not a temporary fallback. Record the substitution in the artifact all the
-  same.
+- **ask-deepseek / ask-hermes (DeepSeek seat):** The DeepSeek ACP standing path
+  is first-party opencode, not a temporary fallback. `ask-hermes` remains that
+  alias, not the launcher harness. Record the substitution in the artifact all
+  the same.
 - **ask-glm / ask-gemma / ask-deepseek / ask-pool down (opencode missing):**
   reinstall opencode first — four seats share the binary. There is no second
   host for the opencode ACP transport.

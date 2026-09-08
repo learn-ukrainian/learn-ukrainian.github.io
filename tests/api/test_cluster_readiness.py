@@ -149,12 +149,12 @@ def test_readiness_surfaces_component_interlock_refusal(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     """#7482: operators can diagnose a rejected authority seam from readiness."""
-    monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
+    monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_SESSION_STREAMS", "pg")
     monkeypatch.setenv(_PG_DSN_ENV, _UNREACHABLE_DSN)
 
     data = check_cluster_readiness(_ready_context(tmp_path))
 
-    refusal = data["interlocks"][StoreId.FLEET_COMMS.value]
+    refusal = data["interlocks"][StoreId.SESSION_STREAMS.value]
     assert refusal == {
         "allowed": False,
         "reason": "authority_unsupported_component",

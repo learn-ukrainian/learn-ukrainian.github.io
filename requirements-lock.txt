@@ -17,7 +17,7 @@ blinker==1.9.0
 build==1.5.0
 cbor==1.0.0
 certifi==2026.6.17
-cffi==2.1.0
+cffi==2.1.1
 cfgv==3.5.0
 chardet==7.6.0
 charset-normalizer==3.4.4
@@ -51,7 +51,7 @@ fsspec==2026.1.0
 ftfy==6.3.1
 google-auth==2.49.2
 google-genai==1.65.0
-greenlet==3.5.1
+greenlet==3.5.5
 grpcio==1.82.1
 h11==0.16.0
 h2==4.4.1
@@ -62,7 +62,7 @@ httpcore2==2.9.1
 httpx-sse==0.4.3
 httpx==0.28.1
 httpx2==2.9.1
-huggingface_hub==1.24.0
+huggingface_hub==1.29.0
 humanfriendly==10.0
 hyperframe==6.1.0
 identify==2.6.19
@@ -116,7 +116,7 @@ packaging==26.2
 pandas==3.0.1
 pathspec==1.1.1
 pdftext==0.7.1
-peft==0.19.1
+peft==0.20.0
 pillow==12.3.0
 platformdirs==4.9.6
 playwright==1.59.0
@@ -149,7 +149,7 @@ pymorphy3-dicts-uk==2.4.1.1.1663094765
 pymorphy3==2.0.6
 pymorphy3==2.0.6
 PyMuPDF==1.28.0
-pypdf==6.16.1
+pypdf==6.16.2
 pypdfium2==4.30.0
 pyproject_hooks==1.2.0
 pytest-cov==7.1.0
