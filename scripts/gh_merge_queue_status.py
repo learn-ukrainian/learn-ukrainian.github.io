@@ -56,14 +56,21 @@ query($owner: String!, $name: String!, $number: Int!, $branch: String!) {
         solo
         headCommit {
           oid
-          checkSuites(first: 10) {
+          checkSuites(first: 20) {
             nodes {
               status
               conclusion
+              createdAt
+              updatedAt
               workflowRun {
                 id
                 url
                 event
+                createdAt
+                updatedAt
+                workflow {
+                  name
+                }
               }
             }
           }
@@ -179,21 +186,32 @@ def find_latest_merge_group_run(
     for r in runs:
         if not isinstance(r, dict):
             continue
+        event = r.get("event")
+        if event is not None and event != "merge_group":
+            continue
         branch = r.get("head_branch") or r.get("headBranch") or ""
+        if event is None and not branch.startswith("gh-readonly-queue/"):
+            continue
         if extract_pr_number(branch) == target_pr:
             matching.append(r)
     if not matching:
         return None
-    matching.sort(
-        key=lambda r: str(r.get("created_at") or r.get("createdAt") or ""),
-        reverse=True,
-    )
+
+    def _sort_key(run: dict[str, Any]) -> tuple[str, int]:
+        ts = str(run.get("created_at") or run.get("createdAt") or run.get("updated_at") or run.get("updatedAt") or "")
+        run_id = run.get("id") or run.get("databaseId") or 0
+        try:
+            numeric_id = int(run_id)
+        except (ValueError, TypeError):
+            numeric_id = 0
+        return (ts, numeric_id)
+
+    matching.sort(key=_sort_key, reverse=True)
     newest_created = str(matching[0].get("created_at") or matching[0].get("createdAt") or "")
-    same_batch = [
-        r
-        for r in matching
-        if str(r.get("created_at") or r.get("createdAt") or "") == newest_created
-    ]
+    if newest_created:
+        same_batch = [r for r in matching if str(r.get("created_at") or r.get("createdAt") or "") == newest_created]
+    else:
+        same_batch = matching
     ci_run = next((r for r in same_batch if str(r.get("name") or "").upper() == "CI"), None)
     return ci_run or matching[0]
 
@@ -242,18 +260,33 @@ def evaluate_status_data(
     actions_runs: list[dict[str, Any]] | None = None,
 ) -> MergeQueueStatus:
     """Evaluate raw GraphQL repository payload and Actions runs into MergeQueueStatus."""
-    repository = graphql_data.get("data", {}).get("repository") or graphql_data.get("repository") or {}
-    pr_obj = repository.get("pullRequest")
-    if pr_obj is None:
+    raw_data = graphql_data.get("data") if isinstance(graphql_data, dict) else None
+    data_dict = (
+        raw_data
+        if isinstance(raw_data, dict)
+        else (graphql_data if isinstance(graphql_data, dict) and "repository" in graphql_data else {})
+    )
+    raw_repo = data_dict.get("repository") if isinstance(data_dict, dict) else None
+    repository = raw_repo if isinstance(raw_repo, dict) else {}
+    pr_obj = repository.get("pullRequest") if isinstance(repository, dict) else None
+    if not isinstance(pr_obj, dict):
+        if isinstance(graphql_data, dict) and "errors" in graphql_data:
+            errors = graphql_data.get("errors") or []
+            msgs = [e.get("message", "") for e in errors if isinstance(e, dict) and e.get("message")]
+            if any("Could not resolve to a PullRequest" in m for m in msgs):
+                raise ValueError(f"Pull request #{pr_number} not found in repository.")
+            err_msg = "; ".join(msgs) if msgs else json.dumps(errors)
+            raise RuntimeError(f"GraphQL error: {err_msg}")
         raise ValueError(f"Pull request #{pr_number} not found in repository.")
 
     pr_state = str(pr_obj.get("state") or "OPEN")
     pr_merged = bool(pr_obj.get("merged"))
     merge_state_status = pr_obj.get("mergeStateStatus")
     is_in_mq = bool(pr_obj.get("isInMergeQueue"))
-    mq_entry = pr_obj.get("mergeQueueEntry")
+    mq_entry = pr_obj.get("mergeQueueEntry") if isinstance(pr_obj.get("mergeQueueEntry"), dict) else None
 
-    mq_obj = repository.get("mergeQueue") or {}
+    raw_mq = repository.get("mergeQueue")
+    mq_obj = raw_mq if isinstance(raw_mq, dict) else {}
     queue_url = mq_obj.get("url")
     next_eta = mq_obj.get("nextEntryEstimatedTimeToMerge")
 
@@ -268,45 +301,85 @@ def evaluate_status_data(
         state = mq_entry.get("state")
         enqueued_at = mq_entry.get("enqueuedAt")
         eta_seconds = mq_entry.get("estimatedTimeToMerge")
-        head_commit = mq_entry.get("headCommit")
+        head_commit = mq_entry.get("headCommit") if isinstance(mq_entry.get("headCommit"), dict) else None
     elif is_in_mq:
         # Check entries on mergeQueue object
-        nodes = mq_obj.get("entries", {}).get("nodes", [])
+        raw_entries = mq_obj.get("entries")
+        entries_dict = raw_entries if isinstance(raw_entries, dict) else {}
+        nodes = entries_dict.get("nodes", []) if isinstance(entries_dict.get("nodes"), list) else []
         for node in nodes:
-            if isinstance(node, dict) and node.get("pullRequest", {}).get("number") == pr_number:
-                position = node.get("position")
-                state = node.get("state")
-                enqueued_at = node.get("enqueuedAt")
-                eta_seconds = node.get("estimatedTimeToMerge")
-                break
+            if isinstance(node, dict):
+                pr_sub = node.get("pullRequest")
+                if isinstance(pr_sub, dict) and pr_sub.get("number") == pr_number:
+                    position = node.get("position")
+                    state = node.get("state")
+                    enqueued_at = node.get("enqueuedAt")
+                    eta_seconds = node.get("estimatedTimeToMerge")
+                    break
         if position is None:
             # isInMergeQueue is true but position could not be resolved from entry
             state = "QUEUED"
             if next_eta is not None:
                 eta_seconds = next_eta
 
-    # Check for merge_group workflow run
+    # Collect candidate merge_group workflow runs from checkSuites and actions_runs
+    candidate_runs: list[dict[str, Any]] = []
+
+    if head_commit and isinstance(head_commit, dict):
+        raw_cs = head_commit.get("checkSuites")
+        cs_dict = raw_cs if isinstance(raw_cs, dict) else {}
+        check_suites = cs_dict.get("nodes", []) if isinstance(cs_dict.get("nodes"), list) else []
+        for cs in check_suites:
+            if isinstance(cs, dict):
+                wf_run = cs.get("workflowRun")
+                if isinstance(wf_run, dict):
+                    wf_url = wf_run.get("url")
+                    if wf_url:
+                        wf_event = wf_run.get("event")
+                        # Filter out non-merge_group runs (e.g. stale pull_request run)
+                        if wf_event and wf_event != "merge_group":
+                            continue
+                        wf_obj = wf_run.get("workflow")
+                        wf_name = (
+                            (wf_obj.get("name") if isinstance(wf_obj, dict) else None)
+                            or wf_run.get("name")
+                            or cs.get("name")
+                            or ""
+                        )
+                        created_at = (
+                            wf_run.get("createdAt")
+                            or wf_run.get("created_at")
+                            or cs.get("createdAt")
+                            or cs.get("created_at")
+                            or ""
+                        )
+                        run_id = wf_run.get("id") or wf_run.get("databaseId") or cs.get("id") or 0
+                        candidate_runs.append(
+                            {
+                                "id": run_id,
+                                "url": wf_url,
+                                "html_url": wf_url,
+                                "name": wf_name,
+                                "status": cs.get("status") or wf_run.get("status"),
+                                "conclusion": cs.get("conclusion") or wf_run.get("conclusion"),
+                                "event": wf_event or "merge_group",
+                                "head_branch": f"gh-readonly-queue/main/pr-{pr_number}-suite",
+                                "created_at": created_at,
+                            }
+                        )
+
+    if actions_runs:
+        candidate_runs.extend(actions_runs)
+
+    matched_run = find_latest_merge_group_run(candidate_runs, pr_number)
     run_url: str | None = None
     run_status: str | None = None
     run_conclusion: str | None = None
 
-    if head_commit and isinstance(head_commit, dict):
-        check_suites = head_commit.get("checkSuites", {}).get("nodes", [])
-        for cs in check_suites:
-            if isinstance(cs, dict):
-                wf_run = cs.get("workflowRun")
-                if isinstance(wf_run, dict) and wf_run.get("url"):
-                    run_url = wf_run.get("url")
-                    run_status = cs.get("status")
-                    run_conclusion = cs.get("conclusion")
-                    break
-
-    if not run_url and actions_runs:
-        matched_run = find_latest_merge_group_run(actions_runs, pr_number)
-        if matched_run:
-            run_url = matched_run.get("html_url") or matched_run.get("url")
-            run_status = matched_run.get("status")
-            run_conclusion = matched_run.get("conclusion")
+    if matched_run:
+        run_url = matched_run.get("html_url") or matched_run.get("url")
+        run_status = matched_run.get("status")
+        run_conclusion = matched_run.get("conclusion")
 
     eta_human = format_eta_human(eta_seconds)
     summary_line = build_summary_line(
@@ -389,12 +462,20 @@ def fetch_live_status(
         raise RuntimeError(f"Failed to parse GraphQL response (exit {proc.returncode}): {err_msg}") from exc
 
     # Check GraphQL errors
-    if "errors" in data and not data.get("data", {}).get("repository", {}).get("pullRequest"):
-        errors = data.get("errors", [])
-        msgs = [e.get("message", "") for e in errors if isinstance(e, dict)]
+    raw_data = data.get("data") if isinstance(data, dict) else None
+    data_dict = raw_data if isinstance(raw_data, dict) else {}
+    raw_repo = data_dict.get("repository") if isinstance(data_dict, dict) else None
+    repo_dict = raw_repo if isinstance(raw_repo, dict) else {}
+    raw_pr = repo_dict.get("pullRequest") if isinstance(repo_dict, dict) else None
+    pr_dict = raw_pr if isinstance(raw_pr, dict) else None
+
+    if isinstance(data, dict) and "errors" in data and not pr_dict:
+        errors = data.get("errors") or []
+        msgs = [e.get("message", "") for e in errors if isinstance(e, dict) and e.get("message")]
         if any("Could not resolve to a PullRequest" in m for m in msgs):
             raise ValueError(f"Pull request #{pr_number} not found in repository {repo}.")
-        raise RuntimeError(f"GraphQL error: {'; '.join(msgs)}")
+        err_msg = "; ".join(msgs) if msgs else json.dumps(errors)
+        raise RuntimeError(f"GraphQL error: {err_msg}")
 
     # Fetch merge_group workflow runs (best effort)
     actions_runs: list[dict[str, Any]] = []
@@ -429,7 +510,7 @@ def fetch_live_status(
                 "-L",
                 "30",
                 "--json",
-                "url,headBranch,status,conclusion,createdAt,name",
+                "url,headBranch,status,conclusion,createdAt,name,event",
             ]
             rl_proc = subprocess.run(
                 rl_cmd,
@@ -479,7 +560,10 @@ def check_and_report_pr_status(
     try:
         pr_number = parse_pr_identifier(pr)
     except ValueError as exc:
-        print(f"Error: {exc}", file=sys.stderr)
+        if json_only:
+            print(json.dumps({"error": str(exc), "status": "error"}, indent=2))
+        else:
+            print(f"Error: {exc}", file=sys.stderr)
         return 2
 
     resolved_repo = resolve_repository(repo)
@@ -489,7 +573,12 @@ def check_and_report_pr_status(
             with open(fixture_file, encoding="utf-8") as f:
                 fix_data = json.load(f)
         except Exception as exc:
-            print(f"Error reading fixture {fixture_file}: {exc}", file=sys.stderr)
+            if json_only:
+                print(
+                    json.dumps({"error": f"Error reading fixture {fixture_file}: {exc}", "status": "error"}, indent=2)
+                )
+            else:
+                print(f"Error reading fixture {fixture_file}: {exc}", file=sys.stderr)
             return 1
 
         actions_runs: list[dict[str, Any]] = []
@@ -502,15 +591,36 @@ def check_and_report_pr_status(
                     elif isinstance(act_data, list):
                         actions_runs = act_data
             except Exception as exc:
-                print(f"Error reading actions fixture {actions_fixture_file}: {exc}", file=sys.stderr)
+                if json_only:
+                    print(
+                        json.dumps(
+                            {
+                                "error": f"Error reading actions fixture {actions_fixture_file}: {exc}",
+                                "status": "error",
+                            },
+                            indent=2,
+                        )
+                    )
+                else:
+                    print(f"Error reading actions fixture {actions_fixture_file}: {exc}", file=sys.stderr)
                 return 1
         elif isinstance(fix_data, dict) and "actions_runs" in fix_data:
             actions_runs = fix_data["actions_runs"]
 
         try:
             status = evaluate_status_data(fix_data, pr_number, actions_runs)
-        except ValueError as exc:
-            print(f"Error: {exc}", file=sys.stderr)
+        except (ValueError, RuntimeError) as exc:
+            if json_only:
+                diag: dict[str, Any] = {
+                    "error": str(exc),
+                    "pr_number": pr_number,
+                    "status": "error",
+                }
+                if isinstance(fix_data, dict) and fix_data.get("errors"):
+                    diag["errors"] = fix_data["errors"]
+                print(json.dumps(diag, indent=2))
+            else:
+                print(f"Error: {exc}", file=sys.stderr)
             return 1
     else:
         auth_token = token or os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
@@ -522,10 +632,16 @@ def check_and_report_pr_status(
                 token=auth_token,
             )
         except ValueError as exc:
-            print(f"Error: {exc}", file=sys.stderr)
+            if json_only:
+                print(json.dumps({"error": str(exc), "pr_number": pr_number, "status": "error"}, indent=2))
+            else:
+                print(f"Error: {exc}", file=sys.stderr)
             return 1
         except RuntimeError as exc:
-            print(f"Error querying GitHub: {exc}", file=sys.stderr)
+            if json_only:
+                print(json.dumps({"error": str(exc), "pr_number": pr_number, "status": "error"}, indent=2))
+            else:
+                print(f"Error querying GitHub: {exc}", file=sys.stderr)
             return 1
 
     output = render_output(status, json_only=json_only, line_only=line_only)
