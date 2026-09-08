@@ -1,6 +1,7 @@
-# Portable home defaults. The main task's reasoning effort remains user-owned.
-# The deployer changes only the three keys below in the existing home config.
+# Portable home defaults approved by the operator.
+# The deployer changes only the four keys below in the existing home config.
 model = "gpt-6-astra"
+model_reasoning_effort = "medium"
 
 [agents]
 default_subagent_model = "gpt-6-astra"
