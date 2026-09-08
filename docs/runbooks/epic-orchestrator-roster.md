@@ -137,10 +137,19 @@ Exact tables below must match `scripts/config/model_catalog.yaml` → `orchestra
 | kimi | false |
 <!-- fleet-roster-projection:end formal_review_eligible -->
 
-Grok uses the proven parent-owned exact-head sealed ACP path. The fleet-facing
-`kimi` endpoint resolves to the canonical KimiCC K3 participant, but remains
-fail-closed until its authenticated sealed MCP canary passes. AGY remains
-fail-closed because its text-only wrapper cannot consume the sealed MCP.
+These tables project catalog fields, not proof of current reviewer health or
+qualification. Resolve review through the canonical `local-code-review` workflow:
+a qualified native toolful outside-author-family reviewer inspects the exact head
+SHA and posts findings/verdict on the PR; required CI must pass before merge.
+Retired sealed ACP/MCP canaries do not establish current review eligibility.
+
+**Model-by-harness intent:** operator-authorized Astra/Grok orchestration from Hermes
+separates model family, model ID, harness, and functional role. Resolve supported
+models and launcher routes from live catalog data and launcher help. This does not
+change model pins, dispatch/review quality gates, or existing stream ownership:
+one driver per stream still binds. The retired individual DeepSeek ACP transport
+is not a blanket ban on the Hermes harness. Required catalog changes need advisor
+review; this routing intent does not authorize speculative pins.
 
 ---
 

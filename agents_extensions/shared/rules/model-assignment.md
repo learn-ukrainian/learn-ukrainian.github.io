@@ -76,8 +76,8 @@ Record the harness fallback explicitly; it is a transport fallback, not a model 
   * **DeepSeek seat**: `deepseek-v4-flash` through first-party OpenCode (`deepseek-direct/*`) at
     `high` effort for review/research AND dispatch, preserving native Entire capture (operator
     2026-08-13: OpenCode is the dispatch default). Bridge asks use `ask-deepseek` (or the
-    `ask-hermes` alias) on the `acpx-deepseek-shadow` ACP seat — Hermes was permanently removed
-    (operator order 2026-08-16), so the seat rides the same native `opencode acp --pure` transport
+    `ask-hermes` alias) on the `acpx-deepseek-shadow` ACP seat — its historical Hermes transport is retired,
+    so the seat rides the same native `opencode acp --pure` transport
     as GLM/Gemma (#6805). The current Arena evidence is preliminary
     and frontend-specific, so this promotion does not grant critical or advisory authority.
 * **Complex Tasks, Deep Reviews & Anthropic Advisory Consultations**:
@@ -130,7 +130,7 @@ or count as a formal review.
   hard tasks 2026-08-13**, operator GO; canary Pro #6703 merged `9c44e63f63` @ high, Flash #6702
   canary shipped): first-party OpenCode `deepseek-direct/*` at `high` — the dispatch
   default since 2026-08-13, with native Entire capture; bridge asks go through `ask-deepseek`
-  (Hermes permanently removed 2026-08-16; `ask-hermes` survives as an alias of the same seat).
+  (the individual Hermes transport is retired; `ask-hermes` survives as an alias of the same seat).
   **Pin (2026-08-13):** Flash @ high = everyday DeepSeek. Pro @ high = hard implement only
   (complex multi-file, hard lookup). Language/VESUM/folk still forbidden. First-party
   deepseek-direct only. Default `--agent deepseek` remains Flash. Pro is reachable via
@@ -222,7 +222,20 @@ and SAY the picture is partial rather than guessing. `/api/state/routing-budget`
 `delegate --check-budget` mirror the same signal but have historically dropped it
 (`burn_pct_7d: null` / `remaining_pct: null` per lane) — a null there is MISSING DATA, not zero
 usage and not zero remaining; when they disagree or return nulls, trust the CLI. It does not list every API/routed model and therefore
-must never define the fleet by itself. Grok 4.5 and GPT/Codex never route through Hermes. Kimi K3 is a separate
+must never define the fleet by itself.
+
+**Model-by-harness intent:** operator-authorized Astra/Grok orchestration from Hermes
+keeps model family, model ID, harness, and functional role as separate axes. Hermes
+is the harness, not a model family or an independent review identity. Resolve the
+current supported model and launcher route from the live catalog and launcher help;
+this intent does not introduce new model pins. Retiring the individual DeepSeek ACP
+transport is not a blanket ban on the Hermes harness. Preserve one driver per stream,
+existing stream ownership, dispatch quality floors, and toolful outside-author-family
+exact-head review with required CI before merge. A harness change never permits a
+competing lease or makes same-family review independent. Required catalog changes
+need advisor review; do not speculate new pins.
+
+Kimi K3 is a separate
 native `kimi` CLI subscription lane (`kimi-code/k3`, max effort, tool/image/video input; do not publish a
 context-size claim until the native provider documents it). **Never OpenRouter** for Kimi workers.
 API-billed lanes such as DeepSeek may be absent from CodexBar by design; absence is unknown

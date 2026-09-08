@@ -82,6 +82,9 @@ only for an explicit rollback or compatibility probe.
 
 Do not create new authoritative bridge, channel, broker, or diary writes. Historical
 stores stay available through bounded read-only projections and idempotent migration.
+Session handoff files still carry continuity, not competing message or lease authority.
+Preserve required handoff continuity without creating new legacy message/job writes
+or another control plane; existing stream ownership remains binding.
 
 Forbidden: inventing a third message bus; encoding only file-handoff folklore in new
 cold-prompts; silent plane flips; “for now” cutovers.

@@ -730,3 +730,46 @@ def test_onboarding_retires_sealed_review_instructions(onboarding: str) -> None:
     assert not re.search(r"__main__\.py\s+(review-pr|publish-review-verdict)", onboarding)
     assert "sealed Fleet review" not in onboarding
     assert "formal `review-pr` correctly" not in onboarding
+
+
+@pytest.mark.parametrize("path", [REPO / "AGENTS.md", COOPERATION, FLEET_COMMS])
+def test_startup_authority_preserves_continuity_without_legacy_writes(path: Path) -> None:
+    body = " ".join(_read(path).split())
+    assert "Session handoff files still carry continuity" in body
+    assert "not competing message or lease authority" in body
+    assert "existing stream ownership" in body
+    assert "legacy message/job writes" in body
+    assert "another control plane" in body
+    assert "read-only migration/projection" in body
+    assert "dual-write remains authoritative" not in body
+
+
+@pytest.mark.parametrize("path", [ROSTER, REPO / "agents_extensions/shared/rules/model-assignment.md"])
+def test_model_by_harness_intent_preserves_routing_gates(path: Path) -> None:
+    body = " ".join(_read(path).split())
+    for contract in (
+        "operator-authorized Astra/Grok orchestration from Hermes",
+        "model family, model ID, harness, and functional role",
+        "one driver per stream",
+        "existing stream ownership",
+        "not a blanket ban on the Hermes harness",
+        "catalog changes need advisor review",
+        "outside-author-family",
+        "required CI",
+    ):
+        assert contract in body, f"{path.name}: missing {contract}"
+    assert "Grok 4.5 and GPT/Codex never route through Hermes" not in body
+    assert "Hermes was permanently removed" not in body
+    assert "Hermes permanently removed" not in body
+
+
+def test_roster_does_not_route_review_through_retired_sealed_canaries() -> None:
+    body = " ".join(_read(ROSTER).split())
+    assert "Retired sealed ACP/MCP canaries do not establish current review eligibility" in body
+    assert "local-code-review" in body
+    for stale in (
+        "proven parent-owned exact-head sealed ACP path",
+        "until its authenticated sealed MCP canary passes",
+        "text-only wrapper cannot consume the sealed MCP",
+    ):
+        assert stale not in body
