@@ -1,6 +1,6 @@
 ## Summary
 
-<!-- Brief description of changes -->
+<!-- Brief description of changes; link ticket Verify / outcome -->
 
 ## Changes
 
@@ -8,9 +8,15 @@
 
 ## Testing
 
-- [ ] Modules pass audit (`scripts/audit_module.py`)
-- [ ] Website builds without errors (`cd site && npm run build`)
-- [ ] Ukrainian text reviewed for naturalness
+- [ ] Ticket **Verify** commands run (paste evidence or N/A with reason)
+- [ ] Modules pass audit (`scripts/audit_module.py`) when curriculum touched
+- [ ] Website builds without errors (`cd site && npm run build`) when site touched
+- [ ] Ukrainian text reviewed for naturalness when learner-facing copy changes
+- [ ] Task-quality advisory (non-trivial issues): `.venv/bin/python scripts/check_issue_task_quality.py --issue N`
+
+## Terminal goal
+
+<!-- merge | deploy | certify — must match the linked issue -->
 
 ## Related Issues
 

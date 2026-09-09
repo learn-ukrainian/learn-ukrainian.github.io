@@ -44,6 +44,8 @@ gh issue create \
 
 ## Definition of Done
 
+Canonical pack: `docs/best-practices/task-quality.md` (DoR before start; terminal goal + residual on close).
+
 - [ ] All audit gates show :white_check_mark: PASS
 - [ ] Word count meets target (95%+ minimum)
 - [ ] All plan outline sections present

@@ -941,6 +941,7 @@ Use this before content generation to verify plan files still match `scripts/aud
 | `scripts/assess_research.py` | Assess and upgrade research | `.venv/bin/python scripts/assess_research.py hist --upgrade` |
 | `scripts/consultation_cli.py` | Review consultation proposals | `.venv/bin/python scripts/consultation_cli.py list` |
 | `scripts/check_decisions.py` | Audit decision journal expiry | `.venv/bin/python scripts/check_decisions.py` |
+| `scripts/check_issue_task_quality.py` | Advisory DoR/DoD field check for issue bodies (#7854) | `.venv/bin/python scripts/check_issue_task_quality.py --issue N` |
 | `scripts/audit/atlas_source_census.py` | Build aggregate-safe Word Atlas source planning counts | `.venv/bin/python scripts/audit/atlas_source_census.py --markdown-out docs/runbooks/word-atlas-source-census-planning.md` |
 | `scripts/audit/atlas_entry_model_census.py` | Count reviewed Atlas entries by finalized `entry_type` bucket | `.venv/bin/python scripts/audit/atlas_entry_model_census.py --format markdown` |
 | `scripts/audit/atlas_source_entry_count.py` | Estimate aggregate source-corpus Atlas entry backlog by finalized bucket | `.venv/bin/python scripts/audit/atlas_source_entry_count.py --include-ohoiko-private --markdown-out docs/runbooks/word-atlas-source-entry-count.md` |

@@ -32,11 +32,14 @@ gh issue create \
 
 ## Definition of Done
 
-- [ ] All tasks checked off
-- [ ] Tests pass (if applicable)
+Canonical pack: `docs/best-practices/task-quality.md` (DoR before start; DoD before close).
+
+- [ ] User-visible outcome verified against denominator
+- [ ] Verify commands green (or N/A with reason)
 - [ ] Documentation updated (if applicable)
-- [ ] Issue commented with summary of changes
-- [ ] Ready for review / closed
+- [ ] If code/docs change: PR + cross-family exact-head APPROVE + CI green + merge closeout
+- [ ] Terminal goal matched (`merge` | `deploy` | `certify` | …)
+- [ ] Close comment: outcome · denominator · residual · owner
 
 ## Related Files
 
