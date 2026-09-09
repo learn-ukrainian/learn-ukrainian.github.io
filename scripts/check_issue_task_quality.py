@@ -117,12 +117,21 @@ def _substantive(chunk: str | None, *, allow_none: bool = False) -> bool:
         stripped = raw.strip()
         if not stripped:
             continue
-        # Skip nested markdown headings only (not "#1234 issue refs").
-        if re.match(r"^#{1,6}\s+\S", stripped):
+        if re.match(r"^```", stripped):
+            continue
+        # Markdown headings / hash comments; keep "#1234" issue refs.
+        if (
+            stripped.startswith("#")
+            and not re.match(r"^#\d", stripped)
+            and re.match(r"^#{1,6}(?:\s|$)", stripped)
+        ):
             continue
         line = stripped.lstrip("-* ").strip()
         line = re.sub(r"^\[\s*[xX ]\s*\]\s*", "", line).strip()
-        if not line:
+        if not line or line in {"```"}:
+            continue
+        # Bare fence language tags are not content.
+        if re.fullmatch(r"[a-zA-Z0-9_+-]+", line) and raw.strip().startswith("```"):
             continue
         if allow_none and EXPLICIT_NONE_RE.match(line):
             lines.append(line)
