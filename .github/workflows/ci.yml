@@ -18,9 +18,12 @@ env:
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, edited]
+    types: [opened, synchronize, reopened, edited, labeled]
   merge_group:
   workflow_dispatch:
+  # Full PR-tier floor; slow tests remain in pytest-slow-nightly.yml.
+  schedule:
+    - cron: '30 3 * * *'
 
 jobs:
   changes:
@@ -36,93 +39,19 @@ jobs:
         with:
           persist-credentials: false
           sparse-checkout: |
-            scripts/ci/frontend_change_denominator.json
+            scripts/ci/
+            scripts/__init__.py
           sparse-checkout-cone-mode: false
+      - name: Test classifier
+        run: python3 -m unittest scripts.ci.test_classify_changes
       - id: classify
         env:
+          EVENT_NAME: ${{ github.event_name }}
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
           HEAD: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          import json, os, pathlib, subprocess, sys, urllib.parse
-          base = os.environ.get("BASE") or ""
-          head = os.environ.get("HEAD") or ""
-          repo = os.environ["REPO"]
-          token = os.environ["GH_TOKEN"]
-          shard_count = int(os.environ["PYTEST_SHARD_COUNT"])
-          all_shards = json.dumps(list(range(1, shard_count + 1)))
-          docs_only, frontend, shards = "false", "true", all_shards
-
-          def fail_closed():
-              print(f"docs_only=false\nfrontend=true\nshards={all_shards}")
-              out = os.environ.get("GITHUB_OUTPUT")
-              if out:
-                  pathlib.Path(out).write_text(
-                      f"docs_only=false\nfrontend=true\nshards={all_shards}\n", encoding="utf-8"
-                  )
-              sys.exit(0)
-
-          if not base or set(base) <= {"0"} or not head:
-              fail_closed()
-          spec = urllib.parse.quote(f"{base}...{head}", safe=".")
-          cmd = [
-              "gh", "api", "--paginate",
-              f"repos/{repo}/compare/{spec}",
-              "--jq",
-              ".files[] | .filename, (.previous_filename // empty)",
-          ]
-          try:
-              raw = subprocess.check_output(cmd, text=True, timeout=60)
-          except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
-              fail_closed()
-          paths = sorted({line.strip() for line in raw.splitlines() if line.strip()})
-          # Compare API silently caps at 300 files; treat 300 as truncated.
-          if not paths or len(paths) >= 300:
-              fail_closed()
-
-          def is_docs(path: str) -> bool:
-              # Infra CI skips wiki/ and curriculum/ — Content CI owns those.
-              # docs/*.md yes; docs/lesson-schema.yaml still hits contracts.
-              if path.endswith(".md"):
-                  return True
-              prefixes = (
-                  "wiki/",
-                  "curriculum/",
-                  "agents_extensions/shared/skills/",
-                  ".claude/",
-                  ".codex/",
-                  ".agent/",
-              )
-              return any(path == p.rstrip("/") or path.startswith(p) for p in prefixes)
-
-          denom = {"site/", "scripts/atlas/", "scripts/lexicon/"}
-          denom_file = pathlib.Path("scripts/ci/frontend_change_denominator.json")
-          if denom_file.is_file():
-              data = json.loads(denom_file.read_text(encoding="utf-8"))
-              denom = set(data.get("paths") or denom)
-          def is_frontend(path: str) -> bool:
-              for entry in denom:
-                  if entry.endswith("/"):
-                      if path.startswith(entry):
-                          return True
-                  elif path == entry:
-                      return True
-              return False
-
-          docs_only = "true" if all(is_docs(p) for p in paths) else "false"
-          frontend = "true" if any(is_frontend(p) for p in paths) else "false"
-          shards = "[1]" if docs_only == "true" else all_shards
-          print(f"files={len(paths)} docs_only={docs_only} frontend={frontend} shards={shards}")
-          out = os.environ.get("GITHUB_OUTPUT")
-          if out:
-              pathlib.Path(out).write_text(
-                  f"docs_only={docs_only}\nfrontend={frontend}\nshards={shards}\n",
-                  encoding="utf-8",
-              )
-          PY
+        run: python3 -m scripts.ci.classify_changes
 
   ruff:
     name: Ruff
