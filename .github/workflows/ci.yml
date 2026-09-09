@@ -156,6 +156,7 @@ jobs:
           cache-dependency-path: package-lock.json
       - name: Install native mechanism test dependencies
         run: |
+          sudo rm -f /etc/apt/sources.list.d/*chrome* /etc/apt/sources.list.d/*google* /var/lib/apt/lists/*chrome* /var/lib/apt/lists/*google*
           sudo apt-get update -qq
           sudo apt-get install -y bubblewrap postgresql-16 libpq-dev apparmor
           # Ubuntu-hosted runners require an application-specific userns grant.
