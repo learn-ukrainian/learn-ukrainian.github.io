@@ -16,9 +16,29 @@ replacement, not the old two-tier merge-queue file.
 | Frontend | when frontend paths changed |
 | CI Gate | always |
 
-Docs/skills PRs (every changed path is docs/, shared skills, agent deploy
-trees, or `*.md`) skip ruff/contracts/frontend and run one pytest leg with
-`-m docs_skills`. Compare API failure fail-closes to a full code run.
+The Changes job uses `scripts/ci/classify_changes.py`. Ordinary PRs skip
+ruff/contracts and run one `docs_skills` pytest leg only when every path is
+Markdown in docs/, shared skills, agent deploy trees, or the repository root,
+or belongs to wiki/ or curriculum/ (owned by Content CI). Frontend denominator
+matches always override the docs exemption, including `packages/activity-kit/`.
+Unknown paths, including Markdown under unrecognized or executable trees, run
+the full pytest shard set and ruff/contracts; frontend follows its denominator.
+All docs YAML, schemas, packages, dashboards, dependency manifests/locks,
+Python/pre-commit configuration, and scripts/config or scripts/ci changes
+therefore run the full PR-tier floor.
+
+Merge groups force the full tier, including frontend. Previously they used the
+same path classifier as PRs and could run only the docs selection. A PR carrying
+`full-ci` also forces the full tier; adding a label triggers a fresh run.
+Manual runs and the daily 03:30 UTC schedule in `ci.yml` use that same full
+floor (`not atlas_release and not slow`). `pytest-slow-nightly.yml` remains the
+separate slow selection; this adds no retries or duplicate slow-test execution.
+Missing/malformed comparison data, API errors, empty changes, and the compare
+API's 300-file cap fail closed to the full tier including frontend.
+
+Scripts-only PRs still run all duration-balanced pytest shards. Path-selected
+pytest subsets and independent lane flags remain deferred. After merge, the
+CI stream owner tracks one week of `ci_timings` on the private work item.
 
 No CF attest. No auto-arm. No landing-class classifier. No coverage floor.
 Red team review is out of band.

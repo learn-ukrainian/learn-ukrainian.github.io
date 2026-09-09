@@ -9,6 +9,7 @@
     "scripts/audit/generate_search_index.py",
     "scripts/audit/generate_daily_pool.py",
     ".python-version",
-    ".github/workflows/ci.yml"
+    ".github/workflows/ci.yml",
+    "packages/activity-kit/"
   ]
 }

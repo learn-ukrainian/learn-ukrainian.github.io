@@ -418,7 +418,9 @@ def _ci_text() -> str:
 def test_ci_yml_declares_shard_count_once() -> None:
     ci_text = _ci_text()
     assert re.search(r"(?m)^\s*PYTEST_SHARD_COUNT:\s*'4'\s*$", ci_text), "shard count must be declared once at workflow env level"
-    assert "int(os.environ[\"PYTEST_SHARD_COUNT\"])" in ci_text, "changes job must read the declared shard count, not hardcode it"
+    classifier = (_REPO_ROOT / "scripts/ci/classify_changes.py").read_text()
+    assert "python3 -m scripts.ci.classify_changes" in ci_text
+    assert 'int(os.environ["PYTEST_SHARD_COUNT"])' in classifier, "classifier must read the declared shard count"
     assert "${{ env.PYTEST_SHARD_COUNT }}" in ci_text, "pytest job must read the same declared shard count"
 
 
