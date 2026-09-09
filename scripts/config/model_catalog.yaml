@@ -347,13 +347,17 @@ models:
       thinking: disabled). Effort decision topology (operator 2026-09-09): default
       high (API default; start here — do not port Opus/xhigh habits); medium/low
       for routine interactive work (low often beats prior-gen xhigh/max; medium
-      ≈ Fable 5 cheaper); xhigh only for hard multi-file / long autonomous turns;
-      max almost never. Quirks: high+ on simple tasks over-gathers (lower effort,
-      do not prompt around it); low searches less (bump for retrieval-heavy
-      named products); effort does not shorten visible output. Keep verification
-      scaffolding — the Opus 5 guidance to delete it does not apply.
-      claude-fable-5 remains as the legacy alias id pinned by existing callers
-      and tests. Full prose: docs/best-practices/fleet-shared-doctrine.md § Effort.
+      ≈ Fable 5 cheaper); xhigh for hard multi-file / long autonomous turns and for
+      curriculum/linguistic review skills that pin effort: xhigh (content-review,
+      plan-review, plan-review-seminar, batch-review, prompt-review — do not step
+      those down); max almost never. Long deliverables stay at high unless a
+      measured quality gain says otherwise; at xhigh/max leave output-budget room.
+      Quirks: high+ on simple tasks over-gathers (lower effort, do not prompt
+      around it); low searches less (bump for retrieval-heavy named products);
+      effort does not shorten visible output. Keep verification scaffolding —
+      the Opus 5 guidance to delete it does not apply. claude-fable-5 remains as
+      the legacy alias id pinned by existing callers and tests. Full prose:
+      docs/best-practices/fleet-shared-doctrine.md § Effort.
     sources:
       - https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1
   claude-opus-5:
@@ -997,9 +1001,10 @@ orchestrator_seats:
       2026-07-26 at ~2 weekly-quota points per orchestration hour in that style.
       Escalation stays CROSS-FAMILY to Astra @ high; Claude is an escalation TARGET,
       not an escalator. Opus 5 is not an orchestrator and its advisory output does
-      not confer approval authority. Driving default is `high` (step down to
-      medium/low for routine; xhigh only for hard turns; max almost never) —
-      see fleet-shared-doctrine Fable 5.1 effort topology.
+      not confer approval authority.       Driving default is `high` (step down to
+      medium/low for routine; xhigh for hard turns and pinned curriculum/linguistic
+      review skills; max almost never; long deliverables stay at high unless measured
+      gain) — see fleet-shared-doctrine Fable 5.1 effort topology.
   codex:
     model_id: gpt-6-astra
     effort: high
