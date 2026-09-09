@@ -6935,6 +6935,33 @@ def test_cross_repo_guard_refuses_worktree_from_sibling(tmp_path, monkeypatch):
     assert "primary checkout" in err
 
 
+def test_cross_repo_guard_allows_explicit_repo_target(tmp_path, monkeypatch):
+    """#672 P2.1: allowlisted --repo retargets worktree creation to the sibling."""
+    primary, sibling, _ = _init_sibling_pair(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+
+    assert (
+        delegate._resolve_cross_repo_binding_error(
+            worktree_arg="auto",
+            cwd_arg=None,
+            requested_branch=None,
+            invocation_cwd=primary,
+            target_repo_root=sibling,
+        )
+        is None
+    )
+    assert (
+        delegate._resolve_cross_repo_binding_error(
+            worktree_arg="auto",
+            cwd_arg=None,
+            requested_branch=None,
+            invocation_cwd=sibling,
+            target_repo_root=sibling,
+        )
+        is None
+    )
+
+
 def test_cross_repo_guard_refuses_branch_from_sibling(tmp_path, monkeypatch):
     """--branch has the same primary-only fetch/attach blindness as --worktree."""
     primary, sibling, _ = _init_sibling_pair(tmp_path)
