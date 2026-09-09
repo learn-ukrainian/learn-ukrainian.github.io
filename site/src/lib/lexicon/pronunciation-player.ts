@@ -1,5 +1,6 @@
 /** Shared controller for React practice cards and SSR-only Atlas articles. */
-const BASE = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/audio/pronunciation/`;
+const CDN_BASE = (import.meta.env.PUBLIC_AUDIO_CDN_URL || '').replace(/\/$/, '');
+const BASE = CDN_BASE ? `${CDN_BASE}/` : `${import.meta.env.BASE_URL.replace(/\/$/, '')}/audio/pronunciation/`;
 type Manifest = { schemaVersion: number; entries: Record<string, { file: string }> };
 let manifestRequest: Promise<Manifest> | undefined;
 let active: (() => void) | undefined;
@@ -82,8 +83,11 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
         if (disposed || !playing || active !== stop) audio.pause();
       } else {
         // Read on each click: installed voices may arrive after initial mount.
+        // Prefer local system voices, but accept online/cloud Ukrainian voices
+        // (essential for Windows Edge Polina Natural and Google Chrome).
         const voices = synthesis?.getVoices() ?? [];
-        const voice = voices.find((voice) => voice.lang.toLowerCase().startsWith('uk') && voice.localService);
+        const ukVoices = voices.filter((v) => v.lang.toLowerCase().startsWith('uk'));
+        const voice = ukVoices.find((v) => v.localService) ?? ukVoices[0];
         if (!voice || !window.SpeechSynthesisUtterance) { failed(); return; }
         utterance = new SpeechSynthesisUtterance(spoken);
         utterance.lang = 'uk-UA';
@@ -116,7 +120,7 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
   if (lemma) void manifest().then((value) => {
     if (disposed) return;
     const entry = Object.hasOwn(value.entries, lemma) ? value.entries[lemma] : undefined;
-    if (!entry || !/^[a-f0-9]{64}\.wav$/.test(entry.file)) return;
+    if (!entry || !/^[a-f0-9]{64}\.(opus|webm|mp3|wav)$/.test(entry.file)) return;
     audio = new Audio(`${BASE}${entry.file}`);
     audio.preload = 'none';
     audio.onended = () => { attempt++; playing = false; label(); };

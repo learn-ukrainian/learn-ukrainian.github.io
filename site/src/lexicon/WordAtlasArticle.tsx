@@ -244,7 +244,7 @@ export default function WordAtlasArticle({
               {entry.lemma}
               {headerStress && <span className="word-stress">{`[${headerStress}]`}</span>}
             </h1>
-            <PronunciationPlayer lemma={entry.lemma} />
+            <PronunciationPlayer lemma={headerStress || entry.lemma} />
             <div className="word-pos">
               {[posLabel, headwordIpa, entry.gloss ? `«${entry.gloss}»` : null].filter(Boolean).join(" · ")}
             </div>
