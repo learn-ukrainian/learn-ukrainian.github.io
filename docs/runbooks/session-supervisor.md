@@ -175,8 +175,20 @@ from PR #7781; a missing API fails closed, without generic acknowledgment fallba
 The common launcher process loop starts and stops the supervisory watcher,
 handles its wake notification, reaps the provider, and closes the exact lease
 before executing the existing driver entrypoint with the original arguments.
-Watcher failure stops the provider without authorizing a successor; failed
-lease release also prevents successor execution.
+A transient Monitor transport outage or HTTP 5xx response leaves the provider alive: the live watcher
+logs, sleeps, and retries until recovery or launcher termination. It signals the
+launcher only after writing a successfully prepared delivery (exit 75). A
+transient watcher exit (76) restarts the watcher under the same lease; USR1 alone
+never authorizes a wake. Permanent watcher failures still stop the provider
+without authorizing a successor.
+
+Exact lease close retries Monitor failures with exponential backoff from 1 second
+up to 30 seconds for ten minutes (override: `LC_DRIVER_CLOSE_RETRY_SECONDS`). It
+logs `waiting for Monitor API to recover (close attempt N)` without remote stderr.
+Fencing or missing lease environment fails immediately. Exhausted close retries
+retain safe `close_failure_reason=` classification and prevent successor execution.
+Recovery waits do not override lease fencing or the heartbeat TTL: losing the
+lease still stops the provider.
 
 Supervisory requests use the existing authority message/delivery store and the
 recipient `supervisor:epic:<number>`, keeping automatic events out of ordinary

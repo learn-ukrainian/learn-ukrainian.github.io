@@ -40,6 +40,7 @@ DEFAULT_POLL_INTERVAL_SECONDS = 15.0
 MAX_PREVIEW_CHARS = 240
 DEFAULT_LOCK_DIR = PRIMARY_REPO_ROOT / ".agent"
 SUPERVISORY_RESTART_EXIT = 75
+SUPERVISORY_TRANSIENT_EXIT = 76
 SUPERVISORY_DELIVERY_SECONDS = 60
 
 
@@ -263,17 +264,22 @@ def run_live_supervisory_watcher(*, interval_seconds: float = DEFAULT_POLL_INTER
     from agents_extensions.shared.session_streams.hooks import lease_from_environment
     from scripts.fleet_comms.authority import AuthorityService
     from scripts.session_supervisor import SessionSupervisor
-    from scripts.session_supervisor.remote import RemoteEpicClient
+    from scripts.session_supervisor.remote import RemoteEpicClient, RemoteUnavailableError
 
     lease = lease_from_environment()
     supervisor = SessionSupervisor(None, repo_root=Path.cwd(), remote=RemoteEpicClient())
     with AuthorityService() as service:
         require_supervisory_api(service)
         while True:
-            request = consume_supervisory_event(service, supervisor, lease)
-            if request is not None:
-                print(request.delivery_id, flush=True)
-                return SUPERVISORY_RESTART_EXIT
+            try:
+                request = consume_supervisory_event(service, supervisor, lease)
+            except RemoteUnavailableError:
+                # Do not expose remote diagnostics or signal an unprepared wake.
+                print("inbox watcher: waiting for Monitor API to recover", file=sys.stderr, flush=True)
+            else:
+                if request is not None:
+                    print(request.delivery_id, flush=True)
+                    return SUPERVISORY_RESTART_EXIT
             time.sleep(interval_seconds)
 
 
@@ -564,7 +570,8 @@ def build_parser() -> argparse.ArgumentParser:
 
 Outputs: bounded notifications; supervisory modes consume Fleet Comms events,
 prepare durable handoffs, or invoke existing driver launchers.
-Exit codes: 0 success; 2 refusal/error; 75 launcher-owned restart prepared.
+Exit codes: 0 success; 2 refusal/error; 75 launcher-owned restart prepared;
+76 transient Monitor failure (launcher may restart the live watcher).
 Related: docs/runbooks/session-supervisor.md; scripts.session_supervisor.
 """,
     )
@@ -592,6 +599,8 @@ Related: docs/runbooks/session-supervisor.md; scripts.session_supervisor.
 
 def main(argv: list[str] | None = None) -> int:
     """Run the watcher CLI while keeping normal polling stdout event-only."""
+    from scripts.session_supervisor.remote import RemoteUnavailableError
+
     args = build_parser().parse_args(argv)
     notify_parent = None
     try:
@@ -616,7 +625,10 @@ def main(argv: list[str] | None = None) -> int:
                 if lease_from_environment().holder.process_id != os.getppid():
                     raise ValueError("supervisory watcher must be a direct child of its lease-owning launcher")
                 notify_parent = os.getppid()
-            return run_live_supervisory_watcher(interval_seconds=args.interval)
+            result = run_live_supervisory_watcher(interval_seconds=args.interval)
+            if result == SUPERVISORY_RESTART_EXIT and notify_parent is not None and os.getppid() == notify_parent:
+                os.kill(notify_parent, signal.SIGUSR1)
+            return result
         if args.wake_driver:
             if not args.epic:
                 raise ValueError("--wake-driver requires --epic")
@@ -627,12 +639,12 @@ def main(argv: list[str] | None = None) -> int:
             print(stop_watcher(args.agent), file=sys.stderr)
             return 0
         run_watcher(args.agent, interval_seconds=args.interval, once=args.once)
+    except RemoteUnavailableError:
+        print("inbox watcher: Monitor API temporarily unavailable", file=sys.stderr)
+        return SUPERVISORY_TRANSIENT_EXIT if args.live_supervisory else 2
     except (OSError, RuntimeError, ValueError, sqlite3.Error) as exc:
         print(f"inbox watcher: {exc}", file=sys.stderr)
         return 2
-    finally:
-        if notify_parent is not None and os.getppid() == notify_parent:
-            os.kill(notify_parent, signal.SIGUSR1)
     return 0
 
 

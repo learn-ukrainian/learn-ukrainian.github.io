@@ -426,10 +426,10 @@ def test_driver_termination_forwards_signal_and_closes_exact_lease(
         signal.signal(termination_signal, original_handler)
 
 
-def test_close_failure_after_two_attempts_reports_classification_without_raw_stderr(
+def test_missing_close_environment_fails_fast_without_raw_stderr(
     tmp_path: Path,
 ) -> None:
-    """#671: two exhausted close attempts must classify, never echo raw stderr."""
+    """Missing lease configuration must fail immediately and never echo stderr."""
     hostile_stderr = (
         "session-supervisor: missing required hook environment: SESSION_STREAM_ID\n"
         "SECRET_TOKEN_MUST_NOT_LEAK=s3kr1t\n"
@@ -455,7 +455,7 @@ def test_close_failure_after_two_attempts_reports_classification_without_raw_std
 
     assert result.returncode == 1
     assert not close_marker.is_file()
-    assert close_attempts.read_text(encoding="utf-8").strip() == "2"
+    assert close_attempts.read_text(encoding="utf-8").strip() == "1"
     assert "close_failure_reason=missing-required-environment" in result.stderr
     combined = result.stdout + result.stderr
     assert "SECRET_TOKEN_MUST_NOT_LEAK" not in combined
@@ -488,7 +488,7 @@ def test_provider_nonzero_with_close_failure_keeps_provider_exit_and_classifies(
     assert result.returncode == 7, result.stdout + result.stderr
     assert child_started.is_file()
     assert not close_marker.is_file()
-    assert close_attempts.read_text(encoding="utf-8").strip() == "2"
+    assert close_attempts.read_text(encoding="utf-8").strip() == "1"
     assert "close_failure_reason=lease-fenced" in result.stderr
     assert "`id`" not in (result.stdout + result.stderr)
 
@@ -516,10 +516,11 @@ def test_signal_forwarding_with_close_failure_keeps_signal_exit_and_classifies(
             "done\n"
             "exit 88\n"
         ),
-        failed_close_attempts=2,
+        failed_close_attempts=100,
         close_stderr=hostile_stderr,
     )
     env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    env["LC_DRIVER_CLOSE_RETRY_SECONDS"] = "1"
     original_handler = signal.signal(termination_signal, signal.SIG_DFL)
     try:
         process = subprocess.Popen(
@@ -549,7 +550,7 @@ def test_signal_forwarding_with_close_failure_keeps_signal_exit_and_classifies(
         )
         assert process.returncode == expected_exit, stdout + stderr
         assert not close_marker.is_file()
-        assert close_attempts.read_text(encoding="utf-8").strip() == "2"
+        assert int(close_attempts.read_text(encoding="utf-8").strip()) in {1, 2}
         assert "close_failure_reason=monitor-unreachable" in stderr
         assert "$(evil)" not in (stdout + stderr)
     finally:
@@ -1038,3 +1039,69 @@ def test_hermes_rejects_effort_that_transport_would_clamp(provider: str) -> None
     result = run_launcher(f"start-{provider}.sh", "--harness", "hermes", "--effort", "max")
     assert result.returncode == 2
     assert "supports only low|medium|high|xhigh effort" in result.stderr
+
+
+@pytest.mark.parametrize("reason", ["Monitor API unreachable", "Monitor API returned an error (503)"])
+@pytest.mark.parametrize("recover", [True, False])
+def test_close_waits_with_capped_backoff_and_safe_exhaustion(tmp_path: Path, reason: str, recover: bool) -> None:
+    launcher, attempts, closed, _ = _core_driver_exit_fixture(
+        tmp_path, provider_body="exit 0", failed_close_attempts=8 if recover else 100,
+        close_stderr=reason + "\n$(hostile-secret)",
+    )
+    # Advance Bash's elapsed clock deterministically; verify the production
+    # ten-minute budget without spending ten minutes on every regression run.
+    script = f"""
+source {launcher.parent / 'scripts/lib/launcher_core.sh'}
+LC_PROVIDER=claude
+LC_SESSION_ROOT={launcher.parent}
+LC_DURABLE_HELPER_ROOT={launcher.parent}
+unset LC_DRIVER_CLOSE_RETRY_SECONDS SECONDS
+SECONDS=0
+sleep() {{ printf 'delay=%s\n' "$1"; SECONDS=$((SECONDS + $1)); }}
+launcher_close_driver_lease
+"""
+    result = subprocess.run(["bash", "-c", script], cwd=REPO, capture_output=True, text=True, timeout=10)
+    assert result.returncode == (0 if recover else 1), result.stderr
+    delays = [int(line.split("=")[1]) for line in result.stdout.splitlines()]
+    assert delays[:6] == [1, 2, 4, 8, 16, 30]
+    assert max(delays) == 30
+    assert int(attempts.read_text()) > 2
+    assert closed.exists() is recover
+    assert "waiting for Monitor API to recover (close attempt 3)" in result.stderr
+    assert "hostile-secret" not in result.stdout + result.stderr
+    if not recover:
+        assert sum(delays) == 600
+        expected = "monitor-unreachable" if "unreachable" in reason else "monitor-error"
+        assert f"close_failure_reason={expected}" in result.stderr
+
+
+@pytest.mark.parametrize("watcher_exit", [76, 2, 0, 75])
+@pytest.mark.parametrize("notify", [False, True])
+def test_watcher_exit_recovery_preserves_provider_and_rejects_false_wakes(
+    tmp_path: Path, watcher_exit: int, notify: bool,
+) -> None:
+    completed = tmp_path / "provider-completed"
+    restarted = tmp_path / "watcher-restarted"
+    first = tmp_path / "watcher-first"
+    launcher, _, closed, _ = _core_driver_exit_fixture(
+        tmp_path,
+        provider_body=f"sleep 1\ntouch {str(completed)!r}\nexit 0",
+    )
+    watcher = launcher.parent / "scripts/ai_agent_bridge/inbox_watch.sh"
+    watcher.write_text(
+        "#!/usr/bin/env bash\n"
+        f"if [ -f {str(first)!r} ]; then touch {str(restarted)!r}; exec sleep 300; fi\n"
+        f"touch {str(first)!r}\n"
+        + ('kill -USR1 "$PPID"\n' if notify else '')
+        + f"exit {watcher_exit}\n",
+    )
+    result = subprocess.run(
+        ["bash", str(launcher), "--epic", "devops"], cwd=launcher.parent,
+        capture_output=True, text=True, timeout=10,
+        env={key: value for key, value in os.environ.items() if not key.startswith("GIT_")},
+    )
+    # Even 75 without a delivery is not a valid prepared wake.
+    assert result.returncode == (0 if watcher_exit == 76 else 1), result.stdout + result.stderr
+    assert restarted.exists() is (watcher_exit == 76)
+    assert completed.exists() is (watcher_exit == 76)
+    assert closed.exists()

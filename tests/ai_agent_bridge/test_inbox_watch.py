@@ -222,3 +222,85 @@ def test_poll_once_surfaces_messages_for_phantom_empty_roster_identity(isolate_d
         conn.close()
 
     assert [event.message_id for event in events] == [canonical_id, alias_id]
+
+
+def test_live_supervisory_retries_outages_until_prepared(capsys):
+    from scripts.session_supervisor.remote import RemoteUnavailableError, RemoteUnreachableError
+
+    request = _inbox_watch.SupervisoryRequest("delivery-test", "epic:9999", "restart", 1)
+    with (
+        patch("agents_extensions.shared.session_streams.hooks.lease_from_environment"),
+        patch("scripts.fleet_comms.authority.AuthorityService"),
+        patch("scripts.session_supervisor.SessionSupervisor"),
+        patch.object(_inbox_watch, "consume_supervisory_event", side_effect=[
+            RemoteUnreachableError("hostile $(secret)"), None,
+            RemoteUnavailableError("hostile $(secret)"), request,
+        ]) as consume,
+        patch.object(_inbox_watch.time, "sleep") as sleep,
+    ):
+        assert _inbox_watch.run_live_supervisory_watcher(interval_seconds=0.25) == 75
+    assert consume.call_count == 4
+    assert sleep.call_args_list == [((0.25,),)] * 3
+    captured = capsys.readouterr()
+    assert captured.out == "delivery-test\n"
+    assert captured.err.count("waiting for Monitor API to recover") == 2
+    assert "secret" not in captured.err
+
+
+@pytest.mark.parametrize("result", [75, 2, 76, "permanent", "transient"])
+def test_live_supervisory_notifies_only_prepared_wake(result):
+    from scripts.session_supervisor.remote import RemoteUnreachableError
+
+    error = None
+    if result == "permanent":
+        error = ValueError("bad lease")
+    elif result == "transient":
+        error = RemoteUnreachableError("unreachable")
+    with (
+        patch("agents_extensions.shared.session_streams.hooks.lease_from_environment") as lease,
+        patch.object(_inbox_watch.os, "getppid", return_value=12345),
+        patch.object(_inbox_watch.os, "kill") as kill,
+        patch.object(_inbox_watch, "run_live_supervisory_watcher", return_value=result, side_effect=error),
+    ):
+        lease.return_value.holder.process_id = 12345
+        expected = 2 if result == "permanent" else 76 if result == "transient" else result
+        assert _inbox_watch.main(["grok", "--live-supervisory", "--notify-parent"]) == expected
+    if result == 75:
+        kill.assert_called_once_with(12345, _inbox_watch.signal.SIGUSR1)
+    else:
+        kill.assert_not_called()
+
+
+def test_live_supervisory_rejects_wrong_parent_without_notification():
+    with (
+        patch("agents_extensions.shared.session_streams.hooks.lease_from_environment") as lease,
+        patch.object(_inbox_watch.os, "getppid", return_value=12345),
+        patch.object(_inbox_watch.os, "kill") as kill,
+        patch.object(_inbox_watch, "run_live_supervisory_watcher") as run,
+    ):
+        lease.return_value.holder.process_id = 54321
+        assert _inbox_watch.main(["grok", "--live-supervisory", "--notify-parent"]) == 2
+    kill.assert_not_called()
+    run.assert_not_called()
+
+
+@pytest.mark.parametrize("http_error", [False, True])
+def test_monitor_server_failure_is_retryable_without_remote_diagnostics(http_error):
+    import urllib.error
+    from unittest.mock import MagicMock
+
+    from scripts.session_supervisor.remote import RemoteEpicClient, RemoteUnavailableError
+
+    response = MagicMock()
+    response.__enter__.return_value = response
+    response.status = 503
+    response.read.return_value = b'{"detail":"hostile-secret"}'
+
+    def opener(*args, **kwargs):
+        if http_error:
+            raise urllib.error.HTTPError("http://localhost", 503, "unavailable", {}, io.BytesIO(response.read()))
+        return response
+
+    with pytest.raises(RemoteUnavailableError) as error:
+        RemoteEpicClient(opener=opener).health()
+    assert str(error.value) == "Monitor API temporarily unavailable (503)"
