@@ -105,6 +105,16 @@ def test_missing_body_file_strict_fails(tmp_path) -> None:
     assert code == 1
 
 
+def test_empty_tilde_verify_fence_warns() -> None:
+    body = COMPLETE.replace(
+        "## Verify\n```bash\n.venv/bin/python scripts/check_issue_task_quality.py --help\n```",
+        "## Verify\n~~~bash\n~~~\n",
+    )
+    result = score_body(body)
+    assert result["verdict"] == "WARN"
+    assert "verify" in result["missing"]
+
+
 def test_cli_help(capsys) -> None:
     try:
         main(["--help"])
