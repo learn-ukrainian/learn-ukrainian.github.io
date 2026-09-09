@@ -1,13 +1,13 @@
 # Fleet shared doctrine — roles, cost discipline, living classification
 
-**Status:** operator doctrine (binding for routing judgment; see precedence)  
-**Classification state:** drafted 2026-07-19 (Sol draft review #3593 `APPROVE_WITH_AMENDS` applied)  
-**Maintains with:** [`fleet-role-scorecard.md`](fleet-role-scorecard.md)  
+**Status:** operator doctrine (binding for routing judgment; see precedence)
+**Classification state:** drafted 2026-07-19 (Sol draft review #3593 `APPROVE_WITH_AMENDS` applied)
+**Maintains with:** [`fleet-role-scorecard.md`](fleet-role-scorecard.md)
 **Complements:**
 
-- `agents_extensions/shared/rules/model-assignment.md` — machine routing / LANGUAGE-LANES  
-- [`agent-bridge.md`](agent-bridge.md) — review isolation, `review-pr`, worktree reaper  
-- `agents_extensions/shared/rules/operator-expectations.md` — operator contract  
+- `agents_extensions/shared/rules/model-assignment.md` — machine routing / LANGUAGE-LANES
+- [`agent-bridge.md`](agent-bridge.md) — review isolation, `review-pr`, worktree reaper
+- `agents_extensions/shared/rules/operator-expectations.md` — operator contract
 
 ---
 
@@ -15,10 +15,10 @@
 
 When instructions conflict, apply **in this order**:
 
-1. Operator contract (`operator-expectations.md` and hard repo gates)  
-2. `model-assignment.md` / served `/api/rules` machine routing  
-3. **This doctrine** + scorecard  
-4. Session preference / ad-hoc “use the smartest model”  
+1. Operator contract (`operator-expectations.md` and hard repo gates)
+2. `model-assignment.md` / served `/api/rules` machine routing
+3. **This doctrine** + scorecard
+4. Session preference / ad-hoc “use the smartest model”
 
 If a scorecard row conflicts with LANGUAGE-LANES, egress, or review-gate rules → **fail closed** (refuse the route; do not invent a silent substitution).
 
@@ -77,12 +77,12 @@ Assign by **role × task family × harness × route/egress**, not marketing rank
 - **Timed pauses:** near_cap/paused lanes carry **return-at** (e.g. Codex 2026-08-10T19:47Z) — auto-return, never permanent neglect.
 - **Cursor gate:** #6469 plan-only adapter **fixed** — cursor-first mechanical tier is active; Ultra month strengthens first-pick preference through ~2026-09-13.
 
-- Use ceiling models **often** on *qualifying* hard work — not rarely, and not as free general labor.  
-- **Never** default ceiling models as orchestrator or first-pass implementer.  
-- **Escalation triggers (immediate):** security; high blast radius; unclear invariants; architectural ambiguity with multiple viable options; release-level uncertainty.  
-- **Escalation after evidence-backed attempts:** repeated failed **root-cause** fixes (not blind “retry 2×”).  
-- **Do not** escalate merely because the task is “important.”  
-- **SuperGrok Heavy** (and similar plans): **verified capacity entitlement** for longer/more parallel Grok worker runs — **not** a stable capability rank. Re-check when plan or routing changes.  
+- Use ceiling models **often** on *qualifying* hard work — not rarely, and not as free general labor.
+- **Never** default ceiling models as orchestrator or first-pass implementer.
+- **Escalation triggers (immediate):** security; high blast radius; unclear invariants; architectural ambiguity with multiple viable options; release-level uncertainty.
+- **Escalation after evidence-backed attempts:** repeated failed **root-cause** fixes (not blind “retry 2×”).
+- **Do not** escalate merely because the task is “important.”
+- **SuperGrok Heavy** (and similar plans): **verified capacity entitlement** for longer/more parallel Grok worker runs — **not** a stable capability rank. Re-check when plan or routing changes.
 - **Future xAI Fable/Sol-class:** candidate ceiling advisor/hard coder **after bakeoff**; do not auto-promote to orchestrator.
 
 ### Effort guidance (per model)
@@ -90,12 +90,32 @@ Assign by **role × task family × harness × route/egress**, not marketing rank
 | Model | Effort |
 |---|---|
 | Sol | Floor **`high`**; prefer **`xhigh`/`max`** for qualifying hard decisions |
-| Fable 5 | Prefer **`xhigh`** for ceiling work |
+| **Fable 5.1** | Standing default **`high`** (API default; start here and sweep). See subsection below — do **not** port an Opus/`xhigh` habit. |
+| Fable 5 (legacy) | Prefer **`xhigh`** for ceiling work only when that SKU is seated |
 | Terra (orchestrating hard stream) | **`xhigh`** |
 | Terra (routine implement) | **`medium`–`high`**, escalate with risk |
 | Opus orchestrating | **`high`+** |
 | Luna bounded work / recon | **`max`** with exact owned paths + objective scope ceiling; never sole authority |
 | Claude Haiku recon | **`medium`** default; never sole authority |
+
+#### Fable 5.1 `/effort` decision topology (operator 2026-09-09)
+
+Canonical short form of the bundled Claude API Fable 5.1 effort guidance (Claude Code `/effort` picker). Level names do **not** map to the same thinking depth across models.
+
+| Level | When |
+|---|---|
+| **`high`** | **Default.** Orchestration, epic driving, first-pass **code** review, dispatch briefs, day-to-day coding. Also the starting point for **long deliverables** (long docs/code rewrites): stay at `high` unless a measured quality gain justifies more. |
+| **`medium` / `low`** | Routine / quick interactive turns. Fable 5.1 at `low` often beats prior-gen `xhigh`/`max`; `medium` roughly matches Fable 5 cheaper. Prefer these for quick edits and questions. |
+| **`xhigh`** | Capability-sensitive only: hard debugging, large multi-file refactors, long autonomous runs — and the standing floor for **curriculum/linguistic review skills** (see exceptions). Expect multi-minute turns. At `xhigh`/`max`, leave room for the final answer (provider: long outputs can exhaust the turn if thinking fills the budget). |
+| **`max`** | Almost never — extremely hard, latency-insensitive problems after measured headroom at `xhigh`. Same long-output budget caution. |
+
+**Standing exceptions (do not “step down” these):** skills whose frontmatter pins `effort: xhigh` — `content-review`, `plan-review`, `plan-review-seminar`, `batch-review`, `prompt-review` — stay at `xhigh`. They judge Ukrainian learner content; a miss is a durable error. This topology does **not** override those pins. Routine **code** CF may still use a cheaper first pass via dispatch routing.
+
+Quirks that change the choice:
+
+- **Higher effort on routine work over-gathers.** At `high+` on a simple task it deliberates too long and may tidy/refactor unasked code — **lower effort**, do not prompt around it.
+- **`low` searches less.** Answers from memory more; bump effort when the turn needs retrieval for named products/libraries with stale knowledge.
+- **Effort ≠ response length.** Over-long replies are a prompting fix (see Concise by default), not an effort dial. Separately: for long *deliverables*, prefer `high` first; only raise to `xhigh`/`max` with a measured benefit and output-budget headroom.
 
 ---
 
@@ -117,10 +137,10 @@ Interactive orchestrators stay **thin** (status, route, approve, merge). Workers
 
 For work in the **repository review-gate scope** (consequential PRs that must pass the operator CF gate before merge):
 
-1. Reviewer **family ≠ author family**.  
-2. Reviewer must be **qualified for the task family** (code/infra vs VESUM language vs folk).  
+1. Reviewer **family ≠ author family**.
+2. Reviewer must be **qualified for the task family** (code/infra vs VESUM language vs folk).
 3. Use a qualified native toolful review lane and the review-worktree contract in `agents_extensions/shared/skills/local-code-review/SKILL.md`; sealed formal review is retired.
-4. Record provenance on the PR (implementer + reviewer model/family/harness; note advisor if material).  
+4. Record provenance on the PR (implementer + reviewer model/family/harness; note advisor if material).
 5. **Conditional selection:** do not offer Terra as CF for OpenAI-authored PRs, or Sonnet as CF for Anthropic-authored PRs, etc.
 
 Authoritative CF quality ladder remains in `model-assignment.md`; this doctrine does not lower that floor.
@@ -129,9 +149,9 @@ Authoritative CF quality ladder remains in `model-assignment.md`; this doctrine 
 
 ## 7. Language + evidence
 
-- **LANGUAGE-LANES** for load-bearing Ukrainian judgment: `agy` / `codex` / `claude` / `grok-4.6` only (see model-assignment).  
-- **Gemini 3.1 Pro via AGY** is the designated UA specialist; outputs remain **hypotheses until VESUM/`sources`-backed**.  
-- VESUM validates **morphology/attestation** — not arbitrary cultural or historical claims.  
+- **LANGUAGE-LANES** for load-bearing Ukrainian judgment: `agy` / `codex` / `claude` / `grok-4.6` only (see model-assignment).
+- **Gemini 3.1 Pro via AGY** is the designated UA specialist; outputs remain **hypotheses until VESUM/`sources`-backed**.
+- VESUM validates **morphology/attestation** — not arbitrary cultural or historical claims.
 - FOLK: GPT↔Claude cultural gate; **no DeepSeek** for folk culture.
 
 ---
@@ -155,9 +175,9 @@ Record when relevant: **provider, intermediary, region/retention, data class**. 
 
 Models improve on an accelerated schedule. Classification is a **maintenance duty**, not a one-time opinion.
 
-- After **every major release** (including SuperGrok Heavy changes / new xAI ceiling): re-probe scorecard cells.  
-- Else **quarterly** full re-score.  
-- Public benchmarks = **priors only**; local bakeoffs + evidence ledger drive promotion.  
+- After **every major release** (including SuperGrok Heavy changes / new xAI ceiling): re-probe scorecard cells.
+- Else **quarterly** full re-score.
+- Public benchmarks = **priors only**; local bakeoffs + evidence ledger drive promotion.
 - Capability **peak is unknown**; **value** today is routing hygiene + harness + evidence, not waiting for AGI.
 
 See scorecard for provisional/validated/deprecated states and re-probe protocol.
@@ -168,22 +188,22 @@ See scorecard for provisional/validated/deprecated states and re-probe protocol.
 
 When a preferred lane is at quota/outage:
 
-1. Use `scripts/config/agent_fallback_substitutions.yaml` + model-assignment harness table.  
-2. **Never** silently lower quality floor for consequential work.  
+1. Use `scripts/config/agent_fallback_substitutions.yaml` + model-assignment harness table.
+2. **Never** silently lower quality floor for consequential work.
 3. **Always** record substitution (model/family/harness + reason) in the PR or orchestration note.
 
 ---
 
 ## 11. Anti-patterns
 
-- Sol/Fable for search, format, routine tests, first-pass CRUD.  
-- Sol/Fable only at the end to bless a design they never challenged.  
-- Any single model as sole orchestrator + implementer + CF reviewer on a consequential stream.  
-- Flash/Luna/Haiku as release authority.  
-- Discuss/panel counted as CF review.  
-- Cursor “review” without **pinned** backing model family.  
-- Unqualified language/folk reviewers.  
-- China-egress / local-only routes on unclassified or sensitive data.  
+- Sol/Fable for search, format, routine tests, first-pass CRUD.
+- Sol/Fable only at the end to bless a design they never challenged.
+- Any single model as sole orchestrator + implementer + CF reviewer on a consequential stream.
+- Flash/Luna/Haiku as release authority.
+- Discuss/panel counted as CF review.
+- Cursor “review” without **pinned** backing model family.
+- Unqualified language/folk reviewers.
+- China-egress / local-only routes on unclassified or sensitive data.
 - Blind “fail twice then escalate” without root-cause evidence.
 
 ---
@@ -202,3 +222,4 @@ When a preferred lane is at quota/outage:
 |---|---|---|
 | 2026-07-19 | Initial doctrine (research + Sol #3588/#3593 amends) | grok/fleet-doctrine-scorecard |
 | 2026-07-19 | Haiku listed with Luna for recon effort guidance / anti-patterns | grok/fleet-scorecard-haiku-recon |
+| 2026-09-09 | Fable 5.1 `/effort` decision topology: default high; medium/low routine; xhigh rare; max almost never; over-gather / low-search quirks | cursor-infra/fable-51-effort-guidance |
