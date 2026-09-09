@@ -1,0 +1,26 @@
+# Fleet repository allowlist — multi-repo dispatch (#672 P2.1)
+#
+# Keys are the only valid `--repo` values for `scripts/delegate.py`.
+# `local_name` is the sibling directory beside the public primary checkout
+# (layout A: `/home/ops/<local_name>` next to `learn-ukrainian`).
+#
+# Control plane (batch_state, Monitor, fleet-comms) remains on the public
+# primary that owns `scripts/delegate.py`. `--repo` retargets git worktree
+# creation and `gh` remotes only.
+
+version: 1
+
+repos:
+  public:
+    github: learn-ukrainian/learn-ukrainian.github.io
+    local_name: learn-ukrainian
+    role: public-monorepo
+    default: true
+  infra-private:
+    github: learn-ukrainian/learn-ukrainian-infra-private
+    local_name: learn-ukrainian-infra-private
+    role: private-infra
+  hramatka:
+    github: learn-ukrainian/hramatka
+    local_name: hramatka
+    role: private-product

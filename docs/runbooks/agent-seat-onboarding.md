@@ -281,35 +281,45 @@ become a second coordination plane.
 
 #### Sibling-repo dispatch
 
-`--worktree` and `--branch` always bind the Learn Ukrainian primary checkout
+`--worktree` and `--branch` default to the Learn Ukrainian primary checkout
 that owns `scripts/delegate.py` (`_REPO_ROOT`). They do **not** follow the
 shell cwd. Invoking `dispatch --worktree` from a sibling repository (for
-example a private checkout next to this one) is refused: the worktree would
-otherwise be created under the primary while the brief still described the
-sibling.
+example a private checkout next to this one) without `--repo` is refused: the
+worktree would otherwise be created under the primary while the brief still
+described the sibling (#6900).
 
-`--cwd` cannot be combined with `--worktree` or `--branch`. That refusal is
-intentional. The supported sibling-repo flow is:
+**Preferred (#672 P2.1):** pass an allowlisted `--repo` key from
+`scripts/config/fleet_repos.yaml` so delegate creates the layout-A worktree
+under that sibling checkout:
+
+```bash
+LU_PRIMARY="$(dirname "$(git -C /path/to/learn-ukrainian rev-parse --path-format=absolute --git-common-dir)")"
+"$LU_PRIMARY/.venv/bin/python" "$LU_PRIMARY/scripts/delegate.py" dispatch \
+  --agent <lane> --task-id <id> --prompt-file <path> \
+  --mode workspace-write --repo hramatka --worktree
+```
+
+Allowlisted keys today: `public` (default), `infra-private`, `hramatka`.
+Missing sibling checkouts fail closed with a clone hint. Task JSON and
+Monitor/fleet-comms stay on the public primary control plane; `--repo` only
+retargets git worktree creation (and, for landing helpers, the GitHub slug).
+
+**Legacy manual flow** (still valid):
 
 ```bash
 # In the sibling repository — not via delegate --worktree:
 git -C /path/to/sibling worktree add .worktrees/dispatch/<agent>/<task> <base-or-branch>
 
 # Invoke this repo's delegate against that worktree (no --worktree).
-# Derive LU_PRIMARY from the Learn Ukrainian checkout, never from the sibling.
 LU_PRIMARY="$(dirname "$(git -C /path/to/learn-ukrainian rev-parse --path-format=absolute --git-common-dir)")"
 "$LU_PRIMARY/.venv/bin/python" "$LU_PRIMARY/scripts/delegate.py" dispatch \
   --agent <lane> --task-id <id> --prompt-file <path> \
   --mode workspace-write --cwd /path/to/sibling/.worktrees/dispatch/<agent>/<task>
 ```
 
-`--branch` has the same primary-only binding: it fetches and attaches a branch
-from the primary remote, not from the sibling. Follow-up work on a sibling PR
-uses the same manual-worktree + `--cwd` path.
-
-First-class `--repo` / cwd-derived worktree creation is out of scope for this
-v1: task state, the worktree reaper, sparse-checkout, and data-symlink
-provisioning all assume `_REPO_ROOT`.
+`--branch` attach on sibling `--repo` is out of scope for P2.1 (fresh
+`--worktree` only). Reaper three-repo sweeps and history migration are later
+P2 slices — not this v1.
 
 ### Astra workhorse and Luna bounded scout
 

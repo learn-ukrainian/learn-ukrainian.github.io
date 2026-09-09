@@ -1191,18 +1191,121 @@ def _derive_worktree_branch(agent: str, task_id: str) -> str:
     return f"{agent}/{safe_task}"
 
 
-def _auto_worktree_path(agent: str, task_id: str) -> Path:
+def _auto_worktree_path(agent: str, task_id: str, *, repo_root: Path | None = None) -> Path:
     """Default worktree path for a fresh dispatch: ``.worktrees/dispatch/{agent}/{task}/``.
 
-    Always under :data:`_REPO_ROOT`, never the invocation cwd. A sibling-repo
-    cwd therefore cannot retarget this path — :func:`_resolve_cross_repo_binding_error`
-    must refuse that case instead of letting the worker appear to run "here".
+    Defaults under :data:`_REPO_ROOT`. With ``--repo`` (#672 P2.1) the path is
+    rooted at the allowlisted sibling checkout instead. A bare sibling cwd
+    still cannot retarget this path — use ``--repo`` or the manual ``--cwd``
+    flow (:func:`_resolve_cross_repo_binding_error`).
     """
     normalized = _normalize_task_id(agent, task_id)
     # Slashes are fine in branch names but not in a single path component,
     # so flatten them here (task_id ``foo/bar`` → path ``foo-bar``).
     safe = re.sub(r"[^A-Za-z0-9._-]+", "-", normalized).strip("./-") or "task"
-    return _REPO_ROOT / ".worktrees" / "dispatch" / agent / safe
+    root = Path(repo_root).resolve() if repo_root is not None else _REPO_ROOT
+    return root / ".worktrees" / "dispatch" / agent / safe
+
+
+def _ensure_sibling_repo_worktree(
+    *,
+    repo_root: Path,
+    agent: str,
+    task_id: str,
+    raw_path: str,
+    base: str = "main",
+    dry_run: bool = False,
+) -> tuple[Path, str, dict[str, Any]]:
+    """Create or reuse a layout-A worktree under an allowlisted sibling checkout.
+
+    Public-primary helpers (sparse checkout, data symlinks, mirror-aware
+    ``_fetch_base``) stay on :data:`_REPO_ROOT`. Sibling repos get a narrow
+    fetch + ``git worktree add`` path so private product/infra trees are not
+    forced through public monorepo provisioning (#672 P2.1).
+    """
+    root = Path(repo_root).resolve()
+    path = Path(raw_path).expanduser()
+    if not path.is_absolute():
+        path = root / path
+    worktree_path = path.resolve()
+    try:
+        worktree_path.relative_to(root)
+    except ValueError as exc:
+        raise ValueError(
+            f"sibling worktree path {worktree_path} is outside target repo {root}"
+        ) from exc
+    worktree_branch = _derive_worktree_branch(agent, task_id)
+    telemetry: dict[str, Any] = {
+        "base_sha": None,
+        "rebased": False,
+        "layout": "dispatch",
+        "reused": False,
+        "sparse": None,
+        "local_venv": None,
+        "repo_root": str(root),
+    }
+    if worktree_path.exists():
+        if not worktree_path.is_dir():
+            raise ValueError(f"worktree path exists but is not a directory: {worktree_path}")
+        telemetry["reused"] = True
+        actual_sha = _resolve_sha(worktree_path)
+        if actual_sha is None:
+            raise RuntimeError(f"could not resolve HEAD for existing worktree {worktree_path}")
+        telemetry["base_sha"] = actual_sha
+        return worktree_path, worktree_branch, telemetry
+    if dry_run:
+        raise ValueError(
+            f"sibling --repo dry-run found no worktree at {worktree_path}; "
+            "rerun without --dry-run to create one"
+        )
+    branch_name = _base_branch_name(base)
+    origin_ref = f"origin/{branch_name}"
+    try:
+        fetch_proc = subprocess.run(
+            [
+                "git",
+                "fetch",
+                "origin",
+                f"+refs/heads/{branch_name}:refs/remotes/origin/{branch_name}",
+            ],
+            cwd=root,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+            env=_sanitized_git_env(),
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(
+            f"git fetch timed out after {DEFAULT_GIT_TIMEOUT_S}s for sibling repo {root}"
+        ) from exc
+    if fetch_proc.returncode != 0:
+        detail = (fetch_proc.stderr or fetch_proc.stdout or "git fetch failed").strip()
+        raise RuntimeError(f"could not fetch {origin_ref} in sibling repo {root}: {detail}")
+    if _resolve_sha(root, origin_ref) is None:
+        raise RuntimeError(f"{origin_ref} unresolvable in sibling repo {root} after fetch")
+    worktree_path.parent.mkdir(parents=True, exist_ok=True)
+    add_command = ["git", "worktree", "add", "-b", worktree_branch, str(worktree_path), origin_ref]
+    try:
+        proc = subprocess.run(
+            add_command,
+            cwd=root,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+            env=_sanitized_git_env(),
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"git worktree add timed out after {DEFAULT_GIT_TIMEOUT_S}s") from exc
+    if proc.returncode != 0:
+        stderr = (proc.stderr or proc.stdout or "git worktree add failed").strip()
+        raise RuntimeError(stderr)
+    actual_sha = _resolve_sha(worktree_path)
+    if actual_sha is None:
+        raise RuntimeError(f"could not resolve HEAD for created worktree {worktree_path}")
+    telemetry["base_sha"] = actual_sha
+    return worktree_path, worktree_branch, telemetry
 
 
 def _classify_worktree_layout(path: Path | str | None) -> str | None:
@@ -1330,11 +1433,12 @@ _WRITE_WORKTREE_HINT = (
 )
 _CROSS_REPO_BINDING_HINT = (
     "Dispatch binds the Learn Ukrainian primary checkout that owns this "
-    "script, not the invocation cwd. For a sibling repository, create a "
-    "worktree there manually (`git worktree add .worktrees/dispatch/"
-    "<agent>/<task> <base>`), then run `dispatch --mode workspace-write "
-    "--cwd <that-worktree>` without `--worktree` or `--branch`. See "
-    "docs/runbooks/agent-seat-onboarding.md (sibling-repo dispatch)."
+    "script, not the invocation cwd. Prefer first-class "
+    "`dispatch --repo {infra-private|hramatka} --worktree` (#672 P2.1). "
+    "Legacy: create a worktree in the sibling manually "
+    "(`git worktree add .worktrees/dispatch/<agent>/<task> <base>`), then "
+    "run `dispatch --mode workspace-write --cwd <that-worktree>` without "
+    "`--worktree` or `--branch`. See docs/runbooks/agent-seat-onboarding.md."
 )
 
 
@@ -1681,16 +1785,17 @@ def _resolve_cross_repo_binding_error(
     cwd_arg: str | None,
     requested_branch: str | None = None,
     invocation_cwd: Path | str | None = None,
+    target_repo_root: Path | str | None = None,
 ) -> str | None:
     """Refuse silent primary-repo binding when invoked from another git root.
 
-    ``--worktree`` and ``--branch`` always create or attach under
+    ``--worktree`` / ``--branch`` without ``--repo`` still create under
     :data:`_REPO_ROOT` (see :func:`_auto_worktree_path`). An invocation cwd
     whose git root is a sibling checkout used to look like "dispatch here"
-    while the worktree landed in the primary — issue #6900. First-class
-    ``--repo`` support would retarget fetch, ``git worktree add``, the
-    reaper, sparse-checkout, and data-symlink provisioning; v1 refuses
-    loudly and documents the existing manual-worktree + ``--cwd`` flow.
+    while the worktree landed in the primary — issue #6900.
+
+    With allowlisted ``--repo`` (#672 P2.1), worktrees are created under the
+    resolved sibling checkout; the guard allows that explicit retarget.
     """
     invocation_root = _resolve_invocation_git_root(invocation_cwd)
     if invocation_root is None:
@@ -1699,6 +1804,13 @@ def _resolve_cross_repo_binding_error(
     primary = wc.canonicalize(_REPO_ROOT)
     if invocation_root == primary:
         return None
+    if target_repo_root is not None:
+        target = wc.canonicalize(target_repo_root)
+        if invocation_root == target:
+            return None
+        # Explicit --repo retargets creation even when the shell sits elsewhere.
+        if target != primary:
+            return None
     # Documented sibling flow: explicit --cwd, never --worktree/--branch.
     # cmd_dispatch promotes a bare --branch to worktree_arg="auto" first.
     if cwd_arg and not worktree_arg and not requested_branch:
@@ -5681,13 +5793,45 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         )
         return 2
 
-    # #6900: --worktree/--branch (and the default worker cwd) always bind
-    # _REPO_ROOT. Invoking from a sibling git root used to create the
-    # worktree in the primary while the shell cwd said otherwise.
+    # #672 P2.1: allowlisted --repo retargets worktree creation to a sibling
+    # checkout. Control-plane task state stays on the public primary.
+    fleet_repo_key = getattr(args, "repo", None)
+    fleet_repo_meta: dict[str, Any] | None = None
+    target_repo_root = _REPO_ROOT
+    try:
+        from scripts.fleet_repos import FleetRepoError, fleet_repo_as_dict, resolve_fleet_repo
+    except ImportError:  # pragma: no cover - flat script path
+        from fleet_repos import FleetRepoError, fleet_repo_as_dict, resolve_fleet_repo  # type: ignore
+
+    try:
+        fleet_repo, target_repo_root = resolve_fleet_repo(fleet_repo_key, primary_root=_REPO_ROOT)
+        fleet_repo_meta = fleet_repo_as_dict(fleet_repo, target_repo_root)
+    except FleetRepoError as exc:
+        print(f"❌ {exc}", file=sys.stderr)
+        return 2
+    if not fleet_repo.default and requested_branch:
+        print(
+            "❌ --branch attach on sibling --repo is not supported in P2.1; "
+            "use --repo with bare --worktree for a fresh branch, or the manual --cwd flow.",
+            file=sys.stderr,
+        )
+        return 2
+    if not fleet_repo.default and not worktree_arg and not args.cwd:
+        print(
+            "❌ sibling --repo requires --worktree (auto) or --cwd at an existing sibling worktree.",
+            file=sys.stderr,
+        )
+        return 2
+
+    # #6900: --worktree/--branch (and the default worker cwd) bind the target
+    # checkout (public primary, or --repo sibling). Invoking from another git
+    # root without --repo used to create the worktree in the primary while the
+    # shell cwd said otherwise.
     cross_repo_error = _resolve_cross_repo_binding_error(
         worktree_arg=worktree_arg,
         cwd_arg=args.cwd,
         requested_branch=requested_branch,
+        target_repo_root=target_repo_root,
     )
     if cross_repo_error:
         print(cross_repo_error, file=sys.stderr)
@@ -5955,45 +6099,52 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     resolved_worktree_raw: str | None = None
     if worktree_arg:
         resolved_worktree_raw = (
-            str(_auto_worktree_path(dispatch_agent, task_id)) if worktree_arg == "auto" else worktree_arg
+            str(_auto_worktree_path(dispatch_agent, task_id, repo_root=target_repo_root))
+            if worktree_arg == "auto"
+            else worktree_arg
         )
-        try:
-            resolved_worktree_base_sha = _resolve_worktree_base_sha(
-                agent=dispatch_agent,
-                task_id=task_id,
-                raw_path=resolved_worktree_raw,
-                base=getattr(args, "base", None) or "main",
-                branch=requested_branch,
-                allow_rebase=not bool(getattr(args, "dry_run", False)),
-            )
-        except (ValueError, RuntimeError) as exc:
-            if not bool(getattr(args, "dry_run", False)):
-                _record_worktree_prep_failure(
-                    task_id=task_id,
-                    run_nonce=run_nonce,
-                    attribution=attribution,
+        if fleet_repo.default:
+            try:
+                resolved_worktree_base_sha = _resolve_worktree_base_sha(
                     agent=dispatch_agent,
-                    mode=args.mode,
-                    prompt=prompt,
-                    error=exc,
-                    requested_model=args.model,
-                    requested_effort=getattr(args, "effort", None),
-                    requested_harness=requested_harness,
-                    lifecycle_carrier=lifecycle_carrier,
-                    worktree_path=resolved_worktree_raw,
-                    worktree_branch=requested_branch,
-                    worktree_base=getattr(args, "base", None) or "main",
-                    agent_alias_note=agent_alias_note,
-                    output_schema_path=output_schema_path,
-                    output_schema_sha256=output_schema_sha256,
-                    keep_worktree=keep_worktree,
-                    hard_timeout=args.hard_timeout,
-                    silence_timeout=silence_timeout,
-                    initial_response_timeout=initial_response_timeout,
-                    max_budget_usd=max_budget_usd,
+                    task_id=task_id,
+                    raw_path=resolved_worktree_raw,
+                    base=getattr(args, "base", None) or "main",
+                    branch=requested_branch,
+                    allow_rebase=not bool(getattr(args, "dry_run", False)),
                 )
-            print(f"❌ failed to resolve immutable worktree base for {task_id!r}: {exc}", file=sys.stderr)
-            return 1
+            except (ValueError, RuntimeError) as exc:
+                if not bool(getattr(args, "dry_run", False)):
+                    _record_worktree_prep_failure(
+                        task_id=task_id,
+                        run_nonce=run_nonce,
+                        attribution=attribution,
+                        agent=dispatch_agent,
+                        mode=args.mode,
+                        prompt=prompt,
+                        error=exc,
+                        requested_model=args.model,
+                        requested_effort=getattr(args, "effort", None),
+                        requested_harness=requested_harness,
+                        lifecycle_carrier=lifecycle_carrier,
+                        worktree_path=resolved_worktree_raw,
+                        worktree_branch=requested_branch,
+                        worktree_base=getattr(args, "base", None) or "main",
+                        agent_alias_note=agent_alias_note,
+                        output_schema_path=output_schema_path,
+                        output_schema_sha256=output_schema_sha256,
+                        keep_worktree=keep_worktree,
+                        hard_timeout=args.hard_timeout,
+                        silence_timeout=silence_timeout,
+                        initial_response_timeout=initial_response_timeout,
+                        max_budget_usd=max_budget_usd,
+                    )
+                print(f"❌ failed to resolve immutable worktree base for {task_id!r}: {exc}", file=sys.stderr)
+                return 1
+        else:
+            # Sibling repos resolve the base SHA at create time inside
+            # _ensure_sibling_repo_worktree (simple origin fetch).
+            resolved_worktree_base_sha = None
 
     # Writable-path admission guard (#5643 Δ2-A WARN; #5645 REFUSE later).
     # Runs before task-state write / worktree / branch side effects so a refuse
@@ -6197,18 +6348,34 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         # Fix 4 (#1476): the sentinel ``auto`` (from bare ``--worktree``)
         # resolves to ``.worktrees/dispatch/{agent}/{task}/``. Explicit
         # paths remain unchanged for back-compat with in-flight dispatches.
-        resolved_raw = str(_auto_worktree_path(dispatch_agent, task_id)) if worktree_arg == "auto" else worktree_arg
+        # #672 P2.1: sibling --repo roots the auto path under that checkout.
+        resolved_raw = (
+            str(_auto_worktree_path(dispatch_agent, task_id, repo_root=target_repo_root))
+            if worktree_arg == "auto"
+            else worktree_arg
+        )
         try:
-            worktree_path, worktree_branch, worktree_telemetry = _ensure_worktree(
-                agent=dispatch_agent,
-                task_id=task_id,
-                raw_path=resolved_raw,
-                base=getattr(args, "base", None) or "main",
-                branch=requested_branch,
-                resolved_base_sha=resolved_worktree_base_sha,
-                full_checkout=full_checkout,
-                sparse_include=sparse_include,
-            )
+            if fleet_repo.default:
+                worktree_path, worktree_branch, worktree_telemetry = _ensure_worktree(
+                    agent=dispatch_agent,
+                    task_id=task_id,
+                    raw_path=resolved_raw,
+                    base=getattr(args, "base", None) or "main",
+                    branch=requested_branch,
+                    resolved_base_sha=resolved_worktree_base_sha,
+                    full_checkout=full_checkout,
+                    sparse_include=sparse_include,
+                )
+            else:
+                worktree_path, worktree_branch, worktree_telemetry = _ensure_sibling_repo_worktree(
+                    repo_root=target_repo_root,
+                    agent=dispatch_agent,
+                    task_id=task_id,
+                    raw_path=resolved_raw,
+                    base=getattr(args, "base", None) or "main",
+                )
+                if fleet_repo_meta is not None:
+                    worktree_telemetry["fleet_repo"] = fleet_repo_meta
         except (ValueError, RuntimeError) as exc:
             stdout_fd.close()
             stderr_fd.close()
@@ -7572,13 +7739,25 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     d.add_argument(
+        "--repo",
+        default=None,
+        metavar="KEY",
+        help=(
+            "Allowlisted fleet repository for worktree creation and GitHub "
+            "targeting (#672 P2.1). Keys come from scripts/config/fleet_repos.yaml "
+            "(public, infra-private, hramatka). Default: public primary. Sibling "
+            "keys require --worktree (auto) or --cwd; task state stays on the "
+            "public primary control plane. Legacy manual sibling --cwd flow remains valid."
+        ),
+    )
+    d.add_argument(
         "--cwd",
         default=None,
         help="Working directory for the worker (default: primary checkout). "
         "For workspace-write/danger it must be a verified added "
         "worktree, never the primary checkout — prefer --worktree. "
-        "Supported sibling-repo flow: manual `git worktree add` in that "
-        "repo, then `--cwd <that-worktree>` without `--worktree`.",
+        "Sibling-repo flow: prefer `--repo KEY --worktree`, or manual "
+        "`git worktree add` then `--cwd <that-worktree>` without `--worktree`.",
     )
     d.add_argument(
         "--worktree",

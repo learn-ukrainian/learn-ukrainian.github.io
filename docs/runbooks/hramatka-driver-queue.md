@@ -2,20 +2,33 @@
 
 Cold-start queue contract for anyone driving the Hramatka epic (public
 [#4542](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4542))
-across the public/private repo split. Authority: the 2026-08-07 stream-hygiene
+across the multi-repo split. Authority: the 2026-08-07 stream-hygiene
 consult (`batch_state/hramatka-drive/CONSULT-VERDICT-stream-hygiene-2026-08-07.md`,
 gitignored local evidence; ACP conversation
 `conversation_7b6241377cd44c7ea5265da5c85efb5c`, claude/codex/agy/kimi converged
 spine). Scope gate ships with PR-2; settle reaper with PR-3; closeout
 `hygiene_check` with PR-4 (this document covers all three surfaces).
 
+## Repositories (three-seat layout after #672 P2)
+
+| Repo | Role |
+| --- | --- |
+| Public `learn-ukrainian/learn-ukrainian.github.io` | Shared curriculum/UI/contracts; fleet control plane (`delegate.py`, Monitor, batch_state). |
+| Private `learn-ukrainian/learn-ukrainian-infra-private` | Non-public infra only (deploy inventory, credentials wiring, host ops). |
+| Private `learn-ukrainian/hramatka` | Secret-free teacher product (app, API, lesson engine, product CI). Shell created in P2.0; history migration is P2.2. |
+
+Dispatch into a sibling product/infra checkout with first-class
+`--repo hramatka` or `--repo infra-private` (see
+`scripts/config/fleet_repos.yaml` and agent-seat-onboarding § Sibling-repo
+dispatch). Do not invent a fourth coordination plane.
+
 ## Queue roles
 
 | Queue | Role |
 | --- | --- |
-| Private BOARD [learn-ukrainian-infra-private#349](https://github.com/learn-ukrainian/learn-ukrainian-infra-private/issues/349) | **Planning/priority queue.** Ownership + ordering for active Hramatka work. |
+| Private BOARD [learn-ukrainian-infra-private#349](https://github.com/learn-ukrainian/learn-ukrainian-infra-private/issues/349) | **Planning/priority queue.** Ownership + ordering for active Hramatka work (until product issues move with P2.2). |
 | Public [#4542](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4542) | **Charter + bare pointer.** Narrative/authorization record, not a live operational checklist. Never auto-generate or mirror a public checklist from the private board — leak + dual-write, explicitly rejected by the consult. |
-| GitHub issue/PR state (either repo) | Factual SSOT for what is actually open or closed. #349 is the priority queue, not a duplicate status feed — an item can be closed on GitHub while still ranked on #349, and the reverse. |
+| GitHub issue/PR state (any of the three repos) | Factual SSOT for what is actually open or closed. #349 is the priority queue, not a duplicate status feed — an item can be closed on GitHub while still ranked on #349, and the reverse. |
 
 ## Cold-start read order
 
