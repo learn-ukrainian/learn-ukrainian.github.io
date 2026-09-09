@@ -1,33 +1,33 @@
 {
-  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest-c6513c775388.json.gz",
+  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest-25a60991c58f.json.gz",
   "release_tag": "atlas-manifest",
   "manifest_version": "0.1",
   "manifest_fingerprint": "c51aa4a8dda4f4f1ce31284439b1980b9dca2ffa55daecfa31ea87d2cb86c1e2",
   "fingerprint_schema_version": 1,
-  "generated_at": "2026-09-09T13:23:52+00:00",
-  "gz_sha256": "7cb8982b177fb58fc0c5559ca281afeaa91556cdffbb3b396ce60fd39bd59ec5",
-  "json_sha256": "c6513c7753884b8c937bea3c9080280889b37c914035c5c1aec280466c1d166c",
-  "gz_bytes": 31011949,
-  "json_bytes": 227983421,
+  "generated_at": "2026-09-09T14:04:00+00:00",
+  "gz_sha256": "4322b0eff7844941aa1431923dc7de952e020b822ad34e60656520915f350261",
+  "json_sha256": "25a60991c58f0883f2d7b2ef3f1db31c5887fb0d18a929735407fe70999d0d89",
+  "gz_bytes": 31473412,
+  "json_bytes": 232309807,
   "richness_gate": {
     "baseline": {
-      "poc_thin_pages": 6609,
-      "search_no_visible_gloss": 5,
-      "old_gate_no_english_anchor": 1004
-    },
-    "candidate": {
       "poc_thin_pages": 6989,
       "search_no_visible_gloss": 5,
       "old_gate_no_english_anchor": 1200
     },
+    "candidate": {
+      "poc_thin_pages": 7391,
+      "search_no_visible_gloss": 5,
+      "old_gate_no_english_anchor": 1410
+    },
     "regressions": {
       "poc_thin_pages": {
-        "baseline": 6609,
-        "candidate": 6989
+        "baseline": 6989,
+        "candidate": 7391
       },
       "old_gate_no_english_anchor": {
-        "baseline": 1004,
-        "candidate": 1200
+        "baseline": 1200,
+        "candidate": 1410
       }
     },
     "override_reason": "Operator directive: admit VESUM-attested textbook vocabulary without holding back thin entries",
