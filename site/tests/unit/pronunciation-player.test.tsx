@@ -224,8 +224,19 @@ describe('on-device Ukrainian speech', () => {
     expect(button).toHaveTextContent('Play pronunciation');
   });
 
-  it.each(['en', 'uk'] as const)('rejects English and remote voices with %s feedback and allows retry', async (locale) => {
+  it('accepts online or remote Ukrainian voices for Windows Edge and Chrome', async () => {
     speech.getVoices.mockReturnValue([{lang: 'en-US', localService: true}, {...UK_VOICE, localService: false}]);
+    const Player = await player();
+    render(<Player lemma="автобус" locale="uk" />);
+    fireEvent.click(screen.getByRole('button'));
+    expect(speech.speak).toHaveBeenCalledOnce();
+    const utterance = speech.speak.mock.calls[0][0];
+    expect(utterance.voice).toMatchObject({ lang: 'uk-UA', localService: false });
+    expect(screen.getByRole('status')).toBeEmptyDOMElement();
+  });
+
+  it.each(['en', 'uk'] as const)('rejects non-Ukrainian voices with %s feedback and allows retry', async (locale) => {
+    speech.getVoices.mockReturnValue([{lang: 'en-US', localService: true}]);
     const Player = await player();
     render(<Player lemma="автобус" locale={locale} />);
     fireEvent.click(screen.getByRole('button'));
@@ -236,6 +247,17 @@ describe('on-device Ukrainian speech', () => {
     fireEvent.click(screen.getByRole('button'));
     expect(speech.speak).toHaveBeenCalledOnce();
     expect(screen.getByRole('status')).toBeEmptyDOMElement();
+  });
+
+  it('supports opus, webm, and mp3 audio entries in addition to wav', async () => {
+    vi.mocked(fetch).mockResolvedValue({ ok: true, json: async () => ({
+      schemaVersion: 1, entries: { 'автобус': { file: `${'b'.repeat(64)}.opus` } },
+    }) } as Response);
+    const Player = await player();
+    render(<Player lemma="автобус" />);
+    const button = await screen.findByRole('button', { name: 'Послухати вимову' });
+    fireEvent.click(button);
+    expect(instances[0].src).toMatch(new RegExp(`/audio/pronunciation/${'b'.repeat(64)}\\.opus$`));
   });
 
   it('handles voices arriving after mount without autoplay', async () => {

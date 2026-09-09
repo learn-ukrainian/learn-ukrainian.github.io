@@ -90,15 +90,15 @@ invalid. An explicitly present safe WAV entry can be used instead of speech;
 otherwise a click speaks only the source Ukrainian lemma, never its English
 gloss. The spoken headword is marked `lang="uk"` in the UI.
 
-For speech, each click rechecks available voices and selects a local voice whose
-language starts with `uk`. If none is available (including while the voice list
-is still loading), the existing localized error appears and the learner can
-retry. It never falls back to an English voice or a remote voice. Unsupported
-browsers and audio/speech failures use the same feedback. Button and status
-labels follow the chrome locale.
+For speech, each click rechecks available voices and selects an installed Ukrainian voice
+(`uk*`), preferring local system voices while allowing browser online Ukrainian voices
+(such as Microsoft Polina on Windows Edge and Google Ukrainian on Chrome). It never falls
+back to a non-Ukrainian voice. Unsupported browsers and audio/speech failures use the same
+feedback. Button and status labels follow the chrome locale.
 
-Playback is explicit and exclusive across speech and WAVs. Stop, changing a
-card, or leaving an article cancels speech or pauses the WAV. Atlas SSR pages
+Playback is explicit and exclusive across speech and pre-recorded audio clips (`.opus`, `.webm`,
+`.mp3`, `.wav`, optionally served via `PUBLIC_AUDIO_CDN_URL`). Stop, changing a
+card, or leaving an article cancels speech or pauses the audio. Atlas SSR pages
 use the same small DOM controller as React pages, without hydrating the whole
 article or shipping its catalog.
 The practice player sits outside the card's flip button beside its subtitle;
@@ -119,7 +119,7 @@ correctness. It has the same voice provenance as above. Tests cover selection,
 exclusions, caps, invalid output, atomic publication, playback failure, lifecycle,
 locale, SSR startup and card activation isolation. Player tests also cover missing
 manifests, Ukrainian voice selection, missing/late voices, speech cancellation,
-completion/errors and rejection of English or remote voices.
+completion/errors, non-Ukrainian voice rejection, and remote/online Ukrainian voice acceptance.
 
 **Listening mode stays disabled.** Valid WAVs and source-verified synthesis text
 prove the pipeline, not the pronunciation of the resulting sound. Before enabling
