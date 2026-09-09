@@ -14,68 +14,131 @@ import subprocess
 import sys
 from dataclasses import dataclass
 
+HTML_COMMENT_RE = re.compile(r"(?s)<!--.*?-->")
+PLACEHOLDER_RE = re.compile(
+    r"(?i)^(?:todo|tbd|n/?a|none|…|\.\.\.|\[.*\]|<.*>|criterion \d+|path/to/)\s*$"
+)
+TERMINAL_GOALS = ("merge", "deploy", "certify", "decision-only", "audit-only")
+
 
 @dataclass(frozen=True)
 class FieldCheck:
     key: str
     label: str
-    pattern: re.Pattern[str]
+    heading: re.Pattern[str]
 
 
-# Coarse, intentional: catch missing *concepts*, not enforce one heading style.
+# Locate sections by heading; values must be substantive (not empty/placeholder).
 FIELDS: tuple[FieldCheck, ...] = (
     FieldCheck(
         "outcome",
         "user-visible outcome / what",
         re.compile(
-            r"(?is)(user[- ]visible\s+outcome|\*\*what\*\*|##\s*(outcome|overview|problem(\s+statement)?)\b)"
+            r"(?im)^#{1,3}\s*(?:user[- ]visible\s+outcome|outcome|overview|problem(?:\s+statement)?)\s*$"
+            r"|^\*\*what\*\*\s*:"
         ),
+    ),
+    FieldCheck(
+        "why",
+        "why / evidence",
+        re.compile(r"(?im)^#{1,3}\s*(?:why(?:\s*/\s*evidence)?|evidence|repro)\s*$"),
+    ),
+    FieldCheck(
+        "in_scope",
+        "in scope / paths",
+        re.compile(r"(?im)^#{1,3}\s*(?:in\s+scope|scope|affected)\s*$"),
     ),
     FieldCheck(
         "non_goals",
         "non-goals / out of scope",
-        re.compile(r"(?is)(non[- ]goals?|out of scope|do not (?:do|file|start))"),
+        re.compile(r"(?im)^#{1,3}\s*(?:non[- ]goals?|out of scope)\s*$"),
     ),
     FieldCheck(
         "denominator",
         "denominator / scope size",
-        re.compile(r"(?is)(denominator|##\s*affected\b|n\s*[≥>=]\s*\d+|sample of)"),
+        re.compile(r"(?im)^#{1,3}\s*(?:denominator)\s*$"),
     ),
     FieldCheck(
         "verify",
         "verify commands / held-out check",
-        re.compile(
-            r"(?is)(##\s*verify\b|verify:|held-out|```(?:bash|shell|text)?\n|\.venv/bin/python|pytest )"
-        ),
+        re.compile(r"(?im)^#{1,3}\s*(?:verify|verification|test plan)\s*$"),
+    ),
+    FieldCheck(
+        "deps",
+        "dependencies (or explicit none)",
+        re.compile(r"(?im)^#{1,3}\s*(?:deps|dependencies|blockers)\s*$"),
     ),
     FieldCheck(
         "dod",
         "definition of done / acceptance criteria",
-        re.compile(r"(?is)(definition of done|acceptance criteria|##\s*done\b)"),
+        re.compile(
+            r"(?im)^#{1,3}\s*(?:definition of done|acceptance criteria(?:\s*/\s*definition of done)?|done)\s*$"
+        ),
     ),
     FieldCheck(
         "terminal_goal",
         "terminal goal (merge|deploy|certify|decision-only|audit-only)",
-        re.compile(
-            r"(?is)(terminal goal|\bmerge\b.*\bdeploy\b|\bcertify\b|decision-only|audit-only)"
-        ),
+        re.compile(r"(?im)^#{1,3}\s*(?:terminal goal)\s*$"),
     ),
     FieldCheck(
         "residual",
         "residual / leftover owner",
-        re.compile(r"(?is)(residual|leftover|follow[- ]up owner|owner:)"),
+        re.compile(r"(?im)^#{1,3}\s*(?:residual|leftovers?)\s*$"),
     ),
 )
 
-# Only explicit markers — do not match prose that merely discusses trivial work.
 TRIVIAL_RE = re.compile(
     r"(?im)^(?:\*\*)?(?:trivial|typo-only|single-line)(?:\*\*)?\s*:\s*(?:yes|true|exempt)\b"
     r"|^(?:trivial|typo-only)\s+fix\b"
 )
+HEADING_LINE_RE = re.compile(r"(?m)^(#{1,6}\s+\S.*|\*\*[^*]+\*\*\s*:.*)$")
+
+
+def _strip_noise(text: str) -> str:
+    return HTML_COMMENT_RE.sub("", text or "")
+
+
+def _section_body(text: str, heading: re.Pattern[str]) -> str | None:
+    match = heading.search(text)
+    if not match:
+        return None
+    rest = text[match.end() :]
+    next_heading = HEADING_LINE_RE.search(rest)
+    chunk = rest if next_heading is None else rest[: next_heading.start()]
+    return chunk.strip()
+
+
+def _substantive(chunk: str | None) -> bool:
+    if chunk is None:
+        return False
+    # Prefer fenced commands for verify; otherwise non-empty non-placeholder lines.
+    lines = []
+    for raw in chunk.splitlines():
+        stripped = raw.strip()
+        if not stripped:
+            continue
+        # Skip nested markdown headings only (not "#1234 issue refs").
+        if re.match(r"^#{1,6}\s+\S", stripped):
+            continue
+        line = stripped.lstrip("-* ").strip()
+        line = re.sub(r"^\[\s*[xX ]\s*\]\s*", "", line).strip()
+        if not line:
+            continue
+        if PLACEHOLDER_RE.match(line):
+            continue
+        lines.append(line)
+    return bool(lines)
+
+
+def _terminal_goal_ok(chunk: str | None) -> bool:
+    if not chunk:
+        return False
+    lowered = chunk.lower()
+    return any(re.search(rf"(?i)\b{re.escape(goal)}\b", lowered) for goal in TERMINAL_GOALS)
 
 
 def score_body(body: str, *, trivial: bool = False) -> dict[str, object]:
-    text = body or ""
+    text = _strip_noise(body or "")
     if trivial or TRIVIAL_RE.search(text):
         return {
             "verdict": "PASS",
@@ -84,13 +147,21 @@ def score_body(body: str, *, trivial: bool = False) -> dict[str, object]:
             "present": [f.key for f in FIELDS],
             "notes": ["trivial exemption — full card not required"],
         }
+
     missing: list[str] = []
     present: list[str] = []
     for field in FIELDS:
-        if field.pattern.search(text):
+        chunk = _section_body(text, field.heading)
+        ok = (
+            _terminal_goal_ok(chunk)
+            if field.key == "terminal_goal"
+            else _substantive(chunk)
+        )
+        if ok:
             present.append(field.key)
         else:
             missing.append(field.key)
+
     verdict = "PASS" if not missing else "WARN"
     return {
         "verdict": verdict,
@@ -146,15 +217,30 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--json", action="store_true", help="Machine-readable result")
     args = parser.parse_args(argv)
 
-    if args.issue is not None:
-        body = _fetch_issue_body(args.repo, args.issue)
-    elif args.body_file:
-        with open(args.body_file, encoding="utf-8") as handle:
-            body = handle.read()
-    else:
-        body = args.body or ""
+    try:
+        if args.issue is not None:
+            body = _fetch_issue_body(args.repo, args.issue)
+        elif args.body_file:
+            with open(args.body_file, encoding="utf-8") as handle:
+                body = handle.read()
+        else:
+            body = args.body or ""
+        result = score_body(body, trivial=args.trivial)
+    except (
+        OSError,
+        subprocess.SubprocessError,
+        json.JSONDecodeError,
+        UnicodeError,
+        ValueError,
+    ) as exc:
+        result = {
+            "verdict": "WARN",
+            "trivial": False,
+            "missing": ["input"],
+            "present": [],
+            "notes": [f"input_error:{type(exc).__name__}:{exc}"],
+        }
 
-    result = score_body(body, trivial=args.trivial)
     if args.json:
         print(json.dumps(result, indent=2, sort_keys=True))
     else:

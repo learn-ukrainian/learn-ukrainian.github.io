@@ -29,6 +29,9 @@ assignees: ''
 ## Terminal goal
 <!-- merge | deploy | certify | decision-only | audit-only -->
 
+## Dependencies
+<!-- Blockers named, or `none` -->
+
 ## Acceptance Criteria / Definition of Done
 - [ ] Outcome verified against denominator (evidence on this issue)
 - [ ] Verify commands green (or N/A with reason)

@@ -2,11 +2,17 @@
 
 from __future__ import annotations
 
-from scripts.check_issue_task_quality import score_body
+from scripts.check_issue_task_quality import main, score_body
 
 COMPLETE = """
 ## User-visible outcome
 Ship the advisory checker.
+
+## Why / evidence
+#7854 audit showed empty DoD cards.
+
+## In scope
+`scripts/check_issue_task_quality.py` and issue templates.
 
 ## Non-goals
 No blocking CI gate.
@@ -19,14 +25,30 @@ All templates under .github/ISSUE_TEMPLATE/.
 .venv/bin/python scripts/check_issue_task_quality.py --help
 ```
 
+## Dependencies
+none
+
 ## Definition of Done
-- [ ] PR merged
+- [ ] PR merged with CF + green CI
 
 ## Terminal goal
 merge
 
 ## Residual
 none — owner: n/a
+"""
+
+HEADINGS_ONLY = """
+## User-visible outcome
+## Why / evidence
+## In scope
+## Non-goals
+## Denominator
+## Verify
+## Dependencies
+## Definition of Done
+## Terminal goal
+## Residual
 """
 
 
@@ -39,8 +61,21 @@ def test_complete_card_passes() -> None:
 def test_missing_fields_warn() -> None:
     result = score_body("## Overview\nDo a thing somehow.\n")
     assert result["verdict"] == "WARN"
-    assert "outcome" in result["missing"] or "dod" in result["missing"]
     assert "non_goals" in result["missing"]
+    assert "why" in result["missing"]
+
+
+def test_headings_only_warns() -> None:
+    result = score_body(HEADINGS_ONLY)
+    assert result["verdict"] == "WARN"
+    assert "outcome" in result["missing"]
+    assert "terminal_goal" in result["missing"]
+
+
+def test_empty_body_warns() -> None:
+    result = score_body("")
+    assert result["verdict"] == "WARN"
+    assert len(result["missing"]) >= 8
 
 
 def test_trivial_exemption() -> None:
@@ -58,11 +93,21 @@ def test_prose_mentioning_trivial_is_not_exempt() -> None:
     assert result["verdict"] == "WARN"
 
 
-def test_cli_help(capsys) -> None:
-    from scripts import check_issue_task_quality as mod
+def test_missing_body_file_is_fail_open(tmp_path) -> None:
+    missing = tmp_path / "does-not-exist.md"
+    code = main(["--body-file", str(missing), "--json"])
+    assert code == 0
 
+
+def test_missing_body_file_strict_fails(tmp_path) -> None:
+    missing = tmp_path / "does-not-exist.md"
+    code = main(["--body-file", str(missing), "--strict"])
+    assert code == 1
+
+
+def test_cli_help(capsys) -> None:
     try:
-        mod.main(["--help"])
+        main(["--help"])
     except SystemExit as exc:
         assert exc.code == 0
     out = capsys.readouterr().out
