@@ -117,7 +117,7 @@ def _substantive(chunk: str | None, *, allow_none: bool = False) -> bool:
         stripped = raw.strip()
         if not stripped:
             continue
-        if re.match(r"^```", stripped):
+        if re.match(r"^(```|~~~)", stripped):
             continue
         # Markdown headings / hash comments; keep "#1234" issue refs.
         if (
@@ -128,10 +128,12 @@ def _substantive(chunk: str | None, *, allow_none: bool = False) -> bool:
             continue
         line = stripped.lstrip("-* ").strip()
         line = re.sub(r"^\[\s*[xX ]\s*\]\s*", "", line).strip()
-        if not line or line in {"```"}:
+        if not line or line in {"```", "~~~"}:
             continue
         # Bare fence language tags are not content.
-        if re.fullmatch(r"[a-zA-Z0-9_+-]+", line) and raw.strip().startswith("```"):
+        if re.fullmatch(r"[a-zA-Z0-9_+-]+", line) and re.match(
+            r"^(```|~~~)", raw.strip()
+        ):
             continue
         if allow_none and EXPLICIT_NONE_RE.match(line):
             lines.append(line)
