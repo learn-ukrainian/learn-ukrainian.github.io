@@ -409,7 +409,11 @@ def test_load_cache_arms_autonomous_refresh_timer(
         finally:
             loop.call_later = orig_call_later  # type: ignore[method-assign]
         assert delays, "set_host_load_cache must schedule call_later"
-        assert delays[0] == pytest.approx(router_mod.HOST_LOAD_REFRESH_AFTER_S, abs=0.001)
+        # Delay is HOST_LOAD_REFRESH_AFTER_S minus sample age at arm time
+        # (scripts/api/atlas_jobs_router.py::_arm_host_load_timer). Under CI
+        # load a few ms of age is normal; require a near-full window, not exact.
+        assert 0.0 < delays[0] <= router_mod.HOST_LOAD_REFRESH_AFTER_S
+        assert delays[0] == pytest.approx(router_mod.HOST_LOAD_REFRESH_AFTER_S, abs=0.05)
         handle = next(iter(router_mod._HOST_LOAD_TIMERS.values()))
         remaining = handle.when() - loop.time()
         await asyncio.sleep(max(0.0, remaining - 0.002))
