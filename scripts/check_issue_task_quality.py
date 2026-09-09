@@ -16,8 +16,9 @@ from dataclasses import dataclass
 
 HTML_COMMENT_RE = re.compile(r"(?s)<!--.*?-->")
 PLACEHOLDER_RE = re.compile(
-    r"(?i)^(?:todo|tbd|n/?a|none|…|\.\.\.|\[.*\]|<.*>|criterion \d+|path/to/)\s*$"
+    r"(?i)^(?:todo|tbd|n/?a|…|\.\.\.|\[.*\]|<.*>|criterion \d+|path/to/)\s*$"
 )
+EXPLICIT_NONE_RE = re.compile(r"(?i)^(?:none|n/?a|na)\s*(?:[—\-].*)?$")
 TERMINAL_GOALS = ("merge", "deploy", "certify", "decision-only", "audit-only")
 
 
@@ -108,10 +109,9 @@ def _section_body(text: str, heading: re.Pattern[str]) -> str | None:
     return chunk.strip()
 
 
-def _substantive(chunk: str | None) -> bool:
+def _substantive(chunk: str | None, *, allow_none: bool = False) -> bool:
     if chunk is None:
         return False
-    # Prefer fenced commands for verify; otherwise non-empty non-placeholder lines.
     lines = []
     for raw in chunk.splitlines():
         stripped = raw.strip()
@@ -123,6 +123,9 @@ def _substantive(chunk: str | None) -> bool:
         line = stripped.lstrip("-* ").strip()
         line = re.sub(r"^\[\s*[xX ]\s*\]\s*", "", line).strip()
         if not line:
+            continue
+        if allow_none and EXPLICIT_NONE_RE.match(line):
+            lines.append(line)
             continue
         if PLACEHOLDER_RE.match(line):
             continue
@@ -152,11 +155,12 @@ def score_body(body: str, *, trivial: bool = False) -> dict[str, object]:
     present: list[str] = []
     for field in FIELDS:
         chunk = _section_body(text, field.heading)
-        ok = (
-            _terminal_goal_ok(chunk)
-            if field.key == "terminal_goal"
-            else _substantive(chunk)
-        )
+        if field.key == "terminal_goal":
+            ok = _terminal_goal_ok(chunk)
+        else:
+            ok = _substantive(
+                chunk, allow_none=field.key in {"deps", "residual", "non_goals"}
+            )
         if ok:
             present.append(field.key)
         else:
