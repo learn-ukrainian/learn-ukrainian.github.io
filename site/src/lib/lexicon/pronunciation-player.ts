@@ -33,8 +33,10 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
   mounted.get(root)?.();
   const button = root.querySelector('button')!;
   const status = root.querySelector<HTMLElement>('[role="status"]')!;
-  const spoken = (root.dataset.pronunciationLemma ?? '').trim();
-  const lemma = pronunciationKey(spoken);
+  const rawSpoken = (root.dataset.pronunciationLemma ?? '').trim();
+  const headerStress = root.parentElement?.querySelector('.word-stress')?.textContent?.replace(/[[\]]/g, '').trim();
+  const spoken = headerStress || rawSpoken;
+  const lemma = pronunciationKey(rawSpoken);
   const synthesis = window.speechSynthesis;
   let utterance: SpeechSynthesisUtterance | undefined;
   let disposed = false;
