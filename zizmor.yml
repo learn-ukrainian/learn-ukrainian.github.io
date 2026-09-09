@@ -7,3 +7,9 @@ rules:
       - deploy-pages.yml:30
       # gemini-plan-execute.yml:49 — credentials needed for MCP push_files (contents:write)
       - gemini-plan-execute.yml:49
+  self-repository:
+    ignore:
+      # content-ci.yml:27 — `$/` is correct (zizmor 1.30 / GH Actions 2026-07-30),
+      # but our pinned actionlint 1.7.12 rejects it (rhysd/actionlint#732 still open).
+      # Keep `./` until actionlint ships `$/` support, then migrate and drop this ignore.
+      - content-ci.yml:27

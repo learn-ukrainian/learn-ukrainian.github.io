@@ -21,7 +21,7 @@ A further six Drive PDFs for grade 1 had no local JSONL before this pass —
 three books (Большакова 2018, Большакова 2025, Кравцова 2025), each split
 across two parts. Every PDF was copied via `rclone copy` (never `sync`) into
 the gitignored local cache
-(`/home/ops/learn-ukrainian/data/textbook_chunks/grade-01/`, PDFs and JSONL
+(`$ATLAS_RUN_ROOT/data/textbook_chunks/grade-01/`, PDFs and JSONL
 not committed) and run through `scripts/rag/extract_text.py --native-only`,
 which fails closed rather than falling back to OCR:
 
