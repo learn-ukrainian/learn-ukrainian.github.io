@@ -8,7 +8,7 @@ Before choosing an ordinary ask lane, request the ACP routing snapshot:
 
 ```bash
 curl -fsS 'http://localhost:8765/api/state/routing-budget?transport=acp'
-/home/ops/learn-ukrainian/.venv/bin/python -m scripts.fleet.capacity_pick --transport acp --strict
+.venv/bin/python -m scripts.fleet.capacity_pick --transport acp --strict
 ```
 
 The default routing snapshot and capacity picker remain scoped to native
