@@ -200,6 +200,7 @@ def _fetch_issue_body(repo: str, number: int) -> str:
             "body,title,labels",
         ],
         text=True,
+        timeout=60,
     )
     data = json.loads(raw)
     labels = " ".join(label.get("name", "") for label in data.get("labels") or [])
