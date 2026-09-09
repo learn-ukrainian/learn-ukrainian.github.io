@@ -75,6 +75,8 @@ gh issue create \
 
 ## Definition of Done
 
+Canonical pack: `docs/best-practices/task-quality.md` (DoR before start; terminal goal + residual on close).
+
 - [ ] All plans reviewed against checklist
 - [ ] Issues documented with proposed fixes
 - [ ] High-severity issues escalated for user decision

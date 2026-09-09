@@ -45,14 +45,21 @@ Do NOT create issues for:
 
 ## Issue Content Standards
 
+Non-trivial issues must carry the **task-quality pack** (DoR before dispatch,
+DoD before close): see [`task-quality.md`](task-quality.md). Advisory check:
+
+```bash
+.venv/bin/python scripts/check_issue_task_quality.py --issue N
+```
+
 A good issue has:
 
 1. **Title**: `area: brief description` (e.g. `fix: meta sections oversized in 9 modules`)
-2. **Problem**: What's wrong, with evidence
-3. **Root cause**: Why it happened
-4. **Affected modules/files**: Specific list where applicable
-5. **Fix**: What was done or what needs doing
-6. **Commands**: Exact commands to reproduce/verify
+2. **User-visible outcome** + **why/evidence**
+3. **In scope / non-goals / denominator**
+4. **Verify** commands (or held-out check)
+5. **Terminal goal** + **Definition of Done**
+6. **Residual** owner (or “none”) when closing
 
 Template for bug reports:
 ```markdown

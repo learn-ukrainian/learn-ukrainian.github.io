@@ -73,6 +73,7 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 | Module content quality | [`module-content-quality.md`](docs/best-practices/module-content-quality.md) |
 | Agent cooperation | [`agent-cooperation.md`](docs/best-practices/agent-cooperation.md) |
 | Issue tracking | [`issue-tracking.md`](docs/best-practices/issue-tracking.md) |
+| Task quality (DoR/DoD) | [`task-quality.md`](docs/best-practices/task-quality.md) |
 | Gitflow | [`gitflow.md`](docs/best-practices/gitflow.md) |
 | Git hygiene (dirty-tree policy) | [`git-hygiene.md`](docs/best-practices/git-hygiene.md) |
 | Audit standards | [`audit-standards.md`](docs/best-practices/audit-standards.md) |

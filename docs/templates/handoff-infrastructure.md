@@ -69,12 +69,16 @@ gh issue create \
 
 ## Definition of Done
 
+Canonical pack: `docs/best-practices/task-quality.md`. Implement in a **dispatch worktree**, never primary `main`.
+
 - [ ] Tool runs without errors on happy path
 - [ ] Help text is clear and complete (`--help`)
 - [ ] Edge cases handled gracefully (missing files, bad input)
 - [ ] Added to `package.json` scripts (if applicable)
 - [ ] Documentation updated in `docs/SCRIPTS.md`
 - [ ] Works in CI environment (no interactive prompts)
+- [ ] PR + cross-family exact-head APPROVE + CI green + merge closeout
+- [ ] Terminal goal matched; close comment names residual + owner
 
 ## Related Files
 

@@ -74,6 +74,8 @@ For each reviewed module, assess:
 
 ## Definition of Done
 
+Canonical pack: `docs/best-practices/task-quality.md` (DoR before start; terminal goal + residual on close).
+
 - [ ] All automated audits run
 - [ ] Era-defining modules deep-reviewed (14)
 - [ ] Stratified sample reviewed (~20 modules)

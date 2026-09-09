@@ -116,6 +116,8 @@ gh issue create \
 
 ## Definition of Done
 
+Canonical pack: `docs/best-practices/task-quality.md` (DoR before start; terminal goal + residual on close).
+
 - [ ] Root cause identified and documented
 - [ ] Fix implemented
 - [ ] Regression test added
