@@ -182,11 +182,12 @@ def cmd_fleet_status(args: argparse.Namespace) -> int:
 def _monitor_base_url(monitor_url: str | None) -> str:
     """Normalize a Monitor base URL for sibling API paths (fail-open friendly)."""
     raw = (monitor_url or os.environ.get("AB_MONITOR_URL") or "http://127.0.0.1:8765").strip()
+    raw = raw.rstrip("/")
     if raw.endswith("/api/state/summary"):
-        raw = raw[: -len("/api/state/summary")]
+        raw = raw[: -len("/api/state/summary")].rstrip("/")
     if raw.endswith("/api"):
-        raw = raw[: -len("/api")]
-    return raw.rstrip("/")
+        raw = raw[: -len("/api")].rstrip("/")
+    return raw
 
 
 def _fetch_json_fail_open(url: str, *, timeout_seconds: float = 2.0) -> dict[str, Any]:
@@ -206,6 +207,10 @@ def _fetch_json_fail_open(url: str, *, timeout_seconds: float = 2.0) -> dict[str
         return {"available": False, "reason": type(exc).__name__}
 
 
+# Active tasks older than this are exception-worthy (stale / hung).
+_STALE_ACTIVE_AGE_S = 3600.0
+
+
 def fleet_progress_payload(
     *,
     repo_root: Path | None = None,
@@ -215,12 +220,20 @@ def fleet_progress_payload(
     idle_events: list[dict[str, Any]] | None = None,
     work_next: dict[str, Any] | None = None,
     delegate_active: dict[str, Any] | None = None,
+    delegate_failed: dict[str, Any] | None = None,
+    stale_active_age_s: float = _STALE_ACTIVE_AGE_S,
 ) -> dict[str, Any]:
     """Exception-based supervision projection over existing idle_settle + Work API.
 
     Private #670 AC-PROGRESS: surfaces actionable exceptions only — never invents
     a second controller. Injected kwargs support unit tests without live HTTP.
+
+    Delegate supervision uses the real Monitor contracts:
+    - ``GET /api/delegate/tasks?status=failed`` for terminal failures
+    - ``GET /api/delegate/active`` for stale running/spawning tasks (by age_s)
     """
+    import urllib.parse
+
     from scripts.fleet import idle_settle
 
     root = repo_root or Path.cwd()
@@ -231,11 +244,13 @@ def fleet_progress_payload(
 
     base = _monitor_base_url(monitor_url)
     if work_next is None:
-        work_next = _fetch_json_fail_open(
-            f"{base}/api/work/v1/next?stream={stream}&limit=7"
-        )
+        query = urllib.parse.urlencode({"stream": stream, "limit": 7})
+        work_next = _fetch_json_fail_open(f"{base}/api/work/v1/next?{query}")
     if delegate_active is None:
         delegate_active = _fetch_json_fail_open(f"{base}/api/delegate/active")
+    if delegate_failed is None:
+        failed_query = urllib.parse.urlencode({"status": "failed", "limit": 20})
+        delegate_failed = _fetch_json_fail_open(f"{base}/api/delegate/tasks?{failed_query}")
 
     work_payload = work_next.get("payload") if work_next.get("available") else {}
     queue = list((work_payload or {}).get("queue") or []) if isinstance(work_payload, dict) else []
@@ -245,20 +260,40 @@ def fleet_progress_payload(
         other = digest.get("other_streams") or {}
         blockers = list(other.get("top_blockers") or [])[:7]
 
-    active_tasks = []
+    failed_tasks: list[dict[str, Any]] = []
+    if delegate_failed.get("available"):
+        fpayload = delegate_failed.get("payload") or {}
+        if isinstance(fpayload, dict):
+            for task in fpayload.get("tasks") or []:
+                if not isinstance(task, dict):
+                    continue
+                failed_tasks.append(
+                    {
+                        "task_id": task.get("task_id"),
+                        "agent": task.get("agent"),
+                        "status": task.get("status") or "failed",
+                    }
+                )
+
+    stale_active: list[dict[str, Any]] = []
     if delegate_active.get("available"):
         dpayload = delegate_active.get("payload") or {}
         if isinstance(dpayload, dict):
             for task in dpayload.get("tasks") or []:
                 if not isinstance(task, dict):
                     continue
-                status = str(task.get("status") or "")
-                if status in {"failed", "timeout", "crashed", "rate_limited", "cancelled"}:
-                    active_tasks.append(
+                age = task.get("age_s")
+                try:
+                    age_f = float(age) if age is not None else None
+                except (TypeError, ValueError):
+                    age_f = None
+                if age_f is not None and age_f >= stale_active_age_s:
+                    stale_active.append(
                         {
                             "task_id": task.get("task_id"),
                             "agent": task.get("agent"),
-                            "status": status,
+                            "status": task.get("status"),
+                            "age_s": age_f,
                         }
                     )
 
@@ -293,8 +328,10 @@ def fleet_progress_payload(
                     "title": (item.get("title") or "")[:120],
                 }
             )
-    for task in active_tasks:
-        exceptions.append({"kind": "delegate_terminal", **task})
+    for task in failed_tasks:
+        exceptions.append({"kind": "delegate_failed", **task})
+    for task in stale_active:
+        exceptions.append({"kind": "delegate_stale_active", **task})
 
     return {
         "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
@@ -324,10 +361,14 @@ def fleet_progress_payload(
                 if isinstance(b, dict)
             ],
         },
-        "delegate_active": {
-            "available": bool(delegate_active.get("available")),
-            "reason": delegate_active.get("reason"),
-            "failed_or_terminal": active_tasks,
+        "delegate": {
+            "active_available": bool(delegate_active.get("available")),
+            "active_reason": delegate_active.get("reason"),
+            "failed_available": bool(delegate_failed.get("available")),
+            "failed_reason": delegate_failed.get("reason"),
+            "failed_tasks": failed_tasks,
+            "stale_active": stale_active,
+            "stale_active_age_s": stale_active_age_s,
         },
         "exceptions": exceptions,
         "exception_count": len(exceptions),
@@ -394,7 +435,10 @@ def fleet_help_payload() -> dict[str, Any]:
             "board": "fleet board (cold-start driver board)",
             "backlog": "fleet backlog (pending deliveries)",
             "dead": "fleet dead (dead-letter inventory)",
-            "progress": "fleet progress (AC-PROGRESS exception supervision)",
+            "progress": (
+                "fleet progress (AC-PROGRESS exception supervision; CLI-only — "
+                "no /api/fleet/facade/progress HTTP route yet)"
+            ),
         },
         "note": "Thin facade only; Fleet Comms remains the authoritative message plane.",
     }
