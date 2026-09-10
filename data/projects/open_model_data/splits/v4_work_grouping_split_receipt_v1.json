@@ -1,0 +1,36 @@
+{
+  "schema_version": "v4_work_grouping_split_receipt_v1",
+  "receipt_id": "receipt.split.04dfbbaf8da1a6c50b1367e8",
+  "verdict": "WORK_GROUPING_SPLIT_CONFIRMED",
+  "config_sha256": "9943c188874be01b02e3b09d95b3935f6517603ca4e1f3a722cb675a0eff33db",
+  "language_usage_receipt_sha256": "6fc331221bf2736bb1c1b2f9af13baac5216d8ae8a09bad5771dd3cfa1260c99",
+  "index_sha256": "9d14e0aa958db1e97abd7c350dfcd4344eaa4ce4d6a0979aba0ce0b04e0dd888",
+  "summary": {
+    "total_spans_evaluated": 1419,
+    "total_work_families": 3,
+    "work_families_by_split": {
+      "training": 1,
+      "development": 1,
+      "heldout_evaluation": 1
+    },
+    "spans_by_split": {
+      "training": 614,
+      "development": 245,
+      "heldout_evaluation": 559,
+      "quarantine_excluded": 1
+    },
+    "deduplication_summary": {
+      "unique_spans": 1419,
+      "duplicate_spans_excluded": 0
+    },
+    "evaluation_firewall_summary": {
+      "prohibited_benchmark_spans_detected": 0,
+      "cross_boundary_leaks_detected": 0,
+      "firewall_verified_clean": true
+    },
+    "builder_clearance_summary": {
+      "cleared_training_spans": 614,
+      "firewalled_evaluation_spans": 559
+    }
+  }
+}

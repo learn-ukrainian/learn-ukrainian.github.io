@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v4_work_grouping_split_config_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "inputs",
+    "outputs",
+    "split_rules",
+    "ownership"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v4_work_grouping_split_config_v1"
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "language_usage_index",
+        "language_usage_receipt",
+        "provenance_index",
+        "heldout_seal_receipt"
+      ],
+      "properties": {
+        "language_usage_index": {
+          "type": "string",
+          "minLength": 1
+        },
+        "language_usage_receipt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance_index": {
+          "type": "string",
+          "minLength": 1
+        },
+        "heldout_seal_receipt": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "index",
+        "receipt"
+      ],
+      "properties": {
+        "index": {
+          "type": "string",
+          "minLength": 1
+        },
+        "receipt": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "split_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "grouping_level",
+        "heldout_evaluation_fraction",
+        "development_fraction",
+        "training_fraction",
+        "exact_deduplication",
+        "screen_benchmarks_and_exams",
+        "allow_cross_boundary_works",
+        "record_id_modulo_forbidden"
+      ],
+      "properties": {
+        "grouping_level": {
+          "type": "string",
+          "enum": ["work_family"]
+        },
+        "heldout_evaluation_fraction": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "development_fraction": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "training_fraction": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "exact_deduplication": {
+          "type": "boolean"
+        },
+        "screen_benchmarks_and_exams": {
+          "type": "boolean"
+        },
+        "allow_cross_boundary_works": {
+          "type": "boolean",
+          "const": false
+        },
+        "record_id_modulo_forbidden": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "ownership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "epic",
+        "issue",
+        "agent"
+      ],
+      "properties": {
+        "epic": {
+          "type": ["string", "integer"]
+        },
+        "issue": {
+          "type": "integer"
+        },
+        "agent": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}
