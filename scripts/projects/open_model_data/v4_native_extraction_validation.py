@@ -173,8 +173,10 @@ def evaluate_span_fidelity(
     findings: list[dict[str, Any]] = []
     encoding_valid = True
 
+    anomaly_cfg = rules.get("anomaly_detection", {})
+
     # Check 1: OCR Exclusion (EXTRACT-3)
-    if is_ocr:
+    if is_ocr and anomaly_cfg.get("fail_closed_on_ocr", True):
         findings.append(
             {
                 "type": "ocr_extraction_detected",
@@ -184,18 +186,19 @@ def evaluate_span_fidelity(
         )
         return "EXCLUDED_OCR", False, findings, False
 
-    # Check 2: Replacement Characters and Encoding Damage (EXTRACT-2)
-    anomaly_cfg = rules.get("anomaly_detection", {})
-    if anomaly_cfg.get("detect_replacement_characters", True):
-        if "\ufffd" in text:
-            encoding_valid = False
-            findings.append(
-                {
-                    "type": "unicode_replacement_character",
-                    "description": "Found U+FFFD replacement character indicating broken original encoding",
-                    "severity": "BLOCKING",
-                }
-            )
+    # Check 2: Replacement Characters (EXTRACT-2)
+    if anomaly_cfg.get("detect_replacement_characters", True) and "\ufffd" in text:
+        encoding_valid = False
+        findings.append(
+            {
+                "type": "unicode_replacement_character",
+                "description": "Found U+FFFD replacement character indicating broken original encoding",
+                "severity": "BLOCKING",
+            }
+        )
+
+    # Check 2b: Illegal Control Characters (EXTRACT-2)
+    if anomaly_cfg.get("detect_control_characters", True):
         for c in text:
             if ord(c) < 32 and c not in ("\t", "\n", "\r"):
                 encoding_valid = False

@@ -54,36 +54,53 @@ def test_evaluate_span_fidelity_clean_native() -> None:
     assert len([f for f in findings if f["severity"] == "BLOCKING"]) == 0
 
 
-def test_evaluate_span_fidelity_detects_replacement_characters() -> None:
-    """Replacement character U+FFFD and illegal ASCII controls are rejected as damaged (EXTRACT-2)."""
-    rules = {
+def test_evaluate_span_fidelity_detects_replacement_characters_and_controls_independently() -> None:
+    """Replacement character U+FFFD and illegal ASCII controls are detected independently (EXTRACT-2)."""
+    rules_both = {
         "anomaly_detection": {
             "detect_replacement_characters": True,
-            "detect_duplicate_lines": True,
-            "detect_truncation_pairs": True,
-            "detect_intraline_duplicates": True,
-            "fail_closed_on_ocr": True,
+            "detect_control_characters": True,
         }
     }
-    # Text with replacement character
     damaged_text = "Пошкоджений текст \ufffd уривок."
-    status, enc_valid, findings, training_eligible = extraction.evaluate_span_fidelity(
-        damaged_text, rules, is_ocr=False
-    )
-    assert status == "REJECTED_DAMAGED"
-    assert enc_valid is False
-    assert training_eligible is False
-    assert any(f["type"] == "unicode_replacement_character" for f in findings)
-
-    # Text with illegal ASCII control character (e.g. SOH 0x01)
     control_text = "Текст з невидимим байтом \x01 контролю."
-    status2, enc_valid2, findings2, training_eligible2 = extraction.evaluate_span_fidelity(
-        control_text, rules, is_ocr=False
-    )
-    assert status2 == "REJECTED_DAMAGED"
-    assert enc_valid2 is False
-    assert training_eligible2 is False
-    assert any(f["type"] == "illegal_control_character" for f in findings2)
+
+    # Both active: both caught
+    s1, ev1, f1, te1 = extraction.evaluate_span_fidelity(damaged_text, rules_both)
+    assert s1 == "REJECTED_DAMAGED" and not ev1 and not te1
+    assert any(f["type"] == "unicode_replacement_character" for f in f1)
+
+    s2, ev2, f2, te2 = extraction.evaluate_span_fidelity(control_text, rules_both)
+    assert s2 == "REJECTED_DAMAGED" and not ev2 and not te2
+    assert any(f["type"] == "illegal_control_character" for f in f2)
+
+    # Disable replacement characters: control chars still detected
+    rules_no_repl = {
+        "anomaly_detection": {
+            "detect_replacement_characters": False,
+            "detect_control_characters": True,
+        }
+    }
+    s3, ev3, _f3, _te3 = extraction.evaluate_span_fidelity(damaged_text, rules_no_repl)
+    assert s3 == "ACCEPTED_FAITHFUL" and ev3 is True
+
+    s4, ev4, f4, _te4 = extraction.evaluate_span_fidelity(control_text, rules_no_repl)
+    assert s4 == "REJECTED_DAMAGED" and ev4 is False
+    assert any(f["type"] == "illegal_control_character" for f in f4)
+
+    # Disable control characters: replacement chars still detected
+    rules_no_ctrl = {
+        "anomaly_detection": {
+            "detect_replacement_characters": True,
+            "detect_control_characters": False,
+        }
+    }
+    s5, ev5, _f5, _te5 = extraction.evaluate_span_fidelity(control_text, rules_no_ctrl)
+    assert s5 == "ACCEPTED_FAITHFUL" and ev5 is True
+
+    s6, ev6, f6, _te6 = extraction.evaluate_span_fidelity(damaged_text, rules_no_ctrl)
+    assert s6 == "REJECTED_DAMAGED" and ev6 is False
+    assert any(f["type"] == "unicode_replacement_character" for f in f6)
 
 
 def test_evaluate_span_fidelity_detects_layout_anomalies() -> None:

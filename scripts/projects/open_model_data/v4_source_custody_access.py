@@ -1107,7 +1107,7 @@ def build(
     total_permitted = sum(1 for r in access_records if r["permitted_to_proceed"])
 
     receipt_id = _make_receipt_id(config_sha256, index_sha256, missing_report_sha256)
-    first_cohort_ready = bool(lit_permitted and (lit_acc == len(lit_records)))
+    first_cohort_ready = bool(lit_permitted and len(lit_records) > 0 and (lit_acc == len(lit_records)))
     custody_verdict = (
         "PROCEED_WITH_ACCESSIBLE_SOURCES" if first_cohort_ready and total_permitted > 0 else "HALT_INACCESSIBLE_SOURCES"
     )

@@ -1,7 +1,7 @@
 {
   "schema_version": "v4_native_extraction_quarantine_report_v1",
-  "report_id": "quarantine.6492451354c5b9b49d706c26",
-  "config_sha256": "058437949a5b354070af4340d94f6f360392e19faf6fb0558590af13c49c24d0",
+  "report_id": "quarantine.3b1ee58170b2030225138cf9",
+  "config_sha256": "0eaa4fd1997d82369f478fd945a3b6269fb4343b186f41cbc46c07fd385d862e",
   "quarantined_spans": [
     {
       "source_id": "source.literary.451b33b316e840f953b4e393",

@@ -1,9 +1,9 @@
 {
   "schema_version": "v4_native_extraction_receipt_v1",
-  "receipt_id": "receipt.extraction.c910320484100988c2e97dbf",
-  "config_sha256": "058437949a5b354070af4340d94f6f360392e19faf6fb0558590af13c49c24d0",
-  "index_sha256": "697821423d8d4939e788cae063b3ff800967cc42062fd0f76df319f5b83fa87b",
-  "quarantine_report_sha256": "42a77f1e20d253a006b07af0b4fd40bbd1445459fd38e2952c3b8a744a372c29",
+  "receipt_id": "receipt.extraction.ec126798c70a15d18e91c3d5",
+  "config_sha256": "0eaa4fd1997d82369f478fd945a3b6269fb4343b186f41cbc46c07fd385d862e",
+  "index_sha256": "e540bc33e5b114703da62e8c6a572f721b1076944f985ff3ff94a091513e91a5",
+  "quarantine_report_sha256": "6be2f55dc3e139a13605f1b76c629604711d8042f18544a380c4bc014fab1fd6",
   "summary": {
     "total_sources_evaluated": 3,
     "total_spans_evaluated": 1419,

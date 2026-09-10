@@ -23,6 +23,7 @@
     ],
     "anomaly_detection": {
       "detect_replacement_characters": true,
+      "detect_control_characters": true,
       "detect_duplicate_lines": true,
       "detect_truncation_pairs": true,
       "detect_intraline_duplicates": true,

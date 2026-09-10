@@ -92,6 +92,7 @@
           "additionalProperties": false,
           "required": [
             "detect_replacement_characters",
+            "detect_control_characters",
             "detect_duplicate_lines",
             "detect_truncation_pairs",
             "detect_intraline_duplicates",
@@ -99,6 +100,9 @@
           ],
           "properties": {
             "detect_replacement_characters": {
+              "type": "boolean"
+            },
+            "detect_control_characters": {
               "type": "boolean"
             },
             "detect_duplicate_lines": {

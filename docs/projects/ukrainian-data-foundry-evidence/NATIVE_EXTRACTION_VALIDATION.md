@@ -29,7 +29,10 @@ under epic #7423 (operator decision 2026-09-10).
 - **EXTRACT-4 — Deterministic Stream Reconstruction:** Each span maintains a
   monotonically increasing `sequence_order` (0-indexed) and `stream_digest_contribution`.
   The rolling accumulation of chunk records reconstructs the exact `stream_sha256`
-  verified in custody access (#7884), proving 100% fidelity and zero silent omissions.
+  verified in custody access (#7884) during `build()`, proving 100% fidelity and
+  zero silent omissions. In unprovisioned CI environments, `verify()` validates
+  sequence monotonicity, locator arithmetic, and receipt linkage from committed
+  records without requiring access to `sources.db`.
 
 ## Usage
 
