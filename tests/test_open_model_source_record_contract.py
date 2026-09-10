@@ -7,6 +7,7 @@ import importlib.util
 import json
 from pathlib import Path
 
+import pytest
 from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -192,3 +193,53 @@ def test_empty_input_has_an_explicit_receipt_kind(tmp_path: Path) -> None:
     assert result["admitted_records"] == 0
     assert result["rejected_records"] == 0
     assert result["results"] == []
+
+
+@pytest.mark.parametrize("status", ["unknown", "conflicting", "denied"])
+@pytest.mark.parametrize("operation", ["local_learning", "deterministic_local_analysis"])
+def test_private_permission_does_not_grant_redistribution(status, operation):
+    schema, schema_hash = CONTRACT.load_schema()
+    validator = Draft202012Validator(schema)
+    record = example_record()
+    record["rights"]["redistribution"]["status"] = status
+    assert CONTRACT.validate_record(record, validator, schema_hash, operation=operation)["admitted"]
+    public = CONTRACT.validate_record(record, validator, schema_hash, operation="public_redistribution")
+    assert public["reasons"] == [f"redistribution_status_{status}"]
+
+
+@pytest.mark.parametrize("operation", CONTRACT.RIGHTS_BY_OPERATION)
+@pytest.mark.parametrize("mutation", [
+    lambda r: r["rights"]["model_training"].update(status="denied"),
+    lambda r: r["rights"]["model_training"].update(evidence_ids=["evidence.other-source"]),
+    lambda r: r.pop("work_id"),
+    lambda r: r.pop("source_id"),
+    lambda r: r["review"].update(unresolved=True),
+    lambda r: r["usage"].update(contamination_exclusion_ids=["evaluation.heldout"]),
+])
+def test_operations_preserve_permission_provenance_and_clearance_gates(operation, mutation):
+    schema, schema_hash = CONTRACT.load_schema()
+    record = example_record()
+    mutation(record)
+    assert not CONTRACT.validate_record(
+        record, Draft202012Validator(schema), schema_hash, operation=operation,
+    )["admitted"]
+
+
+def test_unknown_operation_is_not_an_admission_bypass(tmp_path):
+    schema, schema_hash = CONTRACT.load_schema()
+    with pytest.raises(ValueError, match="unsupported source admission operation"):
+        CONTRACT.validate_record(example_record(), Draft202012Validator(schema), schema_hash, operation="publish")
+    empty = tmp_path / "empty.json"
+    empty.write_text("[]")
+    with pytest.raises(ValueError, match="unsupported source admission operation"):
+        CONTRACT.validate_path(empty, operation="publish")
+
+
+@pytest.mark.parametrize("category", sorted(CONTRACT.EXCLUDED_SOURCE_CATEGORIES))
+@pytest.mark.parametrize("operation", CONTRACT.RIGHTS_BY_OPERATION)
+def test_excluded_source_categories_never_admit(category, operation):
+    schema, schema_hash = CONTRACT.load_schema()
+    record = example_record()
+    record["description"]["genre"] = category
+    result = CONTRACT.validate_record(record, Draft202012Validator(schema), schema_hash, operation=operation)
+    assert result["reasons"] == ["source_category_excluded"]

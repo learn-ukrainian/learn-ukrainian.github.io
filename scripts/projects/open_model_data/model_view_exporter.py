@@ -158,6 +158,7 @@ class SourceAdmission:
     sha256: str
     admitted: bool
     reasons: tuple[str, ...]
+    operation: str
 
 
 @dataclass(frozen=True)
@@ -745,6 +746,7 @@ def admission_receipt(
     return {
         "applied": admissions is not None,
         "policy": "recompute source_record_v1 admission; unknown is denial",
+        "operation": next(iter(admissions.values())).operation if admissions else None,
         "source_records_admitted": admitted,
         "source_records_denied": total - admitted,
         "source_records_total": total,
@@ -765,7 +767,8 @@ def deduplication_receipt(accepted_fingerprints: int | None, *, partitioning: st
     }
 
 
-def load_source_admissions(path: Path) -> tuple[dict[str, SourceAdmission], int]:
+def load_source_admissions(path: Path, *, operation: str = "local_learning") -> tuple[dict[str, SourceAdmission], int]:
+    source_contract.required_rights(operation)
     schema, schema_hash = source_contract.load_schema()
     validator = Draft202012Validator(schema, format_checker=FormatChecker())
     try:
@@ -778,13 +781,14 @@ def load_source_admissions(path: Path) -> tuple[dict[str, SourceAdmission], int]
         record_id = row.get("record_id")
         require(isinstance(record_id, str), f"source record {index} lacks record_id")
         require(record_id not in admissions, f"duplicate source record ID: {record_id}")
-        result = source_contract.validate_record(row, validator, schema_hash)
+        result = source_contract.validate_record(row, validator, schema_hash, operation=operation)
         source_family = row.get("source_family")
         require(isinstance(source_family, str) and source_family, f"source record {index} lacks explicit source_family")
         if source_family in INELIGIBLE_SOURCE_FAMILIES:
             admissions[record_id] = SourceAdmission(
                 record=row,
                 sha256=sha256_text(canonical_json(row)),
+                operation=operation,
                 admitted=False,
                 reasons=tuple((*result["reasons"], SOURCE_FAMILY_DENIAL)),
             )
@@ -792,6 +796,7 @@ def load_source_admissions(path: Path) -> tuple[dict[str, SourceAdmission], int]
         admissions[record_id] = SourceAdmission(
             record=row,
             sha256=sha256_text(canonical_json(row)),
+            operation=operation,
             admitted=bool(result["admitted"]),
             reasons=tuple(result["reasons"]),
         )
@@ -855,6 +860,9 @@ def require_stable_order(current: str, previous: str | None, *, label: str) -> s
 def validate_source_payload_semantics(payload: Mapping[str, Any]) -> None:
     require(payload["text_sha256"] == sha256_text(payload["text"]), "source payload text hash mismatch")
     derivation = payload["derivation"]
+    if derivation["kind"] == "full_source":
+        require(payload["text_sha256"] == payload["source_content_sha256"],
+                "full source payload text does not match source content hash")
     if derivation["kind"] == "character_span":
         require(
             derivation["source_start_char"] < derivation["source_end_char"],
@@ -902,6 +910,10 @@ def safety_reason_for_source_payload(
         raise ExportError("source payload parent content hash does not match source record")
     if payload["origin"] == "unknown":
         return "origin_unknown"
+    if not payload["test_fixture"] and (
+        payload["origin"] != "human_authored" or admission.record["source_family"] == "synthetic"
+    ):
+        return "source_origin_not_human_authored"
     origin_evidence = payload["origin_evidence"]
     if (
         origin_evidence["status"] != "verified"
@@ -976,6 +988,12 @@ def correction_source_reason(record: Mapping[str, Any], admission: SourceAdmissi
     if not admission.admitted:
         return "source_record_not_admitted"
     candidate = record["candidate"]
+    if not correction_fixture_state(record) and (
+        candidate["source"]["origin"] != "human_authored"
+        or admission.record["source_family"] == "synthetic"
+        or candidate["safety"]["origin"] != "verified_human_authorship"
+    ):
+        return "source_origin_not_human_authored"
     if candidate["source"]["content_sha256"] != admission.record["content"]["sha256"]:
         raise ExportError("correction/source-record content hash mismatch")
     safety = candidate["safety"]
@@ -1179,6 +1197,44 @@ def finalize_export(
         raise
 
 
+def materialize_human_source(
+    *, source_records_path: Path, reviewed_payload_path: Path,
+    source_text_path: Path, output: Path,
+    v011_manifest: Path, v02_packet: Path,
+    extra_evaluation_artifacts: Sequence[Path],
+) -> dict[str, Any]:
+    """Bind existing reviewed metadata to exact full-source UTF-8 bytes.
+
+    This optional preparation step creates no rights, origin, or review claims.
+    The ordinary payload schema and exporter gates remain the authority.
+    """
+    require(output.resolve() not in {
+        source_records_path.resolve(), reviewed_payload_path.resolve(), source_text_path.resolve(),
+    }, "materialization output must not overwrite source inputs")
+    admissions, _ = load_source_admissions(source_records_path, operation="local_learning")
+    payload = read_json(reviewed_payload_path)
+    require(payload.get("origin") == "human_authored", "materialization requires human-authored source")
+    require(payload.get("test_fixture") is False, "materialization requires non-fixture reviewed metadata")
+    require(payload.get("derivation", {}).get("kind") == "full_source", "materialization requires full_source metadata")
+    # Decode bytes directly: read_text would silently normalize CRLF source bytes.
+    text = source_text_path.read_bytes().decode("utf-8")
+    for key, value in {"text": text, "text_sha256": sha256_text(text)}.items():
+        require(key not in payload or payload[key] == value, f"reviewed payload {key} differs from source bytes")
+        payload[key] = value
+    schemas, schema_registry = schema_bundle()
+    validate_schema(payload, validator_for(SOURCE_PAYLOAD_SCHEMA, schemas=schemas, registry=schema_registry),
+                    label="reviewed human-source payload")
+    validate_source_payload_semantics(payload)
+    registry = build_exclusion_registry(
+        v011_manifest=v011_manifest, v02_packet=v02_packet, extra_artifacts=extra_evaluation_artifacts,
+    )
+    reason = safety_reason_for_source_payload(payload, admissions.get(payload["source_record_id"]), registry)
+    require(reason is None, f"human-source materialization denied: {reason}")
+    write_json_atomic(output, (canonical_json(payload) + "\n").encode("utf-8"))
+    return {"operation": "local_learning", "payloads_written": 1,
+            "source_record_id": payload["source_record_id"], "output_sha256": sha256_file(output)}
+
+
 def export_pretraining(
     *,
     source_records_path: Path,
@@ -1191,12 +1247,13 @@ def export_pretraining(
     v011_manifest: Path,
     v02_packet: Path,
     extra_evaluation_artifacts: Sequence[Path],
+    operation: str = "local_learning",
 ) -> dict[str, Any]:
     schemas, schema_registry = schema_bundle()
     payload_validator = validator_for(SOURCE_PAYLOAD_SCHEMA, schemas=schemas, registry=schema_registry)
     output_validator = validator_for(PRETRAIN_SCHEMA, schemas=schemas, registry=schema_registry)
     receipt_validator = validator_for(EXPORT_RECEIPT_SCHEMA, schemas=schemas, registry=schema_registry)
-    admissions, source_count = load_source_admissions(source_records_path)
+    admissions, source_count = load_source_admissions(source_records_path, operation=operation)
     exclusion_registry = build_exclusion_registry(
         v011_manifest=v011_manifest,
         v02_packet=v02_packet,
@@ -1414,6 +1471,7 @@ def export_correction_family(
     v011_manifest: Path,
     v02_packet: Path,
     extra_evaluation_artifacts: Sequence[Path],
+    operation: str = "local_learning",
 ) -> dict[str, Any]:
     require(view_kind in {"correction_instruction", "preference", "quality_filter"}, "invalid correction-family view")
     schemas, schema_registry = schema_bundle()
@@ -1422,7 +1480,7 @@ def export_correction_family(
     correction_validator = validator_for(CORRECTION_RECORD_SCHEMA, schemas=schemas, registry=schema_registry)
     output_validator = validator_for(VIEW_SCHEMAS[view_kind], schemas=schemas, registry=schema_registry)
     receipt_validator = validator_for(EXPORT_RECEIPT_SCHEMA, schemas=schemas, registry=schema_registry)
-    admissions, source_count = load_source_admissions(source_records_path)
+    admissions, source_count = load_source_admissions(source_records_path, operation=operation)
     exclusion_registry = build_exclusion_registry(
         v011_manifest=v011_manifest,
         v02_packet=v02_packet,
@@ -1673,6 +1731,8 @@ def validate_view_artifact(
         if view_kind == "heldout_evaluation":
             continue
         row_eligibility = row["eligibility"]
+        require(not row_eligibility["model_training_eligible"] or row["origin"] == "human_authored",
+                "training recipe requires human-authored source text")
         eligible += int(row_eligibility["model_training_eligible"])
         fixtures += int(row_eligibility["test_fixture"])
     return total, eligible, fixtures
@@ -1838,8 +1898,10 @@ def write_json_atomic(path: Path, value: bytes) -> None:
 
 
 def add_evaluation_options(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument("--v011-manifest", type=Path, default=DEFAULT_V011_MANIFEST)
-    parser.add_argument("--v02-packet", type=Path, default=DEFAULT_V02_PACKET)
+    parser.add_argument("--v011-manifest", type=Path, default=DEFAULT_V011_MANIFEST,
+                        help="Frozen v0.1.1 evaluation manifest (default: repository manifest)")
+    parser.add_argument("--v02-packet", type=Path, default=DEFAULT_V02_PACKET,
+                        help="Frozen v0.2 evaluation packet (default: repository packet)")
     parser.add_argument(
         "--extra-evaluation-artifact",
         action="append",
@@ -1850,44 +1912,70 @@ def add_evaluation_options(parser: argparse.ArgumentParser) -> None:
 
 
 def add_common_export_options(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument("--source-records", type=Path, required=True)
-    parser.add_argument("--origin", choices=ORIGINS, required=True)
-    parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--receipt-output", type=Path, required=True)
-    parser.add_argument("--allow-test-fixtures", action="store_true")
+    parser.add_argument("--source-records", type=Path, required=True, help="Existing source_record_v1 JSON/JSONL")
+    parser.add_argument("--origin", choices=ORIGINS, required=True, help="Homogeneous source origin; production requires human_authored")
+    parser.add_argument(
+        "--operation", choices=tuple(source_contract.RIGHTS_BY_OPERATION), default="local_learning",
+        help="Rights required for this local artifact; public_redistribution also requires redistribution permission",
+    )
+    parser.add_argument("--output", type=Path, required=True, help="Local JSONL output path")
+    parser.add_argument("--receipt-output", type=Path, required=True, help="Local content-blind receipt JSON path")
+    parser.add_argument("--allow-test-fixtures", action="store_true", help="Allow ineligible structural fixtures (default: false)")
     add_evaluation_options(parser)
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Build disjoint Ukrainian Data Foundry model-consumer views")
+    parser = argparse.ArgumentParser(
+        description="Materialize reviewed human source bytes and build disjoint local model-consumer views.\n"
+                    "Use existing rights and review evidence; never use this tool to publish or grant permission.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples: /home/ops/learn-ukrainian/.venv/bin/python -m "
+               "scripts.projects.open_model_data.model_view_exporter continued-pretraining --help\n"
+               "  /home/ops/learn-ukrainian/.venv/bin/python -m "
+               "scripts.projects.open_model_data.model_view_exporter materialize-human-source --help\n"
+               "Outputs: local JSONL views/payloads and content-blind JSON receipts; no training or uploads.\n"
+               "Exit codes: 0 completed (inspect excluded counts); 2 invalid input/arguments.\n"
+               "Related: docs/projects/open-model-data/SOURCE_RECORD_CONTRACT.md; #7888",
+    )
     subparsers = parser.add_subparsers(dest="command", required=True)
+
+    materialize = subparsers.add_parser(
+        "materialize-human-source", help="Bind exact source bytes to existing reviewed payload metadata",
+        description="Materialize one approved human source without rewriting text or inventing review evidence.",
+    )
+    materialize.add_argument("--source-records", type=Path, required=True, help="Existing source_record_v1 JSON/JSONL")
+    materialize.add_argument("--reviewed-payload", type=Path, required=True,
+                             help="Existing full_source payload metadata JSON; text/text_sha256 may be omitted")
+    materialize.add_argument("--source-text", type=Path, required=True, help="Exact approved UTF-8 source text file")
+    materialize.add_argument("--output", type=Path, required=True, help="Local reviewed payload JSONL destination")
+    add_evaluation_options(materialize)
 
     pretraining = subparsers.add_parser("continued-pretraining")
     add_common_export_options(pretraining)
-    pretraining.add_argument("--payloads", type=Path, required=True)
+    pretraining.add_argument("--payloads", type=Path, required=True, help="Reviewed foundry_source_payload_v1 JSONL")
     pretraining.add_argument(
         "--representation-view",
         choices=("faithful_literary", "modern_literary_ukrainian"),
-        required=True,
+        required=True, help="Retain faithful text or apply reviewed modern loss masks",
     )
 
     for command in ("correction", "preference", "quality-filter"):
         child = subparsers.add_parser(command)
         add_common_export_options(child)
-        child.add_argument("--correction-records", type=Path, required=True)
+        child.add_argument("--correction-records", type=Path, required=True, help="Qualified canonical correction handoffs JSONL")
 
     evaluation = subparsers.add_parser("evaluation")
-    evaluation.add_argument("--release", choices=("v0.1.1", "v0.2", "all"), default="all")
-    evaluation.add_argument("--output", type=Path, required=True)
-    evaluation.add_argument("--receipt-output", type=Path, required=True)
+    evaluation.add_argument("--release", choices=("v0.1.1", "v0.2", "all"), default="all", help="Evaluation release to preserve (default: all)")
+    evaluation.add_argument("--output", type=Path, required=True, help="Local output JSON/JSONL path")
+    evaluation.add_argument("--receipt-output", type=Path, required=True, help="Local receipt JSON path")
     add_evaluation_options(evaluation)
 
     recipe = subparsers.add_parser("recipe")
-    recipe.add_argument("--config", type=Path, required=True)
-    recipe.add_argument("--view-artifact", type=Path, required=True)
-    recipe.add_argument("--view-receipt", type=Path, required=True)
-    recipe.add_argument("--output", type=Path, required=True)
-    recipe.add_argument("--allow-test-fixtures", action="store_true")
+    recipe.add_argument("--config", type=Path, required=True, help="Training recipe configuration JSON")
+    recipe.add_argument("--view-artifact", type=Path, required=True, help="Exact model-view JSONL artifact")
+    recipe.add_argument("--view-receipt", type=Path, required=True, help="Matching model-view receipt JSON")
+    recipe.add_argument("--output", type=Path, required=True, help="Local output JSON/JSONL path")
+    recipe.add_argument("--allow-test-fixtures", action="store_true", help="Bind ineligible fixture views (default: false)")
     return parser
 
 
@@ -1895,9 +1983,19 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     try:
+        if args.command == "materialize-human-source":
+            receipt = materialize_human_source(
+                source_records_path=args.source_records, reviewed_payload_path=args.reviewed_payload,
+                source_text_path=args.source_text, output=args.output,
+                v011_manifest=args.v011_manifest, v02_packet=args.v02_packet,
+                extra_evaluation_artifacts=args.extra_evaluation_artifact,
+            )
+            print(canonical_json(receipt))
+            return 0
         if args.command == "continued-pretraining":
             receipt = export_pretraining(
                 source_records_path=args.source_records,
+                operation=args.operation,
                 payloads_path=args.payloads,
                 origin=args.origin,
                 representation_view=args.representation_view,
@@ -1919,6 +2017,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             receipt = export_correction_family(
                 view_kind=view_kind,
                 source_records_path=args.source_records,
+                operation=args.operation,
                 correction_records_path=args.correction_records,
                 origin=args.origin,
                 output=args.output,
@@ -1950,7 +2049,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
         print(canonical_json(manifest))
         return 0
-    except (ExportError, correction_factory.FactoryError) as exc:
+    except (ExportError, correction_factory.FactoryError, OSError, UnicodeError) as exc:
         parser.exit(2, f"error: {exc}\n")
 
 
