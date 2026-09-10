@@ -1,0 +1,28 @@
+{
+  "schema_version": "v4_work_grouping_split_config_v1",
+  "inputs": {
+    "language_usage_index": "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
+    "language_usage_receipt": "data/projects/open_model_data/language/v4_language_usage_receipt_v1.json",
+    "provenance_index": "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl",
+    "heldout_seal_receipt": "data/projects/open_model_data/admission/dataset_v4_a3_heldout_source_family_seal_receipt_v1.json"
+  },
+  "outputs": {
+    "index": "data/projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl",
+    "receipt": "data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json"
+  },
+  "split_rules": {
+    "grouping_level": "work_family",
+    "heldout_evaluation_fraction": 0.1,
+    "development_fraction": 0.1,
+    "training_fraction": 0.8,
+    "exact_deduplication": true,
+    "screen_benchmarks_and_exams": true,
+    "allow_cross_boundary_works": false,
+    "record_id_modulo_forbidden": true
+  },
+  "ownership": {
+    "epic": 7423,
+    "issue": 7887,
+    "agent": "gemini/7887-work-grouping-evaluation"
+  }
+}

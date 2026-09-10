@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v4_work_grouping_split_item_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "split_item_id",
+    "language_usage_id",
+    "extraction_id",
+    "source_id",
+    "source_family",
+    "cohort_id",
+    "work_id",
+    "work_family_id",
+    "edition_linkage",
+    "deduplication",
+    "evaluation_screening",
+    "builder_clearance"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v4_work_grouping_split_item_v1"
+    },
+    "split_item_id": {
+      "type": "string",
+      "pattern": "^split\\.[a-f0-9]{24}$"
+    },
+    "language_usage_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "extraction_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_family": {
+      "type": "string",
+      "minLength": 1
+    },
+    "cohort_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "work_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "work_family_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "edition_linkage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "author",
+        "year",
+        "version_label"
+      ],
+      "properties": {
+        "author": {
+          "type": ["string", "null"]
+        },
+        "year": {
+          "type": ["integer", "string", "null"]
+        },
+        "version_label": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "deduplication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "is_duplicate",
+        "duplicate_of_id",
+        "dedup_action"
+      ],
+      "properties": {
+        "is_duplicate": {
+          "type": "boolean"
+        },
+        "duplicate_of_id": {
+          "type": ["string", "null"]
+        },
+        "dedup_action": {
+          "type": "string",
+          "enum": ["retained", "excluded_duplicate"]
+        }
+      }
+    },
+    "evaluation_screening": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "screened",
+        "is_benchmark_or_exam",
+        "passed_screening"
+      ],
+      "properties": {
+        "screened": {
+          "type": "boolean"
+        },
+        "is_benchmark_or_exam": {
+          "type": "boolean"
+        },
+        "passed_screening": {
+          "type": "boolean"
+        }
+      }
+    },
+    "builder_clearance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "split_partition",
+        "builder_training_cleared",
+        "clearance_status",
+        "firewall_verified"
+      ],
+      "properties": {
+        "split_partition": {
+          "type": "string",
+          "enum": ["training", "development", "heldout_evaluation", "quarantine_excluded"]
+        },
+        "builder_training_cleared": {
+          "type": "boolean"
+        },
+        "clearance_status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "firewall_verified": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

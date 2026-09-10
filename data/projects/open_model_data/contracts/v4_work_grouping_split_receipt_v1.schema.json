@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v4_work_grouping_split_receipt_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "verdict",
+    "config_sha256",
+    "language_usage_receipt_sha256",
+    "index_sha256",
+    "summary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v4_work_grouping_split_receipt_v1"
+    },
+    "receipt_id": {
+      "type": "string",
+      "pattern": "^receipt\\.split\\.[a-f0-9]{24}$"
+    },
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "WORK_GROUPING_SPLIT_CONFIRMED",
+        "WORK_GROUPING_SPLIT_REJECTED"
+      ]
+    },
+    "config_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "language_usage_receipt_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "index_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_spans_evaluated",
+        "total_work_families",
+        "work_families_by_split",
+        "spans_by_split",
+        "deduplication_summary",
+        "evaluation_firewall_summary",
+        "builder_clearance_summary"
+      ],
+      "properties": {
+        "total_spans_evaluated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total_work_families": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "work_families_by_split": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "training",
+            "development",
+            "heldout_evaluation"
+          ],
+          "properties": {
+            "training": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "development": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "heldout_evaluation": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "spans_by_split": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "training",
+            "development",
+            "heldout_evaluation",
+            "quarantine_excluded"
+          ],
+          "properties": {
+            "training": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "development": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "heldout_evaluation": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "quarantine_excluded": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "deduplication_summary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "unique_spans",
+            "duplicate_spans_excluded"
+          ],
+          "properties": {
+            "unique_spans": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "duplicate_spans_excluded": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "evaluation_firewall_summary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "prohibited_benchmark_spans_detected",
+            "cross_boundary_leaks_detected",
+            "firewall_verified_clean"
+          ],
+          "properties": {
+            "prohibited_benchmark_spans_detected": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "cross_boundary_leaks_detected": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "firewall_verified_clean": {
+              "type": "boolean"
+            }
+          }
+        },
+        "builder_clearance_summary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cleared_training_spans",
+            "firewalled_evaluation_spans"
+          ],
+          "properties": {
+            "cleared_training_spans": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "firewalled_evaluation_spans": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}
