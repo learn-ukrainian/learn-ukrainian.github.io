@@ -26,11 +26,13 @@ DATASET_VERSION = "v4.0.0-human-pilot-scale"
 MAX_FILE_SIZE_BYTES = 2000 * 1024  # 2000 KB pre-commit ceiling
 
 PROHIBITED_HOST_PATTERNS = [
-    re.compile(r"/home/[a-zA-Z0-9_-]+"),
-    re.compile(r"/tmp/[a-zA-Z0-9_-]+"),
-    re.compile(r"/Users/[a-zA-Z0-9_-]+"),
-    re.compile(r"/var/[a-zA-Z0-9_-]+"),
-    re.compile(r"/private/[a-zA-Z0-9_-]+"),
+    re.compile(r"/home/[a-zA-Z0-9_.-]+"),
+    re.compile(r"/tmp/[a-zA-Z0-9_.-]+"),
+    re.compile(r"/Users/[a-zA-Z0-9_.-]+"),
+    re.compile(r"/var/[a-zA-Z0-9_.-]+"),
+    re.compile(r"/private/[a-zA-Z0-9_.-]+"),
+    re.compile(r"/workspace/[a-zA-Z0-9_.-]+"),
+    re.compile(r"/root/[a-zA-Z0-9_.-]+"),
     re.compile(r"file://"),
 ]
 
@@ -58,10 +60,13 @@ def assert_no_private_host_paths(data: Any, path_prefix: str = "") -> None:
     if isinstance(data, str):
         for pat in PROHIBITED_HOST_PATTERNS:
             if pat.search(data):
-                raise ValueError(f"Prohibited host path detected at {path_prefix}: {data}")
+                loc = path_prefix or "root"
+                raise ValueError(
+                    f"Prohibited host path detected at {loc} matching pattern {pat.pattern}"
+                )
     elif isinstance(data, dict):
         for k, v in data.items():
-            assert_no_private_host_paths(v, f"{path_prefix}.{k}")
+            assert_no_private_host_paths(v, f"{path_prefix}.{k}" if path_prefix else k)
     elif isinstance(data, list):
         for idx, item in enumerate(data):
             assert_no_private_host_paths(item, f"{path_prefix}[{idx}]")

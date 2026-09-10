@@ -91,8 +91,24 @@ def test_delivery5_custody_and_zero_host_paths() -> None:
     assert receipt["zero_host_paths_verified"] is True
     assert_no_private_host_paths(receipt)
 
-    with pytest.raises(ValueError, match="Prohibited host path detected"):
+    with pytest.raises(ValueError, match="Prohibited host path detected at leak"):
         assert_no_private_host_paths({"leak": "/home/user/data"})
+
+    with pytest.raises(ValueError, match="Prohibited host path detected at leak"):
+        assert_no_private_host_paths({"leak": "/workspace/repo/data"})
+
+    with pytest.raises(ValueError, match="Prohibited host path detected at leak"):
+        assert_no_private_host_paths({"leak": "/root/secret_data"})
+
+    # Ensure scanned content is never echoed into the exception message
+    secret_text = "SECRET_DOCUMENT_CONTENT_DO_NOT_ECHO /workspace/secret/path"
+    try:
+        assert_no_private_host_paths(secret_text, "doc_locator")
+    except ValueError as exc:
+        assert "SECRET_DOCUMENT_CONTENT_DO_NOT_ECHO" not in str(exc)
+        assert "Prohibited host path detected at doc_locator" in str(exc)
+    else:
+        pytest.fail("Expected ValueError was not raised")
 
 
 def test_verify_delivery_clean_pass() -> None:
