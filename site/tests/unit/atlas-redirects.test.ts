@@ -42,4 +42,18 @@ describe('Atlas redirects', () => {
     expect(proiekCyrillicAlias).toBeDefined();
     expect(proiekCyrillicAlias.s).toBe('проєкт');
   });
+
+  test.skipIf(!existsSync(resolve(__dirname, '../../dist/lexicon')))(
+    'built redirect page for проєк redirects to проєкт',
+    () => {
+      const redirectPaths = [
+        resolve(__dirname, '../../dist/lexicon/проєк/index.html'),
+        resolve(__dirname, '../../dist/lexicon/%D0%BF%D1%80%D0%BE%D1%94%D0%BA/index.html'),
+      ];
+      const existing = redirectPaths.find((p) => existsSync(p));
+      if (!existing) return;
+      const html = readFileSync(existing, 'utf-8');
+      expect(html).toContain('/lexicon/%D0%BF%D1%80%D0%BE%D1%94%D0%BA%D1%82/');
+    },
+  );
 });
