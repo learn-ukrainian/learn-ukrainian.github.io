@@ -155,5 +155,110 @@
         "null"
       ]
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "permitted_to_proceed": { "const": true } }
+      },
+      "then": {
+        "properties": {
+          "blocking_reason": { "type": "null" },
+          "lineage_verification": {
+            "properties": {
+              "status": { "const": "CONFIRMED_NATIVE" },
+              "is_ocr_derived": { "const": false }
+            }
+          },
+          "custody_resolution": {
+            "properties": {
+              "host_reachable": { "const": true },
+              "status": { "enum": ["RESOLVED_ACCESSIBLE", "PARTIAL_CHUNKS_AND_DB_ONLY"] }
+            }
+          },
+          "bounded_read_metrics": {
+            "properties": {
+              "observed_records": { "minimum": 1 },
+              "stream_sha256": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "permitted_to_proceed": { "const": false } }
+      },
+      "then": {
+        "properties": {
+          "blocking_reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "lineage_verification": {
+            "properties": { "is_ocr_derived": { "const": true } }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "permitted_to_proceed": { "const": false },
+          "lineage_verification": {
+            "properties": { "status": { "const": "EXCLUDED_OCR" } }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "lineage_verification": {
+            "properties": { "status": { "const": "EXCLUDED_OCR" } }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "permitted_to_proceed": { "const": false },
+          "lineage_verification": {
+            "properties": { "is_ocr_derived": { "const": true } }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "lineage_verification": {
+            "properties": { "status": { "const": "UNKNOWN_LINEAGE" } }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "permitted_to_proceed": { "const": false }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "custody_resolution": {
+            "properties": { "status": { "const": "UNREACHABLE_ON_HOST" } }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "permitted_to_proceed": { "const": false },
+          "custody_resolution": {
+            "properties": { "host_reachable": { "const": false } }
+          }
+        }
+      }
+    }
+  ]
 }

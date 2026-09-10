@@ -135,14 +135,17 @@ class BoundedCustodyReader:
             cursor = conn.cursor()
             cursor.execute("PRAGMA query_only = ON;")
             cursor.execute(
-                f"SELECT id, chunk_id, length(text) FROM {table} WHERE source_file = ? ORDER BY id ASC",
+                f"SELECT id, chunk_id, text FROM {table} WHERE source_file = ? ORDER BY id ASC",
                 (source_file,),
             )
             while rows := cursor.fetchmany(batch_size):
-                for row_id, chunk_id, text_len in rows:
+                for row_id, chunk_id, text in rows:
+                    text_str = text or ""
+                    text_len = len(text_str)
                     records_streamed += 1
-                    chars_streamed += text_len or 0
-                    row_repr = f"{row_id}:{chunk_id}:{text_len}\n".encode()
+                    chars_streamed += text_len
+                    text_hash = hashlib.sha256(text_str.encode("utf-8")).hexdigest()
+                    row_repr = f"{row_id}:{chunk_id}:{text_len}:{text_hash}\n".encode()
                     digest.update(row_repr)
         finally:
             conn.close()
@@ -159,23 +162,69 @@ class BoundedCustodyReader:
             "duration_seconds": duration,
         }
 
+    def read_chunk_stream(
+        self,
+        chunk_file: Path,
+    ) -> dict[str, Any]:
+        """Stream records directly from a JSONL chunk file (ACCESS-3)."""
+        if not chunk_file.is_file():
+            raise CustodyAccessError(f"Chunk file not found: {chunk_file}")
+
+        start_time = time.monotonic()
+        records_streamed = 0
+        chars_streamed = 0
+        digest = hashlib.sha256()
+
+        with chunk_file.open(encoding="utf-8") as f:
+            for line in f:
+                line_str = line.strip()
+                if not line_str:
+                    continue
+                row = json.loads(line_str)
+                c_id = row.get("chunk_id", "")
+                text_str = row.get("text", "") or ""
+                text_len = len(text_str)
+                records_streamed += 1
+                chars_streamed += text_len
+                text_hash = hashlib.sha256(text_str.encode("utf-8")).hexdigest()
+                digest.update(f"{c_id}:{text_len}:{text_hash}\n".encode())
+
+        duration = time.monotonic() - start_time
+        stream_hash = digest.hexdigest() if records_streamed > 0 else None
+
+        return {
+            "source_file": chunk_file.stem,
+            "chunk_file": str(chunk_file),
+            "records_streamed": records_streamed,
+            "chars_streamed": chars_streamed,
+            "stream_sha256": stream_hash,
+            "duration_seconds": duration,
+        }
+
 
 def check_chunk_file_lineage(
     chunk_file: Path,
     excluded_modes: Sequence[str] = ("apple_vision_ocr", "ocr", "scanned_image"),
-) -> tuple[str, bool, int, int]:
+) -> tuple[str, bool, int, int, list[tuple[str, str]]]:
     """Examine a textbook chunk file for non-OCR lineage (ACCESS-2).
 
+    Validates every single row:
+    - Absent/unlabelled extraction modes fail closed as unknown lineage.
+    - Excluded modes (e.g. apple_vision_ocr) flag the file as OCR-derived.
+    - Unknown/non-native modes fail closed as unknown lineage.
+
     Returns:
-        (lineage_mode, is_ocr, row_count, char_count)
+        (lineage_mode, is_ocr, row_count, char_count, chunk_records)
+        where chunk_records is [(chunk_id, text), ...]
     """
     if not chunk_file.is_file():
-        return "unknown", False, 0, 0
+        return "unknown", False, 0, 0, []
 
     row_count = 0
     char_count = 0
-    modes_seen = set()
+    chunk_records: list[tuple[str, str]] = []
     has_ocr = False
+    has_unknown = False
 
     with chunk_file.open(encoding="utf-8") as f:
         for line in f:
@@ -188,27 +237,36 @@ def check_chunk_file_lineage(
             except json.JSONDecodeError as exc:
                 raise CustodyAccessError(f"Corrupted JSON in chunk file {chunk_file}: {exc}") from exc
 
-            mode = row.get("extraction_mode")
-            page_mode = row.get("page_extraction_mode")
-            for m in (mode, page_mode):
-                if m:
-                    modes_seen.add(str(m))
-                    if str(m) in excluded_modes:
-                        has_ocr = True
-
-            text = row.get("text") or ""
+            c_id = str(row.get("chunk_id", ""))
+            text = str(row.get("text") or "")
+            chunk_records.append((c_id, text))
             char_count += len(text)
 
-    if not modes_seen:
-        return "unknown", False, row_count, char_count
+            mode = row.get("extraction_mode")
+            page_mode = row.get("page_extraction_mode")
+
+            # Validate extraction mode per row:
+            # If neither extraction_mode nor page_extraction_mode is set, row is unlabelled -> unknown lineage
+            modes_for_row = [str(m) for m in (mode, page_mode) if m]
+            if not modes_for_row:
+                has_unknown = True
+            else:
+                for m in modes_for_row:
+                    if m in excluded_modes:
+                        has_ocr = True
+                    elif m not in ("native_text", "native_pdf_text"):
+                        has_unknown = True
+
+    if row_count == 0:
+        return "unknown", False, 0, 0, []
 
     if has_ocr:
-        return "apple_vision_ocr", True, row_count, char_count
+        return "apple_vision_ocr", True, row_count, char_count, chunk_records
 
-    if all(m in ("native_text", "native_pdf_text") for m in modes_seen):
-        return "native_pdf_text", False, row_count, char_count
+    if has_unknown:
+        return "unknown", False, row_count, char_count, chunk_records
 
-    return "unknown", False, row_count, char_count
+    return "native_pdf_text", False, row_count, char_count, chunk_records
 
 
 def resolve_source_access(
@@ -228,12 +286,11 @@ def resolve_source_access(
 
     cur = db_conn.cursor()
     cur.execute(
-        f"SELECT COUNT(*), SUM(length(text)) FROM {table} WHERE source_file = ?",
+        f"SELECT COUNT(*) FROM {table} WHERE source_file = ?",
         (source_file,),
     )
     db_row = cur.fetchone()
     db_records = db_row[0] if db_row else 0
-    db_chars = db_row[1] if (db_row and db_row[1] is not None) else 0
 
     chunk_path = chunks_map.get(source_file)
     chunk_ref = None
@@ -276,7 +333,9 @@ def resolve_source_access(
         excluded_modes = cohort_cfg.get("excluded_modes", ["apple_vision_ocr", "ocr", "scanned_image"])
 
         if chunk_path is not None and chunk_path.is_file():
-            chunk_mode, chunk_is_ocr, chunk_rows, _chunk_chars = check_chunk_file_lineage(chunk_path, excluded_modes)
+            chunk_mode, chunk_is_ocr, _chunk_rows, _chunk_chars, chunk_records = check_chunk_file_lineage(
+                chunk_path, excluded_modes
+            )
             if chunk_is_ocr:
                 lineage_status = "EXCLUDED_OCR"
                 lineage_mode = "apple_vision_ocr"
@@ -286,24 +345,39 @@ def resolve_source_access(
                 blocking_reason = "ocr_derived_extraction_mode_excluded"
                 custody_status = "PARTIAL_CHUNKS_AND_DB_ONLY"
             elif chunk_mode in ("native_pdf_text", "native_text"):
-                lineage_status = "CONFIRMED_NATIVE"
-                lineage_mode = "native_pdf_text"
-                evidence_ref = f"{chunk_ref}#extraction_mode"
-                is_ocr = False
-                # Accessible if DB or chunks present
-                permitted = db_records > 0 or chunk_rows > 0
-                custody_status = "RESOLVED_ACCESSIBLE" if archive_on_host else "PARTIAL_CHUNKS_AND_DB_ONLY"
-                blocking_reason = None
-                if not archive_on_host:
-                    missing_report_item = {
-                        "source_id": source_id,
-                        "source_locator": {"source_file": source_file},
-                        "cohort_id": cohort_id,
-                        "missing_path_ref": archive_ref or f"gdrive:learn-ukrainian-data/textbooks/{source_file}.pdf",
-                        "reason": "execution_host_resolver_unmounted",
-                        "owner": "existing custody/source-access owner",
-                        "blocks": "direct PDF byte extraction for this source",
-                    }
+                # Bind accessed database content to the verified chunk file lineage (ACCESS-2)
+                cur.execute(
+                    f"SELECT chunk_id, text FROM {table} WHERE source_file = ? ORDER BY id ASC",
+                    (source_file,),
+                )
+                db_rows = cur.fetchall()
+                db_records_list = [(str(r[0]), str(r[1] or "")) for r in db_rows]
+
+                if not db_records_list:
+                    lineage_status = "UNKNOWN_LINEAGE"
+                    lineage_mode = "unknown"
+                    evidence_ref = f"{chunk_ref}#missing_db"
+                    is_ocr = False
+                    permitted = False
+                    blocking_reason = "source_records_not_found_in_database"
+                    custody_status = "PARTIAL_CHUNKS_AND_DB_ONLY"
+                elif db_records_list != chunk_records:
+                    # Database content does not match verified chunk lineage
+                    lineage_status = "UNKNOWN_LINEAGE"
+                    lineage_mode = "unknown"
+                    evidence_ref = f"{chunk_ref}#discrepancy"
+                    is_ocr = False
+                    permitted = False
+                    blocking_reason = "database_content_does_not_match_lineage_chunk_evidence"
+                    custody_status = "PARTIAL_CHUNKS_AND_DB_ONLY"
+                else:
+                    lineage_status = "CONFIRMED_NATIVE"
+                    lineage_mode = "native_pdf_text"
+                    evidence_ref = f"{chunk_ref}#extraction_mode"
+                    is_ocr = False
+                    permitted = True
+                    custody_status = "RESOLVED_ACCESSIBLE" if archive_on_host else "PARTIAL_CHUNKS_AND_DB_ONLY"
+                    blocking_reason = None
             else:
                 lineage_status = "UNKNOWN_LINEAGE"
                 lineage_mode = "unknown"
@@ -321,46 +395,47 @@ def resolve_source_access(
             permitted = False
             custody_status = "UNREACHABLE_ON_HOST"
             blocking_reason = "missing_chunk_file_and_unmounted_archive"
+
+        if not permitted:
             missing_report_item = {
                 "source_id": source_id,
                 "source_locator": {"source_file": source_file},
                 "cohort_id": cohort_id,
                 "missing_path_ref": archive_ref or f"gdrive:learn-ukrainian-data/textbooks/{source_file}.pdf",
-                "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+                "reason": blocking_reason or "not_permitted_to_proceed",
+                "owner": "existing custody/source-access owner",
+                "blocks": "direct PDF byte extraction for this source",
+            }
+        elif not archive_on_host:
+            missing_report_item = {
+                "source_id": source_id,
+                "source_locator": {"source_file": source_file},
+                "cohort_id": cohort_id,
+                "missing_path_ref": archive_ref or f"gdrive:learn-ukrainian-data/textbooks/{source_file}.pdf",
+                "reason": "execution_host_resolver_unmounted",
                 "owner": "existing custody/source-access owner",
                 "blocks": "direct PDF byte extraction for this source",
             }
 
-    # Bounded read digest computation
+    # Bounded read digest computation (content-sensitive text hashing)
     stream_digest = None
-    observed_records = db_records
-    observed_chars = db_chars
+    observed_records = 0
+    observed_chars = 0
 
-    if db_records > 0:
+    if permitted and db_records > 0:
         cur.execute(
-            f"SELECT id, chunk_id, length(text) FROM {table} WHERE source_file = ? ORDER BY id ASC",
+            f"SELECT id, chunk_id, text FROM {table} WHERE source_file = ? ORDER BY id ASC",
             (source_file,),
         )
         digest = hashlib.sha256()
         while rows := cur.fetchmany(1000):
-            for row_id, chunk_id, text_len in rows:
-                digest.update(f"{row_id}:{chunk_id}:{text_len}\n".encode())
-        stream_digest = digest.hexdigest()
-    elif chunk_path is not None and chunk_path.is_file():
-        # Compute digest over chunk row IDs without database
-        digest = hashlib.sha256()
-        observed_records = 0
-        observed_chars = 0
-        with chunk_path.open(encoding="utf-8") as f:
-            for line in f:
-                if not line.strip():
-                    continue
+            for row_id, chunk_id, text in rows:
+                text_str = text or ""
+                t_len = len(text_str)
                 observed_records += 1
-                row = json.loads(line)
-                c_id = row.get("chunk_id", "")
-                t_len = len(row.get("text", ""))
                 observed_chars += t_len
-                digest.update(f"{c_id}:{t_len}\n".encode())
+                text_hash = hashlib.sha256(text_str.encode("utf-8")).hexdigest()
+                digest.update(f"{row_id}:{chunk_id}:{t_len}:{text_hash}\n".encode())
         stream_digest = digest.hexdigest()
 
     record = {
@@ -375,7 +450,7 @@ def resolve_source_access(
             "primary_store": primary_store,
             "chunks_store": chunk_ref,
             "archive_store": archive_ref,
-            "host_reachable": archive_on_host or (db_records > 0) or (chunk_path is not None and chunk_path.is_file()),
+            "host_reachable": custody_status != "UNREACHABLE_ON_HOST",
         },
         "lineage_verification": {
             "status": lineage_status,
@@ -544,8 +619,13 @@ def build(
     tb_perm_count = sum(1 for r in tb_records if r["permitted_to_proceed"])
 
     total_evaluated = len(access_records)
-    total_accessible = sum(1 for r in access_records if r["permitted_to_proceed"])
-    total_unreachable = sum(1 for r in access_records if not r["permitted_to_proceed"])
+    total_accessible = sum(
+        1
+        for r in access_records
+        if r["custody_resolution"]["status"] in ("RESOLVED_ACCESSIBLE", "PARTIAL_CHUNKS_AND_DB_ONLY")
+        and r["permitted_to_proceed"]
+    )
+    total_unreachable = sum(1 for r in access_records if r["custody_resolution"]["status"] == "UNREACHABLE_ON_HOST")
     total_native = sum(1 for r in access_records if r["lineage_verification"]["status"] == "CONFIRMED_NATIVE")
     total_ocr = sum(1 for r in access_records if r["lineage_verification"]["status"] == "EXCLUDED_OCR")
     total_permitted = sum(1 for r in access_records if r["permitted_to_proceed"])
@@ -638,9 +718,19 @@ def verify(
     if receipt["missing_report_sha256"] != sha256_file(out_missing_path):
         raise CustodyAccessError("Receipt missing_report_sha256 mismatch")
 
-    # Verify index
+    # Verify index and recompute invariants directly from index records (Finding 3)
     item_validator = _load_schema(ITEM_SCHEMA_PATH, roots)
     record_count = 0
+    recomputed_total = 0
+    recomputed_accessible = 0
+    recomputed_unreachable = 0
+    recomputed_native = 0
+    recomputed_ocr = 0
+    recomputed_permitted = 0
+
+    lit_records = []
+    tb_records = []
+
     with out_index_path.open(encoding="utf-8") as f:
         header_line = f.readline().strip()
         header = json.loads(header_line)
@@ -658,8 +748,140 @@ def verify(
             if errors:
                 raise CustodyAccessError(f"Index line {line_num} error: {errors[0].message}")
 
+            permitted = row["permitted_to_proceed"]
+            status = row["lineage_verification"]["status"]
+            is_ocr = row["lineage_verification"]["is_ocr_derived"]
+            cust_status = row["custody_resolution"]["status"]
+            host_reachable = row["custody_resolution"]["host_reachable"]
+            metrics = row["bounded_read_metrics"]
+            blocking_reason = row["blocking_reason"]
+
+            # Explicit invariant checks
+            if permitted:
+                if status != "CONFIRMED_NATIVE":
+                    raise CustodyAccessError(
+                        f"Contradictory record at line {line_num} ({row['source_id']}): "
+                        f"permitted_to_proceed is True but lineage status is {status}"
+                    )
+                if is_ocr:
+                    raise CustodyAccessError(
+                        f"Contradictory record at line {line_num} ({row['source_id']}): "
+                        f"permitted_to_proceed is True but is_ocr_derived is True"
+                    )
+                if not host_reachable:
+                    raise CustodyAccessError(
+                        f"Contradictory record at line {line_num} ({row['source_id']}): "
+                        f"permitted_to_proceed is True but host_reachable is False"
+                    )
+                if blocking_reason is not None:
+                    raise CustodyAccessError(
+                        f"Contradictory record at line {line_num} ({row['source_id']}): "
+                        f"permitted_to_proceed is True but blocking_reason is {blocking_reason}"
+                    )
+                if metrics["observed_records"] <= 0 or not metrics["stream_sha256"]:
+                    raise CustodyAccessError(
+                        f"Contradictory record at line {line_num} ({row['source_id']}): "
+                        f"permitted_to_proceed is True but observed_records is {metrics['observed_records']}"
+                    )
+            else:
+                if blocking_reason is None:
+                    raise CustodyAccessError(
+                        f"Contradictory record at line {line_num} ({row['source_id']}): "
+                        f"permitted_to_proceed is False but blocking_reason is None"
+                    )
+                if is_ocr and status != "EXCLUDED_OCR":
+                    raise CustodyAccessError(
+                        f"Contradictory record at line {line_num} ({row['source_id']}): "
+                        f"is_ocr_derived is True but lineage status is {status}"
+                    )
+
+            recomputed_total += 1
+            if cust_status in ("RESOLVED_ACCESSIBLE", "PARTIAL_CHUNKS_AND_DB_ONLY") and permitted:
+                recomputed_accessible += 1
+            if cust_status == "UNREACHABLE_ON_HOST":
+                recomputed_unreachable += 1
+            if status == "CONFIRMED_NATIVE":
+                recomputed_native += 1
+            if status == "EXCLUDED_OCR":
+                recomputed_ocr += 1
+            if permitted:
+                recomputed_permitted += 1
+
+            if row["cohort_id"] == "literary-non-ocr":
+                lit_records.append(row)
+            elif row["cohort_id"] == "public-textbooks-non-stem-non-ocr":
+                tb_records.append(row)
+
     if header.get("records") != record_count:
         raise CustodyAccessError(f"Index header record count {header.get('records')} != observed {record_count}")
+
+    # Verify receipt summary against recomputed invariants
+    summary = receipt.get("summary", {})
+    if summary.get("total_sources_evaluated") != recomputed_total:
+        raise CustodyAccessError(
+            f"Receipt summary total_sources_evaluated mismatch: {summary.get('total_sources_evaluated')} != {recomputed_total}"
+        )
+    if summary.get("accessible_sources_count") != recomputed_accessible:
+        raise CustodyAccessError(
+            f"Receipt summary accessible_sources_count mismatch: {summary.get('accessible_sources_count')} != {recomputed_accessible}"
+        )
+    if summary.get("unreachable_on_host_count") != recomputed_unreachable:
+        raise CustodyAccessError(
+            f"Receipt summary unreachable_on_host_count mismatch: {summary.get('unreachable_on_host_count')} != {recomputed_unreachable}"
+        )
+    if summary.get("confirmed_native_count") != recomputed_native:
+        raise CustodyAccessError(
+            f"Receipt summary confirmed_native_count mismatch: {summary.get('confirmed_native_count')} != {recomputed_native}"
+        )
+    if summary.get("excluded_ocr_count") != recomputed_ocr:
+        raise CustodyAccessError(
+            f"Receipt summary excluded_ocr_count mismatch: {summary.get('excluded_ocr_count')} != {recomputed_ocr}"
+        )
+    if summary.get("permitted_to_proceed_count") != recomputed_permitted:
+        raise CustodyAccessError(
+            f"Receipt summary permitted_to_proceed_count mismatch: {summary.get('permitted_to_proceed_count')} != {recomputed_permitted}"
+        )
+
+    # Recompute cohort summaries
+    lit_acc = sum(
+        1
+        for r in lit_records
+        if r["custody_resolution"]["status"] in ("RESOLVED_ACCESSIBLE", "PARTIAL_CHUNKS_AND_DB_ONLY")
+        and r["permitted_to_proceed"]
+    )
+    lit_native = sum(1 for r in lit_records if r["lineage_verification"]["status"] == "CONFIRMED_NATIVE")
+    lit_perm = sum(1 for r in lit_records if r["permitted_to_proceed"])
+    lit_cov = round(lit_acc / len(lit_records), 6) if lit_records else 0.0
+
+    rc_lit = summary.get("first_eligible_cohort", {})
+    if (
+        rc_lit.get("total_sources") != len(lit_records)
+        or rc_lit.get("accessible_sources") != lit_acc
+        or rc_lit.get("confirmed_native") != lit_native
+        or rc_lit.get("permitted_to_proceed") != (lit_perm == len(lit_records))
+        or rc_lit.get("coverage_ratio") != lit_cov
+    ):
+        raise CustodyAccessError("Receipt first_eligible_cohort discrepancy")
+
+    tb_acc = sum(
+        1
+        for r in tb_records
+        if r["custody_resolution"]["status"] in ("RESOLVED_ACCESSIBLE", "PARTIAL_CHUNKS_AND_DB_ONLY")
+        and r["permitted_to_proceed"]
+    )
+    tb_missing = sum(1 for r in tb_records if not r["permitted_to_proceed"])
+    tb_native = sum(1 for r in tb_records if r["lineage_verification"]["status"] == "CONFIRMED_NATIVE")
+    tb_perm = sum(1 for r in tb_records if r["permitted_to_proceed"])
+
+    rc_tb = summary.get("textbook_cohort", {})
+    if (
+        rc_tb.get("total_sources") != len(tb_records)
+        or rc_tb.get("accessible_sources") != tb_acc
+        or rc_tb.get("missing_on_host") != tb_missing
+        or rc_tb.get("confirmed_native") != tb_native
+        or rc_tb.get("permitted_to_proceed") != tb_perm
+    ):
+        raise CustodyAccessError("Receipt textbook_cohort discrepancy")
 
     # Verify missing report
     missing_validator = _load_schema(MISSING_REPORT_SCHEMA_PATH, roots)
