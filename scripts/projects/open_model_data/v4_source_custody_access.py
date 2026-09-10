@@ -338,6 +338,8 @@ def check_chunk_file_lineage(
     if not chunk_file.is_file():
         return "unknown", False, 0, 0, None
 
+    effective_ocr_modes = set(OCR_LINEAGE_MODES).union(excluded_modes)
+
     row_count = 0
     char_count = 0
     chunk_digest = hashlib.sha256()
@@ -373,7 +375,7 @@ def check_chunk_file_lineage(
                 has_unknown = True
             else:
                 for m in modes_for_row:
-                    if m in excluded_modes:
+                    if m in effective_ocr_modes:
                         has_ocr = True
                         if detected_ocr_mode is None:
                             detected_ocr_mode = m
@@ -456,10 +458,12 @@ def validate_cohort_spec(cohort_cfg: Mapping[str, Any]) -> None:
 def derive_missing_report_item(
     row: Mapping[str, Any],
     config: Mapping[str, Any],
+    effective_custody_status: str | None = None,
 ) -> dict[str, Any] | None:
     """Derive expected missing report item from an access record and custody config (ACCESS-4)."""
     cid = row.get("cohort_id", "")
     cust = row.get("custody_resolution", {})
+    status = effective_custody_status if effective_custody_status is not None else cust.get("status")
     permitted = row.get("permitted_to_proceed", False)
     owner = config.get("ownership", {}).get("unmounted_archive_owner", "existing custody/source-access owner")
     source_locator = row.get("source_locator", {})
@@ -467,7 +471,7 @@ def derive_missing_report_item(
     source_id = row.get("source_id", "")
 
     if cid == "public-textbooks-non-stem-non-ocr":
-        if cust.get("status") != "RESOLVED_ACCESSIBLE":
+        if status != "RESOLVED_ACCESSIBLE":
             reason = (
                 row.get("blocking_reason") or "not_permitted_to_proceed"
                 if not permitted
@@ -539,11 +543,12 @@ def resolve_source_access(
     db_row = cur.fetchone()
     db_records = db_row[0] if db_row else 0
 
+    norm_input_root = input_root.resolve()
     chunk_path = chunks_map.get(source_file)
     chunk_ref = None
     if chunk_path is not None:
         try:
-            rel = chunk_path.relative_to(input_root)
+            rel = chunk_path.resolve().relative_to(norm_input_root)
             chunk_ref = f"file:{rel}"
         except ValueError:
             chunk_ref = f"file:{chunk_path.name}"
@@ -557,7 +562,7 @@ def resolve_source_access(
     # Check host archive accessibility
     archive_on_host = False
     if archive_locator and archive_locator.startswith("data/"):
-        host_archive_path = input_root / archive_locator
+        host_archive_path = norm_input_root / archive_locator
         if host_archive_path.is_dir():
             suffix = ".jsonl" if lineage_rule == "native_digital_source" else ".pdf"
             archive_file = host_archive_path / f"{source_file}{suffix}"
@@ -716,12 +721,14 @@ def build(
     output_root: Path,
 ) -> dict[str, Any]:
     """Execute custody resolution and lineage audit (ACCESS-1..4)."""
-    roots = [input_root, Path.cwd()]
+    norm_input_root = input_root.resolve()
+    norm_output_root = output_root.resolve()
+    roots = [norm_input_root, Path.cwd()]
     config, resolved_config_path = _load_config(config_path, roots)
     config_sha256 = sha256_file(resolved_config_path)
 
     resolved_inputs, resolved_outputs = validate_and_resolve_paths(
-        config, input_root, output_root, config_path=resolved_config_path
+        config, norm_input_root, norm_output_root, config_path=resolved_config_path
     )
 
     # Resolve input paths
@@ -786,7 +793,7 @@ def build(
                 cohort_id=cid,
                 source_family=fam,
                 cohort_cfg=cohort_cfg,
-                input_root=input_root,
+                input_root=norm_input_root,
                 db_conn=conn,
                 chunks_map=chunks_map,
                 unmounted_archive_owner=config["ownership"]["unmounted_archive_owner"],
@@ -1003,7 +1010,9 @@ def verify(
     output_root: Path,
 ) -> bool:
     """Verify committed custody artifacts against contracts and invariants."""
-    roots = [input_root, Path.cwd()]
+    norm_input_root = input_root.resolve()
+    norm_output_root = output_root.resolve()
+    roots = [norm_input_root, Path.cwd()]
     config, resolved_config_path = _load_config(config_path, roots)
     expected_config_sha256 = sha256_file(resolved_config_path)
     for c in config["cohorts"]:
@@ -1011,7 +1020,7 @@ def verify(
     cohorts_by_id = {c["cohort_id"]: c for c in config["cohorts"]}
 
     _resolved_inputs, resolved_outputs = validate_and_resolve_paths(
-        config, input_root, output_root, config_path=resolved_config_path
+        config, norm_input_root, norm_output_root, config_path=resolved_config_path
     )
     out_index_path = resolved_outputs["index"]
     out_missing_path = resolved_outputs["missing_report"]
@@ -1024,6 +1033,14 @@ def verify(
     ]:
         if not path.is_file():
             raise CustodyAccessError(f"{name} artifact missing: {path}")
+
+    # Map chunk files from textbook_chunks_dir if available
+    chunks_map: dict[str, Path] = {}
+    chunks_dir = _resolved_inputs.get("textbook_chunks_dir")
+    if chunks_dir is not None and chunks_dir.is_dir():
+        for chunk_file in chunks_dir.glob("*/*.jsonl"):
+            stem = chunk_file.name[:-6] if chunk_file.name.endswith(".jsonl") else chunk_file.stem
+            chunks_map[stem] = chunk_file
 
     # Verify receipt schema and hashes
     receipt_validator = _load_schema(RECEIPT_SCHEMA_PATH, roots)
@@ -1137,6 +1154,42 @@ def verify(
             host_reachable = row["custody_resolution"]["host_reachable"]
             metrics = row["bounded_read_metrics"]
             blocking_reason = row["blocking_reason"]
+
+            lineage_rule = cohort_cfg["lineage_rule"]
+            archive_locator = cohort_cfg.get("archive_locator", "")
+
+            # Probe host storage to re-resolve custody independently of index assertions (ACCESS-1, ACCESS-4)
+            archive_on_host = False
+            if archive_locator and archive_locator.startswith("data/"):
+                host_archive_path = norm_input_root / archive_locator
+                if host_archive_path.is_dir():
+                    suffix = ".jsonl" if lineage_rule == "native_digital_source" else ".pdf"
+                    archive_file = host_archive_path / f"{source_file}{suffix}"
+                    if archive_file.is_file():
+                        archive_on_host = True
+
+            chunk_path = chunks_map.get(source_file) if chunks_map else None
+            chunk_on_host = chunk_path is not None and chunk_path.is_file()
+
+            if cohort_id == "public-textbooks-non-stem-non-ocr":
+                # For unmounted archives, index cannot claim RESOLVED_ACCESSIBLE
+                if not archive_on_host and cust_status == "RESOLVED_ACCESSIBLE":
+                    raise CustodyAccessError(
+                        f"Index line {line_num} ({source_id}): custody status claims 'RESOLVED_ACCESSIBLE' "
+                        f"but host archive is unmounted at {archive_locator}/{source_file}.pdf"
+                    )
+                if archive_on_host and cust_status == "PARTIAL_CHUNKS_AND_DB_ONLY":
+                    raise CustodyAccessError(
+                        f"Index line {line_num} ({source_id}): custody status claims 'PARTIAL_CHUNKS_AND_DB_ONLY' "
+                        f"but host archive is reachable at {archive_locator}/{source_file}.pdf"
+                    )
+                re_resolved_status = (
+                    "RESOLVED_ACCESSIBLE"
+                    if archive_on_host
+                    else ("PARTIAL_CHUNKS_AND_DB_ONLY" if chunk_on_host else "UNREACHABLE_ON_HOST")
+                )
+            else:
+                re_resolved_status = cust_status
 
             # Explicit invariant checks across ALL rows (permitted and blocked)
             if status == "CONFIRMED_NATIVE":
@@ -1303,7 +1356,7 @@ def verify(
             elif row["cohort_id"] == "public-textbooks-non-stem-non-ocr":
                 tb_records.append(row)
 
-            m_item = derive_missing_report_item(row, config)
+            m_item = derive_missing_report_item(row, config, effective_custody_status=re_resolved_status)
             if m_item is not None:
                 expected_missing_items.append(m_item)
 

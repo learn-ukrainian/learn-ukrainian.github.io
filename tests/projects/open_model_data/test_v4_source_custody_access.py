@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 import re
 import sqlite3
 from pathlib import Path
@@ -1837,3 +1838,130 @@ def test_derive_missing_report_item_separates_lineage_exclusion_from_reachable_a
     item2 = custody.derive_missing_report_item(unreachable_row, cfg)
     assert item2 is not None
     assert item2["reason"] == "missing_chunk_file_and_unmounted_archive"
+
+
+def test_check_chunk_file_lineage_classifies_ocr_modes_with_empty_excluded_modes(tmp_path: Path) -> None:
+    """Known OCR modes are recognized as OCR even when excluded_modes is empty or incomplete (ACCESS-2)."""
+    for mode_name in sorted(custody.OCR_LINEAGE_MODES):
+        chunk_file = tmp_path / f"{mode_name}_sample.jsonl"
+        rows = [
+            {"chunk_id": "c1", "extraction_mode": mode_name, "text": "Текст."},
+        ]
+        chunk_file.write_text("\n".join(json.dumps(r) for r in rows) + "\n", encoding="utf-8")
+
+        mode, is_ocr, count, _chars, _digest = custody.check_chunk_file_lineage(chunk_file, excluded_modes=[])
+        assert mode == mode_name
+        assert is_ocr is True
+        assert count == 1
+
+
+def test_resolve_source_access_normalizes_relative_input_root(tmp_path: Path) -> None:
+    """resolve_source_access relativizes chunk paths against normalized input_root when relative path is given."""
+    chunks_dir = tmp_path / "data/textbook_chunks/grade-10"
+    chunks_dir.mkdir(parents=True)
+    chunk_file = (chunks_dir / "10-klas-book.jsonl").resolve()
+    chunk_file.write_text(
+        json.dumps(
+            {
+                "chunk_id": "c1",
+                "extraction_mode": "native_pdf_text",
+                "page_extraction_mode": "native_pdf_text",
+                "text": "Текст",
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    db_path = tmp_path / "test.db"
+    conn = sqlite3.connect(db_path)
+    conn.execute("CREATE TABLE textbooks (id INTEGER PRIMARY KEY, chunk_id TEXT, source_file TEXT, text TEXT);")
+    conn.execute("INSERT INTO textbooks (chunk_id, source_file, text) VALUES ('c1', '10-klas-book', 'Текст');")
+    conn.commit()
+
+    cohort_cfg = {
+        "cohort_id": "public-textbooks-non-stem-non-ocr",
+        "source_family": "public_textbooks",
+        "resolver_kind": "hybrid_sqlite_chunks_archive",
+        "lineage_rule": "native_pdf_text",
+        "archive_locator": "data/textbooks",
+        "primary_store": "sqlite:sources.db#textbooks",
+    }
+
+    rel_root = Path(os.path.relpath(tmp_path, Path.cwd()))
+    record, _missing = custody.resolve_source_access(
+        source_id="source.public_textbooks.rel_test",
+        source_file="10-klas-book",
+        cohort_id="public-textbooks-non-stem-non-ocr",
+        source_family="public_textbooks",
+        cohort_cfg=cohort_cfg,
+        input_root=rel_root,
+        db_conn=conn,
+        chunks_map={"10-klas-book": chunk_file},
+    )
+    conn.close()
+
+    assert record["custody_resolution"]["chunks_store"] == "file:data/textbook_chunks/grade-10/10-klas-book.jsonl"
+
+
+def test_verify_detects_unmounted_textbook_tampered_as_accessible(tmp_path: Path, repo_root: Path) -> None:
+    """verify() rejects an index claiming RESOLVED_ACCESSIBLE when the archive is unmounted on host (ACCESS-4)."""
+    tampered_out = tmp_path / "out"
+    tgt_custody = tampered_out / "data/projects/open_model_data/custody"
+    tgt_custody.mkdir(parents=True)
+
+    orig_index_path = Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl")
+    lines = orig_index_path.read_text(encoding="utf-8").splitlines()
+    header = lines[0]
+
+    tampered_sid = None
+    tampered_lines = [header]
+    for line in lines[1:]:
+        row = json.loads(line)
+        if (
+            row["cohort_id"] == "public-textbooks-non-stem-non-ocr"
+            and row["custody_resolution"]["status"] == "PARTIAL_CHUNKS_AND_DB_ONLY"
+            and tampered_sid is None
+        ):
+            tampered_sid = row["source_id"]
+            row["custody_resolution"]["status"] = "RESOLVED_ACCESSIBLE"
+            row["custody_resolution"]["host_reachable"] = True
+            tampered_lines.append(json.dumps(row))
+        else:
+            tampered_lines.append(line)
+
+    assert tampered_sid is not None
+    (tgt_custody / "v4_source_custody_access_index_v1.jsonl").write_text(
+        "\n".join(tampered_lines) + "\n", encoding="utf-8"
+    )
+
+    orig_missing = json.loads(
+        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    missing_tampered = copy.deepcopy(orig_missing)
+    missing_tampered["missing_inputs"] = [
+        item for item in missing_tampered["missing_inputs"] if item["source_id"] != tampered_sid
+    ]
+    missing_path = tgt_custody / "v4_source_custody_missing_report_v1.json"
+    missing_path.write_text(json.dumps(missing_tampered), encoding="utf-8")
+
+    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
+    receipt_tampered = copy.deepcopy(receipt_data)
+    receipt_tampered["index_sha256"] = custody.sha256_file(tgt_custody / "v4_source_custody_access_index_v1.jsonl")
+    receipt_tampered["missing_report_sha256"] = custody.sha256_file(missing_path)
+    receipt_tampered["receipt_id"] = custody._make_receipt_id(
+        receipt_tampered["config_sha256"],
+        receipt_tampered["index_sha256"],
+        receipt_tampered["missing_report_sha256"],
+    )
+    (tgt_custody / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
+
+    with pytest.raises(
+        custody.CustodyAccessError, match=r"custody status claims 'RESOLVED_ACCESSIBLE' but host archive is unmounted"
+    ):
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
