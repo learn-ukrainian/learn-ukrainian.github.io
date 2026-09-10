@@ -1,0 +1,304 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v4_dataset_quality_evaluation_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "assessment_id",
+    "verdict",
+    "timestamp",
+    "assessed_pilot_receipt_sha256",
+    "assessed_pilot_records_sha256",
+    "legacy_100_slot_contract_rejected",
+    "denominator_accounting",
+    "quality_fidelity_checks",
+    "heldout_evaluation_protocol",
+    "cohort_findings",
+    "downstream_study_methodology"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v4_dataset_quality_evaluation_v1"
+    },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^eval\\.assessment\\.[a-f0-9]{24}$"
+    },
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "DATASET_QUALITY_CONFIRMED",
+        "DATASET_QUALITY_REJECTED"
+      ]
+    },
+    "timestamp": {
+      "type": "string"
+    },
+    "assessed_pilot_receipt_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "assessed_pilot_records_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "legacy_100_slot_contract_rejected": {
+      "type": "boolean",
+      "const": true
+    },
+    "denominator_accounting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_evaluated_spans",
+        "total_admitted_spans",
+        "exported_training_spans",
+        "firewalled_heldout_evaluation_spans",
+        "development_spans",
+        "quarantined_spans",
+        "rejected_spans",
+        "abstained_spans",
+        "covered_strata",
+        "operator_excluded_residuals"
+      ],
+      "properties": {
+        "total_evaluated_spans": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total_admitted_spans": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "exported_training_spans": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "firewalled_heldout_evaluation_spans": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "development_spans": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "quarantined_spans": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "rejected_spans": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "abstained_spans": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "covered_strata": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "operator_excluded_residuals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "stratum",
+              "reason",
+              "issue"
+            ],
+            "properties": {
+              "stratum": {
+                "type": "string"
+              },
+              "reason": {
+                "type": "string"
+              },
+              "issue": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    },
+    "quality_fidelity_checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "verbatim_fidelity_rate",
+        "tampering_detected",
+        "synthetic_corrections_detected",
+        "dual_view_loss_masks_valid",
+        "non_target_citations_masked",
+        "vesum_sources_validated",
+        "unattested_penalized",
+        "no_gold_from_model_agreement",
+        "split_firewall_cross_family_leaks",
+        "duplicate_spans_detected",
+        "benchmark_contamination_detected"
+      ],
+      "properties": {
+        "verbatim_fidelity_rate": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "tampering_detected": {
+          "type": "boolean",
+          "const": false
+        },
+        "synthetic_corrections_detected": {
+          "type": "boolean",
+          "const": false
+        },
+        "dual_view_loss_masks_valid": {
+          "type": "boolean",
+          "const": true
+        },
+        "non_target_citations_masked": {
+          "type": "boolean",
+          "const": true
+        },
+        "vesum_sources_validated": {
+          "type": "boolean",
+          "const": true
+        },
+        "unattested_penalized": {
+          "type": "boolean",
+          "const": false
+        },
+        "no_gold_from_model_agreement": {
+          "type": "boolean",
+          "const": true
+        },
+        "split_firewall_cross_family_leaks": {
+          "type": "integer",
+          "const": 0
+        },
+        "duplicate_spans_detected": {
+          "type": "integer",
+          "const": 0
+        },
+        "benchmark_contamination_detected": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "heldout_evaluation_protocol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "custody_firewall_enforced",
+        "consumer_views_evaluated",
+        "scoring_metrics"
+      ],
+      "properties": {
+        "custody_firewall_enforced": {
+          "type": "boolean",
+          "const": true
+        },
+        "consumer_views_evaluated": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "scoring_metrics": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "cohort_findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "cohort_id",
+          "stratum",
+          "evaluated_spans",
+          "verbatim_fidelity_confirmed",
+          "split_firewall_confirmed",
+          "verdict"
+        ],
+        "properties": {
+          "cohort_id": {
+            "type": "string"
+          },
+          "stratum": {
+            "type": "string"
+          },
+          "evaluated_spans": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "verbatim_fidelity_confirmed": {
+            "type": "boolean"
+          },
+          "split_firewall_confirmed": {
+            "type": "boolean"
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "PASS",
+              "FAIL"
+            ]
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "downstream_study_methodology": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_issue",
+        "dataset_quality_verdict",
+        "trained_model_utility_verdict",
+        "uncertainty_and_limitations"
+      ],
+      "properties": {
+        "target_issue": {
+          "type": "integer",
+          "const": 7889
+        },
+        "dataset_quality_verdict": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "FAIL"
+          ]
+        },
+        "trained_model_utility_verdict": {
+          "type": "string",
+          "enum": [
+            "PENDING_EXPERIMENTAL_STUDY",
+            "PASS",
+            "FAIL"
+          ]
+        },
+        "uncertainty_and_limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}
