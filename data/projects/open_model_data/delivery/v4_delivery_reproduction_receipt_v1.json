@@ -26,6 +26,11 @@
     "technical_report": "docs/projects/ukrainian-data-foundry-evidence/HUMAN_SOURCE_TECHNICAL_REPORT.md",
     "research_summary": "docs/projects/ukrainian-data-foundry-evidence/RESEARCH_SUMMARY.md"
   },
+  "document_digests": {
+    "dataset_card_sha256": "855d26435c9a573aadf41c4be4ed8a871452daf257c0871e82bd6268468431a6",
+    "technical_report_sha256": "fd5a24b99fa7b0fce80d0fcb0c1a60dd80e21445bab946d7aef245e1f76a1e54",
+    "research_summary_sha256": "141088482873e47950ec68bb0bbc6d15846cd95cf32a2af0d560b5c81de98b7f"
+  },
   "residuals": {
     "operator_excluded_strata": [
       "stem_technical_and_exact_sciences",

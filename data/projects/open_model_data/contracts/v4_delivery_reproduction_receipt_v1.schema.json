@@ -13,6 +13,7 @@
     "dataset_reproduction",
     "learning_study_reproduction",
     "deliverable_documents",
+    "document_digests",
     "residuals",
     "custody_retained",
     "zero_host_paths_verified",
@@ -134,6 +135,29 @@
         },
         "research_summary": {
           "type": "string"
+        }
+      }
+    },
+    "document_digests": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dataset_card_sha256",
+        "technical_report_sha256",
+        "research_summary_sha256"
+      ],
+      "properties": {
+        "dataset_card_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "technical_report_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "research_summary_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
         }
       }
     },

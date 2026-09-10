@@ -115,3 +115,59 @@ def test_verify_delivery_detects_tampered_artifact(tmp_path: Path) -> None:
     tampered_receipt2 = tmp_path / "tampered_receipt2.json"
     tampered_receipt2.write_text(json.dumps(receipt2), encoding="utf-8")
     assert verify_delivery(Path.cwd(), tampered_receipt2) is False
+
+    # Modified receipt with mismatched document digest fails verification
+    receipt3 = json.loads(DELIVERY_RECEIPT_PATH.read_text(encoding="utf-8"))
+    receipt3["document_digests"]["dataset_card_sha256"] = "0000000000000000000000000000000000000000000000000000000000000000"
+    tampered_receipt3 = tmp_path / "tampered_receipt3.json"
+    tampered_receipt3.write_text(json.dumps(receipt3), encoding="utf-8")
+    assert verify_delivery(Path.cwd(), tampered_receipt3) is False
+
+
+def test_verify_delivery_detects_tampered_document(tmp_path: Path) -> None:
+    """Verify delivery verification detects tampered or leaked deliverable documents."""
+    import shutil
+
+    # Create a mock repo root with a copied structure
+    mock_root = tmp_path / "mock_repo"
+    mock_root.mkdir(parents=True, exist_ok=True)
+
+    # Copy necessary contracts and artifacts
+    for subpath in [
+        "data/projects/open_model_data/contracts/v4_delivery_reproduction_receipt_v1.schema.json",
+        "data/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json",
+        "data/projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
+        "data/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json",
+        "data/projects/open_model_data/study/v4_learning_study_recipe_v1.json",
+        "data/projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl",
+        "data/projects/open_model_data/study/v4_learning_study_receipt_v1.json",
+        "docs/projects/ukrainian-data-foundry-evidence/HUMAN_SOURCE_DATASET_CARD.md",
+        "docs/projects/ukrainian-data-foundry-evidence/HUMAN_SOURCE_TECHNICAL_REPORT.md",
+        "docs/projects/ukrainian-data-foundry-evidence/RESEARCH_SUMMARY.md",
+        "data/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json",
+    ]:
+        src = Path.cwd() / subpath
+        dst = mock_root / subpath
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src, dst)
+
+    mock_receipt = mock_root / "data/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json"
+    assert verify_delivery(mock_root, mock_receipt) is True
+
+    # Mutating document text without updating digest fails verification
+    card = mock_root / "docs/projects/ukrainian-data-foundry-evidence/HUMAN_SOURCE_DATASET_CARD.md"
+    orig_text = card.read_text(encoding="utf-8")
+    card.write_text(orig_text + "\nTampered content", encoding="utf-8")
+    assert verify_delivery(mock_root, mock_receipt) is False
+
+    # Restoring original text passes
+    card.write_text(orig_text, encoding="utf-8")
+    assert verify_delivery(mock_root, mock_receipt) is True
+
+    # Introducing a private host path into document fails verification even if digest is recomputed
+    from scripts.projects.open_model_data.v4_reproduce_deliverables import sha256_file
+    card.write_text(orig_text + "\nLeaked path: /home/secret/user", encoding="utf-8")
+    rcpt_data = json.loads(mock_receipt.read_text(encoding="utf-8"))
+    rcpt_data["document_digests"]["dataset_card_sha256"] = sha256_file(card)
+    mock_receipt.write_text(json.dumps(rcpt_data, indent=2), encoding="utf-8")
+    assert verify_delivery(mock_root, mock_receipt) is False

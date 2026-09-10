@@ -167,6 +167,14 @@ def build_delivery_receipt(
 
     receipt_id = f"receipt.delivery.{sha256_bytes(f'{records_sha}:{study_rcpt_sha}'.encode())[:24]}"
 
+    # Hash and scan deliverable documents for private host paths
+    card_sha = sha256_file(dataset_card_path)
+    report_sha = sha256_file(tech_report_path)
+    summary_sha = sha256_file(summary_path)
+
+    for doc_path in [dataset_card_path, tech_report_path, summary_path]:
+        assert_no_private_host_paths(doc_path.read_text(encoding="utf-8"), str(doc_path.relative_to(repo_root)))
+
     delivery_data = {
         "schema_version": "v4_delivery_reproduction_receipt_v1",
         "receipt_id": receipt_id,
@@ -194,6 +202,11 @@ def build_delivery_receipt(
             "dataset_card": str(dataset_card_path.relative_to(repo_root)),
             "technical_report": str(tech_report_path.relative_to(repo_root)),
             "research_summary": str(summary_path.relative_to(repo_root)),
+        },
+        "document_digests": {
+            "dataset_card_sha256": card_sha,
+            "technical_report_sha256": report_sha,
+            "research_summary_sha256": summary_sha,
         },
         "residuals": {
             "operator_excluded_strata": OPERATOR_EXCLUDED_RESIDUALS,
@@ -240,10 +253,18 @@ def verify_delivery(
     if receipt_data.get("learning_utility_verdict") != "LEARNING_UTILITY_CONFIRMED":
         return False
 
-    # Check that referenced deliverable documents exist
-    for _, rel_path in receipt_data["deliverable_documents"].items():
+    # Check that referenced deliverable documents exist, match bound digests, and contain no private host paths
+    doc_digests = receipt_data.get("document_digests", {})
+    for doc_key, rel_path in receipt_data["deliverable_documents"].items():
         doc_path = repo_root / rel_path
         if not doc_path.exists():
+            return False
+        expected_digest = doc_digests.get(f"{doc_key}_sha256")
+        if not expected_digest or sha256_file(doc_path) != expected_digest:
+            return False
+        try:
+            assert_no_private_host_paths(doc_path.read_text(encoding="utf-8"), rel_path)
+        except ValueError:
             return False
 
     # Check and rehash dataset deliverables
