@@ -205,7 +205,7 @@ class BoundedCustodyReader:
 def check_chunk_file_lineage(
     chunk_file: Path,
     excluded_modes: Sequence[str] = ("apple_vision_ocr", "ocr", "scanned_image"),
-) -> tuple[str, bool, int, int, list[tuple[str, str]]]:
+) -> tuple[str, bool, int, int, str | None]:
     """Examine a textbook chunk file for non-OCR lineage (ACCESS-2).
 
     Validates every single row:
@@ -214,18 +214,18 @@ def check_chunk_file_lineage(
     - Unknown/non-native modes fail closed as unknown lineage.
 
     Returns:
-        (lineage_mode, is_ocr, row_count, char_count, chunk_records)
-        where chunk_records is [(chunk_id, text), ...]
+        (lineage_mode, is_ocr, row_count, char_count, content_sha256)
     """
     if not chunk_file.is_file():
-        return "unknown", False, 0, 0, []
+        return "unknown", False, 0, 0, None
 
     row_count = 0
     char_count = 0
-    chunk_records: list[tuple[str, str]] = []
+    chunk_digest = hashlib.sha256()
     has_ocr = False
     detected_ocr_mode: str | None = None
     has_unknown = False
+    seen_native_modes: set[str] = set()
 
     with chunk_file.open(encoding="utf-8") as f:
         for line in f:
@@ -240,7 +240,8 @@ def check_chunk_file_lineage(
 
             c_id = str(row.get("chunk_id", ""))
             text = str(row.get("text") or "")
-            chunk_records.append((c_id, text))
+            t_hash = hashlib.sha256(text.encode("utf-8")).hexdigest()
+            chunk_digest.update(f"{c_id}:{len(text)}:{t_hash}\n".encode())
             char_count += len(text)
 
             mode = row.get("extraction_mode")
@@ -257,19 +258,30 @@ def check_chunk_file_lineage(
                         has_ocr = True
                         if detected_ocr_mode is None:
                             detected_ocr_mode = m
-                    elif m not in ("native_text", "native_pdf_text"):
+                    elif m in ("native_text", "native_pdf_text"):
+                        seen_native_modes.add(m)
+                    else:
                         has_unknown = True
 
     if row_count == 0:
-        return "unknown", False, 0, 0, []
+        return "unknown", False, 0, 0, None
+
+    content_sha256 = chunk_digest.hexdigest()
 
     if has_ocr:
-        return detected_ocr_mode or "apple_vision_ocr", True, row_count, char_count, chunk_records
+        return detected_ocr_mode or "apple_vision_ocr", True, row_count, char_count, content_sha256
 
     if has_unknown:
-        return "unknown", False, row_count, char_count, chunk_records
+        return "unknown", False, row_count, char_count, content_sha256
 
-    return "native_pdf_text", False, row_count, char_count, chunk_records
+    if len(seen_native_modes) > 1:
+        observed_mode = "mixed_native"
+    elif "native_text" in seen_native_modes:
+        observed_mode = "native_text"
+    else:
+        observed_mode = "native_pdf_text"
+
+    return observed_mode, False, row_count, char_count, content_sha256
 
 
 def resolve_source_access(
@@ -336,7 +348,7 @@ def resolve_source_access(
         excluded_modes = cohort_cfg.get("excluded_modes", ["apple_vision_ocr", "ocr", "scanned_image"])
 
         if chunk_path is not None and chunk_path.is_file():
-            chunk_mode, chunk_is_ocr, _chunk_rows, _chunk_chars, chunk_records = check_chunk_file_lineage(
+            chunk_mode, chunk_is_ocr, _chunk_rows, _chunk_chars, chunk_digest = check_chunk_file_lineage(
                 chunk_path, excluded_modes
             )
             if chunk_is_ocr:
@@ -347,16 +359,24 @@ def resolve_source_access(
                 permitted = False
                 blocking_reason = "ocr_derived_extraction_mode_excluded"
                 custody_status = "PARTIAL_CHUNKS_AND_DB_ONLY"
-            elif chunk_mode in ("native_pdf_text", "native_text"):
+            elif chunk_mode in ("native_pdf_text", "native_text", "mixed_native"):
                 # Bind accessed database content to the verified chunk file lineage (ACCESS-2)
                 cur.execute(
                     f"SELECT chunk_id, text FROM {table} WHERE source_file = ? ORDER BY id ASC",
                     (source_file,),
                 )
-                db_rows = cur.fetchall()
-                db_records_list = [(str(r[0]), str(r[1] or "")) for r in db_rows]
+                db_digest = hashlib.sha256()
+                db_records_count = 0
+                while batch := cur.fetchmany(1000):
+                    for r_chunk_id, r_text in batch:
+                        db_records_count += 1
+                        t = r_text or ""
+                        t_hash = hashlib.sha256(t.encode("utf-8")).hexdigest()
+                        db_digest.update(f"{r_chunk_id}:{len(t)}:{t_hash}\n".encode())
 
-                if not db_records_list:
+                db_stream_hash = db_digest.hexdigest() if db_records_count > 0 else None
+
+                if db_records_count == 0:
                     lineage_status = "UNKNOWN_LINEAGE"
                     lineage_mode = "unknown"
                     evidence_ref = f"{chunk_ref}#missing_db"
@@ -364,7 +384,7 @@ def resolve_source_access(
                     permitted = False
                     blocking_reason = "source_records_not_found_in_database"
                     custody_status = "PARTIAL_CHUNKS_AND_DB_ONLY"
-                elif db_records_list != chunk_records:
+                elif db_records_count != _chunk_rows or db_stream_hash != chunk_digest:
                     # Database content does not match verified chunk lineage
                     lineage_status = "UNKNOWN_LINEAGE"
                     lineage_mode = "unknown"
@@ -375,7 +395,7 @@ def resolve_source_access(
                     custody_status = "PARTIAL_CHUNKS_AND_DB_ONLY"
                 else:
                     lineage_status = "CONFIRMED_NATIVE"
-                    lineage_mode = "native_pdf_text"
+                    lineage_mode = chunk_mode
                     evidence_ref = f"{chunk_ref}#extraction_mode"
                     is_ocr = False
                     permitted = True
@@ -479,7 +499,7 @@ def build(
     output_root: Path,
 ) -> dict[str, Any]:
     """Execute custody resolution and lineage audit (ACCESS-1..4)."""
-    roots = [Path.cwd(), input_root]
+    roots = [input_root, Path.cwd()]
     config, resolved_config_path = _load_config(config_path, roots)
     config_sha256 = sha256_file(resolved_config_path)
 
@@ -726,7 +746,7 @@ def verify(
     output_root: Path,
 ) -> bool:
     """Verify committed custody artifacts against contracts and invariants."""
-    roots = [Path.cwd(), input_root]
+    roots = [input_root, Path.cwd()]
     config, resolved_config_path = _load_config(config_path, roots)
     expected_config_sha256 = sha256_file(resolved_config_path)
 

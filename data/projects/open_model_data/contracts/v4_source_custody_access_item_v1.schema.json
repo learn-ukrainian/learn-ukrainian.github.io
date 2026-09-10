@@ -108,6 +108,8 @@
           "enum": [
             "native_digital_source",
             "native_pdf_text",
+            "native_text",
+            "mixed_native",
             "apple_vision_ocr",
             "ocr",
             "scanned_image",

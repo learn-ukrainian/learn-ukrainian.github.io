@@ -126,12 +126,26 @@ def test_check_chunk_file_lineage_native(tmp_path: Path) -> None:
     ]
     chunk_file.write_text("\n".join(json.dumps(r) for r in rows) + "\n", encoding="utf-8")
 
-    mode, is_ocr, count, chars, records = custody.check_chunk_file_lineage(chunk_file)
-    assert mode == "native_pdf_text"
+    mode, is_ocr, count, chars, digest = custody.check_chunk_file_lineage(chunk_file)
+    assert mode == "mixed_native"
     assert is_ocr is False
     assert count == 2
     assert chars > 0
-    assert len(records) == 2
+    assert digest is not None
+
+
+def test_check_chunk_file_lineage_pure_native_text(tmp_path: Path) -> None:
+    chunk_file = tmp_path / "native_text_sample.jsonl"
+    rows = [
+        {"chunk_id": "c1", "extraction_mode": "native_text", "text": "Привіт."},
+    ]
+    chunk_file.write_text("\n".join(json.dumps(r) for r in rows) + "\n", encoding="utf-8")
+
+    mode, is_ocr, count, _chars, digest = custody.check_chunk_file_lineage(chunk_file)
+    assert mode == "native_text"
+    assert is_ocr is False
+    assert count == 1
+    assert digest is not None
 
 
 def test_check_chunk_file_lineage_ocr_excluded(tmp_path: Path) -> None:
@@ -147,7 +161,7 @@ def test_check_chunk_file_lineage_ocr_excluded(tmp_path: Path) -> None:
     ]
     chunk_file.write_text("\n".join(json.dumps(r) for r in rows) + "\n", encoding="utf-8")
 
-    mode, is_ocr, count, _chars, _records = custody.check_chunk_file_lineage(chunk_file)
+    mode, is_ocr, count, _chars, _digest = custody.check_chunk_file_lineage(chunk_file)
     assert mode == "apple_vision_ocr"
     assert is_ocr is True
     assert count == 2
@@ -160,7 +174,7 @@ def test_check_chunk_file_lineage_unknown_fails_closed(tmp_path: Path) -> None:
     ]
     chunk_file.write_text("\n".join(json.dumps(r) for r in rows) + "\n", encoding="utf-8")
 
-    mode, is_ocr, _count, _chars, _records = custody.check_chunk_file_lineage(chunk_file)
+    mode, is_ocr, _count, _chars, _digest = custody.check_chunk_file_lineage(chunk_file)
     assert mode == "unknown"
     assert is_ocr is False
 
@@ -174,7 +188,7 @@ def test_check_chunk_file_lineage_unlabelled_mixed_row_fails_closed(tmp_path: Pa
     ]
     chunk_file.write_text("\n".join(json.dumps(r) for r in rows) + "\n", encoding="utf-8")
 
-    mode, is_ocr, count, _chars, _records = custody.check_chunk_file_lineage(chunk_file)
+    mode, is_ocr, count, _chars, _digest = custody.check_chunk_file_lineage(chunk_file)
     assert mode == "unknown"
     assert is_ocr is False
     assert count == 2
@@ -828,10 +842,22 @@ def test_check_chunk_file_lineage_preserves_excluded_mode(tmp_path: Path) -> Non
     ]
     chunk_file.write_text("\n".join(json.dumps(r) for r in rows) + "\n", encoding="utf-8")
 
-    mode, is_ocr, count, _chars, _records = custody.check_chunk_file_lineage(chunk_file)
+    mode, is_ocr, count, _chars, _digest = custody.check_chunk_file_lineage(chunk_file)
     assert mode == "scanned_image"
     assert is_ocr is True
     assert count == 1
+
+
+def test_input_root_takes_precedence_over_cwd(tmp_path: Path) -> None:
+    custom_input = tmp_path / "input"
+    prov_dir = custom_input / "data/projects/open_model_data/provenance"
+    prov_dir.mkdir(parents=True)
+    custom_prov = prov_dir / "v4_source_provenance_index_v1.jsonl"
+    custom_prov.write_text("CUSTOM_PROV_HEADER\n", encoding="utf-8")
+
+    rel_path = Path("data/projects/open_model_data/provenance/v4_source_provenance_index_v1.jsonl")
+    resolved = custody._resolve_file(rel_path, [custom_input, Path.cwd()])
+    assert resolved == custom_prov
 
 
 def test_verify_detects_cohort_id_mismatch_in_summary(tmp_path: Path, repo_root: Path) -> None:
