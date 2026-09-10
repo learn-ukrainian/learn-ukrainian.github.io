@@ -1781,7 +1781,8 @@ def verify(
                 if m_item is not None:
                     expected_missing_items.append(m_item)
     finally:
-        db_conn.close()
+        if db_conn is not None:
+            db_conn.close()
 
     if header.get("records") != record_count:
         raise CustodyAccessError(f"Index header record count {header.get('records')} != observed {record_count}")
