@@ -1,0 +1,54 @@
+{
+  "schema_version": "v4_source_custody_access_config_v1",
+  "operator_decision": {
+    "date": "2026-09-10",
+    "issue": 7884,
+    "parent_epic": 7423,
+    "summary": "Resolve existing non-OCR source access in custody; confirm native digital text or native PDF text layer with non-OCR extraction lineage; exclude OCR-derived text; make bounded read path executable without broad recollection or copying corpus content; record affected missing paths and owner while permitting another already accessible eligible source to proceed."
+  },
+  "inputs": {
+    "provenance_index": "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl",
+    "provenance_receipt": "data/projects/open_model_data/provenance/v4_provenance_restoration_receipt_v1.json",
+    "database": "data/sources.db",
+    "textbook_chunks_dir": "data/textbook_chunks",
+    "retained_archive_locator": "gdrive:learn-ukrainian-data/textbooks"
+  },
+  "outputs": {
+    "index": "data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+    "missing_report": "data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json",
+    "receipt": "data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json"
+  },
+  "cohorts": [
+    {
+      "cohort_id": "literary-non-ocr",
+      "source_family": "literary",
+      "resolver_kind": "sqlite_database",
+      "primary_store": "sqlite:sources.db#literary_texts",
+      "lineage_rule": "native_digital_source",
+      "excluded_modes": [
+        "apple_vision_ocr",
+        "ocr",
+        "scanned_image"
+      ],
+      "archive_locator": "gdrive:learn-ukrainian-data/literary_texts"
+    },
+    {
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "source_family": "public_textbooks",
+      "resolver_kind": "hybrid_sqlite_chunks_archive",
+      "primary_store": "sqlite:sources.db#textbooks",
+      "chunks_dir": "data/textbook_chunks",
+      "archive_locator": "gdrive:learn-ukrainian-data/textbooks",
+      "lineage_rule": "native_pdf_text",
+      "excluded_modes": [
+        "apple_vision_ocr",
+        "ocr",
+        "scanned_image"
+      ]
+    }
+  ],
+  "ownership": {
+    "unmounted_archive_owner": "existing custody/source-access owner",
+    "blocks_scope": "extraction of affected selected inputs, not all dataset work"
+  }
+}

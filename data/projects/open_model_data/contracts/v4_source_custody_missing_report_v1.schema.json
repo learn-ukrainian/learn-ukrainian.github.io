@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v4_source_custody_missing_report_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "operator_decision_date",
+    "issue",
+    "owner",
+    "scope",
+    "unmounted_archive_locator",
+    "missing_inputs",
+    "accessible_eligible_sources_permitted_to_proceed"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v4_source_custody_missing_report_v1"
+    },
+    "operator_decision_date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "issue": {
+      "type": "integer"
+    },
+    "owner": {
+      "type": "string"
+    },
+    "scope": {
+      "type": "string"
+    },
+    "unmounted_archive_locator": {
+      "type": "string"
+    },
+    "missing_inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "source_locator",
+          "cohort_id",
+          "missing_path_ref",
+          "reason",
+          "owner",
+          "blocks"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string"
+          },
+          "source_locator": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "source_file"
+            ],
+            "properties": {
+              "source_file": {
+                "type": "string"
+              }
+            }
+          },
+          "cohort_id": {
+            "type": "string"
+          },
+          "missing_path_ref": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "blocks": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "accessible_eligible_sources_permitted_to_proceed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "permitted",
+        "description",
+        "permitted_cohort_ids"
+      ],
+      "properties": {
+        "permitted": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string"
+        },
+        "permitted_cohort_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

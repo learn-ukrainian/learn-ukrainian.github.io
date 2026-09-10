@@ -1,0 +1,1359 @@
+{
+  "schema_version": "v4_source_custody_missing_report_v1",
+  "operator_decision_date": "2026-09-10",
+  "issue": 7884,
+  "owner": "existing custody/source-access owner",
+  "scope": "extraction of affected selected inputs, not all dataset work",
+  "unmounted_archive_locator": "gdrive:learn-ukrainian-data/textbooks",
+  "missing_inputs": [
+    {
+      "source_id": "source.public_textbooks.00cebc897bb7feab776c42a8",
+      "source_locator": {
+        "source_file": "9-klas-mystetstvo-masol-2017"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/9-klas-mystetstvo-masol-2017.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.01864efa3c583ee449d77fe1",
+      "source_locator": {
+        "source_file": "1-klas-bukvar-zaharijchuk-2025-1"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/1-klas-bukvar-zaharijchuk-2025-1.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.05906f37ccdd6efc9b283628",
+      "source_locator": {
+        "source_file": "11-klas-ekonomika-homiak-2019"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/11-klas-ekonomika-homiak-2019.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.07604d78ce2a01cae6661e9b",
+      "source_locator": {
+        "source_file": "3-klas-ukrainska-mova-vashulenko-2020-1"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/3-klas-ukrainska-mova-vashulenko-2020-1.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.08ed8349053ac56e8fa4f6ed",
+      "source_locator": {
+        "source_file": "5-klas-zdorovia-vorontsova-2022"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/5-klas-zdorovia-vorontsova-2022.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.0b008fa5c44c22b748a385c1",
+      "source_locator": {
+        "source_file": "7-klas-zdorovia-guschyna-2024"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/7-klas-zdorovia-guschyna-2024.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.0b6108625117447b874127e2",
+      "source_locator": {
+        "source_file": "8-klas-istoria-ukr-hlibovska-2025"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/8-klas-istoria-ukr-hlibovska-2025.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.0cd3037087873d7abeb84895",
+      "source_locator": {
+        "source_file": "7-klas-ukrmova-avramenko-2024"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/7-klas-ukrmova-avramenko-2024.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.0d6901d7aac83d0c6e9fc34f",
+      "source_locator": {
+        "source_file": "5-klas-zarubizhna-literatura-voloshchuk-2022"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/5-klas-zarubizhna-literatura-voloshchuk-2022.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.0ff382f420fb306c56f0c9c4",
+      "source_locator": {
+        "source_file": "antonenko-davydovych-yak-my-hovorymo"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/antonenko-davydovych-yak-my-hovorymo.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.122033dcd9057de3f75fd816",
+      "source_locator": {
+        "source_file": "2-klas-ukrmova-bolshakova-2019-2"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/2-klas-ukrmova-bolshakova-2019-2.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.142e3bdbda4d76cff625a0a2",
+      "source_locator": {
+        "source_file": "8-klas-zarlit-voloschuk-2025"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/8-klas-zarlit-voloschuk-2025.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.1562cbfcc0d32d5ab5fe3106",
+      "source_locator": {
+        "source_file": "10-klas-zakhyst-fuka-2023"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/10-klas-zakhyst-fuka-2023.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.17b572968a4198849a0c1dcb",
+      "source_locator": {
+        "source_file": "10-klas-ukrmova-glazova-2018"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/10-klas-ukrmova-glazova-2018.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.18be833ae5f956d50a15dd2f",
+      "source_locator": {
+        "source_file": "11-klas-istoriya-ukr-galimov-2024"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/11-klas-istoriya-ukr-galimov-2024.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.1913447e257b53974f1e98ed",
+      "source_locator": {
+        "source_file": "6-klas-etyka-martyniuk-2023"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/6-klas-etyka-martyniuk-2023.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.1a3a9d0d901abb944fbde462",
+      "source_locator": {
+        "source_file": "4-klas-ukrayinska-mova-ponomarova-2021-1"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/4-klas-ukrayinska-mova-ponomarova-2021-1.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.1cd415359eb40a99dce84c88",
+      "source_locator": {
+        "source_file": "7-klas-ukrmova-litvinova-2024"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/7-klas-ukrmova-litvinova-2024.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.1d29c935c44e5fc5eb671089",
+      "source_locator": {
+        "source_file": "5-klas-ukrlit-zabolotnyi-2022"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/5-klas-ukrlit-zabolotnyi-2022.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.1ffb46dda43bc527c24a47c3",
+      "source_locator": {
+        "source_file": "8-klas-finans-plastun-2025"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/8-klas-finans-plastun-2025.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.220351154673e32a14a18048",
+      "source_locator": {
+        "source_file": "9-klas-geografiia-boiko-2026"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/9-klas-geografiia-boiko-2026.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.22b0888cb6ec24be3d1bb311",
+      "source_locator": {
+        "source_file": "11-klas-geografija-pestushko-2019"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/11-klas-geografija-pestushko-2019.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.2684dd10ff7597378500fc2e",
+      "source_locator": {
+        "source_file": "7-klas-zarlit-voloschuk-2024"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/7-klas-zarlit-voloschuk-2024.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.290d54bf815858ae3d7c261c",
+      "source_locator": {
+        "source_file": "pohribnyi-ukrainska-literaturna-vymova-1992"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/pohribnyi-ukrainska-literaturna-vymova-1992.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.293a4ac1296e36db31728a0c",
+      "source_locator": {
+        "source_file": "1-klas-bukvar-zaharijchuk-2025-2"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/1-klas-bukvar-zaharijchuk-2025-2.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.2a45d430852faa69be3f9428",
+      "source_locator": {
+        "source_file": "10-klas-ukrajinska-mova-avramenko-2018"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/10-klas-ukrajinska-mova-avramenko-2018.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.2a6421de9812cacf49aefaf5",
+      "source_locator": {
+        "source_file": "9-klas-ukrajinska-mova-avramenko-2017"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/9-klas-ukrajinska-mova-avramenko-2017.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.2d3810d53bd6d6387f1e2157",
+      "source_locator": {
+        "source_file": "5-klas-etyka-meleshchenko-2022"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/5-klas-etyka-meleshchenko-2022.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.2e89b23e3cd7a286616a32f4",
+      "source_locator": {
+        "source_file": "10-klas-ukrlit-borzenko-2018-prof"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/10-klas-ukrlit-borzenko-2018-prof.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.31bf642a4c022e5da26e34e4",
+      "source_locator": {
+        "source_file": "2-klas-ukrmova-kravcova-2019-2"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/2-klas-ukrmova-kravcova-2019-2.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.320c2bcaed49104332e74b0c",
+      "source_locator": {
+        "source_file": "9-klas-istorija-ukrajini-gisem-2017"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/9-klas-istorija-ukrajini-gisem-2017.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.36485812b3cd034a6c8ded50",
+      "source_locator": {
+        "source_file": "11-klas-ukrajinska-mova-glazova-2019"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/11-klas-ukrajinska-mova-glazova-2019.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.36bd252a42c7c7eb1a54d465",
+      "source_locator": {
+        "source_file": "7-klas-istoria-ukr-pometun-2024"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/7-klas-istoria-ukr-pometun-2024.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.3a672f5c26596b13f217461f",
+      "source_locator": {
+        "source_file": "4-klas-ukrayinska-mova-savchenko-2021-2"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/4-klas-ukrayinska-mova-savchenko-2021-2.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.3c317c0b031a76f395d404fa",
+      "source_locator": {
+        "source_file": "9-klas-ukrmova-zabolotnyi-2017"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/9-klas-ukrmova-zabolotnyi-2017.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.3d8c9692f0eda22b2713df90",
+      "source_locator": {
+        "source_file": "10-klas-ukrmova-karaman-2018"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/10-klas-ukrmova-karaman-2018.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.40f1253fd4637beaf9818fdf",
+      "source_locator": {
+        "source_file": "2-klas-ukrmova-vashulenko-2019-1"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/2-klas-ukrmova-vashulenko-2019-1.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.439519db1bd5ab0133aae69e",
+      "source_locator": {
+        "source_file": "6-klas-ukrlit-avramenko-2023"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/6-klas-ukrlit-avramenko-2023.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.4b4b00ca596bcac1e4daa675",
+      "source_locator": {
+        "source_file": "10-11-klas-mystectvo-nazarenko-2018"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/10-11-klas-mystectvo-nazarenko-2018.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.5171d6d3353d943d1ff7726f",
+      "source_locator": {
+        "source_file": "10-klas-ukrmova-zabolotnyi-2018"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/10-klas-ukrmova-zabolotnyi-2018.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.578a9a8a72104b1818b6d315",
+      "source_locator": {
+        "source_file": "8-klas-ukrmova-onatiy-2025"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/8-klas-ukrmova-onatiy-2025.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.594045104561b00d16bf7e72",
+      "source_locator": {
+        "source_file": "8-klas-istoria-ukr-galimov-2025"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/8-klas-istoria-ukr-galimov-2025.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.5b1fda1b01302f342c161916",
+      "source_locator": {
+        "source_file": "7-klas-mystetstvo-masol-2024"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/7-klas-mystetstvo-masol-2024.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.5f1882d9c9b9ba11bac728ad",
+      "source_locator": {
+        "source_file": "11-klas-zakhist-vitchizni-gudima-2019-med"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/11-klas-zakhist-vitchizni-gudima-2019-med.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.602074727581c677b63bba38",
+      "source_locator": {
+        "source_file": "8-klas-mystetstvo-komarovska-2025"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/8-klas-mystetstvo-komarovska-2025.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.61e5d9b1b77a5f778b4cee92",
+      "source_locator": {
+        "source_file": "6-klas-ukrmova-golub-2023"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/6-klas-ukrmova-golub-2023.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.61ef02ddec8e3fe9fbe05cc9",
+      "source_locator": {
+        "source_file": "11-klas-ukrmova-zabolotnyi-2019"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/11-klas-ukrmova-zabolotnyi-2019.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.638b42d90627a586ce8aca40",
+      "source_locator": {
+        "source_file": "7-klas-ukrlit-avramenko-2024"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/7-klas-ukrlit-avramenko-2024.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.67b1a7a45117a2264a6b1e57",
+      "source_locator": {
+        "source_file": "11-klas-ukrajinska-mova-voron-2019"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/11-klas-ukrajinska-mova-voron-2019.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.69e0c9f8abd9391943d567ca",
+      "source_locator": {
+        "source_file": "8-klas-ukrmova-zabolotnyi-2025"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/8-klas-ukrmova-zabolotnyi-2025.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.6b58da6203168ee9251ff3fc",
+      "source_locator": {
+        "source_file": "7-klas-ukrlit-mishhenko-2015"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/7-klas-ukrlit-mishhenko-2015.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.704b4fdc2602c415b8763bb8",
+      "source_locator": {
+        "source_file": "6-klas-ukrlit-kovalenko-2023"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/6-klas-ukrlit-kovalenko-2023.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.7211f9364fb9cbedf5e5a94c",
+      "source_locator": {
+        "source_file": "7-klas-istoria-ukr-galimov-2024"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/7-klas-istoria-ukr-galimov-2024.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.750a4bb14216e087ae3d69e8",
+      "source_locator": {
+        "source_file": "11-klas-istoriya-ukr-hlibovska-2024"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/11-klas-istoriya-ukr-hlibovska-2024.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.7679a42184ad6a4e052e3e8c",
+      "source_locator": {
+        "source_file": "10-klas-zarubizhna-literatura-voloshhuk-2018"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/10-klas-zarubizhna-literatura-voloshhuk-2018.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.78c1632b5213f3eafe6b1126",
+      "source_locator": {
+        "source_file": "11-klas-zarubizhna-literatura-voloshhuk-2019"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/11-klas-zarubizhna-literatura-voloshhuk-2019.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.7bceadcafb80197eb30a7aa6",
+      "source_locator": {
+        "source_file": "6-klas-ukrmova-zabolotnyi-2020"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/6-klas-ukrmova-zabolotnyi-2020.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.7c33c1c2042a179cbda04fcd",
+      "source_locator": {
+        "source_file": "2-klas-ukrmova-kravcova-2019-1"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/2-klas-ukrmova-kravcova-2019-1.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.7d4717e183950e8c6bf3cbb6",
+      "source_locator": {
+        "source_file": "8-klas-ukrlit-avramenko-2025"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/8-klas-ukrlit-avramenko-2025.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.7effed7823944ca9a04a4f4f",
+      "source_locator": {
+        "source_file": "3-klas-ukrainska-mova-ponomarova-2020-1"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/3-klas-ukrainska-mova-ponomarova-2020-1.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.7f023dc2dc8f3e1a9e43a0b2",
+      "source_locator": {
+        "source_file": "5-klas-ukrmova-golub-2022"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/5-klas-ukrmova-golub-2022.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.817b2df0005d70c1b0b45ed3",
+      "source_locator": {
+        "source_file": "6-klas-istoriya-gisem-2023"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/6-klas-istoriya-gisem-2023.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.839bc044fdb19353c96fb707",
+      "source_locator": {
+        "source_file": "11-klas-istoriya-vsesvit-schupak-2024"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/11-klas-istoriya-vsesvit-schupak-2024.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.843690d099adc726ed3b395d",
+      "source_locator": {
+        "source_file": "11-klas-ukrlit-borzenko-2019-prof"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/11-klas-ukrlit-borzenko-2019-prof.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.84f2bd70ba7d9bc647e97a0f",
+      "source_locator": {
+        "source_file": "2-klas-ukrmova-vashulenko-2019-2"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/2-klas-ukrmova-vashulenko-2019-2.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.88fa99786655a6c8b17cec8b",
+      "source_locator": {
+        "source_file": "4-klas-ukrayinska-mova-varzatska-2021-1"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/4-klas-ukrayinska-mova-varzatska-2021-1.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.89625c7c6bbccd388e082748",
+      "source_locator": {
+        "source_file": "3-klas-ukrainska-mova-kravtsova-2020-1"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/3-klas-ukrainska-mova-kravtsova-2020-1.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.8bb7de4444ccbc35486cd308",
+      "source_locator": {
+        "source_file": "9-klas-hromadianska-osvita-pometun-2026"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/9-klas-hromadianska-osvita-pometun-2026.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.8d9977174944fa7a603dd4ed",
+      "source_locator": {
+        "source_file": "10-klas-istorija-ukrajiny-gisem-2018"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/10-klas-istorija-ukrajiny-gisem-2018.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.8dab73bc9ad5b785edddf8cd",
+      "source_locator": {
+        "source_file": "4-klas-ukrmova-zaharijchuk"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/4-klas-ukrmova-zaharijchuk.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.920f9629a118d9f3b8d573b1",
+      "source_locator": {
+        "source_file": "8-klas-heohrafiya-hilberh-2025"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/8-klas-heohrafiya-hilberh-2025.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.9495b2c5144a5df90a364e34",
+      "source_locator": {
+        "source_file": "11-klas-pravoznavstvo-narovlianskyi-2019"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/11-klas-pravoznavstvo-narovlianskyi-2019.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.95428ac91fef841020a4f406",
+      "source_locator": {
+        "source_file": "9-klas-zarubizhna-literatura-kovbasenko-2026"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/9-klas-zarubizhna-literatura-kovbasenko-2026.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.9602e1070a51d7365bb7dfdb",
+      "source_locator": {
+        "source_file": "6-klas-zdorovia-vorontsova-2023"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/6-klas-zdorovia-vorontsova-2023.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.96bee2ccf2a7445cdcc6cacd",
+      "source_locator": {
+        "source_file": "5-klas-ukrmova-zabolotnyi-2023"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/5-klas-ukrmova-zabolotnyi-2023.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.97b72a41f58b3ce91e9b312d",
+      "source_locator": {
+        "source_file": "8-klas-istoriya-ukr-gisem-2021"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/8-klas-istoriya-ukr-gisem-2021.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.9865a5a5ad1de82ec3afc008",
+      "source_locator": {
+        "source_file": "4-klas-ukrayinska-mova-zaharijchuk-2021-1"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/4-klas-ukrayinska-mova-zaharijchuk-2021-1.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.99496f3e720c26422914278f",
+      "source_locator": {
+        "source_file": "7-klas-istoria-ukr-hlibovska-2024"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/7-klas-istoria-ukr-hlibovska-2024.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.9d60b4ae72a6666af3d90b65",
+      "source_locator": {
+        "source_file": "7-klas-heohrafiya-hilberh-2024"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/7-klas-heohrafiya-hilberh-2024.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.9e405331fd2403844fe71700",
+      "source_locator": {
+        "source_file": "8-klas-ukrmova-avramenko-2025"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/8-klas-ukrmova-avramenko-2025.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.9eb5c52965c939a8f71f60d4",
+      "source_locator": {
+        "source_file": "5-klas-ukrlit-avramenko-2022"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/5-klas-ukrlit-avramenko-2022.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.a1f602955d5bf60afdb0f8a5",
+      "source_locator": {
+        "source_file": "8-klas-istoria-vsesvitnia-ladychenko-2025"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/8-klas-istoria-vsesvitnia-ladychenko-2025.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.a38a81420f84d7f1b485b708",
+      "source_locator": {
+        "source_file": "10-klas-ukrajinska-mova-zabolotnij-2018"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/10-klas-ukrajinska-mova-zabolotnij-2018.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.a4c9ae0aacd686e6ead57f56",
+      "source_locator": {
+        "source_file": "11-klas-ukrajinska-literatura-avramenko-2019"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/11-klas-ukrajinska-literatura-avramenko-2019.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.ac9f8782c6f47c83d9786080",
+      "source_locator": {
+        "source_file": "5-klas-istoriya-schupak-2022"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/5-klas-istoriya-schupak-2022.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.ad49c1b47901a1c72d7afede",
+      "source_locator": {
+        "source_file": "9-klas-ukrajinska-literatura-mishhenko-2017"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/9-klas-ukrajinska-literatura-mishhenko-2017.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.ad64b61d2f990bea0bdecc16",
+      "source_locator": {
+        "source_file": "4-klas-ukrayinska-mova-kravtsova-2021-1"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/4-klas-ukrayinska-mova-kravtsova-2021-1.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.b0ea88cd703ad5c15fca55a7",
+      "source_locator": {
+        "source_file": "10-klas-ekonomika-krupska-2018"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/10-klas-ekonomika-krupska-2018.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.b1fa2081c716a27f12bbe887",
+      "source_locator": {
+        "source_file": "8-klas-ukrlit-zabolotnyi-2025"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/8-klas-ukrlit-zabolotnyi-2025.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.b2255e02fbbd5498c02f5752",
+      "source_locator": {
+        "source_file": "10-klas-hromadianska-gisem-2018"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/10-klas-hromadianska-gisem-2018.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.b49c97cc2d6461faa516dcc8",
+      "source_locator": {
+        "source_file": "3-klas-ukrainska-mova-savchuk-2020-2"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/3-klas-ukrainska-mova-savchuk-2020-2.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.b506a89c471eb5472094db94",
+      "source_locator": {
+        "source_file": "9-klas-ukrajinska-mova-zabolotnij-2017"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/9-klas-ukrajinska-mova-zabolotnij-2017.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.b71365af198f5760160c265c",
+      "source_locator": {
+        "source_file": "9-klas-vsesvitnia-istoriia-pometun-2026"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/9-klas-vsesvitnia-istoriia-pometun-2026.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.bddb293796917fb5d7b74bc2",
+      "source_locator": {
+        "source_file": "6-klas-mystetstvo-rublia-2023"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/6-klas-mystetstvo-rublia-2023.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.bf119bc1e290c1b8470cea5f",
+      "source_locator": {
+        "source_file": "3-klas-ukrainska-mova-savchenko-2020-2"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/3-klas-ukrainska-mova-savchenko-2020-2.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.c11c800e6caef56719d35bb0",
+      "source_locator": {
+        "source_file": "8-klas-istoria-ukr-schupak-2025"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/8-klas-istoria-ukr-schupak-2025.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.c682e6ea24f85016de8577e5",
+      "source_locator": {
+        "source_file": "9-klas-istorija-ukrajini-burnejko-2017"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/9-klas-istorija-ukrajini-burnejko-2017.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.c6884c15dc46eb58a453af5a",
+      "source_locator": {
+        "source_file": "10-klas-geografija-bojko-2018"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/10-klas-geografija-bojko-2018.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.c696f04b6709f07d35b1babe",
+      "source_locator": {
+        "source_file": "9-klas-ukrajinska-mova-voron-2017"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/9-klas-ukrajinska-mova-voron-2017.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.c94b6ac4da72ce5d322c57ff",
+      "source_locator": {
+        "source_file": "6-klas-ukrmova-avramenko-2023"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/6-klas-ukrmova-avramenko-2023.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.ca13f0304455021c22cae6a7",
+      "source_locator": {
+        "source_file": "5-klas-ukrmova-litvinova-2022"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/5-klas-ukrmova-litvinova-2022.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.d07af29037ea4dbac9eb17fd",
+      "source_locator": {
+        "source_file": "11-klas-ukrajinska-mova-avramenko-2019"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/11-klas-ukrajinska-mova-avramenko-2019.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.d1560b31baba1f6703668ac8",
+      "source_locator": {
+        "source_file": "5-klas-ukrmova-avramenko-2022"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/5-klas-ukrmova-avramenko-2022.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.d3f12e7f4a4313b59178593a",
+      "source_locator": {
+        "source_file": "10-klas-ukrajinska-literatura-avramenko-2018"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/10-klas-ukrajinska-literatura-avramenko-2018.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.d76f3c05196072ab7aefbd27",
+      "source_locator": {
+        "source_file": "3-klas-ukrainska-mova-vashulenko-2020-2"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/3-klas-ukrainska-mova-vashulenko-2020-2.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.d7b4779a4b0da8608b4713a6",
+      "source_locator": {
+        "source_file": "10-klas-vsesvitnia-istoriia-gisem-2018-stand"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/10-klas-vsesvitnia-istoriia-gisem-2018-stand.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.d7ebb10fd1d165d30e65fab5",
+      "source_locator": {
+        "source_file": "7-klas-istoria-vsesvitnia-ladychenko-2024"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/7-klas-istoria-vsesvitnia-ladychenko-2024.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.e1ce72029af163e109ca8f4b",
+      "source_locator": {
+        "source_file": "1-klas-bukvar-bolshakova-2018-2"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/1-klas-bukvar-bolshakova-2018-2.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.e2c1126ffe14640c68007ea3",
+      "source_locator": {
+        "source_file": "10-klas-pravoznavstvo-lukianchykov-2018"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/10-klas-pravoznavstvo-lukianchykov-2018.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.e4f56ed1ddb20ace7d07ab82",
+      "source_locator": {
+        "source_file": "6-klas-heohrafiya-zapotockyi-2023"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/6-klas-heohrafiya-zapotockyi-2023.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.e5aac8b855b0546198281237",
+      "source_locator": {
+        "source_file": "1-klas-bukvar-bolshakova-2018-1"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/1-klas-bukvar-bolshakova-2018-1.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.e5c4b94e68514d879957ce36",
+      "source_locator": {
+        "source_file": "7-klas-ukrlit-zabolotnyi-2024"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/7-klas-ukrlit-zabolotnyi-2024.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.ea7ac780f55916a4fb5956a5",
+      "source_locator": {
+        "source_file": "9-klas-ukrajinska-literatura-avramenko-2017"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/9-klas-ukrajinska-literatura-avramenko-2017.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.ea8ab82ed7f751adb85e718e",
+      "source_locator": {
+        "source_file": "8-klas-hromadianska-osvita-vasylkiv-2025"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/8-klas-hromadianska-osvita-vasylkiv-2025.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.eb3f2a1dff7b00a308047bcd",
+      "source_locator": {
+        "source_file": "7-klas-ukrmova-zabolotnyi-2024"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/7-klas-ukrmova-zabolotnyi-2024.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.ec4fdbba35078e24599c7769",
+      "source_locator": {
+        "source_file": "6-klas-ukrmova-litvinova-2023"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/6-klas-ukrmova-litvinova-2023.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.edacc05cddda817a5c321ae0",
+      "source_locator": {
+        "source_file": "6-klas-istoriia-shchupak-2023"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/6-klas-istoriia-shchupak-2023.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.f1d814e4afa1c94835035290",
+      "source_locator": {
+        "source_file": "11-klas-istoriya-ukr-gisem-2024"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/11-klas-istoriya-ukr-gisem-2024.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.f349878f24516e12b6ced23c",
+      "source_locator": {
+        "source_file": "8-klas-zdorovia-vasylenko-2025"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/8-klas-zdorovia-vasylenko-2025.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.f3e6889be98448e75ea03e1f",
+      "source_locator": {
+        "source_file": "2-klas-ukrmova-bolshakova-2019-1"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/2-klas-ukrmova-bolshakova-2019-1.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.f55dc35eb0cea204e7b7da8c",
+      "source_locator": {
+        "source_file": "6-klas-ukrlit-zabolotnyi-2023"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/6-klas-ukrlit-zabolotnyi-2023.pdf",
+      "reason": "execution_host_resolver_unmounted_and_missing_chunks",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    },
+    {
+      "source_id": "source.public_textbooks.f7025cba630a3eccd0e8e866",
+      "source_locator": {
+        "source_file": "5-klas-mystetstvo-rublia-2022"
+      },
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "missing_path_ref": "gdrive:learn-ukrainian-data/textbooks/5-klas-mystetstvo-rublia-2022.pdf",
+      "reason": "execution_host_resolver_unmounted",
+      "owner": "existing custody/source-access owner",
+      "blocks": "direct PDF byte extraction for this source"
+    }
+  ],
+  "accessible_eligible_sources_permitted_to_proceed": {
+    "permitted": true,
+    "description": "First eligible cohort (literary-non-ocr) is 100% accessible and verified non-OCR; accessible native textbooks with verified chunk and DB presence are also permitted to proceed.",
+    "permitted_cohort_ids": [
+      "literary-non-ocr"
+    ]
+  }
+}

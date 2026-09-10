@@ -1,0 +1,41 @@
+{
+  "schema_version": "v4_source_custody_access_receipt_v1",
+  "receipt_id": "receipt.custody.085056abf1ded0e400037d6a",
+  "config_sha256": "6973cedc3b4a572064236a77405f7b8f15db3a85a0d6e76505d52d62e934ba07",
+  "index_sha256": "5a0d9686c5ddc5f64addf8138b3e25b343a4b6c48d2f2df2b78b870e985e5189",
+  "missing_report_sha256": "e742f63a471402bd5141f4a15b4510e0b08e85373c040718806e2ea657574d56",
+  "summary": {
+    "total_sources_evaluated": 351,
+    "accessible_sources_count": 311,
+    "unreachable_on_host_count": 40,
+    "confirmed_native_count": 311,
+    "excluded_ocr_count": 0,
+    "permitted_to_proceed_count": 311,
+    "first_eligible_cohort": {
+      "cohort_id": "literary-non-ocr",
+      "total_sources": 229,
+      "accessible_sources": 229,
+      "confirmed_native": 229,
+      "coverage_ratio": 1.0,
+      "permitted_to_proceed": true
+    },
+    "textbook_cohort": {
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "total_sources": 122,
+      "accessible_sources": 82,
+      "missing_on_host": 40,
+      "confirmed_native": 82,
+      "permitted_to_proceed": 82
+    }
+  },
+  "safety_assertions": {
+    "no_corpus_text_emitted": true,
+    "no_private_host_paths_disclosed": true,
+    "no_broad_recollection": true,
+    "no_new_storage_infrastructure": true,
+    "ocr_derived_excluded": true,
+    "unknown_lineage_not_called_native": true,
+    "first_eligible_cohort_ready": true
+  },
+  "verdict": "PROCEED_WITH_ACCESSIBLE_SOURCES"
+}

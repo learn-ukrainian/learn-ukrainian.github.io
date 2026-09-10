@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v4_source_custody_access_item_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "access_id",
+    "source_id",
+    "cohort_id",
+    "source_family",
+    "source_locator",
+    "custody_resolution",
+    "lineage_verification",
+    "bounded_read_metrics",
+    "permitted_to_proceed",
+    "blocking_reason"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v4_source_custody_access_v1"
+    },
+    "access_id": {
+      "type": "string",
+      "pattern": "^access\\.[a-f0-9]{24}$"
+    },
+    "source_id": {
+      "type": "string",
+      "pattern": "^source\\.(?:literary|public_textbooks)\\.[a-f0-9]{24}$"
+    },
+    "cohort_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "source_family": {
+      "enum": [
+        "literary",
+        "public_textbooks"
+      ]
+    },
+    "source_locator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_file"
+      ],
+      "properties": {
+        "source_file": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "custody_resolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "primary_store",
+        "host_reachable"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "RESOLVED_ACCESSIBLE",
+            "PARTIAL_CHUNKS_AND_DB_ONLY",
+            "UNREACHABLE_ON_HOST"
+          ]
+        },
+        "primary_store": {
+          "type": "string"
+        },
+        "chunks_store": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "archive_store": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "host_reachable": {
+          "type": "boolean"
+        }
+      }
+    },
+    "lineage_verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "lineage_mode",
+        "evidence_ref",
+        "is_ocr_derived"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "CONFIRMED_NATIVE",
+            "EXCLUDED_OCR",
+            "UNKNOWN_LINEAGE"
+          ]
+        },
+        "lineage_mode": {
+          "enum": [
+            "native_digital_source",
+            "native_pdf_text",
+            "apple_vision_ocr",
+            "unknown"
+          ]
+        },
+        "evidence_ref": {
+          "type": "string"
+        },
+        "is_ocr_derived": {
+          "type": "boolean"
+        }
+      }
+    },
+    "bounded_read_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observed_records",
+        "observed_characters",
+        "stream_sha256"
+      ],
+      "properties": {
+        "observed_records": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "observed_characters": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stream_sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "permitted_to_proceed": {
+      "type": "boolean"
+    },
+    "blocking_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}
