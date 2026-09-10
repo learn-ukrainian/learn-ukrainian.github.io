@@ -501,7 +501,21 @@ def test_verify_detects_evidence_ref_private_host_path(
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
-def test_verify_detects_missing_report_private_host_path(tmp_path: Path, repo_root: Path) -> None:
+@pytest.mark.parametrize(
+    ("field_path", "bad_val"),
+    [
+        (("unmounted_archive_locator",), "/home/ops/secret_archive"),
+        (("owner",), "alice at /home/alice"),
+        (("scope",), r"processing C:\Users\alice\data"),
+        (("accessible_eligible_sources_permitted_to_proceed", "description"), r"Proceed using \\server\share\data.pdf"),
+        (("missing_inputs", 0, "reason"), "unmounted at /home/ops/gdrive"),
+        (("missing_inputs", 0, "blocks"), r"blocked by C:\private\job"),
+        (("missing_inputs", 0, "owner"), "/root/admin"),
+    ],
+)
+def test_verify_detects_missing_report_freeform_private_host_paths(
+    tmp_path: Path, repo_root: Path, field_path: tuple, bad_val: str
+) -> None:
     tampered_out = tmp_path / "out"
     custody_dir = tampered_out / "data/projects/open_model_data/custody"
     custody_dir.mkdir(parents=True)
@@ -511,7 +525,11 @@ def test_verify_detects_missing_report_private_host_path(tmp_path: Path, repo_ro
     )
 
     missing_data = json.loads(Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_text(encoding="utf-8"))
-    missing_data["unmounted_archive_locator"] = "/home/ops/secret_archive"
+    target = missing_data
+    for k in field_path[:-1]:
+        target = target[k]
+    target[field_path[-1]] = bad_val
+
     missing_path = custody_dir / "v4_source_custody_missing_report_v1.json"
     missing_path.write_text(json.dumps(missing_data), encoding="utf-8")
 

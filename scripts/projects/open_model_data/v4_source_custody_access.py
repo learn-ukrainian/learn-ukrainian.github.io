@@ -686,16 +686,34 @@ def _is_private_or_absolute_host_path(path_str: str) -> bool:
     """Detect platform-independent absolute host paths and private host segments (including Windows drive/UNC)."""
     if not path_str:
         return False
-    normalized = path_str.replace("\\", "/")
-    if normalized.startswith(("/", "~")):
-        return True
-    if len(normalized) >= 2 and normalized[0].isalpha() and normalized[1] == ":":
-        return True
-    if normalized.startswith("//"):
-        return True
-    parts = [p.lower() for p in normalized.strip("/").split("/")]
-    private_parts = {"home", "users", "root", "tmp", "temp", "var", "appdata", "private"}
-    return any(p in private_parts or p.startswith("~") for p in parts)
+    tokens = path_str.split()
+    for token in tokens:
+        t = token.strip("\"'()[]{}<>,;")
+        if not t:
+            continue
+        normalized = t.replace("\\", "/")
+        if normalized.startswith(("/", "~")):
+            return True
+        if len(normalized) >= 2 and normalized[0].isalpha() and normalized[1] == ":":
+            return True
+        if normalized.startswith("//"):
+            return True
+        parts = [p.lower() for p in normalized.strip("/").split("/")]
+        private_parts = {"home", "users", "root", "tmp", "temp", "var", "appdata", "private"}
+        if any(p in private_parts or p.startswith("~") for p in parts):
+            return True
+    return False
+
+
+def _contains_private_or_absolute_host_path(obj: Any) -> bool:
+    """Recursively scan all string values in an object (dict, list, string) for private or absolute host paths."""
+    if isinstance(obj, str):
+        return _is_private_or_absolute_host_path(obj)
+    if isinstance(obj, Mapping):
+        return any(_contains_private_or_absolute_host_path(v) for v in obj.values())
+    if isinstance(obj, (list, tuple, set)):
+        return any(_contains_private_or_absolute_host_path(item) for item in obj)
+    return False
 
 
 def verify(
@@ -832,24 +850,11 @@ def verify(
             if forbidden_keys.intersection(row.keys()):
                 recomputed_no_corpus_text = False
 
-            src_file = row.get("source_locator", {}).get("source_file") or ""
-            if _is_private_or_absolute_host_path(src_file):
+            if _contains_private_or_absolute_host_path(row):
                 recomputed_no_private_host_paths = False
+
 
             cust = row.get("custody_resolution", {})
-            for store_field in ("primary_store", "chunks_store", "archive_store"):
-                store_val = cust.get(store_field) or ""
-                if _is_private_or_absolute_host_path(store_val):
-                    recomputed_no_private_host_paths = False
-
-            ev_ref = row.get("lineage_verification", {}).get("evidence_ref") or ""
-            if _is_private_or_absolute_host_path(ev_ref):
-                recomputed_no_private_host_paths = False
-
-            blk_reason = row.get("blocking_reason") or ""
-            if _is_private_or_absolute_host_path(blk_reason):
-                recomputed_no_private_host_paths = False
-
             if row.get("cohort_id") not in ("literary-non-ocr", "public-textbooks-non-stem-non-ocr"):
                 recomputed_no_broad_recollection = False
 
@@ -966,16 +971,9 @@ def verify(
     if missing_errors:
         raise CustodyAccessError(f"Missing report error: {missing_errors[0].message}")
 
-    archive_loc = missing_report.get("unmounted_archive_locator") or ""
-    if _is_private_or_absolute_host_path(archive_loc):
+    if _contains_private_or_absolute_host_path(missing_report):
         recomputed_no_private_host_paths = False
 
-    for item in missing_report.get("missing_inputs", []):
-        ref = item.get("missing_path_ref") or ""
-        sf = item.get("source_locator", {}).get("source_file") or ""
-        for p_val in (ref, sf):
-            if _is_private_or_absolute_host_path(p_val):
-                recomputed_no_private_host_paths = False
 
     expected_first_ready = bool(lit_perm == len(lit_records) and len(lit_records) > 0 and lit_acc == len(lit_records))
     expected_verdict = (
