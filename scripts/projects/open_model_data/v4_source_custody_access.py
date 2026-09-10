@@ -694,7 +694,7 @@ def _is_private_or_absolute_host_path(path_str: str) -> bool:
         normalized = t.replace("\\", "/")
         if normalized.startswith(("/", "~")):
             return True
-        if len(normalized) >= 2 and normalized[0].isalpha() and normalized[1] == ":":
+        if len(normalized) >= 3 and normalized[0].isalpha() and normalized[1] == ":" and normalized[2] == "/":
             return True
         if normalized.startswith("//"):
             return True

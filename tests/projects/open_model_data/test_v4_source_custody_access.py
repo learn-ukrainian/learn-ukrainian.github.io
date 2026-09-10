@@ -396,6 +396,10 @@ def test_is_private_or_absolute_host_path() -> None:
     assert not custody._is_private_or_absolute_host_path("file:data/textbook_chunks/grade-06/6-klas.jsonl")
     assert not custody._is_private_or_absolute_host_path("sqlite:sources.db#textbooks")
     assert not custody._is_private_or_absolute_host_path("gdrive:learn-ukrainian-data/textbooks/6-klas.pdf")
+    assert not custody._is_private_or_absolute_host_path("A: follow up with the custodian")
+    assert not custody._is_private_or_absolute_host_path("B: check item status")
+    assert not custody._is_private_or_absolute_host_path("Note: this is clean text")
+
 
     # Unix absolute paths and home expansion
     assert custody._is_private_or_absolute_host_path("/opt/data/book.pdf")
