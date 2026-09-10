@@ -249,3 +249,38 @@ def test_hardening_gates(tmp_path):
         " VALUES ('тест', 'тест', 'тест', 'lemma', 'approved', 'public')"
     )
     conn.close()
+
+
+def test_curated_aliases_loaded(tmp_path):
+    entries = [
+        {"lemma": "проєкт", "url_slug": "проєкт", "gloss": "project", "pos": "noun"},
+    ]
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(json.dumps({"entries": entries}, ensure_ascii=False), encoding="utf-8")
+    curated = tmp_path / "curated_aliases.yaml"
+    curated.write_text(
+        """aliases:
+  - alias: "проєк"
+    kind: "spelling_variant"
+    source: "curated"
+    target_slug: "проєкт"
+    visibility: "public"
+  - alias: "proiek"
+    kind: "transliteration"
+    source: "curated"
+    target_slug: "проєкт"
+    visibility: "public"
+""",
+        encoding="utf-8",
+    )
+    db = tmp_path / "atlas.db"
+    counts = atlas_db.migrate_manifest(
+        manifest,
+        db,
+        curated_aliases_path=curated,
+    )
+    assert counts["curated_aliases"] == 2
+    conn = sqlite3.connect(db)
+    aliases = dict(conn.execute("SELECT alias, target_slug FROM aliases WHERE source = 'curated'").fetchall())
+    assert aliases == {"проєк": "проєкт", "proiek": "проєкт"}
+    conn.close()

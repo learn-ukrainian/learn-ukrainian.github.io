@@ -469,6 +469,8 @@
     "lessonTag": "a1",
     "cefr": "A1",
     "pos": "noun",
+    "example": "Дани́ло — виклада́ч та́нців у прива́тній сту́дії.",
+    "exampleEn": "Danylo is a dance teacher in a private studio.",
     "etymology": "From виклада́ти + -ач."
   },
   {
@@ -481,6 +483,7 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "Вивчила я її тоді, коли вперше почала використовувати англійську мову для конкретних цілей у моєму житті.",
+    "exampleEn": "I use my own materials in my lessons.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -503,6 +506,7 @@
     "cefr": "B1",
     "pos": "verb",
     "example": "Чому важливо вимикати електричну лампу, коли нею не користуєшся?",
+    "exampleEn": "I turn off my computer completely once a week.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -524,6 +528,7 @@
     "cefr": "B1",
     "pos": "verb",
     "example": "Які проблеми можуть виникати під час проведення штучного запліднення?",
+    "exampleEn": "I often have grammar questions (“Grammar questions often arise for me”).",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -545,6 +550,7 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "Якось, реагуючи на людську нетерплячість, Блаженніший Любомир Гузар сказав: «Дайте людям вирости у свободі».",
+    "exampleEn": "A big tree grows from a small grain.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -588,6 +594,7 @@
     "cefr": "B1",
     "pos": "verb",
     "example": "Яку суму коштів із Вашого бюджету, Ви готові витратити протягом місяця на шкільні аксесуари?",
+    "exampleEn": "She often spends money on makeup.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -685,6 +692,7 @@
     "cefr": "A1",
     "pos": "adv",
     "example": "Виникає питання: що знижує температуру всередині плями?",
+    "exampleEn": "We are waiting inside.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -707,6 +715,7 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "90% студентів успішно А вчать Б будуть вчити В вчаться іспит!",
+    "exampleEn": "Now we are learning the accusative case.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -728,6 +737,7 @@
     "cefr": "A2",
     "pos": "verb:impf",
     "example": "Художник щоразу все мусить відкривати заново, все з самого початку.",
+    "exampleEn": "She is now opening a bank account.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -804,6 +814,7 @@
     "cefr": "A2",
     "pos": "verb:pf",
     "example": "Тому вирішив відчинити двері та перевірити, що сталося.",
+    "exampleEn": "Every day I open the windows in the apartment.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -913,6 +924,7 @@
     "cefr": "A1",
     "pos": "numeral",
     "example": "І якщо ви з’їли порівну, то на кожну людину припадає по вісім часток.",
+    "exampleEn": "We will be in Kyiv for eight days.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -934,6 +946,7 @@
     "cefr": "A1",
     "pos": "numeral",
     "example": "Потреба кохання гостро спалахнула в ньому, як тільки минуло йому вісімнадцять років.",
+    "exampleEn": "She is eighteen years old.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1085,6 +1098,7 @@
     "cefr": "A1",
     "pos": "noun",
     "example": "Підбиваємо підсумки Офіційною грошовою одиницею в Україні є гривня.",
+    "exampleEn": "Where can I change dollars to hryvnias?",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1171,6 +1185,7 @@
     "cefr": "A1",
     "pos": "verb",
     "example": "Не обов’язково дарувати дитині дорогі – Який сюрприз!",
+    "exampleEn": "We always give our mother flowers for her birthday.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1193,6 +1208,7 @@
     "cefr": "A1",
     "pos": "numeral",
     "example": "Антоніна плакала через те, що бандура зламалася, напевно або мабуть, місяців зо два, зо три.",
+    "exampleEn": "Two ice creams, please.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1259,6 +1275,7 @@
     "cefr": "A2",
     "pos": "adj",
     "example": "Знання про хімічну рівновагу допомагає організувати більш дешевий і зручний технологічний процес одержання речовин.",
+    "exampleEn": "In this shop, everything is very cheap.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1344,6 +1361,7 @@
     "cefr": "B1",
     "pos": "verb",
     "example": "А головне — не можна дозволяти, щоб багатший знущався з біднішого, сильніша держава тиснула на слабшу.",
+    "exampleEn": "She does not allow herself to eat sweets at night.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1430,6 +1448,7 @@
     "cefr": "A1",
     "pos": "verb",
     "example": "Функція театру в тому, щоб збуджувати людей, змушувати їх думати… Бернард Шоу  Бургтеатр у Відні, де у 1913 р.",
+    "exampleEn": "I think that is a lie.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1452,6 +1471,7 @@
     "cefr": "A1",
     "pos": "noun",
     "example": "Нарешті дівчина, задихавшись, зупинилася, і народ любовно почав їй плескати.",
+    "exampleEn": "This girl is my friend, not my girlfriend.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1474,6 +1494,7 @@
     "cefr": "A2",
     "pos": "noun",
     "example": "Ще дідусь і не отримав твого листа, а може, і не зразу відповість.",
+    "exampleEn": "My grandfather's name was Mykola.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1496,6 +1517,7 @@
     "cefr": "A1",
     "pos": "noun",
     "example": "Шевчука «Дім на горі» якраз і представляє життя людей у такому незвичайному поєднанні.",
+    "exampleEn": "This is my home.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1519,6 +1541,16 @@
     "etymology": "From Ancient Greek εὐφημισμός, from εὐφημίζω, from εὔφημος."
   },
   {
+    "lemma": "етнічність",
+    "slug": "етнічність",
+    "gloss": "ЕТНІ́ЧНІСТЬ, ності, ж. Абстр. ім. до етні́чний. З огляду на реальну або уявну загрозу асиміляції у нечисленних етносів етнічність здатна набувати характеру самоцінності (з наук.-попул. літ.); Етнічність відтворює якісні характеристики людини або групи людей, пов'язані з їхнім етнічним походженням і які виявляються у побуті, культурі, поведінці й у цілому в ментальності (із журн.).",
+    "k": "other",
+    "weight": 3,
+    "lessonTag": "b2",
+    "cefr": "C1",
+    "pos": "noun"
+  },
+  {
     "lemma": "забирати",
     "slug": "забирати",
     "gloss": "to take (to get into one's hands, possession or control)",
@@ -1528,6 +1560,7 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "Іду в садік забирати малу.",
+    "exampleEn": "It takes a lot of time.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1745,6 +1778,7 @@
     "cefr": "A1",
     "pos": "adverb",
     "example": "Звичайно, їх є більше: це і каштан — символ Києва, і інші квіти, наприклад, волошки.",
+    "exampleEn": "Of course, I will be at the party.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1777,6 +1811,7 @@
     "cefr": "A1",
     "pos": "adj",
     "example": "Здоровий спосіб життя 78 Навіщо піклуватися про здоров’я?",
+    "exampleEn": "I like healthy food.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1841,6 +1876,7 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "Новими в усіх редакторах є такі команди в меню Файл: Перейменувати — змінити ім’я файла безпосередньо в середовищі редактора.",
+    "exampleEn": "Do you often change your style?",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1896,6 +1932,7 @@
     "cefr": "A1",
     "pos": "verb",
     "example": "Радикали прагнули продовжити революцію та знищити самодержавство.",
+    "exampleEn": "Such government actions are destroying the economy.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1980,16 +2017,6 @@
     "k": "vyv",
     "weight": 3,
     "lessonTag": "b1",
-    "cefr": "C1",
-    "pos": "noun"
-  },
-  {
-    "lemma": "катафора",
-    "slug": "катафора",
-    "gloss": "cataphora",
-    "k": "vyv",
-    "weight": 3,
-    "lessonTag": "b2",
     "cefr": "C1",
     "pos": "noun"
   },
@@ -2283,6 +2310,7 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "Купатися можна у вбиральні, на кухні, в кабінеті чи в конторі – за вибором.",
+    "exampleEn": "We already bathed the children.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -2305,6 +2333,7 @@
     "cefr": "B1",
     "pos": "numeral",
     "example": "Наступне, шосте речення: Ціни залежать від університету, переважно це кілька десятків тисяч гривень на рік.",
+    "exampleEn": "I have some questions.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -2413,6 +2442,7 @@
     "cefr": "A2",
     "pos": "noun",
     "example": "Запалене лице було гарне, але дуже молоде.",
+    "exampleEn": "This is my favorite face cream.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -2444,6 +2474,7 @@
     "cefr": "A1",
     "pos": "noun",
     "example": "Тобі знадобляться: помірно гаряча вода, чашка, секундомір, металева ложка.",
+    "exampleEn": "This soup is eaten with a spoon.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -2486,6 +2517,7 @@
     "cefr": "A1",
     "pos": "noun",
     "example": "Потрібно одержати в одній із цих посудин 1 літр рідини.",
+    "exampleEn": "In this bottle, there is a liter of milk.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -2592,6 +2624,7 @@
     "cefr": "A1",
     "pos": "noun",
     "example": "Мед любить їсти й ведмідь, а Шершень теж не проти того.",
+    "exampleEn": "I want tea with honey and lemon.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -2613,6 +2646,7 @@
     "cefr": "A2",
     "pos": "noun",
     "example": "Що таке собаче мило?",
+    "exampleEn": "In the bathroom, there is no soap.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -2740,6 +2774,7 @@
     "cefr": "A1",
     "pos": "noun",
     "example": "Шляхом тривалих спостережень вони визначили надійні одиниці часу: добу, рік, місяць.",
+    "exampleEn": "Now it is the full moon.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -2761,6 +2796,7 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "Заважати гратися – мішати слухати на уроці.",
+    "exampleEn": "A concrete mixer mixes concrete.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -2922,6 +2958,7 @@
     "cefr": "A1",
     "pos": "adverb",
     "example": "Який молочний продукт можна перетворити на злак, прочитавши його назву справа наліво?",
+    "exampleEn": "To the left of Olena is her son Nazar.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -2943,6 +2980,7 @@
     "cefr": "A1",
     "pos": "verb",
     "example": "Графи, які можна намалювати, не відриваючи олівця від паперу, називають ейлеровими.",
+    "exampleEn": "My granddaughter draws (or paints) well.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -3148,6 +3186,7 @@
     "cefr": "A2",
     "pos": "negative pronoun",
     "example": "Я для неї зірву Оріон золотий, я — поет робітничої рані… Так ніхто не кохав.",
+    "exampleEn": "No one will stop me.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -3236,6 +3275,7 @@
     "cefr": "A1",
     "pos": "verb",
     "example": "Завоювавши Персію, Александр почав одягатися як перський шахиншах та одружився із двома персіянками.",
+    "exampleEn": "She wears this dress for special events.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -3387,6 +3427,7 @@
     "cefr": "A2",
     "pos": "adj",
     "example": "Це визначає основний метод правового регулювання, який використовує фінансове право, — імперативний метод, або метод субординації, владних приписів.",
+    "exampleEn": "This is my main place of work.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -3409,6 +3450,7 @@
     "cefr": "A1",
     "pos": "noun",
     "example": "Тюрк заявив, що його офіс підтвердив 10 тис.",
+    "exampleEn": "Where is their office located?",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -3508,6 +3550,7 @@
     "cefr": "B2",
     "pos": "verb",
     "example": "Петлюри було здійснено низку заходів, покликаних викорінити в Армії УНР отаманщину та перетворити її на регулярне військо.",
+    "exampleEn": "The girl turned her hobby into a business.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -3671,6 +3714,7 @@
     "cefr": "A2",
     "pos": "noun",
     "example": "Поліція мала величезні повноваження, що дозволяли їй втручатися в усі сфери суспільного та особистого життя громадян.",
+    "exampleEn": "He has to go to the police.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -3692,6 +3736,7 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "Чи потрібно постійно порівнювати себе з іншими?",
+    "exampleEn": "Critics compare his film to Tarantino's movies.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -3725,6 +3770,7 @@
     "cefr": "B1",
     "pos": "adv",
     "example": "Після евакуації пораненого в укриття потрібно постійно дбати про власну безпеку і безпеку пораненого.",
+    "exampleEn": "I constantly want to sleep.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -3747,6 +3793,7 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "Із метою відволікти населення від боротьби проти самодержавства царський уряд намагався поширити на українські землі антисемітські настрої.",
+    "exampleEn": "She spreads this information wherever she can.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -3907,6 +3954,7 @@
     "cefr": "B1",
     "pos": "verb",
     "example": "Які сувеніри привезти з України?",
+    "exampleEn": "They bring production materials from abroad.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4069,6 +4117,7 @@
     "cefr": "B1",
     "pos": "verb",
     "example": "Приєднати газову трубку.",
+    "exampleEn": "Railway workers attached additional cars to the train.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4091,6 +4140,7 @@
     "cefr": "A1",
     "pos": "verb",
     "example": "Приєднатися до такого народу — це гірше, ніж скочити живим у вогонь.",
+    "exampleEn": "Railway workers attached additional cars to the train.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4134,6 +4184,7 @@
     "cefr": "B1",
     "pos": "verb",
     "example": "Ті не перемагають, хто не вміють програвати.",
+    "exampleEn": "I often lose to him at chess.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4156,6 +4207,7 @@
     "cefr": "A1",
     "pos": "verb",
     "example": "Її не можна було передавати в спадок, продавати тощо.",
+    "exampleEn": "The woman sells her vegetables at the market.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4177,6 +4229,7 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "Адже навряд чи, перебуваючи в місцях позбавлення волі, злочинець зможе продовжувати свою злочинну діяльність.",
+    "exampleEn": "He continues to work, learn and develop.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4393,6 +4446,7 @@
     "cefr": "A2",
     "pos": "adverb",
     "example": "Узимку світає пізно, темніє рано.",
+    "exampleEn": "Sashko came back home late at night.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4415,6 +4469,7 @@
     "cefr": "A1",
     "pos": "adverb",
     "example": "Далі вона розповідає: Ми далі будемо рухатися по життю разом.",
+    "exampleEn": "We studied together at school.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4468,6 +4523,7 @@
     "cefr": "B2",
     "pos": "verb:impf",
     "example": "Аерозольні упаковки не можна розбирати чи розбивати, адже вони пожежота вибухонебезпечні.",
+    "exampleEn": "It breaks my heart.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4490,6 +4546,7 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "Бо пора вже розповісти про дивну дружбу двох хлопців – Данила Ланового та Богдана Майстренка.",
+    "exampleEn": "The professor often tells interesting stories about famous Ukrainians.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4577,6 +4634,7 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "Маленький лискучий жолудь лягає в холодну землю, вкривається ковдрою з листя, а потім знімає шапку і починає рости.",
+    "exampleEn": "They say that other people's children grow up fast.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4642,6 +4700,7 @@
     "cefr": "A1",
     "pos": "noun",
     "example": "Пагутяк «Потрапити в сад» за родовою ознакою — епічний.",
+    "exampleEn": "In the afternoon, we will work in the garden.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4876,6 +4935,7 @@
     "cefr": "A1",
     "pos": "noun",
     "example": "Сипле, сипле, сипле сніг...",
+    "exampleEn": "Yesterday, it snowed all day.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4918,6 +4978,7 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "Передній ангел дивився прямо на Галю, ніби хотів спитати, чого вона прийшла.",
+    "exampleEn": "He often asks me how I am doing.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -5081,6 +5142,7 @@
     "cefr": "A1",
     "pos": "noun",
     "example": "Вона вже геть знесилилася й сіла на стілець, що невідомо звідки взявся в коридорі.",
+    "exampleEn": "This chair is very comfortable.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -5143,6 +5205,7 @@
     "cefr": "A1",
     "pos": "noun",
     "example": "Омріяна сумка не з’явилася в її руках, Бондаренко зі своїми служками не вибігла з крамниці зі словами прокляття.",
+    "exampleEn": "My wallet is in the purse.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -5164,6 +5227,7 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "Стояти на розпутті — вагатися, сумніватися.",
+    "exampleEn": "I doubt he will come to the party.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -5229,6 +5293,7 @@
     "cefr": "A1",
     "pos": "noun",
     "example": "Було тій Анні, може, десять рочків, її привів розлючений сусід.",
+    "exampleEn": "My neighbors are musicians.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -5422,6 +5487,7 @@
     "cefr": "A2",
     "pos": "noun",
     "example": "Речення номер два: Ліворуч було поле, праворуч – лише трава та квіти.",
+    "exampleEn": "We are lying on the grass in the park.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -5495,6 +5561,7 @@
     "cefr": "A1",
     "pos": "adverb",
     "example": "Під час рівняння військовослужбовці можуть трохи пересуватися вперед, назад або в той чи інший бік.",
+    "exampleEn": "And a little bit of sour cream, please.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -5559,6 +5626,7 @@
     "cefr": "A2",
     "pos": "adv",
     "example": "Бояри та представники знаті винаймали для своїх дітей приватних учителів, які навчали їх удома.",
+    "exampleEn": "We are at home on the weekend.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -5946,6 +6014,7 @@
     "cefr": "A1",
     "pos": "noun:m",
     "example": "Як функціонує мережа «Інтернет речей»?",
+    "exampleEn": "I spend too much time on the internet.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
