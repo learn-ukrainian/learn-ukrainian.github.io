@@ -38,7 +38,7 @@ beforeEach(() => {
   }) }));
   document.documentElement.dataset.chromeLocale = 'uk';
 });
-afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
+afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.unstubAllEnvs(); });
 
 async function player() { return (await import('../../src/components/PronunciationPlayer')).default; }
 
@@ -260,6 +260,26 @@ describe('on-device Ukrainian speech', () => {
     expect(instances[0].src).toMatch(new RegExp(`/audio/pronunciation/${'b'.repeat(64)}\\.opus$`));
   });
 
+  it('supports sharded 2-char prefix directory paths for opus audio', async () => {
+    vi.mocked(fetch).mockResolvedValue({ ok: true, json: async () => ({
+      schemaVersion: 1, entries: { 'автобус': { file: `ab/${'a'.repeat(64)}.opus` } },
+    }) } as Response);
+    const Player = await player();
+    render(<Player lemma="автобус" />);
+    const button = await screen.findByRole('button', { name: 'Послухати вимову' });
+    fireEvent.click(button);
+    expect(instances[0].src).toMatch(new RegExp(`/audio/pronunciation/ab/${'a'.repeat(64)}\\.opus$`));
+  });
+
+  it('computes deterministic lemmaAudioPath using web crypto', async () => {
+    const { lemmaAudioPath } = await import('../../src/lib/lexicon/pronunciation-player');
+    const path = await lemmaAudioPath('авто́бус', 'opus', true);
+    expect(path).toMatch(/^[a-f0-9]{2}\/[a-f0-9]{64}\.opus$/);
+    const flatPath = await lemmaAudioPath('автобус', 'opus', false);
+    expect(flatPath).toMatch(/^[a-f0-9]{64}\.opus$/);
+    expect(path).toBe(`${flatPath.slice(0, 2)}/${flatPath}`);
+  });
+
   it('handles voices arriving after mount without autoplay', async () => {
     speech.getVoices.mockReturnValue([]);
     const Player = await player();
@@ -321,6 +341,96 @@ describe('on-device Ukrainian speech', () => {
     unmountAtlasPronunciation();
     expect(speech.cancel).toHaveBeenCalledOnce();
     document.body.innerHTML = '';
+  });
+});
+
+describe('CDN distribution and resilient fallback', () => {
+  const CDN_URL = 'https://cdn.learn-ukrainian.org/word-atlas-audio';
+
+  beforeEach(() => {
+    vi.stubEnv('PUBLIC_AUDIO_CDN_URL', CDN_URL);
+  });
+
+  it('uses CDN base URL for manifest-backed audio entries', async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        schemaVersion: 1,
+        entries: { 'автобус': { file: `12/${'c'.repeat(64)}.opus` } },
+      }),
+    } as Response);
+    const Player = await player();
+    render(<Player lemma="автобус" />);
+    const button = await screen.findByRole('button', { name: 'Послухати вимову' });
+    fireEvent.click(button);
+    expect(instances[0].src).toBe(`${CDN_URL}/12/${'c'.repeat(64)}.opus`);
+    expect(instances[0].play).toHaveBeenCalledOnce();
+  });
+
+  it('falls back to speech synthesis exactly once when CDN audio fails with both onerror and play rejection', async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        schemaVersion: 1,
+        entries: { 'автобус': { file: `12/${'c'.repeat(64)}.opus` } },
+      }),
+    } as Response);
+    const Player = await player();
+    render(<Player lemma="автобус" locale="uk" />);
+    const button = await screen.findByRole('button', { name: 'Послухати вимову' });
+
+    // Simulate browser behavior on 404 / decode failure: play() rejects AND onerror fires
+    instances[0].play.mockImplementation(async () => {
+      instances[0].onerror?.();
+      throw new Error('404 Not Found');
+    });
+
+    fireEvent.click(button);
+    await waitFor(() => expect(speech.speak).toHaveBeenCalled());
+
+    // Critical assertion for Finding 1: speech.speak must be called EXACTLY ONCE, never queued twice
+    expect(speech.speak).toHaveBeenCalledOnce();
+    const utterance = speech.speak.mock.calls[0][0];
+    expect(utterance).toMatchObject({ text: 'автобус', lang: 'uk-UA' });
+  });
+
+  it('derives on-demand CDN audio path and falls back to speech synthesis on 404 when manifest is missing', async () => {
+    vi.mocked(fetch).mockRejectedValue(new Error('manifest 404'));
+    const Player = await player();
+    render(<Player lemma="автобус" locale="uk" />);
+
+    // Wait for on-demand lemmaAudioPath derivation and audio attachment
+    await waitFor(() => expect(instances).toHaveLength(1));
+    expect(instances[0].src.startsWith(`${CDN_URL}/`)).toBe(true);
+    expect(instances[0].src.slice(CDN_URL.length + 1)).toMatch(/^[a-f0-9]{2}\/[a-f0-9]{64}\.opus$/);
+
+    // When clicked, audio.play() fails (simulating CDN clip not yet synthesized)
+    instances[0].play.mockImplementation(async () => {
+      instances[0].onerror?.();
+      throw new Error('404 Not Found');
+    });
+
+    const button = screen.getByRole('button', { name: 'Послухати вимову' });
+    fireEvent.click(button);
+    await waitFor(() => expect(speech.speak).toHaveBeenCalledTimes(1));
+    expect(speech.speak).toHaveBeenCalledOnce();
+  });
+
+  it('derives on-demand CDN audio path when manifest exists but lemma is not in manifest', async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        schemaVersion: 1,
+        entries: { 'інше_слово': { file: `12/${'c'.repeat(64)}.opus` } },
+      }),
+    } as Response);
+    const Player = await player();
+    render(<Player lemma="автобус" locale="uk" />);
+
+    // Wait for on-demand derivation since lemma is omitted from manifest
+    await waitFor(() => expect(instances).toHaveLength(1));
+    expect(instances[0].src.startsWith(`${CDN_URL}/`)).toBe(true);
+    expect(instances[0].src.slice(CDN_URL.length + 1)).toMatch(/^[a-f0-9]{2}\/[a-f0-9]{64}\.opus$/);
   });
 });
 
