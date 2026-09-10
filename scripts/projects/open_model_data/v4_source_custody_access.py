@@ -1264,7 +1264,18 @@ def verify(
     db_conn: sqlite3.Connection | None = None
     if db_path is not None and db_path.is_file():
         db_uri = f"file:{db_path.resolve()}?mode=ro"
-        db_conn = sqlite3.connect(db_uri, uri=True)
+        conn_candidate = sqlite3.connect(db_uri, uri=True)
+        cur = conn_candidate.cursor()
+        cur.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        existing_tables = {r[0] for r in cur.fetchall()}
+        required_tables = set(FAMILY_APPROVED_TABLES.values())
+        missing_tables = required_tables - existing_tables
+        if missing_tables:
+            conn_candidate.close()
+            if require_database:
+                raise CustodyAccessError(f"Database {db_path} missing required tables: {sorted(missing_tables)}")
+        else:
+            db_conn = conn_candidate
 
     # Map chunk files from textbook_chunks_dir if available
     chunks_map: dict[str, Path] = {}
