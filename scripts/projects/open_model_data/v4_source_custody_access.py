@@ -799,6 +799,13 @@ def verify(
             if errors:
                 raise CustodyAccessError(f"Index line {line_num} error: {errors[0].message}")
 
+            expected_access_id = _make_access_id(row["source_id"], row["cohort_id"])
+            if row.get("access_id") != expected_access_id:
+                raise CustodyAccessError(
+                    f"Index line {line_num} ({row.get('source_id')}): access_id mismatch: "
+                    f"expected {expected_access_id}, got {row.get('access_id')}"
+                )
+
             permitted = row["permitted_to_proceed"]
             status = row["lineage_verification"]["status"]
             is_ocr = row["lineage_verification"]["is_ocr_derived"]
