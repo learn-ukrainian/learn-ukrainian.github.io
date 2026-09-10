@@ -85,8 +85,8 @@ def _make_access_id(source_id: str, cohort_id: str) -> str:
     return f"access.{hashlib.sha256(seed).hexdigest()[:24]}"
 
 
-def _make_receipt_id(config_hash: str, index_hash: str) -> str:
-    seed = f"{config_hash}:{index_hash}".encode()
+def _make_receipt_id(config_hash: str, index_hash: str, missing_report_hash: str) -> str:
+    seed = f"{config_hash}:{index_hash}:{missing_report_hash}".encode()
     return f"receipt.custody.{hashlib.sha256(seed).hexdigest()[:24]}"
 
 
@@ -137,6 +137,8 @@ class BoundedCustodyReader:
         source_file: str,
         batch_size: int = 1000,
     ) -> dict[str, Any]:
+        if batch_size <= 0:
+            raise CustodyAccessError(f"batch_size must be strictly positive (> 0), got {batch_size}")
         if not self.database_path.is_file():
             raise CustodyAccessError(f"Database file not found: {self.database_path}")
 
@@ -329,6 +331,55 @@ def validate_cohort_spec(cohort_cfg: Mapping[str, Any]) -> None:
         raise CustodyAccessError(f"Cohort '{cohort_id}' has unsupported source_family '{family}'")
 
 
+def derive_missing_report_item(
+    row: Mapping[str, Any],
+    config: Mapping[str, Any],
+) -> dict[str, Any] | None:
+    """Derive expected missing report item from an access record and custody config (ACCESS-4)."""
+    cid = row.get("cohort_id", "")
+    cust = row.get("custody_resolution", {})
+    permitted = row.get("permitted_to_proceed", False)
+    owner = config.get("ownership", {}).get("unmounted_archive_owner", "existing custody/source-access owner")
+    source_locator = row.get("source_locator", {})
+    sfile = source_locator.get("source_file", "")
+    source_id = row.get("source_id", "")
+
+    if cid == "public-textbooks-non-stem-non-ocr":
+        if not permitted:
+            return {
+                "source_id": source_id,
+                "source_locator": {"source_file": sfile},
+                "cohort_id": cid,
+                "missing_path_ref": cust.get("archive_store") or f"gdrive:learn-ukrainian-data/textbooks/{sfile}.pdf",
+                "reason": row.get("blocking_reason") or "not_permitted_to_proceed",
+                "owner": owner,
+                "blocks": "direct PDF byte extraction for this source",
+            }
+        elif cust.get("status") != "RESOLVED_ACCESSIBLE":
+            return {
+                "source_id": source_id,
+                "source_locator": {"source_file": sfile},
+                "cohort_id": cid,
+                "missing_path_ref": cust.get("archive_store") or f"gdrive:learn-ukrainian-data/textbooks/{sfile}.pdf",
+                "reason": "execution_host_resolver_unmounted",
+                "owner": owner,
+                "blocks": "direct PDF byte extraction for this source",
+            }
+    else:
+        if not permitted:
+            p_store = cust.get("primary_store", "")
+            return {
+                "source_id": source_id,
+                "source_locator": {"source_file": sfile},
+                "cohort_id": cid,
+                "missing_path_ref": cust.get("archive_store") or f"{p_store}#{sfile}",
+                "reason": row.get("blocking_reason") or "not_permitted_to_proceed",
+                "owner": owner,
+                "blocks": "source records missing from database",
+            }
+    return None
+
+
 def resolve_source_access(
     source_id: str,
     source_file: str,
@@ -338,6 +389,7 @@ def resolve_source_access(
     input_root: Path,
     db_conn: sqlite3.Connection,
     chunks_map: Mapping[str, Path],
+    unmounted_archive_owner: str = "existing custody/source-access owner",
 ) -> tuple[dict[str, Any], dict[str, Any] | None]:
     """Resolve custody arrangement and verify lineage for one source (ACCESS-1, ACCESS-2, ACCESS-4)."""
     if not cohort_cfg or cohort_cfg.get("cohort_id") != cohort_id:
@@ -393,7 +445,6 @@ def resolve_source_access(
                 archive_on_host = True
 
     # Lineage verification driven by cohort's configured lineage_rule
-    missing_report_item = None
     if lineage_rule == "native_digital_source":
         # Literary corpus is established native digital text from human-authored archives
         lineage_status = "CONFIRMED_NATIVE"
@@ -479,27 +530,6 @@ def resolve_source_access(
             custody_status = "UNREACHABLE_ON_HOST"
             blocking_reason = "missing_chunk_file_and_unmounted_archive"
 
-        if not permitted:
-            missing_report_item = {
-                "source_id": source_id,
-                "source_locator": {"source_file": source_file},
-                "cohort_id": cohort_id,
-                "missing_path_ref": archive_ref or f"gdrive:learn-ukrainian-data/textbooks/{source_file}.pdf",
-                "reason": blocking_reason or "not_permitted_to_proceed",
-                "owner": "existing custody/source-access owner",
-                "blocks": "direct PDF byte extraction for this source",
-            }
-        elif not archive_on_host:
-            missing_report_item = {
-                "source_id": source_id,
-                "source_locator": {"source_file": source_file},
-                "cohort_id": cohort_id,
-                "missing_path_ref": archive_ref or f"gdrive:learn-ukrainian-data/textbooks/{source_file}.pdf",
-                "reason": "execution_host_resolver_unmounted",
-                "owner": "existing custody/source-access owner",
-                "blocks": "direct PDF byte extraction for this source",
-            }
-
     # Bounded read digest computation (content-sensitive text hashing)
     stream_digest = None
     observed_records = 0
@@ -550,6 +580,10 @@ def resolve_source_access(
         "blocking_reason": blocking_reason,
     }
 
+    missing_report_item = derive_missing_report_item(
+        record,
+        {"ownership": {"unmounted_archive_owner": unmounted_archive_owner}},
+    )
     return record, missing_report_item
 
 
@@ -628,6 +662,7 @@ def build(
                 input_root=input_root,
                 db_conn=conn,
                 chunks_map=chunks_map,
+                unmounted_archive_owner=config["ownership"]["unmounted_archive_owner"],
             )
             access_records.append(record)
             if missing_item is not None:
@@ -706,7 +741,7 @@ def build(
         if r["custody_resolution"]["status"] in ("RESOLVED_ACCESSIBLE", "PARTIAL_CHUNKS_AND_DB_ONLY")
         and r["permitted_to_proceed"]
     )
-    tb_missing = sum(1 for r in tb_records if not r["permitted_to_proceed"])
+    tb_missing = sum(1 for r in tb_records if r["custody_resolution"]["status"] != "RESOLVED_ACCESSIBLE")
     tb_native = sum(1 for r in tb_records if r["lineage_verification"]["status"] == "CONFIRMED_NATIVE")
     tb_perm_count = sum(1 for r in tb_records if r["permitted_to_proceed"])
 
@@ -722,7 +757,7 @@ def build(
     total_ocr = sum(1 for r in access_records if r["lineage_verification"]["status"] == "EXCLUDED_OCR")
     total_permitted = sum(1 for r in access_records if r["permitted_to_proceed"])
 
-    receipt_id = _make_receipt_id(config_sha256, index_sha256)
+    receipt_id = _make_receipt_id(config_sha256, index_sha256, missing_report_sha256)
     receipt = {
         "schema_version": RECEIPT_SCHEMA_VERSION,
         "receipt_id": receipt_id,
@@ -851,7 +886,9 @@ def verify(
     if receipt["missing_report_sha256"] != expected_missing_report_sha256:
         raise CustodyAccessError("Receipt missing_report_sha256 mismatch")
 
-    expected_receipt_id = _make_receipt_id(expected_config_sha256, expected_index_sha256)
+    expected_receipt_id = _make_receipt_id(
+        expected_config_sha256, expected_index_sha256, expected_missing_report_sha256
+    )
     if receipt.get("receipt_id") != expected_receipt_id:
         raise CustodyAccessError(
             f"Receipt receipt_id mismatch: expected {expected_receipt_id}, got {receipt.get('receipt_id')}"
@@ -876,6 +913,7 @@ def verify(
 
     lit_records = []
     tb_records = []
+    expected_missing_items = []
     seen_access_ids: set[str] = set()
     seen_source_identities: dict[str, tuple[str, str, str]] = {}
     seen_cohort_locators: set[tuple[str, str]] = set()
@@ -1106,6 +1144,10 @@ def verify(
             elif row["cohort_id"] == "public-textbooks-non-stem-non-ocr":
                 tb_records.append(row)
 
+            m_item = derive_missing_report_item(row, config)
+            if m_item is not None:
+                expected_missing_items.append(m_item)
+
     if header.get("records") != record_count:
         raise CustodyAccessError(f"Index header record count {header.get('records')} != observed {record_count}")
 
@@ -1202,7 +1244,7 @@ def verify(
         if r["custody_resolution"]["status"] in ("RESOLVED_ACCESSIBLE", "PARTIAL_CHUNKS_AND_DB_ONLY")
         and r["permitted_to_proceed"]
     )
-    tb_missing = sum(1 for r in tb_records if not r["permitted_to_proceed"])
+    tb_missing = sum(1 for r in tb_records if r["custody_resolution"]["status"] != "RESOLVED_ACCESSIBLE")
     tb_native = sum(1 for r in tb_records if r["lineage_verification"]["status"] == "CONFIRMED_NATIVE")
     tb_perm = sum(1 for r in tb_records if r["permitted_to_proceed"])
 
@@ -1217,7 +1259,7 @@ def verify(
     ):
         raise CustodyAccessError("Receipt textbook_cohort discrepancy")
 
-    # Verify missing report
+    # Verify missing report schema and invariants (ACCESS-4)
     missing_validator = _load_schema(MISSING_REPORT_SCHEMA_PATH, roots)
     missing_report = json.loads(out_missing_path.read_text(encoding="utf-8"))
     missing_errors = list(missing_validator.iter_errors(missing_report))
@@ -1261,6 +1303,58 @@ def verify(
             )
         if not expected_val:
             raise CustodyAccessError(f"Recomputed safety assertion {key} failed (False)")
+
+    # Cross-check missing report metadata against config
+    expected_owner = config.get("ownership", {}).get("unmounted_archive_owner")
+    if missing_report.get("owner") != expected_owner:
+        raise CustodyAccessError(
+            f"Missing report owner mismatch: expected '{expected_owner}', got '{missing_report.get('owner')}'"
+        )
+
+    expected_scope = config.get("ownership", {}).get("blocks_scope")
+    if missing_report.get("scope") != expected_scope:
+        raise CustodyAccessError(
+            f"Missing report scope mismatch: expected '{expected_scope}', got '{missing_report.get('scope')}'"
+        )
+
+    expected_date = config.get("operator_decision", {}).get("date")
+    if missing_report.get("operator_decision_date") != expected_date:
+        raise CustodyAccessError(
+            f"Missing report operator_decision_date mismatch: expected '{expected_date}', "
+            f"got '{missing_report.get('operator_decision_date')}'"
+        )
+
+    expected_issue = config.get("operator_decision", {}).get("issue")
+    if missing_report.get("issue") != expected_issue:
+        raise CustodyAccessError(
+            f"Missing report issue mismatch: expected {expected_issue}, got {missing_report.get('issue')}"
+        )
+
+    expected_archive_locator = config.get("inputs", {}).get("retained_archive_locator")
+    if missing_report.get("unmounted_archive_locator") != expected_archive_locator:
+        raise CustodyAccessError(
+            f"Missing report unmounted_archive_locator mismatch: expected '{expected_archive_locator}', "
+            f"got '{missing_report.get('unmounted_archive_locator')}'"
+        )
+
+    # Cross-check derived missing entries against missing_report["missing_inputs"]
+    observed_missing_inputs = missing_report.get("missing_inputs", [])
+    if len(observed_missing_inputs) != len(expected_missing_items):
+        raise CustodyAccessError(
+            f"Missing report item count mismatch: derived {len(expected_missing_items)} missing items from access index, "
+            f"but missing report contains {len(observed_missing_inputs)}"
+        )
+
+    derived_by_id = {item["source_id"]: item for item in expected_missing_items}
+    for idx, obs_item in enumerate(observed_missing_inputs):
+        sid = obs_item.get("source_id")
+        if sid not in derived_by_id:
+            raise CustodyAccessError(
+                f"Missing report entry {idx} has unexpected source_id '{sid}' not derived as missing from access index"
+            )
+        exp_item = derived_by_id[sid]
+        if obs_item != exp_item:
+            raise CustodyAccessError(f"Missing report entry for '{sid}' mismatch: expected {exp_item}, got {obs_item}")
 
     return True
 

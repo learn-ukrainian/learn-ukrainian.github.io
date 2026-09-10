@@ -7,8 +7,10 @@ from __future__ import annotations
 
 import copy
 import json
+import re
 import sqlite3
 from pathlib import Path
+from typing import Any
 
 import pytest
 from jsonschema import Draft202012Validator
@@ -326,7 +328,9 @@ def test_verify_detects_contradictory_eligibility_and_forged_summary(tmp_path: P
     # Re-hash index into receipt to isolate semantic/schema rejection from simple hash mismatch
     receipt_data = json.loads((custody_orig / "v4_source_custody_access_receipt_v1.json").read_text(encoding="utf-8"))
     receipt_data["index_sha256"] = custody.sha256_file(tgt_custody / "v4_source_custody_access_index_v1.jsonl")
-    receipt_data["receipt_id"] = custody._make_receipt_id(receipt_data["config_sha256"], receipt_data["index_sha256"])
+    receipt_data["receipt_id"] = custody._make_receipt_id(
+        receipt_data["config_sha256"], receipt_data["index_sha256"], receipt_data["missing_report_sha256"]
+    )
     (tgt_custody / "v4_source_custody_access_receipt_v1.json").write_text(json.dumps(receipt_data), encoding="utf-8")
 
     # Must fail schema / semantic invariant validation
@@ -442,7 +446,9 @@ def test_verify_detects_forged_access_id(tmp_path: Path, repo_root: Path) -> Non
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["index_sha256"] = custody.sha256_file(custody_dir / "v4_source_custody_access_index_v1.jsonl")
     receipt_tampered["receipt_id"] = custody._make_receipt_id(
-        receipt_tampered["config_sha256"], receipt_tampered["index_sha256"]
+        receipt_tampered["config_sha256"],
+        receipt_tampered["index_sha256"],
+        receipt_tampered["missing_report_sha256"],
     )
     (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(
         json.dumps(receipt_tampered), encoding="utf-8"
@@ -481,7 +487,9 @@ def test_verify_detects_duplicate_source_id(tmp_path: Path, repo_root: Path) -> 
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["index_sha256"] = custody.sha256_file(custody_dir / "v4_source_custody_access_index_v1.jsonl")
     receipt_tampered["receipt_id"] = custody._make_receipt_id(
-        receipt_tampered["config_sha256"], receipt_tampered["index_sha256"]
+        receipt_tampered["config_sha256"],
+        receipt_tampered["index_sha256"],
+        receipt_tampered["missing_report_sha256"],
     )
     (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(
         json.dumps(receipt_tampered), encoding="utf-8"
@@ -520,7 +528,9 @@ def test_verify_detects_duplicate_source_locator(tmp_path: Path, repo_root: Path
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["index_sha256"] = custody.sha256_file(custody_dir / "v4_source_custody_access_index_v1.jsonl")
     receipt_tampered["receipt_id"] = custody._make_receipt_id(
-        receipt_tampered["config_sha256"], receipt_tampered["index_sha256"]
+        receipt_tampered["config_sha256"],
+        receipt_tampered["index_sha256"],
+        receipt_tampered["missing_report_sha256"],
     )
     (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(
         json.dumps(receipt_tampered), encoding="utf-8"
@@ -559,7 +569,9 @@ def test_verify_detects_provenance_projection_mismatch(tmp_path: Path, repo_root
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["index_sha256"] = custody.sha256_file(custody_dir / "v4_source_custody_access_index_v1.jsonl")
     receipt_tampered["receipt_id"] = custody._make_receipt_id(
-        receipt_tampered["config_sha256"], receipt_tampered["index_sha256"]
+        receipt_tampered["config_sha256"],
+        receipt_tampered["index_sha256"],
+        receipt_tampered["missing_report_sha256"],
     )
     (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(
         json.dumps(receipt_tampered), encoding="utf-8"
@@ -601,7 +613,9 @@ def test_verify_detects_missing_provenance_index(tmp_path: Path, repo_root: Path
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["config_sha256"] = expected_config_sha
     receipt_tampered["index_sha256"] = custody.sha256_file(custody_dir / "v4_source_custody_access_index_v1.jsonl")
-    receipt_tampered["receipt_id"] = custody._make_receipt_id(expected_config_sha, receipt_tampered["index_sha256"])
+    receipt_tampered["receipt_id"] = custody._make_receipt_id(
+        expected_config_sha, receipt_tampered["index_sha256"], receipt_tampered["missing_report_sha256"]
+    )
     (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(
         json.dumps(receipt_tampered), encoding="utf-8"
     )
@@ -694,7 +708,9 @@ def test_verify_detects_recomputed_safety_assertion_violations(tmp_path: Path, r
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["index_sha256"] = custody.sha256_file(custody_dir / "v4_source_custody_access_index_v1.jsonl")
     receipt_tampered["receipt_id"] = custody._make_receipt_id(
-        receipt_tampered["config_sha256"], receipt_tampered["index_sha256"]
+        receipt_tampered["config_sha256"],
+        receipt_tampered["index_sha256"],
+        receipt_tampered["missing_report_sha256"],
     )
     (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(
         json.dumps(receipt_tampered), encoding="utf-8"
@@ -744,7 +760,9 @@ def test_verify_detects_evidence_ref_private_host_path(tmp_path: Path, repo_root
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["index_sha256"] = custody.sha256_file(custody_dir / "v4_source_custody_access_index_v1.jsonl")
     receipt_tampered["receipt_id"] = custody._make_receipt_id(
-        receipt_tampered["config_sha256"], receipt_tampered["index_sha256"]
+        receipt_tampered["config_sha256"],
+        receipt_tampered["index_sha256"],
+        receipt_tampered["missing_report_sha256"],
     )
     (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(
         json.dumps(receipt_tampered), encoding="utf-8"
@@ -796,6 +814,11 @@ def test_verify_detects_missing_report_freeform_private_host_paths(
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["missing_report_sha256"] = custody.sha256_file(missing_path)
+    receipt_tampered["receipt_id"] = custody._make_receipt_id(
+        receipt_tampered["config_sha256"],
+        receipt_tampered["index_sha256"],
+        receipt_tampered["missing_report_sha256"],
+    )
     (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(
         json.dumps(receipt_tampered), encoding="utf-8"
     )
@@ -820,9 +843,9 @@ def test_verify_allows_missing_report_valid_prose_with_reserved_words(tmp_path: 
             encoding="utf-8"
         )
     )
-    missing_data["missing_inputs"][0]["reason"] = "private archive unavailable"
-    missing_data["owner"] = "root cause investigator"
-    missing_data["scope"] = "temp failure investigation for non-stem cohort"
+    missing_data["accessible_eligible_sources_permitted_to_proceed"]["description"] = (
+        "root cause analysis: temp failure investigation for private archive reachability"
+    )
 
     missing_path = custody_dir / "v4_source_custody_missing_report_v1.json"
     missing_path.write_text(json.dumps(missing_data, indent=2) + "\n", encoding="utf-8")
@@ -831,6 +854,11 @@ def test_verify_allows_missing_report_valid_prose_with_reserved_words(tmp_path: 
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
     receipt_updated = copy.deepcopy(receipt_data)
     receipt_updated["missing_report_sha256"] = custody.sha256_file(missing_path)
+    receipt_updated["receipt_id"] = custody._make_receipt_id(
+        receipt_updated["config_sha256"],
+        receipt_updated["index_sha256"],
+        receipt_updated["missing_report_sha256"],
+    )
     (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(
         json.dumps(receipt_updated, indent=2) + "\n", encoding="utf-8"
     )
@@ -1125,7 +1153,9 @@ def test_verify_rejects_unknown_mode_labeled_as_confirmed_native(tmp_path: Path,
     # Re-hash index and update receipt summary counts to test semantic rejection
     receipt_data = json.loads((custody_orig / "v4_source_custody_access_receipt_v1.json").read_text(encoding="utf-8"))
     receipt_data["index_sha256"] = custody.sha256_file(tgt_custody / "v4_source_custody_access_index_v1.jsonl")
-    receipt_data["receipt_id"] = custody._make_receipt_id(receipt_data["config_sha256"], receipt_data["index_sha256"])
+    receipt_data["receipt_id"] = custody._make_receipt_id(
+        receipt_data["config_sha256"], receipt_data["index_sha256"], receipt_data["missing_report_sha256"]
+    )
     receipt_data["summary"]["confirmed_native_count"] += 1
     receipt_data["summary"]["textbook_cohort"]["confirmed_native"] += 1
     (tgt_custody / "v4_source_custody_access_receipt_v1.json").write_text(json.dumps(receipt_data), encoding="utf-8")
@@ -1163,7 +1193,9 @@ def test_verify_rejects_contradictory_lineage_status_and_mode_combinations(tmp_p
     )
     receipt_data = json.loads((custody_orig / "v4_source_custody_access_receipt_v1.json").read_text(encoding="utf-8"))
     receipt_data["index_sha256"] = custody.sha256_file(tgt_custody / "v4_source_custody_access_index_v1.jsonl")
-    receipt_data["receipt_id"] = custody._make_receipt_id(receipt_data["config_sha256"], receipt_data["index_sha256"])
+    receipt_data["receipt_id"] = custody._make_receipt_id(
+        receipt_data["config_sha256"], receipt_data["index_sha256"], receipt_data["missing_report_sha256"]
+    )
     (tgt_custody / "v4_source_custody_access_receipt_v1.json").write_text(json.dumps(receipt_data), encoding="utf-8")
 
     with pytest.raises(
@@ -1185,7 +1217,9 @@ def test_verify_rejects_contradictory_lineage_status_and_mode_combinations(tmp_p
         "\n".join(tampered_index_lines) + "\n", encoding="utf-8"
     )
     receipt_data["index_sha256"] = custody.sha256_file(tgt_custody / "v4_source_custody_access_index_v1.jsonl")
-    receipt_data["receipt_id"] = custody._make_receipt_id(receipt_data["config_sha256"], receipt_data["index_sha256"])
+    receipt_data["receipt_id"] = custody._make_receipt_id(
+        receipt_data["config_sha256"], receipt_data["index_sha256"], receipt_data["missing_report_sha256"]
+    )
     (tgt_custody / "v4_source_custody_access_receipt_v1.json").write_text(json.dumps(receipt_data), encoding="utf-8")
 
     with pytest.raises(
@@ -1193,3 +1227,188 @@ def test_verify_rejects_contradictory_lineage_status_and_mode_combinations(tmp_p
         match=r"lineage status is EXCLUDED_OCR but lineage_mode is 'native_digital_source'",
     ):
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+
+
+def test_bounded_custody_reader_rejects_non_positive_batch_size(tmp_path: Path) -> None:
+    """BoundedCustodyReader.read_source_stream must reject batch_size <= 0 (ACCESS-3)."""
+    db_path = tmp_path / "test.db"
+    conn = sqlite3.connect(db_path)
+    conn.execute("CREATE TABLE tbl (source_file TEXT, text TEXT)")
+    conn.execute("INSERT INTO tbl VALUES ('f1', 'hello')")
+    conn.commit()
+    conn.close()
+
+    reader = custody.BoundedCustodyReader(db_path)
+    with pytest.raises(custody.CustodyAccessError, match=r"batch_size must be strictly positive \(> 0\), got 0"):
+        reader.read_source_stream("tbl", "f1", batch_size=0)
+
+    with pytest.raises(custody.CustodyAccessError, match=r"batch_size must be strictly positive \(> 0\), got -10"):
+        reader.read_source_stream("tbl", "f1", batch_size=-10)
+
+
+def test_textbook_cohort_summary_missing_on_host_reflects_archive_reachability(tmp_path: Path, repo_root: Path) -> None:
+    """Receipt summary must count all textbooks with unmounted host archives as missing_on_host (122)."""
+    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
+    assert receipt_data["summary"]["textbook_cohort"]["missing_on_host"] == 122
+
+    tampered_out = tmp_path / "out"
+    tgt_custody = tampered_out / "data/projects/open_model_data/custody"
+    tgt_custody.mkdir(parents=True)
+
+    (tgt_custody / "v4_source_custody_access_index_v1.jsonl").write_bytes(
+        Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl").read_bytes()
+    )
+    (tgt_custody / "v4_source_custody_missing_report_v1.json").write_bytes(
+        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+    )
+
+    # Tamper missing_on_host back to 60 (only counting not-permitted) and verify rejection
+    receipt_tampered = copy.deepcopy(receipt_data)
+    receipt_tampered["summary"]["textbook_cohort"]["missing_on_host"] = 60
+    (tgt_custody / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
+
+    with pytest.raises(custody.CustodyAccessError, match=r"Receipt textbook_cohort discrepancy"):
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+
+
+@pytest.mark.parametrize(
+    ("meta_key", "tampered_val", "expected_err"),
+    [
+        ("owner", "unauthorized-party", r"Missing report owner mismatch"),
+        ("scope", "all datasets globally", r"Missing report scope mismatch"),
+        ("operator_decision_date", "1999-01-01", r"Missing report operator_decision_date mismatch"),
+        ("issue", 12345, r"Missing report issue mismatch"),
+        ("unmounted_archive_locator", "s3://tampered-bucket", r"Missing report unmounted_archive_locator mismatch"),
+    ],
+)
+def test_verify_detects_tampered_missing_report_metadata(
+    tmp_path: Path, repo_root: Path, meta_key: str, tampered_val: Any, expected_err: str
+) -> None:
+    """Missing report metadata must strictly match custody config (ACCESS-4)."""
+    tampered_out = tmp_path / "out"
+    tgt_custody = tampered_out / "data/projects/open_model_data/custody"
+    tgt_custody.mkdir(parents=True)
+
+    (tgt_custody / "v4_source_custody_access_index_v1.jsonl").write_bytes(
+        Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl").read_bytes()
+    )
+
+    missing_path = tgt_custody / "v4_source_custody_missing_report_v1.json"
+    missing_data = json.loads(
+        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    missing_data[meta_key] = tampered_val
+    missing_path.write_text(json.dumps(missing_data), encoding="utf-8")
+
+    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
+    receipt_tampered = copy.deepcopy(receipt_data)
+    receipt_tampered["missing_report_sha256"] = custody.sha256_file(missing_path)
+    receipt_tampered["receipt_id"] = custody._make_receipt_id(
+        receipt_tampered["config_sha256"],
+        receipt_tampered["index_sha256"],
+        receipt_tampered["missing_report_sha256"],
+    )
+    (tgt_custody / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
+
+    with pytest.raises(custody.CustodyAccessError, match=expected_err):
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+
+
+def test_verify_detects_tampered_missing_report_items(tmp_path: Path, repo_root: Path) -> None:
+    """Missing report items must strictly match derived missing items from the access index (ACCESS-4)."""
+    tampered_out = tmp_path / "out"
+    tgt_custody = tampered_out / "data/projects/open_model_data/custody"
+    tgt_custody.mkdir(parents=True)
+
+    (tgt_custody / "v4_source_custody_access_index_v1.jsonl").write_bytes(
+        Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl").read_bytes()
+    )
+
+    orig_missing = json.loads(
+        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
+
+    # Case 1: Dropping an item (count mismatch)
+    missing_tampered = copy.deepcopy(orig_missing)
+    missing_tampered["missing_inputs"].pop()
+    missing_path = tgt_custody / "v4_source_custody_missing_report_v1.json"
+    missing_path.write_text(json.dumps(missing_tampered), encoding="utf-8")
+
+    receipt_tampered = copy.deepcopy(receipt_data)
+    receipt_tampered["missing_report_sha256"] = custody.sha256_file(missing_path)
+    receipt_tampered["receipt_id"] = custody._make_receipt_id(
+        receipt_tampered["config_sha256"],
+        receipt_tampered["index_sha256"],
+        receipt_tampered["missing_report_sha256"],
+    )
+    (tgt_custody / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
+
+    with pytest.raises(custody.CustodyAccessError, match=r"Missing report item count mismatch"):
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+
+    # Case 2: Unexpected source_id
+    missing_tampered = copy.deepcopy(orig_missing)
+    missing_tampered["missing_inputs"][0]["source_id"] = "source.public_textbooks.unexpected_fictitious_id"
+    missing_path.write_text(json.dumps(missing_tampered), encoding="utf-8")
+    receipt_tampered["missing_report_sha256"] = custody.sha256_file(missing_path)
+    receipt_tampered["receipt_id"] = custody._make_receipt_id(
+        receipt_tampered["config_sha256"],
+        receipt_tampered["index_sha256"],
+        receipt_tampered["missing_report_sha256"],
+    )
+    (tgt_custody / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
+
+    with pytest.raises(
+        custody.CustodyAccessError, match=r"unexpected source_id 'source\.public_textbooks\.unexpected_fictitious_id'"
+    ):
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+
+    # Case 3: Altered field in an item (e.g. reason)
+    missing_tampered = copy.deepcopy(orig_missing)
+    sid = missing_tampered["missing_inputs"][0]["source_id"]
+    missing_tampered["missing_inputs"][0]["reason"] = "tampered_arbitrary_reason"
+    missing_path.write_text(json.dumps(missing_tampered), encoding="utf-8")
+    receipt_tampered["missing_report_sha256"] = custody.sha256_file(missing_path)
+    receipt_tampered["receipt_id"] = custody._make_receipt_id(
+        receipt_tampered["config_sha256"],
+        receipt_tampered["index_sha256"],
+        receipt_tampered["missing_report_sha256"],
+    )
+    (tgt_custody / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
+
+    with pytest.raises(custody.CustodyAccessError, match=rf"Missing report entry for '{re.escape(sid)}' mismatch"):
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+
+
+def test_receipt_id_includes_missing_report_sha256() -> None:
+    """Receipt ID must cryptographically bind config, index, and missing report hashes."""
+    id1 = custody._make_receipt_id("cfg_hash", "idx_hash", "missing_hash_1")
+    id2 = custody._make_receipt_id("cfg_hash", "idx_hash", "missing_hash_2")
+    assert id1 != id2
+
+    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
+    expected_id = custody._make_receipt_id(
+        receipt_data["config_sha256"],
+        receipt_data["index_sha256"],
+        receipt_data["missing_report_sha256"],
+    )
+    assert receipt_data["receipt_id"] == expected_id

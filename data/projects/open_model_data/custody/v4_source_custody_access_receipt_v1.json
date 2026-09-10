@@ -1,8 +1,8 @@
 {
   "schema_version": "v4_source_custody_access_receipt_v1",
-  "receipt_id": "receipt.custody.cc4625ab28ab515d1aaac31b",
+  "receipt_id": "receipt.custody.fdbcc74835121f49f4b046f3",
   "config_sha256": "6973cedc3b4a572064236a77405f7b8f15db3a85a0d6e76505d52d62e934ba07",
-  "index_sha256": "4eb52975a5be03144f38c587d22c408a3becd2cec4881933f2bb19b3ac5ec5b9",
+  "index_sha256": "80f18536e4e0980f5c06154f386d727ea14262db1b484e9cf9adcf4a4c5d0681",
   "missing_report_sha256": "3e58f19d6853a2891a4240732b902d2c57b68a0e26db2acf8f69d05de4bc04e7",
   "summary": {
     "total_sources_evaluated": 351,
@@ -23,7 +23,7 @@
       "cohort_id": "public-textbooks-non-stem-non-ocr",
       "total_sources": 122,
       "accessible_sources": 62,
-      "missing_on_host": 60,
+      "missing_on_host": 122,
       "confirmed_native": 62,
       "permitted_to_proceed": 62
     }
