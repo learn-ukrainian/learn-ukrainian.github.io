@@ -1,0 +1,2732 @@
+version: 1
+kind: atlas_source_inventory
+sources:
+- id: private-teacher-lesson-vocabulary-table-1-rows-611-1154
+  source_family: teacher_lesson
+  extraction_mode: curated_headword
+  title: Private teacher lesson vocabulary - explicit table rows 611-1154
+  locator: local-only explicit vocabulary table rows 611-1154
+  notes: Derived headword metadata only; raw private lesson material is local-only and not committed.
+    Daily Word, Practice, and cloze remain frozen without explicit surface_admission. Multi-word entries
+    and collocations are classified as phrase/verb/noun.
+  headwords:
+  - lemma: пільга
+    pos: noun
+    gloss: Benefit / Privilege
+    locator: explicit vocabulary table row 611
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: дрова
+    pos: noun
+    gloss: Firewood
+    locator: explicit vocabulary table row 612
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: порода
+    pos: noun
+    gloss: Breed
+    locator: explicit vocabulary table row 613
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: ладан
+    pos: noun
+    gloss: Incense
+    locator: explicit vocabulary table row 614
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: зазнати збитків
+    pos: verb
+    gloss: To suffer losses (perf)
+    locator: explicit vocabulary table row 615
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: пошкодження
+    pos: noun
+    gloss: Damage
+    locator: explicit vocabulary table row 616
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: землетрус
+    pos: noun
+    gloss: Earthquake
+    locator: explicit vocabulary table row 617
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: сарафанне радіо
+    pos: phrase
+    gloss: Word of mouth
+    locator: explicit vocabulary table row 618
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: скупий
+    pos: adjective
+    gloss: Stingy / Greedy
+    locator: explicit vocabulary table row 619
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: харчовий контейнер
+    pos: phrase
+    gloss: Lunchbox / Food container
+    locator: explicit vocabulary table row 620
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: лоток
+    pos: noun
+    gloss: Food container / Tray
+    locator: explicit vocabulary table row 621
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: загадковий
+    pos: adjective
+    gloss: Mysterious
+    locator: explicit vocabulary table row 622
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: таємничий
+    pos: adjective
+    gloss: Mysterious
+    locator: explicit vocabulary table row 623
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: лікарняний
+    pos: noun
+    gloss: Sick leave
+    locator: explicit vocabulary table row 624
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: покійний
+    pos: noun
+    gloss: Late / Deceased
+    locator: explicit vocabulary table row 625
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: засмагати
+    pos: verb
+    gloss: To sunbathe (impf)
+    locator: explicit vocabulary table row 626
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: засмагнути
+    pos: verb
+    gloss: To sunbathe (perf)
+    locator: explicit vocabulary table row 627
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: чемний
+    pos: adjective
+    gloss: Polite / Respectful
+    locator: explicit vocabulary table row 628
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: посилка
+    pos: noun
+    gloss: Parcel / Package
+    locator: explicit vocabulary table row 629
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: опік
+    pos: noun
+    gloss: Burn
+    locator: explicit vocabulary table row 630
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: багатодітна сім’я
+    pos: phrase
+    gloss: Large family
+    locator: explicit vocabulary table row 631
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: витрати
+    pos: noun
+    gloss: Expenses
+    locator: explicit vocabulary table row 632
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: худий
+    pos: adjective
+    gloss: Skinny / Thin
+    locator: explicit vocabulary table row 633
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: наймати
+    pos: verb
+    gloss: To hire (impf)
+    locator: explicit vocabulary table row 634
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: найняти
+    pos: verb
+    gloss: To hire (perf)
+    locator: explicit vocabulary table row 635
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: посудомийка
+    pos: noun
+    gloss: Dishwasher
+    locator: explicit vocabulary table row 636
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: смуга
+    pos: noun
+    gloss: Lane (road)
+    locator: explicit vocabulary table row 637
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: обганяти
+    pos: verb
+    gloss: To overtake (impf)
+    locator: explicit vocabulary table row 638
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: обігнати
+    pos: verb
+    gloss: To overtake (perf)
+    locator: explicit vocabulary table row 639
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: гнити
+    pos: verb
+    gloss: To rot (impf)
+    locator: explicit vocabulary table row 640
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: згнити
+    pos: verb
+    gloss: To rot (perf)
+    locator: explicit vocabulary table row 641
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: грабувати
+    pos: verb
+    gloss: To rob (impf)
+    locator: explicit vocabulary table row 642
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: пограбувати
+    pos: verb
+    gloss: To rob (perf)
+    locator: explicit vocabulary table row 643
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: старший
+    pos: adjective
+    gloss: Senior / Older
+    locator: explicit vocabulary table row 644
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: неповнолітній
+    pos: noun
+    gloss: Minor (underage)
+    locator: explicit vocabulary table row 645
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: викликати залежність
+    pos: verb
+    gloss: To be addictive (impf)
+    locator: explicit vocabulary table row 646
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: залежність
+    pos: noun
+    gloss: Addiction
+    locator: explicit vocabulary table row 647
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: ребро
+    pos: noun
+    gloss: Rib
+    locator: explicit vocabulary table row 648
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: перелом
+    pos: noun
+    gloss: Fracture / Break
+    locator: explicit vocabulary table row 649
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: загострення
+    pos: noun
+    gloss: Exacerbation / Aggravation
+    locator: explicit vocabulary table row 650
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: жебракувати
+    pos: verb
+    gloss: To beg for money (impf)
+    locator: explicit vocabulary table row 651
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: визнавати когось винним
+    pos: verb
+    gloss: To find someone guilty (impf)
+    locator: explicit vocabulary table row 652
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: визнати когось винним
+    pos: verb
+    gloss: To find someone guilty (perf)
+    locator: explicit vocabulary table row 653
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: працювати над
+    pos: verb
+    gloss: To work on (impf)
+    locator: explicit vocabulary table row 654
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: дрімати
+    pos: verb
+    gloss: To nap / doze (impf)
+    locator: explicit vocabulary table row 655
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: ймовірність
+    pos: noun
+    gloss: Probability / Likelihood
+    locator: explicit vocabulary table row 656
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: подати сигнал
+    pos: verb
+    gloss: To signal (perf)
+    locator: explicit vocabulary table row 657
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: підвернути ногу
+    pos: verb
+    gloss: To sprain / twist foot (perf)
+    locator: explicit vocabulary table row 658
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: дикий кабан
+    pos: phrase
+    gloss: Wild boar
+    locator: explicit vocabulary table row 659
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: взяти на роботу
+    pos: verb
+    gloss: To employ / hire (perf)
+    locator: explicit vocabulary table row 660
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: перстень
+    pos: noun
+    gloss: Ring
+    locator: explicit vocabulary table row 661
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: міністр закордонних справ
+    pos: phrase
+    gloss: Foreign Minister
+    locator: explicit vocabulary table row 662
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: злочин
+    pos: noun
+    gloss: Crime
+    locator: explicit vocabulary table row 663
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: спільник
+    pos: noun
+    gloss: Accomplice
+    locator: explicit vocabulary table row 664
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: граціозний
+    pos: adjective
+    gloss: Graceful
+    locator: explicit vocabulary table row 665
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: перешкода
+    pos: noun
+    gloss: Obstacle
+    locator: explicit vocabulary table row 666
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: довічне ув’язнення
+    pos: phrase
+    gloss: Life sentence
+    locator: explicit vocabulary table row 667
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: підлабузник
+    pos: noun
+    gloss: Sycophant / Bootlicker
+    locator: explicit vocabulary table row 668
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: ховати
+    pos: verb
+    gloss: To hide / bury (impf)
+    locator: explicit vocabulary table row 669
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: заховати
+    pos: verb
+    gloss: To hide (perf)
+    locator: explicit vocabulary table row 670
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: поховати
+    pos: verb
+    gloss: To bury (perf)
+    locator: explicit vocabulary table row 671
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: заражатися
+    pos: verb
+    gloss: To get infected (impf)
+    locator: explicit vocabulary table row 672
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: заразитися
+    pos: verb
+    gloss: To get infected (perf)
+    locator: explicit vocabulary table row 673
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: дотичний
+    pos: adjective
+    gloss: Tangent / Related
+    locator: explicit vocabulary table row 674
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: сумувати за
+    pos: verb
+    gloss: To miss (impf)
+    locator: explicit vocabulary table row 675
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: стежити за
+    pos: verb
+    gloss: To monitor / watch over (impf)
+    locator: explicit vocabulary table row 676
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: гидливий
+    pos: adjective
+    gloss: Squeamish
+    locator: explicit vocabulary table row 677
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: поставити запитання
+    pos: verb
+    gloss: To ask a question (perf)
+    locator: explicit vocabulary table row 678
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: ігнорувати
+    pos: verb
+    gloss: To ignore (impf)
+    locator: explicit vocabulary table row 679
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: проігнорувати
+    pos: verb
+    gloss: To ignore (perf)
+    locator: explicit vocabulary table row 680
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: зв’язатися з
+    pos: verb
+    gloss: To contact (perf)
+    locator: explicit vocabulary table row 681
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: застрягати
+    pos: verb
+    gloss: To get stuck (impf)
+    locator: explicit vocabulary table row 682
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: застрягнути
+    pos: verb
+    gloss: To get stuck (perf)
+    locator: explicit vocabulary table row 683
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: як стемніє
+    pos: phrase
+    gloss: When it gets dark
+    locator: explicit vocabulary table row 684
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: постувати
+    pos: verb
+    gloss: To fast (religious) (impf)
+    locator: explicit vocabulary table row 685
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: худоба
+    pos: noun
+    gloss: Livestock
+    locator: explicit vocabulary table row 686
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: хлів
+    pos: noun
+    gloss: Barn
+    locator: explicit vocabulary table row 687
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: доглядати
+    pos: verb
+    gloss: To look after / care for (impf)
+    locator: explicit vocabulary table row 688
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: доглянути
+    pos: verb
+    gloss: To look after / care for (perf)
+    locator: explicit vocabulary table row 689
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: частувати
+    pos: verb
+    gloss: To treat with food (impf)
+    locator: explicit vocabulary table row 690
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: стайня
+    pos: noun
+    gloss: Stable
+    locator: explicit vocabulary table row 691
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: померлий
+    pos: noun
+    gloss: Deceased
+    locator: explicit vocabulary table row 692
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: непорозуміння
+    pos: noun
+    gloss: Misunderstanding
+    locator: explicit vocabulary table row 693
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: напруга
+    pos: noun
+    gloss: Tension / Voltage
+    locator: explicit vocabulary table row 694
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: багаторічний
+    pos: adjective
+    gloss: Long-term / Perennial
+    locator: explicit vocabulary table row 695
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: посів
+    pos: noun
+    gloss: Crops / Sowing
+    locator: explicit vocabulary table row 696
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: санчата
+    pos: noun
+    gloss: Sled / Sleigh
+    locator: explicit vocabulary table row 697
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: імбирний пряник
+    pos: phrase
+    gloss: Gingerbread
+    locator: explicit vocabulary table row 698
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: янголятко
+    pos: noun
+    gloss: Little angel
+    locator: explicit vocabulary table row 699
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: сяяти
+    pos: verb
+    gloss: To shine (impf)
+    locator: explicit vocabulary table row 700
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: світити
+    pos: verb
+    gloss: To shine (impf)
+    locator: explicit vocabulary table row 701
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: засяяти
+    pos: verb
+    gloss: To shine / start shining (perf)
+    locator: explicit vocabulary table row 702
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: засвітити
+    pos: verb
+    gloss: To turn on light / shine (perf)
+    locator: explicit vocabulary table row 703
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: кориця
+    pos: noun
+    gloss: Cinnamon
+    locator: explicit vocabulary table row 704
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: льодяник
+    pos: noun
+    gloss: Lollipop
+    locator: explicit vocabulary table row 705
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: рити
+    pos: verb
+    gloss: To dig (impf)
+    locator: explicit vocabulary table row 706
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: зарити
+    pos: verb
+    gloss: To bury / dig in (perf)
+    locator: explicit vocabulary table row 707
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: річниця
+    pos: noun
+    gloss: Anniversary
+    locator: explicit vocabulary table row 708
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: роковини
+    pos: noun
+    gloss: Commemoration date (tragic)
+    locator: explicit vocabulary table row 709
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: набір
+    pos: noun
+    gloss: Set / Kit
+    locator: explicit vocabulary table row 710
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: пряжа
+    pos: noun
+    gloss: Yarn
+    locator: explicit vocabulary table row 711
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: флешка
+    pos: noun
+    gloss: USB flash drive
+    locator: explicit vocabulary table row 712
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: абонемент
+    pos: noun
+    gloss: Subscription / Season pass
+    locator: explicit vocabulary table row 713
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: Вифлеєм
+    pos: noun
+    gloss: Bethlehem
+    locator: explicit vocabulary table row 714
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: пастух
+    pos: noun
+    gloss: Shepherd
+    locator: explicit vocabulary table row 715
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: яловичина
+    pos: noun
+    gloss: Beef
+    locator: explicit vocabulary table row 716
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: свинина
+    pos: noun
+    gloss: Pork
+    locator: explicit vocabulary table row 717
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: телятина
+    pos: noun
+    gloss: Veal
+    locator: explicit vocabulary table row 718
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: курятина
+    pos: noun
+    gloss: Chicken meat
+    locator: explicit vocabulary table row 719
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: полювати
+    pos: verb
+    gloss: To hunt (impf)
+    locator: explicit vocabulary table row 720
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: скласти іспит
+    pos: verb
+    gloss: To pass / take an exam (perf)
+    locator: explicit vocabulary table row 721
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: знадобитися
+    pos: verb
+    gloss: To be needed (perf)
+    locator: explicit vocabulary table row 722
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: спроба
+    pos: noun
+    gloss: Attempt / Try
+    locator: explicit vocabulary table row 723
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: бухгалтер
+    pos: noun
+    gloss: Accountant
+    locator: explicit vocabulary table row 724
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: тривалість
+    pos: noun
+    gloss: Duration
+    locator: explicit vocabulary table row 725
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: речовина
+    pos: noun
+    gloss: Substance / Material
+    locator: explicit vocabulary table row 726
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: спрага
+    pos: noun
+    gloss: Thirst
+    locator: explicit vocabulary table row 727
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: словесно
+    pos: adverb
+    gloss: Verbally
+    locator: explicit vocabulary table row 728
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: непокоїти
+    pos: verb
+    gloss: To bother / worry (impf)
+    locator: explicit vocabulary table row 729
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: сліпо довіряти
+    pos: verb
+    gloss: To trust blindly (impf)
+    locator: explicit vocabulary table row 730
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: профілактика
+    pos: noun
+    gloss: Prevention
+    locator: explicit vocabulary table row 731
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: позбуватися
+    pos: verb
+    gloss: To get rid of (impf)
+    locator: explicit vocabulary table row 732
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: позбутися
+    pos: verb
+    gloss: To get rid of (perf)
+    locator: explicit vocabulary table row 733
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: надолужити
+    pos: verb
+    gloss: To catch up / make up for (perf)
+    locator: explicit vocabulary table row 734
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: зокрема
+    pos: adverb
+    gloss: In particular
+    locator: explicit vocabulary table row 735
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: хибне уявлення
+    pos: phrase
+    gloss: Misconception
+    locator: explicit vocabulary table row 736
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: справляти вплив
+    pos: verb
+    gloss: To exert influence (impf)
+    locator: explicit vocabulary table row 737
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: відточити навички
+    pos: verb
+    gloss: To hone skills (perf)
+    locator: explicit vocabulary table row 738
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: незліченний
+    pos: adjective
+    gloss: Countless
+    locator: explicit vocabulary table row 739
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: перевага
+    pos: noun
+    gloss: Advantage
+    locator: explicit vocabulary table row 740
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: здатний
+    pos: adjective
+    gloss: Capable
+    locator: explicit vocabulary table row 741
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: набувати досвіду
+    pos: verb
+    gloss: To gain experience (impf)
+    locator: explicit vocabulary table row 742
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: повсюдний
+    pos: adjective
+    gloss: Ubiquitous
+    locator: explicit vocabulary table row 743
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: дозвілля
+    pos: noun
+    gloss: Leisure
+    locator: explicit vocabulary table row 744
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: прокачувати мозок
+    pos: verb
+    gloss: To train the brain (impf)
+    locator: explicit vocabulary table row 745
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: ставити завдання
+    pos: verb
+    gloss: To set a task (impf)
+    locator: explicit vocabulary table row 746
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: здібності
+    pos: noun
+    gloss: Abilities
+    locator: explicit vocabulary table row 747
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: як інакше
+    pos: phrase
+    gloss: How else
+    locator: explicit vocabulary table row 748
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: перебіг
+    pos: noun
+    gloss: Course / Progress
+    locator: explicit vocabulary table row 749
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: сюжет
+    pos: noun
+    gloss: Plot
+    locator: explicit vocabulary table row 750
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: головоломка
+    pos: noun
+    gloss: Brain teaser / Puzzle
+    locator: explicit vocabulary table row 751
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: траплятися
+    pos: verb
+    gloss: To happen (impf)
+    locator: explicit vocabulary table row 752
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: розв’язати таємницю
+    pos: verb
+    gloss: To solve a mystery (perf)
+    locator: explicit vocabulary table row 753
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: сюжетні провисання
+    pos: phrase
+    gloss: Plot holes
+    locator: explicit vocabulary table row 754
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: стати у пригоді
+    pos: verb
+    gloss: To come in handy (perf)
+    locator: explicit vocabulary table row 755
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: ухвалювати рішення
+    pos: verb
+    gloss: To make a decision (impf)
+    locator: explicit vocabulary table row 756
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: ухвалити рішення
+    pos: verb
+    gloss: To make a decision (perf)
+    locator: explicit vocabulary table row 757
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: обробляти інформацію
+    pos: verb
+    gloss: To process information (impf)
+    locator: explicit vocabulary table row 758
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: смалець
+    pos: noun
+    gloss: Lard
+    locator: explicit vocabulary table row 759
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: обмін речовин
+    pos: phrase
+    gloss: Metabolism
+    locator: explicit vocabulary table row 760
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: метаболізм
+    pos: noun
+    gloss: Metabolism
+    locator: explicit vocabulary table row 761
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: насильство
+    pos: noun
+    gloss: Violence
+    locator: explicit vocabulary table row 762
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: на ділі
+    pos: phrase
+    gloss: In practice / In reality
+    locator: explicit vocabulary table row 763
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: доводити
+    pos: verb
+    gloss: To prove (impf)
+    locator: explicit vocabulary table row 764
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: довести
+    pos: verb
+    gloss: To prove (perf)
+    locator: explicit vocabulary table row 765
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: самонавіювання
+    pos: noun
+    gloss: Autosuggestion
+    locator: explicit vocabulary table row 766
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: засвоюватися
+    pos: verb
+    gloss: To be absorbed / assimilated (impf)
+    locator: explicit vocabulary table row 767
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: голитися
+    pos: verb
+    gloss: To shave (impf)
+    locator: explicit vocabulary table row 768
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: поголитися
+    pos: verb
+    gloss: To shave (perf)
+    locator: explicit vocabulary table row 769
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: надмірна кількість
+    pos: phrase
+    gloss: Excessive amount
+    locator: explicit vocabulary table row 770
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: травний тракт
+    pos: phrase
+    gloss: Digestive tract
+    locator: explicit vocabulary table row 771
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: відійти від
+    pos: verb
+    gloss: To move away from (perf)
+    locator: explicit vocabulary table row 772
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: наявність
+    pos: noun
+    gloss: Availability / Presence
+    locator: explicit vocabulary table row 773
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: розлад
+    pos: noun
+    gloss: Disorder
+    locator: explicit vocabulary table row 774
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: взаємодія
+    pos: noun
+    gloss: Interaction
+    locator: explicit vocabulary table row 775
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: дедалі
+    pos: adverb
+    gloss: Increasingly / More and more
+    locator: explicit vocabulary table row 776
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: порушення сну
+    pos: phrase
+    gloss: Sleep disturbance
+    locator: explicit vocabulary table row 777
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: зневага
+    pos: noun
+    gloss: Disregard / Disrespect
+    locator: explicit vocabulary table row 778
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: напружений
+    pos: adjective
+    gloss: Tense / Strenuous
+    locator: explicit vocabulary table row 779
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: навичка
+    pos: noun
+    gloss: Skill
+    locator: explicit vocabulary table row 780
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: самооцінка
+    pos: noun
+    gloss: Self-esteem
+    locator: explicit vocabulary table row 781
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: забезпечення
+    pos: noun
+    gloss: Provision / Ensuring
+    locator: explicit vocabulary table row 782
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: дохід
+    pos: noun
+    gloss: Income
+    locator: explicit vocabulary table row 783
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: надлишок
+    pos: noun
+    gloss: Excess
+    locator: explicit vocabulary table row 784
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: уникати
+    pos: verb
+    gloss: To avoid (impf)
+    locator: explicit vocabulary table row 785
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: уникнути
+    pos: verb
+    gloss: To avoid (perf)
+    locator: explicit vocabulary table row 786
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: ходьба
+    pos: noun
+    gloss: Walking
+    locator: explicit vocabulary table row 787
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: зневоднення
+    pos: noun
+    gloss: Dehydration
+    locator: explicit vocabulary table row 788
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: вплив
+    pos: noun
+    gloss: Impact / Influence
+    locator: explicit vocabulary table row 789
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: кинути виклик
+    pos: verb
+    gloss: To challenge (perf)
+    locator: explicit vocabulary table row 790
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: начинка
+    pos: noun
+    gloss: Filling
+    locator: explicit vocabulary table row 791
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: спалах захворювання
+    pos: phrase
+    gloss: Disease outbreak
+    locator: explicit vocabulary table row 792
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: висипатися
+    pos: verb
+    gloss: To get enough sleep (impf)
+    locator: explicit vocabulary table row 793
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: загартовуватися
+    pos: verb
+    gloss: To toughen up (perf)
+    locator: explicit vocabulary table row 794
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: вогнище інфекції
+    pos: phrase
+    gloss: Source of infection
+    locator: explicit vocabulary table row 795
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: карієс
+    pos: noun
+    gloss: Cavity / Caries
+    locator: explicit vocabulary table row 796
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: перебіг хвороби
+    pos: phrase
+    gloss: Course of disease
+    locator: explicit vocabulary table row 797
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: сприяти
+    pos: verb
+    gloss: To facilitate / promote (impf)
+    locator: explicit vocabulary table row 798
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: приміщення
+    pos: noun
+    gloss: Premises
+    locator: explicit vocabulary table row 799
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: раннє дитинство
+    pos: phrase
+    gloss: Early childhood
+    locator: explicit vocabulary table row 800
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: увага
+    pos: noun
+    gloss: Attention
+    locator: explicit vocabulary table row 801
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: довгостроковий
+    pos: adjective
+    gloss: Long-term
+    locator: explicit vocabulary table row 802
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: закономірність
+    pos: noun
+    gloss: Regularity / Pattern
+    locator: explicit vocabulary table row 803
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: нести в собі
+    pos: verb
+    gloss: To carry within
+    locator: explicit vocabulary table row 804
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: навколишнє середовище
+    pos: phrase
+    gloss: Environment
+    locator: explicit vocabulary table row 805
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: гризти
+    pos: verb
+    gloss: To gnaw / chew (impf)
+    locator: explicit vocabulary table row 806
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: балуватися
+    pos: verb
+    gloss: To indulge / fool around (impf)
+    locator: explicit vocabulary table row 807
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: жертвувати
+    pos: verb
+    gloss: To sacrifice (impf)
+    locator: explicit vocabulary table row 808
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: пожертвувати
+    pos: verb
+    gloss: To sacrifice (perf)
+    locator: explicit vocabulary table row 809
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: відбиватися на
+    pos: verb
+    gloss: To reflect on / impact (impf)
+    locator: explicit vocabulary table row 810
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: похапцем
+    pos: adverb
+    gloss: In a hurry
+    locator: explicit vocabulary table row 811
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: бути схильним
+    pos: verb
+    gloss: To be inclined / predisposed
+    locator: explicit vocabulary table row 812
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: обходитися
+    pos: verb
+    gloss: To manage without (impf)
+    locator: explicit vocabulary table row 813
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: обійтися
+    pos: verb
+    gloss: To manage without (perf)
+    locator: explicit vocabulary table row 814
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: обсяг
+    pos: noun
+    gloss: Volume / Scope
+    locator: explicit vocabulary table row 815
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: відсутність
+    pos: noun
+    gloss: Absence
+    locator: explicit vocabulary table row 816
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: присутність
+    pos: noun
+    gloss: Presence
+    locator: explicit vocabulary table row 817
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: нежить
+    pos: noun
+    gloss: Runny nose
+    locator: explicit vocabulary table row 818
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: закладений ніс
+    pos: phrase
+    gloss: Congested nose
+    locator: explicit vocabulary table row 819
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: кліщ
+    pos: noun
+    gloss: Tick
+    locator: explicit vocabulary table row 820
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: блідий
+    pos: adjective
+    gloss: Pale
+    locator: explicit vocabulary table row 821
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: млявий
+    pos: adjective
+    gloss: Lethargic / Sluggish
+    locator: explicit vocabulary table row 822
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: долати
+    pos: verb
+    gloss: To overcome (impf)
+    locator: explicit vocabulary table row 823
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: подолати
+    pos: verb
+    gloss: To overcome (perf)
+    locator: explicit vocabulary table row 824
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: внести корективи
+    pos: verb
+    gloss: To make adjustments (perf)
+    locator: explicit vocabulary table row 825
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: на кшталт
+    pos: phrase
+    gloss: Such as / Like
+    locator: explicit vocabulary table row 826
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: взяти до уваги
+    pos: verb
+    gloss: To take into account (perf)
+    locator: explicit vocabulary table row 827
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: ґрунтовно
+    pos: adverb
+    gloss: Thoroughly
+    locator: explicit vocabulary table row 828
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: далеко не завжди
+    pos: phrase
+    gloss: Not always
+    locator: explicit vocabulary table row 829
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: вуглеводи
+    pos: noun
+    gloss: Carbohydrates
+    locator: explicit vocabulary table row 830
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: крупа
+    pos: noun
+    gloss: Groats / Cereal
+    locator: explicit vocabulary table row 831
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: відповідно
+    pos: adverb
+    gloss: Respectively / Accordingly
+    locator: explicit vocabulary table row 832
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: додавати
+    pos: verb
+    gloss: To add (impf)
+    locator: explicit vocabulary table row 833
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: додати
+    pos: verb
+    gloss: To add (perf)
+    locator: explicit vocabulary table row 834
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: тягати залізо
+    pos: verb
+    gloss: To lift weights (coll.) (impf)
+    locator: explicit vocabulary table row 835
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: нирка
+    pos: noun
+    gloss: Kidney
+    locator: explicit vocabulary table row 836
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: клітковина
+    pos: noun
+    gloss: Fiber
+    locator: explicit vocabulary table row 837
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: бажано
+    pos: phrase
+    gloss: Preferably
+    locator: explicit vocabulary table row 838
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: схуднення
+    pos: noun
+    gloss: Weight loss
+    locator: explicit vocabulary table row 839
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: спорядження
+    pos: noun
+    gloss: Equipment / Gear
+    locator: explicit vocabulary table row 840
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: підтягнуте тіло
+    pos: phrase
+    gloss: Toned body
+    locator: explicit vocabulary table row 841
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: розбиратися
+    pos: verb
+    gloss: To figure out / understand (impf)
+    locator: explicit vocabulary table row 842
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: розібратися
+    pos: verb
+    gloss: To figure out / understand (perf)
+    locator: explicit vocabulary table row 843
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: запроваджувати
+    pos: verb
+    gloss: To implement (impf)
+    locator: explicit vocabulary table row 844
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: запровадити
+    pos: verb
+    gloss: To implement (perf)
+    locator: explicit vocabulary table row 845
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: високосний
+    pos: adjective
+    gloss: Leap (year)
+    locator: explicit vocabulary table row 846
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: накопичуватися
+    pos: verb
+    gloss: To accumulate (impf)
+    locator: explicit vocabulary table row 847
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: накопичитися
+    pos: verb
+    gloss: To accumulate (perf)
+    locator: explicit vocabulary table row 848
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: показник
+    pos: noun
+    gloss: Indicator / Index
+    locator: explicit vocabulary table row 849
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: відставати
+    pos: verb
+    gloss: To fall behind (impf)
+    locator: explicit vocabulary table row 850
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: родимка
+    pos: noun
+    gloss: Mole (skin)
+    locator: explicit vocabulary table row 851
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: віддалено
+    pos: adverb
+    gloss: Remotely
+    locator: explicit vocabulary table row 852
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: мережа
+    pos: noun
+    gloss: Network
+    locator: explicit vocabulary table row 853
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: розгорнути вебсайт
+    pos: verb
+    gloss: To deploy a website (perf)
+    locator: explicit vocabulary table row 854
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: комора
+    pos: noun
+    gloss: Storeroom / Pantry
+    locator: explicit vocabulary table row 855
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: кишеня
+    pos: noun
+    gloss: Pocket
+    locator: explicit vocabulary table row 856
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: складова
+    pos: noun
+    gloss: Component
+    locator: explicit vocabulary table row 857
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: застосунок
+    pos: noun
+    gloss: Application / App
+    locator: explicit vocabulary table row 858
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: апаратне забезпечення
+    pos: phrase
+    gloss: Hardware
+    locator: explicit vocabulary table row 859
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: капот
+    pos: noun
+    gloss: Hood / Bonnet
+    locator: explicit vocabulary table row 860
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: жвавий
+    pos: adjective
+    gloss: Lively / Brisk
+    locator: explicit vocabulary table row 861
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: обслуговувати
+    pos: verb
+    gloss: To serve / maintain (impf)
+    locator: explicit vocabulary table row 862
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: натискати
+    pos: verb
+    gloss: To press (impf)
+    locator: explicit vocabulary table row 863
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: натиснути
+    pos: verb
+    gloss: To press (perf)
+    locator: explicit vocabulary table row 864
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: майстерня
+    pos: noun
+    gloss: Workshop
+    locator: explicit vocabulary table row 865
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: за потреби
+    pos: phrase
+    gloss: If necessary
+    locator: explicit vocabulary table row 866
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: розгалужуватися
+    pos: verb
+    gloss: To branch out (impf)
+    locator: explicit vocabulary table row 867
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: ядро
+    pos: noun
+    gloss: Core / Kernel
+    locator: explicit vocabulary table row 868
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: створювати
+    pos: verb
+    gloss: To create (impf)
+    locator: explicit vocabulary table row 869
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: створити
+    pos: verb
+    gloss: To create (perf)
+    locator: explicit vocabulary table row 870
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: на відстані витягнутої руки
+    pos: phrase
+    gloss: Within arm's reach
+    locator: explicit vocabulary table row 871
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: очищуватися
+    pos: verb
+    gloss: To clean oneself (impf)
+    locator: explicit vocabulary table row 872
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: живлення
+    pos: noun
+    gloss: Power supply
+    locator: explicit vocabulary table row 873
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: вкладка
+    pos: noun
+    gloss: Tab (browser)
+    locator: explicit vocabulary table row 874
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: вводити
+    pos: verb
+    gloss: To input / enter (impf)
+    locator: explicit vocabulary table row 875
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: запит
+    pos: noun
+    gloss: Request / Query
+    locator: explicit vocabulary table row 876
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: жорсткий диск
+    pos: phrase
+    gloss: Hard drive
+    locator: explicit vocabulary table row 877
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: кільце
+    pos: noun
+    gloss: Ring
+    locator: explicit vocabulary table row 878
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: важіль
+    pos: noun
+    gloss: Lever
+    locator: explicit vocabulary table row 879
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: з самого початку
+    pos: phrase
+    gloss: From the very beginning
+    locator: explicit vocabulary table row 880
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: розпізнати запрошення
+    pos: verb
+    gloss: To recognize an invitation (perf)
+    locator: explicit vocabulary table row 881
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: надавати перевагу
+    pos: verb
+    gloss: To prefer (impf)
+    locator: explicit vocabulary table row 882
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: тарган
+    pos: noun
+    gloss: cockroach
+    locator: explicit vocabulary table row 883
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: доведеться
+    pos: verb
+    gloss: Will have to (perf)
+    locator: explicit vocabulary table row 884
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: укладати угоду
+    pos: verb
+    gloss: To conclude a deal (impf)
+    locator: explicit vocabulary table row 885
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: укласти угоду
+    pos: verb
+    gloss: To conclude a deal (perf)
+    locator: explicit vocabulary table row 886
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: скасовувати
+    pos: verb
+    gloss: To cancel (impf)
+    locator: explicit vocabulary table row 887
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: скасувати
+    pos: verb
+    gloss: To cancel (perf)
+    locator: explicit vocabulary table row 888
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: посвідчення водія
+    pos: phrase
+    gloss: Driver’s license
+    locator: explicit vocabulary table row 889
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: міністр закордонних справ
+    pos: phrase
+    gloss: Foreign Minister
+    locator: explicit vocabulary table row 890
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: на ім'я
+    pos: phrase
+    gloss: By name
+    locator: explicit vocabulary table row 891
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: знущатися з
+    pos: verb
+    gloss: To bully / abuse (impf)
+    locator: explicit vocabulary table row 892
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: сміятися з
+    pos: verb
+    gloss: To laugh at (impf)
+    locator: explicit vocabulary table row 893
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: у шоці від
+    pos: phrase
+    gloss: Shocked by
+    locator: explicit vocabulary table row 894
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: пронос
+    pos: noun
+    gloss: Diarrhea
+    locator: explicit vocabulary table row 895
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: діарея
+    pos: noun
+    gloss: Diarrhea
+    locator: explicit vocabulary table row 896
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: блювати
+    pos: verb
+    gloss: to throw up (vulgar)
+    locator: explicit vocabulary table row 897
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: Вифлеєм
+    pos: noun
+    gloss: Bethlehem
+    locator: explicit vocabulary table row 898
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: жорсткий диск
+    pos: phrase
+    gloss: Hard drive
+    locator: explicit vocabulary table row 899
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: з боку батька
+    pos: phrase
+    gloss: From dad’s side
+    locator: explicit vocabulary table row 900
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: навряд чи
+    pos: phrase
+    gloss: Hardly / Unlikely
+    locator: explicit vocabulary table row 901
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: графічний інтерфейс користувача
+    pos: phrase
+    gloss: Graphical User Interface (GUI)
+    locator: explicit vocabulary table row 902
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: лячно
+    pos: adverb
+    gloss: Scary
+    locator: explicit vocabulary table row 903
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: папка
+    pos: noun
+    gloss: Folder
+    locator: explicit vocabulary table row 904
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: попит
+    pos: noun
+    gloss: Demand
+    locator: explicit vocabulary table row 905
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: площа
+    pos: noun
+    gloss: Area / Square
+    locator: explicit vocabulary table row 906
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: периметр
+    pos: noun
+    gloss: Perimeter
+    locator: explicit vocabulary table row 907
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: рівний
+    pos: adjective
+    gloss: Equal / Straight
+    locator: explicit vocabulary table row 908
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: прихований
+    pos: adjective
+    gloss: Hidden
+    locator: explicit vocabulary table row 909
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: співвідношення
+    pos: noun
+    gloss: Ratio / Proportion
+    locator: explicit vocabulary table row 910
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: довжина
+    pos: noun
+    gloss: Length
+    locator: explicit vocabulary table row 911
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: ширина
+    pos: noun
+    gloss: Width
+    locator: explicit vocabulary table row 912
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: розрахунок
+    pos: noun
+    gloss: Calculation
+    locator: explicit vocabulary table row 913
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: дорівнювати
+    pos: verb
+    gloss: To equal (impf)
+    locator: explicit vocabulary table row 914
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: округлений
+    pos: adjective
+    gloss: Rounded off
+    locator: explicit vocabulary table row 915
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: спільний
+    pos: adjective
+    gloss: Mutual / Common
+    locator: explicit vocabulary table row 916
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: послідовність
+    pos: noun
+    gloss: Sequence
+    locator: explicit vocabulary table row 917
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: мушля
+    pos: noun
+    gloss: Shell
+    locator: explicit vocabulary table row 918
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: порожнеча
+    pos: noun
+    gloss: Emptiness
+    locator: explicit vocabulary table row 919
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: галузь
+    pos: noun
+    gloss: Sphere / Field
+    locator: explicit vocabulary table row 920
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: конкурентоспроможність
+    pos: noun
+    gloss: Competitiveness
+    locator: explicit vocabulary table row 921
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: спроможний
+    pos: adjective
+    gloss: Capable
+    locator: explicit vocabulary table row 922
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: розгалужена мережа
+    pos: phrase
+    gloss: Extensive network
+    locator: explicit vocabulary table row 923
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: ватага
+    pos: noun
+    gloss: Gang / Band
+    locator: explicit vocabulary table row 924
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: нечиста сила
+    pos: phrase
+    gloss: Evil spirits
+    locator: explicit vocabulary table row 925
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: верстви суспільства
+    pos: phrase
+    gloss: Social strata
+    locator: explicit vocabulary table row 926
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: підпорядкувати
+    pos: verb
+    gloss: To subordinate (perf)
+    locator: explicit vocabulary table row 927
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: пошитись в дурні
+    pos: verb
+    gloss: To make a fool of oneself (perf)
+    locator: explicit vocabulary table row 928
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: втратити страх
+    pos: verb
+    gloss: To lose fear (perf)
+    locator: explicit vocabulary table row 929
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: зарозумілий
+    pos: adjective
+    gloss: Arrogant
+    locator: explicit vocabulary table row 930
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: зухвалий
+    pos: adjective
+    gloss: Audacious / Bold
+    locator: explicit vocabulary table row 931
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: нахабний
+    pos: adjective
+    gloss: Impudent / Arrogant
+    locator: explicit vocabulary table row 932
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: гармидер
+    pos: noun
+    gloss: Mess / Chaos
+    locator: explicit vocabulary table row 933
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: порушувати правила
+    pos: verb
+    gloss: To break rules (impf)
+    locator: explicit vocabulary table row 934
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: навряд чи
+    pos: phrase
+    gloss: Hardly / Unlikely
+    locator: explicit vocabulary table row 935
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: черговий
+    pos: noun
+    gloss: On duty / Yet another
+    locator: explicit vocabulary table row 936
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: споріднена душа
+    pos: phrase
+    gloss: Soulmate
+    locator: explicit vocabulary table row 937
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: стояти на задньому плані
+    pos: verb
+    gloss: To stay in the background (impf)
+    locator: explicit vocabulary table row 938
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: смертний вирок
+    pos: phrase
+    gloss: Death penalty
+    locator: explicit vocabulary table row 939
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: потойбіччя
+    pos: noun
+    gloss: Afterlife
+    locator: explicit vocabulary table row 940
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: знахар
+    pos: noun
+    gloss: Folk healer
+    locator: explicit vocabulary table row 941
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: загін
+    pos: noun
+    gloss: Squad / Detachment
+    locator: explicit vocabulary table row 942
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: дар
+    pos: noun
+    gloss: Gift / Talent
+    locator: explicit vocabulary table row 943
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: обдарований
+    pos: adjective
+    gloss: Talented
+    locator: explicit vocabulary table row 944
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: посада
+    pos: noun
+    gloss: Position / Post
+    locator: explicit vocabulary table row 945
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: посадовець
+    pos: noun
+    gloss: Official
+    locator: explicit vocabulary table row 946
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: історична постать
+    pos: phrase
+    gloss: Historical figure
+    locator: explicit vocabulary table row 947
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: безліч
+    pos: noun
+    gloss: Myriad / Countless
+    locator: explicit vocabulary table row 948
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: спотворювати
+    pos: verb
+    gloss: To distort (impf)
+    locator: explicit vocabulary table row 949
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: спотворити
+    pos: verb
+    gloss: To distort (perf)
+    locator: explicit vocabulary table row 950
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: струс мозку
+    pos: phrase
+    gloss: Concussion
+    locator: explicit vocabulary table row 951
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: сприяти розвитку
+    pos: verb
+    gloss: To promote development (impf)
+    locator: explicit vocabulary table row 952
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: відсіч
+    pos: noun
+    gloss: Repulse / Rebuff
+    locator: explicit vocabulary table row 953
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: укріплення
+    pos: noun
+    gloss: Fortification
+    locator: explicit vocabulary table row 954
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: земельні володіння
+    pos: phrase
+    gloss: Land ownership
+    locator: explicit vocabulary table row 955
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: стратити
+    pos: verb
+    gloss: To execute (perf)
+    locator: explicit vocabulary table row 956
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: каркати
+    pos: verb
+    gloss: To jinx / croak (impf)
+    locator: explicit vocabulary table row 957
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: накаркати
+    pos: verb
+    gloss: To jinx (perf)
+    locator: explicit vocabulary table row 958
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: походження
+    pos: noun
+    gloss: Origin
+    locator: explicit vocabulary table row 959
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: земельні угіддя
+    pos: phrase
+    gloss: Agricultural land
+    locator: explicit vocabulary table row 960
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: самосвідомість
+    pos: noun
+    gloss: Self-awareness
+    locator: explicit vocabulary table row 961
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: не те щоб
+    pos: phrase
+    gloss: It’s not that
+    locator: explicit vocabulary table row 962
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: вміння
+    pos: noun
+    gloss: Skill / Ability
+    locator: explicit vocabulary table row 963
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: загоряти
+    pos: verb
+    gloss: To get tanned (impf)
+    locator: explicit vocabulary table row 964
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: загоріти
+    pos: verb
+    gloss: To get tanned (perf)
+    locator: explicit vocabulary table row 965
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: засмага
+    pos: noun
+    gloss: Tan
+    locator: explicit vocabulary table row 966
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: подробиці
+    pos: noun
+    gloss: Details
+    locator: explicit vocabulary table row 967
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: ерудиція
+    pos: noun
+    gloss: Erudition
+    locator: explicit vocabulary table row 968
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: не дійти одностайної думки
+    pos: phrase
+    gloss: Not reach consensus (perf)
+    locator: explicit vocabulary table row 969
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: гострий розум
+    pos: phrase
+    gloss: Sharp mind
+    locator: explicit vocabulary table row 970
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: передбачати перебіг подій
+    pos: verb
+    gloss: To predict event course (impf)
+    locator: explicit vocabulary table row 971
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: вільно володіти мовою
+    pos: verb
+    gloss: To be fluent in language (impf)
+    locator: explicit vocabulary table row 972
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: талановитий промовець
+    pos: phrase
+    gloss: Gifted orator
+    locator: explicit vocabulary table row 973
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: впливати на громадську думку
+    pos: verb
+    gloss: To influence public opinion (impf)
+    locator: explicit vocabulary table row 974
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: не образити господаря
+    pos: phrase
+    gloss: Not to offend host (perf)
+    locator: explicit vocabulary table row 975
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: не прагнути розкоші
+    pos: phrase
+    gloss: Not to seek luxury (impf)
+    locator: explicit vocabulary table row 976
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: розбиратися у чомусь
+    pos: verb
+    gloss: To be knowledgeable in (impf)
+    locator: explicit vocabulary table row 977
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: найбільше кохання
+    pos: phrase
+    gloss: Greatest love
+    locator: explicit vocabulary table row 978
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: відповідати за фінанси
+    pos: verb
+    gloss: To handle finances (impf)
+    locator: explicit vocabulary table row 979
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: політична кар’єра
+    pos: phrase
+    gloss: Political career
+    locator: explicit vocabulary table row 980
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: суперечлива постать
+    pos: phrase
+    gloss: Controversial figure
+    locator: explicit vocabulary table row 981
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: особисте потрясіння
+    pos: phrase
+    gloss: Personal trauma
+    locator: explicit vocabulary table row 982
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: не змогти оговтатися
+    pos: verb
+    gloss: To fail to recover (perf)
+    locator: explicit vocabulary table row 983
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: бути присвяченим комусь
+    pos: verb
+    gloss: To be dedicated to (impf)
+    locator: explicit vocabulary table row 984
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: відповідно до рішення
+    pos: phrase
+    gloss: According to decision
+    locator: explicit vocabulary table row 985
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: розглядати варіанти
+    pos: verb
+    gloss: To consider options (impf)
+    locator: explicit vocabulary table row 986
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: зрештою
+    pos: adverb
+    gloss: Eventually / In the end
+    locator: explicit vocabulary table row 987
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: увійти в історію
+    pos: verb
+    gloss: To go down in history (perf)
+    locator: explicit vocabulary table row 988
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: залишити помітний слід
+    pos: verb
+    gloss: To leave a significant mark (perf)
+    locator: explicit vocabulary table row 989
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: відіграти важливу роль
+    pos: verb
+    gloss: To play an important role (perf)
+    locator: explicit vocabulary table row 990
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: користуватися авторитетом
+    pos: verb
+    gloss: To hold authority (impf)
+    locator: explicit vocabulary table row 991
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: мати вплив на події
+    pos: verb
+    gloss: To influence events (impf)
+    locator: explicit vocabulary table row 992
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: спадкоємець
+    pos: noun
+    gloss: Heir
+    locator: explicit vocabulary table row 993
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: смородина
+    pos: noun
+    gloss: Blackcurrant
+    locator: explicit vocabulary table row 994
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: порічка
+    pos: noun
+    gloss: Redcurrant / Whitecurrant
+    locator: explicit vocabulary table row 995
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: повноліття
+    pos: noun
+    gloss: Legal age / Adulthood
+    locator: explicit vocabulary table row 996
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: заколот
+    pos: noun
+    gloss: Uprising / Revolt
+    locator: explicit vocabulary table row 997
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: під проводом
+    pos: phrase
+    gloss: Under leadership of
+    locator: explicit vocabulary table row 998
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: вщент
+    pos: adverb
+    gloss: Completely / Utterly
+    locator: explicit vocabulary table row 999
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: намотати на вус
+    pos: verb
+    gloss: To take note of (idiom) (perf)
+    locator: explicit vocabulary table row 1000
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: присяга
+    pos: noun
+    gloss: Oath
+    locator: explicit vocabulary table row 1001
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: постригтися в ченці
+    pos: verb
+    gloss: To take monastic vows (perf)
+    locator: explicit vocabulary table row 1002
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: поплатитися головою
+    pos: verb
+    gloss: To pay with one's life (perf)
+    locator: explicit vocabulary table row 1003
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: відпустка
+    pos: noun
+    gloss: Vacation / Leave
+    locator: explicit vocabulary table row 1004
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: повстанець
+    pos: noun
+    gloss: Rebel
+    locator: explicit vocabulary table row 1005
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: всіляко
+    pos: adverb
+    gloss: In every way
+    locator: explicit vocabulary table row 1006
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: глухий як тетеря
+    pos: phrase
+    gloss: Deaf as a post (idiom)
+    locator: explicit vocabulary table row 1007
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: представник
+    pos: noun
+    gloss: Representative
+    locator: explicit vocabulary table row 1008
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: відрядження
+    pos: noun
+    gloss: Business trip
+    locator: explicit vocabulary table row 1009
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: заручитися підтримкою
+    pos: verb
+    gloss: To gain support (perf)
+    locator: explicit vocabulary table row 1010
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: завоювати
+    pos: verb
+    gloss: To conquer / win (perf)
+    locator: explicit vocabulary table row 1011
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: обіцянка
+    pos: noun
+    gloss: Promise
+    locator: explicit vocabulary table row 1012
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: запроданство
+    pos: noun
+    gloss: Treachery / Betrayal
+    locator: explicit vocabulary table row 1013
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: далекосяжний
+    pos: adjective
+    gloss: Far-reaching
+    locator: explicit vocabulary table row 1014
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: соратник
+    pos: noun
+    gloss: Comrade-in-arms
+    locator: explicit vocabulary table row 1015
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: походити з давнього роду
+    pos: verb
+    gloss: To stem from an old family line (impf)
+    locator: explicit vocabulary table row 1016
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: здобути хорошу освіту
+    pos: verb
+    gloss: To receive good education (perf)
+    locator: explicit vocabulary table row 1017
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: легко знаходити спільну мову
+    pos: verb
+    gloss: To get along easily (impf)
+    locator: explicit vocabulary table row 1018
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: завоювати довіру
+    pos: verb
+    gloss: To earn trust (perf)
+    locator: explicit vocabulary table row 1019
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: належати до найближчого оточення
+    pos: verb
+    gloss: To belong to inner circle (impf)
+    locator: explicit vocabulary table row 1020
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: не взяти до уваги
+    pos: verb
+    gloss: To fail to account for (perf)
+    locator: explicit vocabulary table row 1021
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: обрати гетьманом
+    pos: verb
+    gloss: To elect as hetman (perf)
+    locator: explicit vocabulary table row 1022
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: укласти союз
+    pos: verb
+    gloss: To conclude an alliance (perf)
+    locator: explicit vocabulary table row 1023
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: шукати підтримки
+    pos: verb
+    gloss: To seek support (impf)
+    locator: explicit vocabulary table row 1024
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: утримати владу
+    pos: verb
+    gloss: To retain power (perf)
+    locator: explicit vocabulary table row 1025
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: втручатися у справи
+    pos: verb
+    gloss: To interfere in affairs (impf)
+    locator: explicit vocabulary table row 1026
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: відмовитися від претензій
+    pos: verb
+    gloss: To renounce claims (perf)
+    locator: explicit vocabulary table row 1027
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: перетворюватися на руїну
+    pos: verb
+    gloss: To turn into ruins (impf)
+    locator: explicit vocabulary table row 1028
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: залишити домівку
+    pos: verb
+    gloss: To leave home (perf)
+    locator: explicit vocabulary table row 1029
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: розчаруватися в політиці
+    pos: verb
+    gloss: To become disillusioned in policy (perf)
+    locator: explicit vocabulary table row 1030
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: зректися булави
+    pos: verb
+    gloss: To abdicate hetman's mace (perf)
+    locator: explicit vocabulary table row 1031
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: перебувати під владою
+    pos: verb
+    gloss: To be under rule of (impf)
+    locator: explicit vocabulary table row 1032
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: дійти висновку
+    pos: verb
+    gloss: To come to a conclusion (perf)
+    locator: explicit vocabulary table row 1033
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: мати вирішальне значення
+    pos: verb
+    gloss: To be of crucial importance (impf)
+    locator: explicit vocabulary table row 1034
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: докласти значних зусиль
+    pos: verb
+    gloss: To make considerable efforts (perf)
+    locator: explicit vocabulary table row 1035
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: зазнати значних втрат
+    pos: verb
+    gloss: To suffer heavy losses (perf)
+    locator: explicit vocabulary table row 1036
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: опинитися в складному становищі
+    pos: verb
+    gloss: To find oneself in a tight spot (perf)
+    locator: explicit vocabulary table row 1037
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: нищівний
+    pos: adjective
+    gloss: devastating
+    locator: explicit vocabulary table row 1038
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: сплюндрований
+    pos: adjective
+    gloss: ravaged
+    locator: explicit vocabulary table row 1039
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: перейти на бік
+    pos: verb
+    gloss: to switch sides
+    locator: explicit vocabulary table row 1040
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: вести переговори
+    pos: verb
+    gloss: to negotiate
+    locator: explicit vocabulary table row 1041
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: спиратися на підтримку
+    pos: phrase
+    gloss: rely on support
+    locator: explicit vocabulary table row 1042
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: викликати незадоволення
+    pos: verb
+    gloss: to cause dissatisfaction
+    locator: explicit vocabulary table row 1043
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: написати донос
+    pos: verb
+    gloss: to file a police report
+    locator: explicit vocabulary table row 1044
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: засудити до страти
+    pos: verb
+    gloss: to sentence to death
+    locator: explicit vocabulary table row 1045
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: замінити вирок
+    pos: verb
+    gloss: to commute the sentence
+    locator: explicit vocabulary table row 1046
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: очолити оборону
+    pos: verb
+    gloss: to lead the defence
+    locator: explicit vocabulary table row 1047
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: керувати землями
+    pos: verb
+    gloss: to manage the land
+    locator: explicit vocabulary table row 1048
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: постригтися у ченці
+    pos: verb
+    gloss: to take monastic vows
+    locator: explicit vocabulary table row 1049
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: увічнити пам'ять
+    pos: verb
+    gloss: to honour the memory of
+    locator: explicit vocabulary table row 1050
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: повернути ім'я із забуття
+    pos: verb
+    gloss: to restore a name from oblivion
+    locator: explicit vocabulary table row 1051
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: заздалегідь
+    pos: adverb
+    gloss: in advance
+    locator: explicit vocabulary table row 1052
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: мати на меті
+    pos: verb
+    gloss: to have as a goal; to aim to
+    locator: explicit vocabulary table row 1053
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: чарка
+    pos: noun
+    gloss: shot glass
+    locator: explicit vocabulary table row 1054
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: наступити на граблі
+    pos: verb
+    gloss: to make the same mistake again
+    locator: explicit vocabulary table row 1055
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: скочити через пліт
+    pos: verb
+    gloss: to cheat (in marriage; relationship)
+    locator: explicit vocabulary table row 1056
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: дійшла звістка
+    pos: phrase
+    gloss: the news came
+    locator: explicit vocabulary table row 1057
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: кинути все
+    pos: phrase
+    gloss: give up everything; leave everything
+    locator: explicit vocabulary table row 1058
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: передати провід
+    pos: phrase
+    gloss: pass the lead
+    locator: explicit vocabulary table row 1059
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: розбиратися
+    pos: verb
+    gloss: To figure out / understand (impf)
+    locator: explicit vocabulary table row 1060
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: виголосити присягу
+    pos: verb
+    gloss: to take an oath
+    locator: explicit vocabulary table row 1061
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: просуватися вперед
+    pos: verb
+    gloss: to advance forward
+    locator: explicit vocabulary table row 1062
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: строчити
+    pos: verb
+    gloss: to write hurriedly
+    locator: explicit vocabulary table row 1063
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: рихтувати пики
+    pos: verb
+    gloss: to beat someone’s faces
+    locator: explicit vocabulary table row 1064
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: наживати (нажити – perf) ворогів
+    pos: verb
+    gloss: to make enemies
+    locator: explicit vocabulary table row 1065
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: з легкої руки
+    pos: phrase
+    gloss: thanks to
+    locator: explicit vocabulary table row 1066
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: ладнати
+    pos: verb
+    gloss: to get along
+    locator: explicit vocabulary table row 1067
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: усунути (perf)
+    pos: phrase
+    gloss: eliminate
+    locator: explicit vocabulary table row 1068
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: поставити перед кимось низку умов
+    pos: verb
+    gloss: to impose/set a number of conditions on someone
+    locator: explicit vocabulary table row 1069
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: низка
+    pos: noun
+    gloss: a number; a list; amount
+    locator: explicit vocabulary table row 1070
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: верстви населення
+    pos: phrase
+    gloss: social classes of population
+    locator: explicit vocabulary table row 1071
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: погодитися на умови
+    pos: verb
+    gloss: to agree to the conditions
+    locator: explicit vocabulary table row 1072
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: проводити політику
+    pos: verb
+    gloss: to pursue a policy
+    locator: explicit vocabulary table row 1073
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: відповідати чиїмось інтересам
+    pos: verb
+    gloss: to serve / correspond to someone’s interests
+    locator: explicit vocabulary table row 1074
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: поширювати свій вплив
+    pos: verb
+    gloss: to expand one’s influence
+    locator: explicit vocabulary table row 1075
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: опинитися під чиєюсь булавою
+    pos: verb
+    gloss: to come under someone’s rule
+    locator: explicit vocabulary table row 1076
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: висунути претензії на щось
+    pos: verb
+    gloss: to lay claim to something
+    locator: explicit vocabulary table row 1077
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: загострити / загострювати розбіжності
+    pos: verb
+    gloss: to exacerbate differences
+    locator: explicit vocabulary table row 1078
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: зазнати переслідувань
+    pos: verb
+    gloss: to face persecution
+    locator: explicit vocabulary table row 1079
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: отримати висвячення
+    pos: verb
+    gloss: to receive ordination
+    locator: explicit vocabulary table row 1080
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: підтримувати добрі відносини
+    pos: verb
+    gloss: to maintain good relations
+    locator: explicit vocabulary table row 1081
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: виступати проти чогось
+    pos: verb
+    gloss: to oppose something
+    locator: explicit vocabulary table row 1082
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: застерігати когось від чогось
+    pos: verb
+    gloss: to warn someone against something
+    locator: explicit vocabulary table row 1083
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: усупереч чиїйсь позиції
+    pos: phrase
+    gloss: contrary to someone’s position
+    locator: explicit vocabulary table row 1084
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: вкрай непопулярний
+    pos: phrase
+    gloss: extremely unpopular
+    locator: explicit vocabulary table row 1085
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: не розкривати справжніх причин
+    pos: phrase
+    gloss: not to reveal the real reasons
+    locator: explicit vocabulary table row 1086
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: марно намагатися
+    pos: verb
+    gloss: to try in vain
+    locator: explicit vocabulary table row 1087
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: залишатися неясним
+    pos: verb
+    gloss: to remain unclear
+    locator: explicit vocabulary table row 1088
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: покласти відповідальність на когось
+    pos: verb
+    gloss: to place/blame responsibility on someone
+    locator: explicit vocabulary table row 1089
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: дати хід доносу
+    pos: verb
+    gloss: to act on / give consideration to a denunciation
+    locator: explicit vocabulary table row 1090
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: закидати комусь щось
+    pos: verb
+    gloss: to accuse someone of something
+    locator: explicit vocabulary table row 1091
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: жити не в злагоді з кимось
+    pos: verb
+    gloss: to be on bad terms with someone
+    locator: explicit vocabulary table row 1092
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: подати донос
+    pos: verb
+    gloss: to file/make a denunciation
+    locator: explicit vocabulary table row 1093
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: надійти від уряду
+    pos: verb
+    gloss: to arrive from the government
+    locator: explicit vocabulary table row 1094
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: покласти в основу
+    pos: verb
+    gloss: to use as the basis
+    locator: explicit vocabulary table row 1095
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: здобути хорошу освіту
+    pos: verb
+    gloss: To receive good education (perf)
+    locator: explicit vocabulary table row 1096
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: обійняти посаду
+    pos: verb
+    gloss: to take up / hold a position
+    locator: explicit vocabulary table row 1097
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: вести листування з кимось
+    pos: verb
+    gloss: to correspond with someone
+    locator: explicit vocabulary table row 1098
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: відступити до
+    pos: verb
+    gloss: to retreat to
+    locator: explicit vocabulary table row 1099
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: обмежити владу
+    pos: verb
+    gloss: to limit/restrict power
+    locator: explicit vocabulary table row 1100
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: запровадити
+    pos: verb
+    gloss: To implement (perf)
+    locator: explicit vocabulary table row 1101
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: зловживати владою
+    pos: verb
+    gloss: to abuse power
+    locator: explicit vocabulary table row 1102
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: використовувати щось у власних інтересах
+    pos: verb
+    gloss: to use something for one's own interests
+    locator: explicit vocabulary table row 1103
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: заручитися підтримкою
+    pos: verb
+    gloss: To gain support (perf)
+    locator: explicit vocabulary table row 1104
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: розпочати похід
+    pos: verb
+    gloss: to launch a campaign
+    locator: explicit vocabulary table row 1105
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: жити в еміграції
+    pos: verb
+    gloss: to live in exile
+    locator: explicit vocabulary table row 1106
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: домагатися підтримки
+    pos: verb
+    gloss: to seek/gain support
+    locator: explicit vocabulary table row 1107
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: не полишати надії
+    pos: phrase
+    gloss: not to give up hope
+    locator: explicit vocabulary table row 1108
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: відстояти незалежність
+    pos: verb
+    gloss: to defend/secure independence
+    locator: explicit vocabulary table row 1109
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: підходити для посади
+    pos: phrase
+    gloss: be suitable for a position / fit a role
+    locator: explicit vocabulary table row 1110
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: провести частину кар’єри
+    pos: phrase
+    gloss: spend a portion of one's career
+    locator: explicit vocabulary table row 1111
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: у складі дипломатичної місії
+    pos: phrase
+    gloss: as part of a diplomatic mission
+    locator: explicit vocabulary table row 1112
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: спиратися на підтримку
+    pos: phrase
+    gloss: rely on support
+    locator: explicit vocabulary table row 1113
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: забезпечити стабільність
+    pos: phrase
+    gloss: ensure stability / provide stability
+    locator: explicit vocabulary table row 1114
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: обмежити владу
+    pos: verb
+    gloss: to limit/restrict power
+    locator: explicit vocabulary table row 1115
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: посилити присутність
+    pos: phrase
+    gloss: strengthen presence / reinforce presence
+    locator: explicit vocabulary table row 1116
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: обходити умови договору
+    pos: phrase
+    gloss: bypass the terms of a treaty / circumvent agreement terms
+    locator: explicit vocabulary table row 1117
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: придушити повстання
+    pos: phrase
+    gloss: suppress an uprising / quell a rebellion
+    locator: explicit vocabulary table row 1118
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: впоратися із ситуацією
+    pos: phrase
+    gloss: handle the situation / cope with the situation
+    locator: explicit vocabulary table row 1119
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: скасувати устрій
+    pos: phrase
+    gloss: abolish the system / dismantle the structure
+    locator: explicit vocabulary table row 1120
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: запровадити обов’язкові відробітки
+    pos: phrase
+    gloss: introduce mandatory labor / institute compulsory labor duty
+    locator: explicit vocabulary table row 1121
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: бути зобов’язаним щось робити
+    pos: phrase
+    gloss: be obliged to do something / be bound to do something
+    locator: explicit vocabulary table row 1122
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: укласти союз
+    pos: verb
+    gloss: To conclude an alliance (perf)
+    locator: explicit vocabulary table row 1123
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: порушити умови угоди
+    pos: phrase
+    gloss: violate the terms of an agreement / breach a contract
+    locator: explicit vocabulary table row 1124
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: перейти на бік когось
+    pos: phrase
+    gloss: defect to someone's side / switch sides to
+    locator: explicit vocabulary table row 1125
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: накласти анафему
+    pos: phrase
+    gloss: pronounce an anathema / cast an excommunication
+    locator: explicit vocabulary table row 1126
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: підтримати гетьмана
+    pos: phrase
+    gloss: support the Hetman / stand behind the Hetman
+    locator: explicit vocabulary table row 1127
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: засудити до страти
+    pos: verb
+    gloss: to sentence to death
+    locator: explicit vocabulary table row 1128
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: залишитися вірним
+    pos: phrase
+    gloss: remain loyal / stay faithful
+    locator: explicit vocabulary table row 1129
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: обрати власного гетьмана
+    pos: phrase
+    gloss: elect one's own Hetman
+    locator: explicit vocabulary table row 1130
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: воювати по обидва боки
+    pos: phrase
+    gloss: fight on both sides
+    locator: explicit vocabulary table row 1131
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: означати поразку / перемогу
+    pos: phrase
+    gloss: signify defeat / victory (mean defeat / victory)
+    locator: explicit vocabulary table row 1132
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: поглинати державу / територію
+    pos: phrase
+    gloss: absorb a state / territory (annex a territory)
+    locator: explicit vocabulary table row 1133
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: мати право на щось
+    pos: phrase
+    gloss: be entitled to something / have the right to something
+    locator: explicit vocabulary table row 1134
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: розпоряджатися чимось на власний розсуд
+    pos: phrase
+    gloss: dispose of something at one's own discretion
+    locator: explicit vocabulary table row 1135
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: втручатися у справи
+    pos: verb
+    gloss: To interfere in affairs (impf)
+    locator: explicit vocabulary table row 1136
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: здійснювати управління
+    pos: phrase
+    gloss: exercise governance / carry out administration
+    locator: explicit vocabulary table row 1137
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: навести лад
+    pos: phrase
+    gloss: restore order / establish order
+    locator: explicit vocabulary table row 1138
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: вимагати скасування
+    pos: phrase
+    gloss: demand abolition / demand cancellation
+    locator: explicit vocabulary table row 1139
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: повертати автономію
+    pos: phrase
+    gloss: restore autonomy / regain autonomy
+    locator: explicit vocabulary table row 1140
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: заснувати січ
+    pos: phrase
+    gloss: found the Sich / establish the Sich
+    locator: explicit vocabulary table row 1141
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: підпорядкувати владі
+    pos: phrase
+    gloss: subordinate to authority / subject to power
+    locator: explicit vocabulary table row 1142
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: великодушно
+    pos: adverb
+    gloss: generously
+    locator: explicit vocabulary table row 1143
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: втратити дар мови
+    pos: verb
+    gloss: to be speechless
+    locator: explicit vocabulary table row 1144
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: розрядити ситуацію
+    pos: phrase
+    gloss: de-escalate the situation
+    locator: explicit vocabulary table row 1145
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: пліснява
+    pos: noun
+    gloss: mold
+    locator: explicit vocabulary table row 1146
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: товар
+    pos: noun
+    gloss: product
+    locator: explicit vocabulary table row 1147
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: наїхати на когось
+    pos: phrase
+    gloss: Go at someone, Run over someone
+    locator: explicit vocabulary table row 1148
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: стрілянина своїх по своїх
+    pos: phrase
+    gloss: friendly fire
+    locator: explicit vocabulary table row 1149
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: на кшталт
+    pos: phrase
+    gloss: Such as / Like
+    locator: explicit vocabulary table row 1150
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: капці
+    pos: noun
+    gloss: slippers
+    locator: explicit vocabulary table row 1151
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: підходити
+    pos: verb
+    gloss: to come up to / to suit / to fit (imperfective)
+    locator: explicit vocabulary table row 1152
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: тісно товаришувати
+    pos: verb
+    gloss: to be close friends
+    locator: explicit vocabulary table row 1153
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: тісний
+    pos: adjective
+    gloss: tight-fitting, cramped
+    locator: explicit vocabulary table row 1154
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
