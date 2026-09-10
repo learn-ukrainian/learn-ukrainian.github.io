@@ -1,0 +1,226 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v4_human_source_dataset_record_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "record_id",
+    "dataset_version",
+    "split_item_id",
+    "work_family_id",
+    "work_id",
+    "source_id",
+    "source_family",
+    "cohort_id",
+    "provenance",
+    "source_fidelity",
+    "language_views",
+    "split_clearance",
+    "admission_evidence"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v4_human_source_dataset_record_v1"
+    },
+    "record_id": {
+      "type": "string",
+      "pattern": "^record\\.human\\.[a-f0-9]{24}$"
+    },
+    "dataset_version": {
+      "type": "string",
+      "const": "v4.0.0-human-pilot-scale"
+    },
+    "split_item_id": {
+      "type": "string",
+      "pattern": "^split\\.[a-f0-9]{24}$"
+    },
+    "work_family_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "work_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_id": {
+      "type": "string",
+      "pattern": "^source\\.[a-zA-Z0-9_.-]+$"
+    },
+    "source_family": {
+      "type": "string"
+    },
+    "cohort_id": {
+      "type": "string"
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "author",
+        "year",
+        "genre",
+        "period",
+        "canonical_url"
+      ],
+      "properties": {
+        "author": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "year": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "genre": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "period": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "canonical_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "source_fidelity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "char_length",
+        "span_sha256",
+        "is_native_text",
+        "verbatim_preserved"
+      ],
+      "properties": {
+        "char_length": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "span_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "is_native_text": {
+          "type": "boolean",
+          "const": true
+        },
+        "verbatim_preserved": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "language_views": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "primary_role",
+        "faithful_view",
+        "modern_view"
+      ],
+      "properties": {
+        "primary_role": {
+          "type": "string",
+          "enum": [
+            "modern_standard",
+            "literary_register",
+            "historical_period",
+            "quoted_metalinguistic",
+            "foreign_citation",
+            "damaged_or_excluded"
+          ]
+        },
+        "faithful_view": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "training_eligible"
+          ],
+          "properties": {
+            "training_eligible": {
+              "type": "boolean"
+            }
+          }
+        },
+        "modern_view": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "training_eligible",
+            "loss_mask_count"
+          ],
+          "properties": {
+            "training_eligible": {
+              "type": "boolean"
+            },
+            "loss_mask_count": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "split_clearance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "split_partition",
+        "builder_training_cleared",
+        "clearance_status"
+      ],
+      "properties": {
+        "split_partition": {
+          "type": "string",
+          "enum": [
+            "training",
+            "development",
+            "heldout_evaluation",
+            "quarantine_excluded"
+          ]
+        },
+        "builder_training_cleared": {
+          "type": "boolean"
+        },
+        "clearance_status": {
+          "type": "string"
+        }
+      }
+    },
+    "admission_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "admission_decision",
+        "rights_basis",
+        "firewall_verified"
+      ],
+      "properties": {
+        "admission_decision": {
+          "type": "string"
+        },
+        "rights_basis": {
+          "type": "string"
+        },
+        "firewall_verified": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    }
+  }
+}

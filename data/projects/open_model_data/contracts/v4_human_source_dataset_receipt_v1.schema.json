@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v4_human_source_dataset_receipt_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "dataset_version",
+    "verdict",
+    "manifest_sha256",
+    "split_receipt_sha256",
+    "records_sha256",
+    "quality_assessment_sha256",
+    "dataset_accounting",
+    "deduplication_yield",
+    "storage_accounting",
+    "frozen_for_downstream",
+    "residuals"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v4_human_source_dataset_receipt_v1"
+    },
+    "receipt_id": {
+      "type": "string",
+      "pattern": "^receipt\\.dataset\\.[a-f0-9]{24}$"
+    },
+    "dataset_version": {
+      "type": "string",
+      "const": "v4.0.0-human-pilot-scale"
+    },
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "DATASET_CONFIRMED",
+        "DATASET_REJECTED"
+      ]
+    },
+    "manifest_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "split_receipt_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "records_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "quality_assessment_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "dataset_accounting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_evaluated_spans",
+        "total_admitted_spans",
+        "exported_training_spans",
+        "firewalled_heldout_evaluation_spans",
+        "development_spans",
+        "rejected_quarantine_spans",
+        "silent_drops"
+      ],
+      "properties": {
+        "total_evaluated_spans": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total_admitted_spans": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "exported_training_spans": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "firewalled_heldout_evaluation_spans": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "development_spans": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "rejected_quarantine_spans": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "silent_drops": {
+          "type": "integer",
+          "const": 0
+        }
+      }
+    },
+    "deduplication_yield": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unique_spans_count",
+        "duplicate_spans_count",
+        "deduplication_rate"
+      ],
+      "properties": {
+        "unique_spans_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "duplicate_spans_count": {
+          "type": "integer",
+          "const": 0
+        },
+        "deduplication_rate": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        }
+      }
+    },
+    "storage_accounting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "records_byte_size",
+        "records_line_count",
+        "below_2000kb_precommit_limit"
+      ],
+      "properties": {
+        "records_byte_size": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "records_line_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "below_2000kb_precommit_limit": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "frozen_for_downstream": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "open_weight_learning_study_issue",
+        "deliverable_reproduction_issue"
+      ],
+      "properties": {
+        "open_weight_learning_study_issue": {
+          "type": "integer",
+          "const": 7889
+        },
+        "deliverable_reproduction_issue": {
+          "type": "integer",
+          "const": 7433
+        }
+      }
+    },
+    "residuals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operator_excluded_strata"
+      ],
+      "properties": {
+        "operator_excluded_strata": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}

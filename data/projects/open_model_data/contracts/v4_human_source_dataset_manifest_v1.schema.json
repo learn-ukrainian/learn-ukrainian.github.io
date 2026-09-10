@@ -1,0 +1,258 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v4_human_source_dataset_manifest_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "dataset_version",
+    "inputs",
+    "outputs",
+    "denominator_accounting",
+    "ownership"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v4_human_source_dataset_manifest_v1"
+    },
+    "manifest_id": {
+      "type": "string",
+      "pattern": "^manifest\\.dataset\\.[a-zA-Z0-9_-]+$"
+    },
+    "dataset_version": {
+      "type": "string",
+      "const": "v4.0.0-human-pilot-scale"
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "split_index",
+        "split_receipt",
+        "language_index",
+        "extraction_index",
+        "provenance_index",
+        "quality_assessment"
+      ],
+      "properties": {
+        "split_index": {
+          "type": "string"
+        },
+        "split_receipt": {
+          "type": "string"
+        },
+        "language_index": {
+          "type": "string"
+        },
+        "extraction_index": {
+          "type": "string"
+        },
+        "provenance_index": {
+          "type": "string"
+        },
+        "quality_assessment": {
+          "type": "string"
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "records",
+        "receipt"
+      ],
+      "properties": {
+        "records": {
+          "type": "string"
+        },
+        "receipt": {
+          "type": "string"
+        }
+      }
+    },
+    "denominator_accounting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_holdings_sources",
+        "total_selected_sources",
+        "total_work_families",
+        "total_evaluated_spans",
+        "total_admitted_spans",
+        "exported_training_spans",
+        "firewalled_heldout_evaluation_spans",
+        "development_spans",
+        "quarantined_spans",
+        "strata_coverage",
+        "source_selection",
+        "operator_excluded_residuals"
+      ],
+      "properties": {
+        "total_holdings_sources": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "total_selected_sources": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "total_work_families": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "total_evaluated_spans": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "total_admitted_spans": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "exported_training_spans": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "firewalled_heldout_evaluation_spans": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "development_spans": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "quarantined_spans": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "strata_coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "literary_prose",
+            "educational_textbook",
+            "stem_technical",
+            "video_captions",
+            "ocr_scans",
+            "private_teaching_material"
+          ],
+          "properties": {
+            "literary_prose": {
+              "type": "string",
+              "enum": [
+                "covered"
+              ]
+            },
+            "educational_textbook": {
+              "type": "string",
+              "enum": [
+                "covered"
+              ]
+            },
+            "stem_technical": {
+              "type": "string",
+              "enum": [
+                "residual_operator_excluded"
+              ]
+            },
+            "video_captions": {
+              "type": "string",
+              "enum": [
+                "residual_operator_excluded"
+              ]
+            },
+            "ocr_scans": {
+              "type": "string",
+              "enum": [
+                "residual_operator_excluded"
+              ]
+            },
+            "private_teaching_material": {
+              "type": "string",
+              "enum": [
+                "residual_operator_excluded"
+              ]
+            }
+          }
+        },
+        "source_selection": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "source_id",
+              "work_family_id",
+              "cohort_id",
+              "stratum",
+              "status"
+            ],
+            "properties": {
+              "source_id": {
+                "type": "string"
+              },
+              "work_family_id": {
+                "type": "string"
+              },
+              "cohort_id": {
+                "type": "string"
+              },
+              "stratum": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "operator_excluded_residuals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "stratum",
+              "reason",
+              "issue"
+            ],
+            "properties": {
+              "stratum": {
+                "type": "string"
+              },
+              "reason": {
+                "type": "string"
+              },
+              "issue": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    },
+    "ownership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "epic",
+        "issue",
+        "agent"
+      ],
+      "properties": {
+        "epic": {
+          "type": "integer",
+          "const": 7423
+        },
+        "issue": {
+          "type": "integer",
+          "const": 7432
+        },
+        "agent": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
