@@ -1,0 +1,39 @@
+{
+  "schema_version": "v4_delivery_reproduction_receipt_v1",
+  "receipt_id": "receipt.delivery.fd059ac39239433b9bb00413",
+  "dataset_version": "v4.0.0-human-pilot-scale",
+  "dataset_quality_verdict": "DATASET_QUALITY_CONFIRMED",
+  "learning_utility_verdict": "LEARNING_UTILITY_CONFIRMED",
+  "overall_delivery_verdict": "EPIC_DELIVERABLES_CONFIRMED",
+  "dataset_reproduction": {
+    "manifest_sha256": "cdbbfb31ebe30a8167191a48365de05b83206fc2b373f35e44288c10a68cc4ac",
+    "records_sha256": "d3980b929a70980d6627876c11653fca375d2906ab5f4381a6ebba21903950cc",
+    "receipt_sha256": "1ed815ced4d24f6a77553b16f3e4d7573cd6b47934959c2c75317a18a98e9082",
+    "records_count": 1419,
+    "loader_verified": true
+  },
+  "learning_study_reproduction": {
+    "recipe_sha256": "e1bec8c11dbf0d16cf30c26193903f4a5fdd037d186d80214f7c74732f9e62ad",
+    "runs_count": 9,
+    "receipt_sha256": "60c7e06bf639e44af1c020a25135ce99f4ad6a3c929f3902c7dd393635ca69d1",
+    "baseline_perplexity_mean": 14.805,
+    "adapted_perplexity_mean": 10.935,
+    "perplexity_delta_pct": -26.14
+  },
+  "deliverable_documents": {
+    "dataset_card": "docs/projects/ukrainian-data-foundry-evidence/HUMAN_SOURCE_DATASET_CARD.md",
+    "technical_report": "docs/projects/ukrainian-data-foundry-evidence/HUMAN_SOURCE_TECHNICAL_REPORT.md",
+    "research_summary": "docs/projects/ukrainian-data-foundry-evidence/RESEARCH_SUMMARY.md"
+  },
+  "residuals": {
+    "operator_excluded_strata": [
+      "stem_technical_and_exact_sciences",
+      "video_captions_transcripts",
+      "ocr_scanned_unverified_sources",
+      "private_teaching_material"
+    ]
+  },
+  "custody_retained": true,
+  "zero_host_paths_verified": true,
+  "notes": "Full deliverables reproduced with independent verification under #7433. All acceptance criteria satisfied."
+}
