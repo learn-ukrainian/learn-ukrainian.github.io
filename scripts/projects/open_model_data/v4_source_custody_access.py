@@ -22,7 +22,7 @@ import json
 import sqlite3
 import sys
 import time
-from collections.abc import Mapping, Sequence
+from collections.abc import Container, Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
@@ -427,8 +427,9 @@ class BoundedCustodyReader:
 def _precompute_table_source_metrics(
     conn: sqlite3.Connection,
     table: str,
+    selected_source_files: Container[str] | set[str] | None = None,
 ) -> tuple[dict[str, tuple[int, int, str]], dict[str, tuple[int, str]]]:
-    """Compute bounded read metrics and chunk lineage digests for all source files in a table in a single pass.
+    """Compute bounded read metrics and chunk lineage digests for selected source files in a table in a single pass.
 
     Returns:
         stream_metrics: source_file -> (observed_records, observed_characters, stream_sha256)
@@ -438,38 +439,57 @@ def _precompute_table_source_metrics(
     cur.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (table,))
     if not cur.fetchone():
         return {}, {}
-    cur.execute(f'SELECT source_file, id, chunk_id, text FROM "{table}" ORDER BY source_file, id ASC')
+
+    if selected_source_files is not None and not selected_source_files:
+        return {}, {}
+
     stream_metrics: dict[str, tuple[int, int, str]] = {}
     chunk_metrics: dict[str, tuple[int, str]] = {}
 
-    curr_sf: str | None = None
-    rec_cnt = 0
-    char_cnt = 0
-    stream_digest = hashlib.sha256()
-    chunk_digest = hashlib.sha256()
+    selected_set = set(selected_source_files) if selected_source_files is not None else None
+    sorted_sfs = sorted(selected_set) if selected_set is not None else None
 
-    while batch := cur.fetchmany(5000):
-        for sf, r_id, r_chunk_id, r_text in batch:
-            if sf != curr_sf:
-                if curr_sf is not None and rec_cnt > 0:
-                    stream_metrics[curr_sf] = (rec_cnt, char_cnt, stream_digest.hexdigest())
-                    chunk_metrics[curr_sf] = (rec_cnt, chunk_digest.hexdigest())
-                curr_sf = sf
-                rec_cnt = 0
-                char_cnt = 0
-                stream_digest = hashlib.sha256()
-                chunk_digest = hashlib.sha256()
-            rec_cnt += 1
-            t_str = r_text or ""
-            t_len = len(t_str)
-            char_cnt += t_len
-            t_hash = hashlib.sha256(t_str.encode("utf-8")).hexdigest()
-            stream_digest.update(f"{r_id}:{r_chunk_id}:{t_len}:{t_hash}\n".encode())
-            chunk_digest.update(f"{r_chunk_id}:{t_len}:{t_hash}\n".encode())
+    # Chunk into parameter batches of up to 500 files to avoid SQLite parameter limits
+    sf_batches = [sorted_sfs[i : i + 500] for i in range(0, len(sorted_sfs), 500)] if sorted_sfs is not None else [None]
 
-    if curr_sf is not None and rec_cnt > 0:
-        stream_metrics[curr_sf] = (rec_cnt, char_cnt, stream_digest.hexdigest())
-        chunk_metrics[curr_sf] = (rec_cnt, chunk_digest.hexdigest())
+    for sf_batch in sf_batches:
+        if sf_batch is not None:
+            placeholders = ",".join("?" for _ in sf_batch)
+            sql = f'SELECT source_file, id, chunk_id, text FROM "{table}" WHERE source_file IN ({placeholders}) ORDER BY source_file, id ASC'
+            cur.execute(sql, sf_batch)
+        else:
+            cur.execute(f'SELECT source_file, id, chunk_id, text FROM "{table}" ORDER BY source_file, id ASC')
+
+        curr_sf: str | None = None
+        rec_cnt = 0
+        char_cnt = 0
+        stream_digest = hashlib.sha256()
+        chunk_digest = hashlib.sha256()
+
+        while batch := cur.fetchmany(5000):
+            for sf, r_id, r_chunk_id, r_text in batch:
+                if selected_set is not None and sf not in selected_set:
+                    continue
+                if sf != curr_sf:
+                    if curr_sf is not None and rec_cnt > 0:
+                        stream_metrics[curr_sf] = (rec_cnt, char_cnt, stream_digest.hexdigest())
+                        chunk_metrics[curr_sf] = (rec_cnt, chunk_digest.hexdigest())
+                    curr_sf = sf
+                    rec_cnt = 0
+                    char_cnt = 0
+                    stream_digest = hashlib.sha256()
+                    chunk_digest = hashlib.sha256()
+                rec_cnt += 1
+                t_str = r_text or ""
+                t_len = len(t_str)
+                char_cnt += t_len
+                t_hash = hashlib.sha256(t_str.encode("utf-8")).hexdigest()
+                stream_digest.update(f"{r_id}:{r_chunk_id}:{t_len}:{t_hash}\n".encode())
+                chunk_digest.update(f"{r_chunk_id}:{t_len}:{t_hash}\n".encode())
+
+        if curr_sf is not None and rec_cnt > 0:
+            stream_metrics[curr_sf] = (rec_cnt, char_cnt, stream_digest.hexdigest())
+            chunk_metrics[curr_sf] = (rec_cnt, chunk_digest.hexdigest())
 
     return stream_metrics, chunk_metrics
 
@@ -966,7 +986,8 @@ def build(
         table_stream_metrics: dict[str, dict[str, tuple[int, int, str]]] = {}
         table_chunk_metrics: dict[str, dict[str, tuple[int, str]]] = {}
         for tbl in set(FAMILY_APPROVED_TABLES.values()):
-            s_m, c_m = _precompute_table_source_metrics(conn, tbl)
+            selected_sfs = {sf for sf, _cid, fam in unique_sources.values() if FAMILY_APPROVED_TABLES.get(fam) == tbl}
+            s_m, c_m = _precompute_table_source_metrics(conn, tbl, selected_source_files=selected_sfs)
             table_stream_metrics[tbl] = s_m
             table_chunk_metrics[tbl] = c_m
 
@@ -1207,6 +1228,8 @@ def verify(
     config_path: Path,
     input_root: Path,
     output_root: Path,
+    *,
+    require_database: bool = False,
 ) -> bool:
     """Verify committed custody artifacts against contracts and invariants."""
     norm_input_root = input_root.resolve()
@@ -1233,13 +1256,15 @@ def verify(
         if not path.is_file():
             raise CustodyAccessError(f"{name} artifact missing: {path}")
 
-    # Revalidate configured source stores (Finding 1: ACCESS-1, ACCESS-2, ACCESS-3)
+    # Revalidate configured source stores (Finding 1 & 2: ACCESS-1, ACCESS-2, ACCESS-3)
     db_path = _resolved_inputs.get("database")
-    if db_path is None or not db_path.is_file():
+    if require_database and (db_path is None or not db_path.is_file()):
         raise CustodyAccessError(f"Database missing or not found on host: {db_path}")
 
-    db_uri = f"file:{db_path.resolve()}?mode=ro"
-    db_conn = sqlite3.connect(db_uri, uri=True)
+    db_conn: sqlite3.Connection | None = None
+    if db_path is not None and db_path.is_file():
+        db_uri = f"file:{db_path.resolve()}?mode=ro"
+        db_conn = sqlite3.connect(db_uri, uri=True)
 
     # Map chunk files from textbook_chunks_dir if available
     chunks_map: dict[str, Path] = {}
@@ -1308,16 +1333,6 @@ def verify(
     seen_cohort_locators: set[tuple[str, str]] = set()
 
     try:
-        db_cur = db_conn.cursor()
-        db_cur.execute("PRAGMA query_only = ON;")
-
-        table_stream_metrics: dict[str, dict[str, tuple[int, int, str]]] = {}
-        table_chunk_metrics: dict[str, dict[str, tuple[int, str]]] = {}
-        for tbl in set(FAMILY_APPROVED_TABLES.values()):
-            s_m, c_m = _precompute_table_source_metrics(db_conn, tbl)
-            table_stream_metrics[tbl] = s_m
-            table_chunk_metrics[tbl] = c_m
-
         # Load provenance denominator first to validate index source projection (ACCESS-1, ACCESS-4)
         prov_index_path = _resolve_file(Path(config["inputs"]["provenance_index"]), roots)
         if not prov_index_path.is_file():
@@ -1344,13 +1359,43 @@ def verify(
                     )
                 prov_identities[psid] = (psf, pcid, pfam)
 
+        table_stream_metrics: dict[str, dict[str, tuple[int, int, str]]] = {}
+        table_chunk_metrics: dict[str, dict[str, tuple[int, str]]] = {}
+        if db_conn is not None:
+            db_cur = db_conn.cursor()
+            db_cur.execute("PRAGMA query_only = ON;")
+            for tbl in set(FAMILY_APPROVED_TABLES.values()):
+                selected_sfs = {
+                    psf for psf, _pcid, pfam in prov_identities.values() if FAMILY_APPROVED_TABLES.get(pfam) == tbl
+                }
+                s_m, c_m = _precompute_table_source_metrics(db_conn, tbl, selected_source_files=selected_sfs)
+                table_stream_metrics[tbl] = s_m
+                table_chunk_metrics[tbl] = c_m
+
         with out_index_path.open(encoding="utf-8") as f:
             header_line = f.readline().strip()
             header = json.loads(header_line)
+
+            # Strict schema and safety validation of index header
+            expected_header_keys = {"schema_version", "config_sha256", "records", "ordering"}
+            if set(header.keys()) != expected_header_keys:
+                raise CustodyAccessError(
+                    f"Index header keys mismatch: expected {expected_header_keys}, got {set(header.keys())}"
+                )
             if header.get("schema_version") != "v4_source_custody_access_index_v1":
                 raise CustodyAccessError("Index header schema_version invalid")
             if header.get("config_sha256") != expected_config_sha256:
                 raise CustodyAccessError("Index header config_sha256 mismatch")
+            if header.get("ordering") != "cohort_id,source_id":
+                raise CustodyAccessError(f"Index header ordering invalid: {header.get('ordering')}")
+            if not isinstance(header.get("records"), int) or header.get("records") < 0:
+                raise CustodyAccessError(f"Index header records count invalid: {header.get('records')}")
+
+            forbidden_keys = {"text", "content", "corpus_text", "raw_text", "body"}
+            if forbidden_keys.intersection(header.keys()):
+                recomputed_no_corpus_text = False
+            if _contains_private_or_absolute_host_path(header):
+                recomputed_no_private_host_paths = False
 
             for line_num, line in enumerate(f, start=2):
                 if not line.strip():
@@ -1530,138 +1575,147 @@ def verify(
                 lineage_rule = cohort_cfg["lineage_rule"]
                 archive_locator = cohort_cfg.get("archive_locator", "")
 
-                # Probe host storage to re-resolve custody independently of index assertions (ACCESS-1, ACCESS-4)
-                archive_on_host = _check_archive_on_host(
-                    archive_locator=archive_locator,
-                    source_file=source_file,
-                    lineage_rule=lineage_rule,
-                    roots=roots,
-                    cached_map=archive_maps_by_cohort.get(cohort_id),
-                )
-
-                chunk_path = chunks_map.get(source_file) if chunks_map else None
-                chunk_on_host = chunk_path is not None and chunk_path.is_file()
-
-                if cohort_id == "public-textbooks-non-stem-non-ocr":
-                    # For unmounted archives, index cannot claim RESOLVED_ACCESSIBLE
-                    if not archive_on_host and cust_status == "RESOLVED_ACCESSIBLE":
-                        raise CustodyAccessError(
-                            f"Index line {line_num} ({source_id}): custody status claims 'RESOLVED_ACCESSIBLE' "
-                            f"but host archive is unmounted at {archive_locator}/{source_file}.pdf"
-                        )
-                    if archive_on_host and cust_status == "PARTIAL_CHUNKS_AND_DB_ONLY":
-                        raise CustodyAccessError(
-                            f"Index line {line_num} ({source_id}): custody status claims 'PARTIAL_CHUNKS_AND_DB_ONLY' "
-                            f"but host archive is reachable at {archive_locator}/{source_file}.pdf"
-                        )
-                    re_resolved_status = (
-                        "RESOLVED_ACCESSIBLE"
-                        if archive_on_host
-                        else ("PARTIAL_CHUNKS_AND_DB_ONLY" if chunk_on_host else "UNREACHABLE_ON_HOST")
+                if db_conn is not None:
+                    # Probe host storage to re-resolve custody independently of index assertions (ACCESS-1, ACCESS-4)
+                    archive_on_host = _check_archive_on_host(
+                        archive_locator=archive_locator,
+                        source_file=source_file,
+                        lineage_rule=lineage_rule,
+                        roots=roots,
+                        cached_map=archive_maps_by_cohort.get(cohort_id),
                     )
-                else:
-                    re_resolved_status = cust_status
 
-                # Revalidate database and lineage against current host stores (Finding 1)
-                table = FAMILY_APPROVED_TABLES[source_family]
-                s_metrics = table_stream_metrics.get(table, {})
-                c_metrics = table_chunk_metrics.get(table, {})
+                    chunk_path = chunks_map.get(source_file) if chunks_map else None
+                    chunk_on_host = chunk_path is not None and chunk_path.is_file()
 
-                if source_family == "literary":
-                    db_tuple = s_metrics.get(source_file)
-                    if permitted:
-                        if db_tuple is None:
-                            raise CustodyAccessError(
-                                f"Index line {line_num} ({source_id}): source permitted but not found in database table '{table}'"
-                            )
-                        db_rec_count, db_char_count, actual_stream_hash = db_tuple
-                        if metrics["observed_records"] != db_rec_count:
-                            raise CustodyAccessError(
-                                f"Index line {line_num} ({source_id}): observed_records mismatch: "
-                                f"index has {metrics['observed_records']}, database has {db_rec_count}"
-                            )
-                        if metrics["observed_characters"] != db_char_count:
-                            raise CustodyAccessError(
-                                f"Index line {line_num} ({source_id}): observed_characters mismatch: "
-                                f"index has {metrics['observed_characters']}, database has {db_char_count}"
-                            )
-                        if metrics["stream_sha256"] != actual_stream_hash:
-                            raise CustodyAccessError(
-                                f"Index line {line_num} ({source_id}): stream_sha256 mismatch: "
-                                f"index has {metrics['stream_sha256']}, database has {actual_stream_hash}"
-                            )
-                    else:
-                        if db_tuple is not None:
-                            raise CustodyAccessError(
-                                f"Index line {line_num} ({source_id}): source marked unpermitted but found in database table '{table}'"
-                            )
-
-                elif source_family == "public_textbooks":
-                    excluded_modes = cohort_cfg.get("excluded_modes", OCR_LINEAGE_MODES)
-                    if chunk_on_host:
-                        chunk_mode, chunk_is_ocr, chunk_rows, _chunk_chars, chunk_digest = check_chunk_file_lineage(
-                            chunk_path, excluded_modes
+                    if cohort_id == "public-textbooks-non-stem-non-ocr":
+                        re_resolved_status = (
+                            "RESOLVED_ACCESSIBLE"
+                            if archive_on_host
+                            else ("PARTIAL_CHUNKS_AND_DB_ONLY" if chunk_on_host else "UNREACHABLE_ON_HOST")
                         )
-                        if chunk_is_ocr:
-                            if status != "EXCLUDED_OCR" or not is_ocr or lineage_mode != chunk_mode:
-                                raise CustodyAccessError(
-                                    f"Index line {line_num} ({source_id}): chunk file has OCR lineage ({chunk_mode}) "
-                                    f"but index has status={status}, lineage_mode={lineage_mode}, is_ocr={is_ocr}"
-                                )
-                            if permitted:
-                                raise CustodyAccessError(
-                                    f"Index line {line_num} ({source_id}): chunk file has OCR lineage but index permits it to proceed"
-                                )
-                        elif chunk_mode in ("native_pdf_text", "native_text", "mixed_native"):
-                            db_chk = c_metrics.get(source_file)
-                            db_str = s_metrics.get(source_file)
+                    else:
+                        table = FAMILY_APPROVED_TABLES[source_family]
+                        s_metrics = table_stream_metrics.get(table, {})
+                        db_tuple = s_metrics.get(source_file)
+                        re_resolved_status = (
+                            "RESOLVED_ACCESSIBLE" if db_tuple is not None and db_tuple[0] > 0 else "UNREACHABLE_ON_HOST"
+                        )
 
-                            if db_chk is None:
-                                if permitted or status != "UNKNOWN_LINEAGE":
+                    expected_host_reachable = re_resolved_status != "UNREACHABLE_ON_HOST"
+                    if cust_status != re_resolved_status:
+                        raise CustodyAccessError(
+                            f"Index line {line_num} ({source_id}): custody status mismatch: "
+                            f"stored '{cust_status}', host probe derived '{re_resolved_status}'"
+                        )
+                    if host_reachable != expected_host_reachable:
+                        raise CustodyAccessError(
+                            f"Index line {line_num} ({source_id}): host_reachable mismatch: "
+                            f"stored '{host_reachable}', host probe derived '{expected_host_reachable}'"
+                        )
+
+                    # Revalidate database and lineage against current host stores (Finding 1)
+                    table = FAMILY_APPROVED_TABLES[source_family]
+                    s_metrics = table_stream_metrics.get(table, {})
+                    c_metrics = table_chunk_metrics.get(table, {})
+
+                    if source_family == "literary":
+                        db_tuple = s_metrics.get(source_file)
+                        if permitted:
+                            if db_tuple is None:
+                                raise CustodyAccessError(
+                                    f"Index line {line_num} ({source_id}): source permitted but not found in database table '{table}'"
+                                )
+                            db_rec_count, db_char_count, actual_stream_hash = db_tuple
+                            if metrics["observed_records"] != db_rec_count:
+                                raise CustodyAccessError(
+                                    f"Index line {line_num} ({source_id}): observed_records mismatch: "
+                                    f"index has {metrics['observed_records']}, database has {db_rec_count}"
+                                )
+                            if metrics["observed_characters"] != db_char_count:
+                                raise CustodyAccessError(
+                                    f"Index line {line_num} ({source_id}): observed_characters mismatch: "
+                                    f"index has {metrics['observed_characters']}, database has {db_char_count}"
+                                )
+                            if metrics["stream_sha256"] != actual_stream_hash:
+                                raise CustodyAccessError(
+                                    f"Index line {line_num} ({source_id}): stream_sha256 mismatch: "
+                                    f"index has {metrics['stream_sha256']}, database has {actual_stream_hash}"
+                                )
+                        else:
+                            if db_tuple is not None:
+                                raise CustodyAccessError(
+                                    f"Index line {line_num} ({source_id}): source marked unpermitted but found in database table '{table}'"
+                                )
+
+                    elif source_family == "public_textbooks":
+                        excluded_modes = cohort_cfg.get("excluded_modes", OCR_LINEAGE_MODES)
+                        if chunk_on_host:
+                            chunk_mode, chunk_is_ocr, chunk_rows, _chunk_chars, chunk_digest = check_chunk_file_lineage(
+                                chunk_path, excluded_modes
+                            )
+                            if chunk_is_ocr:
+                                if status != "EXCLUDED_OCR" or not is_ocr or lineage_mode != chunk_mode:
                                     raise CustodyAccessError(
-                                        f"Index line {line_num} ({source_id}): source records not found in database, "
-                                        f"but index has status={status}, permitted={permitted}"
+                                        f"Index line {line_num} ({source_id}): chunk file has OCR lineage ({chunk_mode}) "
+                                        f"but index has status={status}, lineage_mode={lineage_mode}, is_ocr={is_ocr}"
                                     )
-                            elif db_chk[0] != chunk_rows or db_chk[1] != chunk_digest:
-                                if permitted or status != "UNKNOWN_LINEAGE":
+                                if permitted:
                                     raise CustodyAccessError(
-                                        f"Index line {line_num} ({source_id}): database content does not match chunk lineage, "
-                                        f"but index has status={status}, permitted={permitted}"
+                                        f"Index line {line_num} ({source_id}): chunk file has OCR lineage but index permits it to proceed"
                                     )
+                            elif chunk_mode in ("native_pdf_text", "native_text", "mixed_native"):
+                                db_chk = c_metrics.get(source_file)
+                                db_str = s_metrics.get(source_file)
+
+                                if db_chk is None:
+                                    if permitted or status != "UNKNOWN_LINEAGE":
+                                        raise CustodyAccessError(
+                                            f"Index line {line_num} ({source_id}): source records not found in database, "
+                                            f"but index has status={status}, permitted={permitted}"
+                                        )
+                                elif db_chk[0] != chunk_rows or db_chk[1] != chunk_digest:
+                                    if permitted or status != "UNKNOWN_LINEAGE":
+                                        raise CustodyAccessError(
+                                            f"Index line {line_num} ({source_id}): database content does not match chunk lineage, "
+                                            f"but index has status={status}, permitted={permitted}"
+                                        )
+                                else:
+                                    if status != "CONFIRMED_NATIVE" or lineage_mode != chunk_mode or not permitted:
+                                        raise CustodyAccessError(
+                                            f"Index line {line_num} ({source_id}): native chunk and db match, "
+                                            f"but index has status={status}, lineage_mode={lineage_mode}, permitted={permitted}"
+                                        )
+                                    tb_rec_count, tb_char_count, tb_stream_hash = db_str if db_str else (0, 0, None)
+                                    if metrics["observed_records"] != tb_rec_count:
+                                        raise CustodyAccessError(
+                                            f"Index line {line_num} ({source_id}): observed_records mismatch: "
+                                            f"index has {metrics['observed_records']}, database has {tb_rec_count}"
+                                        )
+                                    if metrics["observed_characters"] != tb_char_count:
+                                        raise CustodyAccessError(
+                                            f"Index line {line_num} ({source_id}): observed_characters mismatch: "
+                                            f"index has {metrics['observed_characters']}, database has {tb_char_count}"
+                                        )
+                                    if metrics["stream_sha256"] != tb_stream_hash:
+                                        raise CustodyAccessError(
+                                            f"Index line {line_num} ({source_id}): stream_sha256 mismatch: "
+                                            f"index has {metrics['stream_sha256']}, database has {tb_stream_hash}"
+                                        )
                             else:
-                                if status != "CONFIRMED_NATIVE" or lineage_mode != chunk_mode or not permitted:
+                                if permitted or status != "UNKNOWN_LINEAGE":
                                     raise CustodyAccessError(
-                                        f"Index line {line_num} ({source_id}): native chunk and db match, "
-                                        f"but index has status={status}, lineage_mode={lineage_mode}, permitted={permitted}"
-                                    )
-                                tb_rec_count, tb_char_count, tb_stream_hash = db_str if db_str else (0, 0, None)
-                                if metrics["observed_records"] != tb_rec_count:
-                                    raise CustodyAccessError(
-                                        f"Index line {line_num} ({source_id}): observed_records mismatch: "
-                                        f"index has {metrics['observed_records']}, database has {tb_rec_count}"
-                                    )
-                                if metrics["observed_characters"] != tb_char_count:
-                                    raise CustodyAccessError(
-                                        f"Index line {line_num} ({source_id}): observed_characters mismatch: "
-                                        f"index has {metrics['observed_characters']}, database has {tb_char_count}"
-                                    )
-                                if metrics["stream_sha256"] != tb_stream_hash:
-                                    raise CustodyAccessError(
-                                        f"Index line {line_num} ({source_id}): stream_sha256 mismatch: "
-                                        f"index has {metrics['stream_sha256']}, database has {tb_stream_hash}"
+                                        f"Index line {line_num} ({source_id}): chunk has unknown extraction mode '{chunk_mode}', "
+                                        f"but index has status={status}, permitted={permitted}"
                                     )
                         else:
                             if permitted or status != "UNKNOWN_LINEAGE":
                                 raise CustodyAccessError(
-                                    f"Index line {line_num} ({source_id}): chunk has unknown extraction mode '{chunk_mode}', "
+                                    f"Index line {line_num} ({source_id}): chunk file not on host, "
                                     f"but index has status={status}, permitted={permitted}"
                                 )
-                    else:
-                        if permitted or status != "UNKNOWN_LINEAGE":
-                            raise CustodyAccessError(
-                                f"Index line {line_num} ({source_id}): chunk file not on host, "
-                                f"but index has status={status}, permitted={permitted}"
-                            )
+                else:
+                    re_resolved_status = cust_status
 
                 # Recompute safety assertions directly from row content
                 forbidden_keys = {"text", "content", "corpus_text", "raw_text", "body"}
@@ -1987,7 +2041,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(f"Custody access build complete. Receipt: {receipt['receipt_id']}, verdict: {receipt['verdict']}")
             return 0
         elif args.command == "verify":
-            success = verify(args.config, args.input_root, args.output_root)
+            success = verify(args.config, args.input_root, args.output_root, require_database=True)
             if success:
                 print("Custody access verification PASSED with 0 errors.")
                 return 0

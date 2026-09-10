@@ -45,12 +45,24 @@ def test_config_passes_schema() -> None:
     assert not errors, f"Config schema errors: {errors}"
 
 
-def test_verify_passes_on_committed_artifacts(repo_root: Path) -> None:
+@pytest.fixture
+def requires_textbook_chunks() -> Path:
+    for candidate in (Path("data/textbook_chunks"), Path("/home/ops/learn-ukrainian/data/textbook_chunks")):
+        if candidate.is_dir():
+            return candidate
+    pytest.skip("requires data/textbook_chunks corpus directory (not provisioned in CI)")
+
+
+def test_verify_passes_on_committed_artifacts(
+    repo_root: Path,
+    requires_sources_db: Path,
+    requires_textbook_chunks: Path,
+) -> None:
     # Uses repo_root for input-root and output-root
     input_root = (
         Path("/home/ops/learn-ukrainian") if Path("/home/ops/learn-ukrainian/data/sources.db").is_file() else repo_root
     )
-    assert custody.verify(CONFIG_PATH, input_root=input_root, output_root=repo_root) is True
+    assert custody.verify(CONFIG_PATH, input_root=input_root, output_root=repo_root, require_database=True) is True
 
 
 def test_first_eligible_cohort_100_percent_accessible() -> None:
@@ -1904,7 +1916,12 @@ def test_resolve_source_access_normalizes_relative_input_root(tmp_path: Path) ->
     assert record["custody_resolution"]["chunks_store"] == "file:data/textbook_chunks/grade-10/10-klas-book.jsonl"
 
 
-def test_verify_detects_unmounted_textbook_tampered_as_accessible(tmp_path: Path, repo_root: Path) -> None:
+def test_verify_detects_unmounted_textbook_tampered_as_accessible(
+    tmp_path: Path,
+    repo_root: Path,
+    requires_sources_db: Path,
+    requires_textbook_chunks: Path,
+) -> None:
     """verify() rejects an index claiming RESOLVED_ACCESSIBLE when the archive is unmounted on host (ACCESS-4)."""
     tampered_out = tmp_path / "out"
     tgt_custody = tampered_out / "data/projects/open_model_data/custody"
@@ -1962,9 +1979,10 @@ def test_verify_detects_unmounted_textbook_tampered_as_accessible(tmp_path: Path
     )
 
     with pytest.raises(
-        custody.CustodyAccessError, match=r"custody status claims 'RESOLVED_ACCESSIBLE' but host archive is unmounted"
+        custody.CustodyAccessError,
+        match=r"custody status (claims 'RESOLVED_ACCESSIBLE' but host archive is unmounted|mismatch)",
     ):
-        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out, require_database=True)
 
 
 def test_archive_locator_grade_tree_and_mount_resolution(tmp_path: Path) -> None:
@@ -2085,7 +2103,12 @@ def test_precompute_table_source_metrics_matches_stream_and_chunk_digests(tmp_pa
     conn.close()
 
 
-def test_verify_detects_tampered_database_stream_metrics(tmp_path: Path, repo_root: Path) -> None:
+def test_verify_detects_tampered_database_stream_metrics(
+    tmp_path: Path,
+    repo_root: Path,
+    requires_sources_db: Path,
+    requires_textbook_chunks: Path,
+) -> None:
     """verify() detects when index observed_records, observed_characters, or stream_sha256 disagree with sources.db (Finding 1)."""
     tampered_out = tmp_path / "out"
     tgt_custody = tampered_out / "data/projects/open_model_data/custody"
@@ -2129,7 +2152,7 @@ def test_verify_detects_tampered_database_stream_metrics(tmp_path: Path, repo_ro
     )
 
     with pytest.raises(custody.CustodyAccessError, match=r"observed_records mismatch"):
-        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out, require_database=True)
 
     # 2. Tamper stream_sha256
     lines_hash = list(lines)
@@ -2148,10 +2171,15 @@ def test_verify_detects_tampered_database_stream_metrics(tmp_path: Path, repo_ro
     )
 
     with pytest.raises(custody.CustodyAccessError, match=r"stream_sha256 mismatch"):
-        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out, require_database=True)
 
 
-def test_verify_detects_unpermitted_source_in_database(tmp_path: Path, repo_root: Path) -> None:
+def test_verify_detects_unpermitted_source_in_database(
+    tmp_path: Path,
+    repo_root: Path,
+    requires_sources_db: Path,
+    requires_textbook_chunks: Path,
+) -> None:
     """verify() detects when a source marked unpermitted is present in the database (Finding 1)."""
     tampered_out = tmp_path / "out"
     tgt_custody = tampered_out / "data/projects/open_model_data/custody"
@@ -2195,10 +2223,15 @@ def test_verify_detects_unpermitted_source_in_database(tmp_path: Path, repo_root
     )
 
     with pytest.raises(custody.CustodyAccessError, match=r"source marked unpermitted but found in database table"):
-        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out, require_database=True)
 
 
-def test_verify_detects_chunk_file_missing_for_permitted_textbook(tmp_path: Path, repo_root: Path) -> None:
+def test_verify_detects_chunk_file_missing_for_permitted_textbook(
+    tmp_path: Path,
+    repo_root: Path,
+    requires_sources_db: Path,
+    requires_textbook_chunks: Path,
+) -> None:
     """verify() detects when a permitted textbook's chunk file is missing on host (Finding 1)."""
     empty_chunks = tmp_path / "empty_chunks"
     empty_chunks.mkdir()
@@ -2244,6 +2277,145 @@ def test_verify_detects_chunk_file_missing_for_permitted_textbook(tmp_path: Path
 
     with pytest.raises(
         custody.CustodyAccessError,
-        match=r"chunk file not on host, but index has status=CONFIRMED_NATIVE, permitted=True",
+        match=r"(chunk file not on host, but index has status=CONFIRMED_NATIVE, permitted=True|custody status mismatch)",
     ):
-        custody.verify(cfg_path, input_root=repo_root, output_root=tampered_out)
+        custody.verify(cfg_path, input_root=repo_root, output_root=tampered_out, require_database=True)
+
+
+def test_verify_detects_mismatched_custody_status_or_host_reachable(
+    tmp_path: Path,
+    repo_root: Path,
+    requires_sources_db: Path,
+    requires_textbook_chunks: Path,
+) -> None:
+    """verify() rejects when stored status or host_reachable contradicts independent host probe (Finding 4)."""
+    tampered_out = tmp_path / "out"
+    tgt_custody = tampered_out / "data/projects/open_model_data/custody"
+    tgt_custody.mkdir(parents=True)
+
+    orig_index_path = Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl")
+    lines = orig_index_path.read_text(encoding="utf-8").splitlines()
+    header = lines[0]
+
+    # Tamper an unpermitted textbook record from UNREACHABLE_ON_HOST to PARTIAL_CHUNKS_AND_DB_ONLY while keeping host_reachable=True
+    tampered_lines = [header]
+    tampered_sid = None
+    for line in lines[1:]:
+        row = json.loads(line)
+        if (
+            row["cohort_id"] == "public-textbooks-non-stem-non-ocr"
+            and not row["permitted_to_proceed"]
+            and row["custody_resolution"]["status"] == "UNREACHABLE_ON_HOST"
+            and tampered_sid is None
+        ):
+            tampered_sid = row["source_id"]
+            row["custody_resolution"]["status"] = "PARTIAL_CHUNKS_AND_DB_ONLY"
+            row["custody_resolution"]["host_reachable"] = True
+            tampered_lines.append(json.dumps(row))
+        else:
+            tampered_lines.append(line)
+
+    assert tampered_sid is not None
+    idx_path = tgt_custody / "v4_source_custody_access_index_v1.jsonl"
+    idx_path.write_text("\n".join(tampered_lines) + "\n", encoding="utf-8")
+
+    (tgt_custody / "v4_source_custody_missing_report_v1.json").write_bytes(
+        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+    )
+
+    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
+    receipt_tampered = copy.deepcopy(receipt_data)
+    receipt_tampered["index_sha256"] = custody.sha256_file(idx_path)
+    receipt_tampered["receipt_id"] = custody._make_receipt_id(
+        receipt_tampered["config_sha256"],
+        receipt_tampered["index_sha256"],
+        receipt_tampered["missing_report_sha256"],
+    )
+    (tgt_custody / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
+
+    with pytest.raises(custody.CustodyAccessError, match=r"(custody status mismatch|host_reachable mismatch)"):
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out, require_database=True)
+
+
+def test_verify_detects_index_header_tampering_and_corpus_leakage(tmp_path: Path, repo_root: Path) -> None:
+    """verify() strictly validates index header schema and rejects unexpected keys or leaked text (Finding 3)."""
+    tampered_out = tmp_path / "out"
+    tgt_custody = tampered_out / "data/projects/open_model_data/custody"
+    tgt_custody.mkdir(parents=True)
+
+    orig_index_path = Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl")
+    lines = orig_index_path.read_text(encoding="utf-8").splitlines()
+    header = json.loads(lines[0])
+
+    # 1. Injected unexpected key ('note') into header
+    header_tampered = copy.deepcopy(header)
+    header_tampered["note"] = "Injected header note"
+    tampered_lines = [json.dumps(header_tampered), *lines[1:]]
+    idx_path = tgt_custody / "v4_source_custody_access_index_v1.jsonl"
+    idx_path.write_text("\n".join(tampered_lines) + "\n", encoding="utf-8")
+
+    (tgt_custody / "v4_source_custody_missing_report_v1.json").write_bytes(
+        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+    )
+
+    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
+    receipt_tampered = copy.deepcopy(receipt_data)
+    receipt_tampered["index_sha256"] = custody.sha256_file(idx_path)
+    receipt_tampered["receipt_id"] = custody._make_receipt_id(
+        receipt_tampered["config_sha256"],
+        receipt_tampered["index_sha256"],
+        receipt_tampered["missing_report_sha256"],
+    )
+    (tgt_custody / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
+
+    with pytest.raises(custody.CustodyAccessError, match=r"Index header keys mismatch"):
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+
+    # 2. Injected forbidden text into header ('text')
+    header_tampered = copy.deepcopy(header)
+    header_tampered["text"] = "Corpus text leakage"
+    tampered_lines = [json.dumps(header_tampered), *lines[1:]]
+    idx_path.write_text("\n".join(tampered_lines) + "\n", encoding="utf-8")
+    receipt_tampered["index_sha256"] = custody.sha256_file(idx_path)
+    receipt_tampered["receipt_id"] = custody._make_receipt_id(
+        receipt_tampered["config_sha256"],
+        receipt_tampered["index_sha256"],
+        receipt_tampered["missing_report_sha256"],
+    )
+    (tgt_custody / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
+
+    with pytest.raises(custody.CustodyAccessError, match=r"(Index header keys mismatch|no_corpus_text_emitted)"):
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+
+
+def test_precompute_table_source_metrics_filters_selected_sources(tmp_path: Path) -> None:
+    """_precompute_table_source_metrics restricts queries to selected_source_files (Finding 1)."""
+    db_file = tmp_path / "test.db"
+    conn = sqlite3.connect(db_file)
+    cur = conn.cursor()
+    cur.execute("CREATE TABLE literary_texts (source_file TEXT, id INTEGER, chunk_id TEXT, text TEXT)")
+    cur.execute("INSERT INTO literary_texts VALUES ('src_in', 1, 'c1', 'Hello')")
+    cur.execute("INSERT INTO literary_texts VALUES ('src_in', 2, 'c2', 'World')")
+    cur.execute("INSERT INTO literary_texts VALUES ('src_out', 3, 'c3', 'Secret out-of-scope text')")
+    conn.commit()
+
+    # Pass selected_source_files containing only 'src_in'
+    s_m, _c_m = custody._precompute_table_source_metrics(conn, "literary_texts", selected_source_files={"src_in"})
+    assert "src_in" in s_m
+    assert "src_out" not in s_m
+    assert s_m["src_in"][0] == 2
+    assert s_m["src_in"][1] == 10
+
+    # If selected_source_files is empty, returns empty without querying
+    s_empty, c_empty = custody._precompute_table_source_metrics(conn, "literary_texts", selected_source_files=set())
+    assert s_empty == {}
+    assert c_empty == {}
+    conn.close()
