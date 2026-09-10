@@ -842,6 +842,14 @@ def verify(
                 if _is_private_or_absolute_host_path(store_val):
                     recomputed_no_private_host_paths = False
 
+            ev_ref = row.get("lineage_verification", {}).get("evidence_ref") or ""
+            if _is_private_or_absolute_host_path(ev_ref):
+                recomputed_no_private_host_paths = False
+
+            blk_reason = row.get("blocking_reason") or ""
+            if _is_private_or_absolute_host_path(blk_reason):
+                recomputed_no_private_host_paths = False
+
             if row.get("cohort_id") not in ("literary-non-ocr", "public-textbooks-non-stem-non-ocr"):
                 recomputed_no_broad_recollection = False
 
@@ -957,6 +965,10 @@ def verify(
     missing_errors = list(missing_validator.iter_errors(missing_report))
     if missing_errors:
         raise CustodyAccessError(f"Missing report error: {missing_errors[0].message}")
+
+    archive_loc = missing_report.get("unmounted_archive_locator") or ""
+    if _is_private_or_absolute_host_path(archive_loc):
+        recomputed_no_private_host_paths = False
 
     for item in missing_report.get("missing_inputs", []):
         ref = item.get("missing_path_ref") or ""
