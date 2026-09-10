@@ -26,6 +26,7 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.projects.open_model_data import frozen_export_provenance as provenance
 from scripts.projects.ua_eval_harness.evaluate_model import load_manifest
 
 RELEASE_ROOT = ROOT / "data/projects/ua_open_weight_eval/v0.1.0"
@@ -469,6 +470,15 @@ def verify_release() -> dict[str, Any]:
         "saved_response_schema": sha256_file(RELEASE_ROOT / "saved_response.schema.json"),
         "suite_cli": sha256_file(Path(__file__)),
     }
+    if provenance.is_frozen_receipt("ua_open_weight_eval_v010", RECEIPT_PATH.read_bytes()):
+        # This exact published receipt names creator bytes, not today's code.
+        # Fresh build_release() receipts above always record raw current hashes.
+        try:
+            historical = provenance.verify_frozen_receipt("ua_open_weight_eval_v010")
+        except provenance.FrozenProvenanceError as exc:
+            raise SuiteError(str(exc)) from exc
+        expected_artifacts["foundry_firewall"] = historical["historical_bindings"][provenance.EXPORTER]
+        expected_artifacts["suite_cli"] = historical["historical_bindings"][provenance.EVALUATION_BUILDER]
     _require(receipt.get("artifacts") == expected_artifacts, "release artifact receipt mismatch")
     _require(receipt.get("upstream_freezes") == verify_upstream_freezes(), "upstream receipt drift")
     policies = receipt.get("policy", {})
@@ -848,7 +858,16 @@ def score_saved(responses_path: Path, output: Path) -> dict[str, Any]:
 
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples: /home/ops/learn-ukrainian/.venv/bin/python -m "
+               "scripts.projects.ua_open_weight_eval.suite_cli verify\n"
+               "  /home/ops/learn-ukrainian/.venv/bin/python -m "
+               "scripts.projects.ua_open_weight_eval.suite_cli package-publication --help\n"
+               "Outputs: selected local suite artifacts/receipts; historical verification preserves frozen bytes.\n"
+               "Exit codes: 0 success; nonzero invalid arguments or failed validation.\n"
+               "Related: docs/projects/ua-open-weight-eval; source admission #7888.",
+    )
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("build", help="rebuild the deterministic 4,000-case release")
     commands.add_parser("verify", help="verify frozen inputs and exact reproduction")
@@ -856,26 +875,26 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         "package-publication",
         help="build the verified GitHub and Hugging Face payload",
     )
-    package.add_argument("--output", type=Path, required=True)
-    package.add_argument("--source-revision", required=True)
-    package.add_argument("--archive", type=Path)
+    package.add_argument("--output", type=Path, required=True, help="Destination for the selected local artifact")
+    package.add_argument("--source-revision", required=True, help="Full lowercase 40-hex source Git SHA")
+    package.add_argument("--archive", type=Path, help="Optional local ZIP destination (default: no archive)")
     verify_package = commands.add_parser(
         "verify-publication-package",
         help="verify a staged publication payload",
     )
-    verify_package.add_argument("--package", type=Path, required=True)
+    verify_package.add_argument("--package", type=Path, required=True, help="Local publication package directory to verify")
     prepare = commands.add_parser("prepare", help="write a source-only request packet")
-    prepare.add_argument("--output", type=Path, required=True)
+    prepare.add_argument("--output", type=Path, required=True, help="Destination for the selected local artifact")
     validate = commands.add_parser("validate-run-config", help="validate an offline open-weight runner config")
-    validate.add_argument("--config", type=Path, required=True)
+    validate.add_argument("--config", type=Path, required=True, help="Local model runner configuration JSON")
     run = commands.add_parser("run-local", help="execute a preinstalled local open-weight runner")
-    run.add_argument("--config", type=Path, required=True)
-    run.add_argument("--requests", type=Path, required=True)
-    run.add_argument("--responses", type=Path, required=True)
-    run.add_argument("--receipt", type=Path, required=True)
+    run.add_argument("--config", type=Path, required=True, help="Local model runner configuration JSON")
+    run.add_argument("--requests", type=Path, required=True, help="Source-only request JSONL path")
+    run.add_argument("--responses", type=Path, required=True, help="Saved model-response JSONL path")
+    run.add_argument("--receipt", type=Path, required=True, help="Local run receipt JSON path")
     score = commands.add_parser("score", help="score complete saved output per track")
-    score.add_argument("--responses", type=Path, required=True)
-    score.add_argument("--output", type=Path, required=True)
+    score.add_argument("--responses", type=Path, required=True, help="Saved model-response JSONL path")
+    score.add_argument("--output", type=Path, required=True, help="Destination for the selected local artifact")
     return parser.parse_args(argv)
 
 

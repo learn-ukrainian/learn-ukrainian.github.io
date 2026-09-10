@@ -47,7 +47,7 @@ def run_export(directory: Path, record, payload, operation="local_learning"):
         "--representation-view", "faithful_literary", "--operation", operation,
         "--output", str(directory / "output.jsonl"),
         "--receipt-output", str(directory / "receipt.json"),
-    ], cwd=exporter.ROOT, capture_output=True, text=True, check=False)
+    ], cwd=exporter.ROOT, capture_output=True, text=True, check=False, timeout=60)
     assert result.returncode == 0, result.stderr
     return json.loads(result.stdout)
 
@@ -62,7 +62,7 @@ def materialize_input(directory: Path, record, payload):
         "materialize-human-source", "--source-records", str(directory / "sources.jsonl"),
         "--reviewed-payload", str(directory / "reviewed.json"),
         "--source-text", str(directory / "source.txt"), "--output", str(directory / "materialized.jsonl"),
-    ], cwd=exporter.ROOT, capture_output=True, text=True, check=False)
+    ], cwd=exporter.ROOT, capture_output=True, text=True, check=False, timeout=60)
     assert result.returncode == 0, result.stderr
     receipt = json.loads(result.stdout)
     assert receipt["payloads_written"] == 1
@@ -121,13 +121,14 @@ def test_materialize_denies_crlf_line_ending_byte_mismatch(tmp_path):
         "materialize-human-source", "--source-records", str(tmp_path / "sources.jsonl"),
         "--reviewed-payload", str(tmp_path / "reviewed.json"),
         "--source-text", str(tmp_path / "source.txt"), "--output", str(tmp_path / "materialized.jsonl"),
-    ], cwd=exporter.ROOT, capture_output=True, text=True, check=False)
+    ], cwd=exporter.ROOT, capture_output=True, text=True, check=False, timeout=60)
     assert result.returncode == 2, "materialize must reject exact-byte mismatch from CRLF endings"
     assert not (tmp_path / "materialized.jsonl").exists()
 
 
 @pytest.mark.parametrize("mutation,reason", [
     (lambda r, p: p.update(origin="machine_generated"), "source_origin_not_human_authored"),
+    (lambda r, p: r.update(source_family="synthetic"), "source_origin_not_human_authored"),
     (lambda r, p: r.pop("work_id"), "source_record_not_admitted"),
     (lambda r, p: p.update(source_record_id="record.absent"), "source_record_missing"),
     (lambda r, p: r["rights"]["model_training"].update(status="denied"), "source_record_not_admitted"),
@@ -172,6 +173,8 @@ def test_evaluation_text_cannot_enter_human_source_view(tmp_path):
     lambda r, p: r["rights"]["model_training"].update(status="denied"),
     lambda r, p: r.pop("work_id"),
     lambda r, p: p.update(source_content_sha256="0" * 64),
+    lambda r, p: p.update(test_fixture=True),
+    lambda r, p: p["derivation"].update(kind="character_span"),
 ])
 def test_materialization_denies_invalid_input_without_overwriting(tmp_path, mutation):
     record, payload = prepare_inputs(tmp_path)
@@ -189,3 +192,43 @@ def test_materialization_denies_invalid_input_without_overwriting(tmp_path, muta
             extra_evaluation_artifacts=(),
         )
     assert output.read_bytes() == b"previous artifact\n"
+
+
+@pytest.mark.parametrize("category", ["stem", "video_captions", "video_transcripts", "ocr", "ocr_derived", "private_teaching_material"])
+@pytest.mark.parametrize("field", ["source_family", "genre"])
+def test_cli_preserves_explicit_source_exclusions(tmp_path, category, field):
+    record, payload = prepare_inputs(tmp_path)
+    if field == "source_family":
+        record[field] = category
+    else:
+        record["description"][field] = category
+    receipt = run_export(tmp_path, record, payload)
+    assert receipt["output"]["records"] == 0
+    assert receipt["counts"]["excluded_source_record_not_admitted"] == 1
+
+
+def test_conflicting_public_permission_is_not_local_permission(tmp_path):
+    record, payload = prepare_inputs(tmp_path)
+    record["rights"]["redistribution"]["status"] = "conflicting"
+    assert run_export(tmp_path, record, payload)["output"]["records"] == 1
+    assert run_export(tmp_path, record, payload, "public_redistribution")["output"]["records"] == 0
+
+
+def test_materialization_preserves_crlf_and_denies_line_ending_mutation(tmp_path):
+    record, payload = prepare_inputs(tmp_path)
+    text = HUMAN_TEXT.replace("\n", "\r\n")
+    record["content"]["sha256"] = exporter.sha256_text(text)
+    payload.update(text=text, text_sha256=exporter.sha256_text(text), source_content_sha256=exporter.sha256_text(text))
+    payload["language_span_review"]["character_spans"][0]["end"] = len(text)
+    assert materialize_input(tmp_path, record, payload)["text"].encode("utf-8") == text.encode("utf-8")
+    output = tmp_path / "materialized.jsonl"
+    before = output.read_bytes()
+    (tmp_path / "source.txt").write_bytes(HUMAN_TEXT.encode("utf-8"))
+    with pytest.raises(exporter.ExportError, match="full source payload text"):
+        exporter.materialize_human_source(
+            source_records_path=tmp_path / "sources.jsonl", reviewed_payload_path=tmp_path / "reviewed.json",
+            source_text_path=tmp_path / "source.txt", output=output,
+            v011_manifest=exporter.DEFAULT_V011_MANIFEST, v02_packet=exporter.DEFAULT_V02_PACKET,
+            extra_evaluation_artifacts=(),
+        )
+    assert output.read_bytes() == before
