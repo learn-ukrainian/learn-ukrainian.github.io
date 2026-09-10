@@ -1,0 +1,32 @@
+{
+  "schema_version": "v4_language_usage_config_v1",
+  "inputs": {
+    "extraction_index": "data/projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl",
+    "extraction_receipt": "data/projects/open_model_data/extraction/v4_native_extraction_receipt_v1.json",
+    "provenance_index": "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl",
+    "database": "data/sources.db"
+  },
+  "outputs": {
+    "index": "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
+    "receipt": "data/projects/open_model_data/language/v4_language_usage_receipt_v1.json"
+  },
+  "separation_rules": {
+    "target_cohorts": [
+      "literary-non-ocr",
+      "public-textbooks-non-stem-non-ocr"
+    ],
+    "target_sources": [
+      "source.literary.0020599cfcaf15e887bdb73c",
+      "source.public_textbooks.00cebc897bb7feab776c42a8",
+      "source.literary.451b33b316e840f953b4e393"
+    ],
+    "mask_quoted_in_modern_view": true,
+    "mask_foreign_citations_in_modern_view": true,
+    "preserve_verbatim_original": true,
+    "allow_unattested_vesum_forms": true
+  },
+  "ownership": {
+    "linguistic_preparation_owner": "linguistic preparation owner with independent Ukrainian review",
+    "blocks_scope": "using incorrectly labelled or unreviewed spans in a claimed learning view"
+  }
+}

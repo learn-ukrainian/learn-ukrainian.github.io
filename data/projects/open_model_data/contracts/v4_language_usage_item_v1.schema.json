@@ -1,0 +1,239 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v4_language_usage_item_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "language_usage_id",
+    "extraction_id",
+    "source_id",
+    "cohort_id",
+    "source_family",
+    "source_file",
+    "chunk_id",
+    "span_locator",
+    "functional_role",
+    "consumer_views",
+    "linguistic_invariants"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v4_language_usage_v1"
+    },
+    "language_usage_id": {
+      "type": "string",
+      "pattern": "^lang\\.[a-f0-9]{24}$"
+    },
+    "extraction_id": {
+      "type": "string",
+      "pattern": "^extract\\.[a-f0-9]{24}$"
+    },
+    "source_id": {
+      "type": "string",
+      "pattern": "^source\\.(?:literary|public_textbooks)\\.[a-f0-9]{24}$"
+    },
+    "cohort_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "source_family": {
+      "enum": [
+        "literary",
+        "public_textbooks"
+      ]
+    },
+    "source_file": {
+      "type": "string",
+      "minLength": 1
+    },
+    "chunk_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "span_locator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start_char",
+        "end_char",
+        "char_length",
+        "span_sha256"
+      ],
+      "properties": {
+        "start_char": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end_char": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "char_length": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "span_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "functional_role": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "primary_role",
+        "roles",
+        "uncertainty",
+        "basis"
+      ],
+      "properties": {
+        "primary_role": {
+          "enum": [
+            "modern_standard",
+            "literary_register",
+            "historical_period",
+            "regional_dialect",
+            "quoted_metalinguistic",
+            "damaged_or_excluded"
+          ]
+        },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "enum": [
+              "modern_standard",
+              "literary_register",
+              "historical_period",
+              "regional_dialect",
+              "quoted_metalinguistic",
+              "damaged_or_excluded"
+            ]
+          }
+        },
+        "uncertainty": {
+          "enum": [
+            "confirmed",
+            "inferred_from_metadata",
+            "unresolved"
+          ]
+        },
+        "basis": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "consumer_views": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "faithful_view",
+        "modern_view"
+      ],
+      "properties": {
+        "faithful_view": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "training_eligible",
+            "loss_mask_spans"
+          ],
+          "properties": {
+            "training_eligible": {
+              "type": "boolean"
+            },
+            "loss_mask_spans": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "start_char",
+                  "end_char",
+                  "reason"
+                ],
+                "properties": {
+                  "start_char": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "end_char": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "modern_view": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "training_eligible",
+            "loss_mask_spans"
+          ],
+          "properties": {
+            "training_eligible": {
+              "type": "boolean"
+            },
+            "loss_mask_spans": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "start_char",
+                  "end_char",
+                  "reason"
+                ],
+                "properties": {
+                  "start_char": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "end_char": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "linguistic_invariants": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "verbatim_preserved",
+        "unattested_lexical_items_count",
+        "vesum_grounded"
+      ],
+      "properties": {
+        "verbatim_preserved": {
+          "type": "boolean"
+        },
+        "unattested_lexical_items_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "vesum_grounded": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

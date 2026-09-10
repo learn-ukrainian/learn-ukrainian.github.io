@@ -1,0 +1,30 @@
+{
+  "schema_version": "v4_language_usage_receipt_v1",
+  "receipt_id": "receipt.language.13f75785dc25f46798a4717d",
+  "config_sha256": "dab4c834e5f720ca9343a6871a2139f4073393363e77f580c4a0e07602e91586",
+  "extraction_receipt_sha256": "45e38ee063533e20646cd7fe6cca4b7415ad67091b5d5397267384c8f2511d2f",
+  "index_sha256": "5d2c1cf124bbf8c025a0eb493e1c65faf38db154a34a81546343631c61d02d80",
+  "summary": {
+    "total_sources_evaluated": 3,
+    "total_spans_evaluated": 1419,
+    "faithful_training_eligible_count": 1418,
+    "modern_training_eligible_count": 1325,
+    "masked_spans_count": 1155,
+    "role_breakdown": {
+      "modern_standard": 245,
+      "literary_register": 1080,
+      "historical_period": 93,
+      "regional_dialect": 0,
+      "quoted_metalinguistic": 0,
+      "damaged_or_excluded": 1
+    }
+  },
+  "safety_assertions": {
+    "no_corpus_text": true,
+    "no_private_host_paths": true,
+    "verbatim_wording_preserved": true,
+    "no_invented_modernizations": true,
+    "loss_masks_prevent_contamination": true
+  },
+  "verdict": "LANGUAGE_USAGE_SEPARATION_CONFIRMED"
+}

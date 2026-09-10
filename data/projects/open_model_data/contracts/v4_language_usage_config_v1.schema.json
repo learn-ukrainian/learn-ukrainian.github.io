@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v4_language_usage_config_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "inputs",
+    "outputs",
+    "separation_rules",
+    "ownership"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v4_language_usage_config_v1"
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "extraction_index",
+        "extraction_receipt",
+        "provenance_index",
+        "database"
+      ],
+      "properties": {
+        "extraction_index": {
+          "type": "string",
+          "minLength": 1
+        },
+        "extraction_receipt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance_index": {
+          "type": "string",
+          "minLength": 1
+        },
+        "database": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "index",
+        "receipt"
+      ],
+      "properties": {
+        "index": {
+          "type": "string",
+          "minLength": 1
+        },
+        "receipt": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "separation_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_cohorts",
+        "mask_quoted_in_modern_view",
+        "mask_foreign_citations_in_modern_view",
+        "preserve_verbatim_original",
+        "allow_unattested_vesum_forms"
+      ],
+      "properties": {
+        "target_cohorts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$"
+          }
+        },
+        "target_sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^source\\.(?:literary|public_textbooks)\\.[a-f0-9]{24}$"
+          }
+        },
+        "mask_quoted_in_modern_view": {
+          "type": "boolean"
+        },
+        "mask_foreign_citations_in_modern_view": {
+          "type": "boolean"
+        },
+        "preserve_verbatim_original": {
+          "type": "boolean"
+        },
+        "allow_unattested_vesum_forms": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ownership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "linguistic_preparation_owner",
+        "blocks_scope"
+      ],
+      "properties": {
+        "linguistic_preparation_owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "blocks_scope": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}
