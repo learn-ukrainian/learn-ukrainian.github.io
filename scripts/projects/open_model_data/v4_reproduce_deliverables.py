@@ -82,7 +82,10 @@ def load_partition_view(records_path: Path, partition: str) -> list[dict[str, An
     """Load records filtered by split partition (DELIVERY-1)."""
     filtered = []
     for record in load_dataset_stream(records_path):
-        if record.get("split_clearance", {}).get("split_partition") == partition:
+        sc = record.get("split_clearance", {})
+        if sc.get("split_partition") == partition:
+            if partition == "training" and not sc.get("builder_training_cleared", False):
+                continue
             filtered.append(record)
     return filtered
 

@@ -280,10 +280,10 @@ def build_dataset(
 
             is_quarantine = assigned_part == "quarantine_excluded"
 
-            if is_quarantine:
+            if is_quarantine or (assigned_part == "training" and not builder_cleared):
                 quarantine_spans += 1
                 clearance_status = "QUARANTINE_EXCLUDED"
-            elif assigned_part == "training":
+            elif assigned_part == "training" and builder_cleared:
                 training_spans += 1
                 clearance_status = "TRAINING_CLEARED"
             elif assigned_part == "heldout_evaluation":
