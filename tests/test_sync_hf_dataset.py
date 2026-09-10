@@ -45,3 +45,26 @@ def test_sync_hf_dataset_requires_token(tmp_path: Path, monkeypatch):
     monkeypatch.delenv("HF_TOKEN", raising=False)
     with pytest.raises(ValueError, match="HF_TOKEN"):
         sync_hf_dataset(tmp_path, repo_id="test/repo", token=None, dry_run=False)
+
+
+def test_sync_hf_dataset_cli_subprocess(tmp_path: Path):
+    import os
+    import subprocess
+    import sys
+
+    (tmp_path / "test.opus").write_bytes(b"OggS" + b"X" * 1500)
+
+    env = os.environ.copy()
+    env.pop("PYTHONPATH", None)
+
+    script_path = Path(__file__).resolve().parents[1] / "scripts/audio/sync_hf_dataset.py"
+    proc = subprocess.run(
+        [sys.executable, str(script_path), "--local-dir", str(tmp_path), "--dry-run"],
+        capture_output=True,
+        text=True,
+        env=env,
+        timeout=30,
+    )
+    assert proc.returncode == 0, f"STDOUT:\n{proc.stdout}\nSTDERR:\n{proc.stderr}"
+    assert "Hugging Face dataset sync status:" in proc.stdout
+    assert "'dry_run': True" in proc.stdout

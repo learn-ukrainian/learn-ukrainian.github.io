@@ -23,6 +23,21 @@ from pathlib import Path
 from typing import Any
 from urllib.request import urlopen
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+
+def _find_default_manifest() -> Path | None:
+    for p in [_REPO_ROOT, *_REPO_ROOT.parents]:
+        candidate = p / "site" / "src" / "data" / "lexicon-manifest.json"
+        if candidate.is_file():
+            return candidate
+    return None
+
+
+DEFAULT_MANIFEST = _find_default_manifest()
+
 REVISION = "1162a9173d0ce503555aed757976b7a9912eae4c"
 VOICE = "uk_UA-ukrainian_tts-medium"
 MODEL_FILES = {
@@ -281,7 +296,12 @@ def main() -> None:
         "Encodes 24 kbps mono OGG/Opus clips with deterministic lemma hashing.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument("--manifest", type=Path, help="Input Atlas/lexicon manifest JSON")
+    parser.add_argument(
+        "--manifest",
+        type=Path,
+        default=DEFAULT_MANIFEST if DEFAULT_MANIFEST.is_file() else None,
+        help="Input Atlas/lexicon manifest JSON",
+    )
     parser.add_argument("--deck", type=Path, help="Input Practice deck JSON")
     parser.add_argument("--out-dir", type=Path, default=Path("batch_state/audio_opus"), help="Output directory")
     parser.add_argument("--limit", type=int, default=0, help="Max words to synthesize (0=unlimited)")
@@ -294,7 +314,11 @@ def main() -> None:
     args = parser.parse_args()
 
     items = []
-    if args.manifest and args.manifest.is_file():
+    if args.deck and args.deck.is_file():
+        data = json.loads(args.deck.read_text())
+        for e in data.get("lexemes", []):
+            items.append({"lemma": e.get("lemmaPlain"), "pos": e.get("pos")})
+    elif args.manifest and args.manifest.is_file():
         data = json.loads(args.manifest.read_text())
         raw_entries = data.get("entries", [])
         if isinstance(raw_entries, dict):
@@ -304,12 +328,8 @@ def main() -> None:
             for e in raw_entries:
                 if isinstance(e, dict):
                     items.append({"lemma": e.get("lemma"), "pos": e.get("pos")})
-    elif args.deck and args.deck.is_file():
-        data = json.loads(args.deck.read_text())
-        for e in data.get("lexemes", []):
-            items.append({"lemma": e.get("lemmaPlain"), "pos": e.get("pos")})
     else:
-        parser.error("Specify either --manifest or --deck")
+        parser.error("Specify either --manifest or --deck (or ensure site/src/data/lexicon-manifest.json exists)")
 
     if args.runtime_dir.is_dir():
         sys.path.insert(0, str(args.runtime_dir.resolve()))

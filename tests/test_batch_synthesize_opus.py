@@ -157,3 +157,39 @@ def test_synthesize_batch_and_manifest(tmp_path: Path, monkeypatch: pytest.Monke
     loaded = json.loads((out_dir / "manifest.json").read_text())
     assert loaded["totalCount"] == 2
     assert "школа" in loaded["entries"]
+
+
+def test_default_manifest_discovery():
+    from scripts.audio.batch_synthesize_opus import _find_default_manifest
+
+    manifest_path = _find_default_manifest()
+    if manifest_path is not None:
+        assert manifest_path.name == "lexicon-manifest.json"
+        assert manifest_path.is_file()
+
+
+def test_cli_dry_run_subprocess(tmp_path: Path):
+    import os
+    import subprocess
+    import sys
+
+    dummy_manifest = tmp_path / "manifest.json"
+    dummy_manifest.write_text(
+        json.dumps({"entries": [{"lemma": "хліб", "pos": "noun"}, {"lemma": "невідомеслово", "pos": "noun"}]})
+    )
+
+    env = os.environ.copy()
+    env.pop("PYTHONPATH", None)
+
+    script_path = Path(__file__).resolve().parents[1] / "scripts/audio/batch_synthesize_opus.py"
+    proc = subprocess.run(
+        [sys.executable, str(script_path), "--manifest", str(dummy_manifest), "--dry-run"],
+        capture_output=True,
+        text=True,
+        env=env,
+        timeout=30,
+    )
+    assert proc.returncode == 0, f"STDOUT:\n{proc.stdout}\nSTDERR:\n{proc.stderr}"
+    assert "Total candidate words: 2" in proc.stdout
+    assert "Pending synthesis: 1" in proc.stdout
+    assert "Dry-run complete." in proc.stdout
