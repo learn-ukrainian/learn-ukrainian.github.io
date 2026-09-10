@@ -1,0 +1,42 @@
+{
+  "schema_version": "v4_human_source_dataset_receipt_v1",
+  "receipt_id": "receipt.dataset.d644ec2322542133adc3f12d",
+  "dataset_version": "v4.0.0-human-pilot-scale",
+  "verdict": "DATASET_CONFIRMED",
+  "manifest_sha256": "cdbbfb31ebe30a8167191a48365de05b83206fc2b373f35e44288c10a68cc4ac",
+  "split_receipt_sha256": "dc52361567488837e41db9c79c79c78604fe80ee7463c31d256c9de73b1c07b0",
+  "records_sha256": "d3980b929a70980d6627876c11653fca375d2906ab5f4381a6ebba21903950cc",
+  "quality_assessment_sha256": "34846ab692b2743296e1fae88a0a3355f082650f443c27b67741332f9077b8ac",
+  "dataset_accounting": {
+    "total_evaluated_spans": 1419,
+    "total_admitted_spans": 1418,
+    "exported_training_spans": 614,
+    "firewalled_heldout_evaluation_spans": 559,
+    "development_spans": 245,
+    "rejected_quarantine_spans": 1,
+    "silent_drops": 0
+  },
+  "deduplication_yield": {
+    "unique_spans_count": 1419,
+    "duplicate_spans_count": 0,
+    "deduplication_rate": 1.0
+  },
+  "storage_accounting": {
+    "records_byte_size": 1852653,
+    "records_line_count": 1420,
+    "below_2000kb_precommit_limit": true
+  },
+  "frozen_for_downstream": {
+    "open_weight_learning_study_issue": 7889,
+    "deliverable_reproduction_issue": 7433
+  },
+  "residuals": {
+    "operator_excluded_strata": [
+      "stem_technical_and_exact_sciences",
+      "video_captions_transcripts",
+      "ocr_scanned_unverified_sources",
+      "private_teaching_material"
+    ]
+  },
+  "notes": "Representative human-source dataset denominator and audit frozen under #7432."
+}

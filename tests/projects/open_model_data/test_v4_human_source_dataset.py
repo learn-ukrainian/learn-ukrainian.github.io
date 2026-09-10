@@ -1,0 +1,133 @@
+"""Tests for the complete private human-source dataset denominator and coverage audit (Issue #7432)."""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import jsonschema
+import pytest
+
+from scripts.projects.open_model_data.v4_human_source_dataset import (
+    OPERATOR_EXCLUDED_RESIDUALS,
+    assert_no_private_host_paths,
+    verify_dataset,
+)
+
+CONTRACTS_DIR = Path("data/projects/open_model_data/contracts")
+DATASET_DIR = Path("data/projects/open_model_data/dataset")
+MANIFEST_PATH = DATASET_DIR / "v4_human_source_dataset_manifest_v1.json"
+RECEIPT_PATH = DATASET_DIR / "v4_human_source_dataset_receipt_v1.json"
+RECORDS_PATH = DATASET_DIR / "v4_human_source_dataset_records_v1.jsonl"
+
+
+def test_schema_contracts_valid() -> None:
+    """The 3 JSON schemas for dataset manifest, record, and receipt must be valid Draft 2020-12 schemas."""
+    for schema_name in [
+        "v4_human_source_dataset_manifest_v1.schema.json",
+        "v4_human_source_dataset_record_v1.schema.json",
+        "v4_human_source_dataset_receipt_v1.schema.json",
+    ]:
+        p = CONTRACTS_DIR / schema_name
+        assert p.is_file(), f"Missing schema contract: {p}"
+        schema_data = json.loads(p.read_text(encoding="utf-8"))
+        jsonschema.Draft202012Validator.check_schema(schema_data)
+
+
+def test_manifest_denominator_accounting() -> None:
+    """Check explicit denominator accounting and residual tracking (SCALE-1 & SCALE-2)."""
+    assert MANIFEST_PATH.is_file(), f"Missing manifest: {MANIFEST_PATH}"
+    manifest_data = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    assert manifest_data["schema_version"] == "v4_human_source_dataset_manifest_v1"
+    assert manifest_data["dataset_version"] == "v4.0.0-human-pilot-scale"
+
+    acct = manifest_data["denominator_accounting"]
+    assert acct["total_holdings_sources"] == 16
+    assert acct["total_selected_sources"] == 3
+    assert acct["total_work_families"] == 3
+    assert acct["total_evaluated_spans"] == 1419
+    assert acct["total_admitted_spans"] == 1418
+    assert acct["exported_training_spans"] == 614
+    assert acct["firewalled_heldout_evaluation_spans"] == 559
+    assert acct["development_spans"] == 245
+    assert acct["quarantined_spans"] == 1
+
+    strata = acct["strata_coverage"]
+    assert strata["literary_prose"] == "covered"
+    assert strata["educational_textbook"] == "covered"
+    assert strata["stem_technical"] == "residual_operator_excluded"
+    assert strata["video_captions"] == "residual_operator_excluded"
+    assert strata["ocr_scans"] == "residual_operator_excluded"
+    assert strata["private_teaching_material"] == "residual_operator_excluded"
+
+    assert acct["operator_excluded_residuals"] == OPERATOR_EXCLUDED_RESIDUALS
+
+
+def test_dataset_receipt_and_storage_accounting() -> None:
+    """Verify receipt accounting, deduplication yield, and storage limits (SCALE-4 & SCALE-5)."""
+    assert RECEIPT_PATH.is_file(), f"Missing receipt: {RECEIPT_PATH}"
+    receipt_data = json.loads(RECEIPT_PATH.read_text(encoding="utf-8"))
+    assert receipt_data["verdict"] == "DATASET_CONFIRMED"
+    assert receipt_data["dataset_version"] == "v4.0.0-human-pilot-scale"
+
+    acct = receipt_data["dataset_accounting"]
+    assert acct["total_evaluated_spans"] == 1419
+    assert acct["total_admitted_spans"] == 1418
+    assert acct["exported_training_spans"] == 614
+    assert acct["firewalled_heldout_evaluation_spans"] == 559
+    assert acct["development_spans"] == 245
+    assert acct["rejected_quarantine_spans"] == 1
+    assert acct["silent_drops"] == 0
+
+    dedup = receipt_data["deduplication_yield"]
+    assert dedup["unique_spans_count"] == 1419
+    assert dedup["duplicate_spans_count"] == 0
+    assert dedup["deduplication_rate"] == 1.0
+
+    storage = receipt_data["storage_accounting"]
+    assert storage["below_2000kb_precommit_limit"] is True
+    assert storage["records_byte_size"] < 2000 * 1024
+
+    assert receipt_data["frozen_for_downstream"]["open_weight_learning_study_issue"] == 7889
+    assert receipt_data["frozen_for_downstream"]["deliverable_reproduction_issue"] == 7433
+
+
+def test_dataset_record_fidelity_and_invariants() -> None:
+    """Verify individual records satisfy verbatim preservation and privacy invariants (SCALE-3)."""
+    assert RECORDS_PATH.is_file(), f"Missing records: {RECORDS_PATH}"
+    with RECORDS_PATH.open("r", encoding="utf-8") as f:
+        header = json.loads(f.readline())
+        assert header["schema_version"] == "v4_human_source_dataset_records_v1"
+        assert header["records"] == 1419
+
+        sample_count = 0
+        for line in f:
+            line_str = line.strip()
+            if not line_str:
+                continue
+            rec = json.loads(line_str)
+            assert rec["schema_version"] == "v4_human_source_dataset_record_v1"
+            assert rec["record_id"].startswith("record.human.")
+            assert rec["source_fidelity"]["is_native_text"] is True
+            assert rec["source_fidelity"]["verbatim_preserved"] is True
+            assert rec["admission_evidence"]["firewall_verified"] is True
+            sample_count += 1
+
+        assert sample_count == 1419
+
+
+def test_privacy_host_paths_clean() -> None:
+    """Ensure zero private host paths exist in any public dataset artifact."""
+    manifest_data = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    assert_no_private_host_paths(manifest_data)
+
+    receipt_data = json.loads(RECEIPT_PATH.read_text(encoding="utf-8"))
+    assert_no_private_host_paths(receipt_data)
+
+    with pytest.raises(ValueError, match="Prohibited host path detected"):
+        assert_no_private_host_paths({"bad": "/home/ops/secret"})
+
+
+def test_verify_dataset_clean_pass() -> None:
+    """The verify_dataset function must return True on intact artifacts."""
+    assert verify_dataset(Path.cwd()) is True
