@@ -34,6 +34,7 @@ ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 DEFAULT_DB = ROOT / "data" / "atlas.db"
 DEFAULT_SYNONYM_VERDICTS = ROOT / "data" / "lexicon" / "synonym_pair_verdicts.yaml"
+DEFAULT_CURATED_ALIASES = ROOT / "data" / "lexicon" / "curated_aliases.yaml"
 
 ARTICLE_ENTRY_TYPES = {
     "lemma",
@@ -223,6 +224,32 @@ def _load_verified_synonym_pairs(verdicts_path: Path) -> tuple[list[tuple[str, s
     return sorted(pairs), self_pairs_skipped
 
 
+def _load_curated_aliases(
+    curated_aliases_path: Path,
+) -> list[tuple[str, str, str, str, str]]:
+    """Load curated aliases and spelling variants that resolve to public articles."""
+    if not curated_aliases_path.exists():
+        return []
+    data = yaml.safe_load(curated_aliases_path.read_text(encoding="utf-8")) or {}
+    if not isinstance(data, dict):
+        return []
+    alias_list = data.get("aliases", [])
+    if not isinstance(alias_list, list):
+        return []
+    rows: list[tuple[str, str, str, str, str]] = []
+    for item in alias_list:
+        if not isinstance(item, dict):
+            continue
+        alias = str(item.get("alias") or "").strip()
+        target = str(item.get("target_slug") or "").strip()
+        kind = str(item.get("kind") or "spelling_variant").strip()
+        source = str(item.get("source") or "curated").strip()
+        visibility = str(item.get("visibility") or "public").strip()
+        if alias and target and kind in ALIAS_KINDS:
+            rows.append((alias, kind, source, target, visibility))
+    return rows
+
+
 def _relation_targets_by_lemma(cur: sqlite3.Cursor) -> dict[str, tuple[str, ...]]:
     """Map verdict lemmas to public Atlas slugs through the aliases table.
 
@@ -321,6 +348,7 @@ def migrate_manifest(
     manifest_path: Path,
     db_path: Path,
     synonym_verdicts_path: Path = DEFAULT_SYNONYM_VERDICTS,
+    curated_aliases_path: Path = DEFAULT_CURATED_ALIASES,
 ) -> dict[str, int]:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     entries = manifest.get("entries", [])
@@ -459,6 +487,19 @@ def migrate_manifest(
 
     counts.update(_insert_verified_synonym_relations(cur, synonym_verdicts_path))
 
+    # Curated aliases and spelling variants
+    curated_alias_rows = _load_curated_aliases(curated_aliases_path)
+    curated_count = 0
+    for a, k, src, target, vis in curated_alias_rows:
+        if target in article_visibility:
+            cur.execute(
+                "INSERT OR IGNORE INTO aliases(alias, kind, source, target_slug, visibility) VALUES (?,?,?,?,?)",
+                (a, k, src, target, vis),
+            )
+            counts["aliases"] += 1
+            curated_count += 1
+    counts["curated_aliases"] = curated_count
+
     # FTS
     cur.execute("DELETE FROM articles_fts")
     cur.execute(
@@ -526,6 +567,12 @@ def main() -> None:
     ap.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     ap.add_argument("--db", type=Path, default=DEFAULT_DB)
     ap.add_argument(
+        "--curated-aliases",
+        type=Path,
+        default=DEFAULT_CURATED_ALIASES,
+        help="Path to curated aliases YAML file.",
+    )
+    ap.add_argument(
         "--validate-aliases-only",
         action="store_true",
         help="Validate alias targets in an existing DB without rebuilding it.",
@@ -535,7 +582,11 @@ def main() -> None:
         if args.validate_aliases_only:
             validate_alias_targets(args.db)
             return
-        counts = migrate_manifest(args.manifest, args.db)
+        counts = migrate_manifest(
+            args.manifest,
+            args.db,
+            curated_aliases_path=args.curated_aliases,
+        )
         by_type = counts.pop("by_type", {})
         print("atlas_db migrate:", json.dumps(counts, ensure_ascii=False))
         print("by entry_type:", json.dumps(by_type, ensure_ascii=False))

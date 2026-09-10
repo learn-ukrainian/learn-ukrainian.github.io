@@ -28,6 +28,8 @@ const starlightNodeModules = realpathSync(fileURLToPath(new URL('./node_modules'
 // so we never publish two URLs for the same page.
 const redirects = {
   '/lexicon/practice': '/words-of-the-day/practice/',
+  '/lexicon/проєк': '/lexicon/проєкт/',
+  '/lexicon/%D0%BF%D1%80%D0%BE%D1%94%D0%BA': '/lexicon/проєкт/',
 };
 
 /** @param {string} page */

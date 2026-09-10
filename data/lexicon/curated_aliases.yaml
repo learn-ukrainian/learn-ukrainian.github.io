@@ -1,0 +1,14 @@
+# Curated aliases and spelling variants that resolve to public Word Atlas articles.
+# Adjudicated via Word Atlas entry model runbook (docs/runbooks/word-atlas-entry-model.md).
+
+aliases:
+  - alias: "проєк"
+    kind: "spelling_variant"
+    source: "curated"
+    target_slug: "проєкт"
+    visibility: "public"
+  - alias: "proiek"
+    kind: "transliteration"
+    source: "curated"
+    target_slug: "проєкт"
+    visibility: "public"
