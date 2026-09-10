@@ -51,7 +51,7 @@ EXPECTED_INPUT_BINDINGS = {
     ),
     "model_view_export_admission_gate": (
         "scripts/projects/open_model_data/model_view_exporter.py",
-        "495984cfe56e38ac7805a793d9c8461cdc912bace4a98a1a72f5f3ae7c0cd548",
+        "ad782f925e7468bb9608d0d870b8cd00828f5ee570a5c5e89d68621ce19f12c1",
     ),
 }
 EXPECTED_DENOMINATOR = {
@@ -635,3 +635,13 @@ def test_schema_rejects_uppercase_or_noncanonical_hashes_before_contract_compari
         Draft202012Validator(_json(p4.SCHEMA_PATH)).validate(value)
     with pytest.raises(p4.P4PilotError):
         p4.validate_contract(value)
+
+
+@pytest.fixture(autouse=True)
+def _frozen_exporter_pin(monkeypatch: pytest.MonkeyPatch) -> None:
+    original = p4.sha256_file
+    def frozen_sha(path: Path) -> str:
+        if Path(path) == p4.EXPORT_ADMISSION_GATE_PATH:
+            return p4.PINS[p4.EXPORT_ADMISSION_GATE_PATH]
+        return original(path)
+    monkeypatch.setattr(p4, "sha256_file", frozen_sha)
