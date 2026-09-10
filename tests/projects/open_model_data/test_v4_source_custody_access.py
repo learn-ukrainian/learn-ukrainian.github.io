@@ -369,27 +369,35 @@ def test_verify_detects_forged_receipt_id_and_verdict(tmp_path: Path, repo_root:
     # Test 1: Forged receipt_id
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["receipt_id"] = "receipt.custody.111122223333444455556666"
-    (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(json.dumps(receipt_tampered), encoding="utf-8")
+    (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
     with pytest.raises(custody.CustodyAccessError, match="Receipt receipt_id mismatch"):
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
     # Test 2: Forged verdict
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["verdict"] = "HALT_INACCESSIBLE_SOURCES"
-    (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(json.dumps(receipt_tampered), encoding="utf-8")
+    (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
     with pytest.raises(custody.CustodyAccessError, match="Receipt verdict mismatch"):
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
     # Test 3: Contradictory safety assertion
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["safety_assertions"]["first_eligible_cohort_ready"] = False
-    (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(json.dumps(receipt_tampered), encoding="utf-8")
-    with pytest.raises(custody.CustodyAccessError, match=r"Receipt safety_assertions\.first_eligible_cohort_ready mismatch"):
+    (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
+    with pytest.raises(
+        custody.CustodyAccessError, match=r"Receipt safety_assertions\.first_eligible_cohort_ready mismatch"
+    ):
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
 def test_is_private_or_absolute_host_path() -> None:
-    # Allowed clean paths
+    # Allowed clean paths and prose
     assert not custody._is_private_or_absolute_host_path("")
     assert not custody._is_private_or_absolute_host_path("sources/textbooks/math.pdf")
     assert not custody._is_private_or_absolute_host_path("data/clean/source.txt")
@@ -399,7 +407,12 @@ def test_is_private_or_absolute_host_path() -> None:
     assert not custody._is_private_or_absolute_host_path("A: follow up with the custodian")
     assert not custody._is_private_or_absolute_host_path("B: check item status")
     assert not custody._is_private_or_absolute_host_path("Note: this is clean text")
-
+    assert not custody._is_private_or_absolute_host_path("private archive unavailable")
+    assert not custody._is_private_or_absolute_host_path("root cause analysis")
+    assert not custody._is_private_or_absolute_host_path("temp storage failure")
+    assert not custody._is_private_or_absolute_host_path("clean users list")
+    assert not custody._is_private_or_absolute_host_path("home page link")
+    assert not custody._is_private_or_absolute_host_path("var environment unset")
 
     # Unix absolute paths and home expansion
     assert custody._is_private_or_absolute_host_path("/opt/data/book.pdf")
@@ -416,12 +429,16 @@ def test_is_private_or_absolute_host_path() -> None:
     assert custody._is_private_or_absolute_host_path(r"\\server\share\data.pdf")
     assert custody._is_private_or_absolute_host_path("//server/share/data.pdf")
 
-    # Private directory segments
+    # Private directory segments in path-shaped tokens
     assert custody._is_private_or_absolute_host_path("foo/home/bar.txt")
     assert custody._is_private_or_absolute_host_path("foo/appdata/bar.txt")
     assert custody._is_private_or_absolute_host_path("foo/tmp/bar.txt")
     assert custody._is_private_or_absolute_host_path(r"foo\private\bar.txt")
     assert custody._is_private_or_absolute_host_path("Users/alice/doc.pdf")
+    assert custody._is_private_or_absolute_host_path("private/archive")
+    assert custody._is_private_or_absolute_host_path(r"private\archive")
+    assert custody._is_private_or_absolute_host_path("root/folder")
+    assert custody._is_private_or_absolute_host_path("temp/dir")
 
 
 @pytest.mark.parametrize(
@@ -433,14 +450,16 @@ def test_is_private_or_absolute_host_path() -> None:
         "relative/path/appdata/secrets.txt",
     ],
 )
-def test_verify_detects_recomputed_safety_assertion_violations(
-    tmp_path: Path, repo_root: Path, bad_path: str
-) -> None:
+def test_verify_detects_recomputed_safety_assertion_violations(tmp_path: Path, repo_root: Path, bad_path: str) -> None:
     tampered_out = tmp_path / "out"
     custody_dir = tampered_out / "data/projects/open_model_data/custody"
     custody_dir.mkdir(parents=True)
 
-    index_lines = Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl").read_text(encoding="utf-8").splitlines()
+    index_lines = (
+        Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    )
     header = index_lines[0]
     records = [json.loads(line) for line in index_lines[1:]]
 
@@ -454,14 +473,22 @@ def test_verify_detects_recomputed_safety_assertion_violations(
     # Test private/absolute host path insertion in source_locator
     records[0]["source_locator"]["source_file"] = bad_path
     tampered_lines = [header] + [json.dumps(r) for r in records]
-    (custody_dir / "v4_source_custody_access_index_v1.jsonl").write_text("\n".join(tampered_lines) + "\n", encoding="utf-8")
+    (custody_dir / "v4_source_custody_access_index_v1.jsonl").write_text(
+        "\n".join(tampered_lines) + "\n", encoding="utf-8"
+    )
 
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["index_sha256"] = custody.sha256_file(custody_dir / "v4_source_custody_access_index_v1.jsonl")
-    receipt_tampered["receipt_id"] = custody._make_receipt_id(receipt_tampered["config_sha256"], receipt_tampered["index_sha256"])
-    (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(json.dumps(receipt_tampered), encoding="utf-8")
+    receipt_tampered["receipt_id"] = custody._make_receipt_id(
+        receipt_tampered["config_sha256"], receipt_tampered["index_sha256"]
+    )
+    (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
 
-    with pytest.raises(custody.CustodyAccessError, match=r"Receipt safety_assertions\.no_private_host_paths_disclosed mismatch"):
+    with pytest.raises(
+        custody.CustodyAccessError, match=r"Receipt safety_assertions\.no_private_host_paths_disclosed mismatch"
+    ):
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
@@ -473,14 +500,16 @@ def test_verify_detects_recomputed_safety_assertion_violations(
         r"\\server\share\evidence.jsonl",
     ],
 )
-def test_verify_detects_evidence_ref_private_host_path(
-    tmp_path: Path, repo_root: Path, bad_evidence_ref: str
-) -> None:
+def test_verify_detects_evidence_ref_private_host_path(tmp_path: Path, repo_root: Path, bad_evidence_ref: str) -> None:
     tampered_out = tmp_path / "out"
     custody_dir = tampered_out / "data/projects/open_model_data/custody"
     custody_dir.mkdir(parents=True)
 
-    index_lines = Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl").read_text(encoding="utf-8").splitlines()
+    index_lines = (
+        Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    )
     header = index_lines[0]
     records = [json.loads(line) for line in index_lines[1:]]
 
@@ -494,14 +523,22 @@ def test_verify_detects_evidence_ref_private_host_path(
     # Test private/absolute host path insertion in lineage evidence_ref
     records[0]["lineage_verification"]["evidence_ref"] = bad_evidence_ref
     tampered_lines = [header] + [json.dumps(r) for r in records]
-    (custody_dir / "v4_source_custody_access_index_v1.jsonl").write_text("\n".join(tampered_lines) + "\n", encoding="utf-8")
+    (custody_dir / "v4_source_custody_access_index_v1.jsonl").write_text(
+        "\n".join(tampered_lines) + "\n", encoding="utf-8"
+    )
 
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["index_sha256"] = custody.sha256_file(custody_dir / "v4_source_custody_access_index_v1.jsonl")
-    receipt_tampered["receipt_id"] = custody._make_receipt_id(receipt_tampered["config_sha256"], receipt_tampered["index_sha256"])
-    (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(json.dumps(receipt_tampered), encoding="utf-8")
+    receipt_tampered["receipt_id"] = custody._make_receipt_id(
+        receipt_tampered["config_sha256"], receipt_tampered["index_sha256"]
+    )
+    (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
 
-    with pytest.raises(custody.CustodyAccessError, match=r"Receipt safety_assertions\.no_private_host_paths_disclosed mismatch"):
+    with pytest.raises(
+        custody.CustodyAccessError, match=r"Receipt safety_assertions\.no_private_host_paths_disclosed mismatch"
+    ):
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
@@ -528,7 +565,11 @@ def test_verify_detects_missing_report_freeform_private_host_paths(
         Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl").read_bytes()
     )
 
-    missing_data = json.loads(Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_text(encoding="utf-8"))
+    missing_data = json.loads(
+        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_text(
+            encoding="utf-8"
+        )
+    )
     target = missing_data
     for k in field_path[:-1]:
         target = target[k]
@@ -541,7 +582,43 @@ def test_verify_detects_missing_report_freeform_private_host_paths(
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
     receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["missing_report_sha256"] = custody.sha256_file(missing_path)
-    (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(json.dumps(receipt_tampered), encoding="utf-8")
+    (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
 
-    with pytest.raises(custody.CustodyAccessError, match=r"Receipt safety_assertions\.no_private_host_paths_disclosed mismatch"):
+    with pytest.raises(
+        custody.CustodyAccessError, match=r"Receipt safety_assertions\.no_private_host_paths_disclosed mismatch"
+    ):
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+
+
+def test_verify_allows_missing_report_valid_prose_with_reserved_words(tmp_path: Path, repo_root: Path) -> None:
+    valid_out = tmp_path / "out"
+    custody_dir = valid_out / "data/projects/open_model_data/custody"
+    custody_dir.mkdir(parents=True)
+
+    (custody_dir / "v4_source_custody_access_index_v1.jsonl").write_bytes(
+        Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl").read_bytes()
+    )
+
+    missing_data = json.loads(
+        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    missing_data["missing_inputs"][0]["reason"] = "private archive unavailable"
+    missing_data["owner"] = "root cause investigator"
+    missing_data["scope"] = "temp failure investigation for non-stem cohort"
+
+    missing_path = custody_dir / "v4_source_custody_missing_report_v1.json"
+    missing_path.write_text(json.dumps(missing_data, indent=2) + "\n", encoding="utf-8")
+
+    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
+    receipt_updated = copy.deepcopy(receipt_data)
+    receipt_updated["missing_report_sha256"] = custody.sha256_file(missing_path)
+    (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_updated, indent=2) + "\n", encoding="utf-8"
+    )
+
+    assert custody.verify(CONFIG_PATH, input_root=repo_root, output_root=valid_out) is True

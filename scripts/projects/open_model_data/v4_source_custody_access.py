@@ -698,10 +698,11 @@ def _is_private_or_absolute_host_path(path_str: str) -> bool:
             return True
         if normalized.startswith("//"):
             return True
-        parts = [p.lower() for p in normalized.strip("/").split("/")]
-        private_parts = {"home", "users", "root", "tmp", "temp", "var", "appdata", "private"}
-        if any(p in private_parts or p.startswith("~") for p in parts):
-            return True
+        if "/" in normalized:
+            parts = [p.lower() for p in normalized.strip("/").split("/") if p]
+            private_parts = {"home", "users", "root", "tmp", "temp", "var", "appdata", "private"}
+            if any(p in private_parts or p.startswith("~") for p in parts):
+                return True
     return False
 
 
@@ -853,7 +854,6 @@ def verify(
             if _contains_private_or_absolute_host_path(row):
                 recomputed_no_private_host_paths = False
 
-
             cust = row.get("custody_resolution", {})
             if row.get("cohort_id") not in ("literary-non-ocr", "public-textbooks-non-stem-non-ocr"):
                 recomputed_no_broad_recollection = False
@@ -974,7 +974,6 @@ def verify(
     if _contains_private_or_absolute_host_path(missing_report):
         recomputed_no_private_host_paths = False
 
-
     expected_first_ready = bool(lit_perm == len(lit_records) and len(lit_records) > 0 and lit_acc == len(lit_records))
     expected_verdict = (
         "PROCEED_WITH_ACCESSIBLE_SOURCES"
@@ -983,9 +982,7 @@ def verify(
     )
 
     if receipt.get("verdict") != expected_verdict:
-        raise CustodyAccessError(
-            f"Receipt verdict mismatch: expected {expected_verdict}, got {receipt.get('verdict')}"
-        )
+        raise CustodyAccessError(f"Receipt verdict mismatch: expected {expected_verdict}, got {receipt.get('verdict')}")
 
     # Invariant: First eligible cohort must be 100% accessible and permitted to proceed
     first_cohort = receipt["summary"]["first_eligible_cohort"]
