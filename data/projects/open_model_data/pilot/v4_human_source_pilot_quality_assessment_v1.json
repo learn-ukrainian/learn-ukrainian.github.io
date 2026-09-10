@@ -1,0 +1,104 @@
+{
+  "schema_version": "v4_dataset_quality_evaluation_v1",
+  "assessment_id": "eval.assessment.c5e1eb862b4aada83dc7e417",
+  "verdict": "DATASET_QUALITY_CONFIRMED",
+  "timestamp": "2026-09-10T22:09:32.996188+00:00",
+  "assessed_pilot_receipt_sha256": "02030df11079f186328b584e480aa462834520bea25f9c16ace87a65c874cdf0",
+  "assessed_pilot_records_sha256": "98e722ff3f9cf9db2283b2b660bb805a5971f761bf488d09304402f201d9e265",
+  "legacy_100_slot_contract_rejected": true,
+  "denominator_accounting": {
+    "total_evaluated_spans": 1419,
+    "total_admitted_spans": 1418,
+    "exported_training_spans": 614,
+    "firewalled_heldout_evaluation_spans": 559,
+    "development_spans": 245,
+    "quarantined_spans": 1,
+    "rejected_spans": 0,
+    "abstained_spans": 0,
+    "covered_strata": [
+      "literary_fiction_prose",
+      "educational_textbooks_general_humanities"
+    ],
+    "operator_excluded_residuals": [
+      {
+        "stratum": "stem_technical_and_exact_sciences",
+        "reason": "Operator mandate excludes STEM technical content from initial human-learning focus",
+        "issue": 7432
+      },
+      {
+        "stratum": "video_captions_transcripts",
+        "reason": "Operator mandate excludes video captions and speech transcripts due to transcription noise",
+        "issue": 7432
+      },
+      {
+        "stratum": "ocr_scanned_unverified_sources",
+        "reason": "Operator mandate requires native digital extraction; unverified OCR scans are quarantined/excluded",
+        "issue": 7432
+      },
+      {
+        "stratum": "private_teaching_material",
+        "reason": "Operator mandate excludes private teaching material without explicit local-use clearance",
+        "issue": 7432
+      }
+    ]
+  },
+  "quality_fidelity_checks": {
+    "verbatim_fidelity_rate": 1.0,
+    "tampering_detected": false,
+    "synthetic_corrections_detected": false,
+    "dual_view_loss_masks_valid": true,
+    "non_target_citations_masked": true,
+    "vesum_sources_validated": true,
+    "unattested_penalized": false,
+    "no_gold_from_model_agreement": true,
+    "split_firewall_cross_family_leaks": 0,
+    "duplicate_spans_detected": 0,
+    "benchmark_contamination_detected": false
+  },
+  "heldout_evaluation_protocol": {
+    "custody_firewall_enforced": true,
+    "consumer_views_evaluated": [
+      "faithful_view",
+      "modern_view"
+    ],
+    "scoring_metrics": [
+      "loss_faithful_view",
+      "loss_modern_view",
+      "perplexity_faithful_view",
+      "perplexity_modern_view",
+      "grammatical_accuracy_heldout"
+    ]
+  },
+  "cohort_findings": [
+    {
+      "cohort_id": "literary-non-ocr",
+      "stratum": "literary",
+      "evaluated_spans": 1174,
+      "verbatim_fidelity_confirmed": true,
+      "split_firewall_confirmed": true,
+      "verdict": "PASS",
+      "notes": "Cohort literary-non-ocr passed independent fidelity, loss-mask, and partition firewall checks"
+    },
+    {
+      "cohort_id": "public-textbooks-non-stem-non-ocr",
+      "stratum": "public_textbooks",
+      "evaluated_spans": 245,
+      "verbatim_fidelity_confirmed": true,
+      "split_firewall_confirmed": true,
+      "verdict": "PASS",
+      "notes": "Cohort public-textbooks-non-stem-non-ocr passed independent fidelity, loss-mask, and partition firewall checks"
+    }
+  ],
+  "downstream_study_methodology": {
+    "target_issue": 7889,
+    "dataset_quality_verdict": "PASS",
+    "trained_model_utility_verdict": "PENDING_EXPERIMENTAL_STUDY",
+    "uncertainty_and_limitations": [
+      "Pilot cohort covers representative subset of literary prose and educational humanities",
+      "Excluded strata (STEM, captions, OCR, private teaching) remain explicitly deferred to #7432",
+      "Downstream model utility study (#7889) evaluates actual open-weight model parameter adaptation",
+      "Tokenizer fertility delta between base models and Ukrainian vocabulary must be controlled"
+    ]
+  },
+  "notes": "Independent dataset quality and evaluation separation assessment confirmed under #7431."
+}
