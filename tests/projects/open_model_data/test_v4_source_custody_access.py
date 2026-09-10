@@ -552,6 +552,47 @@ def test_verify_detects_provenance_projection_mismatch(tmp_path: Path, repo_root
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+def test_verify_detects_missing_provenance_index(tmp_path: Path, repo_root: Path) -> None:
+    tampered_out = tmp_path / "out"
+    custody_dir = tampered_out / "data/projects/open_model_data/custody"
+    custody_dir.mkdir(parents=True)
+
+    config_data = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    config_data["inputs"]["provenance_index"] = "data/projects/open_model_data/nonexistent_provenance_index.jsonl"
+    tampered_config = tmp_path / "config.json"
+    tampered_config.write_text(json.dumps(config_data), encoding="utf-8")
+    expected_config_sha = custody.sha256_file(tampered_config)
+
+    index_lines = (
+        Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    )
+    header = json.loads(index_lines[0])
+    header["config_sha256"] = expected_config_sha
+    tampered_lines = [json.dumps(header), *index_lines[1:]]
+    (custody_dir / "v4_source_custody_access_index_v1.jsonl").write_text(
+        "\n".join(tampered_lines) + "\n", encoding="utf-8"
+    )
+
+    (custody_dir / "v4_source_custody_missing_report_v1.json").write_bytes(
+        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+    )
+
+    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
+    receipt_tampered = copy.deepcopy(receipt_data)
+    receipt_tampered["config_sha256"] = expected_config_sha
+    receipt_tampered["index_sha256"] = custody.sha256_file(custody_dir / "v4_source_custody_access_index_v1.jsonl")
+    receipt_tampered["receipt_id"] = custody._make_receipt_id(expected_config_sha, receipt_tampered["index_sha256"])
+    (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
+
+    with pytest.raises(custody.CustodyAccessError, match=r"Provenance index missing"):
+        custody.verify(tampered_config, input_root=repo_root, output_root=tampered_out)
+
+
 def test_is_private_or_absolute_host_path() -> None:
     # Allowed clean paths and prose
     assert not custody._is_private_or_absolute_host_path("")

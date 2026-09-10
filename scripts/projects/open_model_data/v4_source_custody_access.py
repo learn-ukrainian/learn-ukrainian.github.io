@@ -928,33 +928,34 @@ def verify(
     if header.get("records") != record_count:
         raise CustodyAccessError(f"Index header record count {header.get('records')} != observed {record_count}")
 
-    # Compare complete source projection against bound provenance denominator if available
+    # Compare complete source projection against bound provenance denominator
     prov_index_path = _resolve_file(Path(config["inputs"]["provenance_index"]), roots)
-    if prov_index_path.is_file():
-        prov_identities: dict[str, tuple[str, str, str]] = {}
-        with prov_index_path.open(encoding="utf-8") as pf:
-            _ = pf.readline()
-            for pline in pf:
-                if not pline.strip():
-                    continue
-                prow = json.loads(pline)
-                psid = prow["source_id"]
-                psf = prow.get("source_locator", {}).get("source_file", "")
-                pcid = prow.get("cohort_id", "")
-                pfam = prow.get("source_family", "")
-                prov_identities[psid] = (psf, pcid, pfam)
-        if seen_source_identities != prov_identities:
-            missing = set(prov_identities.keys()) - set(seen_source_identities.keys())
-            extra = set(seen_source_identities.keys()) - set(prov_identities.keys())
-            mismatches = [
-                sid
-                for sid in (set(seen_source_identities.keys()) & set(prov_identities.keys()))
-                if seen_source_identities[sid] != prov_identities[sid]
-            ]
-            raise CustodyAccessError(
-                f"Access index source projection does not match provenance denominator: "
-                f"{len(missing)} missing, {len(extra)} unexpected, {len(mismatches)} projection mismatches"
-            )
+    if not prov_index_path.is_file():
+        raise CustodyAccessError(f"Provenance index missing: {prov_index_path}")
+    prov_identities: dict[str, tuple[str, str, str]] = {}
+    with prov_index_path.open(encoding="utf-8") as pf:
+        _ = pf.readline()
+        for pline in pf:
+            if not pline.strip():
+                continue
+            prow = json.loads(pline)
+            psid = prow["source_id"]
+            psf = prow.get("source_locator", {}).get("source_file", "")
+            pcid = prow.get("cohort_id", "")
+            pfam = prow.get("source_family", "")
+            prov_identities[psid] = (psf, pcid, pfam)
+    if seen_source_identities != prov_identities:
+        missing = set(prov_identities.keys()) - set(seen_source_identities.keys())
+        extra = set(seen_source_identities.keys()) - set(prov_identities.keys())
+        mismatches = [
+            sid
+            for sid in (set(seen_source_identities.keys()) & set(prov_identities.keys()))
+            if seen_source_identities[sid] != prov_identities[sid]
+        ]
+        raise CustodyAccessError(
+            f"Access index source projection does not match provenance denominator: "
+            f"{len(missing)} missing, {len(extra)} unexpected, {len(mismatches)} projection mismatches"
+        )
 
     # Verify receipt summary against recomputed invariants
     summary = receipt.get("summary", {})
