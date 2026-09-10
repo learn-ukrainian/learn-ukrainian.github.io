@@ -2419,3 +2419,37 @@ def test_precompute_table_source_metrics_filters_selected_sources(tmp_path: Path
     assert s_empty == {}
     assert c_empty == {}
     conn.close()
+
+
+def test_verify_handles_stub_database_with_missing_tables(tmp_path: Path, repo_root: Path) -> None:
+    """verify() treats stub databases lacking required tables as unprovisioned when require_database=False,
+    and raises CustodyAccessError mentioning missing tables when require_database=True.
+    """
+    # 1. Create stub database lacking required tables (only has esum_etymology)
+    stub_dir = tmp_path / "data"
+    stub_dir.mkdir(parents=True)
+    stub_db = stub_dir / "sources.db"
+    conn = sqlite3.connect(stub_db)
+    conn.execute("CREATE TABLE esum_etymology (id INTEGER PRIMARY KEY, word TEXT)")
+    conn.commit()
+    conn.close()
+
+    # 2. Setup output_root with committed artifacts
+    out_dir = tmp_path / "out"
+    tgt_custody = out_dir / "data/projects/open_model_data/custody"
+    tgt_custody.mkdir(parents=True)
+    for fname in (
+        "v4_source_custody_access_index_v1.jsonl",
+        "v4_source_custody_missing_report_v1.json",
+        "v4_source_custody_access_receipt_v1.json",
+    ):
+        (tgt_custody / fname).write_bytes((Path("data/projects/open_model_data/custody") / fname).read_bytes())
+
+    # 3. When require_database=False (unprovisioned CI with stub database on disk),
+    # verify() detects missing tables, leaves db_conn=None, and passes without error.
+    res = custody.verify(CONFIG_PATH, input_root=tmp_path, output_root=out_dir, require_database=False)
+    assert res is True
+
+    # 4. When require_database=True, verify() detects missing required tables and raises CustodyAccessError
+    with pytest.raises(custody.CustodyAccessError, match=r"missing required tables:.*(literary_texts|textbooks)"):
+        custody.verify(CONFIG_PATH, input_root=tmp_path, output_root=out_dir, require_database=True)
