@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v4_human_source_pilot_record_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "record_id",
+    "split_item_id",
+    "work_family_id",
+    "work_id",
+    "source_id",
+    "source_family",
+    "cohort_id",
+    "provenance",
+    "source_fidelity",
+    "language_views",
+    "split_clearance",
+    "admission_evidence"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v4_human_source_pilot_record_v1"
+    },
+    "record_id": {
+      "type": "string",
+      "pattern": "^record\\.human\\.[a-f0-9]{24}$"
+    },
+    "split_item_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "work_family_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "work_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_family": {
+      "type": "string",
+      "minLength": 1
+    },
+    "cohort_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "author",
+        "year",
+        "genre",
+        "period",
+        "canonical_url"
+      ],
+      "properties": {
+        "author": {
+          "type": ["string", "null"]
+        },
+        "year": {
+          "type": ["integer", "string", "null"]
+        },
+        "genre": {
+          "type": ["string", "null"]
+        },
+        "period": {
+          "type": ["string", "null"]
+        },
+        "canonical_url": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "source_fidelity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "char_length",
+        "span_sha256",
+        "is_native_text",
+        "verbatim_preserved"
+      ],
+      "properties": {
+        "char_length": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "span_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "is_native_text": {
+          "type": "boolean"
+        },
+        "verbatim_preserved": {
+          "type": "boolean"
+        }
+      }
+    },
+    "language_views": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "primary_role",
+        "faithful_view",
+        "modern_view"
+      ],
+      "properties": {
+        "primary_role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "faithful_view": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "training_eligible"
+          ],
+          "properties": {
+            "training_eligible": {
+              "type": "boolean"
+            }
+          }
+        },
+        "modern_view": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "training_eligible",
+            "loss_mask_count"
+          ],
+          "properties": {
+            "training_eligible": {
+              "type": "boolean"
+            },
+            "loss_mask_count": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "split_clearance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "split_partition",
+        "builder_training_cleared",
+        "clearance_status"
+      ],
+      "properties": {
+        "split_partition": {
+          "type": "string",
+          "minLength": 1
+        },
+        "builder_training_cleared": {
+          "type": "boolean"
+        },
+        "clearance_status": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "admission_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "admission_decision",
+        "rights_basis",
+        "firewall_verified"
+      ],
+      "properties": {
+        "admission_decision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rights_basis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "firewall_verified": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

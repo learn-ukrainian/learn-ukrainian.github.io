@@ -1,0 +1,55 @@
+{
+  "schema_version": "v4_human_source_pilot_manifest_v1",
+  "manifest_id": "manifest.pilot.20260910",
+  "inputs": {
+    "split_index": "data/projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl",
+    "split_receipt": "data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json",
+    "language_index": "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
+    "extraction_index": "data/projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl",
+    "provenance_index": "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl"
+  },
+  "outputs": {
+    "records": "data/projects/open_model_data/pilot/v4_human_source_pilot_records_v1.jsonl",
+    "receipt": "data/projects/open_model_data/pilot/v4_human_source_pilot_receipt_v1.json"
+  },
+  "pilot_denominator": {
+    "total_sources_selected": 3,
+    "total_work_families": 3,
+    "target_records": 1419,
+    "strata_coverage": {
+      "literary_prose": "covered",
+      "educational_textbook": "covered",
+      "stem_technical": "residual_operator_excluded",
+      "video_captions": "residual_operator_excluded",
+      "ocr_scans": "residual_operator_excluded"
+    },
+    "source_selection": [
+      {
+        "source_id": "source.literary.0020599cfcaf15e887bdb73c",
+        "work_family_id": "work_family.literary.hrushevskyy_istoriya_ukrayiny_odnotomnyk",
+        "cohort_id": "literary-non-ocr",
+        "stratum": "literary_prose",
+        "status": "cleared_heldout_evaluation"
+      },
+      {
+        "source_id": "source.public_textbooks.00cebc897bb7feab776c42a8",
+        "work_family_id": "work_family.public_textbooks.masol_mystetstvo_grade_9",
+        "cohort_id": "textbooks-public-non-ocr",
+        "stratum": "educational_textbook",
+        "status": "cleared_development"
+      },
+      {
+        "source_id": "source.literary.451b33b316e840f953b4e393",
+        "work_family_id": "work_family.literary.yuriy_andrukhovych_moskoviada",
+        "cohort_id": "literary-non-ocr",
+        "stratum": "literary_prose",
+        "status": "cleared_builder_training"
+      }
+    ]
+  },
+  "ownership": {
+    "epic": 7423,
+    "issue": 7430,
+    "agent": "gemini/7430-first-human-source-pilot"
+  }
+}
