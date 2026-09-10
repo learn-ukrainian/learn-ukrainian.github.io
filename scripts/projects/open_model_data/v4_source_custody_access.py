@@ -119,6 +119,116 @@ def _make_receipt_id(config_hash: str, index_hash: str, missing_report_hash: str
     return f"receipt.custody.{hashlib.sha256(seed).hexdigest()[:24]}"
 
 
+def _primary_repo_root() -> Path | None:
+    """Discover primary repository root if running inside a git worktree."""
+    try:
+        cur = Path.cwd().resolve()
+        for parent in [cur, *list(cur.parents)]:
+            git_file = parent / ".git"
+            if git_file.is_file():
+                content = git_file.read_text(encoding="utf-8").strip()
+                if content.startswith("gitdir:"):
+                    raw_gitdir = content.split(":", 1)[1].strip()
+                    git_dir = Path(raw_gitdir)
+                    if not git_dir.is_absolute():
+                        git_dir = (parent / git_dir).resolve()
+                    common_git = git_dir.parents[1]
+                    primary = common_git.parent
+                    if primary.is_dir():
+                        return primary
+            elif git_file.is_dir():
+                return parent
+    except Exception:
+        pass
+    default_primary = Path("/home/ops/learn-ukrainian")
+    if default_primary.is_dir():
+        return default_primary
+    return None
+
+
+def _get_search_roots(input_root: Path) -> list[Path]:
+    """Ordered search roots for local custody inputs."""
+    norm_in = input_root.resolve()
+    roots = [norm_in, Path.cwd()]
+    primary = _primary_repo_root()
+    if primary is not None and primary not in roots:
+        roots.append(primary)
+    return roots
+
+
+def _resolve_archive_mount(archive_locator: str, roots: Sequence[Path]) -> Path | None:
+    """Resolve a logical archive locator (e.g. gdrive:learn-ukrainian-data/textbooks) to a local mount directory."""
+    if not archive_locator:
+        return None
+    for r in roots:
+        candidates: list[Path] = []
+        if archive_locator.startswith("gdrive:learn-ukrainian-data/"):
+            rel = archive_locator.removeprefix("gdrive:learn-ukrainian-data/")
+            candidates.extend([r / "data" / rel, r / rel])
+        elif archive_locator.startswith("gdrive:"):
+            rel = archive_locator.removeprefix("gdrive:")
+            candidates.extend([r / "data" / rel, r / rel])
+        elif archive_locator.startswith("data/"):
+            candidates.append(r / archive_locator)
+        elif Path(archive_locator).is_absolute():
+            candidates.append(Path(archive_locator))
+        else:
+            candidates.extend([r / archive_locator, r / "data" / archive_locator])
+
+        for c in candidates:
+            if c.is_dir():
+                return c
+    return None
+
+
+def _build_archive_cache_map(
+    archive_locator: str,
+    lineage_rule: str,
+    roots: Sequence[Path],
+) -> dict[str, Path]:
+    """Pre-index all files in the mounted archive directory (including grade-* subdirectories)."""
+    mount_dir = _resolve_archive_mount(archive_locator, roots)
+    if mount_dir is None or not mount_dir.is_dir():
+        return {}
+    suffix = ".jsonl" if lineage_rule == "native_digital_source" else ".pdf"
+    archive_map: dict[str, Path] = {}
+    for p in mount_dir.glob(f"*{suffix}"):
+        if p.is_file():
+            archive_map[p.stem] = p
+    for p in mount_dir.glob(f"grade-*/*{suffix}"):
+        if p.is_file():
+            archive_map[p.stem] = p
+    for p in mount_dir.glob(f"*/*{suffix}"):
+        if p.is_file() and p.stem not in archive_map:
+            archive_map[p.stem] = p
+    return archive_map
+
+
+def _check_archive_on_host(
+    archive_locator: str,
+    source_file: str,
+    lineage_rule: str,
+    roots: Sequence[Path],
+    cached_map: Mapping[str, Path] | None = None,
+) -> bool:
+    """Grade-aware check for an archive source file on host storage."""
+    if cached_map is not None:
+        return source_file in cached_map
+    mount_dir = _resolve_archive_mount(archive_locator, roots)
+    if mount_dir is None or not mount_dir.is_dir():
+        return False
+    suffix = ".jsonl" if lineage_rule == "native_digital_source" else ".pdf"
+    if (mount_dir / f"{source_file}{suffix}").is_file():
+        return True
+    for grade_dir in mount_dir.glob("grade-*"):
+        if grade_dir.is_dir() and (grade_dir / f"{source_file}{suffix}").is_file():
+            return True
+    for sub in mount_dir.iterdir():
+        if sub.is_dir() and not sub.name.startswith(".") and (sub / f"{source_file}{suffix}").is_file():
+            return True
+    return False
+
+
 def _resolve_file(path: Path, roots: Sequence[Path]) -> Path:
     if path.is_absolute() and path.exists():
         return path
@@ -159,7 +269,7 @@ def validate_and_resolve_paths(
     """Validate output containment, distinctness, and input/output disjointness (ACCESS-1, ACCESS-4)."""
     in_root = input_root.resolve()
     out_root = output_root.resolve()
-    roots = [in_root, Path.cwd()]
+    roots = _get_search_roots(in_root)
 
     resolved_inputs: dict[str, Path] = {}
     cp = Path(config_path) if config_path is not None else DEFAULT_CONFIG
@@ -312,6 +422,56 @@ class BoundedCustodyReader:
             "stream_sha256": stream_hash,
             "duration_seconds": duration,
         }
+
+
+def _precompute_table_source_metrics(
+    conn: sqlite3.Connection,
+    table: str,
+) -> tuple[dict[str, tuple[int, int, str]], dict[str, tuple[int, str]]]:
+    """Compute bounded read metrics and chunk lineage digests for all source files in a table in a single pass.
+
+    Returns:
+        stream_metrics: source_file -> (observed_records, observed_characters, stream_sha256)
+        chunk_metrics: source_file -> (record_count, chunk_digest)
+    """
+    cur = conn.cursor()
+    cur.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (table,))
+    if not cur.fetchone():
+        return {}, {}
+    cur.execute(f'SELECT source_file, id, chunk_id, text FROM "{table}" ORDER BY source_file, id ASC')
+    stream_metrics: dict[str, tuple[int, int, str]] = {}
+    chunk_metrics: dict[str, tuple[int, str]] = {}
+
+    curr_sf: str | None = None
+    rec_cnt = 0
+    char_cnt = 0
+    stream_digest = hashlib.sha256()
+    chunk_digest = hashlib.sha256()
+
+    while batch := cur.fetchmany(5000):
+        for sf, r_id, r_chunk_id, r_text in batch:
+            if sf != curr_sf:
+                if curr_sf is not None and rec_cnt > 0:
+                    stream_metrics[curr_sf] = (rec_cnt, char_cnt, stream_digest.hexdigest())
+                    chunk_metrics[curr_sf] = (rec_cnt, chunk_digest.hexdigest())
+                curr_sf = sf
+                rec_cnt = 0
+                char_cnt = 0
+                stream_digest = hashlib.sha256()
+                chunk_digest = hashlib.sha256()
+            rec_cnt += 1
+            t_str = r_text or ""
+            t_len = len(t_str)
+            char_cnt += t_len
+            t_hash = hashlib.sha256(t_str.encode("utf-8")).hexdigest()
+            stream_digest.update(f"{r_id}:{r_chunk_id}:{t_len}:{t_hash}\n".encode())
+            chunk_digest.update(f"{r_chunk_id}:{t_len}:{t_hash}\n".encode())
+
+    if curr_sf is not None and rec_cnt > 0:
+        stream_metrics[curr_sf] = (rec_cnt, char_cnt, stream_digest.hexdigest())
+        chunk_metrics[curr_sf] = (rec_cnt, chunk_digest.hexdigest())
+
+    return stream_metrics, chunk_metrics
 
 
 def check_chunk_file_lineage(
@@ -512,6 +672,9 @@ def resolve_source_access(
     db_conn: sqlite3.Connection,
     chunks_map: Mapping[str, Path],
     unmounted_archive_owner: str = "existing custody/source-access owner",
+    archive_cache_map: Mapping[str, Path] | None = None,
+    precomputed_stream_metrics: Mapping[str, tuple[int, int, str]] | None = None,
+    precomputed_chunk_metrics: Mapping[str, tuple[int, str]] | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any] | None]:
     """Resolve custody arrangement and verify lineage for one source (ACCESS-1, ACCESS-2, ACCESS-4)."""
     if not cohort_cfg or cohort_cfg.get("cohort_id") != cohort_id:
@@ -536,21 +699,30 @@ def resolve_source_access(
     access_id = _make_access_id(source_id, cohort_id)
 
     cur = db_conn.cursor()
-    cur.execute(
-        f'SELECT COUNT(*) FROM "{table}" WHERE source_file = ?',
-        (source_file,),
-    )
-    db_row = cur.fetchone()
-    db_records = db_row[0] if db_row else 0
+    if precomputed_stream_metrics is not None:
+        stream_tuple = precomputed_stream_metrics.get(source_file)
+        db_records = stream_tuple[0] if stream_tuple is not None else 0
+    else:
+        cur.execute(
+            f'SELECT COUNT(*) FROM "{table}" WHERE source_file = ?',
+            (source_file,),
+        )
+        db_row = cur.fetchone()
+        db_records = db_row[0] if db_row else 0
 
     norm_input_root = input_root.resolve()
+    roots = _get_search_roots(norm_input_root)
     chunk_path = chunks_map.get(source_file)
     chunk_ref = None
     if chunk_path is not None:
-        try:
-            rel = chunk_path.resolve().relative_to(norm_input_root)
-            chunk_ref = f"file:{rel}"
-        except ValueError:
+        for r in roots:
+            try:
+                rel = chunk_path.resolve().relative_to(r.resolve())
+                chunk_ref = f"file:{rel}"
+                break
+            except ValueError:
+                continue
+        if chunk_ref is None:
             chunk_ref = f"file:{chunk_path.name}"
 
     archive_locator = cohort_cfg.get("archive_locator", "")
@@ -559,15 +731,14 @@ def resolve_source_access(
     else:
         archive_ref = f"{archive_locator}/{source_file}.pdf" if archive_locator else None
 
-    # Check host archive accessibility
-    archive_on_host = False
-    if archive_locator and archive_locator.startswith("data/"):
-        host_archive_path = norm_input_root / archive_locator
-        if host_archive_path.is_dir():
-            suffix = ".jsonl" if lineage_rule == "native_digital_source" else ".pdf"
-            archive_file = host_archive_path / f"{source_file}{suffix}"
-            if archive_file.is_file():
-                archive_on_host = True
+    # Check host archive accessibility (grade-aware, logical-mount-aware)
+    archive_on_host = _check_archive_on_host(
+        archive_locator=archive_locator,
+        source_file=source_file,
+        lineage_rule=lineage_rule,
+        roots=roots,
+        cached_map=archive_cache_map,
+    )
 
     # Lineage verification driven by cohort's configured lineage_rule
     if lineage_rule == "native_digital_source":
@@ -598,20 +769,23 @@ def resolve_source_access(
                 custody_status = chunk_custody_status
             elif chunk_mode in ("native_pdf_text", "native_text", "mixed_native"):
                 # Bind accessed database content to the verified chunk file lineage (ACCESS-2)
-                cur.execute(
-                    f'SELECT chunk_id, text FROM "{table}" WHERE source_file = ? ORDER BY id ASC',
-                    (source_file,),
-                )
-                db_digest = hashlib.sha256()
-                db_records_count = 0
-                while batch := cur.fetchmany(1000):
-                    for r_chunk_id, r_text in batch:
-                        db_records_count += 1
-                        t = r_text or ""
-                        t_hash = hashlib.sha256(t.encode("utf-8")).hexdigest()
-                        db_digest.update(f"{r_chunk_id}:{len(t)}:{t_hash}\n".encode())
-
-                db_stream_hash = db_digest.hexdigest() if db_records_count > 0 else None
+                if precomputed_chunk_metrics is not None:
+                    chunk_tuple = precomputed_chunk_metrics.get(source_file)
+                    db_records_count, db_stream_hash = chunk_tuple if chunk_tuple is not None else (0, None)
+                else:
+                    cur.execute(
+                        f'SELECT chunk_id, text FROM "{table}" WHERE source_file = ? ORDER BY id ASC',
+                        (source_file,),
+                    )
+                    db_digest = hashlib.sha256()
+                    db_records_count = 0
+                    while batch := cur.fetchmany(1000):
+                        for r_chunk_id, r_text in batch:
+                            db_records_count += 1
+                            t = r_text or ""
+                            t_hash = hashlib.sha256(t.encode("utf-8")).hexdigest()
+                            db_digest.update(f"{r_chunk_id}:{len(t)}:{t_hash}\n".encode())
+                    db_stream_hash = db_digest.hexdigest() if db_records_count > 0 else None
 
                 if db_records_count == 0:
                     lineage_status = "UNKNOWN_LINEAGE"
@@ -664,20 +838,25 @@ def resolve_source_access(
     observed_chars = 0
 
     if permitted and db_records > 0:
-        cur.execute(
-            f'SELECT id, chunk_id, text FROM "{table}" WHERE source_file = ? ORDER BY id ASC',
-            (source_file,),
-        )
-        digest = hashlib.sha256()
-        while rows := cur.fetchmany(1000):
-            for row_id, chunk_id, text in rows:
-                text_str = text or ""
-                t_len = len(text_str)
-                observed_records += 1
-                observed_chars += t_len
-                text_hash = hashlib.sha256(text_str.encode("utf-8")).hexdigest()
-                digest.update(f"{row_id}:{chunk_id}:{t_len}:{text_hash}\n".encode())
-        stream_digest = digest.hexdigest()
+        if precomputed_stream_metrics is not None:
+            stream_tuple = precomputed_stream_metrics.get(source_file)
+            if stream_tuple is not None:
+                observed_records, observed_chars, stream_digest = stream_tuple
+        else:
+            cur.execute(
+                f'SELECT id, chunk_id, text FROM "{table}" WHERE source_file = ? ORDER BY id ASC',
+                (source_file,),
+            )
+            digest = hashlib.sha256()
+            while rows := cur.fetchmany(1000):
+                for row_id, chunk_id, text in rows:
+                    text_str = text or ""
+                    t_len = len(text_str)
+                    observed_records += 1
+                    observed_chars += t_len
+                    text_hash = hashlib.sha256(text_str.encode("utf-8")).hexdigest()
+                    digest.update(f"{row_id}:{chunk_id}:{t_len}:{text_hash}\n".encode())
+            stream_digest = digest.hexdigest()
 
     record = {
         "schema_version": ITEM_SCHEMA_VERSION,
@@ -723,7 +902,7 @@ def build(
     """Execute custody resolution and lineage audit (ACCESS-1..4)."""
     norm_input_root = input_root.resolve()
     norm_output_root = output_root.resolve()
-    roots = [norm_input_root, Path.cwd()]
+    roots = _get_search_roots(norm_input_root)
     config, resolved_config_path = _load_config(config_path, roots)
     config_sha256 = sha256_file(resolved_config_path)
 
@@ -764,17 +943,33 @@ def build(
             stem = chunk_file.name[:-6] if chunk_file.name.endswith(".jsonl") else chunk_file.stem
             chunks_map[stem] = chunk_file
 
-    # Connect to database read-only
-    db_uri = f"file:{db_path.resolve()}?mode=ro"
-    conn = sqlite3.connect(db_uri, uri=True)
-
+    # Pre-build archive cache maps for cohorts (Finding 2)
     for c in config["cohorts"]:
         validate_cohort_spec(c)
     cohorts_by_id = {c["cohort_id"]: c for c in config["cohorts"]}
+    archive_maps_by_cohort: dict[str, dict[str, Path]] = {}
+    for cid, c_cfg in cohorts_by_id.items():
+        archive_maps_by_cohort[cid] = _build_archive_cache_map(
+            c_cfg.get("archive_locator", ""),
+            c_cfg.get("lineage_rule", ""),
+            roots,
+        )
+
+    # Connect to database read-only
+    db_uri = f"file:{db_path.resolve()}?mode=ro"
+    conn = sqlite3.connect(db_uri, uri=True)
     access_records = []
     missing_items = []
 
     try:
+        # Precompute table stream and chunk metrics for approved tables (ACCESS-1, ACCESS-2, ACCESS-3)
+        table_stream_metrics: dict[str, dict[str, tuple[int, int, str]]] = {}
+        table_chunk_metrics: dict[str, dict[str, tuple[int, str]]] = {}
+        for tbl in set(FAMILY_APPROVED_TABLES.values()):
+            s_m, c_m = _precompute_table_source_metrics(conn, tbl)
+            table_stream_metrics[tbl] = s_m
+            table_chunk_metrics[tbl] = c_m
+
         # Sort sources deterministically by cohort_id, then source_id
         sorted_sids = sorted(unique_sources.keys(), key=lambda s: (unique_sources[s][1], s))
         for sid in sorted_sids:
@@ -787,6 +982,7 @@ def build(
                     f"Provenance source {sid} ({cid}) source_family '{fam}' "
                     f"does not match configured cohort source_family '{cohort_cfg.get('source_family')}'"
                 )
+            tbl = FAMILY_APPROVED_TABLES[fam]
             record, missing_item = resolve_source_access(
                 source_id=sid,
                 source_file=sf,
@@ -797,6 +993,9 @@ def build(
                 db_conn=conn,
                 chunks_map=chunks_map,
                 unmounted_archive_owner=config["ownership"]["unmounted_archive_owner"],
+                archive_cache_map=archive_maps_by_cohort.get(cid),
+                precomputed_stream_metrics=table_stream_metrics.get(tbl),
+                precomputed_chunk_metrics=table_chunk_metrics.get(tbl),
             )
             access_records.append(record)
             if missing_item is not None:
@@ -1012,7 +1211,7 @@ def verify(
     """Verify committed custody artifacts against contracts and invariants."""
     norm_input_root = input_root.resolve()
     norm_output_root = output_root.resolve()
-    roots = [norm_input_root, Path.cwd()]
+    roots = _get_search_roots(norm_input_root)
     config, resolved_config_path = _load_config(config_path, roots)
     expected_config_sha256 = sha256_file(resolved_config_path)
     for c in config["cohorts"]:
@@ -1034,6 +1233,14 @@ def verify(
         if not path.is_file():
             raise CustodyAccessError(f"{name} artifact missing: {path}")
 
+    # Revalidate configured source stores (Finding 1: ACCESS-1, ACCESS-2, ACCESS-3)
+    db_path = _resolved_inputs.get("database")
+    if db_path is None or not db_path.is_file():
+        raise CustodyAccessError(f"Database missing or not found on host: {db_path}")
+
+    db_uri = f"file:{db_path.resolve()}?mode=ro"
+    db_conn = sqlite3.connect(db_uri, uri=True)
+
     # Map chunk files from textbook_chunks_dir if available
     chunks_map: dict[str, Path] = {}
     chunks_dir = _resolved_inputs.get("textbook_chunks_dir")
@@ -1041,6 +1248,15 @@ def verify(
         for chunk_file in chunks_dir.glob("*/*.jsonl"):
             stem = chunk_file.name[:-6] if chunk_file.name.endswith(".jsonl") else chunk_file.stem
             chunks_map[stem] = chunk_file
+
+    # Pre-build archive cache maps for cohorts (Finding 2)
+    archive_maps_by_cohort: dict[str, dict[str, Path]] = {}
+    for cid, c_cfg in cohorts_by_id.items():
+        archive_maps_by_cohort[cid] = _build_archive_cache_map(
+            c_cfg.get("archive_locator", ""),
+            c_cfg.get("lineage_rule", ""),
+            roots,
+        )
 
     # Verify receipt schema and hashes
     receipt_validator = _load_schema(RECEIPT_SCHEMA_PATH, roots)
@@ -1091,274 +1307,427 @@ def verify(
     seen_source_identities: dict[str, tuple[str, str, str]] = {}
     seen_cohort_locators: set[tuple[str, str]] = set()
 
-    with out_index_path.open(encoding="utf-8") as f:
-        header_line = f.readline().strip()
-        header = json.loads(header_line)
-        if header.get("schema_version") != "v4_source_custody_access_index_v1":
-            raise CustodyAccessError("Index header schema_version invalid")
-        if header.get("config_sha256") != expected_config_sha256:
-            raise CustodyAccessError("Index header config_sha256 mismatch")
+    try:
+        db_cur = db_conn.cursor()
+        db_cur.execute("PRAGMA query_only = ON;")
 
-        for line_num, line in enumerate(f, start=2):
-            if not line.strip():
-                continue
-            record_count += 1
-            row = json.loads(line)
-            errors = list(item_validator.iter_errors(row))
-            if errors:
-                raise CustodyAccessError(f"Index line {line_num} error: {errors[0].message}")
+        table_stream_metrics: dict[str, dict[str, tuple[int, int, str]]] = {}
+        table_chunk_metrics: dict[str, dict[str, tuple[int, str]]] = {}
+        for tbl in set(FAMILY_APPROVED_TABLES.values()):
+            s_m, c_m = _precompute_table_source_metrics(db_conn, tbl)
+            table_stream_metrics[tbl] = s_m
+            table_chunk_metrics[tbl] = c_m
 
-            source_id = row["source_id"]
-            cohort_id = row["cohort_id"]
-            source_family = row.get("source_family", "")
-            source_file = row.get("source_locator", {}).get("source_file", "")
-
-            if cohort_id not in cohorts_by_id:
-                raise CustodyAccessError(f"Index line {line_num} ({source_id}): unconfigured cohort_id '{cohort_id}'")
-            cohort_cfg = cohorts_by_id[cohort_id]
-            if cohort_cfg.get("source_family") != source_family:
-                raise CustodyAccessError(
-                    f"Index line {line_num} ({source_id}): source_family '{source_family}' "
-                    f"does not match configured cohort source_family '{cohort_cfg.get('source_family')}'"
-                )
-
-            if source_id in seen_source_identities:
-                raise CustodyAccessError(f"Index line {line_num} ({source_id}): duplicate source_id in access index")
-
-            if (cohort_id, source_file) in seen_cohort_locators:
-                raise CustodyAccessError(
-                    f"Index line {line_num} ({source_id}): duplicate source locator ({cohort_id}, {source_file}) in access index"
-                )
-            seen_cohort_locators.add((cohort_id, source_file))
-            seen_source_identities[source_id] = (source_file, cohort_id, source_family)
-
-            expected_access_id = _make_access_id(source_id, cohort_id)
-            if row.get("access_id") != expected_access_id:
-                raise CustodyAccessError(
-                    f"Index line {line_num} ({source_id}): access_id mismatch: "
-                    f"expected {expected_access_id}, got {row.get('access_id')}"
-                )
-
-            access_id = row["access_id"]
-            if access_id in seen_access_ids:
-                raise CustodyAccessError(
-                    f"Index line {line_num} ({source_id}): duplicate access_id {access_id} in access index"
-                )
-            seen_access_ids.add(access_id)
-
-            permitted = row["permitted_to_proceed"]
-            status = row["lineage_verification"]["status"]
-            lineage_mode = row["lineage_verification"].get("lineage_mode")
-            is_ocr = row["lineage_verification"]["is_ocr_derived"]
-            cust_status = row["custody_resolution"]["status"]
-            host_reachable = row["custody_resolution"]["host_reachable"]
-            metrics = row["bounded_read_metrics"]
-            blocking_reason = row["blocking_reason"]
-
-            lineage_rule = cohort_cfg["lineage_rule"]
-            archive_locator = cohort_cfg.get("archive_locator", "")
-
-            # Probe host storage to re-resolve custody independently of index assertions (ACCESS-1, ACCESS-4)
-            archive_on_host = False
-            if archive_locator and archive_locator.startswith("data/"):
-                host_archive_path = norm_input_root / archive_locator
-                if host_archive_path.is_dir():
-                    suffix = ".jsonl" if lineage_rule == "native_digital_source" else ".pdf"
-                    archive_file = host_archive_path / f"{source_file}{suffix}"
-                    if archive_file.is_file():
-                        archive_on_host = True
-
-            chunk_path = chunks_map.get(source_file) if chunks_map else None
-            chunk_on_host = chunk_path is not None and chunk_path.is_file()
-
-            if cohort_id == "public-textbooks-non-stem-non-ocr":
-                # For unmounted archives, index cannot claim RESOLVED_ACCESSIBLE
-                if not archive_on_host and cust_status == "RESOLVED_ACCESSIBLE":
+        # Load provenance denominator first to validate index source projection (ACCESS-1, ACCESS-4)
+        prov_index_path = _resolve_file(Path(config["inputs"]["provenance_index"]), roots)
+        if not prov_index_path.is_file():
+            raise CustodyAccessError(f"Provenance index missing: {prov_index_path}")
+        prov_identities: dict[str, tuple[str, str, str]] = {}
+        with prov_index_path.open(encoding="utf-8") as pf:
+            _ = pf.readline()
+            for pline in pf:
+                if not pline.strip():
+                    continue
+                prow = json.loads(pline)
+                psid = prow["source_id"]
+                psf = prow.get("source_locator", {}).get("source_file", "")
+                pcid = prow.get("cohort_id", "")
+                pfam = prow.get("source_family", "")
+                if pcid not in cohorts_by_id:
                     raise CustodyAccessError(
-                        f"Index line {line_num} ({source_id}): custody status claims 'RESOLVED_ACCESSIBLE' "
-                        f"but host archive is unmounted at {archive_locator}/{source_file}.pdf"
+                        f"Provenance denominator source {psid} references unconfigured cohort_id '{pcid}'"
                     )
-                if archive_on_host and cust_status == "PARTIAL_CHUNKS_AND_DB_ONLY":
+                if cohorts_by_id[pcid].get("source_family") != pfam:
                     raise CustodyAccessError(
-                        f"Index line {line_num} ({source_id}): custody status claims 'PARTIAL_CHUNKS_AND_DB_ONLY' "
-                        f"but host archive is reachable at {archive_locator}/{source_file}.pdf"
+                        f"Provenance denominator source {psid} ({pcid}) source_family '{pfam}' "
+                        f"does not match configured cohort source_family '{cohorts_by_id[pcid].get('source_family')}'"
                     )
-                re_resolved_status = (
-                    "RESOLVED_ACCESSIBLE"
-                    if archive_on_host
-                    else ("PARTIAL_CHUNKS_AND_DB_ONLY" if chunk_on_host else "UNREACHABLE_ON_HOST")
-                )
-            else:
-                re_resolved_status = cust_status
+                prov_identities[psid] = (psf, pcid, pfam)
 
-            # Explicit invariant checks across ALL rows (permitted and blocked)
-            if status == "CONFIRMED_NATIVE":
-                if lineage_mode not in NATIVE_LINEAGE_MODES:
+        with out_index_path.open(encoding="utf-8") as f:
+            header_line = f.readline().strip()
+            header = json.loads(header_line)
+            if header.get("schema_version") != "v4_source_custody_access_index_v1":
+                raise CustodyAccessError("Index header schema_version invalid")
+            if header.get("config_sha256") != expected_config_sha256:
+                raise CustodyAccessError("Index header config_sha256 mismatch")
+
+            for line_num, line in enumerate(f, start=2):
+                if not line.strip():
+                    continue
+                record_count += 1
+                row = json.loads(line)
+                errors = list(item_validator.iter_errors(row))
+                if errors:
+                    raise CustodyAccessError(f"Index line {line_num} error: {errors[0].message}")
+
+                source_id = row["source_id"]
+                cohort_id = row["cohort_id"]
+                source_family = row.get("source_family", "")
+                source_file = row.get("source_locator", {}).get("source_file", "")
+
+                if cohort_id not in cohorts_by_id:
+                    raise CustodyAccessError(
+                        f"Index line {line_num} ({source_id}): unconfigured cohort_id '{cohort_id}'"
+                    )
+                cohort_cfg = cohorts_by_id[cohort_id]
+                if cohort_cfg.get("source_family") != source_family:
+                    raise CustodyAccessError(
+                        f"Index line {line_num} ({source_id}): source_family '{source_family}' "
+                        f"does not match configured cohort source_family '{cohort_cfg.get('source_family')}'"
+                    )
+
+                if source_id in seen_source_identities:
+                    raise CustodyAccessError(
+                        f"Index line {line_num} ({source_id}): duplicate source_id in access index"
+                    )
+
+                if (cohort_id, source_file) in seen_cohort_locators:
+                    raise CustodyAccessError(
+                        f"Index line {line_num} ({source_id}): duplicate source locator ({cohort_id}, {source_file}) in access index"
+                    )
+                seen_cohort_locators.add((cohort_id, source_file))
+                seen_source_identities[source_id] = (source_file, cohort_id, source_family)
+
+                expected_access_id = _make_access_id(source_id, cohort_id)
+                if row.get("access_id") != expected_access_id:
+                    raise CustodyAccessError(
+                        f"Index line {line_num} ({source_id}): access_id mismatch: "
+                        f"expected {expected_access_id}, got {row.get('access_id')}"
+                    )
+
+                access_id = row["access_id"]
+                if access_id in seen_access_ids:
+                    raise CustodyAccessError(
+                        f"Index line {line_num} ({source_id}): duplicate access_id {access_id} in access index"
+                    )
+                seen_access_ids.add(access_id)
+
+                permitted = row["permitted_to_proceed"]
+                status = row["lineage_verification"]["status"]
+                lineage_mode = row["lineage_verification"].get("lineage_mode")
+                is_ocr = row["lineage_verification"]["is_ocr_derived"]
+                cust_status = row["custody_resolution"]["status"]
+                host_reachable = row["custody_resolution"]["host_reachable"]
+                metrics = row["bounded_read_metrics"]
+                blocking_reason = row["blocking_reason"]
+
+                # Explicit invariant checks across ALL rows (permitted and blocked)
+                if status == "CONFIRMED_NATIVE":
+                    if lineage_mode not in NATIVE_LINEAGE_MODES:
+                        raise CustodyAccessError(
+                            f"Contradictory record at line {line_num} ({row['source_id']}): "
+                            f"lineage status is CONFIRMED_NATIVE but lineage_mode is '{lineage_mode}'"
+                        )
+                    if is_ocr:
+                        raise CustodyAccessError(
+                            f"Contradictory record at line {line_num} ({row['source_id']}): "
+                            f"lineage status is CONFIRMED_NATIVE but is_ocr_derived is True"
+                        )
+                elif status == "UNKNOWN_LINEAGE":
+                    if lineage_mode != "unknown":
+                        raise CustodyAccessError(
+                            f"Contradictory record at line {line_num} ({row['source_id']}): "
+                            f"lineage status is UNKNOWN_LINEAGE but lineage_mode is '{lineage_mode}'"
+                        )
+                    if is_ocr:
+                        raise CustodyAccessError(
+                            f"Contradictory record at line {line_num} ({row['source_id']}): "
+                            f"lineage status is UNKNOWN_LINEAGE but is_ocr_derived is True"
+                        )
+                    if permitted:
+                        raise CustodyAccessError(
+                            f"Contradictory record at line {line_num} ({row['source_id']}): "
+                            f"permitted_to_proceed is True but lineage status is UNKNOWN_LINEAGE"
+                        )
+                elif status == "EXCLUDED_OCR":
+                    if lineage_mode not in OCR_LINEAGE_MODES:
+                        raise CustodyAccessError(
+                            f"Contradictory record at line {line_num} ({row['source_id']}): "
+                            f"lineage status is EXCLUDED_OCR but lineage_mode is '{lineage_mode}'"
+                        )
+                    if not is_ocr:
+                        raise CustodyAccessError(
+                            f"Contradictory record at line {line_num} ({row['source_id']}): "
+                            f"lineage status is EXCLUDED_OCR but is_ocr_derived is False"
+                        )
+                    if permitted:
+                        raise CustodyAccessError(
+                            f"Contradictory record at line {line_num} ({row['source_id']}): "
+                            f"permitted_to_proceed is True but lineage status is EXCLUDED_OCR"
+                        )
+                else:
+                    raise CustodyAccessError(
+                        f"Contradictory record at line {line_num} ({row['source_id']}): unknown lineage status '{status}'"
+                    )
+
+                if lineage_mode == "unknown" and status != "UNKNOWN_LINEAGE":
                     raise CustodyAccessError(
                         f"Contradictory record at line {line_num} ({row['source_id']}): "
-                        f"lineage status is CONFIRMED_NATIVE but lineage_mode is '{lineage_mode}'"
+                        f"lineage_mode is 'unknown' but lineage status is '{status}'"
                     )
-                if is_ocr:
+                if lineage_mode in OCR_LINEAGE_MODES and status != "EXCLUDED_OCR":
                     raise CustodyAccessError(
                         f"Contradictory record at line {line_num} ({row['source_id']}): "
-                        f"lineage status is CONFIRMED_NATIVE but is_ocr_derived is True"
+                        f"lineage_mode is '{lineage_mode}' but lineage status is '{status}'"
                     )
-            elif status == "UNKNOWN_LINEAGE":
-                if lineage_mode != "unknown":
+                if lineage_mode in NATIVE_LINEAGE_MODES and status != "CONFIRMED_NATIVE":
                     raise CustodyAccessError(
                         f"Contradictory record at line {line_num} ({row['source_id']}): "
-                        f"lineage status is UNKNOWN_LINEAGE but lineage_mode is '{lineage_mode}'"
+                        f"lineage_mode is '{lineage_mode}' but lineage status is '{status}'"
                     )
-                if is_ocr:
-                    raise CustodyAccessError(
-                        f"Contradictory record at line {line_num} ({row['source_id']}): "
-                        f"lineage status is UNKNOWN_LINEAGE but is_ocr_derived is True"
-                    )
+
                 if permitted:
-                    raise CustodyAccessError(
-                        f"Contradictory record at line {line_num} ({row['source_id']}): "
-                        f"permitted_to_proceed is True but lineage status is UNKNOWN_LINEAGE"
-                    )
-            elif status == "EXCLUDED_OCR":
-                if lineage_mode not in OCR_LINEAGE_MODES:
-                    raise CustodyAccessError(
-                        f"Contradictory record at line {line_num} ({row['source_id']}): "
-                        f"lineage status is EXCLUDED_OCR but lineage_mode is '{lineage_mode}'"
-                    )
-                if not is_ocr:
-                    raise CustodyAccessError(
-                        f"Contradictory record at line {line_num} ({row['source_id']}): "
-                        f"lineage status is EXCLUDED_OCR but is_ocr_derived is False"
-                    )
-                if permitted:
-                    raise CustodyAccessError(
-                        f"Contradictory record at line {line_num} ({row['source_id']}): "
-                        f"permitted_to_proceed is True but lineage status is EXCLUDED_OCR"
-                    )
-            else:
-                raise CustodyAccessError(
-                    f"Contradictory record at line {line_num} ({row['source_id']}): unknown lineage status '{status}'"
-                )
+                    if not host_reachable:
+                        raise CustodyAccessError(
+                            f"Contradictory record at line {line_num} ({row['source_id']}): "
+                            f"permitted_to_proceed is True but host_reachable is False"
+                        )
+                    if blocking_reason is not None:
+                        raise CustodyAccessError(
+                            f"Contradictory record at line {line_num} ({row['source_id']}): "
+                            f"permitted_to_proceed is True but blocking_reason is {blocking_reason}"
+                        )
+                    if metrics["observed_records"] <= 0 or not metrics["stream_sha256"]:
+                        raise CustodyAccessError(
+                            f"Contradictory record at line {line_num} ({row['source_id']}): "
+                            f"permitted_to_proceed is True but observed_records is {metrics['observed_records']}"
+                        )
+                    expected_rule = cohort_cfg["lineage_rule"]
+                    if expected_rule == "native_digital_source" and lineage_mode != "native_digital_source":
+                        raise CustodyAccessError(
+                            f"Contradictory record at line {line_num} ({row['source_id']}): "
+                            f"permitted_to_proceed is True but lineage_mode is '{lineage_mode}' "
+                            f"instead of expected cohort lineage_rule '{expected_rule}'"
+                        )
+                    if expected_rule == "native_pdf_text" and lineage_mode not in (
+                        "native_pdf_text",
+                        "native_text",
+                        "mixed_native",
+                    ):
+                        raise CustodyAccessError(
+                            f"Contradictory record at line {line_num} ({row['source_id']}): "
+                            f"permitted_to_proceed is True but lineage_mode is '{lineage_mode}' "
+                            f"instead of compatible native mode for cohort lineage_rule '{expected_rule}'"
+                        )
+                else:
+                    if blocking_reason is None:
+                        raise CustodyAccessError(
+                            f"Contradictory record at line {line_num} ({row['source_id']}): "
+                            f"permitted_to_proceed is False but blocking_reason is None"
+                        )
 
-            if lineage_mode == "unknown" and status != "UNKNOWN_LINEAGE":
-                raise CustodyAccessError(
-                    f"Contradictory record at line {line_num} ({row['source_id']}): "
-                    f"lineage_mode is 'unknown' but lineage status is '{status}'"
-                )
-            if lineage_mode in OCR_LINEAGE_MODES and status != "EXCLUDED_OCR":
-                raise CustodyAccessError(
-                    f"Contradictory record at line {line_num} ({row['source_id']}): "
-                    f"lineage_mode is '{lineage_mode}' but lineage status is '{status}'"
-                )
-            if lineage_mode in NATIVE_LINEAGE_MODES and status != "CONFIRMED_NATIVE":
-                raise CustodyAccessError(
-                    f"Contradictory record at line {line_num} ({row['source_id']}): "
-                    f"lineage_mode is '{lineage_mode}' but lineage status is '{status}'"
-                )
-
-            if permitted:
-                if not host_reachable:
-                    raise CustodyAccessError(
-                        f"Contradictory record at line {line_num} ({row['source_id']}): "
-                        f"permitted_to_proceed is True but host_reachable is False"
-                    )
-                if blocking_reason is not None:
-                    raise CustodyAccessError(
-                        f"Contradictory record at line {line_num} ({row['source_id']}): "
-                        f"permitted_to_proceed is True but blocking_reason is {blocking_reason}"
-                    )
-                if metrics["observed_records"] <= 0 or not metrics["stream_sha256"]:
-                    raise CustodyAccessError(
-                        f"Contradictory record at line {line_num} ({row['source_id']}): "
-                        f"permitted_to_proceed is True but observed_records is {metrics['observed_records']}"
-                    )
-                expected_rule = cohort_cfg["lineage_rule"]
-                if expected_rule == "native_digital_source" and lineage_mode != "native_digital_source":
-                    raise CustodyAccessError(
-                        f"Contradictory record at line {line_num} ({row['source_id']}): "
-                        f"permitted_to_proceed is True but lineage_mode is '{lineage_mode}' "
-                        f"instead of expected cohort lineage_rule '{expected_rule}'"
-                    )
-                if expected_rule == "native_pdf_text" and lineage_mode not in (
-                    "native_pdf_text",
-                    "native_text",
-                    "mixed_native",
+                # Check projection against provenance denominator
+                if source_id not in prov_identities or (source_file, cohort_id, source_family) != prov_identities.get(
+                    source_id
                 ):
                     raise CustodyAccessError(
-                        f"Contradictory record at line {line_num} ({row['source_id']}): "
-                        f"permitted_to_proceed is True but lineage_mode is '{lineage_mode}' "
-                        f"instead of compatible native mode for cohort lineage_rule '{expected_rule}'"
-                    )
-            else:
-                if blocking_reason is None:
-                    raise CustodyAccessError(
-                        f"Contradictory record at line {line_num} ({row['source_id']}): "
-                        f"permitted_to_proceed is False but blocking_reason is None"
+                        f"Access index source projection does not match provenance denominator: "
+                        f"source_id '{source_id}' identity ({source_file}, {cohort_id}, {source_family}) "
+                        f"does not match provenance denominator {prov_identities.get(source_id)}"
                     )
 
-            # Recompute safety assertions directly from row content
-            forbidden_keys = {"text", "content", "corpus_text", "raw_text", "body"}
-            if forbidden_keys.intersection(row.keys()):
-                recomputed_no_corpus_text = False
+                lineage_rule = cohort_cfg["lineage_rule"]
+                archive_locator = cohort_cfg.get("archive_locator", "")
 
-            if _contains_private_or_absolute_host_path(row):
-                recomputed_no_private_host_paths = False
-
-            cust = row.get("custody_resolution", {})
-            if row.get("cohort_id") not in ("literary-non-ocr", "public-textbooks-non-stem-non-ocr"):
-                recomputed_no_broad_recollection = False
-
-            p_store = cust.get("primary_store") or ""
-            expected_p_store = f"sqlite:sources.db#{FAMILY_APPROVED_TABLES[source_family]}"
-            if p_store != expected_p_store:
-                raise CustodyAccessError(
-                    f"Index line {line_num} ({source_id}): primary_store '{p_store}' does not match expected '{expected_p_store}'"
+                # Probe host storage to re-resolve custody independently of index assertions (ACCESS-1, ACCESS-4)
+                archive_on_host = _check_archive_on_host(
+                    archive_locator=archive_locator,
+                    source_file=source_file,
+                    lineage_rule=lineage_rule,
+                    roots=roots,
+                    cached_map=archive_maps_by_cohort.get(cohort_id),
                 )
 
-            c_store = cust.get("chunks_store") or ""
-            if c_store and not c_store.startswith("file:data/textbook_chunks/"):
-                recomputed_no_new_storage_infrastructure = False
+                chunk_path = chunks_map.get(source_file) if chunks_map else None
+                chunk_on_host = chunk_path is not None and chunk_path.is_file()
 
-            if is_ocr and (status != "EXCLUDED_OCR" or permitted):
-                recomputed_ocr_derived_excluded = False
-            if status == "EXCLUDED_OCR" and (permitted or lineage_mode not in OCR_LINEAGE_MODES or not is_ocr):
-                recomputed_ocr_derived_excluded = False
-            if lineage_mode in OCR_LINEAGE_MODES and (status != "EXCLUDED_OCR" or permitted or not is_ocr):
-                recomputed_ocr_derived_excluded = False
+                if cohort_id == "public-textbooks-non-stem-non-ocr":
+                    # For unmounted archives, index cannot claim RESOLVED_ACCESSIBLE
+                    if not archive_on_host and cust_status == "RESOLVED_ACCESSIBLE":
+                        raise CustodyAccessError(
+                            f"Index line {line_num} ({source_id}): custody status claims 'RESOLVED_ACCESSIBLE' "
+                            f"but host archive is unmounted at {archive_locator}/{source_file}.pdf"
+                        )
+                    if archive_on_host and cust_status == "PARTIAL_CHUNKS_AND_DB_ONLY":
+                        raise CustodyAccessError(
+                            f"Index line {line_num} ({source_id}): custody status claims 'PARTIAL_CHUNKS_AND_DB_ONLY' "
+                            f"but host archive is reachable at {archive_locator}/{source_file}.pdf"
+                        )
+                    re_resolved_status = (
+                        "RESOLVED_ACCESSIBLE"
+                        if archive_on_host
+                        else ("PARTIAL_CHUNKS_AND_DB_ONLY" if chunk_on_host else "UNREACHABLE_ON_HOST")
+                    )
+                else:
+                    re_resolved_status = cust_status
 
-            if (status == "UNKNOWN_LINEAGE" or lineage_mode == "unknown") and (
-                status == "CONFIRMED_NATIVE" or permitted
-            ):
-                recomputed_unknown_not_native = False
-            if status == "CONFIRMED_NATIVE" and lineage_mode not in NATIVE_LINEAGE_MODES:
-                recomputed_unknown_not_native = False
-            if status == "UNKNOWN_LINEAGE" and lineage_mode != "unknown":
-                recomputed_unknown_not_native = False
-            if lineage_mode == "unknown" and status != "UNKNOWN_LINEAGE":
-                recomputed_unknown_not_native = False
-            if status != "CONFIRMED_NATIVE" and lineage_mode is None and permitted:
-                recomputed_unknown_not_native = False
+                # Revalidate database and lineage against current host stores (Finding 1)
+                table = FAMILY_APPROVED_TABLES[source_family]
+                s_metrics = table_stream_metrics.get(table, {})
+                c_metrics = table_chunk_metrics.get(table, {})
 
-            recomputed_total += 1
-            if cust_status in ("RESOLVED_ACCESSIBLE", "PARTIAL_CHUNKS_AND_DB_ONLY") and permitted:
-                recomputed_accessible += 1
-            if cust_status == "UNREACHABLE_ON_HOST":
-                recomputed_unreachable += 1
-            if status == "CONFIRMED_NATIVE":
-                recomputed_native += 1
-            if status == "EXCLUDED_OCR":
-                recomputed_ocr += 1
-            if permitted:
-                recomputed_permitted += 1
+                if source_family == "literary":
+                    db_tuple = s_metrics.get(source_file)
+                    if permitted:
+                        if db_tuple is None:
+                            raise CustodyAccessError(
+                                f"Index line {line_num} ({source_id}): source permitted but not found in database table '{table}'"
+                            )
+                        db_rec_count, db_char_count, actual_stream_hash = db_tuple
+                        if metrics["observed_records"] != db_rec_count:
+                            raise CustodyAccessError(
+                                f"Index line {line_num} ({source_id}): observed_records mismatch: "
+                                f"index has {metrics['observed_records']}, database has {db_rec_count}"
+                            )
+                        if metrics["observed_characters"] != db_char_count:
+                            raise CustodyAccessError(
+                                f"Index line {line_num} ({source_id}): observed_characters mismatch: "
+                                f"index has {metrics['observed_characters']}, database has {db_char_count}"
+                            )
+                        if metrics["stream_sha256"] != actual_stream_hash:
+                            raise CustodyAccessError(
+                                f"Index line {line_num} ({source_id}): stream_sha256 mismatch: "
+                                f"index has {metrics['stream_sha256']}, database has {actual_stream_hash}"
+                            )
+                    else:
+                        if db_tuple is not None:
+                            raise CustodyAccessError(
+                                f"Index line {line_num} ({source_id}): source marked unpermitted but found in database table '{table}'"
+                            )
 
-            if row["cohort_id"] == "literary-non-ocr":
-                lit_records.append(row)
-            elif row["cohort_id"] == "public-textbooks-non-stem-non-ocr":
-                tb_records.append(row)
+                elif source_family == "public_textbooks":
+                    excluded_modes = cohort_cfg.get("excluded_modes", OCR_LINEAGE_MODES)
+                    if chunk_on_host:
+                        chunk_mode, chunk_is_ocr, chunk_rows, _chunk_chars, chunk_digest = check_chunk_file_lineage(
+                            chunk_path, excluded_modes
+                        )
+                        if chunk_is_ocr:
+                            if status != "EXCLUDED_OCR" or not is_ocr or lineage_mode != chunk_mode:
+                                raise CustodyAccessError(
+                                    f"Index line {line_num} ({source_id}): chunk file has OCR lineage ({chunk_mode}) "
+                                    f"but index has status={status}, lineage_mode={lineage_mode}, is_ocr={is_ocr}"
+                                )
+                            if permitted:
+                                raise CustodyAccessError(
+                                    f"Index line {line_num} ({source_id}): chunk file has OCR lineage but index permits it to proceed"
+                                )
+                        elif chunk_mode in ("native_pdf_text", "native_text", "mixed_native"):
+                            db_chk = c_metrics.get(source_file)
+                            db_str = s_metrics.get(source_file)
 
-            m_item = derive_missing_report_item(row, config, effective_custody_status=re_resolved_status)
-            if m_item is not None:
-                expected_missing_items.append(m_item)
+                            if db_chk is None:
+                                if permitted or status != "UNKNOWN_LINEAGE":
+                                    raise CustodyAccessError(
+                                        f"Index line {line_num} ({source_id}): source records not found in database, "
+                                        f"but index has status={status}, permitted={permitted}"
+                                    )
+                            elif db_chk[0] != chunk_rows or db_chk[1] != chunk_digest:
+                                if permitted or status != "UNKNOWN_LINEAGE":
+                                    raise CustodyAccessError(
+                                        f"Index line {line_num} ({source_id}): database content does not match chunk lineage, "
+                                        f"but index has status={status}, permitted={permitted}"
+                                    )
+                            else:
+                                if status != "CONFIRMED_NATIVE" or lineage_mode != chunk_mode or not permitted:
+                                    raise CustodyAccessError(
+                                        f"Index line {line_num} ({source_id}): native chunk and db match, "
+                                        f"but index has status={status}, lineage_mode={lineage_mode}, permitted={permitted}"
+                                    )
+                                tb_rec_count, tb_char_count, tb_stream_hash = db_str if db_str else (0, 0, None)
+                                if metrics["observed_records"] != tb_rec_count:
+                                    raise CustodyAccessError(
+                                        f"Index line {line_num} ({source_id}): observed_records mismatch: "
+                                        f"index has {metrics['observed_records']}, database has {tb_rec_count}"
+                                    )
+                                if metrics["observed_characters"] != tb_char_count:
+                                    raise CustodyAccessError(
+                                        f"Index line {line_num} ({source_id}): observed_characters mismatch: "
+                                        f"index has {metrics['observed_characters']}, database has {tb_char_count}"
+                                    )
+                                if metrics["stream_sha256"] != tb_stream_hash:
+                                    raise CustodyAccessError(
+                                        f"Index line {line_num} ({source_id}): stream_sha256 mismatch: "
+                                        f"index has {metrics['stream_sha256']}, database has {tb_stream_hash}"
+                                    )
+                        else:
+                            if permitted or status != "UNKNOWN_LINEAGE":
+                                raise CustodyAccessError(
+                                    f"Index line {line_num} ({source_id}): chunk has unknown extraction mode '{chunk_mode}', "
+                                    f"but index has status={status}, permitted={permitted}"
+                                )
+                    else:
+                        if permitted or status != "UNKNOWN_LINEAGE":
+                            raise CustodyAccessError(
+                                f"Index line {line_num} ({source_id}): chunk file not on host, "
+                                f"but index has status={status}, permitted={permitted}"
+                            )
+
+                # Recompute safety assertions directly from row content
+                forbidden_keys = {"text", "content", "corpus_text", "raw_text", "body"}
+                if forbidden_keys.intersection(row.keys()):
+                    recomputed_no_corpus_text = False
+
+                if _contains_private_or_absolute_host_path(row):
+                    recomputed_no_private_host_paths = False
+
+                cust = row.get("custody_resolution", {})
+                if row.get("cohort_id") not in ("literary-non-ocr", "public-textbooks-non-stem-non-ocr"):
+                    recomputed_no_broad_recollection = False
+
+                p_store = cust.get("primary_store") or ""
+                expected_p_store = f"sqlite:sources.db#{FAMILY_APPROVED_TABLES[source_family]}"
+                if p_store != expected_p_store:
+                    raise CustodyAccessError(
+                        f"Index line {line_num} ({source_id}): primary_store '{p_store}' does not match expected '{expected_p_store}'"
+                    )
+
+                c_store = cust.get("chunks_store") or ""
+                if c_store and not c_store.startswith("file:data/textbook_chunks/"):
+                    recomputed_no_new_storage_infrastructure = False
+
+                if is_ocr and (status != "EXCLUDED_OCR" or permitted):
+                    recomputed_ocr_derived_excluded = False
+                if status == "EXCLUDED_OCR" and (permitted or lineage_mode not in OCR_LINEAGE_MODES or not is_ocr):
+                    recomputed_ocr_derived_excluded = False
+                if lineage_mode in OCR_LINEAGE_MODES and (status != "EXCLUDED_OCR" or permitted or not is_ocr):
+                    recomputed_ocr_derived_excluded = False
+
+                if (status == "UNKNOWN_LINEAGE" or lineage_mode == "unknown") and (
+                    status == "CONFIRMED_NATIVE" or permitted
+                ):
+                    recomputed_unknown_not_native = False
+                if status == "CONFIRMED_NATIVE" and lineage_mode not in NATIVE_LINEAGE_MODES:
+                    recomputed_unknown_not_native = False
+                if status == "UNKNOWN_LINEAGE" and lineage_mode != "unknown":
+                    recomputed_unknown_not_native = False
+                if lineage_mode == "unknown" and status != "UNKNOWN_LINEAGE":
+                    recomputed_unknown_not_native = False
+                if status != "CONFIRMED_NATIVE" and lineage_mode is None and permitted:
+                    recomputed_unknown_not_native = False
+
+                recomputed_total += 1
+                if cust_status in ("RESOLVED_ACCESSIBLE", "PARTIAL_CHUNKS_AND_DB_ONLY") and permitted:
+                    recomputed_accessible += 1
+                if cust_status == "UNREACHABLE_ON_HOST":
+                    recomputed_unreachable += 1
+                if status == "CONFIRMED_NATIVE":
+                    recomputed_native += 1
+                if status == "EXCLUDED_OCR":
+                    recomputed_ocr += 1
+                if permitted:
+                    recomputed_permitted += 1
+
+                if row["cohort_id"] == "literary-non-ocr":
+                    lit_records.append(row)
+                elif row["cohort_id"] == "public-textbooks-non-stem-non-ocr":
+                    tb_records.append(row)
+
+                m_item = derive_missing_report_item(row, config, effective_custody_status=re_resolved_status)
+                if m_item is not None:
+                    expected_missing_items.append(m_item)
+    finally:
+        db_conn.close()
 
     if header.get("records") != record_count:
         raise CustodyAccessError(f"Index header record count {header.get('records')} != observed {record_count}")

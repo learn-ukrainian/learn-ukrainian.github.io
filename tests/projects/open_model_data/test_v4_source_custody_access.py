@@ -1965,3 +1965,285 @@ def test_verify_detects_unmounted_textbook_tampered_as_accessible(tmp_path: Path
         custody.CustodyAccessError, match=r"custody status claims 'RESOLVED_ACCESSIBLE' but host archive is unmounted"
     ):
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+
+
+def test_archive_locator_grade_tree_and_mount_resolution(tmp_path: Path) -> None:
+    """_resolve_archive_mount, _build_archive_cache_map, and _check_archive_on_host resolve across grade directories and logical locators (Finding 2)."""
+    tb_dir = tmp_path / "data" / "textbooks"
+    tb_dir.mkdir(parents=True)
+    (tb_dir / "top_book.pdf").touch()
+    (tb_dir / "grade-10").mkdir()
+    (tb_dir / "grade-10" / "grade10_book.pdf").touch()
+    (tb_dir / "sub_other").mkdir()
+    (tb_dir / "sub_other" / "other_book.pdf").touch()
+
+    lit_dir = tmp_path / "data" / "lit_archive"
+    lit_dir.mkdir(parents=True)
+    (lit_dir / "lit_book.jsonl").touch()
+
+    roots = [tmp_path]
+
+    # Test _resolve_archive_mount
+    m1 = custody._resolve_archive_mount("gdrive:learn-ukrainian-data/textbooks", roots)
+    assert m1 == tb_dir
+    m2 = custody._resolve_archive_mount("data/textbooks", roots)
+    assert m2 == tb_dir
+    m3 = custody._resolve_archive_mount("data/lit_archive", roots)
+    assert m3 == lit_dir
+    assert custody._resolve_archive_mount("", roots) is None
+    assert custody._resolve_archive_mount("nonexistent", roots) is None
+
+    # Test _build_archive_cache_map
+    tb_map = custody._build_archive_cache_map(
+        "gdrive:learn-ukrainian-data/textbooks",
+        "native_pdf_text",
+        roots,
+    )
+    assert "top_book" in tb_map
+    assert "grade10_book" in tb_map
+    assert "other_book" in tb_map
+    assert tb_map["grade10_book"] == tb_dir / "grade-10" / "grade10_book.pdf"
+
+    lit_map = custody._build_archive_cache_map(
+        "data/lit_archive",
+        "native_digital_source",
+        roots,
+    )
+    assert "lit_book" in lit_map
+
+    # Test _check_archive_on_host with cache
+    assert custody._check_archive_on_host(
+        "gdrive:learn-ukrainian-data/textbooks",
+        "grade10_book",
+        "native_pdf_text",
+        roots,
+        cached_map=tb_map,
+    )
+    assert not custody._check_archive_on_host(
+        "gdrive:learn-ukrainian-data/textbooks",
+        "missing_book",
+        "native_pdf_text",
+        roots,
+        cached_map=tb_map,
+    )
+
+    # Test _check_archive_on_host without cache (direct filesystem scan)
+    assert custody._check_archive_on_host(
+        "gdrive:learn-ukrainian-data/textbooks",
+        "top_book",
+        "native_pdf_text",
+        roots,
+        cached_map=None,
+    )
+    assert custody._check_archive_on_host(
+        "gdrive:learn-ukrainian-data/textbooks",
+        "grade10_book",
+        "native_pdf_text",
+        roots,
+        cached_map=None,
+    )
+    assert custody._check_archive_on_host(
+        "gdrive:learn-ukrainian-data/textbooks",
+        "other_book",
+        "native_pdf_text",
+        roots,
+        cached_map=None,
+    )
+    assert not custody._check_archive_on_host(
+        "gdrive:learn-ukrainian-data/textbooks",
+        "missing_book",
+        "native_pdf_text",
+        roots,
+        cached_map=None,
+    )
+
+
+def test_precompute_table_source_metrics_matches_stream_and_chunk_digests(tmp_path: Path) -> None:
+    """_precompute_table_source_metrics computes exact per-source stream and chunk metrics in a single pass."""
+    db_path = tmp_path / "test.db"
+    conn = sqlite3.connect(db_path)
+    conn.execute("CREATE TABLE literary_texts (id INTEGER PRIMARY KEY, chunk_id TEXT, source_file TEXT, text TEXT);")
+    conn.execute(
+        "INSERT INTO literary_texts (chunk_id, source_file, text) VALUES "
+        "('c1', 'src_a', 'Text A1'), "
+        "('c2', 'src_a', 'Text A2'), "
+        "('c1', 'src_b', 'Text B1');"
+    )
+    conn.commit()
+
+    s_m, c_m = custody._precompute_table_source_metrics(conn, "literary_texts")
+    assert set(s_m.keys()) == {"src_a", "src_b"}
+    assert set(c_m.keys()) == {"src_a", "src_b"}
+
+    assert s_m["src_a"][0] == 2  # records
+    assert s_m["src_a"][1] == len("Text A1") + len("Text A2")  # characters
+    assert c_m["src_a"][0] == 2  # chunk records
+
+    empty_s, empty_c = custody._precompute_table_source_metrics(conn, "nonexistent_table")
+    assert empty_s == {}
+    assert empty_c == {}
+    conn.close()
+
+
+def test_verify_detects_tampered_database_stream_metrics(tmp_path: Path, repo_root: Path) -> None:
+    """verify() detects when index observed_records, observed_characters, or stream_sha256 disagree with sources.db (Finding 1)."""
+    tampered_out = tmp_path / "out"
+    tgt_custody = tampered_out / "data/projects/open_model_data/custody"
+    tgt_custody.mkdir(parents=True)
+
+    orig_index_path = Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl")
+    lines = orig_index_path.read_text(encoding="utf-8").splitlines()
+
+    tampered_idx = -1
+    for i, line in enumerate(lines[1:], start=1):
+        row = json.loads(line)
+        if row.get("cohort_id") == "literary-non-ocr" and row.get("permitted_to_proceed"):
+            tampered_idx = i
+            break
+    assert tampered_idx != -1
+
+    # 1. Tamper observed_records
+    lines_rec = list(lines)
+    row_rec = json.loads(lines_rec[tampered_idx])
+    row_rec["bounded_read_metrics"]["observed_records"] += 999
+    lines_rec[tampered_idx] = json.dumps(row_rec)
+
+    idx_path = tgt_custody / "v4_source_custody_access_index_v1.jsonl"
+    idx_path.write_text("\n".join(lines_rec) + "\n", encoding="utf-8")
+
+    (tgt_custody / "v4_source_custody_missing_report_v1.json").write_bytes(
+        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+    )
+
+    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
+    receipt_tampered = copy.deepcopy(receipt_data)
+    receipt_tampered["index_sha256"] = custody.sha256_file(idx_path)
+    receipt_tampered["receipt_id"] = custody._make_receipt_id(
+        receipt_tampered["config_sha256"],
+        receipt_tampered["index_sha256"],
+        receipt_tampered["missing_report_sha256"],
+    )
+    (tgt_custody / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
+
+    with pytest.raises(custody.CustodyAccessError, match=r"observed_records mismatch"):
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+
+    # 2. Tamper stream_sha256
+    lines_hash = list(lines)
+    row_hash = json.loads(lines_hash[tampered_idx])
+    row_hash["bounded_read_metrics"]["stream_sha256"] = "0" * 64
+    lines_hash[tampered_idx] = json.dumps(row_hash)
+    idx_path.write_text("\n".join(lines_hash) + "\n", encoding="utf-8")
+    receipt_tampered["index_sha256"] = custody.sha256_file(idx_path)
+    receipt_tampered["receipt_id"] = custody._make_receipt_id(
+        receipt_tampered["config_sha256"],
+        receipt_tampered["index_sha256"],
+        receipt_tampered["missing_report_sha256"],
+    )
+    (tgt_custody / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
+
+    with pytest.raises(custody.CustodyAccessError, match=r"stream_sha256 mismatch"):
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+
+
+def test_verify_detects_unpermitted_source_in_database(tmp_path: Path, repo_root: Path) -> None:
+    """verify() detects when a source marked unpermitted is present in the database (Finding 1)."""
+    tampered_out = tmp_path / "out"
+    tgt_custody = tampered_out / "data/projects/open_model_data/custody"
+    tgt_custody.mkdir(parents=True)
+
+    orig_index_path = Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl")
+    lines = orig_index_path.read_text(encoding="utf-8").splitlines()
+
+    tampered_idx = -1
+    for i, line in enumerate(lines[1:], start=1):
+        row = json.loads(line)
+        if row.get("cohort_id") == "literary-non-ocr" and row.get("permitted_to_proceed"):
+            tampered_idx = i
+            break
+    assert tampered_idx != -1
+
+    lines_unperm = list(lines)
+    row_unperm = json.loads(lines_unperm[tampered_idx])
+    row_unperm["permitted_to_proceed"] = False
+    row_unperm["blocking_reason"] = "manually_blocked_for_test"
+    lines_unperm[tampered_idx] = json.dumps(row_unperm)
+
+    idx_path = tgt_custody / "v4_source_custody_access_index_v1.jsonl"
+    idx_path.write_text("\n".join(lines_unperm) + "\n", encoding="utf-8")
+
+    (tgt_custody / "v4_source_custody_missing_report_v1.json").write_bytes(
+        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+    )
+
+    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
+    receipt_tampered = copy.deepcopy(receipt_data)
+    receipt_tampered["index_sha256"] = custody.sha256_file(idx_path)
+    receipt_tampered["receipt_id"] = custody._make_receipt_id(
+        receipt_tampered["config_sha256"],
+        receipt_tampered["index_sha256"],
+        receipt_tampered["missing_report_sha256"],
+    )
+    (tgt_custody / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
+
+    with pytest.raises(custody.CustodyAccessError, match=r"source marked unpermitted but found in database table"):
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+
+
+def test_verify_detects_chunk_file_missing_for_permitted_textbook(tmp_path: Path, repo_root: Path) -> None:
+    """verify() detects when a permitted textbook's chunk file is missing on host (Finding 1)."""
+    empty_chunks = tmp_path / "empty_chunks"
+    empty_chunks.mkdir()
+
+    cfg = copy.deepcopy(json.loads(Path(CONFIG_PATH).read_text(encoding="utf-8")))
+    cfg["inputs"]["textbook_chunks_dir"] = str(os.path.relpath(empty_chunks, repo_root))
+    cfg_path = tmp_path / "custom_config.json"
+    cfg_path.write_text(json.dumps(cfg), encoding="utf-8")
+
+    tampered_out = tmp_path / "out"
+    tgt_custody = tampered_out / "data/projects/open_model_data/custody"
+    tgt_custody.mkdir(parents=True)
+
+    idx_path = tgt_custody / "v4_source_custody_access_index_v1.jsonl"
+    orig_lines = (
+        Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    )
+    header = json.loads(orig_lines[0])
+    cfg_hash = custody.sha256_file(cfg_path)
+    header["config_sha256"] = cfg_hash
+    orig_lines[0] = json.dumps(header)
+    idx_path.write_text("\n".join(orig_lines) + "\n", encoding="utf-8")
+
+    missing_path = tgt_custody / "v4_source_custody_missing_report_v1.json"
+    missing_path.write_bytes(
+        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+    )
+
+    idx_hash = custody.sha256_file(idx_path)
+    missing_hash = custody.sha256_file(missing_path)
+    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
+    receipt_tampered = copy.deepcopy(receipt_data)
+    receipt_tampered["config_sha256"] = cfg_hash
+    receipt_tampered["index_sha256"] = idx_hash
+    receipt_tampered["missing_report_sha256"] = missing_hash
+    receipt_tampered["receipt_id"] = custody._make_receipt_id(cfg_hash, idx_hash, missing_hash)
+    (tgt_custody / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
+
+    with pytest.raises(
+        custody.CustodyAccessError,
+        match=r"chunk file not on host, but index has status=CONFIRMED_NATIVE, permitted=True",
+    ):
+        custody.verify(cfg_path, input_root=repo_root, output_root=tampered_out)
