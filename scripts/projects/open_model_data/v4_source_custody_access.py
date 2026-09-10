@@ -284,6 +284,35 @@ def check_chunk_file_lineage(
     return observed_mode, False, row_count, char_count, content_sha256
 
 
+def validate_cohort_spec(cohort_cfg: Mapping[str, Any]) -> None:
+    """Validate that cohort configuration declares compatible resolver_kind and lineage_rule."""
+    cohort_id = cohort_cfg.get("cohort_id", "<unknown>")
+    family = cohort_cfg.get("source_family")
+    resolver_kind = cohort_cfg.get("resolver_kind")
+    lineage_rule = cohort_cfg.get("lineage_rule")
+
+    if family == "literary":
+        if resolver_kind != "sqlite_database":
+            raise CustodyAccessError(
+                f"Cohort '{cohort_id}' (family 'literary') requires resolver_kind 'sqlite_database', got '{resolver_kind}'"
+            )
+        if lineage_rule != "native_digital_source":
+            raise CustodyAccessError(
+                f"Cohort '{cohort_id}' (family 'literary') requires lineage_rule 'native_digital_source', got '{lineage_rule}'"
+            )
+    elif family == "public_textbooks":
+        if resolver_kind != "hybrid_sqlite_chunks_archive":
+            raise CustodyAccessError(
+                f"Cohort '{cohort_id}' (family 'public_textbooks') requires resolver_kind 'hybrid_sqlite_chunks_archive', got '{resolver_kind}'"
+            )
+        if lineage_rule != "native_pdf_text":
+            raise CustodyAccessError(
+                f"Cohort '{cohort_id}' (family 'public_textbooks') requires lineage_rule 'native_pdf_text', got '{lineage_rule}'"
+            )
+    else:
+        raise CustodyAccessError(f"Cohort '{cohort_id}' has unsupported source_family '{family}'")
+
+
 def resolve_source_access(
     source_id: str,
     source_file: str,
@@ -302,7 +331,9 @@ def resolve_source_access(
             f"Source {source_id} ({cohort_id}) source_family '{source_family}' "
             f"does not match configured cohort source_family '{cohort_cfg.get('source_family')}'"
         )
+    validate_cohort_spec(cohort_cfg)
 
+    lineage_rule = cohort_cfg["lineage_rule"]
     primary_store = cohort_cfg.get("primary_store") or (
         f"sqlite:sources.db#{'literary_texts' if source_family == 'literary' else 'textbooks'}"
     )
@@ -330,7 +361,7 @@ def resolve_source_access(
             chunk_ref = f"file:{chunk_path.name}"
 
     archive_locator = cohort_cfg.get("archive_locator", "")
-    if source_family == "literary":
+    if lineage_rule == "native_digital_source":
         archive_ref = f"{archive_locator}/{source_file}.jsonl" if archive_locator else None
     else:
         archive_ref = f"{archive_locator}/{source_file}.pdf" if archive_locator else None
@@ -340,24 +371,24 @@ def resolve_source_access(
     if archive_locator and archive_locator.startswith("data/"):
         host_archive_path = input_root / archive_locator
         if host_archive_path.is_dir():
-            suffix = ".jsonl" if source_family == "literary" else ".pdf"
+            suffix = ".jsonl" if lineage_rule == "native_digital_source" else ".pdf"
             archive_file = host_archive_path / f"{source_file}{suffix}"
             if archive_file.is_file():
                 archive_on_host = True
 
-    # Lineage verification
+    # Lineage verification driven by cohort's configured lineage_rule
     missing_report_item = None
-    if source_family == "literary":
+    if lineage_rule == "native_digital_source":
         # Literary corpus is established native digital text from human-authored archives
         lineage_status = "CONFIRMED_NATIVE"
         lineage_mode = "native_digital_source"
-        evidence_ref = "sqlite:sources.db#literary_texts"
+        evidence_ref = primary_store
         is_ocr = False
         permitted = db_records > 0
         custody_status = "RESOLVED_ACCESSIBLE" if db_records > 0 else "UNREACHABLE_ON_HOST"
         blocking_reason = None if permitted else "source_records_not_found_in_database"
     else:
-        # Public textbooks cohort
+        # Public textbooks cohort with hybrid resolver (native_pdf_text)
         excluded_modes = cohort_cfg.get("excluded_modes", ["apple_vision_ocr", "ocr", "scanned_image"])
 
         if chunk_path is not None and chunk_path.is_file():
@@ -553,6 +584,8 @@ def build(
     db_uri = f"file:{db_path.resolve()}?mode=ro"
     conn = sqlite3.connect(db_uri, uri=True)
 
+    for c in config["cohorts"]:
+        validate_cohort_spec(c)
     cohorts_by_id = {c["cohort_id"]: c for c in config["cohorts"]}
     access_records = []
     missing_items = []
@@ -769,6 +802,8 @@ def verify(
     roots = [input_root, Path.cwd()]
     config, resolved_config_path = _load_config(config_path, roots)
     expected_config_sha256 = sha256_file(resolved_config_path)
+    for c in config["cohorts"]:
+        validate_cohort_spec(c)
     cohorts_by_id = {c["cohort_id"]: c for c in config["cohorts"]}
 
     out_index_path = output_root / config["outputs"]["index"]
@@ -853,10 +888,11 @@ def verify(
 
             if cohort_id not in cohorts_by_id:
                 raise CustodyAccessError(f"Index line {line_num} ({source_id}): unconfigured cohort_id '{cohort_id}'")
-            if cohorts_by_id[cohort_id].get("source_family") != source_family:
+            cohort_cfg = cohorts_by_id[cohort_id]
+            if cohort_cfg.get("source_family") != source_family:
                 raise CustodyAccessError(
                     f"Index line {line_num} ({source_id}): source_family '{source_family}' "
-                    f"does not match configured cohort source_family '{cohorts_by_id[cohort_id].get('source_family')}'"
+                    f"does not match configured cohort source_family '{cohort_cfg.get('source_family')}'"
                 )
 
             if source_id in seen_source_identities:
@@ -917,6 +953,24 @@ def verify(
                     raise CustodyAccessError(
                         f"Contradictory record at line {line_num} ({row['source_id']}): "
                         f"permitted_to_proceed is True but observed_records is {metrics['observed_records']}"
+                    )
+                expected_rule = cohort_cfg["lineage_rule"]
+                lineage_mode = row["lineage_verification"].get("lineage_mode")
+                if expected_rule == "native_digital_source" and lineage_mode != "native_digital_source":
+                    raise CustodyAccessError(
+                        f"Contradictory record at line {line_num} ({row['source_id']}): "
+                        f"permitted_to_proceed is True but lineage_mode is '{lineage_mode}' "
+                        f"instead of expected cohort lineage_rule '{expected_rule}'"
+                    )
+                if expected_rule == "native_pdf_text" and lineage_mode not in (
+                    "native_pdf_text",
+                    "native_text",
+                    "mixed_native",
+                ):
+                    raise CustodyAccessError(
+                        f"Contradictory record at line {line_num} ({row['source_id']}): "
+                        f"permitted_to_proceed is True but lineage_mode is '{lineage_mode}' "
+                        f"instead of compatible native mode for cohort lineage_rule '{expected_rule}'"
                     )
             else:
                 if blocking_reason is None:

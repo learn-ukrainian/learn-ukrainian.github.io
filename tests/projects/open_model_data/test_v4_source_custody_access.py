@@ -272,6 +272,8 @@ def test_discrepant_database_chunks_fail_closed(tmp_path: Path) -> None:
     cohort_cfg = {
         "cohort_id": "public-textbooks-non-stem-non-ocr",
         "source_family": "public_textbooks",
+        "resolver_kind": "hybrid_sqlite_chunks_archive",
+        "lineage_rule": "native_pdf_text",
         "archive_locator": "gdrive:test/tb_test.pdf",
         "excluded_modes": ["apple_vision_ocr", "ocr"],
     }
@@ -1001,13 +1003,89 @@ def test_build_and_verify_detect_unconfigured_and_mismatched_cohort(tmp_path: Pa
     ):
         custody.build(config_path, input_root=custom_input, output_root=custom_out)
 
-    # Mismatched source_family in config
+    # Mismatched source_family between provenance row and config cohort
     config_data2 = json.loads(Path(CONFIG_PATH).read_text(encoding="utf-8"))
     for c in config_data2["cohorts"]:
         if c["cohort_id"] == "public-textbooks-non-stem-non-ocr":
             c["source_family"] = "literary"
+            c["resolver_kind"] = "sqlite_database"
+            c["lineage_rule"] = "native_digital_source"
     config_path2 = custom_input / "config2.json"
     config_path2.write_text(json.dumps(config_data2, indent=2), encoding="utf-8")
 
     with pytest.raises(custody.CustodyAccessError, match=r"does not match configured cohort source_family"):
         custody.build(config_path2, input_root=custom_input, output_root=custom_out)
+
+
+def test_validate_cohort_spec_enforces_compatible_resolver_and_lineage_rule() -> None:
+    # Literary incompatible resolver_kind
+    with pytest.raises(custody.CustodyAccessError, match=r"requires resolver_kind 'sqlite_database'"):
+        custody.validate_cohort_spec(
+            {
+                "cohort_id": "lit",
+                "source_family": "literary",
+                "resolver_kind": "hybrid_sqlite_chunks_archive",
+                "lineage_rule": "native_digital_source",
+            }
+        )
+
+    # Literary incompatible lineage_rule
+    with pytest.raises(custody.CustodyAccessError, match=r"requires lineage_rule 'native_digital_source'"):
+        custody.validate_cohort_spec(
+            {
+                "cohort_id": "lit",
+                "source_family": "literary",
+                "resolver_kind": "sqlite_database",
+                "lineage_rule": "native_pdf_text",
+            }
+        )
+
+    # Public textbooks incompatible resolver_kind
+    with pytest.raises(custody.CustodyAccessError, match=r"requires resolver_kind 'hybrid_sqlite_chunks_archive'"):
+        custody.validate_cohort_spec(
+            {
+                "cohort_id": "tb",
+                "source_family": "public_textbooks",
+                "resolver_kind": "sqlite_database",
+                "lineage_rule": "native_pdf_text",
+            }
+        )
+
+    # Public textbooks incompatible lineage_rule
+    with pytest.raises(custody.CustodyAccessError, match=r"requires lineage_rule 'native_pdf_text'"):
+        custody.validate_cohort_spec(
+            {
+                "cohort_id": "tb",
+                "source_family": "public_textbooks",
+                "resolver_kind": "hybrid_sqlite_chunks_archive",
+                "lineage_rule": "native_digital_source",
+            }
+        )
+
+    # Unknown source_family
+    with pytest.raises(custody.CustodyAccessError, match=r"unsupported source_family 'unknown'"):
+        custody.validate_cohort_spec(
+            {
+                "cohort_id": "unknown",
+                "source_family": "unknown",
+                "resolver_kind": "sqlite_database",
+                "lineage_rule": "native_digital_source",
+            }
+        )
+
+
+def test_verify_detects_incompatible_cohort_lineage_rule_in_config(tmp_path: Path, repo_root: Path) -> None:
+    tampered_out = tmp_path / "out"
+    custody_dir = tampered_out / "data/projects/open_model_data/custody"
+    custody_dir.mkdir(parents=True)
+
+    # Tamper config so literary specifies native_pdf_text
+    config_data = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    for c in config_data["cohorts"]:
+        if c["cohort_id"] == "literary-non-ocr":
+            c["lineage_rule"] = "native_pdf_text"
+    tampered_config = tmp_path / "config.json"
+    tampered_config.write_text(json.dumps(config_data), encoding="utf-8")
+
+    with pytest.raises(custody.CustodyAccessError, match=r"requires lineage_rule 'native_digital_source'"):
+        custody.verify(tampered_config, input_root=repo_root, output_root=tampered_out)
