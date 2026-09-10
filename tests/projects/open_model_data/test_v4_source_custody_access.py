@@ -834,18 +834,30 @@ def test_verify_allows_missing_report_valid_prose_with_reserved_words(tmp_path: 
     custody_dir = valid_out / "data/projects/open_model_data/custody"
     custody_dir.mkdir(parents=True)
 
-    (custody_dir / "v4_source_custody_access_index_v1.jsonl").write_bytes(
-        Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl").read_bytes()
+    # Use valid prose containing reserved words ('root', 'temp', 'private') in scope
+    prose = "root cause analysis: temp failure investigation for private archive reachability"
+    cfg_data = json.loads(Path(CONFIG_PATH).read_text(encoding="utf-8"))
+    cfg_data["ownership"]["blocks_scope"] = prose
+    test_cfg_path = tmp_path / "test_config.json"
+    test_cfg_path.write_text(json.dumps(cfg_data, indent=2), encoding="utf-8")
+
+    idx_path = custody_dir / "v4_source_custody_access_index_v1.jsonl"
+    lines = (
+        Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
     )
+    header = json.loads(lines[0])
+    header["config_sha256"] = custody.sha256_file(test_cfg_path)
+    lines[0] = custody.canonical_json(header)
+    idx_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     missing_data = json.loads(
         Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_text(
             encoding="utf-8"
         )
     )
-    missing_data["accessible_eligible_sources_permitted_to_proceed"]["description"] = (
-        "root cause analysis: temp failure investigation for private archive reachability"
-    )
+    missing_data["scope"] = prose
 
     missing_path = custody_dir / "v4_source_custody_missing_report_v1.json"
     missing_path.write_text(json.dumps(missing_data, indent=2) + "\n", encoding="utf-8")
@@ -853,6 +865,8 @@ def test_verify_allows_missing_report_valid_prose_with_reserved_words(tmp_path: 
     receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
     receipt_updated = copy.deepcopy(receipt_data)
+    receipt_updated["config_sha256"] = custody.sha256_file(test_cfg_path)
+    receipt_updated["index_sha256"] = custody.sha256_file(idx_path)
     receipt_updated["missing_report_sha256"] = custody.sha256_file(missing_path)
     receipt_updated["receipt_id"] = custody._make_receipt_id(
         receipt_updated["config_sha256"],
@@ -863,7 +877,7 @@ def test_verify_allows_missing_report_valid_prose_with_reserved_words(tmp_path: 
         json.dumps(receipt_updated, indent=2) + "\n", encoding="utf-8"
     )
 
-    assert custody.verify(CONFIG_PATH, input_root=repo_root, output_root=valid_out) is True
+    assert custody.verify(test_cfg_path, input_root=repo_root, output_root=valid_out) is True
 
 
 def test_check_chunk_file_lineage_preserves_excluded_mode(tmp_path: Path) -> None:
@@ -1038,6 +1052,7 @@ def test_build_and_verify_detect_unconfigured_and_mismatched_cohort(tmp_path: Pa
             c["source_family"] = "literary"
             c["resolver_kind"] = "sqlite_database"
             c["lineage_rule"] = "native_digital_source"
+            c["primary_store"] = "sqlite:sources.db#literary_texts"
     config_path2 = custom_input / "config2.json"
     config_path2.write_text(json.dumps(config_data2, indent=2), encoding="utf-8")
 
@@ -1412,3 +1427,223 @@ def test_receipt_id_includes_missing_report_sha256() -> None:
         receipt_data["missing_report_sha256"],
     )
     assert receipt_data["receipt_id"] == expected_id
+
+
+def test_validate_and_resolve_paths_rejects_aliasing_collision_and_escaping(tmp_path: Path) -> None:
+    """Validate that output paths cannot alias inputs, collide with each other, or escape output_root."""
+    in_root = tmp_path / "inputs"
+    out_root = tmp_path / "outputs"
+    in_root.mkdir()
+    out_root.mkdir()
+
+    base_cfg: dict[str, Any] = {
+        "inputs": {
+            "provenance_index": "data/provenance.jsonl",
+            "database": "data/sources.db",
+            "textbook_chunks_dir": "data/chunks",
+        },
+        "outputs": {
+            "index": "out/index.jsonl",
+            "missing_report": "out/missing.json",
+            "receipt": "out/receipt.json",
+        },
+    }
+
+    # Normal valid resolution
+    _res_in, res_out = custody.validate_and_resolve_paths(base_cfg, in_root, out_root)
+    assert res_out["index"] == (out_root / "out/index.jsonl").resolve()
+
+    # Output aliases database input
+    cfg_alias_db = copy.deepcopy(base_cfg)
+    cfg_alias_db["outputs"]["index"] = "data/sources.db"
+    with pytest.raises(custody.CustodyAccessError, match=r"aliases input 'database'"):
+        custody.validate_and_resolve_paths(cfg_alias_db, input_root=tmp_path, output_root=tmp_path)
+
+    # Output inside textbook_chunks_dir
+    cfg_inside_chunks = copy.deepcopy(base_cfg)
+    cfg_inside_chunks["outputs"]["index"] = "data/chunks/sub/index.jsonl"
+    with pytest.raises(custody.CustodyAccessError, match=r"located inside input directory 'textbook_chunks_dir'"):
+        custody.validate_and_resolve_paths(cfg_inside_chunks, input_root=tmp_path, output_root=tmp_path)
+
+    # Output collision between two outputs
+    cfg_collision = copy.deepcopy(base_cfg)
+    cfg_collision["outputs"]["receipt"] = "out/index.jsonl"
+    with pytest.raises(custody.CustodyAccessError, match=r"Output path collision between 'index' and 'receipt'"):
+        custody.validate_and_resolve_paths(cfg_collision, in_root, out_root)
+
+    # Output escapes output_root
+    cfg_escape = copy.deepcopy(base_cfg)
+    cfg_escape["outputs"]["index"] = "../../escaped.jsonl"
+    with pytest.raises(custody.CustodyAccessError, match=r"escapes output_root"):
+        custody.validate_and_resolve_paths(cfg_escape, in_root, out_root)
+
+    # Missing required output key
+    cfg_missing_key = copy.deepcopy(base_cfg)
+    del cfg_missing_key["outputs"]["receipt"]
+    with pytest.raises(custody.CustodyAccessError, match=r"Missing required output key in config: 'receipt'"):
+        custody.validate_and_resolve_paths(cfg_missing_key, in_root, out_root)
+
+
+def test_cohort_spec_and_reader_reject_unapproved_table_names_and_sql_injection(tmp_path: Path) -> None:
+    """Cohort config, stream reader, and verifier reject unapproved tables and SQL injection."""
+    # Config cohort with SQL injection in primary_store
+    with pytest.raises(custody.CustodyAccessError, match=r"primary_store .* does not match approved store"):
+        custody.validate_cohort_spec(
+            {
+                "cohort_id": "lit",
+                "source_family": "literary",
+                "resolver_kind": "sqlite_database",
+                "lineage_rule": "native_digital_source",
+                "primary_store": "sqlite:sources.db#literary_texts WHERE source_file = ? OR 1=1 --",
+            }
+        )
+
+    # Config cohort with unapproved table
+    with pytest.raises(custody.CustodyAccessError, match=r"primary_store .* does not match approved store"):
+        custody.validate_cohort_spec(
+            {
+                "cohort_id": "tb",
+                "source_family": "public_textbooks",
+                "resolver_kind": "hybrid_sqlite_chunks_archive",
+                "lineage_rule": "native_pdf_text",
+                "primary_store": "sqlite:sources.db#sqlite_master",
+            }
+        )
+
+    # BoundedCustodyReader rejects unapproved table
+    db_file = tmp_path / "test.db"
+    conn = sqlite3.connect(db_file)
+    conn.execute("CREATE TABLE foo (id INT);")
+    conn.commit()
+    conn.close()
+
+    reader = custody.BoundedCustodyReader(db_file)
+    with pytest.raises(custody.CustodyAccessError, match=r"not an approved custody database table"):
+        reader.read_source_stream("sqlite_master", "dummy")
+
+    with pytest.raises(custody.CustodyAccessError, match=r"not an approved custody database table"):
+        reader.read_source_stream("literary_texts WHERE 1=1 --", "dummy")
+
+
+def test_verify_detects_duplicate_missing_source_id_and_omissions(tmp_path: Path, repo_root: Path) -> None:
+    """Missing report verification detects duplicate source IDs and omitted items."""
+    tampered_out = tmp_path / "out"
+    custody_dir = tampered_out / "data/projects/open_model_data/custody"
+    custody_dir.mkdir(parents=True)
+
+    (custody_dir / "v4_source_custody_access_index_v1.jsonl").write_bytes(
+        Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl").read_bytes()
+    )
+
+    orig_missing = json.loads(
+        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    # Duplicate an entry while keeping list length identical (replaces entry 1 with copy of entry 0)
+    dup_missing = copy.deepcopy(orig_missing)
+    dup_missing["missing_inputs"][1] = copy.deepcopy(dup_missing["missing_inputs"][0])
+    dup_path = custody_dir / "v4_source_custody_missing_report_v1.json"
+    dup_path.write_text(json.dumps(dup_missing), encoding="utf-8")
+
+    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
+    receipt_dup = copy.deepcopy(receipt_data)
+    receipt_dup["missing_report_sha256"] = custody.sha256_file(dup_path)
+    receipt_dup["receipt_id"] = custody._make_receipt_id(
+        receipt_dup["config_sha256"],
+        receipt_dup["index_sha256"],
+        receipt_dup["missing_report_sha256"],
+    )
+    (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(json.dumps(receipt_dup), encoding="utf-8")
+
+    with pytest.raises(custody.CustodyAccessError, match=r"duplicate source_id .* in missing_inputs"):
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+
+
+@pytest.mark.parametrize(
+    ("mutation_key", "mutation_val"),
+    [
+        ("permitted", False),
+        ("permitted_cohort_ids", ["public-textbooks-non-stem-non-ocr"]),
+        ("description", "Tampered progression decision text without any private paths"),
+    ],
+)
+def test_verify_detects_tampered_progression_decision(
+    tmp_path: Path, repo_root: Path, mutation_key: str, mutation_val: Any
+) -> None:
+    """Missing report progression decision tampering is caught by verify()."""
+    tampered_out = tmp_path / "out"
+    custody_dir = tampered_out / "data/projects/open_model_data/custody"
+    custody_dir.mkdir(parents=True)
+
+    (custody_dir / "v4_source_custody_access_index_v1.jsonl").write_bytes(
+        Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl").read_bytes()
+    )
+
+    missing_data = json.loads(
+        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    missing_data["accessible_eligible_sources_permitted_to_proceed"][mutation_key] = mutation_val
+
+    missing_path = custody_dir / "v4_source_custody_missing_report_v1.json"
+    missing_path.write_text(json.dumps(missing_data), encoding="utf-8")
+
+    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
+    receipt_tampered = copy.deepcopy(receipt_data)
+    receipt_tampered["missing_report_sha256"] = custody.sha256_file(missing_path)
+    receipt_tampered["receipt_id"] = custody._make_receipt_id(
+        receipt_tampered["config_sha256"],
+        receipt_tampered["index_sha256"],
+        receipt_tampered["missing_report_sha256"],
+    )
+    (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
+
+    with pytest.raises(
+        custody.CustodyAccessError,
+        match=r"Missing report accessible_eligible_sources_permitted_to_proceed mismatch",
+    ):
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+
+
+def test_verify_detects_tampered_primary_store_in_index(tmp_path: Path, repo_root: Path) -> None:
+    """Index record with tampered primary_store (e.g. SQL injection suffix) is rejected by verify()."""
+    tampered_out = tmp_path / "out"
+    custody_dir = tampered_out / "data/projects/open_model_data/custody"
+    custody_dir.mkdir(parents=True)
+
+    idx_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl")
+    lines = idx_orig.read_text(encoding="utf-8").splitlines()
+    # Tamper second line (first access record)
+    first_record = json.loads(lines[1])
+    first_record["custody_resolution"]["primary_store"] = "sqlite:sources.db#literary_texts WHERE 1=1 --"
+    lines[1] = custody.canonical_json(first_record)
+
+    idx_path = custody_dir / "v4_source_custody_access_index_v1.jsonl"
+    idx_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    (custody_dir / "v4_source_custody_missing_report_v1.json").write_bytes(
+        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+    )
+
+    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
+    receipt_tampered = copy.deepcopy(receipt_data)
+    receipt_tampered["index_sha256"] = custody.sha256_file(idx_path)
+    receipt_tampered["receipt_id"] = custody._make_receipt_id(
+        receipt_tampered["config_sha256"],
+        receipt_tampered["index_sha256"],
+        receipt_tampered["missing_report_sha256"],
+    )
+    (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
+
+    with pytest.raises(custody.CustodyAccessError, match=r"primary_store .* does not match expected"):
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)

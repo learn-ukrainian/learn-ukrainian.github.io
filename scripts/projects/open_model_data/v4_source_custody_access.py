@@ -56,6 +56,35 @@ OCR_LINEAGE_MODES = frozenset(
     }
 )
 
+FAMILY_APPROVED_TABLES: dict[str, str] = {
+    "literary": "literary_texts",
+    "public_textbooks": "textbooks",
+}
+ALLOWED_DATABASE_TABLES: frozenset[str] = frozenset(FAMILY_APPROVED_TABLES.values())
+
+PROGRESSION_DESCRIPTION = (
+    "First eligible cohort (literary-non-ocr) is 100% accessible and verified non-OCR; "
+    "accessible native textbooks with verified chunk and DB presence are also permitted to proceed."
+)
+PROGRESSION_DESCRIPTION_HALTED = (
+    "First eligible cohort is not 100% accessible and verified non-OCR; progression halted."
+)
+
+
+def derive_progression_decision(first_eligible_ready: bool) -> dict[str, Any]:
+    """Derive deterministic progression decision block for missing report (ACCESS-4)."""
+    if first_eligible_ready:
+        return {
+            "permitted": True,
+            "description": PROGRESSION_DESCRIPTION,
+            "permitted_cohort_ids": ["literary-non-ocr"],
+        }
+    return {
+        "permitted": False,
+        "description": PROGRESSION_DESCRIPTION_HALTED,
+        "permitted_cohort_ids": [],
+    }
+
 
 class CustodyAccessError(RuntimeError):
     """Raised when custody resolution or lineage verification fails closed."""
@@ -121,6 +150,54 @@ def _load_config(config_path: Path, roots: Sequence[Path]) -> tuple[dict[str, An
     return config, resolved
 
 
+def validate_and_resolve_paths(
+    config: Mapping[str, Any],
+    input_root: Path,
+    output_root: Path,
+) -> tuple[dict[str, Path], dict[str, Path]]:
+    """Validate output containment, distinctness, and input/output disjointness (ACCESS-1, ACCESS-4)."""
+    in_root = input_root.resolve()
+    out_root = output_root.resolve()
+
+    resolved_inputs: dict[str, Path] = {}
+    inputs_cfg = config.get("inputs", {})
+    for k in ("provenance_index", "provenance_receipt", "database", "textbook_chunks_dir"):
+        if k in inputs_cfg:
+            raw_p = Path(inputs_cfg[k])
+            p = raw_p.resolve() if raw_p.is_absolute() else (in_root / raw_p).resolve()
+            resolved_inputs[k] = p
+
+    outputs_cfg = config.get("outputs", {})
+    resolved_outputs: dict[str, Path] = {}
+    seen_output_paths: dict[Path, str] = {}
+
+    for k in ("index", "missing_report", "receipt"):
+        if k not in outputs_cfg:
+            raise CustodyAccessError(f"Missing required output key in config: '{k}'")
+        raw_p = Path(outputs_cfg[k])
+        p = raw_p.resolve() if raw_p.is_absolute() else (out_root / raw_p).resolve()
+
+        if not p.is_relative_to(out_root):
+            raise CustodyAccessError(f"Output path for '{k}' ({p}) escapes output_root ({out_root})")
+
+        if p in seen_output_paths:
+            prev_k = seen_output_paths[p]
+            raise CustodyAccessError(f"Output path collision between '{prev_k}' and '{k}': both resolve to {p}")
+        seen_output_paths[p] = k
+        resolved_outputs[k] = p
+
+    for out_k, out_p in resolved_outputs.items():
+        for in_k, in_p in resolved_inputs.items():
+            if out_p == in_p:
+                raise CustodyAccessError(f"Output '{out_k}' ({out_p}) aliases input '{in_k}' ({in_p})")
+            if (in_k == "textbook_chunks_dir" or in_p.is_dir()) and out_p.is_relative_to(in_p):
+                raise CustodyAccessError(
+                    f"Output '{out_k}' ({out_p}) is located inside input directory '{in_k}' ({in_p})"
+                )
+
+    return resolved_inputs, resolved_outputs
+
+
 class BoundedCustodyReader:
     """Bounded, read-only custody stream reader (ACCESS-3).
 
@@ -139,6 +216,10 @@ class BoundedCustodyReader:
     ) -> dict[str, Any]:
         if batch_size <= 0:
             raise CustodyAccessError(f"batch_size must be strictly positive (> 0), got {batch_size}")
+        if table not in ALLOWED_DATABASE_TABLES:
+            raise CustodyAccessError(
+                f"Table '{table}' is not an approved custody database table (expected one of {sorted(ALLOWED_DATABASE_TABLES)})"
+            )
         if not self.database_path.is_file():
             raise CustodyAccessError(f"Database file not found: {self.database_path}")
 
@@ -153,7 +234,7 @@ class BoundedCustodyReader:
             cursor = conn.cursor()
             cursor.execute("PRAGMA query_only = ON;")
             cursor.execute(
-                f"SELECT id, chunk_id, text FROM {table} WHERE source_file = ? ORDER BY id ASC",
+                f'SELECT id, chunk_id, text FROM "{table}" WHERE source_file = ? ORDER BY id ASC',
                 (source_file,),
             )
             while rows := cursor.fetchmany(batch_size):
@@ -303,11 +384,23 @@ def check_chunk_file_lineage(
 
 
 def validate_cohort_spec(cohort_cfg: Mapping[str, Any]) -> None:
-    """Validate that cohort configuration declares compatible resolver_kind and lineage_rule."""
+    """Validate that cohort configuration declares compatible resolver_kind, lineage_rule, and approved store."""
     cohort_id = cohort_cfg.get("cohort_id", "<unknown>")
     family = cohort_cfg.get("source_family")
     resolver_kind = cohort_cfg.get("resolver_kind")
     lineage_rule = cohort_cfg.get("lineage_rule")
+    primary_store = cohort_cfg.get("primary_store")
+
+    if family not in FAMILY_APPROVED_TABLES:
+        raise CustodyAccessError(f"Cohort '{cohort_id}' has unsupported source_family '{family}'")
+    approved_table = FAMILY_APPROVED_TABLES[family]
+
+    if primary_store is not None:
+        expected_store = f"sqlite:sources.db#{approved_table}"
+        if primary_store != expected_store:
+            raise CustodyAccessError(
+                f"Cohort '{cohort_id}' primary_store '{primary_store}' does not match approved store '{expected_store}'"
+            )
 
     if family == "literary":
         if resolver_kind != "sqlite_database":
@@ -327,8 +420,6 @@ def validate_cohort_spec(cohort_cfg: Mapping[str, Any]) -> None:
             raise CustodyAccessError(
                 f"Cohort '{cohort_id}' (family 'public_textbooks') requires lineage_rule 'native_pdf_text', got '{lineage_rule}'"
             )
-    else:
-        raise CustodyAccessError(f"Cohort '{cohort_id}' has unsupported source_family '{family}'")
 
 
 def derive_missing_report_item(
@@ -402,18 +493,20 @@ def resolve_source_access(
     validate_cohort_spec(cohort_cfg)
 
     lineage_rule = cohort_cfg["lineage_rule"]
-    primary_store = cohort_cfg.get("primary_store") or (
-        f"sqlite:sources.db#{'literary_texts' if source_family == 'literary' else 'textbooks'}"
-    )
-    if "#" in primary_store:
-        table = primary_store.split("#", 1)[1]
-    else:
-        table = "literary_texts" if source_family == "literary" else "textbooks"
+    if source_family not in FAMILY_APPROVED_TABLES:
+        raise CustodyAccessError(f"Source {source_id} has unsupported source_family '{source_family}'")
+    table = FAMILY_APPROVED_TABLES[source_family]
+    expected_primary_store = f"sqlite:sources.db#{table}"
+    primary_store = cohort_cfg.get("primary_store") or expected_primary_store
+    if primary_store != expected_primary_store:
+        raise CustodyAccessError(
+            f"Cohort '{cohort_id}' primary_store '{primary_store}' does not match approved store '{expected_primary_store}'"
+        )
     access_id = _make_access_id(source_id, cohort_id)
 
     cur = db_conn.cursor()
     cur.execute(
-        f"SELECT COUNT(*) FROM {table} WHERE source_file = ?",
+        f'SELECT COUNT(*) FROM "{table}" WHERE source_file = ?',
         (source_file,),
     )
     db_row = cur.fetchone()
@@ -473,7 +566,7 @@ def resolve_source_access(
             elif chunk_mode in ("native_pdf_text", "native_text", "mixed_native"):
                 # Bind accessed database content to the verified chunk file lineage (ACCESS-2)
                 cur.execute(
-                    f"SELECT chunk_id, text FROM {table} WHERE source_file = ? ORDER BY id ASC",
+                    f'SELECT chunk_id, text FROM "{table}" WHERE source_file = ? ORDER BY id ASC',
                     (source_file,),
                 )
                 db_digest = hashlib.sha256()
@@ -537,7 +630,7 @@ def resolve_source_access(
 
     if permitted and db_records > 0:
         cur.execute(
-            f"SELECT id, chunk_id, text FROM {table} WHERE source_file = ? ORDER BY id ASC",
+            f'SELECT id, chunk_id, text FROM "{table}" WHERE source_file = ? ORDER BY id ASC',
             (source_file,),
         )
         digest = hashlib.sha256()
@@ -597,10 +690,12 @@ def build(
     config, resolved_config_path = _load_config(config_path, roots)
     config_sha256 = sha256_file(resolved_config_path)
 
+    resolved_inputs, resolved_outputs = validate_and_resolve_paths(config, input_root, output_root)
+
     # Resolve input paths
-    prov_index_path = _resolve_file(Path(config["inputs"]["provenance_index"]), roots)
-    db_path = _resolve_file(Path(config["inputs"]["database"]), roots)
-    chunks_dir = _resolve_file(Path(config["inputs"]["textbook_chunks_dir"]), roots)
+    prov_index_path = resolved_inputs["provenance_index"]
+    db_path = resolved_inputs["database"]
+    chunks_dir = resolved_inputs.get("textbook_chunks_dir", Path())
 
     if not prov_index_path.is_file():
         raise CustodyAccessError(f"Provenance index missing: {prov_index_path}")
@@ -678,13 +773,22 @@ def build(
             raise CustodyAccessError(f"Access record schema failure: {errors[0].message}")
 
     # Prepare outputs
-    out_index_path = output_root / config["outputs"]["index"]
-    out_missing_path = output_root / config["outputs"]["missing_report"]
-    out_receipt_path = output_root / config["outputs"]["receipt"]
+    out_index_path = resolved_outputs["index"]
+    out_missing_path = resolved_outputs["missing_report"]
+    out_receipt_path = resolved_outputs["receipt"]
 
     out_index_path.parent.mkdir(parents=True, exist_ok=True)
     out_missing_path.parent.mkdir(parents=True, exist_ok=True)
     out_receipt_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Compute cohort metrics and progression decision (Finding 4)
+    lit_records = [r for r in access_records if r["cohort_id"] == "literary-non-ocr"]
+    tb_records = [r for r in access_records if r["cohort_id"] == "public-textbooks-non-stem-non-ocr"]
+
+    lit_acc = sum(1 for r in lit_records if r["custody_resolution"]["status"] == "RESOLVED_ACCESSIBLE")
+    lit_native = sum(1 for r in lit_records if r["lineage_verification"]["status"] == "CONFIRMED_NATIVE")
+    lit_permitted = all(r["permitted_to_proceed"] for r in lit_records)
+    first_cohort_ready = bool(lit_permitted and len(lit_records) > 0 and lit_acc == len(lit_records))
 
     # Write index JSONL atomically
     index_header = {
@@ -710,14 +814,7 @@ def build(
         "scope": config["ownership"]["blocks_scope"],
         "unmounted_archive_locator": config["inputs"]["retained_archive_locator"],
         "missing_inputs": missing_items,
-        "accessible_eligible_sources_permitted_to_proceed": {
-            "permitted": True,
-            "description": (
-                "First eligible cohort (literary-non-ocr) is 100% accessible and verified non-OCR; "
-                "accessible native textbooks with verified chunk and DB presence are also permitted to proceed."
-            ),
-            "permitted_cohort_ids": ["literary-non-ocr"],
-        },
+        "accessible_eligible_sources_permitted_to_proceed": derive_progression_decision(first_cohort_ready),
     }
     missing_validator = _load_schema(MISSING_REPORT_SCHEMA_PATH, roots)
     missing_errors = list(missing_validator.iter_errors(missing_report))
@@ -728,13 +825,6 @@ def build(
     missing_report_sha256 = sha256_file(out_missing_path)
 
     # Prepare receipt
-    lit_records = [r for r in access_records if r["cohort_id"] == "literary-non-ocr"]
-    tb_records = [r for r in access_records if r["cohort_id"] == "public-textbooks-non-stem-non-ocr"]
-
-    lit_acc = sum(1 for r in lit_records if r["custody_resolution"]["status"] == "RESOLVED_ACCESSIBLE")
-    lit_native = sum(1 for r in lit_records if r["lineage_verification"]["status"] == "CONFIRMED_NATIVE")
-    lit_permitted = all(r["permitted_to_proceed"] for r in lit_records)
-
     tb_acc = sum(
         1
         for r in tb_records
@@ -857,9 +947,10 @@ def verify(
         validate_cohort_spec(c)
     cohorts_by_id = {c["cohort_id"]: c for c in config["cohorts"]}
 
-    out_index_path = output_root / config["outputs"]["index"]
-    out_missing_path = output_root / config["outputs"]["missing_report"]
-    out_receipt_path = output_root / config["outputs"]["receipt"]
+    _resolved_inputs, resolved_outputs = validate_and_resolve_paths(config, input_root, output_root)
+    out_index_path = resolved_outputs["index"]
+    out_missing_path = resolved_outputs["missing_report"]
+    out_receipt_path = resolved_outputs["receipt"]
 
     for path, name in [
         (out_index_path, "Index"),
@@ -1100,8 +1191,11 @@ def verify(
                 recomputed_no_broad_recollection = False
 
             p_store = cust.get("primary_store") or ""
-            if p_store and not p_store.startswith("sqlite:sources.db#"):
-                recomputed_no_broad_recollection = False
+            expected_p_store = f"sqlite:sources.db#{FAMILY_APPROVED_TABLES[source_family]}"
+            if p_store != expected_p_store:
+                raise CustodyAccessError(
+                    f"Index line {line_num} ({source_id}): primary_store '{p_store}' does not match expected '{expected_p_store}'"
+                )
 
             c_store = cust.get("chunks_store") or ""
             if c_store and not c_store.startswith("file:data/textbook_chunks/"):
@@ -1337,7 +1431,16 @@ def verify(
             f"got '{missing_report.get('unmounted_archive_locator')}'"
         )
 
-    # Cross-check derived missing entries against missing_report["missing_inputs"]
+    # Validate missing-report progression decision (Finding 4)
+    expected_progression = derive_progression_decision(expected_first_ready)
+    obs_progression = missing_report.get("accessible_eligible_sources_permitted_to_proceed")
+    if obs_progression != expected_progression:
+        raise CustodyAccessError(
+            f"Missing report accessible_eligible_sources_permitted_to_proceed mismatch: "
+            f"expected {expected_progression}, got {obs_progression}"
+        )
+
+    # Cross-check derived missing entries against missing_report["missing_inputs"] (Finding 3)
     observed_missing_inputs = missing_report.get("missing_inputs", [])
     if len(observed_missing_inputs) != len(expected_missing_items):
         raise CustodyAccessError(
@@ -1346,8 +1449,12 @@ def verify(
         )
 
     derived_by_id = {item["source_id"]: item for item in expected_missing_items}
+    seen_missing_ids: set[str] = set()
     for idx, obs_item in enumerate(observed_missing_inputs):
         sid = obs_item.get("source_id")
+        if sid in seen_missing_ids:
+            raise CustodyAccessError(f"Missing report entry {idx} has duplicate source_id '{sid}' in missing_inputs")
+        seen_missing_ids.add(sid)
         if sid not in derived_by_id:
             raise CustodyAccessError(
                 f"Missing report entry {idx} has unexpected source_id '{sid}' not derived as missing from access index"
@@ -1355,6 +1462,12 @@ def verify(
         exp_item = derived_by_id[sid]
         if obs_item != exp_item:
             raise CustodyAccessError(f"Missing report entry for '{sid}' mismatch: expected {exp_item}, got {obs_item}")
+
+    if seen_missing_ids != set(derived_by_id.keys()):
+        missing_sids = set(derived_by_id.keys()) - seen_missing_ids
+        raise CustodyAccessError(
+            f"Missing report does not contain all derived missing sources: missing {len(missing_sids)} ({missing_sids})"
+        )
 
     return True
 
