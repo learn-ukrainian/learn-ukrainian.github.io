@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v4_learning_study_execution_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "recipe_id",
+    "condition",
+    "seed",
+    "training_metrics",
+    "evaluation_metrics",
+    "reproducibility"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v4_learning_study_execution_v1"
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^run\\.learning\\.[a-zA-Z0-9_-]+$"
+    },
+    "recipe_id": {
+      "type": "string",
+      "pattern": "^recipe\\.learning\\.[a-zA-Z0-9_-]+$"
+    },
+    "condition": {
+      "type": "string",
+      "enum": [
+        "unchanged_baseline",
+        "faithful_human_adaptation",
+        "modern_masked_adaptation"
+      ]
+    },
+    "seed": {
+      "type": "integer"
+    },
+    "training_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "steps_completed",
+        "tokens_processed",
+        "final_training_loss",
+        "early_stopped"
+      ],
+      "properties": {
+        "steps_completed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tokens_processed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "final_training_loss": {
+          "type": "number",
+          "minimum": 0
+        },
+        "early_stopped": {
+          "type": "boolean"
+        }
+      }
+    },
+    "evaluation_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "heldout_cross_entropy",
+        "heldout_perplexity",
+        "historical_preservation_score",
+        "unattested_spelling_rate"
+      ],
+      "properties": {
+        "heldout_cross_entropy": {
+          "type": "number",
+          "minimum": 0
+        },
+        "heldout_perplexity": {
+          "type": "number",
+          "minimum": 1.0
+        },
+        "historical_preservation_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1.0
+        },
+        "unattested_spelling_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1.0
+        }
+      }
+    },
+    "reproducibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "checkpoint_digest",
+        "execution_digest"
+      ],
+      "properties": {
+        "checkpoint_digest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "execution_digest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    }
+  }
+}

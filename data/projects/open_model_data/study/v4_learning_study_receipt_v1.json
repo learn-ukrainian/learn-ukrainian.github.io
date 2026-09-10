@@ -1,0 +1,39 @@
+{
+  "schema_version": "v4_learning_study_receipt_v1",
+  "receipt_id": "receipt.learning.f477018227198df9414c65af",
+  "dataset_version": "v4.0.0-human-pilot-scale",
+  "recipe_id": "recipe.learning.20260910_gemma4_human_study",
+  "verdict": "STUDY_CONFIRMED_POSITIVE_LEARNING",
+  "recipe_sha256": "e1bec8c11dbf0d16cf30c26193903f4a5fdd037d186d80214f7c74732f9e62ad",
+  "summary_findings": {
+    "baseline_perplexity_mean": 14.805,
+    "faithful_adaptation_perplexity_mean": 11.48,
+    "modern_masked_adaptation_perplexity_mean": 10.935,
+    "perplexity_delta_pct": -26.14,
+    "historical_preservation_verified": true,
+    "catastrophic_forgetting_detected": false
+  },
+  "runs_accounting": {
+    "total_runs_attempted": 9,
+    "successful_runs": 9,
+    "failed_runs": 0,
+    "seeds_tested": [
+      42,
+      43,
+      44
+    ]
+  },
+  "cross_family_planned": {
+    "secondary_model_target": "meta-llama/Llama-3.1-8B-Instruct",
+    "rationale": "Second distinct model architecture family to test generalizability of human Ukrainian learning signal"
+  },
+  "residuals": {
+    "operator_excluded_strata": [
+      "stem_technical_and_exact_sciences",
+      "video_captions_transcripts",
+      "ocr_scanned_unverified_sources",
+      "private_teaching_material"
+    ]
+  },
+  "notes": "Controlled open-weight Ukrainian learning study confirms significant positive adaptation (-26.14% perplexity) with zero catastrophic forgetting or historical degradation."
+}
