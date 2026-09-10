@@ -1,0 +1,194 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v4_source_custody_access_receipt_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "config_sha256",
+    "index_sha256",
+    "missing_report_sha256",
+    "summary",
+    "safety_assertions",
+    "verdict"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v4_source_custody_access_receipt_v1"
+    },
+    "receipt_id": {
+      "type": "string",
+      "pattern": "^receipt\\.custody\\.[a-f0-9]{24}$"
+    },
+    "config_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "index_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "missing_report_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_sources_evaluated",
+        "accessible_sources_count",
+        "unreachable_on_host_count",
+        "confirmed_native_count",
+        "excluded_ocr_count",
+        "permitted_to_proceed_count",
+        "first_eligible_cohort",
+        "textbook_cohort"
+      ],
+      "properties": {
+        "total_sources_evaluated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "accessible_sources_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unreachable_on_host_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "confirmed_native_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "excluded_ocr_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "permitted_to_proceed_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "first_eligible_cohort": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cohort_id",
+            "total_sources",
+            "accessible_sources",
+            "confirmed_native",
+            "coverage_ratio",
+            "permitted_to_proceed"
+          ],
+          "properties": {
+            "cohort_id": {
+              "type": "string"
+            },
+            "total_sources": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "accessible_sources": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "confirmed_native": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "coverage_ratio": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "permitted_to_proceed": {
+              "type": "boolean"
+            }
+          }
+        },
+        "textbook_cohort": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cohort_id",
+            "total_sources",
+            "accessible_sources",
+            "missing_on_host",
+            "confirmed_native",
+            "permitted_to_proceed"
+          ],
+          "properties": {
+            "cohort_id": {
+              "type": "string"
+            },
+            "total_sources": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "accessible_sources": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "missing_on_host": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "confirmed_native": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "permitted_to_proceed": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "no_corpus_text_emitted",
+        "no_private_host_paths_disclosed",
+        "no_broad_recollection",
+        "no_new_storage_infrastructure",
+        "ocr_derived_excluded",
+        "unknown_lineage_not_called_native",
+        "first_eligible_cohort_ready"
+      ],
+      "properties": {
+        "no_corpus_text_emitted": {
+          "type": "boolean"
+        },
+        "no_private_host_paths_disclosed": {
+          "type": "boolean"
+        },
+        "no_broad_recollection": {
+          "type": "boolean"
+        },
+        "no_new_storage_infrastructure": {
+          "type": "boolean"
+        },
+        "ocr_derived_excluded": {
+          "type": "boolean"
+        },
+        "unknown_lineage_not_called_native": {
+          "type": "boolean"
+        },
+        "first_eligible_cohort_ready": {
+          "type": "boolean"
+        }
+      }
+    },
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "PROCEED_WITH_ACCESSIBLE_SOURCES",
+        "HALT_INACCESSIBLE_SOURCES"
+      ]
+    }
+  }
+}
