@@ -100,9 +100,30 @@ def test_private_admission_cannot_be_replayed_as_public_export(tmp_path):
     assert public["output"]["records"] == 0
     assert public["counts"]["excluded_source_record_not_admitted"] == 1
     assert (tmp_path / "output.jsonl").read_bytes() == b""
+    # Conflicting redistribution also blocks public export.
+    record["rights"]["redistribution"]["status"] = "conflicting"
+    assert run_export(tmp_path, record, payload, "public_redistribution")["output"]["records"] == 0
     # A fresh grant changes only the public operation decision.
     record["rights"]["redistribution"]["status"] = "granted"
     assert run_export(tmp_path, record, payload, "public_redistribution")["output"]["records"] == 1
+
+
+def test_materialize_denies_crlf_line_ending_byte_mismatch(tmp_path):
+    record, payload = prepare_inputs(tmp_path)
+    # Write CRLF bytes to source.txt when record content specifies LF hash
+    crlf_text = HUMAN_TEXT.replace("\n", "\r\n")
+    write_jsonl(tmp_path / "sources.jsonl", [record])
+    (tmp_path / "source.txt").write_bytes(crlf_text.encode("utf-8"))
+    metadata = {key: value for key, value in payload.items() if key not in {"text", "text_sha256"}}
+    (tmp_path / "reviewed.json").write_text(json.dumps(metadata), encoding="utf-8")
+    result = subprocess.run([
+        sys.executable, "-m", "scripts.projects.open_model_data.model_view_exporter",
+        "materialize-human-source", "--source-records", str(tmp_path / "sources.jsonl"),
+        "--reviewed-payload", str(tmp_path / "reviewed.json"),
+        "--source-text", str(tmp_path / "source.txt"), "--output", str(tmp_path / "materialized.jsonl"),
+    ], cwd=exporter.ROOT, capture_output=True, text=True, check=False)
+    assert result.returncode == 2, "materialize must reject exact-byte mismatch from CRLF endings"
+    assert not (tmp_path / "materialized.jsonl").exists()
 
 
 @pytest.mark.parametrize("mutation,reason", [
@@ -113,6 +134,18 @@ def test_private_admission_cannot_be_replayed_as_public_export(tmp_path):
     (lambda r, p: r["review"].update(unresolved=True), "source_record_not_admitted"),
     (lambda r, p: r["usage"].update(role="evaluation_only"), "source_record_not_admitted"),
     (lambda r, p: p["language_span_review"].update(status="incomplete"), "language_span_review_incomplete"),
+    (lambda r, p: r["description"].update(genre="stem"), "source_record_not_admitted"),
+    (lambda r, p: r["description"].update(genre="ocr"), "source_record_not_admitted"),
+    (lambda r, p: r["description"].update(genre="ocr_derived"), "source_record_not_admitted"),
+    (lambda r, p: r["description"].update(genre="video_captions"), "source_record_not_admitted"),
+    (lambda r, p: r["description"].update(genre="video_transcripts"), "source_record_not_admitted"),
+    (lambda r, p: r["description"].update(genre="private_teaching_material"), "source_record_not_admitted"),
+    (lambda r, p: r.update(source_family="stem"), "source_record_not_admitted"),
+    (lambda r, p: r.update(source_family="ocr"), "source_record_not_admitted"),
+    (lambda r, p: r.update(source_family="ocr_derived"), "source_record_not_admitted"),
+    (lambda r, p: r.update(source_family="video_captions"), "source_record_not_admitted"),
+    (lambda r, p: r.update(source_family="video_transcripts"), "source_record_not_admitted"),
+    (lambda r, p: r.update(source_family="private_teaching_material"), "source_record_not_admitted"),
 ])
 def test_human_source_negative_admission(tmp_path, mutation, reason):
     record, payload = prepare_inputs(tmp_path)

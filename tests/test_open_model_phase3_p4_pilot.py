@@ -51,7 +51,7 @@ EXPECTED_INPUT_BINDINGS = {
     ),
     "model_view_export_admission_gate": (
         "scripts/projects/open_model_data/model_view_exporter.py",
-        "ad782f925e7468bb9608d0d870b8cd00828f5ee570a5c5e89d68621ce19f12c1",
+        "495984cfe56e38ac7805a793d9c8461cdc912bace4a98a1a72f5f3ae7c0cd548",
     ),
 }
 EXPECTED_DENOMINATOR = {
