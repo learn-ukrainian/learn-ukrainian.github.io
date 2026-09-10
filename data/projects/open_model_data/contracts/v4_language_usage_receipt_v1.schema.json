@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v4_language_usage_receipt_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "config_sha256",
+    "extraction_receipt_sha256",
+    "index_sha256",
+    "summary",
+    "safety_assertions",
+    "verdict"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v4_language_usage_receipt_v1"
+    },
+    "receipt_id": {
+      "type": "string",
+      "pattern": "^receipt\\.language\\.[a-f0-9]{24}$"
+    },
+    "config_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "extraction_receipt_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "index_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_sources_evaluated",
+        "total_spans_evaluated",
+        "faithful_training_eligible_count",
+        "modern_training_eligible_count",
+        "masked_spans_count",
+        "role_breakdown"
+      ],
+      "properties": {
+        "total_sources_evaluated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total_spans_evaluated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "faithful_training_eligible_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "modern_training_eligible_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "masked_spans_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "role_breakdown": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "modern_standard",
+            "literary_register",
+            "historical_period",
+            "regional_dialect",
+            "quoted_metalinguistic",
+            "damaged_or_excluded"
+          ],
+          "properties": {
+            "modern_standard": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "literary_register": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "historical_period": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "regional_dialect": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "quoted_metalinguistic": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "damaged_or_excluded": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "no_corpus_text",
+        "no_private_host_paths",
+        "verbatim_wording_preserved",
+        "no_invented_modernizations",
+        "loss_masks_prevent_contamination"
+      ],
+      "properties": {
+        "no_corpus_text": {
+          "type": "boolean"
+        },
+        "no_private_host_paths": {
+          "type": "boolean"
+        },
+        "verbatim_wording_preserved": {
+          "type": "boolean"
+        },
+        "no_invented_modernizations": {
+          "type": "boolean"
+        },
+        "loss_masks_prevent_contamination": {
+          "type": "boolean"
+        }
+      }
+    },
+    "verdict": {
+      "enum": [
+        "LANGUAGE_USAGE_SEPARATION_CONFIRMED",
+        "CONTAMINATION_DETECTED",
+        "FAILED_VALIDATION"
+      ]
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}
