@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v4_human_source_pilot_receipt_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "verdict",
+    "manifest_sha256",
+    "split_receipt_sha256",
+    "records_sha256",
+    "pilot_accounting",
+    "user_visible_proof_1_of_1",
+    "residuals"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v4_human_source_pilot_receipt_v1"
+    },
+    "receipt_id": {
+      "type": "string",
+      "pattern": "^receipt\\.pilot\\.[a-f0-9]{24}$"
+    },
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "PILOT_DATASET_CONFIRMED",
+        "PILOT_DATASET_REJECTED"
+      ]
+    },
+    "manifest_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "split_receipt_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "records_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "pilot_accounting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "selected_spans",
+        "admitted_spans",
+        "exported_training_spans",
+        "rejected_quarantine_spans",
+        "abstained_evaluation_spans",
+        "abstained_development_spans"
+      ],
+      "properties": {
+        "selected_spans": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "admitted_spans": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "exported_training_spans": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "rejected_quarantine_spans": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "abstained_evaluation_spans": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "abstained_development_spans": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "user_visible_proof_1_of_1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_id",
+        "work_family_id",
+        "source_id",
+        "span_sha256",
+        "builder_training_cleared",
+        "verbatim_preserved"
+      ],
+      "properties": {
+        "record_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "work_family_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "span_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "builder_training_cleared": {
+          "type": "boolean",
+          "const": true
+        },
+        "verbatim_preserved": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "residuals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "post_pilot_evaluation_study_issue",
+        "full_denominator_construction_issue",
+        "operator_excluded_strata"
+      ],
+      "properties": {
+        "post_pilot_evaluation_study_issue": {
+          "type": "integer",
+          "const": 7431
+        },
+        "full_denominator_construction_issue": {
+          "type": "integer",
+          "const": 7432
+        },
+        "operator_excluded_strata": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}

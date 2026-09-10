@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v4_human_source_pilot_manifest_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "inputs",
+    "outputs",
+    "pilot_denominator",
+    "ownership"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v4_human_source_pilot_manifest_v1"
+    },
+    "manifest_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "split_index",
+        "split_receipt",
+        "language_index",
+        "extraction_index",
+        "provenance_index"
+      ],
+      "properties": {
+        "split_index": {
+          "type": "string",
+          "minLength": 1
+        },
+        "split_receipt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "language_index": {
+          "type": "string",
+          "minLength": 1
+        },
+        "extraction_index": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance_index": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "records",
+        "receipt"
+      ],
+      "properties": {
+        "records": {
+          "type": "string",
+          "minLength": 1
+        },
+        "receipt": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "pilot_denominator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_sources_selected",
+        "total_work_families",
+        "target_records",
+        "strata_coverage",
+        "source_selection"
+      ],
+      "properties": {
+        "total_sources_selected": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "total_work_families": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "target_records": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "strata_coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "literary_prose",
+            "educational_textbook",
+            "stem_technical",
+            "video_captions",
+            "ocr_scans"
+          ],
+          "properties": {
+            "literary_prose": {
+              "type": "string",
+              "enum": ["covered", "residual"]
+            },
+            "educational_textbook": {
+              "type": "string",
+              "enum": ["covered", "residual"]
+            },
+            "stem_technical": {
+              "type": "string",
+              "enum": ["residual_operator_excluded"]
+            },
+            "video_captions": {
+              "type": "string",
+              "enum": ["residual_operator_excluded"]
+            },
+            "ocr_scans": {
+              "type": "string",
+              "enum": ["residual_operator_excluded"]
+            }
+          }
+        },
+        "source_selection": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "source_id",
+              "work_family_id",
+              "cohort_id",
+              "stratum",
+              "status"
+            ],
+            "properties": {
+              "source_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "work_family_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cohort_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "stratum": {
+                "type": "string",
+                "minLength": 1
+              },
+              "status": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "ownership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "epic",
+        "issue",
+        "agent"
+      ],
+      "properties": {
+        "epic": {
+          "type": ["string", "integer"]
+        },
+        "issue": {
+          "type": "integer"
+        },
+        "agent": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

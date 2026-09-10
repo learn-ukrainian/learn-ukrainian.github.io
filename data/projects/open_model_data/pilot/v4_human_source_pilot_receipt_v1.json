@@ -1,0 +1,34 @@
+{
+  "schema_version": "v4_human_source_pilot_receipt_v1",
+  "receipt_id": "receipt.pilot.702e1b404da41ffda2824da5",
+  "verdict": "PILOT_DATASET_CONFIRMED",
+  "manifest_sha256": "eab18e358266836f81c9791d3eb2a371f0d1fa88d360056a7d31429263efa8f3",
+  "split_receipt_sha256": "dc52361567488837e41db9c79c79c78604fe80ee7463c31d256c9de73b1c07b0",
+  "records_sha256": "98e722ff3f9cf9db2283b2b660bb805a5971f761bf488d09304402f201d9e265",
+  "pilot_accounting": {
+    "selected_spans": 1419,
+    "admitted_spans": 1418,
+    "exported_training_spans": 614,
+    "rejected_quarantine_spans": 1,
+    "abstained_evaluation_spans": 559,
+    "abstained_development_spans": 245
+  },
+  "user_visible_proof_1_of_1": {
+    "record_id": "record.human.259e48bf64167e8b0499129a",
+    "work_family_id": "work_family.literary.yuriy_andrukhovych_moskoviada",
+    "source_id": "source.literary.451b33b316e840f953b4e393",
+    "span_sha256": "18771bb492efa1435d908096e6e500bc2aafefe82dfad162bee0179f5d5f8f34",
+    "builder_training_cleared": true,
+    "verbatim_preserved": true
+  },
+  "residuals": {
+    "post_pilot_evaluation_study_issue": 7431,
+    "full_denominator_construction_issue": 7432,
+    "operator_excluded_strata": [
+      "stem_technical",
+      "video_captions",
+      "ocr_scans",
+      "private_teaching_material"
+    ]
+  }
+}
