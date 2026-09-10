@@ -1636,8 +1636,8 @@ sources:
     locator: explicit vocabulary table row 935
     context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
   - lemma: черговий
-    pos: noun
-    gloss: On duty / Yet another
+    pos: adjective
+    gloss: On duty, yet another
     locator: explicit vocabulary table row 936
     context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
   - lemma: споріднена душа
@@ -2280,9 +2280,14 @@ sources:
     gloss: to beat someone’s faces
     locator: explicit vocabulary table row 1064
     context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
-  - lemma: наживати (нажити – perf) ворогів
+  - lemma: наживати ворогів
     pos: verb
-    gloss: to make enemies
+    gloss: to make enemies (imperfective)
+    locator: explicit vocabulary table row 1065
+    context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+  - lemma: нажити ворогів
+    pos: verb
+    gloss: to make enemies (perfective)
     locator: explicit vocabulary table row 1065
     context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
   - lemma: з легкої руки
@@ -2295,9 +2300,9 @@ sources:
     gloss: to get along
     locator: explicit vocabulary table row 1067
     context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
-  - lemma: усунути (perf)
-    pos: phrase
-    gloss: eliminate
+  - lemma: усунути
+    pos: verb
+    gloss: To eliminate (perf)
     locator: explicit vocabulary table row 1068
     context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
   - lemma: поставити перед кимось низку умов
