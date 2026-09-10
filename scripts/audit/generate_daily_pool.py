@@ -282,14 +282,15 @@ def _pool_item(
     example, example_en = _first_example(entry)
     inventory_row = (sentence_inventory or {}).get(str(lemma))
     if inventory_row is not None:
-        example = str(inventory_row["sentence"]).strip()
-    if example is not None:
-        item["example"] = example
-    if example_en is not None:
-        item["exampleEn"] = example_en
-    if inventory_row is not None:
+        item["example"] = str(inventory_row["sentence"]).strip()
+        if example_en is not None:
+            item["exampleEn"] = example_en
         item["exampleProvenance"] = inventory_row["provenance"]
         item["exampleLicense"] = inventory_row["license"]
+    elif sentence_inventory is None and example is not None:
+        item["example"] = example
+        if example_en is not None:
+            item["exampleEn"] = example_en
     origin = _first_origin(entry)
     if origin is not None:
         item["etymology"] = origin
