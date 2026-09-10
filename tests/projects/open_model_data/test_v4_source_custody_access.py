@@ -474,6 +474,84 @@ def test_verify_detects_duplicate_source_id(tmp_path: Path, repo_root: Path) -> 
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+def test_verify_detects_duplicate_source_locator(tmp_path: Path, repo_root: Path) -> None:
+    tampered_out = tmp_path / "out"
+    custody_dir = tampered_out / "data/projects/open_model_data/custody"
+    custody_dir.mkdir(parents=True)
+
+    index_lines = (
+        Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    )
+    header = index_lines[0]
+    records = [json.loads(line) for line in index_lines[1:]]
+
+    # Keep a different source_id but duplicate another source's source_file locator in the same cohort
+    records[1]["source_locator"]["source_file"] = records[0]["source_locator"]["source_file"]
+    tampered_lines = [header] + [json.dumps(r) for r in records]
+    (custody_dir / "v4_source_custody_access_index_v1.jsonl").write_text(
+        "\n".join(tampered_lines) + "\n", encoding="utf-8"
+    )
+
+    (custody_dir / "v4_source_custody_missing_report_v1.json").write_bytes(
+        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+    )
+
+    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
+    receipt_tampered = copy.deepcopy(receipt_data)
+    receipt_tampered["index_sha256"] = custody.sha256_file(custody_dir / "v4_source_custody_access_index_v1.jsonl")
+    receipt_tampered["receipt_id"] = custody._make_receipt_id(
+        receipt_tampered["config_sha256"], receipt_tampered["index_sha256"]
+    )
+    (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
+
+    with pytest.raises(custody.CustodyAccessError, match=r"duplicate source locator"):
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+
+
+def test_verify_detects_provenance_projection_mismatch(tmp_path: Path, repo_root: Path) -> None:
+    tampered_out = tmp_path / "out"
+    custody_dir = tampered_out / "data/projects/open_model_data/custody"
+    custody_dir.mkdir(parents=True)
+
+    index_lines = (
+        Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    )
+    header = index_lines[0]
+    records = [json.loads(line) for line in index_lines[1:]]
+
+    # Change source_family for record 0 to create a projection mismatch with provenance denominator
+    records[0]["source_family"] = "public_textbooks"
+    tampered_lines = [header] + [json.dumps(r) for r in records]
+    (custody_dir / "v4_source_custody_access_index_v1.jsonl").write_text(
+        "\n".join(tampered_lines) + "\n", encoding="utf-8"
+    )
+
+    (custody_dir / "v4_source_custody_missing_report_v1.json").write_bytes(
+        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+    )
+
+    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
+    receipt_tampered = copy.deepcopy(receipt_data)
+    receipt_tampered["index_sha256"] = custody.sha256_file(custody_dir / "v4_source_custody_access_index_v1.jsonl")
+    receipt_tampered["receipt_id"] = custody._make_receipt_id(
+        receipt_tampered["config_sha256"], receipt_tampered["index_sha256"]
+    )
+    (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
+
+    with pytest.raises(custody.CustodyAccessError, match=r"projection does not match provenance denominator"):
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+
+
 def test_is_private_or_absolute_host_path() -> None:
     # Allowed clean paths and prose
     assert not custody._is_private_or_absolute_host_path("")
@@ -548,8 +626,8 @@ def test_verify_detects_recomputed_safety_assertion_violations(tmp_path: Path, r
     receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
 
-    # Test private/absolute host path insertion in source_locator
-    records[0]["source_locator"]["source_file"] = bad_path
+    # Test private/absolute host path insertion in custody_resolution archive_store
+    records[0]["custody_resolution"]["archive_store"] = bad_path
     tampered_lines = [header] + [json.dumps(r) for r in records]
     (custody_dir / "v4_source_custody_access_index_v1.jsonl").write_text(
         "\n".join(tampered_lines) + "\n", encoding="utf-8"
