@@ -1,0 +1,24 @@
+{
+  "schema_version": "v4_native_extraction_quarantine_report_v1",
+  "report_id": "quarantine.6492451354c5b9b49d706c26",
+  "config_sha256": "058437949a5b354070af4340d94f6f360392e19faf6fb0558590af13c49c24d0",
+  "quarantined_spans": [
+    {
+      "source_id": "source.literary.451b33b316e840f953b4e393",
+      "cohort_id": "literary-non-ocr",
+      "source_file": "ukrlib-andrukhovych",
+      "chunk_id": "6bb17922_c0019",
+      "reason": "layout_or_encoding_anomaly",
+      "details": [
+        "intraline_duplicate_token_spans"
+      ]
+    }
+  ],
+  "summary": {
+    "total_spans_evaluated": 1419,
+    "accepted_spans_count": 1418,
+    "quarantined_spans_count": 1,
+    "rejected_spans_count": 0,
+    "training_eligible_spans_count": 1418
+  }
+}

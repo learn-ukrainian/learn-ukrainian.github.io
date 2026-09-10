@@ -1,0 +1,40 @@
+{
+  "schema_version": "v4_native_extraction_config_v1",
+  "inputs": {
+    "custody_index": "data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl",
+    "custody_receipt": "data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json",
+    "database": "data/sources.db",
+    "textbook_chunks_dir": "data/textbook_chunks"
+  },
+  "outputs": {
+    "index": "data/projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl",
+    "quarantine_report": "data/projects/open_model_data/extraction/v4_native_extraction_quarantine_report_v1.json",
+    "receipt": "data/projects/open_model_data/extraction/v4_native_extraction_receipt_v1.json"
+  },
+  "extraction_rules": {
+    "target_cohorts": [
+      "literary-non-ocr",
+      "public-textbooks-non-stem-non-ocr"
+    ],
+    "target_sources": [
+      "source.literary.0020599cfcaf15e887bdb73c",
+      "source.public_textbooks.00cebc897bb7feab776c42a8",
+      "source.literary.451b33b316e840f953b4e393"
+    ],
+    "anomaly_detection": {
+      "detect_replacement_characters": true,
+      "detect_duplicate_lines": true,
+      "detect_truncation_pairs": true,
+      "detect_intraline_duplicates": true,
+      "fail_closed_on_ocr": true
+    },
+    "reconstruction_integrity": {
+      "enforce_stream_digest_match": true,
+      "enforce_zero_silent_omissions": true
+    }
+  },
+  "ownership": {
+    "extraction_pipeline_owner": "deterministic extraction implementation owner",
+    "quarantine_custodian": "extraction quarantine custodian"
+  }
+}

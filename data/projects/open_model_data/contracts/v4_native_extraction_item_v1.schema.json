@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v4_native_extraction_item_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "extraction_id",
+    "source_id",
+    "cohort_id",
+    "source_family",
+    "source_file",
+    "chunk_id",
+    "span_locator",
+    "fidelity_assessment",
+    "reconstruction_linkage"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v4_native_extraction_v1"
+    },
+    "extraction_id": {
+      "type": "string",
+      "pattern": "^extract\\.[a-f0-9]{24}$"
+    },
+    "source_id": {
+      "type": "string",
+      "pattern": "^source\\.(?:literary|public_textbooks)\\.[a-f0-9]{24}$"
+    },
+    "cohort_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "source_family": {
+      "enum": [
+        "literary",
+        "public_textbooks"
+      ]
+    },
+    "source_file": {
+      "type": "string",
+      "minLength": 1
+    },
+    "chunk_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "span_locator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start_char",
+        "end_char",
+        "char_length",
+        "span_sha256"
+      ],
+      "properties": {
+        "start_char": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end_char": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "char_length": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "span_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "fidelity_assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "encoding_valid",
+        "anomaly_findings",
+        "is_ocr",
+        "training_eligible"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ACCEPTED_FAITHFUL",
+            "QUARANTINED_ANOMALOUS",
+            "EXCLUDED_OCR",
+            "REJECTED_DAMAGED"
+          ]
+        },
+        "encoding_valid": {
+          "type": "boolean"
+        },
+        "anomaly_findings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "description",
+              "severity"
+            ],
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "severity": {
+                "enum": [
+                  "BLOCKING",
+                  "OBSERVATION"
+                ]
+              }
+            }
+          }
+        },
+        "is_ocr": {
+          "type": "boolean"
+        },
+        "training_eligible": {
+          "type": "boolean"
+        }
+      }
+    },
+    "reconstruction_linkage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sequence_order",
+        "stream_digest_contribution"
+      ],
+      "properties": {
+        "sequence_order": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stream_digest_contribution": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "mechanical_derivatives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "operation",
+          "derivative_sha256"
+        ],
+        "properties": {
+          "operation": {
+            "type": "string"
+          },
+          "derivative_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      }
+    }
+  }
+}
