@@ -400,6 +400,33 @@ def build_dataset(
     total_admitted = total_evaluated - quarantine_spans
     dedup_rate = 1.0 if total_evaluated > 0 else 0.0
 
+    # SCALE-4: Validate processed counts strictly match frozen manifest denominator
+    manifest_accounting = manifest_data["denominator_accounting"]
+    if total_evaluated != manifest_accounting["total_evaluated_spans"]:
+        raise ValueError(
+            f"Evaluated spans {total_evaluated} does not match manifest {manifest_accounting['total_evaluated_spans']}"
+        )
+    if total_admitted != manifest_accounting["total_admitted_spans"]:
+        raise ValueError(
+            f"Admitted spans {total_admitted} does not match manifest {manifest_accounting['total_admitted_spans']}"
+        )
+    if training_spans != manifest_accounting["exported_training_spans"]:
+        raise ValueError(
+            f"Training spans {training_spans} does not match manifest {manifest_accounting['exported_training_spans']}"
+        )
+    if eval_spans != manifest_accounting["firewalled_heldout_evaluation_spans"]:
+        raise ValueError(
+            f"Heldout spans {eval_spans} does not match manifest {manifest_accounting['firewalled_heldout_evaluation_spans']}"
+        )
+    if dev_spans != manifest_accounting["development_spans"]:
+        raise ValueError(
+            f"Dev spans {dev_spans} does not match manifest {manifest_accounting['development_spans']}"
+        )
+    if quarantine_spans != manifest_accounting["quarantined_spans"]:
+        raise ValueError(
+            f"Quarantine spans {quarantine_spans} does not match manifest {manifest_accounting['quarantined_spans']}"
+        )
+
     receipt_data = {
         "schema_version": "v4_human_source_dataset_receipt_v1",
         "receipt_id": receipt_id,
@@ -482,6 +509,23 @@ def verify_dataset(
         return False
     if receipt_data.get("dataset_accounting", {}).get("silent_drops") != 0:
         return False
+
+    manifest_data = json.loads(manifest_path.read_text(encoding="utf-8"))
+    m_acc = manifest_data.get("denominator_accounting", {})
+    r_acc = receipt_data.get("dataset_accounting", {})
+    if r_acc.get("total_evaluated_spans") != m_acc.get("total_evaluated_spans"):
+        return False
+    if r_acc.get("total_admitted_spans") != m_acc.get("total_admitted_spans"):
+        return False
+    if r_acc.get("exported_training_spans") != m_acc.get("exported_training_spans"):
+        return False
+    if r_acc.get("firewalled_heldout_evaluation_spans") != m_acc.get("firewalled_heldout_evaluation_spans"):
+        return False
+    if r_acc.get("development_spans") != m_acc.get("development_spans"):
+        return False
+    if r_acc.get("rejected_quarantine_spans") != m_acc.get("quarantined_spans"):
+        return False
+
     return receipt_data.get("storage_accounting", {}).get("below_2000kb_precommit_limit") is True
 
 
