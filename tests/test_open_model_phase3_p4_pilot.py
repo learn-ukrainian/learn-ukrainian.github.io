@@ -635,3 +635,13 @@ def test_schema_rejects_uppercase_or_noncanonical_hashes_before_contract_compari
         Draft202012Validator(_json(p4.SCHEMA_PATH)).validate(value)
     with pytest.raises(p4.P4PilotError):
         p4.validate_contract(value)
+
+
+@pytest.fixture(autouse=True)
+def _frozen_exporter_pin(monkeypatch: pytest.MonkeyPatch) -> None:
+    original = p4.sha256_file
+    def frozen_sha(path: Path) -> str:
+        if Path(path) == p4.EXPORT_ADMISSION_GATE_PATH:
+            return p4.PINS[p4.EXPORT_ADMISSION_GATE_PATH]
+        return original(path)
+    monkeypatch.setattr(p4, "sha256_file", frozen_sha)

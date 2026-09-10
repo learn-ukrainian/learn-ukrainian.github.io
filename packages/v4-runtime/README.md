@@ -1,5 +1,14 @@
 # V4 runtime package
 
+> **Historical V4 mechanism; original-row generation is stopped.** The active
+> operator decision requires human-authored dataset source text and admits zero
+> existing AI candidates. The original-authoring roles, 100-slot denominator,
+> training exclusions and launch/readiness instructions below describe the
+> cancelled workflow and cannot authorize its restart. Use the
+> [private human-source build/export contract](../../docs/projects/open-model-data/SOURCE_RECORD_CONTRACT.md) for #7888.
+> Private local-learning permission is separate from public redistribution;
+> retain existing source-specific evidence and exclusions.
+
 `learn-ukrainian-v4-runtime` supplies the canonical public implementation used
 by the existing protected API and Sources services. Repository scripts are
 compatibility adapters and require the package to be installed.

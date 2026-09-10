@@ -1,5 +1,14 @@
 # Cyrillic-Slavic Ukrainian dataset delivery plan — V4
 
+> **Historical V4 mechanism; original-row generation is stopped.** The active
+> operator decision requires human-authored dataset source text and admits zero
+> existing AI candidates. The original-authoring roles, 100-slot denominator,
+> training exclusions and launch/readiness instructions below describe the
+> cancelled workflow and cannot authorize its restart. Use the
+> [private human-source build/export contract](SOURCE_RECORD_CONTRACT.md) for #7888.
+> Private local-learning permission is separate from public redistribution;
+> retain existing source-specific evidence and exclusions.
+
 ## Controlling contract and history
 
 This is the operational control packet for the Ukrainian dataset-delivery epic.

@@ -415,6 +415,7 @@ def test_mixed_source_families_exclude_wikipedia_and_export_eligible_rows(tmp_pa
     assert len(rows) == 1
     assert rows[0]["lineage"]["source_record_id"] == allowed_record_id
     assert receipt["admission"] == {
+        "operation": "local_learning",
         "applied": True,
         "policy": "recompute source_record_v1 admission; unknown is denial",
         "source_records_admitted": 1,
@@ -976,6 +977,7 @@ def test_intra_view_exact_and_near_duplicates_are_excluded(
         == 1
     )
     assert receipt["admission"] == {
+        "operation": "local_learning",
         "applied": True,
         "policy": "recompute source_record_v1 admission; unknown is denial",
         "source_records_admitted": 2,
@@ -1500,3 +1502,87 @@ def test_cli_returns_exit_two_for_fixture_without_explicit_switch(
             ]
         )
     assert exc.value.code == 2
+
+
+@pytest.mark.parametrize("redistribution", ["denied", "unknown"])
+@pytest.mark.parametrize("operation,expected", [("local_learning", 1), ("public_redistribution", 0)])
+def test_human_source_local_permission_is_not_public_authority(tmp_path, redistribution, operation, expected):
+    # Controlled rights/review fixtures, not an authorization for a real corpus.
+    text = "Dataset Ukrainian source text must be human-authored."
+    record = source_record(text, source_family="human_fixture")
+    record["rights"]["redistribution"]["status"] = redistribution
+    payload = source_payload(text)
+    payload.update(origin="human_authored", test_fixture=False)
+    write_jsonl(tmp_path / "sources.jsonl", [record])
+    write_jsonl(tmp_path / "payloads.jsonl", [payload])
+    receipt = exporter.export_pretraining(
+        source_records_path=tmp_path / "sources.jsonl", payloads_path=tmp_path / "payloads.jsonl",
+        origin="human_authored", representation_view="faithful_literary",
+        output=tmp_path / "output.jsonl", receipt_output=tmp_path / "receipt.json",
+        allow_test_fixtures=False, operation=operation,
+        v011_manifest=exporter.DEFAULT_V011_MANIFEST, v02_packet=exporter.DEFAULT_V02_PACKET,
+        extra_evaluation_artifacts=(),
+    )
+    assert receipt["output"]["records"] == expected
+    assert receipt["admission"]["operation"] == operation
+    assert len(read_jsonl(tmp_path / "output.jsonl")) == expected
+    if expected:
+        assert receipt["counts"]["model_training_eligible_records"] == 1
+
+
+@pytest.mark.parametrize("origin", ["machine_generated", "machine_translated", "human_revised_synthetic"])
+def test_machine_origin_cannot_become_training_eligible(tmp_path, origin):
+    text = "Origin mutation safety input."
+    record = source_record(text)
+    payload = source_payload(text)
+    payload.update(origin=origin, test_fixture=False)
+    write_jsonl(tmp_path / "sources.jsonl", [record])
+    write_jsonl(tmp_path / "payloads.jsonl", [payload])
+    receipt = exporter.export_pretraining(
+        source_records_path=tmp_path / "sources.jsonl", payloads_path=tmp_path / "payloads.jsonl",
+        origin=origin, representation_view="faithful_literary",
+        output=tmp_path / "output.jsonl", receipt_output=tmp_path / "receipt.json",
+        allow_test_fixtures=True,
+        v011_manifest=exporter.DEFAULT_V011_MANIFEST, v02_packet=exporter.DEFAULT_V02_PACKET,
+        extra_evaluation_artifacts=(),
+    )
+    assert receipt["output"]["records"] == 0
+    assert receipt["counts"]["excluded_source_origin_not_human_authored"] == 1
+
+
+def test_full_source_cannot_relabel_unrelated_text():
+    payload = source_payload("Substituted text with an internally consistent hash.")
+    payload["source_content_sha256"] = exporter.sha256_text("Actual source bytes.")
+    with pytest.raises(exporter.ExportError, match="full source payload text"):
+        exporter.validate_source_payload_semantics(payload)
+
+
+@pytest.mark.parametrize("view_kind", ["correction_instruction", "preference", "quality_filter"])
+@pytest.mark.parametrize("operation,expected", [("local_learning", 1), ("public_redistribution", 0)])
+def test_correction_consumer_permissions_are_operation_specific(tmp_path, view_kind, operation, expected):
+    text = "У цьому синтетичному реченні є помилку для перевірки."
+    record = source_record(text)
+    record["rights"]["redistribution"]["status"] = "denied"
+    write_jsonl(tmp_path / "source.jsonl", [record])
+    write_jsonl(tmp_path / "correction.jsonl", [correction_record(text)])
+    receipt = exporter.export_correction_family(
+        view_kind=view_kind, source_records_path=tmp_path / "source.jsonl",
+        correction_records_path=tmp_path / "correction.jsonl", origin="machine_generated",
+        output=tmp_path / "output.jsonl", receipt_output=tmp_path / "receipt.json",
+        operation=operation, allow_test_fixtures=True,
+        v011_manifest=exporter.DEFAULT_V011_MANIFEST, v02_packet=exporter.DEFAULT_V02_PACKET,
+        extra_evaluation_artifacts=(),
+    )
+    assert receipt["output"]["records"] == expected
+    assert receipt["admission"]["operation"] == operation
+
+
+def test_recipe_rejects_machine_view_relabelled_as_training_eligible(tmp_path):
+    view, _ = export_fixture_pretraining(tmp_path)
+    rows = read_jsonl(view)
+    rows[0]["eligibility"].update(test_fixture=False, model_training_eligible=True)
+    write_jsonl(view, rows)
+    schemas, registry = exporter.schema_bundle()
+    validator = exporter.validator_for(exporter.PRETRAIN_SCHEMA, schemas=schemas, registry=registry)
+    with pytest.raises(exporter.ExportError, match="requires human-authored source text"):
+        exporter.validate_view_artifact(view_path=view, view_kind="continued_pretraining", validator=validator)

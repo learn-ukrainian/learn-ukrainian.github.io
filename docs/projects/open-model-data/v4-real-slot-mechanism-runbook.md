@@ -1,5 +1,14 @@
 # V4 real-slot mechanism: packaged parent execution
 
+> **Historical V4 mechanism; original-row generation is stopped.** The active
+> operator decision requires human-authored dataset source text and admits zero
+> existing AI candidates. The original-authoring roles, 100-slot denominator,
+> training exclusions and launch/readiness instructions below describe the
+> cancelled workflow and cannot authorize its restart. Use the
+> [private human-source build/export contract](SOURCE_RECORD_CONTRACT.md) for #7888.
+> Private local-learning permission is separate from public redistribution;
+> retain existing source-specific evidence and exclusions.
+
 PR #7662 preserves the A3 seal and frozen public receipts while moving current
 execution into `learn_ukrainian_v4_runtime`. The existing protected API parent
 owns process launch, capture, parsing, artifact writes and terminalization.

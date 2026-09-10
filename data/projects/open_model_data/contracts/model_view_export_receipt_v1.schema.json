@@ -15,6 +15,7 @@
       "type": "object", "additionalProperties": false,
       "required": ["applied", "policy", "source_records_total", "source_records_admitted", "source_records_denied"],
       "properties": {
+        "operation": {"enum": ["local_learning", "deterministic_local_analysis", "public_redistribution", null]},
         "applied": {"type": "boolean"},
         "policy": {"const": "recompute source_record_v1 admission; unknown is denial"},
         "source_records_total": {"type": "integer", "minimum": 0},

@@ -27,7 +27,24 @@ LEGACY_MISSING_FIELDS = (
     "register",
     "translation_origin",
 )
-REQUIRED_GRANTED_RIGHTS = ("copyright", "license", "redistribution", "model_training")
+RIGHTS_BY_OPERATION = {
+    "local_learning": ("copyright", "license", "model_training"),
+    "deterministic_local_analysis": ("copyright", "license", "model_training"),
+    "public_redistribution": ("copyright", "license", "model_training", "redistribution"),
+}
+
+# Explicit source classifications only; do not infer topic/origin from prose.
+EXCLUDED_SOURCE_CATEGORIES = frozenset({
+    "stem", "video_captions", "video_transcripts", "ocr", "ocr_derived",
+    "private_teaching_material",
+})
+
+
+def required_rights(operation: str) -> tuple[str, ...]:
+    """Reject unknown operations rather than accidentally granting a capability."""
+    if operation not in RIGHTS_BY_OPERATION:
+        raise ValueError(f"unsupported source admission operation: {operation}")
+    return RIGHTS_BY_OPERATION[operation]
 
 
 def canonical_json(value: Any) -> str:
@@ -81,8 +98,11 @@ def _is_absolute_http_url(value: str) -> bool:
     )
 
 
-def _semantic_reasons(record: dict[str, Any], schema_hash: str) -> list[str]:
+def _semantic_reasons(record: dict[str, Any], schema_hash: str, operation: str) -> list[str]:
     reasons: list[str] = []
+    categories = (record["source_family"], record["description"]["genre"])
+    if any(value.casefold().replace("-", "_") in EXCLUDED_SOURCE_CATEGORIES for value in categories):
+        reasons.append("source_category_excluded")
     if record.get("contract_schema_sha256") != schema_hash:
         reasons.append("contract_schema_sha256_mismatch")
     acquisition_url = record.get("acquisition", {}).get("source_or_catalog_url", "")
@@ -104,9 +124,8 @@ def _semantic_reasons(record: dict[str, Any], schema_hash: str) -> list[str]:
         reasons.append("duplicate_evidence_id")
     if any(not _is_absolute_http_url(item.get("url", "")) for item in evidence):
         reasons.append("evidence_url_invalid")
-    for right_name in REQUIRED_GRANTED_RIGHTS:
-        statement = record.get("rights", {}).get(right_name, {})
-        if statement.get("status") != "granted":
+    for right_name, statement in record["rights"].items():
+        if right_name in required_rights(operation) and statement.get("status") != "granted":
             reasons.append(f"{right_name}_status_{statement.get('status', 'missing')}")
         if not set(statement.get("evidence_ids", [])).issubset(evidence_ids):
             reasons.append(f"{right_name}_evidence_reference_missing")
@@ -132,17 +151,22 @@ def _semantic_reasons(record: dict[str, Any], schema_hash: str) -> list[str]:
     return sorted(set(reasons))
 
 
-def validate_record(record: dict[str, Any], validator: Draft202012Validator, schema_hash: str) -> dict[str, Any]:
+def validate_record(
+    record: dict[str, Any], validator: Draft202012Validator, schema_hash: str,
+    *, operation: str = "local_learning",
+) -> dict[str, Any]:
     """Return a content-blind admission disposition for one contract record."""
+    required_rights(operation)
     schema_errors = _schema_errors(record, validator)
     if schema_errors:
         return {"admitted": False, "record_id": record.get("record_id"), "reasons": ["schema_invalid"]}
-    reasons = _semantic_reasons(record, schema_hash)
+    reasons = _semantic_reasons(record, schema_hash, operation)
     return {"admitted": not reasons, "record_id": record["record_id"], "reasons": reasons}
 
 
-def validate_path(path: Path) -> dict[str, Any]:
+def validate_path(path: Path, *, operation: str = "local_learning") -> dict[str, Any]:
     """Validate a source-contract input and emit deterministic aggregate results."""
+    required_rights(operation)
     schema, schema_hash = load_schema()
     validator = Draft202012Validator(schema, format_checker=FormatChecker())
     records = load_records(path)
@@ -153,7 +177,7 @@ def validate_path(path: Path) -> dict[str, Any]:
             legacy_records += 1
             outcomes.append({"admitted": False, "record_id": None, "reasons": list(LEGACY_MISSING_FIELDS)})
         else:
-            outcomes.append(validate_record(record, validator, schema_hash))
+            outcomes.append(validate_record(record, validator, schema_hash, operation=operation))
     counts = Counter(reason for outcome in outcomes for reason in outcome["reasons"])
     all_legacy = bool(outcomes) and legacy_records == len(outcomes)
     if not outcomes:
@@ -165,6 +189,7 @@ def validate_path(path: Path) -> dict[str, Any]:
     else:
         input_kind = "source_record_v1"
     return {
+        "operation": operation,
         "admitted_records": sum(outcome["admitted"] for outcome in outcomes),
         "contract_records": len(outcomes) - legacy_records,
         "contract_schema_sha256": schema_hash,
@@ -184,10 +209,21 @@ def validate_path(path: Path) -> dict[str, Any]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Fail-closed source-record contract validator")
+    parser = argparse.ArgumentParser(
+        description="Validate source-record rights and provenance for one operation.\n"
+                    "Use for admission checks; this command never exports source text or grants rights.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Example: /home/ops/learn-ukrainian/.venv/bin/python -m "
+               "scripts.projects.open_model_data.validate_source_records records.jsonl --operation local_learning\n"
+               "Outputs: content-blind JSON on stdout; no files written.\n"
+               "Exit codes: 0 completed (inspect rejection counts); 2 invalid arguments.\n"
+               "Related: docs/projects/open-model-data/SOURCE_RECORD_CONTRACT.md; #7888",
+    )
     parser.add_argument("input", type=Path, help="JSON, JSON-list, or JSONL input")
+    parser.add_argument("--operation", choices=tuple(RIGHTS_BY_OPERATION), default="local_learning",
+                        help="Permission scope to validate (default: local_learning)")
     args = parser.parse_args()
-    print(canonical_json(validate_path(args.input)))
+    print(canonical_json(validate_path(args.input, operation=args.operation)))
     return 0
 
 
