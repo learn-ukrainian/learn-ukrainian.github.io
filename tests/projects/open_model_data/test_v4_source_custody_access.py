@@ -271,6 +271,7 @@ def test_discrepant_database_chunks_fail_closed(tmp_path: Path) -> None:
     chunks_map = {"tb_test": chunk_file}
     cohort_cfg = {
         "cohort_id": "public-textbooks-non-stem-non-ocr",
+        "source_family": "public_textbooks",
         "archive_locator": "gdrive:test/tb_test.pdf",
         "excluded_modes": ["apple_vision_ocr", "ocr"],
     }
@@ -540,8 +541,8 @@ def test_verify_detects_provenance_projection_mismatch(tmp_path: Path, repo_root
     header = index_lines[0]
     records = [json.loads(line) for line in index_lines[1:]]
 
-    # Change source_family for record 0 to create a projection mismatch with provenance denominator
-    records[0]["source_family"] = "public_textbooks"
+    # Change source_file for record 0 to create a projection mismatch with provenance denominator
+    records[0]["source_locator"]["source_file"] = "tampered_source_file"
     tampered_lines = [header] + [json.dumps(r) for r in records]
     (custody_dir / "v4_source_custody_access_index_v1.jsonl").write_text(
         "\n".join(tampered_lines) + "\n", encoding="utf-8"
@@ -908,3 +909,105 @@ def test_read_command_fails_when_source_yields_zero_records(tmp_path: Path, caps
     captured = capsys.readouterr()
     assert "Access proof failed" in captured.err
     assert '"records_streamed":0' in captured.out
+
+
+def test_resolve_source_access_requires_exact_cohort_and_source_family(tmp_path: Path) -> None:
+    db_path = tmp_path / "test.db"
+    conn = sqlite3.connect(db_path)
+    conn.execute("CREATE TABLE literary_texts (id INTEGER PRIMARY KEY, source_file TEXT, chunk_id TEXT, text TEXT);")
+    conn.commit()
+
+    # Empty cohort_cfg
+    with pytest.raises(custody.CustodyAccessError, match=r"requires an exact configured cohort entry"):
+        custody.resolve_source_access(
+            source_id="s1",
+            source_file="f1",
+            cohort_id="literary-non-ocr",
+            source_family="literary",
+            cohort_cfg={},
+            input_root=tmp_path,
+            db_conn=conn,
+            chunks_map={},
+        )
+
+    # Cohort ID mismatch
+    with pytest.raises(custody.CustodyAccessError, match=r"requires an exact configured cohort entry"):
+        custody.resolve_source_access(
+            source_id="s1",
+            source_file="f1",
+            cohort_id="literary-non-ocr",
+            source_family="literary",
+            cohort_cfg={"cohort_id": "other-cohort", "source_family": "literary"},
+            input_root=tmp_path,
+            db_conn=conn,
+            chunks_map={},
+        )
+
+    # Source family mismatch
+    with pytest.raises(
+        custody.CustodyAccessError,
+        match=r"source_family 'literary' does not match configured cohort source_family 'public_textbooks'",
+    ):
+        custody.resolve_source_access(
+            source_id="s1",
+            source_file="f1",
+            cohort_id="literary-non-ocr",
+            source_family="literary",
+            cohort_cfg={"cohort_id": "literary-non-ocr", "source_family": "public_textbooks"},
+            input_root=tmp_path,
+            db_conn=conn,
+            chunks_map={},
+        )
+
+    conn.close()
+
+
+def test_build_and_verify_detect_unconfigured_and_mismatched_cohort(tmp_path: Path, repo_root: Path) -> None:
+    custom_input = tmp_path / "input"
+    custom_out = tmp_path / "out"
+    custom_input.mkdir(parents=True)
+    custom_out.mkdir(parents=True)
+
+    config_path = custom_input / "config.json"
+    config_data = json.loads(Path(CONFIG_PATH).read_text(encoding="utf-8"))
+    config_data["cohorts"] = [c for c in config_data["cohorts"] if c["cohort_id"] == "literary-non-ocr"]
+    config_path.write_text(json.dumps(config_data, indent=2), encoding="utf-8")
+
+    prov_dir = custom_input / "data/projects/open_model_data/provenance"
+    prov_dir.mkdir(parents=True)
+    prov_file = prov_dir / "v4_provenance_restoration_index_v1.jsonl"
+    prov_rows = [
+        json.dumps({"schema_version": "v4_provenance_restoration_index_v1", "records": 1}),
+        json.dumps(
+            {
+                "source_id": "source.public_textbooks.123",
+                "cohort_id": "public-textbooks-non-stem-non-ocr",
+                "source_family": "public_textbooks",
+                "source_locator": {"source_file": "tb1"},
+            }
+        ),
+    ]
+    prov_file.write_text("\n".join(prov_rows) + "\n", encoding="utf-8")
+
+    db_file = custom_input / "data/sources.db"
+    db_file.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(db_file)
+    conn.execute("CREATE TABLE literary_texts (id INTEGER PRIMARY KEY, source_file TEXT, chunk_id TEXT, text TEXT);")
+    conn.commit()
+    conn.close()
+
+    with pytest.raises(
+        custody.CustodyAccessError, match=r"references unconfigured cohort_id 'public-textbooks-non-stem-non-ocr'"
+    ):
+        custody.build(config_path, input_root=custom_input, output_root=custom_out)
+
+    # Mismatched source_family in config
+    config_data2 = json.loads(Path(CONFIG_PATH).read_text(encoding="utf-8"))
+    for c in config_data2["cohorts"]:
+        if c["cohort_id"] == "public-textbooks-non-stem-non-ocr":
+            c["source_family"] = "literary"
+    config_path2 = custom_input / "config2.json"
+    config_path2.write_text(json.dumps(config_data2, indent=2), encoding="utf-8")
+
+    with pytest.raises(custody.CustodyAccessError, match=r"does not match configured cohort source_family"):
+        custody.build(config_path2, input_root=custom_input, output_root=custom_out)

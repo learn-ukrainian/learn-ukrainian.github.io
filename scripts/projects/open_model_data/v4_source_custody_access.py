@@ -295,8 +295,21 @@ def resolve_source_access(
     chunks_map: Mapping[str, Path],
 ) -> tuple[dict[str, Any], dict[str, Any] | None]:
     """Resolve custody arrangement and verify lineage for one source (ACCESS-1, ACCESS-2, ACCESS-4)."""
-    table = "literary_texts" if source_family == "literary" else "textbooks"
-    primary_store = f"sqlite:sources.db#{table}"
+    if not cohort_cfg or cohort_cfg.get("cohort_id") != cohort_id:
+        raise CustodyAccessError(f"Source {source_id} requires an exact configured cohort entry for '{cohort_id}'")
+    if cohort_cfg.get("source_family") != source_family:
+        raise CustodyAccessError(
+            f"Source {source_id} ({cohort_id}) source_family '{source_family}' "
+            f"does not match configured cohort source_family '{cohort_cfg.get('source_family')}'"
+        )
+
+    primary_store = cohort_cfg.get("primary_store") or (
+        f"sqlite:sources.db#{'literary_texts' if source_family == 'literary' else 'textbooks'}"
+    )
+    if "#" in primary_store:
+        table = primary_store.split("#", 1)[1]
+    else:
+        table = "literary_texts" if source_family == "literary" else "textbooks"
     access_id = _make_access_id(source_id, cohort_id)
 
     cur = db_conn.cursor()
@@ -549,7 +562,14 @@ def build(
         sorted_sids = sorted(unique_sources.keys(), key=lambda s: (unique_sources[s][1], s))
         for sid in sorted_sids:
             sf, cid, fam = unique_sources[sid]
-            cohort_cfg = cohorts_by_id.get(cid, {})
+            if cid not in cohorts_by_id:
+                raise CustodyAccessError(f"Provenance source {sid} references unconfigured cohort_id '{cid}'")
+            cohort_cfg = cohorts_by_id[cid]
+            if cohort_cfg.get("source_family") != fam:
+                raise CustodyAccessError(
+                    f"Provenance source {sid} ({cid}) source_family '{fam}' "
+                    f"does not match configured cohort source_family '{cohort_cfg.get('source_family')}'"
+                )
             record, missing_item = resolve_source_access(
                 source_id=sid,
                 source_file=sf,
@@ -749,6 +769,7 @@ def verify(
     roots = [input_root, Path.cwd()]
     config, resolved_config_path = _load_config(config_path, roots)
     expected_config_sha256 = sha256_file(resolved_config_path)
+    cohorts_by_id = {c["cohort_id"]: c for c in config["cohorts"]}
 
     out_index_path = output_root / config["outputs"]["index"]
     out_missing_path = output_root / config["outputs"]["missing_report"]
@@ -829,6 +850,14 @@ def verify(
             cohort_id = row["cohort_id"]
             source_family = row.get("source_family", "")
             source_file = row.get("source_locator", {}).get("source_file", "")
+
+            if cohort_id not in cohorts_by_id:
+                raise CustodyAccessError(f"Index line {line_num} ({source_id}): unconfigured cohort_id '{cohort_id}'")
+            if cohorts_by_id[cohort_id].get("source_family") != source_family:
+                raise CustodyAccessError(
+                    f"Index line {line_num} ({source_id}): source_family '{source_family}' "
+                    f"does not match configured cohort source_family '{cohorts_by_id[cohort_id].get('source_family')}'"
+                )
 
             if source_id in seen_source_identities:
                 raise CustodyAccessError(f"Index line {line_num} ({source_id}): duplicate source_id in access index")
@@ -966,6 +995,15 @@ def verify(
             psf = prow.get("source_locator", {}).get("source_file", "")
             pcid = prow.get("cohort_id", "")
             pfam = prow.get("source_family", "")
+            if pcid not in cohorts_by_id:
+                raise CustodyAccessError(
+                    f"Provenance denominator source {psid} references unconfigured cohort_id '{pcid}'"
+                )
+            if cohorts_by_id[pcid].get("source_family") != pfam:
+                raise CustodyAccessError(
+                    f"Provenance denominator source {psid} ({pcid}) source_family '{pfam}' "
+                    f"does not match configured cohort source_family '{cohorts_by_id[pcid].get('source_family')}'"
+                )
             prov_identities[psid] = (psf, pcid, pfam)
     if seen_source_identities != prov_identities:
         missing = set(prov_identities.keys()) - set(seen_source_identities.keys())
