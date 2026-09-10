@@ -781,6 +781,8 @@ def verify(
 
     lit_records = []
     tb_records = []
+    seen_source_ids: set[str] = set()
+    seen_access_ids: set[str] = set()
 
     with out_index_path.open(encoding="utf-8") as f:
         header_line = f.readline().strip()
@@ -799,12 +801,24 @@ def verify(
             if errors:
                 raise CustodyAccessError(f"Index line {line_num} error: {errors[0].message}")
 
-            expected_access_id = _make_access_id(row["source_id"], row["cohort_id"])
+            source_id = row["source_id"]
+            if source_id in seen_source_ids:
+                raise CustodyAccessError(f"Index line {line_num} ({source_id}): duplicate source_id in access index")
+            seen_source_ids.add(source_id)
+
+            expected_access_id = _make_access_id(source_id, row["cohort_id"])
             if row.get("access_id") != expected_access_id:
                 raise CustodyAccessError(
-                    f"Index line {line_num} ({row.get('source_id')}): access_id mismatch: "
+                    f"Index line {line_num} ({source_id}): access_id mismatch: "
                     f"expected {expected_access_id}, got {row.get('access_id')}"
                 )
+
+            access_id = row["access_id"]
+            if access_id in seen_access_ids:
+                raise CustodyAccessError(
+                    f"Index line {line_num} ({source_id}): duplicate access_id {access_id} in access index"
+                )
+            seen_access_ids.add(access_id)
 
             permitted = row["permitted_to_proceed"]
             status = row["lineage_verification"]["status"]
@@ -902,6 +916,25 @@ def verify(
 
     if header.get("records") != record_count:
         raise CustodyAccessError(f"Index header record count {header.get('records')} != observed {record_count}")
+
+    # Compare complete source set against bound provenance denominator if available
+    prov_index_path = _resolve_file(Path(config["inputs"]["provenance_index"]), roots)
+    if prov_index_path.is_file():
+        prov_source_ids: set[str] = set()
+        with prov_index_path.open(encoding="utf-8") as pf:
+            _ = pf.readline()
+            for pline in pf:
+                if not pline.strip():
+                    continue
+                prow = json.loads(pline)
+                prov_source_ids.add(prow["source_id"])
+        if seen_source_ids != prov_source_ids:
+            missing = prov_source_ids - seen_source_ids
+            extra = seen_source_ids - prov_source_ids
+            raise CustodyAccessError(
+                f"Access index source set does not match provenance denominator: "
+                f"{len(missing)} missing, {len(extra)} unexpected"
+            )
 
     # Verify receipt summary against recomputed invariants
     summary = receipt.get("summary", {})

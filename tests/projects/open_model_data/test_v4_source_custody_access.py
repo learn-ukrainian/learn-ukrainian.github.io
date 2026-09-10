@@ -435,6 +435,45 @@ def test_verify_detects_forged_access_id(tmp_path: Path, repo_root: Path) -> Non
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
+def test_verify_detects_duplicate_source_id(tmp_path: Path, repo_root: Path) -> None:
+    tampered_out = tmp_path / "out"
+    custody_dir = tampered_out / "data/projects/open_model_data/custody"
+    custody_dir.mkdir(parents=True)
+
+    index_lines = (
+        Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    )
+    header = index_lines[0]
+    records = [json.loads(line) for line in index_lines[1:]]
+
+    # Replace second record with a duplicate of the first record in the same cohort
+    records[1] = copy.deepcopy(records[0])
+    tampered_lines = [header] + [json.dumps(r) for r in records]
+    (custody_dir / "v4_source_custody_access_index_v1.jsonl").write_text(
+        "\n".join(tampered_lines) + "\n", encoding="utf-8"
+    )
+
+    (custody_dir / "v4_source_custody_missing_report_v1.json").write_bytes(
+        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+    )
+
+    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
+    receipt_tampered = copy.deepcopy(receipt_data)
+    receipt_tampered["index_sha256"] = custody.sha256_file(custody_dir / "v4_source_custody_access_index_v1.jsonl")
+    receipt_tampered["receipt_id"] = custody._make_receipt_id(
+        receipt_tampered["config_sha256"], receipt_tampered["index_sha256"]
+    )
+    (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
+
+    with pytest.raises(custody.CustodyAccessError, match=r"duplicate source_id"):
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+
+
 def test_is_private_or_absolute_host_path() -> None:
     # Allowed clean paths and prose
     assert not custody._is_private_or_absolute_host_path("")
