@@ -388,7 +388,50 @@ def test_verify_detects_forged_receipt_id_and_verdict(tmp_path: Path, repo_root:
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
 
 
-def test_verify_detects_recomputed_safety_assertion_violations(tmp_path: Path, repo_root: Path) -> None:
+def test_is_private_or_absolute_host_path() -> None:
+    # Allowed clean paths
+    assert not custody._is_private_or_absolute_host_path("")
+    assert not custody._is_private_or_absolute_host_path("sources/textbooks/math.pdf")
+    assert not custody._is_private_or_absolute_host_path("data/clean/source.txt")
+    assert not custody._is_private_or_absolute_host_path("file:data/textbook_chunks/grade-06/6-klas.jsonl")
+    assert not custody._is_private_or_absolute_host_path("sqlite:sources.db#textbooks")
+    assert not custody._is_private_or_absolute_host_path("gdrive:learn-ukrainian-data/textbooks/6-klas.pdf")
+
+    # Unix absolute paths and home expansion
+    assert custody._is_private_or_absolute_host_path("/opt/data/book.pdf")
+    assert custody._is_private_or_absolute_host_path("/home/ops/book.pdf")
+    assert custody._is_private_or_absolute_host_path("~/data.txt")
+    assert custody._is_private_or_absolute_host_path("~ops/data.txt")
+
+    # Windows drive paths
+    assert custody._is_private_or_absolute_host_path(r"C:\Users\alice\private\book.pdf")
+    assert custody._is_private_or_absolute_host_path("c:/users/bob/doc.txt")
+    assert custody._is_private_or_absolute_host_path(r"D:\repo\data.txt")
+
+    # Windows UNC paths
+    assert custody._is_private_or_absolute_host_path(r"\\server\share\data.pdf")
+    assert custody._is_private_or_absolute_host_path("//server/share/data.pdf")
+
+    # Private directory segments
+    assert custody._is_private_or_absolute_host_path("foo/home/bar.txt")
+    assert custody._is_private_or_absolute_host_path("foo/appdata/bar.txt")
+    assert custody._is_private_or_absolute_host_path("foo/tmp/bar.txt")
+    assert custody._is_private_or_absolute_host_path(r"foo\private\bar.txt")
+    assert custody._is_private_or_absolute_host_path("Users/alice/doc.pdf")
+
+
+@pytest.mark.parametrize(
+    "bad_path",
+    [
+        "/home/ops/private/book.pdf",
+        r"C:\Users\alice\private\book.pdf",
+        r"\\server\share\private\book.pdf",
+        "relative/path/appdata/secrets.txt",
+    ],
+)
+def test_verify_detects_recomputed_safety_assertion_violations(
+    tmp_path: Path, repo_root: Path, bad_path: str
+) -> None:
     tampered_out = tmp_path / "out"
     custody_dir = tampered_out / "data/projects/open_model_data/custody"
     custody_dir.mkdir(parents=True)
@@ -404,12 +447,12 @@ def test_verify_detects_recomputed_safety_assertion_violations(tmp_path: Path, r
     receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
     receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
 
-    # Test private host path insertion in source_locator
-    records[0]["source_locator"]["source_file"] = "/home/ops/private/book.pdf"
+    # Test private/absolute host path insertion in source_locator
+    records[0]["source_locator"]["source_file"] = bad_path
     tampered_lines = [header] + [json.dumps(r) for r in records]
     (custody_dir / "v4_source_custody_access_index_v1.jsonl").write_text("\n".join(tampered_lines) + "\n", encoding="utf-8")
 
-    receipt_tampered = dict(receipt_data)
+    receipt_tampered = copy.deepcopy(receipt_data)
     receipt_tampered["index_sha256"] = custody.sha256_file(custody_dir / "v4_source_custody_access_index_v1.jsonl")
     receipt_tampered["receipt_id"] = custody._make_receipt_id(receipt_tampered["config_sha256"], receipt_tampered["index_sha256"])
     (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(json.dumps(receipt_tampered), encoding="utf-8")

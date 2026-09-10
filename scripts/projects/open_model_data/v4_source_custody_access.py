@@ -682,6 +682,22 @@ def build(
     return receipt
 
 
+def _is_private_or_absolute_host_path(path_str: str) -> bool:
+    """Detect platform-independent absolute host paths and private host segments (including Windows drive/UNC)."""
+    if not path_str:
+        return False
+    normalized = path_str.replace("\\", "/")
+    if normalized.startswith(("/", "~")):
+        return True
+    if len(normalized) >= 2 and normalized[0].isalpha() and normalized[1] == ":":
+        return True
+    if normalized.startswith("//"):
+        return True
+    parts = [p.lower() for p in normalized.strip("/").split("/")]
+    private_parts = {"home", "users", "root", "tmp", "temp", "var", "appdata", "private"}
+    return any(p in private_parts or p.startswith("~") for p in parts)
+
+
 def verify(
     config_path: Path,
     input_root: Path,
@@ -817,17 +833,13 @@ def verify(
                 recomputed_no_corpus_text = False
 
             src_file = row.get("source_locator", {}).get("source_file") or ""
-            if src_file.startswith(("/", "home/", "Users/", "root/", "tmp/", "var/")) or any(
-                p in src_file for p in ("/home/", "/Users/", "/root/", "/tmp/", "/var/")
-            ):
+            if _is_private_or_absolute_host_path(src_file):
                 recomputed_no_private_host_paths = False
 
             cust = row.get("custody_resolution", {})
             for store_field in ("primary_store", "chunks_store", "archive_store"):
                 store_val = cust.get(store_field) or ""
-                if store_val.startswith(("/", "home/", "Users/", "root/", "tmp/", "var/")) or any(
-                    p in store_val for p in ("/home/", "/Users/", "/root/", "/tmp/", "/var/")
-                ):
+                if _is_private_or_absolute_host_path(store_val):
                     recomputed_no_private_host_paths = False
 
             if row.get("cohort_id") not in ("literary-non-ocr", "public-textbooks-non-stem-non-ocr"):
@@ -950,9 +962,7 @@ def verify(
         ref = item.get("missing_path_ref") or ""
         sf = item.get("source_locator", {}).get("source_file") or ""
         for p_val in (ref, sf):
-            if p_val.startswith(("/", "home/", "Users/", "root/", "tmp/", "var/")) or any(
-                p in p_val for p in ("/home/", "/Users/", "/root/", "/tmp/", "/var/")
-            ):
+            if _is_private_or_absolute_host_path(p_val):
                 recomputed_no_private_host_paths = False
 
     expected_first_ready = bool(lit_perm == len(lit_records) and len(lit_records) > 0 and lit_acc == len(lit_records))
