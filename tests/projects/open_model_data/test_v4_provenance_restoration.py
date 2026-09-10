@@ -317,7 +317,7 @@ def test_nonempty_reconciliation_diff_fails_closed(tmp_path: Path) -> None:
     _database(root)
     _snapshot(root)
     _ledger(root, textbook_diff={"raw_only": ["surprise-raw"], "database_only_or_raw_chunk_unresolved": []})
-    with pytest.raises(restoration.RestorationError, match="non-empty raw_only diff"):
+    with pytest.raises(restoration.RestorationError, match=r"non-empty or non-list raw_only diff"):
         _build(root)
 
 
@@ -385,3 +385,211 @@ def test_atomic_publication_failure_preserves_prior_outputs(
         _build(root)
     assert index.read_bytes() == before
     assert not list(index.parent.glob(".*.tmp"))
+
+
+def _reseal_tampered_artifacts(root: Path) -> None:
+    """Helper to coherently reseal hashes across index header, unresolved report, and receipt."""
+    evidence = root / "data/projects/open_model_data/evidence"
+    index_path = evidence / "v4_provenance_restoration_index_v1.jsonl"
+    report_path = evidence / "v4_provenance_restoration_unresolved_v1.json"
+    receipt_path = evidence / "v4_provenance_restoration_receipt_v1.json"
+
+    lines = index_path.read_text(encoding="utf-8").splitlines()
+    header = json.loads(lines[0])
+    rows = [json.loads(line) for line in lines[1:]]
+    rows_bytes = "".join(restoration.canonical_json(r) + "\n" for r in rows).encode("utf-8")
+    header["records"] = len(rows)
+    header["rows_sha256"] = hashlib.sha256(rows_bytes).hexdigest()
+    index_content = (restoration.canonical_json(header) + "\n").encode("utf-8") + rows_bytes
+    index_path.write_bytes(index_content)
+    index_sha256 = hashlib.sha256(index_content).hexdigest()
+
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    report["index_sha256"] = index_sha256
+    recomputed = restoration._build_unresolved_report(
+        rows, index_sha256=index_sha256, config_sha256=report["config_sha256"], snapshot=header["snapshot"]
+    )
+    report["by_cohort"] = recomputed["by_cohort"]
+    report_content = (restoration.canonical_json(report) + "\n").encode("utf-8")
+    report_path.write_bytes(report_content)
+    report_sha256 = hashlib.sha256(report_content).hexdigest()
+
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    receipt["outputs"]["index"]["sha256"] = index_sha256
+    receipt["outputs"]["index"]["records"] = len(rows)
+    receipt["outputs"]["unresolved_report"]["sha256"] = report_sha256
+    receipt_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def test_verify_rejects_fabricated_edition_metadata(tmp_path: Path) -> None:
+    root = _environment(tmp_path)
+    _build(root)
+    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    lines = index.read_text(encoding="utf-8").splitlines()
+    row = json.loads(lines[1])
+    row["links"]["edition"]["title"] = "Fabricated Edition Title"
+    lines[1] = restoration.canonical_json(row)
+    index.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    _reseal_tampered_artifacts(root)
+    with pytest.raises(restoration.RestorationError, match="edition metadata diverges"):
+        restoration.verify(config_path=CONFIG, input_root=root, output_root=root)
+
+
+def test_verify_rejects_fabricated_acquisition_ref(tmp_path: Path) -> None:
+    root = _environment(tmp_path)
+    _build(root)
+    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    lines = index.read_text(encoding="utf-8").splitlines()
+    row = json.loads(lines[1])
+    row["links"]["acquisition_ref"] = "gdrive:learn-ukrainian-data/literary_texts/forged.jsonl"
+    lines[1] = restoration.canonical_json(row)
+    index.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    _reseal_tampered_artifacts(root)
+    with pytest.raises(restoration.RestorationError, match="acquisition_ref diverges"):
+        restoration.verify(config_path=CONFIG, input_root=root, output_root=root)
+
+
+def test_verify_rejects_fabricated_textbook_domain(tmp_path: Path) -> None:
+    root = _environment(tmp_path)
+    _build(root)
+    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    lines = index.read_text(encoding="utf-8").splitlines()
+    # tb-lang is row index 3
+    found = False
+    for i in range(1, len(lines)):
+        row = json.loads(lines[i])
+        if row["cohort_id"] == "public-textbooks-non-stem-non-ocr" and row["classification"]["domain"]["status"] == "restored":
+            current_val = row["classification"]["domain"]["value"]
+            row["classification"]["domain"]["value"] = "ekonomika" if current_val != "ekonomika" else "pravoznavstvo"
+            lines[i] = restoration.canonical_json(row)
+            found = True
+            break
+    assert found
+    index.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    _reseal_tampered_artifacts(root)
+    with pytest.raises(restoration.RestorationError, match="invalid restored metadata classification"):
+        restoration.verify(config_path=CONFIG, input_root=root, output_root=root)
+
+
+def test_verify_rejects_fabricated_column_classification(tmp_path: Path) -> None:
+    root = _environment(tmp_path)
+    _build(root)
+    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    lines = index.read_text(encoding="utf-8").splitlines()
+    # lit-a poetry
+    found = False
+    for i in range(1, len(lines)):
+        row = json.loads(lines[i])
+        if row["cohort_id"] == "literary-non-ocr" and row["classification"]["domain"]["status"] == "restored":
+            row["classification"]["domain"]["value"] = "chronicle"
+            lines[i] = restoration.canonical_json(row)
+            found = True
+            break
+    assert found
+    index.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    _reseal_tampered_artifacts(root)
+    with pytest.raises(restoration.RestorationError, match="invalid restored column classification"):
+        restoration.verify(config_path=CONFIG, input_root=root, output_root=root)
+
+
+def test_verify_rejects_inconsistent_unresolved_status(tmp_path: Path) -> None:
+    root = _environment(tmp_path)
+    _build(root)
+    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    lines = index.read_text(encoding="utf-8").splitlines()
+    row = json.loads(lines[1])
+    row["unresolved"] = []
+    lines[1] = restoration.canonical_json(row)
+    index.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    _reseal_tampered_artifacts(root)
+    with pytest.raises(restoration.RestorationError, match="unresolved keys diverge"):
+        restoration.verify(config_path=CONFIG, input_root=root, output_root=root)
+
+
+def test_verify_rejects_partial_selection(tmp_path: Path) -> None:
+    root = _environment(tmp_path)
+    _build(root)
+    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    lines = index.read_text(encoding="utf-8").splitlines()
+    # Drop first 2 rows
+    lines = [lines[0], lines[1], lines[2]]
+    index.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    _reseal_tampered_artifacts(root)
+    with pytest.raises(restoration.RestorationError, match=r"disagrees with expected selection|does not match complete eligible selection"):
+        restoration.verify(config_path=CONFIG, input_root=root, output_root=root)
+
+
+def test_verify_rejects_duplicate_locator(tmp_path: Path) -> None:
+    root = _environment(tmp_path)
+    _build(root)
+    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    lines = index.read_text(encoding="utf-8").splitlines()
+    # Duplicate row 1 in place of row 2 so total count matches expected selection
+    lines[2] = lines[1]
+    index.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    _reseal_tampered_artifacts(root)
+    with pytest.raises(restoration.RestorationError, match="duplicate locator_id"):
+        restoration.verify(config_path=CONFIG, input_root=root, output_root=root)
+
+
+def test_verify_rejects_divergent_receipt_selection_or_exclusions(tmp_path: Path) -> None:
+    root = _environment(tmp_path)
+    _build(root)
+    receipt_path = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_receipt_v1.json"
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    receipt["selection"]["cohorts"][0]["selected_rows"] = 999
+    receipt_path.write_text(json.dumps(receipt, indent=2), encoding="utf-8")
+    with pytest.raises(restoration.RestorationError, match="receipt cohort accounting disagrees"):
+        restoration.verify(config_path=CONFIG, input_root=root, output_root=root)
+
+
+def test_acquisition_plan_rejects_missing_or_invalid_reconciliation_details() -> None:
+    cohort = {
+        "cohort_id": "c",
+        "acquisition": {
+            "inventory_asset_id": "asset-1",
+            "ref_template": "ref:{source_stem}",
+            "require_empty_diffs": ["diff_a"],
+        },
+    }
+    # Missing record
+    with pytest.raises(restoration.RestorationError, match="missing inventory reconciliation record"):
+        restoration._acquisition_plan(cohort, {})
+
+    # Missing details
+    with pytest.raises(restoration.RestorationError, match="missing or non-dict details object"):
+        restoration._acquisition_plan(cohort, {"asset-1": {"asset_id": "asset-1"}})
+
+    # Non-dict details
+    with pytest.raises(restoration.RestorationError, match="missing or non-dict details object"):
+        restoration._acquisition_plan(cohort, {"asset-1": {"asset_id": "asset-1", "details": None}})
+
+    # Missing diff key
+    with pytest.raises(restoration.RestorationError, match="missing required diff key: diff_a"):
+        restoration._acquisition_plan(cohort, {"asset-1": {"asset_id": "asset-1", "details": {}}})
+
+    # Non-empty diff
+    with pytest.raises(restoration.RestorationError, match="has a non-empty or non-list diff_a diff"):
+        restoration._acquisition_plan(cohort, {"asset-1": {"asset_id": "asset-1", "details": {"diff_a": ["bad"]}}})
+
+    # Non-list diff
+    with pytest.raises(restoration.RestorationError, match="has a non-empty or non-list diff_a diff"):
+        restoration._acquisition_plan(cohort, {"asset-1": {"asset_id": "asset-1", "details": {"diff_a": None}}})
+
+    # Unresolved detail key checks
+    cohort_with_unresolved = {
+        "cohort_id": "c2",
+        "acquisition": {
+            "inventory_asset_id": "asset-2",
+            "ref_template": "ref:{source_stem}",
+            "require_empty_diffs": ["diff_a"],
+            "unresolved_detail_key": "unresolved_list",
+        },
+    }
+    # Missing unresolved key
+    with pytest.raises(restoration.RestorationError, match="missing unresolved detail key"):
+        restoration._acquisition_plan(cohort_with_unresolved, {"asset-2": {"asset_id": "asset-2", "details": {"diff_a": []}}})
+
+    # Non-list unresolved key
+    with pytest.raises(restoration.RestorationError, match="is not a list"):
+        restoration._acquisition_plan(cohort_with_unresolved, {"asset-2": {"asset_id": "asset-2", "details": {"diff_a": [], "unresolved_list": "bad"}}})

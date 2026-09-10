@@ -162,11 +162,18 @@
             "database": {
               "type": "object",
               "additionalProperties": false,
-              "required": ["path", "access", "tables"],
+              "required": ["path", "access", "tables", "column_evidence"],
               "properties": {
                 "path": {"const": "data/sources.db"},
                 "access": {"const": "read_only"},
-                "tables": {"type": "array", "items": {"$ref": "#/$defs/identifier"}, "uniqueItems": true, "minItems": 1}
+                "tables": {"type": "array", "items": {"$ref": "#/$defs/identifier"}, "uniqueItems": true, "minItems": 1},
+                "column_evidence": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object",
+                    "additionalProperties": {"type": ["string", "null"]}
+                  }
+                }
               }
             }
           }

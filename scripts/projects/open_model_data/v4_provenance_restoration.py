@@ -214,18 +214,40 @@ def _acquisition_plan(
     cohort: Mapping[str, Any], ledger: Mapping[str, dict[str, Any]]
 ) -> tuple[str, set[str]]:
     binding = cohort["acquisition"]
-    record = ledger.get(binding["inventory_asset_id"])
+    asset_id = binding["inventory_asset_id"]
+    record = ledger.get(asset_id)
     if record is None:
-        raise RestorationError(f"missing inventory reconciliation record: {binding['inventory_asset_id']}")
-    details = record.get("details", {})
+        raise RestorationError(f"missing inventory reconciliation record: {asset_id}")
+    details = record.get("details")
+    if not isinstance(details, dict):
+        raise RestorationError(f"inventory reconciliation {asset_id} missing or non-dict details object")
     for key in binding["require_empty_diffs"]:
-        if details.get(key) not in (None, []):
+        if key not in details:
             raise RestorationError(
-                f"inventory reconciliation {binding['inventory_asset_id']} has a non-empty {key} diff; "
+                f"inventory reconciliation {asset_id} details missing required diff key: {key}"
+            )
+        diff_val = details[key]
+        if not isinstance(diff_val, list) or len(diff_val) != 0:
+            raise RestorationError(
+                f"inventory reconciliation {asset_id} has a non-empty or non-list {key} diff: {diff_val!r}; "
                 "acquisition links cannot be restored from retained evidence"
             )
-    unresolved = set(details.get(binding.get("unresolved_detail_key", ""), []) or [])
+    unresolved_key = binding.get("unresolved_detail_key")
+    if unresolved_key is not None:
+        if unresolved_key not in details:
+            raise RestorationError(
+                f"inventory reconciliation {asset_id} details missing unresolved detail key: {unresolved_key}"
+            )
+        unresolved_val = details[unresolved_key]
+        if not isinstance(unresolved_val, list):
+            raise RestorationError(
+                f"inventory reconciliation {asset_id} unresolved detail key {unresolved_key} is not a list: {unresolved_val!r}"
+            )
+        unresolved = set(unresolved_val)
+    else:
+        unresolved = set()
     return binding["ref_template"], unresolved
+
 
 
 def _column_classification(
@@ -416,107 +438,42 @@ def _family_exclusion_rows(config: Mapping[str, Any], rows: list[dict[str, Any]]
     return exclusions
 
 
-def build(*, config_path: Path, input_root: Path, output_root: Path | None = None) -> dict[str, Any]:
-    """Build and atomically publish the restoration index, report, and receipt."""
-    config = _load_config(config_path)
-    config_sha256 = sha256_file(config_path)
-    output_root = input_root if output_root is None else output_root
-    snapshot_rows, snapshot = _load_snapshot(input_root / config["inputs"]["locator_index"])
-    ledger = _load_ledger(input_root / config["inputs"]["inventory_ledger"])
-    _check_ocr_exclusion_evidence(config, ledger)
-    _check_private_sources_absent(config, snapshot_rows)
-
-    record_validator = _record_validator()
+def _select_eligible_rows(
+    config: Mapping[str, Any], snapshot_rows: list[dict[str, Any]]
+) -> tuple[dict[str, list[dict[str, Any]]], list[dict[str, Any]], list[dict[str, Any]]]:
+    """Deterministically partition snapshot rows into eligible cohorts, summaries, and exclusions."""
+    selected_by_cohort: dict[str, list[dict[str, Any]]] = {}
+    cohort_summaries: list[dict[str, Any]] = []
     excluded_subjects: Counter[str] = Counter()
     subject_unresolved_rows = 0
-    records: list[dict[str, Any]] = []
-    tables_read: set[str] = set()
-    cohort_summaries: list[dict[str, Any]] = []
 
-    database_path = input_root / config["inputs"]["database"]
-    connection: sqlite3.Connection | None = None
-    try:
-        for cohort in config["cohorts"]:
-            family_rows = [row for row in snapshot_rows if row["source_family"] == cohort["source_family"]]
-            column_bindings = {
-                field: cohort["classification"][field]
-                for field in CLASSIFICATION_FIELDS
-                if cohort["classification"][field]["kind"] == "column"
+    for cohort in config["cohorts"]:
+        family_rows = [row for row in snapshot_rows if row["source_family"] == cohort["source_family"]]
+        excluded = set(cohort.get("subject_exclusions", {}).get("subjects", ()))
+        selected: list[dict[str, Any]] = []
+        selected_records = 0
+        for row in family_rows:
+            _verify_identity(cohort, row)
+            subject = _normalized(row["metadata"].get("subject"))
+            if cohort["source_family"] == "public_textbooks":
+                if subject is not None and subject in excluded:
+                    excluded_subjects[subject] += 1
+                    continue
+                if subject is None:
+                    subject_unresolved_rows += 1
+                    continue
+            selected.append(row)
+            selected_records += row["affected_records"]
+        selected_by_cohort[cohort["cohort_id"]] = selected
+        cohort_summaries.append(
+            {
+                "cohort_id": cohort["cohort_id"],
+                "source_family": cohort["source_family"],
+                "consumer_view": cohort["consumer_view"],
+                "selected_rows": len(selected),
+                "selected_records": selected_records,
             }
-            classification_by_group: dict[tuple[str, str], dict[str, str | None]] = {}
-            if column_bindings:
-                if connection is None:
-                    connection = _connect(database_path)
-                tables_read.add(cohort["table"])
-                snapshot_groups = {
-                    _verify_identity(cohort, row) for row in family_rows
-                }
-                classification_by_group = _column_classification(
-                    connection, cohort, column_bindings, snapshot_groups
-                )
-            ref_template, acquisition_unresolved = _acquisition_plan(cohort, ledger)
-            excluded = set(cohort.get("subject_exclusions", {}).get("subjects", ()))
-            selected: list[dict[str, Any]] = []
-            selected_records = 0
-            for row in family_rows:
-                _verify_identity(cohort, row)
-                subject = _normalized(row["metadata"].get("subject"))
-                if cohort["source_family"] == "public_textbooks":
-                    if subject is not None and subject in excluded:
-                        excluded_subjects[subject] += 1
-                        continue
-                    if subject is None:
-                        subject_unresolved_rows += 1
-                        continue
-                key = (
-                    _group_value(row["source_locator"].get("source_file")),
-                    _group_value(row["work_locator"].get(cohort["work_column"])),
-                )
-                record = _restoration_record(
-                    cohort,
-                    row,
-                    ref_template,
-                    acquisition_unresolved,
-                    classification_by_group.get(key) if column_bindings else None,
-                )
-                _validate(record, record_validator, f"restoration record {record['restoration_id']}")
-                selected.append(record)
-                selected_records += row["affected_records"]
-            records.extend(selected)
-            cohort_summaries.append(
-                {
-                    "cohort_id": cohort["cohort_id"],
-                    "source_family": cohort["source_family"],
-                    "consumer_view": cohort["consumer_view"],
-                    "selected_rows": len(selected),
-                    "selected_records": selected_records,
-                }
-            )
-    finally:
-        if connection is not None:
-            connection.close()
-
-    records.sort(key=lambda record: (record["cohort_id"], record["source_id"], record["work_id"], record["locator_id"]))
-    header = {
-        "schema_version": "v4_provenance_restoration_index_v1",
-        "row_schema_version": "v4_provenance_restoration_v1",
-        "snapshot": snapshot,
-        "config_sha256": config_sha256,
-        "records": len(records),
-        "ordering": ORDERING,
-    }
-    index_content = _index_content(records, header)
-    index_path = output_root / config["outputs"]["index"]
-    _publish(index_path, index_content)
-    index_sha256 = sha256_bytes(index_content)
-
-    report = _build_unresolved_report(
-        records, index_sha256=index_sha256, config_sha256=config_sha256, snapshot=snapshot
-    )
-    _validate(report, _validator("unresolvedReport"), "unresolved report")
-    report_content = (canonical_json(report) + "\n").encode("utf-8")
-    report_path = output_root / config["outputs"]["unresolved_report"]
-    _publish(report_path, report_content)
+        )
 
     exclusions = _family_exclusion_rows(config, snapshot_rows)
     if excluded_subjects:
@@ -551,6 +508,94 @@ def build(*, config_path: Path, input_root: Path, output_root: Path | None = Non
             "inventory_asset_ids": sorted(config["ocr_exclusion_evidence"]["inventory_asset_ids"]),
         }
     )
+    return selected_by_cohort, cohort_summaries, exclusions
+
+
+def build(*, config_path: Path, input_root: Path, output_root: Path | None = None) -> dict[str, Any]:
+    """Build and atomically publish the restoration index, report, and receipt."""
+    config = _load_config(config_path)
+    config_sha256 = sha256_file(config_path)
+    output_root = input_root if output_root is None else output_root
+    snapshot_rows, snapshot = _load_snapshot(input_root / config["inputs"]["locator_index"])
+    ledger = _load_ledger(input_root / config["inputs"]["inventory_ledger"])
+    _check_ocr_exclusion_evidence(config, ledger)
+    _check_private_sources_absent(config, snapshot_rows)
+
+    record_validator = _record_validator()
+    records: list[dict[str, Any]] = []
+    tables_read: set[str] = set()
+
+    selected_by_cohort, cohort_summaries, exclusions = _select_eligible_rows(config, snapshot_rows)
+
+    database_path = input_root / config["inputs"]["database"]
+    connection: sqlite3.Connection | None = None
+    column_evidence: dict[str, dict[str, str | None]] = {}
+    try:
+        for cohort in config["cohorts"]:
+            cohort_id = cohort["cohort_id"]
+            family_selected = selected_by_cohort[cohort_id]
+            column_bindings = {
+                field: cohort["classification"][field]
+                for field in CLASSIFICATION_FIELDS
+                if cohort["classification"][field]["kind"] == "column"
+            }
+            classification_by_group: dict[tuple[str, str], dict[str, str | None]] = {}
+            if column_bindings:
+                if connection is None:
+                    connection = _connect(database_path)
+                tables_read.add(cohort["table"])
+                snapshot_groups = {
+                    _verify_identity(cohort, row)
+                    for row in snapshot_rows
+                    if row["source_family"] == cohort["source_family"]
+                }
+                classification_by_group = _column_classification(
+                    connection, cohort, column_bindings, snapshot_groups
+                )
+                for group_key, values in sorted(classification_by_group.items()):
+                    group_id = f"{cohort_id}:{group_key[0]}#{group_key[1]}"
+                    column_evidence[group_id] = values
+            ref_template, acquisition_unresolved = _acquisition_plan(cohort, ledger)
+            for row in family_selected:
+                key = (
+                    _group_value(row["source_locator"].get("source_file")),
+                    _group_value(row["work_locator"].get(cohort["work_column"])),
+                )
+                record = _restoration_record(
+                    cohort,
+                    row,
+                    ref_template,
+                    acquisition_unresolved,
+                    classification_by_group.get(key) if column_bindings else None,
+                )
+                _validate(record, record_validator, f"restoration record {record['restoration_id']}")
+                records.append(record)
+    finally:
+        if connection is not None:
+            connection.close()
+
+    records.sort(key=lambda record: (record["cohort_id"], record["source_id"], record["work_id"], record["locator_id"]))
+    header = {
+        "schema_version": "v4_provenance_restoration_index_v1",
+        "row_schema_version": "v4_provenance_restoration_v1",
+        "snapshot": snapshot,
+        "config_sha256": config_sha256,
+        "records": len(records),
+        "ordering": ORDERING,
+    }
+    index_content = _index_content(records, header)
+    index_path = output_root / config["outputs"]["index"]
+    _publish(index_path, index_content)
+    index_sha256 = sha256_bytes(index_content)
+
+    report = _build_unresolved_report(
+        records, index_sha256=index_sha256, config_sha256=config_sha256, snapshot=snapshot
+    )
+    _validate(report, _validator("unresolvedReport"), "unresolved report")
+    report_content = (canonical_json(report) + "\n").encode("utf-8")
+    report_path = output_root / config["outputs"]["unresolved_report"]
+    _publish(report_path, report_content)
+
     receipt = {
         "schema_version": "v4_provenance_restoration_receipt_v1",
         "config_sha256": config_sha256,
@@ -567,6 +612,7 @@ def build(*, config_path: Path, input_root: Path, output_root: Path | None = Non
                 "path": config["inputs"]["database"],
                 "access": "read_only",
                 "tables": sorted(tables_read),
+                "column_evidence": column_evidence,
             },
         },
         "selection": {
@@ -642,12 +688,22 @@ def _read_index(path: Path, record_validator: Draft202012Validator) -> tuple[dic
 
 
 def verify(*, config_path: Path, input_root: Path, output_root: Path | None = None) -> dict[str, Any]:
-    """Validate committed restoration artifacts against the snapshot and ledger."""
+    """Validate committed restoration artifacts against snapshot, ledger, and retained evidence."""
     config = _load_config(config_path)
     config_sha256 = sha256_file(config_path)
     output_root = input_root if output_root is None else output_root
     snapshot_rows, snapshot = _load_snapshot(input_root / config["inputs"]["locator_index"])
     snapshot_by_locator = {row["locator_id"]: row for row in snapshot_rows}
+    if len(snapshot_by_locator) != len(snapshot_rows):
+        raise RestorationError("duplicate locator_id in retained locator snapshot")
+
+    ledger = _load_ledger(input_root / config["inputs"]["inventory_ledger"])
+    _check_ocr_exclusion_evidence(config, ledger)
+    _check_private_sources_absent(config, snapshot_rows)
+
+    selected_by_cohort, expected_cohorts, expected_exclusions = _select_eligible_rows(config, snapshot_rows)
+    expected_locators = {row["locator_id"] for rows in selected_by_cohort.values() for row in rows}
+    cohort_by_id = {cohort["cohort_id"]: cohort for cohort in config["cohorts"]}
 
     index_path = output_root / config["outputs"]["index"]
     index_sha256 = sha256_file(index_path)
@@ -656,15 +712,29 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
         raise RestorationError("restoration index snapshot binding disagrees with the retained locator snapshot")
     if header["config_sha256"] != config_sha256:
         raise RestorationError("restoration index config hash disagrees with the config file")
+    if header["records"] != len(expected_locators):
+        raise RestorationError(
+            f"restoration index header record count {header['records']} disagrees with expected selection {len(expected_locators)}"
+        )
+
+    observed_locators: set[str] = set()
     for record in records:
-        source = snapshot_by_locator.get(record["locator_id"])
-        if source is None:
-            raise RestorationError(f"restored locator {record['locator_id']} is absent from the snapshot")
-        for key in ("source_id", "work_id", "source_family", "source_locator", "work_locator", "canonical_url"):
-            expected = source[key] if key != "canonical_url" else source["canonical_url"]
-            actual = record[key] if key != "canonical_url" else record["links"]["canonical_url"]
-            if actual != expected:
-                raise RestorationError(f"restored record {record['restoration_id']} diverges from snapshot field {key}")
+        lid = record["locator_id"]
+        if lid in observed_locators:
+            raise RestorationError(f"duplicate locator_id {lid} in restoration index")
+        observed_locators.add(lid)
+    if observed_locators != expected_locators:
+        missing = sorted(expected_locators - observed_locators)
+        extra = sorted(observed_locators - expected_locators)
+        raise RestorationError(
+            f"restoration index does not match complete eligible selection: "
+            f"{len(missing)} missing, {len(extra)} extra locators"
+        )
+
+    acquisition_plans = {
+        cohort["cohort_id"]: _acquisition_plan(cohort, ledger)
+        for cohort in config["cohorts"]
+    }
 
     report_path = output_root / config["outputs"]["unresolved_report"]
     report = _read_json(report_path)
@@ -675,10 +745,10 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
         raise RestorationError("unresolved report config hash disagrees with the config file")
     if report["snapshot_semantic_jsonl_sha256"] != snapshot["semantic_jsonl_sha256"]:
         raise RestorationError("unresolved report snapshot binding disagrees with the locator snapshot")
-    recomputed = _build_unresolved_report(
+    recomputed_report = _build_unresolved_report(
         records, index_sha256=index_sha256, config_sha256=config_sha256, snapshot=snapshot
     )
-    if report["by_cohort"] != recomputed["by_cohort"]:
+    if report["by_cohort"] != recomputed_report["by_cohort"]:
         raise RestorationError("unresolved report cohort accounting disagrees with the index rows")
 
     receipt_path = output_root / config["outputs"]["receipt"]
@@ -698,13 +768,150 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
         raise RestorationError("receipt unresolved-report hash disagrees with the committed report")
     if receipt["outputs"]["index"]["records"] != header["records"]:
         raise RestorationError("receipt record count disagrees with the committed index")
-    selected = {
-        cohort["cohort_id"]: cohort
-        for cohort in receipt["selection"]["cohorts"]
-    }
-    for cohort_id, accounting in report["by_cohort"].items():
-        if cohort_id not in selected or selected[cohort_id]["selected_rows"] != accounting["records"]:
-            raise RestorationError(f"receipt cohort accounting disagrees with the unresolved report for {cohort_id}")
+
+    if receipt["selection"]["cohorts"] != expected_cohorts:
+        raise RestorationError("receipt cohort accounting disagrees with reconstructed selection")
+    if receipt["selection"]["exclusions"] != expected_exclusions:
+        raise RestorationError("receipt exclusion accounting disagrees with reconstructed selection")
+
+    receipt_db = receipt["inputs"]["database"]
+    column_evidence = receipt_db.get("column_evidence")
+    if not isinstance(column_evidence, dict):
+        raise RestorationError("receipt database input missing or non-dict column_evidence")
+    database_path = input_root / config["inputs"]["database"]
+    if database_path.is_file():
+        connection = _connect(database_path)
+        try:
+            for cohort in config["cohorts"]:
+                column_bindings = {
+                    field: cohort["classification"][field]
+                    for field in CLASSIFICATION_FIELDS
+                    if cohort["classification"][field]["kind"] == "column"
+                }
+                if column_bindings:
+                    family_rows = [row for row in snapshot_rows if row["source_family"] == cohort["source_family"]]
+                    snapshot_groups = {_verify_identity(cohort, row) for row in family_rows}
+                    live_db = _column_classification(connection, cohort, column_bindings, snapshot_groups)
+                    for group_key, values in live_db.items():
+                        group_id = f"{cohort['cohort_id']}:{group_key[0]}#{group_key[1]}"
+                        if group_id not in column_evidence or column_evidence[group_id] != values:
+                            raise RestorationError(
+                                f"receipt column evidence diverges from database for {group_id}"
+                            )
+        finally:
+            connection.close()
+
+    for record in records:
+        source = snapshot_by_locator[record["locator_id"]]
+        cohort_id = record["cohort_id"]
+        if cohort_id not in cohort_by_id:
+            raise RestorationError(f"restored record {record['restoration_id']} has unknown cohort {cohort_id}")
+        cohort = cohort_by_id[cohort_id]
+
+        for key in ("source_id", "work_id", "source_family", "source_locator", "work_locator"):
+            if record[key] != source[key]:
+                raise RestorationError(f"restored record {record['restoration_id']} diverges from snapshot field {key}")
+        if record["affected_records"] != source["affected_records"]:
+            raise RestorationError(
+                f"restored record {record['restoration_id']} affected_records diverges from snapshot"
+            )
+
+        if record["links"]["canonical_url"] != source["canonical_url"]:
+            raise RestorationError(
+                f"restored record {record['restoration_id']} canonical_url diverges from snapshot"
+            )
+
+        if record["links"]["edition"] != dict(source["metadata"]):
+            raise RestorationError(
+                f"restored record {record['restoration_id']} edition metadata diverges from snapshot metadata"
+            )
+
+        ref_template, acq_unresolved = acquisition_plans[cohort_id]
+        source_file = record["source_locator"].get("source_file")
+        stem = Path(str(source_file)).stem if source_file else None
+        if stem is None or stem in acq_unresolved:
+            expected_acq_ref = None
+            expected_acq_unresolved = True
+        else:
+            expected_acq_ref = ref_template.format(source_stem=stem)
+            expected_acq_unresolved = False
+        if record["links"]["acquisition_ref"] != expected_acq_ref:
+            raise RestorationError(
+                f"restored record {record['restoration_id']} acquisition_ref diverges from ledger reconciliation: "
+                f"expected {expected_acq_ref!r}, got {record['links']['acquisition_ref']!r}"
+            )
+
+        expected_unresolved: list[str] = []
+        if source["canonical_url"] is None:
+            expected_unresolved.append("canonical_source_url")
+        if expected_acq_unresolved:
+            expected_unresolved.append("acquisition_raw_locator")
+
+        classification = record["classification"]
+        for field in CLASSIFICATION_FIELDS:
+            binding = cohort["classification"][field]
+            entry = classification.get(field)
+            if entry is None or not isinstance(entry, dict):
+                raise RestorationError(f"restored record {record['restoration_id']} missing classification for {field}")
+            kind = binding["kind"]
+            if kind == "unresolved":
+                if entry["status"] != "unresolved" or entry["value"] != "unknown" or entry["source_ref"] is not None:
+                    raise RestorationError(
+                        f"restored record {record['restoration_id']} field {field} invalid unresolved classification: {entry!r}"
+                    )
+                expected_unresolved.append(field)
+            elif kind == "snapshot_metadata":
+                raw_val = _normalized(source["metadata"].get(binding["field"]))
+                if raw_val is None:
+                    if entry["status"] != "unresolved" or entry["value"] != "unknown" or entry["source_ref"] != binding["source_ref"]:
+                        raise RestorationError(
+                            f"restored record {record['restoration_id']} field {field} invalid missing metadata classification: {entry!r}"
+                        )
+                    expected_unresolved.append(field)
+                else:
+                    if raw_val not in binding["vocabulary"]:
+                        raise RestorationError(
+                            f"restored record {record['restoration_id']} field {field} value {raw_val!r} outside vocabulary"
+                        )
+                    if entry["status"] != "restored" or entry["value"] != raw_val or entry["source_ref"] != binding["source_ref"]:
+                        raise RestorationError(
+                            f"restored record {record['restoration_id']} field {field} invalid restored metadata classification: {entry!r}"
+                        )
+            elif kind == "column":
+                group_key = (
+                    _group_value(source["source_locator"].get("source_file")),
+                    _group_value(source["work_locator"].get(cohort["work_column"])),
+                )
+                group_id = f"{cohort_id}:{group_key[0]}#{group_key[1]}"
+                if group_id not in column_evidence:
+                    raise RestorationError(
+                        f"restored record {record['restoration_id']} group {group_id} missing from column evidence"
+                    )
+                expected_val = column_evidence[group_id].get(field)
+                if expected_val is None:
+                    if entry["status"] != "unresolved" or entry["value"] != "unknown" or entry["source_ref"] != binding["source_ref"]:
+                        raise RestorationError(
+                            f"restored record {record['restoration_id']} field {field} invalid missing column classification: {entry!r}"
+                        )
+                    expected_unresolved.append(field)
+                else:
+                    if expected_val not in binding["vocabulary"]:
+                        raise RestorationError(
+                            f"restored record {record['restoration_id']} field {field} value {expected_val!r} outside vocabulary"
+                        )
+                    if entry["status"] != "restored" or entry["value"] != expected_val or entry["source_ref"] != binding["source_ref"]:
+                        raise RestorationError(
+                            f"restored record {record['restoration_id']} field {field} invalid restored column classification: {entry!r}"
+                        )
+            else:
+                raise RestorationError(f"unsupported classification kind {kind!r}")
+
+        if record["unresolved"] != sorted(set(expected_unresolved)):
+            raise RestorationError(
+                f"restored record {record['restoration_id']} unresolved keys diverge: "
+                f"expected {sorted(set(expected_unresolved))}, got {record['unresolved']}"
+            )
+
     return {
         "records": header["records"],
         "index_sha256": index_sha256,
