@@ -8,10 +8,10 @@ replacement, not the old two-tier merge-queue file.
 
 | Job | When |
 | --- | --- |
-| Changes | always (GitHub compare API; `docs_only` / `frontend` / `shards`) |
+| Changes | always (`docs_only` / `frontend` / `shards` / `pytest_mode` / `shard_count` / `pytest_candidates`) |
 | Ruff | not docs-only |
 | Secret scan | always |
-| pytest | always (4 shards for code, 1 `docs_skills` shard for docs/skills) |
+| pytest | always (`full` → 4 shards; `selected` → 1 shard over candidates; `docs` → 1 `docs_skills` shard) |
 | Contracts | not docs-only |
 | Frontend | when frontend paths changed |
 | CI Gate | always |
@@ -36,9 +36,17 @@ separate slow selection; this adds no retries or duplicate slow-test execution.
 Missing/malformed comparison data, API errors, empty changes, and the compare
 API's 300-file cap fail closed to the full tier including frontend.
 
-Scripts-only PRs still run all duration-balanced pytest shards. Path-selected
-pytest subsets and independent lane flags remain deferred. After merge, the
-CI stream owner tracks one week of `ci_timings` on the private work item.
+Scripts/`tests/`-only PRs that pass the selected allowlist run
+`pytest_mode=selected`: one matrix job, `shard_count=1`, and `plan-files`
+stdin from `pytest_candidates` (resolved once in Changes — no re-derive in
+pytest). Shared-root denylist hits (`.github/`, `scripts/ci|config|build/`,
+conftest, locks, packages/schemas/site/curriculum, etc.), non-test files under
+`tests/`, non-`.py` under `scripts/`, stem collisions, unmapped scripts, deleted
+test files, empty or ≥80 candidates, and anything outside the allowlist stay
+`pytest_mode=full` with four shards. Contracts and ruff stay on whenever
+`docs_only=false`. After merge, the CI stream owner tracks one week of
+`ci_timings` on the private work item (selected may be rare under on-disk stem
+collision conservatism).
 
 No CF attest. No auto-arm. No landing-class classifier. No coverage floor.
 Red team review is out of band.
@@ -48,10 +56,11 @@ Red team review is out of band.
 The code pytest shards run on all 4 runner vCPUs (`-n logical`, not `-n auto`
 which counts physical cores), collect through one initial `tests` path
 instead of positional file arguments, and balance by measured per-file
-duration instead of a modulo split. Shard count (`4`) is declared once in
-`ci.yml`'s workflow-level `env: PYTEST_SHARD_COUNT`, read by both the
-`changes` job's `shards` output and the pytest job's `plan-files` call.
-
+duration instead of a modulo split. Full-tier shard count (`4`) is declared
+once in `ci.yml`'s workflow-level `env: PYTEST_SHARD_COUNT`. The Changes job
+emits `shard_count` (1 or 4) and `shards`; `plan-files` always uses
+`needs.changes.outputs.shard_count` so selected mode never LPT-partitions a
+candidate set into unused buckets.
 `--max-worker-restart=0` fails the job on a worker crash: pytest-timeout's
 thread method terminates the process, and replacing it can leave xdist
 hanging until the job limit.

@@ -11,9 +11,10 @@ permissions:
   contents: read
 
 env:
-  # Declared once (docs/decisions/2026-07-22-pytest-four-shard-matrix.md); the
-  # `changes` job's `shards` output and the pytest job's `plan-files
-  # --shard-count` both read this instead of a second hardcoded "4".
+  # Full-tier default (docs/decisions/2026-07-22-pytest-four-shard-matrix.md).
+  # Selected/docs modes emit shard_count=1 from Changes; plan-files reads
+  # needs.changes.outputs.shard_count (not this env alone) so selected never
+  # LPT-partitions into unused buckets.
   PYTEST_SHARD_COUNT: '4'
 
 on:
@@ -34,10 +35,15 @@ jobs:
       docs_only: ${{ steps.classify.outputs.docs_only }}
       frontend: ${{ steps.classify.outputs.frontend }}
       shards: ${{ steps.classify.outputs.shards }}
+      pytest_mode: ${{ steps.classify.outputs.pytest_mode }}
+      shard_count: ${{ steps.classify.outputs.shard_count }}
+      pytest_candidates: ${{ steps.classify.outputs.pytest_candidates }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          # Sparse working tree; classify uses `git ls-tree HEAD` for existence /
+          # stem-collision / safety-net checks (object tree, not working tree).
           sparse-checkout: |
             scripts/ci/
             scripts/__init__.py
@@ -193,15 +199,27 @@ jobs:
         if: needs.changes.outputs.docs_only == 'false'
         env:
           SHARD: ${{ matrix.shard }}
-          SHARD_COUNT: ${{ env.PYTEST_SHARD_COUNT }}
+          SHARD_COUNT: ${{ needs.changes.outputs.shard_count }}
+          PYTEST_MODE: ${{ needs.changes.outputs.pytest_mode }}
+          PYTEST_CANDIDATES: ${{ needs.changes.outputs.pytest_candidates }}
         run: |
           set -euo pipefail
           allowlist="${RUNNER_TEMP}/pytest-shard-${SHARD}-files.txt"
-          git ls-files -- tests | grep -E '/test_[^/]+\.py$' | sort | \
-            .venv/bin/python scripts/ci/pytest_shards.py plan-files \
-              --shard-id "$SHARD" --shard-count "$SHARD_COUNT" \
-              --durations scripts/ci/pytest-file-durations.json \
-              --output "$allowlist"
+          if [ "$PYTEST_MODE" = "selected" ]; then
+            # Candidates resolved once in Changes; do not re-derive stem maps here.
+            # Hardcode shard 1/1 so a mismatched shard_count cannot LPT-drop files.
+            .venv/bin/python -c 'import json,os; print("\n".join(sorted(json.loads(os.environ["PYTEST_CANDIDATES"]))))' | \
+              .venv/bin/python scripts/ci/pytest_shards.py plan-files \
+                --shard-id 1 --shard-count 1 \
+                --durations scripts/ci/pytest-file-durations.json \
+                --output "$allowlist"
+          else
+            git ls-files -- tests | grep -E '/test_[^/]+\.py$' | sort | \
+              .venv/bin/python scripts/ci/pytest_shards.py plan-files \
+                --shard-id "$SHARD" --shard-count "$SHARD_COUNT" \
+                --durations scripts/ci/pytest-file-durations.json \
+                --output "$allowlist"
+          fi
           echo "LU_PYTEST_SHARD_FILES=${allowlist}" >> "$GITHUB_ENV"
       - name: Start memory sampler
         if: needs.changes.outputs.docs_only == 'false'

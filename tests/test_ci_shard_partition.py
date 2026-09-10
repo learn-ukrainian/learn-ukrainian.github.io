@@ -415,20 +415,111 @@ def _ci_text() -> str:
     return _CI.read_text(encoding="utf-8")
 
 
-def test_ci_yml_declares_shard_count_once() -> None:
+def test_ci_yml_declares_full_tier_shard_count_once() -> None:
+    """Full-tier default stays 4; plan-files must follow Changes.shard_count."""
     ci_text = _ci_text()
-    assert re.search(r"(?m)^\s*PYTEST_SHARD_COUNT:\s*'4'\s*$", ci_text), "shard count must be declared once at workflow env level"
-    classifier = (_REPO_ROOT / "scripts/ci/classify_changes.py").read_text()
+    assert re.search(r"(?m)^\s*PYTEST_SHARD_COUNT:\s*'4'\s*$", ci_text), (
+        "full-tier shard count must be declared once at workflow env level"
+    )
+    assert ci_text.count("PYTEST_SHARD_COUNT:") == 1
+    classifier = (_REPO_ROOT / "scripts/ci/classify_changes.py").read_text(encoding="utf-8")
     assert "python3 -m scripts.ci.classify_changes" in ci_text
-    assert 'int(os.environ["PYTEST_SHARD_COUNT"])' in classifier, "classifier must read the declared shard count"
-    assert "${{ env.PYTEST_SHARD_COUNT }}" in ci_text, "pytest job must read the same declared shard count"
+    assert 'int(os.environ["PYTEST_SHARD_COUNT"])' in classifier
+    assert "needs.changes.outputs.shard_count" in ci_text
+    assert "needs.changes.outputs.pytest_mode" in ci_text
+    assert "needs.changes.outputs.pytest_candidates" in ci_text
+    # Do not lock plan-files to env.PYTEST_SHARD_COUNT alone (silent-drop on selected).
+    assert "SHARD_COUNT: ${{ env.PYTEST_SHARD_COUNT }}" not in ci_text
 
 
-def test_ci_yml_plan_files_called_with_declared_shard_count() -> None:
+def test_ci_yml_plan_files_uses_changes_shard_count() -> None:
     ci_text = _ci_text()
     assert "pytest_shards.py plan-files" in ci_text
-    assert '--shard-id "$SHARD" --shard-count "$SHARD_COUNT"' in ci_text
     assert "scripts/ci/pytest-file-durations.json" in ci_text
+    assert 'PYTEST_MODE" = "selected"' in ci_text or "PYTEST_MODE\" = \"selected\"" in ci_text
+    # Selected and full both pass Changes.outputs.shard_count (1 vs 4), not env alone.
+    assert '--shard-id "$SHARD" --shard-count "$SHARD_COUNT"' in ci_text
+    assert "SHARD_COUNT: ${{ needs.changes.outputs.shard_count }}" in ci_text
+    assert "PYTEST_CANDIDATES" in ci_text
+    assert "SHARD_COUNT: ${{ env.PYTEST_SHARD_COUNT }}" not in ci_text
+
+
+def test_selected_plan_files_stdin_is_exact_candidates_no_silent_drop(tmp_path: Path) -> None:
+    """Selected mode: plan-files stdin == pytest_candidates; shard_count=1; no drop."""
+    candidates = [
+        "tests/test_a.py",
+        "tests/audit/test_c.py",
+        "tests/test_ci_shard_partition.py",
+    ]
+    durations = {path: 1.0 for path in candidates}
+    output = tmp_path / "allowlist.txt"
+    weights = write_file_shard_plan(
+        paths=candidates,
+        shard_id=1,
+        shard_count=1,
+        durations=durations,
+        output=output,
+    )
+    written = output.read_text(encoding="utf-8").splitlines()
+    assert written == sorted(candidates)
+    assert len(weights) == 1
+    assert weights[0]["file_count"] == len(candidates)
+    shards = assign_files(candidates, 1, durations)
+    assert len(shards) == 1
+    assert_set_integrity(candidates, shards)
+
+
+def test_full_plan_files_still_partitions_across_four_shards(tmp_path: Path) -> None:
+    durations = {path: float(i + 1) for i, path in enumerate(_SAMPLE_PATHS)}
+    shards = assign_files(_SAMPLE_PATHS, 4, durations)
+    assert len(shards) == 4
+    assert_set_integrity(_SAMPLE_PATHS, shards)
+    for shard_id in range(1, 5):
+        allowlist = tmp_path / f"shard-{shard_id}.txt"
+        write_file_shard_plan(
+            paths=_SAMPLE_PATHS,
+            shard_id=shard_id,
+            shard_count=4,
+            durations=durations,
+            output=allowlist,
+        )
+        assert allowlist.read_text(encoding="utf-8").splitlines()
+
+
+def test_shards_length_equals_shard_count_for_selected_and_full() -> None:
+    from scripts.ci.classify_changes import classify
+
+    docs = classify(
+        ["docs/guide.md"],
+        event="pull_request",
+        labels=[],
+        shard_count=4,
+        denominator=[],
+        tree_paths=frozenset(),
+    )
+    assert len(json.loads(docs["shards"])) == int(docs["shard_count"]) == 1
+
+    selected = classify(
+        ["tests/test_x.py"],
+        event="pull_request",
+        labels=[],
+        shard_count=4,
+        denominator=[],
+        tree_paths=frozenset({"tests/test_x.py"}),
+    )
+    assert selected["pytest_mode"] == "selected"
+    assert len(json.loads(selected["shards"])) == int(selected["shard_count"]) == 1
+
+    full = classify(
+        ["unknown.bin"],
+        event="pull_request",
+        labels=[],
+        shard_count=4,
+        denominator=[],
+        tree_paths=frozenset(),
+    )
+    assert full["pytest_mode"] == "full"
+    assert len(json.loads(full["shards"])) == int(full["shard_count"]) == 4
 
 
 def test_ci_yml_no_modulo_split_remains() -> None:
