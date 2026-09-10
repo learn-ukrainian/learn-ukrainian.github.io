@@ -723,6 +723,7 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
         )
 
     observed_locators: set[str] = set()
+    observed_restoration_ids: set[str] = set()
     observed_locators_by_cohort: dict[str, set[str]] = {cid: set() for cid in selected_by_cohort}
     observed_records_by_cohort: dict[str, int] = {cid: 0 for cid in selected_by_cohort}
     for record in records:
@@ -737,6 +738,15 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
             raise RestorationError(
                 f"restored record {record['restoration_id']} cohort {record['cohort_id']!r} "
                 f"diverges from reconstructed cohort {expected_cohort_id!r}"
+            )
+        rid = record["restoration_id"]
+        if rid in observed_restoration_ids:
+            raise RestorationError(f"duplicate restoration_id {rid} in restoration index")
+        observed_restoration_ids.add(rid)
+        expected_rid = locators.opaque_id("restore", canonical_json([expected_cohort_id, lid]))
+        if rid != expected_rid:
+            raise RestorationError(
+                f"restored record {lid} restoration_id {rid!r} diverges from expected {expected_rid!r}"
             )
         observed_locators_by_cohort[expected_cohort_id].add(lid)
         observed_records_by_cohort[expected_cohort_id] += record["affected_records"]

@@ -614,3 +614,33 @@ def test_verify_rejects_reassigned_cohort(tmp_path: Path) -> None:
     _reseal_tampered_artifacts(root)
     with pytest.raises(restoration.RestorationError, match="diverges from reconstructed cohort"):
         restoration.verify(config_path=CONFIG, input_root=root, output_root=root)
+
+
+def test_verify_rejects_duplicate_restoration_id(tmp_path: Path) -> None:
+    root = _environment(tmp_path)
+    _build(root)
+    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    lines = index.read_text(encoding="utf-8").splitlines()
+    records = [json.loads(line) for line in lines[1:]]
+    # Copy restoration_id from record 0 onto record 1
+    records[1]["restoration_id"] = records[0]["restoration_id"]
+    new_lines = [lines[0]] + [restoration.canonical_json(r) for r in records]
+    index.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
+    _reseal_tampered_artifacts(root)
+    with pytest.raises(restoration.RestorationError, match="duplicate restoration_id"):
+        restoration.verify(config_path=CONFIG, input_root=root, output_root=root)
+
+
+def test_verify_rejects_fabricated_restoration_id(tmp_path: Path) -> None:
+    root = _environment(tmp_path)
+    _build(root)
+    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    lines = index.read_text(encoding="utf-8").splitlines()
+    records = [json.loads(line) for line in lines[1:]]
+    # Fabricate schema-conforming restoration_id on record 0
+    records[0]["restoration_id"] = "restore." + "0" * 24
+    new_lines = [lines[0]] + [restoration.canonical_json(r) for r in records]
+    index.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
+    _reseal_tampered_artifacts(root)
+    with pytest.raises(restoration.RestorationError, match=r"diverges from expected"):
+        restoration.verify(config_path=CONFIG, input_root=root, output_root=root)
