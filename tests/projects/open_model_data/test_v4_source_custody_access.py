@@ -819,3 +819,66 @@ def test_verify_allows_missing_report_valid_prose_with_reserved_words(tmp_path: 
     )
 
     assert custody.verify(CONFIG_PATH, input_root=repo_root, output_root=valid_out) is True
+
+
+def test_check_chunk_file_lineage_preserves_excluded_mode(tmp_path: Path) -> None:
+    chunk_file = tmp_path / "scanned_sample.jsonl"
+    rows = [
+        {"chunk_id": "c1", "extraction_mode": "scanned_image", "text": "Скан."},
+    ]
+    chunk_file.write_text("\n".join(json.dumps(r) for r in rows) + "\n", encoding="utf-8")
+
+    mode, is_ocr, count, _chars, _records = custody.check_chunk_file_lineage(chunk_file)
+    assert mode == "scanned_image"
+    assert is_ocr is True
+    assert count == 1
+
+
+def test_verify_detects_cohort_id_mismatch_in_summary(tmp_path: Path, repo_root: Path) -> None:
+    tampered_out = tmp_path / "out"
+    custody_dir = tampered_out / "data/projects/open_model_data/custody"
+    custody_dir.mkdir(parents=True)
+
+    (custody_dir / "v4_source_custody_access_index_v1.jsonl").write_bytes(
+        Path("data/projects/open_model_data/custody/v4_source_custody_access_index_v1.jsonl").read_bytes()
+    )
+    (custody_dir / "v4_source_custody_missing_report_v1.json").write_bytes(
+        Path("data/projects/open_model_data/custody/v4_source_custody_missing_report_v1.json").read_bytes()
+    )
+
+    receipt_orig = Path("data/projects/open_model_data/custody/v4_source_custody_access_receipt_v1.json")
+    receipt_data = json.loads(receipt_orig.read_text(encoding="utf-8"))
+
+    # Tamper first_eligible_cohort cohort_id
+    receipt_tampered = copy.deepcopy(receipt_data)
+    receipt_tampered["summary"]["first_eligible_cohort"]["cohort_id"] = "wrong-cohort"
+    (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered), encoding="utf-8"
+    )
+    with pytest.raises(custody.CustodyAccessError, match=r"Receipt first_eligible_cohort discrepancy"):
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+
+    # Tamper textbook_cohort cohort_id
+    receipt_tampered2 = copy.deepcopy(receipt_data)
+    receipt_tampered2["summary"]["textbook_cohort"]["cohort_id"] = "wrong-cohort"
+    (custody_dir / "v4_source_custody_access_receipt_v1.json").write_text(
+        json.dumps(receipt_tampered2), encoding="utf-8"
+    )
+    with pytest.raises(custody.CustodyAccessError, match=r"Receipt textbook_cohort discrepancy"):
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+
+
+def test_read_command_fails_when_source_yields_zero_records(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    db_path = tmp_path / "test.db"
+    conn = sqlite3.connect(db_path)
+    conn.execute("CREATE TABLE literary_texts (id INTEGER PRIMARY KEY, source_file TEXT, chunk_id TEXT, text TEXT);")
+    conn.commit()
+    conn.close()
+
+    exit_code = custody.main(
+        ["read", "--database", str(db_path), "--table", "literary_texts", "--source-file", "nonexistent"]
+    )
+    assert exit_code == 1
+    captured = capsys.readouterr()
+    assert "Access proof failed" in captured.err
+    assert '"records_streamed":0' in captured.out

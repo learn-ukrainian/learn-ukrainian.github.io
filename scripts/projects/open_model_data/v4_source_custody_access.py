@@ -224,6 +224,7 @@ def check_chunk_file_lineage(
     char_count = 0
     chunk_records: list[tuple[str, str]] = []
     has_ocr = False
+    detected_ocr_mode: str | None = None
     has_unknown = False
 
     with chunk_file.open(encoding="utf-8") as f:
@@ -254,6 +255,8 @@ def check_chunk_file_lineage(
                 for m in modes_for_row:
                     if m in excluded_modes:
                         has_ocr = True
+                        if detected_ocr_mode is None:
+                            detected_ocr_mode = m
                     elif m not in ("native_text", "native_pdf_text"):
                         has_unknown = True
 
@@ -261,7 +264,7 @@ def check_chunk_file_lineage(
         return "unknown", False, 0, 0, []
 
     if has_ocr:
-        return "apple_vision_ocr", True, row_count, char_count, chunk_records
+        return detected_ocr_mode or "apple_vision_ocr", True, row_count, char_count, chunk_records
 
     if has_unknown:
         return "unknown", False, row_count, char_count, chunk_records
@@ -338,7 +341,7 @@ def resolve_source_access(
             )
             if chunk_is_ocr:
                 lineage_status = "EXCLUDED_OCR"
-                lineage_mode = "apple_vision_ocr"
+                lineage_mode = chunk_mode
                 evidence_ref = f"{chunk_ref}#extraction_mode"
                 is_ocr = True
                 permitted = False
@@ -997,7 +1000,8 @@ def verify(
 
     rc_lit = summary.get("first_eligible_cohort", {})
     if (
-        rc_lit.get("total_sources") != len(lit_records)
+        rc_lit.get("cohort_id") != "literary-non-ocr"
+        or rc_lit.get("total_sources") != len(lit_records)
         or rc_lit.get("accessible_sources") != lit_acc
         or rc_lit.get("confirmed_native") != lit_native
         or rc_lit.get("permitted_to_proceed") != (lit_perm == len(lit_records))
@@ -1017,7 +1021,8 @@ def verify(
 
     rc_tb = summary.get("textbook_cohort", {})
     if (
-        rc_tb.get("total_sources") != len(tb_records)
+        rc_tb.get("cohort_id") != "public-textbooks-non-stem-non-ocr"
+        or rc_tb.get("total_sources") != len(tb_records)
         or rc_tb.get("accessible_sources") != tb_acc
         or rc_tb.get("missing_on_host") != tb_missing
         or rc_tb.get("confirmed_native") != tb_native
@@ -1110,6 +1115,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             reader = BoundedCustodyReader(args.database)
             result = reader.read_source_stream(args.table, args.source_file, args.batch_size)
             print(canonical_json(result))
+            if result.get("records_streamed", 0) == 0:
+                print(
+                    f"Error: Access proof failed — source '{args.source_file}' yielded 0 records in '{args.table}'",
+                    file=sys.stderr,
+                )
+                return 1
             return 0
     except CustodyAccessError as exc:
         print(f"Error: {exc}", file=sys.stderr)

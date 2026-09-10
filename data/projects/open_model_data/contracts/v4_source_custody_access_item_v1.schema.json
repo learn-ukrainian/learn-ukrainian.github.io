@@ -109,6 +109,8 @@
             "native_digital_source",
             "native_pdf_text",
             "apple_vision_ocr",
+            "ocr",
+            "scanned_image",
             "unknown"
           ]
         },
