@@ -15,12 +15,13 @@ from scripts.projects.open_model_data import v4_provenance_restoration as restor
 
 ROOT = Path(__file__).resolve().parents[3]
 EVIDENCE = ROOT / "data/projects/open_model_data/evidence"
+PROVENANCE = ROOT / "data/projects/open_model_data/provenance"
 CONTRACT = ROOT / "data/projects/open_model_data/contracts/v4_provenance_restoration_v1.schema.json"
-CONFIG = EVIDENCE / "v4_provenance_restoration_config_v1.json"
+CONFIG = PROVENANCE / "v4_provenance_restoration_config_v1.json"
 LOCATOR_CONFIG = EVIDENCE / "source_work_locator_config_v1.json"
-INDEX = EVIDENCE / "v4_provenance_restoration_index_v1.jsonl"
-UNRESOLVED = EVIDENCE / "v4_provenance_restoration_unresolved_v1.json"
-RECEIPT = EVIDENCE / "v4_provenance_restoration_receipt_v1.json"
+INDEX = PROVENANCE / "v4_provenance_restoration_index_v1.jsonl"
+UNRESOLVED = PROVENANCE / "v4_provenance_restoration_unresolved_v1.json"
+RECEIPT = PROVENANCE / "v4_provenance_restoration_receipt_v1.json"
 
 
 def _database(root: Path) -> Path:
@@ -107,14 +108,14 @@ def _build(root: Path) -> dict:
 
 
 def _index_rows(root: Path) -> tuple[dict, list[dict]]:
-    lines = (root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl").read_text(
+    lines = (root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl").read_text(
         encoding="utf-8"
     ).splitlines()
     return json.loads(lines[0]), [json.loads(line) for line in lines[1:]]
 
 
 def _artifact(root: Path, name: str) -> dict:
-    return json.loads((root / f"data/projects/open_model_data/evidence/{name}").read_text(encoding="utf-8"))
+    return json.loads((root / f"data/projects/open_model_data/provenance/{name}").read_text(encoding="utf-8"))
 
 
 def test_committed_config_validates_against_contract() -> None:
@@ -231,9 +232,9 @@ def test_build_is_byte_deterministic(tmp_path: Path) -> None:
     root = _environment(tmp_path)
     first = _build(root)
     paths = [
-        root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl",
-        root / "data/projects/open_model_data/evidence/v4_provenance_restoration_unresolved_v1.json",
-        root / "data/projects/open_model_data/evidence/v4_provenance_restoration_receipt_v1.json",
+        root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl",
+        root / "data/projects/open_model_data/provenance/v4_provenance_restoration_unresolved_v1.json",
+        root / "data/projects/open_model_data/provenance/v4_provenance_restoration_receipt_v1.json",
     ]
     before = [path.read_bytes() for path in paths]
     second = _build(root)
@@ -244,13 +245,13 @@ def test_build_is_byte_deterministic(tmp_path: Path) -> None:
 def test_no_corpus_text_leaks_into_artifacts(tmp_path: Path) -> None:
     root = _environment(tmp_path)
     _build(root)
-    evidence = root / "data/projects/open_model_data/evidence"
+    provenance = root / "data/projects/open_model_data/provenance"
     for name in (
         "v4_provenance_restoration_index_v1.jsonl",
         "v4_provenance_restoration_unresolved_v1.json",
         "v4_provenance_restoration_receipt_v1.json",
     ):
-        content = (evidence / name).read_text(encoding="utf-8")
+        content = (provenance / name).read_text(encoding="utf-8")
         assert "SECRET" not in content
 
 
@@ -346,7 +347,7 @@ def test_unknown_config_key_fails_schema(tmp_path: Path) -> None:
 def test_verify_detects_tampered_index_and_reordered_rows(tmp_path: Path) -> None:
     root = _environment(tmp_path)
     _build(root)
-    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    index = root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl"
     lines = index.read_text(encoding="utf-8").splitlines()
     tampered = json.loads(lines[-1])
     tampered["links"]["canonical_url"] = "https://attacker.example/forge"
@@ -357,7 +358,7 @@ def test_verify_detects_tampered_index_and_reordered_rows(tmp_path: Path) -> Non
 
     root = _environment(tmp_path / "reordered")
     _build(root)
-    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    index = root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl"
     lines = index.read_text(encoding="utf-8").splitlines()
     header, rows = lines[0], [json.loads(line) for line in lines[1:]]
     rows.reverse()
@@ -374,7 +375,7 @@ def test_atomic_publication_failure_preserves_prior_outputs(
 ) -> None:
     root = _environment(tmp_path)
     _build(root)
-    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    index = root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl"
     before = index.read_bytes()
 
     def fail(_source: Path, _target: Path) -> None:
@@ -389,10 +390,10 @@ def test_atomic_publication_failure_preserves_prior_outputs(
 
 def _reseal_tampered_artifacts(root: Path) -> None:
     """Helper to coherently reseal hashes across index header, unresolved report, and receipt."""
-    evidence = root / "data/projects/open_model_data/evidence"
-    index_path = evidence / "v4_provenance_restoration_index_v1.jsonl"
-    report_path = evidence / "v4_provenance_restoration_unresolved_v1.json"
-    receipt_path = evidence / "v4_provenance_restoration_receipt_v1.json"
+    provenance = root / "data/projects/open_model_data/provenance"
+    index_path = provenance / "v4_provenance_restoration_index_v1.jsonl"
+    report_path = provenance / "v4_provenance_restoration_unresolved_v1.json"
+    receipt_path = provenance / "v4_provenance_restoration_receipt_v1.json"
 
     lines = index_path.read_text(encoding="utf-8").splitlines()
     header = json.loads(lines[0])
@@ -424,7 +425,7 @@ def _reseal_tampered_artifacts(root: Path) -> None:
 def test_verify_rejects_fabricated_edition_metadata(tmp_path: Path) -> None:
     root = _environment(tmp_path)
     _build(root)
-    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    index = root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl"
     lines = index.read_text(encoding="utf-8").splitlines()
     row = json.loads(lines[1])
     row["links"]["edition"]["title"] = "Fabricated Edition Title"
@@ -438,7 +439,7 @@ def test_verify_rejects_fabricated_edition_metadata(tmp_path: Path) -> None:
 def test_verify_rejects_fabricated_acquisition_ref(tmp_path: Path) -> None:
     root = _environment(tmp_path)
     _build(root)
-    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    index = root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl"
     lines = index.read_text(encoding="utf-8").splitlines()
     row = json.loads(lines[1])
     row["links"]["acquisition_ref"] = "gdrive:learn-ukrainian-data/literary_texts/forged.jsonl"
@@ -452,7 +453,7 @@ def test_verify_rejects_fabricated_acquisition_ref(tmp_path: Path) -> None:
 def test_verify_rejects_fabricated_textbook_domain(tmp_path: Path) -> None:
     root = _environment(tmp_path)
     _build(root)
-    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    index = root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl"
     lines = index.read_text(encoding="utf-8").splitlines()
     # tb-lang is row index 3
     found = False
@@ -474,7 +475,7 @@ def test_verify_rejects_fabricated_textbook_domain(tmp_path: Path) -> None:
 def test_verify_rejects_fabricated_column_classification(tmp_path: Path) -> None:
     root = _environment(tmp_path)
     _build(root)
-    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    index = root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl"
     lines = index.read_text(encoding="utf-8").splitlines()
     # lit-a poetry
     found = False
@@ -495,7 +496,7 @@ def test_verify_rejects_fabricated_column_classification(tmp_path: Path) -> None
 def test_verify_rejects_inconsistent_unresolved_status(tmp_path: Path) -> None:
     root = _environment(tmp_path)
     _build(root)
-    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    index = root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl"
     lines = index.read_text(encoding="utf-8").splitlines()
     row = json.loads(lines[1])
     row["unresolved"] = []
@@ -509,7 +510,7 @@ def test_verify_rejects_inconsistent_unresolved_status(tmp_path: Path) -> None:
 def test_verify_rejects_partial_selection(tmp_path: Path) -> None:
     root = _environment(tmp_path)
     _build(root)
-    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    index = root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl"
     lines = index.read_text(encoding="utf-8").splitlines()
     # Drop first 2 rows
     lines = [lines[0], lines[1], lines[2]]
@@ -522,7 +523,7 @@ def test_verify_rejects_partial_selection(tmp_path: Path) -> None:
 def test_verify_rejects_duplicate_locator(tmp_path: Path) -> None:
     root = _environment(tmp_path)
     _build(root)
-    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    index = root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl"
     lines = index.read_text(encoding="utf-8").splitlines()
     # Duplicate row 1 in place of row 2 so total count matches expected selection
     lines[2] = lines[1]
@@ -535,7 +536,7 @@ def test_verify_rejects_duplicate_locator(tmp_path: Path) -> None:
 def test_verify_rejects_divergent_receipt_selection_or_exclusions(tmp_path: Path) -> None:
     root = _environment(tmp_path)
     _build(root)
-    receipt_path = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_receipt_v1.json"
+    receipt_path = root / "data/projects/open_model_data/provenance/v4_provenance_restoration_receipt_v1.json"
     receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
     receipt["selection"]["cohorts"][0]["selected_rows"] = 999
     receipt_path.write_text(json.dumps(receipt, indent=2), encoding="utf-8")
@@ -598,7 +599,7 @@ def test_acquisition_plan_rejects_missing_or_invalid_reconciliation_details() ->
 def test_verify_rejects_reassigned_cohort(tmp_path: Path) -> None:
     root = _environment(tmp_path)
     _build(root)
-    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    index = root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl"
     lines = index.read_text(encoding="utf-8").splitlines()
     header_line = lines[0]
     records = [json.loads(line) for line in lines[1:]]
@@ -619,7 +620,7 @@ def test_verify_rejects_reassigned_cohort(tmp_path: Path) -> None:
 def test_verify_rejects_duplicate_restoration_id(tmp_path: Path) -> None:
     root = _environment(tmp_path)
     _build(root)
-    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    index = root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl"
     lines = index.read_text(encoding="utf-8").splitlines()
     records = [json.loads(line) for line in lines[1:]]
     # Copy restoration_id from record 0 onto record 1
@@ -634,7 +635,7 @@ def test_verify_rejects_duplicate_restoration_id(tmp_path: Path) -> None:
 def test_verify_rejects_fabricated_restoration_id(tmp_path: Path) -> None:
     root = _environment(tmp_path)
     _build(root)
-    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    index = root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl"
     lines = index.read_text(encoding="utf-8").splitlines()
     records = [json.loads(line) for line in lines[1:]]
     # Fabricate schema-conforming restoration_id on record 0

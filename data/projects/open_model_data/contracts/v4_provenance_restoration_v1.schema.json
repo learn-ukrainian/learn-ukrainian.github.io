@@ -349,9 +349,9 @@
           "additionalProperties": false,
           "required": ["index", "unresolved_report", "receipt"],
           "properties": {
-            "index": {"const": "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"},
-            "unresolved_report": {"const": "data/projects/open_model_data/evidence/v4_provenance_restoration_unresolved_v1.json"},
-            "receipt": {"const": "data/projects/open_model_data/evidence/v4_provenance_restoration_receipt_v1.json"}
+            "index": {"const": "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl"},
+            "unresolved_report": {"const": "data/projects/open_model_data/provenance/v4_provenance_restoration_unresolved_v1.json"},
+            "receipt": {"const": "data/projects/open_model_data/provenance/v4_provenance_restoration_receipt_v1.json"}
           }
         },
         "consumer_views": {"type": "array", "items": {"enum": ["db.literary_texts", "db.textbooks.public"]}, "uniqueItems": true, "minItems": 2, "maxItems": 2},

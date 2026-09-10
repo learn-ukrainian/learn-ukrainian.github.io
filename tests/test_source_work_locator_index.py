@@ -14,7 +14,7 @@ from scripts.projects.open_model_data import source_work_locator_index as locato
 from scripts.projects.open_model_data import v4_provenance_restoration as restoration
 
 ROOT = Path(__file__).resolve().parents[1]
-RESTORATION_CONFIG = ROOT / "data/projects/open_model_data/evidence/v4_provenance_restoration_config_v1.json"
+RESTORATION_CONFIG = ROOT / "data/projects/open_model_data/provenance/v4_provenance_restoration_config_v1.json"
 RESTORATION_CONTRACT = ROOT / "data/projects/open_model_data/contracts/v4_provenance_restoration_v1.schema.json"
 EXCLUDED = (
     "anna-ohoiko-1000-words-2nd-ed",
@@ -436,7 +436,7 @@ def _restore(tmp_path: Path) -> tuple[list[dict], Path]:
     locators.build(config_path=config, input_root=root, output=snapshot)
     _write_restoration_inputs(root, snapshot)
     restoration.build(config_path=RESTORATION_CONFIG, input_root=root, output_root=root)
-    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    index = root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl"
     lines = index.read_text(encoding="utf-8").splitlines()
     return [json.loads(line) for line in lines[1:]], index
 

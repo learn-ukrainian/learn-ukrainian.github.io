@@ -32,7 +32,7 @@ from scripts.projects.open_model_data import source_work_locator_index as locato
 
 ROOT = Path(__file__).resolve().parents[3]
 CONTRACT = ROOT / "data/projects/open_model_data/contracts/v4_provenance_restoration_v1.schema.json"
-DEFAULT_CONFIG = ROOT / "data/projects/open_model_data/evidence/v4_provenance_restoration_config_v1.json"
+DEFAULT_CONFIG = ROOT / "data/projects/open_model_data/provenance/v4_provenance_restoration_config_v1.json"
 CLASSIFICATION_FIELDS = ("period", "register", "domain", "original_language", "translation_status")
 ORDERING = "cohort_id,source_id,work_id,locator_id"
 

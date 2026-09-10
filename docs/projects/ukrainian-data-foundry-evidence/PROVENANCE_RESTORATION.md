@@ -35,11 +35,11 @@ artifacts):
 
 ```bash
 .venv/bin/python -m scripts.projects.open_model_data.v4_provenance_restoration build \
-  --config data/projects/open_model_data/evidence/v4_provenance_restoration_config_v1.json \
+  --config data/projects/open_model_data/provenance/v4_provenance_restoration_config_v1.json \
   --input-root . --output-root .
 
 .venv/bin/python -m scripts.projects.open_model_data.v4_provenance_restoration verify \
-  --config data/projects/open_model_data/evidence/v4_provenance_restoration_config_v1.json \
+  --config data/projects/open_model_data/provenance/v4_provenance_restoration_config_v1.json \
   --input-root . --output-root .
 ```
 
