@@ -40,6 +40,22 @@ ITEM_SCHEMA_PATH = CONTRACTS_DIR / "v4_source_custody_access_item_v1.schema.json
 MISSING_REPORT_SCHEMA_PATH = CONTRACTS_DIR / "v4_source_custody_missing_report_v1.schema.json"
 RECEIPT_SCHEMA_PATH = CONTRACTS_DIR / "v4_source_custody_access_receipt_v1.schema.json"
 
+NATIVE_LINEAGE_MODES = frozenset(
+    {
+        "native_digital_source",
+        "native_pdf_text",
+        "native_text",
+        "mixed_native",
+    }
+)
+OCR_LINEAGE_MODES = frozenset(
+    {
+        "apple_vision_ocr",
+        "ocr",
+        "scanned_image",
+    }
+)
+
 
 class CustodyAccessError(RuntimeError):
     """Raised when custody resolution or lineage verification fails closed."""
@@ -921,24 +937,79 @@ def verify(
 
             permitted = row["permitted_to_proceed"]
             status = row["lineage_verification"]["status"]
+            lineage_mode = row["lineage_verification"].get("lineage_mode")
             is_ocr = row["lineage_verification"]["is_ocr_derived"]
             cust_status = row["custody_resolution"]["status"]
             host_reachable = row["custody_resolution"]["host_reachable"]
             metrics = row["bounded_read_metrics"]
             blocking_reason = row["blocking_reason"]
 
-            # Explicit invariant checks
-            if permitted:
-                if status != "CONFIRMED_NATIVE":
+            # Explicit invariant checks across ALL rows (permitted and blocked)
+            if status == "CONFIRMED_NATIVE":
+                if lineage_mode not in NATIVE_LINEAGE_MODES:
                     raise CustodyAccessError(
                         f"Contradictory record at line {line_num} ({row['source_id']}): "
-                        f"permitted_to_proceed is True but lineage status is {status}"
+                        f"lineage status is CONFIRMED_NATIVE but lineage_mode is '{lineage_mode}'"
                     )
                 if is_ocr:
                     raise CustodyAccessError(
                         f"Contradictory record at line {line_num} ({row['source_id']}): "
-                        f"permitted_to_proceed is True but is_ocr_derived is True"
+                        f"lineage status is CONFIRMED_NATIVE but is_ocr_derived is True"
                     )
+            elif status == "UNKNOWN_LINEAGE":
+                if lineage_mode != "unknown":
+                    raise CustodyAccessError(
+                        f"Contradictory record at line {line_num} ({row['source_id']}): "
+                        f"lineage status is UNKNOWN_LINEAGE but lineage_mode is '{lineage_mode}'"
+                    )
+                if is_ocr:
+                    raise CustodyAccessError(
+                        f"Contradictory record at line {line_num} ({row['source_id']}): "
+                        f"lineage status is UNKNOWN_LINEAGE but is_ocr_derived is True"
+                    )
+                if permitted:
+                    raise CustodyAccessError(
+                        f"Contradictory record at line {line_num} ({row['source_id']}): "
+                        f"permitted_to_proceed is True but lineage status is UNKNOWN_LINEAGE"
+                    )
+            elif status == "EXCLUDED_OCR":
+                if lineage_mode not in OCR_LINEAGE_MODES:
+                    raise CustodyAccessError(
+                        f"Contradictory record at line {line_num} ({row['source_id']}): "
+                        f"lineage status is EXCLUDED_OCR but lineage_mode is '{lineage_mode}'"
+                    )
+                if not is_ocr:
+                    raise CustodyAccessError(
+                        f"Contradictory record at line {line_num} ({row['source_id']}): "
+                        f"lineage status is EXCLUDED_OCR but is_ocr_derived is False"
+                    )
+                if permitted:
+                    raise CustodyAccessError(
+                        f"Contradictory record at line {line_num} ({row['source_id']}): "
+                        f"permitted_to_proceed is True but lineage status is EXCLUDED_OCR"
+                    )
+            else:
+                raise CustodyAccessError(
+                    f"Contradictory record at line {line_num} ({row['source_id']}): unknown lineage status '{status}'"
+                )
+
+            if lineage_mode == "unknown" and status != "UNKNOWN_LINEAGE":
+                raise CustodyAccessError(
+                    f"Contradictory record at line {line_num} ({row['source_id']}): "
+                    f"lineage_mode is 'unknown' but lineage status is '{status}'"
+                )
+            if lineage_mode in OCR_LINEAGE_MODES and status != "EXCLUDED_OCR":
+                raise CustodyAccessError(
+                    f"Contradictory record at line {line_num} ({row['source_id']}): "
+                    f"lineage_mode is '{lineage_mode}' but lineage status is '{status}'"
+                )
+            if lineage_mode in NATIVE_LINEAGE_MODES and status != "CONFIRMED_NATIVE":
+                raise CustodyAccessError(
+                    f"Contradictory record at line {line_num} ({row['source_id']}): "
+                    f"lineage_mode is '{lineage_mode}' but lineage status is '{status}'"
+                )
+
+            if permitted:
                 if not host_reachable:
                     raise CustodyAccessError(
                         f"Contradictory record at line {line_num} ({row['source_id']}): "
@@ -955,7 +1026,6 @@ def verify(
                         f"permitted_to_proceed is True but observed_records is {metrics['observed_records']}"
                     )
                 expected_rule = cohort_cfg["lineage_rule"]
-                lineage_mode = row["lineage_verification"].get("lineage_mode")
                 if expected_rule == "native_digital_source" and lineage_mode != "native_digital_source":
                     raise CustodyAccessError(
                         f"Contradictory record at line {line_num} ({row['source_id']}): "
@@ -977,11 +1047,6 @@ def verify(
                     raise CustodyAccessError(
                         f"Contradictory record at line {line_num} ({row['source_id']}): "
                         f"permitted_to_proceed is False but blocking_reason is None"
-                    )
-                if is_ocr and status != "EXCLUDED_OCR":
-                    raise CustodyAccessError(
-                        f"Contradictory record at line {line_num} ({row['source_id']}): "
-                        f"is_ocr_derived is True but lineage status is {status}"
                     )
 
             # Recompute safety assertions directly from row content
@@ -1006,12 +1071,22 @@ def verify(
 
             if is_ocr and (status != "EXCLUDED_OCR" or permitted):
                 recomputed_ocr_derived_excluded = False
-            if status == "EXCLUDED_OCR" and permitted:
+            if status == "EXCLUDED_OCR" and (permitted or lineage_mode not in OCR_LINEAGE_MODES or not is_ocr):
+                recomputed_ocr_derived_excluded = False
+            if lineage_mode in OCR_LINEAGE_MODES and (status != "EXCLUDED_OCR" or permitted or not is_ocr):
                 recomputed_ocr_derived_excluded = False
 
-            if status == "UNKNOWN_LINEAGE" and (status == "CONFIRMED_NATIVE" or permitted):
+            if (status == "UNKNOWN_LINEAGE" or lineage_mode == "unknown") and (
+                status == "CONFIRMED_NATIVE" or permitted
+            ):
                 recomputed_unknown_not_native = False
-            if status != "CONFIRMED_NATIVE" and row["lineage_verification"].get("lineage_mode") is None and permitted:
+            if status == "CONFIRMED_NATIVE" and lineage_mode not in NATIVE_LINEAGE_MODES:
+                recomputed_unknown_not_native = False
+            if status == "UNKNOWN_LINEAGE" and lineage_mode != "unknown":
+                recomputed_unknown_not_native = False
+            if lineage_mode == "unknown" and status != "UNKNOWN_LINEAGE":
+                recomputed_unknown_not_native = False
+            if status != "CONFIRMED_NATIVE" and lineage_mode is None and permitted:
                 recomputed_unknown_not_native = False
 
             recomputed_total += 1

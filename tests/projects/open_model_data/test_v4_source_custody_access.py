@@ -1089,3 +1089,107 @@ def test_verify_detects_incompatible_cohort_lineage_rule_in_config(tmp_path: Pat
 
     with pytest.raises(custody.CustodyAccessError, match=r"requires lineage_rule 'native_digital_source'"):
         custody.verify(tampered_config, input_root=repo_root, output_root=tampered_out)
+
+
+def test_verify_rejects_unknown_mode_labeled_as_confirmed_native(tmp_path: Path, repo_root: Path) -> None:
+    """Codex finding r3980769771: Blocked record with status=CONFIRMED_NATIVE and lineage_mode=unknown must fail."""
+    custody_orig = Path("data/projects/open_model_data/custody")
+    tampered_out = tmp_path / "out"
+    tgt_custody = tampered_out / "data/projects/open_model_data/custody"
+    tgt_custody.mkdir(parents=True)
+
+    index_lines = (custody_orig / "v4_source_custody_access_index_v1.jsonl").read_text(encoding="utf-8").splitlines()
+    header = index_lines[0]
+    records = [json.loads(line) for line in index_lines[1:]]
+
+    # Pick a blocked textbook record
+    target_idx = None
+    for i, r in enumerate(records):
+        if not r["permitted_to_proceed"] and r["lineage_verification"]["status"] == "UNKNOWN_LINEAGE":
+            target_idx = i
+            break
+    assert target_idx is not None
+
+    # Set status to CONFIRMED_NATIVE while leaving lineage_mode as unknown (and permitted_to_proceed=False)
+    records[target_idx]["lineage_verification"]["status"] = "CONFIRMED_NATIVE"
+    records[target_idx]["lineage_verification"]["lineage_mode"] = "unknown"
+
+    tampered_index_lines = [header] + [json.dumps(r) for r in records]
+    (tgt_custody / "v4_source_custody_access_index_v1.jsonl").write_text(
+        "\n".join(tampered_index_lines) + "\n", encoding="utf-8"
+    )
+    (tgt_custody / "v4_source_custody_missing_report_v1.json").write_bytes(
+        (custody_orig / "v4_source_custody_missing_report_v1.json").read_bytes()
+    )
+
+    # Re-hash index and update receipt summary counts to test semantic rejection
+    receipt_data = json.loads((custody_orig / "v4_source_custody_access_receipt_v1.json").read_text(encoding="utf-8"))
+    receipt_data["index_sha256"] = custody.sha256_file(tgt_custody / "v4_source_custody_access_index_v1.jsonl")
+    receipt_data["receipt_id"] = custody._make_receipt_id(receipt_data["config_sha256"], receipt_data["index_sha256"])
+    receipt_data["summary"]["confirmed_native_count"] += 1
+    receipt_data["summary"]["textbook_cohort"]["confirmed_native"] += 1
+    (tgt_custody / "v4_source_custody_access_receipt_v1.json").write_text(json.dumps(receipt_data), encoding="utf-8")
+
+    with pytest.raises(
+        custody.CustodyAccessError,
+        match=r"lineage status is CONFIRMED_NATIVE but lineage_mode is 'unknown'",
+    ):
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+
+
+def test_verify_rejects_contradictory_lineage_status_and_mode_combinations(tmp_path: Path, repo_root: Path) -> None:
+    """Validate that any mismatch between lineage status and mode is rejected by verify."""
+    custody_orig = Path("data/projects/open_model_data/custody")
+    tampered_out = tmp_path / "out"
+    tgt_custody = tampered_out / "data/projects/open_model_data/custody"
+    tgt_custody.mkdir(parents=True)
+
+    index_lines = (custody_orig / "v4_source_custody_access_index_v1.jsonl").read_text(encoding="utf-8").splitlines()
+    header = index_lines[0]
+    records = [json.loads(line) for line in index_lines[1:]]
+
+    # Test 1: UNKNOWN_LINEAGE status with native_digital_source mode
+    records_copy = copy.deepcopy(records)
+    for r in records_copy:
+        if not r["permitted_to_proceed"]:
+            r["lineage_verification"]["lineage_mode"] = "native_digital_source"
+            break
+    tampered_index_lines = [header] + [json.dumps(r) for r in records_copy]
+    (tgt_custody / "v4_source_custody_access_index_v1.jsonl").write_text(
+        "\n".join(tampered_index_lines) + "\n", encoding="utf-8"
+    )
+    (tgt_custody / "v4_source_custody_missing_report_v1.json").write_bytes(
+        (custody_orig / "v4_source_custody_missing_report_v1.json").read_bytes()
+    )
+    receipt_data = json.loads((custody_orig / "v4_source_custody_access_receipt_v1.json").read_text(encoding="utf-8"))
+    receipt_data["index_sha256"] = custody.sha256_file(tgt_custody / "v4_source_custody_access_index_v1.jsonl")
+    receipt_data["receipt_id"] = custody._make_receipt_id(receipt_data["config_sha256"], receipt_data["index_sha256"])
+    (tgt_custody / "v4_source_custody_access_receipt_v1.json").write_text(json.dumps(receipt_data), encoding="utf-8")
+
+    with pytest.raises(
+        custody.CustodyAccessError,
+        match=r"lineage status is UNKNOWN_LINEAGE but lineage_mode is 'native_digital_source'",
+    ):
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+
+    # Test 2: EXCLUDED_OCR status with native_digital_source mode (and is_ocr_derived=True so schema passes)
+    records_copy = copy.deepcopy(records)
+    for r in records_copy:
+        if not r["permitted_to_proceed"]:
+            r["lineage_verification"]["status"] = "EXCLUDED_OCR"
+            r["lineage_verification"]["lineage_mode"] = "native_digital_source"
+            r["lineage_verification"]["is_ocr_derived"] = True
+            break
+    tampered_index_lines = [header] + [json.dumps(r) for r in records_copy]
+    (tgt_custody / "v4_source_custody_access_index_v1.jsonl").write_text(
+        "\n".join(tampered_index_lines) + "\n", encoding="utf-8"
+    )
+    receipt_data["index_sha256"] = custody.sha256_file(tgt_custody / "v4_source_custody_access_index_v1.jsonl")
+    receipt_data["receipt_id"] = custody._make_receipt_id(receipt_data["config_sha256"], receipt_data["index_sha256"])
+    (tgt_custody / "v4_source_custody_access_receipt_v1.json").write_text(json.dumps(receipt_data), encoding="utf-8")
+
+    with pytest.raises(
+        custody.CustodyAccessError,
+        match=r"lineage status is EXCLUDED_OCR but lineage_mode is 'native_digital_source'",
+    ):
+        custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
