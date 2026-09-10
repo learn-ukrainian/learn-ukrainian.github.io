@@ -737,6 +737,13 @@ def verify(
     recomputed_ocr = 0
     recomputed_permitted = 0
 
+    recomputed_no_corpus_text = True
+    recomputed_no_private_host_paths = True
+    recomputed_no_broad_recollection = True
+    recomputed_no_new_storage_infrastructure = True
+    recomputed_ocr_derived_excluded = True
+    recomputed_unknown_not_native = True
+
     lit_records = []
     tb_records = []
 
@@ -803,6 +810,46 @@ def verify(
                         f"Contradictory record at line {line_num} ({row['source_id']}): "
                         f"is_ocr_derived is True but lineage status is {status}"
                     )
+
+            # Recompute safety assertions directly from row content
+            forbidden_keys = {"text", "content", "corpus_text", "raw_text", "body"}
+            if forbidden_keys.intersection(row.keys()):
+                recomputed_no_corpus_text = False
+
+            src_file = row.get("source_locator", {}).get("source_file") or ""
+            if src_file.startswith(("/", "home/", "Users/", "root/", "tmp/", "var/")) or any(
+                p in src_file for p in ("/home/", "/Users/", "/root/", "/tmp/", "/var/")
+            ):
+                recomputed_no_private_host_paths = False
+
+            cust = row.get("custody_resolution", {})
+            for store_field in ("primary_store", "chunks_store", "archive_store"):
+                store_val = cust.get(store_field) or ""
+                if store_val.startswith(("/", "home/", "Users/", "root/", "tmp/", "var/")) or any(
+                    p in store_val for p in ("/home/", "/Users/", "/root/", "/tmp/", "/var/")
+                ):
+                    recomputed_no_private_host_paths = False
+
+            if row.get("cohort_id") not in ("literary-non-ocr", "public-textbooks-non-stem-non-ocr"):
+                recomputed_no_broad_recollection = False
+
+            p_store = cust.get("primary_store") or ""
+            if p_store and not p_store.startswith("sqlite:sources.db#"):
+                recomputed_no_broad_recollection = False
+
+            c_store = cust.get("chunks_store") or ""
+            if c_store and not c_store.startswith("file:data/textbook_chunks/"):
+                recomputed_no_new_storage_infrastructure = False
+
+            if is_ocr and (status != "EXCLUDED_OCR" or permitted):
+                recomputed_ocr_derived_excluded = False
+            if status == "EXCLUDED_OCR" and permitted:
+                recomputed_ocr_derived_excluded = False
+
+            if status == "UNKNOWN_LINEAGE" and (status == "CONFIRMED_NATIVE" or permitted):
+                recomputed_unknown_not_native = False
+            if status != "CONFIRMED_NATIVE" and row["lineage_verification"].get("lineage_mode") is None and permitted:
+                recomputed_unknown_not_native = False
 
             recomputed_total += 1
             if cust_status in ("RESOLVED_ACCESSIBLE", "PARTIAL_CHUNKS_AND_DB_ONLY") and permitted:
@@ -899,6 +946,15 @@ def verify(
     if missing_errors:
         raise CustodyAccessError(f"Missing report error: {missing_errors[0].message}")
 
+    for item in missing_report.get("missing_inputs", []):
+        ref = item.get("missing_path_ref") or ""
+        sf = item.get("source_locator", {}).get("source_file") or ""
+        for p_val in (ref, sf):
+            if p_val.startswith(("/", "home/", "Users/", "root/", "tmp/", "var/")) or any(
+                p in p_val for p in ("/home/", "/Users/", "/root/", "/tmp/", "/var/")
+            ):
+                recomputed_no_private_host_paths = False
+
     expected_first_ready = bool(lit_perm == len(lit_records) and len(lit_records) > 0 and lit_acc == len(lit_records))
     expected_verdict = (
         "PROCEED_WITH_ACCESSIBLE_SOURCES"
@@ -916,23 +972,25 @@ def verify(
     if not first_cohort["permitted_to_proceed"] or first_cohort["coverage_ratio"] != 1.0:
         raise CustodyAccessError("First eligible cohort is not 100% ready to proceed")
 
-    # Invariant: Safety assertions must match recomputed state and all be True
+    # Invariant: Recompute every safety assertion and verify against receipt
+    recomputed_safety = {
+        "no_corpus_text_emitted": recomputed_no_corpus_text,
+        "no_private_host_paths_disclosed": recomputed_no_private_host_paths,
+        "no_broad_recollection": recomputed_no_broad_recollection,
+        "no_new_storage_infrastructure": recomputed_no_new_storage_infrastructure,
+        "ocr_derived_excluded": recomputed_ocr_derived_excluded,
+        "unknown_lineage_not_called_native": recomputed_unknown_not_native,
+        "first_eligible_cohort_ready": expected_first_ready,
+    }
+
     safety = receipt.get("safety_assertions", {})
-    if safety.get("first_eligible_cohort_ready") != expected_first_ready:
-        raise CustodyAccessError(
-            f"Receipt safety_assertions.first_eligible_cohort_ready mismatch: expected {expected_first_ready}, got {safety.get('first_eligible_cohort_ready')}"
-        )
-    for key in (
-        "no_corpus_text_emitted",
-        "no_private_host_paths_disclosed",
-        "no_broad_recollection",
-        "no_new_storage_infrastructure",
-        "ocr_derived_excluded",
-        "unknown_lineage_not_called_native",
-        "first_eligible_cohort_ready",
-    ):
-        if not safety.get(key):
-            raise CustodyAccessError(f"Safety assertion {key} is not True")
+    for key, expected_val in recomputed_safety.items():
+        if safety.get(key) != expected_val:
+            raise CustodyAccessError(
+                f"Receipt safety_assertions.{key} mismatch: expected {expected_val}, got {safety.get(key)}"
+            )
+        if not expected_val:
+            raise CustodyAccessError(f"Recomputed safety assertion {key} failed (False)")
 
     return True
 
