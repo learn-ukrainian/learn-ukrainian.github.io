@@ -1107,6 +1107,10 @@ def build(
     total_permitted = sum(1 for r in access_records if r["permitted_to_proceed"])
 
     receipt_id = _make_receipt_id(config_sha256, index_sha256, missing_report_sha256)
+    first_cohort_ready = bool(lit_permitted and len(lit_records) > 0 and (lit_acc == len(lit_records)))
+    custody_verdict = (
+        "PROCEED_WITH_ACCESSIBLE_SOURCES" if first_cohort_ready and total_permitted > 0 else "HALT_INACCESSIBLE_SOURCES"
+    )
     receipt = {
         "schema_version": RECEIPT_SCHEMA_VERSION,
         "receipt_id": receipt_id,
@@ -1144,9 +1148,9 @@ def build(
             "no_new_storage_infrastructure": True,
             "ocr_derived_excluded": True,
             "unknown_lineage_not_called_native": True,
-            "first_eligible_cohort_ready": lit_permitted and (lit_acc == len(lit_records)),
+            "first_eligible_cohort_ready": first_cohort_ready,
         },
-        "verdict": "PROCEED_WITH_ACCESSIBLE_SOURCES",
+        "verdict": custody_verdict,
     }
 
     receipt_validator = _load_schema(RECEIPT_SCHEMA_PATH, roots)

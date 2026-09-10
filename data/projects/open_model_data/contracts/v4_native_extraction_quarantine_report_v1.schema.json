@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v4_native_extraction_quarantine_report_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "report_id",
+    "config_sha256",
+    "quarantined_spans",
+    "summary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v4_native_extraction_quarantine_report_v1"
+    },
+    "report_id": {
+      "type": "string",
+      "pattern": "^quarantine\\.[a-f0-9]{24}$"
+    },
+    "config_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "quarantined_spans": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "cohort_id",
+          "source_file",
+          "chunk_id",
+          "reason",
+          "details"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "pattern": "^source\\.(?:literary|public_textbooks)\\.[a-f0-9]{24}$"
+          },
+          "cohort_id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$"
+          },
+          "source_file": {
+            "type": "string",
+            "minLength": 1
+          },
+          "chunk_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "details": {
+            "type": [
+              "array",
+              "object",
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_spans_evaluated",
+        "accepted_spans_count",
+        "quarantined_spans_count",
+        "rejected_spans_count",
+        "training_eligible_spans_count"
+      ],
+      "properties": {
+        "total_spans_evaluated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "accepted_spans_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "quarantined_spans_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "rejected_spans_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "training_eligible_spans_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

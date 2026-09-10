@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v4_native_extraction_config_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "inputs",
+    "outputs",
+    "extraction_rules",
+    "ownership"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v4_native_extraction_config_v1"
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "custody_index",
+        "custody_receipt",
+        "database"
+      ],
+      "properties": {
+        "custody_index": {
+          "type": "string",
+          "minLength": 1
+        },
+        "custody_receipt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "database": {
+          "type": "string",
+          "minLength": 1
+        },
+        "textbook_chunks_dir": {
+          "type": "string"
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "index",
+        "quarantine_report",
+        "receipt"
+      ],
+      "properties": {
+        "index": {
+          "type": "string",
+          "minLength": 1
+        },
+        "quarantine_report": {
+          "type": "string",
+          "minLength": 1
+        },
+        "receipt": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "extraction_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_cohorts",
+        "anomaly_detection",
+        "reconstruction_integrity"
+      ],
+      "properties": {
+        "target_cohorts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$"
+          }
+        },
+        "target_sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^source\\.(?:literary|public_textbooks)\\.[a-f0-9]{24}$"
+          }
+        },
+        "anomaly_detection": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "detect_replacement_characters",
+            "detect_control_characters",
+            "detect_duplicate_lines",
+            "detect_truncation_pairs",
+            "detect_intraline_duplicates",
+            "fail_closed_on_ocr"
+          ],
+          "properties": {
+            "detect_replacement_characters": {
+              "type": "boolean"
+            },
+            "detect_control_characters": {
+              "type": "boolean"
+            },
+            "detect_duplicate_lines": {
+              "type": "boolean"
+            },
+            "detect_truncation_pairs": {
+              "type": "boolean"
+            },
+            "detect_intraline_duplicates": {
+              "type": "boolean"
+            },
+            "fail_closed_on_ocr": {
+              "type": "boolean"
+            }
+          }
+        },
+        "reconstruction_integrity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "enforce_stream_digest_match",
+            "enforce_zero_silent_omissions"
+          ],
+          "properties": {
+            "enforce_stream_digest_match": {
+              "type": "boolean"
+            },
+            "enforce_zero_silent_omissions": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "ownership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "extraction_pipeline_owner",
+        "quarantine_custodian"
+      ],
+      "properties": {
+        "extraction_pipeline_owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "quarantine_custodian": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

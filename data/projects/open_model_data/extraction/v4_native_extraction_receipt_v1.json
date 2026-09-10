@@ -1,0 +1,22 @@
+{
+  "schema_version": "v4_native_extraction_receipt_v1",
+  "receipt_id": "receipt.extraction.ec126798c70a15d18e91c3d5",
+  "config_sha256": "0eaa4fd1997d82369f478fd945a3b6269fb4343b186f41cbc46c07fd385d862e",
+  "index_sha256": "e540bc33e5b114703da62e8c6a572f721b1076944f985ff3ff94a091513e91a5",
+  "quarantine_report_sha256": "6be2f55dc3e139a13605f1b76c629604711d8042f18544a380c4bc014fab1fd6",
+  "summary": {
+    "total_sources_evaluated": 3,
+    "total_spans_evaluated": 1419,
+    "accepted_spans_count": 1418,
+    "quarantined_spans_count": 1,
+    "rejected_spans_count": 0,
+    "training_eligible_spans_count": 1418
+  },
+  "safety_assertions": {
+    "no_corpus_text": true,
+    "no_private_host_paths": true,
+    "immutable_original_preserved": true,
+    "zero_silent_omissions": true
+  },
+  "verdict": "EXTRACTION_FIDELITY_CONFIRMED"
+}
