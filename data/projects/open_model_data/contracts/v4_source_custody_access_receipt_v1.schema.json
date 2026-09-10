@@ -184,7 +184,11 @@
       }
     },
     "verdict": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "PROCEED_WITH_ACCESSIBLE_SOURCES",
+        "HALT_INACCESSIBLE_SOURCES"
+      ]
     }
   }
 }

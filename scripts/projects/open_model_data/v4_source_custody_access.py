@@ -711,12 +711,21 @@ def verify(
     if receipt_errors:
         raise CustodyAccessError(f"Receipt validation error: {receipt_errors[0].message}")
 
+    expected_index_sha256 = sha256_file(out_index_path)
+    expected_missing_report_sha256 = sha256_file(out_missing_path)
+
     if receipt["config_sha256"] != expected_config_sha256:
         raise CustodyAccessError("Receipt config_sha256 mismatch")
-    if receipt["index_sha256"] != sha256_file(out_index_path):
+    if receipt["index_sha256"] != expected_index_sha256:
         raise CustodyAccessError("Receipt index_sha256 mismatch")
-    if receipt["missing_report_sha256"] != sha256_file(out_missing_path):
+    if receipt["missing_report_sha256"] != expected_missing_report_sha256:
         raise CustodyAccessError("Receipt missing_report_sha256 mismatch")
+
+    expected_receipt_id = _make_receipt_id(expected_config_sha256, expected_index_sha256)
+    if receipt.get("receipt_id") != expected_receipt_id:
+        raise CustodyAccessError(
+            f"Receipt receipt_id mismatch: expected {expected_receipt_id}, got {receipt.get('receipt_id')}"
+        )
 
     # Verify index and recompute invariants directly from index records (Finding 3)
     item_validator = _load_schema(ITEM_SCHEMA_PATH, roots)
@@ -890,14 +899,39 @@ def verify(
     if missing_errors:
         raise CustodyAccessError(f"Missing report error: {missing_errors[0].message}")
 
+    expected_first_ready = bool(lit_perm == len(lit_records) and len(lit_records) > 0 and lit_acc == len(lit_records))
+    expected_verdict = (
+        "PROCEED_WITH_ACCESSIBLE_SOURCES"
+        if expected_first_ready and recomputed_permitted > 0
+        else "HALT_INACCESSIBLE_SOURCES"
+    )
+
+    if receipt.get("verdict") != expected_verdict:
+        raise CustodyAccessError(
+            f"Receipt verdict mismatch: expected {expected_verdict}, got {receipt.get('verdict')}"
+        )
+
     # Invariant: First eligible cohort must be 100% accessible and permitted to proceed
     first_cohort = receipt["summary"]["first_eligible_cohort"]
     if not first_cohort["permitted_to_proceed"] or first_cohort["coverage_ratio"] != 1.0:
         raise CustodyAccessError("First eligible cohort is not 100% ready to proceed")
 
-    # Invariant: Safety assertions must all be True
-    for key, val in receipt["safety_assertions"].items():
-        if not val:
+    # Invariant: Safety assertions must match recomputed state and all be True
+    safety = receipt.get("safety_assertions", {})
+    if safety.get("first_eligible_cohort_ready") != expected_first_ready:
+        raise CustodyAccessError(
+            f"Receipt safety_assertions.first_eligible_cohort_ready mismatch: expected {expected_first_ready}, got {safety.get('first_eligible_cohort_ready')}"
+        )
+    for key in (
+        "no_corpus_text_emitted",
+        "no_private_host_paths_disclosed",
+        "no_broad_recollection",
+        "no_new_storage_infrastructure",
+        "ocr_derived_excluded",
+        "unknown_lineage_not_called_native",
+        "first_eligible_cohort_ready",
+    ):
+        if not safety.get(key):
             raise CustodyAccessError(f"Safety assertion {key} is not True")
 
     return True
