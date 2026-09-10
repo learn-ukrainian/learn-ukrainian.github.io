@@ -51,7 +51,7 @@ EXPECTED_INPUT_BINDINGS = {
     ),
     "model_view_export_admission_gate": (
         "scripts/projects/open_model_data/model_view_exporter.py",
-        "ad782f925e7468bb9608d0d870b8cd00828f5ee570a5c5e89d68621ce19f12c1",
+        "495984cfe56e38ac7805a793d9c8461cdc912bace4a98a1a72f5f3ae7c0cd548",
     ),
 }
 EXPECTED_DENOMINATOR = {
@@ -265,9 +265,7 @@ def test_frozen_input_bindings_and_schema_digest_are_exact() -> None:
     assert value["bindings"] == expected
     assert value["controlling_outcome_sha256"] == EXPECTED_OUTCOME_SHA256
     assert value["generator"]["path"] == "scripts/projects/open_model_data/build_phase3_p4_pilot.py"
-    assert value["generator"]["implementation_sha256"] == p4.historical_code_hash(p4.provenance.P4_BUILDER)
-    assert p4.sha256_file(Path(p4.__file__).resolve()) == p4.provenance.CURRENT_SUCCESSORS[p4.provenance.P4_BUILDER]
-    assert value["generator"]["implementation_sha256"] != p4.sha256_file(Path(p4.__file__).resolve())
+    assert value["generator"]["implementation_sha256"] == p4.sha256_file(Path(p4.__file__).resolve())
     assert value["generator"]["schema_sha256"] == p4.sha256_file(p4.SCHEMA_PATH)
 
 

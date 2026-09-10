@@ -26,8 +26,6 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
-from scripts.projects.open_model_data import frozen_export_provenance as provenance
-
 ROOT = Path(__file__).resolve().parents[3]
 DATA = ROOT / "data/projects/open_model_data"
 CONTRACTS = DATA / "contracts"
@@ -55,7 +53,7 @@ PINS = {
     CAPABILITY_POLICY_PATH: "3a4a3af2edb1f7d68ebec8717e617ba8465ec26e74c29b408812ef1503aa6c60",
     SOURCE_RECORD_SCHEMA_PATH: "db39258d365b939fb36c1a913b3911d9c185ae7c36e41265e04671be43e36b29",
     CORPUS_ADMISSION_VALIDATOR_PATH: "07b8329cd2c160c15cf3f892d4743ff4e3985156883bd35bd0410f97da9c4278",
-    EXPORT_ADMISSION_GATE_PATH: "ad782f925e7468bb9608d0d870b8cd00828f5ee570a5c5e89d68621ce19f12c1",
+    EXPORT_ADMISSION_GATE_PATH: "495984cfe56e38ac7805a793d9c8461cdc912bace4a98a1a72f5f3ae7c0cd548",
 }
 CASE_ROLES = (
     "correct_modern_production",
@@ -119,21 +117,8 @@ def read_json(path: Path, label: str) -> dict[str, Any]:
     return value
 
 
-def historical_code_hash(logical_path: str) -> str:
-    """Resolve only the fixed P4 historical declaration, never live admission."""
-    try:
-        return provenance.historical_binding_sha256("p4_zero_row_v1", logical_path)
-    except provenance.FrozenProvenanceError as exc:
-        raise P4PilotError(str(exc)) from exc
-
-
 def artifact(path: Path) -> dict[str, str]:
     actual = sha256_file(path)
-    if path == EXPORT_ADMISSION_GATE_PATH:
-        # P4 is a frozen, blocked historical declaration. Verify the current
-        # gate independently before resolving its historical creator binding.
-        require(actual == provenance.CURRENT_SUCCESSORS[provenance.EXPORTER], f"{path.name} hash drift")
-        actual = historical_code_hash(provenance.EXPORTER)
     require(actual == PINS[path], f"{path.name} hash drift")
     return {"path": path.relative_to(ROOT).as_posix(), "sha256": actual}
 
@@ -371,11 +356,7 @@ def validate_candidate_admission(candidate: Mapping[str, Any]) -> None:
 
 
 def build_contract() -> dict[str, Any]:
-    """Reconstruct the exact frozen zero-row P4 declaration, not a new release.
-
-    Creator hashes refer to verified historical blobs. Current successor code
-    and source exclusions are checked independently; this grants no admission.
-    """
+    """Build the exact current zero-row P4 construction receipt."""
     _validate_inputs()
     body: dict[str, Any] = {
         "schema_version": SCHEMA_VERSION,
@@ -457,7 +438,7 @@ def build_contract() -> dict[str, Any]:
         },
         "generator": {
             "path": "scripts/projects/open_model_data/build_phase3_p4_pilot.py",
-            "implementation_sha256": historical_code_hash(provenance.P4_BUILDER),
+            "implementation_sha256": sha256_file(Path(__file__).resolve()),
             "schema_sha256": sha256_file(SCHEMA_PATH),
         },
     }
@@ -494,16 +475,7 @@ def write_output(path: Path = OUTPUT_PATH) -> dict[str, Any]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(
-        description="Reconstruct or verify the frozen, blocked historical P4 declaration.\n"
-                    "Use for provenance checks, never to restart original-row generation or admit data.",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Example: /home/ops/learn-ukrainian/.venv/bin/python -m "
-               "scripts.projects.open_model_data.build_phase3_p4_pilot --check\n"
-               "Outputs: without --check, reconstructs the exact historical zero-row receipt; no source text.\n"
-               "Exit codes: 0 verified/reconstructed; 1 receipt differs; 2 invalid arguments.\n"
-               "Related: docs/projects/open-model-data/SOURCE_RECORD_CONTRACT.md; #7888.",
-    )
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true", help="verify the checked-in deterministic P4 contract")
     args = parser.parse_args(argv)
     expected = build_contract()

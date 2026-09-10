@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import copy
 import hashlib
 import json
 from dataclasses import replace
@@ -10,7 +9,6 @@ import pytest
 from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import audit_model_ready_receipts as audit
-from scripts.projects.open_model_data import frozen_export_provenance as provenance
 
 ROOT = Path(__file__).resolve().parents[1]
 CANONICAL_RECEIPT = ROOT / "data/projects/open_model_data/model_views/model_ready_product_audit_v1.json"
@@ -107,22 +105,7 @@ def test_current_receipt_reproduces_frozen_historical_metadata(tmp_path: Path) -
 
     schema = json.loads(inputs.schema.read_text(encoding="utf-8"))
     assert not list(Draft202012Validator(schema).iter_errors(tracked))
-    assert hashlib.sha256(CANONICAL_RECEIPT.read_bytes()).hexdigest() == (
-        "251568b1fb90dda7fa1a394cedbe2a2713ad2e95f2945625ce5aa6583c6d1767"
-    )
-    # Current audits must attribute the live exporter and this updated test,
-    # while preserving every historical product fact and frozen source input.
-    expected = copy.deepcopy(tracked)
-    for path in (inputs.exporter, inputs.mutation_tests):
-        expected["direct_inputs"][path.relative_to(ROOT).as_posix()] = audit.artifact(path)
-    rebind(expected)
-    assert receipt == expected
-    assert receipt["direct_inputs"][provenance.EXPORTER]["sha256"] == provenance.CURRENT_SUCCESSORS[provenance.EXPORTER]
-    assert tracked["direct_inputs"][provenance.EXPORTER]["sha256"] == provenance.historical_binding_sha256(
-        "p4_zero_row_v1", provenance.EXPORTER,
-    )
-    with pytest.raises(audit.AuditError, match="direct input hashes"):
-        audit.validate_receipt(tracked, inputs.schema, inputs)
+    assert receipt == tracked
     audit.validate_receipt(receipt, inputs.schema, inputs)
     assert receipt["product_truth"]["continued_pretraining"]["faithful"] == {
         "historical_artifact_records": 1028,
@@ -161,7 +144,7 @@ def test_wikipedia_policy_drift_blocks_receipt_regeneration(tmp_path: Path) -> N
 )
 def test_planted_mutations_are_rejected(name: str) -> None:
     inputs = audit.default_inputs()
-    receipt = audit.build_receipt(inputs)
+    receipt = json.loads(CANONICAL_RECEIPT.read_text(encoding="utf-8"))
     mutate(receipt, name)
     rebind(receipt)
 

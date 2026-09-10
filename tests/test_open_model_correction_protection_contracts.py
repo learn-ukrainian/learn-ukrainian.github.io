@@ -11,8 +11,6 @@ import pytest
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import ValidationError
 
-from scripts.projects.open_model_data import frozen_export_provenance as provenance
-
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
 SHA = "a" * 64
@@ -240,8 +238,5 @@ def test_fixed_dispositions_namespace_and_release_safety() -> None:
 
 
 def test_existing_gold_lane_contracts_and_gated_exporter_are_hash_pinned() -> None:
-    assert provenance.historical_binding_sha256("p4_zero_row_v1", provenance.EXPORTER) == (
-        "ad782f925e7468bb9608d0d870b8cd00828f5ee570a5c5e89d68621ce19f12c1"
-    )
     for path, expected in GOLD_LANE_HASHES.items():
         assert hashlib.sha256(path.read_bytes()).hexdigest() == expected

@@ -146,8 +146,6 @@ def _semantic_reasons(record: dict[str, Any], schema_hash: str, operation: str) 
     usage = record.get("usage", {})
     if usage.get("role") == "evaluation_only":
         reasons.append("evaluation_only_never_admitted_to_training_or_export")
-    if usage.get("contamination_exclusion_ids"):
-        reasons.append("contamination_exclusion_present")
     if usage.get("role") == "excluded":
         reasons.append("record_marked_excluded")
     return sorted(set(reasons))

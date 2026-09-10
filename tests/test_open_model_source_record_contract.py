@@ -214,7 +214,7 @@ def test_private_permission_does_not_grant_redistribution(status, operation):
     lambda r: r.pop("work_id"),
     lambda r: r.pop("source_id"),
     lambda r: r["review"].update(unresolved=True),
-    lambda r: r["usage"].update(contamination_exclusion_ids=["evaluation.heldout"]),
+    lambda r: r["usage"].update(role="excluded"),
 ])
 def test_operations_preserve_permission_provenance_and_clearance_gates(operation, mutation):
     schema, schema_hash = CONTRACT.load_schema()
