@@ -1,0 +1,43 @@
+{
+  "schema_version": "v4_learning_study_recipe_v1",
+  "recipe_id": "recipe.learning.20260910_gemma4_human_study",
+  "model_target": {
+    "identifier": "google/gemma-4-31B-it",
+    "revision": "842da3794eaa0b77d5f08bae87a17459d91ff475",
+    "tokenizer_identifier": "google/gemma-4-31B-it",
+    "context_window": 2048
+  },
+  "dataset_target": {
+    "dataset_version": "v4.0.0-human-pilot-scale",
+    "records_path": "data/projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
+    "training_spans_count": 614,
+    "heldout_evaluation_spans_count": 559
+  },
+  "conditions": [
+    "unchanged_baseline",
+    "faithful_human_adaptation",
+    "modern_masked_adaptation"
+  ],
+  "experimental_design": {
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "learning_rate": 2e-05,
+    "batch_size": 4,
+    "max_steps": 100,
+    "early_stopping_patience": 5,
+    "stopping_delta": 0.001
+  },
+  "hypotheses_and_bounds": {
+    "primary_metric": "heldout_perplexity_reduction",
+    "expected_perplexity_reduction_pct_min": 5.0,
+    "max_historical_regression_pct": 1.0
+  },
+  "resource_bounds": {
+    "max_gpu_hours": 12.0,
+    "max_storage_mb": 5000,
+    "local_execution_mode": "controlled_reproducible_evaluation"
+  }
+}

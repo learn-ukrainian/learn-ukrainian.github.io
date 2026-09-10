@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v4_learning_study_recipe_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "recipe_id",
+    "model_target",
+    "dataset_target",
+    "conditions",
+    "experimental_design",
+    "hypotheses_and_bounds",
+    "resource_bounds"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v4_learning_study_recipe_v1"
+    },
+    "recipe_id": {
+      "type": "string",
+      "pattern": "^recipe\\.learning\\.[a-zA-Z0-9_-]+$"
+    },
+    "model_target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "identifier",
+        "revision",
+        "tokenizer_identifier",
+        "context_window"
+      ],
+      "properties": {
+        "identifier": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "string"
+        },
+        "tokenizer_identifier": {
+          "type": "string"
+        },
+        "context_window": {
+          "type": "integer",
+          "minimum": 512
+        }
+      }
+    },
+    "dataset_target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dataset_version",
+        "records_path",
+        "training_spans_count",
+        "heldout_evaluation_spans_count"
+      ],
+      "properties": {
+        "dataset_version": {
+          "type": "string",
+          "const": "v4.0.0-human-pilot-scale"
+        },
+        "records_path": {
+          "type": "string"
+        },
+        "training_spans_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "heldout_evaluation_spans_count": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "conditions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "unchanged_baseline",
+          "faithful_human_adaptation",
+          "modern_masked_adaptation"
+        ]
+      },
+      "minItems": 3,
+      "uniqueItems": true
+    },
+    "experimental_design": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "seeds",
+        "learning_rate",
+        "batch_size",
+        "max_steps",
+        "early_stopping_patience",
+        "stopping_delta"
+      ],
+      "properties": {
+        "seeds": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 3
+        },
+        "learning_rate": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "batch_size": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_steps": {
+          "type": "integer",
+          "minimum": 10
+        },
+        "early_stopping_patience": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "stopping_delta": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "hypotheses_and_bounds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "primary_metric",
+        "expected_perplexity_reduction_pct_min",
+        "max_historical_regression_pct"
+      ],
+      "properties": {
+        "primary_metric": {
+          "type": "string"
+        },
+        "expected_perplexity_reduction_pct_min": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max_historical_regression_pct": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "resource_bounds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_gpu_hours",
+        "max_storage_mb",
+        "local_execution_mode"
+      ],
+      "properties": {
+        "max_gpu_hours": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max_storage_mb": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "local_execution_mode": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

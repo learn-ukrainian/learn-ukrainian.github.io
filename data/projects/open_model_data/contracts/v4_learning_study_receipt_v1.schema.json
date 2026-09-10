@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v4_learning_study_receipt_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "dataset_version",
+    "recipe_id",
+    "verdict",
+    "recipe_sha256",
+    "summary_findings",
+    "runs_accounting",
+    "cross_family_planned",
+    "residuals",
+    "notes"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v4_learning_study_receipt_v1"
+    },
+    "receipt_id": {
+      "type": "string",
+      "pattern": "^receipt\\.learning\\.[a-zA-Z0-9_-]+$"
+    },
+    "dataset_version": {
+      "type": "string",
+      "const": "v4.0.0-human-pilot-scale"
+    },
+    "recipe_id": {
+      "type": "string",
+      "pattern": "^recipe\\.learning\\.[a-zA-Z0-9_-]+$"
+    },
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "STUDY_CONFIRMED_POSITIVE_LEARNING",
+        "STUDY_CONFIRMED_INCONCLUSIVE",
+        "STUDY_CONFIRMED_REGRESSION"
+      ]
+    },
+    "recipe_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "summary_findings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "baseline_perplexity_mean",
+        "faithful_adaptation_perplexity_mean",
+        "modern_masked_adaptation_perplexity_mean",
+        "perplexity_delta_pct",
+        "historical_preservation_verified",
+        "catastrophic_forgetting_detected"
+      ],
+      "properties": {
+        "baseline_perplexity_mean": {
+          "type": "number",
+          "minimum": 1.0
+        },
+        "faithful_adaptation_perplexity_mean": {
+          "type": "number",
+          "minimum": 1.0
+        },
+        "modern_masked_adaptation_perplexity_mean": {
+          "type": "number",
+          "minimum": 1.0
+        },
+        "perplexity_delta_pct": {
+          "type": "number"
+        },
+        "historical_preservation_verified": {
+          "type": "boolean"
+        },
+        "catastrophic_forgetting_detected": {
+          "type": "boolean"
+        }
+      }
+    },
+    "runs_accounting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_runs_attempted",
+        "successful_runs",
+        "failed_runs",
+        "seeds_tested"
+      ],
+      "properties": {
+        "total_runs_attempted": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "successful_runs": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "failed_runs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "seeds_tested": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "cross_family_planned": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "secondary_model_target",
+        "rationale"
+      ],
+      "properties": {
+        "secondary_model_target": {
+          "type": "string"
+        },
+        "rationale": {
+          "type": "string"
+        }
+      }
+    },
+    "residuals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operator_excluded_strata"
+      ],
+      "properties": {
+        "operator_excluded_strata": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}
