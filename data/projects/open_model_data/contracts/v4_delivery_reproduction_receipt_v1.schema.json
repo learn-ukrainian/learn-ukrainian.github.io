@@ -80,6 +80,7 @@
       "additionalProperties": false,
       "required": [
         "recipe_sha256",
+        "runs_sha256",
         "runs_count",
         "receipt_sha256",
         "baseline_perplexity_mean",
@@ -88,6 +89,10 @@
       ],
       "properties": {
         "recipe_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "runs_sha256": {
           "type": "string",
           "pattern": "^[a-f0-9]{64}$"
         },

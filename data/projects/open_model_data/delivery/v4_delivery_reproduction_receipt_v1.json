@@ -14,6 +14,7 @@
   },
   "learning_study_reproduction": {
     "recipe_sha256": "e1bec8c11dbf0d16cf30c26193903f4a5fdd037d186d80214f7c74732f9e62ad",
+    "runs_sha256": "a478678e0df485ff64143a248193f22758838271669a793ec3fce5ef4ffe1bed",
     "runs_count": 9,
     "receipt_sha256": "60c7e06bf639e44af1c020a25135ce99f4ad6a3c929f3902c7dd393635ca69d1",
     "baseline_perplexity_mean": 14.805,

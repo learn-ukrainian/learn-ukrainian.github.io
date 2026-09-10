@@ -143,15 +143,27 @@ def build_delivery_receipt(
     study_receipt = json.loads(study_receipt_path.read_text(encoding="utf-8"))
     study_recipe_sha = sha256_file(study_recipe_path)
     study_rcpt_sha = sha256_file(study_receipt_path)
+    study_runs_sha = sha256_file(study_runs_path)
 
     if study_receipt["recipe_sha256"] != study_recipe_sha:
         raise ValueError("Study recipe SHA mismatch in receipt")
 
+    recipe_id = study_receipt.get("recipe_id")
     study_runs_count = 0
+    seeds_seen = set()
     with study_runs_path.open("r", encoding="utf-8") as f:
         for line in f:
             if line.strip():
+                run_item = json.loads(line)
                 study_runs_count += 1
+                if run_item.get("recipe_id") != recipe_id:
+                    raise ValueError(f"Run {run_item.get('run_id')} recipe_id does not match {recipe_id}")
+                if "seed" in run_item:
+                    seeds_seen.add(run_item["seed"])
+
+    expected_seeds = set(study_receipt.get("runs_accounting", {}).get("seeds_tested", []))
+    if expected_seeds and seeds_seen != expected_seeds:
+        raise ValueError(f"Run seeds {seeds_seen} do not match study receipt seeds {expected_seeds}")
 
     receipt_id = f"receipt.delivery.{sha256_bytes(f'{records_sha}:{study_rcpt_sha}'.encode())[:24]}"
 
@@ -171,6 +183,7 @@ def build_delivery_receipt(
         },
         "learning_study_reproduction": {
             "recipe_sha256": study_recipe_sha,
+            "runs_sha256": study_runs_sha,
             "runs_count": study_runs_count,
             "receipt_sha256": study_rcpt_sha,
             "baseline_perplexity_mean": study_receipt["summary_findings"]["baseline_perplexity_mean"],
@@ -264,14 +277,29 @@ def verify_delivery(
         return False
     if sha256_file(study_receipt_path) != study_repro.get("receipt_sha256"):
         return False
+    if sha256_file(study_runs_path) != study_repro.get("runs_sha256"):
+        return False
 
-    # Structural / record count checks
+    # Validate runs against study receipt
+    study_receipt = json.loads(study_receipt_path.read_text(encoding="utf-8"))
+    expected_seeds = set(study_receipt.get("runs_accounting", {}).get("seeds_tested", []))
+    recipe_id = study_receipt.get("recipe_id")
+
     runs_count = 0
+    seeds_seen = set()
     with study_runs_path.open("r", encoding="utf-8") as f:
         for line in f:
             if line.strip():
+                run_item = json.loads(line)
                 runs_count += 1
+                if run_item.get("recipe_id") != recipe_id:
+                    return False
+                if "seed" in run_item:
+                    seeds_seen.add(run_item["seed"])
+
     if runs_count != study_repro.get("runs_count"):
+        return False
+    if expected_seeds and seeds_seen != expected_seeds:
         return False
 
     records_count = sum(1 for _ in load_dataset_stream(dataset_records_path))
