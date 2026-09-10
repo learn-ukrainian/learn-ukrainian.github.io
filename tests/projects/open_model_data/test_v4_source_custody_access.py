@@ -668,6 +668,15 @@ def test_is_private_or_absolute_host_path() -> None:
     assert custody._is_private_or_absolute_host_path("root/folder")
     assert custody._is_private_or_absolute_host_path("temp/dir")
 
+    # Absolute and private paths after assignment and field separators (=, :)
+    assert custody._is_private_or_absolute_host_path("location=/opt/private-corpus")
+    assert custody._is_private_or_absolute_host_path("prefix:/opt/private-corpus")
+    assert custody._is_private_or_absolute_host_path(r"assignment=C:\Users\alice\private\book.pdf")
+    assert custody._is_private_or_absolute_host_path("field:c:/users/bob/doc.txt")
+    assert custody._is_private_or_absolute_host_path(r"share=\\server\share\data.pdf")
+    assert custody._is_private_or_absolute_host_path("share=//server/share/data.pdf")
+    assert custody._is_private_or_absolute_host_path("path=foo/home/bar.txt")
+
 
 @pytest.mark.parametrize(
     "bad_path",
@@ -784,6 +793,8 @@ def test_verify_detects_evidence_ref_private_host_path(tmp_path: Path, repo_root
         (("missing_inputs", 0, "reason"), "unmounted at /home/ops/gdrive"),
         (("missing_inputs", 0, "blocks"), r"blocked by C:\private\job"),
         (("missing_inputs", 0, "owner"), "/root/admin"),
+        (("unmounted_archive_locator",), "location=/opt/private-corpus"),
+        (("scope",), "prefix:/opt/private-corpus"),
     ],
 )
 def test_verify_detects_missing_report_freeform_private_host_paths(
@@ -1454,6 +1465,9 @@ def test_validate_and_resolve_paths_rejects_aliasing_collision_and_escaping(tmp_
     assert res_out["index"] == (out_root / "out/index.jsonl").resolve()
 
     # Output aliases database input
+    (tmp_path / "data").mkdir(parents=True, exist_ok=True)
+    (tmp_path / "data/sources.db").touch()
+    (tmp_path / "data/chunks").mkdir(parents=True, exist_ok=True)
     cfg_alias_db = copy.deepcopy(base_cfg)
     cfg_alias_db["outputs"]["index"] = "data/sources.db"
     with pytest.raises(custody.CustodyAccessError, match=r"aliases input 'database'"):
@@ -1701,3 +1715,125 @@ def test_validate_cohort_spec_and_lineage_reject_non_ocr_excluded_modes(tmp_path
 
         with pytest.raises(custody.CustodyAccessError, match=r"excluded_modes contains unsupported or non-OCR mode"):
             custody.check_chunk_file_lineage(tmp_path / "dummy.jsonl", excluded_modes=[bad_mode])
+
+
+def test_validate_and_resolve_paths_preserves_cwd_fallback(tmp_path: Path, repo_root: Path) -> None:
+    """When an input is not present under input_root, validate_and_resolve_paths falls back to cwd."""
+    out_dir = tmp_path / "out"
+    out_dir.mkdir()
+    cfg: dict[str, Any] = {
+        "inputs": {
+            "provenance_index": "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl",
+            "database": "data/sources.db",
+            "textbook_chunks_dir": "data/textbook_chunks",
+        },
+        "outputs": {
+            "index": "out/index.jsonl",
+            "missing_report": "out/missing.json",
+            "receipt": "out/receipt.json",
+        },
+    }
+
+    # tmp_path has no provenance_index or database, so it falls back to cwd (repo_root)
+    resolved_in, _ = custody.validate_and_resolve_paths(cfg, input_root=tmp_path, output_root=out_dir)
+    assert resolved_in["provenance_index"] == (repo_root / cfg["inputs"]["provenance_index"]).resolve()
+
+    # When input_root does contain the file, input_root wins
+    custom_prov = tmp_path / cfg["inputs"]["provenance_index"]
+    custom_prov.parent.mkdir(parents=True, exist_ok=True)
+    custom_prov.write_text("CUSTOM_INDEX\n", encoding="utf-8")
+    resolved_in2, _ = custody.validate_and_resolve_paths(cfg, input_root=tmp_path, output_root=out_dir)
+    assert resolved_in2["provenance_index"] == custom_prov.resolve()
+
+
+def test_derive_missing_report_item_separates_lineage_exclusion_from_reachable_archive() -> None:
+    """Textbooks with reachable archives on host are never reported as missing, even when blocked by OCR or lineage."""
+    cfg = {"ownership": {"unmounted_archive_owner": "custody-owner"}}
+
+    # Blocked by OCR, but raw archive is mounted and reachable on host
+    reachable_ocr_row = {
+        "cohort_id": "public-textbooks-non-stem-non-ocr",
+        "source_id": "source.public_textbooks.reachable_ocr",
+        "source_locator": {"source_file": "10-klas-ocr-book"},
+        "custody_resolution": {
+            "status": "RESOLVED_ACCESSIBLE",
+            "primary_store": "sqlite:sources.db#textbooks",
+            "archive_store": "data/textbooks/10-klas-ocr-book.pdf",
+            "host_reachable": True,
+        },
+        "lineage_verification": {
+            "status": "EXCLUDED_OCR",
+            "lineage_mode": "ocr",
+            "is_ocr_derived": True,
+        },
+        "permitted_to_proceed": False,
+        "blocking_reason": "ocr_derived_extraction_mode_excluded",
+    }
+    assert custody.derive_missing_report_item(reachable_ocr_row, cfg) is None
+
+    # Blocked by lineage discrepancy, but raw archive is mounted and reachable on host
+    reachable_discrepancy_row = {
+        "cohort_id": "public-textbooks-non-stem-non-ocr",
+        "source_id": "source.public_textbooks.reachable_discrepancy",
+        "source_locator": {"source_file": "10-klas-discrepancy-book"},
+        "custody_resolution": {
+            "status": "RESOLVED_ACCESSIBLE",
+            "primary_store": "sqlite:sources.db#textbooks",
+            "archive_store": "data/textbooks/10-klas-discrepancy-book.pdf",
+            "host_reachable": True,
+        },
+        "lineage_verification": {
+            "status": "UNKNOWN_LINEAGE",
+            "lineage_mode": "unknown",
+            "is_ocr_derived": False,
+        },
+        "permitted_to_proceed": False,
+        "blocking_reason": "database_content_does_not_match_lineage_chunk_evidence",
+    }
+    assert custody.derive_missing_report_item(reachable_discrepancy_row, cfg) is None
+
+    # Unmounted archive on host (PARTIAL_CHUNKS_AND_DB_ONLY) -> reported as missing
+    unmounted_row = {
+        "cohort_id": "public-textbooks-non-stem-non-ocr",
+        "source_id": "source.public_textbooks.unmounted",
+        "source_locator": {"source_file": "10-klas-unmounted-book"},
+        "custody_resolution": {
+            "status": "PARTIAL_CHUNKS_AND_DB_ONLY",
+            "primary_store": "sqlite:sources.db#textbooks",
+            "archive_store": "gdrive:learn-ukrainian-data/textbooks/10-klas-unmounted-book.pdf",
+            "host_reachable": True,
+        },
+        "lineage_verification": {
+            "status": "CONFIRMED_NATIVE",
+            "lineage_mode": "native_pdf_text",
+            "is_ocr_derived": False,
+        },
+        "permitted_to_proceed": True,
+        "blocking_reason": None,
+    }
+    item = custody.derive_missing_report_item(unmounted_row, cfg)
+    assert item is not None
+    assert item["reason"] == "execution_host_resolver_unmounted"
+
+    # Completely unreachable on host (UNREACHABLE_ON_HOST) -> reported as missing
+    unreachable_row = {
+        "cohort_id": "public-textbooks-non-stem-non-ocr",
+        "source_id": "source.public_textbooks.unreachable",
+        "source_locator": {"source_file": "10-klas-unreachable-book"},
+        "custody_resolution": {
+            "status": "UNREACHABLE_ON_HOST",
+            "primary_store": "sqlite:sources.db#textbooks",
+            "archive_store": "gdrive:learn-ukrainian-data/textbooks/10-klas-unreachable-book.pdf",
+            "host_reachable": False,
+        },
+        "lineage_verification": {
+            "status": "UNKNOWN_LINEAGE",
+            "lineage_mode": "unknown",
+            "is_ocr_derived": False,
+        },
+        "permitted_to_proceed": False,
+        "blocking_reason": "missing_chunk_file_and_unmounted_archive",
+    }
+    item2 = custody.derive_missing_report_item(unreachable_row, cfg)
+    assert item2 is not None
+    assert item2["reason"] == "missing_chunk_file_and_unmounted_archive"

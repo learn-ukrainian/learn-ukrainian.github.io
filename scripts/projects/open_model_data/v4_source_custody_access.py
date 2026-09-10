@@ -177,7 +177,7 @@ def validate_and_resolve_paths(
     for k in ("provenance_index", "provenance_receipt", "database", "textbook_chunks_dir"):
         if k in inputs_cfg:
             raw_p = Path(inputs_cfg[k])
-            p = raw_p.resolve() if raw_p.is_absolute() else (in_root / raw_p).resolve()
+            p = _resolve_file(raw_p, roots).resolve()
             resolved_inputs[k] = p
 
     outputs_cfg = config.get("outputs", {})
@@ -467,26 +467,22 @@ def derive_missing_report_item(
     source_id = row.get("source_id", "")
 
     if cid == "public-textbooks-non-stem-non-ocr":
-        if not permitted:
+        if cust.get("status") != "RESOLVED_ACCESSIBLE":
+            reason = (
+                row.get("blocking_reason") or "not_permitted_to_proceed"
+                if not permitted
+                else "execution_host_resolver_unmounted"
+            )
             return {
                 "source_id": source_id,
                 "source_locator": {"source_file": sfile},
                 "cohort_id": cid,
                 "missing_path_ref": cust.get("archive_store") or f"gdrive:learn-ukrainian-data/textbooks/{sfile}.pdf",
-                "reason": row.get("blocking_reason") or "not_permitted_to_proceed",
+                "reason": reason,
                 "owner": owner,
                 "blocks": "direct PDF byte extraction for this source",
             }
-        elif cust.get("status") != "RESOLVED_ACCESSIBLE":
-            return {
-                "source_id": source_id,
-                "source_locator": {"source_file": sfile},
-                "cohort_id": cid,
-                "missing_path_ref": cust.get("archive_store") or f"gdrive:learn-ukrainian-data/textbooks/{sfile}.pdf",
-                "reason": "execution_host_resolver_unmounted",
-                "owner": owner,
-                "blocks": "direct PDF byte extraction for this source",
-            }
+        return None
     else:
         if not permitted:
             p_store = cust.get("primary_store", "")
@@ -586,6 +582,7 @@ def resolve_source_access(
             chunk_mode, chunk_is_ocr, _chunk_rows, _chunk_chars, chunk_digest = check_chunk_file_lineage(
                 chunk_path, excluded_modes
             )
+            chunk_custody_status = "RESOLVED_ACCESSIBLE" if archive_on_host else "PARTIAL_CHUNKS_AND_DB_ONLY"
             if chunk_is_ocr:
                 lineage_status = "EXCLUDED_OCR"
                 lineage_mode = chunk_mode
@@ -593,7 +590,7 @@ def resolve_source_access(
                 is_ocr = True
                 permitted = False
                 blocking_reason = "ocr_derived_extraction_mode_excluded"
-                custody_status = "PARTIAL_CHUNKS_AND_DB_ONLY"
+                custody_status = chunk_custody_status
             elif chunk_mode in ("native_pdf_text", "native_text", "mixed_native"):
                 # Bind accessed database content to the verified chunk file lineage (ACCESS-2)
                 cur.execute(
@@ -618,7 +615,7 @@ def resolve_source_access(
                     is_ocr = False
                     permitted = False
                     blocking_reason = "source_records_not_found_in_database"
-                    custody_status = "PARTIAL_CHUNKS_AND_DB_ONLY"
+                    custody_status = chunk_custody_status
                 elif db_records_count != _chunk_rows or db_stream_hash != chunk_digest:
                     # Database content does not match verified chunk lineage
                     lineage_status = "UNKNOWN_LINEAGE"
@@ -627,14 +624,14 @@ def resolve_source_access(
                     is_ocr = False
                     permitted = False
                     blocking_reason = "database_content_does_not_match_lineage_chunk_evidence"
-                    custody_status = "PARTIAL_CHUNKS_AND_DB_ONLY"
+                    custody_status = chunk_custody_status
                 else:
                     lineage_status = "CONFIRMED_NATIVE"
                     lineage_mode = chunk_mode
                     evidence_ref = f"{chunk_ref}#extraction_mode"
                     is_ocr = False
                     permitted = True
-                    custody_status = "RESOLVED_ACCESSIBLE" if archive_on_host else "PARTIAL_CHUNKS_AND_DB_ONLY"
+                    custody_status = chunk_custody_status
                     blocking_reason = None
             else:
                 lineage_status = "UNKNOWN_LINEAGE"
@@ -643,7 +640,7 @@ def resolve_source_access(
                 is_ocr = False
                 permitted = False
                 blocking_reason = "unknown_extraction_lineage_not_silently_called_native"
-                custody_status = "PARTIAL_CHUNKS_AND_DB_ONLY"
+                custody_status = chunk_custody_status
         else:
             # No chunk file found on host
             lineage_status = "UNKNOWN_LINEAGE"
@@ -651,8 +648,10 @@ def resolve_source_access(
             evidence_ref = "none"
             is_ocr = False
             permitted = False
-            custody_status = "UNREACHABLE_ON_HOST"
-            blocking_reason = "missing_chunk_file_and_unmounted_archive"
+            custody_status = "RESOLVED_ACCESSIBLE" if archive_on_host else "UNREACHABLE_ON_HOST"
+            blocking_reason = (
+                "missing_chunk_file_and_unmounted_archive" if not archive_on_host else "missing_chunk_file"
+            )
 
     # Bounded read digest computation (content-sensitive text hashing)
     stream_digest = None
@@ -936,23 +935,54 @@ def _is_private_or_absolute_host_path(path_str: str) -> bool:
     """Detect platform-independent absolute host paths and private host segments (including Windows drive/UNC)."""
     if not path_str:
         return False
+
+    def _is_path_candidate(s: str) -> bool:
+        if s.startswith(("/", "~")):
+            return True
+        if len(s) >= 3 and s[0].isalpha() and s[1] == ":" and s[2] == "/":
+            return True
+        if s.startswith("//"):
+            return True
+        if "/" in s:
+            parts = [p.lower() for p in s.strip("/").split("/") if p]
+            private_parts = {"home", "users", "root", "tmp", "temp", "var", "appdata", "private"}
+            if any(p in private_parts or p.startswith("~") for p in parts):
+                return True
+        return False
+
     tokens = path_str.split()
     for token in tokens:
         t = token.strip("\"'()[]{}<>,;")
         if not t:
             continue
         normalized = t.replace("\\", "/")
-        if normalized.startswith(("/", "~")):
+        if _is_path_candidate(normalized):
             return True
-        if len(normalized) >= 3 and normalized[0].isalpha() and normalized[1] == ":" and normalized[2] == "/":
-            return True
-        if normalized.startswith("//"):
-            return True
-        if "/" in normalized:
-            parts = [p.lower() for p in normalized.strip("/").split("/") if p]
-            private_parts = {"home", "users", "root", "tmp", "temp", "var", "appdata", "private"}
-            if any(p in private_parts or p.startswith("~") for p in parts):
-                return True
+
+        # Check sub-tokens after separators like = or : (e.g. location=/opt/private-corpus)
+        if "=" in normalized:
+            for sub in normalized.split("=")[1:]:
+                sub = sub.strip("\"'()[]{}<>,;")
+                if sub and _is_path_candidate(sub):
+                    return True
+
+        if ":" in normalized and "://" not in normalized:
+            for sub in normalized.split(":")[1:]:
+                sub = sub.strip("\"'()[]{}<>,;")
+                if sub and _is_path_candidate(sub):
+                    return True
+        elif "://" in normalized:
+            _, remainder = normalized.split("://", 1)
+            remainder = remainder.strip("\"'()[]{}<>,;")
+            if remainder.startswith("/"):
+                if _is_path_candidate(remainder):
+                    return True
+            elif "/" in remainder:
+                parts = [p.lower() for p in remainder.strip("/").split("/") if p]
+                private_parts = {"home", "users", "root", "tmp", "temp", "var", "appdata", "private"}
+                if any(p in private_parts or p.startswith("~") for p in parts):
+                    return True
+
     return False
 
 
