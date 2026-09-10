@@ -154,12 +154,25 @@ def validate_and_resolve_paths(
     config: Mapping[str, Any],
     input_root: Path,
     output_root: Path,
+    config_path: Path | None = None,
 ) -> tuple[dict[str, Path], dict[str, Path]]:
     """Validate output containment, distinctness, and input/output disjointness (ACCESS-1, ACCESS-4)."""
     in_root = input_root.resolve()
     out_root = output_root.resolve()
+    roots = [in_root, Path.cwd()]
 
     resolved_inputs: dict[str, Path] = {}
+    cp = Path(config_path) if config_path is not None else DEFAULT_CONFIG
+    resolved_inputs["config"] = _resolve_file(cp, roots).resolve()
+
+    for s_name, s_path in (
+        ("config_schema", CONFIG_SCHEMA_PATH),
+        ("item_schema", ITEM_SCHEMA_PATH),
+        ("missing_report_schema", MISSING_REPORT_SCHEMA_PATH),
+        ("receipt_schema", RECEIPT_SCHEMA_PATH),
+    ):
+        resolved_inputs[s_name] = _resolve_file(s_path, roots).resolve()
+
     inputs_cfg = config.get("inputs", {})
     for k in ("provenance_index", "provenance_receipt", "database", "textbook_chunks_dir"):
         if k in inputs_cfg:
@@ -315,6 +328,13 @@ def check_chunk_file_lineage(
     Returns:
         (lineage_mode, is_ocr, row_count, char_count, content_sha256)
     """
+    for m in excluded_modes:
+        if m not in OCR_LINEAGE_MODES:
+            raise CustodyAccessError(
+                f"check_chunk_file_lineage: excluded_modes contains unsupported or non-OCR mode '{m}' "
+                f"(expected subset of {sorted(OCR_LINEAGE_MODES)})"
+            )
+
     if not chunk_file.is_file():
         return "unknown", False, 0, 0, None
 
@@ -420,6 +440,17 @@ def validate_cohort_spec(cohort_cfg: Mapping[str, Any]) -> None:
             raise CustodyAccessError(
                 f"Cohort '{cohort_id}' (family 'public_textbooks') requires lineage_rule 'native_pdf_text', got '{lineage_rule}'"
             )
+
+    excluded_modes = cohort_cfg.get("excluded_modes")
+    if excluded_modes is not None:
+        if not isinstance(excluded_modes, (list, tuple)):
+            raise CustodyAccessError(f"Cohort '{cohort_id}' excluded_modes must be a list, got {type(excluded_modes)}")
+        for mode in excluded_modes:
+            if mode not in OCR_LINEAGE_MODES:
+                raise CustodyAccessError(
+                    f"Cohort '{cohort_id}' excluded_modes contains unsupported or non-OCR mode '{mode}' "
+                    f"(expected subset of {sorted(OCR_LINEAGE_MODES)})"
+                )
 
 
 def derive_missing_report_item(
@@ -690,7 +721,9 @@ def build(
     config, resolved_config_path = _load_config(config_path, roots)
     config_sha256 = sha256_file(resolved_config_path)
 
-    resolved_inputs, resolved_outputs = validate_and_resolve_paths(config, input_root, output_root)
+    resolved_inputs, resolved_outputs = validate_and_resolve_paths(
+        config, input_root, output_root, config_path=resolved_config_path
+    )
 
     # Resolve input paths
     prov_index_path = resolved_inputs["provenance_index"]
@@ -947,7 +980,9 @@ def verify(
         validate_cohort_spec(c)
     cohorts_by_id = {c["cohort_id"]: c for c in config["cohorts"]}
 
-    _resolved_inputs, resolved_outputs = validate_and_resolve_paths(config, input_root, output_root)
+    _resolved_inputs, resolved_outputs = validate_and_resolve_paths(
+        config, input_root, output_root, config_path=resolved_config_path
+    )
     out_index_path = resolved_outputs["index"]
     out_missing_path = resolved_outputs["missing_report"]
     out_receipt_path = resolved_outputs["receipt"]

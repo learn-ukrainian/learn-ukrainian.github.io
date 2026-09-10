@@ -136,7 +136,12 @@
           "excluded_modes": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "apple_vision_ocr",
+                "ocr",
+                "scanned_image"
+              ]
             }
           }
         }

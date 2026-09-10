@@ -1647,3 +1647,57 @@ def test_verify_detects_tampered_primary_store_in_index(tmp_path: Path, repo_roo
 
     with pytest.raises(custody.CustodyAccessError, match=r"primary_store .* does not match expected"):
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out)
+
+
+def test_validate_and_resolve_paths_protects_config_and_schemas_from_aliases(repo_root: Path) -> None:
+    """Outputs cannot alias consumed config file or schema contracts."""
+    base_cfg: dict[str, Any] = {
+        "inputs": {
+            "provenance_index": "data/provenance.jsonl",
+            "database": "data/sources.db",
+            "textbook_chunks_dir": "data/chunks",
+        },
+        "outputs": {
+            "index": "out/index.jsonl",
+            "missing_report": "out/missing.json",
+            "receipt": "out/receipt.json",
+        },
+    }
+
+    # Output aliases config path
+    cfg_alias_config = copy.deepcopy(base_cfg)
+    cfg_alias_config["outputs"]["index"] = str(custody.DEFAULT_CONFIG)
+    with pytest.raises(custody.CustodyAccessError, match=r"aliases input 'config'"):
+        custody.validate_and_resolve_paths(
+            cfg_alias_config, input_root=repo_root, output_root=repo_root, config_path=custody.DEFAULT_CONFIG
+        )
+
+    # Output aliases item schema
+    cfg_alias_schema = copy.deepcopy(base_cfg)
+    cfg_alias_schema["outputs"]["index"] = str(custody.ITEM_SCHEMA_PATH)
+    with pytest.raises(custody.CustodyAccessError, match=r"aliases input 'item_schema'"):
+        custody.validate_and_resolve_paths(cfg_alias_schema, input_root=repo_root, output_root=repo_root)
+
+    # Output aliases missing report schema
+    cfg_alias_missing_schema = copy.deepcopy(base_cfg)
+    cfg_alias_missing_schema["outputs"]["index"] = str(custody.MISSING_REPORT_SCHEMA_PATH)
+    with pytest.raises(custody.CustodyAccessError, match=r"aliases input 'missing_report_schema'"):
+        custody.validate_and_resolve_paths(cfg_alias_missing_schema, input_root=repo_root, output_root=repo_root)
+
+
+def test_validate_cohort_spec_and_lineage_reject_non_ocr_excluded_modes(tmp_path: Path) -> None:
+    """Cohort configuration and chunk lineage reader reject non-OCR extraction modes in excluded_modes."""
+    for bad_mode in ("native_text", "native_pdf_text", "unknown", "invalid_mode"):
+        with pytest.raises(custody.CustodyAccessError, match=r"excluded_modes contains unsupported or non-OCR mode"):
+            custody.validate_cohort_spec(
+                {
+                    "cohort_id": "tb",
+                    "source_family": "public_textbooks",
+                    "resolver_kind": "hybrid_sqlite_chunks_archive",
+                    "lineage_rule": "native_pdf_text",
+                    "excluded_modes": [bad_mode],
+                }
+            )
+
+        with pytest.raises(custody.CustodyAccessError, match=r"excluded_modes contains unsupported or non-OCR mode"):
+            custody.check_chunk_file_lineage(tmp_path / "dummy.jsonl", excluded_modes=[bad_mode])
