@@ -11,8 +11,11 @@ import pytest
 from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import source_work_locator_index as locators
+from scripts.projects.open_model_data import v4_provenance_restoration as restoration
 
 ROOT = Path(__file__).resolve().parents[1]
+RESTORATION_CONFIG = ROOT / "data/projects/open_model_data/evidence/v4_provenance_restoration_config_v1.json"
+RESTORATION_CONTRACT = ROOT / "data/projects/open_model_data/contracts/v4_provenance_restoration_v1.schema.json"
 EXCLUDED = (
     "anna-ohoiko-1000-words-2nd-ed",
     "anna-ohoiko-500-verbs",
@@ -30,21 +33,21 @@ def _fixture(tmp_path: Path) -> tuple[Path, Path]:
     database.parent.mkdir(parents=True)
     with sqlite3.connect(database) as connection:
         connection.execute(
-            "CREATE TABLE literary_texts (source_file TEXT, work_id TEXT, source_url TEXT, title TEXT, author TEXT, year INTEGER, text TEXT)"
+            "CREATE TABLE literary_texts (source_file TEXT, work_id TEXT, source_url TEXT, title TEXT, author TEXT, year INTEGER, genre TEXT, language_period TEXT, text TEXT)"
         )
         connection.executemany(
-            "INSERT INTO literary_texts VALUES (?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO literary_texts (source_file, work_id, source_url, title, author, year, genre, language_period, text) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
-                ("lit", "book", "https://example.test/book.pdf#page=1", "Book", "Author", 1900, "LITERARY SECRET"),
-                ("lit", "book", "https://example.test/book.pdf#page=2", "Book", "Author", 1900, "LITERARY SECRET"),
+                ("lit", "book", "https://example.test/book.pdf#page=1", "Book", "Author", 1900, "poetry", "modern", "LITERARY SECRET"),
+                ("lit", "book", "https://example.test/book.pdf#page=2", "Book", "Author", 1900, "poetry", "modern", "LITERARY SECRET"),
             ],
         )
         connection.execute(
             "CREATE TABLE textbooks (source_file TEXT, title TEXT, author TEXT, author_uk TEXT, grade TEXT, subject TEXT, text TEXT)"
         )
         connection.execute(
-            "INSERT INTO textbooks VALUES (?, ?, ?, ?, ?, ?, ?)",
-            ("book", "Title", "author", "автор", "4", "math", "TEXTBOOK SECRET"),
+            "INSERT INTO textbooks (source_file, title, author, author_uk, grade, subject, text) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            ("book", "Title", "author", "автор", "4", "ukrmova", "TEXTBOOK SECRET"),
         )
         for value in EXCLUDED:
             connection.execute(
@@ -405,3 +408,88 @@ def test_atomic_publication_failure_preserves_prior_index(tmp_path: Path, monkey
         locators.build(config_path=config, input_root=root, output=output)
     assert output.read_bytes() == previous
     assert not list(output.parent.glob(".*.tmp"))
+
+
+def _write_restoration_inputs(root: Path, snapshot: Path) -> None:
+    evidence = root / "data/projects/open_model_data/evidence"
+    evidence.mkdir(parents=True, exist_ok=True)
+    (evidence / "source_work_locator_index_v1.compact.jsonl").write_bytes(snapshot.read_bytes())
+    inventory = root / "data/projects/open_model_data/inventory"
+    inventory.mkdir(parents=True, exist_ok=True)
+    records = [
+        {"asset_id": "drive.literary_raw_reconciliation", "details": {"database_only": [], "raw_only": []}},
+        {
+            "asset_id": "drive.textbook_raw_reconciliation",
+            "details": {"raw_only": [], "database_only_or_raw_chunk_unresolved": []},
+        },
+        {"asset_id": "drive.deferred_textbook_scans", "lineage": {"ingestion_status": "not_ingested"}},
+        {"asset_id": "drive.orphan_ocr", "lineage": {"ingestion_status": "not_ingested"}},
+    ]
+    (inventory / "recovery_ledger_v1.jsonl").write_text(
+        "".join(json.dumps(record) + "\n" for record in records), encoding="utf-8"
+    )
+
+
+def _restore(tmp_path: Path) -> tuple[list[dict], Path]:
+    config, root = _fixture(tmp_path)
+    snapshot = root / "snapshot.compact.jsonl"
+    locators.build(config_path=config, input_root=root, output=snapshot)
+    _write_restoration_inputs(root, snapshot)
+    restoration.build(config_path=RESTORATION_CONFIG, input_root=root, output_root=root)
+    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    lines = index.read_text(encoding="utf-8").splitlines()
+    return [json.loads(line) for line in lines[1:]], index
+
+
+def test_restoration_rows_pass_schema_and_retain_stable_ids(tmp_path: Path) -> None:
+    rows, _index = _restore(tmp_path)
+    validator = Draft202012Validator(json.loads(RESTORATION_CONTRACT.read_text()))
+    for row in rows:
+        assert not list(validator.iter_errors(row))
+    _output, snapshot_rows = _build(tmp_path / "snapshot-source")
+    snapshot_by_locator = {row["locator_id"]: row for row in snapshot_rows}
+    restored = {row["locator_id"]: row for row in rows}
+    expected = {
+        row["locator_id"]
+        for row in snapshot_rows
+        if row["source_family"] in ("literary", "public_textbooks")
+    }
+    assert set(restored) == expected
+    for locator_id, row in restored.items():
+        source = snapshot_by_locator[locator_id]
+        assert row["source_id"] == source["source_id"]
+        assert row["work_id"] == source["work_id"]
+        assert row["source_locator"] == source["source_locator"]
+        assert row["work_locator"] == source["work_locator"]
+        assert row["links"]["canonical_url"] == source["canonical_url"]
+
+
+def test_restoration_retains_canonical_urls_and_tags_period_genre_register(tmp_path: Path) -> None:
+    rows, _index = _restore(tmp_path)
+    literary = next(row for row in rows if row["source_family"] == "literary")
+    assert literary["links"]["canonical_url"] == "https://example.test/book.pdf"
+    assert literary["classification"]["period"] == {
+        "value": "modern",
+        "status": "restored",
+        "source_ref": "sqlite:sources.db#literary_texts.language_period",
+    }
+    assert literary["classification"]["domain"] == {
+        "value": "poetry",
+        "status": "restored",
+        "source_ref": "sqlite:sources.db#literary_texts.genre",
+    }
+    for field in ("register", "original_language", "translation_status"):
+        assert literary["classification"][field]["status"] == "unresolved"
+        assert literary["classification"][field]["value"] == "unknown"
+    textbook = next(row for row in rows if row["source_family"] == "public_textbooks")
+    assert textbook["classification"]["domain"]["value"] == "ukrmova"
+    assert textbook["classification"]["domain"]["status"] == "restored"
+    assert textbook["classification"]["period"]["status"] == "unresolved"
+    assert "canonical_source_url" in textbook["unresolved"]
+
+
+def test_restoration_build_is_byte_deterministic(tmp_path: Path) -> None:
+    _rows, index = _restore(tmp_path)
+    before = index.read_bytes()
+    restoration.build(config_path=RESTORATION_CONFIG, input_root=tmp_path, output_root=tmp_path)
+    assert index.read_bytes() == before

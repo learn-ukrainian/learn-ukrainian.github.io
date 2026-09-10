@@ -1,0 +1,391 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v4_provenance_restoration_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "restoration_id", "cohort_id", "source_family", "inventory_asset_id", "consumer_view", "locator_id", "source_id", "work_id", "source_locator", "work_locator", "links", "classification", "affected_records", "unresolved"],
+  "properties": {
+    "schema_version": {"const": "v4_provenance_restoration_v1"},
+    "restoration_id": {"type": "string", "pattern": "^restore\\.[a-f0-9]{24}$"},
+    "cohort_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
+    "source_family": {"enum": ["literary", "public_textbooks"]},
+    "inventory_asset_id": {"enum": ["db.literary_texts", "db.textbooks.public"]},
+    "consumer_view": {"enum": ["db.literary_texts", "db.textbooks.public"]},
+    "locator_id": {"type": "string", "pattern": "^locator\\.[a-f0-9]{24}$"},
+    "source_id": {"type": "string", "pattern": "^source\\.(?:literary|public_textbooks)\\.[a-f0-9]{24}$"},
+    "work_id": {"type": "string", "pattern": "^work\\.(?:literary|public_textbooks)\\.[a-f0-9]{24}$"},
+    "source_locator": {"$ref": "#/$defs/metadataObject"},
+    "work_locator": {"$ref": "#/$defs/metadataObject"},
+    "links": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["canonical_url", "acquisition_ref", "edition"],
+      "properties": {
+        "canonical_url": {"type": ["string", "null"], "format": "uri"},
+        "acquisition_ref": {"type": ["string", "null"], "pattern": "^gdrive:learn-ukrainian-data/[a-z_]+(?:/[^/]+\\.jsonl|#[^/]+)$"},
+        "edition": {"$ref": "#/$defs/metadataObject"}
+      }
+    },
+    "classification": {"$ref": "#/$defs/classification"},
+    "affected_records": {"type": "integer", "minimum": 1},
+    "unresolved": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/unresolvedKey"}}
+  },
+  "allOf": [
+    {"$ref": "#/$defs/literaryRecord"},
+    {"$ref": "#/$defs/textbookRecord"}
+  ],
+  "$defs": {
+    "identifier": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
+    "publicValue": {"type": ["string", "null"]},
+    "metadataObject": {"type": "object", "additionalProperties": {"$ref": "#/$defs/publicValue"}},
+    "unresolvedKey": {"enum": ["canonical_source_url", "acquisition_raw_locator", "period", "register", "domain", "original_language", "translation_status"]},
+    "periodValue": {"enum": ["old_east_slavic", "middle_ukrainian", "modern", "unknown"]},
+    "translationStatusValue": {"enum": ["original", "translation", "unknown"]},
+    "classificationField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "status", "source_ref"],
+      "properties": {
+        "value": {"type": "string", "minLength": 1},
+        "status": {"enum": ["restored", "unresolved"]},
+        "source_ref": {"type": ["string", "null"], "minLength": 3}
+      }
+    },
+    "classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["period", "register", "domain", "original_language", "translation_status"],
+      "properties": {
+        "period": {
+          "allOf": [
+            {"$ref": "#/$defs/classificationField"},
+            {"properties": {"value": {"$ref": "#/$defs/periodValue"}}}
+          ]
+        },
+        "register": {"$ref": "#/$defs/classificationField"},
+        "domain": {"$ref": "#/$defs/classificationField"},
+        "original_language": {"$ref": "#/$defs/classificationField"},
+        "translation_status": {
+          "allOf": [
+            {"$ref": "#/$defs/classificationField"},
+            {"properties": {"value": {"$ref": "#/$defs/translationStatusValue"}}}
+          ]
+        }
+      }
+    },
+    "literaryRecord": {
+      "if": {"properties": {"source_family": {"const": "literary"}}},
+      "then": {"properties": {
+        "inventory_asset_id": {"const": "db.literary_texts"},
+        "consumer_view": {"const": "db.literary_texts"},
+        "source_id": {"pattern": "^source\\.literary\\.[a-f0-9]{24}$"},
+        "work_id": {"pattern": "^work\\.literary\\.[a-f0-9]{24}$"},
+        "source_locator": {"type": "object", "additionalProperties": false, "required": ["source_file"], "properties": {"source_file": {"$ref": "#/$defs/publicValue"}}},
+        "work_locator": {"type": "object", "additionalProperties": false, "required": ["work_id"], "properties": {"work_id": {"$ref": "#/$defs/publicValue"}}},
+        "links": {"properties": {"edition": {"type": "object", "additionalProperties": false, "required": ["title", "author", "year"], "properties": {"title": {"$ref": "#/$defs/publicValue"}, "author": {"$ref": "#/$defs/publicValue"}, "year": {"$ref": "#/$defs/publicValue"}}}}}
+      }}
+    },
+    "textbookRecord": {
+      "if": {"properties": {"source_family": {"const": "public_textbooks"}}},
+      "then": {"properties": {
+        "inventory_asset_id": {"const": "db.textbooks.public"},
+        "consumer_view": {"const": "db.textbooks.public"},
+        "source_id": {"pattern": "^source\\.public_textbooks\\.[a-f0-9]{24}$"},
+        "work_id": {"pattern": "^work\\.public_textbooks\\.[a-f0-9]{24}$"},
+        "source_locator": {"type": "object", "additionalProperties": false, "required": ["source_file"], "properties": {"source_file": {"$ref": "#/$defs/publicValue"}}},
+        "work_locator": {"type": "object", "additionalProperties": false, "required": ["title"], "properties": {"title": {"$ref": "#/$defs/publicValue"}}},
+        "links": {"properties": {"edition": {"type": "object", "additionalProperties": false, "required": ["title", "author", "author_uk", "grade", "subject"], "properties": {"title": {"$ref": "#/$defs/publicValue"}, "author": {"$ref": "#/$defs/publicValue"}, "author_uk": {"$ref": "#/$defs/publicValue"}, "grade": {"$ref": "#/$defs/publicValue"}, "subject": {"$ref": "#/$defs/publicValue"}}}}}
+      }}
+    },
+    "indexHeader": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "row_schema_version", "snapshot", "config_sha256", "records", "ordering", "rows_sha256"],
+      "properties": {
+        "schema_version": {"const": "v4_provenance_restoration_index_v1"},
+        "row_schema_version": {"const": "v4_provenance_restoration_v1"},
+        "snapshot": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["evidence", "semantic_jsonl_sha256", "records"],
+          "properties": {
+            "evidence": {"const": "data/projects/open_model_data/evidence/source_work_locator_index_v1.compact.jsonl"},
+            "semantic_jsonl_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "records": {"type": "integer", "minimum": 1}
+          }
+        },
+        "config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "records": {"type": "integer", "minimum": 0},
+        "ordering": {"const": "cohort_id,source_id,work_id,locator_id"},
+        "rows_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "unresolvedReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "index_sha256", "config_sha256", "snapshot_semantic_jsonl_sha256", "by_cohort", "human_source_approvals_reopened", "notes"],
+      "properties": {
+        "schema_version": {"const": "v4_provenance_unresolved_report_v1"},
+        "index_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "snapshot_semantic_jsonl_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "by_cohort": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["records", "unresolved_keys"],
+            "properties": {
+              "records": {"type": "integer", "minimum": 0},
+              "unresolved_keys": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 1}}
+            }
+          }
+        },
+        "human_source_approvals_reopened": {"const": false},
+        "notes": {"type": "array", "items": {"type": "string", "minLength": 10}}
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "config_sha256", "inputs", "selection", "outputs", "human_source_approvals_reopened", "limitations"],
+      "properties": {
+        "schema_version": {"const": "v4_provenance_restoration_receipt_v1"},
+        "config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "inputs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["locator_index", "inventory_ledger", "database"],
+          "properties": {
+            "locator_index": {"$ref": "#/$defs/inputFile"},
+            "inventory_ledger": {"$ref": "#/$defs/inputFile"},
+            "database": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["path", "access", "tables"],
+              "properties": {
+                "path": {"const": "data/sources.db"},
+                "access": {"const": "read_only"},
+                "tables": {"type": "array", "items": {"$ref": "#/$defs/identifier"}, "uniqueItems": true, "minItems": 1}
+              }
+            }
+          }
+        },
+        "selection": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["operator_decision_date", "cohorts", "exclusions"],
+          "properties": {
+            "operator_decision_date": {"const": "2026-09-10"},
+            "cohorts": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["cohort_id", "source_family", "consumer_view", "selected_rows", "selected_records"],
+                "properties": {
+                  "cohort_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
+                  "source_family": {"enum": ["literary", "public_textbooks"]},
+                  "consumer_view": {"enum": ["db.literary_texts", "db.textbooks.public"]},
+                  "selected_rows": {"type": "integer", "minimum": 0},
+                  "selected_records": {"type": "integer", "minimum": 0}
+                }
+              }
+            },
+            "exclusions": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["basis", "scope", "rows"],
+                "properties": {
+                  "basis": {"type": "string", "minLength": 3},
+                  "scope": {"type": "string", "minLength": 3},
+                  "rows": {"type": "integer", "minimum": 0},
+                  "subjects": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 1}},
+                  "sources": {"type": "array", "items": {"type": "string", "minLength": 3}, "uniqueItems": true},
+                  "inventory_asset_ids": {"type": "array", "items": {"type": "string", "minLength": 3}, "uniqueItems": true}
+                }
+              }
+            }
+          }
+        },
+        "outputs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["index", "unresolved_report"],
+          "properties": {
+            "index": {"$ref": "#/$defs/outputFile"},
+            "unresolved_report": {"$ref": "#/$defs/outputFile"}
+          }
+        },
+        "human_source_approvals_reopened": {"const": false},
+        "limitations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 10}}
+      }
+    },
+    "inputFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 3},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "outputFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "records"],
+      "properties": {
+        "path": {"type": "string", "minLength": 3},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "records": {"type": "integer", "minimum": 0}
+      }
+    },
+    "classificationBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": {"enum": ["column", "snapshot_metadata", "unresolved"]},
+        "column": {"$ref": "#/$defs/identifier"},
+        "field": {"$ref": "#/$defs/identifier"},
+        "vocabulary": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true, "minItems": 1},
+        "source_ref": {"type": "string", "minLength": 3},
+        "reason": {"type": "string", "minLength": 10}
+      },
+      "allOf": [
+        {"if": {"properties": {"kind": {"const": "column"}}}, "then": {"required": ["column", "vocabulary", "source_ref"]}},
+        {"if": {"properties": {"kind": {"const": "snapshot_metadata"}}}, "then": {"required": ["field", "vocabulary", "source_ref"]}},
+        {"if": {"properties": {"kind": {"const": "unresolved"}}}, "then": {"required": ["reason"]}}
+      ]
+    },
+    "acquisitionBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "inventory_asset_id", "ref_template", "require_empty_diffs"],
+      "properties": {
+        "kind": {"const": "inventory_reconciliation"},
+        "inventory_asset_id": {"enum": ["drive.literary_raw_reconciliation", "drive.textbook_raw_reconciliation"]},
+        "ref_template": {"type": "string", "pattern": "^gdrive:learn-ukrainian-data/[a-z_]+(?:/\\{source_stem\\}\\.jsonl|#\\{source_stem\\})$"},
+        "require_empty_diffs": {"type": "array", "items": {"enum": ["database_only", "raw_only"]}, "uniqueItems": true},
+        "unresolved_detail_key": {"const": "database_only_or_raw_chunk_unresolved"}
+      }
+    },
+    "cohort": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cohort_id", "source_family", "inventory_asset_id", "consumer_view", "acquisition", "classification"],
+      "properties": {
+        "cohort_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
+        "source_family": {"enum": ["literary", "public_textbooks"]},
+        "inventory_asset_id": {"enum": ["db.literary_texts", "db.textbooks.public"]},
+        "consumer_view": {"enum": ["db.literary_texts", "db.textbooks.public"]},
+        "table": {"$ref": "#/$defs/identifier"},
+        "source_column": {"$ref": "#/$defs/identifier"},
+        "work_column": {"$ref": "#/$defs/identifier"},
+        "subject_exclusions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["basis", "subjects"],
+          "properties": {
+            "basis": {"const": "stem_operator_exclusion_2026-09-10"},
+            "subjects": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true, "minItems": 1}
+          }
+        },
+        "acquisition": {"$ref": "#/$defs/acquisitionBinding"},
+        "classification": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["period", "register", "domain", "original_language", "translation_status"],
+          "properties": {
+            "period": {"$ref": "#/$defs/classificationBinding"},
+            "register": {"$ref": "#/$defs/classificationBinding"},
+            "domain": {"$ref": "#/$defs/classificationBinding"},
+            "original_language": {"$ref": "#/$defs/classificationBinding"},
+            "translation_status": {"$ref": "#/$defs/classificationBinding"}
+          }
+        }
+      }
+    },
+    "config": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "operator_decision", "inputs", "outputs", "consumer_views", "family_exclusions", "private_source_exclusions", "ocr_exclusion_evidence", "cohorts"],
+      "properties": {
+        "schema_version": {"const": "v4_provenance_restoration_config_v1"},
+        "operator_decision": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["date", "issue", "parent_epic", "summary"],
+          "properties": {
+            "date": {"const": "2026-09-10"},
+            "issue": {"const": 7883},
+            "parent_epic": {"const": 7423},
+            "summary": {"type": "string", "minLength": 20}
+          }
+        },
+        "inputs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["database", "locator_index", "inventory_ledger"],
+          "properties": {
+            "database": {"const": "data/sources.db"},
+            "locator_index": {"const": "data/projects/open_model_data/evidence/source_work_locator_index_v1.compact.jsonl"},
+            "inventory_ledger": {"const": "data/projects/open_model_data/inventory/recovery_ledger_v1.jsonl"}
+          }
+        },
+        "outputs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["index", "unresolved_report", "receipt"],
+          "properties": {
+            "index": {"const": "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"},
+            "unresolved_report": {"const": "data/projects/open_model_data/evidence/v4_provenance_restoration_unresolved_v1.json"},
+            "receipt": {"const": "data/projects/open_model_data/evidence/v4_provenance_restoration_receipt_v1.json"}
+          }
+        },
+        "consumer_views": {"type": "array", "items": {"enum": ["db.literary_texts", "db.textbooks.public"]}, "uniqueItems": true, "minItems": 2, "maxItems": 2},
+        "family_exclusions": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["source_family", "basis"],
+            "properties": {
+              "source_family": {"enum": ["external_articles", "wikipedia"]},
+              "basis": {"type": "string", "minLength": 10}
+            }
+          },
+          "allOf": [
+            {"contains": {"properties": {"source_family": {"const": "external_articles"}}}},
+            {"contains": {"properties": {"source_family": {"const": "wikipedia"}}}}
+          ]
+        },
+        "private_source_exclusions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["basis", "sources"],
+          "properties": {
+            "basis": {"const": "private_teaching_material_operator_exclusion_2026-09-10"},
+            "sources": {"type": "array", "items": {"type": "string", "minLength": 3}, "uniqueItems": true, "minItems": 8, "maxItems": 8}
+          }
+        },
+        "ocr_exclusion_evidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["basis", "inventory_asset_ids"],
+          "properties": {
+            "basis": {"const": "ocr_derived_text_operator_exclusion_2026-09-10"},
+            "inventory_asset_ids": {"type": "array", "items": {"enum": ["drive.deferred_textbook_scans", "drive.orphan_ocr"]}, "uniqueItems": true, "minItems": 2, "maxItems": 2}
+          }
+        },
+        "cohorts": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/cohort"}}
+      }
+    }
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "config_sha256": "63e08d6e88006b6aaba377e0c0fdbd94d3458c454d6f64993db2d4586ea1ab82",
+  "human_source_approvals_reopened": false,
+  "inputs": {
+    "database": {
+      "access": "read_only",
+      "path": "data/sources.db",
+      "tables": [
+        "literary_texts"
+      ]
+    },
+    "inventory_ledger": {
+      "path": "data/projects/open_model_data/inventory/recovery_ledger_v1.jsonl",
+      "sha256": "ac6a1da8db2dbfbf831e74d58d987674c06ebaeca7b8067aad1ee6c353d196bf"
+    },
+    "locator_index": {
+      "path": "data/projects/open_model_data/evidence/source_work_locator_index_v1.compact.jsonl",
+      "sha256": "ca9fb9e88f7520d77bafb9139b2ba20c652a47395c94d416ad575a1ac0801ee6"
+    }
+  },
+  "limitations": [
+    "Restoration binds metadata only; no corpus text is read, emitted, or transformed.",
+    "Unresolved period/register/domain/original-language/translation fields remain explicit unknowns pending retained-evidence discovery.",
+    "End-to-end provenance propagation through extraction and export is verified separately under #7430 PILOT-1/PILOT-4."
+  ],
+  "outputs": {
+    "index": {
+      "path": "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl",
+      "records": 29946,
+      "sha256": "fa638869568f7578615c93c8a71025eb94593d81399c965f67900a8bab66fc58"
+    },
+    "unresolved_report": {
+      "path": "data/projects/open_model_data/evidence/v4_provenance_restoration_unresolved_v1.json",
+      "records": 2,
+      "sha256": "df671ba9fa1fc89988b40935f8291287b5c694b56e34e03b642f91115a5fcb65"
+    }
+  },
+  "schema_version": "v4_provenance_restoration_receipt_v1",
+  "selection": {
+    "cohorts": [
+      {
+        "cohort_id": "literary-non-ocr",
+        "consumer_view": "db.literary_texts",
+        "selected_records": 137723,
+        "selected_rows": 3309,
+        "source_family": "literary"
+      },
+      {
+        "cohort_id": "public-textbooks-non-stem-non-ocr",
+        "consumer_view": "db.textbooks.public",
+        "selected_records": 37239,
+        "selected_rows": 26637,
+        "source_family": "public_textbooks"
+      }
+    ],
+    "exclusions": [
+      {
+        "basis": "video_captions_and_transcripts_excluded_by_operator_decision_2026-09-10",
+        "rows": 1205,
+        "scope": "external_articles"
+      },
+      {
+        "basis": "not_a_selected_consumer_view_for_the_first_eligible_cohort",
+        "rows": 1029,
+        "scope": "wikipedia"
+      },
+      {
+        "basis": "stem_operator_exclusion_2026-09-10",
+        "rows": 10122,
+        "scope": "public_textbooks",
+        "subjects": {
+          "algebra": 1492,
+          "astronomiya": 143,
+          "biolohiya": 1036,
+          "fizyka": 1393,
+          "heometriya": 1171,
+          "informatyka": 1512,
+          "khimiya": 1242,
+          "matematyka": 1378,
+          "pryroda": 755
+        }
+      },
+      {
+        "basis": "public_textbook_subject_unresolved_fail_safe",
+        "rows": 0,
+        "scope": "public_textbooks"
+      },
+      {
+        "basis": "private_teaching_material_operator_exclusion_2026-09-10",
+        "rows": 0,
+        "scope": "db.textbooks.private",
+        "sources": [
+          "anna-ohoiko-1000-words-2nd-ed",
+          "anna-ohoiko-500-verbs",
+          "ulp-1-00-lesson-notes",
+          "ulp-2-00-lesson-notes",
+          "ulp-3-00-lesson-notes",
+          "ulp-4-00-lesson-notes",
+          "ulp-5-00-lesson-notes",
+          "ulp-6-00-lesson-notes"
+        ]
+      },
+      {
+        "basis": "ocr_derived_text_operator_exclusion_2026-09-10",
+        "inventory_asset_ids": [
+          "drive.deferred_textbook_scans",
+          "drive.orphan_ocr"
+        ],
+        "rows": 0,
+        "scope": "un-ingested retained OCR candidates"
+      }
+    ],
+    "operator_decision_date": "2026-09-10"
+  }
+}
