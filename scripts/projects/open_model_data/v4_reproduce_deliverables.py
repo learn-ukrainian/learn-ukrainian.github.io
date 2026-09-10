@@ -230,7 +230,49 @@ def verify_delivery(
         if not doc_path.exists():
             return False
 
-    return True
+    # Check and rehash dataset deliverables
+    dataset_manifest_path = repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json"
+    dataset_records_path = repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl"
+    dataset_receipt_path = repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json"
+
+    for p in [dataset_manifest_path, dataset_records_path, dataset_receipt_path]:
+        if not p.exists():
+            return False
+
+    ds_repro = receipt_data.get("dataset_reproduction", {})
+    if sha256_file(dataset_manifest_path) != ds_repro.get("manifest_sha256"):
+        return False
+    if sha256_file(dataset_records_path) != ds_repro.get("records_sha256"):
+        return False
+    if sha256_file(dataset_receipt_path) != ds_repro.get("receipt_sha256"):
+        return False
+
+    # Check and rehash learning study deliverables
+    study_recipe_path = repo_root / "data/projects/open_model_data/study/v4_learning_study_recipe_v1.json"
+    study_runs_path = repo_root / "data/projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl"
+    study_receipt_path = repo_root / "data/projects/open_model_data/study/v4_learning_study_receipt_v1.json"
+
+    for p in [study_recipe_path, study_runs_path, study_receipt_path]:
+        if not p.exists():
+            return False
+
+    study_repro = receipt_data.get("learning_study_reproduction", {})
+    if sha256_file(study_recipe_path) != study_repro.get("recipe_sha256"):
+        return False
+    if sha256_file(study_receipt_path) != study_repro.get("receipt_sha256"):
+        return False
+
+    # Structural / record count checks
+    runs_count = 0
+    with study_runs_path.open("r", encoding="utf-8") as f:
+        for line in f:
+            if line.strip():
+                runs_count += 1
+    if runs_count != study_repro.get("runs_count"):
+        return False
+
+    records_count = sum(1 for _ in load_dataset_stream(dataset_records_path))
+    return records_count == ds_repro.get("records_count")
 
 
 def main() -> int:

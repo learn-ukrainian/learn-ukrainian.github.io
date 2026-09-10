@@ -98,3 +98,13 @@ def test_delivery5_custody_and_zero_host_paths() -> None:
 def test_verify_delivery_clean_pass() -> None:
     """Verify delivery verification passes on intact deliverables."""
     assert verify_delivery(Path.cwd(), DELIVERY_RECEIPT_PATH) is True
+
+
+def test_verify_delivery_detects_tampered_artifact(tmp_path: Path) -> None:
+    """Verify delivery verification detects missing or corrupted artifacts."""
+    # Modified receipt with mismatched digest fails verification
+    receipt = json.loads(DELIVERY_RECEIPT_PATH.read_text(encoding="utf-8"))
+    receipt["dataset_reproduction"]["manifest_sha256"] = "0000000000000000000000000000000000000000000000000000000000000000"
+    tampered_receipt = tmp_path / "tampered_receipt.json"
+    tampered_receipt.write_text(json.dumps(receipt), encoding="utf-8")
+    assert verify_delivery(Path.cwd(), tampered_receipt) is False
