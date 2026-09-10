@@ -299,7 +299,7 @@ def main() -> None:
     parser.add_argument(
         "--manifest",
         type=Path,
-        default=DEFAULT_MANIFEST if DEFAULT_MANIFEST.is_file() else None,
+        default=DEFAULT_MANIFEST,
         help="Input Atlas/lexicon manifest JSON",
     )
     parser.add_argument("--deck", type=Path, help="Input Practice deck JSON")

@@ -193,3 +193,29 @@ def test_cli_dry_run_subprocess(tmp_path: Path):
     assert "Total candidate words: 2" in proc.stdout
     assert "Pending synthesis: 1" in proc.stdout
     assert "Dry-run complete." in proc.stdout
+
+
+def test_default_manifest_none_fallback(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    import sys
+
+    from scripts.audio import batch_synthesize_opus
+
+    monkeypatch.setattr(batch_synthesize_opus, "DEFAULT_MANIFEST", None)
+
+    # 1. Verify --help does not crash when DEFAULT_MANIFEST is None
+    monkeypatch.setattr(sys, "argv", ["batch_synthesize_opus.py", "--help"])
+    with pytest.raises(SystemExit) as exc_help:
+        batch_synthesize_opus.main()
+    assert exc_help.value.code == 0
+
+    # 2. Verify omitting both --manifest and --deck exits cleanly with error code 2
+    monkeypatch.setattr(sys, "argv", ["batch_synthesize_opus.py", "--dry-run"])
+    with pytest.raises(SystemExit) as exc_no_args:
+        batch_synthesize_opus.main()
+    assert exc_no_args.value.code == 2
+
+    # 3. Verify --deck works seamlessly when DEFAULT_MANIFEST is None
+    dummy_deck = tmp_path / "deck.json"
+    dummy_deck.write_text(json.dumps({"lexemes": [{"lemmaPlain": "ліс", "pos": "noun"}]}))
+    monkeypatch.setattr(sys, "argv", ["batch_synthesize_opus.py", "--deck", str(dummy_deck), "--dry-run"])
+    batch_synthesize_opus.main()  # Should not raise
