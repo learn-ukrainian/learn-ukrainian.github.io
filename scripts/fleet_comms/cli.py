@@ -179,6 +179,219 @@ def cmd_fleet_status(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
+def _monitor_base_url(monitor_url: str | None) -> str:
+    """Normalize a Monitor base URL for sibling API paths (fail-open friendly)."""
+    raw = (monitor_url or os.environ.get("AB_MONITOR_URL") or "http://127.0.0.1:8765").strip()
+    raw = raw.rstrip("/")
+    if raw.endswith("/api/state/summary"):
+        raw = raw[: -len("/api/state/summary")].rstrip("/")
+    if raw.endswith("/api"):
+        raw = raw[: -len("/api")].rstrip("/")
+    return raw
+
+
+def _fetch_json_fail_open(url: str, *, timeout_seconds: float = 2.0) -> dict[str, Any]:
+    """GET JSON; on any transport/parse failure return available=False (no secrets)."""
+    import urllib.error
+    import urllib.request
+
+    try:
+        req = urllib.request.Request(url, headers={"Accept": "application/json"})
+        with urllib.request.urlopen(req, timeout=timeout_seconds) as resp:
+            body = resp.read().decode("utf-8")
+        payload = json.loads(body) if body else {}
+        if isinstance(payload, dict):
+            return {"available": True, "payload": payload}
+        return {"available": False, "reason": "non_object_json"}
+    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, OSError) as exc:
+        return {"available": False, "reason": type(exc).__name__}
+
+
+# Active tasks older than this are exception-worthy (stale / hung).
+_STALE_ACTIVE_AGE_S = 3600.0
+
+
+def fleet_progress_payload(
+    *,
+    repo_root: Path | None = None,
+    monitor_url: str | None = None,
+    stream: str = "infra-harness",
+    idle_store: Path | None = None,
+    idle_events: list[dict[str, Any]] | None = None,
+    work_next: dict[str, Any] | None = None,
+    delegate_active: dict[str, Any] | None = None,
+    delegate_failed: dict[str, Any] | None = None,
+    stale_active_age_s: float = _STALE_ACTIVE_AGE_S,
+) -> dict[str, Any]:
+    """Exception-based supervision projection over existing idle_settle + Work API.
+
+    Private #670 AC-PROGRESS: surfaces actionable exceptions only — never invents
+    a second controller. Injected kwargs support unit tests without live HTTP.
+
+    Delegate supervision uses the real Monitor contracts:
+    - ``GET /api/delegate/tasks?status=failed`` for terminal failures
+    - ``GET /api/delegate/active`` for stale running/spawning tasks (by age_s)
+    """
+    import urllib.parse
+
+    from scripts.fleet import idle_settle
+
+    root = repo_root or Path.cwd()
+    store_path = idle_store if idle_store is not None else idle_settle.default_store_path(root)
+    if idle_events is None:
+        idle_events = idle_settle.load_events(store_path)
+    idle_report = idle_settle.build_report(idle_events)
+
+    base = _monitor_base_url(monitor_url)
+    if work_next is None:
+        query = urllib.parse.urlencode({"stream": stream, "limit": 7})
+        work_next = _fetch_json_fail_open(f"{base}/api/work/v1/next?{query}")
+    if delegate_active is None:
+        delegate_active = _fetch_json_fail_open(f"{base}/api/delegate/active")
+    if delegate_failed is None:
+        failed_query = urllib.parse.urlencode({"status": "failed", "limit": 20})
+        delegate_failed = _fetch_json_fail_open(f"{base}/api/delegate/tasks?{failed_query}")
+
+    work_payload = work_next.get("payload") if work_next.get("available") else {}
+    queue = list((work_payload or {}).get("queue") or []) if isinstance(work_payload, dict) else []
+    blockers = []
+    if isinstance(work_payload, dict):
+        digest = work_payload.get("digest") or {}
+        other = digest.get("other_streams") or {}
+        blockers = list(other.get("top_blockers") or [])[:7]
+
+    failed_tasks: list[dict[str, Any]] = []
+    if delegate_failed.get("available"):
+        fpayload = delegate_failed.get("payload") or {}
+        if isinstance(fpayload, dict):
+            for task in fpayload.get("tasks") or []:
+                if not isinstance(task, dict):
+                    continue
+                failed_tasks.append(
+                    {
+                        "task_id": task.get("task_id"),
+                        "agent": task.get("agent"),
+                        "status": task.get("status") or "failed",
+                    }
+                )
+
+    stale_active: list[dict[str, Any]] = []
+    if delegate_active.get("available"):
+        dpayload = delegate_active.get("payload") or {}
+        if isinstance(dpayload, dict):
+            for task in dpayload.get("tasks") or []:
+                if not isinstance(task, dict):
+                    continue
+                age = task.get("age_s")
+                try:
+                    age_f = float(age) if age is not None else None
+                except (TypeError, ValueError):
+                    age_f = None
+                if age_f is not None and age_f >= stale_active_age_s:
+                    stale_active.append(
+                        {
+                            "task_id": task.get("task_id"),
+                            "agent": task.get("agent"),
+                            "status": task.get("status"),
+                            "age_s": age_f,
+                        }
+                    )
+
+    missing = int(idle_report.get("settle_events_missing_action") or 0)
+    dishonest = int(idle_report.get("settle_events_dishonest") or 0)
+    invalid = int(idle_report.get("settle_events_invalid_disposition") or 0)
+
+    exceptions: list[dict[str, Any]] = []
+    if missing:
+        exceptions.append({"kind": "idle_settle_missing_action", "count": missing})
+    if dishonest:
+        exceptions.append({"kind": "idle_settle_dishonest", "count": dishonest})
+    if invalid:
+        exceptions.append({"kind": "idle_settle_invalid_disposition", "count": invalid})
+    for item in queue:
+        if not isinstance(item, dict):
+            continue
+        action = item.get("safe_next_action") or {}
+        code = action.get("code") if isinstance(action, dict) else None
+        health = item.get("health")
+        if health in {"OFF_TRACK", "AT_RISK"} or code in {
+            "FIX_CI",
+            "RESOLVE_BLOCKER",
+            "INSPECT_UNKNOWN",
+        }:
+            exceptions.append(
+                {
+                    "kind": "work_queue",
+                    "health": health,
+                    "action": code,
+                    "remote_id": item.get("remote_id"),
+                    "title": (item.get("title") or "")[:120],
+                }
+            )
+    for task in failed_tasks:
+        exceptions.append({"kind": "delegate_failed", **task})
+    for task in stale_active:
+        exceptions.append({"kind": "delegate_stale_active", **task})
+
+    return {
+        "response_schema_version": COMMS_RESPONSE_SCHEMA_VERSION,
+        "ac": "AC-PROGRESS",
+        "idle_settle": {
+            "store_exists": store_path.exists(),
+            "event_count": idle_report.get("event_count"),
+            "missing_action": missing,
+            "invalid_disposition": invalid,
+            "dishonest": dishonest,
+            "eligible_idle_opportunity_seconds": idle_report.get(
+                "eligible_idle_opportunity_seconds"
+            ),
+        },
+        "work_next": {
+            "available": bool(work_next.get("available")),
+            "reason": work_next.get("reason"),
+            "stream": stream,
+            "queue_len": len(queue),
+            "top_blockers": [
+                {
+                    "action_code": b.get("action_code"),
+                    "health": b.get("health"),
+                    "title": (b.get("title") or "")[:120],
+                }
+                for b in blockers
+                if isinstance(b, dict)
+            ],
+        },
+        "delegate": {
+            "active_available": bool(delegate_active.get("available")),
+            "active_reason": delegate_active.get("reason"),
+            "failed_available": bool(delegate_failed.get("available")),
+            "failed_reason": delegate_failed.get("reason"),
+            "failed_tasks": failed_tasks,
+            "stale_active": stale_active,
+            "stale_active_age_s": stale_active_age_s,
+        },
+        "exceptions": exceptions,
+        "exception_count": len(exceptions),
+    }
+
+
+def cmd_fleet_progress(args: argparse.Namespace) -> int:
+    """Seat-facing AC-PROGRESS exception supervision over existing surfaces."""
+    repo_root = Path(args.repo_root).expanduser() if args.repo_root else None
+    idle_store = Path(args.idle_store).expanduser() if args.idle_store else None
+    sys.stdout.write(
+        _json_dump(
+            fleet_progress_payload(
+                repo_root=repo_root,
+                monitor_url=getattr(args, "monitor_url", None),
+                stream=args.stream,
+                idle_store=idle_store,
+            )
+        )
+    )
+    return EXIT_OK
+
+
 def cmd_broker_report(args: argparse.Namespace) -> int:
     """Emit read-only #6106 legacy Broker Ops observation evidence."""
     routes_db = Path(args.routes_db).expanduser() if args.routes_db else None
@@ -222,6 +435,10 @@ def fleet_help_payload() -> dict[str, Any]:
             "board": "fleet board (cold-start driver board)",
             "backlog": "fleet backlog (pending deliveries)",
             "dead": "fleet dead (dead-letter inventory)",
+            "progress": (
+                "fleet progress (AC-PROGRESS exception supervision; CLI-only — "
+                "no /api/fleet/facade/progress HTTP route yet)"
+            ),
         },
         "note": "Thin facade only; Fleet Comms remains the authoritative message plane.",
     }
@@ -951,6 +1168,28 @@ def build_parser() -> argparse.ArgumentParser:
     fleet_status.add_argument("--recent-limit", type=int, default=50, help="Max recent parity events")
     fleet_status.add_argument("--monitor-url", default=None, help="Monitor API base URL for epic authority")
     fleet_status.set_defaults(func=cmd_fleet_status)
+
+    fleet_progress = fleet_sub.add_parser(
+        "progress",
+        help="AC-PROGRESS exception supervision (idle_settle + work next + delegate)",
+    )
+    fleet_progress.add_argument("--repo-root", default=None, help="Repo root for idle_settle store")
+    fleet_progress.add_argument(
+        "--idle-store",
+        default=None,
+        help="idle_settle events JSONL (default: batch_state/idle_settle/events.jsonl)",
+    )
+    fleet_progress.add_argument(
+        "--stream",
+        default="infra-harness",
+        help="Work API stream for /api/work/v1/next (default: infra-harness)",
+    )
+    fleet_progress.add_argument(
+        "--monitor-url",
+        default=None,
+        help="Monitor API base URL (default: AB_MONITOR_URL or loopback :8765)",
+    )
+    fleet_progress.set_defaults(func=cmd_fleet_progress)
 
     fleet_board = fleet_sub.add_parser("board", help="Delegate to cold-start-board")
     fleet_board.add_argument("--format", choices=["json", "markdown"], default="json")
