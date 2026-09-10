@@ -703,6 +703,11 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
 
     selected_by_cohort, expected_cohorts, expected_exclusions = _select_eligible_rows(config, snapshot_rows)
     expected_locators = {row["locator_id"] for rows in selected_by_cohort.values() for row in rows}
+    expected_cohort_by_locator = {
+        row["locator_id"]: cohort_id
+        for cohort_id, rows in selected_by_cohort.items()
+        for row in rows
+    }
     cohort_by_id = {cohort["cohort_id"]: cohort for cohort in config["cohorts"]}
 
     index_path = output_root / config["outputs"]["index"]
@@ -718,11 +723,24 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
         )
 
     observed_locators: set[str] = set()
+    observed_locators_by_cohort: dict[str, set[str]] = {cid: set() for cid in selected_by_cohort}
+    observed_records_by_cohort: dict[str, int] = {cid: 0 for cid in selected_by_cohort}
     for record in records:
         lid = record["locator_id"]
         if lid in observed_locators:
             raise RestorationError(f"duplicate locator_id {lid} in restoration index")
         observed_locators.add(lid)
+        expected_cohort_id = expected_cohort_by_locator.get(lid)
+        if expected_cohort_id is None:
+            raise RestorationError(f"locator_id {lid} not in reconstructed eligible selection")
+        if record["cohort_id"] != expected_cohort_id:
+            raise RestorationError(
+                f"restored record {record['restoration_id']} cohort {record['cohort_id']!r} "
+                f"diverges from reconstructed cohort {expected_cohort_id!r}"
+            )
+        observed_locators_by_cohort[expected_cohort_id].add(lid)
+        observed_records_by_cohort[expected_cohort_id] += record["affected_records"]
+
     if observed_locators != expected_locators:
         missing = sorted(expected_locators - observed_locators)
         extra = sorted(observed_locators - expected_locators)
@@ -730,6 +748,17 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
             f"restoration index does not match complete eligible selection: "
             f"{len(missing)} missing, {len(extra)} extra locators"
         )
+
+    expected_cohort_summaries = {c["cohort_id"]: c for c in expected_cohorts}
+    for cid, rows in selected_by_cohort.items():
+        expected_lids = {row["locator_id"] for row in rows}
+        if observed_locators_by_cohort[cid] != expected_lids:
+            raise RestorationError(f"cohort {cid} locators diverge from reconstructed selection")
+        if observed_records_by_cohort[cid] != expected_cohort_summaries[cid]["selected_records"]:
+            raise RestorationError(
+                f"cohort {cid} affected records {observed_records_by_cohort[cid]} "
+                f"diverge from expected {expected_cohort_summaries[cid]['selected_records']}"
+            )
 
     acquisition_plans = {
         cohort["cohort_id"]: _acquisition_plan(cohort, ledger)

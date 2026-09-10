@@ -593,3 +593,24 @@ def test_acquisition_plan_rejects_missing_or_invalid_reconciliation_details() ->
     # Non-list unresolved key
     with pytest.raises(restoration.RestorationError, match="is not a list"):
         restoration._acquisition_plan(cohort_with_unresolved, {"asset-2": {"asset_id": "asset-2", "details": {"diff_a": [], "unresolved_list": "bad"}}})
+
+
+def test_verify_rejects_reassigned_cohort(tmp_path: Path) -> None:
+    root = _environment(tmp_path)
+    _build(root)
+    index = root / "data/projects/open_model_data/evidence/v4_provenance_restoration_index_v1.jsonl"
+    lines = index.read_text(encoding="utf-8").splitlines()
+    header_line = lines[0]
+    records = [json.loads(line) for line in lines[1:]]
+    # Reassign a literary row to the textbooks cohort
+    target_row = next(r for r in records if r["cohort_id"] == "literary-non-ocr")
+    target_row["cohort_id"] = "public-textbooks-non-stem-non-ocr"
+    ordered = sorted(
+        records,
+        key=lambda r: (r["cohort_id"], r["source_id"], r["work_id"], r["locator_id"]),
+    )
+    new_lines = [header_line] + [restoration.canonical_json(r) for r in ordered]
+    index.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
+    _reseal_tampered_artifacts(root)
+    with pytest.raises(restoration.RestorationError, match="diverges from reconstructed cohort"):
+        restoration.verify(config_path=CONFIG, input_root=root, output_root=root)
