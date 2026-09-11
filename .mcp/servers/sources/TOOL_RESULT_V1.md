@@ -38,8 +38,13 @@ only sees structured payloads still has the human summary.
 `evidence_identifiers`, `result`) and **add** the envelope fields above.
 Do not fold envelope fields into `result` (evidence ids stay stable).
 
-Disposition → status: `supported`/`partial` → `ok`; `not_found`/`negative` →
-`empty`; `ambiguous`/`invalid_input` → `error`.
+Disposition → status: `supported`/`partial` → `ok` (but `match_count == 0`
+forces `empty`); `not_found`/`negative` → `empty` with `hits: []`;
+`ambiguous`/`invalid_input` → `error`.
+
+For `check_modern_form`, archaic-only (`disposition=negative`) keeps VESUM rows
+in `result` / `supporting_records` and emits the empty triple on the envelope
+(`status=empty`, `match_count=0`, `hits=[]`).
 
 ### Search / dict tools
 

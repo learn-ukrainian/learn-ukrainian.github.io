@@ -51,8 +51,14 @@ def enrich_typed_outcome(
     if not isinstance(disposition, str):
         raise ValueError("typed outcome requires disposition")
 
+    status = disposition_to_status(disposition)
+    # Zero listed hits are never "ok" for consumers (e.g. all-missing verify_words
+    # keeps disposition=partial but must surface status=empty).
+    if match_count == 0 and status == "ok":
+        status = "empty"
+
     outcome["schema"] = SCHEMA_V1
-    outcome["status"] = disposition_to_status(disposition)
+    outcome["status"] = status
     outcome["query"] = dict(query)
     outcome["match_count"] = match_count
     outcome["hits"] = list(hits)

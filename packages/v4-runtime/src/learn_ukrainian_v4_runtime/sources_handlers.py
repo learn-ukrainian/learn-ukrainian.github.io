@@ -97,7 +97,9 @@ async def handle_check_modern_form(args: dict):
     success = has_modern is True
     identifiers = [_typed_identifier("vesum", {"word": word, "matches": matches, "result": payload})] if success else []
     prose = json.dumps(payload, ensure_ascii=False)
-    hits = list(matches)
+    # Envelope hits follow the empty triple when disposition is negative/empty:
+    # VESUM rows remain in result/supporting_records for V4, not in consumer hits.
+    hits = list(matches) if success else []
     outcome = {
         "tool": "check_modern_form",
         "disposition": "supported" if success else "negative",

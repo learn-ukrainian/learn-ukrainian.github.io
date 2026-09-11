@@ -85,6 +85,19 @@ class TestEnvelopeHelpers:
         assert env["match_count"] == 0
         assert env["hits"] == []
 
+    def test_partial_zero_hits_is_empty_status(self):
+        outcome = {
+            "tool": "verify_words",
+            "disposition": "partial",
+            "success": False,
+            "evidence_identifiers": [],
+            "result": {"found": 0},
+        }
+        enrich_typed_outcome(outcome, query={"words": ["a"]}, match_count=0, hits=[], summary_prose="none")
+        assert outcome["disposition"] == "partial"
+        assert outcome["status"] == "empty"
+        assert outcome["match_count"] == 0
+
 
 class TestVerifyWordEnvelope:
     def test_found_exposes_integer_match_count(self, server_module):
@@ -112,6 +125,26 @@ class TestVerifyWordEnvelope:
         assert outcome["hits"] == []
         assert outcome["disposition"] == "not_found"
         assert "NOT FOUND" in content[0].text
+
+    def test_verify_words_all_missing_is_empty_status(self, server_module):
+        with patch("scripts.verification.vesum.verify_words", return_value={"а": [], "б": []}):
+            content, outcome = _run(server_module.handle_verify_words({"words": ["а", "б"]}))
+        assert outcome["disposition"] == "partial"
+        assert outcome["status"] == "empty"
+        assert outcome["match_count"] == 0
+        assert outcome["hits"] == []
+        assert "NOT FOUND" in content[0].text
+
+    def test_check_modern_form_archaic_only_empty_hits(self, server_module):
+        archaic = [{"lemma": "старий", "pos": "adj", "tags": "adj:m:v_naz:arch"}]
+        with patch("scripts.verification.vesum.verify_word", return_value=archaic):
+            _content, outcome = _run(server_module.handle_check_modern_form({"word": "старий"}))
+        assert outcome["disposition"] == "negative"
+        assert outcome["status"] == "empty"
+        assert outcome["match_count"] == 0
+        assert outcome["hits"] == []
+        assert outcome["result"]["has_only_archaic_form"] is True
+        assert outcome["supporting_records"]["matches"] == archaic
 
 
 class TestSearchTextEnvelope:
