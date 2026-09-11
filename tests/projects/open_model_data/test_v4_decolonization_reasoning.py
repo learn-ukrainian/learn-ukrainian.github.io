@@ -389,3 +389,31 @@ def test_synthesize_trajectory_requires_living_standard_attestation() -> None:
     )
     # Must refuse to synthesize ungrounded living standard claims
     assert result is None
+
+
+def test_curated_evidence_only_assigned_to_matching_alternative() -> None:
+    """G8: candidate-level curated_evidence naming only one alternative must not promote unsupported alternatives."""
+    candidate = CalqueCandidate(
+        target_term="проблемне_слово",
+        suggestions=["непідтверджене_слово", "підтверджене_слово"],
+        source_tag="curated_test",
+        curated_evidence=["Слово «підтверджене_слово» є питомим українським відповідником."],
+    )
+    vesum_counts = {"непідтверджене_слово": 10, "підтверджене_слово": 15}
+    tb_attestations = {"непідтверджене_слово": None, "підтверджене_слово": None}
+    dict_attestations = {"непідтверджене_слово": None, "підтверджене_слово": None}
+
+    result = synthesize_trajectory_and_dpo(
+        candidate,
+        vesum_counts,
+        tb_attestations,
+        dict_attestations,
+    )
+    assert result is not None
+    traj, _ = result
+    spectrum = traj["register_spectrum"]
+    assert spectrum["primary_living_standard"] == "підтверджене_слово"
+
+    alts_by_lemma = {a["lemma"]: a for a in spectrum["alternatives"]}
+    assert alts_by_lemma["підтверджене_слово"]["register_tier"] == "living_standard"
+    assert alts_by_lemma["непідтверджене_слово"]["register_tier"] != "living_standard"

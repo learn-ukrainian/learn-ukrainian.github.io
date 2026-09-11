@@ -60,6 +60,12 @@ REFUSAL_PATTERNS = [
     re.compile(r"як\s+(?:мовна\s+модель|штучний\s+інтелект|асистент)", re.IGNORECASE),
     re.compile(r"не\s+(?:маю|надаю)\s+(?:можливості|відповід)", re.IGNORECASE),
     re.compile(r"(?:наведено|вжито|використано)\s+лише\s+для\s+прикладу", re.IGNORECASE),
+    re.compile(r"(?:оцінки|відповіді|аналізу)\s+не\s+буде", re.IGNORECASE),
+    re.compile(r"не\s+буде\s+(?:оцінки|відповіді|аналізу)", re.IGNORECASE),
+    re.compile(r"не\s+(?:буду|будемо)\s+(?:оцінювати|відповідати|коментувати|аналізувати)", re.IGNORECASE),
+    re.compile(r"я\s+не\s+даю\s+(?:оцінок|відповідей)", re.IGNORECASE),
+    re.compile(r"(?:без\s+коментарів|без\s+оцінки|без\s+відповіді)", re.IGNORECASE),
+    re.compile(r"не\s+можу\s+(?:оцінити|відповісти|надати\s+оцінку)", re.IGNORECASE),
 ]
 
 EXPLANATION_CONNECTIVES = [
@@ -68,6 +74,14 @@ EXPLANATION_CONNECTIVES = [
     re.compile(r"(?:походить\s+від|утворено|походить|відповідає|виражає|є\s+кальк|є\s+росіян)", re.IGNORECASE),
     re.compile(r"(?:питомий|питоме|питомим|автентичн|власне\s+українськ)", re.IGNORECASE),
     re.compile(r"(?:вживати|вживається|використовувати|використовується|казати|правильно)", re.IGNORECASE),
+]
+
+SUGGESTION_PATTERNS = [
+    r"(?:правильно|краще|варто|слід|рекомендуємо|рекомендовано|радимо|доцільно|доречно|потрібно|необхідно|нормативно)\s+(?:вживати|казати|говорити|писати|використовувати|брати)?\s*[:—–-]?\s*[«\"]?{alt}[»\"]?",
+    r"(?:вживайте|кажіть|говоріть|пишіть|використовуйте|беріть|замініть|обирайте|надавайте\s+перевагу)\s*[«\"]?{alt}[»\"]?",
+    r"(?:замість|натомість|як\s+відповідник|відповідник(?:ом|а|ів)?|варіант(?:ом|а|ів)?|синонім(?:ом|а|ів)?|норма|слово|питоме|автентичне|літературне)\s+.*?[«\"]?{alt}[»\"]?",
+    r"[«\"]?{alt}[»\"]?\s*(?:—|-|–|є|це)?\s*(?:це\s+)?(?:питом|автентичн|нормативн|правильн|чинн|літературн|відповідник|стандарт|живий\s+стандарт)",
+    r"[«\"]?{alt}[»\"]?\s*(?:відповідає\s+нормі|має\s+парадигму|зафіксован|є\s+норм|вважається\s+норм|рекомендується|радять)",
 ]
 
 ALTERNATIVE_NEGATION_PATTERNS = [
@@ -93,8 +107,10 @@ def evaluate_single_response(
     resp_norm = response_text.lower().strip()
     term_norm = normalize_token(target_term)
 
-    # Empty, whitespace-only, or vacuous responses fail immediately
-    if not resp_norm:
+    tokens = [t for t in re.split(r"\W+", resp_norm) if t]
+
+    # Empty, whitespace-only, punctuation-only (tokenless), or vacuous responses fail immediately
+    if not resp_norm or not tokens:
         return {
             "target_term": target_term,
             "calque_eliminated": False,
@@ -152,8 +168,10 @@ def evaluate_single_response(
         has_critique = any(m in resp_norm for m in critique_markers)
         calque_eliminated = has_critique
     else:
-        # Calque not mentioned; verify response does not defend errors in general
-        calque_eliminated = True
+        # Calque not mentioned; require active linguistic recommendation context
+        calque_eliminated = any(
+            m in resp_norm for m in ("правильн", "норм", "вжива", "рекоменд", "краще", "варто", "слід", "слово", "відповідник", "мовн")
+        )
 
     # 2. Authentic suggestion check:
     # Does the response recommend at least one verified Ukrainian equivalent without negating it?
@@ -171,10 +189,23 @@ def evaluate_single_response(
                 is_negated = True
                 break
 
-        if not is_negated:
+        if is_negated:
+            continue
+
+        # Check for prescriptive/normative suggestion context
+        is_suggested = False
+        for s_pat in SUGGESTION_PATTERNS:
+            s_regex = re.compile(s_pat.format(alt=re.escape(alt_norm)), re.IGNORECASE)
+            if s_regex.search(resp_norm):
+                is_suggested = True
+                break
+
+        if is_suggested:
             matched_alts.append(alt)
 
     authentic_suggested = len(matched_alts) > 0
+    if not calque_present and not authentic_suggested:
+        calque_eliminated = False
 
     # 3. Morphemic and historical reasoning grounding check:
     tokens = [t for t in re.split(r"\W+", resp_norm) if t]

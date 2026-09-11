@@ -538,11 +538,16 @@ def synthesize_trajectory_and_dpo(
     for s in verified_alts:
         tb = textbook_attestations.get(s)
         dict_att = dict_attestations.get(s)
+        matching_curated = [
+            ev
+            for ev in (candidate.curated_evidence or [])
+            if s.lower() in ev.lower() or normalize_text(s) in normalize_text(ev)
+        ]
         if tb:
             evidence = f"Підручник МОН «{tb['subject']}» {tb['grade']} клас ({tb['author']}); цитата: «{tb['snippet']}»{prov_suffix}"
             tier = "living_standard"
-        elif candidate.curated_evidence:
-            evidence = f"{'; '.join(candidate.curated_evidence[:2])}{prov_suffix}"
+        elif matching_curated:
+            evidence = f"{'; '.join(matching_curated[:2])}{prov_suffix}"
             tier = "living_standard"
         elif dict_att:
             evidence = f"{dict_att}{prov_suffix}"
@@ -568,13 +573,13 @@ def synthesize_trajectory_and_dpo(
                 {
                     "lemma": s,
                     "register_tier": "purist_neologism",
-                    "evidence_source": f"Не зафіксовано у словниковій базі ВЕСУМ (0 форм); кабінетний новотвір{prov_suffix}",
+                    "evidence_source": f"Відсутній у ВЕСУМ (0 словоформ); пуристичний або діаспорний неологізм{prov_suffix}",
                 }
             )
 
-    # Gate on verified living-standard evidence:
-    # A decolonization trajectory must teach a verified modern living standard.
-    # Without living standard attestation, we do not produce ungrounded normative training data.
+    # Ensure there is at least one verified living standard alternative with addressable evidence.
+    # If no living standard alternative exists with verified textbook, dictionary, or curated evidence,
+    # refuse normative synthesis to avoid teaching unsupported living-standard claims.
     living_candidates = [alt for alt in spectrum_alts if alt["register_tier"] == "living_standard"]
     if not living_candidates:
         return None
@@ -608,8 +613,8 @@ def synthesize_trajectory_and_dpo(
         )
     else:
         historical_note = (
-            f"Калькована форма «{target_term}» закріпилася в радянський період унаслідок зближення лексичних систем "
-            "та цензурного вилучення питомих слів з академічних словників."
+            f"Форма «{target_term}» кваліфікується як калькований або нерекомендований варіант у сучасних "
+            "довідниках з культури мови та лексикографічних джерелах."
         )
 
     if prov_note:

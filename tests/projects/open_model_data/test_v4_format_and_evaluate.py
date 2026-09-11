@@ -4,7 +4,11 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
 from pathlib import Path
+from typing import Any
+
+import pytest
 
 from scripts.projects.open_model_data.v4_evaluate_decolonization import (
     evaluate_predictions,
@@ -12,6 +16,7 @@ from scripts.projects.open_model_data.v4_evaluate_decolonization import (
 )
 from scripts.projects.open_model_data.v4_format_decolonization import (
     dpo_pair_to_trl,
+    extract_target_term,
     format_consumer_datasets,
     trajectory_to_chatml,
     trajectory_to_sharegpt,
@@ -118,23 +123,57 @@ def test_gemma3_and_gemma4_template_adaptation() -> None:
     assert "<thought>" in gemma3_rendered
 
     # 3. Verify Gemma 4 native turn & channel structure (<|turn> / <turn|>, <|channel>thought)
-    thought_match = re.search(r"<thought>(.*?)</thought>", asst_msg, re.DOTALL)
-    assert thought_match is not None
-    thought_body = thought_match.group(1).strip()
-    final_reply = re.sub(r"<thought>.*?</thought>\s*", "", asst_msg, flags=re.DOTALL).strip()
+    import jinja2
 
-    gemma4_rendered = (
-        f"<|turn>user\n{user_msg}<turn|>\n"
-        f"<|turn>model\n"
-        f"<|channel>thought\n{thought_body}\n<channel|>\n"
-        f"{final_reply}<turn|>"
+    def convert_to_gemma4_native(example: dict) -> dict:
+        convs = example["conversations"]
+        sys_val = next((c["value"] for c in convs if c["from"] == "system"), "")
+        human_val = next((c["value"] for c in convs if c["from"] == "human"), "")
+        gpt_val = next((c["value"] for c in convs if c["from"] == "gpt"), "")
+
+        thought_m = re.search(r"<thought>(.*?)</thought>", gpt_val, re.DOTALL)
+        if thought_m:
+            reasoning = thought_m.group(1).strip()
+            final_text = re.sub(r"<thought>.*?</thought>\s*", "", gpt_val, flags=re.DOTALL).strip()
+        else:
+            reasoning = None
+            final_text = gpt_val
+
+        user_text = f"{sys_val}\n\n{human_val}" if sys_val else human_val
+        assistant_msg: dict[str, Any] = {"role": "assistant", "content": final_text}
+        if reasoning:
+            assistant_msg["reasoning"] = reasoning
+
+        return {
+            "messages": [
+                {"role": "user", "content": user_text},
+                assistant_msg,
+            ]
+        }
+
+    gemma4_rec = convert_to_gemma4_native(sample_sg)
+    assert "reasoning" in gemma4_rec["messages"][1]
+    assert gemma4_rec["messages"][1]["reasoning"] == "Крок 1: Аналіз морфемної будови."
+    assert "<thought>" not in gemma4_rec["messages"][1]["content"]
+
+    # Official Gemma 4 Jinja template logic: thought channel emitted only when reasoning is populated
+    gemma4_jinja_template = (
+        "{% for message in messages %}"
+        "{{ '<|turn>' + message['role'] + '\n' }}"
+        "{% if message['reasoning'] is defined and message['reasoning'] is not none %}"
+        "{{ '<|channel>thought\n' + message['reasoning'] + '\n<channel|>\n' }}"
+        "{% endif %}"
+        "{{ message['content'] + '<turn|>\n' }}"
+        "{% endfor %}"
     )
-    assert "<|turn>user" in gemma4_rendered
-    assert "<turn|>" in gemma4_rendered
-    assert "<|turn>model" in gemma4_rendered
-    assert "<|channel>thought" in gemma4_rendered
-    assert "<channel|>" in gemma4_rendered
-    assert "Вживайте «автовежа»." in gemma4_rendered
+    template = jinja2.Template(gemma4_jinja_template)
+    jinja_rendered = template.render(messages=gemma4_rec["messages"])
+
+    assert "<|turn>user\n" in jinja_rendered
+    assert "<turn|>" in jinja_rendered
+    assert "<|turn>assistant\n" in jinja_rendered
+    assert "<|channel>thought\nКрок 1: Аналіз морфемної будови.\n<channel|>\n" in jinja_rendered
+    assert "Вживайте «автовежа»." in jinja_rendered
 
 
 def test_dpo_pair_to_trl() -> None:
@@ -446,11 +485,26 @@ def test_adversarial_non_answers_rejected() -> None:
     assert res_legit["is_pass"] is True
     assert res_legit["composite_score"] >= 0.8
 
+    # G2: semantic non-answers with evasions or unrelated sentences mentioning token
+    semantic_evasion = "Оцінки не буде. На дошці написано goodtoken. Учень читає словник, бо його цікавить суфікс."
+    res_evasion = evaluate_single_response(target, alts, semantic_evasion)
+    assert res_evasion["is_pass"] is False
+    assert res_evasion["composite_score"] == 0.0
+
+    semantic_non_answer = "На дошці написано goodtoken. Учень читає словник, бо його цікавить суфікс."
+    res_non_answer = evaluate_single_response(target, alts, semantic_non_answer)
+    assert res_non_answer["is_pass"] is False
+    assert res_non_answer["composite_score"] == 0.0
+
+    # G4: tokenless or punctuation-only input must not crash with ZeroDivisionError
+    for tokenless in ("...", "!!! ???", "😊", "   ", "\n\t"):
+        res_tokenless = evaluate_single_response(target, alts, tokenless)
+        assert res_tokenless["is_pass"] is False
+        assert res_tokenless["composite_score"] == 0.0
+
 
 def test_partition_firewall_rejects_dpo_target_leakage(tmp_path: Path) -> None:
     # R4: train SFT target 'a', train DPO target 'b', held-out SFT 'b' must fail closed
-    import pytest
-
     in_dir = tmp_path / "leak_gen"
     in_dir.mkdir()
     out_dir = tmp_path / "leak_consumer"
@@ -504,8 +558,6 @@ def test_evaluate_predictions_resolves_exact_id_over_prompt_substring(tmp_path: 
 
 def test_atomic_staging_protects_existing_consumer_dir(tmp_path: Path) -> None:
     # R6: staging directory protects existing files if validation fails
-    import pytest
-
     in_dir = tmp_path / "atomic_gen"
     in_dir.mkdir()
     out_dir = tmp_path / "atomic_consumer"
@@ -522,3 +574,196 @@ def test_atomic_staging_protects_existing_consumer_dir(tmp_path: Path) -> None:
     # Sentinel file must still exist untouched
     assert sentinel.is_file()
     assert sentinel.read_text(encoding="utf-8") == "existing content\n"
+
+
+def test_extract_target_term_conflict_rejection() -> None:
+    """G3: verify extract_target_term rejects conflicting top-level vs metadata representations."""
+    # Consistent representations
+    assert extract_target_term({"target_term": "Термін1"}) == "термін1"
+    assert extract_target_term({"metadata": {"target_term": "Термін2"}}) == "термін2"
+    assert (
+        extract_target_term({"target_term": "Термін3", "metadata": {"target_term": "термін3"}})
+        == "термін3"
+    )
+
+    # Disagreeing representations
+    conflict_rec = {
+        "pair_id": "dpo.conflict.1",
+        "target_term": "термін_а",
+        "metadata": {"target_term": "термін_б"},
+    }
+    with pytest.raises(ValueError, match=r"Conflicting target term representations"):
+        extract_target_term(conflict_rec)
+
+    with pytest.raises(ValueError, match=r"Conflicting target term representations"):
+        dpo_pair_to_trl(
+            {
+                "pair_id": "dpo.conflict.1",
+                "prompt": "Питання",
+                "chosen": "Правильно",
+                "rejected": "Неправильно",
+                "target_term": "термін_а",
+                "metadata": {"target_term": "термін_б"},
+            }
+        )
+
+
+def test_atomic_rollback_on_publication_failure(tmp_path: Path, monkeypatch: Any) -> None:
+    """G5: publication failure must rollback and preserve existing files untouched."""
+    in_dir = tmp_path / "gen"
+    in_dir.mkdir()
+    out_dir = tmp_path / "consumer"
+    out_dir.mkdir()
+
+    # Pre-existing published file
+    existing_file = out_dir / "uldr_sharegpt_train_part001.jsonl"
+    existing_file.write_text("old canonical content\n", encoding="utf-8")
+    existing_manifest = out_dir / "consumer_formats_manifest.json"
+    existing_manifest.write_text('{"old": true}\n', encoding="utf-8")
+
+    # Valid input mock
+    t_file = in_dir / "traj.jsonl"
+    d_file = in_dir / "dpo.jsonl"
+    t_file.write_text(
+        json.dumps(
+            {
+                "trajectory_id": "t1",
+                "target_term": "калька",
+                "query": "q",
+                "final_response": "r",
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    d_file.write_text(
+        json.dumps(
+            {
+                "pair_id": "d1",
+                "prompt": "p",
+                "chosen": "c",
+                "rejected": "rej",
+                "target_term": "калька",
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    manifest = {
+        "dataset_name": "ULDR",
+        "total_trajectories": 1,
+        "total_dpo_pairs": 1,
+        "partition_counts": {"train": 1, "held_out": 0},
+        "shards": [
+            {
+                "shard_index": 1,
+                "partition": "train",
+                "trajectories_file": t_file.name,
+                "dpo_pairs_file": d_file.name,
+                "records_count": 1,
+            }
+        ],
+    }
+    (in_dir / "decolonization_manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+
+    # Inject failure during moving files from staging into out_dir
+    original_move = shutil.move
+
+    def faulty_move(src: str, dst: str, *args: Any, **kwargs: Any) -> Any:
+        # Allow moving old files to backup, fail on the first staged file move to out_dir
+        if "staging" in str(src) and str(dst).startswith(str(out_dir)):
+            raise OSError("Injected disk failure during publication move")
+        return original_move(src, dst, *args, **kwargs)
+
+    monkeypatch.setattr(shutil, "move", faulty_move)
+
+    with pytest.raises(OSError, match=r"Injected disk failure"):
+        format_consumer_datasets(in_dir, out_dir)
+
+    # Verify existing files are preserved completely intact
+    assert existing_file.is_file()
+    assert existing_file.read_text(encoding="utf-8") == "old canonical content\n"
+    assert existing_manifest.is_file()
+    assert existing_manifest.read_text(encoding="utf-8") == '{"old": true}\n'
+
+    # Verify no backup or staging directory leaks
+    assert len(list(out_dir.glob(".backup_*"))) == 0
+    assert len(list(out_dir.glob(".staging_*"))) == 0
+
+
+def test_manifest_reconciliation_fail_closed(tmp_path: Path) -> None:
+    """G6: manifest reconciliation must fail closed on unknown partitions, count mismatches, and asymmetries."""
+    in_dir = tmp_path / "recon_gen"
+    in_dir.mkdir()
+    out_dir = tmp_path / "recon_consumer"
+
+    t_file = in_dir / "traj.jsonl"
+    d_file = in_dir / "dpo.jsonl"
+    t_file.write_text(
+        json.dumps({"trajectory_id": "t1", "target_term": "калька", "query": "q", "final_response": "r"}) + "\n",
+        encoding="utf-8",
+    )
+    d_file.write_text(
+        json.dumps({"pair_id": "d1", "prompt": "p", "chosen": "c", "rejected": "rej", "target_term": "калька"}) + "\n",
+        encoding="utf-8",
+    )
+
+    # 1. Unknown partition
+    manifest_unknown = {
+        "dataset_name": "ULDR",
+        "shards": [{"partition": "eval_unknown", "trajectories_file": t_file.name, "dpo_pairs_file": d_file.name}],
+    }
+    (in_dir / "decolonization_manifest.json").write_text(json.dumps(manifest_unknown), encoding="utf-8")
+    with pytest.raises(ValueError, match=r"Unknown or unsupported partition 'eval_unknown'"):
+        format_consumer_datasets(in_dir, out_dir)
+
+    # 2. records_count mismatch
+    manifest_records_count = {
+        "dataset_name": "ULDR",
+        "shards": [
+            {
+                "partition": "train",
+                "trajectories_file": t_file.name,
+                "dpo_pairs_file": d_file.name,
+                "records_count": 99,
+            }
+        ],
+    }
+    (in_dir / "decolonization_manifest.json").write_text(json.dumps(manifest_records_count), encoding="utf-8")
+    with pytest.raises(ValueError, match=r"Record count mismatch.*expected 99, got 1"):
+        format_consumer_datasets(in_dir, out_dir)
+
+    # 3. Partition count mismatch
+    manifest_part_mismatch = {
+        "dataset_name": "ULDR",
+        "partition_counts": {"train": 50, "held_out": 0},
+        "shards": [
+            {
+                "partition": "train",
+                "trajectories_file": t_file.name,
+                "dpo_pairs_file": d_file.name,
+                "records_count": 1,
+            }
+        ],
+    }
+    (in_dir / "decolonization_manifest.json").write_text(json.dumps(manifest_part_mismatch), encoding="utf-8")
+    with pytest.raises(ValueError, match=r"Partition 'train' count mismatch: declared 50, parsed 1"):
+        format_consumer_datasets(in_dir, out_dir)
+
+    # 4. Total count mismatch
+    manifest_total_mismatch = {
+        "dataset_name": "ULDR",
+        "total_trajectories": 50,
+        "shards": [
+            {
+                "partition": "train",
+                "trajectories_file": t_file.name,
+                "dpo_pairs_file": d_file.name,
+                "records_count": 1,
+            }
+        ],
+    }
+    (in_dir / "decolonization_manifest.json").write_text(json.dumps(manifest_total_mismatch), encoding="utf-8")
+    with pytest.raises(ValueError, match=r"Aggregate total_trajectories mismatch: manifest 50 != parsed 1"):
+        format_consumer_datasets(in_dir, out_dir)

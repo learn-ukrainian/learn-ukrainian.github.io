@@ -83,11 +83,32 @@ def trajectory_to_chatml(trajectory: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def extract_target_term(rec: dict[str, Any]) -> str:
+    """Extract and validate the normalized target term across trajectories and DPO pairs.
+
+    Enforces that top-level target_term and metadata target_term/target_calque do not conflict.
+    """
+    top_term = rec.get("target_term")
+    meta_term = None
+    if "metadata" in rec and isinstance(rec["metadata"], dict):
+        meta_term = rec["metadata"].get("target_term") or rec["metadata"].get("target_calque")
+
+    if top_term and meta_term and (top_term.strip().lower() != meta_term.strip().lower()):
+        rec_id = rec.get("trajectory_id") or rec.get("pair_id") or rec.get("id") or "unknown"
+        raise ValueError(
+            f"Conflicting target term representations in record {rec_id}: "
+            f"top-level '{top_term}' != metadata '{meta_term}'"
+        )
+
+    target = top_term or meta_term or ""
+    return target.strip().lower()
+
+
 def dpo_pair_to_trl(dpo_pair: dict[str, Any]) -> dict[str, Any]:
     """Convert an ULDR DPO pair to standard Hugging Face TRL DPO format with embedded system prompt."""
+    target = extract_target_term(dpo_pair)
     meta = dpo_pair.get("metadata", {})
-    target = meta.get("target_term") or dpo_pair.get("target_term", "")
-    calque_cat = meta.get("calque_category")
+    calque_cat = meta.get("calque_category") if isinstance(meta, dict) else None
     if not calque_cat and target:
         calque_cat, _, _ = classify_calque_type(target)
 
@@ -207,8 +228,8 @@ def format_consumer_datasets(
 
     for shard_info in declared_shards:
         part = shard_info.get("partition")
-        if part not in partition_records:
-            continue
+        if part not in ("train", "held_out"):
+            raise ValueError(f"Unknown or unsupported partition '{part}' in shard: {shard_info}")
 
         traj_p = input_dir / shard_info["trajectories_file"]
         dpo_p = input_dir / shard_info["dpo_pairs_file"]
@@ -240,9 +261,16 @@ def format_consumer_datasets(
                     t_records.append(json.loads(line))
         if not t_records:
             raise ValueError(f"Declared trajectory shard {traj_p.name} contains zero valid JSON records")
-        if "trajectories_count" in shard_info and len(t_records) != shard_info["trajectories_count"]:
+
+        expected_t_count = (
+            shard_info.get("records_count")
+            if "records_count" in shard_info
+            else shard_info.get("trajectories_count")
+        )
+        if expected_t_count is not None and len(t_records) != expected_t_count:
             raise ValueError(
-                f"Record count mismatch in {traj_p.name}: expected {shard_info['trajectories_count']}, got {len(t_records)}"
+                f"Record count mismatch in trajectory shard {traj_p.name}: "
+                f"expected {expected_t_count}, got {len(t_records)}"
             )
 
         d_records = []
@@ -253,13 +281,54 @@ def format_consumer_datasets(
                     d_records.append(json.loads(line))
         if not d_records:
             raise ValueError(f"Declared DPO shard {dpo_p.name} contains zero valid JSON records")
-        if "dpo_pairs_count" in shard_info and len(d_records) != shard_info["dpo_pairs_count"]:
+
+        expected_d_count = (
+            shard_info.get("records_count")
+            if "records_count" in shard_info
+            else shard_info.get("dpo_pairs_count")
+        )
+        if expected_d_count is not None and len(d_records) != expected_d_count:
             raise ValueError(
-                f"Record count mismatch in {dpo_p.name}: expected {shard_info['dpo_pairs_count']}, got {len(d_records)}"
+                f"Record count mismatch in DPO shard {dpo_p.name}: "
+                f"expected {expected_d_count}, got {len(d_records)}"
+            )
+
+        if len(t_records) != len(d_records):
+            raise ValueError(
+                f"Record count asymmetry in shard {shard_info.get('shard_index')}: "
+                f"{len(t_records)} trajectories vs {len(d_records)} DPO pairs"
             )
 
         partition_records[part]["trajs"].extend(t_records)
         partition_records[part]["dpos"].extend(d_records)
+
+    # Reconcile partition-level counts and totals against manifest
+    for p_name in ("train", "held_out"):
+        actual_t_count = len(partition_records[p_name]["trajs"])
+        actual_d_count = len(partition_records[p_name]["dpos"])
+        if actual_t_count != actual_d_count:
+            raise ValueError(
+                f"Partition '{p_name}' stream count mismatch: {actual_t_count} trajectories vs {actual_d_count} DPO pairs"
+            )
+
+        declared_part_counts = manifest.get("partition_counts", {})
+        if p_name in declared_part_counts and declared_part_counts[p_name] != actual_t_count:
+            raise ValueError(
+                f"Partition '{p_name}' count mismatch: declared {declared_part_counts[p_name]}, "
+                f"parsed {actual_t_count}"
+            )
+
+    total_parsed_trajs = sum(len(partition_records[p]["trajs"]) for p in ("train", "held_out"))
+    total_parsed_dpos = sum(len(partition_records[p]["dpos"]) for p in ("train", "held_out"))
+
+    if "total_trajectories" in manifest and manifest["total_trajectories"] != total_parsed_trajs:
+        raise ValueError(
+            f"Aggregate total_trajectories mismatch: manifest {manifest['total_trajectories']} != parsed {total_parsed_trajs}"
+        )
+    if "total_dpo_pairs" in manifest and manifest["total_dpo_pairs"] != total_parsed_dpos:
+        raise ValueError(
+            f"Aggregate total_dpo_pairs mismatch: manifest {manifest['total_dpo_pairs']} != parsed {total_parsed_dpos}"
+        )
 
     # Cross-partition firewall validation (R4: combine SFT and DPO targets)
     train_traj_ids = {t["trajectory_id"] for t in partition_records["train"]["trajs"]}
@@ -278,22 +347,16 @@ def format_consumer_datasets(
             f"Partition firewall violation: {len(dpo_id_overlap)} overlapping DPO pair IDs: {dpo_id_overlap}"
         )
 
-    def _extract_term(rec: dict[str, Any]) -> str:
-        term = rec.get("target_term")
-        if not term and "metadata" in rec and isinstance(rec["metadata"], dict):
-            term = rec["metadata"].get("target_term") or rec["metadata"].get("target_calque")
-        return (term or "").strip().lower()
-
-    # Validate combined SFT + DPO target terms across partitions
+    # Validate combined SFT + DPO target terms across partitions using extract_target_term
     train_targets = {
-        _extract_term(t) for t in partition_records["train"]["trajs"] if _extract_term(t)
+        extract_target_term(t) for t in partition_records["train"]["trajs"] if extract_target_term(t)
     } | {
-        _extract_term(d) for d in partition_records["train"]["dpos"] if _extract_term(d)
+        extract_target_term(d) for d in partition_records["train"]["dpos"] if extract_target_term(d)
     }
     held_out_targets = {
-        _extract_term(t) for t in partition_records["held_out"]["trajs"] if _extract_term(t)
+        extract_target_term(t) for t in partition_records["held_out"]["trajs"] if extract_target_term(t)
     } | {
-        _extract_term(d) for d in partition_records["held_out"]["dpos"] if _extract_term(d)
+        extract_target_term(d) for d in partition_records["held_out"]["dpos"] if extract_target_term(d)
     }
     target_overlap = train_targets & held_out_targets
     if target_overlap:
@@ -365,17 +428,45 @@ def format_consumer_datasets(
             "zero_restricted_sources": zero_restricted,
         }
 
-        # Staging verified: atomically publish by moving staged files into output_dir
-        for old_f in output_dir.glob("*.jsonl"):
-            old_f.unlink()
+        # Staging verified: atomically publish with backup and rollback protection
+        backup_dir = output_dir / f".backup_{uuid.uuid4().hex[:8]}"
+        backup_dir.mkdir(parents=True, exist_ok=True)
+        backed_up_files: list[str] = []
 
-        for staged_f in staging_dir.glob("*.jsonl"):
-            shutil.move(str(staged_f), str(output_dir / staged_f.name))
+        try:
+            # Move existing files to backup
+            existing_candidates = [*output_dir.glob("*.jsonl"), output_dir / "consumer_formats_manifest.json"]
+            for old_f in existing_candidates:
+                if old_f.is_file():
+                    dest_backup = backup_dir / old_f.name
+                    shutil.move(str(old_f), str(dest_backup))
+                    backed_up_files.append(old_f.name)
 
-        summary_path = output_dir / "consumer_formats_manifest.json"
-        with summary_path.open("w", encoding="utf-8") as f:
-            json.dump(stats, f, ensure_ascii=False, indent=2)
-            f.write("\n")
+            # Move verified files from staging to output_dir
+            for staged_f in staging_dir.glob("*.jsonl"):
+                shutil.move(str(staged_f), str(output_dir / staged_f.name))
+
+            summary_path = output_dir / "consumer_formats_manifest.json"
+            with summary_path.open("w", encoding="utf-8") as f:
+                json.dump(stats, f, ensure_ascii=False, indent=2)
+                f.write("\n")
+
+        except Exception:
+            # Atomic rollback: clean up partial moves and restore original files
+            for partial_f in output_dir.glob("*.jsonl"):
+                partial_f.unlink(missing_ok=True)
+            (output_dir / "consumer_formats_manifest.json").unlink(missing_ok=True)
+
+            for b_name in backed_up_files:
+                b_src = backup_dir / b_name
+                if b_src.is_file():
+                    shutil.move(str(b_src), str(output_dir / b_name))
+            raise
+        else:
+            shutil.rmtree(backup_dir, ignore_errors=True)
+        finally:
+            if backup_dir.exists():
+                shutil.rmtree(backup_dir, ignore_errors=True)
 
     finally:
         if staging_dir.exists():
