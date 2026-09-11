@@ -250,6 +250,10 @@
         "sha256": "fe55142c3cb85f87474eb7adc53c66dc34b2ddbdb380bc1ce9d883bcd3d2b971"
       },
       {
+        "path": "scripts/lexicon/reconcile_calque_clusters.py",
+        "sha256": "c9d6ef5def7db15f354cfbcaac5d5189ba0fb902ccb37a5bea505cb260a930b0"
+      },
+      {
         "path": "scripts/lexicon/reenrich_thin_manifest_entries.py",
         "sha256": "cea6bfdaafca0b857ce152e48a962ee8c0d9352f6a774e95febd4c62d2fc5738"
       },
