@@ -1117,6 +1117,13 @@
       ]
     },
     {
+      "lemma": "бджолярство",
+      "slug": "бджолярство",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "безглуздий",
       "slug": "безглуздий",
       "sources": [
@@ -1226,6 +1233,13 @@
     {
       "lemma": "безтурботний",
       "slug": "безтурботний",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "безуспішно",
+      "slug": "безуспішно",
       "sources": [
         "teacher_inventory"
       ]
@@ -2211,6 +2225,13 @@
       ]
     },
     {
+      "lemma": "валер'янка",
+      "slug": "валер'янка",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "валет",
       "slug": "валет",
       "sources": [
@@ -2446,6 +2467,13 @@
       ]
     },
     {
+      "lemma": "вебсайт",
+      "slug": "вебсайт",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "вегетаріанець",
       "slug": "вегетаріанець",
       "sources": [
@@ -2511,6 +2539,13 @@
     {
       "lemma": "великий",
       "slug": "великий",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "великодушно",
+      "slug": "великодушно",
       "sources": [
         "teacher_inventory"
       ]
@@ -3021,6 +3056,20 @@
     {
       "lemma": "вигук",
       "slug": "вигук",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "вигулювати",
+      "slug": "вигулювати",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "вигуляти",
+      "slug": "вигуляти",
       "sources": [
         "teacher_inventory"
       ]
@@ -3575,6 +3624,13 @@
       ]
     },
     {
+      "lemma": "виправдатися",
+      "slug": "виправдатися",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "випробування",
       "slug": "випробування",
       "sources": [
@@ -3733,6 +3789,13 @@
       ]
     },
     {
+      "lemma": "висвячення",
+      "slug": "висвячення",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "висилати",
       "slug": "висилати",
       "sources": [
@@ -3809,6 +3872,13 @@
     {
       "lemma": "виснажливий",
       "slug": "виснажливий",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "виснажливо",
+      "slug": "виснажливо",
       "sources": [
         "teacher_inventory"
       ]
@@ -4059,6 +4129,13 @@
       ]
     },
     {
+      "lemma": "вифлеєм",
+      "slug": "вифлеєм",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "вихвалятися",
       "slug": "вихвалятися",
       "sources": [
@@ -4303,6 +4380,13 @@
       ]
     },
     {
+      "lemma": "вкритися",
+      "slug": "вкритися",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "вкусити",
       "slug": "вкусити",
       "sources": [
@@ -4469,6 +4553,13 @@
     {
       "lemma": "вогник",
       "slug": "вогник",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "вогники",
+      "slug": "вогники",
       "sources": [
         "teacher_inventory"
       ]
@@ -4741,6 +4832,13 @@
       ]
     },
     {
+      "lemma": "впакувати",
+      "slug": "впакувати",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "впасти",
       "slug": "впасти",
       "sources": [
@@ -4802,6 +4900,13 @@
     {
       "lemma": "вплутувати",
       "slug": "вплутувати",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "вполювати",
+      "slug": "вполювати",
       "sources": [
         "teacher_inventory"
       ]
@@ -5141,6 +5246,13 @@
     {
       "lemma": "вуглевод",
       "slug": "вуглевод",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "вуглеводи",
+      "slug": "вуглеводи",
       "sources": [
         "teacher_inventory"
       ]
@@ -5959,6 +6071,13 @@
       ]
     },
     {
+      "lemma": "відрядити",
+      "slug": "відрядити",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "відрізнятися",
       "slug": "відрізнятися",
       "sources": [
@@ -6257,6 +6376,13 @@
       "slug": "він-поведе-мене-до",
       "sources": [
         "homework",
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "вінничанин",
+      "slug": "вінничанин",
+      "sources": [
         "teacher_inventory"
       ]
     },
@@ -8010,6 +8136,13 @@
       ]
     },
     {
+      "lemma": "деталька",
+      "slug": "деталька",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "детектив",
       "slug": "детектив",
       "sources": [
@@ -8345,6 +8478,13 @@
       "slug": "довгостроковий",
       "sources": [
         "homework",
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "доведеться",
+      "slug": "доведеться",
+      "sources": [
         "teacher_inventory"
       ]
     },
@@ -10812,6 +10952,13 @@
       ]
     },
     {
+      "lemma": "закладений",
+      "slug": "закладений",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "закладений ніс",
       "slug": "закладений-ніс",
       "sources": [
@@ -11343,6 +11490,13 @@
     {
       "lemma": "запечений",
       "slug": "запечений",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "запинитися",
+      "slug": "запинитися",
       "sources": [
         "teacher_inventory"
       ]
@@ -12903,6 +13057,13 @@
       ]
     },
     {
+      "lemma": "здібності",
+      "slug": "здібності",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "здібність",
       "slug": "здібність",
       "sources": [
@@ -14148,6 +14309,13 @@
     {
       "lemma": "кандидатура",
       "slug": "кандидатура",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "канцелярист",
+      "slug": "канцелярист",
       "sources": [
         "teacher_inventory"
       ]
@@ -15905,6 +16073,13 @@
       ]
     },
     {
+      "lemma": "кріпатура",
+      "slug": "кріпатура",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "крісло",
       "slug": "крісло",
       "sources": [
@@ -17328,6 +17503,13 @@
     {
       "lemma": "медикамент",
       "slug": "медикамент",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "медикаменти",
+      "slug": "медикаменти",
       "sources": [
         "teacher_inventory"
       ]
@@ -18845,6 +19027,20 @@
       ]
     },
     {
+      "lemma": "наживати",
+      "slug": "наживати",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "нажити",
+      "slug": "нажити",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "назва",
       "slug": "назва",
       "sources": [
@@ -18944,6 +19140,13 @@
       ]
     },
     {
+      "lemma": "найлегший",
+      "slug": "найлегший",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "наймати",
       "slug": "наймати",
       "sources": [
@@ -18990,6 +19193,13 @@
     {
       "lemma": "наказати",
       "slug": "наказати",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "накаркати",
+      "slug": "накаркати",
       "sources": [
         "teacher_inventory"
       ]
@@ -20227,6 +20437,13 @@
       ]
     },
     {
+      "lemma": "непопулярний",
+      "slug": "непопулярний",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "непорозуміння",
       "slug": "непорозуміння",
       "sources": [
@@ -20525,6 +20742,13 @@
     {
       "lemma": "нитка",
       "slug": "нитка",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "нищівний",
+      "slug": "нищівний",
       "sources": [
         "teacher_inventory"
       ]
@@ -21320,6 +21544,13 @@
       ]
     },
     {
+      "lemma": "оговтатися",
+      "slug": "оговтатися",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "оголосити",
       "slug": "оголосити",
       "sources": [
@@ -21499,6 +21730,13 @@
     {
       "lemma": "ожиріння",
       "slug": "ожиріння",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "озвучка",
+      "slug": "озвучка",
       "sources": [
         "teacher_inventory"
       ]
@@ -21717,6 +21955,13 @@
       ]
     },
     {
+      "lemma": "опозиційно",
+      "slug": "опозиційно",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "опозиція",
       "slug": "опозиція",
       "sources": [
@@ -21813,6 +22058,13 @@
     {
       "lemma": "організований",
       "slug": "організований",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "організованість",
+      "slug": "організованість",
       "sources": [
         "teacher_inventory"
       ]
@@ -22523,6 +22775,13 @@
     {
       "lemma": "паперовий",
       "slug": "паперовий",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "папка",
+      "slug": "папка",
       "sources": [
         "teacher_inventory"
       ]
@@ -23648,6 +23907,20 @@
       ]
     },
     {
+      "lemma": "пестициди",
+      "slug": "пестициди",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "Петро",
+      "slug": "петро",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "печериця",
       "slug": "печериця",
       "sources": [
@@ -24684,6 +24957,13 @@
       ]
     },
     {
+      "lemma": "подробиці",
+      "slug": "подробиці",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "подруга",
       "slug": "подруга",
       "sources": [
@@ -25086,6 +25366,13 @@
       ]
     },
     {
+      "lemma": "полковників",
+      "slug": "полковників",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "полководець",
       "slug": "полководець",
       "sources": [
@@ -25455,6 +25742,13 @@
       "slug": "попит",
       "sources": [
         "homework",
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "поплатитися",
+      "slug": "поплатитися",
+      "sources": [
         "teacher_inventory"
       ]
     },
@@ -25889,6 +26183,13 @@
     {
       "lemma": "постити",
       "slug": "постити",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "постригтися",
+      "slug": "постригтися",
       "sources": [
         "teacher_inventory"
       ]
@@ -26786,6 +27087,13 @@
     {
       "lemma": "привітати",
       "slug": "привітати",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "привітатися",
+      "slug": "привітатися",
       "sources": [
         "teacher_inventory"
       ]
@@ -28421,6 +28729,13 @@
       ]
     },
     {
+      "lemma": "пукнути",
+      "slug": "пукнути",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "пул",
       "slug": "пул",
       "sources": [
@@ -28913,6 +29228,13 @@
     {
       "lemma": "підсилювати",
       "slug": "підсилювати",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "підскарбій",
+      "slug": "підскарбій",
       "sources": [
         "teacher_inventory"
       ]
@@ -29459,6 +29781,13 @@
       ]
     },
     {
+      "lemma": "рекордний",
+      "slug": "рекордний",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "релаксація",
       "slug": "релаксація",
       "sources": [
@@ -29504,6 +29833,13 @@
     {
       "lemma": "рентген",
       "slug": "рентген",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "рентгенів",
+      "slug": "рентгенів",
       "sources": [
         "teacher_inventory"
       ]
@@ -30280,6 +30616,13 @@
       ]
     },
     {
+      "lemma": "розпоряджатися",
+      "slug": "розпоряджатися",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "розпочати",
       "slug": "розпочати",
       "sources": [
@@ -30365,6 +30708,13 @@
       "slug": "розробник",
       "sources": [
         "homework"
+      ]
+    },
+    {
+      "lemma": "розрядити",
+      "slug": "розрядити",
+      "sources": [
+        "teacher_inventory"
       ]
     },
     {
@@ -30566,6 +30916,13 @@
       ]
     },
     {
+      "lemma": "розірваний",
+      "slug": "розірваний",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "розірвати",
       "slug": "розірвати",
       "sources": [
@@ -30575,6 +30932,13 @@
     {
       "lemma": "роковина",
       "slug": "роковина",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "роковини",
+      "slug": "роковини",
       "sources": [
         "teacher_inventory"
       ]
@@ -30751,6 +31115,13 @@
     {
       "lemma": "рученя",
       "slug": "рученя",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "рученята",
+      "slug": "рученята",
       "sources": [
         "teacher_inventory"
       ]
@@ -32713,6 +33084,13 @@
       ]
     },
     {
+      "lemma": "Софія",
+      "slug": "софія",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "сохнути",
       "slug": "сохнути",
       "sources": [
@@ -32909,6 +33287,13 @@
     {
       "lemma": "список",
       "slug": "список",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "сплюндрований",
+      "slug": "сплюндрований",
       "sources": [
         "teacher_inventory"
       ]
@@ -33192,6 +33577,13 @@
     {
       "lemma": "сприйняти",
       "slug": "сприйняти",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "спритність",
+      "slug": "спритність",
       "sources": [
         "teacher_inventory"
       ]
@@ -33674,6 +34066,13 @@
       ]
     },
     {
+      "lemma": "статки",
+      "slug": "статки",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "статок",
       "slug": "статок",
       "sources": [
@@ -34074,6 +34473,13 @@
       ]
     },
     {
+      "lemma": "строчити",
+      "slug": "строчити",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "структура",
       "slug": "структура",
       "sources": [
@@ -34106,6 +34512,13 @@
       "slug": "струс-мозку",
       "sources": [
         "homework",
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "струсити",
+      "slug": "струсити",
+      "sources": [
         "teacher_inventory"
       ]
     },
@@ -36074,6 +36487,13 @@
       ]
     },
     {
+      "lemma": "увінчаний",
+      "slug": "увінчаний",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "угода",
       "slug": "угода",
       "sources": [
@@ -36487,6 +36907,13 @@
     {
       "lemma": "усунути",
       "slug": "усунути",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "утвердитися",
+      "slug": "утвердитися",
       "sources": [
         "teacher_inventory"
       ]
@@ -37233,6 +37660,13 @@
       ]
     },
     {
+      "lemma": "хлопчиків",
+      "slug": "хлопчиків",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "хліб",
       "slug": "хліб",
       "sources": [
@@ -37418,6 +37852,13 @@
       ]
     },
     {
+      "lemma": "хтозна-який",
+      "slug": "хтозна-який",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "хтось",
       "slug": "хтось",
       "sources": [
@@ -37437,6 +37878,13 @@
       "slug": "худоба",
       "sources": [
         "homework",
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "художників",
+      "slug": "художників",
+      "sources": [
         "teacher_inventory"
       ]
     },
@@ -38017,6 +38465,13 @@
       ]
     },
     {
+      "lemma": "чернецтво",
+      "slug": "чернецтво",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "черниця",
       "slug": "черниця",
       "sources": [
@@ -38287,6 +38742,13 @@
       ]
     },
     {
+      "lemma": "чізкейк",
+      "slug": "чізкейк",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
       "lemma": "шаблон",
       "slug": "шаблон",
       "sources": [
@@ -38426,6 +38888,13 @@
       "slug": "швидкість-вбиває",
       "sources": [
         "homework",
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "Шевченко",
+      "slug": "шевченко",
+      "sources": [
         "teacher_inventory"
       ]
     },
@@ -38631,6 +39100,13 @@
     {
       "lemma": "шляхетний",
       "slug": "шляхетний",
+      "sources": [
+        "teacher_inventory"
+      ]
+    },
+    {
+      "lemma": "шляхетський",
+      "slug": "шляхетський",
       "sources": [
         "teacher_inventory"
       ]
