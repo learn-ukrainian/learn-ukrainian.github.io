@@ -1045,25 +1045,11 @@ Returns per-track: `total`, `enriched`, `pending`, `pct`, `not_enriched` (first 
 
 ---
 
-### `GET /api/state/ready-to-build[?track=x]` (deprecated)
+### Retired Legacy Endpoint — `GET /api/state/ready-to-build` (HTTP 404)
 
-Legacy modules where research/dossier evidence exists but the orchestration
-content phase has not started. These are **research-complete candidates, not a
-generation-ready build queue**. In particular, BIO dossiers do not satisfy the
-BIO manual preparation gates. Migrate generation decisions to the exact module
-route under `/api/state/preparation/{track}/{slug}`.
-
-```bash
-# All tracks
-curl -s http://localhost:8765/api/state/ready-to-build | python3 -m json.tool
-
-# Specific track
-curl -s "http://localhost:8765/api/state/ready-to-build?track=hist" | python3 -m json.tool
-```
-
-Candidate membership and the `count`/`modules` shape remain compatible. The
-response additively labels itself `informational-only`, names its exact legacy
-semantics, and links the replacement.
+`GET /api/state/ready-to-build` previously returned legacy research-complete candidates.
+It was retired in #7947. Requests do not operate with deprecation headers and return HTTP `404 Not Found`.
+Callers must use canonical `/api/state/preparation` (or `/api/state/preparation/{track}/{slug}`).
 
 ---
 
@@ -2925,12 +2911,14 @@ migrate", not "break suddenly".
 
 ### Retired endpoints (HTTP 404)
 
-The following legacy endpoints and route aliases have been completely retired and unmounted (see #7942, #7945). They do **not** operate with deprecation headers; requests return HTTP `404 Not Found`. Callers must use the canonical endpoints:
+The following legacy endpoints and route aliases have been completely retired and unmounted (see #7942, #7945, #7947). They do **not** operate with deprecation headers; requests return HTTP `404 Not Found`. Callers must use the canonical endpoints:
 
 | Retired Route | Canonical Replacement | Status | Notes |
 |---|---|---|---|
 | `GET /api/blue/live-status` | `GET /api/state/build-status` | 404 Not Found | Retired in #7942 (#7945); callers migrated to `/api/state/build-status` |
 | `GET /api/rag/*` | `GET /api/sources/*` | 404 Not Found | Retired in #7942 (#7945); alias prefix unmounted, canonical endpoints are under `/api/sources/*` |
+| `GET /api/state/ready-to-build` | `GET /api/state/preparation` | 404 Not Found | Retired in #7947; callers migrated to `/api/state/preparation` |
+| `GET /api/cost/*` | `GET /api/analytics/cost/*` | 404 Not Found | Retired in #7947; duplicate mount unmounted, canonical endpoints are under `/api/analytics/cost/*` |
 
 
 ---

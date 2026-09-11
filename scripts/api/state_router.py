@@ -7,7 +7,6 @@ Endpoints:
   GET /api/state/pipeline/{track}     Per-module pipeline state for one track
   GET /api/state/preparation          Active manifest bundle/publication roster
   GET /api/state/preparation/{track}/{slug} Canonical one-module preparation
-  GET /api/state/ready-to-build       Deprecated research-complete candidates
   GET /api/state/weak-points          Modules with quality issues
   GET /api/state/build-status/{track}  Compact live build progress (one call)
   GET /api/state/build-status          All-tracks build progress summary
@@ -124,9 +123,6 @@ from .state_helpers import (
     get_plan_slugs,
     get_research_score,
     get_word_target_from_plan,
-    is_content_done,
-    is_research_done,
-    load_module_state,
     read_v2_state,
     read_v3_state,
 )
@@ -135,11 +131,6 @@ from .state_issues import (
     compute_issues,
 )
 from .telemetry.response import add_json_telemetry, session_id_from_request
-
-# Re-export symbols used by dashboard_router and tests (backward compat)
-_detect_pipeline_version = detect_pipeline_version
-_is_research_done = is_research_done
-_is_content_done = is_content_done
 
 CODE_IMPLEMENT_LANE_PRIORITY: dict[str, int] = {
     "cursor": 0,
@@ -1975,50 +1966,6 @@ async def preparation_module(
 
     status_code = 404 if payload["manifest_authority"] == "off-manifest" else 200
     return _preparation_response(request, payload, status_code=status_code)
-
-
-@router.get("/ready-to-build", deprecated=True)
-async def ready_to_build(track: str | None = Query(None), ctx: MonitorContext = Depends(get_ctx)):
-    """Deprecated research-complete candidates; not generation readiness."""
-
-    def _compute():
-        ready = []
-        level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
-
-        for level_cfg in level_cfgs:
-            track_id = level_cfg["id"]
-            plan_slugs = get_plan_slugs(
-                track_id, curriculum_root=ctx.roots.curriculum_root, plans_root=ctx.roots.plans_root
-            )
-            track_dir = ctx.roots.curriculum_root / level_cfg["path"]
-
-            for num, slug in plan_slugs:
-                orch_dir = safe_join(track_dir / "orchestration", slug)
-                state = load_module_state(track_id, slug, orch_dir)
-
-                if is_research_done(state, track_dir, slug) and not is_content_done(state):
-                    version = detect_pipeline_version(orch_dir)
-                    research_phase = state.get("phases", {}).get("research", {})
-                    ready.append(
-                        {
-                            "track": track_id,
-                            "num": num,
-                            "slug": slug,
-                            "pipeline_version": version,
-                            "phase_a_ts": research_phase.get("ts"),
-                            "phase_a_mode": research_phase.get("mode"),
-                        }
-                    )
-        return {
-            "count": len(ready),
-            "modules": ready,
-            "authority": "informational-only",
-            "semantics": "research-complete-candidates-not-generation-readiness",
-            "deprecated": True,
-            "replacement": "/api/state/preparation",
-        }
-
-    return await asyncio.to_thread(_compute)
 
 
 @router.get("/weak-points")

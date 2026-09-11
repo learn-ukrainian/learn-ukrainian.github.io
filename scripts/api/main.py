@@ -2,7 +2,8 @@
 FastAPI server for playground dashboards.
 
 Architecture:
-  - main.py: shared endpoints (config, batch state, dispatcher, websocket, static files)
+  - main.py: shared endpoints (config, static files, health, orient)
+  - batch_router.py: batch state, dispatcher, and websocket
   - blue_router.py: Blue team endpoints at /api/blue/...
   - gold_router.py: Gold team endpoints at /api/gold/...
 
@@ -27,7 +28,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query, Request, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
@@ -55,6 +56,7 @@ from .agent_monitor_router import router as agent_monitor_router
 from .agent_router import router as agent_router
 from .artifacts_router import router as artifacts_router
 from .atlas_jobs_router import router as atlas_jobs_router
+from .batch_router import router as batch_router
 from .blue_router import router as blue_router
 from .build_events_router import router as build_events_router
 from .cluster_router import router as cluster_router
@@ -92,7 +94,6 @@ from .ops_router import router as ops_router
 from .opsec_sanitize import opsec_path_sanitizer_middleware
 from .preload import preload_all
 from .project_state_router import router as project_state_router
-from .rag_router import router as sources_router
 from .repository_authority import build_repository_authority, cwd_role
 from .resilience import get_resilience_snapshot, resilience_middleware
 from .reviewer_ghosts_router import router as reviewer_ghosts_router
@@ -104,6 +105,7 @@ from .runtime_router import router as runtime_router
 from .session_router import router as session_router
 from .session_streams_router import router as session_streams_router
 from .site_router import router as site_router
+from .sources_router import router as sources_router
 from .state_helpers import cache_get, cache_invalidate, cache_set, ctx_cache_scope
 from .state_router import router as state_router
 from .telemetry.response import add_json_telemetry, session_id_from_request
@@ -1748,125 +1750,6 @@ async def get_config(request: Request, ctx: MonitorContext = Depends(get_ctx)):
     return {"levels": LEVELS, "api_version": request.app.version, "pipeline": pipeline_info}
 
 
-@core_router.get("/api/batch/dispatcher")
-async def get_dispatcher_state(ctx: MonitorContext = Depends(get_ctx)):
-    state_file = ctx.roots.batch_state_dir / "dispatcher_state.json"
-    if not state_file.exists():
-        return {"tracks": {}}
-    with open(state_file) as f:
-        return json.load(f)
-
-
-@core_router.get("/api/batch/active")
-async def get_active_orchestration(ctx: MonitorContext = Depends(get_ctx)):
-    active = []
-    if not ctx.roots.curriculum_root.exists():
-        return active
-    for track_dir in ctx.roots.curriculum_root.iterdir():
-        if not track_dir.is_dir():
-            continue
-        orch_dir = track_dir / "orchestration"
-        if not orch_dir.exists():
-            continue
-        for module_dir in orch_dir.iterdir():
-            if not module_dir.is_dir():
-                continue
-            latest_mtime = 0.0
-            for f in module_dir.iterdir():
-                if f.is_file():
-                    latest_mtime = max(latest_mtime, f.stat().st_mtime)
-            if (datetime.now().timestamp() - latest_mtime) < 900:
-                active.append(
-                    {
-                        "slug": module_dir.name,
-                        "track": track_dir.name,
-                        "seconds_ago": int(datetime.now().timestamp() - latest_mtime),
-                    }
-                )
-    return active
-
-
-@core_router.get("/api/batch/failures")
-async def get_failure_queue(ctx: MonitorContext = Depends(get_ctx)):
-    f_file = ctx.roots.batch_state_dir / "failure_queue.json"
-    if not f_file.exists():
-        return []
-    with open(f_file) as f:
-        return json.load(f)
-
-
-@core_router.get("/api/batch/usage")
-async def get_batch_usage(ctx: MonitorContext = Depends(get_ctx)):
-    usage_dir = ctx.roots.batch_state_dir / "api_usage"
-    if not usage_dir.exists():
-        return {}
-    summaries = {}
-    for f in sorted(usage_dir.glob("summary_*.json")):
-        track = f.stem.replace("summary_", "")
-        try:
-            with open(f) as fh:
-                summaries[track] = json.load(fh)
-        except Exception:
-            pass
-    return summaries
-
-
-@core_router.get("/api/batch/checkpoints")
-async def get_all_checkpoints(ctx: MonitorContext = Depends(get_ctx)):
-    results = {}
-    if not ctx.roots.batch_state_dir.exists():
-        return results
-    for f in ctx.roots.batch_state_dir.glob("checkpoint_*.json"):
-        track = f.stem.replace("checkpoint_", "")
-        try:
-            with open(f) as fh:
-                results[track] = json.load(fh)
-        except Exception:
-            pass
-    return results
-
-
-@core_router.get("/api/batch/dispatcher/running")
-async def dispatcher_running():
-    return {"running": False}
-
-
-@core_router.post("/api/batch/dispatcher/scan")
-async def run_dispatcher_scan(ctx: MonitorContext = Depends(get_ctx)):
-    cmd = [
-        str(ctx.roots.live_repo_root / ".venv" / "bin" / "python"),
-        str(ctx.roots.live_repo_root / "scripts" / "batch_dispatcher.py"),
-        "scan",
-    ]
-    # Use asyncio.to_thread to avoid blocking the event loop
-    result = await asyncio.to_thread(subprocess.run, cmd, cwd=ctx.roots.live_repo_root)
-    if result.returncode != 0:
-        raise HTTPException(status_code=500, detail="Dispatcher scan failed")
-    return {"status": "ok"}
-
-
-@core_router.get("/api/batch/dispatcher/logs")
-async def get_dispatcher_logs(lines: int = 50, ctx: MonitorContext = Depends(get_ctx)):
-    log_file = ctx.roots.project_root / "logs" / "dispatcher.log"
-    if not log_file.exists():
-        return {"lines": []}
-    return {"lines": log_file.read_text().splitlines()[-lines:]}
-
-
-# ==================== WEBSOCKET ====================
-
-
-@core_router.websocket("/ws/batch")
-async def batch_websocket(websocket: WebSocket):
-    await websocket.accept()
-    try:
-        while True:
-            await websocket.send_json({"type": "heartbeat"})
-            await asyncio.sleep(5)
-    except WebSocketDisconnect:
-        pass
-
-
 # ==================== IMAGE SERVING ====================
 
 _ALLOWED_IMG_EXT = {".png", ".jpg", ".jpeg", ".webp"}
@@ -1982,7 +1865,6 @@ def create_app(context: MonitorContext, *, lifespan: Any = None) -> FastAPI:
     factory_app.include_router(coordination_router, prefix="/api/coordination")
     factory_app.include_router(consultation_router, prefix="/api/consultation")
     factory_app.include_router(cluster_router, prefix="/api/cluster", tags=["cluster"])
-    factory_app.include_router(cost_router, prefix="/api/cost")
     factory_app.include_router(cost_router, prefix="/api/analytics/cost")
     factory_app.include_router(contracts_router, prefix="/api/contracts", tags=["contracts"])
     factory_app.include_router(dashboard_router, prefix="/api/dashboard")
@@ -2018,6 +1900,7 @@ def create_app(context: MonitorContext, *, lifespan: Any = None) -> FastAPI:
     factory_app.include_router(wiki_router, prefix="/api/wiki", tags=["wiki"])
     factory_app.include_router(worktrees_router, prefix="/api/worktrees", tags=["worktrees"])
     factory_app.include_router(work_router, prefix="/api/work", tags=["work"])
+    factory_app.include_router(batch_router)
     factory_app.include_router(core_router)
     return factory_app
 

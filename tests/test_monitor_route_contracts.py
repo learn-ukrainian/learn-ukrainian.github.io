@@ -156,10 +156,14 @@ def test_dead_alias_inventory_contracts():
 
     assert "NOTE: retire_now" in contract_for_route("/api/blue/live-status", "http").recommendation
     assert "NOTE: retire_now" in contract_for_route("/api/rag", "http").recommendation
+    assert "NOTE: retire_now" in contract_for_route("/api/state/ready-to-build", "http").recommendation
+    assert "NOTE: retire_now" in contract_for_route("/api/cost", "http").recommendation
 
     http_paths = {route.path for route in _public_http_routes()}
     assert "/api/blue/live-status" not in http_paths
     assert not any(path.startswith("/api/rag") for path in http_paths)
+    assert "/api/state/ready-to-build" not in http_paths
+    assert not any(path.startswith("/api/cost") for path in http_paths)
 
     ws_contract = contract_for_route("/ws/batch", "websocket")
     assert ws_contract is not None

@@ -414,6 +414,15 @@ class TestRouterMounting:
         assert "/api/rag/stats" not in paths
         assert not any(p.startswith("/api/rag") for p in paths)
 
+    def test_ready_to_build_not_mounted(self):
+        paths = self._route_paths()
+        assert "/api/state/ready-to-build" not in paths
+
+    def test_cost_alias_not_mounted(self):
+        paths = self._route_paths()
+        assert "/api/cost" not in paths
+        assert not any(p.startswith("/api/cost") for p in paths)
+
     def test_hramatka_not_mounted_on_public_monitor(self):
         paths = self._route_paths()
         assert not any(p.startswith("/api/hramatka") for p in paths)
@@ -439,6 +448,14 @@ class TestPublicMonitorSurfacesAndBoundaries:
 
     def test_rag_stats_alias_retired_returns_404(self):
         resp = client.get("/api/rag/stats")
+        assert resp.status_code == 404
+
+    def test_ready_to_build_retired_returns_404(self):
+        resp = client.get("/api/state/ready-to-build")
+        assert resp.status_code == 404
+
+    def test_cost_alias_retired_returns_404(self):
+        resp = client.get("/api/cost")
         assert resp.status_code == 404
 
     def test_readyz_returns_404(self):
