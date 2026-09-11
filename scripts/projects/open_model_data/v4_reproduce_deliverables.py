@@ -72,6 +72,18 @@ def assert_no_private_host_paths(data: Any, path_prefix: str = "") -> None:
             assert_no_private_host_paths(item, f"{path_prefix}[{idx}]")
 
 
+def assert_file_no_private_host_paths(path: Path, rel_path: str = "") -> None:
+    """Scan file lines for prohibited private host paths without echoing file contents."""
+    loc = rel_path or str(path)
+    with path.open("r", encoding="utf-8") as f:
+        for line_no, line in enumerate(f, start=1):
+            for pat in PROHIBITED_HOST_PATTERNS:
+                if pat.search(line):
+                    raise ValueError(
+                        f"Prohibited host path detected at {loc}:{line_no} matching pattern {pat.pattern}"
+                    )
+
+
 def load_dataset_stream(records_path: Path) -> Iterator[dict[str, Any]]:
     """Stream dataset records yielding parsed rows (DELIVERY-1)."""
     with records_path.open("r", encoding="utf-8") as f:
@@ -172,13 +184,24 @@ def build_delivery_receipt(
 
     receipt_id = f"receipt.delivery.{sha256_bytes(f'{records_sha}:{study_rcpt_sha}'.encode())[:24]}"
 
-    # Hash and scan deliverable documents for private host paths
+    # Hash and scan all deliverable documents and artifacts for private host paths
     card_sha = sha256_file(dataset_card_path)
     report_sha = sha256_file(tech_report_path)
     summary_sha = sha256_file(summary_path)
 
-    for doc_path in [dataset_card_path, tech_report_path, summary_path]:
-        assert_no_private_host_paths(doc_path.read_text(encoding="utf-8"), str(doc_path.relative_to(repo_root)))
+    bound_artifacts = [
+        dataset_manifest_path,
+        dataset_records_path,
+        dataset_receipt_path,
+        study_recipe_path,
+        study_runs_path,
+        study_receipt_path,
+        dataset_card_path,
+        tech_report_path,
+        summary_path,
+    ]
+    for artifact_path in bound_artifacts:
+        assert_file_no_private_host_paths(artifact_path, str(artifact_path.relative_to(repo_root)))
 
     delivery_data = {
         "schema_version": "v4_delivery_reproduction_receipt_v1",
@@ -258,7 +281,10 @@ def verify_delivery(
     if receipt_data.get("learning_utility_verdict") != "LEARNING_UTILITY_CONFIRMED":
         return False
 
-    # Check that referenced deliverable documents exist, match bound digests, and contain no private host paths
+    if receipt_data.get("zero_host_paths_verified") is not True:
+        return False
+
+    # Check that referenced deliverable documents exist and match bound digests
     doc_digests = receipt_data.get("document_digests", {})
     for doc_key, rel_path in receipt_data["deliverable_documents"].items():
         doc_path = repo_root / rel_path
@@ -266,10 +292,6 @@ def verify_delivery(
             return False
         expected_digest = doc_digests.get(f"{doc_key}_sha256")
         if not expected_digest or sha256_file(doc_path) != expected_digest:
-            return False
-        try:
-            assert_no_private_host_paths(doc_path.read_text(encoding="utf-8"), rel_path)
-        except ValueError:
             return False
 
     # Check and rehash dataset deliverables
@@ -327,6 +349,28 @@ def verify_delivery(
         return False
     if expected_seeds and seeds_seen != expected_seeds:
         return False
+
+    # Scan all bound artifacts to verify zero private host paths
+    dataset_card_path = repo_root / receipt_data["deliverable_documents"]["dataset_card"]
+    tech_report_path = repo_root / receipt_data["deliverable_documents"]["technical_report"]
+    summary_path = repo_root / receipt_data["deliverable_documents"]["research_summary"]
+
+    bound_artifacts = [
+        dataset_manifest_path,
+        dataset_records_path,
+        dataset_receipt_path,
+        study_recipe_path,
+        study_runs_path,
+        study_receipt_path,
+        dataset_card_path,
+        tech_report_path,
+        summary_path,
+    ]
+    for art_path in bound_artifacts:
+        try:
+            assert_file_no_private_host_paths(art_path, str(art_path.relative_to(repo_root)))
+        except (ValueError, UnicodeDecodeError):
+            return False
 
     records_count = sum(1 for _ in load_dataset_stream(dataset_records_path))
     return records_count == ds_repro.get("records_count")

@@ -9,6 +9,7 @@ import jsonschema
 import pytest
 
 from scripts.projects.open_model_data.v4_reproduce_deliverables import (
+    assert_file_no_private_host_paths,
     assert_no_private_host_paths,
     load_dataset_stream,
     load_partition_view,
@@ -187,3 +188,28 @@ def test_verify_delivery_detects_tampered_document(tmp_path: Path) -> None:
     rcpt_data["document_digests"]["dataset_card_sha256"] = sha256_file(card)
     mock_receipt.write_text(json.dumps(rcpt_data, indent=2), encoding="utf-8")
     assert verify_delivery(mock_root, mock_receipt) is False
+
+    # Restoring card and introducing a private host path (/workspace/...) into study runs fails verification
+    card.write_text(orig_text, encoding="utf-8")
+    rcpt_data["document_digests"]["dataset_card_sha256"] = sha256_file(card)
+
+    study_runs = mock_root / "data/projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl"
+    orig_runs = study_runs.read_text(encoding="utf-8")
+    study_runs.write_text(orig_runs + '{"run_id": "run.999", "recipe_id": "recipe.v4.learning.open_weight_pilot.20260910", "seed": 42, "path": "/workspace/checkout"}\n', encoding="utf-8")
+    rcpt_data["learning_study_reproduction"]["runs_sha256"] = sha256_file(study_runs)
+    mock_receipt.write_text(json.dumps(rcpt_data, indent=2), encoding="utf-8")
+    assert verify_delivery(mock_root, mock_receipt) is False
+
+
+def test_assert_file_no_private_host_paths(tmp_path: Path) -> None:
+    """Ensure assert_file_no_private_host_paths scans files and raises ValueError without leaking text."""
+    clean_file = tmp_path / "clean.txt"
+    clean_file.write_text("Normal content\nSecond line\n", encoding="utf-8")
+    assert_file_no_private_host_paths(clean_file, "clean.txt")
+
+    leaked_file = tmp_path / "leaked.txt"
+    leaked_file.write_text("CONFIDENTIAL_TOP_SECRET /root/checkout/secret\n", encoding="utf-8")
+    with pytest.raises(ValueError) as excinfo:
+        assert_file_no_private_host_paths(leaked_file, "leaked.txt")
+    assert "CONFIDENTIAL_TOP_SECRET" not in str(excinfo.value)
+    assert "Prohibited host path detected at leaked.txt:1" in str(excinfo.value)
