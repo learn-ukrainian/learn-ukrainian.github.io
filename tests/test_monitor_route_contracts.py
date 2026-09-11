@@ -128,3 +128,32 @@ def test_every_atlas_jobs_route_matches_contracts():
         else:
             assert contract.mutates is False, f"{path} must have mutates=False"
 
+
+def test_dead_alias_inventory_contracts():
+    """Verify dead-alias/deprecated candidates in #7936 have honest contract notes."""
+    candidates = [
+        "/api/state/ready-to-build",
+        "/api/blue/live-status",
+        "/api/blue",
+        "/api/gold",
+        "/api/agent",
+        "/api/comms/messages",
+        "/api/comms/conversations",
+        "/api/comms/conversation",
+        "/api/comms/live-activity",
+        "/api/comms/send",
+        "/api/cost",
+        "/api/rag",
+        "/api/batch",
+    ]
+    for path in candidates:
+        contract = contract_for_route(path, "http")
+        assert contract is not None, f"missing contract for {path}"
+        assert "NOTE:" in contract.recommendation, f"contract for {path} missing inventory NOTE"
+        assert any(
+            cls in contract.recommendation for cls in ("compat_keep", "migrate_caller_first")
+        ), f"contract for {path} missing classification"
+
+    ws_contract = contract_for_route("/ws/batch", "websocket")
+    assert ws_contract is not None
+    assert "NOTE: compat_keep" in ws_contract.recommendation
