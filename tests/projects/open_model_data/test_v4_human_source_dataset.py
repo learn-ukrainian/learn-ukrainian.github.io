@@ -15,6 +15,7 @@ from scripts.projects.open_model_data.v4_human_source_dataset import (
     load_dataset_stream,
     load_partition_view,
     resolve_record_loss_masks,
+    resolve_record_text,
     verify_dataset,
 )
 
@@ -267,3 +268,35 @@ def test_authenticated_loss_mask_resolver() -> None:
     }
     with pytest.raises(ValueError, match=r"does not match record loss_mask_count"):
         resolve_record_loss_masks(tampered_rec)
+
+
+def test_authenticated_source_text_resolver() -> None:
+    """Verify that resolve_record_text and load_dataset_stream resolve private source text."""
+    import hashlib
+
+    records = list(load_dataset_stream(RECORDS_PATH, resolve_masks=True, resolve_text=True))
+    assert len(records) == 1419
+
+    rec0 = records[0]
+    assert "text" in rec0
+    assert "text" in rec0["source_fidelity"]
+    assert len(rec0["text"]) == rec0["source_fidelity"]["char_length"]
+    assert hashlib.sha256(rec0["text"].encode("utf-8")).hexdigest() == rec0["source_fidelity"]["span_sha256"]
+
+    # Verify direct resolution
+    with open(RECORDS_PATH, encoding="utf-8") as f:
+        _ = f.readline()
+        raw_line = f.readline()
+    rec_raw = json.loads(raw_line)
+    resolved_text = resolve_record_text(rec_raw)
+    assert resolved_text == rec0["text"]
+
+    # Test error handling on missing sha or tampered sha
+    with pytest.raises(ValueError, match=r"Record is missing source_fidelity\.span_sha256"):
+        resolve_record_text({})
+
+    tampered_rec = dict(rec_raw)
+    tampered_rec["source_fidelity"] = dict(rec_raw["source_fidelity"])
+    tampered_rec["source_fidelity"]["span_sha256"] = "0000000000000000000000000000000000000000000000000000000000000000"
+    with pytest.raises(KeyError, match=r"not found in authenticated extraction index"):
+        resolve_record_text(tampered_rec)

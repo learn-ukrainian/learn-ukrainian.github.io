@@ -17,6 +17,7 @@ import hashlib
 import json
 import os
 import re
+import sqlite3
 import sys
 from collections.abc import Iterator
 from pathlib import Path
@@ -598,6 +599,61 @@ def verify_dataset(
 
 
 _LANGUAGE_USAGE_CACHE: dict[Path, dict[str, list[dict[str, Any]]]] = {}
+_EXTRACTION_INDEX_CACHE: dict[Path, dict[str, dict[str, Any]]] = {}
+_SOURCES_DB_CONNS: dict[Path, sqlite3.Connection] = {}
+
+
+def _get_sources_db_path(repo_root: Path) -> Path:
+    candidates = [
+        repo_root / "data/sources.db",
+        Path.cwd() / "data/sources.db",
+    ]
+    for p in [repo_root, Path.cwd()]:
+        for parent in p.parents:
+            candidates.append(parent / "data/sources.db")
+    for cand in candidates:
+        if cand.is_file():
+            return cand.resolve()
+    raise FileNotFoundError("Missing authenticated source database: data/sources.db")
+
+
+def _get_extraction_map(repo_root: Path) -> dict[str, dict[str, Any]]:
+    root_resolved = repo_root.resolve()
+    if root_resolved in _EXTRACTION_INDEX_CACHE:
+        return _EXTRACTION_INDEX_CACHE[root_resolved]
+
+    candidates = [
+        root_resolved / "data/projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl",
+        Path.cwd() / "data/projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl",
+    ]
+    for p in [root_resolved, Path.cwd()]:
+        for parent in p.parents:
+            candidates.append(parent / "data/projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl")
+
+    ext_path: Path | None = None
+    for cand in candidates:
+        if cand.is_file():
+            ext_path = cand.resolve()
+            break
+
+    if ext_path is None:
+        raise FileNotFoundError("Missing authenticated native extraction index: v4_native_extraction_index_v1.jsonl")
+
+    ext_map: dict[str, dict[str, Any]] = {}
+    with ext_path.open("r", encoding="utf-8") as f:
+        _ = f.readline()  # header
+        for line in f:
+            line_str = line.strip()
+            if not line_str:
+                continue
+            item = json.loads(line_str)
+            span_loc = item.get("span_locator", {})
+            sha = span_loc.get("span_sha256")
+            if sha:
+                ext_map[sha] = item
+
+    _EXTRACTION_INDEX_CACHE[root_resolved] = ext_map
+    return ext_map
 
 
 def _get_language_usage_masks(repo_root: Path) -> dict[str, list[dict[str, Any]]]:
@@ -658,15 +714,68 @@ def resolve_record_loss_masks(
     return resolved_masks
 
 
+def resolve_record_text(
+    record: dict[str, Any],
+    repo_root: Path | None = None,
+) -> str:
+    """Resolve authenticated private source text for a dataset record.
+
+    Looks up the span text from the authenticated private database (data/sources.db)
+    via native extraction linkage, verifying that:
+    1. sha256(text) matches record["source_fidelity"]["span_sha256"]
+    2. len(text) matches record["source_fidelity"]["char_length"]
+    """
+    root = (repo_root or Path.cwd()).resolve()
+    fidelity = record.get("source_fidelity", {})
+    expected_sha = fidelity.get("span_sha256")
+    if not expected_sha:
+        raise ValueError("Record is missing source_fidelity.span_sha256")
+    expected_len = fidelity.get("char_length")
+
+    ext_map = _get_extraction_map(root)
+    if expected_sha not in ext_map:
+        raise KeyError(f"Span SHA {expected_sha} not found in authenticated extraction index")
+
+    ext_item = ext_map[expected_sha]
+    sf = ext_item.get("source_file")
+    chunk_id = ext_item.get("chunk_id")
+    fam = ext_item.get("source_family")
+    table = "literary_texts" if fam == "literary" else "textbooks"
+
+    db_path = _get_sources_db_path(root)
+    if db_path not in _SOURCES_DB_CONNS:
+        _SOURCES_DB_CONNS[db_path] = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    conn = _SOURCES_DB_CONNS[db_path]
+    cur = conn.cursor()
+
+    cur.execute(f'SELECT text FROM "{table}" WHERE source_file = ? AND chunk_id = ?', (sf, chunk_id))
+    row = cur.fetchone()
+    if not row or row[0] is None:
+        raise ValueError(f"No database record found in {table} for source_file={sf}, chunk_id={chunk_id}")
+
+    text = str(row[0])
+    actual_sha = hashlib.sha256(text.encode("utf-8")).hexdigest()
+    if actual_sha != expected_sha:
+        raise ValueError(f"Resolved text SHA {actual_sha} does not match expected {expected_sha}")
+    if expected_len is not None and len(text) != expected_len:
+        raise ValueError(f"Resolved text length {len(text)} does not match expected {expected_len}")
+
+    return text
+
+
 def load_dataset_stream(
     records_path: Path,
     resolve_masks: bool = False,
+    resolve_text: bool = False,
     repo_root: Path | None = None,
 ) -> Iterator[dict[str, Any]]:
     """Stream dataset records yielding parsed rows (DELIVERY-1 / SCALE-4).
 
-    If resolve_masks is True, resolves and attaches modern_view.loss_mask_spans
-    from the authenticated language usage index.
+    - If resolve_masks is True, resolves and attaches modern_view.loss_mask_spans
+      from the authenticated language usage index.
+    - If resolve_text is True, resolves and attaches private source text to
+      record["text"] and record["source_fidelity"]["text"] from data/sources.db,
+      verified against source_fidelity.span_sha256 and char_length.
     """
     root = repo_root.resolve() if repo_root is not None else Path.cwd().resolve()
     # If not found directly at cwd, search upward from records_path
@@ -688,6 +797,11 @@ def load_dataset_stream(
                 masks = resolve_record_loss_masks(record, repo_root=root)
                 if "language_views" in record and "modern_view" in record["language_views"]:
                     record["language_views"]["modern_view"]["loss_mask_spans"] = masks
+            if resolve_text:
+                text = resolve_record_text(record, repo_root=root)
+                record["text"] = text
+                if "source_fidelity" in record:
+                    record["source_fidelity"]["text"] = text
             yield record
 
 
@@ -695,11 +809,17 @@ def load_partition_view(
     records_path: Path,
     partition: str,
     resolve_masks: bool = False,
+    resolve_text: bool = False,
     repo_root: Path | None = None,
 ) -> list[dict[str, Any]]:
     """Load records filtered by split partition (DELIVERY-1 / SCALE-4)."""
     filtered = []
-    for record in load_dataset_stream(records_path, resolve_masks=resolve_masks, repo_root=repo_root):
+    for record in load_dataset_stream(
+        records_path,
+        resolve_masks=resolve_masks,
+        resolve_text=resolve_text,
+        repo_root=repo_root,
+    ):
         sc = record.get("split_clearance", {})
         if sc.get("split_partition") == partition:
             if partition == "training" and not sc.get("builder_training_cleared", False):

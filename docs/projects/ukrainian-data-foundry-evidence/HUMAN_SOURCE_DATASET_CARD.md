@@ -29,22 +29,34 @@ Each record in `v4_human_source_dataset_records_v1.jsonl` contains:
 - `split_clearance`: Partition assignment (`training`, `development`, `heldout_evaluation`, `quarantine_excluded`) and firewall verification.
 - `admission_evidence`: Rights basis and local learning approval confirmation.
 
-### Authenticated Loss Mask Resolution
+### Authenticated Loss Mask and Source Text Resolution
 
-The dataset records in `v4_human_source_dataset_records_v1.jsonl` index `loss_mask_count` directly in `language_views.modern_view`. Consumers requiring full character-level loss masking intervals use the authenticated stream loader or resolver:
+The dataset records in `v4_human_source_dataset_records_v1.jsonl` index `loss_mask_count` directly in `language_views.modern_view` and bind cryptographic span digests in `source_fidelity.span_sha256`. To enforce repository pre-commit file ceilings (<2000 KB) while maintaining strict private corpus security, authentic text and exact character-level loss masking intervals are resolved dynamically from authenticated local stores (`data/sources.db` and `v4_language_usage_index_v1.jsonl`) via the stream loader or individual record resolvers:
 
 ```python
 from scripts.projects.open_model_data.v4_reproduce_deliverables import (
     load_dataset_stream,
+    load_partition_view,
     resolve_record_loss_masks,
+    resolve_record_text,
 )
 
-# Stream records with resolved modern_view loss mask spans attached:
-for record in load_dataset_stream(records_path, resolve_masks=True):
+# Stream records with both modern_view loss mask spans and authenticated text:
+for record in load_dataset_stream(records_path, resolve_masks=True, resolve_text=True):
+    text = record["text"]  # verified against source_fidelity.span_sha256
     masks = record["language_views"]["modern_view"]["loss_mask_spans"]
+
+# Load specific partition view with full text and masks:
+training_records = load_partition_view(
+    records_path,
+    partition="training",
+    resolve_masks=True,
+    resolve_text=True,
+)
 
 # Or resolve on an individual record dictionary:
 masks = resolve_record_loss_masks(record)
+text = resolve_record_text(record)
 ```
 
 

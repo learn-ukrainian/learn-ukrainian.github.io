@@ -55,6 +55,6 @@ The program successfully resolved 6 historical architectural blockers, establish
 
 ## Final Delivery Verdicts
 
-- **Dataset Quality**: `DATASET_QUALITY_CONFIRMED`
-- **Learning Utility**: `LEARNING_UTILITY_CONFIRMED` (Protocol & Harness Confirmed; Empirical Training Pre-Registered)
-- **Epic Deliverables**: `EPIC_DELIVERABLES_CONFIRMED`
+- **Dataset Quality**: `DATASET_QUALITY_CONFIRMED` (1,419 human-source spans with verified text and loss mask resolution)
+- **Learning Utility**: `LEARNING_UTILITY_PROTOCOL_HARNESS_CONFIRMED_EMPIRICAL_PENDING` (Protocol, recipe, harness, and multi-seed variance confirmed under simulation fixtures; empirical model training pending dedicated GPU cluster execution)
+- **Epic Deliverables**: `EPIC_DELIVERABLES_CONFIRMED_EMPIRICAL_PENDING` (Complete dataset denominator, verified loaders with mask and text resolution, delivery receipts, and study protocol reproduced and confirmed)

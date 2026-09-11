@@ -14,6 +14,7 @@ from scripts.projects.open_model_data.v4_reproduce_deliverables import (
     load_dataset_stream,
     load_partition_view,
     resolve_record_loss_masks,
+    resolve_record_text,
     verify_delivery,
 )
 
@@ -59,6 +60,25 @@ def test_delivery1_stream_loader_and_partition_views() -> None:
     resolved_spans = resolve_record_loss_masks(stream_records[0])
     assert resolved_spans == m0["loss_mask_spans"]
 
+    # Verify stream loading with both resolved modern_view loss mask spans and authenticated text
+    import hashlib
+    text_records = list(load_dataset_stream(RECORDS_PATH, resolve_masks=True, resolve_text=True))
+    assert len(text_records) == 1419
+    t0 = text_records[0]
+    assert "text" in t0
+    assert "text" in t0["source_fidelity"]
+    assert len(t0["text"]) == t0["source_fidelity"]["char_length"]
+    assert hashlib.sha256(t0["text"].encode("utf-8")).hexdigest() == t0["source_fidelity"]["span_sha256"]
+
+    # Verify direct text resolution on record
+    resolved_text = resolve_record_text(stream_records[0])
+    assert resolved_text == t0["text"]
+
+    # Verify partition loading with resolved text
+    training_text_records = load_partition_view(RECORDS_PATH, "training", resolve_masks=True, resolve_text=True)
+    assert len(training_text_records) == 614
+    assert "text" in training_text_records[0]
+
 
 def test_delivery2_documentation_artifacts_exist() -> None:
     """Verify all deliverable documentation exists and is linked in the receipt (DELIVERY-2 & DELIVERY-6)."""
@@ -94,8 +114,8 @@ def test_delivery4_distinct_verdicts() -> None:
     """Verify dataset quality and learning utility verdicts are stated separately (DELIVERY-4)."""
     receipt = json.loads(DELIVERY_RECEIPT_PATH.read_text(encoding="utf-8"))
     assert receipt["dataset_quality_verdict"] == "DATASET_QUALITY_CONFIRMED"
-    assert receipt["learning_utility_verdict"] == "LEARNING_UTILITY_CONFIRMED"
-    assert receipt["overall_delivery_verdict"] == "EPIC_DELIVERABLES_CONFIRMED"
+    assert receipt["learning_utility_verdict"] == "LEARNING_UTILITY_PROTOCOL_HARNESS_CONFIRMED_EMPIRICAL_PENDING"
+    assert receipt["overall_delivery_verdict"] == "EPIC_DELIVERABLES_CONFIRMED_EMPIRICAL_PENDING"
 
 
 def test_delivery5_custody_and_zero_host_paths() -> None:
@@ -152,6 +172,13 @@ def test_verify_delivery_detects_tampered_artifact(tmp_path: Path) -> None:
     tampered_receipt3 = tmp_path / "tampered_receipt3.json"
     tampered_receipt3.write_text(json.dumps(receipt3), encoding="utf-8")
     assert verify_delivery(Path.cwd(), tampered_receipt3) is False
+
+    # Modified receipt with mismatched language usage index digest fails verification
+    receipt4 = json.loads(DELIVERY_RECEIPT_PATH.read_text(encoding="utf-8"))
+    receipt4["dataset_reproduction"]["language_usage_index_sha256"] = "0000000000000000000000000000000000000000000000000000000000000000"
+    tampered_receipt4 = tmp_path / "tampered_receipt4.json"
+    tampered_receipt4.write_text(json.dumps(receipt4), encoding="utf-8")
+    assert verify_delivery(Path.cwd(), tampered_receipt4) is False
 
 
 def test_verify_delivery_detects_tampered_document(tmp_path: Path) -> None:

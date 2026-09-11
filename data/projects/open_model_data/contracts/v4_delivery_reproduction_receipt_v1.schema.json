@@ -37,11 +37,17 @@
     },
     "learning_utility_verdict": {
       "type": "string",
-      "const": "LEARNING_UTILITY_CONFIRMED"
+      "enum": [
+        "LEARNING_UTILITY_CONFIRMED",
+        "LEARNING_UTILITY_PROTOCOL_HARNESS_CONFIRMED_EMPIRICAL_PENDING"
+      ]
     },
     "overall_delivery_verdict": {
       "type": "string",
-      "const": "EPIC_DELIVERABLES_CONFIRMED"
+      "enum": [
+        "EPIC_DELIVERABLES_CONFIRMED",
+        "EPIC_DELIVERABLES_CONFIRMED_EMPIRICAL_PENDING"
+      ]
     },
     "dataset_reproduction": {
       "type": "object",
@@ -50,6 +56,7 @@
         "manifest_sha256",
         "records_sha256",
         "receipt_sha256",
+        "language_usage_index_sha256",
         "records_count",
         "loader_verified"
       ],
@@ -63,6 +70,10 @@
           "pattern": "^[a-f0-9]{64}$"
         },
         "receipt_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "language_usage_index_sha256": {
           "type": "string",
           "pattern": "^[a-f0-9]{64}$"
         },
