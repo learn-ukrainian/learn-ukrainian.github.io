@@ -57,10 +57,24 @@ def sha256_file(path: Path) -> str:
     return h.hexdigest()
 
 
+def _unescape_unicode(s: str) -> str:
+    if "\\u" not in s and "\\U" not in s:
+        return s
+    try:
+        return re.sub(
+            r"\\u([0-9a-fA-F]{4})",
+            lambda m: chr(int(m.group(1), 16)),
+            s,
+        )
+    except Exception:
+        return s
+
+
 def assert_no_private_host_paths(data: Any, path_prefix: str = "") -> None:
     if isinstance(data, str):
+        unescaped = _unescape_unicode(data)
         for pat in PROHIBITED_HOST_PATTERNS:
-            if pat.search(data):
+            if pat.search(data) or pat.search(unescaped):
                 loc = path_prefix or "root"
                 raise ValueError(f"Prohibited host path detected at {loc} matching pattern {pat.pattern}")
     elif isinstance(data, dict):
@@ -76,9 +90,24 @@ def assert_file_no_private_host_paths(path: Path, rel_path: str = "") -> None:
     loc = rel_path or str(path)
     with path.open("r", encoding="utf-8") as f:
         for line_no, line in enumerate(f, start=1):
+            unescaped = _unescape_unicode(line)
             for pat in PROHIBITED_HOST_PATTERNS:
-                if pat.search(line):
+                if pat.search(line) or pat.search(unescaped):
                     raise ValueError(f"Prohibited host path detected at {loc}:{line_no} matching pattern {pat.pattern}")
+
+    # For structured JSON and JSONL artifacts, decode and recursively scan parsed values
+    # ensuring unicode-escaped strings (e.g. \u002fworkspace) cannot bypass raw line scans.
+    if path.suffix == ".json":
+        data = json.loads(path.read_text(encoding="utf-8"))
+        assert_no_private_host_paths(data, loc)
+    elif path.suffix == ".jsonl":
+        with path.open("r", encoding="utf-8") as f:
+            for line_no, line in enumerate(f, start=1):
+                line_str = line.strip()
+                if not line_str:
+                    continue
+                item = json.loads(line_str)
+                assert_no_private_host_paths(item, f"{loc}:{line_no}")
 
 
 _LANGUAGE_USAGE_CACHE: dict[Path, dict[str, list[dict[str, Any]]]] = {}
@@ -321,6 +350,11 @@ def load_dataset_stream(
             if not line_str:
                 continue
             record = json.loads(line_str)
+            if "text" in record or "text" in record.get("source_fidelity", {}):
+                raise ValueError(
+                    f"Persisted record {record.get('record_id')} contains raw text; "
+                    "persisted dataset records must retain custody and cannot contain raw corpus text."
+                )
             if resolve_masks:
                 masks = resolve_record_loss_masks(record, repo_root=root)
                 if "language_views" in record and "modern_view" in record["language_views"]:
@@ -686,26 +720,40 @@ def verify_delivery(
     except Exception:
         db_available = False
 
+    # Ensure persisted records strictly retain custody and contain zero raw corpus text
+    with dataset_records_path.open("r", encoding="utf-8") as f:
+        _ = f.readline()  # header
+        for line in f:
+            line_str = line.strip()
+            if not line_str:
+                continue
+            raw_rec = json.loads(line_str)
+            if "text" in raw_rec or "text" in raw_rec.get("source_fidelity", {}):
+                return False
+
     # Verify stream loader with resolved loss masks across ALL records
     records_count = 0
-    for record in load_dataset_stream(
-        dataset_records_path,
-        resolve_masks=True,
-        resolve_text=db_available,
-        repo_root=repo_root,
-    ):
-        records_count += 1
-        m_view = record.get("language_views", {}).get("modern_view", {})
-        if "loss_mask_spans" not in m_view or len(m_view["loss_mask_spans"]) != m_view.get("loss_mask_count"):
-            return False
-        char_len = record.get("source_fidelity", {}).get("char_length", 0)
-        for span in m_view.get("loss_mask_spans", []):
-            if not validate_mask_span(span, char_len):
+    try:
+        for record in load_dataset_stream(
+            dataset_records_path,
+            resolve_masks=True,
+            resolve_text=db_available,
+            repo_root=repo_root,
+        ):
+            records_count += 1
+            m_view = record.get("language_views", {}).get("modern_view", {})
+            if "loss_mask_spans" not in m_view or len(m_view["loss_mask_spans"]) != m_view.get("loss_mask_count"):
                 return False
-        if db_available:
-            text = record.get("text")
-            if not text or len(text) != char_len:
-                return False
+            char_len = record.get("source_fidelity", {}).get("char_length", 0)
+            for span in m_view.get("loss_mask_spans", []):
+                if not validate_mask_span(span, char_len):
+                    return False
+            if db_available:
+                text = record.get("text")
+                if not text or len(text) != char_len:
+                    return False
+    except (ValueError, KeyError):
+        return False
 
     return records_count == ds_repro.get("records_count")
 

@@ -121,9 +121,6 @@
         "verbatim_preserved": {
           "type": "boolean",
           "const": true
-        },
-        "text": {
-          "type": "string"
         }
       }
     },
@@ -250,9 +247,6 @@
           "const": true
         }
       }
-    },
-    "text": {
-      "type": "string"
     }
   }
 }

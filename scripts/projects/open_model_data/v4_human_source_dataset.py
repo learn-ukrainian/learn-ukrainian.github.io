@@ -75,10 +75,24 @@ def sha256_file(path: Path) -> str:
     return h.hexdigest()
 
 
+def _unescape_unicode(s: str) -> str:
+    if "\\u" not in s and "\\U" not in s:
+        return s
+    try:
+        return re.sub(
+            r"\\u([0-9a-fA-F]{4})",
+            lambda m: chr(int(m.group(1), 16)),
+            s,
+        )
+    except Exception:
+        return s
+
+
 def assert_no_private_host_paths(data: Any, path_prefix: str = "") -> None:
     if isinstance(data, str):
+        unescaped = _unescape_unicode(data)
         for pat in PROHIBITED_HOST_PATTERNS:
-            if pat.search(data):
+            if pat.search(data) or pat.search(unescaped):
                 loc = path_prefix or "root"
                 raise ValueError(f"Prohibited host path detected at {loc} matching pattern {pat.pattern}")
     elif isinstance(data, dict):
@@ -581,6 +595,17 @@ def verify_dataset(
     if r_acc.get("rejected_quarantine_spans") != m_acc.get("quarantined_spans"):
         return False
 
+    # Ensure persisted records strictly retain custody and contain zero raw corpus text
+    with records_path.open("r", encoding="utf-8") as f:
+        _ = f.readline()  # header
+        for line in f:
+            line_str = line.strip()
+            if not line_str:
+                continue
+            raw_rec = json.loads(line_str)
+            if "text" in raw_rec or "text" in raw_rec.get("source_fidelity", {}):
+                return False
+
     # Verify loader and authenticated loss mask resolver
     try:
         sample_stream = load_dataset_stream(records_path, resolve_masks=True, repo_root=repo_root)
@@ -839,6 +864,11 @@ def load_dataset_stream(
             if not line_str:
                 continue
             record = json.loads(line_str)
+            if "text" in record or "text" in record.get("source_fidelity", {}):
+                raise ValueError(
+                    f"Persisted record {record.get('record_id')} contains raw text; "
+                    "persisted dataset records must retain custody and cannot contain raw corpus text."
+                )
             if resolve_masks:
                 masks = resolve_record_loss_masks(record, repo_root=root)
                 if "language_views" in record and "modern_view" in record["language_views"]:

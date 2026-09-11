@@ -340,3 +340,55 @@ def test_validate_mask_span_schema_and_interval_bounds() -> None:
         )
         is False
     )
+
+
+def test_persisted_records_reject_preexisting_raw_text(tmp_path: Path) -> None:
+    """Ensure load_dataset_stream and verify_dataset reject persisted records containing raw text."""
+    bad_records_file = tmp_path / "bad_records.jsonl"
+    bad_record = {
+        "schema_version": "v4_human_source_dataset_record_v1",
+        "record_id": "record.human.test12345678901234",
+        "source_id": "source.literary.test",
+        "text": "Private corpus text directly serialized",
+    }
+    bad_records_file.write_text("# header\n" + json.dumps(bad_record) + "\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="contains raw text"):
+        next(load_dataset_stream(bad_records_file, resolve_masks=False, resolve_text=False))
+
+    bad_record2 = {
+        "schema_version": "v4_human_source_dataset_record_v1",
+        "record_id": "record.human.test12345678901235",
+        "source_fidelity": {"text": "Private text in fidelity"},
+    }
+    bad_records_file.write_text("# header\n" + json.dumps(bad_record2) + "\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="contains raw text"):
+        next(load_dataset_stream(bad_records_file, resolve_masks=False, resolve_text=False))
+
+
+def test_record_schema_forbids_raw_text() -> None:
+    """Ensure v4_human_source_dataset_record_v1 schema rejects raw text property."""
+    import jsonschema
+
+    schema_path = CONTRACTS_DIR / "v4_human_source_dataset_record_v1.schema.json"
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+
+    # Valid base record without text
+    with open(RECORDS_PATH, encoding="utf-8") as f:
+        _ = f.readline()
+        record = json.loads(f.readline())
+
+    jsonschema.validate(instance=record, schema=schema)
+
+    # Adding raw text at root must fail schema validation
+    rec_with_text = dict(record)
+    rec_with_text["text"] = "Sample corpus text"
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate(instance=rec_with_text, schema=schema)
+
+    # Adding raw text under source_fidelity must fail schema validation
+    rec_with_fidelity_text = dict(record)
+    rec_with_fidelity_text["source_fidelity"] = dict(record["source_fidelity"])
+    rec_with_fidelity_text["source_fidelity"]["text"] = "Sample corpus text"
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate(instance=rec_with_fidelity_text, schema=schema)

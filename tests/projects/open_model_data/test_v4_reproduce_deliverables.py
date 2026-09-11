@@ -348,3 +348,44 @@ def test_validate_mask_span_schema_and_interval_bounds() -> None:
         )
         is False
     )
+
+
+def test_assert_file_no_private_host_paths_detects_unicode_escaped_paths(tmp_path: Path) -> None:
+    """Ensure unicode-escaped host paths in json and jsonl files are caught and rejected."""
+    # JSON file with unicode-escaped slash: \u002fworkspace\u002frepo
+    json_file = tmp_path / "escaped.json"
+    json_file.write_text('{"target_dir": "\\u002fworkspace\\u002frepo"}\n', encoding="utf-8")
+    with pytest.raises(ValueError, match="Prohibited host path detected"):
+        assert_file_no_private_host_paths(json_file, "escaped.json")
+
+    # JSONL file with unicode-escaped /home path
+    jsonl_file = tmp_path / "escaped.jsonl"
+    jsonl_file.write_text('{"entry": 1, "path": "\\u002fhome\\u002fuser\\u002fdata"}\n', encoding="utf-8")
+    with pytest.raises(ValueError, match="Prohibited host path detected"):
+        assert_file_no_private_host_paths(jsonl_file, "escaped.jsonl")
+
+
+def test_persisted_records_reject_preexisting_raw_text(tmp_path: Path) -> None:
+    """Ensure load_dataset_stream and verify_delivery reject persisted records containing raw text."""
+    # Write a test records jsonl with raw text
+    bad_records_file = tmp_path / "bad_records.jsonl"
+    bad_record = {
+        "schema_version": "v4_human_source_dataset_record_v1",
+        "record_id": "record.human.test12345678901234",
+        "source_id": "source.literary.test",
+        "text": "Private corpus text directly serialized",
+    }
+    bad_records_file.write_text("# header\n" + json.dumps(bad_record) + "\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="contains raw text"):
+        next(load_dataset_stream(bad_records_file, resolve_masks=False, resolve_text=False))
+
+    # Also test text under source_fidelity
+    bad_record2 = {
+        "schema_version": "v4_human_source_dataset_record_v1",
+        "record_id": "record.human.test12345678901235",
+        "source_fidelity": {"text": "Private text in fidelity"},
+    }
+    bad_records_file.write_text("# header\n" + json.dumps(bad_record2) + "\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="contains raw text"):
+        next(load_dataset_stream(bad_records_file, resolve_masks=False, resolve_text=False))
