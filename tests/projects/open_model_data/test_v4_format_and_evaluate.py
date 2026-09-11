@@ -47,6 +47,7 @@ def test_trajectory_to_sharegpt() -> None:
 
 
 def test_dpo_pair_to_trl() -> None:
+    # Real schema: metadata does NOT contain calque_category
     sample_dpo = {
         "pair_id": "dpo.decolonize.avtovyshka",
         "prompt": "Чи правильне слово «автовишка»?",
@@ -54,7 +55,9 @@ def test_dpo_pair_to_trl() -> None:
         "rejected": "Так, «автовишка» цілком нормативне слово.",
         "metadata": {
             "target_term": "автовишка",
-            "calque_category": "lexical_calque",
+            "rejected_flaw": "affirmation_of_calque",
+            "primary_alternative": "автовежа",
+            "vesum_verified": True,
         },
     }
 
@@ -66,6 +69,17 @@ def test_dpo_pair_to_trl() -> None:
     assert trl["chosen"] == sample_dpo["chosen"]
     assert trl["rejected"] == sample_dpo["rejected"]
     assert "деколонізації" in trl["system"]
+
+    # Test active participle dynamic classification
+    participle_dpo = {
+        "pair_id": "dpo.decolonize.bazhayuchyj",
+        "prompt": "Чи можна казати бажаючий?",
+        "chosen": "Вживайте охочий.",
+        "rejected": "Бажаючий це норма.",
+        "metadata": {"target_term": "бажаючий"},
+    }
+    trl_part = dpo_pair_to_trl(participle_dpo)
+    assert trl_part["calque_category"] == "active_participle"
 
 
 def test_evaluate_single_response() -> None:
@@ -130,7 +144,12 @@ def test_format_and_evaluate_end_to_end(tmp_path: Path) -> None:
         "prompt": "Як замінити слово холостяк?",
         "chosen": "Вживайте парубок.",
         "rejected": "Холостяк це норма.",
-        "metadata": {"target_term": "холостяк", "calque_category": "lexical_calque"},
+        "metadata": {
+            "target_term": "холостяк",
+            "rejected_flaw": "affirmation_of_calque",
+            "primary_alternative": "парубок",
+            "vesum_verified": True,
+        },
     }
     dpo_held_out.write_text(json.dumps(dpo_rec, ensure_ascii=False) + "\n", encoding="utf-8")
 
@@ -168,6 +187,22 @@ def test_format_and_evaluate_end_to_end(tmp_path: Path) -> None:
     assert stats["sharegpt_held_out_count"] == 1
     assert stats["trl_dpo_train_count"] == 1
     assert stats["trl_dpo_held_out_count"] == 1
+    assert stats["quality_metrics"]["zero_private_paths"] is True
+    assert stats["quality_metrics"]["zero_restricted_sources"] is True
+
+    # Verify consumer_formats_manifest.json on disk
+    manifest_on_disk = json.loads((out_dir / "consumer_formats_manifest.json").read_text(encoding="utf-8"))
+    assert manifest_on_disk["quality_metrics"]["zero_private_paths"] is True
+    assert manifest_on_disk["quality_metrics"]["zero_restricted_sources"] is True
+
+    # Verify shipped DPO records have populated calque_category
+    dpo_shards = list(out_dir.glob("uldr_dpo_*.jsonl"))
+    assert len(dpo_shards) >= 1
+    for dpo_s in dpo_shards:
+        for line in dpo_s.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                rec = json.loads(line)
+                assert rec["calque_category"] == "lexical_calque"
 
     # Run evaluate_predictions with a passing prediction
     preds_file = tmp_path / "preds.jsonl"

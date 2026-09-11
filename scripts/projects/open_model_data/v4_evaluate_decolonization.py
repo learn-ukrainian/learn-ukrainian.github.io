@@ -43,9 +43,9 @@ REASONING_MARKERS = [
 ]
 
 AFFIRMATION_PATTERNS = [
-    re.compile(r"правильно\s+(?:вживати|казати|говорити)\s+[«\"]?{term}[»\"]?", re.IGNORECASE),
-    re.compile(r"слово\s+[«\"]?{term}[»\"]?\s+є\s+(?:цілком\s+)?нормативним", re.IGNORECASE),
-    re.compile(r"вживайте\s+[«\"]?{term}[»\"]?", re.IGNORECASE),
+    r"правильно\s+(?:вживати|казати|говорити)\s+[«\"]?{term}[»\"]?",
+    r"слово\s+[«\"]?{term}[»\"]?\s+є\s+(?:цілком\s+)?нормативним",
+    r"вживайте\s+[«\"]?{term}[»\"]?",
 ]
 
 
@@ -68,7 +68,7 @@ def evaluate_single_response(
     # If the model explicitly affirms or recommends the calque, it fails elimination.
     calque_affirmed = False
     for pat in AFFIRMATION_PATTERNS:
-        regex = re.compile(pat.pattern.format(term=re.escape(term_norm)), re.IGNORECASE)
+        regex = re.compile(pat.format(term=re.escape(term_norm)), re.IGNORECASE)
         if regex.search(resp_norm):
             calque_affirmed = True
             break

@@ -11,10 +11,19 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from scripts.projects.open_model_data.v4_decolonization_reasoning import (
+    classify_calque_type,
+    scan_generated_files,
+)
+
 DEFAULT_INPUT_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "decolonization" / "generated"
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "decolonization" / "consumer"
 
@@ -52,10 +61,14 @@ def trajectory_to_sharegpt(trajectory: dict[str, Any]) -> dict[str, Any]:
 def dpo_pair_to_trl(dpo_pair: dict[str, Any]) -> dict[str, Any]:
     """Convert an ULDR DPO pair to standard Hugging Face TRL DPO format."""
     meta = dpo_pair.get("metadata", {})
+    target = meta.get("target_term") or dpo_pair.get("target_term", "")
+    calque_cat = meta.get("calque_category")
+    if not calque_cat and target:
+        calque_cat, _, _ = classify_calque_type(target)
     return {
         "id": dpo_pair["pair_id"],
-        "target_term": meta.get("target_term") or dpo_pair.get("target_term", ""),
-        "calque_category": meta.get("calque_category") or dpo_pair.get("calque_category", ""),
+        "target_term": target,
+        "calque_category": calque_cat or "lexical_calque",
         "system": SYSTEM_PROMPT,
         "prompt": dpo_pair["prompt"],
         "chosen": dpo_pair["chosen"],
@@ -167,6 +180,17 @@ def format_consumer_datasets(
                     "records_count": len(chunk),
                 }
             )
+
+    # Active private path and restricted source scan across all generated consumer shards
+    consumer_shard_paths = [output_dir / sh["file"] for sh in stats["shards"]]
+    zero_paths, zero_restricted, violations = scan_generated_files(consumer_shard_paths)
+    if violations:
+        raise RuntimeError("Private content leak detected in consumer datasets:\n" + "\n".join(violations))
+
+    stats["quality_metrics"] = {
+        "zero_private_paths": zero_paths,
+        "zero_restricted_sources": zero_restricted,
+    }
 
     summary_path = output_dir / "consumer_formats_manifest.json"
     with summary_path.open("w", encoding="utf-8") as f:

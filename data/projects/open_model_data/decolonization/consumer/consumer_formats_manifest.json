@@ -32,24 +32,24 @@
       "format": "trl_dpo",
       "partition": "train",
       "file": "uldr_dpo_train_part001.jsonl",
-      "bytes": 860310,
-      "sha256": "1cebc6f2895870b45abeb411878c7cc0243a6cfc245cecc8071c3ab321f81769",
+      "bytes": 865916,
+      "sha256": "05a2c4b70f9d0649c2585ba502d3ab41189eb2c6efa32cc6b38168ee42ef9ad9",
       "records_count": 400
     },
     {
       "format": "trl_dpo",
       "partition": "train",
       "file": "uldr_dpo_train_part002.jsonl",
-      "bytes": 848601,
-      "sha256": "f73fbfebfd24dc9211a3faab8f027f23638ed5cbf7e6c117dcc19a7e855029c3",
+      "bytes": 854201,
+      "sha256": "6f85019e56521cb6f4934f83c243bd1403b80c6596e6fad82a3520facff2ecc3",
       "records_count": 400
     },
     {
       "format": "trl_dpo",
       "partition": "train",
       "file": "uldr_dpo_train_part003.jsonl",
-      "bytes": 352698,
-      "sha256": "dcdaf84e3d99d4ec7b466fa99cf63bd9af9e793ae37511440f6f8d3a3193f474",
+      "bytes": 355036,
+      "sha256": "c6dc058455cd3f872f7cb17611050644c8f286439a522e94559746d0efc12dcf",
       "records_count": 167
     },
     {
@@ -64,9 +64,13 @@
       "format": "trl_dpo",
       "partition": "held_out",
       "file": "uldr_dpo_held_out_part001.jsonl",
-      "bytes": 497909,
-      "sha256": "233369674e1f4f067b971900b1ad67da71b588df27cb7970a86a7b264c980ef3",
+      "bytes": 501183,
+      "sha256": "44438cb2ca7a2121654d4e5b4aaddba85d4b6f392fa511c7bd8618ce5f16ac93",
       "records_count": 233
     }
-  ]
+  ],
+  "quality_metrics": {
+    "zero_private_paths": true,
+    "zero_restricted_sources": true
+  }
 }
