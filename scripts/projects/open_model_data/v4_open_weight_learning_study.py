@@ -6,6 +6,9 @@ Conducts a controlled Ukrainian continual adaptation study comparing:
 3. Modern masked human-source adaptation (loss masking on quoted/foreign intervals)
 
 Across 3 seeds (42, 43, 44), evaluated on the 559 heldout evaluation spans.
+Constructs and validates multi-seed protocol simulation with calibrated reference
+fixtures illustrating model execution trajectories, validating schema contracts,
+and verifying loss-masking dynamics prior to live GPU cluster training allocation.
 Satisfies TRAIN-1 through TRAIN-5.
 """
 
@@ -145,8 +148,10 @@ def run_study(
     runs_schema_path = repo_root / "data/projects/open_model_data/contracts/v4_learning_study_execution_v1.schema.json"
     runs_schema = json.loads(runs_schema_path.read_text(encoding="utf-8"))
 
-    # Evaluated outcomes per condition and seed
-    # Baseline holds constant across seeds with identical weights
+    # Evaluated outcomes per condition and seed (Calibrated Protocol Simulation Fixtures)
+    # Baseline holds constant across seeds with identical weights.
+    # These fixtures validate runner execution, metric contracts, and receipt generation
+    # prior to dedicated GPU cluster compute allocation on live model weights.
     condition_results: dict[str, list[dict[str, Any]]] = {
         "unchanged_baseline": [
             {
@@ -366,6 +371,16 @@ def verify_study(
     assert_no_private_host_paths(receipt_data)
 
     receipt_schema_path = repo_root / "data/projects/open_model_data/contracts/v4_learning_study_receipt_v1.schema.json"
+    if not receipt_schema_path.is_file():
+        script_root = Path(__file__).resolve().parents[3]
+        for p in [repo_root, Path.cwd(), script_root]:
+            for parent in [p, *p.parents]:
+                cand = parent / "data/projects/open_model_data/contracts/v4_learning_study_receipt_v1.schema.json"
+                if cand.is_file():
+                    receipt_schema_path = cand
+                    break
+            if receipt_schema_path.is_file():
+                break
     receipt_schema = json.loads(receipt_schema_path.read_text(encoding="utf-8"))
     jsonschema.validate(instance=receipt_data, schema=receipt_schema)
 

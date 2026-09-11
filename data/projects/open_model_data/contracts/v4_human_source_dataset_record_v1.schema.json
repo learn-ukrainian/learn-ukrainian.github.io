@@ -170,6 +170,32 @@
             "loss_mask_count": {
               "type": "integer",
               "minimum": 0
+            },
+            "loss_mask_spans": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "start_char",
+                  "end_char",
+                  "reason"
+                ],
+                "properties": {
+                  "start_char": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "end_char": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
             }
           }
         }

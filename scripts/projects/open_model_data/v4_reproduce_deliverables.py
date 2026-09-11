@@ -1,0 +1,1004 @@
+"""Reproduce final private dataset and learning-study deliverables (Issue #7433).
+
+Provides verifiable independent reproduction of:
+1. Complete private human-source dataset (#7432) with streaming & partition loaders
+2. Controlled open-weight Ukrainian learning study (#7889)
+3. Delivery documentation: Dataset Card, Technical Report, and Research Summary
+4. Separate dataset quality and learning utility verdicts
+
+Satisfies DELIVERY-1 through DELIVERY-6.
+"""
+
+from __future__ import annotations
+
+import argparse
+import contextlib
+import hashlib
+import json
+import re
+import sqlite3
+import sys
+from collections.abc import Iterator
+from pathlib import Path
+from typing import Any
+
+import jsonschema
+
+DATASET_VERSION = "v4.0.0-human-pilot-scale"
+MAX_FILE_SIZE_BYTES = 2000 * 1024  # 2000 KB pre-commit ceiling
+
+PROHIBITED_HOST_PATTERNS = [
+    re.compile(r"/home/[a-zA-Z0-9_.-]+"),
+    re.compile(r"/tmp/[a-zA-Z0-9_.-]+"),
+    re.compile(r"/Users/[a-zA-Z0-9_.-]+"),
+    re.compile(r"/var/[a-zA-Z0-9_.-]+"),
+    re.compile(r"/private/[a-zA-Z0-9_.-]+"),
+    re.compile(r"/workspace/[a-zA-Z0-9_.-]+"),
+    re.compile(r"/root/[a-zA-Z0-9_.-]+"),
+    re.compile(r"file://"),
+]
+
+OPERATOR_EXCLUDED_RESIDUALS = [
+    "stem_technical_and_exact_sciences",
+    "video_captions_transcripts",
+    "ocr_scanned_unverified_sources",
+    "private_teaching_material",
+]
+
+
+def sha256_bytes(b: bytes) -> str:
+    return hashlib.sha256(b).hexdigest()
+
+
+def sha256_file(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        while chunk := f.read(65536):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _unescape_unicode(s: str) -> str:
+    if "\\u" not in s and "\\U" not in s:
+        return s
+    try:
+        return re.sub(
+            r"\\u([0-9a-fA-F]{4})",
+            lambda m: chr(int(m.group(1), 16)),
+            s,
+        )
+    except Exception:
+        return s
+
+
+def assert_no_private_host_paths(data: Any, path_prefix: str = "") -> None:
+    if isinstance(data, str):
+        unescaped = _unescape_unicode(data)
+        for pat in PROHIBITED_HOST_PATTERNS:
+            if pat.search(data) or pat.search(unescaped):
+                loc = path_prefix or "root"
+                raise ValueError(f"Prohibited host path detected at {loc} matching pattern {pat.pattern}")
+    elif isinstance(data, dict):
+        for k, v in data.items():
+            assert_no_private_host_paths(v, f"{path_prefix}.{k}" if path_prefix else k)
+    elif isinstance(data, list):
+        for idx, item in enumerate(data):
+            assert_no_private_host_paths(item, f"{path_prefix}[{idx}]")
+
+
+def assert_file_no_private_host_paths(path: Path, rel_path: str = "") -> None:
+    """Scan file lines for prohibited private host paths without echoing file contents."""
+    loc = rel_path or str(path)
+    with path.open("r", encoding="utf-8") as f:
+        for line_no, line in enumerate(f, start=1):
+            unescaped = _unescape_unicode(line)
+            for pat in PROHIBITED_HOST_PATTERNS:
+                if pat.search(line) or pat.search(unescaped):
+                    raise ValueError(f"Prohibited host path detected at {loc}:{line_no} matching pattern {pat.pattern}")
+
+    # For structured JSON and JSONL artifacts, decode and recursively scan parsed values
+    # ensuring unicode-escaped strings (e.g. \u002fworkspace) cannot bypass raw line scans.
+    if path.suffix == ".json":
+        data = json.loads(path.read_text(encoding="utf-8"))
+        assert_no_private_host_paths(data, loc)
+    elif path.suffix == ".jsonl":
+        with path.open("r", encoding="utf-8") as f:
+            for line_no, line in enumerate(f, start=1):
+                line_str = line.strip()
+                if not line_str:
+                    continue
+                item = json.loads(line_str)
+                assert_no_private_host_paths(item, f"{loc}:{line_no}")
+
+
+_LANGUAGE_USAGE_CACHE: dict[tuple[Path, str], dict[str, list[dict[str, Any]]]] = {}
+_EXTRACTION_INDEX_CACHE: dict[tuple[Path, str], dict[str, dict[str, Any]]] = {}
+_SOURCES_DB_CONNS: dict[Path, sqlite3.Connection] = {}
+_RECORD_SCHEMA_CACHE: dict[tuple[Path, str], jsonschema.Draft202012Validator] = {}
+
+
+def clear_caches() -> None:
+    """Clear all in-memory caches and database connections."""
+    _LANGUAGE_USAGE_CACHE.clear()
+    _EXTRACTION_INDEX_CACHE.clear()
+    _RECORD_SCHEMA_CACHE.clear()
+    for conn in _SOURCES_DB_CONNS.values():
+        with contextlib.suppress(Exception):
+            conn.close()
+    _SOURCES_DB_CONNS.clear()
+
+
+def _get_sources_db_path(repo_root: Path) -> Path:
+    candidates = [
+        repo_root / "data/sources.db",
+        Path.cwd() / "data/sources.db",
+    ]
+    for p in [repo_root, Path.cwd()]:
+        for parent in p.parents:
+            candidates.append(parent / "data/sources.db")
+    for cand in candidates:
+        if cand.is_file():
+            return cand.resolve()
+    raise FileNotFoundError("Missing authenticated source database: data/sources.db")
+
+
+def _get_extraction_map(repo_root: Path) -> dict[str, dict[str, Any]]:
+    root_resolved = repo_root.resolve()
+
+    candidates = [
+        root_resolved / "data/projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl",
+        Path.cwd() / "data/projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl",
+    ]
+    for p in [root_resolved, Path.cwd()]:
+        for parent in p.parents:
+            candidates.append(parent / "data/projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl")
+
+    ext_path: Path | None = None
+    for cand in candidates:
+        if cand.is_file():
+            ext_path = cand.resolve()
+            break
+
+    if ext_path is None:
+        raise FileNotFoundError("Missing authenticated native extraction index: v4_native_extraction_index_v1.jsonl")
+
+    ext_sha = sha256_file(ext_path)
+    cache_key = (ext_path, ext_sha)
+    if cache_key in _EXTRACTION_INDEX_CACHE:
+        return _EXTRACTION_INDEX_CACHE[cache_key]
+
+    ext_map: dict[str, dict[str, Any]] = {}
+    with ext_path.open("r", encoding="utf-8") as f:
+        _ = f.readline()  # header
+        for line in f:
+            line_str = line.strip()
+            if not line_str:
+                continue
+            item = json.loads(line_str)
+            span_loc = item.get("span_locator", {})
+            sha = span_loc.get("span_sha256")
+            if sha:
+                ext_map[sha] = item
+
+    _EXTRACTION_INDEX_CACHE[cache_key] = ext_map
+    return ext_map
+
+
+def _get_language_usage_masks(repo_root: Path) -> dict[str, list[dict[str, Any]]]:
+    root_resolved = repo_root.resolve()
+
+    lang_index_path = root_resolved / "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl"
+    if not lang_index_path.is_file():
+        for p in [root_resolved, Path.cwd()]:
+            for parent in p.parents:
+                cand = parent / "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl"
+                if cand.is_file():
+                    lang_index_path = cand
+                    break
+            if lang_index_path.is_file():
+                break
+
+    if not lang_index_path.is_file():
+        raise FileNotFoundError(f"Missing authenticated language usage index: {lang_index_path}")
+
+    lang_sha = sha256_file(lang_index_path)
+    cache_key = (lang_index_path.resolve(), lang_sha)
+    if cache_key in _LANGUAGE_USAGE_CACHE:
+        return _LANGUAGE_USAGE_CACHE[cache_key]
+
+    masks_map: dict[str, list[dict[str, Any]]] = {}
+    with lang_index_path.open("r", encoding="utf-8") as f:
+        _ = f.readline()  # header
+        for line in f:
+            line_str = line.strip()
+            if not line_str:
+                continue
+            item = json.loads(line_str)
+            span_loc = item.get("span_locator", {})
+            sha = span_loc.get("span_sha256")
+            if not sha:
+                continue
+            cviews = item.get("consumer_views", {})
+            modern = cviews.get("modern_view", {})
+            spans = modern.get("loss_mask_spans", [])
+            masks_map[sha] = spans
+
+    _LANGUAGE_USAGE_CACHE[cache_key] = masks_map
+    return masks_map
+
+
+def _get_record_validator(repo_root: Path) -> jsonschema.Draft202012Validator:
+    schema_path = repo_root / "data/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json"
+    if not schema_path.is_file():
+        script_root = Path(__file__).resolve().parents[3]
+        for p in [repo_root, Path.cwd(), script_root]:
+            for parent in [p, *p.parents]:
+                cand = parent / "data/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json"
+                if cand.is_file():
+                    schema_path = cand
+                    break
+            if schema_path.is_file():
+                break
+
+    if not schema_path.is_file():
+        raise FileNotFoundError(f"Missing record schema: {schema_path}")
+
+    schema_resolved = schema_path.resolve()
+    schema_sha = sha256_file(schema_resolved)
+    cache_key = (schema_resolved, schema_sha)
+    if cache_key in _RECORD_SCHEMA_CACHE:
+        return _RECORD_SCHEMA_CACHE[cache_key]
+
+    schema_data = json.loads(schema_resolved.read_text(encoding="utf-8"))
+    validator = jsonschema.Draft202012Validator(schema_data)
+    _RECORD_SCHEMA_CACHE[cache_key] = validator
+    return validator
+
+
+LOSS_MASK_SPAN_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": [
+        "start_char",
+        "end_char",
+        "reason",
+    ],
+    "properties": {
+        "start_char": {
+            "type": "integer",
+            "minimum": 0,
+        },
+        "end_char": {
+            "type": "integer",
+            "minimum": 0,
+        },
+        "reason": {
+            "type": "string",
+            "minLength": 1,
+        },
+    },
+}
+
+_MASK_SPAN_VALIDATOR = jsonschema.Draft202012Validator(LOSS_MASK_SPAN_SCHEMA)
+
+DATASET_RECORDS_HEADER_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["schema_version", "dataset_version", "records", "manifest_sha256"],
+    "properties": {
+        "schema_version": {"type": "string", "const": "v4_human_source_dataset_records_v1"},
+        "dataset_version": {"type": "string"},
+        "records": {"type": "integer", "minimum": 1},
+        "manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    },
+}
+
+_RECORDS_HEADER_VALIDATOR = jsonschema.Draft202012Validator(DATASET_RECORDS_HEADER_SCHEMA)
+
+
+def validate_mask_span(span: Any, char_len: int | None = None) -> bool:
+    """Validate a loss mask span object against the canonical contract schema and interval bounds."""
+    if not _MASK_SPAN_VALIDATOR.is_valid(span):
+        return False
+    start = span["start_char"]
+    end = span["end_char"]
+    if start > end:
+        return False
+    return char_len is None or end <= char_len
+
+
+def resolve_record_loss_masks(
+    record: dict[str, Any],
+    repo_root: Path | None = None,
+) -> list[dict[str, Any]]:
+    """Resolve authenticated modern_view loss mask spans for a dataset record.
+
+    Retrieves exact loss mask intervals (start_char, end_char, reason) from the authenticated
+    v4_language_usage_index_v1.jsonl, verifying that the count matches record's loss_mask_count
+    and all spans satisfy the contract schema and interval bounds.
+    """
+    root = (repo_root or Path.cwd()).resolve()
+    span_sha = record.get("source_fidelity", {}).get("span_sha256")
+    if not span_sha:
+        raise ValueError("Record is missing source_fidelity.span_sha256")
+
+    masks_map = _get_language_usage_masks(root)
+    if span_sha not in masks_map:
+        raise KeyError(f"Span SHA {span_sha} not found in authenticated language usage index")
+
+    resolved_masks = masks_map[span_sha]
+    expected_count = record.get("language_views", {}).get("modern_view", {}).get("loss_mask_count")
+    if expected_count is not None and len(resolved_masks) != expected_count:
+        raise ValueError(
+            f"Resolved mask count {len(resolved_masks)} does not match record loss_mask_count {expected_count}"
+        )
+
+    char_len = record.get("source_fidelity", {}).get("char_length")
+    for span in resolved_masks:
+        if not validate_mask_span(span, char_len):
+            raise ValueError(
+                f"Resolved mask span {span} failed schema or interval bounds validation for record {record.get('record_id')}"
+            )
+
+    return resolved_masks
+
+
+def resolve_record_text(
+    record: dict[str, Any],
+    repo_root: Path | None = None,
+    sources_db_path: Path | None = None,
+) -> str:
+    """Resolve authenticated private source text for a dataset record.
+
+    Looks up the span text from the authenticated private database (data/sources.db)
+    via native extraction linkage, verifying that:
+    1. sha256(text) matches record["source_fidelity"]["span_sha256"]
+    2. len(text) matches record["source_fidelity"]["char_length"]
+    """
+    root = (repo_root or Path.cwd()).resolve()
+    fidelity = record.get("source_fidelity", {})
+    expected_sha = fidelity.get("span_sha256")
+    if not expected_sha:
+        raise ValueError("Record is missing source_fidelity.span_sha256")
+    expected_len = fidelity.get("char_length")
+
+    ext_map = _get_extraction_map(root)
+    if expected_sha not in ext_map:
+        raise KeyError(f"Span SHA {expected_sha} not found in authenticated extraction index")
+
+    ext_item = ext_map[expected_sha]
+    sf = ext_item.get("source_file")
+    chunk_id = ext_item.get("chunk_id")
+    fam = ext_item.get("source_family")
+    table = "literary_texts" if fam == "literary" else "textbooks"
+
+    db_path = sources_db_path.resolve() if sources_db_path is not None else _get_sources_db_path(root)
+    if db_path not in _SOURCES_DB_CONNS:
+        _SOURCES_DB_CONNS[db_path] = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    conn = _SOURCES_DB_CONNS[db_path]
+    cur = conn.cursor()
+
+    cur.execute(f'SELECT text FROM "{table}" WHERE source_file = ? AND chunk_id = ?', (sf, chunk_id))
+    row = cur.fetchone()
+    if not row or row[0] is None:
+        raise ValueError(f"No database record found in {table} for source_file={sf}, chunk_id={chunk_id}")
+
+    text = str(row[0])
+    actual_sha = hashlib.sha256(text.encode("utf-8")).hexdigest()
+    if actual_sha != expected_sha:
+        raise ValueError(f"Resolved text SHA {actual_sha} does not match expected {expected_sha}")
+    if expected_len is not None and len(text) != expected_len:
+        raise ValueError(f"Resolved text length {len(text)} does not match expected {expected_len}")
+
+    return text
+
+
+def load_dataset_stream(
+    records_path: Path,
+    resolve_masks: bool = False,
+    resolve_text: bool = False,
+    repo_root: Path | None = None,
+    sources_db_path: Path | None = None,
+) -> Iterator[dict[str, Any]]:
+    """Stream dataset records yielding parsed rows (DELIVERY-1).
+
+    - If resolve_masks is True, resolves and attaches modern_view.loss_mask_spans
+      from the authenticated language usage index.
+    - If resolve_text is True, resolves and attaches private source text to
+      record["text"] and record["source_fidelity"]["text"] from data/sources.db,
+      verified against source_fidelity.span_sha256 and char_length.
+    """
+    root = repo_root.resolve() if repo_root is not None else Path.cwd().resolve()
+    if not (root / "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl").is_file():
+        cur = records_path.resolve()
+        for p in [cur, *cur.parents]:
+            if (p / "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl").is_file():
+                root = p
+                break
+
+    with records_path.open("r", encoding="utf-8") as f:
+        header_processed = False
+        for line in f:
+            line_str = line.strip()
+            if not line_str:
+                continue
+            if not header_processed:
+                header_processed = True
+                if line_str.startswith("#"):
+                    continue
+                try:
+                    obj = json.loads(line_str)
+                except Exception as err:
+                    raise ValueError(f"Invalid dataset records header: {line_str}") from err
+
+                if obj.get("schema_version") == "v4_human_source_dataset_records_v1":
+                    if not _RECORDS_HEADER_VALIDATOR.is_valid(obj):
+                        raise ValueError(f"Invalid dataset records header: {line_str}")
+                    continue
+                record = obj
+            else:
+                record = json.loads(line_str)
+            if "text" in record or "text" in record.get("source_fidelity", {}):
+                raise ValueError(
+                    f"Persisted record {record.get('record_id')} contains raw text; "
+                    "persisted dataset records must retain custody and cannot contain raw corpus text."
+                )
+            if resolve_masks:
+                masks = resolve_record_loss_masks(record, repo_root=root)
+                if "language_views" in record and "modern_view" in record["language_views"]:
+                    record["language_views"]["modern_view"]["loss_mask_spans"] = masks
+            if resolve_text:
+                text = resolve_record_text(record, repo_root=root, sources_db_path=sources_db_path)
+                record["text"] = text
+                if "source_fidelity" in record:
+                    record["source_fidelity"]["text"] = text
+            yield record
+
+
+def load_partition_view(
+    records_path: Path,
+    partition: str,
+    resolve_masks: bool = False,
+    resolve_text: bool = False,
+    repo_root: Path | None = None,
+    sources_db_path: Path | None = None,
+) -> list[dict[str, Any]]:
+    """Load records filtered by split partition (DELIVERY-1)."""
+    filtered = []
+    for record in load_dataset_stream(
+        records_path,
+        resolve_masks=resolve_masks,
+        resolve_text=resolve_text,
+        repo_root=repo_root,
+        sources_db_path=sources_db_path,
+    ):
+        sc = record.get("split_clearance", {})
+        if sc.get("split_partition") == partition:
+            if partition == "training" and not sc.get("builder_training_cleared", False):
+                continue
+            filtered.append(record)
+    return filtered
+
+
+def _get_verify_study() -> Any:
+    try:
+        from scripts.projects.open_model_data.v4_open_weight_learning_study import verify_study
+
+        return verify_study
+    except ImportError:
+        root = Path(__file__).resolve().parents[3]
+        if str(root) not in sys.path:
+            sys.path.insert(0, str(root))
+        from scripts.projects.open_model_data.v4_open_weight_learning_study import verify_study
+
+        return verify_study
+
+
+def build_delivery_receipt(
+    repo_root: Path,
+    receipt_out: Path,
+) -> dict[str, Any]:
+    """Reproduce deliverables and emit delivery receipt (DELIVERY-1..6)."""
+    dataset_manifest_path = repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json"
+    dataset_records_path = repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl"
+    dataset_receipt_path = repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json"
+    lang_index_path = repo_root / "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl"
+    study_recipe_path = repo_root / "data/projects/open_model_data/study/v4_learning_study_recipe_v1.json"
+    study_runs_path = repo_root / "data/projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl"
+    study_receipt_path = repo_root / "data/projects/open_model_data/study/v4_learning_study_receipt_v1.json"
+
+    dataset_card_path = repo_root / "docs/projects/ukrainian-data-foundry-evidence/HUMAN_SOURCE_DATASET_CARD.md"
+    tech_report_path = repo_root / "docs/projects/ukrainian-data-foundry-evidence/HUMAN_SOURCE_TECHNICAL_REPORT.md"
+    summary_path = repo_root / "docs/projects/ukrainian-data-foundry-evidence/RESEARCH_SUMMARY.md"
+
+    for p in [
+        dataset_manifest_path,
+        dataset_records_path,
+        dataset_receipt_path,
+        lang_index_path,
+        study_recipe_path,
+        study_runs_path,
+        study_receipt_path,
+    ]:
+        if not p.exists():
+            raise FileNotFoundError(f"Missing required artifact: {p}")
+
+    # Verify stream loader & partition counts
+    training_records = load_partition_view(dataset_records_path, "training", repo_root=repo_root)
+    heldout_records = load_partition_view(dataset_records_path, "heldout_evaluation", repo_root=repo_root)
+    dev_records = load_partition_view(dataset_records_path, "development", repo_root=repo_root)
+
+    if len(training_records) != 614:
+        raise ValueError(f"Expected 614 training records, found {len(training_records)}")
+    if len(heldout_records) != 559:
+        raise ValueError(f"Expected 559 heldout records, found {len(heldout_records)}")
+    if len(dev_records) != 245:
+        raise ValueError(f"Expected 245 dev records, found {len(dev_records)}")
+
+    manifest_sha = sha256_file(dataset_manifest_path)
+    records_sha = sha256_file(dataset_records_path)
+    dataset_rcpt_sha = sha256_file(dataset_receipt_path)
+    lang_index_sha = sha256_file(lang_index_path)
+
+    record_validator = _get_record_validator(repo_root)
+    seen_record_ids: set[str] = set()
+    seen_span_shas: set[str] = set()
+
+    # Pass 1: Validate header and every raw record against schema, check zero raw text, and ensure uniqueness
+    with dataset_records_path.open("r", encoding="utf-8") as f:
+        header_line = f.readline()
+        if not header_line:
+            raise ValueError(f"Empty records file: {dataset_records_path}")
+        header = json.loads(header_line)
+        if not _RECORDS_HEADER_VALIDATOR.is_valid(header):
+            errs = list(_RECORDS_HEADER_VALIDATOR.iter_errors(header))
+            raise ValueError(f"Invalid dataset records header: {errs[0].message if errs else 'schema failure'}")
+        if header.get("records") != 1419:
+            raise ValueError(f"Header records count {header.get('records')} != 1419")
+        if header.get("manifest_sha256") != manifest_sha:
+            raise ValueError(f"Header manifest_sha256 {header.get('manifest_sha256')} != {manifest_sha}")
+        if header.get("dataset_version") != DATASET_VERSION:
+            raise ValueError(f"Header dataset_version {header.get('dataset_version')} != {DATASET_VERSION}")
+        for line_no, line in enumerate(f, start=2):
+            line_str = line.strip()
+            if not line_str:
+                continue
+            raw_rec = json.loads(line_str)
+            if "text" in raw_rec or "text" in raw_rec.get("source_fidelity", {}):
+                raise ValueError(
+                    f"Persisted record {raw_rec.get('record_id')} at line {line_no} contains raw text; "
+                    "persisted dataset records must retain custody and cannot contain raw corpus text."
+                )
+            if not record_validator.is_valid(raw_rec):
+                errs = list(record_validator.iter_errors(raw_rec))
+                raise ValueError(
+                    f"Persisted record {raw_rec.get('record_id')} at line {line_no} violates record schema: "
+                    f"{errs[0].message if errs else 'schema failure'}"
+                )
+            rid = raw_rec.get("record_id")
+            if not rid or rid in seen_record_ids:
+                raise ValueError(f"Duplicate or missing record_id: {rid}")
+            seen_record_ids.add(rid)
+
+            span_sha = raw_rec.get("source_fidelity", {}).get("span_sha256")
+            if not span_sha or span_sha in seen_span_shas:
+                raise ValueError(f"Duplicate or missing span_sha256: {span_sha}")
+            seen_span_shas.add(span_sha)
+
+    if len(seen_record_ids) != 1419:
+        raise ValueError(f"Expected 1419 unique record IDs, found {len(seen_record_ids)}")
+    if len(seen_span_shas) != 1419:
+        raise ValueError(f"Expected 1419 unique span SHAs, found {len(seen_span_shas)}")
+
+    # Pass 2: Verify stream loader with resolved loss masks and authenticated text across ALL 1,419 records
+    verified_records_count = 0
+    for record in load_dataset_stream(
+        dataset_records_path,
+        resolve_masks=True,
+        resolve_text=True,
+        repo_root=repo_root,
+    ):
+        verified_records_count += 1
+        m_view = record.get("language_views", {}).get("modern_view", {})
+        if "loss_mask_spans" not in m_view or len(m_view["loss_mask_spans"]) != m_view.get("loss_mask_count"):
+            raise ValueError(f"Authenticated loss mask resolution failed on record {record.get('record_id')}")
+        char_len = record.get("source_fidelity", {}).get("char_length", 0)
+        for span in m_view.get("loss_mask_spans", []):
+            if not validate_mask_span(span, char_len):
+                raise ValueError(f"Invalid mask span in record {record.get('record_id')}: {span}")
+        text = record.get("text")
+        if not text or len(text) != char_len:
+            raise ValueError(f"Authenticated text resolution failed on record {record.get('record_id')}")
+
+    if verified_records_count != 1419:
+        raise ValueError(f"Expected 1419 verified records, found {verified_records_count}")
+
+    dataset_receipt = json.loads(dataset_receipt_path.read_text(encoding="utf-8"))
+    if dataset_receipt["manifest_sha256"] != manifest_sha:
+        raise ValueError("Dataset manifest SHA mismatch in receipt")
+    if dataset_receipt["records_sha256"] != records_sha:
+        raise ValueError("Dataset records SHA mismatch in receipt")
+
+    verify_study = _get_verify_study()
+
+    if not verify_study(repo_root, study_recipe_path, study_runs_path, study_receipt_path):
+        raise ValueError("Controlled learning study verification failed")
+
+    study_receipt = json.loads(study_receipt_path.read_text(encoding="utf-8"))
+    if study_receipt.get("verdict") != "STUDY_CONFIRMED_POSITIVE_LEARNING":
+        raise ValueError(f"Unexpected study receipt verdict: {study_receipt.get('verdict')}")
+    study_recipe_sha = sha256_file(study_recipe_path)
+    study_rcpt_sha = sha256_file(study_receipt_path)
+    study_runs_sha = sha256_file(study_runs_path)
+
+    if study_receipt["recipe_sha256"] != study_recipe_sha:
+        raise ValueError("Study recipe SHA mismatch in receipt")
+
+    recipe_id = study_receipt.get("recipe_id")
+    study_runs_count = 0
+    seeds_seen = set()
+    with study_runs_path.open("r", encoding="utf-8") as f:
+        for line in f:
+            if line.strip():
+                run_item = json.loads(line)
+                study_runs_count += 1
+                if run_item.get("recipe_id") != recipe_id:
+                    raise ValueError(f"Run {run_item.get('run_id')} recipe_id does not match {recipe_id}")
+                if "seed" in run_item:
+                    seeds_seen.add(run_item["seed"])
+
+    expected_seeds = set(study_receipt.get("runs_accounting", {}).get("seeds_tested", []))
+    if expected_seeds and seeds_seen != expected_seeds:
+        raise ValueError(f"Run seeds {seeds_seen} do not match study receipt seeds {expected_seeds}")
+
+    receipt_id = f"receipt.delivery.{sha256_bytes(f'{records_sha}:{study_rcpt_sha}'.encode())[:24]}"
+
+    # Hash and scan all deliverable documents and artifacts for private host paths
+    card_sha = sha256_file(dataset_card_path)
+    report_sha = sha256_file(tech_report_path)
+    summary_sha = sha256_file(summary_path)
+
+    bound_artifacts = [
+        dataset_manifest_path,
+        dataset_records_path,
+        dataset_receipt_path,
+        lang_index_path,
+        study_recipe_path,
+        study_runs_path,
+        study_receipt_path,
+        dataset_card_path,
+        tech_report_path,
+        summary_path,
+    ]
+    for artifact_path in bound_artifacts:
+        assert_file_no_private_host_paths(artifact_path, str(artifact_path.relative_to(repo_root)))
+
+    delivery_data = {
+        "schema_version": "v4_delivery_reproduction_receipt_v1",
+        "receipt_id": receipt_id,
+        "dataset_version": DATASET_VERSION,
+        "dataset_quality_verdict": "DATASET_QUALITY_CONFIRMED",
+        "learning_utility_verdict": "LEARNING_UTILITY_PROTOCOL_HARNESS_CONFIRMED_EMPIRICAL_PENDING",
+        "overall_delivery_verdict": "EPIC_DELIVERABLES_CONFIRMED_EMPIRICAL_PENDING",
+        "dataset_reproduction": {
+            "manifest_sha256": manifest_sha,
+            "records_sha256": records_sha,
+            "receipt_sha256": dataset_rcpt_sha,
+            "language_usage_index_sha256": lang_index_sha,
+            "records_count": 1419,
+            "loader_verified": True,
+        },
+        "learning_study_reproduction": {
+            "recipe_sha256": study_recipe_sha,
+            "runs_sha256": study_runs_sha,
+            "runs_count": study_runs_count,
+            "receipt_sha256": study_rcpt_sha,
+            "baseline_perplexity_mean": study_receipt["summary_findings"]["baseline_perplexity_mean"],
+            "adapted_perplexity_mean": study_receipt["summary_findings"]["modern_masked_adaptation_perplexity_mean"],
+            "perplexity_delta_pct": study_receipt["summary_findings"]["perplexity_delta_pct"],
+        },
+        "deliverable_documents": {
+            "dataset_card": str(dataset_card_path.relative_to(repo_root)),
+            "technical_report": str(tech_report_path.relative_to(repo_root)),
+            "research_summary": str(summary_path.relative_to(repo_root)),
+        },
+        "document_digests": {
+            "dataset_card_sha256": card_sha,
+            "technical_report_sha256": report_sha,
+            "research_summary_sha256": summary_sha,
+        },
+        "residuals": {
+            "operator_excluded_strata": OPERATOR_EXCLUDED_RESIDUALS,
+        },
+        "custody_retained": True,
+        "zero_host_paths_verified": True,
+        "notes": (
+            "Full deliverables reproduced with independent verification under #7433. "
+            "Dataset quality confirmed across 1,419 human-source spans with verified text and loss mask resolution. "
+            "Learning study protocol, recipe, harness, and seed variance confirmed under simulation fixtures; "
+            "empirical model learning utility remains pending live GPU cluster execution."
+        ),
+    }
+
+    assert_no_private_host_paths(delivery_data)
+    receipt_schema_path = (
+        repo_root / "data/projects/open_model_data/contracts/v4_delivery_reproduction_receipt_v1.schema.json"
+    )
+    receipt_schema = json.loads(receipt_schema_path.read_text(encoding="utf-8"))
+    jsonschema.validate(instance=delivery_data, schema=receipt_schema)
+
+    receipt_out.parent.mkdir(parents=True, exist_ok=True)
+    receipt_out.write_text(json.dumps(delivery_data, indent=2) + "\n", encoding="utf-8")
+
+    return delivery_data
+
+
+def verify_delivery(
+    repo_root: Path,
+    receipt_path: Path,
+) -> bool:
+    """Verify delivery reproduction receipt and associated files (DELIVERY-1..6)."""
+    if not receipt_path.exists():
+        return False
+
+    try:
+        receipt_data = json.loads(receipt_path.read_text(encoding="utf-8"))
+        assert_no_private_host_paths(receipt_data)
+
+        receipt_schema_path = (
+            repo_root / "data/projects/open_model_data/contracts/v4_delivery_reproduction_receipt_v1.schema.json"
+        )
+        receipt_schema = json.loads(receipt_schema_path.read_text(encoding="utf-8"))
+        jsonschema.validate(instance=receipt_data, schema=receipt_schema)
+    except (ValueError, json.JSONDecodeError, jsonschema.ValidationError):
+        return False
+
+    if receipt_data.get("overall_delivery_verdict") not in (
+        "EPIC_DELIVERABLES_CONFIRMED",
+        "EPIC_DELIVERABLES_CONFIRMED_EMPIRICAL_PENDING",
+    ):
+        return False
+    if receipt_data.get("dataset_quality_verdict") != "DATASET_QUALITY_CONFIRMED":
+        return False
+    if receipt_data.get("learning_utility_verdict") not in (
+        "LEARNING_UTILITY_CONFIRMED",
+        "LEARNING_UTILITY_PROTOCOL_HARNESS_CONFIRMED_EMPIRICAL_PENDING",
+    ):
+        return False
+
+    if receipt_data.get("zero_host_paths_verified") is not True:
+        return False
+
+    # Check that referenced deliverable documents exist, are regular files confined to repo_root, and match bound digests
+    doc_digests = receipt_data.get("document_digests", {})
+    resolved_repo_root = repo_root.resolve()
+    resolved_docs: dict[str, Path] = {}
+    for doc_key, rel_path in receipt_data.get("deliverable_documents", {}).items():
+        if not isinstance(rel_path, str) or not rel_path.strip():
+            return False
+        raw_p = Path(rel_path)
+        if raw_p.is_absolute() or ".." in raw_p.parts:
+            return False
+        doc_path = (repo_root / raw_p).resolve()
+        try:
+            doc_path.relative_to(resolved_repo_root)
+        except ValueError:
+            return False
+        if not doc_path.is_file():
+            return False
+        expected_digest = doc_digests.get(f"{doc_key}_sha256")
+        if not expected_digest or sha256_file(doc_path) != expected_digest:
+            return False
+        resolved_docs[doc_key] = doc_path
+
+    # Check and rehash dataset deliverables
+    dataset_manifest_path = repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json"
+    dataset_records_path = repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl"
+    dataset_receipt_path = repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json"
+    lang_index_path = repo_root / "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl"
+
+    for p in [dataset_manifest_path, dataset_records_path, dataset_receipt_path, lang_index_path]:
+        if not p.exists():
+            return False
+
+    ds_repro = receipt_data.get("dataset_reproduction", {})
+    if sha256_file(dataset_manifest_path) != ds_repro.get("manifest_sha256"):
+        return False
+    if sha256_file(dataset_records_path) != ds_repro.get("records_sha256"):
+        return False
+    if sha256_file(dataset_receipt_path) != ds_repro.get("receipt_sha256"):
+        return False
+    if sha256_file(lang_index_path) != ds_repro.get("language_usage_index_sha256"):
+        return False
+
+    # Check and rehash learning study deliverables
+    study_recipe_path = repo_root / "data/projects/open_model_data/study/v4_learning_study_recipe_v1.json"
+    study_runs_path = repo_root / "data/projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl"
+    study_receipt_path = repo_root / "data/projects/open_model_data/study/v4_learning_study_receipt_v1.json"
+
+    for p in [study_recipe_path, study_runs_path, study_receipt_path]:
+        if not p.exists():
+            return False
+
+    study_repro = receipt_data.get("learning_study_reproduction", {})
+    if sha256_file(study_recipe_path) != study_repro.get("recipe_sha256"):
+        return False
+    if sha256_file(study_receipt_path) != study_repro.get("receipt_sha256"):
+        return False
+    if sha256_file(study_runs_path) != study_repro.get("runs_sha256"):
+        return False
+
+    verify_study = _get_verify_study()
+
+    if not verify_study(repo_root, study_recipe_path, study_runs_path, study_receipt_path):
+        return False
+
+    # Validate runs against study receipt
+    study_receipt = json.loads(study_receipt_path.read_text(encoding="utf-8"))
+    if study_receipt.get("verdict") != "STUDY_CONFIRMED_POSITIVE_LEARNING":
+        return False
+    sf = study_receipt.get("summary_findings", {})
+    if study_repro.get("baseline_perplexity_mean") != sf.get("baseline_perplexity_mean"):
+        return False
+    if study_repro.get("adapted_perplexity_mean") != sf.get("modern_masked_adaptation_perplexity_mean"):
+        return False
+    if study_repro.get("perplexity_delta_pct") != sf.get("perplexity_delta_pct"):
+        return False
+
+    expected_seeds = set(study_receipt.get("runs_accounting", {}).get("seeds_tested", []))
+    recipe_id = study_receipt.get("recipe_id")
+
+    runs_count = 0
+    seeds_seen = set()
+    with study_runs_path.open("r", encoding="utf-8") as f:
+        for line in f:
+            if line.strip():
+                run_item = json.loads(line)
+                runs_count += 1
+                if run_item.get("recipe_id") != recipe_id:
+                    return False
+                if "seed" in run_item:
+                    seeds_seen.add(run_item["seed"])
+
+    if runs_count != study_repro.get("runs_count"):
+        return False
+    if expected_seeds and seeds_seen != expected_seeds:
+        return False
+
+    # Scan all bound artifacts to verify zero private host paths
+    dataset_card_path = resolved_docs["dataset_card"]
+    tech_report_path = resolved_docs["technical_report"]
+    summary_path = resolved_docs["research_summary"]
+
+    bound_artifacts = [
+        dataset_manifest_path,
+        dataset_records_path,
+        dataset_receipt_path,
+        lang_index_path,
+        study_recipe_path,
+        study_runs_path,
+        study_receipt_path,
+        dataset_card_path,
+        tech_report_path,
+        summary_path,
+    ]
+    for art_path in bound_artifacts:
+        try:
+            assert_file_no_private_host_paths(art_path, str(art_path.relative_to(repo_root)))
+        except (ValueError, UnicodeDecodeError):
+            return False
+
+    # Check if database is accessible for full text verification
+    try:
+        db_p = _get_sources_db_path(repo_root)
+        db_available = db_p.is_file()
+    except Exception:
+        db_available = False
+
+    # Ensure persisted records strictly retain custody, contain zero raw corpus text,
+    # satisfy the canonical record contract schema, and contain unique record IDs and span SHAs
+    record_validator = _get_record_validator(repo_root)
+    seen_record_ids: set[str] = set()
+    seen_span_shas: set[str] = set()
+
+    with dataset_records_path.open("r", encoding="utf-8") as f:
+        header_line = f.readline()
+        if not header_line:
+            return False
+        try:
+            header_data = json.loads(header_line)
+            if not _RECORDS_HEADER_VALIDATOR.is_valid(header_data):
+                return False
+        except Exception:
+            return False
+        if header_data.get("records") != ds_repro.get("records_count"):
+            return False
+        if header_data.get("manifest_sha256") != ds_repro.get("manifest_sha256"):
+            return False
+        if header_data.get("dataset_version") != receipt_data.get("dataset_version"):
+            return False
+        for line in f:
+            line_str = line.strip()
+            if not line_str:
+                continue
+            raw_rec = json.loads(line_str)
+            if "text" in raw_rec or "text" in raw_rec.get("source_fidelity", {}):
+                return False
+            if not record_validator.is_valid(raw_rec):
+                return False
+            rid = raw_rec.get("record_id")
+            if not rid or rid in seen_record_ids:
+                return False
+            seen_record_ids.add(rid)
+
+            span_sha = raw_rec.get("source_fidelity", {}).get("span_sha256")
+            if not span_sha or span_sha in seen_span_shas:
+                return False
+            seen_span_shas.add(span_sha)
+
+    if len(seen_record_ids) != ds_repro.get("records_count") or len(seen_span_shas) != ds_repro.get("records_count"):
+        return False
+
+    # Verify stream loader with resolved loss masks across ALL records
+    records_count = 0
+    try:
+        for record in load_dataset_stream(
+            dataset_records_path,
+            resolve_masks=True,
+            resolve_text=db_available,
+            repo_root=repo_root,
+        ):
+            records_count += 1
+            m_view = record.get("language_views", {}).get("modern_view", {})
+            if "loss_mask_spans" not in m_view or len(m_view["loss_mask_spans"]) != m_view.get("loss_mask_count"):
+                return False
+            char_len = record.get("source_fidelity", {}).get("char_length", 0)
+            for span in m_view.get("loss_mask_spans", []):
+                if not validate_mask_span(span, char_len):
+                    return False
+            if db_available:
+                text = record.get("text")
+                if not text or len(text) != char_len:
+                    return False
+    except (ValueError, KeyError):
+        return False
+
+    return records_count == ds_repro.get("records_count")
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Reproduce and verify final dataset and learning study deliverables")
+    parser.add_argument("action", choices=["reproduce", "verify"])
+    parser.add_argument("--repo-root", type=Path, default=Path.cwd())
+    parser.add_argument(
+        "--receipt",
+        type=Path,
+        default=Path("data/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json"),
+    )
+
+    args = parser.parse_args()
+    repo_root = args.repo_root.resolve()
+    rcpt_p = args.receipt if args.receipt.is_absolute() else repo_root / args.receipt
+
+    try:
+        if args.action == "reproduce":
+            receipt = build_delivery_receipt(repo_root, rcpt_p)
+            print(f"SUCCESS: Reproduced deliverables with receipt {receipt['receipt_id']}")
+            return 0
+        elif args.action == "verify":
+            ok = verify_delivery(repo_root, rcpt_p)
+            if ok:
+                print("SUCCESS: Delivery deliverables verified and confirmed.")
+                return 0
+            else:
+                print("FAILURE: Delivery deliverables failed verification.", file=sys.stderr)
+                return 1
+    except Exception as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 2
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

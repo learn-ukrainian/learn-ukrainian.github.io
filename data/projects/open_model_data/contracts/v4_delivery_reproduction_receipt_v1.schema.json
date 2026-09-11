@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v4_delivery_reproduction_receipt_v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "dataset_version",
+    "dataset_quality_verdict",
+    "learning_utility_verdict",
+    "overall_delivery_verdict",
+    "dataset_reproduction",
+    "learning_study_reproduction",
+    "deliverable_documents",
+    "document_digests",
+    "residuals",
+    "custody_retained",
+    "zero_host_paths_verified",
+    "notes"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v4_delivery_reproduction_receipt_v1"
+    },
+    "receipt_id": {
+      "type": "string",
+      "pattern": "^receipt\\.delivery\\.[a-zA-Z0-9_-]+$"
+    },
+    "dataset_version": {
+      "type": "string",
+      "const": "v4.0.0-human-pilot-scale"
+    },
+    "dataset_quality_verdict": {
+      "type": "string",
+      "const": "DATASET_QUALITY_CONFIRMED"
+    },
+    "learning_utility_verdict": {
+      "type": "string",
+      "enum": [
+        "LEARNING_UTILITY_CONFIRMED",
+        "LEARNING_UTILITY_PROTOCOL_HARNESS_CONFIRMED_EMPIRICAL_PENDING"
+      ]
+    },
+    "overall_delivery_verdict": {
+      "type": "string",
+      "enum": [
+        "EPIC_DELIVERABLES_CONFIRMED",
+        "EPIC_DELIVERABLES_CONFIRMED_EMPIRICAL_PENDING"
+      ]
+    },
+    "dataset_reproduction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "manifest_sha256",
+        "records_sha256",
+        "receipt_sha256",
+        "language_usage_index_sha256",
+        "records_count",
+        "loader_verified"
+      ],
+      "properties": {
+        "manifest_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "records_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "receipt_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "language_usage_index_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "records_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "loader_verified": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "learning_study_reproduction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recipe_sha256",
+        "runs_sha256",
+        "runs_count",
+        "receipt_sha256",
+        "baseline_perplexity_mean",
+        "adapted_perplexity_mean",
+        "perplexity_delta_pct"
+      ],
+      "properties": {
+        "recipe_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "runs_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "runs_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "receipt_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "baseline_perplexity_mean": {
+          "type": "number",
+          "minimum": 1.0
+        },
+        "adapted_perplexity_mean": {
+          "type": "number",
+          "minimum": 1.0
+        },
+        "perplexity_delta_pct": {
+          "type": "number"
+        }
+      }
+    },
+    "deliverable_documents": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dataset_card",
+        "technical_report",
+        "research_summary"
+      ],
+      "properties": {
+        "dataset_card": {
+          "type": "string",
+          "pattern": "^(?!/)(?!.*\\.\\.)[a-zA-Z0-9_./-]+\\.md$"
+        },
+        "technical_report": {
+          "type": "string",
+          "pattern": "^(?!/)(?!.*\\.\\.)[a-zA-Z0-9_./-]+\\.md$"
+        },
+        "research_summary": {
+          "type": "string",
+          "pattern": "^(?!/)(?!.*\\.\\.)[a-zA-Z0-9_./-]+\\.md$"
+        }
+      }
+    },
+    "document_digests": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dataset_card_sha256",
+        "technical_report_sha256",
+        "research_summary_sha256"
+      ],
+      "properties": {
+        "dataset_card_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "technical_report_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "research_summary_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "residuals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operator_excluded_strata"
+      ],
+      "properties": {
+        "operator_excluded_strata": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "custody_retained": {
+      "type": "boolean",
+      "const": true
+    },
+    "zero_host_paths_verified": {
+      "type": "boolean",
+      "const": true
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}

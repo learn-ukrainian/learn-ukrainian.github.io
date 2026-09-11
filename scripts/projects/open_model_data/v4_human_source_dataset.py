@@ -13,10 +13,14 @@ human-source learning mandate:
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import json
+import os
 import re
+import sqlite3
 import sys
+from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
@@ -26,11 +30,13 @@ DATASET_VERSION = "v4.0.0-human-pilot-scale"
 MAX_FILE_SIZE_BYTES = 2000 * 1024  # 2000 KB pre-commit limit
 
 PROHIBITED_HOST_PATTERNS = [
-    re.compile(r"/home/[a-zA-Z0-9_-]+"),
-    re.compile(r"/tmp/[a-zA-Z0-9_-]+"),
-    re.compile(r"/Users/[a-zA-Z0-9_-]+"),
-    re.compile(r"/var/[a-zA-Z0-9_-]+"),
-    re.compile(r"/private/[a-zA-Z0-9_-]+"),
+    re.compile(r"/home/[a-zA-Z0-9_.-]+"),
+    re.compile(r"/tmp/[a-zA-Z0-9_.-]+"),
+    re.compile(r"/Users/[a-zA-Z0-9_.-]+"),
+    re.compile(r"/var/[a-zA-Z0-9_.-]+"),
+    re.compile(r"/private/[a-zA-Z0-9_.-]+"),
+    re.compile(r"/workspace/[a-zA-Z0-9_.-]+"),
+    re.compile(r"/root/[a-zA-Z0-9_.-]+"),
     re.compile(r"file://"),
 ]
 
@@ -70,14 +76,29 @@ def sha256_file(path: Path) -> str:
     return h.hexdigest()
 
 
+def _unescape_unicode(s: str) -> str:
+    if "\\u" not in s and "\\U" not in s:
+        return s
+    try:
+        return re.sub(
+            r"\\u([0-9a-fA-F]{4})",
+            lambda m: chr(int(m.group(1), 16)),
+            s,
+        )
+    except Exception:
+        return s
+
+
 def assert_no_private_host_paths(data: Any, path_prefix: str = "") -> None:
     if isinstance(data, str):
+        unescaped = _unescape_unicode(data)
         for pat in PROHIBITED_HOST_PATTERNS:
-            if pat.search(data):
-                raise ValueError(f"Prohibited host path detected at {path_prefix}: {data}")
+            if pat.search(data) or pat.search(unescaped):
+                loc = path_prefix or "root"
+                raise ValueError(f"Prohibited host path detected at {loc} matching pattern {pat.pattern}")
     elif isinstance(data, dict):
         for k, v in data.items():
-            assert_no_private_host_paths(v, f"{path_prefix}.{k}")
+            assert_no_private_host_paths(v, f"{path_prefix}.{k}" if path_prefix else k)
     elif isinstance(data, list):
         for idx, item in enumerate(data):
             assert_no_private_host_paths(item, f"{path_prefix}[{idx}]")
@@ -226,9 +247,8 @@ def build_dataset(
     manifest_schema = json.loads(manifest_schema_path.read_text(encoding="utf-8"))
     jsonschema.validate(instance=manifest_data, schema=manifest_schema)
 
-    manifest_out.parent.mkdir(parents=True, exist_ok=True)
-    manifest_out.write_text(json.dumps(manifest_data, indent=2) + "\n", encoding="utf-8")
-    manifest_sha = sha256_file(manifest_out)
+    manifest_bytes = (json.dumps(manifest_data, indent=2) + "\n").encode("utf-8")
+    manifest_sha = hashlib.sha256(manifest_bytes).hexdigest()
 
     # SCALE-2: Build Dataset Records
     records: list[dict[str, Any]] = []
@@ -280,10 +300,10 @@ def build_dataset(
 
             is_quarantine = assigned_part == "quarantine_excluded"
 
-            if is_quarantine:
+            if is_quarantine or (assigned_part == "training" and not builder_cleared):
                 quarantine_spans += 1
                 clearance_status = "QUARANTINE_EXCLUDED"
-            elif assigned_part == "training":
+            elif assigned_part == "training" and builder_cleared:
                 training_spans += 1
                 clearance_status = "TRAINING_CLEARED"
             elif assigned_part == "heldout_evaluation":
@@ -374,79 +394,169 @@ def build_dataset(
             assert_no_private_host_paths(rec)
             records.append(rec)
 
-    records_out.parent.mkdir(parents=True, exist_ok=True)
-    with records_out.open("w", encoding="utf-8") as f:
-        # Header line
-        header = {
-            "schema_version": "v4_human_source_dataset_records_v1",
-            "dataset_version": DATASET_VERSION,
-            "records": len(records),
-            "manifest_sha256": manifest_sha,
-        }
-        f.write(json.dumps(header) + "\n")
-        for rec in records:
-            jsonschema.validate(instance=rec, schema=record_schema)
-            f.write(json.dumps(rec) + "\n")
-
-    records_size = records_out.stat().st_size
-    if records_size > MAX_FILE_SIZE_BYTES:
-        raise ValueError(f"Records file exceeds 2000 KB: {records_size} bytes")
-
-    records_sha = sha256_file(records_out)
-
-    # SCALE-4 & SCALE-5: Generate Dataset Receipt
-    receipt_id = f"receipt.dataset.{sha256_bytes((manifest_sha + records_sha).encode())[:24]}"
     total_evaluated = len(records)
     total_admitted = total_evaluated - quarantine_spans
     dedup_rate = 1.0 if total_evaluated > 0 else 0.0
 
-    receipt_data = {
-        "schema_version": "v4_human_source_dataset_receipt_v1",
-        "receipt_id": receipt_id,
-        "dataset_version": DATASET_VERSION,
-        "verdict": "DATASET_CONFIRMED",
-        "manifest_sha256": manifest_sha,
-        "split_receipt_sha256": split_receipt_sha,
-        "records_sha256": records_sha,
-        "quality_assessment_sha256": quality_assessment_sha,
-        "dataset_accounting": {
-            "total_evaluated_spans": total_evaluated,
-            "total_admitted_spans": total_admitted,
-            "exported_training_spans": training_spans,
-            "firewalled_heldout_evaluation_spans": eval_spans,
-            "development_spans": dev_spans,
-            "rejected_quarantine_spans": quarantine_spans,
-            "silent_drops": 0,
-        },
-        "deduplication_yield": {
-            "unique_spans_count": len(seen_hashes),
-            "duplicate_spans_count": 0,
-            "deduplication_rate": dedup_rate,
-        },
-        "storage_accounting": {
-            "records_byte_size": records_size,
-            "records_line_count": len(records) + 1,
-            "below_2000kb_precommit_limit": True,
-        },
-        "frozen_for_downstream": {
-            "open_weight_learning_study_issue": 7889,
-            "deliverable_reproduction_issue": 7433,
-        },
-        "residuals": {
-            "operator_excluded_strata": [r["stratum"] for r in OPERATOR_EXCLUDED_RESIDUALS],
-        },
-        "notes": "Representative human-source dataset denominator and audit frozen under #7432.",
-    }
+    # SCALE-4: Validate processed counts strictly match frozen manifest denominator BEFORE writing files
+    manifest_accounting = manifest_data["denominator_accounting"]
+    if total_evaluated != manifest_accounting["total_evaluated_spans"]:
+        raise ValueError(
+            f"Evaluated spans {total_evaluated} does not match manifest {manifest_accounting['total_evaluated_spans']}"
+        )
+    if total_admitted != manifest_accounting["total_admitted_spans"]:
+        raise ValueError(
+            f"Admitted spans {total_admitted} does not match manifest {manifest_accounting['total_admitted_spans']}"
+        )
+    if training_spans != manifest_accounting["exported_training_spans"]:
+        raise ValueError(
+            f"Training spans {training_spans} does not match manifest {manifest_accounting['exported_training_spans']}"
+        )
+    if eval_spans != manifest_accounting["firewalled_heldout_evaluation_spans"]:
+        raise ValueError(
+            f"Heldout spans {eval_spans} does not match manifest {manifest_accounting['firewalled_heldout_evaluation_spans']}"
+        )
+    if dev_spans != manifest_accounting["development_spans"]:
+        raise ValueError(f"Dev spans {dev_spans} does not match manifest {manifest_accounting['development_spans']}")
+    if quarantine_spans != manifest_accounting["quarantined_spans"]:
+        raise ValueError(
+            f"Quarantine spans {quarantine_spans} does not match manifest {manifest_accounting['quarantined_spans']}"
+        )
 
-    assert_no_private_host_paths(receipt_data)
-    receipt_schema_path = (
-        repo_root / "data/projects/open_model_data/contracts/v4_human_source_dataset_receipt_v1.schema.json"
-    )
-    receipt_schema = json.loads(receipt_schema_path.read_text(encoding="utf-8"))
-    jsonschema.validate(instance=receipt_data, schema=receipt_schema)
-
+    manifest_out.parent.mkdir(parents=True, exist_ok=True)
+    records_out.parent.mkdir(parents=True, exist_ok=True)
     receipt_out.parent.mkdir(parents=True, exist_ok=True)
-    receipt_out.write_text(json.dumps(receipt_data, indent=2) + "\n", encoding="utf-8")
+
+    manifest_tmp = manifest_out.with_suffix(f".tmp.{os.getpid()}")
+    records_tmp = records_out.with_suffix(f".tmp.{os.getpid()}")
+    receipt_tmp = receipt_out.with_suffix(f".tmp.{os.getpid()}")
+    backups: list[tuple[Path, Path | None]] = []
+
+    try:
+        manifest_tmp.write_bytes(manifest_bytes)
+
+        with records_tmp.open("w", encoding="utf-8") as f:
+            header = {
+                "schema_version": "v4_human_source_dataset_records_v1",
+                "dataset_version": DATASET_VERSION,
+                "records": len(records),
+                "manifest_sha256": manifest_sha,
+            }
+            f.write(json.dumps(header) + "\n")
+            for rec in records:
+                jsonschema.validate(instance=rec, schema=record_schema)
+                f.write(json.dumps(rec) + "\n")
+
+        records_size = records_tmp.stat().st_size
+        if records_size > MAX_FILE_SIZE_BYTES:
+            raise ValueError(f"Records file exceeds 2000 KB: {records_size} bytes")
+
+        records_sha = sha256_file(records_tmp)
+
+        # SCALE-4 & SCALE-5: Generate Dataset Receipt
+        receipt_id = f"receipt.dataset.{sha256_bytes((manifest_sha + records_sha).encode())[:24]}"
+        receipt_data = {
+            "schema_version": "v4_human_source_dataset_receipt_v1",
+            "receipt_id": receipt_id,
+            "dataset_version": DATASET_VERSION,
+            "verdict": "DATASET_CONFIRMED",
+            "manifest_sha256": manifest_sha,
+            "split_receipt_sha256": split_receipt_sha,
+            "records_sha256": records_sha,
+            "quality_assessment_sha256": quality_assessment_sha,
+            "dataset_accounting": {
+                "total_evaluated_spans": total_evaluated,
+                "total_admitted_spans": total_admitted,
+                "exported_training_spans": training_spans,
+                "firewalled_heldout_evaluation_spans": eval_spans,
+                "development_spans": dev_spans,
+                "rejected_quarantine_spans": quarantine_spans,
+                "silent_drops": 0,
+            },
+            "deduplication_yield": {
+                "unique_spans_count": len(seen_hashes),
+                "duplicate_spans_count": 0,
+                "deduplication_rate": dedup_rate,
+            },
+            "storage_accounting": {
+                "records_byte_size": records_size,
+                "records_line_count": len(records) + 1,
+                "below_2000kb_precommit_limit": True,
+            },
+            "frozen_for_downstream": {
+                "open_weight_learning_study_issue": 7889,
+                "deliverable_reproduction_issue": 7433,
+            },
+            "residuals": {
+                "operator_excluded_strata": [r["stratum"] for r in OPERATOR_EXCLUDED_RESIDUALS],
+            },
+            "notes": "Representative human-source dataset denominator and audit frozen under #7432.",
+        }
+
+        assert_no_private_host_paths(receipt_data)
+        receipt_schema_path = (
+            repo_root / "data/projects/open_model_data/contracts/v4_human_source_dataset_receipt_v1.schema.json"
+        )
+        receipt_schema = json.loads(receipt_schema_path.read_text(encoding="utf-8"))
+        jsonschema.validate(instance=receipt_data, schema=receipt_schema)
+
+        receipt_tmp.write_text(json.dumps(receipt_data, indent=2) + "\n", encoding="utf-8")
+
+        # Transactional publishing with rollback to ensure mutual consistency across the artifact set
+        targets = [
+            (manifest_tmp, manifest_out),
+            (records_tmp, records_out),
+            (receipt_tmp, receipt_out),
+        ]
+        # 1. Back up existing target files
+        for _, target in targets:
+            if target.exists():
+                bak = target.with_suffix(f".bak.{os.getpid()}")
+                target.replace(bak)
+                backups.append((target, bak))
+            else:
+                backups.append((target, None))
+
+        # 2. Move staged copies to targets
+        for tmp, target in targets:
+            tmp.replace(target)
+
+        # 3. Success: publication is committed; clear active rollback tracking before cleanup
+        backups_to_clean = list(backups)
+        backups.clear()
+
+        for _, bak in backups_to_clean:
+            if bak is not None and bak.exists():
+                with contextlib.suppress(OSError):
+                    bak.unlink()
+    except Exception as publish_err:
+        # Rollback on any failure to restore earlier generation
+        rollback_errors = []
+        restored = []
+        for target, bak in backups:
+            try:
+                if bak is not None and bak.exists():
+                    bak.replace(target)
+                    restored.append((target, bak))
+                elif target.exists():
+                    target.unlink()
+                    restored.append((target, bak))
+            except Exception as rb_err:
+                rollback_errors.append((target, bak, rb_err))
+        for item in restored:
+            if item in backups:
+                backups.remove(item)
+        if rollback_errors:
+            raise RuntimeError(
+                f"Rollback failed during publish recovery for {len(rollback_errors)} artifact(s): "
+                f"{rollback_errors}. Surviving backup files retained for recovery."
+            ) from publish_err
+        raise
+    finally:
+        for tmp_path in (manifest_tmp, records_tmp, receipt_tmp):
+            if tmp_path.exists():
+                with contextlib.suppress(OSError):
+                    tmp_path.unlink()
 
     return receipt_data
 
@@ -482,7 +592,456 @@ def verify_dataset(
         return False
     if receipt_data.get("dataset_accounting", {}).get("silent_drops") != 0:
         return False
+
+    manifest_data = json.loads(manifest_path.read_text(encoding="utf-8"))
+    m_acc = manifest_data.get("denominator_accounting", {})
+    r_acc = receipt_data.get("dataset_accounting", {})
+    if r_acc.get("total_evaluated_spans") != m_acc.get("total_evaluated_spans"):
+        return False
+    if r_acc.get("total_admitted_spans") != m_acc.get("total_admitted_spans"):
+        return False
+    if r_acc.get("exported_training_spans") != m_acc.get("exported_training_spans"):
+        return False
+    if r_acc.get("firewalled_heldout_evaluation_spans") != m_acc.get("firewalled_heldout_evaluation_spans"):
+        return False
+    if r_acc.get("development_spans") != m_acc.get("development_spans"):
+        return False
+    if r_acc.get("rejected_quarantine_spans") != m_acc.get("quarantined_spans"):
+        return False
+
+    # Ensure persisted records strictly retain custody, contain zero raw corpus text,
+    # satisfy the canonical record contract schema, and contain unique record IDs and span SHAs
+    record_validator = _get_record_validator(repo_root)
+    seen_record_ids: set[str] = set()
+    seen_span_shas: set[str] = set()
+
+    with records_path.open("r", encoding="utf-8") as f:
+        header_line = f.readline()
+        if not header_line:
+            return False
+        try:
+            header_data = json.loads(header_line)
+            if not _RECORDS_HEADER_VALIDATOR.is_valid(header_data):
+                return False
+        except Exception:
+            return False
+        if header_data.get("records") != 1419:
+            return False
+        manifest_sha = sha256_file(manifest_path)
+        if header_data.get("manifest_sha256") != manifest_sha:
+            return False
+        if header_data.get("dataset_version") != DATASET_VERSION:
+            return False
+        for line in f:
+            line_str = line.strip()
+            if not line_str:
+                continue
+            raw_rec = json.loads(line_str)
+            if "text" in raw_rec or "text" in raw_rec.get("source_fidelity", {}):
+                return False
+            if not record_validator.is_valid(raw_rec):
+                return False
+            rid = raw_rec.get("record_id")
+            if not rid or rid in seen_record_ids:
+                return False
+            seen_record_ids.add(rid)
+
+            span_sha = raw_rec.get("source_fidelity", {}).get("span_sha256")
+            if not span_sha or span_sha in seen_span_shas:
+                return False
+            seen_span_shas.add(span_sha)
+
+    if len(seen_record_ids) != 1419 or len(seen_span_shas) != 1419:
+        return False
+
+    # Verify loader and authenticated loss mask resolver across all records
+    resolved_count = 0
+    try:
+        sample_stream = load_dataset_stream(records_path, resolve_masks=True, repo_root=repo_root)
+        for record in sample_stream:
+            resolved_count += 1
+            m_view = record.get("language_views", {}).get("modern_view", {})
+            if "loss_mask_spans" not in m_view or len(m_view["loss_mask_spans"]) != m_view.get("loss_mask_count"):
+                return False
+            char_len = record.get("source_fidelity", {}).get("char_length", 0)
+            for span in m_view.get("loss_mask_spans", []):
+                if not validate_mask_span(span, char_len):
+                    return False
+    except Exception:
+        return False
+
+    if resolved_count != 1419:
+        return False
+
     return receipt_data.get("storage_accounting", {}).get("below_2000kb_precommit_limit") is True
+
+
+_LANGUAGE_USAGE_CACHE: dict[tuple[Path, str], dict[str, list[dict[str, Any]]]] = {}
+_EXTRACTION_INDEX_CACHE: dict[tuple[Path, str], dict[str, dict[str, Any]]] = {}
+_SOURCES_DB_CONNS: dict[Path, sqlite3.Connection] = {}
+_RECORD_SCHEMA_CACHE: dict[tuple[Path, str], jsonschema.Draft202012Validator] = {}
+
+
+def clear_caches() -> None:
+    """Clear all in-memory caches and database connections."""
+    _LANGUAGE_USAGE_CACHE.clear()
+    _EXTRACTION_INDEX_CACHE.clear()
+    _RECORD_SCHEMA_CACHE.clear()
+    for conn in _SOURCES_DB_CONNS.values():
+        with contextlib.suppress(Exception):
+            conn.close()
+    _SOURCES_DB_CONNS.clear()
+
+
+def _get_sources_db_path(repo_root: Path) -> Path:
+    candidates = [
+        repo_root / "data/sources.db",
+        Path.cwd() / "data/sources.db",
+    ]
+    for p in [repo_root, Path.cwd()]:
+        for parent in p.parents:
+            candidates.append(parent / "data/sources.db")
+    for cand in candidates:
+        if cand.is_file():
+            return cand.resolve()
+    raise FileNotFoundError("Missing authenticated source database: data/sources.db")
+
+
+def _get_extraction_map(repo_root: Path) -> dict[str, dict[str, Any]]:
+    root_resolved = repo_root.resolve()
+
+    candidates = [
+        root_resolved / "data/projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl",
+        Path.cwd() / "data/projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl",
+    ]
+    for p in [root_resolved, Path.cwd()]:
+        for parent in p.parents:
+            candidates.append(parent / "data/projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl")
+
+    ext_path: Path | None = None
+    for cand in candidates:
+        if cand.is_file():
+            ext_path = cand.resolve()
+            break
+
+    if ext_path is None:
+        raise FileNotFoundError("Missing authenticated native extraction index: v4_native_extraction_index_v1.jsonl")
+
+    ext_sha = sha256_file(ext_path)
+    cache_key = (ext_path, ext_sha)
+    if cache_key in _EXTRACTION_INDEX_CACHE:
+        return _EXTRACTION_INDEX_CACHE[cache_key]
+
+    ext_map: dict[str, dict[str, Any]] = {}
+    with ext_path.open("r", encoding="utf-8") as f:
+        _ = f.readline()  # header
+        for line in f:
+            line_str = line.strip()
+            if not line_str:
+                continue
+            item = json.loads(line_str)
+            span_loc = item.get("span_locator", {})
+            sha = span_loc.get("span_sha256")
+            if sha:
+                ext_map[sha] = item
+
+    _EXTRACTION_INDEX_CACHE[cache_key] = ext_map
+    return ext_map
+
+
+def _get_language_usage_masks(repo_root: Path) -> dict[str, list[dict[str, Any]]]:
+    root_resolved = repo_root.resolve()
+
+    lang_index_path = root_resolved / "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl"
+    if not lang_index_path.is_file():
+        for p in [root_resolved, Path.cwd()]:
+            for parent in p.parents:
+                cand = parent / "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl"
+                if cand.is_file():
+                    lang_index_path = cand
+                    break
+            if lang_index_path.is_file():
+                break
+
+    if not lang_index_path.is_file():
+        raise FileNotFoundError(f"Missing authenticated language usage index: {lang_index_path}")
+
+    lang_sha = sha256_file(lang_index_path)
+    cache_key = (lang_index_path.resolve(), lang_sha)
+    if cache_key in _LANGUAGE_USAGE_CACHE:
+        return _LANGUAGE_USAGE_CACHE[cache_key]
+
+    masks_map: dict[str, list[dict[str, Any]]] = {}
+    with lang_index_path.open("r", encoding="utf-8") as f:
+        _ = f.readline()  # header
+        for line in f:
+            line_str = line.strip()
+            if not line_str:
+                continue
+            item = json.loads(line_str)
+            span_loc = item.get("span_locator", {})
+            sha = span_loc.get("span_sha256")
+            if not sha:
+                continue
+            cviews = item.get("consumer_views", {})
+            modern = cviews.get("modern_view", {})
+            spans = modern.get("loss_mask_spans", [])
+            masks_map[sha] = spans
+
+    _LANGUAGE_USAGE_CACHE[cache_key] = masks_map
+    return masks_map
+
+
+def _get_record_validator(repo_root: Path) -> jsonschema.Draft202012Validator:
+    schema_path = repo_root / "data/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json"
+    if not schema_path.is_file():
+        script_root = Path(__file__).resolve().parents[3]
+        for p in [repo_root, Path.cwd(), script_root]:
+            for parent in [p, *p.parents]:
+                cand = parent / "data/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json"
+                if cand.is_file():
+                    schema_path = cand
+                    break
+            if schema_path.is_file():
+                break
+
+    if not schema_path.is_file():
+        raise FileNotFoundError(f"Missing record schema: {schema_path}")
+
+    schema_resolved = schema_path.resolve()
+    schema_sha = sha256_file(schema_resolved)
+    cache_key = (schema_resolved, schema_sha)
+    if cache_key in _RECORD_SCHEMA_CACHE:
+        return _RECORD_SCHEMA_CACHE[cache_key]
+
+    schema_data = json.loads(schema_resolved.read_text(encoding="utf-8"))
+    validator = jsonschema.Draft202012Validator(schema_data)
+    _RECORD_SCHEMA_CACHE[cache_key] = validator
+    return validator
+
+
+LOSS_MASK_SPAN_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": [
+        "start_char",
+        "end_char",
+        "reason",
+    ],
+    "properties": {
+        "start_char": {
+            "type": "integer",
+            "minimum": 0,
+        },
+        "end_char": {
+            "type": "integer",
+            "minimum": 0,
+        },
+        "reason": {
+            "type": "string",
+            "minLength": 1,
+        },
+    },
+}
+
+_MASK_SPAN_VALIDATOR = jsonschema.Draft202012Validator(LOSS_MASK_SPAN_SCHEMA)
+
+DATASET_RECORDS_HEADER_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["schema_version", "dataset_version", "records", "manifest_sha256"],
+    "properties": {
+        "schema_version": {"type": "string", "const": "v4_human_source_dataset_records_v1"},
+        "dataset_version": {"type": "string"},
+        "records": {"type": "integer", "minimum": 1},
+        "manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    },
+}
+
+_RECORDS_HEADER_VALIDATOR = jsonschema.Draft202012Validator(DATASET_RECORDS_HEADER_SCHEMA)
+
+
+def validate_mask_span(span: Any, char_len: int | None = None) -> bool:
+    """Validate a loss mask span object against the canonical contract schema and interval bounds."""
+    if not _MASK_SPAN_VALIDATOR.is_valid(span):
+        return False
+    start = span["start_char"]
+    end = span["end_char"]
+    if start > end:
+        return False
+    return char_len is None or end <= char_len
+
+
+def resolve_record_loss_masks(
+    record: dict[str, Any],
+    repo_root: Path | None = None,
+) -> list[dict[str, Any]]:
+    """Resolve authenticated modern_view loss mask spans for a dataset record.
+
+    Retrieves exact loss mask intervals (start_char, end_char, reason) from the authenticated
+    v4_language_usage_index_v1.jsonl, verifying that the count matches record's loss_mask_count
+    and all spans satisfy the contract schema and interval bounds.
+    """
+    root = (repo_root or Path.cwd()).resolve()
+    span_sha = record.get("source_fidelity", {}).get("span_sha256")
+    if not span_sha:
+        raise ValueError("Record is missing source_fidelity.span_sha256")
+
+    masks_map = _get_language_usage_masks(root)
+    if span_sha not in masks_map:
+        raise KeyError(f"Span SHA {span_sha} not found in authenticated language usage index")
+
+    resolved_masks = masks_map[span_sha]
+    expected_count = record.get("language_views", {}).get("modern_view", {}).get("loss_mask_count")
+    if expected_count is not None and len(resolved_masks) != expected_count:
+        raise ValueError(
+            f"Resolved mask count {len(resolved_masks)} does not match record loss_mask_count {expected_count}"
+        )
+
+    char_len = record.get("source_fidelity", {}).get("char_length")
+    for span in resolved_masks:
+        if not validate_mask_span(span, char_len):
+            raise ValueError(
+                f"Resolved mask span {span} failed schema or interval bounds validation for record {record.get('record_id')}"
+            )
+
+    return resolved_masks
+
+
+def resolve_record_text(
+    record: dict[str, Any],
+    repo_root: Path | None = None,
+    sources_db_path: Path | None = None,
+) -> str:
+    """Resolve authenticated private source text for a dataset record.
+
+    Looks up the span text from the authenticated private database (data/sources.db)
+    via native extraction linkage, verifying that:
+    1. sha256(text) matches record["source_fidelity"]["span_sha256"]
+    2. len(text) matches record["source_fidelity"]["char_length"]
+    """
+    root = (repo_root or Path.cwd()).resolve()
+    fidelity = record.get("source_fidelity", {})
+    expected_sha = fidelity.get("span_sha256")
+    if not expected_sha:
+        raise ValueError("Record is missing source_fidelity.span_sha256")
+    expected_len = fidelity.get("char_length")
+
+    ext_map = _get_extraction_map(root)
+    if expected_sha not in ext_map:
+        raise KeyError(f"Span SHA {expected_sha} not found in authenticated extraction index")
+
+    ext_item = ext_map[expected_sha]
+    sf = ext_item.get("source_file")
+    chunk_id = ext_item.get("chunk_id")
+    fam = ext_item.get("source_family")
+    table = "literary_texts" if fam == "literary" else "textbooks"
+
+    db_path = sources_db_path.resolve() if sources_db_path is not None else _get_sources_db_path(root)
+    if db_path not in _SOURCES_DB_CONNS:
+        _SOURCES_DB_CONNS[db_path] = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    conn = _SOURCES_DB_CONNS[db_path]
+    cur = conn.cursor()
+
+    cur.execute(f'SELECT text FROM "{table}" WHERE source_file = ? AND chunk_id = ?', (sf, chunk_id))
+    row = cur.fetchone()
+    if not row or row[0] is None:
+        raise ValueError(f"No database record found in {table} for source_file={sf}, chunk_id={chunk_id}")
+
+    text = str(row[0])
+    actual_sha = hashlib.sha256(text.encode("utf-8")).hexdigest()
+    if actual_sha != expected_sha:
+        raise ValueError(f"Resolved text SHA {actual_sha} does not match expected {expected_sha}")
+    if expected_len is not None and len(text) != expected_len:
+        raise ValueError(f"Resolved text length {len(text)} does not match expected {expected_len}")
+
+    return text
+
+
+def load_dataset_stream(
+    records_path: Path,
+    resolve_masks: bool = False,
+    resolve_text: bool = False,
+    repo_root: Path | None = None,
+    sources_db_path: Path | None = None,
+) -> Iterator[dict[str, Any]]:
+    """Stream dataset records yielding parsed rows (DELIVERY-1 / SCALE-4).
+
+    - If resolve_masks is True, resolves and attaches modern_view.loss_mask_spans
+      from the authenticated language usage index.
+    - If resolve_text is True, resolves and attaches private source text to
+      record["text"] and record["source_fidelity"]["text"] from data/sources.db,
+      verified against source_fidelity.span_sha256 and char_length.
+    """
+    root = repo_root.resolve() if repo_root is not None else Path.cwd().resolve()
+    # If not found directly at cwd, search upward from records_path
+    if not (root / "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl").is_file():
+        cur = records_path.resolve()
+        for p in [cur, *cur.parents]:
+            if (p / "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl").is_file():
+                root = p
+                break
+
+    with records_path.open("r", encoding="utf-8") as f:
+        header_processed = False
+        for line in f:
+            line_str = line.strip()
+            if not line_str:
+                continue
+            if not header_processed:
+                header_processed = True
+                if line_str.startswith("#"):
+                    continue
+                try:
+                    obj = json.loads(line_str)
+                except Exception as err:
+                    raise ValueError(f"Invalid dataset records header: {line_str}") from err
+
+                if obj.get("schema_version") == "v4_human_source_dataset_records_v1":
+                    if not _RECORDS_HEADER_VALIDATOR.is_valid(obj):
+                        raise ValueError(f"Invalid dataset records header: {line_str}")
+                    continue
+                record = obj
+            else:
+                record = json.loads(line_str)
+            if "text" in record or "text" in record.get("source_fidelity", {}):
+                raise ValueError(
+                    f"Persisted record {record.get('record_id')} contains raw text; "
+                    "persisted dataset records must retain custody and cannot contain raw corpus text."
+                )
+            if resolve_masks:
+                masks = resolve_record_loss_masks(record, repo_root=root)
+                if "language_views" in record and "modern_view" in record["language_views"]:
+                    record["language_views"]["modern_view"]["loss_mask_spans"] = masks
+            if resolve_text:
+                text = resolve_record_text(record, repo_root=root, sources_db_path=sources_db_path)
+                record["text"] = text
+                if "source_fidelity" in record:
+                    record["source_fidelity"]["text"] = text
+            yield record
+
+
+def load_partition_view(
+    records_path: Path,
+    partition: str,
+    resolve_masks: bool = False,
+    resolve_text: bool = False,
+    repo_root: Path | None = None,
+) -> list[dict[str, Any]]:
+    """Load records filtered by split partition (DELIVERY-1 / SCALE-4)."""
+    filtered = []
+    for record in load_dataset_stream(
+        records_path,
+        resolve_masks=resolve_masks,
+        resolve_text=resolve_text,
+        repo_root=repo_root,
+    ):
+        sc = record.get("split_clearance", {})
+        if sc.get("split_partition") == partition:
+            if partition == "training" and not sc.get("builder_training_cleared", False):
+                continue
+            filtered.append(record)
+    return filtered
 
 
 def main() -> int:
