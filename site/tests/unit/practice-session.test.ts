@@ -73,9 +73,9 @@ function deckFromIds(ids: string[]): PracticeDeckData {
   };
 }
 
-function dueCard(lemmaId: string) {
+function dueCard(lemmaId: string, dueTime?: number) {
   return {
-    due: NOW.getTime() - 60_000,
+    due: dueTime ?? NOW.getTime() - 60_000,
     stability: 4,
     difficulty: 4,
     elapsed_days: 1,
