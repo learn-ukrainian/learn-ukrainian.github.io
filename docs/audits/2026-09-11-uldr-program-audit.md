@@ -1,7 +1,7 @@
 # ULDR program audit — 2026-09-11
 
-Latest disposition: **FAIL** at `3083e3569172bc0c43ee5066fa8ab527d0413e05`.
-See [the regenerated-package re-review](#regenerated-package-re-review--dcc5bced-and-3083e356)
+Latest disposition: **FAIL** at `2fdd9c25cdfb7ba1ee6c4cf9e08692e1a9f69c32`.
+See [the fourth re-review](#fourth-re-review--2fdd9c25)
 for current fixes, evidence, and remaining findings. Earlier sections retain the
 history of the heads they name.
 
@@ -523,3 +523,120 @@ and reconciliation improvements. Resolve the remaining semantic, identity,
 publication and native-template defects with adverse fixtures that exercise the
 actual production paths. Keep the 97-seed residual visible. Repeat exact-head
 review after those changes; this audit authorizes no merge or model execution.
+
+## Fourth re-review — 2fdd9c25
+
+**VERDICT: FAIL** at `2fdd9c25cdfb7ba1ee6c4cf9e08692e1a9f69c32` of PR #7933.
+This section supersedes prior dispositions where it explicitly marks a finding
+fixed. The review remains bounded to the existing audit scope.
+
+### Confirmed fixes and validation
+
+- **31 affected tests pass** in 0.85 seconds at this exact head, including the
+  four contract tests alongside the 27 generator/formatter/evaluator tests.
+- Canonical counts remain 1,200 trajectories and 1,200 DPO pairs, split 966/234.
+  All eight canonical hash, byte and record-count checks pass. An exact-ID and
+  content reconciliation of all four consumer partitions/formats found zero
+  missing IDs, extra IDs or mismatched formatted records.
+- **G3 fixed:** conflicting target representations now raise an error; validation
+  and DPO formatting use the same resolver.
+- **G4 fixed:** punctuation-only and emoji responses now score zero without
+  crashing the evaluation batch.
+- **G6 fixed:** canonical `records_count` mismatches and unknown partitions are
+  rejected; partition and aggregate totals are checked.
+- **G7 fixed within the tested scope:** executing the exact documented Gemma 4
+  mapper with Google's current official Jinja template produces the native
+  thought channel, preserves reasoning/final text and removes literal thought
+  tags. This is an isolated template test, not full trainer execution.
+- **G1 attribution clarified:** the guide explicitly identifies the 99.15% score
+  as a packaged-reference self-check, not external model inference. Its additional
+  claims about what that check proves remain excessive, as detailed below.
+- **G5 partially fixed:** a replacement-file move failure after backup completion
+  now restores the originals. Failure during backup creation remains destructive.
+
+### H1 — P1: A descriptive sentence is still scored as a perfect recommendation
+
+For synthetic target `badtoken` and alternative `goodtoken`, this response scores
+**1.0 / PASS**:
+
+> Слово goodtoken записане на дошці. Учень читає словник, бо його цікавить суфікс.
+
+`v4_evaluate_decolonization.py:82` treats “слово … alternative” as a recommendation;
+`:172–173,223–230` then accepts unrelated linguistic keywords and a connective as
+elimination and reasoning grounding. The response describes text on a board; it
+neither recommends a form nor evaluates the target.
+
+The previous “Оцінки не буде” counterexample now fails, but adding its exact evasion
+pattern does not resolve the underlying semantic issue. Preserve heuristic metric
+labels and validate recommendation, diagnosis and explanation against independently
+adjudicated adverse cases. Do not claim linguistic correctness from these proxies.
+
+### H2 — P2: Backup failure still deletes the original dataset
+
+`v4_format_decolonization.py:442` moves existing files into backup before recording
+each successful move. If the first backup move raises `OSError`, the backup list
+is empty. The exception handler at `:456–458` nevertheless deletes all original
+JSONLs and the original manifest, then has nothing to restore. A synthetic
+fault-injection probe confirmed both originals gone and no backup remaining.
+
+Track original and newly published files separately. Cleanup must never delete
+an original that was not successfully backed up, and failed restoration must
+retain recovery files. Cover faults during backup creation as well as after it;
+the latter path now passes its recovery probe.
+
+### H3 — P1: Citation mention is still treated as positive evidence
+
+`v4_decolonization_reasoning.py:541–551` now restricts candidate-level evidence
+by checking whether the alternative's spelling appears in the citation. This
+fixes borrowing evidence that never mentions that alternative, but not evidence
+that mentions it as an example to reject.
+
+A synthetic candidate with alternatives `alpha` and `beta`, positive VESUM counts
+and no textbook/dictionary attestations, using the sole citation:
+
+> Do not use alpha. Use beta.
+
+still assigns both alternatives `living_standard` and selects **alpha** as the
+primary. Evidence must bind a positive recommendation to its source, not merely
+contain the lemma as a substring. Source approval is unchanged; what remains
+unverified is the inference made from the approved source.
+
+The generic lexical suppression sentence was replaced, but the other historical
+category templates remain in the generator. Target classification is still
+unconditional once an alternative passes. Do not describe all target/historical
+claims as source-grounded until those specific relations are supported.
+
+### H4 — Evidence limitation: Self-check attribution is fixed, validity claims are not
+
+The guide now correctly says no external model inference produced the score.
+However, `decolonization-training-guide.md:308–311` says the self-check mathematically
+verifies absence of contradictory or ungrounded reasoning and establishes a
+“theoretical upper bound.” A heuristic scoring the generator's own answers cannot
+establish those properties; H1 directly demonstrates its semantic blind spot.
+Describe it as a reference-answer regression/sanity check with those limitations.
+
+The current exact-head aggregate rerun is still 234 evaluated, 99.57% elimination,
+99.57% suggestion, 99.15% grounding/pass, and 0.9932 mean score. The new guide's
+claim of 100% elimination and suggestions (`:306`) does not match that result.
+All evaluation was performed inside custody and only aggregates were exported.
+
+### Current CI blocker
+
+The PR's CodeQL result is **FAILURE** on this head. Its annotation flags
+`tests/projects/open_model_data/test_v4_format_and_evaluate.py:169` for constructing
+a Jinja environment with `autoescape=False` and reports one high-severity alert.
+This is a chat-template test; the annotation alone is not proof of a production
+web XSS vulnerability. It still needs a justified, repository-compliant disposition
+and a passing check before merge. Do not mark all CI green while it remains open.
+
+### Evidence and next disposition
+
+Synthetic probes cover H1–H3; existing tests and aggregate artifact reconciliation
+cover the confirmed fixes. Native Gemma verification executes the documented mapper
+and the official template, with no model weights or full trainer run.
+[Official Gemma 4 template](https://huggingface.co/google/gemma-4-31B-it/blob/main/chat_template.jinja).
+The template evidence is date-scoped. The 97-seed residual remains recorded.
+
+Resolve the remaining recommendation/evidence semantics and backup-loss path;
+correct self-check claims and dispose of the CodeQL alert. Then repeat exact-head
+review. No merge or implementation change is authorized by this report.
