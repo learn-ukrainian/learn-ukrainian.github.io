@@ -376,7 +376,7 @@ describe('practice session helpers', () => {
     expect(firstPicks.size).toBeGreaterThanOrEqual(4);
   });
 
-  test('borrowed pool shuffles near-due cards when session seeds differ', () => {
+  test('borrowed pool shuffles near-due cards and rotates beyond the top 4 pool', () => {
     const ids = Array.from({ length: 16 }, (_, i) => `future-${i}`);
     const testDeck = deckFromIds(ids);
     const state = loadState(localStorage, NOW);
@@ -389,7 +389,7 @@ describe('practice session helpers', () => {
     saveState(state, localStorage, NOW.getTime());
 
     const borrowedPicks = new Set<string>();
-    for (let seed = 1; seed <= 8; seed += 1) {
+    for (let seed = 1; seed <= 20; seed += 1) {
       const selection = selectNextPracticeItem(testDeck, {
         now: NOW,
         modeFilter: 'flashcards',
@@ -400,8 +400,61 @@ describe('practice session helpers', () => {
       }
     }
 
-    // Borrowed candidates must vary across different session seeds rather than pinning on one
-    expect(borrowedPicks.size).toBeGreaterThanOrEqual(3);
+    // Borrowed candidates must vary across seeds and rotate beyond the top 4 candidates
+    expect(borrowedPicks.size).toBeGreaterThanOrEqual(4);
+    const reachedOutsideTop4 = Array.from(borrowedPicks).some((id) => !ids.slice(0, 4).includes(id));
+    expect(reachedOutsideTop4).toBe(true);
+    localStorage.removeItem(SRS_STORAGE_KEY);
+  });
+
+  test('overdue cards in the same 4-hour window invert relative order across seeds', () => {
+    const ids = ['overdue-1h', 'overdue-2h'];
+    const testDeck = deckFromIds(ids);
+    const state = loadState(localStorage, NOW);
+    const HOUR = 60 * 60 * 1000;
+    state.cards.set(cardKey('overdue-1h', 'flashcards'), dueCard('overdue-1h', NOW.getTime() - Math.floor(1.5 * HOUR)));
+    state.cards.set(cardKey('overdue-2h', 'flashcards'), dueCard('overdue-2h', NOW.getTime() - Math.floor(2.5 * HOUR)));
+    saveState(state, localStorage, NOW.getTime());
+
+    const firstPicks = new Set<string>();
+    for (let seed = 1; seed <= 20; seed += 1) {
+      const selection = selectNextPracticeItem(testDeck, {
+        now: NOW,
+        modeFilter: 'flashcards',
+        sessionSeed: seed * 1237,
+      });
+      if (selection) {
+        firstPicks.add(selection.lemma.lemmaId);
+      }
+    }
+
+    // Both cards must appear as first pick under different seeds because they share the 4-hour urgency bucket
+    expect(firstPicks).toContain('overdue-1h');
+    expect(firstPicks).toContain('overdue-2h');
+    localStorage.removeItem(SRS_STORAGE_KEY);
+  });
+
+  test('borrowed pool preserves eligible candidate when poolFilter is applied', () => {
+    const ids = Array.from({ length: 16 }, (_, i) => `future-${i}`);
+    const testDeck = deckFromIds(ids);
+    const state = loadState(localStorage, NOW);
+    for (const id of ids) {
+      state.cards.set(
+        cardKey(id, 'flashcards'),
+        dueCard(id, NOW.getTime() + 24 * 60 * 60 * 1000),
+      );
+    }
+    saveState(state, localStorage, NOW.getTime());
+
+    // With seed 71271 and a poolFilter permitting only future-0, the card must not be truncated away
+    const selection = selectNextPracticeItem(testDeck, {
+      now: NOW,
+      modeFilter: 'flashcards',
+      sessionSeed: 71271,
+      poolFilter: (candidate) => candidate.lemma.lemmaId === 'future-0',
+    });
+    expect(selection).not.toBeNull();
+    expect(selection?.lemma.lemmaId).toBe('future-0');
     localStorage.removeItem(SRS_STORAGE_KEY);
   });
 });

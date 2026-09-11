@@ -214878,7 +214878,7 @@
       "sentenceFrameId": "teacher_frame_5117",
       "lemma": "вбиральня",
       "form": "вбиральня",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "Підкажіть, будь ласка, де тут громадська _____?",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -214886,7 +214886,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for вбиральня",
+      "clozeEn": "Could you please tell me where the public restroom is here?",
       "options": [
         {
           "optionId": "opt_ans",
@@ -215172,7 +215172,7 @@
       "sentenceFrameId": "teacher_frame_5124",
       "lemma": "взутися",
       "form": "взутися",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "Перед тим як виходити на вулицю, треба тепло _____.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -215180,7 +215180,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for взутися",
+      "clozeEn": "Before going outside, one needs to put on warm shoes.",
       "options": [
         {
           "optionId": "opt_ans",
@@ -215256,7 +215256,7 @@
       "sentenceFrameId": "teacher_frame_5126",
       "lemma": "вибухати",
       "form": "вибухати",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "Коли тиск усередині надто високий, балон може _____.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -215264,7 +215264,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for вибухати",
+      "clozeEn": "When the pressure inside is too high, the cylinder can explode.",
       "options": [
         {
           "optionId": "opt_ans",
@@ -216558,7 +216558,7 @@
       "sentenceFrameId": "teacher_frame_5157",
       "lemma": "відстрочка",
       "form": "відстрочка",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "Студентові була надана офіційна _____ від сплати навчання.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -216566,7 +216566,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for відстрочка",
+      "clozeEn": "The student was granted an official deferral of tuition payment.",
       "options": [
         {
           "optionId": "opt_ans",
@@ -216936,7 +216936,7 @@
       "sentenceFrameId": "teacher_frame_5166",
       "lemma": "горщок",
       "form": "горщок",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "Бабуся поставила глиняний _____ із кашею в теплу піч.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -216944,7 +216944,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for горщок",
+      "clozeEn": "Grandmother put the clay pot with porridge into the warm oven.",
       "options": [
         {
           "optionId": "opt_ans",
@@ -217650,7 +217650,7 @@
       "sentenceFrameId": "teacher_frame_5183",
       "lemma": "довірений",
       "form": "довірений",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "У складних фінансових справах мені потрібен _____ радник.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -217658,7 +217658,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for довірений",
+      "clozeEn": "In complex financial matters, I need a trusted advisor.",
       "options": [
         {
           "optionId": "opt_ans",
@@ -220212,7 +220212,7 @@
       "sentenceFrameId": "teacher_frame_5244",
       "lemma": "застерігати",
       "form": "застерігати",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "Лікарі не втомлюються _____ пацієнтів від самолікування.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -220220,7 +220220,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for застерігати",
+      "clozeEn": "Doctors never tire of warning patients against self-medication.",
       "options": [
         {
           "optionId": "opt_ans",
@@ -222816,7 +222816,7 @@
       "sentenceFrameId": "teacher_frame_5306",
       "lemma": "кінематографія",
       "form": "кінематографія",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "Сучасна українська _____ стрімко розвивається та здобуває міжнародні нагороди.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -222824,7 +222824,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for кінематографія",
+      "clozeEn": "Modern Ukrainian cinematography is developing rapidly and winning international awards.",
       "options": [
         {
           "optionId": "opt_ans",
@@ -223782,7 +223782,7 @@
       "sentenceFrameId": "teacher_frame_5329",
       "lemma": "можновладець",
       "form": "можновладець",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "Жоден корумпований _____ не повинен стояти вище за закон.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -223790,7 +223790,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for можновладець",
+      "clozeEn": "No corrupt ruler should stand above the law.",
       "options": [
         {
           "optionId": "opt_ans",
@@ -224748,7 +224748,7 @@
       "sentenceFrameId": "teacher_frame_5352",
       "lemma": "налисник",
       "form": "налисник",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "На десерт ми замовили гарячий солодкий _____ із сиром та родзинками.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -224756,7 +224756,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for налисник",
+      "clozeEn": "For dessert we ordered a hot sweet crepe with cottage cheese and raisins.",
       "options": [
         {
           "optionId": "opt_ans",
@@ -225840,7 +225840,7 @@
       "sentenceFrameId": "teacher_frame_5378",
       "lemma": "облаштуватися",
       "form": "облаштуватися",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "Після переїзду до нового міста родині знадобився час, щоб _____ на новому місці.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -225848,7 +225848,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for облаштуватися",
+      "clozeEn": "After moving to the new city, the family needed time to settle in at the new place.",
       "options": [
         {
           "optionId": "opt_ans",
@@ -227436,7 +227436,7 @@
       "sentenceFrameId": "teacher_frame_5416",
       "lemma": "перебільшений",
       "form": "перебільшений",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "Чутки про небезпеку були голосними, але їхній масштаб виявився явно _____.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -227444,7 +227444,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for перебільшений",
+      "clozeEn": "Rumors of danger were loud, but their scale turned out to be clearly exaggerated.",
       "options": [
         {
           "optionId": "opt_ans",
@@ -227688,7 +227688,7 @@
       "sentenceFrameId": "teacher_frame_5422",
       "lemma": "перекушувати",
       "form": "перекушувати",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "Між парами студенти звикли швидко _____ свіжими фруктами та горіхами.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -227696,7 +227696,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for перекушувати",
+      "clozeEn": "Between classes, students are used to having a quick snack of fresh fruits and nuts.",
       "options": [
         {
           "optionId": "opt_ans",
@@ -228234,7 +228234,7 @@
       "sentenceFrameId": "teacher_frame_5435",
       "lemma": "повиснути",
       "form": "повиснути",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "Після раптової зливи густий туман міг надовго _____ над долиною.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -228242,7 +228242,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for повиснути",
+      "clozeEn": "After the sudden downpour, dense fog could hang over the valley for a long time.",
       "options": [
         {
           "optionId": "opt_ans",
@@ -228990,7 +228990,7 @@
       "sentenceFrameId": "teacher_frame_5453",
       "lemma": "помішати",
       "form": "помішати",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "Щоб суп не пригорів до дна каструлі, треба обережно _____ його ложкою.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -228998,7 +228998,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for помішати",
+      "clozeEn": "To keep the soup from burning to the bottom of the pot, one should carefully stir it with a spoon.",
       "options": [
         {
           "optionId": "opt_ans",
@@ -229116,7 +229116,7 @@
       "sentenceFrameId": "teacher_frame_5456",
       "lemma": "попереджати",
       "form": "попереджати",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "Правила безпеки вимагають завчасно _____ людей про загрозу бурі.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -229124,7 +229124,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for попереджати",
+      "clozeEn": "Safety regulations require notifying people in advance about a storm threat.",
       "options": [
         {
           "optionId": "opt_ans",
@@ -229326,7 +229326,7 @@
       "sentenceFrameId": "teacher_frame_5461",
       "lemma": "порухати",
       "form": "порухати",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "Після довгого сидіння за комп’ютером корисно встати й трохи _____ плечима.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -229334,7 +229334,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for порухати",
+      "clozeEn": "After sitting at a computer for a long time, it is useful to stand up and move one’s shoulders a bit.",
       "options": [
         {
           "optionId": "opt_ans",
@@ -230166,7 +230166,7 @@
       "sentenceFrameId": "teacher_frame_5481",
       "lemma": "приказувати",
       "form": "приказувати",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "Бабуся з усмішкою любила повчати онуків і весело _____ старі приказки.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -230174,7 +230174,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for приказувати",
+      "clozeEn": "Grandmother loved to instruct her grandchildren with a smile and merrily recite old sayings.",
       "options": [
         {
           "optionId": "opt_ans",
@@ -230502,7 +230502,7 @@
       "sentenceFrameId": "teacher_frame_5489",
       "lemma": "присягнутися",
       "form": "присягнутися",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "Кожен новий воїн повинен урочисто _____ на вірність українському народові.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -230510,7 +230510,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for присягнутися",
+      "clozeEn": "Every new warrior must solemnly swear allegiance to the Ukrainian people.",
       "options": [
         {
           "optionId": "opt_ans",
@@ -231468,7 +231468,7 @@
       "sentenceFrameId": "teacher_frame_5512",
       "lemma": "підкупляти",
       "form": "підкупляти",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "Справжню чесність і принциповість судді неможливо _____ жодними грошима.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -231476,7 +231476,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for підкупляти",
+      "clozeEn": "True honesty and integrity of a judge cannot be bribed by any amount of money.",
       "options": [
         {
           "optionId": "opt_ans",
@@ -231804,7 +231804,7 @@
       "sentenceFrameId": "teacher_frame_5520",
       "lemma": "радниця",
       "form": "радниця",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "Досвідчена юридична _____ допомогла підготувати всі необхідні документи.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -231812,7 +231812,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for радниця",
+      "clozeEn": "The experienced legal advisor helped prepare all the necessary documents.",
       "options": [
         {
           "optionId": "opt_ans",
@@ -231972,7 +231972,7 @@
       "sentenceFrameId": "teacher_frame_5524",
       "lemma": "релаксація",
       "form": "релаксація",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "Спокійна вечірня прогулянка на свіжому повітрі — це найкраща _____ після напруженого дня.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -231980,7 +231980,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for релаксація",
+      "clozeEn": "A calm evening walk in the fresh air is the best relaxation after a stressful day.",
       "options": [
         {
           "optionId": "opt_ans",
@@ -232434,7 +232434,7 @@
       "sentenceFrameId": "teacher_frame_5535",
       "lemma": "розвіддані",
       "form": "розвіддані",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "Військові отримали свіжі точні _____ про пересування сил ворога.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -232442,7 +232442,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for розвіддані",
+      "clozeEn": "The military received fresh, accurate intelligence on the movement of enemy forces.",
       "options": [
         {
           "optionId": "opt_ans",
@@ -233064,7 +233064,7 @@
       "sentenceFrameId": "teacher_frame_5550",
       "lemma": "розчухати",
       "form": "розчухати",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "Комариний укус сильно свербів, але дитину просили не _____ шкіру до крові.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -233072,7 +233072,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for розчухати",
+      "clozeEn": "The mosquito bite was itching strongly, but the child was asked not to scratch the skin until it bled.",
       "options": [
         {
           "optionId": "opt_ans",
@@ -237222,7 +237222,7 @@
       "sentenceFrameId": "teacher_frame_5649",
       "lemma": "штрафувати",
       "form": "штрафувати",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "За порушення правил паркування дорожня поліція має право суворо _____ водіїв.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -237230,7 +237230,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for штрафувати",
+      "clozeEn": "For violating parking rules, the traffic police have the right to strictly fine drivers.",
       "options": [
         {
           "optionId": "opt_ans",
@@ -237810,7 +237810,7 @@
       "sentenceFrameId": "teacher_frame_5663",
       "lemma": "інфікований",
       "form": "інфікований",
-      "sentence": "Ключове слово для вивчення в цьому контексті: «_____».",
+      "sentence": "Медичний інструмент виявився непридатним, оскільки був _____ небезпечними бактеріями.",
       "blankCase": "context",
       "caseRule": {
         "code": "teacher-lesson",
@@ -237818,7 +237818,7 @@
         "labelEn": "Teacher Lesson Context",
         "caseLabel": "називний"
       },
-      "clozeEn": "Context sentence for інфікований",
+      "clozeEn": "The medical tool proved unusable because it was infected with hazardous bacteria.",
       "options": [
         {
           "optionId": "opt_ans",
