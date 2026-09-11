@@ -62,9 +62,7 @@ def assert_no_private_host_paths(data: Any, path_prefix: str = "") -> None:
         for pat in PROHIBITED_HOST_PATTERNS:
             if pat.search(data):
                 loc = path_prefix or "root"
-                raise ValueError(
-                    f"Prohibited host path detected at {loc} matching pattern {pat.pattern}"
-                )
+                raise ValueError(f"Prohibited host path detected at {loc} matching pattern {pat.pattern}")
     elif isinstance(data, dict):
         for k, v in data.items():
             assert_no_private_host_paths(v, f"{path_prefix}.{k}" if path_prefix else k)
@@ -80,9 +78,7 @@ def assert_file_no_private_host_paths(path: Path, rel_path: str = "") -> None:
         for line_no, line in enumerate(f, start=1):
             for pat in PROHIBITED_HOST_PATTERNS:
                 if pat.search(line):
-                    raise ValueError(
-                        f"Prohibited host path detected at {loc}:{line_no} matching pattern {pat.pattern}"
-                    )
+                    raise ValueError(f"Prohibited host path detected at {loc}:{line_no} matching pattern {pat.pattern}")
 
 
 _LANGUAGE_USAGE_CACHE: dict[Path, dict[str, list[dict[str, Any]]]] = {}
@@ -173,6 +169,44 @@ def _get_language_usage_masks(repo_root: Path) -> dict[str, list[dict[str, Any]]
     return masks_map
 
 
+LOSS_MASK_SPAN_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": [
+        "start_char",
+        "end_char",
+        "reason",
+    ],
+    "properties": {
+        "start_char": {
+            "type": "integer",
+            "minimum": 0,
+        },
+        "end_char": {
+            "type": "integer",
+            "minimum": 0,
+        },
+        "reason": {
+            "type": "string",
+            "minLength": 1,
+        },
+    },
+}
+
+_MASK_SPAN_VALIDATOR = jsonschema.Draft202012Validator(LOSS_MASK_SPAN_SCHEMA)
+
+
+def validate_mask_span(span: Any, char_len: int | None = None) -> bool:
+    """Validate a loss mask span object against the canonical contract schema and interval bounds."""
+    if not _MASK_SPAN_VALIDATOR.is_valid(span):
+        return False
+    start = span["start_char"]
+    end = span["end_char"]
+    if start > end:
+        return False
+    return char_len is None or end <= char_len
+
+
 def resolve_record_loss_masks(
     record: dict[str, Any],
     repo_root: Path | None = None,
@@ -180,7 +214,8 @@ def resolve_record_loss_masks(
     """Resolve authenticated modern_view loss mask spans for a dataset record.
 
     Retrieves exact loss mask intervals (start_char, end_char, reason) from the authenticated
-    v4_language_usage_index_v1.jsonl, verifying that the count matches record's loss_mask_count.
+    v4_language_usage_index_v1.jsonl, verifying that the count matches record's loss_mask_count
+    and all spans satisfy the contract schema and interval bounds.
     """
     root = (repo_root or Path.cwd()).resolve()
     span_sha = record.get("source_fidelity", {}).get("span_sha256")
@@ -197,6 +232,13 @@ def resolve_record_loss_masks(
         raise ValueError(
             f"Resolved mask count {len(resolved_masks)} does not match record loss_mask_count {expected_count}"
         )
+
+    char_len = record.get("source_fidelity", {}).get("char_length")
+    for span in resolved_masks:
+        if not validate_mask_span(span, char_len):
+            raise ValueError(
+                f"Resolved mask span {span} failed schema or interval bounds validation for record {record.get('record_id')}"
+            )
 
     return resolved_masks
 
@@ -369,8 +411,8 @@ def build_delivery_receipt(
             raise ValueError(f"Authenticated loss mask resolution failed on record {record.get('record_id')}")
         char_len = record.get("source_fidelity", {}).get("char_length", 0)
         for span in m_view.get("loss_mask_spans", []):
-            if not (0 <= span.get("start_char", 0) <= span.get("end_char", 0) <= char_len):
-                raise ValueError(f"Invalid mask span intervals in record {record.get('record_id')}")
+            if not validate_mask_span(span, char_len):
+                raise ValueError(f"Invalid mask span in record {record.get('record_id')}: {span}")
         text = record.get("text")
         if not text or len(text) != char_len:
             raise ValueError(f"Authenticated text resolution failed on record {record.get('record_id')}")
@@ -658,7 +700,7 @@ def verify_delivery(
             return False
         char_len = record.get("source_fidelity", {}).get("char_length", 0)
         for span in m_view.get("loss_mask_spans", []):
-            if not (0 <= span.get("start_char", 0) <= span.get("end_char", 0) <= char_len):
+            if not validate_mask_span(span, char_len):
                 return False
         if db_available:
             text = record.get("text")

@@ -62,6 +62,7 @@ def test_delivery1_stream_loader_and_partition_views() -> None:
 
     # Verify stream loading with both resolved modern_view loss mask spans and authenticated text
     import hashlib
+
     text_records = list(load_dataset_stream(RECORDS_PATH, resolve_masks=True, resolve_text=True))
     assert len(text_records) == 1419
     t0 = text_records[0]
@@ -154,28 +155,36 @@ def test_verify_delivery_detects_tampered_artifact(tmp_path: Path) -> None:
     """Verify delivery verification detects missing or corrupted artifacts."""
     # Modified receipt with mismatched dataset manifest digest fails verification
     receipt = json.loads(DELIVERY_RECEIPT_PATH.read_text(encoding="utf-8"))
-    receipt["dataset_reproduction"]["manifest_sha256"] = "0000000000000000000000000000000000000000000000000000000000000000"
+    receipt["dataset_reproduction"]["manifest_sha256"] = (
+        "0000000000000000000000000000000000000000000000000000000000000000"
+    )
     tampered_receipt = tmp_path / "tampered_receipt.json"
     tampered_receipt.write_text(json.dumps(receipt), encoding="utf-8")
     assert verify_delivery(Path.cwd(), tampered_receipt) is False
 
     # Modified receipt with mismatched runs digest fails verification
     receipt2 = json.loads(DELIVERY_RECEIPT_PATH.read_text(encoding="utf-8"))
-    receipt2["learning_study_reproduction"]["runs_sha256"] = "0000000000000000000000000000000000000000000000000000000000000000"
+    receipt2["learning_study_reproduction"]["runs_sha256"] = (
+        "0000000000000000000000000000000000000000000000000000000000000000"
+    )
     tampered_receipt2 = tmp_path / "tampered_receipt2.json"
     tampered_receipt2.write_text(json.dumps(receipt2), encoding="utf-8")
     assert verify_delivery(Path.cwd(), tampered_receipt2) is False
 
     # Modified receipt with mismatched document digest fails verification
     receipt3 = json.loads(DELIVERY_RECEIPT_PATH.read_text(encoding="utf-8"))
-    receipt3["document_digests"]["dataset_card_sha256"] = "0000000000000000000000000000000000000000000000000000000000000000"
+    receipt3["document_digests"]["dataset_card_sha256"] = (
+        "0000000000000000000000000000000000000000000000000000000000000000"
+    )
     tampered_receipt3 = tmp_path / "tampered_receipt3.json"
     tampered_receipt3.write_text(json.dumps(receipt3), encoding="utf-8")
     assert verify_delivery(Path.cwd(), tampered_receipt3) is False
 
     # Modified receipt with mismatched language usage index digest fails verification
     receipt4 = json.loads(DELIVERY_RECEIPT_PATH.read_text(encoding="utf-8"))
-    receipt4["dataset_reproduction"]["language_usage_index_sha256"] = "0000000000000000000000000000000000000000000000000000000000000000"
+    receipt4["dataset_reproduction"]["language_usage_index_sha256"] = (
+        "0000000000000000000000000000000000000000000000000000000000000000"
+    )
     tampered_receipt4 = tmp_path / "tampered_receipt4.json"
     tampered_receipt4.write_text(json.dumps(receipt4), encoding="utf-8")
     assert verify_delivery(Path.cwd(), tampered_receipt4) is False
@@ -224,6 +233,7 @@ def test_verify_delivery_detects_tampered_document(tmp_path: Path) -> None:
 
     # Introducing a private host path into document fails verification even if digest is recomputed
     from scripts.projects.open_model_data.v4_reproduce_deliverables import sha256_file
+
     card.write_text(orig_text + "\nLeaked path: /home/secret/user", encoding="utf-8")
     rcpt_data = json.loads(mock_receipt.read_text(encoding="utf-8"))
     rcpt_data["document_digests"]["dataset_card_sha256"] = sha256_file(card)
@@ -236,7 +246,11 @@ def test_verify_delivery_detects_tampered_document(tmp_path: Path) -> None:
 
     study_runs = mock_root / "data/projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl"
     orig_runs = study_runs.read_text(encoding="utf-8")
-    study_runs.write_text(orig_runs + '{"run_id": "run.999", "recipe_id": "recipe.v4.learning.open_weight_pilot.20260910", "seed": 42, "path": "/workspace/checkout"}\n', encoding="utf-8")
+    study_runs.write_text(
+        orig_runs
+        + '{"run_id": "run.999", "recipe_id": "recipe.v4.learning.open_weight_pilot.20260910", "seed": 42, "path": "/workspace/checkout"}\n',
+        encoding="utf-8",
+    )
     rcpt_data["learning_study_reproduction"]["runs_sha256"] = sha256_file(study_runs)
     mock_receipt.write_text(json.dumps(rcpt_data, indent=2), encoding="utf-8")
     assert verify_delivery(mock_root, mock_receipt) is False
@@ -294,3 +308,43 @@ def test_verify_delivery_rejects_path_traversal_and_out_of_repo_documents(tmp_pa
     rcpt_data["deliverable_documents"]["dataset_card"] = "/etc/passwd"
     mock_receipt.write_text(json.dumps(rcpt_data, indent=2), encoding="utf-8")
     assert verify_delivery(mock_root, mock_receipt) is False
+
+
+def test_validate_mask_span_schema_and_interval_bounds() -> None:
+    """Verify that validate_mask_span rejects missing required fields and invalid interval bounds."""
+    from scripts.projects.open_model_data.v4_reproduce_deliverables import validate_mask_span
+
+    # Valid mask span
+    valid_span = {"start_char": 10, "end_char": 25, "reason": "historical_period"}
+    assert validate_mask_span(valid_span, char_len=50) is True
+
+    # Reject empty dict
+    assert validate_mask_span({}, char_len=50) is False
+
+    # Reject missing reason
+    assert validate_mask_span({"start_char": 10, "end_char": 25}, char_len=50) is False
+    assert validate_mask_span({"start_char": 10, "end_char": 25, "reason": ""}, char_len=50) is False
+
+    # Reject missing start_char or end_char
+    assert validate_mask_span({"end_char": 25, "reason": "historical_period"}, char_len=50) is False
+    assert validate_mask_span({"start_char": 10, "reason": "historical_period"}, char_len=50) is False
+
+    # Reject non-integer or boolean coordinates
+    assert validate_mask_span({"start_char": True, "end_char": 25, "reason": "historical_period"}, char_len=50) is False
+    assert validate_mask_span({"start_char": "10", "end_char": 25, "reason": "historical_period"}, char_len=50) is False
+    assert validate_mask_span({"start_char": -1, "end_char": 25, "reason": "historical_period"}, char_len=50) is False
+
+    # Reject inverted interval (start > end)
+    assert validate_mask_span({"start_char": 30, "end_char": 20, "reason": "historical_period"}, char_len=50) is False
+
+    # Reject end_char exceeding record char_length
+    assert validate_mask_span({"start_char": 10, "end_char": 60, "reason": "historical_period"}, char_len=50) is False
+
+    # Reject unexpected extra fields (additionalProperties: False)
+    assert (
+        validate_mask_span(
+            {"start_char": 10, "end_char": 25, "reason": "historical_period", "extra": "field"},
+            char_len=50,
+        )
+        is False
+    )

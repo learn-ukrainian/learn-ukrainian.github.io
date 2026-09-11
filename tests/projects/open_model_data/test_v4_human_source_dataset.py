@@ -164,7 +164,9 @@ def test_build_dataset_atomic_prewrite_validation_on_denominator_mismatch(tmp_pa
     src_split_index = repo_root / "data/projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl"
     lines = src_split_index.read_text(encoding="utf-8").splitlines()
     truncated_lines = [lines[0], *lines[2:]]  # drop line 1 (1 span omitted)
-    (splits_dir / "v4_work_grouping_split_index_v1.jsonl").write_text("\n".join(truncated_lines) + "\n", encoding="utf-8")
+    (splits_dir / "v4_work_grouping_split_index_v1.jsonl").write_text(
+        "\n".join(truncated_lines) + "\n", encoding="utf-8"
+    )
 
     out_dir = tmp_path / "out"
     out_dir.mkdir(parents=True)
@@ -263,9 +265,7 @@ def test_authenticated_loss_mask_resolver() -> None:
         resolve_record_loss_masks({})
 
     tampered_rec = dict(rec_raw)
-    tampered_rec["language_views"] = {
-        "modern_view": {"loss_mask_count": 999999}
-    }
+    tampered_rec["language_views"] = {"modern_view": {"loss_mask_count": 999999}}
     with pytest.raises(ValueError, match=r"does not match record loss_mask_count"):
         resolve_record_loss_masks(tampered_rec)
 
@@ -300,3 +300,43 @@ def test_authenticated_source_text_resolver() -> None:
     tampered_rec["source_fidelity"]["span_sha256"] = "0000000000000000000000000000000000000000000000000000000000000000"
     with pytest.raises(KeyError, match=r"not found in authenticated extraction index"):
         resolve_record_text(tampered_rec)
+
+
+def test_validate_mask_span_schema_and_interval_bounds() -> None:
+    """Verify that validate_mask_span rejects missing required fields and invalid interval bounds."""
+    from scripts.projects.open_model_data.v4_human_source_dataset import validate_mask_span
+
+    # Valid mask span
+    valid_span = {"start_char": 10, "end_char": 25, "reason": "historical_period"}
+    assert validate_mask_span(valid_span, char_len=50) is True
+
+    # Reject empty dict
+    assert validate_mask_span({}, char_len=50) is False
+
+    # Reject missing reason
+    assert validate_mask_span({"start_char": 10, "end_char": 25}, char_len=50) is False
+    assert validate_mask_span({"start_char": 10, "end_char": 25, "reason": ""}, char_len=50) is False
+
+    # Reject missing start_char or end_char
+    assert validate_mask_span({"end_char": 25, "reason": "historical_period"}, char_len=50) is False
+    assert validate_mask_span({"start_char": 10, "reason": "historical_period"}, char_len=50) is False
+
+    # Reject non-integer or boolean coordinates
+    assert validate_mask_span({"start_char": True, "end_char": 25, "reason": "historical_period"}, char_len=50) is False
+    assert validate_mask_span({"start_char": "10", "end_char": 25, "reason": "historical_period"}, char_len=50) is False
+    assert validate_mask_span({"start_char": -1, "end_char": 25, "reason": "historical_period"}, char_len=50) is False
+
+    # Reject inverted interval (start > end)
+    assert validate_mask_span({"start_char": 30, "end_char": 20, "reason": "historical_period"}, char_len=50) is False
+
+    # Reject end_char exceeding record char_length
+    assert validate_mask_span({"start_char": 10, "end_char": 60, "reason": "historical_period"}, char_len=50) is False
+
+    # Reject unexpected extra fields (additionalProperties: False)
+    assert (
+        validate_mask_span(
+            {"start_char": 10, "end_char": 25, "reason": "historical_period", "extra": "field"},
+            char_len=50,
+        )
+        is False
+    )
