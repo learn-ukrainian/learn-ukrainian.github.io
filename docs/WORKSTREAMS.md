@@ -63,7 +63,7 @@ is the single source of truth for membership (auditor:
 | corpus-channels | #4706 | Acquisition & ingestion (textbooks · ZNO · Ohoiko-media · press · academic) |
 | infra-harness | #6943 (successor to closed #4707) | Infra & fleet reliability (hooks, dispatch, routing) |
 | devops | #5703 | DevOps automation, CI, release & launcher reliability |
-| monitor | #7177 | Monitor API + UI — fleet & host observability |
+| monitor (`ops-api` alias) | #7919 (successor to closed #7177) | **Ops API + UI** — operator API (`scripts/api`) + dashboards; Monitor routes are a subset |
 | eval-harness | #4913 | Internal QG schemas, validators, quality gates, product adapters, and private calibration |
 | open-model-data | #6321, #7423 (#6321 succeeds closed #6164 and #6056) | Build the source-derived Cyrillic-Slavic Ukrainian dataset under #7423 on the completed Foundry engine. Community usefulness is primary; adoption is secondary evidence, not a gate. Every shipped artifact names a concrete consumer decision/use case. Current truth: #7423 is the active dataset-delivery epic; #6375/Cycle007 is completed historical evaluation evidence only; #6333 remains historical `ENGINE_READY` evidence; Phase 4 remains blocked. |
 | core-quality | #4274 | Deterministic track audits + remediation (A1–B2) |

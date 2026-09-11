@@ -23,8 +23,10 @@ streams:
     title: "DevOps automation, CI, release & launcher reliability"
     epics: [5703]
   monitor:
-    title: "Monitor API + UI — fleet & host observability"
-    epics: [7177]
+    # Product name: Ops API + UI. Stream key stays `monitor` for launcher/handoff
+    # stability; selectors `ops-api` / `ops.api` alias here via handoff_identity.sh.
+    title: "Ops API + UI — operator API (scripts/api) & dashboards"
+    epics: [7919]  # successor to closed #7177
   eval-harness:
     title: "Internal UA quality machinery — QG gates, validators, product adapters"
     epics: [4913]

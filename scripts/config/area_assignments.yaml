@@ -26,6 +26,8 @@ assignments:
       - kimi-devops
       - cursor-devops
   monitor:
+    # Human name: Ops API + UI (#7919). Prefer Kimi for UI/design (dispatch --agent kimi);
+    # keep slots empty so *-monitor phantoms alias to bare provider (42-slot roster).
     driver_agent_type: infra-orchestrator
     slots: []
   harness:

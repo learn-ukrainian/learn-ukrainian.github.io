@@ -152,8 +152,10 @@ def test_open_model_data_resolves_to_dedicated_provider_slot(resolver: str, expe
         ("seminars-bio", "bio\tepic:4431\n"),
         ("corpus", "corpus\tepic:4706\n"),
         ("corpus-channels", "corpus\tepic:4706\n"),
-        ("monitor", "monitor\tepic:7177\n"),
-        ("infra.monitor", "monitor\tepic:7177\n"),
+        ("monitor", "monitor\tepic:7919\n"),
+        ("infra.monitor", "monitor\tepic:7919\n"),
+        ("ops-api", "monitor\tepic:7919\n"),
+        ("ops.api", "monitor\tepic:7919\n"),
     ],
 )
 def test_legacy_selector_outputs_remain_byte_identical(selector: str, expected: str) -> None:
@@ -182,8 +184,8 @@ def test_legacy_selector_outputs_remain_byte_identical(selector: str, expected: 
         ("infra.fleet-comms", "infra", INFRA_STREAM_ID, "claude-infra", "gemini-infra", "grok-infra", "codex-infra"),
         ("infra.devops", "devops", "epic:5703", "claude-devops", "gemini-devops", "grok-devops", "codex-devops"),
         ("devops", "devops", "epic:5703", "claude-devops", "gemini-devops", "grok-devops", "codex-devops"),
-        ("infra.monitor", "monitor", "epic:7177", "claude-monitor", "gemini-monitor", "grok-monitor", "codex-monitor"),
-        ("monitor", "monitor", "epic:7177", "claude-monitor", "gemini-monitor", "grok-monitor", "codex-monitor"),
+        ("infra.monitor", "monitor", "epic:7919", "claude-monitor", "gemini-monitor", "grok-monitor", "codex-monitor"),
+        ("monitor", "monitor", "epic:7919", "claude-monitor", "gemini-monitor", "grok-monitor", "codex-monitor"),
         ("atlas.practice", "atlas", "epic:4387", "claude-atlas", "gemini-atlas", "grok-atlas", "codex-atlas"),
         ("practice-hub", "atlas", "epic:4387", "claude-atlas", "gemini-atlas", "grok-atlas", "codex-atlas"),
         ("hramatka.lessons", "hramatka", "epic:4542", "claude-hramatka", "gemini-hramatka", "grok-hramatka", "codex-hramatka"),
@@ -265,7 +267,7 @@ def test_monitor_epic_is_registered_separately_from_infra() -> None:
     registry = yaml.safe_load(_ISSUE_STREAMS.read_text(encoding="utf-8"))["streams"]
 
     assert registry["infra-harness"]["epics"]
-    assert 7177 in registry["monitor"]["epics"]  # allow-hardcoded-epic: monitor stream anchor
+    assert 7919 in registry["monitor"]["epics"]  # allow-hardcoded-epic: ops-api / monitor stream anchor
     assert set(registry["infra-harness"]["epics"]).isdisjoint(registry["monitor"]["epics"])
     assert set(registry["devops"]["epics"]).isdisjoint(registry["monitor"]["epics"])
 
