@@ -616,7 +616,22 @@ def verify_dataset(
     seen_span_shas: set[str] = set()
 
     with records_path.open("r", encoding="utf-8") as f:
-        _ = f.readline()  # header
+        header_line = f.readline()
+        if not header_line:
+            return False
+        try:
+            header_data = json.loads(header_line)
+            if not _RECORDS_HEADER_VALIDATOR.is_valid(header_data):
+                return False
+        except Exception:
+            return False
+        if header_data.get("records") != 1419:
+            return False
+        manifest_sha = sha256_file(manifest_path)
+        if header_data.get("manifest_sha256") != manifest_sha:
+            return False
+        if header_data.get("dataset_version") != DATASET_VERSION:
+            return False
         for line in f:
             line_str = line.strip()
             if not line_str:
@@ -831,6 +846,20 @@ LOSS_MASK_SPAN_SCHEMA = {
 
 _MASK_SPAN_VALIDATOR = jsonschema.Draft202012Validator(LOSS_MASK_SPAN_SCHEMA)
 
+DATASET_RECORDS_HEADER_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["schema_version", "dataset_version", "records", "manifest_sha256"],
+    "properties": {
+        "schema_version": {"type": "string", "const": "v4_human_source_dataset_records_v1"},
+        "dataset_version": {"type": "string"},
+        "records": {"type": "integer", "minimum": 1},
+        "manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    },
+}
+
+_RECORDS_HEADER_VALIDATOR = jsonschema.Draft202012Validator(DATASET_RECORDS_HEADER_SCHEMA)
+
 
 def validate_mask_span(span: Any, char_len: int | None = None) -> bool:
     """Validate a loss mask span object against the canonical contract schema and interval bounds."""
@@ -954,12 +983,27 @@ def load_dataset_stream(
                 break
 
     with records_path.open("r", encoding="utf-8") as f:
-        _ = f.readline()  # header
+        header_processed = False
         for line in f:
             line_str = line.strip()
             if not line_str:
                 continue
-            record = json.loads(line_str)
+            if not header_processed:
+                header_processed = True
+                if line_str.startswith("#"):
+                    continue
+                try:
+                    obj = json.loads(line_str)
+                except Exception as err:
+                    raise ValueError(f"Invalid dataset records header: {line_str}") from err
+
+                if obj.get("schema_version") == "v4_human_source_dataset_records_v1":
+                    if not _RECORDS_HEADER_VALIDATOR.is_valid(obj):
+                        raise ValueError(f"Invalid dataset records header: {line_str}")
+                    continue
+                record = obj
+            else:
+                record = json.loads(line_str)
             if "text" in record or "text" in record.get("source_fidelity", {}):
                 raise ValueError(
                     f"Persisted record {record.get('record_id')} contains raw text; "

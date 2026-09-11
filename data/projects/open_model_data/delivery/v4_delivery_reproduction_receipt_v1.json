@@ -30,7 +30,7 @@
   "document_digests": {
     "dataset_card_sha256": "2771352518c6d6468bbe1eda56176101686f9c305b22709c1aa8d619a8357012",
     "technical_report_sha256": "5607e07dc4c1691dbc535f0f776740b0b9b32d61f61f8fa74408cd28b521a1e5",
-    "research_summary_sha256": "fae31d2e0a63c75f47840c3609646cdb7bd87164ce0da2f53dd533d364d1b29d"
+    "research_summary_sha256": "23b91aff00af6692a718b9a88d5693a5e7dd998d32441e9c2e39e422ba288a49"
   },
   "residuals": {
     "operator_excluded_strata": [

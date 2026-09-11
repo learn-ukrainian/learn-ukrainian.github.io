@@ -17,13 +17,13 @@ Language models trained on web-scraped corpora frequently suffer from translatio
 
 ## Summary of Findings
 
-- The framework provides an end-to-end verified methodology for continual pre-training on curated human sources (literary prose and educational textbooks), demonstrating enhanced Ukrainian generative fidelity.
-- Calibrated protocol simulation fixtures illustrate how loss masking non-standard or foreign citations during training produces superior perplexity (-26.14%) compared to unmasked continual pre-training (-22.46%).
-- Authentic historical and literary Ukrainian forms are preserved without regression or synthetic modernization.
+- The framework provides an end-to-end verified methodology and protocol harness for continual pre-training on curated human sources (literary prose and educational textbooks), with enhanced Ukrainian generative fidelity projected by protocol simulation fixtures while empirical model learning utility remains pending live cluster training.
+- Calibrated protocol simulation fixtures illustrate how loss masking non-standard or foreign citations during training is projected to achieve superior perplexity (-26.14%) compared to unmasked continual pre-training (-22.46%), pending empirical verification on live model checkpoints.
+- The dual-view masking protocol is structurally designed to preserve authentic historical and literary Ukrainian forms without regression or synthetic modernization.
 - All experimental recipes, multi-seed runners, and schemas are fully verified and reproducible, ready for cluster execution.
 
 ---
 
 ## Open-Weight Model Cross-Family Evaluation Plan
 
-As an extension to the completed Gemma 4 study, identical recipes and evaluation partitions are pre-registered for testing against the Llama 3.1 architecture family (`meta-llama/Llama-3.1-8B-Instruct`) to demonstrate cross-architecture universality of the human-source Ukrainian adaptation signal.
+As an extension to the completed Gemma 4 study, identical recipes and evaluation partitions are pre-registered for testing against the Llama 3.1 architecture family (`meta-llama/Llama-3.1-8B-Instruct`) to evaluate projected cross-architecture universality of the human-source Ukrainian adaptation signal.

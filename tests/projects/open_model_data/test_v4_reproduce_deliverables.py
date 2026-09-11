@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 import sqlite3
 from pathlib import Path
 
@@ -20,6 +21,7 @@ from scripts.projects.open_model_data.v4_reproduce_deliverables import (
     load_partition_view,
     resolve_record_loss_masks,
     resolve_record_text,
+    sha256_file,
     verify_delivery,
 )
 
@@ -229,6 +231,7 @@ def test_verify_delivery_detects_tampered_document(tmp_path: Path) -> None:
     for subpath in [
         "data/projects/open_model_data/contracts/v4_delivery_reproduction_receipt_v1.schema.json",
         "data/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json",
+        "data/projects/open_model_data/contracts/v4_learning_study_receipt_v1.schema.json",
         "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
         "data/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json",
         "data/projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
@@ -605,3 +608,98 @@ def test_cache_refreshes_on_index_change(tmp_path: Path) -> None:
     masks2 = _get_language_usage_masks(fake_repo)
     assert "2222" * 16 in masks2
     assert len(masks2["2222" * 16]) == 1
+
+
+def test_verify_delivery_rejects_inconsistent_study_receipt_metrics_or_verdict(tmp_path: Path) -> None:
+    """Verify that verify_delivery rejects contradictory study receipt verdict or summary metrics (Finding 3987604428)."""
+    fake_repo = tmp_path / "repo_study"
+    fake_repo.mkdir(parents=True, exist_ok=True)
+    repo_root = Path.cwd()
+
+    (fake_repo / "docs").symlink_to((repo_root / "docs").resolve())
+    data_omd = fake_repo / "data/projects/open_model_data"
+    data_omd.mkdir(parents=True, exist_ok=True)
+    for sub in ["contracts", "language", "extraction", "dataset"]:
+        (data_omd / sub).symlink_to((repo_root / "data/projects/open_model_data" / sub).resolve())
+
+    # Copy study directory so we can mutate study receipt
+    shutil.copytree(repo_root / "data/projects/open_model_data/study", data_omd / "study")
+    study_rcpt_file = data_omd / "study/v4_learning_study_receipt_v1.json"
+    study_rcpt_orig = json.loads(study_rcpt_file.read_text(encoding="utf-8"))
+
+    # Symlink delivery directory
+    deliv_dir = data_omd / "delivery"
+    deliv_dir.mkdir(parents=True, exist_ok=True)
+    (deliv_dir / "v4_delivery_reproduction_receipt_v1.json").symlink_to(
+        (repo_root / "data/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json").resolve()
+    )
+
+    delivery_receipt_data = json.loads(DELIVERY_RECEIPT_PATH.read_text(encoding="utf-8"))
+
+    # 1. Tamper study receipt verdict
+    study_rcpt_bad = dict(study_rcpt_orig)
+    study_rcpt_bad["verdict"] = "STUDY_FAILED_NEGATIVE_LEARNING"
+    study_rcpt_file.write_text(json.dumps(study_rcpt_bad), encoding="utf-8")
+
+    rec_data = dict(delivery_receipt_data)
+    rec_data["learning_study_reproduction"] = dict(rec_data["learning_study_reproduction"])
+    rec_data["learning_study_reproduction"]["receipt_sha256"] = sha256_file(study_rcpt_file)
+    test_rcpt1 = tmp_path / "deliv_rcpt1.json"
+    test_rcpt1.write_text(json.dumps(rec_data), encoding="utf-8")
+
+    assert verify_delivery(fake_repo, test_rcpt1) is False
+
+    # 2. Tamper study summary metric in delivery receipt while study receipt has original
+    study_rcpt_file.write_text(json.dumps(study_rcpt_orig), encoding="utf-8")
+    rec_data["learning_study_reproduction"] = dict(delivery_receipt_data["learning_study_reproduction"])
+    rec_data["learning_study_reproduction"]["baseline_perplexity_mean"] = 999.99
+    test_rcpt2 = tmp_path / "deliv_rcpt2.json"
+    test_rcpt2.write_text(json.dumps(rec_data), encoding="utf-8")
+
+    assert verify_delivery(fake_repo, test_rcpt2) is False
+
+    # 3. Tamper study summary metric in study receipt while delivery receipt has original
+    study_rcpt_bad2 = dict(study_rcpt_orig)
+    study_rcpt_bad2["summary_findings"] = dict(study_rcpt_bad2["summary_findings"])
+    study_rcpt_bad2["summary_findings"]["modern_masked_adaptation_perplexity_mean"] = 1.01
+    study_rcpt_file.write_text(json.dumps(study_rcpt_bad2), encoding="utf-8")
+
+    rec_data3 = dict(delivery_receipt_data)
+    rec_data3["learning_study_reproduction"] = dict(rec_data3["learning_study_reproduction"])
+    rec_data3["learning_study_reproduction"]["receipt_sha256"] = sha256_file(study_rcpt_file)
+    test_rcpt3 = tmp_path / "deliv_rcpt3.json"
+    test_rcpt3.write_text(json.dumps(rec_data3), encoding="utf-8")
+
+    assert verify_delivery(fake_repo, test_rcpt3) is False
+
+
+def test_verify_delivery_rejects_tampered_or_missing_records_header(tmp_path: Path) -> None:
+    """Verify that verify_delivery and build_delivery_receipt reject tampered or missing JSONL header (Finding 3987604443)."""
+    with open(RECORDS_PATH, encoding="utf-8") as f:
+        header = json.loads(f.readline())
+        lines = [f.readline() for _ in range(1419)]
+
+    # 1. Tampered records count in header
+    bad_h1 = dict(header)
+    bad_h1["records"] = 100
+    content1 = json.dumps(bad_h1) + "\n" + "".join(lines)
+    repo1, rcpt1 = _setup_fake_repo_with_records(tmp_path / "bad_count", content1)
+    assert verify_delivery(repo1, rcpt1) is False
+    with pytest.raises(ValueError, match=r"Header records count"):
+        build_delivery_receipt(repo1, tmp_path / "out1.json")
+
+    # 2. Tampered manifest_sha256 in header
+    bad_h2 = dict(header)
+    bad_h2["manifest_sha256"] = "0" * 64
+    content2 = json.dumps(bad_h2) + "\n" + "".join(lines)
+    repo2, rcpt2 = _setup_fake_repo_with_records(tmp_path / "bad_sha", content2)
+    assert verify_delivery(repo2, rcpt2) is False
+    with pytest.raises(ValueError, match=r"Header manifest_sha256"):
+        build_delivery_receipt(repo2, tmp_path / "out2.json")
+
+    # 3. Missing header (first line is a data record)
+    content3 = "".join(lines)
+    repo3, rcpt3 = _setup_fake_repo_with_records(tmp_path / "missing_header", content3)
+    assert verify_delivery(repo3, rcpt3) is False
+    with pytest.raises(ValueError, match=r"Invalid dataset records header"):
+        build_delivery_receipt(repo3, tmp_path / "out3.json")

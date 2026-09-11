@@ -281,6 +281,20 @@ LOSS_MASK_SPAN_SCHEMA = {
 
 _MASK_SPAN_VALIDATOR = jsonschema.Draft202012Validator(LOSS_MASK_SPAN_SCHEMA)
 
+DATASET_RECORDS_HEADER_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["schema_version", "dataset_version", "records", "manifest_sha256"],
+    "properties": {
+        "schema_version": {"type": "string", "const": "v4_human_source_dataset_records_v1"},
+        "dataset_version": {"type": "string"},
+        "records": {"type": "integer", "minimum": 1},
+        "manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    },
+}
+
+_RECORDS_HEADER_VALIDATOR = jsonschema.Draft202012Validator(DATASET_RECORDS_HEADER_SCHEMA)
+
 
 def validate_mask_span(span: Any, char_len: int | None = None) -> bool:
     """Validate a loss mask span object against the canonical contract schema and interval bounds."""
@@ -403,12 +417,27 @@ def load_dataset_stream(
                 break
 
     with records_path.open("r", encoding="utf-8") as f:
-        _ = f.readline()  # header
+        header_processed = False
         for line in f:
             line_str = line.strip()
             if not line_str:
                 continue
-            record = json.loads(line_str)
+            if not header_processed:
+                header_processed = True
+                if line_str.startswith("#"):
+                    continue
+                try:
+                    obj = json.loads(line_str)
+                except Exception as err:
+                    raise ValueError(f"Invalid dataset records header: {line_str}") from err
+
+                if obj.get("schema_version") == "v4_human_source_dataset_records_v1":
+                    if not _RECORDS_HEADER_VALIDATOR.is_valid(obj):
+                        raise ValueError(f"Invalid dataset records header: {line_str}")
+                    continue
+                record = obj
+            else:
+                record = json.loads(line_str)
             if "text" in record or "text" in record.get("source_fidelity", {}):
                 raise ValueError(
                     f"Persisted record {record.get('record_id')} contains raw text; "
@@ -449,6 +478,20 @@ def load_partition_view(
                 continue
             filtered.append(record)
     return filtered
+
+
+def _get_verify_study() -> Any:
+    try:
+        from scripts.projects.open_model_data.v4_open_weight_learning_study import verify_study
+
+        return verify_study
+    except ImportError:
+        root = Path(__file__).resolve().parents[3]
+        if str(root) not in sys.path:
+            sys.path.insert(0, str(root))
+        from scripts.projects.open_model_data.v4_open_weight_learning_study import verify_study
+
+        return verify_study
 
 
 def build_delivery_receipt(
@@ -492,13 +535,30 @@ def build_delivery_receipt(
     if len(dev_records) != 245:
         raise ValueError(f"Expected 245 dev records, found {len(dev_records)}")
 
+    manifest_sha = sha256_file(dataset_manifest_path)
+    records_sha = sha256_file(dataset_records_path)
+    dataset_rcpt_sha = sha256_file(dataset_receipt_path)
+    lang_index_sha = sha256_file(lang_index_path)
+
     record_validator = _get_record_validator(repo_root)
     seen_record_ids: set[str] = set()
     seen_span_shas: set[str] = set()
 
-    # Pass 1: Validate every raw record against schema, check zero raw text, and ensure uniqueness
+    # Pass 1: Validate header and every raw record against schema, check zero raw text, and ensure uniqueness
     with dataset_records_path.open("r", encoding="utf-8") as f:
-        _ = f.readline()  # header
+        header_line = f.readline()
+        if not header_line:
+            raise ValueError(f"Empty records file: {dataset_records_path}")
+        header = json.loads(header_line)
+        if not _RECORDS_HEADER_VALIDATOR.is_valid(header):
+            errs = list(_RECORDS_HEADER_VALIDATOR.iter_errors(header))
+            raise ValueError(f"Invalid dataset records header: {errs[0].message if errs else 'schema failure'}")
+        if header.get("records") != 1419:
+            raise ValueError(f"Header records count {header.get('records')} != 1419")
+        if header.get("manifest_sha256") != manifest_sha:
+            raise ValueError(f"Header manifest_sha256 {header.get('manifest_sha256')} != {manifest_sha}")
+        if header.get("dataset_version") != DATASET_VERSION:
+            raise ValueError(f"Header dataset_version {header.get('dataset_version')} != {DATASET_VERSION}")
         for line_no, line in enumerate(f, start=2):
             line_str = line.strip()
             if not line_str:
@@ -554,18 +614,19 @@ def build_delivery_receipt(
         raise ValueError(f"Expected 1419 verified records, found {verified_records_count}")
 
     dataset_receipt = json.loads(dataset_receipt_path.read_text(encoding="utf-8"))
-    manifest_sha = sha256_file(dataset_manifest_path)
-    records_sha = sha256_file(dataset_records_path)
-    dataset_rcpt_sha = sha256_file(dataset_receipt_path)
-    lang_index_sha = sha256_file(lang_index_path)
-
     if dataset_receipt["manifest_sha256"] != manifest_sha:
         raise ValueError("Dataset manifest SHA mismatch in receipt")
     if dataset_receipt["records_sha256"] != records_sha:
         raise ValueError("Dataset records SHA mismatch in receipt")
 
-    # Verify learning study reproduction
+    verify_study = _get_verify_study()
+
+    if not verify_study(repo_root, study_recipe_path, study_runs_path, study_receipt_path):
+        raise ValueError("Controlled learning study verification failed")
+
     study_receipt = json.loads(study_receipt_path.read_text(encoding="utf-8"))
+    if study_receipt.get("verdict") != "STUDY_CONFIRMED_POSITIVE_LEARNING":
+        raise ValueError(f"Unexpected study receipt verdict: {study_receipt.get('verdict')}")
     study_recipe_sha = sha256_file(study_recipe_path)
     study_rcpt_sha = sha256_file(study_receipt_path)
     study_runs_sha = sha256_file(study_runs_path)
@@ -767,8 +828,23 @@ def verify_delivery(
     if sha256_file(study_runs_path) != study_repro.get("runs_sha256"):
         return False
 
+    verify_study = _get_verify_study()
+
+    if not verify_study(repo_root, study_recipe_path, study_runs_path, study_receipt_path):
+        return False
+
     # Validate runs against study receipt
     study_receipt = json.loads(study_receipt_path.read_text(encoding="utf-8"))
+    if study_receipt.get("verdict") != "STUDY_CONFIRMED_POSITIVE_LEARNING":
+        return False
+    sf = study_receipt.get("summary_findings", {})
+    if study_repro.get("baseline_perplexity_mean") != sf.get("baseline_perplexity_mean"):
+        return False
+    if study_repro.get("adapted_perplexity_mean") != sf.get("modern_masked_adaptation_perplexity_mean"):
+        return False
+    if study_repro.get("perplexity_delta_pct") != sf.get("perplexity_delta_pct"):
+        return False
+
     expected_seeds = set(study_receipt.get("runs_accounting", {}).get("seeds_tested", []))
     recipe_id = study_receipt.get("recipe_id")
 
@@ -826,7 +902,21 @@ def verify_delivery(
     seen_span_shas: set[str] = set()
 
     with dataset_records_path.open("r", encoding="utf-8") as f:
-        _ = f.readline()  # header
+        header_line = f.readline()
+        if not header_line:
+            return False
+        try:
+            header_data = json.loads(header_line)
+            if not _RECORDS_HEADER_VALIDATOR.is_valid(header_data):
+                return False
+        except Exception:
+            return False
+        if header_data.get("records") != ds_repro.get("records_count"):
+            return False
+        if header_data.get("manifest_sha256") != ds_repro.get("manifest_sha256"):
+            return False
+        if header_data.get("dataset_version") != receipt_data.get("dataset_version"):
+            return False
         for line in f:
             line_str = line.strip()
             if not line_str:

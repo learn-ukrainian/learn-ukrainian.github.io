@@ -697,3 +697,75 @@ def test_record_schema_forbids_raw_text() -> None:
     rec_with_fidelity_text["source_fidelity"]["text"] = "Sample corpus text"
     with pytest.raises(jsonschema.ValidationError):
         jsonschema.validate(instance=rec_with_fidelity_text, schema=schema)
+
+
+def test_verify_dataset_rejects_tampered_or_missing_records_header(tmp_path: Path) -> None:
+    """Verify that verify_dataset rejects records with invalid, missing, or mismatched header even with matching SHA."""
+    from scripts.projects.open_model_data.v4_human_source_dataset import sha256_file
+
+    with open(RECORDS_PATH, encoding="utf-8") as f:
+        header_line = f.readline()
+        header = json.loads(header_line)
+        lines = [f.readline() for _ in range(1419)]
+
+    # 1. Tampered records count in header
+    bad_header1 = dict(header)
+    bad_header1["records"] = 100
+    bad_file1 = tmp_path / "bad_count_records.jsonl"
+    bad_file1.write_text(json.dumps(bad_header1) + "\n" + "".join(lines), encoding="utf-8")
+
+    receipt_data = json.loads(RECEIPT_PATH.read_text(encoding="utf-8"))
+    receipt_data["records_sha256"] = sha256_file(bad_file1)
+    fake_rcpt1 = tmp_path / "fake_receipt1.json"
+    fake_rcpt1.write_text(json.dumps(receipt_data), encoding="utf-8")
+
+    assert (
+        verify_dataset(
+            Path.cwd(),
+            records_rel=str(bad_file1.relative_to(Path.cwd()) if bad_file1.is_relative_to(Path.cwd()) else bad_file1),
+            receipt_rel=str(
+                fake_rcpt1.relative_to(Path.cwd()) if fake_rcpt1.is_relative_to(Path.cwd()) else fake_rcpt1
+            ),
+        )
+        is False
+    )
+
+    # 2. Tampered manifest_sha256 in header
+    bad_header2 = dict(header)
+    bad_header2["manifest_sha256"] = "0" * 64
+    bad_file2 = tmp_path / "bad_manifest_records.jsonl"
+    bad_file2.write_text(json.dumps(bad_header2) + "\n" + "".join(lines), encoding="utf-8")
+
+    receipt_data["records_sha256"] = sha256_file(bad_file2)
+    fake_rcpt2 = tmp_path / "fake_receipt2.json"
+    fake_rcpt2.write_text(json.dumps(receipt_data), encoding="utf-8")
+
+    assert (
+        verify_dataset(
+            Path.cwd(),
+            records_rel=str(bad_file2.relative_to(Path.cwd()) if bad_file2.is_relative_to(Path.cwd()) else bad_file2),
+            receipt_rel=str(
+                fake_rcpt2.relative_to(Path.cwd()) if fake_rcpt2.is_relative_to(Path.cwd()) else fake_rcpt2
+            ),
+        )
+        is False
+    )
+
+    # 3. Missing header (first line is a data record)
+    bad_file3 = tmp_path / "missing_header_records.jsonl"
+    bad_file3.write_text("".join(lines), encoding="utf-8")
+
+    receipt_data["records_sha256"] = sha256_file(bad_file3)
+    fake_rcpt3 = tmp_path / "fake_receipt3.json"
+    fake_rcpt3.write_text(json.dumps(receipt_data), encoding="utf-8")
+
+    assert (
+        verify_dataset(
+            Path.cwd(),
+            records_rel=str(bad_file3.relative_to(Path.cwd()) if bad_file3.is_relative_to(Path.cwd()) else bad_file3),
+            receipt_rel=str(
+                fake_rcpt3.relative_to(Path.cwd()) if fake_rcpt3.is_relative_to(Path.cwd()) else fake_rcpt3
+            ),
+        )
+        is False
+    )
