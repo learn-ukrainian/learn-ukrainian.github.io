@@ -100,4 +100,10 @@ curl -s http://localhost:8765/api/dashboard/comms         # Broker messages + wa
 curl -s http://localhost:8765/api/gold/inspect/{t}/{slug} # Deep module inspection
 ```
 
+## Retired Endpoints (HTTP 404)
+
+Retired in #7942 (#7945); return HTTP 404 without deprecation headers:
+- `GET /api/blue/live-status` → use `GET /api/state/build-status`
+- `GET /api/rag/*` → use canonical `GET /api/sources/*`
+
 Full reference: `docs/MONITOR-API.md`
