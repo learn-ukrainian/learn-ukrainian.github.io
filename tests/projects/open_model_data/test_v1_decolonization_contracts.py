@@ -49,6 +49,13 @@ def test_seed_trajectories_validate(trajectory_schema: dict) -> None:
             assert not errors, f"Validation errors on line {idx}: {[e.message for e in errors]}"
             records.append(record)
 
+
+    # Verify register_spectrum alternatives are fully covered in vesum_attestation
+    for r in records:
+        vesum_lemmas = {v["lemma"] for v in r["vesum_attestation"]}
+        for alt in r["register_spectrum"]["alternatives"]:
+            assert alt["lemma"] in vesum_lemmas, f"Alternative {alt["lemma"]} in {r["target_term"]} not in vesum_attestation"
+
     assert len(records) >= 3
     # Verify unique trajectory IDs
     traj_ids = [r["trajectory_id"] for r in records]
