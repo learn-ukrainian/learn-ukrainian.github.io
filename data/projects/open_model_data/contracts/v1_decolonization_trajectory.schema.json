@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v1_decolonization_trajectory.schema.json",
+  "title": "UkrainianLinguisticReasoningTrajectoryV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "trajectory_id",
+    "query",
+    "target_term",
+    "is_calque_or_russianism",
+    "morphemic_breakdown",
+    "lexicographical_context",
+    "vesum_attestation",
+    "register_spectrum",
+    "reasoning_steps",
+    "final_response"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v1_decolonization_trajectory"
+    },
+    "trajectory_id": {
+      "type": "string",
+      "pattern": "^traj\\.decolonize\\.[a-f0-9]{16}$"
+    },
+    "query": {
+      "type": "string",
+      "minLength": 3
+    },
+    "target_term": {
+      "type": "string",
+      "minLength": 1
+    },
+    "is_calque_or_russianism": {
+      "type": "boolean"
+    },
+    "morphemic_breakdown": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_formation",
+        "ukrainian_equivalent_mechanism"
+      ],
+      "properties": {
+        "source_formation": {
+          "type": "string",
+          "minLength": 5
+        },
+        "ukrainian_equivalent_mechanism": {
+          "type": "string",
+          "minLength": 5
+        }
+      }
+    },
+    "lexicographical_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "historical_suppression_note",
+        "restoration_era"
+      ],
+      "properties": {
+        "historical_suppression_note": {
+          "type": "string",
+          "minLength": 5
+        },
+        "restoration_era": {
+          "type": "string",
+          "minLength": 3
+        }
+      }
+    },
+    "vesum_attestation": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "lemma",
+          "vesum_forms_count",
+          "is_standard_attested"
+        ],
+        "properties": {
+          "lemma": {
+            "type": "string",
+            "minLength": 1
+          },
+          "vesum_forms_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "is_standard_attested": {
+            "type": "boolean"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "register_spectrum": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "primary_living_standard",
+        "alternatives"
+      ],
+      "properties": {
+        "primary_living_standard": {
+          "type": "string",
+          "minLength": 1
+        },
+        "alternatives": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "lemma",
+              "register_tier",
+              "evidence_source"
+            ],
+            "properties": {
+              "lemma": {
+                "type": "string",
+                "minLength": 1
+              },
+              "register_tier": {
+                "type": "string",
+                "enum": [
+                  "living_standard",
+                  "classical_regional",
+                  "technical_compound",
+                  "purist_neologism"
+                ]
+              },
+              "evidence_source": {
+                "type": "string",
+                "minLength": 3
+              }
+            }
+          }
+        }
+      }
+    },
+    "reasoning_steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 5
+      }
+    },
+    "final_response": {
+      "type": "string",
+      "minLength": 10
+    }
+  }
+}

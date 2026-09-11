@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v1_decolonization_dpo_pair.schema.json",
+  "title": "UkrainianLinguisticDpoPairV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "pair_id",
+    "prompt",
+    "chosen",
+    "rejected",
+    "metadata"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v1_decolonization_dpo_pair"
+    },
+    "pair_id": {
+      "type": "string",
+      "pattern": "^dpo\\.decolonize\\.[a-f0-9]{16}$"
+    },
+    "prompt": {
+      "type": "string",
+      "minLength": 3
+    },
+    "chosen": {
+      "type": "string",
+      "minLength": 10
+    },
+    "rejected": {
+      "type": "string",
+      "minLength": 10
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_term",
+        "rejected_flaw",
+        "primary_alternative",
+        "vesum_verified"
+      ],
+      "properties": {
+        "target_term": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rejected_flaw": {
+          "type": "string",
+          "enum": [
+            "soviet_lexicography_acceptance",
+            "unvetted_purism_hallucination",
+            "mechanical_wordnet_synset",
+            "lack_of_morphemic_reasoning"
+          ]
+        },
+        "primary_alternative": {
+          "type": "string",
+          "minLength": 1
+        },
+        "vesum_verified": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}
