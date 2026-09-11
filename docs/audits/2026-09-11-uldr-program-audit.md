@@ -1,7 +1,7 @@
 # ULDR program audit — 2026-09-11
 
-Latest disposition: **FAIL** at `2fdd9c25cdfb7ba1ee6c4cf9e08692e1a9f69c32`.
-See [the fourth re-review](#fourth-re-review--2fdd9c25)
+Latest disposition: **FAIL** at `c64d8956ba390cde7d8af4c791ef46d8db33257c`.
+See [the fifth re-review](#fifth-re-review--c64d8956)
 for current fixes, evidence, and remaining findings. Earlier sections retain the
 history of the heads they name.
 
@@ -640,3 +640,95 @@ The template evidence is date-scoped. The 97-seed residual remains recorded.
 Resolve the remaining recommendation/evidence semantics and backup-loss path;
 correct self-check claims and dispose of the CodeQL alert. Then repeat exact-head
 review. No merge or implementation change is authorized by this report.
+
+## Fifth re-review — c64d8956
+
+**VERDICT: FAIL** at `c64d8956ba390cde7d8af4c791ef46d8db33257c` of PR #7933.
+The remaining issues are semantic qualification of answers and interpretation of
+citation evidence. The previously reproduced output-loss paths are fixed.
+
+### Verified fixes and package checks
+
+- **35 affected tests pass** in 1.20 seconds: 31 generator/formatter/evaluator
+  tests plus four contract tests.
+- Canonical and consumer counts reconcile to 1,200 trajectories and 1,200 DPO
+  pairs, split 966/234. All **16 canonical and consumer hash/byte/count receipts**
+  match. The four consumer groups exactly match the current formatter's output
+  for their canonical records. Maximum shard size: **1,799,051 bytes**.
+- **H2 fixed in the exercised failure paths:** original shard and manifest contents
+  survive failure on the first backup move, second backup move, and staged-file
+  move. When restoration itself fails, the originals remain in the retained backup.
+- **H4 fixed:** the guide now uses the observed metrics and calls the score a
+  reference regression/sanity check with explicit pattern-matching limitations;
+  the mathematical-proof and theoretical-upper-bound claims are removed.
+- The original H1 descriptive sentence now scores zero. The original H3
+  “Do not use alpha. Use beta.” citation now rejects alpha. These are real
+  improvements; the counterexamples below show why they do not fully establish
+  the intended semantic properties.
+- Sweeping historical suppression templates have been replaced. This audit does
+  not independently validate every replacement grammatical claim.
+
+### I1 — P1: Subject binding still accepts quotation and unrelated reasoning
+
+For target `badtoken` and alternative `goodtoken`, both synthetic responses score
+**1.0 / PASS**:
+
+> На дошці написано «Вживайте goodtoken», бо учень переписав словник про суфікс. Це лише цитата з вправи.
+
+> Правильно вживати goodtoken. Учень читає словник, бо його цікавить суфікс.
+
+The first reports an instruction as a quotation rather than endorsing it. The
+second makes a recommendation but provides no relevant linguistic reasoning.
+At `v4_evaluate_decolonization.py:223–243`, a subject-bearing sentence can satisfy
+the binding check with a marker or connective, while the other reasoning markers
+are counted elsewhere in the response. The checks do not establish that the
+explanation supports the recommendation.
+
+The guide's new proxy disclaimer accurately limits what these scores can prove.
+Keep that distinction in release claims: a proxy PASS is not independent semantic
+qualification, and H1 cannot be called a general non-answer/grounding fix. Use
+independently adjudicated contextual cases for that qualification, rather than
+adding only the next exact quotation to the refusal patterns.
+
+### I2 — P1: Negated correctness still promotes the rejected alternative
+
+The new `is_positive_citation` rejects the original imperative counterexample,
+but still returns positive support for alpha in this synthetic citation:
+
+> alpha is not correct. beta is correct.
+
+With positive VESUM counts and no other attestation, synthesis marks both
+alternatives `living_standard` and selects **alpha** as primary.
+`v4_decolonization_reasoning.py:502–553` uses negative and positive regex lists;
+the positive “correct” pattern matches the negated assertion that is absent from
+the rejection list. The training consequence is a recommendation contrary to its
+own citation, not merely a weak evaluation score.
+
+Bind an explicit positive recommendation to its evidence and retain uncertainty
+when that relation cannot be established. Extending a blacklist for one phrasing
+does not establish the positive evidence relation. No source-collection approval
+is being reopened; the defect is the inference made from a supplied citation.
+
+### CodeQL disposition is not yet established by the neutral result
+
+The prior high-severity alert is no longer returned as a failing check. However,
+the exact-head CodeQL check is **NEUTRAL**, with “1 configuration not found”:
+code scanning says it cannot determine introduced alerts because the default
+Python configuration present on main was not found. This is not evidence of a
+clean Python security comparison or confirmed alert resolution.
+
+Other CI jobs were still running when checked. Resolve or explain that coverage
+warning and verify the completed exact-head results before claiming all CI clear.
+The original annotation concerned a non-HTML chat-template test; this report still
+does not assert a production XSS vulnerability.
+
+### Disposition and validation boundary
+
+The failure-injection fixes, artifact receipts and corrected reference-check
+framing are accepted as progress. Semantic scoring remains a documented proxy,
+and the citation counterexample continues to block the claim of verified normative
+training labels. The 3/100 seed delivery and 97-seed residual are unchanged.
+
+All counterexamples are synthetic. Real artifact checks exported only aggregates
+and equality results from custody. No implementation changes, model execution,
+merge or publication occurred during this review.
