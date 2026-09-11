@@ -12,6 +12,7 @@ Satisfies DELIVERY-1 through DELIVERY-6.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import json
 import re
@@ -110,9 +111,21 @@ def assert_file_no_private_host_paths(path: Path, rel_path: str = "") -> None:
                 assert_no_private_host_paths(item, f"{loc}:{line_no}")
 
 
-_LANGUAGE_USAGE_CACHE: dict[Path, dict[str, list[dict[str, Any]]]] = {}
-_EXTRACTION_INDEX_CACHE: dict[Path, dict[str, dict[str, Any]]] = {}
+_LANGUAGE_USAGE_CACHE: dict[tuple[Path, str], dict[str, list[dict[str, Any]]]] = {}
+_EXTRACTION_INDEX_CACHE: dict[tuple[Path, str], dict[str, dict[str, Any]]] = {}
 _SOURCES_DB_CONNS: dict[Path, sqlite3.Connection] = {}
+_RECORD_SCHEMA_CACHE: dict[tuple[Path, str], jsonschema.Draft202012Validator] = {}
+
+
+def clear_caches() -> None:
+    """Clear all in-memory caches and database connections."""
+    _LANGUAGE_USAGE_CACHE.clear()
+    _EXTRACTION_INDEX_CACHE.clear()
+    _RECORD_SCHEMA_CACHE.clear()
+    for conn in _SOURCES_DB_CONNS.values():
+        with contextlib.suppress(Exception):
+            conn.close()
+    _SOURCES_DB_CONNS.clear()
 
 
 def _get_sources_db_path(repo_root: Path) -> Path:
@@ -131,8 +144,6 @@ def _get_sources_db_path(repo_root: Path) -> Path:
 
 def _get_extraction_map(repo_root: Path) -> dict[str, dict[str, Any]]:
     root_resolved = repo_root.resolve()
-    if root_resolved in _EXTRACTION_INDEX_CACHE:
-        return _EXTRACTION_INDEX_CACHE[root_resolved]
 
     candidates = [
         root_resolved / "data/projects/open_model_data/extraction/v4_native_extraction_index_v1.jsonl",
@@ -151,6 +162,11 @@ def _get_extraction_map(repo_root: Path) -> dict[str, dict[str, Any]]:
     if ext_path is None:
         raise FileNotFoundError("Missing authenticated native extraction index: v4_native_extraction_index_v1.jsonl")
 
+    ext_sha = sha256_file(ext_path)
+    cache_key = (ext_path, ext_sha)
+    if cache_key in _EXTRACTION_INDEX_CACHE:
+        return _EXTRACTION_INDEX_CACHE[cache_key]
+
     ext_map: dict[str, dict[str, Any]] = {}
     with ext_path.open("r", encoding="utf-8") as f:
         _ = f.readline()  # header
@@ -164,18 +180,31 @@ def _get_extraction_map(repo_root: Path) -> dict[str, dict[str, Any]]:
             if sha:
                 ext_map[sha] = item
 
-    _EXTRACTION_INDEX_CACHE[root_resolved] = ext_map
+    _EXTRACTION_INDEX_CACHE[cache_key] = ext_map
     return ext_map
 
 
 def _get_language_usage_masks(repo_root: Path) -> dict[str, list[dict[str, Any]]]:
     root_resolved = repo_root.resolve()
-    if root_resolved in _LANGUAGE_USAGE_CACHE:
-        return _LANGUAGE_USAGE_CACHE[root_resolved]
 
     lang_index_path = root_resolved / "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl"
     if not lang_index_path.is_file():
+        for p in [root_resolved, Path.cwd()]:
+            for parent in p.parents:
+                cand = parent / "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl"
+                if cand.is_file():
+                    lang_index_path = cand
+                    break
+            if lang_index_path.is_file():
+                break
+
+    if not lang_index_path.is_file():
         raise FileNotFoundError(f"Missing authenticated language usage index: {lang_index_path}")
+
+    lang_sha = sha256_file(lang_index_path)
+    cache_key = (lang_index_path.resolve(), lang_sha)
+    if cache_key in _LANGUAGE_USAGE_CACHE:
+        return _LANGUAGE_USAGE_CACHE[cache_key]
 
     masks_map: dict[str, list[dict[str, Any]]] = {}
     with lang_index_path.open("r", encoding="utf-8") as f:
@@ -194,8 +223,35 @@ def _get_language_usage_masks(repo_root: Path) -> dict[str, list[dict[str, Any]]
             spans = modern.get("loss_mask_spans", [])
             masks_map[sha] = spans
 
-    _LANGUAGE_USAGE_CACHE[root_resolved] = masks_map
+    _LANGUAGE_USAGE_CACHE[cache_key] = masks_map
     return masks_map
+
+
+def _get_record_validator(repo_root: Path) -> jsonschema.Draft202012Validator:
+    schema_path = repo_root / "data/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json"
+    if not schema_path.is_file():
+        for p in [repo_root, Path.cwd()]:
+            for parent in p.parents:
+                cand = parent / "data/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json"
+                if cand.is_file():
+                    schema_path = cand
+                    break
+            if schema_path.is_file():
+                break
+
+    if not schema_path.is_file():
+        raise FileNotFoundError(f"Missing record schema: {schema_path}")
+
+    schema_resolved = schema_path.resolve()
+    schema_sha = sha256_file(schema_resolved)
+    cache_key = (schema_resolved, schema_sha)
+    if cache_key in _RECORD_SCHEMA_CACHE:
+        return _RECORD_SCHEMA_CACHE[cache_key]
+
+    schema_data = json.loads(schema_resolved.read_text(encoding="utf-8"))
+    validator = jsonschema.Draft202012Validator(schema_data)
+    _RECORD_SCHEMA_CACHE[cache_key] = validator
+    return validator
 
 
 LOSS_MASK_SPAN_SCHEMA = {
@@ -275,6 +331,7 @@ def resolve_record_loss_masks(
 def resolve_record_text(
     record: dict[str, Any],
     repo_root: Path | None = None,
+    sources_db_path: Path | None = None,
 ) -> str:
     """Resolve authenticated private source text for a dataset record.
 
@@ -300,7 +357,7 @@ def resolve_record_text(
     fam = ext_item.get("source_family")
     table = "literary_texts" if fam == "literary" else "textbooks"
 
-    db_path = _get_sources_db_path(root)
+    db_path = sources_db_path.resolve() if sources_db_path is not None else _get_sources_db_path(root)
     if db_path not in _SOURCES_DB_CONNS:
         _SOURCES_DB_CONNS[db_path] = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
     conn = _SOURCES_DB_CONNS[db_path]
@@ -326,6 +383,7 @@ def load_dataset_stream(
     resolve_masks: bool = False,
     resolve_text: bool = False,
     repo_root: Path | None = None,
+    sources_db_path: Path | None = None,
 ) -> Iterator[dict[str, Any]]:
     """Stream dataset records yielding parsed rows (DELIVERY-1).
 
@@ -360,7 +418,7 @@ def load_dataset_stream(
                 if "language_views" in record and "modern_view" in record["language_views"]:
                     record["language_views"]["modern_view"]["loss_mask_spans"] = masks
             if resolve_text:
-                text = resolve_record_text(record, repo_root=root)
+                text = resolve_record_text(record, repo_root=root, sources_db_path=sources_db_path)
                 record["text"] = text
                 if "source_fidelity" in record:
                     record["source_fidelity"]["text"] = text
@@ -373,6 +431,7 @@ def load_partition_view(
     resolve_masks: bool = False,
     resolve_text: bool = False,
     repo_root: Path | None = None,
+    sources_db_path: Path | None = None,
 ) -> list[dict[str, Any]]:
     """Load records filtered by split partition (DELIVERY-1)."""
     filtered = []
@@ -381,6 +440,7 @@ def load_partition_view(
         resolve_masks=resolve_masks,
         resolve_text=resolve_text,
         repo_root=repo_root,
+        sources_db_path=sources_db_path,
     ):
         sc = record.get("split_clearance", {})
         if sc.get("split_partition") == partition:
@@ -420,9 +480,9 @@ def build_delivery_receipt(
             raise FileNotFoundError(f"Missing required artifact: {p}")
 
     # Verify stream loader & partition counts
-    training_records = load_partition_view(dataset_records_path, "training")
-    heldout_records = load_partition_view(dataset_records_path, "heldout_evaluation")
-    dev_records = load_partition_view(dataset_records_path, "development")
+    training_records = load_partition_view(dataset_records_path, "training", repo_root=repo_root)
+    heldout_records = load_partition_view(dataset_records_path, "heldout_evaluation", repo_root=repo_root)
+    dev_records = load_partition_view(dataset_records_path, "development", repo_root=repo_root)
 
     if len(training_records) != 614:
         raise ValueError(f"Expected 614 training records, found {len(training_records)}")
@@ -431,7 +491,45 @@ def build_delivery_receipt(
     if len(dev_records) != 245:
         raise ValueError(f"Expected 245 dev records, found {len(dev_records)}")
 
-    # Verify stream loader with resolved loss masks and authenticated text across ALL 1,419 records
+    record_validator = _get_record_validator(repo_root)
+    seen_record_ids: set[str] = set()
+    seen_span_shas: set[str] = set()
+
+    # Pass 1: Validate every raw record against schema, check zero raw text, and ensure uniqueness
+    with dataset_records_path.open("r", encoding="utf-8") as f:
+        _ = f.readline()  # header
+        for line_no, line in enumerate(f, start=2):
+            line_str = line.strip()
+            if not line_str:
+                continue
+            raw_rec = json.loads(line_str)
+            if "text" in raw_rec or "text" in raw_rec.get("source_fidelity", {}):
+                raise ValueError(
+                    f"Persisted record {raw_rec.get('record_id')} at line {line_no} contains raw text; "
+                    "persisted dataset records must retain custody and cannot contain raw corpus text."
+                )
+            if not record_validator.is_valid(raw_rec):
+                errs = list(record_validator.iter_errors(raw_rec))
+                raise ValueError(
+                    f"Persisted record {raw_rec.get('record_id')} at line {line_no} violates record schema: "
+                    f"{errs[0].message if errs else 'schema failure'}"
+                )
+            rid = raw_rec.get("record_id")
+            if not rid or rid in seen_record_ids:
+                raise ValueError(f"Duplicate or missing record_id: {rid}")
+            seen_record_ids.add(rid)
+
+            span_sha = raw_rec.get("source_fidelity", {}).get("span_sha256")
+            if not span_sha or span_sha in seen_span_shas:
+                raise ValueError(f"Duplicate or missing span_sha256: {span_sha}")
+            seen_span_shas.add(span_sha)
+
+    if len(seen_record_ids) != 1419:
+        raise ValueError(f"Expected 1419 unique record IDs, found {len(seen_record_ids)}")
+    if len(seen_span_shas) != 1419:
+        raise ValueError(f"Expected 1419 unique span SHAs, found {len(seen_span_shas)}")
+
+    # Pass 2: Verify stream loader with resolved loss masks and authenticated text across ALL 1,419 records
     verified_records_count = 0
     for record in load_dataset_stream(
         dataset_records_path,
@@ -720,7 +818,12 @@ def verify_delivery(
     except Exception:
         db_available = False
 
-    # Ensure persisted records strictly retain custody and contain zero raw corpus text
+    # Ensure persisted records strictly retain custody, contain zero raw corpus text,
+    # satisfy the canonical record contract schema, and contain unique record IDs and span SHAs
+    record_validator = _get_record_validator(repo_root)
+    seen_record_ids: set[str] = set()
+    seen_span_shas: set[str] = set()
+
     with dataset_records_path.open("r", encoding="utf-8") as f:
         _ = f.readline()  # header
         for line in f:
@@ -730,6 +833,20 @@ def verify_delivery(
             raw_rec = json.loads(line_str)
             if "text" in raw_rec or "text" in raw_rec.get("source_fidelity", {}):
                 return False
+            if not record_validator.is_valid(raw_rec):
+                return False
+            rid = raw_rec.get("record_id")
+            if not rid or rid in seen_record_ids:
+                return False
+            seen_record_ids.add(rid)
+
+            span_sha = raw_rec.get("source_fidelity", {}).get("span_sha256")
+            if not span_sha or span_sha in seen_span_shas:
+                return False
+            seen_span_shas.add(span_sha)
+
+    if len(seen_record_ids) != ds_repro.get("records_count") or len(seen_span_shas) != ds_repro.get("records_count"):
+        return False
 
     # Verify stream loader with resolved loss masks across ALL records
     records_count = 0

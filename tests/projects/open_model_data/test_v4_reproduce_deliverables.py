@@ -2,15 +2,20 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
+import sqlite3
 from pathlib import Path
 
 import jsonschema
 import pytest
 
 from scripts.projects.open_model_data.v4_reproduce_deliverables import (
+    _get_language_usage_masks,
     assert_file_no_private_host_paths,
     assert_no_private_host_paths,
+    build_delivery_receipt,
+    clear_caches,
     load_dataset_stream,
     load_partition_view,
     resolve_record_loss_masks,
@@ -23,6 +28,27 @@ DATASET_DIR = Path("data/projects/open_model_data/dataset")
 DELIVERY_DIR = Path("data/projects/open_model_data/delivery")
 RECORDS_PATH = DATASET_DIR / "v4_human_source_dataset_records_v1.jsonl"
 DELIVERY_RECEIPT_PATH = DELIVERY_DIR / "v4_delivery_reproduction_receipt_v1.json"
+
+
+def _has_full_sources_db() -> bool:
+    candidates = [Path("data/sources.db"), Path.cwd() / "data/sources.db"]
+    for p in [Path.cwd(), *Path.cwd().parents]:
+        candidates.append(p / "data/sources.db")
+    for cand in candidates:
+        if cand.is_file():
+            try:
+                conn = sqlite3.connect(f"file:{cand.resolve()}?mode=ro", uri=True)
+                cur = conn.cursor()
+                cur.execute(
+                    "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('literary_texts', 'textbooks')"
+                )
+                tables = {row[0] for row in cur.fetchall()}
+                conn.close()
+                if "literary_texts" in tables and "textbooks" in tables:
+                    return True
+            except Exception:
+                pass
+    return False
 
 
 def test_schema_valid() -> None:
@@ -61,7 +87,8 @@ def test_delivery1_stream_loader_and_partition_views() -> None:
     assert resolved_spans == m0["loss_mask_spans"]
 
     # Verify stream loading with both resolved modern_view loss mask spans and authenticated text
-    import hashlib
+    if not _has_full_sources_db():
+        pytest.skip("Full data/sources.db with literary_texts/textbooks not available in test runner environment")
 
     text_records = list(load_dataset_stream(RECORDS_PATH, resolve_masks=True, resolve_text=True))
     assert len(text_records) == 1419
@@ -389,3 +416,190 @@ def test_persisted_records_reject_preexisting_raw_text(tmp_path: Path) -> None:
     bad_records_file.write_text("# header\n" + json.dumps(bad_record2) + "\n", encoding="utf-8")
     with pytest.raises(ValueError, match="contains raw text"):
         next(load_dataset_stream(bad_records_file, resolve_masks=False, resolve_text=False))
+
+
+def test_mock_delivery_stream_loader_with_text(tmp_path: Path) -> None:
+    """Verify stream loading and partition filtering with text in mock environment (runs in CI)."""
+    fake_repo = tmp_path / "fake_repo"
+    fake_repo.mkdir()
+
+    # 1. Create mock sqlite DB
+    mock_db = tmp_path / "mock_sources.db"
+    conn = sqlite3.connect(str(mock_db))
+    cur = conn.cursor()
+    cur.execute("CREATE TABLE literary_texts (source_file TEXT, chunk_id INTEGER, text TEXT)")
+    cur.execute("CREATE TABLE textbooks (source_file TEXT, chunk_id INTEGER, text TEXT)")
+    sample_text = "Тестовий український текст для перевірки динамічного завантаження."
+    sample_sha = hashlib.sha256(sample_text.encode("utf-8")).hexdigest()
+    sample_len = len(sample_text)
+    cur.execute(
+        "INSERT INTO textbooks (source_file, chunk_id, text) VALUES (?, ?, ?)",
+        ("tb_sample.txt", 10, sample_text),
+    )
+    conn.commit()
+    conn.close()
+
+    # 2. Create mock extraction index
+    ext_dir = fake_repo / "data/projects/open_model_data/extraction"
+    ext_dir.mkdir(parents=True)
+    ext_file = ext_dir / "v4_native_extraction_index_v1.jsonl"
+    ext_entry = {
+        "extraction_id": "ext.test.1",
+        "source_file": "tb_sample.txt",
+        "chunk_id": 10,
+        "source_family": "textbook",
+        "span_locator": {"span_sha256": sample_sha},
+    }
+    ext_file.write_text("# header\n" + json.dumps(ext_entry) + "\n", encoding="utf-8")
+
+    # 3. Create mock record
+    mock_rec = {
+        "schema_version": "v4_human_source_dataset_record_v1",
+        "record_id": "record.human.test_tb_1",
+        "source_id": "source.textbook.test",
+        "split_clearance": {
+            "split_partition": "training",
+            "builder_training_cleared": True,
+        },
+        "source_fidelity": {
+            "char_length": sample_len,
+            "span_sha256": sample_sha,
+            "is_native_text": True,
+            "verbatim_preserved": True,
+        },
+    }
+
+    rec_file = tmp_path / "mock_records.jsonl"
+    rec_file.write_text("# header\n" + json.dumps(mock_rec) + "\n", encoding="utf-8")
+
+    stream_records = list(
+        load_dataset_stream(rec_file, resolve_text=True, repo_root=fake_repo, sources_db_path=mock_db)
+    )
+    assert len(stream_records) == 1
+    assert stream_records[0]["text"] == sample_text
+
+    part_records = load_partition_view(
+        rec_file, "training", resolve_text=True, repo_root=fake_repo, sources_db_path=mock_db
+    )
+    assert len(part_records) == 1
+    assert part_records[0]["text"] == sample_text
+
+
+def _setup_fake_repo_with_records(tmp_path: Path, records_content: str) -> tuple[Path, Path]:
+    repo_root = Path.cwd()
+    fake_repo = tmp_path / "repo"
+    fake_repo.mkdir(parents=True, exist_ok=True)
+
+    # Symlink docs
+    (fake_repo / "docs").symlink_to((repo_root / "docs").resolve())
+
+    # Symlink shared open_model_data directories
+    data_omd = fake_repo / "data/projects/open_model_data"
+    data_omd.mkdir(parents=True, exist_ok=True)
+    for sub in ["contracts", "study", "language", "extraction", "delivery"]:
+        (data_omd / sub).symlink_to((repo_root / "data/projects/open_model_data" / sub).resolve())
+
+    # Setup dataset dir with symlinked manifest & receipt, and custom records file
+    dataset_dir = data_omd / "dataset"
+    dataset_dir.mkdir(parents=True, exist_ok=True)
+    (dataset_dir / "v4_human_source_dataset_manifest_v1.json").symlink_to(
+        (repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json").resolve()
+    )
+    (dataset_dir / "v4_human_source_dataset_receipt_v1.json").symlink_to(
+        (repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json").resolve()
+    )
+
+    custom_records = dataset_dir / "v4_human_source_dataset_records_v1.jsonl"
+    custom_records.write_text(records_content, encoding="utf-8")
+
+    from scripts.projects.open_model_data.v4_reproduce_deliverables import sha256_file
+
+    receipt_data = json.loads(DELIVERY_RECEIPT_PATH.read_text(encoding="utf-8"))
+    receipt_data["dataset_reproduction"]["records_sha256"] = sha256_file(custom_records)
+    fake_receipt = tmp_path / "test_delivery_receipt.json"
+    fake_receipt.write_text(json.dumps(receipt_data), encoding="utf-8")
+
+    return fake_repo, fake_receipt
+
+
+def test_verify_delivery_rejects_schema_violating_record(tmp_path: Path) -> None:
+    """Verify that verify_delivery and build_delivery_receipt reject records violating schema contract (Finding 1)."""
+    with open(RECORDS_PATH, encoding="utf-8") as f:
+        header = f.readline()
+        lines = [f.readline() for _ in range(1419)]
+
+    rec1 = json.loads(lines[0])
+    rec1_bad = dict(rec1)
+    rec1_bad["admission_evidence"] = dict(rec1["admission_evidence"])
+    rec1_bad["admission_evidence"]["firewall_verified"] = False  # Schema const: true
+
+    bad_content = header + json.dumps(rec1_bad) + "\n" + "".join(lines[1:])
+    fake_repo, fake_receipt = _setup_fake_repo_with_records(tmp_path, bad_content)
+
+    assert verify_delivery(fake_repo, fake_receipt) is False
+
+    with pytest.raises(ValueError, match=r"violates record schema"):
+        build_delivery_receipt(fake_repo, tmp_path / "out_receipt.json")
+
+
+def test_verify_delivery_rejects_duplicate_record_id_or_span_sha(tmp_path: Path) -> None:
+    """Verify that verify_delivery and build_delivery_receipt reject duplicate records or span hashes (Finding 3)."""
+    with open(RECORDS_PATH, encoding="utf-8") as f:
+        header = f.readline()
+        lines = [f.readline() for _ in range(1419)]
+
+    rec1 = json.loads(lines[0])
+    rec2 = json.loads(lines[1])
+
+    # 1. Duplicate record_id
+    rec2_bad_id = dict(rec2)
+    rec2_bad_id["record_id"] = rec1["record_id"]
+    dup_id_content = header + lines[0] + json.dumps(rec2_bad_id) + "\n" + "".join(lines[2:])
+    fake_repo_id, fake_receipt_id = _setup_fake_repo_with_records(tmp_path / "dup_id", dup_id_content)
+    assert verify_delivery(fake_repo_id, fake_receipt_id) is False
+    with pytest.raises(ValueError, match=r"Duplicate or missing record_id"):
+        build_delivery_receipt(fake_repo_id, tmp_path / "out_receipt1.json")
+
+    # 2. Duplicate span_sha256
+    rec2_bad_sha = dict(rec2)
+    rec2_bad_sha["source_fidelity"] = dict(rec2["source_fidelity"])
+    rec2_bad_sha["source_fidelity"]["span_sha256"] = rec1["source_fidelity"]["span_sha256"]
+    dup_sha_content = header + lines[0] + json.dumps(rec2_bad_sha) + "\n" + "".join(lines[2:])
+    fake_repo_sha, fake_receipt_sha = _setup_fake_repo_with_records(tmp_path / "dup_sha", dup_sha_content)
+    assert verify_delivery(fake_repo_sha, fake_receipt_sha) is False
+    with pytest.raises(ValueError, match=r"Duplicate or missing span_sha256"):
+        build_delivery_receipt(fake_repo_sha, tmp_path / "out_receipt2.json")
+
+
+def test_cache_refreshes_on_index_change(tmp_path: Path) -> None:
+    """Verify that language usage cache dynamically reloads on content change without stale results (Finding 2)."""
+    fake_repo = tmp_path / "fake_repo_cache"
+    lang_dir = fake_repo / "data/projects/open_model_data/language"
+    lang_dir.mkdir(parents=True)
+    lang_file = lang_dir / "v4_language_usage_index_v1.jsonl"
+
+    item1 = {
+        "language_usage_id": "lu.1",
+        "span_locator": {"span_sha256": "1111" * 16},
+        "consumer_views": {"modern_view": {"loss_mask_spans": [{"start_char": 0, "end_char": 5, "reason": "dialect"}]}},
+    }
+    lang_file.write_text("# header\n" + json.dumps(item1) + "\n", encoding="utf-8")
+    clear_caches()
+
+    masks1 = _get_language_usage_masks(fake_repo)
+    assert "1111" * 16 in masks1
+    assert len(masks1["1111" * 16]) == 1
+
+    # Modify file
+    item2 = {
+        "language_usage_id": "lu.2",
+        "span_locator": {"span_sha256": "2222" * 16},
+        "consumer_views": {
+            "modern_view": {"loss_mask_spans": [{"start_char": 10, "end_char": 20, "reason": "foreign_citation"}]}
+        },
+    }
+    lang_file.write_text("# header\n" + json.dumps(item1) + "\n" + json.dumps(item2) + "\n", encoding="utf-8")
+
+    masks2 = _get_language_usage_masks(fake_repo)
+    assert "2222" * 16 in masks2
+    assert len(masks2["2222" * 16]) == 1
