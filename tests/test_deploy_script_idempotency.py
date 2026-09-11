@@ -1090,3 +1090,40 @@ def test_codex_retained_capture_survives_full_redeploy_with_late_writes(tmp_path
     assert check.returncode == 0, check.stdout + check.stderr
     assert "No changes to deploy" in _run(repo, DEPLOY_SCRIPT).stdout
     assert backup_file.read_bytes() == b"Preserve late user writes"
+
+
+
+@pytest.mark.parametrize("sibling", ["skills-custom", "retired-skills-user-notes", "skills retired-skills", "skills\nretired-skills", "skills: retired-skills"])
+def test_codex_orphan_prefix_siblings_abort_deploy_and_preserve_user_content(
+    tmp_path: Path, sibling: str,
+) -> None:
+    repo = _init_checkout(tmp_path)
+    initial = _run(repo, DEPLOY_SCRIPT)
+    assert initial.returncode == 0, initial.stdout + initial.stderr
+    note = repo / ".codex" / sibling / "note.txt"
+    note.parent.mkdir()
+    note.write_bytes(b"Keep this unrelated user content\n")
+    redeploy = _run(repo, DEPLOY_SCRIPT)
+    assert redeploy.returncode != 0
+    assert "undeclared orphan" in redeploy.stdout
+    assert sibling in redeploy.stdout
+    assert note.read_bytes() == b"Keep this unrelated user content\n"
+
+
+def test_deploy_preflight_preserves_declared_glob_and_trailing_slash_subtrees(tmp_path: Path) -> None:
+    repo = _init_checkout(tmp_path)
+    (repo / ".codex").mkdir()
+    (repo / ".codex/.DS_Store").write_bytes(b"Ignored Finder metadata")
+    declared_notes = [
+        repo / ".claude/atlas-epic/nested/note.txt",
+        repo / ".gemini/tmp/nested/note.txt",
+    ]
+    for note in declared_notes:
+        note.parent.mkdir(parents=True)
+        note.write_bytes(b"Declared runtime content\n")
+    deployed = _run(repo, DEPLOY_SCRIPT)
+    assert deployed.returncode == 0, deployed.stdout + deployed.stderr
+    for note in declared_notes:
+        assert note.read_bytes() == b"Declared runtime content\n"
+    checked = _run(repo, CHECK_SCRIPT)
+    assert checked.returncode == 0, checked.stdout + checked.stderr

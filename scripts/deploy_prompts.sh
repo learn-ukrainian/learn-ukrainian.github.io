@@ -212,14 +212,24 @@ git_source_deleted() {
 check_orphans() {
     local src="$1" dst="$2" declared="$3" label="$4"
     [[ -d "$dst" ]] || return 0
-    local orphans
-    orphans=$(diff -rq --exclude='.DS_Store' "$src" "$dst" 2>/dev/null \
-        | awk -v dst="$dst" '$0 ~ "^Only in "dst {sub("^Only in "dst"[/:]* *",""); sub(": ","/"); print}')
-    for orphan in $orphans; do
+    local path orphan d normalized
+    # Diff output is presentation text: quoting, whitespace, and ': ' can
+    # corrupt a filename into an allowed path. Enumerate actual names instead,
+    # without following symlinks. A NUL sentinel reports traversal failure.
+    while IFS= read -r -d '' path; do
+        if [[ -z "$path" ]]; then
+            echo "  ⚠️  $label: destination inventory failed; preserve and reconcile"
+            return 1
+        fi
+        orphan="${path#"$dst"/}"
+        [[ -e "$src/$orphan" || -L "$src/$orphan" ]] && continue
         local matched=false
         for d in $declared; do
-            # Match if orphan is exactly d or starts with d (for directories)
-            if [[ "$orphan" == "$d" || "$orphan" == $d || "$orphan" == "$d"* || "$orphan/" == "$d" ]]; then
+            normalized="${d%/}"
+            # Match the checker's exact path or slash-descendant semantics.
+            # Declared globs such as *-epic remain intentional patterns.
+            # shellcheck disable=SC2053
+            if [[ "$orphan" == $normalized || "$orphan" == $normalized/* ]]; then
                 matched=true
                 break
             fi
@@ -235,7 +245,7 @@ check_orphans() {
             echo "       2. Add it to ORPHAN_PATHS_* in scripts/deploy_orphan_paths.sh"
             return 1
         fi
-    done
+    done < <(find -P "$dst" -mindepth 1 -name '.DS_Store' -prune -o -print0 || printf '\0')
     return 0
 }
 

@@ -30,7 +30,8 @@ If the native action fails, record the failure and stop:
 ```bash
 .venv/bin/python scripts/orchestration/thread_handoff.py record-native-result \
   --agent codex --lineage-id <lineage-id> --rollover-id <rollover-id> \
-  --action archive --failed --error "<actual native failure>"
+  --action archive --failed --error "<actual native failure>" \
+  --evidence "<tool-backed evidence of the attempted archive and its failure>"
 ```
 
 On retry, begin with `native-action --action archive` and the exact proof flags
