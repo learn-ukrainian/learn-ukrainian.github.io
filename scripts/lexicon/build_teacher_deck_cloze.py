@@ -17,6 +17,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from scripts.lexicon.relation_pairs import normalize_relation_word
+from scripts.practice.extract_textbook_error_corrections import is_intentional_error_context
 from scripts.verification.vesum import verify_lemma
 
 INTAKE_JSON = REPO_ROOT / "data/lexicon/intake/private_teacher_lesson_intake_candidates.json"
@@ -71,6 +72,8 @@ def exclude_private_cloze_cards(cards: list[dict[str, object]]) -> list[dict[str
 def find_cloze_sentence(texts: list[str], forms: set[str]) -> tuple[str, str] | None:
     """Blank one complete, VESUM-attested token, never a substring or other lemma."""
     for text in texts:
+        if is_intentional_error_context(text):
+            continue
         for sentence in re.split(r"(?<=[.!?])\s+", text):
             sentence = sentence.strip()
             if not 15 <= len(sentence) <= 150 or "__" in sentence:
