@@ -9,11 +9,13 @@ fleet-role-scorecard) is served at:
 
     GET /api/rules?format=markdown    (Monitor API on localhost:8765)
 
-Cold-start: fetch this endpoint as step 2 of the orientation sequence
-(workflow.md § "Cold-start sequence"). The endpoint supports
+For task intake, read `agents_extensions/shared/rules/task-scoped-reading.md`
+and load the applicable sources before acting. The endpoint is the complete
+reference for full policy audits or cross-cutting work; it supports
 `If-None-Match` for warm-cache hits.
 
-Offline fallback (API unreachable) — same paths, same order as
+Offline: use the same task selector. When the complete reference is needed,
+read this full fallback list — same paths, same order as
 `scripts/api/rules_router.py` `RULE_SOURCES`:
 
     agents_extensions/shared/rules/operator-expectations.md
@@ -30,6 +32,6 @@ Offline fallback (API unreachable) — same paths, same order as
 
 These files no longer auto-load into the Claude Code system prompt
 (moved out of `.claude/rules/` deploy target) — read them directly
-only when the API is down.
+when selected for the task or when the full offline reference is needed.
 
 </critical>

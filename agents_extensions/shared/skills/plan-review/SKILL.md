@@ -1,6 +1,6 @@
 ---
 name: plan-review
-description: Review CORE level plans (A1-C2, PRO) using State Standard 2024 + textbook RAG + VESUM. Finds bad vocab, wrong grammar scope, Russianisms, factual errors.
+description: Review CORE plans (A1–C2) against the State Standard, textbooks, and VESUM; use plan-review-seminar for seminar plans.
 argument-hint: "<track> [modules: all | 1 | 5-10 | slug-name]"
 effort: xhigh
 ---

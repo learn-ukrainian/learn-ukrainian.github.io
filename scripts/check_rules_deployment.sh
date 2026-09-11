@@ -256,6 +256,11 @@ check_gemini_file_owners() {
 }
 
 drift=0
+# Duplicate skill discovery is an error even when the two copies agree.
+if [[ -e .codex/skills || -L .codex/skills ]]; then
+    echo "::error::Legacy .codex/skills discovery path remains; run scripts/deploy_prompts.sh and reconcile any unverified content."
+    drift=1
+fi
 
 # Orphan exclusions must stay in lock-step with scripts/deploy_orphan_paths.sh
 # and the rsync calls in scripts/deploy_prompts.sh. Word-splitting matches deploy.
@@ -275,7 +280,8 @@ check_pair \
     "agents_extensions/shared" \
     ".codex" \
     $ORPHAN_PATHS_CODEX \
-    $CODEX_OVERLAY_PATHS || drift=1
+    $CODEX_OVERLAY_PATHS \
+    $CODEX_DISCOVERY_EXCLUDES || drift=1
 check_overlay "agents_extensions/codex" ".codex" || drift=1
 # shellcheck disable=SC2086
 check_pair "agents_extensions/shared/skills" ".agents/skills" $ORPHAN_PATHS_AGENTS || drift=1

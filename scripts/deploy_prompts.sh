@@ -256,12 +256,13 @@ check_shared_skill_collisions() {
 # Step 0: Preflight — assert no undeclared orphan paths in destinations
 echo "=== Preflight (orphan-path guard) ==="
 orphan_fail=false
+"$PROJECT_PYTHON" scripts/deploy/retire_codex_skills.py verify || orphan_fail=true
 check_orphans "$SHARED_EXTENSIONS" ".claude" "$ORPHAN_PATHS_CLAUDE" "$SHARED_EXTENSIONS → .claude" || orphan_fail=true
 # .agent/ is preserve-by-default (runtime state written by agents/lanes).
 # No orphan check or --delete here — see #4741. Shared source (if any)
 # is overlaid; everything else in .agent/ is left alone.
 check_orphans "$SHARED_EXTENSIONS/skills" ".agents/skills" "$ORPHAN_PATHS_AGENTS" "$SHARED_EXTENSIONS/skills → .agents/skills" || orphan_fail=true
-check_orphans "$SHARED_EXTENSIONS" ".codex" "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS" "$SHARED_EXTENSIONS → .codex" || orphan_fail=true
+check_orphans "$SHARED_EXTENSIONS" ".codex" "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS $CODEX_DISCOVERY_EXCLUDES" "$SHARED_EXTENSIONS → .codex" || orphan_fail=true
 check_orphans "gemini_extensions" ".gemini" "$ORPHAN_PATHS_GEMINI $GEMINI_SHARED_SKILL_OVERLAY_PATHS" "gemini_extensions → .gemini" || orphan_fail=true
 check_orphans "$SHARED_EXTENSIONS/rules" ".gemini/rules" "" "$SHARED_EXTENSIONS/rules → .gemini/rules" || orphan_fail=true
 check_shared_skill_collisions || orphan_fail=true
@@ -417,7 +418,7 @@ diff_dirs \
 # .agent/ diff is best-effort (no declared orphans, preserve-by-default)
 diff_dirs "$SHARED_EXTENSIONS" ".agent" "$SHARED_EXTENSIONS → .agent" ""
 diff_dirs "$SHARED_EXTENSIONS/skills" ".agents/skills" "$SHARED_EXTENSIONS/skills → .agents/skills" "$ORPHAN_PATHS_AGENTS"
-diff_dirs "$SHARED_EXTENSIONS" ".codex" "$SHARED_EXTENSIONS → .codex" "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS"
+diff_dirs "$SHARED_EXTENSIONS" ".codex" "$SHARED_EXTENSIONS → .codex" "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS $CODEX_DISCOVERY_EXCLUDES"
 if [[ -d "$CODEX_EXTENSIONS" ]]; then
     diff_overlay_files "$CODEX_EXTENSIONS" ".codex" "$CODEX_EXTENSIONS → .codex"
 fi
@@ -426,6 +427,11 @@ diff_shared_skill_overlays
 diff_gemini_skill_owners
 diff_dirs "$SHARED_EXTENSIONS/rules" ".gemini/rules" "$SHARED_EXTENSIONS/rules → .gemini/rules" ""
 echo ""
+
+if [[ -d .codex/skills ]]; then
+    echo "  .codex/skills: verified legacy discovery mirror will be retired"
+    has_changes=true
+fi
 
 if [[ "$has_changes" == false ]]; then
     echo "No changes to deploy."
@@ -439,6 +445,7 @@ fi
 
 # Step 3: Sync — with per-target --exclude for declared orphan paths
 echo "=== Syncing ==="
+"$PROJECT_PYTHON" scripts/deploy/retire_codex_skills.py apply
 # shellcheck disable=SC2046  # intentional word-splitting of build_excludes output
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS") "$SHARED_EXTENSIONS/" .claude/
 # .agent/ overlays source without --delete. A deploy-owned manifest reaps only
@@ -451,7 +458,7 @@ reap_retired_shared_agent_paths
 sync_shared_agent_mirror
 write_shared_agent_manifest
 # shellcheck disable=SC2046
-rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS") "$SHARED_EXTENSIONS/" .codex/
+rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS $CODEX_DISCOVERY_EXCLUDES") "$SHARED_EXTENSIONS/" .codex/
 if [[ -d "$CODEX_EXTENSIONS" ]]; then
     rsync -av "$CODEX_EXTENSIONS/" .codex/
 fi

@@ -1,6 +1,6 @@
 ---
 name: build-monitoring
-description: How to monitor V7 curriculum builds — the Monitor tool command template, mandatory --worktree isolation, the JSONL event fields v7_build.py/linear_pipeline.py emit, and the Monitor API for state queries without running a build. Use whenever launching or watching a `scripts/build/v7_build.py` run.
+description: Launch or watch an isolated V7 curriculum build and interpret its Monitor events and state.
 ---
 
 # Build Monitoring (MANDATORY)

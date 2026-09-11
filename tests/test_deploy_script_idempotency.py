@@ -73,6 +73,7 @@ UNSCOPED_RULE_FILES = (
 )
 CLAUDE_RULE_FILES = (
     "_load-via-api.md",
+    "task-scoped-reading.md",
     "activity-yaml.md",
     "mcp-sources-and-dictionaries.md",
     "pipeline.md",
@@ -94,6 +95,7 @@ def _copy_repo_subset(target: Path) -> None:
         # mirror every file the script actually invokes, or deploy exits non-zero
         # here for a reason that has nothing to do with the behaviour under test.
         Path("scripts/deploy/agent_directory.py"),
+        Path("scripts/deploy/retire_codex_skills.py"),
         Path("scripts/deploy/reap_agent_mirrors.py"),
         Path("scripts/deploy/sync_agent_mirror.py"),
         Path("scripts/lint_prompts.py"),
@@ -218,7 +220,7 @@ def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
             assert (repo / mirror_root / shared_file).read_bytes() == canonical.read_bytes()
     for skill_name in SHARED_CURRICULUM_SKILLS:
         canonical_skill = repo / "agents_extensions" / "shared" / "skills" / skill_name
-        for mirror_root in (".claude", ".agent", ".agents", ".codex", ".gemini"):
+        for mirror_root in (".claude", ".agent", ".agents", ".gemini"):
             deployed_skill = repo / mirror_root / "skills" / skill_name
             assert (deployed_skill / "SKILL.md").read_bytes() == (canonical_skill / "SKILL.md").read_bytes()
             assert (deployed_skill / "agents" / "openai.yaml").read_bytes() == (
@@ -963,3 +965,99 @@ def test_drift_is_caught(tmp_path: Path) -> None:
     assert check_result.returncode != 0
     assert "Deploy-script drift between agents_extensions/shared and .claude" in combined_output
     assert "pipeline.md" in combined_output
+
+
+def test_codex_skills_have_one_discovery_root_and_migrate_verified_legacy(tmp_path: Path) -> None:
+    repo = _init_checkout(tmp_path)
+    _init_git_history(repo)
+    source = repo / "agents_extensions/shared/skills"
+    legacy = repo / ".codex/skills"
+    shutil.copytree(source, legacy)
+    result = _run(repo, DEPLOY_SCRIPT)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert not legacy.exists()
+    for skill in source.glob("*/SKILL.md"):
+        relative = skill.relative_to(source)
+        for mirror in (".agents/skills", ".claude/skills", ".agent/skills", ".gemini/skills"):
+            # Existing Claude orphan exclusion '*-epic' also excludes these
+            # nested names; this migration preserves that harness's policy.
+            if mirror == ".claude/skills" and skill.parent.name.endswith("-epic"):
+                continue
+            assert (repo / mirror / relative).read_bytes() == skill.read_bytes()
+    assert _run(repo, CHECK_SCRIPT).returncode == 0
+    assert "No changes to deploy" in _run(repo, DEPLOY_SCRIPT).stdout
+
+
+def test_codex_legacy_migration_preserves_modified_content(tmp_path: Path) -> None:
+    repo = _init_checkout(tmp_path)
+    assert _run(repo, DEPLOY_SCRIPT).returncode == 0
+    _init_git_history(repo)
+    legacy = repo / ".codex/skills"
+    shutil.copytree(repo / "agents_extensions/shared/skills", legacy)
+    changed = legacy / "track-completion/SKILL.md"
+    changed.write_text(changed.read_text() + "\nUser local changes\n")
+    before = {p.relative_to(legacy): p.read_bytes() for p in legacy.rglob("*") if p.is_file()}
+    result = _run(repo, DEPLOY_SCRIPT)
+    assert result.returncode != 0
+    assert "Unverified legacy Codex skill content" in result.stdout
+    assert before == {p.relative_to(legacy): p.read_bytes() for p in legacy.rglob("*") if p.is_file()}
+    assert _run(repo, CHECK_SCRIPT).returncode != 0
+
+
+def test_codex_legacy_migration_recognizes_committed_source_before_edits(tmp_path: Path) -> None:
+    repo = _init_checkout(tmp_path)
+    source = repo / "agents_extensions/shared/skills"
+    shutil.copytree(source, repo / ".codex/skills")
+    _init_git_history(repo)
+    skill = source / "track-completion/SKILL.md"
+    skill.write_text(skill.read_text() + "\nUpdated source\n")
+    result = _run(repo, DEPLOY_SCRIPT)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert not (repo / ".codex/skills").exists()
+    assert (repo / ".agents/skills/track-completion/SKILL.md").read_bytes() == skill.read_bytes()
+
+
+@pytest.mark.parametrize("unsafe_kind", ["untracked-source", "symlink", "unknown-directory"])
+def test_codex_legacy_migration_requires_provenance_and_preserves_unsafe_content(
+    tmp_path: Path, unsafe_kind: str,
+) -> None:
+    repo = _init_checkout(tmp_path)
+    _init_git_history(repo)
+    legacy = repo / ".codex/skills"
+    legacy.mkdir(parents=True)
+    if unsafe_kind == "symlink":
+        outside = tmp_path / "outside"
+        outside.mkdir()
+        (outside / "SKILL.md").write_text("User data")
+        (legacy / "local").symlink_to(outside, target_is_directory=True)
+    elif unsafe_kind == "unknown-directory":
+        (legacy / "local").mkdir()
+    else:
+        source = repo / "agents_extensions/shared/skills/local/SKILL.md"
+        source.parent.mkdir()
+        source.write_text("User data")
+        (legacy / "local").mkdir()
+        (legacy / "local/SKILL.md").write_bytes(source.read_bytes())
+    result = _run(repo, DEPLOY_SCRIPT)
+    assert result.returncode != 0
+    assert "preserve and reconcile" in result.stdout
+    assert (legacy / "local").exists()
+    if unsafe_kind == "symlink":
+        assert (outside / "SKILL.md").read_text() == "User data"
+    elif unsafe_kind == "untracked-source":
+        assert (legacy / "local/SKILL.md").read_text() == "User data"
+
+
+def test_codex_legacy_migration_works_after_updated_sources_are_committed(tmp_path: Path) -> None:
+    repo = _init_checkout(tmp_path)
+    _init_git_history(repo)
+    source = repo / "agents_extensions/shared/skills"
+    shutil.copytree(source, repo / ".codex/skills")
+    skill = source / "track-completion/SKILL.md"
+    skill.write_text(skill.read_text() + "\nCommitted source revision\n")
+    assert _run_command(repo, ["git", "add", "agents_extensions"]).returncode == 0
+    assert _run_command(repo, ["git", "commit", "-qm", "revise source"]).returncode == 0
+    result = _run(repo, DEPLOY_SCRIPT)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert not (repo / ".codex/skills").exists()
+    assert (repo / ".agents/skills/track-completion/SKILL.md").read_bytes() == skill.read_bytes()

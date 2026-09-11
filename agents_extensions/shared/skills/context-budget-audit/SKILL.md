@@ -1,6 +1,6 @@
 ---
 name: context-budget-audit
-description: Audit prompt sizes across build orchestration dirs. Surfaces sections that dominate the prompt (>40%), tracks per-phase budget vs the model's context window, and checks whether directives in the prompt were actually covered in the response.
+description: Audit a module or range of orchestration prompts for context size, dominant sections, and missed directives.
 argument-hint: <track>/<slug> | <track> <slug> | <track> <range>
 ---
 

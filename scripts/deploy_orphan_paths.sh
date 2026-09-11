@@ -78,3 +78,7 @@ CLAUDE_RULE_AUTOLOAD_EXCLUDES=(
     "rules/fleet-driver-routing.md"
 )
 CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS="${CLAUDE_RULE_AUTOLOAD_EXCLUDES[*]}"
+
+# Codex discovers shared skills only via .agents/skills. Preserve the legacy
+# path from rsync deletion; retire only byte-verified copies via the helper.
+CODEX_DISCOVERY_EXCLUDES="skills"

@@ -24,3 +24,19 @@ npm run agents:deploy
 ```
 
 `npm run claude:deploy` remains as a compatibility alias.
+
+
+## Codex skill discovery
+
+Git-tracked `agents_extensions/shared/skills/` is canonical. Run
+`scripts/deploy_prompts.sh` to deploy shared skills to `.agents/skills/`, the
+single Codex discovery root. `.codex/` continues to receive its hooks, config,
+and other shared resources, but no skills. Other harness skill mirrors remain.
+The deploy helper retires a legacy `.codex/skills/` file only when its bytes
+match tracked current source or a regular-file blob in that exact source path's Git history. Modified, unknown, or symlinked legacy content
+aborts deployment and remains intact for explicit reconciliation. The deployment
+checker rejects a surviving legacy discovery tree. Do not hand-edit mirrors.
+
+Task intake follows `shared/rules/task-scoped-reading.md`. Mode-specific skill
+procedures live in linked `references/` files and are loaded only for the current
+operation or engine state; commands still run from the repository root.

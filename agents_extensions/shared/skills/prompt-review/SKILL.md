@@ -1,6 +1,6 @@
 ---
 name: prompt-review
-description: Analyze orchestration folders to find prompt/context engineering problems. Every friction report is a prompt engineering bug report.
+description: Diagnose prompt and context engineering problems in a module orchestration folder.
 argument-hint: <path-to-orchestration-folder | track slug>
 effort: xhigh
 ---
