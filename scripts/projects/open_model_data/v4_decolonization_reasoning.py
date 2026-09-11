@@ -3,10 +3,11 @@
 
 Mines calque and Russianism replacement clusters from curated human holdings
 (LanguageTool, style guides, textbooks, UA-GEC), verifies inflectional validity
-in VESUM, extracts living school curriculum citations from MESU Grade 1-11 textbooks,
+in VESUM, extracts living school curriculum citations from genuine MESU Grade 1-11 textbooks,
 and synthesizes normative SFT reasoning trajectories and contrastive DPO preference pairs.
 
 Zero LLM authoring: 100% deterministic rule-based processing.
+Zero private leakage: Strictly filters non-redistributable sources (ULP, Ohoiko, private lessons).
 """
 
 from __future__ import annotations
@@ -37,6 +38,7 @@ def resolve_data_path(rel_path: str) -> Path:
             cwd=REPO_ROOT,
             text=True,
             stderr=subprocess.DEVNULL,
+            timeout=30,
         ).strip()
         main_p = Path(common).resolve().parent / rel_path
         if main_p.exists() and main_p.stat().st_size > 0:
@@ -64,6 +66,72 @@ _CYRILLIC_TOKEN_RE = re.compile(r"^[А-Яа-яЄєІіЇїҐґ'’ʼ\s-]+$")
 _ACTIVE_PARTICIPLE_RE = re.compile(r"(?:[юуяа]ч[иі][йяехм]|ючись|ячись)$", re.IGNORECASE)
 _PREFIX_OBEZ_RE = re.compile(r"^обез", re.IGNORECASE)
 _PREFIX_SO_RE = re.compile(r"^со[пткхчшщс]", re.IGNORECASE)
+
+# Real MESU school subjects and author display mappings
+SUBJECT_DISPLAY_NAMES: dict[str, str] = {
+    "ukrmova": "Українська мова",
+    "ukrlit": "Українська література",
+    "istoriya": "Історія України",
+    "vsesvitnia": "Всесвітня історія",
+    "biolohiya": "Біологія",
+    "heohrafiya": "Географія",
+    "fizyka": "Фізика",
+    "khimiya": "Хімія",
+    "matematyka": "Математика",
+    "algebra": "Алгебра",
+    "heometriya": "Геометрія",
+    "ya_doslidzhuiu_svit": "Я досліджую світ",
+    "pravoznavstvo": "Правознавство",
+    "astronomiya": "Астрономія",
+    "pryroda": "Природознавство",
+    "informatyka": "Інформатика",
+    "tekhnolohiyi": "Технології",
+    "bukvar": "Буквар",
+    "zarlit": "Зарубіжна література",
+    "mystetstvo": "Мистецтво",
+}
+
+AUTHOR_DISPLAY_NAMES: dict[str, str] = {
+    "glazova": "О. Глазова",
+    "avramenko": "О. Авраменко",
+    "zabolotnyi": "О. Заболотний",
+    "pometun": "О. Пометун",
+    "vlasov": "В. Власов",
+    "zaharijchuk": "М. Захарійчук",
+    "bilenko": "О. Біленко",
+    "onishchuk": "І. Оніщук",
+    "hyshkina": "О. Гісем",
+}
+
+RESTRICTED_SOURCE_SUBSTRINGS = (
+    "ulp-",
+    "ohoiko",
+    "private-teacher",
+    "pohribnyi",
+    "antonenko",
+)
+
+RESTRICTED_AUTHORS = (
+    "ukrainian lessons podcast",
+    "anna ohoiko",
+    "private_teacher_lesson",
+    "borys antonenko-davydovych",
+    "mykola pohribnyi",
+)
+
+ALLOWED_GRADES = ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11")
+
+PRIVATE_PATH_PATTERNS = [
+    re.compile(r"/(?:home|Users|tmp|var/tmp|workspace|root)/[a-zA-Z0-9_.-]+", re.IGNORECASE),
+    re.compile(r"[A-Z]:\\[a-zA-Z0-9_.-]+", re.IGNORECASE),
+]
+
+RESTRICTED_SOURCE_PATTERNS = [
+    re.compile(r"ulp-", re.IGNORECASE),
+    re.compile(r"ukrainian\s*lessons", re.IGNORECASE),
+    re.compile(r"ohoiko", re.IGNORECASE),
+    re.compile(r"private[-_]teacher", re.IGNORECASE),
+]
 
 
 def strip_accents(s: str) -> str:
@@ -190,7 +258,9 @@ def load_calque_candidates(
             clean_suggs = [
                 normalize_text(s)
                 for s in suggestions
-                if normalize_text(s) and normalize_text(s).lower() != norm_term and _CYRILLIC_TOKEN_RE.match(normalize_text(s))
+                if normalize_text(s)
+                and normalize_text(s).lower() != norm_term
+                and _CYRILLIC_TOKEN_RE.match(normalize_text(s))
             ]
             if not clean_suggs:
                 continue
@@ -224,7 +294,13 @@ def get_vesum_counts(lemmas: list[str], vesum_db_path: Path) -> dict[str, int]:
 
 
 def find_textbook_attestation(lemma: str, sources_db_path: Path) -> dict[str, Any] | None:
-    """Search MESU Grade 1-11 textbooks in sources.db for living school citations."""
+    """Search genuine MESU Grade 1-11 textbooks in sources.db for living school citations.
+
+    Strictly excludes:
+    - Private/non-redistributable sources (ULP podcast, Anna Ohoiko, private lessons)
+    - Reference manuals without grades (Pohribnyi, Antonenko-Davydovych prose)
+    - Chunks with non-school grades (empty, university)
+    """
     if not sources_db_path.is_file():
         return None
     conn = sqlite3.connect(str(sources_db_path))
@@ -235,30 +311,65 @@ def find_textbook_attestation(lemma: str, sources_db_path: Path) -> dict[str, An
         if len(search_kw) < 3:
             return None
 
-        query = (
-            "SELECT title, grade, subject, author, text "
-            "FROM textbooks WHERE text LIKE ? AND subject IN ('Українська мова', 'Українська література', 'Історія України', 'Всесвітня історія', 'Природничі науки', 'Біологія', 'Географія') "
-            "ORDER BY grade ASC LIMIT 1"
-        )
-        row = cur.execute(query, (f"%{search_kw}%",)).fetchone()
-        if not row:
-            query = "SELECT title, grade, subject, author, text FROM textbooks WHERE text LIKE ? LIMIT 1"
-            row = cur.execute(query, (f"%{search_kw}%",)).fetchone()
+        grade_placeholders = ",".join("?" for _ in ALLOWED_GRADES)
+        query = f"""
+            SELECT title, grade, subject, author, text, source_file
+            FROM textbooks
+            WHERE text LIKE ?
+              AND grade IN ({grade_placeholders})
+            ORDER BY CAST(grade AS INTEGER) ASC
+            LIMIT 20
+        """
+        params = [f"%{search_kw}%", *ALLOWED_GRADES]
+        rows = cur.execute(query, params).fetchall()
 
-        if row:
-            text = row[4]
+        for row in rows:
+            title, grade, subject, author, text, src_file = row
+            src_lower = (src_file or "").lower()
+            author_lower = (author or "").lower()
+
+            if any(r in src_lower for r in RESTRICTED_SOURCE_SUBSTRINGS):
+                continue
+            if any(r in author_lower for r in RESTRICTED_AUTHORS):
+                continue
+
             sentences = [s.strip() for s in text.split(".") if search_kw in s.lower()]
-            snippet = sentences[0] if sentences else text[:120]
-            snippet = re.sub(r"\s+", " ", snippet).strip()
+            if not sentences:
+                continue
+            snippet = re.sub(r"\s+", " ", sentences[0]).strip()
             if len(snippet) > 160:
                 snippet = snippet[:157] + "..."
+
+            display_subject = SUBJECT_DISPLAY_NAMES.get(subject, subject)
+            display_author = AUTHOR_DISPLAY_NAMES.get(author, author.title() if author else "")
+
             return {
-                "title": row[0],
-                "grade": row[1],
-                "subject": row[2],
-                "author": row[3],
+                "title": title,
+                "grade": int(grade) if str(grade).isdigit() else grade,
+                "subject": display_subject,
+                "author": display_author,
                 "snippet": snippet,
+                "source_file": src_file,
             }
+    finally:
+        conn.close()
+    return None
+
+
+def find_dictionary_attestation(lemma: str, sources_db_path: Path) -> str | None:
+    """Check historical (Grinchenko) and academic (SUM-11) dictionary presence in sources.db."""
+    if not sources_db_path.is_file():
+        return None
+    conn = sqlite3.connect(str(sources_db_path))
+    try:
+        cur = conn.cursor()
+        first_w = lemma.split()[0].lower()
+        row_g = cur.execute("SELECT 1 FROM grinchenko WHERE word = ? LIMIT 1", (first_w,)).fetchone()
+        if row_g:
+            return "Історичний словник української мови Б. Грінченка (1907–1909); верифіковано у ВЕСУМ"
+        row_s = cur.execute("SELECT 1 FROM sum11 WHERE word = ? LIMIT 1", (first_w,)).fetchone()
+        if row_s:
+            return "Академічний Словник української мови в 11 томах (СУМ-11); верифіковано у ВЕСУМ"
     finally:
         conn.close()
     return None
@@ -304,6 +415,7 @@ def synthesize_trajectory_and_dpo(
     candidate: CalqueCandidate,
     vesum_counts: dict[str, int],
     textbook_attestations: dict[str, dict[str, Any] | None],
+    dict_attestations: dict[str, str | None],
 ) -> tuple[dict[str, Any], dict[str, Any]] | None:
     """Synthesize an SFT reasoning trajectory and a contrastive DPO pair conforming to schemas."""
     target_term = candidate.target_term
@@ -314,47 +426,55 @@ def synthesize_trajectory_and_dpo(
         return None
 
     primary_alt = verified_alts[0]
+    primary_tb = textbook_attestations.get(primary_alt)
     traj_id = compute_id("traj", target_term)
     dpo_id = compute_id("dpo", target_term)
 
     vesum_attestation = []
     for s in suggestions:
         count = vesum_counts.get(s, 0)
-        vesum_attestation.append({
-            "lemma": s,
-            "vesum_forms_count": count,
-            "is_standard_attested": count > 0,
-        })
+        vesum_attestation.append(
+            {
+                "lemma": s,
+                "vesum_forms_count": count,
+                "is_standard_attested": count > 0,
+            }
+        )
 
     spectrum_alts = []
     for s in verified_alts:
         tb = textbook_attestations.get(s)
+        dict_att = dict_attestations.get(s)
         if tb:
-            evidence = (
-                f"Підручник МОН «{tb['subject']}» {tb['grade']} клас ({tb['author']}); "
-                f"цитата: «{tb['snippet']}»"
-            )
+            evidence = f"Підручник МОН «{tb['subject']}» {tb['grade']} клас ({tb['author']}); цитата: «{tb['snippet']}»"
             tier = "living_standard"
         elif candidate.curated_evidence:
             evidence = "; ".join(candidate.curated_evidence[:2])
             tier = "living_standard"
+        elif dict_att:
+            evidence = dict_att
+            tier = "classical_regional" if "Грінченка" in dict_att else "living_standard"
         else:
-            evidence = "Академічні словники сучасної української мови (СУМ-20 / ВТС); верифіковано у ВЕСУМ"
+            evidence = f"Словозмінна парадигма зафіксована у словниковій базі ВЕСУМ ({vesum_counts[s]} словоформ)"
             tier = "living_standard"
 
-        spectrum_alts.append({
-            "lemma": s,
-            "register_tier": tier,
-            "evidence_source": evidence,
-        })
+        spectrum_alts.append(
+            {
+                "lemma": s,
+                "register_tier": tier,
+                "evidence_source": evidence,
+            }
+        )
 
     for s in suggestions:
         if vesum_counts.get(s, 0) == 0:
-            spectrum_alts.append({
-                "lemma": s,
-                "register_tier": "purist_neologism",
-                "evidence_source": "Не зафіксовано у словниковій базі ВЕСУМ (0 форм); кабінетний новотвір",
-            })
+            spectrum_alts.append(
+                {
+                    "lemma": s,
+                    "register_tier": "purist_neologism",
+                    "evidence_source": "Не зафіксовано у словниковій базі ВЕСУМ (0 форм); кабінетний новотвір",
+                }
+            )
 
     calque_category, source_formation_desc, equiv_mechanism_desc = classify_calque_type(target_term)
 
@@ -404,9 +524,11 @@ def synthesize_trajectory_and_dpo(
     final_response = (
         f"Правильно вживати «{primary_alt}». Вживання форми «{target_term}» є типовою калькою з російської мови. "
         f"{equiv_mechanism_desc} "
-        f"Питоме українське слово «{primary_alt}» відповідає чинному Правопису, має повну парадигму відмінювання "
-        f"у морфологічному словнику ВЕСУМ та зафіксоване в сучасних навчальних і академічних виданнях."
+        f"Питоме українське слово «{primary_alt}» відповідає чинній мовній нормі та має повну парадигму словозміни "
+        f"у морфологічній базі ВЕСУМ ({vesum_counts[primary_alt]} словоформ)."
     )
+    if primary_tb:
+        final_response += f" Воно послідовно вживається в підручниках МОН (зокрема: «{primary_tb['subject']}» {primary_tb['grade']} клас)."
 
     query = f"Як правильно сказати або написати українською: «{target_term}» чи «{primary_alt}»?"
 
@@ -447,6 +569,29 @@ def synthesize_trajectory_and_dpo(
     }
 
     return trajectory, dpo_pair
+
+
+def scan_generated_files(file_paths: list[Path]) -> tuple[bool, bool, list[str]]:
+    """Scan generated files for private host paths and restricted private source leaks."""
+    violations: list[str] = []
+    has_private_paths = False
+    has_restricted_sources = False
+
+    for fp in file_paths:
+        if not fp.is_file():
+            continue
+        with fp.open("r", encoding="utf-8") as f:
+            for line_no, line in enumerate(f, 1):
+                for pat in PRIVATE_PATH_PATTERNS:
+                    if pat.search(line):
+                        has_private_paths = True
+                        violations.append(f"{fp.name}:{line_no}: private host path: {line[:80]}...")
+                for pat in RESTRICTED_SOURCE_PATTERNS:
+                    if pat.search(line):
+                        has_restricted_sources = True
+                        violations.append(f"{fp.name}:{line_no}: restricted private source leak: {line[:80]}...")
+
+    return not has_private_paths, not has_restricted_sources, violations
 
 
 def generate_pipeline(
@@ -502,6 +647,7 @@ def generate_pipeline(
             suggestions = candidate.suggestions
             vesum_counts = get_vesum_counts(suggestions, vesum_db_path)
             tb_attestations = {}
+            dict_attestations = {}
             has_tb = False
             for s in suggestions:
                 if vesum_counts.get(s, 0) > 0:
@@ -509,8 +655,15 @@ def generate_pipeline(
                     tb_attestations[s] = tb
                     if tb:
                         has_tb = True
+                    dict_att = find_dictionary_attestation(s, sources_db_path)
+                    dict_attestations[s] = dict_att
 
-            record = synthesize_trajectory_and_dpo(candidate, vesum_counts, tb_attestations)
+            record = synthesize_trajectory_and_dpo(
+                candidate,
+                vesum_counts,
+                tb_attestations,
+                dict_attestations,
+            )
             if not record:
                 continue
 
@@ -526,16 +679,18 @@ def generate_pipeline(
                 traj_fh.close()
                 dpo_fh.close()
                 assert current_t_path is not None and current_d_path is not None
-                generated_shards.append({
-                    "shard_index": shard_idx,
-                    "trajectories_file": current_t_path.name,
-                    "trajectories_bytes": current_t_path.stat().st_size,
-                    "trajectories_sha256": hashlib.sha256(current_t_path.read_bytes()).hexdigest(),
-                    "dpo_pairs_file": current_d_path.name,
-                    "dpo_pairs_bytes": current_d_path.stat().st_size,
-                    "dpo_pairs_sha256": hashlib.sha256(current_d_path.read_bytes()).hexdigest(),
-                    "records_count": current_shard_count,
-                })
+                generated_shards.append(
+                    {
+                        "shard_index": shard_idx,
+                        "trajectories_file": current_t_path.name,
+                        "trajectories_bytes": current_t_path.stat().st_size,
+                        "trajectories_sha256": hashlib.sha256(current_t_path.read_bytes()).hexdigest(),
+                        "dpo_pairs_file": current_d_path.name,
+                        "dpo_pairs_bytes": current_d_path.stat().st_size,
+                        "dpo_pairs_sha256": hashlib.sha256(current_d_path.read_bytes()).hexdigest(),
+                        "records_count": current_shard_count,
+                    }
+                )
                 shard_idx += 1
                 current_shard_count = 0
                 traj_fh, dpo_fh, current_t_path, current_d_path = open_shard(shard_idx)
@@ -552,21 +707,33 @@ def generate_pipeline(
             traj_fh.close()
             dpo_fh.close()
             assert current_t_path is not None and current_d_path is not None
-            generated_shards.append({
-                "shard_index": shard_idx,
-                "trajectories_file": current_t_path.name,
-                "trajectories_bytes": current_t_path.stat().st_size,
-                "trajectories_sha256": hashlib.sha256(current_t_path.read_bytes()).hexdigest(),
-                "dpo_pairs_file": current_d_path.name,
-                "dpo_pairs_bytes": current_d_path.stat().st_size,
-                "dpo_pairs_sha256": hashlib.sha256(current_d_path.read_bytes()).hexdigest(),
-                "records_count": current_shard_count,
-            })
+            generated_shards.append(
+                {
+                    "shard_index": shard_idx,
+                    "trajectories_file": current_t_path.name,
+                    "trajectories_bytes": current_t_path.stat().st_size,
+                    "trajectories_sha256": hashlib.sha256(current_t_path.read_bytes()).hexdigest(),
+                    "dpo_pairs_file": current_d_path.name,
+                    "dpo_pairs_bytes": current_d_path.stat().st_size,
+                    "dpo_pairs_sha256": hashlib.sha256(current_d_path.read_bytes()).hexdigest(),
+                    "records_count": current_shard_count,
+                }
+            )
     finally:
         if traj_fh and not traj_fh.closed:
             traj_fh.close()
         if dpo_fh and not dpo_fh.closed:
             dpo_fh.close()
+
+    # Active private path and restricted source scan
+    shard_paths = []
+    for s in generated_shards:
+        shard_paths.append(out_dir / s["trajectories_file"])
+        shard_paths.append(out_dir / s["dpo_pairs_file"])
+
+    zero_paths, zero_restricted, violations = scan_generated_files(shard_paths)
+    if violations:
+        raise RuntimeError("Private content leak detected in generated dataset:\n" + "\n".join(violations))
 
     manifest = {
         "dataset_name": "Ukrainian Linguistic Decolonization & Reasoning (ULDR)",
@@ -579,7 +746,8 @@ def generate_pipeline(
             "textbook_attestation_rate": (
                 round(textbook_attestation_count / total_trajs, 4) if total_trajs > 0 else 0.0
             ),
-            "zero_private_paths": True,
+            "zero_private_paths": zero_paths,
+            "zero_restricted_sources": zero_restricted,
         },
     }
 
@@ -620,6 +788,8 @@ def main() -> None:
         f"across {len(manifest['shards'])} shard(s)."
     )
     print(f"Textbook attestation rate: {manifest['quality_metrics']['textbook_attestation_rate']:.2%}")
+    print(f"Zero private paths: {manifest['quality_metrics']['zero_private_paths']}")
+    print(f"Zero restricted sources: {manifest['quality_metrics']['zero_restricted_sources']}")
     print(f"Receipt written to {args.out_dir / 'decolonization_manifest.json'}")
 
 

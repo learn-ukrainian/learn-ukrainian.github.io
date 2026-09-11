@@ -7,17 +7,18 @@
     {
       "shard_index": 1,
       "trajectories_file": "decolonization_trajectories_part001.jsonl",
-      "trajectories_bytes": 449267,
-      "trajectories_sha256": "b98ae65168685a7cbcae1da8a84fedbeaf7a34f1b09cf4d06e2c4110161dd151",
+      "trajectories_bytes": 445929,
+      "trajectories_sha256": "415f7786485cf38506431cd520a9e30d72c0f1807fef73bcd11a9b1ea059c2d2",
       "dpo_pairs_file": "decolonization_dpo_pairs_part001.jsonl",
-      "dpo_pairs_bytes": 153220,
-      "dpo_pairs_sha256": "6bf3b34898aa44ad776e5eacac8c7251d7fa21de294ff4f1ed3d9e63174624d8",
+      "dpo_pairs_bytes": 155355,
+      "dpo_pairs_sha256": "61e1016aaf8f0674a9acbe2f00abd97f687df6747286383d8b3985b9d9a391c2",
       "records_count": 100
     }
   ],
   "quality_metrics": {
     "vesum_verification_rate": 1.0,
     "textbook_attestation_rate": 0.83,
-    "zero_private_paths": true
+    "zero_private_paths": true,
+    "zero_restricted_sources": true
   }
 }

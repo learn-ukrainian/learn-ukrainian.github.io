@@ -891,7 +891,14 @@ def verify_delivery(
     # Check if database is accessible for full text verification
     try:
         db_p = _get_sources_db_path(repo_root)
-        db_available = db_p.is_file()
+        db_available = False
+        if db_p.is_file():
+            conn = sqlite3.connect(f"file:{db_p}?mode=ro", uri=True)
+            cur = conn.cursor()
+            cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name IN ('literary_texts', 'textbooks')")
+            tables = {row[0] for row in cur.fetchall()}
+            conn.close()
+            db_available = "literary_texts" in tables and "textbooks" in tables
     except Exception:
         db_available = False
 
@@ -960,7 +967,7 @@ def verify_delivery(
                 text = record.get("text")
                 if not text or len(text) != char_len:
                     return False
-    except (ValueError, KeyError):
+    except (ValueError, KeyError, sqlite3.Error):
         return False
 
     return records_count == ds_repro.get("records_count")
