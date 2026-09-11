@@ -204,3 +204,157 @@ pinned training path. Re-review the resulting exact head with adverse fixtures
 and qualified source-grounded linguistic assessment. Closure requires explicit
 per-finding evidence; this report does not authorize training, publication, or a
 change to the source-collection boundary.
+
+## Remediation re-review — PR #7933
+
+**VERDICT: FAIL** at exact head
+`69e72ef4a90990d4edbd7fb9c8ef15f8e8d6a6b6`.
+The remediation makes useful changes, but the statement that all findings are
+resolved is not supported. The original audit above remains historical evidence;
+this section records the new head's disposition.
+
+### Confirmed improvements
+
+- All 20 affected tests pass (0.82 seconds on the custody host); current PR CI is
+  green, with some inapplicable jobs skipped.
+- F1's original first-word-only textbook counterexample is rejected. VESUM now
+  checks every constituent token, and dictionaries have a full-phrase query path.
+  Both deployed dictionary tables have the `definition` column used by that path.
+- F2 adds provenance strings and measured VESUM count/denominator fields in code.
+- F3 rejects the original contradictory answer, empty output, and short keyword
+  fragment. These are specific counterexample fixes, not semantic validation.
+- F4's original duplicate/missing fixture now reports 2 expected, 1 evaluated,
+  1 missing, 2 duplicates, 1 unknown, and a 0.5 pass rate.
+- F5 rejects identical IDs and overlapping SFT targets across partitions.
+- F6 rejects nonexistent shards and individually oversized records and rolls
+  shards by UTF-8 bytes. The nine delivered consumer JSONLs have a maximum size
+  of 1,799,218 bytes. A synthetic Unicode rollover also passed.
+- F7's DPO system instruction now reaches tokenization in the isolated TRL helper
+  probe. Full trainer execution was not performed.
+
+### R1 — P1: The delivered canonical dataset was not remediated
+
+Git-blob comparison between the audited original and remediation heads shows
+**all nine files under `generated/` are unchanged**, including all trajectories,
+DPO pairs, and the canonical manifest. Aggregate inspection found the new
+provenance marker in **0 of 967 training trajectories**. Consumer reformatting
+therefore republishes the original reasoning/evidence, not newly generated output
+from the revised attestation code.
+
+Regenerate and validate canonical artifacts after the evidence defects are fixed,
+then derive consumer artifacts from that exact verified generation. Reconcile
+all receipts and describe any changed denominator. Formatter changes alone do
+not close findings against the delivered linguistic data.
+
+### R2 — P1: F2 still teaches unconditional gold and living-standard claims
+
+At `v4_decolonization_reasoning.py:553–559`, a VESUM-only alternative is now labeled
+`technical_compound` or `classical_regional`. But `:618–630` still calls the primary
+alternative a verified living standard and says the target should be avoided;
+`:637–648` still sets the target calque flag to true and places the same alternative
+in `primary_living_standard`. Historical explanations remain category templates.
+
+A synthetic target with a VESUM-positive `valid phrase` and no textbook/dictionary
+evidence receives `technical_compound` while retaining that same phrase as its
+primary living standard and a normative final recommendation. Changing one
+register field does not remove the contradictory training supervision.
+
+Gate all judgment-bearing fields on evidence. Preserve uncertainty consistently
+instead of replacing one unsupported register label with another. Retain
+addressable source evidence rather than provenance text alone.
+
+### R3 — P1: F3 still scores non-answers at 100 percent
+
+At `v4_evaluate_decolonization.py:149–179`, length checks augment the same keyword
+heuristics. For target `badtoken` and alternative `goodtoken`, both examples
+still return **1.0 / PASS**:
+
+> goodtoken суфікс словник суфікс словник суфікс словник
+
+> Я відмовляюся оцінювати badtoken чи goodtoken. Слова «калька» та «суфікс» наведено лише для прикладу.
+
+The second explicitly refuses to evaluate either expression. Additionally, the
+new target-independent affirmation pattern at `:51` makes a recommendation of
+the alternative followed by “Це не є помилкою” score zero even when the target
+is absent. Contextual meaning remains unmeasured. Do not label these heuristics
+State Standard compliance or grounded reasoning; validate scoring against an
+independently adjudicated adverse set.
+
+### R4 — P1: F5's target firewall excludes DPO targets
+
+`v4_format_decolonization.py:245–255` builds target sets only from SFT trajectories.
+A synthetic train SFT target `a`, train DPO target `b`, and held-out SFT/DPO target
+`b`, all with distinct IDs, export successfully with
+`verified_disjoint_targets=True` and overlap zero.
+
+Validate the combined SFT/DPO target sets and pair-to-trajectory correspondence.
+This proves an enforcement gap; it does not assert contamination in the delivered
+artifacts.
+
+### R5 — P2: F4 can score an explicit ID against the wrong gold item
+
+`v4_evaluate_decolonization.py:253–258` mixes exact ID and prompt-substring matching
+in a first-match loop. With two synthetic gold items, prediction ID
+`synthetic.otherbadtoken` and prompt `Compare badtoken with otherbadtoken` is scored
+against `badtoken`, leaving the explicitly identified item missing. Resolve exact
+identities first and reject conflicting or ambiguous fallback matches.
+
+### R6 — P2: F6 still risks destructive or falsely successful publication
+
+`v4_format_decolonization.py:198–200` deletes existing consumer JSONLs before
+parsing and firewall checks. A rejected overlap fixture removed a previous
+synthetic output. Validate the full input and stage replacement outputs before
+atomically publishing them.
+
+The nonempty check at `:193–196` checks bytes only: whitespace-only shards still
+produce successful zero-row exports. Declared input hashes and record counts
+also remain unreconciled. Validate parsed records and complete manifest integrity,
+not just existence and positive file size.
+
+### R7 — P1: F7's dual SFT fields do not fix the documented TRL path
+
+The formatter emits both legacy `conversations` and adapted `messages`
+(`v4_format_decolonization.py:54–65`), while the recipe passes the whole row into
+SFTTrainer. Current upstream TRL detects `conversations` and runs
+`maybe_convert_to_chatml`, which overwrites `messages` from that field. Executing
+that official helper on a synthetic new-format record produces roles
+`system/human/gpt`, discarding the intended `user/assistant` adaptation.
+
+Select the intended representation explicitly before training, and test the
+actual preprocessing path. The guide's smoke check manually reads `messages`;
+it bypasses the conversion that loses the adaptation. Pin dependencies. Evidence
+here is official-source and isolated-helper execution, not a full model run.
+
+### R8 — P2: The guide misidentifies Gemma 4 control tokens
+
+`decolonization-training-guide.md:55–71` claims `<thought>...</thought>` is Gemma 4's
+native reasoning channel and presents older `<start_of_turn>` syntax as its
+shared format. Google's current documentation specifies `<|turn>` / `<turn|>`
+and `<|channel>thought` / `<channel|>`, with `<|think|>` enabling thinking.
+
+Plain `<thought>` text can be custom supervision, but it is not the documented
+native control channel. Use separate verified model-template paths and a smoke
+check of the actual control-token sequence. Merely finding literal tags in the
+rendered text does not establish native reasoning-channel training. The claimed
+20–30 percent Ukrainian token reduction and comparative linguistic-refusal
+behavior have no supporting measurement in this PR and remain unverified.
+
+Official sources checked on 2026-09-11:
+[Google Gemma 4 formatting](https://ai.google.dev/gemma/docs/core/prompt-formatting-gemma4),
+[TRL conversion code](https://github.com/huggingface/trl/blob/main/trl/data_utils.py),
+and [SFT preprocessing](https://github.com/huggingface/trl/blob/main/trl/trainer/sft_trainer.py).
+Upstream URLs move; conclusions about TRL are scoped to the inspected source date.
+
+### Seed milestone and closure
+
+The plan now describes three reference anchors instead of the previous 100-item
+curation target. That accurately states the observed count, but documents a scope
+reduction rather than delivery of the missing 97 curated items. The operator must
+accept that changed completion denominator or the curation remains outstanding;
+a remediation summary cannot silently redefine completion.
+
+Reproduction used temporary synthetic fixtures and aggregate exact-blob checks;
+no protected source text or held-out identities are included. No production
+regeneration or training was run. Close the findings only after fresh artifact
+reconciliation and exact-head adversarial re-review. This review does not authorize
+merging PR #7933.
