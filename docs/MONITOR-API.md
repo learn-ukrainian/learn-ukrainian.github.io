@@ -1240,9 +1240,9 @@ Public Monitor endpoints for SQLite FTS5 source corpora, textbook chunks, litera
 | GET | `/api/sources/search_literary?q=...[&work=...][&genre=...][&period=...][&limit=5]` | Search literary and primary texts |
 | GET | `/api/sources/browse_images[?grade=...][&sort=size|name|grade][&page=0][&per_page=100]` | Browse textbook images on disk with pagination |
 
-### Retired Legacy Alias — `/api/rag/*`
+### Retired Legacy Alias — `/api/rag/*` (HTTP 404)
 
-`/api/rag/*` previously mirrored `/api/sources/*` for backward compatibility. It was retired in #7939 after all callers migrated. Callers must use canonical `/api/sources/*`.
+`/api/rag/*` previously mirrored `/api/sources/*` for backward compatibility. It was retired in #7942 (closing #7939, documented in #7945) after all callers migrated. Requests to `/api/rag/*` do not operate with deprecation headers and return HTTP `404 Not Found`. Callers must use canonical `/api/sources/*`.
 
 ### Service Boundaries: Public Monitor vs. Private Teacher
 
@@ -2917,12 +2917,21 @@ future cleanup.
 
 | Deprecated | Replacement |
 |---|---|
-| `GET /api/blue/live-status` | `GET /api/state/build-status` (retired in #7939) |
 | `GET /api/comms/live-activity` | `GET /api/state/build-status` + `GET /api/build/events` stream |
 
 The deprecated routes still work for existing dashboards and scripts
 that haven't been updated — the contract is "log a warning and
 migrate", not "break suddenly".
+
+### Retired endpoints (HTTP 404)
+
+The following legacy endpoints and route aliases have been completely retired and unmounted (see #7942, #7945). They do **not** operate with deprecation headers; requests return HTTP `404 Not Found`. Callers must use the canonical endpoints:
+
+| Retired Route | Canonical Replacement | Status | Notes |
+|---|---|---|---|
+| `GET /api/blue/live-status` | `GET /api/state/build-status` | 404 Not Found | Retired in #7942 (#7945); callers migrated to `/api/state/build-status` |
+| `GET /api/rag/*` | `GET /api/sources/*` | 404 Not Found | Retired in #7942 (#7945); alias prefix unmounted, canonical endpoints are under `/api/sources/*` |
+
 
 ---
 
