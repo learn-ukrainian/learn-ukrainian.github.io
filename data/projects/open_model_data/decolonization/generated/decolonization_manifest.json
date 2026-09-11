@@ -1,24 +1,70 @@
 {
   "dataset_name": "Ukrainian Linguistic Decolonization & Reasoning (ULDR)",
   "schema_version": "v1",
-  "total_trajectories": 100,
-  "total_dpo_pairs": 100,
+  "total_trajectories": 1200,
+  "total_dpo_pairs": 1200,
+  "partition_counts": {
+    "train": 967,
+    "held_out": 233
+  },
+  "partition_firewall": {
+    "verified_partition_isolation": true,
+    "train_held_out_overlap_count": 0,
+    "train_ratio_target": 0.8
+  },
+  "quality_metrics": {
+    "vesum_verification_rate": 1.0,
+    "textbook_attestation_rate": 0.545,
+    "textbook_attestation_count": 654,
+    "dictionary_attestation_rate": 0.5842,
+    "dictionary_attestation_count": 701,
+    "zero_private_paths": true,
+    "zero_restricted_sources": true
+  },
   "shards": [
     {
       "shard_index": 1,
-      "trajectories_file": "decolonization_trajectories_part001.jsonl",
-      "trajectories_bytes": 445929,
-      "trajectories_sha256": "415f7786485cf38506431cd520a9e30d72c0f1807fef73bcd11a9b1ea059c2d2",
-      "dpo_pairs_file": "decolonization_dpo_pairs_part001.jsonl",
-      "dpo_pairs_bytes": 155355,
-      "dpo_pairs_sha256": "61e1016aaf8f0674a9acbe2f00abd97f687df6747286383d8b3985b9d9a391c2",
-      "records_count": 100
+      "partition": "train",
+      "trajectories_file": "decolonization_trajectories_train_part001.jsonl",
+      "trajectories_bytes": 1768116,
+      "trajectories_sha256": "e5b4dae15c37ceeafe22f3891e23160c51229d9384eebd4b65bacd733bf05fb6",
+      "dpo_pairs_file": "decolonization_dpo_pairs_train_part001.jsonl",
+      "dpo_pairs_bytes": 616164,
+      "dpo_pairs_sha256": "4b969a4f2223830833609618143b0e520bf7fad282188ffb466665d6fc32dbe3",
+      "records_count": 400
+    },
+    {
+      "shard_index": 2,
+      "partition": "train",
+      "trajectories_file": "decolonization_trajectories_train_part002.jsonl",
+      "trajectories_bytes": 1782568,
+      "trajectories_sha256": "72709b321d4da99c1e1aa1ed55fe69c16a2e0b1c920c774a221f8a530337f077",
+      "dpo_pairs_file": "decolonization_dpo_pairs_train_part002.jsonl",
+      "dpo_pairs_bytes": 607273,
+      "dpo_pairs_sha256": "76aaf73a86851d8d7c66785b1f50a634c4dfb3385698e37e13e5a254d2d384fb",
+      "records_count": 400
+    },
+    {
+      "shard_index": 3,
+      "partition": "train",
+      "trajectories_file": "decolonization_trajectories_train_part003.jsonl",
+      "trajectories_bytes": 729102,
+      "trajectories_sha256": "0bc453fbe1a9015b9e056e209f1a6b600aa8523a35c5241234fcf336a2debbee",
+      "dpo_pairs_file": "decolonization_dpo_pairs_train_part003.jsonl",
+      "dpo_pairs_bytes": 251630,
+      "dpo_pairs_sha256": "5c1282c1986a810df9e745d01b913dc5c1254c924b821ed9961153a371cba3bf",
+      "records_count": 167
+    },
+    {
+      "shard_index": 1,
+      "partition": "held_out",
+      "trajectories_file": "decolonization_trajectories_held_out_part001.jsonl",
+      "trajectories_bytes": 1041028,
+      "trajectories_sha256": "6115a92c39d3e69d76bca42e10c36dbf78277b5b24d1d8f5df00ca537b6cdaa9",
+      "dpo_pairs_file": "decolonization_dpo_pairs_held_out_part001.jsonl",
+      "dpo_pairs_bytes": 356736,
+      "dpo_pairs_sha256": "a51ffd1ebb1e98fd0414011db704bac2b9f15c8f66877b16264bc9d2775f6515",
+      "records_count": 233
     }
-  ],
-  "quality_metrics": {
-    "vesum_verification_rate": 1.0,
-    "textbook_attestation_rate": 0.83,
-    "zero_private_paths": true,
-    "zero_restricted_sources": true
-  }
+  ]
 }
