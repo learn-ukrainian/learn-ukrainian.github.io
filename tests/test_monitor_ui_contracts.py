@@ -59,7 +59,7 @@ def test_playground_page_uses_shared_parchment_monitor_design(filename, active_l
     html = (ROOT / "dashboards" / filename).read_text(encoding="utf-8")
     assert '<link rel="stylesheet" href="/monitor.css">' in html
     assert 'class="monitor-nav"' in html
-    assert 'aria-label="Monitor sections"' in html
+    assert 'aria-label="Ops API sections"' in html
     assert active_link in html
     assert heading in html
     assert ":root" not in html
