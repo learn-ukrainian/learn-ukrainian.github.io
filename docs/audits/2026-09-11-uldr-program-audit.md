@@ -1,5 +1,10 @@
 # ULDR program audit — 2026-09-11
 
+Latest disposition: **FAIL** at `3083e3569172bc0c43ee5066fa8ab527d0413e05`.
+See [the regenerated-package re-review](#regenerated-package-re-review--dcc5bced-and-3083e356)
+for current fixes, evidence, and remaining findings. Earlier sections retain the
+history of the heads they name.
+
 ## Disposition
 
 **FAIL for the claimed gold linguistic dataset and reliable semantic evaluation readiness.**
@@ -358,3 +363,163 @@ no protected source text or held-out identities are included. No production
 regeneration or training was run. Close the findings only after fresh artifact
 reconciliation and exact-head adversarial re-review. This review does not authorize
 merging PR #7933.
+
+## Regenerated-package re-review — dcc5bced and 3083e356
+
+**VERDICT: FAIL** at final reviewed head
+`3083e3569172bc0c43ee5066fa8ab527d0413e05` of PR #7933.
+Implementation and artifact checks began at
+`dcc5bced7c27dc6f9828a6618541bc2d6ad774aa`. The head advanced during review;
+the exact intervening diff adds only a 64-line Gemma-format test. No implementation,
+guide, schema, or dataset content changed between those heads. The added test was
+inspected and the affected suite rerun: **27 passed in 0.87 seconds**.
+
+### Verified progress and residual disposition
+
+| Prior finding | Disposition at this head |
+| --- | --- |
+| R1: unchanged canonical artifacts | Fixed: all 9 files regenerated; 1,200/1,200 provenance markers |
+| R2: VESUM-only primary standard | Specific fallback rejected; target and historical evidence remain unresolved |
+| R3: prior refusal/repetition probes | Those examples fixed; a new semantic non-answer still scores 1.0 |
+| R4: combined DPO/SFT firewall | Original example rejected; conflicting target fields bypass the check |
+| R5: exact identity precedence | Original wrong-item matching example fixed |
+| R6: publication/integrity | Content validation improved; move-failure loss and real count-key mismatch remain |
+| R7: dual-column TRL overwrite | Fixed by explicit role mapping and removing conversations before SFT |
+| R8: native Gemma 4 formatting | Documentation corrected; actual training conversion still emits literal tags |
+| Seed denominator | Correctly restored: 3/100 delivered, 97 outstanding |
+
+The canonical package has 1,200 trajectories and 1,200 DPO pairs, split **966
+train / 234 held-out** in each format. All eight generated JSONL hash, byte and
+`records_count` checks pass. The maximum canonical shard is **1,794,425 bytes**;
+the maximum consumer shard is **1,663,396 bytes**. Consumer counts reconcile.
+Exact normalized canonical target overlap is zero. These are actual artifact
+checks, not synthetic examples. A provenance marker is source text attribution;
+its presence alone does not make evidence independently addressable or verified.
+
+### G1 — Evidence limitation: The reported benchmark is reproducible from packaged reference answers
+
+The untracked `consumer/held_out_evaluation_report.json` reports 234 evaluated,
+0.9957 elimination/suggestion rates, 0.9915 grounding/pass rates, and 0.9932 mean
+score. A read-only custody-host probe used the existing held-out ShareGPT `gpt`
+answer in every row as the prediction and evaluated it against canonical gold.
+**The resulting report equals the existing report exactly, including all
+per-item evaluation fields.** No model invocation was needed.
+
+This establishes that the reported result can be a generator/evaluator self-check;
+it does not establish independently produced model performance, historical
+accuracy, or linguistic gold quality. The report has no model, prediction-input
+digest, or inference receipt. Label the score as a packaged-reference self-check,
+or supply independently produced prediction provenance before describing it as
+model evidence. This finding does not add model training to repository scope.
+No held-out text or identities leave custody in this audit.
+
+### G2 — P1: Further regex filters still accept semantic non-answers
+
+`v4_evaluate_decolonization.py:189–225` accepts the following synthetic response
+for target `badtoken` and alternative `goodtoken` with **1.0 / PASS**:
+
+> Оцінки не буде. На дошці написано goodtoken. Учень читає словник, бо його цікавить суфікс.
+
+The answer withholds evaluation and describes classroom text. It does not
+recommend the alternative or give a linguistic diagnosis. Keyword diversity and
+a connective are not semantic grounding. The earlier refusal/repetition examples
+now fail correctly, but their fixes do not close this broader finding. Preserve
+heuristic labels and require independent adverse semantic assessment before
+using these scores as evidence of linguistic correctness.
+
+### G3 — P1: Target-field precedence differs between validation and export
+
+`v4_format_decolonization.py:281–285` validates a top-level target before a metadata
+target; `:88–89` exports the metadata target first. A synthetic training DPO record
+with `target_term="a"` and `metadata.target_term="b"`, alongside training SFT `a`
+and held-out SFT/DPO `b`, passes with distinct IDs. The two exported DPO partitions
+both contain target `b`, while the manifest reports zero overlap.
+
+Reject conflicting representations or resolve one canonical target and use it
+throughout validation and formatting. The original single-representation overlap
+fixture is fixed. This counterexample demonstrates an accepted-input failure,
+not contamination in the current regenerated artifacts.
+
+### G4 — P2: Tokenless responses crash the evaluation batch
+
+At `v4_evaluate_decolonization.py:185`, a nonempty response can produce zero tokens,
+then divide by `len(tokens)`. Synthetic responses `...` and an emoji each raise
+`ZeroDivisionError`. Handle tokenless responses as scored failures so one malformed
+prediction cannot abort the benchmark. This is separate from empty-string handling,
+which already works.
+
+### G5 — P2: Publication is not atomic on filesystem failure
+
+`v4_format_decolonization.py:368–382` deletes previous JSONLs, moves replacements
+one at a time, and removes staging in `finally`. Injecting `OSError` on the first
+move leaves old shards deleted, the old manifest present, no replacement shards,
+and staging removed. Pre-publication content failures now preserve outputs, but
+publication itself still needs a recoverable generation switch or rollback.
+
+### G6 — P2: Count validation checks fields the canonical manifest does not use
+
+`v4_format_decolonization.py:243,256` validates optional `trajectories_count` and
+`dpo_pairs_count`. Actual canonical shard receipts use `records_count`. A synthetic
+manifest declaring `records_count=2` with one trajectory and one DPO row exports
+successfully. Reconcile the real contract field against both input streams and
+verify aggregate totals. Unknown partition names also still skip processing
+(`:209–211`) and can lead to a falsely successful empty publication.
+
+Actual generated receipts reconcile in this audit. This finding concerns missing
+protection against inconsistent subsequent inputs. Declared hash mismatches,
+whitespace-only shards and the previous missing-file examples are now rejected.
+
+### G7 — P2: Gemma 4 native thinking is still absent from the executed recipe
+
+The guide's `convert_to_chatml` (`decolonization-training-guide.md:114–130`) correctly
+maps roles and removes the conflicting column, but copies literal
+`<thought>...</thought>` unchanged into assistant `content`. The smoke check
+(`:229–232`) still checks for those literal tags rather than native channels.
+
+An isolated probe executed the exact documented converter and Google's current
+Gemma 4 Jinja template on synthetic input. It produced `user/assistant` roles,
+preserved literal thought tags, and emitted **no native thought channel**. A
+positive control supplying the template's `reasoning` field did emit the native
+channel. No tokenizer weights, model, or full trainer were loaded.
+
+The latest added test manually constructs the desired Gemma strings inside the
+test itself; it does not execute the guide's training path or the official template.
+It therefore cannot establish that the training recipe produces those strings.
+Implement and validate the intended model-specific transformation, or explicitly
+describe the recipe as literal-tag supervision rather than native-channel training.
+
+Sources checked on the audit date:
+[Google's Gemma 4 template](https://huggingface.co/google/gemma-4-31B-it/blob/main/chat_template.jinja)
+and [official control-token documentation](https://ai.google.dev/gemma/docs/core/prompt-formatting-gemma4).
+The upstream template is date-scoped; production recipes should pin it.
+
+### G8 — P1: The new alternative gate does not establish target or historical truth
+
+`v4_decolonization_reasoning.py:575–584` now requires at least one alternative that
+was assigned `living_standard`; this genuinely removes the VESUM-only fallback.
+But alternative occurrence is not evidence that the target is a calque or that a
+specific suppression history applies. The target flag remains unconditional
+(`:649`), and the historical explanation remains selected by spelling/category
+(`:593–623`). The code still needs evidence tied to those separate claims, not
+just evidence that an alternative exists. All 1,200 regenerated targets remain
+positively labeled; this aggregate does not prove that every label is wrong.
+
+A concrete alternative-level defect also remains at `:544–546`: candidate-level
+`curated_evidence` is assigned to every VESUM-positive suggestion. In a synthetic
+case with two alternatives and evidence naming only the second, both become
+`living_standard` and the unsupported first alternative becomes primary. Tie
+curated evidence to the exact recommendation it supports before selecting the
+primary; a nonempty candidate evidence list is not a per-alternative proof.
+
+The source approval boundary is unchanged. The unresolved requirement is to bind
+the labels and explanations to the evidence actually supporting them, preserve
+uncertainty, and demonstrate linguistic quality independently of the generator's
+own templates.
+
+### Required next disposition
+
+Do not report all findings closed. Preserve the verified regeneration, formatting
+and reconciliation improvements. Resolve the remaining semantic, identity,
+publication and native-template defects with adverse fixtures that exercise the
+actual production paths. Keep the 97-seed residual visible. Repeat exact-head
+review after those changes; this audit authorizes no merge or model execution.
