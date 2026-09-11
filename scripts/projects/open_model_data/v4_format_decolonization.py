@@ -428,45 +428,64 @@ def format_consumer_datasets(
             "zero_restricted_sources": zero_restricted,
         }
 
-        # Staging verified: atomically publish with backup and rollback protection
+        # Staging verified: atomically publish with two-phase backup and rollback protection
         backup_dir = output_dir / f".backup_{uuid.uuid4().hex[:8]}"
         backup_dir.mkdir(parents=True, exist_ok=True)
         backed_up_files: list[str] = []
+        newly_published_files: list[Path] = []
+        restoration_failed = False
 
+        # Phase 1: Move existing files to backup
         try:
-            # Move existing files to backup
             existing_candidates = [*output_dir.glob("*.jsonl"), output_dir / "consumer_formats_manifest.json"]
             for old_f in existing_candidates:
                 if old_f.is_file():
                     dest_backup = backup_dir / old_f.name
                     shutil.move(str(old_f), str(dest_backup))
                     backed_up_files.append(old_f.name)
+        except Exception:
+            # If backup fails, DO NOT unlink output_dir files; restore already-moved files
+            for b_name in backed_up_files:
+                b_src = backup_dir / b_name
+                if b_src.is_file():
+                    try:
+                        shutil.move(str(b_src), str(output_dir / b_name))
+                    except Exception:
+                        restoration_failed = True
+            if not restoration_failed:
+                shutil.rmtree(backup_dir, ignore_errors=True)
+            raise
 
-            # Move verified files from staging to output_dir
+        # Phase 2: Move verified files from staging to output_dir
+        try:
             for staged_f in staging_dir.glob("*.jsonl"):
-                shutil.move(str(staged_f), str(output_dir / staged_f.name))
+                dest = output_dir / staged_f.name
+                shutil.move(str(staged_f), str(dest))
+                newly_published_files.append(dest)
 
             summary_path = output_dir / "consumer_formats_manifest.json"
             with summary_path.open("w", encoding="utf-8") as f:
                 json.dump(stats, f, ensure_ascii=False, indent=2)
                 f.write("\n")
+            newly_published_files.append(summary_path)
 
         except Exception:
-            # Atomic rollback: clean up partial moves and restore original files
-            for partial_f in output_dir.glob("*.jsonl"):
+            # Atomic rollback: clean up ONLY newly published files and restore original files
+            for partial_f in newly_published_files:
                 partial_f.unlink(missing_ok=True)
-            (output_dir / "consumer_formats_manifest.json").unlink(missing_ok=True)
 
             for b_name in backed_up_files:
                 b_src = backup_dir / b_name
                 if b_src.is_file():
-                    shutil.move(str(b_src), str(output_dir / b_name))
+                    try:
+                        shutil.move(str(b_src), str(output_dir / b_name))
+                    except Exception:
+                        restoration_failed = True
+            if not restoration_failed:
+                shutil.rmtree(backup_dir, ignore_errors=True)
             raise
         else:
             shutil.rmtree(backup_dir, ignore_errors=True)
-        finally:
-            if backup_dir.exists():
-                shutil.rmtree(backup_dir, ignore_errors=True)
 
     finally:
         if staging_dir.exists():

@@ -499,6 +499,60 @@ def classify_calque_type(target_term: str) -> tuple[str, str, str]:
         )
 
 
+def is_positive_citation(lemma: str, citation: str) -> bool:
+    """Return True if citation positively recommends or attests lemma, and does not frame it as an error/calque."""
+    if not lemma or not citation:
+        return False
+
+    lem = lemma.strip().lower()
+    cit = citation.lower()
+
+    # Whole-word / token boundary check (supports Cyrillic and Latin)
+    lem_pat = rf"(?<![а-яіїєґa-z0-9]){re.escape(lem)}(?![а-яіїєґa-z0-9])"
+    if not re.search(lem_pat, cit):
+        return False
+
+    # Negative patterns directed at lemma
+    negative_patterns = [
+        # English negative prefixes
+        rf"(?:do\s+not\s+use|don't\s+use|avoid|never\s+use|not\s+recommended|deprecated|incorrect)\s+(?:the\s+)?(?:word|term|form|phrase)?\s*[«\"']?{lem_pat}",
+        rf"(?:замість|натомість)\s+(?:слова|форми|варіанта|терміна|виразу|конструкції)?\s*[«\"']?{lem_pat}\s*[,;:—–-]",
+        rf"(?:замість|натомість)\s+(?:слова|форми|варіанта|терміна|виразу|конструкції)?\s*[«\"']?{lem_pat}\s+(?:вжива|використову|краще|варто|беріть|слід|обирай)",
+        # Ukrainian negative prefixes
+        rf"(?:не\s+(?:вживати|вживайте|вживається|варто|слід|можна|рекомендовано|радимо|доцільно))\s+(?:слово|форму|варіант|термін)?\s*[«\"']?{lem_pat}",
+        rf"(?:а\s+не|not)\s+[«\"']?{lem_pat}",
+        rf"(?:уника(?:ти|йте|тиме|тимуть))\s+(?:слово|форму|варіант|термін)?\s*[«\"']?{lem_pat}",
+        rf"(?:помилков\w*|неправильн\w*|кальк\w*|суржик\w*|росіянізм\w*)\s*[:—–-]?\s*(?:як-от|зокрема)?\s*[«\"']?{lem_pat}",
+        # Negative postfixes (where lemma is followed by calque/error markers)
+        rf"{lem_pat}\s*[:—–-]?\s*(?:—|-|–|є|це|\b)\s*(?:не\s+вжива\w*|кальк\w*|помилк\w*|неправильн\w*|суржик\w*|росіянізм\w*|не\s+рекоменд\w*|уника\w*)",
+        rf"{lem_pat}\s*[:—–-]?\s*(?:уникати|не\s+вживати|замінити|неправильно|помилково)",
+        rf"{lem_pat}\s*[^;.!?\n]*(?:is\s+)?(?:incorrect|not\s+recommended|deprecated|calque|avoided|a\s+calque)",
+    ]
+
+    for pat in negative_patterns:
+        if re.search(pat, cit):
+            return False
+
+    # Positive affirmation patterns
+    positive_patterns = [
+        # English positive markers
+        rf"(?:use|prefer|recommended|correct|standard|valid|appropriate)\s+[^;.!?\n]*{lem_pat}",
+        rf"{lem_pat}\s*[^;.!?\n]*(?:is\s+)?(?:recommended|correct|standard|valid|appropriate|the\s+standard|preferred)",
+        rf"(?:living\s+standard|normative|standard)\s*[:—–-]?\s*[^;.!?\n]*{lem_pat}",
+        # Ukrainian positive markers
+        rf"(?:правильн\w*|краще|варто|слід|рекоменд\w*|радимо|доцільно|доречно|потрібно|необхідно|нормативн\w*)\s+[^;.!?\n]*{lem_pat}",
+        rf"(?:вжива\w*|пишіть|кажіть|говоріть|використову\w*|обирайте|надавайте\s+перевагу)\s+[^;.!?\n]*{lem_pat}",
+        rf"{lem_pat}\s*[^;.!?\n]*(?:—|-|–|є|це)\s*[^;.!?\n]*(?:питом\w*|автентичн\w*|нормативн\w*|правильн\w*|чинн\w*|літературн\w*|відповідник\w*|стандарт\w*|варіант\w*|норма\b)",
+        rf"(?:питом\w*|автентичн\w*|нормативн\w*|правильн\w*|чинн\w*|літературн\w*|живий\s+стандарт)\s+[^;.!?\n]*{lem_pat}",
+        # Contrastive correction marker: e.g. "мандрівний (а не мандруючий)"
+        rf"{lem_pat}\s*[^;.!?\n]*\((?:а\s+не|не|not|замість)\s+[^)]+\)",
+        # Right-hand side of correction arrow or dash: "A — B" or "A → B"
+        rf"(?:—|-|–|→)\s*[^;.!?\n]*{lem_pat}",
+    ]
+
+    return any(re.search(pat, cit) for pat in positive_patterns)
+
+
 def synthesize_trajectory_and_dpo(
     candidate: CalqueCandidate,
     vesum_counts: dict[str, int],
@@ -541,7 +595,7 @@ def synthesize_trajectory_and_dpo(
         matching_curated = [
             ev
             for ev in (candidate.curated_evidence or [])
-            if s.lower() in ev.lower() or normalize_text(s) in normalize_text(ev)
+            if is_positive_citation(s, ev)
         ]
         if tb:
             evidence = f"Підручник МОН «{tb['subject']}» {tb['grade']} клас ({tb['author']}); цитата: «{tb['snippet']}»{prov_suffix}"
@@ -597,19 +651,18 @@ def synthesize_trajectory_and_dpo(
 
     if calque_category == "active_participle":
         historical_note = (
-            "У радянський період укладання словників (зокрема так званих «зелених» та «сірих» томів РУС/СУМ-11) "
-            "активно культивувалося штучне впровадження активних дієприкметників для зближення граматичної структури "
-            "української мови з російською."
+            f"В українській літературній мові активні дієприкметники теперішнього часу на -уч-/-яч- (як-от «{target_term}») "
+            "є нетиповими; граматична норма надає перевагу описовим конструкціям, віддієслівним прикметникам або дієсловам."
         )
     elif calque_category == "prefixal_calque":
         historical_note = (
-            "Невластиві префіксальні утворення нав'язувалися радянською термінологічною уніфікацією 1930–1950-х років, "
-            "яка забороняла автентичні українські дериваційні моделі."
+            f"Префіксальна словотвірна модель у формі «{target_term}» не відповідає питомій українській дериваційній нормі; "
+            "нормативні порадники радять уживати безпрефіксні варіанти або форми з питомими префіксами."
         )
     elif calque_category == "phrasal_calque":
         historical_note = (
-            "Буквальний канцелярит закріпився через радянське діловодство та масові переклади офіційних документів "
-            "без урахування прийменникового ладу української мови."
+            f"Словосполучення «{target_term}» відтворює синтаксичну кальку чужомовного звороту; "
+            "українська синтаксична норма вимагає природних безприйменникових або питомих прийменникових конструкцій."
         )
     else:
         historical_note = (
@@ -618,7 +671,7 @@ def synthesize_trajectory_and_dpo(
         )
 
     if prov_note:
-        historical_note = f"{prov_note} {historical_note}"
+        historical_note = f"{prov_note}. {historical_note}"
 
     lexicographical_context = {
         "historical_suppression_note": historical_note,

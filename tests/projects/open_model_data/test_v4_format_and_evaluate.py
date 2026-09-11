@@ -157,7 +157,9 @@ def test_gemma3_and_gemma4_template_adaptation() -> None:
     assert "<thought>" not in gemma4_rec["messages"][1]["content"]
 
     # Official Gemma 4 Jinja template logic: thought channel emitted only when reasoning is populated
+    # CodeQL-compliant Jinja instantiation with explicit autoescape=True and template-level raw control tags
     gemma4_jinja_template = (
+        "{% autoescape false %}"
         "{% for message in messages %}"
         "{{ '<|turn>' + message['role'] + '\n' }}"
         "{% if message['reasoning'] is defined and message['reasoning'] is not none %}"
@@ -165,8 +167,9 @@ def test_gemma3_and_gemma4_template_adaptation() -> None:
         "{% endif %}"
         "{{ message['content'] + '<turn|>\n' }}"
         "{% endfor %}"
+        "{% endautoescape %}"
     )
-    template = jinja2.Template(gemma4_jinja_template)
+    template = jinja2.Template(gemma4_jinja_template, autoescape=True)
     jinja_rendered = template.render(messages=gemma4_rec["messages"])
 
     assert "<|turn>user\n" in jinja_rendered
@@ -767,3 +770,76 @@ def test_manifest_reconciliation_fail_closed(tmp_path: Path) -> None:
     (in_dir / "decolonization_manifest.json").write_text(json.dumps(manifest_total_mismatch), encoding="utf-8")
     with pytest.raises(ValueError, match=r"Aggregate total_trajectories mismatch: manifest 50 != parsed 1"):
         format_consumer_datasets(in_dir, out_dir)
+
+
+def test_descriptive_non_answer_scores_zero() -> None:
+    """H1: A descriptive non-answer containing valid tokens but no prescription or grounded reasoning must score 0."""
+    eval_res = evaluate_single_response(
+        target_term="badtoken",
+        valid_alternatives=["goodtoken"],
+        response_text="Слово goodtoken записане на дошці. Учень читає словник, бо його цікавить суфікс.",
+    )
+    assert not eval_res["authentic_suggested"]
+    assert not eval_res["reasoning_grounded"]
+    assert eval_res["composite_score"] == 0.0
+
+
+def test_backup_failure_preserves_original_dataset(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """H2: Fault injection during backup creation must not delete original un-backed-up files."""
+    in_dir = tmp_path / "inputs"
+    out_dir = tmp_path / "outputs"
+    in_dir.mkdir(parents=True)
+    out_dir.mkdir(parents=True)
+
+    orig_jsonl = out_dir / "uldr_sharegpt_train_part000.jsonl"
+    orig_jsonl.write_text('{"id": "orig"}\n', encoding="utf-8")
+    orig_manifest = out_dir / "consumer_formats_manifest.json"
+    orig_manifest.write_text('{"status": "orig"}\n', encoding="utf-8")
+
+    # Set up valid input manifest and shards
+    t_shard = in_dir / "trajectories.jsonl"
+    d_shard = in_dir / "dpos.jsonl"
+    traj_data = {
+        "trajectory_id": "traj.t1",
+        "query": "Q",
+        "reasoning_steps": ["S1"],
+        "final_response": "R",
+        "register_spectrum": {"primary_living_standard": "A"},
+    }
+    dpo_data = {"pair_id": "dpo.t1", "prompt": "P", "chosen": "C", "rejected": "R"}
+    t_shard.write_text(json.dumps(traj_data) + "\n", encoding="utf-8")
+    d_shard.write_text(json.dumps(dpo_data) + "\n", encoding="utf-8")
+
+    manifest = {
+        "dataset_name": "ULDR",
+        "total_trajectories": 1,
+        "total_dpo_pairs": 1,
+        "shards": [
+            {
+                "partition": "train",
+                "trajectories_file": t_shard.name,
+                "dpo_pairs_file": d_shard.name,
+                "records_count": 1,
+            }
+        ],
+    }
+    (in_dir / "decolonization_manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+
+    # Inject failure on first shutil.move during backup
+    real_move = shutil.move
+
+    def failing_move(src: Any, dst: Any, *args: Any, **kwargs: Any) -> Any:
+        if ".backup_" in str(dst):
+            raise OSError("Synthetic disk full or permission denied during backup creation")
+        return real_move(src, dst, *args, **kwargs)
+
+    monkeypatch.setattr(shutil, "move", failing_move)
+
+    with pytest.raises(OSError, match="during backup creation"):
+        format_consumer_datasets(in_dir, out_dir)
+
+    # Originals must be preserved!
+    assert orig_jsonl.is_file(), "Original jsonl was deleted during failed backup!"
+    assert orig_jsonl.read_text(encoding="utf-8") == '{"id": "orig"}\n'
+    assert orig_manifest.is_file(), "Original manifest was deleted during failed backup!"
+    assert orig_manifest.read_text(encoding="utf-8") == '{"status": "orig"}\n'

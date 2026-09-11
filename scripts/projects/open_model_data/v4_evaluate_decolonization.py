@@ -77,11 +77,11 @@ EXPLANATION_CONNECTIVES = [
 ]
 
 SUGGESTION_PATTERNS = [
-    r"(?:правильно|краще|варто|слід|рекомендуємо|рекомендовано|радимо|доцільно|доречно|потрібно|необхідно|нормативно)\s+(?:вживати|казати|говорити|писати|використовувати|брати)?\s*[:—–-]?\s*[«\"]?{alt}[»\"]?",
-    r"(?:вживайте|кажіть|говоріть|пишіть|використовуйте|беріть|замініть|обирайте|надавайте\s+перевагу)\s*[«\"]?{alt}[»\"]?",
-    r"(?:замість|натомість|як\s+відповідник|відповідник(?:ом|а|ів)?|варіант(?:ом|а|ів)?|синонім(?:ом|а|ів)?|норма|слово|питоме|автентичне|літературне)\s+.*?[«\"]?{alt}[»\"]?",
-    r"[«\"]?{alt}[»\"]?\s*(?:—|-|–|є|це)?\s*(?:це\s+)?(?:питом|автентичн|нормативн|правильн|чинн|літературн|відповідник|стандарт|живий\s+стандарт)",
-    r"[«\"]?{alt}[»\"]?\s*(?:відповідає\s+нормі|має\s+парадигму|зафіксован|є\s+норм|вважається\s+норм|рекомендується|радять)",
+    r"(?:правильно|краще|варто|слід|рекомендуємо|рекомендовано|радимо|доцільно|доречно|потрібно|необхідно|нормативно)\s+(?:вживати|казати|говорити|писати|використовувати|брати|обирати)?\s*[:—–-]?\s*[«\"]?{alt}[»\"]?",
+    r"(?:вживайте|кажіть|говоріть|пишіть|використовуйте|беріть|замініть|обирайте|надавайте\s+перевагу)\s*[:—–-]?\s*[«\"]?{alt}[»\"]?",
+    r"(?:замість\s+.*?|натомість|як\s+відповідник\w*|питом\w*\s+відповідник\w*|нормативн\w*\s+відповідник\w*|правильн\w*\s+варіант\w*|питом\w*\s+слов\w*)\s+(?:є|виступає|слугує)?\s*[:—–-]?\s*[«\"]?{alt}[»\"]?",
+    r"[«\"]?{alt}[»\"]?\s*(?:—|-|–|є|це)\s*(?:це\s+)?(?:питом\w*|автентичн\w*|нормативн\w*|правильн\w*|чинн\w*|літературн\w*)\s+(?:відповідник\w*|стандарт\w*|варіант\w*|слово\w*|форма\w*|норм\w*)",
+    r"[«\"]?{alt}[»\"]?\s*(?:відповідає\s+(?:мовній\s+)?нормі|має\s+(?:повну\s+)?парадигму|зафіксован\w*\s+у\s+словник|є\s+літературн\w*\s+норм\w*|вважається\s+норм\w*|рекомендується|радять)",
 ]
 
 ALTERNATIVE_NEGATION_PATTERNS = [
@@ -147,30 +147,30 @@ def evaluate_single_response(
 
     # If the calque is mentioned, check if it is explicitly framed as an error / calque / incorrect
     calque_present = term_norm in resp_norm
+    critique_markers = (
+        "кальк",
+        "помилк",
+        "росіян",
+        "не рекоменд",
+        "не варто",
+        "штучн",
+        "замін",
+        "замість",
+        "уникати",
+        "суржик",
+        "неправильн",
+        "радянськ",
+    )
+    has_critique = any(m in resp_norm for m in critique_markers)
+
     if calque_affirmed:
         calque_eliminated = False
     elif calque_present:
-        # Check for critique context
-        critique_markers = (
-            "кальк",
-            "помилк",
-            "росіян",
-            "не рекоменд",
-            "не варто",
-            "штучн",
-            "замін",
-            "замість",
-            "уникати",
-            "суржик",
-            "неправильн",
-            "радянськ",
-        )
-        has_critique = any(m in resp_norm for m in critique_markers)
         calque_eliminated = has_critique
     else:
         # Calque not mentioned; require active linguistic recommendation context
         calque_eliminated = any(
-            m in resp_norm for m in ("правильн", "норм", "вжива", "рекоменд", "краще", "варто", "слід", "слово", "відповідник", "мовн")
+            m in resp_norm for m in ("правильн", "норм", "вжива", "рекоменд", "краще", "варто", "слід", "відповідник", "замін", "замість")
         )
 
     # 2. Authentic suggestion check:
@@ -220,6 +220,18 @@ def evaluate_single_response(
     has_explanation_syntax = any(p.search(resp_norm) for p in EXPLANATION_CONNECTIVES)
     distinct_reasoning_markers = sum(1 for p in REASONING_MARKERS if p.search(resp_norm))
 
+    # Verify reasoning actually references the linguistic subject (target term or alternative)
+    target_tokens = {term_norm} | {normalize_token(a) for a in valid_alternatives if normalize_token(a)}
+    sentences = [s.strip() for s in re.split(r"[.!?\n]+", resp_norm) if s.strip()]
+    reasoning_sentences = [
+        s
+        for s in sentences
+        if any(p.search(s) for p in REASONING_MARKERS) or any(c.search(s) for c in EXPLANATION_CONNECTIVES)
+    ]
+    reasoning_mentions_subject = any(
+        any(tt in s for tt in target_tokens) for s in reasoning_sentences
+    )
+
     reasoning_grounded = (
         (distinct_reasoning_markers >= 2)
         and (not calque_affirmed)
@@ -228,6 +240,7 @@ def evaluate_single_response(
         and authentic_suggested
         and (not is_repetitive)
         and has_explanation_syntax
+        and reasoning_mentions_subject
     )
 
     # 4. Composite score:

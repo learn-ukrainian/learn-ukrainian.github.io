@@ -18,6 +18,7 @@ from scripts.projects.open_model_data.v4_decolonization_reasoning import (
     find_textbook_attestation,
     generate_pipeline,
     get_partition_for_term,
+    is_positive_citation,
     normalize_text,
     scan_generated_files,
     strip_accents,
@@ -417,3 +418,66 @@ def test_curated_evidence_only_assigned_to_matching_alternative() -> None:
     alts_by_lemma = {a["lemma"]: a for a in spectrum["alternatives"]}
     assert alts_by_lemma["підтверджене_слово"]["register_tier"] == "living_standard"
     assert alts_by_lemma["непідтверджене_слово"]["register_tier"] != "living_standard"
+
+
+def test_is_positive_citation_semantics() -> None:
+    """Verify is_positive_citation rejects negative mentions and accepts affirmative recommendations."""
+    # Negative English & Ukrainian mentions
+    assert not is_positive_citation("alpha", "Do not use alpha. Use beta.")
+    assert not is_positive_citation("alpha", "Avoid alpha; prefer beta.")
+    assert not is_positive_citation("alpha", "Never use alpha instead of beta.")
+    assert not is_positive_citation("альфа", "Не вживайте альфа; краще бета.")
+    assert not is_positive_citation("альфа", "Замість альфа вживайте бета.")
+    assert not is_positive_citation("альфа", "Слово альфа — це калька з російської.")
+    assert not is_positive_citation("мандруючий", "11-klas: мандрівний (а не мандруючий) сюжет")
+
+    # Positive English & Ukrainian mentions
+    assert is_positive_citation("beta", "Do not use alpha. Use beta.")
+    assert is_positive_citation("бета", "Не вживайте альфа; краще бета.")
+    assert is_positive_citation("бета", "Замість альфа вживайте бета.")
+    assert is_positive_citation("мандрівний", "11-klas: мандрівний (а не мандруючий) сюжет")
+    assert is_positive_citation("голова зборів", "11-klas: головуючий на зборах — голова зборів")
+    assert is_positive_citation("питоме", "Слово «питоме» є нормативним відповідником.")
+
+
+def test_negative_evidence_does_not_promote_rejected_alternative() -> None:
+    """H3: Prohibitive evidence ('Do not use alpha. Use beta.') must not promote alpha to living standard."""
+    candidate = CalqueCandidate(
+        target_term="test_calque",
+        suggestions=["alpha", "beta"],
+        source_tag="curated_test",
+        curated_evidence=["Do not use alpha. Use beta."],
+    )
+    vesum_counts = {"alpha": 10, "beta": 15}
+    tb_attestations = {"alpha": None, "beta": None}
+    dict_attestations = {"alpha": None, "beta": None}
+
+    result = synthesize_trajectory_and_dpo(
+        candidate,
+        vesum_counts,
+        tb_attestations,
+        dict_attestations,
+    )
+    assert result is not None
+    traj, _ = result
+    spectrum = traj["register_spectrum"]
+    # beta must be selected as primary, NOT alpha
+    assert spectrum["primary_living_standard"] == "beta"
+
+    alts_by_lemma = {a["lemma"]: a for a in spectrum["alternatives"]}
+    assert alts_by_lemma["beta"]["register_tier"] == "living_standard"
+    assert alts_by_lemma["alpha"]["register_tier"] != "living_standard"
+
+    # If only alpha is available with prohibitive evidence, synthesis must be refused
+    prohibitive_only_cand = CalqueCandidate(
+        target_term="test_calque",
+        suggestions=["alpha"],
+        source_tag="curated_test",
+        curated_evidence=["Do not use alpha."],
+    )
+    assert synthesize_trajectory_and_dpo(
+        prohibitive_only_cand,
+        {"alpha": 10},
+        {"alpha": None},
+        {"alpha": None},
+    ) is None

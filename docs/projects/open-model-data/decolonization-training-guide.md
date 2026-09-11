@@ -300,14 +300,15 @@ python scripts/projects/open_model_data/v4_evaluate_decolonization.py \
 - **Mean Composite Score**: Weighted index (0.40 elimination + 0.40 authentic suggestions + 0.20 reasoning).
 - **Pass Rate**: Thresholded at composite score >= 0.80.
 
-### Packaged-Reference Self-Check (Gold Benchmark Upper Bound)
+### Packaged-Reference Self-Check (Gold Benchmark Sanity Check)
 
 > [!IMPORTANT]
-> **Attribution & Evaluation Boundary**: The reported evaluation score of **99.15% pass rate** (232/234 pass, 100% calque elimination, 100% authentic suggestions, 99.15% reasoning grounding) on the held-out partition is a **Packaged-Reference Self-Check (Gold Benchmark Upper Bound)**.
+> **Attribution & Evaluation Boundary**: The reported evaluation score of **99.15% pass rate** (232/234 pass, 99.57% calque elimination, 99.57% authentic suggestions, 99.15% reasoning grounding, mean composite score 0.9932) on the held-out partition is a **Packaged-Reference Self-Check (Gold Benchmark Sanity Check)**.
 >
-> This metric is obtained by running `v4_evaluate_decolonization.py` directly on the dataset's own packaged reference answers as predictions against the held-out Canary evaluation rubric. It mathematically verifies:
-> 1. Complete test-harness and rubric sanity across all 234 held-out targets.
-> 2. Absence of contradictory instructions, ungrounded affirmations, or broken reasoning in the gold reference data.
-> 3. The theoretical upper bound of the dataset when evaluated under the strict multi-dimensional Canary gates.
+> This metric is obtained by running `v4_evaluate_decolonization.py` directly on the dataset's own packaged reference answers as predictions against the held-out Canary evaluation rubric.
 >
-> **It is NOT an empirical inference benchmark of an external trained model.** In accordance with the permanent non-commercial policy and the Operator Contract (Section 1), no model training compute is paid for or executed inside this repository, and no model checkpoint weights are hosted here. Downstream researchers and practitioners fine-tuning Gemma 3 or Gemma 4 must independently run inference on their fine-tuned checkpoints and evaluate their generated predictions using the evaluation command above.
+> **Reference Regression Check**: It serves as an automated sanity and regression check confirming pipeline consistency, morphemic connective structure, and vocabulary coverage across the held-out references.
+>
+> **Evaluation Proxy Limitations**: As with any automated pattern-matching evaluator, these metric scores are heuristic proxies: they verify adherence to prescribed structural patterns, explanation connectives, and lexical recommendations, but cannot mathematically prove semantic correctness or linguistic perfection in all adversarial contexts. They provide a reproducible baseline check on reference answers, not a proof of theoretical upper bounds or an empirical inference benchmark of an external trained model.
+>
+> In accordance with the permanent non-commercial policy and the Operator Contract (Section 1), no model training compute is paid for or executed inside this repository, and no model checkpoint weights are hosted here. Downstream researchers and practitioners fine-tuning Gemma 3 or Gemma 4 must independently run inference on their fine-tuned checkpoints and evaluate their generated predictions using the evaluation command above.
