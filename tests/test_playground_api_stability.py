@@ -74,7 +74,7 @@ DASHBOARD_LOADS = {
         "/api/images/textbooks",
         "/api/images/stats",
         "/api/images/annotations?per_page=5",
-        "/api/rag/search_text?q=test&limit=5",
+        "/api/sources/search_text?q=test&limit=5",
     ],
     "orient.html": [
         "/api/orient",
@@ -153,7 +153,7 @@ BUDGETS = {
     "/api/images/stats": 1.5,
     "/api/images/textbooks": 1.5,
     "/api/orient": 1.5,
-    "/api/rag/search_text?q=test&limit=5": 1.5,
+    "/api/sources/search_text?q=test&limit=5": 1.5,
     "/api/runtime/agents": 1.5,
     "/api/runtime/auth": 1.5,
     "/api/runtime/recent?limit=50": 1.5,
@@ -275,7 +275,7 @@ def test_playground_primary_endpoints_keep_health_fast(tmp_path, monkeypatch, th
             endpoint_timings.append((dashboard, endpoint, p95_elapsed))
 
             for response in responses:
-                if endpoint.startswith("/api/rag/"):
+                if endpoint.startswith("/api/sources/"):
                     assert response.status_code in {200, 404, 500, 503}, f"{dashboard} {endpoint}"
                 else:
                     assert response.status_code < 500, f"{dashboard} {endpoint}"

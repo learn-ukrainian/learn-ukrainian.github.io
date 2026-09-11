@@ -2001,7 +2001,6 @@ def create_app(context: MonitorContext, *, lifespan: Any = None) -> FastAPI:
     factory_app.include_router(issues_router, prefix="/api/issues", tags=["issues"])
     factory_app.include_router(knowledge_router, prefix="/api/knowledge", tags=["knowledge"])
     factory_app.include_router(sources_router, prefix="/api/sources", tags=["sources"])
-    factory_app.include_router(sources_router, prefix="/api/rag", tags=["rag"], deprecated=True)
     # GH #1529 P3 — reviewer-ghost telemetry nested under /api/state so clients
     # can discover it alongside the other state-query endpoints.
     factory_app.include_router(

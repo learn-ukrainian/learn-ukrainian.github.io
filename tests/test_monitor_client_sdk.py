@@ -196,11 +196,15 @@ def test_sdk_not_modified_path(sdk, monkeypatch):
 # ---------------------------------------------------------------------
 
 
-def test_blue_live_status_carries_deprecation_header():
+def test_blue_live_status_retired_returns_404():
     resp = client.get("/api/blue/live-status")
+    assert resp.status_code == 404
+
+
+def test_build_status_canonical_no_deprecation_header():
+    resp = client.get("/api/state/build-status")
     assert resp.status_code == 200
-    assert resp.headers.get("X-Deprecated") == "true"
-    assert resp.headers.get("X-Deprecated-Use") == "/api/state/build-status"
+    assert "X-Deprecated" not in resp.headers
 
 
 def test_comms_live_activity_carries_deprecation_header():

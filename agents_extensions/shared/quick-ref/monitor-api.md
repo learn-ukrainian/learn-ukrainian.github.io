@@ -95,7 +95,7 @@ curl -s "http://localhost:8765/api/state/pipeline-versions?track=a1" | python3 -
 ## Other Useful Endpoints
 
 ```bash
-curl -s http://localhost:8765/api/blue/live-status        # Pass/fail all tracks
+curl -s http://localhost:8765/api/state/build-status       # Pass/fail all tracks
 curl -s http://localhost:8765/api/dashboard/comms         # Broker messages + watcher
 curl -s http://localhost:8765/api/gold/inspect/{t}/{slug} # Deep module inspection
 ```

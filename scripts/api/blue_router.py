@@ -12,14 +12,13 @@ import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException
 
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
-from .config import LEVELS
 from .monitor_context import MonitorContext, get_ctx
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -32,7 +31,6 @@ from audit.checks.activity_validation import (
     check_unjumble_out_of_scope_dative,
     check_unjumble_runon_answer,
 )
-from audit.status_cache import get_source_paths, read_status
 from slug_utils import to_bare_slug
 from yaml_activities import ActivityParser
 
@@ -48,91 +46,6 @@ async def health(ctx: MonitorContext = Depends(get_ctx)):
         "status": "ok",
         "batch_state_dir_exists": ctx.roots.batch_state_dir.exists(),
     }
-
-
-@router.get("/live-status", deprecated=True)
-async def live_status(response: Response, ctx: MonitorContext = Depends(get_ctx)):
-    """Ground truth: scan filesystem for actual module files per track.
-
-    DEPRECATED (GH #1309): use ``/api/state/build-status`` (all tracks)
-    or ``/api/state/build-status/{track}`` (single track) instead.
-    The state endpoints have a stricter contract, are covered by
-    tests, and carry per-section freshness metadata. This handler
-    remains for backwards compatibility but will be removed.
-
-    Responses carry ``X-Deprecated: true`` and ``X-Deprecated-Use``
-    so clients can log a warning without parsing the JSON body.
-
-    Uses #561 status cache (read_status + get_source_paths) for staleness detection.
-    This is the real picture — checks what files exist on disk.
-    """
-    response.headers["X-Deprecated"] = "true"
-    response.headers["X-Deprecated-Use"] = "/api/state/build-status"
-    response.headers["Warning"] = '299 - "This endpoint is deprecated; migrate to /api/state/build-status (#1309)"'
-
-    results = {}
-    curriculum_root = ctx.roots.curriculum_root
-    for level_cfg in LEVELS:
-        track = level_cfg["id"]
-        level_dir = curriculum_root / level_cfg["path"]
-        if not level_dir.exists():
-            continue
-
-        meta_dir = level_dir / "meta"
-        status_dir = level_dir / "status"
-        modules = []
-
-        if meta_dir.exists():
-            for meta_file in sorted(meta_dir.glob("*.yaml")):
-                slug = meta_file.stem
-                sp = get_source_paths(level_dir, slug)
-                has_meta = sp["meta"].exists() if sp["meta"] else False
-                has_lesson = sp["md"].exists() if sp["md"] else False
-                has_activities = sp["activities"].exists() if sp["activities"] else False
-                has_vocab = sp["vocabulary"].exists() if sp["vocabulary"] else False
-
-                status_file = status_dir / f"{slug}.json"
-                result = read_status(status_file, source_paths=sp)
-
-                file_count = sum([has_meta, has_lesson, has_activities, has_vocab])
-                if result and result.is_fresh and result.status == "pass":
-                    state = "pass"
-                elif result and not result.is_fresh and result.status == "pass":
-                    state = "stale-pass"
-                elif file_count == 4:
-                    state = "built"
-                elif file_count > 1:
-                    state = "partial"
-                else:
-                    state = "skeleton"
-
-                mod_info = {
-                    "slug": slug,
-                    "state": state,
-                    "files": {
-                        "meta": has_meta,
-                        "lesson": has_lesson,
-                        "activities": has_activities,
-                        "vocabulary": has_vocab,
-                    },
-                }
-                if result:
-                    mod_info["audit_status"] = result.status
-                    mod_info["is_fresh"] = result.is_fresh
-                modules.append(mod_info)
-
-        results[track] = {
-            "module_count": len(modules),
-            "states": {
-                "pass": sum(1 for m in modules if m["state"] == "pass"),
-                "stale_pass": sum(1 for m in modules if m["state"] == "stale-pass"),
-                "built": sum(1 for m in modules if m["state"] == "built"),
-                "partial": sum(1 for m in modules if m["state"] == "partial"),
-                "skeleton": sum(1 for m in modules if m["state"] == "skeleton"),
-            },
-            "modules": modules,
-        }
-    return results
 
 
 @router.get("/freshness")
