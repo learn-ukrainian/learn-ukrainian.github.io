@@ -417,6 +417,7 @@ def build_dataset(
     manifest_tmp = manifest_out.with_suffix(f".tmp.{os.getpid()}")
     records_tmp = records_out.with_suffix(f".tmp.{os.getpid()}")
     receipt_tmp = receipt_out.with_suffix(f".tmp.{os.getpid()}")
+    backups: list[tuple[Path, Path | None]] = []
 
     try:
         manifest_tmp.write_bytes(manifest_bytes)
@@ -488,13 +489,48 @@ def build_dataset(
 
         receipt_tmp.write_text(json.dumps(receipt_data, indent=2) + "\n", encoding="utf-8")
 
-        manifest_tmp.replace(manifest_out)
-        records_tmp.replace(records_out)
-        receipt_tmp.replace(receipt_out)
+        # Transactional publishing with rollback to ensure mutual consistency across the artifact set
+        targets = [
+            (manifest_tmp, manifest_out),
+            (records_tmp, records_out),
+            (receipt_tmp, receipt_out),
+        ]
+        # 1. Back up existing target files
+        for _, target in targets:
+            if target.exists():
+                bak = target.with_suffix(f".bak.{os.getpid()}")
+                target.replace(bak)
+                backups.append((target, bak))
+            else:
+                backups.append((target, None))
+
+        # 2. Move staged copies to targets
+        for tmp, target in targets:
+            tmp.replace(target)
+
+        # 3. Success: clean up backups
+        for _, bak in backups:
+            if bak is not None and bak.exists():
+                bak.unlink()
+        backups.clear()
+    except Exception:
+        # Rollback on any failure to restore earlier generation
+        for target, bak in backups:
+            try:
+                if bak is not None and bak.exists():
+                    bak.replace(target)
+                elif target.exists():
+                    target.unlink()
+            except Exception:
+                pass
+        raise
     finally:
         for tmp_path in (manifest_tmp, records_tmp, receipt_tmp):
             if tmp_path.exists():
                 tmp_path.unlink()
+        for _, bak in backups:
+            if bak is not None and bak.exists():
+                bak.unlink()
 
     return receipt_data
 

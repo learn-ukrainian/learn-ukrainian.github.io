@@ -184,3 +184,42 @@ def test_build_dataset_atomic_prewrite_validation_on_denominator_mismatch(tmp_pa
     # Verify no temporary files were leaked
     tmp_files = list(out_dir.glob("*.tmp*"))
     assert tmp_files == []
+
+
+def test_build_dataset_transactional_rollback_on_replacement_failure(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """If an error occurs during atomic replacement, all target files roll back to previous state."""
+    repo_root = Path.cwd()
+    out_dir = tmp_path / "out"
+    out_dir.mkdir(parents=True)
+    test_manifest_out = out_dir / "manifest.json"
+    test_records_out = out_dir / "records.jsonl"
+    test_receipt_out = out_dir / "receipt.json"
+
+    # Pre-populate sentinel content
+    test_manifest_out.write_text("sentinel manifest", encoding="utf-8")
+    test_records_out.write_text("sentinel records", encoding="utf-8")
+    test_receipt_out.write_text("sentinel receipt", encoding="utf-8")
+
+    orig_replace = Path.replace
+
+    def mock_replace(self: Path, target: Path | str) -> Path:
+        target_path = Path(target)
+        if target_path.name == "receipt.json" and ".tmp." in self.name:
+            raise OSError("Simulated disk error during receipt replacement")
+        return orig_replace(self, target)
+
+    monkeypatch.setattr(Path, "replace", mock_replace)
+
+    with pytest.raises(OSError, match="Simulated disk error"):
+        build_dataset(repo_root, test_manifest_out, test_records_out, test_receipt_out)
+
+    # All targets must have rolled back to sentinel contents
+    assert test_manifest_out.read_text(encoding="utf-8") == "sentinel manifest"
+    assert test_records_out.read_text(encoding="utf-8") == "sentinel records"
+    assert test_receipt_out.read_text(encoding="utf-8") == "sentinel receipt"
+
+    # No stray tmp or backup files remain
+    assert list(out_dir.glob("*.tmp*")) == []
+    assert list(out_dir.glob("*.bak*")) == []
