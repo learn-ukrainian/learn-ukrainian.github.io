@@ -292,3 +292,346 @@ def test_phrase_candidates_and_inflow_queue_file(
     data = json.loads(queue_out.read_text(encoding="utf-8"))
     assert len(data) == 1
     assert data[0]["lemma"] == "завірюха"
+
+
+def test_heritage_pairs_real_schema(tmp_path: Path) -> None:
+    """Verify parser extracts from real production heritage_pairs.yaml schema."""
+    real_schema_yaml = tmp_path / "heritage_real.yaml"
+    content = {
+        "pairs": [
+            {
+                "calqueLabel": "бажаючий",
+                "nativeLemma": "охочий",
+                "corrections": ["охочий"],
+            },
+            {
+                "calqueLabel": "благополучний",
+                "nativeLemma": "щасливий",
+                "corrections": ["щасливий", "успішний"],
+            },
+            {
+                "error": "старий_варіант",
+                "correct": "новий_варіант",
+            },
+        ]
+    }
+    real_schema_yaml.write_text(yaml.dump(content), encoding="utf-8")
+
+    dummy_file = tmp_path / "dummy.json"
+    dummy_file.write_text("{}", encoding="utf-8")
+
+    engine = CalqueReconciliationEngine(
+        sources_db_path=tmp_path / "dummy.db",
+        atlas_db_path=tmp_path / "dummy.db",
+        lt_path=dummy_file,
+        heritage_pairs_path=real_schema_yaml,
+        heritage_overlay_path=tmp_path / "empty.yaml",
+    )
+
+    raw = engine.load_raw_replacements()
+    assert "бажаючий" in raw
+    assert raw["бажаючий"]["heritage_pairs"] == ["охочий"]
+
+    assert "благополучний" in raw
+    assert raw["благополучний"]["heritage_pairs"] == ["щасливий", "успішний"]
+
+    assert "старий_варіант" in raw
+    assert raw["старий_варіант"]["heritage_pairs"] == ["новий_варіант"]
+
+
+def test_phrase_validation_clean_vs_garbage(mock_dbs: dict[str, Path]) -> None:
+    """Verify phrase validation accepts authentic Ukrainian tokens and rejects garbage."""
+    engine = CalqueReconciliationEngine(
+        sources_db_path=mock_dbs["sources_db"],
+        atlas_db_path=mock_dbs["atlas_db"],
+        lt_path=mock_dbs["lt_path"],
+        heritage_pairs_path=mock_dbs["heritage_pairs"],
+        heritage_overlay_path=mock_dbs["heritage_overlay"],
+    )
+
+    # Valid Ukrainian phrases
+    valid_cand1 = engine.validate_candidate("добрий лад")
+    assert valid_cand1.is_phrase is True
+    assert valid_cand1.vesum_forms_count == 1
+    assert valid_cand1.is_valid is True
+
+    valid_cand2 = engine.validate_candidate("пилососна машина")
+    assert valid_cand2.is_phrase is True
+    assert valid_cand2.vesum_forms_count == 1
+    assert valid_cand2.is_valid is True
+
+    # Invalid phrases with digits / symbols / Latin
+    garbage1 = engine.validate_candidate("пилосос 123$$$")
+    assert garbage1.is_phrase is True
+    assert garbage1.vesum_forms_count == 0
+    assert garbage1.is_valid is False
+
+    garbage2 = engine.validate_candidate("robot auto")
+    assert garbage2.is_phrase is True
+    assert garbage2.vesum_forms_count == 0
+    assert garbage2.is_valid is False
+
+    garbage3 = engine.validate_candidate("прилад-@!")
+    assert garbage3.is_phrase is False  # single token with symbols
+    assert garbage3.vesum_forms_count == 0
+    assert garbage3.is_valid is False
+
+
+def test_lexicalised_safe_and_polysemes_skipped(mock_dbs: dict[str, Path], monkeypatch: pytest.MonkeyPatch) -> None:
+    """Verify lexicalised adjectives and polysemes are skipped and never blanket-flagged."""
+    conn = sqlite3.connect(mock_dbs["atlas_db"])
+    # Seed 'блискучий' (LEXICALISED_SAFE) and 'вірний' (SENSE_RESTRICTED_CALQUES)
+    conn.execute("INSERT INTO articles VALUES ('блискучий', 'блискучий');")
+    conn.execute(
+        "INSERT INTO article_payloads VALUES ('блискучий', ?);",
+        (json.dumps({"slug": "блискучий", "lemma": "блискучий", "sections": {}}),),
+    )
+    conn.execute("INSERT INTO articles VALUES ('вірний', 'вірний');")
+    conn.execute(
+        "INSERT INTO article_payloads VALUES ('вірний', ?);",
+        (json.dumps({"slug": "вірний", "lemma": "вірний", "sections": {}}),),
+    )
+    conn.commit()
+    conn.close()
+
+    # Add lt_replacements for them
+    lt_data = {
+        "блискучий": {"suggestions": ["яскравіший"]},
+        "вірний": {"suggestions": ["правильний"]},
+    }
+    mock_dbs["lt_path"].write_text(json.dumps(lt_data), encoding="utf-8")
+
+    engine = CalqueReconciliationEngine(
+        sources_db_path=mock_dbs["sources_db"],
+        atlas_db_path=mock_dbs["atlas_db"],
+        lt_path=mock_dbs["lt_path"],
+        heritage_pairs_path=mock_dbs["heritage_pairs"],
+        heritage_overlay_path=mock_dbs["heritage_overlay"],
+    )
+
+    res = engine.run_reconciliation(dry_run=False)
+    # Neither should be modified
+    assert "блискучий" not in res["entries"]
+    assert "вірний" not in res["entries"]
+
+    conn = sqlite3.connect(mock_dbs["atlas_db"])
+    row = conn.execute("SELECT payload_json FROM article_payloads WHERE slug = 'блискучий'").fetchone()
+    assert "is_russianism" not in json.loads(row[0])
+    row_v = conn.execute("SELECT payload_json FROM article_payloads WHERE slug = 'вірний'").fetchone()
+    assert "is_russianism" not in json.loads(row_v[0])
+    conn.close()
+
+
+def test_severity_classification_curated_vs_pure_lt(mock_dbs: dict[str, Path], monkeypatch: pytest.MonkeyPatch) -> None:
+    """Verify curated calques get red severity while pure LT replacements get orange."""
+
+    def mock_verify_lemma(lemma: str, db_path: Any = None) -> list[dict[str, Any]]:
+        return [{"lemma": lemma, "pos": "noun", "tags": "inanim:f:v_naz"}]
+
+    monkeypatch.setattr("scripts.lexicon.reconcile_calque_clusters.verify_lemma", mock_verify_lemma)
+
+    conn = sqlite3.connect(mock_dbs["atlas_db"])
+    # 1. Pure LT replacement: 'антипаста' -> 'антипасто'
+    conn.execute("INSERT INTO articles VALUES ('антипаста', 'антипаста');")
+    conn.execute(
+        "INSERT INTO article_payloads VALUES ('антипаста', ?);",
+        (json.dumps({"slug": "антипаста", "lemma": "антипаста", "sections": {}}),),
+    )
+    # 2. Curated calque via heritage_pairs: 'бажаючий' -> 'охочий'
+    conn.execute("INSERT INTO articles VALUES ('бажаючий', 'бажаючий');")
+    conn.execute(
+        "INSERT INTO article_payloads VALUES ('бажаючий', ?);",
+        (json.dumps({"slug": "бажаючий", "lemma": "бажаючий", "sections": {}}),),
+    )
+    conn.commit()
+    conn.close()
+
+    # Seed lt_replacements
+    lt_data = {
+        "антипаста": {"suggestions": ["антипасто"]},
+        "бажаючий": {"suggestions": ["охочий"]},
+    }
+    mock_dbs["lt_path"].write_text(json.dumps(lt_data), encoding="utf-8")
+
+    # Seed heritage_pairs with бажаючий
+    heritage_data = {
+        "pairs": [
+            {
+                "calqueLabel": "бажаючий",
+                "nativeLemma": "охочий",
+                "corrections": ["охочий"],
+            }
+        ]
+    }
+    mock_dbs["heritage_pairs"].write_text(yaml.dump(heritage_data), encoding="utf-8")
+
+    engine = CalqueReconciliationEngine(
+        sources_db_path=mock_dbs["sources_db"],
+        atlas_db_path=mock_dbs["atlas_db"],
+        lt_path=mock_dbs["lt_path"],
+        heritage_pairs_path=mock_dbs["heritage_pairs"],
+        heritage_overlay_path=mock_dbs["heritage_overlay"],
+    )
+
+    engine.run_reconciliation(dry_run=False, single_lemma="антипаста")
+    engine.run_reconciliation(dry_run=False, single_lemma="бажаючий")
+
+    conn = sqlite3.connect(mock_dbs["atlas_db"])
+
+    # 'антипаста' (pure LT): orange severity, is_russianism = False
+    row_lt = conn.execute("SELECT payload_json FROM article_payloads WHERE slug = 'антипаста'").fetchone()
+    p_lt = json.loads(row_lt[0])
+    assert p_lt["is_russianism"] is False
+    assert p_lt["calque_warning"]["severity"] == "orange"
+    assert "Нерекомендоване або ненормативне слововживання" in p_lt["calque_warning"]["warning_text"]
+
+    # 'бажаючий' (curated calque): red severity, is_russianism = True
+    row_her = conn.execute("SELECT payload_json FROM article_payloads WHERE slug = 'бажаючий'").fetchone()
+    p_her = json.loads(row_her[0])
+    assert p_her["is_russianism"] is True
+    assert p_her["calque_warning"]["severity"] == "red"
+    assert "Калька / росіянізм" in p_her["calque_warning"]["warning_text"]
+
+    conn.close()
+
+
+def test_fts5_hyphenated_lemma(mock_dbs: dict[str, Path], monkeypatch: pytest.MonkeyPatch) -> None:
+    """Verify candidate validation handles hyphenated compound words safely in FTS5."""
+
+    def mock_verify_lemma(lemma: str, db_path: Any = None) -> list[dict[str, Any]]:
+        return [{"lemma": lemma, "pos": "adj", "tags": "m:v_naz"}]
+
+    monkeypatch.setattr("scripts.lexicon.reconcile_calque_clusters.verify_lemma", mock_verify_lemma)
+
+    engine = CalqueReconciliationEngine(
+        sources_db_path=mock_dbs["sources_db"],
+        atlas_db_path=mock_dbs["atlas_db"],
+        lt_path=mock_dbs["lt_path"],
+        heritage_pairs_path=mock_dbs["heritage_pairs"],
+        heritage_overlay_path=mock_dbs["heritage_overlay"],
+    )
+
+    # Should not raise OperationalError
+    cand = engine.validate_candidate("алма-атинський")
+    assert cand.term == "алма-атинський"
+    assert cand.is_phrase is False
+    assert cand.is_valid is True
+
+
+def test_peer_synonyms_exclude_russianisms_in_atlas(mock_dbs: dict[str, Path], monkeypatch: pytest.MonkeyPatch) -> None:
+    """Verify that alternatives flagged as Russianisms in Atlas are excluded from peer synonyms."""
+
+    def mock_verify_lemma(lemma: str, db_path: Any = None) -> list[dict[str, Any]]:
+        return [{"lemma": lemma, "pos": "noun", "tags": "inanim:m:v_naz"}]
+
+    monkeypatch.setattr("scripts.lexicon.reconcile_calque_clusters.verify_lemma", mock_verify_lemma)
+
+    conn = sqlite3.connect(mock_dbs["atlas_db"])
+    # Error lemma: 'тест_помилка'
+    # Alt 1: 'автентичне_слово'
+    # Alt 2: 'інший_росіянізм' (already flagged as is_russianism: true in Atlas)
+    conn.execute("INSERT INTO articles VALUES ('тест_помилка', 'тест_помилка');")
+    conn.execute(
+        "INSERT INTO article_payloads VALUES ('тест_помилка', ?);",
+        (json.dumps({"slug": "тест_помилка", "lemma": "тест_помилка", "sections": {}}),),
+    )
+    conn.execute("INSERT INTO articles VALUES ('автентичне_слово', 'автентичне_слово');")
+    conn.execute(
+        "INSERT INTO article_payloads VALUES ('автентичне_слово', ?);",
+        (
+            json.dumps(
+                {"slug": "автентичне_слово", "lemma": "автентичне_слово", "sections": {"synonyms": {"items": []}}}
+            ),
+        ),
+    )
+    conn.execute("INSERT INTO articles VALUES ('інший_росіянізм', 'інший_росіянізм');")
+    conn.execute(
+        "INSERT INTO article_payloads VALUES ('інший_росіянізм', ?);",
+        (json.dumps({"slug": "інший_росіянізм", "lemma": "інший_росіянізм", "is_russianism": True, "sections": {}}),),
+    )
+    conn.commit()
+    conn.close()
+
+    lt_data = {"тест_помилка": {"suggestions": ["автентичне_слово", "інший_росіянізм"]}}
+    mock_dbs["lt_path"].write_text(json.dumps(lt_data), encoding="utf-8")
+
+    engine = CalqueReconciliationEngine(
+        sources_db_path=mock_dbs["sources_db"],
+        atlas_db_path=mock_dbs["atlas_db"],
+        lt_path=mock_dbs["lt_path"],
+        heritage_pairs_path=mock_dbs["heritage_pairs"],
+        heritage_overlay_path=mock_dbs["heritage_overlay"],
+    )
+
+    engine.run_reconciliation(dry_run=False, single_lemma="тест_помилка")
+
+    conn = sqlite3.connect(mock_dbs["atlas_db"])
+    row = conn.execute("SELECT payload_json FROM article_payloads WHERE slug = 'автентичне_слово'").fetchone()
+    p = json.loads(row[0])
+    # 'інший_росіянізм' must NOT leak into 'автентичне_слово' peer synonyms
+    assert "інший_росіянізм" not in p["sections"]["synonyms"]["items"]
+    # And 'тест_помилка' must also not be there
+    assert "тест_помилка" not in p["sections"]["synonyms"]["items"]
+    conn.close()
+
+
+def test_warning_text_refresh_on_force(mock_dbs: dict[str, Path], monkeypatch: pytest.MonkeyPatch) -> None:
+    """Verify warning_text is refreshed dynamically on --force reprocessing."""
+
+    def mock_verify_lemma(lemma: str, db_path: Any = None) -> list[dict[str, Any]]:
+        return [{"lemma": lemma, "pos": "noun", "tags": "inanim:m:v_naz"}]
+
+    monkeypatch.setattr("scripts.lexicon.reconcile_calque_clusters.verify_lemma", mock_verify_lemma)
+
+    conn = sqlite3.connect(mock_dbs["atlas_db"])
+    stale_payload = {
+        "slug": "старий_запис",
+        "lemma": "старий_запис",
+        "is_russianism": True,
+        "enrichment_version": 2,
+        "calque_warning": {
+            "is_calque": True,
+            "severity": "red",
+            "standard_alternatives": ["стара_альтернатива"],
+            "warning_text": "Застарілий текст попередження",
+        },
+        "sections": {},
+    }
+    conn.execute("INSERT INTO articles VALUES ('старий_запис', 'старий_запис');")
+    conn.execute(
+        "INSERT INTO article_payloads VALUES ('старий_запис', ?);",
+        (json.dumps(stale_payload),),
+    )
+    conn.commit()
+    conn.close()
+
+    lt_data = {"старий_запис": {"suggestions": ["нова_альтернатива"]}}
+    mock_dbs["lt_path"].write_text(json.dumps(lt_data), encoding="utf-8")
+
+    heritage_data = {
+        "pairs": [
+            {
+                "calqueLabel": "старий_запис",
+                "corrections": ["нова_альтернатива"],
+            }
+        ]
+    }
+    mock_dbs["heritage_pairs"].write_text(yaml.dump(heritage_data), encoding="utf-8")
+
+    engine = CalqueReconciliationEngine(
+        sources_db_path=mock_dbs["sources_db"],
+        atlas_db_path=mock_dbs["atlas_db"],
+        lt_path=mock_dbs["lt_path"],
+        heritage_pairs_path=mock_dbs["heritage_pairs"],
+        heritage_overlay_path=mock_dbs["heritage_overlay"],
+    )
+
+    # Run with force=True
+    engine.run_reconciliation(dry_run=False, single_lemma="старий_запис", force=True)
+
+    conn = sqlite3.connect(mock_dbs["atlas_db"])
+    row = conn.execute("SELECT payload_json FROM article_payloads WHERE slug = 'старий_запис'").fetchone()
+    p = json.loads(row[0])
+    assert p["calque_warning"]["warning_text"] != "Застарілий текст попередження"
+    assert "нова_альтернатива" in p["calque_warning"]["warning_text"]
+    conn.close()

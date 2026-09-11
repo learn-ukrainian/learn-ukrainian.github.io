@@ -65,7 +65,7 @@ DEFAULT_INFLOW_QUEUE = PROJECT_ROOT / "data" / "lexicon" / "calque_inflow_queue.
 
 _ACUTE_RE = re.compile(r"[\u0301\u0300]")
 _EDGE_PUNCT_RE = re.compile(r"^[\"'«»„”“,.:;!?…\s]+|[\"'«»„”“,.:;!?…\s]+$")
-_CLEAN_TOKEN_RE = re.compile(r"^[A-Za-zА-Яа-яЄєІіЇїҐґ0-9'’ʼ-]+$")
+_CLEAN_TOKEN_RE = re.compile(r"^[А-Яа-яЄєІіЇїҐґ'’ʼ-]+$")
 
 
 def strip_accents(s: str) -> str:
@@ -92,7 +92,7 @@ class CandidateAlternative:
     @property
     def is_valid(self) -> bool:
         if self.is_phrase:
-            return True
+            return self.vesum_forms_count > 0
         return self.vesum_forms_count > 0 or self.heritage_attested
 
     @property
@@ -131,6 +131,30 @@ class CalqueReconciliationEngine:
 
         self._cached_atlas_lemmas: set[str] | None = None
         self._cached_candidate_map: dict[str, list[CandidateAlternative]] = {}
+        self._lexicalised_safe: set[str] | None = None
+
+    def get_lexicalised_safe(self) -> set[str]:
+        """Return set of verified lexicalised adjectives and polysemes that must not be blanket-warned."""
+        if self._lexicalised_safe is None:
+            safe = set()
+            try:
+                from scripts.lexicon.calque_corrections import (
+                    LEXICALISED_SAFE,
+                    SENSE_RESTRICTED_CALQUES,
+                )
+
+                for w in LEXICALISED_SAFE:
+                    w_clean = normalize_text(w).lower()
+                    if w_clean:
+                        safe.add(w_clean)
+                for w in SENSE_RESTRICTED_CALQUES:
+                    w_clean = normalize_text(w).lower()
+                    if w_clean:
+                        safe.add(w_clean)
+            except ImportError:
+                pass
+            self._lexicalised_safe = safe
+        return self._lexicalised_safe
 
     @property
     def sources_conn(self) -> sqlite3.Connection:
@@ -172,9 +196,12 @@ class CalqueReconciliationEngine:
                     raw_map[k_clean] = {}
                 raw_map[k_clean]["lt_replacements"] = suggs
 
-        # 2. Curated calques from calque_corrections.py
+        # 2. Curated calques and phrasal calques from calque_corrections.py
         try:
-            from scripts.lexicon.calque_corrections import CURATED_CALQUES
+            from scripts.lexicon.calque_corrections import (
+                CURATED_CALQUES,
+                PHRASAL_CALQUES,
+            )
 
             for k, v in CURATED_CALQUES.items():
                 k_clean = normalize_text(k).lower()
@@ -182,7 +209,15 @@ class CalqueReconciliationEngine:
                 if isinstance(corrections, list):
                     if k_clean not in raw_map:
                         raw_map[k_clean] = {}
-                    raw_map[k_clean]["curated_calques"] = corrections
+                    raw_map[k_clean]["curated_calques"] = [normalize_text(c) for c in corrections if normalize_text(c)]
+
+            for k, v in PHRASAL_CALQUES.items():
+                k_clean = normalize_text(k).lower()
+                corrections = v.get("corrections", [])
+                if isinstance(corrections, list):
+                    if k_clean not in raw_map:
+                        raw_map[k_clean] = {}
+                    raw_map[k_clean]["phrasal_calques"] = [normalize_text(c) for c in corrections if normalize_text(c)]
         except ImportError:
             pass
 
@@ -202,13 +237,38 @@ class CalqueReconciliationEngine:
                     )
                     for p in pairs:
                         if isinstance(p, dict):
-                            err = normalize_text(p.get("error", "")).lower()
-                            corr = p.get("correct")
-                            if err and corr:
+                            err_raw = p.get("calqueLabel") or p.get("error", "")
+                            err = normalize_text(err_raw).lower()
+                            if not err:
+                                continue
+
+                            clean_corrs: list[str] = []
+                            corrs = p.get("corrections")
+                            if isinstance(corrs, list):
+                                clean_corrs.extend([normalize_text(c) for c in corrs if normalize_text(c)])
+                            elif isinstance(corrs, str):
+                                c_clean = normalize_text(corrs)
+                                if c_clean:
+                                    clean_corrs.append(c_clean)
+
+                            correct = p.get("correct")
+                            if isinstance(correct, list):
+                                clean_corrs.extend([normalize_text(c) for c in correct if normalize_text(c)])
+                            elif isinstance(correct, str):
+                                c_clean = normalize_text(correct)
+                                if c_clean and c_clean not in clean_corrs:
+                                    clean_corrs.append(c_clean)
+
+                            native_lemma = p.get("nativeLemma")
+                            if isinstance(native_lemma, str):
+                                nl_clean = normalize_text(native_lemma)
+                                if nl_clean and nl_clean not in clean_corrs:
+                                    clean_corrs.append(nl_clean)
+
+                            if clean_corrs:
                                 if err not in raw_map:
                                     raw_map[err] = {}
-                                corr_list = [corr] if isinstance(corr, str) else list(corr)
-                                raw_map[err][src_tag] = corr_list
+                                raw_map[err][src_tag] = clean_corrs
                 except Exception:
                     pass
 
@@ -220,18 +280,18 @@ class CalqueReconciliationEngine:
         is_phrase = " " in term_clean
 
         if is_phrase:
-            # Check if each token exists in VESUM
+            # Check if each token is valid non-empty Cyrillic
             tokens = term_clean.split()
-            tokens_vesum = True
+            tokens_valid = bool(tokens)
             for tok in tokens:
-                tok_clean = tok.strip(".,;:!?()[]\"'«»").lower()
-                if tok_clean and not _CLEAN_TOKEN_RE.match(tok_clean):
-                    tokens_vesum = False
+                tok_clean = normalize_text(tok).lower()
+                if not tok_clean or not _CLEAN_TOKEN_RE.match(tok_clean):
+                    tokens_valid = False
                     break
             return CandidateAlternative(
                 term=term_clean,
                 is_phrase=True,
-                vesum_forms_count=1 if tokens_vesum else 0,
+                vesum_forms_count=1 if tokens_valid else 0,
             )
 
         # Single word: check VESUM
@@ -240,13 +300,14 @@ class CalqueReconciliationEngine:
         forms_count = len(forms)
         pos = forms[0]["pos"] if forms else None
 
-        # Check textbooks FTS5 hits
+        # Check textbooks FTS5 hits (double-quoted exact match handles hyphens safely)
         tb_hits = 0
         try:
             cursor = self.sources_conn.cursor()
+            fts_term = f'"{lemma_lower.replace('"', "")}"'
             row = cursor.execute(
                 "SELECT count(*) FROM textbooks_fts WHERE textbooks_fts MATCH ?",
-                (lemma_lower,),
+                (fts_term,),
             ).fetchone()
             if row:
                 tb_hits = row[0]
@@ -288,7 +349,13 @@ class CalqueReconciliationEngine:
         # 2. heritage_pairs
         # 3. lt_replacements
         # 4. heritage_overlay
-        source_order = ["curated_calques", "heritage_pairs", "lt_replacements", "heritage_overlay"]
+        source_order = [
+            "curated_calques",
+            "phrasal_calques",
+            "heritage_pairs",
+            "lt_replacements",
+            "heritage_overlay",
+        ]
         for src in source_order:
             if src in sources_dict:
                 for raw_sugg in sources_dict[src]:
@@ -327,6 +394,7 @@ class CalqueReconciliationEngine:
         results = {
             "total_candidates": len(target_lemmas),
             "reconciled_entries": 0,
+            "peer_synonyms_updated": 0,
             "skipped_up_to_date": 0,
             "inflow_queued_count": 0,
             "entries": {},
@@ -334,8 +402,13 @@ class CalqueReconciliationEngine:
         }
 
         cursor = self.atlas_conn.cursor()
+        lexicalised_safe = self.get_lexicalised_safe()
 
         for lemma in target_lemmas:
+            # Skip verified lexicalised adjectives (e.g. блискучий)
+            if lemma.lower() in lexicalised_safe:
+                continue
+
             sources_dict = raw_replacements.get(lemma.lower(), {})
             if not sources_dict:
                 continue
@@ -374,22 +447,30 @@ class CalqueReconciliationEngine:
             payload["enrichment_version"] = CURRENT_ENRICHMENT_VERSION
             payload["updated_at"] = datetime.datetime.now(datetime.UTC).isoformat()
 
-            # Determine severity:
-            # If in curated calques or lt_replacements indicates severe Russianism -> red
-            is_rus = payload.get("is_russianism", False) or True  # Marked as Russianism / calque
+            # Determine severity and Russianism status:
+            # Confirmed calque/Russianism authorities vs general LT replacement
+            is_curated_calque = bool(
+                {"curated_calques", "phrasal_calques", "heritage_pairs"} & set(sources_dict.keys())
+            )
+            is_rus = bool(payload.get("is_russianism", False) or is_curated_calque)
             payload["is_russianism"] = is_rus
 
             calque_warning = payload.get("calque_warning", {})
             if not isinstance(calque_warning, dict):
                 calque_warning = {}
 
+            first_3 = ", ".join(sorted_alts[:3])
             calque_warning["is_calque"] = True
             calque_warning["severity"] = "red" if is_rus else "orange"
             calque_warning["standard_alternatives"] = sorted_alts
-            if "warning_text" not in calque_warning:
-                first_3 = ", ".join(sorted_alts[:3])
+            # Always refresh warning_text so it stays strictly aligned with current alternatives
+            if is_rus:
                 calque_warning["warning_text"] = (
                     f"Калька / росіянізм. В українській літературній мові слід уживати: {first_3}."
+                )
+            else:
+                calque_warning["warning_text"] = (
+                    f"Нерекомендоване або ненормативне слововживання. В українській літературній мові слід уживати: {first_3}."
                 )
             payload["calque_warning"] = calque_warning
 
@@ -397,6 +478,28 @@ class CalqueReconciliationEngine:
             # 1. On the error lemma (e.g. пилосос):
             # Connect to authentic alternatives that are present in Atlas
             in_atlas_alts = [c.term for c in candidates if c.term in atlas_lemmas]
+
+            # Filter out any alternative that is itself flagged as a Russianism or calque in Atlas
+            clean_atlas_alts: list[str] = []
+            for alt in in_atlas_alts:
+                alt_check_row = cursor.execute(
+                    """
+                    SELECT ap.payload_json
+                    FROM articles a
+                    JOIN article_payloads ap ON a.slug = ap.slug
+                    WHERE a.lemma = ?
+                """,
+                    (alt,),
+                ).fetchone()
+                if alt_check_row:
+                    try:
+                        p_data = json.loads(alt_check_row[0])
+                        if p_data.get("is_russianism") or p_data.get("calque_warning", {}).get("is_calque"):
+                            continue
+                    except Exception:
+                        pass
+                clean_atlas_alts.append(alt)
+
             sections = payload.get("sections", {})
             if not isinstance(sections, dict):
                 sections = {}
@@ -407,7 +510,7 @@ class CalqueReconciliationEngine:
             existing_syns = synonyms_sec.get("items", [])
             # Prune known WordNet invalid synsets (e.g. 'вакуум' from 'пилосос')
             filtered_syns = [s for s in existing_syns if s != "вакуум" and s != lemma]
-            merged_syns = sorted(set(filtered_syns) | set(in_atlas_alts))
+            merged_syns = sorted(set(filtered_syns) | set(clean_atlas_alts))
             synonyms_sec["items"] = merged_syns
             synonyms_sec["source"] = "curated standard alternatives"
             sections["synonyms"] = synonyms_sec
@@ -415,8 +518,8 @@ class CalqueReconciliationEngine:
 
             # 2. On each authentic alternative present in Atlas (e.g. порохотяг, пилосмок, пилотяг):
             # Wire mutual synonyms between authentic peers (excluding the Russianism lemma!)
-            for alt_lemma in in_atlas_alts:
-                peer_alts = [a for a in in_atlas_alts if a != alt_lemma]
+            for alt_lemma in clean_atlas_alts:
+                peer_alts = [a for a in clean_atlas_alts if a != alt_lemma]
                 if not peer_alts:
                     continue
                 alt_row = cursor.execute(
@@ -447,7 +550,7 @@ class CalqueReconciliationEngine:
                             "UPDATE article_payloads SET payload_json = ? WHERE slug = ?",
                             (json.dumps(alt_payload, ensure_ascii=False), alt_slug),
                         )
-                    results["peer_synonyms_updated"] = results.get("peer_synonyms_updated", 0) + 1
+                    results["peer_synonyms_updated"] += 1
 
             # Queue authentic alternatives not in Atlas for inflow
             for cand in candidates:
@@ -468,7 +571,7 @@ class CalqueReconciliationEngine:
                 "slug": slug,
                 "is_russianism": is_rus,
                 "standard_alternatives": sorted_alts,
-                "in_atlas_alternatives": in_atlas_alts,
+                "in_atlas_alternatives": clean_atlas_alts,
                 "synonyms": merged_syns,
             }
 
