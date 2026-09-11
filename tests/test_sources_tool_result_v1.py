@@ -17,6 +17,7 @@ from learn_ukrainian_v4_runtime.tool_result_envelope import (
 )
 
 SOURCES_SERVER_PATH = Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "sources" / "server.py"
+VESUM_FIXTURE_VERSION = "a" * 64
 
 
 @pytest.fixture
@@ -100,7 +101,8 @@ class TestEnvelopeHelpers:
 
 
 class TestVerifyWordEnvelope:
-    def test_found_exposes_integer_match_count(self, server_module):
+    def test_found_exposes_integer_match_count(self, server_module, monkeypatch):
+        monkeypatch.setattr(server_module, "_vesum_source_version", lambda: VESUM_FIXTURE_VERSION)
         mock_matches = [
             {"lemma": "читати", "pos": "verb", "tags": "verb:imperf:inf"},
             {"lemma": "читати", "pos": "verb", "tags": "verb:imperf:pres:s:3"},
