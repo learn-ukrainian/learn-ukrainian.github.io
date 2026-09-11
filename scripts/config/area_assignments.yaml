@@ -26,8 +26,11 @@ assignments:
       - kimi-devops
       - cursor-devops
   monitor:
+    # Human name: Ops API + UI (#7919). Kimi preferred for UI/design implement.
     driver_agent_type: infra-orchestrator
-    slots: []
+    slots:
+      - kimi-infra
+      - cursor-infra
   harness:
     driver_agent_type: infra-orchestrator
     slots:

@@ -32,9 +32,12 @@ areas:
     id: monitor
     aliases:
       - monitor
+      - ops-api
+      - ops.api
+      - operator-api
     epics:
-      - number: 7177
-        name: "Monitor API + UI — fleet & host observability"
+      - number: 7919  # successor to closed #7177
+        name: "Ops API + UI — operator API & dashboards"
   harness:
     id: harness
     aliases:

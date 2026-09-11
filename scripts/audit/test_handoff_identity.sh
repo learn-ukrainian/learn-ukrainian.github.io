@@ -57,7 +57,9 @@ eq "$(launcher_selector_lane infra.fleet-comms)" "infra" "fleet-comms resolves t
 eq "$(launcher_selector_lane devops)" "devops" "devops resolves to dedicated lane"
 eq "$(launcher_selector_stream infra.devops)" "epic:5703" "devops resolves to dedicated stream"
 eq "$(launcher_selector_lane monitor)" "monitor" "monitor resolves to dedicated lane"
-eq "$(launcher_selector_stream infra.monitor)" "epic:7177" "monitor resolves to dedicated stream"
+eq "$(launcher_selector_stream infra.monitor)" "epic:7919" "monitor resolves to dedicated stream"
+eq "$(launcher_selector_stream ops-api)" "epic:7919" "ops-api alias → monitor stream epic"
+eq "$(launcher_selector_lane ops-api)" "monitor" "ops-api alias → monitor lane"
 eq "$(launcher_selector_lane atlas.practice)" "atlas" "atlas practice resolves to atlas"
 eq "$(launcher_selector_stream hramatka.lessons)" "epic:4542" "hramatka lessons resolves"
 # corpus is a documented, currently-recommended driver epic

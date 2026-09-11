@@ -21,8 +21,8 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 | **harness / infra** (named alternate) | Codex / gpt-6-astra @ high | `./start-codex-driver.sh --epic infra` |
 | **devops** | Gemini (AGY) | `./start-gemini-driver.sh --epic devops` |
 | **devops** (named alternate) | Codex / gpt-6-astra @ high | `./start-codex-driver.sh --epic devops` |
-| **monitor** | Gemini (AGY) | `./start-gemini-driver.sh --epic monitor` |
-| **monitor** (named alternate) | Codex / gpt-6-astra @ high | `./start-codex-driver.sh --epic monitor` |
+| **ops-api** (Operator API + UI; stream key `monitor`) | Cursor or Gemini (AGY); **Kimi for UI/design** | `./start-cursor-driver.sh --epic ops-api` (alias: `--epic monitor`) |
+| **ops-api** (named alternate) | Codex / gpt-6-astra @ high | `./start-codex-driver.sh --epic ops-api` |
 | **corpus** (acquisition & ingestion) | Gemini (AGY) | `./start-gemini-driver.sh --epic corpus` |
 | **atlas** (Word Atlas + Practice Hub product) | Grok 4.6 | `./start-grok-driver.sh --epic atlas` |
 | **hramatka** (teacher lesson service) | Grok 4.6 · Fable if judgment-heavy | `./start-grok-driver.sh --epic hramatka` |

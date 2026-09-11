@@ -137,7 +137,7 @@ launcher_selector_resolve() {
       key="devops"
       lane="devops"
       ;;
-    monitor|infra.monitor)
+    monitor|infra.monitor|ops-api|ops.api|operator-api)
       key="monitor"
       lane="monitor"
       ;;
@@ -212,7 +212,7 @@ EOF
   Compatibility aliases:
     infra | harness | infra.fleet-comms
     devops | infra.devops
-    monitor | infra.monitor
+    monitor | infra.monitor | ops-api | ops.api | operator-api
     atlas | practice | practice-hub | atlas.practice
     hramatka | hramatka.lessons
     folk | seminars-folk
