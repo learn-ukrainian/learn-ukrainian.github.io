@@ -843,3 +843,22 @@ def test_backup_failure_preserves_original_dataset(tmp_path: Path, monkeypatch: 
     assert orig_jsonl.read_text(encoding="utf-8") == '{"id": "orig"}\n'
     assert orig_manifest.is_file(), "Original manifest was deleted during failed backup!"
     assert orig_manifest.read_text(encoding="utf-8") == '{"status": "orig"}\n'
+
+
+def test_quoted_instruction_and_unrelated_reasoning_rejected() -> None:
+    """I1: Quoted instructions and unrelated student reasoning must score 0.0 / FAIL."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    # 1. Quoted instruction with citation disclaimer
+    r1 = "На дошці написано «Вживайте goodtoken», бо учень переписав словник про суфікс. Це лише цитата з вправи."
+    eval1 = evaluate_single_response(target, alts, r1)
+    assert not eval1["is_pass"]
+    assert eval1["composite_score"] == 0.0
+
+    # 2. Recommendation coupled with unrelated narrative reasoning
+    r2 = "Правильно вживати goodtoken. Учень читає словник, бо його цікавить суфікс."
+    eval2 = evaluate_single_response(target, alts, r2)
+    assert not eval2["is_pass"]
+    assert not eval2["reasoning_grounded"]
+    assert eval2["composite_score"] <= 0.40

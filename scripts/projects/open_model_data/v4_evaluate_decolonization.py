@@ -66,14 +66,17 @@ REFUSAL_PATTERNS = [
     re.compile(r"я\s+не\s+даю\s+(?:оцінок|відповідей)", re.IGNORECASE),
     re.compile(r"(?:без\s+коментарів|без\s+оцінки|без\s+відповіді)", re.IGNORECASE),
     re.compile(r"не\s+можу\s+(?:оцінити|відповісти|надати\s+оцінку)", re.IGNORECASE),
+    re.compile(r"(?:це\s+)?(?:лише|тільки)\s+(?:цитата|приклад|вправа|уривок)", re.IGNORECASE),
+    re.compile(r"цитата\s+з\s+(?:вправи|тексту|підручника|книги|дошки)", re.IGNORECASE),
+    re.compile(r"(?:на\s+дошці|у\s+зошиті)\s+(?:написано|записано)", re.IGNORECASE),
 ]
 
 EXPLANATION_CONNECTIVES = [
-    re.compile(r"(?:тому\s+що|оскільки|бо\s+|через\s+те\s+що)", re.IGNORECASE),
-    re.compile(r"(?:замість|на\s+відміну\s+від|натомість)", re.IGNORECASE),
-    re.compile(r"(?:походить\s+від|утворено|походить|відповідає|виражає|є\s+кальк|є\s+росіян)", re.IGNORECASE),
+    re.compile(r"(?:тому\s+що|оскільки|бо\s+|через\s+те\s+що|адже)", re.IGNORECASE),
+    re.compile(r"(?:замість|на\s+відміну\s+від|натомість|а\s+не)", re.IGNORECASE),
+    re.compile(r"(?:походить\s+від|утворено|відповідає|виражає|(?:є|це|—|-|–)\s+(?:\w+\s+)?(?:кальк\w*|росіянізм\w*|помилк\w*|суржик\w*))", re.IGNORECASE),
     re.compile(r"(?:питомий|питоме|питомим|автентичн|власне\s+українськ)", re.IGNORECASE),
-    re.compile(r"(?:вживати|вживається|використовувати|використовується|казати|правильно)", re.IGNORECASE),
+    re.compile(r"(?:за\s+(?:словником|підручником|правописом|весум)|у\s+(?:словнику|підручнику|правописі|весумі))", re.IGNORECASE),
 ]
 
 SUGGESTION_PATTERNS = [
@@ -170,7 +173,7 @@ def evaluate_single_response(
     else:
         # Calque not mentioned; require active linguistic recommendation context
         calque_eliminated = any(
-            m in resp_norm for m in ("правильн", "норм", "вжива", "рекоменд", "краще", "варто", "слід", "відповідник", "замін", "замість")
+            m in resp_norm for m in ("правильн", "норм", "вжива", "рекоменд", "краще", "варто", "слід", "слово", "відповідник", "мовн")
         )
 
     # 2. Authentic suggestion check:
@@ -190,6 +193,14 @@ def evaluate_single_response(
                 break
 
         if is_negated:
+            continue
+
+        # Ignore suggestions that are merely inside attributed quotations (e.g. написано «alt»)
+        quoted_in_attribution = re.search(
+            rf"(?:написано|записано|сказано|процитовано|йдеться\s+про)\s*[«\"'\(][^»\"'\)]*{re.escape(alt_norm)}",
+            resp_norm,
+        )
+        if quoted_in_attribution:
             continue
 
         # Check for prescriptive/normative suggestion context
@@ -217,20 +228,14 @@ def evaluate_single_response(
         len(tokens) >= 5 and max_content_freq_ratio > 0.20
     )
 
-    has_explanation_syntax = any(p.search(resp_norm) for p in EXPLANATION_CONNECTIVES)
-    distinct_reasoning_markers = sum(1 for p in REASONING_MARKERS if p.search(resp_norm))
-
     # Verify reasoning actually references the linguistic subject (target term or alternative)
     target_tokens = {term_norm} | {normalize_token(a) for a in valid_alternatives if normalize_token(a)}
     sentences = [s.strip() for s in re.split(r"[.!?\n]+", resp_norm) if s.strip()]
-    reasoning_sentences = [
-        s
-        for s in sentences
-        if any(p.search(s) for p in REASONING_MARKERS) or any(c.search(s) for c in EXPLANATION_CONNECTIVES)
-    ]
-    reasoning_mentions_subject = any(
-        any(tt in s for tt in target_tokens) for s in reasoning_sentences
-    )
+    subject_sentences = [s for s in sentences if any(tt in s for tt in target_tokens)]
+    subject_text = " ".join(subject_sentences)
+
+    has_explanation_syntax = any(p.search(subject_text) for p in EXPLANATION_CONNECTIVES)
+    distinct_reasoning_markers = sum(1 for p in REASONING_MARKERS if p.search(subject_text))
 
     reasoning_grounded = (
         (distinct_reasoning_markers >= 2)
@@ -240,7 +245,6 @@ def evaluate_single_response(
         and authentic_suggested
         and (not is_repetitive)
         and has_explanation_syntax
-        and reasoning_mentions_subject
     )
 
     # 4. Composite score:
@@ -259,6 +263,10 @@ def evaluate_single_response(
 
     # If the response is repetitive keyword salad, cap score severely
     if is_repetitive or not has_explanation_syntax:
+        composite_score = min(composite_score, 0.40)
+
+    # If reasoning is not grounded in the linguistic subject, cap score severely
+    if not reasoning_grounded:
         composite_score = min(composite_score, 0.40)
 
     # If the response is an unsubstantiated fragment (< 35 characters), cap score

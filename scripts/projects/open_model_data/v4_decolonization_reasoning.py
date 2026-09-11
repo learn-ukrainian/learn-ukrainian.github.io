@@ -514,19 +514,23 @@ def is_positive_citation(lemma: str, citation: str) -> bool:
 
     # Negative patterns directed at lemma
     negative_patterns = [
-        # English negative prefixes
-        rf"(?:do\s+not\s+use|don't\s+use|avoid|never\s+use|not\s+recommended|deprecated|incorrect)\s+(?:the\s+)?(?:word|term|form|phrase)?\s*[«\"']?{lem_pat}",
+        # English negation
+        rf"(?:do\s+not\s+use|don't\s+use|avoid|never\s+use|replace)\s+[^;.!?\n]*{lem_pat}",
+        rf"(?:instead\s+of|rather\s+than)\s+[^;.!?\n]*{lem_pat}",
+        rf"{lem_pat}\s+(?:is\s+)?(?:not|n't|never)\s+(?:correct|recommended|standard|valid|appropriate|preferred|the\s+norm)",
+        rf"{lem_pat}\s+(?:is\s+)?(?:incorrect|deprecated|a\s+calque|calque|avoided|an\s+error|wrong|unacceptable)",
+        rf"(?:not|n't)\s+(?:recommended|correct|standard|valid|appropriate)\s*(?:to\s+use|:)?\s*[^;.!?\n]*{lem_pat}",
+        rf"(?:incorrect|deprecated|calque|wrong|error)\s*[:—–-]?\s*[^;.!?\n]*{lem_pat}",
+        # Ukrainian negation
+        rf"(?:не\s+(?:вживати|вживайте|вживається|варто|слід|можна|рекомендовано|радимо|доцільно))\s+(?:слово|форму|варіант|термін)?\s*[«\"']?{lem_pat}",
+        rf"{lem_pat}\s*[:—–-]?\s*(?:—|-|–|є|це|\b)\s*(?:не\s+(?:є\s+)?(?:правильн\w*|норм\w*|питом\w*|стандарт\w*|чинн\w*|літературн\w*|рекоменд\w*|вжива\w*))",
+        rf"{lem_pat}\s*[:—–-]?\s*(?:—|-|–|є|це|\b)\s*(?:кальк\w*|помилк\w*|неправильн\w*|суржик\w*|росіянізм\w*|не\s+рекоменд\w*|уника\w*)",
         rf"(?:замість|натомість)\s+(?:слова|форми|варіанта|терміна|виразу|конструкції)?\s*[«\"']?{lem_pat}\s*[,;:—–-]",
         rf"(?:замість|натомість)\s+(?:слова|форми|варіанта|терміна|виразу|конструкції)?\s*[«\"']?{lem_pat}\s+(?:вжива|використову|краще|варто|беріть|слід|обирай)",
-        # Ukrainian negative prefixes
-        rf"(?:не\s+(?:вживати|вживайте|вживається|варто|слід|можна|рекомендовано|радимо|доцільно))\s+(?:слово|форму|варіант|термін)?\s*[«\"']?{lem_pat}",
+        rf"\((?:а\s+не|not)\s+[«\"']?{lem_pat}[»\"']?\)",
         rf"(?:а\s+не|not)\s+[«\"']?{lem_pat}",
         rf"(?:уника(?:ти|йте|тиме|тимуть))\s+(?:слово|форму|варіант|термін)?\s*[«\"']?{lem_pat}",
         rf"(?:помилков\w*|неправильн\w*|кальк\w*|суржик\w*|росіянізм\w*)\s*[:—–-]?\s*(?:як-от|зокрема)?\s*[«\"']?{lem_pat}",
-        # Negative postfixes (where lemma is followed by calque/error markers)
-        rf"{lem_pat}\s*[:—–-]?\s*(?:—|-|–|є|це|\b)\s*(?:не\s+вжива\w*|кальк\w*|помилк\w*|неправильн\w*|суржик\w*|росіянізм\w*|не\s+рекоменд\w*|уника\w*)",
-        rf"{lem_pat}\s*[:—–-]?\s*(?:уникати|не\s+вживати|замінити|неправильно|помилково)",
-        rf"{lem_pat}\s*[^;.!?\n]*(?:is\s+)?(?:incorrect|not\s+recommended|deprecated|calque|avoided|a\s+calque)",
     ]
 
     for pat in negative_patterns:
@@ -537,14 +541,13 @@ def is_positive_citation(lemma: str, citation: str) -> bool:
     positive_patterns = [
         # English positive markers
         rf"(?:use|prefer|recommended|correct|standard|valid|appropriate)\s+[^;.!?\n]*{lem_pat}",
-        rf"{lem_pat}\s*[^;.!?\n]*(?:is\s+)?(?:recommended|correct|standard|valid|appropriate|the\s+standard|preferred)",
+        rf"{lem_pat}\s+(?:is\s+)?(?:recommended|correct|standard|valid|appropriate|the\s+standard|preferred)",
         rf"(?:living\s+standard|normative|standard)\s*[:—–-]?\s*[^;.!?\n]*{lem_pat}",
         # Ukrainian positive markers
         rf"(?:правильн\w*|краще|варто|слід|рекоменд\w*|радимо|доцільно|доречно|потрібно|необхідно|нормативн\w*)\s+[^;.!?\n]*{lem_pat}",
         rf"(?:вжива\w*|пишіть|кажіть|говоріть|використову\w*|обирайте|надавайте\s+перевагу)\s+[^;.!?\n]*{lem_pat}",
-        rf"{lem_pat}\s*[^;.!?\n]*(?:—|-|–|є|це)\s*[^;.!?\n]*(?:питом\w*|автентичн\w*|нормативн\w*|правильн\w*|чинн\w*|літературн\w*|відповідник\w*|стандарт\w*|варіант\w*|норма\b)",
+        rf"(?:слово|термін|форма|варіант)?\s*[«\"'\s]?{lem_pat}[»\"'\s]?\s*(?:—|-|–|є|це)\s*(?:це\s+)?(?:питом\w*|автентичн\w*|нормативн\w*|правильн\w*|чинн\w*|літературн\w*)(?:\s+\w+)?(?:\s+(?:відповідник\w*|стандарт\w*|варіант\w*|слово\w*|форма\w*|норм\w*))?",
         rf"(?:питом\w*|автентичн\w*|нормативн\w*|правильн\w*|чинн\w*|літературн\w*|живий\s+стандарт)\s+[^;.!?\n]*{lem_pat}",
-        # Contrastive correction marker: e.g. "мандрівний (а не мандруючий)"
         rf"{lem_pat}\s*[^;.!?\n]*\((?:а\s+не|не|not|замість)\s+[^)]+\)",
         # Right-hand side of correction arrow or dash: "A — B" or "A → B"
         rf"(?:—|-|–|→)\s*[^;.!?\n]*{lem_pat}",
