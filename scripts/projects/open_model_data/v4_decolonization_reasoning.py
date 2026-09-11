@@ -505,55 +505,154 @@ def is_positive_citation(lemma: str, citation: str) -> bool:
         return False
 
     lem = lemma.strip().lower()
-    cit = citation.lower()
+    cit_lower = citation.lower().strip()
 
     # Whole-word / token boundary check (supports Cyrillic and Latin)
     lem_pat = rf"(?<![а-яіїєґa-z0-9]){re.escape(lem)}(?![а-яіїєґa-z0-9])"
-    if not re.search(lem_pat, cit):
+    if not re.search(lem_pat, cit_lower):
         return False
 
-    # Negative patterns directed at lemma
-    negative_patterns = [
-        # English negation
-        rf"(?:do\s+not\s+use|don't\s+use|avoid|never\s+use|replace)\s+[^;.!?\n]*{lem_pat}",
-        rf"(?:instead\s+of|rather\s+than)\s+[^;.!?\n]*{lem_pat}",
+    # 1. Structural contrastive constructions with explicit grammatical roles
+    # Pattern: Replace <A> with/by <B>
+    m_replace = re.search(r"\breplace\s+(.+?)\s+(?:with|by)\s+([^;.!?\n]+)", cit_lower)
+    if m_replace:
+        a_text = m_replace.group(1)
+        b_text = m_replace.group(2)
+        in_a = bool(re.search(lem_pat, a_text))
+        in_b = bool(re.search(lem_pat, b_text))
+        if in_a and not in_b:
+            return False
+        if in_b and not in_a:
+            return True
+
+    # Pattern: Substitute <B> for <A>
+    m_subst = re.search(r"\bsubstitute\s+(.+?)\s+for\s+([^;.!?\n]+)", cit_lower)
+    if m_subst:
+        b_text = m_subst.group(1)
+        a_text = m_subst.group(2)
+        in_a = bool(re.search(lem_pat, a_text))
+        in_b = bool(re.search(lem_pat, b_text))
+        if in_a and not in_b:
+            return False
+        if in_b and not in_a:
+            return True
+
+    # Pattern: замініть / замінити <A> на <B>
+    m_zamin = re.search(r"(?:замініть|замінити)\s+(.+?)\s+на\s+([^;.!?\n]+)", cit_lower)
+    if m_zamin:
+        a_text = m_zamin.group(1)
+        b_text = m_zamin.group(2)
+        in_a = bool(re.search(lem_pat, a_text))
+        in_b = bool(re.search(lem_pat, b_text))
+        if in_a and not in_b:
+            return False
+        if in_b and not in_a:
+            return True
+
+    # Pattern: замість <A> [вживайте|краще|...] <B>
+    m_zamist = re.search(
+        r"(?:замість|натомість)\s+(.+?)\s*(?:[,;:—–-]|(?:\s+(?:вжива\w*|використову\w*|краще|варто|слід|обирай\w*|беріть|треба)))\s*([^;.!?\n]+)",
+        cit_lower,
+    )
+    if m_zamist:
+        a_text = m_zamist.group(1)
+        b_text = m_zamist.group(2)
+        in_a = bool(re.search(lem_pat, a_text))
+        in_b = bool(re.search(lem_pat, b_text))
+        if in_a and not in_b:
+            return False
+        if in_b and not in_a:
+            return True
+
+    # Pattern: <B> замість <A> or <B> rather than <A> or <B> instead of <A>
+    m_inv_zamist = re.search(
+        r"([^;.!?\n]+?)\s+(?:замість|натомість|на\s+відміну\s+від|rather\s+than|instead\s+of)\s+([^;.!?\n]+)",
+        cit_lower,
+    )
+    if m_inv_zamist:
+        b_text = m_inv_zamist.group(1)
+        a_text = m_inv_zamist.group(2)
+        has_b_negation = bool(re.search(r"\b(?:never|not|don't|do\s+not|avoid|не|уникати)\b", b_text))
+        if has_b_negation:
+            a_text, b_text = b_text, a_text
+        in_a = bool(re.search(lem_pat, a_text))
+        in_b = bool(re.search(lem_pat, b_text))
+        if in_a and not in_b:
+            return False
+        if in_b and not in_a:
+            return True
+
+    # Pattern: <B> (а не <A>)
+    m_ane = re.search(r"([^;.!?\n]+?)\s*\((?:а\s+не|not)\s+([^)]+)\)", cit_lower)
+    if m_ane:
+        b_text = m_ane.group(1)
+        a_text = m_ane.group(2)
+        in_a = bool(re.search(lem_pat, a_text))
+        in_b = bool(re.search(lem_pat, b_text))
+        if in_a and not in_b:
+            return False
+        if in_b and not in_a:
+            return True
+
+    # Pattern: <A> — <B> (dictionary error-to-norm list, e.g. "головуючий — голова зборів")
+    m_dash = re.search(r"^([^—–→\n]+?)\s*(?:—|–|→)\s*([^—–→\n]+)$", cit_lower)
+    if m_dash:
+        a_text = m_dash.group(1)
+        b_text = m_dash.group(2)
+        in_a = bool(re.search(lem_pat, a_text))
+        in_b = bool(re.search(lem_pat, b_text))
+        if in_a and not in_b:
+            return False
+        if in_b and not in_a:
+            return True
+
+    # 2. Segment by sentences / independent clauses
+    clauses = [c.strip() for c in re.split(r"[.!?;\n]+", cit_lower) if c.strip()]
+    lem_clauses = [c for c in clauses if re.search(lem_pat, c)]
+    if not lem_clauses:
+        return False
+
+    # Clause-level negative patterns directed at lemma
+    clause_neg_patterns = [
+        # English
+        rf"\b(?:do\s+not|don't|never)\s+(?:\w+\s+)*(?:use|prefer|choose|adopt)\s+[^;.!?\n]*{lem_pat}",
+        rf"\b(?:avoid|stop)\s+(?:\w+\s+)*{lem_pat}",
         rf"{lem_pat}\s+(?:is\s+)?(?:not|n't|never)\s+(?:correct|recommended|standard|valid|appropriate|preferred|the\s+norm)",
         rf"{lem_pat}\s+(?:is\s+)?(?:incorrect|deprecated|a\s+calque|calque|avoided|an\s+error|wrong|unacceptable)",
-        rf"(?:not|n't)\s+(?:recommended|correct|standard|valid|appropriate)\s*(?:to\s+use|:)?\s*[^;.!?\n]*{lem_pat}",
-        rf"(?:incorrect|deprecated|calque|wrong|error)\s*[:—–-]?\s*[^;.!?\n]*{lem_pat}",
-        # Ukrainian negation
-        rf"(?:не\s+(?:вживати|вживайте|вживається|варто|слід|можна|рекомендовано|радимо|доцільно))\s+(?:слово|форму|варіант|термін)?\s*[«\"']?{lem_pat}",
+        rf"\b(?:not|n't)\s+(?:recommended|correct|standard|valid|appropriate)\s*(?:to\s+use|:)?\s*[^;.!?\n]*{lem_pat}",
+        rf"\b(?:incorrect|deprecated|calque|wrong|error)\s*[:—–-]?\s*[^;.!?\n]*{lem_pat}",
+        # Ukrainian
+        rf"(?:не\s+(?:\w+\s+)?(?:вживати|вживайте|вживається|варто|слід|можна|рекомендовано|радимо|доцільно))\s+(?:слово|форму|варіант|термін)?\s*[«\"']?{lem_pat}",
         rf"{lem_pat}\s*[:—–-]?\s*(?:—|-|–|є|це|\b)\s*(?:не\s+(?:є\s+)?(?:правильн\w*|норм\w*|питом\w*|стандарт\w*|чинн\w*|літературн\w*|рекоменд\w*|вжива\w*))",
         rf"{lem_pat}\s*[:—–-]?\s*(?:—|-|–|є|це|\b)\s*(?:кальк\w*|помилк\w*|неправильн\w*|суржик\w*|росіянізм\w*|не\s+рекоменд\w*|уника\w*)",
-        rf"(?:замість|натомість)\s+(?:слова|форми|варіанта|терміна|виразу|конструкції)?\s*[«\"']?{lem_pat}\s*[,;:—–-]",
-        rf"(?:замість|натомість)\s+(?:слова|форми|варіанта|терміна|виразу|конструкції)?\s*[«\"']?{lem_pat}\s+(?:вжива|використову|краще|варто|беріть|слід|обирай)",
-        rf"\((?:а\s+не|not)\s+[«\"']?{lem_pat}[»\"']?\)",
-        rf"(?:а\s+не|not)\s+[«\"']?{lem_pat}",
         rf"(?:уника(?:ти|йте|тиме|тимуть))\s+(?:слово|форму|варіант|термін)?\s*[«\"']?{lem_pat}",
         rf"(?:помилков\w*|неправильн\w*|кальк\w*|суржик\w*|росіянізм\w*)\s*[:—–-]?\s*(?:як-от|зокрема)?\s*[«\"']?{lem_pat}",
     ]
 
-    for pat in negative_patterns:
-        if re.search(pat, cit):
-            return False
+    for c in lem_clauses:
+        for pat in clause_neg_patterns:
+            if re.search(pat, c):
+                return False
 
-    # Positive affirmation patterns
-    positive_patterns = [
-        # English positive markers
-        rf"(?:use|prefer|recommended|correct|standard|valid|appropriate)\s+[^;.!?\n]*{lem_pat}",
+    # Clause-level positive patterns directed at lemma
+    clause_pos_patterns = [
+        # English
+        rf"\b(?:use|prefer|recommended|correct|standard|valid|appropriate)\s+[^;.!?\n]*{lem_pat}",
         rf"{lem_pat}\s+(?:is\s+)?(?:recommended|correct|standard|valid|appropriate|the\s+standard|preferred)",
         rf"(?:living\s+standard|normative|standard)\s*[:—–-]?\s*[^;.!?\n]*{lem_pat}",
-        # Ukrainian positive markers
+        # Ukrainian
         rf"(?:правильн\w*|краще|варто|слід|рекоменд\w*|радимо|доцільно|доречно|потрібно|необхідно|нормативн\w*)\s+[^;.!?\n]*{lem_pat}",
         rf"(?:вжива\w*|пишіть|кажіть|говоріть|використову\w*|обирайте|надавайте\s+перевагу)\s+[^;.!?\n]*{lem_pat}",
         rf"(?:слово|термін|форма|варіант)?\s*[«\"'\s]?{lem_pat}[»\"'\s]?\s*(?:—|-|–|є|це)\s*(?:це\s+)?(?:питом\w*|автентичн\w*|нормативн\w*|правильн\w*|чинн\w*|літературн\w*)(?:\s+\w+)?(?:\s+(?:відповідник\w*|стандарт\w*|варіант\w*|слово\w*|форма\w*|норм\w*))?",
         rf"(?:питом\w*|автентичн\w*|нормативн\w*|правильн\w*|чинн\w*|літературн\w*|живий\s+стандарт)\s+[^;.!?\n]*{lem_pat}",
-        rf"{lem_pat}\s*[^;.!?\n]*\((?:а\s+не|не|not|замість)\s+[^)]+\)",
-        # Right-hand side of correction arrow or dash: "A — B" or "A → B"
-        rf"(?:—|-|–|→)\s*[^;.!?\n]*{lem_pat}",
     ]
 
-    return any(re.search(pat, cit) for pat in positive_patterns)
+    for c in lem_clauses:
+        for pat in clause_pos_patterns:
+            if re.search(pat, c):
+                return True
+
+    return False
 
 
 def synthesize_trajectory_and_dpo(

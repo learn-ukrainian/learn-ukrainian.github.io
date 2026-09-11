@@ -94,6 +94,55 @@ ALTERNATIVE_NEGATION_PATTERNS = [
     r"замість\s+[«\"]?{alt}[»\"]?\s+(?:вживайте|краще|правильно)\s+[«\"]?{term}[»\"]?",
 ]
 
+LINGUISTIC_RELATION_PATTERNS = [
+    # Relation 1: Authority Attestation Binding
+    re.compile(
+        r"(?:за|згідно\s+з|відповідно\s+до|підтверджен\w*)\s+(?:словником|підручником|правописом|весум|чинним\s+правописом|нормами)",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"(?:у|в)\s+(?:словнику|підручнику|правописі|весумі)\s+(?:подано|зафіксовано|наведено|зазначено|міститься|є)",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"(?:словник|підручник|правопис|весум)\s+(?:подає|фіксує|наводить|зазначає|містить|рекомендує|вказує)",
+        re.IGNORECASE,
+    ),
+    re.compile(r"зафіксован\w*\s+(?:у|в)\s+(?:словнику|весум|підручнику|джерелах)", re.IGNORECASE),
+    # Relation 2: Morphological & Word-Formation Binding
+    re.compile(r"(?:утворено|походить)\s+(?:від|за\s+допомогою|через|шляхом|відповідно\s+до)", re.IGNORECASE),
+    re.compile(r"(?:містить|має)\s+(?:питомий\s+)?(?:суфікс|префікс|корінь|закінчення)", re.IGNORECASE),
+    re.compile(
+        r"(?:суфікс\w*|префікс\w*|дієприкметник\w*|закінчення)\s+[^;.!?\n]*(?:є\s+)?(?:властив\w*|невластив\w*|питом\w*|характерн\w*|ненормативн\w*|чужорідн\w*|твори\w*|відповіда\w*)",
+        re.IGNORECASE,
+    ),
+    re.compile(r"активн\w*\s+дієприкметник\w*", re.IGNORECASE),
+    re.compile(r"словотвірн\w*\s+модел\w*", re.IGNORECASE),
+    re.compile(r"наголос\s+(?:падає|на|у)", re.IGNORECASE),
+    # Relation 3: Linguistic Status & Decolonization Classification
+    re.compile(
+        r"(?:є|це|—|-|–)\s*(?:це\s+)?(?:\w+\s+)?(?:кальк\w*|росіянізм\w*|русизм\w*|суржик\w*|запозичен\w*)",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"(?:(?:є|це|—|-|–)\s*(?:це\s+)?(?:\w+\s+)?(?:питом\w*|автентичн\w*|нормативн\w*|літературн\w*|чинн\w*)\s+(?:відповідник\w*|варіант\w*|форма\w*|слово\w*|стандарт\w*|норма\b)|(?:питом\w*|автентичн\w*|нормативн\w*|літературн\w*|чинн\w*)\s+(?:відповідник\w*|варіант\w*|форма\w*|слово\w*|стандарт\w*|норма\b)\s+(?:є|виступає|це))",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"замість\s+(?:російськ\w*|радянськ\w*|скалькован\w*|кальк\w*|росіянізм\w*|помилк\w*)",
+        re.IGNORECASE,
+    ),
+    re.compile(r"походить\s+від\s+рос", re.IGNORECASE),
+]
+
+NARRATIVE_AGENT_PATTERNS = [
+    re.compile(
+        r"\b(?:я|ми|учень|учениця|студент|студентка|автор|хтось)\s+(?:прочитав\w*|вивчив\w*|переписав\w*|знайшов\w*|побачив\w*|подивився|подивилася|дізнався|дізналася|чув\w*|думаю|вважаю|хочу|цікавить\w*)",
+        re.IGNORECASE,
+    ),
+    re.compile(r"(?:бо|тому\s+що|оскільки)\s+(?:я|ми|учень|студент)\b", re.IGNORECASE),
+]
+
 
 def normalize_token(s: str) -> str:
     """Strip accents and non-alphanumeric punctuation."""
@@ -235,6 +284,8 @@ def evaluate_single_response(
     subject_text = " ".join(subject_sentences)
 
     has_explanation_syntax = any(p.search(subject_text) for p in EXPLANATION_CONNECTIVES)
+    has_linguistic_relation = any(p.search(subject_text) for p in LINGUISTIC_RELATION_PATTERNS)
+    has_narrative_agent = any(p.search(resp_norm) for p in NARRATIVE_AGENT_PATTERNS)
     distinct_reasoning_markers = sum(1 for p in REASONING_MARKERS if p.search(subject_text))
 
     reasoning_grounded = (
@@ -245,6 +296,8 @@ def evaluate_single_response(
         and authentic_suggested
         and (not is_repetitive)
         and has_explanation_syntax
+        and has_linguistic_relation
+        and (not has_narrative_agent)
     )
 
     # 4. Composite score:

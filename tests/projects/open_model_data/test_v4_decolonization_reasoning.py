@@ -529,3 +529,44 @@ def test_negated_correctness_does_not_promote_rejected_alternative() -> None:
         {"alpha": None},
         {"alpha": None},
     ) is None
+
+
+def test_contrastive_replacement_and_intervening_negation() -> None:
+    """J2: Verify 'Do not ever use alpha. Use beta.' and 'Replace alpha with beta.' resolve correctly."""
+    # 1. Intervening adverb in negation
+    assert not is_positive_citation("alpha", "Do not ever use alpha. Use beta.")
+    assert is_positive_citation("beta", "Do not ever use alpha. Use beta.")
+
+    # 2. Structured replacement
+    assert not is_positive_citation("alpha", "Replace alpha with beta.")
+    assert is_positive_citation("beta", "Replace alpha with beta.")
+
+    # 3. End-to-end trajectory synthesis for 'Do not ever use alpha. Use beta.'
+    cand1 = CalqueCandidate(
+        target_term="test_calque",
+        suggestions=["alpha", "beta"],
+        source_tag="curated_test",
+        curated_evidence=["Do not ever use alpha. Use beta."],
+    )
+    res1 = synthesize_trajectory_and_dpo(cand1, {"alpha": 10, "beta": 15}, {"alpha": None, "beta": None}, {"alpha": None, "beta": None})
+    assert res1 is not None
+    traj1, _ = res1
+    assert traj1["register_spectrum"]["primary_living_standard"] == "beta"
+    alts1 = {a["lemma"]: a for a in traj1["register_spectrum"]["alternatives"]}
+    assert alts1["beta"]["register_tier"] == "living_standard"
+    assert alts1["alpha"]["register_tier"] != "living_standard"
+
+    # 4. End-to-end trajectory synthesis for 'Replace alpha with beta.'
+    cand2 = CalqueCandidate(
+        target_term="test_calque",
+        suggestions=["alpha", "beta"],
+        source_tag="curated_test",
+        curated_evidence=["Replace alpha with beta."],
+    )
+    res2 = synthesize_trajectory_and_dpo(cand2, {"alpha": 10, "beta": 15}, {"alpha": None, "beta": None}, {"alpha": None, "beta": None})
+    assert res2 is not None
+    traj2, _ = res2
+    assert traj2["register_spectrum"]["primary_living_standard"] == "beta"
+    alts2 = {a["lemma"]: a for a in traj2["register_spectrum"]["alternatives"]}
+    assert alts2["beta"]["register_tier"] == "living_standard"
+    assert alts2["alpha"]["register_tier"] != "living_standard"

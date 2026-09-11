@@ -862,3 +862,16 @@ def test_quoted_instruction_and_unrelated_reasoning_rejected() -> None:
     assert not eval2["is_pass"]
     assert not eval2["reasoning_grounded"]
     assert eval2["composite_score"] <= 0.40
+
+
+def test_same_sentence_unrelated_reasoning_rejected() -> None:
+    """J1: A recommendation with an unrelated reason in the same sentence must not score 100% / PASS."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    # Probe from audit J1: speaker action narrative in the same sentence
+    r = "Вживайте goodtoken, бо я прочитав словник і вивчив суфікс."
+    eval_res = evaluate_single_response(target, alts, r)
+    assert not eval_res["is_pass"]
+    assert not eval_res["reasoning_grounded"]
+    assert eval_res["composite_score"] <= 0.40
