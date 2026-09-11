@@ -1338,6 +1338,7 @@ from learn_ukrainian_v4_runtime.sources_transport import (
 from learn_ukrainian_v4_runtime.sources_transport import (
     record_typed_invocation as _record_v4_typed_invocation,
 )
+from learn_ukrainian_v4_runtime.tool_result_envelope import build_search_envelope
 
 
 @lru_cache(maxsize=1)
@@ -1460,7 +1461,7 @@ async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[lis
             name, arguments, response_chars=len(_resp_text), duration_s=_elapsed,
             response_text=_resp_text, privacy_mode=privacy_mode,
         )
-        if typed_outcome is not None:
+        if typed_outcome is not None and isinstance(typed_outcome, dict) and "disposition" in typed_outcome:
             _record_v4_typed_invocation(name=name, typed_outcome=typed_outcome)
         return result, False, typed_outcome
     except Exception as e:
@@ -1510,18 +1511,23 @@ async def _on_call_tool(_ctx: Any, params: CallToolRequestParams) -> CallToolRes
 server = Server("sources", on_list_tools=_on_list_tools, on_call_tool=_on_call_tool)
 
 
-async def handle_search_text(args: dict) -> list[TextContent]:
+async def handle_search_text(args: dict):
     query = args["query"]
     limit = min(args.get("limit", 5), 20)
     subject = args.get("subject")
     source_file = args.get("source_file")
+    query_obj = {"query": query, "limit": limit, "subject": subject, "source_file": source_file}
 
     from wiki.sources_db import search_textbooks
     keywords = {w for w in query.lower().split() if len(w) >= 3}
     hits = await asyncio.to_thread(search_textbooks, keywords, limit, subject=subject, source_file=source_file)
 
     if not hits:
-        return [TextContent(type="text", text="No results found.")]
+        prose = "No results found."
+        envelope = build_search_envelope(
+            tool="search_text", query=query_obj, hits=[], summary_prose=prose
+        )
+        return [TextContent(type="text", text=prose)], envelope
 
     lines = [f"Found {len(hits)} results for: \"{query}\"\n"]
     for i, hit in enumerate(hits, 1):
@@ -1534,7 +1540,11 @@ async def handle_search_text(args: dict) -> list[TextContent]:
         lines.append(f"- **Text**:\n{hit.get('text', '')}")
         lines.append("")
 
-    return [TextContent(type="text", text="\n".join(lines))]
+    prose = "\n".join(lines)
+    envelope = build_search_envelope(
+        tool="search_text", query=query_obj, hits=list(hits), summary_prose=prose
+    )
+    return [TextContent(type="text", text=prose)], envelope
 
 
 async def handle_search_sources(args: dict) -> list[TextContent]:
@@ -1554,16 +1564,21 @@ async def handle_search_sources(args: dict) -> list[TextContent]:
     return [TextContent(type="text", text=json.dumps(hits, ensure_ascii=False, indent=2))]
 
 
-async def handle_search_literary(args: dict) -> list[TextContent]:
+async def handle_search_literary(args: dict):
     query = args["query"]
     limit = min(args.get("limit", 5), 20)
+    query_obj = {"query": query, "limit": limit}
 
     from wiki.sources_db import search_literary
     keywords = {w for w in query.lower().split() if len(w) >= 3}
     hits = await asyncio.to_thread(search_literary, keywords, limit)
 
     if not hits:
-        return [TextContent(type="text", text="No literary results found.")]
+        prose = "No literary results found."
+        envelope = build_search_envelope(
+            tool="search_literary", query=query_obj, hits=[], summary_prose=prose
+        )
+        return [TextContent(type="text", text=prose)], envelope
 
     lines = [f"Found {len(hits)} results for: \"{query}\"\n"]
     for i, hit in enumerate(hits, 1):
@@ -1574,7 +1589,11 @@ async def handle_search_literary(args: dict) -> list[TextContent]:
         lines.append(f"- **Text**:\n{hit.get('text', '')}")
         lines.append("")
 
-    return [TextContent(type="text", text="\n".join(lines))]
+    prose = "\n".join(lines)
+    envelope = build_search_envelope(
+        tool="search_literary", query=query_obj, hits=list(hits), summary_prose=prose
+    )
+    return [TextContent(type="text", text=prose)], envelope
 
 
 
@@ -1680,14 +1699,23 @@ async def handle_get_full_text(args: dict) -> list[TextContent]:
     return [TextContent(type="text", text="\n\n---\n\n".join(text_parts))]
 
 
-async def handle_get_chunk_context(args: dict) -> list[TextContent]:
+async def handle_get_chunk_context(args: dict):
     chunk_id = args["chunk_id"]
+    query_obj = {"chunk_id": chunk_id}
 
     from wiki.sources_db import _get_conn
     try:
         conn = _get_conn()
     except FileNotFoundError:
-        return [TextContent(type="text", text="Sources database not found.")]
+        prose = "Sources database not found."
+        envelope = build_search_envelope(
+            tool="get_chunk_context",
+            query=query_obj,
+            hits=[],
+            summary_prose=prose,
+            status="error",
+        )
+        return [TextContent(type="text", text=prose)], envelope
 
     # Search all tables for the chunk_id
     for table in ("textbooks", "literary_texts"):
@@ -1695,9 +1723,21 @@ async def handle_get_chunk_context(args: dict) -> list[TextContent]:
             f"SELECT * FROM {table} WHERE chunk_id = ?", (chunk_id,)
         ).fetchone()
         if row:
-            return [TextContent(type="text", text=f"**[{chunk_id}]** — {dict(row).get('title', '')}\n\n{dict(row).get('text', '')}")]
+            row_dict = dict(row)
+            prose = f"**[{chunk_id}]** — {row_dict.get('title', '')}\n\n{row_dict.get('text', '')}"
+            envelope = build_search_envelope(
+                tool="get_chunk_context",
+                query=query_obj,
+                hits=[row_dict],
+                summary_prose=prose,
+            )
+            return [TextContent(type="text", text=prose)], envelope
 
-    return [TextContent(type="text", text=f"No context found for chunk: {chunk_id}")]
+    prose = f"No context found for chunk: {chunk_id}"
+    envelope = build_search_envelope(
+        tool="get_chunk_context", query=query_obj, hits=[], summary_prose=prose
+    )
+    return [TextContent(type="text", text=prose)], envelope
 
 
 async def handle_collection_stats(args: dict) -> list[TextContent]:
@@ -2326,8 +2366,9 @@ async def handle_query_slovnyk_me(args: dict) -> list[TextContent]:
     )]
 
 
-async def handle_query_pravopys(args: dict) -> list[TextContent]:
+async def handle_query_pravopys(args: dict):
     topic = args["topic"]
+    query_obj = {"topic": topic}
 
     from rag.source_query import pravopys_lookup, pravopys_section
 
@@ -2338,7 +2379,11 @@ async def handle_query_pravopys(args: dict) -> list[TextContent]:
         result = await asyncio.to_thread(pravopys_lookup, topic)
 
     if not result:
-        return [TextContent(type="text", text=f"No pravopys section found for: '{topic}'")]
+        prose = f"No pravopys section found for: '{topic}'"
+        envelope = build_search_envelope(
+            tool="query_pravopys", query=query_obj, hits=[], summary_prose=prose
+        )
+        return [TextContent(type="text", text=prose)], envelope
 
     lines = [
         f"**Pravopys section {result['section']}**",
@@ -2346,7 +2391,11 @@ async def handle_query_pravopys(args: dict) -> list[TextContent]:
         "",
         result["text"][:3000],
     ]
-    return [TextContent(type="text", text="\n".join(lines))]
+    prose = "\n".join(lines)
+    envelope = build_search_envelope(
+        tool="query_pravopys", query=query_obj, hits=[result], summary_prose=prose
+    )
+    return [TextContent(type="text", text=prose)], envelope
 
 
 def _quote_balanced_clip(text: str, max_chars: int = 500) -> str:
@@ -2376,10 +2425,17 @@ def _quote_balanced_clip(text: str, max_chars: int = 500) -> str:
     return clipped
 
 
-async def handle_dict_search(args: dict, collection: str, label: str) -> list[TextContent]:
+async def handle_dict_search(args: dict, collection: str, label: str):
     """Generic handler for dictionary/reference collection searches — uses SQLite."""
     query = args.get("query", args.get("word", ""))
     limit = min(args.get("limit", 3), 10)
+    tool_name = {
+        "style_guide": "search_style_guide",
+        "sum11": "search_definitions",
+        "frazeolohichnyi": "search_idioms",
+        "ukrajinet": "search_synonyms",
+    }.get(collection, f"dict:{collection}")
+    query_obj = {"query": query, "limit": limit, "collection": collection, "label": label}
 
     # Map old Qdrant collection names to sources_db functions
     from wiki import sources_db as sdb
@@ -2395,12 +2451,24 @@ async def handle_dict_search(args: dict, collection: str, label: str) -> list[Te
 
     func = _LOOKUP.get(collection)
     if not func:
-        return [TextContent(type="text", text=f"Unknown collection: {collection}")]
+        prose = f"Unknown collection: {collection}"
+        envelope = build_search_envelope(
+            tool=tool_name,
+            query=query_obj,
+            hits=[],
+            summary_prose=prose,
+            status="error",
+        )
+        return [TextContent(type="text", text=prose)], envelope
 
     hits = await asyncio.to_thread(func, query, limit)
 
     if not hits:
-        return [TextContent(type="text", text=f"No results in {label} for: \"{query}\"")]
+        prose = f"No results in {label} for: \"{query}\""
+        envelope = build_search_envelope(
+            tool=tool_name, query=query_obj, hits=[], summary_prose=prose
+        )
+        return [TextContent(type="text", text=prose)], envelope
 
     lines = [f"Found {len(hits)} results in **{label}** for: \"{query}\"\n"]
     for i, hit in enumerate(hits, 1):
@@ -2429,7 +2497,11 @@ async def handle_dict_search(args: dict, collection: str, label: str) -> list[Te
             lines.append(f"- **Text**: {_quote_balanced_clip(text, 500)}")
         lines.append("")
 
-    return [TextContent(type="text", text="\n".join(lines))]
+    prose = "\n".join(lines)
+    envelope = build_search_envelope(
+        tool=tool_name, query=query_obj, hits=list(hits), summary_prose=prose
+    )
+    return [TextContent(type="text", text=prose)], envelope
 
 
 async def handle_search_slovnyk_me(args: dict) -> list[TextContent]:

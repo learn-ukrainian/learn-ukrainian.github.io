@@ -9,6 +9,7 @@ from typing import Any
 from mcp.types import TextContent
 
 from learn_ukrainian_v4_runtime.operation_auth import HEX64, OperationRefused
+from learn_ukrainian_v4_runtime.tool_result_envelope import enrich_typed_outcome
 from learn_ukrainian_v4_runtime.v4_canonical_authority_store import immutable_evidence_identifier
 
 _backend = None
@@ -41,14 +42,25 @@ def _is_archaic(tags: str | None) -> bool:
 
 async def handle_check_modern_form(args: dict):
     word = args.get("word")
+    query = {"word": word}
     if not isinstance(word, str) or not word.strip():
+        prose = json.dumps(
+            {
+                "tool": "check_modern_form",
+                "disposition": "invalid_input",
+                "success": False,
+                "evidence_identifiers": [],
+            },
+            ensure_ascii=False,
+        )
         outcome = {
             "tool": "check_modern_form",
             "disposition": "invalid_input",
             "success": False,
             "evidence_identifiers": [],
         }
-        return [TextContent(type="text", text=json.dumps(outcome, ensure_ascii=False))], outcome
+        enrich_typed_outcome(outcome, query=query, match_count=0, hits=[], summary_prose=prose)
+        return [TextContent(type="text", text=prose)], outcome
 
     verify_word = backend().verify_word
     matches = await asyncio.to_thread(verify_word, word, None)
@@ -59,6 +71,7 @@ async def handle_check_modern_form(args: dict):
             "has_only_archaic_form": False,
             "error": "Word not found in VESUM.",
         }
+        prose = json.dumps(payload, ensure_ascii=False)
         outcome = {
             "tool": "check_modern_form",
             "disposition": "not_found",
@@ -66,7 +79,8 @@ async def handle_check_modern_form(args: dict):
             "evidence_identifiers": [],
             "result": payload,
         }
-        return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))], outcome
+        enrich_typed_outcome(outcome, query=query, match_count=0, hits=[], summary_prose=prose)
+        return [TextContent(type="text", text=prose)], outcome
 
     has_archaic = False
     has_modern = False
@@ -82,6 +96,10 @@ async def handle_check_modern_form(args: dict):
     }
     success = has_modern is True
     identifiers = [_typed_identifier("vesum", {"word": word, "matches": matches, "result": payload})] if success else []
+    prose = json.dumps(payload, ensure_ascii=False)
+    # Envelope hits follow the empty triple when disposition is negative/empty:
+    # VESUM rows remain in result/supporting_records for V4, not in consumer hits.
+    hits = list(matches) if success else []
     outcome = {
         "tool": "check_modern_form",
         "disposition": "supported" if success else "negative",
@@ -90,20 +108,25 @@ async def handle_check_modern_form(args: dict):
         "result": payload,
         "supporting_records": {"word": word, "matches": matches},
     }
-    return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))], outcome
+    enrich_typed_outcome(outcome, query=query, match_count=len(hits), hits=hits, summary_prose=prose)
+    return [TextContent(type="text", text=prose)], outcome
 
 
 async def handle_verify_word(args: dict):
     word = args.get("word")
     pos_filter = args.get("pos_filter")
+    query = {"word": word, "pos_filter": pos_filter}
     if not isinstance(word, str) or not word.strip():
+        prose = "invalid_input: word is required"
         outcome = {"tool": "verify_word", "disposition": "invalid_input", "success": False, "evidence_identifiers": []}
-        return [TextContent(type="text", text="invalid_input: word is required")], outcome
+        enrich_typed_outcome(outcome, query=query, match_count=0, hits=[], summary_prose=prose)
+        return [TextContent(type="text", text=prose)], outcome
 
     verify_word = backend().verify_word
     matches = await asyncio.to_thread(verify_word, word, pos_filter)
     typed_result = {"word": word, "pos_filter": pos_filter, "matches": matches}
     if not matches:
+        prose = f"'{word}' — NOT FOUND in VESUM. This word form may not exist in standard Ukrainian."
         outcome = {
             "tool": "verify_word",
             "disposition": "not_found",
@@ -111,20 +134,10 @@ async def handle_verify_word(args: dict):
             "evidence_identifiers": [],
             "result": typed_result,
         }
-        return [
-            TextContent(
-                type="text", text=f"'{word}' — NOT FOUND in VESUM. This word form may not exist in standard Ukrainian."
-            )
-        ], outcome
+        enrich_typed_outcome(outcome, query=query, match_count=0, hits=[], summary_prose=prose)
+        return [TextContent(type="text", text=prose)], outcome
 
     identifier = _typed_identifier("vesum", typed_result)
-    outcome = {
-        "tool": "verify_word",
-        "disposition": "supported",
-        "success": True,
-        "evidence_identifiers": [identifier],
-        "result": typed_result,
-    }
     lines = [f"'{word}' — {len(matches)} match(es) in VESUM:\n"]
     for m in matches:
         tags = m.get("tags") or ""
@@ -132,26 +145,40 @@ async def handle_verify_word(args: dict):
         lines.append(
             f"- **lemma**: {m.get('lemma')}  |  **pos**: {m.get('pos')}  |  **tags**: `{tags}`  |  **is_archaic**: {archaic}"
         )
-    return [TextContent(type="text", text="\n".join(lines))], outcome
+    prose = "\n".join(lines)
+    outcome = {
+        "tool": "verify_word",
+        "disposition": "supported",
+        "success": True,
+        "evidence_identifiers": [identifier],
+        "result": typed_result,
+    }
+    enrich_typed_outcome(
+        outcome, query=query, match_count=len(matches), hits=list(matches), summary_prose=prose
+    )
+    return [TextContent(type="text", text=prose)], outcome
 
 
 async def handle_verify_words(args: dict):
     words = args.get("words")
     pos_filter = args.get("pos_filter")
+    query = {"words": words, "pos_filter": pos_filter}
     if not isinstance(words, list) or not words or not all(isinstance(item, str) and item.strip() for item in words):
+        prose = "invalid_input: words must be a nonempty list"
         outcome = {"tool": "verify_words", "disposition": "invalid_input", "success": False, "evidence_identifiers": []}
-        return [TextContent(type="text", text="invalid_input: words must be a nonempty list")], outcome
+        enrich_typed_outcome(outcome, query=query, match_count=0, hits=[], summary_prose=prose)
+        return [TextContent(type="text", text=prose)], outcome
 
     verify_words = backend().verify_words
     results = await asyncio.to_thread(verify_words, words, pos_filter)
     found = 0
     lines = [f"Batch verification: {len(words)} words\n"]
-    supported_results: dict[str, list] = {}
+    hit_rows: list[dict[str, Any]] = []
     for word in words:
         matches = results.get(word, [])
         if matches:
             found += 1
-            supported_results[word] = matches
+            hit_rows.append({"word": word, "matches": matches})
             tags_str = ", ".join(f"{m['lemma']}({m['pos']})" for m in matches[:3])
             lines.append(f"- **{word}** — FOUND ({len(matches)} match): {tags_str}")
         else:
@@ -160,6 +187,7 @@ async def handle_verify_words(args: dict):
     all_supported = found == len(words)
     typed_result = {"words": words, "pos_filter": pos_filter, "found": found, "total": len(words), "matches": results}
     identifiers = [_typed_identifier("vesum", typed_result)] if all_supported else []
+    prose = "\n".join(lines)
     outcome = {
         "tool": "verify_words",
         "disposition": "supported" if all_supported else "partial",
@@ -167,19 +195,26 @@ async def handle_verify_words(args: dict):
         "evidence_identifiers": identifiers,
         "result": typed_result,
     }
-    return [TextContent(type="text", text="\n".join(lines))], outcome
+    enrich_typed_outcome(
+        outcome, query=query, match_count=len(hit_rows), hits=hit_rows, summary_prose=prose
+    )
+    return [TextContent(type="text", text=prose)], outcome
 
 
 async def handle_verify_lemma(args: dict):
     lemma = args.get("lemma")
+    query = {"lemma": lemma}
     if not isinstance(lemma, str) or not lemma.strip():
+        prose = "invalid_input: lemma is required"
         outcome = {"tool": "verify_lemma", "disposition": "invalid_input", "success": False, "evidence_identifiers": []}
-        return [TextContent(type="text", text="invalid_input: lemma is required")], outcome
+        enrich_typed_outcome(outcome, query=query, match_count=0, hits=[], summary_prose=prose)
+        return [TextContent(type="text", text=prose)], outcome
 
     verify_lemma = backend().verify_lemma
     forms = await asyncio.to_thread(verify_lemma, lemma)
 
     if not forms:
+        prose = f"Lemma '{lemma}' — NOT FOUND in VESUM."
         outcome = {
             "tool": "verify_lemma",
             "disposition": "not_found",
@@ -187,7 +222,8 @@ async def handle_verify_lemma(args: dict):
             "evidence_identifiers": [],
             "result": {"lemma": lemma, "forms": []},
         }
-        return [TextContent(type="text", text=f"Lemma '{lemma}' — NOT FOUND in VESUM.")], outcome
+        enrich_typed_outcome(outcome, query=query, match_count=0, hits=[], summary_prose=prose)
+        return [TextContent(type="text", text=prose)], outcome
 
     # Group forms by POS for readability
     by_pos: dict[str, list] = {}
@@ -207,6 +243,7 @@ async def handle_verify_lemma(args: dict):
             is_archaic = f.get("is_archaic", False)
             lines.append(f"- {f.get('word_form')}  |  `{tags}`  |  **is_archaic**: {is_archaic}")
         lines.append("")
+    prose = "\n".join(lines)
     typed_result = {"lemma": lemma, "forms": forms}
     identifier = _typed_identifier("vesum", typed_result)
     outcome = {
@@ -216,21 +253,25 @@ async def handle_verify_lemma(args: dict):
         "evidence_identifiers": [identifier],
         "result": typed_result,
     }
-    return [TextContent(type="text", text="\n".join(lines))], outcome
+    enrich_typed_outcome(outcome, query=query, match_count=len(forms), hits=list(forms), summary_prose=prose)
+    return [TextContent(type="text", text=prose)], outcome
 
 
 async def handle_verify_stress(args: dict):
     word = args.get("word")
     pos = args.get("pos")
     tags = args.get("tags")
+    query = {"word": word, "pos": pos, "tags": tags}
     if not isinstance(word, str) or not word.strip():
+        prose = json.dumps({"status": "invalid_input"}, ensure_ascii=False)
         outcome = {
             "tool": "verify_stress",
             "disposition": "invalid_input",
             "success": False,
             "evidence_identifiers": [],
         }
-        return [TextContent(type="text", text=json.dumps({"status": "invalid_input"}, ensure_ascii=False))], outcome
+        enrich_typed_outcome(outcome, query=query, match_count=0, hits=[], summary_prose=prose)
+        return [TextContent(type="text", text=prose)], outcome
 
     verify_stress = backend().verify_stress
     payload = await asyncio.to_thread(verify_stress, word, pos, tags)
@@ -255,6 +296,8 @@ async def handle_verify_stress(args: dict):
     else:
         disposition = "supported"
     identifiers = [_typed_identifier("sources", payload)] if success else []
+    hits = list(payload.get("matches") or []) if isinstance(payload, dict) else []
+    prose = json.dumps(payload, indent=2, ensure_ascii=False)
     outcome = {
         "tool": "verify_stress",
         "disposition": disposition,
@@ -262,4 +305,5 @@ async def handle_verify_stress(args: dict):
         "evidence_identifiers": identifiers,
         "result": payload,
     }
-    return [TextContent(type="text", text=json.dumps(payload, indent=2, ensure_ascii=False))], outcome
+    enrich_typed_outcome(outcome, query=query, match_count=len(hits), hits=hits, summary_prose=prose)
+    return [TextContent(type="text", text=prose)], outcome

@@ -276,13 +276,13 @@ class TestCallToolDispatch:
             "text": "Родовий відмінок у шкільному підручнику.",
         }
         with patch("wiki.sources_db.search_textbooks", return_value=[hit]) as mock:
-            result = _run(
+            content, _envelope = _run(
                 server_module.handle_search_text(
                     {"query": "родовий відмінок", "subject": "ukrmova", "limit": 3}
                 )
             )
 
-        assert "Subject**: ukrmova" in result[0].text
+        assert "Subject**: ukrmova" in content[0].text
         mock.assert_called_once()
         args, kwargs = mock.call_args
         assert "родовий" in args[0]
@@ -904,11 +904,14 @@ class TestDictSearchQuoteBalance:
             "definition": "Початок " + "а" * 600,
         }
         with patch("wiki.sources_db.search_definitions", return_value=[hit]):
-            result = _run(server_module.handle_dict_search({"query": "тест"}, "sum11", "СУМ-11"))
-            text = result[0].text
+            content, envelope = _run(server_module.handle_dict_search({"query": "тест"}, "sum11", "СУМ-11"))
+            text = content[0].text
             assert "Found 1 results" in text
             assert "…" in text
             assert len(text) < 700
+            assert envelope["schema"] == "sources.tool-result.v1"
+            assert envelope["match_count"] == 1
+            assert envelope["tool"] == "search_definitions"
 
 
 class TestHealthEndpoint:
