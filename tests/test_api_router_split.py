@@ -107,6 +107,8 @@ class TestOldPathsRemoved:
         "/api/batch/freshness",
         "/api/batch/resolved-failures",
         "/api/blue/live-status",
+        "/api/state/ready-to-build",
+        "/api/cost",
     ])
     def test_old_blue_path_returns_404(self, path):
         r = client.get(path)

@@ -160,7 +160,7 @@ def images_client(_patch_config, mock_project_root):
 def rag_client(mock_project_root):
     """TestClient for sources router."""
     from scripts.api.monitor_context import fixture_context
-    from scripts.api.rag_router import router
+    from scripts.api.sources_router import router
 
     app = FastAPI()
     app.state.ctx = fixture_context(mock_project_root)

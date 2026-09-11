@@ -60,13 +60,12 @@ def test_cost_summary_empty_payload(tmp_path, monkeypatch):
     assert payload["windows"]["all_time"]["records_total"] == 0
 
 
-def test_cost_summary_compat_alias(tmp_path, monkeypatch):
+def test_cost_summary_retired_alias_returns_404(tmp_path, monkeypatch):
     monkeypatch.setattr(app.state, "ctx", _ctx_with_cost_roots(tmp_path))
 
     response = client.get("/api/cost")
 
-    assert response.status_code == 200
-    assert response.json()["windows"]["all_time"]["records_total"] == 0
+    assert response.status_code == 404
 
 
 def test_cost_module_route_returns_windows(tmp_path, monkeypatch):

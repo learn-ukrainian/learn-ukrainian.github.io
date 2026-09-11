@@ -13,7 +13,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from scripts.api.monitor_context import fixture_context
-from scripts.api.rag_router import router
+from scripts.api.sources_router import router
 from scripts.wiki.sources_db import _get_conn, using_connection
 
 pytestmark = pytest.mark.repo_invariant
