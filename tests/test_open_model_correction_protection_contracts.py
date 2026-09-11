@@ -17,7 +17,7 @@ SHA = "a" * 64
 GOLD_LANE_HASHES = {
     CONTRACTS / "correction_record_v1.schema.json": "35bd6ccc85fc38f60879db4ec74fbf1979cccb1754ffb108c525d5f136ca747a",
     CONTRACTS / "correction_reviewer_decision_v1.schema.json": "c4d697b0afd6338eb7493c09b54ec265d82cc60bbc6a905f4b9707b0647177a6",
-    ROOT / "scripts/projects/open_model_data/model_view_exporter.py": "495984cfe56e38ac7805a793d9c8461cdc912bace4a98a1a72f5f3ae7c0cd548",
+    ROOT / "scripts/projects/open_model_data/model_view_exporter.py": "46e2c80f6a8b30fd03412e09af2c00d8648164827ea80a29f3d834d23fa4da36",
 }
 SCHEMA_NAMES = (
     "correction_protection_source_v1.schema.json",
