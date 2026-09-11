@@ -704,8 +704,13 @@ def test_four_skill_entrypoints_route_normal_bio_work_to_one_bounded_ledger() ->
     assert "--disposition <complete|no-change|blocked>" not in lifecycle
     assert "resume_command" in lifecycle
     assert "one authoritative bounded" in completion
-    assert "model_call_count" in completion
-    assert "hidden retry" in completion
+    # The state router must expose the budget-stop procedure, which retains
+    # the actual no-retry and reporting contract after progressive disclosure.
+    budget_reference = "references/blocked-budget-exhausted.md"
+    assert budget_reference in completion
+    budget_stop = (skill_root / "track-completion" / budget_reference).read_text(encoding="utf-8")
+    assert "model_call_count" in budget_stop
+    assert "hidden retry" in budget_stop
     assert "routes through `$track-completion`" in post_build
     assert "prepare-semantic-review" in post_build
     assert "without retrying" in post_build

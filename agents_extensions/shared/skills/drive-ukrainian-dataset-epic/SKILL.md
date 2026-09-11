@@ -1,6 +1,6 @@
 ---
 name: drive-ukrainian-dataset-epic
-description: Inspect or reconcile Ukrainian dataset work under the operator's human-authored-source requirement, preserving rights, provenance, custody, held-out separation, and independent review. Legacy V4 row generation is stopped and this skill cannot restart it.
+description: Inspect or reconcile Ukrainian dataset work under the human-authored-source requirement. Never restart legacy V4 row generation.
 ---
 
 # Ukrainian dataset authority and source boundary

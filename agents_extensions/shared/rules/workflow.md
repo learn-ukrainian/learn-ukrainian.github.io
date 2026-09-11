@@ -4,8 +4,13 @@
 
 ## Cold-start sequence (do this first every session)
 
-Use the Monitor API instead of reading files. A session with a known assigned
-functional role opts into that role's bounded pointer-only cold start:
+First apply `agents_extensions/shared/rules/task-scoped-reading.md`. Load the
+operator contract and sources required by the task and current phase; do not
+load unrelated curriculum, fleet-driver, or rollover procedures for an ordinary
+code or documentation edit. The examples below are the full Monitor bootstrap
+for tasks that need it, not a mandatory endpoint sweep for every session.
+A session with a known assigned functional role opts into that role's bounded
+pointer-only cold start:
 
 ```python
 from ai_agent_bridge.monitor_client import MonitorClient
@@ -130,16 +135,11 @@ and residual gap. For normative language evidence, establish the source's pedago
 evidential role before consuming an occurrence. Any non-goal that would shrink the actual
 mission needs operator/advisor approval.
 
-**Do NOT read `CLAUDE.md`, `agents_extensions/shared/rules/*.md`, or
-`docs/session-state/current.md` directly on cold start.** Those are
-the source of truth the endpoints above serve. Reading them separately
-costs 5+ tool calls and ignores the hash-based cache. If an endpoint
-is unreachable (API server down), THEN fall back to files.
-
-For Claude specifically, `.claude/rules/` now carries only a small API
-pointer plus path-scoped rules. The canonical always-load rule set for
-Claude is `/api/rules?format=markdown`; use the source files directly
-only as the offline fallback above.
+Use canonical Git sources selected for the task. Do not load another harness's
+root instructions or unrelated session state during Codex startup. Monitor's
+complete `/api/rules?format=markdown` reference supports cached full-policy
+reads; when unavailable, the same task-scoped selector and ordered full fallback
+remain available in `agents_extensions/shared/rules/_load-via-api.md`.
 
 After a write that needs to be immediately visible (just-committed
 change, just-filed issue), pass `?fresh=true` to `/api/orient`.
@@ -328,7 +328,7 @@ agent-side reasoning.
 single API call almost always returns the structured answer you
 were trying to reconstruct.
 
-**Full reference:** [`docs/MONITOR-API.md`](../../docs/MONITOR-API.md).
+**Full reference:** [`docs/MONITOR-API.md`](../../../docs/MONITOR-API.md).
 
 ### Don't confuse `claude agents` with active-dispatch state
 

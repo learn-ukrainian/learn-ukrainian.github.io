@@ -6,16 +6,18 @@
 
 ## Read the current rule set
 
-When the local Monitor API is available, read `GET /api/rules?format=markdown`
-before consequential work; it is the canonical, complete ruleset. It is served
-with the operator contract first and supports hash-based cache checks.
+Start with this binding digest, then read the canonical
+[`task-scoped-reading.md`](agents_extensions/shared/rules/task-scoped-reading.md)
+selector. Load the sources for the task and current phase before acting; load
+additional sources when scope changes. Git `agents_extensions/` remains
+canonical; deployed harness copies are consumers.
 
-When that API is unavailable, read
-`agents_extensions/shared/rules/_load-via-api.md`, then its ordered local
-fallback list. Do not invent an alternative policy or treat an unavailable API
-as permission to skip rules. The full sources include the operator contract,
-critical and non-negotiable rules, workflow, fleet-comms coordination,
-worktree, CLI, and model-assignment rules.
+The Monitor `GET /api/rules?format=markdown` endpoint remains the complete,
+hash-cacheable rules reference. Use it when the full ruleset is needed, not as
+a requirement to inject unrelated rules on every task. If Monitor is unavailable,
+use the same selector via
+[`_load-via-api.md`](agents_extensions/shared/rules/_load-via-api.md).
+Missing telemetry is unknown; applicable hard gates still bind.
 
 ## Operator Contract (binding for ALL agents — read before acting)
 
@@ -86,13 +88,13 @@ non-skippable:
 
 ## Fleet, context, and delegation
 
-- For standalone TUI/UI drivers, read
+- For explicitly assigned epic/track drivers or Fleet Comms actions, read
   `agents_extensions/shared/rules/fleet-comms-coordination.md`; Fleet Comms
   owns durable messages/jobs in `authority` mode; legacy stores are read-only
   migration/projection inputs. Session handoff files still carry continuity,
   not competing message or lease authority. Preserve existing stream ownership;
-  do not create legacy message/job writes or another control plane. Use `plane-status` and
-  the `drive-epic` skill. Codex may lead an explicitly assigned, authorized
+  do not create legacy message/job writes or another control plane. Use `plane-status`;
+  load `drive-epic` only when explicitly assigned to drive an epic/track. Codex may lead an explicitly assigned, authorized
   stream as a catalogued alternate; it must never co-own a live same-stream
   lease. Otherwise its role is coding or review. Do not change plane, retention,
   or formal-review eligibility without operator/advisor GO.

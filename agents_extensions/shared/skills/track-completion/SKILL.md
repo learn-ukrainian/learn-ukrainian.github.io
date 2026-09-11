@@ -1,6 +1,6 @@
 ---
 name: track-completion
-description: Complete one active Ukrainian curriculum module through a canonical CORE-or-seminar workflow. Use for built modules that need the versioned post-build gate, unbuilt modules that need plan review and V7 construction before that gate, interrupted module completion runs that must resume from a durable ledger, or non-PASS modules that need root-cause repair, fresh review, independent cross-family review, and publication.
+description: Complete or resume one CORE or seminar module, including plan review, build, repair, independent review, and publication.
 ---
 
 # Track completion
@@ -172,195 +172,26 @@ and identities into non-authoritative archival ledger storage.
 
 ## Follow the returned state
 
-### `PLAN_REVIEW_REQUIRED`
+Read only the reference for the state returned by the canonical engine. After
+a transition, load its new state reference before acting. Never select a state
+from caller claims or skip a gate. All command/resource paths are repository-
+root or skill-root paths as written; do not resolve them under `references/`.
 
-Run every configured deterministic plan-validation command. Then use the
-configured family skill: `$plan-review` for CORE or `$plan-review-seminar` for
-seminars. Generated reports may exist locally but must not enter the PR.
-
-Record `PASS` or `REVISE` with `record-plan-review`. For `REVISE`, use
-`$apply-plan-fixes`; structural or semantic plan edits remain approval-bound
-and must follow plan versioning. After an approved plan change, use
-`record-change --owner-kind plan_workflow`, then re-review the plan.
-
-### `PARTIAL_RECOVERY_REQUIRED`
-
-Do not delete or overwrite partial artifacts automatically. Diagnose why a
-unique built content target is absent or ambiguous. Preserve forensic build
-evidence, repair the build/source workflow, and use the configured V7 command
-with `--no-resume` when any build input changed. Record a successful complete
-bundle with `record-build`.
-
-### `BUILD_REQUIRED`
-
-Run the configured V7 command from the current issue worktree without
-`--worktree`. Use `--no-resume` after plan, source, prompt, policy, or build
-input changes; V7 artifact-existence resume is not canonical completion
-freshness. Record the actual writer/repair author family with `record-build`.
-
-### `POST_BUILD_REVIEW_REQUIRED`
-
-Read and follow `$post-build-review` completely for the same target. Before
-any semantic/provider call, freeze and authorize its exact protocol identity:
-
-```bash
-.venv/bin/python agents_extensions/shared/skills/track-completion/scripts/track_completion.py \
-  prepare-semantic-review <track/slug> --run-id <id> \
-  --protocol-version <X.Y.Z> --prompt-sha256 <sha256> --schema-sha256 <sha256> \
-  --reviewer-family <family> --reviewer-model <model>
-```
-
-This command returns the only allowed phase and remaining budget. Do not make a
-semantic call if it rejects. `record-review` accepts only a result bound to that
-pre-existing frozen identity; protocol/tool/source drift is rejected without
-consuming budget. A queued audit-tooling drift blocks every further active-run
-semantic prepare or record because no packet provenance proves the result used
-the frozen tooling. Use `restart-bounded-completion` for the later run. Allocate a
-new invocation directory every time. Do not repair, normalize, or retry inside
-that invocation. Use its emitted semantic schema when the provider supports
-structured output; prompt-only JSON compliance is not a reliable automation
-boundary. For Codex dispatches, emit the schema with `semantic-schema
---provider codex`; then `--output-schema <semantic_schema_path>` is mandatory.
-An absent or provider-incompatible schema is `audit_tooling`, not a reason to
-retry the model.
-Record its exact result:
-
-```bash
-.venv/bin/python \
-  agents_extensions/shared/skills/track-completion/scripts/track_completion.py \
-  record-review <track/slug> --run-id <id> --result <result_path>
-```
-
-The helper rejects target/source drift and validates the canonical result.
-Never substitute `llm_qg.json`, SQLite, a score, or a generated audit report.
-
-### `REPAIR_REQUIRED`
-
-Use only the returned deterministic owners:
-
-- `built_artifact`: repair learner-facing content/activities/vocabulary/
-  resources or their canonical generation source.
-- `plan_workflow`: return to the approval-bound versioned plan workflow.
-- `audit_tooling`: repair the audit, prompt, policy, schema, reviewer route, or
-  evidence tooling. Do not edit curriculum content to satisfy protocol noise.
-
-An ambiguous finding routes to `audit_tooling`; do not guess. After the one
-allowed learner-source change, run `record-change` with owner
-`built_artifact`; the helper invalidates the initial semantic evidence and
-permits the final review only after fresh deterministic verification. A second
-learner repair or third semantic review is rejected without ledger mutation
-and leaves the terminal disposition `BLOCKED_BUDGET_EXHAUSTED`. Audit-tooling
-drift with unchanged learner source is deferred, not repaired inside this run.
-Do not run an unchanged-source stability retry in a bounded active run: it
-would spend a forbidden semantic call. Preserve the finding and route any
-tooling/reviewer concern to a later run; `REVIEWER_INSTABILITY` remains only
-for already-recorded contradictory evidence, never as authorization for a
-third call.
-
-### `REVIEWER_INSTABILITY`
-
-Stop content mutation. Preserve both review results. Identical source, config,
-protocol, prompt, and reviewer identity with a different material finding or
-disposition fingerprint is reviewer/tooling instability. Adjudicate the route,
-prompt, evidence access, or reviewer. Record either a real `audit_tooling`
-change with `record-change` or a no-source-change route adjudication with
-`record-instability-adjudication`. Do not commission another semantic review
-in the active bounded run: preserve the instability and route it to a later
-run. Never average results or rewrite content to chase the flip.
-
-### `INDEPENDENT_REVIEW_REQUIRED`
-
-Send the final diff to one reviewer outside every recorded machine author
-family. Internal same-family subagents do not satisfy this gate. Record the
-reviewer family, exact evidence artifact, and `PASS`. Resolve requested changes,
-record `CHANGES_REQUESTED` with its deterministic `--owner-kind`, resolve the
-repair, and rerun post-build review before trying again.
-
-If only the versioned audit workflow changes while this gate is pending, record
-that exact `audit_tooling` change. The helper requires unchanged learner hashes
-and returns the module to `POST_BUILD_REVIEW_REQUIRED`; stale review evidence
-must never remain authoritative merely because it had already reached this gate.
-
-Record both the process receipt and the strict `independent-review`
-certification artifact. Only the strict current artifact advances to
-`PUBLISH_REQUIRED`.
-
-A qualifying canonical post-build semantic review may satisfy this learner
-content gate once when its reviewer group is outside every recorded learner
-author group and its result, protocol identity, and learner hashes remain
-current. The ledger records that reuse explicitly and fails closed on any
-binding drift. This reuse is only learner-content evidence: a code change still
-requires the repository's separate cross-family code-review gate before its PR
-can merge.
-
-### `BLOCKED_BUDGET_EXHAUSTED`
-
-Do not reopen, retry, or silently replace the run. Preserve the terminal
-ledger and open a later run only after a separately adjudicated source or
-protocol change establishes new scope.
-
-Report the bounded ledger's `elapsed_time_ms`, `model_call_count`,
-`repair_count`, and `final_quality_disposition` with the blocker and next
-action. These counts are authoritative; do not add a hidden retry, stability
-check, semantic review, repair, or quality-gate call outside them.
-
-### `PUBLISH_REQUIRED`
-
-Run configured shippability checks and repository pre-submit gates. The strict
-integration receipt must later prove `PASS` for MDX drift, source parity,
-forward parity, `verify_shippable`, deterministic audits, focused tests,
-artifact scope, the `X-Agent` trailer, and forbidden-file checks. Commit with
-the required `X-Agent` trailer, open one scoped PR, attach module-build telemetry
-when the run built a module, wait for the independent review gate, arm
-auto-merge, and monitor through merge. Record the PR and exact merge SHA with
-`record-published`; this advances to `INTEGRATION_REQUIRED` and never completes
-the run. Then close the issue with evidence, clean the branch/worktree, and
-record the strict integration artifact bound to the same PR and merge SHA. A
-current PASS with no build or repair may satisfy goal `merge` as
-`NO_CHANGE_PASS` without creating an empty PR; goal `deploy` still needs an
-exact publication identity.
-
-### `INTEGRATION_REQUIRED`
-
-Record the strict current integration artifact only after publication and
-cleanup. Its diff identity must equal the independent-review artifact and its
-PR/merge identity must equal `publication`. Goal `merge` completes here. Goals
-`certify` and `deploy` continue to production QG.
-
-### `AWAITING_PRODUCTION_QG_ARMING`
-
-Production QG is never self-armed. Supply one current qualification artifact
-from outside the repository to `qg-decision-card`. The card shows the proposed
-reviewer family/model/route/lineage, qualification identity, canary, budget,
-circuit, resume contract, and deterministic approval id. A human creates a
-separate `production-qg-human-arming.v1` artifact with that exact approval id.
-Record both with `record-qg-authorization`. The route must be outside every
-author family and pass the track's reviewer policy.
-
-### `PRODUCTION_QG_REQUIRED`
-
-Run only the qualified, human-armed live production route and record its strict
-`production-qg` artifact. A current PASS satisfies goal `certify`; goal
-`deploy` advances to `DEPLOYMENT_REQUIRED`. A material learner finding routes
-to `REPAIR_REQUIRED`; malformed/provenance failures route to
-`AUDIT_TOOLING_REQUIRED`. Any repair changes identity and therefore requires
-fresh PBR, independent review, integration, production QG, and downstream
-evidence.
-
-### `DEPLOYMENT_REQUIRED`
-
-Only after production QG passes, dispatch the canonical manual `Deploy to
-GitHub Pages` workflow on `main` and wait for success. Its head must contain the
-recorded publication merge. Use `verify-deployment --workflow-run-id <id> --url
-<production-url> --out <external-runtime-receipt.json>`, then record that strict
-`deployment` artifact. The verifier queries the exact Actions run, rejects push
-events and runs created before the recorded QG pass, proves publication
-ancestry, and fetches production; it writes a receipt only when production
-exposes the build's unique immutable workflow-head marker and the module
-response contains the exact target marker. A
-successful workflow for another SHA, a generic HTTP 200, or a stale marker is
-not deployment proof. Completion requires the deployment receipt; certification
-alone is not terminal for goal `deploy`.
+| Returned state | Required reference |
+| --- | --- |
+| `PLAN_REVIEW_REQUIRED` | [Procedure](references/plan-review-required.md) |
+| `PARTIAL_RECOVERY_REQUIRED` | [Procedure](references/partial-recovery-required.md) |
+| `BUILD_REQUIRED` | [Procedure](references/build-required.md) |
+| `POST_BUILD_REVIEW_REQUIRED` | [Procedure](references/post-build-review-required.md) |
+| `REPAIR_REQUIRED` | [Procedure](references/repair-required.md) |
+| `REVIEWER_INSTABILITY` | [Procedure](references/reviewer-instability.md) |
+| `INDEPENDENT_REVIEW_REQUIRED` | [Procedure](references/independent-review-required.md) |
+| `BLOCKED_BUDGET_EXHAUSTED` | [Procedure](references/blocked-budget-exhausted.md) |
+| `PUBLISH_REQUIRED` | [Procedure](references/publish-required.md) |
+| `INTEGRATION_REQUIRED` | [Procedure](references/integration-required.md) |
+| `AWAITING_PRODUCTION_QG_ARMING` | [Procedure](references/awaiting-production-qg-arming.md) |
+| `PRODUCTION_QG_REQUIRED` | [Procedure](references/production-qg-required.md) |
+| `DEPLOYMENT_REQUIRED` | [Procedure](references/deployment-required.md) |
 
 ## Invariants
 

@@ -1,6 +1,6 @@
 ---
 name: prompt-template-review
-description: Validate pipeline prompt templates. Finds unreplaced placeholders, contradictions between templates, stale instructions.
+description: Review pipeline prompt templates for unresolved placeholders, contradictions, and stale instructions.
 argument-hint: "[all | specific-template.md]"
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: curriculum-preparation
-description: Prepare, audit, or resume missing or stale prerequisite evidence for one manifest target, one track missing-only scan, or one bounded homogeneous packet by using the canonical curriculum readiness evaluator. Use for preparation-scoped work before a learner-module build or when curriculum-lifecycle explicitly delegates preparation. Do not use to build learner modules, coordinate a track, run post-build review, certify, publish, or deploy.
+description: Prepare missing or stale prerequisite evidence for a module, missing-only track scan, or bounded packet; do not build modules.
 ---
 
 # Curriculum preparation

@@ -1,10 +1,6 @@
 ---
 name: entire-context
-description: >
-  Run bounded body-free context-link intake for non-trivial work, provenance
-  questions, and handoffs (ADR-018). Use relevant private recall only when it
-  materially restores task continuity. GitHub, Fleet Comms, Monitor, session
-  streams, rollover, and formal review remain authoritative.
+description: Find bounded body-free context links for task intake, provenance, or handoff; use private recall only for a relevant continuity gap.
 when-to-use: >
   session start; cold start; orient; task intake; continue; resume; handoff;
   what happened; prior work; explain commit; ACP discussion; epic drive; before
@@ -150,52 +146,14 @@ or call GitHub, Fleet, Monitor, Entire, or the network. Missing, malformed,
 nonterminal, stale, unpublished, hash-mismatched, or digest-drifted inputs are
 omitted fail-closed.
 
-## Product prompt workflow and private native Entire mode
+## Private native recall (conditional)
 
-For product-style prompts, use `search` for relevant past-work locators. Add
-`explain-change` only when an exact provenance path matters, and `handoff` only
-when participants need a verified capsule. These are conditional follow-ups,
-not a requirement to load every linked record. Use the `.venv/bin/python`
-commands above for the canonical body-free recall path.
-
-The operator-authorized private mode in `.entire/private-recall.json` permits
-the accountable root to use native Entire search, explain, recap, dispatch,
-and private handoff when those tools materially help the task. Before first
-use, run `.venv/bin/python -m scripts.entire.private_mode_preflight` and require
-its body-free receipt to report `"ready": true`. It verifies routing, private
-checkpoint visibility, public-ref absence, authentication, exact private
-Entire ACLs on both mirrors, mirror readiness, and the exact 0.8.42 pin without
-printing command output or local paths. Use only these shapes:
-
-```bash
-entire search "<query>" --json --limit <1-10> \
-  --repo learn-ukrainian/learn-ukrainian.github.io
-entire checkpoint explain <checkpoint-id-or-sha> --json
-entire checkpoint explain <checkpoint-id-or-sha> --full --no-pager
-entire recap --static <--day|--week|--month|--90>
-entire dispatch --local --all-branches --since <window>
-```
-
-`dispatch` is also the native private handoff surface. The accountable root may
-consume search and explain results inside its private task context. Never place
-prompt-bearing output in a distributed capsule, a public issue/PR, or
-formal-review evidence; external disclosure requires operator review. Full
-explain requires a task that needs exact continuity and must not be fanned out
-to workers. `--all-repos`, `--code`, `--generate`, `--force`,
-`--raw-transcript`, and `--transcript` remain forbidden. Full explain is
-allowed without a second operator prompt when exact continuity is relevant.
-Recap/dispatch and worktree-mutating resume/rewind still require a present
-operator request. Entire review is supplemental and never satisfies the sealed
-Fleet formal-review gate. Provider failure, an empty search index, or a rate
-limit must be reported truthfully and never changes the canonical workflow
-outcome.
-
-Current official product references:
-
-- [Entire Skills](https://docs.entire.io/learn/skills)
-- [Review and recap agent work](https://docs.entire.io/learn/review-and-recap-agent-work)
-- [Search past agent work](https://docs.entire.io/learn/search-past-agent-work)
-- [Investigate why code exists](https://docs.entire.io/learn/investigate-why-code-exists)
+For a concrete continuity gap that body-free locators cannot resolve, the
+accountable root reads [private native recall](references/private-native.md)
+before the private-mode preflight or any native command. This reference retains
+allowed command shapes, explicit-request boundaries, privacy restrictions, and
+failure behavior. It is unnecessary for routine body-free intake. Children never
+receive native session bodies. Run commands from the repository root.
 
 ## How to consume results
 

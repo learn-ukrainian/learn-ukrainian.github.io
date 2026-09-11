@@ -41,7 +41,9 @@ ORPHAN_PATHS_AGENTS=""
 
 # --- shared → .codex (rsync orphan excludes only; overlay paths below) ---
 # settings.local.json is machine-local runtime configuration.
-ORPHAN_PATHS_CODEX="settings.local.json"
+# retired-skills/ retains atomically captured legacy discovery trees, including
+# concurrent writes. Deploy never deletes or overwrites this recovery storage.
+ORPHAN_PATHS_CODEX="settings.local.json retired-skills"
 
 # --- deploy-owned: Codex overlay paths (checker mirrors for .codex drift) ---
 # Managed by agents_extensions/codex/, not by the shared tree. Exclude them from
@@ -78,3 +80,7 @@ CLAUDE_RULE_AUTOLOAD_EXCLUDES=(
     "rules/fleet-driver-routing.md"
 )
 CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS="${CLAUDE_RULE_AUTOLOAD_EXCLUDES[*]}"
+
+# Codex discovers shared skills only via .agents/skills. Preserve the legacy
+# path from rsync deletion; capture verified copies into retained storage.
+CODEX_DISCOVERY_EXCLUDES="skills"

@@ -1,6 +1,6 @@
 ---
 name: curriculum-lifecycle
-description: Run or resume the manifest-derived curriculum lifecycle for one active track. Use when an operator asks to process a track in manifest order, select built, unbuilt, stale, or coordinator `one` scope for an explicitly named module, or resume an exact coordinator run. Route every acquired module through curriculum-preparation or track-completion; a standalone module completion belongs to track-completion instead.
+description: Process an active track in manifest order or resume an exact coordinator run. Use track-completion for standalone module completion.
 ---
 
 # Curriculum lifecycle
