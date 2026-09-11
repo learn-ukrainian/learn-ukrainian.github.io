@@ -54,7 +54,7 @@ def test_seed_trajectories_validate(trajectory_schema: dict) -> None:
     for r in records:
         vesum_lemmas = {v["lemma"] for v in r["vesum_attestation"]}
         for alt in r["register_spectrum"]["alternatives"]:
-            assert alt["lemma"] in vesum_lemmas, f"Alternative {alt["lemma"]} in {r["target_term"]} not in vesum_attestation"
+            assert alt["lemma"] in vesum_lemmas, f"Alternative {alt['lemma']} in {r['target_term']} not in vesum_attestation"
 
     assert len(records) >= 3
     # Verify unique trajectory IDs

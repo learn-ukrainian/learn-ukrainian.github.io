@@ -703,3 +703,43 @@ def test_verify_delivery_rejects_tampered_or_missing_records_header(tmp_path: Pa
     assert verify_delivery(repo3, rcpt3) is False
     with pytest.raises(ValueError, match=r"Invalid dataset records header"):
         build_delivery_receipt(repo3, tmp_path / "out3.json")
+
+
+def test_verify_delivery_succeeds_with_partial_or_missing_sources_db(tmp_path: Path) -> None:
+    """Verify delivery passes when sources.db lacks literary_texts table (e.g. CI runner)."""
+    # Create mock repo
+    fake_repo = tmp_path / "mock_repo"
+    fake_repo.mkdir()
+
+    # Create a fake sources.db with only textbooks table
+    (fake_repo / "data").mkdir()
+    conn = sqlite3.connect(str(fake_repo / "data/sources.db"))
+    cur = conn.cursor()
+    cur.execute("CREATE TABLE textbooks (source_file TEXT, chunk_id INTEGER, text TEXT)")
+    conn.commit()
+    conn.close()
+
+    # Copy required deliverables into fake_repo
+    for subpath in [
+        "data/projects/open_model_data/contracts/v4_delivery_reproduction_receipt_v1.schema.json",
+        "data/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json",
+        "data/projects/open_model_data/contracts/v4_learning_study_receipt_v1.schema.json",
+        "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
+        "data/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json",
+        "data/projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
+        "data/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json",
+        "data/projects/open_model_data/study/v4_learning_study_recipe_v1.json",
+        "data/projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl",
+        "data/projects/open_model_data/study/v4_learning_study_receipt_v1.json",
+        "docs/projects/ukrainian-data-foundry-evidence/HUMAN_SOURCE_DATASET_CARD.md",
+        "docs/projects/ukrainian-data-foundry-evidence/HUMAN_SOURCE_TECHNICAL_REPORT.md",
+        "docs/projects/ukrainian-data-foundry-evidence/RESEARCH_SUMMARY.md",
+        "data/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json",
+    ]:
+        src = Path.cwd() / subpath
+        dst = fake_repo / subpath
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src, dst)
+
+    receipt_path = fake_repo / "data/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json"
+    assert verify_delivery(fake_repo, receipt_path) is True
