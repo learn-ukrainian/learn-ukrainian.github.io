@@ -705,7 +705,7 @@ def test_codex_config_and_hooks_are_managed_sources_not_orphans() -> None:
 
     assert (REPO_ROOT / "agents_extensions" / "codex" / "hooks.json").exists()
     assert (REPO_ROOT / "agents_extensions" / "codex" / "config.toml").exists()
-    assert 'ORPHAN_PATHS_CODEX="settings.local.json"' in shared
+    assert 'ORPHAN_PATHS_CODEX="settings.local.json retired-skills"' in shared
     assert 'CODEX_OVERLAY_PATHS="config.toml hooks.json memory"' in shared
     assert "$CODEX_OVERLAY_PATHS" in check
 
@@ -1061,3 +1061,32 @@ def test_codex_legacy_migration_works_after_updated_sources_are_committed(tmp_pa
     assert result.returncode == 0, result.stdout + result.stderr
     assert not (repo / ".codex/skills").exists()
     assert (repo / ".agents/skills/track-completion/SKILL.md").read_bytes() == skill.read_bytes()
+
+
+def test_codex_retained_capture_survives_full_redeploy_with_late_writes(tmp_path: Path) -> None:
+    repo = _init_checkout(tmp_path)
+    _init_git_history(repo)
+    source = repo / "agents_extensions/shared/skills"
+    shutil.copytree(source, repo / ".codex/skills")
+    legacy_file = repo / ".codex/skills/track-completion/SKILL.md"
+    with legacy_file.open("r+b", buffering=0) as writer:
+        initial = _run(repo, DEPLOY_SCRIPT)
+        assert initial.returncode == 0, initial.stdout + initial.stderr
+        retained = list((repo / ".codex/retired-skills").glob("*/skills"))
+        assert len(retained) == 1
+        writer.seek(0)
+        writer.write(b"Preserve late user writes")
+        writer.truncate()
+    backup_file = retained[0] / "track-completion/SKILL.md"
+    updated = source / "track-completion/SKILL.md"
+    updated.write_text(updated.read_text() + "\nSource change forces complete deployment.\n")
+    # Full rsync/diff/orphan/check paths must all preserve the recovery storage.
+    redeploy = _run(repo, DEPLOY_SCRIPT)
+    assert redeploy.returncode == 0, redeploy.stdout + redeploy.stderr
+    assert backup_file.read_bytes() == b"Preserve late user writes"
+    assert not (repo / ".codex/skills").exists()
+    assert (repo / ".agents/skills/track-completion/SKILL.md").read_bytes() == updated.read_bytes()
+    check = _run(repo, CHECK_SCRIPT)
+    assert check.returncode == 0, check.stdout + check.stderr
+    assert "No changes to deploy" in _run(repo, DEPLOY_SCRIPT).stdout
+    assert backup_file.read_bytes() == b"Preserve late user writes"

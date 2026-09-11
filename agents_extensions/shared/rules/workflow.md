@@ -328,7 +328,7 @@ agent-side reasoning.
 single API call almost always returns the structured answer you
 were trying to reconstruct.
 
-**Full reference:** [`docs/MONITOR-API.md`](../../docs/MONITOR-API.md).
+**Full reference:** [`docs/MONITOR-API.md`](../../../docs/MONITOR-API.md).
 
 ### Don't confuse `claude agents` with active-dispatch state
 

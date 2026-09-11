@@ -2,7 +2,10 @@
 
 In the fresh task, use the exact paths returned by `detect` or `resume`. First
 finish exact native title reconciliation or the honest unsupported-adapter
-fallback, then bind the replacement task, read the handoff, and write a truthful durable
+fallback. If that prerequisite is pending, read the title reconciliation and
+unsupported-adapter procedures in [preparation](prepare.md) and finish only the
+required action before resuming; never create another replacement merely to
+resume. Then bind the replacement task, read the handoff, and write a truthful durable
 semantic snapshot at the reserved `semantic_snapshot_path`. Its records must be
 exactly 3 goals, 3 decisions/rationales, 2 negative constraints/prohibitions, and
 2 next actions with real allowed `source_ref` values; never use Git, GitHub, or

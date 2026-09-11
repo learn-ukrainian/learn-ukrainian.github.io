@@ -42,3 +42,32 @@ def test_task_family_native_inventory_does_not_bypass_planner_pin_precondition()
     assert "pinnedThreads" in entry
     assert "--confirm-pin-unknown <TASK_UUID>" in manifest
     assert "not a claim that the" in manifest
+
+
+def test_rollover_archive_only_route_contains_native_result_and_reconciliation() -> None:
+    archive = (SKILLS / "thread-rollover/references/archive.md").read_text()
+    for command in ("native-action", "record-native-result", "reconcile-native"):
+        assert command in archive
+    for boundary in ("--action archive", "--succeeded", "--failed", "readback is pending"):
+        assert boundary in archive
+    assert "exactly as for title" not in archive
+
+
+def test_rollover_resume_routes_pending_native_prerequisite_without_new_replacement() -> None:
+    reference = SKILLS / "thread-rollover/references/resume.md"
+    body = reference.read_text()
+    assert "[preparation](prepare.md)" in body
+    assert "never create another replacement" in body
+    prepare = reference.parent / "prepare.md"
+    assert prepare.is_file()
+    for command in ("record-native-result", "reconcile-native", "bind-replacement"):
+        assert command in prepare.read_text()
+
+
+def test_workflow_monitor_reference_resolves_from_canonical_source() -> None:
+    workflow = ROOT / "agents_extensions/shared/rules/workflow.md"
+    body = workflow.read_text()
+    target = re.search(r"\[\x60docs/MONITOR-API.md\x60\]\(([^)]+)\)", body)
+    assert target is not None
+    assert (workflow.parent / target[1]).resolve() == ROOT / "docs/MONITOR-API.md"
+    assert (workflow.parent / target[1]).is_file()

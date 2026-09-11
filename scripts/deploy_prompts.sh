@@ -429,7 +429,7 @@ diff_dirs "$SHARED_EXTENSIONS/rules" ".gemini/rules" "$SHARED_EXTENSIONS/rules â
 echo ""
 
 if [[ -d .codex/skills ]]; then
-    echo "  .codex/skills: verified legacy discovery mirror will be retired"
+    echo "  .codex/skills: verified legacy discovery mirror will be captured into retained storage"
     has_changes=true
 fi
 
@@ -494,4 +494,8 @@ done
 echo "  âœ… Destination hooks verified/chmod'd."
 echo ""
 
+if [[ -e .codex/skills || -L .codex/skills ]]; then
+    echo "ERROR: Legacy Codex discovery was recreated during deploy; preserved for reconciliation."
+    exit 1
+fi
 echo "Deploy complete."

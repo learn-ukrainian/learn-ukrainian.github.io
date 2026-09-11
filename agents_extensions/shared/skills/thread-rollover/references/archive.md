@@ -13,12 +13,32 @@ preserve the predecessor when the app does not expose it.
 ```
 
 Only a response with `needs_native_action: true` authorizes native
-`set_thread_archived` with the returned exact arguments. Then persist and
-reconcile exactly as for title, using `--action archive`. Any missing proof,
-unconfirmed replacement, title mismatch, ambiguous identity, running status,
-pinned/unknown pin state, app/API absence, or partial failure leaves the exact
-predecessor visible and records a retryable blocker. Unrelated tasks are never
-archive candidates.
+`set_thread_archived` with the returned exact arguments. After a successful
+native call, persist its result before readback, then reconcile the same action:
+
+```bash
+.venv/bin/python scripts/orchestration/thread_handoff.py record-native-result \
+  --agent codex --lineage-id <lineage-id> --rollover-id <rollover-id> \
+  --action archive --succeeded --evidence "set_thread_archived acknowledged"
+.venv/bin/python scripts/orchestration/thread_handoff.py reconcile-native \
+  --agent codex --lineage-id <lineage-id> --rollover-id <rollover-id> \
+  --action archive
+```
+
+If the native action fails, record the failure and stop:
+
+```bash
+.venv/bin/python scripts/orchestration/thread_handoff.py record-native-result \
+  --agent codex --lineage-id <lineage-id> --rollover-id <rollover-id> \
+  --action archive --failed --error "<actual native failure>"
+```
+
+On retry, begin with `native-action --action archive` and the exact proof flags
+above; never repeat an acknowledged mutation while readback is pending. Any
+missing proof, unconfirmed replacement, title mismatch, ambiguous identity,
+running status, pinned/unknown pin state, app/API absence, or partial failure
+preserves the predecessor and records a retryable blocker. Unrelated tasks are
+never archive candidates.
 
 This archive step does not replace or weaken the existing automation cleanup
 gate. Delete or pause an old heartbeat only after `confirm-started` reports
