@@ -13,6 +13,7 @@ from scripts.projects.open_model_data.v4_reproduce_deliverables import (
     assert_no_private_host_paths,
     load_dataset_stream,
     load_partition_view,
+    resolve_record_loss_masks,
     verify_delivery,
 )
 
@@ -45,6 +46,18 @@ def test_delivery1_stream_loader_and_partition_views() -> None:
 
     dev_records = load_partition_view(RECORDS_PATH, "development")
     assert len(dev_records) == 245
+
+    # Verify stream loading with resolved modern_view loss mask spans
+    resolved_records = list(load_dataset_stream(RECORDS_PATH, resolve_masks=True))
+    assert len(resolved_records) == 1419
+    first_resolved = resolved_records[0]
+    m0 = first_resolved["language_views"]["modern_view"]
+    assert "loss_mask_spans" in m0
+    assert len(m0["loss_mask_spans"]) == m0["loss_mask_count"]
+
+    # Verify direct record resolution
+    resolved_spans = resolve_record_loss_masks(stream_records[0])
+    assert resolved_spans == m0["loss_mask_spans"]
 
 
 def test_delivery2_documentation_artifacts_exist() -> None:
@@ -152,6 +165,7 @@ def test_verify_delivery_detects_tampered_document(tmp_path: Path) -> None:
     # Copy necessary contracts and artifacts
     for subpath in [
         "data/projects/open_model_data/contracts/v4_delivery_reproduction_receipt_v1.schema.json",
+        "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
         "data/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json",
         "data/projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
         "data/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json",
@@ -224,6 +238,7 @@ def test_verify_delivery_rejects_path_traversal_and_out_of_repo_documents(tmp_pa
 
     for subpath in [
         "data/projects/open_model_data/contracts/v4_delivery_reproduction_receipt_v1.schema.json",
+        "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
         "data/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json",
         "data/projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
         "data/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json",

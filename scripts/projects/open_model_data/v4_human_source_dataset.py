@@ -18,6 +18,7 @@ import json
 import os
 import re
 import sys
+from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
@@ -583,7 +584,128 @@ def verify_dataset(
     if r_acc.get("rejected_quarantine_spans") != m_acc.get("quarantined_spans"):
         return False
 
+    # Verify loader and authenticated loss mask resolver
+    try:
+        sample_stream = load_dataset_stream(records_path, resolve_masks=True, repo_root=repo_root)
+        first_resolved = next(sample_stream)
+        m_view = first_resolved.get("language_views", {}).get("modern_view", {})
+        if "loss_mask_spans" not in m_view or len(m_view["loss_mask_spans"]) != m_view.get("loss_mask_count"):
+            return False
+    except Exception:
+        return False
+
     return receipt_data.get("storage_accounting", {}).get("below_2000kb_precommit_limit") is True
+
+
+_LANGUAGE_USAGE_CACHE: dict[Path, dict[str, list[dict[str, Any]]]] = {}
+
+
+def _get_language_usage_masks(repo_root: Path) -> dict[str, list[dict[str, Any]]]:
+    root_resolved = repo_root.resolve()
+    if root_resolved in _LANGUAGE_USAGE_CACHE:
+        return _LANGUAGE_USAGE_CACHE[root_resolved]
+
+    lang_index_path = root_resolved / "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl"
+    if not lang_index_path.is_file():
+        raise FileNotFoundError(f"Missing authenticated language usage index: {lang_index_path}")
+
+    masks_map: dict[str, list[dict[str, Any]]] = {}
+    with lang_index_path.open("r", encoding="utf-8") as f:
+        _ = f.readline()  # header
+        for line in f:
+            line_str = line.strip()
+            if not line_str:
+                continue
+            item = json.loads(line_str)
+            span_loc = item.get("span_locator", {})
+            sha = span_loc.get("span_sha256")
+            if not sha:
+                continue
+            cviews = item.get("consumer_views", {})
+            modern = cviews.get("modern_view", {})
+            spans = modern.get("loss_mask_spans", [])
+            masks_map[sha] = spans
+
+    _LANGUAGE_USAGE_CACHE[root_resolved] = masks_map
+    return masks_map
+
+
+def resolve_record_loss_masks(
+    record: dict[str, Any],
+    repo_root: Path | None = None,
+) -> list[dict[str, Any]]:
+    """Resolve authenticated modern_view loss mask spans for a dataset record.
+
+    Retrieves exact loss mask intervals (start_char, end_char, reason) from the authenticated
+    v4_language_usage_index_v1.jsonl, verifying that the count matches record's loss_mask_count.
+    """
+    root = (repo_root or Path.cwd()).resolve()
+    span_sha = record.get("source_fidelity", {}).get("span_sha256")
+    if not span_sha:
+        raise ValueError("Record is missing source_fidelity.span_sha256")
+
+    masks_map = _get_language_usage_masks(root)
+    if span_sha not in masks_map:
+        raise KeyError(f"Span SHA {span_sha} not found in authenticated language usage index")
+
+    resolved_masks = masks_map[span_sha]
+    expected_count = record.get("language_views", {}).get("modern_view", {}).get("loss_mask_count")
+    if expected_count is not None and len(resolved_masks) != expected_count:
+        raise ValueError(
+            f"Resolved mask count {len(resolved_masks)} does not match record loss_mask_count {expected_count}"
+        )
+
+    return resolved_masks
+
+
+def load_dataset_stream(
+    records_path: Path,
+    resolve_masks: bool = False,
+    repo_root: Path | None = None,
+) -> Iterator[dict[str, Any]]:
+    """Stream dataset records yielding parsed rows (DELIVERY-1 / SCALE-4).
+
+    If resolve_masks is True, resolves and attaches modern_view.loss_mask_spans
+    from the authenticated language usage index.
+    """
+    root = repo_root.resolve() if repo_root is not None else Path.cwd().resolve()
+    # If not found directly at cwd, search upward from records_path
+    if not (root / "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl").is_file():
+        cur = records_path.resolve()
+        for p in [cur, *cur.parents]:
+            if (p / "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl").is_file():
+                root = p
+                break
+
+    with records_path.open("r", encoding="utf-8") as f:
+        _ = f.readline()  # header
+        for line in f:
+            line_str = line.strip()
+            if not line_str:
+                continue
+            record = json.loads(line_str)
+            if resolve_masks:
+                masks = resolve_record_loss_masks(record, repo_root=root)
+                if "language_views" in record and "modern_view" in record["language_views"]:
+                    record["language_views"]["modern_view"]["loss_mask_spans"] = masks
+            yield record
+
+
+def load_partition_view(
+    records_path: Path,
+    partition: str,
+    resolve_masks: bool = False,
+    repo_root: Path | None = None,
+) -> list[dict[str, Any]]:
+    """Load records filtered by split partition (DELIVERY-1 / SCALE-4)."""
+    filtered = []
+    for record in load_dataset_stream(records_path, resolve_masks=resolve_masks, repo_root=repo_root):
+        sc = record.get("split_clearance", {})
+        if sc.get("split_partition") == partition:
+            if partition == "training" and not sc.get("builder_training_cleared", False):
+                continue
+            filtered.append(record)
+    return filtered
 
 
 def main() -> int:

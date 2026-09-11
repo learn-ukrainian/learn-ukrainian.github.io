@@ -27,9 +27,9 @@
     "research_summary": "docs/projects/ukrainian-data-foundry-evidence/RESEARCH_SUMMARY.md"
   },
   "document_digests": {
-    "dataset_card_sha256": "855d26435c9a573aadf41c4be4ed8a871452daf257c0871e82bd6268468431a6",
-    "technical_report_sha256": "3806e0980b3891878d6f52c2eaa671e2bd829057f9de5d4c35ef03fbb9fead01",
-    "research_summary_sha256": "141088482873e47950ec68bb0bbc6d15846cd95cf32a2af0d560b5c81de98b7f"
+    "dataset_card_sha256": "3484bdd108b8420efcd9701ad9881fa526d3eccb4b180d3a53cd129bb9a64864",
+    "technical_report_sha256": "7a5dfff806f43669bcf8d1df08bfbec10815b1c03d72a2f4ad2ca80b425b0814",
+    "research_summary_sha256": "fae31d2e0a63c75f47840c3609646cdb7bd87164ce0da2f53dd533d364d1b29d"
   },
   "residuals": {
     "operator_excluded_strata": [

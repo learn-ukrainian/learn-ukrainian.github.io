@@ -12,6 +12,9 @@ from scripts.projects.open_model_data.v4_human_source_dataset import (
     OPERATOR_EXCLUDED_RESIDUALS,
     assert_no_private_host_paths,
     build_dataset,
+    load_dataset_stream,
+    load_partition_view,
+    resolve_record_loss_masks,
     verify_dataset,
 )
 
@@ -223,3 +226,44 @@ def test_build_dataset_transactional_rollback_on_replacement_failure(
     # No stray tmp or backup files remain
     assert list(out_dir.glob("*.tmp*")) == []
     assert list(out_dir.glob("*.bak*")) == []
+
+
+def test_authenticated_loss_mask_resolver() -> None:
+    """Verify that resolve_record_loss_masks and load_dataset_stream resolve modern_view loss masks."""
+    records = list(load_dataset_stream(RECORDS_PATH, resolve_masks=True))
+    assert len(records) == 1419
+
+    # Verify first record
+    rec0 = records[0]
+    m0 = rec0["language_views"]["modern_view"]
+    assert "loss_mask_spans" in m0
+    assert len(m0["loss_mask_spans"]) == m0["loss_mask_count"]
+    for span in m0["loss_mask_spans"]:
+        assert "start_char" in span
+        assert "end_char" in span
+        assert "reason" in span
+        assert span["start_char"] <= span["end_char"]
+
+    # Verify partition loading with resolved modern_view loss masks
+    training_resolved = load_partition_view(RECORDS_PATH, "training", resolve_masks=True)
+    assert len(training_resolved) == 614
+    assert "loss_mask_spans" in training_resolved[0]["language_views"]["modern_view"]
+
+    # Verify direct resolution on raw record dict
+    with open(RECORDS_PATH, encoding="utf-8") as f:
+        _ = f.readline()  # skip header
+        raw_line = f.readline()
+    rec_raw = json.loads(raw_line)
+    resolved_masks = resolve_record_loss_masks(rec_raw)
+    assert resolved_masks == m0["loss_mask_spans"]
+
+    # Test error handling on missing sha or mismatched count
+    with pytest.raises(ValueError, match=r"Record is missing source_fidelity\.span_sha256"):
+        resolve_record_loss_masks({})
+
+    tampered_rec = dict(rec_raw)
+    tampered_rec["language_views"] = {
+        "modern_view": {"loss_mask_count": 999999}
+    }
+    with pytest.raises(ValueError, match=r"does not match record loss_mask_count"):
+        resolve_record_loss_masks(tampered_rec)

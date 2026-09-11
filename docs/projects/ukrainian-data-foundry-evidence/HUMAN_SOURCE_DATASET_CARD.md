@@ -25,9 +25,28 @@ Each record in `v4_human_source_dataset_records_v1.jsonl` contains:
 - `language_views`:
   - `primary_role`: Linguistic register classification (`modern_standard`, `literary_register`, `historical_period`, `quoted_metalinguistic`, etc.).
   - `faithful_view`: Training clearance for unmasked causal language modeling.
-  - `modern_view`: Loss masking intervals for foreign or non-standard quoted occurrences.
+  - `modern_view`: Indexed `loss_mask_count` integer for foreign or non-standard quoted occurrences. To enforce the repository pre-commit file ceiling (<2000 KB), exact span intervals (`start_char`, `end_char`, `reason`) are resolved at load time via the authenticated resolver `resolve_record_loss_masks(record)` or `load_dataset_stream(records_path, resolve_masks=True)` backed by authenticated `v4_language_usage_index_v1.jsonl`.
 - `split_clearance`: Partition assignment (`training`, `development`, `heldout_evaluation`, `quarantine_excluded`) and firewall verification.
 - `admission_evidence`: Rights basis and local learning approval confirmation.
+
+### Authenticated Loss Mask Resolution
+
+The dataset records in `v4_human_source_dataset_records_v1.jsonl` index `loss_mask_count` directly in `language_views.modern_view`. Consumers requiring full character-level loss masking intervals use the authenticated stream loader or resolver:
+
+```python
+from scripts.projects.open_model_data.v4_reproduce_deliverables import (
+    load_dataset_stream,
+    resolve_record_loss_masks,
+)
+
+# Stream records with resolved modern_view loss mask spans attached:
+for record in load_dataset_stream(records_path, resolve_masks=True):
+    masks = record["language_views"]["modern_view"]["loss_mask_spans"]
+
+# Or resolve on an individual record dictionary:
+masks = resolve_record_loss_masks(record)
+```
+
 
 ### Data Splits
 
