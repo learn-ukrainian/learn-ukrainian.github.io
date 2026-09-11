@@ -213,3 +213,42 @@ def test_assert_file_no_private_host_paths(tmp_path: Path) -> None:
         assert_file_no_private_host_paths(leaked_file, "leaked.txt")
     assert "CONFIDENTIAL_TOP_SECRET" not in str(excinfo.value)
     assert "Prohibited host path detected at leaked.txt:1" in str(excinfo.value)
+
+
+def test_verify_delivery_rejects_path_traversal_and_out_of_repo_documents(tmp_path: Path) -> None:
+    """Verify delivery verification rejects absolute paths, directory traversal, and out-of-repo files."""
+    import shutil
+
+    mock_root = tmp_path / "mock_repo"
+    mock_root.mkdir(parents=True, exist_ok=True)
+
+    for subpath in [
+        "data/projects/open_model_data/contracts/v4_delivery_reproduction_receipt_v1.schema.json",
+        "data/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json",
+        "data/projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
+        "data/projects/open_model_data/dataset/v4_human_source_dataset_receipt_v1.json",
+        "data/projects/open_model_data/study/v4_learning_study_recipe_v1.json",
+        "data/projects/open_model_data/study/v4_learning_study_execution_runs_v1.jsonl",
+        "data/projects/open_model_data/study/v4_learning_study_receipt_v1.json",
+        "docs/projects/ukrainian-data-foundry-evidence/HUMAN_SOURCE_DATASET_CARD.md",
+        "docs/projects/ukrainian-data-foundry-evidence/HUMAN_SOURCE_TECHNICAL_REPORT.md",
+        "docs/projects/ukrainian-data-foundry-evidence/RESEARCH_SUMMARY.md",
+        "data/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json",
+    ]:
+        src = Path.cwd() / subpath
+        dst = mock_root / subpath
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src, dst)
+
+    mock_receipt = mock_root / "data/projects/open_model_data/delivery/v4_delivery_reproduction_receipt_v1.json"
+    rcpt_data = json.loads(mock_receipt.read_text(encoding="utf-8"))
+
+    # 1. Traversal path with '..' is rejected
+    rcpt_data["deliverable_documents"]["dataset_card"] = "../../../tmp/file.md"
+    mock_receipt.write_text(json.dumps(rcpt_data, indent=2), encoding="utf-8")
+    assert verify_delivery(mock_root, mock_receipt) is False
+
+    # 2. Absolute path is rejected
+    rcpt_data["deliverable_documents"]["dataset_card"] = "/etc/passwd"
+    mock_receipt.write_text(json.dumps(rcpt_data, indent=2), encoding="utf-8")
+    assert verify_delivery(mock_root, mock_receipt) is False

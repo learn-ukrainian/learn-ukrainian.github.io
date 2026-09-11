@@ -265,14 +265,17 @@ def verify_delivery(
     if not receipt_path.exists():
         return False
 
-    receipt_data = json.loads(receipt_path.read_text(encoding="utf-8"))
-    assert_no_private_host_paths(receipt_data)
+    try:
+        receipt_data = json.loads(receipt_path.read_text(encoding="utf-8"))
+        assert_no_private_host_paths(receipt_data)
 
-    receipt_schema_path = (
-        repo_root / "data/projects/open_model_data/contracts/v4_delivery_reproduction_receipt_v1.schema.json"
-    )
-    receipt_schema = json.loads(receipt_schema_path.read_text(encoding="utf-8"))
-    jsonschema.validate(instance=receipt_data, schema=receipt_schema)
+        receipt_schema_path = (
+            repo_root / "data/projects/open_model_data/contracts/v4_delivery_reproduction_receipt_v1.schema.json"
+        )
+        receipt_schema = json.loads(receipt_schema_path.read_text(encoding="utf-8"))
+        jsonschema.validate(instance=receipt_data, schema=receipt_schema)
+    except (ValueError, json.JSONDecodeError, jsonschema.ValidationError):
+        return False
 
     if receipt_data.get("overall_delivery_verdict") != "EPIC_DELIVERABLES_CONFIRMED":
         return False
@@ -284,15 +287,27 @@ def verify_delivery(
     if receipt_data.get("zero_host_paths_verified") is not True:
         return False
 
-    # Check that referenced deliverable documents exist and match bound digests
+    # Check that referenced deliverable documents exist, are regular files confined to repo_root, and match bound digests
     doc_digests = receipt_data.get("document_digests", {})
-    for doc_key, rel_path in receipt_data["deliverable_documents"].items():
-        doc_path = repo_root / rel_path
-        if not doc_path.exists():
+    resolved_repo_root = repo_root.resolve()
+    resolved_docs: dict[str, Path] = {}
+    for doc_key, rel_path in receipt_data.get("deliverable_documents", {}).items():
+        if not isinstance(rel_path, str) or not rel_path.strip():
+            return False
+        raw_p = Path(rel_path)
+        if raw_p.is_absolute() or ".." in raw_p.parts:
+            return False
+        doc_path = (repo_root / raw_p).resolve()
+        try:
+            doc_path.relative_to(resolved_repo_root)
+        except ValueError:
+            return False
+        if not doc_path.is_file():
             return False
         expected_digest = doc_digests.get(f"{doc_key}_sha256")
         if not expected_digest or sha256_file(doc_path) != expected_digest:
             return False
+        resolved_docs[doc_key] = doc_path
 
     # Check and rehash dataset deliverables
     dataset_manifest_path = repo_root / "data/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json"
@@ -351,9 +366,9 @@ def verify_delivery(
         return False
 
     # Scan all bound artifacts to verify zero private host paths
-    dataset_card_path = repo_root / receipt_data["deliverable_documents"]["dataset_card"]
-    tech_report_path = repo_root / receipt_data["deliverable_documents"]["technical_report"]
-    summary_path = repo_root / receipt_data["deliverable_documents"]["research_summary"]
+    dataset_card_path = resolved_docs["dataset_card"]
+    tech_report_path = resolved_docs["technical_report"]
+    summary_path = resolved_docs["research_summary"]
 
     bound_artifacts = [
         dataset_manifest_path,

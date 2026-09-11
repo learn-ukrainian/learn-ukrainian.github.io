@@ -128,13 +128,16 @@
       ],
       "properties": {
         "dataset_card": {
-          "type": "string"
+          "type": "string",
+          "pattern": "^(?!/)(?!.*\\.\\.)[a-zA-Z0-9_./-]+\\.md$"
         },
         "technical_report": {
-          "type": "string"
+          "type": "string",
+          "pattern": "^(?!/)(?!.*\\.\\.)[a-zA-Z0-9_./-]+\\.md$"
         },
         "research_summary": {
-          "type": "string"
+          "type": "string",
+          "pattern": "^(?!/)(?!.*\\.\\.)[a-zA-Z0-9_./-]+\\.md$"
         }
       }
     },
