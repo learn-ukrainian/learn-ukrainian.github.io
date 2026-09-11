@@ -6,16 +6,22 @@ from pathlib import Path
 
 from scripts.audit.generate_practice_deck import JsonVesumVerifier
 from scripts.audit.practice_linguistic import (
+    RULE_BLANK_COUNT,
+    RULE_DISTRACTOR_DISTINCT,
     RULE_HOMOGRAPH,
     RULE_IDENTITY_LABEL,
+    RULE_INTENTIONAL_ERROR_QUARANTINE,
     RULE_LEADING_QUIZ,
     RULE_PREP_NOM,
     RULE_STRESS,
+    check_cloze_blank_count,
     check_cloze_item,
     check_homograph_oblique,
     check_identity_rule_consistency,
+    check_intentional_error_quarantine,
     check_leading_quiz,
     check_nominative_only_after_prep,
+    check_options_uniqueness,
     check_stress_item,
     index_from_generator_candidates,
     is_identity_form,
@@ -302,3 +308,42 @@ def test_check_assets_vesum_flag_runs_linguistic_pack(tmp_path: Path) -> None:
     )
     assert summary["ok"] is False
     assert any("VESUM" in error for error in summary["errors"])
+
+
+def test_intentional_error_quarantine_rejected() -> None:
+    bad_sentences = [
+        "НЕПРАВИЛЬНО\nПРАВИЛЬНО\nзатягувати рішення\n_____ з рішенням",
+        "Неправильно Правильно ___ відбулася в кабінеті директора",
+        "Орфографічну помилку допущено у варіанті: А _____ Б глядацький",
+        "Відредагуйте речення: деякі слова можна _____ або замінити",
+        "СУРЖИК § 19 Нація — _____ у Вічність",
+        "Помилку допущено в рядку А _____ Б аптека",
+    ]
+    for sent in bad_sentences:
+        findings = check_intentional_error_quarantine("item_bad", sent)
+        assert any(
+            f.rule_id == RULE_INTENTIONAL_ERROR_QUARANTINE for f in findings
+        ), f"Expected quarantine rejection for: {sent!r}"
+
+    good_sent = "Учитель уважно пояснив, як правильно написати це слово в зошиті."
+    assert check_intentional_error_quarantine("item_good", good_sent) == []
+
+
+def test_cloze_blank_count_single_blank() -> None:
+    assert check_cloze_blank_count("item", "Це гарне _____ речення.") == []
+    assert check_cloze_blank_count("item", "Це гарне ___ речення.") == []
+    # 0 blanks
+    findings_0 = check_cloze_blank_count("item", "Тут немає пропущеного місця.")
+    assert any(f.rule_id == RULE_BLANK_COUNT for f in findings_0)
+    # Multiple blanks
+    findings_multi = check_cloze_blank_count("item", "Перше _____ і друге _____ речення.")
+    assert any(f.rule_id == RULE_BLANK_COUNT for f in findings_multi)
+
+
+def test_options_uniqueness_detects_duplicates() -> None:
+    unique_opts = [{"label": "книга"}, {"label": "зошит"}, {"label": "ручка"}]
+    assert check_options_uniqueness("item", unique_opts) == []
+
+    dup_opts = [{"label": "книга"}, {"label": "зошит"}, {"label": "книга"}]
+    findings = check_options_uniqueness("item", dup_opts)
+    assert any(f.rule_id == RULE_DISTRACTOR_DISTINCT for f in findings)

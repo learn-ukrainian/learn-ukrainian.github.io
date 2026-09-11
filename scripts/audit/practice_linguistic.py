@@ -55,6 +55,9 @@ RULE_LEADING_QUIZ = "leading_quiz_marker"
 RULE_STRESS = "stress_self_consistency"
 RULE_PARADIGM_SLOT = "paradigm_declared_slot"
 RULE_GOLD_LEMMA = "gold_lemma_match"
+RULE_INTENTIONAL_ERROR_QUARANTINE = "intentional_error_quarantine"
+RULE_BLANK_COUNT = "cloze_blank_count"
+RULE_DISTRACTOR_DISTINCT = "distractor_uniqueness"
 
 
 class VesumVerifier(Protocol):
@@ -480,6 +483,83 @@ def check_leading_quiz(item_id: str, text: str | None) -> list[Finding]:
     return []
 
 
+INTENTIONAL_ERROR_PATTERNS = [
+    re.compile(r"\bНЕПРАВИЛЬНО\b"),
+    re.compile(r"\bНеправильно\s+(?:і\s+)?Правильно\b", re.IGNORECASE),
+    re.compile(r"\bПравильно\s+(?:і\s+)?НЕправильно\b", re.IGNORECASE),
+    re.compile(r"\bСУРЖИК\b"),
+    re.compile(r"\bАНТИСУРЖИК\b", re.IGNORECASE),
+    re.compile(r"\bПомилку\s+допущено\b", re.IGNORECASE),
+    re.compile(r"\bВідредагуйте\s+речення\b", re.IGNORECASE),
+    re.compile(r"\bВиправте\s+помилк", re.IGNORECASE),
+    re.compile(r"\bЗнайдіть\s+(?:і\s+виправте\s+)?помилк", re.IGNORECASE),
+    re.compile(r"\bОрфографічну\s+помилку\b", re.IGNORECASE),
+]
+
+_CLOZE_BLANK_RE = re.compile(r"_{3,}")
+
+
+def check_intentional_error_quarantine(item_id: str, text: str | None) -> list[Finding]:
+    if not text:
+        return []
+    for pattern in INTENTIONAL_ERROR_PATTERNS:
+        match = pattern.search(text)
+        if match:
+            return [
+                Finding(
+                    RULE_INTENTIONAL_ERROR_QUARANTINE,
+                    item_id,
+                    f"cloze sentence contains intentional error/table marker: {match.group(0)!r}",
+                )
+            ]
+    return []
+
+
+def check_cloze_blank_count(item_id: str, text: str | None) -> list[Finding]:
+    if not text:
+        return [Finding(RULE_BLANK_COUNT, item_id, "cloze sentence is empty")]
+    blanks = _CLOZE_BLANK_RE.findall(text)
+    if len(blanks) != 1:
+        return [
+            Finding(
+                RULE_BLANK_COUNT,
+                item_id,
+                f"cloze sentence must have exactly 1 blank (found {len(blanks)})",
+            )
+        ]
+    return []
+
+
+def check_options_uniqueness(item_id: str, options: list[Any] | None) -> list[Finding]:
+    if not options or not isinstance(options, list):
+        return []
+    labels: list[str] = []
+    for opt in options:
+        if isinstance(opt, dict):
+            lbl = _clean(opt.get("label")) or _clean(opt.get("text")) or ""
+        elif isinstance(opt, str):
+            lbl = opt.strip()
+        else:
+            continue
+        if lbl:
+            labels.append(plain(lbl))
+    seen = set()
+    dups = set()
+    for l in labels:
+        if l in seen:
+            dups.add(l)
+        seen.add(l)
+    if dups:
+        return [
+            Finding(
+                RULE_DISTRACTOR_DISTINCT,
+                item_id,
+                f"duplicate options found: {sorted(dups)}",
+            )
+        ]
+    return []
+
+
 def check_source_attested_blank(
     item: dict[str, Any],
     source_index: ClozeSourceIndex | None,
@@ -728,11 +808,15 @@ def check_cloze_item(
 ) -> list[Finding]:
     item_id = _item_id(item, "cloze")
     findings: list[Finding] = []
+    sentence_clean = _clean(item.get("sentence"))
+    findings.extend(check_cloze_blank_count(item_id, sentence_clean))
+    findings.extend(check_intentional_error_quarantine(item_id, sentence_clean))
+    findings.extend(check_options_uniqueness(item_id, item.get("options")))
     findings.extend(check_source_attested_blank(item, source_index, item_id=item_id))
     findings.extend(
         check_identity_rule_consistency(item, item_id=item_id, lemma_plain=lemma_plain)
     )
-    findings.extend(check_leading_quiz(item_id, _clean(item.get("sentence"))))
+    findings.extend(check_leading_quiz(item_id, sentence_clean))
     findings.extend(
         check_homograph_oblique(item, verifier, item_id=item_id, lemma_plain=lemma_plain)
     )
