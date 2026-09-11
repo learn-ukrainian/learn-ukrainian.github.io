@@ -151,8 +151,15 @@ def test_dead_alias_inventory_contracts():
         assert contract is not None, f"missing contract for {path}"
         assert "NOTE:" in contract.recommendation, f"contract for {path} missing inventory NOTE"
         assert any(
-            cls in contract.recommendation for cls in ("compat_keep", "migrate_caller_first")
+            cls in contract.recommendation for cls in ("compat_keep", "migrate_caller_first", "retire_now")
         ), f"contract for {path} missing classification"
+
+    assert "NOTE: retire_now" in contract_for_route("/api/blue/live-status", "http").recommendation
+    assert "NOTE: retire_now" in contract_for_route("/api/rag", "http").recommendation
+
+    http_paths = {route.path for route in _public_http_routes()}
+    assert "/api/blue/live-status" not in http_paths
+    assert not any(path.startswith("/api/rag") for path in http_paths)
 
     ws_contract = contract_for_route("/ws/batch", "websocket")
     assert ws_contract is not None

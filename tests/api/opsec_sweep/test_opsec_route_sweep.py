@@ -463,8 +463,6 @@ def test_route_registry_matches_openapi_and_classifies_every_operation() -> None
     by_key = {record.key: record for record in records}
     assert {
         "GET /api/images/textbooks",
-        "GET /api/rag/search_literary",
-        "GET /api/rag/search_text",
         "GET /api/sources/search_literary",
         "GET /api/sources/search_text",
     } == registry.FIXTURE_EMPTY_ROUTE_KEYS

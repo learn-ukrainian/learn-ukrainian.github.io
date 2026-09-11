@@ -409,9 +409,10 @@ class TestRouterMounting:
         paths = self._route_paths()
         assert "/api/sources/stats" in paths
 
-    def test_rag_router_mounted_as_alias(self):
+    def test_rag_router_not_mounted(self):
         paths = self._route_paths()
-        assert "/api/rag/stats" in paths
+        assert "/api/rag/stats" not in paths
+        assert not any(p.startswith("/api/rag") for p in paths)
 
     def test_hramatka_not_mounted_on_public_monitor(self):
         paths = self._route_paths()
@@ -436,11 +437,9 @@ class TestPublicMonitorSurfacesAndBoundaries:
         data = resp.json()
         assert "sources_db" in data
 
-    def test_rag_stats_alias_returns_200(self):
+    def test_rag_stats_alias_retired_returns_404(self):
         resp = client.get("/api/rag/stats")
-        assert resp.status_code == 200
-        data = resp.json()
-        assert "sources_db" in data
+        assert resp.status_code == 404
 
     def test_readyz_returns_404(self):
         assert client.get("/api/readyz").status_code == 404

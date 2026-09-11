@@ -1205,7 +1205,7 @@ curl -s http://localhost:8765/api/batch/dispatcher
 ### Audit & quality (existing dashboard router)
 ```bash
 # All tracks pass/fail overview
-curl -s http://localhost:8765/api/blue/live-status
+curl -s http://localhost:8765/api/state/build-status
 
 # Per-module detail for a track
 curl -s http://localhost:8765/api/dashboard/track/hist
@@ -1240,9 +1240,9 @@ Public Monitor endpoints for SQLite FTS5 source corpora, textbook chunks, litera
 | GET | `/api/sources/search_literary?q=...[&work=...][&genre=...][&period=...][&limit=5]` | Search literary and primary texts |
 | GET | `/api/sources/browse_images[?grade=...][&sort=size|name|grade][&page=0][&per_page=100]` | Browse textbook images on disk with pagination |
 
-### Legacy Alias — `/api/rag/*`
+### Retired Legacy Alias — `/api/rag/*`
 
-`/api/rag/*` mirrors `/api/sources/*` for backward compatibility with older scripts and dashboards. It is deprecated and scheduled for removal after the next quarterly cleanup pass. New callers must use `/api/sources/*`.
+`/api/rag/*` previously mirrored `/api/sources/*` for backward compatibility. It was retired in #7939 after all callers migrated. Callers must use canonical `/api/sources/*`.
 
 ### Service Boundaries: Public Monitor vs. Private Teacher
 
@@ -2917,7 +2917,7 @@ future cleanup.
 
 | Deprecated | Replacement |
 |---|---|
-| `GET /api/blue/live-status` | `GET /api/state/build-status` |
+| `GET /api/blue/live-status` | `GET /api/state/build-status` (retired in #7939) |
 | `GET /api/comms/live-activity` | `GET /api/state/build-status` + `GET /api/build/events` stream |
 
 The deprecated routes still work for existing dashboards and scripts
