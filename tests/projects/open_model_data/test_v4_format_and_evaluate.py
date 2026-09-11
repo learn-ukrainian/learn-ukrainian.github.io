@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 from scripts.projects.open_model_data.v4_evaluate_decolonization import (
@@ -71,6 +72,69 @@ def test_trajectory_to_chatml() -> None:
     assert cml["messages"][1]["role"] == "assistant"
     assert "<thought>" in cml["messages"][1]["content"]
     assert "</thought>" in cml["messages"][1]["content"]
+
+
+def test_gemma3_and_gemma4_template_adaptation() -> None:
+    sample_sg = {
+        "id": "traj.decolonize.avtovyshka",
+        "target_term": "автовишка",
+        "conversations": [
+            {"from": "system", "value": "Ти — помічник з мовної деколонізації."},
+            {"from": "human", "value": "Як сказати «автовишка»?"},
+            {"from": "gpt", "value": "<thought>\nКрок 1: Аналіз морфемної будови.\n</thought>\n\nВживайте «автовежа»."},
+        ],
+    }
+
+    # 1. Verify TRL adaptation recipe maps to ChatML and eliminates collisions
+    def convert_to_chatml(example: dict) -> dict:
+        convs = example["conversations"]
+        sys_val = next((c["value"] for c in convs if c["from"] == "system"), "")
+        human_val = next((c["value"] for c in convs if c["from"] == "human"), "")
+        gpt_val = next((c["value"] for c in convs if c["from"] == "gpt"), "")
+        user_text = f"{sys_val}\n\n{human_val}" if sys_val else human_val
+        return {
+            "messages": [
+                {"role": "user", "content": user_text},
+                {"role": "assistant", "content": gpt_val},
+            ]
+        }
+
+    cml_rec = convert_to_chatml(sample_sg)
+    assert "messages" in cml_rec
+    assert len(cml_rec["messages"]) == 2
+    assert cml_rec["messages"][0]["role"] == "user"
+    assert cml_rec["messages"][1]["role"] == "assistant"
+
+    # 2. Verify Gemma 3 format structure (<start_of_turn> / <end_of_turn>)
+    user_msg = cml_rec["messages"][0]["content"]
+    asst_msg = cml_rec["messages"][1]["content"]
+    gemma3_rendered = (
+        f"<start_of_turn>user\n{user_msg}<end_of_turn>\n"
+        f"<start_of_turn>model\n{asst_msg}<end_of_turn>"
+    )
+    assert "<start_of_turn>user" in gemma3_rendered
+    assert "<end_of_turn>" in gemma3_rendered
+    assert "<start_of_turn>model" in gemma3_rendered
+    assert "<thought>" in gemma3_rendered
+
+    # 3. Verify Gemma 4 native turn & channel structure (<|turn> / <turn|>, <|channel>thought)
+    thought_match = re.search(r"<thought>(.*?)</thought>", asst_msg, re.DOTALL)
+    assert thought_match is not None
+    thought_body = thought_match.group(1).strip()
+    final_reply = re.sub(r"<thought>.*?</thought>\s*", "", asst_msg, flags=re.DOTALL).strip()
+
+    gemma4_rendered = (
+        f"<|turn>user\n{user_msg}<turn|>\n"
+        f"<|turn>model\n"
+        f"<|channel>thought\n{thought_body}\n<channel|>\n"
+        f"{final_reply}<turn|>"
+    )
+    assert "<|turn>user" in gemma4_rendered
+    assert "<turn|>" in gemma4_rendered
+    assert "<|turn>model" in gemma4_rendered
+    assert "<|channel>thought" in gemma4_rendered
+    assert "<channel|>" in gemma4_rendered
+    assert "Вживайте «автовежа»." in gemma4_rendered
 
 
 def test_dpo_pair_to_trl() -> None:
