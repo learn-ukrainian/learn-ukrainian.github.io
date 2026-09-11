@@ -24,7 +24,7 @@ def test_work_page_evidence_rail_and_a11y_surface():
     html = WORK.read_text(encoding="utf-8")
     assert '<link rel="stylesheet" href="/monitor.css">' in html
     assert 'class="monitor-nav"' in html
-    assert 'aria-label="Monitor sections"' in html
+    assert 'aria-label="Ops API sections"' in html
     assert 'class="active" href="/work.html"' in html
     assert "Evidence rail" in html or "evidence rail" in html.lower()
     assert 'role="listbox"' in html
