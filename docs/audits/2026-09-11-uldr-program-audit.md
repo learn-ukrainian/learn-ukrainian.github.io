@@ -1,7 +1,7 @@
 # ULDR program audit — 2026-09-11
 
-Latest disposition: **FAIL** at `c64d8956ba390cde7d8af4c791ef46d8db33257c`.
-See [the fifth re-review](#fifth-re-review--c64d8956)
+Latest disposition: **FAIL** at `c55474b6edc39d231adf406ebc2e8f2e2cdcb273`.
+See [the sixth diagnostic re-review](#sixth-diagnostic-re-review--c55474b6)
 for current fixes, evidence, and remaining findings. Earlier sections retain the
 history of the heads they name.
 
@@ -732,3 +732,85 @@ training labels. The 3/100 seed delivery and 97-seed residual are unchanged.
 All counterexamples are synthetic. Real artifact checks exported only aggregates
 and equality results from custody. No implementation changes, model execution,
 merge or publication occurred during this review.
+
+## Sixth diagnostic re-review — c55474b6
+
+**VERDICT: FAIL** at `c55474b6edc39d231adf406ebc2e8f2e2cdcb273` of PR #7933.
+The prior exact counterexamples are fixed. The remaining failure class is the
+semantic relation between a statement and the evidence used to support it.
+
+### Scope and verification
+
+This head changes only the generator, evaluator and their two test files relative
+to `c64d8956`; the formatter, guide and all canonical/consumer artifacts are
+unchanged. Their previously verified receipts and recovery behavior are therefore
+not being replaced by untested new implementations in this commit.
+
+- **37 affected tests pass** in 0.93 seconds: the reported 33 tests plus four
+  contract tests. Check-only Ruff passes for the affected code and tests.
+- The prior attributed quotation scores zero; the prior separate unrelated
+  reasoning sentence scores 0.4 and fails.
+- The prior “alpha is not correct. beta is correct.” citation now selects beta.
+- Previously exercised backup, publication and restoration-failure probes still
+  pass. Native Gemma template adaptation still passes the isolated mapper probe.
+
+### J1 — I1 remains: sentence membership is not a supporting explanation
+
+For target `badtoken` and alternative `goodtoken`, this synthetic response scores
+**1.0 / PASS**:
+
+> Вживайте goodtoken, бо я прочитав словник і вивчив суфікс.
+
+The response recommends the alternative, but the speaker having read a dictionary
+and studied a suffix is not a linguistic reason that supports the recommendation.
+The evaluator now restricts keywords/connectives to subject-bearing sentences
+(`v4_evaluate_decolonization.py:231–245`), but all those words occur in one sentence
+here. It still labels the reasoning grounded without establishing the relationship.
+
+The documented heuristic limitation is appropriate; do not convert this proxy
+PASS into a claim of independently grounded reasoning. For semantic qualification,
+use evidence that evaluates the explanation's relationship to the answer, not
+only sentence co-occurrence. Another exact-string refusal pattern would not
+resolve this finding class.
+
+### J2 — I2 remains: ordinary contrastive citations are still misinterpreted
+
+Two synthetic citations show opposite errors in `is_positive_citation`:
+
+| Citation | Observed result | Required interpretation |
+| --- | --- | --- |
+| Do not ever use alpha. Use beta. | Both positive; alpha selected as primary | Reject alpha; recommend beta |
+| Replace alpha with beta. | Both rejected; synthesis returns no trajectory | Reject alpha; recommend beta |
+
+The first bypasses an imperative-negation pattern with an intervening adverb,
+while the positive use-pattern still matches. The second exposes the new broad
+negative pattern: `replace` followed by arbitrary text also reaches the replacement
+itself, so beta is rejected (`v4_decolonization_reasoning.py:515–557`).
+
+Both probes use positive VESUM counts and no other evidence. The first can teach
+a recommendation contrary to its own citation; the second drops supported output.
+Bind positive and negative evidence to the specific alternative and role. A
+negative-pattern blacklist plus a broad positive-pattern list does not establish
+that binding.
+
+### Review disposition
+
+This is a recurring failure class across successive patch rounds. The next
+remediation should establish the positive-evidence and semantic-qualification
+approach, with independently assessed contrastive cases, rather than claim closure
+from more examples of the same regex strategy. Implementation remains owned by
+the author; this audit neither changes the design nor applies fixes.
+
+The local closeout tool independently resolved PR head/base and recorded the
+existing two findings. Its formal reviewer resolver selected Claude Sonnet 5;
+Astra was eligible, Gemini was excluded as the author family, and unqualified
+multi-model or data-egress routes were excluded. No new selected Claude review
+was dispatched for this diagnostic pass. The formal ledger therefore leaves
+these findings **UNADJUDICATED**; this report is direct reproduced behavioral
+evidence and is not a claim of completed formal merge closeout.
+
+Deterministic checks and synthetic behavior probes are recorded above. This is
+source-aware diagnostic testing, not an independently blinded linguistic
+assessment. No model training, protected payload export or merge occurred.
+The existing 97-seed residual is unchanged. Current CI completion and CodeQL
+comparison coverage must still be verified before any merge decision.
