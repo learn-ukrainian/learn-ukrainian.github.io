@@ -305,10 +305,10 @@ def test_epics_graph_endpoint_contract_and_structure(tmp_path: Path, monkeypatch
     mock_audit = {
         "generated_at": 1700000000,
         "effective_membership": {
-            "7269": {"epics": [7177], "streams": ["monitor"], "via": "native", "unique_stream": True},  # allow-hardcoded-epic: mock audit data
-            "7270": {"epics": [7177], "streams": ["monitor"], "via": "native", "unique_stream": True},  # allow-hardcoded-epic: mock audit data
-            "7271": {"epics": [7177], "streams": ["monitor"], "via": "native", "unique_stream": True},  # allow-hardcoded-epic: mock audit data
-            "7100": {"epics": [7177], "streams": ["monitor"], "via": "native", "unique_stream": True},  # allow-hardcoded-epic: mock audit data
+            "7269": {"epics": [7919], "streams": ["monitor"], "via": "native", "unique_stream": True},  # allow-hardcoded-epic: mock audit data
+            "7270": {"epics": [7919], "streams": ["monitor"], "via": "native", "unique_stream": True},  # allow-hardcoded-epic: mock audit data
+            "7271": {"epics": [7919], "streams": ["monitor"], "via": "native", "unique_stream": True},  # allow-hardcoded-epic: mock audit data
+            "7100": {"epics": [7919], "streams": ["monitor"], "via": "native", "unique_stream": True},  # allow-hardcoded-epic: mock audit data
         },
         "open_issue_numbers": [7269, 7270, 7271],
         "open_issue_titles": {
@@ -339,13 +339,13 @@ def test_epics_graph_endpoint_contract_and_structure(tmp_path: Path, monkeypatch
     assert "area:monitor" in areas
     assert areas["area:monitor"]["stream_id"] == "monitor"
     assert areas["area:monitor"]["epic_count"] == 1
-    assert "Monitor API + UI" in areas["area:monitor"]["title"]
+    assert "Ops API + UI" in areas["area:monitor"]["title"]
 
     # Verify nodes.epics
     epics = {e["id"]: e for e in data["nodes"]["epics"]}
-    assert "epic:7177" in epics  # allow-hardcoded-epic: graph contract check
-    monitor_epic = epics["epic:7177"]  # allow-hardcoded-epic: graph contract check
-    assert monitor_epic["number"] == 7177  # allow-hardcoded-epic: graph contract check
+    assert "epic:7919" in epics  # allow-hardcoded-epic: graph contract check
+    monitor_epic = epics["epic:7919"]  # allow-hardcoded-epic: graph contract check
+    assert monitor_epic["number"] == 7919  # allow-hardcoded-epic: graph contract check
     assert monitor_epic["area_id"] == "monitor"
     assert monitor_epic["open_issue_count"] == 3
     assert monitor_epic["closed_issue_count"] == 1
@@ -355,11 +355,11 @@ def test_epics_graph_endpoint_contract_and_structure(tmp_path: Path, monkeypatch
 
     # Verify edges
     edge_pairs = {(e["from"], e["to"]) for e in data["edges"]}
-    assert ("area:monitor", "epic:7177") in edge_pairs  # allow-hardcoded-epic: graph edge check
+    assert ("area:monitor", "epic:7919") in edge_pairs  # allow-hardcoded-epic: graph edge check
 
     # Verify issues_by_epic
-    assert "7177" in data["issues_by_epic"]  # allow-hardcoded-epic: issues_by_epic check
-    epic_issues = data["issues_by_epic"]["7177"]  # allow-hardcoded-epic: issues_by_epic check
+    assert "7919" in data["issues_by_epic"]  # allow-hardcoded-epic: issues_by_epic check
+    epic_issues = data["issues_by_epic"]["7919"]  # allow-hardcoded-epic: issues_by_epic check
     assert epic_issues["total_open"] == 3
     assert epic_issues["truncated"] is False
     assert len(epic_issues["items"]) == 3
@@ -440,9 +440,9 @@ def test_epics_graph_denied_audit_spawn_returns_no_cache_200(tmp_path: Path, mon
 def test_epics_graph_truncation_cap_at_50(tmp_path: Path, monkeypatch) -> None:
     client = _client(tmp_path, monkeypatch)
 
-    # 60 open issues for epic 7177
+    # 60 open issues for epic 7919
     effective_membership = {
-        str(1000 + i): {"epics": [7177], "streams": ["monitor"], "via": "native", "unique_stream": True}  # allow-hardcoded-epic: mock audit data
+        str(1000 + i): {"epics": [7919], "streams": ["monitor"], "via": "native", "unique_stream": True}  # allow-hardcoded-epic: mock audit data
         for i in range(60)
     }
     open_issue_numbers = [1000 + i for i in range(60)]
@@ -466,7 +466,7 @@ def test_epics_graph_truncation_cap_at_50(tmp_path: Path, monkeypatch) -> None:
     assert response.status_code == 200
     data = response.json()
 
-    monitor_issues = data["issues_by_epic"]["7177"]  # allow-hardcoded-epic: truncation check
+    monitor_issues = data["issues_by_epic"]["7919"]  # allow-hardcoded-epic: truncation check
     assert monitor_issues["total_open"] == 60
     assert monitor_issues["truncated"] is True
     assert len(monitor_issues["items"]) == 50
@@ -474,16 +474,16 @@ def test_epics_graph_truncation_cap_at_50(tmp_path: Path, monkeypatch) -> None:
 
 def test_epics_graph_store_lease_and_decision_passthrough(tmp_path: Path, monkeypatch) -> None:
     client = _client(tmp_path, monkeypatch)
-    claimed = _claim(client, "epic:7177")  # allow-hardcoded-epic: remote lifecycle route fixture
+    claimed = _claim(client, "epic:7919")  # allow-hardcoded-epic: remote lifecycle route fixture
     lease = claimed["lease"]
 
     # Append a state entry and a decision entry
     client.post(
-        "/api/epics/v1/epic:7177/handoff",  # allow-hardcoded-epic: remote lifecycle route fixture
+        "/api/epics/v1/epic:7919/handoff",  # allow-hardcoded-epic: remote lifecycle route fixture
         json={**lease, "type": "state", "body": "working on graph", "idempotency_key": "graph-state-1"},
     )
     client.post(
-        "/api/epics/v1/epic:7177/handoff",  # allow-hardcoded-epic: remote lifecycle route fixture
+        "/api/epics/v1/epic:7919/handoff",  # allow-hardcoded-epic: remote lifecycle route fixture
         json={**lease, "type": "decision", "body": "design approved", "idempotency_key": "graph-dec-1"},
     )
 
@@ -495,8 +495,8 @@ def test_epics_graph_store_lease_and_decision_passthrough(tmp_path: Path, monkey
     data = response.json()
 
     epics_by_id = {e["id"]: e for e in data["nodes"]["epics"]}
-    assert "epic:7177" in epics_by_id  # allow-hardcoded-epic: store passthrough check
-    epic_7177 = epics_by_id["epic:7177"]  # allow-hardcoded-epic: store passthrough check
-    assert epic_7177["lease"] is not None
-    assert epic_7177["last_state"]["body"] == "working on graph"
-    assert epic_7177["last_decision"]["body"] == "design approved"
+    assert "epic:7919" in epics_by_id  # allow-hardcoded-epic: store passthrough check
+    epic_7919 = epics_by_id["epic:7919"]  # allow-hardcoded-epic: store passthrough check
+    assert epic_7919["lease"] is not None
+    assert epic_7919["last_state"]["body"] == "working on graph"
+    assert epic_7919["last_decision"]["body"] == "design approved"
