@@ -58,7 +58,7 @@ def test_seed_trajectories_validate(trajectory_schema: dict) -> None:
     targets = {r["target_term"] for r in records}
     assert "пилосос" in targets
     assert "переключити" in targets
-    assert "кримчанин" in targets
+    assert "приймати участь" in targets
 
 
 def test_seed_dpo_pairs_validate(dpo_pair_schema: dict) -> None:

@@ -45,7 +45,7 @@ A critical strategic principle guides this effort:
    - Soviet terminological commissions in the 1930s and later СУМ-11 (1970s) systematically favored *пилосос* to synchronize Ukrainian technical vocabulary with Russian, actively suppressing authentic Ukrainian alternatives.
 3. **The Living Reality**:
    - In independent Ukraine, authentic terminology was restored in living language:
-     - **пилосмок** (*пил + смоктати*): The dominant contemporary standard taught in MESU-approved school textbooks (e.g. Gr 9 World History, Пометун 2026; recommended by Prof. Oleksandr Ponomariv).
+     - **пилосмок** (*пил + смоктати*): The dominant contemporary standard taught in MESU-approved school textbooks (e.g. Gr 9 World History, Пометун 2026, p. 166: «Перша модель пилосмока»; recommended by Prof. Oleksandr Ponomariv).
      - **порохотяг** (*порох + тягти*): Classical historical and Western Ukrainian standard (documented in modern academic dictionaries СУМ-20 and ВТС).
      - **пилотяг** (*пил + тягти*): Technical compound standard.
      - **порохосмок** (*порох + смоктати*): Purist neologism coined by diaspora lexicographer Pavlo Shtepa (1968), absent from modern morphological standards (VESUM has 0 forms).
@@ -211,7 +211,7 @@ Following the **Operator Contract** (Item 5: Route by model × harness fit; Item
 
 ### Phase 1: Contract Freezing & Seed Curation (Milestone 1)
 - **Codex**: Implement `v1` JSON schemas for trajectories and DPO pairs under `data/projects/open_model_data/contracts/`.
-- **Gemini**: Curate the initial 100 core Russianisms / Soviet calques (*пилосос*, *переключити*, *кримчанин*, *просвітитель*, *приймати участь*, *в даний момент*, etc.) with full textbook and style guide citations.
+- **Gemini**: Curate the initial 100 core Russianisms / Soviet calques (*пилосос*, *переключити*, *приймати участь*, *просвітитель*, *приймати участь*, *в даний момент*, etc.) with full textbook and style guide citations.
 - **Review**: Claude cross-family review on contracts and initial seed schemas.
 
 ### Phase 2: Automated Generator Pipeline (Milestone 2)
