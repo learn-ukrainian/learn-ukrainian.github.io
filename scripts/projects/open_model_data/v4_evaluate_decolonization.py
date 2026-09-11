@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -48,9 +49,25 @@ AFFIRMATION_PATTERNS = [
     r"вживайте\s+[«\"]?{term}[»\"]?",
     r"можна\s+(?:цілком\s+)?(?:вільно\s+)?вживати\s+[«\"]?{term}[»\"]?",
     r"{term}\s*(?:—|-|–|є|це)?\s*(?:це\s+)?(?:правильн|нормативн|прийнятн|допустим|літературн|влучн|вдало|вірн|кращ|кращий|вибір)",
-    r"не\s+(?:є\s+)?(?:помилк|кальк|русизм|вад)",
-    r"немає\s+(?:тут\s+)?(?:жодної\s+)?помилк",
-    r"не\s+вважа(?:ється|ти)\s+помилк",
+    r"(?:у\s+вживанні|щодо)\s+[«\"]?{term}[»\"]?\s+немає\s+(?:жодної\s+)?помилк",
+    r"[«\"]?{term}[»\"]?\s+не\s+(?:є\s+)?(?:помилк|кальк|русизм|вад)",
+    r"[«\"]?{term}[»\"]?\s+не\s+вважа(?:ється|ти)\s+помилк",
+]
+
+REFUSAL_PATTERNS = [
+    re.compile(r"відмов(?:ляюся|ляємося|лятися|лятимемося)", re.IGNORECASE),
+    re.compile(r"не\s+(?:можу|можемо|маю\s+змоги)\s+(?:оцін|надати|відповід|визнач)", re.IGNORECASE),
+    re.compile(r"як\s+(?:мовна\s+модель|штучний\s+інтелект|асистент)", re.IGNORECASE),
+    re.compile(r"не\s+(?:маю|надаю)\s+(?:можливості|відповід)", re.IGNORECASE),
+    re.compile(r"(?:наведено|вжито|використано)\s+лише\s+для\s+прикладу", re.IGNORECASE),
+]
+
+EXPLANATION_CONNECTIVES = [
+    re.compile(r"(?:тому\s+що|оскільки|бо\s+|через\s+те\s+що)", re.IGNORECASE),
+    re.compile(r"(?:замість|на\s+відміну\s+від|натомість)", re.IGNORECASE),
+    re.compile(r"(?:походить\s+від|утворено|походить|відповідає|виражає|є\s+кальк|є\s+росіян)", re.IGNORECASE),
+    re.compile(r"(?:питомий|питоме|питомим|автентичн|власне\s+українськ)", re.IGNORECASE),
+    re.compile(r"(?:вживати|вживається|використовувати|використовується|казати|правильно)", re.IGNORECASE),
 ]
 
 ALTERNATIVE_NEGATION_PATTERNS = [
@@ -89,6 +106,20 @@ def evaluate_single_response(
             "is_pass": False,
         }
 
+    # Refusal / evasion check: explicit refusal fails immediately
+    for r_pat in REFUSAL_PATTERNS:
+        if r_pat.search(resp_norm):
+            return {
+                "target_term": target_term,
+                "calque_eliminated": False,
+                "authentic_suggested": False,
+                "matched_alternatives": [],
+                "reasoning_grounded": False,
+                "reasoning_hits": 0,
+                "composite_score": 0.0,
+                "is_pass": False,
+            }
+
     # 1. Calque elimination check:
     # If the model explicitly affirms, defends, or recommends the calque, it fails elimination.
     calque_affirmed = False
@@ -103,7 +134,7 @@ def evaluate_single_response(
     if calque_affirmed:
         calque_eliminated = False
     elif calque_present:
-        # Check for critique context and absence of "немає помилки"
+        # Check for critique context
         critique_markers = (
             "кальк",
             "помилк",
@@ -146,15 +177,26 @@ def evaluate_single_response(
     authentic_suggested = len(matched_alts) > 0
 
     # 3. Morphemic and historical reasoning grounding check:
-    reasoning_hit_count = sum(1 for p in REASONING_MARKERS if p.search(resp_norm))
-    # Reasoning requires substantive content length (>= 30 chars), at least 2 markers,
-    # and MUST NOT affirm or defend the calque.
+    tokens = [t for t in re.split(r"\W+", resp_norm) if t]
+    content_tokens = [t for t in tokens if len(t) > 2]
+    max_content_freq_ratio = (
+        max(Counter(content_tokens).values()) / len(content_tokens) if content_tokens else 0.0
+    )
+    is_repetitive = (len(tokens) < 20 and (len(set(tokens)) / len(tokens)) < 0.65) or (
+        len(tokens) >= 5 and max_content_freq_ratio > 0.20
+    )
+
+    has_explanation_syntax = any(p.search(resp_norm) for p in EXPLANATION_CONNECTIVES)
+    distinct_reasoning_markers = sum(1 for p in REASONING_MARKERS if p.search(resp_norm))
+
     reasoning_grounded = (
-        (reasoning_hit_count >= 2)
+        (distinct_reasoning_markers >= 2)
         and (not calque_affirmed)
-        and (len(resp_norm) >= 30)
+        and (len(resp_norm) >= 35)
         and calque_eliminated
         and authentic_suggested
+        and (not is_repetitive)
+        and has_explanation_syntax
     )
 
     # 4. Composite score:
@@ -171,6 +213,10 @@ def evaluate_single_response(
     if calque_affirmed or not calque_eliminated:
         composite_score = 0.0
 
+    # If the response is repetitive keyword salad, cap score severely
+    if is_repetitive or not has_explanation_syntax:
+        composite_score = min(composite_score, 0.40)
+
     # If the response is an unsubstantiated fragment (< 35 characters), cap score
     if len(resp_norm) < 35:
         composite_score = min(composite_score, 0.40)
@@ -184,7 +230,7 @@ def evaluate_single_response(
         "authentic_suggested": authentic_suggested,
         "matched_alternatives": matched_alts,
         "reasoning_grounded": reasoning_grounded,
-        "reasoning_hits": reasoning_hit_count,
+        "reasoning_hits": distinct_reasoning_markers,
         "composite_score": round(composite_score, 2),
         "is_pass": is_pass,
     }
@@ -203,6 +249,7 @@ def evaluate_predictions(
 
     # Load gold items
     gold_items: dict[str, dict[str, Any]] = {}
+    gold_by_id: dict[str, str] = {}
     with held_out_path.open("r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
@@ -218,6 +265,8 @@ def evaluate_predictions(
                 "alternatives": alts,
                 "gold_response": item.get("final_response") or item.get("response"),
             }
+            if item.get("trajectory_id"):
+                gold_by_id[item["trajectory_id"]] = norm_key
 
     expected_denominator = len(gold_items)
     if expected_denominator == 0:
@@ -235,7 +284,7 @@ def evaluate_predictions(
             if not line:
                 continue
             pred = json.loads(line)
-            pred_id = pred.get("id", "")
+            pred_id = pred.get("id") or pred.get("trajectory_id", "")
             if pred_id and pred_id in seen_prediction_ids:
                 duplicate_predictions.append(pred_id)
                 continue
@@ -246,16 +295,18 @@ def evaluate_predictions(
             norm_target = normalize_token(target)
             matched_gold_key: str | None = None
 
-            if norm_target in gold_items:
+            # Priority 1: Exact trajectory ID match
+            if pred_id and pred_id in gold_by_id:
+                matched_gold_key = gold_by_id[pred_id]
+            # Priority 2: Explicit target term match
+            elif norm_target and norm_target in gold_items:
                 matched_gold_key = norm_target
-            else:
-                # Try finding by trajectory_id or query substring
-                for k, v in gold_items.items():
-                    if (v["trajectory_id"] and v["trajectory_id"] == pred_id) or (
-                        k and k in pred.get("prompt", "").lower()
-                    ):
-                        matched_gold_key = k
-                        break
+            # Priority 3: Fallback only if prompt unambiguously mentions EXACTLY ONE gold item
+            elif pred.get("prompt"):
+                prompt_lower = pred.get("prompt", "").lower()
+                matching_keys = [k for k in gold_items if k and k in prompt_lower]
+                if len(matching_keys) == 1:
+                    matched_gold_key = matching_keys[0]
 
             if matched_gold_key:
                 if matched_gold_key in matched_predictions:
@@ -275,6 +326,16 @@ def evaluate_predictions(
             resp_text = (
                 pred.get("final_response") or pred.get("response") or pred.get("generated_text") or pred.get("text", "")
             )
+            if not resp_text and "conversations" in pred and isinstance(pred["conversations"], list):
+                resp_text = next(
+                    (c.get("value", "") for c in pred["conversations"] if c.get("from") in ("gpt", "assistant")),
+                    "",
+                )
+            if not resp_text and "messages" in pred and isinstance(pred["messages"], list):
+                resp_text = next(
+                    (m.get("content", "") for m in pred["messages"] if m.get("role") in ("assistant", "model")),
+                    "",
+                )
             eval_res = evaluate_single_response(gold["target_term"], gold["alternatives"], resp_text)
             eval_res["id"] = pred.get("id", gold["trajectory_id"])
             eval_res["status"] = "evaluated"

@@ -12,6 +12,7 @@ from scripts.projects.open_model_data.v4_evaluate_decolonization import (
 from scripts.projects.open_model_data.v4_format_decolonization import (
     dpo_pair_to_trl,
     format_consumer_datasets,
+    trajectory_to_chatml,
     trajectory_to_sharegpt,
 )
 
@@ -32,6 +33,7 @@ def test_trajectory_to_sharegpt() -> None:
     assert sg["id"] == "traj.decolonize.avtovyshka"
     assert sg["target_term"] == "автовишка"
     assert len(sg["conversations"]) == 3
+    assert "messages" not in sg
 
     sys_msg, human_msg, gpt_msg = sg["conversations"]
     assert sys_msg["from"] == "system"
@@ -44,6 +46,31 @@ def test_trajectory_to_sharegpt() -> None:
     assert "Крок 2: Питомий відповідник" in gpt_msg["value"]
     assert "</thought>" in gpt_msg["value"]
     assert "Правильно вживати «автовежа»." in gpt_msg["value"]
+
+
+def test_trajectory_to_chatml() -> None:
+    sample_traj = {
+        "trajectory_id": "traj.decolonize.avtovyshka",
+        "target_term": "автовишка",
+        "query": "Як правильно сказати «автовишка»?",
+        "reasoning_steps": [
+            "Аналіз морфемної будови: -вишка є росіянізмом.",
+            "Питомий відповідник: автовежа.",
+        ],
+        "final_response": "Правильно вживати «автовежа».",
+    }
+
+    cml = trajectory_to_chatml(sample_traj)
+    assert cml["id"] == "traj.decolonize.avtovyshka"
+    assert cml["target_term"] == "автовишка"
+    assert len(cml["messages"]) == 2
+    assert "conversations" not in cml
+    assert cml["messages"][0]["role"] == "user"
+    assert "деколонізації" in cml["messages"][0]["content"]
+    assert sample_traj["query"] in cml["messages"][0]["content"]
+    assert cml["messages"][1]["role"] == "assistant"
+    assert "<thought>" in cml["messages"][1]["content"]
+    assert "</thought>" in cml["messages"][1]["content"]
 
 
 def test_dpo_pair_to_trl() -> None:
@@ -295,16 +322,17 @@ def test_format_and_evaluate_end_to_end(tmp_path: Path) -> None:
                 assert rec["calque_category"] == "lexical_calque"
                 assert "деколонізації" in rec["prompt"]
 
-    # Verify ShareGPT has messages for Gemma 3/4
+    # Verify ShareGPT has pure ShareGPT structure (conversations only, no conflicting messages column)
     sg_shards = list(out_dir.glob("uldr_sharegpt_*.jsonl"))
     assert len(sg_shards) >= 1
     for sg_s in sg_shards:
         for line in sg_s.read_text(encoding="utf-8").splitlines():
             if line.strip():
                 rec = json.loads(line)
-                assert "messages" in rec
-                assert len(rec["messages"]) == 2
-                assert "деколонізації" in rec["messages"][0]["content"]
+                assert "conversations" in rec
+                assert "messages" not in rec
+                assert len(rec["conversations"]) == 3
+                assert "деколонізації" in rec["conversations"][0]["value"]
 
     # Run evaluate_predictions with a passing prediction
     preds_file = tmp_path / "preds.jsonl"
@@ -330,3 +358,103 @@ def test_format_and_evaluate_end_to_end(tmp_path: Path) -> None:
     assert eval_res["reasoning_grounding_rate"] == 1.0
     assert eval_res["pass_rate"] == 1.0
     assert eval_report.is_file()
+
+
+def test_adversarial_non_answers_rejected() -> None:
+    # R3: explicit refusal must score 0.0 and fail
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    refusal = "Я відмовляюся оцінювати badtoken чи goodtoken. Слова «калька» та «суфікс» наведено лише для прикладу."
+    res_refusal = evaluate_single_response(target, alts, refusal)
+    assert res_refusal["is_pass"] is False
+    assert res_refusal["composite_score"] == 0.0
+
+    # R3: keyword spam with repeated tokens must fail (token repetition penalty)
+    spam = "goodtoken суфікс словник суфікс словник суфікс словник"
+    res_spam = evaluate_single_response(target, alts, spam)
+    assert res_spam["is_pass"] is False
+    assert res_spam["composite_score"] <= 0.40
+
+    # R3: legitimate affirmation of alternative (not target) must pass
+    legit = "Слово badtoken є калькою. Рекомендуємо goodtoken, оскільки це питоме слово за словником ВЕСУМ. Це не є помилкою в сучасній літературній нормі."
+    res_legit = evaluate_single_response(target, alts, legit)
+    assert res_legit["is_pass"] is True
+    assert res_legit["composite_score"] >= 0.8
+
+
+def test_partition_firewall_rejects_dpo_target_leakage(tmp_path: Path) -> None:
+    # R4: train SFT target 'a', train DPO target 'b', held-out SFT 'b' must fail closed
+    import pytest
+
+    in_dir = tmp_path / "leak_gen"
+    in_dir.mkdir()
+    out_dir = tmp_path / "leak_consumer"
+
+    train_sft = in_dir / "train_sft.jsonl"
+    train_dpo = in_dir / "train_dpo.jsonl"
+    held_sft = in_dir / "held_sft.jsonl"
+    held_dpo = in_dir / "held_dpo.jsonl"
+
+    train_sft.write_text(json.dumps({"trajectory_id": "t1", "target_term": "term_a", "query": "q", "final_response": "r"}) + "\n")
+    train_dpo.write_text(json.dumps({"pair_id": "d1", "prompt": "p", "chosen": "c", "rejected": "rej", "metadata": {"target_term": "term_b"}}) + "\n")
+    held_sft.write_text(json.dumps({"trajectory_id": "t2", "target_term": "term_b", "query": "q", "final_response": "r"}) + "\n")
+    held_dpo.write_text(json.dumps({"pair_id": "d2", "prompt": "p", "chosen": "c", "rejected": "rej", "metadata": {"target_term": "term_c"}}) + "\n")
+
+    manifest = {
+        "shards": [
+            {"partition": "train", "trajectories_file": train_sft.name, "dpo_pairs_file": train_dpo.name},
+            {"partition": "held_out", "trajectories_file": held_sft.name, "dpo_pairs_file": held_dpo.name},
+        ]
+    }
+    (in_dir / "decolonization_manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+
+    with pytest.raises(ValueError, match=r"Partition firewall violation.*overlapping target terms"):
+        format_consumer_datasets(in_dir, out_dir)
+
+
+def test_evaluate_predictions_resolves_exact_id_over_prompt_substring(tmp_path: Path) -> None:
+    # R5: prediction ID synthetic.otherbadtoken with prompt 'Compare badtoken with otherbadtoken'
+    # must score against otherbadtoken, NOT badtoken
+    gold_path = tmp_path / "gold.jsonl"
+    g1 = {"trajectory_id": "synthetic.badtoken", "target_term": "badtoken", "register_spectrum": {"alternatives": [{"lemma": "good1"}]}}
+    g2 = {"trajectory_id": "synthetic.otherbadtoken", "target_term": "otherbadtoken", "register_spectrum": {"alternatives": [{"lemma": "good2"}]}}
+    gold_path.write_text(json.dumps(g1) + "\n" + json.dumps(g2) + "\n", encoding="utf-8")
+
+    preds_path = tmp_path / "preds.jsonl"
+    p = {
+        "id": "synthetic.otherbadtoken",
+        "prompt": "Compare badtoken with otherbadtoken",
+        "response": "Слово otherbadtoken — це росіянізм. Вживайте good2, оскільки це норма за словником ВЕСУМ.",
+    }
+    preds_path.write_text(json.dumps(p) + "\n", encoding="utf-8")
+
+    summary = evaluate_predictions(gold_path, preds_path)
+    assert summary["expected_gold_records"] == 2
+    assert summary["total_evaluated"] == 1
+    assert summary["missing_records_count"] == 1
+    eval_row = next(r for r in summary["evaluations"] if r["status"] == "evaluated")
+    assert eval_row["id"] == "synthetic.otherbadtoken"
+    assert eval_row["target_term"] == "otherbadtoken"
+
+
+def test_atomic_staging_protects_existing_consumer_dir(tmp_path: Path) -> None:
+    # R6: staging directory protects existing files if validation fails
+    import pytest
+
+    in_dir = tmp_path / "atomic_gen"
+    in_dir.mkdir()
+    out_dir = tmp_path / "atomic_consumer"
+    out_dir.mkdir()
+    sentinel = out_dir / "important_existing.jsonl"
+    sentinel.write_text("existing content\n", encoding="utf-8")
+
+    # Incomplete manifest (violates validation)
+    (in_dir / "decolonization_manifest.json").write_text("{}", encoding="utf-8")
+
+    with pytest.raises(ValueError):
+        format_consumer_datasets(in_dir, out_dir)
+
+    # Sentinel file must still exist untouched
+    assert sentinel.is_file()
+    assert sentinel.read_text(encoding="utf-8") == "existing content\n"

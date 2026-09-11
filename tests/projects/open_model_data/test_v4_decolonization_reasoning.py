@@ -257,6 +257,7 @@ def test_generate_pipeline_mock(
     cur.execute("CREATE TABLE ua_gec_errors (error TEXT, correct TEXT, error_type TEXT, is_native INTEGER)")
     cur.execute("CREATE TABLE grinchenko (word TEXT)")
     cur.execute("CREATE TABLE sum11 (word TEXT)")
+    cur.execute("INSERT INTO sum11 VALUES ('автовежа')")
     conn.commit()
     conn.close()
 
@@ -366,3 +367,25 @@ def test_partitioning_firewall_determinism() -> None:
     held_out_count = partitions.count("held_out")
     assert train_count + held_out_count == 100
     assert 65 <= train_count <= 95
+
+
+def test_synthesize_trajectory_requires_living_standard_attestation() -> None:
+    """R2 regression: a candidate with zero living standard evidence must not produce living standard claims."""
+    # Synthetic candidate with only VESUM counts and no textbook, dictionary, or curated evidence
+    candidate = CalqueCandidate(
+        target_term="синтетичний_термін",
+        suggestions=["дійсна фраза"],
+        source_tag="synthetic_test",
+    )
+    vesum_counts = {"дійсна фраза": 5}
+    tb_attestations = {"дійсна фраза": None}
+    dict_attestations = {"дійсна фраза": None}
+
+    result = synthesize_trajectory_and_dpo(
+        candidate,
+        vesum_counts,
+        tb_attestations,
+        dict_attestations,
+    )
+    # Must refuse to synthesize ungrounded living standard claims
+    assert result is None

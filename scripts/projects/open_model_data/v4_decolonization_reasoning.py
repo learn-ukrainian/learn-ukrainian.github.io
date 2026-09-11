@@ -51,6 +51,7 @@ def resolve_data_path(rel_path: str) -> Path:
 CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
 TRAJECTORY_SCHEMA_PATH = CONTRACTS_DIR / "v1_decolonization_trajectory.schema.json"
 DPO_PAIR_SCHEMA_PATH = CONTRACTS_DIR / "v1_decolonization_dpo_pair.schema.json"
+MAX_SHARD_BYTES: int = 1_800_000
 
 DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
 DEFAULT_VESUM_DB = resolve_data_path("data/vesum.db")
@@ -368,8 +369,7 @@ def find_textbook_attestation(
                 rows = cur.execute(fts_query, (f'"{escaped_phrase}"', *ALLOWED_GRADES)).fetchall()
             except sqlite3.OperationalError:
                 rows = []
-
-        if not rows:
+        else:
             query = f"""
                 SELECT title, grade, subject, author, text, source_file
                 FROM textbooks
@@ -513,8 +513,6 @@ def synthesize_trajectory_and_dpo(
     if not verified_alts:
         return None
 
-    primary_alt = verified_alts[0]
-    primary_tb = textbook_attestations.get(primary_alt)
     traj_id = compute_id("traj", target_term)
     dpo_id = compute_id("dpo", target_term)
 
@@ -552,9 +550,8 @@ def synthesize_trajectory_and_dpo(
         else:
             evidence = (
                 f"Словозмінна парадигма зафіксована у словниковій базі ВЕСУМ ({vesum_counts[s]} словоформ); "
-                f"без прямого шкільного підручникового контексту{prov_suffix}"
+                f"без прямого шкільного підручникового чи словникового контексту{prov_suffix}"
             )
-            # Without textbook or dictionary attestation, do not unconditionally claim primary living standard
             tier = "technical_compound" if ("-" in s or len(s.split()) > 1) else "classical_regional"
 
         spectrum_alts.append(
@@ -574,6 +571,17 @@ def synthesize_trajectory_and_dpo(
                     "evidence_source": f"Не зафіксовано у словниковій базі ВЕСУМ (0 форм); кабінетний новотвір{prov_suffix}",
                 }
             )
+
+    # Gate on verified living-standard evidence:
+    # A decolonization trajectory must teach a verified modern living standard.
+    # Without living standard attestation, we do not produce ungrounded normative training data.
+    living_candidates = [alt for alt in spectrum_alts if alt["register_tier"] == "living_standard"]
+    if not living_candidates:
+        return None
+
+    primary_alt_info = living_candidates[0]
+    primary_alt = primary_alt_info["lemma"]
+    primary_evidence = primary_alt_info["evidence_source"]
 
     calque_category, source_formation_desc, equiv_mechanism_desc = classify_calque_type(target_term)
 
@@ -619,18 +627,17 @@ def synthesize_trajectory_and_dpo(
         f"1. Етимологія та словотвірна діагностика: Визначено дериваційну проблему форми «{target_term}» ({calque_category}). {source_formation_desc}",
         f"2. Питома словотвірна модель: Відновлено природний словотвірний механізм. {equiv_mechanism_desc}",
         f"3. Морфологічна верифікація за словником ВЕСУМ: Рекомендований варіант «{primary_alt}» має повну словозмінну парадигму ({vesum_counts[primary_alt]} словоформ у базі даних).",
-        f"4. Реєстрове узгодження та контекст уживання: Варіант «{primary_alt}» належить до нормативного живого стандарту (living_standard) та підтверджений мовною практикою.",
-        f"5. Нормативний висновок і практична рекомендація: Слід уникати форми «{target_term}», послідовно вживаючи питоме «{primary_alt}».",
+        f"4. Реєстрове узгодження та контекст уживання: Варіант «{primary_alt}» належить до нормативного живого стандарту (living_standard). Підтверджено джерелом: {primary_evidence}.",
+        f"5. Нормативний висновок і практична рекомендація: Слід уникати калькованої форми «{target_term}», послідовно вживаючи питоме «{primary_alt}».",
     ]
 
     final_response = (
         f"Правильно вживати «{primary_alt}». Вживання форми «{target_term}» є типовою калькою з російської мови. "
         f"{equiv_mechanism_desc} "
         f"Питоме українське слово «{primary_alt}» відповідає чинній мовній нормі та має повну парадигму словозміни "
-        f"у морфологічній базі ВЕСУМ ({vesum_counts[primary_alt]} словоформ)."
+        f"у морфологічній базі ВЕСУМ ({vesum_counts[primary_alt]} словоформ). "
+        f"Нормативне засвідчення: {primary_evidence}."
     )
-    if primary_tb:
-        final_response += f" Воно послідовно вживається в підручниках МОН (зокрема: «{primary_tb['subject']}» {primary_tb['grade']} клас)."
 
     query = f"Як правильно сказати або написати українською: «{target_term}» чи «{primary_alt}»?"
 
@@ -713,9 +720,13 @@ def generate_pipeline(
     records_per_shard: int = 400,
     train_ratio: float = 0.8,
     verify_schema: bool = True,
+    max_shard_bytes: int = MAX_SHARD_BYTES,
 ) -> dict[str, Any]:
     """Execute the ULDR dataset generation pipeline with partitioning, sharding, and manifest receipts."""
     out_dir.mkdir(parents=True, exist_ok=True)
+    # Clean prior JSONL files in out_dir to prevent orphan shards
+    for stale_file in out_dir.glob("decolonization_*.jsonl"):
+        stale_file.unlink()
 
     traj_validator = None
     dpo_validator = None
@@ -742,6 +753,8 @@ def generate_pipeline(
         p: {
             "shard_idx": 1,
             "current_shard_count": 0,
+            "current_t_bytes": 0,
+            "current_d_bytes": 0,
             "total_count": 0,
             "traj_fh": None,
             "dpo_fh": None,
@@ -812,7 +825,16 @@ def generate_pipeline(
                     part, pstate["shard_idx"]
                 )
 
-            if pstate["current_shard_count"] >= records_per_shard:
+            t_line = json.dumps(trajectory, ensure_ascii=False) + "\n"
+            d_line = json.dumps(dpo_pair, ensure_ascii=False) + "\n"
+            t_bytes = len(t_line.encode("utf-8"))
+            d_bytes = len(d_line.encode("utf-8"))
+
+            if pstate["current_shard_count"] > 0 and (
+                pstate["current_shard_count"] >= records_per_shard
+                or pstate["current_t_bytes"] + t_bytes > max_shard_bytes
+                or pstate["current_d_bytes"] + d_bytes > max_shard_bytes
+            ):
                 pstate["traj_fh"].close()
                 pstate["dpo_fh"].close()
                 cur_t = pstate["current_t_path"]
@@ -833,13 +855,17 @@ def generate_pipeline(
                 )
                 pstate["shard_idx"] += 1
                 pstate["current_shard_count"] = 0
+                pstate["current_t_bytes"] = 0
+                pstate["current_d_bytes"] = 0
                 pstate["traj_fh"], pstate["dpo_fh"], pstate["current_t_path"], pstate["current_d_path"] = open_shard(
                     part, pstate["shard_idx"]
                 )
 
-            pstate["traj_fh"].write(json.dumps(trajectory, ensure_ascii=False) + "\n")
-            pstate["dpo_fh"].write(json.dumps(dpo_pair, ensure_ascii=False) + "\n")
+            pstate["traj_fh"].write(t_line)
+            pstate["dpo_fh"].write(d_line)
             pstate["current_shard_count"] += 1
+            pstate["current_t_bytes"] += t_bytes
+            pstate["current_d_bytes"] += d_bytes
             pstate["total_count"] += 1
             pstate["terms"].add(candidate.target_term)
 

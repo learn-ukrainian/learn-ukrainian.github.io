@@ -52,12 +52,27 @@ This generates sharded consumer files adhering to the `< 2,000,000 bytes` reposi
 ### 4.1 Target Foundation Architectures: Gemma 3 & Gemma 4
 
 We specifically target modern open-weight architectures:
-- **Gemma 4** (`google/gemma-4-31b-it`): Incorporates native reasoning and thinking channels (`<thought> ... </thought>`) directly into the architecture, alongside high-capacity multilingual Ukrainian tokenization.
-- **Gemma 3** (`google/gemma-3-27b-it`): Highly efficient multilingual foundation model with enhanced Cyrillic vocabulary compression.
+- **Gemma 4** (`google/gemma-4-31b-it`): Google's modern instruction-tuned model supporting dual-channel thought reasoning. Gemma 4 natively delimits turns with `<|turn>` / `<turn|>` and routes reasoning through native thought channels (`<|channel>thought` ... `<channel|>`) activated via the `<|think|>` control token.
+- **Gemma 3** (`google/gemma-3-27b-it`): Multilingual foundation model using turn delimiters `<start_of_turn>` and `<end_of_turn>`, suitable for supervised `<thought> ... </thought>` text-level reasoning.
 
-### 4.2 Chat Template & System Prompt Adaptation (Gemma Turn Structure)
+### 4.2 Chat Template & Turn Structure Specifications
 
-Gemma's chat template structures conversations using user and model turns:
+#### Gemma 4 Native Channel Format
+In Gemma 4's native chat template:
+```
+<|turn>user
+{system_prompt}
+
+{user_query}<turn|>
+<|turn>model
+<|channel>thought
+{reasoning_steps}
+<channel|>
+{final_response}<turn|>
+```
+
+#### Gemma 3 / Generic Supervised Format
+In Gemma 3 and standard ChatML fine-tuning:
 ```
 <start_of_turn>user
 {system_prompt}
@@ -71,29 +86,48 @@ Gemma's chat template structures conversations using user and model turns:
 {final_response}<end_of_turn>
 ```
 
-To support this seamlessly across trainers:
-1. **SFT (`uldr_sharegpt_*.jsonl`)**: Each record provides both `"conversations"` (standard ShareGPT) and `"messages"` (standard Hugging Face format with system instructions prepended to the user turn).
-2. **DPO (`uldr_dpo_*.jsonl`)**: The `prompt` field embeds `{system_prompt}\n\n{user_prompt}` directly, ensuring that Hugging Face TRL `DPOTrainer` fully tokenizes system guidance rather than discarding detached system columns.
+### 4.3 Data Formats & TRL ChatML Adaptation (R7 Resolution)
 
-### 4.3 Stage 1: SFT with Thought Reasoning (Unsloth / TRL)
+To avoid trainer conflicts:
+1. **Pure ShareGPT Shards (`uldr_sharegpt_*.jsonl`)**: Emits `"conversations"` with standard roles (`system`, `human`, `gpt`).
+2. **TRL Preprocessing Requirement**: Upstream Hugging Face TRL checks for the presence of a `"conversations"` column; if found, its internal `maybe_convert_to_chatml` automatically converts it into roles `system/human/gpt`, overwriting any existing `messages` column. To safely train with `messages` (`user`/`assistant`), map the dataset and remove `"conversations"` prior to passing it to `SFTTrainer`.
+3. **DPO (`uldr_dpo_*.jsonl`)**: The `prompt` column embeds `{system_prompt}\n\n{user_prompt}` directly, ensuring that Hugging Face TRL `DPOTrainer` fully tokenizes system guidance rather than discarding detached system columns.
 
-The ShareGPT dataset incorporates explicit `<thought> ... </thought>` tags demonstrating the 5-step diagnostic procedure (morphemic analysis, Soviet unification suppression history, MESU curriculum attestation, VESUM validation, and register spectrum).
+### 4.4 Stage 1: SFT with Thought Reasoning (Hugging Face TRL)
 
 ```python
 import torch
 from datasets import load_dataset
 from peft import LoraConfig
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoTokenizer
 from trl import SFTConfig, SFTTrainer
 
 # Primary target: Gemma 4 or Gemma 3
 model_id = "google/gemma-4-31b-it"  # Alternatively: "google/gemma-3-27b-it"
 
 tokenizer = AutoTokenizer.from_pretrained(model_id)
-dataset = load_dataset(
+raw_dataset = load_dataset(
     "json",
     data_files="data/projects/open_model_data/decolonization/consumer/uldr_sharegpt_train_part*.jsonl",
 )
+
+# Convert ShareGPT conversations to ChatML messages and DROP the conversations column
+# to prevent TRL's maybe_convert_to_chatml from overwriting the messages schema.
+def convert_to_chatml(example):
+    convs = example["conversations"]
+    sys_val = next((c["value"] for c in convs if c["from"] == "system"), "")
+    human_val = next((c["value"] for c in convs if c["from"] == "human"), "")
+    gpt_val = next((c["value"] for c in convs if c["from"] == "gpt"), "")
+
+    user_text = f"{sys_val}\n\n{human_val}" if sys_val else human_val
+    return {
+        "messages": [
+            {"role": "user", "content": user_text},
+            {"role": "assistant", "content": gpt_val},
+        ]
+    }
+
+dataset = raw_dataset.map(convert_to_chatml, remove_columns=["conversations"])
 
 lora_config = LoraConfig(
     r=16,
@@ -127,14 +161,14 @@ trainer = SFTTrainer(
 trainer.train()
 ```
 
-### 4.4 Stage 2: Direct Preference Optimization (DPO)
+### 4.5 Stage 2: Direct Preference Optimization (DPO)
 
 After SFT, apply DPO over `uldr_dpo_train_part*.jsonl` to penalize Soviet calques and reward authentic linguistic reasoning.
 
 ```python
 from datasets import load_dataset
 from peft import PeftModel
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoTokenizer
 from trl import DPOConfig, DPOTrainer
 
 model_id = "google/gemma-4-31b-it"
@@ -164,9 +198,9 @@ dpo_trainer = DPOTrainer(
 dpo_trainer.train()
 ```
 
-### 4.5 Pre-Training Tokenization Smoke Test
+### 4.6 Pre-Training Tokenization Smoke Test
 
-Run this verification check prior to launching GPU training jobs to ensure the tokenizer correctly preserves thinking tags and system instructions without truncation:
+Run this verification check prior to launching GPU training jobs to ensure the tokenizer correctly preserves thinking tags and system instructions without truncation or role collision:
 
 ```python
 import json
@@ -179,8 +213,19 @@ sample_file = "data/projects/open_model_data/decolonization/consumer/uldr_shareg
 with open(sample_file, "r", encoding="utf-8") as f:
     sample_rec = json.loads(f.readline())
 
+# Convert to ChatML
+convs = sample_rec["conversations"]
+sys_val = next((c["value"] for c in convs if c["from"] == "system"), "")
+human_val = next((c["value"] for c in convs if c["from"] == "human"), "")
+gpt_val = next((c["value"] for c in convs if c["from"] == "gpt"), "")
+
+messages = [
+    {"role": "user", "content": f"{sys_val}\n\n{human_val}"},
+    {"role": "assistant", "content": gpt_val},
+]
+
 # Verify messages formatting through the model chat template
-rendered_prompt = tokenizer.apply_chat_template(sample_rec["messages"], tokenize=False)
+rendered_prompt = tokenizer.apply_chat_template(messages, tokenize=False)
 assert "<thought>" in rendered_prompt and "</thought>" in rendered_prompt
 assert "мовної деколонізації" in rendered_prompt
 print("Tokenizer and chat template smoke test PASSED!")

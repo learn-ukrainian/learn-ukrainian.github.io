@@ -11,7 +11,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import shutil
 import sys
+import uuid
 from pathlib import Path
 from typing import Any
 
@@ -41,7 +43,7 @@ MAX_SHARD_BYTES = 1_800_000  # Hard ceiling comfortably below repository 2,000,0
 
 
 def trajectory_to_sharegpt(trajectory: dict[str, Any]) -> dict[str, Any]:
-    """Convert a normative ULDR trajectory to ShareGPT & ChatML/Gemma formats with <thought> block."""
+    """Convert a normative ULDR trajectory to pure standard ShareGPT format with <thought> block."""
     traj_id = trajectory["trajectory_id"]
     query = trajectory["query"]
     thought_steps = trajectory.get("reasoning_steps", [])
@@ -58,7 +60,22 @@ def trajectory_to_sharegpt(trajectory: dict[str, Any]) -> dict[str, Any]:
             {"from": "human", "value": query},
             {"from": "gpt", "value": assistant_reply},
         ],
-        # Native ChatML / Gemma 3 & 4 turn structure with system instructions prepended to user turn
+    }
+
+
+def trajectory_to_chatml(trajectory: dict[str, Any]) -> dict[str, Any]:
+    """Convert a normative ULDR trajectory to pure ChatML/Messages format for Hugging Face SFTTrainer."""
+    traj_id = trajectory["trajectory_id"]
+    query = trajectory["query"]
+    thought_steps = trajectory.get("reasoning_steps", [])
+    response = trajectory.get("final_response") or trajectory.get("response", "")
+
+    thought_content = "\n".join(f"Крок {i + 1}: {step}" for i, step in enumerate(thought_steps))
+    assistant_reply = f"<thought>\n{thought_content}\n</thought>\n\n{response}"
+
+    return {
+        "id": traj_id,
+        "target_term": trajectory.get("target_term", ""),
         "messages": [
             {"role": "user", "content": f"{SYSTEM_PROMPT}\n\n{query}"},
             {"role": "assistant", "content": assistant_reply},
@@ -178,28 +195,11 @@ def format_consumer_datasets(
     with manifest_path.open("r", encoding="utf-8") as f:
         manifest = json.load(f)
 
-    # Fail closed: verify all declared input shards exist and are non-empty
+    # Fail closed: verify all declared input shards exist, match hashes/counts, and contain valid JSON
     declared_shards = manifest.get("shards", [])
     if not declared_shards:
         raise ValueError(f"Manifest {manifest_path} contains 0 declared shards.")
 
-    for shard_info in declared_shards:
-        traj_p = input_dir / shard_info["trajectories_file"]
-        dpo_p = input_dir / shard_info["dpo_pairs_file"]
-        if not traj_p.is_file():
-            raise FileNotFoundError(f"Declared trajectories shard missing: {traj_p}")
-        if not dpo_p.is_file():
-            raise FileNotFoundError(f"Declared DPO pairs shard missing: {dpo_p}")
-        if traj_p.stat().st_size == 0:
-            raise ValueError(f"Declared trajectories shard is empty: {traj_p}")
-        if dpo_p.stat().st_size == 0:
-            raise ValueError(f"Declared DPO pairs shard is empty: {dpo_p}")
-
-    # Clean existing consumer jsonl files
-    for old_f in output_dir.glob("*.jsonl"):
-        old_f.unlink()
-
-    # Ingest partition records
     partition_records: dict[str, dict[str, list[dict[str, Any]]]] = {
         "train": {"trajs": [], "dpos": []},
         "held_out": {"trajs": [], "dpos": []},
@@ -212,20 +212,56 @@ def format_consumer_datasets(
 
         traj_p = input_dir / shard_info["trajectories_file"]
         dpo_p = input_dir / shard_info["dpo_pairs_file"]
+        if not traj_p.is_file():
+            raise FileNotFoundError(f"Declared trajectories shard missing: {traj_p}")
+        if not dpo_p.is_file():
+            raise FileNotFoundError(f"Declared DPO pairs shard missing: {dpo_p}")
+        if traj_p.stat().st_size == 0:
+            raise ValueError(f"Declared trajectories shard is empty (0 bytes): {traj_p}")
+        if dpo_p.stat().st_size == 0:
+            raise ValueError(f"Declared DPO pairs shard is empty (0 bytes): {dpo_p}")
 
+        # Reconcile SHA-256 hashes if declared in manifest
+        if "trajectories_sha256" in shard_info:
+            actual_th = hashlib.sha256(traj_p.read_bytes()).hexdigest()
+            if actual_th != shard_info["trajectories_sha256"]:
+                raise ValueError(f"Corrupted trajectory shard {traj_p.name}: hash mismatch")
+        if "dpo_pairs_sha256" in shard_info:
+            actual_dh = hashlib.sha256(dpo_p.read_bytes()).hexdigest()
+            if actual_dh != shard_info["dpo_pairs_sha256"]:
+                raise ValueError(f"Corrupted DPO shard {dpo_p.name}: hash mismatch")
+
+        # Ingest and validate actual parsed non-empty records
+        t_records = []
         with traj_p.open("r", encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
                 if line:
-                    partition_records[part]["trajs"].append(json.loads(line))
+                    t_records.append(json.loads(line))
+        if not t_records:
+            raise ValueError(f"Declared trajectory shard {traj_p.name} contains zero valid JSON records")
+        if "trajectories_count" in shard_info and len(t_records) != shard_info["trajectories_count"]:
+            raise ValueError(
+                f"Record count mismatch in {traj_p.name}: expected {shard_info['trajectories_count']}, got {len(t_records)}"
+            )
 
+        d_records = []
         with dpo_p.open("r", encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
                 if line:
-                    partition_records[part]["dpos"].append(json.loads(line))
+                    d_records.append(json.loads(line))
+        if not d_records:
+            raise ValueError(f"Declared DPO shard {dpo_p.name} contains zero valid JSON records")
+        if "dpo_pairs_count" in shard_info and len(d_records) != shard_info["dpo_pairs_count"]:
+            raise ValueError(
+                f"Record count mismatch in {dpo_p.name}: expected {shard_info['dpo_pairs_count']}, got {len(d_records)}"
+            )
 
-    # Cross-partition firewall validation (Finding F5)
+        partition_records[part]["trajs"].extend(t_records)
+        partition_records[part]["dpos"].extend(d_records)
+
+    # Cross-partition firewall validation (R4: combine SFT and DPO targets)
     train_traj_ids = {t["trajectory_id"] for t in partition_records["train"]["trajs"]}
     held_out_traj_ids = {t["trajectory_id"] for t in partition_records["held_out"]["trajs"]}
     traj_id_overlap = train_traj_ids & held_out_traj_ids
@@ -242,11 +278,22 @@ def format_consumer_datasets(
             f"Partition firewall violation: {len(dpo_id_overlap)} overlapping DPO pair IDs: {dpo_id_overlap}"
         )
 
+    def _extract_term(rec: dict[str, Any]) -> str:
+        term = rec.get("target_term")
+        if not term and "metadata" in rec and isinstance(rec["metadata"], dict):
+            term = rec["metadata"].get("target_term") or rec["metadata"].get("target_calque")
+        return (term or "").strip().lower()
+
+    # Validate combined SFT + DPO target terms across partitions
     train_targets = {
-        t["target_term"].strip().lower() for t in partition_records["train"]["trajs"] if t.get("target_term")
+        _extract_term(t) for t in partition_records["train"]["trajs"] if _extract_term(t)
+    } | {
+        _extract_term(d) for d in partition_records["train"]["dpos"] if _extract_term(d)
     }
     held_out_targets = {
-        t["target_term"].strip().lower() for t in partition_records["held_out"]["trajs"] if t.get("target_term")
+        _extract_term(t) for t in partition_records["held_out"]["trajs"] if _extract_term(t)
+    } | {
+        _extract_term(d) for d in partition_records["held_out"]["dpos"] if _extract_term(d)
     }
     target_overlap = train_targets & held_out_targets
     if target_overlap:
@@ -267,57 +314,72 @@ def format_consumer_datasets(
         "shards": [],
     }
 
-    # Write sharded files with byte-budget control (Finding F6)
-    for part in ("train", "held_out"):
-        # ShareGPT
-        sg_shards, sg_count = _write_sharded_records(
-            records=partition_records[part]["trajs"],
-            format_fn=trajectory_to_sharegpt,
-            output_dir=output_dir,
-            file_prefix="uldr_sharegpt",
-            partition=part,
-            format_name="sharegpt",
-            max_records_per_shard=records_per_shard,
-            max_shard_bytes=max_shard_bytes,
-        )
-        stats["shards"].extend(sg_shards)
-        if part == "train":
-            stats["sharegpt_train_count"] = sg_count
-        else:
-            stats["sharegpt_held_out_count"] = sg_count
+    # Staged atomic publication (R6: do NOT delete existing outputs until new outputs are verified)
+    staging_dir = output_dir / f".staging_{uuid.uuid4().hex[:8]}"
+    staging_dir.mkdir(parents=True, exist_ok=True)
 
-        # TRL DPO
-        dpo_shards, dpo_count = _write_sharded_records(
-            records=partition_records[part]["dpos"],
-            format_fn=dpo_pair_to_trl,
-            output_dir=output_dir,
-            file_prefix="uldr_dpo",
-            partition=part,
-            format_name="trl_dpo",
-            max_records_per_shard=records_per_shard,
-            max_shard_bytes=max_shard_bytes,
-        )
-        stats["shards"].extend(dpo_shards)
-        if part == "train":
-            stats["trl_dpo_train_count"] = dpo_count
-        else:
-            stats["trl_dpo_held_out_count"] = dpo_count
+    try:
+        for part in ("train", "held_out"):
+            # ShareGPT
+            sg_shards, sg_count = _write_sharded_records(
+                records=partition_records[part]["trajs"],
+                format_fn=trajectory_to_sharegpt,
+                output_dir=staging_dir,
+                file_prefix="uldr_sharegpt",
+                partition=part,
+                format_name="sharegpt",
+                max_records_per_shard=records_per_shard,
+                max_shard_bytes=max_shard_bytes,
+            )
+            stats["shards"].extend(sg_shards)
+            if part == "train":
+                stats["sharegpt_train_count"] = sg_count
+            else:
+                stats["sharegpt_held_out_count"] = sg_count
 
-    # Active private path and restricted source scan across all generated consumer shards
-    consumer_shard_paths = [output_dir / sh["file"] for sh in stats["shards"]]
-    zero_paths, zero_restricted, violations = scan_generated_files(consumer_shard_paths)
-    if violations:
-        raise RuntimeError("Private content leak detected in consumer datasets:\n" + "\n".join(violations))
+            # TRL DPO
+            dpo_shards, dpo_count = _write_sharded_records(
+                records=partition_records[part]["dpos"],
+                format_fn=dpo_pair_to_trl,
+                output_dir=staging_dir,
+                file_prefix="uldr_dpo",
+                partition=part,
+                format_name="trl_dpo",
+                max_records_per_shard=records_per_shard,
+                max_shard_bytes=max_shard_bytes,
+            )
+            stats["shards"].extend(dpo_shards)
+            if part == "train":
+                stats["trl_dpo_train_count"] = dpo_count
+            else:
+                stats["trl_dpo_held_out_count"] = dpo_count
 
-    stats["quality_metrics"] = {
-        "zero_private_paths": zero_paths,
-        "zero_restricted_sources": zero_restricted,
-    }
+        # Active private path and restricted source scan across all generated consumer shards in staging
+        staged_shard_paths = [staging_dir / sh["file"] for sh in stats["shards"]]
+        zero_paths, zero_restricted, violations = scan_generated_files(staged_shard_paths)
+        if violations:
+            raise RuntimeError("Private content leak detected in consumer datasets:\n" + "\n".join(violations))
 
-    summary_path = output_dir / "consumer_formats_manifest.json"
-    with summary_path.open("w", encoding="utf-8") as f:
-        json.dump(stats, f, ensure_ascii=False, indent=2)
-        f.write("\n")
+        stats["quality_metrics"] = {
+            "zero_private_paths": zero_paths,
+            "zero_restricted_sources": zero_restricted,
+        }
+
+        # Staging verified: atomically publish by moving staged files into output_dir
+        for old_f in output_dir.glob("*.jsonl"):
+            old_f.unlink()
+
+        for staged_f in staging_dir.glob("*.jsonl"):
+            shutil.move(str(staged_f), str(output_dir / staged_f.name))
+
+        summary_path = output_dir / "consumer_formats_manifest.json"
+        with summary_path.open("w", encoding="utf-8") as f:
+            json.dump(stats, f, ensure_ascii=False, indent=2)
+            f.write("\n")
+
+    finally:
+        if staging_dir.exists():
+            shutil.rmtree(staging_dir, ignore_errors=True)
 
     return stats
 

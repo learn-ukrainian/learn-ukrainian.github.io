@@ -211,7 +211,10 @@ Following the **Operator Contract** (Item 5: Route by model × harness fit; Item
 
 ### Phase 1: Contract Freezing & Seed Anchors (Milestone 1 — PR #7918)
 - **Contracts**: Frozen `v1` JSON schemas for trajectories (`v1_decolonization_trajectory.schema.json`) and DPO pairs (`v1_decolonization_dpo_pair.schema.json`) under `data/projects/open_model_data/contracts/`.
-- **Seed Anchors**: Frozen 3 canonical gold reference seeds (*пилосос*, *переключити*, *кримчанин*) under `data/projects/open_model_data/decolonization/seeds/` with 100% VESUM verification, textbook citations, and register spectrum.
+- **Seed Curation Denominator & Status**:
+  - **Planned Denominator**: 100 human-curated gold seed trajectories.
+  - **Verified Delivered Outcome**: 3 canonical reference contract anchor seeds (*пилосос*, *переключити*, *кримчанин*) delivered under `data/projects/open_model_data/decolonization/seeds/` with 100% VESUM verification, textbook citations, and register spectrum validation.
+  - **Residual Gap**: 97 human-curated seed files remain outstanding (3/100 delivered). Per Operator Contract Rule 14, this scope is not silently reduced; this residual gap remains formally recorded for operator disposition and subsequent curator cycles, while the automated pipeline in Phase 2 mines living standards and attestation directly from textbooks and academic lexicographical sources.
 - **Review**: Independent cross-family review approved by Claude Sonnet 5.
 
 ### Phase 2: Automated Generator Pipeline & Attestation Engine (Milestone 2 — PR #7923)
