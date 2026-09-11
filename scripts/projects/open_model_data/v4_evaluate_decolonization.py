@@ -43,9 +43,21 @@ REASONING_MARKERS = [
 ]
 
 AFFIRMATION_PATTERNS = [
-    r"правильно\s+(?:вживати|казати|говорити)\s+[«\"]?{term}[»\"]?",
+    r"правильно\s+(?:вживати|казати|говорити|писати)?\s*[«\"]?{term}[»\"]?",
     r"слово\s+[«\"]?{term}[»\"]?\s+є\s+(?:цілком\s+)?нормативним",
     r"вживайте\s+[«\"]?{term}[»\"]?",
+    r"можна\s+(?:цілком\s+)?(?:вільно\s+)?вживати\s+[«\"]?{term}[»\"]?",
+    r"{term}\s*(?:—|-|–|є|це)?\s*(?:це\s+)?(?:правильн|нормативн|прийнятн|допустим|літературн|влучн|вдало|вірн|кращ|кращий|вибір)",
+    r"не\s+(?:є\s+)?(?:помилк|кальк|русизм|вад)",
+    r"немає\s+(?:тут\s+)?(?:жодної\s+)?помилк",
+    r"не\s+вважа(?:ється|ти)\s+помилк",
+]
+
+ALTERNATIVE_NEGATION_PATTERNS = [
+    r"не\s+(?:варто\s+|слід\s+|можна\s+|треба\s+)?(?:вживати|вживайте|використовувати|використовуйте|казати|кажіть|говорити|говоріть|писати|пишіть|радимо|рекомендуємо|брати|беріть)\s+[«\"]?{alt}[»\"]?",
+    r"не\s+[«\"]?{alt}[»\"]?",
+    r"(?:уникати|уникайте|відмовтеся\s+від|відмовитися\s+від)\s+[«\"]?{alt}[»\"]?",
+    r"замість\s+[«\"]?{alt}[»\"]?\s+(?:вживайте|краще|правильно)\s+[«\"]?{term}[»\"]?",
 ]
 
 
@@ -61,11 +73,24 @@ def evaluate_single_response(
     response_text: str,
 ) -> dict[str, Any]:
     """Evaluate one model output against gold decolonization targets."""
-    resp_norm = response_text.lower()
+    resp_norm = response_text.lower().strip()
     term_norm = normalize_token(target_term)
 
+    # Empty, whitespace-only, or vacuous responses fail immediately
+    if not resp_norm:
+        return {
+            "target_term": target_term,
+            "calque_eliminated": False,
+            "authentic_suggested": False,
+            "matched_alternatives": [],
+            "reasoning_grounded": False,
+            "reasoning_hits": 0,
+            "composite_score": 0.0,
+            "is_pass": False,
+        }
+
     # 1. Calque elimination check:
-    # If the model explicitly affirms or recommends the calque, it fails elimination.
+    # If the model explicitly affirms, defends, or recommends the calque, it fails elimination.
     calque_affirmed = False
     for pat in AFFIRMATION_PATTERNS:
         regex = re.compile(pat.format(term=re.escape(term_norm)), re.IGNORECASE)
@@ -75,27 +100,62 @@ def evaluate_single_response(
 
     # If the calque is mentioned, check if it is explicitly framed as an error / calque / incorrect
     calque_present = term_norm in resp_norm
-    if calque_present and not calque_affirmed:
-        # Check for critique context
-        critique_markers = ("кальк", "помилк", "росіян", "не рекоменд", "не варто", "штучн", "замін", "замість")
+    if calque_affirmed:
+        calque_eliminated = False
+    elif calque_present:
+        # Check for critique context and absence of "немає помилки"
+        critique_markers = (
+            "кальк",
+            "помилк",
+            "росіян",
+            "не рекоменд",
+            "не варто",
+            "штучн",
+            "замін",
+            "замість",
+            "уникати",
+            "суржик",
+            "неправильн",
+            "радянськ",
+        )
         has_critique = any(m in resp_norm for m in critique_markers)
         calque_eliminated = has_critique
     else:
-        calque_eliminated = not calque_affirmed
+        # Calque not mentioned; verify response does not defend errors in general
+        calque_eliminated = True
 
     # 2. Authentic suggestion check:
-    # Does the response recommend at least one verified Ukrainian equivalent?
+    # Does the response recommend at least one verified Ukrainian equivalent without negating it?
     matched_alts = []
     for alt in valid_alternatives:
         alt_norm = normalize_token(alt)
-        if alt_norm and alt_norm in resp_norm:
+        if not alt_norm or alt_norm not in resp_norm:
+            continue
+
+        # Check if this alternative is negated or discouraged
+        is_negated = False
+        for n_pat in ALTERNATIVE_NEGATION_PATTERNS:
+            n_regex = re.compile(n_pat.format(alt=re.escape(alt_norm), term=re.escape(term_norm)), re.IGNORECASE)
+            if n_regex.search(resp_norm):
+                is_negated = True
+                break
+
+        if not is_negated:
             matched_alts.append(alt)
 
     authentic_suggested = len(matched_alts) > 0
 
     # 3. Morphemic and historical reasoning grounding check:
     reasoning_hit_count = sum(1 for p in REASONING_MARKERS if p.search(resp_norm))
-    reasoning_grounded = reasoning_hit_count >= 2
+    # Reasoning requires substantive content length (>= 30 chars), at least 2 markers,
+    # and MUST NOT affirm or defend the calque.
+    reasoning_grounded = (
+        (reasoning_hit_count >= 2)
+        and (not calque_affirmed)
+        and (len(resp_norm) >= 30)
+        and calque_eliminated
+        and authentic_suggested
+    )
 
     # 4. Composite score:
     # 0.40 calque_eliminated + 0.40 authentic_suggested + 0.20 reasoning_grounded
@@ -107,7 +167,16 @@ def evaluate_single_response(
     if reasoning_grounded:
         composite_score += 0.20
 
-    is_pass = composite_score >= 0.80
+    # If the calque is affirmed or not eliminated, score is capped at 0.0
+    if calque_affirmed or not calque_eliminated:
+        composite_score = 0.0
+
+    # If the response is an unsubstantiated fragment (< 35 characters), cap score
+    if len(resp_norm) < 35:
+        composite_score = min(composite_score, 0.40)
+
+    # To achieve PASS, response must meet score threshold AND have verified reasoning grounding
+    is_pass = (composite_score >= 0.80) and reasoning_grounded
 
     return {
         "target_term": target_term,
@@ -126,7 +195,7 @@ def evaluate_predictions(
     predictions_path: Path,
     out_report_path: Path | None = None,
 ) -> dict[str, Any]:
-    """Evaluate a batch of predictions against the held-out evaluation partition."""
+    """Evaluate predictions against the held-out partition with strict denominator reconciliation."""
     if not held_out_path.is_file():
         raise FileNotFoundError(f"Missing held-out benchmark file at {held_out_path}")
     if not predictions_path.is_file():
@@ -142,69 +211,110 @@ def evaluate_predictions(
             item = json.loads(line)
             target = item.get("target_term") or normalize_token(item.get("query", ""))
             alts = [a["lemma"] for a in item.get("register_spectrum", {}).get("alternatives", [])]
-            gold_items[normalize_token(target)] = {
+            norm_key = normalize_token(target)
+            gold_items[norm_key] = {
                 "trajectory_id": item.get("trajectory_id"),
                 "target_term": target,
                 "alternatives": alts,
                 "gold_response": item.get("final_response") or item.get("response"),
             }
 
-    # Load predictions
-    results: list[dict[str, Any]] = []
+    expected_denominator = len(gold_items)
+    if expected_denominator == 0:
+        raise ValueError(f"Held-out benchmark file {held_out_path} contains 0 valid gold records.")
+
+    # Load predictions and map to gold items
+    matched_predictions: dict[str, dict[str, Any]] = {}
+    seen_prediction_ids: set[str] = set()
+    duplicate_predictions: list[str] = []
+    unknown_predictions: list[dict[str, Any]] = []
+
     with predictions_path.open("r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if not line:
                 continue
             pred = json.loads(line)
+            pred_id = pred.get("id", "")
+            if pred_id and pred_id in seen_prediction_ids:
+                duplicate_predictions.append(pred_id)
+                continue
+            if pred_id:
+                seen_prediction_ids.add(pred_id)
+
             target = pred.get("target_term", "")
             norm_target = normalize_token(target)
-            if norm_target not in gold_items:
-                # Try finding by trajectory_id or query
-                for k, v in gold_items.items():
-                    if v["trajectory_id"] == pred.get("id") or k in pred.get("prompt", "").lower():
-                        norm_target = k
-                        break
+            matched_gold_key: str | None = None
 
             if norm_target in gold_items:
-                gold = gold_items[norm_target]
-                resp_text = (
-                    pred.get("final_response")
-                    or pred.get("response")
-                    or pred.get("generated_text")
-                    or pred.get("text", "")
-                )
-                eval_res = evaluate_single_response(gold["target_term"], gold["alternatives"], resp_text)
-                eval_res["id"] = pred.get("id", gold["trajectory_id"])
-                results.append(eval_res)
+                matched_gold_key = norm_target
+            else:
+                # Try finding by trajectory_id or query substring
+                for k, v in gold_items.items():
+                    if (v["trajectory_id"] and v["trajectory_id"] == pred_id) or (
+                        k and k in pred.get("prompt", "").lower()
+                    ):
+                        matched_gold_key = k
+                        break
 
-    total = len(results)
-    if total == 0:
-        summary = {
-            "total_evaluated": 0,
-            "calque_elimination_rate": 0.0,
-            "authentic_suggestion_rate": 0.0,
-            "reasoning_grounding_rate": 0.0,
-            "mean_composite_score": 0.0,
-            "pass_rate": 0.0,
-            "evaluations": [],
-        }
-    else:
-        elim_count = sum(1 for r in results if r["calque_eliminated"])
-        auth_count = sum(1 for r in results if r["authentic_suggested"])
-        reas_count = sum(1 for r in results if r["reasoning_grounded"])
-        pass_count = sum(1 for r in results if r["is_pass"])
-        mean_score = sum(r["composite_score"] for r in results) / total
+            if matched_gold_key:
+                if matched_gold_key in matched_predictions:
+                    duplicate_predictions.append(matched_gold_key)
+                else:
+                    matched_predictions[matched_gold_key] = pred
+            else:
+                unknown_predictions.append(pred)
 
-        summary = {
-            "total_evaluated": total,
-            "calque_elimination_rate": round(elim_count / total, 4),
-            "authentic_suggestion_rate": round(auth_count / total, 4),
-            "reasoning_grounding_rate": round(reas_count / total, 4),
-            "mean_composite_score": round(mean_score, 4),
-            "pass_rate": round(pass_count / total, 4),
-            "evaluations": results,
-        }
+    # Reconcile evaluations across the exact gold denominator
+    results: list[dict[str, Any]] = []
+    missing_count = 0
+
+    for norm_key, gold in gold_items.items():
+        if norm_key in matched_predictions:
+            pred = matched_predictions[norm_key]
+            resp_text = (
+                pred.get("final_response") or pred.get("response") or pred.get("generated_text") or pred.get("text", "")
+            )
+            eval_res = evaluate_single_response(gold["target_term"], gold["alternatives"], resp_text)
+            eval_res["id"] = pred.get("id", gold["trajectory_id"])
+            eval_res["status"] = "evaluated"
+            results.append(eval_res)
+        else:
+            missing_count += 1
+            results.append(
+                {
+                    "id": gold["trajectory_id"],
+                    "target_term": gold["target_term"],
+                    "calque_eliminated": False,
+                    "authentic_suggested": False,
+                    "matched_alternatives": [],
+                    "reasoning_grounded": False,
+                    "reasoning_hits": 0,
+                    "composite_score": 0.0,
+                    "is_pass": False,
+                    "status": "missing_prediction",
+                }
+            )
+
+    elim_count = sum(1 for r in results if r["calque_eliminated"])
+    auth_count = sum(1 for r in results if r["authentic_suggested"])
+    reas_count = sum(1 for r in results if r["reasoning_grounded"])
+    pass_count = sum(1 for r in results if r["is_pass"])
+    mean_score = sum(r["composite_score"] for r in results) / expected_denominator
+
+    summary = {
+        "expected_gold_records": expected_denominator,
+        "total_evaluated": len(matched_predictions),
+        "missing_records_count": missing_count,
+        "duplicate_predictions_count": len(duplicate_predictions),
+        "unknown_predictions_count": len(unknown_predictions),
+        "calque_elimination_rate": round(elim_count / expected_denominator, 4),
+        "authentic_suggestion_rate": round(auth_count / expected_denominator, 4),
+        "reasoning_grounding_rate": round(reas_count / expected_denominator, 4),
+        "mean_composite_score": round(mean_score, 4),
+        "pass_rate": round(pass_count / expected_denominator, 4),
+        "evaluations": results,
+    }
 
     if out_report_path:
         out_report_path.parent.mkdir(parents=True, exist_ok=True)

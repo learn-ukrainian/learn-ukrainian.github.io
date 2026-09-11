@@ -65,7 +65,8 @@ def test_dpo_pair_to_trl() -> None:
     assert trl["id"] == "dpo.decolonize.avtovyshka"
     assert trl["target_term"] == "автовишка"
     assert trl["calque_category"] == "lexical_calque"
-    assert trl["prompt"] == sample_dpo["prompt"]
+    assert sample_dpo["prompt"] in trl["prompt"]
+    assert "деколонізації" in trl["prompt"]
     assert trl["chosen"] == sample_dpo["chosen"]
     assert trl["rejected"] == sample_dpo["rejected"]
     assert "деколонізації" in trl["system"]
@@ -106,16 +107,90 @@ def test_evaluate_single_response() -> None:
     assert res_bad["calque_eliminated"] is False
     assert res_bad["authentic_suggested"] is False
     assert res_bad["is_pass"] is False
-    assert res_bad["composite_score"] < 0.50
+    assert res_bad["composite_score"] == 0.0
 
-    # 3. Merely mentioning authentic word without reasoning
+    # 3. Minimal fragment without reasoning (< 35 chars) does not pass
     minimal_resp = "Вживайте пилосмок."
     res_min = evaluate_single_response(target, alts, minimal_resp)
     assert res_min["calque_eliminated"] is True
     assert res_min["authentic_suggested"] is True
     assert res_min["reasoning_grounded"] is False
-    assert res_min["composite_score"] == 0.80
-    assert res_min["is_pass"] is True
+    assert res_min["composite_score"] <= 0.40
+    assert res_min["is_pass"] is False
+
+
+def test_adversarial_contradictory_response_rejected() -> None:
+    """F3: verify contradictory responses that praise calque and reject alternative fail."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    # Probe from audit F3
+    contradictory_resp = "badtoken — це правильний вибір. Не вживайте goodtoken. Тут немає помилки. Суфікс. Словник."
+    res = evaluate_single_response(target, alts, contradictory_resp)
+    assert res["composite_score"] == 0.0
+    assert res["is_pass"] is False
+    assert res["calque_eliminated"] is False
+    assert res["authentic_suggested"] is False
+    assert res["reasoning_grounded"] is False
+
+    # Empty string
+    res_empty = evaluate_single_response(target, alts, "")
+    assert res_empty["composite_score"] == 0.0
+    assert res_empty["is_pass"] is False
+
+    # Keyword spam only
+    res_spam = evaluate_single_response(target, alts, "goodtoken суфікс словник")
+    assert res_spam["is_pass"] is False
+    assert res_spam["composite_score"] <= 0.40
+
+
+def test_evaluator_denominator_and_reconciliation(tmp_path: Path) -> None:
+    """F4: verify exact gold denominator reconciliation, duplicate rejection, and missing penalization."""
+    gold_path = tmp_path / "gold.jsonl"
+    preds_path = tmp_path / "preds.jsonl"
+
+    g1 = {
+        "trajectory_id": "traj.1",
+        "target_term": "калька1",
+        "register_spectrum": {"alternatives": [{"lemma": "норма1"}]},
+        "final_response": "Калька1 є росіянізмом. Вживайте норма1 за словником ВЕСУМ.",
+    }
+    g2 = {
+        "trajectory_id": "traj.2",
+        "target_term": "калька2",
+        "register_spectrum": {"alternatives": [{"lemma": "норма2"}]},
+        "final_response": "Калька2 є росіянізмом. Вживайте норма2 за словником ВЕСУМ.",
+    }
+    gold_path.write_text(json.dumps(g1) + "\n" + json.dumps(g2) + "\n", encoding="utf-8")
+
+    # Supply 1 valid prediction, 1 duplicate prediction of g1, and 1 unknown prediction (g2 missing)
+    p1 = {
+        "id": "traj.1",
+        "target_term": "калька1",
+        "response": "Слово калька1 — росіянізм. Правильно норма1 за підручником та ВЕСУМ.",
+    }
+    p1_dup = {
+        "id": "traj.1",
+        "target_term": "калька1",
+        "response": "Дублікат",
+    }
+    p_unk = {
+        "id": "traj.unknown",
+        "target_term": "невідомий",
+        "response": "Невідомо",
+    }
+    preds_path.write_text(
+        json.dumps(p1) + "\n" + json.dumps(p1_dup) + "\n" + json.dumps(p_unk) + "\n",
+        encoding="utf-8",
+    )
+
+    summary = evaluate_predictions(gold_path, preds_path)
+    assert summary["expected_gold_records"] == 2
+    assert summary["total_evaluated"] == 1
+    assert summary["missing_records_count"] == 1
+    assert summary["duplicate_predictions_count"] == 1
+    assert summary["unknown_predictions_count"] == 1
+    assert summary["pass_rate"] == 0.50  # 1 pass out of 2 expected gold items
 
 
 def test_format_and_evaluate_end_to_end(tmp_path: Path) -> None:
@@ -123,7 +198,7 @@ def test_format_and_evaluate_end_to_end(tmp_path: Path) -> None:
     in_dir.mkdir(parents=True)
     out_dir = tmp_path / "consumer"
 
-    # Create mock manifest and shards
+    # Create mock manifest and shards with disjoint targets and IDs
     traj_held_out = in_dir / "mock_traj_held_out.jsonl"
     dpo_held_out = in_dir / "mock_dpo_held_out.jsonl"
     traj_train = in_dir / "mock_traj_train.jsonl"
@@ -139,7 +214,7 @@ def test_format_and_evaluate_end_to_end(tmp_path: Path) -> None:
     }
     traj_held_out.write_text(json.dumps(record_held_out, ensure_ascii=False) + "\n", encoding="utf-8")
 
-    dpo_rec = {
+    dpo_held_out_rec = {
         "pair_id": "dpo.decolonize.kholostyak",
         "prompt": "Як замінити слово холостяк?",
         "chosen": "Вживайте парубок.",
@@ -151,7 +226,7 @@ def test_format_and_evaluate_end_to_end(tmp_path: Path) -> None:
             "vesum_verified": True,
         },
     }
-    dpo_held_out.write_text(json.dumps(dpo_rec, ensure_ascii=False) + "\n", encoding="utf-8")
+    dpo_held_out.write_text(json.dumps(dpo_held_out_rec, ensure_ascii=False) + "\n", encoding="utf-8")
 
     record_train = {
         "trajectory_id": "traj.decolonize.perekluchyty",
@@ -162,7 +237,20 @@ def test_format_and_evaluate_end_to_end(tmp_path: Path) -> None:
         "register_spectrum": {"alternatives": [{"lemma": "перемкнути"}]},
     }
     traj_train.write_text(json.dumps(record_train, ensure_ascii=False) + "\n", encoding="utf-8")
-    dpo_train.write_text(json.dumps(dpo_rec, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    dpo_train_rec = {
+        "pair_id": "dpo.decolonize.perekluchyty",
+        "prompt": "Як сказати переключити?",
+        "chosen": "Вживайте перемкнути.",
+        "rejected": "Переключити це норма.",
+        "metadata": {
+            "target_term": "переключити",
+            "rejected_flaw": "affirmation_of_calque",
+            "primary_alternative": "перемкнути",
+            "vesum_verified": True,
+        },
+    }
+    dpo_train.write_text(json.dumps(dpo_train_rec, ensure_ascii=False) + "\n", encoding="utf-8")
 
     manifest = {
         "dataset_name": "ULDR Mock",
@@ -189,13 +277,15 @@ def test_format_and_evaluate_end_to_end(tmp_path: Path) -> None:
     assert stats["trl_dpo_held_out_count"] == 1
     assert stats["quality_metrics"]["zero_private_paths"] is True
     assert stats["quality_metrics"]["zero_restricted_sources"] is True
+    assert stats["partition_firewall"]["verified_disjoint_ids"] is True
+    assert stats["partition_firewall"]["verified_disjoint_targets"] is True
 
     # Verify consumer_formats_manifest.json on disk
     manifest_on_disk = json.loads((out_dir / "consumer_formats_manifest.json").read_text(encoding="utf-8"))
     assert manifest_on_disk["quality_metrics"]["zero_private_paths"] is True
     assert manifest_on_disk["quality_metrics"]["zero_restricted_sources"] is True
 
-    # Verify shipped DPO records have populated calque_category
+    # Verify shipped DPO records have populated calque_category and embedded system prompt
     dpo_shards = list(out_dir.glob("uldr_dpo_*.jsonl"))
     assert len(dpo_shards) >= 1
     for dpo_s in dpo_shards:
@@ -203,6 +293,18 @@ def test_format_and_evaluate_end_to_end(tmp_path: Path) -> None:
             if line.strip():
                 rec = json.loads(line)
                 assert rec["calque_category"] == "lexical_calque"
+                assert "деколонізації" in rec["prompt"]
+
+    # Verify ShareGPT has messages for Gemma 3/4
+    sg_shards = list(out_dir.glob("uldr_sharegpt_*.jsonl"))
+    assert len(sg_shards) >= 1
+    for sg_s in sg_shards:
+        for line in sg_s.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                rec = json.loads(line)
+                assert "messages" in rec
+                assert len(rec["messages"]) == 2
+                assert "деколонізації" in rec["messages"][0]["content"]
 
     # Run evaluate_predictions with a passing prediction
     preds_file = tmp_path / "preds.jsonl"
@@ -211,7 +313,7 @@ def test_format_and_evaluate_end_to_end(tmp_path: Path) -> None:
             {
                 "id": "traj.decolonize.kholostyak",
                 "target_term": "холостяк",
-                "response": "Слово «холостяк» — це росіянізм і радянська калька. Правильно казати парубок за словником ВЕСУМ.",
+                "response": "Слово «холостяк» — це росіянізм і радянська калька. Правильно казати парубок за словником ВЕСУМ та підручником МОН.",
             },
             ensure_ascii=False,
         )
@@ -221,6 +323,7 @@ def test_format_and_evaluate_end_to_end(tmp_path: Path) -> None:
 
     eval_report = tmp_path / "report.json"
     eval_res = evaluate_predictions(traj_held_out, preds_file, eval_report)
+    assert eval_res["expected_gold_records"] == 1
     assert eval_res["total_evaluated"] == 1
     assert eval_res["calque_elimination_rate"] == 1.0
     assert eval_res["authentic_suggestion_rate"] == 1.0

@@ -209,29 +209,28 @@ Following the **Operator Contract** (Item 5: Route by model × harness fit; Item
   (Gemini + Codex)                       (Codex + Gemini)                           (Claude Review)              (Open-Weight Compute)
 ```
 
-### Phase 1: Contract Freezing & Seed Curation (Milestone 1)
-- **Codex**: Implement `v1` JSON schemas for trajectories and DPO pairs under `data/projects/open_model_data/contracts/`.
-- **Gemini**: Curate the initial 100 core Russianisms / Soviet calques (*пилосос*, *переключити*, *приймати участь*, *просвітитель*, *приймати участь*, *в даний момент*, etc.) with full textbook and style guide citations.
-- **Review**: Claude cross-family review on contracts and initial seed schemas.
+### Phase 1: Contract Freezing & Seed Anchors (Milestone 1 — PR #7918)
+- **Contracts**: Frozen `v1` JSON schemas for trajectories (`v1_decolonization_trajectory.schema.json`) and DPO pairs (`v1_decolonization_dpo_pair.schema.json`) under `data/projects/open_model_data/contracts/`.
+- **Seed Anchors**: Frozen 3 canonical gold reference seeds (*пилосос*, *переключити*, *кримчанин*) under `data/projects/open_model_data/decolonization/seeds/` with 100% VESUM verification, textbook citations, and register spectrum.
+- **Review**: Independent cross-family review approved by Claude Sonnet 5.
 
-### Phase 2: Automated Generator Pipeline (Milestone 2)
-- **Codex**: Build `scripts/projects/open_model_data/v4_decolonization_reasoning.py` to:
-  1. Mine candidate clusters from Word Atlas and `sources.db`.
-  2. Query `vesum.db` to verify morphological paradigms.
-  3. Synthesize structured reasoning steps into JSONL streams.
-- **Gemini**: Add linguistic evaluation test fixtures ensuring register nuances are preserved.
+### Phase 2: Automated Generator Pipeline & Attestation Engine (Milestone 2 — PR #7923)
+- Build `scripts/projects/open_model_data/v4_decolonization_reasoning.py`:
+  1. Multi-source mining across `sources.db` (MESU textbooks Gr 1–11, style guides, and dictionaries).
+  2. Query `vesum.db` to verify morphological paradigms for all tokens in multi-word phrases.
+  3. Synthesize structured reasoning steps and contrastive DPO pairs into JSONL streams with dynamic attestation metrics.
+- Add linguistic evaluation test fixtures ensuring multi-word phrases and register nuances are verified.
 
-### Phase 3: Dataset Packaging, Custody & Audit (Milestone 3)
-- Generate 5,000+ SFT reasoning trajectories and 2,500+ DPO preference pairs.
+### Phase 3: Dataset Packaging, Firewall & Manifests (Milestone 3 — PR #7925)
+- Generate 1,200 normative SFT reasoning trajectories and 1,200 contrastive DPO preference pairs across 4 shards (3 train + 1 held-out).
+- Enforce strict deterministic partition firewall (`get_partition_for_term`) with 0 overlap between train (967 records) and held-out (233 records).
 - Enforce repository hard gates:
   - File size ceiling: `< 2000 KB` per shard.
   - Zero private host paths (`/home/`, `/tmp/`, `/workspace/`, `/root/`).
-  - Strict SHA-256 manifest and delivery receipts.
-- **Claude**: Execute independent cross-family audit gate on the published dataset.
+  - Strict cryptographic SHA-256 manifests (`trajectories_manifest.json`, `dpo_pairs_manifest.json`).
 
-### Phase 4: Open-Weight Model Training & State Standard Benchmark (Milestone 4)
-- Execute dual-view SFT + DPO training on Gemma 4 (31B-it).
-- Evaluate against Ukrainian State Standard 2024 benchmarks, measuring:
-  - Calque elimination rate (% of Russianisms corrected).
-  - Living standard fidelity (% of corrections matching MESU textbooks).
-  - Over-purism avoidance (% of unvetted neologisms rejected).
+### Phase 4: Consumer Recipes, Formatters & Evaluation Harness (Milestone 4 — PR #7927)
+- Transform canonical shards into ShareGPT (with `<thought>` tags and Gemma `messages` turn structure) and Hugging Face TRL DPO formats with embedded system prompts.
+- Implement automated evaluation harness (`v4_evaluate_decolonization.py`) benchmarking against held-out partition across 5 core metrics with strict denominator reconciliation and contradiction detection.
+- Provide downstream training recipes for Gemma 3 (`google/gemma-3-27b-it`) and Gemma 4 (`google/gemma-4-31b-it`) in `docs/projects/open-model-data/decolonization-training-guide.md`.
+- Boundary Invariant: Model training compute remains a downstream community activity; this repository delivers verified datasets, cryptographic manifests, evaluation canaries, and consumer recipes.

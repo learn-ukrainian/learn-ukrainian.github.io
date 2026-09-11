@@ -288,6 +288,8 @@ def test_generate_pipeline_mock(
     assert manifest["partition_firewall"]["verified_partition_isolation"] is True
     assert manifest["partition_firewall"]["train_held_out_overlap_count"] == 0
     assert manifest["quality_metrics"]["vesum_verification_rate"] == 1.0
+    assert manifest["quality_metrics"]["vesum_verification_count"] >= 2
+    assert manifest["quality_metrics"]["vesum_verification_denominator"] >= 2
     assert manifest["quality_metrics"]["zero_private_paths"] is True
     assert manifest["quality_metrics"]["zero_restricted_sources"] is True
     assert (out_dir / "decolonization_manifest.json").is_file()
@@ -310,6 +312,39 @@ def test_generate_pipeline_mock(
         assert "ohoiko" not in t_content
         assert "СУМ-20" not in t_content
         assert "ВТС" not in t_content
+
+
+def test_phrase_attestation_requires_full_phrase_match(tmp_path: Path) -> None:
+    """F1: verify that textbook and dictionary matching requires the entire multi-word phrase."""
+    db_path = tmp_path / "mock_phrase_sources.db"
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    cur.execute(
+        "CREATE TABLE textbooks (title TEXT, grade TEXT, subject TEXT, author TEXT, text TEXT, source_file TEXT)"
+    )
+    # Only the first word 'брати' is present
+    cur.execute(
+        "INSERT INTO textbooks VALUES ('Українська мова', '7', 'ukrmova', 'avramenko', 'Треба брати книжку в бібліотеці.', '7-klas.pdf')"
+    )
+    conn.commit()
+    conn.close()
+
+    # Searching for multi-word phrase 'брати участь' must fail (return None)
+    res = find_textbook_attestation("брати участь", db_path)
+    assert res is None, "Error: phrase matched when only first word was present!"
+
+    # Now insert actual full phrase
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    cur.execute(
+        "INSERT INTO textbooks VALUES ('Українська мова', '8', 'ukrmova', 'avramenko', 'Учні прагнуть брати участь у змаганнях.', '8-klas.pdf')"
+    )
+    conn.commit()
+    conn.close()
+
+    res_pos = find_textbook_attestation("брати участь", db_path)
+    assert res_pos is not None
+    assert "брати участь" in res_pos["snippet"].lower()
 
 
 def test_partitioning_firewall_determinism() -> None:

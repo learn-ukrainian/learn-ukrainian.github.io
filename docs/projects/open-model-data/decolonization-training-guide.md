@@ -49,7 +49,33 @@ This generates sharded consumer files adhering to the `< 2,000,000 bytes` reposi
 
 ## 4. Consumer Training Recipes
 
-### 4.1 Stage 1: SFT with Thought Reasoning (Unsloth / TRL)
+### 4.1 Target Foundation Architectures: Gemma 3 & Gemma 4
+
+We specifically target modern open-weight architectures:
+- **Gemma 4** (`google/gemma-4-31b-it`): Incorporates native reasoning and thinking channels (`<thought> ... </thought>`) directly into the architecture, alongside high-capacity multilingual Ukrainian tokenization.
+- **Gemma 3** (`google/gemma-3-27b-it`): Highly efficient multilingual foundation model with enhanced Cyrillic vocabulary compression.
+
+### 4.2 Chat Template & System Prompt Adaptation (Gemma Turn Structure)
+
+Gemma's chat template structures conversations using user and model turns:
+```
+<start_of_turn>user
+{system_prompt}
+
+{user_query}<end_of_turn>
+<start_of_turn>model
+<thought>
+{reasoning_steps}
+</thought>
+
+{final_response}<end_of_turn>
+```
+
+To support this seamlessly across trainers:
+1. **SFT (`uldr_sharegpt_*.jsonl`)**: Each record provides both `"conversations"` (standard ShareGPT) and `"messages"` (standard Hugging Face format with system instructions prepended to the user turn).
+2. **DPO (`uldr_dpo_*.jsonl`)**: The `prompt` field embeds `{system_prompt}\n\n{user_prompt}` directly, ensuring that Hugging Face TRL `DPOTrainer` fully tokenizes system guidance rather than discarding detached system columns.
+
+### 4.3 Stage 1: SFT with Thought Reasoning (Unsloth / TRL)
 
 The ShareGPT dataset incorporates explicit `<thought> ... </thought>` tags demonstrating the 5-step diagnostic procedure (morphemic analysis, Soviet unification suppression history, MESU curriculum attestation, VESUM validation, and register spectrum).
 
@@ -60,7 +86,8 @@ from peft import LoraConfig
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from trl import SFTConfig, SFTTrainer
 
-model_id = "google/gemma-2-27b-it"  # Or any Ukrainian-capable base/instruct model
+# Primary target: Gemma 4 or Gemma 3
+model_id = "google/gemma-4-31b-it"  # Alternatively: "google/gemma-3-27b-it"
 
 tokenizer = AutoTokenizer.from_pretrained(model_id)
 dataset = load_dataset(
@@ -100,7 +127,7 @@ trainer = SFTTrainer(
 trainer.train()
 ```
 
-### 4.2 Stage 2: Direct Preference Optimization (DPO)
+### 4.4 Stage 2: Direct Preference Optimization (DPO)
 
 After SFT, apply DPO over `uldr_dpo_train_part*.jsonl` to penalize Soviet calques and reward authentic linguistic reasoning.
 
@@ -109,6 +136,8 @@ from datasets import load_dataset
 from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from trl import DPOConfig, DPOTrainer
+
+model_id = "google/gemma-4-31b-it"
 
 dataset = load_dataset(
     "json",
@@ -135,6 +164,28 @@ dpo_trainer = DPOTrainer(
 dpo_trainer.train()
 ```
 
+### 4.5 Pre-Training Tokenization Smoke Test
+
+Run this verification check prior to launching GPU training jobs to ensure the tokenizer correctly preserves thinking tags and system instructions without truncation:
+
+```python
+import json
+from transformers import AutoTokenizer
+
+model_id = "google/gemma-4-31b-it"
+tokenizer = AutoTokenizer.from_pretrained(model_id)
+
+sample_file = "data/projects/open_model_data/decolonization/consumer/uldr_sharegpt_train_part001.jsonl"
+with open(sample_file, "r", encoding="utf-8") as f:
+    sample_rec = json.loads(f.readline())
+
+# Verify messages formatting through the model chat template
+rendered_prompt = tokenizer.apply_chat_template(sample_rec["messages"], tokenize=False)
+assert "<thought>" in rendered_prompt and "</thought>" in rendered_prompt
+assert "мовної деколонізації" in rendered_prompt
+print("Tokenizer and chat template smoke test PASSED!")
+```
+
 ---
 
 ## 5. Benchmarking Against the Held-Out Evaluation Partition
@@ -142,7 +193,7 @@ dpo_trainer.train()
 To verify model performance and calculate State Standard 2024 compliance without test-set contamination:
 
 1. Generate completions on the held-out partition queries (`data/projects/open_model_data/decolonization/generated/decolonization_trajectories_held_out_part001.jsonl`).
-2. Save completions to a JSONL file with fields `{"id": ..., "response": ...}`.
+2. Save completions to a JSONL file with fields `{"id": ..., "target_term": ..., "response": ...}`.
 3. Run the automated evaluation harness:
 
 ```bash

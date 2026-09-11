@@ -280,7 +280,7 @@ def get_vesum_counts(
     vesum_db_path: Path,
     conn: sqlite3.Connection | None = None,
 ) -> dict[str, int]:
-    """Query local VESUM database for paradigm form counts."""
+    """Query local VESUM database for paradigm form counts across all constituent words."""
     counts: dict[str, int] = {}
     if not vesum_db_path.is_file():
         return {lemma: 0 for lemma in lemmas}
@@ -291,10 +291,18 @@ def get_vesum_counts(
     try:
         cur = conn.cursor()
         for lemma in lemmas:
-            words = lemma.split()
-            first_word = words[0] if words else lemma
-            row = cur.execute("SELECT count(*) FROM forms WHERE lemma = ?", (first_word.lower(),)).fetchone()
-            counts[lemma] = row[0] if row else 0
+            words = [w.strip() for w in lemma.split() if w.strip()]
+            if not words:
+                counts[lemma] = 0
+                continue
+            # Check every constituent word in the phrase
+            word_counts: list[int] = []
+            for w in words:
+                norm_w = re.sub(r"[\u0300\u0301]", "", w).strip().lower()
+                row = cur.execute("SELECT count(*) FROM forms WHERE lemma = ?", (norm_w,)).fetchone()
+                word_counts.append(row[0] if row else 0)
+            # If any word in the phrase is absent from VESUM, the phrase has 0 attested paradigm
+            counts[lemma] = min(word_counts) if word_counts else 0
     finally:
         if close_conn:
             conn.close()
@@ -318,6 +326,10 @@ def find_textbook_attestation(
 ) -> dict[str, Any] | None:
     """Search genuine MESU Grade 1-11 textbooks in sources.db for living school citations.
 
+    Strictly requires:
+    - Full-phrase matching (multi-word phrases must appear in entirety, not just first word)
+    - School grades 1-11 only
+
     Strictly excludes:
     - Private/non-redistributable sources (ULP podcast, Anna Ohoiko, private lessons)
     - Reference manuals without grades (Pohribnyi, Antonenko-Davydovych prose)
@@ -331,9 +343,11 @@ def find_textbook_attestation(
         close_conn = True
     try:
         cur = conn.cursor()
-        words = lemma.split()
-        search_kw = words[0].lower() if words else lemma.lower()
-        if len(search_kw) < 3:
+        words = [w.strip() for w in lemma.split() if w.strip()]
+        if not words:
+            return None
+        clean_phrase = " ".join(words).lower()
+        if len(clean_phrase) < 3:
             return None
 
         grade_placeholders = ",".join("?" for _ in ALLOWED_GRADES)
@@ -341,7 +355,7 @@ def find_textbook_attestation(
 
         if _has_textbooks_fts(conn):
             try:
-                escaped_kw = search_kw.replace('"', '""')
+                escaped_phrase = clean_phrase.replace('"', '""')
                 fts_query = f"""
                     SELECT t.title, t.grade, t.subject, t.author, t.text, t.source_file
                     FROM textbooks_fts f
@@ -351,7 +365,7 @@ def find_textbook_attestation(
                     ORDER BY CAST(t.grade AS INTEGER) ASC
                     LIMIT 20
                 """
-                rows = cur.execute(fts_query, (f'"{escaped_kw}"', *ALLOWED_GRADES)).fetchall()
+                rows = cur.execute(fts_query, (f'"{escaped_phrase}"', *ALLOWED_GRADES)).fetchall()
             except sqlite3.OperationalError:
                 rows = []
 
@@ -364,7 +378,7 @@ def find_textbook_attestation(
                 ORDER BY CAST(grade AS INTEGER) ASC
                 LIMIT 20
             """
-            params = [f"%{search_kw}%", *ALLOWED_GRADES]
+            params = [f"%{clean_phrase}%", *ALLOWED_GRADES]
             rows = cur.execute(query, params).fetchall()
 
         for row in rows:
@@ -377,7 +391,12 @@ def find_textbook_attestation(
             if any(r in author_lower for r in RESTRICTED_AUTHORS):
                 continue
 
-            sentences = [s.strip() for s in text.split(".") if search_kw in s.lower()]
+            # Strict phrase verification: all words must appear together in text
+            text_lower = text.lower()
+            if clean_phrase not in text_lower:
+                continue
+
+            sentences = [s.strip() for s in text.split(".") if clean_phrase in s.lower()]
             if not sentences:
                 continue
             snippet = re.sub(r"\s+", " ", sentences[0]).strip()
@@ -415,13 +434,29 @@ def find_dictionary_attestation(
         close_conn = True
     try:
         cur = conn.cursor()
-        first_w = lemma.split()[0].lower()
-        row_g = cur.execute("SELECT 1 FROM grinchenko WHERE word = ? LIMIT 1", (first_w,)).fetchone()
-        if row_g:
-            return "Історичний словник української мови Б. Грінченка (1907–1909); верифіковано у ВЕСУМ"
-        row_s = cur.execute("SELECT 1 FROM sum11 WHERE word = ? LIMIT 1", (first_w,)).fetchone()
-        if row_s:
-            return "Академічний Словник української мови в 11 томах (СУМ-11); верифіковано у ВЕСУМ"
+        words = [w.strip() for w in lemma.split() if w.strip()]
+        if not words:
+            return None
+
+        if len(words) == 1:
+            word = words[0].lower()
+            row_g = cur.execute("SELECT 1 FROM grinchenko WHERE word = ? LIMIT 1", (word,)).fetchone()
+            if row_g:
+                return "Історичний словник української мови Б. Грінченка (1907–1909); верифіковано у ВЕСУМ"
+            row_s = cur.execute("SELECT 1 FROM sum11 WHERE word = ? LIMIT 1", (word,)).fetchone()
+            if row_s:
+                return "Академічний Словник української мови в 11 томах (СУМ-11); верифіковано у ВЕСУМ"
+        else:
+            # Multi-word phrase: verify if full phrase appears in SUM-11 or Grinchenko definitions
+            phrase = " ".join(words).lower()
+            row_s = cur.execute("SELECT 1 FROM sum11 WHERE definition LIKE ? LIMIT 1", (f"%{phrase}%",)).fetchone()
+            if row_s:
+                return (
+                    "Академічний Словник української мови (СУМ-11, контекстне вживання фраземи); верифіковано у ВЕСУМ"
+                )
+            row_g = cur.execute("SELECT 1 FROM grinchenko WHERE definition LIKE ? LIMIT 1", (f"%{phrase}%",)).fetchone()
+            if row_g:
+                return "Історичний словник української мови Б. Грінченка (контекстне вживання фраземи); верифіковано у ВЕСУМ"
     finally:
         if close_conn:
             conn.close()
@@ -495,21 +530,32 @@ def synthesize_trajectory_and_dpo(
         )
 
     spectrum_alts = []
+    prov_tag = candidate.source_tag
+    prov_note = candidate.provenance_note
+    prov_suffix = f" (джерело: {prov_tag}"
+    if prov_note:
+        prov_suffix += f", {prov_note}"
+    prov_suffix += ")"
+
     for s in verified_alts:
         tb = textbook_attestations.get(s)
         dict_att = dict_attestations.get(s)
         if tb:
-            evidence = f"Підручник МОН «{tb['subject']}» {tb['grade']} клас ({tb['author']}); цитата: «{tb['snippet']}»"
+            evidence = f"Підручник МОН «{tb['subject']}» {tb['grade']} клас ({tb['author']}); цитата: «{tb['snippet']}»{prov_suffix}"
             tier = "living_standard"
         elif candidate.curated_evidence:
-            evidence = "; ".join(candidate.curated_evidence[:2])
+            evidence = f"{'; '.join(candidate.curated_evidence[:2])}{prov_suffix}"
             tier = "living_standard"
         elif dict_att:
-            evidence = dict_att
+            evidence = f"{dict_att}{prov_suffix}"
             tier = "classical_regional" if "Грінченка" in dict_att else "living_standard"
         else:
-            evidence = f"Словозмінна парадигма зафіксована у словниковій базі ВЕСУМ ({vesum_counts[s]} словоформ)"
-            tier = "living_standard"
+            evidence = (
+                f"Словозмінна парадигма зафіксована у словниковій базі ВЕСУМ ({vesum_counts[s]} словоформ); "
+                f"без прямого шкільного підручникового контексту{prov_suffix}"
+            )
+            # Without textbook or dictionary attestation, do not unconditionally claim primary living standard
+            tier = "technical_compound" if ("-" in s or len(s.split()) > 1) else "classical_regional"
 
         spectrum_alts.append(
             {
@@ -525,7 +571,7 @@ def synthesize_trajectory_and_dpo(
                 {
                     "lemma": s,
                     "register_tier": "purist_neologism",
-                    "evidence_source": "Не зафіксовано у словниковій базі ВЕСУМ (0 форм); кабінетний новотвір",
+                    "evidence_source": f"Не зафіксовано у словниковій базі ВЕСУМ (0 форм); кабінетний новотвір{prov_suffix}",
                 }
             )
 
@@ -557,6 +603,9 @@ def synthesize_trajectory_and_dpo(
             f"Калькована форма «{target_term}» закріпилася в радянський період унаслідок зближення лексичних систем "
             "та цензурного вилучення питомих слів з академічних словників."
         )
+
+    if prov_note:
+        historical_note = f"{prov_note} {historical_note}"
 
     lexicographical_context = {
         "historical_suppression_note": historical_note,
@@ -683,6 +732,7 @@ def generate_pipeline(
     candidates = load_calque_candidates(lt_replacements_path, sources_db_path)
 
     total_trajs = 0
+    vesum_verification_count = 0
     textbook_attestation_count = 0
     dict_attestation_count = 0
     generated_shards: list[dict[str, Any]] = []
@@ -794,6 +844,8 @@ def generate_pipeline(
             pstate["terms"].add(candidate.target_term)
 
             total_trajs += 1
+            if any(v["is_standard_attested"] for v in trajectory.get("vesum_attestation", [])):
+                vesum_verification_count += 1
             if has_tb:
                 textbook_attestation_count += 1
             if has_dict:
@@ -864,7 +916,9 @@ def generate_pipeline(
             "train_ratio_target": train_ratio,
         },
         "quality_metrics": {
-            "vesum_verification_rate": 1.0 if total_trajs > 0 else 0.0,
+            "vesum_verification_count": vesum_verification_count,
+            "vesum_verification_denominator": total_trajs,
+            "vesum_verification_rate": (round(vesum_verification_count / total_trajs, 4) if total_trajs > 0 else 0.0),
             "textbook_attestation_rate": (
                 round(textbook_attestation_count / total_trajs, 4) if total_trajs > 0 else 0.0
             ),
