@@ -92,12 +92,12 @@ class TestSearchTextSourceFilter:
         args = {"query": "test query", "source_file": "antonenko-davydovych-yak-my-hovorymo"}
         with patch("wiki.sources_db.search_textbooks") as mock_search:
             mock_search.return_value = [{"title": "Title", "text": "Hit", "chunk_id": "1"}]
-            result = _run(server_module.handle_search_text(args))
+            content, _envelope = _run(server_module.handle_search_text(args))
 
             mock_search.assert_called_once()
             _, kwargs = mock_search.call_args
             assert kwargs.get("source_file") == "antonenko-davydovych-yak-my-hovorymo"
-            assert "**Source file**" in result[0].text
+            assert "**Source file**" in content[0].text
 
     def test_handle_search_text_backward_compatibility(self, server_module):
         args = {"query": "test query"}
