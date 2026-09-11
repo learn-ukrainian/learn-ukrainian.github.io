@@ -33,7 +33,6 @@ areas:
     aliases:
       - monitor
       - ops-api
-      - ops.api
       - operator-api
     epics:
       - number: 7919  # successor to closed #7177

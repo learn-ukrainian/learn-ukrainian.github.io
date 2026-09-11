@@ -72,7 +72,7 @@ def test_resolve_area_canonical_ids() -> None:
 
     monitor = resolve_area("monitor")
     assert monitor.id == "monitor"
-    assert monitor.epics == (EpicInfo(7177, "Monitor API + UI — fleet & host observability"),)
+    assert monitor.epics == (EpicInfo(7919, "Ops API + UI — operator API & dashboards"),)
 
     open_model_data = resolve_area("open-model-data")
     assert open_model_data.id == "open-model-data"
@@ -117,7 +117,7 @@ def test_resolve_area_by_epic_number() -> None:
     assert resolve_area("epic:6943").id == "infra"  # allow-hardcoded-epic: taxonomy alias reverse lookup
     assert resolve_area_by_epic(6943).id == "infra"
     assert resolve_area_by_epic("epic:5703").id == "devops"  # allow-hardcoded-epic: taxonomy alias reverse lookup
-    assert resolve_area(7177).id == "monitor"
+    assert resolve_area(7919).id == "monitor"
     assert resolve_area(6321).id == "open-model-data"
 
 
@@ -183,8 +183,11 @@ def test_inventory_session_streams_wiring() -> None:
         ("infra.fleet-comms", "infra", INFRA_STREAM_ID),
         ("devops", "devops", "epic:5703"),
         ("infra.devops", "devops", "epic:5703"),
-        ("monitor", "monitor", "epic:7177"),
-        ("infra.monitor", "monitor", "epic:7177"),
+        ("monitor", "monitor", "epic:7919"),
+        ("infra.monitor", "monitor", "epic:7919"),
+        ("ops-api", "monitor", "epic:7919"),
+        ("ops.api", "monitor", "epic:7919"),
+        ("operator-api", "monitor", "epic:7919"),
         ("atlas", "atlas", "epic:4387"),
         ("practice", "atlas", "epic:4387"),
         ("practice-hub", "atlas", "epic:4387"),
