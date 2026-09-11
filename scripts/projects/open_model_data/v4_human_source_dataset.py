@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -231,9 +232,8 @@ def build_dataset(
     manifest_schema = json.loads(manifest_schema_path.read_text(encoding="utf-8"))
     jsonschema.validate(instance=manifest_data, schema=manifest_schema)
 
-    manifest_out.parent.mkdir(parents=True, exist_ok=True)
-    manifest_out.write_text(json.dumps(manifest_data, indent=2) + "\n", encoding="utf-8")
-    manifest_sha = sha256_file(manifest_out)
+    manifest_bytes = (json.dumps(manifest_data, indent=2) + "\n").encode("utf-8")
+    manifest_sha = hashlib.sha256(manifest_bytes).hexdigest()
 
     # SCALE-2: Build Dataset Records
     records: list[dict[str, Any]] = []
@@ -379,33 +379,11 @@ def build_dataset(
             assert_no_private_host_paths(rec)
             records.append(rec)
 
-    records_out.parent.mkdir(parents=True, exist_ok=True)
-    with records_out.open("w", encoding="utf-8") as f:
-        # Header line
-        header = {
-            "schema_version": "v4_human_source_dataset_records_v1",
-            "dataset_version": DATASET_VERSION,
-            "records": len(records),
-            "manifest_sha256": manifest_sha,
-        }
-        f.write(json.dumps(header) + "\n")
-        for rec in records:
-            jsonschema.validate(instance=rec, schema=record_schema)
-            f.write(json.dumps(rec) + "\n")
-
-    records_size = records_out.stat().st_size
-    if records_size > MAX_FILE_SIZE_BYTES:
-        raise ValueError(f"Records file exceeds 2000 KB: {records_size} bytes")
-
-    records_sha = sha256_file(records_out)
-
-    # SCALE-4 & SCALE-5: Generate Dataset Receipt
-    receipt_id = f"receipt.dataset.{sha256_bytes((manifest_sha + records_sha).encode())[:24]}"
     total_evaluated = len(records)
     total_admitted = total_evaluated - quarantine_spans
     dedup_rate = 1.0 if total_evaluated > 0 else 0.0
 
-    # SCALE-4: Validate processed counts strictly match frozen manifest denominator
+    # SCALE-4: Validate processed counts strictly match frozen manifest denominator BEFORE writing files
     manifest_accounting = manifest_data["denominator_accounting"]
     if total_evaluated != manifest_accounting["total_evaluated_spans"]:
         raise ValueError(
@@ -432,53 +410,91 @@ def build_dataset(
             f"Quarantine spans {quarantine_spans} does not match manifest {manifest_accounting['quarantined_spans']}"
         )
 
-    receipt_data = {
-        "schema_version": "v4_human_source_dataset_receipt_v1",
-        "receipt_id": receipt_id,
-        "dataset_version": DATASET_VERSION,
-        "verdict": "DATASET_CONFIRMED",
-        "manifest_sha256": manifest_sha,
-        "split_receipt_sha256": split_receipt_sha,
-        "records_sha256": records_sha,
-        "quality_assessment_sha256": quality_assessment_sha,
-        "dataset_accounting": {
-            "total_evaluated_spans": total_evaluated,
-            "total_admitted_spans": total_admitted,
-            "exported_training_spans": training_spans,
-            "firewalled_heldout_evaluation_spans": eval_spans,
-            "development_spans": dev_spans,
-            "rejected_quarantine_spans": quarantine_spans,
-            "silent_drops": 0,
-        },
-        "deduplication_yield": {
-            "unique_spans_count": len(seen_hashes),
-            "duplicate_spans_count": 0,
-            "deduplication_rate": dedup_rate,
-        },
-        "storage_accounting": {
-            "records_byte_size": records_size,
-            "records_line_count": len(records) + 1,
-            "below_2000kb_precommit_limit": True,
-        },
-        "frozen_for_downstream": {
-            "open_weight_learning_study_issue": 7889,
-            "deliverable_reproduction_issue": 7433,
-        },
-        "residuals": {
-            "operator_excluded_strata": [r["stratum"] for r in OPERATOR_EXCLUDED_RESIDUALS],
-        },
-        "notes": "Representative human-source dataset denominator and audit frozen under #7432.",
-    }
-
-    assert_no_private_host_paths(receipt_data)
-    receipt_schema_path = (
-        repo_root / "data/projects/open_model_data/contracts/v4_human_source_dataset_receipt_v1.schema.json"
-    )
-    receipt_schema = json.loads(receipt_schema_path.read_text(encoding="utf-8"))
-    jsonschema.validate(instance=receipt_data, schema=receipt_schema)
-
+    manifest_out.parent.mkdir(parents=True, exist_ok=True)
+    records_out.parent.mkdir(parents=True, exist_ok=True)
     receipt_out.parent.mkdir(parents=True, exist_ok=True)
-    receipt_out.write_text(json.dumps(receipt_data, indent=2) + "\n", encoding="utf-8")
+
+    manifest_tmp = manifest_out.with_suffix(f".tmp.{os.getpid()}")
+    records_tmp = records_out.with_suffix(f".tmp.{os.getpid()}")
+    receipt_tmp = receipt_out.with_suffix(f".tmp.{os.getpid()}")
+
+    try:
+        manifest_tmp.write_bytes(manifest_bytes)
+
+        with records_tmp.open("w", encoding="utf-8") as f:
+            header = {
+                "schema_version": "v4_human_source_dataset_records_v1",
+                "dataset_version": DATASET_VERSION,
+                "records": len(records),
+                "manifest_sha256": manifest_sha,
+            }
+            f.write(json.dumps(header) + "\n")
+            for rec in records:
+                jsonschema.validate(instance=rec, schema=record_schema)
+                f.write(json.dumps(rec) + "\n")
+
+        records_size = records_tmp.stat().st_size
+        if records_size > MAX_FILE_SIZE_BYTES:
+            raise ValueError(f"Records file exceeds 2000 KB: {records_size} bytes")
+
+        records_sha = sha256_file(records_tmp)
+
+        # SCALE-4 & SCALE-5: Generate Dataset Receipt
+        receipt_id = f"receipt.dataset.{sha256_bytes((manifest_sha + records_sha).encode())[:24]}"
+        receipt_data = {
+            "schema_version": "v4_human_source_dataset_receipt_v1",
+            "receipt_id": receipt_id,
+            "dataset_version": DATASET_VERSION,
+            "verdict": "DATASET_CONFIRMED",
+            "manifest_sha256": manifest_sha,
+            "split_receipt_sha256": split_receipt_sha,
+            "records_sha256": records_sha,
+            "quality_assessment_sha256": quality_assessment_sha,
+            "dataset_accounting": {
+                "total_evaluated_spans": total_evaluated,
+                "total_admitted_spans": total_admitted,
+                "exported_training_spans": training_spans,
+                "firewalled_heldout_evaluation_spans": eval_spans,
+                "development_spans": dev_spans,
+                "rejected_quarantine_spans": quarantine_spans,
+                "silent_drops": 0,
+            },
+            "deduplication_yield": {
+                "unique_spans_count": len(seen_hashes),
+                "duplicate_spans_count": 0,
+                "deduplication_rate": dedup_rate,
+            },
+            "storage_accounting": {
+                "records_byte_size": records_size,
+                "records_line_count": len(records) + 1,
+                "below_2000kb_precommit_limit": True,
+            },
+            "frozen_for_downstream": {
+                "open_weight_learning_study_issue": 7889,
+                "deliverable_reproduction_issue": 7433,
+            },
+            "residuals": {
+                "operator_excluded_strata": [r["stratum"] for r in OPERATOR_EXCLUDED_RESIDUALS],
+            },
+            "notes": "Representative human-source dataset denominator and audit frozen under #7432.",
+        }
+
+        assert_no_private_host_paths(receipt_data)
+        receipt_schema_path = (
+            repo_root / "data/projects/open_model_data/contracts/v4_human_source_dataset_receipt_v1.schema.json"
+        )
+        receipt_schema = json.loads(receipt_schema_path.read_text(encoding="utf-8"))
+        jsonschema.validate(instance=receipt_data, schema=receipt_schema)
+
+        receipt_tmp.write_text(json.dumps(receipt_data, indent=2) + "\n", encoding="utf-8")
+
+        manifest_tmp.replace(manifest_out)
+        records_tmp.replace(records_out)
+        receipt_tmp.replace(receipt_out)
+    finally:
+        for tmp_path in (manifest_tmp, records_tmp, receipt_tmp):
+            if tmp_path.exists():
+                tmp_path.unlink()
 
     return receipt_data
 

@@ -42,7 +42,7 @@ The program successfully resolved 6 historical architectural blockers, establish
 
 ### Key Findings
 
-- **Statistical Significance**: Both adaptation strategies produced statistically significant perplexity reductions on heldout Ukrainian text.
+- **Consistent Perplexity Reduction**: Both adaptation strategies produced consistent observed perplexity reductions on heldout Ukrainian text across all evaluation seeds.
 - **Superiority of Masked Adaptation**: Applying loss masks on foreign and quoted text yielded an additional 3.68% perplexity improvement over unmasked adaptation, demonstrating that selective masking prevents cross-linguistic interference.
 - **Linguistic Preservation**: Historical preservation score (0.985) exceeded baseline (0.982), proving zero catastrophic forgetting of archaic or classical registers.
 

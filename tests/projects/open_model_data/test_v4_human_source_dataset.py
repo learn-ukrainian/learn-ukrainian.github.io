@@ -11,6 +11,7 @@ import pytest
 from scripts.projects.open_model_data.v4_human_source_dataset import (
     OPERATOR_EXCLUDED_RESIDUALS,
     assert_no_private_host_paths,
+    build_dataset,
     verify_dataset,
 )
 
@@ -131,3 +132,55 @@ def test_privacy_host_paths_clean() -> None:
 def test_verify_dataset_clean_pass() -> None:
     """The verify_dataset function must return True on intact artifacts."""
     assert verify_dataset(Path.cwd()) is True
+
+
+def test_build_dataset_atomic_prewrite_validation_on_denominator_mismatch(tmp_path: Path) -> None:
+    """Denominator discrepancy must raise ValueError before writing files, leaving targets untouched."""
+    repo_root = Path.cwd()
+    fake_repo = tmp_path / "repo"
+    fake_repo.mkdir(parents=True)
+
+    # Recreate input paths in fake_repo
+    contracts_target = fake_repo / "data/projects/open_model_data/contracts"
+    contracts_target.parent.mkdir(parents=True, exist_ok=True)
+    contracts_target.symlink_to((repo_root / CONTRACTS_DIR).resolve())
+
+    for dir_name in ["language", "extraction", "provenance", "pilot"]:
+        target = fake_repo / f"data/projects/open_model_data/{dir_name}"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.symlink_to((repo_root / f"data/projects/open_model_data/{dir_name}").resolve())
+
+    splits_dir = fake_repo / "data/projects/open_model_data/splits"
+    splits_dir.mkdir(parents=True, exist_ok=True)
+    (splits_dir / "v4_work_grouping_split_receipt_v1.json").symlink_to(
+        (repo_root / "data/projects/open_model_data/splits/v4_work_grouping_split_receipt_v1.json").resolve()
+    )
+
+    # Create split_index with one line missing to create an intentional denominator mismatch
+    src_split_index = repo_root / "data/projects/open_model_data/splits/v4_work_grouping_split_index_v1.jsonl"
+    lines = src_split_index.read_text(encoding="utf-8").splitlines()
+    truncated_lines = [lines[0], *lines[2:]]  # drop line 1 (1 span omitted)
+    (splits_dir / "v4_work_grouping_split_index_v1.jsonl").write_text("\n".join(truncated_lines) + "\n", encoding="utf-8")
+
+    out_dir = tmp_path / "out"
+    out_dir.mkdir(parents=True)
+    test_manifest_out = out_dir / "manifest.json"
+    test_records_out = out_dir / "records.jsonl"
+    test_receipt_out = out_dir / "receipt.json"
+
+    # Pre-populate sentinel content
+    test_manifest_out.write_text("sentinel manifest", encoding="utf-8")
+    test_records_out.write_text("sentinel records", encoding="utf-8")
+    test_receipt_out.write_text("sentinel receipt", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Evaluated spans 1418 does not match manifest 1419"):
+        build_dataset(fake_repo, test_manifest_out, test_records_out, test_receipt_out)
+
+    # Verify target files were NOT overwritten
+    assert test_manifest_out.read_text(encoding="utf-8") == "sentinel manifest"
+    assert test_records_out.read_text(encoding="utf-8") == "sentinel records"
+    assert test_receipt_out.read_text(encoding="utf-8") == "sentinel receipt"
+
+    # Verify no temporary files were leaked
+    tmp_files = list(out_dir.glob("*.tmp*"))
+    assert tmp_files == []
