@@ -74,9 +74,15 @@ REFUSAL_PATTERNS = [
 EXPLANATION_CONNECTIVES = [
     re.compile(r"(?:тому\s+що|оскільки|бо\s+|через\s+те\s+що|адже)", re.IGNORECASE),
     re.compile(r"(?:замість|на\s+відміну\s+від|натомість|а\s+не)", re.IGNORECASE),
-    re.compile(r"(?:походить\s+від|утворено|відповідає|виражає|(?:є|це|—|-|–)\s+(?:\w+\s+)?(?:кальк\w*|росіянізм\w*|помилк\w*|суржик\w*))", re.IGNORECASE),
+    re.compile(
+        r"(?:походить\s+від|утворено|відповідає|виражає|(?:є|це|—|-|–)\s+(?:\w+\s+)?(?:кальк\w*|росіянізм\w*|помилк\w*|суржик\w*))",
+        re.IGNORECASE,
+    ),
     re.compile(r"(?:питомий|питоме|питомим|автентичн|власне\s+українськ)", re.IGNORECASE),
-    re.compile(r"(?:за\s+(?:словником|підручником|правописом|весум)|у\s+(?:словнику|підручнику|правописі|весумі))", re.IGNORECASE),
+    re.compile(
+        r"(?:за\s+(?:словником|підручником|правописом|весум)|у\s+(?:словнику|підручнику|правописі|весумі))",
+        re.IGNORECASE,
+    ),
 ]
 
 SUGGESTION_PATTERNS = [
@@ -141,6 +147,17 @@ NARRATIVE_AGENT_PATTERNS = [
         re.IGNORECASE,
     ),
     re.compile(r"(?:бо|тому\s+що|оскільки)\s+(?:я|ми|учень|студент)\b", re.IGNORECASE),
+]
+
+OTHER_ENTITY_PATTERNS = [
+    re.compile(
+        r"\b(?:інш\w*|сторонн\w*|чуж\w*)\s+(?:слов\w*|форм\w*|лексем\w*|термін\w*|значенн\w*|понять\w*|одиниц\w*)",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(?:another|other)\s+(?:word|term|form|lexeme|meaning|unit)",
+        re.IGNORECASE,
+    ),
 ]
 
 
@@ -222,7 +239,8 @@ def evaluate_single_response(
     else:
         # Calque not mentioned; require active linguistic recommendation context
         calque_eliminated = any(
-            m in resp_norm for m in ("правильн", "норм", "вжива", "рекоменд", "краще", "варто", "слід", "слово", "відповідник", "мовн")
+            m in resp_norm
+            for m in ("правильн", "норм", "вжива", "рекоменд", "краще", "варто", "слід", "слово", "відповідник", "мовн")
         )
 
     # 2. Authentic suggestion check:
@@ -270,9 +288,7 @@ def evaluate_single_response(
     # 3. Morphemic and historical reasoning grounding check:
     tokens = [t for t in re.split(r"\W+", resp_norm) if t]
     content_tokens = [t for t in tokens if len(t) > 2]
-    max_content_freq_ratio = (
-        max(Counter(content_tokens).values()) / len(content_tokens) if content_tokens else 0.0
-    )
+    max_content_freq_ratio = max(Counter(content_tokens).values()) / len(content_tokens) if content_tokens else 0.0
     is_repetitive = (len(tokens) < 20 and (len(set(tokens)) / len(tokens)) < 0.65) or (
         len(tokens) >= 5 and max_content_freq_ratio > 0.20
     )
@@ -286,6 +302,7 @@ def evaluate_single_response(
     has_explanation_syntax = any(p.search(subject_text) for p in EXPLANATION_CONNECTIVES)
     has_linguistic_relation = any(p.search(subject_text) for p in LINGUISTIC_RELATION_PATTERNS)
     has_narrative_agent = any(p.search(resp_norm) for p in NARRATIVE_AGENT_PATTERNS)
+    has_other_entity = any(p.search(resp_norm) for p in OTHER_ENTITY_PATTERNS)
     distinct_reasoning_markers = sum(1 for p in REASONING_MARKERS if p.search(subject_text))
 
     reasoning_grounded = (
@@ -298,6 +315,7 @@ def evaluate_single_response(
         and has_explanation_syntax
         and has_linguistic_relation
         and (not has_narrative_agent)
+        and (not has_other_entity)
     )
 
     # 4. Composite score:
@@ -314,8 +332,8 @@ def evaluate_single_response(
     if calque_affirmed or not calque_eliminated:
         composite_score = 0.0
 
-    # If the response is repetitive keyword salad, cap score severely
-    if is_repetitive or not has_explanation_syntax:
+    # If the response is repetitive keyword salad, lacks explanation syntax, or concerns another entity, cap score severely
+    if is_repetitive or not has_explanation_syntax or has_other_entity:
         composite_score = min(composite_score, 0.40)
 
     # If reasoning is not grounded in the linguistic subject, cap score severely

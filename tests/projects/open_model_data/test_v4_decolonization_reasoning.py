@@ -481,12 +481,15 @@ def test_negative_evidence_does_not_promote_rejected_alternative() -> None:
         source_tag="curated_test",
         curated_evidence=["Do not use alpha."],
     )
-    assert synthesize_trajectory_and_dpo(
-        prohibitive_only_cand,
-        {"alpha": 10},
-        {"alpha": None},
-        {"alpha": None},
-    ) is None
+    assert (
+        synthesize_trajectory_and_dpo(
+            prohibitive_only_cand,
+            {"alpha": 10},
+            {"alpha": None},
+            {"alpha": None},
+        )
+        is None
+    )
 
 
 def test_negated_correctness_does_not_promote_rejected_alternative() -> None:
@@ -523,12 +526,15 @@ def test_negated_correctness_does_not_promote_rejected_alternative() -> None:
         source_tag="curated_test",
         curated_evidence=["alpha is not correct."],
     )
-    assert synthesize_trajectory_and_dpo(
-        sole_cand,
-        {"alpha": 10},
-        {"alpha": None},
-        {"alpha": None},
-    ) is None
+    assert (
+        synthesize_trajectory_and_dpo(
+            sole_cand,
+            {"alpha": 10},
+            {"alpha": None},
+            {"alpha": None},
+        )
+        is None
+    )
 
 
 def test_contrastive_replacement_and_intervening_negation() -> None:
@@ -548,7 +554,9 @@ def test_contrastive_replacement_and_intervening_negation() -> None:
         source_tag="curated_test",
         curated_evidence=["Do not ever use alpha. Use beta."],
     )
-    res1 = synthesize_trajectory_and_dpo(cand1, {"alpha": 10, "beta": 15}, {"alpha": None, "beta": None}, {"alpha": None, "beta": None})
+    res1 = synthesize_trajectory_and_dpo(
+        cand1, {"alpha": 10, "beta": 15}, {"alpha": None, "beta": None}, {"alpha": None, "beta": None}
+    )
     assert res1 is not None
     traj1, _ = res1
     assert traj1["register_spectrum"]["primary_living_standard"] == "beta"
@@ -563,10 +571,47 @@ def test_contrastive_replacement_and_intervening_negation() -> None:
         source_tag="curated_test",
         curated_evidence=["Replace alpha with beta."],
     )
-    res2 = synthesize_trajectory_and_dpo(cand2, {"alpha": 10, "beta": 15}, {"alpha": None, "beta": None}, {"alpha": None, "beta": None})
+    res2 = synthesize_trajectory_and_dpo(
+        cand2, {"alpha": 10, "beta": 15}, {"alpha": None, "beta": None}, {"alpha": None, "beta": None}
+    )
     assert res2 is not None
     traj2, _ = res2
     assert traj2["register_spectrum"]["primary_living_standard"] == "beta"
     alts2 = {a["lemma"]: a for a in traj2["register_spectrum"]["alternatives"]}
     assert alts2["beta"]["register_tier"] == "living_standard"
     assert alts2["alpha"]["register_tier"] != "living_standard"
+
+
+def test_negated_replacement_polarity() -> None:
+    """K1: 'Use alpha. Do not replace alpha with beta.' selects alpha and rejects beta."""
+    # 1. Direct polarity checks for negated replacement
+    assert is_positive_citation("alpha", "Use alpha. Do not replace alpha with beta.")
+    assert not is_positive_citation("beta", "Use alpha. Do not replace alpha with beta.")
+    assert not is_positive_citation("alpha", "Do not replace alpha with beta.")
+    assert not is_positive_citation("beta", "Do not replace alpha with beta.")
+
+    # 2. Ukrainian polarity checks
+    assert is_positive_citation("alpha", "Вживайте alpha. Не замінюйте alpha на beta.")
+    assert not is_positive_citation("beta", "Вживайте alpha. Не замінюйте alpha на beta.")
+    assert not is_positive_citation("alpha", "Не замінюйте alpha на beta.")
+    assert not is_positive_citation("beta", "Не замінюйте alpha на beta.")
+
+    # 3. End-to-end trajectory synthesis
+    cand = CalqueCandidate(
+        target_term="test_calque",
+        suggestions=["alpha", "beta"],
+        source_tag="curated_test",
+        curated_evidence=["Use alpha. Do not replace alpha with beta."],
+    )
+    res = synthesize_trajectory_and_dpo(
+        cand,
+        {"alpha": 10, "beta": 15},
+        {"alpha": None, "beta": None},
+        {"alpha": None, "beta": None},
+    )
+    assert res is not None
+    traj, _ = res
+    assert traj["register_spectrum"]["primary_living_standard"] == "alpha"
+    alts = {a["lemma"]: a for a in traj["register_spectrum"]["alternatives"]}
+    assert alts["alpha"]["register_tier"] == "living_standard"
+    assert alts["beta"]["register_tier"] != "living_standard"

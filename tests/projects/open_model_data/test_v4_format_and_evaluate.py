@@ -113,10 +113,7 @@ def test_gemma3_and_gemma4_template_adaptation() -> None:
     # 2. Verify Gemma 3 format structure (<start_of_turn> / <end_of_turn>)
     user_msg = cml_rec["messages"][0]["content"]
     asst_msg = cml_rec["messages"][1]["content"]
-    gemma3_rendered = (
-        f"<start_of_turn>user\n{user_msg}<end_of_turn>\n"
-        f"<start_of_turn>model\n{asst_msg}<end_of_turn>"
-    )
+    gemma3_rendered = f"<start_of_turn>user\n{user_msg}<end_of_turn>\n<start_of_turn>model\n{asst_msg}<end_of_turn>"
     assert "<start_of_turn>user" in gemma3_rendered
     assert "<end_of_turn>" in gemma3_rendered
     assert "<start_of_turn>model" in gemma3_rendered
@@ -517,10 +514,24 @@ def test_partition_firewall_rejects_dpo_target_leakage(tmp_path: Path) -> None:
     held_sft = in_dir / "held_sft.jsonl"
     held_dpo = in_dir / "held_dpo.jsonl"
 
-    train_sft.write_text(json.dumps({"trajectory_id": "t1", "target_term": "term_a", "query": "q", "final_response": "r"}) + "\n")
-    train_dpo.write_text(json.dumps({"pair_id": "d1", "prompt": "p", "chosen": "c", "rejected": "rej", "metadata": {"target_term": "term_b"}}) + "\n")
-    held_sft.write_text(json.dumps({"trajectory_id": "t2", "target_term": "term_b", "query": "q", "final_response": "r"}) + "\n")
-    held_dpo.write_text(json.dumps({"pair_id": "d2", "prompt": "p", "chosen": "c", "rejected": "rej", "metadata": {"target_term": "term_c"}}) + "\n")
+    train_sft.write_text(
+        json.dumps({"trajectory_id": "t1", "target_term": "term_a", "query": "q", "final_response": "r"}) + "\n"
+    )
+    train_dpo.write_text(
+        json.dumps(
+            {"pair_id": "d1", "prompt": "p", "chosen": "c", "rejected": "rej", "metadata": {"target_term": "term_b"}}
+        )
+        + "\n"
+    )
+    held_sft.write_text(
+        json.dumps({"trajectory_id": "t2", "target_term": "term_b", "query": "q", "final_response": "r"}) + "\n"
+    )
+    held_dpo.write_text(
+        json.dumps(
+            {"pair_id": "d2", "prompt": "p", "chosen": "c", "rejected": "rej", "metadata": {"target_term": "term_c"}}
+        )
+        + "\n"
+    )
 
     manifest = {
         "shards": [
@@ -538,8 +549,16 @@ def test_evaluate_predictions_resolves_exact_id_over_prompt_substring(tmp_path: 
     # R5: prediction ID synthetic.otherbadtoken with prompt 'Compare badtoken with otherbadtoken'
     # must score against otherbadtoken, NOT badtoken
     gold_path = tmp_path / "gold.jsonl"
-    g1 = {"trajectory_id": "synthetic.badtoken", "target_term": "badtoken", "register_spectrum": {"alternatives": [{"lemma": "good1"}]}}
-    g2 = {"trajectory_id": "synthetic.otherbadtoken", "target_term": "otherbadtoken", "register_spectrum": {"alternatives": [{"lemma": "good2"}]}}
+    g1 = {
+        "trajectory_id": "synthetic.badtoken",
+        "target_term": "badtoken",
+        "register_spectrum": {"alternatives": [{"lemma": "good1"}]},
+    }
+    g2 = {
+        "trajectory_id": "synthetic.otherbadtoken",
+        "target_term": "otherbadtoken",
+        "register_spectrum": {"alternatives": [{"lemma": "good2"}]},
+    }
     gold_path.write_text(json.dumps(g1) + "\n" + json.dumps(g2) + "\n", encoding="utf-8")
 
     preds_path = tmp_path / "preds.jsonl"
@@ -584,10 +603,7 @@ def test_extract_target_term_conflict_rejection() -> None:
     # Consistent representations
     assert extract_target_term({"target_term": "Термін1"}) == "термін1"
     assert extract_target_term({"metadata": {"target_term": "Термін2"}}) == "термін2"
-    assert (
-        extract_target_term({"target_term": "Термін3", "metadata": {"target_term": "термін3"}})
-        == "термін3"
-    )
+    assert extract_target_term({"target_term": "Термін3", "metadata": {"target_term": "термін3"}}) == "термін3"
 
     # Disagreeing representations
     conflict_rec = {
@@ -871,6 +887,19 @@ def test_same_sentence_unrelated_reasoning_rejected() -> None:
 
     # Probe from audit J1: speaker action narrative in the same sentence
     r = "Вживайте goodtoken, бо я прочитав словник і вивчив суфікс."
+    eval_res = evaluate_single_response(target, alts, r)
+    assert not eval_res["is_pass"]
+    assert not eval_res["reasoning_grounded"]
+    assert eval_res["composite_score"] <= 0.40
+
+
+def test_explanation_concerning_other_word_rejected() -> None:
+    """K2: An explanation concerning another word must fail grounding and not pass."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    # Probe from audit K2: explanation explicitly concerns another word
+    r = "Вживайте goodtoken, бо у словнику подано пояснення суфікса іншого слова."
     eval_res = evaluate_single_response(target, alts, r)
     assert not eval_res["is_pass"]
     assert not eval_res["reasoning_grounded"]

@@ -370,15 +370,17 @@ def find_textbook_attestation(
             except sqlite3.OperationalError:
                 rows = []
         else:
+            variants = list(dict.fromkeys([clean_phrase, clean_phrase.capitalize(), clean_phrase.title()]))
+            like_clauses = " OR ".join("text LIKE ?" for _ in variants)
             query = f"""
                 SELECT title, grade, subject, author, text, source_file
                 FROM textbooks
-                WHERE text LIKE ?
+                WHERE ({like_clauses})
                   AND grade IN ({grade_placeholders})
                 ORDER BY CAST(grade AS INTEGER) ASC
                 LIMIT 20
             """
-            params = [f"%{clean_phrase}%", *ALLOWED_GRADES]
+            params = [f"%{v}%" for v in variants] + list(ALLOWED_GRADES)
             rows = cur.execute(query, params).fetchall()
 
         for row in rows:
@@ -507,147 +509,208 @@ def is_positive_citation(lemma: str, citation: str) -> bool:
     lem = lemma.strip().lower()
     cit_lower = citation.lower().strip()
 
-    # Whole-word / token boundary check (supports Cyrillic and Latin)
     lem_pat = rf"(?<![а-яіїєґa-z0-9]){re.escape(lem)}(?![а-яіїєґa-z0-9])"
     if not re.search(lem_pat, cit_lower):
         return False
 
-    # 1. Structural contrastive constructions with explicit grammatical roles
-    # Pattern: Replace <A> with/by <B>
-    m_replace = re.search(r"\breplace\s+(.+?)\s+(?:with|by)\s+([^;.!?\n]+)", cit_lower)
-    if m_replace:
-        a_text = m_replace.group(1)
-        b_text = m_replace.group(2)
-        in_a = bool(re.search(lem_pat, a_text))
-        in_b = bool(re.search(lem_pat, b_text))
-        if in_a and not in_b:
-            return False
-        if in_b and not in_a:
-            return True
-
-    # Pattern: Substitute <B> for <A>
-    m_subst = re.search(r"\bsubstitute\s+(.+?)\s+for\s+([^;.!?\n]+)", cit_lower)
-    if m_subst:
-        b_text = m_subst.group(1)
-        a_text = m_subst.group(2)
-        in_a = bool(re.search(lem_pat, a_text))
-        in_b = bool(re.search(lem_pat, b_text))
-        if in_a and not in_b:
-            return False
-        if in_b and not in_a:
-            return True
-
-    # Pattern: замініть / замінити <A> на <B>
-    m_zamin = re.search(r"(?:замініть|замінити)\s+(.+?)\s+на\s+([^;.!?\n]+)", cit_lower)
-    if m_zamin:
-        a_text = m_zamin.group(1)
-        b_text = m_zamin.group(2)
-        in_a = bool(re.search(lem_pat, a_text))
-        in_b = bool(re.search(lem_pat, b_text))
-        if in_a and not in_b:
-            return False
-        if in_b and not in_a:
-            return True
-
-    # Pattern: замість <A> [вживайте|краще|...] <B>
-    m_zamist = re.search(
-        r"(?:замість|натомість)\s+(.+?)\s*(?:[,;:—–-]|(?:\s+(?:вжива\w*|використову\w*|краще|варто|слід|обирай\w*|беріть|треба)))\s*([^;.!?\n]+)",
-        cit_lower,
-    )
-    if m_zamist:
-        a_text = m_zamist.group(1)
-        b_text = m_zamist.group(2)
-        in_a = bool(re.search(lem_pat, a_text))
-        in_b = bool(re.search(lem_pat, b_text))
-        if in_a and not in_b:
-            return False
-        if in_b and not in_a:
-            return True
-
-    # Pattern: <B> замість <A> or <B> rather than <A> or <B> instead of <A>
-    m_inv_zamist = re.search(
-        r"([^;.!?\n]+?)\s+(?:замість|натомість|на\s+відміну\s+від|rather\s+than|instead\s+of)\s+([^;.!?\n]+)",
-        cit_lower,
-    )
-    if m_inv_zamist:
-        b_text = m_inv_zamist.group(1)
-        a_text = m_inv_zamist.group(2)
-        has_b_negation = bool(re.search(r"\b(?:never|not|don't|do\s+not|avoid|не|уникати)\b", b_text))
-        if has_b_negation:
-            a_text, b_text = b_text, a_text
-        in_a = bool(re.search(lem_pat, a_text))
-        in_b = bool(re.search(lem_pat, b_text))
-        if in_a and not in_b:
-            return False
-        if in_b and not in_a:
-            return True
-
-    # Pattern: <B> (а не <A>)
-    m_ane = re.search(r"([^;.!?\n]+?)\s*\((?:а\s+не|not)\s+([^)]+)\)", cit_lower)
-    if m_ane:
-        b_text = m_ane.group(1)
-        a_text = m_ane.group(2)
-        in_a = bool(re.search(lem_pat, a_text))
-        in_b = bool(re.search(lem_pat, b_text))
-        if in_a and not in_b:
-            return False
-        if in_b and not in_a:
-            return True
-
-    # Pattern: <A> — <B> (dictionary error-to-norm list, e.g. "головуючий — голова зборів")
-    m_dash = re.search(r"^([^—–→\n]+?)\s*(?:—|–|→)\s*([^—–→\n]+)$", cit_lower)
-    if m_dash:
-        a_text = m_dash.group(1)
-        b_text = m_dash.group(2)
-        in_a = bool(re.search(lem_pat, a_text))
-        in_b = bool(re.search(lem_pat, b_text))
-        if in_a and not in_b:
-            return False
-        if in_b and not in_a:
-            return True
-
-    # 2. Segment by sentences / independent clauses
+    # Split into independent clauses / sentences
     clauses = [c.strip() for c in re.split(r"[.!?;\n]+", cit_lower) if c.strip()]
     lem_clauses = [c for c in clauses if re.search(lem_pat, c)]
     if not lem_clauses:
         return False
 
-    # Clause-level negative patterns directed at lemma
-    clause_neg_patterns = [
-        # English
-        rf"\b(?:do\s+not|don't|never)\s+(?:\w+\s+)*(?:use|prefer|choose|adopt)\s+[^;.!?\n]*{lem_pat}",
-        rf"\b(?:avoid|stop)\s+(?:\w+\s+)*{lem_pat}",
-        rf"{lem_pat}\s+(?:is\s+)?(?:not|n't|never)\s+(?:correct|recommended|standard|valid|appropriate|preferred|the\s+norm)",
-        rf"{lem_pat}\s+(?:is\s+)?(?:incorrect|deprecated|a\s+calque|calque|avoided|an\s+error|wrong|unacceptable)",
-        rf"\b(?:not|n't)\s+(?:recommended|correct|standard|valid|appropriate)\s*(?:to\s+use|:)?\s*[^;.!?\n]*{lem_pat}",
-        rf"\b(?:incorrect|deprecated|calque|wrong|error)\s*[:—–-]?\s*[^;.!?\n]*{lem_pat}",
-        # Ukrainian
-        rf"(?:не\s+(?:\w+\s+)?(?:вживати|вживайте|вживається|варто|слід|можна|рекомендовано|радимо|доцільно))\s+(?:слово|форму|варіант|термін)?\s*[«\"']?{lem_pat}",
-        rf"{lem_pat}\s*[:—–-]?\s*(?:—|-|–|є|це|\b)\s*(?:не\s+(?:є\s+)?(?:правильн\w*|норм\w*|питом\w*|стандарт\w*|чинн\w*|літературн\w*|рекоменд\w*|вжива\w*))",
-        rf"{lem_pat}\s*[:—–-]?\s*(?:—|-|–|є|це|\b)\s*(?:кальк\w*|помилк\w*|неправильн\w*|суржик\w*|росіянізм\w*|не\s+рекоменд\w*|уника\w*)",
-        rf"(?:уника(?:ти|йте|тиме|тимуть))\s+(?:слово|форму|варіант|термін)?\s*[«\"']?{lem_pat}",
-        rf"(?:помилков\w*|неправильн\w*|кальк\w*|суржик\w*|росіянізм\w*)\s*[:—–-]?\s*(?:як-от|зокрема)?\s*[«\"']?{lem_pat}",
-    ]
-
+    # Pass 1: evaluate whether any clause explicitly rejects lemma or whether lemma is in a rejected role
     for c in lem_clauses:
+        # Negated replacement: "do not replace <A> with <B>" -> B is prohibited/rejected
+        m_neg_replace = re.search(
+            r"\b(?:do\s+not|don't|never|not)\s+(?:\w+\s+)*replace\s+(.+?)\s+(?:with|by)\s+([^;.!?\n]+)",
+            c,
+        )
+        if m_neg_replace:
+            b_text = m_neg_replace.group(2)
+            if re.search(lem_pat, b_text):
+                return False
+
+        # Affirmative replacement: "replace <A> with <B>" -> A is replaced/rejected
+        m_replace = re.search(r"\breplace\s+(.+?)\s+(?:with|by)\s+([^;.!?\n]+)", c)
+        if m_replace and not re.search(r"\b(?:do\s+not|don't|never|not)\s+(?:\w+\s+)*replace\b", c):
+            a_text = m_replace.group(1)
+            b_text = m_replace.group(2)
+            if re.search(lem_pat, a_text) and not re.search(lem_pat, b_text):
+                return False
+
+        # Negated / affirmative "замініть <A> на <B>"
+        m_neg_zamin = re.search(
+            r"\b(?:не\s+(?:\w+\s+)?(?:замінюйте|замінювати|варто\s+замінювати|слід\s+замінювати))\s+(.+?)\s+на\s+([^;.!?\n]+)",
+            c,
+        )
+        if m_neg_zamin:
+            b_text = m_neg_zamin.group(2)
+            if re.search(lem_pat, b_text):
+                return False
+
+        m_zamin = re.search(r"\b(?:замініть|замінити)\s+(.+?)\s+на\s+([^;.!?\n]+)", c)
+        if m_zamin and not re.search(r"\bне\b", c):
+            a_text = m_zamin.group(1)
+            b_text = m_zamin.group(2)
+            if re.search(lem_pat, a_text) and not re.search(lem_pat, b_text):
+                return False
+
+        # Substitute
+        m_subst = re.search(r"\bsubstitute\s+(.+?)\s+for\s+([^;.!?\n]+)", c)
+        if m_subst:
+            b_text = m_subst.group(1)
+            a_text = m_subst.group(2)
+            if re.search(r"\b(?:do\s+not|don't|never|not)\b", c):
+                if re.search(lem_pat, b_text):
+                    return False
+            else:
+                if re.search(lem_pat, a_text) and not re.search(lem_pat, b_text):
+                    return False
+
+        # "замість <A> [вживайте] <B>" -> A is rejected
+        m_zamist = re.search(
+            r"(?:замість|натомість)\s+(.+?)\s*(?:[,;:—–-]|(?:\s+(?:вжива\w*|використову\w*|краще|варто|слід|обирай\w*|беріть|треба)))\s*([^;.!?\n]+)",
+            c,
+        )
+        if m_zamist:
+            a_text = m_zamist.group(1)
+            b_text = m_zamist.group(2)
+            if re.search(r"\bне\b", c):
+                if re.search(lem_pat, b_text):
+                    return False
+            else:
+                if re.search(lem_pat, a_text) and not re.search(lem_pat, b_text):
+                    return False
+
+        # Instead of / rather than / замість
+        m_inv_zamist = re.search(
+            r"([^:;.!?\n]+?)\s+(?:замість|натомість|на\s+відміну\s+від|rather\s+than|instead\s+of)\s+([^;.!?\n]+)",
+            c,
+        )
+        if m_inv_zamist:
+            b_text = m_inv_zamist.group(1).strip()
+            a_text = m_inv_zamist.group(2).strip()
+            if b_text:
+                has_b_neg = bool(re.search(r"\b(?:never|not|don't|do\s+not|avoid|не|уникати)\b", b_text))
+                if has_b_neg:
+                    if re.search(lem_pat, b_text):
+                        return False
+                else:
+                    if re.search(lem_pat, a_text) and not re.search(lem_pat, b_text):
+                        return False
+
+        # <B> (а не <A>)
+        m_ane = re.search(r"([^;.!?\n]+?)\s*\((?:а\s+не|not)\s+([^)]+)\)", c)
+        if m_ane:
+            a_text = m_ane.group(2)
+            if re.search(lem_pat, a_text):
+                return False
+
+        # <A> — <B> error correction pair
+        c_body = re.sub(r"^[\w\-]+:\s*", "", c)
+        dash_parts = [p.strip() for p in re.split(r"\s*(?:—|–|→)\s*", c_body) if p.strip()]
+        if len(dash_parts) >= 2:
+            a_text = dash_parts[0]
+            b_text = dash_parts[-1]
+            if re.search(lem_pat, a_text) and not re.search(lem_pat, b_text):
+                return False
+
+        # General clause-level negative patterns
+        clause_neg_patterns = [
+            rf"\b(?:do\s+not|don't|never)\s+(?:\w+\s+)*(?:use|prefer|choose|adopt)\s+(?:(?!\binstead\s+of\b|\brather\s+than\b|\bзамість\b)[^;.!?\n])*{lem_pat}",
+            rf"\b(?:avoid|stop)\s+(?:\w+\s+)*{lem_pat}",
+            rf"{lem_pat}\s+(?:is\s+)?(?:not|n't|never)\s+(?:correct|recommended|standard|valid|appropriate|preferred|the\s+norm)",
+            rf"{lem_pat}\s+(?:is\s+)?(?:incorrect|deprecated|a\s+calque|calque|avoided|an\s+error|wrong|unacceptable)",
+            rf"\b(?:not|n't)\s+(?:recommended|correct|standard|valid|appropriate)\s*(?:to\s+use|:)?\s*[^;.!?\n]*{lem_pat}",
+            rf"\b(?:incorrect|deprecated|calque|wrong|error)\s*[:—–-]?\s*[^;.!?\n]*{lem_pat}",
+            rf"(?:не\s+(?:\w+\s+)?(?:вживати|вживайте|вживається|варто|слід|можна|рекомендовано|радимо|доцільно))\s+(?:слово|форму|варіант|термін)?\s*[«\"']?{lem_pat}",
+            rf"{lem_pat}\s*[:—–-]?\s*(?:—|-|–|є|це|\b)\s*(?:не\s+(?:є\s+)?(?:правильн\w*|норм\w*|питом\w*|стандарт\w*|чинн\w*|літературн\w*|рекоменд\w*|вжива\w*))",
+            rf"{lem_pat}\s*[:—–-]?\s*(?:—|-|–|є|це|\b)\s*(?:кальк\w*|помилк\w*|неправильн\w*|суржик\w*|росіянізм\w*|не\s+рекоменд\w*|уника\w*)",
+            rf"(?:уника(?:ти|йте|тиме|тимуть))\s+(?:слово|форму|варіант|термін)?\s*[«\"']?{lem_pat}",
+            rf"(?:помилков\w*|неправильн\w*|кальк\w*|суржик\w*|росіянізм\w*)\s*[:—–-]?\s*(?:як-от|зокрема)?\s*[«\"']?{lem_pat}",
+        ]
         for pat in clause_neg_patterns:
             if re.search(pat, c):
                 return False
 
-    # Clause-level positive patterns directed at lemma
-    clause_pos_patterns = [
-        # English
-        rf"\b(?:use|prefer|recommended|correct|standard|valid|appropriate)\s+[^;.!?\n]*{lem_pat}",
-        rf"{lem_pat}\s+(?:is\s+)?(?:recommended|correct|standard|valid|appropriate|the\s+standard|preferred)",
-        rf"(?:living\s+standard|normative|standard)\s*[:—–-]?\s*[^;.!?\n]*{lem_pat}",
-        # Ukrainian
-        rf"(?:правильн\w*|краще|варто|слід|рекоменд\w*|радимо|доцільно|доречно|потрібно|необхідно|нормативн\w*)\s+[^;.!?\n]*{lem_pat}",
-        rf"(?:вжива\w*|пишіть|кажіть|говоріть|використову\w*|обирайте|надавайте\s+перевагу)\s+[^;.!?\n]*{lem_pat}",
-        rf"(?:слово|термін|форма|варіант)?\s*[«\"'\s]?{lem_pat}[»\"'\s]?\s*(?:—|-|–|є|це)\s*(?:це\s+)?(?:питом\w*|автентичн\w*|нормативн\w*|правильн\w*|чинн\w*|літературн\w*)(?:\s+\w+)?(?:\s+(?:відповідник\w*|стандарт\w*|варіант\w*|слово\w*|форма\w*|норм\w*))?",
-        rf"(?:питом\w*|автентичн\w*|нормативн\w*|правильн\w*|чинн\w*|літературн\w*|живий\s+стандарт)\s+[^;.!?\n]*{lem_pat}",
-    ]
-
+    # Pass 2: check whether any clause positively recommends lemma
     for c in lem_clauses:
+        # Affirmative replacement: "replace <A> with <B>" -> B is recommended
+        m_replace = re.search(r"\breplace\s+(.+?)\s+(?:with|by)\s+([^;.!?\n]+)", c)
+        if m_replace and not re.search(r"\b(?:do\s+not|don't|never|not)\s+(?:\w+\s+)*replace\b", c):
+            b_text = m_replace.group(2)
+            if re.search(lem_pat, b_text):
+                return True
+
+        # Affirmative "замініть <A> на <B>" -> B is recommended
+        m_zamin = re.search(r"\b(?:замініть|замінити)\s+(.+?)\s+на\s+([^;.!?\n]+)", c)
+        if m_zamin and not re.search(r"\bне\b", c):
+            b_text = m_zamin.group(2)
+            if re.search(lem_pat, b_text):
+                return True
+
+        # Affirmative substitute <B> for <A> -> B is recommended
+        m_subst = re.search(r"\bsubstitute\s+(.+?)\s+for\s+([^;.!?\n]+)", c)
+        if m_subst and not re.search(r"\b(?:do\s+not|don't|never|not)\b", c):
+            b_text = m_subst.group(1)
+            if re.search(lem_pat, b_text):
+                return True
+
+        # "замість <A> [вживайте] <B>" -> B is recommended
+        m_zamist = re.search(
+            r"(?:замість|натомість)\s+(.+?)\s*(?:[,;:—–-]|(?:\s+(?:вжива\w*|використову\w*|краще|варто|слід|обирай\w*|беріть|треба)))\s*([^;.!?\n]+)",
+            c,
+        )
+        if m_zamist and not re.search(r"\bне\b", c):
+            b_text = m_zamist.group(2)
+            if re.search(lem_pat, b_text):
+                return True
+
+        # "<B> замість <A>"
+        m_inv_zamist = re.search(
+            r"([^:;.!?\n]+?)\s+(?:замість|натомість|на\s+відміну\s+від|rather\s+than|instead\s+of)\s+([^;.!?\n]+)",
+            c,
+        )
+        if m_inv_zamist:
+            b_text = m_inv_zamist.group(1).strip()
+            a_text = m_inv_zamist.group(2).strip()
+            if b_text:
+                has_b_neg = bool(re.search(r"\b(?:never|not|don't|do\s+not|avoid|не|уникати)\b", b_text))
+                if has_b_neg:
+                    if re.search(lem_pat, a_text):
+                        return True
+                else:
+                    if re.search(lem_pat, b_text):
+                        return True
+
+        # "<B> (а не <A>)" -> B is recommended
+        m_ane = re.search(r"([^;.!?\n]+?)\s*\((?:а\s+не|not)\s+([^)]+)\)", c)
+        if m_ane:
+            b_text = m_ane.group(1)
+            if re.search(lem_pat, b_text):
+                return True
+
+        # "<A> — <B>" -> B is recommended
+        c_body = re.sub(r"^[\w\-]+:\s*", "", c)
+        dash_parts = [p.strip() for p in re.split(r"\s*(?:—|–|→)\s*", c_body) if p.strip()]
+        if len(dash_parts) >= 2:
+            b_text = dash_parts[-1]
+            if re.search(lem_pat, b_text):
+                return True
+
+        # Clause-level positive patterns
+        clause_pos_patterns = [
+            # English
+            rf"\b(?:use|prefer|recommended|correct|standard|valid|appropriate)\s+[^;.!?\n]*{lem_pat}",
+            rf"{lem_pat}\s+(?:is\s+)?(?:recommended|correct|standard|valid|appropriate|the\s+standard|preferred)",
+            rf"(?:living\s+standard|normative|standard)\s*[:—–-]?\s*[^;.!?\n]*{lem_pat}",
+            # Ukrainian
+            rf"(?:правильн\w*|краще|варто|слід|рекоменд\w*|радимо|доцільно|доречно|потрібно|необхідно|нормативн\w*)\s+[^;.!?\n]*{lem_pat}",
+            rf"(?:вжива\w*|пишіть|кажіть|говоріть|використову\w*|обирайте|надавайте\s+перевагу)\s+[^;.!?\n]*{lem_pat}",
+            rf"(?:слово|термін|форма|варіант)?\s*[«\"'\s]?{lem_pat}[»\"'\s]?\s*(?:—|-|–|є|це)\s*(?:це\s+)?(?:питом\w*|автентичн\w*|нормативн\w*|правильн\w*|чинн\w*|літературн\w*)(?:\s+\w+)?(?:\s+(?:відповідник\w*|стандарт\w*|варіант\w*|слово\w*|форма\w*|норм\w*))?",
+            rf"(?:питом\w*|автентичн\w*|нормативн\w*|правильн\w*|чинн\w*|літературн\w*|живий\s+стандарт)\s+[^;.!?\n]*{lem_pat}",
+        ]
         for pat in clause_pos_patterns:
             if re.search(pat, c):
                 return True
@@ -694,11 +757,7 @@ def synthesize_trajectory_and_dpo(
     for s in verified_alts:
         tb = textbook_attestations.get(s)
         dict_att = dict_attestations.get(s)
-        matching_curated = [
-            ev
-            for ev in (candidate.curated_evidence or [])
-            if is_positive_citation(s, ev)
-        ]
+        matching_curated = [ev for ev in (candidate.curated_evidence or []) if is_positive_citation(s, ev)]
         if tb:
             evidence = f"Підручник МОН «{tb['subject']}» {tb['grade']} клас ({tb['author']}); цитата: «{tb['snippet']}»{prov_suffix}"
             tier = "living_standard"
