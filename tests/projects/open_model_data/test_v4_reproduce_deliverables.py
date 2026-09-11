@@ -228,6 +228,7 @@ def test_verify_delivery_detects_tampered_document(tmp_path: Path) -> None:
     # Copy necessary contracts and artifacts
     for subpath in [
         "data/projects/open_model_data/contracts/v4_delivery_reproduction_receipt_v1.schema.json",
+        "data/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json",
         "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
         "data/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json",
         "data/projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",
@@ -306,6 +307,7 @@ def test_verify_delivery_rejects_path_traversal_and_out_of_repo_documents(tmp_pa
 
     for subpath in [
         "data/projects/open_model_data/contracts/v4_delivery_reproduction_receipt_v1.schema.json",
+        "data/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json",
         "data/projects/open_model_data/language/v4_language_usage_index_v1.jsonl",
         "data/projects/open_model_data/dataset/v4_human_source_dataset_manifest_v1.json",
         "data/projects/open_model_data/dataset/v4_human_source_dataset_records_v1.jsonl",

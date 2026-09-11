@@ -235,6 +235,41 @@ def test_build_dataset_transactional_rollback_on_replacement_failure(
     assert list(out_dir.glob("*.bak*")) == []
 
 
+def test_build_dataset_backup_cleanup_failure_does_not_rollback(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """If an error occurs while deleting backups after targets are replaced, publication succeeds and targets remain."""
+    repo_root = Path.cwd()
+    out_dir = tmp_path / "out"
+    out_dir.mkdir(parents=True)
+    test_manifest_out = out_dir / "manifest.json"
+    test_records_out = out_dir / "records.jsonl"
+    test_receipt_out = out_dir / "receipt.json"
+
+    # Pre-populate sentinel content
+    test_manifest_out.write_text("sentinel manifest", encoding="utf-8")
+    test_records_out.write_text("sentinel records", encoding="utf-8")
+    test_receipt_out.write_text("sentinel receipt", encoding="utf-8")
+
+    orig_unlink = Path.unlink
+
+    def mock_unlink(self: Path, missing_ok: bool = False) -> None:
+        if ".bak." in self.name:
+            raise OSError("Simulated permission error unlinking backup")
+        orig_unlink(self, missing_ok=missing_ok)
+
+    monkeypatch.setattr(Path, "unlink", mock_unlink)
+
+    receipt_data = build_dataset(repo_root, test_manifest_out, test_records_out, test_receipt_out)
+    assert receipt_data["storage_accounting"]["below_2000kb_precommit_limit"] is True
+    assert receipt_data["dataset_accounting"]["total_evaluated_spans"] == 1419
+
+    # All targets must contain the new publication, not sentinel content
+    assert test_manifest_out.read_text(encoding="utf-8") != "sentinel manifest"
+    assert test_records_out.read_text(encoding="utf-8") != "sentinel records"
+    assert test_receipt_out.read_text(encoding="utf-8") != "sentinel receipt"
+
+
 def test_authenticated_loss_mask_resolver() -> None:
     """Verify that resolve_record_loss_masks and load_dataset_stream resolve modern_view loss masks."""
     records = list(load_dataset_stream(RECORDS_PATH, resolve_masks=True))
@@ -541,6 +576,32 @@ def test_verify_dataset_rejects_schema_violating_record(tmp_path: Path) -> None:
             records_rel=str(
                 bad_rec_file.relative_to(Path.cwd()) if bad_rec_file.is_relative_to(Path.cwd()) else bad_rec_file
             ),
+        )
+        is False
+    )
+
+
+def test_verify_dataset_rejects_tampered_non_first_record_mask(tmp_path: Path) -> None:
+    """Verify that verify_dataset rejects when a non-first record has an invalid loss mask (Finding 2)."""
+    with open(RECORDS_PATH, encoding="utf-8") as f:
+        header = f.readline()
+        lines = [f.readline() for _ in range(1419)]
+
+    # Tamper with record 50's loss_mask_count so loader or mask resolver fails
+    rec50 = json.loads(lines[50])
+    rec50_bad = dict(rec50)
+    rec50_bad["language_views"] = dict(rec50["language_views"])
+    rec50_bad["language_views"]["modern_view"] = dict(rec50["language_views"]["modern_view"])
+    rec50_bad["language_views"]["modern_view"]["loss_mask_count"] = 999999
+
+    bad_file = tmp_path / "bad_rec50_records.jsonl"
+    bad_file.write_text(
+        header + "".join(lines[:50]) + json.dumps(rec50_bad) + "\n" + "".join(lines[51:]), encoding="utf-8"
+    )
+    assert (
+        verify_dataset(
+            Path.cwd(),
+            records_rel=str(bad_file.relative_to(Path.cwd()) if bad_file.is_relative_to(Path.cwd()) else bad_file),
         )
         is False
     )

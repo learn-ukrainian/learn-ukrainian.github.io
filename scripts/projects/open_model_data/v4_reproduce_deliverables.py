@@ -230,8 +230,9 @@ def _get_language_usage_masks(repo_root: Path) -> dict[str, list[dict[str, Any]]
 def _get_record_validator(repo_root: Path) -> jsonschema.Draft202012Validator:
     schema_path = repo_root / "data/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json"
     if not schema_path.is_file():
-        for p in [repo_root, Path.cwd()]:
-            for parent in p.parents:
+        script_root = Path(__file__).resolve().parents[3]
+        for p in [repo_root, Path.cwd(), script_root]:
+            for parent in [p, *p.parents]:
                 cand = parent / "data/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json"
                 if cand.is_file():
                     schema_path = cand

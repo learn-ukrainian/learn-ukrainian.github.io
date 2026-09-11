@@ -521,11 +521,14 @@ def build_dataset(
         for tmp, target in targets:
             tmp.replace(target)
 
-        # 3. Success: clean up backups
-        for _, bak in backups:
-            if bak is not None and bak.exists():
-                bak.unlink()
+        # 3. Success: publication is committed; clear active rollback tracking before cleanup
+        backups_to_clean = list(backups)
         backups.clear()
+
+        for _, bak in backups_to_clean:
+            if bak is not None and bak.exists():
+                with contextlib.suppress(OSError):
+                    bak.unlink()
     except Exception as publish_err:
         # Rollback on any failure to restore earlier generation
         rollback_errors = []
@@ -636,18 +639,23 @@ def verify_dataset(
     if len(seen_record_ids) != 1419 or len(seen_span_shas) != 1419:
         return False
 
-    # Verify loader and authenticated loss mask resolver
+    # Verify loader and authenticated loss mask resolver across all records
+    resolved_count = 0
     try:
         sample_stream = load_dataset_stream(records_path, resolve_masks=True, repo_root=repo_root)
-        first_resolved = next(sample_stream)
-        m_view = first_resolved.get("language_views", {}).get("modern_view", {})
-        if "loss_mask_spans" not in m_view or len(m_view["loss_mask_spans"]) != m_view.get("loss_mask_count"):
-            return False
-        char_len = first_resolved.get("source_fidelity", {}).get("char_length", 0)
-        for span in m_view.get("loss_mask_spans", []):
-            if not validate_mask_span(span, char_len):
+        for record in sample_stream:
+            resolved_count += 1
+            m_view = record.get("language_views", {}).get("modern_view", {})
+            if "loss_mask_spans" not in m_view or len(m_view["loss_mask_spans"]) != m_view.get("loss_mask_count"):
                 return False
+            char_len = record.get("source_fidelity", {}).get("char_length", 0)
+            for span in m_view.get("loss_mask_spans", []):
+                if not validate_mask_span(span, char_len):
+                    return False
     except Exception:
+        return False
+
+    if resolved_count != 1419:
         return False
 
     return receipt_data.get("storage_accounting", {}).get("below_2000kb_precommit_limit") is True
@@ -772,8 +780,9 @@ def _get_language_usage_masks(repo_root: Path) -> dict[str, list[dict[str, Any]]
 def _get_record_validator(repo_root: Path) -> jsonschema.Draft202012Validator:
     schema_path = repo_root / "data/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json"
     if not schema_path.is_file():
-        for p in [repo_root, Path.cwd()]:
-            for parent in p.parents:
+        script_root = Path(__file__).resolve().parents[3]
+        for p in [repo_root, Path.cwd(), script_root]:
+            for parent in [p, *p.parents]:
                 cand = parent / "data/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json"
                 if cand.is_file():
                     schema_path = cand
