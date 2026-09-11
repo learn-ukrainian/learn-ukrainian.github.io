@@ -1,0 +1,72 @@
+{
+  "sharegpt_train_count": 967,
+  "sharegpt_held_out_count": 233,
+  "trl_dpo_train_count": 967,
+  "trl_dpo_held_out_count": 233,
+  "shards": [
+    {
+      "format": "sharegpt",
+      "partition": "train",
+      "file": "uldr_sharegpt_train_part001.jsonl",
+      "bytes": 1385964,
+      "sha256": "fcaefb6bc5f107e2895ee7f3fe091ac62898c31aa9eed0e3b4612394ed752001",
+      "records_count": 400
+    },
+    {
+      "format": "sharegpt",
+      "partition": "train",
+      "file": "uldr_sharegpt_train_part002.jsonl",
+      "bytes": 1375940,
+      "sha256": "0c0ba9fc94a6e7d5fd86ad4c9f86b9f73f8abeffaa841a8176b9cf7354666668",
+      "records_count": 400
+    },
+    {
+      "format": "sharegpt",
+      "partition": "train",
+      "file": "uldr_sharegpt_train_part003.jsonl",
+      "bytes": 571714,
+      "sha256": "43717fd30c34a24078583dc1d9fdb3bdab2d8c4a787c3401dc49f7f450805589",
+      "records_count": 167
+    },
+    {
+      "format": "trl_dpo",
+      "partition": "train",
+      "file": "uldr_dpo_train_part001.jsonl",
+      "bytes": 860310,
+      "sha256": "1cebc6f2895870b45abeb411878c7cc0243a6cfc245cecc8071c3ab321f81769",
+      "records_count": 400
+    },
+    {
+      "format": "trl_dpo",
+      "partition": "train",
+      "file": "uldr_dpo_train_part002.jsonl",
+      "bytes": 848601,
+      "sha256": "f73fbfebfd24dc9211a3faab8f027f23638ed5cbf7e6c117dcc19a7e855029c3",
+      "records_count": 400
+    },
+    {
+      "format": "trl_dpo",
+      "partition": "train",
+      "file": "uldr_dpo_train_part003.jsonl",
+      "bytes": 352698,
+      "sha256": "dcdaf84e3d99d4ec7b466fa99cf63bd9af9e793ae37511440f6f8d3a3193f474",
+      "records_count": 167
+    },
+    {
+      "format": "sharegpt",
+      "partition": "held_out",
+      "file": "uldr_sharegpt_held_out_part001.jsonl",
+      "bytes": 805448,
+      "sha256": "6389283e852aaf3e8eb58c4a740d271fe83dd035e8a944893a065f0c3f7a29fc",
+      "records_count": 233
+    },
+    {
+      "format": "trl_dpo",
+      "partition": "held_out",
+      "file": "uldr_dpo_held_out_part001.jsonl",
+      "bytes": 497909,
+      "sha256": "233369674e1f4f067b971900b1ad67da71b588df27cb7970a86a7b264c980ef3",
+      "records_count": 233
+    }
+  ]
+}
