@@ -339,8 +339,14 @@ def test_heritage_pairs_real_schema(tmp_path: Path) -> None:
     assert raw["старий_варіант"]["heritage_pairs"] == ["новий_варіант"]
 
 
-def test_phrase_validation_clean_vs_garbage(mock_dbs: dict[str, Path]) -> None:
+def test_phrase_validation_clean_vs_garbage(mock_dbs: dict[str, Path], monkeypatch: pytest.MonkeyPatch) -> None:
     """Verify phrase validation accepts authentic Ukrainian tokens and rejects garbage."""
+
+    def mock_verify_lemma(lemma: str, db_path: Any = None) -> list[dict[str, Any]]:
+        return []
+
+    monkeypatch.setattr("scripts.lexicon.reconcile_calque_clusters.verify_lemma", mock_verify_lemma)
+
     engine = CalqueReconciliationEngine(
         sources_db_path=mock_dbs["sources_db"],
         atlas_db_path=mock_dbs["atlas_db"],
@@ -379,6 +385,12 @@ def test_phrase_validation_clean_vs_garbage(mock_dbs: dict[str, Path]) -> None:
 
 def test_lexicalised_safe_and_polysemes_skipped(mock_dbs: dict[str, Path], monkeypatch: pytest.MonkeyPatch) -> None:
     """Verify lexicalised adjectives and polysemes are skipped and never blanket-flagged."""
+
+    def mock_verify_lemma(lemma: str, db_path: Any = None) -> list[dict[str, Any]]:
+        return []
+
+    monkeypatch.setattr("scripts.lexicon.reconcile_calque_clusters.verify_lemma", mock_verify_lemma)
+
     conn = sqlite3.connect(mock_dbs["atlas_db"])
     # Seed 'блискучий' (LEXICALISED_SAFE) and 'вірний' (SENSE_RESTRICTED_CALQUES)
     conn.execute("INSERT INTO articles VALUES ('блискучий', 'блискучий');")
@@ -503,6 +515,12 @@ def test_fts5_hyphenated_lemma(mock_dbs: dict[str, Path], monkeypatch: pytest.Mo
 
     monkeypatch.setattr("scripts.lexicon.reconcile_calque_clusters.verify_lemma", mock_verify_lemma)
 
+    # Seed a row with hyphenated word in textbooks_fts to test match hit count
+    s_conn = sqlite3.connect(mock_dbs["sources_db"])
+    s_conn.execute("INSERT INTO textbooks_fts (content) VALUES ('підручник з алма-атинський край');")
+    s_conn.commit()
+    s_conn.close()
+
     engine = CalqueReconciliationEngine(
         sources_db_path=mock_dbs["sources_db"],
         atlas_db_path=mock_dbs["atlas_db"],
@@ -511,11 +529,12 @@ def test_fts5_hyphenated_lemma(mock_dbs: dict[str, Path], monkeypatch: pytest.Mo
         heritage_overlay_path=mock_dbs["heritage_overlay"],
     )
 
-    # Should not raise OperationalError
+    # Should not raise OperationalError and safely match hyphenated term in FTS5
     cand = engine.validate_candidate("алма-атинський")
     assert cand.term == "алма-атинський"
     assert cand.is_phrase is False
     assert cand.is_valid is True
+    assert cand.textbook_hits == 1
 
 
 def test_peer_synonyms_exclude_russianisms_in_atlas(mock_dbs: dict[str, Path], monkeypatch: pytest.MonkeyPatch) -> None:
