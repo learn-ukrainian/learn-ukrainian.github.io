@@ -1216,7 +1216,7 @@ PAGE_CONTRACTS: tuple[PageContract, ...] = (
         ("humans", "agents"),
         "Shares its redirect target with comms.html; canonical channel evidence is visible through Fleet Observer projections.",
         "low if callers follow the redirect; medium if automation expects the retired page DOM",
-        "retain as a compatibility redirect during the observation window",
+        "retain redirect permanently; observation window closed (#7935) — keeps bookmarks/legacy links alive at zero maintenance cost and the file is pinned by UI contract tests",
     ),
     PageContract(
         "comms.html",
@@ -1227,7 +1227,7 @@ PAGE_CONTRACTS: tuple[PageContract, ...] = (
         ("humans",),
         "Shares its redirect target with channels.html; legacy /api/comms/* routes remain separately deployed for compatibility.",
         "low if callers follow the redirect; medium if automation expects the retired page DOM",
-        "retain as a compatibility redirect during the observation window",
+        "retain redirect permanently; observation window closed (#7935) — keeps bookmarks/legacy links alive at zero maintenance cost and the file is pinned by UI contract tests",
     ),
     PageContract(
         "delegate.html",
