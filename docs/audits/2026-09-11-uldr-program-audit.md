@@ -1,7 +1,7 @@
 # ULDR program audit — 2026-09-11
 
-Latest disposition: **FAIL** at `c55474b6edc39d231adf406ebc2e8f2e2cdcb273`.
-See [the sixth diagnostic re-review](#sixth-diagnostic-re-review--c55474b6)
+Latest disposition: **FAIL** at `d26cc384e6afa8c5bde8aa3676a108f98dce22c2`.
+See [the seventh diagnostic re-review](#seventh-diagnostic-re-review--d26cc384)
 for current fixes, evidence, and remaining findings. Earlier sections retain the
 history of the heads they name.
 
@@ -814,3 +814,82 @@ source-aware diagnostic testing, not an independently blinded linguistic
 assessment. No model training, protected payload export or merge occurred.
 The existing 97-seed residual is unchanged. Current CI completion and CodeQL
 comparison coverage must still be verified before any merge decision.
+
+
+## Seventh diagnostic re-review — d26cc384
+
+**VERDICT: FAIL** at `d26cc384e6afa8c5bde8aa3676a108f98dce22c2` of PR #7933.
+The exact J1/J2 examples are fixed; the two underlying semantic failure classes
+remain reproducible.
+
+### Scope and verification
+
+Only the generator, evaluator and their two test files changed from `c55474b6`.
+Artifacts, formatter and guide are unchanged; previous artifact receipts retain
+their original scope. No new artifact rebuild or model benchmark was run here.
+
+- **39 tests passed in 1.16 seconds**: 16 generator, 19 formatting/evaluation,
+  and four contract tests. The initial command used a nonexistent contract-test
+  path and collected nothing; the corrected command below produced this result.
+- Check-only Ruff passed for both changed implementation and test files.
+- “Replace alpha with beta.” and “Do not ever use alpha. Use beta.” now both
+  reject alpha, recommend beta and synthesize beta as primary.
+- The previous autobiographical explanation now scores **0.4 / FAIL**.
+
+Tests ran with the project interpreter on the reviewed author worktree:
+
+```text
+/home/ops/learn-ukrainian/.venv/bin/python -m pytest \
+  tests/projects/open_model_data/test_v4_decolonization_reasoning.py \
+  tests/projects/open_model_data/test_v4_format_and_evaluate.py \
+  tests/projects/open_model_data/test_v1_decolonization_contracts.py -q
+```
+
+### K1 — J2 remains: negated replacement reverses the citation's meaning
+
+The new structural replacement branch returns before clause-level negation is
+checked (`v4_decolonization_reasoning.py:516–525`). Both synthetic citations below
+return alpha=false, beta=true and synthesize **beta** as primary:
+
+> Do not replace alpha with beta.
+
+> Use alpha. Do not replace alpha with beta.
+
+The second explicitly recommends alpha and prohibits its replacement with beta.
+The implementation rejects that recommendation and teaches the prohibited one.
+The probe supplies positive VESUM counts for both tokens and no other evidence.
+This demonstrates polarity loss in the new role extractor, not missing lexical
+attestation. Resolve negation and the complete statement before treating a
+structural role match as positive evidence.
+
+### K2 — J1 remains: a relation concerning another word earns perfect grounding
+
+For target `badtoken` and alternative `goodtoken`, this synthetic response scores
+**1.0 / PASS**, with `reasoning_grounded=true` and two reasoning hits:
+
+> Вживайте goodtoken, бо у словнику подано пояснення суфікса іншого слова.
+
+The dictionary explanation explicitly concerns another word. It supplies no
+linguistic support for the recommended alternative. The evaluator still searches
+for relation patterns anywhere in subject-bearing sentences
+(`v4_evaluate_decolonization.py:282–301`); it does not bind the relation's subject
+or object to the recommendation. The added autobiographical exclusions fix J1's
+literal example but do not establish semantic grounding.
+
+These checks are useful heuristics, but their PASS must not be represented as
+independent semantic qualification. Both findings recur across patch rounds;
+closure requires evidence addressing the failure classes and independently
+assessed contrastive cases. Remediation ownership remains with the author; no
+implementation or new architecture decision is made by this report.
+
+### CI and limits
+
+At inspection, CI was still running. The same-head CodeQL summary was **neutral**,
+with “2 configurations not found”: JavaScript/TypeScript and Python comparison
+configurations. It explicitly could not determine alerts introduced by the PR.
+That is not evidence of alert clearance; later completion may change the result.
+
+All counterexamples are synthetic and were executed against archived exact-head
+code. This is a diagnostic re-review, not a completed formal review ledger or
+independently blinded linguistic assessment. The existing 97-seed residual is
+unchanged. No protected text, dataset mutation, model execution or merge occurred.
