@@ -275,12 +275,19 @@ def load_calque_candidates(
     return list(candidates_map.values())
 
 
-def get_vesum_counts(lemmas: list[str], vesum_db_path: Path) -> dict[str, int]:
+def get_vesum_counts(
+    lemmas: list[str],
+    vesum_db_path: Path,
+    conn: sqlite3.Connection | None = None,
+) -> dict[str, int]:
     """Query local VESUM database for paradigm form counts."""
     counts: dict[str, int] = {}
     if not vesum_db_path.is_file():
         return {lemma: 0 for lemma in lemmas}
-    conn = sqlite3.connect(str(vesum_db_path))
+    close_conn = False
+    if conn is None:
+        conn = sqlite3.connect(f"file:{vesum_db_path.resolve()}?mode=ro", uri=True)
+        close_conn = True
     try:
         cur = conn.cursor()
         for lemma in lemmas:
@@ -289,11 +296,26 @@ def get_vesum_counts(lemmas: list[str], vesum_db_path: Path) -> dict[str, int]:
             row = cur.execute("SELECT count(*) FROM forms WHERE lemma = ?", (first_word.lower(),)).fetchone()
             counts[lemma] = row[0] if row else 0
     finally:
-        conn.close()
+        if close_conn:
+            conn.close()
     return counts
 
 
-def find_textbook_attestation(lemma: str, sources_db_path: Path) -> dict[str, Any] | None:
+def _has_textbooks_fts(conn: sqlite3.Connection) -> bool:
+    """Check whether textbooks_fts virtual table exists in the connected database."""
+    try:
+        cur = conn.cursor()
+        cur.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='textbooks_fts'")
+        return cur.fetchone() is not None
+    except Exception:
+        return False
+
+
+def find_textbook_attestation(
+    lemma: str,
+    sources_db_path: Path,
+    conn: sqlite3.Connection | None = None,
+) -> dict[str, Any] | None:
     """Search genuine MESU Grade 1-11 textbooks in sources.db for living school citations.
 
     Strictly excludes:
@@ -303,7 +325,10 @@ def find_textbook_attestation(lemma: str, sources_db_path: Path) -> dict[str, An
     """
     if not sources_db_path.is_file():
         return None
-    conn = sqlite3.connect(str(sources_db_path))
+    close_conn = False
+    if conn is None:
+        conn = sqlite3.connect(f"file:{sources_db_path.resolve()}?mode=ro", uri=True)
+        close_conn = True
     try:
         cur = conn.cursor()
         words = lemma.split()
@@ -312,16 +337,35 @@ def find_textbook_attestation(lemma: str, sources_db_path: Path) -> dict[str, An
             return None
 
         grade_placeholders = ",".join("?" for _ in ALLOWED_GRADES)
-        query = f"""
-            SELECT title, grade, subject, author, text, source_file
-            FROM textbooks
-            WHERE text LIKE ?
-              AND grade IN ({grade_placeholders})
-            ORDER BY CAST(grade AS INTEGER) ASC
-            LIMIT 20
-        """
-        params = [f"%{search_kw}%", *ALLOWED_GRADES]
-        rows = cur.execute(query, params).fetchall()
+        rows: list[Any] = []
+
+        if _has_textbooks_fts(conn):
+            try:
+                escaped_kw = search_kw.replace('"', '""')
+                fts_query = f"""
+                    SELECT t.title, t.grade, t.subject, t.author, t.text, t.source_file
+                    FROM textbooks_fts f
+                    JOIN textbooks t ON t.id = f.rowid
+                    WHERE textbooks_fts MATCH ?
+                      AND t.grade IN ({grade_placeholders})
+                    ORDER BY CAST(t.grade AS INTEGER) ASC
+                    LIMIT 20
+                """
+                rows = cur.execute(fts_query, (f'"{escaped_kw}"', *ALLOWED_GRADES)).fetchall()
+            except sqlite3.OperationalError:
+                rows = []
+
+        if not rows:
+            query = f"""
+                SELECT title, grade, subject, author, text, source_file
+                FROM textbooks
+                WHERE text LIKE ?
+                  AND grade IN ({grade_placeholders})
+                ORDER BY CAST(grade AS INTEGER) ASC
+                LIMIT 20
+            """
+            params = [f"%{search_kw}%", *ALLOWED_GRADES]
+            rows = cur.execute(query, params).fetchall()
 
         for row in rows:
             title, grade, subject, author, text, src_file = row
@@ -352,15 +396,23 @@ def find_textbook_attestation(lemma: str, sources_db_path: Path) -> dict[str, An
                 "source_file": src_file,
             }
     finally:
-        conn.close()
+        if close_conn:
+            conn.close()
     return None
 
 
-def find_dictionary_attestation(lemma: str, sources_db_path: Path) -> str | None:
+def find_dictionary_attestation(
+    lemma: str,
+    sources_db_path: Path,
+    conn: sqlite3.Connection | None = None,
+) -> str | None:
     """Check historical (Grinchenko) and academic (SUM-11) dictionary presence in sources.db."""
     if not sources_db_path.is_file():
         return None
-    conn = sqlite3.connect(str(sources_db_path))
+    close_conn = False
+    if conn is None:
+        conn = sqlite3.connect(f"file:{sources_db_path.resolve()}?mode=ro", uri=True)
+        close_conn = True
     try:
         cur = conn.cursor()
         first_w = lemma.split()[0].lower()
@@ -371,7 +423,8 @@ def find_dictionary_attestation(lemma: str, sources_db_path: Path) -> str | None
         if row_s:
             return "Академічний Словник української мови в 11 томах (СУМ-11); верифіковано у ВЕСУМ"
     finally:
-        conn.close()
+        if close_conn:
+            conn.close()
     return None
 
 
@@ -594,16 +647,25 @@ def scan_generated_files(file_paths: list[Path]) -> tuple[bool, bool, list[str]]
     return not has_private_paths, not has_restricted_sources, violations
 
 
+def get_partition_for_term(term: str, train_ratio: float = 0.8) -> str:
+    """Deterministically partition a calque term into 'train' or 'held_out'."""
+    norm = normalize_text(term).lower()
+    digest = hashlib.sha256(f"uldr_partition_v1:{norm}".encode()).hexdigest()
+    ratio_val = int(digest[:8], 16) / 0xFFFFFFFF
+    return "train" if ratio_val < train_ratio else "held_out"
+
+
 def generate_pipeline(
     lt_replacements_path: Path,
     sources_db_path: Path,
     vesum_db_path: Path,
     out_dir: Path,
-    limit: int | None = 100,
-    records_per_shard: int = 500,
+    limit: int | None = 1200,
+    records_per_shard: int = 400,
+    train_ratio: float = 0.8,
     verify_schema: bool = True,
 ) -> dict[str, Any]:
-    """Execute the ULDR dataset generation pipeline with sharding and manifest receipts."""
+    """Execute the ULDR dataset generation pipeline with partitioning, sharding, and manifest receipts."""
     out_dir.mkdir(parents=True, exist_ok=True)
 
     traj_validator = None
@@ -620,43 +682,60 @@ def generate_pipeline(
 
     candidates = load_calque_candidates(lt_replacements_path, sources_db_path)
 
-    shard_idx = 1
-    current_shard_count = 0
     total_trajs = 0
     textbook_attestation_count = 0
-
-    traj_fh = None
-    dpo_fh = None
+    dict_attestation_count = 0
     generated_shards: list[dict[str, Any]] = []
 
-    def open_shard(idx: int) -> tuple[Any, Any, Path, Path]:
-        t_path = out_dir / f"decolonization_trajectories_part{idx:03d}.jsonl"
-        d_path = out_dir / f"decolonization_dpo_pairs_part{idx:03d}.jsonl"
+    partitions = ("train", "held_out")
+    partition_state: dict[str, dict[str, Any]] = {
+        p: {
+            "shard_idx": 1,
+            "current_shard_count": 0,
+            "total_count": 0,
+            "traj_fh": None,
+            "dpo_fh": None,
+            "current_t_path": None,
+            "current_d_path": None,
+            "terms": set(),
+        }
+        for p in partitions
+    }
+
+    def open_shard(part: str, idx: int) -> tuple[Any, Any, Path, Path]:
+        t_path = out_dir / f"decolonization_trajectories_{part}_part{idx:03d}.jsonl"
+        d_path = out_dir / f"decolonization_dpo_pairs_{part}_part{idx:03d}.jsonl"
         return t_path.open("w", encoding="utf-8"), d_path.open("w", encoding="utf-8"), t_path, d_path
 
-    current_t_path: Path | None = None
-    current_d_path: Path | None = None
+    # Reuse persistent read-only SQLite connections across candidate iterations
+    conn_sources: sqlite3.Connection | None = None
+    conn_vesum: sqlite3.Connection | None = None
+    if sources_db_path.is_file():
+        conn_sources = sqlite3.connect(f"file:{sources_db_path.resolve()}?mode=ro", uri=True)
+    if vesum_db_path.is_file():
+        conn_vesum = sqlite3.connect(f"file:{vesum_db_path.resolve()}?mode=ro", uri=True)
 
     try:
-        traj_fh, dpo_fh, current_t_path, current_d_path = open_shard(shard_idx)
-
         for candidate in candidates:
             if limit is not None and total_trajs >= limit:
                 break
 
             suggestions = candidate.suggestions
-            vesum_counts = get_vesum_counts(suggestions, vesum_db_path)
+            vesum_counts = get_vesum_counts(suggestions, vesum_db_path, conn=conn_vesum)
             tb_attestations = {}
             dict_attestations = {}
             has_tb = False
+            has_dict = False
             for s in suggestions:
                 if vesum_counts.get(s, 0) > 0:
-                    tb = find_textbook_attestation(s, sources_db_path)
+                    tb = find_textbook_attestation(s, sources_db_path, conn=conn_sources)
                     tb_attestations[s] = tb
                     if tb:
                         has_tb = True
-                    dict_att = find_dictionary_attestation(s, sources_db_path)
+                    dict_att = find_dictionary_attestation(s, sources_db_path, conn=conn_sources)
                     dict_attestations[s] = dict_att
+                    if dict_att:
+                        has_dict = True
 
             record = synthesize_trajectory_and_dpo(
                 candidate,
@@ -675,55 +754,90 @@ def generate_pipeline(
                 traj_validator.validate(trajectory)
                 dpo_validator.validate(dpo_pair)
 
-            if current_shard_count >= records_per_shard:
-                traj_fh.close()
-                dpo_fh.close()
-                assert current_t_path is not None and current_d_path is not None
+            part = get_partition_for_term(candidate.target_term, train_ratio)
+            pstate = partition_state[part]
+
+            if pstate["traj_fh"] is None:
+                pstate["traj_fh"], pstate["dpo_fh"], pstate["current_t_path"], pstate["current_d_path"] = open_shard(
+                    part, pstate["shard_idx"]
+                )
+
+            if pstate["current_shard_count"] >= records_per_shard:
+                pstate["traj_fh"].close()
+                pstate["dpo_fh"].close()
+                cur_t = pstate["current_t_path"]
+                cur_d = pstate["current_d_path"]
+                assert cur_t is not None and cur_d is not None
                 generated_shards.append(
                     {
-                        "shard_index": shard_idx,
-                        "trajectories_file": current_t_path.name,
-                        "trajectories_bytes": current_t_path.stat().st_size,
-                        "trajectories_sha256": hashlib.sha256(current_t_path.read_bytes()).hexdigest(),
-                        "dpo_pairs_file": current_d_path.name,
-                        "dpo_pairs_bytes": current_d_path.stat().st_size,
-                        "dpo_pairs_sha256": hashlib.sha256(current_d_path.read_bytes()).hexdigest(),
-                        "records_count": current_shard_count,
+                        "shard_index": pstate["shard_idx"],
+                        "partition": part,
+                        "trajectories_file": cur_t.name,
+                        "trajectories_bytes": cur_t.stat().st_size,
+                        "trajectories_sha256": hashlib.sha256(cur_t.read_bytes()).hexdigest(),
+                        "dpo_pairs_file": cur_d.name,
+                        "dpo_pairs_bytes": cur_d.stat().st_size,
+                        "dpo_pairs_sha256": hashlib.sha256(cur_d.read_bytes()).hexdigest(),
+                        "records_count": pstate["current_shard_count"],
                     }
                 )
-                shard_idx += 1
-                current_shard_count = 0
-                traj_fh, dpo_fh, current_t_path, current_d_path = open_shard(shard_idx)
+                pstate["shard_idx"] += 1
+                pstate["current_shard_count"] = 0
+                pstate["traj_fh"], pstate["dpo_fh"], pstate["current_t_path"], pstate["current_d_path"] = open_shard(
+                    part, pstate["shard_idx"]
+                )
 
-            traj_fh.write(json.dumps(trajectory, ensure_ascii=False) + "\n")
-            dpo_fh.write(json.dumps(dpo_pair, ensure_ascii=False) + "\n")
+            pstate["traj_fh"].write(json.dumps(trajectory, ensure_ascii=False) + "\n")
+            pstate["dpo_fh"].write(json.dumps(dpo_pair, ensure_ascii=False) + "\n")
+            pstate["current_shard_count"] += 1
+            pstate["total_count"] += 1
+            pstate["terms"].add(candidate.target_term)
 
-            current_shard_count += 1
             total_trajs += 1
             if has_tb:
                 textbook_attestation_count += 1
+            if has_dict:
+                dict_attestation_count += 1
 
-        if traj_fh and dpo_fh and current_shard_count > 0:
-            traj_fh.close()
-            dpo_fh.close()
-            assert current_t_path is not None and current_d_path is not None
-            generated_shards.append(
-                {
-                    "shard_index": shard_idx,
-                    "trajectories_file": current_t_path.name,
-                    "trajectories_bytes": current_t_path.stat().st_size,
-                    "trajectories_sha256": hashlib.sha256(current_t_path.read_bytes()).hexdigest(),
-                    "dpo_pairs_file": current_d_path.name,
-                    "dpo_pairs_bytes": current_d_path.stat().st_size,
-                    "dpo_pairs_sha256": hashlib.sha256(current_d_path.read_bytes()).hexdigest(),
-                    "records_count": current_shard_count,
-                }
-            )
+        for part in partitions:
+            pstate = partition_state[part]
+            if pstate["traj_fh"] and not pstate["traj_fh"].closed:
+                pstate["traj_fh"].close()
+                pstate["dpo_fh"].close()
+                cur_t = pstate["current_t_path"]
+                cur_d = pstate["current_d_path"]
+                if pstate["current_shard_count"] > 0:
+                    assert cur_t is not None and cur_d is not None
+                    generated_shards.append(
+                        {
+                            "shard_index": pstate["shard_idx"],
+                            "partition": part,
+                            "trajectories_file": cur_t.name,
+                            "trajectories_bytes": cur_t.stat().st_size,
+                            "trajectories_sha256": hashlib.sha256(cur_t.read_bytes()).hexdigest(),
+                            "dpo_pairs_file": cur_d.name,
+                            "dpo_pairs_bytes": cur_d.stat().st_size,
+                            "dpo_pairs_sha256": hashlib.sha256(cur_d.read_bytes()).hexdigest(),
+                            "records_count": pstate["current_shard_count"],
+                        }
+                    )
     finally:
-        if traj_fh and not traj_fh.closed:
-            traj_fh.close()
-        if dpo_fh and not dpo_fh.closed:
-            dpo_fh.close()
+        for pstate in partition_state.values():
+            if pstate["traj_fh"] and not pstate["traj_fh"].closed:
+                pstate["traj_fh"].close()
+            if pstate["dpo_fh"] and not pstate["dpo_fh"].closed:
+                pstate["dpo_fh"].close()
+        if conn_sources is not None:
+            conn_sources.close()
+        if conn_vesum is not None:
+            conn_vesum.close()
+
+    # Verify partition isolation (firewall)
+    train_terms = partition_state["train"]["terms"]
+    held_out_terms = partition_state["held_out"]["terms"]
+    overlap = train_terms.intersection(held_out_terms)
+    if overlap:
+        raise RuntimeError(f"Contamination detected! Train and held-out partitions overlap on terms: {overlap}")
 
     # Active private path and restricted source scan
     shard_paths = []
@@ -740,15 +854,27 @@ def generate_pipeline(
         "schema_version": "v1",
         "total_trajectories": total_trajs,
         "total_dpo_pairs": total_trajs,
-        "shards": generated_shards,
+        "partition_counts": {
+            "train": partition_state["train"]["total_count"],
+            "held_out": partition_state["held_out"]["total_count"],
+        },
+        "partition_firewall": {
+            "verified_partition_isolation": True,
+            "train_held_out_overlap_count": len(overlap),
+            "train_ratio_target": train_ratio,
+        },
         "quality_metrics": {
             "vesum_verification_rate": 1.0 if total_trajs > 0 else 0.0,
             "textbook_attestation_rate": (
                 round(textbook_attestation_count / total_trajs, 4) if total_trajs > 0 else 0.0
             ),
+            "textbook_attestation_count": textbook_attestation_count,
+            "dictionary_attestation_rate": (round(dict_attestation_count / total_trajs, 4) if total_trajs > 0 else 0.0),
+            "dictionary_attestation_count": dict_attestation_count,
             "zero_private_paths": zero_paths,
             "zero_restricted_sources": zero_restricted,
         },
+        "shards": generated_shards,
     }
 
     manifest_path = out_dir / "decolonization_manifest.json"
@@ -769,8 +895,9 @@ def main() -> None:
         type=Path,
         default=REPO_ROOT / "data" / "projects" / "open_model_data" / "decolonization" / "generated",
     )
-    parser.add_argument("--limit", type=int, default=100)
-    parser.add_argument("--records-per-shard", type=int, default=500)
+    parser.add_argument("--limit", type=int, default=1200)
+    parser.add_argument("--records-per-shard", type=int, default=400)
+    parser.add_argument("--train-ratio", type=float, default=0.8)
     parser.add_argument("--no-verify-schema", action="store_true", default=False)
 
     args = parser.parse_args()
@@ -781,13 +908,20 @@ def main() -> None:
         out_dir=args.out_dir,
         limit=args.limit,
         records_per_shard=args.records_per_shard,
+        train_ratio=args.train_ratio,
         verify_schema=not args.no_verify_schema,
     )
     print(
         f"Generated {manifest['total_trajectories']} trajectories and {manifest['total_dpo_pairs']} DPO pairs "
         f"across {len(manifest['shards'])} shard(s)."
     )
+    print(f"Partition counts: {manifest['partition_counts']}")
+    print(
+        f"Partition firewall: verified_isolation={manifest['partition_firewall']['verified_partition_isolation']}, "
+        f"overlap={manifest['partition_firewall']['train_held_out_overlap_count']}"
+    )
     print(f"Textbook attestation rate: {manifest['quality_metrics']['textbook_attestation_rate']:.2%}")
+    print(f"Dictionary attestation rate: {manifest['quality_metrics']['dictionary_attestation_rate']:.2%}")
     print(f"Zero private paths: {manifest['quality_metrics']['zero_private_paths']}")
     print(f"Zero restricted sources: {manifest['quality_metrics']['zero_restricted_sources']}")
     print(f"Receipt written to {args.out_dir / 'decolonization_manifest.json'}")

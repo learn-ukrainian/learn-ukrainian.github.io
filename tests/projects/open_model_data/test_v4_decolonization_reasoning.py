@@ -17,6 +17,7 @@ from scripts.projects.open_model_data.v4_decolonization_reasoning import (
     find_dictionary_attestation,
     find_textbook_attestation,
     generate_pipeline,
+    get_partition_for_term,
     normalize_text,
     scan_generated_files,
     strip_accents,
@@ -282,6 +283,10 @@ def test_generate_pipeline_mock(
 
     assert manifest["total_trajectories"] >= 2
     assert manifest["total_dpo_pairs"] >= 2
+    assert "partition_counts" in manifest
+    assert "partition_firewall" in manifest
+    assert manifest["partition_firewall"]["verified_partition_isolation"] is True
+    assert manifest["partition_firewall"]["train_held_out_overlap_count"] == 0
     assert manifest["quality_metrics"]["vesum_verification_rate"] == 1.0
     assert manifest["quality_metrics"]["zero_private_paths"] is True
     assert manifest["quality_metrics"]["zero_restricted_sources"] is True
@@ -290,6 +295,7 @@ def test_generate_pipeline_mock(
     shards = manifest["shards"]
     assert len(shards) >= 1
     for sh in shards:
+        assert sh["partition"] in ("train", "held_out")
         t_file = out_dir / sh["trajectories_file"]
         d_file = out_dir / sh["dpo_pairs_file"]
         assert t_file.is_file()
@@ -304,3 +310,24 @@ def test_generate_pipeline_mock(
         assert "ohoiko" not in t_content
         assert "СУМ-20" not in t_content
         assert "ВТС" not in t_content
+
+
+def test_partitioning_firewall_determinism() -> None:
+    """Verify determinism and firewall isolation for train vs held_out partitioning."""
+    p1 = get_partition_for_term("автовишка")
+    p2 = get_partition_for_term("автовишка ")
+    p3 = get_partition_for_term("АВТОВИШКА")
+    assert p1 == p2 == p3
+    assert p1 in ("train", "held_out")
+
+    # Ratio boundary checks
+    assert get_partition_for_term("термін", train_ratio=1.0) == "train"
+    assert get_partition_for_term("термін", train_ratio=0.0) == "held_out"
+
+    # Distribution test across 100 sample terms
+    terms = [f"калька_зразок_{i}" for i in range(100)]
+    partitions = [get_partition_for_term(t, train_ratio=0.8) for t in terms]
+    train_count = partitions.count("train")
+    held_out_count = partitions.count("held_out")
+    assert train_count + held_out_count == 100
+    assert 65 <= train_count <= 95
