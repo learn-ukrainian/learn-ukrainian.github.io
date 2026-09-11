@@ -162,7 +162,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         ("legacy agents",),
         "Misleading predecessor to /api/state/preparation; candidate membership is preserved for compatibility.",
         "high if treated as generation authority",
-        "deprecated; migrate to /api/state/preparation",
+        "deprecated; migrate to /api/state/preparation (NOTE: compat_keep; zero in-repo callers post-#5441, preserved for legacy external agents)",
         replacement="/api/state/preparation",
     ),
     RouteContract(
@@ -199,7 +199,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         ("legacy agents", "docs"),
         "Duplicates /api/state/build-status.",
         "high because stale consumers can bypass the canonical state contract",
-        "deprecated; migrate to /api/state/build-status",
+        "deprecated; migrate to /api/state/build-status (NOTE: migrate_caller_first; test callers in test_release_snapshot.py, test_api_router_split.py, test_monitor_client_sdk.py)",
         replacement="/api/state/build-status",
     ),
     RouteContract(
@@ -212,7 +212,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         ("agents", "final-review workflow"),
         "Overlaps /api/state and /api/artifacts for some module evidence.",
         "low for final-review helpers; medium for write-side effects",
-        "retain compatibility helpers",
+        "retain compatibility helpers (NOTE: compat_keep; active final-review workflow helpers)",
     ),
     RouteContract(
         "/api/gold",
@@ -224,7 +224,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         ("legacy agents", "docs"),
         "Overlaps /api/state/module, /api/artifacts, and /api/dashboard/module.",
         "medium because canonical source is not obvious from the route name",
-        "retain until agent consumers migrate",
+        "retain until agent consumers migrate (NOTE: compat_keep; callers in consultation tests and router split tests)",
     ),
     RouteContract(
         "/api/agent",
@@ -236,7 +236,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         ("agents", "docs"),
         "Overlaps /api/state, /api/artifacts, /api/runtime, and /api/worktrees.",
         "medium because it is a compatibility facade",
-        "retain until agent consumers migrate",
+        "retain until agent consumers migrate (NOTE: compat_keep; caller in test_release_snapshot.py)",
     ),
     RouteContract(
         "/api/artifacts",
@@ -325,7 +325,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         ("legacy external callers",),
         "Replaced by channel message endpoints.",
         "medium",
-        "deprecated; migrate to /api/comms/channels/{name}/messages",
+        "deprecated; migrate to /api/comms/channels/{name}/messages (NOTE: compat_keep gated by #6106 and legacy telemetry)",
         replacement="/api/comms/channels/{name}/messages",
     ),
     RouteContract(
@@ -338,7 +338,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         ("legacy external callers",),
         "Replaced by channel threads.",
         "medium",
-        "deprecated; migrate to /api/comms/channels/{name}/threads/{thread_id}",
+        "deprecated; migrate to /api/comms/channels/{name}/threads/{thread_id} (NOTE: compat_keep gated by #6106 and legacy telemetry)",
         replacement="/api/comms/channels/{name}/threads/{thread_id}",
     ),
     RouteContract(
@@ -351,7 +351,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         ("legacy external callers",),
         "Replaced by channel threads.",
         "medium",
-        "deprecated; migrate to /api/comms/channels/{name}/threads/{thread_id}",
+        "deprecated; migrate to /api/comms/channels/{name}/threads/{thread_id} (NOTE: compat_keep gated by #6106 and legacy telemetry)",
         replacement="/api/comms/channels/{name}/threads/{thread_id}",
     ),
     RouteContract(
@@ -364,7 +364,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         ("legacy docs",),
         "Replaced by channel activity and delegate/build event endpoints.",
         "medium",
-        "deprecated; migrate to /api/comms/agent-activity and /api/delegate/active",
+        "deprecated; migrate to /api/comms/agent-activity and /api/delegate/active (NOTE: compat_keep gated by #6106 and legacy telemetry)",
         replacement="/api/comms/agent-activity",
     ),
     RouteContract(
@@ -377,7 +377,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         ("legacy external callers",),
         "Replaced by channel post endpoint.",
         "medium",
-        "deprecated; migrate to /api/comms/channels/{name}/post",
+        "deprecated; migrate to /api/comms/channels/{name}/post (NOTE: compat_keep gated by #6106 and legacy telemetry)",
         replacement="/api/comms/channels/{name}/post",
     ),
     RouteContract(
@@ -502,7 +502,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         ("legacy scripts", "docs"),
         "Alias of /api/analytics/cost.",
         "low",
-        "retain compatibility alias",
+        "retain compatibility alias (NOTE: compat_keep; tested by test_cost_api.py)",
         replacement="/api/analytics/cost",
     ),
     RouteContract(
@@ -563,7 +563,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         ("image-explorer.html (legacy)", "agents"),
         "Legacy alias for /api/sources.",
         "low/medium",
-        "deprecated; migrate callers to /api/sources",
+        "deprecated; migrate callers to /api/sources (NOTE: migrate_caller_first; UI migrated, test callers remain in test_sources_router_context, test_app_factory, test_api_endpoints, test_coverage_api_routers, test_playground_api_stability, test_opsec_route_sweep)",
         replacement="/api/sources",
     ),
     RouteContract(
@@ -863,7 +863,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         ("legacy scripts", "docs"),
         "Overlaps delegate, build-events, and comms progress surfaces.",
         "medium because it is older orchestration vocabulary",
-        "retain compatibility until clients migrate",
+        "retain compatibility until clients migrate (NOTE: migrate_caller_first; live callers in session_start.sh, session_end.sh, wt.sh, and test suites)",
     ),
     RouteContract(
         "/api/config",
@@ -913,7 +913,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         ("legacy live monitors",),
         "Overlaps newer polling dashboards.",
         "medium because WebSockets are not visible in OpenAPI",
-        "retain until websocket consumers are audited",
+        "retain until websocket consumers are audited (NOTE: compat_keep; websocket heartbeat retained for legacy monitors)",
     ),
     RouteContract(
         "/api/work",
