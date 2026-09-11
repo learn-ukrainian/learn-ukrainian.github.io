@@ -1,0 +1,37 @@
+{
+  "source": "VESUM local database, corroborated by Sources MCP verify_word",
+  "captured_on": "2026-09-11",
+  "word": "синій",
+  "matches": [
+    {
+      "lemma": "синій",
+      "pos": "adj",
+      "tags": "adj:m:v_naz:compb"
+    },
+    {
+      "lemma": "синій",
+      "pos": "adj",
+      "tags": "adj:m:v_zna:rinanim:compb"
+    },
+    {
+      "lemma": "синій",
+      "pos": "adj",
+      "tags": "adj:m:v_kly:compb"
+    },
+    {
+      "lemma": "синій",
+      "pos": "adj",
+      "tags": "adj:f:v_dav:compb"
+    },
+    {
+      "lemma": "синій",
+      "pos": "adj",
+      "tags": "adj:f:v_mis:compb"
+    },
+    {
+      "lemma": "синіти",
+      "pos": "verb",
+      "tags": "verb:imperf:impr:s:2"
+    }
+  ]
+}

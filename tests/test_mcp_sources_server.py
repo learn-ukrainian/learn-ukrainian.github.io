@@ -386,7 +386,7 @@ class TestVerifyWordHandler:
             content, outcome = _run(server_module.handle_verify_word({"word": "читай"}))
             assert "читати" in content[0].text
             assert "verb" in content[0].text
-            assert "1 match" in content[0].text
+            assert "1 analysis (1 distinct lemma)" in content[0].text
             assert outcome["disposition"] == "supported"
             assert outcome["success"] is True
             assert outcome["result"] == {

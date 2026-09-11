@@ -7,7 +7,7 @@ parse Markdown prose. Schema id: `sources.tool-result.v1` (issue #7954 / epic #7
 
 | Channel | Content |
 | --- | --- |
-| MCP `content` (text) | Human prose (unchanged for agent workflows) |
+| MCP `content` (text) | Human prose, including analysis and lemma counts for VESUM verification |
 | MCP `structuredContent` | Full envelope JSON (machine path) |
 
 `summary_prose` inside the envelope mirrors the text content so a consumer that
@@ -22,8 +22,16 @@ only sees structured payloads still has the human summary.
   "status": "ok",
   "query": {"word": "синій", "pos_filter": null},
   "match_count": 6,
-  "hits": [{"lemma": "синій", "pos": "adj", "tags": "…"}],
-  "summary_prose": "'синій' — 6 match(es) in VESUM:\n…"
+  "lemma_count": 2,
+  "hits": [
+    {"lemma": "синій", "pos": "adj", "tags": "adj:m:v_naz:compb", "is_archaic": false, "tag_gloss": "adjective; masculine; nominative; positive degree"},
+    {"lemma": "синій", "pos": "adj", "tags": "adj:m:v_zna:rinanim:compb", "is_archaic": false, "tag_gloss": "adjective; masculine; accusative; for inanimate referents; positive degree"},
+    {"lemma": "синій", "pos": "adj", "tags": "adj:m:v_kly:compb", "is_archaic": false, "tag_gloss": "adjective; masculine; vocative; positive degree"},
+    {"lemma": "синій", "pos": "adj", "tags": "adj:f:v_dav:compb", "is_archaic": false, "tag_gloss": "adjective; feminine; dative; positive degree"},
+    {"lemma": "синій", "pos": "adj", "tags": "adj:f:v_mis:compb", "is_archaic": false, "tag_gloss": "adjective; feminine; locative; positive degree"},
+    {"lemma": "синіти", "pos": "verb", "tags": "verb:imperf:impr:s:2", "is_archaic": false, "tag_gloss": "verb; imperfective; imperative; singular; second person"}
+  ],
+  "summary_prose": "6 analyses (2 distinct lemmas)\n\n'синій' — matches in VESUM:\n…"
 }
 ```
 
@@ -37,6 +45,46 @@ only sees structured payloads still has the human summary.
 `check_modern_form` keep authority keys (`disposition`, `success`,
 `evidence_identifiers`, `result`) and **add** the envelope fields above.
 Do not fold envelope fields into `result` (evidence ids stay stable).
+
+### VESUM analyses and lemmas (#7955)
+
+For `verify_word`, `verify_words`, and `verify_lemma`:
+
+- `match_count` counts **morphological analysis rows**, exactly `len(hits)`.
+  Different analyses of the same word/lemma are retained.
+- `lemma_count` is an integer counting distinct exact `lemma` strings in
+  `hits`. It does not count homonymous lexeme identities or normalize spellings.
+  Empty and invalid-input envelopes have both counts zero.
+- Every hit includes `lemma`, `pos`, `tags`, `is_archaic`, and non-empty
+  `tag_gloss`. Lemma lookup hits also retain `word_form`; their `lemma` is the
+  queried lemma. Batch hits include the input `word`.
+- Batch hits contain all analyses for each **distinct input word**, in first
+  input occurrence order. Repeating an input does not multiply analyses.
+  Lemmas are deduplicated across the entire batch. Existing `result.found`
+  and `result.total` still count input occurrences.
+- Both `summary_prose` and MCP text state `N analyses (M distinct lemmas)`,
+  including zero-count and invalid-input results.
+
+**Presentation choice:** `tag_gloss` is an English, semicolon-separated
+translation of explicit [VESUM tag tokens](https://github.com/brown-uk/dict_uk/blob/master/doc/tags.txt).
+It does not infer absent features. Unmapped tokens remain visible as
+`unrecognized tag [TOKEN]`; missing tags read `No morphological tags supplied`.
+Raw `tags` are preserved. These presentation fields are added to copies of
+hits, never to V4 `result` or evidence-identifier inputs. No VESUM data changes.
+
+**Batch correction:** the initial #7954 implementation grouped batch `hits`
+as `{word, matches}` and counted found words. #7955 corrects that envelope
+surface to analysis rows. Consumers of the old batch shape should use
+`result.matches` for the unchanged word-to-analyses mapping, or group the
+new hits by `word`. This is a shape correction in v1; the V4 authority
+payload is unchanged and the new lemma/gloss fields are additive.
+Other tools do not acquire `lemma_count` or `tag_gloss` through this change.
+
+The six `синій` rows above were read from the local VESUM database and
+corroborated through Sources MCP on 2026-09-11. The offline contract fixture
+is `tests/fixtures/vesum_synii_analyses.json`, SHA-256
+`df5b93dcc2f4e2f882d6cfb3e08c93ae9eeb61fba34fd75987e832a620c9a0b4`.
+The test runs the real SQLite lookup over these pinned rows.
 
 Disposition → status: `supported`/`partial` → `ok` (but `match_count == 0`
 forces `empty`); `not_found`/`negative` → `empty` with `hits: []`;
@@ -61,4 +109,5 @@ assert isinstance(result["match_count"], int)
 assert result["match_count"] == len(result["hits"])
 ```
 
-Breaking changes require a new schema id (`sources.tool-result.v2`, …).
+Beyond the explicitly documented #7955 batch correction, breaking changes
+require a new schema id (`sources.tool-result.v2`, …).
