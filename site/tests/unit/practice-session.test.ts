@@ -355,4 +355,53 @@ describe('practice session helpers', () => {
       }),
     ).toBe('summary');
   });
+
+  test('session seed shuffles opening picks across independent fresh sessions', () => {
+    const ids = Array.from({ length: 20 }, (_, i) => `word-${String(i).padStart(2, '0')}`);
+    const testDeck = deckFromIds(ids);
+    const firstPicks = new Set<string>();
+
+    for (let seed = 1; seed <= 10; seed += 1) {
+      const selection = selectNextPracticeItem(testDeck, {
+        now: NOW,
+        modeFilter: 'flashcards',
+        sessionSeed: seed * 104729,
+      });
+      if (selection) {
+        firstPicks.add(selection.lemma.lemmaId);
+      }
+    }
+
+    // Different session seeds must not all pick the identical first card
+    expect(firstPicks.size).toBeGreaterThanOrEqual(4);
+  });
+
+  test('borrowed pool shuffles near-due cards when session seeds differ', () => {
+    const ids = Array.from({ length: 16 }, (_, i) => `future-${i}`);
+    const testDeck = deckFromIds(ids);
+    const state = loadState(localStorage, NOW);
+    for (const id of ids) {
+      state.cards.set(
+        cardKey(id, 'flashcards'),
+        dueCard(id, NOW.getTime() + 24 * 60 * 60 * 1000), // due tomorrow
+      );
+    }
+    saveState(state, localStorage, NOW.getTime());
+
+    const borrowedPicks = new Set<string>();
+    for (let seed = 1; seed <= 8; seed += 1) {
+      const selection = selectNextPracticeItem(testDeck, {
+        now: NOW,
+        modeFilter: 'flashcards',
+        sessionSeed: seed * 7919,
+      });
+      if (selection) {
+        borrowedPicks.add(selection.lemma.lemmaId);
+      }
+    }
+
+    // Borrowed candidates must vary across different session seeds rather than pinning on one
+    expect(borrowedPicks.size).toBeGreaterThanOrEqual(3);
+    localStorage.removeItem(SRS_STORAGE_KEY);
+  });
 });
