@@ -168,37 +168,48 @@ Instead of querying a single dictionary, the pipeline triangulates across five d
 
 ### 4.2 Layer 2: Multi-Step Diagnostic Reasoning (SFT Trajectories)
 
-Each trajectory encodes a multi-step cognitive chain. In the shipped production shards (`generated/`), records follow a deterministic 5-step diagnostic template grounded in textbook and academic evidence, as seen in shipped trajectory `traj.decolonize.a847150053166b99` (*задачі* $\rightarrow$ *завдання*):
+Each trajectory encodes a multi-step cognitive chain. In the shipped production shards (`generated/`), records follow a deterministic 5-step diagnostic template grounded in textbook and academic evidence, as seen in shipped trajectory `traj.decolonize.9f9d5fb856ae1420` (*по крайній мірі* $\rightarrow$ *принаймні*):
 
 ```json
 {
   "schema_version": "v1_decolonization_trajectory",
-  "trajectory_id": "traj.decolonize.a847150053166b99",
-  "query": "Як правильно сказати або написати українською: «задачі» чи «завдання»?",
-  "target_term": "задачі",
+  "trajectory_id": "traj.decolonize.9f9d5fb856ae1420",
+  "query": "Як правильно сказати або написати українською: «по крайній мірі» чи «принаймні»?",
+  "target_term": "по крайній мірі",
   "is_calque_or_russianism": true,
   "morphemic_breakdown": {
-    "source_formation": "Лексема «задачі» є штучним лексичним запозиченням (росіянізмом), що витісняє автентичне українське поняття.",
-    "ukrainian_equivalent_mechanism": "Питома лексична система української мови має закорінену в народній мові та класичній літературі власну лексему."
+    "source_formation": "Зворот «по крайній мірі» побудований шляхом буквального послівного перекладу російської синтаксичної або прийменникової конструкції.",
+    "ukrainian_equivalent_mechanism": "Питома українська синтаксична традиція використовує усталені фразеологічні еквіваленти або прислівники з відмінним керуванням."
   },
   "lexicographical_context": {
-    "historical_suppression_note": "Корпус граматичних та лексичних помилок UA-GEC (F/Calque).. Форма «задачі» кваліфікується як калькований або нерекомендований варіант у сучасних довідниках з культури мови...",
-    "restoration_era": "Сучасна українська мовна стандартизація, чинний Правопис 2019, праці Бориса Антоненка-Давидовича..."
+    "historical_suppression_note": "Корпус граматичних та лексичних помилок UA-GEC (F/Calque).. Словосполучення «по крайній мірі» відтворює синтаксичну кальку чужомовного звороту; українська синтаксична норма вимагає природних безприйменникових або питомих прийменникових конструкцій.",
+    "restoration_era": "Сучасна українська мовна стандартизація, чинний Правопис 2019, праці Бориса Антоненка-Давидовича, Олени Курило та стандарти Національної комісії зі стандартів державної мови."
   },
   "vesum_attestation": [
-    {"lemma": "завдання", "vesum_forms_count": 15, "is_standard_attested": true}
+    {
+      "lemma": "принаймні",
+      "vesum_forms_count": 1,
+      "is_standard_attested": true
+    }
   ],
   "register_spectrum": {
-    "primary_living_standard": "завдання",
+    "primary_living_standard": "принаймні",
     "alternatives": [
       {
-        "lemma": "завдання",
+        "lemma": "принаймні",
         "register_tier": "living_standard",
-        "evidence_source": "Підручник МОН «Буквар» 1 клас (М. Захарійчук); цитата: «Художник отримав завдання намалювати предмети...»"
+        "evidence_source": "Підручник МОН «Я досліджую світ» 2 клас (Morze); цитата: «Але принаймні одна властивість або її значення в таких об’єктів різні» (джерело: ua_gec_calque, Корпус граматичних та лексичних помилок UA-GEC (F/Calque).)"
       }
     ]
   },
-  "final_response": "Правильно вживати «завдання». Вживання форми «задачі» є типовою калькою з російської мови..."
+  "reasoning_steps": [
+    "1. Етимологія та словотвірна діагностика: Визначено дериваційну проблему форми «по крайній мірі» (phrasal_calque). Зворот «по крайній мірі» побудований шляхом буквального послівного перекладу російської синтаксичної або прийменникової конструкції.",
+    "2. Питома словотвірна модель: Відновлено природний словотвірний механізм. Питома українська синтаксична традиція використовує усталені фразеологічні еквіваленти або прислівники з відмінним керуванням.",
+    "3. Морфологічна верифікація за словником ВЕСУМ: Рекомендований варіант «принаймні» має повну словозмінну парадигму (1 словоформ у базі даних).",
+    "4. Реєстрове узгодження та контекст уживання: Варіант «принаймні» належить до нормативного живого стандарту (living_standard). Підтверджено джерелом: Підручник МОН «Я досліджую світ» 2 клас (Morze); цитата: «Але принаймні одна властивість або її значення в таких об’єктів різні» (джерело: ua_gec_calque, Корпус граматичних та лексичних помилок UA-GEC (F/Calque).).",
+    "5. Нормативний висновок і практична рекомендація: Слід уникати калькованої форми «по крайній мірі», послідовно вживаючи питоме «принаймні»."
+  ],
+  "final_response": "Правильно вживати «принаймні». Вживання форми «по крайній мірі» є типовою калькою з російської мови. Питома українська синтаксична традиція використовує усталені фразеологічні еквіваленти або прислівники з відмінним керуванням. Питоме українське слово «принаймні» відповідає чинній мовній нормі та має повну парадигму словозміни у морфологічній базі ВЕСУМ (1 словоформ). Нормативне засвідчення: Підручник МОН «Я досліджую світ» 2 клас (Morze); цитата: «Але принаймні одна властивість або її значення в таких об’єктів різні» (джерело: ua_gec_calque, Корпус граматичних та лексичних помилок UA-GEC (F/Calque).)."
 }
 ```
 
@@ -210,11 +221,11 @@ The core breakthrough in ULDR is the engineering of the **Hard-Negative Distribu
 
 In naive preference datasets, the "rejected" completion is often a trivial failure (grammatical incoherence, repetitions, or refusal). Training on trivial negatives fails to teach the model how to overcome subtle hallucinations.
 
-In ULDR, the `rejected` response is generated to precisely emulate the **naive, authoritative-sounding hallucinations of leading foundation models**, as seen in shipped production pair `dpo.decolonize.7471f53a795b2b5d` (*задачу* $\rightarrow$ *завдання*):
-- **Prompt**: *«Як правильно сказати або написати українською: «задачу» чи «завдання»?»*
-- **Chosen Completion**: Provides a balanced, decolonized linguistic analysis citing MESU 1st-grade textbooks (*Захарійчук*) and modern morphological standards (VESUM, 15 forms), recommending *завдання*.
+In ULDR, the `rejected` response is generated to precisely emulate the **naive, authoritative-sounding hallucinations of leading foundation models**, as seen in shipped production pair `dpo.decolonize.9f9d5fb856ae1420` (*по крайній мірі* $\rightarrow$ *принаймні*):
+- **Prompt**: *«Як правильно сказати або написати українською: «по крайній мірі» чи «принаймні»?»*
+- **Chosen Completion**: Provides a balanced, decolonized linguistic analysis citing MESU 2nd-grade textbooks (*Морзе*) and modern morphological standards (VESUM, 1 form), recommending *принаймні*.
 - **Rejected Completion**:
-  > *«Можна вживати як «задачу», так і «завдання». Обидва варіанти зустрічаються в текстах і є рівноправними синонімами в сучасній мові, тому вибір залежить лише від уподобань автора.»*
+  > *«Можна вживати як «по крайній мірі», так і «принаймні». Обидва варіанти зустрічаються в текстах і є рівноправними синонімами в сучасній мові, тому вибір залежить лише від уподобань автора.»*
 
 And similarly in the reference seed pair `dpo.decolonize.b1c2d3e4f5000001` (*пилосос*):
 - **Rejected Completion**:
@@ -264,15 +275,15 @@ The delivered ULDR program under Stream Epic #6321 was subjected to rigorous, mu
 
 The 1,200 shipped production records resolve systematic lexical and phrasal calques across all four shards:
 
-#### Case Study 1: *Задачі* $\rightarrow$ *Завдання* (Shipped Shard Record `traj.decolonize.a847150053166b99`)
-
-- **Problem**: Mechanical borrowing of Russian *задача* into educational and practical contexts where authentic Ukrainian uses *завдання*.
-- **ULDR Resolution**: Teaches normative replacement with **завдання**, attested in Grade 1 textbooks (*Захарійчук*) and verified with 15 morphological forms in VESUM.
-
-#### Case Study 2: *По крайній мірі* $\rightarrow$ *Принаймні* (Shipped Shard Record `traj.decolonize.9f9d5fb856ae1420`)
+#### Case Study 1: *По крайній мірі* $\rightarrow$ *Принаймні* (Shipped Shard Record `traj.decolonize.9f9d5fb856ae1420`)
 
 - **Problem**: Word-for-word phrasal calque of Russian *по крайней мере*.
 - **ULDR Resolution**: Teaches native adverbial discourse markers: **принаймні** (attested in Grade 2 textbooks, *Морзе*), **хоча б**, **щонайменше**.
+
+#### Case Study 2: *Задачі* $\rightarrow$ *Завдання* (Shipped Shard Record `traj.decolonize.a847150053166b99`)
+
+- **Problem**: Mechanical borrowing of Russian *задача* into educational and practical contexts where authentic Ukrainian uses *завдання*.
+- **ULDR Resolution**: Teaches normative replacement with **завдання**, attested in Grade 1 textbooks (*Захарійчук*) and verified with 15 morphological forms in VESUM.
 
 ### 6.2 Reference Seed Exemplars (`seeds/`)
 
