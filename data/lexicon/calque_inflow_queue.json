@@ -1,0 +1,797 @@
+[
+  {
+    "lemma": "перенесення",
+    "pos": "noun",
+    "vesum_forms": 15,
+    "textbook_hits": 225,
+    "cluster_parent": "перенос",
+    "cluster_parents": [
+      "перенос"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "данський",
+    "pos": "adj",
+    "vesum_forms": 32,
+    "textbook_hits": 17,
+    "cluster_parent": "датський",
+    "cluster_parents": [
+      "датський"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "під'єднати",
+    "pos": "verb",
+    "vesum_forms": 17,
+    "textbook_hits": 16,
+    "cluster_parent": "підключити",
+    "cluster_parents": [
+      "підключити"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "стиск",
+    "pos": "noun",
+    "vesum_forms": 16,
+    "textbook_hits": 6,
+    "cluster_parent": "давка",
+    "cluster_parents": [
+      "давка"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "брухт",
+    "pos": "noun",
+    "vesum_forms": 17,
+    "textbook_hits": 4,
+    "cluster_parent": "металобрухт",
+    "cluster_parents": [
+      "металобрухт"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "змертвіння",
+    "pos": "noun",
+    "vesum_forms": 8,
+    "textbook_hits": 4,
+    "cluster_parent": "омертвіння",
+    "cluster_parents": [
+      "омертвіння"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "паротяг",
+    "pos": "noun",
+    "vesum_forms": 17,
+    "textbook_hits": 2,
+    "cluster_parent": "паровоз",
+    "cluster_parents": [
+      "паровоз"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "ламання",
+    "pos": "noun",
+    "vesum_forms": 15,
+    "textbook_hits": 2,
+    "cluster_parent": "поломка",
+    "cluster_parents": [
+      "поломка"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "вартівня",
+    "pos": "noun",
+    "vesum_forms": 14,
+    "textbook_hits": 2,
+    "cluster_parent": "вишка",
+    "cluster_parents": [
+      "вишка"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "помпа",
+    "pos": "noun",
+    "vesum_forms": 14,
+    "textbook_hits": 2,
+    "cluster_parent": "насос",
+    "cluster_parents": [
+      "насос"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "таця",
+    "pos": "noun",
+    "vesum_forms": 14,
+    "textbook_hits": 2,
+    "cluster_parent": "піднос",
+    "cluster_parents": [
+      "піднос"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "дармовис",
+    "pos": "noun",
+    "vesum_forms": 35,
+    "textbook_hits": 1,
+    "cluster_parent": "брелок",
+    "cluster_parents": [
+      "брелок"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "гойдання",
+    "pos": "noun",
+    "vesum_forms": 15,
+    "textbook_hits": 1,
+    "cluster_parent": "качка",
+    "cluster_parents": [
+      "качка"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "пелька",
+    "pos": "noun",
+    "vesum_forms": 14,
+    "textbook_hits": 1,
+    "cluster_parent": "глотка",
+    "cluster_parents": [
+      "глотка"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "поголоска",
+    "pos": "noun",
+    "vesum_forms": 14,
+    "textbook_hits": 1,
+    "cluster_parent": "слух",
+    "cluster_parents": [
+      "слух"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "смілка",
+    "pos": "noun",
+    "vesum_forms": 14,
+    "textbook_hits": 1,
+    "cluster_parent": "буси",
+    "cluster_parents": [
+      "буси"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "люз",
+    "pos": "noun",
+    "vesum_forms": 10,
+    "textbook_hits": 1,
+    "cluster_parent": "зазор",
+    "cluster_parents": [
+      "зазор"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "металолом",
+    "pos": "noun",
+    "vesum_forms": 10,
+    "textbook_hits": 1,
+    "cluster_parent": "металобрухт",
+    "cluster_parents": [
+      "металобрухт"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "зламання",
+    "pos": "noun",
+    "vesum_forms": 8,
+    "textbook_hits": 1,
+    "cluster_parent": "поломка",
+    "cluster_parents": [
+      "поломка"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "січка",
+    "pos": "noun",
+    "vesum_forms": 7,
+    "textbook_hits": 1,
+    "cluster_parent": "буси",
+    "cluster_parents": [
+      "буси"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "затикати",
+    "pos": "verb",
+    "vesum_forms": 41,
+    "textbook_hits": 0,
+    "cluster_parent": "закупорювати",
+    "cluster_parents": [
+      "закупорювати"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "відвертатися",
+    "pos": "verb",
+    "vesum_forms": 37,
+    "textbook_hits": 0,
+    "cluster_parent": "відволікатися",
+    "cluster_parents": [
+      "відволікатися"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "загіпнозований",
+    "pos": "adj",
+    "vesum_forms": 32,
+    "textbook_hits": 0,
+    "cluster_parent": "загіпнотизований",
+    "cluster_parents": [
+      "загіпнотизований"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "місткісний",
+    "pos": "adj",
+    "vesum_forms": 32,
+    "textbook_hits": 0,
+    "cluster_parent": "ємнісний",
+    "cluster_parents": [
+      "ємнісний"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "невловний",
+    "pos": "adj",
+    "vesum_forms": 32,
+    "textbook_hits": 0,
+    "cluster_parent": "невловимий",
+    "cluster_parents": [
+      "невловимий"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "різноколірний",
+    "pos": "adj",
+    "vesum_forms": 32,
+    "textbook_hits": 0,
+    "cluster_parent": "різнокольоровий",
+    "cluster_parents": [
+      "різнокольоровий"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "хвастовитий",
+    "pos": "adj",
+    "vesum_forms": 32,
+    "textbook_hits": 0,
+    "cluster_parent": "хвастливий",
+    "cluster_parents": [
+      "хвастливий"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "цілозерновий",
+    "pos": "adj",
+    "vesum_forms": 32,
+    "textbook_hits": 0,
+    "cluster_parent": "цільнозерновий",
+    "cluster_parents": [
+      "цільнозерновий"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "чванливий",
+    "pos": "adj",
+    "vesum_forms": 32,
+    "textbook_hits": 0,
+    "cluster_parent": "хвастливий",
+    "cluster_parents": [
+      "хвастливий"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "щиросердечний",
+    "pos": "adj",
+    "vesum_forms": 32,
+    "textbook_hits": 0,
+    "cluster_parent": "задушевний",
+    "cluster_parents": [
+      "задушевний"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "закорковувати",
+    "pos": "verb",
+    "vesum_forms": 23,
+    "textbook_hits": 0,
+    "cluster_parent": "закупорювати",
+    "cluster_parents": [
+      "закупорювати"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "зачоповувати",
+    "pos": "verb",
+    "vesum_forms": 23,
+    "textbook_hits": 0,
+    "cluster_parent": "закупорювати",
+    "cluster_parents": [
+      "закупорювати"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "пилотяжити",
+    "pos": "verb",
+    "vesum_forms": 20,
+    "textbook_hits": 0,
+    "cluster_parent": "пилососити",
+    "cluster_parents": [
+      "пилососити"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "видрукувати",
+    "pos": "verb",
+    "vesum_forms": 18,
+    "textbook_hits": 0,
+    "cluster_parent": "роздрукувати",
+    "cluster_parents": [
+      "роздрукувати"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "краянин",
+    "pos": "noun",
+    "vesum_forms": 18,
+    "textbook_hits": 0,
+    "cluster_parent": "співвітчизник",
+    "cluster_parents": [
+      "співвітчизник"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "сум'янин",
+    "pos": "noun",
+    "vesum_forms": 18,
+    "textbook_hits": 0,
+    "cluster_parent": "сумчанин",
+    "cluster_parents": [
+      "сумчанин"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "сумець",
+    "pos": "noun",
+    "vesum_forms": 18,
+    "textbook_hits": 0,
+    "cluster_parent": "сумчанин",
+    "cluster_parents": [
+      "сумчанин"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "катехизис",
+    "pos": "noun",
+    "vesum_forms": 17,
+    "textbook_hits": 0,
+    "cluster_parent": "катехізис",
+    "cluster_parents": [
+      "катехізис"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "перемикнути",
+    "pos": "verb",
+    "vesum_forms": 17,
+    "textbook_hits": 0,
+    "cluster_parent": "переключити",
+    "cluster_parents": [
+      "переключити"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "прозір",
+    "pos": "noun",
+    "vesum_forms": 17,
+    "textbook_hits": 0,
+    "cluster_parent": "зазор",
+    "cluster_parents": [
+      "зазор"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "беріжок",
+    "pos": "noun",
+    "vesum_forms": 16,
+    "textbook_hits": 0,
+    "cluster_parent": "бровка",
+    "cluster_parents": [
+      "бровка"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "носопролиг",
+    "pos": "noun",
+    "vesum_forms": 16,
+    "textbook_hits": 0,
+    "cluster_parent": "носоглотка",
+    "cluster_parents": [
+      "носоглотка"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "обхитрувати",
+    "pos": "verb",
+    "vesum_forms": 16,
+    "textbook_hits": 0,
+    "cluster_parent": "обхитрити",
+    "cluster_parents": [
+      "обхитрити"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "шпилик",
+    "pos": "noun",
+    "vesum_forms": 16,
+    "textbook_hits": 0,
+    "cluster_parent": "вишка",
+    "cluster_parents": [
+      "вишка"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "затикання",
+    "pos": "noun",
+    "vesum_forms": 15,
+    "textbook_hits": 0,
+    "cluster_parent": "закупорка",
+    "cluster_parents": [
+      "закупорка",
+      "закупорювання"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "зачоповування",
+    "pos": "noun",
+    "vesum_forms": 15,
+    "textbook_hits": 0,
+    "cluster_parent": "закупорювання",
+    "cluster_parents": [
+      "закупорювання"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "корабельня",
+    "pos": "noun",
+    "vesum_forms": 14,
+    "textbook_hits": 0,
+    "cluster_parent": "верф",
+    "cluster_parents": [
+      "верф"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "незлагода",
+    "pos": "noun",
+    "vesum_forms": 14,
+    "textbook_hits": 0,
+    "cluster_parent": "різнобій",
+    "cluster_parents": [
+      "різнобій"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "обстава",
+    "pos": "noun",
+    "vesum_forms": 14,
+    "textbook_hits": 0,
+    "cluster_parent": "обстановка",
+    "cluster_parents": [
+      "обстановка"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "доброустрій",
+    "pos": "noun",
+    "vesum_forms": 10,
+    "textbook_hits": 0,
+    "cluster_parent": "благоустрій",
+    "cluster_parents": [
+      "благоустрій"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "засніт",
+    "pos": "noun",
+    "vesum_forms": 10,
+    "textbook_hits": 0,
+    "cluster_parent": "закупорка",
+    "cluster_parents": [
+      "закупорка"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "вивірення",
+    "pos": "noun",
+    "vesum_forms": 8,
+    "textbook_hits": 0,
+    "cluster_parent": "вивірка",
+    "cluster_parents": [
+      "вивірка"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "вивіряння",
+    "pos": "noun",
+    "vesum_forms": 8,
+    "textbook_hits": 0,
+    "cluster_parent": "вивірка",
+    "cluster_parents": [
+      "вивірка"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "закорковування",
+    "pos": "noun",
+    "vesum_forms": 8,
+    "textbook_hits": 0,
+    "cluster_parent": "закупорка",
+    "cluster_parents": [
+      "закупорка",
+      "закупорювання"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "носогорло",
+    "pos": "noun",
+    "vesum_forms": 8,
+    "textbook_hits": 0,
+    "cluster_parent": "носоглотка",
+    "cluster_parents": [
+      "носоглотка"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "поламання",
+    "pos": "noun",
+    "vesum_forms": 8,
+    "textbook_hits": 0,
+    "cluster_parent": "поломка",
+    "cluster_parents": [
+      "поломка"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "припорядження",
+    "pos": "noun",
+    "vesum_forms": 8,
+    "textbook_hits": 0,
+    "cluster_parent": "обмундирування",
+    "cluster_parents": [
+      "обмундирування"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "різнобіжність",
+    "pos": "noun",
+    "vesum_forms": 8,
+    "textbook_hits": 0,
+    "cluster_parent": "різнобій",
+    "cluster_parents": [
+      "різнобій"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "умундирування",
+    "pos": "noun",
+    "vesum_forms": 8,
+    "textbook_hits": 0,
+    "cluster_parent": "обмундирування",
+    "cluster_parents": [
+      "обмундирування"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "щиросердечність",
+    "pos": "noun",
+    "vesum_forms": 8,
+    "textbook_hits": 0,
+    "cluster_parent": "задушевність",
+    "cluster_parents": [
+      "задушевність"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  },
+  {
+    "lemma": "тискнява",
+    "pos": "noun",
+    "vesum_forms": 7,
+    "textbook_hits": 0,
+    "cluster_parent": "давка",
+    "cluster_parents": [
+      "давка"
+    ],
+    "sources": [
+      "lt_replacements"
+    ]
+  }
+]

@@ -391,6 +391,40 @@ def test_heritage_evidence_required_flags_authentic_without_presoviet_attestatio
     assert _gates_for(entry) == ["heritage_evidence_required"]
 
 
+def test_calque_entry_exempt_from_heritage_evidence_required():
+    entry = _entry(
+        lemma="безкоштовний",
+        heritage_status={
+            "classification": "calque",
+            "attestations": [],
+            "is_russianism": False,
+            "russian_shadow": False,
+            "sovietization_risk": 0,
+            "calque_warning": {"standard_alternatives": ["безплатний"]},
+        },
+    )
+
+    assert _gates_for(entry, vesum={"безкоштовний"}) == []
+
+
+def test_calque_entry_still_enforces_vesum_membership():
+    # Calques are valid Ukrainian morphology and must not silently bypass VESUM
+    entry = _entry(
+        lemma="неіснуючеслово",
+        heritage_status={
+            "classification": "calque",
+            "attestations": [],
+            "is_russianism": False,
+            "russian_shadow": False,
+            "sovietization_risk": 0,
+            "calque_warning": {"standard_alternatives": ["слово"]},
+        },
+    )
+
+    assert _gates_for(entry, vesum=set()) == ["lemma_in_vesum"]
+
+
+
 def test_sovietization_must_be_flagged_for_unflagged_sum11_card_risk():
     entry = _entry(
         enrichment={
