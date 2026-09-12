@@ -1119,3 +1119,31 @@ def test_unquoted_modifier_phrases_as_named_subjects_rejected() -> None:
     assert not eval_res["is_pass"]
     assert not eval_res["reasoning_grounded"]
     assert eval_res["composite_score"] <= 0.40
+
+
+def test_unquoted_forma_odnyny_as_named_subject_rejected() -> None:
+    """M1 Review P2: Unquoted 'слова форма однини' must not have its subject stripped and must fail."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    r = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова форма однини."
+    eval_res = evaluate_single_response(target, alts, r)
+    assert not eval_res["is_pass"]
+    assert not eval_res["reasoning_grounded"]
+    assert eval_res["composite_score"] <= 0.40
+
+
+def test_modifier_sequence_ordering_independent() -> None:
+    """M1 Review P2: Chained modifiers (e.g. 'другої відміни чоловічого роду') must be order-independent."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    cases = [
+        "Вживайте goodtoken, бо за словником ВЕСУМ це іменник другої відміни чоловічого роду з питомим суфіксом -ник.",
+        "Вживайте goodtoken, бо за словником ВЕСУМ це іменник чоловічого роду другої відміни з питомим суфіксом -ник.",
+    ]
+    for r in cases:
+        eval_res = evaluate_single_response(target, alts, r)
+        assert eval_res["is_pass"], f"Expected {r} to pass"
+        assert eval_res["reasoning_grounded"], f"Expected {r} grounding to pass"
+        assert eval_res["composite_score"] == 1.0

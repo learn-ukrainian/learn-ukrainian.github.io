@@ -245,7 +245,18 @@ NAMED_ENTITY_PATTERNS = [
     ),
 ]
 
-QUOTED_SPAN_PATTERN = re.compile(r"([«\"“„][^»\"”\n]+[»\"””]|(?<!\w)['‘][^'’\n]+['’](?!\w))")
+PROTECTED_SPAN_PATTERN = re.compile(
+    r"("
+    r"[«\"“„][^»\"”\n]+[»\"””]"
+    r"|(?<!\w)['‘][^'’\n]+['’](?!\w)"
+    r"|(?<=\bслов[аоі]\s)[^.,!?;:\n]+"
+    r"|(?<=\bтермін\s)[^.,!?;:\n]+"
+    r"|(?<=\bтерміна\s)[^.,!?;:\n]+"
+    r"|(?<=\bлексеми\s)[^.,!?;:\n]+"
+    r"|(?<=\bпоняття\s)[^.,!?;:\n]+"
+    r")",
+    re.IGNORECASE,
+)
 
 GRAMMATICAL_MODIFIER_RULES = [
     # Gender modifying POS or form
@@ -291,7 +302,7 @@ GRAMMATICAL_MODIFIER_RULES = [
     # Number modifying grammatical category words
     (
         re.compile(
-            r"\b(?:у\s+|в\s+)?(?:числа|числі|формі|формах|форма|форми|відмінку|відмінка|відмінках|особі|особах)\s+(?:однини|множини)\b",
+            r"\b(?:(?:у\s+|в\s+)(?:формі|формах|відмінку|відмінках)|(?:числа|числі|відмінка|відмінків|особі|особах))\s+(?:однини|множини)\b",
             re.IGNORECASE,
         ),
         " ",
@@ -518,11 +529,15 @@ def evaluate_single_response(
     has_other_entity = any(p.search(resp_norm) for p in OTHER_ENTITY_PATTERNS)
     if not has_other_entity:
         analysis_text = re.sub(r"цитата:\s*[«\"“][^»\"”]+[»\"”]", "", resp_norm, flags=re.IGNORECASE)
-        # Only strip grammatical modifier phrases in genuine modifier context outside quoted spans
-        parts = QUOTED_SPAN_PATTERN.split(analysis_text)
+        # Only strip grammatical modifier phrases in genuine modifier context outside protected spans
+        parts = PROTECTED_SPAN_PATTERN.split(analysis_text)
         for i in range(0, len(parts), 2):
-            for pat, repl in GRAMMATICAL_MODIFIER_RULES:
-                parts[i] = pat.sub(repl, parts[i])
+            while True:
+                prev = parts[i]
+                for pat, repl in GRAMMATICAL_MODIFIER_RULES:
+                    parts[i] = pat.sub(repl, parts[i])
+                if parts[i] == prev:
+                    break
         analysis_text = "".join(parts)
         for pat in NAMED_ENTITY_PATTERNS:
             for m in pat.finditer(analysis_text):
