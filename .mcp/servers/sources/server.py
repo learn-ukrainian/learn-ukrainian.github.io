@@ -1338,7 +1338,11 @@ from learn_ukrainian_v4_runtime.sources_transport import (
 from learn_ukrainian_v4_runtime.sources_transport import (
     record_typed_invocation as _record_v4_typed_invocation,
 )
-from learn_ukrainian_v4_runtime.tool_result_envelope import build_search_envelope
+from learn_ukrainian_v4_runtime.tool_result_envelope import (
+    build_search_envelope,
+    dropped_tokens_diagnostics,
+    split_fts_keywords,
+)
 
 
 @lru_cache(maxsize=1)
@@ -1519,13 +1523,17 @@ async def handle_search_text(args: dict):
     query_obj = {"query": query, "limit": limit, "subject": subject, "source_file": source_file}
 
     from wiki.sources_db import search_textbooks
-    keywords = {w for w in query.lower().split() if len(w) >= 3}
+    keywords, dropped = split_fts_keywords(query)
     hits = await asyncio.to_thread(search_textbooks, keywords, limit, subject=subject, source_file=source_file)
 
     if not hits:
         prose = "No results found."
         envelope = build_search_envelope(
-            tool="search_text", query=query_obj, hits=[], summary_prose=prose
+            tool="search_text",
+            query=query_obj,
+            hits=[],
+            summary_prose=prose,
+            diagnostics=dropped_tokens_diagnostics(dropped),
         )
         return [TextContent(type="text", text=prose)], envelope
 
@@ -1547,21 +1555,30 @@ async def handle_search_text(args: dict):
     return [TextContent(type="text", text=prose)], envelope
 
 
-async def handle_search_sources(args: dict) -> list[TextContent]:
+async def handle_search_sources(args: dict):
     query = args["query"]
     # Empty-string track is intentional: `_prepare_query()` handles ad-hoc
     # string queries without needing a concrete curriculum track.
     track = str(args.get("track", "") or "")
     limit = min(args.get("limit", 10), 20)
+    query_obj = {"query": query, "track": track, "limit": limit}
 
     from wiki.sources_db import search_sources
 
     hits = await asyncio.to_thread(search_sources, query, track=track, limit=limit)
 
     if not hits:
-        return [TextContent(type="text", text="[]")]
+        prose = "No results found."
+        envelope = build_search_envelope(
+            tool="search_sources", query=query_obj, hits=[], summary_prose=prose
+        )
+        return [TextContent(type="text", text=prose)], envelope
 
-    return [TextContent(type="text", text=json.dumps(hits, ensure_ascii=False, indent=2))]
+    prose = json.dumps(hits, ensure_ascii=False, indent=2)
+    envelope = build_search_envelope(
+        tool="search_sources", query=query_obj, hits=list(hits), summary_prose=prose
+    )
+    return [TextContent(type="text", text=prose)], envelope
 
 
 async def handle_search_literary(args: dict):
@@ -1570,13 +1587,17 @@ async def handle_search_literary(args: dict):
     query_obj = {"query": query, "limit": limit}
 
     from wiki.sources_db import search_literary
-    keywords = {w for w in query.lower().split() if len(w) >= 3}
+    keywords, dropped = split_fts_keywords(query)
     hits = await asyncio.to_thread(search_literary, keywords, limit)
 
     if not hits:
         prose = "No literary results found."
         envelope = build_search_envelope(
-            tool="search_literary", query=query_obj, hits=[], summary_prose=prose
+            tool="search_literary",
+            query=query_obj,
+            hits=[],
+            summary_prose=prose,
+            diagnostics=dropped_tokens_diagnostics(dropped),
         )
         return [TextContent(type="text", text=prose)], envelope
 
@@ -1714,6 +1735,7 @@ async def handle_get_chunk_context(args: dict):
             hits=[],
             summary_prose=prose,
             status="error",
+            error_code="sources_db_missing",
         )
         return [TextContent(type="text", text=prose)], envelope
 
@@ -2458,6 +2480,7 @@ async def handle_dict_search(args: dict, collection: str, label: str):
             hits=[],
             summary_prose=prose,
             status="error",
+            error_code="unknown_collection",
         )
         return [TextContent(type="text", text=prose)], envelope
 
