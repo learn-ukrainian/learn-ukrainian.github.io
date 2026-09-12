@@ -20,6 +20,7 @@ Versioning Contract:
 from __future__ import annotations
 
 import argparse
+import contextlib
 import datetime
 import json
 import re
@@ -62,6 +63,7 @@ DEFAULT_LT_REPLACEMENTS = _resolve_repo_path(PROJECT_ROOT / "data" / "lt_replace
 DEFAULT_HERITAGE_PAIRS = _resolve_repo_path(PROJECT_ROOT / "data" / "lexicon" / "heritage_pairs.yaml")
 DEFAULT_HERITAGE_OVERLAY = _resolve_repo_path(PROJECT_ROOT / "data" / "lexicon" / "heritage_pairs.wave1-calque.yaml")
 DEFAULT_INFLOW_QUEUE = PROJECT_ROOT / "data" / "lexicon" / "calque_inflow_queue.json"
+DEFAULT_MANIFEST = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 
 _ACUTE_RE = re.compile(r"[\u0301\u0300]")
 _EDGE_PUNCT_RE = re.compile(r"^[\"'«»„”“,.:;!?…\s]+|[\"'«»„”“,.:;!?…\s]+$")
@@ -117,6 +119,7 @@ class CalqueReconciliationEngine:
         lt_path: Path = DEFAULT_LT_REPLACEMENTS,
         heritage_pairs_path: Path = DEFAULT_HERITAGE_PAIRS,
         heritage_overlay_path: Path = DEFAULT_HERITAGE_OVERLAY,
+        manifest_path: Path | None = None,
     ) -> None:
         self.sources_db_path = sources_db_path
         self.atlas_db_path = atlas_db_path
@@ -124,6 +127,7 @@ class CalqueReconciliationEngine:
         self.lt_path = lt_path
         self.heritage_pairs_path = heritage_pairs_path
         self.heritage_overlay_path = heritage_overlay_path
+        self.manifest_path = manifest_path
 
         self._sources_conn: sqlite3.Connection | None = None
         self._atlas_conn: sqlite3.Connection | None = None
@@ -408,6 +412,18 @@ class CalqueReconciliationEngine:
         cursor = self.atlas_conn.cursor()
         lexicalised_safe = self.get_lexicalised_safe()
 
+        manifest_data: dict[str, Any] | None = None
+        manifest_by_slug: dict[str, dict[str, Any]] = {}
+        if self.manifest_path and self.manifest_path.exists():
+            try:
+                manifest_data = json.loads(self.manifest_path.read_text(encoding="utf-8"))
+                for entry in manifest_data.get("entries", []):
+                    entry_slug = entry.get("url_slug") or entry.get("slug")
+                    if entry_slug:
+                        manifest_by_slug[entry_slug] = entry
+            except Exception as e:
+                print(f"Warning: could not load manifest for sync: {e}", file=sys.stderr)
+
         for lemma in target_lemmas:
             # Skip verified lexicalised adjectives (e.g. блискучий)
             if lemma.lower() in lexicalised_safe:
@@ -554,6 +570,17 @@ class CalqueReconciliationEngine:
                             "UPDATE article_payloads SET payload_json = ? WHERE slug = ?",
                             (json.dumps(alt_payload, ensure_ascii=False), alt_slug),
                         )
+                        with contextlib.suppress(sqlite3.OperationalError):
+                            cursor.execute(
+                                "INSERT OR REPLACE INTO enrichment (slug, section, payload_json, source, filled_at) VALUES (?, 'synonyms', ?, 'curated authentic synonyms', ?)",
+                                (alt_slug, json.dumps(alt_syn_sec, ensure_ascii=False), alt_payload["updated_at"]),
+                            )
+                    if alt_slug in manifest_by_slug:
+                        alt_m_entry = manifest_by_slug[alt_slug]
+                        alt_m_entry["enrichment_version"] = CURRENT_ENRICHMENT_VERSION
+                        alt_m_entry["updated_at"] = alt_payload["updated_at"]
+                        alt_m_sec = alt_m_entry.setdefault("sections", {})
+                        alt_m_sec["synonyms"] = alt_syn_sec
                     results["peer_synonyms_updated"] += 1
 
             # Queue authentic alternatives not in Atlas for inflow
@@ -579,6 +606,41 @@ class CalqueReconciliationEngine:
                 "synonyms": merged_syns,
             }
 
+            # Sync heritage_status
+            heritage_status = payload.get("heritage_status")
+            if not isinstance(heritage_status, dict):
+                heritage_status = {}
+            heritage_status["classification"] = "russianism" if is_rus else "calque"
+            heritage_status["is_russianism"] = is_rus
+            heritage_status["warning_severity"] = "russianism_red" if is_rus else "calque_orange"
+            heritage_status["calque_warning"] = {"standard_alternatives": sorted_alts}
+            if is_rus:
+                heritage_status["russian_shadow"] = True
+            attestations = [
+                att for att in heritage_status.get("attestations", [])
+                if not (isinstance(att, dict) and att.get("source") == "standard_alternative")
+            ]
+            for alt in sorted_alts:
+                attestations.append(
+                    {
+                        "source": "standard_alternative",
+                        "ref": alt,
+                        "detail": f"Ukrainian standard alternative for {lemma}",
+                    }
+                )
+            heritage_status["attestations"] = attestations
+            payload["heritage_status"] = heritage_status
+
+            if slug in manifest_by_slug:
+                m_entry = manifest_by_slug[slug]
+                m_entry["enrichment_version"] = CURRENT_ENRICHMENT_VERSION
+                m_entry["updated_at"] = payload["updated_at"]
+                m_entry["is_russianism"] = is_rus
+                m_entry["calque_warning"] = calque_warning
+                m_entry["heritage_status"] = heritage_status
+                m_sec = m_entry.setdefault("sections", {})
+                m_sec["synonyms"] = synonyms_sec
+
             if not dry_run:
                 # Update SQLite database
                 updated_json = json.dumps(payload, ensure_ascii=False)
@@ -586,9 +648,27 @@ class CalqueReconciliationEngine:
                     "UPDATE article_payloads SET payload_json = ? WHERE slug = ?",
                     (updated_json, slug),
                 )
+                try:
+                    cursor.execute(
+                        "UPDATE articles SET heritage_classification = ?, updated_at = ? WHERE slug = ?",
+                        (heritage_status.get("classification"), payload["updated_at"], slug),
+                    )
+                    cursor.execute(
+                        "INSERT OR REPLACE INTO enrichment (slug, section, payload_json, source, filled_at) VALUES (?, 'heritage_status', ?, 'curated decolonization alternatives', ?)",
+                        (slug, json.dumps(heritage_status, ensure_ascii=False), payload["updated_at"]),
+                    )
+                    cursor.execute(
+                        "INSERT OR REPLACE INTO enrichment (slug, section, payload_json, source, filled_at) VALUES (?, 'synonyms', ?, 'curated standard alternatives', ?)",
+                        (slug, json.dumps(synonyms_sec, ensure_ascii=False), payload["updated_at"]),
+                    )
+                except sqlite3.OperationalError:
+                    pass
 
         if not dry_run:
             self.atlas_conn.commit()
+            if manifest_data and self.manifest_path:
+                with open(self.manifest_path, "w", encoding="utf-8") as f:
+                    json.dump(manifest_data, f, ensure_ascii=False, indent=2)
 
         results["inflow_queued_count"] = len(results["inflow_queue"])
         return results
@@ -601,11 +681,14 @@ def main() -> None:
     parser.add_argument("--force", action="store_true", help="Force update even if enrichment_version >= 2")
     parser.add_argument("--limit", type=int, default=None, help="Limit number of processed entries")
     parser.add_argument("--lemma", type=str, default=None, help="Process specific lemma")
+    parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST, help="Path to manifest JSON")
+    parser.add_argument("--no-manifest", action="store_true", help="Do not update manifest file")
     parser.add_argument("--queue-out", type=Path, default=DEFAULT_INFLOW_QUEUE, help="Output path for inflow queue")
 
     args = parser.parse_args()
 
-    engine = CalqueReconciliationEngine()
+    manifest_path = None if args.no_manifest else args.manifest
+    engine = CalqueReconciliationEngine(manifest_path=manifest_path)
     results = engine.run_reconciliation(
         limit=args.limit,
         dry_run=not args.apply,

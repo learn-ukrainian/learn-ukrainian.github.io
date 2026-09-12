@@ -654,3 +654,61 @@ def test_warning_text_refresh_on_force(mock_dbs: dict[str, Path], monkeypatch: p
     assert p["calque_warning"]["warning_text"] != "Застарілий текст попередження"
     assert "нова_альтернатива" in p["calque_warning"]["warning_text"]
     conn.close()
+
+
+def test_manifest_sync_in_place(mock_dbs: dict[str, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def mock_verify_lemma(lemma: str, db_path: Any = None) -> list[dict[str, Any]]:
+        if lemma in {"заметіль", "хуртовина", "завірюха"}:
+            return [{"lemma": lemma, "pos": "noun", "tags": "inanim:f:v_naz"}]
+        return []
+
+    monkeypatch.setattr("scripts.lexicon.reconcile_calque_clusters.verify_lemma", mock_verify_lemma)
+
+    manifest_file = tmp_path / "mock-lexicon-manifest.json"
+    manifest_content = {
+        "entries": [
+            {
+                "url_slug": "буран",
+                "lemma": "буран",
+                "sections": {"synonyms": {"items": ["вакуум", "буря"]}},
+            },
+            {
+                "url_slug": "заметіль",
+                "lemma": "заметіль",
+                "sections": {"synonyms": {"items": ["віхола"]}},
+            },
+        ]
+    }
+    manifest_file.write_text(json.dumps(manifest_content, ensure_ascii=False), encoding="utf-8")
+
+    engine = CalqueReconciliationEngine(
+        sources_db_path=mock_dbs["sources_db"],
+        atlas_db_path=mock_dbs["atlas_db"],
+        lt_path=mock_dbs["lt_path"],
+        heritage_pairs_path=mock_dbs["heritage_pairs"],
+        heritage_overlay_path=mock_dbs["heritage_overlay"],
+        manifest_path=manifest_file,
+    )
+
+    # 1. Dry run: manifest file should not change
+    engine.run_reconciliation(dry_run=True, single_lemma="буран")
+    unchanged_data = json.loads(manifest_file.read_text(encoding="utf-8"))
+    assert unchanged_data["entries"][0].get("enrichment_version") is None
+
+    # 2. Apply run: manifest file is updated in place
+    engine.run_reconciliation(dry_run=False, single_lemma="буран")
+    updated_data = json.loads(manifest_file.read_text(encoding="utf-8"))
+
+    buran_entry = updated_data["entries"][0]
+    assert buran_entry["enrichment_version"] == CURRENT_ENRICHMENT_VERSION
+    assert buran_entry["is_russianism"] is True
+    assert buran_entry["heritage_status"]["is_russianism"] is True
+    assert buran_entry["heritage_status"]["warning_severity"] == "russianism_red"
+    assert "заметіль" in buran_entry["calque_warning"]["standard_alternatives"]
+    assert "вакуум" not in buran_entry["sections"]["synonyms"]["items"]
+    assert "заметіль" in buran_entry["sections"]["synonyms"]["items"]
+
+    zamitil_entry = updated_data["entries"][1]
+    assert zamitil_entry["enrichment_version"] == CURRENT_ENRICHMENT_VERSION
+    assert "хуртовина" in zamitil_entry["sections"]["synonyms"]["items"]
+    assert "буран" not in zamitil_entry["sections"]["synonyms"]["items"]
