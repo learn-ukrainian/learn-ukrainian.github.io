@@ -81,9 +81,15 @@ areas:
     id: core
     aliases:
       - core-quality
+      - curriculum-upgrade
+      - a1-upgrade
     epics:
       - number: 4274
         name: "Core-track deterministic quality"
+      - number: 7994
+        name: "Curriculum upgrade machinery — V7 upgrade mode, lesson gates, MDX assembler"
+      - number: 7995
+        name: "A1 content rollout — 55 modules into 60-minute lessons under a1-v2"
   seminars:
     id: seminars
     aliases:

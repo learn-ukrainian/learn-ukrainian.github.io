@@ -121,6 +121,22 @@ def test_resolve_area_by_epic_number() -> None:
     assert resolve_area(6321).id == "open-model-data"
 
 
+@pytest.mark.parametrize(
+    ("stream", "epic"),
+    [("curriculum-upgrade", 7994), ("a1-upgrade", 7995)],
+)
+def test_upgrade_streams_share_core_area_but_isolate_handoffs(stream: str, epic: int) -> None:
+    assert resolve_area(stream).id == "core"
+    assert resolve_area(epic).id == "core"
+    candidates = _handoff_candidates_for(stream, epic)
+    assert candidates == (
+        f".claude/{stream}-epic/CLAUDE-DRIVER-HANDOFF.md",
+        f".claude/{stream}-epic/INTERIM-DRIVER-HANDOFF.md",
+        f"docs/session-state/current.claude-{stream}.md",
+    )
+    assert all("core-epic" not in path for path in candidates)
+
+
 def test_resolve_area_unknown_raises_typed_error() -> None:
     with pytest.raises(UnknownAreaError) as exc_info:
         resolve_area("invalid_area_xyz")
@@ -198,6 +214,9 @@ def test_inventory_session_streams_wiring() -> None:
         ("seminars-folk", "folk", "epic:2836"),
         ("bio", "bio", "epic:4431"),
         ("seminars-bio", "bio", "epic:4431"),
+        ("curriculum-upgrade", "curriculum-upgrade", "epic:7994"),
+        ("a1-upgrade", "a1-upgrade", "epic:7995"),
+        ("core-quality", "core-quality", "epic:4274"),
         ("corpus", "corpus", "epic:4706"),
         ("corpus-channels", "corpus", "epic:4706"),
     ],

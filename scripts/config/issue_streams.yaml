@@ -36,6 +36,12 @@ streams:
   core-quality:
     title: "Core-track deterministic quality"
     epics: [4274]
+  curriculum-upgrade:
+    title: "Curriculum upgrade machinery — pipeline upgrade mode, lessons.yaml, per-lesson gates, MDX assembler"
+    epics: [7994]
+  a1-upgrade:
+    title: "A1 content rollout — 55 modules into 60-minute lessons under parallel a1-v2"
+    epics: [7995]
   seminars-folk:
     title: "FOLK track re-research + rebuild"
     epics: [2836]

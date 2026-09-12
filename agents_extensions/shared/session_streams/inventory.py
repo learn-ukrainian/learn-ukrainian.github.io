@@ -27,6 +27,16 @@ MAX_EPIC_NUMBER = 9_999_999_999
 # successor has an explicit stream-id override; the legacy stream-name entry
 # keeps harness-epic paths available for older assignments (#6949).
 HANDOFF_PATH_OVERRIDES: dict[str, tuple[str, ...]] = {
+    "epic:7994": (
+        ".claude/curriculum-upgrade-epic/CLAUDE-DRIVER-HANDOFF.md",
+        ".claude/curriculum-upgrade-epic/INTERIM-DRIVER-HANDOFF.md",
+        "docs/session-state/current.claude-curriculum-upgrade.md",
+    ),
+    "epic:7995": (
+        ".claude/a1-upgrade-epic/CLAUDE-DRIVER-HANDOFF.md",
+        ".claude/a1-upgrade-epic/INTERIM-DRIVER-HANDOFF.md",
+        "docs/session-state/current.claude-a1-upgrade.md",
+    ),
     "epic:6943": (
         ".claude/infra-epic/CLAUDE-DRIVER-HANDOFF.md",
         ".claude/harness-epic/CLAUDE-DRIVER-HANDOFF.md",
