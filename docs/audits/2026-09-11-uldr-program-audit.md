@@ -1,23 +1,28 @@
 # ULDR program audit — 2026-09-11
 
-Latest verification: the [Round 11 worktree fixes](#round-11-worktree-verification--uncommitted) pass their reproduced cases.
-Latest reviewed merged disposition remains **FAIL** at `056cd964e5bda283abf465f9a638b4b3cbf7b82f`.
-See [the ninth diagnostic re-review](#ninth-diagnostic-re-review--056cd964)
-for current fixes, evidence, and remaining findings. Earlier sections retain the
-history of the heads they name.
+Latest verification: **PASS for the bounded delivered-package audit** on merged
+`main` at `303fbadbd171e36bf9c5f025a7c61011ca327847` (PR #7972).
+See [final merged-main verification](#final-merged-main-verification--303fbadbd1).
+Earlier verdicts below are historical and apply only to their named heads.
 
 ## Disposition
 
-**FAIL for the claimed gold linguistic dataset and reliable semantic evaluation readiness.**
-The delivered package exists and its reported production counts reconcile. The
-findings below concern evidence validity, evaluator correctness, and consumer
-validation; they do not imply that all generated linguistic judgments are wrong.
-Actual model training was not a completion requirement of this bounded audit.
+**Findings F1–F7 and M1 are remediated.** The delivered dataset, generator,
+formatter and evaluator are verified within the artifact, regression and
+reference-output checks documented here. M1's final subject-binding correction
+is now on merged main, and the held-out reference self-check reproduces
+**232/234 passes (99.15%)** with a fully reconciled denominator.
 
-Requested by the operator; tracking issue: #7930. Audited implementation:
-`5fa6d752a50a66fa3498bd007d8a538b727d2e32` (merged PR #7927).
-This report changes no implementation or dataset. Gemini retains remediation
-ownership. Findings are independent inspection, not authorization to change scope.
+This is not a claim of independently gold linguistic judgments, model
+generalization or completed training. The evaluator remains a heuristic proxy;
+the two failing reference records and previously documented 97-seed curation
+residual remain visible. Those limits are not erased by closing the reproduced
+implementation findings.
+
+Requested by the operator; tracking issue: #7930; report PR: #7931.
+Initial audited implementation: `5fa6d752a50a66fa3498bd007d8a538b727d2e32`
+(merged PR #7927). This report changes no implementation or dataset.
+Gemini retains ownership of the documented curation residual.
 
 ## Verified delivery and limits
 
@@ -1064,3 +1069,70 @@ and preserves rejection of the tested unrelated lexical subjects. No new finding
 was raised in this bounded verification. Author-owned commit/push and exact-head
 review/CI remain necessary before the published implementation can receive this
 result. No author files were edited or committed by this audit.
+
+
+## Final merged-main verification — 303fbadbd1
+
+**VERDICT: PASS for the bounded delivered-package audit**, verified on
+2026-09-12 after fetching `origin/main` inside the assigned audit worktree.
+PR #7972 (issue #7932) is merged as
+`303fbadbd171e36bf9c5f025a7c61011ca327847`. Its final head is
+`faf8ca3764442773ce157634f2185b19731098fe`; the evaluator and its test file
+are identical between that head and merged main. The operator supplied the
+Astra Round 17 review result, “Verdict: PASS — no new findings”, at that head.
+This report attributes that review result to the supplied handoff; it does not
+claim a new independent review. Live GitHub verification confirms 16 successful
+checks, five skipped checks, and no failed or pending checks on PR #7972.
+
+### Reproduced results
+
+All commands ran inside
+`/home/ops/learn-ukrainian/.worktrees/dispatch/codex/uldr-audit-20260911`,
+using `/home/ops/learn-ukrainian/.venv/bin/python` as the interpreter after
+integrating merged main into the audit branch. Only the audit document differs
+from main; no evaluator, generator, test or dataset edits were made.
+
+| Verification | Observed result |
+| --- | --- |
+| Formatter/evaluator pytest file | 36 passed in 1.00 seconds |
+| Generator and contract pytest files | 22 passed in 0.91 seconds |
+| Original M1 grammatical-label and generic-word probes | Rejected; not grounded |
+| Unrelated lexical subjects and terminal carriers | Rejected, composite score at most 0.40 |
+| Period, semicolon, end-of-input, parenthesis, en/em dash and spaced hyphen boundaries | All regression assertions pass |
+| Quoted/unquoted valid line-wrapped subjects | Grounded, composite score 1.0 / PASS |
+| Line-wrapped terminal carriers followed by a stopword | Not grounded, composite score at most 0.40 / FAIL |
+| Expected / evaluated held-out records | 234 / 234 |
+| Missing / duplicate / unknown predictions | 0 / 0 / 0 |
+| Passing reference records | 232 / 234 (99.15%) |
+| Elimination / suggestion rates | 0.9957 / 0.9957 |
+| Grounding / pass rates | 0.9915 / 0.9915 |
+| Mean composite score | 0.9932 |
+| Scoped Ruff check / format check | All checks passed / 4 files already formatted |
+
+Reproduction commands (the benchmark prints aggregates only):
+
+```bash
+/home/ops/learn-ukrainian/.venv/bin/python -m pytest tests/projects/open_model_data/test_v4_format_and_evaluate.py -q
+/home/ops/learn-ukrainian/.venv/bin/python -m pytest tests/projects/open_model_data/test_v4_decolonization_reasoning.py tests/projects/open_model_data/test_v1_decolonization_contracts.py -q
+/home/ops/learn-ukrainian/.venv/bin/python - <<'PYCODE'
+import json
+from scripts.projects.open_model_data.v4_evaluate_decolonization import (
+    DEFAULT_HELD_OUT_FILE, evaluate_predictions,
+)
+summary = evaluate_predictions(DEFAULT_HELD_OUT_FILE, DEFAULT_HELD_OUT_FILE)
+passed = sum(row["is_pass"] for row in summary.pop("evaluations"))
+assert (passed, summary["expected_gold_records"]) == (232, 234)
+print(json.dumps(dict(summary, passed_records=passed), sort_keys=True))
+PYCODE
+/home/ops/learn-ukrainian/.venv/bin/python -m ruff check scripts/projects/open_model_data/v4_evaluate_decolonization.py scripts/projects/open_model_data/v4_decolonization_reasoning.py tests/projects/open_model_data/test_v4_format_and_evaluate.py tests/projects/open_model_data/test_v4_decolonization_reasoning.py
+/home/ops/learn-ukrainian/.venv/bin/python -m ruff format --check scripts/projects/open_model_data/v4_evaluate_decolonization.py scripts/projects/open_model_data/v4_decolonization_reasoning.py tests/projects/open_model_data/test_v4_format_and_evaluate.py tests/projects/open_model_data/test_v4_decolonization_reasoning.py
+```
+
+The benchmark uses the held-out artifact as both gold and predictions, matching
+the earlier reference self-check. It proves reference-output consistency and
+preserves all 234 records in the denominator; it is not independent semantic
+assessment or a model generalization result. Two reference records still fail.
+Earlier dataset receipts and consumer verification retain their recorded scope;
+no artifact regeneration, model execution or new training run occurred here.
+The original 3/100 curated-seed delivery remains a separate 97-seed residual
+owned by Gemini. Closure of F1–F7 and M1 does not assert completion of that milestone.
