@@ -168,3 +168,26 @@ def test_dead_alias_inventory_contracts():
     ws_contract = contract_for_route("/ws/batch", "websocket")
     assert ws_contract is not None
     assert "NOTE: compat_keep" in ws_contract.recommendation
+
+
+def test_ops_api_openapi_describes_versioning_and_agent_onboard():
+    """OpenAPI is part of the Ops API product surface — keep onboard/version text honest (#7975)."""
+    info = app.openapi()["info"]
+    assert info["title"] == "Ops API"
+    assert info["version"] == "2.0.0"
+    description = info["description"]
+    assert "Application version 2.0.0" in description
+    assert "/api/contracts/routes" in description
+    assert "/api/orient?lean=true" in description
+    assert "docs/MONITOR-API.md" in description
+    assert "response_schema_version" in description
+
+
+def test_launchpad_and_orient_page_contracts_match_post_7976_timeouts():
+    index = contract_for_page("index.html")
+    orient = contract_for_page("orient.html")
+    assert index is not None and orient is not None
+    assert "20s" in index.freshness
+    assert "fresh=true" not in index.freshness.lower() or "no per-load" in index.freshness
+    assert "singleflight" in contract_for_route("/api/state").freshness
+    assert "20s" in orient.freshness

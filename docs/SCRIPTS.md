@@ -561,7 +561,7 @@ servers.
 | Service | Port | What it is |
 | --- | --- | --- |
 | `sources` | 8766 | MCP Sources Server (SQLite FTS5 — textbooks, dicts, literary, Wikipedia). Legacy alias: `rag`. |
-| `api` | 8765 | API / Monitor dashboard (FastAPI) — the `/api/orient` etc. cold-start endpoints. |
+| `api` | 8765 | **Ops API** (FastAPI) — `/docs`, `/api/contracts/routes`, `/api/orient`, state, fleet, work. Narrative: `docs/MONITOR-API.md`. |
 | `astro` | **4321** | **Astro Course UI dev server** — the local site. Alias: `starlight`. |
 
 ```bash
@@ -845,7 +845,9 @@ Monitor(
 )
 ```
 
-For state queries without builds, use the Monitor API (`docs/MONITOR-API.md`):
+For state queries without builds, use the **Ops API** (`docs/MONITOR-API.md`;
+live explorer `http://127.0.0.1:8765/docs`, contracts
+`http://127.0.0.1:8765/api/contracts/routes`):
 ```bash
 curl -s http://localhost:8765/api/state/track-health/a1   # Full track health
 curl -s http://localhost:8765/api/state/failing?track=a2   # Failing modules
