@@ -328,7 +328,7 @@ NAMED_ENTITY_PATTERNS = [
         re.IGNORECASE,
     ),
     re.compile(
-        rf"\b(?:{DESCRIPTOR_WORDS}\s+)+({PART_OF_SPEECH_WORDS})\s+(?={STOPWORD_PATTERN}\b)",
+        rf"\b(?:{DESCRIPTOR_WORDS}\s+)+({PART_OF_SPEECH_WORDS})(?:\s*(?=[.,;:!?…—\-)\]»\"”']|$|\n)|\s+(?={STOPWORD_PATTERN}\b))",
         re.IGNORECASE,
     ),
 ]

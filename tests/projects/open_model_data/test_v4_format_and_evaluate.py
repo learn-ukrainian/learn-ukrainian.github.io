@@ -1238,3 +1238,31 @@ def test_nested_grammatical_descriptors_target_and_unrelated_subjects() -> None:
         assert not eval_u["is_pass"], f"Expected {phrase} to fail"
         assert not eval_u["reasoning_grounded"], f"Expected {phrase} grounding to fail"
         assert eval_u["composite_score"] <= 0.40
+
+    # P2: Terminal carrier subjects before punctuation or end-of-input boundaries
+    for phrase in (
+        "варіант форми іменник",
+        "варіант форми слова",
+        "варіант форми форма",
+        "варіант форми будинок",
+    ):
+        # 1. Terminal before period
+        r_period = f"Вживайте goodtoken, бо за словником ВЕСУМ це {phrase}."
+        eval_p = evaluate_single_response(target, alts, r_period)
+        assert not eval_p["is_pass"], f"Expected {phrase} before period to fail"
+        assert not eval_p["reasoning_grounded"], f"Expected {phrase} grounding before period to fail"
+        assert eval_p["composite_score"] <= 0.40
+
+        # 2. Terminal before semicolon with subsequent clause
+        r_semi = f"Вживайте goodtoken, бо за словником ВЕСУМ це {phrase}; питомий суфікс -ник."
+        eval_s = evaluate_single_response(target, alts, r_semi)
+        assert not eval_s["is_pass"], f"Expected {phrase} before semicolon to fail"
+        assert not eval_s["reasoning_grounded"], f"Expected {phrase} grounding before semicolon to fail"
+        assert eval_s["composite_score"] <= 0.40
+
+        # 3. Terminal at end of input
+        r_end = f"Вживайте goodtoken, бо за словником ВЕСУМ це {phrase}"
+        eval_e = evaluate_single_response(target, alts, r_end)
+        assert not eval_e["is_pass"], f"Expected {phrase} at end-of-input to fail"
+        assert not eval_e["reasoning_grounded"], f"Expected {phrase} grounding at end-of-input to fail"
+        assert eval_e["composite_score"] <= 0.40
