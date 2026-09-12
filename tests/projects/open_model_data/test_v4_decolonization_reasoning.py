@@ -18,6 +18,7 @@ from scripts.projects.open_model_data.v4_decolonization_reasoning import (
     find_textbook_attestation,
     generate_pipeline,
     get_partition_for_term,
+    is_positive_citation,
     normalize_text,
     scan_generated_files,
     strip_accents,
@@ -257,6 +258,7 @@ def test_generate_pipeline_mock(
     cur.execute("CREATE TABLE ua_gec_errors (error TEXT, correct TEXT, error_type TEXT, is_native INTEGER)")
     cur.execute("CREATE TABLE grinchenko (word TEXT)")
     cur.execute("CREATE TABLE sum11 (word TEXT)")
+    cur.execute("INSERT INTO sum11 VALUES ('автовежа')")
     conn.commit()
     conn.close()
 
@@ -288,6 +290,8 @@ def test_generate_pipeline_mock(
     assert manifest["partition_firewall"]["verified_partition_isolation"] is True
     assert manifest["partition_firewall"]["train_held_out_overlap_count"] == 0
     assert manifest["quality_metrics"]["vesum_verification_rate"] == 1.0
+    assert manifest["quality_metrics"]["vesum_verification_count"] >= 2
+    assert manifest["quality_metrics"]["vesum_verification_denominator"] >= 2
     assert manifest["quality_metrics"]["zero_private_paths"] is True
     assert manifest["quality_metrics"]["zero_restricted_sources"] is True
     assert (out_dir / "decolonization_manifest.json").is_file()
@@ -312,6 +316,39 @@ def test_generate_pipeline_mock(
         assert "ВТС" not in t_content
 
 
+def test_phrase_attestation_requires_full_phrase_match(tmp_path: Path) -> None:
+    """F1: verify that textbook and dictionary matching requires the entire multi-word phrase."""
+    db_path = tmp_path / "mock_phrase_sources.db"
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    cur.execute(
+        "CREATE TABLE textbooks (title TEXT, grade TEXT, subject TEXT, author TEXT, text TEXT, source_file TEXT)"
+    )
+    # Only the first word 'брати' is present
+    cur.execute(
+        "INSERT INTO textbooks VALUES ('Українська мова', '7', 'ukrmova', 'avramenko', 'Треба брати книжку в бібліотеці.', '7-klas.pdf')"
+    )
+    conn.commit()
+    conn.close()
+
+    # Searching for multi-word phrase 'брати участь' must fail (return None)
+    res = find_textbook_attestation("брати участь", db_path)
+    assert res is None, "Error: phrase matched when only first word was present!"
+
+    # Now insert actual full phrase
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    cur.execute(
+        "INSERT INTO textbooks VALUES ('Українська мова', '8', 'ukrmova', 'avramenko', 'Учні прагнуть брати участь у змаганнях.', '8-klas.pdf')"
+    )
+    conn.commit()
+    conn.close()
+
+    res_pos = find_textbook_attestation("брати участь", db_path)
+    assert res_pos is not None
+    assert "брати участь" in res_pos["snippet"].lower()
+
+
 def test_partitioning_firewall_determinism() -> None:
     """Verify determinism and firewall isolation for train vs held_out partitioning."""
     p1 = get_partition_for_term("автовишка")
@@ -331,3 +368,285 @@ def test_partitioning_firewall_determinism() -> None:
     held_out_count = partitions.count("held_out")
     assert train_count + held_out_count == 100
     assert 65 <= train_count <= 95
+
+
+def test_synthesize_trajectory_requires_living_standard_attestation() -> None:
+    """R2 regression: a candidate with zero living standard evidence must not produce living standard claims."""
+    # Synthetic candidate with only VESUM counts and no textbook, dictionary, or curated evidence
+    candidate = CalqueCandidate(
+        target_term="синтетичний_термін",
+        suggestions=["дійсна фраза"],
+        source_tag="synthetic_test",
+    )
+    vesum_counts = {"дійсна фраза": 5}
+    tb_attestations = {"дійсна фраза": None}
+    dict_attestations = {"дійсна фраза": None}
+
+    result = synthesize_trajectory_and_dpo(
+        candidate,
+        vesum_counts,
+        tb_attestations,
+        dict_attestations,
+    )
+    # Must refuse to synthesize ungrounded living standard claims
+    assert result is None
+
+
+def test_curated_evidence_only_assigned_to_matching_alternative() -> None:
+    """G8: candidate-level curated_evidence naming only one alternative must not promote unsupported alternatives."""
+    candidate = CalqueCandidate(
+        target_term="проблемне_слово",
+        suggestions=["непідтверджене_слово", "підтверджене_слово"],
+        source_tag="curated_test",
+        curated_evidence=["Слово «підтверджене_слово» є питомим українським відповідником."],
+    )
+    vesum_counts = {"непідтверджене_слово": 10, "підтверджене_слово": 15}
+    tb_attestations = {"непідтверджене_слово": None, "підтверджене_слово": None}
+    dict_attestations = {"непідтверджене_слово": None, "підтверджене_слово": None}
+
+    result = synthesize_trajectory_and_dpo(
+        candidate,
+        vesum_counts,
+        tb_attestations,
+        dict_attestations,
+    )
+    assert result is not None
+    traj, _ = result
+    spectrum = traj["register_spectrum"]
+    assert spectrum["primary_living_standard"] == "підтверджене_слово"
+
+    alts_by_lemma = {a["lemma"]: a for a in spectrum["alternatives"]}
+    assert alts_by_lemma["підтверджене_слово"]["register_tier"] == "living_standard"
+    assert alts_by_lemma["непідтверджене_слово"]["register_tier"] != "living_standard"
+
+
+def test_is_positive_citation_semantics() -> None:
+    """Verify is_positive_citation rejects negative mentions and accepts affirmative recommendations."""
+    # Negative English & Ukrainian mentions
+    assert not is_positive_citation("alpha", "alpha is not correct. beta is correct.")
+    assert not is_positive_citation("alpha", "alpha is incorrect; beta is correct.")
+    assert not is_positive_citation("alpha", "Do not use alpha. Use beta.")
+    assert not is_positive_citation("alpha", "Avoid alpha; prefer beta.")
+    assert not is_positive_citation("alpha", "Never use alpha instead of beta.")
+    assert not is_positive_citation("альфа", "Не вживайте альфа; краще бета.")
+    assert not is_positive_citation("альфа", "Замість альфа вживайте бета.")
+    assert not is_positive_citation("альфа", "Слово альфа — це калька з російської.")
+    assert not is_positive_citation("альфа", "Форма альфа не є правильною.")
+    assert not is_positive_citation("мандруючий", "11-klas: мандрівний (а не мандруючий) сюжет")
+
+    # Positive English & Ukrainian mentions
+    assert is_positive_citation("beta", "alpha is not correct. beta is correct.")
+    assert is_positive_citation("beta", "alpha is incorrect; beta is correct.")
+    assert is_positive_citation("beta", "Do not use alpha. Use beta.")
+    assert is_positive_citation("бета", "Не вживайте альфа; краще бета.")
+    assert is_positive_citation("бета", "Замість альфа вживайте бета.")
+    assert is_positive_citation("бета", "Форма бета є правильною.")
+    assert is_positive_citation("мандрівний", "11-klas: мандрівний (а не мандруючий) сюжет")
+    assert is_positive_citation("голова зборів", "11-klas: головуючий на зборах — голова зборів")
+    assert is_positive_citation("питоме", "Слово «питоме» є нормативним відповідником.")
+
+
+def test_negative_evidence_does_not_promote_rejected_alternative() -> None:
+    """H3: Prohibitive evidence ('Do not use alpha. Use beta.') must not promote alpha to living standard."""
+    candidate = CalqueCandidate(
+        target_term="test_calque",
+        suggestions=["alpha", "beta"],
+        source_tag="curated_test",
+        curated_evidence=["Do not use alpha. Use beta."],
+    )
+    vesum_counts = {"alpha": 10, "beta": 15}
+    tb_attestations = {"alpha": None, "beta": None}
+    dict_attestations = {"alpha": None, "beta": None}
+
+    result = synthesize_trajectory_and_dpo(
+        candidate,
+        vesum_counts,
+        tb_attestations,
+        dict_attestations,
+    )
+    assert result is not None
+    traj, _ = result
+    spectrum = traj["register_spectrum"]
+    # beta must be selected as primary, NOT alpha
+    assert spectrum["primary_living_standard"] == "beta"
+
+    alts_by_lemma = {a["lemma"]: a for a in spectrum["alternatives"]}
+    assert alts_by_lemma["beta"]["register_tier"] == "living_standard"
+    assert alts_by_lemma["alpha"]["register_tier"] != "living_standard"
+
+    # If only alpha is available with prohibitive evidence, synthesis must be refused
+    prohibitive_only_cand = CalqueCandidate(
+        target_term="test_calque",
+        suggestions=["alpha"],
+        source_tag="curated_test",
+        curated_evidence=["Do not use alpha."],
+    )
+    assert (
+        synthesize_trajectory_and_dpo(
+            prohibitive_only_cand,
+            {"alpha": 10},
+            {"alpha": None},
+            {"alpha": None},
+        )
+        is None
+    )
+
+
+def test_negated_correctness_does_not_promote_rejected_alternative() -> None:
+    """I2: Negated correctness ('alpha is not correct. beta is correct.') must promote beta, not alpha."""
+    candidate = CalqueCandidate(
+        target_term="test_calque",
+        suggestions=["alpha", "beta"],
+        source_tag="curated_test",
+        curated_evidence=["alpha is not correct. beta is correct."],
+    )
+    vesum_counts = {"alpha": 10, "beta": 15}
+    tb_attestations = {"alpha": None, "beta": None}
+    dict_attestations = {"alpha": None, "beta": None}
+
+    result = synthesize_trajectory_and_dpo(
+        candidate,
+        vesum_counts,
+        tb_attestations,
+        dict_attestations,
+    )
+    assert result is not None
+    traj, _ = result
+    spectrum = traj["register_spectrum"]
+    assert spectrum["primary_living_standard"] == "beta"
+
+    alts_by_lemma = {a["lemma"]: a for a in spectrum["alternatives"]}
+    assert alts_by_lemma["beta"]["register_tier"] == "living_standard"
+    assert alts_by_lemma["alpha"]["register_tier"] != "living_standard"
+
+    # Sole negated alternative must refuse synthesis
+    sole_cand = CalqueCandidate(
+        target_term="test_calque",
+        suggestions=["alpha"],
+        source_tag="curated_test",
+        curated_evidence=["alpha is not correct."],
+    )
+    assert (
+        synthesize_trajectory_and_dpo(
+            sole_cand,
+            {"alpha": 10},
+            {"alpha": None},
+            {"alpha": None},
+        )
+        is None
+    )
+
+
+def test_contrastive_replacement_and_intervening_negation() -> None:
+    """J2: Verify 'Do not ever use alpha. Use beta.' and 'Replace alpha with beta.' resolve correctly."""
+    # 1. Intervening adverb in negation
+    assert not is_positive_citation("alpha", "Do not ever use alpha. Use beta.")
+    assert is_positive_citation("beta", "Do not ever use alpha. Use beta.")
+
+    # 2. Structured replacement
+    assert not is_positive_citation("alpha", "Replace alpha with beta.")
+    assert is_positive_citation("beta", "Replace alpha with beta.")
+
+    # 3. End-to-end trajectory synthesis for 'Do not ever use alpha. Use beta.'
+    cand1 = CalqueCandidate(
+        target_term="test_calque",
+        suggestions=["alpha", "beta"],
+        source_tag="curated_test",
+        curated_evidence=["Do not ever use alpha. Use beta."],
+    )
+    res1 = synthesize_trajectory_and_dpo(
+        cand1, {"alpha": 10, "beta": 15}, {"alpha": None, "beta": None}, {"alpha": None, "beta": None}
+    )
+    assert res1 is not None
+    traj1, _ = res1
+    assert traj1["register_spectrum"]["primary_living_standard"] == "beta"
+    alts1 = {a["lemma"]: a for a in traj1["register_spectrum"]["alternatives"]}
+    assert alts1["beta"]["register_tier"] == "living_standard"
+    assert alts1["alpha"]["register_tier"] != "living_standard"
+
+    # 4. End-to-end trajectory synthesis for 'Replace alpha with beta.'
+    cand2 = CalqueCandidate(
+        target_term="test_calque",
+        suggestions=["alpha", "beta"],
+        source_tag="curated_test",
+        curated_evidence=["Replace alpha with beta."],
+    )
+    res2 = synthesize_trajectory_and_dpo(
+        cand2, {"alpha": 10, "beta": 15}, {"alpha": None, "beta": None}, {"alpha": None, "beta": None}
+    )
+    assert res2 is not None
+    traj2, _ = res2
+    assert traj2["register_spectrum"]["primary_living_standard"] == "beta"
+    alts2 = {a["lemma"]: a for a in traj2["register_spectrum"]["alternatives"]}
+    assert alts2["beta"]["register_tier"] == "living_standard"
+    assert alts2["alpha"]["register_tier"] != "living_standard"
+
+
+def test_negated_replacement_polarity() -> None:
+    """K1: 'Use alpha. Do not replace alpha with beta.' selects alpha and rejects beta."""
+    # 1. Direct polarity checks for negated replacement
+    assert is_positive_citation("alpha", "Use alpha. Do not replace alpha with beta.")
+    assert not is_positive_citation("beta", "Use alpha. Do not replace alpha with beta.")
+    assert not is_positive_citation("alpha", "Do not replace alpha with beta.")
+    assert not is_positive_citation("beta", "Do not replace alpha with beta.")
+
+    # 2. Ukrainian polarity checks
+    assert is_positive_citation("alpha", "Вживайте alpha. Не замінюйте alpha на beta.")
+    assert not is_positive_citation("beta", "Вживайте alpha. Не замінюйте alpha на beta.")
+    assert not is_positive_citation("alpha", "Не замінюйте alpha на beta.")
+    assert not is_positive_citation("beta", "Не замінюйте alpha на beta.")
+
+    # 3. End-to-end trajectory synthesis
+    cand = CalqueCandidate(
+        target_term="test_calque",
+        suggestions=["alpha", "beta"],
+        source_tag="curated_test",
+        curated_evidence=["Use alpha. Do not replace alpha with beta."],
+    )
+    res = synthesize_trajectory_and_dpo(
+        cand,
+        {"alpha": 10, "beta": 15},
+        {"alpha": None, "beta": None},
+        {"alpha": None, "beta": None},
+    )
+    assert res is not None
+    traj, _ = res
+    assert traj["register_spectrum"]["primary_living_standard"] == "alpha"
+    alts = {a["lemma"]: a for a in traj["register_spectrum"]["alternatives"]}
+    assert alts["alpha"]["register_tier"] == "living_standard"
+    assert alts["beta"]["register_tier"] != "living_standard"
+
+
+def test_comma_contrast_and_predicate_dash_semantics() -> None:
+    """L1: Comma contrast and predicate dash properly bind normative alternative and reject bad one."""
+    # 1. 'Use alpha, not beta.' promotes alpha and rejects beta
+    assert is_positive_citation("alpha", "Use alpha, not beta.")
+    assert not is_positive_citation("beta", "Use alpha, not beta.")
+
+    # 2. 'Do not use beta, use alpha.' promotes alpha and rejects beta
+    assert is_positive_citation("alpha", "Do not use beta, use alpha.")
+    assert not is_positive_citation("beta", "Do not use beta, use alpha.")
+
+    # 3. 'alpha — нормативне слово. beta — помилка.' promotes alpha and rejects beta
+    assert is_positive_citation("alpha", "alpha — нормативне слово. beta — помилка.")
+    assert not is_positive_citation("beta", "alpha — нормативне слово. beta — помилка.")
+
+    # 4. End-to-end trajectory synthesis with suggestion order [beta, alpha]
+    cand = CalqueCandidate(
+        target_term="test_calque",
+        suggestions=["beta", "alpha"],
+        source_tag="curated_test",
+        curated_evidence=["Use alpha, not beta."],
+    )
+    res = synthesize_trajectory_and_dpo(
+        cand,
+        {"alpha": 10, "beta": 15},
+        {"alpha": None, "beta": None},
+        {"alpha": None, "beta": None},
+    )
+    assert res is not None
+    traj, _ = res
+    assert traj["register_spectrum"]["primary_living_standard"] == "alpha"
+    alts = {a["lemma"]: a for a in traj["register_spectrum"]["alternatives"]}
+    assert alts["alpha"]["register_tier"] == "living_standard"
+    assert alts["beta"]["register_tier"] != "living_standard"

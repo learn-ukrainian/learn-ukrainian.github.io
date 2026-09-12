@@ -51,6 +51,7 @@ def resolve_data_path(rel_path: str) -> Path:
 CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
 TRAJECTORY_SCHEMA_PATH = CONTRACTS_DIR / "v1_decolonization_trajectory.schema.json"
 DPO_PAIR_SCHEMA_PATH = CONTRACTS_DIR / "v1_decolonization_dpo_pair.schema.json"
+MAX_SHARD_BYTES: int = 1_800_000
 
 DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
 DEFAULT_VESUM_DB = resolve_data_path("data/vesum.db")
@@ -280,7 +281,7 @@ def get_vesum_counts(
     vesum_db_path: Path,
     conn: sqlite3.Connection | None = None,
 ) -> dict[str, int]:
-    """Query local VESUM database for paradigm form counts."""
+    """Query local VESUM database for paradigm form counts across all constituent words."""
     counts: dict[str, int] = {}
     if not vesum_db_path.is_file():
         return {lemma: 0 for lemma in lemmas}
@@ -291,10 +292,18 @@ def get_vesum_counts(
     try:
         cur = conn.cursor()
         for lemma in lemmas:
-            words = lemma.split()
-            first_word = words[0] if words else lemma
-            row = cur.execute("SELECT count(*) FROM forms WHERE lemma = ?", (first_word.lower(),)).fetchone()
-            counts[lemma] = row[0] if row else 0
+            words = [w.strip() for w in lemma.split() if w.strip()]
+            if not words:
+                counts[lemma] = 0
+                continue
+            # Check every constituent word in the phrase
+            word_counts: list[int] = []
+            for w in words:
+                norm_w = re.sub(r"[\u0300\u0301]", "", w).strip().lower()
+                row = cur.execute("SELECT count(*) FROM forms WHERE lemma = ?", (norm_w,)).fetchone()
+                word_counts.append(row[0] if row else 0)
+            # If any word in the phrase is absent from VESUM, the phrase has 0 attested paradigm
+            counts[lemma] = min(word_counts) if word_counts else 0
     finally:
         if close_conn:
             conn.close()
@@ -318,6 +327,10 @@ def find_textbook_attestation(
 ) -> dict[str, Any] | None:
     """Search genuine MESU Grade 1-11 textbooks in sources.db for living school citations.
 
+    Strictly requires:
+    - Full-phrase matching (multi-word phrases must appear in entirety, not just first word)
+    - School grades 1-11 only
+
     Strictly excludes:
     - Private/non-redistributable sources (ULP podcast, Anna Ohoiko, private lessons)
     - Reference manuals without grades (Pohribnyi, Antonenko-Davydovych prose)
@@ -331,9 +344,11 @@ def find_textbook_attestation(
         close_conn = True
     try:
         cur = conn.cursor()
-        words = lemma.split()
-        search_kw = words[0].lower() if words else lemma.lower()
-        if len(search_kw) < 3:
+        words = [w.strip() for w in lemma.split() if w.strip()]
+        if not words:
+            return None
+        clean_phrase = " ".join(words).lower()
+        if len(clean_phrase) < 3:
             return None
 
         grade_placeholders = ",".join("?" for _ in ALLOWED_GRADES)
@@ -341,7 +356,7 @@ def find_textbook_attestation(
 
         if _has_textbooks_fts(conn):
             try:
-                escaped_kw = search_kw.replace('"', '""')
+                escaped_phrase = clean_phrase.replace('"', '""')
                 fts_query = f"""
                     SELECT t.title, t.grade, t.subject, t.author, t.text, t.source_file
                     FROM textbooks_fts f
@@ -351,20 +366,21 @@ def find_textbook_attestation(
                     ORDER BY CAST(t.grade AS INTEGER) ASC
                     LIMIT 20
                 """
-                rows = cur.execute(fts_query, (f'"{escaped_kw}"', *ALLOWED_GRADES)).fetchall()
+                rows = cur.execute(fts_query, (f'"{escaped_phrase}"', *ALLOWED_GRADES)).fetchall()
             except sqlite3.OperationalError:
                 rows = []
-
-        if not rows:
+        else:
+            variants = list(dict.fromkeys([clean_phrase, clean_phrase.capitalize(), clean_phrase.title()]))
+            like_clauses = " OR ".join("text LIKE ?" for _ in variants)
             query = f"""
                 SELECT title, grade, subject, author, text, source_file
                 FROM textbooks
-                WHERE text LIKE ?
+                WHERE ({like_clauses})
                   AND grade IN ({grade_placeholders})
                 ORDER BY CAST(grade AS INTEGER) ASC
                 LIMIT 20
             """
-            params = [f"%{search_kw}%", *ALLOWED_GRADES]
+            params = [f"%{v}%" for v in variants] + list(ALLOWED_GRADES)
             rows = cur.execute(query, params).fetchall()
 
         for row in rows:
@@ -377,7 +393,12 @@ def find_textbook_attestation(
             if any(r in author_lower for r in RESTRICTED_AUTHORS):
                 continue
 
-            sentences = [s.strip() for s in text.split(".") if search_kw in s.lower()]
+            # Strict phrase verification: all words must appear together in text
+            text_lower = text.lower()
+            if clean_phrase not in text_lower:
+                continue
+
+            sentences = [s.strip() for s in text.split(".") if clean_phrase in s.lower()]
             if not sentences:
                 continue
             snippet = re.sub(r"\s+", " ", sentences[0]).strip()
@@ -415,13 +436,29 @@ def find_dictionary_attestation(
         close_conn = True
     try:
         cur = conn.cursor()
-        first_w = lemma.split()[0].lower()
-        row_g = cur.execute("SELECT 1 FROM grinchenko WHERE word = ? LIMIT 1", (first_w,)).fetchone()
-        if row_g:
-            return "Історичний словник української мови Б. Грінченка (1907–1909); верифіковано у ВЕСУМ"
-        row_s = cur.execute("SELECT 1 FROM sum11 WHERE word = ? LIMIT 1", (first_w,)).fetchone()
-        if row_s:
-            return "Академічний Словник української мови в 11 томах (СУМ-11); верифіковано у ВЕСУМ"
+        words = [w.strip() for w in lemma.split() if w.strip()]
+        if not words:
+            return None
+
+        if len(words) == 1:
+            word = words[0].lower()
+            row_g = cur.execute("SELECT 1 FROM grinchenko WHERE word = ? LIMIT 1", (word,)).fetchone()
+            if row_g:
+                return "Історичний словник української мови Б. Грінченка (1907–1909); верифіковано у ВЕСУМ"
+            row_s = cur.execute("SELECT 1 FROM sum11 WHERE word = ? LIMIT 1", (word,)).fetchone()
+            if row_s:
+                return "Академічний Словник української мови в 11 томах (СУМ-11); верифіковано у ВЕСУМ"
+        else:
+            # Multi-word phrase: verify if full phrase appears in SUM-11 or Grinchenko definitions
+            phrase = " ".join(words).lower()
+            row_s = cur.execute("SELECT 1 FROM sum11 WHERE definition LIKE ? LIMIT 1", (f"%{phrase}%",)).fetchone()
+            if row_s:
+                return (
+                    "Академічний Словник української мови (СУМ-11, контекстне вживання фраземи); верифіковано у ВЕСУМ"
+                )
+            row_g = cur.execute("SELECT 1 FROM grinchenko WHERE definition LIKE ? LIMIT 1", (f"%{phrase}%",)).fetchone()
+            if row_g:
+                return "Історичний словник української мови Б. Грінченка (контекстне вживання фраземи); верифіковано у ВЕСУМ"
     finally:
         if close_conn:
             conn.close()
@@ -464,6 +501,249 @@ def classify_calque_type(target_term: str) -> tuple[str, str, str]:
         )
 
 
+def is_positive_citation(lemma: str, citation: str) -> bool:
+    """Return True if citation positively recommends or attests lemma, and does not frame it as an error/calque."""
+    if not lemma or not citation:
+        return False
+
+    lem = lemma.strip().lower()
+    cit_lower = citation.lower().strip()
+
+    lem_pat = rf"(?<![а-яіїєґa-z0-9]){re.escape(lem)}(?![а-яіїєґa-z0-9])"
+    if not re.search(lem_pat, cit_lower):
+        return False
+
+    raw_clauses = re.split(
+        r"[.!?;\n]+|,\s*(?=(?:not\b|never\b|don't\b|do\s+not\b|avoid\b|use\b|prefer\b|choose\b|adopt\b|а\s+не\b|але\s+не\b|та\s+не\b|і\s+не\b|й\s+не\b|ані\b|не\b|вжива\w*|пишіть\w*|кажіть\w*|обирайте\w*|використову\w*|уника\w*|замість\b|натомість\b|на\s+відміну\s+від\b|instead\s+of\b|rather\s+than\b|but\b|проте\b|однак\b|але\b))",
+        cit_lower,
+    )
+    clauses = [c.strip() for c in raw_clauses if c.strip()]
+    lem_clauses = [c for c in clauses if re.search(lem_pat, c)]
+    if not lem_clauses:
+        return False
+
+    pos_pred_re = re.compile(
+        r"\b(?:правильн\w*|норм\w*|питом\w*|стандарт\w*|чинн\w*|літературн\w*|автентичн\w*)\b",
+        re.IGNORECASE,
+    )
+    neg_pred_re = re.compile(
+        r"\b(?:кальк\w*|помилк\w*|неправильн\w*|суржик\w*|росіянізм\w*|не\s+рекоменд\w*|уника\w*|штучн\w*)\b",
+        re.IGNORECASE,
+    )
+
+    # Pass 1: evaluate whether any clause explicitly rejects lemma or whether lemma is in a rejected role
+    for c in lem_clauses:
+        # Negated replacement: "do not replace <A> with <B>" -> B is prohibited/rejected
+        m_neg_replace = re.search(
+            r"\b(?:do\s+not|don't|never|not)\s+(?:\w+\s+)*replace\s+(.+?)\s+(?:with|by)\s+([^;.!?\n]+)",
+            c,
+        )
+        if m_neg_replace:
+            b_text = m_neg_replace.group(2)
+            if re.search(lem_pat, b_text):
+                return False
+
+        # Affirmative replacement: "replace <A> with <B>" -> A is replaced/rejected
+        m_replace = re.search(r"\breplace\s+(.+?)\s+(?:with|by)\s+([^;.!?\n]+)", c)
+        if m_replace and not re.search(r"\b(?:do\s+not|don't|never|not)\s+(?:\w+\s+)*replace\b", c):
+            a_text = m_replace.group(1)
+            b_text = m_replace.group(2)
+            if re.search(lem_pat, a_text) and not re.search(lem_pat, b_text):
+                return False
+
+        # Negated / affirmative "замініть <A> на <B>"
+        m_neg_zamin = re.search(
+            r"\b(?:не\s+(?:\w+\s+)?(?:замінюйте|замінювати|варто\s+замінювати|слід\s+замінювати))\s+(.+?)\s+на\s+([^;.!?\n]+)",
+            c,
+        )
+        if m_neg_zamin:
+            b_text = m_neg_zamin.group(2)
+            if re.search(lem_pat, b_text):
+                return False
+
+        m_zamin = re.search(r"\b(?:замініть|замінити)\s+(.+?)\s+на\s+([^;.!?\n]+)", c)
+        if m_zamin and not re.search(r"\bне\b", c):
+            a_text = m_zamin.group(1)
+            b_text = m_zamin.group(2)
+            if re.search(lem_pat, a_text) and not re.search(lem_pat, b_text):
+                return False
+
+        # Substitute
+        m_subst = re.search(r"\bsubstitute\s+(.+?)\s+for\s+([^;.!?\n]+)", c)
+        if m_subst:
+            b_text = m_subst.group(1)
+            a_text = m_subst.group(2)
+            if re.search(r"\b(?:do\s+not|don't|never|not)\b", c):
+                if re.search(lem_pat, b_text):
+                    return False
+            else:
+                if re.search(lem_pat, a_text) and not re.search(lem_pat, b_text):
+                    return False
+
+        # "замість <A> [вживайте] <B>" -> A is rejected
+        m_zamist = re.search(
+            r"(?:замість|натомість)\s+(.+?)\s*(?:[,;:—–-]|(?:\s+(?:вжива\w*|використову\w*|краще|варто|слід|обирай\w*|беріть|треба)))\s*([^;.!?\n]+)",
+            c,
+        )
+        if m_zamist:
+            a_text = m_zamist.group(1)
+            b_text = m_zamist.group(2)
+            if re.search(r"\bне\b", c):
+                if re.search(lem_pat, b_text):
+                    return False
+            else:
+                if re.search(lem_pat, a_text) and not re.search(lem_pat, b_text):
+                    return False
+
+        # Instead of / rather than / замість
+        m_inv_zamist = re.search(
+            r"([^:;.!?\n]+?)\s+(?:замість|натомість|на\s+відміну\s+від|rather\s+than|instead\s+of)\s+([^;.!?\n]+)",
+            c,
+        )
+        if m_inv_zamist:
+            b_text = m_inv_zamist.group(1).strip()
+            a_text = m_inv_zamist.group(2).strip()
+            if b_text:
+                has_b_neg = bool(re.search(r"\b(?:never|not|don't|do\s+not|avoid|не|уникати)\b", b_text))
+                if has_b_neg:
+                    if re.search(lem_pat, b_text):
+                        return False
+                else:
+                    if re.search(lem_pat, a_text) and not re.search(lem_pat, b_text):
+                        return False
+
+        # <B> (а не <A>) or <B>, not <A>
+        m_ane = re.search(
+            r"(?<!\bdo\s)(?<!\bdon't\s)(?<!\bnever\s)(?:,\s*|\s*\()(?:а\s+не|not)\s+([^)\n,;.!?]+)\)?",
+            c,
+        )
+        if m_ane:
+            a_text = m_ane.group(1)
+            if re.search(lem_pat, a_text):
+                return False
+
+        # <A> — <B> dash construction
+        c_body = re.sub(r"^[\w\-]+:\s*", "", c)
+        dash_parts = [p.strip() for p in re.split(r"\s*(?:—|–|→)\s*", c_body) if p.strip()]
+        if len(dash_parts) >= 2:
+            a_text = dash_parts[0]
+            b_text = dash_parts[-1]
+            if neg_pred_re.search(b_text) and re.search(lem_pat, a_text):
+                return False
+            elif pos_pred_re.search(b_text):
+                pass
+            elif re.search(lem_pat, a_text) and not re.search(lem_pat, b_text):
+                return False
+
+        # General clause-level negative patterns
+        clause_neg_patterns = [
+            rf"\b(?:do\s+not|don't|never)\s+(?:\w+\s+)*(?:use|prefer|choose|adopt)\s+(?:(?!\binstead\s+of\b|\brather\s+than\b|\bзамість\b)[^;.!?\n])*{lem_pat}",
+            rf"\b(?:avoid|stop)\s+(?:\w+\s+)*{lem_pat}",
+            rf"\b(?:not|never|don't|do\s+not|а\s+не|але\s+не|та\s+не|і\s+не|не|ані)\s+[«\"']?{lem_pat}\b",
+            rf"{lem_pat}\s+(?:is\s+)?(?:not|n't|never)\s+(?:correct|recommended|standard|valid|appropriate|preferred|the\s+norm)",
+            rf"{lem_pat}\s+(?:is\s+)?(?:incorrect|deprecated|a\s+calque|calque|avoided|an\s+error|wrong|unacceptable)",
+            rf"\b(?:not|n't)\s+(?:recommended|correct|standard|valid|appropriate)\s*(?:to\s+use|:)?\s*[^;.!?\n]*{lem_pat}",
+            rf"\b(?:incorrect|deprecated|calque|wrong|error)\s*[:—–-]?\s*[^;.!?\n]*{lem_pat}",
+            rf"(?:не\s+(?:\w+\s+)?(?:вживати|вживайте|вживається|варто|слід|можна|рекомендовано|радимо|доцільно))\s+(?:слово|форму|варіант|термін)?\s*[«\"']?{lem_pat}",
+            rf"{lem_pat}\s*[:—–-]?\s*(?:—|-|–|є|це|\b)\s*(?:не\s+(?:є\s+)?(?:правильн\w*|норм\w*|питом\w*|стандарт\w*|чинн\w*|літературн\w*|рекоменд\w*|вжива\w*))",
+            rf"{lem_pat}\s*[:—–-]?\s*(?:—|-|–|є|це|\b)\s*(?:кальк\w*|помилк\w*|неправильн\w*|суржик\w*|росіянізм\w*|не\s+рекоменд\w*|уника\w*)",
+            rf"(?:уника(?:ти|йте|тиме|тимуть))\s+(?:слово|форму|варіант|термін)?\s*[«\"']?{lem_pat}",
+            rf"(?:помилков\w*|неправильн\w*|кальк\w*|суржик\w*|росіянізм\w*)\s*[:—–-]?\s*(?:як-от|зокрема)?\s*[«\"']?{lem_pat}",
+        ]
+        for pat in clause_neg_patterns:
+            if re.search(pat, c):
+                return False
+
+    # Pass 2: check whether any clause positively recommends lemma
+    for c in lem_clauses:
+        # Affirmative replacement: "replace <A> with <B>" -> B is recommended
+        m_replace = re.search(r"\breplace\s+(.+?)\s+(?:with|by)\s+([^;.!?\n]+)", c)
+        if m_replace and not re.search(r"\b(?:do\s+not|don't|never|not)\s+(?:\w+\s+)*replace\b", c):
+            b_text = m_replace.group(2)
+            if re.search(lem_pat, b_text):
+                return True
+
+        # Affirmative "замініть <A> на <B>" -> B is recommended
+        m_zamin = re.search(r"\b(?:замініть|замінити)\s+(.+?)\s+на\s+([^;.!?\n]+)", c)
+        if m_zamin and not re.search(r"\bне\b", c):
+            b_text = m_zamin.group(2)
+            if re.search(lem_pat, b_text):
+                return True
+
+        # Affirmative substitute <B> for <A> -> B is recommended
+        m_subst = re.search(r"\bsubstitute\s+(.+?)\s+for\s+([^;.!?\n]+)", c)
+        if m_subst and not re.search(r"\b(?:do\s+not|don't|never|not)\b", c):
+            b_text = m_subst.group(1)
+            if re.search(lem_pat, b_text):
+                return True
+
+        # "замість <A> [вживайте] <B>" -> B is recommended
+        m_zamist = re.search(
+            r"(?:замість|натомість)\s+(.+?)\s*(?:[,;:—–-]|(?:\s+(?:вжива\w*|використову\w*|краще|варто|слід|обирай\w*|беріть|треба)))\s*([^;.!?\n]+)",
+            c,
+        )
+        if m_zamist and not re.search(r"\bне\b", c):
+            b_text = m_zamist.group(2)
+            if re.search(lem_pat, b_text):
+                return True
+
+        # "<B> замість <A>"
+        m_inv_zamist = re.search(
+            r"([^:;.!?\n]+?)\s+(?:замість|натомість|на\s+відміну\s+від|rather\s+than|instead\s+of)\s+([^;.!?\n]+)",
+            c,
+        )
+        if m_inv_zamist:
+            b_text = m_inv_zamist.group(1).strip()
+            a_text = m_inv_zamist.group(2).strip()
+            if b_text:
+                has_b_neg = bool(re.search(r"\b(?:never|not|don't|do\s+not|avoid|не|уникати)\b", b_text))
+                if has_b_neg:
+                    if re.search(lem_pat, a_text):
+                        return True
+                else:
+                    if re.search(lem_pat, b_text):
+                        return True
+
+        # "<B> (а не <A>)" or "<B>, not <A>" -> B is recommended
+        m_ane = re.search(
+            r"(?<!\bdo\s)(?<!\bdon't\s)(?<!\bnever\s)(?:,\s*|\s*\()(?:а\s+не|not)\s+([^)\n,;.!?]+)\)?",
+            c,
+        )
+        if m_ane:
+            b_text = c[: m_ane.start()]
+            if re.search(lem_pat, b_text):
+                return True
+
+        # "<A> — <B>" -> B is recommended, or A is recommended if B is a positive predicate
+        c_body = re.sub(r"^[\w\-]+:\s*", "", c)
+        dash_parts = [p.strip() for p in re.split(r"\s*(?:—|–|→)\s*", c_body) if p.strip()]
+        if len(dash_parts) >= 2:
+            a_text = dash_parts[0]
+            b_text = dash_parts[-1]
+            if (pos_pred_re.search(b_text) and re.search(lem_pat, a_text)) or (
+                not neg_pred_re.search(b_text) and re.search(lem_pat, b_text)
+            ):
+                return True
+
+        # Clause-level positive patterns
+        clause_pos_patterns = [
+            # English
+            rf"\b(?:use|prefer|recommended|correct|standard|valid|appropriate)\s+[^;.!?\n]*{lem_pat}",
+            rf"{lem_pat}\s+(?:is\s+)?(?:recommended|correct|standard|valid|appropriate|the\s+standard|preferred)",
+            rf"(?:living\s+standard|normative|standard)\s*[:—–-]?\s*[^;.!?\n]*{lem_pat}",
+            # Ukrainian
+            rf"(?:правильн\w*|краще|варто|слід|рекоменд\w*|радимо|доцільно|доречно|потрібно|необхідно|нормативн\w*)\s+[^;.!?\n]*{lem_pat}",
+            rf"(?:вжива\w*|пишіть|кажіть|говоріть|використову\w*|обирайте|надавайте\s+перевагу)\s+[^;.!?\n]*{lem_pat}",
+            rf"(?:слово|термін|форма|варіант)?\s*[«\"'\s]?{lem_pat}[»\"'\s]?\s*(?:—|-|–|є|це)\s*(?:це\s+)?(?:питом\w*|автентичн\w*|нормативн\w*|правильн\w*|чинн\w*|літературн\w*)(?:\s+\w+)?(?:\s+(?:відповідник\w*|стандарт\w*|варіант\w*|слово\w*|форма\w*|норм\w*))?",
+            rf"(?:питом\w*|автентичн\w*|нормативн\w*|правильн\w*|чинн\w*|літературн\w*|живий\s+стандарт)\s+[^;.!?\n]*{lem_pat}",
+        ]
+        for pat in clause_pos_patterns:
+            if re.search(pat, c):
+                return True
+
+    return False
+
+
 def synthesize_trajectory_and_dpo(
     candidate: CalqueCandidate,
     vesum_counts: dict[str, int],
@@ -478,8 +758,6 @@ def synthesize_trajectory_and_dpo(
     if not verified_alts:
         return None
 
-    primary_alt = verified_alts[0]
-    primary_tb = textbook_attestations.get(primary_alt)
     traj_id = compute_id("traj", target_term)
     dpo_id = compute_id("dpo", target_term)
 
@@ -495,21 +773,32 @@ def synthesize_trajectory_and_dpo(
         )
 
     spectrum_alts = []
+    prov_tag = candidate.source_tag
+    prov_note = candidate.provenance_note
+    prov_suffix = f" (джерело: {prov_tag}"
+    if prov_note:
+        prov_suffix += f", {prov_note}"
+    prov_suffix += ")"
+
     for s in verified_alts:
         tb = textbook_attestations.get(s)
         dict_att = dict_attestations.get(s)
+        matching_curated = [ev for ev in (candidate.curated_evidence or []) if is_positive_citation(s, ev)]
         if tb:
-            evidence = f"Підручник МОН «{tb['subject']}» {tb['grade']} клас ({tb['author']}); цитата: «{tb['snippet']}»"
+            evidence = f"Підручник МОН «{tb['subject']}» {tb['grade']} клас ({tb['author']}); цитата: «{tb['snippet']}»{prov_suffix}"
             tier = "living_standard"
-        elif candidate.curated_evidence:
-            evidence = "; ".join(candidate.curated_evidence[:2])
+        elif matching_curated:
+            evidence = f"{'; '.join(matching_curated[:2])}{prov_suffix}"
             tier = "living_standard"
         elif dict_att:
-            evidence = dict_att
+            evidence = f"{dict_att}{prov_suffix}"
             tier = "classical_regional" if "Грінченка" in dict_att else "living_standard"
         else:
-            evidence = f"Словозмінна парадигма зафіксована у словниковій базі ВЕСУМ ({vesum_counts[s]} словоформ)"
-            tier = "living_standard"
+            evidence = (
+                f"Словозмінна парадигма зафіксована у словниковій базі ВЕСУМ ({vesum_counts[s]} словоформ); "
+                f"без прямого шкільного підручникового чи словникового контексту{prov_suffix}"
+            )
+            tier = "technical_compound" if ("-" in s or len(s.split()) > 1) else "classical_regional"
 
         spectrum_alts.append(
             {
@@ -525,9 +814,20 @@ def synthesize_trajectory_and_dpo(
                 {
                     "lemma": s,
                     "register_tier": "purist_neologism",
-                    "evidence_source": "Не зафіксовано у словниковій базі ВЕСУМ (0 форм); кабінетний новотвір",
+                    "evidence_source": f"Відсутній у ВЕСУМ (0 словоформ); пуристичний або діаспорний неологізм{prov_suffix}",
                 }
             )
+
+    # Ensure there is at least one verified living standard alternative with addressable evidence.
+    # If no living standard alternative exists with verified textbook, dictionary, or curated evidence,
+    # refuse normative synthesis to avoid teaching unsupported living-standard claims.
+    living_candidates = [alt for alt in spectrum_alts if alt["register_tier"] == "living_standard"]
+    if not living_candidates:
+        return None
+
+    primary_alt_info = living_candidates[0]
+    primary_alt = primary_alt_info["lemma"]
+    primary_evidence = primary_alt_info["evidence_source"]
 
     calque_category, source_formation_desc, equiv_mechanism_desc = classify_calque_type(target_term)
 
@@ -538,25 +838,27 @@ def synthesize_trajectory_and_dpo(
 
     if calque_category == "active_participle":
         historical_note = (
-            "У радянський період укладання словників (зокрема так званих «зелених» та «сірих» томів РУС/СУМ-11) "
-            "активно культивувалося штучне впровадження активних дієприкметників для зближення граматичної структури "
-            "української мови з російською."
+            f"В українській літературній мові активні дієприкметники теперішнього часу на -уч-/-яч- (як-от «{target_term}») "
+            "є нетиповими; граматична норма надає перевагу описовим конструкціям, віддієслівним прикметникам або дієсловам."
         )
     elif calque_category == "prefixal_calque":
         historical_note = (
-            "Невластиві префіксальні утворення нав'язувалися радянською термінологічною уніфікацією 1930–1950-х років, "
-            "яка забороняла автентичні українські дериваційні моделі."
+            f"Префіксальна словотвірна модель у формі «{target_term}» не відповідає питомій українській дериваційній нормі; "
+            "нормативні порадники радять уживати безпрефіксні варіанти або форми з питомими префіксами."
         )
     elif calque_category == "phrasal_calque":
         historical_note = (
-            "Буквальний канцелярит закріпився через радянське діловодство та масові переклади офіційних документів "
-            "без урахування прийменникового ладу української мови."
+            f"Словосполучення «{target_term}» відтворює синтаксичну кальку чужомовного звороту; "
+            "українська синтаксична норма вимагає природних безприйменникових або питомих прийменникових конструкцій."
         )
     else:
         historical_note = (
-            f"Калькована форма «{target_term}» закріпилася в радянський період унаслідок зближення лексичних систем "
-            "та цензурного вилучення питомих слів з академічних словників."
+            f"Форма «{target_term}» кваліфікується як калькований або нерекомендований варіант у сучасних "
+            "довідниках з культури мови та лексикографічних джерелах."
         )
+
+    if prov_note:
+        historical_note = f"{prov_note}. {historical_note}"
 
     lexicographical_context = {
         "historical_suppression_note": historical_note,
@@ -570,18 +872,17 @@ def synthesize_trajectory_and_dpo(
         f"1. Етимологія та словотвірна діагностика: Визначено дериваційну проблему форми «{target_term}» ({calque_category}). {source_formation_desc}",
         f"2. Питома словотвірна модель: Відновлено природний словотвірний механізм. {equiv_mechanism_desc}",
         f"3. Морфологічна верифікація за словником ВЕСУМ: Рекомендований варіант «{primary_alt}» має повну словозмінну парадигму ({vesum_counts[primary_alt]} словоформ у базі даних).",
-        f"4. Реєстрове узгодження та контекст уживання: Варіант «{primary_alt}» належить до нормативного живого стандарту (living_standard) та підтверджений мовною практикою.",
-        f"5. Нормативний висновок і практична рекомендація: Слід уникати форми «{target_term}», послідовно вживаючи питоме «{primary_alt}».",
+        f"4. Реєстрове узгодження та контекст уживання: Варіант «{primary_alt}» належить до нормативного живого стандарту (living_standard). Підтверджено джерелом: {primary_evidence}.",
+        f"5. Нормативний висновок і практична рекомендація: Слід уникати калькованої форми «{target_term}», послідовно вживаючи питоме «{primary_alt}».",
     ]
 
     final_response = (
         f"Правильно вживати «{primary_alt}». Вживання форми «{target_term}» є типовою калькою з російської мови. "
         f"{equiv_mechanism_desc} "
         f"Питоме українське слово «{primary_alt}» відповідає чинній мовній нормі та має повну парадигму словозміни "
-        f"у морфологічній базі ВЕСУМ ({vesum_counts[primary_alt]} словоформ)."
+        f"у морфологічній базі ВЕСУМ ({vesum_counts[primary_alt]} словоформ). "
+        f"Нормативне засвідчення: {primary_evidence}."
     )
-    if primary_tb:
-        final_response += f" Воно послідовно вживається в підручниках МОН (зокрема: «{primary_tb['subject']}» {primary_tb['grade']} клас)."
 
     query = f"Як правильно сказати або написати українською: «{target_term}» чи «{primary_alt}»?"
 
@@ -664,9 +965,13 @@ def generate_pipeline(
     records_per_shard: int = 400,
     train_ratio: float = 0.8,
     verify_schema: bool = True,
+    max_shard_bytes: int = MAX_SHARD_BYTES,
 ) -> dict[str, Any]:
     """Execute the ULDR dataset generation pipeline with partitioning, sharding, and manifest receipts."""
     out_dir.mkdir(parents=True, exist_ok=True)
+    # Clean prior JSONL files in out_dir to prevent orphan shards
+    for stale_file in out_dir.glob("decolonization_*.jsonl"):
+        stale_file.unlink()
 
     traj_validator = None
     dpo_validator = None
@@ -683,6 +988,7 @@ def generate_pipeline(
     candidates = load_calque_candidates(lt_replacements_path, sources_db_path)
 
     total_trajs = 0
+    vesum_verification_count = 0
     textbook_attestation_count = 0
     dict_attestation_count = 0
     generated_shards: list[dict[str, Any]] = []
@@ -692,6 +998,8 @@ def generate_pipeline(
         p: {
             "shard_idx": 1,
             "current_shard_count": 0,
+            "current_t_bytes": 0,
+            "current_d_bytes": 0,
             "total_count": 0,
             "traj_fh": None,
             "dpo_fh": None,
@@ -762,7 +1070,16 @@ def generate_pipeline(
                     part, pstate["shard_idx"]
                 )
 
-            if pstate["current_shard_count"] >= records_per_shard:
+            t_line = json.dumps(trajectory, ensure_ascii=False) + "\n"
+            d_line = json.dumps(dpo_pair, ensure_ascii=False) + "\n"
+            t_bytes = len(t_line.encode("utf-8"))
+            d_bytes = len(d_line.encode("utf-8"))
+
+            if pstate["current_shard_count"] > 0 and (
+                pstate["current_shard_count"] >= records_per_shard
+                or pstate["current_t_bytes"] + t_bytes > max_shard_bytes
+                or pstate["current_d_bytes"] + d_bytes > max_shard_bytes
+            ):
                 pstate["traj_fh"].close()
                 pstate["dpo_fh"].close()
                 cur_t = pstate["current_t_path"]
@@ -783,17 +1100,23 @@ def generate_pipeline(
                 )
                 pstate["shard_idx"] += 1
                 pstate["current_shard_count"] = 0
+                pstate["current_t_bytes"] = 0
+                pstate["current_d_bytes"] = 0
                 pstate["traj_fh"], pstate["dpo_fh"], pstate["current_t_path"], pstate["current_d_path"] = open_shard(
                     part, pstate["shard_idx"]
                 )
 
-            pstate["traj_fh"].write(json.dumps(trajectory, ensure_ascii=False) + "\n")
-            pstate["dpo_fh"].write(json.dumps(dpo_pair, ensure_ascii=False) + "\n")
+            pstate["traj_fh"].write(t_line)
+            pstate["dpo_fh"].write(d_line)
             pstate["current_shard_count"] += 1
+            pstate["current_t_bytes"] += t_bytes
+            pstate["current_d_bytes"] += d_bytes
             pstate["total_count"] += 1
             pstate["terms"].add(candidate.target_term)
 
             total_trajs += 1
+            if any(v["is_standard_attested"] for v in trajectory.get("vesum_attestation", [])):
+                vesum_verification_count += 1
             if has_tb:
                 textbook_attestation_count += 1
             if has_dict:
@@ -864,7 +1187,9 @@ def generate_pipeline(
             "train_ratio_target": train_ratio,
         },
         "quality_metrics": {
-            "vesum_verification_rate": 1.0 if total_trajs > 0 else 0.0,
+            "vesum_verification_count": vesum_verification_count,
+            "vesum_verification_denominator": total_trajs,
+            "vesum_verification_rate": (round(vesum_verification_count / total_trajs, 4) if total_trajs > 0 else 0.0),
             "textbook_attestation_rate": (
                 round(textbook_attestation_count / total_trajs, 4) if total_trajs > 0 else 0.0
             ),
