@@ -94,12 +94,6 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
     <p>Qdrant backups, health checks, disk usage, broker vacuum, log cleanup, collection verification.</p>
     <div class="card-stat" id="admin-stat"></div>
   </a>
-  <a class="card audit" href="/audit-dashboard.html">
-    <div class="icon">&#9745;</div>
-    <h2>Audit Dashboard</h2>
-    <p>Track-level overview, module heatmaps, QA gate breakdowns. The mission control.</p>
-    <div class="card-stat" id="audit-stat"></div>
-  </a>
   <a class="card" href="/build-events.html" style="border-left: 3px solid var(--orange);">
     <div class="icon">&#128293;</div>
     <h2>Build Events</h2>
@@ -171,12 +165,6 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
     <h2>Runtime</h2>
     <p>Agent binaries, 7-day usage, default-model headroom, and recent runtime call history.</p>
     <div class="card-stat" id="card-stat-runtime"></div>
-  </a>
-  <a class="card" href="/track-health.html" style="border-left: 3px solid var(--cyan);">
-    <div class="icon">&#128737;</div>
-    <h2>Track Health</h2>
-    <p>Build progress, audit, enrichment, final reviews, ETA — one view per track. Auto-refreshes.</p>
-    <div class="card-stat" id="health-stat"></div>
   </a>
   <a class="card" href="/wiki.html" style="border-left: 3px solid var(--green);">
     <div class="icon">&#128214;</div>
@@ -397,9 +385,6 @@ async function loadStats() {
       <div class="stat"><div class="value" style="color:var(--purple)">${buildState.pending ? '—' : `${buildState.builtPct}%`}</div><div class="label">Built</div></div>
     `;
 
-    document.getElementById('audit-stat').textContent = auditsRecorded
-      ? `${t.pass} passing · ${t.published} published / ${t.total} total`
-      : `no audit results · ${t.published} published / ${t.total} total`;
     document.getElementById('curriculum-stat').textContent = `${dashboardTracks.length} tracks`;
     if (pendingConsultations > 0) {
       document.getElementById('consultation-stat').textContent = `${pendingConsultations} pending proposals`;

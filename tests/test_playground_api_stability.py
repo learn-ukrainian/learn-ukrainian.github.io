@@ -31,11 +31,6 @@ DASHBOARD_LOADS = {
         "/api/admin/backup/list",
         "/api/admin/maintenance/embedding-cache-stats",
     ],
-    "audit-dashboard.html": [
-        "/api/dashboard/overview",
-        "/api/dashboard/track/a1/summary",
-        "/api/state/module/a1/1",
-    ],
     "build-events.html": [
         "/api/build/events/active",
         "/api/build/events/recent?limit=50&offset=0",
@@ -101,12 +96,6 @@ DASHBOARD_LOADS = {
         "/api/runtime/agents",
         "/api/runtime/usage?days=7",
         "/api/delegate/tasks?limit=100",
-    ],
-    "track-health.html": [
-        "/api/state/build-status",
-        "/api/state/enrichment-status",
-        "/api/state/track-health/a1",
-        "/api/state/module/a1/1",
     ],
     "wiki.html": [
         "/api/wiki/status",
