@@ -636,11 +636,54 @@ def _curated_calque_map() -> dict[str, dict[str, Any]]:
                     "citations": list(p.get("citations") or []),
                     "source": "heritage_pairs",
                     "severity": p.get("severity", "calque_yellow"),
+                    "curator": p.get("curator", ""),
                 }
                 keys = [label] + [s for s in surfaces if s]
                 for k in keys:
                     norm_k = _normalize_word(k)
-                    if norm_k:
+                    if not norm_k:
+                        continue
+                    if norm_k in calque_map:
+                        existing = calque_map[norm_k]
+                        is_sense_restricted = (
+                            existing.get("kind") == "sense_restricted"
+                            or entry.get("kind") == "sense_restricted"
+                            or bool(existing.get("authentic_sense"))
+                            or bool(existing.get("authenticSense"))
+                            or bool(entry.get("authenticSense"))
+                        )
+                        merged_corrections = list(existing.get("corrections") or [])
+                        for corr in entry.get("corrections") or []:
+                            if corr not in merged_corrections:
+                                merged_corrections.append(corr)
+
+                        curator_existing = str(existing.get("curator") or "")
+                        curator_new = str(p.get("curator") or "")
+                        prefer_existing = (
+                            existing.get("source") == "calque_corrections"
+                            or (not curator_existing.startswith("script:") and curator_new.startswith("script:"))
+                        )
+
+                        merged = dict(existing if prefer_existing else entry)
+                        merged["corrections"] = merged_corrections
+                        if is_sense_restricted:
+                            merged["kind"] = "sense_restricted"
+                            merged["authenticSense"] = (
+                                entry.get("authenticSense")
+                                or existing.get("authenticSense")
+                                or existing.get("authentic_sense")
+                                or entry.get("authentic_sense")
+                            )
+                            merged["calqueSense"] = (
+                                entry.get("calqueSense")
+                                or existing.get("calqueSense")
+                                or existing.get("calque_sense")
+                                or entry.get("calqueSense")
+                            )
+                        if not merged.get("rationaleUk"):
+                            merged["rationaleUk"] = existing.get("rationaleUk") or entry.get("rationaleUk") or ""
+                        calque_map[norm_k] = merged
+                    else:
                         calque_map[norm_k] = entry
         except Exception as e:
             print(f"WARN: Failed to load heritage_pairs.yaml in heritage_classifier: {e}", file=sys.stderr)

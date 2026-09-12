@@ -3211,6 +3211,19 @@ def _get_heritage_pairs_data() -> tuple[dict[str, dict[str, Any]], dict[str, lis
 
                 keys = [label] + [s for s in surfaces if s]
                 for k in keys:
+                    if k in by_calque:
+                        existing = by_calque[k]
+                        if existing.get("kind") == "sense_restricted" and pair_entry.get("kind") != "sense_restricted":
+                            for corr in pair_entry.get("corrections") or []:
+                                if corr not in existing["corrections"]:
+                                    existing["corrections"].append(corr)
+                            continue
+                        if pair_entry.get("kind") == "sense_restricted" and existing.get("kind") != "sense_restricted":
+                            for corr in existing.get("corrections") or []:
+                                if corr not in pair_entry["corrections"]:
+                                    pair_entry["corrections"].append(corr)
+                            by_calque[k] = pair_entry
+                            continue
                     by_calque[k] = pair_entry
 
                 # For reverse lookup:

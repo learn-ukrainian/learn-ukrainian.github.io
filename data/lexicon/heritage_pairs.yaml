@@ -445,6 +445,7 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: ставлення до когось/стосунки (рос. отношение)
   authenticSense: математичне відношення; діловий документ
+  rationaleUk: 'Слово «відношення» є питомим у науковому й технічному значенні (математичне відношення, числове відношення), а також для офіційного ділового документа. Проте у значенні міжособистісних зв’язків чи ставлення до когось/чогось це калька з рос. «отношение» — слід уживати «ставлення» (до когось), «стосунки», «взаємини», «відносини».'
   notes: MERGE of відношення→стосунок/ставлення/відносини; A2→B1 per agy review
   frames:
   - sentence_with_slot: Мене засмутило його холодне ___ до команди.
@@ -4106,11 +4107,14 @@ pairs:
   - відношення
   nativeSlug: стосунок
   nativeLemma: стосунок
-  kind: lexical
+  kind: sense_restricted
+  calqueSense: ставлення до когось/стосунки (рос. отношение)
+  authenticSense: математичне відношення; діловий документ
   corrections:
   - стосунок
   rationale: 'UA-GEC F/Calque corpus evidence (native + fluency annotator correction, n=6 occurrence(s) across 3 document(s)):
     «відношення» flagged non-standard; reviewed correction «стосунок».'
+  rationaleUk: 'Слово «відношення» є питомим у науковому й технічному значенні (математичне відношення, числове відношення), а також для офіційного ділового документа. Проте у значенні міжособистісних зв’язків чи ставлення до когось/чогось це калька з рос. «отношение» — слід уживати «ставлення» (до когось), «стосунки», «взаємини», «відносини».'
   citations:
   - ua-gec:F/Calque n=6
   sourceFamily: ua-gec
@@ -5385,11 +5389,14 @@ pairs:
   - відношення
   nativeSlug: відносини
   nativeLemma: відносини
-  kind: lexical
+  kind: sense_restricted
+  calqueSense: ставлення до когось/стосунки (рос. отношение)
+  authenticSense: математичне відношення; діловий документ
   corrections:
   - відносини
   rationale: 'UA-GEC F/Calque corpus evidence (native + fluency annotator correction, n=1 occurrence(s) across 1 document(s)):
     «відношення» flagged non-standard; reviewed correction «відносини».'
+  rationaleUk: 'Слово «відношення» є питомим у науковому й технічному значенні (математичне відношення, числове відношення), а також для офіційного ділового документа. Проте у значенні міжособистісних зв’язків чи ставлення до когось/чогось це калька з рос. «отношение» — слід уживати «ставлення» (до когось), «стосунки», «взаємини», «відносини».'
   citations:
   - ua-gec:F/Calque n=1
   sourceFamily: ua-gec
@@ -7513,31 +7520,6 @@ pairs:
     answer_form: рушником
     calque_form: полотенцем
     origin: authored-gemini-2026-09-12
-- calqueLabel: поїздка
-  calqueSurfaces:
-  - поїздка
-  - поїздки
-  nativeSlug: подорож
-  nativeLemma: подорож
-  kind: lexical
-  corrections:
-  - подорож
-  - мандрівка
-  rationale: 'Слово «поїздка» утворене за зразком рос. «поездка». В українській літературній мові для позначення пересування або мандрівки питомими є «подорож», «мандрівка», «виправа».'
-  rationaleUk: 'Слово «поїздка» набуло надмірного вжитку під впливом російського «поездка». Українська мова має багату питому синонімію: «подорож», «мандрівка», «виправа», «поїзд» (діал./арх.). Для коротких поїздок також вживають описові конструкції (поїхати в гості, з’їздити).'
-  citations:
-  - antonenko:Як ми говоримо
-  sourceFamily: antonenko
-  sourceFamilies:
-  - antonenko
-  cefrAvailability: a2
-  severity: calque_yellow
-  curator: gemini-2026-09-12
-  frames:
-  - sentence_with_slot: Наша минулорічна ___ до Карпат запам'яталася назавжди.
-    answer_form: подорож
-    calque_form: поїздка
-    origin: authored-gemini-2026-09-12
 - calqueLabel: ряд
   calqueSurfaces:
   - ряд
@@ -7572,7 +7554,7 @@ pairs:
   - точки зору
   nativeSlug: погляд
   nativeLemma: погляд
-  kind: lexical
+  kind: phrasal
   corrections:
   - погляд
   - думка
@@ -7588,7 +7570,7 @@ pairs:
   severity: calque_yellow
   curator: gemini-2026-09-12
   frames:
-  - sentence_with_slot: На мій ___, це найкраще вирішення проблеми.
-    answer_form: погляд
-    calque_form: точку зору
+  - sentence_with_slot: '___, це найкраще вирішення проблеми.'
+    answer_form: На мій погляд
+    calque_form: З моєї точки зору
     origin: authored-gemini-2026-09-12
