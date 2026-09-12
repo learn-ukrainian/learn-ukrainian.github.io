@@ -150,6 +150,8 @@ def test_live_registry_maps_infra_and_hramatka() -> None:
         ("benchmark-2156", "infra-orchestrator"),
         ("corpus-channels", "infra-orchestrator"),
         ("core-quality", "curriculum-orchestrator"),
+        ("curriculum-upgrade", "curriculum-orchestrator"),
+        ("a1-upgrade", "curriculum-orchestrator"),
     ],
 )
 def test_live_taxonomy_aliases_resolve(alias: str, expected: str) -> None:
