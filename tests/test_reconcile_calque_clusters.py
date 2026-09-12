@@ -786,8 +786,29 @@ def test_manifest_sync_in_place(mock_dbs: dict[str, Path], tmp_path: Path, monke
     conn.close()
 
 
-def test_manifest_fingerprint_not_certified_on_noop_or_partial_run(mock_dbs: dict[str, Path], tmp_path: Path) -> None:
-    """[P1 regression] A no-op or partial reconciliation must not certify unrelated/stale manifest content."""
+def test_manifest_fingerprint_not_certified_on_noop_or_partial_run(
+    mock_dbs: dict[str, Path], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """[P1 regression] A no-op or partial/truncated reconciliation (via single_lemma or limit) must not certify unrelated/stale manifest content."""
+    def mock_verify_lemma(lemma: str, db_path: Any = None) -> list[dict[str, Any]]:
+        return [{"lemma": lemma, "pos": "noun", "tags": "inanim:f:v_naz"}]
+
+    monkeypatch.setattr("scripts.lexicon.reconcile_calque_clusters.verify_lemma", mock_verify_lemma)
+
+    # Seed an additional eligible entry so multiple entries exist for limit=1 testing
+    conn = sqlite3.connect(mock_dbs["atlas_db"])
+    conn.execute("INSERT OR REPLACE INTO articles (slug, lemma) VALUES ('вихр', 'вихр');")
+    conn.execute(
+        "INSERT OR REPLACE INTO article_payloads VALUES ('вихр', ?);",
+        (json.dumps({"slug": "вихр", "lemma": "вихр", "sections": {}}),),
+    )
+    conn.commit()
+    conn.close()
+
+    lt_data = json.loads(mock_dbs["lt_path"].read_text(encoding="utf-8"))
+    lt_data["вихр"] = {"suggestions": ["вихор"]}
+    mock_dbs["lt_path"].write_text(json.dumps(lt_data), encoding="utf-8")
+
     manifest_file = tmp_path / "lexicon-manifest.json"
     old_fingerprint = {"schema_version": 1, "fingerprint": "old-stale-digest-12345"}
     manifest_content = {
@@ -797,7 +818,12 @@ def test_manifest_fingerprint_not_certified_on_noop_or_partial_run(mock_dbs: dic
                 "url_slug": "буран",
                 "lemma": "буран",
                 "sections": {},
-            }
+            },
+            {
+                "url_slug": "вихр",
+                "lemma": "вихр",
+                "sections": {},
+            },
         ],
     }
     manifest_file.write_text(json.dumps(manifest_content, ensure_ascii=False), encoding="utf-8")
@@ -823,9 +849,15 @@ def test_manifest_fingerprint_not_certified_on_noop_or_partial_run(mock_dbs: dic
     data_after_partial = json.loads(manifest_file.read_text(encoding="utf-8"))
     assert data_after_partial["manifest_fingerprint"] == old_fingerprint
 
-    # 3. Full run (single_lemma=None, force=True) with reconciled entries -> now certifies fresh fingerprint
+    # 3. Truncated run (limit=1 with 2 eligible targets): 1 entry reconciled -> limit run must NOT certify entire manifest
+    res_limit = engine.run_reconciliation(dry_run=False, force=True, limit=1)
+    assert res_limit["reconciled_entries"] == 1
+    data_after_limit = json.loads(manifest_file.read_text(encoding="utf-8"))
+    assert data_after_limit["manifest_fingerprint"] == old_fingerprint
+
+    # 4. Full run (single_lemma=None, limit=None, force=True) with reconciled entries -> now certifies fresh fingerprint
     res_full = engine.run_reconciliation(dry_run=False, force=True)
-    assert res_full["reconciled_entries"] > 0
+    assert res_full["reconciled_entries"] >= 2
     data_after_full = json.loads(manifest_file.read_text(encoding="utf-8"))
     assert data_after_full["manifest_fingerprint"]["schema_version"] == 1
     assert data_after_full["manifest_fingerprint"]["fingerprint"] != "old-stale-digest-12345"

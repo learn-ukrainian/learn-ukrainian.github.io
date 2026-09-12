@@ -703,7 +703,7 @@ class CalqueReconciliationEngine:
         if not dry_run:
             self.atlas_conn.commit()
             if manifest_data and self.manifest_path:
-                if single_lemma is None and results["reconciled_entries"] > 0:
+                if single_lemma is None and limit is None and results["reconciled_entries"] > 0:
                     try:
                         if self.manifest_path.resolve() == DEFAULT_MANIFEST.resolve():
                             fingerprint_payload = write_fingerprint(DEFAULT_FINGERPRINT, root=PROJECT_ROOT)
