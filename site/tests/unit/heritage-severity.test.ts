@@ -118,4 +118,73 @@ describe('resolveHeritageBoxes', () => {
     expect(noShadow.green?.body).toContain('підтвердження');
     expect(noShadow.green?.body).not.toContain('тінь');
   });
+
+  // #7982: Pre-Soviet false-positive defenses for convergence calques
+  test('мисль resolves to yellow calque box with думка alternative and Ukrainian rationale', () => {
+    const boxes = resolveHeritageBoxes({
+      heritage_status: {
+        classification: 'calque',
+        warning_severity: 'calque_yellow',
+        is_russianism: false,
+        vesum_attested: true,
+        calque_warning: {
+          noteUk: 'У сучасній українській літературній мові нормативним і нейтральним відповідником є «думка».',
+          standard_alternatives: ['думка'],
+        },
+        attestations: [{ source: 'VESUM', ref: 'мисль' }],
+      },
+    } as LexiconEntryForSeverity);
+
+    expect(boxes.yellow).toBeDefined();
+    expect(boxes.yellow?.title).toBe('Калькове застереження');
+    expect(boxes.yellow?.alternatives).toEqual(['думка']);
+    expect(boxes.yellow?.detail).toContain('нормативним і нейтральним відповідником є «думка»');
+    expect(boxes.green).toBeUndefined();
+  });
+
+  test('глагол (authentic-archaism with calque warning) resolves to stylistic caveat', () => {
+    const boxes = resolveHeritageBoxes({
+      heritage_status: {
+        classification: 'authentic-archaism',
+        warning_severity: 'calque_yellow',
+        is_russianism: false,
+        vesum_attested: true,
+        calque_warning: {
+          kind: 'lexical',
+          noteUk: 'У нейтральному сучасному вжитку слід послуговуватися «дієслово» або «слово».',
+          standard_alternatives: ['дієслово', 'слово'],
+        },
+        attestations: [{ source: 'grinchenko_1907', ref: '9370' }],
+      },
+    } as LexiconEntryForSeverity);
+
+    expect(boxes.yellow).toBeDefined();
+    expect(boxes.yellow?.title).toBe('Стилістичне / калькове застереження');
+    expect(boxes.yellow?.alternatives).toEqual(['дієслово', 'слово']);
+    expect(boxes.green).toBeUndefined();
+  });
+
+  test('вилка (sense-restricted calque) resolves to stylistic caveat with videka alternative', () => {
+    const boxes = resolveHeritageBoxes({
+      heritage_status: {
+        classification: 'standard',
+        warning_severity: 'calque_yellow',
+        is_russianism: false,
+        vesum_attested: true,
+        calque_warning: {
+          kind: 'sense_restricted',
+          noteUk: 'Столовий прибор для їжі в українській мові називається винятково «виделка».',
+          standard_alternatives: ['виделка'],
+          calque_sense: 'столовий прибор',
+          authentic_sense: 'технічна деталь або шаховий термін',
+        },
+        attestations: [{ source: 'VESUM', ref: 'вилка' }],
+      },
+    } as LexiconEntryForSeverity);
+
+    expect(boxes.yellow).toBeDefined();
+    expect(boxes.yellow?.title).toBe('Стилістичне / калькове застереження');
+    expect(boxes.yellow?.alternatives).toEqual(['виделка']);
+    expect(boxes.green).toBeUndefined();
+  });
 });

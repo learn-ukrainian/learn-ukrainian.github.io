@@ -107,7 +107,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "79a352107e60ada2c2eceb23c96535fb743747d758f2832fe88dd33cbe3f0b07"
+        "sha256": "68819a85b4e1114158c5aeaf4f5a70a33528a9c62db01dc9608c1183e8f2d954"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -167,7 +167,7 @@
       },
       {
         "path": "scripts/lexicon/heritage_classifier.py",
-        "sha256": "beb47e26a2bdffb1e65dac1e50f3dd7975a042425c12448eced60581f658d43c"
+        "sha256": "6239a6b58ad4344d2e14eae9be7fb057393ade1486ea4db686a00669ca2ae524"
       },
       {
         "path": "scripts/lexicon/lemma_normalization.py",

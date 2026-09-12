@@ -7296,3 +7296,299 @@ pairs:
     answer_form: із
     calque_form: с
     origin: ua-gec-calque-wave1:textbooks/antonenko-davydovych-yak-my-hovorymo_p007
+- calqueLabel: мисль
+  calqueSurfaces:
+  - мисль
+  - мислі
+  - мислях
+  - мислями
+  nativeSlug: думка
+  nativeLemma: думка
+  kind: lexical
+  corrections:
+  - думка
+  rationale: 'У сучасній стандартній українській мові нейтральним відповідником є «думка» (також погляд, ідея, задум, міркування). «Мисль» — церковнослов’янізм або архаїчно-поетичне слово, активізоване радянською лексикографією для зближення з рос. «мысль».'
+  rationaleUk: 'У сучасній українській літературній мові нормативним і нейтральним відповідником є «думка» (а також погляд, ідея, задум, міркування). Слово «мисль» трапляється у фольклорі та поезії (наприклад, у сталих виразах «мати на мислі», «до мислі»), проте вживання його в нейтральному мовленні є наслідком інтерференції російського «мысль». Радянські словники штучно зрівнювали «мисль» із «думкою» в межах політики зближення мов.'
+  citations:
+  - antonenko:Як ми говоримо
+  - sum-11:мисль
+  - grinchenko:мисль
+  sourceFamily: mixed
+  sourceFamilies:
+  - antonenko
+  - sum-11
+  cefrAvailability: b1
+  severity: calque_yellow
+  curator: gemini-2026-09-12
+  frames:
+  - sentence_with_slot: У мене виникла цікава ___ щодо цього проєкту.
+    answer_form: думка
+    calque_form: мисль
+    origin: authored-gemini-2026-09-12
+  - sentence_with_slot: Поділіться своїми ___ з аудиторією.
+    answer_form: думками
+    calque_form: мислями
+    origin: authored-gemini-2026-09-12
+- calqueLabel: глагол
+  calqueSurfaces:
+  - глагол
+  - глаголи
+  nativeSlug: дієслово
+  nativeLemma: дієслово
+  kind: lexical
+  corrections:
+  - дієслово
+  - слово
+  rationale: 'У граматичному значенні частини мови (рос. глагол) в українській мові вживається винятково «дієслово». В історичному або піднесено-поетичному мовленні «глагол» означає «слово», «мова».'
+  rationaleUk: 'У граматичному значенні частини мови нормативним українським терміном є винятково «дієслово». Уживання слова «глагол» як граматичного терміна є прямим росіянізмом (рос. глагол). В українській поетичній традиції та церковнослов’янських текстах «глагол» вживалося лише в значенні «слово», «мовлення».'
+  citations:
+  - antonenko:Як ми говоримо
+  - grinchenko:глагол
+  sourceFamily: mixed
+  sourceFamilies:
+  - antonenko
+  - grinchenko
+  cefrAvailability: b1
+  severity: calque_yellow
+  curator: gemini-2026-09-12
+  frames:
+  - sentence_with_slot: У цьому реченні головним членом є ___.
+    answer_form: дієслово
+    calque_form: глагол
+    origin: authored-gemini-2026-09-12
+- calqueLabel: воздух
+  calqueSurfaces:
+  - воздух
+  nativeSlug: повітря
+  nativeLemma: повітря
+  kind: lexical
+  corrections:
+  - повітря
+  rationale: 'У значенні суміші газів атмосфери (рос. воздух) в українській мові вживається винятково «повітря». «Во́здух» в українській — рідкісний церковнослов’янізм (покривало для церковного посуду з причастям).'
+  rationaleUk: 'У значенні газової оболонки Землі нормативним українським словом є винятково «повітря». Уживання «воздух» у цьому значенні є росіянізмом. В українській мові слово «во́здух» існує лише як вузькоспеціальний церковний термін (покривало для священного посуду).'
+  citations:
+  - antonenko:Як ми говоримо
+  - grinchenko:воздух
+  - sum-11:воздух
+  sourceFamily: mixed
+  sourceFamilies:
+  - antonenko
+  - sum-11
+  cefrAvailability: a1
+  severity: calque_yellow
+  curator: gemini-2026-09-12
+  frames:
+  - sentence_with_slot: Після грози надворі було свіже й чисте ___.
+    answer_form: повітря
+    calque_form: воздух
+    origin: authored-gemini-2026-09-12
+- calqueLabel: опит
+  calqueSurfaces:
+  - опит
+  nativeSlug: досвід
+  nativeLemma: досвід
+  kind: lexical
+  corrections:
+  - досвід
+  rationale: 'У значенні набутих практичних знань і навичок (рос. опыт) нормативним українським словом є винятково «досвід». Українське «опит» — це лише віддієслівний іменник від «опитувати» (опитування).'
+  rationaleUk: 'У значенні накопичених знань, умінь і життєвої практики нормативним українським словом є винятково «досвід» (а в значенні наукового дослідження — «дослід» або «експеримент»). Слово «опит» в українській мові є рідкісним віддієслівним іменником від «опитувати» (опитування, розпитування) і ніколи не вживається в значенні «досвід».'
+  citations:
+  - antonenko:Як ми говоримо
+  - sum-11:опит
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  - sum-11
+  cefrAvailability: a2
+  severity: calque_yellow
+  curator: gemini-2026-09-12
+  frames:
+  - sentence_with_slot: Для цієї посади потрібен великий практичний ___.
+    answer_form: досвід
+    calque_form: опит
+    origin: authored-gemini-2026-09-12
+- calqueLabel: взор
+  calqueSurfaces:
+  - взор
+  nativeSlug: погляд
+  nativeLemma: погляд
+  kind: lexical
+  corrections:
+  - погляд
+  rationale: 'У сучасному нейтральному вжитку (рос. взор) вживається «погляд». «Взор» — застаріле або поетичне.'
+  rationaleUk: 'Нормативним відповідником у нейтральному мовленні є «погляд». Слово «взор» належить до архаїчно-поетичного стилю або є калькою з російської.'
+  citations:
+  - antonenko:Як ми говоримо
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  severity: calque_yellow
+  curator: gemini-2026-09-12
+  frames:
+  - sentence_with_slot: Вона звернула свій уважний ___ на картину.
+    answer_form: погляд
+    calque_form: взор
+    origin: authored-gemini-2026-09-12
+- calqueLabel: строїти
+  calqueSurfaces:
+  - строїти
+  - строю
+  - строїш
+  nativeSlug: будувати
+  nativeLemma: будувати
+  kind: sense_restricted
+  calqueSense: споруджувати будівлі, об'єкти (рос. строить)
+  authenticSense: ставити в ряди, шеренги; ладити, наладжувати
+  corrections:
+  - будувати
+  - споруджувати
+  rationale: 'У значенні спорудження будівель (рос. строить) слід уживати «будувати» або «споруджувати». «Строїти» в українській мові означає шикувати (строїти військо), наладжувати або у фразеологізмі «строїти дурня».'
+  rationaleUk: 'У значенні зведення будівель або споруд нормативними є дієслова «будувати», «споруджувати», «зводити». Вживання «строїти» в цьому значенні є калькою (рос. строить). В українській мові «строїти» означає ставити в стрій (шикувати), ладнати інструмент або вживається у вислові «строїти з себе когось / строїти дурня».'
+  citations:
+  - antonenko:Як ми говоримо
+  - grinchenko:строїти
+  - sum-11:строїти
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  severity: calque_yellow
+  curator: gemini-2026-09-12
+  frames:
+  - sentence_with_slot: У нашому місті планують ___ нову лікарню.
+    answer_form: будувати
+    calque_form: строїти
+    origin: authored-gemini-2026-09-12
+- calqueLabel: вилка
+  calqueSurfaces:
+  - вилка
+  - вилки
+  nativeSlug: виделка
+  nativeLemma: виделка
+  kind: sense_restricted
+  calqueSense: столовий прибор (рос. вилка)
+  authenticSense: технічна деталь (вилка зчеплення, вилка велосипеда), шаховий прийом
+  corrections:
+  - виделка
+  rationale: 'Столовий прибор в українській мові — винятково виделка. Вилка вживається лише як технічний або шаховий термін.'
+  rationaleUk: 'Столовий прибор для їжі в українській мові називається винятково «виделка». Уживання слова «вилка» в побутовому контексті є калькою з російської. В українській мові «вилка» є лише технічним терміном (вилка зчеплення, телефонна або штепсельна вилка) або терміном у шахах.'
+  citations:
+  - antonenko:Як ми говоримо
+  - sum-11:вилка
+  - grinchenko:виделка
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: a1
+  severity: calque_yellow
+  curator: gemini-2026-09-12
+  frames:
+  - sentence_with_slot: На стіл слід покласти ніж та ___.
+    answer_form: виделку
+    calque_form: вилку
+    origin: authored-gemini-2026-09-12
+- calqueLabel: полотенце
+  calqueSurfaces:
+  - полотенце
+  - полотенця
+  nativeSlug: рушник
+  nativeLemma: рушник
+  kind: lexical
+  corrections:
+  - рушник
+  rationale: 'Традиційний і нормативний український виріб із тканини для витирання — рушник. «Полотенце» — калька/росіянізм.'
+  rationaleUk: 'Для витирання обличчя, рук або посуду в українській мові вживається слово «рушник» (кухонний рушник, банний рушник). Слово «полотенце» є калькою з російської.'
+  citations:
+  - antonenko:Як ми говоримо
+  - sum-11:полотенце
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: a1
+  severity: calque_yellow
+  curator: gemini-2026-09-12
+  frames:
+  - sentence_with_slot: Після вмивання витріть обличчя чистим ___.
+    answer_form: рушником
+    calque_form: полотенцем
+    origin: authored-gemini-2026-09-12
+- calqueLabel: поїздка
+  calqueSurfaces:
+  - поїздка
+  - поїздки
+  nativeSlug: подорож
+  nativeLemma: подорож
+  kind: lexical
+  corrections:
+  - подорож
+  - мандрівка
+  rationale: 'Слово «поїздка» утворене за зразком рос. «поездка». В українській літературній мові для позначення пересування або мандрівки питомими є «подорож», «мандрівка», «виправа».'
+  rationaleUk: 'Слово «поїздка» набуло надмірного вжитку під впливом російського «поездка». Українська мова має багату питому синонімію: «подорож», «мандрівка», «виправа», «поїзд» (діал./арх.). Для коротких поїздок також вживають описові конструкції (поїхати в гості, з’їздити).'
+  citations:
+  - antonenko:Як ми говоримо
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: a2
+  severity: calque_yellow
+  curator: gemini-2026-09-12
+  frames:
+  - sentence_with_slot: Наша минулорічна ___ до Карпат запам'яталася назавжди.
+    answer_form: подорож
+    calque_form: поїздка
+    origin: authored-gemini-2026-09-12
+- calqueLabel: ряд
+  calqueSurfaces:
+  - ряд
+  nativeSlug: низка
+  nativeLemma: низка
+  kind: sense_restricted
+  calqueSense: 'кілька, багато, послідовність абстрактних явищ: «ряд питань», «ряд проблем» (рос. ряд вопросов)'
+  authenticSense: 'сукупність предметів або людей, розташованих в одну лінію (перший ряд у кінотеатрі)'
+  corrections:
+  - низка
+  - кілька
+  - чимало
+  rationale: 'У значенні абстрактної послідовності чи сукупності явищ («ряд питань», «ряд випадків») це калька з рос. «ряд вопросов». Питомі відповідники: «низка питань», «кілька питань», «чимало питань».'
+  rationaleUk: 'В українській мові слово «ряд» означає лінію предметів чи людей (перший ряд, ряд стільців). Уживання слова «ряд» у значенні абстрактної кількості («ряд подій», «ряд питань», «ряд завдань») є калькою російського звороту «ряд вопросов». Слід уживати: «низка питань», «кілька завдань», «багато прикладів», «перелік подій».'
+  citations:
+  - antonenko:Як ми говоримо
+  - sum-11:ряд
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  severity: calque_yellow
+  curator: gemini-2026-09-12
+  frames:
+  - sentence_with_slot: На конференції було обговорено ___ важливих питань.
+    answer_form: низку
+    calque_form: ряд
+    origin: authored-gemini-2026-09-12
+- calqueLabel: точка зору
+  calqueSurfaces:
+  - точка зору
+  - точки зору
+  nativeSlug: погляд
+  nativeLemma: погляд
+  kind: lexical
+  corrections:
+  - погляд
+  - думка
+  rationale: 'В українській мові замість калькованого виразу «точка зору» (рос. точка зрения) слід уживати «погляд», «на мій погляд», «з мого погляду».'
+  rationaleUk: 'Вираз «точка зору» є буквальною калькою російського «точка зрения». В українській літературній мові природними відповідниками є «погляд», «на мій погляд», «з мого погляду», «на мою думку».'
+  citations:
+  - antonenko:Як ми говоримо
+  - karavanskyi:Пошук українського слова
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: a2
+  severity: calque_yellow
+  curator: gemini-2026-09-12
+  frames:
+  - sentence_with_slot: На мій ___, це найкраще вирішення проблеми.
+    answer_form: погляд
+    calque_form: точку зору
+    origin: authored-gemini-2026-09-12
