@@ -1030,3 +1030,22 @@ def test_grammatical_qualifiers_not_treated_as_unrelated_subjects() -> None:
     assert eval_res["is_pass"]
     assert eval_res["reasoning_grounded"]
     assert eval_res["composite_score"] == 1.0
+
+
+def test_explanation_concerning_words_with_modifier_prefixes_rejected() -> None:
+    """M1 Review: Lexical subjects starting with rod-, vyd-, chas- (e.g. «родина», «видання», «часопис») must fail."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    for word in ("родина", "видання", "часопис"):
+        r_quoted = f"Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «{word}»."
+        eval_q = evaluate_single_response(target, alts, r_quoted)
+        assert not eval_q["is_pass"], f"Expected {word} (quoted) to fail"
+        assert not eval_q["reasoning_grounded"], f"Expected {word} (quoted) grounding to fail"
+        assert eval_q["composite_score"] <= 0.40
+
+        r_unquoted = f"Вживайте goodtoken, бо у словнику подано пояснення суфікса слова {word}."
+        eval_u = evaluate_single_response(target, alts, r_unquoted)
+        assert not eval_u["is_pass"], f"Expected {word} (unquoted) to fail"
+        assert not eval_u["reasoning_grounded"], f"Expected {word} (unquoted) grounding to fail"
+        assert eval_u["composite_score"] <= 0.40

@@ -245,17 +245,14 @@ NAMED_ENTITY_PATTERNS = [
     ),
 ]
 
-GRAMMATICAL_QUALIFIERS = re.compile(
-    r"^(?:чоловіч\w*|жіноч\w*|середнь\w*|спільн\w*|"
-    r"доконан\w*|недоконан\w*|"
-    r"теперішн\w*|минул\w*|майбутн\w*|"
-    r"тверд\w*|м['’ʼ]?як\w*|мішан\w*|"
-    r"перш\w*|друг\w*|трет\w*|четверт\w*|"
-    r"вищ\w*|найвищ\w*|"
-    r"однин\w*|множин\w*|"
-    r"род\w*|вид\w*|час\w*|відмін\w*|груп\w*|ступен\w*)$",
-    re.IGNORECASE,
-)
+GRAMMATICAL_MODIFIER_PHRASES = [
+    re.compile(r"\b(?:чоловічого|жіночого|середнього|спільного)\s+роду\b", re.IGNORECASE),
+    re.compile(r"\b(?:доконаного|недоконаного)\s+виду\b", re.IGNORECASE),
+    re.compile(r"\b(?:теперішнього|минулого|майбутнього)\s+часу\b", re.IGNORECASE),
+    re.compile(r"\b(?:першої|другої|третьої|четвертої)\s+відміни\b", re.IGNORECASE),
+    re.compile(r"\b(?:твердої|м['’ʼ]?якої|мішаної)\s+групи\b", re.IGNORECASE),
+    re.compile(r"\b(?:однини|множини)\b", re.IGNORECASE),
+]
 
 GRAMMATICAL_STOPWORDS = {
     "за",
@@ -472,6 +469,8 @@ def evaluate_single_response(
     has_other_entity = any(p.search(resp_norm) for p in OTHER_ENTITY_PATTERNS)
     if not has_other_entity:
         analysis_text = re.sub(r"цитата:\s*[«\"“][^»\"”]+[»\"”]", "", resp_norm, flags=re.IGNORECASE)
+        for gmp in GRAMMATICAL_MODIFIER_PHRASES:
+            analysis_text = gmp.sub(" ", analysis_text)
         for pat in NAMED_ENTITY_PATTERNS:
             for m in pat.finditer(analysis_text):
                 tok = normalize_token(m.group(1))
@@ -484,8 +483,6 @@ def evaluate_single_response(
                     or tok.endswith("–")
                     or tok in EXEMPT_AFFIXES
                 ):
-                    continue
-                if GRAMMATICAL_QUALIFIERS.match(tok):
                     continue
                 words = tok.split()
                 if tok in all_target_tokens or tok in GRAMMATICAL_STOPWORDS:
