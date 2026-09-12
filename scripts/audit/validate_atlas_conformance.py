@@ -614,7 +614,10 @@ def _is_deliberate_warning_entry(entry: Mapping[str, Any]) -> bool:
     status = entry.get("heritage_status")
     if not isinstance(status, Mapping):
         return False
-    return bool(status.get("is_russianism")) or _classification(status) in DECOLONIZATION_WARNING_CLASSIFICATIONS
+    # Calques are valid Ukrainian morphological words and must still be in VESUM;
+    # only raw Russianisms, sovietisms, and surzhyk-to-avoid entries skip the VESUM-membership gate.
+    classification = _classification(status)
+    return bool(status.get("is_russianism")) or classification in {"russianism", "sovietism", "surzhyk"}
 
 
 def _requires_heritage_evidence(status: Mapping[str, Any]) -> bool:
