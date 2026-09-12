@@ -166,7 +166,7 @@ def test_epics_stub_runs_create_app_opsec_sanitizer(tmp_path: Path, monkeypatch)
     ]
     assert opsec_path_sanitizer_middleware in dispatches
     # Full create_app route table, not a bare epics-only FastAPI.
-    assert app.title == "Playground API"
+    assert app.title == "Ops API"
     assert len(app.routes) > 10
 
     real_audit = store.audit
