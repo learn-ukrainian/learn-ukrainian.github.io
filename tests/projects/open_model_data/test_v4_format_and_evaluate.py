@@ -1147,3 +1147,23 @@ def test_modifier_sequence_ordering_independent() -> None:
         assert eval_res["is_pass"], f"Expected {r} to pass"
         assert eval_res["reasoning_grounded"], f"Expected {r} grounding to pass"
         assert eval_res["composite_score"] == 1.0
+
+
+def test_unquoted_goodtoken_subject_explanation_admitted() -> None:
+    """M1 Review P2: Unquoted target subject 'слово goodtoken є іменником чоловічого роду' must pass."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    r_unquoted = (
+        "Вживайте goodtoken, бо за словником ВЕСУМ слово goodtoken є іменником чоловічого роду з питомим суфіксом -ник."
+    )
+    eval_u = evaluate_single_response(target, alts, r_unquoted)
+    assert eval_u["is_pass"]
+    assert eval_u["reasoning_grounded"]
+    assert eval_u["composite_score"] == 1.0
+
+    r_quoted = "Вживайте goodtoken, бо за словником ВЕСУМ слово «goodtoken» є іменником чоловічого роду з питомим суфіксом -ник."
+    eval_q = evaluate_single_response(target, alts, r_quoted)
+    assert eval_q["is_pass"]
+    assert eval_q["reasoning_grounded"]
+    assert eval_q["composite_score"] == 1.0
