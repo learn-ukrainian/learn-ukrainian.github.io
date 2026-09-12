@@ -1,0 +1,29 @@
+{
+  "schema": "sources.exam-eval-pack.v1",
+  "result_schema": "sources.tool-result.v1",
+  "issue": 7957,
+  "parent_epic": 7953,
+  "tools": [
+    {"name": "verify_word", "purpose": "Morph attestation for one surface form", "in_pack": true},
+    {"name": "verify_words", "purpose": "Batch morph attestation", "in_pack": true},
+    {"name": "verify_lemma", "purpose": "Lemma to forms expansion", "in_pack": true},
+    {"name": "verify_stress", "purpose": "Stress attestation", "in_pack": true},
+    {"name": "check_modern_form", "purpose": "Modern vs archaic-only check", "in_pack": true},
+    {"name": "search_text", "purpose": "Textbook FTS", "in_pack": true},
+    {"name": "search_literary", "purpose": "Literary FTS", "in_pack": true},
+    {"name": "get_chunk_context", "purpose": "Fetch chunk by id", "in_pack": true},
+    {"name": "query_pravopys", "purpose": "Orthography rules", "in_pack": true},
+    {"name": "search_style_guide", "purpose": "Style guide lookup", "in_pack": true},
+    {"name": "search_definitions", "purpose": "СУМ-11 definitions", "in_pack": true},
+    {"name": "search_idioms", "purpose": "Idiom / phraseology search", "in_pack": true},
+    {"name": "search_synonyms", "purpose": "Synonym search", "in_pack": true},
+    {"name": "search_sources", "purpose": "Unified multi-corpus retrieval", "in_pack": true, "rationale": "Included for general retrieval when corpus is unknown; prefer scoped tools when known."}
+  ],
+  "non_goals": [
+    "no_answer_keys",
+    "no_held_out_items",
+    "match_count_is_not_mcq_letter",
+    "no_fleet_imports_into_ukrainian_llm_eval",
+    "public_exam_content_contamination_awareness"
+  ]
+}
