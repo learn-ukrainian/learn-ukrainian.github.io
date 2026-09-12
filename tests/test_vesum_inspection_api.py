@@ -445,3 +445,41 @@ def test_concurrent_connection_replacement_during_active_reader(tmp_path: Path) 
     assert not reader_error, f"Reader encountered error during concurrent replacement: {reader_error}"
     assert reader_results == ["first"], f"Expected reader to complete on first connection, got {reader_results}"
     close_vesum_conn()
+
+
+def test_get_vesum_conn_close_lifecycle_does_not_leak_connections(tmp_path: Path) -> None:
+    """Acquire/close cycles on get_vesum_conn must close connections without leaking."""
+    from scripts.verification.vesum import _ACTIVE_CONNS
+
+    close_vesum_conn()
+    db_path = tmp_path / "lifecycle.db"
+
+    conn = sqlite3.connect(db_path)
+    conn.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)")
+    conn.execute("INSERT INTO forms VALUES ('test', 'test', 'noun', 'tag')")
+    conn.commit()
+    conn.close()
+
+    conns: list[sqlite3.Connection] = []
+    for _ in range(20):
+        c = get_vesum_conn(db_path)
+        conns.append(c)
+        close_vesum_conn()
+
+    # All 20 connections must be closed, not retained or queryable
+    for c in conns:
+        with pytest.raises(sqlite3.ProgrammingError, match="Cannot operate on a closed database"):
+            c.execute("SELECT 1")
+
+    # _ACTIVE_CONNS must have zero tracked connections remaining
+    assert len(_ACTIVE_CONNS) == 0
+
+    # Readiness-style polling: repeated get_vesum_conn calls must not increment _ACTIVE_CONNS
+    for _ in range(20):
+        c = get_vesum_conn(db_path)
+        rows = c.execute("SELECT word_form FROM forms").fetchall()
+        assert [r["word_form"] for r in rows] == ["test"]
+    assert len(_ACTIVE_CONNS) == 0
+
+    close_vesum_conn()
+    assert len(_ACTIVE_CONNS) == 0

@@ -111,9 +111,49 @@ def _resolve_vesum_db_path(db_path: str | Path | None = None) -> Path:
     return VESUM_DB_PATH
 
 
-def _acquire_conn(db_path: str | Path | None = None) -> sqlite3.Connection:
-    """Acquire current SQLite connection, managing lifecycle and active readers."""
+def _get_or_create_conn_locked(
+    resolved_path: Path, current_stat: tuple[int, int] | None
+) -> sqlite3.Connection:
+    """Internal helper: return or create the cached SQLite connection under _CONN_LOCK."""
     global _vesum_conn, _vesum_conn_path, _vesum_conn_stat
+    if (
+        _vesum_conn is None
+        or _vesum_conn_path != resolved_path
+        or current_stat is None
+        or _vesum_conn_stat != current_stat
+    ):
+        # Superseded connection: only close immediately if it has NO active readers!
+        old_conn = _vesum_conn
+        if old_conn is not None and _ACTIVE_CONNS.get(old_conn, 0) <= 0:
+            _ACTIVE_CONNS.pop(old_conn, None)
+            with contextlib.suppress(Exception):
+                old_conn.close()
+
+        new_conn = sqlite3.connect(str(resolved_path), check_same_thread=False)
+        new_conn.row_factory = sqlite3.Row
+        _vesum_conn = new_conn
+        _vesum_conn_path = resolved_path
+        _vesum_conn_stat = current_stat
+
+    return _vesum_conn
+
+
+def _release_conn(conn: sqlite3.Connection) -> None:
+    """Release a reader on connection, closing it if superseded and idle."""
+    global _vesum_conn
+    with _CONN_LOCK:
+        if conn in _ACTIVE_CONNS:
+            _ACTIVE_CONNS[conn] -= 1
+            if _ACTIVE_CONNS[conn] <= 0:
+                _ACTIVE_CONNS.pop(conn, None)
+                if conn is not _vesum_conn:
+                    with contextlib.suppress(Exception):
+                        conn.close()
+
+
+@contextlib.contextmanager
+def get_vesum_connection(db_path: str | Path | None = None) -> Iterator[sqlite3.Connection]:
+    """Context manager guaranteeing connection retention across the reader's lifetime."""
     resolved_path = _resolve_vesum_db_path(db_path)
     if not resolved_path.exists():
         raise FileNotFoundError(
@@ -130,47 +170,9 @@ def _acquire_conn(db_path: str | Path | None = None) -> sqlite3.Connection:
         current_stat = None
 
     with _CONN_LOCK:
-        if (
-            _vesum_conn is None
-            or _vesum_conn_path != resolved_path
-            or current_stat is None
-            or _vesum_conn_stat != current_stat
-        ):
-            # Superseded connection: only close immediately if it has NO active readers!
-            old_conn = _vesum_conn
-            if old_conn is not None and _ACTIVE_CONNS.get(old_conn, 0) <= 0:
-                _ACTIVE_CONNS.pop(old_conn, None)
-                with contextlib.suppress(Exception):
-                    old_conn.close()
-
-            new_conn = sqlite3.connect(str(resolved_path), check_same_thread=False)
-            new_conn.row_factory = sqlite3.Row
-            _vesum_conn = new_conn
-            _vesum_conn_path = resolved_path
-            _vesum_conn_stat = current_stat
-            _ACTIVE_CONNS[new_conn] = 0
-
-        conn = _vesum_conn
+        conn = _get_or_create_conn_locked(resolved_path, current_stat)
         _ACTIVE_CONNS[conn] = _ACTIVE_CONNS.get(conn, 0) + 1
-        return conn
 
-
-def _release_conn(conn: sqlite3.Connection) -> None:
-    """Release a reader on connection, closing it if superseded and idle."""
-    global _vesum_conn
-    with _CONN_LOCK:
-        if conn in _ACTIVE_CONNS:
-            _ACTIVE_CONNS[conn] -= 1
-            if _ACTIVE_CONNS[conn] <= 0 and conn is not _vesum_conn:
-                _ACTIVE_CONNS.pop(conn, None)
-                with contextlib.suppress(Exception):
-                    conn.close()
-
-
-@contextlib.contextmanager
-def get_vesum_connection(db_path: str | Path | None = None) -> Iterator[sqlite3.Connection]:
-    """Context manager guaranteeing connection retention across the reader's lifetime."""
-    conn = _acquire_conn(db_path)
     try:
         yield conn
     finally:
@@ -179,21 +181,40 @@ def get_vesum_connection(db_path: str | Path | None = None) -> Iterator[sqlite3.
 
 def get_vesum_conn(db_path: str | Path | None = None) -> sqlite3.Connection:
     """Lazy-load SQLite connection to VESUM dictionary with automatic replacement detection."""
-    return _acquire_conn(db_path)
+    resolved_path = _resolve_vesum_db_path(db_path)
+    if not resolved_path.exists():
+        raise FileNotFoundError(
+            f"VESUM database not found at {resolved_path}. "
+            "Step 1 builds an explicit shadow database only; run "
+            ".venv/bin/python scripts/rag/build_vesum_shadow.py --help "
+            "and pass its explicit path with db_path after approved activation."
+        )
+
+    try:
+        st = resolved_path.stat()
+        current_stat = (st.st_ino, st.st_mtime_ns)
+    except OSError:
+        current_stat = None
+
+    with _CONN_LOCK:
+        return _get_or_create_conn_locked(resolved_path, current_stat)
 
 
-def close_vesum_conn() -> None:
-    """Close and reset cached SQLite connection."""
+def close_vesum_conn(conn: sqlite3.Connection | None = None) -> None:
+    """Close and reset cached SQLite connection, or close an explicitly provided connection."""
     global _vesum_conn, _vesum_conn_path, _vesum_conn_stat
     with _CONN_LOCK:
-        if _vesum_conn is not None:
-            if _ACTIVE_CONNS.get(_vesum_conn, 0) <= 0:
-                with contextlib.suppress(Exception):
-                    _vesum_conn.close()
-                _ACTIVE_CONNS.pop(_vesum_conn, None)
+        target = conn if conn is not None else _vesum_conn
+        if target is None:
+            return
+        if target is _vesum_conn:
             _vesum_conn = None
             _vesum_conn_path = None
             _vesum_conn_stat = None
+        if _ACTIVE_CONNS.get(target, 0) <= 0:
+            _ACTIVE_CONNS.pop(target, None)
+            with contextlib.suppress(Exception):
+                target.close()
 
 
 def verify_word(
