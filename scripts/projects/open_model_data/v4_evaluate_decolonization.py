@@ -245,17 +245,62 @@ NAMED_ENTITY_PATTERNS = [
     ),
 ]
 
-GRAMMATICAL_MODIFIER_PHRASES = [
-    re.compile(r"\b(?:чоловічого|жіночого|середнього|спільного)\s+роду\b", re.IGNORECASE),
-    re.compile(r"\b(?:доконаного|недоконаного)\s+виду\b", re.IGNORECASE),
-    re.compile(r"\b(?:теперішнього|минулого|майбутнього)\s+часу\b", re.IGNORECASE),
-    re.compile(r"\b(?:першої|другої|третьої|четвертої)\s+відміни\b", re.IGNORECASE),
-    re.compile(r"\b(?:твердої|м['’ʼ]?якої|мішаної)\s+групи\b", re.IGNORECASE),
-    re.compile(
-        r"\b(?:у\s+|в\s+)?(?:числа|числі|формі|формах|форма|форми|відмінку|відмінка|відмінках|особі|особах)\s+(?:однини|множини)\b",
-        re.IGNORECASE,
+QUOTED_SPAN_PATTERN = re.compile(r"([«\"“„][^»\"”\n]+[»\"””]|(?<!\w)['‘][^'’\n]+['’](?!\w))")
+
+GRAMMATICAL_MODIFIER_RULES = [
+    # Gender modifying POS or form
+    (
+        re.compile(
+            r"\b(іменник\w*|прикметник\w*|займенник\w*|числівник\w*|дієприкметник\w*|форм\w*)\s+(?:чоловічого|жіночого|середнього|спільного)\s+роду\b",
+            re.IGNORECASE,
+        ),
+        r"\1 ",
     ),
-    re.compile(r"\b(?:лише\s+|тільки\s+)?(?:в|у)\s+(?:однині|множині)\b", re.IGNORECASE),
+    # Aspect modifying verb, participle, or form
+    (
+        re.compile(
+            r"\b(дієслов\w*|дієприкметник\w*|дієприслівник\w*|форм\w*)\s+(?:доконаного|недоконаного)\s+виду\b",
+            re.IGNORECASE,
+        ),
+        r"\1 ",
+    ),
+    # Tense modifying verb, participle, or form
+    (
+        re.compile(
+            r"\b(дієслов\w*|дієприкметник\w*|форм\w*)\s+(?:теперішнього|минулого|майбутнього)\s+часу\b",
+            re.IGNORECASE,
+        ),
+        r"\1 ",
+    ),
+    # Declension modifying noun, adjective, or form
+    (
+        re.compile(
+            r"\b(іменник\w*|прикметник\w*|форм\w*)\s+(?:першої|другої|третьої|четвертої)\s+відміни\b",
+            re.IGNORECASE,
+        ),
+        r"\1 ",
+    ),
+    # Group modifying noun, adjective, or form
+    (
+        re.compile(
+            r"\b(іменник\w*|прикметник\w*|форм\w*)\s+(?:твердої|м['’ʼ]?якої|мішаної)\s+групи\b",
+            re.IGNORECASE,
+        ),
+        r"\1 ",
+    ),
+    # Number modifying grammatical category words
+    (
+        re.compile(
+            r"\b(?:у\s+|в\s+)?(?:числа|числі|формі|формах|форма|форми|відмінку|відмінка|відмінках|особі|особах)\s+(?:однини|множини)\b",
+            re.IGNORECASE,
+        ),
+        " ",
+    ),
+    # Prepositional adverbial number constructions
+    (
+        re.compile(r"\b(?:лише\s+|тільки\s+)?(?:в|у)\s+(?:однині|множині)\b", re.IGNORECASE),
+        " ",
+    ),
 ]
 
 GRAMMATICAL_STOPWORDS = {
@@ -473,11 +518,11 @@ def evaluate_single_response(
     has_other_entity = any(p.search(resp_norm) for p in OTHER_ENTITY_PATTERNS)
     if not has_other_entity:
         analysis_text = re.sub(r"цитата:\s*[«\"“][^»\"”]+[»\"”]", "", resp_norm, flags=re.IGNORECASE)
-        # Only strip grammatical modifier phrases outside quoted spans to preserve explicitly named subjects
-        parts = re.split(r"([«\"“'][^»\"”']+[»\"”'])", analysis_text)
+        # Only strip grammatical modifier phrases in genuine modifier context outside quoted spans
+        parts = QUOTED_SPAN_PATTERN.split(analysis_text)
         for i in range(0, len(parts), 2):
-            for gmp in GRAMMATICAL_MODIFIER_PHRASES:
-                parts[i] = gmp.sub(" ", parts[i])
+            for pat, repl in GRAMMATICAL_MODIFIER_RULES:
+                parts[i] = pat.sub(repl, parts[i])
         analysis_text = "".join(parts)
         for pat in NAMED_ENTITY_PATTERNS:
             for m in pat.finditer(analysis_text):

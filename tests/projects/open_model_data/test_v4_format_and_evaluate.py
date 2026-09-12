@@ -1092,3 +1092,30 @@ def test_grammatical_number_modifiers_admitted() -> None:
         assert eval_res["is_pass"], f"Expected {r} to pass"
         assert eval_res["reasoning_grounded"], f"Expected {r} grounding to pass"
         assert eval_res["composite_score"] == 1.0
+
+
+def test_word_internal_apostrophes_not_treated_as_quotes() -> None:
+    """M1 Review P2: Word-internal apostrophes (e.g. «Об'єкт», «пов'язано») must not suppress modifier stripping."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    r = (
+        "Об'єкт аналізу: Вживайте goodtoken, бо за словником ВЕСУМ це іменник чоловічого роду з питомим суфіксом -ник. "
+        "Це пов'язано зі словотвором."
+    )
+    eval_res = evaluate_single_response(target, alts, r)
+    assert eval_res["is_pass"]
+    assert eval_res["reasoning_grounded"]
+    assert eval_res["composite_score"] == 1.0
+
+
+def test_unquoted_modifier_phrases_as_named_subjects_rejected() -> None:
+    """M1 Review P2: Unquoted modifier phrases introduced by 'слова' (e.g. 'слова чоловічого роду') must fail."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    r = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова чоловічого роду."
+    eval_res = evaluate_single_response(target, alts, r)
+    assert not eval_res["is_pass"]
+    assert not eval_res["reasoning_grounded"]
+    assert eval_res["composite_score"] <= 0.40
