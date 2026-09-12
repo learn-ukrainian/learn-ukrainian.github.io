@@ -392,16 +392,43 @@ def find_textbook_attestation(
                 continue
             if any(r in author_lower for r in RESTRICTED_AUTHORS):
                 continue
+            text_lower = text.lower()
+            if "відомості про стан підручника" in text_lower or "навчальне видання" in text_lower:
+                continue
 
             # Strict phrase verification: all words must appear together in text
-            text_lower = text.lower()
             if clean_phrase not in text_lower:
                 continue
 
-            sentences = [s.strip() for s in text.split(".") if clean_phrase in s.lower()]
-            if not sentences:
+            # Split text by sentence boundaries (.!?)
+            raw_segments = re.split(r"[.!?]\s*", text)
+            matching_segments = [s.strip() for s in raw_segments if clean_phrase in s.lower()]
+            if not matching_segments:
                 continue
-            snippet = re.sub(r"\s+", " ", sentences[0]).strip()
+
+            # Within the matching segment, strip leading non-prose noise lines (puzzle grids, digit sequences)
+            raw = matching_segments[0]
+            lines = [ln.strip() for ln in raw.split("\n") if ln.strip()]
+            cleaned_lines = []
+            found_phrase = False
+            for ln in lines:
+                if not found_phrase:
+                    if re.match(r"^([А-Яа-яЇїІіЄєҐґ]\s+)+[А-Яа-яЇїІіЄєҐґ]$", ln):
+                        continue
+                    if re.match(r"^[\d\s–—\-\+\=\.\,\:\;\№\(\)]+$", ln):
+                        continue
+                    if re.match(r"^\d+\.\s*[\d\s–—\-\+\=\.\,\:\;]+$", ln):
+                        continue
+                cleaned_lines.append(ln)
+                if clean_phrase in ln.lower():
+                    found_phrase = True
+
+            snippet = " ".join(cleaned_lines).strip()
+            snippet = re.sub(r"\s+", " ", snippet).strip()
+            snippet = re.sub(r"^([А-Яа-яЇїІіЄєҐґ]\s+){2,}[А-Яа-яЇїІіЄєҐґ]\s+", "", snippet)
+            snippet = re.sub(r"^[\d\s–—\-\+\=\.\,\:\;\№]+\s+(?=[А-Яа-яЇїІіЄєҐґA-Za-z«])", "", snippet)
+            if not snippet or clean_phrase not in snippet.lower():
+                continue
             if len(snippet) > 160:
                 snippet = snippet[:157] + "..."
 

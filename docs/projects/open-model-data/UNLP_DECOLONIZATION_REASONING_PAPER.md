@@ -162,7 +162,7 @@ The ULDR dataset distribution is structured into two distinct, transparent layer
 
 Instead of querying a single dictionary, the pipeline triangulates across five distinct sources:
 - **Morphological Verification**: All candidate words must inflect in `vesum.db` (ensuring no corrupted or non-existent forms).
-- **Living Educational Attestation**: Priority is given to vocabulary actively taught in MESU-approved Ukrainian school textbooks (Grades 1–11, 2023–2026).
+- **Living Educational Attestation**: Priority is given to vocabulary actively taught in MESU-approved Ukrainian school textbooks (Grades 1–11, 2023–2026), with layout-filtering to exclude non-prose noise (word-search puzzle grids, publisher imprint tables, digit sequences).
 - **Colonial Convergence Filtering (CCF)**: Detections where СУМ-11 lists a word as `«Те саме, що...»` without register caveats are automatically cross-checked against independent style authorities (*«Як ми говоримо»* Антоненка-Давидовича, *«Культура слова»* Пономарева, *Словник синонімів* Караванського).
 - **Register Spectrum Assignment**: Candidate alternatives are categorized into Primary Living Standard, Classical/Regional Standard, Technical Compound, and Purist/Historical Neologism.
 
@@ -283,7 +283,7 @@ The 1,200 shipped production records resolve systematic lexical and phrasal calq
 #### Case Study 2: *Задачі* $\rightarrow$ *Завдання* (Shipped Shard Record `traj.decolonize.a847150053166b99`)
 
 - **Problem**: Mechanical borrowing of Russian *задача* into educational and practical contexts where authentic Ukrainian uses *завдання*.
-- **ULDR Resolution**: Teaches normative replacement with **завдання**, attested in Grade 1 textbooks (*Захарійчук*) and verified with 15 morphological forms in VESUM.
+- **ULDR Resolution**: Teaches normative replacement with **завдання**, attested in Grade 1 textbooks (*Захарійчук*: *«Художник отримав завдання намалювати предмети, у назвах яких є буква ч»*) and verified with 15 morphological forms in VESUM.
 
 ### 6.2 Reference Seed Exemplars (`seeds/`)
 
