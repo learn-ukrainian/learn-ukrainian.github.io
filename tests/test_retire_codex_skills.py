@@ -36,6 +36,135 @@ def captures(root: Path) -> list[Path]:
     return sorted((root / ".codex/retired-skills").glob("*/skills"))
 
 
+@pytest.fixture
+def python_skill(repo: Path) -> Path:
+    relative = Path("example/scripts/bounded_completion.py")
+    source = repo / "agents_extensions/shared/skills" / relative
+    source.parent.mkdir()
+    source.write_text("raise RuntimeError('must never execute during migration')\n")
+    subprocess.run(["git", "add", "agents_extensions"], cwd=repo, check=True, timeout=30)
+    legacy = repo / ".codex/skills" / relative
+    legacy.parent.mkdir()
+    legacy.write_bytes(source.read_bytes())
+    cache = legacy.parent / "__pycache__"
+    cache.mkdir()
+    return cache
+
+
+@pytest.mark.parametrize("name", [
+    "bounded_completion.cpython-312.pyc",
+    "bounded_completion.cpython-314.opt-1.pyc",
+    "bounded_completion.pypy310.opt-foo.pyc",
+])
+@pytest.mark.parametrize("canonical_cache_exists", [False, True])
+def test_python_runtime_cache_is_retained_without_execution(
+    repo: Path, python_skill: Path, name: str, canonical_cache_exists: bool,
+) -> None:
+    if canonical_cache_exists:
+        (repo / "agents_extensions/shared/skills/example/scripts/__pycache__").mkdir()
+    cache = python_skill / name
+    payload = b"Opaque runtime bytes, never load or unmarshal them"
+    cache.write_bytes(payload)
+    assert migration.migrate(repo, "verify") == 0
+    assert migration.migrate(repo, "apply") == 0
+    retained = captures(repo)[0] / cache.relative_to(repo / ".codex/skills")
+    assert retained.read_bytes() == payload
+    assert migration.migrate(repo, "apply") == 0
+    assert retained.read_bytes() == payload
+
+
+@pytest.mark.parametrize("name", [
+    "bounded_completion.cpython-312.py",
+    "bounded_completion..pyc",
+    ".cpython-312.pyc",
+    "missing.cpython-312.pyc",
+    "bounded_completion.cpython-312.opt-!.pyc",
+    "notes.txt",
+])
+def test_unknown_cache_content_is_preserved_and_rejected(repo: Path, python_skill: Path, name: str) -> None:
+    cache = python_skill / name
+    cache.write_bytes(b"User content")
+    assert migration.migrate(repo, "apply") == 1
+    assert cache.read_bytes() == b"User content"
+    assert not captures(repo)
+
+
+@pytest.mark.parametrize("unsafe", [
+    "untracked", "source-symlink", "source-parent-symlink", "index-symlink",
+    "cache-symlink", "cache-directory-symlink", "nested",
+])
+def test_runtime_cache_requires_regular_tracked_source_and_safe_entries(
+    repo: Path, python_skill: Path, unsafe: str,
+) -> None:
+    source = repo / "agents_extensions/shared/skills/example/scripts/bounded_completion.py"
+    cache = python_skill / "bounded_completion.cpython-312.pyc"
+    cache.write_bytes(b"Runtime bytes")
+    if unsafe == "untracked":
+        subprocess.run(["git", "rm", "--cached", "-f", str(source)], cwd=repo, check=True, capture_output=True, timeout=30)
+    elif unsafe == "source-parent-symlink":
+        outside = repo / "outside-scripts"
+        source.parent.rename(outside)
+        source.parent.symlink_to(outside, target_is_directory=True)
+    elif unsafe in ("source-symlink", "index-symlink"):
+        content = source.read_bytes()
+        source.unlink()
+        outside = repo / "outside.py"
+        outside.write_bytes(content)
+        source.symlink_to(outside)
+        if unsafe == "index-symlink":
+            subprocess.run(["git", "add", str(source)], cwd=repo, check=True, timeout=30)
+            source.unlink()
+            source.write_bytes(content)
+    elif unsafe == "cache-symlink":
+        cache.unlink()
+        cache.symlink_to(source)
+    elif unsafe == "cache-directory-symlink":
+        outside = repo / "outside-cache"
+        python_skill.rename(outside)
+        python_skill.symlink_to(outside, target_is_directory=True)
+    else:
+        (python_skill / "nested").mkdir()
+    assert migration.migrate(repo, "apply") == 1
+    assert python_skill.exists()
+    assert not captures(repo)
+
+
+def test_runtime_cache_write_during_capture_is_retained_with_error(
+    repo: Path, python_skill: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    cache = python_skill / "bounded_completion.cpython-312.pyc"
+    cache.write_bytes(b"Runtime bytes")
+    original = migration.rename_exclusive
+    with cache.open("r+b", buffering=0) as writer:
+        def capture_then_write(*args: object) -> None:
+            original(*args)
+            writer.seek(0)
+            writer.write(b"Concurrent cache write")
+            writer.truncate()
+
+        monkeypatch.setattr(migration, "rename_exclusive", capture_then_write)
+        assert migration.migrate(repo, "apply") == 1
+    retained = captures(repo)[0] / cache.relative_to(repo / ".codex/skills")
+    assert retained.read_bytes() == b"Concurrent cache write"
+
+
+@pytest.mark.parametrize("ancestor", ["agents_extensions", "agents_extensions/shared"])
+def test_runtime_cache_rejects_upper_canonical_source_symlink(
+    repo: Path, python_skill: Path, ancestor: str,
+) -> None:
+    cache = python_skill / "bounded_completion.cpython-312.pyc"
+    cache.write_bytes(b"Retain runtime bytes")
+    canonical = repo / ancestor
+    outside = repo.parent / "outside-source"
+    canonical.rename(outside)
+    canonical.symlink_to(outside, target_is_directory=True)
+    relative = cache.relative_to(repo / ".codex/skills").as_posix()
+    assert not migration.cache_source_is_tracked(repo, relative)
+    assert migration.migrate(repo, "apply") == 1
+    assert cache.read_bytes() == b"Retain runtime bytes"
+    assert not captures(repo)
+
+
 def test_capture_is_retained_and_repeated_run_never_removes_backup(repo: Path) -> None:
     assert migration.migrate(repo, "apply") == 0
     retained = captures(repo)
