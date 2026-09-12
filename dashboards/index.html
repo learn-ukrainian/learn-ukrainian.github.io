@@ -67,7 +67,7 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
 
 <div class="stats-row" id="stats-row"></div>
 
-<div id="api-surfaces" class="contracts-note" style="font-size:12px;color:var(--text3);margin:0 0 16px 0;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;"></div>
+<div id="api-surfaces" class="contracts-note" hidden style="font-size:12px;color:var(--text3);margin:0 0 16px 0;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;"></div>
 
 <div class="cards">
   <a class="card comms" href="/fleet.html" style="border-left-color: var(--purple);">
@@ -266,11 +266,13 @@ function sumDashboardTotals(tracks) {
     const stats = track.stats || {};
     acc.total += track.module_count || 0;
     acc.pass += stats.pass || 0;
+    acc.fail += stats.fail || 0;
+    acc.unaudited += stats.unaudited || 0;
     acc.content_complete += stats.content_complete || 0;
     acc.published += track.published_mdx || stats.published_mdx || 0;
     acc.research += (stats.research && stats.research.total) || 0;
     return acc;
-  }, { total: 0, pass: 0, content_complete: 0, published: 0, research: 0 });
+  }, { total: 0, pass: 0, fail: 0, unaudited: 0, content_complete: 0, published: 0, research: 0 });
 }
 
 function sumSummaryTotals(summary, trackIds) {
@@ -371,9 +373,15 @@ async function loadStats() {
     }
     pendingConsultations = cMetrics?.pending_queue || 0;
 
+    // Honesty of zero: pass/fail/unaudited all zero means no audit data is
+    // loaded — render "—" rather than a green 0 that reads as failure (#7976).
+    const auditsRecorded = (t.pass + t.fail + t.unaudited) > 0;
+    const passingDisplay = auditsRecorded ? `${t.pass}` : '—';
+    const passingLabel = auditsRecorded ? 'Passing' : 'Passing · no audit data';
+
     document.getElementById('stats-row').innerHTML = `
       <div class="stat"><div class="value">${t.total}</div><div class="label">Modules</div></div>
-      <div class="stat"><div class="value" style="color:var(--green)">${t.pass}</div><div class="label">Passing</div></div>
+      <div class="stat"><div class="value" style="color:var(--green)">${passingDisplay}</div><div class="label">${passingLabel}</div></div>
       <div class="stat"><div class="value" style="color:var(--cyan)">${t.published}</div><div class="label">Published</div></div>
       <div class="stat"><div class="value" style="color:var(--blue)">${t.content_complete}</div><div class="label">Prose Only</div></div>
       <div class="stat"><div class="value" style="color:var(--cyan)">${displayBuildCount(buildState.current)}</div><div class="label">Current Builds</div></div>
@@ -381,7 +389,9 @@ async function loadStats() {
       <div class="stat"><div class="value" style="color:var(--purple)">${buildState.pending ? '—' : `${buildState.builtPct}%`}</div><div class="label">Built</div></div>
     `;
 
-    document.getElementById('audit-stat').textContent = `${t.pass} passing · ${t.published} published / ${t.total} total`;
+    document.getElementById('audit-stat').textContent = auditsRecorded
+      ? `${t.pass} passing · ${t.published} published / ${t.total} total`
+      : `no audit results · ${t.published} published / ${t.total} total`;
     document.getElementById('curriculum-stat').textContent = `${dashboardTracks.length} tracks`;
     if (pendingConsultations > 0) {
       document.getElementById('consultation-stat').textContent = `${pendingConsultations} pending proposals`;
@@ -457,6 +467,7 @@ async function loadStats() {
       const dashboards = pages.length;
       // Show a compact summary of key sources + link to full contracts.
       const sample = routes.slice(0, 3).map(r => r.source_of_truth || r.pattern).filter(Boolean);
+      el.hidden = false;
       el.innerHTML = `API surface: <strong>${families} route families</strong> • <strong>${dashboards} dashboard pages</strong>. ` +
         `Sources include ${sample.join(', ')}… ` +
         `<a href="/api/contracts/routes">full contracts</a> • <a href="/docs">Swagger</a>. ` +

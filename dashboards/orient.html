@@ -711,6 +711,13 @@ async function loadOrient() {
     setPageBanner(`Session snapshot unavailable: ${error.message}`);
     document.getElementById('refresh-status').textContent = 'Session refresh stopped; fleet retries every 30s';
     document.getElementById('generated-at').textContent = 'Waiting for refresh';
+    // Skeletons must not outlive a failed load: replace any section still
+    // showing "Loading..." with an honest unavailable state (#7976).
+    document.querySelectorAll('[id$="-content"]').forEach((node) => {
+      if (node.textContent.trim() === 'Loading...') {
+        node.textContent = 'Unavailable — session snapshot failed to load';
+      }
+    });
     refreshHalted = true;
     stopRefresh();
     console.error('[orient] refresh failed', error);

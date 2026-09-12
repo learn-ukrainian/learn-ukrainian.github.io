@@ -10,6 +10,7 @@ PRIMARY_NAV_HREFS = [
     "/",
     "/orient.html",
     "/fleet.html",
+    "/work.html",
     "/artifacts/",
     "/runtime.html",
     "/docs",
@@ -597,7 +598,7 @@ def test_artifacts_page_preserves_secondary_dashboard_links():
 
 def test_all_playground_pages_use_single_monitor_shell():
     for path in sorted(DASHBOARDS.glob("*.html")):
-        if path.name in {"channels.html", "comms.html"}:
+        if path.name in {"channels.html", "comms.html", "images.html"}:
             continue
         html = path.read_text(encoding="utf-8")
         assert '<link rel="stylesheet" href="/monitor.css">' in html, path.name
@@ -665,3 +666,42 @@ def test_delegate_detail_pane_projects_observer_safe_task_json() -> None:
             f"delegate detail pane must not reference raw task key {sensitive_key!r}"
         )
     assert "JSON.stringify(detail.task || {}, null, 2)" not in html
+
+
+def test_orient_failure_path_clears_stranded_loading_skeletons() -> None:
+    """A failed /api/orient load must not leave sections promising data forever (#7976)."""
+    html = (DASHBOARDS / "orient.html").read_text(encoding="utf-8")
+    assert "Unavailable — session snapshot failed to load" in html
+    assert 'node.textContent.trim() === \'Loading...\'' in html
+
+
+def test_launchpad_hides_api_surfaces_strip_until_populated() -> None:
+    """No orphan empty chrome: the contracts note stays hidden until it has content (#7976)."""
+    html = (DASHBOARDS / "index.html").read_text(encoding="utf-8")
+    assert 'id="api-surfaces" class="contracts-note" hidden' in html
+    assert "el.hidden = false;" in html
+
+
+def test_launchpad_passing_stat_is_honest_when_no_audit_data() -> None:
+    """A green 0 implies measured failure; absence of audits must render as unknown (#7976)."""
+    html = (DASHBOARDS / "index.html").read_text(encoding="utf-8")
+    assert "Passing · no audit data" in html
+    assert "no audit results" in html
+    assert "acc.fail += stats.fail || 0;" in html
+    assert "acc.unaudited += stats.unaudited || 0;" in html
+
+
+def test_curriculum_treemap_cells_do_not_clip_long_track_names() -> None:
+    html = (DASHBOARDS / "curriculum-dashboard.html").read_text(encoding="utf-8")
+    assert "min-height:${h}px" in html
+    assert ";height:${h}px" not in html
+
+
+def test_image_explorer_topbar_has_base_layout() -> None:
+    html = (DASHBOARDS / "image-explorer.html").read_text(encoding="utf-8")
+    assert ".topbar { display: flex; align-items: center; gap: 16px; padding: 12px 24px; }" in html
+
+
+def test_epics_stream_id_column_does_not_wrap_mid_token() -> None:
+    html = (DASHBOARDS / "epics.html").read_text(encoding="utf-8")
+    assert ".table td:first-child { white-space: nowrap; }" in html
