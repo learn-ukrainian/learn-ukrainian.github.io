@@ -1266,3 +1266,18 @@ def test_nested_grammatical_descriptors_target_and_unrelated_subjects() -> None:
         assert not eval_e["is_pass"], f"Expected {phrase} at end-of-input to fail"
         assert not eval_e["reasoning_grounded"], f"Expected {phrase} grounding at end-of-input to fail"
         assert eval_e["composite_score"] <= 0.40
+
+        # 4. Terminal before opening parenthesis
+        r_paren = f"Вживайте goodtoken, бо за словником ВЕСУМ це {phrase} (питомий суфікс -ник)."
+        eval_paren = evaluate_single_response(target, alts, r_paren)
+        assert not eval_paren["is_pass"], f"Expected {phrase} before parenthesis to fail"
+        assert not eval_paren["reasoning_grounded"], f"Expected {phrase} grounding before parenthesis to fail"
+        assert eval_paren["composite_score"] <= 0.40
+
+        # 5. Terminal before en-dash, em-dash, and space-hyphen-space
+        for dash in ("–", "—", "-"):
+            r_dash = f"Вживайте goodtoken, бо за словником ВЕСУМ це {phrase} {dash} питомий суфікс -ник."
+            eval_d = evaluate_single_response(target, alts, r_dash)
+            assert not eval_d["is_pass"], f"Expected {phrase} before dash {dash} to fail"
+            assert not eval_d["reasoning_grounded"], f"Expected {phrase} grounding before dash {dash} to fail"
+            assert eval_d["composite_score"] <= 0.40

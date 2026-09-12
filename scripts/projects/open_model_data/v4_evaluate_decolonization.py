@@ -314,6 +314,9 @@ RELATION_CHAIN_NO_FORM = (
     r"варіант\w*)\s+)*"
 )
 
+TERMINAL_PUNCT = r"[.,;:!?…—–―−()\[\]{}»”]|--|\s+-\s+"
+TERMINAL_CARRIER_BOUNDARY = rf"(?:\s*(?={TERMINAL_PUNCT}|$|\n)|\s+(?={STOPWORD_PATTERN}\b))"
+
 NAMED_ENTITY_PATTERNS = [
     re.compile(
         rf"\b{RELATION_CHAIN}{PART_OF_SPEECH_WORDS}\s+(?!{STOPWORD_PATTERN}\b)[«\"“']?([а-яіїєґa-z0-9'’ʼ\-]+)[»\"”']?",
@@ -328,7 +331,7 @@ NAMED_ENTITY_PATTERNS = [
         re.IGNORECASE,
     ),
     re.compile(
-        rf"\b(?:{DESCRIPTOR_WORDS}\s+)+({PART_OF_SPEECH_WORDS})(?:\s*(?=[.,;:!?…—\-)\]»\"”']|$|\n)|\s+(?={STOPWORD_PATTERN}\b))",
+        rf"\b(?:{DESCRIPTOR_WORDS}\s+)+({PART_OF_SPEECH_WORDS}){TERMINAL_CARRIER_BOUNDARY}",
         re.IGNORECASE,
     ),
 ]
