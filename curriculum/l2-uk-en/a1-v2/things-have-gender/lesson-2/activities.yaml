@@ -136,17 +136,17 @@ inline:
   title: 'Пра́вда чи ні: ре́чі в кімна́ті й су́мці'
   instruction: Ви́значте, чи пра́вильно вка́зано рід предме́та.
   statements:
-  - statement: У мене́ є стіл. («Стіл» — чолові́чий рід.)
+  - statement: Сло́во «стіл» — це він.
     correct: true
-  - statement: У мене́ є ла́мпа. («Ла́мпа» — сере́дній рід.)
+  - statement: Сло́во «ла́мпа» — це воно́.
     correct: false
-  - statement: У мене́ є лі́жко. («Лі́жко» — сере́дній рід.)
+  - statement: Сло́во «лі́жко» — це воно́.
     correct: true
-  - statement: У мене́ є су́мка. («Су́мка» — жіно́чий рід.)
+  - statement: Сло́во «су́мка» — це вона́.
     correct: true
-  - statement: У мене́ є телефо́н. («Телефо́н» — жіно́чий рід.)
+  - statement: Сло́во «телефо́н» — це вона́.
     correct: false
-  - statement: У мене́ є дзе́ркало. («Дзе́ркало» — сере́дній рід.)
+  - statement: Сло́во «дзе́ркало» — це воно́.
     correct: true
 workbook:
 - type: match-up
@@ -265,30 +265,29 @@ workbook:
     - ла́мпа
     answer: У тебе́ є ла́мпа?
   - words:
-    - Це
-    - моя́
-    - нова́
-    - су́мка
-    answer: Це моя́ нова́ су́мка.
-  - words:
-    - Де
-    - мій
-    - нови́й
-    - телефо́н
-    answer: Де мій нови́й телефо́н?
-  - words:
-    - Ось
-    - моє́
-    - вели́ке
-    - лі́жко
-    answer: Ось моє́ вели́ке лі́жко.
-  - words:
-    - Тут
+    - У
+    - мене́
     - є
-    - комп'ю́тер
-    - і
-    - стіле́ць
-    answer: Тут є комп'ю́тер і стіле́ць.
+    - су́мка
+    answer: У мене́ є су́мка.
+  - words:
+    - У
+    - тебе́
+    - є
+    - телефо́н
+    answer: У тебе́ є телефо́н?
+  - words:
+    - У
+    - мене́
+    - є
+    - лі́жко
+    answer: У мене́ є лі́жко.
+  - words:
+    - У
+    - тебе́
+    - є
+    - зо́шит
+    answer: У тебе́ є зо́шит?
 - id: act-206
   type: odd-one-out
   title: За́йве сло́во за ро́дом
@@ -338,12 +337,13 @@ workbook:
     explanation: Зо́шит — чолові́чий рід, і́нші — сере́дній.
 - id: act-207
   type: translate
-  title: Перекладі́ть ре́чення про ре́чі
+  bonus: true
+  title: 'Бо́нус: перекладі́ть про ре́чі'
   instruction: Перекладі́ть ре́чення на украї́нську мо́ву.
   items:
   - sentence: I have a table and a bed.
     answer: У мене́ є стіл і лі́жко.
-  - sentence: Do you have a phone?
+  - sentence: Do you (informal) have a phone?
     answer: У тебе́ є телефо́н?
   - sentence: This is my bag.
     answer: Це моя́ су́мка.

@@ -2,10 +2,6 @@
   translation: uncle
   pos: noun
   usage: Це мій дя́дько.
-- lemma: соба́ка
-  translation: dog
-  pos: noun
-  usage: Це мій соба́ка.
 - lemma: студе́нт
   translation: male student
   pos: noun
@@ -50,10 +46,6 @@
   translation: female singer
   pos: noun
   usage: Вона́ співа́чка.
-- lemma: Мико́ла
-  translation: Mykola
-  pos: proper noun
-  usage: Він Мико́ла.
 - lemma: Ілля́
   translation: Illia
   pos: proper noun

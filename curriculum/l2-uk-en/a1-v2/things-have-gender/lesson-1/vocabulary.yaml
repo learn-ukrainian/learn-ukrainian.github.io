@@ -62,3 +62,11 @@
   translation: father
   pos: noun
   usage: Це мій ба́тько.
+- lemma: соба́ка
+  translation: dog
+  pos: noun
+  usage: Це мій соба́ка.
+- lemma: Мико́ла
+  translation: Mykola
+  pos: proper noun
+  usage: Він Мико́ла.

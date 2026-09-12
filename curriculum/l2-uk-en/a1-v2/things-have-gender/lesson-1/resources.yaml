@@ -1,10 +1,11 @@
-- title: 'Dobra Forma: Gender of Nouns'
-  role: article
-  url: https://opentext.ku.edu/dobraforma/chapter/1-1/
-  source: 'Dobra Forma: Gender of Nouns'
-  notes: 'Plan and reference source: gender identification rules and noun tables.'
-- title: Noun Genders in Ukrainian
+- title: Пономарьова, 4 клас — с. 35 «Визначаю рід і число іменників»
+  role: textbook
+  chunk_id: 4-klas-ukrayinska-mova-ponomarova-2021-1_s0033
+  source: 'Пономарьова К. І. Українська мова та читання: підруч. для 4 класу, ч. 1 (2021), с. 35'
+  notes: 'Таблиця родів іменників: чоловічий (він, мій), жіночий (вона, моя), середній (воно, моє).'
+- title: Noun Genders in Ukrainian (Infographic)
   role: article
   url: https://www.ukrainianlessons.com/noun-genders-in-ukrainian/
+  accessed: '2026-09-12'
   source: Ukrainian Lessons (джерело)
   notes: Infographic with noun-gender rules and clear everyday examples.

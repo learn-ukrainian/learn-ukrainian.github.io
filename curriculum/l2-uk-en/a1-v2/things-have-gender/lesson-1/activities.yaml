@@ -262,22 +262,58 @@ workbook:
   - statement: «Ба́тько» — це іме́нник чолові́чого ро́ду (він).
     correct: true
 - id: act-102
-  type: match-up
-  title: 'З''єдна́йте: іме́нник і рід'
-  instruction: З'єдна́йте іме́нник із прави́льним займе́нником.
-  pairs:
-  - left: стіл
-    right: він
-  - left: кни́га
-    right: вона́
-  - left: вікно́
-    right: воно́
-  - left: та́то
-    right: він
-  - left: ма́ма
-    right: вона́
-  - left: мі́сто
-    right: воно́
+  type: quiz
+  title: Він, вона́ чи воно́?
+  instruction: Ви́беріть прави́льний займе́нник для ко́жного іме́нника.
+  items:
+  - prompt: стіл
+    options:
+    - text: він
+      correct: true
+    - text: вона́
+      correct: false
+    - text: воно́
+      correct: false
+  - prompt: кни́га
+    options:
+    - text: вона́
+      correct: true
+    - text: він
+      correct: false
+    - text: воно́
+      correct: false
+  - prompt: вікно́
+    options:
+    - text: воно́
+      correct: true
+    - text: він
+      correct: false
+    - text: вона́
+      correct: false
+  - prompt: та́то
+    options:
+    - text: він
+      correct: true
+    - text: вона́
+      correct: false
+    - text: воно́
+      correct: false
+  - prompt: ма́ма
+    options:
+    - text: вона́
+      correct: true
+    - text: він
+      correct: false
+    - text: воно́
+      correct: false
+  - prompt: мі́сто
+    options:
+    - text: воно́
+      correct: true
+    - text: він
+      correct: false
+    - text: вона́
+      correct: false
 - id: act-103
   type: fill-in
   title: Вста́вте мій, моя́ чи моє́
@@ -340,23 +376,24 @@ workbook:
     - вікно́
     answer: Це моє́ вікно́.
   - words:
-    - Тут
+    - Ось
     - мій
-    - зо́шит
-    answer: Тут мій зо́шит.
-  - words:
-    - Там
-    - моя́
-    - кімна́та
-    answer: Там моя́ кімна́та.
+    - та́то
+    answer: Ось мій та́то.
   - words:
     - Ось
+    - моя́
+    - ма́ма
+    answer: Ось моя́ ма́ма.
+  - words:
+    - Це
     - моє́
-    - фо́то
-    answer: Ось моє́ фо́то.
+    - мі́сто
+    answer: Це моє́ мі́сто.
 - id: act-105
   type: translate
-  title: Перекладі́ть ре́чення
+  bonus: true
+  title: 'Бо́нус: перекладі́ть ре́чення'
   instruction: Перекладі́ть ре́чення з англі́йської мо́ви на украї́нську.
   items:
   - sentence: This is my table.
@@ -365,8 +402,8 @@ workbook:
     answer: Це моя́ кни́га.
   - sentence: This is my window.
     answer: Це моє́ вікно́.
-  - sentence: My father is here.
-    answer: Мій та́то тут.
+  - sentence: My brother is here.
+    answer: Мій брат тут.
   - sentence: My mother is there.
     answer: Моя́ ма́ма там.
   - sentence: This is my city.
