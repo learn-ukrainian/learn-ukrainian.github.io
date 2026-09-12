@@ -276,13 +276,13 @@ class TestCallToolDispatch:
             "text": "Родовий відмінок у шкільному підручнику.",
         }
         with patch("wiki.sources_db.search_textbooks", return_value=[hit]) as mock:
-            result = _run(
+            content, _envelope = _run(
                 server_module.handle_search_text(
                     {"query": "родовий відмінок", "subject": "ukrmova", "limit": 3}
                 )
             )
 
-        assert "Subject**: ukrmova" in result[0].text
+        assert "Subject**: ukrmova" in content[0].text
         mock.assert_called_once()
         args, kwargs = mock.call_args
         assert "родовий" in args[0]
@@ -386,7 +386,7 @@ class TestVerifyWordHandler:
             content, outcome = _run(server_module.handle_verify_word({"word": "читай"}))
             assert "читати" in content[0].text
             assert "verb" in content[0].text
-            assert "1 match" in content[0].text
+            assert "1 analysis (1 distinct lemma)" in content[0].text
             assert outcome["disposition"] == "supported"
             assert outcome["success"] is True
             assert outcome["result"] == {
@@ -752,8 +752,11 @@ class TestSearchSourcesHandler:
 
     def test_empty_results(self, server_module):
         with patch("wiki.sources_db.search_sources", return_value=[]):
-            result = _run(server_module.handle_search_sources({"query": "голосні звуки"}))
-            assert result[0].text == "[]"
+            content, envelope = _run(server_module.handle_search_sources({"query": "голосні звуки"}))
+            assert content[0].text == "No results found."
+            assert envelope["status"] == "empty"
+            assert envelope["match_count"] == 0
+            assert envelope["hits"] == []
 
     def test_defaults_track_to_empty_string(self, server_module):
         with patch("wiki.sources_db.search_sources", return_value=[]) as mock:
@@ -771,15 +774,17 @@ class TestSearchSourcesHandler:
             }
         ]
         with patch("wiki.sources_db.search_sources", return_value=mock_hits) as mock:
-            result = _run(
+            content, envelope = _run(
                 server_module.handle_search_sources(
                     {"query": "голосні звуки", "track": "a1", "limit": 5}
                 )
             )
             mock.assert_called_once_with("голосні звуки", track="a1", limit=5)
-            assert '"corpus": "ukrainian_wiki"' in result[0].text
-            assert '"chunk_id": "ukwiki:test-1"' in result[0].text
-
+            assert '"corpus": "ukrainian_wiki"' in content[0].text
+            assert '"chunk_id": "ukwiki:test-1"' in content[0].text
+            assert envelope["status"] == "ok"
+            assert envelope["match_count"] == 1
+            assert envelope["hits"][0]["chunk_id"] == "ukwiki:test-1"
 
 class TestCheckRussianShadowHandler:
     def test_handle_check_russian_shadow(self, server_module):
@@ -904,11 +909,14 @@ class TestDictSearchQuoteBalance:
             "definition": "Початок " + "а" * 600,
         }
         with patch("wiki.sources_db.search_definitions", return_value=[hit]):
-            result = _run(server_module.handle_dict_search({"query": "тест"}, "sum11", "СУМ-11"))
-            text = result[0].text
+            content, envelope = _run(server_module.handle_dict_search({"query": "тест"}, "sum11", "СУМ-11"))
+            text = content[0].text
             assert "Found 1 results" in text
             assert "…" in text
             assert len(text) < 700
+            assert envelope["schema"] == "sources.tool-result.v1"
+            assert envelope["match_count"] == 1
+            assert envelope["tool"] == "search_definitions"
 
 
 class TestHealthEndpoint:

@@ -1,6 +1,6 @@
 ---
 name: content-review
-description: Post-build module quality review. Checks plan adherence, linguistic accuracy, pedagogical quality, activities, vocabulary completeness, engagement.
+description: Review built CORE module pedagogy, language, activities, and vocabulary. Use seminar-content-review for seminar content.
 argument-hint: <path-to-module.md | track slug>
 effort: xhigh
 ---

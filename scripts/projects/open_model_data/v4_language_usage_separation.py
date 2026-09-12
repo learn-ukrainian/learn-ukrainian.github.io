@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import sqlite3
 import sys
@@ -26,7 +27,7 @@ CONFIG_SCHEMA_PATH = Path("data/projects/open_model_data/contracts/v4_language_u
 ITEM_SCHEMA_PATH = Path("data/projects/open_model_data/contracts/v4_language_usage_item_v1.schema.json")
 RECEIPT_SCHEMA_PATH = Path("data/projects/open_model_data/contracts/v4_language_usage_receipt_v1.schema.json")
 
-PRIMARY_REPO_ROOT = Path("/home/ops/learn-ukrainian")
+PRIMARY_REPO_ROOT_ENV = "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
 
 # Quotation detection regexes (Ukrainian, European, and ASCII typographic quotes)
 QUOTE_PATTERN = re.compile(
@@ -43,6 +44,41 @@ HISTORICAL_CHARS_PATTERN = re.compile(r"[ѣъѢЪѳѲ]")
 
 class LanguageUsageError(Exception):
     """Base error for language usage separation and verification."""
+
+
+def _primary_repo_root() -> Path | None:
+    """Resolve an extra search root from env or cwd-relative git discovery.
+
+    Fail closed: no baked host checkout path. An unset env plus failed
+    cwd-relative discovery returns None so callers do not invent a location.
+    """
+    raw = os.environ.get(PRIMARY_REPO_ROOT_ENV, "").strip()
+    if raw:
+        candidate = Path(raw)
+        resolved = candidate.resolve() if candidate.is_absolute() else (Path.cwd() / candidate).resolve()
+        if not resolved.is_dir():
+            raise LanguageUsageError(f"{PRIMARY_REPO_ROOT_ENV} is set but is not an existing directory")
+        return resolved
+    try:
+        cur = Path.cwd().resolve()
+        for parent in [cur, *list(cur.parents)]:
+            git_file = parent / ".git"
+            if git_file.is_file():
+                content = git_file.read_text(encoding="utf-8").strip()
+                if content.startswith("gitdir:"):
+                    raw_gitdir = content.split(":", 1)[1].strip()
+                    git_dir = Path(raw_gitdir)
+                    if not git_dir.is_absolute():
+                        git_dir = (parent / git_dir).resolve()
+                    common_git = git_dir.parents[1]
+                    primary = common_git.parent
+                    if primary.is_dir():
+                        return primary
+            elif git_file.is_dir():
+                return parent
+    except Exception:
+        pass
+    return None
 
 
 def sha256_bytes(data: bytes) -> str:
@@ -79,7 +115,9 @@ def _get_search_roots(input_root: Path | None = None) -> list[Path]:
         if (parent / ".git").exists():
             add(parent)
             break
-    add(PRIMARY_REPO_ROOT)
+    primary = _primary_repo_root()
+    if primary is not None:
+        add(primary)
     return roots
 
 

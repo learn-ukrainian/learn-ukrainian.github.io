@@ -468,8 +468,7 @@ def test_step10_sources_router_cluster_isolation(tmp_path: Path) -> None:
         assert first_stats["sources_db"]["tables"]["textbooks"] == 3
         assert second_stats["sources_db"]["tables"]["textbooks"] == 7
 
-        first_legacy = first_client.get("/api/rag/stats").json()
-        assert first_legacy["sources_db"]["points_count"] == 3
+        assert first_client.get("/api/rag/stats").status_code == 404
 
 
 def test_step11_contracts_router_cluster_isolation(tmp_path: Path) -> None:

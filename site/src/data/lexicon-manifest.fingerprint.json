@@ -55,7 +55,7 @@
       },
       {
         "path": "scripts/lexicon/build_teacher_deck_cloze.py",
-        "sha256": "226b7a1071e92657c68ed6a34a18143ad3c90fd22f8c6f712e6381305ce3f885"
+        "sha256": "555e687aa40a8fb0eba0e06da472b4f2d69e3344d3b420a602539341846af350"
       },
       {
         "path": "scripts/lexicon/calque_corrections.py",
@@ -251,7 +251,7 @@
       },
       {
         "path": "scripts/lexicon/reconcile_calque_clusters.py",
-        "sha256": "c9d6ef5def7db15f354cfbcaac5d5189ba0fb902ccb37a5bea505cb260a930b0"
+        "sha256": "c6bfed7ab74c86bff8e3dba0197faafa208d83efabcce463457e110dac06f7b1"
       },
       {
         "path": "scripts/lexicon/reenrich_thin_manifest_entries.py",

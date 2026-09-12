@@ -1,4 +1,4 @@
-"""#7269 step 10: sources/RAG routes read MonitorContext, not module globals.
+"""#7269 step 10: sources routes read MonitorContext, not module globals.
 
 Listed in scripts/ci/fastlane_always_tests.txt (repo_invariant).
 """
@@ -13,7 +13,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from scripts.api.monitor_context import fixture_context
-from scripts.api.rag_router import router
+from scripts.api.sources_router import router
 from scripts.wiki.sources_db import _get_conn, using_connection
 
 pytestmark = pytest.mark.repo_invariant
@@ -23,7 +23,6 @@ def _client_for(root: Path) -> TestClient:
     app = FastAPI()
     app.state.ctx = fixture_context(root)
     app.include_router(router, prefix="/api/sources")
-    app.include_router(router, prefix="/api/rag")
     return TestClient(app)
 
 
@@ -90,4 +89,4 @@ def test_search_routes_return_empty_when_corpus_missing(tmp_path: Path) -> None:
     assert client.get("/api/sources/search_text", params={"q": "мова"}).json() == []
     assert client.get("/api/sources/search_literary", params={"q": "мова"}).json() == []
     assert client.get("/api/sources/search_images", params={"q": "мова"}).json() == []
-    assert client.get("/api/rag/search_text", params={"q": "мова"}).json() == []
+    assert client.get("/api/rag/search_text", params={"q": "мова"}).status_code == 404

@@ -213,7 +213,7 @@ def main() -> int:
         description="Validate source-record rights and provenance for one operation.\n"
                     "Use for admission checks; this command never exports source text or grants rights.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Example: /home/ops/learn-ukrainian/.venv/bin/python -m "
+        epilog="Example: python -m "
                "scripts.projects.open_model_data.validate_source_records records.jsonl --operation local_learning\n"
                "Outputs: content-blind JSON on stdout; no files written.\n"
                "Exit codes: 0 completed (inspect rejection counts); 2 invalid arguments.\n"

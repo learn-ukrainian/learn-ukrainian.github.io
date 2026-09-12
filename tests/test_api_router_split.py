@@ -34,7 +34,6 @@ class TestBlueEndpoints:
         "/api/blue/health",
         "/api/blue/metrics",
         "/api/blue/history",
-        "/api/blue/live-status",
         "/api/blue/freshness",
     ])
     def test_blue_endpoint_returns_200(self, path):
@@ -46,17 +45,17 @@ class TestBlueEndpoints:
         data = r.json()
         assert data["status"] == "ok"
 
-    def test_live_status_returns_tracks(self):
-        r = client.get("/api/blue/live-status")
+    def test_build_status_returns_tracks(self):
+        r = client.get("/api/state/build-status")
+        assert r.status_code == 200
         data = r.json()
         assert isinstance(data, dict)
-        # Should have at least some tracks
-        assert len(data) > 0, "live-status returned empty dict"
-        # Each track should have module_count and states
-        for track, info in data.items():
-            assert "module_count" in info, f"Track {track} missing module_count"
-            assert "states" in info, f"Track {track} missing states"
-            assert "modules" in info, f"Track {track} missing modules"
+        assert "tracks" in data
+        assert isinstance(data["tracks"], dict)
+        for track, info in data["tracks"].items():
+            assert "total" in info, f"Track {track} missing total"
+            assert "done" in info, f"Track {track} missing done"
+            assert "building" in info, f"Track {track} missing building"
 
 
 class TestGoldEndpoints:
@@ -107,11 +106,14 @@ class TestOldPathsRemoved:
         "/api/batch/live-status",
         "/api/batch/freshness",
         "/api/batch/resolved-failures",
+        "/api/blue/live-status",
+        "/api/state/ready-to-build",
+        "/api/cost",
     ])
     def test_old_blue_path_returns_404(self, path):
         r = client.get(path)
         assert r.status_code == 404, (
-            f"{path} should be 404 (moved to /api/blue/) but returned {r.status_code}"
+            f"{path} should be 404 but returned {r.status_code}"
         )
 
 

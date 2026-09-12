@@ -1929,9 +1929,9 @@ def build_parser() -> argparse.ArgumentParser:
         description="Materialize reviewed human source bytes and build disjoint local model-consumer views.\n"
                     "Use existing rights and review evidence; never use this tool to publish or grant permission.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples: /home/ops/learn-ukrainian/.venv/bin/python -m "
+        epilog="Examples: python -m "
                "scripts.projects.open_model_data.model_view_exporter continued-pretraining --help\n"
-               "  /home/ops/learn-ukrainian/.venv/bin/python -m "
+               "  python -m "
                "scripts.projects.open_model_data.model_view_exporter materialize-human-source --help\n"
                "Outputs: local JSONL views/payloads and content-blind JSON receipts; no training or uploads.\n"
                "Exit codes: 0 completed (inspect excluded counts); 2 invalid input/arguments.\n"

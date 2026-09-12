@@ -1709,10 +1709,12 @@ function applySpacingFilters(
   return wordSpaced.length > 0 ? wordSpaced : filtered;
 }
 
+const URGENCY_BUCKET_MS = 4 * HOUR_MS;
+
 function urgencyBucket(candidate: PracticeSelection, nowTime: number): number {
   if (candidate.lapsed) return -1_000_000_000;
   if (!candidate.cardState) return 1;
-  return Math.floor((candidate.due - nowTime) / HOUR_MS);
+  return Math.floor((candidate.due - nowTime) / URGENCY_BUCKET_MS);
 }
 
 /**
@@ -2018,13 +2020,26 @@ export function selectNextPracticeItem(
   scheduledPool = applySpacingFilters(scheduledPool, history, wordRepeatWindow);
   if (!scheduledPool.length && windowPool.length) scheduledPool = windowPool;
   if (!scheduledPool.length) {
-    const borrowedPool = applyPoolFilter(
-      candidates
-        .filter((candidate) => candidate.due > nowTime)
-        .sort((left, right) => left.due - right.due)
-        .slice(0, Math.max(1, Math.min(4, candidates.length))),
+    const eligibleBorrowed = applyPoolFilter(
+      candidates.filter((candidate) => candidate.due > nowTime),
       options.poolFilter,
     );
+    const borrowedPool = eligibleBorrowed
+      .sort((left, right) => {
+        const dueWindowLeft = Math.floor(left.due / (12 * HOUR_MS));
+        const dueWindowRight = Math.floor(right.due / (12 * HOUR_MS));
+        if (dueWindowLeft !== dueWindowRight) {
+          return dueWindowLeft - dueWindowRight;
+        }
+        if (options.sessionSeed !== undefined) {
+          return (
+            seededPracticeHash(options.sessionSeed, left.itemId) -
+            seededPracticeHash(options.sessionSeed, right.itemId)
+          );
+        }
+        return left.due - right.due;
+      })
+      .slice(0, Math.max(1, Math.min(12, eligibleBorrowed.length)));
     scheduledPool = applySpacingFilters(borrowedPool, history, wordRepeatWindow);
     if (!scheduledPool.length) scheduledPool = borrowedPool;
   }

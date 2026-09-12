@@ -1,72 +1,77 @@
 {
-  "sharegpt_train_count": 967,
-  "sharegpt_held_out_count": 233,
-  "trl_dpo_train_count": 967,
-  "trl_dpo_held_out_count": 233,
+  "sharegpt_train_count": 966,
+  "sharegpt_held_out_count": 234,
+  "trl_dpo_train_count": 966,
+  "trl_dpo_held_out_count": 234,
+  "partition_firewall": {
+    "verified_disjoint_ids": true,
+    "verified_disjoint_targets": true,
+    "train_held_out_overlap_count": 0
+  },
   "shards": [
     {
       "format": "sharegpt",
       "partition": "train",
       "file": "uldr_sharegpt_train_part001.jsonl",
-      "bytes": 1385964,
-      "sha256": "fcaefb6bc5f107e2895ee7f3fe091ac62898c31aa9eed0e3b4612394ed752001",
+      "bytes": 1663396,
+      "sha256": "0ccf8559dae192e4b286f17ba9455736e07709d46af12e4c57cd21739f2901d1",
       "records_count": 400
     },
     {
       "format": "sharegpt",
       "partition": "train",
       "file": "uldr_sharegpt_train_part002.jsonl",
-      "bytes": 1375940,
-      "sha256": "0c0ba9fc94a6e7d5fd86ad4c9f86b9f73f8abeffaa841a8176b9cf7354666668",
+      "bytes": 1643309,
+      "sha256": "6fc396b0ff0d6f93abca2ce999a87e0c74e97d023bbb6445bb45656ed5fc3523",
       "records_count": 400
     },
     {
       "format": "sharegpt",
       "partition": "train",
       "file": "uldr_sharegpt_train_part003.jsonl",
-      "bytes": 571714,
-      "sha256": "43717fd30c34a24078583dc1d9fdb3bdab2d8c4a787c3401dc49f7f450805589",
-      "records_count": 167
+      "bytes": 689677,
+      "sha256": "495165fd0dbea7a228485bff6d8c21f39f7deb5f03619001f8b1cabfff67de53",
+      "records_count": 166
     },
     {
       "format": "trl_dpo",
       "partition": "train",
       "file": "uldr_dpo_train_part001.jsonl",
-      "bytes": 865916,
-      "sha256": "05a2c4b70f9d0649c2585ba502d3ab41189eb2c6efa32cc6b38168ee42ef9ad9",
+      "bytes": 1295493,
+      "sha256": "1940e95bbdff6c0cfdd1df2cacb7282aeabfcd37c24c10073de95213401e3b2a",
       "records_count": 400
     },
     {
       "format": "trl_dpo",
       "partition": "train",
       "file": "uldr_dpo_train_part002.jsonl",
-      "bytes": 854201,
-      "sha256": "6f85019e56521cb6f4934f83c243bd1403b80c6596e6fad82a3520facff2ecc3",
+      "bytes": 1290006,
+      "sha256": "25279029b7d8e105a93db0104c2f96dfe852881eae360763857e209d60a69c19",
       "records_count": 400
     },
     {
       "format": "trl_dpo",
       "partition": "train",
       "file": "uldr_dpo_train_part003.jsonl",
-      "bytes": 355036,
-      "sha256": "c6dc058455cd3f872f7cb17611050644c8f286439a522e94559746d0efc12dcf",
-      "records_count": 167
+      "bytes": 537684,
+      "sha256": "890172731b891086639ba583d3192fafedb0fe058344776019ba9aa94c9abffa",
+      "records_count": 166
     },
     {
       "format": "sharegpt",
       "partition": "held_out",
       "file": "uldr_sharegpt_held_out_part001.jsonl",
-      "bytes": 805448,
-      "sha256": "6389283e852aaf3e8eb58c4a740d271fe83dd035e8a944893a065f0c3f7a29fc",
-      "records_count": 233
+      "bytes": 973952,
+      "sha256": "47122b177c1dd48fc4f090dffb1e03821b0c5764cd5c96ff43c766ead7cecb5d",
+      "records_count": 234
     },
     {
       "format": "trl_dpo",
       "partition": "held_out",
       "file": "uldr_dpo_held_out_part001.jsonl",
-      "bytes": 501183,
-      "sha256": "44438cb2ca7a2121654d4e5b4aaddba85d4b6f392fa511c7bd8618ce5f16ac93",
-      "records_count": 233
+      "bytes": 759032,
+      "sha256": "35e273e8760b710c46506803bd8c3bce3c03e02b11305bf3e3de891bb1023e0b",
+      "records_count": 234
     }
   ],
   "quality_metrics": {

@@ -29,9 +29,9 @@ FixtureKind = Literal["isolated", "skip"]
 
 # Filled from the current exact route tree after the implementation is
 # assembled.  The count and digest are intentionally independent checks.
-FROZEN_HTTP_OPERATION_COUNT = 282
+FROZEN_HTTP_OPERATION_COUNT = 272
 FROZEN_WEBSOCKET_ROUTE_COUNT = 1
-FROZEN_DENOMINATOR_SHA256 = "9a773b07d934a828fdfb04247eabd788206813a29756ed0623e4001e296fe54c"
+FROZEN_DENOMINATOR_SHA256 = "e79908b7dfdb9fa2f06982ad313b1aa8d360b72bfe1cf381de0561df1158a7ae"
 
 # The OpenAPI document records the successful response for most operations,
 # while the isolated fixture deliberately exercises empty stores, denied
@@ -44,8 +44,6 @@ DOCUMENTED_EXERCISE_STATUSES = frozenset(
 FIXTURE_EMPTY_ROUTE_KEYS = frozenset(
     {
         "GET /api/images/textbooks",
-        "GET /api/rag/search_literary",
-        "GET /api/rag/search_text",
         "GET /api/sources/search_literary",
         "GET /api/sources/search_text",
     }
@@ -360,7 +358,7 @@ def _query_for(path_template: str) -> dict[str, Any]:
         return {"stream": "infra-harness", "limit": "1"}
     if path_template == "/api/ops/entire-context/search":
         return {"q": "opsec synthetic", "limit": "1"}
-    if path_template in {"/api/sources/search_text", "/api/rag/search_text", "/api/sources/search_images", "/api/rag/search_images", "/api/sources/search_literary", "/api/rag/search_literary"}:
+    if path_template in {"/api/sources/search_text", "/api/sources/search_images", "/api/sources/search_literary"}:
         return {"q": "opsec synthetic", "limit": "1"}
     if path_template == "/api/comms/inbox":
         return {"agent": "codex", "limit": "1"}

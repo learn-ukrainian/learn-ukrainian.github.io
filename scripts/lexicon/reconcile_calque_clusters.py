@@ -209,7 +209,9 @@ class CalqueReconciliationEngine:
                 if isinstance(corrections, list):
                     if k_clean not in raw_map:
                         raw_map[k_clean] = {}
-                    raw_map[k_clean]["curated_calques"] = [normalize_text(c) for c in corrections if normalize_text(c)]
+                    raw_map[k_clean]["curated_calques"] = [
+                        normalize_text(c).lower() for c in corrections if normalize_text(c)
+                    ]
 
             for k, v in PHRASAL_CALQUES.items():
                 k_clean = normalize_text(k).lower()
@@ -217,7 +219,9 @@ class CalqueReconciliationEngine:
                 if isinstance(corrections, list):
                     if k_clean not in raw_map:
                         raw_map[k_clean] = {}
-                    raw_map[k_clean]["phrasal_calques"] = [normalize_text(c) for c in corrections if normalize_text(c)]
+                    raw_map[k_clean]["phrasal_calques"] = [
+                        normalize_text(c).lower() for c in corrections if normalize_text(c)
+                    ]
         except ImportError:
             pass
 
@@ -245,23 +249,23 @@ class CalqueReconciliationEngine:
                             clean_corrs: list[str] = []
                             corrs = p.get("corrections")
                             if isinstance(corrs, list):
-                                clean_corrs.extend([normalize_text(c) for c in corrs if normalize_text(c)])
+                                clean_corrs.extend([normalize_text(c).lower() for c in corrs if normalize_text(c)])
                             elif isinstance(corrs, str):
-                                c_clean = normalize_text(corrs)
+                                c_clean = normalize_text(corrs).lower()
                                 if c_clean:
                                     clean_corrs.append(c_clean)
 
                             correct = p.get("correct")
                             if isinstance(correct, list):
-                                clean_corrs.extend([normalize_text(c) for c in correct if normalize_text(c)])
+                                clean_corrs.extend([normalize_text(c).lower() for c in correct if normalize_text(c)])
                             elif isinstance(correct, str):
-                                c_clean = normalize_text(correct)
+                                c_clean = normalize_text(correct).lower()
                                 if c_clean and c_clean not in clean_corrs:
                                     clean_corrs.append(c_clean)
 
                             native_lemma = p.get("nativeLemma")
                             if isinstance(native_lemma, str):
-                                nl_clean = normalize_text(native_lemma)
+                                nl_clean = normalize_text(native_lemma).lower()
                                 if nl_clean and nl_clean not in clean_corrs:
                                     clean_corrs.append(nl_clean)
 
@@ -276,7 +280,7 @@ class CalqueReconciliationEngine:
 
     def validate_candidate(self, term: str) -> CandidateAlternative:
         """Validate candidate against VESUM, sources.db textbooks, and heritage."""
-        term_clean = normalize_text(term)
+        term_clean = normalize_text(term).lower()
         is_phrase = " " in term_clean
 
         if is_phrase:

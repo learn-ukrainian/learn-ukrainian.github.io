@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import py_compile
 import shlex
 import shutil
 import subprocess
@@ -73,6 +74,7 @@ UNSCOPED_RULE_FILES = (
 )
 CLAUDE_RULE_FILES = (
     "_load-via-api.md",
+    "task-scoped-reading.md",
     "activity-yaml.md",
     "mcp-sources-and-dictionaries.md",
     "pipeline.md",
@@ -94,6 +96,7 @@ def _copy_repo_subset(target: Path) -> None:
         # mirror every file the script actually invokes, or deploy exits non-zero
         # here for a reason that has nothing to do with the behaviour under test.
         Path("scripts/deploy/agent_directory.py"),
+        Path("scripts/deploy/retire_codex_skills.py"),
         Path("scripts/deploy/reap_agent_mirrors.py"),
         Path("scripts/deploy/sync_agent_mirror.py"),
         Path("scripts/lint_prompts.py"),
@@ -218,7 +221,7 @@ def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
             assert (repo / mirror_root / shared_file).read_bytes() == canonical.read_bytes()
     for skill_name in SHARED_CURRICULUM_SKILLS:
         canonical_skill = repo / "agents_extensions" / "shared" / "skills" / skill_name
-        for mirror_root in (".claude", ".agent", ".agents", ".codex", ".gemini"):
+        for mirror_root in (".claude", ".agent", ".agents", ".gemini"):
             deployed_skill = repo / mirror_root / "skills" / skill_name
             assert (deployed_skill / "SKILL.md").read_bytes() == (canonical_skill / "SKILL.md").read_bytes()
             assert (deployed_skill / "agents" / "openai.yaml").read_bytes() == (
@@ -703,7 +706,7 @@ def test_codex_config_and_hooks_are_managed_sources_not_orphans() -> None:
 
     assert (REPO_ROOT / "agents_extensions" / "codex" / "hooks.json").exists()
     assert (REPO_ROOT / "agents_extensions" / "codex" / "config.toml").exists()
-    assert 'ORPHAN_PATHS_CODEX="settings.local.json"' in shared
+    assert 'ORPHAN_PATHS_CODEX="settings.local.json retired-skills"' in shared
     assert 'CODEX_OVERLAY_PATHS="config.toml hooks.json memory"' in shared
     assert "$CODEX_OVERLAY_PATHS" in check
 
@@ -963,3 +966,195 @@ def test_drift_is_caught(tmp_path: Path) -> None:
     assert check_result.returncode != 0
     assert "Deploy-script drift between agents_extensions/shared and .claude" in combined_output
     assert "pipeline.md" in combined_output
+
+
+def test_codex_skills_have_one_discovery_root_and_migrate_verified_legacy(tmp_path: Path) -> None:
+    repo = _init_checkout(tmp_path)
+    _init_git_history(repo)
+    source = repo / "agents_extensions/shared/skills"
+    legacy = repo / ".codex/skills"
+    shutil.copytree(source, legacy)
+    result = _run(repo, DEPLOY_SCRIPT)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert not legacy.exists()
+    for skill in source.glob("*/SKILL.md"):
+        relative = skill.relative_to(source)
+        for mirror in (".agents/skills", ".claude/skills", ".agent/skills", ".gemini/skills"):
+            # Existing Claude orphan exclusion '*-epic' also excludes these
+            # nested names; this migration preserves that harness's policy.
+            if mirror == ".claude/skills" and skill.parent.name.endswith("-epic"):
+                continue
+            assert (repo / mirror / relative).read_bytes() == skill.read_bytes()
+    assert _run(repo, CHECK_SCRIPT).returncode == 0
+    assert "No changes to deploy" in _run(repo, DEPLOY_SCRIPT).stdout
+
+
+def test_codex_legacy_migration_preserves_modified_content(tmp_path: Path) -> None:
+    repo = _init_checkout(tmp_path)
+    assert _run(repo, DEPLOY_SCRIPT).returncode == 0
+    _init_git_history(repo)
+    legacy = repo / ".codex/skills"
+    shutil.copytree(repo / "agents_extensions/shared/skills", legacy)
+    changed = legacy / "track-completion/SKILL.md"
+    changed.write_text(changed.read_text() + "\nUser local changes\n")
+    before = {p.relative_to(legacy): p.read_bytes() for p in legacy.rglob("*") if p.is_file()}
+    result = _run(repo, DEPLOY_SCRIPT)
+    assert result.returncode != 0
+    assert "Unverified legacy Codex skill content" in result.stdout
+    assert before == {p.relative_to(legacy): p.read_bytes() for p in legacy.rglob("*") if p.is_file()}
+    assert _run(repo, CHECK_SCRIPT).returncode != 0
+
+
+def test_codex_legacy_python_cache_does_not_block_driver_deployment(tmp_path: Path) -> None:
+    repo = _init_checkout(tmp_path)
+    source = repo / "agents_extensions/shared/skills"
+    canonical_cache = source / "track-completion/scripts/__pycache__"
+    if canonical_cache.exists():
+        shutil.rmtree(canonical_cache)
+    _init_git_history(repo)
+    legacy = repo / ".codex/skills"
+    shutil.copytree(source, legacy)
+    cache = legacy / "track-completion/scripts/__pycache__/bounded_completion.cpython-312.pyc"
+    py_compile.compile(str(legacy / "track-completion/scripts/bounded_completion.py"), cfile=str(cache), doraise=True)
+    payload = cache.read_bytes()
+    assert not canonical_cache.exists()
+
+    deploy = _run(repo, DEPLOY_SCRIPT)
+    assert deploy.returncode == 0, deploy.stdout + deploy.stderr
+    assert not legacy.exists()
+    retained = list((repo / ".codex/retired-skills").glob("*/skills"))
+    assert len(retained) == 1
+    backup = retained[0] / cache.relative_to(legacy)
+    assert backup.read_bytes() == payload
+    assert (repo / ".agents/skills/track-completion/SKILL.md").is_file()
+    check = _run(repo, CHECK_SCRIPT)
+    assert check.returncode == 0, check.stdout + check.stderr
+    repeat = _run(repo, DEPLOY_SCRIPT)
+    assert repeat.returncode == 0, repeat.stdout + repeat.stderr
+    assert "No changes to deploy" in repeat.stdout
+    assert backup.read_bytes() == payload
+
+
+def test_codex_legacy_migration_recognizes_committed_source_before_edits(tmp_path: Path) -> None:
+    repo = _init_checkout(tmp_path)
+    source = repo / "agents_extensions/shared/skills"
+    shutil.copytree(source, repo / ".codex/skills")
+    _init_git_history(repo)
+    skill = source / "track-completion/SKILL.md"
+    skill.write_text(skill.read_text() + "\nUpdated source\n")
+    result = _run(repo, DEPLOY_SCRIPT)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert not (repo / ".codex/skills").exists()
+    assert (repo / ".agents/skills/track-completion/SKILL.md").read_bytes() == skill.read_bytes()
+
+
+@pytest.mark.parametrize("unsafe_kind", ["untracked-source", "symlink", "unknown-directory"])
+def test_codex_legacy_migration_requires_provenance_and_preserves_unsafe_content(
+    tmp_path: Path, unsafe_kind: str,
+) -> None:
+    repo = _init_checkout(tmp_path)
+    _init_git_history(repo)
+    legacy = repo / ".codex/skills"
+    legacy.mkdir(parents=True)
+    if unsafe_kind == "symlink":
+        outside = tmp_path / "outside"
+        outside.mkdir()
+        (outside / "SKILL.md").write_text("User data")
+        (legacy / "local").symlink_to(outside, target_is_directory=True)
+    elif unsafe_kind == "unknown-directory":
+        (legacy / "local").mkdir()
+    else:
+        source = repo / "agents_extensions/shared/skills/local/SKILL.md"
+        source.parent.mkdir()
+        source.write_text("User data")
+        (legacy / "local").mkdir()
+        (legacy / "local/SKILL.md").write_bytes(source.read_bytes())
+    result = _run(repo, DEPLOY_SCRIPT)
+    assert result.returncode != 0
+    assert "preserve and reconcile" in result.stdout
+    assert (legacy / "local").exists()
+    if unsafe_kind == "symlink":
+        assert (outside / "SKILL.md").read_text() == "User data"
+    elif unsafe_kind == "untracked-source":
+        assert (legacy / "local/SKILL.md").read_text() == "User data"
+
+
+def test_codex_legacy_migration_works_after_updated_sources_are_committed(tmp_path: Path) -> None:
+    repo = _init_checkout(tmp_path)
+    _init_git_history(repo)
+    source = repo / "agents_extensions/shared/skills"
+    shutil.copytree(source, repo / ".codex/skills")
+    skill = source / "track-completion/SKILL.md"
+    skill.write_text(skill.read_text() + "\nCommitted source revision\n")
+    assert _run_command(repo, ["git", "add", "agents_extensions"]).returncode == 0
+    assert _run_command(repo, ["git", "commit", "-qm", "revise source"]).returncode == 0
+    result = _run(repo, DEPLOY_SCRIPT)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert not (repo / ".codex/skills").exists()
+    assert (repo / ".agents/skills/track-completion/SKILL.md").read_bytes() == skill.read_bytes()
+
+
+def test_codex_retained_capture_survives_full_redeploy_with_late_writes(tmp_path: Path) -> None:
+    repo = _init_checkout(tmp_path)
+    _init_git_history(repo)
+    source = repo / "agents_extensions/shared/skills"
+    shutil.copytree(source, repo / ".codex/skills")
+    legacy_file = repo / ".codex/skills/track-completion/SKILL.md"
+    with legacy_file.open("r+b", buffering=0) as writer:
+        initial = _run(repo, DEPLOY_SCRIPT)
+        assert initial.returncode == 0, initial.stdout + initial.stderr
+        retained = list((repo / ".codex/retired-skills").glob("*/skills"))
+        assert len(retained) == 1
+        writer.seek(0)
+        writer.write(b"Preserve late user writes")
+        writer.truncate()
+    backup_file = retained[0] / "track-completion/SKILL.md"
+    updated = source / "track-completion/SKILL.md"
+    updated.write_text(updated.read_text() + "\nSource change forces complete deployment.\n")
+    # Full rsync/diff/orphan/check paths must all preserve the recovery storage.
+    redeploy = _run(repo, DEPLOY_SCRIPT)
+    assert redeploy.returncode == 0, redeploy.stdout + redeploy.stderr
+    assert backup_file.read_bytes() == b"Preserve late user writes"
+    assert not (repo / ".codex/skills").exists()
+    assert (repo / ".agents/skills/track-completion/SKILL.md").read_bytes() == updated.read_bytes()
+    check = _run(repo, CHECK_SCRIPT)
+    assert check.returncode == 0, check.stdout + check.stderr
+    assert "No changes to deploy" in _run(repo, DEPLOY_SCRIPT).stdout
+    assert backup_file.read_bytes() == b"Preserve late user writes"
+
+
+
+@pytest.mark.parametrize("sibling", ["skills-custom", "retired-skills-user-notes", "skills retired-skills", "skills\nretired-skills", "skills: retired-skills"])
+def test_codex_orphan_prefix_siblings_abort_deploy_and_preserve_user_content(
+    tmp_path: Path, sibling: str,
+) -> None:
+    repo = _init_checkout(tmp_path)
+    initial = _run(repo, DEPLOY_SCRIPT)
+    assert initial.returncode == 0, initial.stdout + initial.stderr
+    note = repo / ".codex" / sibling / "note.txt"
+    note.parent.mkdir()
+    note.write_bytes(b"Keep this unrelated user content\n")
+    redeploy = _run(repo, DEPLOY_SCRIPT)
+    assert redeploy.returncode != 0
+    assert "undeclared orphan" in redeploy.stdout
+    assert sibling in redeploy.stdout
+    assert note.read_bytes() == b"Keep this unrelated user content\n"
+
+
+def test_deploy_preflight_preserves_declared_glob_and_trailing_slash_subtrees(tmp_path: Path) -> None:
+    repo = _init_checkout(tmp_path)
+    (repo / ".codex").mkdir()
+    (repo / ".codex/.DS_Store").write_bytes(b"Ignored Finder metadata")
+    declared_notes = [
+        repo / ".claude/atlas-epic/nested/note.txt",
+        repo / ".gemini/tmp/nested/note.txt",
+    ]
+    for note in declared_notes:
+        note.parent.mkdir(parents=True)
+        note.write_bytes(b"Declared runtime content\n")
+    deployed = _run(repo, DEPLOY_SCRIPT)
+    assert deployed.returncode == 0, deployed.stdout + deployed.stderr
+    for note in declared_notes:
+        assert note.read_bytes() == b"Declared runtime content\n"
+    checked = _run(repo, CHECK_SCRIPT)
+    assert checked.returncode == 0, checked.stdout + checked.stderr

@@ -421,20 +421,11 @@ def test_readiness_contract_error_is_a_fail_closed_503(monkeypatch) -> None:
     assert response.json()["detail"]["code"] == "PREPARATION_AUTHORITY_UNAVAILABLE"
 
 
-def test_ready_to_build_is_additively_deprecated_and_session_start_migrated() -> None:
+def test_ready_to_build_is_retired_and_session_start_migrated() -> None:
     response = CLIENT.get("/api/state/ready-to-build?track=not-a-track")
 
-    assert response.status_code == 200
-    assert response.json() == {
-        "count": 0,
-        "modules": [],
-        "authority": "informational-only",
-        "semantics": "research-complete-candidates-not-generation-readiness",
-        "deprecated": True,
-        "replacement": "/api/state/preparation",
-    }
-    operation = CLIENT.get("/openapi.json").json()["paths"]["/api/state/ready-to-build"]["get"]
-    assert operation["deprecated"] is True
+    assert response.status_code == 404
+    assert "/api/state/ready-to-build" not in CLIENT.get("/openapi.json").json().get("paths", {})
     script = (ROOT / "scripts/session_start.sh").read_text(encoding="utf-8")
     assert "/api/state/ready-to-build" not in script
     assert "/api/state/preparation" in script

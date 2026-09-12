@@ -128,9 +128,14 @@ and the narrowly allowlisted dual paths.
 
 Shared skill `agents_extensions/shared/skills/caveman/` — default intensity **lite**
 (drop filler/hedging; keep articles and full sentences). `npm run agents:deploy`
-(`scripts/deploy_prompts.sh`) rsyncs it to `.claude/skills/caveman`, `.codex/skills/caveman`,
-the `.agent` overlay, `.agents/skills/caveman`, and `.gemini/skills/caveman`. Never hand-edit
-those deploy copies. Caveman is **style only** — never persisted artifacts (commits, PR/issue
+(`scripts/deploy_prompts.sh`) rsyncs it to `.claude/skills/caveman`, the `.agent`
+overlay, `.agents/skills/caveman`, and `.gemini/skills/caveman`. Codex discovers
+shared skills only through `.agents/skills`; Git `agents_extensions` remains
+canonical. Verified legacy `.codex/skills` trees move atomically to unique
+`.codex/retired-skills/<capture>/skills` backups, retained across later deploys.
+Migration never deletes backup contents, including concurrent writes; modified
+or unverified content and recreated active paths require reconciliation. Never
+hand-edit active deploy copies. Caveman is **style only** — never persisted artifacts (commits, PR/issue
 bodies, curriculum, runbooks, review-of-record text on GitHub) and never a substitute for
 fleet-comms durable state. Cursor, Kimi, GLM, and OpenCode consume it through the **host
 harness** skill tree of the CLI that actually launches them (same rule as Entire capture), not

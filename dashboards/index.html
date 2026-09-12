@@ -46,7 +46,7 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
     <h1>ukraine-ops</h1>
     <span>Operational dashboards for the Ukrainian curriculum pipeline</span>
   </div>
-  <nav class="monitor-nav" aria-label="Monitor sections">
+  <nav class="monitor-nav" aria-label="Ops API sections">
     <a class="active" href="/">Home</a>
     <a href="/orient.html">Orient</a>
     <a href="/fleet.html">Fleet</a>
@@ -61,7 +61,7 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
 <section class="hero">
   <div>
     <h2>Operations launchpad</h2>
-    <p>All Monitor API surfaces in one place: curriculum status, agent communications, build events, runtime health, artifacts, and review queues. <a href="/docs">Interactive API docs</a> and <a href="/api/contracts/routes">route contracts</a> available.</p>
+    <p>All Ops API surfaces in one place: curriculum status, agent communications, build events, runtime health, artifacts, and review queues. <a href="/docs">Interactive API docs</a> and <a href="/api/contracts/routes">route contracts</a> available.</p>
   </div>
 </section>
 
@@ -190,7 +190,7 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
 </main>
 
 <script>
-const API_TIMEOUT_MS = 5000;
+const API_TIMEOUT_MS = 20000;
 
 async function fetchJson(path) {
   const controller = new AbortController();
@@ -349,9 +349,9 @@ async function loadStats() {
   // Quality card is often >5s; defer it so it cannot gate first paint of the fast cards.
   const [data, pv, cMetrics, summary, orient, runtimeAgents, delegate, buildEvents, wiki, cost, contracts] = await Promise.all([
     safeFetch('/api/dashboard/overview'),
-    safeFetch('/api/state/pipeline-versions?fresh=true'),
+    safeFetch('/api/state/pipeline-versions'),
     safeFetch('/api/consultation/metrics'),
-    safeFetch('/api/state/summary?fresh=true'),
+    safeFetch('/api/state/summary'),
     safeFetch('/api/orient'),
     safeFetch('/api/runtime/agents'),
     safeFetch('/api/delegate/tasks?limit=100'),

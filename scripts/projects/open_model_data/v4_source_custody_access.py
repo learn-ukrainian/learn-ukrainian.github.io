@@ -19,6 +19,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sqlite3
 import sys
 import time
@@ -119,8 +120,22 @@ def _make_receipt_id(config_hash: str, index_hash: str, missing_report_hash: str
     return f"receipt.custody.{hashlib.sha256(seed).hexdigest()[:24]}"
 
 
+PRIMARY_REPO_ROOT_ENV = "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
+
+
 def _primary_repo_root() -> Path | None:
-    """Discover primary repository root if running inside a git worktree."""
+    """Resolve an extra search root from env or cwd-relative git discovery.
+
+    Fail closed: no baked host checkout path. An unset env plus failed
+    cwd-relative discovery returns None so callers do not invent a location.
+    """
+    raw = os.environ.get(PRIMARY_REPO_ROOT_ENV, "").strip()
+    if raw:
+        candidate = Path(raw)
+        resolved = candidate.resolve() if candidate.is_absolute() else (Path.cwd() / candidate).resolve()
+        if not resolved.is_dir():
+            raise CustodyAccessError(f"{PRIMARY_REPO_ROOT_ENV} is set but is not an existing directory")
+        return resolved
     try:
         cur = Path.cwd().resolve()
         for parent in [cur, *list(cur.parents)]:
@@ -140,9 +155,6 @@ def _primary_repo_root() -> Path | None:
                 return parent
     except Exception:
         pass
-    default_primary = Path("/home/ops/learn-ukrainian")
-    if default_primary.is_dir():
-        return default_primary
     return None
 
 

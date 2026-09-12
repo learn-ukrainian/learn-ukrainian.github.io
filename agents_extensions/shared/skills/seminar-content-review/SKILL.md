@@ -1,6 +1,6 @@
 ---
 name: seminar-content-review
-description: Fact-check BUILT seminar content (FOLK, HIST, BIO, ISTORIO, LIT and subtracks, OES, RUTH) against Wikipedia + Literary RAG + heritage dictionaries. Verifies every factual claim, catches ghost facts / ghost sources / confident fabrication, and runs decolonization + russicism checks. For built module CONTENT — not plans (use plan-review-seminar for plans, content-review for core levels).
+description: Fact-check built seminar content and source grounding. Use plan-review-seminar for plans and content-review for CORE content.
 argument-hint: "<track/slug | path to a content file>"
 effort: xhigh
 ---

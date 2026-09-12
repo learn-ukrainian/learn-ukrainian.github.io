@@ -93,11 +93,11 @@
 
   h2 { font-size: 22px; margin-top: 48px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
   h3 { font-size: 18px; margin-top: 32px; }
-  
+
   table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--sans); font-size: 14px; }
   th { text-align: left; background: var(--surface-2); padding: 10px 12px; border: 1px solid var(--rule); }
   td { padding: 10px 12px; border: 1px solid var(--rule); vertical-align: top; }
-  
+
   .callout {
     padding: 16px;
     border-radius: 4px;
@@ -342,7 +342,7 @@ scripts/audit_module.sh --skip-activities curriculum/l2-uk-en/{track}/{file}.md
 }
 </code></pre>
 <p>Check status without re-auditing:</p>
-<pre><code class="language-bash">curl -s http://localhost:8765/api/blue/live-status   # all tracks
+<pre><code class="language-bash">curl -s http://localhost:8765/api/state/build-status   # all tracks
 curl -s http://localhost:8765/api/gold/inspect/{track}/{slug}  # specific module
 </code></pre>
 <hr />

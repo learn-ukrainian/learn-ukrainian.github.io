@@ -4,8 +4,8 @@
   "total_trajectories": 1200,
   "total_dpo_pairs": 1200,
   "partition_counts": {
-    "train": 967,
-    "held_out": 233
+    "train": 966,
+    "held_out": 234
   },
   "partition_firewall": {
     "verified_partition_isolation": true,
@@ -13,11 +13,13 @@
     "train_ratio_target": 0.8
   },
   "quality_metrics": {
+    "vesum_verification_count": 1200,
+    "vesum_verification_denominator": 1200,
     "vesum_verification_rate": 1.0,
-    "textbook_attestation_rate": 0.545,
-    "textbook_attestation_count": 654,
-    "dictionary_attestation_rate": 0.5842,
-    "dictionary_attestation_count": 701,
+    "textbook_attestation_rate": 0.8275,
+    "textbook_attestation_count": 993,
+    "dictionary_attestation_rate": 0.8533,
+    "dictionary_attestation_count": 1024,
     "zero_private_paths": true,
     "zero_restricted_sources": true
   },
@@ -26,45 +28,45 @@
       "shard_index": 1,
       "partition": "train",
       "trajectories_file": "decolonization_trajectories_train_part001.jsonl",
-      "trajectories_bytes": 1768116,
-      "trajectories_sha256": "e5b4dae15c37ceeafe22f3891e23160c51229d9384eebd4b65bacd733bf05fb6",
+      "trajectories_bytes": 1799051,
+      "trajectories_sha256": "11e1564013ef6d8f46edc3eeae20d631c3e8a3cd0b58b22757dca29a047d59e1",
       "dpo_pairs_file": "decolonization_dpo_pairs_train_part001.jsonl",
-      "dpo_pairs_bytes": 616164,
-      "dpo_pairs_sha256": "4b969a4f2223830833609618143b0e520bf7fad282188ffb466665d6fc32dbe3",
-      "records_count": 400
+      "dpo_pairs_bytes": 622644,
+      "dpo_pairs_sha256": "655f63dc128849deccbd303b63d5f943b90cc91732b3d5771688291559ee3c6f",
+      "records_count": 336
     },
     {
       "shard_index": 2,
       "partition": "train",
       "trajectories_file": "decolonization_trajectories_train_part002.jsonl",
-      "trajectories_bytes": 1782568,
-      "trajectories_sha256": "72709b321d4da99c1e1aa1ed55fe69c16a2e0b1c920c774a221f8a530337f077",
+      "trajectories_bytes": 1796433,
+      "trajectories_sha256": "8ab53e79c58fddb1ba555bf2cda3f3eb1d64d9be950da4d98569c34243750cc6",
       "dpo_pairs_file": "decolonization_dpo_pairs_train_part002.jsonl",
-      "dpo_pairs_bytes": 607273,
-      "dpo_pairs_sha256": "76aaf73a86851d8d7c66785b1f50a634c4dfb3385698e37e13e5a254d2d384fb",
-      "records_count": 400
+      "dpo_pairs_bytes": 610321,
+      "dpo_pairs_sha256": "cc4c8c62547ad7cf1c77db191ad51ef08b4b65e3078d85b7be2d9df4e34b175f",
+      "records_count": 330
     },
     {
       "shard_index": 3,
       "partition": "train",
       "trajectories_file": "decolonization_trajectories_train_part003.jsonl",
-      "trajectories_bytes": 729102,
-      "trajectories_sha256": "0bc453fbe1a9015b9e056e209f1a6b600aa8523a35c5241234fcf336a2debbee",
+      "trajectories_bytes": 1688967,
+      "trajectories_sha256": "9fa6a0c89c821e78d6042f5932056bffe6cca294a217b0b914e6690b61774161",
       "dpo_pairs_file": "decolonization_dpo_pairs_train_part003.jsonl",
-      "dpo_pairs_bytes": 251630,
-      "dpo_pairs_sha256": "5c1282c1986a810df9e745d01b913dc5c1254c924b821ed9961153a371cba3bf",
-      "records_count": 167
+      "dpo_pairs_bytes": 553171,
+      "dpo_pairs_sha256": "d9788026b23dd2316b8db630b9bca32760ea1ad897bcaf8910ab2afa1c585615",
+      "records_count": 300
     },
     {
       "shard_index": 1,
       "partition": "held_out",
       "trajectories_file": "decolonization_trajectories_held_out_part001.jsonl",
-      "trajectories_bytes": 1041028,
-      "trajectories_sha256": "6115a92c39d3e69d76bca42e10c36dbf78277b5b24d1d8f5df00ca537b6cdaa9",
+      "trajectories_bytes": 1300231,
+      "trajectories_sha256": "6e6fdb1995de131fc4db71713ce8577013f784f334a1082be6b6d7e435afd189",
       "dpo_pairs_file": "decolonization_dpo_pairs_held_out_part001.jsonl",
-      "dpo_pairs_bytes": 356736,
-      "dpo_pairs_sha256": "a51ffd1ebb1e98fd0414011db704bac2b9f15c8f66877b16264bc9d2775f6515",
-      "records_count": 233
+      "dpo_pairs_bytes": 435200,
+      "dpo_pairs_sha256": "7ffc0f5d44e2f4610c01fd7c09274b61abeed932ad730ffba89ced6a6f0c4d10",
+      "records_count": 234
     }
   ]
 }

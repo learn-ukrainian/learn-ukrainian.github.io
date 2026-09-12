@@ -1,6 +1,6 @@
 ---
 name: apply-plan-fixes
-description: Apply plan-review fixes within the operator-authorized scope, preserving plan versions. Prepare concrete diffs for any unresolved scope or decision; prior authorization remains valid and silence never grants approval.
+description: Apply existing CORE or seminar plan-review findings within approved scope, preserving plan versions.
 argument-hint: "<track> [modules: all | 1 | 5-10 | slug-name] [--severity CRITICAL,HIGH | --all-fixes]"
 ---
 

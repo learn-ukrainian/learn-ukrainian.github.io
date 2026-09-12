@@ -1,6 +1,6 @@
 ---
 name: local-code-review
-description: Canonical code/infra closeout workflow — freezes scope, resolves the exact review target (local/commit/branch/PR), runs a non-mutating review, resolves a cross-family reviewer, and requires separate behavior proof for user-visible code or infrastructure changes. Never use as a learner-content semantic gate.
+description: Review an exact local, commit, branch, or PR code/infra target with independent review and behavior proof; excludes learner semantics.
 argument-hint: "[local | commit <sha> | branch <branch> <base> | pr <number>]"
 ---
 

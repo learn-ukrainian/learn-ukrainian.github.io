@@ -21,8 +21,10 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
 from audit.checks.activity_validation import (
+    check_activity_intentional_error_leak,
     check_duplicate_options,
     check_fill_in_answer_in_options,
+    check_fill_in_blank_formatting,
     check_indeclinable_case_drills,
     check_mark_the_words_answers_in_text,
     check_quiz_single_correct,
@@ -72,10 +74,12 @@ def scan_file(yaml_path: Path) -> list[dict]:
         check_select_min_correct(activities)
         + check_quiz_single_correct(activities)
         + check_fill_in_answer_in_options(activities)
+        + check_fill_in_blank_formatting(activities)
         + check_translate_single_correct(activities)
         + check_mark_the_words_answers_in_text(activities)
         + check_duplicate_options(activities)
         + check_indeclinable_case_drills(activities)
+        + check_activity_intentional_error_leak(activities)
     ):
         v["file"] = str(yaml_path.relative_to(PROJECT_ROOT))
         violations.append(v)
@@ -134,8 +138,14 @@ def main():
         "SELECT_MIN_CORRECT_MISMATCH": "select min_correct mismatch",
         "QUIZ_CORRECT_COUNT": "quiz wrong correct count",
         "FILL_IN_ANSWER_NOT_IN_OPTIONS": "fill-in answer not in options",
+        "FILL_IN_MISSING_BLANK": "fill-in missing blank marker",
+        "FILL_IN_EMPTY_SENTENCE": "fill-in empty sentence",
+        "FILL_IN_MULTIPLE_BLANKS": "fill-in multiple ambiguous blanks",
         "TRANSLATE_CORRECT_COUNT": "translate wrong correct count",
         "MARK_THE_WORDS_ANSWER_NOT_IN_TEXT": "mark-the-words answer not in text",
+        "DUPLICATE_OPTIONS": "duplicate options",
+        "INDECLINABLE_CASE_DRILL": "indeclinable case drill",
+        "INTENTIONAL_ERROR_LEAK": "intentional error leak without error typing",
         "PARSE_ERROR": "YAML parse error",
     }
     for err_type, viols in sorted(by_type.items()):

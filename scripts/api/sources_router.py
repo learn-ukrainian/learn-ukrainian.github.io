@@ -1,4 +1,4 @@
-"""Sources browse/search endpoints backed by SQLite source helpers (with legacy /api/rag alias)."""
+"""Sources browse/search endpoints backed by SQLite source helpers."""
 
 from __future__ import annotations
 

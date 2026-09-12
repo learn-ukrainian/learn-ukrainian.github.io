@@ -128,3 +128,43 @@ def test_every_atlas_jobs_route_matches_contracts():
         else:
             assert contract.mutates is False, f"{path} must have mutates=False"
 
+
+def test_dead_alias_inventory_contracts():
+    """Verify dead-alias/deprecated candidates in #7936 have honest contract notes."""
+    candidates = [
+        "/api/state/ready-to-build",
+        "/api/blue/live-status",
+        "/api/blue",
+        "/api/gold",
+        "/api/agent",
+        "/api/comms/messages",
+        "/api/comms/conversations",
+        "/api/comms/conversation",
+        "/api/comms/live-activity",
+        "/api/comms/send",
+        "/api/cost",
+        "/api/rag",
+        "/api/batch",
+    ]
+    for path in candidates:
+        contract = contract_for_route(path, "http")
+        assert contract is not None, f"missing contract for {path}"
+        assert "NOTE:" in contract.recommendation, f"contract for {path} missing inventory NOTE"
+        assert any(
+            cls in contract.recommendation for cls in ("compat_keep", "migrate_caller_first", "retire_now")
+        ), f"contract for {path} missing classification"
+
+    assert "NOTE: retire_now" in contract_for_route("/api/blue/live-status", "http").recommendation
+    assert "NOTE: retire_now" in contract_for_route("/api/rag", "http").recommendation
+    assert "NOTE: retire_now" in contract_for_route("/api/state/ready-to-build", "http").recommendation
+    assert "NOTE: retire_now" in contract_for_route("/api/cost", "http").recommendation
+
+    http_paths = {route.path for route in _public_http_routes()}
+    assert "/api/blue/live-status" not in http_paths
+    assert not any(path.startswith("/api/rag") for path in http_paths)
+    assert "/api/state/ready-to-build" not in http_paths
+    assert not any(path.startswith("/api/cost") for path in http_paths)
+
+    ws_contract = contract_for_route("/ws/batch", "websocket")
+    assert ws_contract is not None
+    assert "NOTE: compat_keep" in ws_contract.recommendation

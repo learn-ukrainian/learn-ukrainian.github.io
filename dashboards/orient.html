@@ -95,7 +95,7 @@ tr:last-child td { border-bottom: none; }
     <div id="refresh-status">Auto-refresh every 30s</div>
     <div id="generated-at">Waiting for data...</div>
   </div>
-  <nav class="monitor-nav" aria-label="Monitor sections">
+  <nav class="monitor-nav" aria-label="Ops API sections">
     <a href="/">Home</a>
     <a class="active" href="/orient.html">Orient</a>
     <a href="/fleet.html">Fleet</a>
@@ -168,7 +168,11 @@ tr:last-child td { border-bottom: none; }
 
 <script>
 const REFRESH_MS = 30000;
-const API_TIMEOUT_MS = 5000;
+// /api/orient alone is often ~4–5s on this host; a 5s client abort made the
+// glance page permanently "timed out" even when the API was healthy (#7976).
+const API_TIMEOUT_MS = 20000;
+const ORIENT_TIMEOUT_MS = 20000;
+const GLANCE_TIMEOUT_MS = 12000;
 let refreshTimer = null;
 let refreshHalted = false;
 
@@ -658,7 +662,7 @@ async function loadGlance() {
       ['projects', '/api/fleet/projects/v1', renderGlanceProjects],
     ].map(async ([key, url, render]) => {
       const node = document.getElementById(`glance-${key}`);
-      try { node.innerHTML = render(await fetchJson(url, 4000)); }
+      try { node.innerHTML = render(await fetchJson(url, GLANCE_TIMEOUT_MS)); }
       catch { node.textContent = 'Unknown — lookup unavailable'; }
     }));
   } finally { glanceLoading = false; }
@@ -680,8 +684,8 @@ async function loadOrient() {
   void loadGlance();
   try {
     const [orientResult, discussionsResult] = await Promise.allSettled([
-      fetchJson('/api/orient'),
-      fetchJson('/api/discussions/active')
+      fetchJson('/api/orient', ORIENT_TIMEOUT_MS),
+      fetchJson('/api/discussions/active', GLANCE_TIMEOUT_MS)
     ]);
     if (orientResult.status !== 'fulfilled') throw orientResult.reason;
     const data = orientResult.value;

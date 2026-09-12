@@ -1,8 +1,12 @@
-# Monitor API Reference
+# Ops API Reference (Monitor stream)
+
+Product name: **Ops API** (Operator API + UI). Stream / launcher key remains
+`monitor` (`./start-cursor-driver.sh --epic ops-api`). This file path keeps the
+historic `MONITOR-API` name during progressive rename (#7919 / #7968).
 
 Base URL: `http://localhost:8765`
 
-FastAPI auto-docs: `http://localhost:8765/docs` (Swagger UI)
+FastAPI auto-docs: `http://localhost:8765/docs` (Swagger UI; title **Ops API**)
 
 **Definition authority for the public surface**: `GET /api/contracts/routes` (returns the full `route_contracts` + `page_contracts` registry with `purpose`, `source_of_truth`, `freshness`, `consumers`, `overlap`, `stale_risk`, `recommendation`, `mutates`, `replacement`, and `response_schema_version` for every endpoint family and every `dashboards/*.html` page).
 
@@ -1045,25 +1049,11 @@ Returns per-track: `total`, `enriched`, `pending`, `pct`, `not_enriched` (first 
 
 ---
 
-### `GET /api/state/ready-to-build[?track=x]` (deprecated)
+### Retired Legacy Endpoint — `GET /api/state/ready-to-build` (HTTP 404)
 
-Legacy modules where research/dossier evidence exists but the orchestration
-content phase has not started. These are **research-complete candidates, not a
-generation-ready build queue**. In particular, BIO dossiers do not satisfy the
-BIO manual preparation gates. Migrate generation decisions to the exact module
-route under `/api/state/preparation/{track}/{slug}`.
-
-```bash
-# All tracks
-curl -s http://localhost:8765/api/state/ready-to-build | python3 -m json.tool
-
-# Specific track
-curl -s "http://localhost:8765/api/state/ready-to-build?track=hist" | python3 -m json.tool
-```
-
-Candidate membership and the `count`/`modules` shape remain compatible. The
-response additively labels itself `informational-only`, names its exact legacy
-semantics, and links the replacement.
+`GET /api/state/ready-to-build` previously returned legacy research-complete candidates.
+It was retired in #7947. Requests do not operate with deprecation headers and return HTTP `404 Not Found`.
+Callers must use canonical `/api/state/preparation` (or `/api/state/preparation/{track}/{slug}`).
 
 ---
 
@@ -1205,7 +1195,7 @@ curl -s http://localhost:8765/api/batch/dispatcher
 ### Audit & quality (existing dashboard router)
 ```bash
 # All tracks pass/fail overview
-curl -s http://localhost:8765/api/blue/live-status
+curl -s http://localhost:8765/api/state/build-status
 
 # Per-module detail for a track
 curl -s http://localhost:8765/api/dashboard/track/hist
@@ -1240,9 +1230,9 @@ Public Monitor endpoints for SQLite FTS5 source corpora, textbook chunks, litera
 | GET | `/api/sources/search_literary?q=...[&work=...][&genre=...][&period=...][&limit=5]` | Search literary and primary texts |
 | GET | `/api/sources/browse_images[?grade=...][&sort=size|name|grade][&page=0][&per_page=100]` | Browse textbook images on disk with pagination |
 
-### Legacy Alias — `/api/rag/*`
+### Retired Legacy Alias — `/api/rag/*` (HTTP 404)
 
-`/api/rag/*` mirrors `/api/sources/*` for backward compatibility with older scripts and dashboards. It is deprecated and scheduled for removal after the next quarterly cleanup pass. New callers must use `/api/sources/*`.
+`/api/rag/*` previously mirrored `/api/sources/*` for backward compatibility. It was retired in #7942 (closing #7939, documented in #7945) after all callers migrated. Requests to `/api/rag/*` do not operate with deprecation headers and return HTTP `404 Not Found`. Callers must use canonical `/api/sources/*`.
 
 ### Service Boundaries: Public Monitor vs. Private Teacher
 
@@ -2917,12 +2907,23 @@ future cleanup.
 
 | Deprecated | Replacement |
 |---|---|
-| `GET /api/blue/live-status` | `GET /api/state/build-status` |
 | `GET /api/comms/live-activity` | `GET /api/state/build-status` + `GET /api/build/events` stream |
 
 The deprecated routes still work for existing dashboards and scripts
 that haven't been updated — the contract is "log a warning and
 migrate", not "break suddenly".
+
+### Retired endpoints (HTTP 404)
+
+The following legacy endpoints and route aliases have been completely retired and unmounted (see #7942, #7945, #7947). They do **not** operate with deprecation headers; requests return HTTP `404 Not Found`. Callers must use the canonical endpoints:
+
+| Retired Route | Canonical Replacement | Status | Notes |
+|---|---|---|---|
+| `GET /api/blue/live-status` | `GET /api/state/build-status` | 404 Not Found | Retired in #7942 (#7945); callers migrated to `/api/state/build-status` |
+| `GET /api/rag/*` | `GET /api/sources/*` | 404 Not Found | Retired in #7942 (#7945); alias prefix unmounted, canonical endpoints are under `/api/sources/*` |
+| `GET /api/state/ready-to-build` | `GET /api/state/preparation` | 404 Not Found | Retired in #7947; callers migrated to `/api/state/preparation` |
+| `GET /api/cost/*` | `GET /api/analytics/cost/*` | 404 Not Found | Retired in #7947; duplicate mount unmounted, canonical endpoints are under `/api/analytics/cost/*` |
+
 
 ---
 

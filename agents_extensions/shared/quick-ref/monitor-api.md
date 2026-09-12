@@ -39,8 +39,8 @@ Bridge for comms/discuss: `.venv/bin/python scripts/ai_agent_bridge/__main__.py 
 ## Before Building
 
 ```bash
-# Queue: Phase A done, B not started
-curl -s "http://localhost:8765/api/state/ready-to-build?track=hist" | python3 -m json.tool
+# Curriculum preparation readiness
+curl -s "http://localhost:8765/api/state/preparation?track=hist" | python3 -m json.tool
 
 # Phase-level state for a track
 curl -s http://localhost:8765/api/state/pipeline/istorio | python3 -m json.tool
@@ -73,7 +73,7 @@ curl -s http://localhost:8765/api/state/review-coverage | python3 -m json.tool
 |----------|-------------|
 | `/api/state/summary` | Session start — total snapshot |
 | `/api/state/pipeline/{track}` | Inspect one track's v3/v4 phase progress (auto-detects per module) |
-| `/api/state/ready-to-build` | Before `build_module --all` |
+| `/api/state/preparation` | Before `build_module --all` (curriculum readiness) |
 | `/api/state/weak-points` | After batch — find what needs fixing |
 | `/api/state/failing` | After batch — find hard failures (includes `pipeline_version`) |
 | `/api/state/research-coverage` | Research quality health check |
@@ -95,9 +95,17 @@ curl -s "http://localhost:8765/api/state/pipeline-versions?track=a1" | python3 -
 ## Other Useful Endpoints
 
 ```bash
-curl -s http://localhost:8765/api/blue/live-status        # Pass/fail all tracks
+curl -s http://localhost:8765/api/state/build-status       # Pass/fail all tracks
 curl -s http://localhost:8765/api/dashboard/comms         # Broker messages + watcher
 curl -s http://localhost:8765/api/gold/inspect/{t}/{slug} # Deep module inspection
 ```
+
+## Retired Endpoints (HTTP 404)
+
+Retired in #7942 (#7945) and #7947; return HTTP 404 without deprecation headers:
+- `GET /api/blue/live-status` → use `GET /api/state/build-status`
+- `GET /api/rag/*` → use canonical `GET /api/sources/*`
+- `GET /api/state/ready-to-build` → use canonical `GET /api/state/preparation`
+- `GET /api/cost/*` → use canonical `GET /api/analytics/cost/*`
 
 Full reference: `docs/MONITOR-API.md`

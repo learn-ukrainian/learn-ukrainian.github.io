@@ -5,9 +5,19 @@ const vm = require('node:vm');
 const html = fs.readFileSync('dashboards/orient.html', 'utf8');
 function setup(fetchJson = async () => { throw Error('offline'); }) {
   const nodes = {};
-  const context = vm.createContext({Date, Set, JSON, fetchJson, document: {
-    getElementById(id) { return nodes[id] ||= {innerHTML: '', textContent: ''}; },
-  }});
+  const context = vm.createContext({
+    Date,
+    Set,
+    JSON,
+    fetchJson,
+    // Injected because the production page defines these above the extracted slice (#7976).
+    API_TIMEOUT_MS: 20000,
+    ORIENT_TIMEOUT_MS: 20000,
+    GLANCE_TIMEOUT_MS: 12000,
+    document: {
+      getElementById(id) { return nodes[id] ||= {innerHTML: '', textContent: ''}; },
+    },
+  });
   vm.runInContext(`function escapeHtml(v) { return String(v ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;'); }` + html.slice(html.indexOf('function opaqueHost('), html.indexOf('function stopRefresh(')), context);
   return {context, nodes};
 }
@@ -88,9 +98,9 @@ test('related cross-source observations form one seat without swallowing differe
   assert.equal(conflict[0].state,'unknown (conflicting reports)');
   assert.equal(c.uniqueSeats([{...driver,related:[]},{...delegate,related:[]}]).length,2);
 });
-test('one failed lookup leaves the other three panels usable with a four-second deadline', async () => {
+test('one failed lookup leaves the other three panels usable with the glance timeout budget', async () => {
   const {context:c,nodes}=setup(async (url, timeout) => {
-    assert.equal(timeout,4000);
+    assert.equal(timeout,12000);
     if (url==='/api/occupancy') throw Error('offline');
     if (url==='/api/epics/v1') return {streams:[]};
     if (url==='/api/fleet/workers/v1') return {hosts:[host]};

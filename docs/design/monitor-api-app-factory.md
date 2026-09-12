@@ -223,7 +223,7 @@ claim:
      `legacy_app` object exists to build once `main.py`'s bottom is rewritten to
      `app = create_app(production_context())` — there is nothing left to diff against.
      **Fixed, against the real current wiring** (`scripts/api/main.py:148-168`, read directly rather
-     than assumed): `FastAPI(title="Playground API", version="2.0.0", description=..., lifespan=
+     than assumed): `FastAPI(title="Ops API", version="2.0.0", description=..., lifespan=
      _lifespan)`, then `app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True,
      allow_methods=["*"], allow_headers=["*"])`, then `app.middleware("http")(resilience_middleware)`,
      then three `@app.exception_handler(...)` registrations for `StarletteHTTPException`,

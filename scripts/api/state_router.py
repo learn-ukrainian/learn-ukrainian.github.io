@@ -7,7 +7,6 @@ Endpoints:
   GET /api/state/pipeline/{track}     Per-module pipeline state for one track
   GET /api/state/preparation          Active manifest bundle/publication roster
   GET /api/state/preparation/{track}/{slug} Canonical one-module preparation
-  GET /api/state/ready-to-build       Deprecated research-complete candidates
   GET /api/state/weak-points          Modules with quality issues
   GET /api/state/build-status/{track}  Compact live build progress (one call)
   GET /api/state/build-status          All-tracks build progress summary
@@ -34,6 +33,7 @@ import asyncio
 import json
 import logging
 import re
+import threading
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any, Literal
@@ -115,6 +115,7 @@ from .state_coverage import (
 )
 from .state_helpers import (
     cache_get,
+    cache_get_or_compute,
     cache_get_with_age,
     cache_invalidate,
     cache_set,
@@ -124,9 +125,6 @@ from .state_helpers import (
     get_plan_slugs,
     get_research_score,
     get_word_target_from_plan,
-    is_content_done,
-    is_research_done,
-    load_module_state,
     read_v2_state,
     read_v3_state,
 )
@@ -135,11 +133,6 @@ from .state_issues import (
     compute_issues,
 )
 from .telemetry.response import add_json_telemetry, session_id_from_request
-
-# Re-export symbols used by dashboard_router and tests (backward compat)
-_detect_pipeline_version = detect_pipeline_version
-_is_research_done = is_research_done
-_is_content_done = is_content_done
 
 CODE_IMPLEMENT_LANE_PRIORITY: dict[str, int] = {
     "cursor": 0,
@@ -194,12 +187,167 @@ STATE_RESEARCH_COVERAGE_TTL_S = 300.0
 STATE_RESEARCH_DETAIL_TTL_S = 120.0
 STATE_REVIEW_COVERAGE_TTL_S = 300.0
 STATE_PIPELINE_VERSIONS_TTL_S = 60.0
+STATE_WEAK_POINTS_TTL_S = 60.0
 _PREPARATION_SELECTOR_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
+_state_scan_warm_lock = threading.Lock()
+_state_scan_warm_thread: threading.Thread | None = None
 
 
 def _ctx_cache_key(ctx: MonitorContext, *parts: object) -> str:
     """Cache key scoped to one MonitorContext root (process-global TTL cache)."""
     return ctx_scoped_ttl_key(ctx, *parts)
+
+
+def _compute_pipeline_versions_payload(ctx: MonitorContext, track: str | None) -> dict[str, Any]:
+    """Walk orchestration dirs and group modules by pipeline version."""
+    counts = {"v6": 0, "v5": 0, "v3": 0, "unbuilt": 0}
+    by_version: dict[str, list] = {"v6": [], "v5": [], "v3": [], "unbuilt": []}
+    per_track: dict[str, dict] = {}
+
+    level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
+
+    for level_cfg in level_cfgs:
+        track_id = level_cfg["id"]
+        plan_slugs = get_plan_slugs(
+            track_id, curriculum_root=ctx.roots.curriculum_root, plans_root=ctx.roots.plans_root
+        )
+        if not plan_slugs:
+            continue
+
+        track_dir = ctx.roots.curriculum_root / level_cfg["path"]
+        track_counts = {"v6": 0, "v5": 0, "v3": 0, "unbuilt": 0}
+
+        for num, slug in plan_slugs:
+            orch_dir = safe_join(track_dir / "orchestration", slug)
+            version = detect_pipeline_version(orch_dir)
+            if version not in counts:
+                version = "unbuilt"
+            counts[version] += 1
+            track_counts[version] += 1
+            by_version[version].append({"track": track_id, "num": num, "slug": slug})
+
+        per_track[track_id] = track_counts
+
+    total = sum(counts.values())
+    current_builds = counts["v6"]
+    legacy_builds = counts["v5"] + counts["v3"]
+    unbuilt_modules = counts["unbuilt"]
+    rebuild_backlog = legacy_builds + unbuilt_modules
+    built = current_builds + counts["v5"]
+    return {
+        "total": total,
+        "counts": counts,
+        "pct_v6": round(counts["v6"] / total * 100) if total else 0,
+        "pct_v5": round(counts["v5"] / total * 100) if total else 0,
+        "pct_current": round(current_builds / total * 100) if total else 0,
+        "pct_built": round(built / total * 100) if total else 0,
+        "current_builds": current_builds,
+        "legacy_builds": legacy_builds,
+        "unbuilt_modules": unbuilt_modules,
+        "rebuild_backlog": rebuild_backlog,
+        "build_state": {
+            "current": current_builds,
+            "legacy": legacy_builds,
+            "unbuilt": unbuilt_modules,
+            "backlog": rebuild_backlog,
+        },
+        "needs_rebuild": rebuild_backlog,
+        "per_track": per_track,
+        "v6_modules": by_version["v6"],
+        "v5_modules": by_version["v5"],
+        "generated_at": datetime.now(UTC).isoformat(),
+    }
+
+
+def _compute_weak_points_payload(
+    ctx: MonitorContext,
+    track: str | None,
+    min_score: int,
+    limit: int,
+) -> dict[str, Any]:
+    """Scan modules for audit/research/word-count weakness."""
+    weak = []
+    level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
+
+    for level_cfg in level_cfgs:
+        track_id = level_cfg["id"]
+        plan_slugs = get_plan_slugs(
+            track_id, curriculum_root=ctx.roots.curriculum_root, plans_root=ctx.roots.plans_root
+        )
+        track_dir = ctx.roots.curriculum_root / level_cfg["path"]
+
+        for num, slug in plan_slugs:
+            issues = []
+            audit = get_audit_status(track_dir, slug)
+
+            if audit["status"] == "fail":
+                issues.append("audit_fail")
+
+            research_score = get_research_score(track_dir, slug, track_id)
+            if research_score is not None and research_score < min_score:
+                issues.append(f"research_score_{research_score}")
+
+            word_count = audit.get("word_count", 0)
+            word_target = audit.get("word_target", 0)
+            if word_target == 0 and word_count > 0:
+                word_target = get_word_target_from_plan(
+                    track_id, slug, plans_root=ctx.roots.plans_root, curriculum_root=ctx.roots.curriculum_root
+                )
+            if word_target > 0 and word_count > 0 and word_count < word_target * 0.8:
+                issues.append(f"low_words_{word_count}/{word_target}")
+
+            if issues:
+                orch_dir = safe_join(track_dir / "orchestration", slug)
+                version = detect_pipeline_version(orch_dir)
+                weak.append(
+                    {
+                        "track": track_id,
+                        "num": num,
+                        "slug": slug,
+                        "audit_status": audit["status"],
+                        "word_count": word_count,
+                        "word_target": word_target,
+                        "research_score": research_score,
+                        "pipeline_version": version,
+                        "issues": issues,
+                    }
+                )
+
+    weak.sort(key=severity_key)
+    return {"count": len(weak), "modules": weak[:limit]}
+
+
+def _run_state_scan_warmup(ctx: MonitorContext) -> None:
+    """Populate the default expensive state-scan caches after process start."""
+    try:
+        cache_get_or_compute(
+            _ctx_cache_key(ctx, "pipeline_versions", "all"),
+            STATE_PIPELINE_VERSIONS_TTL_S,
+            lambda: _compute_pipeline_versions_payload(ctx, None),
+        )
+        cache_get_or_compute(
+            _ctx_cache_key(ctx, "weak_points", "all", 7, 20),
+            STATE_WEAK_POINTS_TTL_S,
+            lambda: _compute_weak_points_payload(ctx, None, 7, 20),
+        )
+    except Exception as exc:
+        logging.getLogger("state_router").warning("State scan warmup failed: %s", exc)
+
+
+def schedule_state_scan_warmup(ctx: MonitorContext) -> None:
+    """Detached warm for pipeline-versions + default weak-points (#7973)."""
+    global _state_scan_warm_thread
+    with _state_scan_warm_lock:
+        if _state_scan_warm_thread is not None and _state_scan_warm_thread.is_alive():
+            return
+        worker = threading.Thread(
+            target=_run_state_scan_warmup,
+            args=(ctx,),
+            name="state-scan-warmup",
+            daemon=True,
+        )
+        _state_scan_warm_thread = worker
+        worker.start()
 
 
 def _validate_preparation_query(request: Request, allowed: set[str]) -> None:
@@ -1803,87 +1951,25 @@ async def pipeline_versions(
     track: str | None = Query(None), fresh: bool = Query(False), ctx: MonitorContext = Depends(get_ctx)
 ):
     """All modules grouped by pipeline version."""
-
-    def _compute():
-        counts = {"v6": 0, "v5": 0, "v3": 0, "unbuilt": 0}
-        by_version: dict[str, list] = {"v6": [], "v5": [], "v3": [], "unbuilt": []}
-        per_track: dict[str, dict] = {}
-
-        level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
-
-        for level_cfg in level_cfgs:
-            track_id = level_cfg["id"]
-            plan_slugs = get_plan_slugs(
-                track_id, curriculum_root=ctx.roots.curriculum_root, plans_root=ctx.roots.plans_root
-            )
-            if not plan_slugs:
-                continue
-
-            track_dir = ctx.roots.curriculum_root / level_cfg["path"]
-            track_counts = {"v6": 0, "v5": 0, "v3": 0, "unbuilt": 0}
-
-            for num, slug in plan_slugs:
-                orch_dir = safe_join(track_dir / "orchestration", slug)
-                version = detect_pipeline_version(orch_dir)
-                if version not in counts:
-                    version = "unbuilt"
-                counts[version] += 1
-                track_counts[version] += 1
-                by_version[version].append({"track": track_id, "num": num, "slug": slug})
-
-            per_track[track_id] = track_counts
-
-        total = sum(counts.values())
-        current_builds = counts["v6"]
-        legacy_builds = counts["v5"] + counts["v3"]
-        unbuilt_modules = counts["unbuilt"]
-        rebuild_backlog = legacy_builds + unbuilt_modules
-        built = current_builds + counts["v5"]
-        return {
-            "total": total,
-            "counts": counts,
-            "pct_v6": round(counts["v6"] / total * 100) if total else 0,
-            "pct_v5": round(counts["v5"] / total * 100) if total else 0,
-            "pct_current": round(current_builds / total * 100) if total else 0,
-            "pct_built": round(built / total * 100) if total else 0,
-            "current_builds": current_builds,
-            "legacy_builds": legacy_builds,
-            "unbuilt_modules": unbuilt_modules,
-            "rebuild_backlog": rebuild_backlog,
-            "build_state": {
-                "current": current_builds,
-                "legacy": legacy_builds,
-                "unbuilt": unbuilt_modules,
-                "backlog": rebuild_backlog,
-            },
-            "needs_rebuild": rebuild_backlog,
-            "per_track": per_track,
-            "v6_modules": by_version["v6"],
-            "v5_modules": by_version["v5"],
-            "generated_at": datetime.now(UTC).isoformat(),
-        }
-
     cache_key = _ctx_cache_key(ctx, "pipeline_versions", track or "all")
-    if fresh:
-        cache_invalidate(cache_key)
-    cached = cache_get_with_age(cache_key, ttl=STATE_PIPELINE_VERSIONS_TTL_S)
-    if cached is not None:
-        value, age_s = cached
-        return _with_state_meta(
-            value,
-            source="fs:orchestration",
-            stale_after_s=STATE_PIPELINE_VERSIONS_TTL_S,
-            cache="hit",
-            age_s=age_s,
-        )
-    result = await asyncio.to_thread(_compute)
-    cache_set(cache_key, result)
+    was_warm = (not fresh) and cache_get(cache_key, STATE_PIPELINE_VERSIONS_TTL_S) is not None
+    result = await asyncio.to_thread(
+        cache_get_or_compute,
+        cache_key,
+        STATE_PIPELINE_VERSIONS_TTL_S,
+        lambda: _compute_pipeline_versions_payload(ctx, track),
+        force=fresh,
+    )
+    age_s = 0.0
+    aged = cache_get_with_age(cache_key, STATE_PIPELINE_VERSIONS_TTL_S)
+    if aged is not None:
+        age_s = aged[1]
     return _with_state_meta(
         result,
         source="fs:orchestration",
         stale_after_s=STATE_PIPELINE_VERSIONS_TTL_S,
-        cache="miss",
-        age_s=0.0,
+        cache="hit" if was_warm else "miss",
+        age_s=age_s,
     )
 
 
@@ -1977,117 +2063,23 @@ async def preparation_module(
     return _preparation_response(request, payload, status_code=status_code)
 
 
-@router.get("/ready-to-build", deprecated=True)
-async def ready_to_build(track: str | None = Query(None), ctx: MonitorContext = Depends(get_ctx)):
-    """Deprecated research-complete candidates; not generation readiness."""
-
-    def _compute():
-        ready = []
-        level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
-
-        for level_cfg in level_cfgs:
-            track_id = level_cfg["id"]
-            plan_slugs = get_plan_slugs(
-                track_id, curriculum_root=ctx.roots.curriculum_root, plans_root=ctx.roots.plans_root
-            )
-            track_dir = ctx.roots.curriculum_root / level_cfg["path"]
-
-            for num, slug in plan_slugs:
-                orch_dir = safe_join(track_dir / "orchestration", slug)
-                state = load_module_state(track_id, slug, orch_dir)
-
-                if is_research_done(state, track_dir, slug) and not is_content_done(state):
-                    version = detect_pipeline_version(orch_dir)
-                    research_phase = state.get("phases", {}).get("research", {})
-                    ready.append(
-                        {
-                            "track": track_id,
-                            "num": num,
-                            "slug": slug,
-                            "pipeline_version": version,
-                            "phase_a_ts": research_phase.get("ts"),
-                            "phase_a_mode": research_phase.get("mode"),
-                        }
-                    )
-        return {
-            "count": len(ready),
-            "modules": ready,
-            "authority": "informational-only",
-            "semantics": "research-complete-candidates-not-generation-readiness",
-            "deprecated": True,
-            "replacement": "/api/state/preparation",
-        }
-
-    return await asyncio.to_thread(_compute)
-
-
 @router.get("/weak-points")
 async def weak_points(
     track: str | None = Query(None),
     min_score: int = Query(7, ge=0, le=10),
     limit: int = Query(20, ge=1, le=500),
+    fresh: bool = Query(False),
     ctx: MonitorContext = Depends(get_ctx),
 ):
     """Modules with quality issues: failing audit, thin research, or low word count."""
     cache_key = _ctx_cache_key(ctx, "weak_points", track or "all", min_score, limit)
-    cached = cache_get(cache_key, ttl=60.0)
-    if cached is not None:
-        return cached
-
-    def _compute():
-        weak = []
-        level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
-
-        for level_cfg in level_cfgs:
-            track_id = level_cfg["id"]
-            plan_slugs = get_plan_slugs(
-                track_id, curriculum_root=ctx.roots.curriculum_root, plans_root=ctx.roots.plans_root
-            )
-            track_dir = ctx.roots.curriculum_root / level_cfg["path"]
-
-            for num, slug in plan_slugs:
-                issues = []
-                audit = get_audit_status(track_dir, slug)
-
-                if audit["status"] == "fail":
-                    issues.append("audit_fail")
-
-                research_score = get_research_score(track_dir, slug, track_id)
-                if research_score is not None and research_score < min_score:
-                    issues.append(f"research_score_{research_score}")
-
-                word_count = audit.get("word_count", 0)
-                word_target = audit.get("word_target", 0)
-                if word_target == 0 and word_count > 0:
-                    word_target = get_word_target_from_plan(
-                        track_id, slug, plans_root=ctx.roots.plans_root, curriculum_root=ctx.roots.curriculum_root
-                    )
-                if word_target > 0 and word_count > 0 and word_count < word_target * 0.8:
-                    issues.append(f"low_words_{word_count}/{word_target}")
-
-                if issues:
-                    orch_dir = safe_join(track_dir / "orchestration", slug)
-                    version = detect_pipeline_version(orch_dir)
-                    weak.append(
-                        {
-                            "track": track_id,
-                            "num": num,
-                            "slug": slug,
-                            "audit_status": audit["status"],
-                            "word_count": word_count,
-                            "word_target": word_target,
-                            "research_score": research_score,
-                            "pipeline_version": version,
-                            "issues": issues,
-                        }
-                    )
-
-        weak.sort(key=severity_key)
-        return {"count": len(weak), "modules": weak[:limit]}
-
-    result = await asyncio.to_thread(_compute)
-    cache_set(cache_key, result)
-    return result
+    return await asyncio.to_thread(
+        cache_get_or_compute,
+        cache_key,
+        STATE_WEAK_POINTS_TTL_S,
+        lambda: _compute_weak_points_payload(ctx, track, min_score, limit),
+        force=fresh,
+    )
 
 
 @router.get("/failing")

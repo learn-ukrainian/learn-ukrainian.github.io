@@ -115,11 +115,11 @@ all source identity, hashes, rights and review evidence must already be supplied
 It refuses invalid metadata and leaves an existing destination unchanged.
 
 ```bash
-/home/ops/learn-ukrainian/.venv/bin/python -m scripts.projects.open_model_data.model_view_exporter \
+$VENV/bin/python -m scripts.projects.open_model_data.model_view_exporter \
   materialize-human-source --source-records /approved-custody/source-records.jsonl \
   --reviewed-payload /approved-custody/reviewed-metadata.json \
   --source-text /approved-custody/source.txt --output /approved-custody/reviewed-human-payloads.jsonl
-/home/ops/learn-ukrainian/.venv/bin/python -m scripts.projects.open_model_data.model_view_exporter \
+$VENV/bin/python -m scripts.projects.open_model_data.model_view_exporter \
   continued-pretraining --source-records /approved-custody/source-records.jsonl \
   --payloads /approved-custody/reviewed-human-payloads.jsonl --origin human_authored \
   --representation-view faithful_literary --operation local_learning \

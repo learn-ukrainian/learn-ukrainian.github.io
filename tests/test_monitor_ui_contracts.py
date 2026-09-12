@@ -59,7 +59,7 @@ def test_playground_page_uses_shared_parchment_monitor_design(filename, active_l
     html = (ROOT / "dashboards" / filename).read_text(encoding="utf-8")
     assert '<link rel="stylesheet" href="/monitor.css">' in html
     assert 'class="monitor-nav"' in html
-    assert 'aria-label="Monitor sections"' in html
+    assert 'aria-label="Ops API sections"' in html
     assert active_link in html
     assert heading in html
     assert ":root" not in html
@@ -90,6 +90,20 @@ def test_orient_page_renders_active_discussions_widget():
     assert "renderDiscussions" in html
     assert "fleet.html?conversation=" in html
     assert "channels.html?channel=" not in html
+    # Client abort must outlast measured /api/orient latency (~4–5s) (#7976).
+    assert "ORIENT_TIMEOUT_MS = 20000" in html
+    assert "GLANCE_TIMEOUT_MS = 12000" in html
+    assert "fetchJson('/api/orient', ORIENT_TIMEOUT_MS)" in html
+
+
+def test_launchpad_uses_warm_state_cache_on_first_paint():
+    """Glance home must not force fresh=true on every load (defeats warm cache)."""
+    html = (DASHBOARDS / "index.html").read_text(encoding="utf-8")
+    assert "API_TIMEOUT_MS = 20000" in html
+    assert "/api/state/pipeline-versions?fresh=true" not in html
+    assert "/api/state/summary?fresh=true" not in html
+    assert "/api/state/pipeline-versions" in html
+    assert "/api/state/summary" in html
 
 
 def test_runtime_page_keeps_primary_monitor_nav():
@@ -210,14 +224,14 @@ def test_acp_page_is_a_read_only_master_detail_conversation_reader():
     assert "announceConversationStatus(message)" in html
     assert "white-space: pre-wrap" in html
     assert "Transcript is local-only. Open this page at localhost on the API host." in html
-    assert "Transcript is unavailable on this local Monitor instance." in html
+    assert "Transcript is unavailable on this local Ops API instance." in html
     assert "This conversation has no transcript messages." in html
     assert "Transcript data was malformed and was not rendered." in html
     assert "Transcript could not be loaded." in html
     assert "new URLSearchParams(location.search).get('conversation')" in html
     assert "Recent conversations" in html
     assert "Event flow" in html
-    assert "Message bodies are requested only from the loopback Monitor API." in html
+    assert "Message bodies are requested only from the loopback Ops API." in html
     assert "conversation.updated_at" in html
     assert "event.outcome" in html
     assert "event.duration_ms" in html

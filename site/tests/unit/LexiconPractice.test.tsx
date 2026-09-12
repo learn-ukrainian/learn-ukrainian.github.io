@@ -1060,8 +1060,8 @@ describe('LexiconPractice', () => {
     await user.click(screen.getByRole('button', { name: 'A2' }));
     await waitFor(() => expect(dashboard.querySelector('[data-mode="stress"]')).toBeInTheDocument());
     // 11 MODE_CARD_ORDER lexicon cards + 9 ZNO_PRACTICE_DECKS cards (#6620 added
-    // morphology/syntax/phonetics to the prior 6).
-    expect(dashboard.querySelectorAll('[data-mode]').length).toBe(20);
+    // morphology/syntax/phonetics to the prior 6) + 1 culture-error-correction card (#7961).
+    expect(dashboard.querySelectorAll('[data-mode]').length).toBe(21);
   });
 
   test('renders stress marks only on A1, while revealed daily sentence English stays available', () => {

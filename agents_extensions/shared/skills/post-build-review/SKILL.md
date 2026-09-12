@@ -1,6 +1,6 @@
 ---
 name: post-build-review
-description: Run the canonical read-only, versioned semantic review authorized by one bounded track-completion ledger, or an explicitly diagnostic standalone review that cannot complete a module. A normal BIO completion request routes through track-completion, which owns call and repair budgets.
+description: Run read-only semantic review for a track-completion ledger or an explicitly diagnostic standalone request; never complete a module alone.
 ---
 
 # Post-build review

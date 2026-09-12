@@ -1,6 +1,6 @@
 ---
 name: drive-epic
-description: Model-agnostic orchestrator playbook for driving ONE epic/track lane end-to-end over the fleet-comms message plane. Invoke this when you are launched as an epic/track driver (Grok, Sonnet-5, Gemini/AGY, Kimi, Claude, or Cursor) via a start-<model>-driver.sh --epic launch and told to "drive this epic". Teaches the METHOD — topology → route → dispatch → settle → cross-family review → merge → handoff — and defers all live roster/routing DATA to /api/rules and model_catalog.yaml. Not for main-orchestrator cold-start (that has its own hook) and not for writing a single module (use $track-completion).
+description: Drive one explicitly assigned epic or track through Fleet Comms. Use track-completion for a single curriculum module.
 effort: xhigh
 ---
 
