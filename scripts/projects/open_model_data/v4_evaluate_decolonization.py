@@ -315,7 +315,7 @@ RELATION_CHAIN_NO_FORM = (
 )
 
 TERMINAL_PUNCT = r"[.,;:!?…—–―−()\[\]{}»”]|--|\s+-\s+"
-TERMINAL_CARRIER_BOUNDARY = rf"(?:\s*(?={TERMINAL_PUNCT}|$|\n)|\s+(?={STOPWORD_PATTERN}\b))"
+TERMINAL_CARRIER_BOUNDARY = rf"(?:\s*(?={TERMINAL_PUNCT}|$)|(?:\s+(?={STOPWORD_PATTERN}\b)))"
 
 NAMED_ENTITY_PATTERNS = [
     re.compile(

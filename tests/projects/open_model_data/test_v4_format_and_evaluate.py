@@ -1281,3 +1281,25 @@ def test_nested_grammatical_descriptors_target_and_unrelated_subjects() -> None:
             assert not eval_d["is_pass"], f"Expected {phrase} before dash {dash} to fail"
             assert not eval_d["reasoning_grounded"], f"Expected {phrase} grounding before dash {dash} to fail"
             assert eval_d["composite_score"] <= 0.40
+
+    # P2: Line-wrapped valid subjects must pass across whitespace/newline
+    for phrase in ("варіант форми слова", "варіант форми іменника"):
+        r_wrap = f"Вживайте goodtoken, бо за словником ВЕСУМ це {phrase}\ngoodtoken з питомим суфіксом -ник."
+        eval_w = evaluate_single_response(target, alts, r_wrap)
+        assert eval_w["is_pass"], f"Expected line-wrapped {phrase} to pass"
+        assert eval_w["reasoning_grounded"], f"Expected line-wrapped {phrase} grounding to pass"
+        assert eval_w["composite_score"] == 1.0
+
+        r_wrap_q = f"Вживайте goodtoken, бо за словником ВЕСУМ це {phrase}\n«goodtoken» з питомим суфіксом -ник."
+        eval_wq = evaluate_single_response(target, alts, r_wrap_q)
+        assert eval_wq["is_pass"], f"Expected line-wrapped quoted {phrase} to pass"
+        assert eval_wq["reasoning_grounded"], f"Expected line-wrapped quoted {phrase} grounding to pass"
+        assert eval_wq["composite_score"] == 1.0
+
+    # P2: Line-wrapped terminal carrier followed by stopword must fail
+    for phrase in ("варіант форми іменник", "варіант форми слова"):
+        r_wrap_u = f"Вживайте goodtoken, бо за словником ВЕСУМ це {phrase}\nз питомим суфіксом -ник."
+        eval_wu = evaluate_single_response(target, alts, r_wrap_u)
+        assert not eval_wu["is_pass"], f"Expected line-wrapped {phrase} with stopword to fail"
+        assert not eval_wu["reasoning_grounded"], f"Expected line-wrapped {phrase} grounding to fail"
+        assert eval_wu["composite_score"] <= 0.40
