@@ -1,0 +1,17 @@
+# Independent cross-family CONTENT review — PR #7991 at exact head f3fe3aaa4739e1a124913e3c07e505bdf8582a4d (read-only)
+
+You are the review of record for Ukrainian learner content written by a Gemini (AGY) seat and repaired by the orchestrator. Check out nothing; read the PR head in place: the files are at
+`curriculum/l2-uk-en/a1-v2/things-have-gender/` (lessons.yaml, NOTES.md, lesson-1..3/{module.md, activities.yaml, vocabulary.yaml, resources.yaml}) on branch `agy/cu-p0-pilot-writer-things-have-gender` — use `git show f3fe3aaa4739e1a124913e3c07e505bdf8582a4d:<path>` so you review exactly this head. The original module for comparison: `git show 7829e74b6031cdcc4ef69895b5f42e0643569e44:curriculum/l2-uk-en/a1/things-have-gender/module.md` (and activities/vocabulary/resources.yaml).
+
+Context: epic curriculum-upgrade, Phase 0 pilot. The operator wants every A1 module split into ~60-minute lessons (four tabs each), all original prose preserved verbatim, at least 10 activities per lesson, Ukrainian-first presentation (em-dash English gloss, stress marks on every multi-syllable word, Ukrainian-only dialogues then a breakdown, Ukrainian-only recall, EN→UK translation only as workbook bonus), no named narrator, quotations only with attribution. A deterministic checker already proves structure, preservation, counts, render coverage and stress-mark correctness against the dictionary. YOUR job is what scripts cannot judge. Use the `sources` MCP tools (`verify_words`, `check_russian_shadow`, `search_ua_gec_errors`, `search_style_guide`, `query_pravopys`, `query_cefr_level`) — every language claim you make must cite a tool result.
+
+Report, per lesson and then overall, with PASS / FAIL / RISK and concrete quotes + line references:
+1. **Language correctness of the ADDED Ukrainian** (everything not in the original module): Russianisms, Surzhyk, calques, paronyms, case/gender/agreement errors, unnatural phrasing, Правопис 2019 spelling. Check every added sentence, not a sample.
+2. **Pedagogical fit of the split**: does each lesson stand alone for a 60-minute sitting (warm-up recalls the previous lesson; one clear teaching point; practice before production; a summary and hand-off)? Does lesson 3 close the module credibly? Is anything taught before it is introduced (student-aware: the learner has completed A1 modules 1–7 and, within this module, the previous lessons)?
+3. **Activities**: are the 19 new activities correct (answer keys right, distractors plausible, instructions clear, Ukrainian-only stems/options where required), and are they at A1 (items 4–6 words, no unintroduced vocabulary)? Solve each activity yourself; report any item with a wrong or ambiguous answer.
+4. **Vocabulary allocation**: are the 16 words per lesson the ones the lesson actually uses first? Are translations and usage sentences accurate?
+5. **Presentation rules**: em-dash glossing, no "X sounds like Y in English", dialogues Ukrainian-only with breakdown after, no narrator persona, attribution of any quoted material, English share not higher than the original module.
+6. **Resources**: does each cited source exist and match what the lesson used (textbook chunk_ids resolvable via `search_text`)?
+7. **Verdict**: APPROVE / REQUEST-CHANGES with a numbered fix list ranked by learner harm (a durable learner error ranks first).
+
+Do not modify any file. Finish with one line: `REVIEW-VERDICT: APPROVE` or `REVIEW-VERDICT: REQUEST-CHANGES`.
