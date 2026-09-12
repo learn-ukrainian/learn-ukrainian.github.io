@@ -904,10 +904,11 @@ Phase statuses: `"pending"` | `"complete"` | `"failed"` | `"in_progress"`
 Pipeline generation counts and rebuild pressure. **The single-glance migration dashboard.**
 
 **Caching (#7973):** process-local TTL (~60s) with **singleflight** — concurrent cold
-misses share one curriculum walk. API lifespan warms the default all-tracks key so a
-fresh process does not make the first caller pay the full scan. Pass `?fresh=true` to
-force one coalesced recompute (still singleflight). Response `meta.cache` is `hit` /
-`miss` when present.
+misses share one curriculum walk. API lifespan **schedules** a detached warm of the
+default all-tracks key (best-effort; does not block readiness). An early request
+right after process start may still initiate or join the scan and wait for it.
+Pass `?fresh=true` to force one coalesced recompute (still singleflight). Response
+`meta.cache` is `hit` / `miss` when present.
 
 ```bash
 curl -s http://localhost:8765/api/state/pipeline-versions | python3 -m json.tool
@@ -1154,9 +1155,10 @@ Criteria:
 - word count < 80% of `word_target`
 
 **Caching (#7973):** process-local TTL (~60s) with **singleflight** per
-`(track, min_score, limit)` key. API lifespan warms the default glance key
-(`all`, `min_score=7`, `limit=20`). Pass `?fresh=true` to force one coalesced
-recompute. Response schema is unchanged.
+`(track, min_score, limit)` key. API lifespan **schedules** a detached warm of the
+default glance key (`all`, `min_score=7`, `limit=20`) — best-effort; early callers
+after start may still wait on the first compute. Pass `?fresh=true` to force one
+coalesced recompute. Response schema is unchanged.
 
 ```bash
 curl -s "http://localhost:8765/api/state/weak-points?track=bio" | python3 -m json.tool

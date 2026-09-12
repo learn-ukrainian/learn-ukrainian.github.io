@@ -171,7 +171,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "http",
         "Mixed legacy pipeline telemetry plus canonical project, review, build, routing, and cold-start state.",
         "curriculum.yaml, plans, orchestration state, research/dossier docs, audit/review files, artifacts, and cost records.",
-        "State router TTLs by endpoint; major endpoints expose meta.source, meta.cache, meta.stale_after_s; selected endpoints support ?fresh=true. /api/state/pipeline-versions and /api/state/weak-points use ~60s TTL + singleflight coalesce; API lifespan warms default keys (#7973). /routing-budget serves a 12-minute CodexBar snapshot and never blocks on the CLI.",
+        "State router TTLs by endpoint; major endpoints expose meta.source, meta.cache, meta.stale_after_s; selected endpoints support ?fresh=true. /api/state/pipeline-versions and /api/state/weak-points use ~60s TTL + singleflight coalesce; API lifespan schedules best-effort detached warm of default keys (#7973) — early post-start callers may still wait on the first scan. /routing-budget serves a 12-minute CodexBar snapshot and never blocks on the CLI.",
         ("progress.html", "track-health.html", "quality.html", "index.html", "Site LiveStatus", "agents"),
         "Overlaps /api/dashboard projections, retired /api/blue/live-status, and legacy team views.",
         "low after #2790 for summary/progress; medium for state endpoints that do not expose meta yet",
