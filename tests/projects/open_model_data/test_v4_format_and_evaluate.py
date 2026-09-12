@@ -1224,6 +1224,10 @@ def test_nested_grammatical_descriptors_target_and_unrelated_subjects() -> None:
         "пояснення варіанта форми слова форма",
         "пояснення варіанта форми слова «форма»",
         "пояснення значення варіанта форми слова будинок",
+        "варіант форми форма",
+        "варіант форми «форма»",
+        "варіант форми будинок",
+        "варіант форми «будинок»",
     ):
         r_unrelated = f"Вживайте goodtoken, бо за словником ВЕСУМ це {phrase} з питомим суфіксом -ник."
         eval_u = evaluate_single_response(target, alts, r_unrelated)
