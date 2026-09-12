@@ -139,3 +139,7 @@ assert result["match_count"] == len(result["hits"])
 
 Beyond the explicitly documented #7955 batch correction, breaking changes
 require a new schema id (`sources.tool-result.v2`, …).
+
+## Exam/eval tool pack
+
+See [`EXAM_EVAL_PACK.md`](EXAM_EVAL_PACK.md) and machine manifest [`exam_eval_pack.v1.json`](exam_eval_pack.v1.json) (#7957).
