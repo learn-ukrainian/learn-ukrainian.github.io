@@ -43,7 +43,7 @@ def cache_source_is_tracked(root: Path, relative: str) -> bool:
     for parent in source.parents:
         if parent.is_symlink():
             return False
-        if parent == source_root:
+        if parent == root:
             break
     git_path = source.relative_to(root).as_posix()
     tracked = subprocess.run(

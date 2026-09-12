@@ -148,6 +148,23 @@ def test_runtime_cache_write_during_capture_is_retained_with_error(
     assert retained.read_bytes() == b"Concurrent cache write"
 
 
+@pytest.mark.parametrize("ancestor", ["agents_extensions", "agents_extensions/shared"])
+def test_runtime_cache_rejects_upper_canonical_source_symlink(
+    repo: Path, python_skill: Path, ancestor: str,
+) -> None:
+    cache = python_skill / "bounded_completion.cpython-312.pyc"
+    cache.write_bytes(b"Retain runtime bytes")
+    canonical = repo / ancestor
+    outside = repo.parent / "outside-source"
+    canonical.rename(outside)
+    canonical.symlink_to(outside, target_is_directory=True)
+    relative = cache.relative_to(repo / ".codex/skills").as_posix()
+    assert not migration.cache_source_is_tracked(repo, relative)
+    assert migration.migrate(repo, "apply") == 1
+    assert cache.read_bytes() == b"Retain runtime bytes"
+    assert not captures(repo)
+
+
 def test_capture_is_retained_and_repeated_run_never_removes_backup(repo: Path) -> None:
     assert migration.migrate(repo, "apply") == 0
     retained = captures(repo)
