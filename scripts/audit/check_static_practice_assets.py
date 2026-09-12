@@ -857,6 +857,17 @@ def check_assets(
         )
         practice.pop("_linguistic_shards", None)
 
+    # Practice Hub Quality Gate (Issue #7944)
+    from practice_quality_gate import run_all_practice_audits
+
+    qa_results = run_all_practice_audits(
+        sentence_inventory=sentence_inventory or DEFAULT_SENTENCE_INVENTORY,
+        vesum_db=vesum_db,
+    )
+    for cat, viols in qa_results.items():
+        for v in viols:
+            errors.append(f"practice_quality_gate [{cat}] {v.get('type')}: {v.get('message')}")
+
     coverage = _build_coverage(practice, levels)
     for level_row in practice.values():
         level_row.pop("mode_coverage", None)

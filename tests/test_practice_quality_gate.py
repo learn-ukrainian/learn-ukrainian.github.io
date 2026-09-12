@@ -110,7 +110,9 @@ def test_audit_error_correction_validates_contract(tmp_path: Path):
 
     violations = audit_error_correction_deck(deck_path)
     assert any(v["type"] == "ERROR_TARGET_NOT_IN_SENTENCE" and v["item"] == "drill_missing_target" for v in violations)
-    assert any(v["type"] == "CORRECT_TARGET_MISSING_IN_OPTIONS" and v["item"] == "drill_missing_in_options" for v in violations)
+    assert any(
+        v["type"] == "CORRECT_TARGET_MISSING_IN_OPTIONS" and v["item"] == "drill_missing_in_options" for v in violations
+    )
     assert not any(v["item"] == "drill_good" for v in violations)
 
 
@@ -127,6 +129,46 @@ def test_audit_sentence_inventory_intentional_errors(tmp_path: Path):
     violations = audit_sentence_inventory(inv_path)
     assert len(violations) == 1
     assert violations[0]["type"] == "INTENTIONAL_ERROR_LEAK"
+
+
+def test_audit_error_correction_vesum_attestation(tmp_path: Path, monkeypatch):
+    """Verify that unattested Ukrainian words in error-correction drills are flagged by VESUM."""
+    from scripts.audit import practice_quality_gate
+
+    deck = {
+        "drills": [
+            {
+                "id": "drill_valid",
+                "sentence": "Він брав участь у зборах.",
+                "errorWord": "приймав участь",
+                "correctForm": "брав",
+                "options": ["брав", "приймав"],
+                "explanation": "Калька.",
+            },
+            {
+                "id": "drill_unattested",
+                "sentence": "Це неіснуючеслово речення.",
+                "errorWord": "помилка",
+                "correctForm": "неіснуючеслово",
+                "options": ["неіснуючеслово", "варіант"],
+                "explanation": "Неіснуюче слово.",
+            },
+        ]
+    }
+    deck_path = tmp_path / "ec.json"
+    deck_path.write_text(json.dumps(deck, ensure_ascii=False), encoding="utf-8")
+
+    def mock_verify_word(word: str, db_path=None):
+        return word == "брав"
+
+    monkeypatch.setattr(practice_quality_gate, "verify_word", mock_verify_word)
+    fake_db = tmp_path / "mock_vesum.db"
+    fake_db.touch()
+
+    violations = audit_error_correction_deck(deck_path, vesum_db=fake_db)
+    assert any(v["type"] == "VESUM_UNATTESTED" and v["item"] == "drill_unattested" for v in violations), (
+        f"Expected VESUM_UNATTESTED violation, got: {violations}"
+    )
 
 
 def test_production_practice_quality_gate_passes():

@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """Unified Quality Gate for Practice Hub datasets and decks (Issue #7944).
 
-Audits all active Practice Hub assets:
+Audits active Practice Hub assets:
 1. Teacher Cloze deck (site/src/data/lexicon-teacher-cloze.json)
 2. Textbook Error Correction drills (data/practice/textbook-error-corrections.json)
 3. Lexicon Sentence Inventory (site/src/data/lexicon-sentence-inventory.json)
-4. Word of the Day daily pool (site/src/data/lexicon-daily-pool.json)
 
 Enforces:
 - Exact 1-blank integrity (_____)
@@ -36,24 +35,25 @@ try:
 except ImportError:
     from verification.vesum import verify_word
 
+try:
+    from scripts.rag.config import VESUM_DB_PATH as DEFAULT_VESUM_DB
+except ImportError:
+    try:
+        from rag.config import VESUM_DB_PATH as DEFAULT_VESUM_DB
+    except ImportError:
+        DEFAULT_VESUM_DB = PROJECT_ROOT / "data/vesum.db"
+
+try:
+    from scripts.audit.practice_linguistic import INTENTIONAL_ERROR_PATTERNS
+except ImportError:
+    from practice_linguistic import INTENTIONAL_ERROR_PATTERNS
+
 DEFAULT_TEACHER_CLOZE = PROJECT_ROOT / "site/src/data/lexicon-teacher-cloze.json"
 DEFAULT_ERROR_CORRECTIONS = PROJECT_ROOT / "data/practice/textbook-error-corrections.json"
 DEFAULT_SENTENCE_INVENTORY = PROJECT_ROOT / "site/src/data/lexicon-sentence-inventory.json"
-DEFAULT_DAILY_POOL = PROJECT_ROOT / "site/src/data/lexicon-daily-pool.json"
-DEFAULT_VESUM_DB = PROJECT_ROOT / "data/vesum.db"
 
 _BLANK_RE = re.compile(r"_{3,}")
-_INTENTIONAL_ERROR_PATTERNS = [
-    re.compile(r"\bНЕПРАВИЛЬНО\b"),
-    re.compile(r"\bНеправильно\s+(?:і\s+)?Правильно\b", re.IGNORECASE),
-    re.compile(r"\bПравильно\s+(?:і\s+)?НЕправильно\b", re.IGNORECASE),
-    re.compile(r"\bСУРЖИК\b"),
-    re.compile(r"\bАНТИСУРЖИК\b", re.IGNORECASE),
-    re.compile(r"\bПомилку\s+допущено\b", re.IGNORECASE),
-    re.compile(r"\bОрфографічну\s+помилку\b", re.IGNORECASE),
-    re.compile(r"\bВідредагуйте\s+речення\b", re.IGNORECASE),
-    re.compile(r"\bВиправте\s+помилк", re.IGNORECASE),
-]
+_INTENTIONAL_ERROR_PATTERNS = INTENTIONAL_ERROR_PATTERNS
 
 _CYRILLIC_WORD_RE = re.compile(r"^[а-яіїєґА-ЯІЇЄҐ'\-]+$")
 
@@ -92,9 +92,7 @@ def check_word_in_vesum(word: str, db_path: Path | str | None = None) -> bool:
     return False
 
 
-def audit_teacher_cloze_deck(
-    path: Path | str, vesum_db: Path | str | None = None
-) -> list[dict[str, Any]]:
+def audit_teacher_cloze_deck(path: Path | str, vesum_db: Path | str | None = DEFAULT_VESUM_DB) -> list[dict[str, Any]]:
     """Audit teacher cloze deck for structural, linguistic and quarantine integrity."""
     violations: list[dict[str, Any]] = []
     p = Path(path)
@@ -195,7 +193,7 @@ def audit_teacher_cloze_deck(
 
 
 def audit_error_correction_deck(
-    path: Path | str, vesum_db: Path | str | None = None
+    path: Path | str, vesum_db: Path | str | None = DEFAULT_VESUM_DB
 ) -> list[dict[str, Any]]:
     """Audit error-correction dataset for schema, substring match, and pedagogical validity."""
     violations: list[dict[str, Any]] = []
@@ -206,11 +204,7 @@ def audit_error_correction_deck(
     with open(p, encoding="utf-8") as f:
         data = json.load(f)
 
-    items = (
-        data.get("drills") or data.get("items") or data.get("corrections") or []
-        if isinstance(data, dict)
-        else data
-    )
+    items = data.get("drills") or data.get("items") or data.get("corrections") or [] if isinstance(data, dict) else data
 
     seen_ids: set[str] = set()
     for idx, item in enumerate(items, 1):
@@ -232,9 +226,7 @@ def audit_error_correction_deck(
         correct_target = item.get("correctForm") or item.get("correctTarget", "")
 
         if not sentence:
-            violations.append(
-                {"type": "EMPTY_SENTENCE", "item": item_id, "message": "Sentence is empty"}
-            )
+            violations.append({"type": "EMPTY_SENTENCE", "item": item_id, "message": "Sentence is empty"})
         elif error_target not in sentence:
             violations.append(
                 {
@@ -245,9 +237,7 @@ def audit_error_correction_deck(
             )
 
         if not correct_target:
-            violations.append(
-                {"type": "EMPTY_CORRECT_TARGET", "item": item_id, "message": "correctTarget is empty"}
-            )
+            violations.append({"type": "EMPTY_CORRECT_TARGET", "item": item_id, "message": "correctTarget is empty"})
         elif _normalize_plain(error_target) == _normalize_plain(correct_target):
             violations.append(
                 {
