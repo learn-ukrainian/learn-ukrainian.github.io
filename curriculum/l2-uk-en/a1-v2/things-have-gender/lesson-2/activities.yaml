@@ -134,19 +134,19 @@ inline:
 - id: act-203
   type: true-false
   title: 'Пра́вда чи ні: ре́чі в кімна́ті й су́мці'
-  instruction: Ви́значте, чи прави́льно вказа́но рід предме́та.
+  instruction: Ви́значте, чи пра́вильно вка́зано рід предме́та.
   statements:
-  - statement: У ме́не є стіл. («Стіл» — чолові́чий рід.)
+  - statement: У мене́ є стіл. («Стіл» — чолові́чий рід.)
     correct: true
-  - statement: У ме́не є ла́мпа. («Ла́мпа» — сере́дній рід.)
+  - statement: У мене́ є ла́мпа. («Ла́мпа» — сере́дній рід.)
     correct: false
-  - statement: У ме́не є лі́жко. («Лі́жко» — сере́дній рід.)
+  - statement: У мене́ є лі́жко. («Лі́жко» — сере́дній рід.)
     correct: true
-  - statement: У ме́не є су́мка. («Су́мка» — жіно́чий рід.)
+  - statement: У мене́ є су́мка. («Су́мка» — жіно́чий рід.)
     correct: true
-  - statement: У ме́не є телефо́н. («Телефо́н» — жіно́чий рід.)
+  - statement: У мене́ є телефо́н. («Телефо́н» — жіно́чий рід.)
     correct: false
-  - statement: У ме́не є дзе́ркало. («Дзе́ркало» — сере́дній рід.)
+  - statement: У мене́ є дзе́ркало. («Дзе́ркало» — сере́дній рід.)
     correct: true
 workbook:
 - type: match-up
@@ -171,37 +171,37 @@ workbook:
     right: notebook
   id: act-w2
 - type: fill-in
-  title: У ме́не є предме́ти
+  title: У мене́ є предме́ти
   instruction: Complete the object sentence.
   items:
-  - sentence: ___ ме́не є стіл.
+  - sentence: ___ мене́ є стіл.
     answer: У
     options:
     - У
     - Це
     - Хто
-    explanation: У ме́не є... is the I-have phrase.
-  - sentence: У ме́не ___ кни́га.
+    explanation: У мене́ є... is the I-have phrase.
+  - sentence: У мене́ ___ кни́га.
     answer: є
     options:
     - є
     - зва́ти
     - моя́
-    explanation: У ме́не є... stays as one phrase.
+    explanation: У мене́ є... stays as one phrase.
   - sentence: У ___ є телефо́н?
-    answer: те́бе
+    answer: тебе́
     options:
-    - те́бе
-    - ме́не
+    - тебе́
+    - мене́
     - мій
-    explanation: У те́бе є...? asks one familiar person.
-  - sentence: У ме́не є ___.
+    explanation: У тебе́ є...? asks one familiar person.
+  - sentence: У мене́ є ___.
     answer: вікно́
     options:
     - вікно́
     - він
     - моя́
-    explanation: Вікно́ is an object noun after У ме́не є.
+    explanation: Вікно́ is an object noun after У мене́ є.
   - sentence: Де стіл? ___ тут.
     answer: Він
     options:
@@ -249,21 +249,21 @@ workbook:
     - фо́то
 - id: act-205
   type: unjumble
-  title: Складі́ть ре́чення з «У ме́не є»
+  title: Складі́ть ре́чення з «У мене́ є»
   instruction: Складі́ть слова́ у прави́льному поря́дку.
   words:
   - words:
     - У
-    - ме́не
+    - мене́
     - є
     - стіл
-    answer: У ме́не є стіл.
+    answer: У мене́ є стіл.
   - words:
     - У
-    - те́бе
+    - тебе́
     - є
     - ла́мпа
-    answer: У те́бе є ла́мпа?
+    answer: У тебе́ є ла́мпа?
   - words:
     - Це
     - моя́
@@ -321,7 +321,7 @@ workbook:
     - стіл
     - стіна́
     answer: стіна́
-    explanation: Стіна́ — жіно́чий рід, і́нші — чолові́чий.
+    explanation: Сті́на — жіно́чий рід, і́нші — чолові́чий.
   - words:
     - кімна́та
     - стіна́
@@ -342,9 +342,9 @@ workbook:
   instruction: Перекладі́ть ре́чення на украї́нську мо́ву.
   items:
   - sentence: I have a table and a bed.
-    answer: У ме́не є стіл і лі́жко.
+    answer: У мене́ є стіл і лі́жко.
   - sentence: Do you have a phone?
-    answer: У те́бе є телефо́н?
+    answer: У тебе́ є телефо́н?
   - sentence: This is my bag.
     answer: Це моя́ су́мка.
   - sentence: Where is the mirror?

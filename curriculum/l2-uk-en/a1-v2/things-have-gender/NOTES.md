@@ -53,7 +53,8 @@ All new activities adhere to the A1 allowlist and presentation standards:
    - Unverified lemmas: 0 (limit <= 5 per lesson).
 2. **Stress Verification (`verify_stress`)**:
    - Every multi-syllable Ukrainian form in prose, activities, and vocabulary carries a combining acute accent (U+0301).
-   - Unverified stress: 0 (limit <= 10 per lesson).
+   - Orchestrator batch re-verification (2026-09-12, `scripts.verification.stress`) found and corrected 29 forms the writer had marked wrongly (e.g. *ме́не → мене́*, *диви́мося → ди́вимося*, *Лі́топис → літо́пис*, *твер́дження → тве́рдження*). Writer-side stress claims were not tool-backed; the checker now re-verifies every stressed form.
+   - Not in the stress dictionary (listed per lesson in `lessons.yaml: unverified_stress`, left as written): *уро́ці* (loc. of *уро́к*), *фемініти́ви / фемініти́вом / фемініти́вами* (*фемініти́в*, stress per Правопис/СУМ-20 usage).
 3. **Russian Shadow & Morphology (`is_russian_pattern`)**:
    - All standard vocabulary clear of Russian shadow.
    - Proper nouns (`Микола`, `Ілля`, `Павло`, `Оксана`) from baseline curriculum are whitelisted as standard Ukrainian personal names.

@@ -47,20 +47,25 @@ async function checkScreen(s, mode) {
     await page.screenshot({ path: path.join(outDir, `${mode}-${s}.png`), fullPage: true });
     return;
   }
-  if (n !== 4) failures.push(`${mode}: screen ${s} has ${n} tabs, expected 4`);
-  for (let i = 0; i < n; i++) {
-    const t = tabs.nth(i);
-    const id = await t.getAttribute('data-tab');
+  const expected = ['urok', 'slovnyk', 'vpravy', 'resursy'].map((t) => `${s}-${t}`);
+  const ids = [];
+  for (let i = 0; i < n; i++) ids.push(await tabs.nth(i).getAttribute('data-tab'));
+  if (JSON.stringify(ids) !== JSON.stringify(expected)) failures.push(`${mode}: screen ${s} tabs ${JSON.stringify(ids)} != expected ${JSON.stringify(expected)}`);
+  for (const id of expected) {
+    const t = section.locator(`.tab[data-tab="${id}"]`);
+    if ((await t.count()) !== 1) { failures.push(`${mode}: ${s} tab button ${id} missing`); continue; }
     await t.click();
     const panel = page.locator(`#${id}`);
+    if ((await panel.count()) !== 1) { failures.push(`${mode}: ${s} panel #${id} missing`); continue; }
     const visible = await panel.isVisible();
-    const othersVisible = await section.locator('.tabc.active').count();
+    const visiblePanels = await section.locator('.tabc:visible').count();
+    const visibleIds = await section.locator('.tabc:visible').evaluateAll((els) => els.map((e) => e.id));
     const words = visible ? (await panel.innerText()).split(/\s+/).filter(Boolean).length : 0;
     const activities = visible ? await panel.locator('.exercise').count() : 0;
     const ov = await overflow();
-    results.push({ mode, screen: s, tab: id, visible, words, activities, overflow: ov });
+    results.push({ mode, screen: s, tab: id, visible, visiblePanels, words, activities, overflow: ov });
     if (!visible) failures.push(`${mode}: ${s}/${id} panel not visible after click`);
-    if (othersVisible !== 1) failures.push(`${mode}: ${s}/${id} — ${othersVisible} panels active, expected 1`);
+    if (visiblePanels !== 1 || visibleIds[0] !== id) failures.push(`${mode}: ${s}/${id} — visible panels ${JSON.stringify(visibleIds)}, expected [${id}]`);
     if (mode === 'desktop' && words < 40) failures.push(`${mode}: ${s}/${id} thin (${words} words)`);
     if (mode === 'phone' && ov) failures.push(`${mode}: ${s}/${id} overflows horizontally at 400px`);
     await page.screenshot({ path: path.join(outDir, `${mode}-${s}-${id}.png`), fullPage: true });

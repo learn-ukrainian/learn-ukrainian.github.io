@@ -1,6 +1,6 @@
 # Він, вона́ чи воно́?
 
-У мо́дулі 7 ви переві́рили свій пе́рший конта́кт — you checked your first contact: привіта́ння, імена́ та сім'ю́. Тепе́р ми диви́мося на предме́ти навко́ло, бо в украї́нській мо́ві ко́жен іме́нник ма́є рід — every noun has a gender.
+У мо́дулі 7 ви переві́рили свій пе́рший конта́кт — you checked your first contact: привіта́ння, імена́ та сім'ю́. Тепе́р ми ди́вимося на предме́ти навко́ло, бо в украї́нській мо́ві ко́жен іме́нник ма́є рід — every noun has a gender.
 
 English has "he," "she," and "it." Ukrainian also has **він**, **вона́**,
 and **воно́**, but Ukrainian uses them for every noun, including things in your
@@ -12,7 +12,7 @@ By the end, you can:
 - test common nouns with **він / вона́ / воно́**;
 - use the easy ending signals: consonant = usually masculine, **-а / -я** =
   usually feminine, **-о / -е** = usually neuter;
-- say simple room and bag lines with **У ме́не є...**;
+- say simple room and bag lines with **У мене́ є...**;
 - choose **мій / моя́ / моє́** as a whole phrase with a noun;
 - use **вчи́телька** and **лі́карка** when the person is a woman;
 - repair the most common A1 gender traps without comparing Ukrainian to any
@@ -32,18 +32,18 @@ phrase travels with this noun: **мій**, **моя́**, or **моє́**?"
 
 ```text
 Марко́: Приві́т! Диви́сь, це моя́ кімна́та.
-Окса́на: Кла́сно! У те́бе є стіл?
+Окса́на: Кла́сно! У тебе́ є стіл?
 Марко́: Так, це мій стіл. І моє́ лі́жко.
 Окса́на: А це що?
 Марко́: Це моє́ вікно́. А це — моя́ кни́га.
 ```
 
-Розбі́р розмо́ви пода́но ни́жче — the breakdown of the conversation is given below:
+Розбі́р розмо́ви по́дано ни́жче — the breakdown of the conversation is given below:
 
 | Украї́нська | English support |
 | --- | --- |
 | **Диви́сь, це моя́ кімна́та.** | Look, this is my room. |
-| **У те́бе є стіл?** | Do you have a table? |
+| **У тебе́ є стіл?** | Do you have a table? |
 | **Так, це мій стіл. І моє́ лі́жко.** | Yes, this is my table. And my bed. |
 | **Це моє́ вікно́. А це — моя́ кни́га.** | This is my window. And this is my book. |
 
@@ -126,4 +126,4 @@ adjective table yet.
 
 ### Підсу́мок уро́ку 1
 
-У цьо́му уро́ці ви навчи́лися трьох рече́й: перевіря́ти рід за допомо́гою слів **він**, **вона́**, **воно́**, розпізнава́ти закі́нчення іменника́ та вжива́ти фо́рми **мій**, **моя́**, **моє́** як єди́не ці́ле. Да́лі — уро́к 2, де ми розши́римо ко́ло рече́й навко́ло вас і додамо́ констру́кцію **У ме́не є...**.
+У цьо́му уро́ці ви навчи́лися трьох рече́й: перевіря́ти рід за допомо́гою слів **він**, **вона́**, **воно́**, розпізнава́ти закі́нчення іме́нника та вжива́ти фо́рми **мій**, **моя́**, **моє́** як єди́не ці́ле. Да́лі — уро́к 2, де ми розши́римо ко́ло рече́й навко́ло вас і додамо́ констру́кцію **У мене́ є...**.

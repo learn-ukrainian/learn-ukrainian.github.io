@@ -14,7 +14,8 @@ lessons:
     workbook:
     - 6
     - 9
-  unverified_stress: []
+  unverified_stress:
+  - уро́ці
   unverified_lemmas: []
 - n: 2
   title: Предме́ти навко́ло
@@ -30,7 +31,9 @@ lessons:
     workbook:
     - 6
     - 9
-  unverified_stress: []
+  unverified_stress:
+  - уро́ці
+  - фемініти́вами
   unverified_lemmas: []
 - n: 3
   title: Профе́сії, па́стки й самопереві́рка
@@ -47,7 +50,9 @@ lessons:
     workbook:
     - 6
     - 9
-  unverified_stress: []
+  unverified_stress:
+  - фемініти́ви
+  - фемініти́вом
   unverified_lemmas: []
 closes_module: 3
 provenance:

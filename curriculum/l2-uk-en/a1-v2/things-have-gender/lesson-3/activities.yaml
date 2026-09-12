@@ -82,7 +82,7 @@ inline:
     options:
     - Вона́
     - Він
-  - sentence: Ілля́ — акто́р. ___ пра́цює.
+  - sentence: Ілля́ — акто́р. ___ працю́є.
     answer: Він
     options:
     - Він
@@ -95,7 +95,7 @@ inline:
 - id: act-303
   type: true-false
   title: 'Пра́вда чи ні: чолові́чі імена́ та ви́нятки'
-  instruction: Ви́значте, чи прави́льне твер́дження про рід слів.
+  instruction: Ви́значте, чи прави́льне тве́рдження про рід слів.
   statements:
   - statement: «Мико́ла» — це ім'я́ чолові́ка, тому́ це «він».
     correct: true
@@ -111,7 +111,7 @@ inline:
     correct: true
 workbook:
 - type: error-correction
-  title: Ви́пра́в па́стки ро́ду
+  title: Ви́прав па́стки ро́ду
   instruction: Choose the safer Ukrainian sentence.
   items:
   - sentence: Мій кни́га, мій ру́чка (якщо́ гово́рить чолові́к).
@@ -172,18 +172,18 @@ workbook:
     explanation: Present identity normally omits є.
   - sentence: Моє́ ім'я́ є Джон.
     error: Моє́ ім'я́ є Джон.
-    correction: Ме́не зва́ти Джон.
+    correction: Мене́ зва́ти Джон.
     options:
-    - Ме́не зва́ти Джон.
+    - Мене́ зва́ти Джон.
     - Моє́ ім'я́ є Джон.
-    explanation: Ме́не зва́ти... is the safe name phrase.
+    explanation: Мене́ зва́ти... is the safe name phrase.
   id: act-w4
 - type: quiz
   title: Переві́рка ро́ду
   instruction: Choose the Ukrainian gender-test word. These are diagnostic props,
     not new active vocabulary.
   items:
-  - prompt: Яки́й у ме́не си́льний біль у плечі́!
+  - prompt: Яки́й у мене́ си́льний біль у плечі́!
     options:
     - text: він
       correct: true
@@ -210,7 +210,7 @@ workbook:
     - text: воно́
       correct: false
     explanation: Ро́зпис is masculine in Ukrainian.
-  - prompt: Да́вній лі́топис розповіда́є про Ки́ївську Русь.
+  - prompt: Да́вній літо́пис розповіда́є про Ки́ївську Русь.
     options:
     - text: він
       correct: true
@@ -218,7 +218,7 @@ workbook:
       correct: false
     - text: воно́
       correct: false
-    explanation: Лі́топис is masculine in Ukrainian.
+    explanation: Літо́пис is masculine in Ukrainian.
   - prompt: 'Кни́жне / урочи́сте: у дале́ку путь.'
     options:
     - text: вона́
@@ -292,7 +292,7 @@ workbook:
 - id: act-306
   type: odd-one-out
   title: За́йве сло́во за фо́рмою
-  instruction: Знайді́ть за́йве сло́во се́ред пода́них.
+  instruction: Знайді́ть за́йве сло́во се́ред по́даних.
   items:
   - words:
     - вчи́телька

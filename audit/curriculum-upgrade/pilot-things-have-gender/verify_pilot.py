@@ -15,8 +15,10 @@ Usage (from the dispatch worktree root):
 from __future__ import annotations
 
 import hashlib
+import html as htmlmod
 import json
 import os
+from html.parser import HTMLParser
 import re
 import subprocess
 import sys
@@ -105,11 +107,59 @@ def norm_text(t: str) -> str:
     return re.sub(r"\s+", " ", strip_acute(t)).strip()
 
 
+class _ScreenText(HTMLParser):
+    """Collect visible text per screen section (id 's-<name>'), skipping <script>/<style>
+    and any element carrying `hidden` or an inline display:none / visibility:hidden."""
+
+    VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"}
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.stack: list[tuple[str, bool, bool]] = []   # (tag, skipping, opened_a_screen)
+        self.screen: list[str] = []
+        self.texts: dict[str, list[str]] = {"__all__": []}
+
+    def handle_starttag(self, tag, attrs):
+        if tag in self.VOID:
+            return                                       # no end tag ever comes; never push
+        a = dict(attrs)
+        style = (a.get("style") or "").replace(" ", "").lower()
+        skip = tag in ("script", "style") or "hidden" in a or "display:none" in style or "visibility:hidden" in style
+        opened = tag == "section" and (a.get("id") or "").startswith("s-")
+        if opened:
+            self.screen.append(a["id"][2:])
+            self.texts.setdefault(a["id"][2:], [])
+        self.stack.append((tag, skip, opened))
+
+    def handle_startendtag(self, tag, attrs):
+        return                                           # self-closing: nothing to push
+
+    def handle_endtag(self, tag):
+        if tag in self.VOID:
+            return
+        while self.stack:
+            t, _, opened = self.stack.pop()
+            if opened and self.screen:
+                self.screen.pop()
+            if t == tag:
+                break
+
+    def handle_data(self, data):
+        if any(s for _, s, _ in self.stack):
+            return
+        self.texts["__all__"].append(data)
+        if self.screen:
+            self.texts[self.screen[-1]].append(data)
+
+
+def html_texts(h: str) -> dict[str, str]:
+    p = _ScreenText()
+    p.feed(h)
+    return {k: norm_text(htmlmod.unescape(" ".join(v))) for k, v in p.texts.items()}
+
+
 def html_to_text(h: str) -> str:
-    h = re.sub(r"<script.*?</script>|<style.*?</style>", " ", h, flags=re.S)
-    h = re.sub(r"<[^>]+>", " ", h)
-    h = h.replace("&nbsp;", " ").replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", '"').replace("&#x27;", "'").replace("&#39;", "'")
-    return norm_text(h)
+    return html_texts(h)["__all__"]
 
 
 def sections(md: str) -> dict[str, str]:
@@ -142,27 +192,130 @@ def leaves(obj) -> list:
 
 
 def contains(orig, new) -> bool:
-    """orig ⊆ new structurally: dict keys must exist with contained values; lists are
-    superset-by-element (each orig element contained in some new element); scalars equal
-    modulo stress marks."""
+    """orig ⊆ new structurally with multiplicity: dict keys must exist with contained values;
+    each orig list element must match a DISTINCT new element; scalars equal modulo stress
+    marks and with the same type (True is not 1)."""
     if isinstance(orig, dict):
         return isinstance(new, dict) and all(k in new and contains(v, new[k]) for k, v in orig.items())
     if isinstance(orig, list):
-        return isinstance(new, list) and all(any(contains(o, n) for n in new) for o in orig)
+        if not isinstance(new, list) or len(orig) > len(new):
+            return False
+        cand = [[i for i, n in enumerate(new) if contains(o, n)] for o in orig]
+
+        def match(k: int, used: frozenset) -> bool:   # complete one-to-one assignment (backtracking)
+            if k == len(cand):
+                return True
+            return any(match(k + 1, used | {i}) for i in cand[k] if i not in used)
+        return match(0, frozenset())
     if isinstance(orig, str):
         return isinstance(new, str) and norm_md(orig) == norm_md(new)
-    return orig == new
+    return type(orig) is type(new) and orig == new
+
+
+def first_text(x) -> str | None:
+    if isinstance(x, str):
+        return norm_md(x).lower()
+    if isinstance(x, dict):
+        for v in x.values():
+            if isinstance(v, str) and v.strip():
+                return norm_md(v).lower()
+    return None
+
+
+def contradictions(obj, path="") -> list[str]:
+    """Within any list, two elements with the same primary text are contradictory
+    (same option twice with different answers, same word in two groups, duplicated items)."""
+    out: list[str] = []
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            out += contradictions(v, f"{path}.{k}")
+        return out
+    if isinstance(obj, list):
+        seen: dict[str, int] = {}
+        for i, e in enumerate(obj):
+            t = first_text(e)
+            if t:
+                seen[t] = seen.get(t, 0) + 1
+            out += contradictions(e, f"{path}[{i}]")
+        out += [f"{path}: '{t}' appears {c}x in one list" for t, c in seen.items() if c > 1]
+        # groups: the same item in two groups
+        if obj and all(isinstance(g, dict) and isinstance(g.get("items"), list) for g in obj):
+            allitems: dict[str, int] = {}
+            for g in obj:
+                for it in g["items"]:
+                    t = first_text(it)
+                    if t:
+                        allitems[t] = allitems.get(t, 0) + 1
+            out += [f"{path}: item '{t}' sits in {c} groups" for t, c in allitems.items() if c > 1]
+    return out
+
+
+def learner_text(md: str) -> str:
+    """Drop what the learner never reads as words: comments, code, link destinations, raw URLs."""
+    t = strip_comments(md)
+    t = re.sub(r"```.*?```", " ", t, flags=re.S)
+    t = re.sub(r"`[^`\n]*`", " ", t)
+    t = re.sub(r"\]\([^)]*\)", "]", t)
+    t = re.sub(r"https?://\S+", " ", t)
+    return t
 
 
 def missing_stress(text: str, allow: set[str]) -> list[str]:
-    """Cyrillic tokens (NFC) with >=2 vowels and no combining acute."""
+    """Cyrillic tokens (NFC) with >=2 vowels and no combining acute, in learner-facing text."""
     bad = []
-    for tok in re.findall(rf"[{CYR}'’{ACUTE}]+", nfc(text)):
+    for tok in re.findall(rf"[{CYR}'’{ACUTE}]+", nfc(learner_text(text))):
         if ACUTE in tok:
             continue
-        if len(re.findall(r"[аеєиіїоуюяАЕЄИІЇОУЮЯ]", tok)) >= 2 and strip_acute(tok).lower() not in allow:
+        tok = tok.strip("'’")
+        if tok and len(re.findall(r"[аеєиіїоуюяАЕЄИІЇОУЮЯ]", tok)) >= 2 and strip_acute(tok).lower() not in allow:
             bad.append(tok)
     return bad
+
+
+def _acute_positions(form: str) -> list[int]:
+    out, i = [], 0
+    for ch in unicodedata.normalize("NFD", form):
+        if ch == ACUTE:
+            out.append(i - 1)
+        else:
+            i += 1
+    return out
+
+
+def wrong_stress(text: str, allow: set[str]) -> list[str]:
+    """Marked forms whose acute is not on a vowel the stress dictionary accepts.
+    Uses the repo oracle (scripts.verification.stress, ULIF-derived); forms the dictionary
+    does not know are skipped here (they must be declared in unverified_stress)."""
+    try:
+        sys.path.insert(0, "/home/ops/learn-ukrainian")
+        from scripts.verification.stress import verify_stress  # type: ignore
+    except Exception as e:  # pragma: no cover
+        warn(f"stress oracle unavailable ({e}); correctness check skipped")
+        return []
+    out: list[str] = []
+    seen: set[str] = set()
+    for tok in re.findall(rf"[{CYR}'{ACUTE}]+", nfc(text).replace("''", "'").replace("’", "'")):
+        if ACUTE not in tok or tok in seen:
+            continue
+        seen.add(tok)
+        tok = tok.strip("'’")
+        bare = strip_acute(tok)
+        if not tok or bare.lower() in allow:
+            continue
+        forms: list[str] = []                   # union of readings under both cases (Марко́ name / Ма́рко surname; Мене́ pronoun)
+        for q in {bare, bare.lower()}:
+            r = verify_stress(q)
+            if r.get("status") in ("ok", "ambiguous"):
+                forms += [nfc(m["stressed_form"]) for m in r.get("matches", [])]
+        if not forms:
+            continue
+        allowed: set[int] = set()
+        for f in forms:
+            allowed.update(_acute_positions(f))
+        mine = _acute_positions(tok)
+        if len(mine) != 1 or mine[0] not in allowed:
+            out.append(f"{tok}→{'/'.join(forms)}")
+    return sorted(out)
 
 
 def git_show(path: str) -> str:
@@ -219,6 +372,22 @@ def main() -> int:
     lessons = ly.get("lessons") or []
     if [L.get("n") for L in lessons] != [1, 2, 3]:
         block(f"lessons must be exactly n=1,2,3 in order; got {[L.get('n') for L in lessons]}")
+    expected_sections = {1: {"Діалоги", "Він, вона, воно"}, 2: {"Предмети навколо"}, 3: {"Підсумок", "Імена, пастки й самоперевірка"}}
+    for L in lessons:
+        n = L.get("n")
+        if not str(L.get("title") or "").strip():
+            block(f"lesson {n}: lessons.yaml title missing")
+        secs_declared = {strip_acute(str(s)).strip() for s in (L.get("sections") or [])}
+        if n in expected_sections and secs_declared != expected_sections[n]:
+            block(f"lesson {n}: sections {sorted(secs_declared)} != required {sorted(expected_sections[n])}")
+        if L.get("minutes") != 60:
+            block(f"lesson {n}: minutes must be 60; got {L.get('minutes')!r}")
+        if not isinstance(L.get("word_target"), int) or L["word_target"] < 550:
+            block(f"lesson {n}: word_target must be an int >= 550; got {L.get('word_target')!r}")
+        at = L.get("activities") or {}
+        if not (isinstance(at, dict) and isinstance(at.get("total"), int) and at["total"] >= 10
+                and at.get("inline") == [4, 6] and at.get("workbook") == [6, 9]):
+            block(f"lesson {n}: activities target must be {{total: >=10, inline: [4, 6], workbook: [6, 9]}}; got {at!r}")
     if ly.get("closes_module") != 3:
         block(f"closes_module must be 3; got {ly.get('closes_module')!r}")
     exempt = {e.get("id"): (e.get("reason") or "").strip() for e in (ly.get("items_min_exempt") or [])}
@@ -297,6 +466,8 @@ def main() -> int:
                     block(f"lesson {n}: {aid} has {cnt} items < 6 and is not exempt")
                 if not (a.get("instruction") or a.get("title")):
                     block(f"lesson {n}: {aid} has no instruction/title")
+                for c in contradictions({k: v for k, v in a.items() if k in LIST_FIELDS}, aid):
+                    block(f"lesson {n}: contradictory payload in {c}")
         lemmas = [norm_md(str(e.get("lemma", ""))).lower() for e in vocab]
         all_lemmas += lemmas
         if len(lemmas) < 12:
@@ -317,6 +488,10 @@ def main() -> int:
         if len(u_lem) > MAX_UNVERIFIED_LEMMAS:
             block(f"lesson {n}: {len(u_lem)} unverified lemmas > {MAX_UNVERIFIED_LEMMAS} (stop rule)")
         allow = {strip_acute(w).lower() for w in u_stress}
+        # stress CORRECTNESS: every marked form must match a dictionary reading (not just carry a mark)
+        wrong = wrong_stress(learner_text(lesson_md_clean[n]) + "\n" + "\n".join(str(x) for x in leaves(acts) + leaves(vocab) if isinstance(x, str)), allow)
+        if wrong:
+            block(f"lesson {n}: {len(wrong)} stressed forms contradict the stress dictionary: {wrong[:15]}")
         bad = sorted(set(missing_stress(lesson_md_clean[n], allow)
                          + missing_stress("\n".join(str(x) for x in leaves(acts) if isinstance(x, str)), allow)
                          + missing_stress("\n".join(str(x) for x in leaves(vocab) if isinstance(x, str)), allow)))
@@ -409,24 +584,31 @@ def main() -> int:
         block("rendered HTML missing")
     else:
         h = HTML.read_text(encoding="utf-8")
-        text = html_to_text(h)
-        miss_p = [p for n, t in lesson_md_raw.items() for p in paragraphs(t)
-                  if len(p.split()) >= 8 and md_to_text(p) not in text]
-        if miss_p:
-            block(f"rendered HTML lacks {len(miss_p)} lesson paragraphs, e.g. {md_to_text(miss_p[0])[:70]!r}")
-        miss_s = []
-        for aid, (n, _, act) in new_acts.items():
-            for s in leaves({k: v for k, v in act.items() if k in LIST_FIELDS or k in ("title", "instruction")}):
-                if isinstance(s, str) and len(s) >= 3 and norm_text(s) not in text:
-                    miss_s.append((aid, s))
-        if miss_s:
-            block(f"rendered HTML lacks {len(miss_s)} activity strings, e.g. {miss_s[:3]}")
-        miss_v = [e.get("lemma") for v in lesson_vocab.values() for e in v if norm_text(str(e.get("lemma"))) not in text]
-        if miss_v:
-            block(f"rendered HTML lacks vocabulary lemmas: {miss_v[:10]}")
-        miss_r = [r.get("title") for v in lesson_res.values() for r in v if norm_text(str(r.get("title"))) not in text]
-        if miss_r:
-            block(f"rendered HTML lacks resource titles: {miss_r[:5]}")
+        texts = html_texts(h)           # visible text per screen section, hidden elements excluded
+        for n in (1, 2, 3):
+            text = texts.get(f"l{n}", "")
+            if not text:
+                block(f"rendered HTML has no <section id=\"s-l{n}\"> content")
+                continue
+            miss_p = [p for p in paragraphs(lesson_md_raw.get(n, "")) if len(p.split()) >= 8 and md_to_text(p) not in text]
+            if miss_p:
+                block(f"lesson {n} screen lacks {len(miss_p)} of its paragraphs, e.g. {md_to_text(miss_p[0])[:70]!r}")
+            miss_s = [(aid, s) for aid, (ln, _, act) in new_acts.items() if ln == n
+                      for s in leaves({k: v for k, v in act.items() if k in LIST_FIELDS or k in ("title", "instruction")})
+                      if isinstance(s, str) and len(s) >= 3 and norm_text(s) not in text]
+            if miss_s:
+                block(f"lesson {n} screen lacks {len(miss_s)} activity strings, e.g. {miss_s[:3]}")
+            miss_v = [e.get("lemma") for e in lesson_vocab.get(n, []) if norm_text(str(e.get("lemma"))) not in text]
+            if miss_v:
+                block(f"lesson {n} screen lacks vocabulary lemmas: {miss_v[:10]}")
+            miss_r = [r.get("title") for r in lesson_res.get(n, []) if norm_text(str(r.get("title"))) not in text]
+            if miss_r:
+                block(f"lesson {n} screen lacks resource titles: {miss_r[:5]}")
+            for tab in ("urok", "slovnyk", "vpravy", "resursy"):
+                if f'data-tab="l{n}-{tab}"' not in h or f'id="l{n}-{tab}"' not in h:
+                    block(f"lesson {n} screen lacks tab/panel l{n}-{tab}")
+        if not texts.get("module"):
+            block("rendered HTML has no <section id=\"s-module\"> content")
         for n in (1, 2, 3):
             if f'data-screen="l{n}"' not in h:
                 block(f"rendered HTML has no screen button for lesson {n}")

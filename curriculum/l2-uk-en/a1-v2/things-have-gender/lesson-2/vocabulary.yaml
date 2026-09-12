@@ -1,11 +1,11 @@
-- lemma: у ме́не є
+- lemma: у мене́ є
   translation: I have
   pos: phrase
-  usage: У ме́не є стіл.
-- lemma: у те́бе є
+  usage: У мене́ є стіл.
+- lemma: у тебе́ є
   translation: do you have / you have
   pos: phrase
-  usage: У те́бе є стіл?
+  usage: У тебе́ є стіл?
 - lemma: кімна́та
   translation: room
   pos: noun
