@@ -1,0 +1,355 @@
+inline:
+- id: act-9
+  type: quiz
+  title: Фо́рми профе́сій
+  instruction: Choose the natural profession form.
+  items:
+  - prompt: She is a teacher.
+    options:
+    - text: Вона́ вчи́телька.
+      correct: true
+    - text: Вона́ вчи́тель.
+      correct: false
+    - text: Воно́ вчи́телька.
+      correct: false
+    explanation: Use the feminine profession form for a woman.
+  - prompt: She is a doctor.
+    options:
+    - text: Вона́ лі́карка.
+      correct: true
+    - text: Вона́ лі́кар.
+      correct: false
+    - text: Він лі́карка.
+      correct: false
+    explanation: Лі́карка is the feminine form.
+  - prompt: He is a student.
+    options:
+    - text: Він студе́нт.
+      correct: true
+    - text: Він студе́нтка.
+      correct: false
+    - text: Вона́ студе́нт.
+      correct: false
+    explanation: Студе́нт is the masculine form.
+  - prompt: She is an actor.
+    options:
+    - text: Вона́ акто́рка.
+      correct: true
+    - text: Вона́ акто́р.
+      correct: false
+    - text: Воно́ акто́рка.
+      correct: false
+    explanation: Акто́рка is the feminine profession form.
+- id: act-301
+  type: match-up
+  title: Чолові́чі та жіно́чі фо́рми профе́сій
+  instruction: З'єдна́йте чолові́чу фо́рму профе́сії з відпові́дним фемініти́вом.
+  pairs:
+  - left: студе́нт
+    right: студе́нтка
+  - left: вчи́тель
+    right: вчи́телька
+  - left: учи́тель
+    right: учи́телька
+  - left: лі́кар
+    right: лі́карка
+  - left: акто́р
+    right: акто́рка
+  - left: співа́к
+    right: співа́чка
+- id: act-302
+  type: fill-in
+  title: Він чи вона́ для люде́й
+  instruction: 'Вста́вте прави́льний займе́нник: він чи вона́.'
+  items:
+  - sentence: Мико́ла — чолові́к. ___ студе́нт.
+    answer: Він
+    options:
+    - Він
+    - Вона́
+  - sentence: Окса́на — жі́нка. ___ лі́карка.
+    answer: Вона́
+    options:
+    - Вона́
+    - Він
+  - sentence: Павло́ — вчи́тель. ___ тут.
+    answer: Він
+    options:
+    - Він
+    - Вона́
+  - sentence: Марі́я — співа́чка. ___ там.
+    answer: Вона́
+    options:
+    - Вона́
+    - Він
+  - sentence: Ілля́ — акто́р. ___ працю́є.
+    answer: Він
+    options:
+    - Він
+    - Вона́
+  - sentence: Моя́ сестра́ — вчи́телька. ___ вдо́ма.
+    answer: Вона́
+    options:
+    - Вона́
+    - Він
+- id: act-303
+  type: true-false
+  title: 'Пра́вда чи ні: чолові́чі імена́ та ви́нятки'
+  instruction: Ви́значте, чи прави́льне тве́рдження про рід слів.
+  statements:
+  - statement: «Мико́ла» — це ім'я́ чолові́ка, тому́ це «він».
+    correct: true
+  - statement: «Павло́» — це сере́дній рід, бо закі́нчується на -о.
+    correct: false
+  - statement: «Соба́ка» в украї́нській мо́ві — це чолові́чий рід (він, мій соба́ка).
+    correct: true
+  - statement: «Ілля́» — це ім'я́ чолові́ка, тому́ це «він».
+    correct: true
+  - statement: «Дя́дько» — це жіно́чий рід, бо познача́є люди́ну.
+    correct: false
+  - statement: «Ба́тько» — це чолові́чий рід (він, мій ба́тько).
+    correct: true
+workbook:
+- type: error-correction
+  title: Ви́прав па́стки ро́ду
+  instruction: Choose the safer Ukrainian sentence.
+  items:
+  - sentence: Мій кни́га, мій ру́чка (якщо́ гово́рить чолові́к).
+    error: Мій кни́га, мій ру́чка (якщо́ гово́рить чолові́к).
+    correction: Моя́ кни́га, моя́ ру́чка.
+    options:
+    - Моя́ кни́га, моя́ ру́чка.
+    - Мій кни́га, мій ру́чка.
+    explanation: The possessive follows the nouns кни́га and ру́чка, not the speaker.
+  - sentence: Мій кни́га тут.
+    error: Мій кни́га тут.
+    correction: Моя́ кни́га тут.
+    options:
+    - Моя́ кни́га тут.
+    - Мій кни́га тут.
+    explanation: Кни́га is feminine, so use моя́.
+  - sentence: Мій ру́чка там.
+    error: Мій ру́чка там.
+    correction: Моя́ ру́чка там.
+    options:
+    - Моя́ ру́чка там.
+    - Мій ру́чка там.
+    explanation: Ру́чка is feminine, so use моя́.
+  - sentence: Де стіл? — Воно́ там. (Where is the table? — It is there.)
+    error: Де стіл? — Воно́ там. (Where is the table? — It is there.)
+    correction: Де стіл? — Він там.
+    options:
+    - Де стіл? — Він там.
+    - Де стіл? — Воно́ там.
+    explanation: Стіл is masculine, so the pronoun is він.
+  - sentence: Це моя́ та́то.
+    error: Це моя́ та́то.
+    correction: Це мій та́то.
+    options:
+    - Це мій та́то.
+    - Це моя́ та́то.
+    explanation: Та́то is masculine.
+  - sentence: Вона́ Мико́ла.
+    error: Вона́ Мико́ла.
+    correction: Він Мико́ла.
+    options:
+    - Він Мико́ла.
+    - Вона́ Мико́ла.
+    explanation: Мико́ла is a masculine name.
+  - sentence: Моя́ соба́ка ду́же га́рна.
+    error: Моя́ соба́ка ду́же га́рна.
+    correction: Мій соба́ка ду́же га́рний.
+    options:
+    - Мій соба́ка ду́же га́рний.
+    - Моя́ соба́ка ду́же га́рна.
+    explanation: Соба́ка is masculine in Ukrainian; memorize мій соба́ка.
+  - sentence: Я є студе́нт.
+    error: Я є студе́нт.
+    correction: Я студе́нт.
+    options:
+    - Я студе́нт.
+    - Я є студе́нт.
+    explanation: Present identity normally omits є.
+  - sentence: Моє́ ім'я́ є Джон.
+    error: Моє́ ім'я́ є Джон.
+    correction: Мене́ зва́ти Джон.
+    options:
+    - Мене́ зва́ти Джон.
+    - Моє́ ім'я́ є Джон.
+    explanation: Мене́ зва́ти... is the safe name phrase.
+  id: act-w4
+- type: quiz
+  title: Переві́рка ро́ду
+  instruction: Choose the Ukrainian gender-test word. These are diagnostic props,
+    not new active vocabulary.
+  items:
+  - prompt: Яки́й у мене́ си́льний біль у плечі́!
+    options:
+    - text: він
+      correct: true
+    - text: вона́
+      correct: false
+    - text: воно́
+      correct: false
+    explanation: Біль is masculine in Ukrainian.
+  - prompt: Украї́нський степ широ́кий і ві́тряний.
+    options:
+    - text: він
+      correct: true
+    - text: вона́
+      correct: false
+    - text: воно́
+      correct: false
+    explanation: Степ is masculine in Ukrainian.
+  - prompt: Цей ро́зпис на стіні́ — робо́та украї́нського худо́жника.
+    options:
+    - text: він
+      correct: true
+    - text: вона́
+      correct: false
+    - text: воно́
+      correct: false
+    explanation: Ро́зпис is masculine in Ukrainian.
+  - prompt: Да́вній літо́пис розповіда́є про Ки́ївську Русь.
+    options:
+    - text: він
+      correct: true
+    - text: вона́
+      correct: false
+    - text: воно́
+      correct: false
+    explanation: Літо́пис is masculine in Ukrainian.
+  - prompt: 'Кни́жне / урочи́сте: у дале́ку путь.'
+    options:
+    - text: вона́
+      correct: true
+    - text: він
+      correct: false
+    - text: воно́
+      correct: false
+    explanation: Путь is feminine in this diagnostic expression.
+  id: act-w5
+- id: act-304
+  type: group-sort
+  title: Розподілі́ть слова́ за ро́дом
+  instruction: Розподілі́ть профе́сії та імена́ за грамати́чним ро́дом.
+  groups:
+  - label: він / мій (чолові́чий рід)
+    items:
+    - студе́нт
+    - вчи́тель
+    - лі́кар
+    - соба́ка
+  - label: вона́ / моя́ (жіно́чий рід)
+    items:
+    - студе́нтка
+    - вчи́телька
+    - лі́карка
+    - співа́чка
+  - label: він (імена́ та роди́на на -а/-о)
+    items:
+    - Мико́ла
+    - Ілля́
+    - Павло́
+    - дя́дько
+- id: act-305
+  type: unjumble
+  title: Складі́ть ре́чення з профе́сіями
+  instruction: Розташу́йте слова́, щоб утвори́ти прави́льне ре́чення.
+  words:
+  - words:
+    - Вона́
+    - моя́
+    - вчи́телька
+    answer: Вона́ моя́ вчи́телька.
+  - words:
+    - Він
+    - мій
+    - лі́кар
+    answer: Він мій лі́кар.
+  - words:
+    - Це
+    - мій
+    - соба́ка
+    answer: Це мій соба́ка.
+  - words:
+    - Це
+    - мій
+    - дя́дько
+    answer: Це мій дя́дько.
+  - words:
+    - Він
+    - акто́р
+    - а
+    - вона́
+    - акто́рка
+    answer: Він акто́р, а вона́ акто́рка.
+  - words:
+    - Мене́
+    - зва́ти
+    - Мико́ла
+    answer: Мене́ зва́ти Мико́ла.
+- id: act-306
+  type: odd-one-out
+  title: За́йве сло́во за фо́рмою
+  instruction: Знайді́ть за́йве сло́во се́ред по́даних.
+  items:
+  - words:
+    - вчи́телька
+    - лі́карка
+    - студе́нтка
+    - студе́нт
+    answer: студе́нт
+    explanation: Студе́нт — чолові́ча фо́рма, і́нші — жіно́чі.
+  - words:
+    - акто́р
+    - співа́к
+    - лі́кар
+    - акто́рка
+    answer: акто́рка
+    explanation: Акто́рка — жіно́ча фо́рма, і́нші — чолові́чі.
+  - words:
+    - Мико́ла
+    - Ілля́
+    - Павло́
+    - Окса́на
+    answer: Окса́на
+    explanation: Окса́на — жіно́че ім'я́, і́нші — чолові́чі.
+  - words:
+    - та́то
+    - ба́тько
+    - дя́дько
+    - ма́ма
+    answer: ма́ма
+    explanation: Ма́ма — жіно́чий рід, і́нші — чолові́чий.
+  - words:
+    - стіл
+    - телефо́н
+    - соба́ка
+    - кни́га
+    answer: кни́га
+    explanation: Кни́га — жіно́чий рід, і́нші — чолові́чий.
+  - words:
+    - вікно́
+    - лі́жко
+    - фо́то
+    - лі́карка
+    answer: лі́карка
+    explanation: Лі́карка — жіно́чий рід, і́нші — сере́дній.
+- id: act-307
+  type: translate
+  title: Перекладі́ть ре́чення про люде́й
+  instruction: Перекладі́ть ре́чення з англі́йської мо́ви на украї́нську.
+  items:
+  - sentence: She is a teacher.
+    answer: Вона́ вчи́телька.
+  - sentence: He is a doctor.
+    answer: Він лі́кар.
+  - sentence: My dog is handsome.
+    answer: Мій соба́ка га́рний.
+  - sentence: This is my uncle.
+    answer: Це мій дя́дько.
+  - sentence: My name is John.
+    answer: Мене́ зва́ти Джон.
+  - sentence: She is a student.
+    answer: Вона́ студе́нтка.

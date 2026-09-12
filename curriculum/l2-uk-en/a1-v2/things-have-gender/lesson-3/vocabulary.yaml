@@ -1,0 +1,64 @@
+- lemma: дя́дько
+  translation: uncle
+  pos: noun
+  usage: Це мій дя́дько.
+- lemma: соба́ка
+  translation: dog
+  pos: noun
+  usage: Це мій соба́ка.
+- lemma: студе́нт
+  translation: male student
+  pos: noun
+  usage: Він студе́нт.
+- lemma: студе́нтка
+  translation: female student
+  pos: noun
+  usage: Вона́ студе́нтка.
+- lemma: вчи́тель
+  translation: male teacher
+  pos: noun
+  usage: Він вчи́тель.
+- lemma: вчи́телька
+  translation: female teacher
+  pos: noun
+  usage: Вона́ вчи́телька.
+- lemma: учи́телька
+  translation: female teacher
+  pos: noun
+  usage: Вона́ учи́телька.
+- lemma: лі́кар
+  translation: male doctor
+  pos: noun
+  usage: Він лі́кар.
+- lemma: лі́карка
+  translation: female doctor
+  pos: noun
+  usage: Вона́ лі́карка.
+- lemma: акто́р
+  translation: male actor
+  pos: noun
+  usage: Він акто́р.
+- lemma: акто́рка
+  translation: female actor
+  pos: noun
+  usage: Вона́ акто́рка.
+- lemma: співа́к
+  translation: male singer
+  pos: noun
+  usage: Він співа́к.
+- lemma: співа́чка
+  translation: female singer
+  pos: noun
+  usage: Вона́ співа́чка.
+- lemma: Мико́ла
+  translation: Mykola
+  pos: proper noun
+  usage: Він Мико́ла.
+- lemma: Ілля́
+  translation: Illia
+  pos: proper noun
+  usage: Він Ілля́.
+- lemma: Павло́
+  translation: Pavlo
+  pos: proper noun
+  usage: Він Павло́.

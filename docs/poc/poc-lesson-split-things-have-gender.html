@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A1-008 · Речі мають рід (Pilot 3-Lesson Split)</title>
+  <style>
+
+  :root {
+    --blue: #0057B8; --yellow: #FFD700;
+    --blue-light: #E8F0FE; --yellow-light: #FFF9E0;
+    --green: #2E7D32; --green-light: #E8F5E9;
+    --red: #C62828; --red-light: #FFEBEE;
+    --orange: #E65100; --orange-light: #FFF3E0;
+    --purple: #6A1B9A; --purple-light: #F3E5F5;
+    --teal: #00695C;
+    --ink: #1B2230; --ink-2: #4A5468; --ink-3: #78829A;
+    --line: #E3E7EF; --line-2: #EEF1F6;
+    --ground: #F7F8FB; --paper: #FFFFFF;
+    --bar: #1D2433;
+    --radius: 12px;
+    --shadow: 0 2px 8px rgba(27,34,48,0.07);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; color: var(--ink); background: var(--ground); line-height: 1.65; font-size: 15px; }
+  h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
+  p { margin: 0 0 14px; }
+
+  /* Screen switcher (same role as the POC module-switch bar) */
+  .switch { background: var(--bar); color: #fff; padding: 10px 24px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px; position: sticky; top: 0; z-index: 100; }
+  .switch .lbl { opacity: .65; margin-right: 4px; }
+  .switch button { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.28); padding: 5px 12px; border-radius: 6px; font-size: 13px; cursor: pointer; font-family: inherit; }
+  .switch button:hover { border-color: #fff; }
+  .switch button.on { background: var(--yellow); color: var(--ink); border-color: var(--yellow); font-weight: 700; }
+  .switch .url { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; opacity: .8; margin-left: auto; }
+  .switch .poc { color: var(--yellow); font-weight: 700; letter-spacing: .5px; }
+  .switch .phone-btn { border-style: dashed; }
+  .switch .phone-btn.on { background: #fff; color: var(--ink); border-color: #fff; }
+
+  .screen { display: none; }
+  .screen.on { display: block; }
+  .wrap { max-width: 840px; margin: 0 auto; padding-inline: 24px; }
+  body.phone .wrap { max-width: 400px; padding-inline: 16px; }
+
+  /* Header (POC .header.core) */
+  .header { background: var(--blue); color: #fff; border-bottom: 4px solid var(--yellow); padding-block: 22px; }
+  .crumbs { font-size: 12px; opacity: .85; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-bottom: 8px; }
+  .crumbs a { color: #fff; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,.4); }
+  .crumbs .sep { opacity: .5; }
+  .level-badge { display: inline-block; background: var(--yellow); color: var(--ink); font-weight: 700; font-size: 12px; padding: 2px 10px; border-radius: 4px; margin-bottom: 8px; }
+  .header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .header .sub { opacity: .88; font-size: 14px; }
+  .lesson-dots { display: flex; gap: 6px; margin-top: 12px; align-items: center; }
+  .lesson-dots span { width: 34px; height: 6px; border-radius: 3px; background: rgba(255,255,255,.3); }
+  .lesson-dots span.done { background: var(--yellow); }
+  .lesson-dots span.now { background: #fff; }
+  .lesson-dots em { font-style: normal; font-size: 12px; opacity: .85; margin-left: 6px; }
+
+
+  /* Level landing (mirrors LevelLanding.tsx: unit groups + module rows) */
+  .unit { margin: 22px 0 6px; font-size: 13px; font-weight: 700; color: var(--ink-3); text-transform: uppercase; letter-spacing: .8px; }
+  .mods { display: grid; gap: 6px; }
+  .mod { display: grid; grid-template-columns: 34px 1fr auto; gap: 12px; align-items: center; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; text-decoration: none; color: inherit; }
+  .mod:hover { border-color: var(--blue); }
+  .mod .num { font-weight: 800; color: var(--ink-3); font-variant-numeric: tabular-nums; text-align: right; }
+  .mod .t { font-weight: 600; }
+  .mod .s { font-size: 13px; color: var(--ink-3); }
+  .mod .lc { font-size: 12px; color: var(--ink-2); font-variant-numeric: tabular-nums; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
+  .mod .bar { width: 54px; height: 6px; background: var(--line-2); border-radius: 3px; overflow: hidden; }
+  .mod .bar i { display: block; height: 100%; background: var(--blue); }
+  .mod.done .bar i { background: var(--green); }
+  .mod.open { border-color: var(--blue); box-shadow: var(--shadow); }
+  .mod-lessons { grid-column: 1 / -1; display: grid; gap: 4px; padding: 8px 0 2px 46px; border-top: 1px dashed var(--line); margin-top: 4px; }
+  body.phone .mod-lessons { padding-left: 0; }
+  .mod-lessons a { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; font-size: 14px; text-decoration: none; color: inherit; padding: 6px 10px; border-radius: 8px; }
+  .mod-lessons a:hover { background: var(--blue-light); }
+  .mod-lessons a .k { font-weight: 700; color: var(--blue); font-variant-numeric: tabular-nums; }
+  .mod-lessons a .m { font-size: 12px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .journey { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 16px 0 4px; }
+  body.phone .journey { grid-template-columns: 1fr; }
+  .journey div { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; font-size: 13px; }
+  .journey b { display: block; color: var(--blue); font-size: 12px; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 2px; }
+  .journey code { font-size: 11.5px; }
+
+  /* Stat row */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 18px 0 6px; }
+  body.phone .stats { grid-template-columns: repeat(2, 1fr); }
+  .stat { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; }
+  .stat b { display: block; font-size: 20px; font-variant-numeric: tabular-nums; color: var(--blue); line-height: 1.2; }
+  .stat small { color: var(--ink-3); font-size: 12px; text-transform: uppercase; letter-spacing: .5px; }
+
+  /* Lesson cards on the module landing */
+  .lessons { display: grid; gap: 12px; margin: 14px 0 22px; }
+  .lesson-card { display: grid; grid-template-columns: 56px 1fr auto; gap: 14px; align-items: start; background: var(--paper); border: 2px solid var(--line); border-radius: var(--radius); padding: 16px 18px; text-decoration: none; color: inherit; }
+  body.phone .lesson-card { grid-template-columns: 44px 1fr; }
+  body.phone .lesson-card .cta { grid-column: 2; }
+  .lesson-card.current { border-color: var(--blue); box-shadow: var(--shadow); }
+  .lesson-card.done { border-color: var(--line); }
+  .lnum { width: 56px; height: 56px; border-radius: 10px; background: var(--blue-light); color: var(--blue); font-weight: 800; font-size: 22px; display: flex; align-items: center; justify-content: center; }
+  body.phone .lnum { width: 44px; height: 44px; font-size: 18px; }
+  .lesson-card.done .lnum { background: var(--green-light); color: var(--green); }
+  .lesson-card h3 { font-size: 17px; margin-bottom: 2px; }
+  .lesson-card .what { color: var(--ink-2); font-size: 14px; margin-bottom: 8px; }
+  .meta { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .meta span::before { content: '•'; margin-right: 6px; color: var(--line); }
+  .meta span:first-child::before { content: none; }
+  .pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 10px; letter-spacing: .3px; }
+  .pill.done { background: var(--green-light); color: var(--green); }
+  .pill.now { background: var(--yellow-light); color: #8A6D00; border: 1px solid var(--yellow); }
+  .pill.next { background: var(--line-2); color: var(--ink-3); }
+  .cta { align-self: center; background: var(--blue); color: #fff; border: none; padding: 9px 16px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; font-family: inherit; white-space: nowrap; }
+  .cta.ghost { background: transparent; color: var(--blue); border: 2px solid var(--blue-light); }
+
+  /* 60-minute plan strip */
+  .plan { margin: 18px 0 4px; }
+  .plan .cap { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-3); font-weight: 600; margin-bottom: 8px; display: flex; justify-content: space-between; }
+  .plan .cap b { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .plan-bar { display: flex; gap: 3px; height: 40px; }
+  .plan-bar div { border-radius: 6px; background: var(--blue-light); color: var(--blue); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; padding: 0 4px; overflow: hidden; white-space: nowrap; }
+  .plan-bar div i { font-style: normal; font-weight: 500; opacity: .75; margin-left: 4px; font-variant-numeric: tabular-nums; }
+  .plan-bar .p-recall { background: var(--line-2); color: var(--ink-2); }
+  .plan-bar .p-dialog { background: var(--yellow-light); color: #8A6D00; }
+  .plan-bar .p-rule { background: var(--yellow); color: var(--ink); }
+  .plan-bar .p-inline { background: var(--blue-light); }
+  .plan-bar .p-work { background: var(--blue); color: #fff; }
+  .plan-bar .p-wrap { background: var(--green-light); color: var(--green); }
+  body.phone .plan-bar div i { display: none; }
+
+  /* Tabs (POC .tabs) */
+  .tabs { display: flex; border-bottom: 2px solid var(--line); margin-top: 18px; overflow-x: auto; }
+  .tab { padding: 11px 18px; font-size: 14px; font-weight: 600; color: var(--ink-3); background: none; border: none; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; font-family: inherit; }
+  .tab:hover { color: var(--blue); }
+  .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+  .tab .n { font-size: 11px; color: var(--ink-3); margin-left: 4px; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .tabc { display: none; padding: 24px 0 40px; }
+  .tabc.active { display: block; }
+
+  h2 { font-size: 20px; color: var(--blue); margin: 26px 0 12px; padding-bottom: 6px; border-bottom: 2px solid var(--yellow); }
+  .tabc h2:first-child { margin-top: 0; }
+  h3 { font-size: 16px; margin: 18px 0 8px; color: var(--ink); }
+  .uk { font-weight: 600; color: var(--blue); }
+  .tr { color: var(--ink-3); font-size: 14px; }
+  .persona { display: flex; gap: 12px; align-items: flex-start; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 16px; }
+  .persona .av { width: 40px; height: 40px; border-radius: 50%; background: var(--yellow); color: var(--ink); font-weight: 800; display: flex; align-items: center; justify-content: center; flex: none; }
+  .persona p { margin: 0; }
+
+  /* Dialogue (POC .dialogue) */
+  .dialogue { background: var(--paper); border-left: 4px solid var(--blue); border-radius: 0 var(--radius) var(--radius) 0; padding: 16px 20px; margin: 14px 0; box-shadow: var(--shadow); }
+  .dialogue-title { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-3); margin-bottom: 12px; font-weight: 600; }
+  .dl { margin-bottom: 8px; padding-left: 14px; position: relative; }
+  .dl::before { content: ''; position: absolute; left: 0; top: 9px; width: 7px; height: 7px; border-radius: 50%; background: var(--blue); }
+  .dl:nth-child(odd)::before { background: var(--yellow); }
+  .speaker { font-weight: 700; }
+  .bil { width: 100%; border-collapse: collapse; margin: 10px 0 18px; font-size: 14px; }
+  .bil td { padding: 7px 10px; border-bottom: 1px solid var(--line-2); vertical-align: top; width: 50%; }
+  .bil td:first-child { font-weight: 600; }
+  .bil th { text-align: left; font-size: 12px; color: var(--ink-3); font-weight: 600; padding: 4px 10px; text-transform: uppercase; letter-spacing: .5px; }
+
+  /* Rule box (POC) */
+  .rule-box { background: var(--yellow-light); border: 2px solid var(--yellow); border-radius: var(--radius); padding: 16px 20px; margin: 20px 0; }
+  .rule-box-header { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; margin-bottom: 8px; }
+  .rule-box-icon { width: 30px; height: 30px; background: var(--yellow); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .rule-box table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 14px; }
+  .rule-box th { text-align: left; padding: 6px 10px; background: rgba(255,215,0,.3); }
+  .rule-box td { padding: 6px 10px; }
+  .gm { color: var(--blue); font-weight: 700; } .gf { color: #C2185B; font-weight: 700; } .gn { color: var(--green); font-weight: 700; }
+  .tscroll { overflow-x: auto; }
+
+  /* Exercise wrapper (POC) */
+  .exercise { background: var(--paper); border-radius: var(--radius); border: 2px solid var(--line); padding: 18px 20px; margin: 18px 0; box-shadow: var(--shadow); }
+  .exercise.compact { padding: 12px 16px; display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; margin: 8px 0; box-shadow: none; }
+  .exercise.compact .exercise-title { font-size: 14px; }
+  .exercise.compact .items { font-size: 12px; color: var(--ink-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  body.phone .exercise.compact { grid-template-columns: auto 1fr; }
+  body.phone .exercise.compact .items { grid-column: 2; }
+  .exercise-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+  .badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: .5px; color: #fff; white-space: nowrap; }
+  .b-quiz { background: var(--blue); } .b-fillin { background: var(--green); } .b-matchup { background: var(--orange); }
+  .b-groupsort { background: var(--purple); } .b-truefalse { background: var(--teal); } .b-observe { background: #263238; }
+  .b-select { background: #00838F; } .b-unjumble { background: #AD1457; } .b-translate { background: #1565C0; } .b-order { background: #5D4037; }
+  .exercise-title { font-weight: 600; font-size: 15px; }
+  .exercise-ref { font-size: 12px; color: var(--ink-3); margin-left: auto; font-style: italic; }
+  .exercise-instruction { color: var(--ink-3); font-size: 13px; margin-bottom: 12px; font-style: italic; }
+  .qq { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--line-2); }
+  .qq:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+  .qq .q { font-weight: 600; margin-bottom: 6px; }
+  .opts { display: flex; flex-wrap: wrap; gap: 8px; }
+  .opt { padding: 6px 14px; border: 2px solid var(--line); border-radius: 8px; cursor: pointer; font-size: 14px; background: var(--paper); }
+  .opt:hover { border-color: var(--blue); background: var(--blue-light); }
+  .opt.ok { border-color: var(--green); background: var(--green-light); color: var(--green); font-weight: 600; }
+  .opt.no { border-color: var(--red); background: var(--red-light); color: var(--red); }
+  .fi { margin-bottom: 8px; line-height: 2; }
+  .blank { display: inline-block; min-width: 70px; border-bottom: 2px dashed var(--blue); padding: 0 8px; text-align: center; cursor: pointer; font-weight: 600; color: var(--blue); }
+  .blank.filled { border-bottom-style: solid; background: var(--green-light); color: var(--green); border-color: var(--green); border-radius: 4px; }
+  .observe { background: var(--blue-light); border-radius: var(--radius); padding: 16px; }
+  .observe-pairs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .observe-item { padding: 9px 12px; background: var(--paper); border-radius: 8px; text-align: center; }
+  .observe-q { margin-top: 12px; font-style: italic; color: var(--blue); font-weight: 600; }
+
+  /* Vocab table */
+  .vocab { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .vocab th { background: var(--blue); color: #fff; padding: 8px 12px; text-align: left; font-size: 13px; }
+  .vocab td { padding: 8px 12px; border-bottom: 1px solid var(--line-2); }
+  .vocab tr:hover td { background: var(--blue-light); }
+  .note { background: var(--paper); border: 1px dashed var(--line); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: var(--ink-2); margin: 12px 0; }
+
+  /* Resources */
+  .res { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; margin-bottom: 10px; }
+  .res h3 { margin: 0 0 4px; font-size: 15px; }
+  .res .kind { font-size: 11px; font-weight: 700; color: var(--ink-3); text-transform: uppercase; letter-spacing: .5px; }
+
+  /* Wrap-up + nav */
+  .wrapup { background: var(--green-light); border: 2px solid var(--green); border-radius: var(--radius); padding: 16px 20px; margin-top: 24px; }
+  .wrapup h3 { color: var(--green); margin-top: 0; }
+  .wrapup ul { margin: 0 0 6px 18px; padding: 0; }
+  .lnav { display: flex; justify-content: space-between; gap: 12px; border-top: 2px solid var(--line); padding: 18px 0 40px; margin-top: 8px; }
+  .lnav a { text-decoration: none; color: var(--blue); font-weight: 600; border: 2px solid var(--blue-light); border-radius: 10px; padding: 10px 14px; background: var(--paper); font-size: 14px; }
+  .lnav a small { display: block; font-weight: 500; color: var(--ink-3); font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+  .lnav a.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .lnav a.primary small { color: rgba(255,255,255,.75); }
+
+  /* Design notes screen */
+  .notes { padding: 24px 0 60px; }
+  .notes h2 { margin-top: 30px; }
+  .cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+  body.phone .cmp { grid-template-columns: 1fr; }
+  .cmp > div { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; }
+  .cmp .cap { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-3); font-weight: 700; margin-bottom: 8px; }
+  .cmp .after { border-color: var(--blue); }
+  .cmp ul { margin: 0; padding-left: 18px; }
+  .cmp li { margin-bottom: 4px; font-variant-numeric: tabular-nums; }
+  pre { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; font-size: 12.5px; line-height: 1.55; overflow-x: auto; margin: 10px 0 16px; }
+  table.plain { width: 100%; border-collapse: collapse; font-size: 14px; margin: 10px 0 18px; }
+  table.plain th { text-align: left; border-bottom: 2px solid var(--line); padding: 6px 10px; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--ink-3); }
+  table.plain td { padding: 7px 10px; border-bottom: 1px solid var(--line-2); vertical-align: top; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; background: var(--line-2); padding: 1px 5px; border-radius: 4px; }
+  .callout { background: var(--yellow-light); border-left: 4px solid var(--yellow); padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 12px 0; font-size: 14px; }
+  button:focus-visible, .opt:focus-visible, a:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+  </style>
+</head>
+<body>
+
+<div class="switch">
+  <span class="lbl">Екран:</span>
+  <button class="on" data-screen="module">Модуль (landing)</button>
+  <button data-screen="l1">Урок 1</button>
+  <button data-screen="l2">Урок 2</button>
+  <button data-screen="l3">Урок 3</button>
+  <button class="phone-btn" id="phoneBtn" title="Preview at 400px">📱 400px</button>
+  <span class="url" id="urlbar">/a1-v2/things-have-gender/</span>
+  <span class="poc">Phase 0 Pilot</span>
+</div>
+
+<!-- ============ SCREEN: MODULE LANDING ============ -->
+<section class="screen on" id="s-module">
+  <div class="header"><div class="wrap">
+    <div class="crumbs"><a href="#" data-go="module">A1</a><span class="sep">›</span><span>Модуль 8 з 55</span></div>
+    <span class="level-badge">A1 · Початко́вий рі́вень</span>
+    <h1>Ре́чі ма́ють рід</h1>
+    <div class="sub">Things Have Gender — рід іме́нників: він, вона́, воно́ · мій, моя́, моє́</div>
+    <div class="lesson-dots"><span class="done"></span><span class="now"></span><span></span><em>3 уроки по ≈60 хв</em></div>
+  </div></div>
+
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><b>3</b><small>уроки по ≈60 хв</small></div>
+      <div class="stat"><b>48</b><small>слів у словнику</small></div>
+      <div class="stat"><b>30</b><small>вправ (по 10 у кожному уроці)</small></div>
+      <div class="stat"><b>2 211</b><small>слів прози (без скорочень)</small></div>
+    </div>
+
+    <h2>Цілі та очі́кувані результа́ти мо́дуля</h2>
+    <p class="tr">Objectives from the locked plan (<code>plans/a1/things-have-gender.yaml</code>):</p>
+    <ul style="margin:0 0 16px 18px; padding:0; color:var(--ink-2); font-size:14px">
+      <li>Визначати рід іменників за допомогою тесту <span class="uk">він / вона́ / воно́</span>.</li>
+      <li>Розпізнавати рід за закінченнями слів (приголосний = ч, -а/-я = ж, -о/-е = с).</li>
+      <li>Називати понад 20 поширених предметів із правильним родом.</li>
+      <li>Використовувати конструкцію «У мене є» з предметами кімнати та сумки.</li>
+      <li>Використовувати фемінітив як основну форму професії для жінки (<span class="uk">вчи́телька, лі́карка</span>).</li>
+      <li>Застосовувати український тест він/вона/воно без перенесення роду з інших мов (діагностичні слова-пастки: <span class="uk">біль, степ, розпис, літопис, путь</span>).</li>
+    </ul>
+
+    <h2>Уро́ки мо́дуля</h2>
+    <div class="lessons">
+      <div class="lesson-card current" style="cursor:pointer" onclick="go('l1')">
+        <div class="lnum">1</div>
+        <div>
+          <h3>Він, вона́ чи воно́? <span class="pill now">Урок 1</span></h3>
+          <div class="what">Поняття роду в українській мові, питання Хто це? / Що це?, тест він/вона/воно, закінчення слів та перші словосполучення мій/моя/моє.</div>
+          <div class="meta"><span>≈60 хв</span><span>16 слів</span><span>10 вправ (4 в уроці + 6 у зошиті)</span></div>
+        </div>
+        <button class="cta" onclick="event.stopPropagation(); go('l1')">Відкрити</button>
+      </div>
+
+      <div class="lesson-card" style="cursor:pointer" onclick="go('l2')">
+        <div class="lnum">2</div>
+        <div>
+          <h3>Предме́ти навко́ло <span class="pill next">Урок 2</span></h3>
+          <div class="what">Предмети в кімнаті й у сумці, конструкція «У мене є…», займенники він/вона/воно як відповідь на запитання «Де стіл? — Він тут».</div>
+          <div class="meta"><span>≈60 хв</span><span>16 слів</span><span>10 вправ (4 в уроці + 6 у зошиті)</span></div>
+        </div>
+        <button class="cta ghost" onclick="event.stopPropagation(); go('l2')">Відкрити</button>
+      </div>
+
+      <div class="lesson-card" style="cursor:pointer" onclick="go('l3')">
+        <div class="lnum">3</div>
+        <div>
+          <h3>Профе́сії, па́стки й самопереві́рка <span class="pill next">Урок 3</span></h3>
+          <div class="what">Назви професій та фемінітиви (вчителька, лікарка), чоловічі імена на -а/-о (Микола, Павло), слова-пастки роду та підсумкова перевірка модуля.</div>
+          <div class="meta"><span>≈60 хв</span><span>16 слів</span><span>10 вправ (4 в уроці + 6 у зошиті)</span></div>
+        </div>
+        <button class="cta ghost" onclick="event.stopPropagation(); go('l3')">Відкрити</button>
+      </div>
+    </div>
+
+    <div class="note">Кожен із трьох уроків являє собою повноцінне заняття на 60 хвилин із 4 робочими вкладками: Уро́к, Словни́к, Впра́ви та Ресу́рси. Загальний словник модуля налічує рівно 48 слів, розподілених по 16 слів на урок.</div>
+  </div>
+</section>
+
+<!-- ============ SCREEN: LESSON 1 ============ -->
+<section class="screen" id="s-l1">
+  <div class="header"><div class="wrap">
+    <div class="crumbs"><a href="#" data-go="module">Модуль 8 · Речі мають рід</a><span class="sep">›</span><span>Урок 1 з 3</span></div>
+    <span class="level-badge">A1 · Модуль 8 · Уро́к 1</span>
+    <h1>Він, вона́ чи воно́?</h1>
+    <div class="sub">Lesson 1 of 3 — The він / вона́ / воно́ test and basic endings</div>
+    <div class="lesson-dots"><span class="now"></span><span></span><span></span><em>≈ 60 хв</em></div>
+  </div></div>
+
+  <div class="wrap">
+    <div class="plan">
+      <div class="cap"><span>План на 60 хвили́н</span><b>60 хв</b></div>
+      <div class="plan-bar">
+        <div class="p-recall" style="flex:5" title="Повторення: 5 хв">Повторення<i>5</i></div>
+        <div class="p-dialog" style="flex:15" title="Діалог і розбір: 15 хв">Діалог<i>15</i></div>
+        <div class="p-rule" style="flex:10" title="Правило: 10 хв">Правило<i>10</i></div>
+        <div class="p-inline" style="flex:12" title="Вправи в уроці: 12 хв">Вправи в уроці<i>12</i></div>
+        <div class="p-work" style="flex:15" title="Зошит: 15 хв">Зошит<i>15</i></div>
+        <div class="p-wrap" style="flex:3" title="Підсумок: 3 хв">✓<i>3</i></div>
+      </div>
+    </div>
+
+    <div class="tabs" data-tabs="l1">
+      <button class="tab active" data-tab="l1-urok">Уро́к</button>
+      <button class="tab" data-tab="l1-slovnyk">Словни́к <span class="n">16</span></button>
+      <button class="tab" data-tab="l1-vpravy">Впра́ви <span class="n">10</span></button>
+      <button class="tab" data-tab="l1-resursy">Ресу́рси <span class="n">2</span></button>
+    </div>
+
+    <div class="tabc active" id="l1-urok">
+      <h1>Він, вона́ чи воно́?</h1>
+<p>У мо́дулі 7 ви переві́рили свій пе́рший конта́кт — you checked your first contact: привіта́ння, імена́ та сім'ю́. Тепе́р ми ди́вимося на предме́ти навко́ло, бо в украї́нській мо́ві ко́жен іме́нник ма́є рід — every noun has a gender.</p>
+<p>English has "he," "she," and "it." Ukrainian also has <strong>він</strong>, <strong>вона́</strong>,
+and <strong>воно́</strong>, but Ukrainian uses them for every noun, including things in your
+room. A table is <strong>він</strong>. A book is <strong>вона́</strong>. A window is <strong>воно́</strong>.</p>
+<p>By the end, you can:</p>
+<ul><li>ask whether a word is a person or a thing with <strong>Хто це?</strong> and <strong>Що це?</strong>;</li><li>test common nouns with <strong>він / вона́ / воно́</strong>;</li><li>use the easy ending signals: consonant = usually masculine, <strong>-а / -я</strong> =</li><li>usually feminine, <strong>-о / -е</strong> = usually neuter;</li><li>say simple room and bag lines with <strong>У мене́ є...</strong>;</li><li>choose <strong>мій / моя́ / моє́</strong> as a whole phrase with a noun;</li><li>use <strong>вчи́телька</strong> and <strong>лі́карка</strong> when the person is a woman;</li><li>repair the most common A1 gender traps without comparing Ukrainian to any</li><li>other language.</li></ul>
+<p>Keep the goal small. You are not learning a full adjective or case system.
+You are learning to store a noun with its gender cue.</p>
+<div class="rule-box"><div class="rule-box-header"><div class="rule-box-icon">💡</div> Пора́да — Tip</div><div class="callout">Treat gender as part of the noun card. Do not ask, "Who owns it?" Ask, "What
+phrase travels with this noun: <strong>мій</strong>, <strong>моя́</strong>, or <strong>моє́</strong>?"</div></div>
+<h2>Діало́ги</h2>
+<p>Послу́хайте та прочита́йте коро́тку розмо́ву — listen to and read the short conversation. Марко́ пока́зує свою́ кімна́ту Окса́ні:</p>
+<div class="dialogue"><div class="dl">Марко́: Приві́т! Диви́сь, це моя́ кімна́та.</div><div class="dl">Окса́на: Кла́сно! У тебе́ є стіл?</div><div class="dl">Марко́: Так, це мій стіл. І моє́ лі́жко.</div><div class="dl">Окса́на: А це що?</div><div class="dl">Марко́: Це моє́ вікно́. А це — моя́ кни́га.</div></div>
+<p>Розбі́р розмо́ви по́дано ни́жче — the breakdown of the conversation is given below:</p>
+<div class="tscroll"><table class="bil"><tr><th>Украї́нська</th><th>English support</th></tr><tr><td><strong>Диви́сь, це моя́ кімна́та.</strong></td><td>Look, this is my room.</td></tr><tr><td><strong>У тебе́ є стіл?</strong></td><td>Do you have a table?</td></tr><tr><td><strong>Так, це мій стіл. І моє́ лі́жко.</strong></td><td>Yes, this is my table. And my bed.</td></tr><tr><td><strong>Це моє́ вікно́. А це — моя́ кни́га.</strong></td><td>This is my window. And this is my book.</td></tr></table></div>
+<h3>Пита́льні слова́</h3>
+<p>Start with the noun question.</p>
+<div class="tscroll"><table class="bil"><tr><th>Question</th><th>Use it for</th><th>Examples</th></tr><tr><td><strong>Хто це?</strong></td><td>a person or animal</td><td><strong>та́то</strong>, <strong>сестра́</strong>, <strong>кіт</strong></td></tr><tr><td><strong>Що це?</strong></td><td>a thing or place</td><td><strong>стіл</strong>, <strong>кни́га</strong>, <strong>вікно́</strong></td></tr></table></div>
+<p>In family words, gender often feels familiar:</p>
+<div class="tscroll"><table class="bil"><tr><th>Ukrainian</th><th>Gender test</th><th>My phrase</th></tr><tr><td><strong>та́то</strong></td><td><strong>він</strong></td><td><strong>мій та́то</strong></td></tr><tr><td><strong>брат</strong></td><td><strong>він</strong></td><td><strong>мій брат</strong></td></tr><tr><td><strong>сестра́</strong></td><td><strong>вона́</strong></td><td><strong>моя́ сестра́</strong></td></tr><tr><td><strong>ма́ма</strong></td><td><strong>вона́</strong></td><td><strong>моя́ ма́ма</strong></td></tr></table></div>
+<p>But things also have gender:</p>
+<div class="tscroll"><table class="bil"><tr><th>Ukrainian</th><th>English</th><th>Gender test</th><th>My phrase</th></tr><tr><td><strong>стіл</strong></td><td>table</td><td><strong>він</strong></td><td><strong>мій стіл</strong></td></tr><tr><td><strong>кни́га</strong></td><td>book</td><td><strong>вона́</strong></td><td><strong>моя́ кни́га</strong></td></tr><tr><td><strong>вікно́</strong></td><td>window</td><td><strong>воно́</strong></td><td><strong>моє́ вікно́</strong></td></tr></table></div>
+<p>Do not ask whether the speaker is a man or a woman. Ask what gender the
+Ukrainian noun has. <strong>Мій стіл</strong> is the same if the owner is Olena, Marko, or
+you.</p>
+<h2>Він, вона́, воно́</h2>
+<p>The fastest A1 habit is the <strong>він / вона́ / воно́</strong> test. Endings help you guess
+when the word is new.</p>
+<div class="tscroll"><table class="bil"><tr><th>Signal</th><th>Usually</th><th>Examples</th></tr><tr><td>consonant ending</td><td><strong>він</strong>, <strong>мій</strong></td><td><strong>стіл</strong>, <strong>телефо́н</strong>, <strong>зо́шит</strong>, <strong>ключ</strong></td></tr><tr><td><strong>-а / -я</strong></td><td><strong>вона́</strong>, <strong>моя́</strong></td><td><strong>кни́га</strong>, <strong>ла́мпа</strong>, <strong>кімна́та</strong>, <strong>ру́чка</strong></td></tr><tr><td><strong>-о / -е</strong></td><td><strong>воно́</strong>, <strong>моє́</strong></td><td><strong>вікно́</strong>, <strong>лі́жко</strong>, <strong>дзе́ркало</strong>, <strong>мо́ре</strong></td></tr></table></div>
+<p>At A1, this covers the clear everyday words you need. Some nouns are not clear
+from the ending. You have already seen one important pattern: <strong>та́то</strong> and
+<strong>ба́тько</strong> are masculine because they name a male person. Later you will learn
+more exceptions. Today you only need a safe beginner reaction: if a word does
+not fit the easy pattern, learn it as a phrase.</p>
+<div class="rule-box"><div class="rule-box-header"><div class="rule-box-icon">💡</div> Пора́да — Tip</div><div class="callout">The ending rule is a first guess, not a debate. If this lesson gives you a safe
+phrase such as <strong>мій та́то</strong> or <strong>мій соба́ка</strong>, store the whole phrase.</div></div>
+<p>One high-value exception is <strong>соба́ка</strong>. In Ukrainian, use <strong>він</strong> and
+<strong>мій соба́ка</strong>. For father, keep the course words <strong>та́то</strong> and <strong>ба́тько</strong>.
+Do not replace them with <strong>па́па</strong> in these A1 lines.</p>
+<p>Keep these phrases whole:</p>
+<div class="tscroll"><table class="bil"><tr><th>Phrase</th><th>Meaning</th></tr><tr><td><strong>мій стіл</strong></td><td>my table</td></tr><tr><td><strong>моя́ ру́чка</strong></td><td>my pen</td></tr><tr><td><strong>моє́ вікно́</strong></td><td>my window</td></tr><tr><td><strong>вели́ке я́блуко</strong></td><td>a big apple</td></tr><tr><td><strong>си́нє мо́ре</strong></td><td>a blue sea</td></tr></table></div>
+<p>Those last two phrases preview the next module. Do not turn them into a full
+adjective table yet.</p>
+<h3>Підсу́мок уро́ку 1</h3>
+<p>У цьо́му уро́ці ви навчи́лися трьох рече́й: перевіря́ти рід за допомо́гою слів <strong>він</strong>, <strong>вона́</strong>, <strong>воно́</strong>, розпізнава́ти закі́нчення іме́нника та вжива́ти фо́рми <strong>мій</strong>, <strong>моя́</strong>, <strong>моє́</strong> як єди́не ці́ле. Да́лі — уро́к 2, де ми розши́римо ко́ло рече́й навко́ло вас і додамо́ констру́кцію <strong>У мене́ є...</strong>.</p>
+      <div class="lnav">
+        <a href="#" data-go="module"><small>← Модуль</small>8. Речі мають рід</a>
+        <a href="#" class="primary" data-go="l2"><small>Далі →</small>Урок 2 · Предмети навколо</a>
+      </div>
+    </div>
+
+    <div class="tabc" id="l1-slovnyk">
+      <h2>Словни́к уро́ку 1</h2><div class="note">16 із 48 слів мо́дуля. Ко́жне сло́во має свій уро́к.</div><div class="tscroll"><table class="vocab"><tr><th>Сло́во</th><th>Части́на мо́ви</th><th>English</th><th>У ре́ченні</th></tr>
+<tr><td><strong>рід</strong></td><td>noun</td><td>grammatical gender</td><td>Украї́нські іме́нники ма́ють рід.</td></tr>
+<tr><td><strong>іме́нник</strong></td><td>noun</td><td>noun</td><td>Стіл — це іме́нник.</td></tr>
+<tr><td><strong>хто це?</strong></td><td>phrase</td><td>who is this?</td><td>Хто це? Це та́то.</td></tr>
+<tr><td><strong>що це?</strong></td><td>phrase</td><td>what is this?</td><td>Що це? Це стіл.</td></tr>
+<tr><td><strong>він</strong></td><td>pronoun</td><td>he / masculine gender-test word</td><td>Стіл — він.</td></tr>
+<tr><td><strong>вона́</strong></td><td>pronoun</td><td>she / feminine gender-test word</td><td>Кни́га — вона́.</td></tr>
+<tr><td><strong>воно́</strong></td><td>pronoun</td><td>it / neuter gender-test word</td><td>Вікно́ — воно́.</td></tr>
+<tr><td><strong>мій</strong></td><td>pronoun</td><td>my, masculine</td><td>Це мій стіл.</td></tr>
+<tr><td><strong>моя́</strong></td><td>pronoun</td><td>my, feminine</td><td>Це моя́ кни́га.</td></tr>
+<tr><td><strong>моє́</strong></td><td>pronoun</td><td>my, neuter</td><td>Це моє́ вікно́.</td></tr>
+<tr><td><strong>стіл</strong></td><td>noun</td><td>table</td><td>У мене́ є стіл.</td></tr>
+<tr><td><strong>кни́га</strong></td><td>noun</td><td>book</td><td>Це моя́ кни́га.</td></tr>
+<tr><td><strong>вікно́</strong></td><td>noun</td><td>window</td><td>Моє́ вікно́ вели́ке.</td></tr>
+<tr><td><strong>мі́сто</strong></td><td>noun</td><td>city</td><td>Моє́ мі́сто вели́ке.</td></tr>
+<tr><td><strong>та́то</strong></td><td>noun</td><td>dad</td><td>Це мій та́то.</td></tr>
+<tr><td><strong>ба́тько</strong></td><td>noun</td><td>father</td><td>Це мій ба́тько.</td></tr>
+</table></div>
+    </div>
+
+    <div class="tabc" id="l1-vpravy">
+      <h2>Впра́ви уро́ку 1</h2><div class="note">10 вправ (4 в уро́ці + 6 у зо́шиті). Усі впра́ви наведено ні́жче:</div><h3>В уро́ці — Inline (4)</h3><div class="exercise" id="act-card-act-1">
+<div class="exercise-header"><span class="badge b-quiz">quiz</span><span class="exercise-title">Хто чи що?</span><span class="exercise-ref">в уроці · act-1</span></div>
+<div class="exercise-instruction">Choose the question or pronoun that fits the noun.</div>
+<div class="qq">
+<div class="q">та́то</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">Хто це?</span>
+<span class="opt"  tabindex="0">Що це?</span>
+<span class="opt"  tabindex="0">Воно́?</span>
+</div>
+<div class="note">Та́то is a person word, so ask Хто це?</div>
+</div>
+<div class="qq">
+<div class="q">стіл</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">Що це?</span>
+<span class="opt"  tabindex="0">Хто це?</span>
+<span class="opt"  tabindex="0">Вона́?</span>
+</div>
+<div class="note">Стіл is a thing word, so ask Що це?</div>
+</div>
+<div class="qq">
+<div class="q">сестра́</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">вона́</span>
+<span class="opt"  tabindex="0">він</span>
+<span class="opt"  tabindex="0">воно́</span>
+</div>
+<div class="note">Сестра́ is feminine.</div>
+</div>
+<div class="qq">
+<div class="q">брат</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">він</span>
+<span class="opt"  tabindex="0">вона́</span>
+<span class="opt"  tabindex="0">воно́</span>
+</div>
+<div class="note">Брат is masculine.</div>
+</div>
+<div class="qq">
+<div class="q">кни́га</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">вона́</span>
+<span class="opt"  tabindex="0">він</span>
+<span class="opt"  tabindex="0">воно́</span>
+</div>
+<div class="note">Кни́га is feminine.</div>
+</div>
+<div class="qq">
+<div class="q">вікно́</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">воно́</span>
+<span class="opt"  tabindex="0">вона́</span>
+<span class="opt"  tabindex="0">він</span>
+</div>
+<div class="note">Вікно́ is neuter.</div>
+</div>
+</div>
+<div class="exercise" id="act-card-act-2">
+<div class="exercise-header"><span class="badge b-groupsort">group-sort</span><span class="exercise-title">Сорту́й предме́ти за ро́дом</span><span class="exercise-ref">в уроці · act-2</span></div>
+<div class="exercise-instruction">Sort each noun by its safest A1 gender phrase.</div>
+<div class="journey">
+<div><b>він / мій</b><p>стіл, стіле́ць, телефо́н, комп'ю́тер</p></div>
+<div><b>вона́ / моя́</b><p>кни́га, кімна́та, ла́мпа, ру́чка</p></div>
+<div><b>воно́ / моє́</b><p>вікно́, лі́жко, крі́сло, дзе́ркало</p></div>
+</div>
+</div>
+<div class="exercise" id="act-card-act-5">
+<div class="exercise-header"><span class="badge b-quiz">quiz</span><span class="exercise-title">Закі́нчення підка́зує рід</span><span class="exercise-ref">в уроці · act-5</span></div>
+<div class="exercise-instruction">Choose the usual gender signal from the noun ending.</div>
+<div class="qq">
+<div class="q">стіл закі́нчується на при́голосний.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">він / мій</span>
+<span class="opt"  tabindex="0">вона́ / моя́</span>
+<span class="opt"  tabindex="0">воно́ / моє́</span>
+</div>
+<div class="note">A clear consonant ending is usually masculine.</div>
+</div>
+<div class="qq">
+<div class="q">телефо́н закі́нчується на при́голосний.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">він / мій</span>
+<span class="opt"  tabindex="0">вона́ / моя́</span>
+<span class="opt"  tabindex="0">воно́ / моє́</span>
+</div>
+<div class="note">Телефо́н is masculine in this A1 pattern.</div>
+</div>
+<div class="qq">
+<div class="q">кни́га закі́нчується на -а.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">вона́ / моя́</span>
+<span class="opt"  tabindex="0">він / мій</span>
+<span class="opt"  tabindex="0">воно́ / моє́</span>
+</div>
+<div class="note">A clear -а ending is usually feminine.</div>
+</div>
+<div class="qq">
+<div class="q">кімна́та закі́нчується на -а.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">вона́ / моя́</span>
+<span class="opt"  tabindex="0">він / мій</span>
+<span class="opt"  tabindex="0">воно́ / моє́</span>
+</div>
+<div class="note">Кімна́та is feminine in this A1 pattern.</div>
+</div>
+<div class="qq">
+<div class="q">вікно́ закі́нчується на -о.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">воно́ / моє́</span>
+<span class="opt"  tabindex="0">він / мій</span>
+<span class="opt"  tabindex="0">вона́ / моя́</span>
+</div>
+<div class="note">A clear -о ending is usually neuter.</div>
+</div>
+<div class="qq">
+<div class="q">лі́жко закі́нчується на -о.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">воно́ / моє́</span>
+<span class="opt"  tabindex="0">вона́ / моя́</span>
+<span class="opt"  tabindex="0">він / мій</span>
+</div>
+<div class="note">Лі́жко is neuter in this A1 pattern.</div>
+</div>
+</div>
+<div class="exercise" id="act-card-act-3">
+<div class="exercise-header"><span class="badge b-quiz">quiz</span><span class="exercise-title">Він, вона́ чи воно́?</span><span class="exercise-ref">в уроці · act-3</span></div>
+<div class="exercise-instruction">Choose the Ukrainian gender-test word.</div>
+<div class="qq">
+<div class="q">стіл</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">він</span>
+<span class="opt"  tabindex="0">вона́</span>
+<span class="opt"  tabindex="0">воно́</span>
+</div>
+<div class="note">Стіл ends in a consonant and is masculine.</div>
+</div>
+<div class="qq">
+<div class="q">кни́га</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">вона́</span>
+<span class="opt"  tabindex="0">він</span>
+<span class="opt"  tabindex="0">воно́</span>
+</div>
+<div class="note">Кни́га is feminine.</div>
+</div>
+<div class="qq">
+<div class="q">вікно́</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">воно́</span>
+<span class="opt"  tabindex="0">він</span>
+<span class="opt"  tabindex="0">вона́</span>
+</div>
+<div class="note">Вікно́ is neuter.</div>
+</div>
+<div class="qq">
+<div class="q">телефо́н</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">він</span>
+<span class="opt"  tabindex="0">вона́</span>
+<span class="opt"  tabindex="0">воно́</span>
+</div>
+<div class="note">Телефо́н is masculine.</div>
+</div>
+<div class="qq">
+<div class="q">ла́мпа</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">вона́</span>
+<span class="opt"  tabindex="0">воно́</span>
+<span class="opt"  tabindex="0">він</span>
+</div>
+<div class="note">Ла́мпа is feminine.</div>
+</div>
+<div class="qq">
+<div class="q">лі́жко</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">воно́</span>
+<span class="opt"  tabindex="0">вона́</span>
+<span class="opt"  tabindex="0">він</span>
+</div>
+<div class="note">Лі́жко is neuter.</div>
+</div>
+<div class="qq">
+<div class="q">та́то</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">він</span>
+<span class="opt"  tabindex="0">воно́</span>
+<span class="opt"  tabindex="0">вона́</span>
+</div>
+<div class="note">Та́то is masculine because it names a male person.</div>
+</div>
+<div class="qq">
+<div class="q">Мико́ла</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">він</span>
+<span class="opt"  tabindex="0">вона́</span>
+<span class="opt"  tabindex="0">воно́</span>
+</div>
+<div class="note">Мико́ла is a masculine name.</div>
+</div>
+</div><h3>У зо́шиті — Workbook (6)</h3><div class="exercise" id="act-card-act-w1">
+<div class="exercise-header"><span class="badge b-groupsort">group-sort</span><span class="exercise-title">Сорту́й за ро́дом</span><span class="exercise-ref">у зошиті · act-w1</span></div>
+<div class="exercise-instruction">Sort each noun by its A1 gender signal.</div>
+<div class="journey">
+<div><b>він / мій</b><p>стіл, телефо́н, зо́шит, ключ, та́то</p></div>
+<div><b>вона́ / моя́</b><p>кни́га, ла́мпа, кімна́та, ру́чка, сестра́</p></div>
+<div><b>воно́ / моє́</b><p>вікно́, лі́жко, крі́сло, дзе́ркало, фо́то</p></div>
+</div>
+</div>
+<div class="exercise" id="act-card-act-101">
+<div class="exercise-header"><span class="badge b-truefalse">true-false</span><span class="exercise-title">Пра́вда чи ні?</span><span class="exercise-ref">у зошиті · act-101</span></div>
+<div class="exercise-instruction">Ви́значте, чи пра́вильне тве́рдження про рід іме́нника.</div>
+<div class="fi"><span class="q">«Стіл» — це іме́нник чолові́чого ро́ду (він).</span> — <span class="pill done">Пра́вда</span></div>
+<div class="fi"><span class="q">«Кни́га» — це іме́нник чолові́чого ро́ду (він).</span> — <span class="pill next">Ні</span></div>
+<div class="fi"><span class="q">«Вікно́» — це іме́нник сере́днього ро́ду (воно́).</span> — <span class="pill done">Пра́вда</span></div>
+<div class="fi"><span class="q">«Та́то» — це іме́нник жіно́чого ро́ду (вона́).</span> — <span class="pill next">Ні</span></div>
+<div class="fi"><span class="q">«Мі́сто» — це іме́нник сере́днього ро́ду (воно́).</span> — <span class="pill done">Пра́вда</span></div>
+<div class="fi"><span class="q">«Ба́тько» — це іме́нник чолові́чого ро́ду (він).</span> — <span class="pill done">Пра́вда</span></div>
+</div>
+<div class="exercise" id="act-card-act-102">
+<div class="exercise-header"><span class="badge b-matchup">match-up</span><span class="exercise-title">З'єдна́йте: іме́нник і рід</span><span class="exercise-ref">у зошиті · act-102</span></div>
+<div class="exercise-instruction">З'єдна́йте іме́нник із прави́льним займе́нником.</div>
+<div class="tscroll"><table class="plain"><tr><th>Ліво́руч</th><th>Право́руч</th></tr>
+<tr><td><strong>стіл</strong></td><td>він</td></tr>
+<tr><td><strong>кни́га</strong></td><td>вона́</td></tr>
+<tr><td><strong>вікно́</strong></td><td>воно́</td></tr>
+<tr><td><strong>та́то</strong></td><td>він</td></tr>
+<tr><td><strong>ма́ма</strong></td><td>вона́</td></tr>
+<tr><td><strong>мі́сто</strong></td><td>воно́</td></tr>
+</table></div>
+</div>
+<div class="exercise" id="act-card-act-103">
+<div class="exercise-header"><span class="badge b-fillin">fill-in</span><span class="exercise-title">Вста́вте мій, моя́ чи моє́</span><span class="exercise-ref">у зошиті · act-103</span></div>
+<div class="exercise-instruction">Ви́беріть прави́льний присві́йний займе́нник до ко́жного іме́нника.</div>
+<div class="qq">
+<div class="q">Це ___ стіл.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">мій</span>
+<span class="opt"  tabindex="0">моя́</span>
+<span class="opt"  tabindex="0">моє́</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">мій</span></div>
+</div>
+<div class="qq">
+<div class="q">Це ___ кни́га.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">моя́</span>
+<span class="opt"  tabindex="0">мій</span>
+<span class="opt"  tabindex="0">моє́</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">моя́</span></div>
+</div>
+<div class="qq">
+<div class="q">Це ___ вікно́.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">моє́</span>
+<span class="opt"  tabindex="0">мій</span>
+<span class="opt"  tabindex="0">моя́</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">моє́</span></div>
+</div>
+<div class="qq">
+<div class="q">Це ___ та́то.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">мій</span>
+<span class="opt"  tabindex="0">моя́</span>
+<span class="opt"  tabindex="0">моє́</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">мій</span></div>
+</div>
+<div class="qq">
+<div class="q">Це ___ ма́ма.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">моя́</span>
+<span class="opt"  tabindex="0">мій</span>
+<span class="opt"  tabindex="0">моє́</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">моя́</span></div>
+</div>
+<div class="qq">
+<div class="q">Це ___ мі́сто.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">моє́</span>
+<span class="opt"  tabindex="0">мій</span>
+<span class="opt"  tabindex="0">моя́</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">моє́</span></div>
+</div>
+</div>
+<div class="exercise" id="act-card-act-104">
+<div class="exercise-header"><span class="badge b-unjumble">unjumble</span><span class="exercise-title">Складі́ть ре́чення</span><span class="exercise-ref">у зошиті · act-104</span></div>
+<div class="exercise-instruction">Розташу́йте слова́ у прави́льному поря́дку, щоб утвори́ти ре́чення.</div>
+<div class="fi">Слова́: <span class="tr">Це / мій / стіл</span> → <strong>Це мій стіл.</strong></div>
+<div class="fi">Слова́: <span class="tr">Це / моя́ / кни́га</span> → <strong>Це моя́ кни́га.</strong></div>
+<div class="fi">Слова́: <span class="tr">Це / моє́ / вікно́</span> → <strong>Це моє́ вікно́.</strong></div>
+<div class="fi">Слова́: <span class="tr">Тут / мій / зо́шит</span> → <strong>Тут мій зо́шит.</strong></div>
+<div class="fi">Слова́: <span class="tr">Там / моя́ / кімна́та</span> → <strong>Там моя́ кімна́та.</strong></div>
+<div class="fi">Слова́: <span class="tr">Ось / моє́ / фо́то</span> → <strong>Ось моє́ фо́то.</strong></div>
+</div>
+<div class="exercise" id="act-card-act-105">
+<div class="exercise-header"><span class="badge b-translate">translate</span><span class="exercise-title">Перекладі́ть ре́чення</span><span class="exercise-ref">у зошиті · act-105</span></div>
+<div class="exercise-instruction">Перекладі́ть ре́чення з англі́йської мо́ви на украї́нську.</div>
+<div class="qq">
+<div class="q">This is my table.</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Це мій стіл.</span></div>
+</div>
+<div class="qq">
+<div class="q">This is my book.</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Це моя́ кни́га.</span></div>
+</div>
+<div class="qq">
+<div class="q">This is my window.</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Це моє́ вікно́.</span></div>
+</div>
+<div class="qq">
+<div class="q">My father is here.</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Мій та́то тут.</span></div>
+</div>
+<div class="qq">
+<div class="q">My mother is there.</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Моя́ ма́ма там.</span></div>
+</div>
+<div class="qq">
+<div class="q">This is my city.</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Це моє́ мі́сто.</span></div>
+</div>
+</div>
+    </div>
+
+    <div class="tabc" id="l1-resursy">
+      <h2>Ресу́рси уро́ку 1</h2><div class="res"><div class="kind">article</div><h3>Dobra Forma: Gender of Nouns</h3><p class="tr">Plan and reference source: gender identification rules and noun tables.<br><a href="https://opentext.ku.edu/dobraforma/chapter/1-1/" target="_blank">https://opentext.ku.edu/dobraforma/chapter/1-1/</a></p><div class="meta"><span>Dobra Forma: Gender of Nouns</span></div></div>
+<div class="res"><div class="kind">article</div><h3>Noun Genders in Ukrainian</h3><p class="tr">Infographic with noun-gender rules and clear everyday examples.<br><a href="https://www.ukrainianlessons.com/noun-genders-in-ukrainian/" target="_blank">https://www.ukrainianlessons.com/noun-genders-in-ukrainian/</a></p><div class="meta"><span>Ukrainian Lessons (джерело)</span></div></div>
+<div class="note">Цей спи́сок мі́стить ви́ключно матеріа́ли, на які́ спира́ється цей уро́к. Усі джере́ла нале́жно вка́зано.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCREEN: LESSON 2 ============ -->
+<section class="screen" id="s-l2">
+  <div class="header"><div class="wrap">
+    <div class="crumbs"><a href="#" data-go="module">Модуль 8 · Речі мають рід</a><span class="sep">›</span><span>Урок 2 з 3</span></div>
+    <span class="level-badge">A1 · Модуль 8 · Уро́к 2</span>
+    <h1>Предме́ти навко́ло</h1>
+    <div class="sub">Lesson 2 of 3 — Objects around you, in the room and in the bag</div>
+    <div class="lesson-dots"><span class="done"></span><span class="now"></span><span></span><em>≈ 60 хв</em></div>
+  </div></div>
+
+  <div class="wrap">
+    <div class="plan">
+      <div class="cap"><span>План на 60 хвили́н</span><b>60 хв</b></div>
+      <div class="plan-bar">
+        <div class="p-recall" style="flex:5">Повторення<i>5</i></div>
+        <div class="p-dialog" style="flex:15">Діалог<i>15</i></div>
+        <div class="p-rule" style="flex:10">Правило<i>10</i></div>
+        <div class="p-inline" style="flex:12">Вправи в уроці<i>12</i></div>
+        <div class="p-work" style="flex:15">Зошит<i>15</i></div>
+        <div class="p-wrap" style="flex:3">✓<i>3</i></div>
+      </div>
+    </div>
+
+    <div class="tabs" data-tabs="l2">
+      <button class="tab active" data-tab="l2-urok">Уро́к</button>
+      <button class="tab" data-tab="l2-slovnyk">Словни́к <span class="n">16</span></button>
+      <button class="tab" data-tab="l2-vpravy">Впра́ви <span class="n">10</span></button>
+      <button class="tab" data-tab="l2-resursy">Ресу́рси <span class="n">2</span></button>
+    </div>
+
+    <div class="tabc active" id="l2-urok">
+      <h1>Предме́ти навко́ло</h1>
+<p>У пе́ршому уро́ці ви навчи́лися головно́го пра́вила: украї́нські ре́чі ма́ють рід — Ukrainian things have gender. Стіл — він, кни́га — вона́, вікно́ — воно́. Тепе́р ми вчимо́ся назива́ти предме́ти навко́ло нас у кімна́ті та в су́мці за допомо́гою знайо́мої констру́кції <strong>У мене́ є...</strong> — I have.</p>
+<h2>Предме́ти навко́ло</h2>
+<p>Use <strong>У мене́ є...</strong> from the family module with objects. Read the Ukrainian
+dialogue first. Use the support table after the dialogue to check meaning.</p>
+<div class="dialogue"><div class="dl">Марі́я: Приві́т! Диви́сь, це моя́ кімна́та.</div><div class="dl">Оле́нка: Кла́сно! У тебе́ є стіл?</div><div class="dl">Марі́я: Так, у мене́ є стіл і лі́жко.</div><div class="dl">Оле́нка: А це твоя́ ла́мпа?</div><div class="dl">Марі́я: Так. Це моя́ ла́мпа. Вона́ тут.</div><div class="dl">Оле́нка: А вікно́?</div><div class="dl">Марі́я: Ось воно́. Моє́ вікно́ вели́ке.</div></div>
+<p>Support after the dialogue:</p>
+<div class="tscroll"><table class="bil"><tr><th>Украї́нська</th><th>English support</th></tr><tr><td><strong>Приві́т!</strong></td><td>Hi!</td></tr><tr><td><strong>Диви́сь, це моя́ кімна́та.</strong></td><td>Look, this is my room.</td></tr><tr><td><strong>У тебе́ є стіл?</strong></td><td>Do you have a table?</td></tr><tr><td><strong>У мене́ є стіл і лі́жко.</strong></td><td>I have a table and a bed.</td></tr><tr><td><strong>А це твоя́ ла́мпа?</strong></td><td>And is this your lamp?</td></tr><tr><td><strong>Вона́ тут.</strong></td><td>It is here. The word <strong>ла́мпа</strong> chooses <strong>вона́</strong>.</td></tr><tr><td><strong>Ось воно́.</strong></td><td>Here it is. The word <strong>вікно́</strong> chooses <strong>воно́</strong>.</td></tr><tr><td><strong>Моє́ вікно́ вели́ке.</strong></td><td>My window is big.</td></tr></table></div>
+<p>Read the object lines again and notice the pronoun:</p>
+<ul><li><strong>Де стіл? Він тут.</strong></li><li><strong>Де кни́га? Вона́ тут.</strong></li><li><strong>Де вікно́? Воно́ тут.</strong></li></ul>
+<p>English uses "it" for all three. Ukrainian does not. Let the Ukrainian noun
+choose the pronoun.</p>
+<h2>Що у твої́й су́мці?</h2>
+<p>Now move to a bag:</p>
+<div class="dialogue"><div class="dl">Оле́нка: Що у тебе́ є?</div><div class="dl">Марі́я: У мене́ є кни́га, телефо́н і фо́то.</div><div class="dl">Оле́нка: А у мене́ є ру́чка і зо́шит.</div></div>
+<p>Support after the dialogue:</p>
+<div class="tscroll"><table class="bil"><tr><th>Украї́нська</th><th>English support</th></tr><tr><td><strong>Що у тебе́ є?</strong></td><td>What do you have?</td></tr><tr><td><strong>У мене́ є кни́га, телефо́н і фо́то.</strong></td><td>I have a book, a phone, and a photo.</td></tr><tr><td><strong>А у мене́ є ру́чка і зо́шит.</strong></td><td>And I have a pen and a notebook.</td></tr></table></div>
+<p><strong>Фо́то</strong> is a useful beginner word. Store it as <strong>воно́</strong>: <strong>моє́ фо́то</strong>.</p>
+<h2>Мій, моя́, моє́</h2>
+<p>The possessive word follows the noun.</p>
+<div class="tscroll"><table class="bil"><tr><th>Noun</th><th>Gender</th><th>Say</th></tr><tr><td><strong>стіл</strong></td><td>masculine</td><td><strong>мій стіл</strong></td></tr><tr><td><strong>телефо́н</strong></td><td>masculine</td><td><strong>мій телефо́н</strong></td></tr><tr><td><strong>кни́га</strong></td><td>feminine</td><td><strong>моя́ кни́га</strong></td></tr><tr><td><strong>ру́чка</strong></td><td>feminine</td><td><strong>моя́ ру́чка</strong></td></tr><tr><td><strong>вікно́</strong></td><td>neuter</td><td><strong>моє́ вікно́</strong></td></tr><tr><td><strong>лі́жко</strong></td><td>neuter</td><td><strong>моє́ лі́жко</strong></td></tr></table></div>
+<p>This is the same habit from family:</p>
+<ul><li><strong>мій брат</strong>, <strong>мій та́то</strong>, <strong>мій стіл</strong></li><li><strong>моя́ сестра́</strong>, <strong>моя́ ма́ма</strong>, <strong>моя́ кни́га</strong></li><li><strong>моє́ мі́сто</strong>, <strong>моє́ прі́звище</strong>, <strong>моє́ вікно́</strong></li></ul>
+<p>If you want to say "my room," use <strong>моя́ кімна́та</strong>. If you want to say "my
+chair," use <strong>мій стіле́ць</strong>. If you want to say "my bed," use <strong>моє́ лі́жко</strong>.</p>
+<div class="rule-box"><div class="rule-box-header"><div class="rule-box-icon">💡</div> Пора́да — Tip</div><div class="callout">The owner does not decide the form. The noun decides it. Learn the phrase as a
+pair: <strong>стіл -> мій стіл</strong>, <strong>кни́га -> моя́ кни́га</strong>, <strong>вікно́ -> моє́ вікно́</strong>.</div></div>
+<h3>Підсу́мок уро́ку 2</h3>
+<p>У цьо́му уро́ці ви навчи́лися назива́ти предме́ти навко́ло себе́: стіле́ць, ла́мпу, телефо́н, комп'ю́тер, зо́шит, ру́чку, су́мку, крі́сло, дзе́ркало та фо́то. Ви та́кож потренува́лися каза́ти <strong>У мене́ є...</strong> та ста́вити запита́ння <strong>У тебе́ є...?</strong>. У насту́пному уро́ці ми підсуму́ємо весь мо́дуль, ви́вчимо на́зви профе́сій із фемініти́вами та розберемо́ слова́-па́стки.</p>
+      <div class="lnav">
+        <a href="#" data-go="l1"><small>← Назад</small>Урок 1 · Він, вона чи воно?</a>
+        <a href="#" class="primary" data-go="l3"><small>Далі →</small>Урок 3 · Професії, пастки й самоперевірка</a>
+      </div>
+    </div>
+
+    <div class="tabc" id="l2-slovnyk">
+      <h2>Словни́к уро́ку 2</h2><div class="note">16 із 48 слів мо́дуля. Предме́ти навко́ло в кімна́ті та су́мці.</div><div class="tscroll"><table class="vocab"><tr><th>Сло́во</th><th>Части́на мо́ви</th><th>English</th><th>У ре́ченні</th></tr>
+<tr><td><strong>у мене́ є</strong></td><td>phrase</td><td>I have</td><td>У мене́ є стіл.</td></tr>
+<tr><td><strong>у тебе́ є</strong></td><td>phrase</td><td>do you have / you have</td><td>У тебе́ є стіл?</td></tr>
+<tr><td><strong>кімна́та</strong></td><td>noun</td><td>room</td><td>Це моя́ кімна́та.</td></tr>
+<tr><td><strong>лі́жко</strong></td><td>noun</td><td>bed</td><td>Це моє́ лі́жко.</td></tr>
+<tr><td><strong>стіле́ць</strong></td><td>noun</td><td>chair</td><td>Це мій стіле́ць.</td></tr>
+<tr><td><strong>ла́мпа</strong></td><td>noun</td><td>lamp</td><td>Це моя́ ла́мпа.</td></tr>
+<tr><td><strong>телефо́н</strong></td><td>noun</td><td>phone</td><td>Це мій телефо́н.</td></tr>
+<tr><td><strong>комп'ю́тер</strong></td><td>noun</td><td>computer</td><td>Це мій комп'ю́тер.</td></tr>
+<tr><td><strong>зо́шит</strong></td><td>noun</td><td>notebook</td><td>Це мій зо́шит.</td></tr>
+<tr><td><strong>ру́чка</strong></td><td>noun</td><td>pen</td><td>Це моя́ ру́чка.</td></tr>
+<tr><td><strong>су́мка</strong></td><td>noun</td><td>bag</td><td>Це моя́ су́мка.</td></tr>
+<tr><td><strong>крі́сло</strong></td><td>noun</td><td>armchair</td><td>Це моє́ крі́сло.</td></tr>
+<tr><td><strong>дзе́ркало</strong></td><td>noun</td><td>mirror</td><td>Це моє́ дзе́ркало.</td></tr>
+<tr><td><strong>ключ</strong></td><td>noun</td><td>key</td><td>Це мій ключ.</td></tr>
+<tr><td><strong>фо́то</strong></td><td>noun</td><td>photo</td><td>Це моє́ фо́то.</td></tr>
+<tr><td><strong>стіна́</strong></td><td>noun</td><td>wall</td><td>Це моя́ стіна́.</td></tr>
+</table></div>
+    </div>
+
+    <div class="tabc" id="l2-vpravy">
+      <h2>Впра́ви уро́ку 2</h2><div class="note">10 вправ (4 в уро́ці + 6 у зо́шиті). Усі впра́ви наведено ні́жче:</div><h3>В уро́ці — Inline (4)</h3><div class="exercise" id="act-card-act-4">
+<div class="exercise-header"><span class="badge b-fillin">fill-in</span><span class="exercise-title">Мій предме́т</span><span class="exercise-ref">в уроці · act-4</span></div>
+<div class="exercise-instruction">Choose мій, моя́, or моє́.</div>
+<div class="qq">
+<div class="q">Це ___ стіл.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">мій</span>
+<span class="opt"  tabindex="0">моя́</span>
+<span class="opt"  tabindex="0">моє́</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">мій</span></div>
+<div class="note">Стіл is masculine.</div>
+</div>
+<div class="qq">
+<div class="q">Це ___ кни́га.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">моя́</span>
+<span class="opt"  tabindex="0">мій</span>
+<span class="opt"  tabindex="0">моє́</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">моя́</span></div>
+<div class="note">Кни́га is feminine.</div>
+</div>
+<div class="qq">
+<div class="q">Це ___ вікно́.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">моє́</span>
+<span class="opt"  tabindex="0">мій</span>
+<span class="opt"  tabindex="0">моя́</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">моє́</span></div>
+<div class="note">Вікно́ is neuter.</div>
+</div>
+<div class="qq">
+<div class="q">Це ___ кімна́та.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">моя́</span>
+<span class="opt"  tabindex="0">мій</span>
+<span class="opt"  tabindex="0">моє́</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">моя́</span></div>
+<div class="note">Кімна́та is feminine.</div>
+</div>
+<div class="qq">
+<div class="q">Це ___ лі́жко.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">моє́</span>
+<span class="opt"  tabindex="0">моя́</span>
+<span class="opt"  tabindex="0">мій</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">моє́</span></div>
+<div class="note">Лі́жко is neuter.</div>
+</div>
+<div class="qq">
+<div class="q">Це ___ телефо́н.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">мій</span>
+<span class="opt"  tabindex="0">моя́</span>
+<span class="opt"  tabindex="0">моє́</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">мій</span></div>
+<div class="note">Телефо́н is masculine.</div>
+</div>
+<div class="qq">
+<div class="q">Це ___ ру́чка.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">моя́</span>
+<span class="opt"  tabindex="0">мій</span>
+<span class="opt"  tabindex="0">моє́</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">моя́</span></div>
+<div class="note">Ру́чка is feminine.</div>
+</div>
+<div class="qq">
+<div class="q">Це ___ фо́то.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">моє́</span>
+<span class="opt"  tabindex="0">моя́</span>
+<span class="opt"  tabindex="0">мій</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">моє́</span></div>
+<div class="note">Фо́то is neuter in this lesson.</div>
+</div>
+</div>
+<div class="exercise" id="act-card-act-201">
+<div class="exercise-header"><span class="badge b-quiz">quiz</span><span class="exercise-title">Рід рече́й навко́ло</span><span class="exercise-ref">в уроці · act-201</span></div>
+<div class="exercise-instruction">Обері́ть прави́льний займе́нник (він, вона́ чи воно́) для ко́жного предме́та.</div>
+<div class="qq">
+<div class="q">стіле́ць</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">він</span>
+<span class="opt"  tabindex="0">вона́</span>
+<span class="opt"  tabindex="0">воно́</span>
+</div>
+</div>
+<div class="qq">
+<div class="q">ла́мпа</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">вона́</span>
+<span class="opt"  tabindex="0">він</span>
+<span class="opt"  tabindex="0">воно́</span>
+</div>
+</div>
+<div class="qq">
+<div class="q">лі́жко</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">воно́</span>
+<span class="opt"  tabindex="0">вона́</span>
+<span class="opt"  tabindex="0">він</span>
+</div>
+</div>
+<div class="qq">
+<div class="q">телефо́н</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">він</span>
+<span class="opt"  tabindex="0">вона́</span>
+<span class="opt"  tabindex="0">воно́</span>
+</div>
+</div>
+<div class="qq">
+<div class="q">су́мка</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">вона́</span>
+<span class="opt"  tabindex="0">він</span>
+<span class="opt"  tabindex="0">воно́</span>
+</div>
+</div>
+<div class="qq">
+<div class="q">дзе́ркало</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">воно́</span>
+<span class="opt"  tabindex="0">він</span>
+<span class="opt"  tabindex="0">вона́</span>
+</div>
+</div>
+</div>
+<div class="exercise" id="act-card-act-202">
+<div class="exercise-header"><span class="badge b-observe">observe</span><span class="exercise-title">Порівня́йте предме́ти та рід</span><span class="exercise-ref">в уроці · act-202</span></div>
+<div class="exercise-instruction">Зверні́ть ува́гу на поєдна́ння іме́нника та присві́йного займе́нника.</div>
+<div class="tscroll"><table class="plain"><tr><th>Ліво́руч</th><th>Право́руч</th></tr>
+<tr><td><strong>стіле́ць (при́голосний)</strong></td><td>мій стіле́ць (він)</td></tr>
+<tr><td><strong>су́мка (закі́нчення -а)</strong></td><td>моя́ су́мка (вона́)</td></tr>
+<tr><td><strong>лі́жко (закі́нчення -о)</strong></td><td>моє́ лі́жко (воно́)</td></tr>
+<tr><td><strong>телефо́н (при́голосний)</strong></td><td>мій телефо́н (він)</td></tr>
+<tr><td><strong>ла́мпа (закі́нчення -а)</strong></td><td>моя́ ла́мпа (вона́)</td></tr>
+<tr><td><strong>дзе́ркало (закі́нчення -о)</strong></td><td>моє́ дзе́ркало (воно́)</td></tr>
+</table></div>
+</div>
+<div class="exercise" id="act-card-act-203">
+<div class="exercise-header"><span class="badge b-truefalse">true-false</span><span class="exercise-title">Пра́вда чи ні: ре́чі в кімна́ті й су́мці</span><span class="exercise-ref">в уроці · act-203</span></div>
+<div class="exercise-instruction">Ви́значте, чи пра́вильно вка́зано рід предме́та.</div>
+<div class="fi"><span class="q">У мене́ є стіл. («Стіл» — чолові́чий рід.)</span> — <span class="pill done">Пра́вда</span></div>
+<div class="fi"><span class="q">У мене́ є ла́мпа. («Ла́мпа» — сере́дній рід.)</span> — <span class="pill next">Ні</span></div>
+<div class="fi"><span class="q">У мене́ є лі́жко. («Лі́жко» — сере́дній рід.)</span> — <span class="pill done">Пра́вда</span></div>
+<div class="fi"><span class="q">У мене́ є су́мка. («Су́мка» — жіно́чий рід.)</span> — <span class="pill done">Пра́вда</span></div>
+<div class="fi"><span class="q">У мене́ є телефо́н. («Телефо́н» — жіно́чий рід.)</span> — <span class="pill next">Ні</span></div>
+<div class="fi"><span class="q">У мене́ є дзе́ркало. («Дзе́ркало» — сере́дній рід.)</span> — <span class="pill done">Пра́вда</span></div>
+</div><h3>У зо́шиті — Workbook (6)</h3><div class="exercise" id="act-card-act-w2">
+<div class="exercise-header"><span class="badge b-matchup">match-up</span><span class="exercise-title">Слова́ для кімна́ти й су́мки</span><span class="exercise-ref">у зошиті · act-w2</span></div>
+<div class="exercise-instruction">Match each Ukrainian noun with its English cue.</div>
+<div class="tscroll"><table class="plain"><tr><th>Ліво́руч</th><th>Право́руч</th></tr>
+<tr><td><strong>стіл</strong></td><td>table</td></tr>
+<tr><td><strong>кни́га</strong></td><td>book</td></tr>
+<tr><td><strong>вікно́</strong></td><td>window</td></tr>
+<tr><td><strong>кімна́та</strong></td><td>room</td></tr>
+<tr><td><strong>лі́жко</strong></td><td>bed</td></tr>
+<tr><td><strong>телефо́н</strong></td><td>phone</td></tr>
+<tr><td><strong>ру́чка</strong></td><td>pen</td></tr>
+<tr><td><strong>зо́шит</strong></td><td>notebook</td></tr>
+</table></div>
+</div>
+<div class="exercise" id="act-card-act-w3">
+<div class="exercise-header"><span class="badge b-fillin">fill-in</span><span class="exercise-title">У мене́ є предме́ти</span><span class="exercise-ref">у зошиті · act-w3</span></div>
+<div class="exercise-instruction">Complete the object sentence.</div>
+<div class="qq">
+<div class="q">___ мене́ є стіл.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">У</span>
+<span class="opt"  tabindex="0">Це</span>
+<span class="opt"  tabindex="0">Хто</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">У</span></div>
+<div class="note">У мене́ є... is the I-have phrase.</div>
+</div>
+<div class="qq">
+<div class="q">У мене́ ___ кни́га.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">є</span>
+<span class="opt"  tabindex="0">зва́ти</span>
+<span class="opt"  tabindex="0">моя́</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">є</span></div>
+<div class="note">У мене́ є... stays as one phrase.</div>
+</div>
+<div class="qq">
+<div class="q">У ___ є телефо́н?</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">тебе́</span>
+<span class="opt"  tabindex="0">мене́</span>
+<span class="opt"  tabindex="0">мій</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">тебе́</span></div>
+<div class="note">У тебе́ є...? asks one familiar person.</div>
+</div>
+<div class="qq">
+<div class="q">У мене́ є ___.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">вікно́</span>
+<span class="opt"  tabindex="0">він</span>
+<span class="opt"  tabindex="0">моя́</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">вікно́</span></div>
+<div class="note">Вікно́ is an object noun after У мене́ є.</div>
+</div>
+<div class="qq">
+<div class="q">Де стіл? ___ тут.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">Він</span>
+<span class="opt"  tabindex="0">Вона́</span>
+<span class="opt"  tabindex="0">Воно́</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Він</span></div>
+<div class="note">Стіл is masculine, so use він.</div>
+</div>
+<div class="qq">
+<div class="q">Де кни́га? ___ тут.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">Вона́</span>
+<span class="opt"  tabindex="0">Він</span>
+<span class="opt"  tabindex="0">Воно́</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Вона́</span></div>
+<div class="note">Кни́га is feminine, so use вона́.</div>
+</div>
+<div class="qq">
+<div class="q">Де вікно́? ___ там.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">Воно́</span>
+<span class="opt"  tabindex="0">Вона́</span>
+<span class="opt"  tabindex="0">Він</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Воно́</span></div>
+<div class="note">Вікно́ is neuter, so use воно́.</div>
+</div>
+</div>
+<div class="exercise" id="act-card-act-204">
+<div class="exercise-header"><span class="badge b-groupsort">group-sort</span><span class="exercise-title">Сорту́й ре́чі в кімна́ті й су́мці</span><span class="exercise-ref">у зошиті · act-204</span></div>
+<div class="exercise-instruction">Розподілі́ть предме́ти за ро́дом: він, вона́ чи воно́.</div>
+<div class="journey">
+<div><b>він / мій</b><p>стіле́ць, телефо́н, комп'ю́тер, ключ</p></div>
+<div><b>вона́ / моя́</b><p>ла́мпа, су́мка, ру́чка, стіна́</p></div>
+<div><b>воно́ / моє́</b><p>лі́жко, крі́сло, дзе́ркало, фо́то</p></div>
+</div>
+</div>
+<div class="exercise" id="act-card-act-205">
+<div class="exercise-header"><span class="badge b-unjumble">unjumble</span><span class="exercise-title">Складі́ть ре́чення з «У мене́ є»</span><span class="exercise-ref">у зошиті · act-205</span></div>
+<div class="exercise-instruction">Складі́ть слова́ у прави́льному поря́дку.</div>
+<div class="fi">Слова́: <span class="tr">У / мене́ / є / стіл</span> → <strong>У мене́ є стіл.</strong></div>
+<div class="fi">Слова́: <span class="tr">У / тебе́ / є / ла́мпа</span> → <strong>У тебе́ є ла́мпа?</strong></div>
+<div class="fi">Слова́: <span class="tr">Це / моя́ / нова́ / су́мка</span> → <strong>Це моя́ нова́ су́мка.</strong></div>
+<div class="fi">Слова́: <span class="tr">Де / мій / нови́й / телефо́н</span> → <strong>Де мій нови́й телефо́н?</strong></div>
+<div class="fi">Слова́: <span class="tr">Ось / моє́ / вели́ке / лі́жко</span> → <strong>Ось моє́ вели́ке лі́жко.</strong></div>
+<div class="fi">Слова́: <span class="tr">Тут / є / комп'ю́тер / і / стіле́ць</span> → <strong>Тут є комп'ю́тер і стіле́ць.</strong></div>
+</div>
+<div class="exercise" id="act-card-act-206">
+<div class="exercise-header"><span class="badge b-oddoneout">odd-one-out</span><span class="exercise-title">За́йве сло́во за ро́дом</span><span class="exercise-ref">у зошиті · act-206</span></div>
+<div class="exercise-instruction">Знайді́ть одне́ сло́во, яке́ відрізня́ється за грамати́чним ро́дом.</div>
+<div class="qq"><div class="opts"><span class="opt">стіл</span><span class="opt">телефо́н</span><span class="opt">зо́шит</span><span class="opt">кни́га</span></div><div class="fi">Ві́дповідь: <span class="blank filled">кни́га</span></div><div class="note">Кни́га — жіно́чий рід, і́нші — чолові́чий.</div></div>
+<div class="qq"><div class="opts"><span class="opt">ла́мпа</span><span class="opt">су́мка</span><span class="opt">ру́чка</span><span class="opt">лі́жко</span></div><div class="fi">Ві́дповідь: <span class="blank filled">лі́жко</span></div><div class="note">Лі́жко — сере́дній рід, і́нші — жіно́чий.</div></div>
+<div class="qq"><div class="opts"><span class="opt">вікно́</span><span class="opt">дзе́ркало</span><span class="opt">крі́сло</span><span class="opt">стіле́ць</span></div><div class="fi">Ві́дповідь: <span class="blank filled">стіле́ць</span></div><div class="note">Стіле́ць — чолові́чий рід, і́нші — сере́дній.</div></div>
+<div class="qq"><div class="opts"><span class="opt">ключ</span><span class="opt">комп&#x27;ю́тер</span><span class="opt">стіл</span><span class="opt">стіна́</span></div><div class="fi">Ві́дповідь: <span class="blank filled">стіна́</span></div><div class="note">Стіна́ — жіно́чий рід, і́нші — чолові́чий.</div></div>
+<div class="qq"><div class="opts"><span class="opt">кімна́та</span><span class="opt">стіна́</span><span class="opt">су́мка</span><span class="opt">фо́то</span></div><div class="fi">Ві́дповідь: <span class="blank filled">фо́то</span></div><div class="note">Фо́то — сере́дній рід, і́нші — жіно́чий.</div></div>
+<div class="qq"><div class="opts"><span class="opt">лі́жко</span><span class="opt">вікно́</span><span class="opt">фо́то</span><span class="opt">зо́шит</span></div><div class="fi">Ві́дповідь: <span class="blank filled">зо́шит</span></div><div class="note">Зо́шит — чолові́чий рід, і́нші — сере́дній.</div></div>
+
+</div>
+<div class="exercise" id="act-card-act-207">
+<div class="exercise-header"><span class="badge b-translate">translate</span><span class="exercise-title">Перекладі́ть ре́чення про ре́чі</span><span class="exercise-ref">у зошиті · act-207</span></div>
+<div class="exercise-instruction">Перекладі́ть ре́чення на украї́нську мо́ву.</div>
+<div class="qq">
+<div class="q">I have a table and a bed.</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">У мене́ є стіл і лі́жко.</span></div>
+</div>
+<div class="qq">
+<div class="q">Do you have a phone?</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">У тебе́ є телефо́н?</span></div>
+</div>
+<div class="qq">
+<div class="q">This is my bag.</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Це моя́ су́мка.</span></div>
+</div>
+<div class="qq">
+<div class="q">Where is the mirror?</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Де дзе́ркало?</span></div>
+</div>
+<div class="qq">
+<div class="q">Here is my armchair.</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Ось моє́ крі́сло.</span></div>
+</div>
+<div class="qq">
+<div class="q">My room is here.</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Моя́ кімна́та тут.</span></div>
+</div>
+</div>
+    </div>
+
+    <div class="tabc" id="l2-resursy">
+      <h2>Ресу́рси уро́ку 2</h2><div class="res"><div class="kind">article</div><h3>Dobra Forma: Gender of Nouns (Masculine and Feminine)</h3><p class="tr">Reference for masculine and feminine object nouns in everyday contexts.<br><a href="https://opentext.ku.edu/dobraforma/chapter/1-2/" target="_blank">https://opentext.ku.edu/dobraforma/chapter/1-2/</a></p><div class="meta"><span>Dobra Forma: Gender of Nouns</span></div></div>
+<div class="res"><div class="kind">youtube</div><h3>Gender of Ukrainian Nouns</h3><p class="tr">Visual overview of object nouns and pronoun agreement.<br><a href="https://www.youtube.com/watch?v=Vl5MAW3AYoU" target="_blank">https://www.youtube.com/watch?v=Vl5MAW3AYoU</a></p><div class="meta"><span>Speak Ukrainian</span></div></div>
+<div class="note">Цей спи́сок мі́стить ви́ключно матеріа́ли, на які́ спира́ється цей уро́к. Усі джере́ла нале́жно вка́зано.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCREEN: LESSON 3 ============ -->
+<section class="screen" id="s-l3">
+  <div class="header"><div class="wrap">
+    <div class="crumbs"><a href="#" data-go="module">Модуль 8 · Речі мають рід</a><span class="sep">›</span><span>Урок 3 з 3</span></div>
+    <span class="level-badge">A1 · Модуль 8 · Уро́к 3</span>
+    <h1>Профе́сії, па́стки й самопереві́рка</h1>
+    <div class="sub">Lesson 3 of 3 — Professions, feminitives, traps and module self-check</div>
+    <div class="lesson-dots"><span class="done"></span><span class="done"></span><span class="now"></span><em>≈ 60 хв</em></div>
+  </div></div>
+
+  <div class="wrap">
+    <div class="plan">
+      <div class="cap"><span>План на 60 хвили́н</span><b>60 хв</b></div>
+      <div class="plan-bar">
+        <div class="p-recall" style="flex:5">Повторення<i>5</i></div>
+        <div class="p-dialog" style="flex:15">Діалог<i>15</i></div>
+        <div class="p-rule" style="flex:10">Правило<i>10</i></div>
+        <div class="p-inline" style="flex:12">Вправи в уроці<i>12</i></div>
+        <div class="p-work" style="flex:15">Зошит<i>15</i></div>
+        <div class="p-wrap" style="flex:3">✓<i>3</i></div>
+      </div>
+    </div>
+
+    <div class="tabs" data-tabs="l3">
+      <button class="tab active" data-tab="l3-urok">Уро́к</button>
+      <button class="tab" data-tab="l3-slovnyk">Словни́к <span class="n">16</span></button>
+      <button class="tab" data-tab="l3-vpravy">Впра́ви <span class="n">10</span></button>
+      <button class="tab" data-tab="l3-resursy">Ресу́рси <span class="n">2</span></button>
+    </div>
+
+    <div class="tabc active" id="l3-urok">
+      <h1>Профе́сії, па́стки й самопереві́рка</h1>
+<p>У пе́рших двох уро́ках ви опанува́ли рід предме́тів у кімна́ті та су́мці. Цей уро́к заве́ршує мо́дуль «Ре́чі ма́ють рід» — this lesson closes the module. Ми розгляда́ємо на́зви профе́сій для чолові́ків та жіно́к, типо́ві слова́-па́стки та ро́бимо підсумко́ву самопереві́рку за всіма́ трьома́ уро́ками.</p>
+<h2>Підсу́мок</h2>
+<p>For people, choose the form that fits the person.</p>
+<div class="tscroll"><table class="bil"><tr><th>Masculine</th><th>Feminine</th></tr><tr><td><strong>студе́нт</strong></td><td><strong>студе́нтка</strong></td></tr><tr><td><strong>вчи́тель / учи́тель</strong></td><td><strong>вчи́телька / учи́телька</strong></td></tr><tr><td><strong>лі́кар</strong></td><td><strong>лі́карка</strong></td></tr><tr><td><strong>акто́р</strong></td><td><strong>акто́рка</strong></td></tr><tr><td><strong>співа́к</strong></td><td><strong>співа́чка</strong></td></tr></table></div>
+<p>Use the feminine profession as the normal form for a woman:</p>
+<div class="dialogue"><div class="dl">Вона́ студе́нтка.</div><div class="dl">Вона́ вчи́телька.</div><div class="dl">Вона́ лі́карка.</div></div>
+<div class="tscroll"><table class="bil"><tr><th>Украї́нська</th><th>English support</th></tr><tr><td><strong>Вона́ студе́нтка.</strong></td><td>She is a student.</td></tr><tr><td><strong>Вона́ вчи́телька.</strong></td><td>She is a teacher.</td></tr><tr><td><strong>Вона́ лі́карка.</strong></td><td>She is a doctor.</td></tr></table></div>
+<p>For a man:</p>
+<div class="dialogue"><div class="dl">Він студе́нт.</div><div class="dl">Він вчи́тель.</div><div class="dl">Він лі́кар.</div></div>
+<div class="tscroll"><table class="bil"><tr><th>Украї́нська</th><th>English support</th></tr><tr><td><strong>Він студе́нт.</strong></td><td>He is a student.</td></tr><tr><td><strong>Він вчи́тель.</strong></td><td>He is a teacher.</td></tr><tr><td><strong>Він лі́кар.</strong></td><td>He is a doctor.</td></tr></table></div>
+<p>Keep the earlier identity rule: <strong>Я студе́нт. Я студе́нтка.</strong> Do not force
+<strong>є</strong> into that A1 sentence.</p>
+<h2>Імена́, па́стки й самопереві́рка</h2>
+<p>Some male names end in <strong>-а</strong>, <strong>-я</strong>, or <strong>-о</strong>: <strong>Мико́ла</strong>, <strong>Ілля́</strong>,
+<strong>Павло́</strong>. They are still <strong>він</strong> because they name men. Family words such as
+<strong>та́то</strong>, <strong>ба́тько</strong>, and <strong>дя́дько</strong> are also masculine.</p>
+<h3>Пильну́й па́стки</h3>
+<p>Most errors come from using English habits too directly or from trusting the
+ending when the word is an exception.</p>
+<div class="tscroll"><table class="bil"><tr><th>Trap</th><th>Say this</th></tr><tr><td><strong>мій кни́га</strong></td><td><strong>моя́ кни́га</strong></td></tr><tr><td><strong>мій ру́чка</strong></td><td><strong>моя́ ру́чка</strong></td></tr><tr><td><strong>Де стіл? Воно́ там.</strong></td><td><strong>Де стіл? Він там.</strong></td></tr><tr><td><strong>Це моя́ та́то.</strong></td><td><strong>Це мій та́то.</strong></td></tr><tr><td><strong>Вона́ Мико́ла.</strong></td><td><strong>Він Мико́ла.</strong></td></tr><tr><td><strong>Моя́ соба́ка га́рна.</strong></td><td><strong>Мій соба́ка га́рний.</strong></td></tr><tr><td><strong>Я є студе́нт.</strong></td><td><strong>Я студе́нт.</strong></td></tr><tr><td><strong>Моє́ ім'я́ є Джон.</strong></td><td><strong>Мене́ зва́ти Джон.</strong></td></tr></table></div>
+<p>For <strong>соба́ка</strong>, just memorize the course phrase <strong>мій соба́ка</strong>. You do not need
+a long exception list today.</p>
+<p>The gender-flip mini-check uses five words that are not your active vocabulary:
+<strong>біль</strong>, <strong>степ</strong>, <strong>ро́зпис</strong>, <strong>літо́пис</strong>, and <strong>путь</strong>. They are diagnostic
+props. The point is simple: trust the Ukrainian gender test, not an instinct
+from another language.</p>
+<h3>Самопереві́рка</h3>
+<p>Cover the English support and say the Ukrainian aloud:</p>
+<div class="tscroll"><table class="bil"><tr><th>Украї́нська</th><th>English support</th></tr><tr><td><strong>Це моя́ кімна́та.</strong></td><td>This is my room.</td></tr><tr><td><strong>У мене́ є стіл.</strong></td><td>I have a table.</td></tr><tr><td><strong>У мене́ є кни́га.</strong></td><td>I have a book.</td></tr><tr><td><strong>У мене́ є вікно́.</strong></td><td>I have a window.</td></tr><tr><td><strong>мій стіл</strong></td><td>my table</td></tr><tr><td><strong>моя́ ру́чка</strong></td><td>my pen</td></tr><tr><td><strong>моє́ лі́жко</strong></td><td>my bed</td></tr><tr><td><strong>Де стіл? Він тут.</strong></td><td>Where is the table? It is here.</td></tr><tr><td><strong>Де кни́га? Вона́ тут.</strong></td><td>Where is the book? It is here.</td></tr><tr><td><strong>Де вікно́? Воно́ тут.</strong></td><td>Where is the window? It is here.</td></tr></table></div>
+<p>Then make three tiny room lines. Read the Ukrainian first, then check the
+support.</p>
+<div class="dialogue"><div class="dl">Це моя́ кімна́та.</div><div class="dl">У мене́ є стіл, кни́га і вікно́.</div><div class="dl">Мій стіл тут, моя́ кни́га тут, моє́ вікно́ там.</div></div>
+<div class="tscroll"><table class="bil"><tr><th>Украї́нська</th><th>English support</th></tr><tr><td><strong>Це моя́ кімна́та.</strong></td><td>This is my room.</td></tr><tr><td><strong>У мене́ є стіл, кни́га і вікно́.</strong></td><td>I have a table, a book, and a window.</td></tr><tr><td><strong>Мій стіл тут, моя́ кни́га тут, моє́ вікно́ там.</strong></td><td>My table is here, my book is here, my window is there.</td></tr></table></div>
+<p>Workbook practice will make the pattern automatic: sort nouns by gender, choose
+<strong>він / вона́ / воно́</strong>, complete <strong>мій / моя́ / моє́</strong>, use <strong>У мене́ є...</strong>, and
+repair the gender traps.</p>
+<h3>Заве́ршення мо́дуля</h3>
+<p>Віта́ємо! Ви успі́шно заверши́ли мо́дуль 8 «Ре́чі ма́ють рід». Ви вмі́єте визнача́ти рід іме́нників че́рез тест <strong>він / вона́ / воно́</strong>, зна́єте ба́зові закі́нчення слів, упе́внено вжива́єте <strong>мій / моя́ / моє́</strong> та констру́кцію <strong>У мене́ є...</strong>, розрізня́єте фемініти́ви та уника́єте типо́вих пасто́к. Насту́пний мо́дуль 9 познайо́мить вас із прикме́тниками: «Яки́й він? Весе́лий, вели́кий, нови́й».</p>
+      <div class="lnav">
+        <a href="#" data-go="l2"><small>← Назад</small>Урок 2 · Предмети навколо</a>
+        <a href="#" class="primary" data-go="module"><small>Завершити →</small>Модуль 8 · Речі мають рід</a>
+      </div>
+    </div>
+
+    <div class="tabc" id="l3-slovnyk">
+      <h2>Словни́к уро́ку 3</h2><div class="note">16 із 48 слів мо́дуля. Профе́сії, фемініти́ви та імена́.</div><div class="tscroll"><table class="vocab"><tr><th>Сло́во</th><th>Части́на мо́ви</th><th>English</th><th>У ре́ченні</th></tr>
+<tr><td><strong>дя́дько</strong></td><td>noun</td><td>uncle</td><td>Це мій дя́дько.</td></tr>
+<tr><td><strong>соба́ка</strong></td><td>noun</td><td>dog</td><td>Це мій соба́ка.</td></tr>
+<tr><td><strong>студе́нт</strong></td><td>noun</td><td>male student</td><td>Він студе́нт.</td></tr>
+<tr><td><strong>студе́нтка</strong></td><td>noun</td><td>female student</td><td>Вона́ студе́нтка.</td></tr>
+<tr><td><strong>вчи́тель</strong></td><td>noun</td><td>male teacher</td><td>Він вчи́тель.</td></tr>
+<tr><td><strong>вчи́телька</strong></td><td>noun</td><td>female teacher</td><td>Вона́ вчи́телька.</td></tr>
+<tr><td><strong>учи́телька</strong></td><td>noun</td><td>female teacher</td><td>Вона́ учи́телька.</td></tr>
+<tr><td><strong>лі́кар</strong></td><td>noun</td><td>male doctor</td><td>Він лі́кар.</td></tr>
+<tr><td><strong>лі́карка</strong></td><td>noun</td><td>female doctor</td><td>Вона́ лі́карка.</td></tr>
+<tr><td><strong>акто́р</strong></td><td>noun</td><td>male actor</td><td>Він акто́р.</td></tr>
+<tr><td><strong>акто́рка</strong></td><td>noun</td><td>female actor</td><td>Вона́ акто́рка.</td></tr>
+<tr><td><strong>співа́к</strong></td><td>noun</td><td>male singer</td><td>Він співа́к.</td></tr>
+<tr><td><strong>співа́чка</strong></td><td>noun</td><td>female singer</td><td>Вона́ співа́чка.</td></tr>
+<tr><td><strong>Мико́ла</strong></td><td>proper noun</td><td>Mykola</td><td>Він Мико́ла.</td></tr>
+<tr><td><strong>Ілля́</strong></td><td>proper noun</td><td>Illia</td><td>Він Ілля́.</td></tr>
+<tr><td><strong>Павло́</strong></td><td>proper noun</td><td>Pavlo</td><td>Він Павло́.</td></tr>
+</table></div>
+    </div>
+
+    <div class="tabc" id="l3-vpravy">
+      <h2>Впра́ви уро́ку 3</h2><div class="note">10 вправ (4 в уро́ці + 6 у зо́шиті). Усі впра́ви наведено ні́жче:</div><h3>В уро́ці — Inline (4)</h3><div class="exercise" id="act-card-act-9">
+<div class="exercise-header"><span class="badge b-quiz">quiz</span><span class="exercise-title">Фо́рми профе́сій</span><span class="exercise-ref">в уроці · act-9</span></div>
+<div class="exercise-instruction">Choose the natural profession form.</div>
+<div class="qq">
+<div class="q">She is a teacher.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">Вона́ вчи́телька.</span>
+<span class="opt"  tabindex="0">Вона́ вчи́тель.</span>
+<span class="opt"  tabindex="0">Воно́ вчи́телька.</span>
+</div>
+<div class="note">Use the feminine profession form for a woman.</div>
+</div>
+<div class="qq">
+<div class="q">She is a doctor.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">Вона́ лі́карка.</span>
+<span class="opt"  tabindex="0">Вона́ лі́кар.</span>
+<span class="opt"  tabindex="0">Він лі́карка.</span>
+</div>
+<div class="note">Лі́карка is the feminine form.</div>
+</div>
+<div class="qq">
+<div class="q">He is a student.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">Він студе́нт.</span>
+<span class="opt"  tabindex="0">Він студе́нтка.</span>
+<span class="opt"  tabindex="0">Вона́ студе́нт.</span>
+</div>
+<div class="note">Студе́нт is the masculine form.</div>
+</div>
+<div class="qq">
+<div class="q">She is an actor.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">Вона́ акто́рка.</span>
+<span class="opt"  tabindex="0">Вона́ акто́р.</span>
+<span class="opt"  tabindex="0">Воно́ акто́рка.</span>
+</div>
+<div class="note">Акто́рка is the feminine profession form.</div>
+</div>
+</div>
+<div class="exercise" id="act-card-act-301">
+<div class="exercise-header"><span class="badge b-matchup">match-up</span><span class="exercise-title">Чолові́чі та жіно́чі фо́рми профе́сій</span><span class="exercise-ref">в уроці · act-301</span></div>
+<div class="exercise-instruction">З'єдна́йте чолові́чу фо́рму профе́сії з відпові́дним фемініти́вом.</div>
+<div class="tscroll"><table class="plain"><tr><th>Ліво́руч</th><th>Право́руч</th></tr>
+<tr><td><strong>студе́нт</strong></td><td>студе́нтка</td></tr>
+<tr><td><strong>вчи́тель</strong></td><td>вчи́телька</td></tr>
+<tr><td><strong>учи́тель</strong></td><td>учи́телька</td></tr>
+<tr><td><strong>лі́кар</strong></td><td>лі́карка</td></tr>
+<tr><td><strong>акто́р</strong></td><td>акто́рка</td></tr>
+<tr><td><strong>співа́к</strong></td><td>співа́чка</td></tr>
+</table></div>
+</div>
+<div class="exercise" id="act-card-act-302">
+<div class="exercise-header"><span class="badge b-fillin">fill-in</span><span class="exercise-title">Він чи вона́ для люде́й</span><span class="exercise-ref">в уроці · act-302</span></div>
+<div class="exercise-instruction">Вста́вте прави́льний займе́нник: він чи вона́.</div>
+<div class="qq">
+<div class="q">Мико́ла — чолові́к. ___ студе́нт.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">Він</span>
+<span class="opt"  tabindex="0">Вона́</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Він</span></div>
+</div>
+<div class="qq">
+<div class="q">Окса́на — жі́нка. ___ лі́карка.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">Вона́</span>
+<span class="opt"  tabindex="0">Він</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Вона́</span></div>
+</div>
+<div class="qq">
+<div class="q">Павло́ — вчи́тель. ___ тут.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">Він</span>
+<span class="opt"  tabindex="0">Вона́</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Він</span></div>
+</div>
+<div class="qq">
+<div class="q">Марі́я — співа́чка. ___ там.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">Вона́</span>
+<span class="opt"  tabindex="0">Він</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Вона́</span></div>
+</div>
+<div class="qq">
+<div class="q">Ілля́ — акто́р. ___ працю́є.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">Він</span>
+<span class="opt"  tabindex="0">Вона́</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Він</span></div>
+</div>
+<div class="qq">
+<div class="q">Моя́ сестра́ — вчи́телька. ___ вдо́ма.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">Вона́</span>
+<span class="opt"  tabindex="0">Він</span>
+</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Вона́</span></div>
+</div>
+</div>
+<div class="exercise" id="act-card-act-303">
+<div class="exercise-header"><span class="badge b-truefalse">true-false</span><span class="exercise-title">Пра́вда чи ні: чолові́чі імена́ та ви́нятки</span><span class="exercise-ref">в уроці · act-303</span></div>
+<div class="exercise-instruction">Ви́значте, чи прави́льне тве́рдження про рід слів.</div>
+<div class="fi"><span class="q">«Мико́ла» — це ім'я́ чолові́ка, тому́ це «він».</span> — <span class="pill done">Пра́вда</span></div>
+<div class="fi"><span class="q">«Павло́» — це сере́дній рід, бо закі́нчується на -о.</span> — <span class="pill next">Ні</span></div>
+<div class="fi"><span class="q">«Соба́ка» в украї́нській мо́ві — це чолові́чий рід (він, мій соба́ка).</span> — <span class="pill done">Пра́вда</span></div>
+<div class="fi"><span class="q">«Ілля́» — це ім'я́ чолові́ка, тому́ це «він».</span> — <span class="pill done">Пра́вда</span></div>
+<div class="fi"><span class="q">«Дя́дько» — це жіно́чий рід, бо познача́є люди́ну.</span> — <span class="pill next">Ні</span></div>
+<div class="fi"><span class="q">«Ба́тько» — це чолові́чий рід (він, мій ба́тько).</span> — <span class="pill done">Пра́вда</span></div>
+</div><h3>У зо́шиті — Workbook (6)</h3><div class="exercise" id="act-card-act-w4">
+<div class="exercise-header"><span class="badge b-errorcorrection">error-correction</span><span class="exercise-title">Ви́прав па́стки ро́ду</span><span class="exercise-ref">у зошиті · act-w4</span></div>
+<div class="exercise-instruction">Choose the safer Ukrainian sentence.</div>
+<div class="qq">
+<div class="q">Мій кни́га, мій ру́чка (якщо́ гово́рить чолові́к).</div>
+<div class="fi">Поми́лка: <span class="tr">Мій кни́га, мій ру́чка (якщо́ гово́рить чолові́к).</span></div>
+<div class="fi">Ви́правлення: <strong>Моя́ кни́га, моя́ ру́чка.</strong></div>
+<div class="opts">
+<span class="opt"  tabindex="0">Моя́ кни́га, моя́ ру́чка.</span>
+<span class="opt"  tabindex="0">Мій кни́га, мій ру́чка.</span>
+</div>
+<div class="note">The possessive follows the nouns кни́га and ру́чка, not the speaker.</div>
+</div>
+<div class="qq">
+<div class="q">Мій кни́га тут.</div>
+<div class="fi">Поми́лка: <span class="tr">Мій кни́га тут.</span></div>
+<div class="fi">Ви́правлення: <strong>Моя́ кни́га тут.</strong></div>
+<div class="opts">
+<span class="opt"  tabindex="0">Моя́ кни́га тут.</span>
+<span class="opt"  tabindex="0">Мій кни́га тут.</span>
+</div>
+<div class="note">Кни́га is feminine, so use моя́.</div>
+</div>
+<div class="qq">
+<div class="q">Мій ру́чка там.</div>
+<div class="fi">Поми́лка: <span class="tr">Мій ру́чка там.</span></div>
+<div class="fi">Ви́правлення: <strong>Моя́ ру́чка там.</strong></div>
+<div class="opts">
+<span class="opt"  tabindex="0">Моя́ ру́чка там.</span>
+<span class="opt"  tabindex="0">Мій ру́чка там.</span>
+</div>
+<div class="note">Ру́чка is feminine, so use моя́.</div>
+</div>
+<div class="qq">
+<div class="q">Де стіл? — Воно́ там. (Where is the table? — It is there.)</div>
+<div class="fi">Поми́лка: <span class="tr">Де стіл? — Воно́ там. (Where is the table? — It is there.)</span></div>
+<div class="fi">Ви́правлення: <strong>Де стіл? — Він там.</strong></div>
+<div class="opts">
+<span class="opt"  tabindex="0">Де стіл? — Він там.</span>
+<span class="opt"  tabindex="0">Де стіл? — Воно́ там.</span>
+</div>
+<div class="note">Стіл is masculine, so the pronoun is він.</div>
+</div>
+<div class="qq">
+<div class="q">Це моя́ та́то.</div>
+<div class="fi">Поми́лка: <span class="tr">Це моя́ та́то.</span></div>
+<div class="fi">Ви́правлення: <strong>Це мій та́то.</strong></div>
+<div class="opts">
+<span class="opt"  tabindex="0">Це мій та́то.</span>
+<span class="opt"  tabindex="0">Це моя́ та́то.</span>
+</div>
+<div class="note">Та́то is masculine.</div>
+</div>
+<div class="qq">
+<div class="q">Вона́ Мико́ла.</div>
+<div class="fi">Поми́лка: <span class="tr">Вона́ Мико́ла.</span></div>
+<div class="fi">Ви́правлення: <strong>Він Мико́ла.</strong></div>
+<div class="opts">
+<span class="opt"  tabindex="0">Він Мико́ла.</span>
+<span class="opt"  tabindex="0">Вона́ Мико́ла.</span>
+</div>
+<div class="note">Мико́ла is a masculine name.</div>
+</div>
+<div class="qq">
+<div class="q">Моя́ соба́ка ду́же га́рна.</div>
+<div class="fi">Поми́лка: <span class="tr">Моя́ соба́ка ду́же га́рна.</span></div>
+<div class="fi">Ви́правлення: <strong>Мій соба́ка ду́же га́рний.</strong></div>
+<div class="opts">
+<span class="opt"  tabindex="0">Мій соба́ка ду́же га́рний.</span>
+<span class="opt"  tabindex="0">Моя́ соба́ка ду́же га́рна.</span>
+</div>
+<div class="note">Соба́ка is masculine in Ukrainian; memorize мій соба́ка.</div>
+</div>
+<div class="qq">
+<div class="q">Я є студе́нт.</div>
+<div class="fi">Поми́лка: <span class="tr">Я є студе́нт.</span></div>
+<div class="fi">Ви́правлення: <strong>Я студе́нт.</strong></div>
+<div class="opts">
+<span class="opt"  tabindex="0">Я студе́нт.</span>
+<span class="opt"  tabindex="0">Я є студе́нт.</span>
+</div>
+<div class="note">Present identity normally omits є.</div>
+</div>
+<div class="qq">
+<div class="q">Моє́ ім'я́ є Джон.</div>
+<div class="fi">Поми́лка: <span class="tr">Моє́ ім'я́ є Джон.</span></div>
+<div class="fi">Ви́правлення: <strong>Мене́ зва́ти Джон.</strong></div>
+<div class="opts">
+<span class="opt"  tabindex="0">Мене́ зва́ти Джон.</span>
+<span class="opt"  tabindex="0">Моє́ ім'я́ є Джон.</span>
+</div>
+<div class="note">Мене́ зва́ти... is the safe name phrase.</div>
+</div>
+</div>
+<div class="exercise" id="act-card-act-w5">
+<div class="exercise-header"><span class="badge b-quiz">quiz</span><span class="exercise-title">Переві́рка ро́ду</span><span class="exercise-ref">у зошиті · act-w5</span></div>
+<div class="exercise-instruction">Choose the Ukrainian gender-test word. These are diagnostic props, not new active vocabulary.</div>
+<div class="qq">
+<div class="q">Яки́й у мене́ си́льний біль у плечі́!</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">він</span>
+<span class="opt"  tabindex="0">вона́</span>
+<span class="opt"  tabindex="0">воно́</span>
+</div>
+<div class="note">Біль is masculine in Ukrainian.</div>
+</div>
+<div class="qq">
+<div class="q">Украї́нський степ широ́кий і ві́тряний.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">він</span>
+<span class="opt"  tabindex="0">вона́</span>
+<span class="opt"  tabindex="0">воно́</span>
+</div>
+<div class="note">Степ is masculine in Ukrainian.</div>
+</div>
+<div class="qq">
+<div class="q">Цей ро́зпис на стіні́ — робо́та украї́нського худо́жника.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">він</span>
+<span class="opt"  tabindex="0">вона́</span>
+<span class="opt"  tabindex="0">воно́</span>
+</div>
+<div class="note">Ро́зпис is masculine in Ukrainian.</div>
+</div>
+<div class="qq">
+<div class="q">Да́вній літо́пис розповіда́є про Ки́ївську Русь.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">він</span>
+<span class="opt"  tabindex="0">вона́</span>
+<span class="opt"  tabindex="0">воно́</span>
+</div>
+<div class="note">Літо́пис is masculine in Ukrainian.</div>
+</div>
+<div class="qq">
+<div class="q">Кни́жне / урочи́сте: у дале́ку путь.</div>
+<div class="opts">
+<span class="opt" data-ok="1" tabindex="0">вона́</span>
+<span class="opt"  tabindex="0">він</span>
+<span class="opt"  tabindex="0">воно́</span>
+</div>
+<div class="note">Путь is feminine in this diagnostic expression.</div>
+</div>
+</div>
+<div class="exercise" id="act-card-act-304">
+<div class="exercise-header"><span class="badge b-groupsort">group-sort</span><span class="exercise-title">Розподілі́ть слова́ за ро́дом</span><span class="exercise-ref">у зошиті · act-304</span></div>
+<div class="exercise-instruction">Розподілі́ть профе́сії та імена́ за грамати́чним ро́дом.</div>
+<div class="journey">
+<div><b>він / мій (чолові́чий рід)</b><p>студе́нт, вчи́тель, лі́кар, соба́ка</p></div>
+<div><b>вона́ / моя́ (жіно́чий рід)</b><p>студе́нтка, вчи́телька, лі́карка, співа́чка</p></div>
+<div><b>він (імена́ та роди́на на -а/-о)</b><p>Мико́ла, Ілля́, Павло́, дя́дько</p></div>
+</div>
+</div>
+<div class="exercise" id="act-card-act-305">
+<div class="exercise-header"><span class="badge b-unjumble">unjumble</span><span class="exercise-title">Складі́ть ре́чення з профе́сіями</span><span class="exercise-ref">у зошиті · act-305</span></div>
+<div class="exercise-instruction">Розташу́йте слова́, щоб утвори́ти прави́льне ре́чення.</div>
+<div class="fi">Слова́: <span class="tr">Вона́ / моя́ / вчи́телька</span> → <strong>Вона́ моя́ вчи́телька.</strong></div>
+<div class="fi">Слова́: <span class="tr">Він / мій / лі́кар</span> → <strong>Він мій лі́кар.</strong></div>
+<div class="fi">Слова́: <span class="tr">Це / мій / соба́ка</span> → <strong>Це мій соба́ка.</strong></div>
+<div class="fi">Слова́: <span class="tr">Це / мій / дя́дько</span> → <strong>Це мій дя́дько.</strong></div>
+<div class="fi">Слова́: <span class="tr">Він / акто́р / а / вона́ / акто́рка</span> → <strong>Він акто́р, а вона́ акто́рка.</strong></div>
+<div class="fi">Слова́: <span class="tr">Мене́ / зва́ти / Мико́ла</span> → <strong>Мене́ зва́ти Мико́ла.</strong></div>
+</div>
+<div class="exercise" id="act-card-act-306">
+<div class="exercise-header"><span class="badge b-oddoneout">odd-one-out</span><span class="exercise-title">За́йве сло́во за фо́рмою</span><span class="exercise-ref">у зошиті · act-306</span></div>
+<div class="exercise-instruction">Знайді́ть за́йве сло́во се́ред по́даних.</div>
+<div class="qq"><div class="opts"><span class="opt">вчи́телька</span><span class="opt">лі́карка</span><span class="opt">студе́нтка</span><span class="opt">студе́нт</span></div><div class="fi">Ві́дповідь: <span class="blank filled">студе́нт</span></div><div class="note">Студе́нт — чолові́ча фо́рма, і́нші — жіно́чі.</div></div>
+<div class="qq"><div class="opts"><span class="opt">акто́р</span><span class="opt">співа́к</span><span class="opt">лі́кар</span><span class="opt">акто́рка</span></div><div class="fi">Ві́дповідь: <span class="blank filled">акто́рка</span></div><div class="note">Акто́рка — жіно́ча фо́рма, і́нші — чолові́чі.</div></div>
+<div class="qq"><div class="opts"><span class="opt">Мико́ла</span><span class="opt">Ілля́</span><span class="opt">Павло́</span><span class="opt">Окса́на</span></div><div class="fi">Ві́дповідь: <span class="blank filled">Окса́на</span></div><div class="note">Окса́на — жіно́че ім&#x27;я́, і́нші — чолові́чі.</div></div>
+<div class="qq"><div class="opts"><span class="opt">та́то</span><span class="opt">ба́тько</span><span class="opt">дя́дько</span><span class="opt">ма́ма</span></div><div class="fi">Ві́дповідь: <span class="blank filled">ма́ма</span></div><div class="note">Ма́ма — жіно́чий рід, і́нші — чолові́чий.</div></div>
+<div class="qq"><div class="opts"><span class="opt">стіл</span><span class="opt">телефо́н</span><span class="opt">соба́ка</span><span class="opt">кни́га</span></div><div class="fi">Ві́дповідь: <span class="blank filled">кни́га</span></div><div class="note">Кни́га — жіно́чий рід, і́нші — чолові́чий.</div></div>
+<div class="qq"><div class="opts"><span class="opt">вікно́</span><span class="opt">лі́жко</span><span class="opt">фо́то</span><span class="opt">лі́карка</span></div><div class="fi">Ві́дповідь: <span class="blank filled">лі́карка</span></div><div class="note">Лі́карка — жіно́чий рід, і́нші — сере́дній.</div></div>
+
+</div>
+<div class="exercise" id="act-card-act-307">
+<div class="exercise-header"><span class="badge b-translate">translate</span><span class="exercise-title">Перекладі́ть ре́чення про люде́й</span><span class="exercise-ref">у зошиті · act-307</span></div>
+<div class="exercise-instruction">Перекладі́ть ре́чення з англі́йської мо́ви на украї́нську.</div>
+<div class="qq">
+<div class="q">She is a teacher.</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Вона́ вчи́телька.</span></div>
+</div>
+<div class="qq">
+<div class="q">He is a doctor.</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Він лі́кар.</span></div>
+</div>
+<div class="qq">
+<div class="q">My dog is handsome.</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Мій соба́ка га́рний.</span></div>
+</div>
+<div class="qq">
+<div class="q">This is my uncle.</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Це мій дя́дько.</span></div>
+</div>
+<div class="qq">
+<div class="q">My name is John.</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Мене́ зва́ти Джон.</span></div>
+</div>
+<div class="qq">
+<div class="q">She is a student.</div>
+<div class="fi">Ві́дповідь: <span class="blank filled">Вона́ студе́нтка.</span></div>
+</div>
+</div>
+    </div>
+
+    <div class="tabc" id="l3-resursy">
+      <h2>Ресу́рси уро́ку 3</h2><div class="res"><div class="kind">textbook</div><h3>Пономарьова, 3 клас — с. 86 «Рід іменників»</h3><p class="tr">Тест на рід: він/мій, вона/моя, воно/моє.</p><div class="meta"><span>Пономарьова, 3 клас, с. 86</span></div></div>
+<div class="res"><div class="kind">textbook</div><h3>Вашуленко, 3 клас — с. 112 «Закінчення іменників за родами»</h3><p class="tr">Таблиця закінчень за родами: приголосний, -а/-я, -о/-е.</p><div class="meta"><span>Вашуленко, 3 клас, с. 112</span></div></div>
+<div class="note">Цей спи́сок мі́стить ви́ключно матеріа́ли, на які́ спира́ється цей уро́к. Усі джере́ла нале́жно вка́зано.</div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const screens = { module: 's-module', l1: 's-l1', l2: 's-l2', l3: 's-l3' };
+  const urls = {
+    module: '/a1-v2/things-have-gender/',
+    l1: '/a1-v2/things-have-gender/1/',
+    l2: '/a1-v2/things-have-gender/2/',
+    l3: '/a1-v2/things-have-gender/3/'
+  };
+  function go(key) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === screens[key]));
+    document.querySelectorAll('.switch [data-screen]').forEach(b => b.classList.toggle('on', b.dataset.screen === key));
+    const u = document.getElementById('urlbar');
+    if (u && urls[key]) u.textContent = urls[key];
+    window.scrollTo({ top: 0 });
+  }
+  document.querySelectorAll('.switch [data-screen]').forEach(b => b.addEventListener('click', () => go(b.dataset.screen)));
+  document.querySelectorAll('[data-go]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); go(a.dataset.go); }));
+  const pBtn = document.getElementById('phoneBtn');
+  if (pBtn) {
+    pBtn.addEventListener('click', function () {
+      document.body.classList.toggle('phone');
+      this.classList.toggle('on');
+    });
+  }
+  document.querySelectorAll('.tabs[data-tabs] .tab').forEach(t => t.addEventListener('click', () => {
+    const group = t.closest('.tabs');
+    group.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    const screen = t.closest('.screen');
+    screen.querySelectorAll('.tabc').forEach(c => c.classList.toggle('active', c.id === t.dataset.tab));
+  }));
+  document.querySelectorAll('.qq .opt').forEach(o => o.addEventListener('click', () => {
+    o.parentElement.querySelectorAll('.opt').forEach(x => x.classList.remove('ok', 'no'));
+    o.classList.add(o.dataset.ok ? 'ok' : 'no');
+  }));
+</script>
+</body>
+</html>

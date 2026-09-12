@@ -1,0 +1,117 @@
+lessons:
+- n: 1
+  title: Він, вона́ чи воно́?
+  sections:
+  - Діалоги
+  - Він, вона, воно
+  minutes: 60
+  word_target: 550
+  activities:
+    total: 10
+    inline:
+    - 4
+    - 6
+    workbook:
+    - 6
+    - 9
+  unverified_stress:
+  - уро́ці
+  unverified_lemmas: []
+- n: 2
+  title: Предме́ти навко́ло
+  sections:
+  - Предмети навколо
+  minutes: 60
+  word_target: 550
+  activities:
+    total: 10
+    inline:
+    - 4
+    - 6
+    workbook:
+    - 6
+    - 9
+  unverified_stress:
+  - уро́ці
+  - фемініти́вами
+  unverified_lemmas: []
+- n: 3
+  title: Профе́сії, па́стки й самопереві́рка
+  sections:
+  - Підсумок
+  - Імена, пастки й самоперевірка
+  minutes: 60
+  word_target: 550
+  activities:
+    total: 10
+    inline:
+    - 4
+    - 6
+    workbook:
+    - 6
+    - 9
+  unverified_stress:
+  - фемініти́ви
+  - фемініти́вом
+  unverified_lemmas: []
+closes_module: 3
+provenance:
+- placement: inline
+  index: 0
+  new_id: act-1
+  lesson: 1
+- placement: inline
+  index: 1
+  new_id: act-2
+  lesson: 1
+- placement: inline
+  index: 2
+  new_id: act-3
+  lesson: 1
+- placement: inline
+  index: 3
+  new_id: act-5
+  lesson: 1
+- placement: inline
+  index: 4
+  new_id: act-4
+  lesson: 2
+- placement: inline
+  index: 5
+  new_id: act-9
+  lesson: 3
+- placement: workbook
+  index: 0
+  new_id: act-w1
+  lesson: 1
+- placement: workbook
+  index: 1
+  new_id: act-w2
+  lesson: 2
+- placement: workbook
+  index: 2
+  new_id: act-w3
+  lesson: 2
+- placement: workbook
+  index: 3
+  new_id: act-w4
+  lesson: 3
+- placement: workbook
+  index: 4
+  new_id: act-w5
+  lesson: 3
+items_min_exempt:
+- id: act-9
+  reason: 4-item profession-form quiz from baseline
+- id: act-w5
+  reason: 5-item plan gender diagnostic from baseline
+proper_names:
+- Ілля
+- Джон
+- Марко
+- Марія
+- Микола
+- Оксана
+- Олена
+- Оленка
+- Павло
