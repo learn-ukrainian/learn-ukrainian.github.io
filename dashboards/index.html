@@ -373,9 +373,10 @@ async function loadStats() {
     }
     pendingConsultations = cMetrics?.pending_queue || 0;
 
-    // Honesty of zero: pass/fail/unaudited all zero means no audit data is
-    // loaded — render "—" rather than a green 0 that reads as failure (#7976).
-    const auditsRecorded = (t.pass + t.fail + t.unaudited) > 0;
+    // Honesty of zero: only pass/fail count as recorded audits. An
+    // unaudited-only total (pass=0,fail=0,unaudited=N) is still "no audit
+    // data" — do not render a green Passing: 0 (#7976 / CF on #7978).
+    const auditsRecorded = (t.pass + t.fail) > 0;
     const passingDisplay = auditsRecorded ? `${t.pass}` : '—';
     const passingLabel = auditsRecorded ? 'Passing' : 'Passing · no audit data';
 

@@ -683,12 +683,18 @@ def test_launchpad_hides_api_surfaces_strip_until_populated() -> None:
 
 
 def test_launchpad_passing_stat_is_honest_when_no_audit_data() -> None:
-    """A green 0 implies measured failure; absence of audits must render as unknown (#7976)."""
+    """A green 0 implies measured failure; absence of audits must render as unknown (#7976).
+
+    Unaudited-only totals (pass=0, fail=0, unaudited=N) must NOT count as
+    recorded audits — that state still shows Passing · no audit data.
+    """
     html = (DASHBOARDS / "index.html").read_text(encoding="utf-8")
     assert "Passing · no audit data" in html
     assert "no audit results" in html
     assert "acc.fail += stats.fail || 0;" in html
     assert "acc.unaudited += stats.unaudited || 0;" in html
+    assert "const auditsRecorded = (t.pass + t.fail) > 0;" in html
+    assert "(t.pass + t.fail + t.unaudited) > 0" not in html
 
 
 def test_curriculum_treemap_cells_do_not_clip_long_track_names() -> None:
