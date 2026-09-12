@@ -250,7 +250,8 @@ class TestHomeLoadStatsPublished:
         text = (DASHBOARDS_DIR / "index.html").read_text(encoding="utf-8")
         assert "track.published_mdx" in text
         assert "t.published" in text
-        assert "passing · ${t.published} published" in text
+        assert "${t.published}" in text
+        assert "Published" in text
         assert "${t.pass} passing / ${t.total} total" not in text
 
 
