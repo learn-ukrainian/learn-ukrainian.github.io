@@ -13,6 +13,7 @@ import json
 import sqlite3
 import sys
 import threading
+from collections.abc import Iterator
 from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import Path
@@ -31,6 +32,7 @@ _vesum_conn = None
 _vesum_conn_path: Path | None = None
 _vesum_conn_stat: tuple[int, int] | None = None
 _CONN_LOCK = threading.Lock()
+_ACTIVE_CONNS: dict[sqlite3.Connection, int] = {}
 
 
 class InspectionStatus(StrEnum):
@@ -109,20 +111,8 @@ def _resolve_vesum_db_path(db_path: str | Path | None = None) -> Path:
     return VESUM_DB_PATH
 
 
-def close_vesum_conn() -> None:
-    """Close and reset cached SQLite connection."""
-    global _vesum_conn, _vesum_conn_path, _vesum_conn_stat
-    with _CONN_LOCK:
-        if _vesum_conn is not None:
-            with contextlib.suppress(Exception):
-                _vesum_conn.close()
-            _vesum_conn = None
-            _vesum_conn_path = None
-            _vesum_conn_stat = None
-
-
-def get_vesum_conn(db_path: str | Path | None = None):
-    """Lazy-load SQLite connection to VESUM dictionary with automatic replacement detection."""
+def _acquire_conn(db_path: str | Path | None = None) -> sqlite3.Connection:
+    """Acquire current SQLite connection, managing lifecycle and active readers."""
     global _vesum_conn, _vesum_conn_path, _vesum_conn_stat
     resolved_path = _resolve_vesum_db_path(db_path)
     if not resolved_path.exists():
@@ -146,15 +136,64 @@ def get_vesum_conn(db_path: str | Path | None = None):
             or current_stat is None
             or _vesum_conn_stat != current_stat
         ):
-            if _vesum_conn is not None:
+            # Superseded connection: only close immediately if it has NO active readers!
+            old_conn = _vesum_conn
+            if old_conn is not None and _ACTIVE_CONNS.get(old_conn, 0) <= 0:
+                _ACTIVE_CONNS.pop(old_conn, None)
                 with contextlib.suppress(Exception):
-                    _vesum_conn.close()
-                _vesum_conn = None
-            _vesum_conn = sqlite3.connect(str(resolved_path), check_same_thread=False)
-            _vesum_conn.row_factory = sqlite3.Row
+                    old_conn.close()
+
+            new_conn = sqlite3.connect(str(resolved_path), check_same_thread=False)
+            new_conn.row_factory = sqlite3.Row
+            _vesum_conn = new_conn
             _vesum_conn_path = resolved_path
             _vesum_conn_stat = current_stat
-        return _vesum_conn
+            _ACTIVE_CONNS[new_conn] = 0
+
+        conn = _vesum_conn
+        _ACTIVE_CONNS[conn] = _ACTIVE_CONNS.get(conn, 0) + 1
+        return conn
+
+
+def _release_conn(conn: sqlite3.Connection) -> None:
+    """Release a reader on connection, closing it if superseded and idle."""
+    global _vesum_conn
+    with _CONN_LOCK:
+        if conn in _ACTIVE_CONNS:
+            _ACTIVE_CONNS[conn] -= 1
+            if _ACTIVE_CONNS[conn] <= 0 and conn is not _vesum_conn:
+                _ACTIVE_CONNS.pop(conn, None)
+                with contextlib.suppress(Exception):
+                    conn.close()
+
+
+@contextlib.contextmanager
+def get_vesum_connection(db_path: str | Path | None = None) -> Iterator[sqlite3.Connection]:
+    """Context manager guaranteeing connection retention across the reader's lifetime."""
+    conn = _acquire_conn(db_path)
+    try:
+        yield conn
+    finally:
+        _release_conn(conn)
+
+
+def get_vesum_conn(db_path: str | Path | None = None) -> sqlite3.Connection:
+    """Lazy-load SQLite connection to VESUM dictionary with automatic replacement detection."""
+    return _acquire_conn(db_path)
+
+
+def close_vesum_conn() -> None:
+    """Close and reset cached SQLite connection."""
+    global _vesum_conn, _vesum_conn_path, _vesum_conn_stat
+    with _CONN_LOCK:
+        if _vesum_conn is not None:
+            if _ACTIVE_CONNS.get(_vesum_conn, 0) <= 0:
+                with contextlib.suppress(Exception):
+                    _vesum_conn.close()
+                _ACTIVE_CONNS.pop(_vesum_conn, None)
+            _vesum_conn = None
+            _vesum_conn_path = None
+            _vesum_conn_stat = None
 
 
 def verify_word(
@@ -166,18 +205,18 @@ def verify_word(
 
     Returns list of {lemma, pos, tags} matches. Empty list = not found.
     """
-    conn = get_vesum_conn(db_path)
-    if pos_filter:
-        rows = conn.execute(
-            "SELECT lemma, pos, tags FROM forms WHERE word_form = ? AND pos = ?",
-            (word, pos_filter),
-        ).fetchall()
-    else:
-        rows = conn.execute(
-            "SELECT lemma, pos, tags FROM forms WHERE word_form = ?",
-            (word,),
-        ).fetchall()
-    return [{"lemma": r["lemma"], "pos": r["pos"], "tags": r["tags"]} for r in rows]
+    with get_vesum_connection(db_path) as conn:
+        if pos_filter:
+            rows = conn.execute(
+                "SELECT lemma, pos, tags FROM forms WHERE word_form = ? AND pos = ?",
+                (word, pos_filter),
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                "SELECT lemma, pos, tags FROM forms WHERE word_form = ?",
+                (word,),
+            ).fetchall()
+        return [{"lemma": r["lemma"], "pos": r["pos"], "tags": r["tags"]} for r in rows]
 
 
 def verify_words(
@@ -192,22 +231,22 @@ def verify_words(
     """
     if not words:
         return {}
-    conn = get_vesum_conn(db_path)
-    placeholders = ",".join("?" * len(words))
-    if pos_filter:
-        rows = conn.execute(
-            f"SELECT word_form, lemma, pos, tags FROM forms WHERE word_form IN ({placeholders}) AND pos = ?",
-            (*words, pos_filter),
-        ).fetchall()
-    else:
-        rows = conn.execute(
-            f"SELECT word_form, lemma, pos, tags FROM forms WHERE word_form IN ({placeholders})",
-            words,
-        ).fetchall()
-    result: dict[str, list[dict]] = {w: [] for w in words}
-    for r in rows:
-        result[r["word_form"]].append({"lemma": r["lemma"], "pos": r["pos"], "tags": r["tags"]})
-    return result
+    with get_vesum_connection(db_path) as conn:
+        placeholders = ",".join("?" * len(words))
+        if pos_filter:
+            rows = conn.execute(
+                f"SELECT word_form, lemma, pos, tags FROM forms WHERE word_form IN ({placeholders}) AND pos = ?",
+                (*words, pos_filter),
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                f"SELECT word_form, lemma, pos, tags FROM forms WHERE word_form IN ({placeholders})",
+                words,
+            ).fetchall()
+        result: dict[str, list[dict]] = {w: [] for w in words}
+        for r in rows:
+            result[r["word_form"]].append({"lemma": r["lemma"], "pos": r["pos"], "tags": r["tags"]})
+        return result
 
 
 def verify_lemma(lemma: str, db_path: str | Path | None = None) -> list[dict]:
@@ -215,12 +254,12 @@ def verify_lemma(lemma: str, db_path: str | Path | None = None) -> list[dict]:
 
     Returns list of {word_form, pos, tags} for every form.
     """
-    conn = get_vesum_conn(db_path)
-    rows = conn.execute(
-        "SELECT word_form, pos, tags FROM forms WHERE lemma = ? ORDER BY pos, tags",
-        (lemma,),
-    ).fetchall()
-    return [{"word_form": r["word_form"], "pos": r["pos"], "tags": r["tags"]} for r in rows]
+    with get_vesum_connection(db_path) as conn:
+        rows = conn.execute(
+            "SELECT word_form, pos, tags FROM forms WHERE lemma = ? ORDER BY pos, tags",
+            (lemma,),
+        ).fetchall()
+        return [{"word_form": r["word_form"], "pos": r["pos"], "tags": r["tags"]} for r in rows]
 
 
 _REQUIRED_FORMS_ALL_COLS = frozenset(
@@ -321,7 +360,99 @@ def inspect_word(
     Fails closed with status=UNAVAILABLE if schema or database is unavailable.
     """
     try:
-        conn = get_vesum_conn(db_path)
+        with get_vesum_connection(db_path) as conn:
+            if not _has_inspection_schema(conn):
+                return WordInspection(
+                    word=word,
+                    status=InspectionStatus.UNAVAILABLE,
+                    clean_analyses=[],
+                    marked_analyses=[],
+                    effective_markers=[],
+                    source_locations=[],
+                    source_version="unavailable",
+                    pipeline_identity={},
+                )
+
+            version, meta = _get_metadata_and_version(conn)
+
+            sql = """
+                SELECT
+                    f.id,
+                    f.entry_id,
+                    f.word_form,
+                    f.lemma,
+                    f.pos,
+                    f.tags,
+                    f.source_comment,
+                    f.source_location,
+                    m.marker,
+                    m.origin,
+                    m.marker_class
+                FROM forms_all f
+                LEFT JOIN form_markers m ON f.id = m.form_id
+                WHERE f.word_form = ?
+            """
+            params: list[Any] = [word]
+            if pos_filter:
+                sql += " AND f.pos = ?"
+                params.append(pos_filter)
+            sql += " ORDER BY f.entry_id, f.id, m.marker, m.origin"
+
+            rows = conn.execute(sql, params).fetchall()
+
+            analyses_by_id: dict[int, dict[str, Any]] = {}
+            markers_by_id: dict[int, list[dict[str, str]]] = {}
+            locations: set[str] = set()
+            effective_markers_set: set[str] = set()
+
+            for r in rows:
+                fid = r["id"]
+                if fid not in analyses_by_id:
+                    analyses_by_id[fid] = {
+                        "entry_id": r["entry_id"],
+                        "word_form": r["word_form"],
+                        "lemma": r["lemma"],
+                        "pos": r["pos"],
+                        "tags": r["tags"],
+                        "source_comment": r["source_comment"],
+                        "source_location": r["source_location"],
+                    }
+                    markers_by_id[fid] = []
+                    if r["source_location"]:
+                        locations.add(r["source_location"])
+                if r["marker"] is not None:
+                    marker_dict = {
+                        "marker": r["marker"],
+                        "origin": r["origin"],
+                        "marker_class": r["marker_class"],
+                    }
+                    markers_by_id[fid].append(marker_dict)
+                    effective_markers_set.add(r["marker"])
+
+            clean_analyses: list[dict[str, Any]] = []
+            marked_analyses: list[dict[str, Any]] = []
+
+            for fid, analysis in analyses_by_id.items():
+                markers = markers_by_id[fid]
+                if markers:
+                    marked_copy = dict(analysis)
+                    marked_copy["markers"] = markers
+                    marked_analyses.append(marked_copy)
+                else:
+                    clean_analyses.append(analysis)
+
+            status = _resolve_inspection_status(clean_analyses, marked_analyses)
+
+            return WordInspection(
+                word=word,
+                status=status,
+                clean_analyses=clean_analyses,
+                marked_analyses=marked_analyses,
+                effective_markers=sorted(effective_markers_set),
+                source_locations=sorted(locations),
+                source_version=version,
+                pipeline_identity=meta,
+            )
     except (FileNotFoundError, sqlite3.Error):
         return WordInspection(
             word=word,
@@ -333,111 +464,6 @@ def inspect_word(
             source_version="unavailable",
             pipeline_identity={},
         )
-
-    if not _has_inspection_schema(conn):
-        return WordInspection(
-            word=word,
-            status=InspectionStatus.UNAVAILABLE,
-            clean_analyses=[],
-            marked_analyses=[],
-            effective_markers=[],
-            source_locations=[],
-            source_version="unavailable",
-            pipeline_identity={},
-        )
-
-    version, meta = _get_metadata_and_version(conn)
-
-    sql = """
-        SELECT
-            f.id,
-            f.entry_id,
-            f.word_form,
-            f.lemma,
-            f.pos,
-            f.tags,
-            f.source_comment,
-            f.source_location,
-            m.marker,
-            m.origin,
-            m.marker_class
-        FROM forms_all f
-        LEFT JOIN form_markers m ON f.id = m.form_id
-        WHERE f.word_form = ?
-    """
-    params: list[Any] = [word]
-    if pos_filter:
-        sql += " AND f.pos = ?"
-        params.append(pos_filter)
-    sql += " ORDER BY f.entry_id, f.id, m.marker, m.origin"
-
-    try:
-        rows = conn.execute(sql, params).fetchall()
-    except sqlite3.Error:
-        return WordInspection(
-            word=word,
-            status=InspectionStatus.UNAVAILABLE,
-            clean_analyses=[],
-            marked_analyses=[],
-            effective_markers=[],
-            source_locations=[],
-            source_version="unavailable",
-            pipeline_identity={},
-        )
-
-    analyses_by_id: dict[int, dict[str, Any]] = {}
-    markers_by_id: dict[int, list[dict[str, str]]] = {}
-    locations: set[str] = set()
-    effective_markers_set: set[str] = set()
-
-    for r in rows:
-        fid = r["id"]
-        if fid not in analyses_by_id:
-            analyses_by_id[fid] = {
-                "entry_id": r["entry_id"],
-                "word_form": r["word_form"],
-                "lemma": r["lemma"],
-                "pos": r["pos"],
-                "tags": r["tags"],
-                "source_comment": r["source_comment"],
-                "source_location": r["source_location"],
-            }
-            markers_by_id[fid] = []
-            if r["source_location"]:
-                locations.add(r["source_location"])
-        if r["marker"] is not None:
-            marker_dict = {
-                "marker": r["marker"],
-                "origin": r["origin"],
-                "marker_class": r["marker_class"],
-            }
-            markers_by_id[fid].append(marker_dict)
-            effective_markers_set.add(r["marker"])
-
-    clean_analyses: list[dict[str, Any]] = []
-    marked_analyses: list[dict[str, Any]] = []
-
-    for fid, analysis in analyses_by_id.items():
-        markers = markers_by_id[fid]
-        if markers:
-            marked_copy = dict(analysis)
-            marked_copy["markers"] = markers
-            marked_analyses.append(marked_copy)
-        else:
-            clean_analyses.append(analysis)
-
-    status = _resolve_inspection_status(clean_analyses, marked_analyses)
-
-    return WordInspection(
-        word=word,
-        status=status,
-        clean_analyses=clean_analyses,
-        marked_analyses=marked_analyses,
-        effective_markers=sorted(effective_markers_set),
-        source_locations=sorted(locations),
-        source_version=version,
-        pipeline_identity=meta,
-    )
 
 
 def inspect_words(
@@ -453,7 +479,108 @@ def inspect_words(
         return {}
 
     try:
-        conn = get_vesum_conn(db_path)
+        with get_vesum_connection(db_path) as conn:
+            if not _has_inspection_schema(conn):
+                return {
+                    w: WordInspection(
+                        word=w,
+                        status=InspectionStatus.UNAVAILABLE,
+                        clean_analyses=[],
+                        marked_analyses=[],
+                        effective_markers=[],
+                        source_locations=[],
+                        source_version="unavailable",
+                        pipeline_identity={},
+                    )
+                    for w in words
+                }
+
+            version, meta = _get_metadata_and_version(conn)
+
+            unique_words = list(dict.fromkeys(words))
+            placeholders = ",".join("?" * len(unique_words))
+            sql = f"""
+                SELECT
+                    f.id,
+                    f.entry_id,
+                    f.word_form,
+                    f.lemma,
+                    f.pos,
+                    f.tags,
+                    f.source_comment,
+                    f.source_location,
+                    m.marker,
+                    m.origin,
+                    m.marker_class
+                FROM forms_all f
+                LEFT JOIN form_markers m ON f.id = m.form_id
+                WHERE f.word_form IN ({placeholders})
+            """
+            params: list[Any] = list(unique_words)
+            if pos_filter:
+                sql += " AND f.pos = ?"
+                params.append(pos_filter)
+            sql += " ORDER BY f.word_form, f.entry_id, f.id, m.marker, m.origin"
+
+            rows = conn.execute(sql, params).fetchall()
+
+            data_by_word: dict[str, dict[int, dict[str, Any]]] = {w: {} for w in unique_words}
+            markers_by_word_id: dict[str, dict[int, list[dict[str, str]]]] = {w: {} for w in unique_words}
+            locations_by_word: dict[str, set[str]] = {w: set() for w in unique_words}
+            effective_markers_by_word: dict[str, set[str]] = {w: set() for w in unique_words}
+
+            for r in rows:
+                wf = r["word_form"]
+                fid = r["id"]
+                if wf in data_by_word:
+                    if fid not in data_by_word[wf]:
+                        data_by_word[wf][fid] = {
+                            "entry_id": r["entry_id"],
+                            "word_form": r["word_form"],
+                            "lemma": r["lemma"],
+                            "pos": r["pos"],
+                            "tags": r["tags"],
+                            "source_comment": r["source_comment"],
+                            "source_location": r["source_location"],
+                        }
+                        markers_by_word_id[wf][fid] = []
+                        if r["source_location"]:
+                            locations_by_word[wf].add(r["source_location"])
+                    if r["marker"] is not None:
+                        marker_dict = {
+                            "marker": r["marker"],
+                            "origin": r["origin"],
+                            "marker_class": r["marker_class"],
+                        }
+                        markers_by_word_id[wf][fid].append(marker_dict)
+                        effective_markers_by_word[wf].add(r["marker"])
+
+            results: dict[str, WordInspection] = {}
+            for w in words:
+                clean_analyses = []
+                marked_analyses = []
+                analyses_dict = data_by_word.get(w, {})
+                for fid, analysis in analyses_dict.items():
+                    markers = markers_by_word_id[w].get(fid, [])
+                    if markers:
+                        marked_copy = dict(analysis)
+                        marked_copy["markers"] = markers
+                        marked_analyses.append(marked_copy)
+                    else:
+                        clean_analyses.append(analysis)
+                status = _resolve_inspection_status(clean_analyses, marked_analyses)
+                results[w] = WordInspection(
+                    word=w,
+                    status=status,
+                    clean_analyses=clean_analyses,
+                    marked_analyses=marked_analyses,
+                    effective_markers=sorted(effective_markers_by_word.get(w, set())),
+                    source_locations=sorted(locations_by_word.get(w, set())),
+                    source_version=version,
+                    pipeline_identity=meta,
+                )
+
+            return results
     except (FileNotFoundError, sqlite3.Error):
         return {
             w: WordInspection(
@@ -468,123 +595,6 @@ def inspect_words(
             )
             for w in words
         }
-
-    if not _has_inspection_schema(conn):
-        return {
-            w: WordInspection(
-                word=w,
-                status=InspectionStatus.UNAVAILABLE,
-                clean_analyses=[],
-                marked_analyses=[],
-                effective_markers=[],
-                source_locations=[],
-                source_version="unavailable",
-                pipeline_identity={},
-            )
-            for w in words
-        }
-
-    version, meta = _get_metadata_and_version(conn)
-
-    unique_words = list(dict.fromkeys(words))
-    placeholders = ",".join("?" * len(unique_words))
-    sql = f"""
-        SELECT
-            f.id,
-            f.entry_id,
-            f.word_form,
-            f.lemma,
-            f.pos,
-            f.tags,
-            f.source_comment,
-            f.source_location,
-            m.marker,
-            m.origin,
-            m.marker_class
-        FROM forms_all f
-        LEFT JOIN form_markers m ON f.id = m.form_id
-        WHERE f.word_form IN ({placeholders})
-    """
-    params: list[Any] = list(unique_words)
-    if pos_filter:
-        sql += " AND f.pos = ?"
-        params.append(pos_filter)
-    sql += " ORDER BY f.word_form, f.entry_id, f.id, m.marker, m.origin"
-
-    try:
-        rows = conn.execute(sql, params).fetchall()
-    except sqlite3.Error:
-        return {
-            w: WordInspection(
-                word=w,
-                status=InspectionStatus.UNAVAILABLE,
-                clean_analyses=[],
-                marked_analyses=[],
-                effective_markers=[],
-                source_locations=[],
-                source_version="unavailable",
-                pipeline_identity={},
-            )
-            for w in words
-        }
-
-    data_by_word: dict[str, dict[int, dict[str, Any]]] = {w: {} for w in unique_words}
-    markers_by_word_id: dict[str, dict[int, list[dict[str, str]]]] = {w: {} for w in unique_words}
-    locations_by_word: dict[str, set[str]] = {w: set() for w in unique_words}
-    effective_markers_by_word: dict[str, set[str]] = {w: set() for w in unique_words}
-
-    for r in rows:
-        wf = r["word_form"]
-        fid = r["id"]
-        if wf in data_by_word:
-            if fid not in data_by_word[wf]:
-                data_by_word[wf][fid] = {
-                    "entry_id": r["entry_id"],
-                    "word_form": r["word_form"],
-                    "lemma": r["lemma"],
-                    "pos": r["pos"],
-                    "tags": r["tags"],
-                    "source_comment": r["source_comment"],
-                    "source_location": r["source_location"],
-                }
-                markers_by_word_id[wf][fid] = []
-                if r["source_location"]:
-                    locations_by_word[wf].add(r["source_location"])
-            if r["marker"] is not None:
-                marker_dict = {
-                    "marker": r["marker"],
-                    "origin": r["origin"],
-                    "marker_class": r["marker_class"],
-                }
-                markers_by_word_id[wf][fid].append(marker_dict)
-                effective_markers_by_word[wf].add(r["marker"])
-
-    results: dict[str, WordInspection] = {}
-    for w in words:
-        clean_analyses = []
-        marked_analyses = []
-        analyses_dict = data_by_word.get(w, {})
-        for fid, analysis in analyses_dict.items():
-            markers = markers_by_word_id[w].get(fid, [])
-            if markers:
-                marked_copy = dict(analysis)
-                marked_copy["markers"] = markers
-                marked_analyses.append(marked_copy)
-            else:
-                clean_analyses.append(analysis)
-        status = _resolve_inspection_status(clean_analyses, marked_analyses)
-        results[w] = WordInspection(
-            word=w,
-            status=status,
-            clean_analyses=clean_analyses,
-            marked_analyses=marked_analyses,
-            effective_markers=sorted(effective_markers_by_word.get(w, set())),
-            source_locations=sorted(locations_by_word.get(w, set())),
-            source_version=version,
-            pipeline_identity=meta,
-        )
-
-    return results
 
 
 def inspect_lemma(
@@ -596,7 +606,98 @@ def inspect_lemma(
     Returns LemmaInspection with paradigm forms, clean/marked breakdown, and status.
     """
     try:
-        conn = get_vesum_conn(db_path)
+        with get_vesum_connection(db_path) as conn:
+            if not _has_inspection_schema(conn):
+                return LemmaInspection(
+                    lemma=lemma,
+                    status=InspectionStatus.UNAVAILABLE,
+                    clean_analyses=[],
+                    marked_analyses=[],
+                    forms=[],
+                    effective_markers=[],
+                    source_locations=[],
+                    source_version="unavailable",
+                    pipeline_identity={},
+                )
+
+            version, meta = _get_metadata_and_version(conn)
+
+            sql = """
+                SELECT
+                    f.id,
+                    f.entry_id,
+                    f.word_form,
+                    f.lemma,
+                    f.pos,
+                    f.tags,
+                    f.source_comment,
+                    f.source_location,
+                    m.marker,
+                    m.origin,
+                    m.marker_class
+                FROM forms_all f
+                LEFT JOIN form_markers m ON f.id = m.form_id
+                WHERE f.lemma = ?
+                ORDER BY f.pos, f.tags, f.word_form, m.marker
+            """
+            rows = conn.execute(sql, (lemma,)).fetchall()
+
+            analyses_by_id: dict[int, dict[str, Any]] = {}
+            markers_by_id: dict[int, list[dict[str, str]]] = {}
+            locations: set[str] = set()
+            effective_markers_set: set[str] = set()
+
+            for r in rows:
+                fid = r["id"]
+                if fid not in analyses_by_id:
+                    analyses_by_id[fid] = {
+                        "entry_id": r["entry_id"],
+                        "word_form": r["word_form"],
+                        "lemma": r["lemma"],
+                        "pos": r["pos"],
+                        "tags": r["tags"],
+                        "source_comment": r["source_comment"],
+                        "source_location": r["source_location"],
+                    }
+                    markers_by_id[fid] = []
+                    if r["source_location"]:
+                        locations.add(r["source_location"])
+                if r["marker"] is not None:
+                    marker_dict = {
+                        "marker": r["marker"],
+                        "origin": r["origin"],
+                        "marker_class": r["marker_class"],
+                    }
+                    markers_by_id[fid].append(marker_dict)
+                    effective_markers_set.add(r["marker"])
+
+            clean_analyses: list[dict[str, Any]] = []
+            marked_analyses: list[dict[str, Any]] = []
+            all_forms: list[dict[str, Any]] = []
+
+            for fid, analysis in analyses_by_id.items():
+                markers = markers_by_id[fid]
+                form_entry = dict(analysis)
+                form_entry["markers"] = markers
+                all_forms.append(form_entry)
+                if markers:
+                    marked_analyses.append(form_entry)
+                else:
+                    clean_analyses.append(analysis)
+
+            status = _resolve_inspection_status(clean_analyses, marked_analyses)
+
+            return LemmaInspection(
+                lemma=lemma,
+                status=status,
+                clean_analyses=clean_analyses,
+                marked_analyses=marked_analyses,
+                forms=all_forms,
+                effective_markers=sorted(effective_markers_set),
+                source_locations=sorted(locations),
+                source_version=version,
+                pipeline_identity=meta,
+            )
     except (FileNotFoundError, sqlite3.Error):
         return LemmaInspection(
             lemma=lemma,
@@ -609,111 +710,6 @@ def inspect_lemma(
             source_version="unavailable",
             pipeline_identity={},
         )
-
-    if not _has_inspection_schema(conn):
-        return LemmaInspection(
-            lemma=lemma,
-            status=InspectionStatus.UNAVAILABLE,
-            clean_analyses=[],
-            marked_analyses=[],
-            forms=[],
-            effective_markers=[],
-            source_locations=[],
-            source_version="unavailable",
-            pipeline_identity={},
-        )
-
-    version, meta = _get_metadata_and_version(conn)
-
-    sql = """
-        SELECT
-            f.id,
-            f.entry_id,
-            f.word_form,
-            f.lemma,
-            f.pos,
-            f.tags,
-            f.source_comment,
-            f.source_location,
-            m.marker,
-            m.origin,
-            m.marker_class
-        FROM forms_all f
-        LEFT JOIN form_markers m ON f.id = m.form_id
-        WHERE f.lemma = ?
-        ORDER BY f.pos, f.tags, f.word_form, m.marker
-    """
-    try:
-        rows = conn.execute(sql, (lemma,)).fetchall()
-    except sqlite3.Error:
-        return LemmaInspection(
-            lemma=lemma,
-            status=InspectionStatus.UNAVAILABLE,
-            clean_analyses=[],
-            marked_analyses=[],
-            forms=[],
-            effective_markers=[],
-            source_locations=[],
-            source_version="unavailable",
-            pipeline_identity={},
-        )
-
-    analyses_by_id: dict[int, dict[str, Any]] = {}
-    markers_by_id: dict[int, list[dict[str, str]]] = {}
-    locations: set[str] = set()
-    effective_markers_set: set[str] = set()
-
-    for r in rows:
-        fid = r["id"]
-        if fid not in analyses_by_id:
-            analyses_by_id[fid] = {
-                "entry_id": r["entry_id"],
-                "word_form": r["word_form"],
-                "lemma": r["lemma"],
-                "pos": r["pos"],
-                "tags": r["tags"],
-                "source_comment": r["source_comment"],
-                "source_location": r["source_location"],
-            }
-            markers_by_id[fid] = []
-            if r["source_location"]:
-                locations.add(r["source_location"])
-        if r["marker"] is not None:
-            marker_dict = {
-                "marker": r["marker"],
-                "origin": r["origin"],
-                "marker_class": r["marker_class"],
-            }
-            markers_by_id[fid].append(marker_dict)
-            effective_markers_set.add(r["marker"])
-
-    clean_analyses: list[dict[str, Any]] = []
-    marked_analyses: list[dict[str, Any]] = []
-    all_forms: list[dict[str, Any]] = []
-
-    for fid, analysis in analyses_by_id.items():
-        markers = markers_by_id[fid]
-        form_entry = dict(analysis)
-        form_entry["markers"] = markers
-        all_forms.append(form_entry)
-        if markers:
-            marked_analyses.append(form_entry)
-        else:
-            clean_analyses.append(analysis)
-
-    status = _resolve_inspection_status(clean_analyses, marked_analyses)
-
-    return LemmaInspection(
-        lemma=lemma,
-        status=status,
-        clean_analyses=clean_analyses,
-        marked_analyses=marked_analyses,
-        forms=all_forms,
-        effective_markers=sorted(effective_markers_set),
-        source_locations=sorted(locations),
-        source_version=version,
-        pipeline_identity=meta,
-    )
 
 
 def main() -> None:

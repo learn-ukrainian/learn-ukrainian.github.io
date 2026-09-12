@@ -15,6 +15,7 @@ import bz2
 import json
 import os
 import sqlite3
+import threading
 from pathlib import Path
 
 import pytest
@@ -24,6 +25,9 @@ from scripts.verification.vesum import (
     InspectionStatus,
     LemmaInspection,
     WordInspection,
+    close_vesum_conn,
+    get_vesum_conn,
+    get_vesum_connection,
     inspect_lemma,
     inspect_word,
     inspect_words,
@@ -353,8 +357,6 @@ def test_vesum_cli_global_db_flag(monkeypatch: pytest.MonkeyPatch, tmp_path: Pat
 
 def test_get_vesum_conn_replacement_detection(tmp_path: Path) -> None:
     """Replacing the database file on disk causes get_vesum_conn to reopen to the new inode."""
-    from scripts.verification.vesum import close_vesum_conn, get_vesum_conn
-
     close_vesum_conn()
     db_path = tmp_path / "live.db"
 
@@ -383,4 +385,63 @@ def test_get_vesum_conn_replacement_detection(tmp_path: Path) -> None:
     c2 = get_vesum_conn(db_path)
     rows2 = c2.execute("SELECT word_form FROM forms").fetchall()
     assert [r["word_form"] for r in rows2] == ["second"]
+    close_vesum_conn()
+
+
+def test_concurrent_connection_replacement_during_active_reader(tmp_path: Path) -> None:
+    """Active reader connection is not closed prematurely when another thread triggers replacement."""
+    close_vesum_conn()
+    db_path = tmp_path / "live_concurrent.db"
+
+    conn1 = sqlite3.connect(db_path)
+    conn1.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)")
+    conn1.execute("INSERT INTO forms VALUES ('first', 'first', 'noun', 'tag')")
+    conn1.commit()
+    conn1.close()
+
+    reader_acquired = threading.Event()
+    replacement_done = threading.Event()
+    reader_results: list[str] = []
+    reader_error: list[Exception] = []
+
+    def reader_thread() -> None:
+        try:
+            with get_vesum_connection(db_path) as conn:
+                reader_acquired.set()
+                # Wait until the other thread has replaced the database file on disk
+                # and triggered a replacement check in get_vesum_connection!
+                assert replacement_done.wait(timeout=5.0)
+                # Reader executes query on its acquired connection.
+                # Must NOT raise ProgrammingError: Cannot operate on a closed database!
+                rows = conn.execute("SELECT word_form FROM forms").fetchall()
+                reader_results.extend(r["word_form"] for r in rows)
+        except Exception as exc:
+            reader_error.append(exc)
+
+    t = threading.Thread(target=reader_thread)
+    t.start()
+
+    assert reader_acquired.wait(timeout=5.0)
+
+    # Concurrently replace the database file on disk with DB 2 ('second')
+    new_db = tmp_path / "replacement_concurrent.db"
+    conn2 = sqlite3.connect(new_db)
+    conn2.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)")
+    conn2.execute("INSERT INTO forms VALUES ('second', 'second', 'noun', 'tag')")
+    conn2.commit()
+    conn2.close()
+
+    os.replace(new_db, db_path)
+
+    # Thread 2 (here) acquires connection, detecting replacement and switching to DB 2
+    with get_vesum_connection(db_path) as new_c:
+        new_rows = new_c.execute("SELECT word_form FROM forms").fetchall()
+        assert [r["word_form"] for r in new_rows] == ["second"]
+
+    # Signal reader_thread that replacement and switch occurred
+    replacement_done.set()
+    t.join(timeout=5.0)
+
+    assert not reader_error, f"Reader encountered error during concurrent replacement: {reader_error}"
+    assert reader_results == ["first"], f"Expected reader to complete on first connection, got {reader_results}"
     close_vesum_conn()
