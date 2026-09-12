@@ -108,6 +108,7 @@ from .site_router import router as site_router
 from .sources_router import router as sources_router
 from .state_helpers import cache_get, cache_invalidate, cache_set, ctx_cache_scope
 from .state_router import router as state_router
+from .state_router import schedule_state_scan_warmup
 from .telemetry.response import add_json_telemetry, session_id_from_request
 from .telemetry_router import router as telemetry_router
 from .wiki_router import router as wiki_router
@@ -145,6 +146,10 @@ async def _lifespan(_app: FastAPI):
             warm_projection_cache(ctx=ctx)
         except Exception as exc:
             logger.warning("Work projection warmup schedule on startup failed: %s", exc)
+        try:
+            schedule_state_scan_warmup(ctx)
+        except Exception as exc:
+            logger.warning("State scan warmup schedule on startup failed: %s", exc)
         projection_refresh_task = asyncio.create_task(
             refresh_projection_cache_periodically(ctx), name="work-projection-refresh"
         )

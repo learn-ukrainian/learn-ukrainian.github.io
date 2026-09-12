@@ -148,13 +148,20 @@ V6_PHASE_ORDER = _V6_PHASES
 # BLOCKER. Monotonic values are only valid within this process; the
 # dict is in-memory anyway, so restart clears it naturally.
 
+import concurrent.futures
+import threading
 import time
-from typing import TYPE_CHECKING
+from collections.abc import Callable
+from typing import TYPE_CHECKING, TypeVar
 
 if TYPE_CHECKING:
     from .monitor_context import MonitorContext
 
 _ttl_cache: dict[str, tuple[float, object]] = {}
+_inflight_futures: dict[str, concurrent.futures.Future] = {}
+_inflight_lock = threading.Lock()
+
+T = TypeVar("T")
 
 
 def ctx_cache_scope(ctx: MonitorContext | None) -> str:
@@ -203,6 +210,55 @@ def cache_get_with_age(key: str, ttl: float) -> tuple[object, float] | None:
 def cache_set(key: str, value: object) -> None:
     """Store a value in the TTL cache."""
     _ttl_cache[key] = (time.monotonic(), value)
+
+
+def cache_get_or_compute(  # noqa: UP047 — ruff pyflakes lacks PEP 695 type-param support here
+    key: str,
+    ttl: float,
+    compute: Callable[[], T],
+    *,
+    force: bool = False,
+) -> T:
+    """Return a TTL-cached value, coalescing concurrent misses into one compute.
+
+    Used for expensive curriculum walks (``weak-points``, ``pipeline-versions``)
+    so a stampede of cold GETs cannot multiply a ~2k-module scan (#7973).
+    ``force=True`` bypasses a warm entry (``?fresh=true``) but still coalesces
+    concurrent forced recomputes onto a single flight for the same key.
+    """
+    if not force:
+        cached = cache_get(key, ttl)
+        if cached is not None:
+            return cached  # type: ignore[return-value]
+
+    leader = False
+    with _inflight_lock:
+        if not force:
+            cached = cache_get(key, ttl)
+            if cached is not None:
+                return cached  # type: ignore[return-value]
+        fut = _inflight_futures.get(key)
+        if fut is None:
+            fut = concurrent.futures.Future()
+            _inflight_futures[key] = fut
+            leader = True
+
+    if not leader:
+        return fut.result(timeout=180)
+
+    try:
+        value = compute()
+        cache_set(key, value)
+        fut.set_result(value)
+        return value
+    except BaseException as exc:
+        if not fut.done():
+            fut.set_exception(exc)
+        raise
+    finally:
+        with _inflight_lock:
+            if _inflight_futures.get(key) is fut:
+                _inflight_futures.pop(key, None)
 
 
 def cache_invalidate(prefix: str = "") -> int:
