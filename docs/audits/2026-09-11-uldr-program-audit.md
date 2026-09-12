@@ -1,7 +1,7 @@
 # ULDR program audit — 2026-09-11
 
-Latest disposition: **FAIL** at `d26cc384e6afa8c5bde8aa3676a108f98dce22c2`.
-See [the seventh diagnostic re-review](#seventh-diagnostic-re-review--d26cc384)
+Latest disposition: **FAIL** at `082c51579942fb00bcae9b7d38741708ab02e354`.
+See [the eighth diagnostic re-review](#eighth-diagnostic-re-review--082c5157)
 for current fixes, evidence, and remaining findings. Earlier sections retain the
 history of the heads they name.
 
@@ -893,3 +893,77 @@ All counterexamples are synthetic and were executed against archived exact-head
 code. This is a diagnostic re-review, not a completed formal review ledger or
 independently blinded linguistic assessment. The existing 97-seed residual is
 unchanged. No protected text, dataset mutation, model execution or merge occurred.
+
+
+## Eighth diagnostic re-review — 082c5157
+
+**VERDICT: FAIL** at `082c51579942fb00bcae9b7d38741708ab02e354` of PR #7933.
+The precise K1/K2 examples are fixed, while both semantic failure classes remain.
+
+### Verified improvements and checks
+
+- **41 focused tests passed in 1.37 seconds**: the reported 37 generator and
+  formatting/evaluation tests, plus four contract tests. The command is the same
+  three-file pytest invocation recorded in the seventh diagnostic review.
+- Ruff check and Ruff format --check passed on all four changed files.
+- The author worktree was clean and at the reviewed SHA.
+- “Use alpha. Do not replace alpha with beta.” now selects alpha; the bare
+  prohibition no longer promotes beta.
+- The prior explanation explicitly saying “another word” now scores 0.4 / FAIL.
+- Same-head GitHub CI Gate and CodeQL were **SUCCESS**. All listed checks were
+  successful or skipped, with none pending or failed. The earlier neutral CodeQL
+  warning is therefore superseded for this head.
+
+The delta changes the same two implementation and two test files. It also adjusts
+textbook fallback lookup to query lowercase, initial-capital and title-case
+variants; artifact files are unchanged. The reported 234-row benchmark self-check
+was not rerun in this pass and is not independent semantic validation.
+
+### L1 — K1 remains: comma contrast promotes the explicitly rejected alternative
+
+Synthetic citation:
+
+> Use alpha, not beta.
+
+With positive VESUM counts for both alternatives and no other evidence,
+`is_positive_citation` returns **true for both**. Supplying suggestions in order
+`[beta, alpha]` synthesizes **beta as primary**, contrary to the citation.
+The general positive use-pattern reaches beta across the comma, while the
+negative patterns fail to bind “not beta” to that alternative.
+
+Two additional counterexamples expose supported-output loss:
+
+| Citation | Observed result |
+| --- | --- |
+| Do not use beta, use alpha. | Both rejected; no trajectory |
+| alpha — нормативне слово. beta — помилка. | Both rejected; no trajectory |
+
+The first lets negation consume a later positive recommendation. The second
+classifies an ordinary Ukrainian predicate dash as an error-to-correction pair
+and rejects alpha before reaching its positive status. The new two-pass structure
+does not resolve these grammatical roles or negation scope.
+
+### L2 — K2 remains: naming the unrelated word bypasses the exclusion
+
+For synthetic target `badtoken` and alternative `goodtoken`:
+
+> Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «будинок».
+
+Observed: **1.0 / PASS**, `reasoning_grounded=true`, two reasoning hits.
+The explanation concerns the named word «будинок», not `goodtoken`. The new
+OTHER_ENTITY_PATTERNS detect phrases such as “another word”; they do not bind
+the dictionary/morphology relation to the recommended alternative. Replacing
+the generic description with an explicit name bypasses that exclusion.
+This probe makes no linguistic claim about the named word's actual morphology.
+
+### Disposition and limitations
+
+The tests and CI claims are substantiated. They do not resolve the reproduced
+semantic errors. The repeated failure pattern warrants author-owned remediation
+of evidence interpretation and evaluation validity, with independently assessed
+contrastive cases; another literal example exclusion does not establish closure.
+
+This is exact-head diagnostic evidence, not formal merge closeout or a blinded
+linguistic assessment. No new model benchmark, artifact rebuild, protected text
+export, implementation change or merge occurred. The existing 97-seed residual
+retains its prior scope and owner. Only this audit document changes.
