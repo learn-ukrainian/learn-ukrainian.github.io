@@ -964,3 +964,39 @@ def test_explanation_concerning_word_mova_rejected() -> None:
     assert not eval2["is_pass"]
     assert not eval2["reasoning_grounded"]
     assert eval2["composite_score"] <= 0.40
+
+
+def test_explanation_concerning_word_spiv_rejected() -> None:
+    """M1 Review: A named word matching an affix spelling (e.g. «спів») must not be exempted."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    r1 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «спів»."
+    eval1 = evaluate_single_response(target, alts, r1)
+    assert not eval1["is_pass"]
+    assert not eval1["reasoning_grounded"]
+    assert eval1["composite_score"] <= 0.40
+
+    r2 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова спів."
+    eval2 = evaluate_single_response(target, alts, r2)
+    assert not eval2["is_pass"]
+    assert not eval2["reasoning_grounded"]
+    assert eval2["composite_score"] <= 0.40
+
+
+def test_explanation_concerning_word_forma_rejected() -> None:
+    """M1 Review: A named word matching a grammatical descriptor (e.g. «форма») must not be exempted."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    r1 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «форма»."
+    eval1 = evaluate_single_response(target, alts, r1)
+    assert not eval1["is_pass"]
+    assert not eval1["reasoning_grounded"]
+    assert eval1["composite_score"] <= 0.40
+
+    r2 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова форма."
+    eval2 = evaluate_single_response(target, alts, r2)
+    assert not eval2["is_pass"]
+    assert not eval2["reasoning_grounded"]
+    assert eval2["composite_score"] <= 0.40
