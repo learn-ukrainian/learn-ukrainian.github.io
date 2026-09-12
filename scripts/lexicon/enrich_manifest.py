@@ -3165,33 +3165,87 @@ def _merge_slovnyk_warning(status: dict[str, Any], warning: dict[str, Any] | Non
     return status
 
 
-_HERITAGE_PAIRS_CACHE = None
+_HERITAGE_PAIRS_DATA_CACHE = None
 
 
-def _get_heritage_pairs_rationale_uk() -> dict[str, str]:
-    global _HERITAGE_PAIRS_CACHE
-    if _HERITAGE_PAIRS_CACHE is not None:
-        return _HERITAGE_PAIRS_CACHE
+def _get_heritage_pairs_data() -> tuple[dict[str, dict[str, Any]], dict[str, list[dict[str, Any]]], dict[str, str]]:
+    """Return (pairs_by_calque, pairs_by_native, rationale_uk_map) from heritage_pairs.yaml."""
+    global _HERITAGE_PAIRS_DATA_CACHE
+    if _HERITAGE_PAIRS_DATA_CACHE is not None:
+        return _HERITAGE_PAIRS_DATA_CACHE
+
     import yaml
     path = ROOT / "data" / "lexicon" / "heritage_pairs.yaml"
-    _HERITAGE_PAIRS_CACHE = {}
+    by_calque: dict[str, dict[str, Any]] = {}
+    by_native: dict[str, list[dict[str, Any]]] = {}
+    rationale_uk: dict[str, str] = {}
+
     if path.exists():
         try:
             data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
             pairs = data.get("pairs", [])
             for p in pairs:
                 label = p.get("calqueLabel")
+                if not label:
+                    continue
                 rat_uk = p.get("rationaleUk")
-                if label and rat_uk:
-                    _HERITAGE_PAIRS_CACHE[label] = rat_uk
+                if rat_uk:
+                    rationale_uk[label] = rat_uk
+
+                surfaces = p.get("calqueSurfaces") or []
+                corrections = list(p.get("corrections") or [])
+                native_lemma = p.get("nativeLemma") or p.get("nativeSlug")
+
+                pair_entry = {
+                    "calque": label,
+                    "kind": p.get("kind", "lexical"),
+                    "corrections": corrections,
+                    "note": str(p.get("rationale", "")),
+                    "noteUk": str(rat_uk or ""),
+                    "calque_sense": str(p.get("calqueSense", "")) if p.get("calqueSense") else None,
+                    "authentic_sense": str(p.get("authenticSense", "")) if p.get("authenticSense") else None,
+                    "source": list(p.get("citations") or []),
+                    "evidence": list(p.get("citations") or []),
+                    "heritage_guard": "data/lexicon/heritage_pairs.yaml",
+                }
+
+                keys = [label] + [s for s in surfaces if s]
+                for k in keys:
+                    if k in by_calque:
+                        existing = by_calque[k]
+                        if existing.get("kind") == "sense_restricted" and pair_entry.get("kind") != "sense_restricted":
+                            for corr in pair_entry.get("corrections") or []:
+                                if corr not in existing["corrections"]:
+                                    existing["corrections"].append(corr)
+                            continue
+                        if pair_entry.get("kind") == "sense_restricted" and existing.get("kind") != "sense_restricted":
+                            for corr in existing.get("corrections") or []:
+                                if corr not in pair_entry["corrections"]:
+                                    pair_entry["corrections"].append(corr)
+                            by_calque[k] = pair_entry
+                            continue
+                    by_calque[k] = pair_entry
+
+                # For reverse lookup:
+                targets = corrections + ([native_lemma] if native_lemma else [])
+                for t in targets:
+                    if t not in by_native:
+                        by_native[t] = []
+                    by_native[t].append(pair_entry)
         except Exception as e:
-            print(f"WARN: Failed to load heritage_pairs.yaml for rationaleUk: {e}", file=sys.stderr)
-    return _HERITAGE_PAIRS_CACHE
+            print(f"WARN: Failed to load heritage_pairs.yaml in enrich_manifest: {e}", file=sys.stderr)
+
+    _HERITAGE_PAIRS_DATA_CACHE = (by_calque, by_native, rationale_uk)
+    return _HERITAGE_PAIRS_DATA_CACHE
+
+
+def _get_heritage_pairs_rationale_uk() -> dict[str, str]:
+    return _get_heritage_pairs_data()[2]
 
 
 def _curated_calque(lemma: str, base: str) -> dict[str, Any] | None:
     """Curated §6 calque card from exact dataset lookups only."""
-    rationale_uk_map = _get_heritage_pairs_rationale_uk()
+    by_calque, _, rationale_uk_map = _get_heritage_pairs_data()
     for key in (lemma, base):
         if key in CURATED_CALQUES:
             row = CURATED_CALQUES[key]
@@ -3241,18 +3295,59 @@ def _curated_calque(lemma: str, base: str) -> dict[str, Any] | None:
             res["noteUk"] = rat_uk
         return res
 
+    for key in (lemma, base):
+        if key in by_calque:
+            row = by_calque[key]
+            res = {
+                "kind": str(row.get("kind", "lexical")),
+                "corrections": list(row["corrections"]),
+                "note": str(row["note"]),
+                "source": list(row["source"]),
+                "evidence": list(row.get("evidence", [])),
+                "heritage_guard": str(row.get("heritage_guard", "")),
+            }
+            if row.get("noteUk"):
+                res["noteUk"] = row["noteUk"]
+            if row.get("calque_sense"):
+                res["calque_sense"] = row["calque_sense"]
+            if row.get("authentic_sense"):
+                res["authentic_sense"] = row["authentic_sense"]
+            return res
+
     return None
 
 
 def _reverse_calques(lemma: str, base: str) -> list[dict[str, Any]] | None:
     """Find calques where this lemma is the recommended correction."""
     results: list[dict[str, Any]] = []
-    rationale_uk_map = _get_heritage_pairs_rationale_uk()
+    seen_calques: set[str] = set()
+    _, by_native, rationale_uk_map = _get_heritage_pairs_data()
+
+    for key in (lemma, base):
+        if key in by_native:
+            for pair in by_native[key]:
+                calque = pair["calque"]
+                if calque not in seen_calques:
+                    seen_calques.add(calque)
+                    res = {
+                        "calque": calque,
+                        "kind": str(pair.get("kind", "lexical")),
+                        "note": str(pair.get("note", "")),
+                        "source": list(pair.get("source", [])),
+                    }
+                    if pair.get("calque_sense"):
+                        res["calque_sense"] = pair["calque_sense"]
+                    if pair.get("noteUk"):
+                        res["noteUk"] = pair["noteUk"]
+                    results.append(res)
 
     for calque_dict in (CURATED_CALQUES, SENSE_RESTRICTED_CALQUES, PHRASAL_CALQUES):
         for calque, row in calque_dict.items():
+            if calque in seen_calques:
+                continue
             corrections = row.get("corrections", [])
             if lemma in corrections or base in corrections:
+                seen_calques.add(calque)
                 kind = row.get("kind", "participle")
                 if calque_dict is SENSE_RESTRICTED_CALQUES:
                     kind = "sense_restricted"

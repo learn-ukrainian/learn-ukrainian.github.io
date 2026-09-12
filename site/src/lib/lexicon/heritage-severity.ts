@@ -18,8 +18,17 @@ export interface HeritageStatus {
   russian_shadow?: boolean;
   vesum_attested?: boolean;
   warning_severity?: WarningSeverity;
-  calque_warning?: { detail?: string; standard_alternatives?: string[] } | null;
+  calque_warning?: {
+    kind?: string;
+    note?: string;
+    noteUk?: string;
+    detail?: string;
+    standard_alternatives?: string[];
+    calque_sense?: string;
+    authentic_sense?: string;
+  } | null;
   curated_calque?: {
+    kind?: string;
     corrections?: string[];
     note?: string;
     noteUk?: string;
@@ -164,6 +173,8 @@ function fallbackSeverity(status: HeritageStatus | null | undefined): WarningSev
     return "russianism_red";
   }
 
+  if (hasCalqueAlternative(status) || hasReverseCalque(status)) return "calque_yellow";
+
   if (
     status.russian_shadow &&
     status.vesum_attested === false &&
@@ -172,8 +183,6 @@ function fallbackSeverity(status: HeritageStatus | null | undefined): WarningSev
   ) {
     return "russianism_red";
   }
-
-  if (hasCalqueAlternative(status) || hasReverseCalque(status)) return "calque_yellow";
 
   if (
     TREASURED_CLASSIFICATIONS.has(classification) ||
@@ -216,10 +225,16 @@ export function resolveHeritageBoxes(entry: LexiconEntryForSeverity): HeritageBo
   } else if (severity === "calque_yellow" || hasReverseCalque(status) || hasCalqueAlternative(status)) {
     const alternatives = standardAlternatives(status, entry.gloss ?? null);
     const reverseCalques = status?.reverse_calques?.map((item) => `«${item.calque}»`) ?? [];
+    const isStylistic =
+      status?.classification === "authentic-archaism" ||
+      status?.classification === "dialect" ||
+      status?.classification === "historism" ||
+      status?.calque_warning?.kind === "sense_restricted" ||
+      status?.curated_calque?.kind === "sense_restricted";
     boxes.yellow = {
       severity: "calque_yellow",
       dataSeverity: "yellow",
-      title: "Калькове застереження",
+      title: isStylistic ? "Стилістичне / калькове застереження" : "Калькове застереження",
       body:
         alternatives.length > 0
           ? `Нейтральні відповідники: ${alternatives.join(", ")}.`
@@ -228,6 +243,9 @@ export function resolveHeritageBoxes(entry: LexiconEntryForSeverity): HeritageBo
       detail:
         status?.curated_calque?.noteUk ??
         status?.["§6_note"]?.noteUk ??
+        status?.calque_warning?.noteUk ??
+        status?.calque_warning?.detail ??
+        status?.calque_warning?.note ??
         status?.reverse_calques?.[0]?.noteUk,
     };
   } else if (severity === "treasured") {

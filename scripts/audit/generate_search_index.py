@@ -348,7 +348,7 @@ def classification_code(entry: Mapping[str, Any]) -> str | None:
         warning_severity == "russianism_red" or is_russianism
     ):
         return "rus"
-    if warning_severity == "calque_yellow":
+    if warning_severity == "calque_yellow" and classification not in AUTHENTIC_RUSSIANISM_EXEMPTIONS:
         return "calq"
     if classification == "authentic-archaism":
         return "arch"
@@ -358,6 +358,8 @@ def classification_code(entry: Mapping[str, Any]) -> str | None:
         return "hist"
     if classification == "borrowing":
         return "borr"
+    if warning_severity == "calque_yellow":
+        return "calq"
     return None
 
 

@@ -423,3 +423,61 @@ def test_source_db_path_has_no_hardcoded_absolute_path() -> None:
 
     src = Path(hc.__file__).read_text(encoding="utf-8")
     assert "/Users/krisztiankoos/projects/learn-ukrainian" not in src
+
+
+def test_convergence_calques_receive_yellow_severity_and_alternatives() -> None:
+    """Pre-Soviet attestation or VESUM membership must not create false-positive green badges for convergence calques (#7982)."""
+    # 1. Lexical calque with historical attestation: мисль -> думка
+    mysl = classify_lemma("мисль", db_path=DB, vesum_db_path=VESUM_DB)
+    assert mysl["classification"] == "calque"
+    assert mysl["warning_severity"] == "calque_yellow"
+    assert mysl["is_russianism"] is False
+    assert mysl.get("calque_warning") is not None
+    assert mysl["calque_warning"]["standard_alternatives"] == ["думка"]
+
+    # Surface form must also inherit calque warning and yellow severity
+    mysli = classify_surface_form("мислі", db_path=DB, vesum_db_path=VESUM_DB)
+    assert mysli["classification"] == "calque"
+    assert mysli["warning_severity"] == "calque_yellow"
+    assert mysli.get("calque_warning") is not None
+    assert mysli["calque_warning"]["standard_alternatives"] == ["думка"]
+
+    # 2. Authentic archaism with calque warning: глагол -> дієслово, слово
+    hlahol = classify_lemma("глагол", db_path=DB, vesum_db_path=VESUM_DB)
+    assert hlahol["classification"] == "authentic-archaism"
+    assert hlahol["warning_severity"] == "calque_yellow"
+    assert hlahol["is_russianism"] is False
+    assert hlahol.get("calque_warning") is not None
+    assert hlahol["calque_warning"]["standard_alternatives"] == ["дієслово", "слово"]
+
+    # 3. Sense-restricted calque: строїти -> будувати, споруджувати
+    stroyity = classify_lemma("строїти", db_path=DB, vesum_db_path=VESUM_DB)
+    assert stroyity["warning_severity"] == "calque_yellow"
+    assert stroyity["is_russianism"] is False
+    assert stroyity.get("calque_warning") is not None
+    assert stroyity["calque_warning"]["kind"] == "sense_restricted"
+    assert "будувати" in stroyity["calque_warning"]["standard_alternatives"]
+
+
+def test_sense_restricted_vidnoshennia_preserves_standard_and_mathematical_sense() -> None:
+    """відношення must retain standard classification, calque_yellow severity, and mathematical authentic sense (#7982)."""
+    res = classify_lemma("відношення", db_path=DB, vesum_db_path=VESUM_DB)
+    assert res["classification"] == "standard"
+    assert res["warning_severity"] == "calque_yellow"
+    assert res["is_russianism"] is False
+    assert res.get("calque_warning") is not None
+    assert res["calque_warning"]["kind"] == "sense_restricted"
+    auth_sense = (res["calque_warning"].get("authentic_sense") or "").lower()
+    assert "математичне" in auth_sense or "mathematical" in auth_sense or "числове" in auth_sense
+    alternatives = res["calque_warning"]["standard_alternatives"]
+    assert "ставлення" in alternatives
+    assert "стосунки" in alternatives
+
+
+def test_poizdka_retains_standard_without_calque_warning() -> None:
+    """поїздка is a standard short-trip noun (СУМ-20 / СУМ-11) and must not be flagged as a calque (#7982)."""
+    res = classify_lemma("поїздка", db_path=DB, vesum_db_path=VESUM_DB)
+    assert res["classification"] == "standard"
+    assert res["warning_severity"] in ("none", "treasured")
+    assert res["is_russianism"] is False
+    assert res.get("calque_warning") is None

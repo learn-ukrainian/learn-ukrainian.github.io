@@ -29,6 +29,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 SOURCES_DB = ROOT / "data" / "sources.db"
 LT_REPLACEMENTS = ROOT / "data" / "lt_replacements.json"
+HERITAGE_PAIRS_YAML = ROOT / "data" / "lexicon" / "heritage_pairs.yaml"
 
 _CYRILLIC_WORD_CHARS = "A-Za-zА-Яа-яЄєІіЇїҐґ0-9'’ʼ-"
 _ACUTE_RE = re.compile("[\u0301\u0300]")
@@ -208,7 +209,28 @@ def _classify(
         vesum_archaism and not vesum_archaism["has_modern"]
     )
 
-    russianism = _russianism_status(
+    curated_calque = _lookup_curated_calque(
+        term,
+        lemmas=_extract_vesum_lemmas(vesum) if vesum else None,
+    )
+    built_calque_warning: dict[str, Any] | None = None
+    if curated_calque:
+        built_calque_warning = {
+            "standard_alternatives": list(curated_calque.get("corrections") or []),
+            "kind": curated_calque.get("kind", "lexical"),
+        }
+        if curated_calque.get("rationale") or curated_calque.get("note"):
+            built_calque_warning["note"] = curated_calque.get("rationale") or curated_calque.get("note")
+        if curated_calque.get("rationaleUk") or curated_calque.get("noteUk"):
+            built_calque_warning["noteUk"] = curated_calque.get("rationaleUk") or curated_calque.get("noteUk")
+        if curated_calque.get("calqueSense") or curated_calque.get("calque_sense"):
+            built_calque_warning["calque_sense"] = curated_calque.get("calqueSense") or curated_calque.get("calque_sense")
+        if curated_calque.get("authenticSense") or curated_calque.get("authentic_sense"):
+            built_calque_warning["authentic_sense"] = curated_calque.get("authenticSense") or curated_calque.get("authentic_sense")
+        if curated_calque.get("citations"):
+            built_calque_warning["citations"] = list(curated_calque["citations"])
+
+    russianism = None if curated_calque else _russianism_status(
         term,
         russian_shadow=russian_shadow,
         vesum_attested=bool(vesum),
@@ -262,6 +284,12 @@ def _classify(
         return russianism
 
     if attestations and classification in _AUTHENTIC_CLASSIFICATIONS:
+        if (
+            curated_calque
+            and curated_calque.get("kind") not in ("sense_restricted",)
+            and classification not in ("authentic-archaism", "dialect", "historism")
+        ):
+            classification = "calque"
         return _status(
             classification,
             attestations,
@@ -269,24 +297,30 @@ def _classify(
             russian_shadow=russian_shadow,
             vesum_attested=bool(vesum),
             sovietization_risk=sovietization_risk,
+            calque_warning=built_calque_warning,
         )
 
     if russianism:
         return russianism
 
     if vesum:
+        target_classification = "standard"
+        if curated_calque:
+            target_classification = "standard" if curated_calque.get("kind") == "sense_restricted" else "calque"
         return _status(
-            "standard",
+            target_classification,
             [vesum],
             is_russianism=False,
             russian_shadow=russian_shadow,
             vesum_attested=True,
             sovietization_risk=sovietization_risk,
+            calque_warning=built_calque_warning,
         )
 
-    calque_warning = _calque_warning(term, russian_shadow_detail)
+    calque_warning = built_calque_warning or _calque_warning(term, russian_shadow_detail)
+    target_class = "calque" if (curated_calque and curated_calque.get("kind") != "sense_restricted") else "unknown"
     return _status(
-        "unknown",
+        target_class,
         [],
         is_russianism=False,
         russian_shadow=russian_shadow,
@@ -370,6 +404,9 @@ def compute_warning_severity(
     if bool(status.get("is_russianism")) and classification not in _AUTHENTIC_CLASSIFICATIONS:
         return "russianism_red"
 
+    if _has_calque_alternative(status) or _has_reverse_calque(status):
+        return "calque_yellow"
+
     if (
         bool(status.get("russian_shadow"))
         and not vesum_attested
@@ -377,9 +414,6 @@ def compute_warning_severity(
         and not positive_attestation
     ):
         return "russianism_red"
-
-    if _has_calque_alternative(status) or _has_reverse_calque(status):
-        return "calque_yellow"
 
     if classification in _TREASURED_CLASSIFICATIONS or (
         classification == "standard" and positive_attestation
@@ -524,6 +558,158 @@ def _apostrophe_variants(term: str) -> tuple[str, ...]:
             for replacement in ("'", "’", "ʼ"):
                 variants.add(term.replace(char, replacement))
     return tuple(sorted(variants))
+
+
+_CURATED_CALQUE_MAP: dict[str, dict[str, Any]] | None = None
+
+
+def _curated_calque_map() -> dict[str, dict[str, Any]]:
+    global _CURATED_CALQUE_MAP
+    if _CURATED_CALQUE_MAP is not None:
+        return _CURATED_CALQUE_MAP
+
+    calque_map: dict[str, dict[str, Any]] = {}
+
+    # 1. Load from calque_corrections.py if available
+    try:
+        from scripts.lexicon.calque_corrections import (
+            CURATED_CALQUES,
+            PHRASAL_CALQUES,
+            SENSE_RESTRICTED_CALQUES,
+        )
+
+        for term, data in CURATED_CALQUES.items():
+            norm = _normalize_word(term)
+            if norm:
+                calque_map[norm] = {
+                    "kind": data.get("kind", "participle"),
+                    "corrections": list(data.get("corrections") or []),
+                    "note": data.get("note", ""),
+                    "citations": list(data.get("source") or []),
+                    "source": "calque_corrections",
+                }
+        for term, data in SENSE_RESTRICTED_CALQUES.items():
+            norm = _normalize_word(term)
+            if norm:
+                calque_map[norm] = {
+                    "kind": "sense_restricted",
+                    "corrections": list(data.get("corrections") or []),
+                    "calque_sense": data.get("calque_sense", ""),
+                    "authentic_sense": data.get("authentic_sense", ""),
+                    "note": data.get("note", ""),
+                    "citations": list(data.get("source") or []),
+                    "source": "calque_corrections",
+                }
+        for term, data in PHRASAL_CALQUES.items():
+            norm = _normalize_word(term)
+            if norm:
+                calque_map[norm] = {
+                    "kind": "phrasal",
+                    "corrections": list(data.get("corrections") or []),
+                    "note": data.get("note", ""),
+                    "citations": list(data.get("source") or []),
+                    "source": "calque_corrections",
+                }
+    except ImportError:
+        pass
+
+    # 2. Load from heritage_pairs.yaml (enriches / overrides)
+    if HERITAGE_PAIRS_YAML.exists():
+        try:
+            import yaml
+
+            payload = yaml.safe_load(HERITAGE_PAIRS_YAML.read_text(encoding="utf-8")) or {}
+            pairs = payload.get("pairs", [])
+            for p in pairs:
+                label = p.get("calqueLabel")
+                if not label:
+                    continue
+                surfaces = p.get("calqueSurfaces") or []
+                corrections = list(p.get("corrections") or [])
+                entry = {
+                    "kind": p.get("kind", "lexical"),
+                    "corrections": corrections,
+                    "rationale": p.get("rationale", ""),
+                    "rationaleUk": p.get("rationaleUk", ""),
+                    "calqueSense": p.get("calqueSense"),
+                    "authenticSense": p.get("authenticSense"),
+                    "citations": list(p.get("citations") or []),
+                    "source": "heritage_pairs",
+                    "severity": p.get("severity", "calque_yellow"),
+                    "curator": p.get("curator", ""),
+                }
+                keys = [label] + [s for s in surfaces if s]
+                for k in keys:
+                    norm_k = _normalize_word(k)
+                    if not norm_k:
+                        continue
+                    if norm_k in calque_map:
+                        existing = calque_map[norm_k]
+                        is_sense_restricted = (
+                            existing.get("kind") == "sense_restricted"
+                            or entry.get("kind") == "sense_restricted"
+                            or bool(existing.get("authentic_sense"))
+                            or bool(existing.get("authenticSense"))
+                            or bool(entry.get("authenticSense"))
+                        )
+                        merged_corrections = list(existing.get("corrections") or [])
+                        for corr in entry.get("corrections") or []:
+                            if corr not in merged_corrections:
+                                merged_corrections.append(corr)
+
+                        curator_existing = str(existing.get("curator") or "")
+                        curator_new = str(p.get("curator") or "")
+                        prefer_existing = (
+                            existing.get("source") == "calque_corrections"
+                            or (not curator_existing.startswith("script:") and curator_new.startswith("script:"))
+                        )
+
+                        merged = dict(existing if prefer_existing else entry)
+                        merged["corrections"] = merged_corrections
+                        if is_sense_restricted:
+                            merged["kind"] = "sense_restricted"
+                            merged["authenticSense"] = (
+                                entry.get("authenticSense")
+                                or existing.get("authenticSense")
+                                or existing.get("authentic_sense")
+                                or entry.get("authentic_sense")
+                            )
+                            merged["calqueSense"] = (
+                                entry.get("calqueSense")
+                                or existing.get("calqueSense")
+                                or existing.get("calque_sense")
+                                or entry.get("calqueSense")
+                            )
+                        if not merged.get("rationaleUk"):
+                            merged["rationaleUk"] = existing.get("rationaleUk") or entry.get("rationaleUk") or ""
+                        calque_map[norm_k] = merged
+                    else:
+                        calque_map[norm_k] = entry
+        except Exception as e:
+            print(f"WARN: Failed to load heritage_pairs.yaml in heritage_classifier: {e}", file=sys.stderr)
+
+    _CURATED_CALQUE_MAP = calque_map
+    return _CURATED_CALQUE_MAP
+
+
+def _lookup_curated_calque(term: str, lemmas: list[str] | None = None) -> dict[str, Any] | None:
+    cmap = _curated_calque_map()
+    norm = _normalize_word(term)
+    if norm in cmap:
+        return cmap[norm]
+    if lemmas:
+        for lem in lemmas:
+            norm_lem = _normalize_word(lem)
+            if norm_lem in cmap:
+                return cmap[norm_lem]
+    return None
+
+
+def _extract_vesum_lemmas(vesum: dict[str, Any] | None) -> list[str]:
+    if not vesum:
+        return []
+    ref = str(vesum.get("ref") or "")
+    return [part.strip() for part in ref.split(",") if part.strip()]
 
 
 def _vesum_attestation(
@@ -1400,6 +1586,8 @@ def _prefer_classification(current: str, candidate: str) -> str:
         "authentic-archaism": 70,
         "borrowing": 60,
         "standard": 50,
+        "calque": 45,
+        "russianism": 40,
         "unknown": 0,
     }
     return candidate if priority.get(candidate, 0) > priority.get(current, 0) else current
@@ -1410,7 +1598,7 @@ def _merge_variant_statuses(statuses: list[dict[str, Any]]) -> dict[str, Any]:
     attestations: list[dict[str, Any]] = []
     calque_warning = None
     for status in statuses:
-        if status["classification"] in _AUTHENTIC_CLASSIFICATIONS:
+        if status["classification"] in _AUTHENTIC_CLASSIFICATIONS or status["classification"] == "calque":
             classification = _prefer_classification(classification, str(status["classification"]))
         elif classification == "unknown" and status["classification"] == "russianism":
             classification = "russianism"
@@ -1426,7 +1614,7 @@ def _merge_variant_statuses(statuses: list[dict[str, Any]]) -> dict[str, Any]:
         russian_shadow=any(bool(status.get("russian_shadow")) for status in statuses),
         vesum_attested=any(bool(status.get("vesum_attested")) for status in statuses),
         sovietization_risk=max(int(status.get("sovietization_risk") or 0) for status in statuses),
-        calque_warning=calque_warning if classification == "russianism" else None,
+        calque_warning=calque_warning,
     )
 
 
