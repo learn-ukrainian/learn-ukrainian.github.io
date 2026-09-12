@@ -38,6 +38,7 @@ A critical strategic principle guides this effort:
 ```
 
 ### The Problem in Practice: The Case of *Пилосос*
+
 1. **Morphemic Origin**:
    - In Russian, *пылесос* is formed from *пыль* (dust) + *сосать* (to suck).
    - In Ukrainian, dust is not *смокчуть* (sucked like liquid or candy); it is *втягують* (drawn in) or *всмоктують*.
@@ -73,6 +74,7 @@ flowchart TD
 ```
 
 ### Stage 1: Multi-Source Evidence Mining
+
 Querying internal corpora in `data/sources.db`:
 - **Educational Textbooks (`textbooks`)**: Mining living vocabulary taught in Grades 1–11 approved by the Ministry of Education and Science of Ukraine (2023–2026).
 - **Decolonization Style Guides (`style_guide`)**:
@@ -84,14 +86,17 @@ Querying internal corpora in `data/sources.db`:
 - **UA-GEC Corpus (`ua_gec_errors`)**: Professional human linguist annotations of Russianisms and calques.
 
 ### Stage 2: Deduplicated Candidate Union
+
 Aggregating all candidate alternatives into a canonical replacement pool, resolving multi-source overlap without dropping valid alternatives.
 
 ### Stage 3: VESUM Morphological & Attestation Gate (`vesum.db`)
+
 Every candidate alternative is validated against `data/vesum.db` (409K lemmas, 6.7M forms):
 - **Admitted Standard Candidates**: Candidates with full inflectional paradigms in VESUM (e.g. *пилосмок* [16 forms], *порохотяг* [16 forms], *пилотяг* [16 forms]).
 - **Purist / Dialectal Outliers**: Candidates with 0 forms in VESUM (e.g. *порохосмок*) are classified as historical/diaspora neologisms. They are never presented as the primary classroom recommendation.
 
 ### Stage 4: Register Spectrum Ranking
+
 Ranking valid alternatives into explicit pedagogical registers:
 1. **Primary Living Standard**: Dominant modern classroom/media term (*пилосмок*).
 2. **Classical / Regional Standard**: Historical, literary, and Western Ukrainian term (*порохотяг*).
@@ -99,6 +104,7 @@ Ranking valid alternatives into explicit pedagogical registers:
 4. **Purist / Neologistic Reference**: Historical neologisms (*порохосмок*).
 
 ### Stage 5: Reasoning Trajectory & Preference Generation
+
 Synthesizing structured multi-step reasoning traces for SFT and paired contrastive examples for DPO/RLVR.
 
 ---
@@ -106,6 +112,7 @@ Synthesizing structured multi-step reasoning traces for SFT and paired contrasti
 ## 4. Dataset Contracts & Schema Specifications
 
 ### A. SFT Reasoning Trajectory Schema (`v1`)
+
 ```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -174,6 +181,7 @@ Synthesizing structured multi-step reasoning traces for SFT and paired contrasti
 ```
 
 ### B. DPO Preference Pair Schema (`v1`)
+
 ```json
 {
   "prompt": "Як правильно вживати: пилосос чи пилосмок?",
@@ -210,6 +218,7 @@ Following the **Operator Contract** (Item 5: Route by model × harness fit; Item
 ```
 
 ### Phase 1: Contract Freezing & Seed Anchors (Milestone 1 — PR #7918)
+
 - **Contracts**: Frozen `v1` JSON schemas for trajectories (`v1_decolonization_trajectory.schema.json`) and DPO pairs (`v1_decolonization_dpo_pair.schema.json`) under `data/projects/open_model_data/contracts/`.
 - **Seed Curation Denominator & Status**:
   - **Planned Denominator**: 100 human-curated gold seed trajectories.
@@ -218,6 +227,7 @@ Following the **Operator Contract** (Item 5: Route by model × harness fit; Item
 - **Review**: Independent cross-family review approved by Claude Sonnet 5.
 
 ### Phase 2: Automated Generator Pipeline & Attestation Engine (Milestone 2 — PR #7923)
+
 - Build `scripts/projects/open_model_data/v4_decolonization_reasoning.py`:
   1. Multi-source mining across `sources.db` (MESU textbooks Gr 1–11, style guides, and dictionaries).
   2. Query `vesum.db` to verify morphological paradigms for all tokens in multi-word phrases.
@@ -225,6 +235,7 @@ Following the **Operator Contract** (Item 5: Route by model × harness fit; Item
 - Add linguistic evaluation test fixtures ensuring multi-word phrases and register nuances are verified.
 
 ### Phase 3: Dataset Packaging, Firewall & Manifests (Milestone 3 — PR #7925)
+
 - Generate 1,200 normative SFT reasoning trajectories and 1,200 contrastive DPO preference pairs across 4 shards (3 train + 1 held-out).
 - Enforce strict deterministic partition firewall (`get_partition_for_term`) with 0 overlap between train (967 records) and held-out (233 records).
 - Enforce repository hard gates:
@@ -233,7 +244,24 @@ Following the **Operator Contract** (Item 5: Route by model × harness fit; Item
   - Strict cryptographic SHA-256 manifests (`trajectories_manifest.json`, `dpo_pairs_manifest.json`).
 
 ### Phase 4: Consumer Recipes, Formatters & Evaluation Harness (Milestone 4 — PR #7927)
+
 - Transform canonical shards into ShareGPT (with `<thought>` tags and Gemma `messages` turn structure) and Hugging Face TRL DPO formats with embedded system prompts.
 - Implement automated evaluation harness (`v4_evaluate_decolonization.py`) benchmarking against held-out partition across 5 core metrics with strict denominator reconciliation and contradiction detection.
 - Provide downstream training recipes for Gemma 3 (`google/gemma-3-27b-it`) and Gemma 4 (`google/gemma-4-31b-it`) in `docs/projects/open-model-data/decolonization-training-guide.md`.
 - Boundary Invariant: Model training compute remains a downstream community activity; this repository delivers verified datasets, cryptographic manifests, evaluation canaries, and consumer recipes.
+
+### Phase 5: UNLP Research Paper & Production Architecture Transition (Milestone 5 — PR #7984)
+
+- Author formal research paper for UNLP 2026: `docs/projects/open-model-data/UNLP_DECOLONIZATION_REASONING_PAPER.md`.
+- Formulate the Triad of False Authority (СУМ-11 Soviet prescriptive bias, Grinchenko 1907 ethnographic anachronisms, VESUM morphological blindness).
+- Clean textbook extraction pipeline in `v4_decolonization_reasoning.py` to eliminate all layout artifacts (puzzle grids, publisher imprint metadata, digit runs).
+- Conduct multi-agent fleet deliberation with Claude (Fable 5.1) and Codex (GPT-6.0 Astra) on production scaling and architecture.
+- Formulate the production architecture blueprint: `docs/projects/open-model-data/DECOLONIZATION_EPIC_ARCHITECTURE.md`.
+
+### Phase 6: Production Core, 150 Human Gold Seeds & Model Training Canary (Phase 2 Roadmap)
+
+- Transition data model from single-term replacement to **Contextual Decisions** with 5 allowed outcomes (`correct`, `preserve`, `offer_register_alternatives`, `request_context`, `insufficient_evidence`).
+- Enforce **~30% PRESERVE negative controls** to permanently eliminate hyper-purist over-correction.
+- Author **150 deeply researched Human Gold Seeds** mined from Boris Antonenko-Davydovych *«Як ми говоримо»* (342 chapters in `sources.db`) and *mova.ua* (Мова — ДНК нації), resolving the 97-seed residual debt.
+- Decouple internal evidence dossiers from response outputs, offering natural conversational tips, minimal edits, and grammatical contrasts alongside deep analytical traces.
+- Run an empirical fine-tuning canary on Gemma 3 (12B-it) with a 15% general Ukrainian replay buffer, measuring decolonization gains on the held-out suite and non-inferiority on Eval-UA-tion 1.0.

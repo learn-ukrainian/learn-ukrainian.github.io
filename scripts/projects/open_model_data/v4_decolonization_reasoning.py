@@ -90,6 +90,12 @@ SUBJECT_DISPLAY_NAMES: dict[str, str] = {
     "bukvar": "Буквар",
     "zarlit": "Зарубіжна література",
     "mystetstvo": "Мистецтво",
+    "ekonomika": "Економіка",
+    "etyka": "Етика",
+    "finansova": "Фінансова грамотність",
+    "hromadianska": "Громадянська освіта",
+    "zakhyst": "Захист України",
+    "zdorovia": "Основи здоров'я",
 }
 
 AUTHOR_DISPLAY_NAMES: dict[str, str] = {
@@ -102,6 +108,79 @@ AUTHOR_DISPLAY_NAMES: dict[str, str] = {
     "bilenko": "О. Біленко",
     "onishchuk": "І. Оніщук",
     "hyshkina": "О. Гісем",
+    "gisem": "О. Гісем",
+    "ister": "О. Істер",
+    "zasekina": "Т. Засєкіна",
+    "zasiekina": "Т. Засєкіна",
+    "shalamov": "Р. Шаламов",
+    "homiak": "Я. Хом'як",
+    "rublia": "Т. Рубля",
+    "pryshliak": "М. Пришляк",
+    "meleshchenko": "Т. Мелещенко",
+    "voloshhuk": "Є. Волощук",
+    "voloshchuk": "Є. Волощук",
+    "vashulenko": "М. Вашуленко",
+    "nazarenko": "Н. Назаренко",
+    "morze": "Н. Морзе",
+    "ryvkind": "Й. Ривкінд",
+    "korshevniuk": "Т. Коршевнюк",
+    "kravtsova": "Н. Кравцова",
+    "masol": "Л. Масол",
+    "barjakhtar": "В. Бар'яхтар",
+    "bariakhtar": "В. Бар'яхтар",
+    "bevz": "Г. Бевз",
+    "bojko": "В. Бойко",
+    "boiko": "В. Бойко",
+    "popel": "П. Попель",
+    "kuchma": "М. Кучма",
+    "schupak": "І. Щупак",
+    "shchupak": "І. Щупак",
+    "anderson": "О. Андерсон",
+    "bolshakova": "І. Большакова",
+    "bondarenko": "Г. Бондаренко",
+    "burenko": "В. Буренко",
+    "golub": "Н. Голуб",
+    "grygorovych": "О. Григорович",
+    "hryhorovych": "О. Григорович",
+    "gudima": "А. Гудима",
+    "guschyna": "Н. Гущина",
+    "gushchyna": "Н. Гущина",
+    "karpiuk": "О. Карпюк",
+    "vorontsova": "Т. Воронцова",
+    "yaroshenko": "О. Ярошенко",
+    "savchenko": "О. Савченко",
+    "sobol": "В. Соболь",
+    "tarasenkova": "Н. Тарасенкова",
+    "vasylkiv": "І. Васильків",
+    "zadorozhnyi": "К. Задорожний",
+    "zadorozhnij": "К. Задорожний",
+    "merzliak": "А. Мерзляк",
+    "merzljak": "А. Мерзляк",
+    "narovlianskyi": "О. Наровлянський",
+    "berendieiev": "С. Берендєєв",
+    "fuka": "М. Фука",
+    "hilberh": "Т. Гільберг",
+    "hlibovska": "Г. Хлібовська",
+    "hrushchynska": "Н. Грущинська",
+    "karaman": "С. Караман",
+    "khodzycka": "І. Ходзицька",
+    "komarovska": "О. Комаровська",
+    "kondratova": "Л. Кондратова",
+    "kovbasenko": "Ю. Ковбасенко",
+    "krupska": "Л. Крупська",
+    "ladychenko": "Т. Ладиченко",
+    "litvinova": "С. Літвінова",
+    "lystopad": "Н. Листопад",
+    "mandrenko": "О. Мандренко",
+    "nelin": "Є. Нелін",
+    "plastun": "О. Пластун",
+    "ponomarova": "К. Пономарьова",
+    "rolik": "А. Ролік",
+    "rudenko": "В. Руденко",
+    "vasylenko": "С. Василенко",
+    "voloschuk": "Є. Волощук",
+    "zapotockyi": "С. Запотоцький",
+    "zharkova": "І. Жаркова",
 }
 
 RESTRICTED_SOURCE_SUBSTRINGS = (
@@ -320,22 +399,177 @@ def _has_textbooks_fts(conn: sqlite3.Connection) -> bool:
         return False
 
 
+LAYOUT_GLYPH_CHARS = set("•■♦★▲▼►◄*#_~|(){}[]/\\@$§%^&=+`")
+
+ABBR_INLINE_PAT = re.compile(
+    r"\b(?P<abbr>тис|млн|млрд|грн|коп|руб|р|рр|ст|див|напр|табл|мал|рис|буд|кв|куб)\.\s*(?=[а-яіїєґa-z\d,;:–—\)\/])"
+)
+TITLE_INLINE_PAT = re.compile(
+    r"\b(?P<title>ім|вул|просп|пров|пл|м|с|смт|оз|проф|акад|доц|ген|св|д-р)\.\s+(?=[А-ЯІЇЄҐ])"
+)
+INITIALS_PAT = re.compile(
+    r"\b(?P<init>[А-ЯІЇЄҐ])\.\s*(?=[А-ЯІЇЄҐ]\.|\b[А-ЯІЇЄҐ][а-яіїєґ]+)"
+)
+TITLE_EXEMPTIONS = {
+    "ім", "вул", "просп", "пров", "пл", "м", "с", "смт", "оз", "проф", "акад", "доц", "ген", "св", "д-р"
+}
+
+
+def has_internal_sentence_boundary(s: str) -> bool:
+    """Detect if a string contains an internal sentence boundary (multiple sentences)."""
+    for m in re.finditer(r"(\b[А-Яа-яЇїІіЄєҐґ]+[.!?])\s+([А-ЯІЇЄҐ«\"])", s):
+        full_word = m.group(1)[:-1]
+        w = full_word.lower()
+        if len(full_word) == 1 and full_word.isupper():
+            continue
+        if w in TITLE_EXEMPTIONS:
+            continue
+        return True
+    return False
+
+
+def check_quote_quality(quote: str) -> str | None:
+    """Validate that an extracted citation quote is a single, structurally sound sentence."""
+    if has_internal_sentence_boundary(quote):
+        return "multi-sentence run-on"
+    if re.search(r"\b[хx]\b", quote):
+        return "isolated multiplication/variable symbol"
+    if re.search(r"\b([А-Яа-яЇїІіЄєҐґ]{2,})\s+\1\b", quote):
+        return "repeated adjacent word"
+    if re.search(r"(?:\b\d+\b\s+){3,}\b\d+\b", quote):
+        return "digit run artifact"
+    if re.search(r"\b(?:Рис|Мал|Табл)\.\s*$", quote):
+        return "figure caption remnant"
+    words = quote.split()
+    if len(words) > 0 and quote.count(",") / len(words) > 0.30:
+        return "excessive comma density (exercise list artifact)"
+    return None
+
+
+
+def extract_clean_sentence_candidates(text: str, phrase: str) -> list[str]:
+    """Extract clean, well-formed pedagogical sentence candidates for a target phrase."""
+    # Strip soft-hyphens along with any trailing whitespace (e.g. го- лос- ні- ше -> голосніше)
+    text = re.sub(r"\u00ad\s*", "", text)
+    text = re.sub(r"[\u00A0\u2000-\u200B\u202F\u205F\u3000]", " ", text)
+    # Rejoin line-broken hyphenated words: про- сторі -> просторі
+    text = re.sub(r"(\b[А-Яа-яЇїІіЄєҐґ]+)-\s*\n\s*([а-яіїєґ]+\b)", r"\1\2", text)
+    text = re.sub(r"(\b[А-Яа-яЇїІіЄєҐґ]+)-\s+([а-яіїєґ]+\b)", r"\1\2", text)
+
+    phrase_pat = re.compile(r"\b" + re.escape(phrase) + r"\b", re.IGNORECASE)
+
+    paragraphs = [p.strip() for p in re.split(r"\n{2,}", text) if p.strip()]
+    candidates: list[str] = []
+
+    for p in paragraphs:
+        if not phrase_pat.search(p):
+            continue
+
+        lines = [line.strip() for line in p.split("\n") if line.strip()]
+        p_norm = " ".join(lines)
+
+        # Contextual masking of intra-sentence abbreviations
+        masked = ABBR_INLINE_PAT.sub(r"\g<abbr>§DOT§ ", p_norm)
+        masked = TITLE_INLINE_PAT.sub(r"\g<title>§DOT§ ", masked)
+        masked = INITIALS_PAT.sub(r"\g<init>§DOT§ ", masked)
+
+        # Split on sentence boundaries: [.!?] followed by whitespace
+        raw_sentences = [s.strip() for s in re.split(r"(?<=[.!?])\s+", masked) if s.strip()]
+
+        for s in raw_sentences:
+            s = s.replace("§DOT§", ".").strip()
+            if not phrase_pat.search(s):
+                continue
+
+            # Strip leading numbers, bullets, list markers, dashes
+            s = re.sub(r"^[\s•■♦★▲▼►◄*#_\-–—\d\.\)\:\;]+", "", s).strip()
+            # Strip leading exercise headers
+            s = re.sub(
+                r"^(?:Діємо|Вправа|Завдання|Прочитайте|Перепишіть|Поясніть|Складіть|Знайдіть|Пограйтесь|Я\s*—\s*редактор)[^.!?:]*[:.]\s*",
+                "",
+                s,
+                flags=re.IGNORECASE,
+            ).strip()
+
+            if not phrase_pat.search(s):
+                continue
+
+            s = re.sub(r"\s+", " ", s).strip()
+
+            # Sentence length limits
+            if len(s) < 20 or len(s) > 200:
+                continue
+
+            words = s.split()
+            if len(words) < 3 or len(words) > 35:
+                continue
+
+            # Reject layout glyphs / bullets
+            if any(c in LAYOUT_GLYPH_CHARS for c in s):
+                continue
+
+            # Reject Latin characters (including accented Latin from OCR errors like î)
+            if re.search(r"[A-Za-z\u00C0-\u024F]", s):
+                continue
+
+            # Reject scrambled mixed-case words (e.g. ВОЄнне, МИСтеЦТВо, СКлаД)
+            if re.search(r"\b[А-ЯІЇЄҐ]{2,}[а-яіїєґ]+[А-ЯІЇЄҐ]+\b", s):
+                continue
+            if re.search(r"\b[а-яіїєґ]+[А-ЯІЇЄҐ]{2,}\b", s):
+                continue
+
+            # Must start with capital Ukrainian letter or quote
+            if not re.match(r"^[А-ЯІЇЄҐ«\"]", s):
+                continue
+
+            # Must end with valid sentence punctuation
+            if not re.search(r"[.!?»\"]$", s):
+                if re.search(r"[а-яіїєґ]$", s):
+                    s += "."
+                else:
+                    continue
+
+            # Must NOT contain internal sentence boundary (no multi-sentence run-ons)
+            if has_internal_sentence_boundary(s):
+                continue
+
+            # Must NOT be a comma-separated vocabulary list (exercise word list)
+            if s.count(",") / len(words) > 0.25:
+                continue
+
+            # Must NOT contain isolated math symbols (e.g. 'х' multiplication) or repeated words
+            if re.search(r"\b[хx]\b", s):
+                continue
+            if re.search(r"\b([А-Яа-яЇїІіЄєҐґ]{2,})\s+\1\b", s):
+                continue
+
+            # Reject number-line digit runs (e.g. 9 8 7 6 5)
+            if re.search(r"(?:\b\d+\b\s+){3,}\b\d+\b", s):
+                continue
+            # Reject spaced-out puzzle grids (e.g. Ч А С Н И К)
+            if re.search(r"(?:\b[А-Яа-яЇїІіЄєҐґ]\b\s+){4,}\b[А-Яа-яЇїІіЄєҐґ]\b", s):
+                continue
+            # Reject figure/table caption markers at end
+            if re.search(r"\b(?:Рис|Мал|Табл)\.\s*$", s):
+                continue
+
+            # Uppercase letter ratio limit (reject all-caps headings)
+            upper_count = sum(1 for c in s if c.isupper())
+            if upper_count / len(s) > 0.12:
+                continue
+
+            candidates.append(s)
+
+    return candidates
+
+
+
 def find_textbook_attestation(
     lemma: str,
     sources_db_path: Path,
     conn: sqlite3.Connection | None = None,
 ) -> dict[str, Any] | None:
-    """Search genuine MESU Grade 1-11 textbooks in sources.db for living school citations.
-
-    Strictly requires:
-    - Full-phrase matching (multi-word phrases must appear in entirety, not just first word)
-    - School grades 1-11 only
-
-    Strictly excludes:
-    - Private/non-redistributable sources (ULP podcast, Anna Ohoiko, private lessons)
-    - Reference manuals without grades (Pohribnyi, Antonenko-Davydovych prose)
-    - Chunks with non-school grades (empty, university)
-    """
+    """Find a verified, clean living-standard sentence from MESU-approved Grade 1-11 textbooks."""
     if not sources_db_path.is_file():
         return None
     close_conn = False
@@ -350,6 +584,7 @@ def find_textbook_attestation(
         clean_phrase = " ".join(words).lower()
         if len(clean_phrase) < 3:
             return None
+        phrase_pat = re.compile(r"\b" + re.escape(clean_phrase) + r"\b", re.IGNORECASE)
 
         grade_placeholders = ",".join("?" for _ in ALLOWED_GRADES)
         rows: list[Any] = []
@@ -363,25 +598,44 @@ def find_textbook_attestation(
                     JOIN textbooks t ON t.id = f.rowid
                     WHERE textbooks_fts MATCH ?
                       AND t.grade IN ({grade_placeholders})
-                    ORDER BY CAST(t.grade AS INTEGER) ASC
-                    LIMIT 20
+                    ORDER BY CASE WHEN CAST(t.grade AS INTEGER) >= 5 THEN 0 ELSE 1 END,
+                             CAST(t.grade AS INTEGER) DESC
+                    LIMIT 50
                 """
                 rows = cur.execute(fts_query, (f'"{escaped_phrase}"', *ALLOWED_GRADES)).fetchall()
             except sqlite3.OperationalError:
                 rows = []
-        else:
-            variants = list(dict.fromkeys([clean_phrase, clean_phrase.capitalize(), clean_phrase.title()]))
+
+        if not rows:
+            if len(words) == 1:
+                variants = [
+                    f"% {clean_phrase} %",
+                    f"% {clean_phrase},%",
+                    f"% {clean_phrase}.%",
+                    f"% {clean_phrase}!%",
+                    f"% {clean_phrase}?%",
+                    f"%«{clean_phrase}%",
+                    f"{clean_phrase}%",
+                ]
+                params = variants + list(ALLOWED_GRADES)
+            else:
+                variants = list(dict.fromkeys([clean_phrase, clean_phrase.capitalize(), clean_phrase.title()]))
+                params = [f"%{v}%" for v in variants] + list(ALLOWED_GRADES)
+
             like_clauses = " OR ".join("text LIKE ?" for _ in variants)
             query = f"""
                 SELECT title, grade, subject, author, text, source_file
                 FROM textbooks
                 WHERE ({like_clauses})
                   AND grade IN ({grade_placeholders})
-                ORDER BY CAST(grade AS INTEGER) ASC
-                LIMIT 20
+                ORDER BY CASE WHEN CAST(grade AS INTEGER) >= 5 THEN 0 ELSE 1 END,
+                         CAST(grade AS INTEGER) DESC
+                LIMIT 50
             """
-            params = [f"%{v}%" for v in variants] + list(ALLOWED_GRADES)
             rows = cur.execute(query, params).fetchall()
+
+        best_candidate: dict[str, Any] | None = None
+        best_score = -999.0
 
         for row in rows:
             title, grade, subject, author, text, src_file = row
@@ -392,34 +646,42 @@ def find_textbook_attestation(
                 continue
             if any(r in author_lower for r in RESTRICTED_AUTHORS):
                 continue
-
-            # Strict phrase verification: all words must appear together in text
             text_lower = text.lower()
-            if clean_phrase not in text_lower:
+            if "відомості про стан підручника" in text_lower or "навчальне видання" in text_lower:
                 continue
 
-            sentences = [s.strip() for s in text.split(".") if clean_phrase in s.lower()]
-            if not sentences:
+            if not phrase_pat.search(text_lower):
                 continue
-            snippet = re.sub(r"\s+", " ", sentences[0]).strip()
-            if len(snippet) > 160:
-                snippet = snippet[:157] + "..."
 
-            display_subject = SUBJECT_DISPLAY_NAMES.get(subject, subject)
-            display_author = AUTHOR_DISPLAY_NAMES.get(author, author.title() if author else "")
+            cands = extract_clean_sentence_candidates(text, clean_phrase)
+            for s in cands:
+                score = 0.0
+                g_int = int(grade) if str(grade).isdigit() else 5
+                score += g_int * 2.0
+                if 45 <= len(s) <= 140:
+                    score += 12.0
+                if s.endswith("."):
+                    score += 4.0
+                if subject in ("ukrmova", "ukrlit", "zarlit", "istoriya"):
+                    score += 5.0
 
-            return {
-                "title": title,
-                "grade": int(grade) if str(grade).isdigit() else grade,
-                "subject": display_subject,
-                "author": display_author,
-                "snippet": snippet,
-                "source_file": src_file,
-            }
+                if score > best_score:
+                    best_score = score
+                    disp_subj = SUBJECT_DISPLAY_NAMES.get(subject, subject.title())
+                    disp_auth = AUTHOR_DISPLAY_NAMES.get(author, author.title() if author else "")
+                    best_candidate = {
+                        "title": title,
+                        "grade": g_int,
+                        "subject": disp_subj,
+                        "author": disp_auth,
+                        "snippet": s,
+                        "source_file": src_file,
+                    }
+
+        return best_candidate
     finally:
         if close_conn:
             conn.close()
-    return None
 
 
 def find_dictionary_attestation(
@@ -926,7 +1188,7 @@ def synthesize_trajectory_and_dpo(
 
 
 def scan_generated_files(file_paths: list[Path]) -> tuple[bool, bool, list[str]]:
-    """Scan generated files for private host paths and restricted private source leaks."""
+    """Scan generated files for private host paths, restricted source leaks, and layout/OCR corruptions."""
     violations: list[str] = []
     has_private_paths = False
     has_restricted_sources = False
@@ -944,8 +1206,31 @@ def scan_generated_files(file_paths: list[Path]) -> tuple[bool, bool, list[str]]
                     if pat.search(line):
                         has_restricted_sources = True
                         violations.append(f"{fp.name}:{line_no}: restricted private source leak: {line[:80]}...")
+                # Check for stray OCR Latin letters inside Cyrillic tokens
+                if re.search(r"[А-Яа-яЇїІіЄєҐґ][A-Za-z\u00C0-\u024F]+[А-Яа-яЇїІіЄєҐґ]", line):
+                    violations.append(f"{fp.name}:{line_no}: stray Latin characters in Cyrillic word: {line[:80]}...")
+                # Check for bullet or table glyphs
+                if re.search(r"[•■♦★▲▼►◄]", line):
+                    violations.append(f"{fp.name}:{line_no}: layout bullet/glyph artifact: {line[:80]}...")
+                # Check for scrambled mixed-case words
+                if re.search(r"\b[А-ЯІЇЄҐ]{2,}[а-яіїєґ]+[А-ЯІЇЄҐ]+\b", line):
+                    violations.append(f"{fp.name}:{line_no}: scrambled mixed-case word: {line[:80]}...")
+                # Check for spaced-out puzzle grids (e.g. Ч А С Н И К)
+                if re.search(r"(?:\b[А-Яа-яЇїІіЄєҐґ]\b\s+){4,}\b[А-Яа-яЇїІіЄєҐґ]\b", line):
+                    violations.append(f"{fp.name}:{line_no}: puzzle grid artifact: {line[:80]}...")
+                # Check for number-line digit runs (e.g. 1 2 3 4 5)
+                if re.search(r"(?:\b\d+\b\s+){4,}\b\d+\b", line):
+                    violations.append(f"{fp.name}:{line_no}: digit-run artifact: {line[:80]}...")
+                # Check for defective / run-on citation quotes
+                m_quote = re.search(r"цитата:\s*«([^»]+)»", line)
+                if m_quote:
+                    q = m_quote.group(1)
+                    err = check_quote_quality(q)
+                    if err:
+                        violations.append(f"{fp.name}:{line_no}: defective citation quote ({err}): {q[:80]}...")
 
     return not has_private_paths, not has_restricted_sources, violations
+
 
 
 def get_partition_for_term(term: str, train_ratio: float = 0.8) -> str:

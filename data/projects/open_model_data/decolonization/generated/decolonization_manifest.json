@@ -4,8 +4,8 @@
   "total_trajectories": 1200,
   "total_dpo_pairs": 1200,
   "partition_counts": {
-    "train": 966,
-    "held_out": 234
+    "train": 970,
+    "held_out": 230
   },
   "partition_firewall": {
     "verified_partition_isolation": true,
@@ -16,10 +16,10 @@
     "vesum_verification_count": 1200,
     "vesum_verification_denominator": 1200,
     "vesum_verification_rate": 1.0,
-    "textbook_attestation_rate": 0.8275,
-    "textbook_attestation_count": 993,
-    "dictionary_attestation_rate": 0.8533,
-    "dictionary_attestation_count": 1024,
+    "textbook_attestation_rate": 0.7767,
+    "textbook_attestation_count": 932,
+    "dictionary_attestation_rate": 0.8875,
+    "dictionary_attestation_count": 1065,
     "zero_private_paths": true,
     "zero_restricted_sources": true
   },
@@ -28,45 +28,45 @@
       "shard_index": 1,
       "partition": "train",
       "trajectories_file": "decolonization_trajectories_train_part001.jsonl",
-      "trajectories_bytes": 1799051,
-      "trajectories_sha256": "11e1564013ef6d8f46edc3eeae20d631c3e8a3cd0b58b22757dca29a047d59e1",
+      "trajectories_bytes": 1798839,
+      "trajectories_sha256": "2598c9a757ea4878630ffc40a4f4192604ce228a722a73b89f620592140f5165",
       "dpo_pairs_file": "decolonization_dpo_pairs_train_part001.jsonl",
-      "dpo_pairs_bytes": 622644,
-      "dpo_pairs_sha256": "655f63dc128849deccbd303b63d5f943b90cc91732b3d5771688291559ee3c6f",
-      "records_count": 336
+      "dpo_pairs_bytes": 622423,
+      "dpo_pairs_sha256": "437e06eddcb29ae52353bd867d2f070d6577981639b9150ec1dcc250c1bf741c",
+      "records_count": 333
     },
     {
       "shard_index": 2,
       "partition": "train",
       "trajectories_file": "decolonization_trajectories_train_part002.jsonl",
-      "trajectories_bytes": 1796433,
-      "trajectories_sha256": "8ab53e79c58fddb1ba555bf2cda3f3eb1d64d9be950da4d98569c34243750cc6",
+      "trajectories_bytes": 1799547,
+      "trajectories_sha256": "0d525fe50ccd81ae76256eddaea0862e3afea064022ad31e1ba66a89740e08c3",
       "dpo_pairs_file": "decolonization_dpo_pairs_train_part002.jsonl",
-      "dpo_pairs_bytes": 610321,
-      "dpo_pairs_sha256": "cc4c8c62547ad7cf1c77db191ad51ef08b4b65e3078d85b7be2d9df4e34b175f",
-      "records_count": 330
+      "dpo_pairs_bytes": 611427,
+      "dpo_pairs_sha256": "19a039dd8ec7255280b18392db6f28615f4bb335782d59c90dacaa4a363f7ac2",
+      "records_count": 332
     },
     {
       "shard_index": 3,
       "partition": "train",
       "trajectories_file": "decolonization_trajectories_train_part003.jsonl",
-      "trajectories_bytes": 1688967,
-      "trajectories_sha256": "9fa6a0c89c821e78d6042f5932056bffe6cca294a217b0b914e6690b61774161",
+      "trajectories_bytes": 1714756,
+      "trajectories_sha256": "fb9ebd5f0b8df6620e5934b03944387ff78b6aabf16f5c64341e07f96eb637d9",
       "dpo_pairs_file": "decolonization_dpo_pairs_train_part003.jsonl",
-      "dpo_pairs_bytes": 553171,
-      "dpo_pairs_sha256": "d9788026b23dd2316b8db630b9bca32760ea1ad897bcaf8910ab2afa1c585615",
-      "records_count": 300
+      "dpo_pairs_bytes": 556684,
+      "dpo_pairs_sha256": "f21abc46e7794a9fa2f705686541f19b0228ff4d991f2d11353fd4f16791f8c8",
+      "records_count": 305
     },
     {
       "shard_index": 1,
       "partition": "held_out",
       "trajectories_file": "decolonization_trajectories_held_out_part001.jsonl",
-      "trajectories_bytes": 1300231,
-      "trajectories_sha256": "6e6fdb1995de131fc4db71713ce8577013f784f334a1082be6b6d7e435afd189",
+      "trajectories_bytes": 1263048,
+      "trajectories_sha256": "16f3c00cd7e12985e23f008844e343b27fe76fa1539417b8bfc49274efa11866",
       "dpo_pairs_file": "decolonization_dpo_pairs_held_out_part001.jsonl",
-      "dpo_pairs_bytes": 435200,
-      "dpo_pairs_sha256": "7ffc0f5d44e2f4610c01fd7c09274b61abeed932ad730ffba89ced6a6f0c4d10",
-      "records_count": 234
+      "dpo_pairs_bytes": 422775,
+      "dpo_pairs_sha256": "9be44956551061d24044924b8a227830d31e73b3955e5af8bfc13b7635960fe5",
+      "records_count": 230
     }
   ]
 }
