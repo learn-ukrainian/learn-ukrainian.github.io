@@ -531,9 +531,12 @@ class CalqueReconciliationEngine:
             # Prune known WordNet invalid synsets (e.g. 'вакуум' from 'пилосос')
             filtered_syns = [s for s in existing_syns if s != "вакуум" and s != lemma]
             merged_syns = sorted(set(filtered_syns) | set(clean_atlas_alts))
-            synonyms_sec["items"] = merged_syns
-            synonyms_sec["source"] = "curated standard alternatives"
-            sections["synonyms"] = synonyms_sec
+            if merged_syns:
+                synonyms_sec["items"] = merged_syns
+                synonyms_sec["source"] = "curated standard alternatives"
+                sections["synonyms"] = synonyms_sec
+            else:
+                sections.pop("synonyms", None)
             payload["sections"] = sections
 
             # 2. On each authentic alternative present in Atlas (e.g. порохотяг, пилосмок, пилотяг):
@@ -650,7 +653,10 @@ class CalqueReconciliationEngine:
                 m_entry["calque_warning"] = calque_warning
                 m_entry["heritage_status"] = heritage_status
                 m_sec = m_entry.setdefault("sections", {})
-                m_sec["synonyms"] = synonyms_sec
+                if merged_syns:
+                    m_sec["synonyms"] = synonyms_sec
+                else:
+                    m_sec.pop("synonyms", None)
 
             if not dry_run:
                 # Update SQLite database
@@ -667,10 +673,16 @@ class CalqueReconciliationEngine:
                     "INSERT OR REPLACE INTO enrichment (slug, section, payload_json, source, filled_at) VALUES (?, 'heritage_status', ?, 'curated decolonization alternatives', ?)",
                     (slug, json.dumps(heritage_status, ensure_ascii=False), payload["updated_at"]),
                 )
-                cursor.execute(
-                    "INSERT OR REPLACE INTO enrichment (slug, section, payload_json, source, filled_at) VALUES (?, 'synonyms', ?, 'curated standard alternatives', ?)",
-                    (slug, json.dumps(synonyms_sec, ensure_ascii=False), payload["updated_at"]),
-                )
+                if merged_syns:
+                    cursor.execute(
+                        "INSERT OR REPLACE INTO enrichment (slug, section, payload_json, source, filled_at) VALUES (?, 'synonyms', ?, 'curated standard alternatives', ?)",
+                        (slug, json.dumps(synonyms_sec, ensure_ascii=False), payload["updated_at"]),
+                    )
+                else:
+                    cursor.execute(
+                        "DELETE FROM enrichment WHERE slug = ? AND section = 'synonyms'",
+                        (slug,),
+                    )
 
         if not dry_run:
             self.atlas_conn.commit()

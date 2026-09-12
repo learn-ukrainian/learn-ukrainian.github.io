@@ -50,7 +50,7 @@ NON_STANDARD_AUTHENTIC_CLASSIFICATIONS = {
     "borrowing",
 }
 STANDARD_OR_UNKNOWN_CLASSIFICATIONS = {"", "standard", "unknown"}
-DECOLONIZATION_WARNING_CLASSIFICATIONS = {"russianism", "sovietism", "surzhyk"}
+DECOLONIZATION_WARNING_CLASSIFICATIONS = {"russianism", "sovietism", "surzhyk", "calque"}
 FRESHNESS_DATE_KEYS = (
     "freshness_date",
     "retrieved_at",
