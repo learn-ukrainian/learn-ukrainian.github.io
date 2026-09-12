@@ -90,6 +90,20 @@ def test_orient_page_renders_active_discussions_widget():
     assert "renderDiscussions" in html
     assert "fleet.html?conversation=" in html
     assert "channels.html?channel=" not in html
+    # Client abort must outlast measured /api/orient latency (~4–5s) (#7976).
+    assert "ORIENT_TIMEOUT_MS = 20000" in html
+    assert "GLANCE_TIMEOUT_MS = 12000" in html
+    assert "fetchJson('/api/orient', ORIENT_TIMEOUT_MS)" in html
+
+
+def test_launchpad_uses_warm_state_cache_on_first_paint():
+    """Glance home must not force fresh=true on every load (defeats warm cache)."""
+    html = (DASHBOARDS / "index.html").read_text(encoding="utf-8")
+    assert "API_TIMEOUT_MS = 20000" in html
+    assert "/api/state/pipeline-versions?fresh=true" not in html
+    assert "/api/state/summary?fresh=true" not in html
+    assert "/api/state/pipeline-versions" in html
+    assert "/api/state/summary" in html
 
 
 def test_runtime_page_keeps_primary_monitor_nav():
