@@ -9,6 +9,7 @@ _spec = _ilu.spec_from_file_location(
     _P(__file__).resolve().parent / "validate" / "validate_plan_ordering.py",
 )
 _mod = _ilu.module_from_spec(_spec)
+_sys.modules[_spec.name] = _mod
 _sys.modules[__name__] = _mod
 _spec.loader.exec_module(_mod)
 

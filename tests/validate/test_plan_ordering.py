@@ -1,10 +1,21 @@
 """Parallel tracks reuse base plans without taking ownership of their order."""
 
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
 
 from scripts.validate import validate_plan_ordering as validator
+
+
+def test_legacy_ci_entry_point_validates_parallel_level():
+    result = subprocess.run(
+        [sys.executable, str(validator.PROJECT_ROOT / "scripts/validate_plan_ordering.py"), "a1-v2"],
+        cwd=validator.PROJECT_ROOT, capture_output=True, text=True, check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "All 1 modules verified — no issues found" in result.stdout
 
 
 def test_parallel_level_validates_real_base_plan(monkeypatch, capsys):
