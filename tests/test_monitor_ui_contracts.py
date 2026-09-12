@@ -210,14 +210,14 @@ def test_acp_page_is_a_read_only_master_detail_conversation_reader():
     assert "announceConversationStatus(message)" in html
     assert "white-space: pre-wrap" in html
     assert "Transcript is local-only. Open this page at localhost on the API host." in html
-    assert "Transcript is unavailable on this local Monitor instance." in html
+    assert "Transcript is unavailable on this local Ops API instance." in html
     assert "This conversation has no transcript messages." in html
     assert "Transcript data was malformed and was not rendered." in html
     assert "Transcript could not be loaded." in html
     assert "new URLSearchParams(location.search).get('conversation')" in html
     assert "Recent conversations" in html
     assert "Event flow" in html
-    assert "Message bodies are requested only from the loopback Monitor API." in html
+    assert "Message bodies are requested only from the loopback Ops API." in html
     assert "conversation.updated_at" in html
     assert "event.outcome" in html
     assert "event.duration_ms" in html
