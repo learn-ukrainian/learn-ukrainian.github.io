@@ -1,0 +1,673 @@
+<title>Lesson Split POC</title>
+<style>
+  :root {
+    --blue: #0057B8; --yellow: #FFD700;
+    --blue-light: #E8F0FE; --yellow-light: #FFF9E0;
+    --green: #2E7D32; --green-light: #E8F5E9;
+    --red: #C62828; --red-light: #FFEBEE;
+    --orange: #E65100; --orange-light: #FFF3E0;
+    --purple: #6A1B9A; --purple-light: #F3E5F5;
+    --teal: #00695C;
+    --ink: #1B2230; --ink-2: #4A5468; --ink-3: #78829A;
+    --line: #E3E7EF; --line-2: #EEF1F6;
+    --ground: #F7F8FB; --paper: #FFFFFF;
+    --bar: #1D2433;
+    --radius: 12px;
+    --shadow: 0 2px 8px rgba(27,34,48,0.07);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; color: var(--ink); background: var(--ground); line-height: 1.65; font-size: 15px; }
+  h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
+  p { margin: 0 0 14px; }
+
+  /* Screen switcher (same role as the POC module-switch bar) */
+  .switch { background: var(--bar); color: #fff; padding: 10px 24px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px; position: sticky; top: 0; z-index: 100; }
+  .switch .lbl { opacity: .65; margin-right: 4px; }
+  .switch button { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.28); padding: 5px 12px; border-radius: 6px; font-size: 13px; cursor: pointer; font-family: inherit; }
+  .switch button:hover { border-color: #fff; }
+  .switch button.on { background: var(--yellow); color: var(--ink); border-color: var(--yellow); font-weight: 700; }
+  .switch .url { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; opacity: .8; margin-left: auto; }
+  .switch .poc { color: var(--yellow); font-weight: 700; letter-spacing: .5px; }
+  .switch .phone-btn { border-style: dashed; }
+  .switch .phone-btn.on { background: #fff; color: var(--ink); border-color: #fff; }
+
+  .screen { display: none; }
+  .screen.on { display: block; }
+  .wrap { max-width: 840px; margin: 0 auto; padding-inline: 24px; }
+  body.phone .wrap { max-width: 400px; padding-inline: 16px; }
+
+  /* Header (POC .header.core) */
+  .header { background: var(--blue); color: #fff; border-bottom: 4px solid var(--yellow); padding-block: 22px; }
+  .crumbs { font-size: 12px; opacity: .85; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-bottom: 8px; }
+  .crumbs a { color: #fff; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,.4); }
+  .crumbs .sep { opacity: .5; }
+  .level-badge { display: inline-block; background: var(--yellow); color: var(--ink); font-weight: 700; font-size: 12px; padding: 2px 10px; border-radius: 4px; margin-bottom: 8px; }
+  .header h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .header .sub { opacity: .88; font-size: 14px; }
+  .lesson-dots { display: flex; gap: 6px; margin-top: 12px; align-items: center; }
+  .lesson-dots span { width: 34px; height: 6px; border-radius: 3px; background: rgba(255,255,255,.3); }
+  .lesson-dots span.done { background: var(--yellow); }
+  .lesson-dots span.now { background: #fff; }
+  .lesson-dots em { font-style: normal; font-size: 12px; opacity: .85; margin-left: 6px; }
+
+
+  /* Level landing (mirrors LevelLanding.tsx: unit groups + module rows) */
+  .unit { margin: 22px 0 6px; font-size: 13px; font-weight: 700; color: var(--ink-3); text-transform: uppercase; letter-spacing: .8px; }
+  .mods { display: grid; gap: 6px; }
+  .mod { display: grid; grid-template-columns: 34px 1fr auto; gap: 12px; align-items: center; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; text-decoration: none; color: inherit; }
+  .mod:hover { border-color: var(--blue); }
+  .mod .num { font-weight: 800; color: var(--ink-3); font-variant-numeric: tabular-nums; text-align: right; }
+  .mod .t { font-weight: 600; }
+  .mod .s { font-size: 13px; color: var(--ink-3); }
+  .mod .lc { font-size: 12px; color: var(--ink-2); font-variant-numeric: tabular-nums; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
+  .mod .bar { width: 54px; height: 6px; background: var(--line-2); border-radius: 3px; overflow: hidden; }
+  .mod .bar i { display: block; height: 100%; background: var(--blue); }
+  .mod.done .bar i { background: var(--green); }
+  .mod.open { border-color: var(--blue); box-shadow: var(--shadow); }
+  .mod-lessons { grid-column: 1 / -1; display: grid; gap: 4px; padding: 8px 0 2px 46px; border-top: 1px dashed var(--line); margin-top: 4px; }
+  body.phone .mod-lessons { padding-left: 0; }
+  .mod-lessons a { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; font-size: 14px; text-decoration: none; color: inherit; padding: 6px 10px; border-radius: 8px; }
+  .mod-lessons a:hover { background: var(--blue-light); }
+  .mod-lessons a .k { font-weight: 700; color: var(--blue); font-variant-numeric: tabular-nums; }
+  .mod-lessons a .m { font-size: 12px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .journey { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 16px 0 4px; }
+  body.phone .journey { grid-template-columns: 1fr; }
+  .journey div { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; font-size: 13px; }
+  .journey b { display: block; color: var(--blue); font-size: 12px; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 2px; }
+  .journey code { font-size: 11.5px; }
+
+  /* Stat row */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 18px 0 6px; }
+  body.phone .stats { grid-template-columns: repeat(2, 1fr); }
+  .stat { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; }
+  .stat b { display: block; font-size: 20px; font-variant-numeric: tabular-nums; color: var(--blue); line-height: 1.2; }
+  .stat small { color: var(--ink-3); font-size: 12px; text-transform: uppercase; letter-spacing: .5px; }
+
+  /* Lesson cards on the module landing */
+  .lessons { display: grid; gap: 12px; margin: 14px 0 22px; }
+  .lesson-card { display: grid; grid-template-columns: 56px 1fr auto; gap: 14px; align-items: start; background: var(--paper); border: 2px solid var(--line); border-radius: var(--radius); padding: 16px 18px; text-decoration: none; color: inherit; }
+  body.phone .lesson-card { grid-template-columns: 44px 1fr; }
+  body.phone .lesson-card .cta { grid-column: 2; }
+  .lesson-card.current { border-color: var(--blue); box-shadow: var(--shadow); }
+  .lesson-card.done { border-color: var(--line); }
+  .lnum { width: 56px; height: 56px; border-radius: 10px; background: var(--blue-light); color: var(--blue); font-weight: 800; font-size: 22px; display: flex; align-items: center; justify-content: center; }
+  body.phone .lnum { width: 44px; height: 44px; font-size: 18px; }
+  .lesson-card.done .lnum { background: var(--green-light); color: var(--green); }
+  .lesson-card h3 { font-size: 17px; margin-bottom: 2px; }
+  .lesson-card .what { color: var(--ink-2); font-size: 14px; margin-bottom: 8px; }
+  .meta { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .meta span::before { content: '•'; margin-right: 6px; color: var(--line); }
+  .meta span:first-child::before { content: none; }
+  .pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 10px; letter-spacing: .3px; }
+  .pill.done { background: var(--green-light); color: var(--green); }
+  .pill.now { background: var(--yellow-light); color: #8A6D00; border: 1px solid var(--yellow); }
+  .pill.next { background: var(--line-2); color: var(--ink-3); }
+  .cta { align-self: center; background: var(--blue); color: #fff; border: none; padding: 9px 16px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; font-family: inherit; white-space: nowrap; }
+  .cta.ghost { background: transparent; color: var(--blue); border: 2px solid var(--blue-light); }
+
+  /* 60-minute plan strip */
+  .plan { margin: 18px 0 4px; }
+  .plan .cap { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-3); font-weight: 600; margin-bottom: 8px; display: flex; justify-content: space-between; }
+  .plan .cap b { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .plan-bar { display: flex; gap: 3px; height: 40px; }
+  .plan-bar div { border-radius: 6px; background: var(--blue-light); color: var(--blue); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; padding: 0 4px; overflow: hidden; white-space: nowrap; }
+  .plan-bar div i { font-style: normal; font-weight: 500; opacity: .75; margin-left: 4px; font-variant-numeric: tabular-nums; }
+  .plan-bar .p-recall { background: var(--line-2); color: var(--ink-2); }
+  .plan-bar .p-dialog { background: var(--yellow-light); color: #8A6D00; }
+  .plan-bar .p-rule { background: var(--yellow); color: var(--ink); }
+  .plan-bar .p-inline { background: var(--blue-light); }
+  .plan-bar .p-work { background: var(--blue); color: #fff; }
+  .plan-bar .p-wrap { background: var(--green-light); color: var(--green); }
+  body.phone .plan-bar div i { display: none; }
+
+  /* Tabs (POC .tabs) */
+  .tabs { display: flex; border-bottom: 2px solid var(--line); margin-top: 18px; overflow-x: auto; }
+  .tab { padding: 11px 18px; font-size: 14px; font-weight: 600; color: var(--ink-3); background: none; border: none; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; font-family: inherit; }
+  .tab:hover { color: var(--blue); }
+  .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+  .tab .n { font-size: 11px; color: var(--ink-3); margin-left: 4px; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .tabc { display: none; padding: 24px 0 40px; }
+  .tabc.active { display: block; }
+
+  h2 { font-size: 20px; color: var(--blue); margin: 26px 0 12px; padding-bottom: 6px; border-bottom: 2px solid var(--yellow); }
+  .tabc h2:first-child { margin-top: 0; }
+  h3 { font-size: 16px; margin: 18px 0 8px; color: var(--ink); }
+  .uk { font-weight: 600; color: var(--blue); }
+  .tr { color: var(--ink-3); font-size: 14px; }
+  .persona { display: flex; gap: 12px; align-items: flex-start; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 16px; }
+  .persona .av { width: 40px; height: 40px; border-radius: 50%; background: var(--yellow); color: var(--ink); font-weight: 800; display: flex; align-items: center; justify-content: center; flex: none; }
+  .persona p { margin: 0; }
+
+  /* Dialogue (POC .dialogue) */
+  .dialogue { background: var(--paper); border-left: 4px solid var(--blue); border-radius: 0 var(--radius) var(--radius) 0; padding: 16px 20px; margin: 14px 0; box-shadow: var(--shadow); }
+  .dialogue-title { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-3); margin-bottom: 12px; font-weight: 600; }
+  .dl { margin-bottom: 8px; padding-left: 14px; position: relative; }
+  .dl::before { content: ''; position: absolute; left: 0; top: 9px; width: 7px; height: 7px; border-radius: 50%; background: var(--blue); }
+  .dl:nth-child(odd)::before { background: var(--yellow); }
+  .speaker { font-weight: 700; }
+  .bil { width: 100%; border-collapse: collapse; margin: 10px 0 18px; font-size: 14px; }
+  .bil td { padding: 7px 10px; border-bottom: 1px solid var(--line-2); vertical-align: top; width: 50%; }
+  .bil td:first-child { font-weight: 600; }
+  .bil th { text-align: left; font-size: 12px; color: var(--ink-3); font-weight: 600; padding: 4px 10px; text-transform: uppercase; letter-spacing: .5px; }
+
+  /* Rule box (POC) */
+  .rule-box { background: var(--yellow-light); border: 2px solid var(--yellow); border-radius: var(--radius); padding: 16px 20px; margin: 20px 0; }
+  .rule-box-header { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; margin-bottom: 8px; }
+  .rule-box-icon { width: 30px; height: 30px; background: var(--yellow); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .rule-box table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 14px; }
+  .rule-box th { text-align: left; padding: 6px 10px; background: rgba(255,215,0,.3); }
+  .rule-box td { padding: 6px 10px; }
+  .gm { color: var(--blue); font-weight: 700; } .gf { color: #C2185B; font-weight: 700; } .gn { color: var(--green); font-weight: 700; }
+  .tscroll { overflow-x: auto; }
+
+  /* Exercise wrapper (POC) */
+  .exercise { background: var(--paper); border-radius: var(--radius); border: 2px solid var(--line); padding: 18px 20px; margin: 18px 0; box-shadow: var(--shadow); }
+  .exercise.compact { padding: 12px 16px; display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; margin: 8px 0; box-shadow: none; }
+  .exercise.compact .exercise-title { font-size: 14px; }
+  .exercise.compact .items { font-size: 12px; color: var(--ink-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  body.phone .exercise.compact { grid-template-columns: auto 1fr; }
+  body.phone .exercise.compact .items { grid-column: 2; }
+  .exercise-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+  .badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: .5px; color: #fff; white-space: nowrap; }
+  .b-quiz { background: var(--blue); } .b-fillin { background: var(--green); } .b-matchup { background: var(--orange); }
+  .b-groupsort { background: var(--purple); } .b-truefalse { background: var(--teal); } .b-observe { background: #263238; }
+  .b-select { background: #00838F; } .b-unjumble { background: #AD1457; } .b-translate { background: #1565C0; } .b-order { background: #5D4037; }
+  .exercise-title { font-weight: 600; font-size: 15px; }
+  .exercise-ref { font-size: 12px; color: var(--ink-3); margin-left: auto; font-style: italic; }
+  .exercise-instruction { color: var(--ink-3); font-size: 13px; margin-bottom: 12px; font-style: italic; }
+  .qq { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--line-2); }
+  .qq:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+  .qq .q { font-weight: 600; margin-bottom: 6px; }
+  .opts { display: flex; flex-wrap: wrap; gap: 8px; }
+  .opt { padding: 6px 14px; border: 2px solid var(--line); border-radius: 8px; cursor: pointer; font-size: 14px; background: var(--paper); }
+  .opt:hover { border-color: var(--blue); background: var(--blue-light); }
+  .opt.ok { border-color: var(--green); background: var(--green-light); color: var(--green); font-weight: 600; }
+  .opt.no { border-color: var(--red); background: var(--red-light); color: var(--red); }
+  .fi { margin-bottom: 8px; line-height: 2; }
+  .blank { display: inline-block; min-width: 70px; border-bottom: 2px dashed var(--blue); padding: 0 8px; text-align: center; cursor: pointer; font-weight: 600; color: var(--blue); }
+  .blank.filled { border-bottom-style: solid; background: var(--green-light); color: var(--green); border-color: var(--green); border-radius: 4px; }
+  .observe { background: var(--blue-light); border-radius: var(--radius); padding: 16px; }
+  .observe-pairs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .observe-item { padding: 9px 12px; background: var(--paper); border-radius: 8px; text-align: center; }
+  .observe-q { margin-top: 12px; font-style: italic; color: var(--blue); font-weight: 600; }
+
+  /* Vocab table */
+  .vocab { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .vocab th { background: var(--blue); color: #fff; padding: 8px 12px; text-align: left; font-size: 13px; }
+  .vocab td { padding: 8px 12px; border-bottom: 1px solid var(--line-2); }
+  .vocab tr:hover td { background: var(--blue-light); }
+  .note { background: var(--paper); border: 1px dashed var(--line); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: var(--ink-2); margin: 12px 0; }
+
+  /* Resources */
+  .res { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; margin-bottom: 10px; }
+  .res h3 { margin: 0 0 4px; font-size: 15px; }
+  .res .kind { font-size: 11px; font-weight: 700; color: var(--ink-3); text-transform: uppercase; letter-spacing: .5px; }
+
+  /* Wrap-up + nav */
+  .wrapup { background: var(--green-light); border: 2px solid var(--green); border-radius: var(--radius); padding: 16px 20px; margin-top: 24px; }
+  .wrapup h3 { color: var(--green); margin-top: 0; }
+  .wrapup ul { margin: 0 0 6px 18px; padding: 0; }
+  .lnav { display: flex; justify-content: space-between; gap: 12px; border-top: 2px solid var(--line); padding: 18px 0 40px; margin-top: 8px; }
+  .lnav a { text-decoration: none; color: var(--blue); font-weight: 600; border: 2px solid var(--blue-light); border-radius: 10px; padding: 10px 14px; background: var(--paper); font-size: 14px; }
+  .lnav a small { display: block; font-weight: 500; color: var(--ink-3); font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+  .lnav a.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .lnav a.primary small { color: rgba(255,255,255,.75); }
+
+  /* Design notes screen */
+  .notes { padding: 24px 0 60px; }
+  .notes h2 { margin-top: 30px; }
+  .cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+  body.phone .cmp { grid-template-columns: 1fr; }
+  .cmp > div { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; }
+  .cmp .cap { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-3); font-weight: 700; margin-bottom: 8px; }
+  .cmp .after { border-color: var(--blue); }
+  .cmp ul { margin: 0; padding-left: 18px; }
+  .cmp li { margin-bottom: 4px; font-variant-numeric: tabular-nums; }
+  pre { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; font-size: 12.5px; line-height: 1.55; overflow-x: auto; margin: 10px 0 16px; }
+  table.plain { width: 100%; border-collapse: collapse; font-size: 14px; margin: 10px 0 18px; }
+  table.plain th { text-align: left; border-bottom: 2px solid var(--line); padding: 6px 10px; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--ink-3); }
+  table.plain td { padding: 7px 10px; border-bottom: 1px solid var(--line-2); vertical-align: top; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; background: var(--line-2); padding: 1px 5px; border-radius: 4px; }
+  .callout { background: var(--yellow-light); border-left: 4px solid var(--yellow); padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 12px 0; font-size: 14px; }
+  button:focus-visible, .opt:focus-visible, a:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="switch">
+  <span class="lbl">Екран:</span>
+  <button data-screen="level">A1 (level)</button>
+  <button class="on" data-screen="module">Модуль (landing)</button>
+  <button data-screen="l1">Урок 1</button>
+  <button data-screen="l2">Урок 2 · 3</button>
+  <button data-screen="notes">Дизайн-нотатки</button>
+  <button class="phone-btn" id="phoneBtn" title="Preview at 400px">📱 400px</button>
+  <span class="url" id="urlbar">/a1-v2/things-have-gender/</span>
+  <span class="poc">POC · Option A</span>
+</div>
+
+<!-- ============ SCREEN 0: A1 LEVEL LANDING ============ -->
+<section class="screen" id="s-level">
+  <div class="header"><div class="wrap">
+    <div class="crumbs"><a href="#">Головна</a><span class="sep">›</span><span>A1</span></div>
+    <span class="level-badge">A1 · Beginner</span>
+    <h1>Пе́рші кро́ки · First Steps</h1>
+    <div class="sub">55 модулів · 165 уроків по ≈60 хв · ви пройшли 22 уроки</div>
+  </div></div>
+  <div class="wrap">
+    <div class="journey">
+      <div><b>1 · Рівень</b>Pick a module in the same list as today. Each row now shows how many lessons it has and how far you are.<br><code>/a1-v2/</code> (the current <code>/a1/</code> stays untouched for side-by-side comparison)</div>
+      <div><b>2 · Модуль</b>Expand a row (or open the module page) to pick a lesson. The module page holds objectives and the lesson cards.<br><code>/a1-v2/things-have-gender/</code></div>
+      <div><b>3 · Урок</b>One 60-minute page with the four tabs. "Далі" takes you to the next lesson, then to the next module.<br><code>/a1-v2/things-have-gender/2/</code></div>
+    </div>
+
+    <div class="unit">A1.1 · Звуки, літери та перший контакт</div>
+    <div class="mods">
+      <a class="mod done" href="#"><span class="num">1</span><span><span class="t">Звуки, літери та привіт</span><br><span class="s">33 літери, 38 звуків, Привіт!</span></span><span class="lc">3/3 уроки <span class="bar"><i style="width:100%"></i></span></span></a>
+      <a class="mod done" href="#"><span class="num">2</span><span><span class="t">Читаємо українською</span><br><span class="s">Від літер до слів та речень</span></span><span class="lc">3/3 уроки <span class="bar"><i style="width:100%"></i></span></span></a>
+      <a class="mod done" href="#"><span class="num">3</span><span><span class="t">Особливі знаки</span><br><span class="s">Ь, апостроф і три ключові контрасти</span></span><span class="lc">2/2 уроки <span class="bar"><i style="width:100%"></i></span></span></a>
+      <a class="mod done" href="#"><span class="num">4</span><span><span class="t">Наголос і мелодика</span><br><span class="s">Наголос змінює значення, інтонація змінює намір</span></span><span class="lc">2/2 уроки <span class="bar"><i style="width:100%"></i></span></span></a>
+      <a class="mod done" href="#"><span class="num">5</span><span><span class="t">Хто я?</span><br><span class="s">Мене звати... — ваша перша справжня розмова</span></span><span class="lc">3/3 уроки <span class="bar"><i style="width:100%"></i></span></span></a>
+      <a class="mod done" href="#"><span class="num">6</span><span><span class="t">Моя сім'я</span><br><span class="s">У мене є брат — показуємо фотографії</span></span><span class="lc">3/3 уроки <span class="bar"><i style="width:100%"></i></span></span></a>
+      <a class="mod done" href="#"><span class="num">7</span><span><span class="t">Підсумок: Перший контакт</span><br><span class="s">Чи вмієте ви читати, вітатися та розповідати про себе?</span></span><span class="lc">2/2 уроки <span class="bar"><i style="width:100%"></i></span></span></a>
+    </div>
+
+    <div class="unit">A1.2 · Мій світ</div>
+    <div class="mods">
+      <div class="mod open"><span class="num">8</span><span><span class="t">Речі мають рід</span><br><span class="s">він, вона, воно — кожен іменник має рід</span></span><a class="lc" href="#" data-go="module" style="text-decoration:none;color:inherit">1/3 уроки <span class="bar"><i style="width:33%"></i></span> →</a>
+        <span class="mod-lessons">
+          <a href="#" data-go="l1"><span class="k">Урок 1</span><span>Він, вона чи воно?</span><span class="m">✓ пройдено · 60 хв</span></a>
+          <a href="#" data-go="l2"><span class="k">Урок 2</span><span>Предмети навколо</span><span class="m">▶ продовжити · 60 хв</span></a>
+          <a href="#" data-go="l2"><span class="k">Урок 3</span><span>Професії, пастки й самоперевірка</span><span class="m">60 хв</span></a>
+        </span>
+      </div>
+      <a class="mod" href="#"><span class="num">9</span><span><span class="t">Який він?</span><br><span class="s">Великий стіл, нова книга — опис предметів</span></span><span class="lc">0/3 уроки <span class="bar"><i style="width:0"></i></span></span></a>
+      <a class="mod" href="#"><span class="num">10</span><span><span class="t">Кольори</span><br><span class="s">Синій, жовтий — кольори України та вашого світу</span></span><span class="lc">0/2 уроки <span class="bar"><i style="width:0"></i></span></span></a>
+      <a class="mod" href="#"><span class="num">11</span><span><span class="t">Скільки?</span><br><span class="s">Один, два, три — числа через ціни, вік та номери</span></span><span class="lc">0/3 уроки <span class="bar"><i style="width:0"></i></span></span></a>
+      <a class="mod" href="#"><span class="num">12</span><span><span class="t">Це і те</span><br><span class="s">Цей стіл, та книга — вказуємо на предмети</span></span><span class="lc">0/2 уроки <span class="bar"><i style="width:0"></i></span></span></a>
+      <a class="mod" href="#"><span class="num">13</span><span><span class="t">Багато речей</span><br><span class="s">Столи, книги, вікна — від однини до множини</span></span><span class="lc">0/3 уроки <span class="bar"><i style="width:0"></i></span></span></a>
+    </div>
+    <div class="note" style="margin-top:18px">The level page keeps its current shape (unit groups, numbered module rows from <code>LevelLanding.tsx</code>). Two additions only: a lesson counter with progress on every row, and an expandable lesson list on the row you are in, so a learner can jump straight to "Урок 2" without opening the module page. Rows 14–55 continue exactly like this.</div>
+  </div>
+</section>
+
+<!-- ============ SCREEN 1: MODULE LANDING ============ -->
+<section class="screen on" id="s-module">
+  <div class="header"><div class="wrap">
+    <div class="crumbs"><a href="#" data-go="level">A1</a><span class="sep">›</span><span>Модуль 8 з 55</span></div>
+    <span class="level-badge">A1 · A1.1 Sounds, Letters, and First Contact</span>
+    <h1>Ре́чі ма́ють рід</h1>
+    <div class="sub">Things Have Gender — рід іме́нників: він, вона́, воно́ · мій, моя́, моє́</div>
+    <div class="lesson-dots"><span class="done"></span><span class="now"></span><span></span><em>Урок 2 з 3 · ≈ 2 год лишилося</em></div>
+  </div></div>
+
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><b>3</b><small>уроки по ≈60 хв</small></div>
+      <div class="stat"><b>48</b><small>слів у словнику</small></div>
+      <div class="stat"><b>30</b><small>вправ (було 11)</small></div>
+      <div class="stat"><b>2 344</b><small>слів прози (без змін)</small></div>
+    </div>
+
+    <h2>Що ви змо́жете після мо́дуля</h2>
+    <p class="tr">Objectives come from the locked plan (<code>plans/a1/things-have-gender.yaml</code>), unchanged. Each lesson below owns a subset of them.</p>
+    <ul style="margin:0 0 6px 18px; padding:0; color:var(--ink-2); font-size:14px">
+      <li>Визначати рід іменників за допомогою тесту <span class="uk">він / вона́ / воно́</span></li>
+      <li>Розпізнавати рід за закінченнями (приголосний = ч, -а/-я = ж, -о/-е = с)</li>
+      <li>Називати понад 20 поширених предметів із правильним родом і казати <span class="uk">У ме́не є…</span></li>
+      <li>Використовувати фемінітив як основну форму професії для жінки (<span class="uk">вчи́телька, лі́карка</span>)</li>
+    </ul>
+
+    <h2>Уро́ки</h2>
+    <div class="lessons">
+      <a class="lesson-card done" href="#" data-go="l1">
+        <div class="lnum">1</div>
+        <div>
+          <h3>Він, вона́ чи воно́? <span class="pill done">Пройдено</span></h3>
+          <div class="what">Діалог у кімнаті Марка, тест він/вона/воно, закінчення підказує рід, перші мій/моя/моє.</div>
+          <div class="meta"><span>≈60 хв</span><span>2 розділи плану: Діалоги · Він, вона, воно</span><span>16 слів</span><span>10 вправ (4 в уроці + 6 у зошиті)</span></div>
+        </div>
+        <button class="cta ghost">Повторити</button>
+      </a>
+      <a class="lesson-card current" href="#" data-go="l2">
+        <div class="lnum">2</div>
+        <div>
+          <h3>Предме́ти навко́ло <span class="pill now">Ви тут</span></h3>
+          <div class="what">Речі в кімнаті й у сумці, «У мене є…», мій/моя/моє з новими словами, чоловічий/жіночий/середній у мовленні.</div>
+          <div class="meta"><span>≈60 хв</span><span>1 розділ плану: Предмети навколо</span><span>16 слів</span><span>10 вправ</span></div>
+        </div>
+        <button class="cta">Продовжити</button>
+      </a>
+      <a class="lesson-card" href="#" data-go="l2">
+        <div class="lnum">3</div>
+        <div>
+          <h3>Профе́сії, па́стки й самопереві́рка <span class="pill next">Далі</span></h3>
+          <div class="what">Фемінітиви (вчителька, лікарка), слова-пастки роду, підсумок модуля й контрольна самоперевірка.</div>
+          <div class="meta"><span>≈60 хв</span><span>2 розділи плану: Підсумок · Імена, пастки й самоперевірка</span><span>16 слів</span><span>10 вправ</span></div>
+        </div>
+        <button class="cta ghost">Відкрити</button>
+      </a>
+    </div>
+
+    <div class="note">Модульна сторінка не дублює прозу. Вона показує мету, прогрес і список уроків; сам зміст живе на сторінках уроків. Словник модуля (усі 48 слів) і всі 30 вправ доступні також зведено — з посиланням на урок, де кожне слово чи вправа вперше з'являється.</div>
+
+    <div class="lnav">
+      <a href="#"><small>← Попередній модуль</small>7. Хто я</a>
+      <a href="#"><small>Наступний модуль →</small>9. Багато речей</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCREEN 2: LESSON 1 ============ -->
+<section class="screen" id="s-l1">
+  <div class="header"><div class="wrap">
+    <div class="crumbs"><a href="#" data-go="level">A1</a><span class="sep">›</span><a href="#" data-go="module">Модуль 8 · Речі мають рід</a><span class="sep">›</span><span>Урок 1 з 3</span></div>
+    <span class="level-badge">A1 · Модуль 8 · Уро́к 1</span>
+    <h1>Він, вона́ чи воно́?</h1>
+    <div class="sub">Lesson 1 of 3 — the він/вона/воно test and the ending rule</div>
+    <div class="lesson-dots"><span class="now"></span><span></span><span></span><em>≈ 60 хв</em></div>
+  </div></div>
+
+  <div class="wrap">
+    <div class="plan">
+      <div class="cap"><span>План на 60 хвили́н</span><b>60 хв</b></div>
+      <div class="plan-bar">
+        <div class="p-recall" style="flex:5" title="Повторення: 5 хв">Повторення<i>5</i></div>
+        <div class="p-dialog" style="flex:15" title="Діалог і розбір: 15 хв">Діалог<i>15</i></div>
+        <div class="p-rule" style="flex:10" title="Правило: 10 хв">Правило<i>10</i></div>
+        <div class="p-inline" style="flex:12" title="Вправи в уроці: 12 хв">Вправи в уроці<i>12</i></div>
+        <div class="p-work" style="flex:15" title="Зошит: 15 хв">Зошит<i>15</i></div>
+        <div class="p-wrap" style="flex:3" title="Підсумок: 3 хв">✓<i>3</i></div>
+      </div>
+    </div>
+
+    <div class="tabs" data-tabs="l1">
+      <button class="tab active" data-tab="l1-urok">Уро́к</button>
+      <button class="tab" data-tab="l1-slovnyk">Словни́к <span class="n">16</span></button>
+      <button class="tab" data-tab="l1-vpravy">Впра́ви <span class="n">10</span></button>
+      <button class="tab" data-tab="l1-resursy">Ресу́рси <span class="n">2</span></button>
+    </div>
+
+    <!-- УРОК -->
+    <div class="tabc active" id="l1-urok">
+      <p>У модулі 5 ви вже сказали, хто ви — you already said who you are — and in module 7 you checked what you can do. Сього́дні — today — we look at things, and Ukrainian things have a <span class="uk">рід</span> — a gender. Read the dialogue first even if it feels fast; the breakdown comes right after.</p>
+
+      <h2>Діало́г — Dialogue</h2>
+      <div class="dialogue">
+        <div class="dialogue-title">Відеодзвінок · Марко́ пока́зує кімна́ту</div>
+        <div class="dl"><span class="speaker">Марко́:</span> Приві́т! Диви́сь, це моя́ кімна́та.</div>
+        <div class="dl"><span class="speaker">Окса́на:</span> Кла́сно! У те́бе є стіл?</div>
+        <div class="dl"><span class="speaker">Марко́:</span> Так, це мій стіл. І моє́ лі́жко.</div>
+        <div class="dl"><span class="speaker">Окса́на:</span> А це що?</div>
+        <div class="dl"><span class="speaker">Марко́:</span> Це моє́ вікно́. А це — моя́ кни́га.</div>
+      </div>
+      <h3>Розбі́р — Breakdown</h3>
+      <div class="tscroll"><table class="bil">
+        <tr><th>Украї́нською</th><th>English</th></tr>
+        <tr><td>Диви́сь, це моя́ кімна́та.</td><td>Look, this is my room.</td></tr>
+        <tr><td>У те́бе є стіл?</td><td>Do you have a table? (literally: at you is there a table?)</td></tr>
+        <tr><td>Це мій стіл. І моє́ лі́жко.</td><td>This is my table. And my bed.</td></tr>
+        <tr><td>Це моє́ вікно́. А це — моя́ кни́га.</td><td>This is my window. And this is my book.</td></tr>
+      </table></div>
+      <p>Notice that "my" changed three times: <span class="uk">мій</span> стіл, <span class="uk">моя́</span> кімна́та, <span class="uk">моє́</span> вікно́. Nothing is random here — every noun belongs to one of three genders, and the possessive follows the noun.</p>
+
+      <h2>Він, вона́, воно́ — the test</h2>
+      <p>Ukrainians do not memorise a gender label. They replace the noun with a pronoun and listen: стіл → <span class="uk">він</span>, кни́га → <span class="uk">вона́</span>, вікно́ → <span class="uk">воно́</span>. Whichever pronoun sounds right, that is the gender.</p>
+      <div class="rule-box">
+        <div class="rule-box-header"><div class="rule-box-icon">📐</div> Пра́вило — закі́нчення підка́зує рід</div>
+        <div class="tscroll"><table>
+          <tr><th>Рід</th><th>Тест</th><th>Закі́нчення</th><th>мій / моя́ / моє́</th><th>Прикла́ди</th></tr>
+          <tr><td><span class="gm">чолові́чий (ч)</span></td><td>він</td><td>приголосний</td><td><strong>мій</strong></td><td>стіл, зо́шит, телефо́н</td></tr>
+          <tr><td><span class="gf">жіно́чий (ж)</span></td><td>вона́</td><td>-а, -я</td><td><strong>моя́</strong></td><td>кни́га, ру́чка, кімна́та</td></tr>
+          <tr><td><span class="gn">сере́дній (с)</span></td><td>воно́</td><td>-о, -е</td><td><strong>моє́</strong></td><td>лі́жко, вікно́, фо́то</td></tr>
+        </table></div>
+      </div>
+
+      <div class="exercise">
+        <div class="exercise-header"><span class="badge b-observe">Observe</span><span class="exercise-title">Порівня́йте</span><span class="exercise-ref">в уроці · 1 з 4</span></div>
+        <div class="observe">
+          <div class="observe-pairs">
+            <div class="observe-item"><strong>мій</strong> стіл</div><div class="observe-item">стіл → <strong>-л</strong></div>
+            <div class="observe-item"><strong>моя́</strong> кни́га</div><div class="observe-item">кни́га → <strong>-а</strong></div>
+            <div class="observe-item"><strong>моє́</strong> вікно́</div><div class="observe-item">вікно́ → <strong>-о</strong></div>
+          </div>
+          <div class="observe-q">Що спі́льного між закі́нченням і фо́рмою «мій»?</div>
+        </div>
+      </div>
+
+      <div class="exercise">
+        <div class="exercise-header"><span class="badge b-quiz">Quiz</span><span class="exercise-title">Він, вона́ чи воно́?</span><span class="exercise-ref">в уроці · 2 з 4</span></div>
+        <div class="qq"><div class="q">зо́шит → ?</div><div class="opts"><span class="opt" data-ok="1" tabindex="0">він</span><span class="opt" tabindex="0">вона́</span><span class="opt" tabindex="0">воно́</span></div></div>
+        <div class="qq"><div class="q">ру́чка → ?</div><div class="opts"><span class="opt" tabindex="0">він</span><span class="opt" data-ok="1" tabindex="0">вона́</span><span class="opt" tabindex="0">воно́</span></div></div>
+        <div class="qq"><div class="q">фо́то → ?</div><div class="opts"><span class="opt" tabindex="0">він</span><span class="opt" tabindex="0">вона́</span><span class="opt" data-ok="1" tabindex="0">воно́</span></div></div>
+      </div>
+
+      <div class="exercise">
+        <div class="exercise-header"><span class="badge b-fillin">Fill-in</span><span class="exercise-title">Вста́вте мій / моя́ / моє́</span><span class="exercise-ref">в уроці · 3 з 4</span></div>
+        <div class="fi">Це <span class="blank" data-a="мій" tabindex="0">?</span> зо́шит.</div>
+        <div class="fi">Де <span class="blank" data-a="моя́" tabindex="0">?</span> кімна́та?</div>
+        <div class="fi">Це <span class="blank" data-a="моє́" tabindex="0">?</span> фо́то.</div>
+      </div>
+
+      <div class="exercise compact">
+        <span class="badge b-select">Select</span><span class="exercise-title">Обері́ть фо́рму в те́ксті про кімна́ту</span><span class="items">в уроці · 4 з 4 · 6 речень</span>
+      </div>
+
+      <div class="wrapup">
+        <h3>Підсу́мок уро́ку 1</h3>
+        <ul>
+          <li>Тест: замініть слово на <strong>він / вона́ / воно́</strong>.</li>
+          <li>Приголосний → ч (мій), -а/-я → ж (моя́), -о/-е → с (моє́).</li>
+          <li>Самопереві́рка: назвіть 5 речей у своїй кімнаті з мій / моя́ / моє́.</li>
+        </ul>
+        <p class="tr" style="margin:0">Next: <strong>Уро́к 2 — Предме́ти навко́ло</strong>: more objects and «У ме́не є…».</p>
+      </div>
+    </div>
+
+    <!-- СЛОВНИК -->
+    <div class="tabc" id="l1-slovnyk">
+      <h2>Словни́к уро́ку 1</h2>
+      <div class="note">16 із 48 слів модуля. Кожне слово має свій урок; у модульному словнику видно, в якому уроці воно вперше з'явилося. Flashcards deck below the table (as in the current Словник tab).</div>
+      <div class="tscroll"><table class="vocab">
+        <tr><th>Сло́во</th><th>Рід</th><th>English</th><th>У ре́ченні</th></tr>
+        <tr><td><strong>рід</strong></td><td><span class="gm">ч</span></td><td>gender</td><td>Який рід — стіл?</td></tr>
+        <tr><td><strong>стіл</strong></td><td><span class="gm">ч</span></td><td>table</td><td>мій стіл</td></tr>
+        <tr><td><strong>зо́шит</strong></td><td><span class="gm">ч</span></td><td>notebook</td><td>мій зо́шит</td></tr>
+        <tr><td><strong>телефо́н</strong></td><td><span class="gm">ч</span></td><td>phone</td><td>мій телефо́н</td></tr>
+        <tr><td><strong>кни́га</strong></td><td><span class="gf">ж</span></td><td>book</td><td>моя́ кни́га</td></tr>
+        <tr><td><strong>ру́чка</strong></td><td><span class="gf">ж</span></td><td>pen</td><td>моя́ ру́чка</td></tr>
+        <tr><td><strong>кімна́та</strong></td><td><span class="gf">ж</span></td><td>room</td><td>моя́ кімна́та</td></tr>
+        <tr><td><strong>лі́жко</strong></td><td><span class="gn">с</span></td><td>bed</td><td>моє́ лі́жко</td></tr>
+        <tr><td><strong>вікно́</strong></td><td><span class="gn">с</span></td><td>window</td><td>моє́ вікно́</td></tr>
+        <tr><td><strong>фо́то</strong></td><td><span class="gn">с</span></td><td>photo</td><td>моє́ фо́то</td></tr>
+        <tr><td><strong>він / вона́ / воно́</strong></td><td>—</td><td>he / she / it</td><td>Стіл — він.</td></tr>
+        <tr><td><strong>мій / моя́ / моє́</strong></td><td>—</td><td>my</td><td>мій, моя́, моє́</td></tr>
+        <tr><td><strong>диви́сь</strong></td><td>—</td><td>look (informal)</td><td>Диви́сь, це моя́ кімна́та.</td></tr>
+        <tr><td><strong>кла́сно</strong></td><td>—</td><td>cool, great</td><td>Кла́сно!</td></tr>
+      </table></div>
+    </div>
+
+    <!-- ВПРАВИ -->
+    <div class="tabc" id="l1-vpravy">
+      <h2>Впра́ви уро́ку 1</h2>
+      <div class="note">10 activities for this lesson alone (A1 config: 4–6 inline, 6–9 workbook). The 4 inline ones appear here too with a <em>(see lesson, §…)</em> cross-reference — the existing P2 rule, now per lesson.</div>
+      <h3>У зо́шиті — Workbook (6)</h3>
+      <div class="exercise">
+        <div class="exercise-header"><span class="badge b-groupsort">Group Sort</span><span class="exercise-title">Розподілі́ть за рода́ми</span><span class="exercise-ref">#1</span></div>
+        <div class="exercise-instruction">Натисніть слово, потім групу.</div>
+        <div class="opts"><span class="opt">стіл</span><span class="opt">кни́га</span><span class="opt">лі́жко</span><span class="opt">ру́чка</span><span class="opt">телефо́н</span><span class="opt">вікно́</span><span class="opt">зо́шит</span><span class="opt">фо́то</span></div>
+      </div>
+      <div class="exercise compact"><span class="badge b-truefalse">True/False</span><span class="exercise-title">Пра́вда чи ні? («Кни́га» — чолові́чий рід.)</span><span class="items">#2 · 6 тверджень</span></div>
+      <div class="exercise compact"><span class="badge b-matchup">Match-up</span><span class="exercise-title">З'єдна́йте: іме́нник ↔ він / вона́ / воно́</span><span class="items">#3 · 8 пар</span></div>
+      <div class="exercise compact"><span class="badge b-unjumble">Unjumble</span><span class="exercise-title">Складі́ть ре́чення: це / моя́ / кімна́та</span><span class="items">#4 · 6 речень</span></div>
+      <div class="exercise compact"><span class="badge b-order">Order</span><span class="exercise-title">Відно́віть діало́г Марка́ й Окса́ни</span><span class="items">#5 · 5 реплік</span></div>
+      <div class="exercise compact"><span class="badge b-translate">Translate</span><span class="exercise-title">Bonus: EN → UK (This is my window.)</span><span class="items">#6 · 5 речень</span></div>
+      <h3>В уро́ці — Inline (4, cross-referenced)</h3>
+      <div class="exercise compact"><span class="badge b-observe">Observe</span><span class="exercise-title">Порівня́йте <span class="tr">(see lesson, §Він, вона́, воно́)</span></span><span class="items">#7</span></div>
+      <div class="exercise compact"><span class="badge b-quiz">Quiz</span><span class="exercise-title">Він, вона́ чи воно́? <span class="tr">(see lesson, §Він, вона́, воно́)</span></span><span class="items">#8 · 3</span></div>
+      <div class="exercise compact"><span class="badge b-fillin">Fill-in</span><span class="exercise-title">Вста́вте мій / моя́ / моє́ <span class="tr">(see lesson, §Він, вона́, воно́)</span></span><span class="items">#9 · 3</span></div>
+      <div class="exercise compact"><span class="badge b-select">Select</span><span class="exercise-title">Обері́ть фо́рму в те́ксті <span class="tr">(see lesson, §Він, вона́, воно́)</span></span><span class="items">#10 · 6</span></div>
+    </div>
+
+    <!-- РЕСУРСИ -->
+    <div class="tabc" id="l1-resursy">
+      <h2>Ресу́рси уро́ку 1</h2>
+      <div class="res"><div class="kind">Підручник</div><h3>Захарійчук, Буквар, 1 клас — с. 24 «Мій день»</h3><p class="tr" style="margin:0">chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0024 · the noun list the dialogue draws on</p></div>
+      <div class="res"><div class="kind">Підручник</div><h3>Захарійчук, Буквар, 1 клас — с. 52 «Мій ранок»</h3><p class="tr" style="margin:0">chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0052 · action chain used in the room dialogue</p></div>
+      <div class="note">Only the sources this lesson actually pulled from. Lesson 2 and 3 cite their own; the module landing shows the union.</div>
+    </div>
+
+    <div class="lnav">
+      <a href="#" data-go="module"><small>← Модуль</small>8. Речі мають рід</a>
+      <a href="#" class="primary" data-go="l2"><small>Далі →</small>Урок 2 · Предмети навколо</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCREEN 3: LESSONS 2 + 3 (compact) ============ -->
+<section class="screen" id="s-l2">
+  <div class="header"><div class="wrap">
+    <div class="crumbs"><a href="#" data-go="level">A1</a><span class="sep">›</span><a href="#" data-go="module">Модуль 8 · Речі мають рід</a><span class="sep">›</span><span>Урок 2 з 3</span></div>
+    <span class="level-badge">A1 · Модуль 8 · Уро́к 2</span>
+    <h1>Предме́ти навко́ло</h1>
+    <div class="sub">Lesson 2 of 3 — objects in the room and the bag, «У ме́не є…»</div>
+    <div class="lesson-dots"><span class="done"></span><span class="now"></span><span></span><em>≈ 60 хв</em></div>
+  </div></div>
+  <div class="wrap">
+    <div class="plan">
+      <div class="cap"><span>План на 60 хвили́н</span><b>60 хв</b></div>
+      <div class="plan-bar">
+        <div class="p-recall" style="flex:5">Повторення<i>5</i></div>
+        <div class="p-dialog" style="flex:15">Діалог<i>15</i></div>
+        <div class="p-rule" style="flex:10">Правило<i>10</i></div>
+        <div class="p-inline" style="flex:12">Вправи в уроці<i>12</i></div>
+        <div class="p-work" style="flex:15">Зошит<i>15</i></div>
+        <div class="p-wrap" style="flex:3">✓<i>3</i></div>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab active">Уро́к</button><button class="tab">Словни́к <span class="n">16</span></button><button class="tab">Впра́ви <span class="n">10</span></button><button class="tab">Ресу́рси <span class="n">2</span></button>
+    </div>
+    <div class="tabc active">
+      <p class="tr">Same page shape as Урок 1. The warm-up opens by recalling lesson 1 in Ukrainian: <span class="uk">Стіл — він. Кни́га — вона́. Вікно́ — воно́.</span> — then the new dialogue.</p>
+      <h2>Що в цьо́му уро́ці</h2>
+      <div class="tscroll"><table class="plain">
+        <tr><th>Блок</th><th>Зміст (з плану, розділ «Предмети навколо», 484 слова)</th></tr>
+        <tr><td>Діалог</td><td>Що в сумці? — ключ, гаманець, окуляри; UK-only, розбір після.</td></tr>
+        <tr><td>Правило</td><td>«У ме́не є…» + мій/моя́/моє́; порядок: предмет → рід → форма.</td></tr>
+        <tr><td>Вправи в уроці (4)</td><td>Observe, Quiz, Fill-in, Select</td></tr>
+        <tr><td>Зошит (6)</td><td>Group Sort, Match-up, True/False, Unjumble, Anagram, Translate (bonus)</td></tr>
+        <tr><td>Підсумок</td><td>Самоперевірка: 5 речей у сумці з «У мене є…».</td></tr>
+      </table></div>
+
+      <h2>Уро́к 3 — Профе́сії, па́стки й самопереві́рка</h2>
+      <div class="tscroll"><table class="plain">
+        <tr><th>Блок</th><th>Зміст (з плану: «Підсумок» 175 слів + «Імена, пастки й самоперевірка» 447 слів)</th></tr>
+        <tr><td>Діалог</td><td>Хто ким працює: вчи́телька, лі́карка — фемінітив як основна форма.</td></tr>
+        <tr><td>Правило</td><td>Слова-пастки роду (де інтуїція з іншої мови підводить) + повний підсумок модуля.</td></tr>
+        <tr><td>Вправи в уроці (4)</td><td>Observe, Quiz, Error Correction, Fill-in</td></tr>
+        <tr><td>Зошит (6)</td><td>Match-up, True/False, Cloze, Group Sort, Order, Translate (bonus)</td></tr>
+        <tr><td>Підсумок</td><td>Module self-check across all three lessons — the last lesson closes the module.</td></tr>
+      </table></div>
+      <div class="callout">The last lesson of every module always carries the module summary and the self-check, so the module has a real ending, not just a stop.</div>
+    </div>
+    <div class="lnav">
+      <a href="#" data-go="l1"><small>← Назад</small>Урок 1 · Він, вона чи воно?</a>
+      <a href="#" class="primary"><small>Далі →</small>Урок 3 · Професії, пастки й самоперевірка</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCREEN 4: DESIGN NOTES ============ -->
+<section class="screen" id="s-notes">
+  <div class="header"><div class="wrap">
+    <span class="level-badge">curriculum-upgrade · Phase 0</span>
+    <h1>How Option A manifests</h1>
+    <div class="sub">Module = curriculum unit (manifest unchanged). Lesson = 60-minute consumption unit, one page each, full four tabs.</div>
+  </div></div>
+  <div class="wrap notes">
+    <h2>Before → after, on the real module</h2>
+    <div class="cmp">
+      <div><div class="cap">Now · things-have-gender</div><ul>
+        <li>1 page, 4 tabs</li><li>2 344 words of prose in one sitting</li><li>5 sections (200 / 331 / 484 / 175 / 447 words)</li><li>11 activities total</li><li>48 vocabulary words in one tab</li><li>No stated duration, no stopping point</li></ul></div>
+      <div class="after"><div class="cap">Option A · same module</div><ul>
+        <li>1 landing + 3 lesson pages, 4 tabs each</li><li>≈ 530 / 480 / 620 words per lesson — prose fully covered, none cut</li><li>Sections mapped to lessons 1:1 or 2:1, following the plan</li><li>30 activities (10 per lesson: 4–6 inline, 6–9 workbook)</li><li>16 words per lesson; module Словник shows the union</li><li>60-minute plan strip; warm-up recalls the previous lesson; last lesson closes the module</li></ul></div>
+    </div>
+
+    <h2>URLs and navigation</h2>
+    <div class="tscroll"><table class="plain">
+      <tr><th>Page</th><th>URL</th><th>What it holds</th></tr>
+      <tr><td>Module landing</td><td><code>/a1-v2/things-have-gender/</code></td><td>objectives, progress, lesson cards, union Словник/Вправи/Ресурси (linked to their lesson)</td></tr>
+      <tr><td>Lesson n</td><td><code>/a1-v2/things-have-gender/1/</code> … <code>/3/</code></td><td>four tabs, 60-min plan, prev/next lesson, back to module</td></tr>
+      <tr><td>Old A1</td><td><code>/a1/…</code> unchanged until cut-over</td><td>the current 55 pages stay live; when A1 v2 is approved, <code>a1</code> is archived as <code>a1-v1</code> and <code>a1-v2</code> takes the <code>/a1/</code> URLs</td></tr>
+      <tr><td>Sidebar</td><td>unchanged</td><td>lists modules; lesson pages nest under their module entry and do not add 165 sidebar rows</td></tr>
+    </table></div>
+
+    <h2>What the plan gains</h2>
+    <p class="tr">Plans stay locked; the split is an additive <code>lessons:</code> block that maps existing <code>content_outline</code> sections to lessons. No section is dropped, and lesson word targets are minimums.</p>
+<pre>lessons:
+  - n: 1
+    title: Він, вона чи воно?
+    sections: [Діалоги, "Він, вона, воно"]
+    minutes: 60
+    word_target: 500          # minimum, per lesson
+    new_vocabulary: [рід, стіл, книга, ліжко, вікно, ручка, зошит, кімната, телефон, фото, ...]
+    activities: { total: 10, inline: [4, 6], workbook: [6, 9] }
+  - n: 2
+    title: Предмети навколо
+    sections: [Предмети навколо]
+    ...
+  - n: 3
+    title: Професії, пастки й самоперевірка
+    sections: [Підсумок, "Імена, пастки й самоперевірка"]
+    closes_module: true       # carries the module summary + self-check</pre>
+
+    <h2>What the pipeline changes</h2>
+    <div class="tscroll"><table class="plain">
+      <tr><th>Layer</th><th>Change</th></tr>
+      <tr><td>Writer artifacts</td><td><code>curriculum/l2-uk-en/a1/&lt;slug&gt;/lesson-1/{module.md, activities.yaml, vocabulary.yaml, resources.yaml}</code> — the existing four files, once per lesson. The single-unit writer prompt is reused with a lesson-scoped brief and learner state.</td></tr>
+      <tr><td>Learner state</td><td>cumulative vocabulary advances per lesson, not per module, so lesson 2 knows lesson 1's 16 words.</td></tr>
+      <tr><td>Gates</td><td>python_qg, activity placement, immersion band, word minimum and <code>verify_shippable</code> run per lesson; a module ships only when all its lessons pass.</td></tr>
+      <tr><td>MDX assembler</td><td>emits <code>&lt;slug&gt;/index.mdx</code> (landing) + <code>&lt;slug&gt;/1.mdx</code>…; the four-tab block is unchanged inside each lesson.</td></tr>
+      <tr><td>Reviews</td><td>cross-family content review per lesson plus one module-level coherence pass (does lesson 3 close what lesson 1 opened).</td></tr>
+    </table></div>
+
+    <div class="callout"><strong>Source-material rule.</strong> Reference material we bought (lesson notes, podcasts, books) taught us the <em>method</em> — Ukrainian-first glossing, stress marks, dialogue-then-breakdown, Ukrainian-only recall. Quoting it is allowed only as a marked quotation with the source named where it is used and listed in Ресу́рси. Nothing is reused uncredited, and no other author's persona or opener becomes ours: there is no named narrator at all — the lesson speaks to you directly; Марко́ and Окса́на exist only inside the dialogues, and the prose is our own.</div>
+
+    <h2>Why not Option B (lesson row as tabs on one page)</h2>
+    <p>It keeps one page per module, but it nests a lesson row above the four-tab row: two tab strips on a phone, one URL for three hours of content, no natural "you finished today" stopping point, and progress cannot be tracked per lesson. Option A keeps the four-tab contract exactly as panel-confirmed and adds only a landing page and a lesson index.</p>
+
+    <h2>Open for your call</h2>
+    <ul style="padding-left:18px">
+      <li>Lesson titles in the sidebar: Ukrainian only from lesson 1 at A1 (shown here), or bilingual for the first 20 modules?</li>
+      <li>The 60-minute plan strip: keep as a visible learner aid (shown) or make it a teacher-only hint?</li>
+    </ul>
+  </div>
+</section>
+
+<script>
+  const screens = { level: 's-level', module: 's-module', l1: 's-l1', l2: 's-l2', notes: 's-notes' };
+  const urls = { level: '/a1-v2/', module: '/a1-v2/things-have-gender/', l1: '/a1-v2/things-have-gender/1/', l2: '/a1-v2/things-have-gender/2/', notes: 'docs/poc/poc-lesson-split-design.html' };
+  function go(key) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === screens[key]));
+    document.querySelectorAll('.switch [data-screen]').forEach(b => b.classList.toggle('on', b.dataset.screen === key));
+    document.getElementById('urlbar').textContent = urls[key];
+    window.scrollTo({ top: 0 });
+  }
+  document.querySelectorAll('.switch [data-screen]').forEach(b => b.addEventListener('click', () => go(b.dataset.screen)));
+  document.querySelectorAll('[data-go]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); go(a.dataset.go); }));
+  document.getElementById('phoneBtn').addEventListener('click', function () {
+    document.body.classList.toggle('phone'); this.classList.toggle('on');
+  });
+  document.querySelectorAll('.tabs[data-tabs] .tab').forEach(t => t.addEventListener('click', () => {
+    const group = t.closest('.tabs');
+    group.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    const section = group.closest('.wrap');
+    section.querySelectorAll('.tabc').forEach(c => c.classList.toggle('active', c.id === t.dataset.tab));
+  }));
+  document.querySelectorAll('.qq .opt').forEach(o => o.addEventListener('click', () => {
+    o.parentElement.querySelectorAll('.opt').forEach(x => x.classList.remove('ok', 'no'));
+    o.classList.add(o.dataset.ok ? 'ok' : 'no');
+  }));
+  document.querySelectorAll('.blank').forEach(b => b.addEventListener('click', () => { b.textContent = b.dataset.a; b.classList.add('filled'); }));
+</script>

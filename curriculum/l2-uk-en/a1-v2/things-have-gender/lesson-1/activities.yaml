@@ -1,0 +1,373 @@
+inline:
+- id: act-1
+  type: quiz
+  title: Хто чи що?
+  instruction: Choose the question or pronoun that fits the noun.
+  items:
+  - prompt: та́то
+    options:
+    - text: Хто це?
+      correct: true
+    - text: Що це?
+      correct: false
+    - text: Воно́?
+      correct: false
+    explanation: Та́то is a person word, so ask Хто це?
+  - prompt: стіл
+    options:
+    - text: Що це?
+      correct: true
+    - text: Хто це?
+      correct: false
+    - text: Вона́?
+      correct: false
+    explanation: Стіл is a thing word, so ask Що це?
+  - prompt: сестра́
+    options:
+    - text: вона́
+      correct: true
+    - text: він
+      correct: false
+    - text: воно́
+      correct: false
+    explanation: Сестра́ is feminine.
+  - prompt: брат
+    options:
+    - text: він
+      correct: true
+    - text: вона́
+      correct: false
+    - text: воно́
+      correct: false
+    explanation: Брат is masculine.
+  - prompt: кни́га
+    options:
+    - text: вона́
+      correct: true
+    - text: він
+      correct: false
+    - text: воно́
+      correct: false
+    explanation: Кни́га is feminine.
+  - prompt: вікно́
+    options:
+    - text: воно́
+      correct: true
+    - text: вона́
+      correct: false
+    - text: він
+      correct: false
+    explanation: Вікно́ is neuter.
+- id: act-2
+  type: group-sort
+  title: Сорту́й предме́ти за ро́дом
+  instruction: Sort each noun by its safest A1 gender phrase.
+  groups:
+  - label: він / мій
+    items:
+    - стіл
+    - стіле́ць
+    - телефо́н
+    - комп'ю́тер
+  - label: вона́ / моя́
+    items:
+    - кни́га
+    - кімна́та
+    - ла́мпа
+    - ру́чка
+  - label: воно́ / моє́
+    items:
+    - вікно́
+    - лі́жко
+    - крі́сло
+    - дзе́ркало
+- id: act-5
+  type: quiz
+  title: Закі́нчення підка́зує рід
+  instruction: Choose the usual gender signal from the noun ending.
+  items:
+  - prompt: стіл закі́нчується на при́голосний.
+    options:
+    - text: він / мій
+      correct: true
+    - text: вона́ / моя́
+      correct: false
+    - text: воно́ / моє́
+      correct: false
+    explanation: A clear consonant ending is usually masculine.
+  - prompt: телефо́н закі́нчується на при́голосний.
+    options:
+    - text: він / мій
+      correct: true
+    - text: вона́ / моя́
+      correct: false
+    - text: воно́ / моє́
+      correct: false
+    explanation: Телефо́н is masculine in this A1 pattern.
+  - prompt: кни́га закі́нчується на -а.
+    options:
+    - text: вона́ / моя́
+      correct: true
+    - text: він / мій
+      correct: false
+    - text: воно́ / моє́
+      correct: false
+    explanation: A clear -а ending is usually feminine.
+  - prompt: кімна́та закі́нчується на -а.
+    options:
+    - text: вона́ / моя́
+      correct: true
+    - text: він / мій
+      correct: false
+    - text: воно́ / моє́
+      correct: false
+    explanation: Кімна́та is feminine in this A1 pattern.
+  - prompt: вікно́ закі́нчується на -о.
+    options:
+    - text: воно́ / моє́
+      correct: true
+    - text: він / мій
+      correct: false
+    - text: вона́ / моя́
+      correct: false
+    explanation: A clear -о ending is usually neuter.
+  - prompt: лі́жко закі́нчується на -о.
+    options:
+    - text: воно́ / моє́
+      correct: true
+    - text: вона́ / моя́
+      correct: false
+    - text: він / мій
+      correct: false
+    explanation: Лі́жко is neuter in this A1 pattern.
+- id: act-3
+  type: quiz
+  title: Він, вона́ чи воно́?
+  instruction: Choose the Ukrainian gender-test word.
+  items:
+  - prompt: стіл
+    options:
+    - text: він
+      correct: true
+    - text: вона́
+      correct: false
+    - text: воно́
+      correct: false
+    explanation: Стіл ends in a consonant and is masculine.
+  - prompt: кни́га
+    options:
+    - text: вона́
+      correct: true
+    - text: він
+      correct: false
+    - text: воно́
+      correct: false
+    explanation: Кни́га is feminine.
+  - prompt: вікно́
+    options:
+    - text: воно́
+      correct: true
+    - text: він
+      correct: false
+    - text: вона́
+      correct: false
+    explanation: Вікно́ is neuter.
+  - prompt: телефо́н
+    options:
+    - text: він
+      correct: true
+    - text: вона́
+      correct: false
+    - text: воно́
+      correct: false
+    explanation: Телефо́н is masculine.
+  - prompt: ла́мпа
+    options:
+    - text: вона́
+      correct: true
+    - text: воно́
+      correct: false
+    - text: він
+      correct: false
+    explanation: Ла́мпа is feminine.
+  - prompt: лі́жко
+    options:
+    - text: воно́
+      correct: true
+    - text: вона́
+      correct: false
+    - text: він
+      correct: false
+    explanation: Лі́жко is neuter.
+  - prompt: та́то
+    options:
+    - text: він
+      correct: true
+    - text: воно́
+      correct: false
+    - text: вона́
+      correct: false
+    explanation: Та́то is masculine because it names a male person.
+  - prompt: Мико́ла
+    options:
+    - text: він
+      correct: true
+    - text: вона́
+      correct: false
+    - text: воно́
+      correct: false
+    explanation: Мико́ла is a masculine name.
+workbook:
+- type: group-sort
+  title: Сорту́й за ро́дом
+  instruction: Sort each noun by its A1 gender signal.
+  groups:
+  - label: він / мій
+    items:
+    - стіл
+    - телефо́н
+    - зо́шит
+    - ключ
+    - та́то
+  - label: вона́ / моя́
+    items:
+    - кни́га
+    - ла́мпа
+    - кімна́та
+    - ру́чка
+    - сестра́
+  - label: воно́ / моє́
+    items:
+    - вікно́
+    - лі́жко
+    - крі́сло
+    - дзе́ркало
+    - фо́то
+  id: act-w1
+- id: act-101
+  type: true-false
+  title: Пра́вда чи ні?
+  instruction: Ви́значте, чи пра́вильне твер́дження про рід іме́нника.
+  statements:
+  - statement: «Стіл» — це іме́нник чолові́чого ро́ду (він).
+    correct: true
+  - statement: «Кни́га» — це іме́нник чолові́чого ро́ду (він).
+    correct: false
+  - statement: «Вікно́» — це іме́нник сере́днього ро́ду (воно́).
+    correct: true
+  - statement: «Та́то» — це іме́нник жіно́чого ро́ду (вона́).
+    correct: false
+  - statement: «Мі́сто» — це іме́нник сере́днього ро́ду (воно́).
+    correct: true
+  - statement: «Ба́тько» — це іме́нник чолові́чого ро́ду (він).
+    correct: true
+- id: act-102
+  type: match-up
+  title: 'З''єдна́йте: іме́нник і рід'
+  instruction: З'єдна́йте іме́нник із прави́льним займе́нником.
+  pairs:
+  - left: стіл
+    right: він
+  - left: кни́га
+    right: вона́
+  - left: вікно́
+    right: воно́
+  - left: та́то
+    right: він
+  - left: ма́ма
+    right: вона́
+  - left: мі́сто
+    right: воно́
+- id: act-103
+  type: fill-in
+  title: Вста́вте мій, моя́ чи моє́
+  instruction: Вибері́ть прави́льний присві́йний займе́нник до ко́жного іме́нника.
+  items:
+  - sentence: Це ___ стіл.
+    answer: мій
+    options:
+    - мій
+    - моя́
+    - моє́
+  - sentence: Це ___ кни́га.
+    answer: моя́
+    options:
+    - моя́
+    - мій
+    - моє́
+  - sentence: Це ___ вікно́.
+    answer: моє́
+    options:
+    - моє́
+    - мій
+    - моя́
+  - sentence: Це ___ та́то.
+    answer: мій
+    options:
+    - мій
+    - моя́
+    - моє́
+  - sentence: Це ___ ма́ма.
+    answer: моя́
+    options:
+    - моя́
+    - мій
+    - моє́
+  - sentence: Це ___ мі́сто.
+    answer: моє́
+    options:
+    - моє́
+    - мій
+    - моя́
+- id: act-104
+  type: unjumble
+  title: Складі́ть ре́чення
+  instruction: Розташу́йте слова́ у прави́льному поря́дку, щоб утвори́ти ре́чення.
+  words:
+  - words:
+    - Це
+    - мій
+    - стіл
+    answer: Це мій стіл.
+  - words:
+    - Це
+    - моя́
+    - кни́га
+    answer: Це моя́ кни́га.
+  - words:
+    - Це
+    - моє́
+    - вікно́
+    answer: Це моє́ вікно́.
+  - words:
+    - Тут
+    - мій
+    - зо́шит
+    answer: Тут мій зо́шит.
+  - words:
+    - Там
+    - моя́
+    - кімна́та
+    answer: Там моя́ кімна́та.
+  - words:
+    - Ось
+    - моє́
+    - фо́то
+    answer: Ось моє́ фо́то.
+- id: act-105
+  type: translate
+  title: Перекладі́ть ре́чення
+  instruction: Перекладі́ть ре́чення з англі́йської мо́ви на украї́нську.
+  items:
+  - sentence: This is my table.
+    answer: Це мій стіл.
+  - sentence: This is my book.
+    answer: Це моя́ кни́га.
+  - sentence: This is my window.
+    answer: Це моє́ вікно́.
+  - sentence: My father is here.
+    answer: Мій та́то тут.
+  - sentence: My mother is there.
+    answer: Моя́ ма́ма там.
+  - sentence: This is my city.
+    answer: Це моє́ мі́сто.

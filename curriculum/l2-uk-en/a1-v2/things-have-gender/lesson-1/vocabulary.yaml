@@ -1,0 +1,64 @@
+- lemma: рід
+  translation: grammatical gender
+  pos: noun
+  usage: Украї́нські іме́нники ма́ють рід.
+- lemma: іме́нник
+  translation: noun
+  pos: noun
+  usage: Стіл — це іме́нник.
+- lemma: хто це?
+  translation: who is this?
+  pos: phrase
+  usage: Хто це? Це та́то.
+- lemma: що це?
+  translation: what is this?
+  pos: phrase
+  usage: Що це? Це стіл.
+- lemma: він
+  translation: he / masculine gender-test word
+  pos: pronoun
+  usage: Стіл — він.
+- lemma: вона́
+  translation: she / feminine gender-test word
+  pos: pronoun
+  usage: Кни́га — вона́.
+- lemma: воно́
+  translation: it / neuter gender-test word
+  pos: pronoun
+  usage: Вікно́ — воно́.
+- lemma: мій
+  translation: my, masculine
+  pos: pronoun
+  usage: Це мій стіл.
+- lemma: моя́
+  translation: my, feminine
+  pos: pronoun
+  usage: Це моя́ кни́га.
+- lemma: моє́
+  translation: my, neuter
+  pos: pronoun
+  usage: Це моє́ вікно́.
+- lemma: стіл
+  translation: table
+  pos: noun
+  usage: У ме́не є стіл.
+- lemma: кни́га
+  translation: book
+  pos: noun
+  usage: Це моя́ кни́га.
+- lemma: вікно́
+  translation: window
+  pos: noun
+  usage: Моє́ вікно́ вели́ке.
+- lemma: мі́сто
+  translation: city
+  pos: noun
+  usage: Моє́ мі́сто вели́ке.
+- lemma: та́то
+  translation: dad
+  pos: noun
+  usage: Це мій та́то.
+- lemma: ба́тько
+  translation: father
+  pos: noun
+  usage: Це мій ба́тько.
