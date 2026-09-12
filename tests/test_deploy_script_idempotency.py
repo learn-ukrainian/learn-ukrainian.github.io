@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import py_compile
 import shlex
 import shutil
 import subprocess
@@ -1002,6 +1003,36 @@ def test_codex_legacy_migration_preserves_modified_content(tmp_path: Path) -> No
     assert "Unverified legacy Codex skill content" in result.stdout
     assert before == {p.relative_to(legacy): p.read_bytes() for p in legacy.rglob("*") if p.is_file()}
     assert _run(repo, CHECK_SCRIPT).returncode != 0
+
+
+def test_codex_legacy_python_cache_does_not_block_driver_deployment(tmp_path: Path) -> None:
+    repo = _init_checkout(tmp_path)
+    source = repo / "agents_extensions/shared/skills"
+    canonical_cache = source / "track-completion/scripts/__pycache__"
+    if canonical_cache.exists():
+        shutil.rmtree(canonical_cache)
+    _init_git_history(repo)
+    legacy = repo / ".codex/skills"
+    shutil.copytree(source, legacy)
+    cache = legacy / "track-completion/scripts/__pycache__/bounded_completion.cpython-312.pyc"
+    py_compile.compile(str(legacy / "track-completion/scripts/bounded_completion.py"), cfile=str(cache), doraise=True)
+    payload = cache.read_bytes()
+    assert not canonical_cache.exists()
+
+    deploy = _run(repo, DEPLOY_SCRIPT)
+    assert deploy.returncode == 0, deploy.stdout + deploy.stderr
+    assert not legacy.exists()
+    retained = list((repo / ".codex/retired-skills").glob("*/skills"))
+    assert len(retained) == 1
+    backup = retained[0] / cache.relative_to(legacy)
+    assert backup.read_bytes() == payload
+    assert (repo / ".agents/skills/track-completion/SKILL.md").is_file()
+    check = _run(repo, CHECK_SCRIPT)
+    assert check.returncode == 0, check.stdout + check.stderr
+    repeat = _run(repo, DEPLOY_SCRIPT)
+    assert repeat.returncode == 0, repeat.stdout + repeat.stderr
+    assert "No changes to deploy" in repeat.stdout
+    assert backup.read_bytes() == payload
 
 
 def test_codex_legacy_migration_recognizes_committed_source_before_edits(tmp_path: Path) -> None:

@@ -16,10 +16,46 @@ import stat
 import subprocess
 import sys
 import uuid
+from importlib.util import source_from_cache
 from pathlib import Path
 
 BACKUP_DIRECTORY = "retired-skills"
 DIRECTORY_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+
+
+def cache_source_is_tracked(root: Path, relative: str) -> bool:
+    """Classify retained runtime bytes by cache path, without loading bytecode."""
+    cache = Path(relative)
+    fields = cache.name.split(".")
+    # source_from_cache also accepts wrong suffixes and empty cache tags.
+    if cache.parent.name != "__pycache__" or len(fields) not in (3, 4):
+        return False
+    if fields[-1] != "pyc" or not fields[0] or not fields[1]:
+        return False
+    try:
+        source_relative = Path(source_from_cache(relative))
+    except (ValueError, NotImplementedError):
+        return False
+    source_root = root / "agents_extensions/shared/skills"
+    source = source_root / source_relative
+    if not source.is_file() or source.is_symlink():
+        return False
+    for parent in source.parents:
+        if parent.is_symlink():
+            return False
+        if parent == source_root:
+            break
+    git_path = source.relative_to(root).as_posix()
+    tracked = subprocess.run(
+        ["git", "ls-files", "--stage", "-z", "--", git_path],
+        cwd=root, capture_output=True, check=False, timeout=30,
+    )
+    entries = tracked.stdout.rstrip(b"\0").split(b"\0")
+    if tracked.returncode != 0 or len(entries) != 1 or b"\t" not in entries[0]:
+        return False
+    metadata, path = entries[0].split(b"\t", 1)
+    mode, _, stage = metadata.split()
+    return mode in (b"100644", b"100755") and stage == b"0" and path == os.fsencode(git_path)
 
 
 def source_matches(root: Path, relative: str, payload: bytes) -> bool:
@@ -67,7 +103,11 @@ def inventory(root: Path, tree_fd: int, prefix: str = "") -> dict[str, tuple]:
         info = os.stat(name, dir_fd=tree_fd, follow_symlinks=False)
         if stat.S_ISDIR(info.st_mode):
             source = root / "agents_extensions/shared/skills" / relative
-            if not source.is_dir() or source.is_symlink():
+            if "__pycache__" in Path(prefix).parts:
+                raise ValueError("Nested legacy cache directory; preserve and reconcile")
+            # Python creates this runtime directory only where a script runs;
+            # its canonical-source counterpart need not exist on this host.
+            if name != "__pycache__" and (not source.is_dir() or source.is_symlink()):
                 raise ValueError("Unknown legacy Codex skill directory; preserve and reconcile")
             child_fd = os.open(name, DIRECTORY_FLAGS, dir_fd=tree_fd)
             try:
@@ -86,7 +126,9 @@ def inventory(root: Path, tree_fd: int, prefix: str = "") -> dict[str, tuple]:
                 payload = stream.read()
                 if signature(os.fstat(stream.fileno())) != signature(before):
                     raise ValueError("Legacy file changed during inventory; preserve and reconcile")
-            if not source_matches(root, relative, payload):
+            is_cache = Path(prefix).name == "__pycache__"
+            accepted = cache_source_is_tracked(root, relative) if is_cache else source_matches(root, relative, payload)
+            if not accepted:
                 raise ValueError(f"Unverified legacy Codex skill content: {relative}; preserve and reconcile")
             result[relative] = (*signature(before), hashlib.sha256(payload).hexdigest())
         else:
@@ -185,8 +227,24 @@ def migrate(root: Path, mode: str) -> int:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("mode", choices=("verify", "apply"))
+    parser = argparse.ArgumentParser(
+        description=(
+            "Verify or retain the legacy Codex skill mirror outside discovery. "
+            "Use during agent deployment; never use this to delete custom skills or backups."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python scripts/deploy/retire_codex_skills.py verify
+  .venv/bin/python scripts/deploy/retire_codex_skills.py apply
+Outputs: apply atomically moves .codex/skills into .codex/retired-skills/<id>/skills.
+  Standard __pycache__ files mapped to tracked Python sources are retained as
+  opaque runtime artifacts; their bytes are never executed or authenticated.
+  No backup files are deleted. Verify does not move files.
+Exit codes: 0 = absent or accepted mirror; 1 = preserve and reconcile an error.
+Related: scripts/deploy_prompts.sh; agents_extensions/README.md; issue #7964.
+""",
+    )
+    parser.add_argument("mode", choices=("verify", "apply"), help="verify only, or apply retained capture (required)")
     args = parser.parse_args()
     return migrate(Path(__file__).resolve().parents[2], args.mode)
 
