@@ -198,7 +198,7 @@ Each trajectory encodes a multi-step cognitive chain. In the shipped production 
       {
         "lemma": "принаймні",
         "register_tier": "living_standard",
-        "evidence_source": "Підручник МОН «Я досліджую світ» 2 клас (Morze); цитата: «Але принаймні одна властивість або її значення в таких об’єктів різні» (джерело: ua_gec_calque, Корпус граматичних та лексичних помилок UA-GEC (F/Calque).)"
+        "evidence_source": "Підручник МОН «Зарубіжна література» 11 клас (Є. Волощук); цитата: «Принаймні сам письменник убачав у цьому своє життєве кредо.» (джерело: ua_gec_calque, Корпус граматичних та лексичних помилок UA-GEC (F/Calque).)"
       }
     ]
   },
@@ -206,10 +206,10 @@ Each trajectory encodes a multi-step cognitive chain. In the shipped production 
     "1. Етимологія та словотвірна діагностика: Визначено дериваційну проблему форми «по крайній мірі» (phrasal_calque). Зворот «по крайній мірі» побудований шляхом буквального послівного перекладу російської синтаксичної або прийменникової конструкції.",
     "2. Питома словотвірна модель: Відновлено природний словотвірний механізм. Питома українська синтаксична традиція використовує усталені фразеологічні еквіваленти або прислівники з відмінним керуванням.",
     "3. Морфологічна верифікація за словником ВЕСУМ: Рекомендований варіант «принаймні» має повну словозмінну парадигму (1 словоформ у базі даних).",
-    "4. Реєстрове узгодження та контекст уживання: Варіант «принаймні» належить до нормативного живого стандарту (living_standard). Підтверджено джерелом: Підручник МОН «Я досліджую світ» 2 клас (Morze); цитата: «Але принаймні одна властивість або її значення в таких об’єктів різні» (джерело: ua_gec_calque, Корпус граматичних та лексичних помилок UA-GEC (F/Calque).).",
+    "4. Реєстрове узгодження та контекст уживання: Варіант «принаймні» належить до нормативного живого стандарту (living_standard). Підтверджено джерелом: Підручник МОН «Зарубіжна література» 11 клас (Є. Волощук); цитата: «Принаймні сам письменник убачав у цьому своє життєве кредо.» (джерело: ua_gec_calque, Корпус граматичних та лексичних помилок UA-GEC (F/Calque).).",
     "5. Нормативний висновок і практична рекомендація: Слід уникати калькованої форми «по крайній мірі», послідовно вживаючи питоме «принаймні»."
   ],
-  "final_response": "Правильно вживати «принаймні». Вживання форми «по крайній мірі» є типовою калькою з російської мови. Питома українська синтаксична традиція використовує усталені фразеологічні еквіваленти або прислівники з відмінним керуванням. Питоме українське слово «принаймні» відповідає чинній мовній нормі та має повну парадигму словозміни у морфологічній базі ВЕСУМ (1 словоформ). Нормативне засвідчення: Підручник МОН «Я досліджую світ» 2 клас (Morze); цитата: «Але принаймні одна властивість або її значення в таких об’єктів різні» (джерело: ua_gec_calque, Корпус граматичних та лексичних помилок UA-GEC (F/Calque).)."
+  "final_response": "Правильно вживати «принаймні». Вживання форми «по крайній мірі» є типовою калькою з російської мови. Питома українська синтаксична традиція використовує усталені фразеологічні еквіваленти або прислівники з відмінним керуванням. Питоме українське слово «принаймні» відповідає чинній мовній нормі та має повну парадигму словозміни у морфологічній базі ВЕСУМ (1 словоформ). Нормативне засвідчення: Підручник МОН «Зарубіжна література» 11 клас (Є. Волощук); цитата: «Принаймні сам письменник убачав у цьому своє життєве кредо.» (джерело: ua_gec_calque, Корпус граматичних та лексичних помилок UA-GEC (F/Calque).)."
 }
 ```
 
@@ -223,7 +223,7 @@ In naive preference datasets, the "rejected" completion is often a trivial failu
 
 In ULDR, the `rejected` response is generated to precisely emulate the **naive, authoritative-sounding hallucinations of leading foundation models**, as seen in shipped production pair `dpo.decolonize.9f9d5fb856ae1420` (*по крайній мірі* $\rightarrow$ *принаймні*):
 - **Prompt**: *«Як правильно сказати або написати українською: «по крайній мірі» чи «принаймні»?»*
-- **Chosen Completion**: Provides a balanced, decolonized linguistic analysis citing MESU 2nd-grade textbooks (*Морзе*) and modern morphological standards (VESUM, 1 form), recommending *принаймні*.
+- **Chosen Completion**: Provides a balanced, decolonized linguistic analysis citing MESU 11th-grade textbooks (*Є. Волощук*) and modern morphological standards (VESUM, 1 form), recommending *принаймні*.
 - **Rejected Completion**:
   > *«Можна вживати як «по крайній мірі», так і «принаймні». Обидва варіанти зустрічаються в текстах і є рівноправними синонімами в сучасній мові, тому вибір залежить лише від уподобань автора.»*
 
@@ -278,12 +278,12 @@ The 1,200 shipped production records resolve systematic lexical and phrasal calq
 #### Case Study 1: *По крайній мірі* $\rightarrow$ *Принаймні* (Shipped Shard Record `traj.decolonize.9f9d5fb856ae1420`)
 
 - **Problem**: Word-for-word phrasal calque of Russian *по крайней мере*.
-- **ULDR Resolution**: Teaches native adverbial discourse markers: **принаймні** (attested in Grade 2 textbooks, *Морзе*), **хоча б**, **щонайменше**.
+- **ULDR Resolution**: Teaches native adverbial discourse markers: **принаймні** (attested in Grade 11 textbooks, *Є. Волощук*: *«Принаймні сам письменник убачав у цьому своє життєве кредо.»*), **хоча б**, **щонайменше**.
 
 #### Case Study 2: *Задачі* $\rightarrow$ *Завдання* (Shipped Shard Record `traj.decolonize.a847150053166b99`)
 
 - **Problem**: Mechanical borrowing of Russian *задача* into educational and practical contexts where authentic Ukrainian uses *завдання*.
-- **ULDR Resolution**: Teaches normative replacement with **завдання**, attested in Grade 1 textbooks (*Захарійчук*: *«Художник отримав завдання намалювати предмети, у назвах яких є буква ч»*) and verified with 15 morphological forms in VESUM.
+- **ULDR Resolution**: Teaches normative replacement with **завдання**, attested in Grade 11 textbooks (*О. Істер*: *«Бригадир має розподілити чотири завдання між чотирма робітниками, роздавши кожному по одному завданню.»*) and verified with 15 morphological forms in VESUM.
 
 ### 6.2 Reference Seed Exemplars (`seeds/`)
 

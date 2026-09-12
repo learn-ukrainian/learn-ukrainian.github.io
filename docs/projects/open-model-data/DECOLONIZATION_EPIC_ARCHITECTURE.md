@@ -1,6 +1,6 @@
 # Architecture Specification: Ukrainian Linguistic Decolonization & Reasoning (ULDR) — Phase 2 & Production Roadmap
 
-> **Status:** Approved Architecture Draft
+> **Status:** Proposed Architecture Draft (Under Operator Direction, Pending Designated Advisor Review)
 > **Stream Epic:** #6321 (Open Model Data) / Task #7922
 > **Participating Agent Deliberation:** Yellow Team (Gemini/AGY), Blue Team (Claude Fable 5.1), Red/Alternate (Codex GPT-6.0 Astra)
 > **Target Models:** Google Gemma 3 (4B, 12B, 27B) and Gemma 4 architectures
