@@ -6607,3 +6607,195 @@ def test_enrich_entry_berehynia_sum20_goddess_rework(monkeypatch) -> None:
     assert "wikipedia" not in wiki_ref
     assert "русалк" not in str(wiki_ref).casefold()
     assert "нижчий дух" not in str(wiki_ref)
+
+
+def test_ulif_authoritative_enrichment_integration(monkeypatch) -> None:
+    """Validate authoritative ULIF DictUA enrichment integration for synonyms, antonyms, idioms, and stress."""
+    from scripts.lexicon.enrich_manifest import (
+        _antonyms_ulif,
+        _idioms_ulif,
+        _stress_ulif,
+        _synonyms_ulif,
+        _ulif_has_tables,
+    )
+    from scripts.lexicon.source_attribution import ULIF_DICTUA_LABEL, ULIF_DICTUA_URL
+
+    conn = _conn()
+    # 1. Negative checks: table not yet present
+    assert _ulif_has_tables(conn) is False
+    assert _synonyms_ulif(conn, "добрий") is None
+    assert _stress_ulif(conn, "добрий") is None
+    assert _antonyms_ulif(conn, "добрий") is None
+    assert _idioms_ulif(conn, "добрий") is None
+
+    # 2. Set up ULIF DictUA tables
+    conn.executescript(
+        """
+        CREATE TABLE ulif_dictua_entries (
+            id INTEGER PRIMARY KEY,
+            canonical_headword TEXT NOT NULL,
+            normalized_query TEXT NOT NULL,
+            status TEXT NOT NULL
+        );
+        CREATE TABLE ulif_dictua_sections (
+            id INTEGER PRIMARY KEY,
+            entry_id INTEGER NOT NULL REFERENCES ulif_dictua_entries(id),
+            kind TEXT NOT NULL,
+            source_order INTEGER NOT NULL DEFAULT 0,
+            payload_json TEXT NOT NULL
+        );
+        """
+    )
+    assert _ulif_has_tables(conn) is True
+
+    # Insert entry for добрий and homonym entry for двір 1
+    conn.execute(
+        "INSERT INTO ulif_dictua_entries (id, canonical_headword, normalized_query, status) VALUES (?, ?, ?, ?)",
+        (1, "до́брий", "добрий", "ok"),
+    )
+    conn.execute(
+        "INSERT INTO ulif_dictua_entries (id, canonical_headword, normalized_query, status) VALUES (?, ?, ?, ?)",
+        (2, "дві́р 1", "двір", "ok"),
+    )
+
+    # Insert synonym section for добрий
+    syn_payload = json.dumps(
+        {
+            "terms": [{"text": "ХОРО́ШИЙ"}],
+            "register_labels": ["розм."],
+            "citations": ["Який має позитивні якості."],
+        },
+        ensure_ascii=False,
+    )
+    conn.execute(
+        "INSERT INTO ulif_dictua_sections (entry_id, kind, source_order, payload_json) VALUES (?, ?, ?, ?)",
+        (1, "synonyms", 1, syn_payload),
+    )
+
+    # Insert antonym section for добрий
+    ant_payload = json.dumps(
+        {
+            "rows": [
+                {
+                    "kind": "paired_sense",
+                    "left": {"terms": [{"text": "до́брий"}]},
+                    "right": {"terms": [{"text": "пога́ний"}]},
+                }
+            ]
+        },
+        ensure_ascii=False,
+    )
+    conn.execute(
+        "INSERT INTO ulif_dictua_sections (entry_id, kind, source_order, payload_json) VALUES (?, ?, ?, ?)",
+        (1, "antonyms", 1, ant_payload),
+    )
+
+    # Insert phraseology section for добрий
+    idiom_payload = json.dumps(
+        {
+            "terms": [{"text": "до́брий ве́чір"}],
+            "text": "традиційне вітання",
+        },
+        ensure_ascii=False,
+    )
+    conn.execute(
+        "INSERT INTO ulif_dictua_sections (entry_id, kind, source_order, payload_json) VALUES (?, ?, ?, ?)",
+        (1, "phraseology", 1, idiom_payload),
+    )
+
+    # Patch VESUM analyses so candidates pass validation
+    _patch_vesum_analyses(monkeypatch, {"добрий": "adj", "хороший": "adj", "поганий": "adj", "двір": "noun"})
+
+    # Test direct unit extractors
+    stress_res = _stress_ulif(conn, "добрий")
+    assert stress_res == {"form": "до́брий", "source": ULIF_DICTUA_LABEL}
+
+    homonym_stress = _stress_ulif(conn, "двір")
+    assert homonym_stress == {"form": "дві́р", "source": ULIF_DICTUA_LABEL}
+
+    syn_res = _synonyms_ulif(conn, "добрий")
+    assert syn_res is not None
+    assert syn_res["items"] == ["хороший"]
+    assert syn_res["source"] == ULIF_DICTUA_LABEL
+    assert syn_res["source_urls"] == [ULIF_DICTUA_URL]
+    assert syn_res["synsets"][0]["members"][0]["stressed"] == "хоро́ший"
+    assert syn_res["synsets"][0]["members"][0]["register"] == "розм."
+
+    ant_res = _antonyms_ulif(conn, "добрий", entry_pos="adj")
+    assert ant_res is not None
+    assert ant_res["items"] == ["поганий"]
+    assert ant_res["source"] == ULIF_DICTUA_LABEL
+    assert ant_res["source_urls"] == [ULIF_DICTUA_URL]
+
+    idiom_res = _idioms_ulif(conn, "добрий")
+    assert idiom_res is not None
+    assert idiom_res["source"] == ULIF_DICTUA_LABEL
+    assert idiom_res["source_urls"] == [ULIF_DICTUA_URL]
+    assert idiom_res["items"][0]["phrase"] == "до́брий ве́чір"
+    assert idiom_res["items"][0]["definition"] == "традиційне вітання"
+
+    # Test full pipeline integration via enrich_entry with hermetic mocks
+    cache = {
+        "schema_version": 4,
+        "lookups": {
+            "vts": None,
+            "newsum": None,
+            "synonyms": None,
+            "ukreng": None,
+            "frazeolohichnyi": None,
+            "antonyms": None,
+            "paronyms": None,
+        },
+    }
+    monkeypatch.setattr(enrich_manifest_module, "_slovnyk_cache", lambda lemma: cache)
+
+    monkeypatch.setattr(enrich_manifest_module, "_fetch_slovnyk_entry", lambda *a, **k: None)
+    monkeypatch.setattr(enrich_manifest_module, "_e2u_translation", lambda *a, **k: None)
+    monkeypatch.setattr(enrich_manifest_module, "_goroh_translation", lambda *a, **k: None)
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "classify_lemma",
+        lambda lemma: {
+            "classification": "standard",
+            "is_russianism": False,
+            "russian_shadow": False,
+            "calque_warning": None,
+            "attestations": [],
+        },
+    )
+    monkeypatch.setattr(enrich_manifest_module, "query_wikidata_uk_en", lambda lemma: [])
+    monkeypatch.setattr(enrich_manifest_module, "query_wikipedia", lambda title: None)
+    monkeypatch.setattr(enrich_manifest_module, "verify_lemma", lambda lemma: [])
+    monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+
+    entry = {
+        "lemma": "добрий",
+        "url_slug": "добрий",
+        "pos": "adj",
+        "gloss": "good",
+    }
+
+    assert enrich_manifest_module.enrich_entry(entry, conn, {}, has_sum11_flags=False) is True
+
+    # Validate sections populated from ULIF with authoritative attribution
+    sections = entry.get("sections", {})
+    assert "synonyms" in sections
+    assert sections["synonyms"]["source"] == ULIF_DICTUA_LABEL
+    assert sections["synonyms"]["source_urls"] == [ULIF_DICTUA_URL]
+    assert sections["synonyms"]["items"] == ["хороший"]
+
+    assert "antonyms" in sections
+    assert sections["antonyms"]["source"] == ULIF_DICTUA_LABEL
+    assert sections["antonyms"]["source_urls"] == [ULIF_DICTUA_URL]
+    assert sections["antonyms"]["items"] == ["поганий"]
+
+    assert "idioms" in sections
+    assert sections["idioms"]["source"] == ULIF_DICTUA_LABEL
+    assert sections["idioms"]["source_urls"] == [ULIF_DICTUA_URL]
+    assert sections["idioms"]["items"][0]["phrase"] == "до́брий ве́чір"
+
+    # Validate stress populated from ULIF
+    enrichment = entry.get("enrichment", {})
+    assert "stress" in enrichment
+    assert enrichment["stress"]["source"] == ULIF_DICTUA_LABEL
+    assert enrichment["stress"]["form"] == "до́брий"

@@ -71,6 +71,8 @@ UNMAPPED_SOURCE_PATTERN = re.compile(r"relation_pairs/", re.IGNORECASE)
 SUM20_OFFICIAL_HOME = "https://sum20ua.com"
 ULIF_EXPL_HOME = "https://services.ulif.org.ua/expl"
 ULIF_HOME = "https://www.ulif.org.ua"
+ULIF_DICTUA_URL = "https://lcorp.ulif.org.ua/dictua"
+ULIF_DICTUA_LABEL = "«Словники України» (Український мовно-інформаційний фонд НАН України)"
 
 SLUG_ACADEMIC_LABELS: dict[str, str] = {
     "newsum": SUM20_ACADEMIC_LABEL,
@@ -88,6 +90,8 @@ SLUG_ACADEMIC_LABELS: dict[str, str] = {
     "orthography": ORTHOGRAPHY_LABEL,
     "holoskevych": HOLOSKEVYCH_LABEL,
     "orthoepy": ORTHOEPY_LABEL,
+    "ulif": ULIF_DICTUA_LABEL,
+    "ulif_dictua": ULIF_DICTUA_LABEL,
 }
 
 LEGACY_LABEL_ALIASES: dict[str, str] = {
@@ -98,6 +102,11 @@ LEGACY_LABEL_ALIASES: dict[str, str] = {
     "Словник української мови у 20 томах (СУМ-20)": SUM20_ACADEMIC_LABEL,
     SUM20_SHORT_LABEL: SUM20_ACADEMIC_LABEL,
     VTS_SHORT_LABEL: VTS_ACADEMIC_LABEL,
+    "«Словники України»": ULIF_DICTUA_LABEL,
+    "Словники України": ULIF_DICTUA_LABEL,
+    "УМІФ": ULIF_DICTUA_LABEL,
+    "УМІФ НАН України": ULIF_DICTUA_LABEL,
+    ULIF_DICTUA_LABEL: ULIF_DICTUA_LABEL,
     "Грінченко": GRINCHENKO_LABEL,
     "Горох": GOROH_LABEL,
     "goroh.pp.ua": GOROH_LABEL,
@@ -190,6 +199,8 @@ def official_url_for_slug(slug: str, word: str = "") -> str | None:
         return f"{ULIF_EXPL_HOME}/#/word/{quote(lookup_word, safe='')}"
     if slug == "newsum":
         return SUM20_OFFICIAL_HOME
+    if slug in {"ulif", "ulif_dictua"}:
+        return ULIF_DICTUA_URL
     if slug == "vts":
         return ULIF_HOME
     return None
