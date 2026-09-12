@@ -12,6 +12,7 @@ import contextlib
 import json
 import sqlite3
 import sys
+import threading
 from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import Path
@@ -28,6 +29,8 @@ from scripts.rag.config import VESUM_DB_PATH
 
 _vesum_conn = None
 _vesum_conn_path: Path | None = None
+_vesum_conn_stat: tuple[int, int] | None = None
+_CONN_LOCK = threading.Lock()
 
 
 class InspectionStatus(StrEnum):
@@ -108,33 +111,50 @@ def _resolve_vesum_db_path(db_path: str | Path | None = None) -> Path:
 
 def close_vesum_conn() -> None:
     """Close and reset cached SQLite connection."""
-    global _vesum_conn, _vesum_conn_path
-    if _vesum_conn is not None:
-        with contextlib.suppress(Exception):
-            _vesum_conn.close()
-        _vesum_conn = None
-        _vesum_conn_path = None
+    global _vesum_conn, _vesum_conn_path, _vesum_conn_stat
+    with _CONN_LOCK:
+        if _vesum_conn is not None:
+            with contextlib.suppress(Exception):
+                _vesum_conn.close()
+            _vesum_conn = None
+            _vesum_conn_path = None
+            _vesum_conn_stat = None
 
 
 def get_vesum_conn(db_path: str | Path | None = None):
-    """Lazy-load SQLite connection to VESUM dictionary."""
-    global _vesum_conn, _vesum_conn_path
+    """Lazy-load SQLite connection to VESUM dictionary with automatic replacement detection."""
+    global _vesum_conn, _vesum_conn_path, _vesum_conn_stat
     resolved_path = _resolve_vesum_db_path(db_path)
-    if _vesum_conn is None or _vesum_conn_path != resolved_path:
-        if _vesum_conn is not None:
-            _vesum_conn.close()
-            _vesum_conn = None
-        if not resolved_path.exists():
-            raise FileNotFoundError(
-                f"VESUM database not found at {resolved_path}. "
-                "Step 1 builds an explicit shadow database only; run "
-                ".venv/bin/python scripts/rag/build_vesum_shadow.py --help "
-                "and pass its explicit path with db_path after approved activation."
-            )
-        _vesum_conn = sqlite3.connect(str(resolved_path), check_same_thread=False)
-        _vesum_conn.row_factory = sqlite3.Row
-        _vesum_conn_path = resolved_path
-    return _vesum_conn
+    if not resolved_path.exists():
+        raise FileNotFoundError(
+            f"VESUM database not found at {resolved_path}. "
+            "Step 1 builds an explicit shadow database only; run "
+            ".venv/bin/python scripts/rag/build_vesum_shadow.py --help "
+            "and pass its explicit path with db_path after approved activation."
+        )
+
+    try:
+        st = resolved_path.stat()
+        current_stat = (st.st_ino, st.st_mtime_ns)
+    except OSError:
+        current_stat = None
+
+    with _CONN_LOCK:
+        if (
+            _vesum_conn is None
+            or _vesum_conn_path != resolved_path
+            or current_stat is None
+            or _vesum_conn_stat != current_stat
+        ):
+            if _vesum_conn is not None:
+                with contextlib.suppress(Exception):
+                    _vesum_conn.close()
+                _vesum_conn = None
+            _vesum_conn = sqlite3.connect(str(resolved_path), check_same_thread=False)
+            _vesum_conn.row_factory = sqlite3.Row
+            _vesum_conn_path = resolved_path
+            _vesum_conn_stat = current_stat
+        return _vesum_conn
 
 
 def verify_word(
@@ -203,28 +223,50 @@ def verify_lemma(lemma: str, db_path: str | Path | None = None) -> list[dict]:
     return [{"word_form": r["word_form"], "pos": r["pos"], "tags": r["tags"]} for r in rows]
 
 
+_REQUIRED_FORMS_ALL_COLS = frozenset(
+    {"id", "entry_id", "word_form", "lemma", "pos", "tags", "source_comment", "source_location"}
+)
+_REQUIRED_FORM_MARKERS_COLS = frozenset({"form_id", "marker", "origin", "marker_class"})
+
+
 def _has_inspection_schema(conn: sqlite3.Connection) -> bool:
-    """Check if connection has the marker-preserving forms_all and form_markers schema."""
-    cursor = conn.execute(
-        "SELECT COUNT(*) FROM sqlite_master WHERE type IN ('table', 'view') AND name IN ('forms_all', 'form_markers')"
-    )
-    row = cursor.fetchone()
-    return bool(row and row[0] == 2)
+    """Check if connection has the marker-preserving forms_all and form_markers schema with required columns."""
+    try:
+        tables = {
+            row[0]
+            for row in conn.execute(
+                "SELECT name FROM sqlite_master WHERE type IN ('table', 'view') AND name IN ('forms_all', 'form_markers')"
+            )
+        }
+        if len(tables) < 2:
+            return False
+
+        forms_all_cols = {row[1] for row in conn.execute("PRAGMA table_info(forms_all)")}
+        if not _REQUIRED_FORMS_ALL_COLS.issubset(forms_all_cols):
+            return False
+
+        marker_cols = {row[1] for row in conn.execute("PRAGMA table_info(form_markers)")}
+        return _REQUIRED_FORM_MARKERS_COLS.issubset(marker_cols)
+    except sqlite3.Error:
+        return False
 
 
 def _get_metadata_and_version(conn: sqlite3.Connection) -> tuple[str, dict[str, Any]]:
     """Retrieve build metadata and version identifier if present."""
-    has_meta = conn.execute(
-        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='vesum_build_metadata'"
-    ).fetchone()
-    if not has_meta:
+    try:
+        has_meta = conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='vesum_build_metadata'"
+        ).fetchone()
+        if not has_meta:
+            return "v6.8.0", {}
+        meta = {
+            str(row[0]): str(row[1])
+            for row in conn.execute("SELECT key, value FROM vesum_build_metadata").fetchall()
+        }
+        version = meta.get("canonical_jsonl_sha256") or meta.get("schema_version") or "v6.8.0"
+        return version, meta
+    except sqlite3.Error:
         return "v6.8.0", {}
-    meta = {
-        str(row[0]): str(row[1])
-        for row in conn.execute("SELECT key, value FROM vesum_build_metadata").fetchall()
-    }
-    version = meta.get("canonical_jsonl_sha256") or meta.get("schema_version") or "v6.8.0"
-    return version, meta
 
 
 def _resolve_inspection_status(
@@ -280,7 +322,7 @@ def inspect_word(
     """
     try:
         conn = get_vesum_conn(db_path)
-    except FileNotFoundError:
+    except (FileNotFoundError, sqlite3.Error):
         return WordInspection(
             word=word,
             status=InspectionStatus.UNAVAILABLE,
@@ -329,7 +371,19 @@ def inspect_word(
         params.append(pos_filter)
     sql += " ORDER BY f.entry_id, f.id, m.marker, m.origin"
 
-    rows = conn.execute(sql, params).fetchall()
+    try:
+        rows = conn.execute(sql, params).fetchall()
+    except sqlite3.Error:
+        return WordInspection(
+            word=word,
+            status=InspectionStatus.UNAVAILABLE,
+            clean_analyses=[],
+            marked_analyses=[],
+            effective_markers=[],
+            source_locations=[],
+            source_version="unavailable",
+            pipeline_identity={},
+        )
 
     analyses_by_id: dict[int, dict[str, Any]] = {}
     markers_by_id: dict[int, list[dict[str, str]]] = {}
@@ -400,7 +454,7 @@ def inspect_words(
 
     try:
         conn = get_vesum_conn(db_path)
-    except FileNotFoundError:
+    except (FileNotFoundError, sqlite3.Error):
         return {
             w: WordInspection(
                 word=w,
@@ -457,7 +511,22 @@ def inspect_words(
         params.append(pos_filter)
     sql += " ORDER BY f.word_form, f.entry_id, f.id, m.marker, m.origin"
 
-    rows = conn.execute(sql, params).fetchall()
+    try:
+        rows = conn.execute(sql, params).fetchall()
+    except sqlite3.Error:
+        return {
+            w: WordInspection(
+                word=w,
+                status=InspectionStatus.UNAVAILABLE,
+                clean_analyses=[],
+                marked_analyses=[],
+                effective_markers=[],
+                source_locations=[],
+                source_version="unavailable",
+                pipeline_identity={},
+            )
+            for w in words
+        }
 
     data_by_word: dict[str, dict[int, dict[str, Any]]] = {w: {} for w in unique_words}
     markers_by_word_id: dict[str, dict[int, list[dict[str, str]]]] = {w: {} for w in unique_words}
@@ -528,7 +597,7 @@ def inspect_lemma(
     """
     try:
         conn = get_vesum_conn(db_path)
-    except FileNotFoundError:
+    except (FileNotFoundError, sqlite3.Error):
         return LemmaInspection(
             lemma=lemma,
             status=InspectionStatus.UNAVAILABLE,
@@ -574,7 +643,20 @@ def inspect_lemma(
         WHERE f.lemma = ?
         ORDER BY f.pos, f.tags, f.word_form, m.marker
     """
-    rows = conn.execute(sql, (lemma,)).fetchall()
+    try:
+        rows = conn.execute(sql, (lemma,)).fetchall()
+    except sqlite3.Error:
+        return LemmaInspection(
+            lemma=lemma,
+            status=InspectionStatus.UNAVAILABLE,
+            clean_analyses=[],
+            marked_analyses=[],
+            forms=[],
+            effective_markers=[],
+            source_locations=[],
+            source_version="unavailable",
+            pipeline_identity={},
+        )
 
     analyses_by_id: dict[int, dict[str, Any]] = {}
     markers_by_id: dict[int, list[dict[str, str]]] = {}
@@ -636,25 +718,25 @@ def inspect_lemma(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Query the VESUM morphological dictionary")
-    parser.add_argument("--db", "-d", type=Path, help="Explicit path to VESUM SQLite database")
+    parser.add_argument("--db", "-d", type=Path, default=None, help="Explicit path to VESUM SQLite database")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     word_parser = subparsers.add_parser("word", help="Verify a Ukrainian word form (compatibility view)")
     word_parser.add_argument("query", help="Word form to check")
     word_parser.add_argument("--pos", type=str, help="Filter by POS, e.g. noun, verb, adj")
     word_parser.add_argument("--json", action="store_true", help="Print raw JSON")
-    word_parser.add_argument("--db", "-d", type=Path, help="Explicit path to VESUM SQLite database")
+    word_parser.add_argument("--db", "-d", type=Path, default=argparse.SUPPRESS, help="Explicit path to VESUM SQLite database")
 
     words_parser = subparsers.add_parser("words", help="Batch-verify Ukrainian word forms (compatibility view)")
     words_parser.add_argument("query", nargs="+", help="Word forms to check")
     words_parser.add_argument("--pos", type=str, help="Filter by POS, e.g. noun, verb, adj")
     words_parser.add_argument("--json", action="store_true", help="Print raw JSON")
-    words_parser.add_argument("--db", "-d", type=Path, help="Explicit path to VESUM SQLite database")
+    words_parser.add_argument("--db", "-d", type=Path, default=argparse.SUPPRESS, help="Explicit path to VESUM SQLite database")
 
     lemma_parser = subparsers.add_parser("lemma", help="Get all forms of a lemma (compatibility view)")
     lemma_parser.add_argument("query", help="Lemma to look up")
     lemma_parser.add_argument("--json", action="store_true", help="Print raw JSON")
-    lemma_parser.add_argument("--db", "-d", type=Path, help="Explicit path to VESUM SQLite database")
+    lemma_parser.add_argument("--db", "-d", type=Path, default=argparse.SUPPRESS, help="Explicit path to VESUM SQLite database")
 
     inspect_word_parser = subparsers.add_parser(
         "inspect-word", help="Inspect a word form with full marker awareness"
@@ -662,7 +744,7 @@ def main() -> None:
     inspect_word_parser.add_argument("query", help="Word form to inspect")
     inspect_word_parser.add_argument("--pos", type=str, help="Filter by POS, e.g. noun, verb, adj")
     inspect_word_parser.add_argument("--json", action="store_true", help="Print raw JSON")
-    inspect_word_parser.add_argument("--db", "-d", type=Path, help="Explicit path to VESUM SQLite database")
+    inspect_word_parser.add_argument("--db", "-d", type=Path, default=argparse.SUPPRESS, help="Explicit path to VESUM SQLite database")
 
     inspect_words_parser = subparsers.add_parser(
         "inspect-words", help="Batch inspect word forms with full marker awareness"
@@ -670,14 +752,14 @@ def main() -> None:
     inspect_words_parser.add_argument("query", nargs="+", help="Word forms to inspect")
     inspect_words_parser.add_argument("--pos", type=str, help="Filter by POS, e.g. noun, verb, adj")
     inspect_words_parser.add_argument("--json", action="store_true", help="Print raw JSON")
-    inspect_words_parser.add_argument("--db", "-d", type=Path, help="Explicit path to VESUM SQLite database")
+    inspect_words_parser.add_argument("--db", "-d", type=Path, default=argparse.SUPPRESS, help="Explicit path to VESUM SQLite database")
 
     inspect_lemma_parser = subparsers.add_parser(
         "inspect-lemma", help="Inspect a lemma paradigm with full marker awareness"
     )
     inspect_lemma_parser.add_argument("query", help="Lemma to inspect")
     inspect_lemma_parser.add_argument("--json", action="store_true", help="Print raw JSON")
-    inspect_lemma_parser.add_argument("--db", "-d", type=Path, help="Explicit path to VESUM SQLite database")
+    inspect_lemma_parser.add_argument("--db", "-d", type=Path, default=argparse.SUPPRESS, help="Explicit path to VESUM SQLite database")
 
     args = parser.parse_args()
     db_path = getattr(args, "db", None)

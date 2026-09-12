@@ -64,8 +64,22 @@ def test_verify_shadow_database_detects_hash_mismatch(
     bad_lock["expected"] = dict(lock["expected"])
     bad_lock["expected"]["canonical_jsonl_sha256"] = "0" * 64
 
-    with pytest.raises(ActivationError, match="Canonical JSONL SHA-256 mismatch"):
+    with pytest.raises(ActivationError, match="Metadata canonical JSONL SHA-256 mismatch"):
         verify_shadow_database(shadow_path, bad_lock)
+
+
+def test_verify_shadow_database_detects_tampered_contents(
+    synthetic_lock_and_shadow: tuple[dict[str, object], Path],
+) -> None:
+    lock, shadow_path = synthetic_lock_and_shadow
+    # Tamper with row contents in shadow database without updating vesum_build_metadata
+    conn = sqlite3.connect(shadow_path)
+    conn.execute("UPDATE forms_all SET lemma = 'зміна' WHERE word_form = 'книга'")
+    conn.commit()
+    conn.close()
+
+    with pytest.raises(ActivationError, match="Computed canonical JSONL SHA-256 mismatch"):
+        verify_shadow_database(shadow_path, lock)
 
 
 def test_verify_shadow_database_detects_missing_schema(tmp_path: Path) -> None:

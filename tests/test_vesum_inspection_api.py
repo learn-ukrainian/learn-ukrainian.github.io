@@ -13,6 +13,8 @@ from __future__ import annotations
 
 import bz2
 import json
+import os
+import sqlite3
 from pathlib import Path
 
 import pytest
@@ -294,3 +296,91 @@ def test_legacy_verify_lemma(inspection_db: Path) -> None:
     assert len(forms) == 2
     form_words = {f["word_form"] for f in forms}
     assert form_words == {"clean", "clean-form"}
+
+
+def test_inspection_fail_closed_on_incomplete_schema(tmp_path: Path) -> None:
+    """Incomplete schemas (e.g. missing entry_id or marker_class columns) must return UNAVAILABLE without error."""
+    db_path = tmp_path / "incomplete.db"
+    conn = sqlite3.connect(db_path)
+    # forms_all missing entry_id, source_comment, source_location
+    conn.execute(
+        "CREATE TABLE forms_all (id INTEGER PRIMARY KEY, word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)"
+    )
+    # form_markers missing marker_class
+    conn.execute(
+        "CREATE TABLE form_markers (form_id INT, marker TEXT, origin TEXT)"
+    )
+    conn.execute("INSERT INTO forms_all VALUES (1, 'тест', 'тест', 'noun', 'tag')")
+    conn.commit()
+    conn.close()
+
+    res = inspect_word("тест", db_path=db_path)
+    assert res.status == InspectionStatus.UNAVAILABLE
+
+    batch_res = inspect_words(["тест"], db_path=db_path)
+    assert batch_res["тест"].status == InspectionStatus.UNAVAILABLE
+
+    lemma_res = inspect_lemma("тест", db_path=db_path)
+    assert lemma_res.status == InspectionStatus.UNAVAILABLE
+
+
+def test_vesum_cli_global_db_flag(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, inspection_db: Path, capsys: pytest.CaptureFixture) -> None:
+    """Ensure --db is honored whether placed before or after the subcommand."""
+    from scripts.verification.vesum import main as vesum_main
+
+    # 1. Global --db before subcommand
+    monkeypatch.setattr(
+        "sys.argv",
+        ["vesum.py", "--db", str(inspection_db), "word", "clean", "--json"],
+    )
+    vesum_main()
+    out1 = capsys.readouterr().out
+    data1 = json.loads(out1)
+    assert len(data1) == 1
+    assert data1[0]["lemma"] == "clean"
+
+    # 2. Local --db after subcommand
+    monkeypatch.setattr(
+        "sys.argv",
+        ["vesum.py", "word", "clean", "--db", str(inspection_db), "--json"],
+    )
+    vesum_main()
+    out2 = capsys.readouterr().out
+    data2 = json.loads(out2)
+    assert len(data2) == 1
+    assert data2[0]["lemma"] == "clean"
+
+
+def test_get_vesum_conn_replacement_detection(tmp_path: Path) -> None:
+    """Replacing the database file on disk causes get_vesum_conn to reopen to the new inode."""
+    from scripts.verification.vesum import close_vesum_conn, get_vesum_conn
+
+    close_vesum_conn()
+    db_path = tmp_path / "live.db"
+
+    # DB 1: contains row 'first'
+    conn1 = sqlite3.connect(db_path)
+    conn1.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)")
+    conn1.execute("INSERT INTO forms VALUES ('first', 'first', 'noun', 'tag')")
+    conn1.commit()
+    conn1.close()
+
+    c1 = get_vesum_conn(db_path)
+    rows1 = c1.execute("SELECT word_form FROM forms").fetchall()
+    assert [r["word_form"] for r in rows1] == ["first"]
+
+    # DB 2: built in temp location and atomically replaces DB 1
+    new_db = tmp_path / "replacement.db"
+    conn2 = sqlite3.connect(new_db)
+    conn2.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)")
+    conn2.execute("INSERT INTO forms VALUES ('second', 'second', 'noun', 'tag')")
+    conn2.commit()
+    conn2.close()
+
+    os.replace(new_db, db_path)
+
+    # get_vesum_conn without explicit close must detect inode/mtime change and read 'second'
+    c2 = get_vesum_conn(db_path)
+    rows2 = c2.execute("SELECT word_form FROM forms").fetchall()
+    assert [r["word_form"] for r in rows2] == ["second"]
+    close_vesum_conn()

@@ -28,6 +28,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 from scripts.rag.vesum_reingest import (
     DEFAULT_LOCK_PATH,
     PRODUCTION_DB_PATH,
+    _canonical_jsonl_sha256,
     load_lock,
     sha256_file,
 )
@@ -76,16 +77,23 @@ def verify_shadow_database(
         if fk_errors:
             raise ActivationError(f"Foreign key violations found: {len(fk_errors)}")
 
-        # 3. Metadata check
+        # 3. Metadata check and direct recomputation of canonical hash
         metadata = dict(conn.execute("SELECT key, value FROM vesum_build_metadata").fetchall())
         canonical_sha256 = metadata.get("canonical_jsonl_sha256")
         expected_sha256 = expected.get("canonical_jsonl_sha256")
         if canonical_sha256 != expected_sha256:
             raise ActivationError(
-                f"Canonical JSONL SHA-256 mismatch: expected {expected_sha256}, got {canonical_sha256}"
+                f"Metadata canonical JSONL SHA-256 mismatch: expected {expected_sha256}, got {canonical_sha256}"
             )
 
-        # 4. Row counts check
+        # Recompute canonical digest directly from candidate database contents (#7998)
+        actual_canonical_sha256 = _canonical_jsonl_sha256(conn)
+        if actual_canonical_sha256 != expected_sha256:
+            raise ActivationError(
+                f"Computed canonical JSONL SHA-256 mismatch: expected {expected_sha256}, got {actual_canonical_sha256}"
+            )
+
+        # 4. Row counts and marker counts check
         forms_all_count = conn.execute("SELECT COUNT(*) FROM forms_all").fetchone()[0]
         if forms_all_count != expected.get("forms_all_count"):
             raise ActivationError(
@@ -96,6 +104,18 @@ def verify_shadow_database(
         if forms_compat_count != expected.get("forms_compatibility_count"):
             raise ActivationError(
                 f"forms compatibility count mismatch: expected {expected.get('forms_compatibility_count')}, got {forms_compat_count}"
+            )
+
+        marker_counts = {
+            str(row[0]): int(row[1])
+            for row in conn.execute(
+                "SELECT marker, COUNT(*) FROM form_markers GROUP BY marker ORDER BY marker"
+            ).fetchall()
+        }
+        expected_markers = expected.get("marker_counts", {})
+        if marker_counts != expected_markers:
+            raise ActivationError(
+                f"Marker counts mismatch: expected {expected_markers}, got {marker_counts}"
             )
 
     finally:
