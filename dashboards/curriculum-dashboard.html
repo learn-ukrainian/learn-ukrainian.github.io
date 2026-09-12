@@ -109,6 +109,7 @@ a:hover { text-decoration: underline; }
     <a href="/">Home</a>
     <a href="/orient.html">Orient</a>
     <a href="/fleet.html">Fleet</a>
+    <a href="/work.html">Work</a>
     <a href="/artifacts/">Artifacts</a>
     <a href="/runtime.html">Runtime</a>
     <a href="/docs">API</a>
@@ -195,7 +196,7 @@ function renderTreemap(tracks) {
     const h = Math.max(60, Math.round(t.module_count / totalModules * 600));
     const sel = selectedTrack === t.id ? 'selected' : '';
     return `
-      <div class="treemap-cell ${sel}" style="width:${w}px;height:${h}px;background:${pctColor(t.pct_complete)}"
+      <div class="treemap-cell ${sel}" style="width:${w}px;min-height:${h}px;background:${pctColor(t.pct_complete)}"
            onclick="selectTrack('${t.id}')">
         <span class="name">${t.id.toUpperCase()}</span>
         <span class="count">${t.module_count} modules &middot; ${t.pct_complete}%</span>
