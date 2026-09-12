@@ -212,7 +212,7 @@ def cache_set(key: str, value: object) -> None:
     _ttl_cache[key] = (time.monotonic(), value)
 
 
-def cache_get_or_compute[T](
+def cache_get_or_compute(  # noqa: UP047 — ruff pyflakes lacks PEP 695 type-param support here
     key: str,
     ttl: float,
     compute: Callable[[], T],
