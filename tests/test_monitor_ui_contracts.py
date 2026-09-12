@@ -31,7 +31,6 @@ def test_index_page_uses_shared_parchment_monitor_design():
         "/fleet.html",
         "/epics.html",
         "/work.html",
-        "/audit-dashboard.html",
         "/build-events.html",
         "/consultation.html",
         "/cost.html",
@@ -44,10 +43,24 @@ def test_index_page_uses_shared_parchment_monitor_design():
         "/progress.html",
         "/quality.html",
         "/runtime.html",
-        "/track-health.html",
         "/wiki.html",
     ]:
         assert f'href="{href}"' in html
+    assert 'href="/audit-dashboard.html"' not in html
+    assert 'href="/track-health.html"' not in html
+
+
+@pytest.mark.parametrize(
+    ("filename", "target"),
+    [
+        ("track-health.html", "/progress.html"),
+        ("audit-dashboard.html", "/quality.html"),
+    ],
+)
+def test_consolidated_ops_pages_redirect(filename: str, target: str) -> None:
+    html = (DASHBOARDS / filename).read_text(encoding="utf-8")
+    assert f'content="0; url={target}"' in html
+    assert f'href="{target}"' in html
 
 
 @pytest.mark.parametrize(
@@ -495,7 +508,6 @@ def test_monitor_dashboards_hide_legacy_pipeline_version_labels():
         for path in [
             DASHBOARDS / "index.html",
             DASHBOARDS / "progress.html",
-            DASHBOARDS / "track-health.html",
             DASHBOARDS / "curriculum-dashboard.html",
             DASHBOARDS / "comms.html",
             DASHBOARDS / "delegate.html",
@@ -523,16 +535,14 @@ def test_monitor_dashboards_hide_legacy_pipeline_version_labels():
 
     assert "Current Builds" in dashboard_text["index.html"]
     assert "Rebuild Backlog" in dashboard_text["progress.html"]
-    assert "Build State" in dashboard_text["track-health.html"]
     assert "<th>Build</th>" in dashboard_text["curriculum-dashboard.html"]
 
 
-def test_track_health_uses_live_track_inventory():
-    html = (DASHBOARDS / "track-health.html").read_text(encoding="utf-8")
+def test_progress_uses_live_track_inventory():
+    html = (DASHBOARDS / "progress.html").read_text(encoding="utf-8")
     assert "const TRACKS =" not in html
     assert "/api/state/summary?fresh=true" in html
-    assert "orderedTrackIds" in html
-    assert "module_source !== 'plans-fallback'" in html
+    assert "operationalTrackEntries" in html
 
 
 def test_operational_dashboards_hide_plan_fallback_tracks():
@@ -541,7 +551,6 @@ def test_operational_dashboards_hide_plan_fallback_tracks():
         for path in [
             DASHBOARDS / "index.html",
             DASHBOARDS / "progress.html",
-            DASHBOARDS / "track-health.html",
             DASHBOARDS / "curriculum-dashboard.html",
             DASHBOARDS / "wiki.html",
         ]
@@ -602,7 +611,6 @@ def test_artifacts_page_preserves_secondary_dashboard_links():
     for href in [
         "/admin.html",
         "/fleet.html",
-        "/audit-dashboard.html",
         "/build-events.html",
         "/consultation.html",
         "/cost.html",
@@ -614,16 +622,23 @@ def test_artifacts_page_preserves_secondary_dashboard_links():
         "/progress.html",
         "/quality.html",
         "/runtime.html",
-        "/track-health.html",
         "/wiki.html",
     ]:
         assert f'href="{href}"' in html
         assert (DASHBOARDS / href.lstrip("/")).exists()
+    assert 'href="/audit-dashboard.html"' not in html
+    assert 'href="/track-health.html"' not in html
 
 
 def test_all_playground_pages_use_single_monitor_shell():
     for path in sorted(DASHBOARDS.glob("*.html")):
-        if path.name in {"channels.html", "comms.html", "images.html"}:
+        if path.name in {
+            "channels.html",
+            "comms.html",
+            "images.html",
+            "audit-dashboard.html",
+            "track-health.html",
+        }:
             continue
         html = path.read_text(encoding="utf-8")
         assert '<link rel="stylesheet" href="/monitor.css">' in html, path.name
@@ -641,28 +656,20 @@ def test_all_playground_pages_use_single_monitor_shell():
 
 def test_operations_pages_keep_secondary_navigation():
     pages_to_hrefs = {
-        "audit-dashboard.html": ["/track-health.html", "/docs"],
         "curriculum-dashboard.html": [
-            "/audit-dashboard.html",
             "/progress.html",
             "/quality.html",
-            "/track-health.html",
         ],
-        "progress.html": ["/audit-dashboard.html", "/quality.html", "/track-health.html", "/docs"],
-        "quality.html": ["/audit-dashboard.html", "/progress.html", "/track-health.html", "/docs"],
-        "track-health.html": [
-            "/progress.html",
-            "/audit-dashboard.html",
-            "/quality.html",
-            "/curriculum-dashboard.html",
-            "/docs",
-        ],
+        "progress.html": ["/quality.html", "/curriculum-dashboard.html", "/docs"],
+        "quality.html": ["/progress.html", "/curriculum-dashboard.html", "/docs"],
     }
     for page, hrefs in pages_to_hrefs.items():
         html = (DASHBOARDS / page).read_text(encoding="utf-8")
         assert 'class="ops-nav"' in html, page
         for href in hrefs:
             assert f'href="{href}"' in html, page
+        assert 'href="/audit-dashboard.html"' not in html, page
+        assert 'href="/track-health.html"' not in html, page
 
 
 def test_delegate_completed_rows_open_detail_inspector() -> None:
@@ -715,7 +722,6 @@ def test_launchpad_passing_stat_is_honest_when_no_audit_data() -> None:
     """
     html = (DASHBOARDS / "index.html").read_text(encoding="utf-8")
     assert "Passing · no audit data" in html
-    assert "no audit results" in html
     assert "acc.fail += stats.fail || 0;" in html
     assert "acc.unaudited += stats.unaudited || 0;" in html
     assert "const auditsRecorded = (t.pass + t.fail) > 0;" in html
