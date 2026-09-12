@@ -1,6 +1,6 @@
-# Lesson Contract — Curriculum Reboot (#1577 Phase 0 draft)
+# Lesson Contract v4 — published lessons under a module landing (#7994)
 
-> **Status:** DRAFT v3 — signed off by Codex + Gemini in `architecture` channel
+> **History:** DRAFT v3 — signed off by Codex + Gemini in `architecture` channel
 > thread `6de2be4789394536abdb6356cd5bb006` (round 2, both `[AGREE]`).
 > Open questions §7 resolved per panel consensus. Activity matrix in §3.4
 > aligned with `docs/best-practices/activity-pedagogy.md` per Codex
@@ -36,7 +36,37 @@
 
 ---
 
-## 1. Source artifacts the writer produces
+## 1. Published unit and source artifacts (v4)
+
+V4 applies to curriculum upgrades: the **lesson** is the published unit under a
+module landing. Option A emits `site/src/content/docs/{level}/{slug}/index.mdx`
+and `{slug}/{n}.mdx`. Every lesson retains the four tabs described below. The
+landing carries objectives, lesson cards and linked unions of vocabulary, practice
+and resources; previous/next links advance by lesson. The final lesson closes the
+module. Existing unsplit V7 modules continue to use the v3 single-page shape.
+
+The initial output level is parallel `a1-v2` with `base_level: a1`; live A1 stays
+untouched. A deterministic `lessons.yaml` assigns original sections and activities
+before writing. The upgrade input is the existing module's four artifacts and
+immutable plan. No wiki packet or new plan is authored. Source lesson files live
+in `{level}/{slug}/lesson-{n}/`; only the map is pipeline-owned. Every original
+paragraph remains verbatim in its assigned lesson (stress/whitespace normalization
+only), and every original activity retains its payload and stable identity.
+
+Each 60-minute lesson has at least 550 prose tokens and ten activities (4–6 inline,
+6–9 workbook). The complete pilot split has at least 2000 prose tokens. Original
+short-item exemptions are explicit in the map. Vocabulary is allocated once across
+lessons and accumulates in published tabs and learner state. Stress annotation runs
+after review; correctness, not just mark presence, is checked against the oracle.
+No named narrator or self-introduction; people are named only inside dialogues.
+Quotations are visibly attributed and listed in Resources. Added A1 Ukrainian
+passages of at least three sentences have side-by-side English support.
+
+Schema and exact acceptance: [Phase 1 spec](epics/curriculum-upgrade-phase1-spec.md).
+The existing immersion exposure allocation remains a blocking residual documented
+there; v4 does not silently change current thresholds.
+
+### Legacy v3 artifact history
 
 Every module's authoring output is a small set of files at
 `curriculum/l2-uk-en/{level}/{slug}/`:

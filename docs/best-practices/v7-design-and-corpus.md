@@ -18,9 +18,15 @@ A free, source-grounded **L2 escalator from zero-Ukrainian to the Ukrainian inte
 
 **Audience**: self-driven adult / older teen, peer voice, no AI tells, no "great job!" stickers. Real learners use these modules as their first contact — five excellent modules beat fifty-five mediocre.
 
-### 1.2 The 4-tab module shape (`docs/lesson-contract.md` v3, panel-confirmed 2026-04-25)
+### 1.2 The 4-tab lesson shape (`docs/lesson-contract.md` v4)
 
-Every module = ONE `.mdx` at `starlight/src/content/docs/{level}/{slug}.mdx` with EXACTLY four `<TabItem>` children in this order:
+Upgrades publish a module landing at `site/src/content/docs/{level}/{slug}/index.mdx`
+and one page per lesson at `{slug}/{n}.mdx`, each with exactly four `<TabItem>`
+children in this order. The first parallel level is `a1-v2`; live A1 stays untouched.
+The landing aggregates objectives, lesson cards and linked vocabulary/practice/resources.
+V7 `--upgrade` preserves and expands existing artifacts using a deterministic map;
+no wiki packet or plan rewrite. Existing unsplit V7 modules retain their single page.
+See [Phase 1 spec](../epics/curriculum-upgrade-phase1-spec.md) for gates and acceptance.
 
 | # | EN | UK | Source artifact | Required content |
 |---|---|---|---|---|
@@ -40,7 +46,7 @@ Every module = ONE `.mdx` at `starlight/src/content/docs/{level}/{slug}.mdx` wit
 
 ### 1.3 Student-aware immersion — the BIG V7 design point
 
-> **PRESENTATION PATTERN — READ FIRST** before any A1/A2 build: [`docs/best-practices/ulp-presentation-pattern.md`](ulp-presentation-pattern.md) — extracted Anna Ohoiko presentation moves (UK-first em-dash gloss, side-by-side bilingual, stress marks, UK-only Q&A, named persona) + S1→S6 progression with the DRASTIC S1→S2 step-change at ~A1 m41. The decision card below specifies the ARCHITECTURE (`compute_immersion_band`, gates, schema); the presentation-pattern doc specifies the WRITER EXECUTION moves. Both are required reading.
+> **PRESENTATION PATTERN — READ FIRST** before any A1/A2 build: [`docs/best-practices/ulp-presentation-pattern.md`](ulp-presentation-pattern.md) — extracted Anna Ohoiko presentation moves (UK-first em-dash gloss, side-by-side bilingual, stress marks, UK-only Q&A, direct teaching voice without a named narrator) + S1→S6 progression with the DRASTIC S1→S2 step-change at ~A1 m41. The decision card below specifies the ARCHITECTURE (`compute_immersion_band`, gates, schema); the presentation-pattern doc specifies the WRITER EXECUTION moves. Both are required reading.
 
 `docs/decisions/2026-05-13-ulp-derived-student-aware-immersion.md` (ACCEPTED):
 

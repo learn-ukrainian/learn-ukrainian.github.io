@@ -2593,3 +2593,10 @@ levels:
       # I · Regional / high-culture synthesis
       - rehionalni-etnokulturni-tradytsii
       - narodna-kultura-ta-vysoka-kultura-mistky
+
+  a1-v2:
+    type: core
+    base_level: a1
+    # Parallel preview: list only modules selected for upgrade, never empty shells.
+    modules:
+      - things-have-gender

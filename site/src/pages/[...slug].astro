@@ -68,6 +68,11 @@ const TRACKS: Record<string, TrackOverview> = {
     ],
     pattern: ['tabs', 'dialogue', 'rule cards', 'vocabulary', 'workbook practice', 'prev/next'],
   },
+  'a1-v2': {
+    label: 'A1-v2', title: 'A1 · 60-minute lessons', eyebrow: 'Parallel A1 preview',
+    subtitle: 'Expanded lessons grouped under module landings.', status: 'Preview',
+    family: 'core', state: 'test', heroVariant: 'core', points: [], pattern: ['lessons', 'four tabs'],
+  },
   a2: {
     label: 'A2',
     title: 'A2 · Elementary Ukrainian',
@@ -284,7 +289,7 @@ const HIDDEN_DOCS = new Set(['a1/review-clears-needs-human']);
 // folk module pages get their left sidebar + breadcrumbs + search (reverses #3027 —
 // coordinate with orchestrator on the launch posture).
 const HIDDEN_LINK_TRACKS = new Set<string>();
-const SEARCH_LESSON_PREFIXES = new Set(['a1', 'a2']);
+const SEARCH_LESSON_PREFIXES = new Set(['a1', 'a1-v2', 'a2']);
 const normalizeId = (id: string) => id.replace(/\.mdx?$/, '').replace(/\/index$/, '');
 const hrefFromRoute = (route: string) => `/${route}/`;
 const trackIds = Object.keys(TRACKS);
@@ -364,9 +369,9 @@ const searchItems: SearchItem[] = [
 
 export async function getStaticPaths() {
   const normalizeDocId = (id: string) => id.replace(/\.mdx?$/, '').replace(/\/index$/, '');
-  const publicLessonPrefixes = new Set(['a1', 'a2', 'b1', 'b2', 'bio', 'folk']);
+  const publicLessonPrefixes = new Set(['a1', 'a1-v2', 'a2', 'b1', 'b2', 'bio', 'folk']);
   const hiddenDocs = new Set(['a1/review-clears-needs-human']);
-  const configuredTracks = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'folk', 'bio', 'hist', 'istorio', 'lit', 'oes', 'ruth'];
+  const configuredTracks = ['a1', 'a1-v2', 'a2', 'b1', 'b2', 'c1', 'c2', 'folk', 'bio', 'hist', 'istorio', 'lit', 'oes', 'ruth'];
   const pathDocs = await getCollection('docs');
   const landingDocsByPathTrack = new Map<string, DocsEntry>();
   const docs = pathDocs.filter((entry) => {
@@ -559,6 +564,20 @@ const sidebar = props.kind === 'doc'
   : undefined;
 
 const plannedModuleGroups = (track: string, trackOverview: TrackOverview) => {
+  if (track === 'a1-v2') {
+    return [{
+      unit: trackOverview.title,
+      items: (deployedDocsByTrack.get(track) ?? [])
+        .filter(entry => Array.isArray(entry.data.lessons))
+        .map(entry => ({
+          num: entry.data.sidebar?.order ?? 1,
+          slug: normalizeId(entry.id).split('/')[1],
+          title: entry.data.title,
+          status: 'active' as const,
+          lessons: entry.data.lessons as { n: number; title: string; minutes: number; href: string }[],
+        })),
+    }];
+  }
   const count = moduleCount(track);
   return [{
     unit: `${trackOverview.label} planned modules`,
@@ -598,7 +617,7 @@ const plannedModuleGroups = (track: string, trackOverview: TrackOverview) => {
       subtitle={pageTrack.subtitle}
       moduleCount={moduleCount(props.track)}
       wordTarget={4000}
-      color={`var(--lu-id-${props.track})`}
+      color={`var(--lu-id-${props.track === 'a1-v2' ? 'a1' : props.track})`}
       modules={plannedModuleGroups(props.track, pageTrack)}
     />
   ) : props.kind === 'search' ? (

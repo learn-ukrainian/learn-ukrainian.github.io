@@ -11,6 +11,7 @@ import textwrap
 
 from config import IMMERSION_POLICIES
 from config import get_immersion_rule as shared_get_immersion_rule
+from level_config import base_level
 
 # ============================================================================
 # 1. Config Tables (data only, no logic)
@@ -1190,6 +1191,7 @@ ACTIVITY_CONFIGS: dict[str, dict[str, str]] = {
 
 def get_track_skill(track: str, module_num: int) -> tuple[str, str, str]:
     """Return (skill_file, skill_identity, persona_flavor) for a track + module number."""
+    track = base_level(track)
     if track == "b1":
         key = "b1-early" if module_num <= 5 else "b1-late"
         return TRACK_SKILLS[key]
@@ -1312,6 +1314,7 @@ def _phase_out_activity_type(config: dict[str, str], activity_type: str) -> None
 
 def _resolve_activity_config_key(track: str, slug: str | None) -> str:
     """Resolve the ``ACTIVITY_CONFIGS`` lookup key for a track + slug."""
+    track = base_level(track)
     if slug and slug.startswith("checkpoint-"):
         checkpoint_key = f"{track}-checkpoint"
         if checkpoint_key in ACTIVITY_CONFIGS:
@@ -1355,6 +1358,7 @@ def get_activity_config(
     without leaking into the global ``ACTIVITY_CONFIGS``.
     """
     key = _resolve_activity_config_key(track, slug)
+    track = base_level(track)
     config = copy.deepcopy(ACTIVITY_CONFIGS[key])
 
     # Dynamic rules applied to the copy

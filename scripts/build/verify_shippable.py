@@ -330,17 +330,60 @@ def _print_human(report: dict) -> None:
     print()
 
 
+def verify_lessons(level: str, slug: str, *, module_dir: Path | None = None,
+                   plan_path: Path | None = None, source_dir: Path | None = None) -> dict:
+    """Check every lesson and the landing, including cross-lesson invariants."""
+    from scripts.build.lesson_assembler import assemble_lessons
+    from scripts.build.linear_pipeline import run_mdx_render_gate, run_python_qg
+
+    module_dir = module_dir or _default_module_dir(level, slug)
+    plan_path = plan_path or _default_plan_path("a1", slug)
+    source_dir = source_dir or _default_module_dir("a1", slug)
+    steps = []
+    try:
+        with tempfile.TemporaryDirectory(prefix="verify-lessons-") as temp:
+            pages = assemble_lessons(module_dir, Path(temp), plan_path)
+            quality = run_python_qg(module_dir, plan_path, lesson_mode=True, source_dir=source_dir, rendered=pages)
+            steps.append({"step": "lesson_python_qg", "passed": quality["passed"],
+                          "detail": "; ".join(quality["diagnostics"]) or "lesson gates passed"})
+            renders = {name: run_mdx_render_gate(page) for name, page in pages.items()}
+            for name, result in renders.items():
+                steps.append({"step": f"mdx_render.{name}", "passed": result.get("passed") is True,
+                              "detail": result.get("message", "")})
+            steps.append({"step": "mdx_render", "passed": all(r.get("passed") is True for r in renders.values()),
+                          "detail": "all lesson pages and module landing"})
+    except Exception as exc:
+        steps.append({"step": "lesson_verification", "passed": False,
+                      "detail": f"{type(exc).__name__}: {exc}"})
+    return _finalize(level, slug, steps)
+
+
 def main(argv: list[str] | None = None) -> int:
-    ap = argparse.ArgumentParser(description="Definition-of-Done predicate for a built module (#3138)")
+    ap = argparse.ArgumentParser(
+        description="Verify deterministic shippability of built V7 modules or lesson splits.\nUse after authoring; this does not run a writer or replace cross-family review.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n  .venv/bin/python -m scripts.build.verify_shippable a1-v2 things-have-gender --lesson\n"
+        "  .venv/bin/python -m scripts.build.verify_shippable a1 things-have-gender --json\n\n"
+        "Outputs: human or JSON gate report; temporary assembled MDX. --astro-build writes a build log.\n"
+        "Exit codes: 0 shippable, 1 failed/incomplete gate, 2 invalid arguments.\n"
+        "Related: scripts/build/v7_build.py; docs/epics/curriculum-upgrade-phase1-spec.md; #7994.",
+    )
     ap.add_argument("level", help="track/level token, e.g. folk, a1, b1")
     ap.add_argument("slug", help="module slug")
-    ap.add_argument("--module-dir", type=Path, default=None)
-    ap.add_argument("--plan", type=Path, default=None, dest="plan_path")
+    ap.add_argument("--module-dir", type=Path, default=None, help="Built artifact directory (default: curriculum/l2-uk-en/{level}/{slug})")
+    ap.add_argument("--plan", type=Path, default=None, dest="plan_path", help="Existing plan YAML (default: plans/{level}/{slug}.yaml, base A1 with --lesson)")
     ap.add_argument("--astro-build", action="store_true", help="also run the full astro build (catch-all)")
     ap.add_argument("--json", action="store_true", help="emit the raw report as JSON")
+    ap.add_argument("--lesson", action="store_true", help="verify all lesson pages plus cross-lesson preservation (a1-v2; base plan/source a1)")
+    ap.add_argument("--source-dir", type=Path, help="original built module directory for --lesson")
     args = ap.parse_args(argv)
+    if args.lesson and args.astro_build:
+        ap.error("--lesson does not yet support --astro-build; use the site build separately")
 
-    report = verify(
+    report = verify_lessons(
+        args.level, args.slug, module_dir=args.module_dir,
+        plan_path=args.plan_path, source_dir=args.source_dir,
+    ) if args.lesson else verify(
         args.level,
         args.slug,
         module_dir=args.module_dir,

@@ -13,6 +13,17 @@
 
 User direction 2026-05-25, foreigner himself: *"i as a foreigner prefer the ukranian approach."* Typical foreigner-targeted Ukrainian-as-second-language textbooks Anglicize ("Б sounds like 'b' in English", transliteration tables, English-frame-first dialogues). ULP does the **opposite**: Ukrainian-first, English as a scaffold that recedes. The user wants A1 modules to match Ohoiko's approach, NOT foreigner-textbook conventions. The decision card already encoded the *architecture* (`compute_immersion_band`, `{LEARNER_STATE}`). This doc encodes the *presentation practices*.
 
+## Attribution and voice for curriculum upgrades (#7994)
+
+The examples below are attributed observations of the reference author's work,
+not narrator scripts to copy into our lessons. Upgrades use no named narrator and
+no self-introduction opener. Named people appear only inside dialogues. A quotation
+must be marked as a quotation, visibly attributed, and listed in Ресурси. Do not
+adopt another author's persona or lesson structure. Keep Ukrainian-first presentation
+with side-by-side English support for added A1 passages of three or more sentences.
+Dialogues use blockquotes rendered as DialogueBox, never code fences. Stress marks
+are added deterministically after review and checked for correctness against ULIF.
+
 ## The seven Ohoiko practices (extracted from ULP 1-00, S1 lessons 1, 10, 20)
 
 ### Practice 1 — UK first, EN gloss after, em-dash separator
@@ -126,7 +137,7 @@ Verbatim (Lesson 11, lines 2140-2145):
 
 She names herself, names locations she visits (Kyiv parks, Khmelnytska oblast, Полонне, Хрещатик, Поділ, кав'ярня "Living Room"), and ties grammatical concepts to lived experience.
 
-**A1 writer-prompt directive**: Tab 1 prose should be voiced from a named first-person Ukrainian teacher persona (or named characters in dialogues), not abstracted "the student should learn that...". Cultural anchors should be real Ukrainian places, real foods, real activities — not generic L2-textbook fillers ("the man went to the store").
+**A1 writer-prompt directive**: Use a direct teaching voice without a named narrator. Named characters belong inside dialogues. Use source-grounded Ukrainian cultural contexts; reference-author first-person examples above remain attributed quotations, not a persona for our lessons.
 
 ---
 
