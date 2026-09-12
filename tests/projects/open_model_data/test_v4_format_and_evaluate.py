@@ -1018,3 +1018,15 @@ def test_explanation_concerning_authority_word_rejected() -> None:
     assert not eval2["is_pass"]
     assert not eval2["reasoning_grounded"]
     assert eval2["composite_score"] <= 0.40
+
+
+def test_grammatical_qualifiers_not_treated_as_unrelated_subjects() -> None:
+    """M1 Review P2: Grammatical qualifiers (e.g. «чоловічого роду») describe the subject and must not fail grounding."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    r = "Вживайте goodtoken, бо за словником ВЕСУМ це іменник чоловічого роду з питомим суфіксом -ник."
+    eval_res = evaluate_single_response(target, alts, r)
+    assert eval_res["is_pass"]
+    assert eval_res["reasoning_grounded"]
+    assert eval_res["composite_score"] == 1.0

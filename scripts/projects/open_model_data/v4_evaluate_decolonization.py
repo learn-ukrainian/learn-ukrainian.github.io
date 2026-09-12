@@ -245,6 +245,18 @@ NAMED_ENTITY_PATTERNS = [
     ),
 ]
 
+GRAMMATICAL_QUALIFIERS = re.compile(
+    r"^(?:чоловіч\w*|жіноч\w*|середнь\w*|спільн\w*|"
+    r"доконан\w*|недоконан\w*|"
+    r"теперішн\w*|минул\w*|майбутн\w*|"
+    r"тверд\w*|м['’ʼ]?як\w*|мішан\w*|"
+    r"перш\w*|друг\w*|трет\w*|четверт\w*|"
+    r"вищ\w*|найвищ\w*|"
+    r"однин\w*|множин\w*|"
+    r"род\w*|вид\w*|час\w*|відмін\w*|груп\w*|ступен\w*)$",
+    re.IGNORECASE,
+)
+
 GRAMMATICAL_STOPWORDS = {
     "за",
     "у",
@@ -472,6 +484,8 @@ def evaluate_single_response(
                     or tok.endswith("–")
                     or tok in EXEMPT_AFFIXES
                 ):
+                    continue
+                if GRAMMATICAL_QUALIFIERS.match(tok):
                     continue
                 words = tok.split()
                 if tok in all_target_tokens or tok in GRAMMATICAL_STOPWORDS:
