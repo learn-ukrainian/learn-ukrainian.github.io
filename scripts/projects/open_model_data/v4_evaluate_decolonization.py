@@ -161,98 +161,26 @@ OTHER_ENTITY_PATTERNS = [
 ]
 
 EXEMPT_LINGUISTIC_ENTITIES = {
-    # Textbooks & subjects
-    "буквар",
-    "мова",
-    "українська мова",
-    "література",
-    "українська література",
-    "історія",
-    "історія україни",
-    "всесвітня історія",
-    "біологія",
-    "географія",
-    "фізика",
-    "хімія",
-    "математика",
-    "алгебра",
-    "геометрія",
-    "я досліджую світ",
-    "правознавство",
-    "астрономія",
-    "природознавство",
-    "інформатика",
-    "технології",
-    "зарубіжна література",
-    "мистецтво",
-    "етика",
-    "добро і зло",
-    "основи здоров'я",
-    "етикет",
-    "навколишній світ",
-    "громадянська освіта",
     # Authorities & dictionaries
     "весум",
     "сум-11",
     "сум",
     "грінченко",
     "грінченка",
-    "словник",
-    "словнику",
-    "словником",
-    "словника",
-    "словники",
-    "джерело",
-    "джерела",
-    # Parts of speech & grammatical categories
-    "іменник",
-    "іменника",
-    "прикметник",
-    "прикметника",
-    "дієслово",
-    "дієслова",
-    "дієприкметник",
-    "дієприкметника",
-    "дієприслівник",
-    "дієприслівника",
-    "прислівник",
-    "прислівника",
-    "займенник",
-    "числівник",
-    "прийменник",
-    "сполучник",
-    "частка",
-    "вигук",
-    "частки",
-    # Morphemic concepts
-    "префікс",
-    "префікса",
-    "префіксом",
-    "суфікс",
-    "суфікса",
-    "суфіксом",
-    "корінь",
-    "кореня",
-    "коренем",
-    "закінчення",
-    "основа",
-    "основи",
-    "словотвір",
-    "словотвору",
-    "словотвірна",
-    "словотвірній",
-    "словозміна",
-    "словозміни",
-    "парадигма",
-    "парадигму",
-    "парадигми",
-    "деривація",
-    "деривації",
-    "етимологія",
-    "етимології",
-    "система",
-    "системі",
-    "системи",
+    "правопис",
+    "правопис 2019",
+    # Specific multi-word textbook & course titles
+    "українська мова",
+    "українська література",
+    "історія україни",
+    "всесвітня історія",
+    "я досліджую світ",
+    "зарубіжна література",
+    "основи здоров'я",
+    "громадянська освіта",
+}
+
+EXEMPT_AFFIXES = {
     "-чий",
     "обез-",
     "со-",
@@ -272,52 +200,15 @@ EXEMPT_LINGUISTIC_ENTITIES = {
     "роз-",
     "пре-",
     "при-",
-    # Normative and decolonization status markers
-    "калька",
-    "кальки",
-    "калькою",
-    "росіянізм",
-    "росіянізму",
-    "росіянізмом",
-    "суржик",
-    "суржику",
-    "русизм",
-    "норма",
-    "норми",
-    "нормі",
-    "стандарт",
-    "стандарту",
-    "стандартом",
-    "відповідник",
-    "відповідника",
-    "відповідником",
-    "варіант",
-    "варіанта",
-    "варіантом",
-    "форма",
-    "форми",
-    "формою",
-    "слово",
-    "слова",
-    "словом",
-    "лексема",
-    "лексеми",
-    "лексемою",
-    "термін",
-    "терміна",
-    "терміном",
+    "-тель",
+    "-ник",
+    "-н-",
+    "-ен-",
+    "-ськ-",
+    "-ов-",
+    "-ів-",
+    "-ин-",
 }
-
-NAMED_ENTITY_PATTERNS = [
-    re.compile(
-        r"\b(?:слов[аоеіу]|словом|слові|форм[аиіуе]|формою|лексем[аиіуе]|лексемою|термін[аіу]|терміном)\s+[«\"“']?([а-яіїєґa-z0-9'’ʼ\-]+)[»\"”']?",
-        re.IGNORECASE,
-    ),
-    re.compile(
-        r"\b(?:суфікс\w*|префікс\w*|корен\w*|значенн\w*|поясненн\w*)\s+(?:слова|у\s+слові|форми|у\s+формі)\s+[«\"“']?([а-яіїєґa-z0-9'’ʼ\-]+)[»\"”']?",
-        re.IGNORECASE,
-    ),
-]
 
 GRAMMATICAL_STOPWORDS = {
     "за",
@@ -387,6 +278,132 @@ GRAMMATICAL_STOPWORDS = {
     "виступає",
     "вважається",
 }
+
+STOPWORD_PATTERN = r"(?:" + "|".join(re.escape(w) for w in sorted(GRAMMATICAL_STOPWORDS, key=len, reverse=True)) + r")"
+
+PART_OF_SPEECH_WORDS = (
+    r"(?:у\s+)?(?:слов[аоеіу]|словом|слові|слів|"
+    r"лексем[аиіуе]|лексемою|лексемі|"
+    r"термін[аіу]|терміном|терміні|"
+    r"понятт\w*|"
+    r"іменник\w*|"
+    r"прикметник\w*|"
+    r"дієслов\w*|"
+    r"дієприкметник\w*|"
+    r"дієприслівник\w*|"
+    r"прислівник\w*|"
+    r"займенник\w*|"
+    r"числівник\w*|"
+    r"сполучник\w*|"
+    r"прийменник\w*|"
+    r"частк\w*|"
+    r"вигук\w*)"
+)
+
+DESCRIPTOR_WORDS = (
+    r"(?:суфікс\w*|префікс\w*|корен\w*|основ\w*|закінченн\w*|"
+    r"значенн\w*|поясненн\w*|тлумаченн\w*|етимологі\w*|походженн\w*|"
+    r"варіант\w*|форм\w*)"
+)
+
+RELATION_CHAIN = rf"(?:{DESCRIPTOR_WORDS}\s+)*"
+
+RELATION_CHAIN_NO_FORM = (
+    r"(?:(?:суфікс\w*|префікс\w*|корен\w*|основ\w*|закінченн\w*|"
+    r"значенн\w*|поясненн\w*|тлумаченн\w*|етимологі\w*|походженн\w*|"
+    r"варіант\w*)\s+)*"
+)
+
+TERMINAL_PUNCT = r"[.,;:!?…—–―−()\[\]{}»”]|--|\s+-\s+"
+TERMINAL_CARRIER_BOUNDARY = rf"(?:\s*(?={TERMINAL_PUNCT}|$)|(?:\s+(?={STOPWORD_PATTERN}\b)))"
+
+NAMED_ENTITY_PATTERNS = [
+    re.compile(
+        rf"\b{RELATION_CHAIN}{PART_OF_SPEECH_WORDS}\s+(?!{STOPWORD_PATTERN}\b)[«\"“']?([а-яіїєґa-z0-9'’ʼ\-]+)[»\"”']?",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        rf"\b{RELATION_CHAIN}[«\"“']([а-яіїєґa-z0-9'’ʼ\-]+)[»\"”']",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        rf"\b{RELATION_CHAIN_NO_FORM}(?:форм[аиіуе]|формою|формі)\s+(?!{PART_OF_SPEECH_WORDS}\b)(?!{STOPWORD_PATTERN}\b)([а-яіїєґa-z0-9'’ʼ\-]+)",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        rf"\b(?:{DESCRIPTOR_WORDS}\s+)+({PART_OF_SPEECH_WORDS}){TERMINAL_CARRIER_BOUNDARY}",
+        re.IGNORECASE,
+    ),
+]
+
+PROTECTED_SPAN_PATTERN = re.compile(
+    r"("
+    r"[«\"“„][^»\"”\n]+[»\"””]"
+    r"|(?<!\w)['‘][^'’\n]+['’](?!\w)"
+    r"|(?<=\bслов[аоі]\s)[а-яіїєґa-z0-9'’ʼ\-]+"
+    r"|(?<=\bтермін\s)[а-яіїєґa-z0-9'’ʼ\-]+"
+    r"|(?<=\bтерміна\s)[а-яіїєґa-z0-9'’ʼ\-]+"
+    r"|(?<=\bлексеми\s)[а-яіїєґa-z0-9'’ʼ\-]+"
+    r"|(?<=\bпоняття\s)[а-яіїєґa-z0-9'’ʼ\-]+"
+    r")",
+    re.IGNORECASE,
+)
+
+GRAMMATICAL_MODIFIER_RULES = [
+    # Gender modifying POS or form
+    (
+        re.compile(
+            r"\b(іменник\w*|прикметник\w*|займенник\w*|числівник\w*|дієприкметник\w*|форм\w*)\s+(?:чоловічого|жіночого|середнього|спільного)\s+роду\b",
+            re.IGNORECASE,
+        ),
+        r"\1 ",
+    ),
+    # Aspect modifying verb, participle, or form
+    (
+        re.compile(
+            r"\b(дієслов\w*|дієприкметник\w*|дієприслівник\w*|форм\w*)\s+(?:доконаного|недоконаного)\s+виду\b",
+            re.IGNORECASE,
+        ),
+        r"\1 ",
+    ),
+    # Tense modifying verb, participle, or form
+    (
+        re.compile(
+            r"\b(дієслов\w*|дієприкметник\w*|форм\w*)\s+(?:теперішнього|минулого|майбутнього)\s+часу\b",
+            re.IGNORECASE,
+        ),
+        r"\1 ",
+    ),
+    # Declension modifying noun, adjective, or form
+    (
+        re.compile(
+            r"\b(іменник\w*|прикметник\w*|форм\w*)\s+(?:першої|другої|третьої|четвертої)\s+відміни\b",
+            re.IGNORECASE,
+        ),
+        r"\1 ",
+    ),
+    # Group modifying noun, adjective, or form
+    (
+        re.compile(
+            r"\b(іменник\w*|прикметник\w*|форм\w*)\s+(?:твердої|м['’ʼ]?якої|мішаної)\s+групи\b",
+            re.IGNORECASE,
+        ),
+        r"\1 ",
+    ),
+    # Number modifying grammatical category words
+    (
+        re.compile(
+            r"\b(?:(?:у\s+|в\s+)(?:формі|формах|відмінку|відмінках)|(?:числа|числі|відмінка|відмінків|особі|особах))\s+(?:однини|множини)\b",
+            re.IGNORECASE,
+        ),
+        " ",
+    ),
+    # Prepositional adverbial number constructions
+    (
+        re.compile(r"\b(?:лише\s+|тільки\s+)?(?:в|у)\s+(?:однині|множині)\b", re.IGNORECASE),
+        " ",
+    ),
+]
 
 
 def normalize_token(s: str) -> str:
@@ -523,6 +540,7 @@ def evaluate_single_response(
 
     # Verify reasoning actually references the linguistic subject (target term or alternative)
     target_tokens = {term_norm} | {normalize_token(a) for a in valid_alternatives if normalize_token(a)}
+    all_target_tokens = target_tokens | {w for t in target_tokens for w in t.split()}
     sentences = [s.strip() for s in re.split(r"[.!?\n]+", resp_norm) if s.strip()]
     subject_sentences = [s for s in sentences if any(tt in s for tt in target_tokens)]
     subject_text = " ".join(subject_sentences)
@@ -533,17 +551,33 @@ def evaluate_single_response(
     has_other_entity = any(p.search(resp_norm) for p in OTHER_ENTITY_PATTERNS)
     if not has_other_entity:
         analysis_text = re.sub(r"цитата:\s*[«\"“][^»\"”]+[»\"”]", "", resp_norm, flags=re.IGNORECASE)
+        # Only strip grammatical modifier phrases in genuine modifier context outside protected spans
+        parts = PROTECTED_SPAN_PATTERN.split(analysis_text)
+        for i in range(0, len(parts), 2):
+            while True:
+                prev = parts[i]
+                for pat, repl in GRAMMATICAL_MODIFIER_RULES:
+                    parts[i] = pat.sub(repl, parts[i])
+                if parts[i] == prev:
+                    break
+        analysis_text = "".join(parts)
         for pat in NAMED_ENTITY_PATTERNS:
             for m in pat.finditer(analysis_text):
                 tok = normalize_token(m.group(1))
                 if not tok or len(tok) <= 1:
                     continue
-                words = tok.split()
-                if tok in target_tokens or tok in EXEMPT_LINGUISTIC_ENTITIES or tok in GRAMMATICAL_STOPWORDS:
-                    continue
-                if any(
-                    w in target_tokens or w in EXEMPT_LINGUISTIC_ENTITIES or w in GRAMMATICAL_STOPWORDS for w in words
+                if (
+                    tok.startswith("-")
+                    or tok.endswith("-")
+                    or tok.startswith("–")
+                    or tok.endswith("–")
+                    or tok in EXEMPT_AFFIXES
                 ):
+                    continue
+                words = tok.split()
+                if tok in all_target_tokens or tok in GRAMMATICAL_STOPWORDS:
+                    continue
+                if any(w in all_target_tokens or w in GRAMMATICAL_STOPWORDS for w in words):
                     continue
                 has_other_entity = True
                 break

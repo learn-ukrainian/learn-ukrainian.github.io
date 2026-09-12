@@ -924,3 +924,382 @@ def test_explanation_concerning_named_unrelated_word_rejected() -> None:
     assert not eval2["is_pass"]
     assert not eval2["reasoning_grounded"]
     assert eval2["composite_score"] <= 0.40
+
+
+def test_explanation_concerning_grammatical_label_named_word_rejected() -> None:
+    """M1: An explanation concerning an unrelated word preceded by a grammatical label must fail grounding."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    # Probe from audit M1: grammatical label «іменника «будинок»»
+    r1 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса іменника «будинок»."
+    eval1 = evaluate_single_response(target, alts, r1)
+    assert not eval1["is_pass"]
+    assert not eval1["reasoning_grounded"]
+    assert eval1["composite_score"] <= 0.40
+
+    # Probe unquoted variant
+    r2 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса іменника будинок."
+    eval2 = evaluate_single_response(target, alts, r2)
+    assert not eval2["is_pass"]
+    assert not eval2["reasoning_grounded"]
+    assert eval2["composite_score"] <= 0.40
+
+
+def test_explanation_concerning_word_mova_rejected() -> None:
+    """M1: An explanation concerning the word «мова» must not be exempted when «мова» is not the target."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    # Probe from audit M1: generic word «мова»
+    r1 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «мова»."
+    eval1 = evaluate_single_response(target, alts, r1)
+    assert not eval1["is_pass"]
+    assert not eval1["reasoning_grounded"]
+    assert eval1["composite_score"] <= 0.40
+
+    # Probe unquoted variant
+    r2 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова мова."
+    eval2 = evaluate_single_response(target, alts, r2)
+    assert not eval2["is_pass"]
+    assert not eval2["reasoning_grounded"]
+    assert eval2["composite_score"] <= 0.40
+
+
+def test_explanation_concerning_word_spiv_rejected() -> None:
+    """M1 Review: A named word matching an affix spelling (e.g. «спів») must not be exempted."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    r1 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «спів»."
+    eval1 = evaluate_single_response(target, alts, r1)
+    assert not eval1["is_pass"]
+    assert not eval1["reasoning_grounded"]
+    assert eval1["composite_score"] <= 0.40
+
+    r2 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова спів."
+    eval2 = evaluate_single_response(target, alts, r2)
+    assert not eval2["is_pass"]
+    assert not eval2["reasoning_grounded"]
+    assert eval2["composite_score"] <= 0.40
+
+
+def test_explanation_concerning_word_forma_rejected() -> None:
+    """M1 Review: A named word matching a grammatical descriptor (e.g. «форма») must not be exempted."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    r1 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «форма»."
+    eval1 = evaluate_single_response(target, alts, r1)
+    assert not eval1["is_pass"]
+    assert not eval1["reasoning_grounded"]
+    assert eval1["composite_score"] <= 0.40
+
+    r2 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова форма."
+    eval2 = evaluate_single_response(target, alts, r2)
+    assert not eval2["is_pass"]
+    assert not eval2["reasoning_grounded"]
+    assert eval2["composite_score"] <= 0.40
+
+
+def test_explanation_concerning_authority_word_rejected() -> None:
+    """M1 Review: A named word matching an authority name (e.g. «правопис») must not be exempted as a subject."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    r1 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «правопис»."
+    eval1 = evaluate_single_response(target, alts, r1)
+    assert not eval1["is_pass"]
+    assert not eval1["reasoning_grounded"]
+    assert eval1["composite_score"] <= 0.40
+
+    r2 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова правопис."
+    eval2 = evaluate_single_response(target, alts, r2)
+    assert not eval2["is_pass"]
+    assert not eval2["reasoning_grounded"]
+    assert eval2["composite_score"] <= 0.40
+
+
+def test_grammatical_qualifiers_not_treated_as_unrelated_subjects() -> None:
+    """M1 Review P2: Grammatical qualifiers (e.g. «чоловічого роду») describe the subject and must not fail grounding."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    r = "Вживайте goodtoken, бо за словником ВЕСУМ це іменник чоловічого роду з питомим суфіксом -ник."
+    eval_res = evaluate_single_response(target, alts, r)
+    assert eval_res["is_pass"]
+    assert eval_res["reasoning_grounded"]
+    assert eval_res["composite_score"] == 1.0
+
+
+def test_explanation_concerning_words_with_modifier_prefixes_rejected() -> None:
+    """M1 Review: Lexical subjects starting with rod-, vyd-, chas- (e.g. «родина», «видання», «часопис») must fail."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    for word in ("родина", "видання", "часопис"):
+        r_quoted = f"Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «{word}»."
+        eval_q = evaluate_single_response(target, alts, r_quoted)
+        assert not eval_q["is_pass"], f"Expected {word} (quoted) to fail"
+        assert not eval_q["reasoning_grounded"], f"Expected {word} (quoted) grounding to fail"
+        assert eval_q["composite_score"] <= 0.40
+
+        r_unquoted = f"Вживайте goodtoken, бо у словнику подано пояснення суфікса слова {word}."
+        eval_u = evaluate_single_response(target, alts, r_unquoted)
+        assert not eval_u["is_pass"], f"Expected {word} (unquoted) to fail"
+        assert not eval_u["reasoning_grounded"], f"Expected {word} (unquoted) grounding to fail"
+        assert eval_u["composite_score"] <= 0.40
+
+
+def test_explanation_concerning_words_odnyny_mnozhyny_rejected() -> None:
+    """M1 Review P2: Explicit subjects 'однини', 'множини', or quoted modifier phrases must fail."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    for word in ("однини", "множини"):
+        r_quoted = f"Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «{word}»."
+        eval_q = evaluate_single_response(target, alts, r_quoted)
+        assert not eval_q["is_pass"], f"Expected {word} (quoted) to fail"
+        assert not eval_q["reasoning_grounded"], f"Expected {word} (quoted) grounding to fail"
+        assert eval_q["composite_score"] <= 0.40
+
+        r_unquoted = f"Вживайте goodtoken, бо у словнику подано пояснення суфікса слова {word}."
+        eval_u = evaluate_single_response(target, alts, r_unquoted)
+        assert not eval_u["is_pass"], f"Expected {word} (unquoted) to fail"
+        assert not eval_u["reasoning_grounded"], f"Expected {word} (unquoted) grounding to fail"
+        assert eval_u["composite_score"] <= 0.40
+
+    # Quoted modifier phrase must also be treated as a named entity
+    r_phrase = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «чоловічого роду»."
+    eval_phrase = evaluate_single_response(target, alts, r_phrase)
+    assert not eval_phrase["is_pass"]
+    assert not eval_phrase["reasoning_grounded"]
+    assert eval_phrase["composite_score"] <= 0.40
+
+
+def test_grammatical_number_modifiers_admitted() -> None:
+    """M1 Review P2: Genuine grammatical number modifier phrases (e.g. 'у формі однини') must pass."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    cases = [
+        "Вживайте goodtoken, бо за словником ВЕСУМ це іменник у формі однини з питомим суфіксом -ник.",
+        "Вживайте goodtoken, бо за словником ВЕСУМ це іменник числа однини з питомим суфіксом -ник.",
+        "Вживайте goodtoken, бо за словником ВЕСУМ це іменник, що вживається в однині з питомим суфіксом -ник.",
+    ]
+    for r in cases:
+        eval_res = evaluate_single_response(target, alts, r)
+        assert eval_res["is_pass"], f"Expected {r} to pass"
+        assert eval_res["reasoning_grounded"], f"Expected {r} grounding to pass"
+        assert eval_res["composite_score"] == 1.0
+
+
+def test_word_internal_apostrophes_not_treated_as_quotes() -> None:
+    """M1 Review P2: Word-internal apostrophes (e.g. «Об'єкт», «пов'язано») must not suppress modifier stripping."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    r = (
+        "Об'єкт аналізу: Вживайте goodtoken, бо за словником ВЕСУМ це іменник чоловічого роду з питомим суфіксом -ник. "
+        "Це пов'язано зі словотвором."
+    )
+    eval_res = evaluate_single_response(target, alts, r)
+    assert eval_res["is_pass"]
+    assert eval_res["reasoning_grounded"]
+    assert eval_res["composite_score"] == 1.0
+
+
+def test_unquoted_modifier_phrases_as_named_subjects_rejected() -> None:
+    """M1 Review P2: Unquoted modifier phrases introduced by 'слова' (e.g. 'слова чоловічого роду') must fail."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    r = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова чоловічого роду."
+    eval_res = evaluate_single_response(target, alts, r)
+    assert not eval_res["is_pass"]
+    assert not eval_res["reasoning_grounded"]
+    assert eval_res["composite_score"] <= 0.40
+
+
+def test_unquoted_forma_odnyny_as_named_subject_rejected() -> None:
+    """M1 Review P2: Unquoted 'слова форма однини' must not have its subject stripped and must fail."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    r = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова форма однини."
+    eval_res = evaluate_single_response(target, alts, r)
+    assert not eval_res["is_pass"]
+    assert not eval_res["reasoning_grounded"]
+    assert eval_res["composite_score"] <= 0.40
+
+
+def test_modifier_sequence_ordering_independent() -> None:
+    """M1 Review P2: Chained modifiers (e.g. 'другої відміни чоловічого роду') must be order-independent."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    cases = [
+        "Вживайте goodtoken, бо за словником ВЕСУМ це іменник другої відміни чоловічого роду з питомим суфіксом -ник.",
+        "Вживайте goodtoken, бо за словником ВЕСУМ це іменник чоловічого роду другої відміни з питомим суфіксом -ник.",
+    ]
+    for r in cases:
+        eval_res = evaluate_single_response(target, alts, r)
+        assert eval_res["is_pass"], f"Expected {r} to pass"
+        assert eval_res["reasoning_grounded"], f"Expected {r} grounding to pass"
+        assert eval_res["composite_score"] == 1.0
+
+
+def test_unquoted_goodtoken_subject_explanation_admitted() -> None:
+    """M1 Review P2: Unquoted target subject 'слово goodtoken є іменником чоловічого роду' must pass."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    r_unquoted = (
+        "Вживайте goodtoken, бо за словником ВЕСУМ слово goodtoken є іменником чоловічого роду з питомим суфіксом -ник."
+    )
+    eval_u = evaluate_single_response(target, alts, r_unquoted)
+    assert eval_u["is_pass"]
+    assert eval_u["reasoning_grounded"]
+    assert eval_u["composite_score"] == 1.0
+
+    r_quoted = "Вживайте goodtoken, бо за словником ВЕСУМ слово «goodtoken» є іменником чоловічого роду з питомим суфіксом -ник."
+    eval_q = evaluate_single_response(target, alts, r_quoted)
+    assert eval_q["is_pass"]
+    assert eval_q["reasoning_grounded"]
+    assert eval_q["composite_score"] == 1.0
+
+
+def test_nested_grammatical_descriptors_target_and_unrelated_subjects() -> None:
+    """M1 Review P2: Descriptor chains (e.g. 'варіант форми слова', 'форма іменника') must resolve through to their lexical subject."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    # Target subject through descriptor chain -> PASS (1.0)
+    for phrase in (
+        "форма слова goodtoken",
+        "форма іменника goodtoken",
+        "форма слова «goodtoken»",
+        "форма іменника «goodtoken»",
+        "варіант форми слова goodtoken",
+        "варіант форми слова «goodtoken»",
+        "варіант форми іменника goodtoken",
+        "варіант форми іменника «goodtoken»",
+        "пояснення варіанта форми слова goodtoken",
+        "пояснення варіанта форми слова «goodtoken»",
+        "пояснення значення варіанта форми слова goodtoken",
+        "пояснення суфікса варіанта форми іменника goodtoken",
+    ):
+        r_target = f"Вживайте goodtoken, бо за словником ВЕСУМ це {phrase} з питомим суфіксом -ник."
+        eval_t = evaluate_single_response(target, alts, r_target)
+        assert eval_t["is_pass"], f"Expected {phrase} to pass"
+        assert eval_t["reasoning_grounded"], f"Expected {phrase} grounding to pass"
+        assert eval_t["composite_score"] == 1.0
+
+    # Unrelated subject through descriptor chain -> FAIL (<= 0.40)
+    for phrase in (
+        "форма слова будинок",
+        "форма іменника будинок",
+        "форма слова «будинок»",
+        "форма іменника «будинок»",
+        "форма слова форма",
+        "форма слова іменник",
+        "форма слова «форма»",
+        "форма слова «іменник»",
+        "форма іменника форма",
+        "форма іменника іменник",
+        "варіант форми слова будинок",
+        "варіант форми слова «будинок»",
+        "варіант форми слова форма",
+        "варіант форми слова «форма»",
+        "варіант форми слова іменник",
+        "варіант форми слова «іменник»",
+        "варіант форми іменника будинок",
+        "варіант форми іменника «будинок»",
+        "варіант форми іменника форма",
+        "варіант форми іменника «форма»",
+        "варіант форми іменника іменник",
+        "варіант форми іменника «іменник»",
+        "пояснення варіанта форми слова будинок",
+        "пояснення варіанта форми слова «будинок»",
+        "пояснення варіанта форми слова форма",
+        "пояснення варіанта форми слова «форма»",
+        "пояснення значення варіанта форми слова будинок",
+        "варіант форми форма",
+        "варіант форми «форма»",
+        "варіант форми будинок",
+        "варіант форми «будинок»",
+        "варіант форми іменник",
+        "варіант форми «іменник»",
+        "варіант форми слова",
+        "варіант форми «слова»",
+    ):
+        r_unrelated = f"Вживайте goodtoken, бо за словником ВЕСУМ це {phrase} з питомим суфіксом -ник."
+        eval_u = evaluate_single_response(target, alts, r_unrelated)
+        assert not eval_u["is_pass"], f"Expected {phrase} to fail"
+        assert not eval_u["reasoning_grounded"], f"Expected {phrase} grounding to fail"
+        assert eval_u["composite_score"] <= 0.40
+
+    # P2: Terminal carrier subjects before punctuation or end-of-input boundaries
+    for phrase in (
+        "варіант форми іменник",
+        "варіант форми слова",
+        "варіант форми форма",
+        "варіант форми будинок",
+    ):
+        # 1. Terminal before period
+        r_period = f"Вживайте goodtoken, бо за словником ВЕСУМ це {phrase}."
+        eval_p = evaluate_single_response(target, alts, r_period)
+        assert not eval_p["is_pass"], f"Expected {phrase} before period to fail"
+        assert not eval_p["reasoning_grounded"], f"Expected {phrase} grounding before period to fail"
+        assert eval_p["composite_score"] <= 0.40
+
+        # 2. Terminal before semicolon with subsequent clause
+        r_semi = f"Вживайте goodtoken, бо за словником ВЕСУМ це {phrase}; питомий суфікс -ник."
+        eval_s = evaluate_single_response(target, alts, r_semi)
+        assert not eval_s["is_pass"], f"Expected {phrase} before semicolon to fail"
+        assert not eval_s["reasoning_grounded"], f"Expected {phrase} grounding before semicolon to fail"
+        assert eval_s["composite_score"] <= 0.40
+
+        # 3. Terminal at end of input
+        r_end = f"Вживайте goodtoken, бо за словником ВЕСУМ це {phrase}"
+        eval_e = evaluate_single_response(target, alts, r_end)
+        assert not eval_e["is_pass"], f"Expected {phrase} at end-of-input to fail"
+        assert not eval_e["reasoning_grounded"], f"Expected {phrase} grounding at end-of-input to fail"
+        assert eval_e["composite_score"] <= 0.40
+
+        # 4. Terminal before opening parenthesis
+        r_paren = f"Вживайте goodtoken, бо за словником ВЕСУМ це {phrase} (питомий суфікс -ник)."
+        eval_paren = evaluate_single_response(target, alts, r_paren)
+        assert not eval_paren["is_pass"], f"Expected {phrase} before parenthesis to fail"
+        assert not eval_paren["reasoning_grounded"], f"Expected {phrase} grounding before parenthesis to fail"
+        assert eval_paren["composite_score"] <= 0.40
+
+        # 5. Terminal before en-dash, em-dash, and space-hyphen-space
+        for dash in ("–", "—", "-"):
+            r_dash = f"Вживайте goodtoken, бо за словником ВЕСУМ це {phrase} {dash} питомий суфікс -ник."
+            eval_d = evaluate_single_response(target, alts, r_dash)
+            assert not eval_d["is_pass"], f"Expected {phrase} before dash {dash} to fail"
+            assert not eval_d["reasoning_grounded"], f"Expected {phrase} grounding before dash {dash} to fail"
+            assert eval_d["composite_score"] <= 0.40
+
+    # P2: Line-wrapped valid subjects must pass across whitespace/newline
+    for phrase in ("варіант форми слова", "варіант форми іменника"):
+        r_wrap = f"Вживайте goodtoken, бо за словником ВЕСУМ це {phrase}\ngoodtoken з питомим суфіксом -ник."
+        eval_w = evaluate_single_response(target, alts, r_wrap)
+        assert eval_w["is_pass"], f"Expected line-wrapped {phrase} to pass"
+        assert eval_w["reasoning_grounded"], f"Expected line-wrapped {phrase} grounding to pass"
+        assert eval_w["composite_score"] == 1.0
+
+        r_wrap_q = f"Вживайте goodtoken, бо за словником ВЕСУМ це {phrase}\n«goodtoken» з питомим суфіксом -ник."
+        eval_wq = evaluate_single_response(target, alts, r_wrap_q)
+        assert eval_wq["is_pass"], f"Expected line-wrapped quoted {phrase} to pass"
+        assert eval_wq["reasoning_grounded"], f"Expected line-wrapped quoted {phrase} grounding to pass"
+        assert eval_wq["composite_score"] == 1.0
+
+    # P2: Line-wrapped terminal carrier followed by stopword must fail
+    for phrase in ("варіант форми іменник", "варіант форми слова"):
+        r_wrap_u = f"Вживайте goodtoken, бо за словником ВЕСУМ це {phrase}\nз питомим суфіксом -ник."
+        eval_wu = evaluate_single_response(target, alts, r_wrap_u)
+        assert not eval_wu["is_pass"], f"Expected line-wrapped {phrase} with stopword to fail"
+        assert not eval_wu["reasoning_grounded"], f"Expected line-wrapped {phrase} grounding to fail"
+        assert eval_wu["composite_score"] <= 0.40
