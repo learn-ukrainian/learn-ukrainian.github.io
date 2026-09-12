@@ -1167,3 +1167,35 @@ def test_unquoted_goodtoken_subject_explanation_admitted() -> None:
     assert eval_q["is_pass"]
     assert eval_q["reasoning_grounded"]
     assert eval_q["composite_score"] == 1.0
+
+
+def test_nested_grammatical_descriptors_target_and_unrelated_subjects() -> None:
+    """M1 Review P2: Descriptor chains (e.g. 'форма слова/іменника') must resolve through to their lexical subject."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    # Target subject through descriptor chain -> PASS (1.0)
+    for phrase in (
+        "форма слова goodtoken",
+        "форма іменника goodtoken",
+        "форма слова «goodtoken»",
+        "форма іменника «goodtoken»",
+    ):
+        r_target = f"Вживайте goodtoken, бо за словником ВЕСУМ це {phrase} з питомим суфіксом -ник."
+        eval_t = evaluate_single_response(target, alts, r_target)
+        assert eval_t["is_pass"], f"Expected {phrase} to pass"
+        assert eval_t["reasoning_grounded"], f"Expected {phrase} grounding to pass"
+        assert eval_t["composite_score"] == 1.0
+
+    # Unrelated subject through descriptor chain -> FAIL (<= 0.40)
+    for phrase in (
+        "форма слова будинок",
+        "форма іменника будинок",
+        "форма слова «будинок»",
+        "форма іменника «будинок»",
+    ):
+        r_unrelated = f"Вживайте goodtoken, бо за словником ВЕСУМ це {phrase} з питомим суфіксом -ник."
+        eval_u = evaluate_single_response(target, alts, r_unrelated)
+        assert not eval_u["is_pass"], f"Expected {phrase} to fail"
+        assert not eval_u["reasoning_grounded"], f"Expected {phrase} grounding to fail"
+        assert eval_u["composite_score"] <= 0.40
