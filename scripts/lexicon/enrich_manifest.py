@@ -737,6 +737,7 @@ _STYLE_MARKER_LABELS: dict[str, str] = {
     "obsc": "обсценна форма",
     "bad": "спотворена форма",
     "alt": "альтернативне написання",
+    "subst": "нестандартна форма",
     "up19": "форма за правописом 2019 року",
     "up92": "форма за правописом 1992 року",
 }
@@ -745,7 +746,7 @@ _STYLE_MARKER_LABELS: dict[str, str] = {
 # today, kept as a distinct set so a future VESUM style flag can be segregated (falling
 # back to the generic label below) BEFORE its Ukrainian label is authored — without ever
 # silently reclassifying a grammatical token. Grammatical sub-tags (rev/adjp/pasv/actv/
-# comps/compc/impers/xp1/xp2/subst/nv/ns …) are deliberately absent.
+# comps/compc/impers/xp1/xp2/nv/ns …) are deliberately absent.
 _STYLE_MARKERS: frozenset[str] = frozenset(_STYLE_MARKER_LABELS)
 
 # Never guess a description for a marker we have not verified (#M-4): an unlabelled but

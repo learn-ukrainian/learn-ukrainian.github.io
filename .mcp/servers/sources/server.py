@@ -458,6 +458,68 @@ async def list_tools() -> list[Tool]:
             },
         ),
         Tool(
+            name="inspect_word",
+            description=(
+                "Inspect a Ukrainian word form with full marker awareness in the VESUM morphological dictionary. "
+                "Returns closed InspectionStatus (CLEAN, KNOWN_INVALID, NONSTANDARD, SLANG, "
+                "ARCH_OR_DIALECT_UNRESOLVED, ORTHOGRAPHIC_VARIANT, VULGAR, MIXED, NOT_FOUND, UNAVAILABLE), "
+                "separated clean_analyses and marked_analyses, and effective markers."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "word": {
+                        "type": "string",
+                        "description": "Ukrainian word form to inspect (e.g., 'берізонька', 'дзига', 'бабло')",
+                    },
+                    "pos_filter": {
+                        "type": "string",
+                        "description": "Optional POS filter (e.g., 'noun', 'verb', 'adj', 'adv')",
+                    },
+                },
+                "required": ["word"],
+            },
+        ),
+        Tool(
+            name="inspect_words",
+            description=(
+                "Batch-inspect multiple Ukrainian word forms with full marker awareness against VESUM. "
+                "Returns per-word InspectionStatus, clean_analyses, marked_analyses, and effective markers."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "words": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "List of Ukrainian word forms to inspect",
+                    },
+                    "pos_filter": {
+                        "type": "string",
+                        "description": "Optional POS filter applied to all words",
+                    },
+                },
+                "required": ["words"],
+            },
+        ),
+        Tool(
+            name="inspect_lemma",
+            description=(
+                "Inspect an entire Ukrainian lemma paradigm with full marker awareness in VESUM. "
+                "Returns complete paradigm forms, clean/marked analysis breakdown, effective markers, and status."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "lemma": {
+                        "type": "string",
+                        "description": "Ukrainian lemma to inspect (e.g., 'коза', 'писати')",
+                    },
+                },
+                "required": ["lemma"],
+            },
+        ),
+        Tool(
             name="verify_stress",
             description=(
                 "Stress oracle: look up the stressed form + stressed-vowel index for a Ukrainian word "
@@ -1402,7 +1464,7 @@ async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[lis
     _t0 = _time.monotonic()
     privacy_mode = bool(arguments.pop("_privacy_mode", False)) if isinstance(arguments, dict) else False
     _discard_retired_v4_evidence_args(arguments)
-    if _V4_ACTIVE_ATTEMPT.get() is not None and name not in {"verify_word", "verify_words", "verify_lemma", "verify_stress", "check_modern_form"}:
+    if _V4_ACTIVE_ATTEMPT.get() is not None and name not in {"verify_word", "verify_words", "verify_lemma", "verify_stress", "check_modern_form", "inspect_word", "inspect_words", "inspect_lemma"}:
         return [TextContent(type="text", text="V4 tool capability refused")], True, None
     try:
         # Dispatch to handler
@@ -1423,6 +1485,9 @@ async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[lis
             "verify_words": lambda: handle_verify_words(arguments),
             "vet_vocabulary": lambda: handle_vet_vocabulary(arguments),
             "verify_lemma": lambda: handle_verify_lemma(arguments),
+            "inspect_word": lambda: handle_inspect_word(arguments),
+            "inspect_words": lambda: handle_inspect_words(arguments),
+            "inspect_lemma": lambda: handle_inspect_lemma(arguments),
             "verify_stress": lambda: handle_verify_stress(arguments),
             "query_wikipedia": lambda: handle_query_wikipedia(arguments),
             "query_grac": lambda: handle_query_grac(arguments),
@@ -1950,6 +2015,63 @@ async def handle_vet_vocabulary(args: dict) -> list[TextContent]:
 async def handle_verify_lemma(args: dict):
     return await v4_handlers.handle_verify_lemma(args)
 
+
+async def handle_inspect_word(args: dict):
+    from scripts.verification.vesum import inspect_word
+
+    word = args.get("word") if isinstance(args, dict) else None
+    pos_filter = args.get("pos_filter") if isinstance(args, dict) else None
+    if not isinstance(word, str) or not word.strip():
+        return [TextContent(type="text", text="invalid_input: word is required")]
+    result = await asyncio.to_thread(inspect_word, word.strip(), pos_filter=pos_filter)
+    res_dict = result.as_dict()
+    prose = (
+        f"'{result.word}' — Status: {result.status.value}\n"
+        f"- Effective markers: {', '.join(result.effective_markers) or 'none'}\n"
+        f"- Clean analyses: {len(result.clean_analyses)}\n"
+        f"- Marked analyses: {len(result.marked_analyses)}\n"
+        f"- Raw payload: {json.dumps(res_dict, ensure_ascii=False)}"
+    )
+    return [TextContent(type="text", text=prose)]
+
+
+async def handle_inspect_words(args: dict):
+    from scripts.verification.vesum import inspect_words
+
+    words = args.get("words") if isinstance(args, dict) else None
+    pos_filter = args.get("pos_filter") if isinstance(args, dict) else None
+    if not isinstance(words, list) or not words or not all(isinstance(w, str) and w.strip() for w in words):
+        return [TextContent(type="text", text="invalid_input: words must be a nonempty list")]
+    results = await asyncio.to_thread(inspect_words, words, pos_filter=pos_filter)
+    lines = [f"Batch inspection: {len(words)} words\n"]
+    for w in words:
+        r = results.get(w)
+        if r:
+            markers_str = f" [{', '.join(r.effective_markers)}]" if r.effective_markers else ""
+            lines.append(f"- **{w}** — {r.status.value}{markers_str} (clean={len(r.clean_analyses)}, marked={len(r.marked_analyses)})")
+        else:
+            lines.append(f"- **{w}** — NOT FOUND")
+    payload = {w: r.as_dict() for w, r in results.items()}
+    lines.append(f"\nRaw payload:\n{json.dumps(payload, ensure_ascii=False, indent=2)}")
+    return [TextContent(type="text", text="\n".join(lines))]
+
+
+async def handle_inspect_lemma(args: dict):
+    from scripts.verification.vesum import inspect_lemma
+
+    lemma = args.get("lemma") if isinstance(args, dict) else None
+    if not isinstance(lemma, str) or not lemma.strip():
+        return [TextContent(type="text", text="invalid_input: lemma is required")]
+    result = await asyncio.to_thread(inspect_lemma, lemma.strip())
+    res_dict = result.as_dict()
+    prose = (
+        f"Lemma '{result.lemma}' — Status: {result.status.value}\n"
+        f"- Total paradigm forms: {len(result.forms)}\n"
+        f"- Clean analyses: {len(result.clean_analyses)}, Marked: {len(result.marked_analyses)}\n"
+        f"- Effective markers: {', '.join(result.effective_markers) or 'none'}\n"
+        f"- Raw payload: {json.dumps(res_dict, ensure_ascii=False)}"
+    )
+    return [TextContent(type="text", text=prose)]
 
 
 async def handle_verify_stress(args: dict):

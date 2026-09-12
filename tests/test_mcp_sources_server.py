@@ -58,6 +58,7 @@ class TestListTools:
             "search_sources", "search_text", "search_literary", "search_external",
             "get_full_text", "get_chunk_context", "collection_stats", "mcp_server_identity",
             "verify_word", "verify_source_attribution", "verify_words", "vet_vocabulary", "verify_lemma", "verify_quote", "check_modern_form",
+            "inspect_word", "inspect_words", "inspect_lemma",
             "verify_stress",
             "query_wikipedia", "query_grac", "query_ulif", "query_ulif_synonyms",
             "query_ulif_antonyms", "query_ulif_phraseology",
@@ -245,6 +246,24 @@ class TestCallToolDispatch:
             mock.return_value = [MagicMock(text="ok")]
             _run(server_module.call_tool("verify_words", {"words": ["тест"]}))
             mock.assert_called_once_with({"words": ["тест"]})
+
+    def test_inspect_word_dispatches(self, server_module):
+        with patch.object(server_module, "handle_inspect_word", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            _run(server_module.call_tool("inspect_word", {"word": "тест"}))
+            mock.assert_called_once_with({"word": "тест"})
+
+    def test_inspect_words_dispatches(self, server_module):
+        with patch.object(server_module, "handle_inspect_words", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            _run(server_module.call_tool("inspect_words", {"words": ["тест"]}))
+            mock.assert_called_once_with({"words": ["тест"]})
+
+    def test_inspect_lemma_dispatches(self, server_module):
+        with patch.object(server_module, "handle_inspect_lemma", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            _run(server_module.call_tool("inspect_lemma", {"lemma": "тест"}))
+            mock.assert_called_once_with({"lemma": "тест"})
 
     def test_vet_vocabulary_dispatches(self, server_module):
         with patch.object(server_module, "handle_vet_vocabulary", new_callable=AsyncMock) as mock:
