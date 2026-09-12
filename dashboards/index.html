@@ -345,16 +345,22 @@ async function loadWeakPointsStat() {
   document.getElementById('quality-stat').textContent = `${weakPoints.count} modules need attention`;
 }
 
+async function loadOrientStat() {
+  // /api/orient is ~4–5s; keep it off Home first-paint Promise.all (#7975 residual).
+  const orient = await safeFetch('/api/orient');
+  if (!orient) return;
+  setStat('card-stat-orient', orient.git?.branch || 'no branch');
+}
+
 async function loadStats() {
   let buildState = { pending: true, current: null, backlog: null, builtPct: null };
   let pendingConsultations = 0;
-  // Quality card is often >5s; defer it so it cannot gate first paint of the fast cards.
-  const [data, pv, cMetrics, summary, orient, runtimeAgents, delegate, buildEvents, wiki, cost, contracts] = await Promise.all([
+  // Quality + Orient are often multi-second; defer so they cannot gate first paint.
+  const [data, pv, cMetrics, summary, runtimeAgents, delegate, buildEvents, wiki, cost, contracts] = await Promise.all([
     safeFetch('/api/dashboard/overview'),
     safeFetch('/api/state/pipeline-versions'),
     safeFetch('/api/consultation/metrics'),
     safeFetch('/api/state/summary'),
-    safeFetch('/api/orient'),
     safeFetch('/api/runtime/agents'),
     safeFetch('/api/delegate/tasks?limit=100'),
     safeFetch('/api/build/events/active'),
@@ -363,6 +369,7 @@ async function loadStats() {
     safeFetch('/api/contracts/routes'),
   ]);
   void loadWeakPointsStat();
+  void loadOrientStat();
 
   try {
     if (!data) throw new Error('overview unavailable');
@@ -413,10 +420,6 @@ async function loadStats() {
     document.getElementById('progress-stat').textContent =
       `${displayBuildCount(buildState.current)} current · ${formatBacklogSegment(buildState)} · ${t.dossier_done ?? 0} dossiers · ${t.published_mdx ?? 0} published${stale}`;
   } catch(e) {}
-
-  if (orient) {
-    setStat('card-stat-orient', orient.git?.branch || 'no branch');
-  }
 
   if (runtimeAgents) {
     setStat('card-stat-runtime', `${(runtimeAgents.agents || []).length} agents`);
