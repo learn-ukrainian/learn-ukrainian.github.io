@@ -47,9 +47,9 @@ def test_config_passes_schema() -> None:
 
 @pytest.fixture
 def requires_textbook_chunks() -> Path:
-    for candidate in (Path("data/textbook_chunks"), Path("/home/ops/learn-ukrainian/data/textbook_chunks")):
-        if candidate.is_dir():
-            return candidate
+    candidate = Path("data/textbook_chunks")
+    if candidate.is_dir():
+        return candidate
     pytest.skip("requires data/textbook_chunks corpus directory (not provisioned in CI)")
 
 
@@ -58,11 +58,54 @@ def test_verify_passes_on_committed_artifacts(
     requires_sources_db: Path,
     requires_textbook_chunks: Path,
 ) -> None:
-    # Uses repo_root for input-root and output-root
-    input_root = (
-        Path("/home/ops/learn-ukrainian") if Path("/home/ops/learn-ukrainian/data/sources.db").is_file() else repo_root
+    assert custody.verify(CONFIG_PATH, input_root=repo_root, output_root=repo_root, require_database=True) is True
+
+
+# Reject-sample needle: production scripts/docs must not bake this host checkout path.
+_BAKED_RUN_ROOT_REJECT = "/home/ops/learn-ukrainian"
+
+
+def test_open_model_data_scripts_have_no_baked_run_root_default() -> None:
+    production_paths = (
+        Path("scripts/projects/open_model_data/v4_source_custody_access.py"),
+        Path("scripts/projects/open_model_data/v4_language_usage_separation.py"),
+        Path("scripts/projects/open_model_data/v4_native_extraction_validation.py"),
+        Path("scripts/projects/open_model_data/validate_source_records.py"),
+        Path("scripts/projects/open_model_data/model_view_exporter.py"),
+        Path("docs/projects/open-model-data/SOURCE_RECORD_CONTRACT.md"),
+        Path("scripts/config/fleet_repos.yaml"),
     )
-    assert custody.verify(CONFIG_PATH, input_root=input_root, output_root=repo_root, require_database=True) is True
+    for path in production_paths:
+        text = path.read_text(encoding="utf-8")
+        assert _BAKED_RUN_ROOT_REJECT not in text, f"{path} still bakes a host run-root"
+        assert "/home/ops/<" not in text, f"{path} still documents a host path template"
+
+
+def test_primary_repo_root_uses_env_when_set(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv(custody.PRIMARY_REPO_ROOT_ENV, str(tmp_path))
+    assert custody._primary_repo_root() == tmp_path.resolve()
+
+
+def test_primary_repo_root_resolves_cwd_relative_env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    extra = tmp_path / "extra-root"
+    extra.mkdir()
+    monkeypatch.setenv(custody.PRIMARY_REPO_ROOT_ENV, "extra-root")
+    assert custody._primary_repo_root() == extra.resolve()
+
+
+def test_primary_repo_root_fails_closed_on_invalid_env(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv(custody.PRIMARY_REPO_ROOT_ENV, str(tmp_path / "missing"))
+    with pytest.raises(custody.CustodyAccessError, match=custody.PRIMARY_REPO_ROOT_ENV):
+        custody._primary_repo_root()
+
+
+def test_primary_repo_root_returns_none_when_cwd_has_no_git(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.delenv(custody.PRIMARY_REPO_ROOT_ENV, raising=False)
+    monkeypatch.chdir(tmp_path)
+    assert custody._primary_repo_root() is None
 
 
 def test_first_eligible_cohort_100_percent_accessible() -> None:

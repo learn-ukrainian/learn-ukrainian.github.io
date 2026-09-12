@@ -1,8 +1,8 @@
 # Fleet repository allowlist — multi-repo dispatch (#672 P2.1)
 #
 # Keys are the only valid `--repo` values for `scripts/delegate.py`.
-# `local_name` is the sibling directory beside the public primary checkout
-# (layout A: `/home/ops/<local_name>` next to `learn-ukrainian`).
+# `local_name` is the sibling checkout beside the public primary, named by
+# `local_name` (layout A).
 #
 # Control plane (batch_state, Monitor, fleet-comms) remains on the public
 # primary that owns `scripts/delegate.py`. `--repo` retargets git worktree

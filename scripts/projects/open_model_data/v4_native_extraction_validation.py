@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import sqlite3
 import sys
@@ -80,7 +81,22 @@ def _make_receipt_id(config_sha256: str, index_sha256: str, quarantine_sha256: s
     return f"receipt.extraction.{hashlib.sha256(raw.encode('utf-8')).hexdigest()[:24]}"
 
 
+PRIMARY_REPO_ROOT_ENV = "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
+
+
 def _primary_repo_root() -> Path | None:
+    """Resolve an extra search root from env or cwd-relative git discovery.
+
+    Fail closed: no baked host checkout path. An unset env plus failed
+    cwd-relative discovery returns None so callers do not invent a location.
+    """
+    raw = os.environ.get(PRIMARY_REPO_ROOT_ENV, "").strip()
+    if raw:
+        candidate = Path(raw)
+        resolved = candidate.resolve() if candidate.is_absolute() else (Path.cwd() / candidate).resolve()
+        if not resolved.is_dir():
+            raise NativeExtractionError(f"{PRIMARY_REPO_ROOT_ENV} is set but is not an existing directory")
+        return resolved
     try:
         cur = Path.cwd().resolve()
         for parent in [cur, *list(cur.parents)]:
@@ -100,9 +116,6 @@ def _primary_repo_root() -> Path | None:
                 return parent
     except Exception:
         pass
-    default_primary = Path("/home/ops/learn-ukrainian")
-    if default_primary.is_dir():
-        return default_primary
     return None
 
 
