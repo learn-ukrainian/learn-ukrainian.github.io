@@ -480,6 +480,12 @@ def test_severity_classification_curated_vs_pure_lt(mock_dbs: dict[str, Path], m
         "INSERT INTO article_payloads VALUES ('бажаючий', ?);",
         (json.dumps({"slug": "бажаючий", "lemma": "бажаючий", "sections": {}}),),
     )
+    # 3. Curated convergence calque via heritage_pairs: 'мисль' -> 'думка'
+    conn.execute("INSERT INTO articles (slug, lemma) VALUES ('мисль', 'мисль');")
+    conn.execute(
+        "INSERT INTO article_payloads VALUES ('мисль', ?);",
+        (json.dumps({"slug": "мисль", "lemma": "мисль", "sections": {}}),),
+    )
     conn.commit()
     conn.close()
 
@@ -487,17 +493,27 @@ def test_severity_classification_curated_vs_pure_lt(mock_dbs: dict[str, Path], m
     lt_data = {
         "антипаста": {"suggestions": ["антипасто"]},
         "бажаючий": {"suggestions": ["охочий"]},
+        "мисль": {"suggestions": ["думка"]},
     }
     mock_dbs["lt_path"].write_text(json.dumps(lt_data), encoding="utf-8")
 
-    # Seed heritage_pairs with бажаючий
+    # Seed heritage_pairs with бажаючий and мисль
     heritage_data = {
         "pairs": [
             {
                 "calqueLabel": "бажаючий",
                 "nativeLemma": "охочий",
                 "corrections": ["охочий"],
-            }
+            },
+            {
+                "calqueLabel": "мисль",
+                "nativeLemma": "думка",
+                "corrections": ["думка"],
+                "kind": "lexical",
+                "severity": "calque_yellow",
+                "note": "У сучасній стандартній українській мові нейтральним відповідником є «думка».",
+                "noteUk": "У сучасній українській літературній мові нормативним і нейтральним відповідником є «думка».",
+            },
         ]
     }
     mock_dbs["heritage_pairs"].write_text(yaml.dump(heritage_data), encoding="utf-8")
@@ -512,6 +528,7 @@ def test_severity_classification_curated_vs_pure_lt(mock_dbs: dict[str, Path], m
 
     engine.run_reconciliation(dry_run=False, single_lemma="антипаста")
     engine.run_reconciliation(dry_run=False, single_lemma="бажаючий")
+    engine.run_reconciliation(dry_run=False, single_lemma="мисль")
 
     conn = sqlite3.connect(mock_dbs["atlas_db"])
 
@@ -536,6 +553,20 @@ def test_severity_classification_curated_vs_pure_lt(mock_dbs: dict[str, Path], m
 
     row_art_her = conn.execute("SELECT heritage_classification FROM articles WHERE slug = 'бажаючий'").fetchone()
     assert row_art_her[0] == "russianism"
+
+    # 'мисль' (curated convergence calque): orange severity, is_russianism = False, warning_severity = calque_yellow
+    row_mysl = conn.execute("SELECT payload_json FROM article_payloads WHERE slug = 'мисль'").fetchone()
+    p_mysl = json.loads(row_mysl[0])
+    assert p_mysl["is_russianism"] is False
+    assert p_mysl["calque_warning"]["severity"] == "orange"
+    assert p_mysl["heritage_status"]["warning_severity"] == "calque_yellow"
+    assert p_mysl["heritage_status"]["classification"] == "calque"
+    assert "думка" in p_mysl["calque_warning"]["standard_alternatives"]
+    assert "думка" in p_mysl["calque_warning"]["warning_text"]
+    assert p_mysl["calque_warning"].get("noteUk") is not None
+
+    row_art_mysl = conn.execute("SELECT heritage_classification FROM articles WHERE slug = 'мисль'").fetchone()
+    assert row_art_mysl[0] == "calque"
 
     conn.close()
 
