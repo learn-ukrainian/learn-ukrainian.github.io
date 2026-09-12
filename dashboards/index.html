@@ -190,7 +190,7 @@ body { min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe
 </main>
 
 <script>
-const API_TIMEOUT_MS = 5000;
+const API_TIMEOUT_MS = 20000;
 
 async function fetchJson(path) {
   const controller = new AbortController();
@@ -349,9 +349,9 @@ async function loadStats() {
   // Quality card is often >5s; defer it so it cannot gate first paint of the fast cards.
   const [data, pv, cMetrics, summary, orient, runtimeAgents, delegate, buildEvents, wiki, cost, contracts] = await Promise.all([
     safeFetch('/api/dashboard/overview'),
-    safeFetch('/api/state/pipeline-versions?fresh=true'),
+    safeFetch('/api/state/pipeline-versions'),
     safeFetch('/api/consultation/metrics'),
-    safeFetch('/api/state/summary?fresh=true'),
+    safeFetch('/api/state/summary'),
     safeFetch('/api/orient'),
     safeFetch('/api/runtime/agents'),
     safeFetch('/api/delegate/tasks?limit=100'),
