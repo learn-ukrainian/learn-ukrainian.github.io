@@ -784,3 +784,117 @@ def test_manifest_sync_in_place(mock_dbs: dict[str, Path], tmp_path: Path, monke
     enr_rows = conn.execute("SELECT section FROM enrichment WHERE slug = 'буран' ORDER BY section").fetchall()
     assert [r[0] for r in enr_rows] == ["heritage_status", "synonyms"]
     conn.close()
+
+
+def test_manifest_fingerprint_not_certified_on_noop_or_partial_run(mock_dbs: dict[str, Path], tmp_path: Path) -> None:
+    """[P1 regression] A no-op or partial reconciliation must not certify unrelated/stale manifest content."""
+    manifest_file = tmp_path / "lexicon-manifest.json"
+    old_fingerprint = {"schema_version": 1, "fingerprint": "old-stale-digest-12345"}
+    manifest_content = {
+        "manifest_fingerprint": dict(old_fingerprint),
+        "entries": [
+            {
+                "url_slug": "буран",
+                "lemma": "буран",
+                "sections": {},
+            }
+        ],
+    }
+    manifest_file.write_text(json.dumps(manifest_content, ensure_ascii=False), encoding="utf-8")
+
+    engine = CalqueReconciliationEngine(
+        sources_db_path=mock_dbs["sources_db"],
+        atlas_db_path=mock_dbs["atlas_db"],
+        lt_path=mock_dbs["lt_path"],
+        heritage_pairs_path=mock_dbs["heritage_pairs"],
+        heritage_overlay_path=mock_dbs["heritage_overlay"],
+        manifest_path=manifest_file,
+    )
+
+    # 1. No-op run (non-existent lemma): 0 entries reconciled -> fingerprint must remain old
+    res_noop = engine.run_reconciliation(dry_run=False, single_lemma="non-existent-word")
+    assert res_noop["reconciled_entries"] == 0
+    data_after_noop = json.loads(manifest_file.read_text(encoding="utf-8"))
+    assert data_after_noop["manifest_fingerprint"] == old_fingerprint
+
+    # 2. Partial run (single_lemma): 1 entry reconciled -> partial run must NOT certify entire manifest
+    res_partial = engine.run_reconciliation(dry_run=False, single_lemma="буран")
+    assert res_partial["reconciled_entries"] == 1
+    data_after_partial = json.loads(manifest_file.read_text(encoding="utf-8"))
+    assert data_after_partial["manifest_fingerprint"] == old_fingerprint
+
+    # 3. Full run (single_lemma=None, force=True) with reconciled entries -> now certifies fresh fingerprint
+    res_full = engine.run_reconciliation(dry_run=False, force=True)
+    assert res_full["reconciled_entries"] > 0
+    data_after_full = json.loads(manifest_file.read_text(encoding="utf-8"))
+    assert data_after_full["manifest_fingerprint"]["schema_version"] == 1
+    assert data_after_full["manifest_fingerprint"]["fingerprint"] != "old-stale-digest-12345"
+
+
+def test_curated_severity_reloads_on_yaml_change(mock_dbs: dict[str, Path], monkeypatch: pytest.MonkeyPatch) -> None:
+    """[P2 regression] Engine must rebuild curated severity state on YAML reload without stale cache bleed."""
+    import yaml
+
+    def mock_verify_lemma(lemma: str, db_path: Any = None) -> list[dict[str, Any]]:
+        return [{"lemma": lemma, "pos": "noun", "tags": "inanim:f:v_naz"}]
+
+    monkeypatch.setattr("scripts.lexicon.reconcile_calque_clusters.verify_lemma", mock_verify_lemma)
+
+    conn = sqlite3.connect(mock_dbs["atlas_db"])
+    conn.execute("INSERT OR REPLACE INTO articles (slug, lemma) VALUES ('мисль', 'мисль');")
+    conn.execute(
+        "INSERT OR REPLACE INTO article_payloads VALUES ('мисль', ?);",
+        (json.dumps({"slug": "мисль", "lemma": "мисль", "sections": {}}),),
+    )
+    conn.commit()
+    conn.close()
+
+    # 1. Initially yellow in YAML
+    pair_data = {
+        "pairs": [
+            {
+                "calqueLabel": "мисль",
+                "nativeLemma": "думка",
+                "corrections": ["думка"],
+                "kind": "lexical",
+                "severity": "calque_yellow",
+                "note": "У сучасній мові слід уживати думка.",
+            }
+        ]
+    }
+    mock_dbs["heritage_pairs"].write_text(yaml.dump(pair_data), encoding="utf-8")
+
+    engine = CalqueReconciliationEngine(
+        sources_db_path=mock_dbs["sources_db"],
+        atlas_db_path=mock_dbs["atlas_db"],
+        lt_path=mock_dbs["lt_path"],
+        heritage_pairs_path=mock_dbs["heritage_pairs"],
+        heritage_overlay_path=mock_dbs["heritage_overlay"],
+    )
+
+    engine.run_reconciliation(dry_run=False, single_lemma="мисль", force=True)
+    conn = sqlite3.connect(mock_dbs["atlas_db"])
+    row = conn.execute("SELECT payload_json FROM article_payloads WHERE slug = 'мисль'").fetchone()
+    p = json.loads(row[0])
+    assert p["is_russianism"] is False
+    assert p["calque_warning"]["severity"] == "orange"
+    assert p["heritage_status"]["warning_severity"] == "calque_yellow"
+    assert p["heritage_status"]["classification"] == "calque"
+
+    # 2. Mutate YAML to red on disk; same engine instance reloads YAML cleanly
+    pair_data["pairs"][0]["severity"] = "russianism_red"
+    mock_dbs["heritage_pairs"].write_text(yaml.dump(pair_data), encoding="utf-8")
+
+    engine.run_reconciliation(dry_run=False, single_lemma="мисль", force=True)
+    row = conn.execute("SELECT payload_json FROM article_payloads WHERE slug = 'мисль'").fetchone()
+    p2 = json.loads(row[0])
+    assert p2["is_russianism"] is True
+    assert p2["calque_warning"]["severity"] == "red"
+    assert p2["heritage_status"]["warning_severity"] == "russianism_red"
+    assert p2["heritage_status"]["classification"] == "russianism"
+
+    # 3. Remove pair from YAML; same engine instance must not retain stale pair
+    mock_dbs["heritage_pairs"].write_text(yaml.dump({"pairs": []}), encoding="utf-8")
+    engine.run_reconciliation(dry_run=False, single_lemma="мисль", force=True)
+    assert "мисль" not in engine.curated_heritage_pairs
+    conn.close()

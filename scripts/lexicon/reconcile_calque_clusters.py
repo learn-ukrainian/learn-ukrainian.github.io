@@ -34,7 +34,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.guardrails.worktree_containment import resolve_main_root
-from scripts.lexicon.manifest_fingerprint import write_fingerprint
+from scripts.lexicon.manifest_fingerprint import build_fingerprint, write_fingerprint
 from scripts.verification.vesum import get_vesum_conn, verify_lemma
 
 PRIMARY_ROOT = resolve_main_root(PROJECT_ROOT) or PROJECT_ROOT
@@ -189,6 +189,7 @@ class CalqueReconciliationEngine:
 
     def load_raw_replacements(self) -> dict[str, dict[str, list[str]]]:
         """Collect raw error -> suggestions mappings from all deterministic sources."""
+        self.curated_heritage_pairs = {}
         raw_map: dict[str, dict[str, list[str]]] = {}
 
         # 1. LanguageTool replacements
@@ -279,10 +280,7 @@ class CalqueReconciliationEngine:
                                 if err not in raw_map:
                                     raw_map[err] = {}
                                 raw_map[err][src_tag] = clean_corrs
-                                if src_tag == "heritage_pairs" and (
-                                    err not in self.curated_heritage_pairs
-                                    or p.get("severity") == "calque_yellow"
-                                ):
+                                if src_tag in ("heritage_pairs", "heritage_overlay"):
                                     self.curated_heritage_pairs[err] = p
                 except Exception:
                     pass
@@ -705,14 +703,18 @@ class CalqueReconciliationEngine:
         if not dry_run:
             self.atlas_conn.commit()
             if manifest_data and self.manifest_path:
-                try:
-                    fingerprint_payload = write_fingerprint(DEFAULT_FINGERPRINT, root=PROJECT_ROOT)
-                    manifest_data["manifest_fingerprint"] = {
-                        "schema_version": fingerprint_payload["schema_version"],
-                        "fingerprint": fingerprint_payload["fingerprint"],
-                    }
-                except Exception as e:
-                    print(f"Warning: could not refresh manifest fingerprint: {e}", file=sys.stderr)
+                if single_lemma is None and results["reconciled_entries"] > 0:
+                    try:
+                        if self.manifest_path.resolve() == DEFAULT_MANIFEST.resolve():
+                            fingerprint_payload = write_fingerprint(DEFAULT_FINGERPRINT, root=PROJECT_ROOT)
+                        else:
+                            fingerprint_payload = build_fingerprint(PROJECT_ROOT)
+                        manifest_data["manifest_fingerprint"] = {
+                            "schema_version": fingerprint_payload["schema_version"],
+                            "fingerprint": fingerprint_payload["fingerprint"],
+                        }
+                    except Exception as e:
+                        print(f"Warning: could not refresh manifest fingerprint: {e}", file=sys.stderr)
                 with open(self.manifest_path, "w", encoding="utf-8") as f:
                     json.dump(manifest_data, f, ensure_ascii=False, indent=2)
 
