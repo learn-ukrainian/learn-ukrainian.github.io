@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 import asyncio
+import copy
+import hashlib
 import importlib.util
+import json
 import sys
 from pathlib import Path
 from unittest.mock import patch
@@ -15,9 +18,20 @@ from learn_ukrainian_v4_runtime.tool_result_envelope import (
     disposition_to_status,
     enrich_typed_outcome,
 )
+from learn_ukrainian_v4_runtime.v4_canonical_authority_store import immutable_evidence_identifier
+from learn_ukrainian_v4_runtime.vesum_presentation import tag_gloss
 
 SOURCES_SERVER_PATH = Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "sources" / "server.py"
 VESUM_FIXTURE_VERSION = "a" * 64
+SYNII_FIXTURE = Path(__file__).parent / "fixtures" / "vesum_synii_analyses.json"
+SYNII_SHA256 = "df5b93dcc2f4e2f882d6cfb3e08c93ae9eeb61fba34fd75987e832a620c9a0b4"
+
+
+@pytest.fixture
+def synii_matches():
+    payload = SYNII_FIXTURE.read_bytes()
+    assert hashlib.sha256(payload).hexdigest() == SYNII_SHA256
+    return json.loads(payload)["matches"]
 
 
 @pytest.fixture
@@ -168,3 +182,127 @@ class TestSearchTextEnvelope:
         assert envelope["match_count"] == 1
         assert envelope["hits"][0]["chunk_id"] == "c1"
         assert "Found 1" in content[0].text
+
+
+def _assert_analysis_contract(content, outcome, analyses, lemmas):
+    assert outcome["match_count"] == len(outcome["hits"]) == analyses
+    assert type(outcome["lemma_count"]) is int
+    assert outcome["lemma_count"] == lemmas
+    assert outcome["summary_prose"] == content[0].text
+    count_text = f"{analyses} {'analysis' if analyses == 1 else 'analyses'}"
+    count_text += f" ({lemmas} distinct {'lemma' if lemmas == 1 else 'lemmas'})"
+    assert count_text in content[0].text
+    for hit in outcome["hits"]:
+        assert {"lemma", "pos", "tags", "is_archaic", "tag_gloss"} <= hit.keys()
+        assert hit["tag_gloss"].strip()
+
+
+@pytest.mark.parametrize("pos_filter,analyses,lemmas", [(None, 6, 2), ("adj", 5, 1), ("verb", 1, 1)])
+def test_synii_pinned_lookup(server_module, monkeypatch, tmp_path, synii_matches, pos_filter, analyses, lemmas):
+    """Exercise the real SQL lookup with source-attested rows, including POS filtering."""
+    import sqlite3
+
+    from scripts.verification import vesum
+
+    db_path = tmp_path / "vesum.db"
+    with sqlite3.connect(db_path) as conn:
+        conn.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)")
+        conn.executemany("INSERT INTO forms VALUES (?, ?, ?, ?)", [
+            ("синій", row["lemma"], row["pos"], row["tags"]) for row in synii_matches
+        ])
+    monkeypatch.setattr(vesum, "VESUM_DB_PATH", db_path)
+    monkeypatch.setattr(vesum, "_vesum_conn", None)
+    monkeypatch.setattr(vesum, "_vesum_conn_path", None)
+    monkeypatch.setattr(server_module, "_vesum_source_version", lambda: SYNII_SHA256)
+    try:
+        content, outcome = _run(server_module.handle_verify_word({"word": "синій", "pos_filter": pos_filter}))
+    finally:
+        if vesum._vesum_conn is not None:
+            vesum._vesum_conn.close()
+    _assert_analysis_contract(content, outcome, analyses, lemmas)
+    if pos_filter is None:
+        assert outcome["hits"][0]["tag_gloss"] == "adjective; masculine; nominative; positive degree"
+        assert outcome["hits"][-1]["tag_gloss"] == "verb; imperfective; imperative; singular; second person"
+    expected = {"word": "синій", "pos_filter": pos_filter, "matches": [
+        row for row in synii_matches if pos_filter is None or row["pos"] == pos_filter
+    ]}
+    assert outcome["result"] == expected
+    assert outcome["disposition"] == "supported" and outcome["success"] is True
+    assert outcome["evidence_identifiers"] == [immutable_evidence_identifier(
+        namespace="vesum", source_version=SYNII_SHA256, typed_result=expected,
+    )]
+
+
+@pytest.mark.parametrize("partial", [False, True])
+def test_batch_analysis_rows_and_global_lemmas(server_module, monkeypatch, synii_matches, partial):
+    # Synthetic second input reuses pinned rows to isolate cross-input counting.
+    words = ["синій", "синій", "fixture-second-input"] + (["fixture-miss"] if partial else [])
+    matches = {"синій": synii_matches, "fixture-second-input": synii_matches[:3]}
+    if partial:
+        matches["fixture-miss"] = []
+    original = copy.deepcopy(matches)
+    monkeypatch.setattr(server_module, "_vesum_source_version", lambda: SYNII_SHA256)
+    with patch("scripts.verification.vesum.verify_words", return_value=matches) as lookup:
+        content, outcome = _run(server_module.handle_verify_words({"words": words, "pos_filter": None}))
+    lookup.assert_called_once_with(words, None)
+    _assert_analysis_contract(content, outcome, 9, 2)
+    assert [hit["word"] for hit in outcome["hits"]] == ["синій"] * 6 + ["fixture-second-input"] * 3
+    expected = {"words": words, "pos_filter": None, "found": 3, "total": len(words), "matches": original}
+    assert matches == original
+    assert outcome["result"] == expected
+    assert outcome["disposition"] == ("partial" if partial else "supported")
+    assert outcome["success"] is (not partial)
+    assert outcome["evidence_identifiers"] == ([] if partial else [immutable_evidence_identifier(
+        namespace="vesum", source_version=SYNII_SHA256, typed_result=expected,
+    )])
+
+
+def test_lemma_hits_preserve_authority_payload(server_module, monkeypatch, synii_matches):
+    forms = [{"word_form": "синій", "pos": row["pos"], "tags": row["tags"]} for row in synii_matches[:5]]
+    expected_forms = [{**form, "is_archaic": False} for form in forms]
+    monkeypatch.setattr(server_module, "_vesum_source_version", lambda: SYNII_SHA256)
+    with patch("scripts.verification.vesum.verify_lemma", return_value=forms):
+        content, outcome = _run(server_module.handle_verify_lemma({"lemma": "синій"}))
+    _assert_analysis_contract(content, outcome, 5, 1)
+    expected = {"lemma": "синій", "forms": expected_forms}
+    assert outcome["result"] == expected
+    assert all(hit["lemma"] == "синій" for hit in outcome["hits"])
+    assert outcome["evidence_identifiers"] == [immutable_evidence_identifier(
+        namespace="vesum", source_version=SYNII_SHA256, typed_result=expected,
+    )]
+
+
+@pytest.mark.parametrize("tool,args,empty", [
+    ("verify_word", {"word": "fixture-miss"}, []),
+    ("verify_words", {"words": ["fixture-miss"]}, {"fixture-miss": []}),
+    ("verify_lemma", {"lemma": "fixture-miss"}, []),
+])
+def test_empty_and_invalid_counts(server_module, tool, args, empty):
+    handler = getattr(server_module, f"handle_{tool}")
+    with patch(f"scripts.verification.vesum.{tool}", return_value=empty) as lookup:
+        content, outcome = _run(handler(args))
+        _assert_analysis_contract(content, outcome, 0, 0)
+        assert outcome["status"] == "empty"
+        lookup.reset_mock()
+        content, outcome = _run(handler({}))
+        _assert_analysis_contract(content, outcome, 0, 0)
+        assert outcome["status"] == "error"
+        lookup.assert_not_called()
+
+
+def test_gloss_unknown_and_missing_tokens():
+    assert tag_gloss("adj:f:v_dav:future-tag") == "adjective; feminine; dative; unrecognized tag [future-tag]"
+    assert tag_gloss(None) == tag_gloss("") == "No morphological tags supplied"
+    assert tag_gloss("verb:imperf:impers") == "verb; imperfective; impersonal form"
+
+
+def test_archaic_hit_gloss(server_module, monkeypatch):
+    # Synthetic marker test, not a claim that this pinned modern row is archaic.
+    matches = [{"lemma": "fixture", "pos": "adj", "tags": "adj:m:v_naz:arch"}]
+    monkeypatch.setattr(server_module, "_vesum_source_version", lambda: VESUM_FIXTURE_VERSION)
+    with patch("scripts.verification.vesum.verify_word", return_value=matches):
+        content, outcome = _run(server_module.handle_verify_word({"word": "fixture"}))
+    _assert_analysis_contract(content, outcome, 1, 1)
+    assert outcome["hits"][0]["is_archaic"] is True
+    assert "archaic" in outcome["hits"][0]["tag_gloss"]
+    assert "tag_gloss" not in matches[0]

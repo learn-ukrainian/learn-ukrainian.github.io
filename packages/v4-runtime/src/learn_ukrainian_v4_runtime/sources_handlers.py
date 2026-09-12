@@ -11,6 +11,7 @@ from mcp.types import TextContent
 from learn_ukrainian_v4_runtime.operation_auth import HEX64, OperationRefused
 from learn_ukrainian_v4_runtime.tool_result_envelope import enrich_typed_outcome
 from learn_ukrainian_v4_runtime.v4_canonical_authority_store import immutable_evidence_identifier
+from learn_ukrainian_v4_runtime.vesum_presentation import tag_gloss
 
 _backend = None
 
@@ -112,6 +113,25 @@ async def handle_check_modern_form(args: dict):
     return [TextContent(type="text", text=prose)], outcome
 
 
+def _analysis_counts(hits: list[dict[str, Any]]) -> str:
+    lemma_count = len({hit["lemma"] for hit in hits})
+    analysis_label = "analysis" if len(hits) == 1 else "analyses"
+    lemma_label = "lemma" if lemma_count == 1 else "lemmas"
+    return f"{len(hits)} {analysis_label} ({lemma_count} distinct {lemma_label})"
+
+
+def _vesum_response(outcome: dict, *, query: dict, hits: list[dict], prose: str):
+    """Present analysis rows without mutating V4 result or evidence hash inputs."""
+    presented = [
+        {**hit, "is_archaic": _is_archaic(hit.get("tags")), "tag_gloss": tag_gloss(hit.get("tags"))}
+        for hit in hits
+    ]
+    prose = f"{_analysis_counts(presented)}\n\n{prose}"
+    enrich_typed_outcome(outcome, query=query, match_count=len(presented), hits=presented, summary_prose=prose)
+    outcome["lemma_count"] = len({hit["lemma"] for hit in presented})
+    return [TextContent(type="text", text=prose)], outcome
+
+
 async def handle_verify_word(args: dict):
     word = args.get("word")
     pos_filter = args.get("pos_filter")
@@ -119,8 +139,7 @@ async def handle_verify_word(args: dict):
     if not isinstance(word, str) or not word.strip():
         prose = "invalid_input: word is required"
         outcome = {"tool": "verify_word", "disposition": "invalid_input", "success": False, "evidence_identifiers": []}
-        enrich_typed_outcome(outcome, query=query, match_count=0, hits=[], summary_prose=prose)
-        return [TextContent(type="text", text=prose)], outcome
+        return _vesum_response(outcome, query=query, hits=[], prose=prose)
 
     verify_word = backend().verify_word
     matches = await asyncio.to_thread(verify_word, word, pos_filter)
@@ -134,11 +153,10 @@ async def handle_verify_word(args: dict):
             "evidence_identifiers": [],
             "result": typed_result,
         }
-        enrich_typed_outcome(outcome, query=query, match_count=0, hits=[], summary_prose=prose)
-        return [TextContent(type="text", text=prose)], outcome
+        return _vesum_response(outcome, query=query, hits=[], prose=prose)
 
     identifier = _typed_identifier("vesum", typed_result)
-    lines = [f"'{word}' — {len(matches)} match(es) in VESUM:\n"]
+    lines = [f"'{word}' — matches in VESUM:\n"]
     for m in matches:
         tags = m.get("tags") or ""
         archaic = _is_archaic(tags)
@@ -153,10 +171,7 @@ async def handle_verify_word(args: dict):
         "evidence_identifiers": [identifier],
         "result": typed_result,
     }
-    enrich_typed_outcome(
-        outcome, query=query, match_count=len(matches), hits=list(matches), summary_prose=prose
-    )
-    return [TextContent(type="text", text=prose)], outcome
+    return _vesum_response(outcome, query=query, hits=matches, prose=prose)
 
 
 async def handle_verify_words(args: dict):
@@ -166,21 +181,23 @@ async def handle_verify_words(args: dict):
     if not isinstance(words, list) or not words or not all(isinstance(item, str) and item.strip() for item in words):
         prose = "invalid_input: words must be a nonempty list"
         outcome = {"tool": "verify_words", "disposition": "invalid_input", "success": False, "evidence_identifiers": []}
-        enrich_typed_outcome(outcome, query=query, match_count=0, hits=[], summary_prose=prose)
-        return [TextContent(type="text", text=prose)], outcome
+        return _vesum_response(outcome, query=query, hits=[], prose=prose)
 
     verify_words = backend().verify_words
     results = await asyncio.to_thread(verify_words, words, pos_filter)
     found = 0
     lines = [f"Batch verification: {len(words)} words\n"]
-    hit_rows: list[dict[str, Any]] = []
+    hit_rows = [
+        {**match, "word": word}
+        for word in dict.fromkeys(words)
+        for match in results.get(word, [])
+    ]
     for word in words:
         matches = results.get(word, [])
         if matches:
             found += 1
-            hit_rows.append({"word": word, "matches": matches})
             tags_str = ", ".join(f"{m['lemma']}({m['pos']})" for m in matches[:3])
-            lines.append(f"- **{word}** — FOUND ({len(matches)} match): {tags_str}")
+            lines.append(f"- **{word}** — FOUND ({_analysis_counts(matches)}): {tags_str}")
         else:
             lines.append(f"- **{word}** — NOT FOUND")
     lines.insert(1, f"Found: {found}/{len(words)}\n")
@@ -195,10 +212,7 @@ async def handle_verify_words(args: dict):
         "evidence_identifiers": identifiers,
         "result": typed_result,
     }
-    enrich_typed_outcome(
-        outcome, query=query, match_count=len(hit_rows), hits=hit_rows, summary_prose=prose
-    )
-    return [TextContent(type="text", text=prose)], outcome
+    return _vesum_response(outcome, query=query, hits=hit_rows, prose=prose)
 
 
 async def handle_verify_lemma(args: dict):
@@ -207,8 +221,7 @@ async def handle_verify_lemma(args: dict):
     if not isinstance(lemma, str) or not lemma.strip():
         prose = "invalid_input: lemma is required"
         outcome = {"tool": "verify_lemma", "disposition": "invalid_input", "success": False, "evidence_identifiers": []}
-        enrich_typed_outcome(outcome, query=query, match_count=0, hits=[], summary_prose=prose)
-        return [TextContent(type="text", text=prose)], outcome
+        return _vesum_response(outcome, query=query, hits=[], prose=prose)
 
     verify_lemma = backend().verify_lemma
     forms = await asyncio.to_thread(verify_lemma, lemma)
@@ -222,8 +235,7 @@ async def handle_verify_lemma(args: dict):
             "evidence_identifiers": [],
             "result": {"lemma": lemma, "forms": []},
         }
-        enrich_typed_outcome(outcome, query=query, match_count=0, hits=[], summary_prose=prose)
-        return [TextContent(type="text", text=prose)], outcome
+        return _vesum_response(outcome, query=query, hits=[], prose=prose)
 
     # Group forms by POS for readability
     by_pos: dict[str, list] = {}
@@ -235,7 +247,7 @@ async def handle_verify_lemma(args: dict):
         f["is_archaic"] = is_archaic
         by_pos.setdefault(f.get("pos", "unknown"), []).append(f)
 
-    lines = [f"'{lemma}' — {len(forms)} form(s) across {len(by_pos)} POS (has_archaic_forms: {has_archaic_forms}):\n"]
+    lines = [f"'{lemma}' — forms across {len(by_pos)} POS (has_archaic_forms: {has_archaic_forms}):\n"]
     for pos, pos_forms in by_pos.items():
         lines.append(f"### {pos} ({len(pos_forms)} forms)")
         for f in pos_forms:
@@ -253,8 +265,8 @@ async def handle_verify_lemma(args: dict):
         "evidence_identifiers": [identifier],
         "result": typed_result,
     }
-    enrich_typed_outcome(outcome, query=query, match_count=len(forms), hits=list(forms), summary_prose=prose)
-    return [TextContent(type="text", text=prose)], outcome
+    hits = [{**form, "lemma": lemma} for form in forms]
+    return _vesum_response(outcome, query=query, hits=hits, prose=prose)
 
 
 async def handle_verify_stress(args: dict):
