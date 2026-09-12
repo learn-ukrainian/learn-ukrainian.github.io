@@ -120,6 +120,8 @@ import {
 import { LexiconCustomDeckManager } from './LexiconCustomDeckManager';
 import ZnoPractice, { ZNO_PRACTICE_DECK_META } from './ZnoPractice';
 import { useZnoPracticeOverlay, ZNO_MODE_META } from './useZnoPracticeOverlay';
+import ErrorCorrectionPractice from './ErrorCorrectionPractice';
+import { useErrorCorrectionPracticeOverlay } from './useErrorCorrectionPracticeOverlay';
 
 
 /**
@@ -675,6 +677,16 @@ const MODE_META: Record<
     stepEn: 'Native vocabulary',
     accent: 'teal',
   },
+};
+
+const CULTURE_DECK_META = {
+  title: 'Культура мовлення',
+  en: 'Culture of Speech',
+  description: 'Знаходьте та виправляйте лексичні помилки, кальки й суржик за шкільними підручниками.',
+  descriptionEn: 'Find and edit lexical errors, calques, and surzhyk based on Ukrainian school textbooks.',
+  step: 'Редагування',
+  stepEn: 'Error editing',
+  accent: 'orange' as const,
 };
 
 function visiblePracticeMode(mode: PracticeModeFilter): VisiblePracticeModeFilter {
@@ -2106,6 +2118,15 @@ function LexiconPracticeIsland({
     activeZnoDeckError,
     retryActiveZnoDeck,
   } = useZnoPracticeOverlay();
+  const [hoveredCultureDeck, setHoveredCultureDeck] = useState(false);
+  const {
+    activeCulturePractice,
+    setActiveCulturePractice,
+    cultureDrills,
+    cultureLoading,
+    cultureError,
+    retryCulturePractice,
+  } = useErrorCorrectionPracticeOverlay();
   const [publishedLevels] = useState<Set<CefrLevel>>(
     () => new Set(PUBLISHED_PRACTICE_LEVELS as unknown as CefrLevel[]),
   );
@@ -2165,9 +2186,11 @@ function LexiconPracticeIsland({
     const title = customSets.find((s) => s.id === selectedDeckFilter)?.title;
     return title ? { uk: title, en: title } : null;
   }, [selectedDeckFilter, customSets]);
-  const modeDetail = hoveredZnoDeckId
-    ? ZNO_MODE_META[hoveredZnoDeckId]
-    : MODE_META[hoveredMode ?? 'mixed'];
+  const modeDetail = hoveredCultureDeck
+    ? CULTURE_DECK_META
+    : hoveredZnoDeckId
+      ? ZNO_MODE_META[hoveredZnoDeckId]
+      : MODE_META[hoveredMode ?? 'mixed'];
 
   // #6544: compact above-fold chip label (keeps Drive/Manage folded per #6336).
   const activeDeckChipLabel = useMemo(() => {
@@ -3976,7 +3999,7 @@ function LexiconPracticeIsland({
         </p>
       )}
 
-      {sessionPhase === 'idle' && !activeZnoDeck && !activeZnoDeckLoading && (
+      {sessionPhase === 'idle' && !activeZnoDeck && !activeZnoDeckLoading && !activeCulturePractice && !cultureLoading && (
         <>
           {focusedLemmaId && (
             <div
@@ -4421,6 +4444,35 @@ function LexiconPracticeIsland({
                     </button>
                   );
                 })}
+                <button
+                  key="culture-error-correction"
+                  type="button"
+                  className="k3-mode-card"
+                  data-mode="culture-error-correction"
+                  data-accent={CULTURE_DECK_META.accent}
+                  data-mode-count={278}
+                  aria-describedby="mode-detail-line"
+                  onMouseEnter={() => setHoveredCultureDeck(true)}
+                  onMouseLeave={() => setHoveredCultureDeck(false)}
+                  onFocus={() => setHoveredCultureDeck(true)}
+                  onBlur={() => setHoveredCultureDeck(false)}
+                  onClick={() => setActiveCulturePractice(true)}
+                >
+                  <span className="k3-mode-title">{chromeLocale === 'uk' ? CULTURE_DECK_META.title : CULTURE_DECK_META.en}</span>
+                  <span className="k3-mode-step">{chromeLocale === 'uk' ? CULTURE_DECK_META.step : CULTURE_DECK_META.stepEn}</span>
+                  <span className="k3-mode-desc">
+                    {chromeLocale === 'uk' ? CULTURE_DECK_META.description : CULTURE_DECK_META.descriptionEn}
+                  </span>
+                  <span
+                    className="k3-mode-count"
+                    data-testid="practice-mode-count-culture-error-correction"
+                  >
+                    <span aria-hidden="true">278</span>
+                    <span className="sr-only">
+                      {modeCountAccessibleSuffix(278, chromeLocale)}
+                    </span>
+                  </span>
+                </button>
               </div>
             </div>
             </div>
@@ -4600,6 +4652,51 @@ function LexiconPracticeIsland({
           </div>
           <div className="lexicon-practice-stage" tabIndex={-1}>
             <ZnoPractice deck={activeZnoDeck} onBackToDecks={() => setActiveZnoDeckId(null)} />
+          </div>
+        </div>
+      )}
+
+      {cultureLoading && (
+        <p className="lexicon-practice-muted" role="status" data-testid="practice-culture-loading">
+          <PracticeChromeLabel k="practice.loading" />
+        </p>
+      )}
+
+      {cultureError && (
+        <div className="lexicon-practice-fallback" role="alert" data-testid="practice-culture-error">
+          <p className="lexicon-practice-warning">
+            <PracticeChromeLabel k="practice.loadError" />
+          </p>
+          <button type="button" className="btn btn-accent" onClick={retryCulturePractice}>
+            <PracticeChromeLabel k="practice.retry" />
+          </button>
+          <button type="button" className="stage-back" onClick={() => setActiveCulturePractice(false)}>
+            <PracticeChromeLabel k="practice.home" />
+          </button>
+        </div>
+      )}
+
+      {activeCulturePractice && cultureDrills && (
+        <div className="lexicon-practice-stage-shell" data-testid="practice-culture-session">
+          <div className="lexicon-practice-stage-bar">
+            <button type="button" className="stage-back" onClick={() => setActiveCulturePractice(false)}>
+              <PracticeChromeLabel k="practice.home" />
+            </button>
+            <h2>
+              {chromeLocale === 'uk'
+                ? 'Культура мовлення · Редагування помилок'
+                : 'Culture of Speech · Error Editing'}
+            </h2>
+            <span className="queue-pill" data-testid="practice-culture-session-count">
+              {cultureDrills.length}
+            </span>
+          </div>
+          <div className="lexicon-practice-stage" tabIndex={-1}>
+            <ErrorCorrectionPractice
+              items={cultureDrills}
+              onBackToDecks={() => setActiveCulturePractice(false)}
+              chromeLocale={chromeLocale}
+            />
           </div>
         </div>
       )}

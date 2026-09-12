@@ -1,4 +1,8 @@
 {
+  "deckId": "culture-error-correction",
+  "title": "Культура мовлення: Редагування помилок",
+  "titleEn": "Culture of Speech: Error Editing",
+  "totalDrills": 278,
   "drills": [
     {
       "id": "err_0001",
