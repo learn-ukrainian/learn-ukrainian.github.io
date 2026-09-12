@@ -904,3 +904,23 @@ def test_explanation_concerning_other_word_rejected() -> None:
     assert not eval_res["is_pass"]
     assert not eval_res["reasoning_grounded"]
     assert eval_res["composite_score"] <= 0.40
+
+
+def test_explanation_concerning_named_unrelated_word_rejected() -> None:
+    """L2: An explanation concerning an explicitly named unrelated word must fail grounding and not pass."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    # Probe from audit L2: explanation concerns explicitly named word «будинок»
+    r1 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «будинок»."
+    eval1 = evaluate_single_response(target, alts, r1)
+    assert not eval1["is_pass"]
+    assert not eval1["reasoning_grounded"]
+    assert eval1["composite_score"] <= 0.40
+
+    # Probe unquoted variant
+    r2 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова будинок."
+    eval2 = evaluate_single_response(target, alts, r2)
+    assert not eval2["is_pass"]
+    assert not eval2["reasoning_grounded"]
+    assert eval2["composite_score"] <= 0.40

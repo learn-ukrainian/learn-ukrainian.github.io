@@ -615,3 +615,38 @@ def test_negated_replacement_polarity() -> None:
     alts = {a["lemma"]: a for a in traj["register_spectrum"]["alternatives"]}
     assert alts["alpha"]["register_tier"] == "living_standard"
     assert alts["beta"]["register_tier"] != "living_standard"
+
+
+def test_comma_contrast_and_predicate_dash_semantics() -> None:
+    """L1: Comma contrast and predicate dash properly bind normative alternative and reject bad one."""
+    # 1. 'Use alpha, not beta.' promotes alpha and rejects beta
+    assert is_positive_citation("alpha", "Use alpha, not beta.")
+    assert not is_positive_citation("beta", "Use alpha, not beta.")
+
+    # 2. 'Do not use beta, use alpha.' promotes alpha and rejects beta
+    assert is_positive_citation("alpha", "Do not use beta, use alpha.")
+    assert not is_positive_citation("beta", "Do not use beta, use alpha.")
+
+    # 3. 'alpha — нормативне слово. beta — помилка.' promotes alpha and rejects beta
+    assert is_positive_citation("alpha", "alpha — нормативне слово. beta — помилка.")
+    assert not is_positive_citation("beta", "alpha — нормативне слово. beta — помилка.")
+
+    # 4. End-to-end trajectory synthesis with suggestion order [beta, alpha]
+    cand = CalqueCandidate(
+        target_term="test_calque",
+        suggestions=["beta", "alpha"],
+        source_tag="curated_test",
+        curated_evidence=["Use alpha, not beta."],
+    )
+    res = synthesize_trajectory_and_dpo(
+        cand,
+        {"alpha": 10, "beta": 15},
+        {"alpha": None, "beta": None},
+        {"alpha": None, "beta": None},
+    )
+    assert res is not None
+    traj, _ = res
+    assert traj["register_spectrum"]["primary_living_standard"] == "alpha"
+    alts = {a["lemma"]: a for a in traj["register_spectrum"]["alternatives"]}
+    assert alts["alpha"]["register_tier"] == "living_standard"
+    assert alts["beta"]["register_tier"] != "living_standard"

@@ -513,11 +513,23 @@ def is_positive_citation(lemma: str, citation: str) -> bool:
     if not re.search(lem_pat, cit_lower):
         return False
 
-    # Split into independent clauses / sentences
-    clauses = [c.strip() for c in re.split(r"[.!?;\n]+", cit_lower) if c.strip()]
+    raw_clauses = re.split(
+        r"[.!?;\n]+|,\s*(?=(?:not\b|never\b|don't\b|do\s+not\b|avoid\b|use\b|prefer\b|choose\b|adopt\b|а\s+не\b|але\s+не\b|та\s+не\b|і\s+не\b|й\s+не\b|ані\b|не\b|вжива\w*|пишіть\w*|кажіть\w*|обирайте\w*|використову\w*|уника\w*|замість\b|натомість\b|на\s+відміну\s+від\b|instead\s+of\b|rather\s+than\b|but\b|проте\b|однак\b|але\b))",
+        cit_lower,
+    )
+    clauses = [c.strip() for c in raw_clauses if c.strip()]
     lem_clauses = [c for c in clauses if re.search(lem_pat, c)]
     if not lem_clauses:
         return False
+
+    pos_pred_re = re.compile(
+        r"\b(?:правильн\w*|норм\w*|питом\w*|стандарт\w*|чинн\w*|літературн\w*|автентичн\w*)\b",
+        re.IGNORECASE,
+    )
+    neg_pred_re = re.compile(
+        r"\b(?:кальк\w*|помилк\w*|неправильн\w*|суржик\w*|росіянізм\w*|не\s+рекоменд\w*|уника\w*|штучн\w*)\b",
+        re.IGNORECASE,
+    )
 
     # Pass 1: evaluate whether any clause explicitly rejects lemma or whether lemma is in a rejected role
     for c in lem_clauses:
@@ -600,26 +612,34 @@ def is_positive_citation(lemma: str, citation: str) -> bool:
                     if re.search(lem_pat, a_text) and not re.search(lem_pat, b_text):
                         return False
 
-        # <B> (а не <A>)
-        m_ane = re.search(r"([^;.!?\n]+?)\s*\((?:а\s+не|not)\s+([^)]+)\)", c)
+        # <B> (а не <A>) or <B>, not <A>
+        m_ane = re.search(
+            r"(?<!\bdo\s)(?<!\bdon't\s)(?<!\bnever\s)(?:,\s*|\s*\()(?:а\s+не|not)\s+([^)\n,;.!?]+)\)?",
+            c,
+        )
         if m_ane:
-            a_text = m_ane.group(2)
+            a_text = m_ane.group(1)
             if re.search(lem_pat, a_text):
                 return False
 
-        # <A> — <B> error correction pair
+        # <A> — <B> dash construction
         c_body = re.sub(r"^[\w\-]+:\s*", "", c)
         dash_parts = [p.strip() for p in re.split(r"\s*(?:—|–|→)\s*", c_body) if p.strip()]
         if len(dash_parts) >= 2:
             a_text = dash_parts[0]
             b_text = dash_parts[-1]
-            if re.search(lem_pat, a_text) and not re.search(lem_pat, b_text):
+            if neg_pred_re.search(b_text) and re.search(lem_pat, a_text):
+                return False
+            elif pos_pred_re.search(b_text):
+                pass
+            elif re.search(lem_pat, a_text) and not re.search(lem_pat, b_text):
                 return False
 
         # General clause-level negative patterns
         clause_neg_patterns = [
             rf"\b(?:do\s+not|don't|never)\s+(?:\w+\s+)*(?:use|prefer|choose|adopt)\s+(?:(?!\binstead\s+of\b|\brather\s+than\b|\bзамість\b)[^;.!?\n])*{lem_pat}",
             rf"\b(?:avoid|stop)\s+(?:\w+\s+)*{lem_pat}",
+            rf"\b(?:not|never|don't|do\s+not|а\s+не|але\s+не|та\s+не|і\s+не|не|ані)\s+[«\"']?{lem_pat}\b",
             rf"{lem_pat}\s+(?:is\s+)?(?:not|n't|never)\s+(?:correct|recommended|standard|valid|appropriate|preferred|the\s+norm)",
             rf"{lem_pat}\s+(?:is\s+)?(?:incorrect|deprecated|a\s+calque|calque|avoided|an\s+error|wrong|unacceptable)",
             rf"\b(?:not|n't)\s+(?:recommended|correct|standard|valid|appropriate)\s*(?:to\s+use|:)?\s*[^;.!?\n]*{lem_pat}",
@@ -684,19 +704,25 @@ def is_positive_citation(lemma: str, citation: str) -> bool:
                     if re.search(lem_pat, b_text):
                         return True
 
-        # "<B> (а не <A>)" -> B is recommended
-        m_ane = re.search(r"([^;.!?\n]+?)\s*\((?:а\s+не|not)\s+([^)]+)\)", c)
+        # "<B> (а не <A>)" or "<B>, not <A>" -> B is recommended
+        m_ane = re.search(
+            r"(?<!\bdo\s)(?<!\bdon't\s)(?<!\bnever\s)(?:,\s*|\s*\()(?:а\s+не|not)\s+([^)\n,;.!?]+)\)?",
+            c,
+        )
         if m_ane:
-            b_text = m_ane.group(1)
+            b_text = c[: m_ane.start()]
             if re.search(lem_pat, b_text):
                 return True
 
-        # "<A> — <B>" -> B is recommended
+        # "<A> — <B>" -> B is recommended, or A is recommended if B is a positive predicate
         c_body = re.sub(r"^[\w\-]+:\s*", "", c)
         dash_parts = [p.strip() for p in re.split(r"\s*(?:—|–|→)\s*", c_body) if p.strip()]
         if len(dash_parts) >= 2:
+            a_text = dash_parts[0]
             b_text = dash_parts[-1]
-            if re.search(lem_pat, b_text):
+            if (pos_pred_re.search(b_text) and re.search(lem_pat, a_text)) or (
+                not neg_pred_re.search(b_text) and re.search(lem_pat, b_text)
+            ):
                 return True
 
         # Clause-level positive patterns
