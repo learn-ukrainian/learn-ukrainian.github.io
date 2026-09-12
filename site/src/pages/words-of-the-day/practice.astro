@@ -2328,4 +2328,101 @@ const frontmatter = {
       max-width: none;
     }
   }
+
+  /*
+   * #7961: Error-correction practice mode ('Культура мовлення') styling.
+   * Matches the Practice Hub card & badge tokens, providing proper padding,
+   * badges layout, typography, responsive card body, and action footer.
+   */
+  :global(.error-correction-practice-view) {
+    display: grid;
+    gap: 1.25rem;
+    max-width: 760px;
+    margin: 0 auto;
+    color: var(--lu-text);
+  }
+
+  :global(.error-correction-header-meta) {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  :global(.error-correction-badges) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  :global(.error-correction-source-badge),
+  :global(.error-correction-counter-badge) {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.65rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 9999px;
+    background: var(--lu-surface-raised);
+    color: var(--lu-text-muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  :global(.error-correction-source-badge) {
+    color: var(--lu-primary);
+    border-color: color-mix(in srgb, var(--lu-primary) 30%, var(--lu-border));
+  }
+
+  :global(.error-correction-instruction) {
+    margin: 0;
+    color: var(--lu-text);
+    font-size: 1.15rem;
+    font-weight: 800;
+    line-height: 1.4;
+  }
+
+  :global(.error-correction-card-body) {
+    border: 1px solid var(--lu-border);
+    border-radius: 14px;
+    background: var(--lu-surface);
+    padding: 1.25rem 1.5rem;
+    box-shadow: var(--lu-shadow);
+  }
+
+  :global(.error-correction-action-footer) {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 0.5rem;
+  }
+
+  :global(.error-correction-next-btn) {
+    min-height: 48px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 800;
+    border-radius: 12px;
+    border-color: var(--lu-primary);
+    background: var(--lu-primary);
+    color: var(--lu-on-primary-fill);
+    cursor: pointer;
+    transition: transform 0.1s, opacity 0.12s;
+  }
+
+  :global(.error-correction-next-btn:hover) {
+    opacity: 0.92;
+    transform: translateX(2px);
+  }
+
+  :global(.error-correction-empty) {
+    display: grid;
+    place-items: center;
+    gap: 1rem;
+    padding: 3rem 1.5rem;
+    text-align: center;
+    border: 1px dashed var(--lu-border);
+    border-radius: 16px;
+    background: var(--lu-surface-raised);
+    color: var(--lu-text);
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
 </style>

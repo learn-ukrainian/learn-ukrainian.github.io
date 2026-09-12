@@ -122,6 +122,7 @@ import ZnoPractice, { ZNO_PRACTICE_DECK_META } from './ZnoPractice';
 import { useZnoPracticeOverlay, ZNO_MODE_META } from './useZnoPracticeOverlay';
 import ErrorCorrectionPractice from './ErrorCorrectionPractice';
 import { useErrorCorrectionPracticeOverlay } from './useErrorCorrectionPracticeOverlay';
+import cultureErrorCorrectionsData from '../data/practice-error-corrections.json';
 
 
 /**
@@ -687,6 +688,7 @@ const CULTURE_DECK_META = {
   step: 'Редагування',
   stepEn: 'Error editing',
   accent: 'orange' as const,
+  itemCount: (cultureErrorCorrectionsData as { drills?: unknown[] })?.drills?.length ?? 0,
 };
 
 function visiblePracticeMode(mode: PracticeModeFilter): VisiblePracticeModeFilter {
@@ -4450,7 +4452,7 @@ function LexiconPracticeIsland({
                   className="k3-mode-card"
                   data-mode="culture-error-correction"
                   data-accent={CULTURE_DECK_META.accent}
-                  data-mode-count={278}
+                  data-mode-count={CULTURE_DECK_META.itemCount}
                   aria-describedby="mode-detail-line"
                   onMouseEnter={() => setHoveredCultureDeck(true)}
                   onMouseLeave={() => setHoveredCultureDeck(false)}
@@ -4467,9 +4469,9 @@ function LexiconPracticeIsland({
                     className="k3-mode-count"
                     data-testid="practice-mode-count-culture-error-correction"
                   >
-                    <span aria-hidden="true">278</span>
+                    <span aria-hidden="true">{CULTURE_DECK_META.itemCount}</span>
                     <span className="sr-only">
-                      {modeCountAccessibleSuffix(278, chromeLocale)}
+                      {modeCountAccessibleSuffix(CULTURE_DECK_META.itemCount, chromeLocale)}
                     </span>
                   </span>
                 </button>
