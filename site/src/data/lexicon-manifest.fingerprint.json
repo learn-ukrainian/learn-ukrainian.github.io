@@ -251,7 +251,7 @@
       },
       {
         "path": "scripts/lexicon/reconcile_calque_clusters.py",
-        "sha256": "6a685c0c3b1e48cc47a259cd09ed19eb22e4f1309bc3bc499ec999a480af9569"
+        "sha256": "d5265e9128436b38e5c8b41d51eaa1f23faae00ca5450a4a726da2dbe0e643e2"
       },
       {
         "path": "scripts/lexicon/reenrich_thin_manifest_entries.py",

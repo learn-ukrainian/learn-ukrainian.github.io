@@ -72,8 +72,13 @@ def mock_dbs(tmp_path: Path) -> dict[str, Path]:
     # 2. Mock atlas.db
     atlas_db = tmp_path / "atlas.db"
     a_conn = sqlite3.connect(atlas_db)
-    a_conn.execute("CREATE TABLE articles (slug TEXT PRIMARY KEY, lemma TEXT);")
+    a_conn.execute(
+        "CREATE TABLE articles (slug TEXT PRIMARY KEY, lemma TEXT, heritage_classification TEXT, updated_at TEXT);"
+    )
     a_conn.execute("CREATE TABLE article_payloads (slug TEXT PRIMARY KEY, payload_json TEXT);")
+    a_conn.execute(
+        "CREATE TABLE enrichment (slug TEXT NOT NULL, section TEXT NOT NULL, payload_json TEXT NOT NULL, source TEXT, filled_at TEXT, phase TEXT, UNIQUE (slug, section));"
+    )
 
     # Seed atlas entries:
     # 'буран' (error lemma, Russianism)
@@ -108,13 +113,13 @@ def mock_dbs(tmp_path: Path) -> dict[str, Path]:
         },
     }
 
-    a_conn.execute("INSERT INTO articles VALUES ('буран', 'буран');")
+    a_conn.execute("INSERT INTO articles (slug, lemma) VALUES ('буран', 'буран');")
     a_conn.execute("INSERT INTO article_payloads VALUES ('буран', ?);", (json.dumps(buran_payload),))
 
-    a_conn.execute("INSERT INTO articles VALUES ('заметіль', 'заметіль');")
+    a_conn.execute("INSERT INTO articles (slug, lemma) VALUES ('заметіль', 'заметіль');")
     a_conn.execute("INSERT INTO article_payloads VALUES ('заметіль', ?);", (json.dumps(zamitil_payload),))
 
-    a_conn.execute("INSERT INTO articles VALUES ('хуртовина', 'хуртовина');")
+    a_conn.execute("INSERT INTO articles (slug, lemma) VALUES ('хуртовина', 'хуртовина');")
     a_conn.execute("INSERT INTO article_payloads VALUES ('хуртовина', ?);", (json.dumps(khurtovyna_payload),))
 
     a_conn.commit()
@@ -213,6 +218,26 @@ def test_reconciliation_dry_run_vs_apply(mock_dbs: dict[str, Path], monkeypatch:
     assert khurt_p["enrichment_version"] == CURRENT_ENRICHMENT_VERSION
     assert "заметіль" in khurt_p["sections"]["synonyms"]["items"]
     assert "буран" not in khurt_p["sections"]["synonyms"]["items"]
+
+    # Check DB sync on articles and enrichment tables
+    art_row = conn.execute("SELECT heritage_classification, updated_at FROM articles WHERE slug = 'буран'").fetchone()
+    assert art_row[0] == "russianism"
+    assert art_row[1] == buran_p["updated_at"]
+
+    enr_hs = conn.execute("SELECT payload_json FROM enrichment WHERE slug = 'буран' AND section = 'heritage_status'").fetchone()
+    assert enr_hs is not None
+    hs_data = json.loads(enr_hs[0])
+    assert hs_data["classification"] == "russianism"
+    assert hs_data["warning_severity"] == "russianism_red"
+
+    enr_syn = conn.execute("SELECT payload_json FROM enrichment WHERE slug = 'буран' AND section = 'synonyms'").fetchone()
+    assert enr_syn is not None
+
+    enr_peer = conn.execute("SELECT payload_json FROM enrichment WHERE slug = 'заметіль' AND section = 'synonyms'").fetchone()
+    assert enr_peer is not None
+    peer_data = json.loads(enr_peer[0])
+    assert "хуртовина" in peer_data["items"]
+    assert "буран" not in peer_data["items"]
 
     # Check inflow queue: 'завірюха' was queued because it's not in Atlas
     inflow = apply_results["inflow_queue"]
@@ -393,12 +418,12 @@ def test_lexicalised_safe_and_polysemes_skipped(mock_dbs: dict[str, Path], monke
 
     conn = sqlite3.connect(mock_dbs["atlas_db"])
     # Seed 'блискучий' (LEXICALISED_SAFE) and 'вірний' (SENSE_RESTRICTED_CALQUES)
-    conn.execute("INSERT INTO articles VALUES ('блискучий', 'блискучий');")
+    conn.execute("INSERT INTO articles (slug, lemma) VALUES ('блискучий', 'блискучий');")
     conn.execute(
         "INSERT INTO article_payloads VALUES ('блискучий', ?);",
         (json.dumps({"slug": "блискучий", "lemma": "блискучий", "sections": {}}),),
     )
-    conn.execute("INSERT INTO articles VALUES ('вірний', 'вірний');")
+    conn.execute("INSERT INTO articles (slug, lemma) VALUES ('вірний', 'вірний');")
     conn.execute(
         "INSERT INTO article_payloads VALUES ('вірний', ?);",
         (json.dumps({"slug": "вірний", "lemma": "вірний", "sections": {}}),),
@@ -444,13 +469,13 @@ def test_severity_classification_curated_vs_pure_lt(mock_dbs: dict[str, Path], m
 
     conn = sqlite3.connect(mock_dbs["atlas_db"])
     # 1. Pure LT replacement: 'антипаста' -> 'антипасто'
-    conn.execute("INSERT INTO articles VALUES ('антипаста', 'антипаста');")
+    conn.execute("INSERT INTO articles (slug, lemma) VALUES ('антипаста', 'антипаста');")
     conn.execute(
         "INSERT INTO article_payloads VALUES ('антипаста', ?);",
         (json.dumps({"slug": "антипаста", "lemma": "антипаста", "sections": {}}),),
     )
     # 2. Curated calque via heritage_pairs: 'бажаючий' -> 'охочий'
-    conn.execute("INSERT INTO articles VALUES ('бажаючий', 'бажаючий');")
+    conn.execute("INSERT INTO articles (slug, lemma) VALUES ('бажаючий', 'бажаючий');")
     conn.execute(
         "INSERT INTO article_payloads VALUES ('бажаючий', ?);",
         (json.dumps({"slug": "бажаючий", "lemma": "бажаючий", "sections": {}}),),
@@ -490,19 +515,27 @@ def test_severity_classification_curated_vs_pure_lt(mock_dbs: dict[str, Path], m
 
     conn = sqlite3.connect(mock_dbs["atlas_db"])
 
-    # 'антипаста' (pure LT): orange severity, is_russianism = False
+    # 'антипаста' (pure LT): orange severity, is_russianism = False, warning_severity = calque_yellow
     row_lt = conn.execute("SELECT payload_json FROM article_payloads WHERE slug = 'антипаста'").fetchone()
     p_lt = json.loads(row_lt[0])
     assert p_lt["is_russianism"] is False
     assert p_lt["calque_warning"]["severity"] == "orange"
+    assert p_lt["heritage_status"]["warning_severity"] == "calque_yellow"
     assert "Нерекомендоване або ненормативне слововживання" in p_lt["calque_warning"]["warning_text"]
 
-    # 'бажаючий' (curated calque): red severity, is_russianism = True
+    row_art_lt = conn.execute("SELECT heritage_classification FROM articles WHERE slug = 'антипаста'").fetchone()
+    assert row_art_lt[0] == "calque"
+
+    # 'бажаючий' (curated calque): red severity, is_russianism = True, warning_severity = russianism_red
     row_her = conn.execute("SELECT payload_json FROM article_payloads WHERE slug = 'бажаючий'").fetchone()
     p_her = json.loads(row_her[0])
     assert p_her["is_russianism"] is True
     assert p_her["calque_warning"]["severity"] == "red"
+    assert p_her["heritage_status"]["warning_severity"] == "russianism_red"
     assert "Калька / росіянізм" in p_her["calque_warning"]["warning_text"]
+
+    row_art_her = conn.execute("SELECT heritage_classification FROM articles WHERE slug = 'бажаючий'").fetchone()
+    assert row_art_her[0] == "russianism"
 
     conn.close()
 
@@ -549,12 +582,12 @@ def test_peer_synonyms_exclude_russianisms_in_atlas(mock_dbs: dict[str, Path], m
     # Error lemma: 'тест_помилка'
     # Alt 1: 'автентичне_слово'
     # Alt 2: 'інший_росіянізм' (already flagged as is_russianism: true in Atlas)
-    conn.execute("INSERT INTO articles VALUES ('тест_помилка', 'тест_помилка');")
+    conn.execute("INSERT INTO articles (slug, lemma) VALUES ('тест_помилка', 'тест_помилка');")
     conn.execute(
         "INSERT INTO article_payloads VALUES ('тест_помилка', ?);",
         (json.dumps({"slug": "тест_помилка", "lemma": "тест_помилка", "sections": {}}),),
     )
-    conn.execute("INSERT INTO articles VALUES ('автентичне_слово', 'автентичне_слово');")
+    conn.execute("INSERT INTO articles (slug, lemma) VALUES ('автентичне_слово', 'автентичне_слово');")
     conn.execute(
         "INSERT INTO article_payloads VALUES ('автентичне_слово', ?);",
         (
@@ -563,7 +596,7 @@ def test_peer_synonyms_exclude_russianisms_in_atlas(mock_dbs: dict[str, Path], m
             ),
         ),
     )
-    conn.execute("INSERT INTO articles VALUES ('інший_росіянізм', 'інший_росіянізм');")
+    conn.execute("INSERT INTO articles (slug, lemma) VALUES ('інший_росіянізм', 'інший_росіянізм');")
     conn.execute(
         "INSERT INTO article_payloads VALUES ('інший_росіянізм', ?);",
         (json.dumps({"slug": "інший_росіянізм", "lemma": "інший_росіянізм", "is_russianism": True, "sections": {}}),),
@@ -616,7 +649,7 @@ def test_warning_text_refresh_on_force(mock_dbs: dict[str, Path], monkeypatch: p
         },
         "sections": {},
     }
-    conn.execute("INSERT INTO articles VALUES ('старий_запис', 'старий_запис');")
+    conn.execute("INSERT INTO articles (slug, lemma) VALUES ('старий_запис', 'старий_запис');")
     conn.execute(
         "INSERT INTO article_payloads VALUES ('старий_запис', ?);",
         (json.dumps(stale_payload),),
@@ -712,3 +745,11 @@ def test_manifest_sync_in_place(mock_dbs: dict[str, Path], tmp_path: Path, monke
     assert zamitil_entry["enrichment_version"] == CURRENT_ENRICHMENT_VERSION
     assert "хуртовина" in zamitil_entry["sections"]["synonyms"]["items"]
     assert "буран" not in zamitil_entry["sections"]["synonyms"]["items"]
+
+    # Verify DB sync alongside manifest sync
+    conn = sqlite3.connect(mock_dbs["atlas_db"])
+    art_row = conn.execute("SELECT heritage_classification FROM articles WHERE slug = 'буран'").fetchone()
+    assert art_row[0] == "russianism"
+    enr_rows = conn.execute("SELECT section FROM enrichment WHERE slug = 'буран' ORDER BY section").fetchall()
+    assert [r[0] for r in enr_rows] == ["heritage_status", "synonyms"]
+    conn.close()

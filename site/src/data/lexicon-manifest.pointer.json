@@ -1,36 +1,27 @@
 {
-  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest-1360f0c02afa.json.gz",
+  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest-d1acc6ef613f.json.gz",
   "release_tag": "atlas-manifest",
   "manifest_version": "0.1",
-  "manifest_fingerprint": "71c4c8ae99155a7e3a5b766abc9ed362c5259f95d7b54881684ef3ef08ed1067",
+  "manifest_fingerprint": "ace3e1c936855535a5d776644def3dda9b608fdbb5acdac65593ae32df826dd2",
   "fingerprint_schema_version": 1,
   "generated_at": "2026-09-11T10:12:36+00:00",
-  "gz_sha256": "e1e783f960916304b64e35058761e183dacb7be7441935440136dcdc7542cd9f",
-  "json_sha256": "1360f0c02afa32de89f6fa5e2985c537b47e9047bbe20a7851b2cb8ff36c281f",
-  "gz_bytes": 35506056,
-  "json_bytes": 267301073,
+  "gz_sha256": "c0df9e89a410e761cdfae744cf6da854db879f8484548d13112e7dcf640ec168",
+  "json_sha256": "d1acc6ef613fc145f12d84d9e8854598542e7f504d40c009d9731552596da2c7",
+  "gz_bytes": 35545606,
+  "json_bytes": 267434112,
   "richness_gate": {
     "baseline": {
-      "poc_thin_pages": 6989,
-      "search_no_visible_gloss": 5,
-      "old_gate_no_english_anchor": 1200
-    },
-    "candidate": {
       "poc_thin_pages": 10549,
       "search_no_visible_gloss": 5,
       "old_gate_no_english_anchor": 3010
     },
-    "regressions": {
-      "poc_thin_pages": {
-        "baseline": 6989,
-        "candidate": 10549
-      },
-      "old_gate_no_english_anchor": {
-        "baseline": 1200,
-        "candidate": 3010
-      }
+    "candidate": {
+      "poc_thin_pages": 10530,
+      "search_no_visible_gloss": 5,
+      "old_gate_no_english_anchor": 3010
     },
-    "override_reason": "Reconcile 150 Russianism and calque clusters in Word Atlas under #7914 / #7915 / #4387 with zero richness regressions (poc_thin_pages=10549, search_no_visible_gloss=5, old_gate_no_english_anchor=3010)",
+    "regressions": {},
+    "override_reason": null,
     "bootstrap": false
   },
   "note": "Pins GitHub Release asset manifest for #3659; hydrate it build time instead committing raw JSON."

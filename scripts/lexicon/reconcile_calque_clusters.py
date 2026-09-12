@@ -20,7 +20,6 @@ Versioning Contract:
 from __future__ import annotations
 
 import argparse
-import contextlib
 import datetime
 import json
 import re
@@ -411,6 +410,7 @@ class CalqueReconciliationEngine:
 
         cursor = self.atlas_conn.cursor()
         lexicalised_safe = self.get_lexicalised_safe()
+        inflow_map: dict[str, dict[str, Any]] = {}
 
         manifest_data: dict[str, Any] | None = None
         manifest_by_slug: dict[str, dict[str, Any]] = {}
@@ -570,11 +570,10 @@ class CalqueReconciliationEngine:
                             "UPDATE article_payloads SET payload_json = ? WHERE slug = ?",
                             (json.dumps(alt_payload, ensure_ascii=False), alt_slug),
                         )
-                        with contextlib.suppress(sqlite3.OperationalError):
-                            cursor.execute(
-                                "INSERT OR REPLACE INTO enrichment (slug, section, payload_json, source, filled_at) VALUES (?, 'synonyms', ?, 'curated authentic synonyms', ?)",
-                                (alt_slug, json.dumps(alt_syn_sec, ensure_ascii=False), alt_payload["updated_at"]),
-                            )
+                        cursor.execute(
+                            "INSERT OR REPLACE INTO enrichment (slug, section, payload_json, source, filled_at) VALUES (?, 'synonyms', ?, 'curated authentic synonyms', ?)",
+                            (alt_slug, json.dumps(alt_syn_sec, ensure_ascii=False), alt_payload["updated_at"]),
+                        )
                     if alt_slug in manifest_by_slug:
                         alt_m_entry = manifest_by_slug[alt_slug]
                         alt_m_entry["enrichment_version"] = CURRENT_ENRICHMENT_VERSION
@@ -585,17 +584,29 @@ class CalqueReconciliationEngine:
 
             # Queue authentic alternatives not in Atlas for inflow
             for cand in candidates:
-                if not cand.is_phrase and cand.term not in atlas_lemmas:
-                    results["inflow_queue"].append(
-                        {
+                if (
+                    not cand.is_phrase
+                    and cand.vesum_forms_count > 0
+                    and cand.pos is not None
+                    and cand.term not in atlas_lemmas
+                ):
+                    if cand.term not in inflow_map:
+                        inflow_map[cand.term] = {
                             "lemma": cand.term,
                             "pos": cand.pos,
                             "vesum_forms": cand.vesum_forms_count,
                             "textbook_hits": cand.textbook_hits,
                             "cluster_parent": lemma,
-                            "sources": cand.sources,
+                            "cluster_parents": [lemma],
+                            "sources": list(cand.sources),
                         }
-                    )
+                    else:
+                        entry = inflow_map[cand.term]
+                        if lemma not in entry["cluster_parents"]:
+                            entry["cluster_parents"].append(lemma)
+                        for s in cand.sources:
+                            if s not in entry["sources"]:
+                                entry["sources"].append(s)
 
             results["reconciled_entries"] += 1
             results["entries"][lemma] = {
@@ -612,7 +623,7 @@ class CalqueReconciliationEngine:
                 heritage_status = {}
             heritage_status["classification"] = "russianism" if is_rus else "calque"
             heritage_status["is_russianism"] = is_rus
-            heritage_status["warning_severity"] = "russianism_red" if is_rus else "calque_orange"
+            heritage_status["warning_severity"] = "russianism_red" if is_rus else "calque_yellow"
             heritage_status["calque_warning"] = {"standard_alternatives": sorted_alts}
             if is_rus:
                 heritage_status["russian_shadow"] = True
@@ -648,21 +659,18 @@ class CalqueReconciliationEngine:
                     "UPDATE article_payloads SET payload_json = ? WHERE slug = ?",
                     (updated_json, slug),
                 )
-                try:
-                    cursor.execute(
-                        "UPDATE articles SET heritage_classification = ?, updated_at = ? WHERE slug = ?",
-                        (heritage_status.get("classification"), payload["updated_at"], slug),
-                    )
-                    cursor.execute(
-                        "INSERT OR REPLACE INTO enrichment (slug, section, payload_json, source, filled_at) VALUES (?, 'heritage_status', ?, 'curated decolonization alternatives', ?)",
-                        (slug, json.dumps(heritage_status, ensure_ascii=False), payload["updated_at"]),
-                    )
-                    cursor.execute(
-                        "INSERT OR REPLACE INTO enrichment (slug, section, payload_json, source, filled_at) VALUES (?, 'synonyms', ?, 'curated standard alternatives', ?)",
-                        (slug, json.dumps(synonyms_sec, ensure_ascii=False), payload["updated_at"]),
-                    )
-                except sqlite3.OperationalError:
-                    pass
+                cursor.execute(
+                    "UPDATE articles SET heritage_classification = ?, updated_at = ? WHERE slug = ?",
+                    (heritage_status.get("classification"), payload["updated_at"], slug),
+                )
+                cursor.execute(
+                    "INSERT OR REPLACE INTO enrichment (slug, section, payload_json, source, filled_at) VALUES (?, 'heritage_status', ?, 'curated decolonization alternatives', ?)",
+                    (slug, json.dumps(heritage_status, ensure_ascii=False), payload["updated_at"]),
+                )
+                cursor.execute(
+                    "INSERT OR REPLACE INTO enrichment (slug, section, payload_json, source, filled_at) VALUES (?, 'synonyms', ?, 'curated standard alternatives', ?)",
+                    (slug, json.dumps(synonyms_sec, ensure_ascii=False), payload["updated_at"]),
+                )
 
         if not dry_run:
             self.atlas_conn.commit()
@@ -670,6 +678,10 @@ class CalqueReconciliationEngine:
                 with open(self.manifest_path, "w", encoding="utf-8") as f:
                     json.dump(manifest_data, f, ensure_ascii=False, indent=2)
 
+        results["inflow_queue"] = sorted(
+            inflow_map.values(),
+            key=lambda x: (-x["textbook_hits"], -x["vesum_forms"], x["lemma"]),
+        )
         results["inflow_queued_count"] = len(results["inflow_queue"])
         return results
 
