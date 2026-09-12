@@ -1817,14 +1817,15 @@ async def serve_static(path: str, ctx: MonitorContext = Depends(get_ctx)):
 
 
 def create_app(context: MonitorContext, *, lifespan: Any = None) -> FastAPI:
-    """Build a fresh Monitor API app bound to one context."""
+    """Build a fresh Ops API app bound to one context."""
     factory_lifespan = _lifespan if lifespan is None else lifespan
     factory_app = FastAPI(
-        title="Playground API",
+        title="Ops API",
         version="2.0.0",
         description=(
-            "Monitor API for the Ukrainian curriculum pipeline. "
-            "Powers the ukraine-ops dashboards (root /), agent cold-start (orient, rules, session), "
+            "Operator API (Ops API) for the Ukrainian curriculum pipeline. "
+            "Stream key remains `monitor`; historic Monitor docs paths are progressive rename. "
+            "Powers the ops dashboards (root /), agent cold-start (orient, rules, session), "
             "state queries, comms, delegate, build events, and operational tooling. "
             "Interactive explorer: /docs (Swagger) and /redoc. "
             "Machine-readable route contracts: /api/contracts/routes. "

@@ -1,8 +1,12 @@
-# Monitor API Reference
+# Ops API Reference (Monitor stream)
+
+Product name: **Ops API** (Operator API + UI). Stream / launcher key remains
+`monitor` (`./start-cursor-driver.sh --epic ops-api`). This file path keeps the
+historic `MONITOR-API` name during progressive rename (#7919 / #7968).
 
 Base URL: `http://localhost:8765`
 
-FastAPI auto-docs: `http://localhost:8765/docs` (Swagger UI)
+FastAPI auto-docs: `http://localhost:8765/docs` (Swagger UI; title **Ops API**)
 
 **Definition authority for the public surface**: `GET /api/contracts/routes` (returns the full `route_contracts` + `page_contracts` registry with `purpose`, `source_of_truth`, `freshness`, `consumers`, `overlap`, `stale_risk`, `recommendation`, `mutates`, `replacement`, and `response_schema_version` for every endpoint family and every `dashboards/*.html` page).
 
