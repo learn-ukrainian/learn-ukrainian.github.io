@@ -87,7 +87,7 @@ class DictUACrawler:
                 )
                 self.last_request_at = time.monotonic()
 
-                if resp.status_code in {429, 500, 502, 503, 504}:
+                if resp.status_code in {403, 408, 425, 429} or resp.status_code >= 500:
                     retry_after = resp.headers.get("Retry-After")
                     sleep_time = float(retry_after) if retry_after else backoff
                     print(
@@ -323,6 +323,8 @@ class DumpDB:
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self.conn = sqlite3.connect(str(self.db_path))
         self.conn.execute("PRAGMA journal_mode=WAL;")
+        self.conn.execute("PRAGMA synchronous=NORMAL;")
+        self.conn.execute("PRAGMA busy_timeout=5000;")
         self._init_schema()
 
     def _init_schema(self) -> None:
@@ -417,7 +419,7 @@ def load_atlas_manifest_lemmas(manifest_path: Path) -> list[str]:
 def load_vesum_lemmas(vesum_db_path: Path) -> list[str]:
     conn = sqlite3.connect(str(vesum_db_path))
     cursor = conn.execute(
-        "SELECT DISTINCT lemma FROM vesum_entries WHERE lemma != '' ORDER BY lemma;"
+        "SELECT DISTINCT lemma FROM forms_all WHERE lemma != '' ORDER BY lemma;"
     )
     lemmas = [row[0] for row in cursor.fetchall()]
     conn.close()
