@@ -231,12 +231,13 @@ PART_OF_SPEECH_WORDS = (
 
 RELATION_CHAIN = (
     r"(?:(?:суфікс\w*|префікс\w*|корен\w*|основ\w*|закінченн\w*|"
-    r"значенн\w*|поясненн\w*|тлумаченн\w*|етимологі\w*|походженн\w*)\s+)*"
+    r"значенн\w*|поясненн\w*|тлумаченн\w*|етимологі\w*|походженн\w*|"
+    r"варіант\w*|форм\w*)\s+)*"
 )
 
 NAMED_ENTITY_PATTERNS = [
     re.compile(
-        rf"\b{RELATION_CHAIN}(?:(?:форм\w*|варіант\w*)\s+)?{PART_OF_SPEECH_WORDS}\s+[«\"“']?([а-яіїєґa-z0-9'’ʼ\-]+)[»\"”']?",
+        rf"\b{RELATION_CHAIN}{PART_OF_SPEECH_WORDS}\s+[«\"“']?([а-яіїєґa-z0-9'’ʼ\-]+)[»\"”']?",
         re.IGNORECASE,
     ),
     re.compile(

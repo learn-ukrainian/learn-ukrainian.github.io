@@ -1170,7 +1170,7 @@ def test_unquoted_goodtoken_subject_explanation_admitted() -> None:
 
 
 def test_nested_grammatical_descriptors_target_and_unrelated_subjects() -> None:
-    """M1 Review P2: Descriptor chains (e.g. 'форма слова/іменника') must resolve through to their lexical subject."""
+    """M1 Review P2: Descriptor chains (e.g. 'варіант форми слова', 'форма іменника') must resolve through to their lexical subject."""
     target = "badtoken"
     alts = ["goodtoken"]
 
@@ -1180,6 +1180,14 @@ def test_nested_grammatical_descriptors_target_and_unrelated_subjects() -> None:
         "форма іменника goodtoken",
         "форма слова «goodtoken»",
         "форма іменника «goodtoken»",
+        "варіант форми слова goodtoken",
+        "варіант форми слова «goodtoken»",
+        "варіант форми іменника goodtoken",
+        "варіант форми іменника «goodtoken»",
+        "пояснення варіанта форми слова goodtoken",
+        "пояснення варіанта форми слова «goodtoken»",
+        "пояснення значення варіанта форми слова goodtoken",
+        "пояснення суфікса варіанта форми іменника goodtoken",
     ):
         r_target = f"Вживайте goodtoken, бо за словником ВЕСУМ це {phrase} з питомим суфіксом -ник."
         eval_t = evaluate_single_response(target, alts, r_target)
@@ -1199,6 +1207,23 @@ def test_nested_grammatical_descriptors_target_and_unrelated_subjects() -> None:
         "форма слова «іменник»",
         "форма іменника форма",
         "форма іменника іменник",
+        "варіант форми слова будинок",
+        "варіант форми слова «будинок»",
+        "варіант форми слова форма",
+        "варіант форми слова «форма»",
+        "варіант форми слова іменник",
+        "варіант форми слова «іменник»",
+        "варіант форми іменника будинок",
+        "варіант форми іменника «будинок»",
+        "варіант форми іменника форма",
+        "варіант форми іменника «форма»",
+        "варіант форми іменника іменник",
+        "варіант форми іменника «іменник»",
+        "пояснення варіанта форми слова будинок",
+        "пояснення варіанта форми слова «будинок»",
+        "пояснення варіанта форми слова форма",
+        "пояснення варіанта форми слова «форма»",
+        "пояснення значення варіанта форми слова будинок",
     ):
         r_unrelated = f"Вживайте goodtoken, бо за словником ВЕСУМ це {phrase} з питомим суфіксом -ник."
         eval_u = evaluate_single_response(target, alts, r_unrelated)
