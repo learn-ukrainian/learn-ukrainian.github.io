@@ -107,6 +107,17 @@ def test_launchpad_uses_warm_state_cache_on_first_paint():
     assert "/api/state/summary" in html
 
 
+def test_launchpad_defers_orient_off_first_paint_promise_all() -> None:
+    """Home must not block first paint on ~4–5s /api/orient (#7975 residual)."""
+    html = (DASHBOARDS / "index.html").read_text(encoding="utf-8")
+    assert "async function loadOrientStat()" in html
+    assert "void loadOrientStat();" in html
+    assert "safeFetch('/api/orient')" in html
+    # Orient must not sit in the critical Promise.all tuple with overview/summary.
+    critical = html.split("await Promise.all([", 1)[1].split("]);", 1)[0]
+    assert "safeFetch('/api/orient')" not in critical
+
+
 def test_runtime_page_keeps_primary_monitor_nav():
     html = (DASHBOARDS / "runtime.html").read_text(encoding="utf-8")
     assert '<link rel="stylesheet" href="/monitor.css">' in html
