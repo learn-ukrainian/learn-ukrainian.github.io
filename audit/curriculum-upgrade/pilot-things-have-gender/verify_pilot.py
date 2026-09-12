@@ -282,7 +282,7 @@ def _acute_positions(form: str) -> list[int]:
     return out
 
 
-def wrong_stress(text: str, allow: set[str]) -> list[str]:
+def wrong_stress(text: str, allow: set[str], proper: set[str] = frozenset()) -> list[str]:
     """Marked forms whose acute is not on a vowel the stress dictionary accepts.
     Uses the repo oracle (scripts.verification.stress, ULIF-derived); forms the dictionary
     does not know are skipped here (they must be declared in unverified_stress)."""
@@ -302,11 +302,16 @@ def wrong_stress(text: str, allow: set[str]) -> list[str]:
         bare = strip_acute(tok)
         if not tok or bare.lower() in allow:
             continue
-        forms: list[str] = []                   # union of readings under both cases (Марко́ name / Ма́рко surname; Мене́ pronoun)
-        for q in {bare, bare.lower()}:
+        forms: list[str] = []
+        # proper names (declared in lessons.yaml: proper_names, or capitalised vocabulary lemmas) are looked
+        # up with their case first (Марко́); everything else lowercase first, so sentence-initial common words
+        # (Стіна́, Мене́) never inherit a homograph's reading (Сті́на, Ме́не).
+        order = [bare, bare.lower()] if (bare in proper and bare[:1].isupper()) else [bare.lower(), bare]
+        for q in order:
             r = verify_stress(q)
-            if r.get("status") in ("ok", "ambiguous"):
-                forms += [nfc(m["stressed_form"]) for m in r.get("matches", [])]
+            if r.get("status") in ("ok", "ambiguous") and r.get("matches"):
+                forms = [nfc(m["stressed_form"]) for m in r["matches"]]
+                break
         if not forms:
             continue
         allowed: set[int] = set()
@@ -489,7 +494,8 @@ def main() -> int:
             block(f"lesson {n}: {len(u_lem)} unverified lemmas > {MAX_UNVERIFIED_LEMMAS} (stop rule)")
         allow = {strip_acute(w).lower() for w in u_stress}
         # stress CORRECTNESS: every marked form must match a dictionary reading (not just carry a mark)
-        wrong = wrong_stress(learner_text(lesson_md_clean[n]) + "\n" + "\n".join(str(x) for x in leaves(acts) + leaves(vocab) if isinstance(x, str)), allow)
+        proper = {strip_acute(str(w)) for w in (ly.get("proper_names") or [])} | {strip_acute(str(e.get("lemma", ""))) for e in vocab if str(e.get("lemma", ""))[:1].isupper()}
+        wrong = wrong_stress(learner_text(lesson_md_clean[n]) + "\n" + "\n".join(str(x) for x in leaves(acts) + leaves(vocab) if isinstance(x, str)), allow, proper)
         if wrong:
             block(f"lesson {n}: {len(wrong)} stressed forms contradict the stress dictionary: {wrong[:15]}")
         bad = sorted(set(missing_stress(lesson_md_clean[n], allow)
