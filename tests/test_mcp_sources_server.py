@@ -752,8 +752,11 @@ class TestSearchSourcesHandler:
 
     def test_empty_results(self, server_module):
         with patch("wiki.sources_db.search_sources", return_value=[]):
-            result = _run(server_module.handle_search_sources({"query": "голосні звуки"}))
-            assert result[0].text == "[]"
+            content, envelope = _run(server_module.handle_search_sources({"query": "голосні звуки"}))
+            assert content[0].text == "No results found."
+            assert envelope["status"] == "empty"
+            assert envelope["match_count"] == 0
+            assert envelope["hits"] == []
 
     def test_defaults_track_to_empty_string(self, server_module):
         with patch("wiki.sources_db.search_sources", return_value=[]) as mock:
@@ -771,15 +774,17 @@ class TestSearchSourcesHandler:
             }
         ]
         with patch("wiki.sources_db.search_sources", return_value=mock_hits) as mock:
-            result = _run(
+            content, envelope = _run(
                 server_module.handle_search_sources(
                     {"query": "голосні звуки", "track": "a1", "limit": 5}
                 )
             )
             mock.assert_called_once_with("голосні звуки", track="a1", limit=5)
-            assert '"corpus": "ukrainian_wiki"' in result[0].text
-            assert '"chunk_id": "ukwiki:test-1"' in result[0].text
-
+            assert '"corpus": "ukrainian_wiki"' in content[0].text
+            assert '"chunk_id": "ukwiki:test-1"' in content[0].text
+            assert envelope["status"] == "ok"
+            assert envelope["match_count"] == 1
+            assert envelope["hits"][0]["chunk_id"] == "ukwiki:test-1"
 
 class TestCheckRussianShadowHandler:
     def test_handle_check_russian_shadow(self, server_module):

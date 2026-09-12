@@ -38,6 +38,21 @@ only sees structured payloads still has the human summary.
 - `status`: `ok` | `empty` | `error`
 - `match_count`: non-negative integer; equals `len(hits)` when hits are listed
 - Empty results use `status: "empty"`, `match_count: 0`, `hits: []` — never raw `[]` alone
+- Errors use `status: "error"` plus a stable `error_code` (no stack traces on the wire)
+
+### Optional `diagnostics` (empty only)
+
+When `search_text` / `search_literary` drop query tokens before FTS and the
+result is empty, the envelope may include:
+
+```json
+"diagnostics": {
+  "dropped_tokens": [
+    {"token": "я", "reason": "min_token_length"},
+    {"token": "є", "reason": "min_token_length"}
+  ]
+}
+```
 
 ### V4 verify tools (additive)
 
@@ -96,9 +111,22 @@ in `result` / `supporting_records` and emits the empty triple on the envelope
 
 ### Search / dict tools
 
-`search_text`, `search_literary`, `query_pravopys`, `get_chunk_context`,
-`search_definitions`, `search_idioms`, `search_synonyms`, `search_style_guide`
-return the envelope without V4 authority keys (no disposition recording).
+`search_text`, `search_literary`, `search_sources`, `query_pravopys`,
+`get_chunk_context`, `search_definitions`, `search_idioms`, `search_synonyms`,
+`search_style_guide` return the envelope without V4 authority keys (no
+disposition recording). Empty hits always use the empty triple above — including
+`search_sources` (no bare `[]` text-only responses).
+
+## FTS min-token policy (`search_text` / `search_literary`)
+
+These handlers still require keywords with `len(token) >= 3` before calling
+SQLite FTS (short Ukrainian function words otherwise dominate BM25). That
+filter is **not** removed in #7956 (option B): when an empty result follows
+dropped short tokens, consumers read `diagnostics.dropped_tokens` with
+`reason: "min_token_length"` instead of guessing why the query vanished.
+
+`search_sources` uses `_prepare_query` / dense retrieval and does **not** apply
+this MCP-side length floor; it still returns the same empty envelope shape.
 
 ## Example: integer match_count without prose regex
 

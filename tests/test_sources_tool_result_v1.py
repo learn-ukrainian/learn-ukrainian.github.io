@@ -17,6 +17,7 @@ from learn_ukrainian_v4_runtime.tool_result_envelope import (
     build_search_envelope,
     disposition_to_status,
     enrich_typed_outcome,
+    split_fts_keywords,
 )
 from learn_ukrainian_v4_runtime.v4_canonical_authority_store import immutable_evidence_identifier
 from learn_ukrainian_v4_runtime.vesum_presentation import tag_gloss
@@ -182,6 +183,79 @@ class TestSearchTextEnvelope:
         assert envelope["match_count"] == 1
         assert envelope["hits"][0]["chunk_id"] == "c1"
         assert "Found 1" in content[0].text
+
+    def test_short_token_empty_exposes_diagnostics(self, server_module):
+        with patch("wiki.sources_db.search_textbooks", return_value=[]) as mock_search:
+            content, envelope = _run(server_module.handle_search_text({"query": "я є"}))
+        mock_search.assert_called_once()
+        assert mock_search.call_args.args[0] == set()
+        assert content[0].text == "No results found."
+        assert envelope["status"] == "empty"
+        assert envelope["match_count"] == 0
+        assert envelope["hits"] == []
+        dropped = envelope["diagnostics"]["dropped_tokens"]
+        assert {d["token"] for d in dropped} == {"я", "є"}
+        assert all(d["reason"] == "min_token_length" for d in dropped)
+
+
+class TestUniformEmptyEnvelopes:
+    """#7956 — listed search/dict tools share the empty envelope shape."""
+
+    def test_split_fts_keywords_helper(self):
+        kept, dropped = split_fts_keywords("на я стіл")
+        assert kept == {"стіл"}
+        assert {d["token"] for d in dropped} == {"на", "я"}
+        assert all(d["reason"] == "min_token_length" for d in dropped)
+
+    def test_search_literary_empty(self, server_module):
+        with patch("wiki.sources_db.search_literary", return_value=[]):
+            content, envelope = _run(server_module.handle_search_literary({"query": "zzz"}))
+        assert envelope["status"] == "empty"
+        assert envelope["match_count"] == 0
+        assert envelope["hits"] == []
+        assert envelope["tool"] == "search_literary"
+        assert "literary" in content[0].text.lower() or content[0].text
+
+    def test_search_sources_empty_not_raw_brackets(self, server_module):
+        with patch("wiki.sources_db.search_sources", return_value=[]):
+            content, envelope = _run(server_module.handle_search_sources({"query": "zzz"}))
+        assert content[0].text == "No results found."
+        assert envelope["schema"] == SCHEMA_V1
+        assert envelope["tool"] == "search_sources"
+        assert envelope["status"] == "empty"
+        assert envelope["match_count"] == 0
+        assert envelope["hits"] == []
+
+    @pytest.mark.parametrize(
+        ("tool", "collection", "label", "patch_target"),
+        [
+            ("search_definitions", "sum11", "СУМ-11", "wiki.sources_db.search_definitions"),
+            ("search_idioms", "frazeolohichnyi", "Фразеологічний", "wiki.sources_db.search_idioms"),
+            ("search_synonyms", "ukrajinet", "Ukrajinet WordNet", "wiki.sources_db.search_synonyms"),
+            ("search_style_guide", "style_guide", "Антоненко-Давидович", "wiki.sources_db.search_style_guide"),
+        ],
+    )
+    def test_dict_search_empty(self, server_module, tool, collection, label, patch_target):
+        with patch(patch_target, return_value=[]):
+            content, envelope = _run(
+                server_module.handle_dict_search({"query": "zzznotfound"}, collection, label)
+            )
+        assert envelope["schema"] == SCHEMA_V1
+        assert envelope["tool"] == tool
+        assert envelope["status"] == "empty"
+        assert envelope["match_count"] == 0
+        assert envelope["hits"] == []
+        assert content[0].text == envelope["summary_prose"]
+
+    def test_error_envelope_requires_code(self):
+        with pytest.raises(ValueError, match="error_code"):
+            build_search_envelope(
+                tool="get_chunk_context",
+                query={"chunk_id": "x"},
+                hits=[],
+                summary_prose="missing",
+                status="error",
+            )
 
 
 def _assert_analysis_contract(content, outcome, analyses, lemmas):
