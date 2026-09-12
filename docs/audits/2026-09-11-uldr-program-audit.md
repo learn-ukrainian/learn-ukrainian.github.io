@@ -1,7 +1,7 @@
 # ULDR program audit — 2026-09-11
 
-Latest disposition: **FAIL** at `082c51579942fb00bcae9b7d38741708ab02e354`.
-See [the eighth diagnostic re-review](#eighth-diagnostic-re-review--082c5157)
+Latest disposition: **FAIL** at `056cd964e5bda283abf465f9a638b4b3cbf7b82f` (now merged).
+See [the ninth diagnostic re-review](#ninth-diagnostic-re-review--056cd964)
 for current fixes, evidence, and remaining findings. Earlier sections retain the
 history of the heads they name.
 
@@ -967,3 +967,64 @@ This is exact-head diagnostic evidence, not formal merge closeout or a blinded
 linguistic assessment. No new model benchmark, artifact rebuild, protected text
 export, implementation change or merge occurred. The existing 97-seed residual
 retains its prior scope and owner. Only this audit document changes.
+
+
+## Ninth diagnostic re-review — 056cd964
+
+**VERDICT: FAIL** at `056cd964e5bda283abf465f9a638b4b3cbf7b82f`.
+PR #7933 was already merged at 2026-09-12 09:22:20 UTC when this review began,
+as `b2aa7cf7893d77e419bc36914a56956543319d03`. The two implementation and two
+test files are identical between the reviewed head and that merge commit.
+The remaining evaluator finding therefore applies to the merged implementation.
+
+### Verified fixes and checks
+
+- All three L1 citations now select alpha and reject beta: “Use alpha, not beta.”,
+  “Do not use beta, use alpha.”, and the Ukrainian normative/error predicate pair.
+  The earlier replacement/negation counterexamples also retain their fixes.
+- L2's exact named-word example now scores **0.4 / FAIL**.
+- **43 tests passed in 0.69 seconds**: 18 generator, 21 formatting/evaluation,
+  and four contracts. Ruff check and Ruff format --check passed on all four files.
+- Final PR CI Gate and CodeQL succeeded; all listed checks succeeded or skipped.
+
+Testing used an exact-head archive on the custody host with the project
+interpreter, committed scripts, configuration, schemas and seed fixtures. The
+three-file pytest invocation is unchanged from the seventh diagnostic review.
+A temporary detached review worktree disappeared before test execution; the
+cause was not established. Initial partial local-archive attempts encountered
+import resolution, absent seed fixtures and Ruff package-discovery differences.
+The complete remote archive resolved these harness limitations and produced the
+passing results above. No source fix or test weakening was needed.
+
+### M1 — L2 remains: grammatical labels and exemptions bypass subject binding
+
+For synthetic target `badtoken` and alternative `goodtoken`, both responses score
+**1.0 / PASS**, with `reasoning_grounded=true` and two reasoning hits:
+
+> Вживайте goodtoken, бо у словнику подано пояснення суфікса іменника «будинок».
+
+> Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «мова».
+
+In each case the dictionary explanation concerns a different named word. The
+first replaces the exact phrase “слова «будинок»” with “іменника «будинок»”, which
+the new named-entity patterns do not capture. The second is captured, but «мова»
+appears in EXEMPT_LINGUISTIC_ENTITIES and is exempted even when it is the word
+being analyzed rather than an authority or textbook title.
+
+The failure remains semantic subject binding: sentence-level relation matches
+plus entity exclusions still label unrelated support as grounded. These probes
+make no claim about the actual morphology of either named word. L1's reproduced
+cases are accepted as fixed; M1 is sufficient to withhold semantic-qualification
+PASS for the merged evaluator.
+
+### Disposition
+
+The implementation fixes the previous literal examples and passes its tests.
+The reproduced residual requires author-owned correction and independent
+semantic assessment before the score can serve as evidence of grounded
+reasoning. Merge status and green CI do not resolve this observed behavior.
+
+This report records diagnostic evidence only. No merge, rollback, implementation
+edit, model execution, new artifact rebuild or protected payload export was
+performed. Earlier artifact receipts and the 97-seed residual keep their prior
+scope. Formal merge-review compliance was not assessed in this pass.
