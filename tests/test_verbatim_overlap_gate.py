@@ -34,7 +34,7 @@ from scripts.audit.verbatim_overlap_gate import (
     tokenize,
 )
 
-A1_FREE_TIME = Path("curriculum/l2-uk-en/a1/free-time")
+A1_FREE_TIME = Path("curriculum/l2-uk-en/a1-v1/free-time")
 B1_NARRATIVE = Path("curriculum/l2-uk-en/b1/narrative-mastery")
 
 
@@ -610,12 +610,12 @@ def test_L307_extract_activities_prompt_and_options_text():
     """Regression for L307 (MAJOR): extract_from_activities_yaml (and thus
     extract_module_content) must pull the learner-facing `prompt` field (main one
     in many activities) and `options[].text` (not str(dict) repr). Used by
-    INJECT_ACTIVITY modules like a1/questions.
+    INJECT_ACTIVITY modules like a1-v1/questions.
     Golden: the prompt text e.g. '___ ти?' MUST appear in extracted spans.
     """
     from pathlib import Path
 
-    yaml_p = Path("curriculum/l2-uk-en/a1/questions/activities.yaml")
+    yaml_p = Path("curriculum/l2-uk-en/a1-v1/questions/activities.yaml")
     spans = extract_from_activities_yaml(yaml_p)
     texts = [s.text for s in spans]
     norms = [s.norm for s in spans]
@@ -625,7 +625,7 @@ def test_L307_extract_activities_prompt_and_options_text():
     assert not any("{'text':" in t for t in texts), "options must extract .text not str(dict)"
     assert any(t == "Хто" or t == "Що" or t == "Де" for t in texts), "option text values missing"
     # also via full module extract (INJECT_ACTIVITY module)
-    mod_spans, _meta = extract_module_content("curriculum/l2-uk-en/a1/questions")
+    mod_spans, _meta = extract_module_content("curriculum/l2-uk-en/a1-v1/questions")
     mod_texts = " ".join(s.text for s in mod_spans)
     assert "___ ти?" in mod_texts or any("___ ти?" in s.norm for s in mod_spans)
 
@@ -843,4 +843,3 @@ def test_total_shingles_meta_counts(tmp_path: Path):
 
     conn.close()
     idx.close()
-
