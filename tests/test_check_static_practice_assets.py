@@ -771,3 +771,47 @@ def test_cli_prints_coverage_table(tmp_path: Path) -> None:
     assert "cloze" in result.stdout and "synonym" in result.stdout
     assert "0.0%*" in result.stdout
     assert "* below thin-deck warning threshold" in result.stdout
+
+
+def test_check_assets_runs_qa_gate_with_fixtures(tmp_path: Path) -> None:
+    """Verify check_assets forwards and catches QA violations when run_qa_gate=True."""
+    daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)
+    cloze_path = tmp_path / "bad_cloze.json"
+    cloze_path.write_text(
+        json.dumps(
+            {
+                "cloze": [
+                    {
+                        "clozeId": "c_bad",
+                        "sentence": "НЕПРАВИЛЬНО ПРАВИЛЬНО _____ речення",
+                        "form": "гарне",
+                        "options": [
+                            {"label": "гарне", "kind": "answer"},
+                            {"label": "погане", "kind": "distractor"},
+                        ],
+                    }
+                ]
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    ec_path = tmp_path / "valid_ec.json"
+    ec_path.write_text(json.dumps({"drills": []}), encoding="utf-8")
+
+    summary = check_assets(
+        daily_pool=daily_pool,
+        practice_dir=practice_dir,
+        reviewed_sources=reviewed_sources,
+        levels=("A1",),
+        min_daily_pool_size=2,
+        min_practice_lexemes_per_level=1,
+        teacher_cloze=cloze_path,
+        error_corrections=ec_path,
+        run_qa_gate=True,
+    )
+    assert summary["ok"] is False
+    assert any(
+        "practice_quality_gate [teacher_cloze] INTENTIONAL_ERROR_LEAK" in err
+        for err in summary["errors"]
+    )

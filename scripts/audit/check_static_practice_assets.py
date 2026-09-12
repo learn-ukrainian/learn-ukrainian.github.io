@@ -805,6 +805,9 @@ def check_assets(
     vesum_db: Path | None = None,
     cloze_sources: Path | None = None,
     sentence_inventory: Path | None = None,
+    teacher_cloze: Path | None = None,
+    error_corrections: Path | None = None,
+    run_qa_gate: bool = False,
 ) -> dict[str, Any]:
     if practice_dir == DEFAULT_PRACTICE_DIR:
         ensure_practice_deck_hydrated(practice_dir)
@@ -857,16 +860,23 @@ def check_assets(
         )
         practice.pop("_linguistic_shards", None)
 
-    # Practice Hub Quality Gate (Issue #7944)
-    from practice_quality_gate import run_all_practice_audits
+    # Practice Hub Quality Gate (Issue #7944) — gated to preserve unit-test isolation
+    if run_qa_gate:
+        from practice_quality_gate import (
+            DEFAULT_ERROR_CORRECTIONS,
+            DEFAULT_TEACHER_CLOZE,
+            run_all_practice_audits,
+        )
 
-    qa_results = run_all_practice_audits(
-        sentence_inventory=sentence_inventory or DEFAULT_SENTENCE_INVENTORY,
-        vesum_db=vesum_db,
-    )
-    for cat, viols in qa_results.items():
-        for v in viols:
-            errors.append(f"practice_quality_gate [{cat}] {v.get('type')}: {v.get('message')}")
+        qa_results = run_all_practice_audits(
+            teacher_cloze=teacher_cloze or DEFAULT_TEACHER_CLOZE,
+            error_corrections=error_corrections or DEFAULT_ERROR_CORRECTIONS,
+            sentence_inventory=sentence_inventory or DEFAULT_SENTENCE_INVENTORY,
+            vesum_db=vesum_db,
+        )
+        for cat, viols in qa_results.items():
+            for v in viols:
+                errors.append(f"practice_quality_gate [{cat}] {v.get('type')}: {v.get('message')}")
 
     coverage = _build_coverage(practice, levels)
     for level_row in practice.values():
@@ -929,6 +939,24 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--cloze-sources", type=Path, default=DEFAULT_CLOZE_SOURCES)
     parser.add_argument("--sentence-inventory", type=Path, default=DEFAULT_SENTENCE_INVENTORY)
+    parser.add_argument(
+        "--teacher-cloze",
+        type=Path,
+        default=None,
+        help="Path to teacher cloze deck (default: production path)",
+    )
+    parser.add_argument(
+        "--error-corrections",
+        type=Path,
+        default=None,
+        help="Path to textbook error corrections dataset (default: production path)",
+    )
+    parser.add_argument(
+        "--run-qa-gate",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Run the Practice Hub quality assurance gate (default: enabled in CLI)",
+    )
     parser.add_argument("--format", choices=("summary", "json"), default="summary")
     args = parser.parse_args(argv)
 
@@ -942,6 +970,9 @@ def main(argv: list[str] | None = None) -> int:
         vesum_db=args.vesum_db,
         cloze_sources=args.cloze_sources,
         sentence_inventory=args.sentence_inventory,
+        teacher_cloze=args.teacher_cloze,
+        error_corrections=args.error_corrections,
+        run_qa_gate=args.run_qa_gate,
     )
 
     if args.format == "json":
