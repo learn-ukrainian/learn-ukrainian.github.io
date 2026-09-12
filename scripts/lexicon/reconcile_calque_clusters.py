@@ -34,6 +34,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.guardrails.worktree_containment import resolve_main_root
+from scripts.lexicon.manifest_fingerprint import build_fingerprint, write_fingerprint
 from scripts.verification.vesum import get_vesum_conn, verify_lemma
 
 PRIMARY_ROOT = resolve_main_root(PROJECT_ROOT) or PROJECT_ROOT
@@ -63,6 +64,7 @@ DEFAULT_HERITAGE_PAIRS = _resolve_repo_path(PROJECT_ROOT / "data" / "lexicon" / 
 DEFAULT_HERITAGE_OVERLAY = _resolve_repo_path(PROJECT_ROOT / "data" / "lexicon" / "heritage_pairs.wave1-calque.yaml")
 DEFAULT_INFLOW_QUEUE = PROJECT_ROOT / "data" / "lexicon" / "calque_inflow_queue.json"
 DEFAULT_MANIFEST = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
+DEFAULT_FINGERPRINT = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.fingerprint.json"
 
 _ACUTE_RE = re.compile(r"[\u0301\u0300]")
 _EDGE_PUNCT_RE = re.compile(r"^[\"'«»„”“,.:;!?…\s]+|[\"'«»„”“,.:;!?…\s]+$")
@@ -135,6 +137,7 @@ class CalqueReconciliationEngine:
         self._cached_atlas_lemmas: set[str] | None = None
         self._cached_candidate_map: dict[str, list[CandidateAlternative]] = {}
         self._lexicalised_safe: set[str] | None = None
+        self.curated_heritage_pairs: dict[str, dict[str, Any]] = {}
 
     def get_lexicalised_safe(self) -> set[str]:
         """Return set of verified lexicalised adjectives and polysemes that must not be blanket-warned."""
@@ -186,6 +189,7 @@ class CalqueReconciliationEngine:
 
     def load_raw_replacements(self) -> dict[str, dict[str, list[str]]]:
         """Collect raw error -> suggestions mappings from all deterministic sources."""
+        self.curated_heritage_pairs = {}
         raw_map: dict[str, dict[str, list[str]]] = {}
 
         # 1. LanguageTool replacements
@@ -276,6 +280,8 @@ class CalqueReconciliationEngine:
                                 if err not in raw_map:
                                     raw_map[err] = {}
                                 raw_map[err][src_tag] = clean_corrs
+                                if src_tag in ("heritage_pairs", "heritage_overlay"):
+                                    self.curated_heritage_pairs[err] = p
                 except Exception:
                     pass
 
@@ -467,12 +473,15 @@ class CalqueReconciliationEngine:
             payload["enrichment_version"] = CURRENT_ENRICHMENT_VERSION
             payload["updated_at"] = datetime.datetime.now(datetime.UTC).isoformat()
 
+            curated_pair = self.curated_heritage_pairs.get(lemma)
+            is_curated_yellow = bool(curated_pair and curated_pair.get("severity") == "calque_yellow")
+
             # Determine severity and Russianism status:
             # Confirmed calque/Russianism authorities vs general LT replacement
             is_curated_calque = bool(
                 {"curated_calques", "phrasal_calques", "heritage_pairs"} & set(sources_dict.keys())
             )
-            is_rus = bool(payload.get("is_russianism", False) or is_curated_calque)
+            is_rus = False if is_curated_yellow else bool(payload.get("is_russianism", False) or is_curated_calque)
             payload["is_russianism"] = is_rus
 
             calque_warning = payload.get("calque_warning", {})
@@ -484,7 +493,14 @@ class CalqueReconciliationEngine:
             calque_warning["severity"] = "red" if is_rus else "orange"
             calque_warning["standard_alternatives"] = sorted_alts
             # Always refresh warning_text so it stays strictly aligned with current alternatives
-            if is_rus:
+            if is_curated_yellow:
+                calque_warning["warning_text"] = (
+                    curated_pair.get("note")
+                    or f"Нерекомендоване або ненормативне слововживання. В українській літературній мові слід уживати: {first_3}."
+                )
+                if curated_pair.get("noteUk"):
+                    calque_warning["noteUk"] = curated_pair["noteUk"]
+            elif is_rus:
                 calque_warning["warning_text"] = (
                     f"Калька / росіянізм. В українській літературній мові слід уживати: {first_3}."
                 )
@@ -687,6 +703,18 @@ class CalqueReconciliationEngine:
         if not dry_run:
             self.atlas_conn.commit()
             if manifest_data and self.manifest_path:
+                if single_lemma is None and limit is None and results["reconciled_entries"] > 0:
+                    try:
+                        if self.manifest_path.resolve() == DEFAULT_MANIFEST.resolve():
+                            fingerprint_payload = write_fingerprint(DEFAULT_FINGERPRINT, root=PROJECT_ROOT)
+                        else:
+                            fingerprint_payload = build_fingerprint(PROJECT_ROOT)
+                        manifest_data["manifest_fingerprint"] = {
+                            "schema_version": fingerprint_payload["schema_version"],
+                            "fingerprint": fingerprint_payload["fingerprint"],
+                        }
+                    except Exception as e:
+                        print(f"Warning: could not refresh manifest fingerprint: {e}", file=sys.stderr)
                 with open(self.manifest_path, "w", encoding="utf-8") as f:
                     json.dump(manifest_data, f, ensure_ascii=False, indent=2)
 
