@@ -21,7 +21,7 @@ We present the **Ukrainian Linguistic Decolonization & Reasoning (ULDR)** framew
 3. **Adversarial Hard-Negative Preference Optimization (DPO)** where non-preferred completions precisely simulate the plausible-sounding false-authority justifications produced by current state-of-the-art models;
 4. A **Firewalled Held-Out Evaluation Suite** with zero-leakage partition hashing and automated semantic grounding metrics.
 
-We detail the taxonomy of false authority across major lexical classes, validate our deterministic evaluation harness (which achieves a **99.15% reference self-check pass rate** on held-out reference completions; downstream model training remains a recipes-only consumer deliverable), and release recipes, formatters, and datasets under open licenses to provide a general blueprint for linguistic decolonization in NLP.
+We detail the taxonomy of false authority across major lexical classes, validate our deterministic evaluation harness (which achieves a **99.15% reference self-check pass rate** on held-out reference completions; downstream model training remains an unexecuted, recipes-only consumer deliverable), and release recipes, formatters, and datasets under open licenses to provide a general blueprint for linguistic decolonization in NLP.
 
 ---
 
@@ -84,9 +84,6 @@ Under this policy:
 2. Distinctive Ukrainian words were relegated to secondary positions, tagged with disparaging labels: *«застаріле»* (obsolete), *«розмовне»* (colloquial), or *«обласне»* (provincial).
 3. Definitions were paired with quotes from Soviet political tracts or translated Russian literature.
 
-**Example (*Пилосос* vs. *Пилосмок* / *Порохотяг*):**
-Russian *пылесос* (*пыль* + *сосать*). In authentic Ukrainian, dust is not sucked like a liquid (*смоктати*), but drawn in (*тягти*, *втягувати*). Yet СУМ-11 elevated *пилосос* to synchronize technical terminology with Russian, suppressing *пилосмок* (living standard) and *порохотяг* (classical standard).
-
 ### 2.2 Pre-Soviet Ethnographic Anachronisms and The Anachronism Fallacy
 
 Boris Grinchenko's 1907 *Словарь української мови* is a monumental landmark of pre-Soviet lexicography, based largely on 19th-century ethnographic field records, folklore, and literature. However, automated NLP retrieval pipelines routinely commit the **Anachronism Fallacy**: assuming that because a lemma appears in Grinchenko, it is recommended for neutral contemporary Ukrainian.
@@ -141,7 +138,7 @@ flowchart TD
     subgraph Layer3 ["Layer 3: Adversarial Preference Optimization (DPO)"]
         L3A["Prompt: User Query with Problematic Phrase"]
         L3B["Chosen: Nuanced, Grounded Decolonization Reasoning"]
-        L3C["Rejected: Plausible Naive False-Authority Hallucination (citing СУМ-11/Grinchenko)"]
+        L3C["Rejected: Plausible Naive False-Authority Hallucination"]
     end
 
     subgraph Layer4 ["Layer 4: Held-Out Firewall & Semantic Evaluation"]
@@ -154,57 +151,58 @@ flowchart TD
     Layer3 --> Layer4
 ```
 
-### 4.1 Layer 1: Dataset Composition & Facet-Aware Source Triangulation
+### 4.1 Layer 1: Dataset Composition & Source Triangulation
 
-The released dataset comprises 1,200 trajectories and 1,200 contrastive DPO pairs partitioned into 4 shards (3 train + 1 held-out). This corpus contains **3 extensive, hand-curated gold seed records** (*пилосос*, *переключити*, and *приймати участь*) demonstrating the full multi-source diagnostic breakdown, and **1,197 template-synthesized trajectories** mined deterministically from MESU textbooks and academic dictionaries. Expanding the hand-curated gold set to 100 seeds remains an ongoing curation residual.
+The ULDR dataset distribution is structured into two distinct, transparent layers:
 
-Instead of querying a single dictionary, the ULDR pipeline triangulates across five distinct sources:
-1. **Morphological Verification**: All candidate words must inflect in `vesum.db` (ensuring no corrupted or non-existent forms).
-2. **Living Educational Attestation**: Priority is given to vocabulary actively taught in MESU-approved Ukrainian school textbooks (Grades 1–11, 2023–2026).
-3. **Colonial Convergence Filtering (CCF)**: Detections where СУМ-11 lists a word as `«Те саме, що...»` without register caveats are automatically cross-checked against independent style authorities (*«Як ми говоримо»* Антоненка-Давидовича, *«Культура слова»* Пономарева, *Словник синонімів* Караванського). If the style authorities classify it as a calque or restricted archaism, the Soviet definition is flagged as ideologically biased.
-4. **Register Spectrum Assignment**: Candidate alternatives are categorized into:
-   - **Primary Living Standard**: The dominant classroom/media standard (*пилосмок*, *перемкнути*, *брати участь*).
-   - **Classical / Regional Standard**: Established literary and Western Ukrainian vocabulary (*порохотяг*).
-   - **Specialized / Technical Compound**: Narrow domain terminology (*пилотяг*).
-   - **Purist / Historical Neologism**: Diaspora or archaic proposals (*порохосмок*), documented but not prescribed.
+1. **The Core Production Dataset (`generated/`)**:
+   Comprises **1,200 trajectories and 1,200 contrastive DPO pairs** across 4 shards (966 train + 234 held-out) described by `data/projects/open_model_data/decolonization/generated/decolonization_manifest.json`. These records are synthesized deterministically by the automated mining pipeline (`scripts/projects/open_model_data/v4_decolonization_reasoning.py`), which mines attested living Ukrainian usage from MESU-approved textbooks and academic dictionaries.
+2. **The Out-of-Band Reference Seeds (`seeds/`)**:
+   Comprises **3 hand-crafted gold seed records** (*пилосос*, *переключити*, and *приймати участь*) located in `data/projects/open_model_data/decolonization/seeds/`. These seeds serve as human-curated architectural exemplars defining the complete schema contracts for morphemic breakdown, lexicographical suppression notes, and multi-tier register spectra. Expanding this hand-curated gold set to 100 seeds remains an ongoing project objective.
+
+Instead of querying a single dictionary, the pipeline triangulates across five distinct sources:
+- **Morphological Verification**: All candidate words must inflect in `vesum.db` (ensuring no corrupted or non-existent forms).
+- **Living Educational Attestation**: Priority is given to vocabulary actively taught in MESU-approved Ukrainian school textbooks (Grades 1–11, 2023–2026).
+- **Colonial Convergence Filtering (CCF)**: Detections where СУМ-11 lists a word as `«Те саме, що...»` without register caveats are automatically cross-checked against independent style authorities (*«Як ми говоримо»* Антоненка-Давидовича, *«Культура слова»* Пономарева, *Словник синонімів* Караванського).
+- **Register Spectrum Assignment**: Candidate alternatives are categorized into Primary Living Standard, Classical/Regional Standard, Technical Compound, and Purist/Historical Neologism.
 
 ### 4.2 Layer 2: Multi-Step Diagnostic Reasoning (SFT Trajectories)
 
-Each gold training trajectory encodes a 5-step cognitive chain, as exemplified by shipped gold trajectory `traj.decolonize.a1b2c3d4e5f60001` (*пилосос*):
+Each trajectory encodes a multi-step cognitive chain. In the shipped production shards (`generated/`), records follow a deterministic 5-step diagnostic template grounded in textbook and academic evidence, as seen in shipped trajectory `traj.decolonize.a847150053166b99` (*задачі* $\rightarrow$ *завдання*):
 
 ```json
 {
   "schema_version": "v1_decolonization_trajectory",
-  "trajectory_id": "traj.decolonize.a1b2c3d4e5f60001",
-  "query": "Як правильно вживати українською: пилосос, пилосмок чи порохотяг?",
-  "target_term": "пилосос",
+  "trajectory_id": "traj.decolonize.a847150053166b99",
+  "query": "Як правильно сказати або написати українською: «задачі» чи «завдання»?",
+  "target_term": "задачі",
   "is_calque_or_russianism": true,
   "morphemic_breakdown": {
-    "source_formation": "Слово «пилосос» є структурною покомпонентною калькою російського «пылесос» (пыль + сосать).",
-    "ukrainian_equivalent_mechanism": "В українській мовній картині світу пил не смокчуть (смокчуть рідину чи льодяники), а втягують (порохотяг/пилотяг: тягти пил/порох) або всмоктують (пилосмок: всмоктувати пил)."
+    "source_formation": "Лексема «задачі» є штучним лексичним запозиченням (росіянізмом), що витісняє автентичне українське поняття.",
+    "ukrainian_equivalent_mechanism": "Питома лексична система української мови має закорінену в народній мові та класичній літературі власну лексему."
   },
   "lexicographical_context": {
-    "historical_suppression_note": "У 1930-х роках радянські термінологічні бюлетені та згодом СУМ-11 (т. 6, 1975) цілеспрямовано закріплювали спільні з російською мовою форми, витісняючи питомі українські аналоги.",
-    "restoration_era": "Постколоніальне відновлення наукової та шкільної термінології незалежної України (1991–2026)."
+    "historical_suppression_note": "Корпус граматичних та лексичних помилок UA-GEC (F/Calque).. Форма «задачі» кваліфікується як калькований або нерекомендований варіант у сучасних довідниках з культури мови...",
+    "restoration_era": "Сучасна українська мовна стандартизація, чинний Правопис 2019, праці Бориса Антоненка-Давидовича..."
   },
   "vesum_attestation": [
-    {"lemma": "пилосмок", "vesum_forms_count": 16, "is_standard_attested": true},
-    {"lemma": "порохотяг", "vesum_forms_count": 16, "is_standard_attested": true},
-    {"lemma": "пилотяг", "vesum_forms_count": 16, "is_standard_attested": true},
-    {"lemma": "порохосмок", "vesum_forms_count": 0, "is_standard_attested": false}
+    {"lemma": "завдання", "vesum_forms_count": 15, "is_standard_attested": true}
   ],
   "register_spectrum": {
-    "primary_living_standard": "пилосмок",
+    "primary_living_standard": "завдання",
     "alternatives": [
-      {"lemma": "пилосмок", "register_tier": "living_standard", "evidence_source": "Підручник МОН «Всесвітня історія» 9 кл. (Пометун, 2026, с. 166)"},
-      {"lemma": "порохотяг", "register_tier": "classical_regional", "evidence_source": "СУМ-20, т. 13; ВТС"},
-      {"lemma": "пилотяг", "register_tier": "technical_compound", "evidence_source": "СУМ-20"},
-      {"lemma": "порохосмок", "register_tier": "purist_neologism", "evidence_source": "Словник П. Штепи (1968), відсутній у ВЕСУМ (0 форм)"}
+      {
+        "lemma": "завдання",
+        "register_tier": "living_standard",
+        "evidence_source": "Підручник МОН «Буквар» 1 клас (М. Захарійчук); цитата: «Художник отримав завдання намалювати предмети...»"
+      }
     ]
   },
-  "final_response": "Найбільш нормативним і поширеним сучасним відповідником є слово «пилосмок» — саме воно зафіксоване в чинних підручниках МОН України..."
+  "final_response": "Правильно вживати «завдання». Вживання форми «задачі» є типовою калькою з російської мови..."
 }
 ```
+
+In the out-of-band reference seeds (`seeds/`), the human-curated records (e.g., `traj.decolonize.a1b2c3d4e5f60001` for *пилосос*) further demonstrate deep morphemic and historical analysis (*пилосос* vs. *пилосмок* / *порохотяг* / *пилотяг* / *порохосмок*).
 
 ### 4.3 Layer 3: Adversarial Preference Optimization (DPO)
 
@@ -212,15 +210,19 @@ The core breakthrough in ULDR is the engineering of the **Hard-Negative Distribu
 
 In naive preference datasets, the "rejected" completion is often a trivial failure (grammatical incoherence, repetitions, or refusal). Training on trivial negatives fails to teach the model how to overcome subtle hallucinations.
 
-In ULDR, the `rejected` response is generated to precisely emulate the **naive, authoritative-sounding hallucinations of leading foundation models**, as seen in shipped gold pair `dpo.decolonize.b1c2d3e4f5000001`:
-- **Prompt**: *«Як правильно вживати українською: пилосос, пилосмок чи порохотяг?»*
-- **Chosen Completion**: Provides a balanced, decolonized linguistic analysis citing MESU 9th-grade textbooks (*Пометун 2026*) and modern morphological standards (VESUM), recommending *пилосмок* and *порохотяг*.
+In ULDR, the `rejected` response is generated to precisely emulate the **naive, authoritative-sounding hallucinations of leading foundation models**, as seen in shipped production pair `dpo.decolonize.7471f53a795b2b5d` (*задачу* $\rightarrow$ *завдання*):
+- **Prompt**: *«Як правильно сказати або написати українською: «задачу» чи «завдання»?»*
+- **Chosen Completion**: Provides a balanced, decolonized linguistic analysis citing MESU 1st-grade textbooks (*Захарійчук*) and modern morphological standards (VESUM, 15 forms), recommending *завдання*.
+- **Rejected Completion**:
+  > *«Можна вживати як «задачу», так і «завдання». Обидва варіанти зустрічаються в текстах і є рівноправними синонімами в сучасній мові, тому вибір залежить лише від уподобань автора.»*
+
+And similarly in the reference seed pair `dpo.decolonize.b1c2d3e4f5000001` (*пилосос*):
 - **Rejected Completion**:
   > *«Слово «пилосос» є загальноприйнятим літературним словом, зафіксованим у радянському Словнику української мови (СУМ-11). Також як синоніми можна вживати «порохосмок» або «вакуум».»*
 
 By applying the Bradley-Terry DPO objective:
 $$\mathcal{L}_{\text{DPO}}(\pi_\theta; \pi_{\text{ref}}) = - \mathbb{E}_{(x, y_w, y_l) \sim \mathcal{D}} \left[ \log \sigma \left( \beta \log \frac{\pi_\theta(y_w|x)}{\pi_{\text{ref}}(y_w|x)} - \beta \log \frac{\pi_\theta(y_l|x)}{\pi_{\text{ref}}(y_l|x)} \right) \right]$$
-the model is explicitly penalized for using Soviet dictionary citations or unvetted purist neologisms to legitimize calqued forms.
+the model is explicitly penalized for using false-authority rationalizations (e.g., alleging false synonym parity or citing Soviet leveling) to justify calqued forms.
 
 ### 4.4 Layer 4: Partition Firewall & Held-Out Evaluation Suite
 
@@ -258,38 +260,49 @@ The delivered ULDR program under Stream Epic #6321 was subjected to rigorous, mu
 
 ## 6. Case Studies: Shipped Records & Frontier Challenges
 
-### 6.1 Shipped Dataset Case Studies
+### 6.1 Shipped Production Dataset Case Studies
 
-#### Case Study 1: *Пилосос* $\rightarrow$ *Пилосмок* / *Порохотяг* (Seed Record `traj.decolonize.a1b2c3d4e5f60001`)
+The 1,200 shipped production records resolve systematic lexical and phrasal calques across all four shards:
+
+#### Case Study 1: *Задачі* $\rightarrow$ *Завдання* (Shipped Shard Record `traj.decolonize.a847150053166b99`)
+
+- **Problem**: Mechanical borrowing of Russian *задача* into educational and practical contexts where authentic Ukrainian uses *завдання*.
+- **ULDR Resolution**: Teaches normative replacement with **завдання**, attested in Grade 1 textbooks (*Захарійчук*) and verified with 15 morphological forms in VESUM.
+
+#### Case Study 2: *По крайній мірі* $\rightarrow$ *Принаймні* (Shipped Shard Record `traj.decolonize.9f9d5fb856ae1420`)
+
+- **Problem**: Word-for-word phrasal calque of Russian *по крайней мере*.
+- **ULDR Resolution**: Teaches native adverbial discourse markers: **принаймні** (attested in Grade 2 textbooks, *Морзе*), **хоча б**, **щонайменше**.
+
+### 6.2 Reference Seed Exemplars (`seeds/`)
+
+The 3 out-of-band reference seeds demonstrate deep multi-tier morphemic and historical decolonization analysis:
+
+#### Case Study 3: *Пилосос* $\rightarrow$ *Пилосмок* / *Порохотяг* (Seed Record `traj.decolonize.a1b2c3d4e5f60001`)
 
 - **Problem**: Soviet СУМ-11 convergence elevating Russian compound *пылесос*; naive models jumping to unvetted neologisms like *порохосмок* (0 forms in VESUM).
 - **ULDR Resolution**: Ranks *пилосмок* as primary living standard (attested in MESU 9th-grade textbooks, 2026), *порохотяг* as classical standard, and documents *порохосмок* as an unattested purism.
 
-#### Case Study 2: *Переключити* $\rightarrow$ *Перемкнути* / *Перевести* (Seed Record `traj.decolonize.a1b2c3d4e5f60002`)
+#### Case Study 4: *Переключити* $\rightarrow$ *Перемкнути* / *Перевести* (Seed Record `traj.decolonize.a1b2c3d4e5f60002`)
 
 - **Problem**: Mechanical borrowing of Russian *переключить* into technical and cognitive contexts.
 - **ULDR Resolution**: Teaches morphological root distinction (*мик-* vs *ключ*): *перемкнути передачу* for technical devices vs *перевести / відвернути увагу* for cognitive attention.
 
-#### Case Study 3: *Приймати участь* $\rightarrow$ *Брати участь* (Seed Record `traj.decolonize.a1b2c3d4e5f60003`)
+#### Case Study 5: *Приймати участь* $\rightarrow$ *Брати участь* (Seed Record `traj.decolonize.a1b2c3d4e5f60003`)
 
 - **Problem**: Collocational calque of Russian *принимать участие*.
 - **ULDR Resolution**: Enforces authentic verbal government (*брати участь*), differentiating valid usages of *приймати* (ліки, гостей, до вишу) from participation in collective action.
 
-#### Case Study 4: *По крайній мірі* $\rightarrow$ *Принаймні* (Generated Record)
+### 6.3 Frontier Decolonization Challenges (Motivating Upcoming Curation)
 
-- **Problem**: Word-for-word calque of Russian *по крайней мере*.
-- **ULDR Resolution**: Teaches native discourse markers: **принаймні**, **хоча б**, **щонайменше**.
+While the shipped corpus covers 1,200 terms, ongoing sociolinguistic analysis highlights deeper lexicographical traps that motivate future gold-seed curation expansions:
 
-### 6.2 Frontier Decolonization Challenges (Motivating Upcoming Curation)
-
-While the shipped corpus covers 1,200 terms, our ongoing analysis highlights deeper lexicographical traps that motivate future gold-seed curation:
-
-#### Case Study 5: *Мисль* vs. *Думка* (The Grinchenko + СУМ-11 False Positive)
+#### Case Study 6: *Мисль* vs. *Думка* (The Grinchenko + СУМ-11 False Positive)
 
 - **Problem**: Grinchenko 1907 records *Мисль, мисля* in ethnographic folk idioms (*до мислі*, *мати на мислі*), while СУМ-11 (т. 4, с. 716) elevated it to *«Те саме, що думка»*. Automated classifiers mistake these citations for living standard validity.
 - **Frontier Resolution**: Teaches the model to distinguish pre-Soviet ethnographic idioms from contemporary standard discourse, recommending **думка** for general communication while preserving *мисль* in historical/poetic citations.
 
-#### Case Study 6: *Рахувати* vs. *Вважати* (Polysemic Extension)
+#### Case Study 7: *Рахувати* vs. *Вважати* (Polysemic Extension)
 
 - **Problem**: Mirroring Russian *считать* across both mathematical and epistemic domains (*«я рахую, що...»*).
 - **Frontier Resolution**: Enforces rigorous semantic partitioning: preserves *рахувати* for quantitative calculations, enforces **вважати** / **мати за** for cognitive opinions.
