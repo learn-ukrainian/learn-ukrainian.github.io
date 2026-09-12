@@ -236,7 +236,7 @@ RELATION_CHAIN = (
 
 NAMED_ENTITY_PATTERNS = [
     re.compile(
-        rf"\b{RELATION_CHAIN}(?:{PART_OF_SPEECH_WORDS}\s+)+[«\"“']?([а-яіїєґa-z0-9'’ʼ\-]+)[»\"”']?",
+        rf"\b{RELATION_CHAIN}(?:(?:форм\w*|варіант\w*)\s+)?{PART_OF_SPEECH_WORDS}\s+[«\"“']?([а-яіїєґa-z0-9'’ʼ\-]+)[»\"”']?",
         re.IGNORECASE,
     ),
     re.compile(
