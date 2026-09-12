@@ -17,7 +17,7 @@ VENV_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
-from manifest_utils import get_modules_for_level
+from manifest_utils import get_modules_for_level, load_manifest
 
 from scripts.build import linear_pipeline
 
@@ -152,8 +152,28 @@ def _is_seminar_plan_without_module(target: ModuleTarget) -> bool:
 
 
 def _filter_generatable_targets(targets: list[ModuleTarget]) -> list[ModuleTarget]:
+    levels = load_manifest().get("levels", {})
     generatable: list[ModuleTarget] = []
     for target in targets:
+        if "base_level" in levels.get(target.level, {}):
+            print(
+                f"Skipping {target.level}/{target.slug}: archived level with "
+                "base_level is not a native MDX generator level."
+            )
+            continue
+        module_dir = CURRICULUM_ROOT / target.level / target.slug
+        if target.level == "a1" and (
+            (module_dir / "lessons.yaml").exists()
+            or not (
+                (module_dir / "module.md").is_file()
+                or module_dir.with_suffix(".md").is_file()
+            )
+        ):
+            print(
+                f"Skipping {target.level}/{target.slug}: lesson-split A1 or "
+                "no legacy single-file MDX source contract."
+            )
+            continue
         if _is_seminar_plan_without_module(target):
             print(
                 f"Skipping {target.level}/{target.slug}: seminar plan "
