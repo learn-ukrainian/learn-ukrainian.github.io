@@ -483,3 +483,43 @@ def test_get_vesum_conn_close_lifecycle_does_not_leak_connections(tmp_path: Path
 
     close_vesum_conn()
     assert len(_ACTIVE_CONNS) == 0
+
+
+def test_failed_replacement_does_not_poison_cache(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """If opening a replacement connection fails, the old connection is not closed prematurely."""
+    close_vesum_conn()
+    db_path = tmp_path / "healthy.db"
+    conn = sqlite3.connect(db_path)
+    conn.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)")
+    conn.execute("INSERT INTO forms VALUES ('test', 'test', 'noun', 'tag')")
+    conn.commit()
+    conn.close()
+
+    # Initial successful connection
+    c1 = get_vesum_conn(db_path)
+    assert c1.execute("SELECT word_form FROM forms").fetchone()["word_form"] == "test"
+
+    # Inject failure into sqlite3.connect
+    orig_connect = sqlite3.connect
+
+    def failing_connect(*args, **kwargs):
+        raise sqlite3.OperationalError("injected connection failure")
+
+    monkeypatch.setattr(sqlite3, "connect", failing_connect)
+
+    other_db = tmp_path / "other.db"
+    other_db.touch()
+
+    # Attempt to reopen with replacement triggers error
+    with pytest.raises(sqlite3.OperationalError, match="injected connection failure"):
+        get_vesum_conn(other_db)
+
+    # Restore connect
+    monkeypatch.setattr(sqlite3, "connect", orig_connect)
+
+    # The original connection must still be queryable and not poisoned
+    c_recovered = get_vesum_conn(db_path)
+    assert c_recovered.execute("SELECT word_form FROM forms").fetchone()["word_form"] == "test"
+    close_vesum_conn()

@@ -122,18 +122,19 @@ def _get_or_create_conn_locked(
         or current_stat is None
         or _vesum_conn_stat != current_stat
     ):
-        # Superseded connection: only close immediately if it has NO active readers!
+        new_conn = sqlite3.connect(str(resolved_path), check_same_thread=False)
+        new_conn.row_factory = sqlite3.Row
+
         old_conn = _vesum_conn
+        _vesum_conn = new_conn
+        _vesum_conn_path = resolved_path
+        _vesum_conn_stat = current_stat
+
+        # Superseded connection: only close immediately if it has NO active readers!
         if old_conn is not None and _ACTIVE_CONNS.get(old_conn, 0) <= 0:
             _ACTIVE_CONNS.pop(old_conn, None)
             with contextlib.suppress(Exception):
                 old_conn.close()
-
-        new_conn = sqlite3.connect(str(resolved_path), check_same_thread=False)
-        new_conn.row_factory = sqlite3.Row
-        _vesum_conn = new_conn
-        _vesum_conn_path = resolved_path
-        _vesum_conn_stat = current_stat
 
     return _vesum_conn
 
