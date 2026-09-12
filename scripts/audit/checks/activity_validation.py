@@ -1151,10 +1151,178 @@ def check_indeclinable_case_drills(
     return violations
 
 
+_ACTIVITY_INTENTIONAL_ERROR_PATTERNS = [
+    re.compile(r"\bвідредагуйте\s+речення\b", re.IGNORECASE),
+    re.compile(r"\bзнайдіть\s+(?:і\s+виправте\s+)?помилк", re.IGNORECASE),
+    re.compile(r"\bвиправте\s+помилк", re.IGNORECASE),
+    re.compile(r"\bНЕПРАВИЛЬНО\s*[/|:]\s*ПРАВИЛЬНО\b", re.IGNORECASE),
+    re.compile(r"\bантисуржик\b", re.IGNORECASE),
+]
+
+_EXEMPT_ERROR_ACTIVITY_TYPES = {
+    "error-correction",
+    "editing",
+    "essay-response",
+    "critical-analysis",
+}
+
+
+def check_activity_intentional_error_leak(yaml_activities: list) -> list[dict]:
+    """Detect unclassified textbook error drills leaking into positive learning activities.
+
+    If an exercise asks students to edit deliberate errors or contrasts
+    НЕПРАВИЛЬНО/ПРАВИЛЬНО, it must be typed as 'error-correction' or an editing type
+    to avoid learners learning ungrammatical forms as positive examples.
+    """
+    violations = []
+
+    for activity in yaml_activities:
+        act_type = _get_activity_attr(activity, "type", "")
+        if act_type in _EXEMPT_ERROR_ACTIVITY_TYPES:
+            continue
+
+        title = _get_activity_attr(activity, "title", "Untitled")
+        instruction = _get_activity_attr(activity, "instruction", "")
+        items = _get_activity_attr(activity, "items", []) or []
+
+        for pattern in _ACTIVITY_INTENTIONAL_ERROR_PATTERNS:
+            match_header = pattern.search(f"{title} {instruction}")
+            if match_header:
+                violations.append(
+                    {
+                        "type": "INTENTIONAL_ERROR_LEAK",
+                        "severity": "critical",
+                        "activity": title,
+                        "message": (
+                            f"Activity '{title}' ({act_type}) contains intentional error instruction "
+                            f"'{match_header.group(0)}' but is not typed as error-correction."
+                        ),
+                        "suggestion": (
+                            "Change activity type to 'error-correction', or remove intentional "
+                            "error material if this is a standard positive exercise."
+                        ),
+                    }
+                )
+                break
+
+            # Check individual items
+            item_leak = False
+            for item_idx, item in enumerate(items, 1):
+                sentence = (
+                    _get_activity_attr(item, "sentence", "")
+                    or _get_activity_attr(item, "prompt", "")
+                    or _get_activity_attr(item, "question", "")
+                )
+                match_item = pattern.search(str(sentence))
+                if match_item:
+                    violations.append(
+                        {
+                            "type": "INTENTIONAL_ERROR_LEAK",
+                            "severity": "critical",
+                            "activity": title,
+                            "message": (
+                                f"Item {item_idx} ({act_type}) contains intentional error pattern "
+                                f"'{match_item.group(0)}' without error-correction typing."
+                            ),
+                            "suggestion": (
+                                "Migrate item to an 'error-correction' activity or clean intentional "
+                                "textbook error."
+                            ),
+                        }
+                    )
+                    item_leak = True
+                    break
+            if item_leak:
+                break
+
+    return violations
+
+
+_BLANK_RE = re.compile(r"_{2,}|\.{3,}|\[\.\.\.\]|\[\s*\]")
+
+
+def check_fill_in_blank_formatting(yaml_activities: list) -> list[dict]:
+    """Check that fill-in and cloze activities have valid, unambiguous blanks."""
+    violations = []
+
+    for activity in yaml_activities:
+        act_type = _get_activity_attr(activity, "type", "")
+        if act_type not in ("fill-in", "fill_in", "cloze"):
+            continue
+
+        title = _get_activity_attr(activity, "title", "Untitled")
+        items = _get_activity_attr(activity, "items", []) or _get_activity_attr(activity, "blanks", []) or []
+
+        passage = _get_activity_attr(activity, "passage", "") or _get_activity_attr(activity, "text", "")
+        if act_type == "cloze" and passage:
+            blanks_in_passage = _BLANK_RE.findall(passage)
+            if not blanks_in_passage:
+                violations.append(
+                    {
+                        "type": "FILL_IN_MISSING_BLANK",
+                        "severity": "critical",
+                        "activity": title,
+                        "message": f"Cloze passage in '{title}' does not contain any blank markers (___).",
+                        "suggestion": "Add blank markers like '___' or '[...]' to the passage.",
+                    }
+                )
+
+        for item_idx, item in enumerate(items, 1):
+            sentence = (
+                _get_activity_attr(item, "sentence", "")
+                or _get_activity_attr(item, "prompt", "")
+                or _get_activity_attr(item, "question", "")
+            )
+            if not sentence and act_type == "cloze":
+                continue  # Cloze blanks may only specify answer/options if passage is at top level
+            if not sentence:
+                violations.append(
+                    {
+                        "type": "FILL_IN_EMPTY_SENTENCE",
+                        "severity": "critical",
+                        "activity": title,
+                        "message": f"Item {item_idx} in '{title}' has empty sentence/prompt.",
+                        "suggestion": "Provide a Ukrainian sentence containing a blank '___'.",
+                    }
+                )
+                continue
+
+            blanks = _BLANK_RE.findall(sentence)
+            if len(blanks) == 0:
+                violations.append(
+                    {
+                        "type": "FILL_IN_MISSING_BLANK",
+                        "severity": "critical",
+                        "activity": title,
+                        "message": f"Item {item_idx} in '{title}' lacks a blank marker (___): {sentence[:60]!r}",
+                        "suggestion": "Add '___' where the missing word should be inserted.",
+                    }
+                )
+            elif len(blanks) > 1 and act_type in ("fill-in", "fill_in"):
+                answer = _get_activity_attr(item, "answer")
+                if not isinstance(answer, (list, tuple)):
+                    violations.append(
+                        {
+                            "type": "FILL_IN_MULTIPLE_BLANKS",
+                            "severity": "warning",
+                            "activity": title,
+                            "message": (
+                                f"Item {item_idx} in '{title}' has {len(blanks)} blanks but only one answer: "
+                                f"{sentence[:60]!r}"
+                            ),
+                            "suggestion": "Ensure exactly one blank per single-answer fill-in item.",
+                        }
+                    )
+
+    return violations
+
+
 __all__ = [
+    "check_activity_intentional_error_leak",
     "check_duplicate_options",
     "check_english_hints_in_activities",
     "check_fill_in_answer_in_options",
+    "check_fill_in_blank_formatting",
     "check_indeclinable_case_drills",
     "check_mark_the_words_answers_in_text",
     "check_mark_the_words_format",
