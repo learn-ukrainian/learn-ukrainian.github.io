@@ -1,6 +1,7 @@
 # ULDR program audit — 2026-09-11
 
-Latest disposition: **FAIL** at `056cd964e5bda283abf465f9a638b4b3cbf7b82f` (now merged).
+Latest verification: the [Round 11 worktree fixes](#round-11-worktree-verification--uncommitted) pass their reproduced cases.
+Latest reviewed merged disposition remains **FAIL** at `056cd964e5bda283abf465f9a638b4b3cbf7b82f`.
 See [the ninth diagnostic re-review](#ninth-diagnostic-re-review--056cd964)
 for current fixes, evidence, and remaining findings. Earlier sections retain the
 history of the heads they name.
@@ -1028,3 +1029,38 @@ This report records diagnostic evidence only. No merge, rollback, implementation
 edit, model execution, new artifact rebuild or protected payload export was
 performed. Earlier artifact receipts and the 97-seed residual keep their prior
 scope. Formal merge-review compliance was not assessed in this pass.
+
+
+## Round 11 worktree verification — uncommitted
+
+The operator supplied a subsequent PR #7972 remediation summary. The reported
+fix exists as two uncommitted modifications on top of
+`5502ffdeb14b80b003189869728e83166bb3d30b`; that SHA is still the published PR
+head at inspection. This is a bounded verification of those local modifications,
+not a PASS stamp on the unchanged published head or merged main.
+
+**Verified:** all 58 focused tests pass in 1.43 seconds; affected Ruff check and
+format check pass. Direct synthetic probes confirm the quoted and unquoted
+“варіант форми слова goodtoken” examples score 1.0 / PASS. Paired terminal
+subjects будинок, форма and іменник score 0.4 / FAIL. Both M1 examples from the
+ninth diagnostic review also score 0.4 / FAIL.
+
+The remote self-check using the held-out file as both gold and predictions
+reproduces 234 evaluated records, zero missing/duplicate/unknown predictions,
+232 passes, 0.9957 elimination and suggestion rates, 0.9915 grounding and pass
+rates, and 0.9932 mean composite score. Only aggregates left custody. This checks
+consistency with existing outputs; it is not independent semantic assessment or
+a model generalization result.
+
+Verified working-file SHA-256 fingerprints:
+
+| File | SHA-256 |
+| --- | --- |
+| v4_evaluate_decolonization.py | d0aa77deaf9d8d96224d9bf950421d5e4138fdbf963a5a982ee57ba80a5329e8 |
+| test_v4_format_and_evaluate.py | 6985ab699ea784fd1530f916bb08a00991d5c08200ab7b86a6dc40925a7e35f6 |
+
+The described descriptor-chain change resolves the supplied Round 11 reproducer
+and preserves rejection of the tested unrelated lexical subjects. No new finding
+was raised in this bounded verification. Author-owned commit/push and exact-head
+review/CI remain necessary before the published implementation can receive this
+result. No author files were edited or committed by this audit.
