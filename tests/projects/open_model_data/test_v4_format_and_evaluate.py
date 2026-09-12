@@ -1049,3 +1049,46 @@ def test_explanation_concerning_words_with_modifier_prefixes_rejected() -> None:
         assert not eval_u["is_pass"], f"Expected {word} (unquoted) to fail"
         assert not eval_u["reasoning_grounded"], f"Expected {word} (unquoted) grounding to fail"
         assert eval_u["composite_score"] <= 0.40
+
+
+def test_explanation_concerning_words_odnyny_mnozhyny_rejected() -> None:
+    """M1 Review P2: Explicit subjects 'однини', 'множини', or quoted modifier phrases must fail."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    for word in ("однини", "множини"):
+        r_quoted = f"Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «{word}»."
+        eval_q = evaluate_single_response(target, alts, r_quoted)
+        assert not eval_q["is_pass"], f"Expected {word} (quoted) to fail"
+        assert not eval_q["reasoning_grounded"], f"Expected {word} (quoted) grounding to fail"
+        assert eval_q["composite_score"] <= 0.40
+
+        r_unquoted = f"Вживайте goodtoken, бо у словнику подано пояснення суфікса слова {word}."
+        eval_u = evaluate_single_response(target, alts, r_unquoted)
+        assert not eval_u["is_pass"], f"Expected {word} (unquoted) to fail"
+        assert not eval_u["reasoning_grounded"], f"Expected {word} (unquoted) grounding to fail"
+        assert eval_u["composite_score"] <= 0.40
+
+    # Quoted modifier phrase must also be treated as a named entity
+    r_phrase = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «чоловічого роду»."
+    eval_phrase = evaluate_single_response(target, alts, r_phrase)
+    assert not eval_phrase["is_pass"]
+    assert not eval_phrase["reasoning_grounded"]
+    assert eval_phrase["composite_score"] <= 0.40
+
+
+def test_grammatical_number_modifiers_admitted() -> None:
+    """M1 Review P2: Genuine grammatical number modifier phrases (e.g. 'у формі однини') must pass."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    cases = [
+        "Вживайте goodtoken, бо за словником ВЕСУМ це іменник у формі однини з питомим суфіксом -ник.",
+        "Вживайте goodtoken, бо за словником ВЕСУМ це іменник числа однини з питомим суфіксом -ник.",
+        "Вживайте goodtoken, бо за словником ВЕСУМ це іменник, що вживається в однині з питомим суфіксом -ник.",
+    ]
+    for r in cases:
+        eval_res = evaluate_single_response(target, alts, r)
+        assert eval_res["is_pass"], f"Expected {r} to pass"
+        assert eval_res["reasoning_grounded"], f"Expected {r} grounding to pass"
+        assert eval_res["composite_score"] == 1.0

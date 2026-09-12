@@ -251,7 +251,11 @@ GRAMMATICAL_MODIFIER_PHRASES = [
     re.compile(r"\b(?:теперішнього|минулого|майбутнього)\s+часу\b", re.IGNORECASE),
     re.compile(r"\b(?:першої|другої|третьої|четвертої)\s+відміни\b", re.IGNORECASE),
     re.compile(r"\b(?:твердої|м['’ʼ]?якої|мішаної)\s+групи\b", re.IGNORECASE),
-    re.compile(r"\b(?:однини|множини)\b", re.IGNORECASE),
+    re.compile(
+        r"\b(?:у\s+|в\s+)?(?:числа|числі|формі|формах|форма|форми|відмінку|відмінка|відмінках|особі|особах)\s+(?:однини|множини)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(r"\b(?:лише\s+|тільки\s+)?(?:в|у)\s+(?:однині|множині)\b", re.IGNORECASE),
 ]
 
 GRAMMATICAL_STOPWORDS = {
@@ -469,8 +473,12 @@ def evaluate_single_response(
     has_other_entity = any(p.search(resp_norm) for p in OTHER_ENTITY_PATTERNS)
     if not has_other_entity:
         analysis_text = re.sub(r"цитата:\s*[«\"“][^»\"”]+[»\"”]", "", resp_norm, flags=re.IGNORECASE)
-        for gmp in GRAMMATICAL_MODIFIER_PHRASES:
-            analysis_text = gmp.sub(" ", analysis_text)
+        # Only strip grammatical modifier phrases outside quoted spans to preserve explicitly named subjects
+        parts = re.split(r"([«\"“'][^»\"”']+[»\"”'])", analysis_text)
+        for i in range(0, len(parts), 2):
+            for gmp in GRAMMATICAL_MODIFIER_PHRASES:
+                parts[i] = gmp.sub(" ", parts[i])
+        analysis_text = "".join(parts)
         for pat in NAMED_ENTITY_PATTERNS:
             for m in pat.finditer(analysis_text):
                 tok = normalize_token(m.group(1))
