@@ -7,10 +7,84 @@ historic `MONITOR-API` name during progressive rename (#7919 / #7968).
 Base URL: `http://localhost:8765`
 
 FastAPI auto-docs: `http://localhost:8765/docs` (Swagger UI; title **Ops API**)
+and `http://localhost:8765/redoc` (ReDoc).
 
 **Definition authority for the public surface**: `GET /api/contracts/routes` (returns the full `route_contracts` + `page_contracts` registry with `purpose`, `source_of_truth`, `freshness`, `consumers`, `overlap`, `stale_risk`, `recommendation`, `mutates`, `replacement`, and `response_schema_version` for every endpoint family and every `dashboards/*.html` page).
 
 This (plus the live `meta` objects returned by many endpoints) is the enforced, machine-readable definition of the declared API surface. The running code in `scripts/api/*.py` is the ultimate behavioral authority. `docs/MONITOR-API.md` is the human narrative. Dashboards are consumers/visualizers that should (and increasingly do) derive from the contracts. See `scripts/api/route_contracts.py` and `tests/test_monitor_route_contracts.py`. The 2026-06-07 Monitor API/UI Audit (#2794) is the origin of this registry.
+
+## Where agents onboard (not the HTML dashboards)
+
+Agents learn the Ops API from **live HTTP surfaces**, not from `dashboards/*.html`
+(those are human chrome over the same contracts).
+
+| Step | Surface | Why |
+| --- | --- | --- |
+| 1 | `GET /api/rules?format=markdown` | Binding rules (hash-cacheable) |
+| 2 | `GET /api/orient?lean=true` (+ optional `session=`) | Cold-start snapshot |
+| 3 | `GET /api/contracts/routes` | Machine-readable routes, freshness, schema versions, replacements |
+| 4 | `GET /docs` / `GET /openapi.json` | Interactive + OpenAPI **Ops API 2.0.0** |
+| 5 | This file (`docs/MONITOR-API.md`) | Human narrative reference |
+
+Python helper: `scripts/ai_agent_bridge/monitor_client.py` (`MonitorClient().bootstrap()`).
+Seat/process onboarding (harness, ownership): [`docs/runbooks/agent-seat-onboarding.md`](runbooks/agent-seat-onboarding.md).
+
+After any API behavior change that agents must observe (caching, timeouts,
+schema, retirement), update **all three**: OpenAPI description / `route_contracts.py`
+/ this narrative — in the same PR as the code when possible (#7975).
+
+## API versioning layers
+
+Versioning is intentional and multi-layer. Do not collapse them into one number.
+
+### 1. Application version — `2.0.0`
+
+Set on the FastAPI app (`scripts/api/main.py`). Exposed identically by:
+
+- `GET /api/health` → `version`
+- `GET /api/config` → `api_version`
+- `GET /openapi.json` → `info.version` (title **Ops API**)
+
+Bump only with a deliberate product/compat decision, not on every route tweak.
+
+### 2. Versioned endpoint namespaces — `/v1`
+
+Modern control-plane and fleet surfaces use an explicit path prefix:
+
+| Family | Prefix | Notes |
+| --- | --- | --- |
+| Work | `/api/work/v1/*` | projection, next, capabilities, health |
+| Epics | `/api/epics/v1/*` | claim / heartbeat / health |
+| Fleet workers / projects | `/api/fleet/workers/v1`, `/api/fleet/projects/v1` | |
+| Comms / session streams | `/api/comms/v1/*`, `/api/session-streams/v1/*` | |
+
+Unversioned `/api/state/*`, `/api/orient`, `/api/rules`, etc. remain the
+long-standing agent cold-start and curriculum telemetry surface; treat their
+payload contracts as versioned via `response_schema_version` / `schema_version`
+fields (below), not via URL churn.
+
+### 3. Response / projection schema versions
+
+Payload contracts protect clients from silent shape breaks. Examples:
+
+| Marker | Where |
+| --- | --- |
+| `schema_version: "work-projection.v1"` | Work projection (ADR-019) |
+| `response_schema_version: "authority.v2"` | `/api/state/preparation` |
+| `response_schema_version: "orient.v2"` | `/api/orient` |
+| `response_schema_version: "comms.v2"` | `/api/comms` |
+| `response_schema_version: "session-streams.v2"` | `/api/session-streams` |
+
+Live registry: `GET /api/contracts/routes` (each contract may declare
+`response_schema_version`). Retired aliases return **404** with canonical
+replacements listed in this file and in the contracts registry.
+
+### 4. Canonical machine SSOT
+
+```bash
+curl -s http://localhost:8765/api/contracts/routes | jq .
+curl -s http://localhost:8765/openapi.json | jq .info
+```
 
 ## Work control plane — `/api/work/v1`
 
@@ -187,12 +261,18 @@ validation details. This keeps error responses inside the same sweep boundary.
 
 ## Agent Quick Start
 
+**Onboard from the API, not from HTML dashboards.** See [Where agents onboard](#where-agents-onboard-not-the-html-dashboards) and [API versioning layers](#api-versioning-layers).
+
 **Recommended cold-start sequence (profile-aware):**
 
 ```bash
 # SessionStart writes the official id into CLAUDE_ENV_FILE for later Bash calls.
 # If it is unavailable, telemetry must stay caller-unmatched; never guess from the newest transcript.
 S="${LEARN_UKRAINIAN_SESSION_ID:-}"
+
+# 0. Product + route registry (cheap; do this when learning a new host or after API deploys).
+curl -s "http://localhost:8765/openapi.json" | jq .info
+curl -s "http://localhost:8765/api/contracts/routes" | jq '{generated_at, n_routes:(.route_contracts|length), n_pages:(.page_contracts|length)}'
 
 # 1. Tiny session-bound index: hashes, identity, and trusted context telemetry.
 curl -s "http://localhost:8765/api/state/manifest?session=$S"
@@ -819,13 +899,21 @@ Phase statuses: `"pending"` | `"complete"` | `"failed"` | `"in_progress"`
 
 ---
 
-### `GET /api/state/pipeline-versions[?track=x]`
+### `GET /api/state/pipeline-versions[?track=x][&fresh=true]`
 
 Pipeline generation counts and rebuild pressure. **The single-glance migration dashboard.**
+
+**Caching (#7973):** process-local TTL (~60s) with **singleflight** — concurrent cold
+misses share one curriculum walk. API lifespan **schedules** a detached warm of the
+default all-tracks key (best-effort; does not block readiness). An early request
+right after process start may still initiate or join the scan and wait for it.
+Pass `?fresh=true` to force one coalesced recompute (still singleflight). Response
+`meta.cache` is `hit` / `miss` when present.
 
 ```bash
 curl -s http://localhost:8765/api/state/pipeline-versions | python3 -m json.tool
 curl -s "http://localhost:8765/api/state/pipeline-versions?track=a1" | python3 -m json.tool
+curl -s "http://localhost:8765/api/state/pipeline-versions?fresh=true" | python3 -m json.tool
 ```
 
 Returns:
@@ -1057,7 +1145,7 @@ Callers must use canonical `/api/state/preparation` (or `/api/state/preparation/
 
 ---
 
-### `GET /api/state/weak-points[?track=x&min_score=7&limit=20]`
+### `GET /api/state/weak-points[?track=x&min_score=7&limit=20][&fresh=true]`
 
 Modules with quality issues — **the fire list** for content work.
 
@@ -1066,9 +1154,16 @@ Criteria:
 - research score < `min_score` (default 7)
 - word count < 80% of `word_target`
 
+**Caching (#7973):** process-local TTL (~60s) with **singleflight** per
+`(track, min_score, limit)` key. API lifespan **schedules** a detached warm of the
+default glance key (`all`, `min_score=7`, `limit=20`) — best-effort; early callers
+after start may still wait on the first compute. Pass `?fresh=true` to force one
+coalesced recompute. Response schema is unchanged.
+
 ```bash
 curl -s "http://localhost:8765/api/state/weak-points?track=bio" | python3 -m json.tool
 curl -s "http://localhost:8765/api/state/weak-points?min_score=8&limit=50" | python3 -m json.tool
+curl -s "http://localhost:8765/api/state/weak-points?fresh=true" | python3 -m json.tool
 ```
 
 Results sorted worst-first (audit fails > thin research > low words).
@@ -1355,9 +1450,14 @@ Log: `logs/watchdog.log`.
 ## As an Agent: Session Start Checklist
 
 **Canonical path (P1+P3 since #1309).** One manifest call + only the
-components whose hash changed:
+components whose hash changed. Full onboard map + versioning layers:
+[`docs/MONITOR-API.md`](MONITOR-API.md) § Where agents onboard / API versioning.
 
 ```bash
+# 0. After deploy / unfamiliar host: confirm product + contracts.
+curl -s http://localhost:8765/openapi.json | jq .info
+curl -s http://localhost:8765/api/contracts/routes | jq .generated_at
+
 # 1. Index of hashes. Tiny.
 curl -s http://localhost:8765/api/state/manifest
 
@@ -3310,15 +3410,15 @@ process does not pick up this behavior until restart.
 
 | Page | URL | Data source |
 |------|-----|-------------|
-| Home | `/` | `/api/dashboard/overview`, `/api/state/summary?fresh=true`, `/api/comms/batch-progress` |
+| Home | `/` | `/api/dashboard/overview`, `/api/state/summary` (warm cache; no per-load `fresh=true`), `/api/state/pipeline-versions`, `/api/orient`, … — client abort budget **20s** (#7976) |
 | Audit Dashboard | `/audit-dashboard.html` | `/api/dashboard/overview`, `/api/dashboard/track/{id}` |
 | Progress | `/progress.html` | `/api/state/summary?fresh=true`, `/api/state/pipeline-versions?fresh=true`, `/api/state/pipeline/{track}?fresh=true` |
-| Agent Comms | `/comms.html` | `/api/build/events/active`, `/api/build/events/recent`, `/api/comms/batch-progress`, `/api/comms/zombies`, `/api/comms/messages`, `/api/comms/stats` |
+| Agent Comms | `/comms.html` | redirects to `/fleet.html` (retired Broker Ops chrome) |
 | Quality | `/quality.html` | `/api/state/research-coverage`, `/api/state/review-coverage`, `/api/state/issues`, `/api/state/weak-points` |
 | Track Health | `/track-health.html` | `/api/state/track-health/{track}`, `/api/state/build-status`, `/api/state/enrichment-status` |
 | Curriculum | `/curriculum-dashboard.html` | `/api/dashboard/overview` |
 | Consultation | `/consultation.html` | `/api/consultation/queue`, `/api/consultation/history`, `/api/consultation/metrics` |
-| API Docs | `/docs` | FastAPI auto-generated |
+| API Docs | `/docs` | FastAPI auto-generated OpenAPI (**Ops API 2.0.0**) |
 
 Dashboard consolidation status:
 - `/progress.html` is the canonical fast visual overview for current

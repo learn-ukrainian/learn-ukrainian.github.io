@@ -1829,12 +1829,15 @@ def create_app(context: MonitorContext, *, lifespan: Any = None) -> FastAPI:
         version="2.0.0",
         description=(
             "Operator API (Ops API) for the Ukrainian curriculum pipeline. "
+            "Application version 2.0.0 (also on GET /api/health and /api/config). "
             "Stream key remains `monitor`; historic Monitor docs paths are progressive rename. "
-            "Powers the ops dashboards (root /), agent cold-start (orient, rules, session), "
-            "state queries, comms, delegate, build events, and operational tooling. "
+            "Versioning layers: app 2.0.0 · URL namespaces `/api/*/v1/*` · "
+            "payload `response_schema_version` / `schema_version` on contracts. "
+            "Agent onboard: GET /api/rules, GET /api/orient?lean=true, "
+            "GET /api/contracts/routes, then docs/MONITOR-API.md. "
             "Interactive explorer: /docs (Swagger) and /redoc. "
-            "Machine-readable route contracts: /api/contracts/routes. "
-            "See docs/MONITOR-API.md for the full reference."
+            "Powers ops dashboards (root /), cold-start, state, comms, delegate, "
+            "build events, and operational tooling."
         ),
         lifespan=factory_lifespan,
     )
