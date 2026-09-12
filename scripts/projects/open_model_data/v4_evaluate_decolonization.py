@@ -474,12 +474,9 @@ def evaluate_single_response(
                 ):
                     continue
                 words = tok.split()
-                if tok in all_target_tokens or tok in EXEMPT_LINGUISTIC_ENTITIES or tok in GRAMMATICAL_STOPWORDS:
+                if tok in all_target_tokens or tok in GRAMMATICAL_STOPWORDS:
                     continue
-                if any(
-                    w in all_target_tokens or w in EXEMPT_LINGUISTIC_ENTITIES or w in GRAMMATICAL_STOPWORDS
-                    for w in words
-                ):
+                if any(w in all_target_tokens or w in GRAMMATICAL_STOPWORDS for w in words):
                     continue
                 has_other_entity = True
                 break

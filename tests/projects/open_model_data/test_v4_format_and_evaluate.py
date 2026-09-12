@@ -1000,3 +1000,21 @@ def test_explanation_concerning_word_forma_rejected() -> None:
     assert not eval2["is_pass"]
     assert not eval2["reasoning_grounded"]
     assert eval2["composite_score"] <= 0.40
+
+
+def test_explanation_concerning_authority_word_rejected() -> None:
+    """M1 Review: A named word matching an authority name (e.g. «правопис») must not be exempted as a subject."""
+    target = "badtoken"
+    alts = ["goodtoken"]
+
+    r1 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова «правопис»."
+    eval1 = evaluate_single_response(target, alts, r1)
+    assert not eval1["is_pass"]
+    assert not eval1["reasoning_grounded"]
+    assert eval1["composite_score"] <= 0.40
+
+    r2 = "Вживайте goodtoken, бо у словнику подано пояснення суфікса слова правопис."
+    eval2 = evaluate_single_response(target, alts, r2)
+    assert not eval2["is_pass"]
+    assert not eval2["reasoning_grounded"]
+    assert eval2["composite_score"] <= 0.40
