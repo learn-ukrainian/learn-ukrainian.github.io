@@ -8,8 +8,7 @@
     "size_bytes": 18195377,
     "sha256": "e33803783ac138e6f3af2cf0e9428ba146c0ecfda7f5c41fe83ae00c7af24be9",
     "format": "block-structured: an unindented analysis opens a paradigm; indented analyses are its forms; comments are structurally bound within that block",
-    "license": "CC BY-NC-SA 4.0",
-    "upstream_release_notes": "Upstream release v6.8.5 (2026-08-23) dict_corp_vis.txt.bz2 is byte-for-byte identical (SHA-256 e33803783ac138e6f3af2cf0e9428ba146c0ecfda7f5c41fe83ae00c7af24be9) to v6.8.0; upstream changes were confined to hunspell affix packaging."
+    "license": "CC BY-NC-SA 4.0"
   },
   "pipeline": {
     "importer_version": "v1",
