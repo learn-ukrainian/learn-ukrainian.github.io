@@ -5,12 +5,22 @@ in [RESIDUAL.md](../../RESIDUAL.md). This is one PR, not curriculum publication.
 
 ## Frozen outcome and denominator
 
-A driver upgrades the existing `a1/things-have-gender` artifacts through V7 into
-parallel `a1-v2` lesson artifacts and a module landing plus three lesson pages,
-each with four tabs. The original A1 and all plans remain unchanged.
+A driver upgrades the archived `a1-v1/things-have-gender` artifacts through V7
+into canonical `a1` lesson artifacts and a module landing plus three lesson
+pages, each with four tabs. The old edition moves without rebuilding; source
+bytes and all plans remain unchanged. The archive contains the existing 55
+modules. Canonical A1 starts with zero published upgrades because this PR runs
+no live writer.
 
-- Operator dispatch and #7994 Phase 1 decisions, 2026-09-12: Option A, parallel
-  level, preserve-and-expand, no named narrator, marked attributed quotation,
+The later 2026-09-12 operator GO supersedes the morning parallel-preview naming:
+archive the old edition as `a1-v1` and reserve `a1` for upgraded lessons. The
+archive aliases A1 pedagogy and plans; canonical A1 needs no base-level alias.
+The validator checks all 55 existing A1 plans in their unchanged archive order
+independently of the incremental publication list. Old module bookmarks fall
+back to the archive until a published canonical lesson landing wins.
+
+- Operator dispatch and #7994 Phase 1 decisions, 2026-09-12: Option A, canonical
+  lesson edition and archived previous edition, preserve-and-expand, no named narrator, marked attributed quotation,
   deterministic stress after review, Gemini/AGY or Codex writers later.
 - Held-out Phase 0: `0801b58beece2b2b6380327fb24fd0e3ff129dd5` on
   `agy/cu-p0-pilot-writer-things-have-gender` (#7991).
@@ -19,10 +29,13 @@ each with four tabs. The original A1 and all plans remain unchanged.
 - Approved design SHA-256:
   `935c9b632b89b0b4bc3dd124bced27743a93b3dba7a924b8ece5ff28d01a91b6`.
 - `tests/fixtures/curriculum_upgrade/gold.json` records pinned commits and every
-  fixture SHA-256. Fixtures are test data, never copied to product paths by a build.
+  fixture SHA-256. Input bytes stay pinned; fixture output paths and HTML URL
+  previews use canonical A1. HTML `source_sha256` retains the original hash
+  before edition-name/URL normalization. Fixtures are test data, never copied to product
+  paths by a build.
 
-Non-goals: merge/deploy; publish the preview as live A1; archive/rename A1; edit
-original module or plans; edit agent skills; new pipeline or pedagogy; run live
+Non-goals: merge/undraft/deploy; rebuild the archive; edit
+original module bytes or plans; edit agent skills; new pipeline or pedagogy; run live
 writers in this PR. Driver Grok owns independent non-OpenAI exact-head review and
 merge disposition. Codex owns this implementation, integration and verification.
 
@@ -34,7 +47,7 @@ Run from a dispatch worktree with the shared interpreter:
 /home/ops/learn-ukrainian/.venv/bin/python scripts/build/v7_build.py a1 things-have-gender --upgrade --dry-run
 /home/ops/learn-ukrainian/.venv/bin/python scripts/build/v7_build.py a1 things-have-gender --upgrade --writer gemini-tools --worktree
 /home/ops/learn-ukrainian/.venv/bin/python scripts/build/v7_build.py a1 things-have-gender --upgrade --writer codex-tools --worktree
-/home/ops/learn-ukrainian/.venv/bin/python -m scripts.build.verify_shippable a1-v2 things-have-gender --lesson
+/home/ops/learn-ukrainian/.venv/bin/python -m scripts.build.verify_shippable a1 things-have-gender --lesson
 ```
 
 Only the first command is authorized for live execution in this PR. Existing
@@ -42,10 +55,11 @@ Only the first command is authorized for live execution in this PR. Existing
 `--keep-worktree` apply. `--lesson-map PATH` supplies reviewed titles, proper names
 and bounded unverified declarations; ownership, provenance, closure and exemptions
 must still match fresh deterministic derivation. Targets may only increase. `--upgrade` accepts base A1 only and rejects
-`--use-generator`. Output defaults to `curriculum/l2-uk-en/a1-v2/{slug}/`.
+`--use-generator`. Input is `curriculum/l2-uk-en/a1-v1/{slug}/`; output defaults to
+`curriculum/l2-uk-en/a1/{slug}/`. Plans stay at `plans/a1/{slug}.yaml`.
 Custom `--out` must remain in the build worktree and cannot overlap original A1
 or plans. Custom output MDX is under `--out/mdx`; default MDX is under
-`site/src/content/docs/a1-v2/{slug}/`.
+`site/src/content/docs/a1/{slug}/`.
 
 1. Read existing plan and four module artifacts; record SHA-256 inputs.
 2. Deterministically derive and validate `lessons.yaml`; save full rendered
@@ -71,7 +85,7 @@ artifact persistence. Ordinary V7 builds keep their single-module path.
 
 | Slice | Implementation | Contract |
 |---|---|---|
-| (a) Manifest/config | `curriculum.yaml`, `scripts/level_config.py`, config resolvers, site content collection | Explicit `base_level: a1`; one selected preview module; A1 activities/personas/audit/immersion |
+| (a) Manifest/config | `curriculum.yaml`, `scripts/level_config.py`, config resolvers, site content collection | Archive `a1-v1` aliases A1; canonical `a1` lists published upgrades only; A1 activities/personas/audit/immersion |
 | (b) Map | `scripts/build/lesson_map.py`, `schemas/lesson-map.schema.json` | Ordered deterministic section ownership, introduction to lesson 1, final closure, every original activity recorded |
 | (c) Writer | `v7_build.py`, `linear_pipeline.py`, `phases/linear-write-upgrade.md` | Existing transports, preserved originals, real scoped prompt and dry-run |
 | (d) Gates | `lesson_gates.py`, `verify_shippable.py`, ported pilot checker | Phase 0 preservation/activity/vocab/stress/render checks plus current V7 immersion gates; unresolved exposure conflict remains blocking |
@@ -128,3 +142,6 @@ X-Agent trailer, and a PR linked to #7994. A draft with an unchecked in-scope re
 is not Phase 1 completion. No threshold changes, silent skips, or manual fixture
 publication can close the gap. New architecture/policy decisions stop the affected
 slice and name the operator/advisor decision and driver owner in `RESIDUAL.md`.
+
+PR #7999 must remain draft. Merging would change live `/a1/` URLs; this PR does
+not authorize a Pages/production cutover.

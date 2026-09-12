@@ -24,7 +24,7 @@ def baseline():
 
 
 def test_derivation_matches_held_out_gold_sections_and_provenance(baseline):
-    gold = yaml.safe_load(fixture_text("gold", "curriculum/l2-uk-en/a1-v2/things-have-gender/lessons.yaml"))
+    gold = yaml.safe_load(fixture_text("gold", "curriculum/l2-uk-en/a1/things-have-gender/lessons.yaml"))
     result = derive_lesson_map(*baseline)
     assert [lesson["sections"] for lesson in result["lessons"]] == [lesson["sections"] for lesson in gold["lessons"]]
     assert result["closes_module"] == gold["closes_module"]
@@ -101,4 +101,4 @@ def test_all_held_out_fixture_hashes_and_denominator():
     bundle = load_upgrade_fixtures()
     assert len(bundle["sources"]["baseline"]["files"]) == 5
     assert len(bundle["sources"]["gold"]["files"]) == 15
-    assert bundle["sources"]["gold"]["files"]["docs/poc/poc-lesson-split-design.html"]["sha256"] == "935c9b632b89b0b4bc3dd124bced27743a93b3dba7a924b8ece5ff28d01a91b6"
+    assert bundle["sources"]["gold"]["files"]["docs/poc/poc-lesson-split-design.html"]["source_sha256"] == "935c9b632b89b0b4bc3dd124bced27743a93b3dba7a924b8ece5ff28d01a91b6"

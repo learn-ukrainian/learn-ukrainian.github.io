@@ -9,8 +9,8 @@ from pathlib import Path
 FIXTURE_PATH = Path(__file__).resolve().parents[1] / "fixtures/curriculum_upgrade/gold.json"
 BASE = "7829e74b6031cdcc4ef69895b5f42e0643569e44"
 GOLD = "0801b58beece2b2b6380327fb24fd0e3ff129dd5"
-ORIGINAL = "curriculum/l2-uk-en/a1/things-have-gender"
-UPGRADED = "curriculum/l2-uk-en/a1-v2/things-have-gender"
+ORIGINAL = "curriculum/l2-uk-en/a1-v1/things-have-gender"
+UPGRADED = "curriculum/l2-uk-en/a1/things-have-gender"
 
 
 @lru_cache(maxsize=1)

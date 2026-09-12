@@ -146,6 +146,9 @@ def _default_module_dir(level: str, slug: str) -> Path:
 
 
 def _default_plan_path(level: str, slug: str) -> Path:
+    from scripts.level_config import base_level
+
+    level = base_level(level)
     return CURRICULUM / "plans" / level / f"{slug}.yaml"
 
 
@@ -338,8 +341,11 @@ def verify_lessons(level: str, slug: str, *, module_dir: Path | None = None,
 
     module_dir = module_dir or _default_module_dir(level, slug)
     plan_path = plan_path or _default_plan_path("a1", slug)
-    source_dir = source_dir or _default_module_dir("a1", slug)
+    source_dir = source_dir or _default_module_dir("a1-v1", slug)
     steps = []
+    if level.lower() != "a1":
+        return _finalize(level, slug, [{"step": "inputs", "passed": False,
+                                      "detail": "Lesson verification currently accepts canonical a1 only"}])
     try:
         with tempfile.TemporaryDirectory(prefix="verify-lessons-") as temp:
             pages = assemble_lessons(module_dir, Path(temp), plan_path)
@@ -362,7 +368,7 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(
         description="Verify deterministic shippability of built V7 modules or lesson splits.\nUse after authoring; this does not run a writer or replace cross-family review.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  .venv/bin/python -m scripts.build.verify_shippable a1-v2 things-have-gender --lesson\n"
+        epilog="Examples:\n  .venv/bin/python -m scripts.build.verify_shippable a1 things-have-gender --lesson\n"
         "  .venv/bin/python -m scripts.build.verify_shippable a1 things-have-gender --json\n\n"
         "Outputs: human or JSON gate report; temporary assembled MDX. --astro-build writes a build log.\n"
         "Exit codes: 0 shippable, 1 failed/incomplete gate, 2 invalid arguments.\n"
@@ -374,7 +380,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--plan", type=Path, default=None, dest="plan_path", help="Existing plan YAML (default: plans/{level}/{slug}.yaml, base A1 with --lesson)")
     ap.add_argument("--astro-build", action="store_true", help="also run the full astro build (catch-all)")
     ap.add_argument("--json", action="store_true", help="emit the raw report as JSON")
-    ap.add_argument("--lesson", action="store_true", help="verify all lesson pages plus cross-lesson preservation (a1-v2; base plan/source a1)")
+    ap.add_argument("--lesson", action="store_true", help="verify all lesson pages plus cross-lesson preservation (a1; plans/a1 and archived source a1-v1)")
     ap.add_argument("--source-dir", type=Path, help="original built module directory for --lesson")
     args = ap.parse_args(argv)
     if args.lesson and args.astro_build:

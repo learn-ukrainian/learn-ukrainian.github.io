@@ -244,6 +244,7 @@ def _is_legacy_field_mismatch(
 class CurriculumLevel:
     modules: list[str]
     base_level: str | None = None
+    plan_modules: list[str] | None = None
 
 
 def load_curriculum() -> dict[str, CurriculumLevel]:
@@ -257,6 +258,11 @@ def load_curriculum() -> dict[str, CurriculumLevel]:
         result[level_key] = CurriculumLevel(
             [m for m in modules if isinstance(m, str)], level_data.get("base_level")
         )
+    # Publication is incremental, but the unchanged A1 plans retain their full
+    # sequence and prerequisites. The archive preserves that ordered inventory.
+    # A1 still owns and validates plans/a1, including every original plan.
+    if "a1" in result and "a1-v1" in result and result["a1-v1"].base_level == "a1":
+        result["a1"].plan_modules = result["a1-v1"].modules
     return result
 
 
@@ -638,13 +644,13 @@ def main():
         epilog=(
             "Examples:\n"
             "  scripts/validate/validate_plan_ordering.py\n"
-            "  scripts/validate/validate_plan_ordering.py a1-v2\n"
+            "  scripts/validate/validate_plan_ordering.py a1\n"
             "Outputs: diagnostics on stdout; --fix edits fixable plan fields/references.\n"
             "Exit codes: 0 = no errors; 1 = validation errors; 2 = invalid arguments.\n"
             "Related: curriculum/l2-uk-en/curriculum.yaml; PR #7999."
         ),
     )
-    parser.add_argument("tracks", nargs="*", help="Track keys (e.g. a1-v2); default: all tracks.")
+    parser.add_argument("tracks", nargs="*", help="Track keys (e.g. a1); default: all tracks.")
     parser.add_argument("--fix", action="store_true", help="Edit fixable plan mismatches; default: check only.")
     args = parser.parse_args()
     fix = args.fix
@@ -661,6 +667,7 @@ def main():
         if track not in curriculum:
             print(f"Track '{track}' not found in curriculum.yaml")
             print(f"Available: {', '.join(sorted(curriculum.keys()))}")
+            total_errors += 1
             continue
 
         track_config = curriculum[track]
@@ -669,7 +676,14 @@ def main():
         print(f"Track: {track} ({len(slugs)} modules)")
         print(f"{'=' * 60}")
 
-        issues, fixes = validate_track(track, slugs, fix=fix, base_level=track_config.base_level)
+        plan_slugs = track_config.plan_modules if track_config.plan_modules is not None else slugs
+        issues, fixes = validate_track(track, plan_slugs, fix=fix, base_level=track_config.base_level)
+        if track_config.plan_modules is not None:
+            print(f"  Plan inventory: {len(plan_slugs)} unchanged plans in plans/{track}")
+            issues.extend(
+                f"[{track}] Published module {slug!r} has no archived plan inventory entry"
+                for slug in slugs if slug not in plan_slugs
+            )
 
         errors = [i for i in issues if "ORPHAN" not in i and "doesn't match" not in i]
         warnings = [i for i in issues if "ORPHAN" in i or "doesn't match" in i]

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Orchestrator-owned checker for the curriculum-upgrade Phase 0 pilot:
-a1/things-have-gender split into three 60-minute lessons under the parallel
-level `a1-v2`.
+a1/things-have-gender split into three 60-minute lessons under the canonical
+level `a1`.
 
 Baseline = the original module files at a PINNED commit (never the working
 tree, never a movable branch). Exit code 1 on any BLOCKING failure.
@@ -12,8 +12,8 @@ Content baseline hashes and all lesson thresholds stay pinned. VERIFY_ROOT may
 point to an extracted fixture tree while Git commands run in the dispatch cwd.
 The stress oracle is imported from this checker checkout, never the primary tree.
 
-Layout: original stays untouched at curriculum/l2-uk-en/a1/things-have-gender/;
-the split lives at curriculum/l2-uk-en/a1-v2/things-have-gender/.
+Layout: original is archived unchanged at curriculum/l2-uk-en/a1-v1/things-have-gender/;
+the split lives at curriculum/l2-uk-en/a1/things-have-gender/.
 
 Usage (from the dispatch worktree root):
     /home/ops/learn-ukrainian/.venv/bin/python audit/curriculum-upgrade/pilot-things-have-gender/verify_pilot.py
@@ -34,8 +34,8 @@ from pathlib import Path
 import yaml
 
 ROOT = Path(os.environ.get("VERIFY_ROOT") or Path.cwd())
-ORIG = "curriculum/l2-uk-en/a1/things-have-gender"
-V2 = "curriculum/l2-uk-en/a1-v2/things-have-gender"
+ORIG = "curriculum/l2-uk-en/a1-v1/things-have-gender"
+V2 = "curriculum/l2-uk-en/a1/things-have-gender"
 LESSONS = ROOT / V2
 HTML = ROOT / "docs/poc/poc-lesson-split-things-have-gender.html"
 TEMPLATE = ROOT / "docs/poc/poc-lesson-split-design.html"
@@ -338,7 +338,7 @@ def git_show(path: str) -> str:
 def main() -> int:
     # baseline pinned + hash-verified
     try:
-        base = {n: git_show(f"{ORIG}/{n}") for n in BASELINE_SHA}
+        base = {n: git_show(f"curriculum/l2-uk-en/a1/things-have-gender/{n}") for n in BASELINE_SHA}
     except subprocess.CalledProcessError as e:
         block(f"cannot read baseline at {BASE_COMMIT}: {e.stderr.strip()}")
         return finish()
@@ -346,6 +346,9 @@ def main() -> int:
         got = hashlib.sha256(base[n].encode("utf-8")).hexdigest()
         if got != s:
             block(f"baseline {n} at {BASE_COMMIT} hash {got[:12]} != pinned {s[:12]}")
+        archived = ROOT / ORIG / n
+        if not archived.is_file() or hashlib.sha256(archived.read_bytes()).hexdigest() != s:
+            block(f"archived original {n} differs from the pinned baseline")
     base_md, base_acts = base["module.md"], yaml.safe_load(base["activities.yaml"])
     base_vocab = yaml.safe_load(base["vocabulary.yaml"])
     base_secs = sections(base_md)
@@ -362,7 +365,7 @@ def main() -> int:
 
     # protected paths untouched (vs pinned commit) + template hash
     diff = subprocess.run(["git", "diff", "--name-only", "origin/main", "--",
-                           "curriculum/l2-uk-en/plans", ORIG], capture_output=True, text=True).stdout.split()
+                           "curriculum/l2-uk-en/plans"], capture_output=True, text=True).stdout.split()
     if diff:
         block(f"protected paths modified: {diff}")
     if not TEMPLATE.exists():

@@ -700,7 +700,7 @@ def _persist_build_artifacts(
 
 
 def _run_in_worktree(args: argparse.Namespace, raw_argv: list[str]) -> int:
-    level = "a1-v2" if getattr(args, "upgrade", False) else args.level.lower()
+    level = args.level.lower()
     slug = args.slug
     writer = _normalize_writer(args.writer)
     try:
@@ -1500,7 +1500,7 @@ def build_parser() -> argparse.ArgumentParser:
             "artifacts, knowledge_packet.md, writer_prompt.md, python_qg.json, "
             "llm_qg.json, and {slug}.mdx under --out or "
             "curriculum/l2-uk-en/{level}/{slug}/. Upgrade dry runs save lessons.yaml, input hashes and writer_prompt.md; "
-            "upgrade builds produce lesson-N artifacts and index.mdx plus N.mdx in parallel a1-v2.\n\n"
+            "upgrade builds produce lesson-N artifacts and index.mdx plus N.mdx in canonical a1.\n\n"
             "Worktrees:\n"
             "  Pass --worktree to create .worktrees/builds/{level}-{slug}-{timestamp}/ "
             "and run this build there on a build/{level}/{slug}-{timestamp} branch. "
@@ -1532,7 +1532,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = build_parser()
     parser.add_argument(
         "--upgrade", action="store_true",
-        help="Upgrade an existing A1 module into parallel a1-v2 lessons; skip wiki retrieval and plan writing (default: false).",
+        help="Upgrade an existing A1 module from archived a1-v1 into canonical a1 lessons; skip wiki retrieval and plan writing (default: false).",
     )
     parser.add_argument(
         "--lesson-map", metavar="PATH", default=None,
@@ -1806,11 +1806,11 @@ def _run_stress_annotation_for_level(module_dir: Path, level: str) -> dict[str, 
 
 def _upgrade_output_dir(args: argparse.Namespace) -> Path:
     """Keep upgrade writes in this worktree and outside protected input trees."""
-    output = _resolve_output_dir(args.out, "a1-v2", args.slug).resolve()
+    output = _resolve_output_dir(args.out, "a1", args.slug).resolve()
     root = PROJECT_ROOT.resolve()
     if not output.is_relative_to(root):
         raise linear_pipeline.LinearPipelineError("Upgrade output must be inside the build worktree")
-    for protected in (root / "curriculum/l2-uk-en/a1", root / "curriculum/l2-uk-en/plans"):
+    for protected in (root / "curriculum/l2-uk-en/a1-v1", root / "curriculum/l2-uk-en/plans"):
         if output.is_relative_to(protected) or protected.is_relative_to(output):
             raise linear_pipeline.LinearPipelineError("Upgrade output overlaps protected original modules or plans")
     return output
@@ -1861,7 +1861,7 @@ def _run_upgrade(args: argparse.Namespace) -> int:
 
     tracker = LastEventTracker()
     phase = "input"
-    fields = {"mode": "upgrade", "level": "a1-v2", "slug": args.slug}
+    fields = {"mode": "upgrade", "level": "a1", "slug": args.slug}
     tracker.emit("module_start", **fields)
     try:
         if args.level.lower() != "a1":
@@ -1870,7 +1870,7 @@ def _run_upgrade(args: argparse.Namespace) -> int:
             raise linear_pipeline.LinearPipelineError("Upgrade slug must be a single kebab-case module name")
         if getattr(args, "use_generator", False):
             raise linear_pipeline.LinearPipelineError("--upgrade uses linear-write-upgrade.md; --use-generator is incompatible")
-        source_dir = _default_module_dir("a1", args.slug)
+        source_dir = _default_module_dir("a1-v1", args.slug)
         plan_path = linear_pipeline.plan_path_for("a1", args.slug)
         plan = linear_pipeline.plan_check(plan_path)
         module_dir = _upgrade_output_dir(args)
@@ -1983,7 +1983,7 @@ def _run_upgrade(args: argparse.Namespace) -> int:
             linear_pipeline.write_json(lesson_dir / "stress_annotation.json", {"files": counts, "passed": True})
         phase = "assemble_mdx"
         output_dir = (
-            PROJECT_ROOT / "site/src/content/docs/a1-v2" / args.slug
+            PROJECT_ROOT / "site/src/content/docs/a1" / args.slug
             if args.out is None else module_dir / "mdx"
         )
         rendered = assemble_lessons(module_dir, output_dir, plan_path, validated=False)

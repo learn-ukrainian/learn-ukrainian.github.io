@@ -17,7 +17,7 @@ const { chromium } = require('playwright');
 const source = path.resolve(process.argv[2] || 'batch_state/cu-p1-gold/assembled');
 // Keep output below site so prerender resolves the same installed dependencies.
 const temp = fs.mkdtempSync(path.join(site, '.upgrade-browser-'));
-const pages = path.join(temp, 'src/pages/a1-v2/things-have-gender');
+const pages = path.join(temp, 'src/pages/a1/things-have-gender');
 const dist = path.join(temp, 'dist');
 fs.mkdirSync(pages, { recursive: true });
 for (const name of ['index', '1', '2', '3']) {
@@ -62,7 +62,7 @@ try {
   for (const width of [1200, 400]) {
     await page.setViewportSize({ width, height: 900 });
     for (const suffix of ['', '1/', '2/', '3/']) {
-      const response = await page.goto(`http://127.0.0.1:${server.address().port}/a1-v2/things-have-gender/${suffix}`);
+      const response = await page.goto(`http://127.0.0.1:${server.address().port}/a1/things-have-gender/${suffix}`);
       assert.equal(response.status(), 200);
       await page.waitForSelector('[role=tab]');
       const tabs = page.getByRole('tab');

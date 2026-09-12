@@ -89,7 +89,7 @@ areas:
       - number: 7994
         name: "Curriculum upgrade machinery — V7 upgrade mode, lesson gates, MDX assembler"
       - number: 7995
-        name: "A1 content rollout — 55 modules into 60-minute lessons under a1-v2"
+        name: "A1 content rollout — 55 modules into 60-minute lessons under canonical a1"
   seminars:
     id: seminars
     aliases:

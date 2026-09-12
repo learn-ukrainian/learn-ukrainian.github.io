@@ -1,8 +1,9 @@
 version: '1.0'
 description: 'L2 Ukrainian-English Curriculum Manifest (RFC #410)'
 levels:
-  a1:
+  a1-v1:
     type: core
+    base_level: a1
     # V3 — 55 modules, State Standard 2024 compliant
     # A1.1: Sounds, Letters, and First Contact
     groups:
@@ -2594,9 +2595,7 @@ levels:
       - rehionalni-etnokulturni-tradytsii
       - narodna-kultura-ta-vysoka-kultura-mistky
 
-  a1-v2:
+  a1:
     type: core
-    base_level: a1
-    # Parallel preview: list only modules selected for upgrade, never empty shells.
-    modules:
-      - things-have-gender
+    # Canonical lesson edition: add modules only after upgrade publication.
+    modules: []

@@ -1,5 +1,5 @@
 /**
- * A1 curriculum manifest — bilingual (Ukrainian + English).
+ * Archived A1 curriculum manifest — bilingual (Ukrainian + English).
  *
  * Source of truth for the A1 landing page module list. Order matches
  * `curriculum/l2-uk-en/curriculum.yaml`. Each item carries both Ukrainian
@@ -7,7 +7,7 @@
  * without a separate i18n layer.
  *
  * Status is NOT stored here — it is derived at build time in
- * `src/content/docs/a1/index.mdx` from filesystem detection of the
+ * `src/content/docs/a1-v1/index.mdx` from filesystem detection of the
  * deployed `.mdx` siblings.
  */
 

@@ -9,23 +9,28 @@ from tests.build.upgrade_fixtures import fixture_text
 
 @pytest.fixture
 def gold(tmp_path, monkeypatch):
+    from scripts.generate_mdx import atlas_links
+
+    atlas = tmp_path / "atlas.json"
+    atlas.write_text('{"entries": []}')
+    monkeypatch.setattr(atlas_links, "_DEFAULT_MANIFEST", atlas)
     # Content fixture tests deliberately run without the optional local oracle.
     # Production must reject unavailable correctness evidence, which these tests assert.
     def unavailable(*args):
         raise RuntimeError("fixture has no stress oracle")
     monkeypatch.setattr(gates, "wrong_stress", unavailable)
-    source = tmp_path / "a1"
-    module = tmp_path / "a1-v2"
+    source = tmp_path / "a1-v1"
+    module = tmp_path / "a1"
     source.mkdir()
     module.mkdir()
     root = "curriculum/l2-uk-en"
     for name in ("module.md", "activities.yaml", "vocabulary.yaml", "resources.yaml"):
-        (source / name).write_text(fixture_text("baseline", f"{root}/a1/things-have-gender/{name}"))
+        (source / name).write_text(fixture_text("baseline", f"{root}/a1-v1/things-have-gender/{name}"))
         for n in (1, 2, 3):
             d = module / f"lesson-{n}"
             d.mkdir(exist_ok=True)
-            (d / name).write_text(fixture_text("gold", f"{root}/a1-v2/things-have-gender/lesson-{n}/{name}"))
-    (module / "lessons.yaml").write_text(fixture_text("gold", f"{root}/a1-v2/things-have-gender/lessons.yaml"))
+            (d / name).write_text(fixture_text("gold", f"{root}/a1/things-have-gender/lesson-{n}/{name}"))
+    (module / "lessons.yaml").write_text(fixture_text("gold", f"{root}/a1/things-have-gender/lessons.yaml"))
     plan = yaml.safe_load(fixture_text("baseline", f"{root}/plans/a1/things-have-gender.yaml"))
     return module, source, plan
 
@@ -112,7 +117,7 @@ def test_stress_correctness_compares_positions_to_oracle(monkeypatch):
     from scripts.verification import stress
 
     # The oracle response is controlled test input, not a language assertion.
-    md = fixture_text("gold", "curriculum/l2-uk-en/a1-v2/things-have-gender/lesson-1/module.md")
+    md = fixture_text("gold", "curriculum/l2-uk-en/a1/things-have-gender/lesson-1/module.md")
     token = next(t for t in re.findall(rf"[{gates.CYR}{gates.ACUTE}]+", md)
                  if gates.ACUTE in t and len(gates.strip_acute(t)) > 3)
     monkeypatch.setattr(stress, "verify_stress", lambda _: {

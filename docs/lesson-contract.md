@@ -45,7 +45,8 @@ landing carries objectives, lesson cards and linked unions of vocabulary, practi
 and resources; previous/next links advance by lesson. The final lesson closes the
 module. Existing unsplit V7 modules continue to use the v3 single-page shape.
 
-The initial output level is parallel `a1-v2` with `base_level: a1`; live A1 stays
+The canonical output level is `a1`; the previous edition is archived unchanged
+at `a1-v1` with `base_level: a1`. Plans stay in `plans/a1/`. Production stays
 untouched. A deterministic `lessons.yaml` assigns original sections and activities
 before writing. The upgrade input is the existing module's four artifacts and
 immutable plan. No wiki packet or new plan is authored. Source lesson files live

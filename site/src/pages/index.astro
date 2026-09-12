@@ -31,7 +31,7 @@ const LANDING_TRACKS = new Set([
 const trackHref = (id: string) => (LANDING_TRACKS.has(id) ? `/${id}/` : undefined);
 
 const coreTracks: TrackRow[] = ([
-  { id: 'a1', label: 'A1', titleKey: 'home.track.beginner', statusKey: 'status.released' },
+  { id: 'a1', label: 'A1', titleKey: 'home.track.beginner', statusKey: 'status.preview' },
   { id: 'a2', label: 'A2', titleKey: 'home.track.preIntermediate', statusKey: 'status.released' },
   { id: 'b1', label: 'B1', titleKey: 'home.track.intermediate', statusKey: 'status.released' },
   { id: 'b2', label: 'B2', titleKey: 'home.track.upperIntermediate', statusKey: 'status.released' },
@@ -61,7 +61,7 @@ const seminarTracks: TrackRow[] = ([
 
 <CourseLayout
   title="Learn Ukrainian"
-  description="An English learner interface for released A1, A2, B1, and B2 Ukrainian courses, live C1 and C2 course maps, plus the Word Atlas reference tool."
+  description="An English learner interface for new A1 lessons, the previous A1 edition, and released A2, B1, and B2 Ukrainian courses, live C1 and C2 course maps, plus the Word Atlas reference tool."
   eyebrowKey="home.eyebrow"
   subtitle="A practical English interface for learning Ukrainian."
   currentPath="/"

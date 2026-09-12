@@ -16,6 +16,11 @@ from tests.build.upgrade_fixtures import ORIGINAL, UPGRADED, extract_upgrade_fix
 
 @pytest.fixture
 def upgrade_root(tmp_path, monkeypatch):
+    from scripts.generate_mdx import atlas_links
+
+    atlas = tmp_path / "atlas.json"
+    atlas.write_text('{"entries": []}')
+    monkeypatch.setattr(atlas_links, "_DEFAULT_MANIFEST", atlas)
     extract_upgrade_fixtures(tmp_path, "baseline")
     monkeypatch.setattr(v7_build, "PROJECT_ROOT", tmp_path)
     monkeypatch.setattr(linear_pipeline, "plan_path_for", lambda level, slug: tmp_path / "curriculum/l2-uk-en/plans/a1" / f"{slug}.yaml")
@@ -81,35 +86,35 @@ def test_upgrade_invokes_existing_writer_per_lesson_then_review_then_annotation(
     assert v7_build._run(args) == (0 if quality_passes else 1)
     assert events[:7] == ["writer1", "review", "writer2", "review", "writer3", "review", "coherence"]
     assert events[7:] == ["stress"] * 12
-    assert sorted(p.name for p in (upgrade_root / "site/src/content/docs/a1-v2/things-have-gender").glob("*.mdx")) == ["1.mdx", "2.mdx", "3.mdx", "index.mdx"]
-    for path in (upgrade_root / "site/src/content/docs/a1-v2/things-have-gender").glob("*.mdx"):
+    assert sorted(p.name for p in (upgrade_root / "site/src/content/docs/a1/things-have-gender").glob("*.mdx")) == ["1.mdx", "2.mdx", "3.mdx", "index.mdx"]
+    for path in (upgrade_root / "site/src/content/docs/a1/things-have-gender").glob("*.mdx"):
         frontmatter = yaml.safe_load(path.read_text().split("---", 2)[1])
         assert frontmatter["draft"] is not quality_passes
 
 
-@pytest.mark.parametrize("output", ["curriculum/l2-uk-en/a1", "curriculum/l2-uk-en/a1/things-have-gender", "curriculum/l2-uk-en/plans/a1", "curriculum"])
+@pytest.mark.parametrize("output", ["curriculum/l2-uk-en/a1-v1", "curriculum/l2-uk-en/a1-v1/things-have-gender", "curriculum/l2-uk-en/plans/a1", "curriculum"])
 def test_upgrade_rejects_protected_output(upgrade_root, output):
     args = v7_build.parse_args(["a1", "things-have-gender", "--upgrade", "--dry-run", "--out", output])
     assert v7_build._run(args) == 1
 
 
-def test_parallel_level_resolves_all_pedagogical_configs():
+def test_archive_level_resolves_all_pedagogical_configs():
     from scripts import config
     from scripts.audit.config import get_level_config
     from scripts.pipeline.config_tables import get_activity_config, get_track_skill
 
-    assert base_level("a1-v2") == "a1"
-    assert get_activity_config("a1-v2", 8) == get_activity_config("a1", 8)
-    assert get_activity_config("a1-v2", 15) == get_activity_config("a1", 15)
-    assert get_track_skill("a1-v2", 8) == get_track_skill("a1", 8)
-    assert get_level_config("A1-V2", "grammar") == get_level_config("A1", "grammar")
-    assert config.get_config("a1-v2") == config.get_config("a1")
-    assert config.get_immersion_rule("a1-v2", 8) == config.get_immersion_rule("a1", 8)
+    assert base_level("a1-v1") == "a1"
+    assert get_activity_config("a1-v1", 8) == get_activity_config("a1", 8)
+    assert get_activity_config("a1-v1", 15) == get_activity_config("a1", 15)
+    assert get_track_skill("a1-v1", 8) == get_track_skill("a1", 8)
+    assert get_level_config("A1-V1", "grammar") == get_level_config("A1", "grammar")
+    assert config.get_config("a1-v1") == config.get_config("a1")
+    assert config.get_immersion_rule("a1-v1", 8) == config.get_immersion_rule("a1", 8)
     from scripts.manifest_utils import get_module_by_slug
 
-    # Existing slug-only callers must keep resolving the live original.
+    # With no published upgrades, slug-only lookup resolves the archived module.
     original = get_module_by_slug("things-have-gender")
-    assert original.level == "a1"
+    assert original.level == "a1-v1"
     assert original.local_num == 8
 
 
@@ -178,5 +183,5 @@ def test_upgrade_cli_real_subprocess(tmp_path):
     )
     assert result.returncode == 0, result.stdout + result.stderr
     events = [json.loads(line) for line in result.stdout.splitlines() if line.startswith("{")]
-    assert events and all(e["mode"] == "upgrade" for e in events)
+    assert events and all(e["mode"] == "upgrade" and e["level"] == "a1" for e in events)
     assert events[-1]["writer_invoked"] is False

@@ -32,7 +32,7 @@ def test_gold_assembler(gold, tmp_path):
         assert yaml.safe_load(mdx.split("---", 2)[1])["draft"] is False
         assert mdx.count("<TabItem ") == 4
         assert 'aria-label="Lesson navigation"' in mdx
-        assert f"/a1-v2/things-have-gender/{n}/" in pages["index"]
+        assert f"/a1/things-have-gender/{n}/" in pages["index"]
     assert "<DialogueBox\n" in pages["1"]
     assert "<OddOneOut " in "".join(pages.values())
     manifest = yaml.safe_load(pages["index"].split("---", 2)[1])
@@ -92,7 +92,7 @@ def test_gold_activity_payloads_and_render(gold, tmp_path):
             assert f'<span id="{anchor}">' in mdx
 
 
-def test_parallel_site_routes_and_frontmatter_groups(gold, tmp_path):
+def test_canonical_site_routes_and_frontmatter_groups(gold, tmp_path):
     """Execute the actual Astro route function and group builder with content entries."""
     import json
     import subprocess
@@ -115,27 +115,28 @@ const selected = tree.statements.filter(statement => {
  }
  return false;
 }).map(statement => statement.getText(tree)).join('\n').replace('export async function', 'async function');
-const compiled = ts.transpileModule(selected, {compilerOptions: {target: ts.ScriptTarget.ES2022}}).outputText;
+const helper = fs.readFileSync('site/src/lib/a1-archive-routes.ts', 'utf8').replace('export function', 'function');
+const compiled = ts.transpileModule(helper + '\n' + selected, {compilerOptions: {target: ts.ScriptTarget.ES2022}}).outputText;
 const docs = JSON.parse(fs.readFileSync(0, 'utf8'));
 const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-new AsyncFunction('getCollection', 'moduleCount', compiled + '\nreturn {routes: await getStaticPaths(), groups: plannedModuleGroups("a1-v2", TRACKS["a1-v2"]), visible: [...deployedDocsByTrack.keys()]};')(
+new AsyncFunction('getCollection', 'moduleCount', compiled + '\nreturn {routes: await getStaticPaths(), groups: plannedModuleGroups("a1", TRACKS["a1"]), visible: [...deployedDocsByTrack.keys()]};')(
  async name => name === 'docs' ? docs : [], () => 0
 ).then(result => process.stdout.write(JSON.stringify(result))).catch(error => {console.error(error); process.exitCode = 1;});
 '''
     module, plan = gold
     pages = assemble_lessons(module, tmp_path / "site", plan)
-    docs = [{"id": "a1/things-have-gender", "data": {"title": "Original", "sidebar": {"order": 7}}}]
-    docs.extend({"id": f"a1-v2/things-have-gender/{name}", "data": yaml.safe_load(mdx.split("---", 2)[1])}
+    docs = [{"id": "a1-v1/things-have-gender", "data": {"title": "Original", "sidebar": {"order": 7}}}]
+    docs.extend({"id": f"a1/things-have-gender/{name}", "data": yaml.safe_load(mdx.split("---", 2)[1])}
                 for name, mdx in pages.items())
-    docs.append({"id": "a1-v2/draft/index", "data": {"title": "Draft", "draft": True, "lessons": []}})
+    docs.append({"id": "a1/draft/index", "data": {"title": "Draft", "draft": True, "lessons": []}})
     result = json.loads(subprocess.check_output(["node", "-e", probe], input=json.dumps(docs), text=True))
     routes = {route["params"]["slug"] for route in result["routes"]}
     assert {
-        "a1", "a1/things-have-gender", "a1-v2", "a1-v2/things-have-gender",
-        "a1-v2/things-have-gender/1", "a1-v2/things-have-gender/2", "a1-v2/things-have-gender/3",
+        "a1-v1", "a1-v1/things-have-gender", "a1", "a1/things-have-gender",
+        "a1/things-have-gender/1", "a1/things-have-gender/2", "a1/things-have-gender/3",
     } <= routes
-    assert "a1-v2/draft" not in routes
-    assert "a1-v2" in result["visible"]
+    assert "a1/draft" not in routes
+    assert "a1" in result["visible"]
     modules = result["groups"][0]["items"]
     assert len(modules) == 1
     assert modules[0]["slug"] == "things-have-gender"
@@ -149,6 +150,6 @@ def test_custom_artifact_directory_keeps_plan_slug(gold, tmp_path):
     custom = tmp_path / "custom-writer-output"
     shutil.copytree(module, custom)
     pages = assemble_lessons(custom, tmp_path / "custom-site-output", plan)
-    assert "/a1-v2/things-have-gender/1/" in pages["index"]
-    assert "/a1-v2/things-have-gender/2/" in pages["1"]
-    assert "/a1-v2/custom-writer-output/" not in "".join(pages.values())
+    assert "/a1/things-have-gender/1/" in pages["index"]
+    assert "/a1/things-have-gender/2/" in pages["1"]
+    assert "/a1/custom-writer-output/" not in "".join(pages.values())

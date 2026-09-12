@@ -63,7 +63,7 @@ def _frontmatter(mdx: str, **extra: object) -> str:
 def assemble_lessons(module_dir: Path, output_dir: Path, plan_path: Path, *, validated: bool = True) -> dict[str, str]:
     """Emit index.mdx and numbered pages; vocabulary accumulates by first use.
 
-    ``output_dir`` is the module directory under the parallel site level. Source
+    ``output_dir`` is the module directory under the canonical site level. Source
     artifacts remain in ``module_dir/lesson-N``; no source content is rewritten.
     """
     manifest = yaml.safe_load((module_dir / "lessons.yaml").read_text(encoding="utf-8"))
@@ -75,7 +75,7 @@ def assemble_lessons(module_dir: Path, output_dir: Path, plan_path: Path, *, val
     slug = plan.get("slug")
     if not isinstance(slug, str) or not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", slug):
         raise ValueError("Plan slug must be a lowercase URL slug")
-    level = "a1-v2"
+    level = "a1"
     base = f"/{level}/{slug}/"
     pages: dict[str, str] = {}
     vocabulary: dict[str, dict] = {}

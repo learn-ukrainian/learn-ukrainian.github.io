@@ -22,7 +22,9 @@ A free, source-grounded **L2 escalator from zero-Ukrainian to the Ukrainian inte
 
 Upgrades publish a module landing at `site/src/content/docs/{level}/{slug}/index.mdx`
 and one page per lesson at `{slug}/{n}.mdx`, each with exactly four `<TabItem>`
-children in this order. The first parallel level is `a1-v2`; live A1 stays untouched.
+children in this order. Upgraded lessons use canonical `a1`; the old built edition is archived as
+`a1-v1` without rebuilding. Plans stay in `plans/a1/`; merge/deploy require
+separate authorization.
 The landing aggregates objectives, lesson cards and linked vocabulary/practice/resources.
 V7 `--upgrade` preserves and expands existing artifacts using a deterministic map;
 no wiki packet or plan rewrite. Existing unsplit V7 modules retain their single page.

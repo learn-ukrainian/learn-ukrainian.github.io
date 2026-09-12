@@ -68,7 +68,7 @@ is the single source of truth for membership (auditor:
 | open-model-data | #6321, #7423 (#6321 succeeds closed #6164 and #6056) | Build the source-derived Cyrillic-Slavic Ukrainian dataset under #7423 on the completed Foundry engine. Community usefulness is primary; adoption is secondary evidence, not a gate. Every shipped artifact names a concrete consumer decision/use case. Current truth: #7423 is the active dataset-delivery epic; #6375/Cycle007 is completed historical evaluation evidence only; #6333 remains historical `ENGINE_READY` evidence; Phase 4 remains blocked. |
 | core-quality | #4274 | Deterministic track audits + remediation (A1–B2) |
 | curriculum-upgrade | #7994 | Curriculum upgrade machinery: pipeline upgrade mode, lessons.yaml, per-lesson gates, MDX assembler |
-| a1-upgrade | #7995 | A1 content rollout: 55 modules into 60-minute lessons under parallel a1-v2 |
+| a1-upgrade | #7995 | A1 content rollout: 55 modules into 60-minute lessons under canonical a1 |
 | seminars-folk | #2836 | FOLK re-research + rebuild |
 | seminars-bio | #4431, #4215 | BIO readiness + builds |
 | seminars-cross | #3120, #3079 | Cross-seminar gates |

@@ -11,24 +11,25 @@ from scripts.validate import validate_plan_ordering as validator
 
 def test_legacy_ci_entry_point_validates_parallel_level():
     result = subprocess.run(
-        [sys.executable, str(validator.PROJECT_ROOT / "scripts/validate_plan_ordering.py"), "a1-v2"],
+        [sys.executable, str(validator.PROJECT_ROOT / "scripts/validate_plan_ordering.py"), "a1-v1"],
         cwd=validator.PROJECT_ROOT, capture_output=True, text=True, check=False,
     )
     assert result.returncode == 0, result.stdout + result.stderr
-    assert "All 1 modules verified — no issues found" in result.stdout
+    assert "All 55 modules verified — no issues found" in result.stdout
 
 
 def test_parallel_level_validates_real_base_plan(monkeypatch, capsys):
     curriculum = validator.load_curriculum()
-    parallel = curriculum["a1-v2"]
+    parallel = curriculum["a1-v1"]
     assert parallel.base_level == "a1"
-    assert parallel.modules == ["things-have-gender"]
+    assert len(parallel.modules) == 55
+    assert parallel.modules[7] == "things-have-gender"
     plan = validator.PLANS_DIR / "a1" / "things-have-gender.yaml"
     before = plan.read_bytes()
-    monkeypatch.setattr("sys.argv", ["validate_plan_ordering.py", "a1-v2", "--fix"])
+    monkeypatch.setattr("sys.argv", ["validate_plan_ordering.py", "a1-v1", "--fix"])
 
     assert validator.main() == 0
-    assert "All 1 modules verified — no issues found" in capsys.readouterr().out
+    assert "All 55 modules verified — no issues found" in capsys.readouterr().out
     assert plan.read_bytes() == before
 
 
@@ -113,3 +114,39 @@ def test_level_variants_remain_independent_between_plans(tmp_path, monkeypatch, 
 
     assert issues == []
     assert fixes == 0
+
+
+def test_canonical_publication_subset_preserves_complete_plan_validation(monkeypatch, capsys):
+    curriculum = validator.load_curriculum()
+    canonical = curriculum["a1"]
+    assert canonical.base_level is None
+    assert canonical.modules == []
+    assert canonical.plan_modules == curriculum["a1-v1"].modules
+    plans = {p: p.read_bytes() for p in (validator.PLANS_DIR / "a1").glob("*.yaml")}
+    canonical.modules = ["things-have-gender"]
+    monkeypatch.setattr(validator, "load_curriculum", lambda: curriculum)
+    monkeypatch.setattr("sys.argv", ["validate_plan_ordering.py", "a1", "--fix"])
+    assert validator.main() == 0
+    output = capsys.readouterr().out
+    assert "Plan inventory: 55 unchanged plans in plans/a1" in output
+    assert "TOTAL: 0 errors, 0 warnings" in output
+    assert all(p.read_bytes() == contents for p, contents in plans.items())
+
+
+def test_canonical_subset_still_checks_unpublished_plan_metadata(tmp_path, monkeypatch, capsys):
+    plans = tmp_path / "a1"
+    plans.mkdir()
+    (plans / "first.yaml").write_text("slug: first\nlevel: A1\nsequence: 99\n")
+    monkeypatch.setattr(validator, "PLANS_DIR", tmp_path)
+    monkeypatch.setattr(validator, "load_curriculum", lambda: {
+        "a1": validator.CurriculumLevel([], plan_modules=["first"]),
+    })
+    monkeypatch.setattr("sys.argv", ["validate_plan_ordering.py", "a1"])
+    assert validator.main() == 1
+    assert "sequence=99, expected=1" in capsys.readouterr().out
+
+
+def test_retired_alias_is_rejected(monkeypatch, capsys):
+    monkeypatch.setattr("sys.argv", ["validate_plan_ordering.py", "a1-v2"])
+    assert validator.main() == 1
+    assert "not found in curriculum.yaml" in capsys.readouterr().out

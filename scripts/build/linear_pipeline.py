@@ -1664,8 +1664,11 @@ def _build_dictionary_context(
         return ""
 
     try:
+        from importlib import import_module
+
         from scripts.verification import vesum as vesum_lookup
-        from wiki import sources_db
+
+        sources_db = import_module("wiki.sources_db")
     except Exception as exc:
         return f"## Dictionary context\n\n*Dictionary context unavailable: {type(exc).__name__}: {exc}*"
 

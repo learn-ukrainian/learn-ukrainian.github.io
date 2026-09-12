@@ -5,6 +5,7 @@ import LevelLanding from '../components/LevelLanding';
 import ChromeText from '../components/chrome/ChromeText.astro';
 import { CHROME_STRINGS } from '../lib/i18n/chrome';
 import { isPublishedReading } from '../lib/readings';
+import { archiveBookmarkPaths } from '../lib/a1-archive-routes';
 import curriculumStats from '../data/curriculum-stats.json';
 import lexiconSearchIndex from '../data/lexicon-search-index.json';
 
@@ -50,27 +51,27 @@ const moduleCount = (id: string) => {
 };
 
 const TRACKS: Record<string, TrackOverview> = {
-  a1: {
-    label: 'A1',
+  'a1-v1': {
+    label: 'A1-v1',
     title: 'Перші кроки · First Steps',
-    eyebrow: 'A1 course',
+    eyebrow: 'Previous A1 edition',
     subtitle: 'Beginner Ukrainian for sounds, reading, first conversations, everyday needs, and the A1 finale.',
-    status: 'Released beginner course',
+    status: 'Archived beginner course',
     family: 'core',
     state: 'released',
     heroVariant: 'core',
-    primaryAction: { href: '/a1/sounds-letters-and-hello/', label: 'Start Module 1' },
+    primaryAction: { href: '/a1-v1/sounds-letters-and-hello/', label: 'Start Module 1' },
     secondaryAction: { href: '/lexicon/', label: 'Open Word Atlas' },
     points: [
-      'A1 is the released public beginner track and the first course learners should use today.',
+      'The previous A1 edition remains available here during the lesson rollout.',
       'Lessons keep Ukrainian first with English support where it helps beginners move.',
       'Self-study is supported, but trained native Ukrainian teachers are still the best path.',
     ],
     pattern: ['tabs', 'dialogue', 'rule cards', 'vocabulary', 'workbook practice', 'prev/next'],
   },
-  'a1-v2': {
-    label: 'A1-v2', title: 'A1 · 60-minute lessons', eyebrow: 'Parallel A1 preview',
-    subtitle: 'Expanded lessons grouped under module landings.', status: 'Preview',
+  a1: {
+    label: 'A1', title: 'A1 · 60-minute lessons', eyebrow: 'A1 course',
+    subtitle: 'Expanded lessons grouped under module landings.', status: 'Lesson rollout',
     family: 'core', state: 'test', heroVariant: 'core', points: [], pattern: ['lessons', 'four tabs'],
   },
   a2: {
@@ -283,13 +284,13 @@ const TRACKS: Record<string, TrackOverview> = {
   },
 };
 
-const HIDDEN_DOCS = new Set(['a1/review-clears-needs-human']);
+const HIDDEN_DOCS = new Set(['a1-v1/review-clears-needs-human']);
 // Folk un-hidden 2026-06-19: 6 modules are e2e-certified and folk is already
 // public (astro.config hiddenPublicPaths=[]); this completes the nav un-hide so
 // folk module pages get their left sidebar + breadcrumbs + search (reverses #3027 —
 // coordinate with orchestrator on the launch posture).
 const HIDDEN_LINK_TRACKS = new Set<string>();
-const SEARCH_LESSON_PREFIXES = new Set(['a1', 'a1-v2', 'a2']);
+const SEARCH_LESSON_PREFIXES = new Set(['a1', 'a1-v1', 'a2']);
 const normalizeId = (id: string) => id.replace(/\.mdx?$/, '').replace(/\/index$/, '');
 const hrefFromRoute = (route: string) => `/${route}/`;
 const trackIds = Object.keys(TRACKS);
@@ -369,9 +370,9 @@ const searchItems: SearchItem[] = [
 
 export async function getStaticPaths() {
   const normalizeDocId = (id: string) => id.replace(/\.mdx?$/, '').replace(/\/index$/, '');
-  const publicLessonPrefixes = new Set(['a1', 'a1-v2', 'a2', 'b1', 'b2', 'bio', 'folk']);
-  const hiddenDocs = new Set(['a1/review-clears-needs-human']);
-  const configuredTracks = ['a1', 'a1-v2', 'a2', 'b1', 'b2', 'c1', 'c2', 'folk', 'bio', 'hist', 'istorio', 'lit', 'oes', 'ruth'];
+  const publicLessonPrefixes = new Set(['a1', 'a1-v1', 'a2', 'b1', 'b2', 'bio', 'folk']);
+  const hiddenDocs = new Set(['a1-v1/review-clears-needs-human']);
+  const configuredTracks = ['a1', 'a1-v1', 'a2', 'b1', 'b2', 'c1', 'c2', 'folk', 'bio', 'hist', 'istorio', 'lit', 'oes', 'ruth'];
   const pathDocs = await getCollection('docs');
   const landingDocsByPathTrack = new Map<string, DocsEntry>();
   const docs = pathDocs.filter((entry) => {
@@ -398,6 +399,9 @@ export async function getStaticPaths() {
     { params: { slug: 'search' }, props: { kind: 'search' } },
     { params: { slug: 'missing-content' }, props: { kind: 'state', state: 'missing-content' } },
     { params: { slug: 'empty-reference' }, props: { kind: 'state', state: 'empty-reference' } },
+    ...archiveBookmarkPaths(docs).map(({ slug, entry }) => ({
+      params: { slug }, props: { kind: 'doc', entry },
+    })),
     ...docs.map((entry) => ({
       params: { slug: normalizeDocId(entry.id) },
       props: { kind: 'doc', entry },
@@ -564,7 +568,7 @@ const sidebar = props.kind === 'doc'
   : undefined;
 
 const plannedModuleGroups = (track: string, trackOverview: TrackOverview) => {
-  if (track === 'a1-v2') {
+  if (track === 'a1') {
     return [{
       unit: trackOverview.title,
       items: (deployedDocsByTrack.get(track) ?? [])
@@ -610,16 +614,19 @@ const plannedModuleGroups = (track: string, trackOverview: TrackOverview) => {
   {props.kind === 'landingDoc' && Content ? (
     <Content />
   ) : props.kind === 'track' && pageTrack ? (
+    <>
+    {props.track === 'a1' && <p><a href="/a1-v1/">Study the previous A1 edition (55 modules)</a></p>}
     <LevelLanding
       client:load
       level={pageTrack.label.toUpperCase()}
       title={pageTrack.title}
       subtitle={pageTrack.subtitle}
-      moduleCount={moduleCount(props.track)}
+      moduleCount={props.track === 'a1' ? plannedModuleGroups(props.track, pageTrack)[0].items.length : moduleCount(props.track)}
       wordTarget={4000}
-      color={`var(--lu-id-${props.track === 'a1-v2' ? 'a1' : props.track})`}
+      color={`var(--lu-id-${props.track === 'a1-v1' ? 'a1' : props.track})`}
       modules={plannedModuleGroups(props.track, pageTrack)}
     />
+    </>
   ) : props.kind === 'search' ? (
     <section class="search-page" data-search-root>
       <form class="search-panel" role="search">
