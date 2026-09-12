@@ -399,39 +399,86 @@ def _has_textbooks_fts(conn: sqlite3.Connection) -> bool:
         return False
 
 
-COMMON_ABBREVS = (
-    "тис.", "млн.", "млрд.", "р.", "ст.", "с.", "ім.", "див.", "напр.", "грн.",
-    "проф.", "акад.", "вул.", "буд.", "табл.", "мал.", "рис.", "руб.", "коп."
-)
 LAYOUT_GLYPH_CHARS = set("•■♦★▲▼►◄*#_~|(){}[]/\\@$§%^&=+`")
+
+ABBR_INLINE_PAT = re.compile(
+    r"\b(?P<abbr>тис|млн|млрд|грн|коп|руб|р|рр|ст|див|напр|табл|мал|рис|буд|кв|куб)\.\s*(?=[а-яіїєґa-z\d,;:–—\)\/])"
+)
+TITLE_INLINE_PAT = re.compile(
+    r"\b(?P<title>ім|вул|просп|пров|пл|м|с|смт|оз|проф|акад|доц|ген|св|д-р)\.\s+(?=[А-ЯІЇЄҐ])"
+)
+INITIALS_PAT = re.compile(
+    r"\b(?P<init>[А-ЯІЇЄҐ])\.\s*(?=[А-ЯІЇЄҐ]\.|\b[А-ЯІЇЄҐ][а-яіїєґ]+)"
+)
+TITLE_EXEMPTIONS = {
+    "ім", "вул", "просп", "пров", "пл", "м", "с", "смт", "оз", "проф", "акад", "доц", "ген", "св", "д-р"
+}
+
+
+def has_internal_sentence_boundary(s: str) -> bool:
+    """Detect if a string contains an internal sentence boundary (multiple sentences)."""
+    for m in re.finditer(r"(\b[А-Яа-яЇїІіЄєҐґ]+[.!?])\s+([А-ЯІЇЄҐ«\"])", s):
+        full_word = m.group(1)[:-1]
+        w = full_word.lower()
+        if len(full_word) == 1 and full_word.isupper():
+            continue
+        if w in TITLE_EXEMPTIONS:
+            continue
+        return True
+    return False
+
+
+def check_quote_quality(quote: str) -> str | None:
+    """Validate that an extracted citation quote is a single, structurally sound sentence."""
+    if has_internal_sentence_boundary(quote):
+        return "multi-sentence run-on"
+    if re.search(r"\b[хx]\b", quote):
+        return "isolated multiplication/variable symbol"
+    if re.search(r"\b([А-Яа-яЇїІіЄєҐґ]{2,})\s+\1\b", quote):
+        return "repeated adjacent word"
+    if re.search(r"(?:\b\d+\b\s+){3,}\b\d+\b", quote):
+        return "digit run artifact"
+    if re.search(r"\b(?:Рис|Мал|Табл)\.\s*$", quote):
+        return "figure caption remnant"
+    words = quote.split()
+    if len(words) > 0 and quote.count(",") / len(words) > 0.30:
+        return "excessive comma density (exercise list artifact)"
+    return None
 
 
 
 def extract_clean_sentence_candidates(text: str, phrase: str) -> list[str]:
     """Extract clean, well-formed pedagogical sentence candidates for a target phrase."""
-    text = text.replace("\u00ad", "")
+    # Strip soft-hyphens along with any trailing whitespace (e.g. го- лос- ні- ше -> голосніше)
+    text = re.sub(r"\u00ad\s*", "", text)
     text = re.sub(r"[\u00A0\u2000-\u200B\u202F\u205F\u3000]", " ", text)
     # Rejoin line-broken hyphenated words: про- сторі -> просторі
+    text = re.sub(r"(\b[А-Яа-яЇїІіЄєҐґ]+)-\s*\n\s*([а-яіїєґ]+\b)", r"\1\2", text)
     text = re.sub(r"(\b[А-Яа-яЇїІіЄєҐґ]+)-\s+([а-яіїєґ]+\b)", r"\1\2", text)
 
-    text = re.sub(r"(?<!\n)\n(?!\n)", " ", text)
-    paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
+    phrase_pat = re.compile(r"\b" + re.escape(phrase) + r"\b", re.IGNORECASE)
 
+    paragraphs = [p.strip() for p in re.split(r"\n{2,}", text) if p.strip()]
     candidates: list[str] = []
 
     for p in paragraphs:
-        if phrase.lower() not in p.lower():
+        if not phrase_pat.search(p):
             continue
 
-        # Temporarily mask abbreviation periods so they aren't split
-        masked_p = p
-        for ab in COMMON_ABBREVS:
-            masked_p = masked_p.replace(ab, ab.replace(".", "§DOT§"))
+        lines = [line.strip() for line in p.split("\n") if line.strip()]
+        p_norm = " ".join(lines)
 
-        raw_sentences = re.split(r"[.!?]\s+", masked_p)
+        # Contextual masking of intra-sentence abbreviations
+        masked = ABBR_INLINE_PAT.sub(r"\g<abbr>§DOT§ ", p_norm)
+        masked = TITLE_INLINE_PAT.sub(r"\g<title>§DOT§ ", masked)
+        masked = INITIALS_PAT.sub(r"\g<init>§DOT§ ", masked)
+
+        # Split on sentence boundaries: [.!?] followed by whitespace
+        raw_sentences = [s.strip() for s in re.split(r"(?<=[.!?])\s+", masked) if s.strip()]
+
         for s in raw_sentences:
             s = s.replace("§DOT§", ".").strip()
-            if phrase.lower() not in s.lower():
+            if not phrase_pat.search(s):
                 continue
 
             # Strip leading numbers, bullets, list markers, dashes
@@ -444,13 +491,17 @@ def extract_clean_sentence_candidates(text: str, phrase: str) -> list[str]:
                 flags=re.IGNORECASE,
             ).strip()
 
-            if phrase.lower() not in s.lower():
+            if not phrase_pat.search(s):
                 continue
 
             s = re.sub(r"\s+", " ", s).strip()
 
             # Sentence length limits
             if len(s) < 20 or len(s) > 200:
+                continue
+
+            words = s.split()
+            if len(words) < 3 or len(words) > 35:
                 continue
 
             # Reject layout glyphs / bullets
@@ -478,8 +529,28 @@ def extract_clean_sentence_candidates(text: str, phrase: str) -> list[str]:
                 else:
                     continue
 
-            words = s.split()
-            if len(words) < 3 or len(words) > 35:
+            # Must NOT contain internal sentence boundary (no multi-sentence run-ons)
+            if has_internal_sentence_boundary(s):
+                continue
+
+            # Must NOT be a comma-separated vocabulary list (exercise word list)
+            if s.count(",") / len(words) > 0.25:
+                continue
+
+            # Must NOT contain isolated math symbols (e.g. 'х' multiplication) or repeated words
+            if re.search(r"\b[хx]\b", s):
+                continue
+            if re.search(r"\b([А-Яа-яЇїІіЄєҐґ]{2,})\s+\1\b", s):
+                continue
+
+            # Reject number-line digit runs (e.g. 9 8 7 6 5)
+            if re.search(r"(?:\b\d+\b\s+){3,}\b\d+\b", s):
+                continue
+            # Reject spaced-out puzzle grids (e.g. Ч А С Н И К)
+            if re.search(r"(?:\b[А-Яа-яЇїІіЄєҐґ]\b\s+){4,}\b[А-Яа-яЇїІіЄєҐґ]\b", s):
+                continue
+            # Reject figure/table caption markers at end
+            if re.search(r"\b(?:Рис|Мал|Табл)\.\s*$", s):
                 continue
 
             # Uppercase letter ratio limit (reject all-caps headings)
@@ -490,6 +561,7 @@ def extract_clean_sentence_candidates(text: str, phrase: str) -> list[str]:
             candidates.append(s)
 
     return candidates
+
 
 
 def find_textbook_attestation(
@@ -512,6 +584,7 @@ def find_textbook_attestation(
         clean_phrase = " ".join(words).lower()
         if len(clean_phrase) < 3:
             return None
+        phrase_pat = re.compile(r"\b" + re.escape(clean_phrase) + r"\b", re.IGNORECASE)
 
         grade_placeholders = ",".join("?" for _ in ALLOWED_GRADES)
         rows: list[Any] = []
@@ -527,13 +600,28 @@ def find_textbook_attestation(
                       AND t.grade IN ({grade_placeholders})
                     ORDER BY CASE WHEN CAST(t.grade AS INTEGER) >= 5 THEN 0 ELSE 1 END,
                              CAST(t.grade AS INTEGER) DESC
-                    LIMIT 25
+                    LIMIT 50
                 """
                 rows = cur.execute(fts_query, (f'"{escaped_phrase}"', *ALLOWED_GRADES)).fetchall()
             except sqlite3.OperationalError:
                 rows = []
-        else:
-            variants = list(dict.fromkeys([clean_phrase, clean_phrase.capitalize(), clean_phrase.title()]))
+
+        if not rows:
+            if len(words) == 1:
+                variants = [
+                    f"% {clean_phrase} %",
+                    f"% {clean_phrase},%",
+                    f"% {clean_phrase}.%",
+                    f"% {clean_phrase}!%",
+                    f"% {clean_phrase}?%",
+                    f"%«{clean_phrase}%",
+                    f"{clean_phrase}%",
+                ]
+                params = variants + list(ALLOWED_GRADES)
+            else:
+                variants = list(dict.fromkeys([clean_phrase, clean_phrase.capitalize(), clean_phrase.title()]))
+                params = [f"%{v}%" for v in variants] + list(ALLOWED_GRADES)
+
             like_clauses = " OR ".join("text LIKE ?" for _ in variants)
             query = f"""
                 SELECT title, grade, subject, author, text, source_file
@@ -542,9 +630,8 @@ def find_textbook_attestation(
                   AND grade IN ({grade_placeholders})
                 ORDER BY CASE WHEN CAST(grade AS INTEGER) >= 5 THEN 0 ELSE 1 END,
                          CAST(grade AS INTEGER) DESC
-                LIMIT 25
+                LIMIT 50
             """
-            params = [f"%{v}%" for v in variants] + list(ALLOWED_GRADES)
             rows = cur.execute(query, params).fetchall()
 
         best_candidate: dict[str, Any] | None = None
@@ -563,7 +650,7 @@ def find_textbook_attestation(
             if "відомості про стан підручника" in text_lower or "навчальне видання" in text_lower:
                 continue
 
-            if clean_phrase not in text_lower:
+            if not phrase_pat.search(text_lower):
                 continue
 
             cands = extract_clean_sentence_candidates(text, clean_phrase)
@@ -1134,8 +1221,16 @@ def scan_generated_files(file_paths: list[Path]) -> tuple[bool, bool, list[str]]
                 # Check for number-line digit runs (e.g. 1 2 3 4 5)
                 if re.search(r"(?:\b\d+\b\s+){4,}\b\d+\b", line):
                     violations.append(f"{fp.name}:{line_no}: digit-run artifact: {line[:80]}...")
+                # Check for defective / run-on citation quotes
+                m_quote = re.search(r"цитата:\s*«([^»]+)»", line)
+                if m_quote:
+                    q = m_quote.group(1)
+                    err = check_quote_quality(q)
+                    if err:
+                        violations.append(f"{fp.name}:{line_no}: defective citation quote ({err}): {q[:80]}...")
 
     return not has_private_paths, not has_restricted_sources, violations
+
 
 
 def get_partition_for_term(term: str, train_ratio: float = 0.8) -> str:

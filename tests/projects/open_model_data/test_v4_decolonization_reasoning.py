@@ -228,6 +228,25 @@ def test_scan_generated_files_detects_violations(tmp_path: Path) -> None:
     assert zero_r is False
     assert len(viols) > 0
 
+    # Defect test 3: Multi-sentence run-on citation
+    runon_file = tmp_path / "runon.jsonl"
+    runon_file.write_text(
+        '{"chosen": "цитата: «Розпочалася 2014 р. Цю дату вважають початком.»"}\n',
+        encoding="utf-8",
+    )
+    _, _, viols = scan_generated_files([runon_file])
+    assert any("multi-sentence run-on" in v for v in viols)
+
+    # Defect test 4: Math/multiplication table fragment citation
+    math_file = tmp_path / "math_frag.jsonl"
+    math_file.write_text(
+        '{"chosen": "цитата: «років х ісяів х грн грн. амбітний план.»"}\n',
+        encoding="utf-8",
+    )
+    _, _, viols = scan_generated_files([math_file])
+    assert any("isolated multiplication" in v or "repeated adjacent word" in v for v in viols)
+
+
 
 def test_generate_pipeline_mock(
     tmp_path: Path,
