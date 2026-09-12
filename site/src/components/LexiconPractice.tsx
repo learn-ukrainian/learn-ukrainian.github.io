@@ -3330,6 +3330,7 @@ function LexiconPracticeIsland({
       setSessionPlan(plan);
     } else {
       sessionStartedAtRef.current = Date.now();
+      committedSelectionRef.current = null;
       setSessionSeed(nextSeed);
       setHistory(seededHistory);
       resetSessionTracking(plan, budget);
@@ -3364,6 +3365,7 @@ function LexiconPracticeIsland({
     focus: WeakArea | null = null,
     overrides?: { level?: CefrLevel; deckFilter?: string },
   ) {
+    committedSelectionRef.current = null;
     clearResumeSnapshot(nextMode);
     await beginSession(nextMode, budget, undefined, focus, overrides);
   }
@@ -3391,6 +3393,7 @@ function LexiconPracticeIsland({
    * modal — sessions are cheap) and seeds a brand-new session for it instead.
    */
   async function restartMixedSession() {
+    committedSelectionRef.current = null;
     clearResumeSnapshots();
     setFocusWeakness(null);
     await startSession(sessionBudget, 'mixed');
