@@ -1,0 +1,65 @@
+{
+  "schema_version": "v1_decolonization_mined_candidates",
+  "issue": 8006,
+  "parent_epic": 6321,
+  "generated_at": "2026-09-13T11:15:02.493575+00:00",
+  "files": {
+    "corpus_contrast_tables": {
+      "filename": "corpus_contrast_tables.jsonl",
+      "record_count": 435,
+      "sha256": "2f7d123cf16c8b9eb480a40fd9beaacfd3fb4f3905e07a4d79482e4edca9b9b1",
+      "description": "Human-authored contrast tables (НЕПРАВИЛЬНО -> ПРАВИЛЬНО, ❌ -> ✅) from textbooks."
+    },
+    "zno_distractor_tasks": {
+      "filename": "zno_distractor_tasks.jsonl",
+      "record_count": 1646,
+      "sha256": "eee5cf3706eba2fecbb9cb3bf983657b593690a250316e455688c9369506f062",
+      "description": "1,646 official ZNO/NMT exam tasks with verified stems, distractors, and keys."
+    },
+    "uagec_mined_calques": {
+      "filename": "uagec_mined_calques.jsonl",
+      "record_count": 2190,
+      "sha256": "55b082855480f30393972c5476c9cf0e33292f183e7ecb0a65df3a1956556492",
+      "description": "Human error contexts from UA-GEC (F/Calque, F/Collocation, and capped G/Case)."
+    }
+  },
+  "corpus_contrast_tables_summary": {
+    "total_contrast_pairs": 435,
+    "unique_chunks_mined": 116,
+    "top_authors": {
+      "Авраменко": 209,
+      "Глазова": 116,
+      "Заболотний": 109,
+      "Голуб": 1
+    }
+  },
+  "zno_tasks_summary": {
+    "total_zno_tasks": 1646,
+    "lexical_norm_tasks": 93,
+    "syntactic_norm_tasks": 285,
+    "topic_distribution": {
+      "literature": 574,
+      "phonetic": 33,
+      "orthoepic_norm": 29,
+      "orthographic_norm": 169,
+      "word_formation": 24,
+      "lexical_norm": 93,
+      "syntactic_norm": 285,
+      "morphological_norm": 206,
+      "text": 170,
+      "phraseology": 31,
+      "other": 6,
+      "general": 26
+    }
+  },
+  "uagec_mining_summary": {
+    "total_calque_collocation_available": 2856,
+    "calque_count": 2397,
+    "collocation_count": 459,
+    "protected_test_split_excluded": 1159,
+    "train_calque_collocation_extracted": 1697,
+    "g_case_total": 5024,
+    "g_case_admitted": 493,
+    "g_case_admitted_ratio": 0.22511415525114156
+  }
+}
