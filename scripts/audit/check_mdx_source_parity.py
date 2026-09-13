@@ -181,7 +181,7 @@ def check_parity(mdx_files: list[Path], changed_files: set[Path], base: str | No
             continue
 
         level = parts[0]
-        slug = rel_path.stem
+        slug = parts[1] if len(parts) >= 3 else rel_path.stem
 
         if len(parts) == 2 and slug == "index":
             continue

@@ -1,0 +1,117 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 7.5,
+      "evidence": "\"Літвінова, 6 клас — с. 129 «§ 25. Рід іменників»\"",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "Use **У мене́ є...** from the family module with objects.",
+        "**Моя́ соба́ка га́рна.** | **Мій соба́ка га́рний.**",
+        "Літвінова, 6 клас — с. 129 «§ 25. Рід іменників»"
+      ],
+      "rubric_mapping": "Module type = topic-neutral A1 grammar (noun gender). Quote 1 (Lesson 2) is residual evidence FOR pedagogical: the module is student-aware and cumulative — it explicitly reuses the already-taught 'У мене́ є' frame from the family module rather than re-deriving it, and each lesson opens by naming what the prior lessons built ('У пе́рших двох уро́ках ви опанува́ли...'), so the sequence BUILDS instead of repeating (Audit I signposting satisfied). Quote 2 (Lesson 3 traps table) is strong residual...",
+      "flags": [
+        "out_of_level_textbook"
+      ],
+      "issue_ids": [
+        "LEARNER_FACING_TYPO",
+        "OUT_OF_LEVEL_TEXTBOOK"
+      ],
+      "findings": [
+        {
+          "issue_id": "OUT_OF_LEVEL_TEXTBOOK",
+          "severity": "medium",
+          "quote": "Літвінова, 6 клас — с. 129 «§ 25. Рід іменників»",
+          "replacement": "Cite Grade 1-4 sources for A1 (e.g. the plan's Пономарова Grade 3, p.86 / Вашуленко Grade 3, p.112, or Пономарьова Grade 4) instead of Grade 6 textbooks.",
+          "explanation": "Grade 6 textbook cited in an A1 module; the a1 corpus scope permits only Grades 1-4. The same overshoot repeats across Авраменко 6 клас (Lessons 2 and 3) and Літвінова 6 клас (Lesson 3) — four of the module's citations are two grades above learner level. The underlying content (noun gender, feminitive formation) is correct, but the source register is too advanced for A1; per Audit H this counts as pedagogical evidence-against, not fabrication.",
+          "dimension": "pedagogical"
+        },
+        {
+          "issue_id": "LEARNER_FACING_TYPO",
+          "severity": "low",
+          "quote": "**мій**, **воя́**, or **моє́**",
+          "replacement": "**мій**, **моя́**, or **моє́**",
+          "explanation": "In the Lesson-1 :::tip that first anchors the three possessive forms, 'воя́' is a nonword typo for 'моя́'. The garbled token appears at the precise moment the learner is being taught to store nouns with their possessive cue, so it undermines the clarity of the anchoring move for an A1 reader still decoding Cyrillic.",
+          "dimension": "pedagogical"
+        }
+      ]
+    },
+    "naturalness": {
+      "score": 7.5,
+      "evidence": "\"What\nphrase travels with this noun: **мій**, **воя́**, or **моє́**?\"",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "Приві́т! Диви́сь, це мій стіл.",
+        "Розбі́р розмо́ви по́дано ни́жче",
+        "phrase travels with this noun: **мій**, **воя́**, or **моє́**?"
+      ],
+      "rubric_mapping": "Quote 1 (\"Приві́т! Диви́сь, це мій стіл.\") is evidence FOR: the Марко́/Окса́на dialogue is warm, human, and idiomatic A1 Ukrainian — a real 'look, this is my table' exchange, not a robotic interrogation; native flow and register are correct. Quote 2 (\"Розбі́р розмо́ви по́дано ни́жче\") is evidence FOR: the impersonal -но form (по́дано) is the natural, native Ukrainian construction here, NOT a calqued/evasive passive, showing the writer chose correct impersonal government (residual naturalness...",
+      "flags": [
+        "mcp_verification_unavailable_permission_denied"
+      ],
+      "issue_ids": [
+        "CORRUPTED_UKRAINIAN_FORM"
+      ],
+      "findings": [
+        {
+          "issue_id": "CORRUPTED_UKRAINIAN_FORM",
+          "severity": "major",
+          "quote": "phrase travels with this noun: **мій**, **воя́**, or **моє́**?",
+          "replacement": "phrase travels with this noun: **мій**, **моя́**, or **моє́**?",
+          "explanation": "The feminine possessive is written as *воя́*, a non-existent Ukrainian possessive form; the intended word is моя́ (the module teaches the triad мій/моя/моє everywhere else). A native Ukrainian editor would immediately rewrite this, and because it sits in the Lesson 1 tip that teaches the possessive triad, it directly contradicts and undermines the module's core teaching point.",
+          "dimension": "naturalness"
+        }
+      ]
+    },
+    "decolonization": {
+      "score": 9.3,
+      "evidence": "\"repair the most common A1 gender traps without comparing Ukrainian to any other language.\"",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "repair the most common A1 gender traps without comparing Ukrainian to any other language.",
+        "For father, keep the course words **та́то** and **ба́тько**. Do not replace them with **па́па** in these A1 lines.",
+        "Use the feminine profession as the normal form for a woman:",
+        "trust the Ukrainian gender test, not an instinct from another language.",
+        "Соба́ка is masculine in Ukrainian; memorize мій соба́ка."
+      ],
+      "rubric_mapping": "Module TYPE = topic-neutral (grammar: noun gender). Apply the topic-neutral anchor (9.0+ baseline when (a) canonical vocab, (b) contrast where authorized, (c) grammar on Ukrainian terms with strict anti-Russian-as-reference execution all hold). (a) CANONICAL VOCAB: 'Do not replace them with **па́па** in these A1 lines' is an explicit Russianism rejection keeping the codified pair та́то/ба́тько; room vocabulary (стіл, книга, вікно, кімната, ліжко, дзеркало, стіна, зошит) is fully canonical with..."
+    },
+    "engagement": {
+      "score": 8.5,
+      "evidence": "\"The ending rule is a first guess, not a debate.\"",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "The ending rule is a first guess, not a debate.",
+        "Do not ask whether the speaker is a man or a woman.",
+        "Кла́сно! У тебе́ є стіл?"
+      ],
+      "rubric_mapping": "Residual engagement judgment (deterministic callout-count/META_NARRATION gates already passed): I assess callout pedagogy quality, warmth of tone, whether direct address is content-anchored, and whether dialogue reads human. (1) \"The ending rule is a first guess, not a debate.\" — this :::tip is FOR engagement: the callout carries real, content-anchored pedagogy (it reframes the ending heuristic and tells the learner to store safe phrases like мій та́то whole) rather than filler, exactly the..."
+    },
+    "tone": {
+      "score": 8.8,
+      "evidence": "\"The ending rule is a first guess, not a debate.\"",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Keep the goal small. You are not learning a full adjective or case system.",
+        "The ending rule is a first guess, not a debate.",
+        "For **соба́ка**, just memorize the course phrase **мій соба́ка**. You do not need"
+      ],
+      "rubric_mapping": "Module TYPE for calibration context: topic-neutral A1 grammar (noun gender). For the residual `tone` dim I assess register consistency, warmth, and single-voice discipline (#R-SINGLE-VOICE-A1) plus receding-English audience voice (#R-AUDIENCE-LANGUAGE-A1) — not the META_NARRATION presence the gate already cleared. Quote 1 ('Keep the goal small. You are not learning a full adjective or case system.') is evidence FOR: it is direct second-person peer address that reassures and bounds scope without..."
+    }
+  },
+  "aggregate": {
+    "verdict": "REVISE",
+    "terminal_verdict": "PASS",
+    "failing_dims": [
+      "pedagogical",
+      "naturalness"
+    ],
+    "rejected_dims": [],
+    "warning_dims": [
+      "pedagogical",
+      "naturalness"
+    ],
+    "min_score": 7.5,
+    "min_dim": "pedagogical"
+  }
+}

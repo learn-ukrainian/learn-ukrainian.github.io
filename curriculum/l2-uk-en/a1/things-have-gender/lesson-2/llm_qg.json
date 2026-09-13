@@ -1,0 +1,90 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 8.4,
+      "evidence": "English uses \"it\" for all three. Ukrainian does not. Let the Ukrainian noun choose the pronoun.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "У пе́ршому уро́ці ви навчи́лися перевіря́ти рід: стіл — він, кни́га — вона́, вікно́ — воно́. У цьо́му уро́ці ми перехо́димо до предме́тів навко́ло нас:",
+        "English uses \"it\" for all three. Ukrainian does not. Let the Ukrainian noun choose the pronoun.",
+        "The owner does not decide the form. The noun decides it.",
+        "Літвінова, 6 клас — с. 129 «§ 25. Рід іменників»"
+      ],
+      "rubric_mapping": "Quote 1 (У пе́ршому уро́ці ви навчи́лися...У цьо́му уро́ці ми перехо́димо): FOR — coherent lesson-split progression. Lesson 2 opens by recalling the gender test from lesson 1 (стіл—він, книга—вона, вікно—воно) and explicitly extends it to objects, so the split reads as a continuous escalator, not a standalone fragment, and re-anchors cumulative vocabulary at first use. This is residual judgment the gate cannot make. Quote 2 (English uses \"it\" for all three...): FOR — residual teaching quality....",
+      "flags": [
+        "out_of_level_textbook"
+      ],
+      "issue_ids": [
+        "OUT_OF_LEVEL_TEXTBOOK"
+      ],
+      "findings": [
+        {
+          "issue_id": "OUT_OF_LEVEL_TEXTBOOK",
+          "severity": "minor",
+          "quote": "Літвінова, 6 клас — с. 129 «§ 25. Рід іменників»",
+          "explanation": "Resources cite two Grade 6 textbooks (Літвінова 6 клас and Авраменко 6 клас) in an A1 module; the a1 corpus gate is Grades 1-4 (audit H), so these are above level. The cited sections are topically exact for Рід іменників and, for adult A1 learners, arguably more register-appropriate than the plan's Grade 3 references — and they are resource attributions, not blockquoted children's prose (so #R-NO-CHILDREN-PRIMARY-QUOTES does not fire). In a V7 upgrade with no re-sourcing, this is an inherited...",
+          "dimension": "pedagogical"
+        }
+      ]
+    },
+    "naturalness": {
+      "score": 8.5,
+      "evidence": "\"Присві́йне сло́во узго́джується з ро́дом іме́нника.\"",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Так, у мене́ є стіл і лі́жко.",
+        "Присві́йне сло́во узго́джується з ро́дом іме́нника.",
+        "Знайді́ть одне́ сло́во, яке́ відрізня́ється за грамати́чним ро́дом."
+      ],
+      "rubric_mapping": "Quote 1 (\"Так, у мене́ є стіл і лі́жко.\") — evidence FOR naturalness: the existential/possessive construction uses the correct native government (У + genitive мене́ + є), not the calqued Я маю pattern nor an English-mirrored word order; the dialogue turn reads as spontaneous spoken Ukrainian, not textbook stiffness. Quote 2 (\"Присві́йне сло́во узго́джується з ро́дом іме́нника.\") — evidence FOR: the metalanguage takes the correct native government узгоджуватися з + instrumental (ро́дом), the..."
+    },
+    "decolonization": {
+      "score": 9.2,
+      "evidence": "\"English uses \"it\" for all three. Ukrainian does not.\"",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "English uses \"it\" for all three. Ukrainian does not.",
+        "The owner does not decide the form. The noun decides it.",
+        "- **мій брат**, **мій та́то**, **мій стіл**"
+      ],
+      "rubric_mapping": "Module TYPE = topic-neutral (grammar: noun gender + possessive agreement он/вона/воно). Apply the topic-neutral anchor. Quote 1 (\"English uses \"it\" for all three. Ukrainian does not.\") is evidence FOR: the sole cross-language contrast is anchored to the learner's L1 (English) — the sanctioned A1 scaffold — never to Russian, so Ukrainian is taught on its own terms and satisfies ban-2 (no \"in Ukrainian just like in Russian, but...\"). Quote 2 (\"The owner does not decide the form. The noun decides..."
+    },
+    "engagement": {
+      "score": 8.5,
+      "evidence": "\"The owner does not decide the form. The noun decides it.\"",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "English uses \"it\" for all three. Ukrainian does not. Let the Ukrainian noun\nchoose the pronoun.",
+        "The owner does not decide the form. The noun decides it.",
+        "Оле́нка: Кла́сно! У тебе́ є стіл?"
+      ],
+      "rubric_mapping": "Module TYPE: topic-neutral A1 grammar (noun gender / possessives). Engagement = does the prose HOLD attention (presence of callouts/META_NARRATION already gated). (1) \"English uses \\\"it\\\" for all three. Ukrainian does not. Let the Ukrainian noun choose the pronoun.\" — evidence FOR: a content-anchored direct-address move that names the exact L1→L2 trap the learner will feel, then resolves it with a warm imperative rather than generic filler; this is the kind of specific, attention-holding..."
+    },
+    "tone": {
+      "score": 8.5,
+      "evidence": "\"Let the Ukrainian noun choose the pronoun.\"",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "У пе́ршому уро́ці ви навчи́лися перевіря́ти рід: стіл — він, кни́га — вона́, вікно́ — воно́.",
+        "Let the Ukrainian noun choose the pronoun.",
+        "The owner does not decide the form. The noun decides it."
+      ],
+      "rubric_mapping": "Module type context: A1 topic-neutral grammar lesson, so English scaffolding is expected and not penalized under level calibration. Quote 1 (\"У пе́ршому уро́ці ви навчи́лися перевіря́ти рід...\") is evidence FOR: it opens in Ukrainian-first, warmly signposts the learner's prior knowledge in second person (ви навчи́лися), and uses inclusive teacher framing rather than any third-person 'the student/учня' construction that #R-SINGLE-VOICE-A1 forbids. Quote 2 (\"Let the Ukrainian noun choose the..."
+    }
+  },
+  "aggregate": {
+    "verdict": "REVISE",
+    "terminal_verdict": "PASS",
+    "failing_dims": [
+      "pedagogical",
+      "naturalness"
+    ],
+    "rejected_dims": [],
+    "warning_dims": [
+      "pedagogical",
+      "naturalness"
+    ],
+    "min_score": 8.4,
+    "min_dim": "pedagogical"
+  }
+}

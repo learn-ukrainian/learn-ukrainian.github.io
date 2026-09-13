@@ -1,0 +1,10 @@
+{
+  "mode": "upgrade",
+  "sha256": {
+    "curriculum/l2-uk-en/a1-v1/things-have-gender/module.md": "e7b6d74c6767227586f7058397dd8dd45a9a106b185f9fea7b32f3d2f05bc18e",
+    "curriculum/l2-uk-en/a1-v1/things-have-gender/activities.yaml": "0477b01f2299d315e38c79f7e7ddc9125eccaf14fde1435d0d87a80b5fccbd1e",
+    "curriculum/l2-uk-en/a1-v1/things-have-gender/vocabulary.yaml": "ec6b64f523001386cc63c48ab9aef6dcd9a5e54db702dd23f87b47d2fb87cd0f",
+    "curriculum/l2-uk-en/a1-v1/things-have-gender/resources.yaml": "55dd714d7183bcb86125a743d3da4b088e1a019f0f86ebe8fc0e5c4ef4fc735c",
+    "curriculum/l2-uk-en/plans/a1/things-have-gender.yaml": "8200efb66bea89ca929ffbc1d188b7d44b2a5f2aa6a7f6c3cbb417bbc6ae2cfd"
+  }
+}
