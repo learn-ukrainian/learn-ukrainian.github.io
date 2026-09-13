@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.org/schemas/open_model_data/v1_decolonization_mined_candidates.schema.json",
+  "title": "DecolonizationMinedCandidatesManifest",
+  "description": "Schema contract for ULDR Phase 3.1–3.2 human error & contrast miners (Issue #8006).",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "issue",
+    "parent_epic",
+    "generated_at",
+    "files",
+    "corpus_contrast_tables_summary",
+    "zno_tasks_summary",
+    "uagec_mining_summary"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "v1_decolonization_mined_candidates"
+    },
+    "issue": {
+      "type": "integer",
+      "const": 8006
+    },
+    "parent_epic": {
+      "type": "integer",
+      "const": 6321
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "files": {
+      "type": "object",
+      "required": [
+        "corpus_contrast_tables",
+        "zno_distractor_tasks",
+        "uagec_mined_calques"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "corpus_contrast_tables": {
+          "type": "object",
+          "required": ["filename", "record_count", "sha256", "description"],
+          "properties": {
+            "filename": {"type": "string"},
+            "record_count": {"type": "integer", "minimum": 300},
+            "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+            "description": {"type": "string"}
+          }
+        },
+        "zno_distractor_tasks": {
+          "type": "object",
+          "required": ["filename", "record_count", "sha256", "description"],
+          "properties": {
+            "filename": {"type": "string"},
+            "record_count": {"type": "integer", "const": 1646},
+            "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+            "description": {"type": "string"}
+          }
+        },
+        "uagec_mined_calques": {
+          "type": "object",
+          "required": ["filename", "record_count", "sha256", "description"],
+          "properties": {
+            "filename": {"type": "string"},
+            "record_count": {"type": "integer", "minimum": 2000},
+            "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+            "description": {"type": "string"}
+          }
+        }
+      }
+    },
+    "corpus_contrast_tables_summary": {
+      "type": "object",
+      "required": ["total_contrast_pairs", "unique_chunks_mined", "top_authors"],
+      "properties": {
+        "total_contrast_pairs": {"type": "integer", "minimum": 300},
+        "unique_chunks_mined": {"type": "integer", "minimum": 50},
+        "top_authors": {
+          "type": "object",
+          "additionalProperties": {"type": "integer"}
+        }
+      }
+    },
+    "zno_tasks_summary": {
+      "type": "object",
+      "required": ["total_zno_tasks", "lexical_norm_tasks", "syntactic_norm_tasks", "topic_distribution"],
+      "properties": {
+        "total_zno_tasks": {"type": "integer", "const": 1646},
+        "lexical_norm_tasks": {"type": "integer"},
+        "syntactic_norm_tasks": {"type": "integer"},
+        "topic_distribution": {
+          "type": "object",
+          "additionalProperties": {"type": "integer"}
+        }
+      }
+    },
+    "uagec_mining_summary": {
+      "type": "object",
+      "required": [
+        "total_calque_collocation_available",
+        "calque_count",
+        "collocation_count",
+        "protected_test_split_excluded",
+        "train_calque_collocation_extracted",
+        "g_case_total",
+        "g_case_admitted",
+        "g_case_admitted_ratio"
+      ],
+      "properties": {
+        "total_calque_collocation_available": {"type": "integer", "const": 2856},
+        "calque_count": {"type": "integer", "const": 2397},
+        "collocation_count": {"type": "integer", "const": 459},
+        "protected_test_split_excluded": {"type": "integer", "const": 1159},
+        "train_calque_collocation_extracted": {"type": "integer", "minimum": 2000},
+        "g_case_total": {"type": "integer", "const": 5024},
+        "g_case_admitted": {"type": "integer"},
+        "g_case_admitted_ratio": {"type": "number", "maximum": 0.25}
+      }
+    }
+  },
+  "additionalProperties": false
+}
