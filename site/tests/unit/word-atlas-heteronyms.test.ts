@@ -226,4 +226,63 @@ describe("WordAtlasArticle heteronym support (#8022)", () => {
     const nav = doc.querySelector(".atlas-heteronym-nav");
     expect(nav).toBeNull();
   });
+
+  test("automatically applies curated heteronyms when record.entry.heteronyms is absent from shard (live fallback for город)", () => {
+    // Mimics the live runtime shard for 'город' where record.entry.heteronyms is undefined
+    const liveShardRecord: EntryRecord = {
+      slug: "город",
+      kind: "article",
+      entry: {
+        lemma: "город",
+        url_slug: "город",
+        gloss: "vegetable garden",
+        pos: "noun",
+        heritage_status: {
+          classification: "authentic-archaism",
+        },
+        enrichment: {
+          stress: { form: "го́род" },
+        },
+        sections: {
+          synonyms: { items: ["місто"] },
+        },
+      } as any,
+      aliases: [],
+      relations: [],
+      provenance: [],
+      renderContext: {
+        practiceLevels: [],
+        componentLinks: [],
+      },
+    };
+
+    const html = renderWordAtlasArticle({
+      record: liveShardRecord,
+      generatedAt: "2026-09-13T00:00:00Z",
+      manifestVersion: "1.0",
+    });
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+
+    // Must render the heteronym nav bar
+    const nav = doc.querySelector(".atlas-heteronym-nav");
+    expect(nav).not.toBeNull();
+    const tabs = nav!.querySelectorAll(".atlas-heteronym-tab");
+    expect(tabs.length).toBe(2);
+    expect(tabs[0].textContent).toContain("горо́д");
+    expect(tabs[1].textContent).toContain("го́род");
+
+    // Must render the primary panel with modern standard (A2 vegetable garden)
+    const panel0 = doc.querySelector("#heteronym-panel-0");
+    expect(panel0?.textContent).toContain("горо́д");
+    expect(panel0?.textContent).toContain("vegetable garden");
+    expect(panel0?.textContent).toContain("A2");
+    expect(panel0?.textContent).toContain("грядка");
+
+    // Must render the second panel with archaic city
+    const panel1 = doc.querySelector("#heteronym-panel-1");
+    expect(panel1?.textContent).toContain("го́род");
+    expect(panel1?.textContent).toContain("archaic");
+    expect(panel1?.textContent).toContain("місто");
+  });
 });

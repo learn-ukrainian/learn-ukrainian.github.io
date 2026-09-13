@@ -73,6 +73,108 @@ function bindEtymologyHandlers(root: ParentNode | null): () => void {
   };
 }
 
+function bindHeteronymHandlers(root: ParentNode | null): () => void {
+  if (!root) return () => {};
+  const tabs = root.querySelectorAll<HTMLElement>("[data-heteronym-target]");
+  const panels = root.querySelectorAll<HTMLElement>("[data-heteronym-idx]");
+  const jumpButtons = root.querySelectorAll<HTMLElement>("[data-heteronym-jump]");
+  if (!tabs.length || !panels.length) return () => {};
+
+  const activateTab = (index: number, updateHash = true) => {
+    if (index < 0 || index >= tabs.length) return;
+    tabs.forEach((tab, i) => {
+      const isTarget = i === index;
+      tab.classList.toggle("active", isTarget);
+      tab.setAttribute("aria-selected", isTarget ? "true" : "false");
+      tab.tabIndex = isTarget ? 0 : -1;
+    });
+    panels.forEach((panel, i) => {
+      const isTarget = i === index;
+      panel.style.display = isTarget ? "block" : "none";
+      if (isTarget) {
+        panel.removeAttribute("hidden");
+      } else {
+        panel.setAttribute("hidden", "true");
+      }
+    });
+    const headword = tabs[index]?.getAttribute("data-heteronym-headword");
+    if (updateHash && headword) {
+      history.replaceState(null, "", `#${headword}`);
+    }
+  };
+
+  const listeners: Array<{ el: HTMLElement; event: string; fn: EventListener }> = [];
+
+  tabs.forEach((tab, idx) => {
+    const clickHandler: EventListener = (e) => {
+      e.preventDefault();
+      activateTab(idx, true);
+    };
+    const keyHandler: EventListener = (e) => {
+      const keyboardEvent = e as KeyboardEvent;
+      let targetIdx = -1;
+      if (keyboardEvent.key === "ArrowRight") {
+        targetIdx = (idx + 1) % tabs.length;
+      } else if (keyboardEvent.key === "ArrowLeft") {
+        targetIdx = (idx - 1 + tabs.length) % tabs.length;
+      } else if (keyboardEvent.key === "Home") {
+        targetIdx = 0;
+      } else if (keyboardEvent.key === "End") {
+        targetIdx = tabs.length - 1;
+      }
+      if (targetIdx >= 0) {
+        keyboardEvent.preventDefault();
+        activateTab(targetIdx, true);
+        tabs[targetIdx]?.focus();
+      }
+    };
+    tab.addEventListener("click", clickHandler);
+    tab.addEventListener("keydown", keyHandler);
+    listeners.push({ el: tab, event: "click", fn: clickHandler });
+    listeners.push({ el: tab, event: "keydown", fn: keyHandler });
+  });
+
+  jumpButtons.forEach((btn) => {
+    const jumpHandler: EventListener = (e) => {
+      e.preventDefault();
+      const targetStr = btn.getAttribute("data-heteronym-jump");
+      if (targetStr !== null) {
+        const targetIdx = parseInt(targetStr, 10);
+        activateTab(targetIdx, true);
+        const nav = root.querySelector(".atlas-heteronym-nav");
+        if (nav && "scrollIntoView" in nav) {
+          (nav as HTMLElement).scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+      }
+    };
+    btn.addEventListener("click", jumpHandler);
+    listeners.push({ el: btn, event: "click", fn: jumpHandler });
+  });
+
+  const syncHash = () => {
+    const rawHash = decodeURIComponent(location.hash.replace(/^#/, "").trim());
+    if (!rawHash) return;
+    const clean = (s: string) => s.normalize("NFC").replace(/[\u0300\u0301]/g, "").toLowerCase();
+    const cleanTarget = clean(rawHash);
+    tabs.forEach((tab, i) => {
+      const hw = tab.getAttribute("data-heteronym-headword") || "";
+      if (hw.normalize("NFC") === rawHash.normalize("NFC") || clean(hw) === cleanTarget) {
+        activateTab(i, false);
+      }
+    });
+  };
+
+  syncHash();
+  window.addEventListener("hashchange", syncHash);
+
+  return () => {
+    for (const { el, event, fn } of listeners) {
+      el.removeEventListener(event, fn);
+    }
+    window.removeEventListener("hashchange", syncHash);
+  };
+}
+
 function ShellSkeleton() {
   return (
     <div
@@ -217,7 +319,12 @@ export default function WordAtlasClientShell({
 
   useEffect(() => {
     if (!state || state.status !== "ready") return;
-    return bindEtymologyHandlers(articleHostRef.current);
+    const cleanupEty = bindEtymologyHandlers(articleHostRef.current);
+    const cleanupHet = bindHeteronymHandlers(articleHostRef.current);
+    return () => {
+      cleanupEty();
+      cleanupHet();
+    };
   }, [state]);
 
   if (!slug || !state) return null;
