@@ -267,6 +267,18 @@ def test_partition_firewall_zero_leakage(
         assert r["pair_id"] not in heldout_ids, f"Leakage: DPO pair_id {r['pair_id']} present in held-out suite"
 
 
+def test_partition_firewall_minhash_isolation(receipt_data: dict[str, Any]) -> None:
+    """Verify empirical MinHash near-duplicate similarity is strictly < 0.80 and reported accurately."""
+    firewall = receipt_data["deliverables"]["heldout_evaluation_suite"]["partition_firewall"]
+    assert firewall["partition_isolated"] is True
+    assert firewall["target_term_leakage_count"] == 0
+    assert firewall["record_id_leakage_count"] == 0
+    max_sim = firewall["max_minhash_similarity"]
+    assert isinstance(max_sim, (int, float))
+    assert max_sim < 0.80, f"MinHash similarity {max_sim} >= 0.80 threshold"
+    assert max_sim == 0.2188, f"Unexpected MinHash similarity {max_sim}, expected measured value 0.2188"
+
+
 def test_no_private_host_paths_opsec(receipt_data: dict[str, Any]) -> None:
     """Verify OPSEC: zero host paths, usernames, or raw IPs in receipt."""
     assert_no_private_host_paths(receipt_data, "production_release_receipt.json")

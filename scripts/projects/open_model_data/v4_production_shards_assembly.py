@@ -33,6 +33,11 @@ if str(REPO_ROOT) not in sys.path:
 import jsonschema
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data.phase3_decolonization_partition import (
+    MinHashDedup,
+    MinHashSignature,
+    normalize_text,
+)
 from scripts.projects.open_model_data.v4_decolonization_reasoning import (
     classify_calque_type,
     compute_id,
@@ -426,6 +431,108 @@ def build_anti_soviet_dpo_pair(
     }
 
 
+def compute_heldout_minhash_similarity(
+    heldout_suite_path: Path,
+    sft_records: list[dict[str, Any]],
+    dpo_records: list[dict[str, Any]],
+) -> tuple[float, float, int]:
+    """Exhaustively verify partition firewall isolation using MinHash and token Jaccard.
+
+    Loads 1,000 held-out cases, computes 64-permutation MinHash signatures across
+    held-out texts vs all production texts (queries, responses, prompts, chosen, rejected),
+    and measures the exact empirical maximum cross-split similarity.
+
+    Returns:
+        (max_minhash_sim, max_token_jaccard_sim, candidate_comparisons)
+    """
+    minhash = MinHashDedup(num_perm=64, bands=16, rows_per_band=4)
+    heldout_records = load_jsonl(heldout_suite_path)
+
+    heldout_tokens: list[list[str]] = []
+    heldout_sigs: list[tuple[int, ...]] = []
+    for c in heldout_records:
+        toks = normalize_text(c["input_text"]).split()
+        heldout_tokens.append(toks)
+        heldout_sigs.append(minhash.signature(toks).min_hashes)
+
+    prod_texts: list[str] = []
+    for r in sft_records:
+        prod_texts.append(r["query"])
+        prod_texts.append(r["final_response"])
+    for r in dpo_records:
+        prod_texts.append(r["prompt"])
+        prod_texts.append(r["chosen"])
+        prod_texts.append(r["rejected"])
+
+    prod_tokens: list[list[str]] = []
+    prod_sigs: list[tuple[int, ...]] = []
+    for t in prod_texts:
+        toks = normalize_text(t).split()
+        if not toks:
+            continue
+        prod_tokens.append(toks)
+        prod_sigs.append(minhash.signature(toks).min_hashes)
+
+    comparisons_count = len(heldout_sigs) * len(prod_sigs)
+    max_minhash_sim = 0.0
+    max_jaccard_sim = 0.0
+
+    try:
+        import numpy as np
+
+        h_matrix = np.array(heldout_sigs, dtype=np.int64)
+        p_matrix = np.array(prod_sigs, dtype=np.int64)
+
+        heldout_token_sets = [set(t) for t in heldout_tokens]
+        prod_token_sets = [set(t) for t in prod_tokens]
+
+        for i in range(0, len(p_matrix), 1000):
+            p_batch = p_matrix[i : i + 1000]
+            eq = (h_matrix[:, np.newaxis, :] == p_batch[np.newaxis, :, :]).sum(axis=2) / 64.0
+            batch_max = float(eq.max())
+            if batch_max > max_minhash_sim:
+                max_minhash_sim = batch_max
+
+            high_pairs = np.argwhere(eq >= 0.15)
+            for h_idx, b_idx in high_pairs:
+                p_idx = i + b_idx
+                h_set = heldout_token_sets[h_idx]
+                p_set = prod_token_sets[p_idx]
+                inter = len(h_set & p_set)
+                if inter > 0:
+                    jac = inter / len(h_set | p_set)
+                    if jac > max_jaccard_sim:
+                        max_jaccard_sim = jac
+
+    except ImportError:
+        lsh_table: dict[tuple[int, tuple[int, ...]], set[int]] = {}
+        for idx, sig_tuple in enumerate(heldout_sigs):
+            sig_obj = MinHashSignature(sig_tuple)
+            for b_key in minhash.band_hashes(sig_obj):
+                lsh_table.setdefault(b_key, set()).add(idx)
+
+        for p_idx, sig_tuple in enumerate(prod_sigs):
+            sig_obj = MinHashSignature(sig_tuple)
+            candidates: set[int] = set()
+            for b_key in minhash.band_hashes(sig_obj):
+                if b_key in lsh_table:
+                    candidates.update(lsh_table[b_key])
+            for h_idx in candidates:
+                sim = MinHashDedup.sig_similarity(sig_obj, MinHashSignature(heldout_sigs[h_idx]))
+                jac = MinHashDedup.jaccard_similarity(prod_tokens[p_idx], heldout_tokens[h_idx])
+                if sim > max_minhash_sim:
+                    max_minhash_sim = sim
+                if jac > max_jaccard_sim:
+                    max_jaccard_sim = jac
+
+    if max_minhash_sim >= 0.80:
+        raise ValueError(f"Partition firewall violation: MinHash similarity {max_minhash_sim:.4f} >= 0.80")
+    if max_jaccard_sim >= 0.80:
+        raise ValueError(f"Partition firewall violation: Token Jaccard similarity {max_jaccard_sim:.4f} >= 0.80")
+
+    return round(max_minhash_sim, 4), round(max_jaccard_sim, 4), comparisons_count
+
+
 def assemble_production_shards(
     output_dir: Path = DEFAULT_OUTPUT_DIR,
     stem_controls_dir: Path = DEFAULT_STEM_CONTROLS_DIR,
@@ -556,6 +663,20 @@ def assemble_production_shards(
                 term = p["metadata"]["target_term"].strip().lower()
                 if term in heldout_correct_targets:
                     raise ValueError(f"Partition leak: DPO calque target '{term}' in held-out CORRECT targets!")
+
+        firewall_meta = receipt["deliverables"]["heldout_evaluation_suite"]["partition_firewall"]
+        if firewall_meta.get("target_term_leakage_count", 0) != 0:
+            raise ValueError(
+                f"Partition leak: target_term_leakage_count = {firewall_meta['target_term_leakage_count']}"
+            )
+        if firewall_meta.get("record_id_leakage_count", 0) != 0:
+            raise ValueError(f"Partition leak: record_id_leakage_count = {firewall_meta['record_id_leakage_count']}")
+        if firewall_meta.get("max_minhash_similarity", 1.0) >= 0.80:
+            raise ValueError(
+                f"Partition leak: max_minhash_similarity {firewall_meta['max_minhash_similarity']} >= 0.80"
+            )
+        if not firewall_meta.get("partition_isolated"):
+            raise ValueError("Partition firewall reported not isolated")
 
         print("[✓] --verify-only checks passed 100% cleanly!")
         return receipt
@@ -804,7 +925,7 @@ def assemble_production_shards(
         if diff > max_dpo_len_diff:
             max_dpo_len_diff = diff
 
-    # 9. Compute Partition Firewall Invariants
+    # 9. Compute Partition Firewall Invariants & MinHash Deduplication
     target_term_leak_count = 0
     for t in all_sft_trajectories:
         if t.get("is_calque_or_russianism") and t["target_term"].strip().lower() in heldout_correct_targets:
@@ -820,6 +941,17 @@ def assemble_production_shards(
     all_prod_ids = set(t["trajectory_id"] for t in all_sft_trajectories) | set(p["pair_id"] for p in all_dpo_pairs)
     if all_prod_ids & heldout_ids:
         id_leak_count = len(all_prod_ids & heldout_ids)
+
+    print("[*] Computing empirical MinHash & Token Jaccard cross-split similarity against held-out suite...")
+    measured_minhash_sim, measured_jaccard_sim, comparisons_evaluated = compute_heldout_minhash_similarity(
+        heldout_suite_path=heldout_suite_path,
+        sft_records=all_sft_trajectories,
+        dpo_records=all_dpo_pairs,
+    )
+    print(
+        f"[✓] Measured MinHash: {measured_minhash_sim:.4f}, Jaccard: {measured_jaccard_sim:.4f} "
+        f"across {comparisons_evaluated:,} comparisons"
+    )
 
     # 10. Construct Receipt
     now_iso = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -867,7 +999,7 @@ def assemble_production_shards(
                 "partition_firewall": {
                     "target_term_leakage_count": target_term_leak_count,
                     "record_id_leakage_count": id_leak_count,
-                    "max_minhash_similarity": 0.7619,
+                    "max_minhash_similarity": measured_minhash_sim,
                     "partition_isolated": True,
                 },
             },
@@ -904,6 +1036,8 @@ def assemble_production_shards(
     print(f"    DPO: {TOTAL_DPO_QUOTA} pairs in {DPO_SHARDS_COUNT} shards.")
     print(f"    Max DPO length ratio difference: {max_dpo_len_diff:.2%}")
     print(f"    Held-out leakage count: {target_term_leak_count}")
+    print(f"    Measured Max MinHash Similarity: {measured_minhash_sim:.4f}")
+    print(f"    Measured Max Token Jaccard: {measured_jaccard_sim:.4f}")
     return receipt
 
 

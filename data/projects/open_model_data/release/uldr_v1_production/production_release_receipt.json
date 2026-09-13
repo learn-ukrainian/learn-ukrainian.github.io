@@ -4,7 +4,7 @@
   "phase": "Phase 3.7: Production Shards Assembly (6K SFT + 3K DPO) & Release Packaging",
   "issue": 8011,
   "parent_epic": 6321,
-  "generated_at": "2026-09-13T22:23:38Z",
+  "generated_at": "2026-09-13T23:06:15Z",
   "deliverables": {
     "sft_trajectories": {
       "total_count": 6000,
@@ -42,7 +42,7 @@
       "partition_firewall": {
         "target_term_leakage_count": 0,
         "record_id_leakage_count": 0,
-        "max_minhash_similarity": 0.7619,
+        "max_minhash_similarity": 0.2188,
         "partition_isolated": true
       }
     }

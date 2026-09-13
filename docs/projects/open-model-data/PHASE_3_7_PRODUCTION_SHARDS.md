@@ -57,6 +57,7 @@ To instill versatile instruction-following capabilities across diverse user prom
 | **Total** | **6,000** | **4,200** | **1,800** | **100.0%** | **Full stratified reasoning distribution** |
 
 ### Schema & Verification Guarantees
+
 - **100% VESUM Attestation**: Every proposed replacement lemma and negative control term resolves in `data/vesum.db` (`forms_all` table).
 - **100% Automated Claim-Verification**: Trajectories verified by `CoTClaimVerifier` (`scripts/projects/open_model_data/v4_verify_trajectory_claims.py`) against local linguistic databases.
 - **No Hallucinated History**: PRESERVE negative controls omit suppression notes, preventing confabulated history.
@@ -76,6 +77,7 @@ The 3,000 preference pairs conform to [`v1_decolonization_dpo_pair.schema.json`]
 | **Total** | **3,000** | **100.0%** | — | **Full alignment preference suite** |
 
 ### Length Matching & Scaffold Invariants
+
 - **Length Ratio Invariant**: $|len(chosen) - len(rejected)| / max(len(chosen), len(rejected)) \le 10.0\%$. Prevents length bias where models exploit verbosity heuristics.
 - **Identical CoT Scaffolds**: Chosen and rejected responses follow parallel rhetorical structures, forcing the model to learn semantic distinctions rather than stylistic shortcuts.
 
@@ -87,7 +89,7 @@ The dataset is isolated from the 1,000-case held-out evaluation suite (`data/pro
 - **Held-Out Composition**: 600 PRESERVE cases + 400 CORRECT cases from low-web-visibility sources.
 - **Calque Target Firewall**: 0 overlap between the 4,200 training calques and the 400 held-out CORRECT target patterns.
 - **ID Disjointness**: 0 ID collisions across all 6,000 SFT and 3,000 DPO records against held-out evaluation IDs.
-- **MinHash Deduplication**: Maximum near-duplicate MinHash similarity between training controls and held-out items $< 0.80$ (measured maximum: 0.7619).
+- **MinHash Deduplication**: Maximum near-duplicate MinHash similarity between production shards and held-out items $< 0.80$ (measured empirical maximum across 21,000,000 pairwise comparisons: 0.2188; token Jaccard: 0.2000).
 
 ---
 
@@ -105,6 +107,7 @@ To balance open science and copyright compliance:
 ## 5. CLI Usage & Verification
 
 ### Running Verification Only
+
 To verify an existing release without modifying data files:
 
 ```bash
@@ -120,6 +123,7 @@ Checks executed:
 6. Verifies zero partition leakage against `heldout_evaluation_suite_1000.jsonl`.
 
 ### Running Full Assembly
+
 To rebuild the production release from scratch:
 
 ```bash
@@ -127,6 +131,7 @@ To rebuild the production release from scratch:
 ```
 
 ### Running Test Suite
+
 Execute the comprehensive unit and contract tests:
 
 ```bash
@@ -140,6 +145,7 @@ Execute the comprehensive unit and contract tests:
 For researchers fine-tuning open-weight models (e.g. `google/gemma-3-4b-it` or `google/gemma-4-31B-it`) using Hugging Face Jobs or local GPU clusters:
 
 ### Recommended Training Pipeline
+
 1. **Stage 1: SFT Cold Start (6,000 trajectories)**
    - Method: LoRA / QLoRA ($r=16, \alpha=32$, dropout 0.05).
    - Format: ShareGPT / ChatML formatting with system prompt enforcing Ukrainian decolonized reasoning.
@@ -156,6 +162,7 @@ For researchers fine-tuning open-weight models (e.g. `google/gemma-3-4b-it` or `
      - Harmful Edit Rate $\le 1.0\%$.
 
 ### Hugging Face Hub Dataset Sync
+
 The public shards can be uploaded to Hugging Face Hub using the credential in `~/.secrets/hf.key`:
 
 ```bash
