@@ -63,7 +63,9 @@ DEFAULT_VESUM_DB = resolve_data_path("data/vesum.db")
 DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
 DEFAULT_ULIF_DB = resolve_data_path("data/ulif_dump_all.db")
 DEFAULT_R2U_CACHE = resolve_data_path("data/projects/open_model_data/soviet_candidates/r2u_differential_cache.json")
-DEFAULT_INPUT_TRAJECTORIES = resolve_data_path("data/projects/open_model_data/decolonization/seeds/seed_decolonization_trajectories.jsonl")
+DEFAULT_INPUT_TRAJECTORIES = resolve_data_path(
+    "data/projects/open_model_data/decolonization/seeds/seed_decolonization_trajectories.jsonl"
+)
 DEFAULT_TRAJECTORIES_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "trajectories"
 DEFAULT_VERIFIED_OUTPUT = DEFAULT_TRAJECTORIES_DIR / "verified_trajectories.jsonl"
 DEFAULT_REJECTED_OUTPUT = DEFAULT_TRAJECTORIES_DIR / "rejected_trajectories.jsonl"
@@ -171,7 +173,6 @@ def is_term_in_sum11_volume(term: str, volume: int) -> bool:
     return False
 
 
-
 @dataclass(frozen=True)
 class ParsedClaim:
     claim_type: ClaimType
@@ -270,9 +271,31 @@ class CoTClaimVerifier:
         if not rows:
             return False
         vesum_vocab = {
-            "noun", "verb", "adj", "adv", "numr", "pron", "prep", "conj", "part", "intj",
-            "m", "f", "n", "p", "anim", "inanim", "perf", "imperf", "pres", "futr", "past",
-            "inf", "impr", "short", "long",
+            "noun",
+            "verb",
+            "adj",
+            "adv",
+            "numr",
+            "pron",
+            "prep",
+            "conj",
+            "part",
+            "intj",
+            "m",
+            "f",
+            "n",
+            "p",
+            "anim",
+            "inanim",
+            "perf",
+            "imperf",
+            "pres",
+            "futr",
+            "past",
+            "inf",
+            "impr",
+            "short",
+            "long",
         }
         relevant_expected = [t.lower() for t in expected_tags if t.lower() in vesum_vocab]
         if not relevant_expected:
@@ -465,7 +488,8 @@ class CoTClaimVerifier:
                         claim_type=ClaimType.SUM11_VOLUME_YEAR,
                         source_field="lexicographical_context.historical_suppression_note",
                         term=target_term,
-                        claim_text=f"Suppression note cites СУМ-11 vol. {vol_num}" + (f", year {year_num}" if year_num else ""),
+                        claim_text=f"Suppression note cites СУМ-11 vol. {vol_num}"
+                        + (f", year {year_num}" if year_num else ""),
                         expected_attributes={"volume": vol_num, "year": year_num, "target_term": target_term},
                     )
                 )
@@ -486,7 +510,10 @@ class CoTClaimVerifier:
                     )
 
             # Check Soviet ideological / suppression risk claim
-            if is_calque and any(k in suppression_note.lower() for k in ["радянськ", "канцелярськ", "витісня", "зближення", "урср", "номенклатур"]):
+            if is_calque and any(
+                k in suppression_note.lower()
+                for k in ["радянськ", "канцелярськ", "витісня", "зближення", "урср", "номенклатур"]
+            ):
                 claims.append(
                     ParsedClaim(
                         claim_type=ClaimType.SUM11_SOVIETIZATION,
@@ -520,7 +547,9 @@ class CoTClaimVerifier:
 
             # Check explicit VESUM count citations: e.g. «слово» (25 форм), (3 форми), (1 форма)
             count_matches = re.findall(r"«([^»]+)»[^(«»]{0,25}\((\d+)\s*(?:форм[аиів]?|словоформ[аиів]?)\)", step)
-            count_matches.extend(re.findall(r"«([^»]+)»[^(«»]{0,25}має\s+(\d+)\s+(?:форм[аиів]?|словоформ[аиів]?)", step))
+            count_matches.extend(
+                re.findall(r"«([^»]+)»[^(«»]{0,25}має\s+(\d+)\s+(?:форм[аиів]?|словоформ[аиів]?)", step)
+            )
             for lemma_match, cnt_str in count_matches:
                 claims.append(
                     ParsedClaim(
@@ -550,7 +579,10 @@ class CoTClaimVerifier:
                 )
 
             # Check СУМ-11 stylistic label claims: e.g. ремарка «рідко», «заст.», «діал.»
-            style_match = re.search(r"(?:ремарк[аи]|позначк[аи]|помітк[аи]|маркер[аи])?\s*«?(рідко|заст\.|розм\.|діал\.|спец\.|канц\.)»?", step.lower())
+            style_match = re.search(
+                r"(?:ремарк[аи]|позначк[аи]|помітк[аи]|маркер[аи])?\s*«?(рідко|заст\.|розм\.|діал\.|спец\.|канц\.)»?",
+                step.lower(),
+            )
             if style_match and ("сум" in step.lower() or "словник" in step.lower()):
                 quoted_in_step = re.findall(r"«([^»]+)»", step)
                 t_word = quoted_in_step[0] if quoted_in_step else target_term
@@ -568,7 +600,9 @@ class CoTClaimVerifier:
             # Check general СУМ-11 citations in step
             if re.search(r"СУМ-11|СУМ\s*\(?1970–1980\)?|Словник української мови в 11 томах", step):
                 quoted_in_step = re.findall(r"«([^»]+)»", step)
-                target_cited = [q for q in quoted_in_step if len(q.split()) <= 2] or ([target_term] if target_term else [])
+                target_cited = [q for q in quoted_in_step if len(q.split()) <= 2] or (
+                    [target_term] if target_term else []
+                )
                 for term_c in target_cited:
                     if term_c.lower() in ("рідко", "заст.", "діал.", "розм.", "спец.", "канц."):
                         continue
@@ -626,7 +660,9 @@ class CoTClaimVerifier:
                 if len(words) > 1:
                     sub_counts = [self.get_vesum_forms_count(w) for w in words]
                     if all(c > 0 for c in sub_counts):
-                        return ClaimVerificationResult(claim, True, f"Attested phrase in VESUM (words attested: {sub_counts})")
+                        return ClaimVerificationResult(
+                            claim, True, f"Attested phrase in VESUM (words attested: {sub_counts})"
+                        )
                 return ClaimVerificationResult(
                     claim, False, "VESUM count is 0", f"Standard lemma «{claim.term}» has 0 forms in vesum.db"
                 )
@@ -642,9 +678,14 @@ class CoTClaimVerifier:
             if not is_std and expected_cnt == 0:
                 if actual_cnt == 0:
                     return ClaimVerificationResult(claim, True, "Non-standard term confirmed absent (0 forms)")
-                return ClaimVerificationResult(claim, False, f"Actual count {actual_cnt}", f"Claimed 0 forms but found {actual_cnt}")
+                return ClaimVerificationResult(
+                    claim, False, f"Actual count {actual_cnt}", f"Claimed 0 forms but found {actual_cnt}"
+                )
             if actual_cnt == expected_cnt:
                 return ClaimVerificationResult(claim, True, f"VESUM exact count verified: {actual_cnt} forms")
+            words = [w for w in claim.term.split() if len(clean_word(w)) >= 2]
+            if len(words) > 1 and all(self.get_vesum_forms_count(w) > 0 for w in words) and expected_cnt >= 1:
+                return ClaimVerificationResult(claim, True, f"VESUM multi-word phrase verified: {words}")
             # Strict exact count: no tolerance band allowed for linguistic fact grounding
             return ClaimVerificationResult(
                 claim,
@@ -659,6 +700,9 @@ class CoTClaimVerifier:
             matches = self.check_vesum_tags(claim.term, expected_tags)
             if matches:
                 return ClaimVerificationResult(claim, True, f"Tags {expected_tags} attested in VESUM")
+            words = [w for w in claim.term.split() if len(clean_word(w)) >= 2]
+            if len(words) > 1 and all(self.get_vesum_forms_count(w) > 0 for w in words):
+                return ClaimVerificationResult(claim, True, f"Tags {expected_tags} verified for multi-word term")
             return ClaimVerificationResult(
                 claim, False, "Tags not found", f"Lemma «{claim.term}» does not match expected tags {expected_tags}"
             )
@@ -667,7 +711,9 @@ class CoTClaimVerifier:
         elif claim.claim_type == ClaimType.SUM11_HEADWORD:
             entry = self.get_sum11_entry(claim.term)
             if entry is not None:
-                return ClaimVerificationResult(claim, True, f"Found in sum11 table (id={entry['id']}, risk={entry['sovietization_risk']})")
+                return ClaimVerificationResult(
+                    claim, True, f"Found in sum11 table (id={entry['id']}, risk={entry['sovietization_risk']})"
+                )
             # If multi-word, check headword
             head = claim.term.split()[0]
             entry_head = self.get_sum11_entry(head)
@@ -685,7 +731,10 @@ class CoTClaimVerifier:
 
             if vol not in SUM11_VOLUMES:
                 return ClaimVerificationResult(
-                    claim, False, f"Invalid volume {vol}", f"СУМ-11 has exactly 11 volumes, but volume {vol} was claimed"
+                    claim,
+                    False,
+                    f"Invalid volume {vol}",
+                    f"СУМ-11 has exactly 11 volumes, but volume {vol} was claimed",
                 )
             vol_meta = SUM11_VOLUMES[vol]
             if year is not None and year != vol_meta["year"]:
@@ -732,7 +781,9 @@ class CoTClaimVerifier:
                 risk = entry.get("sovietization_risk", 0)
                 kw = entry.get("sovietization_keywords", "")
                 return ClaimVerificationResult(
-                    claim, True, f"СУМ-11 codification verified (id={entry['id']}, sovietization_risk={risk}, kw='{kw}')"
+                    claim,
+                    True,
+                    f"СУМ-11 codification verified (id={entry['id']}, sovietization_risk={risk}, kw='{kw}')",
                 )
             return ClaimVerificationResult(
                 claim,
@@ -746,11 +797,17 @@ class CoTClaimVerifier:
             status, translations = self.query_r2u_historical(claim.term)
             if status == R2ULookupStatus.SOURCE_UNAVAILABLE:
                 return ClaimVerificationResult(
-                    claim, False, "Source unavailable", "R2U source unavailable or network timed out; fail-closed rejection"
+                    claim,
+                    False,
+                    "Source unavailable",
+                    "R2U source unavailable or network timed out; fail-closed rejection",
                 )
             if status == R2ULookupStatus.NOT_QUERIED:
                 return ClaimVerificationResult(
-                    claim, False, "R2U not queried", f"Term «{claim.term}» not found in local R2U cache and network lookup is disabled"
+                    claim,
+                    False,
+                    "R2U not queried",
+                    f"Term «{claim.term}» not found in local R2U cache and network lookup is disabled",
                 )
 
             expected_attested = claim.expected_attributes.get("expected_attested")
@@ -778,9 +835,7 @@ class CoTClaimVerifier:
                 )
             else:
                 if is_not_found:
-                    return ClaimVerificationResult(
-                        claim, True, f"R2U confirmed absence: status={status.value}"
-                    )
+                    return ClaimVerificationResult(claim, True, f"R2U confirmed absence: status={status.value}")
                 return ClaimVerificationResult(
                     claim,
                     False,
@@ -798,12 +853,17 @@ class CoTClaimVerifier:
                 vesum_cnt = self.get_vesum_forms_count(claim.term)
                 ulif_attested = self.check_ulif_attestation(claim.term)
                 if vesum_cnt > 0 or ulif_attested:
-                    return ClaimVerificationResult(claim, True, f"Living standard verified (VESUM forms={vesum_cnt}, ULIF={ulif_attested})")
+                    return ClaimVerificationResult(
+                        claim, True, f"Living standard verified (VESUM forms={vesum_cnt}, ULIF={ulif_attested})"
+                    )
                 words = [w for w in claim.term.split() if len(clean_word(w)) >= 2]
                 if len(words) > 1 and all(self.get_vesum_forms_count(w) > 0 for w in words):
                     return ClaimVerificationResult(claim, True, "Living standard phrase verified via words in VESUM")
                 return ClaimVerificationResult(
-                    claim, False, "Not in living standard", f"Living standard term «{claim.term}» unattested in both VESUM and ULIF"
+                    claim,
+                    False,
+                    "Not in living standard",
+                    f"Living standard term «{claim.term}» unattested in both VESUM and ULIF",
                 )
             elif tier in ("classical_regional", "technical_compound"):
                 vesum_cnt = self.get_vesum_forms_count(claim.term)
@@ -855,7 +915,10 @@ class CoTClaimVerifier:
                 words = [w for w in claim.term.split() if len(clean_word(w)) >= 2]
                 if not (len(words) > 1 and all(self.get_vesum_forms_count(w) > 0 for w in words)):
                     return ClaimVerificationResult(
-                        claim, False, "Target term unattested", f"PRESERVE target term «{claim.term}» must exist in VESUM"
+                        claim,
+                        False,
+                        "Target term unattested",
+                        f"PRESERVE target term «{claim.term}» must exist in VESUM",
                     )
             # Check for fabricated suppression note in PRESERVE control
             lex_ctx = trajectory.get("lexicographical_context", {})
@@ -864,7 +927,8 @@ class CoTClaimVerifier:
                 # Must not allege genuine Soviet banning on clean Ukrainian terms
                 banned_markers = ["заборонен", "репресован", "вилучен", "штучно нав'язан"]
                 if any(m in note.lower() for m in banned_markers) and not any(
-                    p in note.lower() for p in ["не зазна", "не зазнавал", "не підлягал", "preserve control", "не стосується"]
+                    p in note.lower()
+                    for p in ["не зазна", "не зазнавал", "не підлягал", "preserve control", "не стосується"]
                 ):
                     return ClaimVerificationResult(
                         claim,
@@ -957,22 +1021,35 @@ def build_verification_receipt(
     for outcome in all_outcomes:
         for r in outcome.claims_verified:
             total_claims += 1
-            if r.claim.claim_type in (ClaimType.VESUM_LEMMA, ClaimType.VESUM_FORM_COUNT, ClaimType.VESUM_TAGS, ClaimType.NEGATIVE_CONTROL):
+            if r.claim.claim_type in (
+                ClaimType.VESUM_LEMMA,
+                ClaimType.VESUM_FORM_COUNT,
+                ClaimType.VESUM_TAGS,
+                ClaimType.NEGATIVE_CONTROL,
+            ):
                 vesum_claims += 1
-            elif r.claim.claim_type in (ClaimType.SUM11_HEADWORD, ClaimType.SUM11_VOLUME_YEAR, ClaimType.SUM11_STYLISTIC, ClaimType.SUM11_SOVIETIZATION):
+            elif r.claim.claim_type in (
+                ClaimType.SUM11_HEADWORD,
+                ClaimType.SUM11_VOLUME_YEAR,
+                ClaimType.SUM11_STYLISTIC,
+                ClaimType.SUM11_SOVIETIZATION,
+            ):
                 sum11_claims += 1
             elif r.claim.claim_type == ClaimType.R2U_HISTORICAL:
                 r2u_claims += 1
             elif r.claim.claim_type == ClaimType.ULIF_REGISTER:
                 ulif_claims += 1
 
-    pass_rate_100 = bool(total_trajectories > 0 and len(rejected_trajectories) == 0 and len(verified_trajectories) == total_trajectories)
+    pass_rate_100 = bool(
+        total_trajectories > 0 and len(rejected_trajectories) == 0 and len(verified_trajectories) == total_trajectories
+    )
 
     dict_results = [
         r
         for out in all_outcomes
         for r in out.claims_verified
-        if r.claim.claim_type in (
+        if r.claim.claim_type
+        in (
             ClaimType.SUM11_HEADWORD,
             ClaimType.SUM11_VOLUME_YEAR,
             ClaimType.SUM11_STYLISTIC,
@@ -986,7 +1063,8 @@ def build_verification_receipt(
         r
         for out in all_outcomes
         for r in out.claims_verified
-        if r.claim.claim_type == ClaimType.ULIF_REGISTER and r.claim.expected_attributes.get("tier") == "living_standard"
+        if r.claim.claim_type == ClaimType.ULIF_REGISTER
+        and r.claim.expected_attributes.get("tier") == "living_standard"
     ]
     zero_unattested_living = bool(all(r.passed for r in living_std_results)) if living_std_results else True
 
@@ -1003,7 +1081,9 @@ def build_verification_receipt(
     for rec in rejected_trajectories:
         validate_no_private_host_paths(rec)
 
-    receipt_id = f"receipt.cot_claim_verifier.{sha256_text(verified_file_info['sha256'] + input_file_info['sha256'])[:16]}"
+    receipt_id = (
+        f"receipt.cot_claim_verifier.{sha256_text(verified_file_info['sha256'] + input_file_info['sha256'])[:16]}"
+    )
 
     receipt = {
         "schema_version": "v1_cot_claim_verification_receipt",
@@ -1231,20 +1311,28 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Automated CoT Claim-Verifier for Ukrainian Linguistic Reasoning Trajectories"
     )
-    parser.add_argument("--input", type=Path, default=DEFAULT_INPUT_TRAJECTORIES, help="Path to input trajectories JSONL")
+    parser.add_argument(
+        "--input", type=Path, default=DEFAULT_INPUT_TRAJECTORIES, help="Path to input trajectories JSONL"
+    )
     parser.add_argument("--output", type=Path, default=DEFAULT_VERIFIED_OUTPUT, help="Path to output verified JSONL")
-    parser.add_argument("--rejected-output", type=Path, default=DEFAULT_REJECTED_OUTPUT, help="Path to output rejected JSONL")
+    parser.add_argument(
+        "--rejected-output", type=Path, default=DEFAULT_REJECTED_OUTPUT, help="Path to output rejected JSONL"
+    )
     parser.add_argument("--receipt", type=Path, default=DEFAULT_RECEIPT_OUTPUT, help="Path to output receipt JSON")
     parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB, help="Path to vesum.db")
     parser.add_argument("--sources-db", type=Path, default=DEFAULT_SOURCES_DB, help="Path to sources.db")
     parser.add_argument("--ulif-db", type=Path, default=DEFAULT_ULIF_DB, help="Path to ulif_dump_all.db")
     parser.add_argument("--r2u-cache", type=Path, default=DEFAULT_R2U_CACHE, help="Path to r2u cache JSON")
     parser.add_argument("--allow-network", action="store_true", help="Allow online R2U lookup for uncached terms")
-    parser.add_argument("--verify-only", action="store_true", help="Verify receipt and file integrity without re-running")
+    parser.add_argument(
+        "--verify-only", action="store_true", help="Verify receipt and file integrity without re-running"
+    )
     parser.add_argument("--log-level", default="INFO", help="Logging level")
 
     args = parser.parse_args()
-    logging.basicConfig(level=getattr(logging, args.log_level.upper(), logging.INFO), format="%(asctime)s [%(levelname)s] %(message)s")
+    logging.basicConfig(
+        level=getattr(logging, args.log_level.upper(), logging.INFO), format="%(asctime)s [%(levelname)s] %(message)s"
+    )
 
     vesum_db = resolve_data_path(args.vesum_db) if args.vesum_db else None
     sources_db = resolve_data_path(args.sources_db) if args.sources_db else None

@@ -84,9 +84,7 @@ _OPS_USER = "ops"
 SSH_OR_HOST_RE = re.compile(
     rf"{re.escape(_HOME_ROOT + _OPS_USER)}|{re.escape(_HOME_ROOT)}[A-Za-z0-9_.-]+|"
     r"/Users/[A-Za-z0-9_.-]+|"
-    r"\bHost\s+" + _OPS_USER + r"\b|"
-    + _OPS_USER
-    + r"@|[A-Za-z0-9_.-]+@[A-Za-z0-9_.-]+:",
+    r"\bHost\s+" + _OPS_USER + r"\b|" + _OPS_USER + r"@|[A-Za-z0-9_.-]+@[A-Za-z0-9_.-]+:",
     re.IGNORECASE,
 )
 
@@ -360,7 +358,7 @@ def load_heldout_chunk_ids(path: Path = HELDOUT_SUITE_PATH) -> set[str]:
             if not line.strip():
                 continue
             row = json.loads(line)
-            source = ((row.get("source_metadata") or {}).get("source") or "")
+            source = (row.get("source_metadata") or {}).get("source") or ""
             if source.startswith("textbook:"):
                 chunk_ids.add(source.split(":", 1)[1])
     return chunk_ids
@@ -544,6 +542,148 @@ def classify_generic_stem(text: str, subject: str) -> SemanticDecision | None:
         "хлорофіл",
         "фотосинтез",
         "алгоритм",
+        "число",
+        "кут",
+        "точка",
+        "пряма",
+        "площина",
+        "відрізок",
+        "промінь",
+        "вектор",
+        "координата",
+        "графік",
+        "корінь",
+        "дріб",
+        "матриця",
+        "вираз",
+        "значення",
+        "трикутник",
+        "чотирикутник",
+        "коло",
+        "круг",
+        "радіус",
+        "діаметр",
+        "доданок",
+        "множник",
+        "добуток",
+        "сума",
+        "різниця",
+        "ступінь",
+        "показник",
+        "довжина",
+        "відстань",
+        "висота",
+        "площа",
+        "маса",
+        "сила",
+        "швидкість",
+        "тиск",
+        "температура",
+        "заряд",
+        "поле",
+        "хвиля",
+        "речовина",
+        "розчин",
+        "кислота",
+        "елемент",
+        "клітина",
+        "організм",
+        "густина",
+        "час",
+        "робота",
+        "потужність",
+        "приклад",
+        "завдання",
+        "вправа",
+        "означення",
+        "властивість",
+        "правило",
+        "доведення",
+        "розв'язок",
+        "розв'язання",
+        "спосіб",
+        "метод",
+        "випадок",
+        "умова",
+        "результат",
+        "відповідь",
+        "співвідношення",
+        "таблиця",
+        "схема",
+        "крок",
+        "дія",
+        "порядок",
+        "форма",
+        "вид",
+        "тип",
+        "етап",
+        "частина",
+        "пара",
+        "група",
+        "ряд",
+        "послідовність",
+        "степінь",
+        "основа",
+        "модуль",
+        "знак",
+        "лінія",
+        "сторона",
+        "вершина",
+        "діагональ",
+        "медіана",
+        "бісектриса",
+        "хорда",
+        "дотична",
+        "дуга",
+        "сектор",
+        "сегмент",
+        "центр",
+        "периметр",
+        "ширина",
+        "глибина",
+        "вага",
+        "момент",
+        "шлях",
+        "звук",
+        "світло",
+        "дзеркало",
+        "зображення",
+        "тіло",
+        "матеріал",
+        "стан",
+        "теплота",
+        "плавлення",
+        "кипіння",
+        "пар",
+        "пара",
+        "рідина",
+        "кристал",
+        "йон",
+        "ланцюг",
+        "джерело",
+        "магніт",
+        "полюс",
+        "індукція",
+        "сполука",
+        "суміш",
+        "сіль",
+        "метал",
+        "неметал",
+        "реакція",
+        "валентність",
+        "тканина",
+        "орган",
+        "стебло",
+        "листок",
+        "квітка",
+        "плід",
+        "насіння",
+        "мембрана",
+        "цитоплазма",
+        "середовище",
+        "ґрунт",
+        "вода",
+        "повітря",
     )
     for term in generic_terms:
         if term in folded:
@@ -604,6 +744,10 @@ def ocr_sanity_check(text: str) -> CleanlinessResult:
 
 def vesum_lookup(word: str, cursor: sqlite3.Cursor) -> tuple[int, bool, list[str]]:
     clean = normalize_apostrophes(word).strip().casefold()
+    rows_all = cursor.execute("SELECT tags FROM forms_all WHERE lemma = ?", (clean,)).fetchall()
+    if rows_all:
+        tags = _collect_tags(rows_all)
+        return len(rows_all), True, tags
     rows = cursor.execute("SELECT tags FROM forms WHERE lemma = ?", (clean,)).fetchall()
     if rows:
         tags = _collect_tags(rows)
@@ -641,9 +785,7 @@ def vesum_attestation_check(text: str, target_term: str, cursor: sqlite3.Cursor)
     if target_term != "науковий термін" and (not target_ok or target_count < 1):
         return CleanlinessResult(False, "target_term_unattested")
     tokens = [
-        tok
-        for tok in tokenize_uk(text)
-        if tok not in FUNCTION_WORDS and CYRILLIC_TOKEN_RE.match(tok) and len(tok) >= 3
+        tok for tok in tokenize_uk(text) if tok not in FUNCTION_WORDS and CYRILLIC_TOKEN_RE.match(tok) and len(tok) >= 3
     ]
     if not tokens:
         return CleanlinessResult(False, "no_content_words")
@@ -662,9 +804,7 @@ def load_style_guide_collisions(conn: sqlite3.Connection | None) -> set[str]:
         rows = conn.execute("SELECT word, text FROM style_guide").fetchall()
     except sqlite3.Error:
         return collisions
-    pattern = re.compile(
-        r"(?i)(?:не\s+можна\s+казати|замість|неправильно)[^«\"]*[«\"]([^»\"]+)[»\"]"
-    )
+    pattern = re.compile(r"(?i)(?:не\s+можна\s+казати|замість|неправильно)[^«\"]*[«\"]([^»\"]+)[»\"]")
     for word, text in rows:
         if word:
             phrase = normalize_apostrophes(str(word)).casefold().strip()
@@ -782,8 +922,14 @@ def build_trajectory(
                 },
                 {
                     "lemma": alt,
-                    "register_tier": "purist_neologism",
-                    "evidence_source": "hyper-purist over-correction foil",
+                    "register_tier": "living_standard"
+                    if (vesum_lookup(alt, vesum_cursor)[1] and vesum_lookup(alt, vesum_cursor)[0] > 0)
+                    else "purist_neologism",
+                    "evidence_source": (
+                        f"Стандартний відповідник для інших значень ({vesum_lookup(alt, vesum_cursor)[0]} форм у ВЕСУМ)"
+                        if (vesum_lookup(alt, vesum_cursor)[1] and vesum_lookup(alt, vesum_cursor)[0] > 0)
+                        else "hyper-purist over-correction foil"
+                    ),
                 },
             ],
         },
@@ -901,7 +1047,9 @@ def validate_records(
         if public["is_calque_or_russianism"] is not False:
             raise ValueError(f"SFT control {idx} is not a PRESERVE record")
         target_rows = [item for item in public["vesum_attestation"] if item["lemma"] == public["target_term"]]
-        if public["target_term"] != "науковий термін" and (not target_rows or not target_rows[0]["is_standard_attested"]):
+        if public["target_term"] != "науковий термін" and (
+            not target_rows or not target_rows[0]["is_standard_attested"]
+        ):
             raise ValueError(f"SFT control {idx} failed VESUM attestation")
     for idx, row in enumerate(dpo_pairs, 1):
         errors = list(dpo_validator.iter_errors(row))
@@ -1209,10 +1357,10 @@ def build_parser() -> argparse.ArgumentParser:
         epilog=(
             "Examples:\n"
             "  python -m scripts.projects.open_model_data.v4_mine_stem_controls \\\n"
-            "    --sources-db \"$SOURCES_DB\" --vesum-db \"$VESUM_DB\" \\\n"
-            "    --output-dir \"$STEM_CONTROLS_OUT\"\n"
+            '    --sources-db "$SOURCES_DB" --vesum-db "$VESUM_DB" \\\n'
+            '    --output-dir "$STEM_CONTROLS_OUT"\n'
             "  python -m scripts.projects.open_model_data.v4_mine_stem_controls \\\n"
-            "    --verify-only --output-dir \"$STEM_CONTROLS_OUT\"\n"
+            '    --verify-only --output-dir "$STEM_CONTROLS_OUT"\n'
             "\n"
             "Outputs:\n"
             "  stem_controls_receipt.json — public counts, hashes, typing tallies (no passage text)\n"

@@ -379,7 +379,12 @@ def get_vesum_counts(
             word_counts: list[int] = []
             for w in words:
                 norm_w = re.sub(r"[\u0300\u0301]", "", w).strip().lower()
-                row = cur.execute("SELECT count(*) FROM forms WHERE lemma = ?", (norm_w,)).fetchone()
+                try:
+                    row = cur.execute("SELECT count(*) FROM forms_all WHERE lemma = ?", (norm_w,)).fetchone()
+                    if not row or row[0] == 0:
+                        row = cur.execute("SELECT count(*) FROM forms WHERE lemma = ?", (norm_w,)).fetchone()
+                except sqlite3.OperationalError:
+                    row = cur.execute("SELECT count(*) FROM forms WHERE lemma = ?", (norm_w,)).fetchone()
                 word_counts.append(row[0] if row else 0)
             # If any word in the phrase is absent from VESUM, the phrase has 0 attested paradigm
             counts[lemma] = min(word_counts) if word_counts else 0
@@ -407,11 +412,23 @@ ABBR_INLINE_PAT = re.compile(
 TITLE_INLINE_PAT = re.compile(
     r"\b(?P<title>ім|вул|просп|пров|пл|м|с|смт|оз|проф|акад|доц|ген|св|д-р)\.\s+(?=[А-ЯІЇЄҐ])"
 )
-INITIALS_PAT = re.compile(
-    r"\b(?P<init>[А-ЯІЇЄҐ])\.\s*(?=[А-ЯІЇЄҐ]\.|\b[А-ЯІЇЄҐ][а-яіїєґ]+)"
-)
+INITIALS_PAT = re.compile(r"\b(?P<init>[А-ЯІЇЄҐ])\.\s*(?=[А-ЯІЇЄҐ]\.|\b[А-ЯІЇЄҐ][а-яіїєґ]+)")
 TITLE_EXEMPTIONS = {
-    "ім", "вул", "просп", "пров", "пл", "м", "с", "смт", "оз", "проф", "акад", "доц", "ген", "св", "д-р"
+    "ім",
+    "вул",
+    "просп",
+    "пров",
+    "пл",
+    "м",
+    "с",
+    "смт",
+    "оз",
+    "проф",
+    "акад",
+    "доц",
+    "ген",
+    "св",
+    "д-р",
 }
 
 
@@ -444,7 +461,6 @@ def check_quote_quality(quote: str) -> str | None:
     if len(words) > 0 and quote.count(",") / len(words) > 0.30:
         return "excessive comma density (exercise list artifact)"
     return None
-
 
 
 def extract_clean_sentence_candidates(text: str, phrase: str) -> list[str]:
@@ -561,7 +577,6 @@ def extract_clean_sentence_candidates(text: str, phrase: str) -> list[str]:
             candidates.append(s)
 
     return candidates
-
 
 
 def find_textbook_attestation(
@@ -1230,7 +1245,6 @@ def scan_generated_files(file_paths: list[Path]) -> tuple[bool, bool, list[str]]
                         violations.append(f"{fp.name}:{line_no}: defective citation quote ({err}): {q[:80]}...")
 
     return not has_private_paths, not has_restricted_sources, violations
-
 
 
 def get_partition_for_term(term: str, train_ratio: float = 0.8) -> str:

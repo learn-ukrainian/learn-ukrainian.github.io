@@ -1,0 +1,338 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v1_production_release_receipt.schema.json",
+  "title": "v1_production_release_receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "dataset_name",
+    "phase",
+    "issue",
+    "parent_epic",
+    "generated_at",
+    "deliverables",
+    "licensing",
+    "safety_assertions",
+    "files"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "v1_production_release_receipt"
+    },
+    "dataset_name": {
+      "type": "string",
+      "minLength": 8
+    },
+    "phase": {
+      "type": "string",
+      "minLength": 8
+    },
+    "issue": {
+      "type": "integer",
+      "const": 8011
+    },
+    "parent_epic": {
+      "type": "integer",
+      "const": 6321
+    },
+    "generated_at": {
+      "type": "string",
+      "minLength": 10
+    },
+    "deliverables": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sft_trajectories",
+        "dpo_pairs",
+        "heldout_evaluation_suite"
+      ],
+      "properties": {
+        "sft_trajectories": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "total_count",
+            "shards_count",
+            "partition_distribution",
+            "format_distribution"
+          ],
+          "properties": {
+            "total_count": {
+              "type": "integer",
+              "const": 6000
+            },
+            "shards_count": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "partition_distribution": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "correct_count",
+                "preserve_count",
+                "preserve_ratio"
+              ],
+              "properties": {
+                "correct_count": {
+                  "type": "integer",
+                  "const": 4200
+                },
+                "preserve_count": {
+                  "type": "integer",
+                  "const": 1800
+                },
+                "preserve_ratio": {
+                  "type": "number",
+                  "minimum": 0.28,
+                  "maximum": 0.32
+                }
+              }
+            },
+            "format_distribution": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "quick_tip",
+                "minimal_edit",
+                "contrastive",
+                "deep_analysis"
+              ],
+              "properties": {
+                "quick_tip": {
+                  "type": "integer",
+                  "const": 2400
+                },
+                "minimal_edit": {
+                  "type": "integer",
+                  "const": 1500
+                },
+                "contrastive": {
+                  "type": "integer",
+                  "const": 1200
+                },
+                "deep_analysis": {
+                  "type": "integer",
+                  "const": 900
+                }
+              }
+            }
+          }
+        },
+        "dpo_pairs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "total_count",
+            "shards_count",
+            "types_breakdown",
+            "length_matching"
+          ],
+          "properties": {
+            "total_count": {
+              "type": "integer",
+              "const": 3000
+            },
+            "shards_count": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "types_breakdown": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "anti_soviet_calque_pairs",
+                "anti_hyper_purist_preservation_pairs"
+              ],
+              "properties": {
+                "anti_soviet_calque_pairs": {
+                  "type": "integer",
+                  "const": 2100
+                },
+                "anti_hyper_purist_preservation_pairs": {
+                  "type": "integer",
+                  "const": 900
+                }
+              }
+            },
+            "length_matching": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "max_length_ratio_difference",
+                "length_matched_100_percent"
+              ],
+              "properties": {
+                "max_length_ratio_difference": {
+                  "type": "number",
+                  "maximum": 0.10
+                },
+                "length_matched_100_percent": {
+                  "type": "boolean",
+                  "const": true
+                }
+              }
+            }
+          }
+        },
+        "heldout_evaluation_suite": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "filename",
+            "record_count",
+            "preserve_count",
+            "correct_count",
+            "sha256",
+            "partition_firewall"
+          ],
+          "properties": {
+            "filename": {
+              "type": "string"
+            },
+            "record_count": {
+              "type": "integer",
+              "const": 1000
+            },
+            "preserve_count": {
+              "type": "integer",
+              "const": 600
+            },
+            "correct_count": {
+              "type": "integer",
+              "const": 400
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "partition_firewall": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "target_term_leakage_count",
+                "record_id_leakage_count",
+                "max_minhash_similarity",
+                "max_token_jaccard_similarity",
+                "partition_isolated"
+              ],
+              "properties": {
+                "target_term_leakage_count": {
+                  "type": "integer",
+                  "const": 0
+                },
+                "record_id_leakage_count": {
+                  "type": "integer",
+                  "const": 0
+                },
+                "max_minhash_similarity": {
+                  "type": "number",
+                  "maximum": 0.80
+                },
+                "max_token_jaccard_similarity": {
+                  "type": "number",
+                  "maximum": 0.80
+                },
+                "partition_isolated": {
+                  "type": "boolean",
+                  "const": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "licensing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packaging_tier",
+        "public_release",
+        "research_internal",
+        "terms"
+      ],
+      "properties": {
+        "packaging_tier": {
+          "type": "string",
+          "const": "dual_tier"
+        },
+        "public_release": {
+          "type": "string"
+        },
+        "research_internal": {
+          "type": "string"
+        },
+        "terms": {
+          "type": "string"
+        }
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "no_private_host_paths",
+        "zero_heldout_leakage",
+        "schema_validation_100_percent",
+        "claim_verification_100_percent",
+        "length_matched_100_percent"
+      ],
+      "properties": {
+        "no_private_host_paths": {
+          "type": "boolean",
+          "const": true
+        },
+        "zero_heldout_leakage": {
+          "type": "boolean",
+          "const": true
+        },
+        "schema_validation_100_percent": {
+          "type": "boolean",
+          "const": true
+        },
+        "claim_verification_100_percent": {
+          "type": "boolean",
+          "const": true
+        },
+        "length_matched_100_percent": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "files": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "filename",
+          "record_count",
+          "sha256",
+          "bytes"
+        ],
+        "properties": {
+          "filename": {
+            "type": "string"
+          },
+          "record_count": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      }
+    }
+  }
+}
