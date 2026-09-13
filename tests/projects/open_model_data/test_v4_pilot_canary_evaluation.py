@@ -17,12 +17,14 @@ from scripts.projects.open_model_data.v4_pilot_canary_evaluation import (
     DEFAULT_HELDOUT_SUITE,
     DEFAULT_RECEIPT_OUTPUT,
     DEFAULT_REPLAY_OUTPUT,
+    DEFAULT_VESUM_DB,
     exact_clopper_pearson_upper,
     load_heldout_contexts,
     load_heldout_target_keys,
     sha256_file,
     validate_no_private_host_paths,
     verify_pilot_canary,
+    verify_pilot_canary_partition_firewall,
 )
 
 
@@ -185,6 +187,14 @@ def test_verify_only_succeeds_on_valid_artifacts() -> None:
     assert result is True
 
 
+def _write_receipt_with_digest(rcp_path: Path, data: dict) -> None:
+    """Helper to write receipt and its mandatory detached .sha256 sidecar."""
+    text = json.dumps(data, indent=2) + "\n"
+    rcp_path.write_text(text, encoding="utf-8")
+    sha_file = rcp_path.with_name(rcp_path.name + ".sha256")
+    sha_file.write_text(f"{sha256_file(rcp_path)}  {rcp_path.name}\n", encoding="utf-8")
+
+
 def test_tampered_receipt_gates_fail_verification(tmp_path: Path) -> None:
     """Verify that tampering with safety gate metrics causes verify_pilot_canary to fail."""
     tampered_rcp = tmp_path / "tampered_receipt.json"
@@ -194,7 +204,7 @@ def test_tampered_receipt_gates_fail_verification(tmp_path: Path) -> None:
     receipt_bad = dict(receipt)
     receipt_bad["evaluation_gates"] = dict(receipt["evaluation_gates"])
     receipt_bad["evaluation_gates"]["calque_elimination_rate"] = 0.0
-    tampered_rcp.write_text(json.dumps(receipt_bad, indent=2), encoding="utf-8")
+    _write_receipt_with_digest(tampered_rcp, receipt_bad)
     with pytest.raises(ValueError, match=r"mismatch|FAILED"):
         verify_pilot_canary(
             dataset_path=DEFAULT_DATASET_OUTPUT,
@@ -209,7 +219,7 @@ def test_tampered_receipt_gates_fail_verification(tmp_path: Path) -> None:
     receipt_bad2["evaluation_gates"] = dict(receipt["evaluation_gates"])
     receipt_bad2["evaluation_gates"]["harmful_edit_rate"] = 1.0
     receipt_bad2["evaluation_gates"]["harmful_edit_binomial_upper_bound_95"] = 1.0
-    tampered_rcp.write_text(json.dumps(receipt_bad2, indent=2), encoding="utf-8")
+    _write_receipt_with_digest(tampered_rcp, receipt_bad2)
     with pytest.raises(ValueError, match=r"mismatch|FAILED"):
         verify_pilot_canary(
             dataset_path=DEFAULT_DATASET_OUTPUT,
@@ -224,7 +234,7 @@ def test_tampered_receipt_gates_fail_verification(tmp_path: Path) -> None:
     receipt_bad3["loss_convergence"] = dict(receipt["loss_convergence"])
     receipt_bad3["loss_convergence"]["converged_loss"] = 99.0
     receipt_bad3["loss_convergence"]["loss_converged"] = False
-    tampered_rcp.write_text(json.dumps(receipt_bad3, indent=2), encoding="utf-8")
+    _write_receipt_with_digest(tampered_rcp, receipt_bad3)
     with pytest.raises(ValueError, match="Loss convergence gate FAILED"):
         verify_pilot_canary(
             dataset_path=DEFAULT_DATASET_OUTPUT,
@@ -303,7 +313,7 @@ def test_trajectory_schema_deep_validation(tmp_path: Path) -> None:
 
     receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
     receipt["files"]["dataset"]["sha256"] = sha256_file(tampered_ds)
-    tampered_rcp.write_text(json.dumps(receipt, indent=2), encoding="utf-8")
+    _write_receipt_with_digest(tampered_rcp, receipt)
 
     with pytest.raises(jsonschema.ValidationError):
         verify_pilot_canary(
@@ -324,7 +334,7 @@ def test_empty_replay_object_fails_verification(tmp_path: Path) -> None:
 
     receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
     receipt["files"]["replay_buffer"]["sha256"] = sha256_file(tampered_replay)
-    tampered_rcp.write_text(json.dumps(receipt, indent=2), encoding="utf-8")
+    _write_receipt_with_digest(tampered_rcp, receipt)
 
     with pytest.raises(ValueError, match="missing or empty field"):
         verify_pilot_canary(
@@ -367,7 +377,7 @@ def test_opsec_sentinel_fails_verification(tmp_path: Path) -> None:
 
     receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
     receipt["files"]["dataset"]["sha256"] = sha256_file(tampered_ds)
-    tampered_rcp.write_text(json.dumps(receipt, indent=2), encoding="utf-8")
+    _write_receipt_with_digest(tampered_rcp, receipt)
 
     with pytest.raises(ValueError, match="OPSEC VIOLATION"):
         verify_pilot_canary(
@@ -401,3 +411,202 @@ def test_clopper_pearson_exact_calculation() -> None:
 
     with pytest.raises(ValueError, match="Success count k must satisfy"):
         exact_clopper_pearson_upper(601, 600, 0.95)
+
+
+def test_missing_detached_sha256_fails_verification(tmp_path: Path) -> None:
+    """Verify that verify_pilot_canary fails closed if detached .sha256 is missing."""
+    rcp = tmp_path / "receipt_no_sha.json"
+    shutil.copyfile(DEFAULT_RECEIPT_OUTPUT, rcp)
+    sha_file = rcp.with_name(rcp.name + ".sha256")
+    if sha_file.exists():
+        sha_file.unlink()
+    with pytest.raises(FileNotFoundError, match="Mandatory detached receipt digest missing"):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=DEFAULT_EVAL_CASES_OUTPUT,
+        )
+
+
+def test_tampered_detached_sha256_fails_verification(tmp_path: Path) -> None:
+    """Verify that tampering with detached .sha256 fails verification."""
+    rcp = tmp_path / "receipt_bad_sha.json"
+    shutil.copyfile(DEFAULT_RECEIPT_OUTPUT, rcp)
+    sha_file = rcp.with_name(rcp.name + ".sha256")
+    sha_file.write_text("0000000000000000000000000000000000000000000000000000000000000000  receipt_bad_sha.json\n")
+    with pytest.raises(ValueError, match="Detached receipt digest mismatch"):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=DEFAULT_EVAL_CASES_OUTPUT,
+        )
+
+
+def test_tampered_record_count_fails_verification(tmp_path: Path) -> None:
+    """Verify that tampering with receipt record_count fails verification."""
+    rcp = tmp_path / "receipt_bad_count.json"
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    receipt["files"]["dataset"]["record_count"] = 199
+    _write_receipt_with_digest(rcp, receipt)
+    with pytest.raises(ValueError, match="Dataset record count mismatch"):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=DEFAULT_EVAL_CASES_OUTPUT,
+        )
+
+
+def test_tampered_loss_reduction_pct_fails_verification(tmp_path: Path) -> None:
+    """Verify that inconsistent loss reduction percentage fails verification."""
+    rcp = tmp_path / "receipt_bad_reduction.json"
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    receipt["loss_convergence"]["loss_reduction_pct"] = 99.99
+    _write_receipt_with_digest(rcp, receipt)
+    with pytest.raises(ValueError, match="Loss reduction percentage mismatch"):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=DEFAULT_EVAL_CASES_OUTPUT,
+        )
+
+
+def test_tampered_eval_case_prediction_fails_verification(tmp_path: Path) -> None:
+    """Verify that forged model prediction or inconsistent flags in eval cases fail verification."""
+    tampered_eval = tmp_path / "tampered_eval.jsonl"
+    tampered_rcp = tmp_path / "tampered_eval_receipt.json"
+    lines = [line for line in DEFAULT_EVAL_CASES_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    c0 = json.loads(lines[0])
+    c0["eliminated"] = False
+    c0["passed"] = True  # Inconsistent with prediction evaluation!
+    lines[0] = json.dumps(c0)
+    tampered_eval.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    receipt["files"]["eval_cases"]["sha256"] = sha256_file(tampered_eval)
+    _write_receipt_with_digest(tampered_rcp, receipt)
+    with pytest.raises(ValueError, match=r"inconsistent with prediction evaluation"):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=tampered_rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=tampered_eval,
+        )
+
+
+def test_replay_conversation_deep_validation(tmp_path: Path) -> None:
+    """Verify deep schema validation on replay buffer conversations (empty text, mismatch with top-level)."""
+    tampered_replay = tmp_path / "bad_conv_replay.jsonl"
+    tampered_rcp = tmp_path / "bad_conv_receipt.json"
+    lines = [line for line in DEFAULT_REPLAY_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    r0 = json.loads(lines[0])
+    r0["conversations"][0]["value"] = "   "  # Empty string in conversation turn
+    lines[0] = json.dumps(r0)
+    tampered_replay.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    receipt["files"]["replay_buffer"]["sha256"] = sha256_file(tampered_replay)
+    _write_receipt_with_digest(tampered_rcp, receipt)
+    with pytest.raises(ValueError, match="conversation contains empty message text"):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=tampered_rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=tampered_replay,
+            eval_cases_path=DEFAULT_EVAL_CASES_OUTPUT,
+        )
+
+
+def test_replay_partition_firewall_rejection(tmp_path: Path) -> None:
+    """Verify that held-out partition firewall catches leaks in replay records."""
+    tampered_replay = tmp_path / "heldout_leak_replay.jsonl"
+    tampered_rcp = tmp_path / "heldout_leak_receipt.json"
+    lines = [line for line in DEFAULT_REPLAY_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    r0 = json.loads(lines[0])
+    r0["instruction"] = "Поясніть вживання терміна «обсяг»."
+    r0["conversations"][0]["value"] = "Поясніть вживання терміна «обсяг»."
+    lines[0] = json.dumps(r0)
+    tampered_replay.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    receipt["files"]["replay_buffer"]["sha256"] = sha256_file(tampered_replay)
+    _write_receipt_with_digest(tampered_rcp, receipt)
+    with pytest.raises(ValueError, match="CONTAMINATION ERROR"):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=tampered_rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=tampered_replay,
+            eval_cases_path=DEFAULT_EVAL_CASES_OUTPUT,
+        )
+
+
+def test_query_embedded_in_heldout_context_fails_firewall(tmp_path: Path) -> None:
+    """Verify bidirectional context firewall detects training queries embedded in longer held-out contexts."""
+    synthetic_heldout = tmp_path / "synthetic_heldout.jsonl"
+    synthetic_heldout.write_text(
+        json.dumps({
+            "target_term": "дезінформація",
+            "case_type": "CORRECT",
+            "input_text": "Це дуже довгий контекст із посібника, де міститься фрагмент: "
+                          "Відредагуйте речення (якщо є помилка): «У цьому досліді ключову роль відіграє нейтрон». "
+                          "Який продовжується далі багатьма словами.",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    records = [json.loads(line) for line in DEFAULT_DATASET_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    replay_records = [json.loads(line) for line in DEFAULT_REPLAY_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    with pytest.raises(ValueError, match="Query embedded inside held-out context"):
+        verify_pilot_canary_partition_firewall(records, replay_records, synthetic_heldout)
+
+
+def test_eval_prompt_diversity() -> None:
+    """Verify empirical eval cases have 100% distinct prompts (200 calque, 600 clean control, 100 NLP)."""
+    cases = [json.loads(line) for line in DEFAULT_EVAL_CASES_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    assert len(cases) == 900
+    calque_prompts = set(c["input_prompt"] for c in cases if c["suite"] == "calque_elimination")
+    safety_prompts = set(c["input_prompt"] for c in cases if c["suite"] == "clean_control_safety")
+    nlp_prompts = set(c["input_prompt"] for c in cases if c["suite"] == "general_nlp_benchmark")
+
+    assert len(calque_prompts) == 200, f"Expected 200 distinct calque prompts, got {len(calque_prompts)}"
+    assert len(safety_prompts) == 600, f"Expected 600 distinct clean safety prompts, got {len(safety_prompts)}"
+    assert len(nlp_prompts) == 100, f"Expected 100 distinct NLP benchmark prompts, got {len(nlp_prompts)}"
+
+
+def test_stem_preserves_vesum_fidelity() -> None:
+    """Verify that STEM preserve items in canary dataset match VESUM lemma forms and tags."""
+    if not DEFAULT_VESUM_DB.exists():
+        pytest.skip("VESUM db not present in test environment")
+    import sqlite3
+    conn = sqlite3.connect(DEFAULT_VESUM_DB)
+    cur = conn.cursor()
+
+    records = [json.loads(line) for line in DEFAULT_DATASET_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    preserve_records = [r for r in records if not r.get("is_calque_or_russianism", False)]
+    assert len(preserve_records) == 60
+
+    # Test sample of STEM terms for non-uniform form counts
+    form_counts = set()
+    for r in preserve_records:
+        att = r.get("vesum_attestation", [])
+        assert len(att) > 0, f"Record {r['trajectory_id']} missing vesum_attestation"
+        lemma = att[0]["lemma"]
+        cnt = att[0]["vesum_forms_count"]
+        assert cnt > 0
+        form_counts.add(cnt)
+
+        # Check DB directly
+        cur.execute("SELECT count(*) FROM forms_all WHERE lemma = ?", (lemma,))
+        db_cnt = cur.fetchone()[0]
+        assert db_cnt == cnt, f"Lemma {lemma} count mismatch: recorded {cnt} vs DB {db_cnt}"
+
+    conn.close()
+    assert len(form_counts) >= 5, f"Expected non-hardcoded distinct form counts across STEM terms, got {len(form_counts)}"

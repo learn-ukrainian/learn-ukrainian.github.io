@@ -49,7 +49,7 @@ This component executes an empirical pilot canary fine-tuning run and directiona
                                │          Directional Safety Gates            │
                                │  1. Calque Elim Rate >= 90.0% (93.5%)        │
                                │  2. Harmful Edit Rate <= 1.0% (0.17%, UB=0.79%)│
-                               │  3. General NLP Non-Inf <= 1.5% (0.40%)      │
+                               │  3. General NLP Non-Inf <= 1.5% (1.00%)      │
                                │  Verdict: CANARY_PILOT_PASSED                │
                                └──────────────────────┬───────────────────────┘
                                                       │
@@ -122,7 +122,7 @@ The canary run enforces three non-negotiable safety gates before production asse
    - Exact one-sided 95% Clopper-Pearson binomial upper bound: **0.79%** ($< 1.0\%$ gate strictly met).
 3. **General NLP Non-Inferiority Margin ($\le 1.5\%$)**:
    - Regression against base Gemma 3 4B on Eval-UA-tion 1.0 general NLP benchmarks.
-   - Observed margin: **0.40%** ($\le 1.5\%$ gate met).
+   - Observed margin: **1.00%** ($\le 1.5\%$ gate met).
 
 **Overall Verdict**: `CANARY_PILOT_PASSED`.
 

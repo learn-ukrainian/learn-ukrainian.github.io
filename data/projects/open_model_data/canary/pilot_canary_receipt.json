@@ -1,10 +1,10 @@
 {
   "schema_version": "v1_pilot_canary_receipt",
-  "receipt_id": "receipt.pilot_canary.05de46386e6a998b",
+  "receipt_id": "receipt.pilot_canary.53015da6aaeba05d",
   "issue": 8010,
   "epic": 6321,
   "phase": "Phase 3.6: 200-Item Pilot Canary Fine-Tune on Gemma 3 4B",
-  "generated_at": "2026-09-13T15:28:05Z",
+  "generated_at": "2026-09-13T15:47:52Z",
   "model_target": {
     "identifier": "google/gemma-3-4b-it",
     "architecture": "Gemma3ForCausalLM",
@@ -76,17 +76,17 @@
     "dataset": {
       "filename": "pilot_canary_train_200.jsonl",
       "record_count": 200,
-      "sha256": "1b91d67409fe1554463b1c15ffacf7417a2410b95897a3175d39334e0ddcf83b"
+      "sha256": "df3c7482e2008eed294ec65b8578f775da10990bc355baf3ebdd473c270b11cc"
     },
     "replay_buffer": {
       "filename": "pilot_canary_replay_buffer_30.jsonl",
       "record_count": 30,
-      "sha256": "5bd981afd08c41f9ef420b3979f77871655d8a62e6fcaef2152be5ee89db953e"
+      "sha256": "9633a732b5043b876b0d92eb492b6fa8bbf762aa94cbac8d56942a9d87a08977"
     },
     "eval_cases": {
       "filename": "pilot_canary_eval_cases.jsonl",
       "record_count": 900,
-      "sha256": "29f122b5d756687052fc8694f6efd397116a7a58abe88faf624e3a82e38e7978"
+      "sha256": "d6cb6d34553b00acf2ee36eb08e42fa6031fbf66bf22502e9388c56cb0458de2"
     }
   },
   "verdict": "CANARY_PILOT_PASSED"
