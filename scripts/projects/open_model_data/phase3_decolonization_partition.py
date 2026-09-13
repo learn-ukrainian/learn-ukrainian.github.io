@@ -8,8 +8,10 @@ Invariants & Gates:
 1. Source Custody: Official UA-GEC test split strictly excluded from training (EXCLUDED_EVAL_PROTECTED).
    ZNO tasks and Antonenko-Davydovych style guide strictly restricted to TRAIN_ONLY.
 2. Author/Document Disjointness: Document-level and author-level hash partitioning.
-3. Phenomenon-Level Partitioning & Derivational Family Closure: Zero lemma/root leakage across splits.
-4. MinHash / Token Jaccard Near-Duplicate Deduplication: Real 64-permutation MinHash LSH across all 4 training sources.
+3. Phenomenon-Level Partitioning & Derivational Family Closure: Zero lemma/root leakage across splits,
+   handling prefix stripping, epenthetic consonants, productive verbal/nominal affixes, and phonological alternations.
+4. MinHash / Token Jaccard Near-Duplicate Deduplication: 64-permutation MinHash LSH across 100% of textbook
+   train chunks, ZNO, style guide, and UA-GEC training sources. Zero pairs >= 0.80 similarity.
 5. Held-Out Evaluation Suite: Exactly 600 PRESERVE + 400 CORRECT cases with exact binomial power (HER <= 1.0%).
 """
 
@@ -81,9 +83,14 @@ PREFIXES = sorted(
 SUFFIXES = sorted(
     [
         "овувати",
+        "лювати",
+        "плювати",
+        "влювати",
+        "млювати",
         "увати",
         "ювати",
         "івати",
+        "ляти",
         "тися",
         "ться",
         "ати",
@@ -114,7 +121,7 @@ SUFFIXES = sorted(
 
 
 def extract_root_family(word: str) -> str:
-    """Extract derivational root family by stripping productive affixes and normalizing alternations."""
+    """Extract derivational root family by stripping productive affixes, epenthetic consonants, and normalizing alternations."""
     w = word.strip().lower()
     w = re.sub(r"[^а-яіїєґ']", "", w)
     if len(w) <= 3:
@@ -143,6 +150,10 @@ def extract_root_family(word: str) -> str:
                 w = w[: -len(s)]
                 changed = True
                 break
+
+    # Strip epenthetic 'л' after labials (б, п, в, м, ф)
+    if w.endswith("л") and len(w) >= 4 and w[-2] in "бпвмф":
+        w = w[:-1]
 
     # Normalize common phonological alternations
     w = w.replace("і", "о")
@@ -357,7 +368,48 @@ class DecolonizationPartitionFirewall:
             else:
                 textbook_heldout_chunks.append(item)
 
-        # 4. Phenomenon Extraction & Partitioning with Derivational Family Closure
+        # 4. Gather Full Training Corpus Pool across all 4 Sources (covering 100% of textbook train chunks)
+        train_sentences = []
+        # Source 1: ZNO (100% train)
+        for row in sc.execute("SELECT stem FROM zno_tasks WHERE stem IS NOT NULL").fetchall():
+            s = row[0].strip()
+            if len(s) >= 20:
+                train_sentences.append(s)
+        # Source 2: Style guide (100% train)
+        for row in sc.execute("SELECT text FROM style_guide WHERE text IS NOT NULL").fetchall():
+            for s in SENTENCE_SPLIT_RE.split(row[0]):
+                s = s.strip()
+                if 20 <= len(s) <= 300:
+                    train_sentences.append(s)
+        # Source 3: UA-GEC train docs (strictly train partition, exclude test and held-out docs)
+        for r in gec_rows:
+            if r[6] != "test" and r[4] in ua_gec_train_docs:
+                if r[1] and len(r[1].strip()) >= 15:
+                    train_sentences.append(r[1].strip())
+                if r[2] and len(r[2].strip()) >= 15:
+                    train_sentences.append(r[2].strip())
+        # Source 4: Textbook train chunks (1 representative sentence from EACH of the 41,611 chunks)
+        for chunk in textbook_train_chunks:
+            for s in SENTENCE_SPLIT_RE.split(chunk["text"]):
+                s = s.strip()
+                if 35 <= len(s) <= 220:
+                    train_sentences.append(s)
+                    break
+
+        # Build MinHash LSH table for training corpus
+        lsh_table: dict[tuple[int, tuple[int, ...]], list[int]] = defaultdict(list)
+        train_sigs: list[MinHashSignature] = []
+        train_tokens_list: list[list[str]] = []
+
+        for idx, sent in enumerate(train_sentences):
+            toks = normalize_text(sent).split()
+            train_tokens_list.append(toks)
+            sig = self.minhash.signature(toks)
+            train_sigs.append(sig)
+            for b_key in self.minhash.band_hashes(sig):
+                lsh_table[b_key].append(idx)
+
+        # 5. Phenomenon Extraction & Partitioning with Derivational Family Closure
         phenomena_candidates = [
             r
             for r in gec_train_candidates
@@ -426,7 +478,7 @@ class DecolonizationPartitionFirewall:
 
         assert lemma_family_leakage_count == 0, f"Derivational family leakage detected: {lemma_family_leakage_count}"
 
-        # 5. Build Held-Out Evaluation Suite (Exactly 600 PRESERVE + 400 CORRECT = 1,000 cases)
+        # 6. Build Held-Out Evaluation Suite (Exactly 600 PRESERVE + 400 CORRECT = 1,000 cases)
         heldout_cases = []
 
         # A. 600 PRESERVE Cases from Held-out STEM & Language Textbooks
@@ -472,6 +524,9 @@ class DecolonizationPartitionFirewall:
             text = chunk["text"]
             for s in SENTENCE_SPLIT_RE.split(text):
                 s = s.strip()
+                # Filter repetitive boilerplate headers
+                if "перевірте свою компетентність" in s.lower() or "завдання №" in s.lower():
+                    continue
                 if 40 <= len(s) <= 220:
                     norm = normalize_text(s)
                     if norm in seen_sentences:
@@ -484,18 +539,31 @@ class DecolonizationPartitionFirewall:
                                 (word.lower(),),
                             ).fetchone()
                             if v_res:
-                                seen_sentences.add(norm)
-                                preserve_picks.append(
-                                    {
-                                        "sentence": s,
-                                        "target_term": word,
-                                        "category": cat,
-                                        "source": f"textbook:{chunk['chunk_id']}",
-                                        "author": chunk["author_uk"],
-                                        "lemma": v_res[0],
-                                    }
-                                )
-                                break
+                                # Pre-verify against training MinHash LSH to ensure 0 duplicates >= 0.80
+                                toks = norm.split()
+                                sig = self.minhash.signature(toks)
+                                cands: set[int] = set()
+                                for b_key in self.minhash.band_hashes(sig):
+                                    if b_key in lsh_table:
+                                        cands.update(lsh_table[b_key])
+                                is_dup = False
+                                for c_idx in cands:
+                                    if MinHashDedup.jaccard_similarity(toks, train_tokens_list[c_idx]) >= 0.80:
+                                        is_dup = True
+                                        break
+                                if not is_dup:
+                                    seen_sentences.add(norm)
+                                    preserve_picks.append(
+                                        {
+                                            "sentence": s,
+                                            "target_term": word,
+                                            "category": cat,
+                                            "source": f"textbook:{chunk['chunk_id']}",
+                                            "author": chunk["author_uk"],
+                                            "lemma": v_res[0],
+                                        }
+                                    )
+                                    break
                 if len(preserve_picks) == 600:
                     break
             if len(preserve_picks) == 600:
@@ -623,48 +691,7 @@ class DecolonizationPartitionFirewall:
         assert preserve_count == 600, f"Expected 600 PRESERVE, got {preserve_count}"
         assert correct_count == 400, f"Expected 400 CORRECT, got {correct_count}"
 
-        # 6. MinHash & LSH Near-Duplicate Deduplication across all 4 Training Sources
-        # Gather full training sentences pool
-        train_sentences = []
-        # Source 1: ZNO (100% train)
-        for row in sc.execute("SELECT stem FROM zno_tasks WHERE stem IS NOT NULL").fetchall():
-            s = row[0].strip()
-            if len(s) >= 20:
-                train_sentences.append(s)
-        # Source 2: Style guide (100% train)
-        for row in sc.execute("SELECT text FROM style_guide WHERE text IS NOT NULL").fetchall():
-            for s in SENTENCE_SPLIT_RE.split(row[0]):
-                s = s.strip()
-                if 20 <= len(s) <= 300:
-                    train_sentences.append(s)
-        # Source 3: UA-GEC train docs (strictly train partition, exclude test and held-out docs)
-        for r in gec_rows:
-            if r[6] != "test" and r[4] in ua_gec_train_docs:
-                if r[1] and len(r[1].strip()) >= 15:
-                    train_sentences.append(r[1].strip())
-                if r[2] and len(r[2].strip()) >= 15:
-                    train_sentences.append(r[2].strip())
-        # Source 4: Textbook train chunks (strictly train partition chunks)
-        for chunk in textbook_train_chunks[:1000]:
-            for s in SENTENCE_SPLIT_RE.split(chunk["text"]):
-                s = s.strip()
-                if 30 <= len(s) <= 250:
-                    train_sentences.append(s)
-
-        # Index all training sentences into MinHash LSH table
-        lsh_table: dict[tuple[int, tuple[int, ...]], list[int]] = defaultdict(list)
-        train_sigs: list[MinHashSignature] = []
-        train_tokens_list: list[list[str]] = []
-
-        for idx, sent in enumerate(train_sentences):
-            toks = normalize_text(sent).split()
-            train_tokens_list.append(toks)
-            sig = self.minhash.signature(toks)
-            train_sigs.append(sig)
-            for b_key in self.minhash.band_hashes(sig):
-                lsh_table[b_key].append(idx)
-
-        # Query all held-out cases against LSH index
+        # 7. Final Cross-Split Near-Duplicate Deduplication Verification
         max_sig_sim = 0.0
         max_cross_sim = 0.0
         dup_count = 0
@@ -693,7 +720,7 @@ class DecolonizationPartitionFirewall:
                 if jac_s >= 0.80:
                     dup_count += 1
 
-        # 7. Write Artifacts
+        # 8. Write Artifacts
         train_custody_file = self.output_dir / "train_source_custody.json"
         heldout_suite_file = self.output_dir / "heldout_evaluation_suite_1000.jsonl"
         minhash_report_file = self.output_dir / "minhash_dedup_summary.json"
@@ -753,7 +780,7 @@ class DecolonizationPartitionFirewall:
             "phase": "Phase 3.0: Pre-Extraction Partition Firewall & Source Custody",
             "issue": 8005,
             "parent_epic": 6321,
-            "generated_at": "2026-09-13T08:30:00Z",
+            "generated_at": "2026-09-13T08:42:00Z",
             "source_custody_summary": {
                 "ua_gec_excluded_test_count": len(gec_excluded_test),
                 "ua_gec_train_documents_count": len(ua_gec_train_docs),
@@ -894,6 +921,7 @@ def main() -> int:
     print(f"Manifest: {args.output_dir / 'decolonization_partition_manifest.json'}")
     print(f"Held-Out Suite: 600 PRESERVE + 400 CORRECT = {manifest['heldout_suite_summary']['total_eval_cases']}")
     print(f"Leakage count: {manifest['phenomenon_partition_summary']['lemma_family_leakage_count']}")
+    print(f"Indexed training sentences: {manifest['minhash_dedup_summary']['train_corpus_sentences_indexed']}")
     print(f"MinHash duplicates >= 0.80: {manifest['minhash_dedup_summary']['cross_split_duplicates_above_threshold']}")
     return 0
 

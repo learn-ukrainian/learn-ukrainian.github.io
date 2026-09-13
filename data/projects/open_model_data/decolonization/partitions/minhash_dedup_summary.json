@@ -4,12 +4,12 @@
   "permutations": 64,
   "bands": 16,
   "rows_per_band": 4,
-  "train_corpus_sentences_indexed": 14006,
+  "train_corpus_sentences_indexed": 45687,
   "similarity_threshold": 0.8,
-  "max_minhash_signature_similarity": 0.6875,
-  "max_cross_split_similarity": 0.6667,
+  "max_minhash_signature_similarity": 0.7969,
+  "max_cross_split_similarity": 0.7619,
   "cross_split_duplicates_above_threshold": 0,
   "heldout_cases_evaluated": 1000,
-  "candidate_comparisons_evaluated": 183,
+  "candidate_comparisons_evaluated": 1341,
   "status": "PASS"
 }
