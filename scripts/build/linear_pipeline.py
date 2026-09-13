@@ -111,10 +111,8 @@ WRITER_DEFAULTS: dict[str, dict[str, str]] = {
     "cursor-tools": {"model": "composer-2.5", "effort": "medium"},
     "deepseek-tools": {"model": "deepseek-v4-pro", "effort": "medium"},
     "qwen-tools": {"model": "qwen/qwen3.6-plus", "effort": "medium"},
-    # agy effort is a no-op on the CLI today (Phase-2 follow-up). The
-    # model field is informational only; the TUI-selected model is what
-    # actually runs. "medium" is a placeholder for telemetry parity.
-    "agy-tools": {"model": "gemini-3.5-flash-high", "effort": "medium"},
+    # AGY selects the model via --model; effort remains a telemetry placeholder.
+    "agy-tools": {"model": "gemini-3.8-flash-high", "effort": "medium"},
 }
 PROMPT_BY_WRITER = {
     "grok-tools": "linear-write-grok.md",
@@ -159,7 +157,7 @@ REVIEWER_DEFAULTS: dict[str, dict[str, str]] = {
     "cursor-tools": {"model": "grok-4.5", "effort": "medium"},
     "deepseek-tools": {"model": "deepseek-v4-pro", "effort": "medium"},
     "qwen-tools": {"model": "qwen/qwen3.6-plus", "effort": "medium"},
-    "agy-tools": {"model": "gemini-3.5-flash-high", "effort": "medium"},
+    "agy-tools": {"model": "gemini-3.8-flash-high", "effort": "medium"},
 }
 WRITER_ARTIFACTS = (
     "module.md",

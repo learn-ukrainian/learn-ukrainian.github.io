@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from scripts.agent_runtime.adapters import agy as agy_module
 from scripts.agent_runtime.adapters.agy import AgyAdapter
 from scripts.agent_runtime.adapters.base import InvocationPlan
@@ -380,8 +382,8 @@ def test_build_invocation_maps_model_slug(tmp_path: Path) -> None:
 
 def test_build_invocation_accepts_display_string(tmp_path: Path) -> None:
     # Legacy display labels normalize to the slug form.
-    plan = _build(tmp_path, model="Gemini 3.5 Flash (High)")
-    assert _model_after_flag(plan) == "gemini-3.5-flash-high"
+    plan = _build(tmp_path, model="Gemini 3.8 Flash (High)")
+    assert _model_after_flag(plan) == "gemini-3.8-flash-high"
 
 
 def test_build_invocation_unknown_model_falls_back_to_default(tmp_path: Path) -> None:
@@ -395,3 +397,12 @@ def test_build_invocation_none_model_falls_back_to_default(tmp_path: Path) -> No
     # No model -> resolves the adapter default slug.
     plan = _build(tmp_path, model=None)
     assert _model_after_flag(plan) == "gemini-3.8-flash-high"
+
+
+@pytest.mark.parametrize("tier", ["high", "medium", "low"])
+@pytest.mark.parametrize("display_label", [False, True])
+def test_build_invocation_remaps_retired_flash_aliases(tmp_path: Path, tier: str, display_label: bool) -> None:
+    model = f"Gemini 3.5 Flash ({tier.title()})" if display_label else f"gemini-3.5-flash-{tier}"
+    plan = _build(tmp_path, model=model)
+    assert _model_after_flag(plan) == f"gemini-3.8-flash-{tier}"
+    assert f"gemini-3.5-flash-{tier}" not in agy_module._AGY_MODEL_SLUGS

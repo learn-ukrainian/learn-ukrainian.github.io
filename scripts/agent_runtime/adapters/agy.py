@@ -94,14 +94,13 @@ _MAX_INLINE_TOOL_RESULT_BYTES = 1_000_000
 _AGY_PRINT_TIMEOUT = "120m"
 
 # Canonical ``agy --model`` values (verbatim from ``agy models`` as of
-# 2026-09-02). Callers may pass a slug (``gemini-3.8-flash-high``) or a legacy
+# 2026-09-13). Callers may pass a slug (``gemini-3.8-flash-high``) or a legacy
 # display string (``Gemini 3.8 Flash (High)``); ``_normalize_model`` collapses
 # both to the same key. We always emit the slug form because ``agy models``
 # now lists slugs and headless ``--model <slug>`` is the proven path.
 #
 # Historical note: earlier AGY builds wanted display labels (#2731 slug bug).
-# Live probe 2026-09-02: ``agy models`` lists gemini-3.8-flash-high/medium/low
-# above the 3.7/3.6 back-compat entries.
+# Live probe 2026-09-13: 3.8/3.7/3.6 Flash are listed; 3.5 is retired.
 _AGY_MODEL_SLUGS: tuple[str, ...] = (
     "gemini-3.8-flash-high",
     "gemini-3.8-flash-medium",
@@ -112,9 +111,6 @@ _AGY_MODEL_SLUGS: tuple[str, ...] = (
     "gemini-3.6-flash-high",
     "gemini-3.6-flash-medium",
     "gemini-3.6-flash-low",
-    "gemini-3.5-flash-high",
-    "gemini-3.5-flash-medium",
-    "gemini-3.5-flash-low",
     "gemini-3.1-pro-high",
     "gemini-3.1-pro-low",
     "claude-sonnet-4-6",
@@ -156,6 +152,9 @@ def _build_agy_model_map() -> dict[str, str]:
     out: dict[str, str] = {}
     for slug in _AGY_MODEL_SLUGS:
         out[_normalize_model(slug)] = slug
+    # Retired 3.5 aliases preserve their tier on 3.8, including display labels.
+    for tier in ("high", "medium", "low"):
+        out[_normalize_model(f"gemini-3.5-flash-{tier}")] = f"gemini-3.8-flash-{tier}"
     # Legacy labels that share a normalize key with a slug resolve automatically.
     # Claude/GPT-OSS thinking labels normalize differently — map them explicitly.
     legacy_to_slug = {
