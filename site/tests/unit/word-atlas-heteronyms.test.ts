@@ -6,6 +6,8 @@ import type { EntryRecord } from "@site/src/lib/lexicon/atlas-data-source";
 
 describe("WordAtlasArticle heteronym support (#8022)", () => {
   const heteronymRecord: EntryRecord = {
+    slug: "город",
+    kind: "article",
     entry: {
       lemma: "город",
       url_slug: "город",
@@ -134,6 +136,8 @@ describe("WordAtlasArticle heteronym support (#8022)", () => {
 
   test("renders distinct synonyms in sections for атлас heteronyms", () => {
     const atlasRecord: EntryRecord = {
+      slug: "атлас",
+      kind: "article",
       entry: {
         lemma: "атлас",
         url_slug: "атлас",
@@ -194,6 +198,8 @@ describe("WordAtlasArticle heteronym support (#8022)", () => {
 
   test("standard entry without heteronyms does not render switcher nav", () => {
     const standardRecord: EntryRecord = {
+      slug: "книга",
+      kind: "article",
       entry: {
         lemma: "книга",
         url_slug: "книга",

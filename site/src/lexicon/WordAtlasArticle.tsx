@@ -133,6 +133,23 @@ function getEffectiveHeteronymRecord(
   heteronym: LexiconEntry,
 ): EntryRecord {
   const baseEntry = baseRecord.entry;
+  const baseEnrichment =
+    typeof baseEntry.enrichment === "object" && baseEntry.enrichment !== null
+      ? (baseEntry.enrichment as Record<string, any>)
+      : {};
+  const heteronymEnrichment =
+    typeof heteronym.enrichment === "object" && heteronym.enrichment !== null
+      ? (heteronym.enrichment as Record<string, any>)
+      : {};
+  const baseSections =
+    typeof baseEntry.sections === "object" && baseEntry.sections !== null
+      ? (baseEntry.sections as Record<string, any>)
+      : {};
+  const heteronymSections =
+    typeof heteronym.sections === "object" && heteronym.sections !== null
+      ? (heteronym.sections as Record<string, any>)
+      : {};
+
   const effectiveEntry: LexiconEntry = {
     ...baseEntry,
     ...heteronym,
@@ -142,18 +159,14 @@ function getEffectiveHeteronymRecord(
     pronunciation: heteronym.pronunciation !== undefined ? heteronym.pronunciation : baseEntry.pronunciation,
     heritage_status: heteronym.heritage_status !== undefined ? heteronym.heritage_status : baseEntry.heritage_status,
     distinction_note: heteronym.distinction_note !== undefined ? heteronym.distinction_note : baseEntry.distinction_note,
-    sections: heteronym.sections !== undefined ? { ...baseEntry.sections, ...heteronym.sections } : baseEntry.sections,
+    sections: heteronym.sections !== undefined ? { ...baseSections, ...heteronymSections } : baseEntry.sections,
     enrichment: {
-      ...(typeof baseEntry.enrichment === "object" && baseEntry.enrichment !== null
-        ? (baseEntry.enrichment as Record<string, unknown>)
-        : {}),
-      ...(typeof heteronym.enrichment === "object" && heteronym.enrichment !== null
-        ? (heteronym.enrichment as Record<string, unknown>)
-        : {}),
-      stress: heteronym.stress ?? heteronym.enrichment?.stress ?? baseEntry.enrichment?.stress,
-      cefr: heteronym.cefr !== undefined ? (heteronym.cefr ? { level: heteronym.cefr } : null) : baseEntry.enrichment?.cefr,
-      morphology: heteronym.morphology ?? heteronym.enrichment?.morphology ?? baseEntry.enrichment?.morphology,
-      examples: heteronym.examples ?? heteronym.enrichment?.examples ?? baseEntry.enrichment?.examples,
+      ...baseEnrichment,
+      ...heteronymEnrichment,
+      stress: heteronym.stress ?? heteronymEnrichment.stress ?? baseEnrichment.stress,
+      cefr: heteronym.cefr !== undefined ? (heteronym.cefr ? { level: heteronym.cefr } : null) : baseEnrichment.cefr,
+      morphology: heteronym.morphology ?? heteronymEnrichment.morphology ?? baseEnrichment.morphology,
+      examples: heteronym.examples ?? heteronymEnrichment.examples ?? baseEnrichment.examples,
     },
   };
   return {
@@ -173,7 +186,7 @@ interface WordAtlasArticleBodyProps {
 }
 
 function WordAtlasArticleBody({
-  record,
+  record: _record,
   view,
   generatedAt,
   manifestVersion,
@@ -221,7 +234,7 @@ function WordAtlasArticleBody({
     verbPedagogy,
     hasVerbPedagogy,
     verbPedagogySources,
-    resolvedAspectPartnerSlug,
+    resolvedAspectPartnerSlug: _resolvedAspectPartnerSlug,
     partnerParadigm,
     hasAspectPartner,
     hasPractice,
