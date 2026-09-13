@@ -104,6 +104,8 @@ from scripts.lexicon.source_attribution import (
     SUM20_ACADEMIC_LABEL,
     SUM20_SHORT_LABEL,
     SYNONYMS_LABEL,
+    ULIF_DICTUA_LABEL,
+    ULIF_DICTUA_URL,
     VTS_ACADEMIC_LABEL,
     VTS_SHORT_LABEL,
     WIKIDATA_LABEL,
@@ -1625,12 +1627,10 @@ def _slovnyk_backoff_sleep(attempt: int, retry_after: float | None) -> None:
 
 
 def _fetch_slovnyk_entry(lemma: str, lookup_word: str, slug: str) -> dict[str, Any] | None:
-    """Fetch one slovnyk.me dictionary entry, 429-friendly.
+    """Fetch an entry from slovnyk.me for a specific dictionary.
 
-    Retries 429/5xx/network errors with Retry-After + exponential backoff (so a rate-limit
-    resolves into a real result instead of a transient miss that is never cached, #3097).
-    Returns the parsed entry, ``None`` for a genuine 404 (cached as a known miss), or raises
-    ``_SlovnykTransientError`` only after exhausting retries (caller leaves the slug uncached
+    Returns the parsed entry dict, or None if the entry was not found (404).
+    Raises _SlovnykTransientError on network error or server error (5xx/429,
     so a later run retries it).
     """
     if _phase1_offline_mode():
@@ -1717,7 +1717,7 @@ def _slovnyk_cache(lemma: str) -> dict[str, Any]:
     cache = _load_slovnyk_cache_file(path)
     changed = False
     if cache and cache.get("lookup_word") == lookup_word:
-        if cache.get("schema_version") == 1:
+        if cache.get("schema_version") in (1, 3):
             raw_lookups = cache.get("lookups")
             if isinstance(raw_lookups, dict):
                 cache["lookups"] = {slug: row for slug, row in raw_lookups.items() if row is not None}
@@ -1773,6 +1773,8 @@ def _cache_has_lookup(cache: dict[str, Any] | None, slug: str) -> bool:
 
 
 def _cache_store_lookup(lemma: str, cache: dict[str, Any], slug: str, row: dict[str, Any] | None) -> None:
+    if _phase1_offline_mode():
+        return
     lookups = cache.setdefault("lookups", {})
     if not isinstance(lookups, dict):
         return
@@ -2019,6 +2021,141 @@ def _base_word(term: str) -> str:
     return term.split(" (")[0]
 
 
+def _ulif_has_tables(conn: sqlite3.Connection) -> bool:
+    try:
+        return bool(
+            conn.execute(
+                "SELECT 1 FROM sqlite_master WHERE type='table' AND name='ulif_dictua_entries'"
+            ).fetchone()
+        )
+    except sqlite3.OperationalError:
+        return False
+
+
+def _synonyms_ulif(conn: sqlite3.Connection, lemma: str) -> dict[str, Any] | None:
+    """Extract sense-split synonym groups directly from authoritative ULIF DictUA in sources.db."""
+    if not _ulif_has_tables(conn):
+        return None
+    normalized = _lookup_key(strip_acute_stress(lemma))
+    try:
+        entry = conn.execute(
+            "SELECT id, canonical_headword FROM ulif_dictua_entries WHERE normalized_query = ? AND status = 'ok'",
+            (normalized,),
+        ).fetchone()
+        if not entry:
+            return None
+
+        rows = conn.execute(
+            "SELECT source_order, payload_json FROM ulif_dictua_sections WHERE entry_id = ? AND kind = 'synonyms' ORDER BY source_order",
+            (entry[0],),
+        ).fetchall()
+    except sqlite3.OperationalError:
+        return None
+
+    if not rows:
+        return None
+
+    lemma_key = _lookup_key(strip_acute_stress(lemma))
+    excluded = _WRONG_SENSE_SYNONYMS.get(_base_lemma(lemma).casefold())
+    synsets: list[dict[str, Any]] = []
+    flat_items: list[str] = []
+    seen_flat: set[str] = set()
+    synset_id = 0
+
+    for _source_order, payload_json in rows:
+        try:
+            data = json.loads(payload_json)
+        except Exception:
+            continue
+        terms = data.get("terms") or []
+        register_labels = data.get("register_labels") or []
+        citations = data.get("citations") or []
+
+        members: list[dict[str, Any]] = []
+        for term_obj in terms:
+            raw_term = term_obj.get("text") if isinstance(term_obj, dict) else str(term_obj)
+            if not raw_term:
+                continue
+            # Term text in ULIF is often ALLCAPS with stress, e.g. "КНИ́ЖКА" -> "кни́жка", or "[ ІНАКИЙ ]"
+            cleaned_raw = re.sub(r"^[\[\]\s]+|[\[\]\s]+$", "", raw_term)
+            stressed = cleaned_raw.strip().lower()
+            clean_lemma = _strip_stress(stressed).casefold()
+            key = _lookup_key(clean_lemma)
+            if not clean_lemma or key == lemma_key or clean_lemma in _BLOCKED_SYNONYMS:
+                continue
+            if excluded:
+                norm_term = clean_lemma.replace("’", "'").replace("ʼ", "'").replace("`", "'")
+                if norm_term in excluded:
+                    continue
+            if not _vesum_valid_synonym(clean_lemma):
+                continue
+
+            member: dict[str, Any] = {
+                "lemma": clean_lemma,
+                "stressed": stressed,
+            }
+            if register_labels:
+                member["register"] = register_labels[0]
+            members.append(member)
+            if clean_lemma not in seen_flat:
+                seen_flat.add(clean_lemma)
+                flat_items.append(clean_lemma)
+
+        if not members:
+            continue
+
+        synset_id += 1
+        synset: dict[str, Any] = {
+            "id": synset_id,
+            "members": members,
+        }
+        if citations:
+            # First citation is typically the definition/gloss
+            synset["gloss"] = {"text": str(citations[0])}
+        synsets.append(synset)
+
+    if not flat_items:
+        return None
+
+    return {
+        "items": flat_items[:48],
+        "synsets": synsets,
+        "source": ULIF_DICTUA_LABEL,
+        "source_urls": [ULIF_DICTUA_URL],
+    }
+
+
+def _stress_ulif(conn: sqlite3.Connection, lemma: str) -> dict[str, str] | None:
+    """Authoritative lexicographical stress from ULIF DictUA."""
+    if not _ulif_has_tables(conn):
+        return None
+    normalized = _lookup_key(strip_acute_stress(lemma))
+    try:
+        row = conn.execute(
+            "SELECT canonical_headword FROM ulif_dictua_entries WHERE normalized_query = ? AND status = 'ok'",
+            (normalized,),
+        ).fetchone()
+    except sqlite3.OperationalError:
+        return None
+    if not row or not row[0]:
+        return None
+
+    raw_hw = str(row[0]).strip()
+    hw = re.sub(r"\s+\d+$", "", raw_hw).strip()
+    if not hw:
+        return None
+
+    if _strip_stress(hw).casefold() != normalized:
+        return None
+
+    if _STRESS_MARK_RE.search(unicodedata.normalize("NFKD", hw)):
+        return {
+            "form": hw,
+            "source": ULIF_DICTUA_LABEL,
+        }
+    return None
+
+
 def _synonyms_slovnyk_sense_groups(
     lemma: str,
     cache: dict[str, Any] | None = None,
@@ -2234,6 +2371,110 @@ def _candidate_matches_entry_pos(candidate: str, entry_pos: str | None) -> bool:
     if not mapped_pos or _has_whitespace(candidate):
         return True
     return _candidate_matches_headword_pos(candidate, mapped_pos)
+
+
+def _antonyms_ulif(
+    conn: sqlite3.Connection,
+    lemma: str,
+    *,
+    entry_pos: str | None = None,
+) -> dict[str, Any] | None:
+    """Antonym chips from authoritative ULIF DictUA antonym rows."""
+    if not _ulif_has_tables(conn):
+        return None
+
+    source_term = _canonical_synonym_term(lemma)
+    if not source_term or not _vesum_valid_synonym(source_term):
+        return None
+
+    base_key = _base_lemma(lemma).casefold().replace("’", "'").replace("ʼ", "'").replace("`", "'")
+    if base_key in _DROP_ANTONYM_LEMMAS:
+        return None
+    wrong_terms = _WRONG_ANTONYMS.get(base_key)
+
+    normalized = _lookup_key(strip_acute_stress(lemma))
+    try:
+        entry = conn.execute(
+            "SELECT id FROM ulif_dictua_entries WHERE normalized_query = ? AND status = 'ok'",
+            (normalized,),
+        ).fetchone()
+        if not entry:
+            return None
+
+        rows = conn.execute(
+            "SELECT source_order, payload_json FROM ulif_dictua_sections WHERE entry_id = ? AND kind = 'antonyms' ORDER BY source_order",
+            (entry[0],),
+        ).fetchall()
+    except sqlite3.OperationalError:
+        return None
+
+    if not rows:
+        return None
+
+    items: list[str] = []
+    seen: set[str] = set()
+
+    for _source_order, payload_json in rows:
+        try:
+            data = json.loads(payload_json)
+        except Exception:
+            continue
+        for r in data.get("rows", []):
+            if not isinstance(r, dict):
+                continue
+            r_kind = r.get("kind")
+            candidates: list[str] = []
+            if r_kind == "paired_sense":
+                l_terms = [t.get("text", "") if isinstance(t, dict) else str(t) for t in r.get("left", {}).get("terms", [])]
+                r_terms = [t.get("text", "") if isinstance(t, dict) else str(t) for t in r.get("right", {}).get("terms", [])]
+                l_cleans = [_strip_stress(t).casefold() for t in l_terms if t]
+                r_cleans = [_strip_stress(t).casefold() for t in r_terms if t]
+
+                if normalized in l_cleans:
+                    candidates.extend(r_terms)
+                elif normalized in r_cleans:
+                    candidates.extend(l_terms)
+            elif r_kind == "relation_note":
+                text = str(r.get("text") or "")
+                if "~" in text:
+                    for clause in re.split(r"[;,]", text):
+                        if "~" not in clause:
+                            continue
+                        parts = clause.split("~")
+                        if len(parts) != 2:
+                            continue
+                        left_part = re.sub(r"^[□◘○.\s]+|[□◘○.\s]+$", "", re.sub(r"\(.*?\)", "", parts[0]))
+                        right_part = re.sub(r"^[□◘○.\s]+|[□◘○.\s]+$", "", re.sub(r"\(.*?\)", "", parts[1]))
+                        left_words = [_strip_stress(w).strip().casefold() for w in re.split(r"//", left_part)]
+                        right_words = [_strip_stress(w).strip().casefold() for w in re.split(r"//", right_part)]
+                        if normalized in left_words:
+                            candidates.extend(right_words)
+                        elif normalized in right_words:
+                            candidates.extend(left_words)
+
+            for raw_cand in candidates:
+                clean_cand = re.sub(r"^[\[\]\s]+|[\[\]\s]+$", "", str(raw_cand))
+                term = _clean_atlas_chip_candidate(clean_cand, lemma)
+                if not term or term in seen or not _vesum_valid_synonym(term):
+                    continue
+                if len(term) < 2 or term in {"ти", "до", "на", "за", "по"}:
+                    continue
+                if wrong_terms:
+                    norm_term = term.replace("’", "'").replace("ʼ", "'").replace("`", "'")
+                    if norm_term in wrong_terms:
+                        continue
+                if _candidate_matches_entry_pos(term, entry_pos):
+                    seen.add(term)
+                    items.append(term)
+
+    if not items:
+        return None
+
+    return {
+        "items": items[:12],
+        "source": ULIF_DICTUA_LABEL,
+        "source_urls": [ULIF_DICTUA_URL],
+    }
 
 
 def _antonyms_wiktionary(
@@ -3011,12 +3252,81 @@ def _merge_idiom_sections(*sections: dict[str, Any] | None) -> dict[str, Any] | 
     }
 
 
+def _idioms_ulif(conn: sqlite3.Connection, lemma: str) -> dict[str, Any] | None:
+    """Extract authoritative phraseology/idioms with citations from ULIF DictUA."""
+    if not _ulif_has_tables(conn):
+        return None
+    normalized = _lookup_key(strip_acute_stress(lemma))
+    try:
+        entry = conn.execute(
+            "SELECT id FROM ulif_dictua_entries WHERE normalized_query = ? AND status = 'ok'",
+            (normalized,),
+        ).fetchone()
+        if not entry:
+            return None
+
+        rows = conn.execute(
+            "SELECT source_order, payload_json FROM ulif_dictua_sections WHERE entry_id = ? AND kind = 'phraseology' ORDER BY source_order",
+            (entry[0],),
+        ).fetchall()
+    except sqlite3.OperationalError:
+        return None
+
+    if not rows:
+        return None
+
+    items: list[dict[str, Any]] = []
+    seen_phrases: set[str] = set()
+
+    for _source_order, payload_json in rows:
+        try:
+            data = json.loads(payload_json)
+        except Exception:
+            continue
+        terms = data.get("terms") or []
+        text = str(data.get("text") or "").strip()
+        if not terms or not text:
+            continue
+
+        head_term = terms[0].get("text") if isinstance(terms[0], dict) else str(terms[0])
+        phrase = re.split(r"\(", head_term, maxsplit=1)[0].strip()
+        phrase = re.sub(r"\s+", " ", phrase)
+        phrase = re.sub(r"\u0301+", "\u0301", phrase)
+
+        norm_p = _strip_stress(phrase).casefold()
+        if not norm_p or norm_p in seen_phrases:
+            continue
+        seen_phrases.add(norm_p)
+
+        definition = text
+        if len(definition) > 4000:
+            definition = _truncate_text(definition, 4000)
+
+        items.append({
+            "text": phrase,
+            "phrase": phrase,
+            "definition": definition,
+            "source": ULIF_DICTUA_LABEL,
+            "source_url": ULIF_DICTUA_URL,
+        })
+
+    if not items:
+        return None
+
+    return {
+        "items": items,
+        "source": ULIF_DICTUA_LABEL,
+        "source_urls": [ULIF_DICTUA_URL],
+    }
+
+
 def _idioms(
     conn: sqlite3.Connection,
     lemma: str,
     cache: dict[str, Any] | None = None,
 ) -> dict[str, Any] | None:
     return _merge_idiom_sections(
+        _idioms_ulif(conn, lemma),
         _idioms_slovnyk(lemma, cache),
         _idioms_frazeolohichnyi(conn, lemma),
     )
@@ -4054,7 +4364,7 @@ def _sum20_definition_card(
         except _SlovnykTransientError:
             transient = True
             row = None
-        if cache is not None and not transient:
+        if cache is not None and not transient and not _phase1_offline_mode():
             _cache_store_lookup(lemma, cache, "newsum", row)
     if not row:
         # Inflected-form entry (e.g. моєму) → resolve to its base lemma (мій) and
@@ -4119,7 +4429,7 @@ def _vts_definition_card(
         except _SlovnykTransientError:
             transient = True
             row = None
-        if cache is not None and not transient:
+        if cache is not None and not transient and not _phase1_offline_mode():
             _cache_store_lookup(lemma, cache, "vts", row)
     if not row:
         # Inflected-form entry → fetch the VTS definition of its base lemma.
@@ -7858,13 +8168,22 @@ def enrich_entry(
     # mphdict synonym groups are a local primary source.  A missing database is
     # the only did-not-run state; a present database with no matching set is an
     # authoritative empty result and may retract stale legacy chips.
+    ulif_synonyms = _synonyms_ulif(conn, base)
+    if not ulif_synonyms and fallback_base:
+        ulif_synonyms = _synonyms_ulif(conn, fallback_base)
+        if ulif_synonyms:
+            ulif_synonyms = _with_base_source_label(ulif_synonyms, fallback_base)
     slovnyk_synonyms = _synonyms_slovnyk_sense_groups(base, slovnyk_cache)
     if not slovnyk_synonyms and fallback_base:
         slovnyk_synonyms = _synonyms_slovnyk_sense_groups(fallback_base, slovnyk_cache)
-    synonyms_gate_ran = bool(slovnyk_synonyms) or mphdict_synonyms_available() or _slovnyk_gate_ran(
-        slovnyk_cache, ("synonyms",)
+    synonyms_gate_ran = (
+        bool(ulif_synonyms)
+        or bool(slovnyk_synonyms)
+        or _ulif_has_tables(conn)
+        or mphdict_synonyms_available()
+        or _slovnyk_gate_ran(slovnyk_cache, ("synonyms",))
     )
-    idioms_gate_ran = _slovnyk_gate_ran(slovnyk_cache, _SLOVNYK_IDIOM_SLUGS)
+    idioms_gate_ran = _ulif_has_tables(conn) or _slovnyk_gate_ran(slovnyk_cache, _SLOVNYK_IDIOM_SLUGS)
     sections: dict[str, object] = {}
     gate_provenance: dict[str, str] = {}
 
@@ -7877,8 +8196,8 @@ def enrich_entry(
         if outcome:
             gate_provenance[name] = outcome
 
-    # Prefer sense-split academic synonym dictionary; fall back to mphdict chips.
-    synonyms = slovnyk_synonyms
+    # Prefer authoritative ULIF sense-split groups; fall back to slovnyk.me, then mphdict chips.
+    synonyms = ulif_synonyms or slovnyk_synonyms
     if not synonyms:
         synonyms = _synonyms_mphdict(base)
         if not synonyms and fallback_base:
@@ -7900,11 +8219,17 @@ def enrich_entry(
     )
     synonyms = _merge_synonym_relations(synonyms, synonym_relations)
     _apply_section("synonyms", synonyms, gate_ran=synonyms_gate_ran)
-    antonyms = _antonyms_wiktionary(conn, base, entry_pos=entry_pos)
+    antonyms = _antonyms_ulif(conn, base, entry_pos=entry_pos)
     if not antonyms and fallback_base:
-        antonyms = _antonyms_wiktionary(conn, fallback_base, entry_pos=entry_pos)
+        antonyms = _antonyms_ulif(conn, fallback_base, entry_pos=entry_pos)
         if antonyms:
             antonyms = _with_base_source_label(antonyms, fallback_base)
+    if not antonyms:
+        antonyms = _antonyms_wiktionary(conn, base, entry_pos=entry_pos)
+        if not antonyms and fallback_base:
+            antonyms = _antonyms_wiktionary(conn, fallback_base, entry_pos=entry_pos)
+            if antonyms:
+                antonyms = _with_base_source_label(antonyms, fallback_base)
     antonym_relations = (
         pointer_antonym_relations
         if pointer_antonym_relations is not None
@@ -7990,13 +8315,17 @@ def enrich_entry(
     else:
         entry.pop("gate_provenance", None)
     block: dict[str, object] = {}
-    stressed_lemma = _stress_display_form(lemma)
-    if stressed_lemma:
-        block["stress"] = {"form": stressed_lemma, "source": _STRESS_SOURCE}
+    ulif_stress = _stress_ulif(conn, lemma)
+    if ulif_stress:
+        block["stress"] = ulif_stress
     else:
-        kaikki_stress = _kaikki_stress(kaikki_lookup, lemma)
-        if kaikki_stress:
-            block["stress"] = kaikki_stress
+        stressed_lemma = _stress_display_form(lemma)
+        if stressed_lemma:
+            block["stress"] = {"form": stressed_lemma, "source": _STRESS_SOURCE}
+        else:
+            kaikki_stress = _kaikki_stress(kaikki_lookup, lemma)
+            if kaikki_stress:
+                block["stress"] = kaikki_stress
     cefr = _cefr(conn, lemma)
     if cefr:
         block["cefr"] = cefr

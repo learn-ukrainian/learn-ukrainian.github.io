@@ -90,3 +90,22 @@ def test_migrate_leaves_malformed_files_untouched(tmp_path: Path) -> None:
     assert scan_counts["malformed"] == 1
     assert migrate_counts["malformed"] == 1
     assert malformed_path.read_text(encoding="utf-8") == "not json"
+
+
+def test_migrate_preserves_positive_lookups_from_v3(tmp_path: Path) -> None:
+    current = enrich_manifest_module._SLOVNYK_CACHE_SCHEMA_VERSION
+    stale_path = tmp_path / "слово.json"
+    _write_cache(
+        stale_path,
+        schema_version=3,
+        lookups={
+            "newsum": {"text": "одиниця мови", "word": "слово"},
+            "ukreng": None,
+        },
+    )
+    counts = migrate(tmp_path, dry_run=False)
+    assert counts["migrated"] == 1
+    migrated_payload = json.loads(stale_path.read_text(encoding="utf-8"))
+    assert migrated_payload["schema_version"] == current
+    assert migrated_payload["lookups"] == {"newsum": {"text": "одиниця мови", "word": "слово"}}
+    assert "ukreng" not in migrated_payload["lookups"]

@@ -328,3 +328,21 @@ def test_normalize_academic_label_maps_wikidata() -> None:
     assert normalize_academic_label("wikidata.org/wiki/Q1") == WIKIDATA_LABEL
     assert normalize_academic_label("evilwikidata.org") == "evilwikidata.org"
     assert normalize_academic_label(WIKIDATA_LABEL) == WIKIDATA_LABEL
+
+
+def test_ulif_dictua_attribution_labels() -> None:
+    from scripts.lexicon.source_attribution import (
+        ULIF_DICTUA_LABEL,
+        ULIF_DICTUA_URL,
+        academic_label_for_slug,
+        normalize_academic_label,
+        official_url_for_slug,
+    )
+
+    assert academic_label_for_slug("ulif") == ULIF_DICTUA_LABEL
+    assert academic_label_for_slug("ulif_dictua") == ULIF_DICTUA_LABEL
+    assert official_url_for_slug("ulif") == ULIF_DICTUA_URL
+    assert official_url_for_slug("ulif_dictua") == ULIF_DICTUA_URL
+    assert normalize_academic_label("«Словники України»") == ULIF_DICTUA_LABEL
+    assert normalize_academic_label("УМІФ НАН України") == ULIF_DICTUA_LABEL
+    assert normalize_academic_label(ULIF_DICTUA_LABEL) == ULIF_DICTUA_LABEL

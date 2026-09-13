@@ -107,7 +107,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "260461ae4cec60b924a699cfc003bae3c8dbe5bca2fdfdc9fddaa2ae57a290bf"
+        "sha256": "798f22ebdd0365480584403338edd5ed23f61ba928a4819a78aa7d4c9398e18e"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -195,7 +195,7 @@
       },
       {
         "path": "scripts/lexicon/migrate_slovnyk_cache_v4.py",
-        "sha256": "ba5fdc11236ce2f0320a11cd5af50284a7626c48e5ed4097ee3d754e66dbb49d"
+        "sha256": "14039f6709107ad9de4ff1070026046ef12e6b35e3ac28db44e184e7d5ad9a50"
       },
       {
         "path": "scripts/lexicon/migrate_source_labels.py",
@@ -275,7 +275,7 @@
       },
       {
         "path": "scripts/lexicon/source_attribution.py",
-        "sha256": "b9a81599b1598afa58a7f70dcbbade14bed88b8daf8f33d0fc5cd8b8f37bab48"
+        "sha256": "b2b3a85f52d6180da05c62a554f7f11b43cf0c818f81fc95153d8b52586b32ae"
       },
       {
         "path": "scripts/lexicon/sync_teacher_table_deck.py",
