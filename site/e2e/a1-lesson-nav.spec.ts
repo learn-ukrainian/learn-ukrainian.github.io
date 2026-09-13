@@ -47,6 +47,18 @@ test.describe('A1 upgrade nav', () => {
     expect(nums).toEqual(['01', '02', '03']);
     await expect(page.locator('.lu-sidebar-link.active .lu-sidebar-num')).toHaveText('02');
   });
+
+  test('lesson prev/next hrefs are real paths, not /a1//a1/', async ({ page }) => {
+    await page.goto('/a1/things-have-gender/1/');
+    const prev = page.locator('.lesson-next-prev a').first();
+    const next = page.locator('.lesson-next-prev a').last();
+    await expect(prev).toHaveAttribute('href', '/a1/things-have-gender/');
+    await expect(next).toHaveAttribute('href', '/a1/things-have-gender/2/');
+    await next.click();
+    await expect(page).toHaveURL(/\/a1\/things-have-gender\/2\/$/);
+    await expect(page.locator('.lesson-next-prev a').first()).toHaveAttribute('href', '/a1/things-have-gender/1/');
+    await expect(page.locator('.lesson-next-prev a').last()).toHaveAttribute('href', '/a1/things-have-gender/3/');
+  });
 });
 
 test.describe('A1 upgrade screenshots', () => {

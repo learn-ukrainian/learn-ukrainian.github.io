@@ -7,10 +7,12 @@ import { CHROME_STRINGS } from '../lib/i18n/chrome';
 import { isPublishedReading } from '../lib/readings';
 import { archiveBookmarkPaths } from '../lib/a1-archive-routes';
 import {
+  a1AdjacentHrefs,
   isUpgradedLesson,
   isUpgradedModuleLanding,
   lessonNumberFromDoc,
   moduleSlugFromDoc,
+  resolveNavHref,
 } from '../lib/a1-lesson-nav';
 import curriculumStats from '../data/curriculum-stats.json';
 import lexiconSearchIndex from '../data/lexicon-search-index.json';
@@ -437,12 +439,23 @@ if (props.kind === 'doc' || props.kind === 'landingDoc') {
   docRoute = normalizeId(props.entry.id);
   docTrack = docRoute.split('/')[0];
   isSeminarLesson = TRACKS[docTrack]?.family === 'seminar';
-  if (props.kind === 'doc') {
-    const prev = props.entry.data.prev;
-    const next = props.entry.data.next;
-    if (!HIDDEN_LINK_TRACKS.has(docTrack)) {
-      if (typeof prev === 'string') previousLink = { href: `/${docTrack}/${prev}/`, label: 'Previous' };
-      if (typeof next === 'string') nextLink = { href: `/${docTrack}/${next}/`, label: 'Next' };
+  if (props.kind === 'doc' && !HIDDEN_LINK_TRACKS.has(docTrack)) {
+    if (docTrack === 'a1') {
+      const adjacent = a1AdjacentHrefs(
+        docRoute,
+        (deployedDocsByTrack.get('a1') ?? []).map((entry) => ({
+          id: entry.id,
+          lessons: entry.data.lessons,
+          order: entry.data.sidebar?.order,
+        })),
+      );
+      if (adjacent.prev) previousLink = { href: adjacent.prev, label: 'Previous' };
+      if (adjacent.next) nextLink = { href: adjacent.next, label: 'Next' };
+    } else {
+      const prev = props.entry.data.prev;
+      const next = props.entry.data.next;
+      if (typeof prev === 'string') previousLink = { href: resolveNavHref(prev, docTrack), label: 'Previous' };
+      if (typeof next === 'string') nextLink = { href: resolveNavHref(next, docTrack), label: 'Next' };
     }
   }
 }
