@@ -1,20 +1,20 @@
 {
   "counts": {
-    "r2u_claims_verified": 0,
-    "sum11_claims_verified": 1,
-    "total_claims_verified": 51,
+    "r2u_claims_verified": 3,
+    "sum11_claims_verified": 14,
+    "total_claims_verified": 68,
     "total_trajectories": 3,
     "trajectories_passed": 3,
     "trajectories_rejected": 0,
     "ulif_claims_verified": 13,
-    "vesum_claims_verified": 37
+    "vesum_claims_verified": 38
   },
   "epic": 6321,
   "files": {
     "input_trajectories": {
       "filename": "seed_decolonization_trajectories.jsonl",
       "line_count": 3,
-      "sha256": "45a580370a6f573621f0f36f5e0bf8092b70d36448418383a151092a2bfc5659"
+      "sha256": "ffd545d9178c9d0327c10a31292f1328792c5e0172c2af79ef336926ab68e3f1"
     },
     "rejected_trajectories": {
       "filename": "rejected_trajectories.jsonl",
@@ -24,10 +24,10 @@
     "verified_trajectories": {
       "filename": "verified_trajectories.jsonl",
       "line_count": 3,
-      "sha256": "45a580370a6f573621f0f36f5e0bf8092b70d36448418383a151092a2bfc5659"
+      "sha256": "ffd545d9178c9d0327c10a31292f1328792c5e0172c2af79ef336926ab68e3f1"
     }
   },
-  "generated_at": "2026-09-13T13:05:34.287843+00:00",
+  "generated_at": "2026-09-13T13:45:51.867619+00:00",
   "invariants": {
     "no_private_host_paths": true,
     "pass_rate_100_percent": true,
@@ -36,6 +36,6 @@
     "zero_unverified_dictionary_claims": true
   },
   "issue": 8009,
-  "receipt_id": "receipt.cot_claim_verifier.c38a4af8aa30bc08",
+  "receipt_id": "receipt.cot_claim_verifier.845f06cfb8091364",
   "schema_version": "v1_cot_claim_verification_receipt"
 }

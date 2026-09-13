@@ -1235,6 +1235,10 @@
     "status": "not_found_within_verified_coverage",
     "translations": []
   },
+  "приймати участь": {
+    "status": "not_found_within_verified_coverage",
+    "translations": []
+  },
   "принаймні": {
     "status": "found",
     "translations": [

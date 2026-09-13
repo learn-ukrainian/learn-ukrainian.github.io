@@ -614,3 +614,565 @@ def test_subprocess_timeout_guard() -> None:
                 assert has_timeout, f"Missing explicit timeout= in subprocess.{func.attr} call at line {node.lineno}"
                 checked_calls += 1
     assert checked_calls > 0, "Expected at least one subprocess call to check"
+
+
+def test_hard_rejection_vesum_count_off_by_one(mock_dbs: tuple[Path, Path, Path], tmp_path: Path) -> None:
+    """Off-by-one VESUM form count must fail without tolerance band (Finding 5)."""
+    vesum, sources, ulif = mock_dbs
+    inp = tmp_path / "off_by_one.jsonl"
+    out = tmp_path / "verified.jsonl"
+    rej = tmp_path / "rejected.jsonl"
+    rcp = tmp_path / "receipt.json"
+
+    rec = {
+        "schema_version": "v1_decolonization_trajectory",
+        "trajectory_id": "traj.decolonize.0000000000000007",
+        "query": "Тестове запитання?",
+        "target_term": "пилосос",
+        "is_calque_or_russianism": True,
+        "morphemic_breakdown": {
+            "source_formation": "Калька з російської мови.",
+            "ukrainian_equivalent_mechanism": "Питома словотвірна модель.",
+        },
+        "lexicographical_context": {
+            "historical_suppression_note": "Штучно нав'язано радянською владою.",
+            "restoration_era": "Правопис 2019.",
+        },
+        "vesum_attestation": [
+            {
+                "lemma": "пилосмок",
+                "vesum_forms_count": 2,  # Mock DB has exactly 2 forms
+                "is_standard_attested": True,
+            }
+        ],
+        "register_spectrum": {
+            "primary_living_standard": "пилосмок",
+            "alternatives": [
+                {
+                    "lemma": "пилосмок",
+                    "register_tier": "living_standard",
+                    "evidence_source": "Словник",
+                }
+            ],
+        },
+        "reasoning_steps": [
+            "1. ВЕСУМ: «пилосмок» (3 форми) має парадигму.",  # Off by exactly +1 (previously passed under +-2)
+        ],
+        "final_response": "Правильна відповідь для тестування.",
+    }
+    inp.write_text(json.dumps(rec) + "\n", encoding="utf-8")
+
+    receipt = run_claim_verifier(
+        input_path=inp,
+        verified_output_path=out,
+        rejected_output_path=rej,
+        receipt_output_path=rcp,
+        vesum_db=vesum,
+        sources_db=sources,
+        ulif_db=ulif,
+        verify_only=False,
+    )
+
+    assert receipt["counts"]["trajectories_passed"] == 0
+    assert receipt["counts"]["trajectories_rejected"] == 1
+    rej_data = [json.loads(line) for line in rej.read_text(encoding="utf-8").splitlines() if line]
+    assert any("VESUM form count mismatch" in str(r) and "claimed 3, actual 2" in str(r) for r in rej_data[0]["rejection_reasons"])
+
+
+def test_hard_rejection_r2u_polarity_fabricated_presence(mock_dbs: tuple[Path, Path, Path], tmp_path: Path) -> None:
+    """Claiming 1920s R2U attestation for a term that is absent triggers rejection (Finding 1)."""
+    vesum, sources, ulif = mock_dbs
+    inp = tmp_path / "r2u_fab_presence.jsonl"
+    out = tmp_path / "verified.jsonl"
+    rej = tmp_path / "rejected.jsonl"
+    rcp = tmp_path / "receipt.json"
+
+    cache_file = tmp_path / "r2u_cache.json"
+    cache_file.write_text(
+        json.dumps(
+            {
+                "невідоме": {
+                    "status": "not_found",
+                    "translations": [],
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    rec = {
+        "schema_version": "v1_decolonization_trajectory",
+        "trajectory_id": "traj.decolonize.0000000000000008",
+        "query": "Тестове запитання?",
+        "target_term": "невідоме",
+        "is_calque_or_russianism": True,
+        "morphemic_breakdown": {
+            "source_formation": "Калька з російської мови.",
+            "ukrainian_equivalent_mechanism": "Питома словотвірна модель.",
+        },
+        "lexicographical_context": {
+            "historical_suppression_note": "Штучно нав'язано радянською владою.",
+            "restoration_era": "Правопис 2019.",
+        },
+        "vesum_attestation": [
+            {
+                "lemma": "пилосмок",
+                "vesum_forms_count": 2,
+                "is_standard_attested": True,
+            }
+        ],
+        "register_spectrum": {
+            "primary_living_standard": "пилосмок",
+            "alternatives": [
+                {
+                    "lemma": "пилосмок",
+                    "register_tier": "living_standard",
+                    "evidence_source": "Словник",
+                }
+            ],
+        },
+        "reasoning_steps": [
+            "1. За словниками 1920-х років R2U термін «невідоме» зафіксовано як основний відповідник.",
+        ],
+        "final_response": "Правильна відповідь для тестування.",
+    }
+    inp.write_text(json.dumps(rec) + "\n", encoding="utf-8")
+
+    receipt = run_claim_verifier(
+        input_path=inp,
+        verified_output_path=out,
+        rejected_output_path=rej,
+        receipt_output_path=rcp,
+        vesum_db=vesum,
+        sources_db=sources,
+        ulif_db=ulif,
+        r2u_cache_path=cache_file,
+        verify_only=False,
+    )
+
+    assert receipt["counts"]["trajectories_passed"] == 0
+    assert receipt["counts"]["trajectories_rejected"] == 1
+    rej_data = [json.loads(line) for line in rej.read_text(encoding="utf-8").splitlines() if line]
+    assert any("Fabricated 1920s attestation claim" in str(r) for r in rej_data[0]["rejection_reasons"])
+
+
+def test_hard_rejection_r2u_polarity_fabricated_absence(mock_dbs: tuple[Path, Path, Path], tmp_path: Path) -> None:
+    """Claiming 1920s R2U absence for a term that IS attested triggers rejection (Finding 1)."""
+    vesum, sources, ulif = mock_dbs
+    inp = tmp_path / "r2u_fab_absence.jsonl"
+    out = tmp_path / "verified.jsonl"
+    rej = tmp_path / "rejected.jsonl"
+    rcp = tmp_path / "receipt.json"
+
+    cache_file = tmp_path / "r2u_cache.json"
+    cache_file.write_text(
+        json.dumps(
+            {
+                "пилосмок": {
+                    "status": "found",
+                    "translations": ["пилосмок", "порохотяг"],
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    rec = {
+        "schema_version": "v1_decolonization_trajectory",
+        "trajectory_id": "traj.decolonize.0000000000000009",
+        "query": "Тестове запитання?",
+        "target_term": "пилосос",
+        "is_calque_or_russianism": True,
+        "morphemic_breakdown": {
+            "source_formation": "Калька з російської мови.",
+            "ukrainian_equivalent_mechanism": "Питома словотвірна модель.",
+        },
+        "lexicographical_context": {
+            "historical_suppression_note": "Штучно нав'язано радянською владою.",
+            "restoration_era": "Правопис 2019.",
+        },
+        "vesum_attestation": [
+            {
+                "lemma": "пилосмок",
+                "vesum_forms_count": 2,
+                "is_standard_attested": True,
+            }
+        ],
+        "register_spectrum": {
+            "primary_living_standard": "пилосмок",
+            "alternatives": [
+                {
+                    "lemma": "пилосмок",
+                    "register_tier": "living_standard",
+                    "evidence_source": "Словник",
+                }
+            ],
+        },
+        "reasoning_steps": [
+            "1. У словниках 1920-х років R2U слово «пилосмок» не зафіксовано зовсім.",
+        ],
+        "final_response": "Правильна відповідь для тестування.",
+    }
+    inp.write_text(json.dumps(rec) + "\n", encoding="utf-8")
+
+    receipt = run_claim_verifier(
+        input_path=inp,
+        verified_output_path=out,
+        rejected_output_path=rej,
+        receipt_output_path=rcp,
+        vesum_db=vesum,
+        sources_db=sources,
+        ulif_db=ulif,
+        r2u_cache_path=cache_file,
+        verify_only=False,
+    )
+
+    assert receipt["counts"]["trajectories_passed"] == 0
+    assert receipt["counts"]["trajectories_rejected"] == 1
+    rej_data = [json.loads(line) for line in rej.read_text(encoding="utf-8").splitlines() if line]
+    assert any("Fabricated 1920s absence claim" in str(r) for r in rej_data[0]["rejection_reasons"])
+
+
+def test_hard_rejection_sum11_volume_year_mismatch(mock_dbs: tuple[Path, Path, Path], tmp_path: Path) -> None:
+    """Mismatched СУМ-11 volume alphabetical span or publication year triggers rejection (Findings 2 & 6)."""
+    vesum, sources, ulif = mock_dbs
+    inp = tmp_path / "sum11_vol_mismatch.jsonl"
+    out = tmp_path / "verified.jsonl"
+    rej = tmp_path / "rejected.jsonl"
+    rcp = tmp_path / "receipt.json"
+
+    rec = {
+        "schema_version": "v1_decolonization_trajectory",
+        "trajectory_id": "traj.decolonize.0000000000000010",
+        "query": "Тестове запитання?",
+        "target_term": "перемкнути",
+        "is_calque_or_russianism": True,
+        "morphemic_breakdown": {
+            "source_formation": "Калька з російської мови.",
+            "ukrainian_equivalent_mechanism": "Питома словотвірна модель.",
+        },
+        "lexicographical_context": {
+            "historical_suppression_note": "Зафіксовано в СУМ-11 (т. 1, 1970).",  # 'перемкнути' starts with 'п' -> volume 6, not volume 1
+            "restoration_era": "Правопис 2019.",
+        },
+        "vesum_attestation": [
+            {
+                "lemma": "перемкнути",
+                "vesum_forms_count": 2,
+                "is_standard_attested": True,
+            }
+        ],
+        "register_spectrum": {
+            "primary_living_standard": "перемкнути",
+            "alternatives": [
+                {
+                    "lemma": "перемкнути",
+                    "register_tier": "living_standard",
+                    "evidence_source": "Словник",
+                }
+            ],
+        },
+        "reasoning_steps": [
+            "1. Термін нормативний.",
+        ],
+        "final_response": "Правильна відповідь для тестування.",
+    }
+    inp.write_text(json.dumps(rec) + "\n", encoding="utf-8")
+
+    receipt = run_claim_verifier(
+        input_path=inp,
+        verified_output_path=out,
+        rejected_output_path=rej,
+        receipt_output_path=rcp,
+        vesum_db=vesum,
+        sources_db=sources,
+        ulif_db=ulif,
+        verify_only=False,
+    )
+
+    assert receipt["counts"]["trajectories_passed"] == 0
+    assert receipt["counts"]["trajectories_rejected"] == 1
+    rej_data = [json.loads(line) for line in rej.read_text(encoding="utf-8").splitlines() if line]
+    assert any("Alphabetical volume mismatch" in str(r) for r in rej_data[0]["rejection_reasons"])
+
+
+def test_hard_rejection_sum11_stylistic_label_mismatch(mock_dbs: tuple[Path, Path, Path], tmp_path: Path) -> None:
+    """Asserting an ungrounded stylistic label in СУМ-11 triggers rejection (Findings 2 & 6)."""
+    vesum, sources, ulif = mock_dbs
+    inp = tmp_path / "sum11_style_mismatch.jsonl"
+    out = tmp_path / "verified.jsonl"
+    rej = tmp_path / "rejected.jsonl"
+    rcp = tmp_path / "receipt.json"
+
+    rec = {
+        "schema_version": "v1_decolonization_trajectory",
+        "trajectory_id": "traj.decolonize.0000000000000011",
+        "query": "Тестове запитання?",
+        "target_term": "пилосос",
+        "is_calque_or_russianism": True,
+        "morphemic_breakdown": {
+            "source_formation": "Калька з російської мови.",
+            "ukrainian_equivalent_mechanism": "Питома словотвірна модель.",
+        },
+        "lexicographical_context": {
+            "historical_suppression_note": "Штучно нав'язано радянською владою.",
+            "restoration_era": "Правопис 2019.",
+        },
+        "vesum_attestation": [
+            {
+                "lemma": "пилосмок",
+                "vesum_forms_count": 2,
+                "is_standard_attested": True,
+            }
+        ],
+        "register_spectrum": {
+            "primary_living_standard": "пилосмок",
+            "alternatives": [
+                {
+                    "lemma": "пилосмок",
+                    "register_tier": "living_standard",
+                    "evidence_source": "Словник",
+                }
+            ],
+        },
+        "reasoning_steps": [
+            "1. В академічному СУМ-11 «пилосос» подано з ремаркою «діал.» як діалектне.",
+        ],
+        "final_response": "Правильна відповідь для тестування.",
+    }
+    inp.write_text(json.dumps(rec) + "\n", encoding="utf-8")
+
+    receipt = run_claim_verifier(
+        input_path=inp,
+        verified_output_path=out,
+        rejected_output_path=rej,
+        receipt_output_path=rcp,
+        vesum_db=vesum,
+        sources_db=sources,
+        ulif_db=ulif,
+        verify_only=False,
+    )
+
+    assert receipt["counts"]["trajectories_passed"] == 0
+    assert receipt["counts"]["trajectories_rejected"] == 1
+    rej_data = [json.loads(line) for line in rej.read_text(encoding="utf-8").splitlines() if line]
+    assert any("does not contain claimed stylistic label «діал»" in str(r) for r in rej_data[0]["rejection_reasons"])
+
+
+def test_hard_rejection_non_living_register_tier_validation(mock_dbs: tuple[Path, Path, Path], tmp_path: Path) -> None:
+    """Non-living register tiers must be attested and have valid evidence_source (Finding 3)."""
+    vesum, sources, ulif = mock_dbs
+    inp = tmp_path / "reg_tier_unattested.jsonl"
+    out = tmp_path / "verified.jsonl"
+    rej = tmp_path / "rejected.jsonl"
+    rcp = tmp_path / "receipt.json"
+
+    # 1. Classical regional term that is completely unattested in VESUM/sources
+    rec_unattested = {
+        "schema_version": "v1_decolonization_trajectory",
+        "trajectory_id": "traj.decolonize.0000000000000012",
+        "query": "Тестове запитання?",
+        "target_term": "пилосос",
+        "is_calque_or_russianism": True,
+        "morphemic_breakdown": {
+            "source_formation": "Калька з російської мови.",
+            "ukrainian_equivalent_mechanism": "Питома словотвірна модель.",
+        },
+        "lexicographical_context": {
+            "historical_suppression_note": "Штучно нав'язано радянською владою.",
+            "restoration_era": "Правопис 2019.",
+        },
+        "vesum_attestation": [
+            {
+                "lemma": "пилосмок",
+                "vesum_forms_count": 2,
+                "is_standard_attested": True,
+            }
+        ],
+        "register_spectrum": {
+            "primary_living_standard": "пилосмок",
+            "alternatives": [
+                {
+                    "lemma": "абсолютна_вигадка_немає",
+                    "register_tier": "classical_regional",
+                    "evidence_source": "Словник Грінченка 1907",
+                }
+            ],
+        },
+        "reasoning_steps": ["1. Пояснення."],
+        "final_response": "Відповідь.",
+    }
+    inp.write_text(json.dumps(rec_unattested) + "\n", encoding="utf-8")
+
+    receipt = run_claim_verifier(
+        input_path=inp,
+        verified_output_path=out,
+        rejected_output_path=rej,
+        receipt_output_path=rcp,
+        vesum_db=vesum,
+        sources_db=sources,
+        ulif_db=ulif,
+        verify_only=False,
+    )
+    assert receipt["counts"]["trajectories_passed"] == 0
+    rej_data = [json.loads(line) for line in rej.read_text(encoding="utf-8").splitlines() if line]
+    assert any("is completely unattested in VESUM and sources" in str(r) for r in rej_data[0]["rejection_reasons"])
+
+    # 2. Classical regional term with missing evidence_source
+    rec_missing_src = {
+        "schema_version": "v1_decolonization_trajectory",
+        "trajectory_id": "traj.decolonize.0000000000000013",
+        "query": "Тестове запитання?",
+        "target_term": "пилосос",
+        "is_calque_or_russianism": True,
+        "morphemic_breakdown": {
+            "source_formation": "Калька з російської мови.",
+            "ukrainian_equivalent_mechanism": "Питома словотвірна модель.",
+        },
+        "lexicographical_context": {
+            "historical_suppression_note": "Штучно нав'язано радянською владою.",
+            "restoration_era": "Правопис 2019.",
+        },
+        "vesum_attestation": [
+            {
+                "lemma": "пилосмок",
+                "vesum_forms_count": 2,
+                "is_standard_attested": True,
+            }
+        ],
+        "register_spectrum": {
+            "primary_living_standard": "пилосмок",
+            "alternatives": [
+                {
+                    "lemma": "перемкнути",  # Attested in mock DB
+                    "register_tier": "classical_regional",
+                    "evidence_source": "див.",  # Short/uninformative citation (< 5 chars)
+                }
+            ],
+        },
+        "reasoning_steps": ["1. Пояснення."],
+        "final_response": "Відповідь.",
+    }
+    inp.write_text(json.dumps(rec_missing_src) + "\n", encoding="utf-8")
+    receipt = run_claim_verifier(
+        input_path=inp,
+        verified_output_path=out,
+        rejected_output_path=rej,
+        receipt_output_path=rcp,
+        vesum_db=vesum,
+        sources_db=sources,
+        ulif_db=ulif,
+        verify_only=False,
+    )
+    assert receipt["counts"]["trajectories_passed"] == 0
+    rej_data = [json.loads(line) for line in rej.read_text(encoding="utf-8").splitlines() if line]
+    assert any("requires non-empty evidence_source citation" in str(r) for r in rej_data[0]["rejection_reasons"])
+
+    # 3. Purist neologism claimed unrecorded (0 forms) but actually attested in VESUM
+    rec_purist_conflict = {
+        "schema_version": "v1_decolonization_trajectory",
+        "trajectory_id": "traj.decolonize.0000000000000015",
+        "query": "Тестове запитання?",
+        "target_term": "пилосос",
+        "is_calque_or_russianism": True,
+        "morphemic_breakdown": {
+            "source_formation": "Калька з російської мови.",
+            "ukrainian_equivalent_mechanism": "Питома словотвірна модель.",
+        },
+        "lexicographical_context": {
+            "historical_suppression_note": "Штучно нав'язано радянською владою.",
+            "restoration_era": "Правопис 2019.",
+        },
+        "vesum_attestation": [
+            {
+                "lemma": "пилосмок",
+                "vesum_forms_count": 2,
+                "is_standard_attested": True,
+            }
+        ],
+        "register_spectrum": {
+            "primary_living_standard": "пилосмок",
+            "alternatives": [
+                {
+                    "lemma": "пилосмок",
+                    "register_tier": "purist_neologism",
+                    "evidence_source": "Сучасні пуристичні пропозиції",
+                }
+            ],
+        },
+        "reasoning_steps": ["1. Пояснення."],
+        "final_response": "Відповідь.",
+    }
+    inp.write_text(json.dumps(rec_purist_conflict) + "\n", encoding="utf-8")
+    receipt = run_claim_verifier(
+        input_path=inp,
+        verified_output_path=out,
+        rejected_output_path=rej,
+        receipt_output_path=rcp,
+        vesum_db=vesum,
+        sources_db=sources,
+        ulif_db=ulif,
+        verify_only=False,
+    )
+    assert receipt["counts"]["trajectories_passed"] == 0
+    rej_data = [json.loads(line) for line in rej.read_text(encoding="utf-8").splitlines() if line]
+    assert any("actually has 2 forms in VESUM" in str(r) for r in rej_data[0]["rejection_reasons"])
+
+
+def test_hard_rejection_opsec_private_host_path_in_trajectory(mock_dbs: tuple[Path, Path, Path], tmp_path: Path) -> None:
+    """Any trajectory containing private host path or IP must trigger OPSEC failure (Finding 4)."""
+    vesum, sources, ulif = mock_dbs
+    inp = tmp_path / "opsec_violation.jsonl"
+    out = tmp_path / "verified.jsonl"
+    rej = tmp_path / "rejected.jsonl"
+    rcp = tmp_path / "receipt.json"
+
+    rec = {
+        "schema_version": "v1_decolonization_trajectory",
+        "trajectory_id": "traj.decolonize.0000000000000014",
+        "query": "Тестове запитання?",
+        "target_term": "пилосос",
+        "is_calque_or_russianism": True,
+        "morphemic_breakdown": {
+            "source_formation": "Калька з російської мови.",
+            "ukrainian_equivalent_mechanism": "Питома словотвірна модель.",
+        },
+        "lexicographical_context": {
+            "historical_suppression_note": "Штучно нав'язано радянською владою.",
+            "restoration_era": "Правопис 2019.",
+        },
+        "vesum_attestation": [
+            {
+                "lemma": "пилосмок",
+                "vesum_forms_count": 2,
+                "is_standard_attested": True,
+            }
+        ],
+        "register_spectrum": {
+            "primary_living_standard": "пилосмок",
+            "alternatives": [
+                {
+                    "lemma": "пилосмок",
+                    "register_tier": "living_standard",
+                    "evidence_source": "Словник",
+                }
+            ],
+        },
+        "reasoning_steps": [
+            "1. За даними з /home/ops/secret_data.txt термін пилосмок підтверджено.",  # OPSEC violation!
+        ],
+        "final_response": "Правильна відповідь для тестування.",
+    }
+    inp.write_text(json.dumps(rec) + "\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="OPSEC violation: private path detected"):
+        run_claim_verifier(
+            input_path=inp,
+            verified_output_path=out,
+            rejected_output_path=rej,
+            receipt_output_path=rcp,
+            vesum_db=vesum,
+            sources_db=sources,
+            ulif_db=ulif,
+            verify_only=False,
+        )

@@ -115,10 +115,55 @@ class ClaimType(enum.StrEnum):
     VESUM_FORM_COUNT = "VESUM_FORM_COUNT"
     VESUM_TAGS = "VESUM_TAGS"
     SUM11_HEADWORD = "SUM11_HEADWORD"
+    SUM11_VOLUME_YEAR = "SUM11_VOLUME_YEAR"
+    SUM11_STYLISTIC = "SUM11_STYLISTIC"
     SUM11_SOVIETIZATION = "SUM11_SOVIETIZATION"
     R2U_HISTORICAL = "R2U_HISTORICAL"
     ULIF_REGISTER = "ULIF_REGISTER"
     NEGATIVE_CONTROL = "NEGATIVE_CONTROL"
+
+
+SUM11_VOLUMES: dict[int, dict[str, Any]] = {
+    1: {"letters": ("А", "В"), "year": 1970},
+    2: {"letters": ("Г", "Ж"), "year": 1971},
+    3: {"letters": ("З", "З"), "year": 1972},
+    4: {"letters": ("І", "М"), "year": 1973},
+    5: {"letters": ("Н", "О"), "year": 1974},
+    6: {"letters": ("П", "ПОЇТИ"), "year": 1975},
+    7: {"letters": ("ПОЇХАТИ", "РАДІСНИЙ"), "year": 1976},
+    8: {"letters": ("ПРИВАБЛИВО", "РЯБЕНЬКИЙ"), "year": 1977},
+    9: {"letters": ("С", "С"), "year": 1978},
+    10: {"letters": ("Т", "Ф"), "year": 1979},
+    11: {"letters": ("Х", "Ь"), "year": 1980},
+}
+
+
+def is_term_in_sum11_volume(term: str, volume: int) -> bool:
+    """Verify if a term falls into the alphabetical range of a СУМ-11 volume."""
+    t = clean_word(term.split()[0])
+    if not t or volume not in SUM11_VOLUMES:
+        return False
+    first = t[0]
+    simple_volume_letters = {
+        1: "абв",
+        2: "гґдеєж",
+        3: "з",
+        4: "іїйклм",
+        5: "но",
+        9: "с",
+        10: "туф",
+        11: "хцчшщьюя",
+    }
+    if volume in simple_volume_letters:
+        return first in simple_volume_letters[volume]
+    if volume == 6:
+        return first == "п" and t <= "поїти"
+    if volume == 7:
+        return (first == "п" and "поїти" < t < "привабливо") or (first == "р" and t <= "радісний")
+    if volume == 8:
+        return (first == "п" and t >= "привабливо") or (first == "р" and "радісний" < t <= "рябенький")
+    return False
+
 
 
 @dataclass(frozen=True)
@@ -146,6 +191,28 @@ class TrajectoryVerificationOutcome:
     passed: bool
     claims_verified: list[ClaimVerificationResult]
     rejection_reasons: list[dict[str, Any]] = field(default_factory=list)
+
+
+def detect_term_polarity(text: str, term: str) -> bool:
+    """Detect whether a term in context is asserted as attested (True) or absent (False)."""
+    t_escaped = re.escape(term)
+    neg_patterns = [
+        rf"«{t_escaped}»[^\n.]{{0,35}}(?:не\s+(?:зафіксован|засвідчен|подан|включен|відом)|відсутн|немає|бракує)",
+        rf"(?:не\s+(?:зафіксован|засвідчен|подан|включен|знає|містить|фіксує)|відсутн|немає|бракує)[^\n.]{{0,35}}«{t_escaped}»",
+    ]
+    for pat in neg_patterns:
+        if re.search(pat, text, re.IGNORECASE):
+            return False
+
+    pos_patterns = [
+        rf"«{t_escaped}»[^\n.]{{0,35}}(?:зафіксован|засвідчен|подан|наявн|містить)",
+        rf"(?:зафіксован|засвідчен|подан|наявн|містить|відповідником\s+є|замість\s+якого)[^\n.]{{0,40}}«{t_escaped}»",
+    ]
+    for pat in pos_patterns:
+        if re.search(pat, text, re.IGNORECASE):
+            return True
+
+    return True
 
 
 class CoTClaimVerifier:
@@ -208,8 +275,13 @@ class CoTClaimVerifier:
             return self._sum11_cache[norm]
         cur = self.sources_conn.cursor()
         cur.execute(
-            "SELECT id, word, definition, text, sovietization_risk FROM sum11 WHERE word = ? COLLATE NOCASE",
-            (norm,),
+            """
+            SELECT id, word, definition, text, sovietization_risk, sovietization_keywords
+            FROM sum11
+            WHERE word = ? OR word LIKE ? OR word LIKE ? OR word LIKE ?
+            LIMIT 1
+            """,
+            (norm, f"{norm}|%", f"%|{norm}|%", f"%|{norm}"),
         )
         row = cur.fetchone()
         if not row:
@@ -221,6 +293,7 @@ class CoTClaimVerifier:
             "definition": row[2],
             "text": row[3],
             "sovietization_risk": row[4],
+            "sovietization_keywords": row[5] if len(row) > 5 else "",
         }
         self._sum11_cache[norm] = res
         return res
@@ -363,17 +436,77 @@ class CoTClaimVerifier:
                     source_field=f"register_spectrum.alternatives[{idx}]",
                     term=alt_lemma,
                     claim_text=f"Alternative «{alt_lemma}» register tier claims «{tier}»",
-                    expected_attributes={"tier": tier},
+                    expected_attributes={"tier": tier, "alt_entry": alt},
                 )
             )
 
-        # 3. Reasoning steps CoT claims
+        # 3. Lexicographical context claims (historical suppression note & restoration era)
+        lex_ctx = trajectory.get("lexicographical_context", {})
+        suppression_note = lex_ctx.get("historical_suppression_note", "")
+        if suppression_note:
+            # Check СУМ-11 volume and year citations: e.g. "СУМ-11 (т. 6, 1975)"
+            vol_match = re.search(r"СУМ(?:-11)?\s*\((?:т\.|том)\s*(\d+)(?:,\s*(\d{4}))?\)", suppression_note)
+            if vol_match:
+                vol_num = int(vol_match.group(1))
+                year_num = int(vol_match.group(2)) if vol_match.group(2) else None
+                claims.append(
+                    ParsedClaim(
+                        claim_type=ClaimType.SUM11_VOLUME_YEAR,
+                        source_field="lexicographical_context.historical_suppression_note",
+                        term=target_term,
+                        claim_text=f"Suppression note cites СУМ-11 vol. {vol_num}" + (f", year {year_num}" if year_num else ""),
+                        expected_attributes={"volume": vol_num, "year": year_num, "target_term": target_term},
+                    )
+                )
+
+            # Check СУМ-11 headword citation in suppression note
+            if re.search(r"СУМ(?:-11)?", suppression_note):
+                quoted_in_note = re.findall(r"«([^»]+)»", suppression_note)
+                sum_terms = [q for q in quoted_in_note if len(q.split()) <= 2] or ([target_term] if target_term else [])
+                for s_term in sum_terms:
+                    claims.append(
+                        ParsedClaim(
+                            claim_type=ClaimType.SUM11_HEADWORD,
+                            source_field="lexicographical_context.historical_suppression_note",
+                            term=s_term,
+                            claim_text=f"Suppression note cites СУМ-11 presence for «{s_term}»",
+                            expected_attributes={"must_exist": True},
+                        )
+                    )
+
+            # Check Soviet ideological / suppression risk claim
+            if is_calque and any(k in suppression_note.lower() for k in ["радянськ", "канцелярськ", "витісня", "зближення", "урср", "номенклатур"]):
+                claims.append(
+                    ParsedClaim(
+                        claim_type=ClaimType.SUM11_SOVIETIZATION,
+                        source_field="lexicographical_context.historical_suppression_note",
+                        term=target_term,
+                        claim_text=f"Suppression note asserts Sovietization/suppression context for «{target_term}»",
+                        expected_attributes={"context": suppression_note},
+                    )
+                )
+
+            # Check 1920s / pre-Soviet Academy dictionary citations in suppression note
+            if re.search(r"1920-х|R2U|r2u|Кримськ|Голоскевич", suppression_note):
+                is_absent = bool(re.search(r"відсутн|не засвідчен|не зафіксован|невідом|немає|витісня", suppression_note.lower()))
+                claims.append(
+                    ParsedClaim(
+                        claim_type=ClaimType.R2U_HISTORICAL,
+                        source_field="lexicographical_context.historical_suppression_note",
+                        term=target_term,
+                        claim_text=f"Suppression note cites 1920s dictionary evidence for «{target_term}» (expected_attested={not is_absent})",
+                        expected_attributes={"expected_attested": not is_absent},
+                    )
+                )
+
+        # 4. Reasoning steps CoT claims
         reasoning_steps = trajectory.get("reasoning_steps", [])
         for step_idx, step in enumerate(reasoning_steps):
             field_name = f"reasoning_steps[{step_idx}]"
 
-            # Check explicit VESUM count citations: e.g. «слово» (25 форм) or «слово» має 25 словоформ
-            count_matches = re.findall(r"«([^»]+)»[^(«»]{0,20}\((\d+)\s*(?:форм|словоформ)\)", step)
+            # Check explicit VESUM count citations: e.g. «слово» (25 форм), (3 форми), (1 форма)
+            count_matches = re.findall(r"«([^»]+)»[^(«»]{0,25}\((\d+)\s*(?:форм[аиів]?|словоформ[аиів]?)\)", step)
+            count_matches.extend(re.findall(r"«([^»]+)»[^(«»]{0,25}має\s+(\d+)\s+(?:форм[аиів]?|словоформ[аиів]?)", step))
             for lemma_match, cnt_str in count_matches:
                 claims.append(
                     ParsedClaim(
@@ -385,14 +518,46 @@ class CoTClaimVerifier:
                     )
                 )
 
-            # Check СУМ-11 citations
-            if re.search(r"СУМ-11|СУМ\s*\(?1970–1980\)?|Словник української мови в 11 томах", step):
-                # Look for terms cited inside quotes within this step
+            # Check СУМ-11 volume and year citations in reasoning steps
+            vol_step_match = re.search(r"СУМ(?:-11)?\s*\((?:т\.|том)\s*(\d+)(?:,\s*(\d{4}))?\)", step)
+            if vol_step_match:
+                vol_num = int(vol_step_match.group(1))
+                year_num = int(vol_step_match.group(2)) if vol_step_match.group(2) else None
                 quoted_in_step = re.findall(r"«([^»]+)»", step)
-                target_cited = [q for q in quoted_in_step if len(q.split()) <= 2]
-                if not target_cited and target_term:
-                    target_cited = [target_term]
+                s_term = quoted_in_step[0] if quoted_in_step else target_term
+                claims.append(
+                    ParsedClaim(
+                        claim_type=ClaimType.SUM11_VOLUME_YEAR,
+                        source_field=field_name,
+                        term=s_term,
+                        claim_text=f"CoT step cites СУМ-11 vol. {vol_num}" + (f", year {year_num}" if year_num else ""),
+                        expected_attributes={"volume": vol_num, "year": year_num, "target_term": s_term},
+                    )
+                )
+
+            # Check СУМ-11 stylistic label claims: e.g. ремарка «рідко», «заст.», «діал.»
+            style_match = re.search(r"(?:ремарк[аи]|позначк[аи]|помітк[аи]|маркер[аи])?\s*«?(рідко|заст\.|розм\.|діал\.|спец\.|канц\.)»?", step.lower())
+            if style_match and ("сум" in step.lower() or "словник" in step.lower()):
+                quoted_in_step = re.findall(r"«([^»]+)»", step)
+                t_word = quoted_in_step[0] if quoted_in_step else target_term
+                lbl = style_match.group(1).rstrip(".")
+                claims.append(
+                    ParsedClaim(
+                        claim_type=ClaimType.SUM11_STYLISTIC,
+                        source_field=field_name,
+                        term=t_word,
+                        claim_text=f"CoT step asserts stylistic label «{lbl}» in СУМ-11 for «{t_word}»",
+                        expected_attributes={"label": lbl},
+                    )
+                )
+
+            # Check general СУМ-11 citations in step
+            if re.search(r"СУМ-11|СУМ\s*\(?1970–1980\)?|Словник української мови в 11 томах", step):
+                quoted_in_step = re.findall(r"«([^»]+)»", step)
+                target_cited = [q for q in quoted_in_step if len(q.split()) <= 2] or ([target_term] if target_term else [])
                 for term_c in target_cited:
+                    if term_c.lower() in ("рідко", "заст.", "діал.", "розм.", "спец.", "канц."):
+                        continue
                     claims.append(
                         ParsedClaim(
                             claim_type=ClaimType.SUM11_HEADWORD,
@@ -403,22 +568,23 @@ class CoTClaimVerifier:
                         )
                     )
 
-            # Check R2U / 1920s historical dictionary citations
+            # Check R2U / 1920s historical dictionary citations with polarity detection
             if re.search(r"1920-х|R2U|r2u|Кримськ|Голоскевич|Російсько-українськ.*словник", step):
                 quoted_in_step = re.findall(r"«([^»]+)»", step)
-                r2u_terms = [q for q in quoted_in_step if len(q.split()) <= 2]
+                r2u_terms = [q for q in quoted_in_step if len(q.split()) <= 2] or ([target_term] if target_term else [])
                 for r_term in r2u_terms:
+                    expected_att = detect_term_polarity(step, r_term)
                     claims.append(
                         ParsedClaim(
                             claim_type=ClaimType.R2U_HISTORICAL,
                             source_field=field_name,
                             term=r_term,
-                            claim_text=f"CoT step cites 1920s dictionary / R2U historical evidence for «{r_term}»",
-                            expected_attributes={"term": r_term},
+                            claim_text=f"CoT step cites 1920s dictionary / R2U evidence for «{r_term}» (expected_attested={expected_att})",
+                            expected_attributes={"expected_attested": expected_att},
                         )
                     )
 
-        # 4. Negative controls (PRESERVE) claims
+        # 5. Negative controls (PRESERVE) claims
         if not is_calque:
             claims.append(
                 ParsedClaim(
@@ -465,9 +631,7 @@ class CoTClaimVerifier:
                 return ClaimVerificationResult(claim, False, f"Actual count {actual_cnt}", f"Claimed 0 forms but found {actual_cnt}")
             if actual_cnt == expected_cnt:
                 return ClaimVerificationResult(claim, True, f"VESUM exact count verified: {actual_cnt} forms")
-            if actual_cnt > 0 and expected_cnt > 0 and abs(actual_cnt - expected_cnt) <= 2:
-                # Tolerate minor orthography/apostrophe variation (e.g. 17 vs 19 forms due to parallel forms)
-                return ClaimVerificationResult(claim, True, f"VESUM approximate count verified: claimed {expected_cnt}, found {actual_cnt}")
+            # Strict exact count: no tolerance band allowed for linguistic fact grounding
             return ClaimVerificationResult(
                 claim,
                 False,
@@ -499,25 +663,115 @@ class CoTClaimVerifier:
                 claim, False, "Not in sum11", f"Cited term «{claim.term}» does not exist in sources.db sum11 table"
             )
 
-        # E. R2U Historical Dictionary verification
+        # D.1 СУМ-11 Volume and Year verification
+        elif claim.claim_type == ClaimType.SUM11_VOLUME_YEAR:
+            vol = claim.expected_attributes.get("volume")
+            year = claim.expected_attributes.get("year")
+            term = claim.expected_attributes.get("target_term") or claim.term
+
+            if vol not in SUM11_VOLUMES:
+                return ClaimVerificationResult(
+                    claim, False, f"Invalid volume {vol}", f"СУМ-11 has exactly 11 volumes, but volume {vol} was claimed"
+                )
+            vol_meta = SUM11_VOLUMES[vol]
+            if year is not None and year != vol_meta["year"]:
+                return ClaimVerificationResult(
+                    claim,
+                    False,
+                    f"Year mismatch for vol {vol}",
+                    f"СУМ-11 volume {vol} was published in {vol_meta['year']}, but trajectory claimed year {year}",
+                )
+            if not is_term_in_sum11_volume(term, vol):
+                return ClaimVerificationResult(
+                    claim,
+                    False,
+                    "Alphabetical volume mismatch",
+                    f"Term «{term}» does not fall within alphabetical coverage of СУМ-11 volume {vol}",
+                )
+            return ClaimVerificationResult(
+                claim, True, f"СУМ-11 volume {vol} and year {vol_meta['year']} verified for «{term}»"
+            )
+
+        # D.2 СУМ-11 Stylistic Label verification
+        elif claim.claim_type == ClaimType.SUM11_STYLISTIC:
+            label = claim.expected_attributes.get("label", "").lower()
+            entry = self.get_sum11_entry(claim.term)
+            if entry is None:
+                return ClaimVerificationResult(
+                    claim, False, "Not in sum11", f"Term «{claim.term}» does not exist in sum11 table"
+                )
+            text = (entry.get("text") or entry.get("definition", "")).lower()
+            if label in text:
+                return ClaimVerificationResult(claim, True, f"Stylistic label «{label}» verified in СУМ-11 text")
+            return ClaimVerificationResult(
+                claim,
+                False,
+                f"Label «{label}» not found",
+                f"СУМ-11 entry for «{claim.term}» does not contain claimed stylistic label «{label}»",
+            )
+
+        # D.3 СУМ-11 Sovietization / Codification Context verification
+        elif claim.claim_type == ClaimType.SUM11_SOVIETIZATION:
+            head = claim.term.split()[0]
+            entry = self.get_sum11_entry(claim.term) or self.get_sum11_entry(head)
+            if entry is not None:
+                risk = entry.get("sovietization_risk", 0)
+                kw = entry.get("sovietization_keywords", "")
+                return ClaimVerificationResult(
+                    claim, True, f"СУМ-11 codification verified (id={entry['id']}, sovietization_risk={risk}, kw='{kw}')"
+                )
+            return ClaimVerificationResult(
+                claim,
+                False,
+                "Term not in СУМ-11",
+                f"Trajectory asserts Soviet lexicographical codification in СУМ-11, but «{claim.term}» is not present in СУМ-11",
+            )
+
+        # E. R2U Historical Dictionary verification with Polarity
         elif claim.claim_type == ClaimType.R2U_HISTORICAL:
             status, translations = self.query_r2u_historical(claim.term)
             if status == R2ULookupStatus.SOURCE_UNAVAILABLE:
                 return ClaimVerificationResult(
                     claim, False, "Source unavailable", "R2U source unavailable or network timed out; fail-closed rejection"
                 )
-            if status in (R2ULookupStatus.FOUND, R2ULookupStatus.CACHED):
-                return ClaimVerificationResult(claim, True, f"R2U attested: status={status.value}, translations={translations[:3]}")
-            if status in (R2ULookupStatus.NOT_FOUND, R2ULookupStatus.NOT_FOUND_WITHIN_VERIFIED_COVERAGE):
-                # If the trajectory claimed absence, this is verified. If claimed presence, it's rejected.
-                # In decolonization reasoning, calques are typically absent from 1920s R2U dictionaries!
-                return ClaimVerificationResult(claim, True, f"R2U verified coverage status: {status.value}")
-            # If not queried because network is disabled and term is not in cache, fallback check in vesum/sources
-            return ClaimVerificationResult(claim, True, f"R2U offline status: {status.value}")
+            if status == R2ULookupStatus.NOT_QUERIED:
+                return ClaimVerificationResult(
+                    claim, False, "R2U not queried", f"Term «{claim.term}» not found in local R2U cache and network lookup is disabled"
+                )
+
+            expected_attested = claim.expected_attributes.get("expected_attested", True)
+            is_found = status in (R2ULookupStatus.FOUND, R2ULookupStatus.CACHED)
+            is_not_found = status in (R2ULookupStatus.NOT_FOUND, R2ULookupStatus.NOT_FOUND_WITHIN_VERIFIED_COVERAGE)
+
+            if expected_attested:
+                if is_found:
+                    return ClaimVerificationResult(
+                        claim, True, f"R2U attested: status={status.value}, translations={translations[:3]}"
+                    )
+                return ClaimVerificationResult(
+                    claim,
+                    False,
+                    f"R2U status {status.value}",
+                    f"Fabricated 1920s attestation claim: «{claim.term}» was claimed attested, but R2U returned {status.value}",
+                )
+            else:
+                if is_not_found:
+                    return ClaimVerificationResult(
+                        claim, True, f"R2U confirmed absence: status={status.value}"
+                    )
+                return ClaimVerificationResult(
+                    claim,
+                    False,
+                    f"R2U status {status.value}",
+                    f"Fabricated 1920s absence claim: «{claim.term}» was claimed absent, but R2U returned {status.value}",
+                )
 
         # F. ULIF Register Qualifier verification
         elif claim.claim_type == ClaimType.ULIF_REGISTER:
             tier = claim.expected_attributes.get("tier", "living_standard")
+            alt_entry = claim.expected_attributes.get("alt_entry", {})
+            evidence_source = alt_entry.get("evidence_source", "")
+
             if tier == "living_standard":
                 vesum_cnt = self.get_vesum_forms_count(claim.term)
                 ulif_attested = self.check_ulif_attestation(claim.term)
@@ -529,9 +783,48 @@ class CoTClaimVerifier:
                 return ClaimVerificationResult(
                     claim, False, "Not in living standard", f"Living standard term «{claim.term}» unattested in both VESUM and ULIF"
                 )
-            elif tier in ("purist_neologism", "classical_regional", "technical_compound"):
-                # Non-living standard tiers: verified if annotated in spectrum
-                return ClaimVerificationResult(claim, True, f"Register tier {tier} accepted with evidentiary qualifier")
+            elif tier in ("classical_regional", "technical_compound"):
+                vesum_cnt = self.get_vesum_forms_count(claim.term)
+                sum_entry = self.get_sum11_entry(claim.term)
+                if vesum_cnt == 0 and sum_entry is None:
+                    words = [w for w in claim.term.split() if len(clean_word(w)) >= 2]
+                    if not (len(words) > 1 and all(self.get_vesum_forms_count(w) > 0 for w in words)):
+                        return ClaimVerificationResult(
+                            claim,
+                            False,
+                            "Lexicographically unattested",
+                            f"Register tier «{tier}» term «{claim.term}» is completely unattested in VESUM and sources",
+                        )
+                if not evidence_source or len(evidence_source.strip()) < 5:
+                    return ClaimVerificationResult(
+                        claim,
+                        False,
+                        "Missing evidence source",
+                        f"Register tier «{tier}» requires non-empty evidence_source citation",
+                    )
+                return ClaimVerificationResult(
+                    claim, True, f"Register tier «{tier}» verified (VESUM={vesum_cnt}, source='{evidence_source}')"
+                )
+            elif tier == "purist_neologism":
+                claimed_cnt = alt_entry.get("vesum_forms_count", 0)
+                actual_cnt = self.get_vesum_forms_count(claim.term)
+                if claimed_cnt == 0 and actual_cnt > 0:
+                    return ClaimVerificationResult(
+                        claim,
+                        False,
+                        f"VESUM count is {actual_cnt}",
+                        f"Claimed unrecorded purism «{claim.term}» (0 forms) actually has {actual_cnt} forms in VESUM",
+                    )
+                if not evidence_source or len(evidence_source.strip()) < 5:
+                    return ClaimVerificationResult(
+                        claim,
+                        False,
+                        "Missing evidence source",
+                        f"Purist neologism «{claim.term}» requires cited evidence_source",
+                    )
+                return ClaimVerificationResult(
+                    claim, True, f"Purist neologism «{claim.term}» verified with cited source: {evidence_source}"
+                )
 
         # G. Negative Control verification
         elif claim.claim_type == ClaimType.NEGATIVE_CONTROL:
@@ -642,17 +935,53 @@ def build_verification_receipt(
     for outcome in all_outcomes:
         for r in outcome.claims_verified:
             total_claims += 1
-            if r.claim.claim_type in (ClaimType.VESUM_LEMMA, ClaimType.VESUM_FORM_COUNT, ClaimType.VESUM_TAGS):
+            if r.claim.claim_type in (ClaimType.VESUM_LEMMA, ClaimType.VESUM_FORM_COUNT, ClaimType.VESUM_TAGS, ClaimType.NEGATIVE_CONTROL):
                 vesum_claims += 1
-            elif r.claim.claim_type in (ClaimType.SUM11_HEADWORD, ClaimType.SUM11_SOVIETIZATION):
+            elif r.claim.claim_type in (ClaimType.SUM11_HEADWORD, ClaimType.SUM11_VOLUME_YEAR, ClaimType.SUM11_STYLISTIC, ClaimType.SUM11_SOVIETIZATION):
                 sum11_claims += 1
             elif r.claim.claim_type == ClaimType.R2U_HISTORICAL:
                 r2u_claims += 1
-            elif r.claim.claim_type in (ClaimType.ULIF_REGISTER, ClaimType.NEGATIVE_CONTROL):
+            elif r.claim.claim_type == ClaimType.ULIF_REGISTER:
                 ulif_claims += 1
 
-    pass_rate_100 = (len(verified_trajectories) == total_trajectories) if total_trajectories > 0 else True
-    zero_unverified_claims = all(all(r.passed for r in out.claims_verified) for out in all_outcomes if out.passed)
+    pass_rate_100 = bool(total_trajectories > 0 and len(rejected_trajectories) == 0 and len(verified_trajectories) == total_trajectories)
+    zero_unverified_claims = bool(
+        all(
+            r.passed
+            for out in all_outcomes
+            if out.passed
+            for r in out.claims_verified
+            if r.claim.claim_type in (
+                ClaimType.SUM11_HEADWORD,
+                ClaimType.SUM11_VOLUME_YEAR,
+                ClaimType.SUM11_STYLISTIC,
+                ClaimType.SUM11_SOVIETIZATION,
+                ClaimType.R2U_HISTORICAL,
+            )
+        )
+    )
+
+    living_std_results = [
+        r
+        for out in all_outcomes
+        if out.passed
+        for r in out.claims_verified
+        if r.claim.claim_type == ClaimType.ULIF_REGISTER and r.claim.expected_attributes.get("tier") == "living_standard"
+    ]
+    zero_unattested_living = bool(living_std_results and all(r.passed for r in living_std_results))
+
+    has_network_errors = any(
+        r.claim.claim_type == ClaimType.R2U_HISTORICAL and "source unavailable" in r.evidence.lower()
+        for out in all_outcomes
+        for r in out.claims_verified
+    )
+    zero_network_errors = bool(not has_network_errors)
+
+    # Enforce OPSEC scan across all trajectories written to dataset artifacts
+    for rec in verified_trajectories:
+        validate_no_private_host_paths(rec)
+    for rec in rejected_trajectories:
+        validate_no_private_host_paths(rec)
 
     receipt_id = f"receipt.cot_claim_verifier.{sha256_text(verified_file_info['sha256'] + input_file_info['sha256'])[:16]}"
 
@@ -675,8 +1004,8 @@ def build_verification_receipt(
         "invariants": {
             "pass_rate_100_percent": pass_rate_100,
             "zero_unverified_dictionary_claims": zero_unverified_claims,
-            "zero_unattested_living_standard_terms": True,
-            "zero_network_errors_as_missing_word": True,
+            "zero_unattested_living_standard_terms": zero_unattested_living,
+            "zero_network_errors_as_missing_word": zero_network_errors,
             "no_private_host_paths": True,
         },
         "files": {
@@ -755,6 +1084,11 @@ def run_claim_verifier(
 
     vesum_conn = sqlite3.connect(f"file:{vesum_db}?mode=ro", uri=True)
     sources_conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+
+    if ulif_db is None and DEFAULT_ULIF_DB and DEFAULT_ULIF_DB.is_file():
+        ulif_db = DEFAULT_ULIF_DB
+    if r2u_cache_path is None and DEFAULT_R2U_CACHE and DEFAULT_R2U_CACHE.is_file():
+        r2u_cache_path = DEFAULT_R2U_CACHE
 
     ulif_conn = None
     if ulif_db and ulif_db.is_file():
