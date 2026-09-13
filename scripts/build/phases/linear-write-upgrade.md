@@ -33,13 +33,15 @@ clone only its close/summary *shape*). Added Ukrainian passages of three or more
 sentences require side-by-side English support. Write dialogues as > blockquotes,
 never as code fences; put the English breakdown after.
 
-**Sources are mandatory, not optional.** This upgrade corpus is also the dataset
-for a Ukrainian LLM. Every lemma, gender, government, and example you teach must
-be checked with `sources` / VESUM tools. If a lookup misses, mark `<!-- VERIFY: … -->`
-and do not invent. We are testing whether those tools work; silent guessing poisons
-the dataset. Stress marks still come from the pipeline annotator after review —
-do not invent stressed spellings.
-Stress annotation runs deterministically AFTER review; do not invent stressed spellings.
+**Why you must call `sources` / VESUM — not as a ritual, as the reason this page is better Ukrainian.**
+A fluent model still mixes Russian calques, wrong gender, wrong government, and invented
+example sentences. VESUM is the dictionary of record for lemma, gender, aspect, and
+rections. Looking it up is what makes the line teachable. This run is also a **test of
+the sources tools**: we will check your tool trace. If you never call them, we cannot
+tell they work, and this corpus is the dataset for a Ukrainian LLM — guessed forms
+become the next model's errors. If a lookup misses, mark `<!-- VERIFY: … -->` and do
+not invent. Stress marks still come from the pipeline annotator after review; do not
+invent stressed spellings.
 
 A1 landing overview (lesson 1 only): if the original module opening (text before the first `##`) has no "By the end, you can" after tables/tips/code fences are ignored, also return:
 

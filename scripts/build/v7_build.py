@@ -1829,8 +1829,9 @@ def _upgrade_review_context(lesson_map: Mapping[str, Any], lesson: int | None) -
         "on the last lesson, not Module completion), no named narrator, marked attributed "
         "quotations with Resources entries, no ```text learner examples, and side-by-side English "
         "support for added A1 Ukrainian passages of three or more sentences. "
-        "SOURCES AUDIT: this corpus trains a Ukrainian LLM. Reject unverified morphology, gender, "
-        "or examples. Prefer VESUM/`sources` evidence over fluency. Silent invention is a fail. "
+        "SOURCES AUDIT: VESUM/`sources` is why the Ukrainian is trustworthy (gender, government, "
+        "real examples — not Russian calques). This corpus trains a Ukrainian LLM and tests whether "
+        "the sources tools actually get used. No tool calls = fail. Ungrounded morphology = fail. "
         "Judge the current dimension independently using exact "
         "quotes from these artifacts. Stress annotation follows review. Lesson map:\n"
         + json.dumps(lesson_map, ensure_ascii=False)
@@ -1884,7 +1885,9 @@ def _upgrade_gemini_adjust_then_astra(
             plan=plan, plan_content=plan_content, module_dir=module_dir, writer=writer,
             reviewer_override=writer, profile="core",
             stdout_silence_timeout=stdout_silence_timeout,
-            review_context=review_context + "\nGemini self-review: you wrote this. Adjust if needed. Sources/VESUM required.",
+            review_context=review_context + "\nGemini self-review: you wrote this. Adjust if VESUM/`sources` would change a form. "
+            "Calling sources is how the Ukrainian gets better, and this run tests that the tools work "
+            "(LLM dataset). If you skipped tools while writing, call them now and fix.",
             content_override=content_override, allow_same_model=True,
         )
     except linear_pipeline.LinearPipelineError as exc:
@@ -1912,7 +1915,9 @@ def _upgrade_gemini_adjust_then_astra(
         plan=plan, plan_content=plan_content, module_dir=module_dir, writer=writer,
         reviewer_override=independent_reviewer, profile="core",
         stdout_silence_timeout=stdout_silence_timeout,
-        review_context=review_context + "\nIndependent Astra review after Gemini self-adjust. Sources/VESUM required.",
+        review_context=review_context + "\nIndependent Astra review after Gemini self-adjust. "
+            "Fail ungrounded gender/government/examples. VESUM/`sources` is how the Ukrainian is "
+            "better than a fluent guess; this corpus trains an LLM and tests the tools.",
         content_override=content_override, effort_override=UPGRADE_INDEPENDENT_EFFORT,
     )
     return independent
