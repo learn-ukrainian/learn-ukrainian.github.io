@@ -12,7 +12,7 @@ from scripts.validate import validate_plan_ordering as validator
 def test_legacy_ci_entry_point_validates_parallel_level():
     result = subprocess.run(
         [sys.executable, str(validator.PROJECT_ROOT / "scripts/validate_plan_ordering.py"), "a1-v1"],
-        cwd=validator.PROJECT_ROOT, capture_output=True, text=True, check=False,
+        cwd=validator.PROJECT_ROOT, capture_output=True, text=True, check=False, timeout=60,
     )
     assert result.returncode == 0, result.stdout + result.stderr
     assert "All 55 modules verified — no issues found" in result.stdout

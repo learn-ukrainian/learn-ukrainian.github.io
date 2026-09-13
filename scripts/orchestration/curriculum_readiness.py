@@ -23,6 +23,7 @@ if str(PROJECT_ROOT) not in sys.path:
 from scripts.audit import lint_bio_dossier_xref
 from scripts.audit.wiki_completeness_gate import check_wiki_completeness
 from scripts.build import linear_pipeline
+from scripts.level_config import base_level, resolve_manifest_module_track
 from scripts.orchestration import prompt_contracts
 from scripts.orchestration.preparation_evidence import (
     RegistryValidationError,
@@ -231,15 +232,16 @@ def _research_path(repo_root: Path, track: str, slug: str) -> Path:
 def artifact_path(artifact: str, repo_root: Path, track: str, slug: str) -> Path:
     """Resolve a registered artifact ID without track-name branches."""
     curriculum = repo_root / "curriculum" / "l2-uk-en"
+    plan_track = base_level(track, manifest=curriculum / "curriculum.yaml")
     resolvers: dict[str, Callable[[], Path]] = {
         "research": lambda: _research_path(repo_root, track, slug),
         "dossier": lambda: repo_root / "docs" / "research" / track / f"{slug}.md",
-        "plan": lambda: curriculum / "plans" / track / f"{slug}.yaml",
+        "plan": lambda: curriculum / "plans" / plan_track / f"{slug}.yaml",
         "manual-registry": lambda: curriculum / track / "promotion-evidence.yaml",
-        "wiki-document": lambda: repo_root / "wiki" / resolve_write_domain(track, slug) / f"{slug}.md",
+        "wiki-document": lambda: repo_root / "wiki" / resolve_write_domain(plan_track, slug) / f"{slug}.md",
         "wiki-sources": lambda: repo_root
         / "wiki"
-        / resolve_write_domain(track, slug)
+        / resolve_write_domain(plan_track, slug)
         / f"{slug}.sources.yaml",
         "discovery": lambda: curriculum / track / "discovery" / f"{slug}.yaml",
     }
@@ -1036,6 +1038,7 @@ def evaluate_preparation(
         raise ReadinessError("consumed preparation identity must be a SHA-256 hex digest")
 
     manifest = active_manifest if active_manifest is not None else load_active_manifest(repo_root)
+    track = resolve_manifest_module_track(track, slug, manifest["tracks"])
     manifest_record, manifest_slugs = manifest_track(manifest, track)
     config = load_config(
         repo_root=repo_root,

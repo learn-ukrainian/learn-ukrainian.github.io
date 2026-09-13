@@ -5,6 +5,7 @@ import pytest
 import yaml
 
 from scripts import generate_landing_pages
+from scripts.level_config import base_level
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DOCS_ROOT = PROJECT_ROOT / "site" / "src" / "content" / "docs"
@@ -63,11 +64,16 @@ def test_track_landing_uses_levellanding_contract(path: Path) -> None:
 
     color_match = re.search(r'\bcolor="([^"]+)"', text)
     assert color_match is not None
-    assert color_match.group(1) == f"var(--lu-id-{track})"
+    assert color_match.group(1) == f"var(--lu-id-{base_level(track)})"
 
     module_count = re.search(r"\bmoduleCount=\{(\d+)\}", text)
     word_target = re.search(r"\bwordTarget=\{(\d+)\}", text)
-    assert module_count is not None and int(module_count.group(1)) > 0
+    if track == "a1":
+        assert "moduleCount={(props.modules ?? []).reduce((total, group) => total + group.items.length, 0)}" in text
+        assert "modules={props.modules ?? []}" in text
+        assert "(/a1-v1/)" in text
+    else:
+        assert module_count is not None and int(module_count.group(1)) > 0
     assert word_target is not None and int(word_target.group(1)) > 0
 
 
@@ -81,6 +87,15 @@ def test_dynamic_route_uses_every_track_index_mdx_as_landing_doc() -> None:
     assert "...landingDocsByPathTrack.keys()" in text
     assert "<LevelLanding" in text
     assert "showHero={props.kind !== 'landingDoc' && props.kind !== 'track'}" in text
+
+
+def test_a1_landing_receives_published_lesson_modules_from_router() -> None:
+    text = ROUTER_PATH.read_text(encoding="utf-8")
+
+    assert "<Content modules={docTrack === 'a1' && pageTrack ? plannedModuleGroups(docTrack, pageTrack) : []} />" in text
+    assert "(deployedDocsByTrack.get(track) ?? [])" in text
+    assert ".filter(entry => Array.isArray(entry.data.lessons))" in text
+    assert "lessons: entry.data.lessons" in text
 
 
 def test_content_collection_loads_track_index_mdx_files() -> None:

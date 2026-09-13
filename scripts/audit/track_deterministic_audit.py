@@ -34,7 +34,8 @@ from audit.check_no_internal_ids import (
 )
 from audit.checks.yaml_schema_validation import validate_activity_yaml_file
 from audit.content_surface_gates import scan_module_surface
-from manifest_utils import get_modules_for_level
+from level_config import base_level, resolve_content_track, resolve_manifest_module_track
+from manifest_utils import get_modules_for_level, load_manifest
 from wiki.domains import resolve_write_domain
 
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
@@ -194,27 +195,37 @@ def parse_slug_filter(values: list[str] | None) -> set[str] | None:
 
 def module_paths(track: str, module: Any) -> ModulePaths:
     slug = module.slug
-    module_dir = CURRICULUM_ROOT / track / slug
-    wiki_root = PROJECT_ROOT / "wiki" / resolve_write_domain(track, slug)
+    content_track = resolve_content_track(track, slug, CURRICULUM_ROOT)
+    manifest = CURRICULUM_ROOT / "curriculum.yaml"
+    plan_track = base_level(track, manifest=manifest) if manifest.exists() else track
+    module_dir = CURRICULUM_ROOT / content_track / slug
+    wiki_root = PROJECT_ROOT / "wiki" / resolve_write_domain(plan_track, slug)
     return ModulePaths(
         track=track,
         module_num=int(module.local_num),
         slug=slug,
         title=str(getattr(module, "title", slug)),
         module_dir=module_dir,
-        plan=CURRICULUM_ROOT / "plans" / track / f"{slug}.yaml",
+        plan=CURRICULUM_ROOT / "plans" / plan_track / f"{slug}.yaml",
         module_md=module_dir / "module.md",
         activities=module_dir / "activities.yaml",
         vocabulary=module_dir / "vocabulary.yaml",
         resources=module_dir / "resources.yaml",
         wiki=wiki_root / f"{slug}.md",
         wiki_sources=wiki_root / f"{slug}.sources.yaml",
-        site_mdx=SITE_DOCS_ROOT / track / f"{slug}.mdx",
+        site_mdx=SITE_DOCS_ROOT / content_track / f"{slug}.mdx",
     )
 
 
 def select_modules(track: str, range_filter: tuple[int, int] | None, slugs: set[str] | None) -> list[ModulePaths]:
-    modules = [module_paths(track, module) for module in get_modules_for_level(track)]
+    selected = get_modules_for_level(track)
+    if slugs:
+        levels = load_manifest()["levels"]
+        for slug in sorted(slugs):
+            resolved = resolve_manifest_module_track(track, slug, levels)
+            if resolved != track:
+                selected.extend(module for module in get_modules_for_level(resolved) if module.slug == slug)
+    modules = [module_paths(track, module) for module in selected]
     if range_filter is not None:
         start, end = range_filter
         modules = [module for module in modules if start <= module.module_num <= end]
@@ -697,7 +708,7 @@ def route_path_exists(track: str, current_mdx: Path, raw_target: str) -> bool:
 
 def check_mdx_routes(paths: ModulePaths) -> list[Finding]:
     findings: list[Finding] = []
-    index_path = SITE_DOCS_ROOT / paths.track / "index.mdx"
+    index_path = paths.site_mdx.parent / "index.mdx"
     if index_path.exists():
         index_text = index_path.read_text(encoding="utf-8")
         if f'slug: "{paths.slug}"' not in index_text and f"slug: '{paths.slug}'" not in index_text:
@@ -838,7 +849,7 @@ def run_mdx_validate(paths: ModulePaths) -> list[Finding]:
                 str(VENV_PYTHON),
                 "scripts/generate_mdx.py",
                 "l2-uk-en",
-                paths.track,
+                resolve_content_track(paths.track, paths.slug, CURRICULUM_ROOT),
                 str(paths.module_num),
                 "--validate",
             ],

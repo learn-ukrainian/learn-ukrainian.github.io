@@ -175,13 +175,18 @@ def test_upgrade_cli_real_subprocess(tmp_path):
     import subprocess
 
     root = Path(__file__).resolve().parents[2]
-    # CLI output remains in the worktree; test helper restores no input artifacts.
-    out = root / "batch_state/upgrade-cli-test"
-    result = subprocess.run(
-        [sys.executable, "scripts/build/v7_build.py", "a1", "things-have-gender", "--upgrade", "--dry-run", "--out", str(out)],
-        cwd=root, capture_output=True, text=True, check=False,
+    # Exercise the real CLI guard in an isolated primary checkout, including on CI.
+    env = v7_build.reap_worktrees.sanitized_git_env()
+    env.pop(v7_build.run_archive.ENV_KEY, None)
+    subprocess.run(
+        ["git", "init", str(tmp_path)],
+        capture_output=True, text=True, check=True, timeout=30, env=env,
     )
-    assert result.returncode == 0, result.stdout + result.stderr
-    events = [json.loads(line) for line in result.stdout.splitlines() if line.startswith("{")]
-    assert events and all(e["mode"] == "upgrade" and e["level"] == "a1" for e in events)
-    assert events[-1]["writer_invoked"] is False
+    out = tmp_path / "upgrade-output"
+    result = subprocess.run(
+        [sys.executable, str(root / "scripts/build/v7_build.py"), "a1", "things-have-gender", "--upgrade", "--dry-run", "--out", str(out)],
+        cwd=tmp_path, capture_output=True, text=True, check=False, timeout=60, env=env,
+    )
+    assert result.returncode == v7_build.PrimaryCheckoutBuildError.exit_code
+    assert "Refusing to run v7_build in the primary checkout; pass --worktree" in result.stderr
+    assert not out.exists()

@@ -500,7 +500,8 @@ def test_real_release_serves_live_data_routers_with_logical_paths(tmp_path: Path
 
         key_paths = agent_payload["key_paths"]
         assert curriculum_payload["tracks"]["a1"]["total"] >= 0
-        assert preparation_payload["track"] == "a1"
+        assert preparation_payload["track"] == "a1-v1"
+        assert preparation_payload["publication"]["source"]["path"].startswith("site/src/content/docs/a1-v1/")
         assert "data_checkout" not in preparation_payload["authority"]
         expected_role = (
             "dispatch_worktree"

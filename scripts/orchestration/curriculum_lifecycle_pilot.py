@@ -22,6 +22,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.audit import post_build_review
+from scripts.level_config import base_level, resolve_content_track, resolve_manifest_module_track
 from scripts.orchestration import curriculum_readiness, prompt_contracts
 
 CONTRACT_ROOT = Path("agents_extensions/shared/curriculum-lifecycle")
@@ -313,7 +314,9 @@ def _validate_matrix_semantics(matrix: Mapping[str, Any], repo_root: Path) -> No
                 raise PilotError(f"pilot fixture has no deterministic implementation: {row['scenario']}")
             continue
         track, slug = str(row["selector"]).split("/", 1)
-        manifest, modules = curriculum_readiness.load_manifest_track(repo_root, track)
+        active_manifest = curriculum_readiness.load_active_manifest(repo_root)
+        resolved_track = resolve_manifest_module_track(track, slug, active_manifest["tracks"])
+        manifest, modules = curriculum_readiness.manifest_track(active_manifest, resolved_track)
         if slug not in modules:
             raise PilotError(f"pilot target is not active in curriculum manifest: {row['selector']}")
         family = "core" if manifest["type"] == "core" else "seminar"
@@ -351,9 +354,12 @@ def _learner_hashes(matrix: Mapping[str, Any], repo_root: Path) -> dict[str, str
     selectors = sorted({str(row["selector"]) for row in matrix["rows"] if row["kind"] in {"repository", "historical"}})
     for selector in selectors:
         track, slug = selector.split("/", 1)
+        curriculum = repo_root / "curriculum/l2-uk-en"
+        content_track = resolve_content_track(track, slug, curriculum)
+        plan_track = base_level(track, manifest=curriculum / "curriculum.yaml")
         candidates = [
-            Path(f"curriculum/l2-uk-en/plans/{track}/{slug}.yaml"),
-            *(Path(f"curriculum/l2-uk-en/{track}/{slug}/{name}") for name in LEARNER_BUNDLE_FILES),
+            Path(f"curriculum/l2-uk-en/plans/{plan_track}/{slug}.yaml"),
+            *(Path(f"curriculum/l2-uk-en/{content_track}/{slug}/{name}") for name in LEARNER_BUNDLE_FILES),
         ]
         for relative in candidates:
             path = repo_root / relative

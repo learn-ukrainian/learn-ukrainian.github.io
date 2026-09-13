@@ -875,7 +875,7 @@ def test_target_resolution_routes_core_and_bio_families() -> None:
     seminar = pbr.resolve_target("bio/oleksandr-bilash")
     assert core["semantic_family"] == "core"
     assert seminar["semantic_family"] == "seminar"
-    assert core["files"]["content"].endswith("a1/sounds-letters-and-hello/module.md")
+    assert core["files"]["content"].endswith("a1-v1/sounds-letters-and-hello/module.md")
     assert seminar["files"]["content"].endswith("bio/oleksandr-bilash/module.md")
 
 

@@ -200,6 +200,11 @@ def get_module_by_slug(slug: str) -> Module | None:
             _, mod_base = parse_numbered_slug(mod_slug)
 
             if mod_slug == slug or mod_base == target_base:
+                # Archive order in YAML must not shadow a published canonical slug.
+                base = level_data.get('base_level')
+                canonical = manifest.get('levels', {}).get(base, {}).get('modules', [])
+                if base and any(parse_numbered_slug(item)[1] == target_base for item in canonical):
+                    continue
                 meta = _load_meta_file(level_name, mod_slug)
                 return Module(
                     slug=mod_base,  # Store base slug without number prefix

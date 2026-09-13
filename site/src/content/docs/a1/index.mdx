@@ -1,0 +1,22 @@
+---
+title: "A1 — First Steps"
+description: "The upgraded Ukrainian beginner course, organized into short lessons."
+template: splash
+---
+
+import LevelLanding from '@site/src/components/LevelLanding';
+
+[Study the previous A1 edition (55 modules)](/a1-v1/)
+
+<LevelLanding
+  client:load
+  level="A1"
+  title="First Steps"
+  subtitle="The upgraded A1 course — short lessons for absolute beginners"
+  progressTitle="Upgraded A1 course"
+  progressDescription="Published modules and their lessons appear below as they become available. The complete previous edition remains available above."
+  moduleCount={(props.modules ?? []).reduce((total, group) => total + group.items.length, 0)}
+  wordTarget={1200}
+  color="var(--lu-id-a1)"
+  modules={props.modules ?? []}
+/>

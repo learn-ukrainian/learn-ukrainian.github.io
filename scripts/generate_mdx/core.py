@@ -45,7 +45,8 @@ if str(SCRIPT_DIR) not in sys.path:
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from manifest_utils import CORE_LEVELS, TRACKS, Module, get_modules_for_level
+from level_config import base_level
+from manifest_utils import Module, get_modules_for_level, load_manifest
 from slug_utils import to_bare_slug
 
 # Re-export Activity for type annotations used by callers
@@ -715,21 +716,12 @@ sidebar:
 
 def get_modules_from_manifest(target_level: str | None = None) -> list[Module]:
     """Get list of modules to process from manifest."""
-    all_modules = []
-
-    # Process core levels
-    for level in CORE_LEVELS:
-        if target_level and level != target_level:
-            continue
-        all_modules.extend(get_modules_for_level(level))
-
-    # Process tracks (hist, bio, lit)
-    for track_name in TRACKS:
-        if target_level and track_name != target_level:
-            continue
-        all_modules.extend(get_modules_for_level(track_name))
-
-    return all_modules
+    return [
+        module
+        for level in load_manifest().get("levels", {})
+        if target_level is None or level == target_level
+        for module in get_modules_for_level(level)
+    ]
 
 
 def main():
@@ -838,7 +830,8 @@ def main():
 
         # Load PLAN file for title/subtitle
         plan_data = None
-        plan_file = CURRICULUM_DIR / lang_pair / 'plans' / mod.level.lower() / f"{mod.slug}.yaml"
+        plan_level = base_level(mod.level, manifest=CURRICULUM_DIR / lang_pair / 'curriculum.yaml')
+        plan_file = CURRICULUM_DIR / lang_pair / 'plans' / plan_level / f"{mod.slug}.yaml"
         if plan_file.exists():
             try:
                 with open(plan_file, encoding='utf-8') as f:

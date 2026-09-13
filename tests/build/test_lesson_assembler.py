@@ -129,7 +129,7 @@ new AsyncFunction('getCollection', 'moduleCount', compiled + '\nreturn {routes: 
     docs.extend({"id": f"a1/things-have-gender/{name}", "data": yaml.safe_load(mdx.split("---", 2)[1])}
                 for name, mdx in pages.items())
     docs.append({"id": "a1/draft/index", "data": {"title": "Draft", "draft": True, "lessons": []}})
-    result = json.loads(subprocess.check_output(["node", "-e", probe], input=json.dumps(docs), text=True))
+    result = json.loads(subprocess.check_output(["node", "-e", probe], input=json.dumps(docs), text=True, timeout=30))
     routes = {route["params"]["slug"] for route in result["routes"]}
     assert {
         "a1-v1", "a1-v1/things-have-gender", "a1", "a1/things-have-gender",

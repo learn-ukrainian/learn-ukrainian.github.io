@@ -612,7 +612,7 @@ const plannedModuleGroups = (track: string, trackOverview: TrackOverview) => {
   showHero={props.kind !== 'landingDoc' && props.kind !== 'track'}
 >
   {props.kind === 'landingDoc' && Content ? (
-    <Content />
+    <Content modules={docTrack === 'a1' && pageTrack ? plannedModuleGroups(docTrack, pageTrack) : []} />
   ) : props.kind === 'track' && pageTrack ? (
     <>
     {props.track === 'a1' && <p><a href="/a1-v1/">Study the previous A1 edition (55 modules)</a></p>}
