@@ -1821,9 +1821,13 @@ def _upgrade_review_context(lesson_map: Mapping[str, Any], lesson: int | None) -
     return (
         f"V7 UPGRADE review of {scope}. Review the published lesson unit, not a fresh module build. "
         "No wiki packet or plan rewrite applies. Assess preservation, lesson_split, coherent progression, "
-        "first-use cumulative vocabulary, final module closure, no named narrator, marked attributed "
-        "quotations with Resources entries, and side-by-side English support for added A1 Ukrainian "
-        "passages of three or more sentences. Judge the current dimension independently using exact "
+        "first-use cumulative vocabulary, final module closure (`Підсумок модуля — Module summary` "
+        "on the last lesson, not Module completion), no named narrator, marked attributed "
+        "quotations with Resources entries, no ```text learner examples, and side-by-side English "
+        "support for added A1 Ukrainian passages of three or more sentences. "
+        "SOURCES AUDIT: this corpus trains a Ukrainian LLM. Reject unverified morphology, gender, "
+        "or examples. Prefer VESUM/`sources` evidence over fluency. Silent invention is a fail. "
+        "Judge the current dimension independently using exact "
         "quotes from these artifacts. Stress annotation follows review. Lesson map:\n"
         + json.dumps(lesson_map, ensure_ascii=False)
     )

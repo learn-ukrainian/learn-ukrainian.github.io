@@ -27,10 +27,18 @@ Use a direct, friendly teaching voice with NO named narrator and NO self-introdu
 Named people occur only inside dialogues. Do not adopt any reference author's persona
 or lesson structure. A quotation must be visibly marked, attributed, and have a matching
 entry in resources.yaml (Ресурси). Preserve source provenance.
-Ukrainian comes first, with English scaffolding appropriate to the supplied learner state.
-Added Ukrainian passages of three or more sentences require side-by-side English support.
-Write dialogues as > blockquotes, never as code fences; put the English breakdown after.
-Verify language claims with sources/VESUM tools; never guess Ukrainian forms or stress.
+Ukrainian comes first, with English scaffolding appropriate to the supplied learner state
+and to **this module's original A1 mix** (do not clone module 9's adjectives lesson;
+clone only its close/summary *shape*). Added Ukrainian passages of three or more
+sentences require side-by-side English support. Write dialogues as > blockquotes,
+never as code fences; put the English breakdown after.
+
+**Sources are mandatory, not optional.** This upgrade corpus is also the dataset
+for a Ukrainian LLM. Every lemma, gender, government, and example you teach must
+be checked with `sources` / VESUM tools. If a lookup misses, mark `<!-- VERIFY: … -->`
+and do not invent. We are testing whether those tools work; silent guessing poisons
+the dataset. Stress marks still come from the pipeline annotator after review —
+do not invent stressed spellings.
 Stress annotation runs deterministically AFTER review; do not invent stressed spellings.
 
 A1 landing overview (lesson 1 only): if the original module opening (text before the first `##`) has no "By the end, you can" after tables/tips/code fences are ignored, also return:

@@ -113,7 +113,7 @@ WRITER_DEFAULTS: dict[str, dict[str, str]] = {
     "deepseek-tools": {"model": "deepseek-v4-pro", "effort": "medium"},
     "qwen-tools": {"model": "qwen/qwen3.6-plus", "effort": "medium"},
     # AGY selects the model via --model; effort remains a telemetry placeholder.
-    "agy-tools": {"model": "gemini-3.8-flash-high", "effort": "medium"},
+    "agy-tools": {"model": "gemini-3.8-flash-high", "effort": "high"},
 }
 PROMPT_BY_WRITER = {
     "grok-tools": "linear-write-grok.md",
