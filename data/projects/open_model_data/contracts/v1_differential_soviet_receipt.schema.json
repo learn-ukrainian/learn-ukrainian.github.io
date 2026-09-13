@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v1_differential_soviet_receipt.schema.json",
+  "title": "DifferentialSovietReceiptV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "issue",
+    "epic",
+    "generated_at",
+    "sum11_risk_pool",
+    "whitelists",
+    "counts",
+    "invariants",
+    "files"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v1_differential_soviet_receipt"
+    },
+    "receipt_id": {
+      "type": "string",
+      "pattern": "^receipt\\.soviet_miner\\.[a-f0-9]{16}$"
+    },
+    "issue": {
+      "const": 8008
+    },
+    "epic": {
+      "const": 6321
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sum11_risk_pool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_entries",
+        "risk_1_count",
+        "risk_2_count"
+      ],
+      "properties": {
+        "total_entries": {
+          "const": 7152
+        },
+        "risk_1_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "risk_2_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "whitelists": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "neologism_whitelist_count",
+        "skrypnykivka_archaism_count"
+      ],
+      "properties": {
+        "neologism_whitelist_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "skrypnykivka_archaism_count": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidates_admitted",
+        "neologisms_preserved",
+        "ideological_realia_tagged",
+        "archaisms_rejected",
+        "false_calque_flags_on_whitelist",
+        "network_timeouts_as_missing_words"
+      ],
+      "properties": {
+        "candidates_admitted": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "neologisms_preserved": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ideological_realia_tagged": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "archaisms_rejected": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "false_calque_flags_on_whitelist": {
+          "const": 0
+        },
+        "network_timeouts_as_missing_words": {
+          "const": 0
+        }
+      }
+    },
+    "invariants": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "zero_false_calque_on_neologisms",
+        "zero_network_errors_as_missing_word",
+        "all_replacements_vesum_attested",
+        "no_private_host_paths"
+      ],
+      "properties": {
+        "zero_false_calque_on_neologisms": {
+          "const": true
+        },
+        "zero_network_errors_as_missing_word": {
+          "const": true
+        },
+        "all_replacements_vesum_attested": {
+          "const": true
+        },
+        "no_private_host_paths": {
+          "const": true
+        }
+      }
+    },
+    "files": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidates_index",
+        "candidates_manifest"
+      ],
+      "properties": {
+        "candidates_index": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "filename",
+            "sha256",
+            "line_count"
+          ],
+          "properties": {
+            "filename": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9_-]+\\.jsonl$"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "line_count": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "candidates_manifest": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "filename",
+            "sha256"
+          ],
+          "properties": {
+            "filename": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9_-]+\\.json$"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          }
+        }
+      }
+    }
+  }
+}
