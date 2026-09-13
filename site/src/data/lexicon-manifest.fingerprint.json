@@ -6,6 +6,10 @@
         "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       {
+        "path": "scripts/lexicon/admit_fmu_boosters.py",
+        "sha256": "ba76ee894c94b171dc3660776766d7aed9930ad510732d7ea902f1b3b36cb486"
+      },
+      {
         "path": "scripts/lexicon/admit_stem_slice_2a.py",
         "sha256": "9bf20c194c6d42124cfdf6ef6e99847ae560cb9a5cbb5232cde2d1175d97f68b"
       },
@@ -44,6 +48,10 @@
       {
         "path": "scripts/lexicon/build_data_manifest.py",
         "sha256": "7552b0e73fd2fbecba99aff32d8233021c8e15051d26b64707e658841b7718ad"
+      },
+      {
+        "path": "scripts/lexicon/build_fmu_booster_inventory.py",
+        "sha256": "439452d3930d6e218fe62cac7f6146c1134f4e1b69a7514b33b848ba83c19d0b"
       },
       {
         "path": "scripts/lexicon/build_kaikki_lookup.py",

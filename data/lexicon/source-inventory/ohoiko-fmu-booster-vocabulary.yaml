@@ -1,0 +1,1660 @@
+version: 1
+kind: atlas_source_inventory
+sources:
+- id: ohoiko-fmu-booster-ep-04
+  source_family: ohoiko
+  extraction_mode: curated_headword
+  title: 'Anna Ohoiko - 5 Minute Ukrainian, Episode 4: Means of Transport'
+  url: https://www.ukrainianlessons.com/fmu4/
+  path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+  locator: fmu-booster-ep-04
+  notes: 'Factual vocabulary extracted from 5 Minute Ukrainian Episode 4: Transport. Citation and educational reference only; no continuous audio transcripts or copyrightable lesson dialogues reproduced.'
+  headwords:
+  - lemma: автобус
+    pos: noun
+    gloss: bus
+    locator: fmu-booster-ep-04
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 4: Transport'
+  - lemma: тролейбус
+    pos: noun
+    gloss: trolleybus
+    locator: fmu-booster-ep-04
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 4: Transport'
+  - lemma: трамвай
+    pos: noun
+    gloss: tram
+    locator: fmu-booster-ep-04
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 4: Transport'
+  - lemma: метро
+    pos: noun
+    gloss: subway / metro
+    locator: fmu-booster-ep-04
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 4: Transport'
+  - lemma: маршрутка
+    pos: noun
+    gloss: route minibus
+    locator: fmu-booster-ep-04
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 4: Transport'
+  - lemma: фунікулер
+    pos: noun
+    gloss: funicular
+    locator: fmu-booster-ep-04
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 4: Transport'
+  - lemma: таксі
+    pos: noun
+    gloss: taxi
+    locator: fmu-booster-ep-04
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 4: Transport'
+  - lemma: поїзд
+    pos: noun
+    gloss: train
+    locator: fmu-booster-ep-04
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 4: Transport'
+  - lemma: потяг
+    pos: noun
+    gloss: train
+    locator: fmu-booster-ep-04
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 4: Transport'
+  - lemma: електричка
+    pos: noun
+    gloss: suburban commuter train
+    locator: fmu-booster-ep-04
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 4: Transport'
+  - lemma: літак
+    pos: noun
+    gloss: airplane
+    locator: fmu-booster-ep-04
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 4: Transport'
+  - lemma: пором
+    pos: noun
+    gloss: ferry
+    locator: fmu-booster-ep-04
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 4: Transport'
+  - lemma: машина
+    pos: noun
+    gloss: car
+    locator: fmu-booster-ep-04
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 4: Transport'
+  - lemma: велосипед
+    pos: noun
+    gloss: bicycle
+    locator: fmu-booster-ep-04
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 4: Transport'
+  - lemma: мотоцикл
+    pos: noun
+    gloss: motorcycle
+    locator: fmu-booster-ep-04
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 4: Transport'
+  - lemma: фургон
+    pos: noun
+    gloss: van
+    locator: fmu-booster-ep-04
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 4: Transport'
+  - lemma: будинок на колесах
+    pos: noun
+    gloss: campervan / RV
+    locator: fmu-booster-ep-04
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 4: Transport'
+  - lemma: вантажівка
+    pos: noun
+    gloss: truck
+    locator: fmu-booster-ep-04
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 4: Transport'
+- id: ohoiko-fmu-booster-ep-12
+  source_family: ohoiko
+  extraction_mode: curated_headword
+  title: 'Anna Ohoiko - 5 Minute Ukrainian, Episode 12: Beverages / Drinks'
+  url: https://www.ukrainianlessons.com/fmu12/
+  path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+  locator: fmu-booster-ep-12
+  notes: 'Factual vocabulary extracted from 5 Minute Ukrainian Episode 12: Beverages / Drinks. Citation and educational reference only; no continuous audio transcripts or copyrightable lesson dialogues reproduced.'
+  headwords:
+  - lemma: напій
+    pos: noun
+    gloss: beverage / drink
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+  - lemma: чай
+    pos: noun
+    gloss: tea
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+  - lemma: зелений чай
+    pos: noun
+    gloss: green tea
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+  - lemma: чорний чай
+    pos: noun
+    gloss: black tea
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+  - lemma: трав'яний чай
+    pos: noun
+    gloss: herbal tea
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+  - lemma: кава
+    pos: noun
+    gloss: coffee
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+  - lemma: какао
+    pos: noun
+    gloss: cocoa
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+  - lemma: гарячий шоколад
+    pos: noun
+    gloss: hot chocolate
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+  - lemma: лимонад
+    pos: noun
+    gloss: lemonade
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+  - lemma: компот
+    pos: noun
+    gloss: compote (fruit beverage)
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+  - lemma: узвар
+    pos: noun
+    gloss: uzvar (dried fruit compote)
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+  - lemma: сік
+    pos: noun
+    gloss: juice
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+  - lemma: яблучний сік
+    pos: noun
+    gloss: apple juice
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+  - lemma: апельсиновий сік
+    pos: noun
+    gloss: orange juice
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+  - lemma: смузі
+    pos: noun
+    gloss: smoothie
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+  - lemma: коктейль
+    pos: noun
+    gloss: cocktail
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+  - lemma: молочний коктейль
+    pos: noun
+    gloss: milkshake
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+  - lemma: пиво
+    pos: noun
+    gloss: beer
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+  - lemma: вино
+    pos: noun
+    gloss: wine
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+  - lemma: червоне вино
+    pos: noun
+    gloss: red wine
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+  - lemma: біле вино
+    pos: noun
+    gloss: white wine
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+  - lemma: шампанське
+    pos: noun
+    gloss: champagne
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+  - lemma: горілка
+    pos: noun
+    gloss: horilka / Ukrainian vodka
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+  - lemma: газований напій
+    pos: noun
+    gloss: carbonated drink / soda
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+  - lemma: вода
+    pos: noun
+    gloss: water
+    locator: fmu-booster-ep-12
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 12: Beverages / Drinks'
+- id: ohoiko-fmu-booster-ep-18
+  source_family: ohoiko
+  extraction_mode: curated_headword
+  title: 'Anna Ohoiko - 5 Minute Ukrainian, Episode 18: Shopping Vocabulary'
+  url: https://www.ukrainianlessons.com/fmu18/
+  path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+  locator: fmu-booster-ep-18
+  notes: 'Factual vocabulary extracted from 5 Minute Ukrainian Episode 18: Shopping Vocabulary. Citation and educational reference only; no continuous audio transcripts or copyrightable lesson dialogues reproduced.'
+  headwords:
+  - lemma: відчинено
+    pos: adv
+    gloss: open (sign)
+    locator: fmu-booster-ep-18
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 18: Shopping Vocabulary'
+  - lemma: зачинено
+    pos: adv
+    gloss: closed (sign)
+    locator: fmu-booster-ep-18
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 18: Shopping Vocabulary'
+  - lemma: візок
+    pos: noun
+    gloss: shopping cart / trolley
+    locator: fmu-booster-ep-18
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 18: Shopping Vocabulary'
+  - lemma: кошик
+    pos: noun
+    gloss: shopping basket
+    locator: fmu-booster-ep-18
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 18: Shopping Vocabulary'
+  - lemma: ваги
+    pos: noun
+    gloss: scales
+    locator: fmu-booster-ep-18
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 18: Shopping Vocabulary'
+  - lemma: ціна
+    pos: noun
+    gloss: price
+    locator: fmu-booster-ep-18
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 18: Shopping Vocabulary'
+  - lemma: розпродаж
+    pos: noun
+    gloss: sale
+    locator: fmu-booster-ep-18
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 18: Shopping Vocabulary'
+  - lemma: знижка
+    pos: noun
+    gloss: discount
+    locator: fmu-booster-ep-18
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 18: Shopping Vocabulary'
+  - lemma: акція
+    pos: noun
+    gloss: promotional offer / deal
+    locator: fmu-booster-ep-18
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 18: Shopping Vocabulary'
+  - lemma: каса
+    pos: noun
+    gloss: cash desk / checkout
+    locator: fmu-booster-ep-18
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 18: Shopping Vocabulary'
+  - lemma: черга
+    pos: noun
+    gloss: queue / line
+    locator: fmu-booster-ep-18
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 18: Shopping Vocabulary'
+  - lemma: касир
+    pos: noun
+    gloss: cashier (male)
+    locator: fmu-booster-ep-18
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 18: Shopping Vocabulary'
+  - lemma: касирка
+    pos: noun
+    gloss: cashier (female)
+    locator: fmu-booster-ep-18
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 18: Shopping Vocabulary'
+  - lemma: чек
+    pos: noun
+    gloss: receipt
+    locator: fmu-booster-ep-18
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 18: Shopping Vocabulary'
+- id: ohoiko-fmu-booster-ep-23
+  source_family: ohoiko
+  extraction_mode: curated_headword
+  title: 'Anna Ohoiko - 5 Minute Ukrainian, Episode 23: Hobbies'
+  url: https://www.ukrainianlessons.com/fmu23/
+  path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+  locator: fmu-booster-ep-23
+  notes: 'Factual vocabulary extracted from 5 Minute Ukrainian Episode 23: Hobbies. Citation and educational reference only; no continuous audio transcripts or copyrightable lesson dialogues reproduced.'
+  headwords:
+  - lemma: ходити
+    pos: verb
+    gloss: to go regularly / walk
+    locator: fmu-booster-ep-23
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 23: Hobbies'
+  - lemma: грати
+    pos: verb
+    gloss: to play
+    locator: fmu-booster-ep-23
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 23: Hobbies'
+  - lemma: кататися
+    pos: verb
+    gloss: to ride / slide / ski
+    locator: fmu-booster-ep-23
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 23: Hobbies'
+  - lemma: займатися
+    pos: verb
+    gloss: to engage in / practice
+    locator: fmu-booster-ep-23
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 23: Hobbies'
+  - lemma: готувати
+    pos: verb
+    gloss: to cook
+    locator: fmu-booster-ep-23
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 23: Hobbies'
+  - lemma: бігати
+    pos: verb
+    gloss: to run / jog
+    locator: fmu-booster-ep-23
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 23: Hobbies'
+  - lemma: подорожувати
+    pos: verb
+    gloss: to travel
+    locator: fmu-booster-ep-23
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 23: Hobbies'
+  - lemma: читати
+    pos: verb
+    gloss: to read
+    locator: fmu-booster-ep-23
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 23: Hobbies'
+  - lemma: шахи
+    pos: noun
+    gloss: chess
+    locator: fmu-booster-ep-23
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 23: Hobbies'
+  - lemma: гітара
+    pos: noun
+    gloss: guitar
+    locator: fmu-booster-ep-23
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 23: Hobbies'
+  - lemma: лижі
+    pos: noun
+    gloss: skis
+    locator: fmu-booster-ep-23
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 23: Hobbies'
+  - lemma: йога
+    pos: noun
+    gloss: yoga
+    locator: fmu-booster-ep-23
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 23: Hobbies'
+  - lemma: танець
+    pos: noun
+    gloss: dance
+    locator: fmu-booster-ep-23
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 23: Hobbies'
+  - lemma: серіал
+    pos: noun
+    gloss: TV show / series
+    locator: fmu-booster-ep-23
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 23: Hobbies'
+  - lemma: фільм
+    pos: noun
+    gloss: movie / film
+    locator: fmu-booster-ep-23
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 23: Hobbies'
+- id: ohoiko-fmu-booster-ep-25
+  source_family: ohoiko
+  extraction_mode: curated_headword
+  title: 'Anna Ohoiko - 5 Minute Ukrainian, Episode 25: Sports'
+  url: https://www.ukrainianlessons.com/fmu25/
+  path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+  locator: fmu-booster-ep-25
+  notes: 'Factual vocabulary extracted from 5 Minute Ukrainian Episode 25: Sports. Citation and educational reference only; no continuous audio transcripts or copyrightable lesson dialogues reproduced.'
+  headwords:
+  - lemma: спорт
+    pos: noun
+    gloss: sport
+    locator: fmu-booster-ep-25
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 25: Sports'
+  - lemma: футбол
+    pos: noun
+    gloss: football / soccer
+    locator: fmu-booster-ep-25
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 25: Sports'
+  - lemma: баскетбол
+    pos: noun
+    gloss: basketball
+    locator: fmu-booster-ep-25
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 25: Sports'
+  - lemma: волейбол
+    pos: noun
+    gloss: volleyball
+    locator: fmu-booster-ep-25
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 25: Sports'
+  - lemma: теніс
+    pos: noun
+    gloss: tennis
+    locator: fmu-booster-ep-25
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 25: Sports'
+  - lemma: бокс
+    pos: noun
+    gloss: boxing
+    locator: fmu-booster-ep-25
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 25: Sports'
+  - lemma: атлетика
+    pos: noun
+    gloss: athletics / track and field
+    locator: fmu-booster-ep-25
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 25: Sports'
+  - lemma: гімнастика
+    pos: noun
+    gloss: gymnastics
+    locator: fmu-booster-ep-25
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 25: Sports'
+  - lemma: серфінг
+    pos: noun
+    gloss: surfing
+    locator: fmu-booster-ep-25
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 25: Sports'
+  - lemma: сноубординг
+    pos: noun
+    gloss: snowboarding
+    locator: fmu-booster-ep-25
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 25: Sports'
+  - lemma: більярд
+    pos: noun
+    gloss: billiards / pool
+    locator: fmu-booster-ep-25
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 25: Sports'
+  - lemma: боулінг
+    pos: noun
+    gloss: bowling
+    locator: fmu-booster-ep-25
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 25: Sports'
+  - lemma: біг
+    pos: noun
+    gloss: running
+    locator: fmu-booster-ep-25
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 25: Sports'
+  - lemma: плавання
+    pos: noun
+    gloss: swimming
+    locator: fmu-booster-ep-25
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 25: Sports'
+  - lemma: плавати
+    pos: verb
+    gloss: to swim
+    locator: fmu-booster-ep-25
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 25: Sports'
+  - lemma: фехтування
+    pos: noun
+    gloss: fencing
+    locator: fmu-booster-ep-25
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 25: Sports'
+  - lemma: кінний спорт
+    pos: noun
+    gloss: equestrian sport
+    locator: fmu-booster-ep-25
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 25: Sports'
+  - lemma: лижний спорт
+    pos: noun
+    gloss: skiing
+    locator: fmu-booster-ep-25
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 25: Sports'
+  - lemma: гірськолижний спорт
+    pos: noun
+    gloss: alpine / downhill skiing
+    locator: fmu-booster-ep-25
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 25: Sports'
+  - lemma: велосипедний спорт
+    pos: noun
+    gloss: cycling
+    locator: fmu-booster-ep-25
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 25: Sports'
+- id: ohoiko-fmu-booster-ep-29
+  source_family: ohoiko
+  extraction_mode: curated_headword
+  title: 'Anna Ohoiko - 5 Minute Ukrainian, Episode 29: Months and Seasons'
+  url: https://www.ukrainianlessons.com/fmu29/
+  path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+  locator: fmu-booster-ep-29
+  notes: 'Factual vocabulary extracted from 5 Minute Ukrainian Episode 29: Months and Seasons. Citation and educational reference only; no continuous audio transcripts or copyrightable lesson dialogues reproduced.'
+  headwords:
+  - lemma: пора року
+    pos: noun
+    gloss: season of the year
+    locator: fmu-booster-ep-29
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 29: Months and Seasons'
+  - lemma: зима
+    pos: noun
+    gloss: winter
+    locator: fmu-booster-ep-29
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 29: Months and Seasons'
+  - lemma: взимку
+    pos: adv
+    gloss: in winter
+    locator: fmu-booster-ep-29
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 29: Months and Seasons'
+  - lemma: весна
+    pos: noun
+    gloss: spring
+    locator: fmu-booster-ep-29
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 29: Months and Seasons'
+  - lemma: навесні
+    pos: adv
+    gloss: in spring
+    locator: fmu-booster-ep-29
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 29: Months and Seasons'
+  - lemma: літо
+    pos: noun
+    gloss: summer
+    locator: fmu-booster-ep-29
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 29: Months and Seasons'
+  - lemma: влітку
+    pos: adv
+    gloss: in summer
+    locator: fmu-booster-ep-29
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 29: Months and Seasons'
+  - lemma: осінь
+    pos: noun
+    gloss: autumn / fall
+    locator: fmu-booster-ep-29
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 29: Months and Seasons'
+  - lemma: восени
+    pos: adv
+    gloss: in autumn / in fall
+    locator: fmu-booster-ep-29
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 29: Months and Seasons'
+  - lemma: місяць
+    pos: noun
+    gloss: month
+    locator: fmu-booster-ep-29
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 29: Months and Seasons'
+  - lemma: січень
+    pos: noun
+    gloss: January
+    locator: fmu-booster-ep-29
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 29: Months and Seasons'
+  - lemma: лютий
+    pos: noun
+    gloss: February
+    locator: fmu-booster-ep-29
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 29: Months and Seasons'
+  - lemma: березень
+    pos: noun
+    gloss: March
+    locator: fmu-booster-ep-29
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 29: Months and Seasons'
+  - lemma: квітень
+    pos: noun
+    gloss: April
+    locator: fmu-booster-ep-29
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 29: Months and Seasons'
+  - lemma: травень
+    pos: noun
+    gloss: May
+    locator: fmu-booster-ep-29
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 29: Months and Seasons'
+  - lemma: червень
+    pos: noun
+    gloss: June
+    locator: fmu-booster-ep-29
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 29: Months and Seasons'
+  - lemma: липень
+    pos: noun
+    gloss: July
+    locator: fmu-booster-ep-29
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 29: Months and Seasons'
+  - lemma: серпень
+    pos: noun
+    gloss: August
+    locator: fmu-booster-ep-29
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 29: Months and Seasons'
+  - lemma: вересень
+    pos: noun
+    gloss: September
+    locator: fmu-booster-ep-29
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 29: Months and Seasons'
+  - lemma: жовтень
+    pos: noun
+    gloss: October
+    locator: fmu-booster-ep-29
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 29: Months and Seasons'
+  - lemma: листопад
+    pos: noun
+    gloss: November
+    locator: fmu-booster-ep-29
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 29: Months and Seasons'
+  - lemma: грудень
+    pos: noun
+    gloss: December
+    locator: fmu-booster-ep-29
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 29: Months and Seasons'
+- id: ohoiko-fmu-booster-ep-33
+  source_family: ohoiko
+  extraction_mode: curated_headword
+  title: 'Anna Ohoiko - 5 Minute Ukrainian, Episode 33: Family Members'
+  url: https://www.ukrainianlessons.com/fmu33/
+  path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+  locator: fmu-booster-ep-33
+  notes: 'Factual vocabulary extracted from 5 Minute Ukrainian Episode 33: Family Members. Citation and educational reference only; no continuous audio transcripts or copyrightable lesson dialogues reproduced.'
+  headwords:
+  - lemma: родина
+    pos: noun
+    gloss: family
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: сім'я
+    pos: noun
+    gloss: family
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: батьки
+    pos: noun
+    gloss: parents
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: мама
+    pos: noun
+    gloss: mom / mother
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: мати
+    pos: noun
+    gloss: mother
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: тато
+    pos: noun
+    gloss: dad / father
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: батько
+    pos: noun
+    gloss: father
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: дитина
+    pos: noun
+    gloss: child
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: діти
+    pos: noun
+    gloss: children
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: син
+    pos: noun
+    gloss: son
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: дочка
+    pos: noun
+    gloss: daughter
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: донька
+    pos: noun
+    gloss: daughter
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: бабуся
+    pos: noun
+    gloss: grandmother
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: дідусь
+    pos: noun
+    gloss: grandfather
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: прабабуся
+    pos: noun
+    gloss: great-grandmother
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: прадід
+    pos: noun
+    gloss: great-grandfather
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: брат
+    pos: noun
+    gloss: brother
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: сестра
+    pos: noun
+    gloss: sister
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: дядько
+    pos: noun
+    gloss: uncle
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: тітка
+    pos: noun
+    gloss: aunt
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: племінник
+    pos: noun
+    gloss: nephew
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: племінниця
+    pos: noun
+    gloss: niece
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: двоюрідний брат
+    pos: noun
+    gloss: male cousin
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: двоюрідна сестра
+    pos: noun
+    gloss: female cousin
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: наречений
+    pos: noun
+    gloss: fiancé / groom
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: наречена
+    pos: noun
+    gloss: fiancée / bride
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: чоловік
+    pos: noun
+    gloss: husband
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: дружина
+    pos: noun
+    gloss: wife
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: подружжя
+    pos: noun
+    gloss: married couple
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: свекор
+    pos: noun
+    gloss: father-in-law (husband's father)
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: свекруха
+    pos: noun
+    gloss: mother-in-law (husband's mother)
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: тесть
+    pos: noun
+    gloss: father-in-law (wife's father)
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: теща
+    pos: noun
+    gloss: mother-in-law (wife's mother)
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: невістка
+    pos: noun
+    gloss: daughter-in-law
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+  - lemma: зять
+    pos: noun
+    gloss: son-in-law
+    locator: fmu-booster-ep-33
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
+- id: ohoiko-fmu-booster-ep-35
+  source_family: ohoiko
+  extraction_mode: curated_headword
+  title: 'Anna Ohoiko - 5 Minute Ukrainian, Episode 35: Jobs and Professions'
+  url: https://www.ukrainianlessons.com/fmu35/
+  path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+  locator: fmu-booster-ep-35
+  notes: 'Factual vocabulary extracted from 5 Minute Ukrainian Episode 35: Jobs and Professions. Citation and educational reference only; no continuous audio transcripts or copyrightable lesson dialogues reproduced.'
+  headwords:
+  - lemma: професія
+    pos: noun
+    gloss: profession / occupation
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: вчитель
+    pos: noun
+    gloss: teacher (male)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: вчителька
+    pos: noun
+    gloss: teacher (female)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: викладач
+    pos: noun
+    gloss: instructor / lecturer (male)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: викладачка
+    pos: noun
+    gloss: instructor / lecturer (female)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: професор
+    pos: noun
+    gloss: professor (male)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: професорка
+    pos: noun
+    gloss: professor (female)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: лікар
+    pos: noun
+    gloss: doctor / physician (male)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: лікарка
+    pos: noun
+    gloss: doctor / physician (female)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: менеджер
+    pos: noun
+    gloss: manager (male)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: менеджерка
+    pos: noun
+    gloss: manager (female)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: помічник
+    pos: noun
+    gloss: assistant / helper (male)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: помічниця
+    pos: noun
+    gloss: assistant / helper (female)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: асистент
+    pos: noun
+    gloss: assistant (male)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: асистентка
+    pos: noun
+    gloss: assistant (female)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: інженер
+    pos: noun
+    gloss: engineer (male)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: інженерка
+    pos: noun
+    gloss: engineer (female)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: програміст
+    pos: noun
+    gloss: programmer (male)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: програмістка
+    pos: noun
+    gloss: programmer (female)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: дизайнер
+    pos: noun
+    gloss: designer (male)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: дизайнерка
+    pos: noun
+    gloss: designer (female)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: бухгалтер
+    pos: noun
+    gloss: accountant (male)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: бухгалтерка
+    pos: noun
+    gloss: accountant (female)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: юрист
+    pos: noun
+    gloss: lawyer / jurist (male)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: юристка
+    pos: noun
+    gloss: lawyer / jurist (female)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: офіціант
+    pos: noun
+    gloss: waiter
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: офіціантка
+    pos: noun
+    gloss: waitress
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: будівельник
+    pos: noun
+    gloss: construction worker / builder (male)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: будівельниця
+    pos: noun
+    gloss: construction worker / builder (female)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: водій
+    pos: noun
+    gloss: driver (male)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: водійка
+    pos: noun
+    gloss: driver (female)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: касир
+    pos: noun
+    gloss: cashier (male)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: касирка
+    pos: noun
+    gloss: cashier (female)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: продавець
+    pos: noun
+    gloss: salesperson / shop assistant (male)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: продавчиня
+    pos: noun
+    gloss: salesperson / shop assistant (female)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: тренер
+    pos: noun
+    gloss: coach / trainer (male)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: тренерка
+    pos: noun
+    gloss: coach / trainer (female)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: дослідник
+    pos: noun
+    gloss: researcher (male)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: дослідниця
+    pos: noun
+    gloss: researcher (female)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: засновник
+    pos: noun
+    gloss: founder (male)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: засновниця
+    pos: noun
+    gloss: founder (female)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: підприємець
+    pos: noun
+    gloss: entrepreneur (male)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: підприємниця
+    pos: noun
+    gloss: entrepreneur (female)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: митець
+    pos: noun
+    gloss: artist (male)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: мисткиня
+    pos: noun
+    gloss: artist (female)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: письменник
+    pos: noun
+    gloss: writer (male)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: письменниця
+    pos: noun
+    gloss: writer (female)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: музикант
+    pos: noun
+    gloss: musician (male)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: музикантка
+    pos: noun
+    gloss: musician (female)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: пенсіонер
+    pos: noun
+    gloss: retiree (male)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+  - lemma: пенсіонерка
+    pos: noun
+    gloss: retiree (female)
+    locator: fmu-booster-ep-35
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
+- id: ohoiko-fmu-booster-ep-42
+  source_family: ohoiko
+  extraction_mode: curated_headword
+  title: 'Anna Ohoiko - 5 Minute Ukrainian, Episode 42: Housing and Rooms'
+  url: https://www.ukrainianlessons.com/fmu42/
+  path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+  locator: fmu-booster-ep-42
+  notes: 'Factual vocabulary extracted from 5 Minute Ukrainian Episode 42: Housing and Rooms. Citation and educational reference only; no continuous audio transcripts or copyrightable lesson dialogues reproduced.'
+  headwords:
+  - lemma: житло
+    pos: noun
+    gloss: housing / accommodation
+    locator: fmu-booster-ep-42
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
+  - lemma: помешкання
+    pos: noun
+    gloss: dwelling / accommodation
+    locator: fmu-booster-ep-42
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
+  - lemma: дім
+    pos: noun
+    gloss: house / home
+    locator: fmu-booster-ep-42
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
+  - lemma: будинок
+    pos: noun
+    gloss: building / house
+    locator: fmu-booster-ep-42
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
+  - lemma: хата
+    pos: noun
+    gloss: village house / cottage
+    locator: fmu-booster-ep-42
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
+  - lemma: квартира
+    pos: noun
+    gloss: apartment / flat
+    locator: fmu-booster-ep-42
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
+  - lemma: заміський будинок
+    pos: noun
+    gloss: country house
+    locator: fmu-booster-ep-42
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
+  - lemma: дача
+    pos: noun
+    gloss: summer house / dacha
+    locator: fmu-booster-ep-42
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
+  - lemma: маєток
+    pos: noun
+    gloss: manor / mansion
+    locator: fmu-booster-ep-42
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
+  - lemma: гуртожиток
+    pos: noun
+    gloss: dormitory / residence hall
+    locator: fmu-booster-ep-42
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
+  - lemma: кімната
+    pos: noun
+    gloss: room
+    locator: fmu-booster-ep-42
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
+  - lemma: вітальня
+    pos: noun
+    gloss: living room
+    locator: fmu-booster-ep-42
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
+  - lemma: кухня
+    pos: noun
+    gloss: kitchen
+    locator: fmu-booster-ep-42
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
+  - lemma: спальня
+    pos: noun
+    gloss: bedroom
+    locator: fmu-booster-ep-42
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
+  - lemma: ванна кімната
+    pos: noun
+    gloss: bathroom
+    locator: fmu-booster-ep-42
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
+  - lemma: туалет
+    pos: noun
+    gloss: restroom / toilet
+    locator: fmu-booster-ep-42
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
+  - lemma: кабінет
+    pos: noun
+    gloss: study / home office
+    locator: fmu-booster-ep-42
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
+  - lemma: коридор
+    pos: noun
+    gloss: corridor / hallway
+    locator: fmu-booster-ep-42
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
+  - lemma: передпокій
+    pos: noun
+    gloss: entryway / hall
+    locator: fmu-booster-ep-42
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
+  - lemma: гараж
+    pos: noun
+    gloss: garage
+    locator: fmu-booster-ep-42
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
+  - lemma: підвал
+    pos: noun
+    gloss: basement / cellar
+    locator: fmu-booster-ep-42
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
+  - lemma: горище
+    pos: noun
+    gloss: attic / loft
+    locator: fmu-booster-ep-42
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
+  - lemma: комора
+    pos: noun
+    gloss: pantry / storage room
+    locator: fmu-booster-ep-42
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
+- id: ohoiko-fmu-booster-ep-44
+  source_family: ohoiko
+  extraction_mode: curated_headword
+  title: 'Anna Ohoiko - 5 Minute Ukrainian, Episode 44: Things in Every House'
+  url: https://www.ukrainianlessons.com/fmu44/
+  path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+  locator: fmu-booster-ep-44
+  notes: 'Factual vocabulary extracted from 5 Minute Ukrainian Episode 44: Things in Every House. Citation and educational reference only; no continuous audio transcripts or copyrightable lesson dialogues reproduced.'
+  headwords:
+  - lemma: аптечка
+    pos: noun
+    gloss: first aid kit
+    locator: fmu-booster-ep-44
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 44: Things in Every House'
+  - lemma: батарейка
+    pos: noun
+    gloss: battery
+    locator: fmu-booster-ep-44
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 44: Things in Every House'
+  - lemma: віник
+    pos: noun
+    gloss: broom
+    locator: fmu-booster-ep-44
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 44: Things in Every House'
+  - lemma: совок
+    pos: noun
+    gloss: dustpan
+    locator: fmu-booster-ep-44
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 44: Things in Every House'
+  - lemma: швабра
+    pos: noun
+    gloss: mop
+    locator: fmu-booster-ep-44
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 44: Things in Every House'
+  - lemma: відро
+    pos: noun
+    gloss: bucket
+    locator: fmu-booster-ep-44
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 44: Things in Every House'
+  - lemma: миска
+    pos: noun
+    gloss: basin / bowl
+    locator: fmu-booster-ep-44
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 44: Things in Every House'
+  - lemma: пилосос
+    pos: noun
+    gloss: vacuum cleaner
+    locator: fmu-booster-ep-44
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 44: Things in Every House'
+  - lemma: щітка
+    pos: noun
+    gloss: brush
+    locator: fmu-booster-ep-44
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 44: Things in Every House'
+  - lemma: ганчірка
+    pos: noun
+    gloss: cleaning rag / cloth
+    locator: fmu-booster-ep-44
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 44: Things in Every House'
+  - lemma: губка
+    pos: noun
+    gloss: sponge
+    locator: fmu-booster-ep-44
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 44: Things in Every House'
+  - lemma: смітник
+    pos: noun
+    gloss: trash can / waste bin
+    locator: fmu-booster-ep-44
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 44: Things in Every House'
+  - lemma: пакети для сміття
+    pos: noun
+    gloss: garbage bags / bin liners
+    locator: fmu-booster-ep-44
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 44: Things in Every House'
+  - lemma: мішки для сміття
+    pos: noun
+    gloss: trash bags
+    locator: fmu-booster-ep-44
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 44: Things in Every House'
+  - lemma: гумові рукавички
+    pos: noun
+    gloss: rubber gloves
+    locator: fmu-booster-ep-44
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 44: Things in Every House'
+  - lemma: паперові рушники
+    pos: noun
+    gloss: paper towels
+    locator: fmu-booster-ep-44
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 44: Things in Every House'
+  - lemma: туалетний папір
+    pos: noun
+    gloss: toilet paper
+    locator: fmu-booster-ep-44
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 44: Things in Every House'
+  - lemma: мийні засоби
+    pos: noun
+    gloss: cleaning detergents
+    locator: fmu-booster-ep-44
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 44: Things in Every House'
+  - lemma: засіб для миття вікон
+    pos: noun
+    gloss: window cleaner
+    locator: fmu-booster-ep-44
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 44: Things in Every House'
+  - lemma: засіб для миття унітазу
+    pos: noun
+    gloss: toilet bowl cleaner
+    locator: fmu-booster-ep-44
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 44: Things in Every House'
+  - lemma: засіб для прання
+    pos: noun
+    gloss: laundry detergent
+    locator: fmu-booster-ep-44
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 44: Things in Every House'
+- id: ohoiko-fmu-booster-ep-48
+  source_family: ohoiko
+  extraction_mode: curated_headword
+  title: 'Anna Ohoiko - 5 Minute Ukrainian, Episode 48: Staple Food'
+  url: https://www.ukrainianlessons.com/fmu48/
+  path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+  locator: fmu-booster-ep-48
+  notes: 'Factual vocabulary extracted from 5 Minute Ukrainian Episode 48: Staple Food. Citation and educational reference only; no continuous audio transcripts or copyrightable lesson dialogues reproduced.'
+  headwords:
+  - lemma: хліб
+    pos: noun
+    gloss: bread
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: картопля
+    pos: noun
+    gloss: potato
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: яйце
+    pos: noun
+    gloss: egg
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: макарони
+    pos: noun
+    gloss: pasta / macaroni
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: томатний соус
+    pos: noun
+    gloss: tomato sauce
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: томатна паста
+    pos: noun
+    gloss: tomato paste
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: рис
+    pos: noun
+    gloss: rice
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: гречка
+    pos: noun
+    gloss: buckwheat
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: вівсянка
+    pos: noun
+    gloss: oatmeal / rolled oats
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: борошно
+    pos: noun
+    gloss: flour
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: мука
+    pos: noun
+    gloss: flour
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: цукор
+    pos: noun
+    gloss: sugar
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: мед
+    pos: noun
+    gloss: honey
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: варення
+    pos: noun
+    gloss: jam / preserves
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: джем
+    pos: noun
+    gloss: jam
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: приправа
+    pos: noun
+    gloss: seasoning / condiment
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: спеція
+    pos: noun
+    gloss: spice
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: чорний перець
+    pos: noun
+    gloss: black pepper
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: сіль
+    pos: noun
+    gloss: salt
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: олія
+    pos: noun
+    gloss: oil (vegetable / cooking)
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: соняшникова олія
+    pos: noun
+    gloss: sunflower oil
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: оливкова олія
+    pos: noun
+    gloss: olive oil
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: оцет
+    pos: noun
+    gloss: vinegar
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: масло
+    pos: noun
+    gloss: butter
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: сметана
+    pos: noun
+    gloss: sour cream
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: молоко
+    pos: noun
+    gloss: milk
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: сир
+    pos: noun
+    gloss: cheese / cottage cheese
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: майонез
+    pos: noun
+    gloss: mayonnaise
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: кетчуп
+    pos: noun
+    gloss: ketchup
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+  - lemma: гірчиця
+    pos: noun
+    gloss: mustard
+    locator: fmu-booster-ep-48
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 48: Staple Food'
+- id: ohoiko-fmu-booster-ep-52
+  source_family: ohoiko
+  extraction_mode: curated_headword
+  title: 'Anna Ohoiko - 5 Minute Ukrainian, Episode 52: Body Parts'
+  url: https://www.ukrainianlessons.com/fmu52/
+  path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+  locator: fmu-booster-ep-52
+  notes: 'Factual vocabulary extracted from 5 Minute Ukrainian Episode 52: Body Parts. Citation and educational reference only; no continuous audio transcripts or copyrightable lesson dialogues reproduced.'
+  headwords:
+  - lemma: тіло
+    pos: noun
+    gloss: body
+    locator: fmu-booster-ep-52
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 52: Body Parts'
+  - lemma: частина тіла
+    pos: noun
+    gloss: body part
+    locator: fmu-booster-ep-52
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 52: Body Parts'
+  - lemma: голова
+    pos: noun
+    gloss: head
+    locator: fmu-booster-ep-52
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 52: Body Parts'
+  - lemma: волосся
+    pos: noun
+    gloss: hair
+    locator: fmu-booster-ep-52
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 52: Body Parts'
+  - lemma: око
+    pos: noun
+    gloss: eye
+    locator: fmu-booster-ep-52
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 52: Body Parts'
+  - lemma: вухо
+    pos: noun
+    gloss: ear
+    locator: fmu-booster-ep-52
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 52: Body Parts'
+  - lemma: ніс
+    pos: noun
+    gloss: nose
+    locator: fmu-booster-ep-52
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 52: Body Parts'
+  - lemma: губа
+    pos: noun
+    gloss: lip
+    locator: fmu-booster-ep-52
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 52: Body Parts'
+  - lemma: обличчя
+    pos: noun
+    gloss: face
+    locator: fmu-booster-ep-52
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 52: Body Parts'
+  - lemma: шия
+    pos: noun
+    gloss: neck
+    locator: fmu-booster-ep-52
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 52: Body Parts'
+  - lemma: плече
+    pos: noun
+    gloss: shoulder
+    locator: fmu-booster-ep-52
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 52: Body Parts'
+  - lemma: рука
+    pos: noun
+    gloss: arm / hand
+    locator: fmu-booster-ep-52
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 52: Body Parts'
+  - lemma: палець
+    pos: noun
+    gloss: finger / toe
+    locator: fmu-booster-ep-52
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 52: Body Parts'
+  - lemma: пальці рук
+    pos: noun
+    gloss: fingers
+    locator: fmu-booster-ep-52
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 52: Body Parts'
+  - lemma: пальці ніг
+    pos: noun
+    gloss: toes
+    locator: fmu-booster-ep-52
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 52: Body Parts'
+  - lemma: ніготь
+    pos: noun
+    gloss: nail / fingernail
+    locator: fmu-booster-ep-52
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 52: Body Parts'
+  - lemma: груди
+    pos: noun
+    gloss: chest / breasts
+    locator: fmu-booster-ep-52
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 52: Body Parts'
+  - lemma: живіт
+    pos: noun
+    gloss: belly / stomach
+    locator: fmu-booster-ep-52
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 52: Body Parts'
+  - lemma: сідниці
+    pos: noun
+    gloss: buttocks
+    locator: fmu-booster-ep-52
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 52: Body Parts'
+  - lemma: нога
+    pos: noun
+    gloss: leg / foot
+    locator: fmu-booster-ep-52
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 52: Body Parts'
+- id: ohoiko-fmu-booster-ep-55
+  source_family: ohoiko
+  extraction_mode: curated_headword
+  title: 'Anna Ohoiko - 5 Minute Ukrainian, Episode 55: Car and Road Vocabulary'
+  url: https://www.ukrainianlessons.com/fmu55/
+  path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+  locator: fmu-booster-ep-55
+  notes: 'Factual vocabulary extracted from 5 Minute Ukrainian Episode 55: Car and Road Vocabulary. Citation and educational reference only; no continuous audio transcripts or copyrightable lesson dialogues reproduced.'
+  headwords:
+  - lemma: кермо
+    pos: noun
+    gloss: steering wheel
+    locator: fmu-booster-ep-55
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 55: Car and Road Vocabulary'
+  - lemma: коробка передач
+    pos: noun
+    gloss: gearbox / transmission
+    locator: fmu-booster-ep-55
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 55: Car and Road Vocabulary'
+  - lemma: пасок безпеки
+    pos: noun
+    gloss: seatbelt
+    locator: fmu-booster-ep-55
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 55: Car and Road Vocabulary'
+  - lemma: дорожній рух
+    pos: noun
+    gloss: road traffic
+    locator: fmu-booster-ep-55
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 55: Car and Road Vocabulary'
+  - lemma: дорога
+    pos: noun
+    gloss: road / highway
+    locator: fmu-booster-ep-55
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 55: Car and Road Vocabulary'
+  - lemma: траса
+    pos: noun
+    gloss: highway / route
+    locator: fmu-booster-ep-55
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 55: Car and Road Vocabulary'
+  - lemma: смуга
+    pos: noun
+    gloss: traffic lane
+    locator: fmu-booster-ep-55
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 55: Car and Road Vocabulary'
+  - lemma: дорожній знак
+    pos: noun
+    gloss: road sign
+    locator: fmu-booster-ep-55
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 55: Car and Road Vocabulary'
+  - lemma: світлофор
+    pos: noun
+    gloss: traffic light
+    locator: fmu-booster-ep-55
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 55: Car and Road Vocabulary'
+  - lemma: пішохід
+    pos: noun
+    gloss: pedestrian
+    locator: fmu-booster-ep-55
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 55: Car and Road Vocabulary'
+  - lemma: затор
+    pos: noun
+    gloss: traffic jam
+    locator: fmu-booster-ep-55
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 55: Car and Road Vocabulary'
+  - lemma: корок
+    pos: noun
+    gloss: traffic jam / congestion
+    locator: fmu-booster-ep-55
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 55: Car and Road Vocabulary'
+  - lemma: стоянка
+    pos: noun
+    gloss: parking lot / parking
+    locator: fmu-booster-ep-55
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 55: Car and Road Vocabulary'
+  - lemma: заправка
+    pos: noun
+    gloss: gas station / petrol station
+    locator: fmu-booster-ep-55
+    context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 55: Car and Road Vocabulary'

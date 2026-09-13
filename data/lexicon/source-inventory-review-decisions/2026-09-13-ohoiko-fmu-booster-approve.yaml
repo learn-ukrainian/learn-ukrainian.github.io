@@ -1,0 +1,4633 @@
+version: 1
+kind: atlas_source_inventory_review_decisions
+batch_id: source-inventory-ohoiko-fmu-booster-2026-09-13
+batch_label: ohoiko-fmu-booster-approve-2026-09-13
+reviewer: operator-curated-source-trust
+reviewed_at: '2026-09-13'
+source_queue:
+  workflow: source_inventory_publish_review_queue.v1
+  total_queue_rows: 308
+  approved_in_queue: 308
+  promotion_batch_size: 308
+production_outputs_updated: []
+decisions:
+- lemma: автобус
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: bus
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-04); no AI review
+  source_inventory:
+    key: eefc247276bc7830
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-04
+    source_id: ohoiko-fmu-booster-ep-04
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 4
+  - VESUM and authoritative dictionaries
+- lemma: тролейбус
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: trolleybus
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-04); no AI review
+  source_inventory:
+    key: cf4b0833730bbef8
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-04
+    source_id: ohoiko-fmu-booster-ep-04
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 4
+  - VESUM and authoritative dictionaries
+- lemma: трамвай
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: tram
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-04); no AI review
+  source_inventory:
+    key: 63bb30e2b7b2607c
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-04
+    source_id: ohoiko-fmu-booster-ep-04
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 4
+  - VESUM and authoritative dictionaries
+- lemma: метро
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: subway / metro
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-04); no AI review
+  source_inventory:
+    key: e78032aee03e06a5
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-04
+    source_id: ohoiko-fmu-booster-ep-04
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 4
+  - VESUM and authoritative dictionaries
+- lemma: маршрутка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: route minibus
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-04); no AI review
+  source_inventory:
+    key: 29b00881bf8cd985
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-04
+    source_id: ohoiko-fmu-booster-ep-04
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 4
+  - VESUM and authoritative dictionaries
+- lemma: фунікулер
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: funicular
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-04); no AI review
+  source_inventory:
+    key: a0b55f371c34f59e
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-04
+    source_id: ohoiko-fmu-booster-ep-04
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 4
+  - VESUM and authoritative dictionaries
+- lemma: таксі
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: taxi
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-04); no AI review
+  source_inventory:
+    key: f6fa870626881f7d
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-04
+    source_id: ohoiko-fmu-booster-ep-04
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 4
+  - VESUM and authoritative dictionaries
+- lemma: поїзд
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: train
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-04); no AI review
+  source_inventory:
+    key: 1a687250cbf8d2f5
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-04
+    source_id: ohoiko-fmu-booster-ep-04
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 4
+  - VESUM and authoritative dictionaries
+- lemma: потяг
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: train
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-04); no AI review
+  source_inventory:
+    key: 7218a03386e138e7
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-04
+    source_id: ohoiko-fmu-booster-ep-04
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 4
+  - VESUM and authoritative dictionaries
+- lemma: електричка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: suburban commuter train
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-04); no AI review
+  source_inventory:
+    key: 2344fe5b316066e9
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-04
+    source_id: ohoiko-fmu-booster-ep-04
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 4
+  - VESUM and authoritative dictionaries
+- lemma: літак
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: airplane
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-04); no AI review
+  source_inventory:
+    key: 43f24f2c40c40c75
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-04
+    source_id: ohoiko-fmu-booster-ep-04
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 4
+  - VESUM and authoritative dictionaries
+- lemma: пором
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: ferry
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-04); no AI review
+  source_inventory:
+    key: d725b859b5e093c6
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-04
+    source_id: ohoiko-fmu-booster-ep-04
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 4
+  - VESUM and authoritative dictionaries
+- lemma: машина
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: car
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-04); no AI review
+  source_inventory:
+    key: aa61129f83a2ab79
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-04
+    source_id: ohoiko-fmu-booster-ep-04
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 4
+  - VESUM and authoritative dictionaries
+- lemma: велосипед
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: bicycle
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-04); no AI review
+  source_inventory:
+    key: 90890e76305862b8
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-04
+    source_id: ohoiko-fmu-booster-ep-04
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 4
+  - VESUM and authoritative dictionaries
+- lemma: мотоцикл
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: motorcycle
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-04); no AI review
+  source_inventory:
+    key: fdebf35ad12cbfc6
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-04
+    source_id: ohoiko-fmu-booster-ep-04
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 4
+  - VESUM and authoritative dictionaries
+- lemma: фургон
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: van
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-04); no AI review
+  source_inventory:
+    key: 608ff56e30463199
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-04
+    source_id: ohoiko-fmu-booster-ep-04
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 4
+  - VESUM and authoritative dictionaries
+- lemma: будинок на колесах
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: campervan / RV
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-04); no AI review
+  source_inventory:
+    key: bc79aba66d12e9ea
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-04
+    source_id: ohoiko-fmu-booster-ep-04
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 4
+  - VESUM and authoritative dictionaries
+- lemma: вантажівка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: truck
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-04); no AI review
+  source_inventory:
+    key: c47d05af279f0545
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-04
+    source_id: ohoiko-fmu-booster-ep-04
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 4
+  - VESUM and authoritative dictionaries
+- lemma: напій
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: beverage / drink
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: 8c6a55520baa1dbd
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: чай
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: tea
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: ceae38c98303bd97
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: зелений чай
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: green tea
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: 56ff0eeeed27a700
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: чорний чай
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: black tea
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: 9ba4cee9729db425
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: трав'яний чай
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: herbal tea
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: 26a53e2bd7af0bfc
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: кава
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: coffee
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: 579195fc1c47b5d6
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: какао
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: cocoa
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: 7da6c617f91fe842
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: гарячий шоколад
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: hot chocolate
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: 8806e48cdee8d3a9
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: лимонад
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: lemonade
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: 48d5a7030da4e100
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: компот
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: compote (fruit beverage)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: 636bfdd83d6c0eb0
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: узвар
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: uzvar (dried fruit compote)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: e7f779293a187bb5
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: сік
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: juice
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: b3b9855890157a14
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: яблучний сік
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: apple juice
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: 174c7e908a0e5364
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: апельсиновий сік
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: orange juice
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: 6257ff203c6d5e11
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: смузі
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: smoothie
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: e35386c757271123
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: коктейль
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: cocktail
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: 388b9da6bc8444ca
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: молочний коктейль
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: milkshake
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: be2182f6b74b99df
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: пиво
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: beer
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: 6c23ee9084a61708
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: вино
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: wine
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: 95ed5340b7cd64b9
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: червоне вино
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: red wine
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: 98bdfa1a8040302d
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: біле вино
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: white wine
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: f6df2d8875db38af
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: шампанське
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: champagne
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: 92239fd7b207e277
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: горілка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: horilka / Ukrainian vodka
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: 86e7448a95b73aef
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: газований напій
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: carbonated drink / soda
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: 4dd091c19a259732
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: вода
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: water
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-12); no AI review
+  source_inventory:
+    key: e61560644f4f2ba0
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-12
+    source_id: ohoiko-fmu-booster-ep-12
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 12
+  - VESUM and authoritative dictionaries
+- lemma: відчинено
+  decision: approve_for_publish
+  approved_pos: adv
+  approved_gloss: open (sign)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-18); no AI review
+  source_inventory:
+    key: 7926e3dfe0bd947c
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-18
+    source_id: ohoiko-fmu-booster-ep-18
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 18
+  - VESUM and authoritative dictionaries
+- lemma: зачинено
+  decision: approve_for_publish
+  approved_pos: adv
+  approved_gloss: closed (sign)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-18); no AI review
+  source_inventory:
+    key: dff86df7a33543d4
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-18
+    source_id: ohoiko-fmu-booster-ep-18
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 18
+  - VESUM and authoritative dictionaries
+- lemma: візок
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: shopping cart / trolley
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-18); no AI review
+  source_inventory:
+    key: b22b41b0bfbb98ed
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-18
+    source_id: ohoiko-fmu-booster-ep-18
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 18
+  - VESUM and authoritative dictionaries
+- lemma: кошик
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: shopping basket
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-18); no AI review
+  source_inventory:
+    key: 5742c44a5996cc2a
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-18
+    source_id: ohoiko-fmu-booster-ep-18
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 18
+  - VESUM and authoritative dictionaries
+- lemma: ваги
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: scales
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-18); no AI review
+  source_inventory:
+    key: b96d88c909acf17a
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-18
+    source_id: ohoiko-fmu-booster-ep-18
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 18
+  - VESUM and authoritative dictionaries
+- lemma: ціна
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: price
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-18); no AI review
+  source_inventory:
+    key: 5ef12328dea9c329
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-18
+    source_id: ohoiko-fmu-booster-ep-18
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 18
+  - VESUM and authoritative dictionaries
+- lemma: розпродаж
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: sale
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-18); no AI review
+  source_inventory:
+    key: 2127c117dd3634ad
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-18
+    source_id: ohoiko-fmu-booster-ep-18
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 18
+  - VESUM and authoritative dictionaries
+- lemma: знижка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: discount
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-18); no AI review
+  source_inventory:
+    key: 8563f2aee3be3329
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-18
+    source_id: ohoiko-fmu-booster-ep-18
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 18
+  - VESUM and authoritative dictionaries
+- lemma: акція
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: promotional offer / deal
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-18); no AI review
+  source_inventory:
+    key: 2ee62e61aa27a402
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-18
+    source_id: ohoiko-fmu-booster-ep-18
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 18
+  - VESUM and authoritative dictionaries
+- lemma: каса
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: cash desk / checkout
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-18); no AI review
+  source_inventory:
+    key: 991f4c770b111b26
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-18
+    source_id: ohoiko-fmu-booster-ep-18
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 18
+  - VESUM and authoritative dictionaries
+- lemma: черга
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: queue / line
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-18); no AI review
+  source_inventory:
+    key: d657adb4deda6ec2
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-18
+    source_id: ohoiko-fmu-booster-ep-18
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 18
+  - VESUM and authoritative dictionaries
+- lemma: касир
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: cashier (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-18); no AI review
+  source_inventory:
+    key: 1452d9b0b89948fc
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-18
+    source_id: ohoiko-fmu-booster-ep-18
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 18
+  - VESUM and authoritative dictionaries
+- lemma: касирка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: cashier (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-18); no AI review
+  source_inventory:
+    key: fffa1764c47f346a
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-18
+    source_id: ohoiko-fmu-booster-ep-18
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 18
+  - VESUM and authoritative dictionaries
+- lemma: чек
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: receipt
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-18); no AI review
+  source_inventory:
+    key: f25b5dafb8feecc2
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-18
+    source_id: ohoiko-fmu-booster-ep-18
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 18
+  - VESUM and authoritative dictionaries
+- lemma: ходити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to go regularly / walk
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-23); no AI review
+  source_inventory:
+    key: 9f854a794d3be41d
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-23
+    source_id: ohoiko-fmu-booster-ep-23
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 23
+  - VESUM and authoritative dictionaries
+- lemma: грати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to play
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-23); no AI review
+  source_inventory:
+    key: 24fc905f1d3bda06
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-23
+    source_id: ohoiko-fmu-booster-ep-23
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 23
+  - VESUM and authoritative dictionaries
+- lemma: кататися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to ride / slide / ski
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-23); no AI review
+  source_inventory:
+    key: e7314a9f83cb706f
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-23
+    source_id: ohoiko-fmu-booster-ep-23
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 23
+  - VESUM and authoritative dictionaries
+- lemma: займатися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to engage in / practice
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-23); no AI review
+  source_inventory:
+    key: d7626013c0764a70
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-23
+    source_id: ohoiko-fmu-booster-ep-23
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 23
+  - VESUM and authoritative dictionaries
+- lemma: готувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to cook
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-23); no AI review
+  source_inventory:
+    key: e2fcf6226392220e
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-23
+    source_id: ohoiko-fmu-booster-ep-23
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 23
+  - VESUM and authoritative dictionaries
+- lemma: бігати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to run / jog
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-23); no AI review
+  source_inventory:
+    key: d5510cae81f65a6b
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-23
+    source_id: ohoiko-fmu-booster-ep-23
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 23
+  - VESUM and authoritative dictionaries
+- lemma: подорожувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to travel
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-23); no AI review
+  source_inventory:
+    key: 206e7d046f7360c6
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-23
+    source_id: ohoiko-fmu-booster-ep-23
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 23
+  - VESUM and authoritative dictionaries
+- lemma: читати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to read
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-23); no AI review
+  source_inventory:
+    key: 9748a8b260895e90
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-23
+    source_id: ohoiko-fmu-booster-ep-23
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 23
+  - VESUM and authoritative dictionaries
+- lemma: шахи
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: chess
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-23); no AI review
+  source_inventory:
+    key: f27377e51e74dfdf
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-23
+    source_id: ohoiko-fmu-booster-ep-23
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 23
+  - VESUM and authoritative dictionaries
+- lemma: гітара
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: guitar
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-23); no AI review
+  source_inventory:
+    key: 974a360331295528
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-23
+    source_id: ohoiko-fmu-booster-ep-23
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 23
+  - VESUM and authoritative dictionaries
+- lemma: лижі
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: skis
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-23); no AI review
+  source_inventory:
+    key: 779b4a1ce5f47bb7
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-23
+    source_id: ohoiko-fmu-booster-ep-23
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 23
+  - VESUM and authoritative dictionaries
+- lemma: йога
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: yoga
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-23); no AI review
+  source_inventory:
+    key: eea700d8ab7b8580
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-23
+    source_id: ohoiko-fmu-booster-ep-23
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 23
+  - VESUM and authoritative dictionaries
+- lemma: танець
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: dance
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-23); no AI review
+  source_inventory:
+    key: 97391c78348be74e
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-23
+    source_id: ohoiko-fmu-booster-ep-23
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 23
+  - VESUM and authoritative dictionaries
+- lemma: серіал
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: TV show / series
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-23); no AI review
+  source_inventory:
+    key: e3a148d5837c73b5
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-23
+    source_id: ohoiko-fmu-booster-ep-23
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 23
+  - VESUM and authoritative dictionaries
+- lemma: фільм
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: movie / film
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-23); no AI review
+  source_inventory:
+    key: 77e6129c07f5db33
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-23
+    source_id: ohoiko-fmu-booster-ep-23
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 23
+  - VESUM and authoritative dictionaries
+- lemma: спорт
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: sport
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-25); no AI review
+  source_inventory:
+    key: 662507f1dd13c27e
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-25
+    source_id: ohoiko-fmu-booster-ep-25
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 25
+  - VESUM and authoritative dictionaries
+- lemma: футбол
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: football / soccer
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-25); no AI review
+  source_inventory:
+    key: 75df933a47141a6c
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-25
+    source_id: ohoiko-fmu-booster-ep-25
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 25
+  - VESUM and authoritative dictionaries
+- lemma: баскетбол
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: basketball
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-25); no AI review
+  source_inventory:
+    key: 1f8d5fc5e7f79fd2
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-25
+    source_id: ohoiko-fmu-booster-ep-25
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 25
+  - VESUM and authoritative dictionaries
+- lemma: волейбол
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: volleyball
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-25); no AI review
+  source_inventory:
+    key: a9374204a32643fa
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-25
+    source_id: ohoiko-fmu-booster-ep-25
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 25
+  - VESUM and authoritative dictionaries
+- lemma: теніс
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: tennis
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-25); no AI review
+  source_inventory:
+    key: eae00275d6ee464a
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-25
+    source_id: ohoiko-fmu-booster-ep-25
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 25
+  - VESUM and authoritative dictionaries
+- lemma: бокс
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: boxing
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-25); no AI review
+  source_inventory:
+    key: 8a1dded2eab0fe2f
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-25
+    source_id: ohoiko-fmu-booster-ep-25
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 25
+  - VESUM and authoritative dictionaries
+- lemma: атлетика
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: athletics / track and field
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-25); no AI review
+  source_inventory:
+    key: 0c6a92b68bf11484
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-25
+    source_id: ohoiko-fmu-booster-ep-25
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 25
+  - VESUM and authoritative dictionaries
+- lemma: гімнастика
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: gymnastics
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-25); no AI review
+  source_inventory:
+    key: 2a9344ef6e4ee249
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-25
+    source_id: ohoiko-fmu-booster-ep-25
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 25
+  - VESUM and authoritative dictionaries
+- lemma: серфінг
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: surfing
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-25); no AI review
+  source_inventory:
+    key: e28f50b97cc2aa4c
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-25
+    source_id: ohoiko-fmu-booster-ep-25
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 25
+  - VESUM and authoritative dictionaries
+- lemma: сноубординг
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: snowboarding
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-25); no AI review
+  source_inventory:
+    key: d010a9ee6ecda30d
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-25
+    source_id: ohoiko-fmu-booster-ep-25
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 25
+  - VESUM and authoritative dictionaries
+- lemma: більярд
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: billiards / pool
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-25); no AI review
+  source_inventory:
+    key: d45ea6d213386884
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-25
+    source_id: ohoiko-fmu-booster-ep-25
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 25
+  - VESUM and authoritative dictionaries
+- lemma: боулінг
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: bowling
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-25); no AI review
+  source_inventory:
+    key: b634d2595608e894
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-25
+    source_id: ohoiko-fmu-booster-ep-25
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 25
+  - VESUM and authoritative dictionaries
+- lemma: біг
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: running
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-25); no AI review
+  source_inventory:
+    key: c7f76fcb1732648c
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-25
+    source_id: ohoiko-fmu-booster-ep-25
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 25
+  - VESUM and authoritative dictionaries
+- lemma: плавання
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: swimming
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-25); no AI review
+  source_inventory:
+    key: a6a386ff4b6a958b
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-25
+    source_id: ohoiko-fmu-booster-ep-25
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 25
+  - VESUM and authoritative dictionaries
+- lemma: плавати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to swim
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-25); no AI review
+  source_inventory:
+    key: 17a71deef9299cb9
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-25
+    source_id: ohoiko-fmu-booster-ep-25
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 25
+  - VESUM and authoritative dictionaries
+- lemma: фехтування
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: fencing
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-25); no AI review
+  source_inventory:
+    key: 0b12a5d82a5a28d4
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-25
+    source_id: ohoiko-fmu-booster-ep-25
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 25
+  - VESUM and authoritative dictionaries
+- lemma: кінний спорт
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: equestrian sport
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-25); no AI review
+  source_inventory:
+    key: e9b30ba083baad98
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-25
+    source_id: ohoiko-fmu-booster-ep-25
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 25
+  - VESUM and authoritative dictionaries
+- lemma: лижний спорт
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: skiing
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-25); no AI review
+  source_inventory:
+    key: 0bea524eb2926a7c
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-25
+    source_id: ohoiko-fmu-booster-ep-25
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 25
+  - VESUM and authoritative dictionaries
+- lemma: гірськолижний спорт
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: alpine / downhill skiing
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-25); no AI review
+  source_inventory:
+    key: 1fe4da9d06bd7510
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-25
+    source_id: ohoiko-fmu-booster-ep-25
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 25
+  - VESUM and authoritative dictionaries
+- lemma: велосипедний спорт
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: cycling
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-25); no AI review
+  source_inventory:
+    key: 29a85b249daf6c76
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-25
+    source_id: ohoiko-fmu-booster-ep-25
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 25
+  - VESUM and authoritative dictionaries
+- lemma: пора року
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: season of the year
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-29); no AI review
+  source_inventory:
+    key: bd6c785284c90e00
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-29
+    source_id: ohoiko-fmu-booster-ep-29
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 29
+  - VESUM and authoritative dictionaries
+- lemma: зима
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: winter
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-29); no AI review
+  source_inventory:
+    key: b44f31e4b685aa45
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-29
+    source_id: ohoiko-fmu-booster-ep-29
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 29
+  - VESUM and authoritative dictionaries
+- lemma: взимку
+  decision: approve_for_publish
+  approved_pos: adv
+  approved_gloss: in winter
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-29); no AI review
+  source_inventory:
+    key: 702f37bc8d6863ab
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-29
+    source_id: ohoiko-fmu-booster-ep-29
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 29
+  - VESUM and authoritative dictionaries
+- lemma: весна
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: spring
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-29); no AI review
+  source_inventory:
+    key: be47cf797a84b2d5
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-29
+    source_id: ohoiko-fmu-booster-ep-29
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 29
+  - VESUM and authoritative dictionaries
+- lemma: навесні
+  decision: approve_for_publish
+  approved_pos: adv
+  approved_gloss: in spring
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-29); no AI review
+  source_inventory:
+    key: 04add26b9a24c691
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-29
+    source_id: ohoiko-fmu-booster-ep-29
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 29
+  - VESUM and authoritative dictionaries
+- lemma: літо
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: summer
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-29); no AI review
+  source_inventory:
+    key: a4b5aa5b82e968d3
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-29
+    source_id: ohoiko-fmu-booster-ep-29
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 29
+  - VESUM and authoritative dictionaries
+- lemma: влітку
+  decision: approve_for_publish
+  approved_pos: adv
+  approved_gloss: in summer
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-29); no AI review
+  source_inventory:
+    key: b1b414a33a9f06d0
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-29
+    source_id: ohoiko-fmu-booster-ep-29
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 29
+  - VESUM and authoritative dictionaries
+- lemma: осінь
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: autumn / fall
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-29); no AI review
+  source_inventory:
+    key: ecb5f29ec25505b3
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-29
+    source_id: ohoiko-fmu-booster-ep-29
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 29
+  - VESUM and authoritative dictionaries
+- lemma: восени
+  decision: approve_for_publish
+  approved_pos: adv
+  approved_gloss: in autumn / in fall
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-29); no AI review
+  source_inventory:
+    key: 55d567ecbec602f0
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-29
+    source_id: ohoiko-fmu-booster-ep-29
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 29
+  - VESUM and authoritative dictionaries
+- lemma: місяць
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: month
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-29); no AI review
+  source_inventory:
+    key: 84507d5802d4f668
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-29
+    source_id: ohoiko-fmu-booster-ep-29
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 29
+  - VESUM and authoritative dictionaries
+- lemma: січень
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: January
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-29); no AI review
+  source_inventory:
+    key: 3593c59c2cf93c6b
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-29
+    source_id: ohoiko-fmu-booster-ep-29
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 29
+  - VESUM and authoritative dictionaries
+- lemma: лютий
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: February
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-29); no AI review
+  source_inventory:
+    key: 3fb1f5c44cae03d9
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-29
+    source_id: ohoiko-fmu-booster-ep-29
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 29
+  - VESUM and authoritative dictionaries
+- lemma: березень
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: March
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-29); no AI review
+  source_inventory:
+    key: 6dd59de7828b9d71
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-29
+    source_id: ohoiko-fmu-booster-ep-29
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 29
+  - VESUM and authoritative dictionaries
+- lemma: квітень
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: April
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-29); no AI review
+  source_inventory:
+    key: 5242f71ff3b4dc20
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-29
+    source_id: ohoiko-fmu-booster-ep-29
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 29
+  - VESUM and authoritative dictionaries
+- lemma: травень
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: May
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-29); no AI review
+  source_inventory:
+    key: 2b8cc9df2f5c5af7
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-29
+    source_id: ohoiko-fmu-booster-ep-29
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 29
+  - VESUM and authoritative dictionaries
+- lemma: червень
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: June
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-29); no AI review
+  source_inventory:
+    key: 4192e2329f5d42ef
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-29
+    source_id: ohoiko-fmu-booster-ep-29
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 29
+  - VESUM and authoritative dictionaries
+- lemma: липень
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: July
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-29); no AI review
+  source_inventory:
+    key: e1ece3a73efcc3af
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-29
+    source_id: ohoiko-fmu-booster-ep-29
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 29
+  - VESUM and authoritative dictionaries
+- lemma: серпень
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: August
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-29); no AI review
+  source_inventory:
+    key: f01236407af870cf
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-29
+    source_id: ohoiko-fmu-booster-ep-29
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 29
+  - VESUM and authoritative dictionaries
+- lemma: вересень
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: September
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-29); no AI review
+  source_inventory:
+    key: e00059ce1a15c6ee
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-29
+    source_id: ohoiko-fmu-booster-ep-29
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 29
+  - VESUM and authoritative dictionaries
+- lemma: жовтень
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: October
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-29); no AI review
+  source_inventory:
+    key: adc1b15647e2ec63
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-29
+    source_id: ohoiko-fmu-booster-ep-29
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 29
+  - VESUM and authoritative dictionaries
+- lemma: листопад
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: November
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-29); no AI review
+  source_inventory:
+    key: a38e882f648ce562
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-29
+    source_id: ohoiko-fmu-booster-ep-29
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 29
+  - VESUM and authoritative dictionaries
+- lemma: грудень
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: December
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-29); no AI review
+  source_inventory:
+    key: a0e8f0131d1ec8c8
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-29
+    source_id: ohoiko-fmu-booster-ep-29
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 29
+  - VESUM and authoritative dictionaries
+- lemma: родина
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: family
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: 88a90a612ac1e60a
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: сім'я
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: family
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: 9663382a4917015d
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: батьки
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: parents
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: fd93871f51cddaef
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: мама
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: mom / mother
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: 1d887358a0df166c
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: мати
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: mother
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: 8ee743fb4dd10f01
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: тато
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: dad / father
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: 6042a136ca6f573f
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: батько
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: father
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: cdb12f3fe992ced4
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: дитина
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: child
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: 2b234819fa2a2a6d
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: діти
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: children
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: 51f4497a933c706b
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: син
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: son
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: 344fa87ade0a36f8
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: дочка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: daughter
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: 63eb8b6e66029455
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: донька
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: daughter
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: 2da490aabbca4849
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: бабуся
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: grandmother
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: d05ef9e44b635670
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: дідусь
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: grandfather
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: 26a3cf6879cd31bc
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: прабабуся
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: great-grandmother
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: f486caf96d6ce7ac
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: прадід
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: great-grandfather
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: 74c4bf8122d74e7a
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: брат
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: brother
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: 145abe5b97f20eda
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: сестра
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: sister
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: d6bc59e147924b0b
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: дядько
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: uncle
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: c96dbd33834e2c8d
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: тітка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: aunt
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: fe31a4b702a50c05
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: племінник
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: nephew
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: 9753dd5482b542eb
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: племінниця
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: niece
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: f2960626afbca2e3
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: двоюрідний брат
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: male cousin
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: 020aef52f8637b70
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: двоюрідна сестра
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: female cousin
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: 312a8a51b4919592
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: наречений
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: fiancé / groom
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: 87a08e132f058360
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: наречена
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: fiancée / bride
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: 587235ff85d5547e
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: чоловік
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: husband
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: 748f13bba9ddaeb3
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: дружина
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: wife
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: ce6d6573ba3e81fc
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: подружжя
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: married couple
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: 4d47d154b44447b0
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: свекор
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: father-in-law (husband's father)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: 8399d30136a25378
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: свекруха
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: mother-in-law (husband's mother)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: 194b3be9ffcd5714
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: тесть
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: father-in-law (wife's father)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: ab7a6af710358c53
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: теща
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: mother-in-law (wife's mother)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: bd39cad6ec3cfe56
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: невістка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: daughter-in-law
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: 559348342cb517b7
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: зять
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: son-in-law
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
+  source_inventory:
+    key: e24a96968487fc3b
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-33
+    source_id: ohoiko-fmu-booster-ep-33
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 33
+  - VESUM and authoritative dictionaries
+- lemma: професія
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: profession / occupation
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 3548d30a9ba59306
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: вчитель
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: teacher (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 46c240bb4477fe8d
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: вчителька
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: teacher (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: f5e08a8b020229e9
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: викладач
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: instructor / lecturer (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 7404e15275e1e6d4
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: викладачка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: instructor / lecturer (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: ad5873bea897f8ee
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: професор
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: professor (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 97f3a6eae3ffbcb1
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: професорка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: professor (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 894298131730cca4
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: лікар
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: doctor / physician (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 32f0e81f329a82b3
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: лікарка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: doctor / physician (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: b926ff4c19a29b42
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: менеджер
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: manager (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 933eabbd34658c05
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: менеджерка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: manager (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 9738aed472dc3561
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: помічник
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: assistant / helper (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 26159c82b2a581ce
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: помічниця
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: assistant / helper (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 923fc58139b8cd07
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: асистент
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: assistant (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: fcacea336e995625
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: асистентка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: assistant (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 961f957c78972854
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: інженер
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: engineer (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 51aa06ce04969d5a
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: інженерка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: engineer (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: a36d03cd76fd1e58
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: програміст
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: programmer (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 56c1b102d2421728
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: програмістка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: programmer (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: d316ab9157366462
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: дизайнер
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: designer (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: a88f9c4e9cd7d73a
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: дизайнерка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: designer (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: b27772208eca78bf
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: бухгалтер
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: accountant (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 94337ee7c5acf558
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: бухгалтерка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: accountant (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: aa6eb961587b2efa
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: юрист
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: lawyer / jurist (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 7d1252f852cfe5f7
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: юристка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: lawyer / jurist (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 02218c6a0878a3c2
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: офіціант
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: waiter
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 9d241639c07f1922
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: офіціантка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: waitress
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: d0b958f7dab2ec51
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: будівельник
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: construction worker / builder (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 554df5fbc3385a43
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: будівельниця
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: construction worker / builder (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 9aa65d9991cfcb8d
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: водій
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: driver (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 3c3dd543b6d15291
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: водійка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: driver (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 0e187c17978f3178
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: касир
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: cashier (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 28ebeabe1ceac344
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: касирка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: cashier (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: d266be302103dbea
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: продавець
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: salesperson / shop assistant (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 773be59798a239c9
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: продавчиня
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: salesperson / shop assistant (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: a732f3169690ae59
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: тренер
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: coach / trainer (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: b1d1d4d9f23bb1cb
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: тренерка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: coach / trainer (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: d870ff65eea43992
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: дослідник
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: researcher (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 196cf278b60ddc09
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: дослідниця
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: researcher (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 606479c848617570
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: засновник
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: founder (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: fe2d1648afde7d85
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: засновниця
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: founder (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: da532ceb53f3a035
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: підприємець
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: entrepreneur (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 18d3f43a257c714a
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: підприємниця
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: entrepreneur (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 8406509c24915339
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: митець
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: artist (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: fa87f462741ffcab
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: мисткиня
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: artist (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: e345bd22753856ef
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: письменник
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: writer (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: d902ae21af5484ac
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: письменниця
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: writer (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 643415573682739e
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: музикант
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: musician (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 5f37307a6a8029c6
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: музикантка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: musician (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 26767260866d6f17
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: пенсіонер
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: retiree (male)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 034ae06764cc7f47
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: пенсіонерка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: retiree (female)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
+  source_inventory:
+    key: 3aed7ec874b865d2
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-35
+    source_id: ohoiko-fmu-booster-ep-35
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 35
+  - VESUM and authoritative dictionaries
+- lemma: житло
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: housing / accommodation
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
+  source_inventory:
+    key: 203e71083d600f8d
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-42
+    source_id: ohoiko-fmu-booster-ep-42
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 42
+  - VESUM and authoritative dictionaries
+- lemma: помешкання
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: dwelling / accommodation
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
+  source_inventory:
+    key: a9fdfa8b4f20e209
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-42
+    source_id: ohoiko-fmu-booster-ep-42
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 42
+  - VESUM and authoritative dictionaries
+- lemma: дім
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: house / home
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
+  source_inventory:
+    key: c888f92928437624
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-42
+    source_id: ohoiko-fmu-booster-ep-42
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 42
+  - VESUM and authoritative dictionaries
+- lemma: будинок
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: building / house
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
+  source_inventory:
+    key: 58cd7e3593909440
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-42
+    source_id: ohoiko-fmu-booster-ep-42
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 42
+  - VESUM and authoritative dictionaries
+- lemma: хата
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: village house / cottage
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
+  source_inventory:
+    key: caff3bfb1adaf9d2
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-42
+    source_id: ohoiko-fmu-booster-ep-42
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 42
+  - VESUM and authoritative dictionaries
+- lemma: квартира
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: apartment / flat
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
+  source_inventory:
+    key: 3f4c83c86b45fe6c
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-42
+    source_id: ohoiko-fmu-booster-ep-42
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 42
+  - VESUM and authoritative dictionaries
+- lemma: заміський будинок
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: country house
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
+  source_inventory:
+    key: 86e522bb03dc67a0
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-42
+    source_id: ohoiko-fmu-booster-ep-42
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 42
+  - VESUM and authoritative dictionaries
+- lemma: дача
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: summer house / dacha
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
+  source_inventory:
+    key: 66abb95608ee76a8
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-42
+    source_id: ohoiko-fmu-booster-ep-42
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 42
+  - VESUM and authoritative dictionaries
+- lemma: маєток
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: manor / mansion
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
+  source_inventory:
+    key: 6b132cc1c7b5f67b
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-42
+    source_id: ohoiko-fmu-booster-ep-42
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 42
+  - VESUM and authoritative dictionaries
+- lemma: гуртожиток
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: dormitory / residence hall
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
+  source_inventory:
+    key: 439b9317029e01d8
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-42
+    source_id: ohoiko-fmu-booster-ep-42
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 42
+  - VESUM and authoritative dictionaries
+- lemma: кімната
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: room
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
+  source_inventory:
+    key: cb180c1ef2b05f71
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-42
+    source_id: ohoiko-fmu-booster-ep-42
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 42
+  - VESUM and authoritative dictionaries
+- lemma: вітальня
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: living room
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
+  source_inventory:
+    key: 3cef73b2bfb81851
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-42
+    source_id: ohoiko-fmu-booster-ep-42
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 42
+  - VESUM and authoritative dictionaries
+- lemma: кухня
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: kitchen
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
+  source_inventory:
+    key: 6f298ed0be220458
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-42
+    source_id: ohoiko-fmu-booster-ep-42
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 42
+  - VESUM and authoritative dictionaries
+- lemma: спальня
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: bedroom
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
+  source_inventory:
+    key: 508f306be6766783
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-42
+    source_id: ohoiko-fmu-booster-ep-42
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 42
+  - VESUM and authoritative dictionaries
+- lemma: ванна кімната
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: bathroom
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
+  source_inventory:
+    key: f4cf846a9c592cca
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-42
+    source_id: ohoiko-fmu-booster-ep-42
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 42
+  - VESUM and authoritative dictionaries
+- lemma: туалет
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: restroom / toilet
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
+  source_inventory:
+    key: a330894393d9d400
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-42
+    source_id: ohoiko-fmu-booster-ep-42
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 42
+  - VESUM and authoritative dictionaries
+- lemma: кабінет
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: study / home office
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
+  source_inventory:
+    key: f5ffb463007e181a
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-42
+    source_id: ohoiko-fmu-booster-ep-42
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 42
+  - VESUM and authoritative dictionaries
+- lemma: коридор
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: corridor / hallway
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
+  source_inventory:
+    key: 715286d65e9f33ad
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-42
+    source_id: ohoiko-fmu-booster-ep-42
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 42
+  - VESUM and authoritative dictionaries
+- lemma: передпокій
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: entryway / hall
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
+  source_inventory:
+    key: 858fcb1195a76ef6
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-42
+    source_id: ohoiko-fmu-booster-ep-42
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 42
+  - VESUM and authoritative dictionaries
+- lemma: гараж
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: garage
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
+  source_inventory:
+    key: 5677b7abd0870ea9
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-42
+    source_id: ohoiko-fmu-booster-ep-42
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 42
+  - VESUM and authoritative dictionaries
+- lemma: підвал
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: basement / cellar
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
+  source_inventory:
+    key: e927d27d7990343c
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-42
+    source_id: ohoiko-fmu-booster-ep-42
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 42
+  - VESUM and authoritative dictionaries
+- lemma: горище
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: attic / loft
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
+  source_inventory:
+    key: b6d2bf585da95500
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-42
+    source_id: ohoiko-fmu-booster-ep-42
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 42
+  - VESUM and authoritative dictionaries
+- lemma: комора
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: pantry / storage room
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
+  source_inventory:
+    key: 3fa8339c908838cb
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-42
+    source_id: ohoiko-fmu-booster-ep-42
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 42
+  - VESUM and authoritative dictionaries
+- lemma: аптечка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: first aid kit
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-44); no AI review
+  source_inventory:
+    key: a13b8946d59f83f5
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-44
+    source_id: ohoiko-fmu-booster-ep-44
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 44
+  - VESUM and authoritative dictionaries
+- lemma: батарейка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: battery
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-44); no AI review
+  source_inventory:
+    key: 378ae8a6433fab64
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-44
+    source_id: ohoiko-fmu-booster-ep-44
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 44
+  - VESUM and authoritative dictionaries
+- lemma: віник
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: broom
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-44); no AI review
+  source_inventory:
+    key: 6c9dbdd00bfa4205
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-44
+    source_id: ohoiko-fmu-booster-ep-44
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 44
+  - VESUM and authoritative dictionaries
+- lemma: совок
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: dustpan
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-44); no AI review
+  source_inventory:
+    key: 5040871c4eef1aa6
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-44
+    source_id: ohoiko-fmu-booster-ep-44
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 44
+  - VESUM and authoritative dictionaries
+- lemma: швабра
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: mop
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-44); no AI review
+  source_inventory:
+    key: 24992345ab041231
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-44
+    source_id: ohoiko-fmu-booster-ep-44
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 44
+  - VESUM and authoritative dictionaries
+- lemma: відро
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: bucket
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-44); no AI review
+  source_inventory:
+    key: a56bd721202e4fd1
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-44
+    source_id: ohoiko-fmu-booster-ep-44
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 44
+  - VESUM and authoritative dictionaries
+- lemma: миска
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: basin / bowl
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-44); no AI review
+  source_inventory:
+    key: da3b36b4c4b1253d
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-44
+    source_id: ohoiko-fmu-booster-ep-44
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 44
+  - VESUM and authoritative dictionaries
+- lemma: пилосос
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: vacuum cleaner
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-44); no AI review
+  source_inventory:
+    key: 1aa2174d7bd3ef44
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-44
+    source_id: ohoiko-fmu-booster-ep-44
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 44
+  - VESUM and authoritative dictionaries
+- lemma: щітка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: brush
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-44); no AI review
+  source_inventory:
+    key: 5fa3746067805e93
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-44
+    source_id: ohoiko-fmu-booster-ep-44
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 44
+  - VESUM and authoritative dictionaries
+- lemma: ганчірка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: cleaning rag / cloth
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-44); no AI review
+  source_inventory:
+    key: ae9344a51d3577bc
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-44
+    source_id: ohoiko-fmu-booster-ep-44
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 44
+  - VESUM and authoritative dictionaries
+- lemma: губка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: sponge
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-44); no AI review
+  source_inventory:
+    key: 42d63f76ac33e00e
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-44
+    source_id: ohoiko-fmu-booster-ep-44
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 44
+  - VESUM and authoritative dictionaries
+- lemma: смітник
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: trash can / waste bin
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-44); no AI review
+  source_inventory:
+    key: 01815826ebdd3e99
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-44
+    source_id: ohoiko-fmu-booster-ep-44
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 44
+  - VESUM and authoritative dictionaries
+- lemma: пакети для сміття
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: garbage bags / bin liners
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-44); no AI review
+  source_inventory:
+    key: 84483cb428085a3f
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-44
+    source_id: ohoiko-fmu-booster-ep-44
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 44
+  - VESUM and authoritative dictionaries
+- lemma: мішки для сміття
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: trash bags
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-44); no AI review
+  source_inventory:
+    key: 61516513207a0c34
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-44
+    source_id: ohoiko-fmu-booster-ep-44
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 44
+  - VESUM and authoritative dictionaries
+- lemma: гумові рукавички
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: rubber gloves
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-44); no AI review
+  source_inventory:
+    key: 15a548c9b7e12366
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-44
+    source_id: ohoiko-fmu-booster-ep-44
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 44
+  - VESUM and authoritative dictionaries
+- lemma: паперові рушники
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: paper towels
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-44); no AI review
+  source_inventory:
+    key: 2a52c61b9d26f99f
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-44
+    source_id: ohoiko-fmu-booster-ep-44
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 44
+  - VESUM and authoritative dictionaries
+- lemma: туалетний папір
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: toilet paper
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-44); no AI review
+  source_inventory:
+    key: 0d1aaa0078c2cd0a
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-44
+    source_id: ohoiko-fmu-booster-ep-44
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 44
+  - VESUM and authoritative dictionaries
+- lemma: мийні засоби
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: cleaning detergents
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-44); no AI review
+  source_inventory:
+    key: af3d2cf40f12ec05
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-44
+    source_id: ohoiko-fmu-booster-ep-44
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 44
+  - VESUM and authoritative dictionaries
+- lemma: засіб для миття вікон
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: window cleaner
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-44); no AI review
+  source_inventory:
+    key: 4c507a650e34b599
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-44
+    source_id: ohoiko-fmu-booster-ep-44
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 44
+  - VESUM and authoritative dictionaries
+- lemma: засіб для миття унітазу
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: toilet bowl cleaner
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-44); no AI review
+  source_inventory:
+    key: 0fa2c08722448c42
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-44
+    source_id: ohoiko-fmu-booster-ep-44
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 44
+  - VESUM and authoritative dictionaries
+- lemma: засіб для прання
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: laundry detergent
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-44); no AI review
+  source_inventory:
+    key: ab07a3d8525ac401
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-44
+    source_id: ohoiko-fmu-booster-ep-44
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 44
+  - VESUM and authoritative dictionaries
+- lemma: хліб
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: bread
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: 13f7d53083da6239
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: картопля
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: potato
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: e69dedc2b31789f0
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: яйце
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: egg
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: b0b2ef9ab2488107
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: макарони
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: pasta / macaroni
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: 1092a8838cb58d0b
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: томатний соус
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: tomato sauce
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: f6a248e6bc2efec5
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: томатна паста
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: tomato paste
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: 84305929f9d0d0be
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: рис
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: rice
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: 11af1ae74bdcfd0b
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: гречка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: buckwheat
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: 7801c1af9f1c1a9b
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: вівсянка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: oatmeal / rolled oats
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: 521c85f6c8c93421
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: борошно
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: flour
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: 8ad44b4792155587
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: мука
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: flour
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: b160999b34f59129
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: цукор
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: sugar
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: 54519881f46db405
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: мед
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: honey
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: 3b0dd2791921a54d
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: варення
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: jam / preserves
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: 5767854d3dfe11f6
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: джем
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: jam
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: d33420950100f6b7
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: приправа
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: seasoning / condiment
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: 2545573c08f8d7a4
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: спеція
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: spice
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: 9e8299c79b8ef493
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: чорний перець
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: black pepper
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: 1bbc2f69192188d5
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: сіль
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: salt
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: 289a166f08402757
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: олія
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: oil (vegetable / cooking)
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: 56191fea96bcc637
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: соняшникова олія
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: sunflower oil
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: add13f332b27dea4
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: оливкова олія
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: olive oil
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: e7383106d8a126a9
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: оцет
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: vinegar
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: 3be1e8aa3456d775
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: масло
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: butter
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: 0e2d137d0ec6a8dc
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: сметана
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: sour cream
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: 9c6f0c5c1036b30e
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: молоко
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: milk
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: 72eca89f4a36a70f
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: сир
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: cheese / cottage cheese
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: 422dd70903639d53
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: майонез
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: mayonnaise
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: 33c35e0969358259
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: кетчуп
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: ketchup
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: e8020093bde78842
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: гірчиця
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: mustard
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-48); no AI review
+  source_inventory:
+    key: 39e472ccc3ea8f46
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-48
+    source_id: ohoiko-fmu-booster-ep-48
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 48
+  - VESUM and authoritative dictionaries
+- lemma: тіло
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: body
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-52); no AI review
+  source_inventory:
+    key: 31a53b28c381c5a7
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-52
+    source_id: ohoiko-fmu-booster-ep-52
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 52
+  - VESUM and authoritative dictionaries
+- lemma: частина тіла
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: body part
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-52); no AI review
+  source_inventory:
+    key: bf451d63aed22481
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-52
+    source_id: ohoiko-fmu-booster-ep-52
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 52
+  - VESUM and authoritative dictionaries
+- lemma: голова
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: head
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-52); no AI review
+  source_inventory:
+    key: 28f50f829b3f494a
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-52
+    source_id: ohoiko-fmu-booster-ep-52
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 52
+  - VESUM and authoritative dictionaries
+- lemma: волосся
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: hair
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-52); no AI review
+  source_inventory:
+    key: 0be163c6585cd701
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-52
+    source_id: ohoiko-fmu-booster-ep-52
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 52
+  - VESUM and authoritative dictionaries
+- lemma: око
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: eye
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-52); no AI review
+  source_inventory:
+    key: bb7526f46c15d616
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-52
+    source_id: ohoiko-fmu-booster-ep-52
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 52
+  - VESUM and authoritative dictionaries
+- lemma: вухо
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: ear
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-52); no AI review
+  source_inventory:
+    key: edb7b08b002d67b5
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-52
+    source_id: ohoiko-fmu-booster-ep-52
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 52
+  - VESUM and authoritative dictionaries
+- lemma: ніс
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: nose
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-52); no AI review
+  source_inventory:
+    key: 3abeabd4648e6789
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-52
+    source_id: ohoiko-fmu-booster-ep-52
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 52
+  - VESUM and authoritative dictionaries
+- lemma: губа
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: lip
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-52); no AI review
+  source_inventory:
+    key: 7f252e4032b5f5e2
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-52
+    source_id: ohoiko-fmu-booster-ep-52
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 52
+  - VESUM and authoritative dictionaries
+- lemma: обличчя
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: face
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-52); no AI review
+  source_inventory:
+    key: 60910f1d7189d62d
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-52
+    source_id: ohoiko-fmu-booster-ep-52
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 52
+  - VESUM and authoritative dictionaries
+- lemma: шия
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: neck
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-52); no AI review
+  source_inventory:
+    key: 6c31e976f259e9ef
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-52
+    source_id: ohoiko-fmu-booster-ep-52
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 52
+  - VESUM and authoritative dictionaries
+- lemma: плече
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: shoulder
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-52); no AI review
+  source_inventory:
+    key: 2d5326733a32f2cc
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-52
+    source_id: ohoiko-fmu-booster-ep-52
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 52
+  - VESUM and authoritative dictionaries
+- lemma: рука
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: arm / hand
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-52); no AI review
+  source_inventory:
+    key: 477e04d41f4b9cc2
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-52
+    source_id: ohoiko-fmu-booster-ep-52
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 52
+  - VESUM and authoritative dictionaries
+- lemma: палець
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: finger / toe
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-52); no AI review
+  source_inventory:
+    key: d55261bd0644b308
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-52
+    source_id: ohoiko-fmu-booster-ep-52
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 52
+  - VESUM and authoritative dictionaries
+- lemma: пальці рук
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: fingers
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-52); no AI review
+  source_inventory:
+    key: 94c38a5092bce7b5
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-52
+    source_id: ohoiko-fmu-booster-ep-52
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 52
+  - VESUM and authoritative dictionaries
+- lemma: пальці ніг
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: toes
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-52); no AI review
+  source_inventory:
+    key: 743171d55a2451ad
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-52
+    source_id: ohoiko-fmu-booster-ep-52
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 52
+  - VESUM and authoritative dictionaries
+- lemma: ніготь
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: nail / fingernail
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-52); no AI review
+  source_inventory:
+    key: 981d6c89294e3266
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-52
+    source_id: ohoiko-fmu-booster-ep-52
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 52
+  - VESUM and authoritative dictionaries
+- lemma: груди
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: chest / breasts
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-52); no AI review
+  source_inventory:
+    key: 5985c62922f0d10c
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-52
+    source_id: ohoiko-fmu-booster-ep-52
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 52
+  - VESUM and authoritative dictionaries
+- lemma: живіт
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: belly / stomach
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-52); no AI review
+  source_inventory:
+    key: 73e79251d095b586
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-52
+    source_id: ohoiko-fmu-booster-ep-52
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 52
+  - VESUM and authoritative dictionaries
+- lemma: сідниці
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: buttocks
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-52); no AI review
+  source_inventory:
+    key: d9dc7a4d142c6fe8
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-52
+    source_id: ohoiko-fmu-booster-ep-52
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 52
+  - VESUM and authoritative dictionaries
+- lemma: нога
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: leg / foot
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-52); no AI review
+  source_inventory:
+    key: c35fa6171f68cbad
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-52
+    source_id: ohoiko-fmu-booster-ep-52
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 52
+  - VESUM and authoritative dictionaries
+- lemma: кермо
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: steering wheel
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-55); no AI review
+  source_inventory:
+    key: 9042c5f6d6236fb0
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-55
+    source_id: ohoiko-fmu-booster-ep-55
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 55
+  - VESUM and authoritative dictionaries
+- lemma: коробка передач
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: gearbox / transmission
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-55); no AI review
+  source_inventory:
+    key: 6f12b6bd5685e642
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-55
+    source_id: ohoiko-fmu-booster-ep-55
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 55
+  - VESUM and authoritative dictionaries
+- lemma: пасок безпеки
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: seatbelt
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-55); no AI review
+  source_inventory:
+    key: 867a739adc8ef1d6
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-55
+    source_id: ohoiko-fmu-booster-ep-55
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 55
+  - VESUM and authoritative dictionaries
+- lemma: дорожній рух
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: road traffic
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-55); no AI review
+  source_inventory:
+    key: e186a7eb9319211b
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-55
+    source_id: ohoiko-fmu-booster-ep-55
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 55
+  - VESUM and authoritative dictionaries
+- lemma: дорога
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: road / highway
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-55); no AI review
+  source_inventory:
+    key: 854df82c5597810a
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-55
+    source_id: ohoiko-fmu-booster-ep-55
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 55
+  - VESUM and authoritative dictionaries
+- lemma: траса
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: highway / route
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-55); no AI review
+  source_inventory:
+    key: a2314e68b4fa8826
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-55
+    source_id: ohoiko-fmu-booster-ep-55
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 55
+  - VESUM and authoritative dictionaries
+- lemma: смуга
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: traffic lane
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-55); no AI review
+  source_inventory:
+    key: 4799bf32d634f01c
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-55
+    source_id: ohoiko-fmu-booster-ep-55
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 55
+  - VESUM and authoritative dictionaries
+- lemma: дорожній знак
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: road sign
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-55); no AI review
+  source_inventory:
+    key: 92246daa5212742e
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-55
+    source_id: ohoiko-fmu-booster-ep-55
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 55
+  - VESUM and authoritative dictionaries
+- lemma: світлофор
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: traffic light
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-55); no AI review
+  source_inventory:
+    key: 77f2aff5e093c448
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-55
+    source_id: ohoiko-fmu-booster-ep-55
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 55
+  - VESUM and authoritative dictionaries
+- lemma: пішохід
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: pedestrian
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-55); no AI review
+  source_inventory:
+    key: 930b82853c680323
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-55
+    source_id: ohoiko-fmu-booster-ep-55
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 55
+  - VESUM and authoritative dictionaries
+- lemma: затор
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: traffic jam
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-55); no AI review
+  source_inventory:
+    key: f291b51609f0d7ec
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-55
+    source_id: ohoiko-fmu-booster-ep-55
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 55
+  - VESUM and authoritative dictionaries
+- lemma: корок
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: traffic jam / congestion
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-55); no AI review
+  source_inventory:
+    key: 5ba22edc6a32f0da
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-55
+    source_id: ohoiko-fmu-booster-ep-55
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 55
+  - VESUM and authoritative dictionaries
+- lemma: стоянка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: parking lot / parking
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-55); no AI review
+  source_inventory:
+    key: 29a26a2970831f9d
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-55
+    source_id: ohoiko-fmu-booster-ep-55
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 55
+  - VESUM and authoritative dictionaries
+- lemma: заправка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: gas station / petrol station
+  sense_note: curated ohoiko auto-approve (fmu-booster-ep-55); no AI review
+  source_inventory:
+    key: b4782aec171bdd1a
+    path: data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml
+    locator: fmu-booster-ep-55
+    source_id: ohoiko-fmu-booster-ep-55
+    source_family: ohoiko
+  evidence_refs:
+  - curated source family ohoiko
+  - 5 Minute Ukrainian Ep 55
+  - VESUM and authoritative dictionaries

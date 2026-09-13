@@ -1,14 +1,14 @@
 {
-  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest-add2517ad471.json.gz",
+  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest-6653a92dd169.json.gz",
   "release_tag": "atlas-manifest",
   "manifest_version": "0.1",
-  "manifest_fingerprint": "4f1bd46abbf3a72058dc950830952a1bdf34338f7701afcbdca325d400dc4d77",
+  "manifest_fingerprint": "f2d42d0c8c09796c78fc5a7680b38d79a817dc5232d5914c61914b0bdda6660a",
   "fingerprint_schema_version": 1,
   "generated_at": "2026-09-11T10:12:36+00:00",
-  "gz_sha256": "fd6a10b2850eb64f18b22801b7c659bac6888ff23479c5588b80c16d6c5eadd6",
-  "json_sha256": "add2517ad47181219ea9ac9b55a25068afa4f5b774cd3f5d1ac2356d95c3551c",
-  "gz_bytes": 35692385,
-  "json_bytes": 268665082,
+  "gz_sha256": "7961c73cd1f15a8a361fd5afd528d0a92da3d742419f0259382334029793df24",
+  "json_sha256": "6653a92dd169f9b3bd4bfae9778990d739dea4588c97112c9e6ca12b659c09fa",
+  "gz_bytes": 35739088,
+  "json_bytes": 268932024,
   "richness_gate": {
     "baseline": {
       "poc_thin_pages": 10641,
@@ -21,7 +21,7 @@
       "old_gate_no_english_anchor": 3010
     },
     "regressions": {},
-    "override_reason": "Admit Slice 2A vetted textbook STEM vocabulary (#7551, #6142)",
+    "override_reason": "Admit FMU Vocabulary Booster lists and overlay Anna Ohoiko provenance (#7454, #6370)",
     "bootstrap": false
   },
   "note": "Pins GitHub Release asset manifest for #3659; hydrate it build time instead committing raw JSON."
