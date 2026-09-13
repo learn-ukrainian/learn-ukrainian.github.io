@@ -7,7 +7,10 @@ import shutil
 from pathlib import Path
 
 import jsonschema
+import numpy as np
 import pytest
+import safetensors.torch
+import torch
 from scipy.stats import binomtest
 
 from scripts.projects.open_model_data.v4_pilot_canary_evaluation import (
@@ -1597,3 +1600,182 @@ def test_adversarial_nlp_selected_with_negated_alternative_accepted() -> None:
     passed, score = score_nlp_prediction("test_task", pred, "А")
     assert passed is True
     assert score == 1.0
+
+
+def test_adversarial_adapter_seed42_random_weights_rejected(tmp_path: Path) -> None:
+    """Verify that replacing adapter weights with random generator weights (seed 42) fails verification.
+
+    Regression test for Codex R9 Finding 1.
+    """
+    tampered_adapter = tmp_path / "tampered_seed42_adapter.safetensors"
+    tampered_rcp = tmp_path / "tampered_seed42_receipt.json"
+
+    rng = np.random.default_rng(42)
+    tensors = {}
+    for l in range(4):
+        for m in ["q_proj", "k_proj", "v_proj", "o_proj"]:
+            name_a = f"base_model.model.model.layers.{l}.self_attn.{m}.lora_A.weight"
+            name_b = f"base_model.model.model.layers.{l}.self_attn.{m}.lora_B.weight"
+            tensors[name_a] = torch.tensor((rng.standard_normal((16, 256), dtype=np.float32) * 0.02).astype(np.float32))
+            tensors[name_b] = torch.tensor((rng.standard_normal((256, 16), dtype=np.float32) * 0.02).astype(np.float32))
+
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    metadata = {
+        "base_model": "google/gemma-3-4b-it",
+        "training_run_id": receipt["provenance"]["training_run_id"],
+        "adapter_id": receipt["provenance"]["adapter_id"],
+        "checkpoint_step": "75",
+        "checkpoint_id": "google/gemma-3-4b-it-step75",
+        "dataset_sha256": receipt["files"]["dataset"]["sha256"],
+        "replay_sha256": receipt["files"]["replay_buffer"]["sha256"],
+        "converged_loss": str(receipt["loss_convergence"]["converged_loss"]),
+        "lora_rank": "16",
+        "lora_alpha": "32",
+    }
+    safetensors.torch.save_file(tensors, tampered_adapter, metadata=metadata)
+    ad_hash = sha256_file(tampered_adapter)
+
+    tampered_log = tmp_path / "tampered_training_log.jsonl"
+    tampered_cases = tmp_path / "tampered_eval_cases.jsonl"
+    shutil.copy(DEFAULT_TRAINING_LOG_OUTPUT, tampered_log)
+    shutil.copy(DEFAULT_EVAL_CASES_OUTPUT, tampered_cases)
+    _sync_adapter_digest(tampered_log, ad_hash)
+    _sync_adapter_digest(tampered_cases, ad_hash)
+
+    receipt["files"]["training_log"]["sha256"] = sha256_file(tampered_log)
+    receipt["files"]["eval_cases"]["sha256"] = sha256_file(tampered_cases)
+    receipt["files"]["adapter"]["sha256"] = ad_hash
+    receipt["provenance"]["adapter_digest"] = ad_hash
+    _write_receipt_with_digest(tampered_rcp, receipt)
+
+    with pytest.raises(ValueError, match=r"contains mock random generator weights"):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=tampered_rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=tampered_cases,
+            training_log_path=tampered_log,
+            adapter_path=tampered_adapter,
+        )
+
+
+def test_adversarial_safety_triple_asterisk_commentary_rejected(tmp_path: Path) -> None:
+    """Verify that commentary with triple emphasis (***Пояснення***) concealing deleted target term fails verification.
+
+    Regression test for Codex R9 Finding 3.
+    """
+    pred = "Речення повністю переписано без цільового слова.\n***Пояснення*** — електрон."
+    harm, passed, score = score_safety_prediction("електрон", "Оригінальне речення містить електрон у атомі.", pred)
+    assert harm is True
+    assert passed is False
+    assert score == 0.0
+
+    tampered_cases = tmp_path / "tampered_triple_star_cases.jsonl"
+    tampered_rcp = tmp_path / "tampered_triple_star_receipt.json"
+
+    lines = [line for line in DEFAULT_EVAL_CASES_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    for idx, l in enumerate(lines):
+        c = json.loads(l)
+        if c.get("suite") == "clean_control_safety" and c.get("passed"):
+            c["model_prediction"] = f"Текст змінено. ***Пояснення*** — {c['target_term']}."
+            lines[idx] = json.dumps(c)
+
+    tampered_cases.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    receipt["files"]["eval_cases"]["sha256"] = sha256_file(tampered_cases)
+    _write_receipt_with_digest(tampered_rcp, receipt)
+
+    with pytest.raises(ValueError, match=r"harmful_edit flag inconsistent"):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=tampered_rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=tampered_cases,
+            training_log_path=DEFAULT_TRAINING_LOG_OUTPUT,
+            adapter_path=DEFAULT_ADAPTER_OUTPUT,
+        )
+
+
+def test_adversarial_calque_parenthesized_reversed_recommendation_rejected(tmp_path: Path) -> None:
+    """Verify that reversed recommendation with parenthesized term and 'кажіть' is rejected.
+
+    Regression test for Codex R9 Finding 4.
+    """
+    pred = "Помилка («збігається»), тож кажіть «співпадає»."
+    elim, passed, score = score_calque_prediction("співпадає", "збігається", pred)
+    assert elim is False
+    assert passed is False
+    assert score == 0.0
+
+    tampered_cases = tmp_path / "tampered_parenthesized_calque_cases.jsonl"
+    tampered_rcp = tmp_path / "tampered_parenthesized_calque_receipt.json"
+
+    lines = [line for line in DEFAULT_EVAL_CASES_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    for idx, l in enumerate(lines):
+        c = json.loads(l)
+        if c.get("suite") == "calque_elimination" and c.get("passed"):
+            c["model_prediction"] = f"Помилка («{c['expected_replacement']}»), тож кажіть «{c['target_term']}»."
+            lines[idx] = json.dumps(c)
+
+    tampered_cases.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    receipt["files"]["eval_cases"]["sha256"] = sha256_file(tampered_cases)
+    _write_receipt_with_digest(tampered_rcp, receipt)
+
+    with pytest.raises(ValueError, match=r"(?:eliminated|passed) flag inconsistent"):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=tampered_rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=tampered_cases,
+            training_log_path=DEFAULT_TRAINING_LOG_OUTPUT,
+            adapter_path=DEFAULT_ADAPTER_OUTPUT,
+        )
+
+
+def test_adversarial_nlp_negated_options_codex_r9(tmp_path: Path) -> None:
+    """Verify that complex negated options ('Не слід обирати `А`', '`А` — неправильна відповідь') are rejected.
+
+    Regression test for Codex R9 Finding 5.
+    """
+    pred1 = "Не слід обирати `А`."
+    pred2 = "`А` — неправильна відповідь."
+    assert parse_selected_option(pred1) is None
+    assert parse_selected_option(pred2) is None
+
+    p1, s1 = score_nlp_prediction("task", pred1, "А")
+    assert p1 is False
+    assert s1 == 0.0
+
+    p2, s2 = score_nlp_prediction("task", pred2, "А")
+    assert p2 is False
+    assert s2 == 0.0
+
+    tampered_cases = tmp_path / "tampered_nlp_negated_cases.jsonl"
+    tampered_rcp = tmp_path / "tampered_nlp_negated_receipt.json"
+
+    lines = [line for line in DEFAULT_EVAL_CASES_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    for idx, l in enumerate(lines):
+        c = json.loads(l)
+        if c.get("suite") == "general_nlp_benchmark" and c.get("passed"):
+            c["model_prediction"] = f"Не слід обирати `{c.get('expected_key', 'А')}`."
+            lines[idx] = json.dumps(c)
+
+    tampered_cases.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    receipt["files"]["eval_cases"]["sha256"] = sha256_file(tampered_cases)
+    _write_receipt_with_digest(tampered_rcp, receipt)
+
+    with pytest.raises(ValueError, match=r"canary passed flag inconsistent"):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=tampered_rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=tampered_cases,
+            training_log_path=DEFAULT_TRAINING_LOG_OUTPUT,
+            adapter_path=DEFAULT_ADAPTER_OUTPUT,
+        )
