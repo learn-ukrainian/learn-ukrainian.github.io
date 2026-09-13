@@ -6802,12 +6802,11 @@ def test_ulif_authoritative_enrichment_integration(monkeypatch) -> None:
 
 
 def test_offline_mode_does_not_poison_slovnyk_cache(monkeypatch, tmp_path) -> None:
-    """Validate that offline mode raises _SlovnykTransientError and skips _cache_store_lookup to prevent cache poisoning (#6142)."""
+    """Validate that offline mode returns None for fetch and skips _cache_store_lookup to prevent cache poisoning (#6142)."""
     monkeypatch.setattr(enrich_manifest_module, "_phase1_offline_mode", lambda: True)
 
-    # 1. _fetch_slovnyk_entry raises transient error in offline mode
-    with pytest.raises(enrich_manifest_module._SlovnykTransientError):
-        enrich_manifest_module._fetch_slovnyk_entry("слово", "слово", "vts")
+    # 1. _fetch_slovnyk_entry returns None in offline mode without making network requests
+    assert enrich_manifest_module._fetch_slovnyk_entry("слово", "слово", "vts") is None
 
     # 2. _cache_store_lookup does not write to disk when offline
     dummy_cache_file = tmp_path / "слово.json"
@@ -6821,3 +6820,27 @@ def test_offline_mode_does_not_poison_slovnyk_cache(monkeypatch, tmp_path) -> No
     res = enrich_manifest_module._vts_definition_card("слово", cache)
     assert res is None
     assert "vts" not in cache["lookups"]
+
+
+def test_slovnyk_cache_migrates_v3_preserving_positive_lookups(monkeypatch, tmp_path) -> None:
+    """Validate that _slovnyk_cache migrates v3 rows preserving positive lookups and dropping nulls (#6142)."""
+    monkeypatch.setattr(enrich_manifest_module, "_phase1_offline_mode", lambda: True)
+    dummy_file = tmp_path / "слово.json"
+    dummy_file.write_text(
+        json.dumps({
+            "schema_version": 3,
+            "lemma": "слово",
+            "lookup_word": "слово",
+            "lookups": {
+                "newsum": {"text": "одиниця мови", "word": "слово"},
+                "ukreng": None,
+            },
+        }),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(enrich_manifest_module, "_slovnyk_cache_path", lambda lemma: dummy_file)
+    cache = enrich_manifest_module._slovnyk_cache("слово")
+    assert cache["schema_version"] == 4
+    assert "newsum" in cache["lookups"]
+    assert cache["lookups"]["newsum"]["text"] == "одиниця мови"
+    assert "ukreng" not in cache["lookups"]

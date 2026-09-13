@@ -101,12 +101,17 @@ def migrate(cache_dir: Path, *, dry_run: bool) -> Counter[str]:
         counts["migrated"] += 1
         if dry_run:
             continue
+        raw_lookups = payload.get("lookups", {})
+        if payload.get("schema_version") == 3 and isinstance(raw_lookups, dict):
+            migrated_lookups = {slug: row for slug, row in raw_lookups.items() if row is not None}
+        else:
+            migrated_lookups = {}
         migrated: dict[str, Any] = {
             "schema_version": _SLOVNYK_CACHE_SCHEMA_VERSION,
             "lemma": payload.get("lemma", path.stem),
             "lookup_word": payload.get("lookup_word", payload.get("lemma", path.stem)),
             "fetched_at": payload.get("fetched_at", ""),
-            "lookups": {},
+            "lookups": migrated_lookups,
         }
         path.write_text(json.dumps(migrated, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return counts

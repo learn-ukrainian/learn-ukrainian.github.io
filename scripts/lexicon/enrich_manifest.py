@@ -1627,16 +1627,14 @@ def _slovnyk_backoff_sleep(attempt: int, retry_after: float | None) -> None:
 
 
 def _fetch_slovnyk_entry(lemma: str, lookup_word: str, slug: str) -> dict[str, Any] | None:
-    """Fetch one slovnyk.me dictionary entry, 429-friendly.
+    """Fetch an entry from slovnyk.me for a specific dictionary.
 
-    Retries 429/5xx/network errors with Retry-After + exponential backoff (so a rate-limit
-    resolves into a real result instead of a transient miss that is never cached, #3097).
-    Returns the parsed entry, ``None`` for a genuine 404 (cached as a known miss), or raises
-    ``_SlovnykTransientError`` only after exhausting retries (caller leaves the slug uncached
+    Returns the parsed entry dict, or None if the entry was not found (404).
+    Raises _SlovnykTransientError on network error or server error (5xx/429,
     so a later run retries it).
     """
     if _phase1_offline_mode():
-        raise _SlovnykTransientError("offline mode: slovnyk.me network requests disabled")
+        return None
 
     url = f"{_SLOVNYK_BASE}/dict/{slug}/{quote(lookup_word)}"
     for attempt in range(_SLOVNYK_MAX_RETRIES + 1):
@@ -1719,7 +1717,7 @@ def _slovnyk_cache(lemma: str) -> dict[str, Any]:
     cache = _load_slovnyk_cache_file(path)
     changed = False
     if cache and cache.get("lookup_word") == lookup_word:
-        if cache.get("schema_version") == 1:
+        if cache.get("schema_version") in (1, 3):
             raw_lookups = cache.get("lookups")
             if isinstance(raw_lookups, dict):
                 cache["lookups"] = {slug: row for slug, row in raw_lookups.items() if row is not None}
@@ -4366,7 +4364,7 @@ def _sum20_definition_card(
         except _SlovnykTransientError:
             transient = True
             row = None
-        if cache is not None and not transient:
+        if cache is not None and not transient and not _phase1_offline_mode():
             _cache_store_lookup(lemma, cache, "newsum", row)
     if not row:
         # Inflected-form entry (e.g. моєму) → resolve to its base lemma (мій) and
@@ -4431,7 +4429,7 @@ def _vts_definition_card(
         except _SlovnykTransientError:
             transient = True
             row = None
-        if cache is not None and not transient:
+        if cache is not None and not transient and not _phase1_offline_mode():
             _cache_store_lookup(lemma, cache, "vts", row)
     if not row:
         # Inflected-form entry → fetch the VTS definition of its base lemma.
