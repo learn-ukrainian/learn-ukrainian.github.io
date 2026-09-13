@@ -281,6 +281,7 @@ def test_verify_only_cli_execution() -> None:
         capture_output=True,
         text=True,
         check=False,
+        timeout=60,
     )
     assert res.returncode == 0, f"--verify-only failed with code {res.returncode}:\n{res.stderr}\n{res.stdout}"
     assert "[✓] --verify-only checks passed 100% cleanly!" in res.stdout
